@@ -29,4 +29,5 @@ export const SUPPORTED_LOCALES = [
     'zh-TW'
 ];
 
-export const DEFAULT_LOCALE = en_US;
+export const DEFAULT_LOCALE = 'en-US';
+export const DEFAULT_TRANSLATION_FILE = en_US;

@@ -1,9 +1,4 @@
 import ru_RU from './ru-RU.json';
-import { Locale } from '../types';
+import { Translation } from '../types';
 
-const translation: Locale = {
-    countryLanguageCode: 'ru-RU',
-    translations: ru_RU
-};
-
-export default translation;
+export default ru_RU as Translation;

@@ -1,6 +1,7 @@
 import '@adyen/adyen-web/styles/adyen.css';
 import { createSession } from '../../services';
 import { amount, shopperLocale, shopperReference, countryCode, returnUrl } from '../../config/commonConfig';
+import getTranslationFile from '../../config/getTranslation';
 
 export async function initSession() {
     const session = await createSession({
@@ -13,14 +14,15 @@ export async function initSession() {
         countryCode
     });
 
-    const { AdyenCheckout, Dropin, en_US } = window.AdyenWeb;
+    const { AdyenCheckout, Dropin } = window.AdyenWeb;
 
     const checkout = await AdyenCheckout({
         environment: process.env.__CLIENT_ENV__,
         clientKey: process.env.__CLIENT_KEY__,
         session,
 
-        locale: en_US,
+        locale: shopperLocale,
+        translationFile: getTranslationFile(shopperLocale),
 
         // Events
         beforeSubmit: (data, component, actions) => {

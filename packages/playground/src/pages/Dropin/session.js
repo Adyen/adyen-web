@@ -1,14 +1,15 @@
-import { AdyenCheckout, Dropin, Card, WeChat, Giftcard, PayPal, Ach, GooglePay, en_US } from '@adyen/adyen-web';
+import { AdyenCheckout, Dropin, Card, WeChat, Giftcard, PayPal, Ach, GooglePay } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { createSession } from '../../services';
 import { amount, shopperLocale, shopperReference, countryCode, returnUrl } from '../../config/commonConfig';
+import getTranslationFile from '../../config/getTranslation';
 
 export async function initSession() {
     const session = await createSession({
         amount,
         reference: 'ABC123',
         returnUrl,
-        shopperLocale: 'en-US',
+        shopperLocale,
         shopperReference,
         telephoneNumber: '+611223344',
         shopperEmail: 'shopper.ctp1@adyen.com',
@@ -20,14 +21,7 @@ export async function initSession() {
         clientKey: process.env.__CLIENT_KEY__,
 
         session,
-
-        locale: en_US,
-
-        translations: {
-            'en-US': {
-                payButton: 'Caralho'
-            }
-        },
+        translationFile: getTranslationFile(shopperLocale),
 
         // Events
         beforeSubmit: (data, component, actions) => {

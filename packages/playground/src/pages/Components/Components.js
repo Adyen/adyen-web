@@ -13,8 +13,7 @@ import {
     Pix,
     Oxxo,
     Redirect,
-    Twint,
-    en_US
+    Twint
 } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 
@@ -23,13 +22,15 @@ import '../../style.scss';
 import { getPaymentMethods } from '../../services';
 import { handleSubmit, handleAdditionalDetails, handleChange } from '../../handlers';
 import { amount, shopperLocale } from '../../config/commonConfig';
+import getTranslationFile from '../../config/getTranslation';
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
     window.checkout = await AdyenCheckout({
         amount, // Optional. Used to display the amount in the Pay Button.
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
-        locale: en_US,
+        locale: shopperLocale,
+        translationFile: getTranslationFile(shopperLocale),
         environment: process.env.__CLIENT_ENV__,
         onChange: handleChange,
         onSubmit: handleSubmit,

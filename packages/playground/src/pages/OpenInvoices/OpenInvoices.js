@@ -5,6 +5,7 @@ import { handleChange, handleSubmit } from '../../handlers';
 import { amount, shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
+import getTranslationFile from '../../config/getTranslation';
 
 window.paymentData = {};
 
@@ -21,7 +22,8 @@ const showComps = {
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
     window.core = await AdyenCheckout({
         clientKey: process.env.__CLIENT_KEY__,
-        locale: en_US,
+        locale: shopperLocale,
+        translationFile: getTranslationFile(shopperLocale),
         paymentMethodsResponse: paymentMethodsData,
         environment: process.env.__CLIENT_ENV__,
         onChange: handleChange,

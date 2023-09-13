@@ -2,26 +2,21 @@ import '@adyen/adyen-web/styles/adyen.css';
 import { getPaymentMethods, makePayment, checkBalance, createOrder, cancelOrder, makeDetailsCall } from '../../services';
 import { amount, shopperLocale, countryCode, returnUrl } from '../../config/commonConfig';
 import { getSearchParameters } from '../../utils';
+import getTranslationFile from '../../config/getTranslation';
 
 export async function initManual() {
     const paymentMethodsResponse = await getPaymentMethods({ amount, shopperLocale });
 
-    const { AdyenCheckout, Dropin, en_US } = window.AdyenWeb;
+    const { AdyenCheckout, Dropin } = window.AdyenWeb;
 
     window.checkout = await AdyenCheckout({
         amount,
         countryCode,
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
-        locale: en_US,
+        locale: shopperLocale,
+        translationFile: getTranslationFile(shopperLocale),
         environment: process.env.__CLIENT_ENV__,
-        installmentOptions: {
-            mc: {
-                values: [1, 2, 3, 4]
-            }
-        },
-        // allowPaymentMethods: ['scheme', 'bcmc', 'googlepay', 'paysafecard', 'mbway', 'klarna'],
-        // allowPaymentMethods: ['onlineBanking_PL'],
         onSubmit: async (state, component) => {
             const result = await makePayment(state.data);
 

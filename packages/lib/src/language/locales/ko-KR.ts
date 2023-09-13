@@ -1,9 +1,4 @@
 import ko_KR from './ko-KR.json';
-import { Locale } from '../types';
+import { Translation } from '../types';
 
-const translation: Locale = {
-    countryLanguageCode: 'ko-KR',
-    translations: ko_KR
-};
-
-export default translation;
+export default ko_KR as Translation;

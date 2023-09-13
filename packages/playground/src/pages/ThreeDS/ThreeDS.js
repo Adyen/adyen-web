@@ -1,12 +1,15 @@
-import { AdyenCheckout, en_US } from '@adyen/adyen-web';
+import { AdyenCheckout } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import '../../../config/polyfills';
 import '../../style.scss';
 import { makeDetailsCall } from '../../services';
+import { shopperLocale } from '../../config/commonConfig';
+import getTranslationFile from '../../config/getTranslation';
 
 (async () => {
     const checkout = await AdyenCheckout({
-        locale: en_US,
+        locale: shopperLocale,
+        translationFile: getTranslationFile(shopperLocale),
         environment: 'test',
         clientKey: process.env.__CLIENT_KEY__,
         onAdditionalDetails: async (state, element) => {

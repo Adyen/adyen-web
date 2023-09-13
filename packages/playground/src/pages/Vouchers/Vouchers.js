@@ -1,4 +1,4 @@
-import { AdyenCheckout, BacsDirectDebit, Multibanco, Oxxo, Dragonpay, Boleto, Doku, Econtext, en_US } from '@adyen/adyen-web';
+import { AdyenCheckout, BacsDirectDebit, Multibanco, Oxxo, Dragonpay, Boleto, Doku, Econtext } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { shopperLocale } from '../../config/commonConfig';
 import { handleChange } from '../../handlers';
@@ -6,12 +6,12 @@ import '../../../config/polyfills';
 import '../../style.scss';
 import '../../utils';
 import './Vouchers.scss';
+import getTranslationFile from '../../config/getTranslation';
 (async () => {
-    AdyenCheckout.register(BacsDirectDebit, Multibanco, Oxxo, Dragonpay, Boleto, Doku, Econtext);
-
     window.checkout = await AdyenCheckout({
         clientKey: process.env.__CLIENT_KEY__,
-        locale: en_US,
+        locale: shopperLocale,
+        translationFile: getTranslationFile(shopperLocale),
         environment: process.env.__CLIENT_ENV__,
         onChange: handleChange
     });
@@ -27,6 +27,7 @@ import './Vouchers.scss';
         }
     }).mount('#bacsdd-input-container');
 
+    AdyenCheckout.register(BacsDirectDebit);
     window.bacsddResult = checkout
         .createFromAction({
             paymentMethodType: 'directdebit_GB',
@@ -35,6 +36,7 @@ import './Vouchers.scss';
         })
         .mount('#bacsdd-result-container');
 
+    AdyenCheckout.register(Multibanco);
     window.multibancoResult = checkout
         .createFromAction({
             expiresAt: '2019-09-28T12:54:17',
@@ -98,6 +100,8 @@ import './Vouchers.scss';
         .mount('#boleto-result-container');
 
     // Oxxo Result
+    AdyenCheckout.register(Oxxo);
+
     window.oxxoResult = checkout
         .createFromAction({
             expiresAt: '2019-08-17T23:59:59',

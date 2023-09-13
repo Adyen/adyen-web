@@ -9,8 +9,7 @@ import {
     OnlineBankingPL,
     Entercash,
     MolPayEBankingMY,
-    PayByBank,
-    en_US
+    PayByBank
 } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 
@@ -18,6 +17,7 @@ import { createSession } from '../../services';
 import { shopperLocale, countryCode, returnUrl } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
+import getTranslationFile from '../../config/getTranslation';
 
 (async () => {
     const session = await createSession({
@@ -33,7 +33,8 @@ import '../../style.scss';
     window.core = await AdyenCheckout({
         session,
         clientKey: process.env.__CLIENT_KEY__,
-        locale: en_US,
+        locale: shopperLocale,
+        translationFile: getTranslationFile(shopperLocale),
         environment: process.env.__CLIENT_ENV__,
         onError: console.error,
         paymentMethodsConfiguration: {

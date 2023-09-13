@@ -1,4 +1,4 @@
-import { AdyenCheckout, CashAppPay, ClickToPay, AmazonPay, PayPal, GooglePay, ApplePay, en_US } from '@adyen/adyen-web';
+import { AdyenCheckout, CashAppPay, ClickToPay, AmazonPay, PayPal, GooglePay, ApplePay } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 
 import { getPaymentMethods, makePayment } from '../../services';
@@ -7,13 +7,15 @@ import { checkPaymentResult } from '../../utils';
 import { amount, shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
+import getTranslationFile from '../../config/getTranslation';
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
     window.checkout = await AdyenCheckout({
         amount, // Optional. Used to display the amount in the Pay Button.
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
-        locale: en_US,
+        locale: shopperLocale,
+        translationFile: getTranslationFile(shopperLocale),
         environment: process.env.__CLIENT_ENV__,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,

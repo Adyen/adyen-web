@@ -1,9 +1,4 @@
 import zh_CN from './zh-CN.json';
-import { Locale } from '../types';
+import { Translation } from '../types';
 
-const translation: Locale = {
-    countryLanguageCode: 'zh-CN',
-    translations: zh_CN
-};
-
-export default translation;
+export default zh_CN as Translation;

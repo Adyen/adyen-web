@@ -56,7 +56,7 @@ export function formatLocale(localeParam: string): string {
  * @param supportedLocales -
  */
 export function parseLocale(locale: string, supportedLocales: string[] = []): string {
-    if (!locale || locale.length < 1 || locale.length > 5) return DEFAULT_LOCALE.countryLanguageCode;
+    if (!locale || locale.length < 1 || locale.length > 5) return DEFAULT_LOCALE;
 
     const formattedLocale = formatLocale(locale);
     const hasMatch = supportedLocales.indexOf(formattedLocale) > -1;

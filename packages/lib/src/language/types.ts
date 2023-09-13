@@ -4,9 +4,13 @@ export type CustomTranslations = {
     };
 };
 
+export type Translation = {
+    [message: string]: string;
+};
+
 export type Locale = {
     countryLanguageCode: string;
-    translations: {
+    translations?: {
         [message: string]: string;
     };
 };

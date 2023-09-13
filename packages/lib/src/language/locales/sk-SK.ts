@@ -1,9 +1,4 @@
 import sk_SK from './sk-SK.json';
-import { Locale } from '../types';
+import { Translation } from '../types';
 
-const translation: Locale = {
-    countryLanguageCode: 'sk-SK',
-    translations: sk_SK
-};
-
-export default translation;
+export default sk_SK as Translation;

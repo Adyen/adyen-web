@@ -7,6 +7,7 @@ import { amount, shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
 import { MockReactApp } from './MockReactApp';
+import getTranslationFile from '../../config/getTranslation';
 // import { searchFunctionExample } from '../../utils';
 
 const showComps = {
@@ -32,7 +33,8 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         resourceEnvironment: 'https://checkoutshopper-test.adyen.com/checkoutshopper/',
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
-        locale: en_US,
+        locale: shopperLocale,
+        translationFile: getTranslationFile(shopperLocale),
         environment: process.env.__CLIENT_ENV__,
         showPayButton: true,
         onSubmit: handleSubmit,

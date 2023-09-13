@@ -92,7 +92,8 @@ class Core implements ICore {
 
                     this.setOptions({
                         ...rest,
-                        amount: this.options.order ? this.options.order.remainingAmount : amount
+                        amount: this.options.order ? this.options.order.remainingAmount : amount,
+                        locale: this.options.locale || shopperLocale
                     });
 
                     this.createPaymentMethodsList(paymentMethods);
@@ -106,9 +107,8 @@ class Core implements ICore {
                 });
         }
 
-        this.createCoreModules();
-
         this.createPaymentMethodsList();
+        this.createCoreModules();
 
         return Promise.resolve(this);
     }
@@ -270,7 +270,7 @@ class Core implements ICore {
                 amount: this.options.amount
             }),
             resources: new Resources(this.cdnContext),
-            i18n: new Language(this.options.locale, this.options.translations, this.session?.shopperLocale),
+            i18n: new Language(this.options.locale, this.options.translations, this.options.translationFile),
             srPanel: new SRPanel({ core: this, ...this.options.srConfig })
         });
     }

@@ -1,9 +1,4 @@
 import es_ES from './es-ES.json';
-import { Locale } from '../types';
+import { Translation } from '../types';
 
-const translation: Locale = {
-    countryLanguageCode: 'es-ES',
-    translations: es_ES
-};
-
-export default translation;
+export default es_ES as Translation;

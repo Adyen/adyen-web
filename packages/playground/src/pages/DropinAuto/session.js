@@ -2,6 +2,7 @@ import { AdyenCheckout, Dropin, en_US } from '@adyen/adyen-web/auto';
 import '@adyen/adyen-web/styles/adyen.css';
 import { createSession } from '../../services';
 import { amount, shopperLocale, shopperReference, countryCode, returnUrl } from '../../config/commonConfig';
+import getTranslationFile from '../../config/getTranslation';
 
 export async function initSession() {
     const session = await createSession({
@@ -20,7 +21,8 @@ export async function initSession() {
         clientKey: process.env.__CLIENT_KEY__,
         session,
 
-        locale: en_US,
+        locale: shopperLocale,
+        translationFile: getTranslationFile(shopperLocale),
 
         // Events
         beforeSubmit: (data, component, actions) => {

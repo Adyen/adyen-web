@@ -1,9 +1,4 @@
 import ar from './ar.json';
-import { Locale } from '../types';
+import { Translation } from '../types';
 
-const translation: Locale = {
-    countryLanguageCode: 'ar',
-    translations: ar
-};
-
-export default translation;
+export default ar as Translation;

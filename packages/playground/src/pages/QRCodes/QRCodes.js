@@ -1,4 +1,4 @@
-import { AdyenCheckout, WeChat, BcmcMobile, Swish, PromptPay, PayNow, DuitNow, en_US } from '@adyen/adyen-web';
+import { AdyenCheckout, WeChat, BcmcMobile, Swish, PromptPay, PayNow, DuitNow } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { makePayment } from '../../services';
 import { shopperLocale } from '../../config/commonConfig';
@@ -8,6 +8,7 @@ import '../../style.scss';
 import './QRCodes.scss';
 import { handleResponse } from '../../handlers';
 import getCurrency from '../../config/getCurrency';
+import getTranslationFile from '../../config/getTranslation';
 
 const makeQRCodePayment = (state, component, countryCode) => {
     const currency = getCurrency(countryCode);
@@ -26,7 +27,8 @@ const makeQRCodePayment = (state, component, countryCode) => {
 (async () => {
     window.checkout = await AdyenCheckout({
         clientKey: process.env.__CLIENT_KEY__,
-        locale: en_US,
+        locale: shopperLocale,
+        translationFile: getTranslationFile(shopperLocale),
         environment: process.env.__CLIENT_ENV__,
         risk: { node: 'body', onError: console.error }
     });

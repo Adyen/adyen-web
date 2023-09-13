@@ -1,9 +1,4 @@
 import fr_FR from './fr-FR.json';
-import { Locale } from '../types';
+import { Translation } from '../types';
 
-const translation: Locale = {
-    countryLanguageCode: 'fr-FR',
-    translations: fr_FR
-};
-
-export default translation;
+export default fr_FR as Translation;

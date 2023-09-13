@@ -1,4 +1,4 @@
-import { AdyenCheckout, en_US, SecuredFields } from '@adyen/adyen-web';
+import { AdyenCheckout, SecuredFields } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 
 import { makePayment, makeDetailsCall } from '../../services';
@@ -11,6 +11,7 @@ import paymentsConfig from '../../config/paymentsConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
 import './securedFields.style.scss';
+import getTranslationFile from '../../config/getTranslation';
 
 const showOtherExamples = true; // For testing: set to false to only instantiate the basic form of SecuredFields
 
@@ -48,7 +49,8 @@ if (showOtherExamples === false) {
 
 const configObj = {
     clientKey: process.env.__CLIENT_KEY__,
-    locale: en_US,
+    locale: shopperLocale,
+    translationFile: getTranslationFile(shopperLocale),
     //        environment: 'http://localhost:8080/checkoutshopper/',
     environment: 'test',
     onChange: handleOnChange,
