@@ -3,11 +3,12 @@ import classNames from 'classnames';
 import Field from '../../internal/FormFields/Field';
 import { h } from 'preact';
 import { GiftcardFieldProps } from '../../Giftcard/components/types';
+import { alternativeLabelContent } from '../../Card/components/CardInput/components/IframeLabelAlternative';
 
 export const MealVoucherExpiryField = ({ i18n, sfpState, focusedElement, setFocusOn }: GiftcardFieldProps) => {
     return (
         <Field
-            label={i18n.get("creditCard.expiryDate.label'")}
+            label={i18n.get('creditCard.expiryDate.label')}
             classNameModifiers={['expireDate', '50']}
             errorMessage={sfpState.errors.encryptedExpiryDate && i18n.get(sfpState.errors.encryptedExpiryDate)}
             focused={focusedElement === 'encryptedExpiryDate'}
@@ -15,6 +16,8 @@ export const MealVoucherExpiryField = ({ i18n, sfpState, focusedElement, setFocu
             dir={'ltr'}
             name={'encryptedExpiryDate'}
             contextVisibleToScreenReader={false}
+            useLabelElement={false}
+            renderAlternativeToLabel={alternativeLabelContent}
         >
             <DataSfSpan
                 encryptedFieldType={'encryptedExpiryDate'}

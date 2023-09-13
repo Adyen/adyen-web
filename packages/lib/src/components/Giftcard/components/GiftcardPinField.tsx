@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import Field from '../../internal/FormFields/Field';
 import { h } from 'preact';
 import { GiftcardFieldProps } from './types';
+import { alternativeLabelContent } from '../../Card/components/CardInput/components/IframeLabelAlternative';
 
 export const GiftcardPinField = ({
     i18n,
@@ -22,6 +23,8 @@ export const GiftcardPinField = ({
             dir={'ltr'}
             name={'encryptedSecurityCode'}
             contextVisibleToScreenReader={false}
+            useLabelElement={false}
+            renderAlternativeToLabel={alternativeLabelContent}
         >
             <DataSfSpan
                 encryptedFieldType="encryptedSecurityCode"

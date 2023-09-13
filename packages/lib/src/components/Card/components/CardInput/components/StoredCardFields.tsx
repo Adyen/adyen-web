@@ -37,7 +37,7 @@ export default function StoredCardFields({
             <div className="adyen-checkout__card__exp-cvc adyen-checkout__field-wrapper">
                 {expiryMonth && expiryYear && (
                     <Field
-                        label={i18n.get("creditCard.expiryDate.label'")}
+                        label={i18n.get('creditCard.expiryDate.label')}
                         className="adyen-checkout__field--50"
                         classNameModifiers={['storedCard']}
                         name={'expiryDateField'}
