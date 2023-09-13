@@ -195,7 +195,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
                 //         </div>
                 //     );
                 // };
-                // <Field name={'myField'} renderAlternativeToLabel={alternativeLabelContent}>
+                // <Field name={'myField'} useLabelElement={false} renderAlternativeToLabel={alternativeLabelContent}>
             );
         },
         []
