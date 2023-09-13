@@ -3,9 +3,9 @@ import { test, expect } from '../../pages/cards/card.fixture';
 import { AMEX_CARD } from '../utils/constants';
 import LANG from '../../../lib/src/language/locales/en-US.json';
 
-const EXPIRY_DATE_CONTEXTUAL_TEXT = LANG['creditCard.expiryDateField.contextualText'];
-const CVC_CONTEXTUAL_TEXT_3_DIGITS = LANG['creditCard.cvcField.contextualText.3digits'];
-const CVC_CONTEXTUAL_TEXT_4_DIGITS = LANG['creditCard.cvcField.contextualText.4digits'];
+const EXPIRY_DATE_CONTEXTUAL_TEXT = LANG['creditCard.expiryDate.contextualText'];
+const CVC_CONTEXTUAL_TEXT_3_DIGITS = LANG['creditCard.securityCode.contextualText.3digits'];
+const CVC_CONTEXTUAL_TEXT_4_DIGITS = LANG['creditCard.securityCode.contextualText.4digits'];
 
 test('Should inspect the card inputs and see they have contextual elements set', async ({ cardPage }) => {
     const { card, page } = cardPage;

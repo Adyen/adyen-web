@@ -6,9 +6,9 @@ const CARD_IFRAME_TITLE = LANG['creditCard.encryptedCardNumber.aria.iframeTitle'
 const EXPIRY_DATE_IFRAME_TITLE = LANG['creditCard.encryptedExpiryDate.aria.iframeTitle'];
 const CVC_IFRAME_TITLE = LANG['creditCard.encryptedSecurityCode.aria.iframeTitle'];
 
-const CARD_IFRAME_LABEL = LANG['creditCard.numberField.title'];
-const EXPIRY_DATE_IFRAME_LABEL = LANG['creditCard.expiryDateField.title'];
-const CVC_IFRAME_LABEL = LANG['creditCard.cvcField.title'];
+const CARD_IFRAME_LABEL = LANG['creditCard.cardNumber.label'];
+const EXPIRY_DATE_IFRAME_LABEL = LANG['creditCard.expiryDate.label'];
+const CVC_IFRAME_LABEL = LANG['creditCard.securityCode.label'];
 
 class Card {
     readonly rootElement: Locator;

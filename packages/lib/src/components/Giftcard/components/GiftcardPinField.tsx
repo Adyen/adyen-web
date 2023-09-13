@@ -10,7 +10,7 @@ export const GiftcardPinField = ({
     sfpState,
     focusedElement,
     setFocusOn,
-    label = i18n.get('creditCard.pin.title')
+    label = i18n.get('creditCard.pin.label')
 }: GiftcardFieldProps) => {
     return (
         <Field

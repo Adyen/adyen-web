@@ -42,8 +42,8 @@ export default function CardFields({
     const allowedBrands = brandsIcons?.filter(brandsIcons => !BRAND_ICON_UI_EXCLUSION_LIST?.includes(brandsIcons.name));
     const isAmex = brand === 'amex';
     const cvcContextualText = isAmex
-        ? i18n.get('creditCard.cvcField.contextualText.4digits')
-        : i18n.get('creditCard.cvcField.contextualText.3digits');
+        ? i18n.get('creditCard.securityCode.contextualText.4digits')
+        : i18n.get('creditCard.securityCode.contextualText.3digits');
 
     return (
         <div className="adyen-checkout__card__form">
@@ -53,7 +53,7 @@ export default function CardFields({
                 error={getError(errors, ENCRYPTED_CARD_NUMBER)}
                 focused={focusedElement === ENCRYPTED_CARD_NUMBER}
                 isValid={!!valid.encryptedCardNumber}
-                label={i18n.get('creditCard.numberField.title')}
+                label={i18n.get('creditCard.cardNumber.label')}
                 onFocusField={onFocusField}
                 filled={!!errors.encryptedCardNumber || !!valid.encryptedCardNumber}
                 showBrandIcon={showBrandIcon}
@@ -74,12 +74,12 @@ export default function CardFields({
                     focused={focusedElement === ENCRYPTED_EXPIRY_DATE}
                     isValid={!!valid.encryptedExpiryMonth && !!valid.encryptedExpiryYear}
                     filled={!!errors.encryptedExpiryDate || !!valid.encryptedExpiryYear}
-                    label={i18n.get('creditCard.expiryDateField.title')}
+                    label={i18n.get('creditCard.expiryDate.label')}
                     onFocusField={onFocusField}
                     className={'adyen-checkout__field--50'}
                     expiryDatePolicy={expiryDatePolicy}
                     showContextualElement={showContextualElement}
-                    contextualText={i18n.get('creditCard.expiryDateField.contextualText')}
+                    contextualText={i18n.get('creditCard.expiryDate.contextualText')}
                 />
 
                 {hasCVC && (
@@ -89,7 +89,7 @@ export default function CardFields({
                         cvcPolicy={cvcPolicy}
                         isValid={!!valid.encryptedSecurityCode}
                         filled={!!errors.encryptedSecurityCode || !!valid.encryptedSecurityCode}
-                        label={i18n.get('creditCard.cvcField.title')}
+                        label={i18n.get('creditCard.securityCode.label')}
                         onFocusField={onFocusField}
                         className={'adyen-checkout__field--50'}
                         frontCVC={isAmex}

@@ -45,7 +45,7 @@ export default function CVC(props: CVCProps) {
         'adyen-checkout__input--valid': isValid
     });
 
-    const fieldLabel = cvcPolicy !== CVC_POLICY_OPTIONAL ? label : i18n.get('creditCard.cvcField.title.optional');
+    const fieldLabel = cvcPolicy !== CVC_POLICY_OPTIONAL ? label : i18n.get('creditCard.securityCode.label.optional');
 
     return (
         <Field

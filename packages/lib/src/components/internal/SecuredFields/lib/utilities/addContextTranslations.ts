@@ -25,12 +25,12 @@ export default (originalObj, i18n, txVariant, fieldType) => {
             // Use field type to only add the texts specific to the securedField
             switch (fieldType) {
                 case ENCRYPTED_EXPIRY_DATE:
-                    contextualTexts[ENCRYPTED_EXPIRY_DATE] = i18n.get('creditCard.expiryDateField.contextualText');
+                    contextualTexts[ENCRYPTED_EXPIRY_DATE] = i18n.get('creditCard.expiryDate.contextualText');
                     break;
 
                 case ENCRYPTED_SECURITY_CODE:
-                    contextualTexts[ENCRYPTED_SECURITY_CODE_3_DIGITS] = i18n.get('creditCard.cvcField.contextualText.3digits');
-                    contextualTexts[ENCRYPTED_SECURITY_CODE_4_DIGITS] = i18n.get('creditCard.cvcField.contextualText.4digits');
+                    contextualTexts[ENCRYPTED_SECURITY_CODE_3_DIGITS] = i18n.get('creditCard.securityCode.contextualText.3digits');
+                    contextualTexts[ENCRYPTED_SECURITY_CODE_4_DIGITS] = i18n.get('creditCard.securityCode.contextualText.4digits');
                     break;
                 default:
 
@@ -41,6 +41,7 @@ export default (originalObj, i18n, txVariant, fieldType) => {
 
     if (Object.keys(contextualTexts).length) {
         nuObj.contextualTexts = contextualTexts;
+        console.log('### addContextTranslations::::nuObj.contextualTexts ', nuObj.contextualTexts);
     }
 
     return nuObj;
