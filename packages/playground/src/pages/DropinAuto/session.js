@@ -1,8 +1,10 @@
-import { AdyenCheckout, Dropin, en_US } from '@adyen/adyen-web/auto';
+import AdyenWeb from '@adyen/adyen-web/auto';
 import '@adyen/adyen-web/styles/adyen.css';
 import { createSession } from '../../services';
 import { amount, shopperLocale, shopperReference, countryCode, returnUrl } from '../../config/commonConfig';
 import getTranslationFile from '../../config/getTranslation';
+
+const { AdyenCheckout, Dropin } = AdyenWeb;
 
 export async function initSession() {
     const session = await createSession({

@@ -1,14 +1,20 @@
-import { AdyenCheckout, components } from './index';
-import * as elements from './components';
+import { AdyenCheckout } from './AdyenCheckout';
+import { NewableComponent } from './core/core.registry';
+import * as components from './components';
+import * as locales from './language/locales';
 
-AdyenCheckout.register(...components);
+const Classes: NewableComponent[] = Object.keys(components).map(key => components[key]);
 
-const checkout = {
+// Register all Components
+AdyenCheckout.register(...Classes);
+
+const AdyenWeb = {
     AdyenCheckout,
-    ...elements
+    ...components,
+    ...locales
 };
 
 if (typeof window !== 'undefined') {
     if (!window.AdyenWeb) window.AdyenWeb = {};
-    window.AdyenWeb = checkout;
+    window.AdyenWeb = AdyenWeb;
 }

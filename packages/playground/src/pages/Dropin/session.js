@@ -1,8 +1,10 @@
-import { AdyenCheckout, Dropin, Card, WeChat, Giftcard, PayPal, Ach, GooglePay } from '@adyen/adyen-web';
+import AdyenWeb from '@adyen/adyen-web'; // Default export usage
 import '@adyen/adyen-web/styles/adyen.css';
 import { createSession } from '../../services';
 import { amount, shopperLocale, shopperReference, countryCode, returnUrl } from '../../config/commonConfig';
 import getTranslationFile from '../../config/getTranslation';
+
+const { AdyenCheckout, Dropin, Card, WeChat, Giftcard, PayPal, Ach, GooglePay } = AdyenWeb;
 
 export async function initSession() {
     const session = await createSession({

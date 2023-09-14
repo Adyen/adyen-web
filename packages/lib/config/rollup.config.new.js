@@ -69,7 +69,7 @@ const plugins = ({ minify, isESM }) => {
 
 export default () => {
     return [
-        //ES6 build
+        //ESM
         {
             input: 'src/index.ts',
             plugins: plugins({ minify: false, isESM: true }),

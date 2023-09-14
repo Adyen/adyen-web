@@ -1,9 +1,15 @@
+import * as components from './components';
+import * as locales from './language/locales';
+import { AdyenCheckout } from './AdyenCheckout';
+
+const AdyenWeb = {
+    ...components,
+    ...locales,
+    AdyenCheckout
+};
+export default AdyenWeb;
+
+export { components };
 export * from './components';
 export * from './language/locales';
 export * from './AdyenCheckout';
-
-import * as elements from './components';
-import { NewableComponent } from './core/core.registry';
-
-const components: NewableComponent[] = Object.keys(elements).map(key => elements[key]);
-export { components };
