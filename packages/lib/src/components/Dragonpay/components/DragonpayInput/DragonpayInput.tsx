@@ -40,9 +40,9 @@ export default function DragonpayInput(props: DragonpayInputProps) {
 
     const getIssuerSelectFieldKey = type => {
         if (type === 'dragonpay_otc_non_banking') {
-            return 'dragonpay.voucher.non.bank.selectField.placeholder';
+            return 'dragonpayVoucher.selectField.contextualText.nonBank';
         }
-        return 'dragonpay.voucher.bank.selectField.placeholder';
+        return 'dragonpayVoucher.selectField.contextualText.bank';
     };
 
     useEffect(() => {

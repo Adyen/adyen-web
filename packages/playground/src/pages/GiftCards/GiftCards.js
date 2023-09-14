@@ -29,6 +29,10 @@ import '../../style.scss';
             onOrderRequest: async (resolve, reject) => {
                 resolve(await createOrder({ amount }));
             }
+            // placeholders: {
+            //     cardNumber: 'ph enter NUM',
+            //     securityCode: 'ph pin'
+            // }
         })
         .mount('#genericgiftcard-container');
 

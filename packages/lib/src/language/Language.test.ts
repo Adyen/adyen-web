@@ -5,7 +5,7 @@ describe('Language', () => {
         test('sets up locale and customTranslations', () => {
             const customTranslations = {
                 'es-ES': {
-                    'creditCard.numberField.title': 'es'
+                    'creditCard.cardNumber.label': 'es'
                 }
             };
 
@@ -18,7 +18,7 @@ describe('Language', () => {
         test('sets up locale without country code and customTranslations without countryCode', () => {
             const customTranslations = {
                 es: {
-                    'creditCard.numberField.title': 'es'
+                    'creditCard.cardNumber.label': 'es'
                 }
             };
 
@@ -31,7 +31,7 @@ describe('Language', () => {
         test('sets up a custom locale and customTranslations', () => {
             const customTranslations = {
                 'ca-CA': {
-                    'creditCard.numberField.title': 'ca'
+                    'creditCard.cardNumber.label': 'ca'
                 }
             };
 
@@ -44,7 +44,7 @@ describe('Language', () => {
         test('sets up a custom locale without countryCode and customTranslations', () => {
             const customTranslations = {
                 'ca-CA': {
-                    'creditCard.numberField.title': 'ca'
+                    'creditCard.cardNumber.label': 'ca'
                 }
             };
 
@@ -57,7 +57,7 @@ describe('Language', () => {
         test('falls back to FALLBACK_LOCALE and removes customTranslations that do not match a language/language_country code', () => {
             const customTranslations = {
                 FAKE: {
-                    'creditCard.numberField.title': 'ca'
+                    'creditCard.cardNumber.label': 'ca'
                 }
             };
 
