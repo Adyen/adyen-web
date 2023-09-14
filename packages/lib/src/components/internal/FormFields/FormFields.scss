@@ -101,14 +101,16 @@
     background: inherit;
     outline: none;
     transition: border 0.2s ease-out, box-shadow 0.2s ease-out;
-}
 
-.adyen-checkout__input:required {
-    box-shadow: none;
-}
+    &:required {
+        box-shadow: none;
+    }
 
-.adyen-checkout__input--disabled:hover {
-    border-color: var(--b-color-outline-secondary);
+    &:disabled,
+    &:read-only {
+        color: var(--b-color-label-secondary);
+        cursor: default;
+    }
 }
 
 .adyen-checkout-input__inline-validation {
@@ -127,14 +129,6 @@
 
 .adyen-checkout-input__inline-validation--invalid {
     color: var(--b-color-label-critical);
-}
-
-.adyen-checkout__input[readonly],
-.adyen-checkout__input[readonly]:hover {
-    background: var(--b-color-surface-tertiary);
-    border-color: transparent;
-    color: var(--b-color-surface-quaternary);
-    cursor: default;
 }
 
 .adyen-checkout__input--date {

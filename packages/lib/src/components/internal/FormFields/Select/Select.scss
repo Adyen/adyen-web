@@ -132,9 +132,8 @@
     }
 
     &[readonly] {
-        background: var(--b-input-field-input-disabled-background-color);
         border-color: transparent;
-        color: var(--b-color-label-primary);
+        color: var(--b-color-label-secondary);
         cursor: not-allowed;
     }
 }

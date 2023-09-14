@@ -7,6 +7,7 @@ export interface FieldProps {
     classNameModifiers?: string[];
     children?: ComponentChildren;
     disabled?: boolean;
+    readOnly?: boolean;
     showErrorElement?: boolean;
     errorMessage?: string | boolean;
     showContextualElement?: boolean;

@@ -13,7 +13,7 @@ export default function BrandIcon({ brand, brandsConfiguration = {} }: BrandIcon
 
     return (
         <img
-            className="card-input__icon adyen-checkout__card__cardNumber__brandIcon"
+            className="adyen-checkout-card-input__icon adyen-checkout__card__cardNumber__brandIcon"
             onError={handleError}
             alt={getFullBrandName(brand)}
             src={imageUrl}

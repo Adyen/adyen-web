@@ -19,6 +19,7 @@ function Installments(props: InstallmentsProps) {
     const { i18n } = useCoreContext();
     const { amount, brand, onChange, type } = props;
     const installmentOptions = props.installmentOptions[brand] || props.installmentOptions.card;
+    const readOnly = installmentOptions?.values?.length === 1;
     const [installmentAmount, setInstallmentAmount] = useState(installmentOptions?.preselectedValue || installmentOptions?.values[0]);
     const [radioBtnValue, setRadioBtnValue] = useState('onetime');
 
@@ -113,14 +114,21 @@ function Installments(props: InstallmentsProps) {
 
     return (
         <div className="adyen-checkout__installments">
-            <Field label={i18n.get('installments')} classNameModifiers={['installments']} name={''} useLabelElement={false} showErrorElement={false}>
+            <Field
+                label={i18n.get('installments')}
+                classNameModifiers={['installments']}
+                name={''}
+                useLabelElement={false}
+                showErrorElement={false}
+                readOnly={readOnly}
+            >
                 <Select
                     filterable={false}
                     items={installmentOptions.values.map(installmentItemsMapper)}
                     selectedValue={installmentAmount}
                     onChange={onSelectInstallment}
                     name={'installments'}
-                    readonly={installmentOptions?.values?.length === 1}
+                    readonly={readOnly}
                 />
             </Field>
         </div>

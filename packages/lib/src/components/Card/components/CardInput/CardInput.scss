@@ -1,4 +1,4 @@
-.card-input {
+.adyen-checkout-card-input {
     &__wrapper {
         position: relative;
     }
@@ -73,11 +73,6 @@
     overflow: hidden;
     white-space: nowrap;
     text-align: left;
-}
-
-.adyen-checkout__field--storedCard .adyen-checkout__input[readonly],
-.adyen-checkout__field--storedCard .adyen-checkout__input[readonly]:hover {
-    color: var(--b-input-field-input-box-color);
 }
 
 .adyen-checkout__field--storedCard,

@@ -446,7 +446,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                         ref={setRootNode}
                         className={classNames({
                             'adyen-checkout__card-input': true,
-                            'card-input__wrapper': true,
+                            'adyen-checkout-card-input__wrapper': true,
                             [`adyen-checkout__card-input--${props.fundingSource ?? 'credit'}`]: true,
                             'adyen-checkout__card-input--loading': status === 'loading'
                         })}

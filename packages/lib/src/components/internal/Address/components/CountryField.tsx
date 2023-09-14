@@ -53,6 +53,7 @@ export default function CountryField(props: CountryFieldProps) {
             isValid={!!value}
             showValidIcon={false}
             i18n={i18n}
+            readOnly={readOnly && !!value}
         >
             <Select onChange={onDropdownChange} name={'country'} selectedValue={value} items={countries} readonly={readOnly && !!value} />
         </Field>

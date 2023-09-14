@@ -42,6 +42,7 @@ export default function StateField(props: StateFieldProps) {
             showValidIcon={false}
             name={'stateOrProvince'}
             i18n={i18n}
+            readOnly={readOnly && !!value}
         >
             <Select name={'stateOrProvince'} onChange={onDropdownChange} selectedValue={value} items={states} readonly={readOnly && !!value} />
         </Field>

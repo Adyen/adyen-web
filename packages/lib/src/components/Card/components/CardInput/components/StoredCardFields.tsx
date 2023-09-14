@@ -48,7 +48,6 @@ export default function StoredCardFields({
                             name={'expiryDateField'}
                             className={'adyen-checkout__input adyen-checkout__input--disabled adyen-checkout__card__exp-date__input--oneclick'}
                             value={`${expiryMonth} / ${expiryYear}`}
-                            readonly={true}
                             disabled={true}
                             dir={'ltr'}
                         />

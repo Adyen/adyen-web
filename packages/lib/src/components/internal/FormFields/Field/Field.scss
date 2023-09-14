@@ -1,5 +1,14 @@
 @use '../../../../style/index';
 
+@mixin input-wrapper-inactive{
+    background: var(--b-color-surface-tertiary);
+    border-color: transparent;
+
+    &:hover {
+        border-color: var(--b-color-outline-secondary);
+    }
+}
+
 .adyen-checkout__field {
     display: block;
     margin-bottom: var(--b-spacer-070);
@@ -43,8 +52,7 @@
 
 .adyen-checkout__field--inactive {
     > .adyen-checkout__input-wrapper {
-        background: var(--b-color-surface-tertiary);
-        border-color: var(--b-color-outline-secondary);
+        @include input-wrapper-inactive;
     }
 }
 
@@ -71,8 +79,7 @@
 }
 
 .adyen-checkout__label--disabled + .adyen-checkout__input-wrapper {
-    background: var(--b-color-surface-tertiary);
-    border-color: var(--b-color-outline-secondary);
+    @include input-wrapper-inactive;
 }
 
 .adyen-checkout__label__text,

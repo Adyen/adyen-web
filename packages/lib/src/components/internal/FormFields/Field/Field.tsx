@@ -16,6 +16,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
         classNameModifiers,
         dir,
         disabled,
+        readOnly,
         errorMessage,
         helper,
         inputWrapperModifiers,
@@ -212,7 +213,8 @@ const Field: FunctionalComponent<FieldProps> = props => {
                 classNameModifiers.map(m => `adyen-checkout__field--${m}`),
                 {
                     'adyen-checkout__field--error': errorMessage,
-                    'adyen-checkout__field--valid': isValid
+                    'adyen-checkout__field--valid': isValid,
+                    'adyen-checkout__field--inactive': readOnly || disabled
                 }
             )}
         >
