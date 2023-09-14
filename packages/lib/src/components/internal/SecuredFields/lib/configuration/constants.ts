@@ -15,7 +15,7 @@ export const ENCRYPTED_SECURITY_CODE_4_DIGITS = 'encryptedSecurityCode4digits';
 
 export const GIFT_CARD = 'giftcard';
 
-export const SF_VERSION = '4.7.0';
+export const SF_VERSION = '4.6.0';
 
 export const DEFAULT_CARD_GROUP_TYPES = ['amex', 'mc', 'visa'];
 
@@ -80,7 +80,7 @@ export const SF_FIELDS_MAP = {
     [ENCRYPTED_SECURITY_CODE]: 'securityCode',
     [ENCRYPTED_EXPIRY_MONTH]: 'expiryMonth', // ph
     [ENCRYPTED_EXPIRY_YEAR]: 'expiryYear', // ph
-    // TODO
+    //
     [ENCRYPTED_PWD_FIELD]: 'password',
     [ENCRYPTED_BANK_ACCNT_NUMBER_FIELD]: 'bankAccountNumber',
     [ENCRYPTED_BANK_LOCATION_FIELD]: 'bankLocationId',
