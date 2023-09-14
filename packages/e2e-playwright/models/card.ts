@@ -22,6 +22,7 @@ class Card {
     readonly expiryDateIframeContextualElement: Locator;
 
     readonly cvcField: Locator;
+    readonly cvcErrorElement: Locator;
     readonly cvcContextualElement: Locator;
     readonly cvcInput: Locator;
     readonly cvcIframeContextualElement: Locator;
@@ -49,6 +50,7 @@ class Card {
          * Security code elements, in Checkout
          */
         this.cvcField = this.rootElement.locator('.adyen-checkout__field--securityCode'); // Holder
+        this.cvcErrorElement = this.cvcField.locator('.adyen-checkout-contextual-text--error'); // Related erro element
         this.cvcContextualElement = this.cvcField.locator('.adyen-checkout-contextual-text'); // Related contextual element
 
         /**
