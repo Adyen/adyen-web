@@ -1,5 +1,5 @@
 import { test, expect } from '../../pages/cards/card.fixture';
-// import { test, expect } from '../../pages/cards/card.contextualTexts.fixture';
+import { test as noContextualElementTest } from '../../pages/cards/card.noContextualTexts.fixture';
 import { AMEX_CARD } from '../utils/constants';
 import LANG from '../../../lib/src/language/locales/en-US.json';
 
@@ -8,7 +8,7 @@ const CVC_CONTEXTUAL_TEXT_3_DIGITS = LANG['creditCard.securityCode.contextualTex
 const CVC_CONTEXTUAL_TEXT_4_DIGITS = LANG['creditCard.securityCode.contextualText.4digits'];
 const CVC_ERROR = LANG['error.va.sf-cc-cvc.01'];
 
-test('Should inspect the card inputs and see they have contextual elements set', async ({ cardPage }) => {
+test('#1 Should inspect the card inputs and see they have contextual elements set', async ({ cardPage }) => {
     const { card, page } = cardPage;
 
     await card.isComponentVisible();
@@ -42,7 +42,7 @@ test('Should inspect the card inputs and see they have contextual elements set',
     await expect(card.cvcIframeContextualElement).toHaveText(CVC_CONTEXTUAL_TEXT_3_DIGITS);
 });
 
-test('Should inspect the cvc input and see it has a contextual text set, then replaced by an error, then reset', async ({ cardPage }) => {
+test('#2 Should inspect the cvc input for a contextual text set, then it should be replaced by an error, then reset', async ({ cardPage }) => {
     const { card, page } = cardPage;
 
     await card.isComponentVisible();
@@ -83,4 +83,18 @@ test('Should inspect the cvc input and see it has a contextual text set, then re
     await expect(card.cvcErrorElement).not.toBeVisible();
 
     await expect(card.cvcIframeContextualElement).toHaveText(CVC_CONTEXTUAL_TEXT_3_DIGITS);
+});
+
+noContextualElementTest('#3 Should find no contextualElements because the config says to not show them', async ({ cardPage }) => {
+    const { card, page } = cardPage;
+
+    await card.isComponentVisible();
+
+    // checkout contextual elements not present
+    await expect(card.expiryDateContextualElement).not.toBeVisible();
+    await expect(card.cvcContextualElement).not.toBeVisible();
+
+    // iframe contextual elements - present but without text
+    await expect(card.expiryDateIframeContextualElement).toHaveText('');
+    await expect(card.cvcIframeContextualElement).toHaveText('');
 });
