@@ -1,22 +1,38 @@
 {
     "compilerOptions": {
+        /* Library declaration */
         "declaration": true,
         "outDir": "./dist/types",
+
+        /* Using bundler as we are transpiling with SWC */
+        "moduleResolution": "Bundler",
         "module": "ESNext",
-        "moduleResolution": "node",
-        "target": "es2021",
+
+        /* Base Options: */
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "target": "es2022",
+        "allowJs": true,
+        "resolveJsonModule": true,
+        "moduleDetection": "force",
+
+        /* Strictness */
+        "strict": false,
+        "noUncheckedIndexedAccess": true,
+        "noImplicitAny": false,
+        "noImplicitThis": false,
+        "noImplicitReturns": false,
+        "noImplicitOverride": false,
+        "strictPropertyInitialization": false,
+        "strictNullChecks": false,
+        "useDefineForClassFields": false,
+
+        /** Preact */
         "jsx": "react",
         "jsxFactory": "h",
-        "resolveJsonModule": true,
-        "allowSyntheticDefaultImports": true,
-        "esModuleInterop": true,
-        "noImplicitAny": false,
-//        "noImplicitOverride": true, TODO: turn this on
-        "strictPropertyInitialization": false,
-        "suppressImplicitAnyIndexErrors": true,
-        "importHelpers": true,
-        "baseUrl": "./",
-        "lib": ["dom", "esnext"]
+
+        /* Include types for the browser: window, document, etc */
+        "lib": ["es2022", "dom", "dom.iterable"]
     },
     "include": [
         "./src/**/*",
