@@ -15,7 +15,7 @@ export const ENCRYPTED_SECURITY_CODE_4_DIGITS = 'encryptedSecurityCode4digits';
 
 export const GIFT_CARD = 'giftcard';
 
-export const SF_VERSION = '4.5.1';
+export const SF_VERSION = '4.6.0';
 
 export const DEFAULT_CARD_GROUP_TYPES = ['amex', 'mc', 'visa'];
 
@@ -72,4 +72,19 @@ export const BRAND_READABLE_NAME_MAP = {
     maestro: 'Maestro',
     bcmc: 'Bancontact card',
     bijcard: 'de Bijenkorf Card'
+};
+
+export const SF_FIELDS_MAP = {
+    [ENCRYPTED_CARD_NUMBER]: 'cardNumber', // ph
+    [ENCRYPTED_EXPIRY_DATE]: 'expiryDate', // ph
+    [ENCRYPTED_SECURITY_CODE]: 'securityCode',
+    [ENCRYPTED_EXPIRY_MONTH]: 'expiryMonth', // ph
+    [ENCRYPTED_EXPIRY_YEAR]: 'expiryYear', // ph
+    //
+    [ENCRYPTED_PWD_FIELD]: 'password',
+    [ENCRYPTED_BANK_ACCNT_NUMBER_FIELD]: 'bankAccountNumber',
+    [ENCRYPTED_BANK_LOCATION_FIELD]: 'bankLocationId',
+    //
+    [ENCRYPTED_SECURITY_CODE_3_DIGITS]: 'securityCodeThreeDigits', // ph
+    [ENCRYPTED_SECURITY_CODE_4_DIGITS]: 'securityCodeFourDigits' // ph
 };

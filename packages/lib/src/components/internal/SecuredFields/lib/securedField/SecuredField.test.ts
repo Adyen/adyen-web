@@ -24,13 +24,13 @@ export const ENCRYPTED_SECURITY_CODE_3_DIGITS = 'encryptedSecurityCode3digits';
 export const ENCRYPTED_SECURITY_CODE_4_DIGITS = 'encryptedSecurityCode4digits';
 
 const TRANSLATED_NUMBER_IFRAME_TITLE = LANG['creditCard.encryptedCardNumber.aria.iframeTitle'];
-const TRANSLATED_NUMBER_IFRAME_LABEL = LANG['creditCard.encryptedCardNumber.aria.label'];
+const TRANSLATED_NUMBER_IFRAME_LABEL = LANG['creditCard.cardNumber.label'];
 
 const TRANSLATED_DATE_IFRAME_TITLE = LANG['creditCard.encryptedExpiryDate.aria.iframeTitle'];
-const TRANSLATED_DATE_IFRAME_LABEL = LANG['creditCard.encryptedExpiryDate.aria.label'];
+const TRANSLATED_DATE_IFRAME_LABEL = LANG['creditCard.expiryDate.label'];
 
 const TRANSLATED_CVC_IFRAME_TITLE = LANG['creditCard.encryptedSecurityCode.aria.iframeTitle'];
-const TRANSLATED_CVC_IFRAME_LABEL = LANG['creditCard.encryptedSecurityCode.aria.label'];
+const TRANSLATED_CVC_IFRAME_LABEL = LANG['creditCard.securityCode.label'];
 
 const GENERAL_ERROR_CODE = ERROR_CODES[ERROR_MSG_INCOMPLETE_FIELD];
 const CARD_TOO_OLD_ERROR_CODE = ERROR_CODES[ERROR_MSG_CARD_TOO_OLD];
@@ -187,7 +187,7 @@ describe('SecuredField handling no placeholders config object - should set defau
 });
 
 describe('SecuredField handling placeholders from the placeholders config', () => {
-    const achPlaceholders: AchPlaceholders = { accountNumber: '123', accountLocation: 'abc' };
+    const achPlaceholders: AchPlaceholders = { bankAccountNumber: '123', bankLocationId: 'abc' };
     const giftCardPlaceholders: GiftcardPlaceholders = { cardNumber: '123', expiryDate: '01/01', securityCode: '000' };
 
     test('should set placeholders for txVariant ach (accountNumber field)', () => {
@@ -196,7 +196,7 @@ describe('SecuredField handling placeholders from the placeholders config', () =
             { ...setupObj, txVariant: 'ach', fieldType: ENCRYPTED_BANK_ACCNT_NUMBER_FIELD, placeholders: achPlaceholders },
             i18n
         );
-        expect(ach.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_BANK_ACCNT_NUMBER_FIELD]).toBe(achPlaceholders.accountNumber);
+        expect(ach.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_BANK_ACCNT_NUMBER_FIELD]).toBe(achPlaceholders.bankAccountNumber);
     });
 
     test('should set placeholders for txVariant ach (accountLocation field)', () => {
@@ -205,7 +205,7 @@ describe('SecuredField handling placeholders from the placeholders config', () =
             { ...setupObj, txVariant: 'ach', fieldType: ENCRYPTED_BANK_LOCATION_FIELD, placeholders: achPlaceholders },
             i18n
         );
-        expect(ach.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_BANK_LOCATION_FIELD]).toBe(achPlaceholders.accountLocation);
+        expect(ach.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_BANK_LOCATION_FIELD]).toBe(achPlaceholders.bankLocationId);
     });
 
     test('should set placeholders for txVariant gift card (cardNumber field)', () => {

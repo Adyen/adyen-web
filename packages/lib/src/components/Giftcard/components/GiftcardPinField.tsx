@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import Field from '../../internal/FormFields/Field';
 import { h } from 'preact';
 import { GiftcardFieldProps } from './types';
+import { alternativeLabelContent } from '../../Card/components/CardInput/components/IframeLabelAlternative';
 
 export const GiftcardPinField = ({
     i18n,
@@ -10,7 +11,7 @@ export const GiftcardPinField = ({
     sfpState,
     focusedElement,
     setFocusOn,
-    label = i18n.get('creditCard.pin.title')
+    label = i18n.get('creditCard.pin.label')
 }: GiftcardFieldProps) => {
     return (
         <Field
@@ -22,6 +23,8 @@ export const GiftcardPinField = ({
             dir={'ltr'}
             name={'encryptedSecurityCode'}
             contextVisibleToScreenReader={false}
+            useLabelElement={false}
+            renderAlternativeToLabel={alternativeLabelContent}
         >
             <DataSfSpan
                 encryptedFieldType="encryptedSecurityCode"

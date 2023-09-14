@@ -6,6 +6,7 @@ import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { KCPProps } from './types';
 import DataSfSpan from './DataSfSpan';
 import InputTelephone from '../../../../internal/FormFields/InputTelephone';
+import { alternativeLabelContent } from './IframeLabelAlternative';
 
 export default function KCPAuthentication(props: KCPProps) {
     const { i18n } = useCoreContext();
@@ -52,6 +53,8 @@ export default function KCPAuthentication(props: KCPProps) {
                 isValid={props.encryptedPasswordState.valid}
                 dir={'ltr'}
                 name={'encryptedPassword'}
+                useLabelElement={false}
+                renderAlternativeToLabel={alternativeLabelContent}
             >
                 <DataSfSpan
                     encryptedFieldType="encryptedPassword"

@@ -2,6 +2,7 @@ import { addErrorTranslationsToObject } from '../../../../../../core/Errors/util
 import addContextTranslationsToObject from '../../utilities/addContextTranslations';
 import { AriaConfigObject, AriaConfig } from '../AbstractSecuredField';
 import Language from '../../../../../../language/Language';
+import { SF_FIELDS_MAP } from '../../configuration/constants';
 
 /**
  * Creates an ariaConfig object with 'iframeTitle' and 'label' properties, whose values are retrieved from the translations object.
@@ -15,8 +16,8 @@ export function processAriaConfig(txVariant: string, fieldType: string, i18n: La
     // Get translation for iframeTitle
     const iframeTitle: string = i18n.get(`${type}.${fieldType}.aria.iframeTitle`);
 
-    // Get translation for aria label
-    const label: string = i18n.get(`${type}.${fieldType}.aria.label`);
+    // Get translation for aria label using *same* key that is used to label the element - important a11y consideration for (securedField) iframe
+    const label: string = i18n.get(`${type}.${SF_FIELDS_MAP[fieldType]}.label`);
 
     // Get lang property
     const lang = i18n.locale;

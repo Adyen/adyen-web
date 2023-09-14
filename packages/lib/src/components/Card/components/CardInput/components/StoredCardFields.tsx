@@ -21,13 +21,12 @@ export default function StoredCardFields({
 }: StoredCardFieldsProps) {
     const { i18n } = useCoreContext();
     const storedCardDescription = i18n.get('creditCard.storedCard.description.ariaLabel').replace('%@', lastFour);
-    const storedCardDescriptionSuffix =
-        expiryMonth && expiryYear ? ` ${i18n.get('creditCard.expiryDateField.title')} ${expiryMonth}/${expiryYear}` : '';
+    const storedCardDescriptionSuffix = expiryMonth && expiryYear ? ` ${i18n.get('creditCard.expiryDate.label')} ${expiryMonth}/${expiryYear}` : '';
     const ariaLabel = `${storedCardDescription}${storedCardDescriptionSuffix}`;
     const isAmex = brand === 'amex';
     const cvcContextualText = isAmex
-        ? i18n.get('creditCard.cvcField.contextualText.4digits')
-        : i18n.get('creditCard.cvcField.contextualText.3digits');
+        ? i18n.get('creditCard.securityCode.contextualText.4digits')
+        : i18n.get('creditCard.securityCode.contextualText.3digits');
 
     const getError = (errors, fieldType) => {
         return errors[fieldType] ? i18n.get(errors[fieldType]) : null;
@@ -38,7 +37,7 @@ export default function StoredCardFields({
             <div className="adyen-checkout__card__exp-cvc adyen-checkout__field-wrapper">
                 {expiryMonth && expiryYear && (
                     <Field
-                        label={i18n.get('creditCard.expiryDateField.title')}
+                        label={i18n.get('creditCard.expiryDate.label')}
                         className="adyen-checkout__field--50"
                         classNameModifiers={['storedCard']}
                         name={'expiryDateField'}
@@ -61,7 +60,7 @@ export default function StoredCardFields({
                         focused={focusedElement === 'encryptedSecurityCode'}
                         filled={!!valid.encryptedSecurityCode || !!errors.encryptedSecurityCode}
                         isValid={!!valid.encryptedSecurityCode}
-                        label={i18n.get('creditCard.cvcField.title')}
+                        label={i18n.get('creditCard.securityCode.label')}
                         onFocusField={onFocusField}
                         {...(expiryMonth && expiryYear && { className: 'adyen-checkout__field--50' })}
                         classNameModifiers={['storedCard']}

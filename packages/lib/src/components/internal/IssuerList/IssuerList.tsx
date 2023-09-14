@@ -26,7 +26,7 @@ const schema = ['issuer'];
 const validationRules: ValidatorRules = {
     issuer: {
         validate: issuer => !!issuer && issuer.length > 0,
-        errorMessage: 'idealIssuer.selectField.placeholder',
+        errorMessage: 'issuerList.selectField.contextualText',
         modes: ['blur']
     }
 };

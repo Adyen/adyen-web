@@ -22,7 +22,7 @@ export interface ACHInputDataState {
     billingAddress?: object;
 }
 
-type PlaceholderKeys = 'holderName' | 'accountNumber' | 'accountLocation';
+type PlaceholderKeys = 'holderName' | 'bankAccountNumber' | 'bankLocationId';
 
 export type Placeholders = Partial<Record<PlaceholderKeys, string>>;
 
