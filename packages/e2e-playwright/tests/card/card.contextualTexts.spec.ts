@@ -1,5 +1,4 @@
 import { test, expect } from '../../pages/cards/card.fixture';
-import { test as noContextualElementTest } from '../../pages/cards/card.noContextualTexts.fixture';
 import { AMEX_CARD } from '../utils/constants';
 import LANG from '../../../lib/src/language/locales/en-US.json';
 
@@ -73,6 +72,9 @@ test('#2 Should inspect the cvc input for a contextual text set, then it should 
     // iframe contextual (error) element
     await expect(card.cvcIframeContextualElement).toHaveText(CVC_ERROR);
 
+    // Allow default focusing after validation to happen
+    await page.waitForTimeout(1000);
+
     // type
     await card.typeCvc('737');
 
@@ -85,8 +87,8 @@ test('#2 Should inspect the cvc input for a contextual text set, then it should 
     await expect(card.cvcIframeContextualElement).toHaveText(CVC_CONTEXTUAL_TEXT_3_DIGITS);
 });
 
-noContextualElementTest('#3 Should find no contextualElements because the config says to not show them', async ({ cardPage }) => {
-    const { card, page } = cardPage;
+test('#3 Should find no contextualElements because the config says to not show them', async ({ cardNoContextualElementPage }) => {
+    const { card, page } = cardNoContextualElementPage;
 
     await card.isComponentVisible();
 

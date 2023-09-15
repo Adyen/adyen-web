@@ -14,6 +14,8 @@ class Card {
     readonly rootElement: Locator;
     readonly rootElementSelector: string;
 
+    readonly cardNumberField: Locator;
+    readonly cardNumberErrorElement: Locator;
     readonly cardNumberInput: Locator;
 
     readonly expiryDateField: Locator;
@@ -31,7 +33,18 @@ class Card {
         this.rootElement = page.locator(rootElementSelector);
         this.rootElementSelector = rootElementSelector;
 
-        this.cardNumberInput = this.rootElement.frameLocator(`[title="${CARD_IFRAME_TITLE}"]`).locator(`input[aria-label="${CARD_IFRAME_LABEL}"]`);
+        /**
+         * Card Number elements, in Checkout
+         */
+        this.cardNumberField = this.rootElement.locator('.adyen-checkout__field--cardNumber'); // Holder
+
+        this.cardNumberErrorElement = this.cardNumberField.locator('.adyen-checkout-contextual-text--error');
+
+        /**
+         * Card Number elements, in iframe
+         */
+        const cardNumberIframe = this.rootElement.frameLocator(`[title="${CARD_IFRAME_TITLE}"]`);
+        this.cardNumberInput = cardNumberIframe.locator(`input[aria-label="${CARD_IFRAME_LABEL}"]`);
 
         /**
          * Expiry Date elements, in Checkout

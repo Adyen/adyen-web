@@ -7,6 +7,7 @@ import { optionalDateAndCvcMock } from '../../mocks/binLookup/binLookup.data';
 type Fixture = {
     cardPage: CardPage;
     cardAvsPage: CardAvsPage;
+    cardNoContextualElementPage: CardPage;
 };
 
 const test = base.extend<Fixture>({
@@ -26,6 +27,16 @@ const test = base.extend<Fixture>({
         const cardAvsPage = new CardAvsPage(page);
         await cardAvsPage.goto();
         await use(cardAvsPage);
+    },
+
+    cardNoContextualElementPage: async ({ page }, use) => {
+        await page.addInitScript({
+            content: 'window.cardConfig = { showContextualElement: false}'
+        });
+
+        const cardPage = new CardPage(page);
+        await cardPage.goto();
+        await use(cardPage);
     }
 });
 
