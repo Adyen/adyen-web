@@ -1,7 +1,7 @@
 import Language from '../language';
 import UIElement from '../components/UIElement';
 import RiskModule from './RiskModule';
-import PaymentMethodsResponse from './ProcessResponse/PaymentMethodsResponse';
+import PaymentMethods from './ProcessResponse/PaymentMethods';
 import getComponentForAction from './ProcessResponse/PaymentAction';
 import { resolveEnvironment, resolveCDNEnvironment } from './Environment';
 import Analytics from './Analytics';
@@ -17,7 +17,7 @@ import { DEFAULT_LOCALE } from '../language/config';
 
 class Core implements ICore {
     public session?: Session;
-    public paymentMethodsResponse: PaymentMethodsResponse;
+    public paymentMethodsResponse: PaymentMethods;
     public modules: any;
     public options: CoreOptions;
     public loadingContext?: string;
@@ -233,8 +233,8 @@ class Core implements ICore {
         throw new Error(errorMessage);
     }
 
-    private createPaymentMethodsList(paymentMethodsResponse?: PaymentMethodsResponse): void {
-        this.paymentMethodsResponse = new PaymentMethodsResponse(this.options.paymentMethodsResponse || paymentMethodsResponse, this.options);
+    private createPaymentMethodsList(paymentMethodsResponse?: PaymentMethods): void {
+        this.paymentMethodsResponse = new PaymentMethods(this.options.paymentMethodsResponse || paymentMethodsResponse, this.options);
     }
 
     private createCoreModules(): void {

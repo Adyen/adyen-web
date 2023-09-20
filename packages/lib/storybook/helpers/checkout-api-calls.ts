@@ -1,7 +1,7 @@
 import paymentMethodsConfig from '../config/paymentMethodsConfig';
 import paymentsConfig from '../config/paymentsConfig';
 import { httpPost } from '../utils/http-post';
-import { PaymentMethodsResponse } from '../../src/core/ProcessResponse/PaymentMethodsResponse/types';
+import { PaymentMethodsResponse } from '../../src/core/ProcessResponse/PaymentMethods/types';
 import { RawPaymentResponse } from '../../src/components/types';
 import { CheckoutSessionSetupResponse, Order, OrderStatus, PaymentAction, PaymentAmount } from '../../src/types';
 

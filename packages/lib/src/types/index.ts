@@ -78,6 +78,12 @@ export interface PaymentAction {
     };
 }
 
+type Issuer = {
+    id: string;
+    name: string;
+    disabled?: boolean;
+};
+
 export interface PaymentMethod {
     /**
      * The unique payment method code.
@@ -90,9 +96,9 @@ export interface PaymentMethod {
     name: string;
 
     /**
-     * All input details to be provided to complete the payment with this payment method.
+     * A list of issuers for this payment method.
      */
-    details?: object;
+    issuers?: Issuer[];
 
     /**
      * Configuration props as set by the merchant in the CA and received in the PM object in the /paymentMethods response
@@ -118,6 +124,21 @@ export interface PaymentMethod {
      * The group where this payment method belongs to.
      */
     group?: PaymentMethodGroup;
+}
+
+/**
+ * List of the available payment methods
+ * {@link https://docs.adyen.com/api-explorer/Checkout/70/post/paymentMethods API Explorer /paymentMethods}.
+ */
+export interface PaymentMethodsResponse {
+    /**
+     * Detailed list of payment methods required to generate payment forms.
+     */
+    paymentMethods?: PaymentMethod[];
+    /**
+     * List of all stored payment methods.
+     */
+    storedPaymentMethods?: StoredPaymentMethod[];
 }
 
 /**
@@ -153,22 +174,6 @@ export interface StoredPaymentMethod extends PaymentMethod {
     storedPaymentMethodId?: string;
 
     isStoredPaymentMethod: boolean;
-}
-
-/**
- * List of the available payment methods
- * {@link https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v51/paymentMethods API Explorer /paymentMethods}.
- */
-export interface PaymentMethodsResponseInterface {
-    /**
-     * Detailed list of payment methods required to generate payment forms.
-     */
-    paymentMethods: PaymentMethod[];
-
-    /**
-     * List of all stored payment methods.
-     */
-    storedPaymentMethods: StoredPaymentMethod[];
 }
 
 export interface PaymentResponse {

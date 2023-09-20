@@ -1,12 +1,11 @@
-import { PaymentMethod, StoredPaymentMethod } from '../../../types';
+import { PaymentMethod, PaymentMethodsResponse, StoredPaymentMethod } from '../../../types';
 import { checkPaymentMethodsResponse, processPaymentMethods, processStoredPaymentMethods } from './utils';
-import { PaymentMethodsResponse as PaymentMethodsResponseType } from './types';
 
-class PaymentMethodsResponse {
+class PaymentMethods {
     public paymentMethods: PaymentMethod[] = [];
     public storedPaymentMethods: StoredPaymentMethod[] = [];
 
-    constructor(response: PaymentMethodsResponseType, options = {}) {
+    constructor(response: PaymentMethodsResponse, options = {}) {
         checkPaymentMethodsResponse(response);
 
         this.paymentMethods = response ? processPaymentMethods(response.paymentMethods, options) : [];
@@ -27,4 +26,4 @@ class PaymentMethodsResponse {
     }
 }
 
-export default PaymentMethodsResponse;
+export default PaymentMethods;

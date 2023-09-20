@@ -1,5 +1,5 @@
 import { CustomTranslations, Translation } from '../language/types';
-import { PaymentAmountExtended, Order, PaymentAction } from '../types';
+import { PaymentAmountExtended, Order, PaymentAction, PaymentMethodsResponse } from '../types';
 import { AnalyticsOptions } from './Analytics/types';
 import { RiskModuleOptions } from './RiskModule/RiskModule';
 import { ActionHandledReturnObject, OnPaymentCompletedData, PaymentData } from '../components/types';
@@ -9,7 +9,7 @@ import { GiftCardElementData } from '../components/Giftcard/types';
 import { SRPanelConfig } from './Errors/types';
 import { NewableComponent } from './core.registry';
 import Session from './CheckoutSession';
-import PaymentMethodsResponse from './ProcessResponse/PaymentMethodsResponse';
+import PaymentMethods from './ProcessResponse/PaymentMethods';
 
 type PromiseResolve = typeof Promise.resolve;
 
@@ -26,7 +26,7 @@ export interface ICore {
     createFromAction(action: PaymentAction, options: any): any;
     storeElementReference(element: UIElement): void;
     options: CoreOptions;
-    paymentMethodsResponse: PaymentMethodsResponse;
+    paymentMethodsResponse: PaymentMethods;
     session?: Session;
 }
 

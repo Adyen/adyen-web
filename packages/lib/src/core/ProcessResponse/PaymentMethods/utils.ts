@@ -1,11 +1,10 @@
-import { PaymentMethod, StoredPaymentMethod } from '../../../types';
+import { PaymentMethod, PaymentMethodsResponse, StoredPaymentMethod } from '../../../types';
 import {
     filterAllowedPaymentMethods,
     filterEcomStoredPaymentMethods,
     filterRemovedPaymentMethods,
     filterSupportedStoredPaymentMethods
 } from './filters';
-import { PaymentMethodsResponse } from './types';
 
 const processStoredPaymentMethod = (pm): StoredPaymentMethod => ({
     ...pm,

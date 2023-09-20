@@ -1,6 +1,6 @@
 module.exports = {
     parser: '@typescript-eslint/parser',
-    plugins: ['react', '@typescript-eslint', 'import', 'eslint-plugin-tsdoc', 'jsx-a11y', 'testing-library'],
+    plugins: ['react', '@typescript-eslint', 'import',  'jsx-a11y', 'testing-library'],
     extends: [
         'eslint:recommended',
         'plugin:react/recommended',
@@ -49,16 +49,6 @@ module.exports = {
         'import/prefer-default-export': 'off',
         'no-debugger': 'warn',
         indent: 'off',
-        'import/extensions': [
-            'error',
-            'ignorePackages',
-            {
-                js: 'never',
-                jsx: 'never',
-                ts: 'never',
-                tsx: 'never'
-            }
-        ],
         'import/no-extraneous-dependencies': [
             'error',
             {
@@ -130,8 +120,6 @@ module.exports = {
         'react/prop-types': 'off',
         'react/display-name': 'off',
 
-        // TSDoc
-        'tsdoc/syntax': 'warn',
         // a11y
         'jsx-a11y/alt-text': 'error',
         'jsx-a11y/aria-role': 'error',

@@ -1,4 +1,4 @@
-import { PaymentMethodsResponse } from '../../../core/ProcessResponse/PaymentMethodsResponse/types';
+import { PaymentMethodsResponse } from '../../../core/ProcessResponse/PaymentMethods/types';
 import { InstantPaymentTypes } from '../types';
 
 function splitPaymentMethods(paymentMethodsResponse: PaymentMethodsResponse, instantPaymentTypes: InstantPaymentTypes[]) {

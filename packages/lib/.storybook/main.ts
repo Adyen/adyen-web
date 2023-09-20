@@ -1,10 +1,10 @@
 import type { StorybookConfig } from '@storybook/preact-vite';
 import { mergeConfig, loadEnv } from 'vite';
 import * as path from 'path';
-import version = require('../config/version');
+import Version from '../config/version';
 import eslint from '@rollup/plugin-eslint';
 import stylelint from 'vite-plugin-stylelint';
-const currentVersion = version();
+
 const config: StorybookConfig = {
     stories: ['../storybook/**/*.stories.mdx', '../storybook/**/*.stories.@(js|jsx|ts|tsx)'],
     addons: [
@@ -28,10 +28,10 @@ const config: StorybookConfig = {
             define: {
                 'process.env': env,
                 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-                'process.env.VERSION': JSON.stringify(currentVersion.ADYEN_WEB_VERSION),
-                'process.env.COMMIT_HASH': JSON.stringify(currentVersion.COMMIT_HASH),
-                'process.env.COMMIT_BRANCH': JSON.stringify(currentVersion.COMMIT_BRANCH),
-                'process.env.ADYEN_BUILD_ID': JSON.stringify(currentVersion.ADYEN_BUILD_ID),
+                'process.env.VERSION': JSON.stringify(Version.ADYEN_WEB_VERSION),
+                'process.env.COMMIT_HASH': JSON.stringify(Version.COMMIT_HASH),
+                'process.env.COMMIT_BRANCH': JSON.stringify(Version.COMMIT_BRANCH),
+                'process.env.ADYEN_BUILD_ID': JSON.stringify(Version.ADYEN_BUILD_ID),
                 'process.env.__SF_ENV__': JSON.stringify(env.SF_ENV || 'build')
             },
             server: {

@@ -1,4 +1,4 @@
-import PaymentMethodsResponse from './PaymentMethodsResponse';
+import PaymentMethods from './PaymentMethods';
 
 const paymentMethodsResponseMock = {
     paymentMethods: [
@@ -44,13 +44,13 @@ const paymentMethodsResponseMock = {
 
 describe('PaymentMethodsResponse', () => {
     test('process payment methods', () => {
-        const pmResponse = new PaymentMethodsResponse(paymentMethodsResponseMock);
+        const pmResponse = new PaymentMethods(paymentMethodsResponseMock);
         expect(pmResponse.paymentMethods.length).toBe(2);
         expect(pmResponse.has('scheme')).toBe(true);
     });
 
     test('filters stored payment methods', () => {
-        const pmResponse = new PaymentMethodsResponse(paymentMethodsResponseMock);
+        const pmResponse = new PaymentMethods(paymentMethodsResponseMock);
         expect(pmResponse.storedPaymentMethods.length).toBe(1);
     });
 });

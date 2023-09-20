@@ -1,6 +1,6 @@
 import { checkPaymentMethodsResponse } from './utils';
 
-describe('PaymentMethodsResponse utils', () => {
+describe('PaymentMethods utils', () => {
     describe('checkPaymentMethodsResponse', () => {
         test('should throw if a wrong format is passed', () => {
             expect(() => checkPaymentMethodsResponse([])).toThrow();

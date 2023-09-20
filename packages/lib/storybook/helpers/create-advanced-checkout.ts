@@ -3,7 +3,7 @@ import { cancelOrder, checkBalance, createOrder, getPaymentMethods } from './che
 import { handleAdditionalDetails, handleChange, handleError, handleSubmit } from './checkout-handlers';
 import getCurrency from '../utils/get-currency';
 import { AdyenCheckoutProps } from '../stories/types';
-import { PaymentMethodsResponse } from '../../src/core/ProcessResponse/PaymentMethodsResponse/types';
+import { PaymentMethodsResponse } from '../../src/core/ProcessResponse/PaymentMethods/types';
 import Checkout from '../../src/core/core';
 
 async function createAdvancedFlowCheckout({

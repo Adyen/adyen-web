@@ -1,6 +1,6 @@
 import { filterEcomStoredPaymentMethods, filterSupportedStoredPaymentMethods } from './filters';
 
-describe('PaymentMethodsResponse filters', () => {
+describe('PaymentMethods filters', () => {
     test('filterEcomStoredPaymentMethods', () => {
         expect(filterEcomStoredPaymentMethods({ supportedShopperInteractions: ['SomeInteraction'] })).toBe(false);
         expect(filterEcomStoredPaymentMethods({ supportedShopperInteractions: ['Ecommerce'] })).toBe(true);
