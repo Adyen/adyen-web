@@ -12,6 +12,7 @@ import {
 } from '../internal/SecuredFields/lib/types';
 import { CVCPolicyType, DatePolicyType } from '../internal/SecuredFields/lib/types';
 import { ClickToPayConfiguration } from '../internal/ClickToPay/types';
+import { InstallmentOptions } from './components/CardInput/components/types';
 
 export interface CardElementProps extends UIElementProps {
     /**
@@ -146,7 +147,11 @@ export interface CardElementProps extends UIElementProps {
      */
     onBinLookup?: (event: CbObjOnBinLookup) => void;
 
-    [key: string]: any; // TODO get rid of this and explicitly declare props
+    storedPaymentMethodId?: string;
+    countryCode?: string;
+    billingAddressRequired?: boolean;
+    installmentOptions?: InstallmentOptions;
+    lastFour?: string;
 }
 
 export type SocialSecurityMode = 'show' | 'hide' | 'auto';
@@ -203,7 +208,7 @@ interface CardPaymentMethodData {
     type: string;
     brand?: string;
     storedPaymentMethodId?: string;
-    fundingSource?: string;
+    fundingSource?: 'debit' | 'credit';
     holderName?: string;
     encryptedCardNumber?: string;
     encryptedExpiryMonth?: string;

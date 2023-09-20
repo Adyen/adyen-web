@@ -112,7 +112,7 @@ export interface PaymentMethod {
     /**
      * The funding source of the payment method.
      */
-    fundingSource?: string;
+    fundingSource?: 'debit' | 'credit';
 
     /**
      * The group where this payment method belongs to.
