@@ -8,7 +8,8 @@ import {
     CbObjOnFieldValid,
     CbObjOnFocus,
     CbObjOnLoad,
-    CbObjOnBinLookup
+    CbObjOnBinLookup,
+    StylesObject
 } from '../internal/SecuredFields/lib/types';
 import { CVCPolicyType, DatePolicyType } from '../internal/SecuredFields/lib/types';
 import { ClickToPayConfiguration } from '../internal/ClickToPay/types';
@@ -147,11 +148,16 @@ export interface CardElementProps extends UIElementProps {
      */
     onBinLookup?: (event: CbObjOnBinLookup) => void;
 
+    /**
+     * Related to storedCards
+     */
     storedPaymentMethodId?: string;
+    lastFour?: string;
+
     countryCode?: string;
     billingAddressRequired?: boolean;
     installmentOptions?: InstallmentOptions;
-    lastFour?: string;
+    styles?: StylesObject;
 }
 
 export type SocialSecurityMode = 'show' | 'hide' | 'auto';

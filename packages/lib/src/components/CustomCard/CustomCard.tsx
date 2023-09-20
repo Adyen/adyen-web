@@ -5,19 +5,11 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import collectBrowserInfo from '../../utils/browserInfo';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
 import { CbObjOnBinLookup } from '../internal/SecuredFields/lib/types';
-import { BrandObject } from '../Card/types';
+import { BrandObject, CardElementProps } from '../Card/types';
 import { getCardImageUrl } from '../internal/SecuredFields/utils';
 import { TxVariants } from '../tx-variants';
-import { UIElementProps } from '../types';
 
-interface CustomCardProps extends UIElementProps {
-    styles: any;
-    brand: string[];
-    // TODO: should it extend card?
-    [key: string]: any;
-}
-
-export class CustomCard extends UIElement<CustomCardProps> {
+export class CustomCard extends UIElement<CardElementProps> {
     public static type = TxVariants.customCard;
     public static txVariants = [TxVariants.customCard, TxVariants.card];
 
