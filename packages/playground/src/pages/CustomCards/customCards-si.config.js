@@ -15,7 +15,7 @@ export const styles_si = {
     }
 };
 
-const switchToEndDigitsView = function(endDigits) {
+const switchToEndDigitsView = function (endDigits) {
     if (endDigits) {
         endDigitsEl.innerText = endDigits;
     }
@@ -33,11 +33,11 @@ const switchToEndDigitsView = function(endDigits) {
 
     // Set focus on next screen redraw
     setTimeout(() => {
-        window.securedFieldsSi.setFocusOn('encryptedExpiryDate');
+        window.customCardSi.setFocusOn('encryptedExpiryDate');
     }, 0);
 };
 
-const switchToPanView = function() {
+const switchToPanView = function () {
     panEl.style.display = 'block';
 
     expDateEl.style.display = 'none';
@@ -45,7 +45,7 @@ const switchToPanView = function() {
 
     endDigitsEl.style.display = 'none';
 
-    window.securedFieldsSi.setFocusOn('encryptedCardNumber');
+    window.customCardSi.setFocusOn('encryptedCardNumber');
 };
 
 endDigitsEl.addEventListener('click', e => {
@@ -58,7 +58,7 @@ export function onConfigSuccess_si(pCallbackObj) {
 
     // Allow time for screen to redraw after spinner is hidden
     setTimeout(() => {
-        window.securedFieldsSi.setFocusOn('encryptedCardNumber');
+        window.customCardSi.setFocusOn('encryptedCardNumber');
     }, 100);
 }
 
@@ -100,7 +100,7 @@ export function onBrand_si(pCallbackObj) {
     holderDiv.querySelector('#pmImageSi').setAttribute('src', pCallbackObj.brandImageUrl);
 }
 
-const setErrorClasses = function(pNode, pSetErrors) {
+const setErrorClasses = function (pNode, pSetErrors) {
     if (pSetErrors) {
         if (pNode.className.indexOf('pm-input-field--error') === -1) {
             pNode.className += ' pm-input-field--error';

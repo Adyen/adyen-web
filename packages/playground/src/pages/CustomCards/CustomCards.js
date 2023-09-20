@@ -1,19 +1,19 @@
-import { AdyenCheckout, SecuredFields } from '@adyen/adyen-web';
+import { AdyenCheckout, CustomCard } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 
 import { makePayment, makeDetailsCall } from '../../services';
-import { styles, setFocus, onBrand, onConfigSuccess, onBinLookup, onChange } from './securedFields.config';
-import { styles_si, onConfigSuccess_si, onFieldValid_si, onBrand_si, onError_si, onFocus_si } from './securedFields-si.config';
-import { fancyStyles, fancyChangeBrand, fancyErrors, fancyFieldValid, fancyFocus } from './securedFields-fancy.config';
-import { materialStyles, materialFocus, handleMaterialError, onMaterialFieldValid } from './securedFields-material.config';
+import { styles, setFocus, onBrand, onConfigSuccess, onBinLookup, onChange } from './customCards.config';
+import { styles_si, onConfigSuccess_si, onFieldValid_si, onBrand_si, onError_si, onFocus_si } from './customCards-si.config';
+import { fancyStyles, fancyChangeBrand, fancyErrors, fancyFieldValid, fancyFocus } from './customCards-fancy.config';
+import { materialStyles, materialFocus, handleMaterialError, onMaterialFieldValid } from './customCards-material.config';
 import { shopperLocale } from '../../config/commonConfig';
 import paymentsConfig from '../../config/paymentsConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
-import './securedFields.style.scss';
+import './customCards.style.scss';
 import getTranslationFile from '../../config/getTranslation';
 
-const showOtherExamples = true; // For testing: set to false to only instantiate the basic form of SecuredFields
+const showOtherExamples = true; // For testing: set to false to only instantiate the basic form of CustomCard
 
 window.paymentData = {};
 const cardText = document.querySelector('.sf-text');
@@ -26,8 +26,8 @@ const createMaterialLabelListener = () => {
         label.addEventListener('click', e => {
             e.preventDefault();
             // e.target.
-            const nextSecuredFieldType = e.target.nextElementSibling.dataset.cse;
-            materialDesignSecuredFields.setFocusOn(nextSecuredFieldType);
+            const nextCustomCardType = e.target.nextElementSibling.dataset.cse;
+            materialDesignCustomCard.setFocusOn(nextCustomCardType);
         });
     });
 };
@@ -66,26 +66,8 @@ const configObj = {
     translations: {
         'en-US': {
             'creditCard.cvcField.placeholder.3digits': 'digits 3',
-            'creditCard.cvcField.placeholder.4digits': 'digits 4'
-        }
-    },
-    paymentMethodsConfiguration: {
-        // NOTE: still use 'card' because it's about the component 'type', not the name
-        card: {
-            brandsConfiguration: {
-                synchrony_plcc: {
-                    icon: 'http://localhost:3000/test_images/smartmoney.png'
-                },
-                bcmc: {
-                    icon: 'http://localhost:3000/test_images/bcmc.png'
-                },
-                maestro: {
-                    icon: 'http://localhost:3000/test_images/maestro.png'
-                }
-            }
-        },
-        threeDS2: {
-            challengeWindowSize: '01'
+            'creditCard.cvcField.placeholder.4digits': 'digits 4',
+            'creditCard.encryptedCardNumber.aria.label': 'number label'
         }
     }
 };
@@ -94,13 +76,13 @@ const initCheckout = async () => {
     window.checkout = await AdyenCheckout(configObj);
 
     // SECURED FIELDS
-    window.securedFields = new SecuredFields({
+    window.customCard = new CustomCard({
         core: window.checkout,
         type: 'card',
         brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire', 'synchrony_plcc'],
         styles,
         minimumExpiryDate: '09/21',
-        challengeWindowSize: '05',
+        challengeWindowSize: '03',
         onConfigSuccess,
         onBrand,
         onBinValue: cbObj => {
@@ -111,13 +93,24 @@ const initCheckout = async () => {
         onFocus: setFocus,
         onBinLookup,
         onChange
+        // brandsConfiguration: {
+        //     synchrony_plcc: {
+        //         icon: 'http://localhost:3000/test_images/smartmoney.png'
+        //     },
+        //     bcmc: {
+        //         icon: 'http://localhost:3000/test_images/bcmc.png'
+        //     },
+        //     maestro: {
+        //         icon: 'http://localhost:3000/test_images/maestro.png'
+        //     }
+        // }
     }).mount('.secured-fields');
 
-    createPayButton('.secured-fields', window.securedFields, 'securedfields');
+    createPayButton('.secured-fields', window.customCard, 'customcard');
 
-    window.securedFieldsSi =
+    window.customCardSi =
         showOtherExamples &&
-        new SecuredFields({
+        new CustomCard({
             core: window.checkout,
             type: 'card',
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
@@ -130,9 +123,9 @@ const initCheckout = async () => {
             onFocus: onFocus_si
         }).mount('.secured-fields-si');
 
-    window.fancySecuredFields =
+    window.fancyCustomCard =
         showOtherExamples &&
-        new SecuredFields({
+        new CustomCard({
             core: window.checkout,
             type: 'card',
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
@@ -160,9 +153,9 @@ configObj.translations = {
 const initCheckout2 = async () => {
     window.checkout = await AdyenCheckout(configObj);
 
-    window.materialDesignSecuredFields =
+    window.materialDesignCustomCard =
         showOtherExamples &&
-        new SecuredFields({
+        new CustomCard({
             core: window.checkout,
             type: 'card',
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
@@ -179,7 +172,7 @@ initCheckout2();
 const threeDS2 = (result, component) => {
     const cardButton = document.querySelector('.js-securedfields');
 
-    if (window.securedFields) {
+    if (window.customCard) {
         const sfNode = document.querySelector('.secured-fields');
         while (sfNode.firstChild) {
             sfNode.removeChild(sfNode.firstChild);
@@ -227,11 +220,20 @@ function handlePaymentResult(result, component) {
 function startPayment(component) {
     if (!component.isValid) return component.showValidation();
 
-    const allow3DS2 = paymentsConfig.additionalData.allow3DS2 || false;
+    const allow3DS2 = paymentsConfig.authenticationData.attemptAuthentication || 'never';
 
     const riskdata = checkout.modules.risk.data;
 
-    makePayment(component.data, { additionalData: { riskdata, allow3DS2 } })
+    makePayment(component.data, {
+        additionalData: { riskdata },
+        authenticationData: {
+            attemptAuthentication: allow3DS2,
+            // comment out below if you want to force MDFlow
+            threeDSRequestData: {
+                nativeThreeDS: 'preferred'
+            }
+        }
+    })
         .then(result => {
             handlePaymentResult(result, component);
         })

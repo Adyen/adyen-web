@@ -1,7 +1,7 @@
 /** Card */
 export { default as Card } from './Card';
 export { default as Bancontact } from './Card/Bancontact';
-export { default as SecuredFields } from './SecuredFields';
+export { default as CustomCard } from './CustomCard';
 export { default as ThreeDS2Challenge } from './ThreeDS2/ThreeDS2Challenge';
 export { default as ThreeDS2DeviceFingerprint } from './ThreeDS2/ThreeDS2DeviceFingerprint';
 

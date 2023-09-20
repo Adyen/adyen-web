@@ -46,7 +46,7 @@ const defaultProps = {
     onError: () => {}
 };
 
-function SecuredFieldsInput(props: SecuredFieldsProps) {
+function CustomCardInput(props: SecuredFieldsProps) {
     const sfp = useRef(null);
 
     const [errors, setErrors] = useState({});
@@ -125,9 +125,9 @@ function SecuredFieldsInput(props: SecuredFieldsProps) {
     return <SecuredFieldsProvider ref={sfp} {...extractPropsForSFP(props)} onChange={handleSecuredFieldsChange} render={() => null} />;
 }
 
-SecuredFieldsInput.defaultProps = defaultProps;
+CustomCardInput.defaultProps = defaultProps;
 
-export default SecuredFieldsInput;
+export default CustomCardInput;
 
 const extractPropsForSFP = (props: SecuredFieldsProps) => {
     return {

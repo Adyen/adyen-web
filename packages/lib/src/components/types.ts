@@ -30,7 +30,7 @@ import Ideal from './Ideal';
 import PayPal from './PayPal';
 import QiwiWallet from './QiwiWallet';
 import Redirect from './Redirect';
-import SecuredFields from './SecuredFields';
+import CustomCard from './CustomCard';
 import Sepa from './Sepa';
 import WeChat from './WeChat';
 import PayNow from './PayNow';
@@ -87,18 +87,11 @@ const componentsMap = {
     /** internal */
 
     /** Card */
-    [TxVariants.amex]: Card,
     [TxVariants.bcmc]: Bancontact,
     [TxVariants.card]: Card,
-    [TxVariants.diners]: Card,
-    [TxVariants.discover]: Card,
-    [TxVariants.jcb]: Card,
-    [TxVariants.kcp]: Card,
-    [TxVariants.maestro]: Card,
-    [TxVariants.mc]: Card,
     [TxVariants.scheme]: Card,
     [TxVariants.storedCard]: Card,
-    [TxVariants.securedfields]: SecuredFields,
+    [TxVariants.customCard]: CustomCard,
     [TxVariants.visa]: Card,
     /** Card */
 

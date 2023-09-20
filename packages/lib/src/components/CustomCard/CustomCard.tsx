@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import UIElement from '../UIElement';
-import SecuredFields from './SecuredFieldsInput';
+import CustomCardInput from './CustomCardInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import collectBrowserInfo from '../../utils/browserInfo';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
@@ -10,16 +10,16 @@ import { getCardImageUrl } from '../internal/SecuredFields/utils';
 import { TxVariants } from '../tx-variants';
 import { UIElementProps } from '../types';
 
-interface SecuredFieldProps extends UIElementProps {
+interface CustomCardProps extends UIElementProps {
     styles: any;
     brand: string[];
     // TODO: should it extend card?
     [key: string]: any;
 }
 
-export class SecuredFieldsElement extends UIElement<SecuredFieldProps> {
-    public static type = TxVariants.securedfields;
-    public static txVariants = [TxVariants.securedfields, TxVariants.card];
+export class CustomCard extends UIElement<CustomCardProps> {
+    public static type = TxVariants.customCard;
+    public static txVariants = [TxVariants.customCard, TxVariants.card];
 
     public static analyticsType = 'custom-scheme';
 
@@ -107,7 +107,7 @@ export class SecuredFieldsElement extends UIElement<SecuredFieldProps> {
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                <SecuredFields
+                <CustomCardInput
                     ref={ref => {
                         this.componentRef = ref;
                     }}
@@ -124,4 +124,4 @@ export class SecuredFieldsElement extends UIElement<SecuredFieldProps> {
     }
 }
 
-export default SecuredFieldsElement;
+export default CustomCard;

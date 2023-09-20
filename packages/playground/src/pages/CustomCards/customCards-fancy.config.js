@@ -40,10 +40,10 @@ export const fancyFocus = focusObject => {
     console.log(focusObject);
     if (focusObject.focus === true && focusObject.fieldType === 'encryptedSecurityCode') {
         //  cardHolderDiv.classList.toggle('rotated');
-        // fancySecuredFields.updateStyles(fancyStylesToUpdate);
+        // fancyCustomCard.updateStyles(fancyStylesToUpdate);
     } else if (focusObject.focus === false && focusObject.fieldType === 'encryptedSecurityCode') {
         cardHolderDiv.classList.toggle('rotated');
-        fancySecuredFields.updateStyles(fancyStyles);
+        fancyCustomCard.updateStyles(fancyStyles);
         holderNameDiv.focus();
     }
 };

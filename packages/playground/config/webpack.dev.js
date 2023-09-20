@@ -28,7 +28,7 @@ const htmlPages = [
     { name: 'Issuer Lists', id: 'IssuerLists' },
     { name: 'Open Invoices', id: 'OpenInvoices' },
     { name: 'QR Codes', id: 'QRCodes' },
-    { name: 'Custom Cards', id: 'SecuredFields' },
+    { name: 'Custom Cards', id: 'CustomCards' },
     { name: 'ThreeDS2', id: 'ThreeDS' },
     { name: 'Vouchers', id: 'Vouchers' },
     { name: 'Wallets', id: 'Wallets' },

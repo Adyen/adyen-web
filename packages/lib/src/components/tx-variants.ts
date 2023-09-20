@@ -7,18 +7,11 @@ export enum TxVariants {
     /** internal */
 
     /** Card */
-    amex = 'amex',
     bcmc = 'bcmc',
     card = 'card',
-    diners = 'diners',
-    discover = 'discover',
-    jcb = 'jcb',
-    kcp = 'kcp',
-    maestro = 'maestro',
-    mc = 'mc',
     scheme = 'scheme',
     storedCard = 'storedCard',
-    securedfields = 'securedfields',
+    customCard = 'customcard',
     visa = 'visa',
     /** Card */
 
