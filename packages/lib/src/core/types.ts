@@ -6,7 +6,7 @@ import { ActionHandledReturnObject, OnPaymentCompletedData, PaymentData } from '
 import UIElement from '../components/UIElement';
 import AdyenCheckoutError from './Errors/AdyenCheckoutError';
 import { GiftCardElementData } from '../components/Giftcard/types';
-import { SRPanelProps } from './Errors/types';
+import { SRPanelConfig } from './Errors/types';
 import { NewableComponent } from './core.registry';
 import Session from './CheckoutSession';
 import PaymentMethodsResponse from './ProcessResponse/PaymentMethodsResponse';
@@ -109,7 +109,7 @@ export interface CoreOptions {
     /**
      * Screen Reader configuration
      */
-    srConfig?: SRPanelProps;
+    srConfig?: SRPanelConfig;
 
     /**
      * @internal
