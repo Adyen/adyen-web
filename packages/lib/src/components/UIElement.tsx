@@ -45,7 +45,7 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
         this.elementRef = (props && props.elementRef) || this;
         this.resources = this.props.modules ? this.props.modules.resources : undefined;
 
-        this.storeElementRefOnCore(props);
+        this.storeElementRefOnCore(this.props);
     }
 
     protected override buildElementProps(componentProps: P) {
