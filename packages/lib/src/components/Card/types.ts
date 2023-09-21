@@ -202,7 +202,7 @@ export interface CardConfiguration {
 }
 
 export interface BrandConfiguration {
-    name: string;
+    name?: string;
     icon?: string;
 }
 
