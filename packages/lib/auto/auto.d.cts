@@ -1,2 +1,2 @@
 /* eslint-disable  import/extensions */
-export * from '../dist/es/index.js';
+export * from '../dist/cjs/index.cts';

@@ -1,7 +1,7 @@
-const adyenCheckout = require('../dist/cjs/index.cjs');
-const { AdyenCheckout, components } = adyenCheckout;
+const library = require('../dist/cjs/index.cjs');
+const { AdyenCheckout, components } = library;
 
-AdyenCheckout.register(...components);
+const Classes = Object.keys(components).map(key => components[key]);
+AdyenCheckout.register(...Classes);
 
-// TODO: Check if Object.assign is needed
-module.exports = Object.assign(AdyenCheckout, adyenCheckout);
+module.exports = library;

@@ -16,7 +16,7 @@ dotenv.config({ path: path.resolve('../../', '.env') });
 
 export default () => {
     return [
-        //ESM
+        // ESM
         {
             input: 'src/index.ts',
             plugins: [
@@ -122,10 +122,25 @@ export default () => {
             }
         },
 
-        // Types
+        // Types CJS
         {
             input: 'src/index.ts',
-            output: [{ file: './dist/types/index.d.ts', format: 'es' }],
+            output: [{ file: './dist/cjs/index.d.cts', format: 'commonjs' }],
+            plugins: [
+                resolveExtensions(),
+                loadCommonjsPackage(),
+                lint(),
+                convertJsonToESM(),
+                compileCSS({ extract: false }),
+                compileJavascript(),
+                generateTypes()
+            ]
+        },
+
+        // Types ES
+        {
+            input: 'src/index.ts',
+            output: [{ file: './dist/es/index.d.ts', format: 'es' }],
             plugins: [
                 resolveExtensions(),
                 loadCommonjsPackage(),

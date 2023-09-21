@@ -10,18 +10,28 @@
     ],
     "main": "dist/cjs/index.cjs",
     "module": "dist/es-legacy/index.js",
+    "types": "dist/es/index.d.ts",
     "unpkg": "dist/umd/index.umd.js",
-    "types": "dist/types/index.d.ts",
     "exports": {
         ".": {
-            "types": "./dist/types/index.d.ts",
-            "import": "./dist/es/index.js",
-            "require": "./dist/cjs/index.cjs"
+            "import": {
+                "types": "./dist/es/index.d.ts",
+                "default": "./dist/es/index.js"
+            },
+            "require": {
+                "types": "./dist/cjs/index.cts",
+                "default": "./dist/cjs/index.cjs"
+            }
         },
         "./auto": {
-            "types": "./auto/auto.d.ts",
-            "import": "./auto/auto.js",
-            "require": "./auto/auto.cjs"
+            "import": {
+                "types": "./auto/auto.d.ts",
+                "default": "./auto/auto.js"
+            },
+            "require": {
+                "types": "./auto/auto.d.cts",
+                "default": "./auto/auto.cjs"
+            }
         },
         "./styles/adyen.css": "./dist/es/adyen.css"
     },

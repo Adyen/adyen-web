@@ -5,10 +5,17 @@
   "type": "module",
   "main": "./auto.cjs",
   "module": "./auto.js",
+  "types": "./auto.d.ts",
   "exports": {
-    "types": "./auto.d.ts",
-    "import": "./auto.js",
-    "require": "./auto.cjs"
-  },
-  "types": "./auto.d.ts"
+    ".":  {
+      "import": {
+        "types": "./auto.d.ts",
+        "default": "./auto.js"
+      },
+      "require": {
+        "types": "./auto.cts",
+        "default": "./auto.cjs"
+      }
+    }
+  }
 }
