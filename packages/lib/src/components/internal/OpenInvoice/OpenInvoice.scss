@@ -1,8 +1,8 @@
+@use '../../../style/index';
+
 .adyen-checkout__field--separateDeliveryAddress {
     .adyen-checkout__input-wrapper {
-        border: none;
-        outline: none;
-        background-color: transparent;
+       @include index.adyen-checkout-input-wrapper-reset;
     }
 }
 

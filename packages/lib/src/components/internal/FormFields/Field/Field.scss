@@ -1,6 +1,6 @@
 @use '../../../../style/index';
 
-@mixin input-wrapper-inactive{
+@mixin input-wrapper-inactive {
     background: var(--b-color-surface-tertiary);
     border-color: transparent;
 
@@ -35,18 +35,16 @@
         border: none;
     }
 
-    &:active {
-        outline: 1.5px solid var(--b-color-outline-active);
-        outline-offset: -1px;
+    &:active,
+    &:active:hover,
+    &:focus-within,
+    &:focus-within:hover {
+        box-shadow: 0 0 0 1.5px var(--b-input-field-input-box-focus-border-color);
+        border-color: transparent;
     }
 
     &:hover {
         border-color: var(--b-color-outline-tertiary);
-    }
-
-    &:focus-within {
-        outline: 1.5px solid var(--b-color-outline-active);
-        outline-offset: -1px;
     }
 }
 
@@ -57,13 +55,13 @@
 }
 
 .adyen-checkout__field--valid:not(.adyen-checkout__field--inactive) {
-    > .adyen-checkout__input-wrapper {
+    > :not(.adyen-checkout__label--focused) + .adyen-checkout__input-wrapper:not(:focus-within, :active) {
         border-bottom-color: var(--b-color-label-success);
     }
 }
 
 .adyen-checkout__field--error {
-    > .adyen-checkout__input-wrapper {
+    > :not(.adyen-checkout__label--focused) + .adyen-checkout__input-wrapper:not(:focus-within, :active) {
         border-color: var(--b-color-label-critical);
     }
 }
@@ -74,8 +72,8 @@
 }
 
 .adyen-checkout__label--focused + .adyen-checkout__input-wrapper {
-    outline: 1.5px solid var(--b-color-outline-active);
-    outline-offset: -1px;
+    box-shadow: 0 0 0 1.5px var(--b-input-field-input-box-focus-border-color);
+    border-color: transparent;
 }
 
 .adyen-checkout__label--disabled + .adyen-checkout__input-wrapper {

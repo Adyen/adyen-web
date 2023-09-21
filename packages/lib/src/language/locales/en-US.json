@@ -46,6 +46,7 @@
     "errorPanel.title": "Existing errors",
     "idealIssuer.selectField.title": "Bank",
     "issuerList.selectField.contextualText": "Select your bank to continue",
+    "issuerList.selectField.label": "Bank selection",
     "loading": "Loading…",
     "continue": "Continue",
     "continueTo": "Continue to",

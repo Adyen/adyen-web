@@ -26,7 +26,7 @@
     background: inherit;
     text-decoration: none;
     outline: 0;
-    padding: 7px var(--b-spacer-060);
+    padding: 0 var(--b-spacer-060);
     flex: 1;
     font-size: index.$font-size-medium;
     height: var(--b-spacer-110);
@@ -114,7 +114,7 @@
 .adyen-checkout__filter-input {
     background: inherit;
     border: 0;
-    color: var(--b-color-label-primary);
+    color: var(--b-input-field-input-color);
     font-family: inherit;
     font-size: index.$font-size-medium;
     height: 100%;

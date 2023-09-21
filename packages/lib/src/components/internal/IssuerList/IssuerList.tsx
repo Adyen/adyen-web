@@ -99,6 +99,7 @@ function IssuerList({ items, placeholder, issuer, highlightedIds = [], showConte
             )}
 
             <Field
+                label={i18n.get('issuerList.selectField.label')}
                 errorMessage={getErrorMessage(errors.issuer)}
                 classNameModifiers={['issuer-list']}
                 name={'issuer'}

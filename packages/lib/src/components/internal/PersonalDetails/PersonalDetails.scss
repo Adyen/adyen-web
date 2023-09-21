@@ -1,3 +1,5 @@
+@use '../../../style/index';
+
 .adyen-checkout__fieldset--personalDetails .adyen-checkout__field--gender .adyen-checkout__radio_group {
     display: flex;
 }
@@ -15,10 +17,8 @@
     }
 }
 
-.adyen-checkout__field--gender{
-    .adyen-checkout__input-wrapper{
-        border: none;
-        outline: none;
-        background-color: transparent;
+.adyen-checkout__field--gender {
+    .adyen-checkout__input-wrapper {
+        @include index.adyen-checkout-input-wrapper-reset;
     }
 }
