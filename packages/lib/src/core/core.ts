@@ -29,7 +29,8 @@ class Core implements ICore {
         version: process.env.VERSION,
         revision: process.env.COMMIT_HASH,
         branch: process.env.COMMIT_BRANCH,
-        buildId: process.env.ADYEN_BUILD_ID
+        buildId: process.env.ADYEN_BUILD_ID,
+        moduleType: process.env.MODULE_TYPE
     };
 
     public static registry = registry;

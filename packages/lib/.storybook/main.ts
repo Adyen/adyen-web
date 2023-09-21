@@ -27,6 +27,7 @@ const config: StorybookConfig = {
         return mergeConfig(config, {
             define: {
                 'process.env': env,
+                'process.env.MODULE_TYPE': 'es',
                 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
                 'process.env.VERSION': JSON.stringify(Version.ADYEN_WEB_VERSION),
                 'process.env.COMMIT_HASH': JSON.stringify(Version.COMMIT_HASH),

@@ -13,7 +13,7 @@ export default () => {
                 resolveExtensions(),
                 loadCommonjsPackage(),
                 lint(),
-                replaceValues(),
+                replaceValues({ moduleType: 'es' }),
                 convertJsonToESM(),
                 compileCSS({}),
                 compileJavascript({ target: 'es2022' })

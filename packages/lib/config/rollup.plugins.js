@@ -19,9 +19,13 @@ export const lint = () =>
         exclude: ['./src/**/*.json', './src/**/*.scss']
     });
 
-export const replaceValues = () =>
-    replace({
+export const replaceValues = ({ moduleType = undefined } = {}) => {
+    if (!moduleType) {
+        throw Error('Rollup plugins: replaceValues: moduleType is missing');
+    }
+    return replace({
         values: {
+            'process.env.MODULE_TYPE': JSON.stringify(moduleType),
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
             'process.env.VERSION': JSON.stringify(currentVersion.ADYEN_WEB_VERSION),
             'process.env.COMMIT_HASH': JSON.stringify(currentVersion.COMMIT_HASH),
@@ -31,6 +35,7 @@ export const replaceValues = () =>
         },
         preventAssignment: true
     });
+};
 
 export const convertJsonToESM = () => json({ namedExports: false, compact: true, preferConst: true });
 
