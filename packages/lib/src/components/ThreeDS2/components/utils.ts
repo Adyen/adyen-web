@@ -239,9 +239,5 @@ export const get3DS2FlowProps = (actionSubtype, props) => {
 };
 
 export const isInIframe = () => {
-    try {
-        return window.self !== window.top;
-    } catch (e) {
-        return false;
-    }
+    return window && window.self !== window.top;
 };

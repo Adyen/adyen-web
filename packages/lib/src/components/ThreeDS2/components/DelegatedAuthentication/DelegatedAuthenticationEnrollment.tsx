@@ -1,5 +1,5 @@
 import { h, Fragment } from 'preact';
-import { useEffect, useState, useMemo } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import {
     DelegatedAuthenticationEnrollmentInputData,
     DelegatedAuthenticationEnrollmentOutputData,
@@ -10,6 +10,12 @@ import { createChallengeResolveData, createOldChallengeResolveData, isInIframe }
 import { decodeBase64, encodeBase64 } from './utils';
 import Button from '../../../internal/Button';
 
+const enum DelegatedAuthenticationEnrollmentStatus {
+    loading = 'loading',
+    start = 'start',
+    error = 'error'
+}
+
 const DelegatedAuthenticationEnrollment = ({
     token,
     useOriginalFlow,
@@ -17,18 +23,16 @@ const DelegatedAuthenticationEnrollment = ({
     authorisationToken,
     onComplete
 }: DelegatedAuthenticationEnrollmentProps) => {
-    const [status, setStatus] = useState<string>('loading');
+    const [status, setStatus] = useState<string>(DelegatedAuthenticationEnrollmentStatus.loading);
     const [paymentCredential, setPaymentCredential] = useState<PublicKeyCredential>(null);
     const [registrationData, setRegistrationData] = useState<DelegatedAuthenticationEnrollmentInputData>(null);
     const [supported, setSupported] = useState<boolean>();
     const [spcSupported, setSpcSupported] = useState<boolean>();
 
-    const inIframe = useMemo(() => {
-        return isInIframe();
-    }, []);
+    const inIframe = isInIframe();
 
     const complete = (sdkOutput: string) => {
-        setStatus('loading');
+        setStatus(DelegatedAuthenticationEnrollmentStatus.loading);
         const resolveDataFunction = useOriginalFlow ? createOldChallengeResolveData : createChallengeResolveData;
         const data = resolveDataFunction(dataKey, 'Y', authorisationToken, sdkOutput);
         onComplete(data);
@@ -93,7 +97,7 @@ const DelegatedAuthenticationEnrollment = ({
     }, [supported]);
 
     useEffect(() => {
-        setStatus('start');
+        setStatus(DelegatedAuthenticationEnrollmentStatus.start);
     }, [registrationData]);
 
     useEffect(() => {
@@ -208,7 +212,7 @@ const DelegatedAuthenticationEnrollment = ({
             setPaymentCredential(createdPaymentCredential);
         } catch (err) {
             console.error(err);
-            setStatus('error');
+            setStatus(DelegatedAuthenticationEnrollmentStatus.error);
         }
     };
 

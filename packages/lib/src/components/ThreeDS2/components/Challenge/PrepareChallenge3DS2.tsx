@@ -10,6 +10,13 @@ import './challenge.scss';
 import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
 import useImage from '../../../../core/Context/useImage';
 
+const enum ChallengeStatus {
+    complete = 'complete',
+    retrievingChallengeToken = 'retrievingChallengeToken',
+    delegatedAuthenticationEnrollment = 'delegatedAuthenticationEnrollment',
+    error = 'error'
+}
+
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
     public static defaultProps = {
         onComplete: () => {},
@@ -43,7 +50,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
             /** All good */
             this.state = {
-                status: 'retrievingChallengeToken',
+                status: ChallengeStatus.retrievingChallengeToken,
                 challengeData,
                 errorInfo: null
             };
@@ -55,7 +62,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
     }
 
     setStatusComplete(resultObj) {
-        this.setState({ status: 'complete' }, () => {
+        this.setState({ status: ChallengeStatus.complete }, () => {
             /**
              * Create the data in the way that the /details endpoint expects.
              *  This is different for the 'old',v66, flow triggered by a 'threeDS2Challenge' action (which includes the threeds2InMDFlow)
@@ -63,7 +70,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
              */
 
             if (this.state.challengeData.delegatedAuthenticationSDKInput && resultObj.transStatus === 'Y') {
-                this.setState({ status: 'delegatedAuthenticationEnrollment' });
+                this.setState({ status: ChallengeStatus.delegatedAuthenticationEnrollment });
             } else {
                 const resolveDataFunction = this.props.useOriginalFlow ? createOldChallengeResolveData : createChallengeResolveData;
                 const data = resolveDataFunction(this.props.dataKey, resultObj.transStatus, this.props.paymentData);
@@ -74,13 +81,13 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
     }
 
     setStatusError(errorInfoObj) {
-        this.setState({ status: 'error', errorInfo: errorInfoObj.errorInfo });
+        this.setState({ status: ChallengeStatus.error, errorInfo: errorInfoObj.errorInfo });
         this.props.onError(errorInfoObj); // For some reason this doesn't fire if it's in a callback passed to the setState function
     }
 
     render({ onActionHandled }, { challengeData }) {
         const getImage = useImage();
-        if (this.state.status === 'retrievingChallengeToken') {
+        if (this.state.status === ChallengeStatus.retrievingChallengeToken) {
             return (
                 <DoChallenge3DS2
                     onCompleteChallenge={(challenge: ThreeDS2FlowObject) => {
@@ -125,7 +132,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             );
         }
 
-        if (this.state.status === 'error') {
+        if (this.state.status === ChallengeStatus.error) {
             return (
                 <div className="adyen-checkout__threeds2-challenge-error">
                     <Img
@@ -142,7 +149,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             );
         }
 
-        if (this.state.status === 'delegatedAuthenticationEnrollment') {
+        if (this.state.status === ChallengeStatus.delegatedAuthenticationEnrollment) {
             return (
                 <DelegatedAuthenticationEnrollment
                     dataKey={this.props.dataKey}
