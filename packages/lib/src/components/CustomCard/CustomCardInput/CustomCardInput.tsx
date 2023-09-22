@@ -39,6 +39,7 @@ interface SecuredFieldsProps {
     styles?: StylesObject;
     trimTrailingSeparator?: boolean;
     type: string;
+    maskSecurityCode?: boolean;
 }
 
 const defaultProps = {
@@ -161,6 +162,7 @@ const extractPropsForSFP = (props: SecuredFieldsProps) => {
         styles: props.styles,
         trimTrailingSeparator: props.trimTrailingSeparator,
         type: props.type,
-        resources: props.resources
+        resources: props.resources,
+        maskSecurityCode: props.maskSecurityCode
     };
 };
