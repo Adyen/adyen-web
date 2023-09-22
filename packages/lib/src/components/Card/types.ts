@@ -14,6 +14,7 @@ import {
 import { CVCPolicyType, DatePolicyType } from '../internal/SecuredFields/lib/types';
 import { ClickToPayConfiguration } from '../internal/ClickToPay/types';
 import { InstallmentOptions } from './components/CardInput/components/types';
+import { DisclaimerMsgObject } from '../internal/DisclaimerMessage/DisclaimerMessage';
 
 export interface CardElementProps extends UIElementProps {
     /**
@@ -61,6 +62,12 @@ export interface CardElementProps extends UIElementProps {
     showBrandsUnderCardNumber?: boolean;
 
     /**
+     * Position holder name above card number field (instead of having it after the security code field)
+     * @defaultValue `false`
+     */
+    positionHolderNameOnTop?: boolean;
+
+    /**
      * Show/hide the brand logo when the card brand has been recognized
      * @defaultValue `true`
      */
@@ -75,11 +82,11 @@ export interface CardElementProps extends UIElementProps {
     /** Show/hide the "store details" checkbox */
     enableStoreDetails?: boolean;
 
-    /** Show/hide the CVC field - merchant set config option */
+    /** Show/hide the Security Code field - merchant set config option */
     hideCVC?: boolean;
 
     /**
-     *  Decides whether CVC component will even be rendered.
+     *  Decides whether the CVC (Security Code) component will even be rendered.
      *  Always true except when hideCVC set to false by merchant OR in the case of a *stored* BCMC card.
      *  (For the Bancontact card comp this is set to true since dual-branding possibilities mean the BCMC card can now end up needing to show a CVC field)
      */
@@ -129,7 +136,7 @@ export interface CardElementProps extends UIElementProps {
     onBrand?: (event: CbObjOnBrand) => void;
 
     /**
-     * Called in case of an invalid card number, invalid expiry date, or incomplete field. Called again when errors are cleared.
+     * Called in case of an invalid Card Number, invalid Expiry Date, or incomplete field. Called again when errors are cleared.
      */
     onError?: (event: CbObjOnError) => void;
 
@@ -149,15 +156,89 @@ export interface CardElementProps extends UIElementProps {
     onBinLookup?: (event: CbObjOnBinLookup) => void;
 
     /**
-     * Related to storedCards
+     * Related to storedCards - this information comes from the storedCardData once we process it
+     * @internal
      */
     storedPaymentMethodId?: string;
     lastFour?: string;
 
+    /**
+     * Mostly used in relation to KCP cards
+     */
     countryCode?: string;
+
+    /**
+     * Show Address fields
+     * @defaultValue `false`
+     */
     billingAddressRequired?: boolean;
+
+    /**
+     * Config to specify which address field are required | limit the countries that will show in the country dropdown
+     */
+    billingAddressRequiredFields?: string[];
+    billingAddressAllowedCountries?: string[];
+
+    /**
+     * Configure the installment options for the card
+     */
     installmentOptions?: InstallmentOptions;
+
+    /**
+     * Set whether to show installments broken down into amounts or months
+     * @defaultValue `true`
+     */
+    showInstallmentAmounts?: boolean;
+
+    /**
+     * For some scenarios make the card input fields (PAN, Expiry Date, Security Code) have type="tel" rather than type="text" inputmode="numeric"
+     * @defaultValue `false`
+     */
+    legacyInputMode?: boolean;
+
+    /**
+     * Specify the minimum expiry date that will be considered valid
+     */
+    minimumExpiryDate?: string[];
+
+    /**
+     * Automatically shift the focus from one field to another. Usually happens from a valid Expiry Date field to the Security Code field,
+     * but some BINS also allow us to know that the PAN is complete, in which case we can shift focus to the date field
+     * @defaultValue `true`
+     */
+    autoFocus?: boolean;
+
+    /**
+     * Adds type="password" to the Security code input field, causing its value to be masked
+     * @defaultValue `false`
+     */
+    maskSecurityCode?: boolean;
+
+    /**
+     * Allow binLookup process to occur
+     * @defaultValue `true`
+     */
+    doBinLookup?: boolean;
+
+    /**
+     * Turn on the procedure to force the arrow keys on an iOS soft keyboard to always be disabled
+     * @defaultValue `false`
+     */
+    disableIOSArrowKeys?: boolean;
+
+    /**
+     * Object to configure the message and text for a disclaimer message, added after the Card input fields
+     */
+    disclaimerMessage?: DisclaimerMsgObject;
+
+    /**
+     * Object to configure the styling of the inputs in the iframes that are used to present the PAN, Expiry Date & Security Code fields
+     */
     styles?: StylesObject;
+
+    // keypadFix?: boolean,// TODO ??
+    // forceCompat?: boolean, // TODO ??
+    // allowedDOMAccess: false, // TODO ??
 }
 
 export type SocialSecurityMode = 'show' | 'hide' | 'auto';
