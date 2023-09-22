@@ -13,7 +13,7 @@
         "default": "./auto.js"
       },
       "require": {
-        "types": "./auto.cts",
+        "types": "./auto.d.cts",
         "default": "./auto.cjs"
       }
     }

@@ -95,7 +95,7 @@ export default () => {
             ],
             output: {
                 name: 'AdyenCheckout',
-                file: 'dist/umd/index.umd.js',
+                file: 'dist/umd/adyen.js',
                 format: 'umd',
                 indent: true,
                 sourcemap: false
