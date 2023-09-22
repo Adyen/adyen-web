@@ -1,4 +1,5 @@
-import AdyenWeb from '@adyen/adyen-web'; // Default export usage
+import { AdyenCheckout, Dropin, Card, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay } from '@adyen/adyen-web';
+
 import '@adyen/adyen-web/styles/adyen.css';
 import { getPaymentMethods, makePayment, checkBalance, createOrder, cancelOrder, makeDetailsCall } from '../../services';
 import { amount, shopperLocale, countryCode, returnUrl } from '../../config/commonConfig';
@@ -8,7 +9,7 @@ import getTranslationFile from '../../config/getTranslation';
 export async function initManual() {
     const paymentMethodsResponse = await getPaymentMethods({ amount, shopperLocale });
 
-    window.checkout = await AdyenWeb.AdyenCheckout({
+    window.checkout = await AdyenCheckout({
         amount,
         countryCode,
         clientKey: process.env.__CLIENT_KEY__,
@@ -16,6 +17,7 @@ export async function initManual() {
 
         locale: 'pt-BR',
         translationFile: getTranslationFile(shopperLocale),
+        // translationFile: nl_NL,
 
         environment: process.env.__CLIENT_ENV__,
         onSubmit: async (state, component) => {
@@ -25,7 +27,7 @@ export async function initManual() {
             if (result.action) {
                 // demo only - store paymentData & order
                 if (result.action.paymentData) localStorage.setItem('storedPaymentData', result.action.paymentData);
-                component.handleAction(result.action);
+                component.handleAction(result.action, { challengeWindowSize: '01' });
             } else if (result.order && result.order?.remainingAmount?.value > 0) {
                 // handle orders
                 const order = {
@@ -39,6 +41,7 @@ export async function initManual() {
                 handleFinalState(result.resultCode, component);
             }
         },
+        // srConfig: { showPanel: true },
         // onChange: state => {
         //     console.log('onChange', state);
         // },
@@ -125,18 +128,10 @@ export async function initManual() {
         return Promise.resolve(true);
     }
 
-    const dropin = new AdyenWeb.Dropin({
+    const dropin = new Dropin({
         core: checkout,
-        paymentMethodComponents: [
-            AdyenWeb.Card,
-            AdyenWeb.GooglePay,
-            AdyenWeb.PayPal,
-            AdyenWeb.Ach,
-            AdyenWeb.Affirm,
-            AdyenWeb.WeChat,
-            AdyenWeb.Giftcard,
-            AdyenWeb.AmazonPay
-        ],
+        paymentMethodComponents: [Card, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay],
+        // paymentMethodComponents: [Card, Ach, GooglePay],
         instantPaymentTypes: ['googlepay'],
         paymentMethodsConfiguration: {
             card: {
@@ -151,6 +146,9 @@ export async function initManual() {
             klarna: {
                 useKlarnaWidget: true
             }
+            // storedCard: {
+            //     hideCVC: true
+            // }
         }
     }).mount('#dropin-container');
 
