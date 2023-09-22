@@ -1,5 +1,31 @@
 @use '../../../style/index';
 
+// Workaround to remove autofill background and text color, works on most browsers except for Chrome mobile
+.adyen-checkout__filter-input:-webkit-autofill,
+.adyen-checkout__filter-input:-webkit-autofill:active,
+.adyen-checkout__filter-input:-webkit-autofill:hover,
+.adyen-checkout__filter-input:-webkit-autofill:focus,
+.adyen-checkout__filter-input:autofill,
+.adyen-checkout__input:-webkit-autofill,
+.adyen-checkout__input:-webkit-autofill:active,
+.adyen-checkout__input:-webkit-autofill:hover,
+.adyen-checkout__input:-webkit-autofill:focus,
+.adyen-checkout__input:autofill {
+    color: var(--b-input-field-input-color) !important;
+    -webkit-text-fill-color: var(--b-input-field-input-color) !important;
+    box-shadow: 0 0 0 1000px var(--b-color-background-primary) inset !important;
+    background-clip: text !important;
+    background-color: var(--b-input-field-input-color) !important;
+    transition: none !important;
+}
+
+// Additional workaround for Chrome mobile to remove autofill background and text color
+.adyen-checkout__input,
+.adyen-checkout__filter-input {
+    color: var(--b-input-field-input-color) !important;
+    background-clip: text !important;
+}
+
 .adyen-checkout__field-wrapper {
     display: flex;
     width: 100%;
