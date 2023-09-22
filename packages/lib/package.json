@@ -56,7 +56,7 @@
     "scripts": {
         "start": "npm run dev-server",
         "story": "storybook dev --port 3020 --disable-telemetry",
-        "dev-server": "rollup --watch --config config/rollup.dev.js",
+        "dev-server": "cross-env NODE_ENV=development rollup --watch --config config/rollup.dev.js",
         "build": "rm -rf dist/ && rollup --config config/rollup.prod.js",
         "docs:generate": "typedoc --out docs src --exclude \"**/*+(index|.test).ts\"",
         "start:storybook": "node .storybook/run.cjs",
