@@ -3,7 +3,9 @@
  */
 import { AdyenCheckout, components } from '../dist/es-legacy/index.js';
 
-const Classes = Object.keys(components).map(key => components[key]);
+const { Dropin, ...Components } = components;
+const Classes = Object.keys(Components).map(key => Components[key]);
+
 AdyenCheckout.register(...Classes);
 
 export * from '../dist/es-legacy/index.js';

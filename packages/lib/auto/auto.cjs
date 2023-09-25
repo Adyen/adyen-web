@@ -1,7 +1,9 @@
 const library = require('../dist/cjs/index.cjs');
 const { AdyenCheckout, components } = library;
 
-const Classes = Object.keys(components).map(key => components[key]);
+const { Dropin, ...Components } = components;
+const Classes = Object.keys(Components).map(key => Components[key]);
+
 AdyenCheckout.register(...Classes);
 
 module.exports = library;

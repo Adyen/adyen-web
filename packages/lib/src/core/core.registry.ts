@@ -4,8 +4,9 @@ import ThreeDS2DeviceFingerprint from '../components/ThreeDS2/ThreeDS2DeviceFing
 import Redirect from '../components/Redirect';
 import { TxVariants } from '../components/tx-variants';
 
-function assertIsTypeofUIElement(item: any): item is typeof UIElement {
-    return typeof UIElement === typeof item;
+function assertClassHasType(Class: any): Class is typeof UIElement {
+    const hasValidType = typeof Class.type === 'string' && !!Class.type;
+    return hasValidType;
 }
 
 export type NewableComponent = new (props) => UIElement;
@@ -49,7 +50,7 @@ class Registry implements IRegistry {
 
     public createComponentsMap(components: NewableComponent[]) {
         const componentsMap = components.reduce((memo, component) => {
-            const isValid = assertIsTypeofUIElement(component);
+            const isValid = assertClassHasType(component);
 
             if (!isValid) {
                 console.error('CoreRegistry: Attempt to register Class failed. The Class is not a valid UIElement');

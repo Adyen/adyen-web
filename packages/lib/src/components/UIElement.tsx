@@ -30,7 +30,10 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
     constructor(props?: P) {
         super(props);
 
-        this.core.register(this.constructor as NewableComponent);
+        // Only register UIElements that have the 'type' set. Drop-in for example does not have.
+        if (this.constructor['type']) {
+            this.core.register(this.constructor as NewableComponent);
+        }
 
         this.submit = this.submit.bind(this);
         this.setState = this.setState.bind(this);
