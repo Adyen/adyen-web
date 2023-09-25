@@ -9,7 +9,34 @@ import { BrandObject, CardElementProps } from '../Card/types';
 import { getCardImageUrl } from '../internal/SecuredFields/utils';
 import { TxVariants } from '../tx-variants';
 
-export class CustomCard extends UIElement<CardElementProps> {
+type CustomCardProps = Omit<
+    CardElementProps,
+    | 'clickToPayConfiguration'
+    | '_disableClickToPay'
+    | 'fundingSource'
+    | 'showBrandsUnderCardNumber'
+    | 'positionHolderNameOnTop'
+    | 'showBrandIcon'
+    | 'showFormInstruction'
+    | 'enableStoreDetails'
+    | 'hideCVC'
+    | 'hasCVC'
+    | 'hasHolderName'
+    | 'holderNameRequired'
+    | 'billingAddressRequired'
+    | 'billingAddressRequiredFields'
+    | 'billingAddressAllowedCountries'
+    | 'installmentOptions'
+    | 'showInstallmentAmounts'
+>;
+
+// TODO questions about
+// brand - does a merchant ever make a custom stored card?
+// type
+// configuration
+// countryCode
+
+export class CustomCard extends UIElement<CustomCardProps> {
     public static type = TxVariants.customCard;
     public static txVariants = [TxVariants.customCard, TxVariants.card];
 
@@ -20,7 +47,7 @@ export class CustomCard extends UIElement<CardElementProps> {
         brandsConfiguration: {}
     };
 
-    formatProps(props) {
+    formatProps(props: CustomCardProps) {
         return {
             ...props,
             type: props.type === 'scheme' || props.type === 'securedfields' ? 'card' : props.type

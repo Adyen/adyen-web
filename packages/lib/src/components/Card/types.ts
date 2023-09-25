@@ -236,9 +236,16 @@ export interface CardElementProps extends UIElementProps {
      */
     styles?: StylesObject;
 
-    // keypadFix?: boolean,// TODO ??
-    // forceCompat?: boolean, // TODO ??
-    // allowedDOMAccess: false, // TODO ??
+    /**
+     * Implements a workaround for iOS/Safari bug where keypad doesn't retract when SF paymentMethod is no longer active
+     * @defaultValue `true`
+     */
+    keypadFix?: boolean; // Keep, but use analytics to record if anyone *ever* uses this config prop
+
+    // placeholders: Placeholders; // TODO align with v6 Bento branch
+
+    // forceCompat?: boolean, // TODO - probably drop, if Checkout won't support IE then SF doesn't need to
+    // allowedDOMAccess: false, // TODO -  Drop for v6 (not sure if anyone ever uses this)
 }
 
 export type SocialSecurityMode = 'show' | 'hide' | 'auto';
