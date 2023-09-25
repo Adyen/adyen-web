@@ -53,7 +53,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         if (checkout.paymentMethodsResponse.storedPaymentMethods && checkout.paymentMethodsResponse.storedPaymentMethods.length > 0) {
             const storedCardData = checkout.paymentMethodsResponse.storedPaymentMethods[2];
 
-            window.card = new Card({
+            window.storedCard = new Card({
                 core: checkout,
                 ...storedCardData,
                 disclaimerMessage
@@ -83,7 +83,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     }
 
     if (showComps.cardWithInstallments) {
-        window.card = new Card({
+        window.cardWithInstallments = new Card({
             core: checkout,
             _disableClickToPay: true,
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
