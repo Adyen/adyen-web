@@ -7,9 +7,9 @@ import { RISK_DATA_VERSION, DEVICE_FINGERPRINT } from './constants';
 
 export interface RiskModuleOptions {
     enabled: boolean;
-    onComplete: (data) => void;
-    onError: (error) => void;
-    node: string;
+    onComplete?: (data) => void;
+    onError?: (error) => void;
+    node?: string;
 }
 
 interface RiskModuleProps extends BaseElementProps {
