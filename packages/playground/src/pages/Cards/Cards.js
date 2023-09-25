@@ -1,23 +1,25 @@
-import { AdyenCheckout, Card, Bancontact, en_US } from '@adyen/adyen-web';
+import { AdyenCheckout, Card, Bancontact, nl_NL } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 
 import { getPaymentMethods } from '../../services';
-import { handleSubmit, handleAdditionalDetails, handleError, handleChange } from '../../handlers';
+import { handleSubmit, handleAdditionalDetails, handleError } from '../../handlers';
 import { amount, shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
 import { MockReactApp } from './MockReactApp';
 import getTranslationFile from '../../config/getTranslation';
-// import { searchFunctionExample } from '../../utils';
+import { searchFunctionExample } from '../../utils';
 
 const showComps = {
     clickToPay: true,
     storedCard: true,
     card: true,
-    cardInReact: true,
+    cardWithInstallments: true,
     bcmcCard: true,
     avsCard: true,
     avsPartialCard: true,
+    addressLookup: true,
+    cardInReact: true,
     kcpCard: true
 };
 
@@ -35,22 +37,16 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         paymentMethodsResponse,
         locale: shopperLocale,
         translationFile: getTranslationFile(shopperLocale),
+        // translationFile: nl_NL
         environment: process.env.__CLIENT_ENV__,
         showPayButton: true,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
         onError: handleError,
-        onChange: handleChange,
         risk: {
             enabled: false
         }
     });
-
-    const card = new Card({
-        core: checkout,
-        challengeWindowSize: '01',
-        _disableClickToPay: true
-    }).mount('.card-field');
 
     // Stored Card
     if (showComps.storedCard) {
@@ -61,6 +57,8 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 core: checkout,
                 ...storedCardData,
                 disclaimerMessage
+                // maskSecurityCode: true
+                // hideCVC: true
             }).mount('.storedcard-field');
 
             // A "single branded" card
@@ -72,6 +70,19 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     //
     // // Credit card with installments
     if (showComps.card) {
+        const card = new Card({
+            core: checkout,
+            brands: ['visa', 'amex', 'cartebancaire', 'bcmc'],
+            challengeWindowSize: '01',
+            _disableClickToPay: true
+            // hasHolderName: true,
+            // holderNameRequired: true,
+            // maskSecurityCode: true,
+            // enableStoreDetails: true
+        }).mount('.card-field');
+    }
+
+    if (showComps.cardWithInstallments) {
         window.card = new Card({
             core: checkout,
             _disableClickToPay: true,
@@ -95,11 +106,10 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             },
             onBinLookup: obj => {
                 console.log('### Cards::onBinLookup:: obj=', obj);
-            },
-            // billingAddressRequired: true,
-            onAddressLookup: null //searchFunctionExample
+            }
         }).mount('.card-field-installments');
     }
+
     //
     // Card mounted in a React app
     if (showComps.cardInReact) {
@@ -161,6 +171,15 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 console.log('component level merchant defined error handler for Card objdobj=', objdobj);
             }
         }).mount('.card-avs-partial-field');
+    }
+
+    if (showComps.addressLookup) {
+        window.addressLookupCard = new Card({
+            core: checkout,
+            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
+            billingAddressRequired: true,
+            onAddressLookup: searchFunctionExample
+        }).mount('.card-address-lookup-field');
     }
 
     // Credit card with KCP Authentication
