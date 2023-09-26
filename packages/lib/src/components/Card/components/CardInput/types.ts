@@ -73,6 +73,7 @@ export interface CardInputProps {
     data?: CardInputDataState;
     disableIOSArrowKeys?: boolean;
     enableStoreDetails?: boolean;
+    storePaymentMethod?: boolean;
     expiryMonth?: string;
     expiryYear?: string;
     forceCompat?: boolean;

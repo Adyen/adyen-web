@@ -117,6 +117,7 @@ export const extractPropsForCardFields = (props: CardInputProps) => {
         billingAddressAllowedCountries: props.billingAddressAllowedCountries,
         brandsConfiguration: props.brandsConfiguration,
         enableStoreDetails: props.enableStoreDetails,
+        storePaymentMethod: props.storePaymentMethod,
         hasCVC: props.hasCVC,
         hasHolderName: props.hasHolderName,
         holderNameRequired: props.holderNameRequired,

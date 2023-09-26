@@ -73,6 +73,12 @@ export interface CardElementProps extends UIElementProps {
     /** Show/hide the "store details" checkbox */
     enableStoreDetails?: boolean;
 
+    /**
+     * Set default value for the "store details" checkbox
+     * @defaultValue `false`
+     */
+    storePaymentMethod?: boolean;
+
     /** Show/hide the CVC field - merchant set config option */
     hideCVC?: boolean;
 

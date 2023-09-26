@@ -10,6 +10,7 @@ export default {
     hasHolderName: false,
     holderNameRequired: false,
     enableStoreDetails: false,
+    storePaymentMethod: false,
     hasCVC: true,
     showBrandIcon: true,
     showBrandsUnderCardNumber: true,
