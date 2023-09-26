@@ -6,7 +6,7 @@ export const isANCVNumber = text => /^\d{11}$/.test(text);
 export const ancvValidationRules: ValidatorRules = {
     beneficiaryId: {
         validate: value => isEmailValid(value) || isANCVNumber(value),
-        errorMessage: 'shopperEmail.invalid',
+        errorMessage: 'ancv.beneficiaryId.invalid',
         modes: ['blur']
     }
 };

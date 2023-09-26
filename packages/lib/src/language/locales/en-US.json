@@ -296,5 +296,7 @@
     "trustly.description1": "Pay directly from any of your bank accounts, backed by bank-level security",
     "trustly.description2": "No cards, no app download, no registration",
     "ancv.input.label" : "Your ANCV identification",
-    "ancv.confirmPayment": "Use your ANCV application to confirm the payment."
+    "ancv.confirmPayment": "Use your ANCV application to confirm the payment.",
+    "ancv.form.instruction": "The Cheque-Vacances application is necessary to validate this payment.",
+    "ancv.beneficiaryId.invalid": "Please introduce a valid email address or ANCV identification"
 }
