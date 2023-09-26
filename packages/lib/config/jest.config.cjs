@@ -5,7 +5,7 @@ module.exports = {
     setupFilesAfterEnv: ['<rootDir>/config/setupTests.ts'],
     transformIgnorePatterns: ['node_modules/(?!(preact|@testing-library)/)'],
     transform: {
-        '^.+\\.(js|ts|tsx|mjs)$': 'babel-jest'
+        '^.+\\.(js|ts|tsx|mjs)$': 'ts-jest'
     },
     moduleNameMapper: {
         '\\.scss$': '<rootDir>/config/testMocks/styleMock.js'
