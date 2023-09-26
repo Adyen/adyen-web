@@ -94,7 +94,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     // Keeps the value of the country set initially by the merchant, before the Address Component mutates it
     const partialAddressCountry = useRef<string>(partialAddressSchema && props.data?.billingAddress?.country);
 
-    const [storePaymentMethod, setStorePaymentMethod] = useState(false);
+    const [storePaymentMethod, setStorePaymentMethod] = useState(props.enableStoreDetails && props.storePaymentMethod ? true : false);
     const [billingAddress, setBillingAddress] = useState<AddressData>(showBillingAddress ? props.data.billingAddress : null);
     const [showSocialSecurityNumber, setShowSocialSecurityNumber] = useState(false);
     const [socialSecurityNumber, setSocialSecurityNumber] = useState('');
