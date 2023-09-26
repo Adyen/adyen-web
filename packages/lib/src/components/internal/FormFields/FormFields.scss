@@ -134,9 +134,13 @@
 
     &:disabled,
     &:read-only {
-        color: var(--b-color-label-secondary);
+        color: var(--b-color-label-secondary) !important;
         cursor: default;
     }
+}
+
+span.adyen-checkout__input {
+    overflow: hidden;
 }
 
 .adyen-checkout-input__inline-validation {

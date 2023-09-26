@@ -122,7 +122,7 @@
     width: 100%;
 
     &::placeholder {
-        color: var(--b-color-grey-500);
+        color: var(--b-input-field-input-disabled-color) !important;
         font-weight: var(--b-font-weight-200);
     }
 
@@ -133,7 +133,7 @@
 
     &[readonly] {
         border-color: transparent;
-        color: var(--b-color-label-secondary);
+        color: var(--b-input-field-description-color) !important;
         cursor: not-allowed;
     }
 }
