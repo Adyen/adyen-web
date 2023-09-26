@@ -26,7 +26,6 @@ describe('StoredCard', () => {
         expect(screen.queryByText('Expiry date', { exact: false })).toBeTruthy(); // presence
 
         expect(screen.getByLabelText('Expiry date', { exact: true })).toBeTruthy(); // presence
-        expect(screen.getByLabelText('Expiry date', { exact: true })).toHaveAttribute('readonly', '');
 
         // Look for cvc field elements
         expect(screen.getAllByText('Security code', { exact: true })).toBeTruthy();

@@ -153,7 +153,7 @@ export interface StoredCardFieldsProps {
     lastFour?: string;
     onFocusField: any;
     valid: any;
-    status: string;
+    status?: string;
     showContextualElement?: boolean;
 }
 
