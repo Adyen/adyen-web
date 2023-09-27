@@ -1,5 +1,2 @@
-@import "./border-radius";
-@import "./colors";
-@import "./font-sizes";
-@import "./spacings";
-@import "./media-queries";
+@forward "font-sizes";
+@forward "mixins";

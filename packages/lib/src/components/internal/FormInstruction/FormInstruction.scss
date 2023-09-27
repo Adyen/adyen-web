@@ -1,9 +1,9 @@
-@import "../../../style/index";
+@use "../../../style/index";
 
 .adyen-checkout-form-instruction {
-    line-height: 19px;
-    color: $color-gray-darker;
-    font-size: $font-size-small;
+    line-height: var(--b-line-height-100);
+    color: var(--b-color-label-secondary);
+    font-size: index.$font-size-small;
     font-weight: normal;
     margin-top: 0;
 

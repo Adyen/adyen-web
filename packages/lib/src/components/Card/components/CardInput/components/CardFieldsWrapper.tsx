@@ -62,6 +62,7 @@ export const CardFieldsWrapper = ({
     // For CardFields > CardNumber
     showBrandIcon,
     showBrandsUnderCardNumber,
+    showContextualElement,
     //
     iOSFocusedField,
     disclaimerMessage
@@ -86,6 +87,7 @@ export const CardFieldsWrapper = ({
             <CardFields
                 showBrandIcon={showBrandIcon}
                 showBrandsUnderCardNumber={showBrandsUnderCardNumber}
+                showContextualElement={showContextualElement}
                 brand={sfpState.brand}
                 brandsIcons={brandsIcons}
                 brandsConfiguration={brandsConfiguration}
@@ -118,6 +120,7 @@ export const CardFieldsWrapper = ({
                     onBlur={handleChangeFor('taxNumber', 'blur')}
                     onInput={handleChangeFor('taxNumber', 'input')}
                     disabled={iOSFocusedField && iOSFocusedField !== 'kcpTaxNumberOrDOB'}
+                    placeholder={placeholders.taxNumber}
                 />
             )}
 
@@ -159,6 +162,7 @@ export const CardFieldsWrapper = ({
                     specifications={partialAddressSchema}
                     iOSFocusedField={iOSFocusedField}
                     onAddressLookup={onAddressLookup}
+                    showContextualElement={showContextualElement}
                 />
             )}
 

@@ -1,86 +1,109 @@
 import { h } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
-import classNames from 'classnames';
+import { useCallback, useEffect } from 'preact/hooks';
 import Field from '../FormFields/Field';
 import useForm from '../../../utils/useForm';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import './PhoneInput.scss';
-import { PhoneInputSchema } from './types';
 import Select from '../FormFields/Select';
+import { phoneFormatters, phoneValidationRules } from './validate';
+import { PhoneInputProps, PhoneInputSchema } from './types';
+import InputText from '../FormFields/InputText';
+import Fieldset from '../FormFields/Fieldset';
 
-export function PhoneInput(props) {
+function PhoneInput(props: PhoneInputProps) {
     const { i18n } = useCoreContext();
-    const [status, setStatus] = useState('ready');
-    const showPrefix = !!props?.items?.length;
-    const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<PhoneInputSchema>({
-        schema: [...(showPrefix ? ['phonePrefix'] : []), 'phoneNumber'],
-        defaultData: { ...(showPrefix ? { phonePrefix: props.selected } : {}) },
-        rules: {
-            phoneNumber: {
-                modes: ['blur'],
-                errorMessage: 'error.va.gen.01',
-                validate: phone => phone?.length > 6
-            }
-        }
+
+    const schema = props.requiredFields || [...(props?.items?.length ? ['phonePrefix'] : []), 'phoneNumber'];
+    const showPrefix = schema.includes('phonePrefix') && !!props?.items?.length;
+    const showNumber = schema.includes('phoneNumber');
+
+    const { handleChangeFor, data, valid, errors, isValid, triggerValidation, setSchema } = useForm<PhoneInputSchema>({
+        i18n,
+        ...props,
+        schema,
+        defaultData: props.data,
+        rules: phoneValidationRules,
+        formatters: phoneFormatters
     });
+
+    useEffect(() => {
+        setSchema(schema);
+    }, [schema.toString()]);
+
+    // Force re-validation of the phoneNumber when data.phonePrefix changes (since the validation rules will also change)
+    useEffect((): void => {
+        if (data.phoneNumber) {
+            handleChangeFor('phoneNumber', 'blur')(data.phoneNumber);
+        }
+    }, [data.phonePrefix]);
 
     useEffect(() => {
         props.onChange({ data, valid, errors, isValid });
     }, [data, valid, errors, isValid]);
 
-    this.showValidation = triggerValidation;
-    this.setStatus = setStatus;
+    this.triggerValidation = triggerValidation;
+
+    const getPhoneFieldError = useCallback(
+        (field: string) => {
+            if (errors[field]) {
+                const propsField = field === 'phoneNumber' ? 'phoneNumberErrorKey' : 'phonePrefixErrorKey';
+                const key = props[propsField] ? props[propsField] : errors[field].errorMessage;
+                return i18n.get(key) ?? null;
+            }
+            return null;
+        },
+        [errors]
+    );
+
     return (
-        <div className="adyen-checkout__phone-input">
-            <Field
-                errorMessage={!!errors.phoneNumber}
-                label={i18n.get(props.phoneLabel)}
-                className={classNames({
-                    'adyen-checkout__input--phone-number': true
-                })}
-                inputWrapperModifiers={['phoneInput']}
-                name={''}
-            >
-                <div className="adyen-checkout__input-wrapper">
-                    <div
-                        className={classNames({
-                            'adyen-checkout__input': true,
-                            'adyen-checkout__input--invalid': !!errors.phoneNumber
-                        })}
-                    >
-                        {!!showPrefix && (
-                            <Field inputWrapperModifiers={['phoneInput']} name={props.prefixName}>
-                                <Select
-                                    className={'adyen-checkout__dropdown--small adyen-checkout__countryFlag'}
-                                    filterable={false}
-                                    items={props.items}
-                                    name={props.prefixName}
-                                    onChange={handleChangeFor('phonePrefix')}
-                                    placeholder={i18n.get('infix')}
-                                    selectedValue={data.phonePrefix}
-                                />
+        <Fieldset classNameModifiers={['phone-input']}>
+            {showPrefix && (
+                <Field
+                    className={'adyen-checkout-field--phone-prefix'}
+                    label={i18n.get('telephonePrefix')}
+                    errorMessage={getPhoneFieldError('phonePrefix')}
+                    showValidIcon={false}
+                    isValid={valid.phonePrefix}
+                    dir={'ltr'}
+                    i18n={i18n}
+                    name={'phonePrefix'}
+                >
+                    <Select
+                        className={'adyen-checkout-dropdown adyen-checkout-dropdown--countrycode-selector'}
+                        name={'phonePrefix'}
+                        items={props.items}
+                        onChange={handleChangeFor('phonePrefix')}
+                        placeholder={props?.placeholders?.phonePrefix}
+                        selectedValue={data.phonePrefix}
+                    />
+                </Field>
+            )}
 
-                                <div className="adyen-checkout__phoneNumber">
-                                    <div>{data.phonePrefix}</div>
-
-                                    <input
-                                        type="tel"
-                                        name={props.phoneName}
-                                        value={data.phoneNumber}
-                                        onInput={handleChangeFor('phoneNumber', 'input')}
-                                        onBlur={handleChangeFor('phoneNumber', 'blur')}
-                                        placeholder="123 456 789"
-                                        className="adyen-checkout__input adyen-checkout__input--phoneNumber"
-                                        autoCorrect="off"
-                                    />
-                                </div>
-                            </Field>
-                        )}
-                    </div>
-                </div>
-            </Field>
-            {this.props.showPayButton && this.props.payButton({ status })}
-        </div>
+            {showNumber && (
+                <Field
+                    className={'adyen-checkout-field--phone-number'}
+                    label={props.phoneNumberKey ? i18n.get(props.phoneNumberKey) : i18n.get('telephoneNumber')}
+                    errorMessage={getPhoneFieldError('phoneNumber')}
+                    isValid={valid.phoneNumber}
+                    filled={data?.phoneNumber?.length > 0}
+                    dir={'ltr'}
+                    i18n={i18n}
+                    name={'phoneNumber'}
+                >
+                    <InputText
+                        className="adyen-checkout__input adyen-checkout-input adyen-checkout-input--phone-number"
+                        type="tel"
+                        name="phoneNumber"
+                        value={data.phoneNumber}
+                        onInput={handleChangeFor('phoneNumber', 'input')}
+                        onBlur={handleChangeFor('phoneNumber', 'blur')}
+                        placeholder={props?.placeholders?.phoneNumber}
+                        autoCorrect="off"
+                        required={true}
+                    />
+                </Field>
+            )}
+        </Fieldset>
     );
 }
 

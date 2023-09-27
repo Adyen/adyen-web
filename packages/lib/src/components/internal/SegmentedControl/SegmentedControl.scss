@@ -1,13 +1,11 @@
-@import "../../../style/index";
-
 .adyen-checkout__segmented-control {
     display: flex;
     justify-content: space-between;
-    gap: 4px;
-    padding: 4px 5px;
-    background: $color-white;
-    border: 1px solid $color-gray-dark;
-    border-radius: 6px;
+    gap: var(--b-spacer-020);
+    padding: var(--b-spacer-020) 5px;
+    background: var(--b-color-surface-primary);
+    border-radius: var(--b-border-radius-m);
+    border: var(--b-border-width-s) solid var(--b-color-outline-secondary);
 
     &--disabled {
         pointer-events: none;
@@ -24,31 +22,31 @@
 }
 
 .adyen-checkout__segmented-control-segment {
-    font-weight: 500;
-    color: #0075ff;
+    font-weight: var(--b-text-body-stronger-font-weight);
+    color: var(--b-color-label-primary);
     width: 100%;
-    height: 40px;
+    height: var(--b-spacer-110);
     flex-grow: 1;
     cursor: pointer;
-    background: $color-white;
+    background: var(--b-color-surface-primary);
     border-radius: 6px;
     border: 0;
     text-align: center;
     transition: background 0.3s ease-out;
 
     &:not(&--selected):hover {
-        background-color: $color-gray-lighter;
+        background-color: var(--b-color-grey-100);
     }
 
     &:active {
-        background-color: $color-gray-lighter;
-        border: 1.5px solid $color-gray-darker;
+        background-color: var(--b-color-grey-100);
+        border: 1.5px solid var(--b-color-grey-500);
     }
 
     &--selected {
-        background: #e5f1ff;
-        border: 1.5px solid #0075ff;
-        color: #0075ff;
-        font-weight: 700;
+        background: var(--b-color-background-always-dark);
+        color: var(--b-color-surface-primary);
+        box-shadow: 0 1px var(--b-spacer-010) 0 rgba(0 17 44 / 2%), 0 var(--b-spacer-010) var(--b-spacer-020) 0 rgba(0 17 44 / 4%);
+        font-weight: var(--b-text-body-stronger-font-weight);
     }
 }

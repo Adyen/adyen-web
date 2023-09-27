@@ -24,6 +24,7 @@ export interface CardFieldsProps {
     showBrandIcon?: boolean;
     showBrandsUnderCardNumber: boolean;
     valid?: any;
+    showContextualElement?: boolean;
 }
 
 export interface CardHolderNameProps {
@@ -63,6 +64,8 @@ export interface CVCProps {
     isValid?: any;
     label?: any;
     onFocusField: (field: string) => void;
+    showContextualElement?: boolean;
+    contextualText?: string;
 }
 
 export interface CVCHintProps {
@@ -88,6 +91,8 @@ export interface ExpirationDateProps {
     label?: string;
     onFocusField: (fieldName: string) => {};
     expiryDatePolicy?: DatePolicyType;
+    showContextualElement?: boolean;
+    contextualText?: string;
 }
 
 export interface InstallmentsProps {
@@ -126,11 +131,12 @@ export interface KCPProps {
     onFocusField: (str: string) => {};
     onBlur: (event: Event) => void;
     onInput: (event: Event) => void;
-    taxNumber?: string;
+    // taxNumber?: string;
     error: boolean;
     isValid: boolean;
     value: string;
     disabled?: boolean;
+    placeholder?: string;
 }
 
 export type RtnType_ParamBooleanFn = (tn) => boolean;
@@ -147,6 +153,8 @@ export interface StoredCardFieldsProps {
     lastFour?: string;
     onFocusField: any;
     valid: any;
+    status?: string;
+    showContextualElement?: boolean;
 }
 
 export interface SfSpanProps {

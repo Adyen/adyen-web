@@ -29,13 +29,12 @@ describe('formatPrefixName', () => {
 
     const item = {
         id: '+31',
-        code: 'NL',
-        name: 'Netherlands'
+        code: 'NL'
     };
 
     test('Formats items and adjusts the name', () => {
         const returnedItem = formatPrefixName(item);
-        expect(returnedItem.name).toContain('Netherlands (+31)');
+        expect(returnedItem.name).toContain('🇳🇱 +31 (NL)');
     });
 });
 

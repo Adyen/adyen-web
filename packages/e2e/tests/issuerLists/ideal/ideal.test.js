@@ -19,8 +19,9 @@ test('should make an iDeal payment', async t => {
     const stateData = await getComponentData();
 
     await t.expect(stateData.paymentMethod).eql({
+        checkoutAttemptId: 'do-not-track',
         type: 'ideal',
-        issuer: '1121'
+        issuer: '1164'
     });
 
     await t.expect(stateData.clientStateDataIndicator).eql(true);
@@ -34,6 +35,7 @@ test('should make an iDeal payment using a highlighted issuer', async t => {
     const stateData = await getComponentData();
 
     await t.expect(stateData.paymentMethod).eql({
+        checkoutAttemptId: 'do-not-track',
         type: 'ideal',
         issuer: '1121'
     });

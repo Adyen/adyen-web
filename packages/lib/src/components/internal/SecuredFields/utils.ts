@@ -1,48 +1,4 @@
-import Language from '../../../language/Language';
-import {
-    ENCRYPTED_CARD_NUMBER,
-    ENCRYPTED_EXPIRY_DATE,
-    ENCRYPTED_EXPIRY_MONTH,
-    ENCRYPTED_EXPIRY_YEAR,
-    ENCRYPTED_SECURITY_CODE,
-    ENCRYPTED_PWD_FIELD,
-    ENCRYPTED_SECURITY_CODE_3_DIGITS,
-    ENCRYPTED_SECURITY_CODE_4_DIGITS,
-    ENCRYPTED_BANK_ACCNT_NUMBER_FIELD,
-    ENCRYPTED_BANK_LOCATION_FIELD
-} from './lib/configuration/constants';
-import { SFPlaceholdersObject } from './lib/securedField/AbstractSecuredField';
 import { Resources } from '../../../core/Context/Resources';
-
-/**
- * Lookup translated values for the placeholders for the SecuredFields
- * and return an object with these mapped to the data-cse value of the SecuredField
- */
-export const resolvePlaceholders = (i18n?: Language): SFPlaceholdersObject => {
-    const phObj = {
-        [ENCRYPTED_CARD_NUMBER]: i18n.get && i18n.get('creditCard.numberField.placeholder'),
-        [ENCRYPTED_EXPIRY_DATE]: i18n.get && i18n.get('creditCard.expiryDateField.placeholder'),
-        [ENCRYPTED_EXPIRY_MONTH]: i18n.get && i18n.get('creditCard.expiryDateField.month.placeholder'),
-        [ENCRYPTED_EXPIRY_YEAR]: i18n.get && i18n.get('creditCard.expiryDateField.year.placeholder'),
-        [ENCRYPTED_SECURITY_CODE]: i18n.get && i18n.get('creditCard.cvcField.placeholder'), // Used for gift cards
-        [ENCRYPTED_SECURITY_CODE_3_DIGITS]: i18n.get && i18n.get('creditCard.cvcField.placeholder.3digits'),
-        [ENCRYPTED_SECURITY_CODE_4_DIGITS]: i18n.get && i18n.get('creditCard.cvcField.placeholder.4digits'),
-        [ENCRYPTED_PWD_FIELD]: i18n.get && i18n.get('creditCard.encryptedPassword.placeholder'),
-        [ENCRYPTED_BANK_ACCNT_NUMBER_FIELD]: i18n.get && i18n.get('ach.accountNumberField.placeholder'),
-        [ENCRYPTED_BANK_LOCATION_FIELD]: i18n.get && i18n.get('ach.accountLocationId.placeholder')
-    };
-
-    // For ach - if the merchant has specified a placeholder (which can only be done through a translations object, it doesn't exist in the translations files)
-    // then use it... else default to nothing
-    if (phObj[ENCRYPTED_BANK_ACCNT_NUMBER_FIELD] === 'ach.accountNumberField.placeholder') {
-        phObj[ENCRYPTED_BANK_ACCNT_NUMBER_FIELD] = '';
-    }
-    if (phObj[ENCRYPTED_BANK_LOCATION_FIELD] === 'ach.accountLocationId.placeholder') {
-        phObj[ENCRYPTED_BANK_LOCATION_FIELD] = '';
-    }
-
-    return phObj;
-};
 
 /**
  * Used by SecuredFieldsProviderHandlers

@@ -49,7 +49,7 @@ const CtPCardsList = ({ cardSelected, cards, errorMessage, onChangeCard }: CtPCa
     }, [data, onChangeCard]);
 
     return (
-        <Field name="clickToPayCards" errorMessage={errorMessage}>
+        <Field name="clickToPayCards" errorMessage={errorMessage} readOnly={status === 'loading'}>
             <Select
                 items={items}
                 selectedValue={data['srcDigitalCardId']}

@@ -2,6 +2,16 @@ import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD, ERROR_CODES } fro
 import { SFError } from '../../components/Card/components/CardInput/types';
 import { SortErrorsObj, SortedErrorObject, GenericError, SetSRMessagesReturnObject } from './types';
 import { ValidationRuleResult } from '../../utils/Validator/ValidationRuleResult';
+import {
+    ENCRYPTED_BANK_ACCNT_NUMBER_FIELD,
+    ENCRYPTED_BANK_LOCATION_FIELD,
+    ENCRYPTED_CARD_NUMBER,
+    ENCRYPTED_EXPIRY_DATE,
+    ENCRYPTED_EXPIRY_MONTH,
+    ENCRYPTED_EXPIRY_YEAR,
+    ENCRYPTED_PWD_FIELD,
+    ENCRYPTED_SECURITY_CODE
+} from '../../components/internal/SecuredFields/lib/configuration/constants';
 
 /**
  * Access items stored in the ERROR_CODES object by either sending in the key - in which case you get the value
@@ -21,13 +31,13 @@ export const getError = (keyOrValue: string): string => {
     return keyOrValue;
 };
 
-export const addAriaErrorTranslationsObject = i18n => {
+export const addAriaErrorTranslationsObject = (i18n, errorCodeIdentifier) => {
     const errorKeys = Object.keys(ERROR_CODES);
 
     const transObj = errorKeys.reduce((acc, item) => {
         const value = ERROR_CODES[item];
-        // Limit to sf related errors
-        if (value.indexOf('sf-') > -1 || value.indexOf('gen.01') > -1) {
+        // Limit to errors related to specific sf (or general errors) TODO check if general errors are still used
+        if (value.includes(errorCodeIdentifier) || value.indexOf('gen.01') > -1) {
             acc[value] = i18n.get(value);
         }
         return acc;
@@ -37,16 +47,51 @@ export const addAriaErrorTranslationsObject = i18n => {
 };
 
 /**
- * Adds a new error property to an object, unless it already exists.
+ * Adds a new error property to an object.
  * This error property is an object containing the translated errors, stored by code, that relate to the securedFields
  * @param originalObject - object we want to duplicate and enhance
  * @param i18n - an i18n object to use to get translations
  * @returns a duplicate of the original object with a new property: "error" whose value is a object containing the translated errors
  */
-export const addErrorTranslationsToObject = (originalObj, i18n) => {
+export const addErrorTranslationsToObject = (originalObj, i18n, fieldType) => {
     const nuObj = { ...originalObj };
-    nuObj.error = !nuObj.error ? addAriaErrorTranslationsObject(i18n) : nuObj.error;
+
+    const errorCodeIdentifier = fieldTypeToErrorCodeIdentifier(fieldType);
+    nuObj.error = addAriaErrorTranslationsObject(i18n, errorCodeIdentifier);
+
     return nuObj;
+};
+
+const fieldTypeToErrorCodeIdentifier = fieldType => {
+    let errorCodeIdentifier;
+    switch (fieldType) {
+        case ENCRYPTED_CARD_NUMBER:
+            errorCodeIdentifier = 'sf-cc-num';
+            break;
+        case ENCRYPTED_EXPIRY_DATE:
+            errorCodeIdentifier = 'sf-cc-dat';
+            break;
+        case ENCRYPTED_EXPIRY_MONTH:
+            errorCodeIdentifier = 'sf-cc-mth';
+            break;
+        case ENCRYPTED_EXPIRY_YEAR:
+            errorCodeIdentifier = 'sf-cc-yr';
+            break;
+        case ENCRYPTED_SECURITY_CODE:
+            errorCodeIdentifier = 'sf-cc-cvc';
+            break;
+        case ENCRYPTED_PWD_FIELD:
+            errorCodeIdentifier = 'sf-kcp-pwd';
+            break;
+        case ENCRYPTED_BANK_ACCNT_NUMBER_FIELD:
+            errorCodeIdentifier = 'sf-ach-num';
+            break;
+        case ENCRYPTED_BANK_LOCATION_FIELD:
+            errorCodeIdentifier = 'sf-ach-loc';
+            break;
+        default:
+    }
+    return errorCodeIdentifier;
 };
 
 /**

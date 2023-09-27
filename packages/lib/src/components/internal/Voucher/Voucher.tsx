@@ -33,7 +33,7 @@ export default function Voucher({ voucherDetails = [], className = '', ...props 
                     {props.introduction}{' '}
                     {props.instructionsUrl && (
                         <a
-                            className="adyen-checkout__link adyen-checkout__link--voucher-result-instructions"
+                            className="adyen-checkout-link adyen-checkout-link--voucher-result-instructions"
                             href={props.instructionsUrl}
                             target="_blank"
                             rel="noopener noreferrer"

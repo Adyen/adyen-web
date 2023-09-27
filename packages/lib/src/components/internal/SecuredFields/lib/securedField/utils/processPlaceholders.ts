@@ -1,31 +1,39 @@
-import { resolvePlaceholders } from '../../../utils';
-import { SFPlaceholdersObject, SFInternalConfig } from '../AbstractSecuredField';
+import { SFPlaceholdersObject } from '../AbstractSecuredField';
+import { Placeholders } from '../../../SFP/types';
 import {
     ENCRYPTED_SECURITY_CODE,
     ENCRYPTED_SECURITY_CODE_3_DIGITS,
     ENCRYPTED_SECURITY_CODE_4_DIGITS,
-    GIFT_CARD
+    GIFT_CARD,
+    SF_FIELDS_MAP
 } from '../../configuration/constants';
+import { Placeholders as AchPlaceholders } from '../../../../../Ach/components/AchInput/types';
+import { Placeholders as GiftcardPlaceholders } from '../../../../../Giftcard/components/types';
+import { Placeholders as CardPlaceholders } from '../../../../../Card/components/CardInput/types';
 
 /**
- * Create placeholders with a value from the relevant translation file
+ * Create placeholders with a value from merchant's configuration
+ *
+ * Based on txVariant & fieldType, maps the entries in the passed placeholders object to create a field specific placeholder object
  */
-export function processPlaceholders(configObj: SFInternalConfig, fieldType, i18n): SFPlaceholdersObject {
-    const type: string = configObj.txVariant;
-    const resolvedPlaceholders: SFPlaceholdersObject = resolvePlaceholders(i18n);
+export function processPlaceholders(txVariant: string, fieldType: string, placeholders: Placeholders): SFPlaceholdersObject {
+    switch (txVariant) {
+        case 'ach':
+            return { [fieldType]: (placeholders as AchPlaceholders)[SF_FIELDS_MAP[fieldType]] ?? '' };
 
-    return {
-        // Non-SecurityCode fields
-        ...(fieldType !== ENCRYPTED_SECURITY_CODE && { [fieldType]: resolvedPlaceholders[fieldType] }),
+        case GIFT_CARD:
+            return { [fieldType]: (placeholders as GiftcardPlaceholders)[SF_FIELDS_MAP[fieldType]] ?? '' };
 
-        // Gift cards
-        ...(fieldType === ENCRYPTED_SECURITY_CODE && type === GIFT_CARD && { [fieldType]: resolvedPlaceholders[fieldType] }),
+        default:
+            switch (fieldType) {
+                case ENCRYPTED_SECURITY_CODE:
+                    return {
+                        [ENCRYPTED_SECURITY_CODE_3_DIGITS]: (placeholders as CardPlaceholders).securityCodeThreeDigits ?? '',
+                        [ENCRYPTED_SECURITY_CODE_4_DIGITS]: (placeholders as CardPlaceholders).securityCodeFourDigits ?? ''
+                    };
 
-        // Credit card CVC field
-        ...(fieldType === ENCRYPTED_SECURITY_CODE &&
-            type !== GIFT_CARD && {
-                [ENCRYPTED_SECURITY_CODE_3_DIGITS]: resolvedPlaceholders[ENCRYPTED_SECURITY_CODE_3_DIGITS],
-                [ENCRYPTED_SECURITY_CODE_4_DIGITS]: resolvedPlaceholders[ENCRYPTED_SECURITY_CODE_4_DIGITS]
-            })
-    } as SFPlaceholdersObject;
+                default:
+                    return { [fieldType]: (placeholders as CardPlaceholders)[SF_FIELDS_MAP[fieldType]] ?? '' };
+            }
+    }
 }

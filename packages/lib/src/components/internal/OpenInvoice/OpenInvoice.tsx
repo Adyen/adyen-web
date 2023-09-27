@@ -284,7 +284,12 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
             )}
 
             {showSeparateDeliveryAddressCheckbox && (
-                <Field name={'separateDeliveryAddress'} useLabelElement={false} addContextualElement={false}>
+                <Field
+                    classNameModifiers={['separateDeliveryAddress']}
+                    name={'separateDeliveryAddress'}
+                    useLabelElement={false}
+                    showErrorElement={false}
+                >
                     <Checkbox
                         label={i18n.get('separateDeliveryAddress')}
                         checked={activeFieldsets.deliveryAddress}

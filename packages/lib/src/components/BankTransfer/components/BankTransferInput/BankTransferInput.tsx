@@ -5,7 +5,7 @@ import SendCopyToEmail from '../../../internal/SendCopyToEmail/SendCopyToEmail';
 import { useEffect, useState } from 'preact/hooks';
 import useForm from '../../../../utils/useForm';
 import { BankTransferSchema } from '../../types';
-import { personalDetailsValidationRules } from '../../../internal/PersonalDetails/validate';
+import { validationRules } from '../../../../utils/Validator/defaultRules';
 
 function BankTransferInput(props) {
     const { i18n } = useCoreContext();
@@ -15,7 +15,7 @@ function BankTransferInput(props) {
         schema: [],
         defaultData: props.data,
         rules: {
-            shopperEmail: personalDetailsValidationRules.shopperEmail
+            shopperEmail: validationRules.emailRule
         }
     });
 

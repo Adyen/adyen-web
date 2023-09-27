@@ -13,9 +13,9 @@ describe('TrustlyElement', () => {
         expect(await screen.findByText(/no cards, no app download, no registration/i)).toBeTruthy();
     });
 
-    test('should render redirect button by default', async () => {
+    test('should render redirect button if showPayButton is true', async () => {
         // @ts-ignore ignore
-        render(<Trustly i18n={new Language()} loadingContext="test" modules={{ resources: new Resources() }} />);
+        render(<Trustly showPayButton={true} i18n={new Language()} loadingContext="test" modules={{ resources: new Resources() }} />);
         expect(await screen.findByRole('button')).toHaveTextContent('Continue to trustly');
     });
 

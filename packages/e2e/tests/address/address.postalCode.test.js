@@ -16,8 +16,6 @@ test('should show error when switching from country that has valid postal code t
     await addressComponent.selectCountry('United States');
     await addressComponent.fillPostalCode('12345');
 
-    await t.expect(addressComponent.postalCodeInputError.exists).ok(); // error fields should always be in DOM
-
     await addressComponent.selectCountry('Brazil');
     await t.expect(addressComponent.postalCodeInputError.innerText).contains('Invalid format. Expected format: 12345678 or 12345-678');
 

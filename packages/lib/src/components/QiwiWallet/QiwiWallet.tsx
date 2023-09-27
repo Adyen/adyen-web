@@ -9,11 +9,18 @@ class QiwiWalletElement extends UIElement {
     public static type = 'qiwiwallet';
 
     public static defaultProps = {
+        phoneNumberKey: 'mobileNumber',
+        phoneNumberErrorKey: 'error.va.gen.01',
         items: COUNTRIES.map(formatPrefixName).filter(item => item !== false),
         countryCode: COUNTRIES[0].code,
         prefixName: 'qiwiwallet.telephoneNumberPrefix' || COUNTRIES[0].id,
         phoneName: 'qiwiwallet.telephoneNumber' || ''
     };
+
+    constructor(props) {
+        super(props);
+        this.componentRef = {};
+    }
 
     get isValid() {
         return !!this.state.isValid;
@@ -40,20 +47,30 @@ class QiwiWalletElement extends UIElement {
         };
     }
 
+    public setComponentRef = ref => {
+        if (ref?.triggerValidation && !this.componentRef.showValidation) {
+            this.componentRef = { ...this.componentRef, showValidation: ref.triggerValidation };
+        }
+    };
+
     render() {
+        const { i18n, loadingContext, showPayButton, items, selected, placeholders } = this.props;
+
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
+            <CoreProvider i18n={i18n} loadingContext={loadingContext} resources={this.resources}>
                 <PhoneInput
                     ref={ref => {
-                        this.componentRef = ref;
+                        this.setComponentRef(ref);
                     }}
-                    {...this.props}
-                    {...this.state}
-                    phoneLabel={'mobileNumber'}
+                    phoneNumberKey={QiwiWalletElement.defaultProps.phoneNumberKey}
+                    phoneNumberErrorKey={QiwiWalletElement.defaultProps.phoneNumberErrorKey}
+                    placeholders={placeholders}
+                    items={items}
+                    data={{ phonePrefix: selected }}
                     onChange={this.setState}
-                    onSubmit={this.submit}
-                    payButton={this.payButton}
                 />
+
+                {showPayButton && this.payButton({})}
             </CoreProvider>
         );
     }

@@ -12,6 +12,7 @@ import InputText from '../../internal/FormFields/InputText';
 
 interface BlikInputProps extends UIElementProps {
     data?: BlikInputDataState;
+    placeholders?: BlikInputDataState;
 }
 
 interface BlikInputDataState {
@@ -63,7 +64,7 @@ function BlikInput(props: BlikInputProps) {
                     autocomplete={'off'}
                     onInput={handleChangeFor('blikCode', 'input')}
                     onBlur={handleChangeFor('blikCode', 'blur')}
-                    placeholder={'123456'}
+                    placeholder={props?.placeholders?.blikCode}
                     inputMode={'numeric'}
                     maxLength={6}
                 />

@@ -22,6 +22,7 @@ export default {
     autoFocus: true,
     isPayButtonPrimaryVariant: true,
     disableIOSArrowKeys: true,
+    showContextualElement: true,
 
     // Events
     onLoad: (): any => {},

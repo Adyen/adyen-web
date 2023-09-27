@@ -1,7 +1,6 @@
 import { h } from 'preact';
 import { getCardImageUrl, getFullBrandName } from '../utils';
 import { BrandIconProps } from './types';
-import styles from '../CardInput.module.scss';
 import useImage from '../../../../../core/Context/useImage';
 
 export default function BrandIcon({ brand, brandsConfiguration = {} }: BrandIconProps) {
@@ -14,7 +13,7 @@ export default function BrandIcon({ brand, brandsConfiguration = {} }: BrandIcon
 
     return (
         <img
-            className={`${styles['card-input__icon']} adyen-checkout__card__cardNumber__brandIcon`}
+            className="adyen-checkout-card-input__icon adyen-checkout__card__cardNumber__brandIcon"
             onError={handleError}
             alt={getFullBrandName(brand)}
             src={imageUrl}

@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { MutableRef, useCallback, useEffect, useRef } from 'preact/hooks';
 import classNames from 'classnames';
-import { ARIA_ERROR_SUFFIX } from '../../../core/Errors/constants';
+import { ARIA_CONTEXT_SUFFIX, ARIA_ERROR_SUFFIX } from '../../../core/Errors/constants';
 import Language from '../../../language';
 import './FormFields.scss';
 
@@ -109,7 +109,7 @@ export default function InputBase({ onCreateRef, ...props }: InputBaseProps) {
             readOnly={readonly}
             spellCheck={spellCheck}
             autoCorrect={autoCorrect}
-            aria-describedby={`${uniqueId}${ARIA_ERROR_SUFFIX}`}
+            aria-describedby={`${uniqueId}${isInvalid ? ARIA_ERROR_SUFFIX : ARIA_CONTEXT_SUFFIX}`}
             aria-invalid={isInvalid}
             onInput={handleInput}
             onBlur={handleBlur}

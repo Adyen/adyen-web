@@ -19,7 +19,7 @@ function render(message: string, urls: Array<string>) {
             {interpolateElement(
                 message,
                 urls.map(url => translation => (
-                    <a className="adyen-checkout__link" href={url} target="_blank" rel="noopener noreferrer">
+                    <a className="adyen-checkout-link" href={url} target="_blank" rel="noopener noreferrer">
                         {translation}
                     </a>
                 ))

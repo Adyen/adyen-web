@@ -1,30 +1,26 @@
-@import "src/style/index";
-
 .adyen-checkout__content-separator {
-    margin-top: $spacing-medium;
-    margin-bottom: $spacing-medium;
+    margin-top: var(--b-spacer-070);
+    margin-bottom: var(--b-spacer-070);
     display: flex;
     justify-content: center;
     align-items: center;
-    color: $color-gray-darker;
+    color: var(--b-color-label-secondary);
     white-space: nowrap;
     font-size: 13px;
-    line-height: 19px;
+    line-height: var(--b-text-caption-line-height);
 
     &::after,
     &::before {
-        content: "";
-        display: block;
-        background: $color-gray-light;
-        width: 100%;
-        height: 1px;
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid var(--b-color-grey-500);
     }
 
     &::after {
-        margin-left: 20px;
+        margin-left: var(--b-spacer-080);
     }
 
     &::before {
-        margin-right: 20px;
+        margin-right: var(--b-spacer-080);
     }
 }

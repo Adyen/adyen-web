@@ -45,9 +45,16 @@ export interface CardInputDataState {
     taxNumber?: string;
 }
 
-type Placeholders = {
-    holderName?: string;
-};
+type PlaceholderKeys =
+    | 'holderName'
+    | 'cardNumber'
+    | 'expiryDate'
+    | 'expiryMonth'
+    | 'expiryYear'
+    | 'securityCodeThreeDigits'
+    | 'securityCodeFourDigits'
+    | 'password';
+export type Placeholders = Partial<Record<PlaceholderKeys, string>>;
 
 /**
  * Should be the subset of the props sent to CardInput that are *actually* used by CardInput
@@ -119,6 +126,7 @@ export interface CardInputProps {
     showInstallmentAmounts?: boolean;
     showPayButton?: boolean;
     showWarnings?: boolean;
+    showContextualElement?: boolean;
     specifications?: Specifications;
     storedPaymentMethodId?: string;
     styles?: StylesObject;

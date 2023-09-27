@@ -20,6 +20,7 @@ interface IssuerListContainerProps extends UIElementProps {
     showPaymentMethodItemImages?: boolean;
     showPayButton?: boolean;
     termsAndConditions?: TermsAndConditions;
+    showContextualElement?: boolean;
 }
 
 interface IssuerListData {
@@ -115,6 +116,7 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
                             onChange={this.setState}
                             onSubmit={this.submit}
                             payButton={this.payButton}
+                            contextualText={this.props.i18n.get('issuerList.selectField.contextualText')}
                         />
                     </SRPanelProvider>
                 ) : (

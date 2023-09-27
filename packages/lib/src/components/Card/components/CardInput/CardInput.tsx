@@ -3,7 +3,6 @@ import { useState, useEffect, useRef, useMemo, useCallback } from 'preact/hooks'
 import SecuredFieldsProvider from '../../../internal/SecuredFields/SFP/SecuredFieldsProvider';
 import { OnChangeEventDetails, SFPState } from '../../../internal/SecuredFields/SFP/types';
 import defaultProps from './defaultProps';
-import defaultStyles from './defaultStyles';
 import './CardInput.scss';
 import { AddressModeOptions, CardInputDataState, CardInputErrorState, CardInputProps, CardInputRef, CardInputValidState } from './types';
 import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED } from '../../../internal/SecuredFields/lib/configuration/constants';
@@ -18,7 +17,6 @@ import { AddressData } from '../../../../types';
 import Specifications from '../../../internal/Address/Specifications';
 import { StoredCardFieldsWrapper } from './components/StoredCardFieldsWrapper';
 import { CardFieldsWrapper } from './components/CardFieldsWrapper';
-import styles from './CardInput.module.scss';
 import { getAddressHandler, getAutoJumpHandler, getFocusHandler, setFocusOnFirstField } from './handlers';
 import { InstallmentsObj } from './components/Installments/Installments';
 import { TouchStartEventObj } from './components/types';
@@ -434,7 +432,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
             <SecuredFieldsProvider
                 ref={sfp}
                 {...extractPropsForSFP(props)}
-                styles={{ ...defaultStyles, ...props.styles }}
+                styles={{ ...props.styles }}
                 koreanAuthenticationRequired={props.configuration.koreanAuthenticationRequired}
                 hasKoreanFields={!!(props.configuration.koreanAuthenticationRequired && props.countryCode === 'kr')}
                 onChange={handleSecuredFieldsChange}
@@ -447,7 +445,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                         ref={setRootNode}
                         className={classNames({
                             'adyen-checkout__card-input': true,
-                            [styles['card-input__wrapper']]: true,
+                            'adyen-checkout-card-input__wrapper': true,
                             [`adyen-checkout__card-input--${props.fundingSource ?? 'credit'}`]: true,
                             'adyen-checkout__card-input--loading': status === 'loading'
                         })}

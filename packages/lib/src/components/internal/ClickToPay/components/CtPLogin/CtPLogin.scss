@@ -1,5 +1,3 @@
-@import "../../../../../style/index";
-
 .adyen-checkout-ctp__section > .adyen-checkout__field.adyen-checkout__field--shopperLogin {
-    margin-bottom: 20px;
+    margin-bottom: var(--b-spacer-080);
 }

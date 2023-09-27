@@ -9,7 +9,6 @@ import LoadingWrapper from '../../../internal/LoadingWrapper/LoadingWrapper';
 import defaultProps from './defaultProps';
 import defaultStyles from './defaultStyles';
 import useCoreContext from '../../../../core/Context/useCoreContext';
-import styles from './AchInput.module.scss';
 import './AchInput.scss';
 import { ACHInputDataState, ACHInputProps, ACHInputStateError, ACHInputStateValid } from './types';
 import StoreDetails from '../../../internal/StoreDetails';
@@ -145,7 +144,7 @@ function AchInput(props: ACHInputProps) {
                 onChange={handleSecuredFieldsChange}
                 onFocus={handleFocus}
                 render={({ setRootNode, setFocusOn }, sfpState) => (
-                    <div ref={setRootNode} className={`adyen-checkout__ach-input ${styles['sf-input__wrapper']}`}>
+                    <div ref={setRootNode} className="adyen-checkout__ach-input sf-input__wrapper">
                         <LoadingWrapper status={sfpState.status}>
                             <div className={classNames(['adyen-checkout__fieldset', 'adyen-checkout__fieldset--ach'])}>
                                 {<div className="adyen-checkout__fieldset__title">{i18n.get('ach.bankAccount')}</div>}
@@ -155,12 +154,14 @@ function AchInput(props: ACHInputProps) {
                                         label={i18n.get('ach.accountHolderNameField.title')}
                                         className={'adyen-checkout__pm__holderName'}
                                         errorMessage={!!errors.holderName && i18n.get('ach.accountHolderNameField.invalid')}
+                                        showContextualElement={props.showContextualElement}
+                                        contextualText={i18n.get('ach.accountHolderNameField.contextualText')}
                                         isValid={!!valid.holderName}
                                         name={'holderName'}
                                     >
                                         <InputText
-                                            className={`adyen-checkout__pm__holderName__input ${styles['adyen-checkout__input']}`}
-                                            placeholder={props.placeholders.holderName || i18n.get('ach.accountHolderNameField.placeholder')}
+                                            className="adyen-checkout__pm__holderName__input adyen-checkout__input"
+                                            placeholder={props?.placeholders?.holderName}
                                             value={data.holderName}
                                             required={props.holderNameRequired}
                                             onInput={handleHolderName}
@@ -220,6 +221,7 @@ const extractPropsForSFP = (props: ACHInputProps) => {
         styles: props.styles,
         type: props.type,
         forceCompat: props.forceCompat,
-        resources: props.resources
+        resources: props.resources,
+        placeholders: props.placeholders
     };
 };

@@ -11,14 +11,15 @@ import {
     ENCRYPTED_SECURITY_CODE_3_DIGITS,
     ENCRYPTED_SECURITY_CODE_4_DIGITS
 } from '../configuration/constants';
+import { Placeholders } from '../../SFP/types';
 
 /**
- * Base interface, props common to both SecuredFieldInitObj & IframeConfigObject
+ * Base interface for SecuredFieldSetupObject & IframeConfigObject
  *
  * These are the props that are passed from CSF.createSecuredFields when SecuredField.ts is initialised
  * but which also end up as props in the IframeConfigObject
  */
-export interface SFInternalConfig {
+export interface SecuredFieldCommonProps {
     // originally extracted in createSecuredFields
     fieldType: string;
     extraFieldData: string;
@@ -38,6 +39,7 @@ export interface SFInternalConfig {
     showWarnings: boolean;
     legacyInputMode: boolean;
     minimumExpiryDate: string;
+    // originally from CSF->this.props
     implementationType: string;
     maskSecurityCode: boolean;
     disableIOSArrowKeys: boolean;
@@ -46,22 +48,24 @@ export interface SFInternalConfig {
 /**
  * The object sent when createSecuredFields initialises a new instance of SecuredField.ts
  *
- * Properties defined directly in *this* interface c.f. SFInternalConfig are ones
+ * Properties defined directly in *this* interface c.f. SecuredFieldCommonProps are ones
  * that are needed by SecuredField.ts but are *not* required in the IframeConfigObject
  */
-export interface SecuredFieldInitObj extends SFInternalConfig {
-    iframeSrc: string;
+export interface SecuredFieldSetupObject extends SecuredFieldCommonProps {
     loadingContext: string;
     holderEl: HTMLElement;
+    iframeSrc: string;
+    showContextualElement: boolean;
+    placeholders: Placeholders;
 }
 
 /**
  * Object sent via postMessage to a SecuredField iframe in order to configure that iframe
  *
  * Properties defined directly in *this* interface are ones that are calculated by SecuredField.ts
- * instead of just being read directly from the SecuredFieldInitObj
+ * instead of just being read directly from the SecuredFieldSetupObject
  */
-export interface IframeConfigObject extends SFInternalConfig {
+export interface IframeConfigObject extends SecuredFieldCommonProps {
     numKey: number;
 }
 
@@ -84,6 +88,13 @@ export interface SFPlaceholdersObject {
     [ENCRYPTED_BANK_LOCATION_FIELD]?: string;
 }
 
+interface ContextualTexts {
+    [ENCRYPTED_EXPIRY_DATE]?: string;
+    [ENCRYPTED_SECURITY_CODE_3_DIGITS]?: string;
+    [ENCRYPTED_SECURITY_CODE_4_DIGITS]?: string;
+    [ENCRYPTED_BANK_ACCNT_NUMBER_FIELD]?: string;
+}
+
 export type AriaConfig = {
     lang?: string;
 } & {
@@ -93,26 +104,24 @@ export type AriaConfig = {
 export interface AriaConfigObject {
     iframeTitle?: string;
     label?: string;
-    error?: object;
+    contextualTexts?: ContextualTexts;
 }
 
 abstract class AbstractSecuredField {
-    public sfConfig: SFInternalConfig; // could be protected but needs to be public for tests to run
-    public fieldType: string;
-    protected iframeSrc: string;
+    public sfConfig: SecuredFieldCommonProps; // could be protected but needs to be public for tests to run
     protected loadingContext: string;
     protected holderEl: HTMLElement;
     protected iframeRef: HTMLElement;
     public loadToConfigTimeout: number;
     // From getters/setters with the same name
-    protected _errorType: string;
-    protected _hasError: boolean;
     protected _isValid: boolean;
+    protected _iframeContentWindow: Window;
+    protected _numKey: number;
+    protected _isEncrypted: boolean;
+    protected _hasError: boolean;
+    protected _errorType: string;
     protected _cvcPolicy: CVCPolicyType;
     protected _expiryDatePolicy: DatePolicyType;
-    protected _iframeContentWindow: Window;
-    protected _isEncrypted: boolean;
-    protected _numKey: number;
     protected _iframeOnLoadListener: RtnType_noParamVoidFn;
     protected _postMessageListener: RtnType_postMessageListener;
     // Callback fns assigned via public functions
@@ -127,7 +136,7 @@ abstract class AbstractSecuredField {
     protected onAutoCompleteCallback: RtnType_callbackFn;
 
     protected constructor() {
-        this.sfConfig = {} as any as SFInternalConfig;
+        this.sfConfig = {} as any as SecuredFieldCommonProps;
     }
 }
 

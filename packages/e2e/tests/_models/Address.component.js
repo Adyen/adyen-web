@@ -10,7 +10,7 @@ export default class AddressComponent {
 
         this.postalCodeLabel = this.baseEl.find('.adyen-checkout__field--postalCode .adyen-checkout__label__text');
         this.postalCodeInput = this.baseEl.find('.adyen-checkout__input--postalCode');
-        this.postalCodeInputError = this.baseEl.find('.adyen-checkout__field--postalCode .adyen-checkout__error-text');
+        this.postalCodeInputError = this.baseEl.find('.adyen-checkout__field--postalCode .adyen-checkout-contextual-text--error');
     }
 
     async fillPostalCode(value = '') {

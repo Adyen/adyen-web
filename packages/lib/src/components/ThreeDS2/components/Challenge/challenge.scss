@@ -1,14 +1,12 @@
-@import "../../../../style/index";
-
 .adyen-checkout__threeds2-challenge-error {
     .adyen-checkout__status__icon {
         display: block;
-        margin: $spacing-xxxlarge auto $spacing-xlarge;
+        margin: var(--b-spacer-130) auto var(--b-spacer-100);
     }
 
     .adyen-checkout__status__text {
-        color: $color-red;
-        margin-bottom: $spacing-xxxlarge;
+        color: var(--b-color-label-critical);
+        margin-bottom: var(--b-spacer-130);
         text-align: center;
     }
 }

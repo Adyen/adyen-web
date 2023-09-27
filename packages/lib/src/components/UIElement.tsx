@@ -11,6 +11,7 @@ import { hasOwnProperty } from '../utils/hasOwnProperty';
 import DropinElement from './Dropin';
 import { CoreOptions } from '../core/types';
 import Core from '../core';
+import './UIElement.scss';
 
 export class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;

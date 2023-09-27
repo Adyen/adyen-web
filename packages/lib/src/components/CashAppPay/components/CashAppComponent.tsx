@@ -11,10 +11,15 @@ import './CashAppComponent.scss';
 interface CashAppComponentProps {
     enableStoreDetails?: boolean;
     cashAppService: ICashAppService;
+
     onClick(): void;
+
     onChangeStoreDetails(data: any): void;
+
     onAuthorize(payEventData: CashAppPayEventData): void;
+
     onError(error: AdyenCheckoutError): void;
+
     ref(ref: RefObject<typeof CashAppComponent>): void;
 }
 
@@ -86,7 +91,7 @@ export function CashAppComponent({
     }, [cashAppService, initializeCashAppSdk]);
 
     return (
-        <div className="adyen-checkout__cashapp">
+        <div className="adyen-checkout__cashapp" aria-live="polite" aria-busy={status === 'loading'}>
             {status === 'loading' && <Spinner />}
             {status !== 'loading' && enableStoreDetails && <StoreDetails storeDetails={storePaymentMethod} onChange={setStorePaymentMethod} />}
 

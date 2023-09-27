@@ -60,12 +60,15 @@ const configObj = {
         onComplete: handleOnRiskData,
         onError: console.error
     },
-    translations: {
-        'en-US': {
-            'creditCard.cvcField.placeholder.3digits': 'digits 3',
-            'creditCard.cvcField.placeholder.4digits': 'digits 4'
-        }
-    },
+    // translations: {
+    //     'en-US': {
+    //         'creditCard.numberField.placeholder': 'enter pan',
+    //         'creditCard.expiryDateField.month.placeholder': 'monthses',
+    //         'creditCard.expiryDateField.year.placeholder': 'yearses',
+    //         'creditCard.cvcField.placeholder.3digits': 'digits 3',
+    //         'creditCard.cvcField.placeholder.4digits': 'digits 4'
+    //     }
+    // },
     paymentMethodsConfiguration: {
         // NOTE: still use 'card' because it's about the component 'type', not the name
         card: {

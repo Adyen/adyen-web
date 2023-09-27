@@ -1,4 +1,58 @@
-@import "../../../../style/index";
+.adyen-checkout-card-input {
+    &__wrapper {
+        position: relative;
+    }
+
+    &__icon {
+        border-radius: var(--b-input-field-static-value-border-radius);
+        height: 18px;
+        width: 27px;
+        margin-right: var(--b-spacer-060);
+    }
+
+    &__form {
+        opacity: 1;
+    }
+
+    &__spinner {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        display: none;
+    }
+
+    &__spinner--active {
+        display: block;
+    }
+
+    &__form--loading {
+        opacity: 0;
+    }
+}
+
+.adyen-checkout__input {
+    display: block;
+    max-height: 100px;
+}
+
+.adyen-checkout__card__cvc__input--hidden,
+.adyen-checkout__card__exp-date__input--hidden {
+    display: none;
+}
+
+.adyen-checkout__card__exp-cvc__exp-date__input--hidden {
+    justify-content: flex-end;
+}
+
+.revolving-plan-installments {
+    &__disabled {
+        pointer-events: none;
+        opacity: 0.4;
+    }
+}
 
 .adyen-checkout__card-input__form {
     transition: opacity 0.25s ease-out;
@@ -9,22 +63,16 @@
 }
 
 .adyen-checkout__card__cardNumber__input {
-    padding: 5px 8px;
+    padding-left: var(--b-spacer-060);
 }
 
 .adyen-checkout__card__exp-date__input--oneclick {
-    line-height: 30px;
-    font-weight: 400;
+    line-height: var(--b-text-title-line-height);
+    font-weight: var(--b-text-body-font-weight);
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
     text-align: left;
-
-}
-
-.adyen-checkout__field--storedCard .adyen-checkout__input[readonly],
-.adyen-checkout__field--storedCard .adyen-checkout__input[readonly]:hover{
-    color: $color-black;
 }
 
 .adyen-checkout__field--storedCard,
@@ -33,13 +81,22 @@
     margin-bottom: 0;
 }
 
+.adyen-checkout__store-details {
+    display: flex;
+    align-items: center;
+    gap: var(--b-spacer-060);
+    padding: var(--b-spacer-060) var(--b-spacer-070);
+    margin-top: var(--b-spacer-070);
+    border: var(--b-border-width-s) solid var(--b-color-outline-secondary);
+    border-radius: var(--b-border-radius-m);
+}
+
 .adyen-checkout__card__holderName,
-.adyen-checkout__store-details,
 .adyen-checkout__card__kcp-authentication,
 .adyen-checkout__card__socialSecurityNumber,
 .adyen-checkout__installments,
 .adyen-checkout__card-input .adyen-checkout__fieldset--billingAddress {
-    margin-top: $spacing-medium;
+    margin-top: var(--b-spacer-070);
 }
 
 .adyen-checkout__card-input.adyen-checkout__card-input--loading {
@@ -47,11 +104,11 @@
 }
 
 .adyen-checkout__card__holderName:first-child {
-    margin: 0 0 $spacing-medium;
+    margin: 0 0 var(--b-input-field-label-margin-bottom);
 }
 
 /* Hide card brand icon when cardNumber is in an error state */
-.adyen-checkout__field--cardNumber .adyen-checkout__input--error .adyen-checkout__card__cardNumber__brandIcon {
+.adyen-checkout__field--cardNumber .adyen-checkout__input--error + .adyen-checkout__card__cardNumber__brandIcon {
     display: none;
 }
 
@@ -88,14 +145,11 @@
 }
 
 .adyen-checkout__card__cvc__hint__wrapper {
-    position: absolute;
-    right: 0;
-    top: 0;
     height: 100%;
     width: 27px;
     display: flex;
     align-items: center;
-    margin: 0 10px;
+    margin-right: var(--b-spacer-060);
 
     // Card Flip animation
     transition: transform 0.3s cubic-bezier(0.455, 0.03, 0.515, 0.955);
@@ -118,13 +172,10 @@
 }
 
 .adyen-checkout__field__exp-date_hint_wrapper {
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
     display: flex;
     align-items: center;
     transition: opacity 0.1s linear;
+    margin-right: var(--b-spacer-060);
 
     &.adyen-checkout__field__exp-date_hint_wrapper--hidden {
         opacity: 0;
@@ -134,7 +185,6 @@
 .adyen-checkout__field__exp-date_hint {
     width: 27px;
     height: 18px;
-    margin: 0 10px 0 0;
 }
 
 // Front of the card is our back
@@ -159,13 +209,13 @@
     }
 
     .adyen-checkout__radio_group__input-wrapper {
-        margin-top: 20px;
+        margin-top: var(--b-spacer-080);
     }
 
     .adyen-checkout__field--revolving-plan-installments {
         position: relative;
         top: 42px;
         width: 30%;
-        margin-left: 15px;
+        margin-left: var(--b-spacer-070);
     }
 }

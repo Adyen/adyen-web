@@ -1,54 +1,84 @@
-@import "../../../style/index";
-
 .adyen-checkout__spinner__wrapper {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .adyen-checkout__spinner__wrapper--inline {
-    height: auto;
-    display: inline-block;
-    margin-right: 8px;
+  height: auto;
+  display: inline-block;
+  margin-right: var(--b-spacer-040);
 
-    [dir="rtl"] & {
-        margin-right: 0;
-        margin-left: 8px;
-    }
+  [dir='rtl'] & {
+    margin-right: 0;
+    margin-left: var(--b-spacer-040);
+  }
 }
 
 .adyen-checkout__spinner {
-    border: 3px solid $color-primary;
+  height: var(--b-loading-indicator-height);
+  width: var(--b-loading-indicator-width);
+  position: relative;
+
+  &::before,
+  &::after {
+    animation: bento-progress-circular-rotate 1s cubic-bezier(0.785, 0.135, 0.15, 0.86) infinite;
+    border: var(--b-border-width-l) solid transparent;
     border-radius: 50%;
-    height: 43px;
-    width: 43px;
+    box-sizing: border-box;
+    content: '';
+    display: block;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+
+  &::before {
+    border-color: var(--b-loading-indicator-background-color);
     border-top-color: transparent;
-    animation: rotate-spinner 1.5s infinite linear;
-}
+    opacity: 0.1;
+  }
 
-.adyen-checkout__spinner--large {
-    height: 43px;
-    width: 43px;
-}
+  &::after {
+    border-color: transparent;
+    border-top-color: var(--b-loading-indicator-color);
+  }
 
-.adyen-checkout__spinner--small {
-    height: 16px;
-    width: 16px;
-    border-width: 2px;
-}
+  &--small {
+    height: var(--b-loading-indicator-small-height);
+    width: var(--b-loading-indicator-small-width);
 
-.adyen-checkout__spinner--medium {
+    &::before,
+    &::after {
+      border-width: var(--b-loading-indicator-small-border-width);
+    }
+  }
+
+  &--medium {
     height: 28px;
     width: 28px;
+  }
+
+  &--large {
+    height: var(--b-loading-indicator-large-height);
+    width: var(--b-loading-indicator-large-width);
+
+    &::before,
+    &::after {
+      border-width: var(--b-loading-indicator-large-border-width);
+    }
+  }
 }
 
-@keyframes rotate-spinner {
-    0% {
-        transform: rotate(0deg);
-    }
+@keyframes bento-progress-circular-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
 
-    100% {
-        transform: rotate(360deg);
-    }
+  100% {
+    transform: rotate(360deg);
+  }
 }

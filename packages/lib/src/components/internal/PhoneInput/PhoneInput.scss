@@ -1,67 +1,21 @@
-.adyen-checkout__phone-input {
+@use '../../../style/index';
+
+.adyen-checkout__fieldset--phone-input {
     direction: ltr;
 
-    .adyen-checkout__input-wrapper {
-        width: 100%;
+    .adyen-checkout__fieldset__fields {
+        gap: var(--b-spacer-070);
 
-        .adyen-checkout__input {
-            padding: 0;
-            height: auto;
-
-            &:focus {
-                border: 1px solid #0075ff;
-                box-shadow: 0 0 0 2px #99c2ff;
-            }
-        }
-
-        .adyen-checkout__dropdown__button {
-            width: auto;
-            border: 0;
-            height: 35px;
-            border-top-right-radius: 0;
-            border-bottom-right-radius: 0;
-
-            &::after {
-                left: 40px;
-                box-sizing: revert;
-                height: 10px;
-            }
-        }
-
-        .adyen-checkout__input--phoneNumber {
-            margin-left: 8px;
-            height: 35px;
-            padding-left: 15px;
-            border: 1px solid transparent;
-        }
-
-        .adyen-checkout__input-wrapper--phoneInput {
-            display: flex;
-            align-items: center;
-
-            &:focus {
-                border: 1px solid #0075ff;
-                box-shadow: 0 0 0 2px #99c2ff;
-            }
-        }
-
-        .adyen-checkout__phoneNumber {
-            display: flex;
-            align-items: center;
-            margin-left: 65px;
-            width: 100%;
-        }
-
-        .adyen-checkout__countryFlag {
-            position: absolute;
-        }
-
-        .adyen-checkout__dropdown__button--active {
-            box-shadow: none;
-
-            &:hover {
-                box-shadow: none;
-            }
+        > .adyen-checkout__field {
+            margin-bottom: 0;
         }
     }
+}
+
+.adyen-checkout-field--phone-prefix {
+    width: 144px;
+}
+
+.adyen-checkout-field--phone-number {
+    flex: 1;
 }

@@ -1,9 +1,9 @@
-@import "../../../style/index";
+@use "../../../style/index";
 
 .adyen-checkout__blik__helper {
-    font-size: $font-size-medium;
+    font-size: index.$font-size-medium;
     font-weight: normal;
-    color: $color-black;
-    margin: 0 0 $spacing-medium;
+    color: var(--b-color-label-primary);
+    margin: 0 0 var(--b-spacer-070);
     padding: 0;
 }

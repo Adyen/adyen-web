@@ -126,6 +126,7 @@ export const extractPropsForCardFields = (props: CardInputProps) => {
         // Extract props for CardFields > CardNumber
         showBrandIcon: props.showBrandIcon,
         showBrandsUnderCardNumber: props.showBrandsUnderCardNumber,
+        showContextualElement: props.showContextualElement,
         // Extract props for StoredCardFields
         lastFour: props.lastFour,
         expiryMonth: props.expiryMonth,
@@ -161,7 +162,9 @@ export const extractPropsForSFP = (props: CardInputProps) => {
         showWarnings: props.showWarnings,
         trimTrailingSeparator: props.trimTrailingSeparator,
         maskSecurityCode: props.maskSecurityCode,
-        resources: props.resources
+        resources: props.resources,
+        placeholders: props.placeholders,
+        showContextualElement: props.showContextualElement
     } as SFPProps; // Can't set as return type on fn or it will complain about missing, mandatory, props
 };
 

@@ -1,15 +1,12 @@
-@import "../../../style/index";
+.adyen-checkout__payment-methods-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
 
-.adyen-checkout__dropin,
-.adyen-checkout__dropin *,
-.adyen-checkout__dropin *::after,
-.adyen-checkout__dropin *::before {
-    box-sizing: border-box;
-}
-
-.adyen-checkout__payment-methods-list--loading {
-    user-select: none;
-    pointer-events: none;
+    &--loading {
+        user-select: none;
+        pointer-events: none;
+    }
 }
 
 .adyen-checkout__instant-payment-methods-list {
@@ -18,17 +15,37 @@
     padding: 0;
 
     li:not(:last-child) {
-        margin-bottom: 8px;
+        margin-bottom: var(--b-spacer-040);
     }
 }
 
-/* Forms */
+.adyen-checkout__payment-method {
+    display: block;
+    max-height: 60px;
 
-.adyen-checkout__link {
-    color: $color-primary;
-    text-decoration: none;
-}
+    &__details {
+        display: none;
+    }
 
-.adyen-checkout__link:hover {
-    text-decoration: underline;
+    &__image {
+        width: var(--b-spacer-110);
+        height: 26px;
+
+        &__wrapper {
+            margin-right: var(--b-spacer-040);
+
+            [dir="rtl"] & {
+                margin-right: 0;
+                margin-left: var(--b-spacer-040);
+            }
+        }
+    }
+
+    &--selected {
+        max-height: 100%;
+
+        .adyen-checkout__payment-method__details {
+            display: block;
+        }
+    }
 }

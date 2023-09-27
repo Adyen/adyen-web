@@ -1,10 +1,24 @@
 import { h } from 'preact';
-import { useState, useLayoutEffect } from 'preact/hooks';
+import { useLayoutEffect, useState } from 'preact/hooks';
 import Field from '../../FormFields/Field';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import getDataset from '../../../../core/Services/get-dataset';
 import { CountryFieldProps, CountryFieldItem } from '../types';
 import Select from '../../FormFields/Select';
+import { getFlagEmoji } from '../../../../utils/getFlagEmoji';
+
+const formatCountries = (countries: Array<CountryFieldItem>, allowedCountries: string[]) => {
+    const applyFilter = (country: CountryFieldItem) => allowedCountries.includes(country.id);
+    const applyMapper = (country: CountryFieldItem) => {
+        const flag = getFlagEmoji(country.id);
+        return {
+            ...country,
+            name: `${flag} ${country.name}`,
+            selectedOptionName: `${flag} ${country.name}`
+        };
+    };
+    return allowedCountries.length ? countries.filter(applyFilter).map(applyMapper) : countries.map(applyMapper);
+};
 
 export default function CountryField(props: CountryFieldProps) {
     const { allowedCountries = [], classNameModifiers = [], errorMessage, onDropdownChange, value } = props;
@@ -16,8 +30,7 @@ export default function CountryField(props: CountryFieldProps) {
     useLayoutEffect(() => {
         getDataset('countries', loadingContext, i18n.locale)
             .then(response => {
-                const countriesFilter = country => allowedCountries.includes(country.id);
-                const newCountries = allowedCountries.length ? response.filter(countriesFilter) : response;
+                const newCountries = formatCountries(response, allowedCountries);
                 setCountries(newCountries || []);
                 setReadOnly(newCountries.length === 1 || readOnly);
                 setLoaded(true);
@@ -40,15 +53,9 @@ export default function CountryField(props: CountryFieldProps) {
             isValid={!!value}
             showValidIcon={false}
             i18n={i18n}
+            readOnly={readOnly && !!value}
         >
-            <Select
-                onChange={onDropdownChange}
-                name={'country'}
-                placeholder={i18n.get('select.country')}
-                selectedValue={value}
-                items={countries}
-                readonly={readOnly && !!value}
-            />
+            <Select onChange={onDropdownChange} name={'country'} selectedValue={value} items={countries} readonly={readOnly && !!value} />
         </Field>
     );
 }

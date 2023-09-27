@@ -5,7 +5,6 @@ import DualBrandingIcon from './DualBrandingIcon/DualBrandingIcon';
 import Field from '../../../../internal/FormFields/Field';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { CardNumberProps } from './types';
-import styles from '../CardInput.module.scss';
 import DataSfSpan from './DataSfSpan';
 import { ENCRYPTED_CARD_NUMBER } from '../../../../internal/SecuredFields/lib/configuration/constants';
 import { alternativeLabelContent } from './IframeLabelAlternative';
@@ -27,7 +26,7 @@ export default function CardNumber(props: CardNumberProps) {
             name={ENCRYPTED_CARD_NUMBER}
             showValidIcon={false}
             i18n={i18n}
-            errorVisibleToScreenReader={false} // securedFields have their own, internal, aria-describedby element
+            contextVisibleToScreenReader={false} // securedFields have their own, internal, aria-describedby element
             useLabelElement={false}
             renderAlternativeToLabel={alternativeLabelContent}
         >
@@ -37,15 +36,14 @@ export default function CardNumber(props: CardNumberProps) {
                     'adyen-checkout__input': true,
                     'adyen-checkout__input--large': true,
                     'adyen-checkout__card__cardNumber__input': true,
-                    [styles['adyen-checkout__input']]: true,
                     'adyen-checkout__input--error': error,
                     'adyen-checkout__input--focus': props.focused,
                     'adyen-checkout__input--valid': isValid,
                     'adyen-checkout__card__cardNumber__input--noBrand': !props.showBrandIcon
                 })}
-            >
-                {props.showBrandIcon && !dualBrandingElements && <BrandIcon brandsConfiguration={props.brandsConfiguration} brand={props.brand} />}
-            </DataSfSpan>
+            ></DataSfSpan>
+
+            {props.showBrandIcon && !dualBrandingElements && <BrandIcon brandsConfiguration={props.brandsConfiguration} brand={props.brand} />}
 
             {dualBrandingElements && !error && (
                 <div
