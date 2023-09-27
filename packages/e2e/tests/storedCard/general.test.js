@@ -18,7 +18,7 @@ test('#1 Can fill out the cvc fields in the stored card and make a successful pa
     await t.setNativeDialogHandler(() => true);
 
     // expiry date field is readonly
-    await t.expect(cardPage.storedCardExpiryDate.withAttribute('readonly').exists).ok();
+    await t.expect(cardPage.storedCardExpiryDate.withAttribute('disabled').exists).ok();
 
     await cardPage.cardUtils.fillCVC(t, TEST_CVC_VALUE, 'add', 0);
 
