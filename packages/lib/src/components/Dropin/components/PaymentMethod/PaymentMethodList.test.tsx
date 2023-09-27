@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { ComponentChildren, h } from 'preact';
 import PaymentMethodList from './PaymentMethodList';
 import { render, screen, within } from '@testing-library/preact';
 import { mock } from 'jest-mock-extended';
@@ -7,6 +7,7 @@ import EventEmitter from '../../../EventEmitter';
 import userEvent from '@testing-library/user-event';
 import Giftcard from '../../../Giftcard';
 import { Order, OrderStatus } from '../../../../types';
+import CoreProvider from '../../../../core/Context/CoreProvider';
 
 function createInstantPaymentMethods() {
     return [
@@ -65,12 +66,20 @@ function createPaymentMethodsMock() {
     ];
 }
 
+const customRender = (children: ComponentChildren) => {
+    return render(
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            {children}
+        </CoreProvider>
+    );
+};
+
 test('onSelect should be triggered only once', async () => {
     const user = userEvent.setup();
     const paymentMethods = createPaymentMethodsMock();
     const onSelectMock = jest.fn();
 
-    render(<PaymentMethodList paymentMethods={paymentMethods} cachedPaymentMethods={{}} isLoading={false} onSelect={onSelectMock} />);
+    customRender(<PaymentMethodList paymentMethods={paymentMethods} cachedPaymentMethods={{}} isLoading={false} onSelect={onSelectMock} />);
 
     await user.click(await screen.findByRole('radio', { name: /Card/ }));
     await user.click(await screen.findByRole('radio', { name: /WeChat/ }));
@@ -82,7 +91,7 @@ test('onSelect should be triggered only once', async () => {
 test('should not call onSelect if there is no payment method', () => {
     const onSelectMock = jest.fn();
 
-    render(
+    customRender(
         <PaymentMethodList paymentMethods={[]} cachedPaymentMethods={{}} isLoading={false} onSelect={onSelectMock} openFirstPaymentMethod={true} />
     );
 
@@ -93,7 +102,7 @@ test('should call onSelect when mounting the Component if openFirstPaymentMethod
     const onSelectMock = jest.fn();
     const paymentMethods = createPaymentMethodsMock();
 
-    render(
+    customRender(
         <PaymentMethodList
             paymentMethods={paymentMethods}
             cachedPaymentMethods={{}}
@@ -111,7 +120,7 @@ test('should not call onSelect if openFirstStoredPaymentMethod is set but there 
     const onSelectMock = jest.fn();
     const paymentMethods = createPaymentMethodsMock();
 
-    render(
+    customRender(
         <PaymentMethodList
             paymentMethods={paymentMethods}
             cachedPaymentMethods={{}}
@@ -129,7 +138,7 @@ test('should call onSelect if openFirstStoredPaymentMethod is set and there is n
     const paymentMethods = createPaymentMethodsMock();
     paymentMethods[0].props.oneClick = true;
 
-    render(
+    customRender(
         <PaymentMethodList
             paymentMethods={paymentMethods}
             cachedPaymentMethods={{}}
@@ -146,7 +155,7 @@ test('should display instant payment methods', () => {
     const instantPaymentMethods = createInstantPaymentMethods();
     const paymentMethods = createPaymentMethodsMock();
 
-    render(
+    customRender(
         <PaymentMethodList
             paymentMethods={paymentMethods}
             instantPaymentMethods={instantPaymentMethods}
@@ -165,6 +174,7 @@ describe('Gift card', () => {
 
     beforeEach(() => {
         const props = {
+            core: global.core,
             id: '3',
             type: 'giftcard',
             brand: 'givex',
@@ -177,7 +187,7 @@ describe('Gift card', () => {
     });
 
     test('should display the gift card custom icon in the payment method list', async () => {
-        render(
+        customRender(
             <PaymentMethodList paymentMethods={[giftCardPayment]} cachedPaymentMethods={{}} isLoading={false} openFirstStoredPaymentMethod={true} />
         );
         const img = await screen.findByRole('img');
@@ -194,7 +204,7 @@ describe('Gift card', () => {
             paymentMethods: [{ lastFour: '0000', type: 'givex', amount: { currency: 'USD', value: 5000 } }],
             remainingAmount: { currency: 'USD', value: 20940 }
         };
-        render(
+        customRender(
             <PaymentMethodList
                 order={order}
                 orderStatus={orderStatus}
