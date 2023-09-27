@@ -132,7 +132,7 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
         return state;
     }
 
-    onComplete(state): void {
+    protected onComplete(state): void {
         if (this.props.onComplete) this.props.onComplete(state, this.elementRef);
     }
 

@@ -1,53 +1,66 @@
 import UIElement from './UIElement';
-import AdyenCheckout from '../index';
-import ThreeDS2DeviceFingerprint from './ThreeDS2/ThreeDS2DeviceFingerprint';
-import ThreeDS2Challenge from './ThreeDS2/ThreeDS2Challenge';
+import { ICore } from '../core/types';
+import { mockDeep, mockReset } from 'jest-mock-extended';
+import { AdyenCheckout, ThreeDS2Challenge, ThreeDS2DeviceFingerprint } from '../index';
+
+class MyElement extends UIElement {
+    public static type = 'super_pay';
+
+    public get isValid(): boolean {
+        return false;
+    }
+    public callOnComplete() {
+        super.onComplete({});
+    }
+    public callOnChange() {
+        super.onChange();
+    }
+    render() {
+        return '';
+    }
+}
 
 const submitMock = jest.fn();
 (global as any).HTMLFormElement.prototype.submit = () => submitMock;
 
+const core = mockDeep<ICore>();
+beforeEach(() => {
+    mockReset(core);
+});
+
 describe('UIElement', () => {
-    describe('onComplete', () => {
-        test('calls the passed onComplete function', () => {
-            const onComplete = jest.fn();
-            const uiElement = new UIElement({ onComplete });
-            uiElement.onComplete({});
-            expect(onComplete.mock.calls.length).toBe(1);
+    describe('onComplete()', () => {
+        test('should call "onComplete" prop if available', () => {
+            const onCompleteCb = jest.fn();
+            const element = new MyElement({ core: core, onComplete: onCompleteCb });
+
+            element.callOnComplete();
+
+            expect(onCompleteCb.mock.calls.length).toBe(1);
         });
     });
 
-    describe('onChange', () => {
-        test('calls the passed onChange function', () => {
-            class MyElement extends UIElement {
-                onChange(): object {
-                    return super.onChange();
-                }
-            }
-
+    describe('onChange()', () => {
+        test('should call "onChange" prop if available', () => {
             const onChange = jest.fn();
-            const myElement = new MyElement({ onChange });
-            myElement.onChange();
+            const element = new MyElement({ core: core, onChange });
+
+            element.callOnChange();
+
             expect(onChange.mock.calls.length).toBe(1);
         });
 
-        test('does not trigger the onValid method if the component is not valid', () => {
-            class MyElement extends UIElement {
-                get isValid() {
-                    return false;
-                }
-                onChange(): object {
-                    return super.onChange();
-                }
-            }
+        test('should not trigger onValid method if the component is not valid', () => {
             const onValid = jest.fn();
-            const myElement = new MyElement({ onValid });
-            myElement.onChange();
+            const element = new MyElement({ core: core, onValid });
+
+            element.callOnChange();
+
             expect(onValid.mock.calls.length).toBe(0);
         });
 
-        test('triggers the onValid method if the component is valid', () => {
-            const onValid = jest.fn();
-            class MyElement extends UIElement {
+        test('should trigger the onValid method if the component is valid', () => {
+            class MyValidElement extends UIElement {
                 get isValid() {
                     return true;
                 }
@@ -56,78 +69,76 @@ describe('UIElement', () => {
                 }
             }
 
-            const myElement = new MyElement({ onValid });
-            myElement.onChange();
+            const onValid = jest.fn();
+            const element = new MyValidElement({ core: core, onValid });
+            element.onChange();
+
             expect(onValid.mock.calls.length).toBe(1);
         });
     });
 
-    describe('isValid', () => {
+    describe('isValid()', () => {
         test('should be false by default', () => {
-            const uiElement = new UIElement({});
-            expect(uiElement.isValid).toBe(false);
+            class PristineUiElement extends UIElement {}
+            const element = new PristineUiElement({ core: core });
+            expect(element.isValid).toBe(false);
         });
     });
 
-    describe('onValid', () => {
-        test('calls the passed onValid function', () => {
-            class MyElement extends UIElement {
-                get isValid() {
-                    return true;
-                }
-                onChange(): object {
-                    return super.onChange();
-                }
-            }
-
-            const onValid = jest.fn();
-            const myElement = new MyElement({ onValid });
-
-            myElement.onChange();
-            expect(onValid.mock.calls.length).toBe(1);
-        });
-    });
-
-    describe('showValidation', () => {
-        test("calls component's showValidation method", () => {
+    describe('showValidation()', () => {
+        test("should trigger the component's showValidation method", () => {
             const showValidation = jest.fn();
-            class MyElement extends UIElement {
-                public showValidation = () => showValidation();
-            }
+            const element = new MyElement({ core: core });
 
-            const myElement = new MyElement({});
-            myElement.showValidation();
+            const componentRef = {
+                showValidation
+            };
+
+            element.setComponentRef(componentRef);
+            element.showValidation();
+
             expect(showValidation.mock.calls.length).toBe(1);
         });
     });
 
-    describe('get displayName', () => {
-        test('returns the name prop', () => {
-            const uiElement = new UIElement({ name: 'test123' });
-            expect(uiElement.displayName).toEqual('test123');
+    describe('get displayName()', () => {
+        test('should use the name property if available', () => {
+            const element = new MyElement({ core: core, name: 'SuperPay' });
+            expect(element.displayName).toEqual('SuperPay');
         });
 
-        test('returns the constructor type if no name prop is passed', () => {
-            class MyElement extends UIElement {
-                protected static type = 'test123';
-            }
+        test('should use the constructor type if no name property is passed', () => {
+            const element = new MyElement({ core: core });
+            expect(element.displayName).toEqual('super_pay');
+        });
 
-            const myElement = new MyElement({});
-            expect(myElement.displayName).toEqual('test123');
+        test('should use the name from payment methods response', () => {
+            core.paymentMethodsResponse.paymentMethods = [
+                {
+                    name: 'SuperPayeee',
+                    type: 'super_pay'
+                }
+            ];
+
+            const element = new MyElement({ core: core });
+            expect(element.displayName).toEqual('SuperPayeee');
+        });
+
+        test('should use the name prop as it has precedence over payment methods response name property', () => {
+            core.paymentMethodsResponse.paymentMethods = [
+                {
+                    name: 'SuperPayeee',
+                    type: 'super_pay'
+                }
+            ];
+
+            const element = new MyElement({ core: core, name: 'SuperbPay' });
+            expect(element.displayName).toEqual('SuperbPay');
         });
     });
 
-    describe('handleAction', () => {
-        const challengeAction = {
-            paymentData: 'Ab02b4c0!BQABAgCUeRP+3La4...',
-            authorisationToken: 'BQABAQCmFNEdaCE3rcbbB...',
-            subtype: 'challenge',
-            token: 'eyJhY3NSZWZlcmVuY2VOdW1iZXIiOiJBRFlFTi1BQ1MtU0lNVUxBVE9SIiwiYWNzVHJhbnNJRCI6Ijg0MzZjYThkLThkN2EtNGFjYy05NmYyLTE0ZjU0MjgyNzczZiIsImFjc1VSTCI6Imh0dHBzOlwvXC9wYWwtdGVzdC5hZHllbi5jb21cL3RocmVlZHMyc2ltdWxhdG9yXC9hY3NcL2NoYWxsZW5nZS5zaHRtbCIsIm1lc3NhZ2VWZXJzaW9uIjoiMi4xLjAiLCJ0aHJlZURTTm90aWZpY2F0aW9uVVJMIjoiaHR0cHM6XC9cL2NoZWNrb3V0c2hvcHBlci10ZXN0LmFkeWVuLmNvbVwvY2hlY2tvdXRzaG9wcGVyXC8zZG5vdGlmLnNodG1sP29yaWdpbktleT1wdWIudjIuODExNTY1ODcwNTcxMzk0MC5hSFIwY0hNNkx5OWphR1ZqYTI5MWRITm9iM0J3WlhJdGRHVnpkQzVoWkhsbGJpNWpiMjAuVGFKalVLN3VrUFdTUzJEX3l2ZDY4TFRLN2dRN2ozRXFOM05nS1JWQW84OCIsInRocmVlRFNTZXJ2ZXJUcmFuc0lEIjoiZTU0NDNjZTYtNTE3Mi00MmM1LThjY2MtYmRjMGE1MmNkZjViIn0=',
-            type: 'threeDS2',
-            paymentMethodType: 'scheme'
-        };
-
-        test('should handle new fingerprint action', async () => {
+    describe('handleAction()', () => {
+        test('should handle fingerprint action', async () => {
             const fingerprintAction = {
                 paymentData: 'Ab02b4c0!BQABAgCUeRP+3La4...',
                 authorisationToken: 'BQABAQCmFNEdaCE3rcbbB...',
@@ -137,52 +148,116 @@ describe('UIElement', () => {
                 type: 'threeDS2'
             };
 
-            const checkout = await AdyenCheckout({ environment: 'test', clientKey: 'test_123456', analytics: { enabled: false } });
-            const comp = checkout.create('card').mount('body');
-
-            const pa = comp.handleAction(fingerprintAction);
-            expect(pa instanceof ThreeDS2DeviceFingerprint).toEqual(true);
-
-            expect(pa.props.elementRef).not.toBeDefined();
-            expect(pa.props.showSpinner).toEqual(true);
-            expect(pa.props.statusType).toEqual('loading');
-            expect(pa.props.isDropin).toBe(false);
-        });
-
-        test('should handle new challenge action', async () => {
             const checkout = await AdyenCheckout({
                 environment: 'test',
                 clientKey: 'test_123456',
-                analytics: { enabled: false },
-                paymentMethodsConfiguration: {
-                    threeDS2: { challengeWindowSize: '02' }
-                }
+                analytics: { enabled: false }
             });
 
-            const component = checkout.create('card', {}).mount('body');
+            const element = new MyElement({ core: checkout }).mount('body');
 
-            const pa = component.handleAction(challengeAction);
-            expect(pa instanceof ThreeDS2Challenge).toEqual(true);
+            const actionComponent = element.handleAction(fingerprintAction);
+            expect(actionComponent instanceof ThreeDS2DeviceFingerprint).toEqual(true);
 
-            expect(pa.props.elementRef).not.toBeDefined();
-            expect(pa.props.statusType).toEqual('custom');
-            expect(pa.props.isDropin).toBe(false);
+            expect(actionComponent.props.elementRef).not.toBeDefined();
+            expect(actionComponent.props.showSpinner).toEqual(true);
+            expect(actionComponent.props.statusType).toEqual('loading');
+            expect(actionComponent.props.isDropin).toBe(false);
+        });
 
-            expect(pa.props.challengeWindowSize).toEqual('02');
+        test('should handle challenge action', async () => {
+            const challengeAction = {
+                paymentData: 'Ab02b4c0!BQABAgCUeRP+3La4...',
+                authorisationToken: 'BQABAQCmFNEdaCE3rcbbB...',
+                subtype: 'challenge',
+                token: 'eyJhY3NSZWZlcmVuY2VOdW1iZXIiOiJBRFlFTi1BQ1MtU0lNVUxBVE9SIiwiYWNzVHJhbnNJRCI6Ijg0MzZjYThkLThkN2EtNGFjYy05NmYyLTE0ZjU0MjgyNzczZiIsImFjc1VSTCI6Imh0dHBzOlwvXC9wYWwtdGVzdC5hZHllbi5jb21cL3RocmVlZHMyc2ltdWxhdG9yXC9hY3NcL2NoYWxsZW5nZS5zaHRtbCIsIm1lc3NhZ2VWZXJzaW9uIjoiMi4xLjAiLCJ0aHJlZURTTm90aWZpY2F0aW9uVVJMIjoiaHR0cHM6XC9cL2NoZWNrb3V0c2hvcHBlci10ZXN0LmFkeWVuLmNvbVwvY2hlY2tvdXRzaG9wcGVyXC8zZG5vdGlmLnNodG1sP29yaWdpbktleT1wdWIudjIuODExNTY1ODcwNTcxMzk0MC5hSFIwY0hNNkx5OWphR1ZqYTI5MWRITm9iM0J3WlhJdGRHVnpkQzVoWkhsbGJpNWpiMjAuVGFKalVLN3VrUFdTUzJEX3l2ZDY4TFRLN2dRN2ozRXFOM05nS1JWQW84OCIsInRocmVlRFNTZXJ2ZXJUcmFuc0lEIjoiZTU0NDNjZTYtNTE3Mi00MmM1LThjY2MtYmRjMGE1MmNkZjViIn0=',
+                paymentMethodType: 'scheme',
+                type: 'threeDS2'
+            };
+
+            const checkout = await AdyenCheckout({
+                environment: 'test',
+                clientKey: 'test_123456',
+                analytics: { enabled: false }
+            });
+
+            const element = new MyElement({ core: checkout, challengeWindowSize: '02' }).mount('body');
+
+            const actionComponent = element.handleAction(challengeAction);
+            expect(actionComponent instanceof ThreeDS2Challenge).toEqual(true);
+
+            expect(actionComponent.props.elementRef).not.toBeDefined();
+            expect(actionComponent.props.statusType).toEqual('custom');
+            expect(actionComponent.props.isDropin).toBe(false);
+
+            expect(actionComponent.props.challengeWindowSize).toEqual('02');
+        });
+
+        test('should throw Error if merchant passes the whole response object', async () => {
+            const paymentResponse = {
+                action: {
+                    paymentData: 'Ab02b4c0!BQABAgCUeRP+3La4...',
+                    authorisationToken: 'BQABAQCmFNEdaCE3rcbbB...',
+                    subtype: 'challenge',
+                    token: 'eyJhY3NSZWZlcmVuY2VOdW1iZXIiOiJBRFlFTi1BQ1MtU0lNVUxBVE9SIiwiYWNzVHJhbnNJRCI6Ijg0MzZjYThkLThkN2EtNGFjYy05NmYyLTE0ZjU0MjgyNzczZiIsImFjc1VSTCI6Imh0dHBzOlwvXC9wYWwtdGVzdC5hZHllbi5jb21cL3RocmVlZHMyc2ltdWxhdG9yXC9hY3NcL2NoYWxsZW5nZS5zaHRtbCIsIm1lc3NhZ2VWZXJzaW9uIjoiMi4xLjAiLCJ0aHJlZURTTm90aWZpY2F0aW9uVVJMIjoiaHR0cHM6XC9cL2NoZWNrb3V0c2hvcHBlci10ZXN0LmFkeWVuLmNvbVwvY2hlY2tvdXRzaG9wcGVyXC8zZG5vdGlmLnNodG1sP29yaWdpbktleT1wdWIudjIuODExNTY1ODcwNTcxMzk0MC5hSFIwY0hNNkx5OWphR1ZqYTI5MWRITm9iM0J3WlhJdGRHVnpkQzVoWkhsbGJpNWpiMjAuVGFKalVLN3VrUFdTUzJEX3l2ZDY4TFRLN2dRN2ozRXFOM05nS1JWQW84OCIsInRocmVlRFNTZXJ2ZXJUcmFuc0lEIjoiZTU0NDNjZTYtNTE3Mi00MmM1LThjY2MtYmRjMGE1MmNkZjViIn0=',
+                    paymentMethodType: 'scheme',
+                    type: 'threeDS2'
+                },
+                resultCode: 'IdentifyShopper'
+            };
+
+            const element = new MyElement({ core }).mount('body');
+
+            expect(() => {
+                // @ts-ignore tslint is not applicable here as merchant can potentially pass wrong object
+                element.handleAction(paymentResponse);
+            }).toThrow('have you passed in the whole response object by mistake?');
+        });
+
+        test('should throw Error if merchant passes an invalid action', async () => {
+            const action = {
+                paymentMethodType: 'scheme'
+            };
+
+            const element = new MyElement({ core }).mount('body');
+
+            expect(() => {
+                // @ts-ignore tslint is not applicable here as merchant can potentially pass wrong object
+                element.handleAction(action);
+            }).toThrow('the passed action object does not have a "type" property');
         });
     });
 
-    describe('submit', () => {
+    describe('submit()', () => {
         test('should close active payment method if submit is called by instant payment method', () => {
             const onSubmit = jest.fn();
             const elementRef = { closeActivePaymentMethod: jest.fn(), setStatus: jest.fn() };
-            const uiElement = new UIElement({ isInstantPayment: true, onSubmit, elementRef });
+            const element = new MyElement({ core, isInstantPayment: true, onSubmit, elementRef });
 
-            jest.spyOn(uiElement, 'isValid', 'get').mockReturnValue(true);
+            jest.spyOn(element, 'isValid', 'get').mockReturnValue(true);
 
-            uiElement.submit();
+            element.submit();
 
             expect(elementRef.closeActivePaymentMethod).toHaveBeenCalledTimes(1);
+        });
+
+        test('should trigger showValidation() and not call onSubmit() if component is not valid', () => {
+            const showValidation = jest.fn();
+
+            const element = new MyElement({ core: core });
+
+            // @ts-ignore Checking that internal method is not reached
+            const onSubmitSpy = jest.spyOn(element, 'onSubmit');
+
+            const componentRef = {
+                showValidation
+            };
+            element.setComponentRef(componentRef);
+
+            element.submit();
+
+            expect(showValidation).toBeCalledTimes(1);
+            expect(onSubmitSpy).not.toHaveBeenCalled();
         });
     });
 });
