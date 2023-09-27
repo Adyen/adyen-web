@@ -3,10 +3,6 @@
 @mixin input-wrapper-inactive {
     background: var(--b-color-surface-tertiary);
     border-color: transparent;
-
-    &:hover {
-        border-color: var(--b-color-outline-secondary);
-    }
 }
 
 .adyen-checkout__field {
