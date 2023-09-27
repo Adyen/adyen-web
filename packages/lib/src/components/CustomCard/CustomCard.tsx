@@ -28,12 +28,12 @@ type CustomCardProps = Omit<
     | 'billingAddressAllowedCountries'
     | 'installmentOptions'
     | 'showInstallmentAmounts'
+    | 'configuration'
 >;
 
 // TODO questions about
 // brand - does a merchant ever make a custom stored card?
 // type
-// configuration
 // countryCode
 
 export class CustomCard extends UIElement<CustomCardProps> {
