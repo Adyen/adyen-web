@@ -1,13 +1,13 @@
 import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import useCoreContext from '../../../../core/Context/useCoreContext';
-import LoadingWrapper from '../../../internal/LoadingWrapper';
-import InputText from '../../../internal/FormFields/InputText';
-import Field from '../../../internal/FormFields/Field';
-import useForm from '../../../../utils/useForm';
-import { UIElementProps } from '../../../types';
-import { ancvValidationRules } from '../../validate';
-import { ANCVDataState } from '../../ANCV';
+import useCoreContext from '../../../core/Context/useCoreContext';
+import LoadingWrapper from '../../internal/LoadingWrapper';
+import InputText from '../../internal/FormFields/InputText';
+import Field from '../../internal/FormFields/Field';
+import useForm from '../../../utils/useForm';
+import { UIElementProps } from '../../types';
+import { ancvValidationRules } from '../validate';
+import { ANCVDataState } from '../ANCV';
 
 export interface ANCVInputProps extends UIElementProps {
     ref?: any;
