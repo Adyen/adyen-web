@@ -20,6 +20,7 @@ class Card {
 
     readonly expiryDateField: Locator;
     readonly expiryDateContextualElement: Locator;
+    readonly expiryDateErrorElement: Locator;
     readonly expiryDateInput: Locator;
     readonly expiryDateIframeContextualElement: Locator;
 
@@ -37,8 +38,7 @@ class Card {
          * Card Number elements, in Checkout
          */
         this.cardNumberField = this.rootElement.locator('.adyen-checkout__field--cardNumber'); // Holder
-
-        this.cardNumberErrorElement = this.cardNumberField.locator('.adyen-checkout-contextual-text--error');
+        this.cardNumberErrorElement = this.cardNumberField.locator('.adyen-checkout__error-text');
 
         /**
          * Card Number elements, in iframe
@@ -50,6 +50,7 @@ class Card {
          * Expiry Date elements, in Checkout
          */
         this.expiryDateField = this.rootElement.locator('.adyen-checkout__field--expiryDate'); // Holder
+        this.expiryDateErrorElement = this.expiryDateField.locator('.adyen-checkout__error-text'); // Related error element
         this.expiryDateContextualElement = this.expiryDateField.locator('.adyen-checkout-contextual-text'); // Related contextual element
 
         /**
@@ -63,7 +64,7 @@ class Card {
          * Security code elements, in Checkout
          */
         this.cvcField = this.rootElement.locator('.adyen-checkout__field--securityCode'); // Holder
-        this.cvcErrorElement = this.cvcField.locator('.adyen-checkout-contextual-text--error'); // Related erro element
+        this.cvcErrorElement = this.cvcField.locator('.adyen-checkout__error-text'); // Related error element
         this.cvcContextualElement = this.cvcField.locator('.adyen-checkout-contextual-text'); // Related contextual element
 
         /**
