@@ -58,7 +58,7 @@ const ClickToPayProvider = ({
         }
         configuration.onReady?.();
         isOnReadyInvoked.current = true;
-    }, [configuration.onReady]);
+    }, [configuration?.onReady]);
 
     const finishIdentityValidation = useCallback(
         async (otpValue: string) => {
