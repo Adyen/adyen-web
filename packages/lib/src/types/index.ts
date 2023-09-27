@@ -141,6 +141,30 @@ export interface PaymentMethodsResponse {
     storedPaymentMethods?: StoredPaymentMethod[];
 }
 
+export interface StoredPaymentMethod extends PaymentMethod {
+    id: string;
+    name: string;
+    supportedShopperInteractions: string[];
+    expiryMonth?: string;
+    expiryYear?: string;
+    holderName?: string;
+    iban?: string;
+    lastFour?: string;
+    networkTxReference?: string;
+    ownerName?: string;
+    shopperEmail?: string;
+    /**
+     * A unique identifier of this stored payment method. Mapped from 'storedPaymentMethod.id'
+     * @internal
+     */
+    storedPaymentMethodId?: string;
+    /**
+     * Internal flag
+     * @internal
+     */
+    isStoredPaymentMethod?: boolean;
+}
+
 /**
  * The group where this payment method belongs to.
  */
@@ -159,21 +183,6 @@ export interface PaymentMethodGroup {
      * The unique code of the group.
      */
     type: string;
-}
-
-export interface StoredPaymentMethod extends PaymentMethod {
-    /**
-     * The supported shopper interactions for this stored payment method.
-     */
-    supportedShopperInteractions: string[];
-
-    /**
-     * A unique identifier of this stored payment method.
-     * Mapped from 'storedPaymentMethod.id'
-     */
-    storedPaymentMethodId?: string;
-
-    isStoredPaymentMethod: boolean;
 }
 
 export interface PaymentResponse {

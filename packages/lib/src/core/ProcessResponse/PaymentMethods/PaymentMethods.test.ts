@@ -1,20 +1,14 @@
 import PaymentMethods from './PaymentMethods';
+import { PaymentMethodsResponse } from '../../../types';
 
-const paymentMethodsResponseMock = {
+const paymentMethodsResponseMock: PaymentMethodsResponse = {
     paymentMethods: [
         {
             brands: ['mc', 'visa', 'amex', 'maestro', 'amex_applepay', 'cup', 'diners', 'discover', 'jcb', 'mc_applepay'],
-            details: [
-                { key: 'number', type: 'text' },
-                { key: 'expiryMonth', type: 'text' },
-                { key: 'expiryYear', type: 'text' },
-                { key: 'cvc', type: 'text' },
-                { key: 'holderName', optional: true, type: 'text' }
-            ],
             name: 'Credit Card',
             type: 'scheme'
         },
-        { name: 'PayPal', supportsRecurring: true, type: 'paypal' }
+        { name: 'PayPal', type: 'paypal' }
     ],
     storedPaymentMethods: [
         {

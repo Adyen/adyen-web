@@ -4,8 +4,16 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import RedirectShopper from './components/RedirectShopper';
 import RedirectButton from '../internal/RedirectButton';
 import { TxVariants } from '../tx-variants';
+import { UIElementProps } from '../types';
 
-class RedirectElement extends UIElement {
+interface RedirectProps extends UIElementProps {
+    type: string;
+    url?: string;
+    method?: 'GET' | 'POST';
+    beforeRedirect?: (resolve, reject, url) => Promise<void>;
+}
+
+class RedirectElement extends UIElement<RedirectProps> {
     public static type = TxVariants.redirect;
 
     public static defaultProps = {
@@ -30,7 +38,7 @@ class RedirectElement extends UIElement {
 
     render() {
         if (this.props.url && this.props.method) {
-            return <RedirectShopper {...this.props} />;
+            return <RedirectShopper url={this.props.url} {...this.props} />;
         }
 
         if (this.props.showPayButton) {

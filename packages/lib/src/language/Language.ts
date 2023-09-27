@@ -6,31 +6,30 @@ import { CustomTranslations, Translation } from './types';
 
 export class Language {
     private readonly supportedLocales: string[];
-
     public readonly locale: string;
     public readonly languageCode: string;
     public translations: Record<string, string>;
     public readonly customTranslations;
 
     constructor(locale: string, customTranslations: CustomTranslations = {}, translationFile?: Translation) {
-        this.locale = formatLocale(locale) || parseLocale(locale, this.supportedLocales) || DEFAULT_LOCALE;
-        this.languageCode = this.locale.split('-')[0];
-
-        if (this.locale !== DEFAULT_LOCALE && translationFile === undefined) {
-            // In case the translation is not 'en-US' and there is no translation file provided
-            console.warn(`Language module: 'translationFile' missing.  Make sure to pass the right 'translationFile' to the '${this.locale}' locale`);
-        }
-
         this.customTranslations = formatCustomTranslations(customTranslations, SUPPORTED_LOCALES);
         const localesFromCustomTranslations = Object.keys(this.customTranslations);
         this.supportedLocales = [...SUPPORTED_LOCALES, ...localesFromCustomTranslations].filter((v, i, a) => a.indexOf(v) === i); // our locales + validated custom locales
 
-        const hasCustomTranslations = !!this.customTranslations[this.locale];
+        this.locale = formatLocale(locale) || parseLocale(locale, this.supportedLocales) || DEFAULT_LOCALE;
+        this.languageCode = this.locale.split('-')[0];
+
+        const isUsingCustomLocale = !SUPPORTED_LOCALES.includes(this.locale);
+
+        if (!isUsingCustomLocale && this.locale !== DEFAULT_LOCALE && translationFile === undefined) {
+            // In case the translation is not 'en-US' and there is no translation file provided
+            console.warn(`Language module: 'translationFile' missing.  Make sure to pass the right 'translationFile' to the '${this.locale}' locale`);
+        }
 
         this.translations = {
             ...DEFAULT_TRANSLATION_FILE,
             ...translationFile,
-            ...(hasCustomTranslations && this.customTranslations[this.locale])
+            ...(!!this.customTranslations[this.locale] && this.customTranslations[this.locale])
         };
     }
 
