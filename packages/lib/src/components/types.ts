@@ -245,6 +245,9 @@ export type PaymentMethodsConfiguration =
       }
     | {
           [key in PaymentActionsType]?: any;
+      }
+    | {
+          [key: string]: any;
       };
 
 export interface PaymentMethodData {
@@ -364,6 +367,11 @@ export interface UIElementProps extends BaseElementProps {
     beforeRedirect?: (resolve, reject, redirectData, element: UIElement) => void;
 
     isInstantPayment?: boolean;
+
+    /**
+     * Flags if the element is Stored payment method
+     * @internal
+     */
     isStoredPaymentMethod?: boolean;
 
     type?: string;

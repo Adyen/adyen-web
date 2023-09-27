@@ -1,9 +1,11 @@
 import { checkPaymentMethodsResponse } from './utils';
 
-describe('PaymentMethods utils', () => {
+describe('PaymentMethods Utils', () => {
     describe('checkPaymentMethodsResponse', () => {
         test('should throw if a wrong format is passed', () => {
+            // @ts-ignore Testing if merchant passes the wrong parameter
             expect(() => checkPaymentMethodsResponse([])).toThrow();
+            // @ts-ignore Testing if merchant passes the wrong parameter
             expect(() => checkPaymentMethodsResponse('{}')).toThrow();
         });
 

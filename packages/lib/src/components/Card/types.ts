@@ -242,6 +242,12 @@ export interface CardElementProps extends UIElementProps {
      */
     keypadFix?: boolean; // Keep, but use analytics to record if anyone *ever* uses this config prop
 
+    /**
+     * Comes from Stored payment method object
+     * @internal
+     */
+    expiryMonth?: string;
+
     // placeholders: Placeholders; // TODO align with v6 Bento branch
 
     // forceCompat?: boolean, // TODO - probably drop, if Checkout won't support IE then SF doesn't need to
