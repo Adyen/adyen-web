@@ -298,5 +298,5 @@
     "ancv.input.label" : "Your ANCV identification",
     "ancv.confirmPayment": "Use your ANCV application to confirm the payment.",
     "ancv.form.instruction": "The Cheque-Vacances application is necessary to validate this payment.",
-    "ancv.beneficiaryId.invalid": "Please introduce a valid email address or ANCV identification"
+    "ancv.beneficiaryId.invalid": "Enter a valid email address or ANCV ID"
 }
