@@ -185,6 +185,7 @@ export interface SFFeedbackObj {
     encryptedBin?: string;
     uuid?: string;
     encryptionSuccess?: boolean;
+    hasGenuineTouchEvents?: boolean;
     // [key: string]: EncryptionObj[]; // Doesn't work, so must use an intersection type (https://github.com/Microsoft/TypeScript/issues/20597)
     // BUT this doesn't give as much feedback as an interface e.g. about missing properties
     // } & {

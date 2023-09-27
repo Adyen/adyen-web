@@ -39,12 +39,12 @@ class Core {
 
         this.setOptions(props);
 
-        this.loadingContext = resolveEnvironment(this.options.environment);
-        this.cdnContext = resolveCDNEnvironment(this.options.resourceEnvironment || this.options.environment);
+        this.loadingContext = resolveEnvironment(this.options.environment, this.options.environmentUrls?.api);
+        this.cdnContext = resolveCDNEnvironment(this.options.resourceEnvironment || this.options.environment, this.options.environmentUrls?.api);
 
         const clientKeyType = this.options.clientKey?.substr(0, 4);
         if ((clientKeyType === 'test' || clientKeyType === 'live') && !this.loadingContext.includes(clientKeyType)) {
-            throw new Error(`Error: you are using a ${clientKeyType} clientKey against the ${this.options.environment} environment`);
+            throw new Error(`Error: you are using a '${clientKeyType}' clientKey against the '${this.options.environment}' environment`);
         }
 
         // Expose version number for npm builds

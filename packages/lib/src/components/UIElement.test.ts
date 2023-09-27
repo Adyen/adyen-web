@@ -137,7 +137,7 @@ describe('UIElement', () => {
                 type: 'threeDS2'
             };
 
-            const checkout = await AdyenCheckout({ analytics: { enabled: false } });
+            const checkout = await AdyenCheckout({ environment: 'test', clientKey: 'test_123456', analytics: { enabled: false } });
             const comp = checkout.create('card').mount('body');
 
             const pa = comp.handleAction(fingerprintAction);
@@ -151,6 +151,8 @@ describe('UIElement', () => {
 
         test('should handle new challenge action', async () => {
             const checkout = await AdyenCheckout({
+                environment: 'test',
+                clientKey: 'test_123456',
                 analytics: { enabled: false },
                 paymentMethodsConfiguration: {
                     threeDS2: { challengeWindowSize: '02' }

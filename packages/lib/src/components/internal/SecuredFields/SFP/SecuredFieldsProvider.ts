@@ -182,7 +182,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             implementationType: this.props.implementationType || 'components', // to distinguish between 'regular' and 'custom' card component
             forceCompat: this.props.forceCompat,
             maskSecurityCode: this.props.maskSecurityCode,
-            disableIOSArrowKeys: !!this.props.disableIOSArrowKeys
+            shouldDisableIOSArrowKeys: !!this.props.disableIOSArrowKeys // convert whether function has been defined into a boolean
         };
 
         this.csf = initCSF(csfSetupObj);

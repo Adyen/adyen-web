@@ -23,7 +23,7 @@ const cardUtils = cu(iframeSelector);
 fixture`Testing Bancontact in Dropin`.page(BASE_URL + '?countryCode=BE').clientScripts('bancontact.clientScripts.js');
 
 test(
-    'Enter card number, that we mock to co-branded bcmc/visa ' +
+    '#1 Enter card number, that we mock to co-branded bcmc/visa ' +
         'then click Visa logo and expect CVC field to show, then' +
         'paste in number not recognised by binLookup (but that internally is recognised as Visa)' +
         'ensure that bcmc logo shows & CVC field is hidden',
@@ -35,19 +35,9 @@ test(
         await t
             .expect(dualBrandingIconHolderActive.exists)
             .ok()
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(0)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(0).getAttribute('data-value'))
             .eql('bcmc')
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(1)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(1).getAttribute('data-value'))
             .eql('visa');
 
         // Click Visa brand icon
@@ -71,11 +61,11 @@ test(
         await t
             // bcmc card icon
             .expect(brandingIcon.getAttribute('alt'))
-            .contains('bcmc');
+            .contains('Bancontact card');
     }
 );
 test(
-    'Enter card number, that we mock to co-branded bcmc/visa ' +
+    '#2 Enter card number, that we mock to co-branded bcmc/visa ' +
         'then click Visa logo and expect CVC field to show, then' +
         'delete card number and ' +
         'ensure that bcmc logo shows & CVC field is hidden',
@@ -87,19 +77,9 @@ test(
         await t
             .expect(dualBrandingIconHolderActive.exists)
             .ok()
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(0)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(0).getAttribute('data-value'))
             .eql('bcmc')
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(1)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(1).getAttribute('data-value'))
             .eql('visa');
 
         // Click Visa brand icon
@@ -123,6 +103,6 @@ test(
         await t
             // bcmc card icon
             .expect(brandingIcon.getAttribute('alt'))
-            .contains('bcmc');
+            .contains('Bancontact card');
     }
 );

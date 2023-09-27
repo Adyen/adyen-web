@@ -36,11 +36,7 @@ test('#1 Check Bancontact comp is correctly presented at startup', async t => {
     await t.expect(dropinPage.cc.cvcHolder.filterHidden().exists).ok();
 
     // BCMC logo in number field
-    await t
-        .expect(dropinPage.cc.numSpan.exists)
-        .ok()
-        .expect(dropinPage.cc.brandingIcon.withAttribute('alt', 'bcmc').exists)
-        .ok();
+    await t.expect(dropinPage.cc.numSpan.exists).ok().expect(dropinPage.cc.brandingIcon.withAttribute('alt', 'Bancontact card').exists).ok();
 });
 
 test('#2 Entering digits that our local regEx will recognise as Visa does not affect the UI', async t => {
@@ -49,7 +45,7 @@ test('#2 Entering digits that our local regEx will recognise as Visa does not af
     await dropinPage.cc.cardUtils.fillCardNumber(t, '41');
 
     // BCMC logo still in number field
-    await t.expect(dropinPage.cc.brandingIcon.withAttribute('alt', 'bcmc').exists).ok();
+    await t.expect(dropinPage.cc.brandingIcon.withAttribute('alt', 'Bancontact card').exists).ok();
 
     // Hidden cvc field
     await t.expect(dropinPage.cc.cvcHolder.filterHidden().exists).ok();
@@ -158,17 +154,17 @@ test(
         await dropinPage.cc.cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD);
 
         // Expect Visa logo in number field
-        await t.expect(dropinPage.cc.brandingIcon.withAttribute('alt', 'visa').exists).ok();
+        await t.expect(dropinPage.cc.brandingIcon.withAttribute('alt', 'VISA').exists).ok();
 
         await dropinPage.cc.cardUtils.deleteCardNumber(t);
 
         // Expect BCMC logo in number field
-        await t.expect(dropinPage.cc.brandingIcon.withAttribute('alt', 'bcmc').exists).ok();
+        await t.expect(dropinPage.cc.brandingIcon.withAttribute('alt', 'Bancontact card').exists).ok();
 
         // Re-add Visa num
         await dropinPage.cc.cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD);
 
         // Expect Visa logo in number field again
-        await t.expect(dropinPage.cc.brandingIcon.withAttribute('alt', 'visa').exists).ok();
+        await t.expect(dropinPage.cc.brandingIcon.withAttribute('alt', 'VISA').exists).ok();
     }
 );
