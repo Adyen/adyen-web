@@ -47,7 +47,7 @@ function ANCVInput({ showPayButton, payButton, onChange, onSubmit }: ANCVInputPr
                     <InputText
                         value={data.beneficiaryId}
                         name={'beneficiaryId'}
-                        speellcheck={true}
+                        spellcheck={true}
                         required={true}
                         onInput={handleChangeFor('beneficiaryId', 'input')}
                         onBlur={handleChangeFor('beneficiaryId', 'blur')}
