@@ -72,7 +72,6 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     if (showComps.card) {
         const card = new Card({
             core: checkout,
-            brands: ['visa', 'amex', 'cartebancaire', 'bcmc'],
             challengeWindowSize: '01',
             _disableClickToPay: true
             // hasHolderName: true,
