@@ -68,7 +68,6 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         }
     }
     //
-    // // Credit card with installments
     if (showComps.card) {
         const card = new Card({
             core: checkout,
@@ -81,6 +80,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         }).mount('.card-field');
     }
 
+    // Credit card with installments
     if (showComps.cardWithInstallments) {
         window.cardWithInstallments = new Card({
             core: checkout,
