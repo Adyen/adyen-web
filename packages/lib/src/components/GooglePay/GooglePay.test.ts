@@ -3,14 +3,14 @@ import GooglePay from './GooglePay';
 describe('GooglePay', () => {
     describe('get data', () => {
         test('always returns a type', () => {
-            const gpay = new GooglePay({});
-            expect(gpay.data.paymentMethod.type).toBe('paywithgoogle');
+            const gpay = new GooglePay({ core: global.core });
+            expect(gpay.data.paymentMethod.type).toBe('googlepay');
         });
     });
 
     describe('isAvailable', () => {
         test('resolves if is available', () => {
-            const gpay = new GooglePay({});
+            const gpay = new GooglePay({ core: global.core });
             gpay.isReadyToPay = jest.fn(() => {
                 return Promise.resolve({ result: true });
             });
@@ -20,7 +20,7 @@ describe('GooglePay', () => {
         });
 
         test('rejects if is not available', () => {
-            const gpay = new GooglePay({});
+            const gpay = new GooglePay({ core: global.core });
             gpay.isReadyToPay = jest.fn(() => {
                 return Promise.resolve({ result: false });
             });
@@ -30,7 +30,7 @@ describe('GooglePay', () => {
         });
 
         test('checks paymentMethodPresent if present', () => {
-            const gpay = new GooglePay({});
+            const gpay = new GooglePay({ core: global.core });
             gpay.isReadyToPay = jest.fn(() => {
                 return Promise.resolve({ result: true, paymentMethodPresent: false });
             });
@@ -42,17 +42,18 @@ describe('GooglePay', () => {
 
     describe('Process CA based configuration data', () => {
         test('Retrieves default merchantId', () => {
-            const gpay = new GooglePay({});
+            const gpay = new GooglePay({ core: global.core });
             expect(gpay.props.configuration.merchantId).toEqual('');
         });
 
         test('Retrieves merchantId from configuration', () => {
-            const gpay = new GooglePay({ configuration: { merchantId: 'abcdef', gatewayMerchantId: 'TestMerchant' } });
+            const gpay = new GooglePay({ core: global.core, configuration: { merchantId: 'abcdef', gatewayMerchantId: 'TestMerchant' } });
             expect(gpay.props.configuration.merchantId).toEqual('abcdef');
         });
 
         test('Retrieves merchantId from configuration', () => {
             const gpay = new GooglePay({
+                core: global.core,
                 configuration: {
                     gatewayMerchantId: 'TestMerchant',
                     merchantOrigin: 'example.com'
@@ -62,7 +63,10 @@ describe('GooglePay', () => {
         });
 
         test('Retrieves authJwt from configuration', () => {
-            const gpay = new GooglePay({ configuration: { merchantId: 'abcdef', gatewayMerchantId: 'TestMerchant', authJwt: 'jwt.code' } });
+            const gpay = new GooglePay({
+                core: global.core,
+                configuration: { merchantId: 'abcdef', gatewayMerchantId: 'TestMerchant', authJwt: 'jwt.code' }
+            });
             expect(gpay.props.configuration.authJwt).toEqual('jwt.code');
         });
     });

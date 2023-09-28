@@ -135,7 +135,8 @@
         "tslib": "2.6.2",
         "typescript": "5.2.2",
         "vite": "4.4.8",
-        "vite-plugin-stylelint": "^4.3.0"
+        "vite-plugin-stylelint": "^4.3.0",
+        "whatwg-fetch": "^3.6.19"
     },
     "dependencies": {
         "@types/applepayjs": "^3.0.4",

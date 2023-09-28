@@ -6,7 +6,7 @@ import Error from './Error';
 import Success from './Success';
 
 describe('Status', () => {
-    const srPanel = new SRPanel({});
+    const srPanel = new SRPanel({ core: global.core });
     const customRender = ui => {
         // @ts-ignore render ui as children
         return render(<SRPanelProvider srPanel={srPanel}>{ui}</SRPanelProvider>);

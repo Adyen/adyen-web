@@ -5,6 +5,7 @@ import { GenericError } from '../../../core/Errors/types';
 
 const i18n = { get: key => key };
 
+// @ts-ignore Iban is valid TSX
 const createWrapper = (props = {}) => mount(<IbanInput i18n={i18n} {...props} />);
 
 const ibanErrorObj: GenericError = {

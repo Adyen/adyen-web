@@ -374,6 +374,12 @@ export interface UIElementProps extends BaseElementProps {
      */
     isStoredPaymentMethod?: boolean;
 
+    /**
+     * Stored payment method id
+     * @internal
+     */
+    storedPaymentMethodId?: string;
+
     type?: string;
     name?: string;
     icon?: string;

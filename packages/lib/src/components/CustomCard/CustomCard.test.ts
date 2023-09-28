@@ -4,7 +4,7 @@ describe('CustomCard', () => {
     let customCard;
 
     beforeEach(() => {
-        customCard = new CustomCard({ core: null });
+        customCard = new CustomCard({ core: global.core });
     });
 
     describe('get data', () => {

@@ -1,4 +1,3 @@
 dist/
 server/
-src/polyfills.ts
 !.storybook

@@ -6,8 +6,8 @@ import RedirectButton from '../internal/RedirectButton';
 import { TxVariants } from '../tx-variants';
 import { UIElementProps } from '../types';
 
-interface RedirectProps extends UIElementProps {
-    type: string;
+export interface RedirectProps extends UIElementProps {
+    type?: string;
     url?: string;
     method?: 'GET' | 'POST';
     beforeRedirect?: (resolve, reject, url) => Promise<void>;

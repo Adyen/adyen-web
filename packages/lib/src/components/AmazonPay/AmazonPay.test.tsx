@@ -18,7 +18,8 @@ describe('AmazonPay', () => {
         new AmazonPay({
             ...defaultProps,
             ...props,
-            ...amazonProps
+            ...amazonProps,
+            core: global.core
         });
 
     test('always returns isValid as true', () => {

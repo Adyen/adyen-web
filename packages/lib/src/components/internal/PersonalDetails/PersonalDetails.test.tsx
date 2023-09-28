@@ -3,8 +3,7 @@ import { shallow } from 'enzyme';
 import PersonalDetails from './PersonalDetails';
 
 describe('PersonalDetails', () => {
-    const i18n = { get: key => key };
-    const getWrapper = props => shallow(<PersonalDetails i18n={i18n} {...props} />);
+    const getWrapper = props => shallow(<PersonalDetails i18n={global.i18n} {...props} />);
 
     test('has the required fields', () => {
         const requiredFields = ['firstName', 'lastName', 'telephoneNumber'];

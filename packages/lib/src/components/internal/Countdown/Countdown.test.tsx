@@ -5,7 +5,7 @@ import { SRPanel } from '../../../core/Errors/SRPanel';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 
 describe('Countdown', () => {
-    const srPanel = new SRPanel({});
+    const srPanel = new SRPanel({ core: global.core });
     const customRender = ui => {
         // @ts-ignore render ui as children
         return render(<SRPanelProvider srPanel={srPanel}>{ui}</SRPanelProvider>);

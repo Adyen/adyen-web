@@ -1,9 +1,10 @@
 import { h } from 'preact';
-import { mount } from 'enzyme';
 import PaypalButtons from './PaypalButtons';
+import { render } from '@testing-library/preact';
+import CoreProvider from '../../../core/Context/CoreProvider';
 
 const isEligible = jest.fn(() => true);
-const render = jest.fn(() => Promise.resolve());
+const renderMock = jest.fn(() => Promise.resolve());
 
 const paypalRefMock = {
     FUNDING: {
@@ -11,21 +12,27 @@ const paypalRefMock = {
         CREDIT: 'credit',
         PAYLATER: 'paylater'
     },
-    Buttons: jest.fn(() => ({ isEligible, render }))
+    Buttons: jest.fn(() => ({ isEligible, render: renderMock }))
+};
+
+const renderWithCoreProvider = ui => {
+    return render(
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            {ui}
+        </CoreProvider>
+    );
 };
 
 describe('PaypalButtons', () => {
-    const getWrapper = (props?: object) => mount(<PaypalButtons {...props} paypalRef={paypalRefMock} />);
-
     test('Calls to paypalRef.Buttons', async () => {
         jest.clearAllMocks();
-        getWrapper();
+        renderWithCoreProvider(<PaypalButtons isProcessingPayment={false} onApprove={jest.fn()} paypalRef={paypalRefMock} />);
         expect(paypalRefMock.Buttons).toHaveBeenCalledTimes(4);
     });
 
     test('Calls to paypalRef.Buttons().render', async () => {
         jest.clearAllMocks();
-        getWrapper();
+        renderWithCoreProvider(<PaypalButtons isProcessingPayment={false} onApprove={jest.fn()} paypalRef={paypalRefMock} />);
         expect(paypalRefMock.Buttons().render).toHaveBeenCalledTimes(4);
     });
 });

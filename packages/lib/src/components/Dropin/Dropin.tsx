@@ -114,7 +114,7 @@ class DropinElement extends UIElement<DropinElementProps> {
         return [storedElements, elements, instantPaymentElements];
     };
 
-    public handleAction(action: PaymentAction, props = {}): UIElement | null {
+    public handleAction(action: PaymentAction, props = {}): this | null {
         if (!action || !action.type) {
             if (hasOwnProperty(action, 'action') && hasOwnProperty(action, 'resultCode')) {
                 throw new Error(
