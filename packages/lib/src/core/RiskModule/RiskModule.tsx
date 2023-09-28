@@ -79,7 +79,7 @@ export default class RiskElement extends BaseElement<RiskModuleProps> {
         return this.state.isValid;
     }
 
-    get data(): RiskData {
+    get data(): any {
         if (this.isValid) {
             const dataObj = { version: RISK_DATA_VERSION, ...this.state.data };
             return base64.encode(JSON.stringify(dataObj));

@@ -62,7 +62,7 @@ class BaseElement<P extends BaseElementProps> {
      * Returns the component payment data ready to submit to the Checkout API
      * Note: this does not ensure validity, check isValid first
      */
-    get data(): PaymentData | RiskData {
+    get data(): PaymentData {
         const clientData = getProp(this.props, 'modules.risk.data');
         const useAnalytics = !!getProp(this.props, 'modules.analytics.props.enabled');
         const checkoutAttemptId = useAnalytics ? getProp(this.props, 'modules.analytics.checkoutAttemptId') : 'do-not-track';

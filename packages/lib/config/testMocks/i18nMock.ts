@@ -1,11 +1,8 @@
-import { mock } from 'jest-mock-extended';
 import Language from '../../src/language';
-import en_US from '../../src/language/locales/en-US';
 
-function setupi18nMock() {
-    const i18n = mock<Language>();
-    i18n.get.mockImplementation(key => en_US[key]);
+function setupi18n() {
+    const i18n = new Language('en-US');
     return i18n;
 }
 
-global.i18n = setupi18nMock();
+global.i18n = setupi18n();
