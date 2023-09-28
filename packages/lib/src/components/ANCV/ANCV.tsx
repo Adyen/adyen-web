@@ -99,12 +99,10 @@ export class ANCVElement extends UIElement<ANCVProps> {
                             onError={this.props.onError}
                             onComplete={this.onComplete}
                             brandLogo={this.icon}
-                            type={config.type}
-                            messageText={this.props.i18n.get(config.messageTextId)}
-                            awaitText={this.props.i18n.get(config.awaitTextId)}
+                            type={this.constructor['type']}
+                            messageText={this.props.i18n.get('ancv.confirmPayment')}
+                            awaitText={this.props.i18n.get('await.waitForConfirmation')}
                             showCountdownTimer={config.showCountdownTimer}
-                            delay={config.STATUS_INTERVAL}
-                            countdownTime={config.COUNTDOWN_MINUTES}
                             throttleTime={config.THROTTLE_TIME}
                             throttleInterval={config.THROTTLE_INTERVAL}
                             onActionHandled={this.props.onActionHandled}
