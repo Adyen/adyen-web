@@ -97,7 +97,7 @@ describe('Core', () => {
 
             const actionComponent = checkout.createFromAction(fingerprintAction, { challengeWindowSize: '04' });
 
-            expect(actionComponent.constructor['type']).toBe('threeDS2DeviceFingerprint');
+            expect(actionComponent.constructor['type']).toBe('threeDS2Fingerprint');
 
             expect(actionComponent.props.elementRef).not.toBeDefined();
             expect(actionComponent.props.showSpinner).toEqual(true);

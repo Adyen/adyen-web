@@ -2,9 +2,9 @@ import { PaymentAction } from '../../../types';
 import { get3DS2FlowProps } from '../../../components/ThreeDS2/components/utils';
 import uuid from '../../../utils/uuid';
 import type { IRegistry } from '../../core.registry';
-import Core from '../../core';
+import { ICore } from '../../types';
 
-const createComponent = (core: Core, registry: IRegistry, componentType, props) => {
+const createComponent = (core: ICore, registry: IRegistry, componentType, props) => {
     const Element = registry.getComponent(componentType);
 
     if (!Element) {
@@ -16,7 +16,7 @@ const createComponent = (core: Core, registry: IRegistry, componentType, props) 
 };
 
 const getActionHandler = statusType => {
-    return (core: Core, registry: IRegistry, action: PaymentAction, props) => {
+    return (core: ICore, registry: IRegistry, action: PaymentAction, props) => {
         const config = {
             ...props,
             ...action,
@@ -30,7 +30,7 @@ const getActionHandler = statusType => {
 };
 
 const actionTypes = {
-    redirect: (core: Core, registry, action: PaymentAction, props) => {
+    redirect: (core: ICore, registry, action: PaymentAction, props) => {
         const config = {
             ...props,
             ...action,
@@ -40,7 +40,7 @@ const actionTypes = {
         return createComponent(core, registry, 'redirect', config);
     },
 
-    threeDS2Fingerprint: (core: Core, registry, action: PaymentAction, props) => {
+    threeDS2Fingerprint: (core: ICore, registry, action: PaymentAction, props) => {
         const config = {
             createFromAction: props.createFromAction,
             token: action.token,
@@ -57,7 +57,7 @@ const actionTypes = {
         return createComponent(core, registry, 'threeDS2DeviceFingerprint', config);
     },
 
-    threeDS2Challenge: (core: Core, registry, action: PaymentAction, props) => {
+    threeDS2Challenge: (core: ICore, registry, action: PaymentAction, props) => {
         const config = {
             ...props,
             token: action.token,
@@ -73,12 +73,13 @@ const actionTypes = {
         return createComponent(core, registry, 'threeDS2Challenge', config);
     },
 
-    threeDS2: (core: Core, registry, action: PaymentAction, props) => {
+    threeDS2: (core: ICore, registry, action: PaymentAction, props) => {
         const componentType = action.subtype === 'fingerprint' ? 'threeDS2DeviceFingerprint' : 'threeDS2Challenge';
         const paymentData = action.subtype === 'fingerprint' ? action.paymentData : action.authorisationToken;
 
         const config = {
             // Props common to both flows
+            core: core,
             token: action.token,
             paymentData,
             onActionHandled: props.onActionHandled,
@@ -87,7 +88,6 @@ const actionTypes = {
             isDropin: !!props.isDropin,
             loadingContext: props.loadingContext,
             clientKey: props.clientKey,
-            core: props.core,
             paymentMethodType: props.paymentMethodType,
             challengeWindowSize: props.challengeWindowSize, // always pass challengeWindowSize in case it's been set directly in the handleAction config object
 

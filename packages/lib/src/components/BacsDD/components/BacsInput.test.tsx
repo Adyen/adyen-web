@@ -10,7 +10,7 @@ const defaultProps = {
     onSubmit: () => {}
 };
 
-describe.skip('BacsInput', () => {
+describe('BacsInput', () => {
     const bacsPropsMock = mock<BacsInputProps>();
     const getWrapper = (props = {}) => mount(<BacsInput {...defaultProps} {...props} {...bacsPropsMock} />);
 

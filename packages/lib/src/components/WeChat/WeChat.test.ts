@@ -13,7 +13,7 @@ describe('WeChat', () => {
     describe('get data', () => {
         test('always returns a type', () => {
             const wechat = new WeChat({ core: global.core });
-            expect(wechat.data.paymentMethod.type).toBe('wechatpay');
+            expect(wechat.data.paymentMethod.type).toBe('wechatpayQR');
         });
     });
 
