@@ -2,8 +2,12 @@ import UIElement from './UIElement';
 import { ICore } from '../core/types';
 import { mockDeep, mockReset } from 'jest-mock-extended';
 import { AdyenCheckout, ThreeDS2Challenge, ThreeDS2DeviceFingerprint } from '../index';
+import { UIElementProps } from './types';
 
-class MyElement extends UIElement {
+interface MyElementProps extends UIElementProps {
+    challengeWindowSize?: string;
+}
+class MyElement extends UIElement<MyElementProps> {
     public static type = 'super_pay';
 
     public get isValid(): boolean {
@@ -160,7 +164,7 @@ describe('UIElement', () => {
             expect(actionComponent instanceof ThreeDS2DeviceFingerprint).toEqual(true);
 
             expect(actionComponent.props.elementRef).not.toBeDefined();
-            expect(actionComponent.props.showSpinner).toEqual(true);
+            expect((actionComponent as ThreeDS2DeviceFingerprint).props.showSpinner).toEqual(true);
             expect(actionComponent.props.statusType).toEqual('loading');
             expect(actionComponent.props.isDropin).toBe(false);
         });
@@ -185,12 +189,10 @@ describe('UIElement', () => {
 
             const actionComponent = element.handleAction(challengeAction);
             expect(actionComponent instanceof ThreeDS2Challenge).toEqual(true);
-
             expect(actionComponent.props.elementRef).not.toBeDefined();
             expect(actionComponent.props.statusType).toEqual('custom');
             expect(actionComponent.props.isDropin).toBe(false);
-
-            expect(actionComponent.props.challengeWindowSize).toEqual('02');
+            expect((actionComponent as ThreeDS2Challenge).props.challengeWindowSize).toEqual('02');
         });
 
         test('should throw Error if merchant passes the whole response object', async () => {

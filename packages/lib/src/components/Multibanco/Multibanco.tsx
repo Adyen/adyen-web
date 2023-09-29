@@ -4,11 +4,11 @@ import MultibancoVoucherResult from './components/MultibancoVoucherResult';
 import CoreProvider from '../../core/Context/CoreProvider';
 import RedirectButton from '../internal/RedirectButton';
 import { TxVariants } from '../tx-variants';
+import { VoucherActionElement } from '../types';
 
-export class MultibancoElement extends UIElement {
+export class MultibancoElement extends UIElement<VoucherActionElement> {
     public static type = TxVariants.multibanco;
     public static defaultProps = { showPayButton: true };
-
 
     get isValid() {
         return true;

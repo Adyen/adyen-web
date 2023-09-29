@@ -2,15 +2,24 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import GiftcardComponent from './components/GiftcardComponent';
 import CoreProvider from '../../core/Context/CoreProvider';
-
 import PayButton from '../internal/PayButton';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { PaymentAmount } from '../../types';
-import { PaymentResponse } from '../types';
+import { PaymentResponse, UIElementProps } from '../types';
 import { GiftCardElementData } from './types';
 import { TxVariants } from '../tx-variants';
 
-export class GiftcardElement extends UIElement {
+// TODO: Fix these types
+interface GiftCardProps extends UIElementProps {
+    brandsConfiguration?: any;
+    brand?: string;
+    onOrderCreated?(data): void;
+    onOrderRequest?(resolve, reject, data): void;
+    onBalanceCheck?(resolve, reject, data): void;
+    onRequiringConfirmation?(): void;
+}
+
+export class GiftcardElement extends UIElement<GiftCardProps> {
     public static type = TxVariants.giftcard;
 
     protected static defaultProps = {

@@ -5,6 +5,7 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import BacsResult from './components/BacsResult';
 import PayButton from '../internal/PayButton';
 import { TxVariants } from '../tx-variants';
+import { VoucherActionElement } from '../types';
 
 interface BacsElementData {
     paymentMethod: {
@@ -16,7 +17,7 @@ interface BacsElementData {
     shopperEmail: string;
 }
 
-class BacsElement extends UIElement {
+class BacsElement extends UIElement<VoucherActionElement> {
     public static type = TxVariants.directdebit_GB;
 
     protected static defaultProps = {
@@ -57,6 +58,7 @@ class BacsElement extends UIElement {
                     />
                 ) : (
                     <BacsInput
+                        // @ts-ignore ref is internal from the Component
                         ref={ref => {
                             this.componentRef = ref;
                         }}

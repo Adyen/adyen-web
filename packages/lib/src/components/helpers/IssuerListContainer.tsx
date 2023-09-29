@@ -9,7 +9,7 @@ import { IssuerItem, TermsAndConditions } from '../internal/IssuerList/types';
 import RedirectButton from '../internal/RedirectButton';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 
-interface IssuerListContainerProps extends UIElementProps {
+export interface IssuerListContainerProps extends UIElementProps {
     showImage?: boolean;
     placeholder?: string;
     issuers?: IssuerItem[];
@@ -50,7 +50,6 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
             }));
         }
     }
-
 
     formatProps(props) {
         const issuers = (props.details && props.details.length && (props.details.find(d => d.key === 'issuer') || {}).items) || props.issuers || [];

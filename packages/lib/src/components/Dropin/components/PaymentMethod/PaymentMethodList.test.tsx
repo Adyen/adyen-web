@@ -13,7 +13,7 @@ function createInstantPaymentMethods() {
     return [
         mock<UIElement>({
             props: {
-                id: '1',
+                // id: '1',
                 type: 'googlepay'
             },
             _id: 'scheme-123456',
@@ -23,7 +23,7 @@ function createInstantPaymentMethods() {
         }),
         mock<UIElement>({
             props: {
-                id: '1',
+                // id: '1',
                 type: 'applepay'
             },
             _id: 'scheme-123456',
@@ -38,7 +38,7 @@ function createPaymentMethodsMock() {
     return [
         mock<UIElement>({
             props: {
-                id: '1',
+                // id: '1',
                 type: 'scheme'
             },
             _id: 'scheme-123456',
@@ -47,7 +47,7 @@ function createPaymentMethodsMock() {
         }),
         mock<UIElement>({
             props: {
-                id: '2',
+                // id: '2',
                 type: 'wechat'
             },
             _id: 'google-pay-123456',
@@ -56,7 +56,7 @@ function createPaymentMethodsMock() {
         }),
         mock<UIElement>({
             props: {
-                id: '2',
+                // id: '2',
                 type: 'pix'
             },
             _id: 'apple-pay-123456',

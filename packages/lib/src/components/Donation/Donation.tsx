@@ -3,11 +3,16 @@ import UIElement from '../UIElement';
 import CoreProvider from '../../core/Context/CoreProvider';
 import DonationComponent from './components/DonationComponent';
 import { TxVariants } from '../tx-variants';
+import { UIElementProps } from '../types';
+
+interface DonationProps extends UIElementProps {
+    onDonate(data: any, component: DonationElement): void;
+}
 
 /**
  * DonationElement
  */
-class DonationElement extends UIElement {
+class DonationElement extends UIElement<DonationProps> {
     public static type = TxVariants.donation;
 
     constructor(props) {
@@ -50,6 +55,7 @@ class DonationElement extends UIElement {
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
+                {/* @ts-ignore ref handled by Preact internally */}
                 <DonationComponent {...this.props} ref={this.handleRef} onChange={this.setState} onDonate={this.donate} />
             </CoreProvider>
         );

@@ -13,7 +13,7 @@ export function useBrandLogoConfiguration(paymentMethods: UIElement[]): BrandLog
             paymentMethods.reduce(
                 (accumulator, paymentMethod) => ({
                     ...accumulator,
-                    ...(paymentMethod.props.brand && paymentMethod.icon && { [paymentMethod.props.brand]: paymentMethod.icon })
+                    ...(paymentMethod.props['brand'] && paymentMethod.icon && { [paymentMethod.props['brand']]: paymentMethod.icon })
                 }),
                 {}
             )

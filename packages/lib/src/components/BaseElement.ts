@@ -3,7 +3,6 @@ import getProp from '../utils/getProp';
 import EventEmitter from './EventEmitter';
 import uuid from '../utils/uuid';
 import { BaseElementProps, PaymentData } from './types';
-import { RiskData } from '../core/RiskModule/RiskModule';
 import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 import { ICore } from '../core/types';
 

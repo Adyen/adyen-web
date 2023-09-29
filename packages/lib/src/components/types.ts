@@ -375,10 +375,23 @@ export interface UIElementProps extends BaseElementProps {
     isStoredPaymentMethod?: boolean;
 
     /**
+     * Flag if the element is Stored payment method.
+     * Perhaps can be deprecated and we use the one above?
+     * @internal
+     */
+    oneClick?: boolean;
+
+    /**
      * Stored payment method id
      * @internal
      */
     storedPaymentMethodId?: string;
+
+    /**
+     * Status set when creating the Component from action
+     * @internal
+     */
+    statusType?: 'redirect' | 'loading' | 'custom';
 
     type?: string;
     name?: string;
@@ -415,6 +428,19 @@ export interface UIElementProps extends BaseElementProps {
 
     /** @internal */
     i18n?: Language;
+}
+
+export interface AwaitActionElement extends UIElementProps {
+    paymentData?: string;
+    paymentMethodType?: string;
+    type?: string;
+    url?: string;
+}
+
+export interface VoucherActionElement extends UIElementProps {
+    reference?: string;
+    url?: string;
+    paymentMethodType?: string;
 }
 
 // An interface for the members exposed by a component to its parent UIElement

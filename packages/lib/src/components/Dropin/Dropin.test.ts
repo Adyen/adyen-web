@@ -63,7 +63,7 @@ describe('Dropin', () => {
 
             dropin.handleAction(fingerprintAction);
             expect(dropin.componentFromAction instanceof ThreeDS2DeviceFingerprint).toEqual(true);
-            expect(dropin.componentFromAction.props.showSpinner).toEqual(false);
+            expect((dropin.componentFromAction as ThreeDS2DeviceFingerprint).props.showSpinner).toEqual(false);
             expect(dropin.componentFromAction.props.statusType).toEqual('loading');
             expect(dropin.componentFromAction.props.isDropin).toBe(true);
         });
@@ -83,7 +83,7 @@ describe('Dropin', () => {
             expect(dropin.componentFromAction instanceof ThreeDS2Challenge).toEqual(true);
             expect(dropin.componentFromAction.props.statusType).toEqual('custom');
             expect(dropin.componentFromAction.props.isDropin).toBe(true);
-            expect(dropin.componentFromAction.props.size).toEqual('02');
+            expect((dropin.componentFromAction as ThreeDS2Challenge).props.size).toEqual('02');
         });
 
         test('new challenge action gets challengeWindowSize from paymentMethodsConfiguration', async () => {
@@ -106,7 +106,7 @@ describe('Dropin', () => {
 
             dropin.handleAction(challengeAction);
             expect(dropin.componentFromAction instanceof ThreeDS2Challenge).toEqual(true);
-            expect(dropin.componentFromAction.props.challengeWindowSize).toEqual('02');
+            expect((dropin.componentFromAction as ThreeDS2Challenge).props.challengeWindowSize).toEqual('02');
         });
 
         test('new challenge action gets challengeWindowSize from handleAction config', async () => {
@@ -124,7 +124,7 @@ describe('Dropin', () => {
                 challengeWindowSize: '03'
             });
             expect(dropin.componentFromAction instanceof ThreeDS2Challenge).toEqual(true);
-            expect(dropin.componentFromAction.props.challengeWindowSize).toEqual('03');
+            expect((dropin.componentFromAction as ThreeDS2Challenge).props.challengeWindowSize).toEqual('03');
         });
     });
 

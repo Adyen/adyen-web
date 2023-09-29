@@ -4,8 +4,9 @@ import DokuInput from './components/DokuInput';
 import DokuVoucherResult from './components/DokuVoucherResult';
 import CoreProvider from '../../core/Context/CoreProvider';
 import { TxVariants } from '../tx-variants';
+import { VoucherActionElement } from '../types';
 
-export class DokuElement extends UIElement {
+export class DokuElement extends UIElement<VoucherActionElement> {
     public static type = TxVariants.doku;
     public static txVariants = [
         TxVariants.doku,

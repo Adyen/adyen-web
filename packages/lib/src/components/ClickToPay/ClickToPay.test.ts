@@ -4,11 +4,8 @@ import { ClickToPayConfiguration } from '../internal/ClickToPay/types';
 import createClickToPayService from '../internal/ClickToPay/services/create-clicktopay-service';
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';
 import { CtpState } from '../internal/ClickToPay/services/ClickToPayService';
-import { ICore } from '../../core/types';
 
 jest.mock('../internal/ClickToPay/services/create-clicktopay-service');
-
-const coreMock = mock<ICore>();
 
 test('should initialize ClickToPayService when creating the element', () => {
     const mockCtpService = mock<IClickToPayService>();
@@ -25,7 +22,7 @@ test('should initialize ClickToPayService when creating the element', () => {
     };
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const element = new ClickToPayElement({ core: coreMock, environment: 'test', configuration, ...ctpConfiguration });
+    const element = new ClickToPayElement({ core: global.core, environment: 'test', configuration, ...ctpConfiguration });
 
     expect(createClickToPayService).toHaveBeenCalledWith(configuration, ctpConfiguration, 'test');
     expect(mockCtpService.initialize).toHaveBeenCalledTimes(1);
@@ -38,7 +35,7 @@ test('should formatData() to click to pay /payment request format', () => {
         srcScheme: 'mc'
     };
 
-    const element = new ClickToPayElement({ core: coreMock });
+    const element = new ClickToPayElement({ core: global.core });
     element.setState({ data: paymentDataReceivedFromScheme });
 
     const data = element.formatData();
@@ -58,18 +55,13 @@ test('should formatData() to click to pay /payment request format', () => {
 });
 
 test('should get shopperEmail from session if available', () => {
-    coreMock.options.session.shopperEmail = 'shopper@example.com';
-    // const props = {
-    //     core: {
-    //         options: {
-    //             session: {
-    //                 shopperEmail: 'shopper@example.com'
-    //             }
-    //         }
-    //     }
-    // };
+    global.core.options = {
+        session: {
+            shopperEmail: 'shopper@example.com'
+        }
+    };
 
-    const element = new ClickToPayElement({ core: coreMock });
+    const element = new ClickToPayElement({ core: global.core });
 
     expect(element.props.shopperEmail).toBe('shopper@example.com');
 });
@@ -84,7 +76,7 @@ test('should resolve isAvailable if shopper account is found', async () => {
         get: jest.fn(() => true)
     });
 
-    const element = new ClickToPayElement({ core: coreMock });
+    const element = new ClickToPayElement({ core: global.core });
 
     await expect(element.isAvailable()).resolves.not.toThrow();
 });
@@ -103,7 +95,7 @@ test('should reject isAvailable if shopper account is not found', async () => {
         get: jest.fn(() => false)
     });
 
-    const element = new ClickToPayElement({ core: coreMock });
+    const element = new ClickToPayElement({ core: global.core });
 
     await expect(element.isAvailable()).rejects.toBeFalsy();
 });

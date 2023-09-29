@@ -13,7 +13,7 @@ import { CoreOptions, ICore } from '../core/types';
 import { Resources } from '../core/Context/Resources';
 import { NewableComponent } from '../core/core.registry';
 
-export abstract class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
+export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
 
     protected resources: Resources;
@@ -92,7 +92,7 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
     private onSubmit(): void {
         //TODO: refactor this, instant payment methods are part of Dropin logic not UIElement
         if (this.props.isInstantPayment) {
-            const dropinElementRef = this.elementRef as DropinElement;
+            const dropinElementRef = this.elementRef as unknown as DropinElement;
             dropinElementRef.closeActivePaymentMethod();
         }
 
@@ -199,7 +199,7 @@ export abstract class UIElement<P extends UIElementProps = any> extends BaseElem
         return state;
     };
 
-    public handleAction(action: PaymentAction, props = {}): UIElement | null {
+    public handleAction(action: PaymentAction, props = {}): UIElement<P> | null {
         if (!action || !action.type) {
             if (hasOwnProperty(action, 'action') && hasOwnProperty(action, 'resultCode')) {
                 throw new Error(
