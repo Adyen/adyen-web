@@ -3,12 +3,17 @@ import Countdown from './index';
 import { render, screen } from '@testing-library/preact';
 import { SRPanel } from '../../../core/Errors/SRPanel';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
+import CoreProvider from '../../../core/Context/CoreProvider';
 
 describe('Countdown', () => {
     const srPanel = new SRPanel({ core: global.core });
     const customRender = ui => {
         // @ts-ignore render ui as children
-        return render(<SRPanelProvider srPanel={srPanel}>{ui}</SRPanelProvider>);
+        return render(
+            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                <SRPanelProvider srPanel={srPanel}>{ui}</SRPanelProvider>)
+            </CoreProvider>
+        );
     };
 
     beforeEach(() => {

@@ -2,6 +2,7 @@ import { mount } from 'enzyme';
 import { h } from 'preact';
 import IssuerList from './IssuerList';
 import PayButton from '../PayButton';
+import CoreProvider from '../../../core/Context/CoreProvider';
 
 describe('IssuerList', () => {
     test('Accepts Items as props', () => {
@@ -11,14 +12,16 @@ describe('IssuerList', () => {
             { name: 'Issuer 3', id: '3' }
         ];
         const wrapper = mount(
-            <IssuerList
-                items={items}
-                showPayButton={false}
-                onChange={jest.fn()}
-                payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
-            />
+            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                <IssuerList
+                    items={items}
+                    showPayButton={false}
+                    onChange={jest.fn()}
+                    payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
+                />
+            </CoreProvider>
         );
-        expect(wrapper.props().items).toHaveLength(3);
+        expect(wrapper.find('IssuerList').props().items).toHaveLength(3);
         expect(wrapper.find('ul li')).toHaveLength(3);
     });
 
@@ -31,15 +34,17 @@ describe('IssuerList', () => {
         const highlightedIds = ['2', '3'];
 
         const wrapper = mount(
-            <IssuerList
-                items={items}
-                highlightedIds={highlightedIds}
-                showPayButton={false}
-                onChange={jest.fn()}
-                payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
-            />
+            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                <IssuerList
+                    items={items}
+                    highlightedIds={highlightedIds}
+                    showPayButton={false}
+                    onChange={jest.fn()}
+                    payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
+                />
+            </CoreProvider>
         );
-        expect(wrapper.props().highlightedIds).toHaveLength(2);
+        expect(wrapper.find('IssuerList').props().highlightedIds).toHaveLength(2);
         expect(wrapper.find('.adyen-checkout__issuer-button-group button')).toHaveLength(2);
     });
 
@@ -55,13 +60,15 @@ describe('IssuerList', () => {
         expect(onChangeCb).toBeCalledTimes(0);
 
         const wrapper = mount(
-            <IssuerList
-                items={items}
-                highlightedIds={highlightedIds}
-                showPayButton={false}
-                onChange={onChangeCb}
-                payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
-            />
+            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                <IssuerList
+                    items={items}
+                    highlightedIds={highlightedIds}
+                    showPayButton={false}
+                    onChange={onChangeCb}
+                    payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
+                />
+            </CoreProvider>
         );
 
         let callbackData = { data: { issuer: null }, valid: { issuer: false }, errors: { issuer: null }, isValid: false };
@@ -87,13 +94,15 @@ describe('IssuerList', () => {
         const highlightedIds = ['3', '4', '5'];
 
         const wrapper = mount(
-            <IssuerList
-                items={items}
-                highlightedIds={highlightedIds}
-                showPayButton={false}
-                onChange={jest.fn()}
-                payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
-            />
+            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                <IssuerList
+                    items={items}
+                    highlightedIds={highlightedIds}
+                    showPayButton={false}
+                    onChange={jest.fn()}
+                    payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
+                />
+            </CoreProvider>
         );
 
         const highlightedButtons = wrapper.find('.adyen-checkout__issuer-button-group button');
@@ -111,13 +120,15 @@ describe('IssuerList', () => {
         const highlightedIds = ['3'];
 
         const wrapper = mount(
-            <IssuerList
-                items={items}
-                highlightedIds={highlightedIds}
-                showPayButton={false}
-                onChange={jest.fn()}
-                payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
-            />
+            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                <IssuerList
+                    items={items}
+                    highlightedIds={highlightedIds}
+                    showPayButton={false}
+                    onChange={jest.fn()}
+                    payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
+                />
+            </CoreProvider>
         );
 
         const highlightedIssuerButton = wrapper.find('.adyen-checkout__issuer-button-group button').at(0);

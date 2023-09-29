@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/preact';
 
 import { CVC_POLICY_REQUIRED } from '../../../../internal/SecuredFields/lib/configuration/constants';
 import StoredCardFields from './StoredCardFields';
+import CoreProvider from '../../../../../core/Context/CoreProvider';
 
 const storedCardProps = {
     brand: 'visa',
@@ -17,9 +18,17 @@ const storedCardProps = {
     focusedElement: ''
 };
 
+const renderWithCoreProvider = ui => {
+    return render(
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            {ui}
+        </CoreProvider>
+    );
+};
+
 describe('StoredCard', () => {
     test('Renders a StoredCard field, with readonly expiryDate and cvc field', () => {
-        render(<StoredCardFields {...storedCardProps} />);
+        renderWithCoreProvider(<StoredCardFields {...storedCardProps} />);
 
         // Look for expiryDate elements
         /* eslint-disable-next-line */
@@ -38,7 +47,7 @@ describe('StoredCard', () => {
         newStoredCardProps.expiryMonth = null;
         newStoredCardProps.expiryYear = null;
 
-        render(<StoredCardFields {...newStoredCardProps} />);
+        renderWithCoreProvider(<StoredCardFields {...newStoredCardProps} />);
 
         /* eslint-disable-next-line */
         expect(screen.queryByText('Expiry date', { exact: false })).toBeNull(); // non-presence
@@ -52,7 +61,7 @@ describe('StoredCard', () => {
         newStoredCardProps.expiryMonth = '';
         newStoredCardProps.expiryYear = '';
 
-        render(<StoredCardFields {...newStoredCardProps} />);
+        renderWithCoreProvider(<StoredCardFields {...newStoredCardProps} />);
 
         /* eslint-disable-next-line */
         expect(screen.queryByText('Expiry date', { exact: false })).toBeNull(); // non-presence
@@ -66,7 +75,7 @@ describe('StoredCard', () => {
         delete newStoredCardProps.expiryMonth;
         delete newStoredCardProps.expiryYear;
 
-        render(<StoredCardFields {...newStoredCardProps} />);
+        renderWithCoreProvider(<StoredCardFields {...newStoredCardProps} />);
 
         /* eslint-disable-next-line */
         expect(screen.queryByText('Expiry date', { exact: false })).toBeNull(); // non-presence

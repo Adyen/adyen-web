@@ -3,10 +3,16 @@ import { mount } from 'enzyme';
 import Installments from './Installments';
 import { InstallmentOptions } from '../types';
 import { render, screen } from '@testing-library/preact';
+import CoreProvider from '../../../../../../core/Context/CoreProvider';
 
 describe('Installments', () => {
     let installmentOptions;
-    const getWrapper = (props = {}) => mount(<Installments installmentOptions={installmentOptions} {...props} />);
+    const getWrapper = (props = {}) =>
+        mount(
+            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                <Installments installmentOptions={installmentOptions} {...props} />{' '}
+            </CoreProvider>
+        );
 
     beforeEach(() => {
         installmentOptions = {
@@ -56,7 +62,11 @@ describe('Installments', () => {
         const amount = { value: 30000, currency: 'USD' };
         const props = { amount, installmentOptions, type: 'amount' };
 
-        render(<Installments {...props} />);
+        render(
+            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                <Installments {...props} />
+            </CoreProvider>
+        );
         expect(await screen.findByRole('button')).toHaveTextContent('1x $300.00');
     });
 
@@ -80,9 +90,17 @@ describe('Installments', () => {
                     }
                 };
                 const props = { amount, installmentOptions, type };
-                const { rerender } = render(<Installments {...props} />);
+                const { rerender } = render(
+                    <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                        <Installments {...props} />
+                    </CoreProvider>
+                );
                 expect(await screen.findByRole('button')).toHaveTextContent('2x $150.00');
-                rerender(<Installments brand={'visa'} {...props} />);
+                rerender(
+                    <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                        <Installments brand={'visa'} {...props} />{' '}
+                    </CoreProvider>
+                );
                 expect(await screen.findByRole('button')).toHaveTextContent('2x $150.00');
             });
         });
@@ -100,9 +118,17 @@ describe('Installments', () => {
                     }
                 };
                 const props = { amount, installmentOptions, type };
-                const { rerender } = render(<Installments {...props} />);
+                const { rerender } = render(
+                    <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                        <Installments {...props} />
+                    </CoreProvider>
+                );
                 expect(await screen.findByRole('button')).toHaveTextContent('4x $75.00');
-                rerender(<Installments brand={'visa'} {...props} />);
+                rerender(
+                    <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                        <Installments brand={'visa'} {...props} />
+                    </CoreProvider>
+                );
                 expect(await screen.findByRole('button')).toHaveTextContent('2x $150.00');
             });
 
@@ -117,9 +143,17 @@ describe('Installments', () => {
                     }
                 };
                 const props = { amount, installmentOptions, type };
-                const { rerender } = render(<Installments {...props} />);
+                const { rerender } = render(
+                    <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                        <Installments {...props} />
+                    </CoreProvider>
+                );
                 expect(await screen.findByRole('button')).toHaveTextContent('4x $75.00');
-                rerender(<Installments brand={'visa'} {...props} />);
+                rerender(
+                    <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                        <Installments brand={'visa'} {...props} />
+                    </CoreProvider>
+                );
                 expect(await screen.findByRole('button')).toHaveTextContent('1x $300.00');
             });
         });

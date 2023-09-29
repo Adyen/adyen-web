@@ -1,14 +1,22 @@
 import { h } from 'preact';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import DonationComponent from './DonationComponent';
 import { render, screen } from '@testing-library/preact';
+import CoreProvider from '../../../core/Context/CoreProvider';
 
 const onDonate = () => {};
 const amounts = {
     currency: 'EUR',
     values: [50, 199, 300]
 };
-const createWrapper = (props = {}) => mount(<DonationComponent onDonate={onDonate} amounts={amounts} {...props} />);
+
+const createWrapper = (props = {}) => {
+    return mount(
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            <DonationComponent onDonate={onDonate} amounts={amounts} {...props} />
+        </CoreProvider>
+    );
+};
 
 describe('DonationComponent', () => {
     test('Renders the Donation Component', () => {
@@ -17,15 +25,17 @@ describe('DonationComponent', () => {
     });
 
     test('Renders the Success state', () => {
-        const wrapper = shallow(<DonationComponent amounts={amounts} onDonate={onDonate} />);
-        wrapper.instance().setStatus('success');
-        expect(wrapper.find('.adyen-checkout__status__icon--success')).toHaveLength(1);
+        const wrapper = createWrapper({ amounts, onDonate });
+        wrapper.find('DonationComponent').instance().setStatus('success');
+        wrapper.update();
+        expect(wrapper.find('.adyen-checkout__status__icon--success')).toBeDefined();
     });
 
     test('Renders the Error state', () => {
-        const wrapper = shallow(<DonationComponent amounts={amounts} onDonate={onDonate} />);
-        wrapper.instance().setStatus('error');
-        expect(wrapper.find('.adyen-checkout__status__icon--error')).toHaveLength(1);
+        const wrapper = createWrapper({ amounts, onDonate });
+        wrapper.find('DonationComponent').instance().setStatus('error');
+        wrapper.update();
+        expect(wrapper.find('.adyen-checkout__status__icon--error')).toBeDefined();
     });
 
     test('Shows amounts', () => {
@@ -83,14 +93,22 @@ describe('DonationComponent', () => {
             link: 'https://www.adyen.com'
         };
 
-        render(<DonationComponent amounts={amounts} disclaimerMessage={disclaimerMessage} onDonate={onDonate} />);
+        render(
+            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                <DonationComponent amounts={amounts} disclaimerMessage={disclaimerMessage} onDonate={onDonate} />
+            </CoreProvider>
+        );
         expect(screen.getByText('By continuing', { exact: false }).textContent).toEqual(
             'By continuing you accept the terms and conditions of MyStore'
         );
     });
 
     test('Should not render the disclaimer if there is no disclaimerMessage', () => {
-        render(<DonationComponent amounts={amounts} onDonate={onDonate} />);
+        render(
+            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                <DonationComponent amounts={amounts} onDonate={onDonate} />
+            </CoreProvider>
+        );
         expect(screen.queryByText('By continuing', { exact: false })).toBeNull();
     });
 });

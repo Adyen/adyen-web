@@ -1,24 +1,29 @@
 import { h } from 'preact';
-import { shallow } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import EcontextInput from './EcontextInput';
+import CoreProvider from '../../../../core/Context/CoreProvider';
 
 describe('Econtext: EcontextInput', () => {
     test('renders PersonalDetails form by default', () => {
-        const wrapper = shallow(
-            <EcontextInput onChange={jest.fn()} onSubmit={jest.fn()} showPayButton payButton={() => <button className="pay-button" />} />
+        const wrapper = mount(
+            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                <EcontextInput onChange={jest.fn()} onSubmit={jest.fn()} showPayButton payButton={() => <button className="pay-button" />} />
+            </CoreProvider>
         );
         expect(wrapper.find('PersonalDetails')).toHaveLength(1);
     });
 
     test('hide PersonalDetails form if prop personalDetailsRequired is set to false', () => {
-        const wrapper = shallow(
-            <EcontextInput
-                personalDetailsRequired={false}
-                onChange={jest.fn()}
-                onSubmit={jest.fn()}
-                showPayButton
-                payButton={() => <button className="pay-button" />}
-            />
+        const wrapper = mount(
+            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                <EcontextInput
+                    personalDetailsRequired={false}
+                    onChange={jest.fn()}
+                    onSubmit={jest.fn()}
+                    showPayButton
+                    payButton={() => <button className="pay-button" />}
+                />
+            </CoreProvider>
         );
         expect(wrapper.find('PersonalDetails')).toHaveLength(0);
     });

@@ -4,6 +4,7 @@ import BCMCMobileElement from '../components/BcmcMobile';
 import Session from './CheckoutSession';
 import { CheckoutSessionSetupResponse } from '../types';
 import { Dropin, Ideal } from '../components';
+import { es_ES } from '../language/locales';
 
 jest.spyOn(Session.prototype, 'setupSession').mockImplementation(() => {
     const sessionSetupResponseMock: CheckoutSessionSetupResponse = {
@@ -14,7 +15,10 @@ jest.spyOn(Session.prototype, 'setupSession').mockImplementation(() => {
             currency: 'USD'
         },
         expiresAt: '',
-        paymentMethods: {},
+        paymentMethods: {
+            paymentMethods: [{ name: 'Ideal', type: 'ideal' }],
+            storedPaymentMethods: []
+        },
         returnUrl: '',
         configuration: {},
         shopperLocale: 'en-US'
@@ -33,7 +37,7 @@ describe('Core', () => {
         });
 
         test('should set a custom locale', async () => {
-            const checkout = new AdyenCheckout({ environment: 'test', clientKey: 'test_123456', locale: 'es-ES' });
+            const checkout = new AdyenCheckout({ environment: 'test', clientKey: 'test_123456', locale: 'es-ES', translationFile: es_ES });
             await checkout.initialize();
 
             expect(checkout.options.locale).toBe('es-ES');

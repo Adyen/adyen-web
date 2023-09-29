@@ -1,22 +1,29 @@
 import { mount } from 'enzyme';
 import { h } from 'preact';
 import CardNumber from './CardNumber';
+import CoreProvider from '../../../../../core/Context/CoreProvider';
 
-const wrapper = mount(
-    <CardNumber
-        label="Card number"
-        error=""
-        isValid={false}
-        focused={true}
-        filled={false}
-        showBrandIcon={true}
-        brand="card"
-        onFocusField={() => {}}
-        dualBrandingElements={null}
-        dualBrandingChangeHandler={() => {}}
-        dualBrandingSelected=""
-    />
+// https://github.com/enzymejs/enzyme/issues/1925#issuecomment-490637648
+const Proxy = props => (
+    <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+        <CardNumber
+            label="Card number"
+            error=""
+            isValid={false}
+            focused={true}
+            filled={false}
+            showBrandIcon={true}
+            brand="card"
+            onFocusField={() => {}}
+            dualBrandingElements={null}
+            dualBrandingChangeHandler={() => {}}
+            dualBrandingSelected=""
+            {...props}
+        />
+    </CoreProvider>
 );
+
+const wrapper = mount(<Proxy />);
 
 describe('CardNumber', () => {
     test('Renders a CardNumber field, with standard brand image, and no dual branding', () => {

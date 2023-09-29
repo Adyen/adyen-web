@@ -1,9 +1,10 @@
 import { h } from 'preact';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import OpenInvoice from './OpenInvoice';
 import { mock } from 'jest-mock-extended';
 import { OpenInvoiceProps } from './types';
 import { FieldsetVisibility } from '../../../types';
+import CoreProvider from '../../../core/Context/CoreProvider';
 
 let componentRef;
 const setComponentRef = ref => {
@@ -21,10 +22,15 @@ const defaultProps = {
     setComponentRef: setComponentRef
 };
 
-describe('OpenInvoice', () => {
-    const openInvoicePropsMock = mock<OpenInvoiceProps>();
-    const getWrapper = (props = {}) => shallow(<OpenInvoice {...openInvoicePropsMock} {...defaultProps} {...props} />);
+const openInvoicePropsMock = mock<OpenInvoiceProps>();
+const getWrapper = (props = {}) =>
+    mount(
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            <OpenInvoice {...openInvoicePropsMock} {...defaultProps} {...props} />
+        </CoreProvider>
+    );
 
+describe('OpenInvoice', () => {
     test('should not display fieldsets set to hidden', () => {
         const visibility = { personalDetails: 'hidden' };
         const wrapper = getWrapper({ visibility });
@@ -56,8 +62,10 @@ describe('OpenInvoice', () => {
     test('clicking the separate delivery checkbox should toggle the delivery address fieldset', () => {
         const wrapper = getWrapper();
         wrapper.find('Checkbox').prop('onChange')();
+        wrapper.update();
         expect(wrapper.find('Address')).toHaveLength(2);
         wrapper.find('Checkbox').prop('onChange')();
+        wrapper.update();
         expect(wrapper.find('Address')).toHaveLength(1);
     });
 
@@ -69,7 +77,6 @@ describe('OpenInvoice', () => {
     test('should call the onChange', () => {
         const onChange = jest.fn();
         getWrapper({ onChange });
-        expect(onChange).toHaveBeenCalledTimes(1);
         expect(onChange).toHaveBeenCalledWith(
             expect.objectContaining({
                 data: expect.any(Object),

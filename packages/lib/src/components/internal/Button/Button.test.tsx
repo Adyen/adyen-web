@@ -1,12 +1,17 @@
 import { h } from 'preact';
 import { mount } from 'enzyme';
 import Button from './Button';
+import CoreProvider from '../../../core/Context/CoreProvider';
 
-const i18n = { get: key => key };
+const getWrapper = props => {
+    return mount(
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            <Button {...props} />
+        </CoreProvider>
+    );
+};
 
 describe('Button', () => {
-    const getWrapper = props => mount(<Button i18n={i18n} {...props} />);
-
     test('Renders a button by default', () => {
         const wrapper = getWrapper({ label: 'label' });
         expect(wrapper.text()).toContain('label');

@@ -1,10 +1,11 @@
-import { mount } from 'enzyme';
 import { h } from 'preact';
+import { mount } from 'enzyme';
 import StateField from './StateField';
 import getDataset from '../../../../core/Services/get-dataset';
 import Specifications from '../Specifications';
 import { mock } from 'jest-mock-extended';
 import { StateFieldProps } from '../types';
+import CoreProvider from '../../../../core/Context/CoreProvider';
 
 jest.mock('../../../../core/Services/get-dataset');
 const statesMock = [
@@ -19,11 +20,16 @@ const statesMock = [
 ];
 
 (getDataset as jest.Mock).mockImplementation(jest.fn(() => Promise.resolve(statesMock)));
+const mockedProps = mock<StateFieldProps>();
+const getWrapper = (props = {}) => {
+    return mount(
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            <StateField specifications={new Specifications()} {...props} {...mockedProps} />
+        </CoreProvider>
+    );
+};
 
 describe('StateField', () => {
-    const mockedProps = mock<StateFieldProps>();
-    const getWrapper = (props = {}) => mount(<StateField specifications={new Specifications()} {...props} {...mockedProps} />);
-
     test('does not call getDataset when no country is passed', () => {
         getWrapper();
         expect(getDataset).not.toHaveBeenCalled();
