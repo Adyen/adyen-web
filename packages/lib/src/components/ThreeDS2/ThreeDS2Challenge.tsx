@@ -21,7 +21,7 @@ export interface ThreeDS2ChallengeProps {
     challengeWindowSize?: '01' | '02' | '03' | '04' | '05';
     type?: string;
     loadingContext?: string;
-    useOriginalFlow?: boolean;
+    isMDFlow?: boolean;
     i18n?: Language;
     onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
 }
@@ -44,11 +44,10 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
         // existy used because threeds2InMDFlow will send empty string for paymentData and we should be allowed to proceed with this
         if (!existy(this.props.paymentData)) {
             /**
-             *  One component is used for both old and new 3DS2 challenge flows
-             *   - The presence of useOriginalFlow indicates the old flow which used paymentData from the 3DS2 action
-             *   - The new flow uses authorisationToken from the 3DS2 action, passed internally in a prop called paymentData
+             *   The presence of props.isMDFlow indicates the action to create this component came from the threeds2InMDFlow process which passes (an empty) paymentsData.
+             *   The regular, "native" flow uses the authorisationToken from the 3DS2 action, which actionTypes.ts assigns to a property called paymentData
              */
-            const dataTypeForError = hasOwnProperty(this.props, 'useOriginalFlow') ? 'paymentData' : 'authorisationToken';
+            const dataTypeForError = hasOwnProperty(this.props, 'isMDFlow') ? 'paymentData' : 'authorisationToken';
 
             this.props.onError({ errorCode: 'threeds2.challenge', message: `No ${dataTypeForError} received. Challenge cannot proceed` });
             return null;

@@ -57,10 +57,9 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         this.setState({ status: 'complete' }, () => {
             /**
              * Create the data in the way that the /details endpoint expects.
-             *  This is different for the 'old',v66, flow triggered by a 'threeDS2Challenge' action (which includes the threeds2InMDFlow)
-             *  than for the new, v67, 'threeDS2' action
+             *  This is different for the flow triggered by the threeds2InMDFlow process than for the new, v67, 'threeDS2' action
              */
-            const resolveDataFunction = this.props.useOriginalFlow ? createOldChallengeResolveData : createChallengeResolveData;
+            const resolveDataFunction = this.props.isMDFlow ? createOldChallengeResolveData : createChallengeResolveData;
             const data = resolveDataFunction(this.props.dataKey, resultObj.transStatus, this.props.paymentData);
 
             this.props.onComplete(data); // (equals onAdditionalDetails - except for 3DS2InMDFlow)
