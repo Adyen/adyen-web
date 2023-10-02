@@ -15,7 +15,7 @@ interface DonationProps extends UIElementProps {
 class DonationElement extends UIElement<DonationProps> {
     public static type = TxVariants.donation;
 
-    constructor(props) {
+    constructor(props: DonationProps) {
         super(props);
         this.donate = this.donate.bind(this);
     }

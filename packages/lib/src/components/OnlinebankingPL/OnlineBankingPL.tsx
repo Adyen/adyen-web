@@ -1,4 +1,4 @@
-import IssuerListContainer from '../helpers/IssuerListContainer';
+import IssuerListContainer, { IssuerListContainerProps } from '../helpers/IssuerListContainer';
 import { TxVariants } from '../tx-variants';
 
 class OnlineBankingPL extends IssuerListContainer {
@@ -14,7 +14,7 @@ class OnlineBankingPL extends IssuerListContainer {
         urls: [OnlineBankingPL.disclaimerUrlsMap.regulation, OnlineBankingPL.disclaimerUrlsMap.obligation]
     };
 
-    constructor(props?) {
+    constructor(props: IssuerListContainerProps) {
         super({ ...props, termsAndConditions: OnlineBankingPL.termsAndConditions });
     }
 }

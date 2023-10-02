@@ -15,8 +15,8 @@ import { TxVariants } from '../tx-variants';
 export class ClickToPayElement extends UIElement<ClickToPayElementProps> {
     public static type = TxVariants.clicktopay;
 
-    private clickToPayService: IClickToPayService | null;
-    private ctpConfiguration: ClickToPayConfiguration;
+    private readonly clickToPayService: IClickToPayService | null;
+    private readonly ctpConfiguration: ClickToPayConfiguration;
 
     constructor(props: ClickToPayElementProps) {
         super(props);

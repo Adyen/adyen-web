@@ -36,7 +36,7 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
         showPaymentMethodItemImages: false
     };
 
-    constructor(props?: IssuerListContainerProps) {
+    constructor(props: IssuerListContainerProps) {
         super(props);
 
         const getImage = props => this.resources.getImage(props);
@@ -62,7 +62,7 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
     formatData(): IssuerListData {
         return {
             paymentMethod: {
-                type: this.constructor['type'],
+                type: this.type,
                 issuer: this.state?.data?.issuer
             }
         };
