@@ -5,7 +5,6 @@ import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import { InstallmentsItem, InstallmentsProps } from '../types';
 import Fieldset from '../../../../../internal/FormFields/Fieldset/Fieldset';
 import RadioGroup from '../../../../../internal/FormFields/RadioGroup';
-import styles from '../../CardInput.module.scss';
 import Select from '../../../../../internal/FormFields/Select';
 
 export interface InstallmentsObj {
@@ -20,6 +19,7 @@ function Installments(props: InstallmentsProps) {
     const { i18n } = useCoreContext();
     const { amount, brand, onChange, type } = props;
     const installmentOptions = props.installmentOptions[brand] || props.installmentOptions.card;
+    const readOnly = installmentOptions?.values?.length === 1;
     const [installmentAmount, setInstallmentAmount] = useState(installmentOptions?.preselectedValue || installmentOptions?.values[0]);
     const [radioBtnValue, setRadioBtnValue] = useState('onetime');
 
@@ -92,15 +92,11 @@ function Installments(props: InstallmentsProps) {
                     />
 
                     <Field
-                        className={
-                            radioBtnValue !== 'installments'
-                                ? `${styles['revolving-plan-installments__disabled']}`
-                                : `${styles['revolving-plan-installments']}`
-                        }
+                        className={radioBtnValue !== 'installments' ? 'revolving-plan-installments__disabled' : 'revolving-plan-installments'}
                         classNameModifiers={['revolving-plan-installments']}
                         name={''}
                         useLabelElement={false}
-                        addContextualElement={false}
+                        showErrorElement={false}
                     >
                         <Select
                             filterable={false}
@@ -123,7 +119,8 @@ function Installments(props: InstallmentsProps) {
                 classNameModifiers={['installments']}
                 name={''}
                 useLabelElement={false}
-                addContextualElement={false}
+                showErrorElement={false}
+                readOnly={readOnly}
             >
                 <Select
                     filterable={false}
@@ -131,7 +128,7 @@ function Installments(props: InstallmentsProps) {
                     selectedValue={installmentAmount}
                     onChange={onSelectInstallment}
                     name={'installments'}
-                    readonly={installmentOptions?.values?.length === 1}
+                    readonly={readOnly}
                 />
             </Field>
         </div>

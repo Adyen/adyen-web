@@ -1,8 +1,8 @@
-@import "../../../../style/index";
+@use "../../../../style/index";
 
 .adyen-checkout__voucher-result--oxxo .adyen-checkout__voucher-result__code {
-    font-size: $font-size-small;
-    line-height: 19px;
+    font-size: index.$font-size-small;
+    line-height: var(--b-text-caption-line-height);
     word-break: break-all;
-    padding: 24px;
+    padding: var(--b-spacer-090);
 }

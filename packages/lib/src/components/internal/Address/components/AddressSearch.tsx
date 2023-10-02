@@ -21,9 +21,21 @@ interface AddressSearchProps {
     onManualAddress: any;
     externalErrorMessage: string;
     hideManualButton: boolean;
+    showContextualElement?: boolean;
+    contextualText?: string;
+    placeholder?: string;
 }
 
-export default function AddressSearch({ onAddressLookup, onSelect, onManualAddress, externalErrorMessage, hideManualButton }: AddressSearchProps) {
+export default function AddressSearch({
+    onAddressLookup,
+    onSelect,
+    onManualAddress,
+    externalErrorMessage,
+    hideManualButton,
+    showContextualElement,
+    contextualText,
+    placeholder
+}: AddressSearchProps) {
     const [formattedData, setFormattedData] = useState([]);
     const [originalData, setOriginalData] = useState([]);
 
@@ -70,11 +82,18 @@ export default function AddressSearch({ onAddressLookup, onSelect, onManualAddre
     return (
         <Fragment>
             <div className={'adyen-checkout__address-search adyen-checkout__field-group'}>
-                <Field label={i18n.get('address')} classNameModifiers={['address-search']} errorMessage={errorMessage} name={'address-search'}>
+                <Field
+                    label={i18n.get('address')}
+                    classNameModifiers={['address-search']}
+                    errorMessage={errorMessage}
+                    name={'address-search'}
+                    showContextualElement={showContextualElement}
+                    contextualText={contextualText}
+                >
                     <Select
                         name={'address-search'}
                         className={'adyen-checkout__address-search__dropdown'}
-                        //placeholder={i18n.get('address.placeholder')}
+                        placeholder={placeholder}
                         onInput={debounceInputHandler}
                         items={formattedData}
                         onChange={onChange}

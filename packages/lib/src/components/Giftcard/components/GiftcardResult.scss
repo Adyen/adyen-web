@@ -1,11 +1,9 @@
-@import "../../../style/index";
-
 .adyen-checkout__giftcard-result__header {
     align-items: center;
     display: flex;
     flex-wrap: nowrap;
     font-size: 1em;
-    font-weight: 400;
+    font-weight: var(--b-text-body-font-weight);
     justify-content: space-between;
     position: relative;
     width: 100%;
@@ -17,22 +15,22 @@
 }
 
 .adyen-checkout__giftcard-result__name {
-    margin-left: $spacing-small;
+    margin-left: var(--b-spacer-040);
 }
 
 .adyen-checkout__giftcard-result__balance {
     padding: 0;
     list-style: none;
-    margin: 16px 0 0;
+    margin: var(--b-spacer-070) 0 0;
 }
 
 .adyen-checkout__giftcard-result__balance__item {
     display: flex;
     justify-content: space-between;
-    margin-bottom: $spacing-small;
+    margin-bottom: var(--b-spacer-040);
 
     .adyen-checkout__giftcard-result__balance__title--transactionLimit {
-        color: $color-gray-darker;
+        color: var(--b-color-outline-tertiary);
     }
 
     &:last-child {
@@ -48,8 +46,8 @@
 
 .adyen-checkout__giftcard-result__remaining-balance {
     font-size: 13px;
-    line-height: 19px;
+    line-height: var(--b-text-caption-line-height);
     text-align: center;
-    color: #687282;
-    margin: 8px auto 0;
+    color: var(--b-color-label-secondary);
+    margin: var(--b-spacer-040) auto 0;
 }

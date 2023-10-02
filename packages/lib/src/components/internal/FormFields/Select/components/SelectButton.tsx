@@ -1,8 +1,6 @@
 import { h, Fragment } from 'preact';
 import cx from 'classnames';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { SelectButtonProps } from '../types';
-import styles from '../Select.module.scss';
 import Img from '../../../Img';
 
 function SelectButtonElement({ filterable, toggleButtonRef, ...props }) {
@@ -12,7 +10,6 @@ function SelectButtonElement({ filterable, toggleButtonRef, ...props }) {
 }
 
 function SelectButton(props: SelectButtonProps) {
-    const { i18n } = useCoreContext();
     const { active, selected, inputText, readonly, showList } = props;
 
     // display fallback order
@@ -42,10 +39,8 @@ function SelectButton(props: SelectButtonProps) {
         <SelectButtonElement
             className={cx({
                 'adyen-checkout__dropdown__button': true,
-                [styles['adyen-checkout__dropdown__button']]: true,
                 'adyen-checkout__dropdown__button--readonly': readonly,
                 'adyen-checkout__dropdown__button--active': showList,
-                [styles['adyen-checkout__dropdown__button--active']]: showList,
                 'adyen-checkout__dropdown__button--invalid': props.isInvalid,
                 'adyen-checkout__dropdown__button--valid': props.isValid,
                 'adyen-checkout__dropdown__button--disabled': selected.disabled
@@ -72,10 +67,9 @@ function SelectButton(props: SelectButtonProps) {
                         aria-expanded={showList}
                         aria-owns={props.selectListId}
                         autoComplete="off"
-                        className={cx('adyen-checkout__filter-input', [styles['adyen-checkout__filter-input']])}
+                        className="adyen-checkout__filter-input"
                         onInput={props.onInput}
                         onFocus={onFocusHandler}
-                        placeholder={i18n.get('select.filter.placeholder')}
                         ref={props.filterInputRef}
                         role="combobox"
                         aria-activedescendant={`listItem-${active.id}`}

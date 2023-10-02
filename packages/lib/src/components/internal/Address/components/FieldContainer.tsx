@@ -7,12 +7,14 @@ import useCoreContext from '../../../../core/Context/useCoreContext';
 import Language from '../../../../language/Language';
 import InputText from '../../FormFields/InputText';
 
-function getErrorMessage(errors: AddressStateError, fieldName: string, i18n: Language): string | boolean {
+function getErrorMessage(errors: AddressStateError, fieldName: string, i18n: Language, label: string): string | boolean {
     if (typeof errors[fieldName]?.errorMessage === 'object') {
         const { translationKey, translationObject } = errors[fieldName].errorMessage;
         return i18n.get(translationKey, translationObject);
     }
-    return i18n.get(errors[fieldName]?.errorMessage) || !!errors[fieldName];
+    // Default error msg: Enter the [label name]
+    const errorMsg = i18n.get(errors[fieldName]?.errorMessage, { values: { label: label.toLowerCase() } });
+    return errorMsg || !!errors[fieldName];
 }
 
 /**
@@ -31,7 +33,7 @@ function FieldContainer(props: FieldContainerProps) {
     const labelKey: string = props.specifications.getKeyForField(fieldName, selectedCountry);
     const optionalLabel = isOptional ? ` ${i18n.get('field.title.optional')}` : '';
     const label = `${i18n.get(labelKey)}${optionalLabel}`;
-    const errorMessage = getErrorMessage(errors, fieldName, i18n);
+    const errorMessage = getErrorMessage(errors, fieldName, i18n, label);
 
     switch (fieldName) {
         case 'country':

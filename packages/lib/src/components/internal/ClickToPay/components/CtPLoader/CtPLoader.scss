@@ -5,8 +5,8 @@
     }
 
     &-subtitle {
-        font-size: 16px;
-        line-height: 19px;
+        font-size: var(--b-spacer-070);
+        line-height: var(--b-text-caption-line-height);
         max-width: 280px;
         text-align: center;
         margin: 0 auto 58px;

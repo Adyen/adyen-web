@@ -30,7 +30,6 @@ export { default as CashAppPay } from './CashAppPay';
 export { default as ClickToPay } from './ClickToPay';
 export { default as GooglePay } from './GooglePay';
 export { default as PayPal } from './PayPal';
-export { default as QiwiWallet } from './QiwiWallet';
 
 /** Vouchers */
 export { default as Boleto } from './Boleto';

@@ -21,7 +21,7 @@ export class MBWayElement extends UIElement<AwaitActionElement> {
                 phonePrefix: data.phonePrefix || '+351' // if not specified default to Portuguese country code
             },
             placeholders: {
-                phoneNumber: placeholders.telephoneNumber || placeholders.phoneNumber || '932123456'
+                phoneNumber: placeholders.telephoneNumber || placeholders.phoneNumber
             }
         };
     }

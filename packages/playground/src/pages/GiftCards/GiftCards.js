@@ -31,6 +31,10 @@ import getTranslationFile from '../../config/getTranslation';
         onOrderRequest: async (resolve, reject) => {
             resolve(await createOrder({ amount }));
         }
+        // placeholders: {
+        //     cardNumber: 'ph enter NUM',
+        //     securityCode: 'ph pin'
+        // }
     }).mount('#genericgiftcard-container');
 
     // TODO: Double-check if it is supposed to be like that

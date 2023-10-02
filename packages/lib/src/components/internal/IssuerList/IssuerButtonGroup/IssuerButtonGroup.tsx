@@ -24,7 +24,7 @@ const IssuerButtonGroup = ({ items = [], selectedIssuerId, onChange }: IssuerBut
     );
 
     return (
-        <div className="adyen-checkout__issuer-button-group" role="group" aria-label={i18n.get('idealIssuer.selectField.placeholder')}>
+        <div className="adyen-checkout__issuer-button-group" role="group" aria-label={i18n.get('issuerList.selectField.contextualText')}>
             {items.map(issuer => (
                 <IssuerButton key={issuer.id} {...issuer} selected={selectedIssuerId === issuer.id} onClick={handleClick} />
             ))}

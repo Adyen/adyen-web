@@ -9,7 +9,7 @@ import {
 } from '../../configuration/constants';
 import { existy } from '../../utilities/commonUtils';
 import cardType from '../utils/cardType';
-import { SecuredFieldInitObj } from '../../securedField/AbstractSecuredField';
+import { SecuredFieldSetupObject } from '../../securedField/AbstractSecuredField';
 import SecuredField from '../../securedField/SecuredField';
 import { CardObject, CbObjOnBrand, SFFeedbackObj, CbObjOnLoad, CVCPolicyType, DatePolicyType } from '../../types';
 import AdyenCheckoutError from '../../../../../../core/Errors/AdyenCheckoutError';
@@ -175,8 +175,8 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
         const extraFieldData: string = getAttribute(pItem, DATA_INFO);
         const uid = getAttribute(pItem, DATA_UID);
 
-        // ////// CREATE SecuredField passing in configObject of props that will be set on the SecuredField instance
-        const sfInitObj: SecuredFieldInitObj = {
+        // CREATE SecuredField passing config object
+        const sfInitObj: SecuredFieldSetupObject = {
             fieldType,
             extraFieldData,
             uid,
@@ -184,8 +184,9 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
             holderEl: pItem,
             expiryDatePolicy,
             txVariant: this.state.type,
+            // from this.config (calculated)
             cardGroupTypes: this.config.cardGroupTypes,
-            iframeUIConfig: this.config.iframeUIConfig ? this.config.iframeUIConfig : {},
+            iframeUIConfig: this.config.iframeUIConfig,
             sfLogAtStart: this.config.sfLogAtStart,
             trimTrailingSeparator: this.config.trimTrailingSeparator,
             isCreditCardType: this.config.isCreditCardType,
@@ -194,9 +195,12 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
             showWarnings: this.config.showWarnings,
             legacyInputMode: this.config.legacyInputMode,
             minimumExpiryDate: this.config.minimumExpiryDate,
-            implementationType: this.config.implementationType,
-            maskSecurityCode: this.config.maskSecurityCode,
-            disableIOSArrowKeys: this.config.shouldDisableIOSArrowKeys
+            // from this.props (passed straight thru)
+            maskSecurityCode: this.props.maskSecurityCode,
+            disableIOSArrowKeys: this.props.shouldDisableIOSArrowKeys,
+            implementationType: this.props.implementationType,
+            showContextualElement: this.props.showContextualElement,
+            placeholders: this.props.placeholders
         };
 
         const sf: SecuredField = new SecuredField(sfInitObj, this.props.i18n)
@@ -219,7 +223,7 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
                 /** Create timeout within which time we expect the securedField to configure */
                 // @ts-ignore - timeout 'type' *is* a number
                 sf.loadToConfigTimeout = setTimeout(() => {
-                    reject({ type: sf.fieldType, failReason: 'sf took too long to config' });
+                    reject({ type: sfInitObj.fieldType, failReason: 'sf took too long to config' });
                 }, 6000);
 
                 // If all iframes are loaded - call onLoad callback
@@ -245,7 +249,7 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
             })
             .onTouchstart((pFeedbackObj: SFFeedbackObj): void => {
                 // re. Disabling arrow keys in iOS - need to disable all other fields in the form
-                if (this.config.shouldDisableIOSArrowKeys) {
+                if (this.props.shouldDisableIOSArrowKeys) {
                     /**
                      * re. this.hasGenuineTouchEvents...
                      *  There seems to be an issue with Responsive Design mode in Safari that means it allows setting focus on cross-origin iframes,

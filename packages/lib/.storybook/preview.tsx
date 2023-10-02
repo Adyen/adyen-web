@@ -1,5 +1,4 @@
 import './main.css';
-import '../src/style/index.scss';
 import { Preview } from '@storybook/preact';
 import { DEFAULT_COUNTRY_CODE, DEFAULT_SHOPPER_LOCALE, DEFAULT_AMOUNT_VALUE } from '../storybook/config/commonConfig';
 import { createCheckout } from '../storybook/helpers/create-checkout';

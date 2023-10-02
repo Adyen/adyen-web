@@ -5,7 +5,6 @@ import {
     Klarna,
     Ach,
     SepaDirectDebit,
-    QiwiWallet,
     Vipps,
     Blik,
     Giropay,
@@ -97,10 +96,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         countryCode: 'NL',
         holderName: true
     }).mount('.sepa-field');
-    //
-    // // Qiwi
-    window.qiwi = new QiwiWallet({ core: checkout }).mount('.qiwi-field');
-    //
+
     // // SEPA Direct Debit
     window.vipps = new Vipps({ core: checkout }).mount('.vipps-field');
     //

@@ -1,4 +1,4 @@
-@import "../../../../style/index";
+@use "../../../../style/index";
 
 .adyen-checkout__payment-method {
     &__name {
@@ -8,12 +8,12 @@
     }
 
     &__name--selected {
-        font-weight: 500;
+        font-weight:  var(--b-text-body-stronger-font-weight);
     }
 
     &__additional-info {
-        font-size: $font-size-small;
-        color: $color-gray-darker;
+        font-size: index.$font-size-small;
+        color: var(--b-color-label-secondary);
     }
 
     &__name_wrapper {

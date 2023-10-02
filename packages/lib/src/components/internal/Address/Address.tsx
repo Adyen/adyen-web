@@ -18,7 +18,7 @@ import AddressSearch from './components/AddressSearch';
 export default function Address(props: AddressProps) {
     const { i18n } = useCoreContext();
 
-    const { label = '', requiredFields, visibility, iOSFocusedField = null } = props;
+    const { label = '', requiredFields, visibility, iOSFocusedField = null, showContextualElement } = props;
 
     /** An object by which to expose 'public' members to the parent UIElement */
     const addressRef = useRef<ComponentMethodsRef>({});
@@ -176,6 +176,8 @@ export default function Address(props: AddressProps) {
                         onManualAddress={onManualAddress}
                         externalErrorMessage={searchErrorMessage}
                         hideManualButton={showAddressFields}
+                        showContextualElement={showContextualElement}
+                        contextualText={i18n.get('address.search.contextualText')}
                     />
                 )}
                 {showAddressFields && (

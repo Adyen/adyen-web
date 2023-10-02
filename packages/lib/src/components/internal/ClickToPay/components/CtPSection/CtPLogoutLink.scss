@@ -1,15 +1,14 @@
-@import "../../../../../style/index";
-
 .adyen-checkout-ctp__section-logout-button {
     font-size: 13px;
-    line-height: 19px;
-    font-weight: 400;
-    color: #0075ff;
+    line-height: var(--b-text-caption-line-height);
+    font-weight: var(--b-text-body-font-weight);
+    color: var(--b-color-label-primary);
     margin-left: auto;
     cursor: pointer;
+    text-decoration: underline;
 }
 
 .adyen-checkout-ctp__section-logout-button--disabled {
     pointer-events: none;
-    color: $color-gray-darker;
+    color: var(--b-color-grey-500);
 }

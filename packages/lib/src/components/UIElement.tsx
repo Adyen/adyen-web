@@ -12,6 +12,7 @@ import DropinElement from './Dropin';
 import { CoreOptions, ICore } from '../core/types';
 import { Resources } from '../core/Context/Resources';
 import { NewableComponent } from '../core/core.registry';
+import './UIElement.scss';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;

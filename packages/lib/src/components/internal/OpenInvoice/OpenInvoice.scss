@@ -1,12 +1,18 @@
-@import "../../../style/index";
+@use '../../../style/index';
+
+.adyen-checkout__field--separateDeliveryAddress {
+    .adyen-checkout__input-wrapper {
+       @include index.adyen-checkout-input-wrapper-reset;
+    }
+}
 
 .adyen-checkout__open-invoice .adyen-checkout__fieldset--billingAddress {
-    padding-bottom: 8px;
+    padding-bottom: var(--b-spacer-040);
 }
 
 .adyen-checkout__open-invoice .adyen-checkout__fieldset--deliveryAddress {
-    margin-top: 24px;
-    padding-bottom: 8px;
+    margin-top: var(--b-spacer-090);
+    padding-bottom: var(--b-spacer-040);
 }
 
 .adyen-checkout__open-invoice .adyen-checkout__input--separateDeliveryAddress {
@@ -18,5 +24,5 @@
 }
 
 .adyen-checkout__input--separateDeliveryAddress + .adyen-checkout__checkbox__label {
-    margin-top: 16px;
+    margin-top: var(--b-spacer-070);
 }

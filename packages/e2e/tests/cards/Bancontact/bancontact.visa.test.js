@@ -72,7 +72,7 @@ test('#3 Enter card number, that we mock to co-branded bcmc/visa ' + 'then compl
 });
 
 test(
-    '#4 Enter card number, that we mock to co-branded bcmc/visa ' +
+    '#4 Enter card number (co-branded bcmc/visa) ' +
         'then complete expiryDate and expect comp to be valid' +
         'then click Visa logo and expect comp to not be valid' +
         'then click BCMC logo and expect comp to be valid again',

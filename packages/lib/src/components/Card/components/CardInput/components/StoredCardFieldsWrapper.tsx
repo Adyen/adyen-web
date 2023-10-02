@@ -15,6 +15,7 @@ export const StoredCardFieldsWrapper = ({
     hasInstallments,
     handleInstallments,
     showAmountsInInstallments,
+    showContextualElement,
     // props passed through from CardInput:
     amount,
     hasCVC,
@@ -38,6 +39,7 @@ export const StoredCardFieldsWrapper = ({
                 lastFour={lastFour}
                 expiryMonth={expiryMonth}
                 expiryYear={expiryYear}
+                showContextualElement={showContextualElement}
             />
 
             {hasInstallments && (

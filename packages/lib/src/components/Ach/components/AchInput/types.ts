@@ -22,9 +22,9 @@ export interface ACHInputDataState {
     billingAddress?: object;
 }
 
-type Placeholders = {
-    holderName?: string;
-};
+type PlaceholderKeys = 'holderName' | 'bankAccountNumber' | 'bankLocationId';
+
+export type Placeholders = Partial<Record<PlaceholderKeys, string>>;
 
 export interface ACHInputProps {
     allowedDOMAccess?: boolean;
@@ -53,6 +53,7 @@ export interface ACHInputProps {
     onLoad?: () => {};
     payButton?: (obj) => {};
     placeholders?: Placeholders;
+    showContextualElement?: boolean;
     ref?: any;
     resources: Resources;
     showPayButton?: boolean;

@@ -19,7 +19,7 @@ const logger = RequestLogger(
     }
 );
 
-const errorLabel = Selector('.card-field .adyen-checkout__error-text');
+const errorLabel = Selector('.card-field .adyen-checkout-contextual-text--error');
 
 const UNSUPPORTED_CARD = LANG['error.va.sf-cc-num.03'];
 
@@ -29,10 +29,7 @@ const iframeSelector = getIframeSelector('.card-field iframe');
 
 const cardUtils = cu(iframeSelector);
 
-fixture`Testing binLookup v2 response`
-    .page(CARDS_URL)
-    .clientScripts('binLookup.clientScripts.js')
-    .requestHooks(logger);
+fixture`Testing binLookup v2 response`.page(CARDS_URL).clientScripts('binLookup.clientScripts.js').requestHooks(logger);
 
 test('#1 Enter number of known dual branded card, ' + 'then inspect response body for expected properties ', async t => {
     // Start, allow time for iframes to load

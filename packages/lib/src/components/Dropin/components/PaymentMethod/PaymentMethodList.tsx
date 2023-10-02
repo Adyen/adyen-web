@@ -2,7 +2,6 @@ import { Fragment, h } from 'preact';
 import classNames from 'classnames';
 import PaymentMethodItem from './PaymentMethodItem';
 import getProp from '../../../../utils/getProp';
-import styles from '../DropinComponent.module.scss';
 import UIElement from '../../../UIElement';
 import { Order, OrderStatus } from '../../../../types';
 import OrderPaymentMethods from './OrderPaymentMethods';
@@ -53,7 +52,6 @@ const PaymentMethodList = ({
     const brandLogoConfiguration = useBrandLogoConfiguration(paymentMethods);
 
     const paymentMethodListClassnames = classNames({
-        [styles['adyen-checkout__payment-methods-list']]: true,
         'adyen-checkout__payment-methods-list': true,
         'adyen-checkout__payment-methods-list--loading': isLoading
     });

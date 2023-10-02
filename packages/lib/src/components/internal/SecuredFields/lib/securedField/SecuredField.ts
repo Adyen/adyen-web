@@ -1,102 +1,110 @@
 import * as logger from '../utilities/logger';
 import createIframe from './utils/createIframe';
-import { selectOne, on, off, removeAllChildren } from '../utilities/dom';
+import { off, on, removeAllChildren, selectOne } from '../utilities/dom';
 import postMessageToIframe from '../CSF/utils/iframes/postMessageToIframe';
-import { isWebpackPostMsg, originCheckPassed, isChromeVoxPostMsg } from '../CSF/utils/iframes/postMessageValidation';
+import { isChromeVoxPostMsg, isWebpackPostMsg, originCheckPassed } from '../CSF/utils/iframes/postMessageValidation';
 import {
     CVC_POLICY_HIDDEN,
     CVC_POLICY_OPTIONAL,
-    ENCRYPTED_SECURITY_CODE,
-    ENCRYPTED_EXPIRY_DATE,
     DATE_POLICY_HIDDEN,
     DATE_POLICY_OPTIONAL,
+    ENCRYPTED_EXPIRY_DATE,
     ENCRYPTED_EXPIRY_MONTH,
-    ENCRYPTED_EXPIRY_YEAR
+    ENCRYPTED_EXPIRY_YEAR,
+    ENCRYPTED_SECURITY_CODE
 } from '../configuration/constants';
 import { generateRandomNumber } from '../utilities/commonUtils';
-import { SFFeedbackObj } from '../types';
-import AbstractSecuredField, {
-    SecuredFieldInitObj,
-    IframeConfigObject,
-    AriaConfig,
-    SFPlaceholdersObject,
-    SFInternalConfig
-} from './AbstractSecuredField';
-import { CVCPolicyType, DatePolicyType, RtnType_noParamVoidFn, RtnType_postMessageListener, RtnType_callbackFn } from '../types';
-import { pick, reject } from '../../utils';
+import { CVCPolicyType, DatePolicyType, RtnType_callbackFn, RtnType_noParamVoidFn, RtnType_postMessageListener, SFFeedbackObj } from '../types';
+import AbstractSecuredField, { AriaConfig, IframeConfigObject, SecuredFieldSetupObject, SecuredFieldCommonProps } from './AbstractSecuredField';
+import { reject } from '../../utils';
 import { processAriaConfig } from './utils/processAriaConfig';
 import { processPlaceholders } from './utils/processPlaceholders';
 import Language from '../../../../../language/Language';
 import { hasOwnProperty } from '../../../../../utils/hasOwnProperty';
+import { Placeholders } from '../../SFP/types';
 
 const logPostMsg = false;
 const doLog = false;
 
 class SecuredField extends AbstractSecuredField {
-    // --
-    constructor(pSetupObj: SecuredFieldInitObj, i18n: Language) {
+    constructor(pSetupObj: SecuredFieldSetupObject, i18n: Language) {
         super();
 
-        // List of props from setup object not required, or not directly required (e.g. cvcPolicy), in the iframe config object
-        const deltaPropsArr: string[] = ['fieldType', 'iframeSrc', 'cvcPolicy', 'expiryDatePolicy', 'loadingContext', 'holderEl'];
+        /**
+         * List of props to exclude from being set on this.sfConfig.
+         * These props are only required for internal purposes. They do not get sent to the iframe
+         */
+        const deltaPropsArr: string[] = ['loadingContext', 'holderEl', 'iframeSrc', 'showContextualElement', 'placeholders'];
 
-        // Copy passed setup object values to this.sfConfig...
+        /**
+         * List of props from setup object that will be set on this.sfConfig
+         * These props will all end up being sent to the iframe
+         */
         const configVarsFromSetUpObj = reject(deltaPropsArr).from(pSetupObj);
 
-        // ...breaking references on iframeUIConfig object so we can overwrite its properties in each securedField instance
+        // Copy passed setup object values to this.sfConfig
         this.sfConfig = {
-            ...this.sfConfig,
+            // ...this.sfConfig, // Do we need to do this? Pretty sure we don't
             ...configVarsFromSetUpObj,
+            // Break references on iframeUIConfig object so we can overwrite its properties in each securedField instance
             iframeUIConfig: { ...configVarsFromSetUpObj.iframeUIConfig }
-        } as SFInternalConfig;
+        } as SecuredFieldCommonProps;
 
-        // Copy passed setup object values to this
-        const thisVarsFromSetupObj = pick(deltaPropsArr).from(pSetupObj);
+        /**
+         * Extract values only needed for init
+         */
+        const { iframeSrc, placeholders, showContextualElement } = pSetupObj;
 
-        this.fieldType = thisVarsFromSetupObj.fieldType;
-        this.cvcPolicy = thisVarsFromSetupObj.cvcPolicy;
-        this.expiryDatePolicy = thisVarsFromSetupObj.expiryDatePolicy;
-        this.iframeSrc = thisVarsFromSetupObj.iframeSrc;
-        this.loadingContext = thisVarsFromSetupObj.loadingContext;
-        this.holderEl = thisVarsFromSetupObj.holderEl;
+        /**
+         * Store those passed setup object values that are needed in multiple functions
+         */
+        this.loadingContext = pSetupObj.loadingContext;
+        this.holderEl = pSetupObj.holderEl;
 
-        // Initiate values through setters
+        /**
+         * Initiate other values on 'this' through setters
+         */
         this.isValid = false;
         this.iframeContentWindow = null;
         this.numKey = generateRandomNumber();
         this.isEncrypted = false;
         this.hasError = false;
         this.errorType = '';
+        this.cvcPolicy = pSetupObj.cvcPolicy;
+        this.expiryDatePolicy = pSetupObj.expiryDatePolicy;
 
         if (process.env.NODE_ENV === 'development' && doLog) {
-            logger.log('### SecuredField::constructor:: this.fieldType=', this.fieldType, 'isValid=', this._isValid, 'numKey=', this.numKey);
+            logger.log(
+                '### SecuredField::constructor:: this.sfConfig.fieldType=',
+                this.sfConfig.fieldType,
+                'isValid=',
+                this._isValid,
+                'numKey=',
+                this.numKey
+            );
             logger.log('\n');
         }
 
-        return this.init(i18n);
+        return this.init(i18n, iframeSrc, placeholders, showContextualElement);
     }
 
-    init(i18n: Language): SecuredField {
+    init(i18n: Language, iframeSrc: string, placeholders: Placeholders, showContextualElement: boolean): SecuredField {
         /**
          * Ensure all fields have a related ariaConfig object containing, at minimum, an iframeTitle property and a (translated) errors object
          */
-        const processedAriaConfig: AriaConfig = processAriaConfig(this.sfConfig, this.fieldType, i18n);
+        const processedAriaConfig: AriaConfig = processAriaConfig(this.sfConfig.txVariant, this.sfConfig.fieldType, i18n, showContextualElement);
         // Set result back onto config object
         this.sfConfig.iframeUIConfig.ariaConfig = processedAriaConfig;
 
-        /**
-         * Ensure that if a placeholder hasn't been set for a field then it gets a default, translated, one
-         */
-        const processedPlaceholders: SFPlaceholdersObject = processPlaceholders(this.sfConfig, this.fieldType, i18n);
         // Set result back onto config object
-        this.sfConfig.iframeUIConfig.placeholders = processedPlaceholders;
+        this.sfConfig.iframeUIConfig.placeholders = processPlaceholders(this.sfConfig.txVariant, this.sfConfig.fieldType, placeholders);
 
         /**
          * Configure, create & reference iframe and add load listener
          */
         const iframeConfig = {
-            src: this.iframeSrc,
-            title: processedAriaConfig[this.fieldType].iframeTitle,
+            src: iframeSrc,
+            title: processedAriaConfig[this.sfConfig.fieldType].iframeTitle,
             policy: 'origin'
         };
 
@@ -131,24 +139,8 @@ class SecuredField extends AbstractSecuredField {
 
         // Create and send config object to iframe
         const configObj: IframeConfigObject = {
-            fieldType: this.fieldType,
-            extraFieldData: this.sfConfig.extraFieldData,
-            uid: this.sfConfig.uid,
-            cvcPolicy: this.cvcPolicy,
-            expiryDatePolicy: this.expiryDatePolicy,
-            numKey: this.numKey,
-            txVariant: this.sfConfig.txVariant,
-            cardGroupTypes: this.sfConfig.cardGroupTypes,
-            iframeUIConfig: this.sfConfig.iframeUIConfig,
-            sfLogAtStart: this.sfConfig.sfLogAtStart,
-            trimTrailingSeparator: this.sfConfig.trimTrailingSeparator,
-            isCreditCardType: this.sfConfig.isCreditCardType,
-            showWarnings: this.sfConfig.showWarnings,
-            legacyInputMode: this.sfConfig.legacyInputMode,
-            minimumExpiryDate: this.sfConfig.minimumExpiryDate,
-            implementationType: this.sfConfig.implementationType,
-            maskSecurityCode: this.sfConfig.maskSecurityCode,
-            disableIOSArrowKeys: this.sfConfig.disableIOSArrowKeys
+            ...this.sfConfig,
+            numKey: this.numKey
         };
 
         if (window._b$dl) console.log('### SecuredField:::: onIframeLoaded:: created configObj=', configObj);
@@ -167,12 +159,12 @@ class SecuredField extends AbstractSecuredField {
         }
 
         // TODO - for debugging purposes this would always be useful to see
-        //        logger.log('\n',this.fieldType,'### CSF SecuredField::postMessageListener:: event.data=',event.data);
+        //        logger.log('\n',this.sfConfig.fieldType,'### CSF SecuredField::postMessageListener:: event.data=',event.data);
 
         if (process.env.NODE_ENV === 'development' && logPostMsg) {
             logger.log(
                 '\n###CSF SecuredField::postMessageListener:: DOMAIN & ORIGIN MATCH, NO WEBPACK WEIRDNESS fieldType=',
-                this.fieldType,
+                this.sfConfig.fieldType,
                 'txVariant=',
                 this.sfConfig.txVariant,
                 'this.numKey=',
@@ -229,7 +221,7 @@ class SecuredField extends AbstractSecuredField {
         if (process.env.NODE_ENV === 'development' && logPostMsg) {
             logger.log(
                 '### SecuredField::postMessageListener:: numkeys match PROCEED WITH POST MESSAGE PROCESSING fieldType=',
-                this.fieldType,
+                this.sfConfig.fieldType,
                 'txVariant=',
                 this.sfConfig.txVariant
             );
@@ -307,7 +299,11 @@ class SecuredField extends AbstractSecuredField {
      * Returns whether the securedField is hidden OR whether it is optional and not in error
      */
     isOptionalOrHidden(): boolean {
-        if (this.fieldType === ENCRYPTED_EXPIRY_DATE || this.fieldType === ENCRYPTED_EXPIRY_MONTH || this.fieldType === ENCRYPTED_EXPIRY_YEAR) {
+        if (
+            this.sfConfig.fieldType === ENCRYPTED_EXPIRY_DATE ||
+            this.sfConfig.fieldType === ENCRYPTED_EXPIRY_MONTH ||
+            this.sfConfig.fieldType === ENCRYPTED_EXPIRY_YEAR
+        ) {
             switch (this.expiryDatePolicy) {
                 case DATE_POLICY_HIDDEN:
                     return true;
@@ -318,7 +314,7 @@ class SecuredField extends AbstractSecuredField {
             }
         }
 
-        if (this.fieldType === ENCRYPTED_SECURITY_CODE) {
+        if (this.sfConfig.fieldType === ENCRYPTED_SECURITY_CODE) {
             switch (this.cvcPolicy) {
                 case CVC_POLICY_HIDDEN:
                     return true;
@@ -397,7 +393,7 @@ class SecuredField extends AbstractSecuredField {
     }
 
     get isValid(): boolean {
-        if (this.fieldType === ENCRYPTED_SECURITY_CODE) {
+        if (this.sfConfig.fieldType === ENCRYPTED_SECURITY_CODE) {
             switch (this.cvcPolicy) {
                 case CVC_POLICY_HIDDEN:
                     // If cvc is hidden then the field is always valid
@@ -410,7 +406,11 @@ class SecuredField extends AbstractSecuredField {
             }
         }
 
-        if (this.fieldType === ENCRYPTED_EXPIRY_DATE || this.fieldType === ENCRYPTED_EXPIRY_MONTH || this.fieldType === ENCRYPTED_EXPIRY_YEAR) {
+        if (
+            this.sfConfig.fieldType === ENCRYPTED_EXPIRY_DATE ||
+            this.sfConfig.fieldType === ENCRYPTED_EXPIRY_MONTH ||
+            this.sfConfig.fieldType === ENCRYPTED_EXPIRY_YEAR
+        ) {
             switch (this.expiryDatePolicy) {
                 case DATE_POLICY_HIDDEN:
                     // If date is hidden then the field is always valid
@@ -435,12 +435,12 @@ class SecuredField extends AbstractSecuredField {
 
     set cvcPolicy(value: CVCPolicyType) {
         // Only set if this is a CVC field
-        if (this.fieldType !== ENCRYPTED_SECURITY_CODE) return;
+        if (this.sfConfig.fieldType !== ENCRYPTED_SECURITY_CODE) return;
 
         // Only set if value has changed
         if (value === this.cvcPolicy) return;
 
-        if (process.env.NODE_ENV === 'development' && doLog) logger.log(this.fieldType, '### SecuredField::cvcPolicy:: value=', value);
+        if (process.env.NODE_ENV === 'development' && doLog) logger.log(this.sfConfig.fieldType, '### SecuredField::cvcPolicy:: value=', value);
 
         this._cvcPolicy = value;
 
@@ -458,12 +458,17 @@ class SecuredField extends AbstractSecuredField {
 
     set expiryDatePolicy(value: DatePolicyType) {
         // Only set if this is a date field type of securedField
-        if (this.fieldType !== ENCRYPTED_EXPIRY_DATE && this.fieldType !== ENCRYPTED_EXPIRY_MONTH && this.fieldType !== ENCRYPTED_EXPIRY_YEAR) return;
+        if (
+            this.sfConfig.fieldType !== ENCRYPTED_EXPIRY_DATE &&
+            this.sfConfig.fieldType !== ENCRYPTED_EXPIRY_MONTH &&
+            this.sfConfig.fieldType !== ENCRYPTED_EXPIRY_YEAR
+        )
+            return;
 
         // Only set if value has changed
         if (value === this.expiryDatePolicy) return;
 
-        if (process.env.NODE_ENV === 'development' && doLog) logger.log(this.fieldType, '### SecuredField:expiryDatePolicy:: value=', value);
+        if (process.env.NODE_ENV === 'development' && doLog) logger.log(this.sfConfig.fieldType, '### SecuredField:expiryDatePolicy:: value=', value);
 
         this._expiryDatePolicy = value;
 

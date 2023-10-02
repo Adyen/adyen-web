@@ -1,6 +1,9 @@
 import Language from '../../../language/Language';
 import { SFPState } from '../../internal/SecuredFields/SFP/types';
 
+type PlaceholderKeys = 'cardNumber' | 'securityCode' | 'expiryDate';
+export type Placeholders = Partial<Record<PlaceholderKeys, string>>;
+
 export type GiftcardFieldsProps = {
     setRootNode: (input: HTMLElement) => void;
     i18n: Language;

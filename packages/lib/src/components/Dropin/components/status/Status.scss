@@ -1,4 +1,4 @@
-@import "../../../../style/index";
+@use "../../../../style/index";
 
 .adyen-checkout__status {
     display: flex;
@@ -8,15 +8,15 @@
     justify-content: center;
     height: 350px;
     margin: 0;
-    padding: 32px;
-    background-color: $color-white;
-    border-radius: $border-radius-medium;
-    border: 1px solid $color-gray;
-    font-size: $font-size-medium;
-    color: $color-black;
+    padding: var(--b-spacer-100);
+    background-color: var(--b-color-white);
+    border-radius: var(--b-border-radius-m);
+    border: var(--b-border-width-s) solid var(--b-color-outline-secondary);
+    font-size: index.$font-size-medium;
+    color: var(--b-color-label-primary);
 
     &__icon {
-        margin-bottom: 24px;
+        margin-bottom: var(--b-spacer-090);
     }
 
     .adyen-checkout__spinner__wrapper {

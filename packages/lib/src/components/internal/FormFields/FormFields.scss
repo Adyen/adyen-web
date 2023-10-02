@@ -1,4 +1,30 @@
-@import "../../../style/index";
+@use '../../../style/index';
+
+// Workaround to remove autofill background and text color, works on most browsers except for Chrome mobile
+.adyen-checkout__filter-input:-webkit-autofill,
+.adyen-checkout__filter-input:-webkit-autofill:active,
+.adyen-checkout__filter-input:-webkit-autofill:hover,
+.adyen-checkout__filter-input:-webkit-autofill:focus,
+.adyen-checkout__filter-input:autofill,
+.adyen-checkout__input:-webkit-autofill,
+.adyen-checkout__input:-webkit-autofill:active,
+.adyen-checkout__input:-webkit-autofill:hover,
+.adyen-checkout__input:-webkit-autofill:focus,
+.adyen-checkout__input:autofill {
+    color: var(--b-input-field-input-color) !important;
+    -webkit-text-fill-color: var(--b-input-field-input-color) !important;
+    box-shadow: 0 0 0 1000px var(--b-color-background-primary) inset !important;
+    background-clip: text !important;
+    background-color: var(--b-input-field-input-color) !important;
+    transition: none !important;
+}
+
+// Additional workaround for Chrome mobile to remove autofill background and text color
+.adyen-checkout__input,
+.adyen-checkout__filter-input {
+    color: var(--b-input-field-input-color) !important;
+    background-clip: text !important;
+}
 
 .adyen-checkout__field-wrapper {
     display: flex;
@@ -6,80 +32,80 @@
 }
 
 .adyen-checkout__field--20 {
-    @include screen-s-and-up {
+    @include index.screen-s-and-up {
         width: 20%;
     }
 }
 
 .adyen-checkout__field--30 {
-    @include screen-s-and-up {
+    @include index.screen-s-and-up {
         width: 30%;
     }
 }
 
 .adyen-checkout__field--40 {
-    @include screen-s-and-up {
+    @include index.screen-s-and-up {
         width: 40%;
     }
 }
 
 .adyen-checkout__field--50 {
-    @include screen-s-and-up {
+    @include index.screen-s-and-up {
         width: 50%;
     }
 }
 
 .adyen-checkout__field--60 {
-    @include screen-s-and-up {
+    @include index.screen-s-and-up {
         width: 60%;
     }
 }
 
 .adyen-checkout__field--70 {
-    @include screen-s-and-up {
+    @include index.screen-s-and-up {
         width: 70%;
     }
 }
 
 .adyen-checkout__field--80 {
-    @include screen-s-and-up {
+    @include index.screen-s-and-up {
         width: 80%;
     }
 }
 
 .adyen-checkout__field--col-70 {
-    @include screen-s-and-up {
-        width: calc(70% - 8px);
+    @include index.screen-s-and-up {
+        width: calc(70% - var(--b-spacer-040));
     }
 }
 
 .adyen-checkout__field--col-30 {
-    @include screen-s-and-up {
-        width: calc(30% - 8px);
+    @include index.screen-s-and-up {
+        width: calc(30% - var(--b-spacer-040));
     }
 }
 
 .adyen-checkout__field--col-50 {
-    @include screen-s-and-up {
-        width: calc(50% - 8px);
+    @include index.screen-s-and-up {
+        width: calc(50% - var(--b-spacer-040));
     }
 }
 
 .adyen-checkout__field-wrapper > .adyen-checkout__field:first-child {
-    margin-right: 8px;
+    margin-right: var(--b-spacer-040);
 
-    [dir="rtl"] & {
+    [dir='rtl'] & {
         margin-right: 0;
-        margin-left: 8px;
+        margin-left: var(--b-spacer-040);
     }
 }
 
 .adyen-checkout__field-wrapper > .adyen-checkout__field:nth-child(2) {
-    margin-left: 8px;
+    margin-left: var(--b-spacer-040);
 
-    [dir="rtl"] & {
+    [dir='rtl'] & {
         margin-left: 0;
-        margin-right: 8px;
+        margin-right: var(--b-spacer-040);
     }
 }
 
@@ -88,111 +114,53 @@
 }
 
 .adyen-checkout__input {
-    box-sizing: border-box;
-    color: $color-black;
-    caret-color: $color-blue;
-    font-size: $font-size-medium;
+    flex: 1;
+
+    // prevent overflow
+    min-width: 0;
+    color: var(--b-input-field-input-color);
+    font-size: index.$font-size-medium;
     font-family: inherit;
     display: block;
-    height: 40px;
-    background: $color-white;
-    border: 1px solid $color-gray-dark;
-    border-radius: $border-radius-medium;
-    padding: 5px 8px;
-    position: relative;
+    height: var(--b-spacer-110);
+    padding-left: var(--b-spacer-060);
+    background: inherit;
     outline: none;
-    width: 100%;
     transition: border 0.2s ease-out, box-shadow 0.2s ease-out;
+
+    &:required {
+        box-shadow: none;
+    }
+
+    &:disabled,
+    &:read-only {
+        color: var(--b-color-label-secondary) !important;
+        cursor: default;
+    }
 }
 
-.adyen-checkout__input:hover {
-    border-color: #99a3ad;
-}
-
-.adyen-checkout__input:required {
-    box-shadow: none;
-}
-
-.adyen-checkout__input[readonly],
-.adyen-checkout__input--disabled {
-    background: $color-disabled;
-    border-color: $color-disabled;
-}
-
-.adyen-checkout__input--disabled:hover {
-    border-color: $color-disabled;
-}
-
-.adyen-checkout__input-wrapper {
-    position: relative;
-    display: block;
-}
-
-.adyen-checkout__input-wrapper--block {
-    display: block;
+span.adyen-checkout__input {
+    overflow: hidden;
 }
 
 .adyen-checkout-input__inline-validation {
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    right: 14px;
+    width: var(--b-spacer-070);
+    height: var(--b-spacer-070);
+    margin-right: var(--b-spacer-060);
 
-    [dir="rtl"] & {
-        right: auto;
-        left: 14px;
-    }
-
-    [dir="ltr"] & {
-        right: 14px;
-        left: auto;
+    [dir='rtl'] & {
+        margin-left: var(--b-spacer-060);
     }
 }
 
 .adyen-checkout-input__inline-validation--valid {
-    color: $color-success;
+    color: var(--b-color-label-success);
 }
 
 .adyen-checkout-input__inline-validation--invalid {
-    color: $color-alert;
-}
-
-.adyen-checkout__input--valid {
-    border-bottom-color: $color-success;
-}
-
-.adyen-checkout__input--error,
-.adyen-checkout__input--invalid,
-.adyen-checkout__input--error:hover,
-.adyen-checkout__input--invalid:hover {
-    border-color: $color-alert;
-}
-
-.adyen-checkout__input::placeholder {
-    color: $color-new-gray-darker;
-    font-weight: 200;
+    color: var(--b-color-label-critical);
 }
 
 .adyen-checkout__input--date {
-    padding-right: 30px;
-}
-
-.adyen-checkout__input:active,
-.adyen-checkout__input:focus,
-.adyen-checkout__input--focus,
-.adyen-checkout__input:active:hover,
-.adyen-checkout__input:focus:hover,
-.adyen-checkout__input--focus:hover {
-    border: 1px solid $color-primary;
-    box-shadow: 0 0 0 2px $color-blue-light;
-}
-
-.adyen-checkout__input[readonly],
-.adyen-checkout__input[readonly]:hover {
-    background-color: $color-gray-light;
-    border-color: transparent;
-    color: $color-gray-darker;
-    cursor: default;
+    padding: 0.5em;
 }

@@ -1,9 +1,11 @@
-@import "../../../../style/index";
+@use "../../../../style/index";
+
+$color-alert: #e22d2d;
 
 .adyen-checkout__payment-method__disable-confirmation {
     background: $color-alert;
-    font-size: $font-size-small;
-    color: $color-white;
+    font-size: index.$font-size-small;
+    color: var(--b-color-white);
     border-right: 1px solid darken($color-alert, 2%);
     border-left: 1px solid darken($color-alert, 2%);
     overflow: hidden;
@@ -15,7 +17,7 @@
     &.adyen-checkout__payment-method__disable-confirmation--open {
         max-height: 62px;
         opacity: 1;
-        margin-bottom: 16px;
+        margin-bottom: var(--b-spacer-070);
     }
 }
 
@@ -23,7 +25,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 16px;
+    padding: var(--b-spacer-040) var(--b-spacer-070);
 }
 
 .adyen-checkout__payment-method__disable-confirmation__buttons {
@@ -31,16 +33,16 @@
 }
 
 .adyen-checkout__payment-method__disable-confirmation__button {
-    background: $color-alert;
-    border: 1px solid transparent;
-    border-radius: $border-radius-medium;
-    color: $color-white;
+    background: var(--b-color-label-critical);
+    border: var(--b-border-width-s) solid transparent;
+    border-radius: var(--b-border-radius-m);
+    color: var(--b-color-white);
     cursor: pointer;
     display: block;
     height: auto;
     line-height: 14px;
-    margin: 0 0 0 8px;
-    padding: 8px;
+    margin: 0 0 0 var(--b-spacer-040);
+    padding: var(--b-spacer-040);
     width: auto;
 
     &:hover,
@@ -58,7 +60,7 @@
 
 .adyen-checkout__payment-method__disable-confirmation__button--remove,
 .adyen-checkout__payment-method__disable-confirmation__button--remove:disabled {
-    border-color: $color-white;
+    border-color: var(--b-color-white);
 }
 
 .adyen-checkout__payment-method__disable-confirmation__button--cancel,

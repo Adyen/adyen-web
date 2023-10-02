@@ -115,22 +115,25 @@ describe('CardInput > holderName', () => {
     });
 
     test('holderName required, valid.holderName is false, add text to make valid.holderName = true', () => {
+        const placeholder = { holderName: 'Joe' };
         render(
             <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-                <CardInput {...cardInputRequiredProps} holderNameRequired={true} hasHolderName={true} onChange={onChange} i18n={i18n} />
+                <CardInput
+                    {...cardInputRequiredProps}
+                    holderNameRequired={true}
+                    hasHolderName={true}
+                    onChange={onChange}
+                    i18n={i18n}
+                    placeholders={placeholder}
+                />
             </CoreProvider>
         );
         expect(valid.holderName).toBe(false);
-
-        const placeholderText = i18n.get('creditCard.holderName.placeholder');
-
-        const field = screen.getByPlaceholderText(placeholderText);
+        const field = screen.getByPlaceholderText(placeholder.holderName);
         fireEvent.blur(field, { target: { value: 'joe blogs' } });
 
-        // await waitFor(() => {
         expect(data.holderName).toBe('joe blogs');
         expect(valid.holderName).toBe(true);
-        // });
     });
 
     test('holderName required, data.holderName passed into comp - valid.holderName is true', () => {

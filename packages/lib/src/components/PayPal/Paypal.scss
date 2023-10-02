@@ -1,5 +1,3 @@
-@import "../../style/index";
-
 .adyen-checkout__paypal {
     &__buttons {
         position: relative;
@@ -8,7 +6,7 @@
 
     &__button {
         display: flex;
-        margin-bottom: $spacing-medium;
+        margin-bottom: var(--b-spacer-070);
 
         &:empty {
             display: none;
@@ -17,7 +15,7 @@
 
     &__status {
         &--pending {
-            margin: $spacing-medium 0;
+            margin: var(--b-spacer-070) 0;
         }
 
         &--processing {
@@ -25,7 +23,7 @@
             display: flex;
             font-size: 13px;
             justify-content: center;
-            padding: $spacing-large 0;
+            padding: var(--b-spacer-090) 0;
         }
     }
 }
@@ -38,11 +36,11 @@
 .adyen-checkout__payment-method {
     .adyen-checkout__paypal__status {
         &--pending {
-            margin: -$spacing-medium 0 38px;
+            margin: var(--b-spacer-070) 0 38px;
         }
 
         &--processing {
-            padding: 20px 0 65px;
+            padding: var(--b-spacer-080) 0 65px;
         }
     }
 }

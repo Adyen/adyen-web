@@ -15,6 +15,7 @@ import { CVCPolicyType, DatePolicyType } from '../internal/SecuredFields/lib/typ
 import { ClickToPayConfiguration } from '../internal/ClickToPay/types';
 import { InstallmentOptions } from './components/CardInput/components/types';
 import { DisclaimerMsgObject } from '../internal/DisclaimerMessage/DisclaimerMessage';
+import { Placeholders } from './components/CardInput/types';
 
 export interface CardElementProps extends UIElementProps {
     /**
@@ -79,6 +80,12 @@ export interface CardElementProps extends UIElementProps {
      */
     showFormInstruction?: boolean;
 
+    /**
+     * Show/hide the contextual text under each form field. The contextual text is to assist shoppers filling in the payment form.
+     * @defaultValue `true`
+     */
+    showContextualElement?: boolean;
+
     /** Show/hide the "store details" checkbox */
     enableStoreDetails?: boolean;
 
@@ -101,6 +108,8 @@ export interface CardElementProps extends UIElementProps {
     /** An object sent in the /paymentMethods response */
     configuration?: CardConfiguration;
 
+    /** Configure placeholder text for holderName, cardNumber, expirationDate, securityCode and password. */
+    placeholders?: Placeholders;
     /**
      * Defines the size of the challenge Component
      *
@@ -247,8 +256,6 @@ export interface CardElementProps extends UIElementProps {
      * @internal
      */
     expiryMonth?: string;
-
-    // placeholders: Placeholders; // TODO align with v6 Bento branch
 
     // forceCompat?: boolean, // TODO - probably drop, if Checkout won't support IE then SF doesn't need to
     // allowedDOMAccess: false, // TODO -  Drop for v6 (not sure if anyone ever uses this)

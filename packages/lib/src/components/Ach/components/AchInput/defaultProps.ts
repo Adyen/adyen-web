@@ -7,6 +7,7 @@ export default {
     billingAddressRequired: true,
     billingAddressAllowedCountries: ['US', 'PR'],
     showFormInstruction: true,
+    showContextualElement: true,
 
     // Events
     onLoad: () => {},

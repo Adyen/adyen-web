@@ -1,78 +1,77 @@
-@import "../../../../style/index";
+@use '../../../../style/index';
 
 .adyen-checkout__order-payment-methods-list {
     list-style: none;
-    margin: 0 auto 16px;
+    margin: 0 auto var(--b-spacer-070);
     padding: 0;
 }
 
 .adyen-checkout__order-payment-method {
     position: relative;
-    background: $color-white;
-    border: 1px solid $color-gray-light;
+    background: var(--b-color-white);
+    border: var(--b-border-width-s) solid var(--b-color-outline-tertiary);
     margin-top: -1px;
     width: 100%;
 }
 
 .adyen-checkout__order-payment-method:first-child {
-    border-top-left-radius: $border-radius-large;
-    border-top-right-radius: $border-radius-large;
+    border-top-left-radius: var(--b-border-radius-m);
+    border-top-right-radius: var(--b-border-radius-m);
 }
 
 .adyen-checkout__order-payment-method:last-child {
-    border-bottom-left-radius: $border-radius-large;
-    border-bottom-right-radius: $border-radius-large;
+    border-bottom-left-radius: var(--b-border-radius-m);
+    border-bottom-right-radius: var(--b-border-radius-m);
 }
 
 // Order payment method header
 .adyen-checkout__order-payment-method__header {
     align-items: center;
-    color: $color-black;
+    color: var(--b-color-label-primary);
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-between;
-    font-weight: 500;
-    font-size: $font-size-medium;
-    padding: 16px;
+    font-weight: var(--b-text-body-stronger-font-weight);
+    font-size: index.$font-size-medium;
+    padding: var(--b-spacer-070);
     position: relative;
     transition: background 0.1s ease-out;
     width: 100%;
 
     .adyen-checkout__payment-method__header__title {
-        padding: $spacing-none;
+        padding: var(--b-spacer-000);
     }
 }
 
 // Order payment method content
 .adyen-checkout__order-payment-method__details {
-    padding: 0 16px 16px;
+    padding: 0 var(--b-spacer-070) var(--b-spacer-070);
 }
 
 .adyen-checkout__order-payment-method__deducted-amount {
     display: flex;
     justify-content: space-between;
-    line-height: $font-size-medium;
-    font-size: $font-size-medium;
+    line-height: index.$font-size-medium;
+    font-size: index.$font-size-medium;
 }
 
 .adyen-checkout__order-payment-method__deducted-amount__label {
-    font-size: $font-size-small;
+    font-size: index.$font-size-small;
 }
 
 .adyen-checkout__order-payment-method__deducted-amount__value {
-    font-weight: 500;
+    font-weight: var(--b-text-body-stronger-font-weight);
 }
 
 // Remaining amount warning message
 .adyen-checkout__order-remaining-amount {
     display: block;
     width: 100%;
-    padding: 8px 16px;
-    color: $color-orange-dark;
-    background: $color-orange-light;
-    border-radius: $border-radius-medium;
-    margin-bottom: 16px;
-    font-size: $font-size-small;
+    padding: var(--b-spacer-040) var(--b-spacer-070);
+    color: var(--b-color-label-secondary);
+    border-radius: var(--b-border-radius-m);
+    margin-bottom: var(--b-spacer-070);
+    font-size: index.$font-size-small;
 
     strong {
         font-weight: bold;

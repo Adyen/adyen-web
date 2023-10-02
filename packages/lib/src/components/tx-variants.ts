@@ -50,7 +50,6 @@ export enum TxVariants {
     googlepay = 'googlepay',
     paypal = 'paypal',
     paywithgoogle = 'paywithgoogle',
-    qiwiwallet = 'qiwiwallet',
     /** Wallets */
 
     /** Voucher */

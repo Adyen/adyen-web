@@ -6,9 +6,8 @@ import SelectList from './components/SelectList';
 import uuid from '../../../../utils/uuid';
 import { keys } from './constants';
 import { SelectItem, SelectProps } from './types';
-import styles from './Select.module.scss';
 import './Select.scss';
-import { ARIA_ERROR_SUFFIX } from '../../../../core/Errors/constants';
+import { ARIA_CONTEXT_SUFFIX, ARIA_ERROR_SUFFIX } from '../../../../core/Errors/constants';
 import { simulateFocusScroll } from '../utils';
 
 function Select({
@@ -46,6 +45,9 @@ function Select({
     const selectedOption = active;
 
     const filteredItems = disableTextFilter ? items : items.filter(item => !textFilter || item.name.toLowerCase().includes(textFilter.toLowerCase()));
+
+    const suffix = isInvalid ? ARIA_ERROR_SUFFIX : ARIA_CONTEXT_SUFFIX;
+    const ariaDescribedBy = uniqueId ? `${uniqueId}${suffix}` : null;
 
     const setNextActive = () => {
         if (!filteredItems || filteredItems.length < 1) return;
@@ -256,12 +258,7 @@ function Select({
 
     return (
         <div
-            className={cx([
-                'adyen-checkout__dropdown',
-                styles['adyen-checkout__dropdown'],
-                className,
-                ...classNameModifiers.map(m => `adyen-checkout__dropdown--${m}`)
-            ])}
+            className={cx(['adyen-checkout__dropdown', className, ...classNameModifiers.map(m => `adyen-checkout__dropdown--${m}`)])}
             ref={selectContainerRef}
         >
             <SelectButton
@@ -283,7 +280,7 @@ function Select({
                 toggleButtonRef={toggleButtonRef}
                 toggleList={toggleList}
                 disabled={disabled}
-                ariaDescribedBy={uniqueId ? `${uniqueId}${ARIA_ERROR_SUFFIX}` : null}
+                ariaDescribedBy={ariaDescribedBy}
             />
             <SelectList
                 active={activeOption}

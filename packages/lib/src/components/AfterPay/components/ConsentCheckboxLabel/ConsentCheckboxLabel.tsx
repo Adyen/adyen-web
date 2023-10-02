@@ -15,7 +15,7 @@ export default function ConsentCheckboxLabel(props: ConsentCheckboxLabelProps) {
         return (
             <Fragment>
                 {textBeforeLink}
-                <a className="adyen-checkout__link" target="_blank" rel="noopener noreferrer" href={props.url}>
+                <a className="adyen-checkout-link" target="_blank" rel="noopener noreferrer" href={props.url}>
                     {linkText}
                 </a>
                 {textAfterLink}

@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { cloneElement, ComponentChild, Fragment, FunctionalComponent, h, toChildArray, VNode } from 'preact';
 import Spinner from '../../Spinner';
 import Icon from '../../Icon';
-import { ARIA_ERROR_SUFFIX } from '../../../../core/Errors/constants';
+import { ARIA_CONTEXT_SUFFIX, ARIA_ERROR_SUFFIX } from '../../../../core/Errors/constants';
 import { useCallback, useRef, useState } from 'preact/hooks';
 import { getUniqueId } from '../../../../utils/idGenerator';
 import { FieldProps } from './types';
@@ -16,6 +16,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
         classNameModifiers,
         dir,
         disabled,
+        readOnly,
         errorMessage,
         helper,
         inputWrapperModifiers,
@@ -30,18 +31,20 @@ const Field: FunctionalComponent<FieldProps> = props => {
         onFocusField,
         showValidIcon,
         useLabelElement,
-        addContextualElement,
+        showErrorElement,
+        showContextualElement,
+        contextualText,
         // Redeclare prop names to avoid internal clashes
         filled: propsFilled,
         focused: propsFocused,
         i18n,
-        errorVisibleToScreenReader,
+        contextVisibleToScreenReader,
         renderAlternativeToLabel
     } = props;
 
     // Controls whether any error element has an aria-hidden="true" attr (which means it is the error for a securedField)
     // or whether it has an id attr that can be pointed to by an aria-describedby attr on an input element
-    const errorVisibleToSR = errorVisibleToScreenReader ?? true;
+    const contextVisibleToSR = contextVisibleToScreenReader ?? true;
 
     const uniqueId = useRef(getUniqueId(`adyen-checkout-${name}`));
 
@@ -98,6 +101,28 @@ const Field: FunctionalComponent<FieldProps> = props => {
     }, [label, errorMessage]);
 
     const renderInputRelatedElements = useCallback(() => {
+        const showError = showErrorElement && typeof errorMessage === 'string' && errorMessage.length > 0;
+        const errorElem = showError && (
+            <span
+                className={'adyen-checkout-contextual-text--error'}
+                {...(contextVisibleToSR && { id: `${uniqueId.current}${ARIA_ERROR_SUFFIX}` })}
+                aria-hidden={contextVisibleToSR ? null : 'true'}
+            >
+                {errorMessage}
+            </span>
+        );
+
+        const showContext = showContextualElement && !showError && contextualText?.length > 0;
+        const contextualElem = showContext && (
+            <span
+                className={'adyen-checkout-contextual-text'}
+                {...(contextVisibleToSR && { id: `${uniqueId.current}${ARIA_CONTEXT_SUFFIX}` })}
+                aria-hidden={contextVisibleToSR ? null : 'true'}
+            >
+                {contextualText}
+            </span>
+        );
+
         return (
             <Fragment>
                 <div
@@ -114,7 +139,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
                             onBlurHandler,
                             isInvalid: !!errorMessage,
                             ...(name && { uniqueId: uniqueId.current }),
-                            addContextualElement
+                            showErrorElement: showErrorElement
                         };
                         return cloneElement(child as VNode, childProps);
                     })}
@@ -137,18 +162,11 @@ const Field: FunctionalComponent<FieldProps> = props => {
                         </span>
                     )}
                 </div>
-                {addContextualElement && (
-                    <span
-                        className={'adyen-checkout__error-text'}
-                        {...(errorVisibleToSR && { id: `${uniqueId.current}${ARIA_ERROR_SUFFIX}` })}
-                        aria-hidden={errorVisibleToSR ? null : 'true'}
-                    >
-                        {errorMessage && typeof errorMessage === 'string' && errorMessage.length ? errorMessage : null}
-                    </span>
-                )}
+                {errorElem}
+                {contextualElem}
             </Fragment>
         );
-    }, [children, errorMessage, isLoading, isValid, onFocusHandler, onBlurHandler]);
+    }, [children, errorMessage, contextualText, isLoading, isValid, onFocusHandler, onBlurHandler]);
 
     const LabelOrAlternative = useCallback(
         ({ onFocusField, focused, filled, disabled, name, uniqueId, useLabelElement, isSecuredField, children, renderAlternativeToLabel }) => {
@@ -163,7 +181,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
             };
 
             return useLabelElement ? (
-                // if errorVisibleToSR is true then we are NOT dealing with the label for a securedField... so give it a `for` attribute
+                // if contextVisibleToSR is true then we are NOT dealing with the label for a securedField... so give it a `for` attribute
                 <label {...defaultWrapperProps} {...(!isSecuredField && { htmlFor: name && uniqueId })}>
                     {children}
                 </label>
@@ -178,7 +196,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
                 //         </div>
                 //     );
                 // };
-                // <Field name={'myField'} renderAlternativeToLabel={alternativeLabelContent}>
+                // <Field name={'myField'} useLabelElement={false} renderAlternativeToLabel={alternativeLabelContent}>
             );
         },
         []
@@ -195,7 +213,8 @@ const Field: FunctionalComponent<FieldProps> = props => {
                 classNameModifiers.map(m => `adyen-checkout__field--${m}`),
                 {
                     'adyen-checkout__field--error': errorMessage,
-                    'adyen-checkout__field--valid': isValid
+                    'adyen-checkout__field--valid': isValid,
+                    'adyen-checkout__field--inactive': readOnly || disabled
                 }
             )}
         >
@@ -207,7 +226,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
                 focused={focused}
                 useLabelElement={useLabelElement}
                 uniqueId={uniqueId.current}
-                isSecuredField={!errorVisibleToSR}
+                isSecuredField={!contextVisibleToSR}
                 renderAlternativeToLabel={renderAlternativeToLabel}
             >
                 {renderLabelOrAlternativeContents()}
@@ -222,7 +241,8 @@ Field.defaultProps = {
     classNameModifiers: [],
     inputWrapperModifiers: [],
     useLabelElement: true,
-    addContextualElement: true,
+    showErrorElement: true,
+    showContextualElement: true,
     renderAlternativeToLabel: () => null
 };
 

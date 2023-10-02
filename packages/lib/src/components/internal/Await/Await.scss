@@ -1,10 +1,10 @@
-@import "../../../style/index";
+@use "../../../style/index";
 
 .adyen-checkout__await {
-    background: $color-white;
-    padding: 40px;
-    border: 1px solid $color-gray;
-    border-radius: $border-radius-large;
+    background: var(--b-color-white);
+    padding: var(--b-spacer-110);
+    border: var(--b-border-width-s) solid var(--b-color-outline-secondary);
+    border-radius: var(--b-border-radius-m);
     text-align: center;
 }
 
@@ -25,26 +25,26 @@
 
 .adyen-checkout__await__subtitle,
 .adyen-checkout__await__indicator-text {
-    color: $color-black;
-    font-size: $font-size-medium;
-    line-height: 19px;
-    margin-top: 32px;
+    color: var(--b-color-label-primary);
+    font-size: index.$font-size-medium;
+    line-height: var(--b-text-caption-line-height);
+    margin-top: var(--b-spacer-100);
 }
 
 .adyen-checkout__await__indicator-holder .adyen-checkout__await__indicator-text {
-    margin-top: 6px;
-    margin-left: 10px;
+    margin-top: var(--b-spacer-030);
+    margin-left: var(--b-spacer-050);
 }
 
 .adyen-checkout__await__indicator-holder {
     display: flex;
     justify-content: center;
-    margin-top: 32px;
-    margin-bottom: 20px;
+    margin-top: var(--b-spacer-100);
+    margin-bottom: var(--b-spacer-080);
 }
 
 .adyen-checkout__await__subtitle--result {
-    margin-bottom: 32px;
+    margin-bottom: var(--b-spacer-100);
 }
 
 .adyen-checkout__await__icon {
@@ -53,23 +53,23 @@
 }
 
 .adyen-checkout__await__progress {
-    height: 4px;
-    background: $color-gray;
-    border-radius: $border-radius-xlarge;
-    margin: 32px auto 12px;
+    height: var(--b-spacer-020);
+    background: var(--b-color-outline-secondary);
+    border-radius: var(--b-border-radius-l);
+    margin: var(--b-spacer-100) auto var(--b-spacer-060);
     width: 152px;
 }
 
 .adyen-checkout__await__percentage {
     display: block;
     height: 100%;
-    border-radius: $border-radius-xlarge;
-    background: $color-primary;
+    border-radius: var(--b-border-radius-l);
+    background: var(--b-color-label-primary);
 }
 
 .adyen-checkout__await__countdown {
-    color: $color-gray-darker;
-    font-size: $font-size-small;
+    color: var(--b-color-outline-tertiary);
+    font-size: index.$font-size-small;
 }
 
 .adyen-checkout__await > .adyen-checkout__spinner__wrapper {
@@ -77,7 +77,7 @@
 }
 
 .adyen-checkout__await__app-link {
-    margin-top: 16px;
+    margin-top: var(--b-spacer-070);
     display: none;
 }
 

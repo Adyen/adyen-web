@@ -28,7 +28,6 @@ import Econtext from './Econtext';
 import { FacilyPay3x, FacilyPay4x, FacilyPay6x, FacilyPay10x, FacilyPay12x } from './FacilyPay';
 import Ideal from './Ideal';
 import PayPal from './PayPal';
-import QiwiWallet from './QiwiWallet';
 import Redirect from './Redirect';
 import CustomCard from './CustomCard';
 import Sepa from './Sepa';
@@ -124,7 +123,6 @@ const componentsMap = {
     [TxVariants.googlepay]: GooglePay,
     [TxVariants.paypal]: PayPal,
     [TxVariants.paywithgoogle]: GooglePay,
-    [TxVariants.qiwiwallet]: QiwiWallet,
     /** Wallets */
 
     /** Voucher */

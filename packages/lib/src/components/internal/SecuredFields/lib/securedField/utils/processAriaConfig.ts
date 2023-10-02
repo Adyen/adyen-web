@@ -1,36 +1,42 @@
 import { addErrorTranslationsToObject } from '../../../../../../core/Errors/utils';
-import { AriaConfigObject, AriaConfig, SFInternalConfig } from '../AbstractSecuredField';
+import addContextTranslationsToObject from '../../utilities/addContextTranslations';
+import { AriaConfigObject, AriaConfig } from '../AbstractSecuredField';
 import Language from '../../../../../../language/Language';
+import { SF_FIELDS_MAP } from '../../configuration/constants';
 
 /**
- * Checks if the merchant has defined an ariaConfig object and if so enhances it with a iframeTitle and label property, if they don't already exist.
- * If the ariaConfig object doesn't exist at all we create one with these 2 properties.
- * The iframeTitle and label properties, where they don't previously exist are populated with values read from the translation file.
- * In both cases we then add an error object containing the possible errors for any securedField read from the translation file and stored under error-codes
+ * Creates an ariaConfig object with 'iframeTitle' and 'label' properties, whose values are retrieved from the translations object.
+ * (These values either come from the translation file or have been overwritten by the merchant in a translations config object.)
+ * We then add an error object containing the possible errors for any securedField read from the translation file and stored under error-codes
  */
-export function processAriaConfig(configObj: SFInternalConfig, fieldType: string, i18n: Language): AriaConfig {
+export function processAriaConfig(txVariant: string, fieldType: string, i18n: Language, showContextuaElement): AriaConfig {
     // txVariant can be the scheme name (VISA, Mastercard...) so we put all of them under creditCard
-    const type = ['ach', 'giftcard'].includes(configObj.txVariant) ? configObj.txVariant : 'creditCard';
+    const type = ['ach', 'giftcard'].includes(txVariant) ? txVariant : 'creditCard';
 
     // Get translation for iframeTitle
     const iframeTitle: string = i18n.get(`${type}.${fieldType}.aria.iframeTitle`);
 
-    // Get translation for aria label
-    const label: string = i18n.get(`${type}.${fieldType}.aria.label`);
+    // Get translation for aria label using *same* key that is used to label the element - important a11y consideration for (securedField) iframe
+    const label: string = i18n.get(`${type}.${SF_FIELDS_MAP[fieldType]}.label`);
 
     // Get lang property
     const lang = i18n.locale;
 
-    // Ceate a new object with the iframeTitle & label values from translation file
+    // Create a new object with the iframeTitle & label values from translation file
     const ariaFieldConfigObj: AriaConfigObject = { iframeTitle, label };
 
     // Add error translations object
-    const ariaFieldConfigWithTranslatedErrors = addErrorTranslationsToObject(ariaFieldConfigObj, i18n);
+    let enhancedAriaFieldConfigObj = addErrorTranslationsToObject(ariaFieldConfigObj, i18n, fieldType);
+
+    // If allowed, add the translated contextual texts
+    if (showContextuaElement) {
+        enhancedAriaFieldConfigObj = addContextTranslationsToObject(enhancedAriaFieldConfigObj, i18n, txVariant, fieldType);
+    }
 
     // Create a new aria config object keeping the old entries and adding a new one for this field
     // N.B. need to do this deconstruction of the original aria config object to break existing refs & avoid getting an "accumulated" object
     return {
         ...(lang && { lang }),
-        [fieldType]: ariaFieldConfigWithTranslatedErrors
+        [fieldType]: enhancedAriaFieldConfigObj
     } as AriaConfig;
 }

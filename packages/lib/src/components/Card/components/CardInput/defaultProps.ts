@@ -21,7 +21,8 @@ export default {
     configuration: { koreanAuthenticationRequired: false, socialSecurityNumberMode: 'auto' as SocialSecurityMode },
     autoFocus: true,
     isPayButtonPrimaryVariant: true,
-    disableIOSArrowKeys: false,
+    disableIOSArrowKeys: true,
+    showContextualElement: true,
 
     // Events
     onLoad: (): any => {},
