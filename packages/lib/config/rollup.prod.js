@@ -26,7 +26,7 @@ export default () => {
                 replaceValues({ moduleType: 'es' }),
                 convertJsonToESM(),
                 compileCSS(),
-                compileJavascript(),
+                compileJavascript({ sourceMaps: true }),
                 minify()
             ],
             output: [
@@ -34,6 +34,7 @@ export default () => {
                     dir: './dist/es',
                     format: 'esm',
                     indent: false,
+                    sourcemap: true,
                     preserveModules: true,
                     preserveModulesRoot: 'src',
                     chunkFileNames: 'chunks/[name].js',
@@ -58,7 +59,7 @@ export default () => {
                 replaceValues({ moduleType: 'es-legacy' }),
                 convertJsonToESM(),
                 compileCSS(),
-                compileJavascript({ target: 'es2017' }),
+                compileJavascript({ target: 'es2017', sourceMaps: true }),
                 minify()
             ],
             output: [
@@ -66,6 +67,7 @@ export default () => {
                     dir: './dist/es-legacy',
                     format: 'esm',
                     indent: false,
+                    sourcemap: true,
                     preserveModules: true,
                     preserveModulesRoot: 'src',
                     chunkFileNames: 'chunks/[name].js',
@@ -112,13 +114,14 @@ export default () => {
                 replaceValues({ moduleType: 'commonjs' }),
                 convertJsonToESM(),
                 compileCSS(),
-                compileJavascript({ target: 'es2017' }),
+                compileJavascript({ target: 'es2017', sourceMaps: true }),
                 minify({ isESM: false })
             ],
             output: {
                 file: 'dist/cjs/index.cjs',
                 format: 'commonjs',
-                indent: false
+                indent: false,
+                sourcemap: true
             }
         },
 
