@@ -130,7 +130,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                 {requiredFields.includes('dateOfBirth') && (
                     <Field
                         label={i18n.get('dateOfBirth')}
-                        classNameModifiers={['col-50', 'lastName']}
+                        classNameModifiers={['col-50', 'dateOfBirth']}
                         errorMessage={getErrorMessage(errors.dateOfBirth)}
                         helper={isDateInputSupported ? null : i18n.get('dateOfBirth.format')}
                         name={'dateOfBirth'}
