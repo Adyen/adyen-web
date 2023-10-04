@@ -69,7 +69,8 @@ export const compileJavascript = ({ target = 'es2022', sourceMaps = false } = {}
             module: {
                 type: 'es6'
             },
-            sourceMaps: sourceMaps
+            sourceMaps: sourceMaps,
+            inlineSourcesContent: false
         })
     );
 

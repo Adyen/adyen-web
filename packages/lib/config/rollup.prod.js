@@ -90,7 +90,7 @@ export default () => {
                 replaceValues({ moduleType: 'umd' }),
                 convertJsonToESM(),
                 compileCSS(),
-                compileJavascript(),
+                compileJavascript({ sourceMaps: true }),
                 minify({ isESM: false })
             ],
             output: {
@@ -98,7 +98,7 @@ export default () => {
                 file: 'dist/umd/adyen.js',
                 format: 'umd',
                 indent: true,
-                sourcemap: false
+                sourcemap: true
             }
         },
 

@@ -7,7 +7,6 @@ import {
     PayuNetBanking,
     Dotpay,
     OnlineBankingPL,
-    Entercash,
     MolPayEBankingMY,
     PayByBank
 } from '@adyen/adyen-web';
@@ -65,9 +64,6 @@ import getTranslationFile from '../../config/getTranslation';
 
     // Online banking PL
     window.onlineBanking_PL = new OnlineBankingPL({ core: window.core }).mount('.onlinebanking_PL-field');
-
-    // Entercash
-    window.entercash = new Entercash({ core: window.core }).mount('.entercash-field');
 
     // Molpay MY
     window.molpay = new MolPayEBankingMY({ core: window.core }).mount('.molpay-field');
