@@ -31,7 +31,7 @@ const test = base.extend<Fixture>({
 
     cardNoContextualElementPage: async ({ page }, use) => {
         await page.addInitScript({
-            content: 'window.cardConfig = { showContextualElement: false}'
+            content: 'window.cardConfig = { showContextualElement: false }'
         });
 
         const cardPage = new CardPage(page);

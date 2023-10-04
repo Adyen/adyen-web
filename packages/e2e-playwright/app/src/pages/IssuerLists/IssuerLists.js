@@ -1,5 +1,5 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
+import { AdyenCheckout, Ideal } from '@adyen/adyen-web';
+import '@adyen/adyen-web/styles/adyen.css';
 import { handleSubmit, handleAdditionalDetails, handleError } from '../../handlers';
 import { amount, shopperLocale, countryCode } from '../../services/commonConfig';
 import '../../style.scss';
@@ -24,16 +24,11 @@ const initCheckout = async () => {
         showPayButton: true,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
-        onError: handleError,
-        paymentMethodsConfiguration: {
-            ideal: {
-                highlightedIssuers: ['1121', '1154', '1153']
-            }
-        }
+        onError: handleError
         // ...window.mainConfiguration
     });
 
-    window.ideal = checkout.create('ideal').mount('.ideal-field');
+    window.ideal = new Ideal({ core: checkout, highlightedIssuers: ['1121', '1154', '1153'] }).mount('.ideal-field');
 };
 
 initCheckout();
