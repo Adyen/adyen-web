@@ -23,7 +23,6 @@ import Bancontact from './Card/Bancontact';
 import Donation from './Donation';
 import Giropay from './Giropay';
 import GooglePay from './GooglePay';
-import Entercash from './Entercash';
 import Econtext from './Econtext';
 import { FacilyPay3x, FacilyPay4x, FacilyPay6x, FacilyPay10x, FacilyPay12x } from './FacilyPay';
 import Ideal from './Ideal';
@@ -91,7 +90,6 @@ const componentsMap = {
     [TxVariants.scheme]: Card,
     [TxVariants.storedCard]: Card,
     [TxVariants.customCard]: CustomCard,
-    [TxVariants.visa]: Card,
     /** Card */
 
     /** Direct debit */
@@ -127,9 +125,6 @@ const componentsMap = {
 
     /** Voucher */
     [TxVariants.boletobancario]: Boleto,
-    [TxVariants.boletobancario_bancodobrasil]: Boleto,
-    [TxVariants.boletobancario_bradesco]: Boleto,
-    [TxVariants.boletobancario_hsbc]: Boleto,
     [TxVariants.boletobancario_itau]: Boleto,
     [TxVariants.boletobancario_santander]: Boleto,
     [TxVariants.doku]: Doku,
@@ -153,13 +148,11 @@ const componentsMap = {
     [TxVariants.billdesk_online]: BillDeskOnline,
     [TxVariants.billdesk_wallet]: BillDeskWallet,
     [TxVariants.dotpay]: Dotpay,
-    [TxVariants.entercash]: Entercash,
     [TxVariants.eps]: Eps,
     [TxVariants.ideal]: Ideal,
     [TxVariants.molpay_ebanking_fpx_MY]: MolPayEBankingMY,
     [TxVariants.molpay_ebanking_TH]: MolPayEBankingTH,
     [TxVariants.molpay_ebanking_VN]: MolPayEBankingVN,
-    [TxVariants.onlineBanking]: Dotpay,
     [TxVariants.onlineBanking_CZ]: OnlineBankingCZElement,
     [TxVariants.onlinebanking_IN]: OnlineBankingINElement, // NOTE ]: the txVariant does have a lowercase "b"
     [TxVariants.onlineBanking_PL]: OnlinebankingPL,

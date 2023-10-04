@@ -12,12 +12,9 @@ export class BoletoElement extends UIElement<VoucherActionElement> {
 
     public static txVariants = [
         TxVariants.boletobancario,
-        TxVariants.primeiropay_boleto,
-        TxVariants.boletobancario_bancodobrasil,
-        TxVariants.boletobancario_bradesco,
-        TxVariants.boletobancario_hsbc,
         TxVariants.boletobancario_itau,
-        TxVariants.boletobancario_santander
+        TxVariants.boletobancario_santander,
+        TxVariants.primeiropay_boleto
     ];
 
     get isValid() {

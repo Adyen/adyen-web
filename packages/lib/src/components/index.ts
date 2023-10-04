@@ -40,7 +40,6 @@ export { default as Oxxo } from './Oxxo';
 export { default as BillDeskOnline } from './BillDesk/BillDeskOnline';
 export { default as BillDeskWallet } from './BillDesk/BillDeskWallet';
 export { default as Dotpay } from './Dotpay'; // add other tx variants
-export { default as Entercash } from './Entercash';
 export { default as EPS } from './EPS';
 export { default as Ideal } from './Ideal';
 export { default as MolPayEBankingMY } from './MolPayEBanking/MolPayEBankingMY';

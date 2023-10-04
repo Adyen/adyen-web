@@ -12,7 +12,6 @@ export enum TxVariants {
     scheme = 'scheme',
     storedCard = 'storedCard',
     customCard = 'customcard',
-    visa = 'visa',
     /** Card */
 
     /** ThreeDS */
@@ -54,9 +53,6 @@ export enum TxVariants {
 
     /** Voucher */
     boletobancario = 'boletobancario',
-    boletobancario_bancodobrasil = 'boletobancario_bancodobrasil',
-    boletobancario_bradesco = 'boletobancario_bradesco',
-    boletobancario_hsbc = 'boletobancario_hsbc',
     boletobancario_itau = 'boletobancario_itau',
     boletobancario_santander = 'boletobancario_santander',
     primeiropay_boleto = 'primeiropay_boleto',
@@ -80,13 +76,11 @@ export enum TxVariants {
     billdesk_online = 'billdesk_online',
     billdesk_wallet = 'billdesk_wallet',
     dotpay = 'dotpay',
-    entercash = 'entercash',
     eps = 'eps',
     ideal = 'ideal',
     molpay_ebanking_fpx_MY = 'molpay_ebanking_fpx_MY',
     molpay_ebanking_TH = 'molpay_ebanking_TH',
     molpay_ebanking_VN = 'molpay_ebanking_VN',
-    onlineBanking = 'onlineBanking',
     onlineBanking_CZ = 'onlineBanking_CZ',
     onlinebanking_IN = 'onlinebanking_IN',
     onlineBanking_PL = 'onlineBanking_PL',
