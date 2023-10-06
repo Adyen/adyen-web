@@ -147,7 +147,6 @@ export interface StoredCardFieldsProps {
     lastFour?: string;
     onFocusField: any;
     valid: any;
-    status: string;
 }
 
 export interface SfSpanProps {
