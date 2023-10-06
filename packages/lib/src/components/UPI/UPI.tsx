@@ -8,15 +8,6 @@ import { UPIElementProps, UpiMode, UpiPaymentData } from './types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { TxVariants } from '../tx-variants';
 
-/**
- * 'upi' tx variant is the parent one.
- * 'upi_collect' and 'upi_qr' are the sub variants which are submitted according to the shopper interaction.
- */
-enum TX_VARIANT {
-    UpiCollect = 'upi_collect',
-    UpiQr = 'upi_qr'
-}
-
 class UPI extends UIElement<UPIElementProps> {
     public static type = TxVariants.upi;
     public static txVariants = [TxVariants.upi, TxVariants.upi_qr, TxVariants.upi_collect];
@@ -24,7 +15,7 @@ class UPI extends UIElement<UPIElementProps> {
     private useQrCodeVariant: boolean;
 
     protected static defaultProps = {
-        defaultMode: UpiMode.Vpa
+        defaultMode: 'vpa'
     };
 
     public get isValid(): boolean {
@@ -35,14 +26,14 @@ class UPI extends UIElement<UPIElementProps> {
         const { virtualPaymentAddress } = this.state.data;
         return {
             paymentMethod: {
-                type: this.useQrCodeVariant ? TX_VARIANT.UpiQr : TX_VARIANT.UpiCollect,
+                type: this.useQrCodeVariant ? TxVariants.upi_qr : TxVariants.upi_collect,
                 ...(virtualPaymentAddress && !this.useQrCodeVariant && { virtualPaymentAddress })
             }
         };
     }
 
     private onUpdateMode = (mode: UpiMode): void => {
-        if (mode === UpiMode.QrCode) {
+        if (mode === 'qrCode') {
             this.useQrCodeVariant = true;
             /**
              * When selecting QR code mode, we need to clear the state data and trigger the 'onChange'.
@@ -63,7 +54,7 @@ class UPI extends UIElement<UPIElementProps> {
                         }}
                         {...this.props}
                         qrCodeData={this.props.qrCodeData ? encodeURIComponent(this.props.qrCodeData) : null}
-                        type={TX_VARIANT.UpiQr}
+                        type={TxVariants.upi_qr}
                         brandLogo={this.props.brandLogo || this.icon}
                         onComplete={this.onComplete}
                         introduction={this.props.i18n.get('upi.qrCodeWaitingMessage')}
@@ -82,7 +73,7 @@ class UPI extends UIElement<UPIElementProps> {
                         paymentData={this.props.paymentData}
                         onComplete={this.onComplete}
                         brandLogo={this.icon}
-                        type={TX_VARIANT.UpiCollect}
+                        type={TxVariants.upi_collect}
                         messageText={this.props.i18n.get('upi.vpaWaitingMessage')}
                         awaitText={this.props.i18n.get('await.waitForConfirmation')}
                         showCountdownTimer

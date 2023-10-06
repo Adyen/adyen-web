@@ -1,20 +1,21 @@
-import { Meta, StoryObj } from '@storybook/preact';
-import { PaymentMethodStoryProps } from '../types';
+import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 import { CardElementProps } from '../../../src/components/Card/types';
+import { Card } from '../../../src';
 import { Container } from '../Container';
 
-type CardStory = StoryObj<PaymentMethodStoryProps<CardElementProps> & { txVariant: string }>;
+type CardStory = StoryConfiguration<CardElementProps>;
 
-const meta: Meta<PaymentMethodStoryProps<CardElementProps>> = {
+const meta: MetaConfiguration<CardElementProps> = {
     title: 'Cards/Card'
 };
-export default meta;
 
-const createComponent = (args, context) => {
-    const { txVariant = 'card', componentConfiguration } = args;
+const createComponent = (args: PaymentMethodStoryProps<CardElementProps>, context) => {
+    const { componentConfiguration } = args;
     const checkout = getStoryContextCheckout(context);
-    return <Container type={txVariant} componentConfiguration={componentConfiguration} checkout={checkout} />;
+    const card = new Card({ core: checkout, ...componentConfiguration });
+
+    return <Container element={card} />;
 };
 
 export const Default: CardStory = {
@@ -78,16 +79,6 @@ export const WithInstallments: CardStory = {
     }
 };
 
-export const BCMC: CardStory = {
-    render: createComponent,
-    args: {
-        txVariant: 'bcmc',
-        componentConfiguration: {
-            _disableClickToPay: true
-        }
-    }
-};
-
 export const KCP: CardStory = {
     render: createComponent,
     args: {
@@ -114,3 +105,5 @@ export const WithClickToPay: CardStory = {
         }
     }
 };
+
+export default meta;

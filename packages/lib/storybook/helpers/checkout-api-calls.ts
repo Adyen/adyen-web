@@ -1,9 +1,8 @@
 import paymentMethodsConfig from '../config/paymentMethodsConfig';
 import paymentsConfig from '../config/paymentsConfig';
 import { httpPost } from '../utils/http-post';
-import { PaymentMethodsResponse } from '../../src/core/ProcessResponse/PaymentMethods/types';
 import { RawPaymentResponse } from '../../src/components/types';
-import { CheckoutSessionSetupResponse, Order, OrderStatus, PaymentAction, PaymentAmount } from '../../src/types';
+import { CheckoutSessionSetupResponse, Order, OrderStatus, PaymentAction, PaymentAmount, PaymentMethodsResponse } from '../../src/types';
 
 export const getPaymentMethods = async (configuration?: any): Promise<PaymentMethodsResponse> =>
     await httpPost('paymentMethods', { ...paymentMethodsConfig, ...configuration });

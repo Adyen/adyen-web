@@ -183,6 +183,12 @@ export interface CardElementProps extends UIElementProps {
     billingAddressRequired?: boolean;
 
     /**
+     * If billingAddressRequired is set to true, you can set this to partial to require the shopper's postal code instead of the full address.
+     * @defaultValue full
+     */
+    billingAddressMode?: 'full' | 'partial' | 'none';
+
+    /**
      * Config to specify which address field are required | limit the countries that will show in the country dropdown
      */
     billingAddressRequiredFields?: string[];

@@ -72,6 +72,7 @@ import Trustly from './Trustly';
 import { TxVariants } from './tx-variants';
 import { PaymentActionsType } from '../types';
 import { ICore } from '../core/types';
+import { IBaseElement } from './BaseElement';
 
 /**
  * Maps each component with a Component element.
@@ -319,7 +320,7 @@ export interface BaseElementProps {
     isDropin?: boolean;
 }
 
-export interface IUIElement {
+export interface IUIElement extends IBaseElement {
     isValid: boolean;
     displayName: string;
     accessibleName: string;
@@ -331,6 +332,7 @@ export interface IUIElement {
     handleAction(action: PaymentAction): UIElement | null;
     showValidation(): void;
     setState(newState: object): void;
+    isAvailable(): Promise<boolean>;
 }
 
 export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';

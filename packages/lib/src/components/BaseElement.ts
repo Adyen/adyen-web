@@ -6,7 +6,11 @@ import { BaseElementProps, PaymentData } from './types';
 import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 import { ICore } from '../core/types';
 
-class BaseElement<P extends BaseElementProps> {
+export interface IBaseElement {
+    mount(domNode: HTMLElement | string): IBaseElement;
+}
+
+class BaseElement<P extends BaseElementProps> implements IBaseElement {
     public readonly _id = `${this.constructor['type']}-${uuid()}`;
     public props: P;
     public state: any = {};
@@ -116,6 +120,10 @@ class BaseElement<P extends BaseElementProps> {
         render(this._component, node);
 
         return this;
+    }
+
+    public async isAvailable() {
+        return true;
     }
 
     /**

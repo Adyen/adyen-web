@@ -1,5 +1,8 @@
 import { Meta, StoryObj } from '@storybook/preact';
 import PhoneInput from '../../../src/components/internal/PhoneInput';
+import CoreProvider from '../../../src/core/Context/CoreProvider';
+import Language from '../../../src/language';
+import { Resources } from '../../../src/core/Context/Resources';
 
 const COUNTRIES = [
     { id: '+7', name: 'Russian Federation', code: 'RU' },
@@ -34,7 +37,7 @@ const COUNTRIES = [
  * @param item - prefix
  * @returns item with added displayable name and image
  */
-export const formatPrefixName = item => {
+const formatPrefixName = item => {
     if (!item) {
         throw new Error('No item passed');
     }
@@ -59,13 +62,15 @@ const meta: Meta = {
 export const Default: StoryObj = {
     render: args => {
         return (
-            <PhoneInput
-                items={COUNTRIES.map(formatPrefixName).filter(Boolean)}
-                data={{ phonePrefix: COUNTRIES[0].id }}
-                onChange={item => console.log({ item })}
-                phoneNumberErrorKey={'mobileNumber.invalid'}
-                {...args}
-            />
+            <CoreProvider loadingContext={'test'} i18n={new Language('en-US')} resources={new Resources()}>
+                <PhoneInput
+                    items={COUNTRIES.map(formatPrefixName).filter(Boolean)}
+                    data={{ phonePrefix: COUNTRIES[0].id }}
+                    onChange={item => console.log({ item })}
+                    phoneNumberErrorKey={'mobileNumber.invalid'}
+                    {...args}
+                />
+            </CoreProvider>
         );
     },
     parameters: {

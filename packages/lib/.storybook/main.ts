@@ -6,7 +6,7 @@ import eslint from '@rollup/plugin-eslint';
 import stylelint from 'vite-plugin-stylelint';
 
 const config: StorybookConfig = {
-    stories: ['../storybook/**/*.stories.mdx', '../storybook/**/*.stories.@(js|jsx|ts|tsx)'],
+    stories: ['../storybook/**/*.stories.@(js|jsx|ts|tsx)'],
     addons: [
         {
             name: '@storybook/addon-essentials',
@@ -27,7 +27,6 @@ const config: StorybookConfig = {
         return mergeConfig(config, {
             define: {
                 'process.env': env,
-                'process.env.MODULE_TYPE': 'es',
                 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
                 'process.env.VERSION': JSON.stringify(Version.ADYEN_WEB_VERSION),
                 'process.env.COMMIT_HASH': JSON.stringify(Version.COMMIT_HASH),
@@ -55,6 +54,7 @@ const config: StorybookConfig = {
     }
 };
 export default config;
+
 /**
  * This function is used to resolve the absolute path of a package.
  * It is needed in projects that use Yarn PnP or are set up within a monorepo.

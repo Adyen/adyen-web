@@ -1,21 +1,23 @@
-import { Meta, StoryObj } from '@storybook/preact';
-import { PaymentMethodStoryProps } from '../types';
+import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 import { Container } from '../Container';
 import { KlarnaPaymentsProps } from '../../../src/components/Klarna/types';
+import { Klarna } from '../../../src';
 
-type KlarnaStory = StoryObj<PaymentMethodStoryProps<Partial<KlarnaPaymentsProps>>>;
+type KlarnaStory = StoryConfiguration<KlarnaPaymentsProps>;
 
-const meta: Meta<PaymentMethodStoryProps<KlarnaPaymentsProps>> = {
+const meta: MetaConfiguration<KlarnaPaymentsProps> = {
     title: 'Components/Klarna'
 };
 
-const createComponent = (args, context) => {
+const createComponent = (args: PaymentMethodStoryProps<KlarnaPaymentsProps>, context) => {
+    const { componentConfiguration } = args;
     const checkout = getStoryContextCheckout(context);
-    return <Container type={'klarna'} componentConfiguration={args.componentConfiguration} checkout={checkout} />;
+    const klarna = new Klarna({ core: checkout, ...componentConfiguration });
+    return <Container element={klarna} />;
 };
 
-export const Klarna: KlarnaStory = {
+export const Widget: KlarnaStory = {
     render: createComponent,
     args: {
         countryCode: 'NL',

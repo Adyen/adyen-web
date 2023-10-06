@@ -1,22 +1,25 @@
-import { Meta, StoryObj } from '@storybook/preact';
-import { PaymentMethodStoryProps } from '../types';
+import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
-import { UIElementProps } from '../../../src/components/types';
+import { VoucherActionElement } from '../../../src/components/types';
 import { Container } from '../Container';
+import { Oxxo } from '../../../src';
 
-type OxxoStory = StoryObj<PaymentMethodStoryProps<UIElementProps>>;
+type OxxoStory = StoryConfiguration<VoucherActionElement>;
 
-const meta: Meta<PaymentMethodStoryProps<UIElementProps>> = {
+const meta: MetaConfiguration<VoucherActionElement> = {
     title: 'Vouchers/Oxxo'
 };
-export default meta;
 
-export const Oxxo: OxxoStory = {
-    render: (args, context) => {
+export const Default: OxxoStory = {
+    render: (args: PaymentMethodStoryProps<VoucherActionElement>, context) => {
+        const { componentConfiguration } = args;
         const checkout = getStoryContextCheckout(context);
-        return <Container type={'oxxo'} componentConfiguration={args.componentConfiguration} checkout={checkout} />;
+        const oxxo = new Oxxo({ core: checkout, ...componentConfiguration });
+        return <Container element={oxxo} />;
     },
     args: {
         countryCode: 'MX'
     }
 };
+
+export default meta;
