@@ -5,6 +5,7 @@
 
 .adyen-checkout__dropin .adyen-checkout__applepay__button {
     width: 100%;
+    border-radius: var(--b-border-radius-m);
 }
 
 @supports (-webkit-appearance: -apple-pay-button) {

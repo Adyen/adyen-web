@@ -10,6 +10,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
     public state: DropinComponentState = {
         elements: [],
         instantPaymentElements: [],
+        storedPaymentElements: [],
         orderStatus: null,
         isDisabling: false,
         status: { type: 'loading', props: undefined },
@@ -27,8 +28,8 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         const orderStatusPromise = order ? getOrderStatus({ clientKey, loadingContext }, order) : null;
 
         Promise.all([storedElementsPromises, elementsPromises, instantPaymentsPromises, orderStatusPromise]).then(
-            ([storedElements, elements, instantPaymentElements, orderStatus]) => {
-                this.setState({ instantPaymentElements, elements: [...storedElements, ...elements], orderStatus });
+            ([storedPaymentElements, elements, instantPaymentElements, orderStatus]) => {
+                this.setState({ instantPaymentElements, elements, storedPaymentElements, orderStatus });
                 this.setStatus('ready');
 
                 if (this.props.modules.analytics) {
@@ -115,7 +116,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
 
     private onOrderCancel: (data: onOrderCancelData) => void;
 
-    render(props, { elements, instantPaymentElements, status, activePaymentMethod, cachedPaymentMethods }) {
+    render(props, { elements, instantPaymentElements, storedPaymentElements, status, activePaymentMethod, cachedPaymentMethods }) {
         const isLoading = status.type === 'loading';
         const isRedirecting = status.type === 'redirect';
 
@@ -140,6 +141,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                                 isDisablingPaymentMethod={this.state.isDisabling}
                                 paymentMethods={elements}
                                 instantPaymentMethods={instantPaymentElements}
+                                storedPaymentMethods={storedPaymentElements}
                                 activePaymentMethod={activePaymentMethod}
                                 cachedPaymentMethods={cachedPaymentMethods}
                                 order={this.props.order}

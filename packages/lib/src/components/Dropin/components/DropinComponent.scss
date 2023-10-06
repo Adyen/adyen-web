@@ -1,3 +1,19 @@
+@use '../../../style/index';
+
+.adyen-checkout-payment-methods-container {
+    margin: var(--b-spacer-070) 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--b-spacer-070);
+}
+
+.adyen-checkout-payment-methods-list-label {
+    color: var(--b-color-label-primary);
+    font-size: index.$font-size-small;
+    font-weight: var(--b-text-body-strongest-font-weight);
+    line-height: var(--b-text-caption-stronger-wide-line-height);
+}
+
 .adyen-checkout__payment-methods-list {
     list-style: none;
     margin: 0;
@@ -11,11 +27,12 @@
 
 .adyen-checkout__instant-payment-methods-list {
     list-style: none;
-    margin: 0;
     padding: 0;
+    display: flex;
+    gap: var(--b-spacer-070);
 
-    li:not(:last-child) {
-        margin-bottom: var(--b-spacer-040);
+    li {
+        flex: 1;
     }
 }
 
@@ -34,7 +51,7 @@
         &__wrapper {
             margin-right: var(--b-spacer-040);
 
-            [dir="rtl"] & {
+            [dir='rtl'] & {
                 margin-right: 0;
                 margin-left: var(--b-spacer-040);
             }

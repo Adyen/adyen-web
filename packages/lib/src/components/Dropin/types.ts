@@ -82,6 +82,7 @@ export interface DropinStatusProps {
 export interface DropinComponentState {
     elements: any[];
     instantPaymentElements: UIElement[];
+    storedPaymentElements: UIElement[];
     status: DropinStatus;
     activePaymentMethod: UIElement;
     cachedPaymentMethods: object;

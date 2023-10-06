@@ -257,6 +257,8 @@
     "ctp.errors.INVALID_PARAMETER": "Something went wrong, try again or use the manual card entry",
     "ctp.errors.AUTH_ERROR": "Something went wrong, try again or use the manual card entry",
     "paymentMethodsList.aria.label": "Choose a payment method",
+    "paymentMethodsList.storedPayments.label": "Saved payment methods",
+    "paymentMethodsList.otherPayments.label": "Other payment methods",
     "companyDetails.name.invalid": "Enter the company name",
     "companyDetails.registrationNumber.invalid": "Enter the registration number",
     "consent.checkbox.invalid": "You must agree with the terms & conditions",
