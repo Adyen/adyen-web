@@ -76,6 +76,10 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         }
     }
 
+    public isAvailable(): Promise<void> {
+        return Promise.resolve();
+    }
+
     public setState(newState: object): void {
         this.state = { ...this.state, ...newState };
         this.onChange();

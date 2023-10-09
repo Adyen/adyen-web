@@ -4,22 +4,29 @@ import UIElement from '../../UIElement';
 import { PaymentMethodsConfiguration } from '../../types';
 import { ICore } from '../../../core/types';
 
-// /**
-//  *  Returns a filtered (available) list of InstantPaymentMethods Elements
-//  * @param paymentMethods - Instant payment methods
-//  * @param props - Props to be passed through to every paymentMethod
-//  * @param create - Reference to the main instance `Core#create` method
-//  */
+/**
+ *  Returns a filtered (available) list of InstantPaymentMethods Elements
+ *
+ * @param instantPaymentMethods - Array of PaymentMethod objects from the /paymentMethods response
+ * @param paymentMethodsConfiguration - Dropin paymentMethodsConfiguration object
+ * @param commonProps - High level props to be passed through to every component
+ * @param core - Reference to the checkout core object
+ */
 const createInstantPaymentElements = (
     instantPaymentMethods: PaymentMethod[] = [],
     paymentMethodsConfiguration: PaymentMethodsConfiguration,
-    props,
+    commonProps,
     core: ICore
-): Promise<UIElement[]> | [] => {
+): Promise<UIElement[]> => {
     if (instantPaymentMethods.length) {
-        return createElements(instantPaymentMethods, paymentMethodsConfiguration, { ...props, isInstantPayment: true, showPayButton: true }, core);
+        return createElements(
+            instantPaymentMethods,
+            paymentMethodsConfiguration,
+            { ...commonProps, isInstantPayment: true, showPayButton: true },
+            core
+        );
     }
-    return [];
+    return Promise.resolve([]);
 };
 
 export default createInstantPaymentElements;

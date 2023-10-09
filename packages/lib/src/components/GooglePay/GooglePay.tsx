@@ -80,7 +80,7 @@ class GooglePay extends UIElement<GooglePayProps> {
     /**
      * Determine a shopper's ability to return a form of payment from the Google Pay API.
      */
-    public isAvailable = (): Promise<boolean> => {
+    public override async isAvailable(): Promise<void> {
         return this.isReadyToPay()
             .then(response => {
                 if (!response.result) {
@@ -91,12 +91,12 @@ class GooglePay extends UIElement<GooglePayProps> {
                     throw new Error('Google Pay - No paymentMethodPresent');
                 }
 
-                return true;
+                return Promise.resolve();
             })
-            .catch(() => {
-                return false;
+            .catch(error => {
+                return Promise.reject(error);
             });
-    };
+    }
 
     /**
      * Determine a shopper's ability to return a form of payment from the Google Pay API.

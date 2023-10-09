@@ -1,3 +1,6 @@
+import promiseTimeout from '../../../utils/promiseTimeout';
+import UIElement from '../../UIElement';
+
 export const UNSUPPORTED_PAYMENT_METHODS = ['androidpay', 'samsungpay', 'clicktopay'];
 
 // filter payment methods that we don't support in the Drop-in
@@ -7,11 +10,13 @@ export const filterUnsupported = paymentMethod => !UNSUPPORTED_PAYMENT_METHODS.i
 export const filterPresent = paymentMethod => !!paymentMethod;
 
 // filter payment methods that are available to the user
-export const filterAvailable = paymentMethod => {
-    if (paymentMethod.isAvailable) {
-        const timeout = new Promise((resolve, reject) => setTimeout(reject, 5000));
-        return Promise.race([paymentMethod.isAvailable(), timeout]);
-    }
+export const filterAvailable = (elements: UIElement[]) => {
+    const elementIsAvailablePromises = elements.map(element => {
+        const { promise } = promiseTimeout(5000, element.isAvailable(), {});
+        return promise;
+    });
 
-    return Promise.resolve(!!paymentMethod);
+    return Promise.allSettled(elementIsAvailablePromises).then(promiseResults => {
+        return elements.filter((element, i) => promiseResults[i].status === 'fulfilled');
+    });
 };

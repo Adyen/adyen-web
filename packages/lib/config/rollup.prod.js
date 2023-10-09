@@ -3,7 +3,6 @@ import * as dotenv from 'dotenv';
 import {
     resolveExtensions,
     loadCommonjsPackage,
-    lint,
     replaceValues,
     convertJsonToESM,
     compileCSS,
@@ -22,7 +21,6 @@ export default () => {
             plugins: [
                 resolveExtensions(),
                 loadCommonjsPackage(),
-                lint(),
                 replaceValues({ moduleType: 'es' }),
                 convertJsonToESM(),
                 compileCSS(),
@@ -55,7 +53,6 @@ export default () => {
             plugins: [
                 resolveExtensions(),
                 loadCommonjsPackage(),
-                lint(),
                 replaceValues({ moduleType: 'es-legacy' }),
                 convertJsonToESM(),
                 compileCSS(),
@@ -88,7 +85,6 @@ export default () => {
             plugins: [
                 resolveExtensions(),
                 loadCommonjsPackage(),
-                lint(),
                 replaceValues({ moduleType: 'umd' }),
                 convertJsonToESM(),
                 compileCSS(),
@@ -110,7 +106,6 @@ export default () => {
             plugins: [
                 resolveExtensions(),
                 loadCommonjsPackage(),
-                lint(),
                 replaceValues({ moduleType: 'commonjs' }),
                 convertJsonToESM(),
                 compileCSS(),
@@ -127,32 +122,18 @@ export default () => {
 
         // Types CJS
         {
-            input: 'src/index.ts',
+            input: 'dist/temp-types/index.d.ts',
             output: [{ file: './dist/cjs/index.d.cts', format: 'commonjs' }],
-            plugins: [
-                resolveExtensions(),
-                loadCommonjsPackage(),
-                lint(),
-                convertJsonToESM(),
-                compileCSS({ extract: false }),
-                compileJavascript(),
-                generateTypes()
-            ]
+            external: [/\.scss$/u],
+            plugins: [generateTypes()]
         },
 
         // Types ES
         {
-            input: 'src/index.ts',
+            input: 'dist/temp-types/index.d.ts',
             output: [{ file: './dist/es/index.d.ts', format: 'es' }],
-            plugins: [
-                resolveExtensions(),
-                loadCommonjsPackage(),
-                lint(),
-                convertJsonToESM(),
-                compileCSS({ extract: false }),
-                compileJavascript(),
-                generateTypes()
-            ]
+            external: [/\.scss$/u],
+            plugins: [generateTypes()]
         }
     ];
 };

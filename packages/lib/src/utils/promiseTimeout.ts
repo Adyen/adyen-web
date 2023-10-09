@@ -10,7 +10,6 @@ const promiseTimeout = (ms: number, promise: Promise<any>, timeOutObject: object
 
     const promiseTimer: Promise<any> = new Promise((resolve, reject): void => {
         // Create a timeout to reject promise if not resolved
-        /* eslint-disable-next-line */
         timer = setTimeout((): void => {
             reject(timeOutObject);
         }, ms);

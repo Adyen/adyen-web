@@ -122,10 +122,6 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
         return this;
     }
 
-    public async isAvailable() {
-        return true;
-    }
-
     /**
      * Updates props, resets the internal state and remounts the element.
      * @param props - props to update

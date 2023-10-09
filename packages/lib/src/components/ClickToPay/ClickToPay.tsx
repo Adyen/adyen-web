@@ -80,8 +80,7 @@ export class ClickToPayElement extends UIElement<ClickToPayElementProps> {
      * Resolves Promise if the Shopper has cookies OR has valid CtP account
      * Rejects Promise if account isn't found or if Login screen is triggered
      */
-    // @ts-ignore TODO: Fix isAvailable accross components
-    public async isAvailable(): Promise<void> {
+    public override async isAvailable(): Promise<void> {
         if (!this.clickToPayService) {
             return Promise.reject();
         }

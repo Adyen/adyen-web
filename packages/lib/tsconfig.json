@@ -2,7 +2,7 @@
     "compilerOptions": {
         /* Library declaration */
         "declaration": true,
-        "outDir": "./dist/types",
+        "outDir": "./dist/temp-types",
 
         /* Using bundler as we are transpiling with SWC */
         "moduleResolution": "Bundler",

@@ -8,35 +8,32 @@ describe('GooglePay', () => {
         });
     });
 
-    describe('isAvailable', () => {
-        test('resolves if is available', () => {
+    describe('isAvailable()', () => {
+        test('should resolve if GooglePay is available', async () => {
             const gpay = new GooglePay({ core: global.core });
             gpay.isReadyToPay = jest.fn(() => {
                 return Promise.resolve({ result: true });
             });
-            gpay.isAvailable().then(result => {
-                expect(result).toBe(true);
-            });
+
+            await expect(gpay.isAvailable()).resolves.not.toThrow();
         });
 
-        test('rejects if is not available', () => {
+        test('should reject if is not available', async () => {
             const gpay = new GooglePay({ core: global.core });
             gpay.isReadyToPay = jest.fn(() => {
                 return Promise.resolve({ result: false });
             });
-            gpay.isAvailable().then(result => {
-                expect(result).toBe(false);
-            });
+
+            await expect(gpay.isAvailable()).rejects.toThrow();
         });
 
-        test('checks paymentMethodPresent if present', () => {
+        test('should reject if "paymentMethodPresent" is false', async () => {
             const gpay = new GooglePay({ core: global.core });
             gpay.isReadyToPay = jest.fn(() => {
                 return Promise.resolve({ result: true, paymentMethodPresent: false });
             });
-            gpay.isAvailable().then(result => {
-                expect(result).toBe(false);
-            });
+
+            await expect(gpay.isAvailable()).rejects.toThrow();
         });
     });
 

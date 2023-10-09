@@ -3,19 +3,22 @@ import { PaymentMethod, StoredPaymentMethod } from '../../../types';
 import { getComponentConfiguration } from './getComponentConfiguration';
 import { PaymentMethodsConfiguration } from '../../types';
 import { ICore } from '../../../core/types';
-//
-// /**
-//  * Returns a filtered (available) list of component Elements
-//  * @param components - Array of PaymentMethod objects from the /paymentMethods response
-//  * @param props - High level props to be passed through to every component (as defined in utils/getCommonProps)
-//  * @param create - Reference to the main instance `Core#create` method
-//  */
+import UIElement from '../../UIElement';
+
+/**
+ * Returns a filtered (available) list of component Elements
+ *
+ * @param paymentMethods - Array of PaymentMethod objects from the /paymentMethods response
+ * @param paymentMethodsConfiguration - Dropin paymentMethodsConfiguration object
+ * @param commonProps - High level props to be passed through to every component
+ * @param core - Reference to the checkout core object
+ */
 const createElements = (
     paymentMethods: PaymentMethod[] | StoredPaymentMethod[],
     paymentMethodsConfiguration: PaymentMethodsConfiguration,
     commonProps,
     core: ICore
-) => {
+): Promise<UIElement[]> => {
     const elements = paymentMethods
         .map(paymentMethod => {
             const paymentMethodConfigurationProps = getComponentConfiguration(
@@ -39,10 +42,7 @@ const createElements = (
         .filter(filterPresent)
         .filter(filterUnsupported);
 
-    // filter available elements
-    const elementPromises = elements.map(filterAvailable).map(p => p.catch(e => e));
-
-    return Promise.all(elementPromises).then(values => elements.filter((el, i) => values[i] === true));
+    return filterAvailable(elements);
 };
 
 export default createElements;

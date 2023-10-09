@@ -5,7 +5,7 @@ import replace from '@rollup/plugin-replace';
 import json from '@rollup/plugin-json';
 import terser from '@rollup/plugin-terser';
 import postcss from 'rollup-plugin-postcss';
-import dts from 'rollup-plugin-dts';
+import { dts } from 'rollup-plugin-dts';
 import { defineRollupSwcOption, swc } from 'rollup-plugin-swc3';
 import currentVersion from './version.js';
 

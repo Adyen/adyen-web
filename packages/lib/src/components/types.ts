@@ -332,7 +332,7 @@ export interface IUIElement extends IBaseElement {
     handleAction(action: PaymentAction): UIElement | null;
     showValidation(): void;
     setState(newState: object): void;
-    isAvailable(): Promise<any>;
+    isAvailable(): Promise<void>;
 }
 
 export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';
