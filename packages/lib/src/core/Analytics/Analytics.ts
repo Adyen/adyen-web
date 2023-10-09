@@ -87,7 +87,9 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
             });
 
             addAnalyticsAction(action, aObj);
-        }
+        },
+
+        getEnabled: () => props.enabled
     };
 
     return anlModule;

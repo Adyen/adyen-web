@@ -83,6 +83,7 @@ export interface AnalyticsModule {
     getCheckoutAttemptId: () => string;
     getEventsQueue: () => EventsQueueModule;
     createAnalyticsAction: (a: CreateAnalyticsActionObject) => void;
+    getEnabled: () => boolean;
 }
 
 export interface BaseElementProps {
