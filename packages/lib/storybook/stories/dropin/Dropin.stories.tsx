@@ -29,7 +29,7 @@ export const Auto: DropinStory = {
     render: (args: PaymentMethodStoryProps<DropinElementProps>, context) => {
         const { componentConfiguration } = args;
 
-        // Picking up the Components to register
+        // Register all Components
         const { Dropin, ...Components } = components;
         const Classes = Object.keys(Components).map(key => Components[key]);
         AdyenCheckout.register(...Classes);

@@ -50,7 +50,7 @@ const formatPrefixName = item => {
     return {
         ...item,
         name: `${flag} ${item.name} (${item.id})`,
-        selectedOptionName: flag
+        selectedOptionName: `${flag} ${item.id}`
     };
 };
 
