@@ -172,4 +172,7 @@ export type PaymentMethodsConfiguration =
       }
     | {
           [key in PaymentActionsType]?: any;
+      }
+    | {
+          [key: string]: any;
       };
