@@ -140,7 +140,7 @@ test('should call onSelect if openFirstStoredPaymentMethod is set and there is n
 
     customRender(
         <PaymentMethodList
-            paymentMethods={paymentMethods}
+            storedPaymentMethods={paymentMethods}
             cachedPaymentMethods={{}}
             isLoading={false}
             onSelect={onSelectMock}
