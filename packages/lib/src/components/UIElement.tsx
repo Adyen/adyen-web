@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import BaseElement from './BaseElement';
 import { PaymentAction } from '../types';
-import { PaymentResponse } from './types';
+import { ComponentMethodsRef, PaymentResponse } from './types';
 import PayButton from './internal/PayButton';
 import { IUIElement, PayButtonFunctionProps, RawPaymentResponse, UIElementProps } from './types';
 import { getSanitizedResponse, resolveFinalResult } from './utils';
@@ -273,28 +273,28 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         return this.elementRef.core.update(options);
     }
 
-    public setComponentRef = ref => {
+    public setComponentRef = (ref: ComponentMethodsRef) => {
         this.componentRef = ref;
     };
 
     /**
      * Get the current validation status of the element
      */
-    get isValid(): boolean {
+    public get isValid(): boolean {
         return false;
     }
 
     /**
      * Get the element icon URL for the current environment
      */
-    get icon(): string {
+    public get icon(): string {
         return this.props.icon ?? this.resources.getImage()(this.constructor['type']);
     }
 
     /**
      * Get the element's displayable name
      */
-    get displayName(): string {
+    public get displayName(): string {
         const paymentMethodFromResponse = this.core.paymentMethodsResponse?.paymentMethods?.find(pm => pm.type === this.type);
         return this.props.name || paymentMethodFromResponse?.name || this.type;
     }
@@ -302,14 +302,14 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     /**
      * Get the element accessible name, used in the aria-label of the button that controls selected payment method
      */
-    get accessibleName(): string {
+    public get accessibleName(): string {
         return this.displayName;
     }
 
     /**
      * Return the type of an element
      */
-    get type(): string {
+    public get type(): string {
         return this.props.type || this.constructor['type'];
     }
 

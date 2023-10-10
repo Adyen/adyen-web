@@ -124,6 +124,14 @@ export interface CardElementProps extends UIElementProps {
     challengeWindowSize?: '01' | '02' | '03' | '04' | '05';
 
     /**
+     * Object that contains placeholder information that you can use to prefill fields.
+     */
+    data?: {
+        holderName?: string;
+        billingAddress?: Partial<AddressData>;
+    };
+
+    /**
      * Called once all the card input fields have been created but are not yet ready to use.
      */
     onLoad?: (event: CbObjOnLoad) => void;

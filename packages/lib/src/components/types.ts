@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { ComponentChild, h } from 'preact';
 import { Order, PaymentAction, PaymentAmount, PaymentAmountExtended } from '../types';
 import Language from '../language/Language';
 import UIElement from './UIElement';
@@ -71,8 +71,7 @@ import Duitnow from './DuitNow';
 import Trustly from './Trustly';
 import { TxVariants } from './tx-variants';
 import { PaymentActionsType } from '../types';
-import { ICore } from '../core/types';
-import { IBaseElement } from './BaseElement';
+import { CoreOptions, ICore } from '../core/types';
 
 /**
  * Maps each component with a Component element.
@@ -320,13 +319,30 @@ export interface BaseElementProps {
     isDropin?: boolean;
 }
 
+export interface IBaseElement {
+    data: object;
+    state: any;
+    props: any;
+    _id: string;
+    _component: any;
+    render(): ComponentChild | Error;
+    mount(domNode: HTMLElement | string): IBaseElement;
+    update(props): IBaseElement;
+    remount(component): IBaseElement;
+    unmount(): IBaseElement;
+    remove(): void;
+}
+
 export interface IUIElement extends IBaseElement {
     isValid: boolean;
     displayName: string;
     accessibleName: string;
     type: string;
-    elementRef: any;
+    icon: string;
+    elementRef: IUIElement;
     submit(): void;
+    setComponentRef(ref): void;
+    updateParent(options?: CoreOptions): Promise<ICore>;
     setElementStatus(status: UIElementStatus, props: any): UIElement;
     setStatus(status: UIElementStatus, props?: { message?: string; [key: string]: any }): UIElement;
     handleAction(action: PaymentAction): UIElement | null;
@@ -425,7 +441,7 @@ export interface UIElementProps extends BaseElementProps {
 
 export interface AwaitActionElement extends UIElementProps {
     paymentData?: string;
-    paymentMethodType?: string;
+    paymentMethoType?: string;
     type?: string;
     url?: string;
 }

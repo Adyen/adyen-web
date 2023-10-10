@@ -2,25 +2,24 @@ import { ComponentChild, render } from 'preact';
 import getProp from '../utils/getProp';
 import EventEmitter from './EventEmitter';
 import uuid from '../utils/uuid';
-import { BaseElementProps, PaymentData } from './types';
+import { BaseElementProps, IBaseElement, PaymentData } from './types';
 import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 import { ICore } from '../core/types';
 
-export interface IBaseElement {
-    mount(domNode: HTMLElement | string): IBaseElement;
-}
-
 class BaseElement<P extends BaseElementProps> implements IBaseElement {
     public readonly _id = `${this.constructor['type']}-${uuid()}`;
+
     public props: P;
     public state: any = {};
-    protected static defaultProps = {};
-    public _node = null;
     public _component;
     public eventEmitter = new EventEmitter();
+
+    protected _node: HTMLElement = null;
     protected readonly core: ICore;
 
-    protected constructor(props: P) {
+    protected static defaultProps = {};
+
+    constructor(props: P) {
         this.core = props.core;
 
         if (!this.core) {
@@ -65,7 +64,7 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
      * Returns the component payment data ready to submit to the Checkout API
      * Note: this does not ensure validity, check isValid first
      */
-    get data(): PaymentData {
+    public get data(): PaymentData {
         const clientData = getProp(this.props, 'modules.risk.data');
         const useAnalytics = !!getProp(this.props, 'modules.analytics.props.enabled');
         const checkoutAttemptId = useAnalytics ? getProp(this.props, 'modules.analytics.checkoutAttemptId') : 'do-not-track';
@@ -95,7 +94,7 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
      * @returns this - the payment element instance we mounted
      */
     public mount(domNode: HTMLElement | string): this {
-        const node = typeof domNode === 'string' ? document.querySelector(domNode) : domNode;
+        const node = typeof domNode === 'string' ? document.querySelector<HTMLElement>(domNode) : domNode;
 
         if (!node) {
             throw new Error('Component could not mount. Root node was not found.');
@@ -124,6 +123,7 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
 
     /**
      * Updates props, resets the internal state and remounts the element.
+     *
      * @param props - props to update
      * @returns this - the element instance
      */

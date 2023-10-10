@@ -60,7 +60,7 @@
         "start": "npm run dev-server",
         "story": "storybook dev --port 3020 --disable-telemetry",
         "dev-server": "cross-env NODE_ENV=development rollup --watch --config config/rollup.dev.js",
-        "build": "rm -rf dist/ && npm run lint && npm run lint-styles && npm run types:generate && rollup --config config/rollup.prod.js && rm -rf dist/temp-types",
+        "build": "rm -rf dist/ && npm run lint && npm run lint-styles && npm run type-check && npm run types:generate && rollup --config config/rollup.prod.js && rm -rf dist/temp-types",
         "docs:generate": "typedoc --out docs src --exclude \"**/*+(index|.test).ts\"",
         "start:storybook": "node .storybook/run.cjs",
         "build:storybook": "storybook build --disable-telemetry",
