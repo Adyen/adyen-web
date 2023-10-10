@@ -18,6 +18,9 @@
     list-style: none;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--b-spacer-070);
 
     &--loading {
         user-select: none;
@@ -41,7 +44,10 @@
     max-height: 60px;
 
     &__details {
-        display: none;
+        opacity: 0;
+        height: 0;
+        overflow: hidden;
+        transition: opacity 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms
     }
 
     &__image {
@@ -62,7 +68,8 @@
         max-height: 100%;
 
         .adyen-checkout__payment-method__details {
-            display: block;
+            opacity: 1;
+            height: auto;
         }
     }
 }
