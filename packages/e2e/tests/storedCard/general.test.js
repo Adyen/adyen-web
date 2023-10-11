@@ -6,7 +6,7 @@ const cardPage = new CardComponentPage('.stored-card-field', {}, 'storedcards');
 
 const EMPTY_FIELD = LANG['error.va.sf-cc-cvc.01'];
 
-fixture.only`Testing some general functionality and UI on the stored card component`.beforeEach(async t => {
+fixture`Testing some general functionality and UI on the stored card component`.beforeEach(async t => {
     await t.navigateTo(cardPage.pageUrl);
 });
 
