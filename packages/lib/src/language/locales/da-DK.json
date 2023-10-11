@@ -66,7 +66,7 @@
     "dateOfBirth": "Fødselsdato",
     "shopperEmail": "E-mailadresse",
     "gender": "Køn",
-    "gender.notselected": "Vælg et køn",
+    "gender.notselected": "Vælg dit køn",
     "male": "Mand",
     "female": "Kvinde",
     "billingAddress": "Faktureringsadresse",
@@ -160,7 +160,7 @@
     "mbway.confirmPayment": "Bekræft din betaling på appen MB WAY",
     "shopperEmail.invalid": "Ugyldig e-mailadresse",
     "dateOfBirth.format": "DD/MM/ÅÅÅÅ",
-    "dateOfBirth.invalid": "Du skal være mindst 18 år",
+    "dateOfBirth.invalid": "Indtast en gyldig fødselsdato, der viser, at du er mindst 18 år gammel",
     "blik.confirmPayment": "Åbn din bankapp for at bekræfte betalingen.",
     "blik.invalid": "Indtast 6 tal",
     "blik.code": "6-cifret kode",
@@ -291,7 +291,8 @@
     "companyDetails.registrationNumber.invalid": "Indtast registreringsnummeret",
     "consent.checkbox.invalid": "Du skal acceptere vilkår og betingelser",
     "form.instruction": "Alle felter er obligatoriske, medmindre andet er markeret.",
-    "trustly.descriptor": "Direkte netbanksbetalinger",
-    "trustly.description1": "Betal nemt fra din ønskede bankkonto, med sikker verifikation via dit NemID eller biometrics",
-    "trustly.description2": "Ingen kort, ingen download af apps, og ingen registrering"
+    "ancv.input.label": "Din ANCV-identifikation",
+    "ancv.confirmPayment": "Brug din ANCV-applikation til at bekræfte betalingen.",
+    "ancv.form.instruction": "Cheque-Vacances-applikationen er nødvendig for at validere denne betaling.",
+    "ancv.beneficiaryId.invalid": "Indtast en gyldig e-mailadresse eller ANCV-id"
 }

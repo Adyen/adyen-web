@@ -1,5 +1,5 @@
 node_modules/
 /test-results/
-/playwright-report/
+playwright-report/
 /playwright/.cache/
 screenshot.png

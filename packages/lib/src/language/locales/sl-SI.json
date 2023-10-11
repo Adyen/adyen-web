@@ -66,7 +66,7 @@
     "dateOfBirth": "Datum rojstva",
     "shopperEmail": "Elektronski naslov",
     "gender": "Spol",
-    "gender.notselected": "Izberite spol",
+    "gender.notselected": "Izberite svoj spol",
     "male": "Moški",
     "female": "Ženski",
     "billingAddress": "Naslov za račun",
@@ -159,7 +159,7 @@
     "mbway.confirmPayment": "Potrdite svoje plačilo v aplikaciji MB WAY",
     "shopperEmail.invalid": "Neveljaven elektronski naslov",
     "dateOfBirth.format": "DD/MM/LLLL",
-    "dateOfBirth.invalid": "Imeti morate najmanj 18 let",
+    "dateOfBirth.invalid": "Vnesite veljaven datum rojstva, ki kaže, da ste stari vsaj 18 let.",
     "blik.confirmPayment": "Za potrditev plačila odprite svojo bančno aplikacijo.",
     "blik.invalid": "Vnesite 6 številk",
     "blik.code": "6-mestna koda",
@@ -292,5 +292,9 @@
     "form.instruction": "Vsa polja so obvezna, razen če ni označeno drugače.",
     "trustly.descriptor": "Takojšnje bančno nakazilo",
     "trustly.description1": "Plačajte neposredno s svojega poljubnega bančnega računa, pri čemer je varnost zagotovljena na ravni banke.",
-    "trustly.description2": "Brez kartic, brez prenosa aplikacije, brez registracije"
+    "trustly.description2": "Brez kartic, brez prenosa aplikacije, brez registracije",
+    "ancv.input.label": "Vaša identifikacija ANCV",
+    "ancv.confirmPayment": "Za potrditev plačila uporabite aplikacijo ANCV.",
+    "ancv.form.instruction": "Za potrditev tega plačila je potrebna aplikacija Cheque-Vacances.",
+    "ancv.beneficiaryId.invalid": "Vnesite veljaven e-poštni naslov ali ANCV ID"
 }

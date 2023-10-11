@@ -159,7 +159,7 @@
     "mbway.confirmPayment": "Vahvista maksusi MB WAY -sovelluksella",
     "shopperEmail.invalid": "Ei-kelvollinen sähköpostiosoite",
     "dateOfBirth.format": "PP/KK/VVVV",
-    "dateOfBirth.invalid": "Sinun on oltava vähintään 18-vuotias",
+    "dateOfBirth.invalid": "Anna kelvollinen syntymäaika, joka osoittaa, että olet vähintään 18-vuotias",
     "blik.confirmPayment": "Avaa pankkisovelluksesi vahvistaaksesi maksun.",
     "blik.invalid": "Syötä 6 lukua",
     "blik.code": "6-numeroinen koodi",
@@ -290,7 +290,8 @@
     "companyDetails.registrationNumber.invalid": "Syötä rekisterinumero",
     "consent.checkbox.invalid": "Sinun on hyväksyttävä käyttöehdot",
     "form.instruction": "Kaikki kentät ovat pakollisia, ellei toisin ole merkitty.",
-    "trustly.descriptor": "Verkkopankki",
-    "trustly.description1": "Maksat haluamaltasi tililtä turvallisest",
-    "trustly.description2": "Ei kortteja, ei sovelluksia, ei rekisteröitymistä"
+    "ancv.input.label": "ANCV-tunnuksesi",
+    "ancv.confirmPayment": "Vahvista maksusi ANCV-sovelluksella.",
+    "ancv.form.instruction": "Tämän maksun vahvistaminen edellyttää Cheque-Vacances -sovelluksen.",
+    "ancv.beneficiaryId.invalid": "Anna kelvollinen sähköpostiosoite tai ANCV-tunnus"
 }

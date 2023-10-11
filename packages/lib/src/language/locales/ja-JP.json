@@ -159,7 +159,7 @@
     "mbway.confirmPayment": "MB WAYアプリで支払を確認する",
     "shopperEmail.invalid": "Eメールアドレスが無効です",
     "dateOfBirth.format": "DD/MM/YYYY",
-    "dateOfBirth.invalid": "18歳以上の方のみご利用いただけます",
+    "dateOfBirth.invalid": "18歳以上であることを示す有効な生年月日を入力してください",
     "blik.confirmPayment": "バンキングアプリを開いて、支払を確認してください。",
     "blik.invalid": "6つの数字を入力してください",
     "blik.code": "6桁のコード",
@@ -292,5 +292,9 @@
     "form.instruction": "特に明記されていない限り、すべてのフィールドは必須です。",
     "trustly.descriptor": "即時銀行支払",
     "trustly.description1": "ご利用の銀行口座から直接お支払い可能（銀行レベルのセキュリティで保護されています）",
-    "trustly.description2": "カードなし、アプリのダウンロードなし、登録なし"
+    "trustly.description2": "カードなし、アプリのダウンロードなし、登録なし",
+    "ancv.input.label": "ANCV ID",
+    "ancv.confirmPayment": "ANCVアプリケーションを使用して、支払を確認してください。",
+    "ancv.form.instruction": "この支払を検証するには、Cheque-Vacancesアプリケーションが必要です。",
+    "ancv.beneficiaryId.invalid": "有効なメールアドレスまたはANCV IDを入力してください"
 }

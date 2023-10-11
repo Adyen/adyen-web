@@ -66,7 +66,7 @@
     "dateOfBirth": "Date of birth",
     "shopperEmail": "Email address",
     "gender": "Gender",
-    "gender.notselected": "Select a gender",
+    "gender.notselected": "Select your gender",
     "male": "Male",
     "female": "Female",
     "billingAddress": "Billing address",
@@ -160,7 +160,7 @@
     "mbway.confirmPayment": "Confirm your payment on the MB WAY app",
     "shopperEmail.invalid": "Invalid email address",
     "dateOfBirth.format": "DD/MM/YYYY",
-    "dateOfBirth.invalid": "You must be at least 18 years old",
+    "dateOfBirth.invalid": "Enter a valid date of birth that indicates you are at least 18 years old",
     "blik.confirmPayment": "Open your banking app to confirm the payment.",
     "blik.invalid": "Enter 6 numbers",
     "blik.code": "6-digit code",
@@ -294,5 +294,9 @@
     "form.instruction": "All fields are required unless marked otherwise.",
     "trustly.descriptor": "Instant Bank Payment",
     "trustly.description1": "Pay directly from any of your bank accounts, backed by bank-level security",
-    "trustly.description2": "No cards, no app download, no registration"
+    "trustly.description2": "No cards, no app download, no registration",
+    "ancv.input.label": "Your ANCV identification",
+    "ancv.confirmPayment": "Use your ANCV application to confirm the payment.",
+    "ancv.form.instruction": "The Cheque-Vacances application is necessary to validate this payment.",
+    "ancv.beneficiaryId.invalid": "Enter a valid email address or ANCV ID"
 }

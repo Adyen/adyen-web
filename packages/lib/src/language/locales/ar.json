@@ -66,7 +66,7 @@
     "dateOfBirth": "تاريخ الميلاد",
     "shopperEmail": "عنوان البريد الإلكتروني",
     "gender": "النوع",
-    "gender.notselected": "تحديد نوع",
+    "gender.notselected": "حدد نوعك",
     "male": "ذكر",
     "female": "أنثى",
     "billingAddress": "عنوان الفواتير",
@@ -159,7 +159,7 @@
     "mbway.confirmPayment": "تأكيد الدفع على تطبيق MB WAY",
     "shopperEmail.invalid": "عنوان بريد إلكتروني غير صحيح",
     "dateOfBirth.format": "يوم/شهر/سنة",
-    "dateOfBirth.invalid": "يجب ألا يقل عمرك عن 18 عامًا",
+    "dateOfBirth.invalid": "أدخل تاريخ ميلاد صحيح يشير إلى أن عمرك لا يقل عن 18 عامًا",
     "blik.confirmPayment": "افتح تطبيقك البنكي لتأكيد الدفع.",
     "blik.invalid": "أدخل 6 أرقام",
     "blik.code": "رمز مكون من 6 أرقام",
@@ -293,5 +293,9 @@
     "form.instruction": "جميع الحقول مطلوبة ما لم يتم وضع علامة خلاف ذلك.",
     "trustly.descriptor": "الدفع المصرفي الفوري",
     "trustly.description1": "ادفع مباشرة من أي من حساباتك المصرفية، مدعومًا بأمان على مستوى البنك",
-    "trustly.description2": "لا توجد حاجة للبطاقات أو تحميل التطبيقات أو التسجيل"
+    "trustly.description2": "لا توجد حاجة للبطاقات أو تحميل التطبيقات أو التسجيل",
+    "ancv.input.label": "تعريف ANCV الخاص بك",
+    "ancv.confirmPayment": "استخدم تطبيق ANCV الخاص بك لتأكيد الدفع.",
+    "ancv.form.instruction": "يعد تطبيق Cheque-Vacances ضروريًا للمصادقة على هذه المدفوعات.",
+    "ancv.beneficiaryId.invalid": "أدخل عنوان بريد إلكتروني صحيحًا أو معرف ANCV"
 }

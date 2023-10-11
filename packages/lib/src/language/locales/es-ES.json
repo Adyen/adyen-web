@@ -64,7 +64,7 @@
     "dateOfBirth": "Fecha de nacimiento",
     "shopperEmail": "Dirección de correo electrónico",
     "gender": "Género",
-    "gender.notselected": "Seleccione un género",
+    "gender.notselected": "Seleccione su género",
     "male": "Masculino",
     "female": "Femenino",
     "billingAddress": "Dirección de facturación",
@@ -156,7 +156,7 @@
     "mbway.confirmPayment": "Confirme su pago en la aplicación MB WAY",
     "shopperEmail.invalid": "La dirección de correo electrónico no es válida",
     "dateOfBirth.format": "DD/MM/AAAA",
-    "dateOfBirth.invalid": "Debe ser mayor de 18 años",
+    "dateOfBirth.invalid": "Introduzca una fecha de nacimiento válida que indique que tiene al menos 18 años",
     "blik.confirmPayment": "Abra la aplicación de su banco para confirmar el pago.",
     "blik.invalid": "Introduzca 6 dígitos",
     "blik.code": "Código de 6 dígitos",
@@ -285,7 +285,8 @@
     "companyDetails.registrationNumber.invalid": "Introduzca el número de registro",
     "consent.checkbox.invalid": "Debe aceptar los términos y condiciones",
     "form.instruction": "Todos los campos son obligatorios a menos que se indique lo contrario.",
-    "trustly.descriptor": "Pago bancario instantáneo",
-    "trustly.description1": "Pague directamente desde su cuenta bancaria preferida, respaldado por seguridad a nivel bancario",
-    "trustly.description2": "Sin tarjetas, sin descarga de aplicaciones, sin registro"
+    "ancv.input.label": "Su identificación de la ANCV",
+    "ancv.confirmPayment": "Utilice su solicitud de la ANCV para confirmar el pago.",
+    "ancv.form.instruction": "La aplicación de Cheque-Vacances es necesaria para validar este pago.",
+    "ancv.beneficiaryId.invalid": "Introduzca una dirección de correo electrónico válida o un documento de identidad de la ANCV"
 }

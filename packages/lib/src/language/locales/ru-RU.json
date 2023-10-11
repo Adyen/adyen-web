@@ -66,7 +66,7 @@
     "dateOfBirth": "Дата рождения",
     "shopperEmail": "Адрес эл. почты",
     "gender": "Пол",
-    "gender.notselected": "Выберите пол",
+    "gender.notselected": "Укажите свой пол",
     "male": "Мужчина",
     "female": "Женщина",
     "billingAddress": "Платежный адрес",
@@ -158,7 +158,7 @@
     "mbway.confirmPayment": "Подтвердите оплату в приложении MB WAY",
     "shopperEmail.invalid": "Недействительный адрес эл. почты",
     "dateOfBirth.format": "ДД/ММ/ГГГГ",
-    "dateOfBirth.invalid": "Вам должно быть 18 лет или больше",
+    "dateOfBirth.invalid": "Введите правильную дату рождения. Вам должно быть не менее 18 лет.",
     "blik.confirmPayment": "Для подтверждения оплаты откройте приложение банка.",
     "blik.invalid": "Введите 6 цифр",
     "blik.code": "6-значный код",
@@ -289,5 +289,9 @@
     "form.instruction": "Все поля обязательны для заполнения, если не указано иное.",
     "trustly.descriptor": "Мгновенный банковский платеж",
     "trustly.description1": "Платите непосредственно со своего банковского счета под такой же надежной защитой, как в банках",
-    "trustly.description2": "Без карт, загрузки приложений и регистрации"
+    "trustly.description2": "Без карт, загрузки приложений и регистрации",
+    "ancv.input.label": "Ваш идентификатор ANCV",
+    "ancv.confirmPayment": "Используйте приложение ANCV для подтверждения платежа.",
+    "ancv.form.instruction": "Для подтверждения этого платежа необходимо приложение Cheque-Vacances.",
+    "ancv.beneficiaryId.invalid": "Введите действительный адрес электронной почты или идентификатор ANCV"
 }

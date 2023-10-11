@@ -66,7 +66,7 @@
     "dateOfBirth": "Data nașterii",
     "shopperEmail": "Adresă de e-mail",
     "gender": "Gen",
-    "gender.notselected": "Selectați un gen",
+    "gender.notselected": "Selectați sexul dvs.",
     "male": "Bărbat",
     "female": "Femeie",
     "billingAddress": "Adresa de facturare",
@@ -159,7 +159,7 @@
     "mbway.confirmPayment": "Confirmați plata în aplicația MB WAY",
     "shopperEmail.invalid": "Adresă de e-mail incorectă",
     "dateOfBirth.format": "ZZ/LL/AAAA",
-    "dateOfBirth.invalid": "Trebuie să aveți minimum 18 ani",
+    "dateOfBirth.invalid": "Completați o dată de naștere valabilă care să indice că aveți cel puțin 18 ani.",
     "blik.confirmPayment": "Deschideți aplicația dvs. de banking pentru a confirma plata.",
     "blik.invalid": "Introduceți 6 cifre",
     "blik.code": "Cod din 6 cifre",
@@ -292,5 +292,9 @@
     "form.instruction": "Toate câmpurile sunt obligatorii, numai dacă nu este marcat altfel.",
     "trustly.descriptor": "Plată bancară instantanee",
     "trustly.description1": "Plătiți direct din oricare dintre conturile dvs. bancare, cu sprijinul unei securități de nivel bancar",
-    "trustly.description2": "Fără carduri, fără descărcări de aplicații, fără înregistrare"
+    "trustly.description2": "Fără carduri, fără descărcări de aplicații, fără înregistrare",
+    "ancv.input.label": "Identificarea dvs. ANCV",
+    "ancv.confirmPayment": "Utilizați aplicația ANCV pentru a confirma plata.",
+    "ancv.form.instruction": "Aplicația Cheque-Vacances este necesară pentru a valida această plată.",
+    "ancv.beneficiaryId.invalid": "Completați o adresă de e-mail sau un ID ANCV valabil"
 }
