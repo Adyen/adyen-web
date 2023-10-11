@@ -66,7 +66,7 @@
     "dateOfBirth": "Születési dátum",
     "shopperEmail": "E-mail-cím",
     "gender": "Nem",
-    "gender.notselected": "Válasszon nemet",
+    "gender.notselected": "Válassza ki a nemét",
     "male": "Férfi",
     "female": "Nő",
     "billingAddress": "Számlázási cím",
@@ -159,7 +159,7 @@
     "mbway.confirmPayment": "Fizetés jóváhagyása az MB WAY alkalmazásban",
     "shopperEmail.invalid": "Érvénytelen e-mail-cím",
     "dateOfBirth.format": "NN/HH/ÉÉÉÉ",
-    "dateOfBirth.invalid": "Legalább 18 évesnek kell lennie",
+    "dateOfBirth.invalid": "Adjon meg egy érvényes születési dátumot, amelyből kiderül, hogy elmúlt 18 éves",
     "blik.confirmPayment": "A fizetés jóváhagyásához nyissa meg a banki alkalmazást.",
     "blik.invalid": "Adjon meg 6 számjegyet",
     "blik.code": "6 számjegyű kód",
@@ -292,5 +292,9 @@
     "form.instruction": "Minden mező kitöltése kötelező, hacsak nincs másképp jelölve.",
     "trustly.descriptor": "Azonnali banki fizetés",
     "trustly.description1": "Fizessen közvetlenül bármelyik bankszámlájáról, banki szintű biztonság mellett",
-    "trustly.description2": "Nincs szükség kártyára, alkalmazás letöltésére és regisztrációra"
+    "trustly.description2": "Nincs szükség kártyára, alkalmazás letöltésére és regisztrációra",
+    "ancv.input.label": "Az Ön ANCV-azonosítója",
+    "ancv.confirmPayment": "A fizetés megerősítéséhez használja az ANCV alkalmazást.",
+    "ancv.form.instruction": "A fizetés érvényesítéséhez a Cheque-Vacances alkalmazás szükséges.",
+    "ancv.beneficiaryId.invalid": "Adjon meg egy érvényes e-mail-címet vagy ANCV-azonosítót"
 }

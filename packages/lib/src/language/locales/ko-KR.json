@@ -159,7 +159,7 @@
     "mbway.confirmPayment": "MB WAY 앱에서 결제를 확인하십시오",
     "shopperEmail.invalid": "유효하지 않은 이메일 주소",
     "dateOfBirth.format": "DD(일)/MM(월)/YYYY(연도)",
-    "dateOfBirth.invalid": "최소 18세 이상이어야 합니다",
+    "dateOfBirth.invalid": "만 18세 이상임을 나타내는 유효한 생년월일을 입력합니다.",
     "blik.confirmPayment": "뱅킹 앱을 열어서 결제를 확인하세요.",
     "blik.invalid": "6자리 숫자 입력",
     "blik.code": "6자리 코드",
@@ -292,5 +292,9 @@
     "form.instruction": "별도로 표시되어 있지 않는 한 모든 필드는 필수입니다.",
     "trustly.descriptor": "즉시 은행 결제",
     "trustly.description1": "은행 수준의 보안이 지원되는 은행 계좌에서 직접 결제하세요.",
-    "trustly.description2": "카드, 앱 다운로드, 등록 필요 없음"
+    "trustly.description2": "카드, 앱 다운로드, 등록 필요 없음",
+    "ancv.input.label": "나의 ANCV ID",
+    "ancv.confirmPayment": "ANCV 애플리케이션을 사용해 결제를 확인하세요.",
+    "ancv.form.instruction": "이 결제를 인증하려면 Cheque-Vacances 애플리케이션이 필요합니다.",
+    "ancv.beneficiaryId.invalid": "유효한 이메일 주소나 ANCV ID를 입력하세요."
 }

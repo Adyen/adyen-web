@@ -66,7 +66,7 @@
     "dateOfBirth": "出生日期",
     "shopperEmail": "電子郵件地址",
     "gender": "性別",
-    "gender.notselected": "選取性別",
+    "gender.notselected": "選擇您的性別",
     "male": "男",
     "female": "女",
     "billingAddress": "帳單地址",
@@ -159,7 +159,7 @@
     "mbway.confirmPayment": "在 MB WAY 應用程式上確認您的付款",
     "shopperEmail.invalid": "電子郵件地址無效",
     "dateOfBirth.format": "日／月／年",
-    "dateOfBirth.invalid": "您必須年滿 18 歲",
+    "dateOfBirth.invalid": "輸入表明您至少年滿 18 歲的有效出生日期",
     "blik.confirmPayment": "開啟您的銀行應用程式以確認付款。",
     "blik.invalid": "輸入 6 個數字",
     "blik.code": "6 位數代碼",
@@ -292,5 +292,9 @@
     "form.instruction": "除非另有標示，否則必須填寫所有欄位。",
     "trustly.descriptor": "即時銀行付款",
     "trustly.description1": "直接從任何銀行帳戶付款，並獲得銀行級別安全保障",
-    "trustly.description2": "無需卡，無需下載應用程式，無需註冊"
+    "trustly.description2": "無需卡，無需下載應用程式，無需註冊",
+    "ancv.input.label": "您的 ANCV 身分識別",
+    "ancv.confirmPayment": "使用您的 ANCV 應用程式確認付款。",
+    "ancv.form.instruction": "必須申請 Cheque-Vacances 才能驗證此付款。",
+    "ancv.beneficiaryId.invalid": "輸入有效的電子郵件地址或 ANCV ID"
 }
