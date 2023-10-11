@@ -1,5 +1,19 @@
 # @adyen/adyen-web
 
+## 5.52.0
+
+### Minor Changes
+
+-   adds support for ANCV payment method ([#2293](https://github.com/Adyen/adyen-web/pull/2293))
+
+### Patch Changes
+
+-   fix: remove inline style applied to iframe ([#2343](https://github.com/Adyen/adyen-web/pull/2343))
+
+-   fix: Clear timeouts on SecuredFieldsProvider when unmounting the component ([#2334](https://github.com/Adyen/adyen-web/pull/2334))
+
+-   fix(personalDetails): classNameModifiers for dateOfBirth ([#2344](https://github.com/Adyen/adyen-web/pull/2344))
+
 ## 5.51.0
 
 ### Minor Changes
