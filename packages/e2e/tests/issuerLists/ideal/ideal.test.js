@@ -14,13 +14,14 @@ test('should make an iDeal payment', async t => {
         .expect(Selector('.adyen-checkout__dropdown__list').hasClass('adyen-checkout__dropdown__list--active'))
         .ok();
 
-    await t.click(Selector('.adyen-checkout__dropdown__list').child(0));
+    await t.click(Selector('.adyen-checkout__dropdown__list').child(1));
 
     const stateData = await getComponentData();
 
     await t.expect(stateData.paymentMethod).eql({
         type: 'ideal',
-        issuer: '1121'
+        issuer: '1121',
+        checkoutAttemptId: 'do-not-track'
     });
 
     await t.expect(stateData.clientStateDataIndicator).eql(true);
@@ -35,7 +36,8 @@ test('should make an iDeal payment using a highlighted issuer', async t => {
 
     await t.expect(stateData.paymentMethod).eql({
         type: 'ideal',
-        issuer: '1121'
+        issuer: '1121',
+        checkoutAttemptId: 'do-not-track'
     });
 
     await t.expect(stateData.clientStateDataIndicator).eql(true);
