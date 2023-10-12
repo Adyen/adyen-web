@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { MutableRef, useCallback, useEffect, useRef } from 'preact/hooks';
+import { useCallback } from 'preact/hooks';
 import classNames from 'classnames';
 import { ARIA_ERROR_SUFFIX } from '../../../core/Errors/constants';
 import Language from '../../../language';
@@ -17,26 +17,19 @@ export interface InputBaseProps extends h.JSX.HTMLAttributes {
     value?: string;
     name?: string;
     checked?: boolean;
-    setRef?: (ref: MutableRef<EventTarget>) => void;
+    setRef?: (ref: any) => void;
     trimOnBlur?: boolean;
     i18n?: Language;
     label?: string;
     onBlurHandler?: h.JSX.GenericEventHandler<HTMLInputElement>;
     onFocusHandler?: h.JSX.GenericEventHandler<HTMLInputElement>;
     maxlength?: number | null;
-    onSendRef?: MutableRef<HTMLInputElement>;
+    addContextualElement?: boolean;
 }
 
-export default function InputBase({ onSendRef, ...props }: InputBaseProps) {
+export default function InputBase({ setRef, ...props }: InputBaseProps) {
     const { autoCorrect, classNameModifiers, isInvalid, isValid, readonly = null, spellCheck, type, uniqueId, disabled } = props;
     const className = props.className as string;
-    const inputRef = useRef<HTMLInputElement>(null);
-
-    useEffect(() => {
-        if (onSendRef) {
-            onSendRef.current = inputRef.current;
-        }
-    }, [inputRef.current, onSendRef]);
 
     /**
      * To avoid confusion with misplaced/misdirected onChange handlers - InputBase only accepts onInput, onBlur & onFocus handlers.
@@ -99,7 +92,7 @@ export default function InputBase({ onSendRef, ...props }: InputBaseProps) {
     );
 
     // Don't spread classNameModifiers etc to input element (it ends up as an attribute on the element itself)
-    const { classNameModifiers: cnm, uniqueId: uid, isInvalid: iiv, isValid: iv, ...newProps } = props;
+    const { classNameModifiers: cnm, uniqueId: uid, isInvalid: iiv, isValid: iv, addContextualElement: ace, ...newProps } = props;
 
     return (
         <input
@@ -119,7 +112,7 @@ export default function InputBase({ onSendRef, ...props }: InputBaseProps) {
             onKeyUp={handleKeyUp}
             onKeyPress={handleKeyPress}
             disabled={disabled}
-            ref={inputRef}
+            ref={setRef}
         />
     );
 }

@@ -126,7 +126,9 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
                 onBlur={handleChangeFor('otp', 'blur')}
                 onKeyUp={handleOnKeyUp}
                 onKeyPress={handleOnKeyPress}
-                onSendRef={inputRef}
+                setRef={ref => {
+                    inputRef.current = ref;
+                }}
             />
         </Field>
     );
