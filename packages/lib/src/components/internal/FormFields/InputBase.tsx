@@ -21,20 +21,22 @@ export interface InputBaseProps extends h.JSX.HTMLAttributes {
     trimOnBlur?: boolean;
     i18n?: Language;
     label?: string;
-    onCreateRef?(reference: HTMLInputElement): void;
     onBlurHandler?: h.JSX.GenericEventHandler<HTMLInputElement>;
     onFocusHandler?: h.JSX.GenericEventHandler<HTMLInputElement>;
     maxlength?: number | null;
+    onSendRef?: MutableRef<HTMLInputElement>;
 }
 
-export default function InputBase({ onCreateRef, ...props }: InputBaseProps) {
+export default function InputBase({ onSendRef, ...props }: InputBaseProps) {
     const { autoCorrect, classNameModifiers, isInvalid, isValid, readonly = null, spellCheck, type, uniqueId, disabled } = props;
     const className = props.className as string;
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        onCreateRef?.(inputRef.current);
-    }, [inputRef.current, onCreateRef]);
+        if (onSendRef) {
+            onSendRef.current = inputRef.current;
+        }
+    }, [inputRef.current, onSendRef]);
 
     /**
      * To avoid confusion with misplaced/misdirected onChange handlers - InputBase only accepts onInput, onBlur & onFocus handlers.

@@ -43,7 +43,7 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
         rules: otpValidationRules
     });
     const otpInputHandlersRef = useRef<CtPOneTimePasswordInputHandlers>({ validateInput: null });
-    const [inputRef, setInputRef] = useState<HTMLInputElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
     const [isOtpFielDirty, setIsOtpFieldDirty] = useState<boolean>(false);
 
     const validateInput = useCallback(() => {
@@ -59,10 +59,10 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
     }, [data.otp]);
 
     useEffect(() => {
-        if (!disableOtpAutoFocus && inputRef) {
-            inputRef.focus();
+        if (!disableOtpAutoFocus && inputRef.current) {
+            inputRef.current.focus();
         }
-    }, [inputRef, disableOtpAutoFocus]);
+    }, [inputRef.current, disableOtpAutoFocus]);
 
     useEffect(() => {
         otpInputHandlersRef.current.validateInput = validateInput;
@@ -73,10 +73,10 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
         setData('otp', '');
         setResendOtpError(null);
         if (!disableOtpAutoFocus) {
-            inputRef.focus();
+            inputRef.current.focus();
         }
         props.onResendCode();
-    }, [props.onResendCode, inputRef, disableOtpAutoFocus]);
+    }, [props.onResendCode, inputRef.current, disableOtpAutoFocus]);
 
     const handleOnResendOtpError = useCallback(
         (errorCode: string) => {
@@ -126,7 +126,7 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
                 onBlur={handleChangeFor('otp', 'blur')}
                 onKeyUp={handleOnKeyUp}
                 onKeyPress={handleOnKeyPress}
-                onCreateRef={setInputRef}
+                onSendRef={inputRef}
             />
         </Field>
     );
