@@ -195,6 +195,7 @@ const componentsMap = {
 
     /** Klarna */
     klarna: Klarna,
+    klarna_b2b: Klarna,
     klarna_account: Klarna,
     klarna_paynow: Klarna,
     /** Klarna */
