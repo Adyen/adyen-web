@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, RefCallback } from 'preact';
 import { useCallback } from 'preact/hooks';
 import classNames from 'classnames';
 import { ARIA_ERROR_SUFFIX } from '../../../core/Errors/constants';
@@ -17,7 +17,7 @@ export interface InputBaseProps extends h.JSX.HTMLAttributes {
     value?: string;
     name?: string;
     checked?: boolean;
-    setRef?: (ref: any) => void;
+    setRef: RefCallback<HTMLInputElement>;
     trimOnBlur?: boolean;
     i18n?: Language;
     label?: string;
