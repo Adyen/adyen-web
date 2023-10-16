@@ -1,7 +1,7 @@
 import { Selector, ClientFunction } from 'testcafe';
 import { ISSUERLISTS_URL } from '../../pages';
 
-fixture.only`Testing iDeal (IssuerLists)`.page(`${ISSUERLISTS_URL}?countryCode=NL`);
+fixture`Testing iDeal (IssuerLists)`.page(`${ISSUERLISTS_URL}?countryCode=NL`);
 
 const getComponentData = ClientFunction(() => {
     return window.ideal.data;
