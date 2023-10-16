@@ -67,6 +67,7 @@ const actionTypes = {
             _parentInstance: props._parentInstance,
             paymentMethodType: props.paymentMethodType,
             challengeWindowSize: props.challengeWindowSize, // always pass challengeWindowSize in case it's been set directly in the handleAction config object
+            notificationURL: props.notificationURL,
 
             // Props unique to a particular flow
             ...get3DS2FlowProps(action.subtype, props)
