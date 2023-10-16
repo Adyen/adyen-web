@@ -17,7 +17,7 @@ export interface InputBaseProps extends h.JSX.HTMLAttributes {
     value?: string;
     name?: string;
     checked?: boolean;
-    setRef: RefCallback<HTMLInputElement>;
+    setRef?: RefCallback<HTMLInputElement>;
     trimOnBlur?: boolean;
     i18n?: Language;
     label?: string;
