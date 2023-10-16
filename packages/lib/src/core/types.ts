@@ -3,7 +3,7 @@ import { PaymentMethods, PaymentMethodOptions, PaymentActionsType, PaymentAmount
 import { AnalyticsOptions } from './Analytics/types';
 import { PaymentMethodsResponse } from './ProcessResponse/PaymentMethodsResponse/types';
 import { RiskModuleOptions } from './RiskModule/RiskModule';
-import { ActionHandledReturnObject, OnPaymentCompletedData, PaymentData } from '../components/types';
+import { ActionHandledReturnObject, OnPaymentCompletedData, PaymentData, UIElementProps } from '../components/types';
 import UIElement from '../components/UIElement';
 import AdyenCheckoutError from './Errors/AdyenCheckoutError';
 import { GiftCardElementData } from '../components/Giftcard/types';
@@ -172,4 +172,7 @@ export type PaymentMethodsConfiguration =
       }
     | {
           [key in PaymentActionsType]?: any;
+      }
+    | {
+          [key: string]: UIElementProps;
       };
