@@ -191,6 +191,17 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
             >
                 {brandLogo && <img src={brandLogo} alt={brandName} className="adyen-checkout__qr-loader__brand-logo" />}
 
+                {amount && amount.value && amount.currency && (
+                    <div className="adyen-checkout__qr-loader__payment_amount">{i18n.amount(amount.value, amount.currency)}</div>
+                )}
+
+                {url && (
+                    <div className="adyen-checkout__qr-loader__app-link">
+                        <Button classNameModifiers={['qr-loader']} onClick={() => this.redirectToApp(url)} label={i18n.get('openApp')} />
+                        <ContentSeparator />
+                    </div>
+                )}
+
                 {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
                 <div ref={qrSubtitleRef} tabIndex={0} className="adyen-checkout__qr-loader__subtitle">
                     {i18n.get(this.props.introduction)}
@@ -203,10 +214,6 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                         onActionHandled({ componentType: this.props.type, actionDescription: 'qr-code-loaded' });
                     }}
                 />
-
-                {amount && amount.value && amount.currency && (
-                    <div className="adyen-checkout__qr-loader__payment_amount">{i18n.amount(amount.value, amount.currency)}</div>
-                )}
 
                 <div className="adyen-checkout__qr-loader__progress">
                     <span className="adyen-checkout__qr-loader__percentage" style={{ width: `${this.state.percentage}%` }} />
@@ -232,12 +239,6 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                             icon={getImage({ imageFolder: 'components/' })('copy')}
                             label={i18n.get('button.copy')}
                         />
-                    </div>
-                )}
-                {url && (
-                    <div className="adyen-checkout__qr-loader__app-link">
-                        <ContentSeparator />
-                        <Button classNameModifiers={['qr-loader']} onClick={() => this.redirectToApp(url)} label={i18n.get('openApp')} />
                     </div>
                 )}
             </div>
