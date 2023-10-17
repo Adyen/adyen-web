@@ -44,7 +44,7 @@ export default function KCPAuthentication(props: KCPProps) {
             </Field>
 
             <Field
-                label={i18n.get('creditCard.encryptedPassword.label')}
+                label={i18n.get('creditCard.password.label')}
                 focused={props.focusedElement === 'encryptedPassword'}
                 filled={props.filled}
                 classNameModifiers={['50', 'koreanAuthentication-encryptedPassword']}

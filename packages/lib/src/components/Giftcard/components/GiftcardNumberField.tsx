@@ -8,7 +8,7 @@ import { alternativeLabelContent } from '../../Card/components/CardInput/compone
 export const GiftcardNumberField = ({ i18n, classNameModifiers, sfpState, getCardErrorMessage, focusedElement, setFocusOn }: GiftcardFieldProps) => {
     return (
         <Field
-            label={i18n.get('creditCard.cardNumber.label')}
+            label={i18n.get('giftcard.cardNumber.label')}
             classNameModifiers={['number', ...classNameModifiers]}
             errorMessage={getCardErrorMessage(sfpState)}
             focused={focusedElement === 'encryptedCardNumber'}

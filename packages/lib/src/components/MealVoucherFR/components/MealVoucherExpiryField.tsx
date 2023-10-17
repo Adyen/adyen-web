@@ -8,7 +8,7 @@ import { alternativeLabelContent } from '../../Card/components/CardInput/compone
 export const MealVoucherExpiryField = ({ i18n, sfpState, focusedElement, setFocusOn }: GiftcardFieldProps) => {
     return (
         <Field
-            label={i18n.get('creditCard.expiryDate.label')}
+            label={i18n.get('giftcard.expiryDate.label')}
             classNameModifiers={['expireDate', '50']}
             errorMessage={sfpState.errors.encryptedExpiryDate && i18n.get(sfpState.errors.encryptedExpiryDate)}
             focused={focusedElement === 'encryptedExpiryDate'}
