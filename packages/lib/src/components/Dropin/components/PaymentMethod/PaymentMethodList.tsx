@@ -34,18 +34,28 @@ const PaymentMethodList = ({
 }: PaymentMethodListProps) => {
     const { i18n } = useCoreContext();
     const brandLogoConfiguration = useBrandLogoConfiguration(paymentMethods);
+  const hasInstantPaymentMethods = instantPaymentMethods.length > 0;
+  const hasStoredPaymentMethods = storedPaymentMethods.length > 0;
+  const pmListLabel = hasInstantPaymentMethods || hasStoredPaymentMethods ? i18n.get('paymentMethodsList.otherPayments.label') : '';
 
-    useEffect(() => {
+
+  useEffect(() => {
         // Open first PaymentMethodItem
-        if (paymentMethods[0]) {
-            const firstPaymentMethod = paymentMethods[0];
-            const shouldOpenFirstStored = openFirstStoredPaymentMethod && getProp(firstPaymentMethod, 'props.oneClick') === true;
-            const shouldOpenFirstPaymentMethod = shouldOpenFirstStored || openFirstPaymentMethod;
+      const firstStoredPayment = storedPaymentMethods[0];
+      const firstNonStoredPayment = paymentMethods[0];
 
-            if (shouldOpenFirstPaymentMethod) {
-                onSelect(firstPaymentMethod);
-            }
+      if (firstStoredPayment || firstNonStoredPayment) {
+        const shouldOpenFirstStored = openFirstStoredPaymentMethod && getProp(firstStoredPayment, 'props.oneClick') === true;
+        if (shouldOpenFirstStored) {
+          onSelect(firstStoredPayment);
+          return;
         }
+
+        if (openFirstPaymentMethod) {
+          onSelect(firstNonStoredPayment);
+        }
+      }
+      
     }, []);
 
     return (
@@ -59,9 +69,9 @@ const PaymentMethodList = ({
                 />
             )}
 
-            {!!instantPaymentMethods.length && <InstantPaymentMethods paymentMethods={instantPaymentMethods} />}
+            {hasInstantPaymentMethods && <InstantPaymentMethods paymentMethods={instantPaymentMethods} />}
 
-          {!!storedPaymentMethods.length && (
+          {hasStoredPaymentMethods && (
             <PaymentMethodsContainer
               {...rest}
               label={i18n.get('paymentMethodsList.storedPayments.label')}
@@ -73,7 +83,7 @@ const PaymentMethodList = ({
           {!!paymentMethods.length && (
             <PaymentMethodsContainer
               {...rest}
-              label={i18n.get('paymentMethodsList.otherPayments.label')}
+              label={pmListLabel}
               classNameModifiers={['otherPayments']}
               paymentMethods={paymentMethods}
             ></PaymentMethodsContainer>

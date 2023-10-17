@@ -44,9 +44,11 @@ function PaymentMethodsContainer({
 
     return (
         <div className="adyen-checkout-payment-methods-container">
-            <label htmlFor={selectListId} className="adyen-checkout-payment-methods-list-label">
-                {label}
-            </label>
+            {!!label.length && (
+                <label htmlFor={selectListId} className="adyen-checkout-payment-methods-list-label">
+                    {label}
+                </label>
+            )}
             <ul
                 id={selectListId}
                 className={paymentMethodListClassnames}
