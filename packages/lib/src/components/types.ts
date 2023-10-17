@@ -238,7 +238,7 @@ export type PaymentMethodsConfiguration =
           [key in PaymentActionsType]?: any;
       }
     | {
-          [key: string]: any;
+          [key: string]: UIElementProps;
       };
 
 export interface PaymentMethodData {

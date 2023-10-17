@@ -288,5 +288,9 @@
     "form.instruction": "Minden mező kitöltése kötelező, hacsak nincs másképp jelölve.",
     "trustly.descriptor": "Azonnali banki fizetés",
     "trustly.description1": "Fizessen közvetlenül bármelyik bankszámlájáról, banki szintű biztonság mellett",
-    "trustly.description2": "Nincs szükség kártyára, alkalmazás letöltésére és regisztrációra"
+    "trustly.description2": "Nincs szükség kártyára, alkalmazás letöltésére és regisztrációra",
+    "ancv.input.label": "Az Ön ANCV-azonosítója",
+    "ancv.confirmPayment": "A fizetés megerősítéséhez használja az ANCV alkalmazást.",
+    "ancv.form.instruction": "A fizetés érvényesítéséhez a Cheque-Vacances alkalmazás szükséges.",
+    "ancv.beneficiaryId.invalid": "Adjon meg egy érvényes e-mail-címet vagy ANCV-azonosítót"
 }

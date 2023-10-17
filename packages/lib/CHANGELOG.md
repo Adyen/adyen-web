@@ -1,5 +1,35 @@
 # @adyen/adyen-web
 
+## 5.53.0
+
+### Minor Changes
+
+-   Add `klarna_b2b` tx variant so that Billie (klarna_b2b) is supported. ([#2355](https://github.com/Adyen/adyen-web/pull/2355))
+
+### Patch Changes
+
+-   Fixes an issue with CtPOneTimePassword getting updates to the input element reference it relies upon ([#2353](https://github.com/Adyen/adyen-web/pull/2353))
+
+-   Improvements: add `authorization_token` in the Klarna widget AdditionalDetails state data, so that we are aligned with the API specs. ([#2358](https://github.com/Adyen/adyen-web/pull/2358))
+
+-   Fix Typescript definition for paymentMethodsConfiguration, allowing usage of Tx variants that are not defined in the codebase ([#2349](https://github.com/Adyen/adyen-web/pull/2349))
+
+-   Populate data with initial values (empty strings) for 'ibanNumber' and 'ownerName' ([#2354](https://github.com/Adyen/adyen-web/pull/2354))
+
+## 5.52.0
+
+### Minor Changes
+
+-   adds support for ANCV payment method ([#2293](https://github.com/Adyen/adyen-web/pull/2293))
+
+### Patch Changes
+
+-   fix: remove inline style applied to iframe ([#2343](https://github.com/Adyen/adyen-web/pull/2343))
+
+-   fix: Clear timeouts on SecuredFieldsProvider when unmounting the component ([#2334](https://github.com/Adyen/adyen-web/pull/2334))
+
+-   fix(personalDetails): classNameModifiers for dateOfBirth ([#2344](https://github.com/Adyen/adyen-web/pull/2344))
+
 ## 5.51.0
 
 ### Minor Changes

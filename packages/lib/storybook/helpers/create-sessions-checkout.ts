@@ -22,7 +22,10 @@ async function createSessionsCheckout({ showPayButton, countryCode, shopperLocal
 
     const checkout = await AdyenCheckout({
         clientKey: process.env.CLIENT_KEY,
-        environment: process.env.CLIENT_ENV,
+        environment: 'beta',
+        environmentUrls: {
+            api: process.env.CLIENT_ENV
+        },
         session,
         showPayButton,
         // @ts-ignore TODO: Fix beforeSubmit type

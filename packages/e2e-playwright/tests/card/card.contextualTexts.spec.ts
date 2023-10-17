@@ -7,7 +7,7 @@ const CVC_CONTEXTUAL_TEXT_3_DIGITS = LANG['creditCard.securityCode.contextualTex
 const CVC_CONTEXTUAL_TEXT_4_DIGITS = LANG['creditCard.securityCode.contextualText.4digits'];
 const CVC_ERROR = LANG['error.va.sf-cc-cvc.01'];
 
-test.describe.skip('Card - Contextual text', () => {
+test.describe('Card - Contextual text', () => {
     test('#1 Should inspect the card inputs and see they have contextual elements set', async ({ cardPage }) => {
         const { card, page } = cardPage;
 

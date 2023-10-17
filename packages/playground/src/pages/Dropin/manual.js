@@ -49,6 +49,15 @@ export async function initManual() {
 
             if (result.action) {
                 component.handleAction(result.action);
+            } else if (result.order && result.order?.remainingAmount?.value > 0) {
+                // handle orders
+                const order = {
+                    orderData: result.order.orderData,
+                    pspReference: result.order.pspReference
+                };
+
+                const orderPaymentMethods = await getPaymentMethods({ order, amount, shopperLocale });
+                checkout.update({ paymentMethodsResponse: orderPaymentMethods, order, amount: result.order.remainingAmount });
             } else {
                 handleFinalState(result.resultCode, component);
             }

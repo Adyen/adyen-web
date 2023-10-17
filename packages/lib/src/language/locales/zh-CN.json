@@ -288,5 +288,9 @@
     "form.instruction": "除非另有标记，否则所有字段均为必填项。",
     "trustly.descriptor": "即时银行付款",
     "trustly.description1": "直接从您的任何银行账户付款，并配备银行级安全保障",
-    "trustly.description2": "无需卡片，无需下载应用，无需注册"
+    "trustly.description2": "无需卡片，无需下载应用，无需注册",
+    "ancv.input.label": "您的 ANCV 身份证明",
+    "ancv.confirmPayment": "使用您的 ANCV 应用以确认付款。",
+    "ancv.form.instruction": "要验证这笔付款，必须使用 Checke-Vacances 应用。",
+    "ancv.beneficiaryId.invalid": "输入有效的电子邮件地址或 ANCV ID"
 }
