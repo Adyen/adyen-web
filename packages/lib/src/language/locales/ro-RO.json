@@ -288,5 +288,9 @@
     "form.instruction": "Toate câmpurile sunt obligatorii, numai dacă nu este marcat altfel.",
     "trustly.descriptor": "Plată bancară instantanee",
     "trustly.description1": "Plătiți direct din oricare dintre conturile dvs. bancare, cu sprijinul unei securități de nivel bancar",
-    "trustly.description2": "Fără carduri, fără descărcări de aplicații, fără înregistrare"
+    "trustly.description2": "Fără carduri, fără descărcări de aplicații, fără înregistrare",
+    "ancv.input.label": "Identificarea dvs. ANCV",
+    "ancv.confirmPayment": "Utilizați aplicația ANCV pentru a confirma plata.",
+    "ancv.form.instruction": "Aplicația Cheque-Vacances este necesară pentru a valida această plată.",
+    "ancv.beneficiaryId.invalid": "Completați o adresă de e-mail sau un ID ANCV valabil"
 }

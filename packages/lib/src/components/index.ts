@@ -60,6 +60,7 @@ import OnlineBankingSKElement from './OnlineBankingSK';
 import PayByBank from './PayByBank';
 import PromptPay from './PromptPay';
 import Duitnow from './DuitNow';
+import ANCV from './ANCV';
 import Trustly from './Trustly';
 
 /**
@@ -194,6 +195,7 @@ const componentsMap = {
 
     /** Klarna */
     klarna: Klarna,
+    klarna_b2b: Klarna,
     klarna_account: Klarna,
     klarna_paynow: Klarna,
     /** Klarna */
@@ -216,6 +218,7 @@ const componentsMap = {
     upi: UPI, // also QR
     upi_qr: UPI, // also QR
     upi_collect: UPI, // also QR
+    ancv: ANCV,
     /** Await */
 
     /** Giftcard */

@@ -1,12 +1,7 @@
-export default function createIframe({
-    src,
-    title = 'iframe element',
-    policy = 'origin',
-    styleStr = 'border: none; height:100%; width:100%; overflow:hidden;'
-}) {
+export default function createIframe({ src, title = 'iframe element', policy = 'origin' }) {
     const iframeEl = document.createElement('iframe');
     iframeEl.setAttribute('src', src);
-    iframeEl.setAttribute('class', 'js-iframe');
+    iframeEl.classList.add('js-iframe');
     // For a11y some merchants want to be able to remove the title element on the iframe - seeing the info it carries as extraneous for the screenreader
     if (title === '' || title.trim().length === 0 || title === 'none') {
         iframeEl.setAttribute('role', 'presentation');
@@ -15,7 +10,6 @@ export default function createIframe({
     }
 
     iframeEl.setAttribute('allowtransparency', 'true');
-    iframeEl.setAttribute('style', styleStr);
     iframeEl.setAttribute('referrerpolicy', policy); // Necessary for ClientKey to work
     // Commenting out stops the "The devicemotion events are blocked by feature policy" warning in Chrome >=66 that some merchant experienced
     // Commenting in stops the same warnings in development (??)

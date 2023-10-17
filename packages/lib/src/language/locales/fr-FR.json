@@ -288,5 +288,9 @@
     "form.instruction": "Tous les champs sont obligatoires, sauf indication contraire.",
     "trustly.descriptor": "Paiement bancaire instantané",
     "trustly.description1": "Payez directement à partir de n'importe lequel de vos comptes bancaires, avec une sécurité de niveau bancaire",
-    "trustly.description2": "Aucune carte, aucun téléchargement d'application, aucune inscription"
+    "trustly.description2": "Aucune carte, aucun téléchargement d'application, aucune inscription",
+    "ancv.input.label": "Votre identification ANCV",
+    "ancv.confirmPayment": "Utilisez votre application ANCV pour confirmer le paiement.",
+    "ancv.form.instruction": "L'application Chèque-Vacances est nécessaire pour valider ce paiement.",
+    "ancv.beneficiaryId.invalid": "Saisissez une adresse e-mail ou un identifiant ANCV valide"
 }
