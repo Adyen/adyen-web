@@ -288,5 +288,9 @@
     "form.instruction": "Alle velden zijn verplicht, tenzij anders aangegeven.",
     "trustly.descriptor": "Directe bankbetaling",
     "trustly.description1": "Rechtstreeks betalen vanaf een van uw bankrekeningen, ondersteund door beveiliging op bankniveau",
-    "trustly.description2": "Geen kaarten, geen app downloaden, geen registratie"
+    "trustly.description2": "Geen kaarten, geen app downloaden, geen registratie",
+    "ancv.input.label": "Uw ANCV-identificatie",
+    "ancv.confirmPayment": "Gebruik uw ANCV-toepassing om de betaling te bevestigen.",
+    "ancv.form.instruction": "De Cheque-Vacances applicatie is nodig om deze betaling te valideren.",
+    "ancv.beneficiaryId.invalid": "Voer een geldig e-mailadres of ANCV-id in"
 }

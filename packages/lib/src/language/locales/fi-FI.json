@@ -288,5 +288,9 @@
     "form.instruction": "Kaikki kentät ovat pakollisia, ellei toisin ole merkitty.",
     "trustly.descriptor": "Välitön pankkimaksu",
     "trustly.description1": "Maksa suoraan miltä tahansa pankkitililtäsi pankkitason suojauksella",
-    "trustly.description2": "Ei kortteja, ei sovellusten lataamista, ei rekisteröintiä"
+    "trustly.description2": "Ei kortteja, ei sovellusten lataamista, ei rekisteröintiä",
+    "ancv.input.label": "ANCV-tunnuksesi",
+    "ancv.confirmPayment": "Vahvista maksusi ANCV-sovelluksella.",
+    "ancv.form.instruction": "Tämän maksun vahvistaminen edellyttää Cheque-Vacances -sovelluksen.",
+    "ancv.beneficiaryId.invalid": "Anna kelvollinen sähköpostiosoite tai ANCV-tunnus"
 }

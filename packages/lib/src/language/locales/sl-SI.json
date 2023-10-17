@@ -288,5 +288,9 @@
     "form.instruction": "Vsa polja so obvezna, razen če ni označeno drugače.",
     "trustly.descriptor": "Takojšnje bančno nakazilo",
     "trustly.description1": "Plačajte neposredno s svojega poljubnega bančnega računa, pri čemer je varnost zagotovljena na ravni banke.",
-    "trustly.description2": "Brez kartic, brez prenosa aplikacije, brez registracije"
+    "trustly.description2": "Brez kartic, brez prenosa aplikacije, brez registracije",
+    "ancv.input.label": "Vaša identifikacija ANCV",
+    "ancv.confirmPayment": "Za potrditev plačila uporabite aplikacijo ANCV.",
+    "ancv.form.instruction": "Za potrditev tega plačila je potrebna aplikacija Cheque-Vacances.",
+    "ancv.beneficiaryId.invalid": "Vnesite veljaven e-poštni naslov ali ANCV ID"
 }

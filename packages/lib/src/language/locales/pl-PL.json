@@ -238,7 +238,7 @@
     "upi.vpaWaitingMessage": "Otwórz aplikację UPI, aby potwierdzić płatność",
     "upi.modeSelection": "Dokonaj wyboru sposobu korzystania z UPI.",
     "onlineBanking.termsAndConditions": "Kontynuując, zgadzasz się z %#Warunkami świadczenia usług%#.",
-    "onlineBankingPL.termsAndConditions": "Kontynuując, akceptujesz %#regulations%# oraz %#information obligation%# firmy Przelewy24",
+    "onlineBankingPL.termsAndConditions": "Kontynuując, akceptujesz %#przepisy%# oraz %#obowiązek informacyjny%# firmy Przelewy24",
     "ctp.loading.poweredByCtp": "Działa w oparciu o usługę Click to Pay",
     "ctp.loading.intro": "Sprawdzamy, czy masz zapisane karty Click to Pay...",
     "ctp.login.title": "Przejdź do Click to Pay",
@@ -288,5 +288,9 @@
     "form.instruction": "Wszystkie pola są wymagane, chyba że zaznaczono inaczej.",
     "trustly.descriptor": "Błyskawiczna płatność bankowa",
     "trustly.description1": "Płać bezpośrednio z dowolnego rachunku bankowego, korzystając z zabezpieczeń na poziomie bankowym",
-    "trustly.description2": "Bez kart, bez pobierania aplikacji, bez rejestracji"
+    "trustly.description2": "Bez kart, bez pobierania aplikacji, bez rejestracji",
+    "ancv.input.label": "Twój identyfikator ANCV",
+    "ancv.confirmPayment": "Użyj aplikacji ANCV, aby potwierdzić płatność.",
+    "ancv.form.instruction": "Do zatwierdzenia tej płatności konieczna jest aplikacja Cheque-Vacances.",
+    "ancv.beneficiaryId.invalid": "Wprowadź poprawny adres e-mail lub identyfikator ANCV"
 }

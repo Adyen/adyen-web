@@ -289,5 +289,9 @@
     "form.instruction": "Todos os campos são obrigatórios, a menos que marcados em contrário.",
     "trustly.descriptor": "Pagamento instantâneo",
     "trustly.description1": "Pague diretamente de qualquer conta, com a segurança do seu banco",
-    "trustly.description2": "Sem cartão, sem download de aplicativo, sem cadastro"
+    "trustly.description2": "Sem cartão, sem download de aplicativo, sem cadastro",
+    "ancv.input.label": "Sua identificação da ANCV",
+    "ancv.confirmPayment": "Use o aplicativo da ANCV para confirmar o pagamento.",
+    "ancv.form.instruction": "É necessário ter o aplicativo da Cheque-Vacances para validar este pagamento.",
+    "ancv.beneficiaryId.invalid": "Insira um endereço de e-mail válido ou uma ID da ANCV"
 }

@@ -288,5 +288,9 @@
     "form.instruction": "Všetky polia sú povinné, ak nie je označené inak.",
     "trustly.descriptor": "Okamžitá banková platba",
     "trustly.description1": "Platba priamo z ktoréhokoľvek bankového účtu so zabezpečením na úrovni banky",
-    "trustly.description2": "Žiadne karty, žiadne sťahovanie aplikácií, žiadna registrácia"
+    "trustly.description2": "Žiadne karty, žiadne sťahovanie aplikácií, žiadna registrácia",
+    "ancv.input.label": "Vaša identifikácia ANCV",
+    "ancv.confirmPayment": "Na potvrdenie platby použite svoju aplikáciu ANCV.",
+    "ancv.form.instruction": "Na potvrdenie tejto platby je potrebná aplikácia Cheque-Vacances.",
+    "ancv.beneficiaryId.invalid": "Zadajte platnú e-mailovú adresu alebo ANCV ID"
 }

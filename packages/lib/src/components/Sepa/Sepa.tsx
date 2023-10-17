@@ -15,6 +15,11 @@ class SepaElement extends UIElement {
         showFormInstruction: true
     };
 
+    constructor(props) {
+        super(props);
+        this.state = { ...this.state, ...{ data: { ibanNumber: '', ownerName: '' } } };
+    }
+
     /**
      * Formats props on construction time
      */

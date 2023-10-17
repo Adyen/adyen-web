@@ -137,6 +137,8 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
 
     public componentWillUnmount(): void {
         this.csf = null;
+        clearTimeout(this.csfLoadFailTimeout);
+        clearTimeout(this.csfConfigFailTimeout);
     }
 
     private initializeCSF(root: HTMLElement): void {

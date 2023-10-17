@@ -80,6 +80,8 @@ test('#2 Click pay with empty fields and error panel in avsCard is populated', a
     // no 9th element
     await t.expect(cardPage.errorPanelEls.nth(8).exists).notOk();
 
+    await t.wait(500);
+
     // Expect focus to be place on Card number field - since SRConfig for this card comp says we should move focus
     await t.expect(cardPage.numLabelWithFocus.exists).ok();
 });

@@ -1,14 +1,12 @@
 import { test as base, expect } from '@playwright/test';
 import { CardPage } from './card.page';
 import { CardAvsPage } from './card.avs.page';
-import { binLookupMock } from '../../mocks/binLookup/binLookup.mock';
-import { optionalDateAndCvcMock } from '../../mocks/binLookup/binLookup.data';
 
 type Fixture = {
     cardPage: CardPage;
     cardAvsPage: CardAvsPage;
-    cardLegacyInputModePage: CardPage;
     cardNoContextualElementPage: CardPage;
+    cardLegacyInputModePage: CardPage;
 };
 
 const test = base.extend<Fixture>({
@@ -30,9 +28,9 @@ const test = base.extend<Fixture>({
         await use(cardAvsPage);
     },
 
-    cardLegacyInputModePage: async ({ page }, use) => {
+    cardNoContextualElementPage: async ({ page }, use) => {
         await page.addInitScript({
-            content: 'window.cardConfig = { legacyInputMode: true}'
+            content: 'window.cardConfig = { showContextualElement: false }'
         });
 
         const cardPage = new CardPage(page);
@@ -40,9 +38,9 @@ const test = base.extend<Fixture>({
         await use(cardPage);
     },
 
-    cardNoContextualElementPage: async ({ page }, use) => {
+    cardLegacyInputModePage: async ({ page }, use) => {
         await page.addInitScript({
-            content: 'window.cardConfig = { showContextualElement: false}'
+            content: 'window.cardConfig = { legacyInputMode: true}'
         });
 
         const cardPage = new CardPage(page);

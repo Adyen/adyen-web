@@ -289,5 +289,9 @@
     "form.instruction": "Alle felter er obligatoriske, medmindre andet er markeret.",
     "trustly.descriptor": "Øjeblikkelig bankbetaling",
     "trustly.description1": "Betal direkte fra alle dine bankkonti med sikkerhed på bankniveau",
-    "trustly.description2": "Ingen kort, ingen appdownload, ingen registrering"
+    "trustly.description2": "Ingen kort, ingen appdownload, ingen registrering",
+    "ancv.input.label": "Din ANCV-identifikation",
+    "ancv.confirmPayment": "Brug din ANCV-applikation til at bekræfte betalingen.",
+    "ancv.form.instruction": "Cheque-Vacances-applikationen er nødvendig for at validere denne betaling.",
+    "ancv.beneficiaryId.invalid": "Indtast en gyldig e-mailadresse eller ANCV-id"
 }

@@ -1,4 +1,4 @@
-import { Component, h, RefObject } from 'preact';
+import { Component, h } from 'preact';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import Field from '../FormFields/Field';
 import { checkIbanStatus, isValidHolder } from './validate';
@@ -46,7 +46,7 @@ const ibanErrorObj: GenericError = {
 };
 
 class IbanInput extends Component<IbanInputProps, IbanInputState> {
-    private ibanNumber: RefObject<any>;
+    private ibanNumber: HTMLInputElement;
 
     constructor(props) {
         super(props);

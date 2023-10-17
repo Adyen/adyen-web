@@ -22,6 +22,7 @@ import { processPlaceholders } from './utils/processPlaceholders';
 import Language from '../../../../../language/Language';
 import { hasOwnProperty } from '../../../../../utils/hasOwnProperty';
 import { Placeholders } from '../../SFP/types';
+import './SecuredField.scss';
 
 const logPostMsg = false;
 const doLog = false;
