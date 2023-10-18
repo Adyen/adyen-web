@@ -1,4 +1,4 @@
-import { AdyenCheckout, Giftcard, MealVoucherFR, Card } from '@adyen/adyen-web';
+import { AdyenCheckout, Giftcard, MealVoucherFR, Card, fr_FR } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { handleChange, handleSubmit } from '../../handlers';
 import { amount, shopperLocale, countryCode, returnUrl, shopperReference } from '../../config/commonConfig';
@@ -64,6 +64,7 @@ import getTranslationFile from '../../config/getTranslation';
         clientKey: process.env.__CLIENT_KEY__,
         session,
         showPayButton: true,
+        translationFile: getTranslationFile(shopperLocale),
 
         // Events
         beforeSubmit: (data, component, actions) => {
