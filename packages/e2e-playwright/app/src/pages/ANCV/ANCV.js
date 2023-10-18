@@ -1,5 +1,5 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
+import { AdyenCheckout, ANCV, Card } from '@adyen/adyen-web';
+import '@adyen/adyen-web/styles/adyen.css';
 import { handleSubmit, handleAdditionalDetails, handleError, handleOrderRequest, showAuthorised } from '../../handlers';
 import { amount, shopperLocale, countryCode } from '../../services/commonConfig';
 import '../../style.scss';
@@ -38,7 +38,7 @@ const initCheckout = async () => {
         onOrderCreated: data => {
             console.log('=== onOrderCreated ===', data);
 
-            window.paymentMethod = checkout.create('card').mount('.ancv-field');
+            window.paymentMethod = new Card({ core: checkout }).mount('.ancv-field');
         },
         onPaymentCompleted: () => {
             showAuthorised();
@@ -52,7 +52,7 @@ const initCheckout = async () => {
         // ...window.mainConfiguration
     });
 
-    window.paymentMethod = checkout.create('ancv').mount('.ancv-field');
+    window.paymentMethod = new ANCV({ core: checkout }).mount('.ancv-field');
 
     document.querySelector('#ancv-pay-button').addEventListener('click', () => {
         window.paymentMethod.submit();

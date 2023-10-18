@@ -1,19 +1,20 @@
-import { Meta, StoryObj } from '@storybook/preact';
-import { PaymentMethodStoryProps } from '../types';
+import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 import { PixProps } from '../../../src/components/Pix/types';
 import { Container } from '../Container';
+import { Pix } from '../../../src';
 
-type PixStory = StoryObj<PaymentMethodStoryProps<PixProps>>;
+type PixStory = StoryConfiguration<PixProps>;
 
-const meta: Meta<PaymentMethodStoryProps<PixProps>> = {
+const meta: MetaConfiguration<PixProps> = {
     title: 'Components/Pix'
 };
-export default meta;
 
-const createComponent = (args, context) => {
+const createComponent = (args: PaymentMethodStoryProps<PixProps>, context) => {
+    const { componentConfiguration } = args;
     const checkout = getStoryContextCheckout(context);
-    return <Container type={'pix'} componentConfiguration={args.componentConfiguration} checkout={checkout} />;
+    const pix = new Pix({ core: checkout, ...componentConfiguration });
+    return <Container element={pix} />;
 };
 
 export const Default: PixStory = {
@@ -27,9 +28,10 @@ export const WithPersonalDetails: PixStory = {
     render: createComponent,
     args: {
         ...Default.args,
-        // @ts-ignore TODO: Make Pix 'introduction' prop optional
         componentConfiguration: {
             personalDetailsRequired: true
         }
     }
 };
+
+export default meta;

@@ -10,14 +10,15 @@ import { preparePaymentRequest } from './payment-request';
 import { resolveSupportedVersion, mapBrands } from './utils';
 import { ApplePayElementProps, ApplePayElementData, ApplePaySessionRequest, OnAuthorizedCallback } from './types';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import { TxVariants } from '../tx-variants';
 
 const latestSupportedVersion = 14;
 
 class ApplePayElement extends UIElement<ApplePayElementProps> {
-    protected static type = 'applepay';
+    public static type = TxVariants.applepay;
     protected static defaultProps = defaultProps;
 
-    constructor(props) {
+    constructor(props: ApplePayElementProps) {
         super(props);
         this.startSession = this.startSession.bind(this);
         this.submit = this.submit.bind(this);
@@ -127,7 +128,7 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
      * Determine a shopper's ability to return a form of payment from Apple Pay.
      * @returns Promise Resolve/Reject whether the shopper can use Apple Pay
      */
-    isAvailable(): Promise<boolean> {
+    public override async isAvailable(): Promise<void> {
         if (document.location.protocol !== 'https:') {
             return Promise.reject(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to start an Apple Pay session from an insecure document'));
         }
@@ -138,7 +139,7 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
 
         try {
             if (window.ApplePaySession && ApplePaySession.canMakePayments() && ApplePaySession.supportsVersion(this.props.version)) {
-                return Promise.resolve(true);
+                return Promise.resolve();
             }
         } catch (error) {
             console.warn(error);

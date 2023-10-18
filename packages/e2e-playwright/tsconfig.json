@@ -1,31 +1,30 @@
 {
     "compilerOptions": {
-        "allowJs": true,
-        "checkJs": false,
+        /* Using bundler as we are transpiling with SWC */
+        "moduleResolution": "Bundler",
+        "module": "ESNext",
 
-        "outDir": "./dist/",
-        "declaration": true,
-
-        "moduleResolution": "node",
-        "module": "esnext",
-        "target": "es5",
-        "jsx": "react",
-        "jsxFactory": "h",
-        "resolveJsonModule": true,
-        "allowSyntheticDefaultImports": true,
+        /* Base Options: */
         "esModuleInterop": true,
+        "skipLibCheck": true,
+        "target": "es2022",
+        "allowJs": true,
+        "resolveJsonModule": true,
+        "moduleDetection": "force",
 
-        "noImplicitReturns": true,
-        "noImplicitAny": true,
-
+        /* Strictness */
+        "strict": false,
+        "noUncheckedIndexedAccess": true,
+        "noImplicitAny": false,
+        "noImplicitThis": false,
+        "noImplicitReturns": false,
+        "noImplicitOverride": false,
         "strictPropertyInitialization": false,
-        "suppressImplicitAnyIndexErrors": true,
-        "stripInternal": true,
-        "strictNullChecks": true,
+        "strictNullChecks": false,
+        "useDefineForClassFields": false,
 
-        "importHelpers": true,
-
-        "baseUrl": "./"
+        /* Include types for the browser: window, document, etc */
+        "lib": ["es2022", "dom", "dom.iterable"]
     },
     "include": ["app/", "tests/", "mocks/", "models/", "pages/"],
     "exclude": ["node_modules"]

@@ -40,14 +40,6 @@ describe('Tests for commonUtils', () => {
     test('Should test generateRandomNumber', () => {
         expect(typeof generateRandomNumber()).toEqual('number');
     });
-
-    test('Should test generateRandomNumber mocking window.crypto', () => {
-        (window as any).crypto = {
-            getRandomValues: () => 42
-        };
-
-        expect(typeof generateRandomNumber()).toEqual('number');
-    });
 });
 
 /**

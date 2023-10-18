@@ -1,4 +1,3 @@
-import paymentMethods from '../components';
 import { ADDRESS_SCHEMA } from '../components/internal/Address/constants';
 import actionTypes from '../core/ProcessResponse/PaymentAction/actionTypes';
 import { InstallmentOptions } from '../components/Card/components/CardInput/components/types';
@@ -79,6 +78,12 @@ export interface PaymentAction {
     };
 }
 
+type Issuer = {
+    id: string;
+    name: string;
+    disabled?: boolean;
+};
+
 export interface PaymentMethod {
     /**
      * The unique payment method code.
@@ -91,9 +96,9 @@ export interface PaymentMethod {
     name: string;
 
     /**
-     * All input details to be provided to complete the payment with this payment method.
+     * A list of issuers for this payment method.
      */
-    details?: object;
+    issuers?: Issuer[];
 
     /**
      * Configuration props as set by the merchant in the CA and received in the PM object in the /paymentMethods response
@@ -113,12 +118,51 @@ export interface PaymentMethod {
     /**
      * The funding source of the payment method.
      */
-    fundingSource?: string;
+    fundingSource?: 'debit' | 'credit';
 
     /**
      * The group where this payment method belongs to.
      */
     group?: PaymentMethodGroup;
+}
+
+/**
+ * List of the available payment methods
+ * {@link https://docs.adyen.com/api-explorer/Checkout/70/post/paymentMethods API Explorer /paymentMethods}.
+ */
+export interface PaymentMethodsResponse {
+    /**
+     * Detailed list of payment methods required to generate payment forms.
+     */
+    paymentMethods?: PaymentMethod[];
+    /**
+     * List of all stored payment methods.
+     */
+    storedPaymentMethods?: StoredPaymentMethod[];
+}
+
+export interface StoredPaymentMethod extends PaymentMethod {
+    id: string;
+    name: string;
+    supportedShopperInteractions: string[];
+    expiryMonth?: string;
+    expiryYear?: string;
+    holderName?: string;
+    iban?: string;
+    lastFour?: string;
+    networkTxReference?: string;
+    ownerName?: string;
+    shopperEmail?: string;
+    /**
+     * A unique identifier of this stored payment method. Mapped from 'storedPaymentMethod.id'
+     * @internal
+     */
+    storedPaymentMethodId?: string;
+    /**
+     * Internal flag
+     * @internal
+     */
+    isStoredPaymentMethod?: boolean;
 }
 
 /**
@@ -139,35 +183,6 @@ export interface PaymentMethodGroup {
      * The unique code of the group.
      */
     type: string;
-}
-
-export interface StoredPaymentMethod extends PaymentMethod {
-    /**
-     * The supported shopper interactions for this stored payment method.
-     */
-    supportedShopperInteractions: string[];
-
-    /**
-     * A unique identifier of this stored payment method.
-     * Mapped from 'storedPaymentMethod.id'
-     */
-    storedPaymentMethodId?: string;
-}
-
-/**
- * List of the available payment methods
- * {@link https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v51/paymentMethods API Explorer /paymentMethods}.
- */
-export interface PaymentMethodsResponseInterface {
-    /**
-     * Detailed list of payment methods required to generate payment forms.
-     */
-    paymentMethods: PaymentMethod[];
-
-    /**
-     * List of all stored payment methods.
-     */
-    storedPaymentMethods: StoredPaymentMethod[];
 }
 
 export interface PaymentResponse {
@@ -270,16 +285,6 @@ export interface BrowserInfo {
 }
 
 /**
- * Available components
- */
-export type PaymentMethods = typeof paymentMethods;
-
-/**
- * Options for a component
- */
-export type PaymentMethodOptions<P extends keyof PaymentMethods> = InstanceType<PaymentMethods[P]>['props'];
-
-/**
  * Visibility options for a fieldset
  */
 export type FieldsetVisibility = 'editable' | 'hidden' | 'readOnly';
@@ -287,6 +292,9 @@ export type FieldsetVisibility = 'editable' | 'hidden' | 'readOnly';
 export type CheckoutSession = {
     id: string;
     sessionData: string;
+    shopperLocale?: string;
+    shopperEmail?: string;
+    telephoneNumber?: string;
 };
 
 export type SessionConfiguration = {

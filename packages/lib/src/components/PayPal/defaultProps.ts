@@ -1,6 +1,6 @@
 import { PayPalElementProps } from './types';
 
-const defaultProps: PayPalElementProps = {
+const defaultProps: Partial<PayPalElementProps> = {
     environment: 'TEST',
     status: 'loading',
 

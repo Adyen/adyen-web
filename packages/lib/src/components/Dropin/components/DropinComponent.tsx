@@ -107,7 +107,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
             return (data: onOrderCancelData) =>
                 this.props.session
                     .cancelOrder(data)
-                    .then(() => this.props._parentInstance.update({ order: null }))
+                    .then(() => this.props.core.update({ order: null }))
                     .catch(error => this.setStatus(error?.message || 'error'));
         }
         return null;

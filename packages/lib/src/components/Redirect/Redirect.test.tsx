@@ -12,7 +12,7 @@ jest.mock('../../utils/detectInIframe', () => {
 describe('Redirect', () => {
     describe('isValid', () => {
         test('Is always valid', () => {
-            const redirect = new Redirect({});
+            const redirect = new Redirect({ type: 'redirect', core: global.core });
             expect(redirect.isValid).toBe(true);
         });
     });

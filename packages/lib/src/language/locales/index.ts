@@ -1,28 +1,26 @@
-export default {
-    ar: () => import('./ar.json'),
-    'cs-CZ': () => import('./cs-CZ.json'),
-    'da-DK': () => import('./da-DK.json'),
-    'de-DE': () => import('./de-DE.json'),
-    'el-GR': () => import('./el-GR.json'),
-    'en-US': () => import('./en-US.json'),
-    'es-ES': () => import('./es-ES.json'),
-    'fi-FI': () => import('./fi-FI.json'),
-    'fr-FR': () => import('./fr-FR.json'),
-    'hr-HR': () => import('./hr-HR.json'),
-    'hu-HU': () => import('./hu-HU.json'),
-    'it-IT': () => import('./it-IT.json'),
-    'ja-JP': () => import('./ja-JP.json'),
-    'ko-KR': () => import('./ko-KR.json'),
-    'nl-NL': () => import('./nl-NL.json'),
-    'no-NO': () => import('./no-NO.json'),
-    'pl-PL': () => import('./pl-PL.json'),
-    'pt-BR': () => import('./pt-BR.json'),
-    'pt-PT': () => import('./pt-PT.json'),
-    'ro-RO': () => import('./ro-RO.json'),
-    'ru-RU': () => import('./ru-RU.json'),
-    'sk-SK': () => import('./sk-SK.json'),
-    'sl-SI': () => import('./sl-SI.json'),
-    'sv-SE': () => import('./sv-SE.json'),
-    'zh-CN': () => import('./zh-CN.json'),
-    'zh-TW': () => import('./zh-TW.json')
-};
+export { default as ar } from './ar';
+export { default as cs_CZ } from './cs-CZ';
+export { default as da_DK } from './da-DK';
+export { default as de_DE } from './de-DE';
+export { default as el_GR } from './el-GR';
+export { default as en_US } from './en-US';
+export { default as es_ES } from './es-ES';
+export { default as fi_FI } from './fi-FI';
+export { default as fr_FR } from './fr-FR';
+export { default as hr_HR } from './hr-HR';
+export { default as hu_HU } from './hu-HU';
+export { default as it_IT } from './it-IT';
+export { default as ja_JP } from './ja-JP';
+export { default as ko_KR } from './ko-KR';
+export { default as nl_NL } from './nl-NL';
+export { default as no_NO } from './no-NO';
+export { default as pl_PL } from './pl-PL';
+export { default as pt_BR } from './pt-BR';
+export { default as pt_PT } from './pt-PT';
+export { default as ro_RO } from './ro-RO';
+export { default as ru_RU } from './ru-RU';
+export { default as sk_SK } from './sk-SK';
+export { default as sl_SI } from './sl-SI';
+export { default as sv_SE } from './sv-SE';
+export { default as zh_CN } from './zh-CN';
+export { default as zh_TW } from './zh-TW';

@@ -149,6 +149,11 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             loadingContext = process.env.__SF_ENV__;
         }
 
+        // TODO
+        // if(!this.props.keypadFix){
+        // send analytics action because to know if anyone *ever* sets this config prop
+        // }
+
         const csfSetupObj: CSFSetupObject = {
             rootNode: root,
             type: this.props.type,

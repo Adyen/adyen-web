@@ -2,29 +2,39 @@ import { ComponentChild, render } from 'preact';
 import getProp from '../utils/getProp';
 import EventEmitter from './EventEmitter';
 import uuid from '../utils/uuid';
-import Core from '../core';
-import { BaseElementProps, PaymentData } from './types';
-import { RiskData } from '../core/RiskModule/RiskModule';
-import { Resources } from '../core/Context/Resources';
+import { BaseElementProps, IBaseElement, PaymentData } from './types';
+import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
+import { ICore } from '../core/types';
 
-class BaseElement<P extends BaseElementProps> {
+class BaseElement<P extends BaseElementProps> implements IBaseElement {
     public readonly _id = `${this.constructor['type']}-${uuid()}`;
+
     public props: P;
-    public state;
-    protected static defaultProps = {};
-    public _node;
+    public state: any = {};
     public _component;
     public eventEmitter = new EventEmitter();
-    protected readonly _parentInstance: Core;
 
-    protected resources: Resources;
+    protected _node: HTMLElement = null;
+    protected readonly core: ICore;
 
-    protected constructor(props: P) {
-        this.props = this.formatProps({ showPayButton: true, ...this.constructor['defaultProps'], setStatusAutomatically: true, ...props });
-        this._parentInstance = this.props._parentInstance;
-        this._node = null;
-        this.state = {};
-        this.resources = this.props.modules ? this.props.modules.resources : undefined;
+    protected static defaultProps = {};
+
+    constructor(props: P) {
+        this.core = props.core;
+
+        if (!this.core) {
+            throw new AdyenCheckoutError(
+                'IMPLEMENTATION_ERROR',
+                `Trying to initialise the component '${this.constructor['type']}' without a reference to an instance of Checkout ('core' prop)`
+            );
+        }
+
+        this.buildElementProps(props);
+    }
+
+    protected buildElementProps(componentProps: P) {
+        const { core, ...rest } = componentProps;
+        this.props = this.formatProps({ ...this.constructor['defaultProps'], ...rest });
     }
 
     /**
@@ -54,7 +64,7 @@ class BaseElement<P extends BaseElementProps> {
      * Returns the component payment data ready to submit to the Checkout API
      * Note: this does not ensure validity, check isValid first
      */
-    get data(): PaymentData | RiskData {
+    public get data(): PaymentData {
         const clientData = getProp(this.props, 'modules.risk.data');
         const useAnalytics = !!getProp(this.props, 'modules.analytics.props.enabled');
         const checkoutAttemptId = useAnalytics ? getProp(this.props, 'modules.analytics.checkoutAttemptId') : 'do-not-track';
@@ -84,7 +94,7 @@ class BaseElement<P extends BaseElementProps> {
      * @returns this - the payment element instance we mounted
      */
     public mount(domNode: HTMLElement | string): this {
-        const node = typeof domNode === 'string' ? document.querySelector(domNode) : domNode;
+        const node = typeof domNode === 'string' ? document.querySelector<HTMLElement>(domNode) : domNode;
 
         if (!node) {
             throw new Error('Component could not mount. Root node was not found.');
@@ -113,11 +123,12 @@ class BaseElement<P extends BaseElementProps> {
 
     /**
      * Updates props, resets the internal state and remounts the element.
+     *
      * @param props - props to update
      * @returns this - the element instance
      */
     public update(props: P): this {
-        this.props = this.formatProps({ ...this.props, ...props });
+        this.buildElementProps({ ...this.props, ...props });
         this.state = {};
 
         return this.unmount().mount(this._node); // for new mount fny
@@ -158,8 +169,8 @@ class BaseElement<P extends BaseElementProps> {
     public remove() {
         this.unmount();
 
-        if (this._parentInstance) {
-            this._parentInstance.remove(this);
+        if (this.core) {
+            this.core.remove(this);
         }
     }
 }

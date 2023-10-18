@@ -13,9 +13,11 @@ import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/Click
 import ClickToPayWrapper from './components/ClickToPayWrapper';
 import { UIElementStatus } from '../types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
+import { TxVariants } from '../tx-variants';
 
 export class CardElement extends UIElement<CardElementProps> {
-    public static type = 'scheme';
+    public static type = TxVariants.scheme;
+    public static txVariants = [TxVariants.scheme, TxVariants.card];
 
     private readonly clickToPayService: IClickToPayService | null;
 
@@ -24,10 +26,10 @@ export class CardElement extends UIElement<CardElementProps> {
      */
     private clickToPayRef = null;
 
-    constructor(props) {
+    constructor(props: CardElementProps) {
         super(props);
 
-        if (!props._disableClickToPay) {
+        if (props && !props._disableClickToPay) {
             this.clickToPayService = createClickToPayService(this.props.configuration, this.props.clickToPayConfiguration, this.props.environment);
             this.clickToPayService?.initialize();
         }
@@ -84,8 +86,8 @@ export class CardElement extends UIElement<CardElementProps> {
             clickToPayConfiguration: {
                 ...props.clickToPayConfiguration,
                 disableOtpAutoFocus: props.clickToPayConfiguration?.disableOtpAutoFocus || false,
-                shopperEmail: props.clickToPayConfiguration?.shopperEmail || props?._parentInstance?.options?.session?.shopperEmail,
-                telephoneNumber: props.clickToPayConfiguration?.telephoneNumber || props?._parentInstance?.options?.session?.telephoneNumber,
+                shopperEmail: props.clickToPayConfiguration?.shopperEmail || props?.core?.options?.session?.shopperEmail,
+                telephoneNumber: props.clickToPayConfiguration?.telephoneNumber || props?.core?.options?.session?.telephoneNumber,
                 locale: props.clickToPayConfiguration?.locale || props.i18n?.locale?.replace('-', '_')
             }
         };

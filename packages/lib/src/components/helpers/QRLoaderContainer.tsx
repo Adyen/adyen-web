@@ -22,7 +22,7 @@ export interface QRLoaderContainerProps extends UIElementProps {
     buttonLabel?: string;
     qrCodeImage?: string;
     paymentData?: string;
-    introduction: string;
+    introduction?: string;
     instructions?: string;
     copyBtn?: boolean;
 }
@@ -41,7 +41,7 @@ class QRLoaderContainer<T extends QRLoaderContainerProps = QRLoaderContainerProp
     formatData() {
         return {
             paymentMethod: {
-                type: this.props.type || this.constructor['type'],
+                type: this.type,
                 ...this.state.data
             }
         };

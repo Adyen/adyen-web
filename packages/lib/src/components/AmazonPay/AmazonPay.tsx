@@ -7,9 +7,11 @@ import { AmazonPayElementData, AmazonPayElementProps, CheckoutDetailsRequest } f
 import defaultProps from './defaultProps';
 import { getCheckoutDetails } from './services';
 import './AmazonPay.scss';
+import { TxVariants } from '../tx-variants';
 
 export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
-    public static type = 'amazonpay';
+    public static type = TxVariants.amazonpay;
+
     protected static defaultProps = defaultProps;
 
     formatProps(props) {

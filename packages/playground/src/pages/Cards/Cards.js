@@ -1,23 +1,28 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
+import { AdyenCheckout, Card, Bancontact, nl_NL } from '@adyen/adyen-web';
+import '@adyen/adyen-web/styles/adyen.css';
+
 import { getPaymentMethods } from '../../services';
-import { handleSubmit, handleAdditionalDetails, handleError, handleChange } from '../../handlers';
+import { handleSubmit, handleAdditionalDetails, handleError } from '../../handlers';
 import { amount, shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
 import { MockReactApp } from './MockReactApp';
+import getTranslationFile from '../../config/getTranslation';
 import { searchFunctionExample } from '../../utils';
 
 const showComps = {
     clickToPay: true,
     storedCard: true,
     card: true,
-    cardInReact: true,
+    cardWithInstallments: true,
     bcmcCard: true,
     avsCard: true,
     avsPartialCard: true,
+    addressLookup: true,
+    cardInReact: true,
     kcpCard: true
 };
+
 const disclaimerMessage = {
     message: 'By continuing you accept the %{linkText} of MyStore',
     linkText: 'terms and conditions',
@@ -31,18 +36,13 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
         locale: shopperLocale,
+        translationFile: getTranslationFile(shopperLocale),
+        // translationFile: nl_NL
         environment: process.env.__CLIENT_ENV__,
         showPayButton: true,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
         onError: handleError,
-        onChange: handleChange,
-        paymentMethodsConfiguration: {
-            card: {
-                hasHolderName: true,
-                holderNameRequired: true
-            }
-        },
         risk: {
             enabled: false
         }
@@ -52,124 +52,148 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     if (showComps.storedCard) {
         if (checkout.paymentMethodsResponse.storedPaymentMethods && checkout.paymentMethodsResponse.storedPaymentMethods.length > 0) {
             const storedCardData = checkout.paymentMethodsResponse.storedPaymentMethods[2];
-            window.storedCard = checkout
-                .create('card', {
-                    ...storedCardData,
-                    disclaimerMessage
-                })
-                .mount('.storedcard-field');
+
+            window.storedCard = new Card({
+                core: checkout,
+                ...storedCardData,
+                disclaimerMessage
+                // maskSecurityCode: true
+                // hideCVC: true
+            }).mount('.storedcard-field');
+
+            // A "single branded" card
+            // window.card = new Card(checkout, {
+            //     brands: ['visa']
+            // }).mount('.storedcard-field');
         }
+    }
+    //
+    if (showComps.card) {
+        const card = new Card({
+            core: checkout,
+            challengeWindowSize: '01',
+            _disableClickToPay: true
+            // hasHolderName: true,
+            // holderNameRequired: true,
+            // maskSecurityCode: true,
+            // enableStoreDetails: true
+        }).mount('.card-field');
     }
 
     // Credit card with installments
-    if (showComps.card) {
-        window.card = checkout
-            .create('card', {
-                brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
-                installmentOptions: {
-                    mc: {
-                        values: [1, 2],
-                        preselectedValue: 2
-                    },
-                    visa: {
-                        values: [1, 2, 3, 4],
-                        plans: ['regular', 'revolving'],
-                        preselectedValue: 4
-                    }
+    if (showComps.cardWithInstallments) {
+        window.cardWithInstallments = new Card({
+            core: checkout,
+            _disableClickToPay: true,
+            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
+            installmentOptions: {
+                mc: {
+                    values: [1, 2],
+                    preselectedValue: 2
                 },
-                disclaimerMessage,
-                showBrandsUnderCardNumber: true,
-                showInstallmentAmounts: true,
-                onError: obj => {
-                    console.log('### Cards::onError:: obj=', obj);
-                },
-                onBinLookup: obj => {
-                    console.log('### Cards::onBinLookup:: obj=', obj);
-                },
-                billingAddressRequired: true,
-                onAddressLookup: searchFunctionExample
-            })
-            .mount('.card-field');
+                visa: {
+                    values: [1, 2, 3, 4],
+                    plans: ['regular', 'revolving'],
+                    preselectedValue: 4
+                }
+            },
+            disclaimerMessage,
+            showBrandsUnderCardNumber: true,
+            showInstallmentAmounts: true,
+            onError: obj => {
+                console.log('### Cards::onError:: obj=', obj);
+            },
+            onBinLookup: obj => {
+                console.log('### Cards::onBinLookup:: obj=', obj);
+            }
+        }).mount('.card-field-installments');
     }
 
+    //
     // Card mounted in a React app
     if (showComps.cardInReact) {
-        window.cardReact = checkout.create('card', {});
+        window.cardReact = new Card({ core: checkout });
         MockReactApp(window, 'cardReact', document.querySelector('.react-card-field'), false);
     }
 
     // Bancontact card
     if (showComps.bcmcCard) {
-        window.bancontact = checkout.create('bcmc').mount('.bancontact-field');
+        window.bancontact = new Bancontact({ core: checkout }).mount('.bancontact-field');
     }
 
     // Credit card with AVS
     if (showComps.avsCard) {
-        window.cardAvs = checkout
-            .create('card', {
-                type: 'scheme',
-                brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
-                enableStoreDetails: true,
+        window.cardAvs = new Card({
+            core: checkout,
+            // type: 'scheme',
+            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
+            enableStoreDetails: true,
 
-                // holderName config:
-                hasHolderName: true,
-                holderNameRequired: true,
+            // holderName config:
+            hasHolderName: true,
+            holderNameRequired: true,
+            holderName: 'J. Smith',
+            positionHolderNameOnTop: true,
+
+            // billingAddress config:
+            billingAddressRequired: true,
+            billingAddressAllowedCountries: ['US', 'CA', 'GB'],
+            // billingAddressRequiredFields: ['postalCode', 'country'],
+
+            // data:
+            data: {
                 holderName: 'J. Smith',
-                positionHolderNameOnTop: true,
-
-                // billingAddress config:
-                billingAddressRequired: true,
-                billingAddressAllowedCountries: ['US', 'CA', 'GB'],
-                // billingAddressRequiredFields: ['postalCode', 'country'],
-
-                // data:
-                data: {
-                    holderName: 'J. Smith',
-                    billingAddress: {
-                        street: 'Infinite Loop',
-                        postalCode: '95014',
-                        city: 'Cupertino',
-                        houseNumberOrName: '1',
-                        country: 'US',
-                        stateOrProvince: 'CA'
-                    }
-                },
-                onError: objdobj => {
-                    console.log('component level merchant defined error handler for Card objdobj=', objdobj);
+                billingAddress: {
+                    street: 'Infinite Loop',
+                    postalCode: '95014',
+                    city: 'Cupertino',
+                    houseNumberOrName: '1',
+                    country: 'US',
+                    stateOrProvince: 'CA'
                 }
-            })
-            .mount('.card-avs-field');
+            },
+            onError: objdobj => {
+                console.log('component level merchant defined error handler for Card objdobj=', objdobj);
+            }
+        }).mount('.card-avs-field');
     }
 
     if (showComps.avsPartialCard) {
-        window.avsPartialCard = checkout
-            .create('card', {
-                type: 'scheme',
-                brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
-                // billingAddress config:
-                billingAddressRequired: true,
-                billingAddressMode: 'partial',
-                onError: objdobj => {
-                    console.log('component level merchant defined error handler for Card objdobj=', objdobj);
-                }
-            })
-            .mount('.card-avs-partial-field');
+        window.avsPartialCard = new Card({
+            core: checkout,
+            // type: 'scheme',
+            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
+            // billingAddress config:
+            billingAddressRequired: true,
+            billingAddressMode: 'partial',
+            onError: objdobj => {
+                console.log('component level merchant defined error handler for Card objdobj=', objdobj);
+            }
+        }).mount('.card-avs-partial-field');
+    }
+
+    if (showComps.addressLookup) {
+        window.addressLookupCard = new Card({
+            core: checkout,
+            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
+            billingAddressRequired: true,
+            onAddressLookup: searchFunctionExample
+        }).mount('.card-address-lookup-field');
     }
 
     // Credit card with KCP Authentication
     if (showComps.kcpCard) {
-        window.kcpCard = checkout
-            .create('card', {
-                type: 'scheme',
-                brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'korean_local_card'],
-                // Set koreanAuthenticationRequired AND countryCode so KCP fields show at start
-                // Just set koreanAuthenticationRequired if KCP fields should only show if korean_local_card entered
-                configuration: {
-                    koreanAuthenticationRequired: true
-                },
-                countryCode: 'KR'
-            })
-            .mount('.card-kcp-field');
+        window.kcpCard = new Card({
+            core: checkout,
+            // type: 'scheme',
+            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'korean_local_card'],
+            // Set koreanAuthenticationRequired AND countryCode so KCP fields show at start
+            // Just set koreanAuthenticationRequired if KCP fields should only show if korean_local_card entered
+            configuration: {
+                koreanAuthenticationRequired: true
+            },
+            countryCode: 'KR'
+        }).mount('.card-kcp-field');
     }
 
     if (showComps.clickToPay) {
@@ -177,27 +201,26 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
          * Make sure that the initialization values are being set in the /paymentMethods response,
          * as part of the 'scheme' configuration object
          */
-        window.ctpCard = checkout
-            .create('card', {
-                type: 'scheme',
-                brands: ['mc', 'visa'],
-                configuration: {
-                    visaSrciDpaId: '8e6e347c-254e-863f-0e6a-196bf2d9df02',
-                    visaSrcInitiatorId: 'B9SECVKIQX2SOBQ6J9X721dVBBKHhJJl1nxxVbemHGn5oB6S8',
-                    mcDpaId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1_dpa2',
-                    mcSrcClientId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1'
+        window.ctpCard = new Card({
+            core: checkout,
+            type: 'scheme',
+            brands: ['mc', 'visa'],
+            configuration: {
+                visaSrciDpaId: '8e6e347c-254e-863f-0e6a-196bf2d9df02',
+                visaSrcInitiatorId: 'B9SECVKIQX2SOBQ6J9X721dVBBKHhJJl1nxxVbemHGn5oB6S8',
+                mcDpaId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1_dpa2',
+                mcSrcClientId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1'
+            },
+            clickToPayConfiguration: {
+                shopperEmail: 'shopper@example.com',
+                merchantDisplayName: 'Adyen Merchant Name',
+                onReady: () => {
+                    console.log('Component is ready to be used');
                 },
-                clickToPayConfiguration: {
-                    shopperEmail: 'shopper@example.com',
-                    merchantDisplayName: 'Adyen Merchant Name',
-                    onReady: () => {
-                        console.log('Component is ready to be used');
-                    },
-                    onTimeout: error => {
-                        console.log(error);
-                    }
+                onTimeout: error => {
+                    console.log(error);
                 }
-            })
-            .mount('.card-ctp-field');
+            }
+        }).mount('.card-ctp-field');
     }
 });

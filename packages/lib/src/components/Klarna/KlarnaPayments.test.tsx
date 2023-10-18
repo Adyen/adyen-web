@@ -1,9 +1,9 @@
 import { render, screen, waitFor } from '@testing-library/preact';
 import KlarnaPayments from './KlarnaPayments';
-import DropinElement from '../Dropin';
+import Dropin from '../Dropin';
 
 describe('KlarnaPayments', () => {
-    const coreProps = { name: 'Klarna', i18n: global.i18n, loadingContext: 'test', modules: { resources: global.resources } };
+    const coreProps = { core: global.core, name: 'Klarna', i18n: global.i18n, loadingContext: 'test', modules: { resources: global.resources } };
     const renderKlarna = props => {
         const KlarnaPaymentsEle = new KlarnaPayments({
             ...coreProps,
@@ -27,7 +27,7 @@ describe('KlarnaPayments', () => {
             ...coreProps,
             ...{ paymentData: '', paymentMethodType: '', sdkData: undefined, useKlarnaWidget: false, showPayButton: false }
         });
-        KlarnaPaymentsEle.elementRef = new DropinElement({ paymentMethods: [] });
+        KlarnaPaymentsEle.elementRef = new Dropin({ core: global.core });
         render(KlarnaPaymentsEle.render());
         const spy = jest.spyOn(KlarnaPaymentsEle.elementRef, 'setStatus');
         // @ts-ignore to test

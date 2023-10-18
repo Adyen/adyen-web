@@ -5,9 +5,11 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import config from './components/MBWayAwait/config';
 import Await from '../../components/internal/Await';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
+import { TxVariants } from '../tx-variants';
+import { AwaitActionElement } from '../types';
 
-export class MBWayElement extends UIElement {
-    private static type = 'mbway';
+export class MBWayElement extends UIElement<AwaitActionElement> {
+    public static type = TxVariants.mbway;
 
     formatProps(props) {
         const { data = {}, placeholders = {} } = props;
@@ -76,6 +78,7 @@ export class MBWayElement extends UIElement {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <MBWayInput
+                    /* @ts-ignore ref handled internally by Component */
                     ref={ref => {
                         this.componentRef = ref;
                     }}

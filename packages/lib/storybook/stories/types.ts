@@ -1,4 +1,4 @@
-import { DropinElementProps } from '../../src/components/Dropin/types';
+import { Meta, StoryObj } from '@storybook/preact';
 
 type GlobalStoryProps = {
     useSessions: boolean;
@@ -9,16 +9,16 @@ type GlobalStoryProps = {
 };
 
 export interface PaymentMethodStoryProps<T> extends GlobalStoryProps {
-    componentConfiguration: T;
+    // Core is passed in the 'render' step, so no need to enforce it here
+    componentConfiguration: Omit<T, 'core'>;
 }
 
-export interface DropinStoryProps extends PaymentMethodStoryProps<DropinElementProps> {
-    paymentMethodsConfiguration: any;
-}
+export type StoryConfiguration<T> = StoryObj<PaymentMethodStoryProps<T>>;
+
+export type MetaConfiguration<T> = Meta<PaymentMethodStoryProps<T>>;
 
 export type AdyenCheckoutProps = {
     showPayButton: boolean;
-    paymentMethodsConfiguration?: Record<string, object>;
     countryCode: string;
     shopperLocale: string;
     amount: number;

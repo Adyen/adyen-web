@@ -4,9 +4,18 @@ import DragonpayInput from './components/DragonpayInput';
 import DragonpayVoucherResult from './components/DragonpayVoucherResult';
 import CoreProvider from '../../core/Context/CoreProvider';
 import { DragonpayElementProps } from './types';
+import { TxVariants } from '../tx-variants';
 
 export class DragonpayElement extends UIElement<DragonpayElementProps> {
-    public static type = 'dragonpay';
+    public static type = TxVariants.dragonpay;
+
+    public static txVariants = [
+        TxVariants.dragonpay,
+        TxVariants.dragonpay_ebanking,
+        TxVariants.dragonpay_otc_banking,
+        TxVariants.dragonpay_otc_non_banking,
+        TxVariants.dragonpay_otc_philippines
+    ];
 
     get isValid() {
         return !!this.state.isValid;
@@ -22,7 +31,7 @@ export class DragonpayElement extends UIElement<DragonpayElementProps> {
             ...(shopperEmail && { shopperEmail }),
             paymentMethod: {
                 ...(issuer && { issuer }),
-                type: this.props.type || DragonpayElement.type
+                type: this.type
             }
         };
     }

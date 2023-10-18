@@ -42,7 +42,8 @@ describe('DisclaimerMessage', () => {
     test("Doesn't render the DisclaimerMessage because the linkText is not a string", () => {
         const nuMsg = { ...disclaimerMessage };
 
-        /* eslint-disable-next-line */
+        // @ts-ignore Proper test case
+        // eslint-disable-next-line react/no-unescaped-entities
         nuMsg.message = <script>alert("busted")</script>;
 
         render(<DisclaimerMessage {...nuMsg} />);

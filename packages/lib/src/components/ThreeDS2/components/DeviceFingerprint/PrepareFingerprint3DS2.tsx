@@ -53,11 +53,10 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
     setStatusComplete(resultObj: ResultObject) {
         this.setState({ status: 'complete' }, () => {
             /**
-             * Create the data in the way that the endpoint expects:
-             *  - this will be the /details endpoint for the 'old', v66, flow triggered by a 'threeDS2Fingerprint' action
-             *  - and will be the /submitThreeDS2Fingerprint endpoint for the new, v67, 'threeDS2' action
+             * Create the data in the way that the /details endpoint expects.
+             *  This is different for the flow triggered by the threeds2InMDFlow process than for the new, v67, 'threeDS2' action
              */
-            const resolveDataFunction = this.props.useOriginalFlow ? createOldFingerprintResolveData : createFingerprintResolveData;
+            const resolveDataFunction = this.props.isMDFlow ? createOldFingerprintResolveData : createFingerprintResolveData;
             const data = resolveDataFunction(this.props.dataKey, resultObj, this.props.paymentData);
 
             /**

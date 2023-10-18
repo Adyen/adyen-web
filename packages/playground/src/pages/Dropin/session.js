@@ -1,7 +1,8 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
+import { AdyenCheckout, Dropin, Card, WeChat, Giftcard, PayPal, Ach, GooglePay } from '@adyen/adyen-web';
+import '@adyen/adyen-web/styles/adyen.css';
 import { createSession } from '../../services';
 import { amount, shopperLocale, shopperReference, countryCode, returnUrl } from '../../config/commonConfig';
+import getTranslationFile from '../../config/getTranslation';
 
 export async function initSession() {
     const session = await createSession({
@@ -18,7 +19,9 @@ export async function initSession() {
     const checkout = await AdyenCheckout({
         environment: process.env.__CLIENT_ENV__,
         clientKey: process.env.__CLIENT_KEY__,
+
         session,
+        translationFile: getTranslationFile(shopperLocale),
 
         // Events
         beforeSubmit: (data, component, actions) => {
@@ -32,7 +35,13 @@ export async function initSession() {
         },
         onChange: (state, component) => {
             console.log('onChange', state);
-        },
+        }
+    });
+
+    const dropin = new Dropin({
+        core: checkout,
+        instantPaymentTypes: ['googlepay'],
+        paymentMethodComponents: [Card, WeChat, Giftcard, PayPal, Ach, GooglePay],
         paymentMethodsConfiguration: {
             paywithgoogle: {
                 buttonType: 'plain'
@@ -48,12 +57,6 @@ export async function initSession() {
                 billingAddressMode: 'partial'
             }
         }
-    });
-
-    const dropin = checkout
-        .create('dropin', {
-            instantPaymentTypes: ['googlepay']
-        })
-        .mount('#dropin-container');
+    }).mount('#dropin-container');
     return [checkout, dropin];
 }

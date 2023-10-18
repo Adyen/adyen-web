@@ -2,7 +2,7 @@ import { ValidationRuleResult } from '../../utils/Validator/ValidationRuleResult
 import { SFError } from '../../components/Card/components/CardInput/types';
 import Language from '../../language';
 import { StringObject } from '../../components/internal/Address/types';
-import { BaseElementProps } from '../../components/types';
+import { ICore } from '../types';
 
 export interface ErrorObj {
     // Describes an object with unknown keys whose value is always a ValidationRuleResult or FieldError
@@ -36,7 +36,8 @@ export interface AriaAttributes {
     'aria-atomic'?: 'true' | 'false';
 }
 
-export interface SRPanelProps extends BaseElementProps {
+export interface SRPanelProps {
+    core: ICore;
     enabled?: boolean;
     node?: string;
     showPanel?: boolean;
@@ -44,6 +45,8 @@ export interface SRPanelProps extends BaseElementProps {
     id?: string;
     ariaAttributes?: AriaAttributes;
 }
+
+export type SRPanelConfig = Omit<SRPanelProps, 'core'>;
 
 export interface SRMessagesProps {
     setComponentRef: (ref: any) => void;

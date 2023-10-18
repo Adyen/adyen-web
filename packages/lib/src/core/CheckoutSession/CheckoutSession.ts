@@ -24,7 +24,7 @@ class Session {
     public readonly loadingContext: string;
     public configuration: SessionConfiguration;
 
-    constructor(rawSession: CheckoutSession, clientKey: string, loadingContext: string) {
+    constructor(rawSession: Partial<CheckoutSession>, clientKey: string, loadingContext: string) {
         const session = sanitizeSession(rawSession) as CheckoutSession;
 
         if (!clientKey) throw new Error('No clientKey available');
@@ -40,6 +40,10 @@ class Session {
         } else {
             this.storeSession();
         }
+    }
+
+    get shopperLocale() {
+        return this.session.shopperLocale;
     }
 
     get id() {

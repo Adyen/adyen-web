@@ -7,13 +7,14 @@ export type UpiPaymentData = {
     };
 };
 
-export enum UpiMode {
-    Vpa = 'vpa',
-    QrCode = 'qrCode'
-}
+export type UpiMode = 'vpa' | 'qrCode';
 
 export interface UPIElementProps extends UIElementProps {
-    defaultMode: UpiMode;
+    /**
+     * Define which view is displayed initially when the Component renders
+     * @defaultValue vpa
+     */
+    defaultMode?: UpiMode;
     // Await
     paymentData?: string;
     // QR code

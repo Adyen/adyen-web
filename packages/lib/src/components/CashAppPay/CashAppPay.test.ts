@@ -20,7 +20,7 @@ test('should return on-file data if available', () => {
     const customerId = 'abcdef';
     const cashTag = '$john-doe';
 
-    const cashAppPayElement = new CashAppPay({ storePaymentMethod: true });
+    const cashAppPayElement = new CashAppPay({ core: global.core, storePaymentMethod: true });
 
     const data: CashAppPayEventData = {
         onFileGrantId,
@@ -40,7 +40,7 @@ test('should return grantId, customerId and correct txVariant', () => {
     const grantId = 'xxxx-yyyy';
     const customerId = 'abcdef';
 
-    const cashAppPayElement = new CashAppPay({});
+    const cashAppPayElement = new CashAppPay({ core: global.core });
 
     const data: CashAppPayEventData = {
         grantId,
@@ -53,7 +53,12 @@ test('should return grantId, customerId and correct txVariant', () => {
 });
 
 test('should initially display the loading spinner while SDK is being loaded', async () => {
-    const cashAppPayElement = new CashAppPay({ i18n: global.i18n, loadingContext: 'test', modules: { resources: {} } });
+    const cashAppPayElement = new CashAppPay({
+        core: global.core,
+        i18n: global.i18n,
+        loadingContext: 'test',
+        modules: { resources: global.resources }
+    });
     render(cashAppPayElement.render());
 
     expect(CashAppService).toHaveBeenCalledTimes(1);
@@ -62,7 +67,13 @@ test('should initially display the loading spinner while SDK is being loaded', a
 
 test('should create customer request and then begin CashApp flow when submit is triggered', async () => {
     const onClick = jest.fn().mockImplementation(actions => actions.resolve());
-    const cashAppPayElement = new CashAppPay({ onClick, i18n: global.i18n, loadingContext: 'test', modules: { resources: {} } });
+    const cashAppPayElement = new CashAppPay({
+        core: global.core,
+        onClick,
+        i18n: global.i18n,
+        loadingContext: 'test',
+        modules: { resources: global.resources }
+    });
     render(cashAppPayElement.render());
 
     cashAppPayElement.submit();

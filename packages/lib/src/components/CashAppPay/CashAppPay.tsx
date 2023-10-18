@@ -9,15 +9,16 @@ import { ICashAppService } from './services/types';
 import defaultProps from './defaultProps';
 import RedirectButton from '../internal/RedirectButton';
 import { payAmountLabel } from '../internal/PayButton';
+import { TxVariants } from '../tx-variants';
 
 export class CashAppPay extends UIElement<CashAppPayElementProps> {
-    public static type = 'cashapp';
+    public static type = TxVariants.cashapp;
 
     private readonly cashAppService: ICashAppService | undefined;
 
     protected static defaultProps = defaultProps;
 
-    constructor(props) {
+    constructor(props: CashAppPayElementProps) {
         super(props);
 
         if (this.props.enableStoreDetails && this.props.storePaymentMethod) {

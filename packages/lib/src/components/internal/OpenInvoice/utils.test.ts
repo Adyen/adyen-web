@@ -8,7 +8,8 @@ describe('OpenInvoice utils', () => {
                 companyDetails: false,
                 personalDetails: true,
                 billingAddress: false,
-                deliveryAddress: false
+                deliveryAddress: false,
+                bankAccount: false
             };
 
             const data: OpenInvoiceStateData = {

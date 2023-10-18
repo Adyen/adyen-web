@@ -1,18 +1,6 @@
-/*eslint-disable */
-if (process.env.NODE_ENV === 'development') {
-    // Must use require here as import statements are only allowed
-    // to exist at the top of a file.
-    // require('preact/debug');
-}
+import * as components from './components';
 
-import { CoreOptions } from './core/types';
-import Checkout from './core';
-/* eslint-enable */
-
-async function AdyenCheckout(props: CoreOptions): Promise<Checkout> {
-    const checkout = new Checkout(props);
-
-    return await checkout.initialize();
-}
-
-export default AdyenCheckout;
+export { components };
+export * from './components';
+export * from './language/locales';
+export * from './AdyenCheckout';

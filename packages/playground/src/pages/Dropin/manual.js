@@ -1,23 +1,24 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
+import { AdyenCheckout, Dropin, Card, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay } from '@adyen/adyen-web';
+import '@adyen/adyen-web/styles/adyen.css';
 import { getPaymentMethods, makePayment, checkBalance, createOrder, cancelOrder, makeDetailsCall } from '../../services';
 import { amount, shopperLocale, countryCode, returnUrl } from '../../config/commonConfig';
 import { getSearchParameters } from '../../utils';
+import getTranslationFile from '../../config/getTranslation';
 
 export async function initManual() {
     const paymentMethodsResponse = await getPaymentMethods({ amount, shopperLocale });
+
     window.checkout = await AdyenCheckout({
         amount,
         countryCode,
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
-        locale: shopperLocale,
+
+        locale: 'pt-BR',
+        translationFile: getTranslationFile(shopperLocale),
+        // translationFile: nl_NL,
+
         environment: process.env.__CLIENT_ENV__,
-        installmentOptions: {
-            mc: {
-                values: [1, 2, 3, 4]
-            }
-        },
         onSubmit: async (state, component) => {
             const result = await makePayment(state.data);
 
@@ -25,7 +26,7 @@ export async function initManual() {
             if (result.action) {
                 // demo only - store paymentData & order
                 if (result.action.paymentData) localStorage.setItem('storedPaymentData', result.action.paymentData);
-                component.handleAction(result.action);
+                component.handleAction(result.action, { challengeWindowSize: '01' });
             } else if (result.order && result.order?.remainingAmount?.value > 0) {
                 // handle orders
                 const order = {
@@ -39,9 +40,10 @@ export async function initManual() {
                 handleFinalState(result.resultCode, component);
             }
         },
-        onChange: state => {
-            console.log('onChange', state);
-        },
+        // srConfig: { showPanel: true },
+        // onChange: state => {
+        //     console.log('onChange', state);
+        // },
         onAdditionalDetails: async (state, component) => {
             const result = await makeDetailsCall(state.data);
 
@@ -75,16 +77,6 @@ export async function initManual() {
         },
         onActionHandled: rtnObj => {
             console.log('onActionHandled', rtnObj);
-        },
-        paymentMethodsConfiguration: {
-            card: {
-                enableStoreDetails: false,
-                hasHolderName: true,
-                holderNameRequired: true
-            },
-            paywithgoogle: {
-                buttonType: 'plain'
-            }
         }
     });
 
@@ -123,21 +115,20 @@ export async function initManual() {
 
         // Handle Amazon Pay redirect result
         if (amazonCheckoutSessionId) {
-            window.amazonpay = checkout
-                .create('amazonpay', {
-                    amazonCheckoutSessionId,
-                    showOrderButton: false,
-                    onSubmit: state => {
-                        makePayment(state.data).then(result => {
-                            if (result.action) {
-                                dropin.handleAction(result.action);
-                            } else {
-                                handleFinalState(result.resultCode, dropin);
-                            }
-                        });
-                    }
-                })
-                .mount('body');
+            window.amazonpay = new AmazonPay({
+                core: checkout,
+                amazonCheckoutSessionId,
+                showOrderButton: false,
+                onSubmit: state => {
+                    makePayment(state.data).then(result => {
+                        if (result.action) {
+                            dropin.handleAction(result.action);
+                        } else {
+                            handleFinalState(result.resultCode, dropin);
+                        }
+                    });
+                }
+            }).mount('body');
 
             window.amazonpay.submit();
         }
@@ -145,11 +136,28 @@ export async function initManual() {
         return Promise.resolve(true);
     }
 
-    const dropin = checkout
-        .create('dropin', {
-            instantPaymentTypes: ['googlepay']
-        })
-        .mount('#dropin-container');
+    const dropin = new Dropin({
+        core: checkout,
+        paymentMethodComponents: [Card, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay],
+        instantPaymentTypes: ['googlepay'],
+        paymentMethodsConfiguration: {
+            card: {
+                challengeWindowSize: '03',
+                enableStoreDetails: true,
+                hasHolderName: true,
+                holderNameRequired: true
+            },
+            paywithgoogle: {
+                buttonType: 'plain'
+            },
+            klarna: {
+                useKlarnaWidget: true
+            }
+            // storedCard: {
+            //     hideCVC: true
+            // }
+        }
+    }).mount('#dropin-container');
 
     handleRedirectResult();
 

@@ -1,5 +1,5 @@
 interface CheckoutErrorOptions {
-    cause: any;
+    cause?: any;
 }
 
 class AdyenCheckoutError extends Error {

@@ -2,14 +2,15 @@ import { h } from 'preact';
 import { render, screen } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import Select from './Select';
+import CoreProvider from '../../../../core/Context/CoreProvider';
 
 describe('Select', () => {
     const user = userEvent.setup();
     const getWrapper = (props: any) =>
         render(
-            <div>
+            <CoreProvider loadingContext={'test'} i18n={global.i18n} resources={global.resources}>
                 <Select {...props} name={'mockSelect'} />
-            </div>
+            </CoreProvider>
         );
 
     test('Options list should select with correct inputs', async () => {

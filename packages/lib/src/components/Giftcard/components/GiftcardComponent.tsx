@@ -15,7 +15,7 @@ interface GiftcardComponentProps {
     onSubmit: (event) => void;
     onBalanceCheck: (event) => void;
 
-    amount: PaymentAmount;
+    amount?: PaymentAmount;
     showPayButton?: boolean;
     payButton: (config) => any;
 

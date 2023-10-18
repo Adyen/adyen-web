@@ -1,7 +1,7 @@
-import { PaymentMethod, StoredPaymentMethod, Order, OrderStatus } from '../../types';
+import { Order, OrderStatus } from '../../types';
 import UIElement from '../UIElement';
-import { UIElementProps, UIElementStatus } from '../types';
-import { PaymentMethodsConfiguration } from '../../core/types';
+import { PaymentMethodsConfiguration, UIElementProps, UIElementStatus } from '../types';
+import { NewableComponent } from '../../core/core.registry';
 
 export type InstantPaymentTypes = 'paywithgoogle' | 'googlepay' | 'applepay';
 
@@ -11,9 +11,10 @@ export interface DropinElementProps extends UIElementProps {
      */
     paymentMethodsConfiguration?: PaymentMethodsConfiguration;
 
-    paymentMethods?: PaymentMethod[];
-
-    storedPaymentMethods?: StoredPaymentMethod[];
+    /**
+     * Pass the payment method classes that are going to be used as part of the Drop-in.
+     */
+    paymentMethodComponents?: NewableComponent[];
 
     order?: Order;
 
@@ -36,12 +37,6 @@ export interface DropinElementProps extends UIElementProps {
      * @defaultValue []
      */
     instantPaymentTypes?: InstantPaymentTypes[];
-
-    /**
-     * Instant Payment methods derived from the instantPaymentTypes property
-     * @internal
-     */
-    instantPaymentMethods?: PaymentMethod[];
 
     openFirstStoredPaymentMethod?: boolean;
     openFirstPaymentMethod?: boolean;

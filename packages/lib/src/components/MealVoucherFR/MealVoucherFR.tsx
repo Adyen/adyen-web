@@ -1,10 +1,18 @@
 import GiftcardElement from '../Giftcard/Giftcard';
 import { MealVoucherFields } from './components/MealVoucherFields';
+import { TxVariants } from '../tx-variants';
+import { GiftCardProps } from '../Giftcard/types';
 
 export class MealVoucherFRElement extends GiftcardElement {
-    public static type = 'mealVoucher_FR';
+    public static type = TxVariants.mealVoucher_FR;
+    public static txVariants = [
+        TxVariants.mealVoucher_FR,
+        TxVariants.mealVoucher_FR_natixis,
+        TxVariants.mealVoucher_FR_sodexo,
+        TxVariants.mealVoucher_FR_groupeup
+    ];
 
-    constructor(props) {
+    constructor(props: GiftCardProps) {
         super({
             ...props,
             pinRequired: true,

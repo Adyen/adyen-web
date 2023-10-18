@@ -55,7 +55,7 @@ export interface SecuredFieldSetupObject extends SecuredFieldCommonProps {
     loadingContext: string;
     holderEl: HTMLElement;
     iframeSrc: string;
-    showContextualElement: boolean;
+    showContextualElement?: boolean;
     placeholders: Placeholders;
 }
 
@@ -105,6 +105,7 @@ export interface AriaConfigObject {
     iframeTitle?: string;
     label?: string;
     contextualTexts?: ContextualTexts;
+    error?: object;
 }
 
 abstract class AbstractSecuredField {

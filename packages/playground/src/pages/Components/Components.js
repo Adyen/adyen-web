@@ -1,10 +1,27 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
+import {
+    AdyenCheckout,
+    BankTransfer,
+    MBWay,
+    Klarna,
+    Ach,
+    SepaDirectDebit,
+    Vipps,
+    Blik,
+    Giropay,
+    UPI,
+    Pix,
+    Oxxo,
+    Redirect,
+    Twint
+} from '@adyen/adyen-web';
+import '@adyen/adyen-web/styles/adyen.css';
+
 import '../../../config/polyfills';
 import '../../style.scss';
 import { getPaymentMethods } from '../../services';
 import { handleSubmit, handleAdditionalDetails, handleChange } from '../../handlers';
 import { amount, shopperLocale } from '../../config/commonConfig';
+import getTranslationFile from '../../config/getTranslation';
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
     window.checkout = await AdyenCheckout({
@@ -12,6 +29,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
         locale: shopperLocale,
+        translationFile: getTranslationFile(shopperLocale),
         environment: process.env.__CLIENT_ENV__,
         onChange: handleChange,
         onSubmit: handleSubmit,
@@ -24,8 +42,9 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         }
     });
 
-    // SEPA Bank Transfer
-    window.bankTransfer = checkout.create('bankTransfer_IBAN').mount('.bankTransfer-field');
+    // // SEPA Bank Transfer
+    // window.bankTransfer = new BankTransfer(checkout, { type: 'bankTransfer_IBAN' }).mount('.bankTransfer-field');// BankTransfer doesn't need constructor
+    window.bankTransfer = new BankTransfer({ core: checkout }).mount('.bankTransfer-field'); // BankTransfer needs constructor
     window.bankTransferResult = checkout
         .createFromAction({
             paymentMethodType: 'bankTransfer_IBAN',
@@ -41,69 +60,64 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             shopperEmail: 'shopper@email.com'
         })
         .mount('.bankTransfer-result-field');
-
+    //
     // MBWay
-    window.mbway = checkout.create('mbway').mount('.mbway-field');
+    window.mbway = new MBWay({ core: checkout }).mount('.mbway-field');
 
     // Klarna Widget
-    window.klarnaButton = checkout.create('klarna').mount('.klarna-field');
+    window.klarnaButton = new Klarna({ core: checkout, useKlarnaWidget: true }).mount('.klarna-field');
 
     // ACH
-    window.ach = checkout
-        .create('ach', {
-            // holderNameRequired: false,
-            // hasHolderName: false,
-            //            onConfigSuccess: obj => {
-            //                console.log('### Components::onConfigSuccess:: obj', obj);
-            //            },
-            // billingAddressRequired: false,
-            // billingAddressAllowedCountries: ['US', 'PR'],
-            data: {
-                // holderName: 'B. Fish',
-                billingAddress: {
-                    street: 'Infinite Loop',
-                    postalCode: '95014',
-                    city: 'Cupertino',
-                    houseNumberOrName: '1',
-                    country: 'US',
-                    stateOrProvince: 'CA'
-                }
+    window.ach = new Ach({
+        core: checkout,
+        // holderNameRequired: false,
+        // hasHolderName: false,
+        //            onConfigSuccess: obj => {
+        //                console.log('### Components::onConfigSuccess:: obj', obj);
+        //            },
+        // billingAddressRequired: false,
+        // billingAddressAllowedCountries: ['US', 'PR'],
+        data: {
+            // holderName: 'B. Fish',
+            billingAddress: {
+                street: 'Infinite Loop',
+                postalCode: '95014',
+                city: 'Cupertino',
+                houseNumberOrName: '1',
+                country: 'US',
+                stateOrProvince: 'CA'
             }
-        })
-        .mount('.ach-field');
+        }
+    }).mount('.ach-field');
 
     // SEPA Direct Debit
-    window.sepa = checkout
-        .create('sepadirectdebit', {
-            countryCode: 'NL',
-            holderName: true
-        })
-        .mount('.sepa-field');
+    window.sepa = new SepaDirectDebit({
+        core: checkout,
+        countryCode: 'NL',
+        holderName: true
+    }).mount('.sepa-field');
 
-    // Qiwi
-    window.qiwi = checkout.create('qiwiwallet', {}).mount('.qiwi-field');
-
-    // SEPA Direct Debit
-    window.vipps = checkout.create('vipps').mount('.vipps-field');
-
-    // BLIK
-    window.blik = checkout.create('blik', {}).mount('.blik-field');
-
-    // Giropay
-    window.giropay = checkout.create('giropay').mount('.giropay-field');
-
-    // UPI
-    window.upi = checkout.create('upi').mount('.upi-field');
+    // // SEPA Direct Debit
+    window.vipps = new Vipps({ core: checkout }).mount('.vipps-field');
+    //
+    // // BLIK
+    window.blik = new Blik({ core: checkout }).mount('.blik-field');
+    //
+    // // Giropay
+    window.giropay = new Giropay({ core: checkout }).mount('.giropay-field');
+    //
+    // // UPI
+    window.upi = new UPI({ core: checkout }).mount('.upi-field');
 
     // PIX
-    window.pix = checkout.create('pix', { countdownTime: 5, showPayButton: true }).mount('.pix-field');
+    window.pix = new Pix({ core: checkout, countdownTime: 5 }).mount('.pix-field');
 
     // Oxxo
-    window.oxxo = checkout.create('oxxo', { showPayButton: true }).mount('.oxxo-field');
+    window.oxxo = new Oxxo({ core: checkout }).mount('.oxxo-field');
 
     // Twint
-    window.twint = checkout.create('twint').mount('.twint-field');
+    window.twint = new Twint({ core: checkout }).mount('.twint-field');
 
     // Redirect
-    // window.redirect = checkout.create('paypal').mount('.redirect-field');
+    window.alipay = new Redirect({ core: checkout, type: 'alipay' }).mount('.redirect-field');
 });
