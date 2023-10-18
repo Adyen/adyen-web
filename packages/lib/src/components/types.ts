@@ -230,16 +230,22 @@ type PaymentMethods = typeof componentsMap;
  */
 type PaymentMethodOptions<P extends keyof PaymentMethods> = InstanceType<PaymentMethods[P]>['props'];
 
-export type PaymentMethodsConfiguration =
-    | {
-          [key in keyof PaymentMethods]?: Partial<PaymentMethodOptions<key>>;
-      }
-    | {
-          [key in PaymentActionsType]?: any;
-      }
-    | {
-          [key: string]: UIElementProps;
-      };
+type PaymentMethodsConfigurationMap = {
+    [key in keyof PaymentMethods]?: Partial<PaymentMethodOptions<key>>;
+};
+
+type PaymentActionTypesMap = {
+    [key in PaymentActionsType]?: Partial<UIElementProps>;
+};
+
+/**
+ * Type must be loose, otherwise it will take priority over the rest
+ */
+type NonMappedPaymentMethodsMap = {
+    [key: string]: any;
+};
+
+export type PaymentMethodsConfiguration = PaymentMethodsConfigurationMap & PaymentActionTypesMap & NonMappedPaymentMethodsMap;
 
 export interface PaymentMethodData {
     paymentMethod: {
