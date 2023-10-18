@@ -28,7 +28,7 @@
         "css-loader": "^5.2.7",
         "dotenv": "^16.0.3",
         "html-webpack-plugin": "5.5.1",
-        "postcss": "^8.4.7",
+        "postcss": "^8.4.31",
         "postcss-loader": "^4.3.0",
         "sass-loader": "^10.2.0",
         "source-map-loader": "^1.1.3",
