@@ -3,6 +3,10 @@ dist
 coverage
 storybook-static
 
+# Playwright reports
+packages/playground/playwright-report/
+
+
 *.log*
 .env
 .env*

@@ -25,9 +25,9 @@ export type KlarnaSdkData = {
 };
 
 interface KlarnaPaymentsShared {
-    sdkData: KlarnaSdkData;
-    paymentData: string;
-    paymentMethodType: string;
+    sdkData?: KlarnaSdkData;
+    paymentData?: string;
+    paymentMethodType?: string;
 }
 
 export interface KlarnaWidgetProps extends KlarnaPaymentsShared {
@@ -42,7 +42,7 @@ export interface KlarnaWidgetProps extends KlarnaPaymentsShared {
 
 export type KlarnaPaymentsProps = UIElementProps &
     KlarnaPaymentsShared & {
-        useKlarnaWidget: boolean;
+        useKlarnaWidget?: boolean;
     };
 
 export interface KlarnaWidgetAuthorizeResponse {

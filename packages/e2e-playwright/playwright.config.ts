@@ -9,7 +9,7 @@ dotenv.config({ path: path.resolve('../../', '.env') });
  * See https://playwright.dev/docs/test-configuration.
  */
 const config: PlaywrightTestConfig = {
-    testDir: './tests',
+    testDir: './tests/',
     /* Maximum time one test can run for. */
     timeout: 10 * 2000,
     expect: {
@@ -29,7 +29,7 @@ const config: PlaywrightTestConfig = {
     workers: process.env.CI ? 1 : 1,
 
     /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-    reporter: [['html', { open: 'never' }]],
+    reporter: [['html', { open: 'never' }], ['list']],
 
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
     use: {

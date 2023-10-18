@@ -5,9 +5,12 @@ import { KlarnaPaymentsProps } from './types';
 import PayButton from '../internal/PayButton';
 import { KlarnaContainer } from './components/KlarnaContainer/KlarnaContainer';
 import { PaymentAction } from '../../types';
+import { TxVariants } from '../tx-variants';
 
 class KlarnaPayments extends UIElement<KlarnaPaymentsProps> {
-    public static type = 'klarna';
+    public static type = TxVariants.klarna;
+    public static txVariants = [TxVariants.klarna, TxVariants.klarna_account, TxVariants.klarna_paynow];
+
     protected static defaultProps = {
         useKlarnaWidget: false
     };

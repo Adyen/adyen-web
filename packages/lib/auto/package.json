@@ -1,0 +1,21 @@
+{
+  "name": "@adyen/adyen-web-auto",
+  "private": true,
+  "description": "Auto registering package. Exists to support bundlers without exports support such as webpack 4.",
+  "type": "module",
+  "main": "./auto.cjs",
+  "module": "./auto.js",
+  "types": "./auto.d.ts",
+  "exports": {
+    ".":  {
+      "import": {
+        "types": "./auto.d.ts",
+        "default": "./auto.js"
+      },
+      "require": {
+        "types": "./auto.d.cts",
+        "default": "./auto.cjs"
+      }
+    }
+  }
+}

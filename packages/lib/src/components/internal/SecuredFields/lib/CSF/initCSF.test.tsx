@@ -37,7 +37,7 @@ describe('Calling initCSF', () => {
     });
 
     test('initializing with a custom http origin should throw an error', () => {
-        global['window'] = Object.create(window);
+        global['window'] ??= Object.create(window);
         const url = 'http://www.mycustomdomain.com';
         Object.defineProperty(window, 'location', {
             value: {

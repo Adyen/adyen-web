@@ -1,4 +1,7 @@
 export default {
+    instantPaymentTypes: [],
+    paymentMethodComponents: [],
+
     isDropin: true,
     onReady: () => {}, // triggered when the Dropin is fully loaded
     onComplete: () => {}, // triggered when the shopper completes a payment
@@ -6,9 +9,8 @@ export default {
     onSelect: () => {}, // triggered when a paymentMethod is selected
     onDisableStoredPaymentMethod: null, // triggered when a shopper removes a storedPaymentMethod
     onChange: () => {},
-    instantPaymentMethods: [],
+
     amount: {},
-    installmentOptions: {},
     paymentMethodsConfiguration: {}, // per paymentMethod configuration
     openFirstPaymentMethod: true, // focus the first payment method automatically on load
     openFirstStoredPaymentMethod: true, // focus the first one click payment method automatically on load

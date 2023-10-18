@@ -15,24 +15,20 @@ type OnChangeProps = { data: VpaInputDataState; valid; errors; isValid: boolean 
 interface UPIComponentProps {
     defaultMode: UpiMode;
     showPayButton: boolean;
-
     ref(ref: RefObject<typeof UPIComponent>): void;
-
     payButton(props: PayButtonFunctionProps): h.JSX.Element;
-
     onChange({ data, valid, errors, isValid }: OnChangeProps): void;
-
     onUpdateMode(mode: UpiMode): void;
 }
 
 const A11Y = {
     ButtonId: {
-        VPA: `upi-button-${UpiMode.Vpa}`,
-        QR: `upi-button-${UpiMode.QrCode}`
+        VPA: `upi-button-vpa`,
+        QR: `upi-button-qrCode`
     },
     AreaId: {
-        VPA: `upi-area-${UpiMode.Vpa}`,
-        QR: `upi-area-${UpiMode.QrCode}`
+        VPA: `upi-area-vpa`,
+        QR: `upi-area-qrCode`
     }
 };
 
@@ -75,26 +71,26 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
                 options={[
                     {
                         label: isMobile() ? 'VPA' : 'Virtual Payment Address',
-                        value: UpiMode.Vpa,
+                        value: 'vpa',
                         htmlProps: {
                             id: A11Y.ButtonId.VPA,
-                            'aria-expanded': mode === UpiMode.Vpa,
+                            'aria-expanded': mode === 'vpa',
                             'aria-controls': A11Y.AreaId.VPA
                         }
                     },
                     {
                         label: 'QR Code',
-                        value: UpiMode.QrCode,
+                        value: 'qrCode',
                         htmlProps: {
                             id: A11Y.ButtonId.QR,
-                            'aria-expanded': mode === UpiMode.QrCode,
+                            'aria-expanded': mode === 'qrCode',
                             'aria-controls': A11Y.AreaId.QR
                         }
                     }
                 ]}
             />
 
-            {mode === UpiMode.Vpa ? (
+            {mode === 'vpa' ? (
                 <div id={A11Y.AreaId.VPA} aria-labelledby={A11Y.ButtonId.VPA} role="region">
                     <VpaInput disabled={status === 'loading'} onChange={onChange} onSetInputHandlers={onSetVpaInputHandlers} />
 

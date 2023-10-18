@@ -6,6 +6,8 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import config from './config';
 import RedirectButton from '../../components/internal/RedirectButton';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
+import { TxVariants } from '../tx-variants';
+import { AwaitActionElement } from '../types';
 
 interface BlikElementData {
     paymentMethod: {
@@ -14,8 +16,8 @@ interface BlikElementData {
     };
 }
 
-class BlikElement extends UIElement {
-    public static type = 'blik';
+class BlikElement extends UIElement<AwaitActionElement> {
+    public static type = TxVariants.blik;
 
     formatData(): BlikElementData {
         const recurringPayment = !!this.props.storedPaymentMethodId;
@@ -85,6 +87,7 @@ class BlikElement extends UIElement {
                     />
                 ) : (
                     <BlikInput
+                        // @ts-ignore Ref is used by preact component
                         ref={ref => {
                             this.componentRef = ref;
                         }}

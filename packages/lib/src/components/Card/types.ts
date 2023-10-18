@@ -8,10 +8,13 @@ import {
     CbObjOnFieldValid,
     CbObjOnFocus,
     CbObjOnLoad,
-    CbObjOnBinLookup
+    CbObjOnBinLookup,
+    StylesObject
 } from '../internal/SecuredFields/lib/types';
 import { CVCPolicyType, DatePolicyType } from '../internal/SecuredFields/lib/types';
 import { ClickToPayConfiguration } from '../internal/ClickToPay/types';
+import { InstallmentOptions } from './components/CardInput/components/types';
+import { DisclaimerMsgObject } from '../internal/DisclaimerMessage/DisclaimerMessage';
 import { Placeholders } from './components/CardInput/types';
 
 export interface CardElementProps extends UIElementProps {
@@ -60,6 +63,12 @@ export interface CardElementProps extends UIElementProps {
     showBrandsUnderCardNumber?: boolean;
 
     /**
+     * Position holder name above card number field (instead of having it after the security code field)
+     * @defaultValue `false`
+     */
+    positionHolderNameOnTop?: boolean;
+
+    /**
      * Show/hide the brand logo when the card brand has been recognized
      * @defaultValue `true`
      */
@@ -80,11 +89,11 @@ export interface CardElementProps extends UIElementProps {
     /** Show/hide the "store details" checkbox */
     enableStoreDetails?: boolean;
 
-    /** Show/hide the CVC field - merchant set config option */
+    /** Show/hide the Security Code field - merchant set config option */
     hideCVC?: boolean;
 
     /**
-     *  Decides whether CVC component will even be rendered.
+     *  Decides whether the CVC (Security Code) component will even be rendered.
      *  Always true except when hideCVC set to false by merchant OR in the case of a *stored* BCMC card.
      *  (For the Bancontact card comp this is set to true since dual-branding possibilities mean the BCMC card can now end up needing to show a CVC field)
      */
@@ -101,6 +110,27 @@ export interface CardElementProps extends UIElementProps {
 
     /** Configure placeholder text for holderName, cardNumber, expirationDate, securityCode and password. */
     placeholders?: Placeholders;
+    /**
+     * Defines the size of the challenge Component
+     *
+     * 01: [250px, 400px]
+     * 02: [390px, 400px]
+     * 03: [500px, 600px]
+     * 04: [600px, 400px]
+     * 05: [100%, 100%]
+     *
+     * @defaultValue '02'
+     */
+    challengeWindowSize?: '01' | '02' | '03' | '04' | '05';
+
+    /**
+     * Object that contains placeholder information that you can use to prefill fields.
+     */
+    data?: {
+        holderName?: string;
+        billingAddress?: Partial<AddressData>;
+    };
+
     /**
      * Called once all the card input fields have been created but are not yet ready to use.
      */
@@ -123,7 +153,7 @@ export interface CardElementProps extends UIElementProps {
     onBrand?: (event: CbObjOnBrand) => void;
 
     /**
-     * Called in case of an invalid card number, invalid expiry date, or incomplete field. Called again when errors are cleared.
+     * Called in case of an invalid Card Number, invalid Expiry Date, or incomplete field. Called again when errors are cleared.
      */
     onError?: (event: CbObjOnError) => void;
 
@@ -142,7 +172,107 @@ export interface CardElementProps extends UIElementProps {
      */
     onBinLookup?: (event: CbObjOnBinLookup) => void;
 
-    [key: string]: any; // TODO get rid of this and explicitly declare props
+    /**
+     * Related to storedCards - this information comes from the storedCardData once we process it
+     * @internal
+     */
+    storedPaymentMethodId?: string;
+    lastFour?: string;
+
+    /**
+     * Mostly used in relation to KCP cards
+     */
+    countryCode?: string;
+
+    /**
+     * Show Address fields
+     * @defaultValue `false`
+     */
+    billingAddressRequired?: boolean;
+
+    /**
+     * If billingAddressRequired is set to true, you can set this to partial to require the shopper's postal code instead of the full address.
+     * @defaultValue full
+     */
+    billingAddressMode?: 'full' | 'partial' | 'none';
+
+    /**
+     * Config to specify which address field are required | limit the countries that will show in the country dropdown
+     */
+    billingAddressRequiredFields?: string[];
+    billingAddressAllowedCountries?: string[];
+
+    /**
+     * Configure the installment options for the card
+     */
+    installmentOptions?: InstallmentOptions;
+
+    /**
+     * Set whether to show installments broken down into amounts or months
+     * @defaultValue `true`
+     */
+    showInstallmentAmounts?: boolean;
+
+    /**
+     * For some scenarios make the card input fields (PAN, Expiry Date, Security Code) have type="tel" rather than type="text" inputmode="numeric"
+     * @defaultValue `false`
+     */
+    legacyInputMode?: boolean;
+
+    /**
+     * Specify the minimum expiry date that will be considered valid
+     */
+    minimumExpiryDate?: string[];
+
+    /**
+     * Automatically shift the focus from one field to another. Usually happens from a valid Expiry Date field to the Security Code field,
+     * but some BINS also allow us to know that the PAN is complete, in which case we can shift focus to the date field
+     * @defaultValue `true`
+     */
+    autoFocus?: boolean;
+
+    /**
+     * Adds type="password" to the Security code input field, causing its value to be masked
+     * @defaultValue `false`
+     */
+    maskSecurityCode?: boolean;
+
+    /**
+     * Allow binLookup process to occur
+     * @defaultValue `true`
+     */
+    doBinLookup?: boolean;
+
+    /**
+     * Turn on the procedure to force the arrow keys on an iOS soft keyboard to always be disabled
+     * @defaultValue `false`
+     */
+    disableIOSArrowKeys?: boolean;
+
+    /**
+     * Object to configure the message and text for a disclaimer message, added after the Card input fields
+     */
+    disclaimerMessage?: DisclaimerMsgObject;
+
+    /**
+     * Object to configure the styling of the inputs in the iframes that are used to present the PAN, Expiry Date & Security Code fields
+     */
+    styles?: StylesObject;
+
+    /**
+     * Implements a workaround for iOS/Safari bug where keypad doesn't retract when SF paymentMethod is no longer active
+     * @defaultValue `true`
+     */
+    keypadFix?: boolean; // Keep, but use analytics to record if anyone *ever* uses this config prop
+
+    /**
+     * Comes from Stored payment method object
+     * @internal
+     */
+    expiryMonth?: string;
+
+    // forceCompat?: boolean, // TODO - probably drop, if Checkout won't support IE then SF doesn't need to
+    // allowedDOMAccess: false, // TODO -  Drop for v6 (not sure if anyone ever uses this)
 }
 
 export type SocialSecurityMode = 'show' | 'hide' | 'auto';
@@ -187,7 +317,7 @@ export interface CardConfiguration {
 }
 
 export interface BrandConfiguration {
-    name: string;
+    name?: string;
     icon?: string;
 }
 
@@ -199,7 +329,7 @@ interface CardPaymentMethodData {
     type: string;
     brand?: string;
     storedPaymentMethodId?: string;
-    fundingSource?: string;
+    fundingSource?: 'debit' | 'credit';
     holderName?: string;
     encryptedCardNumber?: string;
     encryptedExpiryMonth?: string;

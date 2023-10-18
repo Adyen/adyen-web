@@ -1,16 +1,18 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
+import { AdyenCheckout, Giftcard, MealVoucherFR, Card } from '@adyen/adyen-web';
+import '@adyen/adyen-web/styles/adyen.css';
 import { handleChange, handleSubmit } from '../../handlers';
 import { amount, shopperLocale, countryCode, returnUrl, shopperReference } from '../../config/commonConfig';
 import { checkBalance, createOrder, createSession } from '../../services';
 import '../../../config/polyfills';
 import '../../utils';
 import '../../style.scss';
+import getTranslationFile from '../../config/getTranslation';
 
 (async () => {
     window.checkout = await AdyenCheckout({
         clientKey: process.env.__CLIENT_KEY__,
         locale: shopperLocale,
+        translationFile: getTranslationFile(shopperLocale),
         countryCode,
         environment: process.env.__CLIENT_ENV__,
         onChange: handleChange,
@@ -19,35 +21,34 @@ import '../../style.scss';
         amount
     });
 
-    window.giftcard = checkout
-        .create('giftcard', {
-            type: 'giftcard',
-            brand: 'valuelink',
-            onBalanceCheck: async (resolve, reject, data) => {
-                resolve(await checkBalance(data));
-            },
-            onOrderRequest: async (resolve, reject) => {
-                resolve(await createOrder({ amount }));
-            }
-            // placeholders: {
-            //     cardNumber: 'ph enter NUM',
-            //     securityCode: 'ph pin'
-            // }
-        })
-        .mount('#genericgiftcard-container');
+    window.giftcard = new Giftcard({
+        core: window.checkout,
+        type: 'giftcard',
+        brand: 'valuelink',
+        onBalanceCheck: async (resolve, reject, data) => {
+            resolve(await checkBalance(data));
+        },
+        onOrderRequest: async (resolve, reject) => {
+            resolve(await createOrder({ amount }));
+        }
+        // placeholders: {
+        //     cardNumber: 'ph enter NUM',
+        //     securityCode: 'ph pin'
+        // }
+    }).mount('#genericgiftcard-container');
 
-    window.giftcard = checkout
-        .create('mealVoucher_FR_natixis', {
-            type: 'mealVoucher_FR_natixis',
-            brand: 'mealVoucher_FR_natixis',
-            onBalanceCheck: async (resolve, reject, data) => {
-                resolve(await checkBalance(data));
-            },
-            onOrderRequest: async (resolve, reject) => {
-                resolve(await createOrder({ amount }));
-            }
-        })
-        .mount('#mealvoucher-fr-container');
+    // TODO: Double-check if it is supposed to be like that
+    window.giftcard = new MealVoucherFR({
+        core: window.checkout,
+        type: 'mealVoucher_FR_natixis',
+        brand: 'mealVoucher_FR_natixis',
+        onBalanceCheck: async (resolve, reject, data) => {
+            resolve(await checkBalance(data));
+        },
+        onOrderRequest: async (resolve, reject) => {
+            resolve(await createOrder({ amount }));
+        }
+    }).mount('#mealvoucher-fr-container');
 
     const session = await createSession({
         amount,
@@ -90,20 +91,19 @@ import '../../style.scss';
     checkoutConfirmButton.addEventListener('click', giftcardSubmit);
     checkoutCardButton.addEventListener('click', cardSubmit);
 
-    window.giftcard = sessionCheckout
-        .create('giftcard', {
-            type: 'giftcard',
-            brand: 'svs',
-            onOrderCreated: () => {
-                console.log('onOrderCreated');
-            },
-            onRequiringConfirmation: () => {
-                console.log('onRequiringConfirmation');
-                checkoutConfirmButton.style.display = '';
-                checkoutAddButton.style.display = 'none';
-            }
-        })
-        .mount('#giftcard-session-container');
+    window.giftcard = new Giftcard({
+        core: sessionCheckout,
+        type: 'giftcard',
+        brand: 'svs',
+        onOrderCreated: () => {
+            console.log('onOrderCreated');
+        },
+        onRequiringConfirmation: () => {
+            console.log('onRequiringConfirmation');
+            checkoutConfirmButton.style.display = '';
+            checkoutAddButton.style.display = 'none';
+        }
+    }).mount('#giftcard-session-container');
 
-    window.card = sessionCheckout.create('card').mount('#payment-method-container');
+    window.card = new Card({ core: sessionCheckout }).mount('#payment-method-container');
 })();

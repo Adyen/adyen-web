@@ -1,26 +1,42 @@
 {
     "compilerOptions": {
+        /* Library declaration */
         "declaration": true,
-        "declarationDir": "./dist/types",
+        "outDir": "./dist/temp-types",
 
-        "moduleResolution": "node",
-        "module": "esnext",
-        "target": "es2021",
+        /* Using bundler as we are transpiling with SWC */
+        "moduleResolution": "Bundler",
+        "module": "ESNext",
+
+        /* Base Options: */
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "target": "es2022",
+        "allowJs": true,
+        "resolveJsonModule": true,
+        "moduleDetection": "force",
+
+        /* Strictness */
+        "strict": false,
+        "noUncheckedIndexedAccess": true,
+        "noImplicitAny": false,
+        "noImplicitThis": false,
+        "noImplicitReturns": false,
+        "noImplicitOverride": false,
+        "strictPropertyInitialization": false,
+        "strictNullChecks": false,
+        "useDefineForClassFields": false,
+
+        /** Preact */
         "jsx": "react",
         "jsxFactory": "h",
-        "resolveJsonModule": true,
-        "allowSyntheticDefaultImports": true,
-        "esModuleInterop": true,
 
-        "noImplicitAny": false,
-        "strictPropertyInitialization": false,
-        "suppressImplicitAnyIndexErrors": true,
-
-        "importHelpers": true,
-
-        "sourceMap": true,
-        "baseUrl": "./"
+        /* Include types for the browser: window, document, etc */
+        "lib": ["es2022", "dom", "dom.iterable"]
     },
-    "include": ["src/"],
-    "exclude": ["node_modules", "**/*.test.*"]
+    "include": [
+        "./src/**/*",
+        "./src/types/custom.d.ts"
+    ],
+    "exclude": ["node_modules", "./dist/**", "**/*.test.*", "**/*.scss"]
 }

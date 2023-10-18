@@ -1,7 +1,7 @@
 import OpenInvoiceContainer from './OpenInvoiceContainer';
 
 describe('OpenInvoiceContainer', () => {
-    const getWrapper = (props = {}) => new OpenInvoiceContainer({ ...props });
+    const getWrapper = (props = {}) => new OpenInvoiceContainer({ core: global.core, ...props });
 
     test('should use the passed countryCode in the address fieldsets', () => {
         const countryCode = 'US';

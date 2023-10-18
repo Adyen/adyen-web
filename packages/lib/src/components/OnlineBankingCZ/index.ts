@@ -1,10 +1,11 @@
 import IssuerListContainer from '../helpers/IssuerListContainer';
+import { TxVariants } from '../tx-variants';
 
 const TERMS_AND_CONDITIONS = 'https://static.payu.com/sites/terms/files/payu_privacy_policy_cs.pdf';
 const ICON = 'bankTransfer_IBAN';
 
 class OnlineBankingCZElement extends IssuerListContainer {
-    public static type = 'onlineBanking_CZ';
+    public static type = TxVariants.onlineBanking_CZ;
 
     private static termsAndConditions = {
         translationKey: 'onlineBanking.termsAndConditions',

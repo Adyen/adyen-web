@@ -2,9 +2,10 @@ import { h } from 'preact';
 import CoreProvider from '../../core/Context/CoreProvider';
 import RedirectElement from '../Redirect';
 import RedirectButton from '../internal/RedirectButton';
+import { TxVariants } from '../tx-variants';
 
 class GiropayElement extends RedirectElement {
-    public static type = 'giropay';
+    public static type = TxVariants.giropay;
 
     formatProps(props) {
         return {

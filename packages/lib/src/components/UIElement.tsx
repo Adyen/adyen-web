@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import BaseElement from './BaseElement';
 import { PaymentAction } from '../types';
-import { PaymentResponse } from './types';
+import { ComponentMethodsRef, PaymentResponse } from './types';
 import PayButton from './internal/PayButton';
 import { IUIElement, PayButtonFunctionProps, RawPaymentResponse, UIElementProps } from './types';
 import { getSanitizedResponse, resolveFinalResult } from './utils';
@@ -9,16 +9,33 @@ import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 import { UIElementStatus } from './types';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
 import DropinElement from './Dropin';
-import { CoreOptions } from '../core/types';
-import Core from '../core';
+import { CoreOptions, ICore } from '../core/types';
+import { Resources } from '../core/Context/Resources';
+import { NewableComponent } from '../core/core.registry';
 import './UIElement.scss';
 
-export class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
+export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
+
+    protected resources: Resources;
+
     public elementRef: UIElement;
+
+    public static type = undefined;
+
+    /**
+     * Defines all txVariants that the Component supports (in case it support multiple ones besides the 'type' one)
+     */
+    public static txVariants: string[] = [];
 
     constructor(props: P) {
         super(props);
+
+        // Only register UIElements that have the 'type' set. Drop-in for example does not have.
+        if (this.constructor['type']) {
+            this.core.register(this.constructor as NewableComponent);
+        }
+
         this.submit = this.submit.bind(this);
         this.setState = this.setState.bind(this);
         this.onValid = this.onValid.bind(this);
@@ -30,6 +47,37 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         this.setElementStatus = this.setElementStatus.bind(this);
 
         this.elementRef = (props && props.elementRef) || this;
+        this.resources = this.props.modules ? this.props.modules.resources : undefined;
+
+        this.storeElementRefOnCore(this.props);
+    }
+
+    protected override buildElementProps(componentProps: P) {
+        const globalCoreProps = this.core.getCorePropsForComponent();
+        const isStoredPaymentMethod = !!componentProps.isStoredPaymentMethod;
+        const paymentMethodsResponseProps = isStoredPaymentMethod
+            ? {}
+            : this.core.paymentMethodsResponse.find(componentProps.type || this.constructor['type']);
+
+        const finalProps = {
+            showPayButton: true,
+            setStatusAutomatically: true,
+            ...globalCoreProps,
+            ...paymentMethodsResponseProps,
+            ...componentProps
+        };
+
+        this.props = this.formatProps({ ...this.constructor['defaultProps'], ...finalProps });
+    }
+
+    protected storeElementRefOnCore(props?: P) {
+        if (!props?.isDropin) {
+            this.core.storeElementReference(this);
+        }
+    }
+
+    public isAvailable(): Promise<void> {
+        return Promise.resolve();
     }
 
     public setState(newState: object): void {
@@ -49,7 +97,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
     private onSubmit(): void {
         //TODO: refactor this, instant payment methods are part of Dropin logic not UIElement
         if (this.props.isInstantPayment) {
-            const dropinElementRef = this.elementRef as DropinElement;
+            const dropinElementRef = this.elementRef as unknown as DropinElement;
             dropinElementRef.closeActivePaymentMethod();
         }
 
@@ -60,7 +108,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         if (this.props.onSubmit) {
             // Classic flow
             this.props.onSubmit({ data: this.data, isValid: this.isValid }, this.elementRef);
-        } else if (this._parentInstance.session) {
+        } else if (this.core.session) {
             // Session flow
             // wrap beforeSubmit callback in a promise
             const beforeSubmitEvent = this.props.beforeSubmit
@@ -89,7 +137,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         return state;
     }
 
-    onComplete(state): void {
+    protected onComplete(state): void {
         if (this.props.onComplete) this.props.onComplete(state, this.elementRef);
     }
 
@@ -123,14 +171,14 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
     }
 
     private submitPayment(data): Promise<void> {
-        return this._parentInstance.session
+        return this.core.session
             .submitPayment(data)
             .then(this.handleResponse)
             .catch(error => this.handleError(error));
     }
 
     private submitAdditionalDetails(data): Promise<void> {
-        return this._parentInstance.session.submitDetails(data).then(this.handleResponse).catch(this.handleError);
+        return this.core.session.submitDetails(data).then(this.handleResponse).catch(this.handleError);
     }
 
     protected handleError = (error: AdyenCheckoutError): void => {
@@ -156,7 +204,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         return state;
     };
 
-    public handleAction(action: PaymentAction, props = {}): UIElement | null {
+    public handleAction(action: PaymentAction, props = {}): UIElement<P> | null {
         if (!action || !action.type) {
             if (hasOwnProperty(action, 'action') && hasOwnProperty(action, 'resultCode')) {
                 throw new Error(
@@ -167,7 +215,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
             throw new Error('handleAction::Invalid Action - the passed action object does not have a "type" property');
         }
 
-        const paymentAction = this._parentInstance.createFromAction(action, {
+        const paymentAction = this.core.createFromAction(action, {
             ...this.elementRef.props,
             ...props,
             onAdditionalDetails: this.handleAdditionalDetails
@@ -221,46 +269,47 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
      * This function exist to make safe access to the protect _parentInstance
      * @param options - CoreOptions
      */
-    public updateParent(options: CoreOptions = {}): Promise<Core> {
-        return this.elementRef._parentInstance.update(options);
+    public updateParent(options: CoreOptions = {}): Promise<ICore> {
+        return this.elementRef.core.update(options);
     }
 
-    public setComponentRef = ref => {
+    public setComponentRef = (ref: ComponentMethodsRef) => {
         this.componentRef = ref;
     };
 
     /**
      * Get the current validation status of the element
      */
-    get isValid(): boolean {
+    public get isValid(): boolean {
         return false;
     }
 
     /**
      * Get the element icon URL for the current environment
      */
-    get icon(): string {
+    public get icon(): string {
         return this.props.icon ?? this.resources.getImage()(this.constructor['type']);
     }
 
     /**
      * Get the element's displayable name
      */
-    get displayName(): string {
-        return this.props.name || this.constructor['type'];
+    public get displayName(): string {
+        const paymentMethodFromResponse = this.core.paymentMethodsResponse?.paymentMethods?.find(pm => pm.type === this.type);
+        return this.props.name || paymentMethodFromResponse?.name || this.type;
     }
 
     /**
      * Get the element accessible name, used in the aria-label of the button that controls selected payment method
      */
-    get accessibleName(): string {
+    public get accessibleName(): string {
         return this.displayName;
     }
 
     /**
      * Return the type of an element
      */
-    get type(): string {
+    public get type(): string {
         return this.props.type || this.constructor['type'];
     }
 

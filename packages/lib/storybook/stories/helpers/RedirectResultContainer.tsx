@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'preact/hooks';
-import AdyenCheckout from '../../../src';
+import { AdyenCheckout } from '../../../src';
 import { handleError, handleFinalState } from '../../helpers/checkout-handlers';
 
 export const RedirectResultContainer = ({ redirectResult, sessionId }) => {

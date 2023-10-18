@@ -1,11 +1,9 @@
 import { createContext } from 'preact';
 import { CommonPropsTypes } from './CoreProvider';
-import Language from '../../language/Language';
-import { Resources } from './Resources';
 
 export const CoreContext = createContext({
-    i18n: new Language(),
+    i18n: null,
     loadingContext: '',
     commonProps: {} as CommonPropsTypes,
-    resources: new Resources()
+    resources: null
 });

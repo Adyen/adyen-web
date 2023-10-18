@@ -2,13 +2,22 @@ import { h } from 'preact';
 import { render, screen } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import StoreDetails from './StoreDetails';
+import CoreProvider from '../../../core/Context/CoreProvider';
+
+const renderWithCoreProvider = ui => {
+    return render(
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            {ui}
+        </CoreProvider>
+    );
+};
 
 test('StoredDetails defaults to false, toggles to true', async () => {
     const user = userEvent.setup();
     let value;
 
     const onChangeMock = jest.fn(event => (value = event));
-    render(<StoreDetails onChange={onChangeMock} />);
+    renderWithCoreProvider(<StoreDetails onChange={onChangeMock} />);
     const checkbox = await screen.findByRole('checkbox');
     // check for the checked status in the DOM
     expect(checkbox).not.toBeChecked();
@@ -26,7 +35,7 @@ test('StoredDetails storeDetails prop true does nothing LEGACY TEST', async () =
     let value;
 
     const onChangeMock = jest.fn(event => (value = event));
-    render(<StoreDetails storeDetails={true} onChange={onChangeMock} />);
+    renderWithCoreProvider(<StoreDetails storeDetails={true} onChange={onChangeMock} />);
     const checkbox = await screen.findByRole('checkbox');
     // buggy behaviour should be fixed, but we improve test coverage before that
     // the checkbox will not be visibly "checked"

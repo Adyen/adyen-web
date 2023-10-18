@@ -11,7 +11,13 @@ import { BrazilPersonalDetail } from '../../../internal/SocialSecurityNumberBraz
 import { ComponentMethodsRef } from '../../../types';
 import FormInstruction from '../../../internal/FormInstruction';
 
-function BoletoInput(props) {
+interface BoletoInputProps {
+    onChange(data: any): void;
+    // TODO
+    [key: string]: any;
+}
+
+function BoletoInput(props: BoletoInputProps) {
     const { i18n } = useCoreContext();
     const addressRef = useRef(null);
     const setAddressRef = ref => {

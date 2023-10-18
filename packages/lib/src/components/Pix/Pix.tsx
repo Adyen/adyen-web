@@ -4,9 +4,10 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import PixInput from './PixInput';
 import { cleanCPFCNPJ } from '../internal/SocialSecurityNumberBrazil/utils';
 import { PixElementData, PixProps } from './types';
+import { TxVariants } from '../tx-variants';
 
 class PixElement extends QRLoaderContainer<PixProps> {
-    public static type = 'pix';
+    public static type = TxVariants.pix;
 
     public static defaultProps = {
         showPayButton: false,

@@ -1,12 +1,12 @@
-import { Meta, StoryObj } from '@storybook/preact';
-import { PaymentMethodStoryProps } from '../types';
+import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 import { Container } from '../Container';
 import { GooglePayProps } from '../../../src/components/GooglePay/types';
 import { handleSubmit } from '../../helpers/checkout-handlers';
 import getCurrency from '../../utils/get-currency';
+import { GooglePay } from '../../../src';
 
-type Story = StoryObj<PaymentMethodStoryProps<GooglePayProps>>;
+type GooglePayStory = StoryConfiguration<GooglePayProps>;
 
 const COUNTRY_CODE = 'US';
 const SHOPPER_LOCALE = 'en-US';
@@ -14,10 +14,9 @@ const INITIAL_AMOUNT = 10000;
 
 let finalAmount = INITIAL_AMOUNT;
 
-const meta: Meta = {
+const meta: MetaConfiguration<GooglePayProps> = {
     title: 'Wallets/GooglePay'
 };
-export default meta;
 
 function getShippingCost(countryCode) {
     switch (countryCode) {
@@ -129,12 +128,14 @@ function calculateNewTransactionInfo(countryCode: string, selectedShippingOption
     return newTransactionInfo;
 }
 
-const createComponent = (args, context) => {
+const createComponent = (args: PaymentMethodStoryProps<GooglePayProps>, context) => {
+    const { componentConfiguration } = args;
     const checkout = getStoryContextCheckout(context);
-    return <Container type={'googlepay'} componentConfiguration={args.componentConfiguration} checkout={checkout} />;
+    const googlepay = new GooglePay({ core: checkout, ...componentConfiguration });
+    return <Container element={googlepay} />;
 };
 
-export const Express: Story = {
+export const Express: GooglePayStory = {
     render: createComponent,
     argTypes: {
         useSessions: {
@@ -225,3 +226,5 @@ export const Express: Story = {
         }
     }
 };
+
+export default meta;

@@ -2,9 +2,17 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import PersonalDetails from '../internal/PersonalDetails';
 import CoreProvider from '../../core/Context/CoreProvider';
+import { TxVariants } from '../tx-variants';
 import FormInstruction from '../internal/FormInstruction';
+import { UIElementProps } from '../types';
 
-export class PersonalDetailsElement extends UIElement {
+interface PersonalDetailsProps extends UIElementProps {
+    showFormInstruction?: boolean;
+}
+
+export class PersonalDetailsElement extends UIElement<PersonalDetailsProps> {
+    public static type = TxVariants.personal_details;
+
     protected static defaultProps = {
         showFormInstruction: true
     };

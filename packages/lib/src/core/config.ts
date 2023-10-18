@@ -16,7 +16,6 @@ export const GENERIC_OPTIONS = [
     'clientKey',
     'showPayButton',
     'redirectFromTopWhenInIframe',
-    'installmentOptions',
 
     // Events
     'onPaymentCompleted',

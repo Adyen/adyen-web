@@ -1,19 +1,22 @@
-import { Meta, StoryObj } from '@storybook/preact';
-import { PaymentMethodStoryProps } from '../types';
+import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 import { PayPalElementProps } from '../../../src/components/PayPal/types';
 import { Container } from '../Container';
+import { PayPal } from '../../../src';
 
-type Story = StoryObj<PaymentMethodStoryProps<PayPalElementProps>>;
+type PayPalStory = StoryConfiguration<PayPalElementProps>;
 
-const meta: Meta = {
+const meta: MetaConfiguration<PayPalElementProps> = {
     title: 'Wallets/Paypal'
 };
-export default meta;
 
-export const Paypal: Story = {
-    render: (args, context) => {
+export const Default: PayPalStory = {
+    render: (args: PaymentMethodStoryProps<PayPalElementProps>, context) => {
+        const { componentConfiguration } = args;
         const checkout = getStoryContextCheckout(context);
-        return <Container type={'paypal'} componentConfiguration={args.componentConfiguration} checkout={checkout} />;
+        const paypal = new PayPal({ core: checkout, ...componentConfiguration });
+        return <Container element={paypal} />;
     }
 };
+
+export default meta;

@@ -1,26 +1,28 @@
-import { Meta, StoryObj } from '@storybook/preact';
-import { PaymentMethodStoryProps } from '../types';
+import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 import { UPIElementProps } from '../../../src/components/UPI/types';
 import { Container } from '../Container';
+import { UPI } from '../../../src';
 
-type UpiStory = StoryObj<PaymentMethodStoryProps<UPIElementProps>>;
+type UpiStory = StoryConfiguration<UPIElementProps>;
 
-const meta: Meta<PaymentMethodStoryProps<UPIElementProps>> = {
+const meta: MetaConfiguration<UPIElementProps> = {
     title: 'Components/UPI'
 };
-export default meta;
 
-export const UPI: UpiStory = {
-    render: (args, context) => {
+export const Default: UpiStory = {
+    render: (args: PaymentMethodStoryProps<UPIElementProps>, context) => {
+        const { componentConfiguration } = args;
         const checkout = getStoryContextCheckout(context);
-        return <Container type={'upi'} componentConfiguration={args.componentConfiguration} checkout={checkout} />;
+        const upi = new UPI({ core: checkout, ...componentConfiguration });
+        return <Container element={upi} />;
     },
     args: {
         countryCode: 'IN',
         componentConfiguration: {
-            // @ts-ignore Seems like enum isnt the best way to export fixed strings
             defaultMode: 'vpa'
         }
     }
 };
+
+export default meta;

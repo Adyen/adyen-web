@@ -3,13 +3,18 @@ import UIElement from '../UIElement';
 import IbanInput from '../internal/IbanInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import { SepaElementData } from './types';
+import { TxVariants } from '../tx-variants';
 import FormInstruction from '../internal/FormInstruction';
+import { UIElementProps } from '../types';
 
+interface SepaProps extends UIElementProps {
+    showFormInstruction?: boolean;
+}
 /**
  * SepaElement
  */
-class SepaElement extends UIElement {
-    public static type = 'sepadirectdebit';
+class SepaElement extends UIElement<SepaProps> {
+    public static type = TxVariants.sepadirectdebit;
 
     protected static defaultProps = {
         showFormInstruction: true
@@ -54,13 +59,14 @@ class SepaElement extends UIElement {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 {this.props.showFormInstruction && <FormInstruction />}
+                {/* @ts-ignore TODO: add props */}
                 <IbanInput
                     ref={ref => {
                         this.componentRef = ref;
                     }}
                     {...this.props}
                     onChange={this.setState}
-                    onSubmit={this.submit}
+                    // onSubmit={this.submit}
                     payButton={this.payButton}
                 />
             </CoreProvider>

@@ -1,4 +1,7 @@
 import { getComponentForAction } from './PaymentAction';
+import registry from '../../core.registry';
+import BoletoElement from '../../../components/Boleto';
+import { BcmcMobile, WeChat } from '../../../components';
 
 describe('getComponentForAction', () => {
     describe('redirect', () => {
@@ -20,7 +23,7 @@ describe('getComponentForAction', () => {
         };
 
         test('processes a redirect response', () => {
-            const paymentResult = getComponentForAction(redirectActionMock);
+            const paymentResult = getComponentForAction(global.core, registry, redirectActionMock);
 
             expect(paymentResult.props.statusType).toBe('redirect');
             expect(paymentResult.constructor.type).toBe('redirect');
@@ -28,7 +31,7 @@ describe('getComponentForAction', () => {
         });
 
         test('processes a post redirect response', () => {
-            const paymentResult = getComponentForAction(redirectPostActionMock);
+            const paymentResult = getComponentForAction(global.core, registry, redirectPostActionMock);
 
             expect(paymentResult.props.statusType).toBe('redirect');
             expect(paymentResult.constructor.type).toBe('redirect');
@@ -37,36 +40,7 @@ describe('getComponentForAction', () => {
         });
     });
 
-    describe('ThreeDS2 old flow: with separate "threeDS2Fingerprint" & "threeDS2Challenge" actions', () => {
-        const threeDS2FingerprintMock = { type: 'threeDS2Fingerprint', paymentMethodType: 'scheme', token: '...', paymentData: '...' };
-        const threeDS2ChallengeMock = { type: 'threeDS2Challenge', paymentMethodType: 'scheme', token: '...', paymentData: '...' };
-
-        test('processes an threeDS2Fingerprint action', () => {
-            const paymentResult = getComponentForAction(threeDS2FingerprintMock);
-
-            expect(paymentResult.props.statusType).toBe('loading');
-            expect(paymentResult.constructor.type).toBe('threeDS2Fingerprint');
-            expect(paymentResult.props.isDropin).toBe(false);
-        });
-
-        test('processes an threeDS2Challenge response', () => {
-            const paymentResult = getComponentForAction(threeDS2ChallengeMock);
-
-            expect(paymentResult.props.statusType).toBe('custom');
-            expect(paymentResult.constructor.type).toBe('threeDS2Challenge');
-            expect(paymentResult.props.isDropin).toBe(false);
-        });
-
-        test('processes an threeDS2Challenge response for Dropin', () => {
-            const paymentResult = getComponentForAction(threeDS2ChallengeMock, { isDropin: true });
-
-            expect(paymentResult.props.statusType).toBe('custom');
-            expect(paymentResult.constructor.type).toBe('threeDS2Challenge');
-            expect(paymentResult.props.isDropin).toBe(true);
-        });
-    });
-
-    describe('ThreeDS2 new flow: with one "threeDS2" action with subtypes', () => {
+    describe('ThreeDS2: with one "threeDS2" action with subtypes', () => {
         const new3DS2FingerprintMock = { type: 'threeDS2', subtype: 'fingerprint', paymentMethodType: 'scheme', token: '...', paymentData: '...' };
         const new3DS2ChallengeMock = { type: 'threeDS2', subtype: 'challenge', paymentMethodType: 'scheme', token: '...', paymentData: '...' };
 
@@ -74,7 +48,7 @@ describe('getComponentForAction', () => {
         const mockDropinProps = { elementRef: {}, isDropin: true, challengeWindowSize: '02' };
 
         test('processes a new threeDS2Fingerprint action initiated from Card component', () => {
-            const paymentResult = getComponentForAction(new3DS2FingerprintMock, mockCoreProps);
+            const paymentResult = getComponentForAction(global.core, registry, new3DS2FingerprintMock, mockCoreProps);
 
             expect(paymentResult.props.statusType).toEqual('loading');
             expect(paymentResult.constructor.type).toEqual('threeDS2Fingerprint');
@@ -84,7 +58,7 @@ describe('getComponentForAction', () => {
         });
 
         test('processes a new threeDS2Fingerprint action initiated from Dropin', () => {
-            const paymentResult = getComponentForAction(new3DS2FingerprintMock, mockDropinProps);
+            const paymentResult = getComponentForAction(global.core, registry, new3DS2FingerprintMock, mockDropinProps);
 
             expect(paymentResult.props.statusType).toEqual('loading');
             expect(paymentResult.constructor.type).toEqual('threeDS2Fingerprint');
@@ -95,7 +69,7 @@ describe('getComponentForAction', () => {
         });
 
         test('processes a new threeDS2Challenge action initiated from Card component', () => {
-            const paymentResult = getComponentForAction(new3DS2ChallengeMock, mockCoreProps);
+            const paymentResult = getComponentForAction(global.core, registry, new3DS2ChallengeMock, mockCoreProps);
 
             expect(paymentResult.props.statusType).toEqual('custom');
             expect(paymentResult.constructor.type).toEqual('threeDS2Challenge');
@@ -105,7 +79,7 @@ describe('getComponentForAction', () => {
         });
 
         test('processes a new threeDS2Challenge action initiated from Dropin', () => {
-            const paymentResult = getComponentForAction(new3DS2ChallengeMock, mockDropinProps);
+            const paymentResult = getComponentForAction(global.core, registry, new3DS2ChallengeMock, mockDropinProps);
 
             expect(paymentResult.props.statusType).toEqual('custom');
             expect(paymentResult.constructor.type).toEqual('threeDS2Challenge');
@@ -117,27 +91,30 @@ describe('getComponentForAction', () => {
 
     describe('QRCode', () => {
         const paymentData = 'Ab02b4c0!BQABAgA20TqlJow';
-        const bcmcMock = {
-            paymentMethodType: 'bcmc_mobile_QR',
-            qrCodeData: 'BEP://1127.0.0.1$2B6VH2NNUBHGDIF3KHNQ3JRK',
-            type: 'qrCode'
-        };
 
         test('processes a qrCode action for bcmc_mobile', () => {
-            const paymentResult = getComponentForAction(bcmcMock, { loadingContext: '', paymentData });
+            const bcmcMock = {
+                paymentMethodType: 'bcmc_mobile_QR',
+                qrCodeData: 'BEP://1127.0.0.1$2B6VH2NNUBHGDIF3KHNQ3JRK',
+                type: 'qrCode'
+            };
+
+            registry.add(BcmcMobile);
+            const paymentResult = getComponentForAction(global.core, registry, bcmcMock, { loadingContext: '', paymentData });
 
             expect(paymentResult.props.statusType).toBe('custom');
             expect(paymentResult.constructor.type).toBe('bcmc_mobile');
         });
 
-        const weChatMock = {
-            paymentMethodType: 'wechatpayQR',
-            qrCodeData: 'BEP://1127.0.0.1$2B6VH2NNUBHGDIF3KHNQ3JRK',
-            type: 'qrCode'
-        };
+        test('processes a qrCode action for wechatpay', () => {
+            const weChatMock = {
+                paymentMethodType: 'wechatpayQR',
+                qrCodeData: 'BEP://1127.0.0.1$2B6VH2NNUBHGDIF3KHNQ3JRK',
+                type: 'qrCode'
+            };
 
-        test('processes a qrCode action for wechatpayQR', () => {
-            const paymentResult = getComponentForAction(weChatMock, { loadingContext: '', paymentData });
+            registry.add(WeChat);
+            const paymentResult = getComponentForAction(global.core, registry, weChatMock, { loadingContext: '', paymentData });
 
             expect(paymentResult.props.statusType).toBe('custom');
             expect(paymentResult.constructor.type).toBe('wechatpayQR');
@@ -162,7 +139,8 @@ describe('getComponentForAction', () => {
         };
 
         test('processes a voucher action for boletobancario_santander', () => {
-            const paymentResult = getComponentForAction(boletoVoucherMock, { loadingContext: '' });
+            registry.add(BoletoElement);
+            const paymentResult = getComponentForAction(global.core, registry, boletoVoucherMock, { loadingContext: '' });
 
             expect(paymentResult.props.statusType).toBe('custom');
             expect(paymentResult.constructor.type).toBe('boletobancario');
@@ -171,7 +149,7 @@ describe('getComponentForAction', () => {
 
     describe('Error', () => {
         test('processes an incorrect action ', () => {
-            expect(() => getComponentForAction({ type: 'test', paymentMethodType: 'test' }, { loadingContext: '' })).toThrow();
+            expect(() => getComponentForAction(global.core, registry, { type: 'test', paymentMethodType: 'test' })).toThrow();
         });
     });
 });

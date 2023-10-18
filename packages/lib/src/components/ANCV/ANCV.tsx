@@ -21,7 +21,7 @@ export interface ANCVDataState {
 }
 
 export class ANCVElement extends UIElement<ANCVProps> {
-    private static type = 'ancv';
+    public static type = 'ancv';
 
     /**
      * Formats the component data output

@@ -1,31 +1,36 @@
-import { formatCustomTranslations, formatLocale, getTranslation, loadTranslations, parseLocale } from './utils';
-import { FALLBACK_LOCALE, defaultTranslation } from './config';
-import locales from './locales';
+import { formatCustomTranslations, formatLocale, getTranslation, parseLocale } from './utils';
+import { SUPPORTED_LOCALES, DEFAULT_LOCALE, DEFAULT_TRANSLATION_FILE } from './config';
 import { getLocalisedAmount } from '../utils/amount-util';
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
+import { CustomTranslations, Translation } from './types';
 
 export class Language {
     private readonly supportedLocales: string[];
-
     public readonly locale: string;
     public readonly languageCode: string;
-    public translations: Record<string, string> = defaultTranslation;
+    public translations: Record<string, string>;
     public readonly customTranslations;
-    public loaded: Promise<any>;
 
-    constructor(locale: string = FALLBACK_LOCALE, customTranslations: object = {}) {
-        const defaultLocales = Object.keys(locales);
-        this.customTranslations = formatCustomTranslations(customTranslations, defaultLocales);
-
+    constructor(locale: string, customTranslations: CustomTranslations = {}, translationFile?: Translation) {
+        this.customTranslations = formatCustomTranslations(customTranslations, SUPPORTED_LOCALES);
         const localesFromCustomTranslations = Object.keys(this.customTranslations);
-        this.supportedLocales = [...defaultLocales, ...localesFromCustomTranslations].filter((v, i, a) => a.indexOf(v) === i); // our locales + validated custom locales
-        this.locale = formatLocale(locale) || parseLocale(locale, this.supportedLocales) || FALLBACK_LOCALE;
-        const [languageCode] = this.locale.split('-');
-        this.languageCode = languageCode;
+        this.supportedLocales = [...SUPPORTED_LOCALES, ...localesFromCustomTranslations].filter((v, i, a) => a.indexOf(v) === i); // our locales + validated custom locales
 
-        this.loaded = loadTranslations(this.locale, this.customTranslations).then(translations => {
-            this.translations = translations;
-        });
+        this.locale = formatLocale(locale) || parseLocale(locale, this.supportedLocales) || DEFAULT_LOCALE;
+        this.languageCode = this.locale.split('-')[0];
+
+        const isUsingCustomLocale = !SUPPORTED_LOCALES.includes(this.locale);
+
+        if (!isUsingCustomLocale && this.locale !== DEFAULT_LOCALE && translationFile === undefined) {
+            // In case the translation is not 'en-US' and there is no translation file provided
+            console.warn(`Language module: 'translationFile' missing.  Make sure to pass the right 'translationFile' to the '${this.locale}' locale`);
+        }
+
+        this.translations = {
+            ...DEFAULT_TRANSLATION_FILE,
+            ...translationFile,
+            ...(!!this.customTranslations[this.locale] && this.customTranslations[this.locale])
+        };
     }
 
     /**

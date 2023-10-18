@@ -1,4 +1,4 @@
-import { h, Fragment, FunctionalComponent } from 'preact';
+import { h, Fragment } from 'preact';
 import { useState, useEffect, useRef, useMemo, useCallback } from 'preact/hooks';
 import SecuredFieldsProvider from '../../../internal/SecuredFields/SFP/SecuredFieldsProvider';
 import { OnChangeEventDetails, SFPState } from '../../../internal/SecuredFields/SFP/types';
@@ -29,7 +29,7 @@ import useImage from '../../../../core/Context/useImage';
 import { getArrayDifferences } from '../../../../utils/arrayUtils';
 import FormInstruction from '../../../internal/FormInstruction';
 
-const CardInput: FunctionalComponent<CardInputProps> = props => {
+const CardInput = (props: CardInputProps) => {
     const sfp = useRef(null);
     const isValidating = useRef(false);
     const getImage = useImage();

@@ -3,9 +3,26 @@ import UIElement from '../UIElement';
 import DokuInput from './components/DokuInput';
 import DokuVoucherResult from './components/DokuVoucherResult';
 import CoreProvider from '../../core/Context/CoreProvider';
+import { TxVariants } from '../tx-variants';
+import { VoucherActionElement } from '../types';
 
-export class DokuElement extends UIElement {
-    public static type = 'doku';
+export class DokuElement extends UIElement<VoucherActionElement> {
+    public static type = TxVariants.doku;
+    public static txVariants = [
+        TxVariants.doku,
+        TxVariants.doku_alfamart,
+        TxVariants.doku_permata_lite_atm,
+        TxVariants.doku_indomaret,
+        TxVariants.doku_atm_mandiri_va,
+        TxVariants.doku_sinarmas_va,
+        TxVariants.doku_mandiri_va,
+        TxVariants.doku_cimb_va,
+        TxVariants.doku_danamon_va,
+        TxVariants.doku_bri_va,
+        TxVariants.doku_bni_va,
+        TxVariants.doku_bca_va,
+        TxVariants.doku_wallet
+    ];
 
     protected static defaultProps = {
         showFormInstruction: true
@@ -22,7 +39,7 @@ export class DokuElement extends UIElement {
         return {
             ...this.state.data,
             paymentMethod: {
-                type: this.props.type || DokuElement.type
+                type: this.type
             }
         };
     }

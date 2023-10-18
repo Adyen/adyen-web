@@ -7,10 +7,13 @@ import { GooglePayProps } from './types';
 import { mapBrands, getGooglePayLocale } from './utils';
 import collectBrowserInfo from '../../utils/browserInfo';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import { TxVariants } from '../tx-variants';
 
 class GooglePay extends UIElement<GooglePayProps> {
-    public static type = 'paywithgoogle';
+    public static type = TxVariants.googlepay;
+    public static txVariants = [TxVariants.googlepay, TxVariants.paywithgoogle];
     public static defaultProps = defaultProps;
+
     protected googlePay = new GooglePayService(this.props);
 
     /**
@@ -37,7 +40,7 @@ class GooglePay extends UIElement<GooglePayProps> {
     formatData() {
         return {
             paymentMethod: {
-                type: this.props.type ?? GooglePay.type,
+                type: this.type,
                 ...this.state
             },
             browserInfo: this.browserInfo
@@ -77,7 +80,7 @@ class GooglePay extends UIElement<GooglePayProps> {
     /**
      * Determine a shopper's ability to return a form of payment from the Google Pay API.
      */
-    public isAvailable = (): Promise<boolean> => {
+    public override async isAvailable(): Promise<void> {
         return this.isReadyToPay()
             .then(response => {
                 if (!response.result) {
@@ -88,12 +91,12 @@ class GooglePay extends UIElement<GooglePayProps> {
                     throw new Error('Google Pay - No paymentMethodPresent');
                 }
 
-                return true;
+                return Promise.resolve();
             })
-            .catch(() => {
-                return false;
+            .catch(error => {
+                return Promise.reject(error);
             });
-    };
+    }
 
     /**
      * Determine a shopper's ability to return a form of payment from the Google Pay API.

@@ -2,15 +2,15 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import GiftcardComponent from './components/GiftcardComponent';
 import CoreProvider from '../../core/Context/CoreProvider';
-
 import PayButton from '../internal/PayButton';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { PaymentAmount } from '../../types';
 import { PaymentResponse } from '../types';
-import { GiftCardElementData } from './types';
+import { GiftCardElementData, GiftCardProps } from './types';
+import { TxVariants } from '../tx-variants';
 
-export class GiftcardElement extends UIElement {
-    public static type = 'giftcard';
+export class GiftcardElement extends UIElement<GiftCardProps> {
+    public static type = TxVariants.giftcard;
 
     protected static defaultProps = {
         brandsConfiguration: {}

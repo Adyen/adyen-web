@@ -5,14 +5,16 @@ import RedirectButton from '../internal/RedirectButton';
 import { BankTransferProps, BankTransferState } from './types';
 import BankTransferResult from './components/BankTransferResult';
 import BankTransferInput from './components/BankTransferInput';
+import { TxVariants } from '../tx-variants';
 
 export class BankTransferElement extends UIElement<BankTransferProps> {
-    public static type = 'bankTransfer_IBAN';
+    public static type = TxVariants.bankTransfer_IBAN;
 
     public static defaultProps = {
         showEmailAddress: true
     };
 
+    // @ts-ignore Double check why state extends all props
     public state: BankTransferState = {
         isValid: !this.props.showEmailAddress,
         data: {}

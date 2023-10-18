@@ -1,31 +1,29 @@
-import { formatCustomTranslations, formatLocale, getTranslation, interpolateElement, loadTranslations, matchLocale, parseLocale } from './utils';
-import locales from './locales';
+import { formatCustomTranslations, formatLocale, getTranslation, interpolateElement, matchLocale, parseLocale } from './utils';
 import { createElement } from 'preact';
-
-const defaultSupportedLocales = Object.keys(locales);
+import { SUPPORTED_LOCALES } from './config';
 
 describe('parseLocale()', () => {
     test('should return the passed locale if formatted properly', () => {
-        expect(parseLocale('en-US', defaultSupportedLocales)).toBe('en-US');
-        expect(parseLocale('zh-TW', defaultSupportedLocales)).toBe('zh-TW');
-        expect(parseLocale('zh-CN', defaultSupportedLocales)).toBe('zh-CN');
-        expect(parseLocale('da-DK', defaultSupportedLocales)).toBe('da-DK');
+        expect(parseLocale('en-US', SUPPORTED_LOCALES)).toBe('en-US');
+        expect(parseLocale('zh-TW', SUPPORTED_LOCALES)).toBe('zh-TW');
+        expect(parseLocale('zh-CN', SUPPORTED_LOCALES)).toBe('zh-CN');
+        expect(parseLocale('da-DK', SUPPORTED_LOCALES)).toBe('da-DK');
     });
 
     test('should return a properly formatted locale if not formatted', () => {
         const locale = 'En_us';
-        expect(parseLocale(locale, defaultSupportedLocales)).toBe('en-US');
+        expect(parseLocale(locale, SUPPORTED_LOCALES)).toBe('en-US');
     });
 
     test('should return a properly formatted locale when a partial locale is sent in', () => {
         const locale = 'nl';
-        expect(parseLocale(locale, defaultSupportedLocales)).toBe('nl-NL');
+        expect(parseLocale(locale, SUPPORTED_LOCALES)).toBe('nl-NL');
     });
 
     test('should return the FALLBACK_LOCALE when an incorrect locale is sent in', () => {
-        expect(parseLocale('default', defaultSupportedLocales)).toBe('en-US');
-        expect(parseLocale('english', defaultSupportedLocales)).toBe('en-US');
-        expect(parseLocale('spanish', defaultSupportedLocales)).toBe('en-US');
+        expect(parseLocale('default', SUPPORTED_LOCALES)).toBe('en-US');
+        expect(parseLocale('english', SUPPORTED_LOCALES)).toBe('en-US');
+        expect(parseLocale('spanish', SUPPORTED_LOCALES)).toBe('en-US');
     });
 
     test('should return FALLBACK_LOCALE when an empty string is send', () => {
@@ -34,31 +32,31 @@ describe('parseLocale()', () => {
 
     test('should return null when a locale is not matched', () => {
         const locale = 'xx_XX';
-        expect(parseLocale(locale, defaultSupportedLocales)).toBe(null);
+        expect(parseLocale(locale, SUPPORTED_LOCALES)).toBe(null);
     });
 
     test('should return a formatted locale when called with an underscored locale like en_US', () => {
         const locale = 'en_US';
-        expect(parseLocale(locale, defaultSupportedLocales)).toBe('en-US');
+        expect(parseLocale(locale, SUPPORTED_LOCALES)).toBe('en-US');
     });
 
     test('should return the matched language when called with a non-proper locale like es&ES', () => {
         const locale = 'es&ES';
-        expect(parseLocale(locale, defaultSupportedLocales)).toBe('es-ES');
+        expect(parseLocale(locale, SUPPORTED_LOCALES)).toBe('es-ES');
     });
 });
 
 describe('matchLocale()', () => {
     test('should match a two letter code', () => {
-        expect(matchLocale('en', defaultSupportedLocales)).toBe('en-US');
-        expect(matchLocale('es', defaultSupportedLocales)).toBe('es-ES');
+        expect(matchLocale('en', SUPPORTED_LOCALES)).toBe('en-US');
+        expect(matchLocale('es', SUPPORTED_LOCALES)).toBe('es-ES');
     });
 
     test('should return null if it cannot match the locale', () => {
-        expect(matchLocale('ca', defaultSupportedLocales)).toBe(null);
-        expect(matchLocale('ne', defaultSupportedLocales)).toBe(null);
-        expect(matchLocale('123', defaultSupportedLocales)).toBe(null);
-        expect(matchLocale(undefined, defaultSupportedLocales)).toBe(null);
+        expect(matchLocale('ca', SUPPORTED_LOCALES)).toBe(null);
+        expect(matchLocale('ne', SUPPORTED_LOCALES)).toBe(null);
+        expect(matchLocale('123', SUPPORTED_LOCALES)).toBe(null);
+        expect(matchLocale(undefined, SUPPORTED_LOCALES)).toBe(null);
     });
 });
 
@@ -120,8 +118,8 @@ describe('getTranslation()', () => {
 
 describe('formatCustomTranslations()', () => {
     test('should work when no custom translations are passed', () => {
-        expect(formatCustomTranslations({}, defaultSupportedLocales)).toEqual({});
-        expect(formatCustomTranslations(undefined, defaultSupportedLocales)).toEqual({});
+        expect(formatCustomTranslations({}, SUPPORTED_LOCALES)).toEqual({});
+        expect(formatCustomTranslations(undefined, SUPPORTED_LOCALES)).toEqual({});
     });
 
     test('should work when custom translations are already in the defaultSupportedLocales', () => {
@@ -131,7 +129,7 @@ describe('formatCustomTranslations()', () => {
             }
         };
 
-        expect(formatCustomTranslations(customTranslations, defaultSupportedLocales)).toEqual(customTranslations);
+        expect(formatCustomTranslations(customTranslations, SUPPORTED_LOCALES)).toEqual(customTranslations);
     });
 
     test('should work when custom translations contain a partial ', () => {
@@ -147,7 +145,7 @@ describe('formatCustomTranslations()', () => {
             }
         };
 
-        expect(formatCustomTranslations(customTranslations, defaultSupportedLocales)).toEqual(expectedCustomTranslations);
+        expect(formatCustomTranslations(customTranslations, SUPPORTED_LOCALES)).toEqual(expectedCustomTranslations);
     });
 
     test('should format new locales', () => {
@@ -163,7 +161,7 @@ describe('formatCustomTranslations()', () => {
             }
         };
 
-        expect(formatCustomTranslations(customTranslations, defaultSupportedLocales)).toEqual(expectedCustomTranslations);
+        expect(formatCustomTranslations(customTranslations, SUPPORTED_LOCALES)).toEqual(expectedCustomTranslations);
     });
 
     test('should format new locales', () => {
@@ -179,7 +177,7 @@ describe('formatCustomTranslations()', () => {
             }
         };
 
-        expect(formatCustomTranslations(customTranslations, defaultSupportedLocales)).toEqual(expectedCustomTranslations);
+        expect(formatCustomTranslations(customTranslations, SUPPORTED_LOCALES)).toEqual(expectedCustomTranslations);
     });
 
     test('should format new partial locales if properly added in the defaultSupportedLocales', () => {
@@ -196,44 +194,6 @@ describe('formatCustomTranslations()', () => {
         };
 
         expect(formatCustomTranslations(customTranslations, defaultSupportedLocales)).toEqual(expectedCustomTranslations);
-    });
-});
-
-describe('loadTranslations()', () => {
-    test('should accept customTranslations without a countryCode for default defaultSupportedLocales', () => {
-        loadTranslations('es-ES', {
-            'es-ES': {
-                'creditCard.cardNumber.label': 'es string'
-            },
-            'es-AR': {
-                'creditCard.cardNumber.label': 'es-AR'
-            }
-        }).then(translations => {
-            expect(translations['creditCard.cardNumber.label']).toBe('es string');
-        });
-    });
-
-    test('should return the passed locale if formatted properly', () => {
-        loadTranslations('ca-CA', {
-            'es-ES': {
-                'creditCard.cardNumber.label': 'es'
-            },
-            'ca-CA': {
-                'creditCard.cardNumber.label': 'ca'
-            }
-        }).then(translations => {
-            expect(translations['creditCard.cardNumber.label']).toBe('ca');
-        });
-    });
-
-    test('should return the passed locale if formatted properly', () => {
-        loadTranslations('ca-CA', {
-            'ca-CA': {
-                'creditCard.cardNumber.label': 'ca-CA'
-            }
-        }).then(translations => {
-            expect(translations['creditCard.cardNumber.label']).toBe('ca-CA');
-        });
     });
 });
 

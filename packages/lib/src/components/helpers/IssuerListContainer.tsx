@@ -5,18 +5,15 @@ import IssuerList from '../internal/IssuerList';
 import getIssuerImageUrl from '../../utils/get-issuer-image';
 import { FALLBACK_CONTEXT } from '../../core/config';
 import CoreProvider from '../../core/Context/CoreProvider';
-import Language from '../../language/Language';
 import { IssuerItem, TermsAndConditions } from '../internal/IssuerList/types';
 import RedirectButton from '../internal/RedirectButton';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 
-interface IssuerListContainerProps extends UIElementProps {
+export interface IssuerListContainerProps extends UIElementProps {
     showImage?: boolean;
     placeholder?: string;
     issuers?: IssuerItem[];
-    highlightedIssuers: string[];
-    i18n: Language;
-    loadingContext: string;
+    highlightedIssuers?: string[];
     showPaymentMethodItemImages?: boolean;
     showPayButton?: boolean;
     termsAndConditions?: TermsAndConditions;
@@ -31,6 +28,15 @@ interface IssuerListData {
 }
 
 class IssuerListContainer extends UIElement<IssuerListContainerProps> {
+    protected static defaultProps = {
+        showImage: true,
+        onValid: () => {},
+        issuers: [],
+        highlightedIssuers: [],
+        loadingContext: FALLBACK_CONTEXT,
+        showPaymentMethodItemImages: false
+    };
+
     constructor(props: IssuerListContainerProps) {
         super(props);
 
@@ -46,15 +52,6 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
         }
     }
 
-    protected static defaultProps = {
-        showImage: true,
-        onValid: () => {},
-        issuers: [],
-        highlightedIssuers: [],
-        loadingContext: FALLBACK_CONTEXT,
-        showPaymentMethodItemImages: false
-    };
-
     formatProps(props) {
         const issuers = (props.details && props.details.length && (props.details.find(d => d.key === 'issuer') || {}).items) || props.issuers || [];
         return { ...props, issuers };
@@ -66,7 +63,7 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
     formatData(): IssuerListData {
         return {
             paymentMethod: {
-                type: this.constructor['type'],
+                type: this.type,
                 issuer: this.state?.data?.issuer
             }
         };

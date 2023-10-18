@@ -44,7 +44,7 @@ export function getTransactionInfo({
     countryCode = 'US',
     totalPriceStatus = 'FINAL',
     ...props
-}: GooglePayProps): google.payments.api.TransactionInfo {
+}: Omit<GooglePayProps, 'core'>): google.payments.api.TransactionInfo {
     const formattedPrice = String(getDecimalAmount(amount.value, amount.currency));
 
     return {
@@ -56,7 +56,7 @@ export function getTransactionInfo({
     };
 }
 
-export function initiatePaymentRequest({ configuration, ...props }: GooglePayProps): GooglePaymentDataRequest {
+export function initiatePaymentRequest({ configuration, ...props }: Omit<GooglePayProps, 'core'>): GooglePaymentDataRequest {
     return {
         apiVersion: config.API_VERSION,
         apiVersionMinor: config.API_VERSION_MINOR,

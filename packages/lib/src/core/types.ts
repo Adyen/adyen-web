@@ -1,17 +1,34 @@
-import { CustomTranslations, Locales } from '../language/types';
-import { PaymentMethods, PaymentMethodOptions, PaymentActionsType, PaymentAmountExtended, Order } from '../types';
+import { CustomTranslations, Translation } from '../language/types';
+import { PaymentAmountExtended, Order, PaymentAction, PaymentMethodsResponse } from '../types';
 import { AnalyticsOptions } from './Analytics/types';
-import { PaymentMethodsResponse } from './ProcessResponse/PaymentMethodsResponse/types';
 import { RiskModuleOptions } from './RiskModule/RiskModule';
-import { ActionHandledReturnObject, OnPaymentCompletedData, PaymentData, UIElementProps } from '../components/types';
+import { ActionHandledReturnObject, OnPaymentCompletedData, PaymentData } from '../components/types';
 import UIElement from '../components/UIElement';
 import AdyenCheckoutError from './Errors/AdyenCheckoutError';
 import { GiftCardElementData } from '../components/Giftcard/types';
-import { SRPanelProps } from './Errors/types';
+import { SRPanelConfig } from './Errors/types';
+import { NewableComponent } from './core.registry';
+import Session from './CheckoutSession';
+import PaymentMethods from './ProcessResponse/PaymentMethods';
 
 type PromiseResolve = typeof Promise.resolve;
 
 type PromiseReject = typeof Promise.reject;
+
+export interface ICore {
+    initialize(): Promise<ICore>;
+    register(...items: NewableComponent[]): void;
+    update({ order }: { order?: Order }): Promise<ICore>;
+    remove(component): ICore;
+    submitDetails(details: any): void;
+    getCorePropsForComponent(): any;
+    getComponent(txVariant: string): NewableComponent | undefined;
+    createFromAction(action: PaymentAction, options: any): any;
+    storeElementReference(element: UIElement): void;
+    options: CoreOptions;
+    paymentMethodsResponse: PaymentMethods;
+    session?: Session;
+}
 
 export interface CoreOptions {
     session?: any;
@@ -43,10 +60,15 @@ export interface CoreOptions {
     /**
      * The shopper's locale. This is used to set the language rendered in the UI.
      * For a list of supported locales, see {@link https://docs.adyen.com/checkout/components-web/localization-components | Localization}.
-     * For adding a custom locale, see {@link https://docs.adyen.com/checkout/components-web/localization-components#create-localization | Create localization}.
-     * @defaultValue 'en-US'
+     * For adding a custom locale, see {@link https://docs.adyen.com/checkout/components-web/localization-components#create-localization | Create localization}.*
      */
-    locale?: Locales | string;
+    locale?: string;
+
+    /**
+     * Translation file which contains the translations to a certain locale.
+     * @default en_US
+     */
+    translationFile?: Translation;
 
     /**
      * Custom translations and localizations
@@ -75,11 +97,6 @@ export interface CoreOptions {
     countryCode?: string;
 
     /**
-     * Optional per payment method configuration
-     */
-    paymentMethodsConfiguration?: PaymentMethodsConfiguration;
-
-    /**
      * Display only these payment methods
      */
     allowPaymentMethods?: string[];
@@ -92,7 +109,7 @@ export interface CoreOptions {
     /**
      * Screen Reader configuration
      */
-    srConfig?: SRPanelProps;
+    srConfig?: SRPanelConfig;
 
     /**
      * @internal
@@ -165,20 +182,3 @@ export interface CoreOptions {
      */
     loadingContext?: string;
 }
-
-type PaymentMethodsConfigurationMap = {
-    [key in keyof PaymentMethods]?: Partial<PaymentMethodOptions<key>>;
-};
-
-type PaymentActionTypesMap = {
-    [key in PaymentActionsType]?: Partial<UIElementProps>;
-};
-
-/**
- * Type must be loose, otherwise it will take priority over the rest
- */
-type NonMappedPaymentMethodsMap = {
-    [key: string]: any;
-};
-
-export type PaymentMethodsConfiguration = PaymentMethodsConfigurationMap & PaymentActionTypesMap & NonMappedPaymentMethodsMap;

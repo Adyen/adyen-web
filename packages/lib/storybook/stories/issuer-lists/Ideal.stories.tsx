@@ -1,19 +1,20 @@
-import { Meta, StoryObj } from '@storybook/preact';
-import { PaymentMethodStoryProps } from '../types';
+import { MetaConfiguration, StoryConfiguration } from '../types';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 import { Container } from '../Container';
-import { UIElementProps } from '../../../src/components/types';
+import { IssuerListContainerProps } from '../../../src/components/helpers/IssuerListContainer';
+import { Ideal } from '../../../src';
 
-type IdealStory = StoryObj<PaymentMethodStoryProps<UIElementProps>>;
+type IdealStory = StoryConfiguration<IssuerListContainerProps>;
 
-const meta: Meta<PaymentMethodStoryProps<UIElementProps>> = {
+const meta: MetaConfiguration<IssuerListContainerProps> = {
     title: 'IssuerList/IDEAL'
 };
-export default meta;
 
 const createComponent = (args, context) => {
+    const { componentConfiguration } = args;
     const checkout = getStoryContextCheckout(context);
-    return <Container type={'ideal'} componentConfiguration={args.componentConfiguration} checkout={checkout} />;
+    const ideal = new Ideal({ core: checkout, ...componentConfiguration });
+    return <Container element={ideal} />;
 };
 
 export const Default: IdealStory = {
@@ -28,8 +29,9 @@ export const WithHighlightedIssuers: IdealStory = {
     args: {
         ...Default.args,
         componentConfiguration: {
-            // @ts-ignore TODO: 'highlightedIssuers' is not documented
             highlightedIssuers: ['1121', '1154', '1153']
         }
     }
 };
+
+export default meta;

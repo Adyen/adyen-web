@@ -1,21 +1,20 @@
-import { Meta, StoryObj } from '@storybook/preact';
-import { PaymentMethodStoryProps } from '../types';
+import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 import { Container } from '../Container';
 import { ApplePayElementProps } from '../../../src/components/ApplePay/types';
 import { handleSubmit } from '../../helpers/checkout-handlers';
 import getCurrency from '../../utils/get-currency';
+import { ApplePay } from '../../../src';
 
-type Story = StoryObj<PaymentMethodStoryProps<ApplePayElementProps>>;
+type ApplePayStory = StoryConfiguration<ApplePayElementProps>;
 
 const COUNTRY_CODE = 'US';
 const SHOPPER_LOCALE = 'en-US';
 const INITIAL_AMOUNT = 10000;
 
-const meta: Meta = {
+const meta: MetaConfiguration<ApplePayElementProps> = {
     title: 'Wallets/ApplePay'
 };
-export default meta;
 
 const getShippingMethods = (countryCode: string): ApplePayJS.ApplePayShippingMethod[] => {
     switch (countryCode) {
@@ -115,12 +114,14 @@ const createApplePayAmountHelper = () => {
 };
 const ApplePayAmountHelper = createApplePayAmountHelper();
 
-const createComponent = (args, context) => {
+const createComponent = (args: PaymentMethodStoryProps<ApplePayElementProps>, context) => {
+    const { componentConfiguration } = args;
     const checkout = getStoryContextCheckout(context);
-    return <Container type={'applepay'} componentConfiguration={args.componentConfiguration} checkout={checkout} />;
+    const applepay = new ApplePay({ core: checkout, ...componentConfiguration });
+    return <Container element={applepay} />;
 };
 
-export const Express: Story = {
+export const Express: ApplePayStory = {
     render: createComponent,
     argTypes: {
         useSessions: {
@@ -212,3 +213,5 @@ export const Express: Story = {
         }
     }
 };
+
+export default meta;

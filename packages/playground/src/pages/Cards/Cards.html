@@ -1,236 +1,258 @@
 <!DOCTYPE html>
 <html class="no-js" lang="">
-    <head>
-        <meta charset="utf-8" />
-        <meta http-equiv="x-ua-compatible" content="ie=edge" />
-        <title>Adyen Web | Cards</title>
-        <meta name="description" content="" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    </head>
-    <body>
-        <header></header>
-        <main>
-            <form class="merchant-checkout__form" method="post">
-                <div class="merchant-checkout__payment-method">
-                    <div class="merchant-checkout__payment-method__header">
-                        <h2>Card with Click to Pay</h2>
-                    </div>
-                    <div class="merchant-checkout__payment-method__details">
-                        <div class="card-ctp-field"></div>
-                    </div>
-                </div>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Adyen Web | Cards</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+</head>
+<body>
+<header></header>
+<main>
+    <form class="merchant-checkout__form" method="post">
 
-                <div class="merchant-checkout__payment-method ">
-                    <div class="merchant-checkout__payment-method__header">
-                        <h2>Stored card</h2>
-                    </div>
-                    <div class="merchant-checkout__payment-method__details">
-                        <div class="storedcard-field"></div>
-                    </div>
-                </div>
-
-                <div class="merchant-checkout__payment-method">
-                    <div class="merchant-checkout__payment-method__header">
-                        <h2>Card</h2>
-                    </div>
-                    <div class="merchant-checkout__payment-method__details">
-                        <div class="card-field"></div>
-                    </div>
-                </div>
-
-                <div class="merchant-checkout__payment-method">
-                    <div class="merchant-checkout__payment-method__header">
-                        <h2>Card in React</h2>
-                    </div>
-                    <div class="merchant-checkout__payment-method__details">
-                        <div class="react-card-field"></div>
-                    </div>
-                </div>
-
-                <div class="merchant-checkout__payment-method">
-                    <div class="merchant-checkout__payment-method__header">
-                        <h2>Bancontact</h2>
-                    </div>
-                    <div class="merchant-checkout__payment-method__details">
-                        <div class="bancontact-field"></div>
-                    </div>
-                </div>
-
-                <div class="merchant-checkout__payment-method">
-                    <div class="merchant-checkout__payment-method__header">
-                        <h2>Card with Billing Address</h2>
-                    </div>
-                    <div class="merchant-checkout__payment-method__details">
-                        <div class="card-avs-field"></div>
-                    </div>
-                </div>
-
-                <div class="merchant-checkout__payment-method">
-                    <div class="merchant-checkout__payment-method__header">
-                        <h2>Card with Billing Address mode partial</h2>
-                    </div>
-                    <div class="merchant-checkout__payment-method__details">
-                        <div class="card-avs-partial-field"></div>
-                    </div>
-                </div>
-
-                <div class="merchant-checkout__payment-method">
-                    <div class="merchant-checkout__payment-method__header">
-                        <h2>Card with Korean Authentication</h2>
-                    </div>
-                    <div class="merchant-checkout__payment-method__details">
-                        <div class="card-kcp-field"></div>
-                    </div>
-                </div>
-
-
-            </form>
-
-            <div class="info">
-                <h2>3DS2:</h2>
-                <table>
-                    <caption>
-                        3DS2 test cards
-                    </caption>
-                    <thead>
-                        <tr>
-                            <th scope="col">Card Type</th>
-                            <th scope="col">Card Number</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>amex</td>
-                            <td>3714 4963 5398 431</td>
-                        </tr>
-                        <tr>
-                            <td>Cartes Bancaires</td>
-                            <td>4035 5014 2814 6300</td>
-                        </tr>
-                        <tr>
-                            <td>Diners</td>
-                            <td>3056 9309 0259 04</td>
-                        </tr>
-                        <tr>
-                            <td>Discover</td>
-                            <td>6011 1111 1111 1117</td>
-                        </tr>
-                        <tr>
-                            <td>JCB</td>
-                            <td>3566 1111 1111 1113</td>
-                        </tr>
-                        <tr>
-                            <td>mc</td>
-                            <td>5454 5454 5454 5454</td>
-                        </tr>
-                        <tr>
-                            <td>UnionPay</td>
-                            <td>6212 3456 7890 1232</td>
-                        </tr>
-                        <tr>
-                            <td>visa</td>
-                            <td>4917 6100 0000 0000</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h2>AVS:</h2>
-                <table>
-                    <caption>
-                        AVS test cards
-                    </caption>
-                    <thead>
-                        <tr>
-                            <th scope="col">Card Number</th>
-                            <th scope="col">Card Type</th>
-                            <th scope="col">House Number</th>
-                            <th scope="col">Address</th>
-                            <th scope="col">ZIP Code</th>
-                            <th scope="col">Country</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>374251021090003</td>
-                            <td>amex</td>
-                            <td>1</td>
-                            <td>Infinite Loop Cupertino, CA.</td>
-                            <td>95014</td>
-                            <td>US</td>
-                        </tr>
-                        <tr>
-                            <td>374251018720018</td>
-                            <td>amex</td>
-                            <td>1600</td>
-                            <td>Pennsylvania Ave NW Washington, DC.</td>
-                            <td>20500</td>
-                            <td>US</td>
-                        </tr>
-                        <tr>
-                            <td>374101012180018</td>
-                            <td>amex</td>
-                            <td>10</td>
-                            <td>Downing Street, London.</td>
-                            <td>SW1A 2AA</td>
-                            <td>GB</td>
-                        </tr>
-                        <tr>
-                            <td>374251033270007</td>
-                            <td>amex</td>
-                            <td>8-10</td>
-                            <td>Broadway, Westminster, London.</td>
-                            <td>SW1H 0BG</td>
-                            <td>GB</td>
-                        </tr>
-                        <tr>
-                            <td>5500000000000004</td>
-                            <td>mc</td>
-                            <td>1600</td>
-                            <td>Pennsylvania Ave NW Washington, DC.</td>
-                            <td>20500</td>
-                            <td>US</td>
-                        </tr>
-                        <tr>
-                            <td>5555555555554444</td>
-                            <td>mc</td>
-                            <td>10</td>
-                            <td>Downing Street, London.</td>
-                            <td>SW1A 2AA</td>
-                            <td>GB</td>
-                        </tr>
-                        <tr>
-                            <td>4400000000000008</td>
-                            <td>visa</td>
-                            <td>1</td>
-                            <td>Infinite Loop Cupertino, CA.</td>
-                            <td>95014</td>
-                            <td>US</td>
-                        </tr>
-                        <tr>
-                            <td>4444333322221111</td>
-                            <td>visa</td>
-                            <td>8-10</td>
-                            <td>Broadway, Westminster, London.</td>
-                            <td>SW1H 0BG</td>
-                            <td>GB</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <p>
-                    <a
-                        href="https://docs.adyen.com/development-resources/test-cards/test-card-numbers/#test-3d-secure-2-authentication"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        More information →
-                    </a>
-                </p>
+        <div class="merchant-checkout__payment-method">
+            <div class="merchant-checkout__payment-method__header">
+                <h2>Card with Click to Pay</h2>
             </div>
-        </main>
+            <div class="merchant-checkout__payment-method__details">
+                <div class="card-ctp-field"></div>
+            </div>
+        </div>
 
-        <script type="text/javascript">
-            window.htmlPages = <%= JSON.stringify(htmlWebpackPlugin.htmlPages) || '' %>;
-        </script>
-    </body>
+        <div class="merchant-checkout__payment-method ">
+            <div class="merchant-checkout__payment-method__header">
+                <h2>Stored card</h2>
+            </div>
+            <div class="merchant-checkout__payment-method__details">
+                <div class="storedcard-field"></div>
+            </div>
+        </div>
+
+        <div class="merchant-checkout__payment-method">
+            <div class="merchant-checkout__payment-method__header">
+                <h2>Card</h2>
+            </div>
+            <div class="merchant-checkout__payment-method__details">
+                <div class="card-field"></div>
+            </div>
+        </div>
+
+        <div class="merchant-checkout__payment-method">
+            <div class="merchant-checkout__payment-method__header">
+                <span style="display: flex; align-items:end; justify-content: space-between">
+                    <h2>Card with Installments</h2>
+                    <span class="adyen-checkout-form-instruction">(type "4" or "55" into the Card number field)</span>
+                </span>
+            </div>
+            <div class="merchant-checkout__payment-method__details">
+                <div class="card-field-installments"></div>
+            </div>
+        </div>
+
+        <div class="merchant-checkout__payment-method">
+            <div class="merchant-checkout__payment-method__header">
+                <h2>Bancontact</h2>
+            </div>
+            <div class="merchant-checkout__payment-method__details">
+                <div class="bancontact-field"></div>
+            </div>
+        </div>
+
+        <div class="merchant-checkout__payment-method">
+            <div class="merchant-checkout__payment-method__header">
+                <h2>Card with Billing Address</h2>
+            </div>
+            <div class="merchant-checkout__payment-method__details">
+                <div class="card-avs-field"></div>
+            </div>
+        </div>
+
+        <div class="merchant-checkout__payment-method">
+            <div class="merchant-checkout__payment-method__header">
+                <h2>Card with Billing Address mode partial</h2>
+            </div>
+            <div class="merchant-checkout__payment-method__details">
+                <div class="card-avs-partial-field"></div>
+            </div>
+        </div>
+
+        <div class="merchant-checkout__payment-method">
+            <div class="merchant-checkout__payment-method__header">
+                <h2>Card with Address Lookup</h2>
+            </div>
+            <div class="merchant-checkout__payment-method__details">
+                <div class="card-address-lookup-field"></div>
+            </div>
+        </div>
+
+        <div class="merchant-checkout__payment-method">
+            <div class="merchant-checkout__payment-method__header">
+                <h2>Card in React</h2>
+            </div>
+            <div class="merchant-checkout__payment-method__details">
+                <div class="react-card-field"></div>
+            </div>
+        </div>
+
+        <div class="merchant-checkout__payment-method">
+            <div class="merchant-checkout__payment-method__header">
+                <h2>Card with Korean Authentication</h2>
+            </div>
+            <div class="merchant-checkout__payment-method__details">
+                <div class="card-kcp-field"></div>
+            </div>
+        </div>
+
+
+    </form>
+
+    <div class="info">
+        <h2>3DS2:</h2>
+        <table>
+            <caption>
+                3DS2 test cards
+            </caption>
+            <thead>
+            <tr>
+                <th scope="col">Card Type</th>
+                <th scope="col">Card Number</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>amex</td>
+                <td>3714 4963 5398 431</td>
+            </tr>
+            <tr>
+                <td>Cartes Bancaires</td>
+                <td>4035 5014 2814 6300</td>
+            </tr>
+            <tr>
+                <td>Diners</td>
+                <td>3056 9309 0259 04</td>
+            </tr>
+            <tr>
+                <td>Discover</td>
+                <td>6011 1111 1111 1117</td>
+            </tr>
+            <tr>
+                <td>JCB</td>
+                <td>3566 1111 1111 1113</td>
+            </tr>
+            <tr>
+                <td>mc</td>
+                <td>5454 5454 5454 5454</td>
+            </tr>
+            <tr>
+                <td>UnionPay</td>
+                <td>6212 3456 7890 1232</td>
+            </tr>
+            <tr>
+                <td>visa</td>
+                <td>4917 6100 0000 0000</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h2>AVS:</h2>
+        <table>
+            <caption>
+                AVS test cards
+            </caption>
+            <thead>
+            <tr>
+                <th scope="col">Card Number</th>
+                <th scope="col">Card Type</th>
+                <th scope="col">House Number</th>
+                <th scope="col">Address</th>
+                <th scope="col">ZIP Code</th>
+                <th scope="col">Country</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>374251021090003</td>
+                <td>amex</td>
+                <td>1</td>
+                <td>Infinite Loop Cupertino, CA.</td>
+                <td>95014</td>
+                <td>US</td>
+            </tr>
+            <tr>
+                <td>374251018720018</td>
+                <td>amex</td>
+                <td>1600</td>
+                <td>Pennsylvania Ave NW Washington, DC.</td>
+                <td>20500</td>
+                <td>US</td>
+            </tr>
+            <tr>
+                <td>374101012180018</td>
+                <td>amex</td>
+                <td>10</td>
+                <td>Downing Street, London.</td>
+                <td>SW1A 2AA</td>
+                <td>GB</td>
+            </tr>
+            <tr>
+                <td>374251033270007</td>
+                <td>amex</td>
+                <td>8-10</td>
+                <td>Broadway, Westminster, London.</td>
+                <td>SW1H 0BG</td>
+                <td>GB</td>
+            </tr>
+            <tr>
+                <td>5500000000000004</td>
+                <td>mc</td>
+                <td>1600</td>
+                <td>Pennsylvania Ave NW Washington, DC.</td>
+                <td>20500</td>
+                <td>US</td>
+            </tr>
+            <tr>
+                <td>5555555555554444</td>
+                <td>mc</td>
+                <td>10</td>
+                <td>Downing Street, London.</td>
+                <td>SW1A 2AA</td>
+                <td>GB</td>
+            </tr>
+            <tr>
+                <td>4400000000000008</td>
+                <td>visa</td>
+                <td>1</td>
+                <td>Infinite Loop Cupertino, CA.</td>
+                <td>95014</td>
+                <td>US</td>
+            </tr>
+            <tr>
+                <td>4444333322221111</td>
+                <td>visa</td>
+                <td>8-10</td>
+                <td>Broadway, Westminster, London.</td>
+                <td>SW1H 0BG</td>
+                <td>GB</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <p>
+            <a
+                    href="https://docs.adyen.com/development-resources/test-cards/test-card-numbers/#test-3d-secure-2-authentication"
+                    target="_blank"
+                    rel="noopener noreferrer"
+            >
+                More information →
+            </a>
+        </p>
+    </div>
+</main>
+
+<script type="text/javascript">
+    window.htmlPages = <%= JSON.stringify(htmlWebpackPlugin.htmlPages) || '' %>;
+</script>
+</body>
 </html>
