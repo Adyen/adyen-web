@@ -3,12 +3,12 @@ import { useState, useEffect } from 'preact/hooks';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import Field from '../../internal/FormFields/Field';
 
-import { renderFormField } from '../../internal/FormFields';
 import { UIElementProps } from '../../types';
 import './BlikInput.scss';
 import useForm from '../../../utils/useForm';
 import { digitsOnlyFormatter } from '../../../utils/Formatters/formatters';
 import useImage from '../../../core/Context/useImage';
+import InputText from '../../internal/FormFields/InputText';
 
 interface BlikInputProps extends UIElementProps {
     data?: BlikInputDataState;
@@ -19,7 +19,7 @@ interface BlikInputDataState {
 }
 
 function BlikInput(props: BlikInputProps) {
-    const { i18n, loadingContext } = useCoreContext();
+    const { i18n } = useCoreContext();
     const getImage = useImage();
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<BlikInputDataState>({
         schema: ['blikCode'],
@@ -52,26 +52,27 @@ function BlikInput(props: BlikInputProps) {
                 classNameModifiers={['blikCode', '50']}
                 isValid={valid.blikCode}
                 dir={'ltr'}
+                name={'blikCode'}
             >
-                {renderFormField('text', {
-                    value: data.blikCode,
-                    name: 'blikCode',
-                    spellcheck: false,
-                    required: true,
-                    autocorrect: 'off',
-                    autocomplete: 'off',
-                    onInput: handleChangeFor('blikCode', 'input'),
-                    onBlur: handleChangeFor('blikCode', 'blur'),
-                    placeholder: '123456',
-                    inputMode: 'numeric',
-                    maxLength: 6
-                })}
+                <InputText
+                    value={data.blikCode}
+                    name={'blikCode'}
+                    spellcheck={false}
+                    required={true}
+                    autocorrect={'off'}
+                    autocomplete={'off'}
+                    onInput={handleChangeFor('blikCode', 'input')}
+                    onBlur={handleChangeFor('blikCode', 'blur')}
+                    placeholder={'123456'}
+                    inputMode={'numeric'}
+                    maxLength={6}
+                />
             </Field>
 
             {props.showPayButton &&
                 props.payButton({
                     status,
-                    icon: getImage({ loadingContext, imageFolder: 'components/' })('lock')
+                    icon: getImage({ imageFolder: 'components/' })('lock')
                 })}
         </div>
     );

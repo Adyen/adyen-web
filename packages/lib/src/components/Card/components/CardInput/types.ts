@@ -13,6 +13,7 @@ import Analytics from '../../../../core/Analytics';
 import RiskElement from '../../../../core/RiskModule';
 import { ComponentMethodsRef } from '../../../types';
 import { DisclaimerMsgObject } from '../../../internal/DisclaimerMessage/DisclaimerMessage';
+import { OnAddressLookupType } from '../../../internal/Address/components/AddressSearch';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -106,6 +107,7 @@ export interface CardInputProps {
     onFieldValid?: () => {};
     onFocus?: (e) => {};
     onLoad?: () => {};
+    onAddressLookup?: OnAddressLookupType;
     payButton?: (obj) => {};
     placeholders?: Placeholders;
     positionHolderNameOnTop?: boolean;
@@ -113,6 +115,7 @@ export interface CardInputProps {
     setComponentRef?: (ref) => void;
     showBrandsUnderCardNumber: boolean;
     showBrandIcon?: boolean;
+    showFormInstruction?: boolean;
     showInstallmentAmounts?: boolean;
     showPayButton?: boolean;
     showWarnings?: boolean;

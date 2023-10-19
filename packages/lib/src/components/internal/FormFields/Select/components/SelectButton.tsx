@@ -8,7 +8,7 @@ import Img from '../../../Img';
 function SelectButtonElement({ filterable, toggleButtonRef, ...props }) {
     if (filterable) return <div {...props} ref={toggleButtonRef} />;
 
-    return <button {...props} ref={toggleButtonRef} />;
+    return <button id={props.id} aria-describedby={props.ariaDescribedBy} type={'button'} {...props} ref={toggleButtonRef} />;
 }
 
 function SelectButton(props: SelectButtonProps) {
@@ -16,7 +16,7 @@ function SelectButton(props: SelectButtonProps) {
     const { active, selected, inputText, readonly, showList } = props;
 
     // display fallback order
-    const displayText = selected.selectedOptionName || selected.name || props.placeholder;
+    const displayText = selected.selectedOptionName || selected.name || props.placeholder || '';
     // displayInputText only used for the text input for the filter
     // display the "typed" filter text when showing the dropdown,
     // hide it and show the "selected" value when collapsed
@@ -54,11 +54,7 @@ function SelectButton(props: SelectButtonProps) {
             filterable={props.filterable}
             onClick={onClickHandler}
             onKeyDown={!readonly ? props.onButtonKeyDown : null}
-            title={selected.name || props.placeholder}
             toggleButtonRef={props.toggleButtonRef}
-            type={!props.filterable ? 'button' : null}
-            aria-describedby={props.ariaDescribedBy}
-            id={props.id}
         >
             {!props.filterable ? (
                 <Fragment>
@@ -85,6 +81,8 @@ function SelectButton(props: SelectButtonProps) {
                         aria-activedescendant={`listItem-${active.id}`}
                         type="text"
                         readOnly={props.readonly}
+                        id={props.id}
+                        aria-describedby={props.ariaDescribedBy}
                     />
                     {!showList && selected.secondaryText && (
                         <span className="adyen-checkout__dropdown__button__secondary-text">{selected.secondaryText}</span>

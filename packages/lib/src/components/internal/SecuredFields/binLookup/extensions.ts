@@ -119,15 +119,26 @@ export default function extensions(props, refs, states, hasPanLengthRef: Partial
                 value = target.getAttribute('data-value') || target.getAttribute('alt');
             }
 
-            setSelectedBrandValue(value);
+            // Check if we have a value and whether that value corresponds to a brandObject we can propagate
+            // If either are false then abandon the process
+            let brandObjArr: BrandObject[] = [];
+            if (value) {
+                // Find the brandObject with the matching brand value and place into an array
+                brandObjArr = dualBrandSelectElements.reduce((acc, item) => {
+                    if (item.brandObject.brand === value) {
+                        acc.push(item.brandObject);
+                    }
+                    return acc;
+                }, []);
 
-            // Find the brandObject with the matching brand value and place into an array
-            const brandObjArr: BrandObject[] = dualBrandSelectElements.reduce((acc, item) => {
-                if (item.brandObject.brand === value) {
-                    acc.push(item.brandObject);
+                if (!brandObjArr.length) {
+                    return; // no brand object associated with value was found
                 }
-                return acc;
-            }, []);
+            } else {
+                return; // no value passed
+            }
+
+            setSelectedBrandValue(value);
 
             // Pass brand object into SecuredFields
             sfp.current.processBinLookupResponse({

@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import Img from '../../../../../internal/Img';
 import './AvailableBrands.scss';
 import { BrandConfiguration } from '../../../../types';
-import { BRAND_READABLE_NAME_MAP } from '../../../../../internal/SecuredFields/lib/configuration/constants';
+import { getFullBrandName } from '../../utils';
 
 type AvailableBrands = Array<BrandConfiguration>;
 
@@ -26,7 +26,7 @@ const AvailableBrands = ({ brands, activeBrand }: PaymentMethodBrandsProps) => {
         >
             {brands.map(({ name, icon }) => (
                 <span key={name} className="adyen-checkout__card__brands__brand-wrapper">
-                    <Img src={icon} alt={BRAND_READABLE_NAME_MAP[name]} />
+                    <Img src={icon} alt={getFullBrandName(name)} />
                 </span>
             ))}
         </span>

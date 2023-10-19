@@ -3,7 +3,7 @@ import { PaymentMethods, PaymentMethodOptions, PaymentActionsType, PaymentAmount
 import { AnalyticsOptions } from './Analytics/types';
 import { PaymentMethodsResponse } from './ProcessResponse/PaymentMethodsResponse/types';
 import { RiskModuleOptions } from './RiskModule/RiskModule';
-import { ActionHandledReturnObject, OnPaymentCompletedData, PaymentData } from '../components/types';
+import { ActionHandledReturnObject, OnPaymentCompletedData, PaymentData, UIElementProps } from '../components/types';
 import UIElement from '../components/UIElement';
 import AdyenCheckoutError from './Errors/AdyenCheckoutError';
 import { GiftCardElementData } from '../components/Giftcard/types';
@@ -19,6 +19,16 @@ export interface CoreOptions {
      * Use test. When you're ready to accept live payments, change the value to one of our {@link https://docs.adyen.com/checkout/drop-in-web#testing-your-integration | live environments}.
      */
     environment?: 'test' | 'live' | 'live-us' | 'live-au' | 'live-apse' | 'live-in' | string;
+
+    /**
+     * Used internally by Pay By Link in order to set its own URL's instead of using the ones mapped in our codebase.
+     *
+     * @internal
+     */
+    environmentUrls?: {
+        api?: string;
+        analytics?: string;
+    };
 
     /**
      * Show or hides a Pay Button for each payment method
@@ -100,9 +110,24 @@ export interface CoreOptions {
 
     setStatusAutomatically?: boolean;
 
-    beforeRedirect?(resolve: PromiseResolve, reject: PromiseReject, redirectData: { url: string; method: string; data?: any }): Promise<void>;
+    beforeRedirect?(
+        resolve: PromiseResolve,
+        reject: PromiseReject,
+        redirectData: {
+            url: string;
+            method: string;
+            data?: any;
+        }
+    ): Promise<void>;
 
-    beforeSubmit?(state: any, element: UIElement, actions: { resolve: PromiseResolve; reject: PromiseReject }): Promise<void>;
+    beforeSubmit?(
+        state: any,
+        element: UIElement,
+        actions: {
+            resolve: PromiseResolve;
+            reject: PromiseReject;
+        }
+    ): Promise<void>;
 
     onPaymentCompleted?(data: OnPaymentCompletedData, element?: UIElement): void;
 
@@ -120,12 +145,14 @@ export interface CoreOptions {
 
     onOrderRequest?(resolve: PromiseResolve, reject: PromiseReject, data: PaymentData): Promise<void>;
 
+    onOrderCancel?(order: Order): void;
+
     /**
      * Only used in Components combined with Sessions flow
      * Callback used to inform when the order is created.
      * https://docs.adyen.com/payment-methods/gift-cards/web-component?tab=config-sessions_1
      */
-    onOrderCreated?(order: Order): void;
+    onOrderCreated?(data: { order: Order }): void;
 
     /**
      * Used only in the Donation Component when shopper declines to donate
@@ -139,10 +166,19 @@ export interface CoreOptions {
     loadingContext?: string;
 }
 
-export type PaymentMethodsConfiguration =
-    | {
-          [key in keyof PaymentMethods]?: Partial<PaymentMethodOptions<key>>;
-      }
-    | {
-          [key in PaymentActionsType]?: any;
-      };
+type PaymentMethodsConfigurationMap = {
+    [key in keyof PaymentMethods]?: Partial<PaymentMethodOptions<key>>;
+};
+
+type PaymentActionTypesMap = {
+    [key in PaymentActionsType]?: Partial<UIElementProps>;
+};
+
+/**
+ * Type must be loose, otherwise it will take priority over the rest
+ */
+type NonMappedPaymentMethodsMap = {
+    [key: string]: any;
+};
+
+export type PaymentMethodsConfiguration = PaymentMethodsConfigurationMap & PaymentActionTypesMap & NonMappedPaymentMethodsMap;

@@ -1,33 +1,72 @@
 import AdyenCheckout from './core';
 import BCMCMobileElement from '../components/BcmcMobile';
+import Session from './CheckoutSession';
+import { CheckoutSessionSetupResponse } from '../types';
+
+jest.spyOn(Session.prototype, 'setupSession').mockImplementation(() => {
+    const sessionSetupResponseMock: CheckoutSessionSetupResponse = {
+        id: 'session-id',
+        sessionData: 'session-data',
+        amount: {
+            value: 1000,
+            currency: 'USD'
+        },
+        expiresAt: '',
+        paymentMethods: {},
+        returnUrl: '',
+        configuration: {},
+        shopperLocale: 'en-US'
+    };
+
+    return Promise.resolve(sessionSetupResponseMock);
+});
 
 beforeEach(() => {
     console.error = jest.fn(error => {
         throw new Error(error);
     });
-    console.log = jest.fn(() => {});
     console.warn = jest.fn(() => {});
 });
 
 describe('Core', () => {
-    test('Should default to the FALLBACK_LOCALE', () => {
-        const Checkout = new AdyenCheckout({});
-        expect(Checkout.modules.i18n.locale).toBe('en-US');
+    test('should default to the FALLBACK_LOCALE', async () => {
+        const checkout = new AdyenCheckout({ environment: 'test', clientKey: 'test_123456' });
+        await checkout.initialize();
+
+        expect(checkout.modules.i18n.locale).toBe('en-US');
     });
 
-    test('Should contain modules', () => {
-        const Checkout = new AdyenCheckout({ locale: 'es-ES' });
-        expect(Object.keys(Checkout.modules).length).toBeGreaterThan(1);
+    test('should create the modules when initializing on Advanced Flow', async () => {
+        const checkout = new AdyenCheckout({ environment: 'test', clientKey: 'test_123456' });
+        await checkout.initialize();
+
+        expect(Object.keys(checkout.modules).length).toBeGreaterThan(1);
     });
 
-    test('Should set a custom locale', () => {
-        const Checkout = new AdyenCheckout({ locale: 'es-ES' });
-        expect(Checkout.modules.i18n.locale).toBe('es-ES');
+    test('should create the modules when initializing on Sesssions flow', async () => {
+        const checkout = new AdyenCheckout({
+            environment: 'test',
+            clientKey: 'test_123456',
+            session: { id: 'session-id', sessionData: 'sesssion-data' }
+        });
+
+        await checkout.initialize();
+
+        expect(Object.keys(checkout.modules).length).toBeGreaterThan(1);
+    });
+
+    test('should set a custom locale', async () => {
+        const checkout = new AdyenCheckout({ environment: 'test', clientKey: 'test_123456', locale: 'es-ES' });
+        await checkout.initialize();
+
+        expect(checkout.modules.i18n.locale).toBe('es-ES');
     });
 
     describe('create', () => {
-        test('Should create a component if it exists', () => {
-            const checkout = new AdyenCheckout({});
+        test('should create a component if it exists', async () => {
+            const checkout = new AdyenCheckout({ environment: 'test', clientKey: 'test_123456' });
+            await checkout.initialize();
+
             expect(checkout.create('dropin')).toBeTruthy();
             expect(() => checkout.create('notapaymentmethod')).toThrow();
         });
@@ -37,40 +76,56 @@ describe('Core', () => {
             const onSubmitMockPMConfig = jest.fn().mockName('onSubmitMockPMConfig');
             const onSubmitMockComponent = jest.fn().mockName('onSubmitMockComponent');
 
-            test('component props receive global props if not defined elsewhere', () => {
-                const checkout = new AdyenCheckout({ onSubmit: onSubmitMockGlobal });
+            test('component props receive global props if not defined elsewhere', async () => {
+                const checkout = new AdyenCheckout({ environment: 'test', clientKey: 'test_123456', onSubmit: onSubmitMockGlobal });
+                await checkout.initialize();
                 const component = checkout.create('card');
+
                 expect(component.props.onSubmit).toBe(onSubmitMockGlobal);
             });
 
-            test('component props take precedence over global props', () => {
-                const checkout = new AdyenCheckout({ onSubmit: onSubmitMockGlobal });
+            test('component props take precedence over global props', async () => {
+                const checkout = new AdyenCheckout({ environment: 'test', clientKey: 'test_123456', onSubmit: onSubmitMockGlobal });
+                await checkout.initialize();
                 const component = checkout.create('card', { onSubmit: onSubmitMockComponent });
+
                 expect(component.props.onSubmit).toBe(onSubmitMockComponent);
             });
 
-            test('paymentMethodsConfiguration props take precedence over global props', () => {
+            test('paymentMethodsConfiguration props take precedence over global props', async () => {
                 const checkout = new AdyenCheckout({
+                    environment: 'test',
+                    clientKey: 'test_123456',
                     onSubmit: onSubmitMockGlobal,
                     paymentMethodsConfiguration: { card: { onSubmit: onSubmitMockPMConfig } }
                 });
+                await checkout.initialize();
                 const component = checkout.create('card');
+
                 expect(component.props.onSubmit).toBe(onSubmitMockPMConfig);
             });
 
-            test('component props take precedence over paymentMethodsConfiguration props', () => {
+            test('component props take precedence over paymentMethodsConfiguration props', async () => {
                 const checkout = new AdyenCheckout({
+                    environment: 'test',
+                    clientKey: 'test_123456',
                     paymentMethodsConfiguration: { card: { onSubmit: onSubmitMockPMConfig } }
                 });
+                await checkout.initialize();
                 const component = checkout.create('card', { onSubmit: onSubmitMockComponent });
+
                 expect(component.props.onSubmit).toBe(onSubmitMockComponent);
             });
         });
     });
 
     describe('createFromAction', () => {
-        test('Should create a component from an action object', () => {
-            const checkout = new AdyenCheckout({});
+        test('should create a component from an action object', async () => {
+            const checkout = new AdyenCheckout({
+                environment: 'test',
+                clientKey: 'test_123456'
+            });
+            await checkout.initialize();
 
             const paymentAction = checkout.createFromAction({
                 method: 'GET',
@@ -82,8 +137,13 @@ describe('Core', () => {
             expect(paymentAction.constructor['type']).toBe('redirect');
         });
 
-        test('should handle new fingerprint action', () => {
-            const checkout = new AdyenCheckout({ paymentMethodsConfiguration: { threeDS2: { challengeWindowSize: '04' } } });
+        test('should handle new fingerprint action', async () => {
+            const checkout = new AdyenCheckout({
+                environment: 'test',
+                clientKey: 'test_123456',
+                paymentMethodsConfiguration: { threeDS2: { challengeWindowSize: '04' } }
+            });
+            await checkout.initialize();
 
             const fingerprintAction = {
                 paymentData: 'Ab02b4c0!BQABAgCUeRP+3La4...',
@@ -104,14 +164,17 @@ describe('Core', () => {
             expect(pa.props.challengeWindowSize).toEqual('04');
         });
 
-        test('should handle new challenge action', () => {
+        test('should handle new challenge action', async () => {
             const checkout = new AdyenCheckout({
+                environment: 'test',
+                clientKey: 'test_123456',
                 paymentMethodsConfiguration: {
                     threeDS2: {
                         challengeWindowSize: '03'
                     }
                 }
             });
+            await checkout.initialize();
 
             const challengeAction = {
                 paymentData: 'Ab02b4c0!BQABAgCUeRP+3La4...',
@@ -134,12 +197,16 @@ describe('Core', () => {
             const onAdditionalDetailsGlobal = jest.fn().mockName('onSubmitGlobal');
             const onAdditionalDetailsBCMC = jest.fn().mockName('onSubmitMockPMConfig');
             const onAdditionalDetailsCreateFromAction = jest.fn().mockName('onSubmitMockComponent');
-            const checkout = new AdyenCheckout({
-                onAdditionalDetails: onAdditionalDetailsGlobal,
-                paymentMethodsConfiguration: { qrCode: { onAdditionalDetails: onAdditionalDetailsBCMC } }
-            });
 
-            test('paymentMethodsConfiguration properties take precedence over global configuration', () => {
+            test('paymentMethodsConfiguration properties take precedence over global configuration', async () => {
+                const checkout = new AdyenCheckout({
+                    environment: 'test',
+                    clientKey: 'test_123456',
+                    onAdditionalDetails: onAdditionalDetailsGlobal,
+                    paymentMethodsConfiguration: { qrCode: { onAdditionalDetails: onAdditionalDetailsBCMC } }
+                });
+                await checkout.initialize();
+
                 const paymentAction = checkout.createFromAction({
                     paymentMethodType: 'bcmc_mobile_QR',
                     qrCodeData: 'BEP://1bcmc-test.adyen.com/pal/bep$ZTHYT3DHKVXYJ3GHBQNNCX4M',
@@ -149,7 +216,14 @@ describe('Core', () => {
                 expect(paymentAction.props.onAdditionalDetails).toEqual(onAdditionalDetailsBCMC);
             });
 
-            test('createFromAction props take precedence over paymentMethodsConfiguration and global configuration', () => {
+            test('createFromAction props take precedence over paymentMethodsConfiguration and global configuration', async () => {
+                const checkout = new AdyenCheckout({
+                    environment: 'test',
+                    clientKey: 'test_123456',
+                    onAdditionalDetails: onAdditionalDetailsGlobal,
+                    paymentMethodsConfiguration: { qrCode: { onAdditionalDetails: onAdditionalDetailsBCMC } }
+                });
+                await checkout.initialize();
                 const paymentAction = checkout.createFromAction(
                     {
                         paymentMethodType: 'bcmc_mobile_QR',
@@ -169,12 +243,42 @@ describe('Core', () => {
 
     describe('update', () => {
         test('Should update all components under main instance', async () => {
-            const checkout = new AdyenCheckout({});
+            const checkout = new AdyenCheckout({
+                environment: 'test',
+                clientKey: 'test_123456'
+            });
+            await checkout.initialize();
+
             const component = checkout.create('dropin').mount('body');
+
             const spy = jest.spyOn(component, 'update');
             await checkout.update();
 
             expect(spy).toHaveBeenCalled();
         });
+
+        test('should update the payment method list for the advanced flow', async () => {
+            const checkout = new AdyenCheckout({
+                environment: 'test',
+                clientKey: 'xxxx'
+            });
+            await checkout.initialize();
+            const paymentMethodsResponse = { paymentMethods: [{ name: 'Credit Card', type: 'scheme', brands: ['visa'] }] };
+            expect(checkout.paymentMethodsResponse).toHaveProperty('paymentMethods', []);
+            await checkout.update({ paymentMethodsResponse });
+            expect(checkout.paymentMethodsResponse).toHaveProperty('paymentMethods', paymentMethodsResponse.paymentMethods);
+        });
+    });
+
+    test('should use custom checkoutshopper URL url if available', () => {
+        const checkout = new AdyenCheckout({
+            environment: 'test',
+            environmentUrls: {
+                api: 'https://localhost:8080/checkoutshopper/'
+            },
+            clientKey: 'devl_FX923810'
+        });
+
+        expect(checkout.loadingContext).toBe('https://localhost:8080/checkoutshopper/');
     });
 });

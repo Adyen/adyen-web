@@ -30,11 +30,13 @@ const Field: FunctionalComponent<FieldProps> = props => {
         onFocusField,
         showValidIcon,
         useLabelElement,
+        addContextualElement,
         // Redeclare prop names to avoid internal clashes
         filled: propsFilled,
         focused: propsFocused,
         i18n,
-        errorVisibleToScreenReader
+        errorVisibleToScreenReader,
+        renderAlternativeToLabel
     } = props;
 
     // Controls whether any error element has an aria-hidden="true" attr (which means it is the error for a securedField)
@@ -69,7 +71,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
         [onBlur, onFieldBlur]
     );
 
-    const renderContent = useCallback(() => {
+    const renderLabelOrAlternativeContents = useCallback(() => {
         return (
             <Fragment>
                 {typeof label === 'string' && (
@@ -84,13 +86,21 @@ const Field: FunctionalComponent<FieldProps> = props => {
                     </span>
                 )}
 
+                {/*TODO - in what scenario is label a function? */}
                 {/*@ts-ignore - function is callable*/}
                 {typeof label === 'function' && label()}
 
                 {labelEndAdornment && <span className="adyen-checkout__label-adornment--end">{labelEndAdornment}</span>}
 
                 {helper && <span className={'adyen-checkout__helper-text'}>{helper}</span>}
-                <span
+            </Fragment>
+        );
+    }, [label, errorMessage, labelEndAdornment, helper]);
+
+    const renderInputRelatedElements = useCallback(() => {
+        return (
+            <Fragment>
+                <div
                     className={classNames([
                         'adyen-checkout__input-wrapper',
                         ...inputWrapperModifiers.map(m => `adyen-checkout__input-wrapper--${m}`)
@@ -103,7 +113,8 @@ const Field: FunctionalComponent<FieldProps> = props => {
                             onFocusHandler,
                             onBlurHandler,
                             isInvalid: !!errorMessage,
-                            ...(name && { uniqueId: uniqueId.current })
+                            ...(name && { uniqueId: uniqueId.current }),
+                            addContextualElement
                         };
                         return cloneElement(child as VNode, childProps);
                     })}
@@ -125,40 +136,53 @@ const Field: FunctionalComponent<FieldProps> = props => {
                             <Icon type="field_error" alt={i18n?.get('error.title')} />
                         </span>
                     )}
-                </span>
-                <span
-                    className={'adyen-checkout__error-text'}
-                    {...(errorVisibleToSR && { id: `${uniqueId.current}${ARIA_ERROR_SUFFIX}` })}
-                    aria-hidden={errorVisibleToSR ? null : 'true'}
-                >
-                    {errorMessage && typeof errorMessage === 'string' && errorMessage.length ? errorMessage : null}
-                </span>
+                </div>
+                {addContextualElement && (
+                    <span
+                        className={'adyen-checkout__error-text'}
+                        {...(errorVisibleToSR && { id: `${uniqueId.current}${ARIA_ERROR_SUFFIX}` })}
+                        aria-hidden={errorVisibleToSR ? null : 'true'}
+                    >
+                        {errorMessage && typeof errorMessage === 'string' && errorMessage.length ? errorMessage : null}
+                    </span>
+                )}
             </Fragment>
         );
-    }, [children, errorMessage, isLoading, isValid, label, onFocusHandler, onBlurHandler]);
+    }, [children, errorMessage, isLoading, isValid, onFocusHandler, onBlurHandler]);
 
-    const LabelOrDiv = useCallback(({ onFocusField, focused, filled, disabled, name, uniqueId, useLabelElement, isSecuredField, children }) => {
-        const defaultWrapperProps = {
-            onClick: onFocusField,
-            className: classNames({
-                'adyen-checkout__label': true,
-                'adyen-checkout__label--focused': focused,
-                'adyen-checkout__label--filled': filled,
-                'adyen-checkout__label--disabled': disabled
-            })
-        };
+    const LabelOrAlternative = useCallback(
+        ({ onFocusField, focused, filled, disabled, name, uniqueId, useLabelElement, isSecuredField, children, renderAlternativeToLabel }) => {
+            const defaultWrapperProps = {
+                onClick: onFocusField,
+                className: classNames({
+                    'adyen-checkout__label': true,
+                    'adyen-checkout__label--focused': focused,
+                    'adyen-checkout__label--filled': filled,
+                    'adyen-checkout__label--disabled': disabled
+                })
+            };
 
-        return useLabelElement ? (
-            // if errorVisibleToSR is true then we are NOT dealing with the label for a securedField... so give it a `for` attribute
-            <label {...defaultWrapperProps} {...(!isSecuredField && { htmlFor: name && uniqueId })}>
-                {children}
-            </label>
-        ) : (
-            <div {...defaultWrapperProps} role={'form'}>
-                {children}
-            </div>
-        );
-    }, []);
+            return useLabelElement ? (
+                // if errorVisibleToSR is true then we are NOT dealing with the label for a securedField... so give it a `for` attribute
+                <label {...defaultWrapperProps} {...(!isSecuredField && { htmlFor: name && uniqueId })}>
+                    {children}
+                </label>
+            ) : (
+                renderAlternativeToLabel(defaultWrapperProps, children, uniqueId) // defaults to null
+
+                // Example usage:
+                // const alternativeLabelContent = (defaultWrapperProps, children, uniqueId) => {
+                //     return (
+                //         <div {...defaultWrapperProps} role={'label'} htmlFor={uniqueId}>
+                //             {children}
+                //         </div>
+                //     );
+                // };
+                // <Field name={'myField'} renderAlternativeToLabel={alternativeLabelContent}>
+            );
+        },
+        []
+    );
 
     /**
      * RENDER
@@ -175,7 +199,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
                 }
             )}
         >
-            <LabelOrDiv
+            <LabelOrAlternative
                 onFocusField={onFocusField}
                 name={name}
                 disabled={disabled}
@@ -184,9 +208,11 @@ const Field: FunctionalComponent<FieldProps> = props => {
                 useLabelElement={useLabelElement}
                 uniqueId={uniqueId.current}
                 isSecuredField={!errorVisibleToSR}
+                renderAlternativeToLabel={renderAlternativeToLabel}
             >
-                {renderContent()}
-            </LabelOrDiv>
+                {renderLabelOrAlternativeContents()}
+            </LabelOrAlternative>
+            {renderInputRelatedElements()}
         </div>
     );
 };
@@ -195,7 +221,9 @@ Field.defaultProps = {
     className: '',
     classNameModifiers: [],
     inputWrapperModifiers: [],
-    useLabelElement: true
+    useLabelElement: true,
+    addContextualElement: true,
+    renderAlternativeToLabel: () => null
 };
 
 export default Field;

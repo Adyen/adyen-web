@@ -246,6 +246,7 @@ export interface Order {
 export interface OrderStatus {
     expiresAt: string;
     paymentMethods: {
+        amount?: PaymentAmount;
         lastFour: string;
         type: string;
     }[];
@@ -289,8 +290,8 @@ export type CheckoutSession = {
 };
 
 export type SessionConfiguration = {
-    installmentOptions: InstallmentOptions;
-    enableStoreDetails: boolean;
+    installmentOptions?: InstallmentOptions;
+    enableStoreDetails?: boolean;
 };
 
 export type CheckoutSessionSetupResponse = {

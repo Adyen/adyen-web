@@ -48,7 +48,8 @@ describe('Installments', () => {
     test('preselects the passed value', () => {
         installmentOptions.card.preselectedValue = 2;
         const wrapper = getWrapper({ installmentOptions });
-        expect(wrapper.find('Select').prop('selected')).toBe(2);
+        // TODO: This test should be migrated to react test library instead of reading form props
+        expect(wrapper.find('Select').prop('selectedValue')).toBe(2);
     });
 
     test('preselect the first if the preselectedValue is not provided', async () => {
@@ -56,7 +57,7 @@ describe('Installments', () => {
         const props = { amount, installmentOptions, type: 'amount' };
 
         render(<Installments {...props} />);
-        expect(await screen.findByTitle('1x $300.00')).toBeTruthy();
+        expect(await screen.findByRole('button')).toHaveTextContent('1x $300.00');
     });
 
     describe('On brand change', () => {
@@ -80,9 +81,9 @@ describe('Installments', () => {
                 };
                 const props = { amount, installmentOptions, type };
                 const { rerender } = render(<Installments {...props} />);
-                expect(await screen.findByTitle('2x $150.00')).toBeTruthy();
+                expect(await screen.findByRole('button')).toHaveTextContent('2x $150.00');
                 rerender(<Installments brand={'visa'} {...props} />);
-                expect(await screen.findByTitle('2x $150.00')).toBeTruthy();
+                expect(await screen.findByRole('button')).toHaveTextContent('2x $150.00');
             });
         });
 
@@ -100,9 +101,9 @@ describe('Installments', () => {
                 };
                 const props = { amount, installmentOptions, type };
                 const { rerender } = render(<Installments {...props} />);
-                expect(await screen.findByTitle('4x $75.00')).toBeTruthy();
+                expect(await screen.findByRole('button')).toHaveTextContent('4x $75.00');
                 rerender(<Installments brand={'visa'} {...props} />);
-                expect(await screen.findByTitle('2x $150.00')).toBeTruthy();
+                expect(await screen.findByRole('button')).toHaveTextContent('2x $150.00');
             });
 
             test('should preselect the first installments', async () => {
@@ -117,9 +118,9 @@ describe('Installments', () => {
                 };
                 const props = { amount, installmentOptions, type };
                 const { rerender } = render(<Installments {...props} />);
-                expect(await screen.findByTitle('4x $75.00')).toBeTruthy();
+                expect(await screen.findByRole('button')).toHaveTextContent('4x $75.00');
                 rerender(<Installments brand={'visa'} {...props} />);
-                expect(await screen.findByTitle('1x $300.00')).toBeTruthy();
+                expect(await screen.findByRole('button')).toHaveTextContent('1x $300.00');
             });
         });
     });

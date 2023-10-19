@@ -36,6 +36,7 @@ export class CardElement extends UIElement<CardElementProps> {
     protected static defaultProps = {
         onBinLookup: () => {},
         showBrandsUnderCardNumber: true,
+        showFormInstruction: true,
         _disableClickToPay: false
     };
 
@@ -164,14 +165,14 @@ export class CardElement extends UIElement<CardElementProps> {
     }
 
     get icon() {
-        return this.props.icon ?? this.resources.getImage({ loadingContext: this.props.loadingContext })(this.brand);
+        return this.props.icon ?? this.resources.getImage()(this.brand);
     }
 
     get brands(): { icon: any; name: string }[] {
-        const { brands, loadingContext, brandsConfiguration } = this.props;
+        const { brands, brandsConfiguration } = this.props;
         if (brands) {
             return brands.map(brand => {
-                const brandIcon = brandsConfiguration[brand]?.icon ?? this.props.modules.resources.getImage({ loadingContext })(brand);
+                const brandIcon = brandsConfiguration[brand]?.icon ?? this.props.modules.resources.getImage()(brand);
                 return { icon: brandIcon, name: brand };
             });
         }

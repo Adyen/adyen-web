@@ -28,6 +28,7 @@ import { processAriaConfig } from './utils/processAriaConfig';
 import { processPlaceholders } from './utils/processPlaceholders';
 import Language from '../../../../../language/Language';
 import { hasOwnProperty } from '../../../../../utils/hasOwnProperty';
+import './SecuredField.scss';
 
 const logPostMsg = false;
 const doLog = false;

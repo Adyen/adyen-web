@@ -4,12 +4,14 @@ import getIssuerImageUrl from '../../../../utils/get-issuer-image';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import { DragonpayVoucherResultProps } from '../../types';
 import { VoucherDetail } from '../../../internal/Voucher/types';
+import useImage from '../../../../core/Context/useImage';
 
 export default function DragonpayVoucherResult(props: DragonpayVoucherResultProps) {
     const { reference, totalAmount, surcharge, expiresAt, alternativeReference, instructionsUrl, icon, issuer, paymentMethodType } = props;
-    const { loadingContext, i18n } = useCoreContext();
+    const { i18n } = useCoreContext();
+    const getImage = useImage();
     const issuerImageUrl =
-        paymentMethodType !== 'dragonpay_otc_philippines' ? getIssuerImageUrl({ loadingContext }, paymentMethodType)(issuer.toLowerCase()) : null;
+        paymentMethodType !== 'dragonpay_otc_philippines' ? getIssuerImageUrl({}, paymentMethodType, getImage)(issuer.toLowerCase()) : null;
 
     return (
         <Voucher

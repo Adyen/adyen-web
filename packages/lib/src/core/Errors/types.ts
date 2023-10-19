@@ -14,12 +14,14 @@ export interface ValidationRuleErrorObj {
     [key: string]: ValidationRuleResult;
 }
 
+export type FieldTypeMappingFn = (key: string, i18n: Language, countrySpecificLabels: StringObject) => string;
+
 export interface SortErrorsObj {
     errors: ErrorObj;
     layout?: string[];
     i18n: Language;
     countrySpecificLabels?: StringObject;
-    fieldTypeMappingFn?: (key: string, i18n: Language, countrySpecificLabels: StringObject) => string;
+    fieldTypeMappingFn?: FieldTypeMappingFn;
 }
 
 export interface SortedErrorObject {
@@ -28,12 +30,19 @@ export interface SortedErrorObject {
     errorCode: string;
 }
 
+export interface AriaAttributes {
+    'aria-relevant'?: 'additions' | 'all' | 'removals' | 'text' | 'additions text';
+    'aria-live'?: 'off' | 'polite' | 'assertive';
+    'aria-atomic'?: 'true' | 'false';
+}
+
 export interface SRPanelProps extends BaseElementProps {
     enabled?: boolean;
     node?: string;
     showPanel?: boolean;
     moveFocus?: boolean;
     id?: string;
+    ariaAttributes?: AriaAttributes;
 }
 
 export interface SRMessagesProps {

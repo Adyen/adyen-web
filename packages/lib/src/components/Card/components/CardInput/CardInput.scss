@@ -19,6 +19,12 @@
     overflow: hidden;
     white-space: nowrap;
     text-align: left;
+
+}
+
+.adyen-checkout__field--storedCard .adyen-checkout__input[readonly],
+.adyen-checkout__field--storedCard .adyen-checkout__input[readonly]:hover{
+    color: $color-black;
 }
 
 .adyen-checkout__field--storedCard,

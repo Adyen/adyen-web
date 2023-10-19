@@ -4,6 +4,7 @@ import ApplePay from './ApplePay';
 import Atome from './Atome';
 import { BillDeskOnline, BillDeskWallet } from './BillDesk';
 import Card from './Card';
+import CashAppPay from './CashAppPay';
 import ClickToPay from './ClickToPay';
 import Bancontact from './Card/Bancontact';
 import Donation from './Donation';
@@ -59,6 +60,8 @@ import OnlineBankingSKElement from './OnlineBankingSK';
 import PayByBank from './PayByBank';
 import PromptPay from './PromptPay';
 import Duitnow from './DuitNow';
+import ANCV from './ANCV';
+import Trustly from './Trustly';
 
 /**
  * Maps each component with a Component element.
@@ -114,6 +117,7 @@ const componentsMap = {
     /** Wallets */
     amazonpay: AmazonPay,
     applepay: ApplePay,
+    cashapp: CashAppPay,
     clicktopay: ClickToPay,
     googlepay: GooglePay,
     paypal: PayPal,
@@ -186,10 +190,12 @@ const componentsMap = {
     redirect: Redirect,
     twint: Twint,
     vipps: Vipps,
+    trustly: Trustly,
     /** Redirect */
 
     /** Klarna */
     klarna: Klarna,
+    klarna_b2b: Klarna,
     klarna_account: Klarna,
     klarna_paynow: Klarna,
     /** Klarna */
@@ -212,6 +218,7 @@ const componentsMap = {
     upi: UPI, // also QR
     upi_qr: UPI, // also QR
     upi_collect: UPI, // also QR
+    ancv: ANCV,
     /** Await */
 
     /** Giftcard */

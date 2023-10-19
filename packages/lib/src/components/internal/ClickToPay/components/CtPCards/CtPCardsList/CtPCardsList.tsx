@@ -6,9 +6,9 @@ import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import useImage from '../../../../../../core/Context/useImage';
 import useForm from '../../../../../../utils/useForm';
 import isMobile from '../../../../../../utils/isMobile';
-import renderFormField from '../../../../FormFields';
 import Field from '../../../../FormFields/Field';
 import './CtPCardsList.scss';
+import Select from '../../../../FormFields/Select';
 
 type CtPCardsListProps = {
     cards: ShopperCard[];
@@ -24,7 +24,7 @@ type CardsSelectorDataState = {
 const schema = ['srcDigitalCardId'];
 
 const CtPCardsList = ({ cardSelected, cards, errorMessage, onChangeCard }: CtPCardsListProps) => {
-    const { i18n, loadingContext } = useCoreContext();
+    const { i18n } = useCoreContext();
     const getImage = useImage();
     const { status } = useClickToPayContext();
     const { handleChangeFor, data } = useForm<CardsSelectorDataState>({
@@ -34,7 +34,7 @@ const CtPCardsList = ({ cardSelected, cards, errorMessage, onChangeCard }: CtPCa
 
     const items = useMemo(() => {
         return cards.map(card => ({
-            icon: card.artUri || getImage({ loadingContext })(card.scheme),
+            icon: card.artUri || getImage()(card.scheme),
             name: `${isMobile() ? '' : card.title} •••• ${card.panLastFour} `,
             secondaryText: card.isExpired && i18n.get('ctp.cards.expiredCard'),
             id: card.srcDigitalCardId,
@@ -50,15 +50,15 @@ const CtPCardsList = ({ cardSelected, cards, errorMessage, onChangeCard }: CtPCa
 
     return (
         <Field name="clickToPayCards" errorMessage={errorMessage}>
-            {renderFormField('select', {
-                items,
-                selected: data['srcDigitalCardId'],
-                name: 'cards',
-                filterable: false,
-                className: 'adyen-checkout-ctp__cards-list-dropdown',
-                readonly: status === 'loading',
-                onChange: handleChangeFor('srcDigitalCardId')
-            })}
+            <Select
+                items={items}
+                selectedValue={data['srcDigitalCardId']}
+                name={'cards'}
+                filterable={false}
+                className={'adyen-checkout-ctp__cards-list-dropdown'}
+                readonly={status === 'loading'}
+                onChange={handleChangeFor('srcDigitalCardId')}
+            />
         </Field>
     );
 };

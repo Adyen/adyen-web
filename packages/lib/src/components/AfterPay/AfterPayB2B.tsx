@@ -6,7 +6,6 @@ import { OpenInvoiceContainerProps } from '../helpers/OpenInvoiceContainer/OpenI
 
 export default class AfterPayB2B extends OpenInvoiceContainer {
     public static type = 'afterpay_b2b';
-
     protected static defaultProps: OpenInvoiceContainerProps = {
         onChange: () => {},
         data: { companyDetails: {}, personalDetails: {}, billingAddress: {}, deliveryAddress: {} },
@@ -15,7 +14,8 @@ export default class AfterPayB2B extends OpenInvoiceContainer {
             personalDetails: 'editable',
             billingAddress: 'editable',
             deliveryAddress: 'editable'
-        }
+        },
+        showFormInstruction: true
     };
 
     formatProps(props) {

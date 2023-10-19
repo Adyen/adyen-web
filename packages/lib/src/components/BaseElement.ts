@@ -56,7 +56,8 @@ class BaseElement<P extends BaseElementProps> {
      */
     get data(): PaymentData | RiskData {
         const clientData = getProp(this.props, 'modules.risk.data');
-        const checkoutAttemptId = getProp(this.props, 'modules.analytics.checkoutAttemptId');
+        const useAnalytics = !!getProp(this.props, 'modules.analytics.props.enabled');
+        const checkoutAttemptId = useAnalytics ? getProp(this.props, 'modules.analytics.checkoutAttemptId') : 'do-not-track';
         const order = this.state.order || this.props.order;
 
         const componentData = this.formatData();

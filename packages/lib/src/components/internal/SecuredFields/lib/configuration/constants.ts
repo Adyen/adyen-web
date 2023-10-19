@@ -15,7 +15,7 @@ export const ENCRYPTED_SECURITY_CODE_4_DIGITS = 'encryptedSecurityCode4digits';
 
 export const GIFT_CARD = 'giftcard';
 
-export const SF_VERSION = '4.4.1';
+export const SF_VERSION = '4.5.1';
 
 export const DEFAULT_CARD_GROUP_TYPES = ['amex', 'mc', 'visa'];
 
@@ -70,5 +70,6 @@ export const BRAND_READABLE_NAME_MAP = {
     jcb: 'JCB',
     diners: 'Diners Club',
     maestro: 'Maestro',
-    bcmc: 'Bancontact card'
+    bcmc: 'Bancontact card',
+    bijcard: 'de Bijenkorf Card'
 };

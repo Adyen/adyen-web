@@ -4,6 +4,7 @@ import { UIElementProps } from '../types';
 import QRLoader from '../internal/QRLoader';
 import CoreProvider from '../../core/Context/CoreProvider';
 import RedirectButton from '../internal/RedirectButton';
+import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 
 export interface QRLoaderContainerProps extends UIElementProps {
     /**
@@ -54,20 +55,22 @@ class QRLoaderContainer<T extends QRLoaderContainerProps = QRLoaderContainerProp
     public renderQRCode() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                <QRLoader
-                    ref={ref => {
-                        this.componentRef = ref;
-                    }}
-                    {...this.props}
-                    type={this.constructor['type']}
-                    brandLogo={this.props.brandLogo || this.icon}
-                    delay={this.props.delay}
-                    onComplete={this.onComplete}
-                    countdownTime={this.props.countdownTime}
-                    instructions={this.props.instructions}
-                    onActionHandled={this.props.onActionHandled}
-                    brandName={this.displayName}
-                />
+                <SRPanelProvider srPanel={this.props.modules.srPanel}>
+                    <QRLoader
+                        ref={ref => {
+                            this.componentRef = ref;
+                        }}
+                        {...this.props}
+                        type={this.constructor['type']}
+                        brandLogo={this.props.brandLogo || this.icon}
+                        delay={this.props.delay}
+                        onComplete={this.onComplete}
+                        countdownTime={this.props.countdownTime}
+                        instructions={this.props.instructions}
+                        onActionHandled={this.props.onActionHandled}
+                        brandName={this.displayName}
+                    />
+                </SRPanelProvider>
             </CoreProvider>
         );
     }

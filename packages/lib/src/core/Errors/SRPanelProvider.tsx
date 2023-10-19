@@ -5,13 +5,23 @@ import { partial } from '../../components/internal/SecuredFields/lib/utilities/c
 import { setSRMessagesFromErrors } from './utils';
 import { SRPanel } from './SRPanel';
 import { SetSRMessagesReturnObject } from './types';
+import { StringObject } from '../../components/internal/Address/types';
 
 type SRPanelProviderProps = {
     srPanel: SRPanel;
     children: ComponentChildren;
 };
 
-export type SetSRMessagesReturnFn = ({ errors, isValidating, layout = null, countrySpecificLabels = null }) => SetSRMessagesReturnObject;
+interface SetSRMessagesReturnFnProps {
+    errors: {
+        [key: string]: any;
+    };
+    isValidating: boolean;
+    layout?: string[];
+    countrySpecificLabels?: StringObject;
+}
+
+export type SetSRMessagesReturnFn = (props: SetSRMessagesReturnFnProps) => SetSRMessagesReturnObject;
 
 const SRPanelProvider = ({ srPanel, children }: SRPanelProviderProps) => {
     const { i18n } = useCoreContext();

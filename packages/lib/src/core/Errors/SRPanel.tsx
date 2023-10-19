@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import './SRPanel.scss';
-import { SRPanelProps } from './types';
+import { AriaAttributes, SRPanelProps } from './types';
 import BaseElement from '../../components/BaseElement';
 import { SRMessages, SRMessagesRef } from './SRMessages';
 
@@ -10,11 +10,18 @@ import { SRMessages, SRMessagesRef } from './SRMessages';
  * For testing purposes can be made visible
  */
 export class SRPanel extends BaseElement<SRPanelProps> {
-    public static defaultProps = {
+    public static type = 'srPanel';
+
+    public static defaultProps: SRPanelProps = {
         enabled: true,
         node: 'body',
         showPanel: false,
-        id: 'ariaLiveSRPanel'
+        id: 'ariaLiveSRPanel',
+        ariaAttributes: {
+            'aria-relevant': 'all',
+            'aria-live': 'polite',
+            'aria-atomic': 'true'
+        }
     };
 
     private readonly srPanelContainer = null;
@@ -36,6 +43,11 @@ export class SRPanel extends BaseElement<SRPanelProps> {
         if (this.props.enabled) {
             this._enabled = true;
             if (document.querySelector(this.props.node)) {
+                const preExistingSRPanel = document.getElementById(this.id);
+                if (preExistingSRPanel) {
+                    document.querySelector(this.props.node).removeChild(preExistingSRPanel);
+                }
+
                 this.srPanelContainer = document.createElement('div');
                 this.srPanelContainer.className = 'sr-panel-holder';
                 this.srPanelContainer.id = this.id;
@@ -60,6 +72,14 @@ export class SRPanel extends BaseElement<SRPanelProps> {
         return this._moveFocus;
     }
 
+    public setAriaProps(ariaAttributes: AriaAttributes): void {
+        const firstPanel = document.querySelector('[class^="adyen-checkout-sr-panel"]');
+        for (const [key, value] of Object.entries(ariaAttributes)) {
+            firstPanel.setAttribute(key, value);
+        }
+        this.props = { ...this.props, ariaAttributes: { ...this.props.ariaAttributes, ...ariaAttributes } };
+    }
+
     // A method we can expose to allow comps to set messages in this panel
     public setMessages = (messages: string[] | string): void => {
         if (!this.props.enabled) return;
@@ -78,10 +98,8 @@ export class SRPanel extends BaseElement<SRPanelProps> {
         return (
             <div
                 className={this.showPanel ? 'adyen-checkout-sr-panel' : 'adyen-checkout-sr-panel--sr-only'}
-                aria-live={'polite'}
-                aria-atomic={'true'}
                 role={'log'}
-                aria-relevant={'all'}
+                {...this.props.ariaAttributes}
                 {...(process.env.NODE_ENV !== 'production' && { 'data-testid': this.id })}
             >
                 <SRMessages setComponentRef={this.setComponentRef} />

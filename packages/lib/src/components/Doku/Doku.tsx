@@ -7,6 +7,10 @@ import CoreProvider from '../../core/Context/CoreProvider';
 export class DokuElement extends UIElement {
     public static type = 'doku';
 
+    protected static defaultProps = {
+        showFormInstruction: true
+    };
+
     get isValid() {
         return !!this.state.isValid;
     }
@@ -24,7 +28,7 @@ export class DokuElement extends UIElement {
     }
 
     get icon() {
-        return this.resources.getImage({})(this.props.type);
+        return this.resources.getImage()(this.props.type);
     }
 
     render() {

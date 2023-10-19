@@ -4,10 +4,17 @@ import Field from '../../internal/FormFields/Field';
 import { h } from 'preact';
 import { GiftcardFieldProps } from './types';
 
-export const GiftcardPinField = ({ i18n, classNameModifiers, sfpState, focusedElement, setFocusOn }: GiftcardFieldProps) => {
+export const GiftcardPinField = ({
+    i18n,
+    classNameModifiers,
+    sfpState,
+    focusedElement,
+    setFocusOn,
+    label = i18n.get('creditCard.pin.title')
+}: GiftcardFieldProps) => {
     return (
         <Field
-            label={i18n.get('creditCard.pin.title')}
+            label={label}
             classNameModifiers={['pin', ...classNameModifiers]}
             errorMessage={sfpState.errors.encryptedSecurityCode && i18n.get(sfpState.errors.encryptedSecurityCode)}
             focused={focusedElement === 'encryptedSecurityCode'}

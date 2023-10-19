@@ -1,12 +1,12 @@
 import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import classNames from 'classnames';
-import renderFormField from '../FormFields';
 import Field from '../FormFields/Field';
 import useForm from '../../../utils/useForm';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import './PhoneInput.scss';
 import { PhoneInputSchema } from './types';
+import Select from '../FormFields/Select';
 
 export function PhoneInput(props) {
     const { i18n } = useCoreContext();
@@ -39,6 +39,7 @@ export function PhoneInput(props) {
                     'adyen-checkout__input--phone-number': true
                 })}
                 inputWrapperModifiers={['phoneInput']}
+                name={''}
             >
                 <div className="adyen-checkout__input-wrapper">
                     <div
@@ -48,16 +49,16 @@ export function PhoneInput(props) {
                         })}
                     >
                         {!!showPrefix && (
-                            <Field inputWrapperModifiers={['phoneInput']}>
-                                {renderFormField('select', {
-                                    className: 'adyen-checkout__dropdown--small adyen-checkout__countryFlag',
-                                    filterable: false,
-                                    items: props.items,
-                                    name: props.prefixName,
-                                    onChange: handleChangeFor('phonePrefix'),
-                                    placeholder: i18n.get('infix'),
-                                    selected: data.phonePrefix
-                                })}
+                            <Field inputWrapperModifiers={['phoneInput']} name={props.prefixName}>
+                                <Select
+                                    className={'adyen-checkout__dropdown--small adyen-checkout__countryFlag'}
+                                    filterable={false}
+                                    items={props.items}
+                                    name={props.prefixName}
+                                    onChange={handleChangeFor('phonePrefix')}
+                                    placeholder={i18n.get('infix')}
+                                    selectedValue={data.phonePrefix}
+                                />
 
                                 <div className="adyen-checkout__phoneNumber">
                                     <div>{data.phonePrefix}</div>

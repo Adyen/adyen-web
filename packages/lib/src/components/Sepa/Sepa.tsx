@@ -3,12 +3,22 @@ import UIElement from '../UIElement';
 import IbanInput from '../internal/IbanInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import { SepaElementData } from './types';
+import FormInstruction from '../internal/FormInstruction';
 
 /**
  * SepaElement
  */
 class SepaElement extends UIElement {
     public static type = 'sepadirectdebit';
+
+    protected static defaultProps = {
+        showFormInstruction: true
+    };
+
+    constructor(props) {
+        super(props);
+        this.state = { ...this.state, ...{ data: { ibanNumber: '', ownerName: '' } } };
+    }
 
     /**
      * Formats props on construction time
@@ -43,6 +53,7 @@ class SepaElement extends UIElement {
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
+                {this.props.showFormInstruction && <FormInstruction />}
                 <IbanInput
                     ref={ref => {
                         this.componentRef = ref;
