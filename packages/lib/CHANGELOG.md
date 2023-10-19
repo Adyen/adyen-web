@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 5.53.1
+
+### Patch Changes
+
+-   Typescript: Fixed types for paymentMethodsConfiguration object ([#2363](https://github.com/Adyen/adyen-web/pull/2363))
+
 ## 5.53.0
 
 ### Minor Changes
