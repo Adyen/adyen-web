@@ -10,9 +10,9 @@ export const useA11yReporter = (statusMessage): void => {
             srPanel.setMessages(null);
             srPanel.setAriaProps({ 'aria-relevant': srPanel.constructor['defaultProps'].ariaAttributes['aria-relevant'] });
         };
-    }, []);
+    }, [srPanel]);
 
     useEffect(() => {
         srPanel.setMessages(statusMessage);
-    }, [statusMessage]);
+    }, [srPanel, statusMessage]);
 };
