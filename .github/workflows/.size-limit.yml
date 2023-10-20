@@ -8,8 +8,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
-      - uses: andresz1/size-limit-action@v1
+      - uses: andresz1/size-limit-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           directory: packages/lib
+          skip_step: install
           package_manager: yarn
