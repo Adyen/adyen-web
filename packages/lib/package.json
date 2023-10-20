@@ -16,6 +16,7 @@
     "typings": "dist/types",
     "exports": {
         ".": {
+            "types": "./dist/types/index.d.ts",
             "import": "./dist/es/index.js",
             "require": "./dist/cjs/index.js"
         },
