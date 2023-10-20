@@ -76,7 +76,7 @@ import { CoreOptions, ICore } from '../core/types';
 /**
  * Maps each component with a Component element.
  */
-const componentsMap = {
+export const componentsMap = {
     /** internal */
     [TxVariants.address]: Address,
     [TxVariants.bankTransfer_IBAN]: BankTransfer,
@@ -223,12 +223,12 @@ const componentsMap = {
 /**
  * Available components
  */
-type PaymentMethods = typeof componentsMap;
+export type PaymentMethods = typeof componentsMap;
 
 /**
  * Options for a component
  */
-type PaymentMethodOptions<P extends keyof PaymentMethods> = InstanceType<PaymentMethods[P]>['props'];
+export type PaymentMethodOptions<P extends keyof PaymentMethods> = InstanceType<PaymentMethods[P]>['props'];
 
 type PaymentMethodsConfigurationMap = {
     [key in keyof PaymentMethods]?: Partial<PaymentMethodOptions<key>>;

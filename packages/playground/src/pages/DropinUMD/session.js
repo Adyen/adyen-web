@@ -14,7 +14,7 @@ export async function initSession() {
         countryCode
     });
 
-    const { AdyenCheckout, Dropin } = window.AdyenWeb;
+    const { AdyenCheckout, Dropin, createComponentFromTxVariant } = window.AdyenWeb;
 
     const checkout = await AdyenCheckout({
         environment: process.env.__CLIENT_ENV__,
@@ -39,24 +39,29 @@ export async function initSession() {
         }
     });
 
-    const dropin = new Dropin({
-        core: checkout,
-        instantPaymentTypes: ['googlepay'],
-        paymentMethodsConfiguration: {
-            paywithgoogle: {
-                buttonType: 'plain'
-            },
-            card: {
-                hasHolderName: true,
-                holderNameRequired: true,
-                holderName: 'J. Smith',
-                positionHolderNameOnTop: true,
-
-                // billingAddress config:
-                billingAddressRequired: true,
-                billingAddressMode: 'partial'
-            }
-        }
+    createComponentFromTxVariant('card', {
+        core: checkout
     }).mount('#dropin-container');
+
+    // const dropin = new Dropin({
+    //     core: checkout,
+    //     instantPaymentTypes: ['googlepay'],
+    //     paymentMethodsConfiguration: {
+    //         paywithgoogle: {
+    //             buttonType: 'plain'
+    //         },
+    //         card: {
+    //             hasHolderName: true,
+    //             holderNameRequired: true,
+    //             holderName: 'J. Smith',
+    //             positionHolderNameOnTop: true,
+    //
+    //             // billingAddress config:
+    //             billingAddressRequired: true,
+    //             billingAddressMode: 'partial'
+    //         }
+    //     }
+    // }).mount('#dropin-container');
+
     return [checkout, dropin];
 }
