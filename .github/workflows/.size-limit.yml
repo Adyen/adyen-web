@@ -19,5 +19,3 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           directory: packages/lib
-          skip_step: build
-          package_manager: yarn
