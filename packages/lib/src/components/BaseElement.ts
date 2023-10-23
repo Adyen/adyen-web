@@ -5,7 +5,6 @@ import uuid from '../utils/uuid';
 import { BaseElementProps, IBaseElement, PaymentData } from './types';
 import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 import { ICore } from '../core/types';
-import { RiskData } from '../core/RiskModule/RiskModule';
 import { AnalyticsInitialEvent } from '../core/Analytics/types';
 
 class BaseElement<P extends BaseElementProps> implements IBaseElement {
@@ -71,7 +70,7 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
      * Returns the component payment data ready to submit to the Checkout API
      * Note: this does not ensure validity, check isValid first
      */
-    public get data(): PaymentData | RiskData {
+    public get data(): PaymentData {
         const clientData = getProp(this.props, 'modules.risk.data');
         const useAnalytics = !!getProp(this.props, 'modules.analytics.getEnabled')?.();
         const checkoutAttemptId = useAnalytics ? getProp(this.props, 'modules.analytics.getCheckoutAttemptId')?.() : 'do-not-track';
