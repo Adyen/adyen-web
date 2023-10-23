@@ -1,5 +1,13 @@
 # @adyen/adyen-web
 
+## 5.53.2
+
+### Patch Changes
+
+-   chore: fix ts config ([#2313](https://github.com/Adyen/adyen-web/pull/2313))
+
+-   UX improvement for the `QRLoader` component - the QR loader shows amount and redirect button before the QR code image. ([#2359](https://github.com/Adyen/adyen-web/pull/2359))
+
 ## 5.53.1
 
 ### Patch Changes
