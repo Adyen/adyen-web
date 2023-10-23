@@ -1,5 +1,5 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
+import { AdyenCheckout, Giftcard } from '@adyen/adyen-web';
+import '@adyen/adyen-web/styles/adyen.css';
 import { createSession } from '../../services';
 import { amount, shopperLocale, countryCode, returnUrl, shopperReference } from '../../services/commonConfig';
 import '../../style.scss';
@@ -33,8 +33,8 @@ const initCheckout = async () => {
         },
     });
 
-    window.card = sessionCheckout
-        .create('giftcard', {
+    window.giftcard = new Giftcard({
+        core: window.sessionCheckout,
             type: 'giftcard',
             brand: 'valuelink',
             onOrderCreated: (data) => {

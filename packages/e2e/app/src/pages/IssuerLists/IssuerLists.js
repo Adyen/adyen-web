@@ -1,5 +1,5 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
+import { AdyenCheckout, Ideal } from '@adyen/adyen-web';
+import '@adyen/adyen-web/styles/adyen.css';
 import { handleSubmit, handleAdditionalDetails, handleError } from '../../handlers';
 import { amount, shopperLocale, countryCode } from '../../services/commonConfig';
 import '../../style.scss';
@@ -33,7 +33,7 @@ const initCheckout = async () => {
         // ...window.mainConfiguration
     });
 
-    window.ideal = checkout.create('ideal').mount('.ideal-field');
+    window.ideal = new Ideal({ core: checkout }).mount('.ideal-field');
 };
 
 initCheckout();
