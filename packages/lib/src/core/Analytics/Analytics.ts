@@ -8,6 +8,7 @@ import { AnalyticsModule } from '../../components/types';
 import { createAnalyticsObject } from './utils';
 
 let capturedCheckoutAttemptId = null;
+let hasLoggedPixel = false;
 
 const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analyticsContext }: AnalyticsProps): AnalyticsModule => {
     const defaultProps = {
@@ -61,10 +62,14 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
                         console.debug(`Fetching checkoutAttemptId failed.${e ? ` Error=${e}` : ''}`);
                     }
                 }
-                // Log pixel
-                // TODO once we stop using the pixel we can stop requiring both "enabled" & "telemetry" config options.
-                //  And v6 will have a "level: 'none" | "all" | "minimal" config prop
-                logEvent(initialEvent);
+
+                if (!hasLoggedPixel) {
+                    // Log pixel
+                    // TODO once we stop using the pixel we can stop requiring both "enabled" & "telemetry" config options.
+                    //  And v6 will have a "level: 'none" | "all" | "minimal" config prop
+                    logEvent(initialEvent);
+                    hasLoggedPixel = true;
+                }
             }
         },
 
