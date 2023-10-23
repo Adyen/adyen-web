@@ -1,7 +1,7 @@
 import { FALLBACK_CONTEXT } from '../config';
 import AdyenCheckoutError from '../Errors/AdyenCheckoutError';
 
-interface HttpOptions {
+export interface HttpOptions {
     accept?: string;
     contentType?: string;
     errorMessage?: string;

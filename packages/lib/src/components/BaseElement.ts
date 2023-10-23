@@ -5,6 +5,8 @@ import uuid from '../utils/uuid';
 import { BaseElementProps, IBaseElement, PaymentData } from './types';
 import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 import { ICore } from '../core/types';
+import { RiskData } from '../core/RiskModule/RiskModule';
+import { AnalyticsInitialEvent } from '../core/Analytics/types';
 
 class BaseElement<P extends BaseElementProps> implements IBaseElement {
     public readonly _id = `${this.constructor['type']}-${uuid()}`;
@@ -56,6 +58,11 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
         return {};
     }
 
+    /* eslint-disable-next-line */
+    protected setUpAnalytics(setUpAnalyticsObj: AnalyticsInitialEvent) {
+        return null;
+    }
+
     protected setState(newState: object): void {
         this.state = { ...this.state, ...newState };
     }
@@ -64,10 +71,10 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
      * Returns the component payment data ready to submit to the Checkout API
      * Note: this does not ensure validity, check isValid first
      */
-    public get data(): PaymentData {
+    public get data(): PaymentData | RiskData {
         const clientData = getProp(this.props, 'modules.risk.data');
-        const useAnalytics = !!getProp(this.props, 'modules.analytics.props.enabled');
-        const checkoutAttemptId = useAnalytics ? getProp(this.props, 'modules.analytics.checkoutAttemptId') : 'do-not-track';
+        const useAnalytics = !!getProp(this.props, 'modules.analytics.getEnabled')?.();
+        const checkoutAttemptId = useAnalytics ? getProp(this.props, 'modules.analytics.getCheckoutAttemptId')?.() : 'do-not-track';
         const order = this.state.order || this.props.order;
 
         const componentData = this.formatData();
@@ -103,10 +110,10 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
         if (this._node) {
             this.unmount(); // new, if this._node exists then we are "remounting" so we first need to unmount if it's not already been done
         } else {
-            // Set up analytics, once
+            // Set up analytics (once, since this._node is undefined)
             if (this.props.modules && this.props.modules.analytics && !this.props.isDropin) {
-                this.props.modules.analytics.send({
-                    containerWidth: this._node && this._node.offsetWidth,
+                this.setUpAnalytics({
+                    containerWidth: node && (node as HTMLElement).offsetWidth,
                     component: this.constructor['analyticsType'] ?? this.constructor['type'],
                     flavor: 'components'
                 });

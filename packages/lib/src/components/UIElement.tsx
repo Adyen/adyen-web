@@ -13,6 +13,8 @@ import { CoreOptions, ICore } from '../core/types';
 import { Resources } from '../core/Context/Resources';
 import { NewableComponent } from '../core/core.registry';
 import './UIElement.scss';
+import { ANALYTICS_MOUNTED_STR, ANALYTICS_SELECTED_STR, ANALYTICS_SUBMIT_STR } from '../core/Analytics/constants';
+import { AnalyticsInitialEvent } from '../core/Analytics/types';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
@@ -94,6 +96,65 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         return state;
     }
 
+    // Only called once, for non Dropin based UIElements, as they are being mounted
+    protected setUpAnalytics(setUpAnalyticsObj: AnalyticsInitialEvent) {
+        const sessionId = this.props.session?.id;
+
+        this.props.modules.analytics
+            .send({
+                ...setUpAnalyticsObj,
+                ...(sessionId && { sessionId })
+            })
+            .then(() => {
+                // Once the initial analytics set up call has been made...
+                // ...create an analytics-action "event" declaring that the component has been mounted
+                this.submitAnalytics('mounted');
+            });
+    }
+
+    /* eslint-disable-next-line */
+    protected submitAnalytics(type = 'action', obj?) {
+        /** Work out what the component's "type" is:
+         * - first check for a dedicated "analyticsType" (currently only applies to custom-cards)
+         * - otherwise, distinguish cards from non-cards: cards will use their static type property, everything else will use props.type
+         */
+        let component = this.constructor['analyticsType'];
+        if (!component) {
+            component = this.constructor['type'] === 'scheme' || this.constructor['type'] === 'bcmc' ? this.constructor['type'] : this.props.type;
+        }
+
+        // console.log('### UIElement::submitAnalytics:: component=', component);
+
+        // Dropin PM selected, or, standalone comp mounted
+        if (type === 'selected' || type === 'mounted') {
+            let storedCardIndicator;
+            // Check if it's a storedCard
+            if (component === 'scheme') {
+                if (hasOwnProperty(this.props, 'supportedShopperInteractions')) {
+                    storedCardIndicator = {
+                        isStoredPaymentMethod: true,
+                        brand: this.props.brand
+                    };
+                }
+            }
+
+            const data = { component, type: this.props.isDropin ? ANALYTICS_SELECTED_STR : ANALYTICS_MOUNTED_STR, ...storedCardIndicator };
+            // console.log('### UIElement::submitAnalytics:: SELECTED data=', data);
+
+            this.props.modules?.analytics.createAnalyticsAction({
+                action: 'event',
+                data
+            });
+            return;
+        }
+
+        // PM pay button pressed
+        this.props.modules?.analytics.createAnalyticsAction({
+            action: 'log',
+            data: { component, type: ANALYTICS_SUBMIT_STR, target: 'payButton', message: 'Shopper clicked pay' }
+        });
+    }
+
     private onSubmit(): void {
         //TODO: refactor this, instant payment methods are part of Dropin logic not UIElement
         if (this.props.isInstantPayment) {
@@ -106,10 +167,14 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         }
 
         if (this.props.onSubmit) {
-            // Classic flow
+            /** Classic flow */
+            // Call analytics endpoint
+            this.submitAnalytics();
+
+            // Call onSubmit handler
             this.props.onSubmit({ data: this.data, isValid: this.isValid }, this.elementRef);
         } else if (this.core.session) {
-            // Session flow
+            /** Session flow */
             // wrap beforeSubmit callback in a promise
             const beforeSubmitEvent = this.props.beforeSubmit
                 ? new Promise((resolve, reject) =>
@@ -121,7 +186,12 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
                 : Promise.resolve(this.data);
 
             beforeSubmitEvent
-                .then(data => this.submitPayment(data))
+                .then(data => {
+                    // Call analytics endpoint
+                    this.submitAnalytics();
+                    // Submit payment
+                    return this.submitPayment(data);
+                })
                 .catch(() => {
                     // set state as ready to submit if the merchant cancels the action
                     this.elementRef.setStatus('ready');

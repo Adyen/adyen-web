@@ -3,7 +3,7 @@ import UIElement from '../components/UIElement';
 import RiskModule from './RiskModule';
 import PaymentMethods from './ProcessResponse/PaymentMethods';
 import getComponentForAction from './ProcessResponse/PaymentAction';
-import { resolveEnvironment, resolveCDNEnvironment } from './Environment';
+import { resolveEnvironment, resolveCDNEnvironment, resolveAnalyticsEnvironment } from './Environment';
 import Analytics from './Analytics';
 import { PaymentAction } from '../types';
 import { CoreOptions, ICore } from './types';
@@ -14,6 +14,8 @@ import { Resources } from './Context/Resources';
 import { SRPanel } from './Errors/SRPanel';
 import registry, { NewableComponent } from './core.registry';
 import { DEFAULT_LOCALE } from '../language/config';
+import { ANALYTICS_ACTION_STR } from './Analytics/constants';
+import { capitalizeFirstLetter } from '../utils/Formatters/formatters';
 
 class Core implements ICore {
     public session?: Session;
@@ -22,6 +24,7 @@ class Core implements ICore {
     public options: CoreOptions;
     public loadingContext?: string;
     public cdnContext?: string;
+    public analyticsContext?: string;
 
     private components: UIElement[] = [];
 
@@ -58,6 +61,7 @@ class Core implements ICore {
 
         this.loadingContext = resolveEnvironment(this.options.environment, this.options.environmentUrls?.api);
         this.cdnContext = resolveCDNEnvironment(this.options.resourceEnvironment || this.options.environment, this.options.environmentUrls?.api);
+        this.analyticsContext = resolveAnalyticsEnvironment(this.options.environment);
         this.session = this.options.session && new Session(this.options.session, this.options.clientKey, this.loadingContext);
 
         const clientKeyType = this.options.clientKey?.substr(0, 4);
@@ -139,6 +143,17 @@ class Core implements ICore {
         }
 
         if (action.type) {
+            // Call analytics endpoint
+            this.modules.analytics.createAnalyticsAction({
+                action: 'log',
+                data: {
+                    component: `${action.type}${action.subtype ?? ''}`,
+                    type: ANALYTICS_ACTION_STR,
+                    subtype: capitalizeFirstLetter(action.type),
+                    message: `${action.type}${action.subtype ?? ''} is initiating`
+                }
+            });
+
             const props = {
                 ...this.getCorePropsForComponent(),
                 ...options
@@ -248,8 +263,9 @@ class Core implements ICore {
 
         this.modules = Object.freeze({
             risk: new RiskModule({ ...this.options, loadingContext: this.loadingContext, core: this }),
-            analytics: new Analytics({
+            analytics: Analytics({
                 loadingContext: this.loadingContext,
+                analyticsContext: this.analyticsContext,
                 clientKey: this.options.clientKey,
                 locale: this.options.locale,
                 analytics: this.options.analytics,

@@ -2,12 +2,13 @@ import { ComponentChild, h } from 'preact';
 import { Order, PaymentAction, PaymentAmount, PaymentAmountExtended } from '../types';
 import Language from '../language/Language';
 import UIElement from './UIElement';
-import Analytics from '../core/Analytics';
 import RiskElement from '../core/RiskModule';
 import { PayButtonProps } from './internal/PayButton/PayButton';
 import Session from '../core/CheckoutSession';
 import { SRPanel } from '../core/Errors/SRPanel';
 import { Resources } from '../core/Context/Resources';
+import { AnalyticsInitialEvent, CreateAnalyticsActionObject } from '../core/Analytics/types';
+import { EventsQueueModule } from '../core/Analytics/EventsQueue';
 
 /** Components */
 import AfterPay from './AfterPay';
@@ -313,12 +314,21 @@ export interface RawPaymentResponse extends PaymentResponse {
     [key: string]: any;
 }
 
+export interface AnalyticsModule {
+    send: (a: AnalyticsInitialEvent) => Promise<any>;
+    sendAnalyticsActions: () => Promise<any>;
+    getCheckoutAttemptId: () => string;
+    getEventsQueue: () => EventsQueueModule;
+    createAnalyticsAction: (a: CreateAnalyticsActionObject) => void;
+    getEnabled: () => boolean;
+}
+
 export interface BaseElementProps {
     core: ICore;
     order?: Order;
     modules?: {
         srPanel?: SRPanel;
-        analytics?: Analytics;
+        analytics?: AnalyticsModule;
         resources?: Resources;
         risk?: RiskElement;
     };
@@ -413,6 +423,7 @@ export interface UIElementProps extends BaseElementProps {
     icon?: string;
     amount?: PaymentAmount;
     secondaryAmount?: PaymentAmountExtended;
+    // brand?: string;
 
     /**
      * Show/Hide pay button

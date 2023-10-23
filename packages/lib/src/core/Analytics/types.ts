@@ -1,3 +1,6 @@
+import { PaymentAmount } from '../../types';
+import { CoreOptions } from '../types';
+
 export interface Experiment {
     controlGroup: boolean;
     experimentId: string;
@@ -26,7 +29,52 @@ export interface AnalyticsOptions {
     payload?: any;
 
     /**
-     * List of experiments to be sent in the collectId call
+     * List of experiments to be sent in the collectId call // TODO - still used?
      */
     experiments?: Experiment[];
 }
+
+export type AnalyticsProps = Pick<CoreOptions, 'loadingContext' | 'locale' | 'clientKey' | 'analytics' | 'amount'> & { analyticsContext?: string };
+
+export interface AnalyticsObject {
+    timestamp: string;
+    component: string;
+    code?: string;
+    errorType?: string;
+    message?: string;
+    type?: string;
+    subtype?: string;
+    target?: string;
+    metadata?: Record<string, any>;
+    isStoredPaymentMethod?: boolean;
+    brand?: string;
+}
+
+export type ANALYTICS_ACTION = 'log' | 'error' | 'event';
+
+export type CreateAnalyticsObject = Omit<AnalyticsObject, 'timestamp'> & { action: ANALYTICS_ACTION };
+
+export type AnalyticsInitialEvent = {
+    containerWidth: number;
+    component: string;
+    flavor: string;
+    paymentMethods?: any[];
+    sessionId?: string;
+};
+
+export type AnalyticsConfig = {
+    analyticsContext?: string;
+    clientKey?: string;
+    locale?: string;
+    amount?: PaymentAmount;
+    loadingContext?: string;
+};
+
+export type CreateAnalyticsActionData = Omit<AnalyticsObject, 'timestamp'>;
+
+export type CreateAnalyticsActionObject = {
+    action: ANALYTICS_ACTION;
+    data: CreateAnalyticsActionData;
+};
+
+export type EventQueueProps = Pick<AnalyticsConfig, 'analyticsContext' | 'clientKey'> & { analyticsPath: string };
