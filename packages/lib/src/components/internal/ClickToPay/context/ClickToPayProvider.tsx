@@ -90,6 +90,13 @@ const ClickToPayProvider = ({
         await ctpService?.logout();
     }, [ctpService]);
 
+    const updateStoreCookiesConsent = useCallback(
+        (shouldStore: boolean) => {
+            ctpService.updateStoreCookiesConsent(shouldStore);
+        },
+        [ctpService]
+    );
+
     return (
         <ClickToPayContext.Provider
             value={{
@@ -112,6 +119,7 @@ const ClickToPayProvider = ({
                 logoutShopper,
                 startIdentityValidation,
                 finishIdentityValidation,
+                updateStoreCookiesConsent,
                 onReady
             }}
         >

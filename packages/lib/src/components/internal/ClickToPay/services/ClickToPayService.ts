@@ -55,6 +55,11 @@ class ClickToPayService implements IClickToPayService {
     public shopperCards: ShopperCard[] = null;
     public identityValidationData: IdentityValidationData = null;
 
+    /**
+     * Indicates if the shopper opted for saving cookies during the transaction
+     */
+    public storeCookies = false;
+
     constructor(
         schemesConfig: SchemesConfiguration,
         sdkLoader: ISrcSdkLoader,
@@ -75,6 +80,10 @@ class ClickToPayService implements IClickToPayService {
 
     public get schemes(): string[] {
         return this.sdkLoader.schemes;
+    }
+
+    public updateStoreCookiesConsent(shouldStore: boolean) {
+        this.storeCookies = shouldStore;
     }
 
     public async initialize(): Promise<void> {
@@ -168,7 +177,8 @@ class ClickToPayService implements IClickToPayService {
         const checkoutResponse = await checkoutSdk.checkout({
             srcDigitalCardId: card.srcDigitalCardId,
             srcCorrelationId: card.srcCorrelationId,
-            ...(card.isDcfPopupEmbedded && { windowRef: window.frames[CTP_IFRAME_NAME] })
+            ...(card.isDcfPopupEmbedded && { windowRef: window.frames[CTP_IFRAME_NAME] }),
+            ...(this.storeCookies && { complianceSettings: { complianceResources: [{ complianceType: 'REMEMBER_ME', uri: '' }] } })
         });
 
         if (checkoutResponse.dcfActionCode !== 'COMPLETE') {

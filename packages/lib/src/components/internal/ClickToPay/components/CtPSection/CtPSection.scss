@@ -11,7 +11,7 @@
         display: flex;
         align-items: center;
         height: 18px;
-        margin-bottom: 14px;
+        margin-bottom: 16px;
     }
 
     &--standalone {
@@ -31,7 +31,6 @@
         font-size: 17px;
         font-weight: 600;
         line-height: 22px;
-        margin: 0 0 4px;
         padding: 0;
         width: auto;
 
@@ -49,7 +48,7 @@
     font-size: 13px;
     font-weight: 400;
     line-height: 19px;
-    color: $color-gray-darker;
+    color: $color-new-gray-darker;
     margin: 0 0 16px;
 }
 

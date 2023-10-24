@@ -13,6 +13,7 @@ export interface IClickToPayContext
     isCtpPrimaryPaymentMethod: boolean;
     setIsCtpPrimaryPaymentMethod(isPrimary: boolean): void;
     logoutShopper(): Promise<void>;
+    updateStoreCookiesConsent(shouldStore: boolean): void;
     ctpState: CtpState;
     cards: ShopperCard[];
     schemes: string[];
@@ -39,6 +40,7 @@ const ClickToPayContext = createContext<IClickToPayContext>({
     isCtpPrimaryPaymentMethod: null,
     setIsCtpPrimaryPaymentMethod: null,
     logoutShopper: null,
+    updateStoreCookiesConsent: null,
     ctpState: null,
     cards: [],
     schemes: [],

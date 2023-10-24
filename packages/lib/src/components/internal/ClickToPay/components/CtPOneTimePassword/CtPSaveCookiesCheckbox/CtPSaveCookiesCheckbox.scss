@@ -1,0 +1,23 @@
+@import "../../../../../../style/index";
+
+.adyen-checkout-ctp__otp-checkbox-container {
+  padding: 12px;
+  background-color: $color-gray-lighter;
+  border-radius: $border-radius-medium;
+}
+
+.adyen-checkout-ctp__otp-checkbox-container  label {
+  cursor: pointer;
+}
+
+.adyen-checkout-ctp__section .adyen-checkout__field.adyen-checkout-ctp__otp-checkbox-container {
+  margin-bottom: 4px;
+}
+
+.adyen-checkout-ctp__otp-checkbox-info {
+  color: $color-new-gray-darker;
+  font-size: 13px;
+  line-height: 19px;
+  font-weight: 400;
+  margin: 0 0 16px;
+}
