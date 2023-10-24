@@ -15,8 +15,10 @@ class Card {
     readonly rootElementSelector: string;
 
     readonly cardNumberField: Locator;
+    readonly cardNumberLabelElement: Locator;
     readonly cardNumberErrorElement: Locator;
     readonly cardNumberInput: Locator;
+    readonly brandingIcon: Locator;
 
     readonly expiryDateField: Locator;
     readonly expiryDateContextualElement: Locator;
@@ -25,6 +27,7 @@ class Card {
     // readonly expiryDateErrorElement: Locator;
 
     readonly cvcField: Locator;
+    readonly cvcLabelText: Locator;
     readonly cvcErrorElement: Locator;
     readonly cvcContextualElement: Locator;
     readonly cvcInput: Locator;
@@ -38,7 +41,10 @@ class Card {
          * Card Number elements, in Checkout
          */
         this.cardNumberField = this.rootElement.locator('.adyen-checkout__field--cardNumber'); // Holder
+        this.cardNumberLabelElement = this.cardNumberField.locator('.adyen-checkout__label');
         this.cardNumberErrorElement = this.cardNumberField.locator('.adyen-checkout-contextual-text--error');
+
+        this.brandingIcon = this.rootElement.locator('.adyen-checkout__card__cardNumber__brandIcon');
 
         /**
          * Card Number elements, in iframe
@@ -64,8 +70,9 @@ class Card {
          * Security code elements, in Checkout
          */
         this.cvcField = this.rootElement.locator('.adyen-checkout__field--securityCode'); // Holder
+        this.cvcLabelText = this.cvcField.locator('.adyen-checkout__label__text');
         this.cvcContextualElement = this.cvcField.locator('.adyen-checkout-contextual-text'); // Related contextual element
-        this.cvcErrorElement = this.cvcField.locator('.adyen-checkout-contextual-text--error'); // Related erro element
+        this.cvcErrorElement = this.cvcField.locator('.adyen-checkout-contextual-text--error'); // Related error element
         // this.cvcErrorElement = this.cvcField.locator('.adyen-checkout__error-text'); // Related error element
 
         /**
@@ -88,6 +95,10 @@ class Card {
 
     async deleteCardNumber() {
         await this.cardNumberInput.clear();
+    }
+
+    async deleteCvc() {
+        await this.cvcInput.clear();
     }
 
     async typeExpiryDate(expiryDate: string) {
