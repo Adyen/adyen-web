@@ -113,7 +113,7 @@
         "rollup-plugin-visualizer": "^5.8.3",
         "sass": "1.62.1",
         "storybook": "^7.2.0",
-        "stylelint": "15.10.1",
+        "stylelint": "15.10.3",
         "stylelint-config-standard-scss": "7.0.1",
         "tslib": "^2.4.1",
         "typescript": "4.9.5",
