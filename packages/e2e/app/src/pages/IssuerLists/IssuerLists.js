@@ -24,16 +24,11 @@ const initCheckout = async () => {
         showPayButton: true,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
-        onError: handleError,
-        paymentMethodsConfiguration: {
-            ideal: {
-                highlightedIssuers: ['1121', '1154', '1153']
-            }
-        }
+        onError: handleError
         // ...window.mainConfiguration
     });
 
-    window.ideal = new Ideal({ core: checkout }).mount('.ideal-field');
+    window.ideal = new Ideal({ core: checkout, highlightedIssuers: ['1121', '1154', '1153'] }).mount('.ideal-field');
 };
 
 initCheckout();
