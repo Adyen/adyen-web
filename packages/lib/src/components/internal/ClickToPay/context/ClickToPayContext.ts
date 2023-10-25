@@ -11,6 +11,7 @@ export interface IClickToPayContext
     extends Pick<IClickToPayService, 'checkout' | 'startIdentityValidation' | 'finishIdentityValidation' | 'verifyIfShopperIsEnrolled'> {
     isStandaloneComponent: boolean;
     isCtpPrimaryPaymentMethod: boolean;
+    isStoringCookies: boolean;
     setIsCtpPrimaryPaymentMethod(isPrimary: boolean): void;
     logoutShopper(): Promise<void>;
     updateStoreCookiesConsent(shouldStore: boolean): void;
@@ -38,6 +39,7 @@ const ClickToPayContext = createContext<IClickToPayContext>({
     configuration: null,
     isStandaloneComponent: null,
     isCtpPrimaryPaymentMethod: null,
+    isStoringCookies: null,
     setIsCtpPrimaryPaymentMethod: null,
     logoutShopper: null,
     updateStoreCookiesConsent: null,

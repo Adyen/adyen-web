@@ -106,6 +106,7 @@ const ClickToPayProvider = ({
                 onSetStatus,
                 amount,
                 configuration,
+                isStoringCookies: ctpService?.storeCookies,
                 isStandaloneComponent,
                 isCtpPrimaryPaymentMethod,
                 setIsCtpPrimaryPaymentMethod,
