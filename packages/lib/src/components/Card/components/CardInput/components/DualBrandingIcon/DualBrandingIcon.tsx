@@ -14,7 +14,7 @@ const DualBrandingIcon = ({ brand, onClick, dataValue, notSelected, brandsConfig
 
     return (
         <img
-            className={`'adyen-checkout-card-input__icon' ${
+            className={`adyen-checkout-card-input__icon ${
                 notSelected ? 'adyen-checkout__card__cardNumber__brandIcon--not-selected' : ''
             } adyen-checkout__card__cardNumber__brandIcon`}
             onError={handleError}
