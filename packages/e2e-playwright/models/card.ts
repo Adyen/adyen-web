@@ -28,6 +28,7 @@ class Card {
     readonly brandingIcon: Locator;
 
     readonly expiryDateField: Locator;
+    readonly expiryDateLabelText: Locator;
     readonly expiryDateContextualElement: Locator;
     readonly expiryDateInput: Locator;
     readonly expiryDateIframeContextualElement: Locator;
@@ -70,6 +71,7 @@ class Card {
          * Expiry Date elements, in Checkout
          */
         this.expiryDateField = this.rootElement.locator('.adyen-checkout__field--expiryDate'); // Holder
+        this.expiryDateLabelText = this.expiryDateField.locator('.adyen-checkout__label__text');
         this.expiryDateContextualElement = this.expiryDateField.locator('.adyen-checkout-contextual-text'); // Related contextual element
         this.expiryDateErrorElement = this.expiryDateField.locator('.adyen-checkout-contextual-text--error'); // Related error element
 
