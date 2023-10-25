@@ -8,6 +8,7 @@ type Fixture = {
     cardNoContextualElementPage: CardPage;
     cardLegacyInputModePage: CardPage;
     cardBrandingPage: CardPage;
+    cardInstallmentsPage: CardPage;
 };
 
 const test = base.extend<Fixture>({
@@ -45,6 +46,22 @@ const test = base.extend<Fixture>({
     cardBrandingPage: async ({ page }, use) => {
         await page.addInitScript({
             content: "window.cardConfig = { brands: ['mc', 'visa', 'amex', 'maestro', 'bcmc']}"
+        });
+
+        await useCardPage(page, use);
+    },
+
+    cardInstallmentsPage: async ({ page }, use) => {
+        const installmentsConfig = JSON.stringify({
+            installmentOptions: {
+                mc: {
+                    values: [1, 2, 3],
+                    plans: ['regular', 'revolving']
+                }
+            }
+        });
+        await page.addInitScript({
+            content: `window.cardConfig = ${installmentsConfig}`
         });
 
         await useCardPage(page, use);

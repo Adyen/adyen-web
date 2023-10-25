@@ -10,7 +10,14 @@ const CARD_IFRAME_LABEL = LANG['creditCard.cardNumber.label'];
 const EXPIRY_DATE_IFRAME_LABEL = LANG['creditCard.expiryDate.label'];
 const CVC_IFRAME_LABEL = LANG['creditCard.securityCode.label'];
 
+const INSTALLMENTS_PAYMENTS = LANG['installments.installments'];
+const REVOLVING_PAYMENT = LANG['installments.revolving'];
+
+const KEYBOARD_DELAY = 300;
+
 class Card {
+    readonly page: Page;
+
     readonly rootElement: Locator;
     readonly rootElementSelector: string;
 
@@ -33,7 +40,14 @@ class Card {
     readonly cvcInput: Locator;
     readonly cvcIframeContextualElement: Locator;
 
+    readonly installmentsPaymentLabel: Locator;
+    readonly revolvingPaymentLabel: Locator;
+    readonly installmentsDropdown: Locator;
+    readonly selectorList: Locator;
+
     constructor(page: Page, rootElementSelector = '.adyen-checkout__card-input') {
+        this.page = page;
+
         this.rootElement = page.locator(rootElementSelector);
         this.rootElementSelector = rootElementSelector;
 
@@ -81,6 +95,14 @@ class Card {
         const cvcIframe = this.rootElement.frameLocator(`[title="${CVC_IFRAME_TITLE}"]`);
         this.cvcInput = cvcIframe.locator(`input[aria-label="${CVC_IFRAME_LABEL}"]`);
         this.cvcIframeContextualElement = cvcIframe.locator('.aria-context');
+
+        /**
+         * Installments related elements
+         */
+        this.installmentsPaymentLabel = this.rootElement.getByText(INSTALLMENTS_PAYMENTS);
+        this.revolvingPaymentLabel = this.rootElement.getByText(REVOLVING_PAYMENT);
+        this.installmentsDropdown = this.rootElement.locator('.adyen-checkout__dropdown__button');
+        this.selectorList = this.rootElement.getByRole('listbox');
     }
 
     async isComponentVisible() {
@@ -107,6 +129,14 @@ class Card {
 
     async typeCvc(cvc: string) {
         await this.cvcInput.type(cvc, { delay: USER_TYPE_DELAY });
+    }
+
+    async pressKeyboardToNextItem() {
+        await this.page.keyboard.press('ArrowDown', { delay: KEYBOARD_DELAY });
+    }
+
+    async pressKeyboardToSelectItem() {
+        await this.page.keyboard.press('Enter', { delay: KEYBOARD_DELAY });
     }
 }
 
