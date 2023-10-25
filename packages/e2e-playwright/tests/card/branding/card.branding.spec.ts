@@ -129,6 +129,7 @@ test.describe('Testing branding - especially regarding optional and hidden cvc f
             // Partial cvc
             await card.typeCvc('73');
 
+            // Force blur event to fire
             await card.cardNumberLabelElement.click();
 
             // Wait for UI to render

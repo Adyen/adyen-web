@@ -21,7 +21,7 @@ test('#1 Testing hidden expiryDatePolicy - how UI & state respond', async t => {
     // UI reflects that binLookup says expiryDate is hidden
     await t.expect(cardPage.dateHolder.filterHidden().exists).ok();
 
-    // Card seen as valid (since CVC is hidden too)
+    // Card seen as invalid
     await t.expect(cardPage.getFromState('isValid')).eql(false);
 
     // Clear number and see UI & state reset
