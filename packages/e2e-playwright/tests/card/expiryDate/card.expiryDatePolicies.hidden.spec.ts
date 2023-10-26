@@ -63,7 +63,7 @@ test.describe('Test how Card Component handles hidden expiryDate policy', () => 
         await card.typeCardNumber(SYNCHRONY_PLCC_NO_DATE);
 
         // Expect errors to be cleared - since the fields were in error because they were empty
-        // but now the PAN field is filled and the date field is hidden the fields have re-rendered and update state
+        // but now the PAN field is filled and the date field is hidden & the fields have re-rendered and updated state
         cardErrors = await page.evaluate('window.card.state.errors');
         await expect(cardErrors[ENCRYPTED_CARD_NUMBER]).toBe(null);
         await expect(cardErrors[ENCRYPTED_EXPIRY_DATE]).toBe(null);

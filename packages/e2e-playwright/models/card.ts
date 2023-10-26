@@ -120,6 +120,10 @@ class Card {
         await this.cardNumberInput.clear();
     }
 
+    async deleteExpiryDate() {
+        await this.expiryDateInput.clear();
+    }
+
     async deleteCvc() {
         await this.cvcInput.clear();
     }
