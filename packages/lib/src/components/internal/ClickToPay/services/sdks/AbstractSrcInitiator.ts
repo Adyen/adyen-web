@@ -83,8 +83,6 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
      */
     public async checkout(params: SrcCheckoutParams): Promise<SrciCheckoutResponse> {
         try {
-            console.log(params);
-
             const checkoutResponse = await this.schemeSdk.checkout(params);
             return checkoutResponse;
         } catch (error) {
