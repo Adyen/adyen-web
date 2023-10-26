@@ -36,7 +36,7 @@ class CustomCard {
     readonly cvcInput: Locator;
     readonly cvcIframeContextualElement: Locator;
 
-    constructor(page: Page, rootElementSelector = '.adyen-checkout__card-input') {
+    constructor(page: Page, rootElementSelector = '.secured-fields') {
         this.page = page;
 
         this.rootElement = page.locator(rootElementSelector);
@@ -45,9 +45,9 @@ class CustomCard {
         /**
          * Card Number elements, in Checkout
          */
-        this.cardNumberField = this.rootElement.locator('.adyen-checkout__field--cardNumber'); // Holder
-        this.cardNumberLabelElement = this.cardNumberField.locator('.adyen-checkout__label');
-        this.cardNumberErrorElement = this.cardNumberField.locator('.adyen-checkout-contextual-text--error');
+        this.cardNumberField = this.rootElement.locator('.pm-form-label-pan'); // Holder
+        this.cardNumberLabelElement = this.cardNumberField.locator('.pm-form-label__text');
+        this.cardNumberErrorElement = this.cardNumberField.locator('.pm-form-label__error-text');
 
         this.brandingIcon = this.rootElement.locator('.adyen-checkout__card__cardNumber__brandIcon');
 
@@ -60,10 +60,9 @@ class CustomCard {
         /**
          * Expiry Date elements, in Checkout
          */
-        this.expiryDateField = this.rootElement.locator('.adyen-checkout__field--expiryDate'); // Holder
-        this.expiryDateLabelText = this.expiryDateField.locator('.adyen-checkout__label__text');
-        this.expiryDateContextualElement = this.expiryDateField.locator('.adyen-checkout-contextual-text'); // Related contextual element
-        this.expiryDateErrorElement = this.expiryDateField.locator('.adyen-checkout-contextual-text--error'); // Related error element
+        this.expiryDateField = this.rootElement.locator('.pm-form-label--exp-date'); // Holder
+        this.expiryDateLabelText = this.expiryDateField.locator('.pm-form-label__text');
+        this.expiryDateErrorElement = this.expiryDateField.locator('.pm-form-label__error-text'); // Related error element
 
         /**
          * Expiry Date elements, in iframe
@@ -75,10 +74,9 @@ class CustomCard {
         /**
          * Security code elements, in Checkout
          */
-        this.cvcField = this.rootElement.locator('.adyen-checkout__field--securityCode'); // Holder
-        this.cvcLabelText = this.cvcField.locator('.adyen-checkout__label__text');
-        this.cvcContextualElement = this.cvcField.locator('.adyen-checkout-contextual-text'); // Related contextual element
-        this.cvcErrorElement = this.cvcField.locator('.adyen-checkout-contextual-text--error'); // Related error element
+        this.cvcField = this.rootElement.locator('.pm-form-label--cvc'); // Holder
+        this.cvcLabelText = this.cvcField.locator('.pm-form-label__text');
+        this.cvcErrorElement = this.cvcField.locator('.pm-form-label__error-text'); // Related error element
 
         /**
          * Security code elements, in iframe

@@ -79,6 +79,8 @@ test.describe('Test how Card Component handles hidden expiryDate policy', () => 
         await card.typeExpiryDate('12/90');
 
         // Expect error in UI
+        await expect(card.expiryDateField).toBeVisible();
+        await expect(card.expiryDateErrorElement).toBeVisible();
         await expect(card.expiryDateErrorElement).toHaveText(DATE_INVALID_ERROR);
 
         // Force blur event to fire on date field
@@ -108,6 +110,7 @@ test.describe('Test how Card Component handles hidden expiryDate policy', () => 
         // Errors in UI visible again
         await expect(card.expiryDateField).toBeVisible();
         await expect(card.expiryDateErrorElement).toBeVisible();
+        await expect(card.expiryDateErrorElement).toHaveText(DATE_INVALID_ERROR);
 
         // Card is not valid
         cardValid = await page.evaluate('window.card.isValid');

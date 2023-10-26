@@ -9,7 +9,7 @@ class CustomCardPage {
 
     constructor(page: Page) {
         this.page = page;
-        this.card = new CustomCard(page, '.secured-fields');
+        this.card = new CustomCard(page);
         this.payButton = page.getByRole('button', { name: /Pay/i });
     }
 
