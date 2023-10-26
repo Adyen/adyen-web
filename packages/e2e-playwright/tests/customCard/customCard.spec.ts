@@ -5,6 +5,8 @@ test.describe('Custom Card - Standard flow', () => {
     test('should fill in card fields and complete the payment', async ({ customCardPage }) => {
         const { card, page } = customCardPage;
 
+        await card.isComponentVisible();
+
         await card.typeCardNumber(REGULAR_TEST_CARD);
         await card.typeExpiryDate(TEST_DATE_VALUE);
         await card.typeCvc(TEST_CVC_VALUE);

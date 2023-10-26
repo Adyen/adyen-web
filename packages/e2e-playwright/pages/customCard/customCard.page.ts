@@ -1,15 +1,15 @@
 import { Locator, Page } from '@playwright/test';
-import { Card } from '../../models/card';
+import { CustomCard } from '../../models/customCard';
 
 class CustomCardPage {
     readonly page: Page;
 
-    readonly card: Card;
+    readonly card: CustomCard;
     readonly payButton: Locator;
 
     constructor(page: Page) {
         this.page = page;
-        this.card = new Card(page, '.secured-fields');
+        this.card = new CustomCard(page, '.secured-fields');
         this.payButton = page.getByRole('button', { name: /Pay/i });
     }
 
