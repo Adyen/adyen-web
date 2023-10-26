@@ -92,6 +92,7 @@ class ClickToPayService implements IClickToPayService {
         try {
             this.sdks = await this.sdkLoader.load(this.environment);
             await this.initiateSdks();
+
             const { recognized = false, idTokens = null } = await this.verifyIfShopperIsRecognized();
 
             if (recognized) {
@@ -113,10 +114,14 @@ class ClickToPayService implements IClickToPayService {
 
             this.setState(CtpState.NotAvailable);
         } catch (error) {
-            if (error instanceof SrciError) console.warn(`Error at ClickToPayService # init: ${error.toString()}`);
-            if (error instanceof TimeoutError) {
+            if (error instanceof SrciError && error?.reason === 'REQUEST_TIMEOUT') {
+                const timeoutError = new TimeoutError(`ClickToPayService - Timeout during ${error.source}() of the scheme '${error.scheme}'`);
+                this.onTimeout?.(timeoutError);
+            } else if (error instanceof TimeoutError) {
                 console.warn(error.toString());
                 this.onTimeout?.(error);
+            } else if (error instanceof SrciError) {
+                console.warn(`Error at ClickToPayService # init: ${error.toString()}`);
             } else {
                 console.warn(error);
             }
