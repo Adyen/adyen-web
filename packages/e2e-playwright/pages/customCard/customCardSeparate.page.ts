@@ -1,7 +1,7 @@
 import { Locator, Page } from '@playwright/test';
 import { CustomCard } from '../../models/customCard';
 
-class CustomCardPage {
+class CustomCardPageSeparate {
     readonly page: Page;
 
     readonly card: CustomCard;
@@ -9,8 +9,8 @@ class CustomCardPage {
 
     constructor(page: Page) {
         this.page = page;
-        this.card = new CustomCard(page);
-        this.payButton = page.getByTestId('pay-customCardRegular');
+        this.card = new CustomCard(page, '.secured-fields-2');
+        this.payButton = page.getByTestId('pay-customCardSeparate');
     }
 
     async goto(url?: string) {
@@ -22,4 +22,4 @@ class CustomCardPage {
     }
 }
 
-export { CustomCardPage };
+export { CustomCardPageSeparate };
