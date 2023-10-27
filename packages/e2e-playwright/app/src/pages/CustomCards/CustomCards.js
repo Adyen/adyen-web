@@ -59,6 +59,8 @@ const initCheckout = async () => {
         payBtn.addEventListener('click', e => {
             e.preventDefault();
 
+            console.log('### CustomCards::createPayButton:: click attribut', attribute);
+
             if (!component.isValid) return component.showValidation();
 
             // formatData

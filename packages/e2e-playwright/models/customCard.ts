@@ -4,10 +4,12 @@ import LANG from '../../lib/src/language/locales/en-US.json';
 
 const CARD_IFRAME_TITLE = LANG['creditCard.encryptedCardNumber.aria.iframeTitle'];
 const EXPIRY_DATE_IFRAME_TITLE = LANG['creditCard.encryptedExpiryDate.aria.iframeTitle'];
+const EXPIRY_MONTH_IFRAME_TITLE = LANG['creditCard.encryptedExpiryMonth.aria.iframeTitle'];
 const CVC_IFRAME_TITLE = LANG['creditCard.encryptedSecurityCode.aria.iframeTitle'];
 
 const CARD_IFRAME_LABEL = LANG['creditCard.cardNumber.label'];
 const EXPIRY_DATE_IFRAME_LABEL = LANG['creditCard.expiryDate.label'];
+const EXPIRY_MONTH_IFRAME_LABEL = LANG['creditCard.expiryMonth.label'] ?? 'creditCard.expiryMonth.label';
 const CVC_IFRAME_LABEL = LANG['creditCard.securityCode.label'];
 
 class CustomCard {
@@ -28,6 +30,12 @@ class CustomCard {
     readonly expiryDateInput: Locator;
     readonly expiryDateIframeContextualElement: Locator;
     readonly expiryDateErrorElement: Locator;
+
+    readonly expiryMonthField: Locator;
+    readonly expiryMonthLabelText: Locator;
+    readonly expiryMonthErrorElement: Locator;
+    readonly expiryMonthInput: Locator;
+    readonly expiryMonthIframeContextualElement: Locator;
 
     readonly cvcField: Locator;
     readonly cvcLabelText: Locator;
@@ -72,6 +80,20 @@ class CustomCard {
         this.expiryDateIframeContextualElement = expiryDateIframe.locator('.aria-context');
 
         /**
+         * Expiry Month elements, in Checkout
+         */
+        this.expiryMonthField = this.rootElement.locator('.pm-form-label--exp-month'); // Holder
+        this.expiryMonthLabelText = this.expiryMonthField.locator('.pm-form-label__text');
+        this.expiryMonthErrorElement = this.expiryMonthField.locator('.pm-form-label__error-text'); // Related error element
+
+        /**
+         * Expiry Month elements, in iframe
+         */
+        const expiryMonthIframe = this.rootElement.frameLocator(`[title="${EXPIRY_MONTH_IFRAME_TITLE}"]`);
+        this.expiryMonthInput = expiryMonthIframe.locator(`input[aria-label="${EXPIRY_MONTH_IFRAME_LABEL}"]`);
+        this.expiryMonthIframeContextualElement = expiryMonthIframe.locator('.aria-context');
+
+        /**
          * Security code elements, in Checkout
          */
         this.cvcField = this.rootElement.locator('.pm-form-label--cvc'); // Holder
@@ -89,6 +111,12 @@ class CustomCard {
     async isComponentVisible() {
         await this.cardNumberInput.waitFor({ state: 'visible' });
         await this.expiryDateInput.waitFor({ state: 'visible' });
+        await this.cvcInput.waitFor({ state: 'visible' });
+    }
+
+    async isSeparateComponentVisible() {
+        await this.cardNumberInput.waitFor({ state: 'visible' });
+        await this.expiryMonthInput.waitFor({ state: 'visible' });
         await this.cvcInput.waitFor({ state: 'visible' });
     }
 
