@@ -5,20 +5,22 @@ class CustomCardPage {
     readonly page: Page;
 
     readonly card: CustomCard;
-    readonly payButton: Locator;
+    readonly payButtonRegular: Locator;
+    readonly payButtonSeparate: Locator;
 
     constructor(page: Page) {
         this.page = page;
         this.card = new CustomCard(page);
-        this.payButton = page.getByRole('button', { name: /Pay/i });
+        this.payButtonRegular = page.getByTestId('pay-customCardRegular');
+        this.payButtonSeparate = page.getByTestId('pay-customCardSeparate');
     }
 
     async goto(url?: string) {
         await this.page.goto('http://localhost:3024/customcards');
     }
 
-    async pay() {
-        await this.payButton.click();
+    async pay(which: string = 'Regular') {
+        await this[`payButton${which}`].click();
     }
 }
 
