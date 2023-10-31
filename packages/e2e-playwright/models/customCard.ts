@@ -5,11 +5,13 @@ import LANG from '../../lib/src/language/locales/en-US.json';
 const CARD_IFRAME_TITLE = LANG['creditCard.encryptedCardNumber.aria.iframeTitle'];
 const EXPIRY_DATE_IFRAME_TITLE = LANG['creditCard.encryptedExpiryDate.aria.iframeTitle'];
 const EXPIRY_MONTH_IFRAME_TITLE = LANG['creditCard.encryptedExpiryMonth.aria.iframeTitle'];
+const EXPIRY_YEAR_IFRAME_TITLE = LANG['creditCard.encryptedExpiryYear.aria.iframeTitle'];
 const CVC_IFRAME_TITLE = LANG['creditCard.encryptedSecurityCode.aria.iframeTitle'];
 
 const CARD_IFRAME_LABEL = LANG['creditCard.cardNumber.label'];
 const EXPIRY_DATE_IFRAME_LABEL = LANG['creditCard.expiryDate.label'];
-const EXPIRY_MONTH_IFRAME_LABEL = LANG['creditCard.expiryMonth.label'] ?? 'creditCard.expiryMonth.label';
+const EXPIRY_MONTH_IFRAME_LABEL = LANG['creditCard.expiryMonth.label'] ?? 'creditCard.expiryMonth.label'; // TODO add translation key
+const EXPIRY_YEAR_IFRAME_LABEL = LANG['creditCard.expiryYear.label'] ?? 'creditCard.expiryYear.label'; // TODO add translation key
 const CVC_IFRAME_LABEL = LANG['creditCard.securityCode.label'];
 
 class CustomCard {
@@ -36,6 +38,12 @@ class CustomCard {
     readonly expiryMonthErrorElement: Locator;
     readonly expiryMonthInput: Locator;
     readonly expiryMonthIframeContextualElement: Locator;
+
+    readonly expiryYearField: Locator;
+    readonly expiryYearLabelText: Locator;
+    readonly expiryYearErrorElement: Locator;
+    readonly expiryYearInput: Locator;
+    readonly expiryYearIframeContextualElement: Locator;
 
     readonly cvcField: Locator;
     readonly cvcLabelText: Locator;
@@ -92,6 +100,20 @@ class CustomCard {
         const expiryMonthIframe = this.rootElement.frameLocator(`[title="${EXPIRY_MONTH_IFRAME_TITLE}"]`);
         this.expiryMonthInput = expiryMonthIframe.locator(`input[aria-label="${EXPIRY_MONTH_IFRAME_LABEL}"]`);
         this.expiryMonthIframeContextualElement = expiryMonthIframe.locator('.aria-context');
+
+        /**
+         * Expiry Year elements, in Checkout
+         */
+        this.expiryYearField = this.rootElement.locator('.pm-form-label--exp-year'); // Holder
+        this.expiryYearLabelText = this.expiryYearField.locator('.pm-form-label__text');
+        this.expiryYearErrorElement = this.expiryYearField.locator('.pm-form-label__error-text');
+
+        /**
+         * Expiry Month elements, in iframe
+         */
+        const expiryYearIframe = this.rootElement.frameLocator(`[title="${EXPIRY_YEAR_IFRAME_TITLE}"]`);
+        this.expiryYearInput = expiryYearIframe.locator(`input[aria-label="${EXPIRY_YEAR_IFRAME_LABEL}"]`);
+        this.expiryYearIframeContextualElement = expiryYearIframe.locator('.aria-context');
 
         /**
          * Security code elements, in Checkout

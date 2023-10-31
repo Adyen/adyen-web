@@ -1,10 +1,9 @@
 import { test as base, expect } from '@playwright/test';
 import { CustomCardPage } from './customCard.page';
-import { CustomCardPageSeparate } from './customCardSeparate.page';
 
 type Fixture = {
     customCardPage: CustomCardPage;
-    customCardPageSeparate: CustomCardPageSeparate;
+    customCardPageSeparate: CustomCardPage;
 };
 
 const test = base.extend<Fixture>({
@@ -15,7 +14,7 @@ const test = base.extend<Fixture>({
     },
 
     customCardPageSeparate: async ({ page }, use) => {
-        const cardPage = new CustomCardPageSeparate(page);
+        const cardPage = new CustomCardPage(page, '.secured-fields-2');
         await cardPage.goto();
         await use(cardPage);
     }
