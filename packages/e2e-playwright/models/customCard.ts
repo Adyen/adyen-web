@@ -28,7 +28,6 @@ class CustomCard {
 
     readonly expiryDateField: Locator;
     readonly expiryDateLabelText: Locator;
-    readonly expiryDateContextualElement: Locator;
     readonly expiryDateInput: Locator;
     readonly expiryDateIframeContextualElement: Locator;
     readonly expiryDateErrorElement: Locator;
@@ -48,7 +47,6 @@ class CustomCard {
     readonly cvcField: Locator;
     readonly cvcLabelText: Locator;
     readonly cvcErrorElement: Locator;
-    readonly cvcContextualElement: Locator;
     readonly cvcInput: Locator;
     readonly cvcIframeContextualElement: Locator;
 
@@ -160,6 +158,13 @@ class CustomCard {
 
     async typeExpiryDate(expiryDate: string) {
         await this.expiryDateInput.type(expiryDate, { delay: USER_TYPE_DELAY });
+    }
+
+    async typeExpiryMonth(expiryMonth: string) {
+        await this.expiryMonthInput.type(expiryMonth, { delay: USER_TYPE_DELAY });
+    }
+    async typeExpiryYear(expiryYear: string) {
+        await this.expiryYearInput.type(expiryYear, { delay: USER_TYPE_DELAY });
     }
 
     async typeCvc(cvc: string) {
