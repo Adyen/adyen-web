@@ -44,6 +44,9 @@ test.describe('Test how Card Component handles optional expiryDate policy', () =
         await expect(card.expiryDateLabelText).toHaveText(DATE_LABEL);
         await expect(card.cvcLabelText).toHaveText(CVC_LABEL);
 
+        // Headless test seems to need time for UI reset to register on state
+        await page.waitForTimeout(500);
+
         // Card seen as invalid
         cardValid = await page.evaluate('window.card.isValid');
         await expect(cardValid).toEqual(false);
@@ -152,6 +155,9 @@ test.describe('Test how Card Component handles optional expiryDate policy', () =
 
         // Delete erroneous date
         await card.deleteExpiryDate();
+
+        // Headless test seems to need time for UI reset to register on state
+        await page.waitForTimeout(500);
 
         // Card now seen as valid
         cardValid = await page.evaluate('window.card.isValid');

@@ -47,6 +47,9 @@ test.describe('Cards (Installments)', () => {
         // Select option
         await card.revolvingPaymentLabel.click();
 
+        // Headless test seems to need time for click to register on state
+        await page.waitForTimeout(500);
+
         // Inspect card.data
         const paymentDataInstallments: any = await page.evaluate('window.card.data.installments');
         await expect(paymentDataInstallments.value).toEqual(1);
