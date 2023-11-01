@@ -59,21 +59,31 @@ test.describe('Test how Card Component handles optional expiryDate policy', () =
 
         await card.isComponentVisible();
 
-        // Expect iframe's expiryDate input field to have an aria-required attr set to true
+        // Expect iframe's expiryDate (& cvc) input fields to have an aria-required attr set to true
         let dateAriaRequired = await card.expiryDateInput.getAttribute('aria-required');
         await expect(dateAriaRequired).toEqual('true');
+
+        let cvcAriaRequired = await card.cvcInput.getAttribute('aria-required');
+        await expect(cvcAriaRequired).toEqual('true');
 
         // Fill number to provoke (mock) binLookup response
         await card.typeCardNumber(REGULAR_TEST_CARD);
 
-        // Expect iframe's expiryDate input field to have an aria-required attr set to false
+        // Expect iframe's expiryDate (& cvc) input fields to have an aria-required attr set to false
         dateAriaRequired = await card.expiryDateInput.getAttribute('aria-required');
         await expect(dateAriaRequired).toEqual('false');
 
+        cvcAriaRequired = await card.cvcInput.getAttribute('aria-required');
+        await expect(cvcAriaRequired).toEqual('false');
+
         // Clear number and see SF's aria-required reset
         await card.deleteCardNumber();
+
         dateAriaRequired = await card.expiryDateInput.getAttribute('aria-required');
         await expect(dateAriaRequired).toEqual('true');
+
+        cvcAriaRequired = await card.cvcInput.getAttribute('aria-required');
+        await expect(cvcAriaRequired).toEqual('true');
     });
 
     test('#3 validating fields first and then entering PAN should see errors cleared from both UI & state', async ({
