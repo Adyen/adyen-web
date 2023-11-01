@@ -172,6 +172,7 @@ export default function Address(props: AddressProps) {
                 {showAddressSearch && (
                     <AddressSearch
                         onAddressLookup={props.onAddressLookup}
+                        onAddressSelected={props.onAddressSelected}
                         onSelect={setSearchData}
                         onManualAddress={onManualAddress}
                         externalErrorMessage={searchErrorMessage}

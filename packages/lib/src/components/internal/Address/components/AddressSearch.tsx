@@ -15,15 +15,31 @@ export type OnAddressLookupType = (
     }
 ) => Promise<void>;
 
+export type OnAddressSelectedType = (
+    value: string,
+    actions: {
+        resolve: (value: AddressLookupItem) => void;
+        reject: (reason?: any) => void;
+    }
+) => Promise<void>;
+
 interface AddressSearchProps {
     onAddressLookup?: OnAddressLookupType;
+    onAddressSelected?: OnAddressSelectedType;
     onSelect: any; //TODO
     onManualAddress: any;
     externalErrorMessage: string;
     hideManualButton: boolean;
 }
 
-export default function AddressSearch({ onAddressLookup, onSelect, onManualAddress, externalErrorMessage, hideManualButton }: AddressSearchProps) {
+export default function AddressSearch({
+    onAddressLookup,
+    onAddressSelected,
+    onSelect,
+    onManualAddress,
+    externalErrorMessage,
+    hideManualButton
+}: AddressSearchProps) {
     const [formattedData, setFormattedData] = useState([]);
     const [originalData, setOriginalData] = useState([]);
 
@@ -44,7 +60,6 @@ export default function AddressSearch({ onAddressLookup, onSelect, onManualAddre
                 })
                 .catch(reason => {
                     setErrorMessage(reason);
-                    console.error('error', reason);
                 });
         },
         [onAddressLookup]
@@ -55,14 +70,32 @@ export default function AddressSearch({ onAddressLookup, onSelect, onManualAddre
         setErrorMessage(externalErrorMessage);
     }, [externalErrorMessage]);
 
-    const onChange = event => {
+    const onChange = async event => {
         if (!event.target.value) {
             setErrorMessage(i18n.get('address.errors.incomplete'));
             return;
         }
         const value = originalData.find(item => item.id === event.target.value);
-        onSelect(value);
-        setFormattedData([]);
+
+        // 1. in case we don't get a function just select item
+        if (typeof onAddressSelected !== 'function') {
+            onSelect(value);
+            setFormattedData([]);
+            return;
+        }
+
+        // 2. in case callback is provided, create and call onAddressSelected
+        new Promise<AddressLookupItem>((resolve, reject) => {
+            onAddressSelected(value, { resolve, reject });
+        })
+            .then(fullData => {
+                onSelect(fullData);
+                setFormattedData([]);
+                return;
+            })
+            .catch(reason => {
+                setErrorMessage(reason);
+            });
     };
 
     const debounceInputHandler = useMemo(() => debounce(onInput), []);

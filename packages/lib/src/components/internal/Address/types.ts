@@ -2,7 +2,7 @@ import { AddressField, AddressData } from '../../../types';
 import Specifications from './Specifications';
 import { ValidatorRules } from '../../../utils/Validator/types';
 import { ValidationRuleResult } from '../../../utils/Validator/ValidationRuleResult';
-import { OnAddressLookupType } from './components/AddressSearch';
+import { OnAddressLookupType, OnAddressSelectedType } from './components/AddressSearch';
 
 // Describes an object with unknown keys whose value is always a string
 export type StringObject = {
@@ -16,6 +16,7 @@ export interface AddressProps {
     label?: string;
     onChange: (newState) => void;
     onAddressLookup?: OnAddressLookupType;
+    onAddressSelected?: OnAddressSelectedType;
     requiredFields?: string[];
     ref?: any;
     specifications?: AddressSpecifications;
