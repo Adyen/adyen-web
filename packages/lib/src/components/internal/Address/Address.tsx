@@ -49,7 +49,7 @@ export default function Address(props: AddressProps) {
         formatters: addressFormatters
     });
 
-    const setSearchData = async selectedAddress => {
+    const setSearchData = selectedAddress => {
         const updatedSelectedAddress = props.onSelectedAddress ? props.onSelectedAddress(selectedAddress) : selectedAddress;
         const propsKeysToProcess = ADDRESS_SCHEMA;
         propsKeysToProcess.forEach(propKey => {
