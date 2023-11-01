@@ -1,5 +1,5 @@
 import { Fragment, h } from 'preact';
-import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import Fieldset from '../FormFields/Fieldset';
 import ReadOnlyAddress from './components/ReadOnlyAddress';
 import { getAddressValidationRules } from './validate';
@@ -49,22 +49,25 @@ export default function Address(props: AddressProps) {
         formatters: addressFormatters
     });
 
-    const setSearchData = selectedAddress => {
-        const propsKeysToProcess = ADDRESS_SCHEMA;
-        propsKeysToProcess.forEach(propKey => {
-            // Make sure the data provided by the merchant is always strings
-            const providedValue = selectedAddress[propKey];
-            if (providedValue === null || providedValue === undefined) return;
-            // Cast everything to string
-            setData(propKey, String(providedValue));
-            triggerValidation();
-        });
-        setHasSelectedAddress(true);
-    };
+    const setSearchData = useCallback(
+        selectedAddress => {
+            const propsKeysToProcess = ADDRESS_SCHEMA;
+            propsKeysToProcess.forEach(propKey => {
+                // Make sure the data provided by the merchant is always strings
+                const providedValue = selectedAddress[propKey];
+                if (providedValue === null || providedValue === undefined) return;
+                // Cast everything to string
+                setData(propKey, String(providedValue));
+                triggerValidation();
+            });
+            setHasSelectedAddress(true);
+        },
+        [setHasSelectedAddress, triggerValidation, setData]
+    );
 
-    const onManualAddress = () => {
+    const onManualAddress = useCallback(() => {
         setUseManualAddress(true);
-    };
+    }, []);
 
     // Expose method expected by (parent) Address.tsx
     addressRef.current.showValidation = () => {

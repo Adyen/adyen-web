@@ -1,7 +1,7 @@
 import Field from '../../FormFields/Field';
 import { Fragment, h } from 'preact';
 import { AddressLookupItem } from '../types';
-import { useCallback, useEffect, useState } from 'preact/hooks';
+import { useCallback, useEffect, useState, useMemo } from 'preact/hooks';
 import './AddressSearch.scss';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import { debounce } from '../utils';
@@ -49,9 +49,9 @@ export default function AddressSearch({
     const mapDataToSelect = data => data.map(({ id, name }) => ({ id, name }));
 
     const onInput = useCallback(
-        async event => {
+        async (inputValue: string) => {
             new Promise<Array<AddressLookupItem>>((resolve, reject) => {
-                onAddressLookup(event, { resolve, reject });
+                onAddressLookup(inputValue, { resolve, reject });
             })
                 .then(data => {
                     setOriginalData(data);
@@ -98,7 +98,7 @@ export default function AddressSearch({
             });
     };
 
-    const debounceInputHandler = useCallback(() => debounce(onInput), []);
+    const debounceInputHandler = useMemo(() => debounce(onInput), []);
 
     return (
         <Fragment>
