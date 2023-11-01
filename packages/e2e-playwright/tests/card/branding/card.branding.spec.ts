@@ -96,6 +96,9 @@ test.describe('Testing branding - especially regarding optional and hidden cvc f
 
             await card.typeCvc(TEST_CVC_VALUE);
 
+            // Headless test seems to need time for UI reset to register on state
+            await page.waitForTimeout(500);
+
             // Is valid
             cardValid = await page.evaluate('window.card.isValid');
             await expect(cardValid).toEqual(true);
