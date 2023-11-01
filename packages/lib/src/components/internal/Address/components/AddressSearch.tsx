@@ -1,7 +1,7 @@
 import Field from '../../FormFields/Field';
 import { Fragment, h } from 'preact';
 import { AddressLookupItem } from '../types';
-import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
+import { useCallback, useEffect, useState } from 'preact/hooks';
 import './AddressSearch.scss';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import { debounce } from '../utils';
@@ -98,7 +98,7 @@ export default function AddressSearch({
             });
     };
 
-    const debounceInputHandler = useMemo(() => debounce(onInput), []);
+    const debounceInputHandler = useCallback(() => debounce(onInput), []);
 
     return (
         <Fragment>
