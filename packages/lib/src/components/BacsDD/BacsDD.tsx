@@ -1,23 +1,14 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import BacsInput from './components/BacsInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import BacsResult from './components/BacsResult';
 import PayButton from '../internal/PayButton';
 import { TxVariants } from '../tx-variants';
-import { VoucherActionElement } from '../types';
+import { VoucherConfiguration } from '../internal/Voucher/types';
+import { BacsElementData } from './types';
 
-interface BacsElementData {
-    paymentMethod: {
-        type: string;
-        holderName: string;
-        bankAccountNumber: string;
-        bankLocationId: string;
-    };
-    shopperEmail: string;
-}
-
-class BacsElement extends UIElement<VoucherActionElement> {
+class BacsElement extends UIElement<VoucherConfiguration> {
     public static type = TxVariants.directdebit_GB;
 
     protected static defaultProps = {

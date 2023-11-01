@@ -1,5 +1,5 @@
 import getProp from './getProp';
-import { BrowserInfo } from '../types';
+import { BrowserInfo } from '../types/global-types';
 
 /**
  * Collects available frontend browser info and store it in the properties dictated by the EMVCo spec

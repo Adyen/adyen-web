@@ -1,24 +1,24 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import CoreProvider from '../../core/Context/CoreProvider';
 import { CashAppComponent } from './components/CashAppComponent';
 import CashAppService from './services/CashAppService';
 import { CashAppSdkLoader } from './services/CashAppSdkLoader';
-import { CashAppPayElementData, CashAppPayElementProps, CashAppPayEventData } from './types';
+import { CashAppPayElementData, CashAppPayConfiguration, CashAppPayEventData } from './types';
 import { ICashAppService } from './services/types';
 import defaultProps from './defaultProps';
 import RedirectButton from '../internal/RedirectButton';
 import { payAmountLabel } from '../internal/PayButton';
 import { TxVariants } from '../tx-variants';
 
-export class CashAppPay extends UIElement<CashAppPayElementProps> {
+export class CashAppPay extends UIElement<CashAppPayConfiguration> {
     public static type = TxVariants.cashapp;
 
     private readonly cashAppService: ICashAppService | undefined;
 
     protected static defaultProps = defaultProps;
 
-    constructor(props: CashAppPayElementProps) {
+    constructor(props: CashAppPayConfiguration) {
         super(props);
 
         if (this.props.enableStoreDetails && this.props.storePaymentMethod) {
@@ -44,7 +44,7 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
         });
     }
 
-    public formatProps(props: CashAppPayElementProps) {
+    public formatProps(props: CashAppPayConfiguration) {
         return {
             ...props,
             enableStoreDetails: props.session?.configuration?.enableStoreDetails || props.enableStoreDetails

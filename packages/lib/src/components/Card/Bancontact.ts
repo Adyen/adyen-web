@@ -1,12 +1,12 @@
 import { CardElement } from './Card';
-import { CardElementData, CardElementProps } from './types';
+import { CardElementData, CardConfiguration } from './types';
 import { CVC_POLICY_HIDDEN } from '../internal/SecuredFields/lib/configuration/constants';
 import { TxVariants } from '../tx-variants';
 
 class BancontactElement extends CardElement {
     public static type = TxVariants.bcmc;
 
-    constructor(props: CardElementProps) {
+    constructor(props: CardConfiguration) {
         super(props);
     }
 
@@ -27,7 +27,7 @@ class BancontactElement extends CardElement {
      * At the same time we can't treat it as a regular 'card' component - because it needs to hide the CVC field at at startup,
      * as well as show the BCMC logo in the number field and ignore any of the internal, regEx driven, brand detection.
      */
-    formatProps(props: CardElementProps) {
+    formatProps(props: CardConfiguration) {
         return {
             ...super.formatProps(props),
             type: 'bcmc', // Force type (only for the Dropin is type automatically set to 'bcmc') - this will bypass the regEx brand detection

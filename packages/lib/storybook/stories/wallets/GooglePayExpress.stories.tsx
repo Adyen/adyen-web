@@ -1,12 +1,12 @@
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 import { Container } from '../Container';
-import { GooglePayProps } from '../../../src/components/GooglePay/types';
+import { GooglePayConfiguration } from '../../../src/components/GooglePay/types';
 import { handleSubmit } from '../../helpers/checkout-handlers';
 import getCurrency from '../../utils/get-currency';
 import { GooglePay } from '../../../src';
 
-type GooglePayStory = StoryConfiguration<GooglePayProps>;
+type GooglePayStory = StoryConfiguration<GooglePayConfiguration>;
 
 const COUNTRY_CODE = 'US';
 const SHOPPER_LOCALE = 'en-US';
@@ -14,7 +14,7 @@ const INITIAL_AMOUNT = 10000;
 
 let finalAmount = INITIAL_AMOUNT;
 
-const meta: MetaConfiguration<GooglePayProps> = {
+const meta: MetaConfiguration<GooglePayConfiguration> = {
     title: 'Wallets/GooglePay'
 };
 
@@ -128,7 +128,7 @@ function calculateNewTransactionInfo(countryCode: string, selectedShippingOption
     return newTransactionInfo;
 }
 
-const createComponent = (args: PaymentMethodStoryProps<GooglePayProps>, context) => {
+const createComponent = (args: PaymentMethodStoryProps<GooglePayConfiguration>, context) => {
     const { componentConfiguration } = args;
     const checkout = getStoryContextCheckout(context);
     const googlepay = new GooglePay({ core: checkout, ...componentConfiguration });

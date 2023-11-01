@@ -1,18 +1,18 @@
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 import { Container } from '../Container';
-import { ApplePayElementProps } from '../../../src/components/ApplePay/types';
+import { ApplePayConfiguration } from '../../../src/components/ApplePay/types';
 import { handleSubmit } from '../../helpers/checkout-handlers';
 import getCurrency from '../../utils/get-currency';
 import { ApplePay } from '../../../src';
 
-type ApplePayStory = StoryConfiguration<ApplePayElementProps>;
+type ApplePayStory = StoryConfiguration<ApplePayConfiguration>;
 
 const COUNTRY_CODE = 'US';
 const SHOPPER_LOCALE = 'en-US';
 const INITIAL_AMOUNT = 10000;
 
-const meta: MetaConfiguration<ApplePayElementProps> = {
+const meta: MetaConfiguration<ApplePayConfiguration> = {
     title: 'Wallets/ApplePay'
 };
 
@@ -114,7 +114,7 @@ const createApplePayAmountHelper = () => {
 };
 const ApplePayAmountHelper = createApplePayAmountHelper();
 
-const createComponent = (args: PaymentMethodStoryProps<ApplePayElementProps>, context) => {
+const createComponent = (args: PaymentMethodStoryProps<ApplePayConfiguration>, context) => {
     const { componentConfiguration } = args;
     const checkout = getStoryContextCheckout(context);
     const applepay = new ApplePay({ core: checkout, ...componentConfiguration });

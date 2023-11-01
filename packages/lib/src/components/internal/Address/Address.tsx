@@ -5,15 +5,15 @@ import ReadOnlyAddress from './components/ReadOnlyAddress';
 import { getAddressValidationRules } from './validate';
 import { addressFormatters, countrySpecificFormatters } from './validate.formats';
 import { AddressProps } from './types';
-import { AddressData } from '../../../types';
+import { AddressData } from '../../../types/global-types';
 import FieldContainer from './components/FieldContainer';
 import useForm from '../../../utils/useForm';
 import Specifications from './Specifications';
 import { ADDRESS_SCHEMA, FALLBACK_VALUE } from './constants';
 import { getMaxLengthByFieldAndCountry } from '../../../utils/validator-utils';
 import useCoreContext from '../../../core/Context/useCoreContext';
-import { ComponentMethodsRef } from '../../types';
 import AddressSearch from './components/AddressSearch';
+import { ComponentMethodsRef } from '../UIElement/types';
 
 export default function Address(props: AddressProps) {
     const { i18n } = useCoreContext();

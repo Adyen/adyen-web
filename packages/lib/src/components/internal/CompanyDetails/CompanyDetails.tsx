@@ -8,8 +8,8 @@ import useCoreContext from '../../../core/Context/useCoreContext';
 import { getFormattedData } from './utils';
 import { CompanyDetailsSchema, CompanyDetailsProps } from './types';
 import useForm from '../../../utils/useForm';
-import { ComponentMethodsRef } from '../../types';
 import InputText from '../FormFields/InputText';
+import { ComponentMethodsRef } from '../UIElement/types';
 
 export const COMPANY_DETAILS_SCHEMA = ['name', 'registrationNumber'];
 

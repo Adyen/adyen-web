@@ -1,4 +1,4 @@
-import { UIElementProps } from '../../../types';
+import { UIElementProps } from '../../../internal/UIElement/types';
 
 export interface MBWayInputData {
     telephoneNumber?: string;

@@ -2,13 +2,13 @@ import { h } from 'preact';
 import OpenInvoiceContainer from '../helpers/OpenInvoiceContainer';
 import ConsentCheckboxLabel from './components/ConsentCheckboxLabel';
 import { AFTERPAY_B2B_CONSENT_URL, ALLOWED_COUNTRIES } from './config';
-import { OpenInvoiceContainerProps } from '../helpers/OpenInvoiceContainer/OpenInvoiceContainer';
 import { TxVariants } from '../tx-variants';
+import { OpenInvoiceConfiguration } from '../helpers/OpenInvoiceContainer/types';
 
 export default class AfterPayB2B extends OpenInvoiceContainer {
     public static type = TxVariants.afterpay_b2b;
 
-    protected static defaultProps: Partial<OpenInvoiceContainerProps> = {
+    protected static defaultProps: Partial<OpenInvoiceConfiguration> = {
         onChange: () => {},
         data: { companyDetails: {}, personalDetails: {}, billingAddress: {}, deliveryAddress: {} },
         visibility: {

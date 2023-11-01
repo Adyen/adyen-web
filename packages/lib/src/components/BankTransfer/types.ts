@@ -1,6 +1,6 @@
-import { UIElementProps } from '../types';
+import { UIElementProps } from '../internal/UIElement/types';
 
-export interface BankTransferProps extends UIElementProps {
+export interface BankTransferConfiguration extends UIElementProps {
     reference?: string;
 
     /**

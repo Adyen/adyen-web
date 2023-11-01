@@ -1,13 +1,13 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import CoreProvider from '../../core/Context/CoreProvider';
 import RedirectButton from '../internal/RedirectButton';
-import { BankTransferProps, BankTransferState } from './types';
+import { BankTransferConfiguration, BankTransferState } from './types';
 import BankTransferResult from './components/BankTransferResult';
 import BankTransferInput from './components/BankTransferInput';
 import { TxVariants } from '../tx-variants';
 
-export class BankTransferElement extends UIElement<BankTransferProps> {
+export class BankTransferElement extends UIElement<BankTransferConfiguration> {
     public static type = TxVariants.bankTransfer_IBAN;
 
     public static defaultProps = {

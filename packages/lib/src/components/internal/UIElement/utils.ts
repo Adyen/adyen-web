@@ -1,8 +1,9 @@
-import { PaymentResponse, RawPaymentResponse, UIElementStatus } from './types';
+import { UIElementStatus } from './types';
+import { RawPaymentResponse, PaymentResponseData } from '../../../types/global-types';
 
 const ALLOWED_PROPERTIES = ['action', 'resultCode', 'sessionData', 'order', 'sessionResult'];
 
-export function getSanitizedResponse(response: RawPaymentResponse): PaymentResponse {
+export function getSanitizedResponse(response: RawPaymentResponse): PaymentResponseData {
     const removedProperties = [];
 
     const sanitizedObject = Object.keys(response).reduce((acc, cur) => {
@@ -16,10 +17,10 @@ export function getSanitizedResponse(response: RawPaymentResponse): PaymentRespo
 
     if (removedProperties.length) console.warn(`The following properties should not be passed to the client: ${removedProperties.join(', ')}`);
 
-    return sanitizedObject as PaymentResponse;
+    return sanitizedObject as PaymentResponseData;
 }
 
-export function resolveFinalResult(result: PaymentResponse): [status: UIElementStatus, statusProps?: any] {
+export function resolveFinalResult(result: PaymentResponseData): [status: UIElementStatus, statusProps?: any] {
     switch (result.resultCode) {
         case 'Authorised':
         case 'Received':

@@ -1,5 +1,5 @@
 import Language from '../../language/Language';
-import { AddressData } from '../../types';
+import { AddressData } from '../../types/global-types';
 
 export interface BoletoElementProps {
     type: string;

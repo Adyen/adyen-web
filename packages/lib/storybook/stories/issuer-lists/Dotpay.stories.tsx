@@ -1,17 +1,17 @@
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 import { Container } from '../Container';
-import { IssuerListContainerProps } from '../../../src/components/helpers/IssuerListContainer';
+import { IssuerListConfiguration } from '../../../src/components/helpers/IssuerListContainer/types';
 import { Dotpay } from '../../../src';
 
-type DotpayStory = StoryConfiguration<IssuerListContainerProps>;
+type DotpayStory = StoryConfiguration<IssuerListConfiguration>;
 
-const meta: MetaConfiguration<IssuerListContainerProps> = {
+const meta: MetaConfiguration<IssuerListConfiguration> = {
     title: 'IssuerList/Dotpay'
 };
 
 export const Default: DotpayStory = {
-    render: (args: PaymentMethodStoryProps<IssuerListContainerProps>, context) => {
+    render: (args: PaymentMethodStoryProps<IssuerListConfiguration>, context) => {
         const { componentConfiguration } = args;
         const checkout = getStoryContextCheckout(context);
         const dotpay = new Dotpay({ core: checkout, ...componentConfiguration });

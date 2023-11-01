@@ -1,7 +1,5 @@
 import { ADDRESS_SCHEMA } from '../components/internal/Address/constants';
 import actionTypes from '../core/ProcessResponse/PaymentAction/actionTypes';
-import { InstallmentOptions } from '../components/Card/components/CardInput/components/types';
-import { ResultCode } from '../components/types';
 
 export type PaymentActionsType = keyof typeof actionTypes;
 
@@ -185,12 +183,6 @@ export interface PaymentMethodGroup {
     type: string;
 }
 
-export interface PaymentResponse {
-    type: string;
-    resultCode: string;
-    url?: string;
-}
-
 export interface ProcessedResponse {
     type: string;
     props?: object;
@@ -289,58 +281,76 @@ export interface BrowserInfo {
  */
 export type FieldsetVisibility = 'editable' | 'hidden' | 'readOnly';
 
-export type CheckoutSession = {
-    id: string;
-    sessionData: string;
-    shopperLocale?: string;
-    shopperEmail?: string;
-    telephoneNumber?: string;
-};
+export interface PaymentMethodData {
+    paymentMethod: {
+        [key: string]: any;
+        checkoutAttemptId?: string;
+    };
+    browserInfo?: {
+        acceptHeader: string;
+        colorDepth: number;
+        javaEnabled: boolean;
+        language: string;
+        screenHeight: number;
+        screenWidth: number;
+        timeZoneOffset: number;
+        userAgent: string;
+    };
+}
 
-export type SessionConfiguration = {
-    installmentOptions?: InstallmentOptions;
-    enableStoreDetails?: boolean;
-};
+/**
+ * Represents the payment data that will be submitted to the /payments endpoint
+ */
+export interface PaymentData extends PaymentMethodData {
+    riskData?: {
+        clientData: string;
+    };
+    order?: {
+        orderData: string;
+        pspReference: string;
+    };
+    clientStateDataIndicator: boolean;
+    sessionData?: string;
+    storePaymentMethod?: boolean;
+}
 
-export type CheckoutSessionSetupResponse = {
-    id: string;
-    sessionData: string;
+export type ResultCode =
+    | 'AuthenticationFinished'
+    | 'AuthenticationNotRequired'
+    | 'Authorised'
+    | 'Cancelled'
+    | 'ChallengeShopper'
+    | 'Error'
+    | 'IdentifyShopper'
+    | 'PartiallyAuthorised'
+    | 'Pending'
+    | 'PresentToShopper'
+    | 'Received'
+    | 'RedirectShopper'
+    | 'Refused';
 
-    amount: PaymentAmount;
-    expiresAt: string;
-    paymentMethods: any;
-    returnUrl: string;
-    configuration: SessionConfiguration;
-    /**
-     * 'shopperLocale' set during session creation.
-     * @defaultValue en-US
-     */
-    shopperLocale: string;
-};
-
-export type CheckoutSessionPaymentResponse = {
-    sessionData: string;
-    status?: string;
-    resultCode: string;
-    action?: PaymentAction;
-};
-
-export type CheckoutSessionDetailsResponse = {
+export interface OnPaymentCompletedData {
     sessionData: string;
     sessionResult: string;
     resultCode: ResultCode;
-    status?: string;
+}
+
+export interface PaymentResponseData {
+    type?: string;
     action?: PaymentAction;
-};
+    resultCode: ResultCode;
+    sessionData?: string;
+    sessionResult?: string;
+    order?: Order;
+}
 
-export type CheckoutSessionBalanceResponse = {
-    sessionData: string;
-    balance?: PaymentAmount;
-    transactionLimit?: PaymentAmount;
-};
+export interface RawPaymentResponse extends PaymentResponseData {
+    [key: string]: any;
+}
 
-export type CheckoutSessionOrdersResponse = {
-    sessionData: string;
-    orderData: string;
-    pspReference: string;
-};
+export type ActionDescriptionType = 'qr-code-loaded' | 'polling-started' | 'fingerprint-iframe-loaded' | 'challenge-iframe-loaded';
+
+export interface ActionHandledReturnObject {
+    componentType: string;
+    actionDescription: ActionDescriptionType;
+}

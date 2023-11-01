@@ -1,5 +1,5 @@
 import Language from '../../../language';
-import { PaymentAmountExtended } from '../../../types';
+import { PaymentAmountExtended } from '../../../types/global-types';
 
 export const PAY_BTN_DIVIDER = '/ ';
 

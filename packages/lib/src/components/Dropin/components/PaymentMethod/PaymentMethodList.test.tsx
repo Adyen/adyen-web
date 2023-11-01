@@ -2,7 +2,7 @@ import { ComponentChildren, h } from 'preact';
 import PaymentMethodList from './PaymentMethodList';
 import { render, screen, within } from '@testing-library/preact';
 import { mock } from 'jest-mock-extended';
-import UIElement from '../../../UIElement';
+import UIElement from '../../../internal/UIElement/UIElement';
 import EventEmitter from '../../../EventEmitter';
 import userEvent from '@testing-library/user-event';
 import Giftcard from '../../../Giftcard';

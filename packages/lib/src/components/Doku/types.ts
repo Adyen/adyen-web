@@ -1,4 +1,4 @@
-import { PaymentAmount } from '../../types';
+import { PaymentAmount } from '../../types/global-types';
 
 export interface DokuVoucherResultProps {
     reference?: string;
@@ -11,10 +11,4 @@ export interface DokuVoucherResultProps {
     merchantName?: string;
     outputDetails?: any;
     ref?: any;
-}
-
-export interface DokuInputSchema {
-    firstName?: string;
-    lastName?: string;
-    shopperEmail?: string;
 }

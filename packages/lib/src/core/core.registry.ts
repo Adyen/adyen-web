@@ -1,4 +1,4 @@
-import UIElement from '../components/UIElement';
+import UIElement from '../components/internal/UIElement/UIElement';
 import ThreeDS2Challenge from '../components/ThreeDS2/ThreeDS2Challenge';
 import ThreeDS2DeviceFingerprint from '../components/ThreeDS2/ThreeDS2DeviceFingerprint';
 import Redirect from '../components/Redirect';

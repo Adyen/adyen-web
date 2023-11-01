@@ -1,16 +1,16 @@
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
-import { PixProps } from '../../../src/components/Pix/types';
+import { PixConfiguration } from '../../../src/components/Pix/types';
 import { Container } from '../Container';
 import { Pix } from '../../../src';
 
-type PixStory = StoryConfiguration<PixProps>;
+type PixStory = StoryConfiguration<PixConfiguration>;
 
-const meta: MetaConfiguration<PixProps> = {
+const meta: MetaConfiguration<PixConfiguration> = {
     title: 'Components/Pix'
 };
 
-const createComponent = (args: PaymentMethodStoryProps<PixProps>, context) => {
+const createComponent = (args: PaymentMethodStoryProps<PixConfiguration>, context) => {
     const { componentConfiguration } = args;
     const checkout = getStoryContextCheckout(context);
     const pix = new Pix({ core: checkout, ...componentConfiguration });

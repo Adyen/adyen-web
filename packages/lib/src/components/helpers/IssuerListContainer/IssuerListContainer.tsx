@@ -1,33 +1,14 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
-import { UIElementProps } from '../types';
-import IssuerList from '../internal/IssuerList';
-import getIssuerImageUrl from '../../utils/get-issuer-image';
-import { FALLBACK_CONTEXT } from '../../core/config';
-import CoreProvider from '../../core/Context/CoreProvider';
-import { IssuerItem, TermsAndConditions } from '../internal/IssuerList/types';
-import RedirectButton from '../internal/RedirectButton';
-import SRPanelProvider from '../../core/Errors/SRPanelProvider';
+import UIElement from '../../internal/UIElement/UIElement';
+import IssuerList from '../../internal/IssuerList';
+import getIssuerImageUrl from '../../../utils/get-issuer-image';
+import { FALLBACK_CONTEXT } from '../../../core/config';
+import CoreProvider from '../../../core/Context/CoreProvider';
+import RedirectButton from '../../internal/RedirectButton';
+import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
+import { IssuerListConfiguration, IssuerListData } from './types';
 
-export interface IssuerListContainerProps extends UIElementProps {
-    showImage?: boolean;
-    placeholder?: string;
-    issuers?: IssuerItem[];
-    highlightedIssuers?: string[];
-    showPaymentMethodItemImages?: boolean;
-    showPayButton?: boolean;
-    termsAndConditions?: TermsAndConditions;
-    showContextualElement?: boolean;
-}
-
-interface IssuerListData {
-    paymentMethod: {
-        type: string;
-        issuer: string;
-    };
-}
-
-class IssuerListContainer extends UIElement<IssuerListContainerProps> {
+class IssuerListContainer extends UIElement<IssuerListConfiguration> {
     protected static defaultProps = {
         showImage: true,
         onValid: () => {},
@@ -37,7 +18,7 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
         showPaymentMethodItemImages: false
     };
 
-    constructor(props: IssuerListContainerProps) {
+    constructor(props: IssuerListConfiguration) {
         super(props);
 
         const getImage = props => this.resources.getImage(props);

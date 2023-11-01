@@ -1,7 +1,7 @@
 import { Fragment, h } from 'preact';
 import ContentSeparator from '../../../internal/ContentSeparator';
 import useCoreContext from '../../../../core/Context/useCoreContext';
-import UIElement from '../../../UIElement';
+import UIElement from '../../../internal/UIElement/UIElement';
 
 interface InstantPaymentMethodsProps {
     paymentMethods: UIElement[];
