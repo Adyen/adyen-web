@@ -147,9 +147,6 @@ export async function initManual() {
                 hasHolderName: true,
                 holderNameRequired: true
             },
-            kakaopay: {
-                name: 'KaKaozAoooo'
-            },
             paywithgoogle: {
                 buttonType: 'plain'
             },
