@@ -8,7 +8,7 @@ const DATE_EMPTY_ERROR = LANG['error.va.sf-cc-dat.04'];
 const CVC_ERROR = LANG['error.va.sf-cc-cvc.01'];
 
 test.describe('Test how Card Component handles hidden expiryDate policy', () => {
-    test('#1 Testing hidden expiryDatePolicy - how UI & state respond', async ({ cardExpiryDatePoliciesPage }) => {
+    test('#1 how UI & state respond', async ({ cardExpiryDatePoliciesPage }) => {
         const { card, page } = cardExpiryDatePoliciesPage;
 
         await card.isComponentVisible();

@@ -10,7 +10,7 @@ const DATE_EMPTY_ERROR = LANG['error.va.sf-cc-dat.04'];
 const CVC_ERROR = LANG['error.va.sf-cc-cvc.01'];
 
 test.describe('Test how Custom Card Component with regular date field handles hidden expiryDate policy', () => {
-    test('#1 Testing hidden expiryDatePolicy - how UI & state respond', async ({ customCardPage }) => {
+    test('#1 how UI & state respond', async ({ customCardPage }) => {
         const { card, page } = customCardPage;
 
         await binLookupMock(page, hiddenDateAndCvcMock);

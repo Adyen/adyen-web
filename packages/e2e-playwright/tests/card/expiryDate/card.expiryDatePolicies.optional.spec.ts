@@ -14,7 +14,7 @@ const DATE_EMPTY_ERROR = LANG['error.va.sf-cc-dat.04'];
 const CVC_ERROR = LANG['error.va.sf-cc-cvc.01'];
 
 test.describe('Test how Card Component handles optional expiryDate policy', () => {
-    test('#1 Testing optional expiryDatePolicy - how UI & state respond', async ({ cardExpiryDatePoliciesPage }) => {
+    test('#1 how UI & state respond', async ({ cardExpiryDatePoliciesPage }) => {
         const { card, page } = cardExpiryDatePoliciesPage;
 
         await binLookupMock(page, optionalDateAndCvcMock);
@@ -52,7 +52,7 @@ test.describe('Test how Card Component handles optional expiryDate policy', () =
         await expect(cardValid).toEqual(false);
     });
 
-    test('#2 Testing optional expiryDatePolicy - how securedField responds', async ({ cardExpiryDatePoliciesPage }) => {
+    test('#2 how securedFields responds', async ({ cardExpiryDatePoliciesPage }) => {
         const { card, page } = cardExpiryDatePoliciesPage;
 
         await binLookupMock(page, optionalDateAndCvcMock);
