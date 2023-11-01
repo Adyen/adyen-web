@@ -26,6 +26,7 @@ export interface AddressProps {
     payButton?: (obj) => {};
     showPayButton?: boolean;
     setComponentRef?: (ref) => void;
+    onSelectedAddress?: (obj) => void;
 }
 
 export interface AddressLookupItem extends AddressData {

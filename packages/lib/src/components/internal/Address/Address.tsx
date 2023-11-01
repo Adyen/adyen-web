@@ -49,11 +49,12 @@ export default function Address(props: AddressProps) {
         formatters: addressFormatters
     });
 
-    const setSearchData = selectedAddress => {
+    const setSearchData = async selectedAddress => {
+        const updatedSelectedAddress = props.onSelectedAddress ? props.onSelectedAddress(selectedAddress) : selectedAddress;
         const propsKeysToProcess = ADDRESS_SCHEMA;
         propsKeysToProcess.forEach(propKey => {
             // Make sure the data provided by the merchant is always strings
-            const providedValue = selectedAddress[propKey];
+            const providedValue = updatedSelectedAddress[propKey];
             if (providedValue === null || providedValue === undefined) return;
             // Cast everything to string
             setData(propKey, String(providedValue));
