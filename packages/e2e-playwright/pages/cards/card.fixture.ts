@@ -54,6 +54,15 @@ const test = base.extend<Fixture>({
     },
 
     cardExpiryDatePoliciesPage: async ({ page }, use) => {
+        const mainConfig = JSON.stringify({
+            srConfig: {
+                moveFocus: false
+            }
+        });
+        await page.addInitScript({
+            content: `window.mainConfiguration = ${mainConfig}`
+        });
+
         const brands = JSON.stringify({ brands: ['mc', 'visa', 'amex', 'synchrony_plcc'] });
         await page.addInitScript({
             content: `window.cardConfig = ${brands}`

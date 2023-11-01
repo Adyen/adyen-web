@@ -62,12 +62,14 @@ test.describe('Test how Card Component handles hidden expiryDate policy', () => 
         // Fill number to provoke binLookup response
         await card.typeCardNumber(SYNCHRONY_PLCC_NO_DATE);
 
-        // Expect errors to be cleared - since the fields were in error because they were empty
-        // but now the PAN field is filled and the date field is hidden & the fields have re-rendered and updated state
+        // Expect card & date errors to be cleared - since the fields were in error because they were empty
+        // but now the PAN field is filled and the date field is hidden & so these fields have re-rendered and updated state
         cardErrors = await page.evaluate('window.card.state.errors');
         await expect(cardErrors[ENCRYPTED_CARD_NUMBER]).toBe(null);
         await expect(cardErrors[ENCRYPTED_EXPIRY_DATE]).toBe(null);
-        await expect(cardErrors[ENCRYPTED_SECURITY_CODE]).toBe(null);
+
+        // The cvc field should remain in error since it is required under this card brand's BIN
+        await expect(cardErrors[ENCRYPTED_SECURITY_CODE]).not.toBe(null);
     });
 
     test('#3 Hidden date field in error does not stop card becoming valid', async ({ cardExpiryDatePoliciesPage }) => {
