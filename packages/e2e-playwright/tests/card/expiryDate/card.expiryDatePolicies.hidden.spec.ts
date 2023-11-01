@@ -62,6 +62,9 @@ test.describe('Test how Card Component handles hidden expiryDate policy', () => 
         // Fill number to provoke binLookup response
         await card.typeCardNumber(SYNCHRONY_PLCC_NO_DATE);
 
+        // Headless test seems to need time for UI reset to register on state
+        await page.waitForTimeout(500);
+
         // Expect card & date errors to be cleared - since the fields were in error because they were empty
         // but now the PAN field is filled and the date field is hidden & so these fields have re-rendered and updated state
         cardErrors = await page.evaluate('window.card.state.errors');
