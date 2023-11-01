@@ -49,8 +49,8 @@ export default function Address(props: AddressProps) {
         formatters: addressFormatters
     });
 
-    const setSearchData = selectedAddress => {
-        const updatedSelectedAddress = props.onSelectedAddress ? props.onSelectedAddress(selectedAddress) : selectedAddress;
+    const setSearchData = async selectedAddress => {
+        const updatedSelectedAddress = props.onSelectedAddress ? await props.onSelectedAddress(selectedAddress) : selectedAddress;
         const propsKeysToProcess = ADDRESS_SCHEMA;
         propsKeysToProcess.forEach(propKey => {
             // Make sure the data provided by the merchant is always strings
