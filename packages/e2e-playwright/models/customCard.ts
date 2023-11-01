@@ -152,6 +152,14 @@ class CustomCard {
         await this.expiryDateInput.clear();
     }
 
+    async deleteExpiryMonth() {
+        await this.expiryMonthInput.clear();
+    }
+
+    async deleteExpiryYear() {
+        await this.expiryYearInput.clear();
+    }
+
     async deleteCvc() {
         await this.cvcInput.clear();
     }
