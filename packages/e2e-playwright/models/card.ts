@@ -143,6 +143,11 @@ class Card {
     async pressKeyboardToSelectItem() {
         await this.page.keyboard.press('Enter', { delay: KEYBOARD_DELAY });
     }
+
+    async selectListItem(who) {
+        const listItem = this.selectorList.locator(`#listItem-${who}`);
+        return listItem;
+    }
 }
 
 export { Card };
