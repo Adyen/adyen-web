@@ -1,4 +1,4 @@
-import { AdyenCheckout, Dropin, Card } from '@adyen/adyen-web';
+import { AdyenCheckout, Dropin, Card, Giftcard } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { createSession } from '../../services';
 import { amount, shopperLocale, countryCode, returnUrl, shopperReference } from '../../services/commonConfig';
@@ -32,7 +32,9 @@ const initCheckout = async () => {
         ...window.mainConfiguration
     });
 
-    window.dropin = new Dropin({ core: checkout, paymentMethodComponents: [Card], ...window.dropinConfig }).mount('#dropin-sessions-container');
+    window.dropin = new Dropin({ core: checkout, paymentMethodComponents: [Card, Giftcard], ...window.dropinConfig }).mount(
+        '#dropin-sessions-container'
+    );
 };
 
 initCheckout();
