@@ -74,6 +74,9 @@ test.describe('Cards (Installments)', () => {
         await card.pressKeyboardToSelectItem();
         // await page.waitForTimeout(5000);
 
+        // Headless test seems to need time for UI interaction to register on state
+        await page.waitForTimeout(500);
+
         // Inspect card.data
         const paymentDataInstallments: any = await page.evaluate('window.card.data.installments');
         await expect(paymentDataInstallments.value).toEqual(2);

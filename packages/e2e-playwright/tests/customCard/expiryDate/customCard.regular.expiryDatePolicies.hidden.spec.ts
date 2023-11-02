@@ -116,6 +116,9 @@ test.describe('Test how Custom Card Component with regular date field handles hi
         // CVC visible again
         await expect(card.cvcField).toBeVisible();
 
+        // Headless test seems to need time for UI change to register on state
+        await page.waitForTimeout(500);
+
         // Card is not valid
         cardValid = await page.evaluate('window.customCard.isValid');
         await expect(cardValid).toEqual(false);

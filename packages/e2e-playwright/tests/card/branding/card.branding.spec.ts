@@ -110,6 +110,9 @@ test.describe('Testing branding - especially regarding optional and hidden cvc f
             brandingIconSrc = await card.brandingIcon.getAttribute('src');
             await expect(brandingIconSrc).toContain('nocard.svg');
 
+            // Headless test seems to need time for UI change to register on state
+            await page.waitForTimeout(500);
+
             // Is not valid
             cardValid = await page.evaluate('window.card.isValid');
             await expect(cardValid).toEqual(false);

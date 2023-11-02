@@ -131,6 +131,9 @@ test.describe('Test how Custom Card Component with separate date field handles h
         await expect(card.expiryMonthField).toBeVisible();
         await expect(card.cvcField).toBeVisible();
 
+        // Headless test seems to need time for UI change to register on state
+        await page.waitForTimeout(500);
+
         // Card is not valid
         cardValid = await page.evaluate('window.customCardSeparate.isValid');
         await expect(cardValid).toEqual(false);
