@@ -8,7 +8,7 @@ describe('components utils', () => {
 
         test('filters unallowed properties', () => {
             const rawResponse = {
-                resultCode: 'Authorised',
+                resultCode: 'Authorised' as const,
                 someBackendProperty: true,
                 sessionResult: 'XYZ123'
             };

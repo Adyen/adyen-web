@@ -2,9 +2,9 @@ import { mount } from 'enzyme';
 import AdyenCheckout from './core';
 import BCMCMobileElement from '../components/BcmcMobile';
 import Session from './CheckoutSession';
-import { CheckoutSessionSetupResponse } from '../types';
 import { Dropin, Ideal } from '../components';
 import { es_ES } from '../language/locales';
+import { CheckoutSessionSetupResponse } from './CheckoutSession/types';
 
 jest.spyOn(Session.prototype, 'setupSession').mockImplementation(() => {
     const sessionSetupResponseMock: CheckoutSessionSetupResponse = {
