@@ -11,10 +11,10 @@ const initCheckout = async () => {
         returnUrl,
         shopperLocale,
         shopperReference,
-        countryCode,
+        countryCode
     });
 
-    const sessionCheckout = await AdyenCheckout({
+    window.sessionCheckout = await AdyenCheckout({
         environment: 'test',
         clientKey: process.env.__CLIENT_KEY__,
         showPayButton: true,
@@ -30,21 +30,26 @@ const initCheckout = async () => {
         onError: (error, component) => {
             console.log('arg', error);
             console.error(error.message, component);
-        },
+        }
     });
 
     window.giftcard = new Giftcard({
         core: window.sessionCheckout,
-            type: 'giftcard',
-            brand: 'valuelink',
-            onOrderCreated: (data) => {
-                window.onOrderCreatedTestData = data;
-            },
-            onRequiringConfirmation: () => {
-                window.onRequiringConfirmationTestData = true;
+        type: 'giftcard',
+        brand: 'valuelink',
+        onOrderCreated: data => {
+            window.onOrderCreatedTestData = data;
+        },
+        onRequiringConfirmation: () => {
+            window.onRequiringConfirmationTestData = true;
+        },
+        brandsConfiguration: {
+            genericgiftcard: {
+                icon: 'https://checkoutshopper-test.adyen.com/checkoutshopper/images/logos/mc.svg',
+                name: 'Gifty mcGiftface'
             }
-        })
-        .mount('.card-field');
+        }
+    }).mount('.card-field');
 };
 
 initCheckout();

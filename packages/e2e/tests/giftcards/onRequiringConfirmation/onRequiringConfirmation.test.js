@@ -3,7 +3,7 @@ import { ClientFunction } from 'testcafe';
 import { fillIFrame, getInputSelector } from '../../utils/commonUtils';
 import { GIFTCARD_NUMBER, GIFTCARD_PIN } from '../utils/constants';
 import { GIFTCARDS_SESSIONS_URL } from '../../pages';
-import {mock, loggers, MOCK_SESSION_DATA, balanceMock} from './onRequiringConfirmation.mocks';
+import { mock, loggers, MOCK_SESSION_DATA, balanceMock } from './onRequiringConfirmation.mocks';
 
 import { GiftCardSessionPage } from '../../_models/GiftCardComponent.page';
 
@@ -17,7 +17,6 @@ fixture`Testing gift cards`.page(GIFTCARDS_SESSIONS_URL).requestHooks([balanceLo
 
 // set up request hooks for different scenarios
 test.requestHooks([balanceMock, mock])('Test if onRequiringConfirmation is retrieved on success', async t => {
-
     await giftCard.pmHolder();
     await giftCard.cardUtils.fillCardNumber(t, GIFTCARD_NUMBER);
     await fillIFrame(t, giftCard.iframeSelector, 1, getInputSelector('encryptedSecurityCode'), GIFTCARD_PIN);
@@ -43,5 +42,5 @@ test.requestHooks([balanceMock, mock])('Test if onRequiringConfirmation is retri
     await t
         .click(giftCard.payButton)
         .expect(paymentLogger.count(() => true))
-        .eql(1)
+        .eql(1);
 });
