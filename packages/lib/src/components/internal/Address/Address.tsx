@@ -50,7 +50,7 @@ export default function Address(props: AddressProps) {
     });
 
     const setSearchData = useCallback(
-        selectedAddress => {
+        (selectedAddress: AddressData) => {
             const propsKeysToProcess = ADDRESS_SCHEMA;
             propsKeysToProcess.forEach(propKey => {
                 // Make sure the data provided by the merchant is always strings

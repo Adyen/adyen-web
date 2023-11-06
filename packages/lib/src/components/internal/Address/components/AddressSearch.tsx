@@ -6,6 +6,7 @@ import './AddressSearch.scss';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import { debounce } from '../utils';
 import Select from '../../FormFields/Select';
+import { AddressData } from '../../../../types';
 
 export type OnAddressLookupType = (
     value: string,
@@ -26,7 +27,7 @@ export type OnAddressSelectedType = (
 interface AddressSearchProps {
     onAddressLookup?: OnAddressLookupType;
     onAddressSelected?: OnAddressSelectedType;
-    onSelect: any; //TODO
+    onSelect: (addressItem: AddressData) => void;
     onManualAddress: any;
     externalErrorMessage: string;
     hideManualButton: boolean;
@@ -112,6 +113,7 @@ export default function AddressSearch({
                         items={formattedData}
                         onChange={onChange}
                         disableTextFilter={true}
+                        blurOnClose={true}
                     />
                 </Field>
                 {!hideManualButton && (
