@@ -4,6 +4,18 @@
   padding: 12px;
   background-color: $color-gray-lighter;
   border-radius: $border-radius-medium;
+  margin-bottom: 16px;
+}
+
+.adyen-checkout-ctp__otp-checkbox-container--checked {
+  background-color: #F2F8FF;
+}
+
+.adyen-checkout-ctp__otp-readmore-button {
+  all: unset;
+  text-transform: lowercase;
+  cursor: pointer;
+  color: $color-blue;
 }
 
 .adyen-checkout-ctp__otp-checkbox-container  label {
@@ -19,5 +31,5 @@
   font-size: 13px;
   line-height: 19px;
   font-weight: 400;
-  margin: 0 0 16px;
+  margin: 4px 0 0;
 }
