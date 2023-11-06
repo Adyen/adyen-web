@@ -1,4 +1,5 @@
 import { test, expect } from '../../../pages/cards/card.fixture';
+import { pressKeyboardToNextItem } from '../../utils/keyboard';
 import { REGULAR_TEST_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE } from '../../utils/constants';
 
 test.describe('Cards (Installments)', () => {
@@ -69,9 +70,9 @@ test.describe('Cards (Installments)', () => {
         await card.installmentsPaymentLabel.click();
 
         await card.installmentsDropdown.click();
-        await card.pressKeyboardToNextItem();
-        await card.pressKeyboardToNextItem();
-        // await card.pressKeyboardToSelectItem();
+        await pressKeyboardToNextItem(page);
+        await pressKeyboardToNextItem(page);
+        // await pressKeyboardToSelectItem(page);
 
         const listItem = await card.selectListItem(2);
         await listItem.click();

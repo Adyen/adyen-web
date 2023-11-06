@@ -13,8 +13,6 @@ const CVC_IFRAME_LABEL = LANG['creditCard.securityCode.label'];
 const INSTALLMENTS_PAYMENTS = LANG['installments.installments'];
 const REVOLVING_PAYMENT = LANG['installments.revolving'];
 
-const KEYBOARD_DELAY = 300;
-
 class Card {
     readonly page: Page;
 
@@ -134,14 +132,6 @@ class Card {
 
     async typeCvc(cvc: string) {
         await this.cvcInput.type(cvc, { delay: USER_TYPE_DELAY });
-    }
-
-    async pressKeyboardToNextItem() {
-        await this.page.keyboard.press('ArrowDown', { delay: KEYBOARD_DELAY });
-    }
-
-    async pressKeyboardToSelectItem() {
-        await this.page.keyboard.press('Enter', { delay: KEYBOARD_DELAY });
     }
 
     async selectListItem(who) {
