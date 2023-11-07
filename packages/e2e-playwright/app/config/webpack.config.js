@@ -19,8 +19,8 @@ const htmlPages = fs.readdirSync(basePageDir).map(fileName => ({
 const htmlPageGenerator = ({ id }, index) => {
     console.log('htmlPageGenerator', id, index);
     return new HTMLWebpackPlugin({
-        // make card index.html the rest of the pages will have page <lower case ID>.html
-        filename: `${id !== 'Cards' ? `${id.toLowerCase()}/` : ''}index.html`,
+        // make Dropin index.html the rest of the pages will have page <lower case ID>.html
+        filename: `${id !== 'Dropin' ? `${id.toLowerCase()}/` : ''}index.html`,
         template: path.join(__dirname, `../src/pages/${id}/${id}.html`),
         templateParameters: () => ({ htmlWebpackPlugin: { htmlPages } }),
         inject: 'body',

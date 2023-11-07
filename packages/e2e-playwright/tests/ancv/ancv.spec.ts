@@ -23,7 +23,7 @@ import { statusMock } from '../../mocks/status/status.mock';
 // });
 
 test('should display card component after handling onOrderCreated', async ({ ancvPage }) => {
-    const { ancv } = ancvPage;
+    const { ancv, page } = ancvPage;
 
     await createOrderMock(ancv.page, orderCreatedMockData);
     await paymentsMock(ancv.page, paymentsActionAncvMockData);
@@ -39,6 +39,9 @@ test('should display card component after handling onOrderCreated', async ({ anc
     await paymentsMock(ancv.page, paymentsSuccessCardMockData);
 
     const cardDisclaimerText = ancv.page.getByText('All fields are required unless marked otherwise.');
+
+    // Headless test seems to need time for UI change to register
+    await page.waitForTimeout(500);
 
     await expect(cardDisclaimerText).toBeVisible();
 });

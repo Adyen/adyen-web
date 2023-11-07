@@ -33,19 +33,9 @@ test(
         await t
             .expect(dualBrandingIconHolderActive.exists)
             .ok()
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(0)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(0).getAttribute('data-value'))
             .eql('visa')
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(1)
-                    .getAttribute('data-value')
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(1).getAttribute('data-value'))
             .eql('cartebancaire');
     }
 );
@@ -116,11 +106,7 @@ test(
         // Partially fill card field with dual branded card (visa/cb)
         await cardUtils.fillCardNumber(t, firstDigits);
 
-        await t
-            .expect(dualBrandingIconHolder.exists)
-            .ok()
-            .expect(dualBrandingIconHolderActive.exists)
-            .notOk();
+        await t.expect(dualBrandingIconHolder.exists).ok().expect(dualBrandingIconHolderActive.exists).notOk();
 
         await t.wait(500);
 
@@ -148,38 +134,18 @@ test(
             // click first icon
             .click(dualBrandingIconHolderActive.find('img').nth(0))
             // first icon shouldn't have the "not selected" class
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(0)
-                    .hasClass(NOT_SELECTED_CLASS)
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(0).hasClass(NOT_SELECTED_CLASS))
             .eql(false)
             // second icon should have the "not selected" class
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(1)
-                    .hasClass(NOT_SELECTED_CLASS)
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(1).hasClass(NOT_SELECTED_CLASS))
             .eql(true)
             // click second icon
             .click(dualBrandingIconHolderActive.find('img').nth(1))
             // second icon shouldn't have the "not selected" class
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(1)
-                    .hasClass(NOT_SELECTED_CLASS)
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(1).hasClass(NOT_SELECTED_CLASS))
             .eql(false)
             // first icon should have the "not selected" class
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(0)
-                    .hasClass(NOT_SELECTED_CLASS)
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(0).hasClass(NOT_SELECTED_CLASS))
             .eql(true);
     }
 );
@@ -204,20 +170,10 @@ test(
         // Check icon opacities (should be 100%)
         await t
             // first icon SHOULDN'T have the "not selected" class
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(0)
-                    .hasClass(NOT_SELECTED_CLASS)
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(0).hasClass(NOT_SELECTED_CLASS))
             .eql(false)
             // second icon SHOULDN'T have the "not selected" class
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(1)
-                    .hasClass(NOT_SELECTED_CLASS)
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(1).hasClass(NOT_SELECTED_CLASS))
             .eql(false);
 
         // Click brand icons
@@ -225,38 +181,18 @@ test(
             // click first icon
             .click(dualBrandingIconHolderActive.find('img').nth(0))
             // first icon SHOULDN'T have the "not selected" class
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(0)
-                    .hasClass(NOT_SELECTED_CLASS)
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(0).hasClass(NOT_SELECTED_CLASS))
             .eql(false)
             // second icon SHOULD have the "not selected" class
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(1)
-                    .hasClass(NOT_SELECTED_CLASS)
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(1).hasClass(NOT_SELECTED_CLASS))
             .eql(true)
             // click second icon
             .click(dualBrandingIconHolderActive.find('img').nth(1))
             // second icon SHOULDN'T have the "not selected" class
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(1)
-                    .hasClass(NOT_SELECTED_CLASS)
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(1).hasClass(NOT_SELECTED_CLASS))
             .eql(false)
             // first icon SHOULD have the "not selected" class
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(0)
-                    .hasClass(NOT_SELECTED_CLASS)
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(0).hasClass(NOT_SELECTED_CLASS))
             .eql(true);
     }
 );
@@ -281,11 +217,7 @@ test(
         await cardUtils.fillCardNumber(t, firstDigits, 'paste');
 
         // Check buttons are present but NOT active (which will mean the holding element is at 25% opacity)
-        await t
-            .expect(dualBrandingIconHolder.exists)
-            .ok()
-            .expect(dualBrandingIconHolderActive.exists)
-            .notOk();
+        await t.expect(dualBrandingIconHolder.exists).ok().expect(dualBrandingIconHolderActive.exists).notOk();
 
         // Complete field
         await cardUtils.fillCardNumber(t, lastDigits);
@@ -296,20 +228,10 @@ test(
         // Check icon opacities (should be 100%)
         await t
             // first icon SHOULDN'T have the "not selected" class
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(0)
-                    .hasClass(NOT_SELECTED_CLASS)
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(0).hasClass(NOT_SELECTED_CLASS))
             .eql(false)
             // second icon SHOULDN'T have the "not selected" class
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(1)
-                    .hasClass(NOT_SELECTED_CLASS)
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(1).hasClass(NOT_SELECTED_CLASS))
             .eql(false);
 
         // Click brand icons
@@ -317,38 +239,18 @@ test(
             // click first icon
             .click(dualBrandingIconHolderActive.find('img').nth(0))
             // first icon SHOULDN'T have the "not selected" class
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(0)
-                    .hasClass(NOT_SELECTED_CLASS)
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(0).hasClass(NOT_SELECTED_CLASS))
             .eql(false)
             // second icon SHOULD have the "not selected" class
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(1)
-                    .hasClass(NOT_SELECTED_CLASS)
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(1).hasClass(NOT_SELECTED_CLASS))
             .eql(true)
             // click second icon
             .click(dualBrandingIconHolderActive.find('img').nth(1))
             // second icon SHOULDN'T have the "not selected" class
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(1)
-                    .hasClass(NOT_SELECTED_CLASS)
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(1).hasClass(NOT_SELECTED_CLASS))
             .eql(false)
             // first icon SHOULD have the "not selected" class
-            .expect(
-                dualBrandingIconHolderActive
-                    .find('img')
-                    .nth(0)
-                    .hasClass(NOT_SELECTED_CLASS)
-            )
+            .expect(dualBrandingIconHolderActive.find('img').nth(0).hasClass(NOT_SELECTED_CLASS))
             .eql(true);
     }
 );

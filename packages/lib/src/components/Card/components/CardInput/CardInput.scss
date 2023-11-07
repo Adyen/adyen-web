@@ -38,8 +38,8 @@
     max-height: 100px;
 }
 
-.adyen-checkout__card__cvc__input--hidden,
-.adyen-checkout__card__exp-date__input--hidden {
+.adyen-checkout__field.adyen-checkout__card__cvc__input--hidden,
+.adyen-checkout__field.adyen-checkout__card__exp-date__input--hidden {
     display: none;
 }
 

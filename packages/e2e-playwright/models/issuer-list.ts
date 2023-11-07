@@ -2,7 +2,6 @@ import { Locator, Page } from '@playwright/test';
 import { USER_TYPE_DELAY } from '../tests/utils/constants';
 
 const SELECTOR_DELAY = 300;
-const KEYBOARD_DELAY = 300;
 
 class IssuerList {
     readonly rootElement: Locator;
@@ -42,18 +41,6 @@ class IssuerList {
 
     async typeOnSelectorField(filter: string) {
         await this.selectorCombobox.type(filter, { delay: USER_TYPE_DELAY });
-    }
-
-    async pressKeyboardToNextItem() {
-        await this.page.keyboard.press('ArrowDown', { delay: KEYBOARD_DELAY });
-    }
-
-    async pressKeyboardToPreviousItem() {
-        await this.page.keyboard.press('ArrowDown', { delay: KEYBOARD_DELAY });
-    }
-
-    async pressKeyboardToSelectItem() {
-        await this.page.keyboard.press('Enter', { delay: KEYBOARD_DELAY });
     }
 }
 

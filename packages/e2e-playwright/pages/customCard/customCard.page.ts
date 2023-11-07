@@ -1,24 +1,27 @@
 import { Locator, Page } from '@playwright/test';
-import { Card } from '../../models/card';
+import { CustomCard } from '../../models/customCard';
 
 class CustomCardPage {
     readonly page: Page;
 
-    readonly card: Card;
-    readonly payButton: Locator;
+    readonly card: CustomCard;
+    readonly payButtonRegular: Locator;
+    readonly payButtonSeparate: Locator;
 
-    constructor(page: Page) {
+    constructor(page: Page, selector?) {
         this.page = page;
-        this.card = new Card(page, '.secured-fields');
-        this.payButton = page.getByRole('button', { name: /Pay/i });
+        this.card = new CustomCard(page, selector);
+        this.payButtonRegular = page.getByTestId('pay-customCardRegular');
+        this.payButtonSeparate = page.getByTestId('pay-customCardSeparate');
     }
 
     async goto(url?: string) {
         await this.page.goto('http://localhost:3024/customcards');
     }
 
-    async pay() {
-        await this.payButton.click();
+    async pay(which: string = 'Regular') {
+        await this[`payButton${which}`].scrollIntoViewIfNeeded();
+        await this[`payButton${which}`].click();
     }
 }
 

@@ -1,5 +1,5 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
+import { AdyenCheckout, Giftcard } from '@adyen/adyen-web';
+import '@adyen/adyen-web/styles/adyen.css';
 import { handleSubmit, handleAdditionalDetails, handleError } from '../../handlers';
 import { checkBalance, createOrder } from '../../services';
 import { amount, shopperLocale, countryCode } from '../../services/commonConfig';
@@ -19,10 +19,8 @@ const initCheckout = async () => {
         ...window.mainConfiguration
     });
 
-    // Credit card with installments
-    window.card = checkout;
-    checkout
-        .create('giftcard', {
+    window.giftcard = new Giftcard({
+            core: window.checkout,
             type: 'giftcard',
             brand: 'valuelink',
             onBalanceCheck: async (resolve, reject, data) => {

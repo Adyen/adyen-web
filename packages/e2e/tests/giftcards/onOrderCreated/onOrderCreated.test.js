@@ -56,8 +56,5 @@ test.requestHooks([noCallbackMock])('Test if onOrderCreated is not called if gif
     await giftCard.cardUtils.fillCardNumber(t, GIFTCARD_NUMBER);
     await fillIFrame(t, giftCard.iframeSelector, 1, getInputSelector('encryptedSecurityCode'), GIFTCARD_PIN);
 
-    await t
-        .click(giftCard.payButton)
-        .expect(getCallBackData())
-        .notOk();
+    await t.click(giftCard.payButton).expect(getCallBackData()).notOk();
 });

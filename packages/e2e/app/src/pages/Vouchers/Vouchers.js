@@ -1,5 +1,5 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
+import { AdyenCheckout, Boleto } from '@adyen/adyen-web';
+import '@adyen/adyen-web/styles/adyen.css';
 import { shopperLocale } from '../../services/commonConfig';
 import '../../style.scss';
 
@@ -11,8 +11,9 @@ const initCheckout = async () => {
     });
 
     // Boleto Input
-    window.boletoInput = checkout
-        .create('boletobancario', {
+    window.boletoInput = new Boleto({
+        core: window.checkout,
+        type: 'boletobancario',
             ...window.boletoConfig
         })
         .mount('#boleto-input-container');
