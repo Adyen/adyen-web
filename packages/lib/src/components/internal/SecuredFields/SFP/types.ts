@@ -14,7 +14,7 @@ export type Placeholders = CardPlaceholders | AchPlaceholders | GiftcardPlacehol
  * Should be the only props that can be sent to SFP (from CardInput, SecuredFieldsInput, AchInput, GiftcardComponent)
  */
 export interface SFPProps {
-    allowedDOMAccess?: boolean;
+    // allowedDOMAccess?: boolean;
     autoFocus?: boolean;
     brands?: string[];
     brandsConfiguration?: CardBrandsConfiguration;

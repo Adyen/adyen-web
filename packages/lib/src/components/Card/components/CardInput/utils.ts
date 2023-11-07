@@ -137,7 +137,7 @@ export const extractPropsForCardFields = (props: CardInputProps) => {
 
 export const extractPropsForSFP = (props: CardInputProps) => {
     return {
-        allowedDOMAccess: props.allowedDOMAccess,
+        // allowedDOMAccess: props.allowedDOMAccess,
         autoFocus: props.autoFocus,
         brands: props.brands,
         brandsConfiguration: props.brandsConfiguration,

@@ -6,7 +6,7 @@ export default {
     rootNode: null,
     loadingContext: null,
     brands: [],
-    allowedDOMAccess: false,
+    // allowedDOMAccess: false,
     showWarnings: false,
     autoFocus: true,
     trimTrailingSeparator: true,

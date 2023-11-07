@@ -1,5 +1,5 @@
 import { makeCallbackObjectsValidation } from '../utils/callbackUtils';
-import { removeEncryptedElement } from '../utils/encryptedElements';
+// import { removeEncryptedElement } from '../utils/encryptedElements';
 import { processErrors } from '../utils/processErrors';
 import { existy } from '../../utilities/commonUtils';
 import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from '../../configuration/constants';
@@ -49,9 +49,9 @@ export function handleValidation(pFeedbackObj: SFFeedbackObj): void {
 
         for (let i = 0, len = callbackObjectsArr.length; i < len; i += 1) {
             // Remove DOM elements
-            if (this.config.allowedDOMAccess) {
-                removeEncryptedElement(this.props.rootNode, callbackObjectsArr[i].uid);
-            }
+            // if (this.config.allowedDOMAccess) {
+            //     removeEncryptedElement(this.props.rootNode, callbackObjectsArr[i].uid);
+            // }
 
             // ...BROADCAST VALID STATE OF INDIVIDUAL INPUTS
             this.callbacks.onFieldValid(callbackObjectsArr[i]);

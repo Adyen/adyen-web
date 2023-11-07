@@ -204,7 +204,7 @@ export default AchInput;
 
 const extractPropsForSFP = (props: ACHInputProps) => {
     return {
-        allowedDOMAccess: props.allowedDOMAccess,
+        // allowedDOMAccess: props.allowedDOMAccess,
         autoFocus: props.autoFocus,
         clientKey: props.clientKey,
         i18n: props.i18n,

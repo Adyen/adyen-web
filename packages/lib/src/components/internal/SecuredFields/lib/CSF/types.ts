@@ -25,7 +25,7 @@ export interface CSFReturnObject {
  * These are the props that are passed from SFP when CSF is initialised and which end up as props in (CSF) this.config: CSFConfigObject
  */
 interface CSFCommonProps {
-    allowedDOMAccess?: boolean | string; // accept boolean or string representation of a boolean i.e. "false"
+    // allowedDOMAccess?: boolean | string; // accept boolean or string representation of a boolean i.e. "false"
     autoFocus?: boolean | string;
     keypadFix?: boolean | string;
     // Below are config props that also end up set on createSecuredFields->SecuredFieldSetupObject
