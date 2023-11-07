@@ -145,6 +145,7 @@ test('should call onSelect if openFirstStoredPaymentMethod is set and there is n
             isLoading={false}
             onSelect={onSelectMock}
             openFirstStoredPaymentMethod={true}
+            paymentMethods={[]}
         />
     );
 

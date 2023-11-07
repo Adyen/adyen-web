@@ -25,14 +25,14 @@ export interface PaymentMethodsContainerProps {
 function PaymentMethodsContainer({
     label,
     classNameModifiers = [],
-    paymentMethods,
-    activePaymentMethod,
-    cachedPaymentMethods,
+    paymentMethods = [],
+    activePaymentMethod = null,
+    cachedPaymentMethods = {},
+    isLoading = false,
+    isDisablingPaymentMethod = false,
     showRemovePaymentMethodButton,
-    onSelect,
-    onDisableStoredPaymentMethod,
-    isDisablingPaymentMethod,
-    isLoading
+    onDisableStoredPaymentMethod = () => {},
+    onSelect
 }: PaymentMethodsContainerProps) {
     const { i18n } = useCoreContext();
     const selectListId: string = useMemo(() => `select-${uuid()}`, []);

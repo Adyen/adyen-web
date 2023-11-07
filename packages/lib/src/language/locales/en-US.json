@@ -74,6 +74,7 @@
     "state": "State",
     "field.title.optional": "(optional)",
     "issuerList.selectField.contextualText": "Select your bank to continue",
+    "issuerList.selectField.label": "Bank selection",
     "privacyPolicy": "Privacy policy",
     "afterPay.agreement": "I agree with the %@ of AfterPay",
     "paymentConditions": "payment conditions",

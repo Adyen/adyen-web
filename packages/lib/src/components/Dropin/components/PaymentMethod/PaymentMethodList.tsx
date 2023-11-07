@@ -10,52 +10,49 @@ import PaymentMethodsContainer, { PaymentMethodsContainerProps } from './Payment
 import { useEffect } from 'preact/hooks';
 
 interface PaymentMethodListProps extends Omit<PaymentMethodsContainerProps, 'label' | 'classNameModifiers'> {
-  instantPaymentMethods?: UIElement[];
-  storedPaymentMethods?: UIElement[];
-  openFirstStoredPaymentMethod?: boolean;
-  openFirstPaymentMethod?: boolean;
-  order?: Order;
-  orderStatus?: OrderStatus;
-  onOrderCancel?: (order) => void;
+    instantPaymentMethods?: UIElement[];
+    storedPaymentMethods?: UIElement[];
+    openFirstStoredPaymentMethod?: boolean;
+    openFirstPaymentMethod?: boolean;
+    order?: Order;
+    orderStatus?: OrderStatus;
+    onOrderCancel?: (order) => void;
 }
 
 const PaymentMethodList = ({
-    paymentMethods = [],
-    instantPaymentMethods = [], 
-    storedPaymentMethods=[],
+    paymentMethods = [], // Non-stored payments
+    instantPaymentMethods = [],
+    storedPaymentMethods = [],
     openFirstStoredPaymentMethod,
     openFirstPaymentMethod,
-    showRemovePaymentMethodButton,
-    orderStatus = null,
     order,
+    orderStatus = null,
     onOrderCancel,
     onSelect = () => {},
     ...rest
 }: PaymentMethodListProps) => {
     const { i18n } = useCoreContext();
     const brandLogoConfiguration = useBrandLogoConfiguration(paymentMethods);
-  const hasInstantPaymentMethods = instantPaymentMethods.length > 0;
-  const hasStoredPaymentMethods = storedPaymentMethods.length > 0;
-  const pmListLabel = hasInstantPaymentMethods || hasStoredPaymentMethods ? i18n.get('paymentMethodsList.otherPayments.label') : '';
+    const hasInstantPaymentMethods = instantPaymentMethods.length > 0;
+    const hasStoredPaymentMethods = storedPaymentMethods.length > 0;
+    const pmListLabel = hasInstantPaymentMethods || hasStoredPaymentMethods ? i18n.get('paymentMethodsList.otherPayments.label') : '';
 
-
-  useEffect(() => {
+    useEffect(() => {
         // Open first PaymentMethodItem
-      const firstStoredPayment = storedPaymentMethods[0];
-      const firstNonStoredPayment = paymentMethods[0];
+        const firstStoredPayment = storedPaymentMethods[0];
+        const firstNonStoredPayment = paymentMethods[0];
 
-      if (firstStoredPayment || firstNonStoredPayment) {
-        const shouldOpenFirstStored = openFirstStoredPaymentMethod && getProp(firstStoredPayment, 'props.oneClick') === true;
-        if (shouldOpenFirstStored) {
-          onSelect(firstStoredPayment);
-          return;
-        }
+        if (firstStoredPayment || firstNonStoredPayment) {
+            const shouldOpenFirstStored = openFirstStoredPaymentMethod && getProp(firstStoredPayment, 'props.oneClick') === true;
+            if (shouldOpenFirstStored) {
+                onSelect(firstStoredPayment);
+                return;
+            }
 
-        if (openFirstPaymentMethod) {
-          onSelect(firstNonStoredPayment);
+            if (openFirstPaymentMethod) {
+                onSelect(firstNonStoredPayment);
+            }
         }
-      }
-      
     }, []);
 
     return (
@@ -71,25 +68,27 @@ const PaymentMethodList = ({
 
             {hasInstantPaymentMethods && <InstantPaymentMethods paymentMethods={instantPaymentMethods} />}
 
-          {hasStoredPaymentMethods && (
-            <PaymentMethodsContainer
-              {...rest}
-              label={i18n.get('paymentMethodsList.storedPayments.label')}
-              classNameModifiers={['storedPayments']}
-              paymentMethods={storedPaymentMethods}
-            ></PaymentMethodsContainer>
-          )}
+            {hasStoredPaymentMethods && (
+                <PaymentMethodsContainer
+                    {...rest}
+                    label={i18n.get('paymentMethodsList.storedPayments.label')}
+                    classNameModifiers={['storedPayments']}
+                    paymentMethods={storedPaymentMethods}
+                    onSelect={onSelect}
+                ></PaymentMethodsContainer>
+            )}
 
-          {!!paymentMethods.length && (
-            <PaymentMethodsContainer
-              {...rest}
-              label={pmListLabel}
-              classNameModifiers={['otherPayments']}
-              paymentMethods={paymentMethods}
-            ></PaymentMethodsContainer>
-          )}
-            </Fragment>
-        );
+            {!!paymentMethods.length && (
+                <PaymentMethodsContainer
+                    {...rest}
+                    label={pmListLabel}
+                    classNameModifiers={['otherPayments']}
+                    paymentMethods={paymentMethods}
+                    onSelect={onSelect}
+                ></PaymentMethodsContainer>
+            )}
+        </Fragment>
+    );
 };
 
 export default PaymentMethodList;
