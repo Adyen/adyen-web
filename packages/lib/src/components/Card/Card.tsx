@@ -17,7 +17,7 @@ import { TxVariants } from '../tx-variants';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = TxVariants.scheme;
-    public static txVariants = [TxVariants.scheme, TxVariants.card];
+    // public static txVariants = [TxVariants.scheme, TxVariants.card];
 
     private readonly clickToPayService: IClickToPayService | null;
 
@@ -66,7 +66,7 @@ export class CardElement extends UIElement<CardElementProps> {
             // billingAddressRequired only available for non-stored cards
             billingAddressRequired: props.storedPaymentMethodId ? false : props.billingAddressRequired,
             // ...(props.brands && !props.groupTypes && { groupTypes: props.brands }),
-            type: props.type === 'scheme' ? 'card' : props.type,
+            type: 'card', //props.type === 'scheme' ? 'card' : props.type,
             countryCode: props.countryCode ? props.countryCode.toLowerCase() : null,
             // Required for transition period (until configuration object becomes the norm)
             // - if merchant has defined value directly in props, use this instead

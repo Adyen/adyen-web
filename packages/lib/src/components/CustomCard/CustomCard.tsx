@@ -38,7 +38,7 @@ type CustomCardProps = Omit<
 
 export class CustomCard extends UIElement<CustomCardProps> {
     public static type = TxVariants.customCard;
-    public static txVariants = [TxVariants.customCard, TxVariants.card];
+    // public static txVariants = [TxVariants.customCard, TxVariants.card];
 
     public static analyticsType = 'custom-scheme';
 
@@ -48,9 +48,11 @@ export class CustomCard extends UIElement<CustomCardProps> {
     };
 
     formatProps(props: CustomCardProps) {
+        const type = 'card'; // = props.type === 'scheme' || props.type === 'customcard' ? 'card' : props.type;
+        console.log('### CustomCard::formatProps:: type=', type);
         return {
             ...props,
-            type: props.type === 'scheme' || props.type === 'securedfields' ? 'card' : props.type
+            type //: props.type === 'scheme' || props.type === 'customcard' ? 'card' : props.type
         };
     }
 

@@ -5,6 +5,7 @@ import { TxVariants } from '../tx-variants';
 
 class BancontactElement extends CardElement {
     public static type = TxVariants.bcmc;
+    // public static txVariants = [TxVariants.bcmc];
 
     constructor(props: CardElementProps) {
         super(props);
