@@ -27,7 +27,7 @@ function ANCVInput({ showPayButton, payButton, onChange, onSubmit }: ANCVInputPr
 
     useEffect(() => {
         onChange({ data, errors, valid, isValid }, this);
-    }, [data, valid, errors, isValid]);
+    }, [data, valid, errors, isValid, onChange]);
 
     const [status, setStatus] = useState<string>('ready');
 

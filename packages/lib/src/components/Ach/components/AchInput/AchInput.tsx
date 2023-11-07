@@ -133,7 +133,7 @@ function AchInput(props: ACHInputProps) {
         const isValid = sfpValid && holderNameValid && billingAddressValid;
 
         props.onChange({ data, isValid, billingAddress, storePaymentMethod });
-    }, [data, valid, errors, storePaymentMethod]);
+    }, [data, valid, errors, storePaymentMethod, props, isSfpValid, billingAddress]);
 
     return (
         <div className="adyen-checkout__ach">

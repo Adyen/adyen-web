@@ -4,6 +4,7 @@ module.exports = {
     extends: [
         'eslint:recommended',
         'plugin:react/recommended',
+        'plugin:react-hooks/recommended',
         'plugin:@typescript-eslint/eslint-recommended',
         'plugin:@typescript-eslint/recommended',
         'plugin:storybook/recommended'
@@ -148,7 +149,10 @@ module.exports = {
         'jsx-a11y/autocomplete-valid': 'error',
         'jsx-a11y/no-static-element-interactions': 'error',
         'jsx-a11y/no-noninteractive-tabindex': 'error',
-        'jsx-a11y/mouse-events-have-key-events': 'error'
+        'jsx-a11y/mouse-events-have-key-events': 'error',
+        // Hooks
+        'react-hooks/exhaustive-deps': 'error',
+        'react-hooks/rules-of-hooks': 'error'
     },
     overrides: [
         {
