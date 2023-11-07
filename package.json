@@ -29,7 +29,7 @@
         "version": "changeset version"
     },
     "resolutions": {
-        "**/regenerator-runtime": "^0.13.9"
+        "**/regenerator-runtime": "^0.14.0"
     },
     "dependencies": {
         "concurrently": "8.0.1"
