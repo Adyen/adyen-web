@@ -1,7 +1,6 @@
 import { h } from 'preact';
 import OpenInvoiceContainer from '../helpers/OpenInvoiceContainer';
-import ConsentCheckboxLabel from './components/ConsentCheckboxLabel';
-import { AFTERPAY_B2B_CONSENT_URL, ALLOWED_COUNTRIES } from './config';
+import { ALLOWED_COUNTRIES } from './config';
 import { OpenInvoiceContainerProps } from '../helpers/OpenInvoiceContainer/OpenInvoiceContainer';
 
 export default class AfterPayB2B extends OpenInvoiceContainer {
@@ -21,8 +20,7 @@ export default class AfterPayB2B extends OpenInvoiceContainer {
     formatProps(props) {
         return {
             ...super.formatProps(props),
-            allowedCountries: props.countryCode ? [props.countryCode] : ALLOWED_COUNTRIES,
-            consentCheckboxLabel: <ConsentCheckboxLabel url={AFTERPAY_B2B_CONSENT_URL} />
+            allowedCountries: props.countryCode ? [props.countryCode] : ALLOWED_COUNTRIES
         };
     }
 }
