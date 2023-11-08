@@ -1,4 +1,3 @@
-import { h } from 'preact';
 import OpenInvoiceContainer from '../helpers/OpenInvoiceContainer';
 import { ALLOWED_COUNTRIES } from './config';
 import { OpenInvoiceContainerProps } from '../helpers/OpenInvoiceContainer/OpenInvoiceContainer';
