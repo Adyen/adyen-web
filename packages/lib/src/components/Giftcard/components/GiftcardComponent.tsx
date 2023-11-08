@@ -8,7 +8,6 @@ import { GIFT_CARD } from '../../internal/SecuredFields/lib/configuration/consta
 import { GiftCardFields } from './GiftcardFields';
 import { GiftcardFieldsProps } from './types';
 import StoreDetails from '../../internal/StoreDetails';
-import RedirectButton from '../../internal/RedirectButton';
 
 interface GiftcardComponentProps {
     onChange: (state) => void;
@@ -20,10 +19,14 @@ interface GiftcardComponentProps {
     amount: PaymentAmount;
     showPayButton?: boolean;
     payButton: (config) => any;
+    brand: string;
 
     pinRequired: boolean;
     expiryDateRequired?: boolean;
     fieldsLayoutComponent: FunctionComponent<GiftcardFieldsProps>;
+
+    enableStoreDetails: boolean;
+    storedPaymentMethodId: string;
 }
 
 class Giftcard extends Component<GiftcardComponentProps> {
@@ -61,7 +64,10 @@ class Giftcard extends Component<GiftcardComponentProps> {
     };
 
     public showValidation = () => {
-        this.sfp.showValidation();
+        // in case it's a stored gift card (stored mealvoucher) there will be no SFP
+        if (this.sfp) {
+            this.sfp.showValidation();
+        }
     };
 
     setStatus(status) {
@@ -83,7 +89,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
         this.setState({ balance, transactionLimit });
     };
 
-    render(props, { focusedElement, balance, transactionLimit }) {
+    render(props: GiftcardComponentProps, { focusedElement, balance, transactionLimit }) {
         const { i18n } = useCoreContext();
 
         const transactionAmount = transactionLimit?.value < balance?.value ? transactionLimit : balance;
@@ -94,7 +100,12 @@ class Giftcard extends Component<GiftcardComponentProps> {
         }
 
         if (props.storedPaymentMethodId) {
-            return <RedirectButton name={props.displayName} amount={props.amount} payButton={props.payButton} onSubmit={props.onBalanceCheck} />;
+            return this.props.payButton({
+                status: this.state.status,
+                onClick: this.props.onBalanceCheck,
+                label: i18n.get('applyGiftcard'),
+                classNameModifiers: ['standalone']
+            });
         }
 
         const getCardErrorMessage = sfpState => {

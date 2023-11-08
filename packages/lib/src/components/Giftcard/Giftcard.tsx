@@ -39,6 +39,10 @@ export class GiftcardElement extends UIElement {
     }
 
     get isValid() {
+        if (this.props.storedPaymentMethodId) {
+            return true;
+        }
+
         return !!this.state.isValid;
     }
 
@@ -47,6 +51,11 @@ export class GiftcardElement extends UIElement {
     }
 
     get displayName() {
+        if (this.props.storedPaymentMethodId && this.props.lastFour) {
+            // this applies for MealVoucher since it has the logic for lastFour
+            return `•••• ${this.props.lastFour}`;
+        }
+
         return this.props.brandsConfiguration[this.props.brand]?.name || this.props.name;
     }
 
