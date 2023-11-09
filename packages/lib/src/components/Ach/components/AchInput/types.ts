@@ -27,7 +27,6 @@ type PlaceholderKeys = 'holderName' | 'bankAccountNumber' | 'bankLocationId';
 export type Placeholders = Partial<Record<PlaceholderKeys, string>>;
 
 export interface ACHInputProps {
-    // allowedDOMAccess?: boolean;
     autoFocus?: boolean;
     billingAddressAllowedCountries?: string[];
     billingAddressRequired?: boolean;
