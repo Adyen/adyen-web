@@ -31,6 +31,7 @@ interface AddressSearchProps {
     onManualAddress: any;
     externalErrorMessage: string;
     hideManualButton: boolean;
+    addressSearchDebounceMs: number;
 }
 
 export default function AddressSearch({
@@ -39,7 +40,8 @@ export default function AddressSearch({
     onSelect,
     onManualAddress,
     externalErrorMessage,
-    hideManualButton
+    hideManualButton,
+    addressSearchDebounceMs
 }: AddressSearchProps) {
     const [formattedData, setFormattedData] = useState([]);
     const [originalData, setOriginalData] = useState([]);
@@ -99,7 +101,7 @@ export default function AddressSearch({
             });
     };
 
-    const debounceInputHandler = useMemo(() => debounce(onInput), []);
+    const debounceInputHandler = useMemo(() => debounce(onInput, addressSearchDebounceMs), []);
 
     return (
         <Fragment>

@@ -180,6 +180,7 @@ export default function Address(props: AddressProps) {
                         onManualAddress={onManualAddress}
                         externalErrorMessage={searchErrorMessage}
                         hideManualButton={showAddressFields}
+                        addressSearchDebounceMs={props.addressSearchDebounceMs}
                     />
                 )}
                 {showAddressFields && (
