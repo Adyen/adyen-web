@@ -17,7 +17,7 @@ export interface AddressProps {
     onChange: (newState) => void;
     onAddressLookup?: OnAddressLookupType;
     onAddressSelected?: OnAddressSelectedType;
-    addressSearchDebounceMs: number;
+    addressSearchDebounceMs?: number;
     requiredFields?: string[];
     ref?: any;
     specifications?: AddressSpecifications;

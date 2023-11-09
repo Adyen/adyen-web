@@ -109,7 +109,7 @@ export interface CardInputProps {
     onLoad?: () => {};
     onAddressLookup?: OnAddressLookupType;
     onAddressSelected?: OnAddressSelectedType;
-    addressSearchDebounceMs: number;
+    addressSearchDebounceMs?: number;
     payButton?: (obj) => {};
     placeholders?: Placeholders;
     positionHolderNameOnTop?: boolean;

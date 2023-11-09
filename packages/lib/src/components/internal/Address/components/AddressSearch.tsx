@@ -31,7 +31,7 @@ interface AddressSearchProps {
     onManualAddress: any;
     externalErrorMessage: string;
     hideManualButton: boolean;
-    addressSearchDebounceMs: number;
+    addressSearchDebounceMs?: number;
 }
 
 export default function AddressSearch({
