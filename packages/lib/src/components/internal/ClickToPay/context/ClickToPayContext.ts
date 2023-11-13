@@ -39,7 +39,7 @@ const ClickToPayContext = createContext<IClickToPayContext>({
     configuration: null,
     isStandaloneComponent: null,
     isCtpPrimaryPaymentMethod: null,
-    isStoringCookies: null,
+    isStoringCookies: false,
     setIsCtpPrimaryPaymentMethod: null,
     logoutShopper: null,
     updateStoreCookiesConsent: null,
