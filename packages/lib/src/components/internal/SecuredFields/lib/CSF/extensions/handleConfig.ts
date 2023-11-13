@@ -34,10 +34,6 @@ export function handleConfig(props: CSFSetupObject): void {
     // Configuration object for individual txVariants - contains styling object values for securedFields inputs
     this.config.iframeUIConfig = props.iframeUIConfig ?? {};
 
-    // By default CSF is allowed to add the encrypted element to the DOM - user of CSF must explicitly 'opt-out' to prevent this happening
-    // (If either condition is true - then set allowedDOMAccess to false)
-    this.config.allowedDOMAccess = !(props.allowedDOMAccess === false || props.allowedDOMAccess === 'false');
-
     // By default CSF is allowed to automatically shift focus from the date to CVC fields - user of CSF must explicitly 'opt-out' to prevent this happening
     this.config.autoFocus = !(props.autoFocus === false || props.autoFocus === 'false');
 

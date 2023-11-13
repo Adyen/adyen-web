@@ -63,7 +63,6 @@ export type Placeholders = Partial<Record<PlaceholderKeys, string>>;
 export interface CardInputProps {
     amount?: PaymentAmount;
     isPayButtonPrimaryVariant?: boolean;
-    allowedDOMAccess?: boolean;
     autoFocus?: boolean;
     billingAddressAllowedCountries?: string[];
     billingAddressRequired?: boolean;

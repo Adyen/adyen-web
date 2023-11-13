@@ -272,7 +272,6 @@ export interface CardElementProps extends UIElementProps {
     expiryMonth?: string;
 
     // forceCompat?: boolean, // TODO - probably drop, if Checkout won't support IE then SF doesn't need to
-    // allowedDOMAccess: false, // TODO -  Drop for v6 (not sure if anyone ever uses this)
 }
 
 export type SocialSecurityMode = 'show' | 'hide' | 'auto';

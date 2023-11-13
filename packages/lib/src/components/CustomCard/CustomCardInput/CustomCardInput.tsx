@@ -10,7 +10,6 @@ import { Resources } from '../../../core/Context/Resources';
 import { Placeholders } from '../../Card/components/CardInput/types';
 
 interface SecuredFieldsProps {
-    allowedDOMAccess?: boolean;
     autoFocus?: boolean;
     brands?: string[];
     brandsConfiguration?: CardBrandsConfiguration;
@@ -134,7 +133,6 @@ export default CustomCardInput;
 
 const extractPropsForSFP = (props: SecuredFieldsProps) => {
     return {
-        allowedDOMAccess: props.allowedDOMAccess,
         autoFocus: props.autoFocus,
         brands: props.brands,
         brandsConfiguration: props.brandsConfiguration,
