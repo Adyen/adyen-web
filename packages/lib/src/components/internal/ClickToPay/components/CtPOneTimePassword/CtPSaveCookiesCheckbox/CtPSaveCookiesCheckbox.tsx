@@ -1,4 +1,4 @@
-import { Fragment, h } from 'preact';
+import { h } from 'preact';
 import classnames from 'classnames';
 import Field from '../../../../FormFields/Field';
 import Checkbox from '../../../../FormFields/Checkbox';
@@ -11,7 +11,6 @@ function CtPSaveCookiesCheckbox() {
     const { i18n } = useCoreContext();
     const { updateStoreCookiesConsent, isStoringCookies } = useClickToPayContext();
     const [checked, setIsChecked] = useState(isStoringCookies);
-    const [isTextTruncated, setIsTextTruncated] = useState<boolean>(true);
 
     const handleOnChange = useCallback(() => {
         const newChecked = !checked;
@@ -35,17 +34,8 @@ function CtPSaveCookiesCheckbox() {
                 />
             </Field>
 
-            <p className="adyen-checkout-ctp__otp-checkbox-info">
-                {isTextTruncated ? (
-                    <Fragment>
-                        <span id="adyen-ctp-cookies-info">{i18n.get('ctp.otp.saveCookiesCheckbox.shorterInfo')} </span>
-                        <button className="adyen-checkout-ctp__otp-readmore-button" onClick={() => setIsTextTruncated(false)}>
-                            {i18n.get('readMore')}..
-                        </button>
-                    </Fragment>
-                ) : (
-                    <span id="adyen-ctp-cookies-info">{i18n.get('ctp.otp.saveCookiesCheckbox.information')}</span>
-                )}
+            <p className="adyen-checkout-ctp__otp-checkbox-info" id="adyen-ctp-cookies-info">
+                {i18n.get('ctp.otp.saveCookiesCheckbox.information')}
             </p>
         </div>
     );
