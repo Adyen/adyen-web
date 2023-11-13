@@ -19,27 +19,89 @@ export async function initManual() {
         // translationFile: nl_NL,
 
         environment: process.env.__CLIENT_ENV__,
-        onSubmit: async (state, component) => {
+
+        onSubmit: async (state, component, actions) => {
+            const { authorizedData } = state;
+            console.log('authorizedData', authorizedData);
+
             const result = await makePayment(state.data);
 
-            // handle actions
             if (result.action) {
-                // demo only - store paymentData & order
-                if (result.action.paymentData) localStorage.setItem('storedPaymentData', result.action.paymentData);
-                component.handleAction(result.action, { challengeWindowSize: '01' });
-            } else if (result.order && result.order?.remainingAmount?.value > 0) {
-                // handle orders
+                actions.resolve({
+                    action: result.action,
+                    actionProps: {
+                        challengeWindowSize: '01'
+                    }
+                });
+                return;
+            }
+
+            if (result.order && result.order?.remainingAmount?.value > 0) {
                 const order = {
                     orderData: result.order.orderData,
                     pspReference: result.order.pspReference
                 };
 
                 const orderPaymentMethods = await getPaymentMethods({ order, amount, shopperLocale });
-                checkout.update({ paymentMethodsResponse: orderPaymentMethods, order, amount: result.order.remainingAmount });
-            } else {
-                handleFinalState(result.resultCode, component);
+
+                actions.resolve({
+                    order,
+                    paymentMethodsResponse: orderPaymentMethods
+                });
+
+                return;
             }
+
+            if (result.resultCode === 'Authorised' || result.resultCode === 'Received') {
+                actions.resolve(result); // DO I NEED FULL RESULT?
+            } else {
+                actions.reject(result)
+            }
+
+
+            //
+            // // Trigger Error for GooglePay
+            // // actions.reject({
+            // //     googlePayError: {
+            // //         message: 'Not sufficient funds',
+            // //         reason: 'OTHER_ERROR,'
+            // //     }
+            // // });
+            //
+            // actions.resolve({ resultCode: result.resultCode });
         },
+
+        onPaymentCompleted(result, element) {
+            console.log('onPaymentCompleted', result, element);
+        },
+        //
+        //
+        // // payments call
+        // if (result === AUTHORIZED)
+        //     return action.resolve({ orderTrackng: { /// details }})}
+        // }
+        //
+        //
+        // action.reject(new ApplePayError('')));
+
+        // // handle actions
+        // if (result.action) {
+        //     // demo only - store paymentData & order
+        //     if (result.action.paymentData) localStorage.setItem('storedPaymentData', result.action.paymentData);
+        //     component.handleAction(result.action, { challengeWindowSize: '01' });
+        // } else if (result.order && result.order?.remainingAmount?.value > 0) {
+        //     // handle orders
+        //     const order = {
+        //         orderData: result.order.orderData,
+        //         pspReference: result.order.pspReference
+        //     };
+        //
+        //     const orderPaymentMethods = await getPaymentMethods({ order, amount, shopperLocale });
+        //     checkout.update({ paymentMethodsResponse: orderPaymentMethods, order, amount: result.order.remainingAmount });
+        // } else {
+        //     handleFinalState(result.resultCode, component);
+        // }
+        // },
         // srConfig: { showPanel: true },
         // onChange: state => {
         //     console.log('onChange', state);

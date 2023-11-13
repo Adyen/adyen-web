@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import BaseElement from './BaseElement';
-import { PaymentAction } from '../types';
+import { CheckoutSessionPaymentResponse, PaymentAction } from '../types';
 import { ComponentMethodsRef, PaymentResponse } from './types';
 import PayButton from './internal/PayButton';
 import { IUIElement, PayButtonFunctionProps, RawPaymentResponse, UIElementProps } from './types';
@@ -8,11 +8,21 @@ import { getSanitizedResponse, resolveFinalResult } from './utils';
 import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 import { UIElementStatus } from './types';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
-import DropinElement from './Dropin';
 import { CoreOptions, ICore } from '../core/types';
 import { Resources } from '../core/Context/Resources';
 import { NewableComponent } from '../core/core.registry';
 import './UIElement.scss';
+
+export type SubmitReject = {
+    googlePayError?: {
+        message?: string;
+        reason?: google.payments.api.ErrorReason;
+    };
+    applePayError?: {
+        // TOOD
+        [key: string]: any;
+    };
+};
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
@@ -40,10 +50,10 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.setState = this.setState.bind(this);
         this.onValid = this.onValid.bind(this);
         this.onComplete = this.onComplete.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
+        this.makePaymentsCall = this.makePaymentsCall.bind(this);
         this.handleAction = this.handleAction.bind(this);
         this.handleOrder = this.handleOrder.bind(this);
-        this.handleResponse = this.handleResponse.bind(this);
+        this.handleSessionsResponse = this.handleSessionsResponse.bind(this);
         this.setElementStatus = this.setElementStatus.bind(this);
 
         this.elementRef = (props && props.elementRef) || this;
@@ -82,6 +92,9 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     public setState(newState: object): void {
         this.state = { ...this.state, ...newState };
+
+        console.log('new state', this.state);
+
         this.onChange();
     }
 
@@ -94,41 +107,106 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         return state;
     }
 
-    private onSubmit(): void {
-        //TODO: refactor this, instant payment methods are part of Dropin logic not UIElement
-        if (this.props.isInstantPayment) {
-            const dropinElementRef = this.elementRef as unknown as DropinElement;
-            dropinElementRef.closeActivePaymentMethod();
-        }
-
+    /**
+     * Triggers the payment flow
+     */
+    private async makePaymentsCall(): Promise<void> {
         if (this.props.setStatusAutomatically) {
             this.setElementStatus('loading');
         }
 
         if (this.props.onSubmit) {
-            // Classic flow
-            this.props.onSubmit({ data: this.data, isValid: this.isValid }, this.elementRef);
-        } else if (this.core.session) {
-            // Session flow
-            // wrap beforeSubmit callback in a promise
-            const beforeSubmitEvent = this.props.beforeSubmit
-                ? new Promise((resolve, reject) =>
-                      this.props.beforeSubmit(this.data, this.elementRef, {
-                          resolve,
-                          reject
-                      })
-                  )
-                : Promise.resolve(this.data);
-
-            beforeSubmitEvent
-                .then(data => this.submitPayment(data))
-                .catch(() => {
-                    // set state as ready to submit if the merchant cancels the action
-                    this.elementRef.setStatus('ready');
-                });
-        } else {
-            this.handleError(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Could not submit the payment'));
+            return this.submitUsingAdvancedFlow();
         }
+
+        if (this.core.session) {
+            return this.submitUsingSessionsFlow();
+        }
+
+        this.handleError(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Could not submit the payment'));
+    }
+
+    private async submitUsingAdvancedFlow() {
+        return (
+            new Promise((resolve, reject) => {
+                this.props.onSubmit(
+                    {
+                        data: this.data,
+                        isValid: this.isValid,
+                        ...(this.state.authorizedData && { authorizedData: this.state.authorizedData })
+                    },
+                    this.elementRef,
+                    { resolve, reject }
+                );
+            })
+                .then((data: any) => {
+                    if (data.action) {
+                        this.elementRef.handleAction(data.action, ...data.actionProps);
+                        return;
+                    }
+                    if (data.order) {
+                        const { order, paymentMethodsResponse } = data;
+                        // @ts-ignore Just testing
+                        this.core.update({ paymentMethodsResponse, order, amount: data.order.remainingAmount });
+                        return;
+                    }
+
+                    this.handleFinalResult(data);
+                })
+                // action.reject got called OR something fail above. TODO: add proper checks
+                .catch(error => {
+                    this.throwPaymentMethodErrorIfNeeded(error);
+                })
+        );
+    }
+
+    private async submitUsingSessionsFlow() {
+        const beforeSubmitEvent = this.props.beforeSubmit
+            ? new Promise((resolve, reject) =>
+                  this.props.beforeSubmit(this.data, this.elementRef, {
+                      resolve,
+                      reject
+                  })
+              )
+            : Promise.resolve(this.data);
+
+        let data;
+
+        try {
+            data = await beforeSubmitEvent;
+        } catch {
+            // set state as ready to submit if the merchant cancels the action
+            this.elementRef.setStatus('ready');
+            return;
+        }
+
+        return this.makeSessionPaymentsCall(data);
+    }
+
+    /**
+     * Method used to break the /payments flow and feed the error data back to the component in case the
+     * payment fails.
+     *
+     * Example: GooglePay / ApplePay accepts data from merchant in order to display custom errors
+     *
+     * @param error - Error object that can be passed back by the merchant
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    protected throwPaymentMethodErrorIfNeeded(error?: SubmitReject): void | never {
+        return;
+    }
+
+    private async makeSessionPaymentsCall(data): Promise<void> {
+        let paymentsResponse: CheckoutSessionPaymentResponse = null;
+
+        try {
+            paymentsResponse = await this.core.session.submitPayment(data);
+        } catch (error) {
+            this.handleError(error);
+            this.throwPaymentMethodErrorIfNeeded();
+        }
+
+        this.handleSessionsResponse(paymentsResponse);
     }
 
     private onValid() {
@@ -144,13 +222,13 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     /**
      * Submit payment method data. If the form is not valid, it will trigger validation.
      */
-    public submit(): void {
+    public async submit(): Promise<void> {
         if (!this.isValid) {
             this.showValidation();
             return;
         }
 
-        this.onSubmit();
+        return this.makePaymentsCall();
     }
 
     public showValidation(): this {
@@ -170,15 +248,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         return this;
     }
 
-    private submitPayment(data): Promise<void> {
-        return this.core.session
-            .submitPayment(data)
-            .then(this.handleResponse)
-            .catch(error => this.handleError(error));
-    }
-
     private submitAdditionalDetails(data): Promise<void> {
-        return this.core.session.submitDetails(data).then(this.handleResponse).catch(this.handleError);
+        return this.core.session.submitDetails(data).then(this.handleSessionsResponse).catch(this.handleError);
     }
 
     protected handleError = (error: AdyenCheckoutError): void => {
@@ -236,13 +307,16 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     };
 
     protected handleFinalResult = (result: PaymentResponse) => {
-        if (this.props.setStatusAutomatically) {
-            const [status, statusProps] = resolveFinalResult(result);
-            if (status) this.setElementStatus(status, statusProps);
+        const [status, statusProps] = resolveFinalResult(result);
+
+        if (this.props.setStatusAutomatically && status) {
+            this.setElementStatus(status, statusProps);
         }
 
-        if (this.props.onPaymentCompleted) this.props.onPaymentCompleted(result, this.elementRef);
-        return result;
+        if (this.props.onPaymentCompleted) {
+            this.props.onPaymentCompleted(result, this.elementRef);
+        }
+        // return result;
     };
 
     /**
@@ -250,7 +324,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * The component will handle automatically actions, orders, and final results.
      * @param rawResponse -
      */
-    protected handleResponse(rawResponse: RawPaymentResponse): void {
+    protected handleSessionsResponse(rawResponse: RawPaymentResponse): void {
         const response = getSanitizedResponse(rawResponse);
 
         if (response.action) {
@@ -260,7 +334,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             // we do this way so the logic on handlingOrder is associated with payment method
             this.handleOrder(response);
         } else {
-            this.elementRef.handleFinalResult(response);
+            this.handleFinalResult(response);
+            // this.elementRef.handleFinalResult(response);
         }
     }
 

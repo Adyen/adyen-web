@@ -1,10 +1,10 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement, { SubmitReject } from '../UIElement';
 import GooglePayService from './GooglePayService';
 import GooglePayButton from './components/GooglePayButton';
 import defaultProps from './defaultProps';
 import { GooglePayProps } from './types';
-import { mapBrands, getGooglePayLocale } from './utils';
+import { getGooglePayLocale } from './utils';
 import collectBrowserInfo from '../../utils/browserInfo';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
@@ -14,23 +14,33 @@ class GooglePay extends UIElement<GooglePayProps> {
     public static txVariants = [TxVariants.googlepay, TxVariants.paywithgoogle];
     public static defaultProps = defaultProps;
 
-    protected googlePay = new GooglePayService(this.props);
+    protected readonly googlePay;
 
-    /**
-     * Formats the component data input
-     * For legacy support - maps configuration.merchantIdentifier to configuration.merchantId
-     */
-    formatProps(props): GooglePayProps {
-        const allowedCardNetworks = props.brands?.length ? mapBrands(props.brands) : props.allowedCardNetworks;
+    constructor(props) {
+        super(props);
+
+        this.googlePay = new GooglePayService({
+            ...this.props,
+            paymentDataCallbacks: {
+                ...this.props.paymentDataCallbacks,
+                onPaymentAuthorized: this.onPaymentAuthorized
+            }
+        });
+    }
+
+    formatProps(props: GooglePayProps): GooglePayProps {
+        // const allowedCardNetworks = props.brands?.length ? mapBrands(props.brands) : props.allowedCardNetworks; BRANDS not documented
         const buttonSizeMode = props.buttonSizeMode ?? (props.isDropin ? 'fill' : 'static');
         const buttonLocale = getGooglePayLocale(props.buttonLocale ?? props.i18n?.locale);
+
+        const callbackIntents: google.payments.api.CallbackIntent[] = [...props.callbackIntents, 'PAYMENT_AUTHORIZATION'];
+
         return {
             ...props,
-            showButton: props.showPayButton === true,
             configuration: props.configuration,
-            allowedCardNetworks,
             buttonSizeMode,
-            buttonLocale
+            buttonLocale,
+            callbackIntents
         };
     }
 
@@ -41,25 +51,18 @@ class GooglePay extends UIElement<GooglePayProps> {
         return {
             paymentMethod: {
                 type: this.type,
-                ...this.state
+                googlePayCardNetwork: this.state.googlePayCardNetwork,
+                googlePayToken: '{}'
             },
             browserInfo: this.browserInfo
         };
     }
 
     public submit = () => {
-        const { onAuthorized = () => {} } = this.props;
-
         return new Promise((resolve, reject) => this.props.onClick(resolve, reject))
             .then(() => this.googlePay.initiatePayment(this.props))
-            .then(paymentData => {
-                this.setState({
-                    googlePayToken: paymentData.paymentMethodData.tokenizationData.token,
-                    googlePayCardNetwork: paymentData.paymentMethodData.info.cardNetwork
-                });
-                super.submit();
-
-                return onAuthorized(paymentData);
+            .then(() => {
+                console.log('HERE');
             })
             .catch((error: google.payments.api.PaymentsError) => {
                 if (error.statusCode === 'CANCELED') {
@@ -68,6 +71,54 @@ class GooglePay extends UIElement<GooglePayProps> {
                     this.handleError(new AdyenCheckoutError('ERROR', error.toString(), { cause: error }));
                 }
             });
+    };
+
+    /**
+     * Method called when the payment is authorized in the payment sheet
+     *
+     * @see https://developers.google.com/pay/api/web/reference/client#onPaymentAuthorized
+     **/
+    private onPaymentAuthorized = async (paymentData: google.payments.api.PaymentData): Promise<google.payments.api.PaymentAuthorizationResult> => {
+        this.setState({
+            authorizedData: paymentData,
+            googlePayToken: paymentData.paymentMethodData.tokenizationData.token,
+            googlePayCardNetwork: paymentData.paymentMethodData.info.cardNetwork
+        });
+
+        return new Promise<google.payments.api.PaymentAuthorizationResult>(resolve => {
+            super
+                .submit()
+                .then(result => {
+                    console.log('Resolving');
+
+                    resolve({ transactionState: 'SUCCESS' });
+                    this.props.onPaymentCompleted(result, this.elementRef);
+                })
+                .catch(googlePayError => {
+                    console.log('Caught error');
+
+                    resolve({
+                        transactionState: 'ERROR',
+                        error: {
+                            intent: 'PAYMENT_AUTHORIZATION',
+                            message: googlePayError?.message || 'Something went wrong',
+                            reason: googlePayError?.reason || 'OTHER_ERROR'
+                        }
+                    });
+                });
+        });
+    };
+
+    protected override throwPaymentMethodErrorIfNeeded = (error?: SubmitReject): never => {
+        this.setElementStatus('ready');
+
+        const googleError: google.payments.api.PaymentDataError = {
+            intent: 'PAYMENT_AUTHORIZATION',
+            message: error?.googlePayError?.message || 'Something went wrong',
+            reason: error?.googlePayError?.reason || 'OTHER_ERROR'
+        };
+
+        throw googleError;
     };
 
     /**

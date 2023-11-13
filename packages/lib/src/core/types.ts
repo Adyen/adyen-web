@@ -30,12 +30,14 @@ export interface ICore {
     session?: Session;
 }
 
+export type AdyenEnvironment = 'test' | 'live' | 'live-us' | 'live-au' | 'live-apse' | 'live-in' | string;
+
 export interface CoreOptions {
     session?: any;
     /**
      * Use test. When you're ready to accept live payments, change the value to one of our {@link https://docs.adyen.com/checkout/drop-in-web#testing-your-integration | live environments}.
      */
-    environment?: 'test' | 'live' | 'live-us' | 'live-au' | 'live-apse' | 'live-in' | string;
+    environment?: AdyenEnvironment;
 
     /**
      * Used internally by Pay By Link in order to set its own URL's instead of using the ones mapped in our codebase.

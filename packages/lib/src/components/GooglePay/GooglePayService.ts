@@ -3,10 +3,14 @@ import { resolveEnvironment } from './utils';
 import Script from '../../utils/Script';
 import config from './config';
 
+interface GooglePayServiceProps {
+    [key: string]: any;
+}
+
 class GooglePayService {
     public readonly paymentsClient: Promise<google.payments.api.PaymentsClient>;
 
-    constructor(props) {
+    constructor(props: GooglePayServiceProps) {
         const environment = resolveEnvironment(props.environment);
         if (environment === 'TEST' && process.env.NODE_ENV === 'development') {
             console.warn('Google Pay initiated in TEST mode. Request non-chargeable payment methods suitable for testing.');

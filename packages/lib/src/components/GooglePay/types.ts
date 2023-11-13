@@ -35,7 +35,6 @@ export interface GooglePayPropsConfiguration {
 export interface GooglePayProps extends UIElementProps {
     type?: 'googlepay' | 'paywithgoogle';
 
-    environment?: google.payments.api.Environment | string;
     configuration?: GooglePayPropsConfiguration;
 
     /**

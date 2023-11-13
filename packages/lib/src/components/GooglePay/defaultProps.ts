@@ -48,5 +48,7 @@ export default {
     shippingAddressParameters: undefined, // https://developers.google.com/pay/api/web/reference/object#ShippingAddressParameters
     shippingOptionRequired: false,
     shippingOptionParameters: undefined,
-    paymentMethods: []
+    paymentMethods: [],
+
+    callbackIntents: []
 };
