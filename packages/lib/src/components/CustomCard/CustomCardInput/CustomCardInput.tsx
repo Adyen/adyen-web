@@ -123,9 +123,6 @@ function CustomCardInput(props: SecuredFieldsProps) {
         });
     }, [data, valid, errors, selectedBrandValue]);
 
-    console.log('\n### CustomCardInput::render:: props.type=', props.type);
-    console.log('### CustomCardInput::render:: props.brand=', props.brand);
-
     /**
      * RENDER
      */

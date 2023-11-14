@@ -38,7 +38,6 @@ type CustomCardProps = Omit<
 
 export class CustomCard extends UIElement<CustomCardProps> {
     public static type = TxVariants.customCard;
-    // public static txVariants = [TxVariants.customCard, TxVariants.card];
 
     public static analyticsType = 'custom-scheme';
 
@@ -46,14 +45,6 @@ export class CustomCard extends UIElement<CustomCardProps> {
         onBinLookup: () => {},
         brandsConfiguration: {}
     };
-
-    constructor(props) {
-        super(props);
-
-        // console.log('\n### CustomCard::constructor:: this.type=', this.type);
-        console.log('\n### CustomCard::constructor:: this.props.type=', this.props.type);
-        console.log('### CustomCard::constructor:: this.props.brand=', this.props.brand);
-    }
 
     formatProps(props: CustomCardProps) {
         return {
@@ -132,8 +123,6 @@ export class CustomCard extends UIElement<CustomCardProps> {
     }
 
     render() {
-        console.log('\n### CustomCard::render:: this.props.type=', this.props.type);
-        console.log('### CustomCard::render:: this.props.brand=', this.props.brand);
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <CustomCardInput

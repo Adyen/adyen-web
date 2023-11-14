@@ -17,7 +17,6 @@ import { TxVariants } from '../tx-variants';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = TxVariants.scheme;
-    // public static txVariants = [TxVariants.scheme, TxVariants.card];
 
     private readonly clickToPayService: IClickToPayService | null;
 
@@ -33,10 +32,6 @@ export class CardElement extends UIElement<CardElementProps> {
             this.clickToPayService = createClickToPayService(this.props.configuration, this.props.clickToPayConfiguration, this.props.environment);
             this.clickToPayService?.initialize();
         }
-
-        console.log('\n### Card::constructor:: this.props.type=', this.props.type);
-        console.log('### Card::constructor:: this.props.brand=', this.props.brand);
-        console.log('### Card::constructor:: this.brand=', this.brand);
     }
 
     protected static defaultProps = {
@@ -214,10 +209,6 @@ export class CardElement extends UIElement<CardElementProps> {
     }
 
     private renderCardInput(isCardPrimaryInput = true): h.JSX.Element {
-        console.log('\n### Card::renderCardInput:: this.props.type=', this.props.type);
-        console.log('### Card::renderCardInput:: this.props.brand=', this.props.brand);
-        console.log('### Card::renderCardInput:: this.brand=', this.brand);
-
         return (
             <CardInput
                 setComponentRef={this.setComponentRef}

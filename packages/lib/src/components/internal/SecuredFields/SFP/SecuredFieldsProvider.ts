@@ -154,8 +154,6 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         // send analytics action because to know if anyone *ever* sets this config prop
         // }
 
-        console.log('\n### SecuredFieldsProvider::initializeCSF:: this.props.type', this.props.type);
-
         const csfSetupObj: CSFSetupObject = {
             rootNode: root,
             type: this.props.type,

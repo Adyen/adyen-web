@@ -427,9 +427,6 @@ const CardInput = (props: CardInputProps) => {
      */
     const FieldToRender = props.storedPaymentMethodId ? StoredCardFieldsWrapper : CardFieldsWrapper;
 
-    console.log('\n### CardInput::render:: props.type=', props.type);
-    console.log('### CardInput::render:: props.brand=', props.brand);
-
     return (
         <Fragment>
             <SecuredFieldsProvider
