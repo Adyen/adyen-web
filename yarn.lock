@@ -4379,14 +4379,14 @@
     "@types/node" "*"
 
 "@types/googlepay@^0.7.0":
-  version "0.7.2"
-  resolved "https://registry.yarnpkg.com/@types/googlepay/-/googlepay-0.7.2.tgz#1ba7633caa27340b101952dc92e1afb3a8be529d"
-  integrity sha512-ZYFviDehf53an2ezqiEwQ3dL3TcQM7OeBhKwzX9NYt61y6BqVc/74a/f8cJ3dsEVlAlcctC4NfeB+Z8JxbiYKw==
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/@types/googlepay/-/googlepay-0.7.4.tgz#271a1b3b191107713a392314bd39c2ce8a1b4b84"
+  integrity sha512-7j0iu4lUQfML5c+3zS8t/BNUJFH5MqKnMWEFD141eWsAXmmm6piJ0p+mJlM2Om61FYGe5pUWKRYB8HlZT7n4rQ==
 
 "@types/graceful-fs@^4.1.3":
-  version "4.1.7"
-  resolved "https://registry.yarnpkg.com/@types/graceful-fs/-/graceful-fs-4.1.7.tgz#30443a2e64fd51113bc3e2ba0914d47109695e2a"
-  integrity sha512-MhzcwU8aUygZroVwL2jeYk6JisJrPl/oov/gsgGCue9mkgl9wjGbzReYQClxiUgFDnib9FuHqTndccKeZKxTRw==
+  version "4.1.9"
+  resolved "https://registry.yarnpkg.com/@types/graceful-fs/-/graceful-fs-4.1.9.tgz#2a06bc0f68a20ab37b3e36aa238be6abdf49e8b4"
+  integrity sha512-olP3sd1qOEe5dXTSaFvQG+02VdRXcdytWLAZsAq1PecU8uqQAhkrnbli7DagjtXKW/Bl7YJbUsa8MPcuc8LHEQ==
   dependencies:
     "@types/node" "*"
 
