@@ -12,6 +12,7 @@ import { Placeholders } from '../../Card/components/CardInput/types';
 interface SecuredFieldsProps {
     allowedDOMAccess?: boolean;
     autoFocus?: boolean;
+    brand?: string;
     brands?: string[];
     brandsConfiguration?: CardBrandsConfiguration;
     clientKey?: string;
@@ -122,10 +123,22 @@ function CustomCardInput(props: SecuredFieldsProps) {
         });
     }, [data, valid, errors, selectedBrandValue]);
 
+    console.log('\n### CustomCardInput::render:: props.type=', props.type);
+    console.log('### CustomCardInput::render:: props.brand=', props.brand);
+
     /**
      * RENDER
      */
-    return <SecuredFieldsProvider ref={sfp} {...extractPropsForSFP(props)} onChange={handleSecuredFieldsChange} render={() => null} />;
+    // prettier-ignore
+    return (
+        <SecuredFieldsProvider
+            ref={sfp}
+            {...extractPropsForSFP(props)}
+            type={props.brand}
+            onChange={handleSecuredFieldsChange}
+            render={() => null}
+        />
+    );
 }
 
 CustomCardInput.defaultProps = defaultProps;
@@ -163,7 +176,6 @@ const extractPropsForSFP = (props: SecuredFieldsProps) => {
         showWarnings: props.showWarnings,
         styles: props.styles,
         trimTrailingSeparator: props.trimTrailingSeparator,
-        type: props.type,
         resources: props.resources,
         maskSecurityCode: props.maskSecurityCode,
         placeholders: props.placeholders

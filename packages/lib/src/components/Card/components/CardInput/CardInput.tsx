@@ -84,7 +84,7 @@ const CardInput = (props: CardInputProps) => {
     const [issuingCountryCode, setIssuingCountryCode] = useState<string>(null);
 
     const [dualBrandSelectElements, setDualBrandSelectElements] = useState([]);
-    const [selectedBrandValue, setSelectedBrandValue] = useState('');
+    const [selectedBrandValue, setSelectedBrandValue] = useState(props.storedPaymentMethodId ? props.brand : ''); // If this is a storedCard comp initialise state with the storedCard's brand
 
     const showBillingAddress = props.billingAddressMode !== AddressModeOptions.none && props.billingAddressRequired;
 
@@ -426,6 +426,9 @@ const CardInput = (props: CardInputProps) => {
      * RENDER
      */
     const FieldToRender = props.storedPaymentMethodId ? StoredCardFieldsWrapper : CardFieldsWrapper;
+
+    console.log('\n### CardInput::render:: props.type=', props.type);
+    console.log('### CardInput::render:: props.brand=', props.brand);
 
     return (
         <Fragment>

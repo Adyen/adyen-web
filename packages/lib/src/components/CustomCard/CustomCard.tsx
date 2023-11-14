@@ -47,12 +47,18 @@ export class CustomCard extends UIElement<CustomCardProps> {
         brandsConfiguration: {}
     };
 
+    constructor(props) {
+        super(props);
+
+        // console.log('\n### CustomCard::constructor:: this.type=', this.type);
+        console.log('\n### CustomCard::constructor:: this.props.type=', this.props.type);
+        console.log('### CustomCard::constructor:: this.props.brand=', this.props.brand);
+    }
+
     formatProps(props: CustomCardProps) {
-        const type = 'card'; // = props.type === 'scheme' || props.type === 'customcard' ? 'card' : props.type;
-        console.log('### CustomCard::formatProps:: type=', type);
         return {
             ...props,
-            type //: props.type === 'scheme' || props.type === 'customcard' ? 'card' : props.type
+            type: TxVariants.customCard
         };
     }
 
@@ -60,7 +66,7 @@ export class CustomCard extends UIElement<CustomCardProps> {
      * Formats the component data output
      */
     formatData() {
-        const sfBrand = this.state.selectedBrandValue || this.props.brand;
+        const sfBrand = this.state.selectedBrandValue;
         return {
             paymentMethod: {
                 type: 'scheme',
@@ -126,6 +132,8 @@ export class CustomCard extends UIElement<CustomCardProps> {
     }
 
     render() {
+        console.log('\n### CustomCard::render:: this.props.type=', this.props.type);
+        console.log('### CustomCard::render:: this.props.brand=', this.props.brand);
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <CustomCardInput
@@ -139,6 +147,7 @@ export class CustomCard extends UIElement<CustomCardProps> {
                     onBinValue={this.onBinValue}
                     implementationType={'custom'}
                     resources={this.resources}
+                    brand={TxVariants.card}
                 />
             </CoreProvider>
         );

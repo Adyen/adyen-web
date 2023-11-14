@@ -33,6 +33,10 @@ export class CardElement extends UIElement<CardElementProps> {
             this.clickToPayService = createClickToPayService(this.props.configuration, this.props.clickToPayConfiguration, this.props.environment);
             this.clickToPayService?.initialize();
         }
+
+        console.log('\n### Card::constructor:: this.props.type=', this.props.type);
+        console.log('### Card::constructor:: this.props.brand=', this.props.brand);
+        console.log('### Card::constructor:: this.brand=', this.brand);
     }
 
     protected static defaultProps = {
@@ -66,7 +70,7 @@ export class CardElement extends UIElement<CardElementProps> {
             // billingAddressRequired only available for non-stored cards
             billingAddressRequired: props.storedPaymentMethodId ? false : props.billingAddressRequired,
             // ...(props.brands && !props.groupTypes && { groupTypes: props.brands }),
-            type: 'card', //props.type === 'scheme' ? 'card' : props.type,
+            type: TxVariants.card,
             countryCode: props.countryCode ? props.countryCode.toLowerCase() : null,
             // Required for transition period (until configuration object becomes the norm)
             // - if merchant has defined value directly in props, use this instead
@@ -98,11 +102,12 @@ export class CardElement extends UIElement<CardElementProps> {
      */
     formatData(): CardElementData {
         /**
-         * this.props.brand is never set for the generic card only for a 'dedicated' single-branded card e.g. bcmc
-         * this.state.selectedBrandValue will be set when /binLookup detects a single brand &/or when /binLookup detects a dual-branded card and
-         *  the shopper makes a brand selection
+         *  this.state.selectedBrandValue will be set when:
+         *  - /binLookup detects a single brand,
+         *  - when /binLookup detects a dual-branded card and the shopper makes a brand selection
+         *  - or, in the case of a storedCard
          */
-        const cardBrand = this.state.selectedBrandValue || this.props.brand;
+        const cardBrand = this.state.selectedBrandValue;
         const includeStorePaymentMethod = this.props.enableStoreDetails && typeof this.state.storePaymentMethod !== 'undefined';
 
         return {
@@ -209,6 +214,10 @@ export class CardElement extends UIElement<CardElementProps> {
     }
 
     private renderCardInput(isCardPrimaryInput = true): h.JSX.Element {
+        console.log('\n### Card::renderCardInput:: this.props.type=', this.props.type);
+        console.log('### Card::renderCardInput:: this.props.brand=', this.props.brand);
+        console.log('### Card::renderCardInput:: this.brand=', this.brand);
+
         return (
             <CardInput
                 setComponentRef={this.setComponentRef}

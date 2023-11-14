@@ -31,7 +31,11 @@ class BancontactElement extends CardElement {
     formatProps(props: CardElementProps) {
         return {
             ...super.formatProps(props),
-            type: 'bcmc', // Force type (only for the Dropin is type automatically set to 'bcmc') - this will bypass the regEx brand detection
+            /**
+             * Force type (only for the Dropin is type automatically set to 'bcmc')
+             * - this will bypass the regEx brand detection that SF normally tries to carry out when the first few digits are entered in the PAN
+             */
+            type: TxVariants.bcmc,
             cvcPolicy: CVC_POLICY_HIDDEN
         };
     }
