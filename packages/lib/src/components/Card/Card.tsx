@@ -65,6 +65,7 @@ export class CardElement extends UIElement<CardElementProps> {
             // billingAddressRequired only available for non-stored cards
             billingAddressRequired: props.storedPaymentMethodId ? false : props.billingAddressRequired,
             // ...(props.brands && !props.groupTypes && { groupTypes: props.brands }),
+            /** props.brand will be specified in the case of a StoredCard or a Bancontact component, for a regular Card we default it to 'card' */
             brand: props.brand ?? TxVariants.card,
             countryCode: props.countryCode ? props.countryCode.toLowerCase() : null,
             // Required for transition period (until configuration object becomes the norm)
