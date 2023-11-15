@@ -259,6 +259,8 @@
     "ctp.otp.codeResent": "Code resent",
     "ctp.otp.title": "Access your Click to Pay cards",
     "ctp.otp.subtitle": "Enter the code %@ sent to %@ to verify it‘s you.",
+    "ctp.otp.saveCookiesCheckbox.label": "Skip verification next time",
+    "ctp.otp.saveCookiesCheckbox.information": "Select to be remembered on your device and browser at participating stores for faster checkout. Not recommended for shared devices.",
     "ctp.emptyProfile.message": "No cards registered in this Click to Pay profile",
     "ctp.separatorText": "or use",
     "ctp.cards.title": "Complete payment with Click to Pay",
