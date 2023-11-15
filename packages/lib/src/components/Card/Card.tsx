@@ -65,7 +65,7 @@ export class CardElement extends UIElement<CardElementProps> {
             // billingAddressRequired only available for non-stored cards
             billingAddressRequired: props.storedPaymentMethodId ? false : props.billingAddressRequired,
             // ...(props.brands && !props.groupTypes && { groupTypes: props.brands }),
-            type: TxVariants.card,
+            brand: props.brand ?? TxVariants.card,
             countryCode: props.countryCode ? props.countryCode.toLowerCase() : null,
             // Required for transition period (until configuration object becomes the norm)
             // - if merchant has defined value directly in props, use this instead
@@ -167,7 +167,7 @@ export class CardElement extends UIElement<CardElementProps> {
     }
 
     get icon() {
-        return this.props.icon ?? this.resources.getImage()(this.brand);
+        return this.props.icon ?? this.resources.getImage()(this.props.brand);
     }
 
     get brands(): { icon: any; name: string }[] {
@@ -180,10 +180,6 @@ export class CardElement extends UIElement<CardElementProps> {
         }
 
         return [];
-    }
-
-    get brand(): string {
-        return this.props.brand || this.props.type;
     }
 
     get displayName(): string {
@@ -219,7 +215,7 @@ export class CardElement extends UIElement<CardElementProps> {
                 payButton={this.payButton}
                 onBrand={this.onBrand}
                 onBinValue={this.onBinValue}
-                brand={this.brand}
+                brand={this.props.brand}
                 brandsIcons={this.brands}
                 isPayButtonPrimaryVariant={isCardPrimaryInput}
                 resources={this.resources}

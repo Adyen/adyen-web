@@ -35,6 +35,7 @@ class BancontactElement extends CardElement {
              * - this will bypass the regEx brand detection that SF normally tries to carry out when the first few digits are entered in the PAN
              */
             type: TxVariants.bcmc,
+            brand: TxVariants.bcmc,
             cvcPolicy: CVC_POLICY_HIDDEN
         };
     }

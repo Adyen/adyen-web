@@ -49,7 +49,8 @@ export class CustomCard extends UIElement<CustomCardProps> {
     formatProps(props: CustomCardProps) {
         return {
             ...props,
-            type: TxVariants.customCard
+            type: TxVariants.customCard,
+            brand: TxVariants.card
         };
     }
 
@@ -136,7 +137,7 @@ export class CustomCard extends UIElement<CustomCardProps> {
                     onBinValue={this.onBinValue}
                     implementationType={'custom'}
                     resources={this.resources}
-                    brand={TxVariants.card}
+                    brand={this.props.brand}
                 />
             </CoreProvider>
         );
