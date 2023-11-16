@@ -1,11 +1,11 @@
 .adyen-checkout__segmented-control {
     display: flex;
     justify-content: space-between;
-    gap: var(--b-spacer-020);
-    padding: var(--b-spacer-020) 5px;
-    background: var(--b-color-surface-primary);
-    border-radius: var(--b-border-radius-m);
-    border: var(--b-border-width-s) solid var(--b-color-outline-secondary);
+    gap: var(--adyen-checkout-spacer-020);
+    padding: var(--adyen-checkout-spacer-020) 5px;
+    background: var(--adyen-checkout-color-surface-primary);
+    border-radius: var(--adyen-checkout-border-radius-m);
+    border: var(--adyen-checkout-border-width-s) solid var(--adyen-checkout-color-outline-secondary);
 
     &--disabled {
         pointer-events: none;
@@ -22,31 +22,31 @@
 }
 
 .adyen-checkout__segmented-control-segment {
-    font-weight: var(--b-text-body-stronger-font-weight);
-    color: var(--b-color-label-primary);
+    font-weight: var(--adyen-checkout-text-body-stronger-font-weight);
+    color: var(--adyen-checkout-color-label-primary);
     width: 100%;
-    height: var(--b-spacer-110);
+    height: var(--adyen-checkout-spacer-110);
     flex-grow: 1;
     cursor: pointer;
-    background: var(--b-color-surface-primary);
+    background: var(--adyen-checkout-color-surface-primary);
     border-radius: 6px;
     border: 0;
     text-align: center;
     transition: background 0.3s ease-out;
 
     &:not(&--selected):hover {
-        background-color: var(--b-color-grey-100);
+        background-color: var(--adyen-checkout-color-grey-100);
     }
 
     &:active {
-        background-color: var(--b-color-grey-100);
-        border: 1.5px solid var(--b-color-grey-500);
+        background-color: var(--adyen-checkout-color-grey-100);
+        border: 1.5px solid var(--adyen-checkout-color-grey-1300);
     }
 
     &--selected {
-        background: var(--b-color-background-always-dark);
-        color: var(--b-color-surface-primary);
-        box-shadow: 0 1px var(--b-spacer-010) 0 rgba(0 17 44 / 2%), 0 var(--b-spacer-010) var(--b-spacer-020) 0 rgba(0 17 44 / 4%);
-        font-weight: var(--b-text-body-stronger-font-weight);
+        background: var(--adyen-checkout-color-background-always-dark);
+        color: var(--adyen-checkout-color-surface-primary);
+        box-shadow: 0 1px var(--adyen-checkout-spacer-010) 0 rgba(0 17 44 / 2%), 0 var(--adyen-checkout-spacer-010) var(--adyen-checkout-spacer-020) 0 rgba(0 17 44 / 4%);
+        font-weight: var(--adyen-checkout-text-body-stronger-font-weight);
     }
 }

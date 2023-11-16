@@ -1,17 +1,17 @@
 @use '../../../style/index';
 
 .adyen-checkout-payment-methods-container {
-    margin: var(--b-spacer-070) 0;
+    margin: var(--adyen-checkout-spacer-070) 0;
     display: flex;
     flex-direction: column;
-    gap: var(--b-spacer-070);
+    gap: var(--adyen-checkout-spacer-070);
 }
 
 .adyen-checkout-payment-methods-list-label {
-    color: var(--b-color-label-primary);
-    font-size: index.$font-size-small;
-    font-weight: var(--b-text-body-strongest-font-weight);
-    line-height: var(--b-text-caption-stronger-wide-line-height);
+    color: var(--adyen-checkout-dropin-list-label-color);
+    font-size: var(--adyen-checkout-dropin-list-label-font-size);
+    font-weight: var(--adyen-checkout-dropin-list-label-font-weight);
+    line-height: var(--adyen-checkout-text-caption-stronger-wide-line-height);
 }
 
 .adyen-checkout__payment-methods-list {
@@ -20,7 +20,7 @@
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--b-spacer-070);
+    gap: var(--adyen-checkout-dropin-payment-item-gap);
 
     &--loading {
         user-select: none;
@@ -32,7 +32,7 @@
     list-style: none;
     padding: 0;
     display: flex;
-    gap: var(--b-spacer-070);
+    gap: var(--adyen-checkout-spacer-070);
 
     li {
         flex: 1;
@@ -51,15 +51,15 @@
     }
 
     &__image {
-        width: var(--b-spacer-110);
+        width: var(--adyen-checkout-spacer-110);
         height: 26px;
 
         &__wrapper {
-            margin-right: var(--b-spacer-040);
+            margin-right: var(--adyen-checkout-spacer-040);
 
             [dir='rtl'] & {
                 margin-right: 0;
-                margin-left: var(--b-spacer-040);
+                margin-left: var(--adyen-checkout-spacer-040);
             }
         }
     }

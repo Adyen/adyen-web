@@ -2,7 +2,7 @@
 
 .adyen-checkout__fieldset {
     display: block;
-    padding-bottom: var(--b-spacer-040);
+    padding-bottom: var(--adyen-checkout-spacer-040);
     width: 100%;
     margin-inline-start: 0;
     margin-inline-end: 0;
@@ -19,17 +19,17 @@
 }
 
 .adyen-checkout__fieldset + .adyen-checkout__fieldset {
-    margin-top: var(--b-spacer-070);
+    margin-top: var(--adyen-checkout-spacer-070);
 }
 
 .adyen-checkout__fieldset__title {
-    color: var(--b-color-grey-500);
+    color: var(--adyen-checkout-color-grey-1300);
     display: block;
-    font-size: index.$font-size-xxsmall;
+    font-size: var(--adyen-checkout-font-size-xxsmall);
     font-weight: bold;
     letter-spacing: 1px;
     margin: 0;
-    padding: 0 0 var(--b-spacer-060);
+    padding: 0 0 var(--adyen-checkout-spacer-060);
     text-transform: uppercase;
 }
 
@@ -56,8 +56,8 @@
 }
 
 .adyen-checkout__fieldset--readonly .adyen-checkout__fieldset__fields {
-    color: var(--b-color-label-primary);
-    font-size: index.$font-size-small;
-    line-height: var(--b-text-caption-line-height);
+    color: var(--adyen-checkout-color-label-primary);
+    font-size: var(--adyen-checkout-font-size-small);
+    line-height: var(--adyen-checkout-text-caption-line-height);
     margin: 0;
 }

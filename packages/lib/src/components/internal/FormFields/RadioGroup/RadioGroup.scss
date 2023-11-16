@@ -11,13 +11,13 @@
 
 .adyen-checkout__radio_group__label {
     padding-bottom: 0;
-    padding-left: var(--b-spacer-090);
+    padding-left: var(--adyen-checkout-spacer-090);
     position: relative;
     display: block;
     color: inherit;
-    font-size: index.$font-size-small;
+    font-size: var(--adyen-checkout-font-size-small);
     font-weight: normal;
-    line-height: var(--b-spacer-070);
+    line-height: var(--adyen-checkout-spacer-070);
     overflow: visible;
 }
 
@@ -28,11 +28,11 @@
 .adyen-checkout__radio_group__label::before {
     content: "";
     position: absolute;
-    background-color: var(--b-color-white);
-    border: var(--b-border-width-s) solid var(--b-color-grey-500);
+    background-color: var(--adyen-checkout-color-white);
+    border: var(--adyen-checkout-border-width-s) solid var(--adyen-checkout-color-grey-1300);
     border-radius: 50%;
-    height: var(--b-spacer-070);
-    width: var(--b-spacer-070);
+    height: var(--adyen-checkout-spacer-070);
+    width: var(--adyen-checkout-spacer-070);
     left: 0;
     top: 0;
     transition: border-color 0.2s ease-out, box-shadow 0.2s ease-out;
@@ -40,7 +40,7 @@
 
 .adyen-checkout__radio_group__label:hover::before {
     border-color: #99a3ad;
-    box-shadow: 0 0 0 var(--b-spacer-010) var(--b-color-outline-secondary);
+    box-shadow: 0 0 0 var(--adyen-checkout-spacer-010) var(--adyen-checkout-color-outline-secondary);
     cursor: pointer;
 }
 
@@ -51,9 +51,9 @@
     margin: 0 auto;
     left: 5px;
     top: 5px;
-    height: var(--b-spacer-030);
-    width: var(--b-spacer-030);
-    background-color: var(--b-color-white);
+    height: var(--adyen-checkout-spacer-030);
+    width: var(--adyen-checkout-spacer-030);
+    background-color: var(--adyen-checkout-color-white);
     border-radius: 50%;
     transform: scale(0);
     transition: transform 0.2s ease-out;
@@ -61,13 +61,13 @@
 }
 
 .adyen-checkout__radio_group__label:hover {
-    border-color: var(--b-color-label-primary);
+    border-color: var(--adyen-checkout-color-label-primary);
     cursor: pointer;
 }
 
 .adyen-checkout__radio_group__input:checked + .adyen-checkout__radio_group__label::before,
 .adyen-checkout__radio_group__label--selected {
-    background-color: var(--b-color-label-primary);
+    background-color: var(--adyen-checkout-color-label-primary);
     border: 0;
     transition: all 0.2s ease-out;
 }
@@ -77,16 +77,16 @@
 }
 
 .adyen-checkout__radio_group__input:focus + .adyen-checkout__radio_group__label::before {
-    border-color: var(--b-color-label-primary);
-    box-shadow: 0 0 0 var(--b-spacer-010) var(--b-color-outline-tertiary);
+    border-color: var(--adyen-checkout-color-label-primary);
+    box-shadow: 0 0 0 var(--adyen-checkout-spacer-010) var(--adyen-checkout-color-outline-tertiary);
 }
 
 .adyen-checkout__radio_group__input:checked + .adyen-checkout__radio_group__label:hover::before,
 .adyen-checkout__radio_group__input:checked:focus + .adyen-checkout__radio_group__label::before,
 .adyen-checkout__radio_group__input:checked:active + .adyen-checkout__radio_group__label::before {
-    box-shadow: 0 0 0 var(--b-spacer-010) var(--b-color-outline-tertiary);
+    box-shadow: 0 0 0 var(--adyen-checkout-spacer-010) var(--adyen-checkout-color-outline-tertiary);
 }
 
 .adyen-checkout__radio_group__label.adyen-checkout__radio_group__label--invalid::before {
-    border: var(--b-border-width-s) solid var(--b-color-label-critical);
+    border: var(--adyen-checkout-border-width-s) solid var(--adyen-checkout-color-label-critical);
 }

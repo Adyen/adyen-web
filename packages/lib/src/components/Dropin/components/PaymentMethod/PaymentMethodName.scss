@@ -8,12 +8,12 @@
     }
 
     &__name--selected {
-        font-weight:  var(--b-text-body-stronger-font-weight);
+        font-weight:  var(--adyen-checkout-text-body-stronger-font-weight);
     }
 
     &__additional-info {
-        font-size: index.$font-size-small;
-        color: var(--b-color-label-secondary);
+        font-size: var(--adyen-checkout-font-size-small);
+        color: var(--adyen-checkout-color-label-secondary);
     }
 
     &__name_wrapper {

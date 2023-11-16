@@ -1,23 +1,23 @@
 @use "../../../../style/index";
 
 .adyen-checkout__issuer-button {
-    background-color: var(--b-color-white);
-    box-shadow: inset 0 0 0 1px var(--b-color-outline-primary);
+    background-color: var(--adyen-checkout-color-white);
+    box-shadow: inset 0 0 0 1px var(--adyen-checkout-color-outline-primary);
     border: none;
-    border-radius: var(--b-border-radius-m);
-    padding: var(--b-spacer-000) var(--b-spacer-060);
+    border-radius: var(--adyen-checkout-border-radius-m);
+    padding: var(--adyen-checkout-spacer-000) var(--adyen-checkout-spacer-060);
     cursor: pointer;
     flex-basis: 47%;
     flex-grow: 2;
-    height: var(--b-spacer-110);
-    font-size: index.$font-size-small;
+    height: var(--adyen-checkout-spacer-110);
+    font-size: var(--adyen-checkout-font-size-small);
     display: flex;
     align-items: center;
     justify-content: space-between;
     transition: background 0.3s ease-out, box-shadow 0.3s ease-out;
 
     &:active {
-        color: black;
+        color: var(--adyen-checkout-color-black);
     }
 
     &:not(&--selected):focus {
@@ -36,16 +36,16 @@
     }
 
     &--selected {
-        background: var(--b-color-white);
-        box-shadow: inset 0 0 0 1px var(--b-color-outline-active);
-        color: var(--b-color-label-primary);
-        font-weight: var(--b-text-body-stronger-font-weight);
-        height: var(--b-spacer-110);
+        background: var(--adyen-checkout-color-background-primary);
+        box-shadow: inset 0 0 0 1px var(--adyen-checkout-color-outline-active);
+        color: var(--adyen-checkout-color-label-primary);
+        font-weight: var(--adyen-checkout-text-body-stronger-font-weight);
+        height: var(--adyen-checkout-spacer-110);
         transition: none;
     }
 }
 
 .adyen-checkout__issuer-button-img {
     max-height: 26px;
-    margin-right: var(--b-spacer-040);
+    margin-right: var(--adyen-checkout-spacer-040);
 }

@@ -9,12 +9,12 @@
         background: transparent;
         border: 0;
         box-shadow: inset 0 0 0 1px #99a3ad;
-        color: var(--b-color-label-primary);
-        font-size: index.$font-size-small;
+        color: var(--adyen-checkout-color-label-primary);
+        font-size: var(--adyen-checkout-font-size-small);
         font-weight: normal;
-        line-height: var(--b-spacer-110);
-        margin-right: var(--b-spacer-040);
-        height: var(--b-spacer-110);
+        line-height: var(--adyen-checkout-spacer-110);
+        margin-right: var(--adyen-checkout-spacer-040);
+        height: var(--adyen-checkout-spacer-110);
         padding: 0;
         text-align: center;
 
@@ -24,12 +24,12 @@
 
         &:hover {
             background: transparent;
-            box-shadow: inset 0 0 0 var(--b-spacer-010) #99a3ad;
+            box-shadow: inset 0 0 0 var(--adyen-checkout-spacer-010) var(--adyen-checkout-color-outline-tertiary);
         }
 
         &:active {
-            background: var(--b-color-grey-100);
-            box-shadow: inset 0 0 0 var(--b-spacer-010) #99a3ad;
+            background: var(--adyen-checkout-color-grey-100);
+            box-shadow: inset 0 0 0 var(--adyen-checkout-spacer-010) var(--adyen-checkout-color-outline-tertiary);
         }
 
         &--disabled {
@@ -46,11 +46,11 @@
             &:hover,
             &:active,
             &:active:hover {
-                background: var(--b-color-grey-100);
-                box-shadow: inset 0 0 0 1px var(--b-color-label-primary);
-                color: var(--b-color-label-primary);
-                font-weight: var(--b-text-body-stronger-font-weight);
-                height: var(--b-spacer-110);
+                background: var(--adyen-checkout-color-grey-100);
+                box-shadow: inset 0 0 0 1px var(--adyen-checkout-color-label-primary);
+                color: var(--adyen-checkout-color-label-primary);
+                font-weight: var(--adyen-checkout-text-body-stronger-font-weight);
+                height: var(--adyen-checkout-spacer-110);
                 transition: none;
             }
         }
