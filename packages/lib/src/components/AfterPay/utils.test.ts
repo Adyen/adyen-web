@@ -21,4 +21,21 @@ describe('getConsentLinkUrl', () => {
             expect(getConsentLinkUrl('be', 'fr')).toBe(rivertyConsentUrlMap.be.fr);
         });
     });
+    describe('no supported country code & locale', () => {
+        beforeEach(() => {
+            console.warn = jest.fn();
+        });
+        test('should give a warning if no country code is provided', () => {
+            getConsentLinkUrl(undefined, 'en');
+            expect(console.warn).toBeCalled();
+        });
+        test('should give a warning if wrong country code is provided', () => {
+            getConsentLinkUrl('WRONG', 'en');
+            expect(console.warn).toBeCalled();
+        });
+        test('should give a warning if wrong locale is provided', () => {
+            getConsentLinkUrl('nl', 'fr');
+            expect(console.warn).toBeCalled();
+        });
+    });
 });
