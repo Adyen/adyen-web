@@ -10,8 +10,8 @@ const CVC_IFRAME_TITLE = LANG['creditCard.encryptedSecurityCode.aria.iframeTitle
 
 const CARD_IFRAME_LABEL = LANG['creditCard.numberField.title'];
 const EXPIRY_DATE_IFRAME_LABEL = LANG['creditCard.expiryDateField.title'];
-const EXPIRY_MONTH_IFRAME_LABEL = LANG['creditCard.expiryMonth.label'] ?? 'creditCard.expiryMonth.label'; // TODO add translation key
-const EXPIRY_YEAR_IFRAME_LABEL = LANG['creditCard.expiryYear.label'] ?? 'creditCard.expiryYear.label'; // TODO add translation key
+const EXPIRY_MONTH_IFRAME_LABEL = LANG['creditCard.encryptedExpiryMonth.aria.label'];
+const EXPIRY_YEAR_IFRAME_LABEL = LANG['creditCard.encryptedExpiryYear.aria.label'];
 const CVC_IFRAME_LABEL = LANG['creditCard.cvcField.title'];
 
 class CustomCard {

@@ -48,6 +48,8 @@ const initCheckout = async () => {
         })
         .mount('.secured-fields-2');
 
+    createPayButton('.secured-fields-2', window.customCardSeparate, 'customCardSeparate');
+
     function createPayButton(parent, component, attribute) {
         const payBtn = document.createElement('button');
 
