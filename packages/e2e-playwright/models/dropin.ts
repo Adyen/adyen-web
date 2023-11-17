@@ -49,26 +49,14 @@ class Dropin {
         this.rootElementSelector = rootElementSelector;
 
         this.pmList = this.rootElement.locator('.adyen-checkout__payment-methods-list');
-
-        /**
-         * ###############################################
-         * Credit card related (but only appear in Dropin)
-         * ###############################################
-         */
-        // Regular branding
-        // this.creditCard = this.pmList.getByText('Credit Card');
-        this.creditCard = this.getPaymentMethodItem('Credit Card');
-        this.brandsHolder = this.pmList.locator('.adyen-checkout__payment-method__brands');
     }
 
     async isComponentVisible() {
         await this.pmList.waitFor({ state: 'visible' });
-        // await this.expiryDateInput.waitFor({ state: 'visible' });
-        // await this.cvcInput.waitFor({ state: 'visible' });
     }
 
     getPaymentMethodItem(pmName: string) {
-        return this.pmList.getByText(pmName);
+        return this.pmList.locator(`.adyen-checkout__payment-method:has-text("${pmName}")`);
     }
 
     // async typeCardNumber(cardNumber: string) {
