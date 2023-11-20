@@ -115,7 +115,7 @@
         "storybook": "^7.2.0",
         "stylelint": "15.10.3",
         "stylelint-config-standard-scss": "7.0.1",
-        "tslib": "^2.4.1",
+        "tslib": "2.6.2",
         "typescript": "4.9.5",
         "vite": "4.4.11",
         "vite-plugin-stylelint": "^4.3.0",
