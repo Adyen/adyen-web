@@ -36,3 +36,43 @@ export function mapBrands(brands) {
         return accumulator;
     }, []);
 }
+
+/**
+ * ApplePay formats address into two lines (US format). First line includes house number and street name.
+ * Second line includes unit/suite/apartment number if applicable.
+ * This function formats it into Adyen's Address format (house number separate from street).
+ * @param billingContact
+ */
+export function formatBillingAddress(billingContact: ApplePayJS.ApplePayPaymentContact) {
+    let street = '';
+    let houseNumberOrName = '';
+    if (billingContact.addressLines && billingContact.addressLines.length) {
+        const splitAddress = splitAddressLine(billingContact.addressLines[0]);
+        street = splitAddress.streetAddress;
+        houseNumberOrName = splitAddress.houseNumber;
+    }
+
+    if (billingContact.addressLines && billingContact.addressLines.length > 1) {
+        street += ` ${billingContact.addressLines[1]}`;
+    }
+
+    return {
+        city: billingContact.locality,
+        country: billingContact.countryCode,
+        houseNumberOrName,
+        postalCode: billingContact.postalCode,
+        stateOrProvince: billingContact.administrativeArea,
+        street: street
+    };
+}
+
+const splitAddressLine = (addressLine: string) => {
+    // The \d+ captures the digits of the house number, and \w* allows for any letter suffixes (like "123B")
+    // Everything after the space is considered the street address.
+    const parts = addressLine.match(/^(\d+\w*)\s+(.+)/);
+    if (parts) {
+        return { houseNumber: parts[1] || '', streetAddress: parts[2] || addressLine };
+    } else {
+        return { houseNumber: '', streetAddress: addressLine };
+    }
+};
