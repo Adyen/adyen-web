@@ -27,8 +27,7 @@ const cardInputRequiredProps = {
     clientKey: 'xxxx',
     loadingContext: 'test',
     resources: global.resources,
-    brandsIcons: [],
-    showBrandsUnderCardNumber: true
+    brandsIcons: []
 };
 
 const getWrapper = ui => {
@@ -54,22 +53,7 @@ describe('CardInput', () => {
 });
 
 describe('CardInput - Brands beneath Card Number field', () => {
-    test('should not render brands if property `showBrandsUnderCardNumber` is set to false', () => {
-        const wrapper = getWrapper(<CardInput {...cardInputRequiredProps} showBrandsUnderCardNumber={false} />);
-        expect(wrapper.find('span.adyen-checkout__card__brands').exists()).toBeFalsy();
-    });
-
-    test('should render brands if property `showBrandsUnderCardNumber` is set', () => {
-        const brandsIcons = [
-            { name: 'visa', icon: 'visa.png' },
-            { name: 'mc', icon: 'mc.png' }
-        ];
-        const wrapper = getWrapper(<CardInput {...cardInputRequiredProps} showBrandsUnderCardNumber brandsIcons={brandsIcons} />);
-        expect(wrapper.find('.adyen-checkout__card__brands__brand-wrapper')).toHaveLength(2);
-        expect(wrapper.find('.adyen-checkout__card__brands__brand-wrapper--disabled')).toHaveLength(0);
-    });
-
-    test('should render brands if property `showBrandsUnderCardNumber` is not set', () => {
+    test('should render brands under Card number field', () => {
         const brandsIcons = [
             { name: 'visa', icon: 'visa.png' },
             { name: 'mc', icon: 'mc.png' }

@@ -57,12 +57,6 @@ export interface CardElementProps extends UIElementProps {
     brands?: string[];
 
     /**
-     * Show/hide available card brands under the Card number field
-     * @defaultValue `false`
-     */
-    showBrandsUnderCardNumber?: boolean;
-
-    /**
      * Position holder name above card number field (instead of having it after the security code field)
      * @defaultValue `false`
      */
