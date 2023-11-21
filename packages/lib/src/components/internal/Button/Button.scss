@@ -81,7 +81,7 @@
         color: var(--adyen-checkout-color-label-primary);
 
         &:hover {
-            background: var(--adyen-checkout-color-grey-100);
+            background: var(--adyen-checkout-color-background-secondary);
             box-shadow: none;
         }
 
@@ -98,14 +98,14 @@
         color: var(--adyen-checkout-color-label-primary);
 
         &:hover {
-            background: var(--adyen-checkout-color-grey-100);
+            background: var(--adyen-checkout-color-background-secondary);
             box-shadow: 0 var(--adyen-checkout-spacer-010) var(--adyen-checkout-spacer-020) rgb(27 42 60 / 20%),
                 0 var(--adyen-checkout-spacer-020) 5px rgb(27 42 60 / 14%);
         }
 
         &:active,
         &:active:hover {
-            background: var(--adyen-checkout-color-grey-100);
+            background: var(--adyen-checkout-color-background-secondary);
             box-shadow: none;
         }
 
@@ -115,7 +115,7 @@
                 box-shadow: none;
                 cursor: not-allowed;
                 border-color: #99a3ad;
-                background-color: var(--adyen-checkout-color-grey-100);
+                background-color: var(--adyen-checkout-color-background-secondary);
                 opacity: 0.5;
                 user-select: all;
             }

@@ -178,7 +178,7 @@
 /*  Payment Method Radio Button */
 .adyen-checkout__payment-method__radio {
     position: absolute;
-    background-color: var(--adyen-checkout-color-white);
+    background-color: var(--adyen-checkout-color-background-primary);
     border: var(--adyen-checkout-border-width-s) solid var(--adyen-checkout-color-outline-secondary);
     border-radius: 50%;
     height: var(--adyen-checkout-spacer-070);
@@ -206,7 +206,7 @@
     top: 50%;
     height: var(--adyen-checkout-spacer-040);
     width: var(--adyen-checkout-spacer-040);
-    background-color: var(--adyen-checkout-color-white);
+    background-color: var(--adyen-checkout-color-background-primary);
     border-radius: 50%;
     transform: translateY(-50%) scale(0);
     transition: transform 0.3s ease-out;

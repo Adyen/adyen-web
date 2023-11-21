@@ -28,8 +28,8 @@
 .adyen-checkout__radio_group__label::before {
     content: "";
     position: absolute;
-    background-color: var(--adyen-checkout-color-white);
-    border: var(--adyen-checkout-border-width-s) solid var(--adyen-checkout-color-grey-1300);
+    background-color: var(--adyen-checkout-color-background-primary);
+    border: var(--adyen-checkout-border-width-s) solid var(--adyen-checkout-color-outline-tertiary);
     border-radius: 50%;
     height: var(--adyen-checkout-spacer-070);
     width: var(--adyen-checkout-spacer-070);
@@ -53,7 +53,7 @@
     top: 5px;
     height: var(--adyen-checkout-spacer-030);
     width: var(--adyen-checkout-spacer-030);
-    background-color: var(--adyen-checkout-color-white);
+    background-color: var(--adyen-checkout-color-background-primary);
     border-radius: 50%;
     transform: scale(0);
     transition: transform 0.2s ease-out;

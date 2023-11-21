@@ -67,13 +67,15 @@
     --adyen-checkout-color-interactive-primary-hovered: var(--adyen-checkout-color-grey-1900);
     --adyen-checkout-color-label-success: var(--adyen-checkout-color-green);
     --adyen-checkout-color-label-critical: var(--adyen-checkout-color-red);
-    --adyen-checkout-color-label-secondary: var(--adyen-checkout-color-grey-1900);
     --adyen-checkout-color-label-primary: var(--adyen-checkout-color-grey-3200);
+    --adyen-checkout-color-label-secondary: var(--adyen-checkout-color-grey-1900);
+    --adyen-checkout-color-label-tertiary: var(--adyen-checkout-color-grey-1300);
     --adyen-checkout-color-surface-modal: var(--adyen-checkout-color-white);
     --adyen-checkout-color-surface-inverse: var(--adyen-checkout-color-grey-3200);
     --adyen-checkout-color-surface-primary: var(--adyen-checkout-color-white);
     --adyen-checkout-color-background-always-dark: var(--adyen-checkout-color-grey-3200);
     --adyen-checkout-color-background-primary: var(--adyen-checkout-color-white);
+    --adyen-checkout-color-background-secondary: var(--adyen-checkout-color-grey-100);
 
     /* Drop-in */
     --adyen-checkout-dropin-payment-item-gap: var(--adyen-checkout-spacer-070);

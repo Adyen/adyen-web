@@ -35,12 +35,12 @@
     transition: background 0.3s ease-out;
 
     &:not(&--selected):hover {
-        background-color: var(--adyen-checkout-color-grey-100);
+        background-color: var(--adyen-checkout-color-background-secondary);
     }
 
     &:active {
-        background-color: var(--adyen-checkout-color-grey-100);
-        border: 1.5px solid var(--adyen-checkout-color-grey-1300);
+        background-color: var(--adyen-checkout-color-background-secondary);
+        border: 1.5px solid var(--adyen-checkout-color-outline-tertiary);
     }
 
     &--selected {

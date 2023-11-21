@@ -13,7 +13,7 @@
     &::before {
         content: '';
         flex: 1;
-        border-bottom: 1px solid var(--adyen-checkout-color-grey-1300);
+        border-bottom: 1px solid var(--adyen-checkout-color-outline-tertiary);
     }
 
     &::after {

@@ -41,7 +41,7 @@
 .adyen-checkout__modal {
     box-shadow: 0 var(--adyen-checkout-spacer-040) var(--adyen-checkout-spacer-090) rgb(0 17 44 / 15%);
     border-radius: var(--adyen-checkout-border-radius-m);
-    background-color: var(--adyen-checkout-color-white);
+    background-color: var(--adyen-checkout-color-background-primary);
     margin: auto;
     padding: var(--adyen-checkout-spacer-070);
     transition: opacity 0.2s ease, visibility 0.2s ease;
