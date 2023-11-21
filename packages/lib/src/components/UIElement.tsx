@@ -1,14 +1,16 @@
 import { h } from 'preact';
-import Core from '../core';
-import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
-import { CoreOptions } from '../core/types';
-import { PaymentAction } from '../types';
-import { hasOwnProperty } from '../utils/hasOwnProperty';
 import BaseElement from './BaseElement';
-import DropinElement from './Dropin';
+import { PaymentAction } from '../types';
+import { PaymentResponse } from './types';
 import PayButton from './internal/PayButton';
-import { IUIElement, PayButtonFunctionProps, PaymentResponse, RawPaymentResponse, UIElementProps, UIElementStatus } from './types';
+import { IUIElement, PayButtonFunctionProps, RawPaymentResponse, UIElementProps } from './types';
 import { getSanitizedResponse, resolveFinalResult } from './utils';
+import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
+import { UIElementStatus } from './types';
+import { hasOwnProperty } from '../utils/hasOwnProperty';
+import DropinElement from './Dropin';
+import { CoreOptions } from '../core/types';
+import Core from '../core';
 
 export class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
