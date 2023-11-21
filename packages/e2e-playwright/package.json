@@ -7,7 +7,8 @@
   "scripts": {
     "test:start-playground": "cross-env NODE_ENV=test webpack-dev-server --config app/config/webpack.config.js",
     "test:headless": "npx playwright test",
-    "test:headed": "npx playwright test --headed"
+    "test:headed": "npx playwright test --headed",
+    "test:ui-mode": "npx playwright test --ui"
   },
   "devDependencies": {
     "@adyen/adyen-web-server": "1.0.0",

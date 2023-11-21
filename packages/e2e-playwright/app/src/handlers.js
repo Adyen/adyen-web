@@ -4,10 +4,10 @@ function removeComponent(component) {
     component.remove();
 }
 
-export function showAuthorised() {
+export function showAuthorised(message = 'Authorized') {
     const resultElement = document.getElementById('result-message');
     resultElement.classList.remove('hide');
-    resultElement.innerText = 'Authorised';
+    resultElement.innerText = message;
 }
 
 export function handleResponse(response, component) {

@@ -14,6 +14,7 @@ type Fixture = {
 const test = base.extend<Fixture>({
     ancvPage: async ({ page }, use) => {
         const ancvPage = new AncvPage(page);
+
         await sessionsMock(page, sessionsMockData);
         await setupMock(page, setupMockData);
         await ancvPage.goto();
