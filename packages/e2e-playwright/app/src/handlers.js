@@ -4,7 +4,7 @@ function removeComponent(component) {
     component.remove();
 }
 
-export function showAuthorised(message = 'Authorized') {
+export function showAuthorised(message = 'Authorised') {
     const resultElement = document.getElementById('result-message');
     resultElement.classList.remove('hide');
     resultElement.innerText = message;
