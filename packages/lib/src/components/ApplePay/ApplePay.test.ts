@@ -39,7 +39,7 @@ describe('ApplePay', () => {
     });
 
     describe('format billing contact as billing address', () => {
-        test('Moves house number from address line 1 into house number and unit to end of street', () => {
+        test('moves house number from address line 1 into house number and unit to end of street', () => {
             const billingContact = {
                 addressLines: ['1 Infinite Loop', 'Unit 100'],
                 locality: 'Cupertino',
@@ -64,7 +64,7 @@ describe('ApplePay', () => {
             expect(billingAddress.country).toEqual('US');
             expect(billingAddress.stateOrProvince).toEqual('CA');
         });
-        test('When only postal code provided, returns billing address with only postal code', () => {
+        test('when only postal code provided, returns billing address with only postal code', () => {
             const billingContact = {
                 addressLines: [],
                 locality: '',
