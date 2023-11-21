@@ -41,7 +41,6 @@ export function mapBrands(brands) {
  * ApplePay formats address into two lines (US format). First line includes house number and street name.
  * Second line includes unit/suite/apartment number if applicable.
  * This function formats it into Adyen's Address format (house number separate from street).
- * @param billingContact
  */
 export function formatBillingAddress(billingContact: ApplePayJS.ApplePayPaymentContact) {
     let street = '';
