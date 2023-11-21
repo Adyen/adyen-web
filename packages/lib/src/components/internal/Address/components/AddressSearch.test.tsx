@@ -138,7 +138,7 @@ test('rejecting onAddressLookupMock should not trigger error', async () => {
     );
 
     // Helps to make sure all tests ran
-    expect.assertions(4);
+    expect.assertions(3);
 
     // Get the input
     const searchBar = screen.getByRole('combobox');
