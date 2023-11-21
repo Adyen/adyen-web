@@ -34,6 +34,10 @@ interface AddressSearchProps {
     addressSearchDebounceMs?: number;
 }
 
+interface RejectionReason {
+    errorMessage: string;
+}
+
 export default function AddressSearch({
     onAddressLookup,
     onAddressSelected,
@@ -51,19 +55,23 @@ export default function AddressSearch({
     const { i18n } = useCoreContext();
     const mapDataToSelect = data => data.map(({ id, name }) => ({ id, name }));
 
-    const onInput = useCallback(
+    const handlePromiseReject = useCallback((reason: RejectionReason) => {
+        if (reason && reason.errorMessage) {
+            setErrorMessage(reason.errorMessage);
+        }
+    }, []);
+
+    const onTextInput = useCallback(
         async (inputValue: string) => {
             new Promise<Array<AddressLookupItem>>((resolve, reject) => {
                 onAddressLookup(inputValue, { resolve, reject });
             })
-                .then(data => {
-                    setOriginalData(data);
-                    setFormattedData(mapDataToSelect(data));
+                .then(searchArray => {
+                    setOriginalData(searchArray);
+                    setFormattedData(mapDataToSelect(searchArray));
                     setErrorMessage('');
                 })
-                .catch(reason => {
-                    setErrorMessage(reason);
-                });
+                .catch(reason => handlePromiseReject(reason));
         },
         [onAddressLookup]
     );
@@ -73,7 +81,7 @@ export default function AddressSearch({
         setErrorMessage(externalErrorMessage);
     }, [externalErrorMessage]);
 
-    const onChange = async event => {
+    const onSelectItem = async event => {
         if (!event.target.value) {
             setErrorMessage(i18n.get('address.errors.incomplete'));
             return;
@@ -96,12 +104,10 @@ export default function AddressSearch({
                 setFormattedData([]);
                 return;
             })
-            .catch(reason => {
-                setErrorMessage(reason);
-            });
+            .catch(reason => handlePromiseReject(reason));
     };
 
-    const debounceInputHandler = useMemo(() => debounce(onInput, addressSearchDebounceMs), []);
+    const debounceInputHandler = useMemo(() => debounce(onTextInput, addressSearchDebounceMs), []);
 
     return (
         <Fragment>
@@ -113,7 +119,7 @@ export default function AddressSearch({
                         //placeholder={i18n.get('address.placeholder')}
                         onInput={debounceInputHandler}
                         items={formattedData}
-                        onChange={onChange}
+                        onChange={onSelectItem}
                         disableTextFilter={true}
                         blurOnClose={true}
                     />
