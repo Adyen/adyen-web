@@ -75,7 +75,7 @@
         "@storybook/manager-api": "^7.2.0",
         "@storybook/preact": "^7.2.0",
         "@storybook/preact-vite": "^7.2.0",
-        "@testing-library/jest-dom": "5.17.0",
+        "@testing-library/jest-dom": "6.1.4",
         "@testing-library/preact": "3.2.3",
         "@testing-library/preact-hooks": "1.1.0",
         "@testing-library/user-event": "14.5.1",
