@@ -58,8 +58,8 @@ export default function Address(props: AddressProps) {
                 if (providedValue === null || providedValue === undefined) return;
                 // Cast everything to string
                 setData(propKey, String(providedValue));
-                triggerValidation();
             });
+            triggerValidation();
             setHasSelectedAddress(true);
         },
         [setHasSelectedAddress, triggerValidation, setData]

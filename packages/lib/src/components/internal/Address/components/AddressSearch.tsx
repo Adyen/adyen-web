@@ -1,5 +1,5 @@
 import Field from '../../FormFields/Field';
-import { Fragment, h } from 'preact';
+import { h } from 'preact';
 import { AddressLookupItem } from '../types';
 import { useCallback, useEffect, useState, useMemo } from 'preact/hooks';
 import './AddressSearch.scss';
@@ -46,7 +46,7 @@ export default function AddressSearch({
     externalErrorMessage,
     hideManualButton,
     addressSearchDebounceMs
-}: AddressSearchProps) {
+}: Readonly<AddressSearchProps>) {
     const [formattedData, setFormattedData] = useState([]);
     const [originalData, setOriginalData] = useState([]);
 
@@ -56,7 +56,7 @@ export default function AddressSearch({
     const mapDataToSelect = data => data.map(({ id, name }) => ({ id, name }));
 
     const handlePromiseReject = useCallback((reason: RejectionReason) => {
-        if (reason && reason.errorMessage) {
+        if (reason?.errorMessage) {
             setErrorMessage(reason.errorMessage);
         }
     }, []);
@@ -102,7 +102,6 @@ export default function AddressSearch({
             .then(fullData => {
                 onSelect(fullData);
                 setFormattedData([]);
-                return;
             })
             .catch(reason => handlePromiseReject(reason));
     };
@@ -110,32 +109,30 @@ export default function AddressSearch({
     const debounceInputHandler = useMemo(() => debounce(onTextInput, addressSearchDebounceMs), []);
 
     return (
-        <Fragment>
-            <div className={'adyen-checkout__address-search adyen-checkout__field-group'}>
-                <Field label={i18n.get('address')} classNameModifiers={['address-search']} errorMessage={errorMessage} name={'address-search'}>
-                    <Select
-                        name={'address-search'}
-                        className={'adyen-checkout__address-search__dropdown'}
-                        //placeholder={i18n.get('address.placeholder')}
-                        onInput={debounceInputHandler}
-                        items={formattedData}
-                        onChange={onSelectItem}
-                        disableTextFilter={true}
-                        blurOnClose={true}
-                    />
-                </Field>
-                {!hideManualButton && (
-                    <span className="adyen-checkout__address-search__manual-add">
-                        <button
-                            type="button"
-                            className="adyen-checkout__button adyen-checkout__button--inline adyen-checkout__button--link adyen-checkout__address-search__manual-add__button"
-                            onClick={onManualAddress}
-                        >
-                            {'+ ' + i18n.get('address.enterManually')}
-                        </button>
-                    </span>
-                )}
-            </div>
-        </Fragment>
+        <div className={'adyen-checkout__address-search adyen-checkout__field-group'}>
+            <Field label={i18n.get('address')} classNameModifiers={['address-search']} errorMessage={errorMessage} name={'address-search'}>
+                <Select
+                    name={'address-search'}
+                    className={'adyen-checkout__address-search__dropdown'}
+                    //placeholder={i18n.get('address.placeholder')}
+                    onInput={debounceInputHandler}
+                    items={formattedData}
+                    onChange={onSelectItem}
+                    disableTextFilter={true}
+                    blurOnClose={true}
+                />
+            </Field>
+            {!hideManualButton && (
+                <span className="adyen-checkout__address-search__manual-add">
+                    <button
+                        type="button"
+                        className="adyen-checkout__button adyen-checkout__button--inline adyen-checkout__button--link adyen-checkout__address-search__manual-add__button"
+                        onClick={onManualAddress}
+                    >
+                        {'+ ' + i18n.get('address.enterManually')}
+                    </button>
+                </span>
+            )}
+        </div>
     );
 }

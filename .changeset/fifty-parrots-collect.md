@@ -2,4 +2,4 @@
 '@adyen/adyen-web': minor
 ---
 
-feature: adds onAddressSelected callback
+feature: adds new onAddressSelected to fill data when an item is selected in AddressSearch
