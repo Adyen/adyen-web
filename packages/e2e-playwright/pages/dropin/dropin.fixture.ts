@@ -4,6 +4,7 @@ import { DropinPage } from './dropin.page';
 type Fixture = {
     dropinPage: DropinPage;
     dropinPage_cardBrands_defaultView: DropinPage;
+    dropinPage_cardBrands_compactView: DropinPage;
 };
 
 const test = base.extend<Fixture>({
@@ -16,7 +17,24 @@ const test = base.extend<Fixture>({
             paymentMethodsConfiguration: {
                 card: {
                     showBrandsUnderCardNumber: false,
-                    brands: ['visa', 'mc', 'amex', 'discover', 'cup', 'maestro', 'bijcard', 'diners', 'jcb', 'synchrony_cbcc']
+                    brands: ['visa', 'mc', 'amex', 'discover', 'cup', 'maestro', 'bijcard', 'diners', 'jcb', 'synchrony_cbcc'],
+                    _disableClickToPay: true
+                }
+            }
+        });
+        await page.addInitScript({
+            content: `window.mainConfiguration = ${pmsConfig}`
+        });
+
+        await useDropinPage(page, use);
+    },
+
+    dropinPage_cardBrands_compactView: async ({ page }, use) => {
+        const pmsConfig = JSON.stringify({
+            paymentMethodsConfiguration: {
+                card: {
+                    brands: ['visa', 'mc', 'amex', 'discover', 'cup', 'maestro', 'bijcard', 'diners', 'jcb', 'synchrony_cbcc'],
+                    _disableClickToPay: true
                 }
             }
         });
