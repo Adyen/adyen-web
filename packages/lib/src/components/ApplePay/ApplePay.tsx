@@ -7,7 +7,7 @@ import defaultProps from './defaultProps';
 import { httpPost } from '../../core/Services/http';
 import { APPLEPAY_SESSION_ENDPOINT } from './config';
 import { preparePaymentRequest } from './payment-request';
-import { resolveSupportedVersion, mapBrands } from './utils';
+import { formatBillingAddress, resolveSupportedVersion, mapBrands } from './utils';
 import { ApplePayElementProps, ApplePayElementData, ApplePaySessionRequest, OnAuthorizedCallback } from './types';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 
@@ -47,8 +47,9 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
         return {
             paymentMethod: {
                 type: ApplePayElement.type,
-                ...this.state
-            }
+                ...(this.state.applePayToken && { applePayToken: this.state.applePayToken })
+            },
+            ...(this.state.billingContact && { billingAddress: formatBillingAddress(this.state.billingContact) })
         };
     }
 
@@ -78,8 +79,12 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
             onValidateMerchant: onValidateMerchant || this.validateMerchant,
             onPaymentAuthorized: (resolve, reject, event) => {
                 if (event?.payment?.token?.paymentData) {
-                    this.setState({ applePayToken: btoa(JSON.stringify(event.payment.token.paymentData)) });
+                    this.setState({
+                        applePayToken: btoa(JSON.stringify(event.payment.token.paymentData)),
+                        ...(event?.payment?.billingContact && { billingContact: event.payment.billingContact })
+                    });
                 }
+
                 super.submit();
                 onPaymentAuthorized(resolve, reject, event);
             }
