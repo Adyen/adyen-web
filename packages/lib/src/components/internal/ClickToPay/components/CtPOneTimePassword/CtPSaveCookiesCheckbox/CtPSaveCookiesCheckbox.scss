@@ -26,3 +26,10 @@
   font-weight: 400;
   margin: 4px 0 0;
 }
+
+.adyen-checkout-ctp__otp-readmore-button {
+  all: unset;
+  text-transform: lowercase;
+  cursor: pointer;
+  color: $color-blue;
+}
