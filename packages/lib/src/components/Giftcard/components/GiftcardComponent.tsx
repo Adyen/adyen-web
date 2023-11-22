@@ -8,6 +8,7 @@ import { GIFT_CARD } from '../../internal/SecuredFields/lib/configuration/consta
 import { GiftCardFields } from './GiftcardFields';
 import { GiftcardFieldsProps } from './types';
 import StoreDetails from '../../internal/StoreDetails';
+import { StoredGiftCardFields } from './StoredGiftCardFields';
 
 interface GiftcardComponentProps {
     onChange: (state) => void;
@@ -27,6 +28,8 @@ interface GiftcardComponentProps {
 
     enableStoreDetails: boolean;
     storedPaymentMethodId: string;
+    expiryMonth?: number;
+    expiryYear?: number;
 }
 
 class Giftcard extends Component<GiftcardComponentProps> {
@@ -99,15 +102,6 @@ class Giftcard extends Component<GiftcardComponentProps> {
             return <GiftcardResult balance={balance} transactionLimit={transactionLimit} onSubmit={props.onSubmit} {...props} />;
         }
 
-        if (props.storedPaymentMethodId) {
-            return this.props.payButton({
-                status: this.state.status,
-                onClick: this.props.onBalanceCheck,
-                label: i18n.get('applyGiftcard'),
-                classNameModifiers: ['standalone']
-            });
-        }
-
         const getCardErrorMessage = sfpState => {
             if (sfpState.errors.encryptedCardNumber) return i18n.get(sfpState.errors.encryptedCardNumber);
 
@@ -135,8 +129,31 @@ class Giftcard extends Component<GiftcardComponentProps> {
                     onChange={this.handleSecureFieldsChange}
                     onFocus={this.handleFocus}
                     type={GIFT_CARD}
-                    render={({ setRootNode, setFocusOn }, sfpState) =>
-                        this.props.fieldsLayoutComponent({
+                    render={({ setRootNode, setFocusOn }, sfpState) => {
+                        if (props.storedPaymentMethodId) {
+                            // return this.props.payButton({
+                            //     status: this.state.status,
+                            //     onClick: this.props.onBalanceCheck,
+                            //     label: i18n.get('applyGiftcard'),
+                            //     classNameModifiers: ['standalone']
+                            // });
+                            return (
+                                <StoredGiftCardFields
+                                    i18n={i18n}
+                                    pinRequired={this.props.pinRequired}
+                                    sfpState={sfpState}
+                                    focusedElement={focusedElement}
+                                    setFocusOn={setFocusOn}
+                                    setRootNode={setRootNode}
+                                    getCardErrorMessage={getCardErrorMessage}
+                                    expiryMonth={props.expiryMonth}
+                                    expiryYear={props.expiryYear}
+                                    {...props}
+                                />
+                            );
+                        }
+
+                        return this.props.fieldsLayoutComponent({
                             i18n: i18n,
                             pinRequired: this.props.pinRequired,
                             focusedElement: focusedElement,
@@ -146,8 +163,8 @@ class Giftcard extends Component<GiftcardComponentProps> {
                             sfpState: sfpState,
                             // TODO maybe remove this?
                             ...props
-                        })
-                    }
+                        });
+                    }}
                 />
 
                 {props.enableStoreDetails && <StoreDetails onChange={this.handleOnStoreDetails} />}
