@@ -41,10 +41,6 @@ class RedirectElement extends UIElement {
         return true;
     }
 
-    get icon() {
-        return this.resources.getImage()(this.props.type);
-    }
-
     render() {
         if (this.props.url && this.props.method) {
             return <RedirectShopper {...this.props} />;

@@ -85,10 +85,6 @@ export class SecuredFieldsElement extends UIElement {
         return !!this.state.isValid;
     }
 
-    get icon() {
-        return this.resources.getImage()(this.props.type);
-    }
-
     get browserInfo() {
         return collectBrowserInfo();
     }
