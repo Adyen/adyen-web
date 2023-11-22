@@ -10,7 +10,7 @@ const submitMock = jest.fn();
 
 describe('UIElement', () => {
     describe('icon()', () => {
-        test.only('should generate the icon URL by getting the tx variant from type() getter', () => {
+        test('should generate the icon URL by getting the tx variant from type() getter', () => {
             const resources = mock<Resources>();
             resources.getImage.mockReturnValue((icon: string) => `https://checkout-adyen.com/${icon}`);
 
