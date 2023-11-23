@@ -41,9 +41,8 @@
     justify-content: space-between;
     font-weight: var(--adyen-checkout-text-body-font-weight);
     font-size: var(--adyen-checkout-font-size-medium);
-    padding: calc(var(--adyen-checkout-spacer-070) - var(--adyen-checkout-spacer-020));
+    padding: var(--adyen-checkout-spacer-070);
     padding-left: calc(var(--adyen-checkout-spacer-120) - var(--adyen-checkout-spacer-020));
-    padding-right: var(--adyen-checkout-spacer-070);
     position: relative;
     transition: background 0.1s ease-out;
     width: 100%;
@@ -59,6 +58,7 @@
 }
 
 .adyen-checkout__payment-method__header__title {
+    max-height: 38px;
     display: flex;
     align-items: center;
     flex-shrink: 0;
@@ -69,7 +69,7 @@
     border: none;
     background: none;
     cursor: pointer;
-    padding: var(--adyen-checkout-spacer-020);
+    padding: 0;
     color: var(--adyen-checkout-color-label-primary);
     font-size: 1em;
     font-weight: var(--adyen-checkout-text-body-font-weight);
@@ -114,7 +114,8 @@
     align-items: center;
     border-radius: var(--adyen-checkout-border-radius-s);
     overflow: hidden;
-    box-shadow: 0 1px var(--adyen-checkout-spacer-010) 0 rgba(0 17 44 / 2%), 0 var(--adyen-checkout-spacer-010) var(--adyen-checkout-spacer-020) 0 rgba(0 17 44 / 4%);
+    box-shadow: 0 1px var(--adyen-checkout-spacer-010) 0 rgba(0 17 44 / 2%),
+        0 var(--adyen-checkout-spacer-010) var(--adyen-checkout-spacer-020) 0 rgba(0 17 44 / 4%);
 }
 
 .adyen-checkout__payment-method__image {
