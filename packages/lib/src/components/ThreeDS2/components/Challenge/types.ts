@@ -1,7 +1,6 @@
-import { ChallengeData, ThreeDS2FlowObject } from '../../types';
+import { ChallengeData, ThreeDS2ChallengeConfiguration, ThreeDS2FlowObject } from '../../types';
 import { ChallengeResolveData } from '../utils';
-import { ThreeDS2ChallengeProps } from '../../ThreeDS2Challenge';
-import { ActionHandledReturnObject } from '../../../types';
+import { ActionHandledReturnObject } from '../../../../types/global-types';
 
 export interface DoChallenge3DS2Props extends ChallengeData {
     onCompleteChallenge: (resolveObject: ThreeDS2FlowObject) => void;
@@ -14,7 +13,7 @@ export interface DoChallenge3DS2State {
     status?: string;
 }
 
-export interface PrepareChallenge3DS2Props extends ThreeDS2ChallengeProps {
+export interface PrepareChallenge3DS2Props extends ThreeDS2ChallengeConfiguration {
     onComplete?: (data: ChallengeResolveData) => void;
 }
 

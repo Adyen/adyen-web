@@ -1,42 +1,21 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement';
 import CustomCardInput from './CustomCardInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import collectBrowserInfo from '../../utils/browserInfo';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
 import { CbObjOnBinLookup } from '../internal/SecuredFields/lib/types';
-import { BrandObject, CardElementProps } from '../Card/types';
+import { BrandObject } from '../Card/types';
 import { getCardImageUrl } from '../internal/SecuredFields/utils';
 import { TxVariants } from '../tx-variants';
-
-type CustomCardProps = Omit<
-    CardElementProps,
-    | 'clickToPayConfiguration'
-    | '_disableClickToPay'
-    | 'fundingSource'
-    | 'showBrandsUnderCardNumber'
-    | 'positionHolderNameOnTop'
-    | 'showBrandIcon'
-    | 'showFormInstruction'
-    | 'enableStoreDetails'
-    | 'hideCVC'
-    | 'hasCVC'
-    | 'hasHolderName'
-    | 'holderNameRequired'
-    | 'billingAddressRequired'
-    | 'billingAddressRequiredFields'
-    | 'billingAddressAllowedCountries'
-    | 'installmentOptions'
-    | 'showInstallmentAmounts'
-    | 'configuration'
->;
+import { CustomCardConfiguration } from './types';
 
 // TODO questions about
 // brand - does a merchant ever make a custom stored card?
 // type
 // countryCode
 
-export class CustomCard extends UIElement<CustomCardProps> {
+export class CustomCard extends UIElement<CustomCardConfiguration> {
     public static type = TxVariants.customCard;
 
     public static analyticsType = 'custom-scheme';
@@ -46,7 +25,7 @@ export class CustomCard extends UIElement<CustomCardProps> {
         brandsConfiguration: {}
     };
 
-    formatProps(props: CustomCardProps) {
+    formatProps(props: CustomCardConfiguration) {
         return {
             ...props,
             type: TxVariants.customCard,

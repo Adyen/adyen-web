@@ -1,9 +1,9 @@
-import { AddressData, FieldsetVisibility, PersonalDetailsSchema } from '../../../types';
+import { AddressData, FieldsetVisibility, PersonalDetailsSchema } from '../../../types/global-types';
 import { CompanyDetailsSchema } from '../CompanyDetails/types';
 import { AddressSpecifications } from '../Address/types';
-import { UIElementProps } from '../../types';
-import UIElement from '../../UIElement';
+import UIElement from '../UIElement/UIElement';
 import { GenericError, ValidationRuleErrorObj } from '../../../core/Errors/types';
+import { UIElementProps } from '../UIElement/types';
 
 export interface OpenInvoiceVisibility {
     companyDetails?: FieldsetVisibility;

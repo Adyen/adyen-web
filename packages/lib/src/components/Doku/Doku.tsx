@@ -1,12 +1,12 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import DokuInput from './components/DokuInput';
 import DokuVoucherResult from './components/DokuVoucherResult';
 import CoreProvider from '../../core/Context/CoreProvider';
 import { TxVariants } from '../tx-variants';
-import { VoucherActionElement } from '../types';
+import { VoucherConfiguration } from '../internal/Voucher/types';
 
-export class DokuElement extends UIElement<VoucherActionElement> {
+export class DokuElement extends UIElement<VoucherConfiguration> {
     public static type = TxVariants.doku;
     public static txVariants = [
         TxVariants.doku,

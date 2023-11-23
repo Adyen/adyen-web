@@ -1,4 +1,4 @@
-import { FieldsetVisibility } from '../../../types';
+import { FieldsetVisibility } from '../../../types/global-types';
 import { ValidatorRules } from '../../../utils/Validator/types';
 
 export interface CompanyDetailsSchema {

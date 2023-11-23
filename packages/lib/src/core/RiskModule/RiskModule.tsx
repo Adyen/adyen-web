@@ -1,9 +1,9 @@
 import { h } from 'preact';
-import BaseElement from '../../components/BaseElement';
-import { BaseElementProps } from '../../components/types';
+import BaseElement from '../../components/internal/BaseElement/BaseElement';
 import DeviceFingerprint from './components/DeviceFingerprint';
 import base64 from '../../utils/base64';
 import { RISK_DATA_VERSION, DEVICE_FINGERPRINT } from './constants';
+import { BaseElementProps } from '../../components/internal/BaseElement/types';
 
 export interface RiskModuleOptions {
     enabled: boolean;

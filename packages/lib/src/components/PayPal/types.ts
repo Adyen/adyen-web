@@ -1,7 +1,7 @@
-import { PaymentAmount, PaymentMethod, ShopperDetails } from '../../types';
-import UIElement from '../UIElement';
-import { UIElementProps } from '../types';
+import { PaymentAmount, PaymentMethod, ShopperDetails } from '../../types/global-types';
+import UIElement from '../internal/UIElement/UIElement';
 import { SUPPORTED_LOCALES } from './config';
+import { UIElementProps } from '../internal/UIElement/types';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare global {
@@ -168,7 +168,7 @@ export interface PayPalConfig {
     intent?: Intent;
 }
 
-export interface PayPalElementProps extends PayPalCommonProps, UIElementProps {
+export interface PayPalConfiguration extends PayPalCommonProps, UIElementProps {
     onSubmit?: (state: any, element: UIElement) => void;
     onComplete?: (state, element?: UIElement) => void;
     onAdditionalDetails?: (state: any, element: UIElement) => void;
@@ -208,4 +208,4 @@ export interface PaypalSettings {
     components: string;
 }
 
-export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
+export type PayPalSupportedLocale = (typeof SUPPORTED_LOCALES)[number];

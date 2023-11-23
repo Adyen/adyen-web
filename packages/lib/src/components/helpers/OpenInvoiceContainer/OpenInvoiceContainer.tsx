@@ -1,21 +1,12 @@
 import { h } from 'preact';
-import UIElement from '../../UIElement';
+import UIElement from '../../internal/UIElement/UIElement';
 import OpenInvoice from '../../internal/OpenInvoice';
 import CoreProvider from '../../../core/Context/CoreProvider';
-import { OpenInvoiceProps } from '../../internal/OpenInvoice/types';
-import { AddressSpecifications } from '../../internal/Address/types';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
-import { ICore } from '../../../core/types';
+import { OpenInvoiceConfiguration } from './types';
 
-export interface OpenInvoiceContainerProps extends Partial<OpenInvoiceProps> {
-    core: ICore;
-    consentCheckboxLabel?: h.JSX.Element;
-    billingAddressRequiredFields?: string[];
-    billingAddressSpecification?: AddressSpecifications;
-}
-
-export default class OpenInvoiceContainer extends UIElement<OpenInvoiceContainerProps> {
-    protected static defaultProps: Partial<OpenInvoiceContainerProps> = {
+export default class OpenInvoiceContainer extends UIElement<OpenInvoiceConfiguration> {
+    protected static defaultProps: Partial<OpenInvoiceConfiguration> = {
         onChange: () => {},
         data: { companyDetails: {}, personalDetails: {}, billingAddress: {}, deliveryAddress: {}, bankAccount: {} },
         visibility: {

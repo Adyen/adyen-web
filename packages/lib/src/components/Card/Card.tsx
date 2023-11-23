@@ -1,9 +1,9 @@
 import { h } from 'preact';
-import { UIElement } from '../UIElement';
+import { UIElement } from '../internal/UIElement/UIElement';
 import CardInput from './components/CardInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import collectBrowserInfo from '../../utils/browserInfo';
-import { BinLookupResponse, CardElementData, CardElementProps } from './types';
+import { BinLookupResponse, CardElementData, CardConfiguration } from './types';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
 import { CbObjOnBinLookup } from '../internal/SecuredFields/lib/types';
 import { reject } from '../internal/SecuredFields/utils';
@@ -11,11 +11,11 @@ import { hasValidInstallmentsObject } from './components/CardInput/utils';
 import createClickToPayService from '../internal/ClickToPay/services/create-clicktopay-service';
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';
 import ClickToPayWrapper from './components/ClickToPayWrapper';
-import { UIElementStatus } from '../types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { TxVariants } from '../tx-variants';
+import { UIElementStatus } from '../internal/UIElement/types';
 
-export class CardElement extends UIElement<CardElementProps> {
+export class CardElement extends UIElement<CardConfiguration> {
     public static type = TxVariants.scheme;
 
     private readonly clickToPayService: IClickToPayService | null;
@@ -25,7 +25,7 @@ export class CardElement extends UIElement<CardElementProps> {
      */
     private clickToPayRef = null;
 
-    constructor(props: CardElementProps) {
+    constructor(props: CardConfiguration) {
         super(props);
 
         if (props && !props._disableClickToPay) {
@@ -55,7 +55,7 @@ export class CardElement extends UIElement<CardElementProps> {
         this.clickToPayRef = ref;
     };
 
-    formatProps(props: CardElementProps) {
+    formatProps(props: CardConfiguration) {
         return {
             ...props,
             // Mismatch between hasHolderName & holderNameRequired which can mean card can never be valid

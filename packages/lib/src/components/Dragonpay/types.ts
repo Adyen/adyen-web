@@ -1,6 +1,6 @@
-import { PaymentAmount } from '../../types';
+import { PaymentAmount } from '../../types/global-types';
 import Language from '../../language/Language';
-import { UIElementProps } from '../types';
+import { UIElementProps } from '../internal/UIElement/types';
 
 export interface DragonpayInputIssuerItem {
     id: string;
@@ -8,7 +8,7 @@ export interface DragonpayInputIssuerItem {
     icon?: string;
 }
 
-export interface DragonpayElementProps extends UIElementProps {
+export interface DragonpayConfiguraton extends UIElementProps {
     type?: string;
     issuers?: DragonpayInputIssuerItem[];
 

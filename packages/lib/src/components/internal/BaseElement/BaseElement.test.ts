@@ -1,7 +1,7 @@
 import BaseElement from './BaseElement';
 import { BaseElementProps } from './types';
 import { mock } from 'jest-mock-extended';
-import { ICore } from '../core/types';
+import { ICore } from '../../../core/types';
 
 describe('BaseElement', () => {
     let MyElement;

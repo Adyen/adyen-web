@@ -1,9 +1,9 @@
 import { filterUnsupported, filterPresent, filterAvailable } from './filters';
-import { PaymentMethod, StoredPaymentMethod } from '../../../types';
+import { PaymentMethod, StoredPaymentMethod } from '../../../types/global-types';
 import { getComponentConfiguration } from './getComponentConfiguration';
-import { PaymentMethodsConfiguration } from '../../types';
 import { ICore } from '../../../core/types';
-import UIElement from '../../UIElement';
+import UIElement from '../../internal/UIElement/UIElement';
+import { PaymentMethodsConfiguration } from '../types';
 
 /**
  * Returns a filtered (available) list of component Elements

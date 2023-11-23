@@ -1,6 +1,6 @@
 import Language from '../../../../language/Language';
 import { StylesObject } from '../../../internal/SecuredFields/lib/types';
-import UIElement from '../../../UIElement';
+import UIElement from '../../../internal/UIElement/UIElement';
 import { Resources } from '../../../../core/Context/Resources';
 
 export interface ACHInputStateValid {

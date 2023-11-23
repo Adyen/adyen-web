@@ -1,6 +1,6 @@
-import { UIElementProps } from '../types';
+import { UIElementProps } from '../internal/UIElement/types';
 
-export interface CashAppPayElementProps extends UIElementProps {
+export interface CashAppPayConfiguration extends UIElementProps {
     /**
      * Indicates that the payment must be stored (Ex: in case there is no checkbox but merchant wants to store it)
      */

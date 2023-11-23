@@ -1,7 +1,8 @@
 import { httpPost } from '../http';
 import Session from '../../CheckoutSession';
-import { CheckoutSessionOrdersResponse, Order } from '../../../types';
+import { CheckoutSessionOrdersResponse } from '../../CheckoutSession/types';
 import { API_VERSION } from './constants';
+import { Order } from '../../../types/global-types';
 
 /**
  */

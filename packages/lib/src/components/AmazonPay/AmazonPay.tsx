@@ -1,15 +1,15 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import CoreProvider from '../../core/Context/CoreProvider';
 import collectBrowserInfo from '../../utils/browserInfo';
 import AmazonPayComponent from './components/AmazonPayComponent';
-import { AmazonPayElementData, AmazonPayElementProps, CheckoutDetailsRequest } from './types';
+import { AmazonPayElementData, AmazonPayConfiguration, CheckoutDetailsRequest } from './types';
 import defaultProps from './defaultProps';
 import { getCheckoutDetails } from './services';
 import './AmazonPay.scss';
 import { TxVariants } from '../tx-variants';
 
-export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
+export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
     public static type = TxVariants.amazonpay;
 
     protected static defaultProps = defaultProps;

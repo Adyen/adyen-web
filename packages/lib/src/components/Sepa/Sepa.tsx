@@ -1,19 +1,12 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import IbanInput from '../internal/IbanInput';
 import CoreProvider from '../../core/Context/CoreProvider';
-import { SepaElementData } from './types';
+import { SepaElementData, SepaConfiguration } from './types';
 import { TxVariants } from '../tx-variants';
 import FormInstruction from '../internal/FormInstruction';
-import { UIElementProps } from '../types';
 
-interface SepaProps extends UIElementProps {
-    showFormInstruction?: boolean;
-}
-/**
- * SepaElement
- */
-class SepaElement extends UIElement<SepaProps> {
+class SepaElement extends UIElement<SepaConfiguration> {
     public static type = TxVariants.sepadirectdebit;
 
     protected static defaultProps = {

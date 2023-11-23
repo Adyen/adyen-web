@@ -13,7 +13,6 @@ import useForm from '../../../../utils/useForm';
 import { SetSRMessagesReturnObject, SortedErrorObject } from '../../../../core/Errors/types';
 import { handlePartialAddressMode, extractPropsForCardFields, extractPropsForSFP, getLayout, lookupBlurBasedErrors, mapFieldKey } from './utils';
 import { usePrevious } from '../../../../utils/hookUtils';
-import { AddressData } from '../../../../types';
 import Specifications from '../../../internal/Address/Specifications';
 import { StoredCardFieldsWrapper } from './components/StoredCardFieldsWrapper';
 import { CardFieldsWrapper } from './components/CardFieldsWrapper';
@@ -28,6 +27,7 @@ import { SetSRMessagesReturnFn } from '../../../../core/Errors/SRPanelProvider';
 import useImage from '../../../../core/Context/useImage';
 import { getArrayDifferences } from '../../../../utils/arrayUtils';
 import FormInstruction from '../../../internal/FormInstruction';
+import { AddressData } from '../../../../types/global-types';
 
 const CardInput = (props: CardInputProps) => {
     const sfp = useRef(null);

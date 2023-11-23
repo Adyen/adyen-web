@@ -1,6 +1,6 @@
-import { QRLoaderContainerProps } from '../helpers/QRLoaderContainer';
+import { QRLoaderConfiguration } from '../helpers/QRLoaderContainer/types';
 
-export interface PixProps extends QRLoaderContainerProps {
+export interface PixConfiguration extends QRLoaderConfiguration {
     personalDetailsRequired?: boolean;
 }
 

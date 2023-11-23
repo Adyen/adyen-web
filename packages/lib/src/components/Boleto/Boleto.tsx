@@ -1,13 +1,13 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import BoletoInput from './components/BoletoInput';
 import { cleanCPFCNPJ } from '../internal/SocialSecurityNumberBrazil/utils';
 import BoletoVoucherResult from './components/BoletoVoucherResult';
 import CoreProvider from '../../core/Context/CoreProvider';
 import { TxVariants } from '../tx-variants';
-import { VoucherActionElement } from '../types';
+import { VoucherConfiguration } from '../internal/Voucher/types';
 
-export class BoletoElement extends UIElement<VoucherActionElement> {
+export class BoletoElement extends UIElement<VoucherConfiguration> {
     public static type = TxVariants.boletobancario;
 
     public static txVariants = [
