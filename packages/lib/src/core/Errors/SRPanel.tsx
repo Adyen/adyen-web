@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import './SRPanel.scss';
 import { AriaAttributes, SRPanelProps } from './types';
-import BaseElement from '../../components/BaseElement';
+import BaseElement from '../../components/internal/BaseElement/BaseElement';
 import { SRMessages, SRMessagesRef } from './SRMessages';
 
 /**

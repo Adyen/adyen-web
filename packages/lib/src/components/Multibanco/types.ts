@@ -1,4 +1,4 @@
-import { PaymentAmount } from '../../types';
+import { PaymentAmount } from '../../types/global-types';
 
 export interface MultibancoVoucherResultProps {
     entity?: string;

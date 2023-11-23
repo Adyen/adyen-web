@@ -1,20 +1,12 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import EcontextInput from './components/EcontextInput';
 import EcontextVoucherResult from './components/EcontextVoucherResult';
 import CoreProvider from '../../core/Context/CoreProvider';
-import { UIElementProps } from '../types';
-import { PersonalDetailsSchema } from '../../types';
 import { TxVariants } from '../tx-variants';
+import { EcontextConfiguration } from './types';
 
-interface EcontextElementProps extends UIElementProps {
-    reference?: string;
-    personalDetailsRequired?: boolean;
-    data?: PersonalDetailsSchema;
-    showFormInstruction?: boolean;
-}
-
-export class EcontextElement extends UIElement<EcontextElementProps> {
+export class EcontextElement extends UIElement<EcontextConfiguration> {
     public static type = TxVariants.econtext;
     public static txVariants = [
         TxVariants.econtext,

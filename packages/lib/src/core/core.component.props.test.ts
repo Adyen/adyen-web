@@ -2,7 +2,7 @@ import { mount } from 'enzyme';
 import AdyenCheckout from './core';
 import { PaymentMethodsResponse } from '../types';
 import { PayPal, Card, Dropin, Redirect } from '../components';
-import { CoreOptions } from './types';
+import { CoreConfiguration } from './types';
 
 const paymentMethodsResponse: PaymentMethodsResponse = {
     paymentMethods: [
@@ -38,7 +38,7 @@ const paymentMethodsResponse: PaymentMethodsResponse = {
     ]
 };
 
-const coreOptions: CoreOptions = {
+const coreOptions: CoreConfiguration = {
     amount: {
         currency: 'USD',
         value: 19000

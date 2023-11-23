@@ -1,4 +1,4 @@
-import QRLoaderContainer from '../helpers/QRLoaderContainer';
+import QRLoaderContainer from '../helpers/QRLoaderContainer/QRLoaderContainer';
 import { TxVariants } from '../tx-variants';
 
 class SwishElement extends QRLoaderContainer {

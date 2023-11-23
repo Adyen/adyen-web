@@ -1,8 +1,8 @@
 import createElements from './createElements';
-import { PaymentMethod } from '../../../types';
-import UIElement from '../../UIElement';
-import { PaymentMethodsConfiguration } from '../../types';
+import { PaymentMethod } from '../../../types/global-types';
+import UIElement from '../../internal/UIElement/UIElement';
 import { ICore } from '../../../core/types';
+import { PaymentMethodsConfiguration } from '../types';
 
 /**
  *  Returns a filtered (available) list of InstantPaymentMethods Elements

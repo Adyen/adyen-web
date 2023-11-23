@@ -3,10 +3,10 @@ import { useRef, useState } from 'preact/hooks';
 import PersonalDetails from '../../../internal/PersonalDetails/PersonalDetails';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import { econtextValidationRules } from '../../validate';
-import { PersonalDetailsSchema } from '../../../../types';
+import { PersonalDetailsSchema } from '../../../../types/global-types';
 import './EcontextInput.scss';
-import { ComponentMethodsRef } from '../../../types';
 import FormInstruction from '../../../internal/FormInstruction';
+import { ComponentMethodsRef } from '../../../internal/UIElement/types';
 
 interface EcontextInputProps {
     personalDetailsRequired?: boolean;

@@ -1,26 +1,16 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import ANCVInput from './components/ANCVInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import config from './components/ANCVAwait/config';
 import Await from '../../components/internal/Await';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
-import { PaymentResponse, UIElementProps } from '../types';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import PayButton from '../internal/PayButton';
+import { ANCVConfiguration } from './types';
+import { PaymentResponseData } from '../../types/global-types';
 
-export interface ANCVProps extends UIElementProps {
-    paymentData?: any;
-    data: ANCVDataState;
-    onOrderRequest?: any;
-    onOrderCreated?: any;
-}
-
-export interface ANCVDataState {
-    beneficiaryId: string;
-}
-
-export class ANCVElement extends UIElement<ANCVProps> {
+export class ANCVElement extends UIElement<ANCVConfiguration> {
     public static type = 'ancv';
 
     /**
@@ -46,7 +36,7 @@ export class ANCVElement extends UIElement<ANCVProps> {
         }
     };
 
-    protected handleOrder = ({ order }: PaymentResponse) => {
+    protected handleOrder = ({ order }: PaymentResponseData) => {
         this.updateParent({ order });
         if (this.props.session && this.props.onOrderCreated) {
             return this.props.onOrderCreated(order);

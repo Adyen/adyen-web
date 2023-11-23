@@ -1,8 +1,8 @@
 import Language from '../../language/Language';
 import { SUPPORTED_LOCALES_EU, SUPPORTED_LOCALES_US } from './config';
-import { BrowserInfo, PaymentAmount } from '../../types';
-import UIElement from '../UIElement';
-import { UIElementProps } from '../types';
+import UIElement from '../internal/UIElement/UIElement';
+import { UIElementProps } from '../internal/UIElement/types';
+import { BrowserInfo, PaymentAmount } from '../../types/global-types';
 
 declare global {
     interface Window {
@@ -30,14 +30,14 @@ export interface RecurringMetadata {
     };
 }
 
-export interface AmazonPayConfiguration {
+export interface AmazonPayBackendConfiguration {
     merchantId?: string;
     publicKeyId?: string;
     region?: Region;
     storeId?: string;
 }
 
-export interface AmazonPayElementProps extends UIElementProps {
+export interface AmazonPayConfiguration extends UIElementProps {
     addressDetails?: AddressDetails;
     amazonPayToken?: string;
     amazonCheckoutSessionId?: string;
@@ -46,7 +46,7 @@ export interface AmazonPayElementProps extends UIElementProps {
     cancelUrl?: string;
     chargePermissionType?: ChargePermissionType;
     clientKey?: string;
-    configuration?: AmazonPayConfiguration;
+    configuration?: AmazonPayBackendConfiguration;
     currency?: Currency;
     deliverySpecifications?: DeliverySpecifications;
     environment?: string;
@@ -70,7 +70,7 @@ export interface AmazonPayElementProps extends UIElementProps {
     onSignOut: (resolve, reject) => Promise<void>;
 }
 
-export interface AmazonPayComponentProps extends AmazonPayElementProps {
+export interface AmazonPayComponentProps extends AmazonPayConfiguration {
     ref: any;
 }
 
@@ -81,7 +81,7 @@ export interface AmazonPayButtonProps {
     cancelUrl?: string;
     chargePermissionType?: ChargePermissionType;
     clientKey?: string;
-    configuration?: AmazonPayConfiguration;
+    configuration?: AmazonPayBackendConfiguration;
     currency?: Currency;
     deliverySpecifications?: DeliverySpecifications;
     design?: string;

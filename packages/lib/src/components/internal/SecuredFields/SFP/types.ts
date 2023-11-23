@@ -1,5 +1,5 @@
 import { CVCPolicyType, DatePolicyType, StylesObject } from '../lib/types';
-import { AddressData } from '../../../../types';
+import { AddressData } from '../../../../types/global-types';
 import { CardBrandsConfiguration } from '../../../Card/types';
 import Language from '../../../../language';
 import { Resources } from '../../../../core/Context/Resources';

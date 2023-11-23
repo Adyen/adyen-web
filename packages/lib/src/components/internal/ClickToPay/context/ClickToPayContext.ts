@@ -2,10 +2,10 @@ import { createContext } from 'preact';
 import { CtpState } from '../services/ClickToPayService';
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../services/types';
 import ShopperCard from '../models/ShopperCard';
-import { ClickToPayConfiguration } from '../types';
-import { UIElementStatus } from '../../../types';
-import { PaymentAmount } from '../../../../types';
+import { ClickToPayProps } from '../types';
+import { PaymentAmount } from '../../../../types/global-types';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
+import { UIElementStatus } from '../../UIElement/types';
 
 export interface IClickToPayContext
     extends Pick<IClickToPayService, 'checkout' | 'startIdentityValidation' | 'finishIdentityValidation' | 'verifyIfShopperIsEnrolled'> {
@@ -19,7 +19,7 @@ export interface IClickToPayContext
     otpMaskedContact: string;
     otpNetwork: string;
     amount: PaymentAmount;
-    configuration: ClickToPayConfiguration;
+    configuration: ClickToPayProps;
     status: UIElementStatus;
     onSubmit(payload: ClickToPayCheckoutPayload): void;
     onSetStatus(status: UIElementStatus): void;

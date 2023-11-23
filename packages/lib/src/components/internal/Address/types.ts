@@ -1,4 +1,4 @@
-import { AddressField, AddressData } from '../../../types';
+import { AddressField, AddressData } from '../../../types/global-types';
 import Specifications from './Specifications';
 import { ValidatorRules } from '../../../utils/Validator/types';
 import { ValidationRuleResult } from '../../../utils/Validator/ValidationRuleResult';

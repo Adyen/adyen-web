@@ -1,6 +1,5 @@
-import { PaymentAmount } from '../../../types';
+import { ActionHandledReturnObject, PaymentAmount } from '../../../types/global-types';
 import Language from '../../../language/Language';
-import { ActionHandledReturnObject } from '../../types';
 
 export interface QRLoaderProps {
     delay?: number;

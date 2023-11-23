@@ -1,12 +1,12 @@
 import { Dropin as DropinComponent, AdyenCheckout, components } from '../../../src';
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
 import { Container } from '../Container';
-import { DropinElementProps } from '../../../src/components/Dropin/types';
+import { DropinConfiguration } from '../../../src/components/Dropin/types';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 
-type DropinStory = StoryConfiguration<DropinElementProps>;
+type DropinStory = StoryConfiguration<DropinConfiguration>;
 
-const meta: MetaConfiguration<DropinElementProps> = {
+const meta: MetaConfiguration<DropinConfiguration> = {
     title: 'Dropin/Default',
     argTypes: {
         componentConfiguration: {
@@ -26,7 +26,7 @@ const meta: MetaConfiguration<DropinElementProps> = {
 };
 
 export const Auto: DropinStory = {
-    render: (args: PaymentMethodStoryProps<DropinElementProps>, context) => {
+    render: (args: PaymentMethodStoryProps<DropinConfiguration>, context) => {
         const { componentConfiguration } = args;
 
         // Register all Components

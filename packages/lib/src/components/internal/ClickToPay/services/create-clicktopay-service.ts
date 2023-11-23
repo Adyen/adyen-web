@@ -2,15 +2,15 @@ import SrcSdkLoader from './sdks/SrcSdkLoader';
 import ClickToPayService from './ClickToPayService';
 import { IClickToPayService, IdentityLookupParams } from './types';
 import { SrcInitParams } from './sdks/types';
-import { CardConfiguration } from '../../../Card/types';
-import { ClickToPayConfiguration, ClickToPayScheme } from '../types';
+import { CardBackendConfiguration } from '../../../Card/types';
+import { ClickToPayProps, ClickToPayScheme } from '../types';
 
 /**
  * Creates the Click to Pay service in case the required configuration is provided
  */
 export default function createClickToPayService(
-    configuration: CardConfiguration,
-    clickToPayConfiguration: ClickToPayConfiguration | undefined,
+    configuration: CardBackendConfiguration,
+    clickToPayConfiguration: ClickToPayProps | undefined,
     environment: string
 ): IClickToPayService | null {
     const schemesConfig = createSchemesInitConfiguration(configuration);
@@ -43,7 +43,7 @@ const createShopperIdentityObject = (shopperEmail: string, telephoneNumber: stri
  * Parses 'configuration' object that comes from the Card payment method config, and try to create the Click to Pay
  * initialization object in case the values are provided.
  */
-const createSchemesInitConfiguration = (configuration: CardConfiguration): Record<ClickToPayScheme, SrcInitParams> => {
+const createSchemesInitConfiguration = (configuration: CardBackendConfiguration): Record<ClickToPayScheme, SrcInitParams> => {
     if (!configuration) {
         return null;
     }

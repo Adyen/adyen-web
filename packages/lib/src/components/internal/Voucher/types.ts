@@ -1,3 +1,5 @@
+import { UIElementProps } from '../UIElement/types';
+
 export interface VoucherDetail {
     label: string;
     value: string;
@@ -45,4 +47,10 @@ export interface VoucherProps {
 
     /** Show/Hide a button to copy the payment reference. It will only show if a reference is available. */
     copyBtn?: boolean;
+}
+
+export interface VoucherConfiguration extends UIElementProps {
+    reference?: string;
+    url?: string;
+    paymentMethodType?: string;
 }

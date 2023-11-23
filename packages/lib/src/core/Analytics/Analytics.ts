@@ -2,9 +2,9 @@ import logEvent from '../Services/analytics/log-event';
 import postTelemetry from '../Services/analytics/post-telemetry';
 import collectId from '../Services/analytics/collect-id';
 import EventsQueue from './EventsQueue';
-import { CoreOptions } from '../types';
+import { CoreConfiguration } from '../types';
 
-export type AnalyticsProps = Pick<CoreOptions, 'loadingContext' | 'locale' | 'clientKey' | 'analytics' | 'amount'>;
+export type AnalyticsProps = Pick<CoreConfiguration, 'loadingContext' | 'locale' | 'clientKey' | 'analytics' | 'amount'>;
 
 class Analytics {
     private static defaultProps = {

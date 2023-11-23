@@ -1,8 +1,8 @@
-import { CoreOptions } from './core/types';
-import Checkout from './core';
-import UIElement from './components/UIElement';
+import { CoreConfiguration } from './types';
+import Checkout from './index';
+import UIElement from '../components/internal/UIElement';
 
-async function AdyenCheckout(props: CoreOptions): Promise<Checkout> {
+async function AdyenCheckout(props: CoreConfiguration): Promise<Checkout> {
     const checkout = new Checkout(props);
     return await checkout.initialize();
 }

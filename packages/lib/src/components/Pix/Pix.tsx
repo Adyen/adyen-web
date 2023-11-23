@@ -1,12 +1,12 @@
 import { h } from 'preact';
-import QRLoaderContainer from '../helpers/QRLoaderContainer';
+import QRLoaderContainer from '../helpers/QRLoaderContainer/QRLoaderContainer';
 import CoreProvider from '../../core/Context/CoreProvider';
 import PixInput from './PixInput';
 import { cleanCPFCNPJ } from '../internal/SocialSecurityNumberBrazil/utils';
-import { PixElementData, PixProps } from './types';
+import { PixElementData, PixConfiguration } from './types';
 import { TxVariants } from '../tx-variants';
 
-class PixElement extends QRLoaderContainer<PixProps> {
+class PixElement extends QRLoaderContainer<PixConfiguration> {
     public static type = TxVariants.pix;
 
     public static defaultProps = {
@@ -21,7 +21,7 @@ class PixElement extends QRLoaderContainer<PixProps> {
         return !!this.state.isValid;
     }
 
-    formatProps(props): PixProps {
+    formatProps(props): PixConfiguration {
         return {
             copyBtn: true,
             introduction: 'pix.instructions',

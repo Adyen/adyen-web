@@ -1,14 +1,14 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import MBWayInput from './components/MBWayInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import config from './components/MBWayAwait/config';
 import Await from '../../components/internal/Await';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { TxVariants } from '../tx-variants';
-import { AwaitActionElement } from '../types';
+import { AwaitConfiguration } from '../internal/Await/types';
 
-export class MBWayElement extends UIElement<AwaitActionElement> {
+export class MBWayElement extends UIElement<AwaitConfiguration> {
     public static type = TxVariants.mbway;
 
     formatProps(props) {

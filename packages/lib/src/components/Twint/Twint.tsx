@@ -3,10 +3,6 @@ import PayButton, { payAmountLabel } from '../internal/PayButton';
 import { h } from 'preact';
 import { TxVariants } from '../tx-variants';
 
-/**
- * TwintElement
- */
-
 class TwintElement extends RedirectElement {
     public static type = TxVariants.twint;
 

@@ -1,10 +1,10 @@
-import { UIElementProps } from '../types';
-import { BrowserInfo } from '../../types';
-import { ClickToPayConfiguration } from '../internal/ClickToPay/types';
+import { BrowserInfo } from '../../types/global-types';
+import { ClickToPayProps as ClickToPayProps } from '../internal/ClickToPay/types';
 import { ClickToPayCheckoutPayload } from '../internal/ClickToPay/services/types';
+import { UIElementProps } from '../internal/UIElement/types';
 
-export type ClickToPayElementProps = UIElementProps &
-    ClickToPayConfiguration & {
+export type ClickToPayConfiguration = UIElementProps &
+    ClickToPayProps & {
         /**
          * ClickToPay configuration sent by the /paymentMethods response
          */

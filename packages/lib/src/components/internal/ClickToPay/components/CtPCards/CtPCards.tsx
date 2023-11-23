@@ -14,7 +14,7 @@ import useImage from '../../../../../core/Context/useImage';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
 import isMobile from '../../../../../utils/isMobile';
 import Language from '../../../../../language';
-import { PaymentAmount } from '../../../../../types';
+import { PaymentAmount } from '../../../../../types/global-types';
 import './CtPCards.scss';
 
 type CtPCardsProps = {

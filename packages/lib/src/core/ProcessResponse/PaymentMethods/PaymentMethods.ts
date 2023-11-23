@@ -1,4 +1,4 @@
-import { PaymentMethod, PaymentMethodsResponse, StoredPaymentMethod } from '../../../types';
+import { PaymentMethod, PaymentMethodsResponse, StoredPaymentMethod } from '../../../types/global-types';
 import { checkPaymentMethodsResponse, processPaymentMethods, processStoredPaymentMethods } from './utils';
 
 class PaymentMethods {

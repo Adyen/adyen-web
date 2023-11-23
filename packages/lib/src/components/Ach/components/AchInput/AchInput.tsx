@@ -12,9 +12,9 @@ import useCoreContext from '../../../../core/Context/useCoreContext';
 import './AchInput.scss';
 import { ACHInputDataState, ACHInputProps, ACHInputStateError, ACHInputStateValid } from './types';
 import StoreDetails from '../../../internal/StoreDetails';
-import { ComponentMethodsRef } from '../../../types';
 import InputText from '../../../internal/FormFields/InputText';
 import FormInstruction from '../../../internal/FormInstruction';
+import { ComponentMethodsRef } from '../../../internal/UIElement/types';
 
 function validateHolderName(holderName, holderNameRequired = false) {
     if (holderNameRequired) {

@@ -1,6 +1,6 @@
-import { AmazonPayElementProps } from './types';
+import { AmazonPayConfiguration } from './types';
 
-const defaultProps: Partial<AmazonPayElementProps> = {
+const defaultProps: Partial<AmazonPayConfiguration> = {
     cancelUrl: typeof window !== 'undefined' ? window.location.href : '',
     configuration: {},
     environment: 'TEST',

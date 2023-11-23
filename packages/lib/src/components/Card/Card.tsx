@@ -1,9 +1,9 @@
 import { h } from 'preact';
-import { UIElement } from '../UIElement';
+import { UIElement } from '../internal/UIElement/UIElement';
 import CardInput from './components/CardInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import collectBrowserInfo from '../../utils/browserInfo';
-import { BinLookupResponse, CardElementData, CardElementProps } from './types';
+import { BinLookupResponse, CardElementData, CardConfiguration } from './types';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
 import { CbObjOnBinLookup } from '../internal/SecuredFields/lib/types';
 import { reject } from '../internal/SecuredFields/utils';
@@ -11,13 +11,12 @@ import { hasValidInstallmentsObject } from './components/CardInput/utils';
 import createClickToPayService from '../internal/ClickToPay/services/create-clicktopay-service';
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';
 import ClickToPayWrapper from './components/ClickToPayWrapper';
-import { UIElementStatus } from '../types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { TxVariants } from '../tx-variants';
+import { UIElementStatus } from '../internal/UIElement/types';
 
-export class CardElement extends UIElement<CardElementProps> {
+export class CardElement extends UIElement<CardConfiguration> {
     public static type = TxVariants.scheme;
-    public static txVariants = [TxVariants.scheme, TxVariants.card];
 
     private readonly clickToPayService: IClickToPayService | null;
 
@@ -26,7 +25,7 @@ export class CardElement extends UIElement<CardElementProps> {
      */
     private clickToPayRef = null;
 
-    constructor(props: CardElementProps) {
+    constructor(props: CardConfiguration) {
         super(props);
 
         if (props && !props._disableClickToPay) {
@@ -55,7 +54,7 @@ export class CardElement extends UIElement<CardElementProps> {
         this.clickToPayRef = ref;
     };
 
-    formatProps(props: CardElementProps) {
+    formatProps(props: CardConfiguration) {
         return {
             ...props,
             // Mismatch between hasHolderName & holderNameRequired which can mean card can never be valid
@@ -65,7 +64,8 @@ export class CardElement extends UIElement<CardElementProps> {
             // billingAddressRequired only available for non-stored cards
             billingAddressRequired: props.storedPaymentMethodId ? false : props.billingAddressRequired,
             // ...(props.brands && !props.groupTypes && { groupTypes: props.brands }),
-            type: props.type === 'scheme' ? 'card' : props.type,
+            /** props.brand will be specified in the case of a StoredCard or a Bancontact component, for a regular Card we default it to 'card' */
+            brand: props.brand ?? TxVariants.card,
             countryCode: props.countryCode ? props.countryCode.toLowerCase() : null,
             // Required for transition period (until configuration object becomes the norm)
             // - if merchant has defined value directly in props, use this instead
@@ -97,11 +97,12 @@ export class CardElement extends UIElement<CardElementProps> {
      */
     formatData(): CardElementData {
         /**
-         * this.props.brand is never set for the generic card only for a 'dedicated' single-branded card e.g. bcmc
-         * this.state.selectedBrandValue will be set when /binLookup detects a single brand &/or when /binLookup detects a dual-branded card and
-         *  the shopper makes a brand selection
+         *  this.state.selectedBrandValue will be set when:
+         *  - /binLookup detects a single brand,
+         *  - when /binLookup detects a dual-branded card and the shopper makes a brand selection
+         *  - or, in the case of a storedCard
          */
-        const cardBrand = this.state.selectedBrandValue || this.props.brand;
+        const cardBrand = this.state.selectedBrandValue;
         const includeStorePaymentMethod = this.props.enableStoreDetails && typeof this.state.storePaymentMethod !== 'undefined';
 
         return {
@@ -165,7 +166,7 @@ export class CardElement extends UIElement<CardElementProps> {
     }
 
     get icon() {
-        return this.props.icon ?? this.resources.getImage()(this.brand);
+        return this.props.icon ?? this.resources.getImage()(this.props.brand);
     }
 
     get brands(): { icon: any; name: string }[] {
@@ -178,10 +179,6 @@ export class CardElement extends UIElement<CardElementProps> {
         }
 
         return [];
-    }
-
-    get brand(): string {
-        return this.props.brand || this.props.type;
     }
 
     get displayName(): string {
@@ -217,7 +214,7 @@ export class CardElement extends UIElement<CardElementProps> {
                 payButton={this.payButton}
                 onBrand={this.onBrand}
                 onBinValue={this.onBinValue}
-                brand={this.brand}
+                brand={this.props.brand}
                 brandsIcons={this.brands}
                 isPayButtonPrimaryVariant={isCardPrimaryInput}
                 resources={this.resources}

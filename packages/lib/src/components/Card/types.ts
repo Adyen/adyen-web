@@ -1,5 +1,4 @@
-import { UIElementProps } from '../types';
-import { AddressData, BrowserInfo } from '../../types';
+import { AddressData, BrowserInfo } from '../../types/global-types';
 import {
     CbObjOnBinValue,
     CbObjOnBrand,
@@ -12,12 +11,13 @@ import {
     StylesObject
 } from '../internal/SecuredFields/lib/types';
 import { CVCPolicyType, DatePolicyType } from '../internal/SecuredFields/lib/types';
-import { ClickToPayConfiguration } from '../internal/ClickToPay/types';
+import { ClickToPayProps } from '../internal/ClickToPay/types';
 import { InstallmentOptions } from './components/CardInput/components/types';
 import { DisclaimerMsgObject } from '../internal/DisclaimerMessage/DisclaimerMessage';
 import { Placeholders } from './components/CardInput/types';
+import { UIElementProps } from '../internal/UIElement/types';
 
-export interface CardElementProps extends UIElementProps {
+export interface CardConfiguration extends UIElementProps {
     /**
      * Only set for a stored card,
      * brand is never set for a generic card component OR a single-branded card
@@ -32,7 +32,7 @@ export interface CardElementProps extends UIElementProps {
     /**
      * Configuration for Click to Pay
      */
-    clickToPayConfiguration?: ClickToPayConfiguration;
+    clickToPayConfiguration?: ClickToPayProps;
 
     /**
      * Disable Click to Pay for testing purposes
@@ -100,7 +100,7 @@ export interface CardElementProps extends UIElementProps {
     holderNameRequired?: boolean;
 
     /** An object sent in the /paymentMethods response */
-    configuration?: CardConfiguration;
+    configuration?: CardBackendConfiguration;
 
     /** Configure placeholder text for holderName, cardNumber, expirationDate, securityCode and password. */
     placeholders?: Placeholders;
@@ -273,7 +273,7 @@ export type SocialSecurityMode = 'show' | 'hide' | 'auto';
 // TODO clarify exact properties that can be in this object
 //  - should only be ones that can be sent in the configuration object in the /paymentMethods response
 /** If the merchant wishes to set any of these properties in their local config they should do so via a "configuration" object */
-export interface CardConfiguration {
+export interface CardBackendConfiguration {
     // Click to Pay
     visaSrciDpaId?: string;
     visaSrcInitiatorId?: string;
