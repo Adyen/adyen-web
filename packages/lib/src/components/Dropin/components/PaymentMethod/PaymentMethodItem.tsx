@@ -57,10 +57,12 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
             return null;
         }
 
+        const isCard = paymentMethod.props.type === 'card' || paymentMethod.props.type === 'scheme';
+
         const paymentMethodClassnames = classNames({
             'adyen-checkout__payment-method': true,
             [`adyen-checkout__payment-method--${paymentMethod.props.type}`]: true,
-            [`adyen-checkout__payment-method--${paymentMethod.props.fundingSource ?? 'credit'}`]: true,
+            ...(isCard && { [`adyen-checkout__payment-method--${paymentMethod.props.fundingSource ?? 'credit'}`]: true }),
             'adyen-checkout__payment-method--selected': isSelected,
             'adyen-checkout__payment-method--loading': isLoading,
             'adyen-checkout__payment-method--disabling': isDisablingPaymentMethod,

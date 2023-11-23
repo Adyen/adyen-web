@@ -7,6 +7,7 @@ import LANG from '../../../../lib/src/language/locales/en-US.json';
 const DATE_LABEL = LANG['creditCard.expiryDate.label'];
 const CVC_LABEL = LANG['creditCard.securityCode.label'];
 const CVC_LABEL_OPTIONAL = LANG['creditCard.securityCode.label.optional'];
+
 const OPTIONAL = LANG['field.title.optional'];
 
 const PAN_ERROR = LANG['error.va.sf-cc-num.02'];

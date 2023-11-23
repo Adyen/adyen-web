@@ -1,4 +1,4 @@
-import { test as base, expect } from '@playwright/test';
+import { test as base, expect, Page } from '@playwright/test';
 import { CardPage } from './card.page';
 import { CardAvsPage } from './card.avs.page';
 
@@ -88,7 +88,7 @@ const test = base.extend<Fixture>({
     }
 });
 
-const useCardPage = async (page, use, PageType = CardPage) => {
+const useCardPage = async (page: Page, use: any, PageType = CardPage) => {
     const cardPage = new PageType(page);
     await cardPage.goto();
     await use(cardPage);

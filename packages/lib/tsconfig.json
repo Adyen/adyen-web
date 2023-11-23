@@ -38,5 +38,5 @@
         "./src/**/*",
         "./src/types/custom.d.ts"
     ],
-    "exclude": ["node_modules", "./dist/**", "**/*.test.*", "**/*.scss"]
+    "exclude": ["node_modules", "./dist/**", "**/*.test.*", "**/*.spec.*", "**/*.scss"]
 }

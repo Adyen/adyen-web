@@ -36,8 +36,15 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
         }
     };
 
+    /**
+     * Called when the /paymentDetails endpoint returns PartiallyAuthorised. The /paymentDetails happens once the /status
+     * returns PartiallyAuthorised
+     *
+     * @param order
+     */
     protected handleOrder = ({ order }: PaymentResponseData) => {
         this.updateParent({ order });
+
         if (this.props.session && this.props.onOrderCreated) {
             return this.props.onOrderCreated(order);
         }

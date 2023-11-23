@@ -64,7 +64,7 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
                     name={generateFieldName('companyName')}
                 >
                     <InputText
-                        name={generateFieldName('companyName')}
+                        name={generateFieldName('name')}
                         value={data.name}
                         classNameModifiers={['name']}
                         onInput={eventHandler('input')}
