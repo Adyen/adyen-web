@@ -91,14 +91,19 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
         const showBrands = !paymentMethod.props.oneClick && paymentMethod.brands && paymentMethod.brands.length > 0;
 
         return (
-            <li key={paymentMethod._id} className={paymentMethodClassnames} onClick={this.handleOnListItemClick}>
+            <li
+                role="radio"
+                aria-checked={isSelected}
+                key={paymentMethod._id}
+                className={paymentMethodClassnames}
+                onClick={this.handleOnListItemClick}
+            >
                 <div className="adyen-checkout__payment-method__header">
                     <button
                         className="adyen-checkout__payment-method__header__title"
                         id={buttonId}
-                        role="radio"
-                        aria-checked={isSelected}
-                        type="button"
+                        aria-expanded={isSelected}
+                        aria-controls={containerId}
                     >
                         <PaymentMethodIcon
                             // Only add alt attribute to storedPaymentMethods (to avoid SR reading the PM name twice)
