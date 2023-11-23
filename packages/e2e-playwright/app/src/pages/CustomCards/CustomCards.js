@@ -20,10 +20,10 @@ const initCheckout = async () => {
         ...window.mainConfiguration
     });
 
-    window.securedFields = checkout
+    window.customCard = checkout
         .create('securedfields', {
             type: 'card',
-            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire'],
+            brands: ['mc', 'visa', 'synchrony_plcc'],
             onConfigSuccess,
             onBrand,
             onFocus: setFocus,
@@ -33,14 +33,30 @@ const initCheckout = async () => {
         })
         .mount('.secured-fields');
 
-    createPayButton('.secured-fields', window.securedFields, 'securedfields');
+    createPayButton('.secured-fields', window.customCard, 'customCardRegular');
+
+    window.customCardSeparate = checkout
+        .create('securedfields', {
+            type: 'card',
+            brands: ['mc', 'visa', 'synchrony_plcc'],
+            onConfigSuccess,
+            onBrand,
+            onFocus: setFocus,
+            onBinLookup,
+            onChange,
+            ...window.cardConfig
+        })
+        .mount('.secured-fields-2');
+
+    createPayButton('.secured-fields-2', window.customCardSeparate, 'customCardSeparate');
 
     function createPayButton(parent, component, attribute) {
         const payBtn = document.createElement('button');
 
         payBtn.textContent = 'Pay';
-        payBtn.name = 'pay';
-        payBtn.classList.add('adyen-checkout__button', 'js-components-button--one-click', `js-${attribute}`);
+        payBtn.name = `pay-${attribute}`;
+        payBtn.setAttribute('data-testid', `pay-${attribute}`);
+        payBtn.classList.add('adyen-checkout__button', 'js-components-button--one-click', `js-pay-${attribute}`);
 
         payBtn.addEventListener('click', e => {
             e.preventDefault();
