@@ -100,14 +100,6 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
                         aria-checked={isSelected}
                         type="button"
                     >
-                        <span
-                            className={classNames({
-                                'adyen-checkout__payment-method__radio': true,
-                                'adyen-checkout__payment-method__radio--selected': isSelected
-                            })}
-                            aria-hidden="true"
-                        />
-
                         <PaymentMethodIcon
                             // Only add alt attribute to storedPaymentMethods (to avoid SR reading the PM name twice)
                             {...(paymentMethod.props.oneClick && { altDescription: paymentMethod.props.name })}
