@@ -38,7 +38,6 @@ type CustomCardProps = Omit<
 
 export class CustomCard extends UIElement<CustomCardProps> {
     public static type = TxVariants.customCard;
-    public static txVariants = [TxVariants.customCard, TxVariants.card];
 
     public static analyticsType = 'custom-scheme';
 
@@ -50,7 +49,8 @@ export class CustomCard extends UIElement<CustomCardProps> {
     formatProps(props: CustomCardProps) {
         return {
             ...props,
-            type: props.type === 'scheme' || props.type === 'securedfields' ? 'card' : props.type
+            type: TxVariants.customCard,
+            brand: TxVariants.card
         };
     }
 
@@ -58,7 +58,7 @@ export class CustomCard extends UIElement<CustomCardProps> {
      * Formats the component data output
      */
     formatData() {
-        const sfBrand = this.state.selectedBrandValue || this.props.brand;
+        const sfBrand = this.state.selectedBrandValue;
         return {
             paymentMethod: {
                 type: 'scheme',
@@ -137,6 +137,7 @@ export class CustomCard extends UIElement<CustomCardProps> {
                     onBinValue={this.onBinValue}
                     implementationType={'custom'}
                     resources={this.resources}
+                    brand={this.props.brand}
                 />
             </CoreProvider>
         );
