@@ -1,6 +1,5 @@
 import { ComponentChild, render } from 'preact';
 import getProp from '../../../utils/getProp';
-import EventEmitter from '../../EventEmitter';
 import uuid from '../../../utils/uuid';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { ICore } from '../../../core/types';
@@ -13,7 +12,6 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
     public props: P;
     public state: any = {};
     public _component;
-    public eventEmitter = new EventEmitter();
 
     protected _node: HTMLElement = null;
     protected readonly core: ICore;

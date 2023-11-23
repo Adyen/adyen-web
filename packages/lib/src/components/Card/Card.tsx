@@ -36,7 +36,6 @@ export class CardElement extends UIElement<CardConfiguration> {
 
     protected static defaultProps = {
         onBinLookup: () => {},
-        showBrandsUnderCardNumber: true,
         showFormInstruction: true,
         _disableClickToPay: false
     };
@@ -134,8 +133,7 @@ export class CardElement extends UIElement<CardConfiguration> {
     }
 
     public onBrand = event => {
-        this.eventEmitter.emit('brand', { ...event, brand: event.brand === 'card' ? null : event.brand });
-        if (this.props.onBrand) this.props.onBrand(event);
+        this.props.onBrand?.(event);
     };
 
     processBinLookupResponse(binLookupResponse: BinLookupResponse, isReset = false) {

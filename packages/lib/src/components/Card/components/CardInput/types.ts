@@ -119,7 +119,6 @@ export interface CardInputProps {
     positionHolderNameOnTop?: boolean;
     resources: Resources;
     setComponentRef?: (ref) => void;
-    showBrandsUnderCardNumber: boolean;
     showBrandIcon?: boolean;
     showFormInstruction?: boolean;
     showInstallmentAmounts?: boolean;

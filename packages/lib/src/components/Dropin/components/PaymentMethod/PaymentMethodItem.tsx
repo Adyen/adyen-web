@@ -33,21 +33,8 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
     };
 
     public state = {
-        showDisableStoredPaymentMethodConfirmation: false,
-        activeBrand: null
+        showDisableStoredPaymentMethodConfirmation: false
     };
-
-    componentDidMount() {
-        this.props.paymentMethod.eventEmitter.on('brand', e => {
-            this.setState({ activeBrand: e.brand });
-        });
-    }
-
-    componentWillUnmount() {
-        this.props.paymentMethod.eventEmitter.off('brand', e => {
-            this.setState({ activeBrand: e.brand });
-        });
-    }
 
     public toggleDisableConfirmation = () => {
         this.setState({ showDisableStoredPaymentMethodConfirmation: !this.state.showDisableStoredPaymentMethodConfirmation });
@@ -63,7 +50,7 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
         onSelect(paymentMethod);
     };
 
-    render({ paymentMethod, isSelected, isDisablingPaymentMethod, isLoaded, isLoading, standalone }, { activeBrand }) {
+    render({ paymentMethod, isSelected, isDisablingPaymentMethod, isLoaded, isLoading, standalone }) {
         const { i18n } = useCoreContext();
 
         if (!paymentMethod) {
@@ -136,11 +123,9 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
 
                     {showBrands && (
                         <PaymentMethodBrands
-                            activeBrand={activeBrand}
                             brands={paymentMethod.brands}
                             excludedUIBrands={BRAND_ICON_UI_EXCLUSION_LIST}
                             isPaymentMethodSelected={isSelected}
-                            isCompactView={paymentMethod.props.showBrandsUnderCardNumber}
                         />
                     )}
                 </div>
