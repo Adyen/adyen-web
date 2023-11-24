@@ -1,4 +1,4 @@
-import { TxVariants } from '../tx-variants.ts';
+import { TxVariants } from '../tx-variants';
 
 /**
  * Maps each component with the string name of its Component element..
