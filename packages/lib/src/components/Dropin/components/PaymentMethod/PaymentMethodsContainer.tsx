@@ -1,10 +1,10 @@
 import { h } from 'preact';
-import UIElement from '../../../UIElement';
 import PaymentMethodItem from './PaymentMethodItem';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import { useMemo } from 'preact/hooks';
 import uuid from '../../../../utils/uuid';
 import classNames from 'classnames';
+import UIElement from '../../../internal/UIElement';
 
 export interface PaymentMethodsContainerProps {
     label: string;
