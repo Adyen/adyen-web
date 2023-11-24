@@ -1,5 +1,5 @@
 import actionTypes from './actionTypes';
-import { PaymentAction } from '../../../types';
+import { PaymentAction } from '../../../types/global-types';
 import type { IRegistry } from '../../core.registry';
 import { ICore } from '../../types';
 

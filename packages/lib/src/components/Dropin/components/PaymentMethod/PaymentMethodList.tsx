@@ -1,7 +1,7 @@
 import { Fragment, h } from 'preact';
 import getProp from '../../../../utils/getProp';
-import UIElement from '../../../UIElement';
-import { Order, OrderStatus } from '../../../../types';
+import UIElement from '../../../internal/UIElement/UIElement';
+import { Order, OrderStatus } from '../../../../types/global-types';
 import OrderPaymentMethods from './OrderPaymentMethods';
 import InstantPaymentMethods from './InstantPaymentMethods';
 import useCoreContext from '../../../../core/Context/useCoreContext';

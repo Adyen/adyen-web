@@ -1,6 +1,5 @@
 import Language from '../../../../language/Language';
-import { BinLookupResponse, BrandConfiguration, CardBrandsConfiguration, CardConfiguration, DualBrandSelectElement } from '../../types';
-import { AddressData, PaymentAmount } from '../../../../types';
+import { BinLookupResponse, BrandConfiguration, CardBrandsConfiguration, CardBackendConfiguration, DualBrandSelectElement } from '../../types';
 import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
 import { CVCPolicyType, DatePolicyType } from '../../../internal/SecuredFields/lib/types';
@@ -11,9 +10,10 @@ import { Resources } from '../../../../core/Context/Resources';
 import { SRPanel } from '../../../../core/Errors/SRPanel';
 import Analytics from '../../../../core/Analytics';
 import RiskElement from '../../../../core/RiskModule';
-import { ComponentMethodsRef } from '../../../types';
 import { DisclaimerMsgObject } from '../../../internal/DisclaimerMessage/DisclaimerMessage';
 import { OnAddressLookupType } from '../../../internal/Address/components/AddressSearch';
+import { ComponentMethodsRef } from '../../../internal/UIElement/types';
+import { AddressData, PaymentAmount } from '../../../../types/global-types';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -63,7 +63,6 @@ export type Placeholders = Partial<Record<PlaceholderKeys, string>>;
 export interface CardInputProps {
     amount?: PaymentAmount;
     isPayButtonPrimaryVariant?: boolean;
-    allowedDOMAccess?: boolean;
     autoFocus?: boolean;
     billingAddressAllowedCountries?: string[];
     billingAddressRequired?: boolean;
@@ -74,7 +73,7 @@ export interface CardInputProps {
     brandsConfiguration?: CardBrandsConfiguration;
     brandsIcons: Array<BrandConfiguration>;
     clientKey: string;
-    configuration?: CardConfiguration;
+    configuration?: CardBackendConfiguration;
     countryCode?: string;
     cvcPolicy?: CVCPolicyType;
     data?: CardInputDataState;
@@ -120,7 +119,6 @@ export interface CardInputProps {
     positionHolderNameOnTop?: boolean;
     resources: Resources;
     setComponentRef?: (ref) => void;
-    showBrandsUnderCardNumber: boolean;
     showBrandIcon?: boolean;
     showFormInstruction?: boolean;
     showInstallmentAmounts?: boolean;

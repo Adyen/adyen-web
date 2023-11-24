@@ -1,5 +1,5 @@
 import { Fragment, h } from 'preact';
-import UIElement from '../../../UIElement';
+import UIElement from '../../../internal/UIElement/UIElement';
 
 interface InstantPaymentMethodsProps {
     paymentMethods: UIElement[];

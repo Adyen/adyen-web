@@ -9,7 +9,6 @@ const paymentMethod = {
     props: {
         type: 'mytype'
     },
-    eventEmitter: { on: jest.fn(), off: jest.fn() },
     render: jest.fn()
 };
 

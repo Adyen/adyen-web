@@ -1,18 +1,16 @@
 import { h } from 'preact';
-import BaseElement from './BaseElement';
-import { PaymentAction } from '../types';
-import { ComponentMethodsRef, PaymentResponse } from './types';
-import PayButton from './internal/PayButton';
-import { IUIElement, PayButtonFunctionProps, RawPaymentResponse, UIElementProps } from './types';
+import BaseElement from '../BaseElement/BaseElement';
+import PayButton from '../PayButton';
 import { getSanitizedResponse, resolveFinalResult } from './utils';
-import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
-import { UIElementStatus } from './types';
-import { hasOwnProperty } from '../utils/hasOwnProperty';
-import DropinElement from './Dropin';
-import { CoreOptions, ICore } from '../core/types';
-import { Resources } from '../core/Context/Resources';
-import { NewableComponent } from '../core/core.registry';
+import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
+import { hasOwnProperty } from '../../../utils/hasOwnProperty';
+import DropinElement from '../../Dropin';
+import { CoreConfiguration, ICore } from '../../../core/types';
+import { Resources } from '../../../core/Context/Resources';
+import { NewableComponent } from '../../../core/core.registry';
 import './UIElement.scss';
+import { ComponentMethodsRef, IUIElement, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
+import { PaymentAction, PaymentResponseData, RawPaymentResponse } from '../../../types/global-types';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
@@ -170,6 +168,12 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         return this;
     }
 
+    /**
+     * Submit the payment using sessions flow
+     *
+     * @param data
+     * @private
+     */
     private submitPayment(data): Promise<void> {
         return this.core.session
             .submitPayment(data)
@@ -229,13 +233,13 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         return null;
     }
 
-    protected handleOrder = (response: PaymentResponse): void => {
+    protected handleOrder = (response: PaymentResponseData): void => {
         this.updateParent({ order: response.order });
         // in case we receive an order in any other component then a GiftCard trigger handleFinalResult
         if (this.props.onPaymentCompleted) this.props.onPaymentCompleted(response, this.elementRef);
     };
 
-    protected handleFinalResult = (result: PaymentResponse) => {
+    protected handleFinalResult = (result: PaymentResponseData) => {
         if (this.props.setStatusAutomatically) {
             const [status, statusProps] = resolveFinalResult(result);
             if (status) this.setElementStatus(status, statusProps);
@@ -269,7 +273,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * This function exist to make safe access to the protect _parentInstance
      * @param options - CoreOptions
      */
-    public updateParent(options: CoreOptions = {}): Promise<ICore> {
+    public updateParent(options: CoreConfiguration = {}): Promise<ICore> {
         return this.elementRef.core.update(options);
     }
 

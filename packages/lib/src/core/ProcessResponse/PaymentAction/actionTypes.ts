@@ -1,4 +1,4 @@
-import { PaymentAction } from '../../../types';
+import { PaymentAction } from '../../../types/global-types';
 import { get3DS2FlowProps } from '../../../components/ThreeDS2/components/utils';
 import uuid from '../../../utils/uuid';
 import type { IRegistry } from '../../core.registry';

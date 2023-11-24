@@ -1,5 +1,5 @@
 import { httpPost } from '../http';
-import { PaymentAmount } from '../../../types';
+import { PaymentAmount } from '../../../types/global-types';
 
 type LogTelemetryConfig = {
     loadingContext: string;

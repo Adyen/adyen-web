@@ -8,7 +8,7 @@ class CustomCardPage {
     readonly payButtonRegular: Locator;
     readonly payButtonSeparate: Locator;
 
-    constructor(page: Page, selector?) {
+    constructor(page: Page, selector?: string) {
         this.page = page;
         this.card = new CustomCard(page, selector);
         this.payButtonRegular = page.getByTestId('pay-customCardRegular');

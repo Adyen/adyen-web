@@ -1,12 +1,12 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import OxxoVoucherResult from './components/OxxoVoucherResult';
 import CoreProvider from '../../core/Context/CoreProvider';
 import { OxxoElementData } from './types';
 import { TxVariants } from '../tx-variants';
-import { VoucherActionElement } from '../types';
+import { VoucherConfiguration } from '../internal/Voucher/types';
 
-export class OxxoElement extends UIElement<VoucherActionElement> {
+export class OxxoElement extends UIElement<VoucherConfiguration> {
     public static type = TxVariants.oxxo;
 
     protected static defaultProps = {

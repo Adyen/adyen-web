@@ -4,7 +4,7 @@ import Status from './status';
 import getOrderStatus from '../../../core/Services/order-status';
 import { DropinComponentProps, DropinComponentState, DropinStatusProps, onOrderCancelData } from '../types';
 import './DropinComponent.scss';
-import { UIElementStatus } from '../../types';
+import { UIElementStatus } from '../../internal/UIElement/types';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {

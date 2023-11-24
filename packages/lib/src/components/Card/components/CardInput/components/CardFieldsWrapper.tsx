@@ -61,7 +61,6 @@ export const CardFieldsWrapper = ({
     positionHolderNameOnTop,
     // For CardFields > CardNumber
     showBrandIcon,
-    showBrandsUnderCardNumber,
     showContextualElement,
     //
     iOSFocusedField,
@@ -86,7 +85,6 @@ export const CardFieldsWrapper = ({
 
             <CardFields
                 showBrandIcon={showBrandIcon}
-                showBrandsUnderCardNumber={showBrandsUnderCardNumber}
                 showContextualElement={showContextualElement}
                 brand={sfpState.brand}
                 brandsIcons={brandsIcons}

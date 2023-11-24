@@ -2,8 +2,7 @@ import { ComponentChildren, h } from 'preact';
 import PaymentMethodList from './PaymentMethodList';
 import { render, screen, within } from '@testing-library/preact';
 import { mock } from 'jest-mock-extended';
-import UIElement from '../../../UIElement';
-import EventEmitter from '../../../EventEmitter';
+import UIElement from '../../../internal/UIElement/UIElement';
 import userEvent from '@testing-library/user-event';
 import Giftcard from '../../../Giftcard';
 import { Order, OrderStatus } from '../../../../types';
@@ -18,7 +17,6 @@ function createInstantPaymentMethods() {
             },
             _id: 'scheme-123456',
             displayName: 'Google Pay',
-            eventEmitter: mock<EventEmitter>(),
             render: () => <button data-testid="instant-googlepay">Pay with Google Pay</button>
         }),
         mock<UIElement>({
@@ -28,7 +26,6 @@ function createInstantPaymentMethods() {
             },
             _id: 'scheme-123456',
             displayName: 'Apple Pay',
-            eventEmitter: mock<EventEmitter>(),
             render: () => <button data-testid="instant-applepay">Pay with Apple Pay</button>
         })
     ];
@@ -42,8 +39,7 @@ function createPaymentMethodsMock() {
                 type: 'scheme'
             },
             _id: 'scheme-123456',
-            displayName: 'Card',
-            eventEmitter: mock<EventEmitter>()
+            displayName: 'Card'
         }),
         mock<UIElement>({
             props: {
@@ -51,8 +47,7 @@ function createPaymentMethodsMock() {
                 type: 'wechat'
             },
             _id: 'google-pay-123456',
-            displayName: 'WeChat',
-            eventEmitter: mock<EventEmitter>()
+            displayName: 'WeChat'
         }),
         mock<UIElement>({
             props: {
@@ -60,8 +55,7 @@ function createPaymentMethodsMock() {
                 type: 'pix'
             },
             _id: 'apple-pay-123456',
-            displayName: 'Pix',
-            eventEmitter: mock<EventEmitter>()
+            displayName: 'Pix'
         })
     ];
 }

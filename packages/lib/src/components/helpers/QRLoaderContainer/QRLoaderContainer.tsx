@@ -1,33 +1,12 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
-import { UIElementProps } from '../types';
-import QRLoader from '../internal/QRLoader';
-import CoreProvider from '../../core/Context/CoreProvider';
-import RedirectButton from '../internal/RedirectButton';
-import SRPanelProvider from '../../core/Errors/SRPanelProvider';
+import UIElement from '../../internal/UIElement/UIElement';
+import QRLoader from '../../internal/QRLoader';
+import CoreProvider from '../../../core/Context/CoreProvider';
+import RedirectButton from '../../internal/RedirectButton';
+import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
+import { QRLoaderConfiguration } from './types';
 
-export interface QRLoaderContainerProps extends UIElementProps {
-    /**
-     * Number of miliseconds that the component will wait in between status calls
-     */
-    delay?: number;
-
-    /**
-     * Number of minutes that the component should keep on loading
-     */
-    countdownTime?: number;
-
-    type?: string;
-    brandLogo?: string;
-    buttonLabel?: string;
-    qrCodeImage?: string;
-    paymentData?: string;
-    introduction?: string;
-    instructions?: string;
-    copyBtn?: boolean;
-}
-
-class QRLoaderContainer<T extends QRLoaderContainerProps = QRLoaderContainerProps> extends UIElement<T> {
+class QRLoaderContainer<T extends QRLoaderConfiguration = QRLoaderConfiguration> extends UIElement<T> {
     // Using the generic here allow to fully extend the QRLoaderContainer (including its props)
     protected static defaultProps = {
         qrCodeImage: '',

@@ -1,7 +1,7 @@
 import UIElement from './UIElement';
-import { ICore } from '../core/types';
+import { ICore } from '../../../core/types';
 import { mockDeep, mockReset } from 'jest-mock-extended';
-import { AdyenCheckout, ThreeDS2Challenge, ThreeDS2DeviceFingerprint } from '../index';
+import { AdyenCheckout, ThreeDS2Challenge, ThreeDS2DeviceFingerprint } from '../../../index';
 import { UIElementProps } from './types';
 
 interface MyElementProps extends UIElementProps {

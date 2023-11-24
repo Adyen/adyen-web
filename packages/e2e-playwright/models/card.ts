@@ -59,6 +59,8 @@ class Card {
 
         this.brandingIcon = this.rootElement.locator('.adyen-checkout__card__cardNumber__brandIcon');
 
+        this.brandingIcon = this.rootElement.locator('.adyen-checkout__card__cardNumber__brandIcon');
+
         /**
          * Card Number elements, in iframe
          */
@@ -134,7 +136,7 @@ class Card {
         await this.cvcInput.type(cvc, { delay: USER_TYPE_DELAY });
     }
 
-    async selectListItem(who) {
+    async selectListItem(who: string) {
         const listItem = this.selectorList.locator(`#listItem-${who}`);
         return listItem;
     }
