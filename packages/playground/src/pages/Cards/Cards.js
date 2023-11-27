@@ -1,7 +1,7 @@
 import AdyenCheckout from '@adyen/adyen-web';
 import '@adyen/adyen-web/dist/es/adyen.css';
 import { getPaymentMethods } from '../../services';
-import { handleSubmit, handleAdditionalDetails, handleError, handleChange } from '../../handlers';
+import { handleSubmit, handleAdditionalDetails, handleError } from '../../handlers';
 import { amount, shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
@@ -12,6 +12,7 @@ const showComps = {
     clickToPay: true,
     storedCard: true,
     card: true,
+    cardWithInstallments: true,
     cardInReact: true,
     bcmcCard: true,
     avsCard: true,
@@ -36,7 +37,6 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
         onError: handleError,
-        onChange: handleChange,
         paymentMethodsConfiguration: {
             card: {
                 hasHolderName: true,
@@ -61,10 +61,30 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         }
     }
 
-    // Credit card with installments
     if (showComps.card) {
         window.card = checkout
             .create('card', {
+                challengeWindowSize: '01',
+                _disableClickToPay: true,
+                // hasHolderName: true,
+                // holderNameRequired: true,
+                // maskSecurityCode: true,
+                // enableStoreDetails: true
+                onError: obj => {
+                    console.log('### Cards::onError:: obj=', obj);
+                },
+                onBinLookup: obj => {
+                    console.log('### Cards::onBinLookup:: obj=', obj);
+                }
+            })
+            .mount('.card-field');
+    }
+
+    // Credit card with installments
+    if (showComps.cardWithInstallments) {
+        window.cardWithInstallments = checkout
+            .create('card', {
+                _disableClickToPay: true,
                 brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
                 installmentOptions: {
                     mc: {
@@ -79,17 +99,9 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 },
                 disclaimerMessage,
                 showBrandsUnderCardNumber: true,
-                showInstallmentAmounts: true,
-                onError: obj => {
-                    console.log('### Cards::onError:: obj=', obj);
-                },
-                onBinLookup: obj => {
-                    console.log('### Cards::onBinLookup:: obj=', obj);
-                },
-                billingAddressRequired: true,
-                onAddressLookup: searchFunctionExample
+                showInstallmentAmounts: true
             })
-            .mount('.card-field');
+            .mount('.card-field-installments');
     }
 
     // Card mounted in a React app
