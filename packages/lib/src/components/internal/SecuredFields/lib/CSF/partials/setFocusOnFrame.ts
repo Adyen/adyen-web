@@ -1,6 +1,8 @@
 import postMessageToIframe from '../utils/iframes/postMessageToIframe';
 import { hasOwnProperty } from '../../../../../../utils/hasOwnProperty';
 import getIframeContentWin from '../utils/iframes/getIframeContentWin';
+import { SFFieldType } from '../../types';
+import { CSFThisObject } from '../types';
 
 /**
  * @param csfState - comes from initial, partial, implementation
@@ -9,7 +11,7 @@ import getIframeContentWin from '../utils/iframes/getIframeContentWin';
  * @param pFieldType -
  * @param doLog -
  */
-export function setFocusOnFrame({ csfState, csfConfig }, pFieldType: string, doLog?: boolean): void {
+export function setFocusOnFrame({ csfState, csfConfig }: CSFThisObject, pFieldType: SFFieldType, doLog?: boolean): void {
     // Check destroySecuredFields hasn't been called (thus clearing the state's securedFields object)
     if (!hasOwnProperty(csfState.securedFields, pFieldType)) return;
 

@@ -9,6 +9,16 @@ declare global {
     }
 }
 
+export type SFFieldType =
+    | 'encryptedCardNumber'
+    | 'encryptedExpiryDate'
+    | 'encryptedExpiryMonth'
+    | 'encryptedExpiryYear'
+    | 'encryptedSecurityCode'
+    | 'encryptedPassword'
+    | 'encryptedBankAccountNumber'
+    | 'encryptedBankLocationId';
+
 export interface SecuredFields {
     encryptedCardNumber?: SecuredField;
     encryptedExpiryDate?: SecuredField;

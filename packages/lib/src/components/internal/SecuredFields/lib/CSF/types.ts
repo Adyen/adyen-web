@@ -104,8 +104,8 @@ export interface CSFStateObject {
 }
 
 export interface CSFThisObject {
-    csfState: CSFStateObject;
-    csfConfig: CSFConfigObject;
-    csfProps: CSFSetupObject;
-    csfCallbacks: CSFCallbacksConfig;
+    csfState?: CSFStateObject;
+    csfConfig?: CSFConfigObject;
+    csfProps?: CSFSetupObject;
+    csfCallbacks?: CSFCallbacksConfig;
 }
