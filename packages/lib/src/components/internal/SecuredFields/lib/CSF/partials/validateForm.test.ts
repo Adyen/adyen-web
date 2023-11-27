@@ -6,7 +6,7 @@ const securedFieldsObj = {
     encryptedSecurityCode: { isValid: true }
 };
 
-const csfState = { allValid: false, securedFields: securedFieldsObj };
+const csfState = { allValid: true, securedFields: securedFieldsObj };
 const csfProps = {};
 const csfConfig = {};
 const csfCallbacks = { onAllValid: null };
@@ -18,37 +18,57 @@ const CSFObj = {
     csfCallbacks
 };
 
-csfCallbacks.onAllValid = jest.fn(() => {
-    return true;
+let formIsValid = true;
+
+csfCallbacks.onAllValid = jest.fn(({ allValid }) => {
+    formIsValid = allValid;
 });
 
+const callValidateForm = () => {
+    // @ts-ignore - test is faking setup object
+    validateForm(CSFObj);
+};
+
 beforeEach(() => {
-    // console.log = jest.fn(() => {});
-    // csfCallbacks.onAllValid = jest.fn(() => {
-    //     return true;
-    // });
+    console.log = jest.fn(() => {});
 });
 
 describe('Testing CSFs validateForm functionality', () => {
-    test('Callback should not be called since csfState.allValid is false; and a securedField that is also not valid will not lead to a change in this state', () => {
-        // @ts-ignore - test is faking setup object
-        validateForm(CSFObj);
+    test('Callback should be called since we are seeing a change from a valid to an invalid state', () => {
+        callValidateForm();
 
-        expect(csfCallbacks.onAllValid).not.toHaveBeenCalled();
+        expect(csfCallbacks.onAllValid).toHaveBeenCalledTimes(1);
+        expect(formIsValid).toEqual(false);
     });
 
-    test('Callback should be called since the securedField is now valid and this will represent an overall state change', () => {
-        securedFieldsObj.encryptedCardNumber.isValid = true;
-        // @ts-ignore - test is faking setup object
-        validateForm(CSFObj);
+    test('Callback should not be called since there is no overall state change', () => {
+        callValidateForm();
 
+        // still only been called once
         expect(csfCallbacks.onAllValid).toHaveBeenCalledTimes(1);
     });
 
-    test('Callback should not be called since everything is still valid so there is no overall state change', () => {
-        // @ts-ignore - test is faking setup object
-        validateForm(CSFObj);
+    test('Callback should be called since everything is now valid', () => {
+        securedFieldsObj.encryptedCardNumber.isValid = true;
+
+        callValidateForm();
 
         expect(csfCallbacks.onAllValid).toHaveBeenCalledTimes(2);
+        expect(formIsValid).toEqual(true);
+    });
+
+    test('Callback called again since since it is always called when everything is valid', () => {
+        callValidateForm();
+
+        expect(csfCallbacks.onAllValid).toHaveBeenCalledTimes(3);
+    });
+
+    test('Callback called again since since we are changing from a valid to an invalid state', () => {
+        securedFieldsObj.encryptedCardNumber.isValid = false;
+
+        callValidateForm();
+
+        expect(csfCallbacks.onAllValid).toHaveBeenCalledTimes(4);
+        expect(formIsValid).toEqual(false);
     });
 });

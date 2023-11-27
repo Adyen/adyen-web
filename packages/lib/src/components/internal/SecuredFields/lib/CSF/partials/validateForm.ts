@@ -24,15 +24,10 @@ export default function validateForm({ csfState, csfProps, csfCallbacks }: CSFTh
 
     const validityHasChanged: boolean = isValid !== csfState.allValid;
 
-    console.log('\n### validateForm::isValid:: ', isValid);
-    console.log('### validateForm::validityHasChanged:: ', validityHasChanged);
-
     csfState.allValid = isValid;
 
     // Only call onAllValid callback if value has changed OR is true
     if (!isValid && !validityHasChanged) return;
-
-    console.log('### validateForm::Calling callback:: ');
 
     const callbackObj: CbObjOnAllValid = { allValid: isValid, type: csfState.type, rootNode: csfProps.rootNode as HTMLElement };
 
