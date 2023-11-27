@@ -13,25 +13,34 @@ const CSFObj = {
     csfConfig
 };
 
-describe('Analytics initialisation and event queue', () => {
+describe('Testing setFocusOnFrame fny', () => {
     const postMessageToIframeMock = jest.fn(obj => console.log('### setFocusOnFrame.test::FN call:: ', obj));
 
     beforeEach(() => {
+        console.log = jest.fn(() => {});
+
         mockedPostMessageToIframe.mockReset();
-        mockedPostMessageToIframe.mockImplementation(postMessageToIframeMock);
+        mockedPostMessageToIframe.mockImplementation(obj => postMessageToIframeMock(obj));
         postMessageToIframeMock.mockClear();
     });
 
-    test('Creates an Analytics module with defaultProps', () => {
+    test('Calling setFocusOnFrame will lead to a call to postMessageToIframe', () => {
         // @ts-ignore - test is faking setup object
         setFocusOnFrame(CSFObj, 'encryptedSecurityCode');
 
-        expect(postMessageToIframeMock).toHaveBeenCalled();
-        // expect(postMessageToIframeMock).toHaveBeenCalledWith({
-        //     txVariant: 'card',
-        //     fieldType: 'encryptedSecurityCode',
-        //     focus: true,
-        //     numKey: 654321
-        // });
+        // expect(postMessageToIframeMock).toHaveBeenCalled();
+        expect(postMessageToIframeMock).toHaveBeenCalledWith({
+            txVariant: 'card',
+            fieldType: 'encryptedSecurityCode',
+            focus: true,
+            numKey: 654321
+        });
+    });
+
+    test('Calling setFocusOnFrame will not lead to a call to postMessageToIframe since the securedFields prop has no "encryptedCardNumber" key', () => {
+        // @ts-ignore - test is faking setup object
+        setFocusOnFrame(CSFObj, 'encryptedCardNumber');
+
+        expect(postMessageToIframeMock).not.toHaveBeenCalled();
     });
 });
