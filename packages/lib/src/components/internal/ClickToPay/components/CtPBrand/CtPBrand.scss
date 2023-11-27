@@ -6,18 +6,18 @@
     }
 
     &-logo {
-        width: var(--b-spacer-090);
-        margin-right: var(--b-spacer-030);
+        width: var(--adyen-checkout-spacer-090);
+        margin-right: var(--adyen-checkout-spacer-030);
     }
 
     &-pipe {
         height: 15px;
-        margin-right: var(--b-spacer-030);
+        margin-right: var(--adyen-checkout-spacer-030);
     }
 
     &-scheme {
         object-fit: none;
-        margin-right: var(--b-spacer-030);
+        margin-right: var(--adyen-checkout-spacer-030);
 
         &-mc {
             width: 27px;

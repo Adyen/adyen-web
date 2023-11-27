@@ -4,8 +4,8 @@ $color-alert: #e22d2d;
 
 .adyen-checkout__payment-method__disable-confirmation {
     background: $color-alert;
-    font-size: index.$font-size-small;
-    color: var(--b-color-white);
+    font-size: var(--adyen-checkout-font-size-small);
+    color: var(--adyen-checkout-color-white);
     border-right: 1px solid darken($color-alert, 2%);
     border-left: 1px solid darken($color-alert, 2%);
     overflow: hidden;
@@ -17,7 +17,7 @@ $color-alert: #e22d2d;
     &.adyen-checkout__payment-method__disable-confirmation--open {
         max-height: 62px;
         opacity: 1;
-        margin-bottom: var(--b-spacer-070);
+        margin-bottom: var(--adyen-checkout-spacer-070);
     }
 }
 
@@ -25,7 +25,7 @@ $color-alert: #e22d2d;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--b-spacer-040) var(--b-spacer-070);
+    padding: var(--adyen-checkout-spacer-040) var(--adyen-checkout-spacer-070);
 }
 
 .adyen-checkout__payment-method__disable-confirmation__buttons {
@@ -33,16 +33,16 @@ $color-alert: #e22d2d;
 }
 
 .adyen-checkout__payment-method__disable-confirmation__button {
-    background: var(--b-color-label-critical);
-    border: var(--b-border-width-s) solid transparent;
-    border-radius: var(--b-border-radius-m);
-    color: var(--b-color-white);
+    background: var(--adyen-checkout-color-label-critical);
+    border: var(--adyen-checkout-border-width-s) solid transparent;
+    border-radius: var(--adyen-checkout-border-radius-m);
+    color: var(--adyen-checkout-color-white);
     cursor: pointer;
     display: block;
     height: auto;
     line-height: 14px;
-    margin: 0 0 0 var(--b-spacer-040);
-    padding: var(--b-spacer-040);
+    margin: 0 0 0 var(--adyen-checkout-spacer-040);
+    padding: var(--adyen-checkout-spacer-040);
     width: auto;
 
     &:hover,
@@ -60,7 +60,7 @@ $color-alert: #e22d2d;
 
 .adyen-checkout__payment-method__disable-confirmation__button--remove,
 .adyen-checkout__payment-method__disable-confirmation__button--remove:disabled {
-    border-color: var(--b-color-white);
+    border-color: var(--adyen-checkout-color-white);
 }
 
 .adyen-checkout__payment-method__disable-confirmation__button--cancel,

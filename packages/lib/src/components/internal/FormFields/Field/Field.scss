@@ -1,13 +1,11 @@
-@use '../../../../style/index';
-
 @mixin input-wrapper-inactive {
-    background: var(--b-color-surface-tertiary);
+    background: var(--adyen-checkout-input-wrapper-inactive-background);
     border-color: transparent;
 }
 
 .adyen-checkout__field {
     display: block;
-    margin-bottom: var(--b-spacer-070);
+    margin-bottom: var(--adyen-checkout-spacer-070);
     width: 100%;
 }
 
@@ -15,9 +13,9 @@
     position: relative;
     display: flex;
     align-items: center;
-    background: var(--b-color-background-primary);
-    border: var(--b-border-width-s) solid var(--b-color-outline-secondary);
-    border-radius: var(--b-border-radius-m);
+    background: var(--adyen-checkout-input-wrapper-background);
+    border: var(--adyen-checkout-input-wrapper-border-width) solid var(--adyen-checkout-input-wrapper-border-color);
+    border-radius: var(--adyen-checkout-input-wrapper-border-radius);
 
     & div,
     input,
@@ -35,12 +33,12 @@
     &:active:hover,
     &:focus-within,
     &:focus-within:hover {
-        box-shadow: 0 0 0 1.5px var(--b-input-field-input-box-focus-border-color);
-        border-color: transparent;
+        box-shadow: 0 0 0 0.5px var(--adyen-checkout-input-wrapper-focus-border-color);
+        border-color: var(--adyen-checkout-input-wrapper-focus-border-color);
     }
 
     &:hover {
-        border-color: var(--b-color-outline-tertiary);
+        border-color: var(--adyen-checkout-input-wrapper-hover-border-color);
     }
 }
 
@@ -52,13 +50,13 @@
 
 .adyen-checkout__field--valid:not(.adyen-checkout__field--inactive) {
     > :not(.adyen-checkout__label--focused) + .adyen-checkout__input-wrapper:not(:focus-within, :active) {
-        border-bottom-color: var(--b-color-label-success);
+        border-bottom-color: var(--adyen-checkout-color-label-success);
     }
 }
 
 .adyen-checkout__field--error {
     > :not(.adyen-checkout__label--focused) + .adyen-checkout__input-wrapper:not(:focus-within, :active) {
-        border-color: var(--b-color-label-critical);
+        border-color: var(--adyen-checkout-color-label-critical);
     }
 }
 
@@ -68,8 +66,8 @@
 }
 
 .adyen-checkout__label--focused + .adyen-checkout__input-wrapper {
-    box-shadow: 0 0 0 1.5px var(--b-input-field-input-box-focus-border-color);
-    border-color: transparent;
+    box-shadow: 0 0 0 0.5px var(--adyen-checkout-input-wrapper-focus-border-color);
+    border-color: var(--adyen-checkout-input-wrapper-focus-border-color);
 }
 
 .adyen-checkout__label--disabled + .adyen-checkout__input-wrapper {
@@ -78,12 +76,11 @@
 
 .adyen-checkout__label__text,
 .adyen-checkout__helper-text {
-    color: var(--b-color-label-primary);
     display: block;
-    font-size: index.$font-size-small;
+    font-size: var(--adyen-checkout-font-size-small);
     font-weight: normal;
     line-height: 13px;
-    padding-bottom: 5px;
+    margin-bottom: var(--adyen-checkout-input-field-label-margin-bottom);
 }
 
 .adyen-checkout__label-adornment--end {
@@ -93,10 +90,11 @@
 }
 
 .adyen-checkout__helper-text {
-    color: var(--b-color-grey-500);
+    color: var(--adyen-checkout-input-field-context-color);
 }
 
 .adyen-checkout__label__text {
+    color: var(--adyen-checkout-input-field-label-color);
     transition: color 0.1s ease-out;
     display: block;
     text-overflow: ellipsis;
@@ -105,20 +103,20 @@
 }
 
 .adyen-checkout__label__text--error {
-    color: var(--b-color-label-critical);
+    color: var(--adyen-checkout-color-label-critical);
 }
 
 .adyen-checkout__label--focused .adyen-checkout__label__text {
-    color: var(--b-color-label-primary);
+    color: var(--adyen-checkout-color-label-primary);
 }
 
 %contextual-text {
     display: flex;
     font-weight: normal;
-    margin-top: var(--b-spacer-020);
-    font-size: index.$font-size-xsmall;
+    margin-top: var(--adyen-checkout-input-field-context-margin-top);
+    font-size: var(--adyen-checkout-font-size-xsmall);
     align-items: center;
-    color: var(--b-color-label-secondary);
+    color: var(--adyen-checkout-input-field-context-color);
 }
 
 .adyen-checkout-contextual-text {
@@ -127,6 +125,6 @@
     &--error {
         @extend %contextual-text;
 
-        color: var(--b-color-label-critical);
+        color: var(--adyen-checkout-color-label-critical);
     }
 }

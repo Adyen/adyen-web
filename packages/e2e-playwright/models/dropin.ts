@@ -16,7 +16,7 @@ class Dropin {
         this.rootElement = page.locator(rootElementSelector);
         this.rootElementSelector = rootElementSelector;
 
-        this.pmList = this.rootElement.locator('.adyen-checkout__payment-methods-list');
+        this.pmList = this.rootElement.locator('.adyen-checkout__payment-methods-list').last();
     }
 
     async isComponentVisible() {

@@ -34,6 +34,15 @@ const config: StorybookConfig = {
                 'process.env.ADYEN_BUILD_ID': JSON.stringify(Version.ADYEN_BUILD_ID),
                 'process.env.__SF_ENV__': JSON.stringify(env.SF_ENV || 'build')
             },
+            resolve: {
+                alias: [
+                    {
+                        // this is required for the SCSS modules
+                        find: /^~(.*)$/,
+                        replacement: '$1'
+                    }
+                ]
+            },
             server: {
                 watch: {
                     usePolling: true
