@@ -67,6 +67,7 @@ import { TxVariants } from '../tx-variants';
 
 /**
  * Maps each component with a Component element.
+ * WARNING: NEVER EXPORT THIS VARIABLE!!! It is only for use by TypeScript, exporting it will break the tree-shaking
  */
 const componentsMap = {
     /** internal */

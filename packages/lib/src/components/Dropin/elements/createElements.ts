@@ -4,6 +4,7 @@ import { getComponentConfiguration } from './getComponentConfiguration';
 import { ICore } from '../../../core/types';
 import UIElement from '../../internal/UIElement/UIElement';
 import { PaymentMethodsConfiguration } from '../types';
+import { componentsMapToString } from '../componentsMapToString';
 
 /**
  * Returns a filtered (available) list of component Elements
@@ -30,7 +31,11 @@ const createElements = (
 
             if (!PaymentMethodElement) {
                 console.warn(
-                    `Dropin: '${paymentMethod.type}' component not found. Make sure to pass its Class to the Dropin 'paymentMethodComponents' parameter`
+                    `Dropin: You support the payment method '${
+                        paymentMethod.type
+                    }' but this component has not been configured. Make sure to import the Class  '${
+                        componentsMapToString[paymentMethod.type]
+                    }' and then pass it in the Dropin's 'paymentMethodComponents' config property if you wish to offer this payment method.`
                 );
                 return null;
             }

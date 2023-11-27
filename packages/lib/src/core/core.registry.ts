@@ -41,7 +41,6 @@ class Registry implements IRegistry {
         }
 
         if (this.supportedTxVariants.has(type)) {
-            console.warn(`CoreRegistry: The component of '${type}' is supported, but it is not registered internally.`);
             return;
         }
 
