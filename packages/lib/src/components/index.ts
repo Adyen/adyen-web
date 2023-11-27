@@ -62,6 +62,7 @@ import PromptPay from './PromptPay';
 import Duitnow from './DuitNow';
 import ANCV from './ANCV';
 import Trustly from './Trustly';
+import PayMe from './PayMe';
 
 /**
  * Maps each component with a Component element.
@@ -210,6 +211,7 @@ const componentsMap = {
     promptpay: PromptPay,
     paynow: PayNow,
     duitnow: Duitnow,
+    payme: PayMe,
     /** QRLoader */
 
     /** Await */
