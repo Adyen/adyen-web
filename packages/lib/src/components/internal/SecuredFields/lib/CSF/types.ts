@@ -1,5 +1,5 @@
 import Language from '../../../../../language/Language';
-import { BrandStorageObject } from '../types';
+import { BrandStorageObject, SecuredFields } from '../types';
 
 /**
  * Exposed functions that can be called on the CSF instance
@@ -22,7 +22,7 @@ export interface CSFReturnObject {
  * Base interface for CSFSetupObject & CSFConfigObject
  *
  * These are the props that are passed from SFP when CSF is initialised but which also end up
- * as props in CSF->this.config: CSFConfigObject
+ * as props in CSF--this.config: CSFConfigObject
  */
 interface CSFCommonProps {
     allowedDOMAccess?: boolean | string; // accept boolean or string representation of a boolean i.e. "false"
@@ -44,12 +44,12 @@ interface CSFCommonProps {
 /**
  * The object sent when SecuredFieldsProvider initialises CSF
  *
- * The properties defined here are ones that will not end up on CSF->this.config
+ * The properties defined here are ones that will not end up on CSF--this.config
  */
 export interface CSFSetupObject extends CSFCommonProps {
     type: string;
     clientKey: string;
-    rootNode: string | HTMLElement;
+    rootNode: string | HTMLElement; // TODO - when is this a string?
     callbacks?: object;
     isKCP?: boolean;
     i18n?: Language;
@@ -99,6 +99,13 @@ export interface CSFStateObject {
     hasSeparateDateFields: boolean;
     currentFocusObject: string;
     registerFieldForIos: boolean;
-    securedFields: object;
+    securedFields: SecuredFields;
     isKCP: boolean;
+}
+
+export interface CSFThisObject {
+    csfState: CSFStateObject;
+    csfConfig: CSFConfigObject;
+    csfProps: CSFSetupObject;
+    csfCallbacks: CSFCallbacksConfig;
 }

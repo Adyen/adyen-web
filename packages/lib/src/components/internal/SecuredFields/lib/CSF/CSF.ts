@@ -1,5 +1,5 @@
 import AbstractCSF from './AbstractCSF';
-import { CSFReturnObject, CSFSetupObject, CSFStateObject } from './types';
+import { CSFReturnObject, CSFSetupObject, CSFStateObject, CSFThisObject } from './types';
 import { StylesObject, CbObjOnAdditionalSF } from '../types';
 import { BinLookupResponse } from '../../../../Card/types';
 import { handleConfig } from './extensions/handleConfig';
@@ -72,7 +72,7 @@ class CSF extends AbstractCSF {
             isKCP: false
         } as CSFStateObject;
 
-        const thisObj = { csfState: this.state, csfConfig: this.config, csfProps: this.props, csfCallbacks: this.callbacks };
+        const thisObj: CSFThisObject = { csfState: this.state, csfConfig: this.config, csfProps: this.props, csfCallbacks: this.callbacks };
 
         // Setup 'this' references
         this.configHandler = handleConfig;

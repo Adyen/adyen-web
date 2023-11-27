@@ -1,4 +1,5 @@
 import { BrandObject } from '../../../Card/types';
+import SecuredField from './securedField/SecuredField';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare global {
@@ -6,6 +7,17 @@ declare global {
         _b$dl: boolean;
         mockBinCount: number;
     }
+}
+
+export interface SecuredFields {
+    encryptedCardNumber?: SecuredField;
+    encryptedExpiryDate?: SecuredField;
+    encryptedExpiryMonth?: SecuredField;
+    encryptedExpiryYear?: SecuredField;
+    encryptedSecurityCode?: SecuredField;
+    encryptedPassword?: SecuredField;
+    encryptedBankAccountNumber?: SecuredField;
+    encryptedBankLocationId?: SecuredField;
 }
 
 export interface BrandStorageObject {
