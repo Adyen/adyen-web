@@ -132,17 +132,19 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
                     )}
                 </div>
 
-                <div className="adyen-checkout__payment-method__details" id={containerId} role="region">
-                    {showRemovePaymentMethodButton && (
-                        <DisableOneClickConfirmation
-                            id={disableConfirmationId}
-                            open={this.state.showDisableStoredPaymentMethodConfirmation}
-                            onDisable={this.onDisableStoredPaymentMethod}
-                            onCancel={this.toggleDisableConfirmation}
-                        />
-                    )}
+                <div className="adyen-checkout-pm-details-wrapper" aria-expanded={isSelected} aria-hidden={!isSelected}>
+                    <div className="adyen-checkout__payment-method__details" id={containerId} role="region">
+                        {showRemovePaymentMethodButton && (
+                            <DisableOneClickConfirmation
+                                id={disableConfirmationId}
+                                open={this.state.showDisableStoredPaymentMethodConfirmation}
+                                onDisable={this.onDisableStoredPaymentMethod}
+                                onCancel={this.toggleDisableConfirmation}
+                            />
+                        )}
 
-                    <PaymentMethodDetails paymentMethodComponent={paymentMethod.render()} isLoaded={isLoaded} />
+                        <PaymentMethodDetails paymentMethodComponent={paymentMethod.render()} isLoaded={isLoaded} />
+                    </div>
                 </div>
             </li>
         );
