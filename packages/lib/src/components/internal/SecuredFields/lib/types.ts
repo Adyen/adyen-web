@@ -184,7 +184,7 @@ export interface CbObjOnAdditionalSF {
 
 export interface SFFeedbackObj {
     action: string;
-    fieldType: string;
+    fieldType: SFFieldType;
     numKey: number;
     brand?: string;
     code?: string;
