@@ -70,7 +70,7 @@ describe('Testing processAutoComplete fny', () => {
     const postMessageToIframeMock = jest.fn(obj => console.log('### processAutoComplete.test::FN call:: ', obj));
 
     beforeEach(() => {
-        // console.log = jest.fn(() => {});
+        console.log = jest.fn(() => {});
 
         mockedPostMessageToIframe.mockReset();
         mockedPostMessageToIframe.mockImplementation(obj => postMessageToIframeMock(obj));
@@ -151,20 +151,6 @@ describe('Testing processAutoComplete fny', () => {
 
         expect(res).toEqual(true);
     });
-
-    // test('Calling processAutoComplete will call postMessageToIframe sending it the expected expiryMonth data object', () => {
-    //     delete csfState.securedFields.encryptedExpiryDate;
-    //
-    //     expectedPostMsgDataObj.fieldType = 'encryptedExpiryMonth';
-    //     expectedPostMsgDataObj.autoComplete = '03';
-    //
-    //     const res = callProcessAutoComplete(sfFeedbackObj_date);
-    //
-    //     expect(postMessageToIframeMock).toHaveBeenCalled();
-    //     expect(postMessageToIframeMock).toHaveBeenCalledWith(expectedPostMsgDataObj);
-    //
-    //     expect(res).toEqual(true);
-    // });
 
     test('Calling processAutoComplete will call postMessageToIframe twice sending it the expected expiryMonth and then expiryYear data objects', () => {
         sfFeedbackObj_date.value = '3/2030'; // also test the month padding fny

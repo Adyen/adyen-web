@@ -19,7 +19,7 @@ const CSFObj = {
     csfCallbacks
 };
 
-let brandType = true;
+let brandType = null;
 
 csfCallbacks.onBrand = jest.fn(({ brand }) => {
     brandType = brand;
