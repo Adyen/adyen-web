@@ -5,6 +5,7 @@ import RedirectShopper from './components/RedirectShopper';
 import RedirectButton from '../internal/RedirectButton';
 import { TxVariants } from '../tx-variants';
 import { UIElementProps } from '../types';
+import collectBrowserInfo from '../../utils/browserInfo';
 
 export interface RedirectProps extends UIElementProps {
     type?: string;
@@ -24,8 +25,13 @@ class RedirectElement extends UIElement<RedirectProps> {
         return {
             paymentMethod: {
                 type: this.type
-            }
+            },
+            browserInfo: this.browserInfo
         };
+    }
+
+    get browserInfo() {
+        return collectBrowserInfo();
     }
 
     get isValid() {

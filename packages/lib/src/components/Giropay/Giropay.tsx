@@ -14,17 +14,6 @@ class GiropayElement extends RedirectElement {
         };
     }
 
-    /**
-     * Formats the component data output
-     */
-    formatData() {
-        return {
-            paymentMethod: {
-                type: GiropayElement.type
-            }
-        };
-    }
-
     get displayName() {
         return this.props.name || this.constructor['type'];
     }
