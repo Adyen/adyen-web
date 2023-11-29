@@ -123,6 +123,8 @@ class DropinElement extends UIElement<DropinElementProps> {
     };
 
     public handleAction(action: PaymentAction, props = {}): this | null {
+        debugger;
+
         if (!action || !action.type) {
             if (hasOwnProperty(action, 'action') && hasOwnProperty(action, 'resultCode')) {
                 throw new Error(

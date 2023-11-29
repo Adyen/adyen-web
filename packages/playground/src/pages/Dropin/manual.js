@@ -26,6 +26,8 @@ export async function initManual() {
 
             const result = await makePayment(state.data);
 
+            // actions.reject();
+            //
             if (result.action) {
                 actions.resolve({
                     action: result.action,
@@ -55,9 +57,15 @@ export async function initManual() {
             if (result.resultCode === 'Authorised' || result.resultCode === 'Received') {
                 actions.resolve(result); // DO I NEED FULL RESULT?
             } else {
-                actions.reject(result)
+                actions.reject(result);
             }
 
+            // return {
+            //     googlePayError: {
+            //         message: 'Not sufficient funds',
+            //             reason: 'OTHER_ERROR,'
+            //     }
+            // }
 
             //
             // // Trigger Error for GooglePay

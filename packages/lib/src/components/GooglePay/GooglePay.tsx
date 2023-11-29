@@ -52,7 +52,7 @@ class GooglePay extends UIElement<GooglePayProps> {
             paymentMethod: {
                 type: this.type,
                 googlePayCardNetwork: this.state.googlePayCardNetwork,
-                googlePayToken: '{}'
+                googlePayToken: this.state.googlePayToken
             },
             browserInfo: this.browserInfo
         };
@@ -88,38 +88,55 @@ class GooglePay extends UIElement<GooglePayProps> {
         return new Promise<google.payments.api.PaymentAuthorizationResult>(resolve => {
             super
                 .submit()
-                .then(result => {
-                    console.log('Resolving');
-
+                // TODO: add action.resolve type
+                .then((result: any) => {
                     resolve({ transactionState: 'SUCCESS' });
-                    this.props.onPaymentCompleted(result, this.elementRef);
+                    return result;
                 })
-                .catch(googlePayError => {
-                    console.log('Caught error');
+                .then(result => {
+                    debugger;
+                    if (result.action) {
+                        this.elementRef.handleAction(result.action, result.actionProps);
+                        return;
+                    }
+                    //
+                    // // if (data.order) {
+                    // //     const { order, paymentMethodsResponse } = data;
+                    // //     // @ts-ignore Just testing
+                    // //     this.core.update({ paymentMethodsResponse, order, amount: data.order.remainingAmount });
+                    // //     return;
+                    // // }
+                    //
+                    this.handleFinalResult(result);
+                })
+                .catch(error => {
+                    this.setElementStatus('ready');
 
                     resolve({
                         transactionState: 'ERROR',
                         error: {
                             intent: 'PAYMENT_AUTHORIZATION',
-                            message: googlePayError?.message || 'Something went wrong',
-                            reason: googlePayError?.reason || 'OTHER_ERROR'
+                            message: error?.googlePayError?.message || 'Something went wrong',
+                            reason: error?.googlePayError?.reason || 'OTHER_ERROR'
                         }
                     });
                 });
         });
     };
 
-    protected override throwPaymentMethodErrorIfNeeded = (error?: SubmitReject): never => {
-        this.setElementStatus('ready');
-
-        const googleError: google.payments.api.PaymentDataError = {
-            intent: 'PAYMENT_AUTHORIZATION',
-            message: error?.googlePayError?.message || 'Something went wrong',
-            reason: error?.googlePayError?.reason || 'OTHER_ERROR'
-        };
-
-        throw googleError;
-    };
+    private override async submitUsingAdvancedFlow(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.props.onSubmit(
+                {
+                    data: this.data,
+                    isValid: this.isValid,
+                    ...(this.state.authorizedData && { authorizedData: this.state.authorizedData })
+                },
+                this.elementRef,
+                { resolve, reject }
+            );
+        });
+    }
 
     /**
      * Validation
