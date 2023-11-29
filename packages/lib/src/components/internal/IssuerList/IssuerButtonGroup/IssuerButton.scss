@@ -1,4 +1,4 @@
-@use "../../../../style/index";
+@use '../../../../style/index';
 
 .adyen-checkout__issuer-button {
     background-color: var(--adyen-checkout-color-background-primary);
@@ -37,7 +37,7 @@
 
     &--selected {
         background: var(--adyen-checkout-color-background-primary);
-        box-shadow: inset 0 0 0 1px var(--adyen-checkout-color-outline-active);
+        box-shadow: inset 0 0 0 1.5px var(--adyen-checkout-color-outline-active);
         color: var(--adyen-checkout-color-label-primary);
         font-weight: var(--adyen-checkout-text-body-stronger-font-weight);
         height: var(--adyen-checkout-spacer-110);
