@@ -53,9 +53,10 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
         };
     }
 
-    submit() {
+    // @ts-ignore FIX THIS
+    public submit = async () => {
         return this.startSession(this.props.onAuthorized);
-    }
+    };
 
     private startSession(onPaymentAuthorized: OnAuthorizedCallback) {
         const { version, onValidateMerchant, onPaymentMethodSelected, onShippingMethodSelected, onShippingContactSelected } = this.props;

@@ -93,7 +93,7 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
         return this.props.storedPaymentMethodId ? 'Cash App Pay' : '';
     }
 
-    public submit = () => {
+    public submit = async () => {
         const { onClick, storedPaymentMethodId } = this.props;
 
         if (storedPaymentMethodId) {

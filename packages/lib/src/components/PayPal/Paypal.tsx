@@ -42,7 +42,7 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         };
     }
 
-    public submit = () => {
+    public submit = async () => {
         this.handleError(new AdyenCheckoutError('IMPLEMENTATION_ERROR', ERRORS.SUBMIT_NOT_SUPPORTED));
     };
 
