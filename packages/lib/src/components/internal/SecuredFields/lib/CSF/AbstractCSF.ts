@@ -1,5 +1,5 @@
 import { CSFSetupObject, CSFConfigObject, CSFCallbacksConfig, CSFStateObject } from './types';
-import { SFFeedbackObj, SendBrandObject, SendExpiryDateObject, CVCPolicyType, DatePolicyType } from '../types';
+import { SFFeedbackObj, SendBrandObject, SendExpiryDateObject, CVCPolicyType, DatePolicyType, SFFieldType } from '../types';
 import { createSecuredFields } from './extensions/createSecuredFields';
 import processBrand from './partials/processBrand';
 import handleBrandFromBinLookup from './extensions/handleBrandFromBinLookup';
@@ -34,7 +34,7 @@ abstract class AbstractCSF {
     protected processBrand: typeof processBrand;
     protected sendBrandToCardSF: (brandObj: SendBrandObject) => void;
     protected sendExpiryDatePolicyToSF: (dateObj: SendExpiryDateObject) => void;
-    protected setFocusOnFrame: (pFieldType: string, doLog?: boolean) => void;
+    protected setFocusOnFrame: (pFieldType: SFFieldType, doLog?: boolean) => void;
     protected setupSecuredField: (pItem: HTMLElement) => void;
     protected touchendListener: (e: Event) => void;
     protected touchstartListener: () => void;
