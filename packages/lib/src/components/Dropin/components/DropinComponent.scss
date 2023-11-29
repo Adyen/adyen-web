@@ -69,4 +69,8 @@
 
 .adyen-checkout-pm-details-wrapper[aria-expanded='true'] {
     grid-template-rows: 1fr;
+
+    .adyen-checkout__payment-method__details {
+        overflow: visible;
+    }
 }
