@@ -40,9 +40,11 @@ const expectedCallbackObj = {
     currentFocusObject: 'encryptedCardNumber'
 };
 
+const handleIOSTouchEvents = jest.fn(() => {});
+
 const callOnFocus = () => {
     // @ts-ignore - test is faking setup object
-    handleFocus(CSFObj, feedbackObj);
+    handleFocus(CSFObj, handleIOSTouchEvents, feedbackObj);
 };
 
 describe('Testing CSFs handleFocus functionality', () => {
@@ -56,6 +58,8 @@ describe('Testing CSFs handleFocus functionality', () => {
         callOnFocus();
 
         expect(csfState.currentFocusObject).toEqual('encryptedCardNumber');
+
+        expect(handleIOSTouchEvents).toHaveBeenCalled();
 
         expect(csfCallbacks.onFocus).toHaveBeenCalledTimes(1);
         expect(onFocusCallbackObj).toEqual(expectedCallbackObj);

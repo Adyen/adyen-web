@@ -11,7 +11,7 @@ import { CSFThisObject } from '../types';
  *
  * @param pFeedbackObj -
  */
-export function handleFocus({ csfState, csfProps, csfCallbacks }: CSFThisObject, pFeedbackObj: SFFeedbackObj): void {
+export function handleFocus({ csfState, csfProps, csfCallbacks }: CSFThisObject, handleIOSTouchEvents, pFeedbackObj: SFFeedbackObj): void {
     const feedbackObj: SFFeedbackObj = { ...pFeedbackObj };
 
     delete feedbackObj.numKey;
@@ -29,7 +29,7 @@ export function handleFocus({ csfState, csfProps, csfCallbacks }: CSFThisObject,
 
             // If iOS detected AND we don't have a (touchend) listener
             if (ua.__IS_IOS && !csfState.registerFieldForIos) {
-                this?.handleIOSTouchEvents();
+                handleIOSTouchEvents();
             }
         }
     } else {
