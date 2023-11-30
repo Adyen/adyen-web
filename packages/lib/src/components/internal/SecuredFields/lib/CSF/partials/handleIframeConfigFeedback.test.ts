@@ -34,7 +34,7 @@ const callHandleIframeConfigFeedback = () => {
 
 describe('Testing CSFs handleIframeConfigFeedback functionality', () => {
     beforeEach(() => {
-        // console.log = jest.fn(() => {});
+        console.log = jest.fn(() => {});
     });
 
     test('isConfigured should not be called since the iframe count is still below the total', () => {

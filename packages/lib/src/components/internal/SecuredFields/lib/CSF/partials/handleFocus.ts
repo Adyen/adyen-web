@@ -1,5 +1,6 @@
 import { SFFeedbackObj, CbObjOnFocus } from '../../types';
 import ua from '../utils/userAgent';
+import { CSFThisObject } from '../types';
 
 /**
  * Call focus callback and store which field currently has focus
@@ -10,12 +11,12 @@ import ua from '../utils/userAgent';
  *
  * @param pFeedbackObj -
  */
-export function handleFocus({ csfState, csfProps, csfCallbacks }, pFeedbackObj: SFFeedbackObj): void {
+export function handleFocus({ csfState, csfProps, csfCallbacks }: CSFThisObject, pFeedbackObj: SFFeedbackObj): void {
     const feedbackObj: SFFeedbackObj = { ...pFeedbackObj };
 
     delete feedbackObj.numKey;
 
-    feedbackObj.rootNode = csfProps.rootNode;
+    feedbackObj.rootNode = csfProps.rootNode as HTMLElement;
     feedbackObj.type = csfState.type;
 
     // Store which field has focus
@@ -28,7 +29,7 @@ export function handleFocus({ csfState, csfProps, csfCallbacks }, pFeedbackObj: 
 
             // If iOS detected AND we don't have a (touchend) listener
             if (ua.__IS_IOS && !csfState.registerFieldForIos) {
-                this.handleIOSTouchEvents();
+                this?.handleIOSTouchEvents();
             }
         }
     } else {
