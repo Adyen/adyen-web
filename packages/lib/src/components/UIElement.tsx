@@ -196,7 +196,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         return;
     }
 
-    private async makeSessionPaymentsCall(data): Promise<void> {
+    protected async makeSessionPaymentsCall(data): Promise<void> {
         let paymentsResponse: CheckoutSessionPaymentResponse = null;
 
         try {
@@ -316,7 +316,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         if (this.props.onPaymentCompleted) {
             this.props.onPaymentCompleted(result, this.elementRef);
         }
-        // return result;
+        return result;
     };
 
     /**
@@ -324,7 +324,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * The component will handle automatically actions, orders, and final results.
      * @param rawResponse -
      */
-    protected handleSessionsResponse(rawResponse: RawPaymentResponse): void {
+    protected handleSessionsResponse(rawResponse: RawPaymentResponse) {
         const response = getSanitizedResponse(rawResponse);
 
         if (response.action) {
@@ -334,7 +334,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             // we do this way so the logic on handlingOrder is associated with payment method
             this.handleOrder(response);
         } else {
-            this.handleFinalResult(response);
+            return this.handleFinalResult(response);
             // this.elementRef.handleFinalResult(response);
         }
     }

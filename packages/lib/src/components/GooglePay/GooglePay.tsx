@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import UIElement, { SubmitReject } from '../UIElement';
+import UIElement from '../UIElement';
 import GooglePayService from './GooglePayService';
 import GooglePayButton from './components/GooglePayButton';
 import defaultProps from './defaultProps';
@@ -8,6 +8,9 @@ import { getGooglePayLocale } from './utils';
 import collectBrowserInfo from '../../utils/browserInfo';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
+import { CheckoutSessionPaymentResponse } from '../../types';
+import { PaymentResponse } from '../types';
+import { resolveFinalResult } from '../utils';
 
 class GooglePay extends UIElement<GooglePayProps> {
     public static type = TxVariants.googlepay;
@@ -90,38 +93,64 @@ class GooglePay extends UIElement<GooglePayProps> {
                 .submit()
                 // TODO: add action.resolve type
                 .then((result: any) => {
-                    resolve({ transactionState: 'SUCCESS' });
-                    return result;
-                })
-                .then(result => {
-                    debugger;
+                    // close for 3ds flow
                     if (result.action) {
-                        this.elementRef.handleAction(result.action, result.actionProps);
-                        return;
+                        resolve({ transactionState: 'SUCCESS' });
+                        return result;
                     }
-                    //
-                    // // if (data.order) {
-                    // //     const { order, paymentMethodsResponse } = data;
-                    // //     // @ts-ignore Just testing
-                    // //     this.core.update({ paymentMethodsResponse, order, amount: data.order.remainingAmount });
-                    // //     return;
-                    // // }
-                    //
-                    this.handleFinalResult(result);
+                })
+                .then(async result => {
+                    return this.handleOnPaymentAuthorizedResponse(result);
+                })
+                .then(status => {
+                    if (status && status === 'success') {
+                        if (status == 'success') {
+                            resolve({ transactionState: 'SUCCESS' });
+                        } else if (status == 'error') {
+                            resolve({
+                                transactionState: 'ERROR',
+                                error: {
+                                    intent: 'PAYMENT_AUTHORIZATION',
+                                    message: error?.googlePayError?.message || 'Something went wrong',
+                                    reason: error?.googlePayError?.reason || 'OTHER_ERROR'
+                                }
+                            });
+                        }
+                    }
                 })
                 .catch(error => {
                     this.setElementStatus('ready');
-
-                    resolve({
-                        transactionState: 'ERROR',
-                        error: {
-                            intent: 'PAYMENT_AUTHORIZATION',
-                            message: error?.googlePayError?.message || 'Something went wrong',
-                            reason: error?.googlePayError?.reason || 'OTHER_ERROR'
-                        }
-                    });
+                    console.log(error);
                 });
         });
+    };
+
+    // TODO types
+    private handleOnPaymentAuthorizedResponse = async result => {
+        // TODO check is best away to check for sessions/
+        if (this.props.onSubmit) {
+            if (result.action) {
+                this.elementRef.handleAction(result.action, result.actionProps);
+                return;
+            }
+            return this.handleFinalResult(result);
+        } else {
+            return this.handleSessionsResponse(result);
+        }
+    };
+
+    protected handleFinalResult = (result: PaymentResponse) => {
+        const [status, statusProps] = resolveFinalResult(result);
+
+        if (this.props.setStatusAutomatically && status) {
+            this.setElementStatus(status, statusProps);
+        }
+
+        if (this.props.onPaymentCompleted) {
+            this.props.onPaymentCompleted(result, this.elementRef);
+        }
+
+        return result;
     };
 
     private override async submitUsingAdvancedFlow(): Promise<any> {
@@ -136,6 +165,17 @@ class GooglePay extends UIElement<GooglePayProps> {
                 { resolve, reject }
             );
         });
+    }
+
+    protected async makeSessionPaymentsCall(data): Promise<void> {
+        let paymentsResponse: CheckoutSessionPaymentResponse = null;
+        try {
+            paymentsResponse = await this.core.session.submitPayment(data);
+        } catch (error) {
+            // TODO resolve with error
+            this.handleError(error);
+        }
+        return paymentsResponse;
     }
 
     /**
