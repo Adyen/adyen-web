@@ -47,7 +47,6 @@ describe('Testing CSFs handleIframeConfigFeedback functionality', () => {
 
     test('isConfigured should be called since the iframe count is the same as the total', () => {
         csfState.iframeConfigCount = 2;
-        window._b$dl = true; // so all lines are covered by test
 
         const res = callHandleIframeConfigFeedback();
 

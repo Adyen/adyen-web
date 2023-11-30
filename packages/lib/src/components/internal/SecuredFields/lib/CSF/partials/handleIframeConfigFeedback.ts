@@ -19,7 +19,7 @@ export function handleIframeConfigFeedback({ csfState, csfCallbacks }: CSFThisOb
 
     if (!csfState.isConfigured) {
         if (csfState.iframeConfigCount === csfState.originalNumIframes) {
-            if ((process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') && window._b$dl) {
+            if (process.env.NODE_ENV === 'development' && window._b$dl) {
                 console.log('\n### handleIframeConfigFeedback::handleIframeConfigFeedback:: ALL IFRAMES CONFIG DO CALLBACK type=', csfState.type);
             }
 
