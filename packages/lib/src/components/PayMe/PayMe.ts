@@ -1,4 +1,5 @@
 import QRLoaderContainer from '../helpers/QRLoaderContainer';
+import Instructions from './Instructions';
 
 class PayMeElement extends QRLoaderContainer {
     public static type = 'payme';
@@ -8,7 +9,11 @@ class PayMeElement extends QRLoaderContainer {
             ...super.formatProps(props),
             delay: 2000, // ms
             countdownTime: 10, // min
-            instructions: 'payme.pendingMessage' //todo: we might need to pass a component to it
+            redirectIntroduction: 'payme.openPayMeApp',
+            introduction: 'payme.scanQrCode',
+            timeToPay: 'payme.timeToPay',
+            redirectButtonLabel: 'payme.redirectButtonLabel',
+            instructions: Instructions
         };
     }
 }
