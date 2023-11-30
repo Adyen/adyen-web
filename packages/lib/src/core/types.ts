@@ -32,6 +32,13 @@ export interface ICore {
 
 export type AdyenEnvironment = 'test' | 'live' | 'live-us' | 'live-au' | 'live-apse' | 'live-in' | string;
 
+export type onSubmitReject = {
+    error?: {
+        googlePayError?: Partial<google.payments.api.PaymentDataError>;
+        applePayError: {};
+    };
+};
+
 export interface CoreOptions {
     session?: any;
     /**
@@ -150,7 +157,14 @@ export interface CoreOptions {
 
     onPaymentCompleted?(data: OnPaymentCompletedData, element?: UIElement): void;
 
-    onSubmit?(state: any, element: UIElement): void;
+    onSubmit?(
+        state: any,
+        element: UIElement,
+        actions: {
+            resolve: () => void;
+            reject: (error: onSubmitReject) => void;
+        }
+    ): void;
 
     onAdditionalDetails?(state: any, element?: UIElement): void;
 

@@ -8,9 +8,8 @@ import { getGooglePayLocale } from './utils';
 import collectBrowserInfo from '../../utils/browserInfo';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
-import { CheckoutSessionPaymentResponse } from '../../types';
 import { PaymentResponse } from '../types';
-import { resolveFinalResult } from '../utils';
+import { onSubmitReject } from '../../core/types';
 
 class GooglePay extends UIElement<GooglePayProps> {
     public static type = TxVariants.googlepay;
@@ -61,12 +60,9 @@ class GooglePay extends UIElement<GooglePayProps> {
         };
     }
 
-    public submit = () => {
-        return new Promise((resolve, reject) => this.props.onClick(resolve, reject))
+    public override submit = () => {
+        new Promise((resolve, reject) => this.props.onClick(resolve, reject))
             .then(() => this.googlePay.initiatePayment(this.props))
-            .then(() => {
-                console.log('HERE');
-            })
             .catch((error: google.payments.api.PaymentsError) => {
                 if (error.statusCode === 'CANCELED') {
                     this.handleError(new AdyenCheckoutError('CANCEL', error.toString(), { cause: error }));
@@ -89,94 +85,28 @@ class GooglePay extends UIElement<GooglePayProps> {
         });
 
         return new Promise<google.payments.api.PaymentAuthorizationResult>(resolve => {
-            super
-                .submit()
-                // TODO: add action.resolve type
-                .then((result: any) => {
-                    // close for 3ds flow
-                    if (result.action) {
-                        resolve({ transactionState: 'SUCCESS' });
-                        return result;
-                    }
+            this.makePaymentsCall()
+                .then((paymentResponse: PaymentResponse) => {
+                    resolve({ transactionState: 'SUCCESS' });
+                    return paymentResponse;
                 })
-                .then(async result => {
-                    return this.handleOnPaymentAuthorizedResponse(result);
+                .then(async paymentResponse => {
+                    this.handleResponse(paymentResponse);
                 })
-                .then(status => {
-                    if (status && status === 'success') {
-                        if (status == 'success') {
-                            resolve({ transactionState: 'SUCCESS' });
-                        } else if (status == 'error') {
-                            resolve({
-                                transactionState: 'ERROR',
-                                error: {
-                                    intent: 'PAYMENT_AUTHORIZATION',
-                                    message: error?.googlePayError?.message || 'Something went wrong',
-                                    reason: error?.googlePayError?.reason || 'OTHER_ERROR'
-                                }
-                            });
-                        }
-                    }
-                })
-                .catch(error => {
+                .catch((error: onSubmitReject) => {
                     this.setElementStatus('ready');
-                    console.log(error);
+
+                    resolve({
+                        transactionState: 'ERROR',
+                        error: {
+                            intent: error?.error?.googlePayError?.intent || 'PAYMENT_AUTHORIZATION',
+                            message: error?.error?.googlePayError?.message || 'Something went wrong',
+                            reason: error?.error?.googlePayError?.reason || 'OTHER_ERROR'
+                        }
+                    });
                 });
         });
     };
-
-    // TODO types
-    private handleOnPaymentAuthorizedResponse = async result => {
-        // TODO check is best away to check for sessions/
-        if (this.props.onSubmit) {
-            if (result.action) {
-                this.elementRef.handleAction(result.action, result.actionProps);
-                return;
-            }
-            return this.handleFinalResult(result);
-        } else {
-            return this.handleSessionsResponse(result);
-        }
-    };
-
-    protected handleFinalResult = (result: PaymentResponse) => {
-        const [status, statusProps] = resolveFinalResult(result);
-
-        if (this.props.setStatusAutomatically && status) {
-            this.setElementStatus(status, statusProps);
-        }
-
-        if (this.props.onPaymentCompleted) {
-            this.props.onPaymentCompleted(result, this.elementRef);
-        }
-
-        return result;
-    };
-
-    private override async submitUsingAdvancedFlow(): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.props.onSubmit(
-                {
-                    data: this.data,
-                    isValid: this.isValid,
-                    ...(this.state.authorizedData && { authorizedData: this.state.authorizedData })
-                },
-                this.elementRef,
-                { resolve, reject }
-            );
-        });
-    }
-
-    protected async makeSessionPaymentsCall(data): Promise<void> {
-        let paymentsResponse: CheckoutSessionPaymentResponse = null;
-        try {
-            paymentsResponse = await this.core.session.submitPayment(data);
-        } catch (error) {
-            // TODO resolve with error
-            this.handleError(error);
-        }
-        return paymentsResponse;
-    }
 
     /**
      * Validation

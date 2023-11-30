@@ -24,41 +24,52 @@ export async function initManual() {
             const { authorizedData } = state;
             console.log('authorizedData', authorizedData);
 
-            const result = await makePayment(state.data);
+            try {
+                const result = await makePayment(state.data);
 
-            // actions.reject();
+                // happpy flow
+                if (result.resultCode.includes('Refused', 'Cancelled', 'Error')) {
+                    action.reject({
+                        error: {
+                            googlePayError: {},
+                            applePayError: {}
+                        }
+                    });
+                } else {
+                    actions.resolve({
+                        action: result.action,
+                        order: result.order,
+                        resultCode: result.resultCode
+                    });
+                }
+            } catch (error) {
+                // Something failed in the request
+                actions.reject();
+            }
+
             //
-            if (result.action) {
-                actions.resolve({
-                    action: result.action,
-                    actionProps: {
-                        challengeWindowSize: '01'
-                    }
-                });
-                return;
-            }
-
-            if (result.order && result.order?.remainingAmount?.value > 0) {
-                const order = {
-                    orderData: result.order.orderData,
-                    pspReference: result.order.pspReference
-                };
-
-                const orderPaymentMethods = await getPaymentMethods({ order, amount, shopperLocale });
-
-                actions.resolve({
-                    order,
-                    paymentMethodsResponse: orderPaymentMethods
-                });
-
-                return;
-            }
-
-            if (result.resultCode === 'Authorised' || result.resultCode === 'Received') {
-                actions.resolve(result); // DO I NEED FULL RESULT?
-            } else {
-                actions.reject(result);
-            }
+            //
+            // if (result.order && result.order?.remainingAmount?.value > 0) {
+            //     const order = {
+            //         orderData: result.order.orderData,
+            //         pspReference: result.order.pspReference
+            //     };
+            //
+            //     const orderPaymentMethods = await getPaymentMethods({ order, amount, shopperLocale });
+            //
+            //     actions.resolve({
+            //         order,
+            //         paymentMethodsResponse: orderPaymentMethods
+            //     });
+            //
+            //     return;
+            // }
+            //
+            // if (result.resultCode === 'Authorised' || result.resultCode === 'Received') {
+            //     actions.resolve(result); // DO I NEED FULL RESULT?
+            // } else {
+            //     actions.reject(result);
+            // }
 
             // return {
             //     googlePayError: {
