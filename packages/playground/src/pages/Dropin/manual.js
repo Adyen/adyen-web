@@ -16,7 +16,6 @@ export async function initManual() {
 
         locale: 'pt-BR',
         translationFile: getTranslationFile(shopperLocale),
-        // translationFile: nl_NL,
 
         environment: process.env.__CLIENT_ENV__,
 
@@ -64,19 +63,6 @@ export async function initManual() {
             //
             //     return;
             // }
-            //
-            // if (result.resultCode === 'Authorised' || result.resultCode === 'Received') {
-            //     actions.resolve(result); // DO I NEED FULL RESULT?
-            // } else {
-            //     actions.reject(result);
-            // }
-
-            // return {
-            //     googlePayError: {
-            //         message: 'Not sufficient funds',
-            //             reason: 'OTHER_ERROR,'
-            //     }
-            // }
 
             //
             // // Trigger Error for GooglePay
@@ -93,38 +79,6 @@ export async function initManual() {
         onPaymentCompleted(result, element) {
             console.log('onPaymentCompleted', result, element);
         },
-        //
-        //
-        // // payments call
-        // if (result === AUTHORIZED)
-        //     return action.resolve({ orderTrackng: { /// details }})}
-        // }
-        //
-        //
-        // action.reject(new ApplePayError('')));
-
-        // // handle actions
-        // if (result.action) {
-        //     // demo only - store paymentData & order
-        //     if (result.action.paymentData) localStorage.setItem('storedPaymentData', result.action.paymentData);
-        //     component.handleAction(result.action, { challengeWindowSize: '01' });
-        // } else if (result.order && result.order?.remainingAmount?.value > 0) {
-        //     // handle orders
-        //     const order = {
-        //         orderData: result.order.orderData,
-        //         pspReference: result.order.pspReference
-        //     };
-        //
-        //     const orderPaymentMethods = await getPaymentMethods({ order, amount, shopperLocale });
-        //     checkout.update({ paymentMethodsResponse: orderPaymentMethods, order, amount: result.order.remainingAmount });
-        // } else {
-        //     handleFinalState(result.resultCode, component);
-        // }
-        // },
-        // srConfig: { showPanel: true },
-        // onChange: state => {
-        //     console.log('onChange', state);
-        // },
         onAdditionalDetails: async (state, component) => {
             const result = await makeDetailsCall(state.data);
 

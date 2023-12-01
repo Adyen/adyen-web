@@ -83,7 +83,7 @@ class DropinElement extends UIElement<DropinConfiguration> {
     /**
      * Calls the onSubmit event with the state of the activePaymentMethod
      */
-    public async submit(): Promise<void> {
+    public override submit(): void {
         if (!this.activePaymentMethod) {
             throw new Error('No active payment method.');
         }
@@ -122,8 +122,6 @@ class DropinElement extends UIElement<DropinConfiguration> {
     };
 
     public handleAction(action: PaymentAction, props = {}): this | null {
-        debugger;
-
         if (!action || !action.type) {
             if (hasOwnProperty(action, 'action') && hasOwnProperty(action, 'resultCode')) {
                 throw new Error(
