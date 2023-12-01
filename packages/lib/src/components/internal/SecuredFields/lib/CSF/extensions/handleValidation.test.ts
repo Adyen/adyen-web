@@ -187,6 +187,9 @@ describe('Testing CSFs handleValidation functionality', () => {
 
             expect(myCSF.validateForm).toHaveBeenCalledTimes(5);
 
+            // check call to addEncryptedElement not made
+            expect(removeEncryptedElementMock).not.toHaveBeenCalled();
+
             expect(myCSF.callbacks.onFieldValid).toHaveBeenCalled();
             expect(callbackObj_fieldValid).toEqual(expected_callbackObj_onFieldValid_PAN);
 
