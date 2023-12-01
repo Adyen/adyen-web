@@ -190,6 +190,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             paymentsResponse = await this.core.session.submitPayment(data);
         } catch (error) {
             this.handleError(error);
+            /**
+             * Re-throw the error, so this Promise gets rejected. This keeps the same behavior as the
+             * 'submitUsingAdvancedFlow'
+             */
+            throw error;
         }
 
         return paymentsResponse;

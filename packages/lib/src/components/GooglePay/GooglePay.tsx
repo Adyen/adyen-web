@@ -90,7 +90,7 @@ class GooglePay extends UIElement<GooglePayProps> {
                     resolve({ transactionState: 'SUCCESS' });
                     return paymentResponse;
                 })
-                .then(async paymentResponse => {
+                .then(paymentResponse => {
                     this.handleResponse(paymentResponse);
                 })
                 .catch((error: onSubmitReject) => {

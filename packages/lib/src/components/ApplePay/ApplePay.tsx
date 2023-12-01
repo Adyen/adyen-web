@@ -8,9 +8,11 @@ import { httpPost } from '../../core/Services/http';
 import { APPLEPAY_SESSION_ENDPOINT } from './config';
 import { preparePaymentRequest } from './payment-request';
 import { resolveSupportedVersion, mapBrands } from './utils';
-import { ApplePayElementProps, ApplePayElementData, ApplePaySessionRequest, OnAuthorizedCallback } from './types';
+import { ApplePayElementProps, ApplePayElementData, ApplePaySessionRequest } from './types';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
+import { PaymentResponse } from '../types';
+import { onSubmitReject } from '../../core/types';
 
 const latestSupportedVersion = 14;
 
@@ -48,17 +50,17 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
         return {
             paymentMethod: {
                 type: ApplePayElement.type,
-                ...this.state
+                applePayToken: this.state.applePayToken
             }
         };
     }
 
-    // @ts-ignore FIX THIS
-    public submit = async () => {
-        return this.startSession(this.props.onAuthorized);
+    public submit = (): void => {
+        this.startSession();
     };
 
-    private startSession(onPaymentAuthorized: OnAuthorizedCallback) {
+    // private startSession(onPaymentAuthorized: OnAuthorizedCallback) {
+    private startSession() {
         const { version, onValidateMerchant, onPaymentMethodSelected, onShippingMethodSelected, onShippingContactSelected } = this.props;
 
         const paymentRequest = preparePaymentRequest({
@@ -79,11 +81,29 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
             onShippingContactSelected,
             onValidateMerchant: onValidateMerchant || this.validateMerchant,
             onPaymentAuthorized: (resolve, reject, event) => {
-                if (event?.payment?.token?.paymentData) {
-                    this.setState({ applePayToken: btoa(JSON.stringify(event.payment.token.paymentData)) });
-                }
-                super.submit();
-                onPaymentAuthorized(resolve, reject, event);
+                this.setState({
+                    applePayToken: btoa(JSON.stringify(event.payment.token.paymentData))
+                });
+
+                this.makePaymentsCall()
+                    .then((paymentResponse: PaymentResponse) => {
+                        // check the order part here
+
+                        resolve();
+                        return paymentResponse;
+                    })
+                    .then(paymentResponse => {
+                        this.handleResponse(paymentResponse);
+                    })
+                    .catch((error: onSubmitReject) => {
+                        this.setElementStatus('ready');
+                        const errors = error?.error?.applePayError;
+
+                        reject({
+                            status: ApplePaySession.STATUS_FAILURE,
+                            errors: errors ? (Array.isArray(errors) ? errors : [errors]) : undefined
+                        });
+                    });
             }
         });
 

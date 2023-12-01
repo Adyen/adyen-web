@@ -35,7 +35,7 @@ export type AdyenEnvironment = 'test' | 'live' | 'live-us' | 'live-au' | 'live-a
 export type onSubmitReject = {
     error?: {
         googlePayError?: Partial<google.payments.api.PaymentDataError>;
-        applePayError: {};
+        applePayError?: ApplePayJS.ApplePayError[] | ApplePayJS.ApplePayError;
     };
 };
 
@@ -162,7 +162,7 @@ export interface CoreOptions {
         element: UIElement,
         actions: {
             resolve: () => void;
-            reject: (error: onSubmitReject) => void;
+            reject: (error?: onSubmitReject) => void;
         }
     ): void;
 
