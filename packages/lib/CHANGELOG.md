@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 5.53.3
+
+### Patch Changes
+
+-   Correct the T&C links for Riverty, remove the B2B T&C link, and change the text from 'AfterPay' to 'Riverty'. ([#2422](https://github.com/Adyen/adyen-web/pull/2422))
+
 ## 5.53.2
 
 ### Patch Changes

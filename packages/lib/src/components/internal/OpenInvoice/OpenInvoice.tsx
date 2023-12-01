@@ -17,7 +17,6 @@ import {
 } from './types';
 import './OpenInvoice.scss';
 import IbanInput from '../IbanInput';
-import { ComponentMethodsRef } from '../../types';
 import { enhanceErrorObjectKeys } from '../../../core/Errors/utils';
 import { GenericError, SetSRMessagesReturnObject, SortedErrorObject } from '../../../core/Errors/types';
 import useSRPanelContext from '../../../core/Errors/useSRPanelContext';
@@ -31,6 +30,7 @@ import { usePrevious } from '../../../utils/hookUtils';
 import { getArrayDifferences } from '../../../utils/arrayUtils';
 import Field from '../FormFields/Field';
 import FormInstruction from '../FormInstruction';
+import { ComponentMethodsRef } from '../UIElement/types';
 
 const consentCBErrorObj: GenericError = {
     isValid: false,

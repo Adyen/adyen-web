@@ -1,17 +1,17 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import GooglePayService from './GooglePayService';
 import GooglePayButton from './components/GooglePayButton';
 import defaultProps from './defaultProps';
-import { GooglePayProps } from './types';
+import { GooglePayConfiguration } from './types';
 import { getGooglePayLocale } from './utils';
 import collectBrowserInfo from '../../utils/browserInfo';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
-import { PaymentResponse } from '../types';
 import { onSubmitReject } from '../../core/types';
+import { PaymentResponseData } from '../../types/global-types';
 
-class GooglePay extends UIElement<GooglePayProps> {
+class GooglePay extends UIElement<GooglePayConfiguration> {
     public static type = TxVariants.googlepay;
     public static txVariants = [TxVariants.googlepay, TxVariants.paywithgoogle];
     public static defaultProps = defaultProps;
@@ -30,8 +30,12 @@ class GooglePay extends UIElement<GooglePayProps> {
         });
     }
 
-    formatProps(props: GooglePayProps): GooglePayProps {
-        // const allowedCardNetworks = props.brands?.length ? mapBrands(props.brands) : props.allowedCardNetworks; BRANDS not documented
+    /**
+     * Formats the component data input
+     * For legacy support - maps configuration.merchantIdentifier to configuration.merchantId
+     */
+    formatProps(props): GooglePayConfiguration {
+        // const allowedCardNetworks = props.brands?.length ? mapBrands(props.brands) : props.allowedCardNetworks;
         const buttonSizeMode = props.buttonSizeMode ?? (props.isDropin ? 'fill' : 'static');
         const buttonLocale = getGooglePayLocale(props.buttonLocale ?? props.i18n?.locale);
 
@@ -86,7 +90,7 @@ class GooglePay extends UIElement<GooglePayProps> {
 
         return new Promise<google.payments.api.PaymentAuthorizationResult>(resolve => {
             this.makePaymentsCall()
-                .then((paymentResponse: PaymentResponse) => {
+                .then((paymentResponse: PaymentResponseData) => {
                     resolve({ transactionState: 'SUCCESS' });
                     return paymentResponse;
                 })

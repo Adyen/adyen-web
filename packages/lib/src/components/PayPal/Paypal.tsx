@@ -1,9 +1,9 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import PaypalComponent from './components/PaypalComponent';
 import defaultProps from './defaultProps';
-import { PaymentAction } from '../../types';
-import { Intent, PayPalElementProps } from './types';
+import { PaymentAction } from '../../types/global-types';
+import { Intent, PayPalConfiguration } from './types';
 import './Paypal.scss';
 import CoreProvider from '../../core/Context/CoreProvider';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
@@ -11,7 +11,7 @@ import { ERRORS } from './constants';
 import { createShopperDetails } from './utils/create-shopper-details';
 import { TxVariants } from '../tx-variants';
 
-class PaypalElement extends UIElement<PayPalElementProps> {
+class PaypalElement extends UIElement<PayPalConfiguration> {
     public static type = TxVariants.paypal;
     public static subtype = 'sdk';
     private paymentData = null;
@@ -20,12 +20,12 @@ class PaypalElement extends UIElement<PayPalElementProps> {
 
     protected static defaultProps = defaultProps;
 
-    constructor(props: PayPalElementProps) {
+    constructor(props: PayPalConfiguration) {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    formatProps(props: PayPalElementProps): PayPalElementProps {
+    formatProps(props: PayPalConfiguration): PayPalConfiguration {
         const { merchantId, intent: intentFromConfig } = props.configuration;
         const isZeroAuth = props.amount?.value === 0;
 

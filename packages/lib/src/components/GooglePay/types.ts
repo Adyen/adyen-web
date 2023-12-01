@@ -1,4 +1,4 @@
-import { UIElementProps } from '../types';
+import { UIElementProps } from '../internal/UIElement/types';
 
 export interface GooglePayPropsConfiguration {
     /**
@@ -32,7 +32,7 @@ export interface GooglePayPropsConfiguration {
     authJwt?: string;
 }
 
-export interface GooglePayProps extends UIElementProps {
+export interface GooglePayConfiguration extends UIElementProps {
     type?: 'googlepay' | 'paywithgoogle';
 
     configuration?: GooglePayPropsConfiguration;

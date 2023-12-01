@@ -1,14 +1,14 @@
 import { h, RefObject } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import UPIComponent from './components/UPIComponent';
 import CoreProvider from '../../core/Context/CoreProvider';
 import Await from '../internal/Await';
 import QRLoader from '../internal/QRLoader';
-import { UPIElementProps, UpiMode, UpiPaymentData } from './types';
+import { UPIConfiguration, UpiMode, UpiPaymentData } from './types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { TxVariants } from '../tx-variants';
 
-class UPI extends UIElement<UPIElementProps> {
+class UPI extends UIElement<UPIConfiguration> {
     public static type = TxVariants.upi;
     public static txVariants = [TxVariants.upi, TxVariants.upi_qr, TxVariants.upi_collect];
 

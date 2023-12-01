@@ -8,8 +8,8 @@ import useCoreContext from '../../../../core/Context/useCoreContext';
 import { BoletoInputDataState } from '../../types';
 import useForm from '../../../../utils/useForm';
 import { BrazilPersonalDetail } from '../../../internal/SocialSecurityNumberBrazil/BrazilPersonalDetail';
-import { ComponentMethodsRef } from '../../../types';
 import FormInstruction from '../../../internal/FormInstruction';
+import { ComponentMethodsRef } from '../../../internal/UIElement/types';
 
 interface BoletoInputProps {
     onChange(data: any): void;

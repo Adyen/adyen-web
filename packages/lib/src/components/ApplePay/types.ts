@@ -1,6 +1,6 @@
-import { UIElementProps } from '../types';
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { UIElementProps } from '../internal/UIElement/types';
+
 declare global {
     interface Window {
         ApplePaySession: ApplePaySession;
@@ -31,7 +31,7 @@ export type OnAuthorizedCallback = (
     event: ApplePayJS.ApplePayPaymentAuthorizedEvent
 ) => void;
 
-export interface ApplePayElementProps extends UIElementProps {
+export interface ApplePayConfiguration extends UIElementProps {
     /**
      * The Apple Pay version number your website supports.
      * @default highest supported version by the shopper device

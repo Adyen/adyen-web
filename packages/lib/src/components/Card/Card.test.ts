@@ -5,7 +5,7 @@ describe('Card', () => {
         test('should not require a billingAddress if it is a stored card', () => {
             const card = new CardElement({ core: global.core, billingAddressRequired: true, storedPaymentMethodId: 'test' });
             expect(card.props.billingAddressRequired).toBe(false);
-            expect(card.props.type).toEqual('card');
+            expect(card.props.type).toEqual('scheme');
         });
 
         test('should format countryCode to lowerCase', () => {

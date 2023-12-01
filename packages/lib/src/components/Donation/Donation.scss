@@ -3,19 +3,19 @@
 .adyen-checkout__adyen-giving {
     .adyen-checkout__status__icon {
         display: block;
-        margin: var(--b-spacer-130) auto var(--b-spacer-100);
+        margin: var(--adyen-checkout-spacer-130) auto var(--adyen-checkout-spacer-100);
     }
 
     .adyen-checkout__status__text {
-        color: var(--b-color-label-primary);
-        margin-bottom: var(--b-spacer-130);
+        color: var(--adyen-checkout-color-label-primary);
+        margin-bottom: var(--adyen-checkout-spacer-130);
         text-align: center;
     }
 }
 
 .adyen-checkout__campaign {
-    border-radius: var(--b-border-radius-m);
-    background: var(--b-color-label-primary);
+    border-radius: var(--adyen-checkout-border-radius-m);
+    background: var(--adyen-checkout-color-label-primary);
     height: 227px;
     overflow: hidden;
     position: relative;
@@ -30,17 +30,17 @@
 }
 
 .adyen-checkout__campaign-logo {
-    border: var(--b-spacer-010) solid rgb(255 255 255 / 40%);
-    border-radius: var(--b-border-radius-s);
+    border: var(--adyen-checkout-spacer-010) solid rgb(255 255 255 / 40%);
+    border-radius: var(--adyen-checkout-border-radius-s);
     display: block;
-    height: var(--b-spacer-120);
-    margin-bottom: var(--b-spacer-070);
+    height: var(--adyen-checkout-spacer-120);
+    margin-bottom: var(--adyen-checkout-spacer-070);
     overflow: hidden;
-    width: var(--b-spacer-120);
+    width: var(--adyen-checkout-spacer-120);
 }
 
 .adyen-checkout__campaign-background-image {
-    background-color: var(--b-color-label-primary);
+    background-color: var(--adyen-checkout-color-label-primary);
     background-position: center;
     background-size: cover;
     height: 100%;
@@ -69,36 +69,36 @@
 
 .adyen-checkout__campaign-content {
     bottom: 0;
-    padding: var(--b-spacer-070);
+    padding: var(--adyen-checkout-spacer-070);
     position: absolute;
     z-index: 2;
 }
 
 .adyen-checkout__campaign-title,
 .adyen-checkout__campaign-description {
-    color: var(--b-color-white);
+    color: var(--adyen-checkout-color-white);
     font-weight: normal;
     margin: 0;
 }
 
 .adyen-checkout__campaign-title {
-    font-size: index.$font-size-medium;
-    margin-bottom: var(--b-spacer-040);
+    font-size: var(--adyen-checkout-font-size-medium);
+    margin-bottom: var(--adyen-checkout-spacer-040);
 }
 
 .adyen-checkout__campaign-description {
-    font-size: index.$font-size-small;
-    line-height: var(--b-text-caption-line-height);
+    font-size: var(--adyen-checkout-font-size-small);
+    line-height: var(--adyen-checkout-text-caption-line-height);
 }
 
 .adyen-checkout__adyen-giving-actions {
-    margin-top: var(--b-spacer-070);
+    margin-top: var(--adyen-checkout-spacer-070);
     text-align: center;
 }
 
 .adyen-checkout__button {
     &.adyen-checkout__button--donate {
-        margin: var(--b-spacer-070) auto var(--b-spacer-040);
+        margin: var(--adyen-checkout-spacer-070) auto var(--adyen-checkout-spacer-040);
     }
 
     &.adyen-checkout__button--decline {

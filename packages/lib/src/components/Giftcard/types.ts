@@ -1,6 +1,6 @@
-import { UIElementProps } from '../types';
 import { FunctionComponent } from 'preact';
 import { GiftcardFieldsProps } from './components/types';
+import { UIElementProps } from '../internal/UIElement/types';
 
 export interface GiftCardElementData {
     paymentMethod: {
@@ -12,7 +12,7 @@ export interface GiftCardElementData {
 }
 
 // TODO: Fix these types
-export interface GiftCardProps extends UIElementProps {
+export interface GiftCardConfiguration extends UIElementProps {
     pinRequired?: boolean;
     expiryDateRequired?: boolean;
     brandsConfiguration?: any;

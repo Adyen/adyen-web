@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'preact/hooks';
-import UIElement from '../../../UIElement';
+import UIElement from '../../../internal/UIElement/UIElement';
 
 type BrandLogoConfiguration = {
     [key: string]: string;

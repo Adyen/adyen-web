@@ -2,7 +2,7 @@ import { Page } from '@playwright/test';
 import { ANCV } from '../../models/ancv';
 
 class AncvPage {
-    readonly page: Page;
+    public readonly page: Page;
 
     public readonly ancv: ANCV;
 

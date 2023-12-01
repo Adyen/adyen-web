@@ -1,4 +1,4 @@
-import { UIElementProps } from '../types';
+import { UIElementProps } from '../internal/UIElement/types';
 
 export type UpiPaymentData = {
     paymentMethod: {
@@ -9,7 +9,7 @@ export type UpiPaymentData = {
 
 export type UpiMode = 'vpa' | 'qrCode';
 
-export interface UPIElementProps extends UIElementProps {
+export interface UPIConfiguration extends UIElementProps {
     /**
      * Define which view is displayed initially when the Component renders
      * @defaultValue vpa

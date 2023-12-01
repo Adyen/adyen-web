@@ -1,6 +1,6 @@
 import { mock } from 'jest-mock-extended';
 import { ClickToPayElement } from './ClickToPay';
-import { ClickToPayConfiguration } from '../internal/ClickToPay/types';
+import { ClickToPayProps } from '../internal/ClickToPay/types';
 import createClickToPayService from '../internal/ClickToPay/services/create-clicktopay-service';
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';
 import { CtpState } from '../internal/ClickToPay/services/ClickToPayService';
@@ -17,7 +17,7 @@ test('should initialize ClickToPayService when creating the element', () => {
         visaSrcInitiatorId: '$123456$',
         visaSrciDpaId: '$654321$'
     };
-    const ctpConfiguration: ClickToPayConfiguration = {
+    const ctpConfiguration: ClickToPayProps = {
         shopperEmail: 'shopper@example.com'
     };
 

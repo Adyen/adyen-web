@@ -1,7 +1,7 @@
 import { httpPost } from '../http';
 import Session from '../../CheckoutSession';
-import { CheckoutSessionDetailsResponse } from '../../../types';
 import { API_VERSION } from './constants';
+import { CheckoutSessionDetailsResponse } from '../../CheckoutSession/types';
 
 /**
  */

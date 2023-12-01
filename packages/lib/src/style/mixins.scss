@@ -31,7 +31,7 @@
 }
 
 @mixin b-focus-ring {
-    @include b-outer-ring-generator(var(--b-focus-ring-color));
+    @include b-outer-ring-generator(var(--adyen-checkout-focus-ring-color));
 }
 
 $adyen-checkout-media-query-s-min: 480px;
@@ -61,21 +61,21 @@ $adyen-checkout-media-query-l-min: 1024px;
 
     --text-decoration: none;
 
-    color: var(--b-color-surface-highlight-strong);
+    color: var(--adyen-checkout-link-text-color);
     text-decoration: var(--text-decoration);
 
     &:hover {
-        --text-decoration: var(--b-link-text-decoration);
+        --text-decoration: var(--adyen-checkout-link-text-decoration);
     }
 
     &:active {
-        --text-decoration: var(--b-link-text-decoration);
+        --text-decoration: var(--adyen-checkout-link-text-decoration);
     }
 
     &:focus-visible {
         @include b-focus-ring;
 
-        border-radius: var(--b-link-border-radius);
+        border-radius: var(--adyen-checkout-link-border-radius);
     }
 }
 

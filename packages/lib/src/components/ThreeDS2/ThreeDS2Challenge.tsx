@@ -1,32 +1,13 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import PrepareChallenge from './components/Challenge';
-import { ErrorCodeObject } from './components/utils';
 import { DEFAULT_CHALLENGE_WINDOW_SIZE } from './config';
 import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
-import Language from '../../language';
-import { ActionHandledReturnObject } from '../types';
 import { TxVariants } from '../tx-variants';
-import { ICore } from '../../core/types';
+import { ThreeDS2ChallengeConfiguration } from './types';
 
-export interface ThreeDS2ChallengeProps {
-    core: ICore;
-    token?: string;
-    dataKey?: string;
-    notificationURL?: string;
-    onError?: (error: string | ErrorCodeObject) => void;
-    paymentData?: string;
-    size?: string;
-    challengeWindowSize?: '01' | '02' | '03' | '04' | '05';
-    type?: string;
-    loadingContext?: string;
-    isMDFlow?: boolean;
-    i18n?: Language;
-    onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
-}
-
-class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
+class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
     public static type = TxVariants.threeDS2Challenge;
 
     public static defaultProps = {

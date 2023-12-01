@@ -2,12 +2,12 @@ import { Meta, StoryObj } from '@storybook/preact';
 import { PaymentMethodStoryProps } from '../types';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 import { Container } from '../Container';
-import { ANCVProps } from '../../../src/components/ANCV/ANCV';
+import { ANCVConfiguration } from '../../../src/components/ANCV/types';
 import { ANCV } from '../../../src';
 
-type ANCVStory = StoryObj<PaymentMethodStoryProps<ANCVProps>>;
+type ANCVStory = StoryObj<PaymentMethodStoryProps<ANCVConfiguration>>;
 
-const meta: Meta<PaymentMethodStoryProps<ANCVProps>> = {
+const meta: Meta<PaymentMethodStoryProps<ANCVConfiguration>> = {
     title: 'Components/ANCV'
 };
 

@@ -13,7 +13,7 @@ import {
     CheckoutSessionPaymentResponse,
     CheckoutSessionSetupResponse,
     SessionConfiguration
-} from '../../types';
+} from './types';
 import cancelOrder from '../Services/sessions/cancel-order';
 import { onOrderCancelData } from '../../components/Dropin/types';
 

@@ -1,4 +1,4 @@
-import { FieldsetVisibility, PersonalDetailsSchema } from '../../../types';
+import { FieldsetVisibility, PersonalDetailsSchema } from '../../../types/global-types';
 import { ValidatorRules } from '../../../utils/Validator/types';
 
 type PersonalDetailsPlaceholders = Omit<PersonalDetailsSchema, 'gender'>;

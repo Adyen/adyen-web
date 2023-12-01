@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import ApplePayButton from './components/ApplePayButton';
 import ApplePayService from './ApplePayService';
 import base64 from '../../utils/base64';
@@ -8,19 +8,19 @@ import { httpPost } from '../../core/Services/http';
 import { APPLEPAY_SESSION_ENDPOINT } from './config';
 import { preparePaymentRequest } from './payment-request';
 import { resolveSupportedVersion, mapBrands } from './utils';
-import { ApplePayElementProps, ApplePayElementData, ApplePaySessionRequest } from './types';
+import { ApplePayConfiguration, ApplePayElementData, ApplePaySessionRequest } from './types';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
-import { PaymentResponse } from '../types';
 import { onSubmitReject } from '../../core/types';
+import { PaymentResponseData } from '../../types/global-types';
 
 const latestSupportedVersion = 14;
 
-class ApplePayElement extends UIElement<ApplePayElementProps> {
+class ApplePayElement extends UIElement<ApplePayConfiguration> {
     public static type = TxVariants.applepay;
     protected static defaultProps = defaultProps;
 
-    constructor(props: ApplePayElementProps) {
+    constructor(props: ApplePayConfiguration) {
         super(props);
         this.startSession = this.startSession.bind(this);
         this.submit = this.submit.bind(this);
@@ -86,9 +86,8 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
                 });
 
                 this.makePaymentsCall()
-                    .then((paymentResponse: PaymentResponse) => {
+                    .then((paymentResponse: PaymentResponseData) => {
                         // check the order part here
-
                         resolve();
                         return paymentResponse;
                     })

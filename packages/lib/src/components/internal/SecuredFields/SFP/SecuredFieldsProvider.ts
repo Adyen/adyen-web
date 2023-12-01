@@ -159,7 +159,6 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             type: this.props.type,
             clientKey: this.props.clientKey,
             cardGroupTypes: this.props.brands,
-            allowedDOMAccess: this.props.allowedDOMAccess,
             autoFocus: this.props.autoFocus,
             trimTrailingSeparator: this.props.trimTrailingSeparator,
             loadingContext,

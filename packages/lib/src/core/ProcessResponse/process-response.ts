@@ -1,11 +1,11 @@
-import { PaymentResponse, ProcessedResponse } from '../../types';
+import { PaymentResponseData, ProcessedResponse } from '../../types/global-types';
 
 /**
  * Processes a complete response from Adyen by resultCode
  * @param response - to be processed
  * @returns a new object describing the response result (ready for onStatusChange)
  */
-const processCompleteResponse = (response: PaymentResponse): ProcessedResponse => {
+const processCompleteResponse = (response: PaymentResponseData): ProcessedResponse => {
     switch (response.resultCode.toLowerCase()) {
         case 'refused':
         case 'error':
@@ -28,7 +28,7 @@ const processCompleteResponse = (response: PaymentResponse): ProcessedResponse =
  * @param response - to be processed
  * @returns a new object describing the response result (ready for onStatusChange)
  */
-export const processResponse = (response: PaymentResponse): ProcessedResponse => {
+export const processResponse = (response: PaymentResponseData): ProcessedResponse => {
     if (!response.type && response.resultCode) {
         return processCompleteResponse(response);
     }

@@ -1,3 +1,41 @@
+import { ICore } from '../../core/types';
+import { ErrorCodeObject } from './components/utils';
+import UIElement from '../internal/UIElement';
+import { ActionHandledReturnObject } from '../../types/global-types';
+import Language from '../../language';
+
+export interface ThreeDS2DeviceFingerprintConfiguration {
+    core: ICore;
+    dataKey: string;
+    token: string;
+    notificationURL: string;
+    onError: (error?: string | ErrorCodeObject) => void;
+    paymentData: string;
+    showSpinner: boolean;
+    type: string;
+    isMDFlow?: boolean;
+    loadingContext?: string;
+    clientKey?: string;
+    elementRef?: UIElement;
+    onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
+}
+
+export interface ThreeDS2ChallengeConfiguration {
+    core: ICore;
+    token?: string;
+    dataKey?: string;
+    notificationURL?: string;
+    onError?: (error: string | ErrorCodeObject) => void;
+    paymentData?: string;
+    size?: string;
+    challengeWindowSize?: '01' | '02' | '03' | '04' | '05';
+    type?: string;
+    loadingContext?: string;
+    isMDFlow?: boolean;
+    i18n?: Language;
+    onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
+}
+
 /**
  * See
  * https://docs.adyen.com/checkout/3d-secure/api-reference#threeds2result

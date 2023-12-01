@@ -1,8 +1,8 @@
 import createElements from './createElements';
-import { StoredPaymentMethod } from '../../../types';
-import { PaymentMethodsConfiguration } from '../../types';
+import { StoredPaymentMethod } from '../../../types/global-types';
 import { ICore } from '../../../core/types';
-import UIElement from '../../UIElement';
+import UIElement from '../../internal/UIElement/UIElement';
+import { PaymentMethodsConfiguration } from '../types';
 
 /**
  * Returns a filtered (available) list of oneClick paymentMethod Elements

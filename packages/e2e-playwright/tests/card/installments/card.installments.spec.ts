@@ -74,7 +74,7 @@ test.describe('Cards (Installments)', () => {
         await pressKeyboardToNextItem(page);
         // await pressKeyboardToSelectItem(page);
 
-        const listItem = await card.selectListItem(2);
+        const listItem = await card.selectListItem('2');
         await listItem.click();
 
         // Headless test seems to need time for UI interaction to register on state
