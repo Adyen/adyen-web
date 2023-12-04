@@ -86,6 +86,8 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
                 });
 
                 this.makePaymentsCall()
+                    .then(this.sanitizeResponse)
+                    .then(this.verifyPaymentDidNotFail)
                     .then((paymentResponse: PaymentResponseData) => {
                         // check the order part here
                         resolve();

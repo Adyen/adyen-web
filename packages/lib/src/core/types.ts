@@ -6,7 +6,8 @@ import {
     PaymentMethodsResponse,
     ActionHandledReturnObject,
     OnPaymentCompletedData,
-    PaymentData
+    PaymentData,
+    PaymentResponseAdvancedFlow
 } from '../types/global-types';
 import { AnalyticsOptions } from './Analytics/types';
 import { RiskModuleOptions } from './RiskModule/RiskModule';
@@ -168,7 +169,7 @@ export interface CoreConfiguration {
         state: any,
         element: UIElement,
         actions: {
-            resolve: () => void;
+            resolve: (response: PaymentResponseAdvancedFlow) => void;
             reject: (error?: onSubmitReject) => void;
         }
     ): void;

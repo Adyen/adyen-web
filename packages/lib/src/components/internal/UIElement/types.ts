@@ -9,84 +9,86 @@ import { CoreConfiguration, ICore } from '../../../core/types';
 
 export type PayButtonFunctionProps = Omit<PayButtonProps, 'amount'>;
 
-export interface UIElementProps extends BaseElementProps {
-    environment?: string;
-    session?: Session;
-    onChange?: (state: any, element: UIElement) => void;
-    onValid?: (state: any, element: UIElement) => void;
-    beforeSubmit?: (state: any, element: UIElement, actions: any) => Promise<void>;
-    // TODO: fix actions type
-    onSubmit?: (state: any, element: UIElement, actions: any) => void;
-    onComplete?: (state, element: UIElement) => void;
-    onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
-    onAdditionalDetails?: (state: any, element: UIElement) => void;
-    onError?: (error, element?: UIElement) => void;
-    onPaymentCompleted?: (result: any, element: UIElement) => void;
-    beforeRedirect?: (resolve, reject, redirectData, element: UIElement) => void;
+type CoreCallbacks = Pick<CoreConfiguration, 'onSubmit'>;
 
-    isInstantPayment?: boolean;
+export type UIElementProps = BaseElementProps &
+    CoreCallbacks & {
+        environment?: string;
+        session?: Session;
+        onChange?: (state: any, element: UIElement) => void;
+        onValid?: (state: any, element: UIElement) => void;
+        beforeSubmit?: (state: any, element: UIElement, actions: any) => Promise<void>;
 
-    /**
-     * Flags if the element is Stored payment method
-     * @internal
-     */
-    isStoredPaymentMethod?: boolean;
+        onComplete?: (state, element: UIElement) => void;
+        onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
+        onAdditionalDetails?: (state: any, element: UIElement) => void;
+        onError?: (error, element?: UIElement) => void;
+        onPaymentCompleted?: (result: any, element: UIElement) => void;
+        beforeRedirect?: (resolve, reject, redirectData, element: UIElement) => void;
 
-    /**
-     * Flag if the element is Stored payment method.
-     * Perhaps can be deprecated and we use the one above?
-     * @internal
-     */
-    oneClick?: boolean;
+        isInstantPayment?: boolean;
 
-    /**
-     * Stored payment method id
-     * @internal
-     */
-    storedPaymentMethodId?: string;
+        /**
+         * Flags if the element is Stored payment method
+         * @internal
+         */
+        isStoredPaymentMethod?: boolean;
 
-    /**
-     * Status set when creating the Component from action
-     * @internal
-     */
-    statusType?: 'redirect' | 'loading' | 'custom';
+        /**
+         * Flag if the element is Stored payment method.
+         * Perhaps can be deprecated and we use the one above?
+         * @internal
+         */
+        oneClick?: boolean;
 
-    type?: string;
-    name?: string;
-    icon?: string;
-    amount?: PaymentAmount;
-    secondaryAmount?: PaymentAmountExtended;
+        /**
+         * Stored payment method id
+         * @internal
+         */
+        storedPaymentMethodId?: string;
 
-    /**
-     * Show/Hide pay button
-     * @defaultValue true
-     */
-    showPayButton?: boolean;
+        /**
+         * Status set when creating the Component from action
+         * @internal
+         */
+        statusType?: 'redirect' | 'loading' | 'custom';
 
-    /**
-     *  Set to false to not set the Component status to 'loading' when onSubmit is triggered.
-     *  @defaultValue true
-     */
-    setStatusAutomatically?: boolean;
+        type?: string;
+        name?: string;
+        icon?: string;
+        amount?: PaymentAmount;
+        secondaryAmount?: PaymentAmountExtended;
 
-    /** @internal */
-    payButton?: (options: PayButtonFunctionProps) => h.JSX.Element;
+        /**
+         * Show/Hide pay button
+         * @defaultValue true
+         */
+        showPayButton?: boolean;
 
-    /** @internal */
-    loadingContext?: string;
+        /**
+         *  Set to false to not set the Component status to 'loading' when onSubmit is triggered.
+         *  @defaultValue true
+         */
+        setStatusAutomatically?: boolean;
 
-    /** @internal */
-    createFromAction?: (action: PaymentAction, props: object) => UIElement;
+        /** @internal */
+        payButton?: (options: PayButtonFunctionProps) => h.JSX.Element;
 
-    /** @internal */
-    clientKey?: string;
+        /** @internal */
+        loadingContext?: string;
 
-    /** @internal */
-    elementRef?: any;
+        /** @internal */
+        createFromAction?: (action: PaymentAction, props: object) => UIElement;
 
-    /** @internal */
-    i18n?: Language;
-}
+        /** @internal */
+        clientKey?: string;
+
+        /** @internal */
+        elementRef?: any;
+
+        /** @internal */
+        i18n?: Language;
+    };
 
 export interface IUIElement extends IBaseElement {
     isValid: boolean;

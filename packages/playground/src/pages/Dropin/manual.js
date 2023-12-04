@@ -28,7 +28,7 @@ export async function initManual() {
 
                 // happpy flow
                 if (result.resultCode.includes('Refused', 'Cancelled', 'Error')) {
-                    action.reject({
+                    actions.reject({
                         error: {
                             googlePayError: {},
                             applePayError: {}

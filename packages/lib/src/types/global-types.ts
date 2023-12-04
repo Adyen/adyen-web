@@ -335,6 +335,12 @@ export interface OnPaymentCompletedData {
     resultCode: ResultCode;
 }
 
+export interface PaymentResponseAdvancedFlow {
+    resultCode: ResultCode;
+    action?: PaymentAction;
+    order?: Order;
+}
+
 export interface PaymentResponseData {
     type?: string;
     action?: PaymentAction;

@@ -8,20 +8,9 @@ import { CoreConfiguration, ICore } from '../../../core/types';
 import { Resources } from '../../../core/Context/Resources';
 import { NewableComponent } from '../../../core/core.registry';
 import { ComponentMethodsRef, IUIElement, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
-import { PaymentAction, PaymentResponseData, PaymentData, RawPaymentResponse } from '../../../types/global-types';
+import { PaymentAction, PaymentResponseData, PaymentData, RawPaymentResponse, PaymentResponseAdvancedFlow } from '../../../types/global-types';
 import './UIElement.scss';
 import { CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
-
-export type SubmitReject = {
-    googlePayError?: {
-        message?: string;
-        reason?: google.payments.api.ErrorReason;
-    };
-    applePayError?: {
-        // TOOD
-        [key: string]: any;
-    };
-};
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
@@ -115,6 +104,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         }
 
         this.makePaymentsCall()
+            .then(this.sanitizeResponse)
+            .then(this.verifyPaymentDidNotFail)
             .then(this.handleResponse)
             .catch(() => {
                 this.elementRef.setStatus('ready');
@@ -124,7 +115,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     /**
      * Triggers the payment flow
      */
-    protected makePaymentsCall(): Promise<PaymentResponseData | CheckoutSessionPaymentResponse> {
+    protected makePaymentsCall(): Promise<PaymentResponseAdvancedFlow | CheckoutSessionPaymentResponse> {
         if (this.props.setStatusAutomatically) {
             this.setElementStatus('loading');
         }
@@ -149,8 +140,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.handleError(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Could not submit the payment'));
     }
 
-    private async submitUsingAdvancedFlow(): Promise<PaymentResponseData> {
-        return new Promise<PaymentResponseData>((resolve, reject) => {
+    private async submitUsingAdvancedFlow(): Promise<PaymentResponseAdvancedFlow> {
+        return new Promise<PaymentResponseAdvancedFlow>((resolve, reject) => {
             this.props.onSubmit(
                 {
                     data: this.data,
@@ -161,25 +152,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
                 { resolve, reject }
             );
         });
-
-        //     .then((paymentsResponse: PaymentResponse) => {
-        //     // Handle result?
-        //     if (paymentsResponse.action) {
-        //         // @ts-ignore Fix props
-        //         this.elementRef.handleAction(paymentsResponse.action, ...paymentsResponse.actionProps);
-        //         return paymentsResponse;
-        //     }
-        //     if (paymentsResponse.order) {
-        //         // @ts-ignore Just testing
-        //         const { order, paymentMethodsResponse } = paymentsResponse;
-        //         // @ts-ignore Just testing
-        //         this.core.update({ paymentMethodsResponse, order, amount: data.order.remainingAmount });
-        //         return paymentsResponse;
-        //     }
-        //
-        //     this.handleFinalResult(paymentsResponse);
-        //     return paymentsResponse;
-        // });
     }
 
     private async submitUsingSessionsFlow(data: PaymentData): Promise<CheckoutSessionPaymentResponse> {
@@ -189,14 +161,26 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             paymentsResponse = await this.core.session.submitPayment(data);
         } catch (error) {
             this.handleError(error);
-            /**
-             * Re-throw the error, so this Promise gets rejected. This keeps the same behavior as the
-             * 'submitUsingAdvancedFlow'
-             */
-            throw error;
+            return Promise.reject(error);
         }
 
         return paymentsResponse;
+    }
+
+    protected sanitizeResponse(rawResponse: RawPaymentResponse): PaymentResponseData {
+        return getSanitizedResponse(rawResponse);
+    }
+
+    protected verifyPaymentDidNotFail(response: PaymentResponseData): Promise<PaymentResponseData> {
+        // Testing response with Refused
+        response.resultCode = 'Refused';
+
+        const [status] = resolveFinalResult(response);
+
+        if (status !== 'error') {
+            return Promise.resolve(response);
+        }
+        return Promise.reject();
     }
 
     private onValid() {

@@ -90,6 +90,8 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
 
         return new Promise<google.payments.api.PaymentAuthorizationResult>(resolve => {
             this.makePaymentsCall()
+                .then(this.sanitizeResponse)
+                .then(this.verifyPaymentDidNotFail)
                 .then((paymentResponse: PaymentResponseData) => {
                     resolve({ transactionState: 'SUCCESS' });
                     return paymentResponse;
