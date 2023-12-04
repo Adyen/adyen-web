@@ -1,0 +1,35 @@
+@import "../../../../../../style/index";
+
+.adyen-checkout-ctp__otp-checkbox-container {
+  padding: 12px;
+  background-color: $color-gray-lighter;
+  border-radius: $border-radius-medium;
+  margin-bottom: 16px;
+}
+
+.adyen-checkout-ctp__otp-checkbox-container--checked {
+  background-color: #F2F8FF;
+}
+
+.adyen-checkout-ctp__otp-checkbox-container  label {
+  cursor: pointer;
+}
+
+.adyen-checkout-ctp__section .adyen-checkout__field.adyen-checkout-ctp__otp-checkbox-container {
+  margin-bottom: 4px;
+}
+
+.adyen-checkout-ctp__otp-checkbox-info {
+  color: $color-new-gray-darker;
+  font-size: 13px;
+  line-height: 19px;
+  font-weight: 400;
+  margin: 4px 0 0;
+}
+
+.adyen-checkout-ctp__otp-readmore-button {
+  all: unset;
+  text-transform: lowercase;
+  cursor: pointer;
+  color: $color-blue;
+}
