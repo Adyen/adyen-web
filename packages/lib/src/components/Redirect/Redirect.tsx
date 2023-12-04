@@ -43,10 +43,6 @@ class RedirectElement extends UIElement {
         return true;
     }
 
-    get icon() {
-        return this.resources.getImage()(this.props.type);
-    }
-
     get browserInfo() {
         return collectBrowserInfo();
     }
