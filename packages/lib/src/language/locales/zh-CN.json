@@ -299,5 +299,11 @@
     "ancv.input.label": "您的 ANCV 身份证明",
     "ancv.confirmPayment": "使用您的 ANCV 应用以确认付款。",
     "ancv.form.instruction": "要验证这笔付款，必须使用 Checke-Vacances 应用。",
-    "ancv.beneficiaryId.invalid": "输入有效的电子邮件地址或 ANCV ID"
+    "ancv.beneficiaryId.invalid": "输入有效的电子邮件地址或 ANCV ID",
+    "payme.openPayMeApp": "在 PayMe 应用中授权付款并等待确认，即可完成您在该应用中的付款。",
+    "payme.redirectButtonLabel": "打开 PayMe 应用",
+    "payme.scanQrCode": "通过二维码完成付款",
+    "payme.timeToPay": "此二维码有效期为 %@",
+    "payme.instructions.steps": "打开 PayMe 应用。%@扫描二维码即可授权付款。%@在应用中完成支付并等待确认。",
+    "payme.instructions.footnote": "付款完成前，请勿关闭此页面"
 }

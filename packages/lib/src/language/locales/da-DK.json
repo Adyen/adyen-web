@@ -298,5 +298,11 @@
     "ancv.input.label": "Din ANCV-identifikation",
     "ancv.confirmPayment": "Brug din ANCV-applikation til at bekræfte betalingen.",
     "ancv.form.instruction": "Cheque-Vacances-applikationen er nødvendig for at validere denne betaling.",
-    "ancv.beneficiaryId.invalid": "Indtast en gyldig e-mailadresse eller ANCV-id"
+    "ancv.beneficiaryId.invalid": "Indtast en gyldig e-mailadresse eller ANCV-id",
+    "payme.openPayMeApp": "Gennemfør betalingen i PayMe-appen ved at godkende betalingen i appen og afvente bekræftelsen.",
+    "payme.redirectButtonLabel": "Åbn PayMe-appen",
+    "payme.scanQrCode": "Gennemfør din betaling med QR-kode",
+    "payme.timeToPay": "Denne QR-kode er gyldig i %@",
+    "payme.instructions.steps": "Åbn PayMe-appen.%@Scan QR-koden for at godkende betalingen.%@Gennemfør betalingen i appen, og afvent bekræftelse.",
+    "payme.instructions.footnote": "Luk ikke denne side, før betalingen er gennemført"
 }

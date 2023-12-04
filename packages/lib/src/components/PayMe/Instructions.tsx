@@ -9,7 +9,7 @@ export default function Instructions() {
 
     return (
         <div className="adyen-checkout-payme-instructions">
-            <ol type="1" className="adyen-checkout-payme-instructions__steps">
+            <ol className="adyen-checkout-payme-instructions__steps">
                 {steps.split('%@').map((step, index) => (
                     <li key={index}>{step}</li>
                 ))}
