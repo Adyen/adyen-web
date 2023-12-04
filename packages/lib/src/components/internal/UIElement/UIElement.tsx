@@ -108,7 +108,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             .then(this.verifyPaymentDidNotFail)
             .then(this.handleResponse)
             .catch(() => {
-                this.elementRef.setStatus('ready');
+                // two scenarios when code reaches here:
+                // - adv flow: merchant used reject passing error back or empty object
+                // - adv flow: merchant resolved passed resultCode: Refused,Cancelled,etc
+                // - on sessions, payment failed with resultCode Refused, Cancelled, etc
+                this.setElementStatus('ready');
             });
     }
 
@@ -172,15 +176,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     protected verifyPaymentDidNotFail(response: PaymentResponseData): Promise<PaymentResponseData> {
-        // Testing response with Refused
-        response.resultCode = 'Refused';
-
-        const [status] = resolveFinalResult(response);
-
-        if (status !== 'error') {
-            return Promise.resolve(response);
+        if (['Cancelled', 'Error', 'Refused'].includes(response.resultCode)) {
+            return Promise.reject();
         }
-        return Promise.reject();
+
+        return Promise.resolve(response);
     }
 
     private onValid() {
