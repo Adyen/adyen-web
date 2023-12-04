@@ -14,9 +14,9 @@ class PayMeElement extends QRLoaderContainer {
 
     formatProps(props) {
         return {
-            delay: PayMeElement.defaultDelay, // ms
+            delay: PayMeElement.defaultDelay,
             ...super.formatProps(props),
-            countdownTime: this.getCountdownTime(props), // min
+            countdownTime: this.getCountdownTime(props),
             redirectIntroduction: 'payme.openPayMeApp',
             introduction: 'payme.scanQrCode',
             timeToPay: 'payme.timeToPay',
