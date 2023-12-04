@@ -33,12 +33,17 @@ class MastercardSdk extends AbstractSrcInitiator {
     }
 
     public async init(params: SrcInitParams, srciTransactionId: string): Promise<void> {
-        const sdkProps = {
-            ...params,
-            ...getMastercardSettings(this.customSdkConfiguration),
-            srciTransactionId
-        };
-        await this.schemeSdk.init(sdkProps);
+        try {
+            const sdkProps = {
+                ...params,
+                ...getMastercardSettings(this.customSdkConfiguration),
+                srciTransactionId
+            };
+            await this.schemeSdk.init(sdkProps);
+        } catch (err) {
+            const srciError = new SrciError(err, 'init', this.schemeName);
+            throw srciError;
+        }
     }
 
     public async identityLookup({ identityValue, type }: SrcIdentityLookupParams): Promise<SrciIdentityLookupResponse> {
