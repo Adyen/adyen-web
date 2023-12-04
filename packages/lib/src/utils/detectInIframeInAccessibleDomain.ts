@@ -1,5 +1,3 @@
-//TODO - rename this module to detectInIframeInSameDomain
-
 // Returns true if the page is being run in an iframe (in a domain we have access to)
 export default () => {
     if (window.parent.location instanceof Location) {

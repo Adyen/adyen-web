@@ -1,5 +1,5 @@
 import { Component, h } from 'preact';
-import detectInIframe from '../../../../utils/detectInIframe';
+import detectInIframeInAccessibleDomain from '../../../../utils/detectInIframeInAccessibleDomain';
 
 interface RedirectShopperProps {
     beforeRedirect: (resolve, reject, url) => Promise<void>;
@@ -21,7 +21,7 @@ class RedirectShopper extends Component<RedirectShopperProps> {
             if (this.postForm) {
                 this.postForm.submit();
             } else {
-                if (this.props.redirectFromTopWhenInIframe && detectInIframe()) {
+                if (this.props.redirectFromTopWhenInIframe && detectInIframeInAccessibleDomain()) {
                     // if in an iframe and the config prop allows it - try to redirect from the top level window
                     window.top.location.assign?.(this.props.url);
                 } else {
@@ -51,7 +51,7 @@ class RedirectShopper extends Component<RedirectShopperProps> {
                     ref={ref => {
                         this.postForm = ref;
                     }}
-                    {...(this.props.redirectFromTopWhenInIframe && detectInIframe() && { target: '_top' })}
+                    {...(this.props.redirectFromTopWhenInIframe && detectInIframeInAccessibleDomain() && { target: '_top' })}
                 >
                     {Object.keys(data).map(key => (
                         <input type="hidden" name={key} key={key} value={data[key]} />
