@@ -3,7 +3,7 @@
 .adyen-checkout-ctp__section {
     position: relative;
     background-color: white;
-    box-shadow: 0 8px 24px rgb(0 0 0 / 15%);
+    box-shadow: 0 6px 12px rgb(0 17 44 / 8%), 0 2px 4px rgb(0 17 44 / 4%);
     border-radius: 12px;
     padding: 16px;
 
@@ -11,7 +11,7 @@
         display: flex;
         align-items: center;
         height: 18px;
-        margin-bottom: 14px;
+        margin-bottom: 16px;
     }
 
     &--standalone {
@@ -31,8 +31,8 @@
         font-size: 17px;
         font-weight: 600;
         line-height: 22px;
-        margin: 0 0 4px;
         padding: 0;
+        margin: 0;
         width: auto;
 
         @media screen and (max-width: 400px) {
@@ -49,7 +49,7 @@
     font-size: 13px;
     font-weight: 400;
     line-height: 19px;
-    color: $color-gray-darker;
+    color: $color-new-gray-darker;
     margin: 0 0 16px;
 }
 
