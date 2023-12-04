@@ -4,6 +4,7 @@ import UIElement from '../UIElement';
 import CoreProvider from '../../core/Context/CoreProvider';
 import RedirectShopper from './components/RedirectShopper';
 import RedirectButton from '../internal/RedirectButton';
+import collectBrowserInfo from '../../utils/browserInfo';
 
 /**
  * RedirectElement
@@ -30,7 +31,8 @@ class RedirectElement extends UIElement {
         return {
             paymentMethod: {
                 type: this.props.type
-            }
+            },
+            browserInfo: this.browserInfo
         };
     }
 
@@ -43,6 +45,10 @@ class RedirectElement extends UIElement {
 
     get icon() {
         return this.resources.getImage()(this.props.type);
+    }
+
+    get browserInfo() {
+        return collectBrowserInfo();
     }
 
     render() {
