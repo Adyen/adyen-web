@@ -114,7 +114,6 @@ export default function AddressSearch({
                 <Select
                     name={'address-search'}
                     className={'adyen-checkout__address-search__dropdown'}
-                    //placeholder={i18n.get('address.placeholder')}
                     onInput={debounceInputHandler}
                     items={formattedData}
                     onChange={onSelectItem}
