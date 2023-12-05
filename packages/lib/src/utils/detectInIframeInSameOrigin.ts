@@ -1,4 +1,8 @@
-// Returns true if the page is being run in an iframe (in a domain we have access to)
+/**
+ * Returns true if the page is being run in an iframe with the same origin as the parent.
+ * In this scenario, if the merchant has set redirectFromTopWhenInIframe: true, then we can perform the redirect on the top level, parent, window;
+ * rather than on the iframe's window
+ */
 export default () => {
     try {
         if (window.parent.location.href) {
