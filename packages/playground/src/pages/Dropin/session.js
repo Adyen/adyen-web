@@ -30,6 +30,9 @@ export async function initSession() {
         onPaymentCompleted: (result, component) => {
             console.info(result, component);
         },
+        onPaymentFailed(result, element) {
+            console.log('onPaymentFailed', result, element);
+        },
         onError: (error, component) => {
             console.info(JSON.stringify(error), component);
         },

@@ -1,5 +1,6 @@
 import { ADDRESS_SCHEMA } from '../components/internal/Address/constants';
 import actionTypes from '../core/ProcessResponse/PaymentAction/actionTypes';
+import { onSubmitReject } from '../core/types';
 
 export type PaymentActionsType = keyof typeof actionTypes;
 
@@ -334,6 +335,12 @@ export interface OnPaymentCompletedData {
     sessionResult: string;
     resultCode: ResultCode;
 }
+
+export type OnPaymentFailedData =
+    | OnPaymentCompletedData
+    | (onSubmitReject & {
+          resultCode: ResultCode;
+      });
 
 export interface PaymentResponseAdvancedFlow {
     resultCode: ResultCode;

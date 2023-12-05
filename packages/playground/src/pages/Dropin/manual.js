@@ -29,6 +29,7 @@ export async function initManual() {
                 // happpy flow
                 if (result.resultCode.includes('Refused', 'Cancelled', 'Error')) {
                     actions.reject({
+                        resultCode: result.resultCode,
                         error: {
                             googlePayError: {},
                             applePayError: {}
@@ -78,6 +79,9 @@ export async function initManual() {
 
         onPaymentCompleted(result, element) {
             console.log('onPaymentCompleted', result, element);
+        },
+        onPaymentFailed(result, element) {
+            console.log('onPaymentFailed', result, element);
         },
         onAdditionalDetails: async (state, component) => {
             const result = await makeDetailsCall(state.data);

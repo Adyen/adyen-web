@@ -7,7 +7,8 @@ import {
     ActionHandledReturnObject,
     OnPaymentCompletedData,
     PaymentData,
-    PaymentResponseAdvancedFlow
+    PaymentResponseAdvancedFlow,
+    OnPaymentFailedData
 } from '../types/global-types';
 import { AnalyticsOptions } from './Analytics/types';
 import { RiskModuleOptions } from './RiskModule/RiskModule';
@@ -164,6 +165,8 @@ export interface CoreConfiguration {
     ): Promise<void>;
 
     onPaymentCompleted?(data: OnPaymentCompletedData, element?: UIElement): void;
+
+    onPaymentFailed?(data?: OnPaymentFailedData, element?: UIElement): void;
 
     onSubmit?(
         state: any,

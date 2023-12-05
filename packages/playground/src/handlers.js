@@ -29,17 +29,32 @@ export function handleError(obj) {
     }
 }
 
-export function handleSubmit(state, component) {
+export async function handleSubmit(state, component, actions) {
     component.setStatus('loading');
 
-    return makePayment(state.data)
-        .then(response => {
-            component.setStatus('ready');
-            handleResponse(response, component);
-        })
-        .catch(error => {
-            throw Error(error);
-        });
+    try {
+        const result = await makePayment(state.data);
+
+        // happpy flow
+        if (result.resultCode.includes('Refused', 'Cancelled', 'Error')) {
+            actions.reject({
+                resultCode: result.resultCode,
+                error: {
+                    googlePayError: {},
+                    applePayError: {}
+                }
+            });
+        } else {
+            actions.resolve({
+                action: result.action,
+                order: result.order,
+                resultCode: result.resultCode
+            });
+        }
+    } catch (error) {
+        // Something failed in the request
+        actions.reject();
+    }
 }
 
 export function handleAdditionalDetails(details, component) {

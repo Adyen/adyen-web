@@ -45,6 +45,12 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         onError: handleError,
         risk: {
             enabled: false
+        },
+        onPaymentCompleted(result, element) {
+            console.log('onPaymentCompleted', result, element);
+        },
+        onPaymentFailed(result, element) {
+            console.log('onPaymentFailed', result, element);
         }
     });
 

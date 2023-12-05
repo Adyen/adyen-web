@@ -19,6 +19,7 @@ export const GENERIC_OPTIONS = [
 
     // Events
     'onPaymentCompleted',
+    'onPaymentFailed',
     'beforeRedirect',
     'beforeSubmit',
     'onSubmit',

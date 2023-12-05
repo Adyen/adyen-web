@@ -1,14 +1,21 @@
 import { h } from 'preact';
 import BaseElement from '../BaseElement/BaseElement';
 import PayButton from '../PayButton';
-import { getSanitizedResponse, resolveFinalResult } from './utils';
+import { getSanitizedResponse } from './utils';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { hasOwnProperty } from '../../../utils/hasOwnProperty';
 import { CoreConfiguration, ICore } from '../../../core/types';
 import { Resources } from '../../../core/Context/Resources';
 import { NewableComponent } from '../../../core/core.registry';
 import { ComponentMethodsRef, IUIElement, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
-import { PaymentAction, PaymentResponseData, PaymentData, RawPaymentResponse, PaymentResponseAdvancedFlow } from '../../../types/global-types';
+import {
+    PaymentAction,
+    PaymentResponseData,
+    PaymentData,
+    RawPaymentResponse,
+    PaymentResponseAdvancedFlow,
+    OnPaymentFailedData
+} from '../../../types/global-types';
 import './UIElement.scss';
 import { CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
 
@@ -107,12 +114,15 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             .then(this.sanitizeResponse)
             .then(this.verifyPaymentDidNotFail)
             .then(this.handleResponse)
-            .catch(() => {
+            .catch((exception: OnPaymentFailedData) => {
                 // two scenarios when code reaches here:
                 // - adv flow: merchant used reject passing error back or empty object
                 // - adv flow: merchant resolved passed resultCode: Refused,Cancelled,etc
-                // - on sessions, payment failed with resultCode Refused, Cancelled, etc
-                this.setElementStatus('ready');
+                // - on sessions, payment failed with resultCode Refused, Cancelled, etcthis.
+                this.props.onPaymentFailed?.(exception, this.elementRef);
+                if (this.props.setStatusAutomatically) {
+                    this.setElementStatus('error');
+                }
             });
     }
 
@@ -177,7 +187,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     protected verifyPaymentDidNotFail(response: PaymentResponseData): Promise<PaymentResponseData> {
         if (['Cancelled', 'Error', 'Refused'].includes(response.resultCode)) {
-            return Promise.reject();
+            return Promise.reject(response);
         }
 
         return Promise.resolve(response);
@@ -281,10 +291,9 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         if (this.props.onPaymentCompleted) this.props.onPaymentCompleted(response, this.elementRef);
     };
 
-    protected handleFinalResult = (result: PaymentResponseData) => {
+    protected handleSuccessResult = (result: PaymentResponseData) => {
         if (this.props.setStatusAutomatically) {
-            const [status, statusProps] = resolveFinalResult(result);
-            if (status) this.setElementStatus(status, statusProps);
+            this.setElementStatus('success');
         }
 
         if (this.props.onPaymentCompleted) {
@@ -317,7 +326,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             return;
         }
 
-        this.handleFinalResult(response);
+        this.handleSuccessResult(response);
     }
 
     /**

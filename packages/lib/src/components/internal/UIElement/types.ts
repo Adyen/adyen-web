@@ -9,7 +9,8 @@ import { CoreConfiguration, ICore } from '../../../core/types';
 
 export type PayButtonFunctionProps = Omit<PayButtonProps, 'amount'>;
 
-type CoreCallbacks = Pick<CoreConfiguration, 'onSubmit'>;
+// TODO add onPaymentCompleted
+type CoreCallbacks = Pick<CoreConfiguration, 'onSubmit' | 'onPaymentFailed'>;
 
 export type UIElementProps = BaseElementProps &
     CoreCallbacks & {
