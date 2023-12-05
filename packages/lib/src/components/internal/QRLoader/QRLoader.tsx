@@ -45,7 +45,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
         throttledInterval: 10000,
         introduction: 'wechatpay.scanqrcode',
         timeToPay: 'wechatpay.timetopay',
-        redirectButtonLabel: 'openApp'
+        buttonLabel: 'openApp'
     };
 
     // Retry until getting a complete response from the server or it times out\
@@ -146,7 +146,6 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
         const { i18n, loadingContext } = useCoreContext();
         const getImage = useImage();
         const qrCodeImage = this.props.qrCodeData ? `${loadingContext}${QRCODE_URL}${this.props.qrCodeData}` : this.props.qrCodeImage;
-
         const finalState = (image, message) => {
             const status = i18n.get(message);
             useA11yReporter(status);
@@ -202,11 +201,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                         {this.props.redirectIntroduction && (
                             <div className="adyen-checkout__qr-loader__subtitle">{i18n.get(this.props.redirectIntroduction)}</div>
                         )}
-                        <Button
-                            classNameModifiers={['qr-loader']}
-                            onClick={() => this.redirectToApp(url)}
-                            label={i18n.get(this.props.redirectButtonLabel)}
-                        />
+                        <Button classNameModifiers={['qr-loader']} onClick={() => this.redirectToApp(url)} label={i18n.get(this.props.buttonLabel)} />
                         <ContentSeparator />
                     </div>
                 )}

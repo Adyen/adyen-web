@@ -13,7 +13,7 @@ class PayMeElement extends QRLoaderContainer {
             redirectIntroduction: 'payme.openPayMeApp',
             introduction: 'payme.scanQrCode',
             timeToPay: 'payme.timeToPay',
-            redirectButtonLabel: 'payme.redirectButtonLabel',
+            buttonLabel: 'payme.redirectButtonLabel',
             instructions: Instructions,
             ...super.formatProps(props)
         };

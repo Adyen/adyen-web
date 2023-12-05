@@ -22,9 +22,9 @@ export interface QRLoaderProps {
     classNameModifiers?: string[];
     brandLogo?: string;
     brandName?: string;
+    buttonLabel?: string;
     introduction?: string;
     redirectIntroduction?: string;
-    redirectButtonLabel?: string;
     timeToPay?: string;
     instructions?: string | (() => h.JSX.Element);
     copyBtn?: boolean;

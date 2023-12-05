@@ -22,6 +22,7 @@ export class CountdownA11yReporter {
 
     constructor(props: ICountdownA11yService) {
         const { srPanel, i18n } = props;
+
         this.srPanel = srPanel;
         this.i18n = i18n;
         // Force the srPanel to update ariaRelevant
