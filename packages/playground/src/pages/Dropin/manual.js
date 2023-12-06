@@ -1,6 +1,24 @@
-import { AdyenCheckout, Dropin, Card, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay } from '@adyen/adyen-web';
+import {
+    AdyenCheckout,
+    Dropin,
+    Card,
+    GooglePay,
+    PayPal,
+    Ach,
+    Affirm,
+    WeChat,
+    Giftcard,
+    AmazonPay
+} from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
-import { getPaymentMethods, makePayment, checkBalance, createOrder, cancelOrder, makeDetailsCall } from '../../services';
+import {
+    getPaymentMethods,
+    makePayment,
+    checkBalance,
+    createOrder,
+    cancelOrder,
+    makeDetailsCall
+} from '../../services';
 import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
 import { getSearchParameters } from '../../utils';
 import getTranslationFile from '../../config/getTranslation';
@@ -96,7 +114,11 @@ export async function initManual() {
                 };
 
                 const orderPaymentMethods = await getPaymentMethods({ order, amount, shopperLocale });
-                checkout.update({ paymentMethodsResponse: orderPaymentMethods, order, amount: result.order.remainingAmount });
+                checkout.update({
+                    paymentMethodsResponse: orderPaymentMethods,
+                    order,
+                    amount: result.order.remainingAmount
+                });
             } else {
                 handleFinalState(result.resultCode, component);
             }

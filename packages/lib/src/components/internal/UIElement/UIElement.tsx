@@ -21,7 +21,10 @@ import {
 import './UIElement.scss';
 import { CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
 
-export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> implements IUIElement {
+export abstract class UIElement<P extends UIElementProps = UIElementProps>
+    extends BaseElement<P>
+    implements IUIElement
+{
     protected componentRef: any;
 
     protected resources: Resources;
@@ -290,10 +293,9 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     protected handleOrder = (response: PaymentResponseData): void => {
         const { order } = response;
 
-        const updateCorePromise =
-            !this.props.session && this.props.onPaymentMethodsRequest
-                ? this.handleAdvanceFlowPaymentMethodsUpdate(order)
-                : this.core.update({ order });
+        const updateCorePromise = this.core.session
+            ? this.core.update({ order })
+            : this.handleAdvanceFlowPaymentMethodsUpdate(order);
 
         updateCorePromise.then(() => {
             this.props.onOrderUpdated?.({ order });
@@ -369,7 +371,9 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * Get the element's displayable name
      */
     public get displayName(): string {
-        const paymentMethodFromResponse = this.core.paymentMethodsResponse?.paymentMethods?.find(pm => pm.type === this.type);
+        const paymentMethodFromResponse = this.core.paymentMethodsResponse?.paymentMethods?.find(
+            pm => pm.type === this.type
+        );
         return this.props.name || paymentMethodFromResponse?.name || this.type;
     }
 
@@ -391,27 +395,50 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * Get the payButton component for the current element
      */
     protected payButton = (props: PayButtonFunctionProps) => {
-        return <PayButton {...props} amount={this.props.amount} secondaryAmount={this.props.secondaryAmount} onClick={this.submit} />;
+        return (
+            <PayButton
+                {...props}
+                amount={this.props.amount}
+                secondaryAmount={this.props.secondaryAmount}
+                onClick={this.submit}
+            />
+        );
     };
 
     private async handleAdvanceFlowPaymentMethodsUpdate(order: Order) {
         return new Promise<PaymentMethodsResponse>((resolve, reject) => {
-            const data = {
-                order: {
-                    orderData: order.orderData,
-                    pspReference: order.pspReference
+            if (!this.props.onPaymentMethodsRequest) {
+                return reject();
+            }
+
+            this.props.onPaymentMethodsRequest(
+                {
+                    order: {
+                        orderData: order.orderData,
+                        pspReference: order.pspReference
+                    },
+                    locale: this.core.options.locale
                 },
-                locale: this.core.options.locale
-            };
-            this.props.onPaymentMethodsRequest(data, { resolve, reject });
+                { resolve, reject }
+            );
         })
-            .then(paymentMethodsResponse => {
-                return this.core.update({ paymentMethodsResponse, order, amount: order.remainingAmount });
-            })
             .catch(error => {
                 this.handleError(
-                    new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Payment methods be updated after partial payment.', { cause: error })
+                    new AdyenCheckoutError(
+                        'IMPLEMENTATION_ERROR',
+                        'Something failed during payment methods update or onPaymentMethodsRequest was not implemented',
+                        {
+                            cause: error
+                        }
+                    )
                 );
+            })
+            .then(paymentMethodsResponse => {
+                return this.core.update({
+                    ...(paymentMethodsResponse && { paymentMethodsResponse }),
+                    order,
+                    amount: order.remainingAmount
+                });
             });
     }
 }
