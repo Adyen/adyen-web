@@ -89,7 +89,7 @@
         "dotenv": "^16.0.3",
         "enzyme": "3.11.0",
         "enzyme-adapter-preact-pure": "4.1.0",
-        "eslint": "8.52.0",
+        "eslint": "8.53.0",
         "eslint-plugin-import": "^2.26.0",
         "eslint-plugin-jsx-a11y": "^6.6.1",
         "eslint-plugin-react": "^7.31.8",
