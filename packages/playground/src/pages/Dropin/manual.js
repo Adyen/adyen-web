@@ -1,7 +1,7 @@
 import { AdyenCheckout, Dropin, Card, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { getPaymentMethods, makePayment, checkBalance, createOrder, cancelOrder, makeDetailsCall } from '../../services';
-import { amount, shopperLocale, countryCode, returnUrl } from '../../config/commonConfig';
+import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
 import { getSearchParameters } from '../../utils';
 import getTranslationFile from '../../config/getTranslation';
 
@@ -102,20 +102,33 @@ export async function initManual() {
             }
         },
         onBalanceCheck: async (resolve, reject, data) => {
+            console.log('onBalanceCheck', data);
             resolve(await checkBalance(data));
         },
-        onOrderRequest: async (resolve, reject) => {
+        onOrderRequest: async resolve => {
+            console.log('onOrderRequested');
             resolve(await createOrder({ amount }));
+        },
+        onOrderUpdated: data => {
+            console.log('onOrderUpdated', data);
         },
         onOrderCancel: async order => {
             await cancelOrder(order);
-            checkout.update({ paymentMethodsResponse: await getPaymentMethods({ amount, shopperLocale }), order: null, amount });
+            checkout.update({
+                paymentMethodsResponse: await getPaymentMethods({ amount, shopperLocale }),
+                order: null,
+                amount
+            });
         },
         onError: (error, component) => {
             console.info(error.name, error.message, error.stack, component);
         },
         onActionHandled: rtnObj => {
             console.log('onActionHandled', rtnObj);
+        },
+        onPaymentMethodsRequest: async (data, { resolve, reject }) => {
+            console.log('onPaymentMethodsRequest', data);
+            resolve(await getPaymentMethods({ amount, shopperLocale: data.locale, order: data.order }));
         }
     });
 

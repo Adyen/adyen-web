@@ -199,16 +199,19 @@ export interface CoreConfiguration {
 
     onOrderRequest?(resolve: PromiseResolve, reject: PromiseReject, data: PaymentData): Promise<void>;
 
-    onPaymentMethodsRequest?(resolve: (response: PaymentMethodsResponse) => void, reject: () => void, data: PaymentMethodsRequestData): void;
+    onPaymentMethodsRequest?(
+        data: PaymentMethodsRequestData,
+        actions: { resolve: (response: PaymentMethodsResponse) => void; reject: () => void }
+    ): void;
 
     onOrderCancel?(order: Order): void;
 
     /**
-     * Only used in Components combined with Sessions flow
-     * Callback used to inform when the order is created.
+     * Called when the gift card balance is less than the transaction amount.
+     * Returns an Order object that includes the remaining amount to be paid.
      * https://docs.adyen.com/payment-methods/gift-cards/web-component?tab=config-sessions_1
      */
-    onOrderCreated?(data: { order: Order }): void;
+    onOrderUpdated?(data: { order: Order }): void;
 
     /**
      * Used only in the Donation Component when shopper declines to donate

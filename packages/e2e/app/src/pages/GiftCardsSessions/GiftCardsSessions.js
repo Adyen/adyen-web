@@ -37,8 +37,8 @@ const initCheckout = async () => {
         core: window.sessionCheckout,
         type: 'giftcard',
         brand: 'valuelink',
-        onOrderCreated: data => {
-            window.onOrderCreatedTestData = data;
+        onOrderUpdated: data => {
+            window.onOrderUpdatedTestData = data;
         },
         onRequiringConfirmation: () => {
             window.onRequiringConfirmationTestData = true;

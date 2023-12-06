@@ -344,9 +344,8 @@ export type OnPaymentFailedData =
 
 //TODO double check these values
 export interface PaymentMethodsRequestData {
-    order: Order;
-    amount: PaymentAmount;
-    locale: string;
+    order?: Order;
+    locale?: string;
     countryCode?: string;
 }
 

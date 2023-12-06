@@ -4,7 +4,7 @@ export interface ANCVConfiguration extends UIElementProps {
     paymentData?: any;
     data: ANCVDataState;
     onOrderRequest?: any;
-    onOrderCreated?: any;
+    onOrderUpdated?: any;
 }
 
 export interface ANCVDataState {

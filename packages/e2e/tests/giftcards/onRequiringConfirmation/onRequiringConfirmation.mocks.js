@@ -1,7 +1,7 @@
 import { RequestMock, RequestLogger } from 'testcafe';
 import { BASE_URL } from '../../pages';
 
-import { mock, loggers } from '../onOrderCreated/onOrderCreated.mocks';
+import { mock, loggers } from '../onOrderUpdated/onOrderUpdated.mocks';
 
 const path = require('path');
 require('dotenv').config({ path: path.resolve('../../', '.env') });

@@ -96,8 +96,8 @@ import getTranslationFile from '../../config/getTranslation';
         core: sessionCheckout,
         type: 'giftcard',
         brand: 'svs',
-        onOrderCreated: () => {
-            console.log('onOrderCreated');
+        onOrderUpdated: () => {
+            console.log('onOrderUpdated');
         },
         onRequiringConfirmation: () => {
             console.log('onRequiringConfirmation');

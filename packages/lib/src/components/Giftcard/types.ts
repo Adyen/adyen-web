@@ -17,7 +17,7 @@ export interface GiftCardConfiguration extends UIElementProps {
     expiryDateRequired?: boolean;
     brandsConfiguration?: any;
     brand?: string;
-    onOrderCreated?(data): void;
+    onOrderUpdated?(data): void;
     onOrderRequest?(resolve, reject, data): void;
     onBalanceCheck?(resolve, reject, data): void;
     onRequiringConfirmation?(): void;

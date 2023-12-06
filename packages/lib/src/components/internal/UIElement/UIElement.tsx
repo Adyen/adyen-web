@@ -296,7 +296,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
                 : this.core.update({ order });
 
         updateCorePromise.then(() => {
-            this.props.onOrderCreated?.({ order });
+            this.props.onOrderUpdated?.({ order });
         });
     };
 
@@ -401,10 +401,9 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
                     orderData: order.orderData,
                     pspReference: order.pspReference
                 },
-                amount: this.props.amount,
                 locale: this.core.options.locale
             };
-            this.props.onPaymentMethodsRequest(resolve, reject, data);
+            this.props.onPaymentMethodsRequest(data, { resolve, reject });
         })
             .then(paymentMethodsResponse => {
                 return this.core.update({ paymentMethodsResponse, order, amount: order.remainingAmount });

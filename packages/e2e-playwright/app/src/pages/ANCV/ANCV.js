@@ -27,7 +27,7 @@ const initCheckout = async () => {
         locale: shopperLocale,
         countryCode,
         showPayButton: true,
-        onOrderCreated: data => {
+        onOrderUpdated: data => {
             showAuthorised('Partially Authorised');
         },
         onError: handleError
