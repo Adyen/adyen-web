@@ -4,7 +4,7 @@ import Redirect from './Redirect';
 import RedirectShopper from './components/RedirectShopper';
 import RedirectElement from './Redirect';
 
-jest.mock('../../utils/detectInIframe', () => {
+jest.mock('../../utils/detectInIframeInSameOrigin', () => {
     return jest.fn().mockImplementation(() => {
         return true;
     });
