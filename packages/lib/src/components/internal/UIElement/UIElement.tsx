@@ -14,7 +14,9 @@ import {
     PaymentData,
     RawPaymentResponse,
     PaymentResponseAdvancedFlow,
-    OnPaymentFailedData
+    OnPaymentFailedData,
+    PaymentMethodsResponse,
+    Order
 } from '../../../types/global-types';
 import './UIElement.scss';
 import { CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
@@ -286,9 +288,16 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     protected handleOrder = (response: PaymentResponseData): void => {
-        this.updateParent({ order: response.order });
-        // in case we receive an order in any other component then a GiftCard trigger handleFinalResult
-        if (this.props.onPaymentCompleted) this.props.onPaymentCompleted(response, this.elementRef);
+        const { order } = response;
+
+        const updateCorePromise =
+            !this.props.session && this.props.onPaymentMethodsRequest
+                ? this.handleAdvanceFlowPaymentMethodsUpdate(order)
+                : this.core.update({ order });
+
+        updateCorePromise.then(() => {
+            this.props.onOrderCreated?.({ order });
+        });
     };
 
     protected handleSuccessResult = (result: PaymentResponseData) => {
@@ -384,6 +393,28 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     protected payButton = (props: PayButtonFunctionProps) => {
         return <PayButton {...props} amount={this.props.amount} secondaryAmount={this.props.secondaryAmount} onClick={this.submit} />;
     };
+
+    private async handleAdvanceFlowPaymentMethodsUpdate(order: Order) {
+        return new Promise<PaymentMethodsResponse>((resolve, reject) => {
+            const data = {
+                order: {
+                    orderData: order.orderData,
+                    pspReference: order.pspReference
+                },
+                amount: this.props.amount,
+                locale: this.core.options.locale
+            };
+            this.props.onPaymentMethodsRequest(resolve, reject, data);
+        })
+            .then(paymentMethodsResponse => {
+                return this.core.update({ paymentMethodsResponse, order, amount: order.remainingAmount });
+            })
+            .catch(error => {
+                this.handleError(
+                    new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Payment methods be updated after partial payment.', { cause: error })
+                );
+            });
+    }
 }
 
 export default UIElement;

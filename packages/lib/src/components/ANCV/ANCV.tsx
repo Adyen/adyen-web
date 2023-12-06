@@ -8,8 +8,6 @@ import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import PayButton from '../internal/PayButton';
 import { ANCVConfiguration } from './types';
-import { PaymentResponseData } from '../../types/global-types';
-
 export class ANCVElement extends UIElement<ANCVConfiguration> {
     public static type = 'ancv';
 
@@ -33,20 +31,6 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
 
         if (this.props.session) {
             return this.props.session.createOrder();
-        }
-    };
-
-    /**
-     * Called when the /paymentDetails endpoint returns PartiallyAuthorised. The /paymentDetails happens once the /status
-     * returns PartiallyAuthorised
-     *
-     * @param order
-     */
-    protected handleOrder = ({ order }: PaymentResponseData) => {
-        this.updateParent({ order });
-
-        if (this.props.session && this.props.onOrderCreated) {
-            return this.props.onOrderCreated(order);
         }
     };
 

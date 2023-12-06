@@ -8,7 +8,8 @@ import {
     OnPaymentCompletedData,
     PaymentData,
     PaymentResponseAdvancedFlow,
-    OnPaymentFailedData
+    OnPaymentFailedData,
+    PaymentMethodsRequestData
 } from '../types/global-types';
 import { AnalyticsOptions } from './Analytics/types';
 import { RiskModuleOptions } from './RiskModule/RiskModule';
@@ -26,14 +27,23 @@ type PromiseReject = typeof Promise.reject;
 
 export interface ICore {
     initialize(): Promise<ICore>;
+
     register(...items: NewableComponent[]): void;
-    update({ order }: { order?: Order }): Promise<ICore>;
+
+    update(options: CoreConfiguration): Promise<ICore>;
+
     remove(component): ICore;
+
     submitDetails(details: any): void;
+
     getCorePropsForComponent(): any;
+
     getComponent(txVariant: string): NewableComponent | undefined;
+
     createFromAction(action: PaymentAction, options: any): any;
+
     storeElementReference(element: UIElement): void;
+
     options: CoreConfiguration;
     paymentMethodsResponse: PaymentMethods;
     session?: Session;
@@ -188,6 +198,8 @@ export interface CoreConfiguration {
     onBalanceCheck?(resolve: PromiseResolve, reject: PromiseReject, data: GiftCardElementData): Promise<void>;
 
     onOrderRequest?(resolve: PromiseResolve, reject: PromiseReject, data: PaymentData): Promise<void>;
+
+    onPaymentMethodsRequest?(resolve: (response: PaymentMethodsResponse) => void, reject: () => void, data: PaymentMethodsRequestData): void;
 
     onOrderCancel?(order: Order): void;
 

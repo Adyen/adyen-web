@@ -342,6 +342,14 @@ export type OnPaymentFailedData =
           resultCode: ResultCode;
       });
 
+//TODO double check these values
+export interface PaymentMethodsRequestData {
+    order: Order;
+    amount: PaymentAmount;
+    locale: string;
+    countryCode?: string;
+}
+
 export interface PaymentResponseAdvancedFlow {
     resultCode: ResultCode;
     action?: PaymentAction;
