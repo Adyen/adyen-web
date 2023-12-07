@@ -1,13 +1,13 @@
-import { makePayment, makeDetailsCall } from './services';
+import { makePayment, makeDetailsCall, createOrder } from './services';
 
 function removeComponent(component) {
     component.remove();
 }
 
-function showAuthorised() {
+export function showAuthorised(message = 'Authorised') {
     const resultElement = document.getElementById('result-message');
     resultElement.classList.remove('hide');
-    resultElement.innerText = 'Authorised';
+    resultElement.innerText = message;
 }
 
 export function handleResponse(response, component) {
@@ -49,5 +49,15 @@ export function handleAdditionalDetails(details, component) {
         })
         .catch(error => {
             throw Error(error);
+        });
+}
+
+export function handleOrderRequest(resolve, reject, data) {
+    return createOrder(data)
+        .then(response => {
+            resolve(response);
+        })
+        .catch(error => {
+            reject(error);
         });
 }

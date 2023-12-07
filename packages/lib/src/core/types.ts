@@ -3,7 +3,7 @@ import { PaymentMethods, PaymentMethodOptions, PaymentActionsType, PaymentAmount
 import { AnalyticsOptions } from './Analytics/types';
 import { PaymentMethodsResponse } from './ProcessResponse/PaymentMethodsResponse/types';
 import { RiskModuleOptions } from './RiskModule/RiskModule';
-import { ActionHandledReturnObject, OnPaymentCompletedData, PaymentData } from '../components/types';
+import { ActionHandledReturnObject, OnPaymentCompletedData, PaymentData, UIElementProps } from '../components/types';
 import UIElement from '../components/UIElement';
 import AdyenCheckoutError from './Errors/AdyenCheckoutError';
 import { GiftCardElementData } from '../components/Giftcard/types';
@@ -166,10 +166,19 @@ export interface CoreOptions {
     loadingContext?: string;
 }
 
-export type PaymentMethodsConfiguration =
-    | {
-          [key in keyof PaymentMethods]?: Partial<PaymentMethodOptions<key>>;
-      }
-    | {
-          [key in PaymentActionsType]?: any;
-      };
+type PaymentMethodsConfigurationMap = {
+    [key in keyof PaymentMethods]?: Partial<PaymentMethodOptions<key>>;
+};
+
+type PaymentActionTypesMap = {
+    [key in PaymentActionsType]?: Partial<UIElementProps>;
+};
+
+/**
+ * Type must be loose, otherwise it will take priority over the rest
+ */
+type NonMappedPaymentMethodsMap = {
+    [key: string]: any;
+};
+
+export type PaymentMethodsConfiguration = PaymentMethodsConfigurationMap & PaymentActionTypesMap & NonMappedPaymentMethodsMap;

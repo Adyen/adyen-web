@@ -95,7 +95,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
                 {helper && <span className={'adyen-checkout__helper-text'}>{helper}</span>}
             </Fragment>
         );
-    }, [label, errorMessage]);
+    }, [label, errorMessage, labelEndAdornment, helper]);
 
     const renderInputRelatedElements = useCallback(() => {
         return (

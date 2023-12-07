@@ -2,11 +2,35 @@ import UIElement from './UIElement';
 import AdyenCheckout from '../index';
 import ThreeDS2DeviceFingerprint from './ThreeDS2/ThreeDS2DeviceFingerprint';
 import ThreeDS2Challenge from './ThreeDS2/ThreeDS2Challenge';
+import { mock } from 'jest-mock-extended';
+import { Resources } from '../core/Context/Resources';
 
 const submitMock = jest.fn();
 (global as any).HTMLFormElement.prototype.submit = () => submitMock;
 
 describe('UIElement', () => {
+    describe('icon()', () => {
+        test('should generate the icon URL by getting the tx variant from type() getter', () => {
+            const resources = mock<Resources>();
+            resources.getImage.mockReturnValue((icon: string) => `https://checkout-adyen.com/${icon}`);
+
+            const txVariant = 'klarna_b2b';
+
+            const uiElement = new UIElement({
+                type: txVariant,
+                modules: {
+                    resources
+                }
+            });
+
+            const typeSpy = jest.spyOn(uiElement, 'type', 'get');
+            const iconUrl = uiElement.icon;
+
+            expect(typeSpy).toHaveBeenCalledTimes(1);
+            expect(iconUrl).toBe(`https://checkout-adyen.com/${txVariant}`);
+        });
+    });
+
     describe('onComplete', () => {
         test('calls the passed onComplete function', () => {
             const onComplete = jest.fn();

@@ -4,7 +4,7 @@ import { loginValidationRules } from './validate';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
 import useForm from '../../../../../utils/useForm';
 import Field from '../../../FormFields/Field';
-import InputText from '../../../FormFields/InputText';
+import InputEmail from '../../../FormFields/InputEmail';
 
 type OnChangeProps = { data: CtPLoginInputDataState; valid; errors; isValid: boolean };
 
@@ -73,7 +73,7 @@ const CtPLoginInput = (props: CtPLoginInputProps): h.JSX.Element => {
             errorMessage={isLoginInputDirty ? props.errorMessage || !!errors.shopperLogin : null}
             classNameModifiers={['shopperLogin']}
         >
-            <InputText
+            <InputEmail
                 name={'shopperLogin'}
                 autocorrect={'off'}
                 spellcheck={false}

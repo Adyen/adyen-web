@@ -103,12 +103,12 @@ export function onBrand(pCallbackObj) {
     // Optional cvc fields
     if (pCallbackObj.cvcPolicy === 'optional' && !optionalCVC) {
         optionalCVC = true;
-        if (cvcNode) cvcNode.querySelector('.pm-form-label__text').innerText = 'CVV/CVC (optional):';
+        if (cvcNode) cvcNode.querySelector('.pm-form-label__text').innerText = 'Security code (optional)';
     }
 
     if (optionalCVC && pCallbackObj.cvcPolicy !== 'optional') {
         optionalCVC = false;
-        if (cvcNode) cvcNode.querySelector('.pm-form-label__text').innerText = 'CVV/CVC:';
+        if (cvcNode) cvcNode.querySelector('.pm-form-label__text').innerText = 'Security code';
     }
 
     /**
@@ -135,16 +135,16 @@ export function onBrand(pCallbackObj) {
     // Optional date fields
     if (pCallbackObj.expiryDatePolicy === 'optional' && !optionalDate) {
         optionalDate = true;
-        if (dateNode) dateNode.querySelector('.pm-form-label__text').innerText = 'Expiry date (optional):';
-        if (monthNode) monthNode.querySelector('.pm-form-label__text').innerText = 'Expiry month (optional):';
-        if (yearNode) yearNode.querySelector('.pm-form-label__text').innerText = 'Expiry year (optional):';
+        if (dateNode) dateNode.querySelector('.pm-form-label__text').innerText = 'Expiry date (optional)';
+        if (monthNode) monthNode.querySelector('.pm-form-label__text').innerText = 'Expiry month (optional)';
+        if (yearNode) yearNode.querySelector('.pm-form-label__text').innerText = 'Expiry year (optional)';
     }
 
     if (optionalDate && pCallbackObj.expiryDatePolicy !== 'optional') {
         optionalDate = false;
-        if (dateNode) dateNode.querySelector('.pm-form-label__text').innerText = 'Expiry date:';
-        if (monthNode) monthNode.querySelector('.pm-form-label__text').innerText = 'Expiry month:';
-        if (yearNode) yearNode.querySelector('.pm-form-label__text').innerText = 'Expiry year:';
+        if (dateNode) dateNode.querySelector('.pm-form-label__text').innerText = 'Expiry date';
+        if (monthNode) monthNode.querySelector('.pm-form-label__text').innerText = 'Expiry month';
+        if (yearNode) yearNode.querySelector('.pm-form-label__text').innerText = 'Expiry year';
     }
 }
 
@@ -248,7 +248,7 @@ export function onChange(state, component) {
     }
 }
 
-const setErrorClasses = function(pNode, pSetErrors) {
+const setErrorClasses = function (pNode, pSetErrors) {
     if (pSetErrors) {
         if (pNode.className.indexOf('pm-input-field--error') === -1) {
             pNode.className += ' pm-input-field--error';
@@ -263,7 +263,7 @@ const setErrorClasses = function(pNode, pSetErrors) {
     }
 };
 
-const setFocusClasses = function(pNode, pSetFocus) {
+const setFocusClasses = function (pNode, pSetFocus) {
     if (pSetFocus) {
         if (pNode.className.indexOf('pm-input-field--focus') === -1) {
             pNode.className += ' pm-input-field--focus';
