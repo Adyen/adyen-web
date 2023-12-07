@@ -59,6 +59,16 @@ export type SrcCard = {
 export type SrcCheckoutParams = {
     srcCorrelationId: string;
     srcDigitalCardId: string;
+    complianceSettings?: {
+        complianceResources: [
+            {
+                complianceType: 'REMEMBER_ME';
+                uri: string;
+                version?: string;
+                dataPublished?: string;
+            }
+        ];
+    };
     windowRef?: Window;
 };
 

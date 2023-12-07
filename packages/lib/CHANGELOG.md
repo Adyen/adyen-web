@@ -1,5 +1,25 @@
 # @adyen/adyen-web
 
+## 5.54.0
+
+### Minor Changes
+
+-   feature: adds new onAddressSelected to fill data when an item is selected in AddressSearch ([#2406](https://github.com/Adyen/adyen-web/pull/2406))
+
+-   Click to Pay - Enabling MC/Visa to drop cookies if the shopper gives consent ([#2409](https://github.com/Adyen/adyen-web/pull/2409))
+
+-   Click to Pay - Replacing loading gif by animated SVGs ([#2435](https://github.com/Adyen/adyen-web/pull/2435))
+
+### Patch Changes
+
+-   For all PaymentMethodItems we were adding a class `adyen-checkout__payment-method--{fundingSource}` (where fundingSource was either "credit" or "debit") ([#2465](https://github.com/Adyen/adyen-web/pull/2465))
+
+    This is meant to be a Card PM specific class to indicate, in the paymentMethods list, whether the card is a credit or debit card.
+
+-   Fixed Klarna B2B logo for Drop-in ([#2458](https://github.com/Adyen/adyen-web/pull/2458))
+
+-   Pass the `browserInfo` in the `state.data` for the Redirect payments, in order to fix the mobile web integration for some redirect payments. ([#2469](https://github.com/Adyen/adyen-web/pull/2469))
+
 ## 5.53.3
 
 ### Patch Changes

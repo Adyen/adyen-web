@@ -9,6 +9,8 @@ export interface IClickToPayService {
     identityValidationData: IdentityValidationData;
     schemes: string[];
     shopperAccountFound: boolean;
+    storeCookies: boolean;
+    updateStoreCookiesConsent(shouldStore: boolean): void;
     initialize(): Promise<void>;
     checkout(card: ShopperCard): Promise<ClickToPayCheckoutPayload>;
     logout(): Promise<void>;

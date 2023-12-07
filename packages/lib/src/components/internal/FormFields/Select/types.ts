@@ -32,6 +32,7 @@ export interface SelectProps {
     disabled?: boolean;
     disableTextFilter?: boolean;
     clearOnSelect?: boolean;
+    blurOnClose?: boolean;
 }
 
 export interface SelectButtonProps {
