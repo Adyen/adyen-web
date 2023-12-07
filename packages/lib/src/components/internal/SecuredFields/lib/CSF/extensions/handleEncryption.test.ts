@@ -165,7 +165,7 @@ describe('Testing CSFs handleEncryption functionality', () => {
     const postMessageToIframeMock = jest.fn(obj => console.log('### handleEncryption.test::Mock FN call to postMessageToIframe:: ', obj));
 
     beforeEach(() => {
-        // console.log = jest.fn(() => {});
+        console.log = jest.fn(() => {});
 
         mockedAddEncryptedElementMock.mockReset();
         mockedAddEncryptedElementMock.mockImplementation((obj, id) => addEncryptedElementMock(obj, id));
