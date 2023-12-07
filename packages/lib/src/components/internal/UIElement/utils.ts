@@ -15,7 +15,8 @@ export function getSanitizedResponse(response: RawPaymentResponse): PaymentRespo
         return acc;
     }, {});
 
-    if (removedProperties.length) console.warn(`The following properties should not be passed to the client: ${removedProperties.join(', ')}`);
+    if (removedProperties.length)
+        console.warn(`The following properties should not be passed to the client: ${removedProperties.join(', ')}`);
 
     return sanitizedObject as PaymentResponseData;
 }

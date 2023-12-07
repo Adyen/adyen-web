@@ -66,7 +66,9 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
     public get data(): PaymentData {
         const clientData = getProp(this.props, 'modules.risk.data');
         const useAnalytics = !!getProp(this.props, 'modules.analytics.props.enabled');
-        const checkoutAttemptId = useAnalytics ? getProp(this.props, 'modules.analytics.checkoutAttemptId') : 'do-not-track';
+        const checkoutAttemptId = useAnalytics
+            ? getProp(this.props, 'modules.analytics.checkoutAttemptId')
+            : 'do-not-track';
         const order = this.state.order || this.props.order;
 
         const componentData = this.formatData();
@@ -126,8 +128,8 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
      * @param props - props to update
      * @returns this - the element instance
      */
-    public update(props: P): this {
-        this.buildElementProps({ ...this.props, ...props });
+    public update(props: Partial<P>): this {
+        this.props = this.formatProps({ ...this.props, ...props });
         this.state = {};
 
         return this.unmount().mount(this._node); // for new mount fny

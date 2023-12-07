@@ -6,13 +6,22 @@ import { AdyenCheckoutProps } from '../stories/types';
 import Checkout from '../../src/core/core';
 import { PaymentMethodsResponse } from '../../src/types';
 
-async function createAdvancedFlowCheckout({ showPayButton, countryCode, shopperLocale, amount }: AdyenCheckoutProps): Promise<Checkout> {
+async function createAdvancedFlowCheckout({
+    showPayButton,
+    countryCode,
+    shopperLocale,
+    amount
+}: AdyenCheckoutProps): Promise<Checkout> {
     const paymentAmount = {
         currency: getCurrency(countryCode),
         value: Number(amount)
     };
 
-    const paymentMethodsResponse: PaymentMethodsResponse = await getPaymentMethods({ amount: paymentAmount, shopperLocale, countryCode });
+    const paymentMethodsResponse: PaymentMethodsResponse = await getPaymentMethods({
+        amount: paymentAmount,
+        shopperLocale,
+        countryCode
+    });
 
     const checkout = await AdyenCheckout({
         clientKey: process.env.CLIENT_KEY,
@@ -41,8 +50,12 @@ async function createAdvancedFlowCheckout({ showPayButton, countryCode, shopperL
         },
 
         onBalanceCheck: async (resolve, reject, data) => {
+            const payload = {
+                amount: paymentAmount,
+                ...data
+            };
             try {
-                const res = await checkBalance(data);
+                const res = await checkBalance(payload);
                 resolve(res);
             } catch (e) {
                 reject(e);
