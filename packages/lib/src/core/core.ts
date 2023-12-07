@@ -148,7 +148,7 @@ class Core {
         }
 
         if (action.type) {
-            // Call analytics endpoint
+            // AnalyticsAction: action: 'log' type:'action'
             this.modules.analytics.createAnalyticsAction({
                 action: 'log',
                 data: {

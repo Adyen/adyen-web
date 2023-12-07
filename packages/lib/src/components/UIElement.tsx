@@ -92,6 +92,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
             const data = { component, type: this.props.isDropin ? ANALYTICS_SELECTED_STR : ANALYTICS_MOUNTED_STR, ...storedCardIndicator };
             // console.log('### UIElement::submitAnalytics:: SELECTED data=', data);
 
+            // AnalyticsAction: action: 'event' type:'mounted'|'selected'
             this.props.modules?.analytics.createAnalyticsAction({
                 action: 'event',
                 data
@@ -99,7 +100,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
             return;
         }
 
-        // PM pay button pressed
+        // PM pay button pressed - AnalyticsAction: action: 'log' type:'submit'
         this.props.modules?.analytics.createAnalyticsAction({
             action: 'log',
             data: { component, type: ANALYTICS_SUBMIT_STR, target: 'payButton', message: 'Shopper clicked pay' }
