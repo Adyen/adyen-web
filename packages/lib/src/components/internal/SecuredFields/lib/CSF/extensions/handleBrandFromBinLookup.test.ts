@@ -8,37 +8,17 @@ const mockedPostMessageToIframe = postMessageToIframe as jest.Mock;
 const securedFieldsObj: any = {
     encryptedCardNumber: { numKey: 654321 },
     encryptedExpiryDate: { expiryDatePolicy: null, numKey: 654321 },
-    // encryptedExpiryMonth: null,
-    // encryptedExpiryYear: null,
     encryptedSecurityCode: { cvcPolicy: null, numKey: 654321 }
 };
 
 const myCSF = {
     state: { type: 'card', securedFields: securedFieldsObj },
-    // props: { rootNode: 'div' },
     config: {},
-    // callbacks: {
-    //     onFieldValid: jest.fn(obj => {
-    //         console.log('### handleEncryption.test::callbacks.onFieldValid:: obj', obj);
-    //     }),
-    //     onError: null
-    // },
     handleBrandFromBinLookup,
     sendBrandToCardSF,
     sendExpiryDatePolicyToSF,
-    validateForm: jest.fn(() => {
-        console.log('### handleBrandFromBinLookup.test::myCSF.validateForm:: ');
-    }),
+    validateForm: null,
     processBrand: null
-    // processBrand: jest.fn(obj => {
-    //     console.log('### handleBrandFromBinLookup.test::myCSF.processBrand:: obj', obj);
-    // })
-    // sendBrandToCardSF: jest.fn(obj => {
-    //     console.log('### handleBrandFromBinLookup.test::myCSF.sendBrandToCardSF:: obj', obj);
-    // }),
-    // sendExpiryDatePolicyToSF: jest.fn(obj => {
-    //     console.log('### handleBrandFromBinLookup.test::myCSF.sendExpiryDatePolicyToSF:: obj', obj);
-    // })
 };
 
 const binLookupResponseObj: any = {
@@ -119,7 +99,7 @@ describe('Testing CSFs handleBrandFromBinLookup functionality', () => {
     const postMessageToIframeMock = jest.fn(obj => console.log('### handleEncryption.test::Mock FN call to postMessageToIframe:: ', obj));
 
     beforeEach(() => {
-        // console.log = jest.fn(() => {});
+        console.log = jest.fn(() => {});
 
         mockedPostMessageToIframe.mockReset();
         mockedPostMessageToIframe.mockImplementation(obj => postMessageToIframeMock(obj));
@@ -127,6 +107,10 @@ describe('Testing CSFs handleBrandFromBinLookup functionality', () => {
 
         myCSF.processBrand = jest.fn(obj => {
             console.log('### handleBrandFromBinLookup.test::myCSF.processBrand:: obj', obj);
+        });
+
+        myCSF.validateForm = jest.fn(() => {
+            console.log('### handleBrandFromBinLookup.test::myCSF.validateForm:: ');
         });
     });
 
@@ -138,16 +122,13 @@ describe('Testing CSFs handleBrandFromBinLookup functionality', () => {
 
             expect(myCSF.processBrand).toHaveBeenCalledWith(expectedProcessBrandObj);
 
-            // expect(myCSF.sendBrandToCardSF).toHaveBeenCalledWith({ brand: 'mc', enableLuhnCheck: true });
-            // expect(myCSF.sendExpiryDatePolicyToSF).toHaveBeenCalledWith({ expiryDatePolicy: 'required' });
-
             expect(postMessageToIframeMock).toHaveBeenCalledWith(expectedSendBrandToCardSFObj);
             expect(postMessageToIframeMock).toHaveBeenCalledWith(expectedSendExpiryDatePolicyToSF_expiryDateObj);
 
             expect(myCSF.state.securedFields.encryptedSecurityCode.cvcPolicy).toEqual('required');
             expect(myCSF.state.securedFields.encryptedExpiryDate.expiryDatePolicy).toEqual('required');
 
-            expect(myCSF.validateForm).toHaveBeenCalledTimes(1);
+            expect(myCSF.validateForm).toHaveBeenCalled();
         }
     );
 
@@ -155,6 +136,7 @@ describe('Testing CSFs handleBrandFromBinLookup functionality', () => {
         'Calling handleBrandFromBinLookup with a binLookupResponse object inside a custom card component should make the expected calls to ' +
             'processBrand & validateForm, send postMsgs to set brand on the card SF & expiryDatePolicy on the expiryMonth & expiryYear SFs, and set cvcPolicy & expiryDatePolicy in state',
         () => {
+            // reconfigure state.securedFields to reflect a custom card setup
             delete myCSF.state.securedFields.encryptedExpiryDate;
 
             myCSF.state.securedFields.encryptedExpiryMonth = { expiryDatePolicy: null, numKey: 654321 };
@@ -172,59 +154,88 @@ describe('Testing CSFs handleBrandFromBinLookup functionality', () => {
             expect(myCSF.state.securedFields.encryptedExpiryMonth.expiryDatePolicy).toEqual('required');
             expect(myCSF.state.securedFields.encryptedExpiryYear.expiryDatePolicy).toEqual('required');
 
-            expect(myCSF.validateForm).toHaveBeenCalledTimes(2);
+            expect(myCSF.validateForm).toHaveBeenCalled();
         }
     );
 
-    test('Calling handleBrandFromBinLookup without a binLookupResponse object...', () => {
-        delete myCSF.state.securedFields.encryptedExpiryMonth;
-        delete myCSF.state.securedFields.encryptedExpiryYear;
+    test(
+        'Calling handleBrandFromBinLookup without a binLookupResponse object or a reset object, on a custom card, ' +
+            'should see that postMsgs are set to reset brand on the card SF and expiryDatePolicy on the expiryMonth & expiryYear SFs, ' +
+            'and processBrand & validateForm are not called',
+        () => {
+            // @ts-ignore it's a mock scenario!
+            myCSF.handleBrandFromBinLookup({}, null);
 
-        myCSF.state.securedFields.encryptedExpiryDate = { expiryDatePolicy: null, numKey: 654321 };
+            expect(postMessageToIframeMock).toHaveBeenCalledWith(expectedSendBrandToCardSF_resetObj);
+            expect(postMessageToIframeMock).toHaveBeenCalledWith(expectedSendExpiryDatePolicyToSF_expiryMonthObj);
+            expect(postMessageToIframeMock).toHaveBeenCalledWith(expectedSendExpiryDatePolicyToSF_expiryYearObj);
 
-        // @ts-ignore it's a mock scenario!
-        myCSF.handleBrandFromBinLookup({}, null);
+            expect(myCSF.processBrand).not.toHaveBeenCalled();
+            expect(myCSF.validateForm).not.toHaveBeenCalled();
+        }
+    );
 
-        expect(myCSF.processBrand).not.toHaveBeenCalled();
+    test(
+        'Calling handleBrandFromBinLookup without a binLookupResponse object or a reset object, on a regular card, ' +
+            'should see that postMsgs are set to reset brand and expiryDatePolicy on the SFs, ' +
+            'expiryDatePolicy is reset in local state, and processBrand & validateForm are not called',
+        () => {
+            // reconfigure state.securedFields to revert it back to a regular card setup
+            delete myCSF.state.securedFields.encryptedExpiryMonth;
+            delete myCSF.state.securedFields.encryptedExpiryYear;
 
-        expect(postMessageToIframeMock).toHaveBeenCalledWith(expectedSendBrandToCardSF_resetObj);
-        expect(postMessageToIframeMock).toHaveBeenCalledWith(expectedSendExpiryDatePolicyToSF_expiryDateObj);
+            myCSF.state.securedFields.encryptedExpiryDate = { expiryDatePolicy: null, numKey: 654321 };
 
-        expect(myCSF.state.securedFields.encryptedExpiryDate.expiryDatePolicy).toEqual('required');
+            // @ts-ignore it's a mock scenario!
+            myCSF.handleBrandFromBinLookup({}, null);
 
-        // not called again
-        expect(myCSF.validateForm).toHaveBeenCalledTimes(2);
-    });
+            expect(postMessageToIframeMock).toHaveBeenCalledWith(expectedSendBrandToCardSF_resetObj);
+            expect(postMessageToIframeMock).toHaveBeenCalledWith(expectedSendExpiryDatePolicyToSF_expiryDateObj);
 
-    test('Calling handleBrandFromBinLookup without a binLookupResponse object, when state.type is not the generic value "card"...', () => {
-        myCSF.state.securedFields.encryptedExpiryDate.expiryDatePolicy = null;
-        myCSF.state.type = 'mc';
+            expect(myCSF.state.securedFields.encryptedExpiryDate.expiryDatePolicy).toEqual('required');
 
-        myCSF.handleBrandFromBinLookup(null, null);
+            expect(myCSF.processBrand).not.toHaveBeenCalled();
+            expect(myCSF.validateForm).not.toHaveBeenCalled();
+        }
+    );
 
-        expect(postMessageToIframeMock).not.toHaveBeenCalled();
-        expect(postMessageToIframeMock).not.toHaveBeenCalled();
+    test(
+        'Calling handleBrandFromBinLookup without a binLookupResponse object or a reset object, when state.type is not the generic value "card", ' +
+            'should see that postMsgs are not sent, expiryDatePolicy is not reset in local state, and processBrand & validateForm are not called',
+        () => {
+            myCSF.state.securedFields.encryptedExpiryDate.expiryDatePolicy = null;
+            myCSF.state.type = 'mc';
 
-        expect(myCSF.state.securedFields.encryptedExpiryDate.expiryDatePolicy).toEqual(null);
+            myCSF.handleBrandFromBinLookup(null, null);
 
-        // not called again
-        expect(myCSF.validateForm).toHaveBeenCalledTimes(2);
-    });
+            expect(postMessageToIframeMock).not.toHaveBeenCalled();
+            expect(postMessageToIframeMock).not.toHaveBeenCalled();
 
-    test('Calling handleBrandFromBinLookup without a binLookupResponse object but with a reset object, when state.type is not the generic value "card"...', () => {
-        myCSF.state.type = 'mc';
+            expect(myCSF.state.securedFields.encryptedExpiryDate.expiryDatePolicy).toEqual(null); // not been set to 'required'
 
-        // @ts-ignore it's a mock scenario!
-        myCSF.handleBrandFromBinLookup(null, nonGenericCard_resetObj);
+            expect(myCSF.processBrand).not.toHaveBeenCalled();
+            expect(myCSF.validateForm).not.toHaveBeenCalled();
+        }
+    );
 
-        expect(myCSF.processBrand).toHaveBeenCalledWith(expectedProcessBrand_resetObj);
+    test(
+        'Calling handleBrandFromBinLookup without a binLookupResponse object but with a reset object, when state.type is not the generic value "card", ' +
+            'should see processBrand called with the expect "reset" object, postMsgs are not sent, expiryDatePolicy is not reset in local state, ' +
+            'and validateForm is not called',
+        () => {
+            myCSF.state.type = 'bcmc';
 
-        expect(postMessageToIframeMock).not.toHaveBeenCalled();
-        expect(postMessageToIframeMock).not.toHaveBeenCalled();
+            // @ts-ignore it's a mock scenario!
+            myCSF.handleBrandFromBinLookup(null, nonGenericCard_resetObj);
 
-        expect(myCSF.state.securedFields.encryptedExpiryDate.expiryDatePolicy).toEqual(null);
+            expect(myCSF.processBrand).toHaveBeenCalledWith(expectedProcessBrand_resetObj);
 
-        // not called again
-        expect(myCSF.validateForm).toHaveBeenCalledTimes(2);
-    });
+            expect(postMessageToIframeMock).not.toHaveBeenCalled();
+            expect(postMessageToIframeMock).not.toHaveBeenCalled();
+
+            expect(myCSF.state.securedFields.encryptedExpiryDate.expiryDatePolicy).toEqual(null);
+
+            expect(myCSF.validateForm).not.toHaveBeenCalled();
+        }
+    );
 });

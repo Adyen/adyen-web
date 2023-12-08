@@ -52,8 +52,10 @@ export default function handleBrandFromBinLookup(binLookupResponse: BinLookupRes
      */
     if (!binLookupResponse || !Object.keys(binLookupResponse).length) {
         if (isGenericCard) {
-            // This will be sent to CardNumber SF which will trigger the brand to be re-evaluated and broadcast (which will reset cvcPolicy)
+            // This will be sent to CardNumber SF which will trigger the brand to be re-evaluated and broadcast
+            // (which will reset cvcPolicy & expiryDatePolicy in state, here in Checkout)
             this.sendBrandToCardSF({ brand: 'reset' });
+            // Also pass the reset expiryDatePolicy to the date related SFs so they can reset visibility & aria-required attrs
             this.sendExpiryDatePolicyToSF({ expiryDatePolicy: DATE_POLICY_REQUIRED });
         } else {
             /**
@@ -67,7 +69,7 @@ export default function handleBrandFromBinLookup(binLookupResponse: BinLookupRes
             }
         }
 
-        // Reset expiryDatePolicy - which never comes from SF
+        // Reset expiryDatePolicy - which never comes from SF // TODO find out under which circumstances this clause is still required
         if (this.state.type === 'card' && hasOwnProperty(this.state.securedFields, ENCRYPTED_EXPIRY_DATE)) {
             this.state.securedFields[ENCRYPTED_EXPIRY_DATE].expiryDatePolicy = DATE_POLICY_REQUIRED;
         }
