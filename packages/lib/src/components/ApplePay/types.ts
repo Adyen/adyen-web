@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { UIElementProps } from '../internal/UIElement/types';
 
 declare global {
@@ -8,6 +7,18 @@ declare global {
 }
 
 type Initiative = 'web' | 'messaging';
+
+export type ApplePayPaymentOrderDetails = {
+    orderTypeIdentifier: string;
+    orderIdentifier: string;
+    webServiceURL: string;
+    authenticationToken: string;
+};
+
+// @types/applepayjs package does not contain 'orderDetails' yet, so we create our own type
+export type ApplePayPaymentAuthorizationResult = ApplePayJS.ApplePayPaymentAuthorizationResult & {
+    orderDetails?: ApplePayPaymentOrderDetails;
+};
 
 export type ApplePayButtonType =
     | 'plain'
@@ -24,12 +35,6 @@ export type ApplePayButtonType =
     | 'support'
     | 'tip'
     | 'top-up';
-
-export type OnAuthorizedCallback = (
-    resolve: (result?: ApplePayJS.ApplePayPaymentAuthorizationResult) => void,
-    reject: (result?: ApplePayJS.ApplePayPaymentAuthorizationResult) => void,
-    event: ApplePayJS.ApplePayPaymentAuthorizedEvent
-) => void;
 
 export interface ApplePayConfiguration extends UIElementProps {
     /**
@@ -142,6 +147,16 @@ export interface ApplePayConfiguration extends UIElementProps {
     // Events
 
     onClick?: (resolve, reject) => void;
+
+    /**
+     * Collect the order tracking details if available.
+     * This callback is invoked when a successfull payment is resolved
+     *
+     * {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaypaymentorderdetails}
+     * @param resolve - Must be called with the orderDetails fields
+     * @param reject - Must be called if something failed during the order creation
+     */
+    onOrderTrackingRequest?: (resolve: (orderDetails: ApplePayPaymentOrderDetails) => void, reject: () => void) => void;
 
     onValidateMerchant?: (resolve, reject, validationURL: string) => void;
 

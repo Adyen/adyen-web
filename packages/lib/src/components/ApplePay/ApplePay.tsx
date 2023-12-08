@@ -8,7 +8,12 @@ import { httpPost } from '../../core/Services/http';
 import { APPLEPAY_SESSION_ENDPOINT } from './config';
 import { preparePaymentRequest } from './payment-request';
 import { resolveSupportedVersion, mapBrands } from './utils';
-import { ApplePayConfiguration, ApplePayElementData, ApplePaySessionRequest } from './types';
+import {
+    ApplePayConfiguration,
+    ApplePayElementData,
+    ApplePayPaymentOrderDetails,
+    ApplePaySessionRequest
+} from './types';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
 import { onSubmitReject } from '../../core/types';
@@ -56,12 +61,17 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
     }
 
     public submit = (): void => {
-        this.startSession();
+        void this.startSession();
     };
 
-    // private startSession(onPaymentAuthorized: OnAuthorizedCallback) {
     private startSession() {
-        const { version, onValidateMerchant, onPaymentMethodSelected, onShippingMethodSelected, onShippingContactSelected } = this.props;
+        const {
+            version,
+            onValidateMerchant,
+            onPaymentMethodSelected,
+            onShippingMethodSelected,
+            onShippingContactSelected
+        } = this.props;
 
         const paymentRequest = preparePaymentRequest({
             companyName: this.props.configuration.merchantName,
@@ -71,7 +81,11 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         const session = new ApplePayService(paymentRequest, {
             version,
             onError: (error: unknown) => {
-                this.handleError(new AdyenCheckoutError('ERROR', 'ApplePay - Something went wrong on ApplePayService', { cause: error }));
+                this.handleError(
+                    new AdyenCheckoutError('ERROR', 'ApplePay - Something went wrong on ApplePayService', {
+                        cause: error
+                    })
+                );
             },
             onCancel: event => {
                 this.handleError(new AdyenCheckoutError('CANCEL', 'ApplePay UI dismissed', { cause: event }));
@@ -88,9 +102,12 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
                 this.makePaymentsCall()
                     .then(this.sanitizeResponse)
                     .then(this.verifyPaymentDidNotFail)
-                    .then((paymentResponse: PaymentResponseData) => {
-                        // check the order part here
-                        resolve();
+                    .then(this.collectOrderTrackingDetailsIfNeeded)
+                    .then(({ paymentResponse, orderDetails }) => {
+                        resolve({
+                            status: ApplePaySession.STATUS_SUCCESS,
+                            ...(orderDetails && { orderDetails })
+                        });
                         return paymentResponse;
                     })
                     .then(paymentResponse => {
@@ -117,13 +134,45 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             }));
     }
 
+    /**
+     * Verify if the 'onOrderTrackingRequest' is provided. If so, triggers the callback expecting an
+     * Apple Pay order details back
+     *
+     * @private
+     */
+    private async collectOrderTrackingDetailsIfNeeded(
+        paymentResponse: PaymentResponseData
+    ): Promise<{ orderDetails?: ApplePayPaymentOrderDetails; paymentResponse: PaymentResponseData }> {
+        return new Promise<ApplePayPaymentOrderDetails | void>((resolve, reject) => {
+            if (!this.props.onOrderTrackingRequest) {
+                return resolve();
+            }
+
+            this.props.onOrderTrackingRequest(resolve, reject);
+        })
+            .then(orderDetails => {
+                return {
+                    paymentResponse,
+                    ...(orderDetails && { orderDetails })
+                };
+            })
+            .catch(() => {
+                return { paymentResponse };
+            });
+    }
+
     private async validateMerchant(resolve, reject) {
         const { hostname: domainName } = window.location;
         const { clientKey, configuration, loadingContext, initiative } = this.props;
         const { merchantName, merchantId } = configuration;
         const path = `${APPLEPAY_SESSION_ENDPOINT}?clientKey=${clientKey}`;
         const options = { loadingContext, path };
-        const request: ApplePaySessionRequest = { displayName: merchantName, domainName, initiative, merchantIdentifier: merchantId };
+        const request: ApplePaySessionRequest = {
+            displayName: merchantName,
+            domainName,
+            initiative,
+            merchantIdentifier: merchantId
+        };
 
         try {
             const response = await httpPost(options, request);
@@ -152,7 +201,12 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
      */
     public override async isAvailable(): Promise<void> {
         if (document.location.protocol !== 'https:') {
-            return Promise.reject(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to start an Apple Pay session from an insecure document'));
+            return Promise.reject(
+                new AdyenCheckoutError(
+                    'IMPLEMENTATION_ERROR',
+                    'Trying to start an Apple Pay session from an insecure document'
+                )
+            );
         }
 
         if (!this.props.onValidateMerchant && !this.props.clientKey) {
@@ -160,7 +214,11 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         }
 
         try {
-            if (window.ApplePaySession && ApplePaySession.canMakePayments() && ApplePaySession.supportsVersion(this.props.version)) {
+            if (
+                window.ApplePaySession &&
+                ApplePaySession.canMakePayments() &&
+                ApplePaySession.supportsVersion(this.props.version)
+            ) {
                 return Promise.resolve();
             }
         } catch (error) {
