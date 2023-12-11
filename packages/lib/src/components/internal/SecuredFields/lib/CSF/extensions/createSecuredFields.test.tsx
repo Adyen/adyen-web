@@ -2,6 +2,11 @@ import { setupSecuredField } from './createSecuredFields';
 import { DATA_ENCRYPTED_FIELD_ATTR } from '../../configuration/constants';
 import { SecuredFields } from '../../types';
 import Language from '../../../../../../language';
+// import SecuredField from '../../securedField/SecuredField';
+
+// jest.mock('../../securedField/SecuredField');
+
+// const mockedSecuredField = SecuredField as jest.Mock;
 
 const myCSF = {
     state: { type: 'card', hasSeparateDateFields: null, securedFields: {} as SecuredFields },
@@ -12,8 +17,31 @@ const myCSF = {
 };
 
 describe('Testing CSFs setupSecuredField functionality', () => {
+    // const SecuredFieldMock = jest.fn(() => ({
+    //     onIframeLoaded: () => ({
+    //         onConfig: () => ({
+    //             onFocus: () => ({
+    //                 onBinValue: () => ({
+    //                     onTouchstart: () => ({
+    //                         onShiftTab: () => ({
+    //                             onEncryption: () => ({
+    //                                 onValidation: () => ({
+    //                                     onAutoComplete: () => ({})
+    //                                 })
+    //                             })
+    //                         })
+    //                     })
+    //                 })
+    //             })
+    //         })
+    //     })
+    // }));
     beforeEach(() => {
         console.log = jest.fn(() => {});
+
+        // mockedSecuredField.mockReset();
+        // mockedSecuredField.mockImplementation(() => SecuredFieldMock());
+        // SecuredFieldMock.mockClear();
     });
 
     test('Calling setupSecuredField...', () => {
