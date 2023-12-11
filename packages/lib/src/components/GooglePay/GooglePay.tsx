@@ -39,7 +39,10 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         const buttonSizeMode = props.buttonSizeMode ?? (props.isDropin ? 'fill' : 'static');
         const buttonLocale = getGooglePayLocale(props.buttonLocale ?? props.i18n?.locale);
 
-        const callbackIntents: google.payments.api.CallbackIntent[] = [...props.callbackIntents, 'PAYMENT_AUTHORIZATION'];
+        const callbackIntents: google.payments.api.CallbackIntent[] = [
+            ...props.callbackIntents,
+            'PAYMENT_AUTHORIZATION'
+        ];
 
         return {
             ...props,
@@ -81,9 +84,11 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
      *
      * @see https://developers.google.com/pay/api/web/reference/client#onPaymentAuthorized
      **/
-    private onPaymentAuthorized = async (paymentData: google.payments.api.PaymentData): Promise<google.payments.api.PaymentAuthorizationResult> => {
+    private onPaymentAuthorized = async (
+        paymentData: google.payments.api.PaymentData
+    ): Promise<google.payments.api.PaymentAuthorizationResult> => {
         this.setState({
-            authorizedData: paymentData,
+            authorizedEvent: paymentData,
             googlePayToken: paymentData.paymentMethodData.tokenizationData.token,
             googlePayCardNetwork: paymentData.paymentMethodData.info.cardNetwork
         });

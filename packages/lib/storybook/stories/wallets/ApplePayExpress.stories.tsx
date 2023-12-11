@@ -171,7 +171,13 @@ export const Express: ApplePayStory = {
                 if (countryCode === 'BR') {
                     update = {
                         newTotal: ApplePayAmountHelper.getApplePayTotal(),
-                        errors: [new ApplePayError('shippingContactInvalid', 'countryCode', 'Cannot ship to the selected address')]
+                        errors: [
+                            new ApplePayError(
+                                'shippingContactInvalid',
+                                'countryCode',
+                                'Cannot ship to the selected address'
+                            )
+                        ]
                     };
                     resolve(update);
                     return;

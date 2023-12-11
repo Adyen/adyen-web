@@ -30,6 +30,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         this.startSession = this.startSession.bind(this);
         this.submit = this.submit.bind(this);
         this.validateMerchant = this.validateMerchant.bind(this);
+        this.collectOrderTrackingDetailsIfNeeded = this.collectOrderTrackingDetailsIfNeeded.bind(this);
     }
 
     /**
@@ -96,7 +97,8 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             onValidateMerchant: onValidateMerchant || this.validateMerchant,
             onPaymentAuthorized: (resolve, reject, event) => {
                 this.setState({
-                    applePayToken: btoa(JSON.stringify(event.payment.token.paymentData))
+                    applePayToken: btoa(JSON.stringify(event.payment.token.paymentData)),
+                    authorizedEvent: event
                 });
 
                 this.makePaymentsCall()
