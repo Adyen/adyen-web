@@ -11,7 +11,7 @@ export default function Instructions() {
         <div className="adyen-checkout-payme-instructions">
             <ol className="adyen-checkout-payme-instructions__steps">
                 {steps.split('%@').map((step, index) => (
-                    <li key={index}>{step}</li>
+                    <li key={`instruction-${index}`}>{step}</li>
                 ))}
             </ol>
             <span>{footnote}</span>
