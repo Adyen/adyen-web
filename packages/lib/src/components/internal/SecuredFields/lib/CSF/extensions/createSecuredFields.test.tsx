@@ -147,51 +147,21 @@ describe('Testing CSFs setupSecuredField functionality', () => {
         }
     );
 
-    test('Calling setupSecuredField to see that the remaining, expected callbacks are set. Running them sees that an object is passed through to the relevant callback function', () => {
-        myCSF.setupSecuredField(makeDiv('encryptedCardNumber'));
+    test(
+        'Calling setupSecuredField to see that the expected onConfigCallback callback is set. Running it sees that an object is passed through to the relevant callback function, ' +
+            'and that the promise is resolved',
+        () => {
+            const prom = myCSF.setupSecuredField(makeDiv('encryptedCardNumber'));
 
-        // onConfigCallback
-        expect(MySecuredField.onConfigCallback).not.toEqual(null);
+            // onConfigCallback
+            expect(MySecuredField.onConfigCallback).not.toEqual(null);
 
-        MySecuredField.onConfigCallback(dummyObj);
-        expect(myCSF.handleIframeConfigFeedback).toHaveBeenCalledWith(dummyObj);
+            MySecuredField.onConfigCallback(dummyObj);
+            expect(myCSF.handleIframeConfigFeedback).toHaveBeenCalledWith(dummyObj);
 
-        // onFocusCallback
-        expect(MySecuredField.onFocusCallback).not.toEqual(null);
-
-        MySecuredField.onFocusCallback(dummyObj);
-        expect(myCSF.handleFocus).toHaveBeenCalledWith(dummyObj);
-
-        // onBinValueCallback
-        expect(MySecuredField.onBinValueCallback).not.toEqual(null);
-
-        MySecuredField.onBinValueCallback(dummyObj);
-        expect(myCSF.handleBinValue).toHaveBeenCalledWith(dummyObj);
-
-        // onShiftTabCallback
-        expect(MySecuredField.onShiftTabCallback).not.toEqual(null);
-
-        MySecuredField.onShiftTabCallback({ fieldType: 'encryptedCardNumber' });
-        expect(myCSF.handleSFShiftTab).toHaveBeenCalledWith('encryptedCardNumber');
-
-        // onEncryptionCallback
-        expect(MySecuredField.onEncryptionCallback).not.toEqual(null);
-
-        MySecuredField.onEncryptionCallback(dummyObj);
-        expect(myCSF.handleEncryption).toHaveBeenCalledWith(dummyObj);
-
-        // onValidationCallback
-        expect(MySecuredField.onValidationCallback).not.toEqual(null);
-
-        MySecuredField.onValidationCallback(dummyObj);
-        expect(myCSF.handleValidation).toHaveBeenCalledWith(dummyObj);
-
-        // onAutoCompleteCallback
-        expect(MySecuredField.onAutoCompleteCallback).not.toEqual(null);
-
-        MySecuredField.onAutoCompleteCallback(dummyObj);
-        expect(myCSF.processAutoComplete).toHaveBeenCalledWith(dummyObj);
-    });
+            return expect(prom).resolves.toBe(dummyObj);
+        }
+    );
 
     test(
         'Calling setupSecuredField to see that expected onTouchstartCallback is set. Running it sees that because myCSF is configured to allow it ' +
@@ -229,4 +199,44 @@ describe('Testing CSFs setupSecuredField functionality', () => {
             expect(myCSF.postMessageToAllIframes).toHaveBeenCalledWith({ fieldType: 'encryptedExpiryDate', fieldClick: true });
         }
     );
+
+    test('Calling setupSecuredField to see that the remaining, expected callbacks are set. Running them sees that an object is passed through to the relevant callback function', () => {
+        myCSF.setupSecuredField(makeDiv('encryptedCardNumber'));
+
+        // onFocusCallback;
+        expect(MySecuredField.onFocusCallback).not.toEqual(null);
+
+        MySecuredField.onFocusCallback(dummyObj);
+        expect(myCSF.handleFocus).toHaveBeenCalledWith(dummyObj);
+
+        // onBinValueCallback
+        expect(MySecuredField.onBinValueCallback).not.toEqual(null);
+
+        MySecuredField.onBinValueCallback(dummyObj);
+        expect(myCSF.handleBinValue).toHaveBeenCalledWith(dummyObj);
+
+        // onShiftTabCallback
+        expect(MySecuredField.onShiftTabCallback).not.toEqual(null);
+
+        MySecuredField.onShiftTabCallback({ fieldType: 'encryptedCardNumber' });
+        expect(myCSF.handleSFShiftTab).toHaveBeenCalledWith('encryptedCardNumber');
+
+        // onEncryptionCallback
+        expect(MySecuredField.onEncryptionCallback).not.toEqual(null);
+
+        MySecuredField.onEncryptionCallback(dummyObj);
+        expect(myCSF.handleEncryption).toHaveBeenCalledWith(dummyObj);
+
+        // onValidationCallback
+        expect(MySecuredField.onValidationCallback).not.toEqual(null);
+
+        MySecuredField.onValidationCallback(dummyObj);
+        expect(myCSF.handleValidation).toHaveBeenCalledWith(dummyObj);
+
+        // onAutoCompleteCallback
+        expect(MySecuredField.onAutoCompleteCallback).not.toEqual(null);
+
+        MySecuredField.onAutoCompleteCallback(dummyObj);
+        expect(myCSF.processAutoComplete).toHaveBeenCalledWith(dummyObj);
+    });
 });
