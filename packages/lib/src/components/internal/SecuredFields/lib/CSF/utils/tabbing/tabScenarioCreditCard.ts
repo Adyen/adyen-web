@@ -6,10 +6,15 @@ import {
     ENCRYPTED_EXPIRY_YEAR
 } from '../../../configuration/constants';
 import { getPreviousTabbableNonSFElement } from './utils';
-import { ShiftTabObject } from '../../../types';
+import { SFFieldType, ShiftTabObject } from '../../../types';
 
 // Regular Credit Card scenario
-export function shiftTabCreditCard(fieldType: string, rootNode: HTMLElement, hasSeparateDateFields: boolean, numIframes: number): ShiftTabObject {
+export function shiftTabCreditCard(
+    fieldType: SFFieldType,
+    rootNode: HTMLElement,
+    hasSeparateDateFields: boolean,
+    numIframes: number
+): ShiftTabObject {
     let additionalField: HTMLElement;
     let fieldToFocus: string;
 
