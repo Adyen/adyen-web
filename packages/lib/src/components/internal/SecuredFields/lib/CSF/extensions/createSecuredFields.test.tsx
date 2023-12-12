@@ -1,8 +1,11 @@
 import { setupSecuredField } from './createSecuredFields';
-import { DATA_ENCRYPTED_FIELD_ATTR } from '../../configuration/constants';
+import { DATA_ENCRYPTED_FIELD_ATTR, ENCRYPTED_CARD_NUMBER, ENCRYPTED_EXPIRY_DATE, SF_CONFIG_TIMEOUT } from '../../configuration/constants';
 import { SecuredFields } from '../../types';
 import Language from '../../../../../../language';
 import SecuredField from '../../securedField/SecuredField';
+
+jest.useFakeTimers();
+jest.spyOn(global, 'setTimeout');
 
 jest.mock('../../securedField/SecuredField');
 
@@ -11,7 +14,7 @@ const mockedSecuredField = SecuredField as jest.Mock;
 let MySecuredField;
 
 const myCSF = {
-    state: { type: 'card', hasSeparateDateFields: null, securedFields: {} as SecuredFields, iframeCount: 0, originalNumIframes: 1, numIframes: 1 },
+    state: { type: 'card', hasSeparateDateFields: null, securedFields: {} as SecuredFields, iframeCount: 0, originalNumIframes: 2, numIframes: 2 },
     config: { shouldDisableIOSArrowKeys: null },
     props: { i18n: new Language('en-US', {}) },
     callbacks: {
@@ -49,6 +52,7 @@ describe('Testing CSFs setupSecuredField functionality', () => {
         console.log = jest.fn(() => {});
 
         MySecuredField = {
+            fieldType: ENCRYPTED_CARD_NUMBER,
             onIframeLoadedCallback: null,
             onConfigCallback: null,
             onFocusCallback: null,
@@ -103,7 +107,7 @@ describe('Testing CSFs setupSecuredField functionality', () => {
     });
 
     test('Calling setupSecuredField to see that an "encryptedCardNumber" SF is created and stored in state', () => {
-        myCSF.setupSecuredField(makeDiv('encryptedCardNumber'));
+        myCSF.setupSecuredField(makeDiv(ENCRYPTED_CARD_NUMBER));
 
         expect(myCSF.state.securedFields.encryptedCardNumber).not.toEqual(null);
     });
@@ -117,14 +121,37 @@ describe('Testing CSFs setupSecuredField functionality', () => {
 
     test(
         'Calling setupSecuredField to see that the expected onIframeLoadedCallback is set.' +
-            'Running the onIframeLoadedCallback callback sees the iframeCount increases, and because all expected iframes have been loaded, the onLoad callback is called',
+            'Running the onIframeLoadedCallback callback sees the iframeCount increases, but because all expected iframes have not been loaded, ' +
+            'the onLoad callback is not called; and we force the config timeout to see that the promise rejects',
         () => {
-            myCSF.setupSecuredField(makeDiv('encryptedCardNumber'));
+            const prom = myCSF.setupSecuredField(makeDiv(ENCRYPTED_CARD_NUMBER));
 
             expect(MySecuredField.onIframeLoadedCallback).not.toEqual(null);
             MySecuredField.onIframeLoadedCallback();
 
             expect(myCSF.state.iframeCount).toEqual(1);
+            expect(myCSF.callbacks.onLoad).not.toHaveBeenCalled();
+
+            // Fast-forward until config related timer has been executed
+            jest.runAllTimers();
+
+            expect(setTimeout).toHaveBeenCalledTimes(1);
+            expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), SF_CONFIG_TIMEOUT);
+
+            return expect(prom).rejects.toEqual({ type: ENCRYPTED_CARD_NUMBER, failReason: 'sf took too long to config' });
+        }
+    );
+
+    test(
+        'Calling setupSecuredField to see that the expected onIframeLoadedCallback is set.' +
+            'Running the onIframeLoadedCallback callback sees the iframeCount increases, and because all expected iframes have been loaded, the onLoad callback is called',
+        () => {
+            myCSF.setupSecuredField(makeDiv(ENCRYPTED_CARD_NUMBER));
+
+            expect(MySecuredField.onIframeLoadedCallback).not.toEqual(null);
+            MySecuredField.onIframeLoadedCallback();
+
+            expect(myCSF.state.iframeCount).toEqual(2);
             expect(myCSF.callbacks.onLoad).toHaveBeenCalledWith({ iframesLoaded: true });
         }
     );
@@ -134,15 +161,15 @@ describe('Testing CSFs setupSecuredField functionality', () => {
             'Running the onIframeLoadedCallback callback again sees the iframeCount increases, and because we now exceed the expected number of iframes have been loaded, ' +
             'the destroySecuredFields function is called and we throw an error',
         () => {
-            myCSF.setupSecuredField(makeDiv('encryptedCardNumber'));
+            myCSF.setupSecuredField(makeDiv(ENCRYPTED_CARD_NUMBER));
 
             expect(MySecuredField.onIframeLoadedCallback).not.toEqual(null);
 
             expect(() => MySecuredField.onIframeLoadedCallback()).toThrow(
-                'One or more securedFields has just loaded new content. This should never happen. securedFields have been removed.\n                        iframe load count=2. Expected count:1'
+                'One or more securedFields has just loaded new content. This should never happen. securedFields have been removed.\n                        iframe load count=3. Expected count:2'
             );
 
-            expect(myCSF.state.iframeCount).toEqual(2);
+            expect(myCSF.state.iframeCount).toEqual(3);
             expect(myCSF.destroySecuredFields).toHaveBeenCalled();
         }
     );
@@ -151,7 +178,7 @@ describe('Testing CSFs setupSecuredField functionality', () => {
         'Calling setupSecuredField to see that the expected onConfigCallback callback is set. Running it sees that an object is passed through to the relevant callback function, ' +
             'and that the promise is resolved',
         () => {
-            const prom = myCSF.setupSecuredField(makeDiv('encryptedCardNumber'));
+            const prom = myCSF.setupSecuredField(makeDiv(ENCRYPTED_CARD_NUMBER));
 
             // onConfigCallback
             expect(MySecuredField.onConfigCallback).not.toEqual(null);
@@ -164,21 +191,39 @@ describe('Testing CSFs setupSecuredField functionality', () => {
     );
 
     test(
-        'Calling setupSecuredField to see that expected onTouchstartCallback is set. Running it sees that because myCSF is configured to allow it ' +
-            '- an object is passed through to the relevant callback function, and that postMessageToAllIframes is called ',
+        'Calling setupSecuredField to see that expected onTouchstartCallback is set. Running it sees that because myCSF is not configured to allow it ' +
+            '- the callback function and postMessageToAllIframes are not called',
         () => {
             myCSF.config.shouldDisableIOSArrowKeys = true;
-            myCSF.hasGenuineTouchEvents = true;
+            myCSF.hasGenuineTouchEvents = false;
 
-            myCSF.setupSecuredField(makeDiv('encryptedCardNumber'));
+            myCSF.setupSecuredField(makeDiv(ENCRYPTED_CARD_NUMBER));
 
             expect(MySecuredField.onTouchstartCallback).not.toEqual(null);
 
-            MySecuredField.onTouchstartCallback({ fieldType: 'encryptedCardNumber' });
+            MySecuredField.onTouchstartCallback({ fieldType: ENCRYPTED_CARD_NUMBER });
 
-            expect(myCSF.callbacks.onTouchstartIOS).toHaveBeenCalledWith({ fieldType: 'encryptedCardNumber' });
+            expect(myCSF.callbacks.onTouchstartIOS).not.toHaveBeenCalled();
 
-            expect(myCSF.postMessageToAllIframes).toHaveBeenCalledWith({ fieldType: 'encryptedCardNumber', fieldClick: true });
+            expect(myCSF.postMessageToAllIframes).not.toHaveBeenCalled();
+        }
+    );
+
+    test(
+        'Calling setupSecuredField to see that expected onTouchstartCallback is set. Running it sees that because myCSF is configured to allow it ' +
+            '- an object is passed through to the relevant callback function, and that postMessageToAllIframes is called ',
+        () => {
+            myCSF.hasGenuineTouchEvents = true;
+
+            myCSF.setupSecuredField(makeDiv(ENCRYPTED_CARD_NUMBER));
+
+            expect(MySecuredField.onTouchstartCallback).not.toEqual(null);
+
+            MySecuredField.onTouchstartCallback({ fieldType: ENCRYPTED_CARD_NUMBER });
+
+            expect(myCSF.callbacks.onTouchstartIOS).toHaveBeenCalledWith({ fieldType: ENCRYPTED_CARD_NUMBER });
+
+            expect(myCSF.postMessageToAllIframes).toHaveBeenCalledWith({ fieldType: ENCRYPTED_CARD_NUMBER, fieldClick: true });
         }
     );
 
@@ -188,20 +233,20 @@ describe('Testing CSFs setupSecuredField functionality', () => {
         () => {
             myCSF.hasGenuineTouchEvents = false;
 
-            myCSF.setupSecuredField(makeDiv('encryptedExpiryDate'));
+            myCSF.setupSecuredField(makeDiv(ENCRYPTED_EXPIRY_DATE));
 
             expect(MySecuredField.onTouchstartCallback).not.toEqual(null);
 
-            MySecuredField.onTouchstartCallback({ fieldType: 'encryptedExpiryDate', hasGenuineTouchEvents: true });
+            MySecuredField.onTouchstartCallback({ fieldType: ENCRYPTED_EXPIRY_DATE, hasGenuineTouchEvents: true });
 
-            expect(myCSF.callbacks.onTouchstartIOS).toHaveBeenCalledWith({ fieldType: 'encryptedExpiryDate' });
+            expect(myCSF.callbacks.onTouchstartIOS).toHaveBeenCalledWith({ fieldType: ENCRYPTED_EXPIRY_DATE });
 
-            expect(myCSF.postMessageToAllIframes).toHaveBeenCalledWith({ fieldType: 'encryptedExpiryDate', fieldClick: true });
+            expect(myCSF.postMessageToAllIframes).toHaveBeenCalledWith({ fieldType: ENCRYPTED_EXPIRY_DATE, fieldClick: true });
         }
     );
 
     test('Calling setupSecuredField to see that the remaining, expected callbacks are set. Running them sees that an object is passed through to the relevant callback function', () => {
-        myCSF.setupSecuredField(makeDiv('encryptedCardNumber'));
+        myCSF.setupSecuredField(makeDiv(ENCRYPTED_CARD_NUMBER));
 
         // onFocusCallback;
         expect(MySecuredField.onFocusCallback).not.toEqual(null);
@@ -218,8 +263,8 @@ describe('Testing CSFs setupSecuredField functionality', () => {
         // onShiftTabCallback
         expect(MySecuredField.onShiftTabCallback).not.toEqual(null);
 
-        MySecuredField.onShiftTabCallback({ fieldType: 'encryptedCardNumber' });
-        expect(myCSF.handleSFShiftTab).toHaveBeenCalledWith('encryptedCardNumber');
+        MySecuredField.onShiftTabCallback({ fieldType: ENCRYPTED_CARD_NUMBER });
+        expect(myCSF.handleSFShiftTab).toHaveBeenCalledWith(ENCRYPTED_CARD_NUMBER);
 
         // onEncryptionCallback
         expect(MySecuredField.onEncryptionCallback).not.toEqual(null);

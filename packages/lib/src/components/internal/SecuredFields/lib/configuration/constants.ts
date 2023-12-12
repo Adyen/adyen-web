@@ -73,3 +73,6 @@ export const BRAND_READABLE_NAME_MAP = {
     bcmc: 'Bancontact card',
     bijcard: 'de Bijenkorf Card'
 };
+
+/** time within which we expect to receive a "configured" message from a securedField iframe, once it has registered as having loaded */
+export const SF_CONFIG_TIMEOUT = 6000;
