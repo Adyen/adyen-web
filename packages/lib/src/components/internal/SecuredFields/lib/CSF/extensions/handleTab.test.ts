@@ -1,6 +1,8 @@
 import { SecuredFields } from '../../types';
 import handleTab from './handleTab';
 import {
+    ENCRYPTED_BANK_ACCNT_NUMBER_FIELD,
+    ENCRYPTED_BANK_LOCATION_FIELD,
     ENCRYPTED_CARD_NUMBER,
     ENCRYPTED_EXPIRY_DATE,
     ENCRYPTED_EXPIRY_MONTH,
@@ -24,31 +26,35 @@ const myCSF = {
     })
 };
 
+const instantiateMocks = () => {
+    const getPreviousTabbableNonSFElementMock = jest.fn((who, rootNode) => {
+        console.log('### handleTab.test::getPreviousTabbableNonSFElementMock:: called with', who, rootNode);
+        return 'some-other-div';
+    });
+
+    const focusExternalFieldMock = jest.fn(what => {
+        console.log('### handleTab.test::focusExternalFieldMock:: called with', what);
+    });
+
+    mockedGetPreviousTabbableNonSFElement.mockReset();
+    mockedGetPreviousTabbableNonSFElement.mockImplementation((who, rootNode) => getPreviousTabbableNonSFElementMock(who, rootNode));
+    getPreviousTabbableNonSFElementMock.mockClear();
+
+    mockedFocusExternalField.mockReset();
+    mockedFocusExternalField.mockImplementation(what => focusExternalFieldMock(what));
+    focusExternalFieldMock.mockClear();
+};
+
 describe("Testing CSF's handleTab functionality in a regular card scenario", () => {
     beforeEach(() => {
-        // console.log = jest.fn(() => {});
+        console.log = jest.fn(() => {});
 
         // reset
         myCSF.state.numIframes = 3;
         myCSF.state.isKCP = false;
         myCSF.state.hasSeparateDateFields = false;
 
-        const getPreviousTabbableNonSFElementMock = jest.fn((who, rootNode) => {
-            console.log('### handleTab.test::getPreviousTabbableNonSFElementMock:: called with', who, rootNode);
-            return 'some-other-div';
-        });
-
-        const focusExternalFieldMock = jest.fn(what => {
-            console.log('### handleTab.test::focusExternalFieldMock:: called with', what);
-        });
-
-        mockedGetPreviousTabbableNonSFElement.mockReset();
-        mockedGetPreviousTabbableNonSFElement.mockImplementation((who, rootNode) => getPreviousTabbableNonSFElementMock(who, rootNode));
-        getPreviousTabbableNonSFElementMock.mockClear();
-
-        mockedFocusExternalField.mockReset();
-        mockedFocusExternalField.mockImplementation(what => focusExternalFieldMock(what));
-        focusExternalFieldMock.mockClear();
+        instantiateMocks();
     });
 
     test('Calling handleShiftTab with a fieldType = "encryptedExpiryDate", should see setFocusOnFrame called with "encryptedCardNumber"', async () => {
@@ -104,29 +110,14 @@ describe("Testing CSF's handleTab functionality in a regular card scenario", () 
 
 describe("Testing CSF's handleTab functionality in a KCP card scenario", () => {
     beforeEach(() => {
-        // console.log = jest.fn(() => {});
+        console.log = jest.fn(() => {});
 
         // reset
         myCSF.state.numIframes = 3;
         myCSF.state.isKCP = true;
         myCSF.state.hasSeparateDateFields = false;
 
-        const getPreviousTabbableNonSFElementMock = jest.fn((who, rootNode) => {
-            console.log('### handleTab.test::getPreviousTabbableNonSFElementMock:: called with', who, rootNode);
-            return 'some-other-div';
-        });
-
-        const focusExternalFieldMock = jest.fn(what => {
-            console.log('### handleTab.test::focusExternalFieldMock:: called with', what);
-        });
-
-        mockedGetPreviousTabbableNonSFElement.mockReset();
-        mockedGetPreviousTabbableNonSFElement.mockImplementation((who, rootNode) => getPreviousTabbableNonSFElementMock(who, rootNode));
-        getPreviousTabbableNonSFElementMock.mockClear();
-
-        mockedFocusExternalField.mockReset();
-        mockedFocusExternalField.mockImplementation(what => focusExternalFieldMock(what));
-        focusExternalFieldMock.mockClear();
+        instantiateMocks();
     });
 
     test('Calling handleShiftTab with a fieldType = "encryptedExpiryDate", should see setFocusOnFrame called with "encryptedCardNumber"', async () => {
@@ -172,6 +163,48 @@ describe("Testing CSF's handleTab functionality in a KCP card scenario", () => {
         async () => {
             myCSF.handleShiftTab(ENCRYPTED_PWD_FIELD);
             expect(getPreviousTabbableNonSFElement).toBeCalledWith(ENCRYPTED_PWD_FIELD, 'div');
+            expect(focusExternalField).toBeCalledWith('some-other-div');
+        }
+    );
+});
+
+describe("Testing CSF's handleTab functionality in a ACH scenario", () => {
+    beforeEach(() => {
+        console.log = jest.fn(() => {});
+
+        // reset
+        myCSF.state.numIframes = 2;
+        myCSF.state.type = 'ach';
+    });
+
+    test('Calling handleShiftTab with a fieldType = "encryptedBankLocationId", should see setFocusOnFrame called with "encryptedBankAccountNumber"', async () => {
+        myCSF.handleShiftTab(ENCRYPTED_BANK_LOCATION_FIELD);
+        expect(myCSF.setFocusOnFrame).toBeCalledWith(ENCRYPTED_BANK_ACCNT_NUMBER_FIELD, false);
+    });
+});
+
+describe("Testing CSF's handleTab functionality in a Giftcard scenario", () => {
+    beforeEach(() => {
+        console.log = jest.fn(() => {});
+
+        // reset
+        myCSF.state.numIframes = 2;
+        myCSF.state.type = 'giftcard';
+
+        instantiateMocks();
+    });
+
+    test('Calling handleShiftTab with a fieldType = "encryptedSecurityCode", should see setFocusOnFrame called with "encryptedCardNumber"', async () => {
+        myCSF.handleShiftTab(ENCRYPTED_SECURITY_CODE);
+        expect(myCSF.setFocusOnFrame).toBeCalledWith(ENCRYPTED_CARD_NUMBER, false);
+    });
+
+    test(
+        'Calling handleShiftTab with a fieldType = "encryptedCardNumber", should see getPreviousTabbableNonSFElement called with "encryptedCardNumber", and ' +
+            'focusExternalField called with the object returned from getPreviousTabbableNonSFElement',
+        async () => {
+            myCSF.handleShiftTab(ENCRYPTED_CARD_NUMBER);
+            expect(getPreviousTabbableNonSFElement).toBeCalledWith(ENCRYPTED_CARD_NUMBER, 'div');
             expect(focusExternalField).toBeCalledWith('some-other-div');
         }
     );

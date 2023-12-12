@@ -16,7 +16,7 @@ export function shiftTabCreditCard(
     numIframes: number
 ): ShiftTabObject {
     let additionalField: HTMLElement;
-    let fieldToFocus: string;
+    let fieldToFocus: SFFieldType;
 
     switch (fieldType) {
         case ENCRYPTED_CARD_NUMBER:

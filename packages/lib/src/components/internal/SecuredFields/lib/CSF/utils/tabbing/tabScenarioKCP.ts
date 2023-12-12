@@ -13,7 +13,7 @@ import { SFFieldType, ShiftTabObject } from '../../../types';
 // an encrypted pin/password field preceded by a form field of a non-SF type (d.o.b/taxRefNum)
 export function shiftTabKCP(fieldType: SFFieldType, rootNode: HTMLElement, hasSeparateDateFields: boolean): ShiftTabObject {
     let additionalField: HTMLElement;
-    let fieldToFocus: string;
+    let fieldToFocus: SFFieldType;
 
     switch (fieldType) {
         case ENCRYPTED_CARD_NUMBER:
