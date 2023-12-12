@@ -11,6 +11,8 @@ jest.mock('../../securedField/SecuredField');
 
 const mockedSecuredField = SecuredField as jest.Mock;
 
+window._b$dl = true; // to cover some missing lines
+
 let MySecuredField;
 
 const myCSF = {
