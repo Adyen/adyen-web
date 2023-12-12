@@ -7,7 +7,7 @@ import defaultProps from './defaultProps';
 import { httpPost } from '../../core/Services/http';
 import { APPLEPAY_SESSION_ENDPOINT } from './config';
 import { preparePaymentRequest } from './payment-request';
-import { resolveSupportedVersion, mapBrands } from './utils';
+import { resolveSupportedVersion, mapBrands, formatApplePayContactToAdyenAddressFormat } from './utils';
 import {
     ApplePayConfiguration,
     ApplePayElementData,
@@ -53,10 +53,14 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
      * Formats the component data output
      */
     protected formatData(): ApplePayElementData {
+        const { applePayToken, billingAddress, shippingAddress } = this.state;
+
         return {
             paymentMethod: {
                 type: ApplePayElement.type,
-                applePayToken: this.state.applePayToken
+                applePayToken,
+                ...(billingAddress && { billingAddress }),
+                ...(shippingAddress && { shippingAddress })
             }
         };
     }
@@ -96,9 +100,14 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             onShippingContactSelected,
             onValidateMerchant: onValidateMerchant || this.validateMerchant,
             onPaymentAuthorized: (resolve, reject, event) => {
+                const billingAddress = formatApplePayContactToAdyenAddressFormat(event.payment.billingContact);
+                const shippingAddress = formatApplePayContactToAdyenAddressFormat(event.payment.shippingContact);
+
                 this.setState({
                     applePayToken: btoa(JSON.stringify(event.payment.token.paymentData)),
-                    authorizedEvent: event
+                    authorizedEvent: event,
+                    ...(billingAddress && { billingAddress }),
+                    ...(shippingAddress && { shippingAddress })
                 });
 
                 this.makePaymentsCall()
