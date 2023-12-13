@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 5.55.1
+
+### Patch Changes
+
+-   Loading the logo images properly when handling qrCode/await actions ([#2490](https://github.com/Adyen/adyen-web/pull/2490))
+
 ## 5.55.0
 
 ### Minor Changes
