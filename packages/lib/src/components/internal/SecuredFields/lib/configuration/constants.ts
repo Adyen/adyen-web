@@ -19,10 +19,9 @@ export const SF_VERSION = '4.8.0';
 
 export const DEFAULT_CARD_GROUP_TYPES = ['amex', 'mc', 'visa'];
 
-// export const NON_CREDIT_CARD_TYPE_SECURED_FIELDS = ['ach', GIFT_CARD, 'sepa', 'sepadirectdebit']; //Maybe, sometime in the future
-export const NON_CREDIT_CARD_TYPE_SECURED_FIELDS = ['ach', GIFT_CARD];
+export const NON_CREDIT_CARD_TYPE_SECURED_FIELDS = ['ach', GIFT_CARD]; // Maybe, sometime in the future will include 'sepa' & 'sepadirectdebit'
 
-// Credit card (CardInput) related securedFields
+// Credit card (CardInput) related securedFields (based on the data-cse attribute)
 export const CREDIT_CARD_SF_FIELDS = [
     ENCRYPTED_CARD_NUMBER,
     ENCRYPTED_EXPIRY_DATE,
@@ -35,9 +34,8 @@ export const CREDIT_CARD_SF_FIELDS = [
 
 export const OTHER_SF_FIELDS = [ENCRYPTED_BANK_ACCNT_NUMBER_FIELD, ENCRYPTED_BANK_LOCATION_FIELD]; // ACH fields
 
+/** A list of all the data-cse attributes that relate to securedFields (as found in card, giftcard or ach) */
 export const ALL_SECURED_FIELDS = CREDIT_CARD_SF_FIELDS.concat(OTHER_SF_FIELDS);
-
-// export const ALL_RELATED_SECURED_FIELDS = ALL_SECURED_FIELDS.concat(NON_CREDIT_CARD_TYPE_SECURED_FIELDS);
 
 // Card components created as: checkout.create({BRAND}) e.g. checkout.create('bcmc')
 // - which are dedicated to a single, core, brand e.g. 'bcmc' BUT which can in effect handle multiple brands e.g. "bcmc", "maestro", "visa"
