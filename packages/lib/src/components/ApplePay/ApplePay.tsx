@@ -53,15 +53,15 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
      * Formats the component data output
      */
     protected formatData(): ApplePayElementData {
-        const { applePayToken, billingAddress, shippingAddress } = this.state;
+        const { applePayToken, billingAddress, deliveryAddress } = this.state;
 
         return {
             paymentMethod: {
                 type: ApplePayElement.type,
-                applePayToken,
-                ...(billingAddress && { billingAddress }),
-                ...(shippingAddress && { shippingAddress })
-            }
+                applePayToken
+            },
+            ...(billingAddress && { billingAddress }),
+            ...(deliveryAddress && { deliveryAddress })
         };
     }
 
@@ -101,13 +101,13 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             onValidateMerchant: onValidateMerchant || this.validateMerchant,
             onPaymentAuthorized: (resolve, reject, event) => {
                 const billingAddress = formatApplePayContactToAdyenAddressFormat(event.payment.billingContact);
-                const shippingAddress = formatApplePayContactToAdyenAddressFormat(event.payment.shippingContact);
+                const deliveryAddress = formatApplePayContactToAdyenAddressFormat(event.payment.shippingContact, true);
 
                 this.setState({
                     applePayToken: btoa(JSON.stringify(event.payment.token.paymentData)),
                     authorizedEvent: event,
                     ...(billingAddress && { billingAddress }),
-                    ...(shippingAddress && { shippingAddress })
+                    ...(deliveryAddress && { deliveryAddress })
                 });
 
                 this.makePaymentsCall()

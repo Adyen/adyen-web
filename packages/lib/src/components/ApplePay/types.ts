@@ -1,5 +1,4 @@
 import { UIElementProps } from '../internal/UIElement/types';
-import { AddressSchema } from '../internal/Address/types';
 import { AddressData } from '../../types/global-types';
 
 declare global {
