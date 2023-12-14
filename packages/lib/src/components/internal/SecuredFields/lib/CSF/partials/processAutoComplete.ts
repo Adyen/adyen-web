@@ -35,9 +35,9 @@ export function processAutoComplete({ csfState, csfConfig, csfCallbacks }: CSFTh
         const dateValArr: string[] = splittableDateVal.split('/');
 
         if (dateValArr.length !== 2) {
-            // console.log('### processAutoComplete::bailing date not long enough:: ');
+            // To avoid bug in some versions of Safari where date doesn't come through as expected
             return false;
-        } // To avoid bug in some versions of Safari where date doesn't come through as expected
+        }
 
         if (dateValArr[0].length === 1) dateValArr[0] = `0${dateValArr[0]}`; // pad, if required
 
@@ -47,7 +47,6 @@ export function processAutoComplete({ csfState, csfConfig, csfCallbacks }: CSFTh
         const year = dateValArr[1];
         const isValidYear = (year?.length === 4 || year?.length === 2) && !isNaN(parseInt(year));
         if (!isValidYear) {
-            // console.log('### processAutoComplete::bailing year not right:: ');
             return false;
         }
 

@@ -23,7 +23,6 @@ function handleShiftTab(fieldType: SFFieldType): void {
         // GIFT CARD scenario: SecurityCode preceded by CardNumber
         case 'giftcard':
             shiftTabObj = shiftTabGiftCard(fieldType, this.props.rootNode);
-            console.log('### handleTab::handleShiftTab:: shiftTabObj', shiftTabObj);
             break;
 
         // Credit Card scenarios
