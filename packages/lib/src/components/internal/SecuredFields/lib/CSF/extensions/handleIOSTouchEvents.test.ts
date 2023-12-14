@@ -1,5 +1,7 @@
 import handleIOSTouchEvents from './handleIOSTouchEvents';
 
+import ua from '../utils/userAgent';
+
 const myCSF = {
     state: { type: 'card', registerFieldForIos: null },
     props: { rootNode: { appendChild: jest.fn(() => {}), removeChild: jest.fn(() => {}) } },
@@ -12,7 +14,8 @@ const myCSF = {
     handleTouchend: handleIOSTouchEvents.handleTouchend,
     hasGenuineTouchEvents: null,
     postMessageToAllIframes: null,
-    destroyTouchendListener: null
+    destroyTouchendListener: null,
+    destroyTouchstartListener: handleIOSTouchEvents.destroyTouchstartListener
 };
 
 const makeElementWithAttribute = (elementType, attrName, attrValue) => {
@@ -163,4 +166,46 @@ describe("Testing CSF's handleIOSTouchEvents' touchendListener functionality", (
     );
 });
 
-// TODO test destroyTouchendListener & destroyTouchstartListener
+describe("Testing CSF's handleIOSTouchEvents' destroyTouchendListener functionality", () => {
+    beforeEach(() => {
+        console.log = jest.fn(() => {});
+
+        ua.__IS_IOS = false;
+
+        myCSF.destroyTouchendListener = handleIOSTouchEvents.destroyTouchendListener;
+    });
+
+    test('Calling destroyTouchendListener will return false since this is not iOS', () => {
+        const res = myCSF.destroyTouchendListener();
+
+        expect(res).toEqual(false);
+    });
+
+    test('Calling destroyTouchendListener will return true since this is iOS', () => {
+        ua.__IS_IOS = true;
+        const res = myCSF.destroyTouchendListener();
+
+        expect(res).toEqual(true);
+    });
+});
+
+describe("Testing CSF's handleIOSTouchEvents' destroyTouchstartListener functionality", () => {
+    beforeEach(() => {
+        console.log = jest.fn(() => {});
+
+        ua.__IS_IOS = false;
+    });
+
+    test('Calling destroyTouchstartListener will return false since this is not iOS', () => {
+        const res = myCSF.destroyTouchstartListener();
+
+        expect(res).toEqual(false);
+    });
+
+    test('Calling destroyTouchstartListener will return true since this is iOS', () => {
+        ua.__IS_IOS = true;
+        const res = myCSF.destroyTouchstartListener();
+
+        expect(res).toEqual(true);
+    });
+});

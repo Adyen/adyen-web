@@ -27,9 +27,7 @@ const myCSF = {
         onError: null
     },
     handleValidation,
-    validateForm: jest.fn(() => {
-        console.log('### handleValidation.test::myCSF.validateForm:: ');
-    }),
+    validateForm: null,
     processBrand: jest.fn(() => {})
 };
 
@@ -109,6 +107,8 @@ describe('Testing CSFs handleValidation functionality', () => {
         mockedRemoveEncryptedElementMock.mockImplementation((obj, id) => removeEncryptedElementMock(obj, id));
         removeEncryptedElementMock.mockClear();
 
+        myCSF.validateForm = jest.fn(() => {});
+
         myCSF.callbacks.onError = jest.fn(obj => {
             console.log('### handleValidation.test::callbacks.onError:: obj', obj);
             callbackObj_error = obj;
@@ -130,7 +130,7 @@ describe('Testing CSFs handleValidation functionality', () => {
         expect(myCSF.callbacks.onError).toHaveBeenCalledTimes(1);
         expect(callbackObj_error).toEqual(expected_callbackObj_errorCleared);
 
-        expect(myCSF.validateForm).toHaveBeenCalledTimes(2);
+        expect(myCSF.validateForm).toHaveBeenCalledTimes(1);
     });
 
     test(
@@ -141,7 +141,7 @@ describe('Testing CSFs handleValidation functionality', () => {
 
             expect(myCSF.callbacks.onError).not.toHaveBeenCalled();
 
-            expect(myCSF.validateForm).toHaveBeenCalledTimes(3);
+            expect(myCSF.validateForm).toHaveBeenCalledTimes(1);
 
             expect(myCSF.state.securedFields.encryptedSecurityCode.cvcPolicy).toEqual('optional');
 
@@ -161,7 +161,7 @@ describe('Testing CSFs handleValidation functionality', () => {
 
             expect(myCSF.callbacks.onError).not.toHaveBeenCalled();
 
-            expect(myCSF.validateForm).toHaveBeenCalledTimes(4); //4
+            expect(myCSF.validateForm).toHaveBeenCalledTimes(1);
 
             // check for a call to removeEncryptedElement
             expect(removeEncryptedElementMock).toHaveBeenCalled();
@@ -185,7 +185,7 @@ describe('Testing CSFs handleValidation functionality', () => {
 
             expect(myCSF.callbacks.onError).not.toHaveBeenCalled();
 
-            expect(myCSF.validateForm).toHaveBeenCalledTimes(5);
+            expect(myCSF.validateForm).toHaveBeenCalledTimes(1);
 
             // check call to addEncryptedElement not made
             expect(removeEncryptedElementMock).not.toHaveBeenCalled();

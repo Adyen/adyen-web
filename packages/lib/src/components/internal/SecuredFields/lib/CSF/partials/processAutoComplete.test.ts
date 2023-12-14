@@ -137,10 +137,12 @@ describe('Testing processAutoComplete fny', () => {
         expect(res).toEqual(false);
     });
 
-    test('Calling processAutoComplete will call postMessageToIframe sending it the expected expiryDate related data object', () => {
+    test('Calling processAutoComplete will call postMessageToIframe sending it the expected expiryDate related data object, and the onAutoComplete callback will not be called', () => {
         sfFeedbackObj_date.value = '03/2030';
 
         const res = callProcessAutoComplete(sfFeedbackObj_date);
+
+        expect(csfCallbacks.onAutoComplete).not.toHaveBeenCalled();
 
         expect(postMessageToIframeMock).toHaveBeenCalled();
         expect(postMessageToIframeMock).toHaveBeenCalledWith(expectedPostMsgDataObj);
@@ -148,7 +150,7 @@ describe('Testing processAutoComplete fny', () => {
         expect(res).toEqual(true);
     });
 
-    test('Calling processAutoComplete will call postMessageToIframe twice sending it the expected expiryMonth and then expiryYear data objects', () => {
+    test('Calling processAutoComplete will call postMessageToIframe twice sending it the expected expiryMonth and then expiryYear data objects, and the onAutoComplete callback will not be called', () => {
         sfFeedbackObj_date.value = '3/2030'; // also test the month padding fny
 
         delete csfState.securedFields.encryptedExpiryDate;
@@ -157,6 +159,8 @@ describe('Testing processAutoComplete fny', () => {
         expectedPostMsgDataObj.autoComplete = '03';
 
         const res = callProcessAutoComplete(sfFeedbackObj_date);
+
+        expect(csfCallbacks.onAutoComplete).not.toHaveBeenCalled();
 
         expect(postMessageToIframeMock).toHaveBeenCalled();
         expect(postMessageToIframeMock).toHaveBeenCalledWith(expectedPostMsgDataObj);
