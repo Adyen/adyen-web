@@ -8,7 +8,7 @@ jest.mock('../utils/iframes/postMessageToIframe');
 const mockedPostMessageToIframe = postMessageToIframe as jest.Mock;
 
 const csfState = { brand: { brand: null, cvcPolicy: 'required' }, type: null, securedFields: { encryptedSecurityCode: { numKey: 654321 } } };
-const csfProps = {};
+const csfProps = { rootNode: 'div' };
 const csfConfig = {};
 const csfCallbacks = { onBrand: null };
 
@@ -18,12 +18,6 @@ const CSFObj = {
     csfConfig,
     csfCallbacks
 };
-
-let brandType = null;
-
-csfCallbacks.onBrand = jest.fn(({ brand }) => {
-    brandType = brand;
-});
 
 const sfFeedbackObj: SFFeedbackObj = {
     action: 'foo',
@@ -39,9 +33,18 @@ const sfFeedbackObj: SFFeedbackObj = {
 const expectedPostMsgDataObj = {
     txVariant: 'card',
     brand: 'amex',
-    fieldType: 'encryptedSecurityCode',
+    fieldType: ENCRYPTED_SECURITY_CODE,
     cvcPolicy: 'required',
     numKey: 654321
+};
+
+const expectedCallbackObj = {
+    brand: 'amex',
+    cvcPolicy: 'required',
+    expiryDatePolicy: 'required',
+    showSocialSecurityNumber: false,
+    type: 'card',
+    rootNode: 'div'
 };
 
 const callProcessBrand = () => {
@@ -54,6 +57,8 @@ describe('Testing processBrand fny', () => {
 
     beforeEach(() => {
         console.log = jest.fn(() => {});
+
+        csfCallbacks.onBrand = jest.fn(() => {});
 
         mockedPostMessageToIframe.mockReset();
         mockedPostMessageToIframe.mockImplementation(obj => postMessageToIframeMock(obj));
@@ -83,12 +88,33 @@ describe('Testing processBrand fny', () => {
         expect(postMessageToIframeMock).toHaveBeenCalledWith(expectedPostMsgDataObj);
 
         expect(csfCallbacks.onBrand).toHaveBeenCalledTimes(1);
-        expect(brandType).toEqual('amex');
+        expect(csfCallbacks.onBrand).toHaveBeenCalledWith(expectedCallbackObj);
     });
 
-    test('Calling processBrand will not lead to another call to postMessageToIframe since the brand has not changed', () => {
+    test('Calling processBrand will lead to a call to postMessageToIframe since state object has type "bcmc" (& the brand has changed); and the onBrand callback will be called', () => {
+        csfState.type = 'bcmc';
+        sfFeedbackObj.brand = 'maestro';
+
+        expectedPostMsgDataObj.txVariant = 'bcmc';
+        expectedPostMsgDataObj.brand = 'maestro';
+
+        expectedCallbackObj.type = 'bcmc';
+        expectedCallbackObj.brand = 'maestro';
+
+        callProcessBrand();
+
+        expect(postMessageToIframeMock).toHaveBeenCalled();
+        expect(postMessageToIframeMock).toHaveBeenCalledWith(expectedPostMsgDataObj);
+
+        expect(csfCallbacks.onBrand).toHaveBeenCalledTimes(1);
+        expect(csfCallbacks.onBrand).toHaveBeenCalledWith(expectedCallbackObj);
+    });
+
+    test('Calling processBrand will not lead to another call to postMessageToIframe or onBrand since the brand has not changed', () => {
         callProcessBrand();
 
         expect(postMessageToIframeMock).not.toHaveBeenCalled();
+
+        expect(csfCallbacks.onBrand).not.toHaveBeenCalled();
     });
 });

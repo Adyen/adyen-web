@@ -24,7 +24,6 @@ export function processAutoComplete({ csfState, csfConfig, csfCallbacks }: CSFTh
         const feedbackObj: SFFeedbackObj = { ...pFeedbackObj };
         delete feedbackObj.numKey;
         const ACFeedbackObj: CbObjOnAutoComplete = feedbackObj as CbObjOnAutoComplete;
-        console.log('### processAutoComplete::csfCallbacks.onAutoCompletej:: called with ', ACFeedbackObj);
         csfCallbacks.onAutoComplete(ACFeedbackObj);
         return true;
     }
@@ -90,4 +89,6 @@ export function processAutoComplete({ csfState, csfConfig, csfCallbacks }: CSFTh
         }
         return true;
     }
+
+    return false;
 }

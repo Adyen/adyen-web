@@ -28,7 +28,6 @@ describe('Testing setFocusOnFrame fny', () => {
         // @ts-ignore - test is faking setup object
         setFocusOnFrame(CSFObj, 'encryptedSecurityCode');
 
-        // expect(postMessageToIframeMock).toHaveBeenCalled();
         expect(postMessageToIframeMock).toHaveBeenCalledWith({
             txVariant: 'card',
             fieldType: 'encryptedSecurityCode',

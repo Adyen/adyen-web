@@ -6,23 +6,15 @@ const securedFieldsObj = {
     encryptedSecurityCode: { isValid: true }
 };
 
-const csfState = { allValid: true, securedFields: securedFieldsObj };
-const csfProps = {};
-const csfConfig = {};
+const csfState = { allValid: true, securedFields: securedFieldsObj, type: 'card' };
+const csfProps = { rootNode: 'div' };
 const csfCallbacks = { onAllValid: null };
 
 const CSFObj = {
     csfState,
     csfProps,
-    csfConfig,
     csfCallbacks
 };
-
-let formIsValid = true;
-
-csfCallbacks.onAllValid = jest.fn(({ allValid }) => {
-    formIsValid = allValid;
-});
 
 const callValidateForm = () => {
     // @ts-ignore - test is faking setup object
@@ -31,6 +23,8 @@ const callValidateForm = () => {
 
 beforeEach(() => {
     console.log = jest.fn(() => {});
+
+    csfCallbacks.onAllValid = jest.fn(() => {});
 });
 
 describe('Testing CSFs validateForm functionality', () => {
@@ -38,14 +32,14 @@ describe('Testing CSFs validateForm functionality', () => {
         callValidateForm();
 
         expect(csfCallbacks.onAllValid).toHaveBeenCalledTimes(1);
-        expect(formIsValid).toEqual(false);
+        expect(csfCallbacks.onAllValid).toHaveBeenCalledWith({ allValid: false, rootNode: 'div', type: 'card' });
     });
 
     test('Callback should not be called since there is no overall state change', () => {
         callValidateForm();
 
         // still only been called once
-        expect(csfCallbacks.onAllValid).toHaveBeenCalledTimes(1);
+        expect(csfCallbacks.onAllValid).not.toHaveBeenCalled();
     });
 
     test('Callback should be called since everything is now valid', () => {
@@ -53,14 +47,14 @@ describe('Testing CSFs validateForm functionality', () => {
 
         callValidateForm();
 
-        expect(csfCallbacks.onAllValid).toHaveBeenCalledTimes(2);
-        expect(formIsValid).toEqual(true);
+        expect(csfCallbacks.onAllValid).toHaveBeenCalledTimes(1);
+        expect(csfCallbacks.onAllValid).toHaveBeenCalledWith({ allValid: true, rootNode: 'div', type: 'card' });
     });
 
     test('Callback called again since since it is always called when everything is valid', () => {
         callValidateForm();
 
-        expect(csfCallbacks.onAllValid).toHaveBeenCalledTimes(3);
+        expect(csfCallbacks.onAllValid).toHaveBeenCalledTimes(1);
     });
 
     test('Callback called again since since we are changing from a valid to an invalid state', () => {
@@ -68,7 +62,7 @@ describe('Testing CSFs validateForm functionality', () => {
 
         callValidateForm();
 
-        expect(csfCallbacks.onAllValid).toHaveBeenCalledTimes(4);
-        expect(formIsValid).toEqual(false);
+        expect(csfCallbacks.onAllValid).toHaveBeenCalledTimes(1);
+        expect(csfCallbacks.onAllValid).toHaveBeenCalledWith({ allValid: false, rootNode: 'div', type: 'card' });
     });
 });

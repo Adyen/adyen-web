@@ -1,6 +1,7 @@
 import postMessageToIframe from '../utils/iframes/postMessageToIframe';
 import { SFFeedbackObj } from '../../types';
 import { processAutoComplete } from './processAutoComplete';
+import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_EXPIRY_DATE } from '../../configuration/constants';
 
 jest.mock('../utils/iframes/postMessageToIframe');
 
@@ -14,35 +15,28 @@ const csfState = {
     type: 'card',
     securedFields: { encryptedExpiryDate: { numKey: 654321 }, encryptedExpiryMonth: { numKey: 654321 }, encryptedExpiryYear: { numKey: 654321 } }
 };
-const csfProps = {};
 const csfConfig = {};
 const csfCallbacks = { onAutoComplete: null };
 
 const CSFObj = {
     csfState,
-    csfProps,
+    // csfProps,
     csfConfig,
     csfCallbacks
 };
-
-let acType = null;
 
 const nameCallbackObj = {
     action: 'autoComplete',
     name: 'cc-name',
     value: 'nn',
-    fieldType: 'encryptedCardNumber'
+    fieldType: ENCRYPTED_CARD_NUMBER
 };
-
-csfCallbacks.onAutoComplete = jest.fn(callbackObj => {
-    acType = callbackObj;
-});
 
 const sfFeedbackObj_name: SFFeedbackObj = {
     action: 'autoComplete',
     name: 'cc-name',
     value: 'nn',
-    fieldType: 'encryptedCardNumber',
+    fieldType: ENCRYPTED_CARD_NUMBER,
     numKey: 654321
 };
 
@@ -50,13 +44,13 @@ const sfFeedbackObj_date: SFFeedbackObj = {
     action: 'autoComplete',
     name: 'cc-exp',
     value: '03/2030',
-    fieldType: 'encryptedCardNumber',
+    fieldType: ENCRYPTED_CARD_NUMBER,
     numKey: 654321
 };
 
 const expectedPostMsgDataObj = {
     txVariant: 'card',
-    fieldType: 'encryptedExpiryDate',
+    fieldType: ENCRYPTED_EXPIRY_DATE,
     autoComplete: '03/30',
     numKey: 654321
 };
@@ -72,6 +66,8 @@ describe('Testing processAutoComplete fny', () => {
     beforeEach(() => {
         console.log = jest.fn(() => {});
 
+        csfCallbacks.onAutoComplete = jest.fn(() => {});
+
         mockedPostMessageToIframe.mockReset();
         mockedPostMessageToIframe.mockImplementation(obj => postMessageToIframeMock(obj));
         postMessageToIframeMock.mockClear();
@@ -81,7 +77,7 @@ describe('Testing processAutoComplete fny', () => {
         const res = callProcessAutoComplete(sfFeedbackObj_name);
 
         expect(csfCallbacks.onAutoComplete).toHaveBeenCalledTimes(1);
-        expect(acType).toEqual(nameCallbackObj);
+        expect(csfCallbacks.onAutoComplete).toHaveBeenCalledWith(nameCallbackObj);
 
         expect(postMessageToIframeMock).not.toHaveBeenCalled();
 
@@ -94,7 +90,7 @@ describe('Testing processAutoComplete fny', () => {
         const res = callProcessAutoComplete(sfFeedbackObj_date);
 
         // callback not called a second time
-        expect(csfCallbacks.onAutoComplete).toHaveBeenCalledTimes(1);
+        expect(csfCallbacks.onAutoComplete).not.toHaveBeenCalled();
 
         expect(postMessageToIframeMock).not.toHaveBeenCalled();
 
@@ -177,5 +173,15 @@ describe('Testing processAutoComplete fny', () => {
         expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 0);
 
         expect(postMessageToIframeMock).toHaveBeenCalledWith(expectedPostMsgDataObj);
+    });
+
+    test('Calling processAutoComplete will not call anything & return false since the autoComplete event is not for a name or date field', () => {
+        sfFeedbackObj_date.name = 'cc-csc';
+
+        const res = callProcessAutoComplete(sfFeedbackObj_date);
+
+        expect(postMessageToIframeMock).not.toHaveBeenCalled();
+
+        expect(res).toEqual(false);
     });
 });

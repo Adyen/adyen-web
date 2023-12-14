@@ -1,12 +1,12 @@
 import postMessageToIframe from '../utils/iframes/postMessageToIframe';
 import { postMessageToAllIframes } from './postMessageToAllIframes';
+import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_EXPIRY_DATE, ENCRYPTED_SECURITY_CODE } from '../../configuration/constants';
 
 jest.mock('../utils/iframes/postMessageToIframe');
 
 const mockedPostMessageToIframe = postMessageToIframe as jest.Mock;
 
 const csfState = {
-    // brand: { brand: null, cvcPolicy: 'required' },
     type: 'card',
     securedFields: { encryptedCardNumber: { numKey: 654321 }, encryptedExpiryDate: { numKey: 654321 }, encryptedSecurityCode: { numKey: 654321 } }
 };
@@ -23,7 +23,7 @@ const dataObj = {
 
 const expectedPostMsgDataObj = {
     txVariant: 'card',
-    fieldType: 'encryptedCardNumber',
+    fieldType: ENCRYPTED_CARD_NUMBER,
     numKey: 654321,
     destroy: true
 };
@@ -52,17 +52,17 @@ describe('Testing postMessageToAllIframes fny', () => {
         expect(res).toEqual(false);
     });
 
-    test('Calling postMessageToAllIframes with no data object will not lead to any calls to postMessageToIframe', () => {
+    test('Calling postMessageToAllIframes with a data object will lead to calls to postMessageToIframe for all existing securedFields', () => {
         const res = callPostMessageToAllIframes(dataObj);
 
         expect(postMessageToIframeMock).toHaveBeenCalledTimes(3);
-        expect(postMessageToIframeMock).toHaveBeenCalledWith(expectedPostMsgDataObj);
+        expect(postMessageToIframeMock).toHaveBeenCalledWith(expectedPostMsgDataObj); // PAN SF
 
-        expectedPostMsgDataObj.fieldType = 'encryptedExpiryDate';
-        expect(postMessageToIframeMock).toHaveBeenCalledWith(expectedPostMsgDataObj);
+        expectedPostMsgDataObj.fieldType = ENCRYPTED_EXPIRY_DATE;
+        expect(postMessageToIframeMock).toHaveBeenCalledWith(expectedPostMsgDataObj); // Date SF
 
-        expectedPostMsgDataObj.fieldType = 'encryptedSecurityCode';
-        expect(postMessageToIframeMock).toHaveBeenCalledWith(expectedPostMsgDataObj);
+        expectedPostMsgDataObj.fieldType = ENCRYPTED_SECURITY_CODE;
+        expect(postMessageToIframeMock).toHaveBeenCalledWith(expectedPostMsgDataObj); // CVC SF
 
         expect(res).toEqual(true);
     });

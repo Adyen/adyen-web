@@ -13,15 +13,9 @@ const CSFObj = {
     csfCallbacks
 };
 
-let onConfigSuccessCallbackObj = null;
-
 let consoleError = null;
 
-csfCallbacks.onConfigSuccess = jest.fn(callbackObj => {
-    onConfigSuccessCallbackObj = callbackObj;
-});
-
-const validateForm = jest.fn(() => console.log('### isConfigured.test:::: validateForm is called'));
+let validateForm;
 
 const callIsConfigured = () => {
     // @ts-ignore - test is faking setup object
@@ -37,14 +31,17 @@ describe('Testing CSFs isConfigured functionality', () => {
             consoleError = error;
         });
 
-        onConfigSuccessCallbackObj = null;
+        validateForm = jest.fn(() => {});
+
+        csfCallbacks.onConfigSuccess = jest.fn(() => {});
     });
 
-    test('onConfigSuccess callback should be called since this is the purpose of this function, but validateForm is not called since we are dealing with 3 securedFields', () => {
+    test('onConfigSuccess callback should be called since this is the purpose of this function, but validateForm is not called since we are dealing with 3 securedFields & not a recurringCard', () => {
         const res = callIsConfigured();
 
         expect(csfCallbacks.onConfigSuccess).toHaveBeenCalledTimes(1);
-        expect(onConfigSuccessCallbackObj).toEqual({ iframesConfigured: true, type: 'card', rootNode: 'div' });
+        expect(csfCallbacks.onConfigSuccess).toHaveBeenCalledWith({ iframesConfigured: true, type: 'card', rootNode: 'div' });
+        // expect(onConfigSuccessCallbackObj).toEqual({ iframesConfigured: true, type: 'card', rootNode: 'div' });
 
         expect(validateForm).not.toHaveBeenCalled();
 
@@ -55,8 +52,8 @@ describe('Testing CSFs isConfigured functionality', () => {
         csfState.numIframes = 1;
         const res = callIsConfigured();
 
-        expect(csfCallbacks.onConfigSuccess).toHaveBeenCalledTimes(2);
-        expect(onConfigSuccessCallbackObj).toEqual({ iframesConfigured: true, type: 'card', rootNode: 'div' });
+        expect(csfCallbacks.onConfigSuccess).toHaveBeenCalledTimes(1);
+        expect(csfCallbacks.onConfigSuccess).toHaveBeenCalledWith({ iframesConfigured: true, type: 'card', rootNode: 'div' });
 
         expect(validateForm).not.toHaveBeenCalled();
 
@@ -68,20 +65,20 @@ describe('Testing CSFs isConfigured functionality', () => {
         csfState.type = 'visa';
         const res = callIsConfigured();
 
-        expect(csfCallbacks.onConfigSuccess).toHaveBeenCalledTimes(3);
-        expect(onConfigSuccessCallbackObj).toEqual({ iframesConfigured: true, type: 'visa', rootNode: 'div' });
+        expect(csfCallbacks.onConfigSuccess).toHaveBeenCalledTimes(1);
+        expect(csfCallbacks.onConfigSuccess).toHaveBeenCalledWith({ iframesConfigured: true, type: 'visa', rootNode: 'div' });
 
         expect(validateForm).not.toHaveBeenCalled();
 
         expect(res).toEqual(true);
     });
 
-    test('validateForm should not be called since we are dealing with a recurring card of an unknown txvariant', () => {
+    test("validateForm should not be called since we are dealing with a recurring card of an unknown txvariant so we don't know what it's cvcPolicy is", () => {
         csfState.type = 'visa_tokenised_subvariant';
         const res = callIsConfigured();
 
-        expect(csfCallbacks.onConfigSuccess).toHaveBeenCalledTimes(4);
-        expect(onConfigSuccessCallbackObj).toEqual({ iframesConfigured: true, type: 'visa_tokenised_subvariant', rootNode: 'div' });
+        expect(csfCallbacks.onConfigSuccess).toHaveBeenCalledTimes(1);
+        expect(csfCallbacks.onConfigSuccess).toHaveBeenCalledWith({ iframesConfigured: true, type: 'visa_tokenised_subvariant', rootNode: 'div' });
 
         expect(validateForm).not.toHaveBeenCalled();
 
@@ -92,8 +89,8 @@ describe('Testing CSFs isConfigured functionality', () => {
         csfState.type = 'laser';
         const res = callIsConfigured();
 
-        expect(csfCallbacks.onConfigSuccess).toHaveBeenCalledTimes(5);
-        expect(onConfigSuccessCallbackObj).toEqual({ iframesConfigured: true, type: 'laser', rootNode: 'div' });
+        expect(csfCallbacks.onConfigSuccess).toHaveBeenCalledTimes(1);
+        expect(csfCallbacks.onConfigSuccess).toHaveBeenCalledWith({ iframesConfigured: true, type: 'laser', rootNode: 'div' });
 
         expect(validateForm).toHaveBeenCalled();
 
