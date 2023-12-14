@@ -2,7 +2,7 @@ import handleIOSTouchEvents from './handleIOSTouchEvents';
 
 const myCSF = {
     state: { type: 'card', registerFieldForIos: null },
-    props: { rootNode: document.createElement('div') },
+    props: { rootNode: { appendChild: jest.fn(() => {}), removeChild: jest.fn(() => {}) } },
     callbacks: {
         onTouchstartIOS: null
     },
@@ -121,13 +121,16 @@ describe("Testing CSF's handleIOSTouchEvents' touchendListener functionality", (
     );
 
     test(
-        'Calling handleTouchend and passing it an element that is not an input, when config.keypadFix = false, will see that destroyTouchendListener & postMessageToAllIframes are called, and ' +
-            'registerFieldForIos will be set to false',
+        'Calling handleTouchend and passing it an element that is not an input, when config.keypadFix = false, will see that destroyTouchendListener & postMessageToAllIframes are called, ' +
+            'registerFieldForIos is set to false, and rootNode.appendChild & .removeChild are not called',
         () => {
             const myElement = makeElementWithAttribute('div', 'data-id', 'myInput');
 
             // @ts-ignore - it's just a test!
             myCSF.touchendListener({ target: myElement });
+
+            expect(myCSF.props.rootNode.appendChild).not.toHaveBeenCalled();
+            expect(myCSF.props.rootNode.removeChild).not.toHaveBeenCalled();
 
             expect(myCSF.destroyTouchendListener).toHaveBeenCalled();
 
@@ -138,8 +141,8 @@ describe("Testing CSF's handleIOSTouchEvents' touchendListener functionality", (
     );
 
     test(
-        'Calling handleTouchend and passing it an element that is not an input, when config.keypadFix = true, will see that destroyTouchendListener & postMessageToAllIframes are called, and ' +
-            'registerFieldForIos will be set to false',
+        'Calling handleTouchend and passing it an element that is not an input, when config.keypadFix = true, will see that destroyTouchendListener & postMessageToAllIframes are called, ' +
+            'registerFieldForIos is set to false, and rootNode.appendChild & .removeChild are called',
         () => {
             myCSF.config.keypadFix = true;
 
@@ -148,7 +151,8 @@ describe("Testing CSF's handleIOSTouchEvents' touchendListener functionality", (
             // @ts-ignore - it's just a test!
             myCSF.touchendListener({ target: myElement });
 
-            // TODO ?? set a removeChild function on rootNode and see if it is called ??
+            expect(myCSF.props.rootNode.appendChild).toHaveBeenCalled();
+            expect(myCSF.props.rootNode.removeChild).toHaveBeenCalled();
 
             expect(myCSF.destroyTouchendListener).toHaveBeenCalled();
 
