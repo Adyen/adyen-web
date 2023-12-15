@@ -19,15 +19,18 @@ describe('formatApplePayContactToAdyenAddressFormat()', () => {
 
         const billingAddress = formatApplePayContactToAdyenAddressFormat(billingContact);
 
-        expect(billingAddress.houseNumberOrName).toEqual('ZZ');
-        expect(billingAddress.street).toEqual('1 Infinite Loop Unit 100');
-        expect(billingAddress.city).toEqual('Cupertino');
-        expect(billingAddress.postalCode).toEqual('95014');
-        expect(billingAddress.country).toEqual('US');
-        expect(billingAddress.stateOrProvince).toEqual('CA');
+        expect(billingAddress).toStrictEqual({
+            postalCode: '95014',
+            houseNumberOrName: 'ZZ',
+            street: '1 Infinite Loop Unit 100',
+            city: 'Cupertino',
+            country: 'US',
+            stateOrProvince: 'CA'
+        });
     });
+
     test('should return only postal code if available', () => {
-        const billingContact = {
+        const billingContact: ApplePayJS.ApplePayPaymentContact = {
             addressLines: [],
             locality: '',
             administrativeArea: '',
@@ -44,15 +47,42 @@ describe('formatApplePayContactToAdyenAddressFormat()', () => {
 
         const billingAddress = formatApplePayContactToAdyenAddressFormat(billingContact);
 
-        expect(billingAddress.houseNumberOrName).toEqual('');
-        expect(billingAddress.street).toEqual('');
-        expect(billingAddress.city).toEqual('');
-        expect(billingAddress.postalCode).toEqual('95014');
-        expect(billingAddress.country).toEqual('');
-        expect(billingAddress.stateOrProvince).toEqual('');
+        expect(billingAddress).toStrictEqual({
+            postalCode: '95014',
+            houseNumberOrName: 'ZZ',
+            street: '',
+            city: '',
+            country: ''
+        });
     });
 
-    test.todo('should return firstName and lastName if the contact is for delivery address');
+    test('should return firstName and lastName if the contact is for delivery address', () => {
+        const deliveryContact: ApplePayJS.ApplePayPaymentContact = {
+            addressLines: ['802 Richardon Drive', 'Brooklyn'],
+            locality: 'New York',
+            administrativeArea: 'NY',
+            postalCode: '11213',
+            countryCode: 'US',
+            country: 'United States',
+            givenName: 'Jonny',
+            familyName: 'Smithson',
+            phoneticFamilyName: '',
+            phoneticGivenName: '',
+            subAdministrativeArea: '',
+            subLocality: ''
+        };
 
-    test.todo('should omit stateOrProvince field if not available');
+        const deliveryAddress = formatApplePayContactToAdyenAddressFormat(deliveryContact, true);
+
+        expect(deliveryAddress).toStrictEqual({
+            street: '802 Richardon Drive Brooklyn',
+            houseNumberOrName: 'ZZ',
+            city: 'New York',
+            postalCode: '11213',
+            country: 'US',
+            stateOrProvince: 'NY',
+            firstName: 'Jonny',
+            lastName: 'Smithson'
+        });
+    });
 });
