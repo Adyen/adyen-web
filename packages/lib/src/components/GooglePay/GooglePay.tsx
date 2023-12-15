@@ -4,12 +4,12 @@ import GooglePayService from './GooglePayService';
 import GooglePayButton from './components/GooglePayButton';
 import defaultProps from './defaultProps';
 import { GooglePayConfiguration } from './types';
-import { getGooglePayLocale } from './utils';
+import { formatGooglePayContactToAdyenAddressFormat, getGooglePayLocale } from './utils';
 import collectBrowserInfo from '../../utils/browserInfo';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
 import { onSubmitReject } from '../../core/types';
-import { PaymentResponseData } from '../../types/global-types';
+import { AddressData, PaymentResponseData } from '../../types/global-types';
 
 class GooglePay extends UIElement<GooglePayConfiguration> {
     public static type = TxVariants.googlepay;
@@ -57,13 +57,18 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
      * Formats the component data output
      */
     formatData() {
+        const { googlePayCardNetwork, googlePayToken, billingAddress, deliveryAddress } = this.state;
+
         return {
             paymentMethod: {
                 type: this.type,
-                googlePayCardNetwork: this.state.googlePayCardNetwork,
-                googlePayToken: this.state.googlePayToken
+                googlePayCardNetwork,
+                googlePayToken
             },
-            browserInfo: this.browserInfo
+            browserInfo: this.browserInfo,
+            origin: !!window && window.location.origin,
+            ...(billingAddress && { billingAddress }),
+            ...(deliveryAddress && { deliveryAddress })
         };
     }
 
@@ -87,10 +92,20 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
     private onPaymentAuthorized = async (
         paymentData: google.payments.api.PaymentData
     ): Promise<google.payments.api.PaymentAuthorizationResult> => {
+        const billingAddress: AddressData = formatGooglePayContactToAdyenAddressFormat(
+            paymentData.paymentMethodData.info.billingAddress
+        );
+        const deliveryAddress: AddressData = formatGooglePayContactToAdyenAddressFormat(
+            paymentData.shippingAddress,
+            true
+        );
+
         this.setState({
             authorizedEvent: paymentData,
             googlePayToken: paymentData.paymentMethodData.tokenizationData.token,
-            googlePayCardNetwork: paymentData.paymentMethodData.info.cardNetwork
+            googlePayCardNetwork: paymentData.paymentMethodData.info.cardNetwork,
+            ...(billingAddress && { billingAddress }),
+            ...(deliveryAddress && { deliveryAddress })
         });
 
         return new Promise<google.payments.api.PaymentAuthorizationResult>(resolve => {
