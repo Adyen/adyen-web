@@ -6,7 +6,8 @@ import {
     DATA_ENCRYPTED_FIELD_ATTR,
     DATA_INFO,
     DATA_UID,
-    SF_CONFIG_TIMEOUT
+    SF_CONFIG_TIMEOUT,
+    ALL_SECURED_FIELDS
 } from '../../configuration/constants';
 import { existy } from '../../utilities/commonUtils';
 import cardType from '../utils/cardType';
@@ -22,8 +23,17 @@ import AdyenCheckoutError from '../../../../../../core/Errors/AdyenCheckoutError
 export function createSecuredFields(): number {
     this.encryptedAttrName = DATA_ENCRYPTED_FIELD_ATTR;
 
-    // Detect DOM elements that qualify as securedField holders
-    const securedFields: HTMLElement[] = select(this.props.rootNode, `[${this.encryptedAttrName}]`);
+    // Detect DOM elements that qualify as securedField holders & filter them for valid types
+    const securedFields: HTMLElement[] = select(this.props.rootNode, `[${this.encryptedAttrName}]`).filter(field => {
+        const fieldType: string = getAttribute(field, this.encryptedAttrName);
+        const isValidType = ALL_SECURED_FIELDS.includes(fieldType);
+        if (!isValidType) {
+            console.warn(
+                `WARNING: '${fieldType}' is not a valid type for the '${this.encryptedAttrName}' attribute. A SecuredField will not be created for this element.`
+            );
+        }
+        return isValidType;
+    });
 
     /**
      * cvcPolicy - 'required' | 'optional' | 'hidden'

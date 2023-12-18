@@ -8,7 +8,7 @@ import '../../style.scss';
 import { MockReactApp } from './MockReactApp';
 import { searchFunctionExample } from '../../utils';
 
-const onlyShowCard = true;
+const onlyShowCard = false;
 
 const showComps = {
     clickToPay: true,
@@ -53,7 +53,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     // Stored Card
     if (!onlyShowCard && showComps.storedCard) {
         if (checkout.paymentMethodsResponse.storedPaymentMethods && checkout.paymentMethodsResponse.storedPaymentMethods.length > 0) {
-            const storedCardData = checkout.paymentMethodsResponse.storedPaymentMethods[2];
+            const storedCardData = checkout.paymentMethodsResponse.storedPaymentMethods[0];
             window.storedCard = checkout
                 .create('card', {
                     ...storedCardData,
