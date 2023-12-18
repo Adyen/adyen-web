@@ -31,6 +31,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         this.submit = this.submit.bind(this);
         this.validateMerchant = this.validateMerchant.bind(this);
         this.collectOrderTrackingDetailsIfNeeded = this.collectOrderTrackingDetailsIfNeeded.bind(this);
+        this.handleAuthorization = this.handleAuthorization.bind(this);
     }
 
     /**
@@ -110,7 +111,8 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
                     ...(deliveryAddress && { deliveryAddress })
                 });
 
-                this.makePaymentsCall()
+                this.handleAuthorization()
+                    .then(this.makePaymentsCall)
                     .then(this.sanitizeResponse)
                     .then(this.verifyPaymentDidNotFail)
                     .then(this.collectOrderTrackingDetailsIfNeeded)
@@ -125,6 +127,8 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
                         this.handleResponse(paymentResponse);
                     })
                     .catch((error: onSubmitReject) => {
+                        console.error(error);
+
                         this.setElementStatus('ready');
                         const errors = error?.error?.applePayError;
 
@@ -143,6 +147,31 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             .catch(() => ({
                 // Swallow exception triggered by onClick reject
             }));
+    }
+
+    /**
+     * Call the 'onAuthorized' callback if available.
+     * Must be resolved/reject for the payment flow to continue
+     *
+     * @private
+     */
+    private async handleAuthorization(): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            if (!this.props.onAuthorized) {
+                resolve();
+            }
+
+            const { authorizedEvent, billingAddress, deliveryAddress } = this.state;
+
+            this.props.onAuthorized(
+                {
+                    authorizedEvent,
+                    ...(billingAddress && { billingAddress }),
+                    ...(deliveryAddress && { deliveryAddress })
+                },
+                { resolve, reject }
+            );
+        });
     }
 
     /**

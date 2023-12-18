@@ -38,8 +38,7 @@ export async function initManual() {
         environment: process.env.__CLIENT_ENV__,
 
         onSubmit: async (state, component, actions) => {
-            const { authorizedData } = state;
-            console.log('authorizedData', authorizedData);
+            console.log('onSubmit', state, component.authorizedEvent);
 
             try {
                 const result = await makePayment(state.data);
@@ -93,6 +92,10 @@ export async function initManual() {
             // // });
             //
             // actions.resolve({ resultCode: result.resultCode });
+        },
+
+        onChange(state, element) {
+            console.log('onChange', state, element);
         },
 
         onPaymentCompleted(result, element) {
@@ -210,30 +213,40 @@ export async function initManual() {
         return Promise.resolve(true);
     }
 
-    const dropin = new Dropin({
+    const gpay = new GooglePay({
         core: checkout,
-        paymentMethodComponents: [Card, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay],
-        instantPaymentTypes: ['googlepay'],
-        paymentMethodsConfiguration: {
-            card: {
-                challengeWindowSize: '03',
-                enableStoreDetails: true,
-                hasHolderName: true,
-                holderNameRequired: true
-            },
-            paywithgoogle: {
-                buttonType: 'plain'
-            },
-            klarna: {
-                useKlarnaWidget: true
-            }
-            // storedCard: {
-            //     hideCVC: true
-            // }
-        }
+        shippingAddressRequired: true,
+        shippingAddressParameters: {
+            phoneNumberRequired: true
+        },
+
+        billingAddressRequired: true
     }).mount('#dropin-container');
+
+    // const dropin = new Dropin({
+    //     core: checkout,
+    //     paymentMethodComponents: [Card, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay],
+    //     instantPaymentTypes: ['googlepay'],
+    //     paymentMethodsConfiguration: {
+    //         card: {
+    //             challengeWindowSize: '03',
+    //             enableStoreDetails: true,
+    //             hasHolderName: true,
+    //             holderNameRequired: true
+    //         },
+    //         paywithgoogle: {
+    //             buttonType: 'plain'
+    //         },
+    //         klarna: {
+    //             useKlarnaWidget: true
+    //         }
+    //         // storedCard: {
+    //         //     hideCVC: true
+    //         // }
+    //     }
+    // }).mount('#dropin-container');
 
     handleRedirectResult();
 
-    return [checkout, dropin];
+    return [checkout, gpay];
 }

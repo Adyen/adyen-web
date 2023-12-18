@@ -368,7 +368,11 @@ export interface RawPaymentResponse extends PaymentResponseData {
     [key: string]: any;
 }
 
-export type ActionDescriptionType = 'qr-code-loaded' | 'polling-started' | 'fingerprint-iframe-loaded' | 'challenge-iframe-loaded';
+export type ActionDescriptionType =
+    | 'qr-code-loaded'
+    | 'polling-started'
+    | 'fingerprint-iframe-loaded'
+    | 'challenge-iframe-loaded';
 
 export interface ActionHandledReturnObject {
     componentType: string;

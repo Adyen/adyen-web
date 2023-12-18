@@ -150,12 +150,28 @@ export interface ApplePayConfiguration extends UIElementProps {
     onClick?: (resolve, reject) => void;
 
     /**
+     * Callback called when ApplePay authorize the payment.
+     * Must be resolved/rejected with the action object.
+     *
+     * @param paymentData
+     * @returns
+     */
+    onAuthorized?: (
+        data: {
+            authorizedEvent: ApplePayJS.ApplePayPaymentAuthorizedEvent;
+            billingAddress?: Partial<AddressData>;
+            deliveryAddress?: Partial<AddressData>;
+        },
+        actions: { resolve: () => void; reject: () => void }
+    ) => void;
+
+    /**
      * Collect the order tracking details if available.
      * This callback is invoked when a successfull payment is resolved
      *
      * {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaypaymentorderdetails}
      * @param resolve - Must be called with the orderDetails fields
-     * @param reject - Must be called if something failed during the order creation
+     * @param reject - Must be called if something failed during the order creation. Calling 'reject' won't cancel the payment flow
      */
     onOrderTrackingRequest?: (resolve: (orderDetails: ApplePayPaymentOrderDetails) => void, reject: () => void) => void;
 

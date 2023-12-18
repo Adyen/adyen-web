@@ -20,6 +20,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
 
     constructor(props) {
         super(props);
+        this.handleAuthorization = this.handleAuthorization.bind(this);
 
         this.googlePay = new GooglePayService({
             ...this.props,
@@ -30,10 +31,6 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         });
     }
 
-    /**
-     * Formats the component data input
-     * For legacy support - maps configuration.merchantIdentifier to configuration.merchantId
-     */
     formatProps(props): GooglePayConfiguration {
         // const allowedCardNetworks = props.brands?.length ? mapBrands(props.brands) : props.allowedCardNetworks;
         const buttonSizeMode = props.buttonSizeMode ?? (props.isDropin ? 'fill' : 'static');
@@ -109,7 +106,8 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         });
 
         return new Promise<google.payments.api.PaymentAuthorizationResult>(resolve => {
-            this.makePaymentsCall()
+            this.handleAuthorization()
+                .then(this.makePaymentsCall)
                 .then(this.sanitizeResponse)
                 .then(this.verifyPaymentDidNotFail)
                 .then((paymentResponse: PaymentResponseData) => {
@@ -126,13 +124,36 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
                         transactionState: 'ERROR',
                         error: {
                             intent: error?.error?.googlePayError?.intent || 'PAYMENT_AUTHORIZATION',
-                            message: error?.error?.googlePayError?.message || 'Something went wrong',
+                            message: error?.error?.googlePayError?.message || 'Payment failed',
                             reason: error?.error?.googlePayError?.reason || 'OTHER_ERROR'
                         }
                     });
                 });
         });
     };
+
+    /**
+     * Call the 'onAuthorized' callback if available.
+     * Must be resolved/reject for the payment flow to continue
+     */
+    private async handleAuthorization(): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            if (!this.props.onAuthorized) {
+                resolve();
+            }
+
+            const { authorizedEvent, billingAddress, deliveryAddress } = this.state;
+
+            this.props.onAuthorized(
+                {
+                    authorizedEvent,
+                    ...(billingAddress && { billingAddress }),
+                    ...(deliveryAddress && { deliveryAddress })
+                },
+                { resolve, reject }
+            );
+        });
+    }
 
     /**
      * Validation

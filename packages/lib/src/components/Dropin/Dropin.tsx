@@ -47,10 +47,6 @@ class DropinElement extends UIElement<DropinConfiguration> {
         };
     }
 
-    public override get authorizedEvent(): any {
-        return this.dropinRef?.state?.activePaymentMethod?.authorizedEvent;
-    }
-
     get isValid() {
         return (
             !!this.dropinRef &&

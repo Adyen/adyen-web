@@ -46,8 +46,13 @@ export async function initSession() {
         instantPaymentTypes: ['googlepay'],
         paymentMethodComponents: [Card, WeChat, Giftcard, PayPal, Ach, GooglePay],
         paymentMethodsConfiguration: {
-            paywithgoogle: {
-                buttonType: 'plain'
+            googlepay: {
+                buttonType: 'plain',
+
+                onAuthorized(data, actions) {
+                    console.log(data, actions);
+                    actions.reject();
+                }
             },
             card: {
                 hasHolderName: true,

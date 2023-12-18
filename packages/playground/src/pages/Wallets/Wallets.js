@@ -142,13 +142,11 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     // PAYPAL
     window.paypalButtons = new PayPal({
         core: window.checkout,
-        onShopperDetails: (shopperDetails, rawData, actions) => {
-            console.log('Shopper details', shopperDetails);
-            console.log('Raw data', rawData);
+        onAuthorized(data, actions) {
+            console.log('onAuthorized', data, actions);
             actions.resolve();
         },
         onError: (error, component) => {
-            component.setStatus('ready');
             console.log('paypal onError', error);
         }
     }).mount('.paypal-field');
@@ -160,7 +158,11 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         environment: 'TEST',
 
         // Callbacks
-        onAuthorized: console.info,
+        onAuthorized(data, actions) {
+            console.log(data, actions);
+            actions.resolve();
+        },
+
         // onError: console.error,
 
         // Payment info
@@ -175,8 +177,11 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
         // Shopper info (optional)
         emailRequired: true,
-        shippingAddressRequired: true,
-        shippingAddressParameters: {}, // https://developers.google.com/pay/api/web/reference/object#ShippingAddressParameters
+
+        // billingAddressRequired: true,
+
+        // shippingAddressRequired: true,
+        // shippingAddressParameters: {}, // https://developers.google.com/pay/api/web/reference/object#ShippingAddressParameters
 
         // Button config (optional)
         buttonType: 'long', // https://developers.google.com/pay/api/web/reference/object#ButtonOptions

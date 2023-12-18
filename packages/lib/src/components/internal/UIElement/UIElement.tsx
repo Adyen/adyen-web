@@ -92,15 +92,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
         return Promise.resolve();
     }
 
-    //  ApplePayJS.ApplePayPayment | google.payments.api.PaymentData | undefined
-    /**
-     * Certain payment methods have data returned after the shopper authorization step (Ex: GooglePay, ApplePay)
-     * This getter returns the event data in case it is available
-     */
-    public get authorizedEvent(): any {
-        return this.state.authorizedEvent;
-    }
-
     public setState(newState: object): void {
         this.state = { ...this.state, ...newState };
         this.onChange();
