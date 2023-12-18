@@ -24,11 +24,14 @@ function isIE() {
     return false;
 }
 
-const __IS_ANDROID = typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent);
-const __IS_IE = typeof navigator !== 'undefined' && isIE();
-const __IS_IOS = typeof navigator !== 'undefined' && /iphone|ipod|ipad/i.test(navigator.userAgent);
-const __IS_FIREFOX = typeof navigator !== 'undefined' && /(firefox)/i.test(navigator.userAgent);
-const __IS_SAFARI = typeof navigator !== 'undefined' && /(safari)/i.test(navigator.userAgent) && !/(chrome)/i.test(navigator.userAgent);
+// NOTE: change from const to let for the purposes of testing (the values get set in some tests)
+/* eslint-disable */
+let __IS_ANDROID = typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent);
+let __IS_IE = typeof navigator !== 'undefined' && isIE();
+let __IS_IOS = typeof navigator !== 'undefined' && /iphone|ipod|ipad/i.test(navigator.userAgent);
+let __IS_FIREFOX = typeof navigator !== 'undefined' && /(firefox)/i.test(navigator.userAgent);
+let __IS_SAFARI = typeof navigator !== 'undefined' && /(safari)/i.test(navigator.userAgent) && !/(chrome)/i.test(navigator.userAgent);
+/* eslint-enable */
 
 export default {
     __IS_ANDROID,

@@ -2,6 +2,7 @@ import cardType from '../utils/cardType';
 import { CardObject, CbObjOnConfigSuccess } from '../../types';
 import * as logger from '../../utilities/logger';
 import { CVC_POLICY_REQUIRED } from '../../configuration/constants';
+import { CSFThisObject } from '../types';
 
 /**
  * @param csfState - comes from initial, partial, implementation
@@ -10,10 +11,10 @@ import { CVC_POLICY_REQUIRED } from '../../configuration/constants';
  * @param csfCallbacks - comes from initial, partial, implementation
  * @param validateForm - comes from initial, partial, implementation
  */
-export function isConfigured({ csfState, csfConfig, csfProps, csfCallbacks }, validateForm): void {
+export function isConfigured({ csfState, csfConfig, csfProps, csfCallbacks }: CSFThisObject, validateForm): boolean {
     csfState.isConfigured = true;
 
-    const callbackObj: CbObjOnConfigSuccess = { iframesConfigured: true, type: csfState.type, rootNode: csfProps.rootNode };
+    const callbackObj: CbObjOnConfigSuccess = { iframesConfigured: true, type: csfState.type, rootNode: csfProps.rootNode as HTMLElement };
 
     csfCallbacks.onConfigSuccess(callbackObj);
 
@@ -21,7 +22,7 @@ export function isConfigured({ csfState, csfConfig, csfProps, csfCallbacks }, va
     if (csfState.numIframes === 1 && csfConfig.isCreditCardType) {
         if (csfState.type === 'card') {
             logger.error("ERROR: Payment method with a single secured field - but 'type' has not been set to a specific card brand");
-            return;
+            return false;
         }
 
         // Get card object from txVariant
@@ -35,9 +36,9 @@ export function isConfigured({ csfState, csfConfig, csfProps, csfCallbacks }, va
 
             // If cvc is optional - the form can be considered valid
             if (cvcPolicy !== CVC_POLICY_REQUIRED) {
-                // this.validateForm();
                 validateForm();
             }
         }
     }
+    return true;
 }

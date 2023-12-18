@@ -1,4 +1,5 @@
 import { BrandObject } from '../../../Card/types';
+import SecuredField from './securedField/SecuredField';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare global {
@@ -6,6 +7,27 @@ declare global {
         _b$dl: boolean;
         mockBinCount: number;
     }
+}
+
+export type SFFieldType =
+    | 'encryptedCardNumber'
+    | 'encryptedExpiryDate'
+    | 'encryptedExpiryMonth'
+    | 'encryptedExpiryYear'
+    | 'encryptedSecurityCode'
+    | 'encryptedPassword'
+    | 'encryptedBankAccountNumber'
+    | 'encryptedBankLocationId';
+
+export interface SecuredFields {
+    encryptedCardNumber?: SecuredField;
+    encryptedExpiryDate?: SecuredField;
+    encryptedExpiryMonth?: SecuredField;
+    encryptedExpiryYear?: SecuredField;
+    encryptedSecurityCode?: SecuredField;
+    encryptedPassword?: SecuredField;
+    encryptedBankAccountNumber?: SecuredField;
+    encryptedBankLocationId?: SecuredField;
 }
 
 export interface BrandStorageObject {
@@ -162,7 +184,7 @@ export interface CbObjOnAdditionalSF {
 
 export interface SFFeedbackObj {
     action: string;
-    fieldType: string;
+    fieldType: SFFieldType;
     numKey: number;
     brand?: string;
     code?: string;

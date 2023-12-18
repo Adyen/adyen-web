@@ -24,7 +24,7 @@ export const processErrors = (
     const isError: boolean = pFeedbackObj.error !== '';
 
     // Error is empty string && field is not already in error: do nothing - don't need to propagate this non-error if the field wasn't already in error
-    // This situation arises when we encrypt a field and trigger an "error clearing" event
+    // This situation arises when we encrypt a field and trigger an "error clearing" event i.e. deleting a character
     // It also arises when an unsupportedCard (re. binLookup) is entered and the shopper continues to interact with the field (adding or deleting digits)
     if (!isError && !field.hasError) {
         return null;
