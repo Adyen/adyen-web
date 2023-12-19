@@ -5,7 +5,8 @@ import {
     CVC_POLICY_REQUIRED,
     DATA_ENCRYPTED_FIELD_ATTR,
     DATA_INFO,
-    DATA_UID
+    DATA_UID,
+    SF_CONFIG_TIMEOUT
 } from '../../configuration/constants';
 import { existy } from '../../utilities/commonUtils';
 import cardType from '../utils/cardType';
@@ -220,7 +221,7 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
                 // @ts-ignore - timeout 'type' *is* a number
                 sf.loadToConfigTimeout = setTimeout(() => {
                     reject({ type: sf.fieldType, failReason: 'sf took too long to config' });
-                }, 6000);
+                }, SF_CONFIG_TIMEOUT);
 
                 // If all iframes are loaded - call onLoad callback
                 if (this.state.iframeCount === this.state.originalNumIframes) {

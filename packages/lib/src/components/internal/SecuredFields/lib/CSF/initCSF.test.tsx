@@ -62,9 +62,57 @@ describe('Calling initCSF', () => {
         expect(() => initCSF({ rootNode: {}, clientKey: 'fsdg', type: 'card' })).toThrow(/WARNING Config :: no loadingContext has been specified!/);
     });
 
-    test('initializing correctly should lead to the return of a CSF object exposing key functions', () => {
+    test('initializing correctly (for a "card") should lead to the return of a CSF object exposing key functions', () => {
         /* @ts-ignore deliberately-not-implementing-all-members */
         const csf = initCSF({ rootNode: {}, clientKey: 'fsdg', type: 'card', loadingContext: 'http' });
+
+        expect(csf).toHaveProperty('updateStyles');
+        expect(csf).toHaveProperty('setFocusOnFrame');
+        expect(csf).toHaveProperty('isValidated');
+        expect(csf).toHaveProperty('hasUnsupportedCard');
+        expect(csf).toHaveProperty('destroy');
+        expect(csf).toHaveProperty('brandsFromBinLookup');
+        expect(csf).toHaveProperty('addSecuredField');
+        expect(csf).toHaveProperty('removeSecuredField');
+        expect(csf).toHaveProperty('setKCPStatus');
+        expect(csf).toHaveProperty('sfIsOptionalOrHidden');
+    });
+
+    test('initializing correctly (for a non-card) should lead to the return of a CSF object exposing key functions', () => {
+        /* @ts-ignore deliberately-not-implementing-all-members */
+        const csf = initCSF({ rootNode: {}, clientKey: 'fsdg', type: 'ach', loadingContext: 'http' });
+
+        expect(csf).toHaveProperty('updateStyles');
+        expect(csf).toHaveProperty('setFocusOnFrame');
+        expect(csf).toHaveProperty('isValidated');
+        expect(csf).toHaveProperty('hasUnsupportedCard');
+        expect(csf).toHaveProperty('destroy');
+        expect(csf).toHaveProperty('brandsFromBinLookup');
+        expect(csf).toHaveProperty('addSecuredField');
+        expect(csf).toHaveProperty('removeSecuredField');
+        expect(csf).toHaveProperty('setKCPStatus');
+        expect(csf).toHaveProperty('sfIsOptionalOrHidden');
+    });
+
+    test('initializing for a "card" with one brand should lead to the return of a CSF object exposing key functions', () => {
+        /* @ts-ignore deliberately-not-implementing-all-members */
+        const csf = initCSF({ rootNode: {}, clientKey: 'fsdg', type: 'card', loadingContext: 'http', cardGroupTypes: ['mc'] });
+
+        expect(csf).toHaveProperty('updateStyles');
+        expect(csf).toHaveProperty('setFocusOnFrame');
+        expect(csf).toHaveProperty('isValidated');
+        expect(csf).toHaveProperty('hasUnsupportedCard');
+        expect(csf).toHaveProperty('destroy');
+        expect(csf).toHaveProperty('brandsFromBinLookup');
+        expect(csf).toHaveProperty('addSecuredField');
+        expect(csf).toHaveProperty('removeSecuredField');
+        expect(csf).toHaveProperty('setKCPStatus');
+        expect(csf).toHaveProperty('sfIsOptionalOrHidden');
+    });
+
+    test('initializing for a "card" with one unrecognised brand should lead to the return of a CSF object exposing key functions', () => {
+        /* @ts-ignore deliberately-not-implementing-all-members */
+        const csf = initCSF({ rootNode: {}, clientKey: 'fsdg', type: 'card', loadingContext: 'http', cardGroupTypes: ['madeupcard'] });
 
         expect(csf).toHaveProperty('updateStyles');
         expect(csf).toHaveProperty('setFocusOnFrame');

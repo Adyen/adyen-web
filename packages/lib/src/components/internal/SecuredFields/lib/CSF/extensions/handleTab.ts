@@ -4,21 +4,12 @@ import { shiftTabCreditCard } from '../utils/tabbing/tabScenarioCreditCard';
 import { shiftTabACH } from '../utils/tabbing/tabScenarioACH';
 import { shiftTabGiftCard } from '../utils/tabbing/tabScenarioGiftCard';
 import { shiftTabKCP } from '../utils/tabbing/tabScenarioKCP';
-import { ShiftTabObject } from '../../types';
+import { SFFieldType, ShiftTabObject } from '../../types';
+import { focusExternalField } from '../utils/tabbing/utils';
 
 const logTab = false;
 
-const focusExternalField = (pAdditionalField: HTMLElement): void => {
-    if (pAdditionalField) {
-        pAdditionalField.focus();
-
-        // Quirky! - Needed to work in the Components scenario
-        pAdditionalField.blur();
-        pAdditionalField.focus();
-    }
-};
-
-function handleShiftTab(fieldType: string): void {
+function handleShiftTab(fieldType: SFFieldType): void {
     if (logTab) logger.log('### handleTab::handleShiftTab:: fieldType', fieldType);
 
     let shiftTabObj: ShiftTabObject;
@@ -59,7 +50,7 @@ function handleShiftTab(fieldType: string): void {
 
 const eligibleForTabFix = (): boolean => ua.__IS_FIREFOX || (ua.__IS_IE && ua.__IS_IE <= 11);
 
-function handleSFShiftTab(fieldType: string): void {
+function handleSFShiftTab(fieldType: SFFieldType): void {
     if (eligibleForTabFix()) {
         this.handleShiftTab(fieldType);
     }

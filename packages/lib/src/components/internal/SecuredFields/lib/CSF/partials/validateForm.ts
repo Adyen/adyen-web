@@ -1,6 +1,7 @@
-import { CbObjOnAllValid } from '../../types';
+import { CbObjOnAllValid, SecuredFields } from '../../types';
+import { CSFThisObject } from '../types';
 
-const checkFormIsValid = (pSecuredFields: object): boolean => {
+const checkFormIsValid = (pSecuredFields: SecuredFields): boolean => {
     const securedFieldKeys: string[] = Object.keys(pSecuredFields);
 
     for (let i = 0, len = securedFieldKeys.length; i < len; i += 1) {
@@ -18,7 +19,7 @@ const checkFormIsValid = (pSecuredFields: object): boolean => {
  * @param csfProps - comes from initial, partial, implementation
  * @param csfCallbacks - comes from initial, partial, implementation
  */
-export default function validateForm({ csfState, csfProps, csfCallbacks }): void {
+export default function validateForm({ csfState, csfProps, csfCallbacks }: CSFThisObject): void {
     const isValid: boolean = checkFormIsValid(csfState.securedFields);
 
     const validityHasChanged: boolean = isValid !== csfState.allValid;
@@ -28,7 +29,7 @@ export default function validateForm({ csfState, csfProps, csfCallbacks }): void
     // Only call onAllValid callback if value has changed OR is true
     if (!isValid && !validityHasChanged) return;
 
-    const callbackObj: CbObjOnAllValid = { allValid: isValid, type: csfState.type, rootNode: csfProps.rootNode };
+    const callbackObj: CbObjOnAllValid = { allValid: isValid, type: csfState.type, rootNode: csfProps.rootNode as HTMLElement };
 
     // BROADCAST VALID STATE OF THE FORM AS A WHOLE
     csfCallbacks.onAllValid(callbackObj);
