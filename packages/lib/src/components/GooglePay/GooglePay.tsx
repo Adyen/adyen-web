@@ -128,6 +128,8 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
                             reason: error?.error?.googlePayError?.reason || 'OTHER_ERROR'
                         }
                     });
+
+                    this.handleFailedResult(error);
                 });
         });
     };

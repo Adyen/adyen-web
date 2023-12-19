@@ -128,14 +128,14 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
                     })
                     .catch((error: onSubmitReject) => {
                         console.error(error);
-
-                        this.setElementStatus('ready');
                         const errors = error?.error?.applePayError;
 
                         reject({
                             status: ApplePaySession.STATUS_FAILURE,
                             errors: errors ? (Array.isArray(errors) ? errors : [errors]) : undefined
                         });
+
+                        this.handleFailedResult(error);
                     });
             }
         });

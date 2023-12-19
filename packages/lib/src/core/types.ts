@@ -174,8 +174,25 @@ export interface CoreConfiguration {
         }
     ): Promise<void>;
 
+    /**
+     * Called when the payment succeeds.
+     *
+     * The first parameter is the sessions response (when using sessions flow), or the result code.
+     *
+     * @param data
+     * @param element
+     */
     onPaymentCompleted?(data: OnPaymentCompletedData, element?: UIElement): void;
 
+    /**
+     * Called when the payment fails.
+     *
+     * The first parameter is poppulated when merchant is using sessions, or when the payment was rejected
+     * with an object. (Ex: 'action.reject(obj)' ). Otherwise, it will be empty.
+     *
+     * @param data
+     * @param element
+     */
     onPaymentFailed?(data?: OnPaymentFailedData, element?: UIElement): void;
 
     onSubmit?(

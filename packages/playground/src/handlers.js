@@ -35,7 +35,8 @@ export async function handleSubmit(state, component, actions) {
     try {
         const result = await makePayment(state.data);
 
-        // happpy flow
+        if (!result.resultCode) actions.reject();
+
         if (result.resultCode.includes('Refused', 'Cancelled', 'Error')) {
             actions.reject({
                 resultCode: result.resultCode,
@@ -48,11 +49,12 @@ export async function handleSubmit(state, component, actions) {
             actions.resolve({
                 action: result.action,
                 order: result.order,
-                resultCode: result.resultCode
+                resultCode: result.resultCode,
+                donationToken: result.donationToken
             });
         }
     } catch (error) {
-        // Something failed in the request
+        console.error('## onSubmit - critical error', error);
         actions.reject();
     }
 }

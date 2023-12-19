@@ -43,7 +43,8 @@ export async function initManual() {
             try {
                 const result = await makePayment(state.data);
 
-                // happpy flow
+                if (!result.resultCode) actions.reject();
+
                 if (result.resultCode.includes('Refused', 'Cancelled', 'Error')) {
                     actions.reject({
                         resultCode: result.resultCode,
@@ -56,42 +57,14 @@ export async function initManual() {
                     actions.resolve({
                         action: result.action,
                         order: result.order,
-                        resultCode: result.resultCode
+                        resultCode: result.resultCode,
+                        donationToken: result.donationToken
                     });
                 }
             } catch (error) {
-                // Something failed in the request
+                console.error('## onSubmit - critical error', error);
                 actions.reject();
             }
-
-            //
-            //
-            // if (result.order && result.order?.remainingAmount?.value > 0) {
-            //     const order = {
-            //         orderData: result.order.orderData,
-            //         pspReference: result.order.pspReference
-            //     };
-            //
-            //     const orderPaymentMethods = await getPaymentMethods({ order, amount, shopperLocale });
-            //
-            //     actions.resolve({
-            //         order,
-            //         paymentMethodsResponse: orderPaymentMethods
-            //     });
-            //
-            //     return;
-            // }
-
-            //
-            // // Trigger Error for GooglePay
-            // // actions.reject({
-            // //     googlePayError: {
-            // //         message: 'Not sufficient funds',
-            // //         reason: 'OTHER_ERROR,'
-            // //     }
-            // // });
-            //
-            // actions.resolve({ resultCode: result.resultCode });
         },
 
         onChange(state, element) {
@@ -104,6 +77,7 @@ export async function initManual() {
         onPaymentFailed(result, element) {
             console.log('onPaymentFailed', result, element);
         },
+
         onAdditionalDetails: async (state, component) => {
             const result = await makeDetailsCall(state.data);
 
@@ -213,40 +187,40 @@ export async function initManual() {
         return Promise.resolve(true);
     }
 
-    const gpay = new GooglePay({
-        core: checkout,
-        shippingAddressRequired: true,
-        shippingAddressParameters: {
-            phoneNumberRequired: true
-        },
-
-        billingAddressRequired: true
-    }).mount('#dropin-container');
-
-    // const dropin = new Dropin({
+    // const gpay = new GooglePay({
     //     core: checkout,
-    //     paymentMethodComponents: [Card, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay],
-    //     instantPaymentTypes: ['googlepay'],
-    //     paymentMethodsConfiguration: {
-    //         card: {
-    //             challengeWindowSize: '03',
-    //             enableStoreDetails: true,
-    //             hasHolderName: true,
-    //             holderNameRequired: true
-    //         },
-    //         paywithgoogle: {
-    //             buttonType: 'plain'
-    //         },
-    //         klarna: {
-    //             useKlarnaWidget: true
-    //         }
-    //         // storedCard: {
-    //         //     hideCVC: true
-    //         // }
-    //     }
+    //     shippingAddressRequired: true,
+    //     shippingAddressParameters: {
+    //         phoneNumberRequired: true
+    //     },
+
+    //     billingAddressRequired: true
     // }).mount('#dropin-container');
+
+    const dropin = new Dropin({
+        core: checkout,
+        paymentMethodComponents: [Card, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay],
+        instantPaymentTypes: ['googlepay'],
+        paymentMethodsConfiguration: {
+            card: {
+                challengeWindowSize: '03',
+                enableStoreDetails: true,
+                hasHolderName: true,
+                holderNameRequired: true
+            },
+            paywithgoogle: {
+                buttonType: 'plain'
+            },
+            klarna: {
+                useKlarnaWidget: true
+            }
+            // storedCard: {
+            //     hideCVC: true
+            // }
+        }
+    }).mount('#dropin-container');
 
     handleRedirectResult();
 
-    return [checkout, gpay];
+    return [checkout];
 }

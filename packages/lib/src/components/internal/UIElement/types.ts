@@ -1,7 +1,12 @@
 import { h } from 'preact';
 import Session from '../../../core/CheckoutSession';
 import UIElement from './UIElement';
-import { ActionHandledReturnObject, PaymentAction, PaymentAmount, PaymentAmountExtended } from '../../../types/global-types';
+import {
+    ActionHandledReturnObject,
+    PaymentAction,
+    PaymentAmount,
+    PaymentAmountExtended
+} from '../../../types/global-types';
 import Language from '../../../language';
 import { BaseElementProps, IBaseElement } from '../BaseElement/types';
 import { PayButtonProps } from '../PayButton/PayButton';
@@ -9,8 +14,10 @@ import { CoreConfiguration, ICore } from '../../../core/types';
 
 export type PayButtonFunctionProps = Omit<PayButtonProps, 'amount'>;
 
-// TODO add onPaymentCompleted
-type CoreCallbacks = Pick<CoreConfiguration, 'onSubmit' | 'onPaymentFailed' | 'onOrderUpdated' | 'onPaymentMethodsRequest'>;
+type CoreCallbacks = Pick<
+    CoreConfiguration,
+    'onSubmit' | 'onPaymentFailed' | 'onPaymentCompleted' | 'onOrderUpdated' | 'onPaymentMethodsRequest'
+>;
 
 export type UIElementProps = BaseElementProps &
     CoreCallbacks & {
@@ -24,7 +31,6 @@ export type UIElementProps = BaseElementProps &
         onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
         onAdditionalDetails?: (state: any, element: UIElement) => void;
         onError?: (error, element?: UIElement) => void;
-        onPaymentCompleted?: (result: any, element: UIElement) => void;
         beforeRedirect?: (resolve, reject, redirectData, element: UIElement) => void;
 
         isInstantPayment?: boolean;

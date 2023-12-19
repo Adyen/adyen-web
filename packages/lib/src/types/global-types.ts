@@ -330,17 +330,14 @@ export type ResultCode =
     | 'RedirectShopper'
     | 'Refused';
 
-export interface OnPaymentCompletedData {
+export type SessionsResponse = {
     sessionData: string;
     sessionResult: string;
     resultCode: ResultCode;
-}
+};
+export type OnPaymentCompletedData = SessionsResponse | { resultCode: ResultCode };
 
-export type OnPaymentFailedData =
-    | OnPaymentCompletedData
-    | (onSubmitReject & {
-          resultCode: ResultCode;
-      });
+export type OnPaymentFailedData = SessionsResponse | onSubmitReject;
 
 //TODO double check these values
 export interface PaymentMethodsRequestData {
@@ -353,6 +350,7 @@ export interface PaymentResponseAdvancedFlow {
     resultCode: ResultCode;
     action?: PaymentAction;
     order?: Order;
+    donationToken?: string;
 }
 
 export interface PaymentResponseData {
@@ -362,6 +360,7 @@ export interface PaymentResponseData {
     sessionData?: string;
     sessionResult?: string;
     order?: Order;
+    donationToken?: string;
 }
 
 export interface RawPaymentResponse extends PaymentResponseData {
