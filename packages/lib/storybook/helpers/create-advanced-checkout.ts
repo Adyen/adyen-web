@@ -1,6 +1,6 @@
 import { AdyenCheckout } from '../../src/index';
-import { cancelOrder, checkBalance, createOrder, getPaymentMethods } from './checkout-api-calls';
-import { handleAdditionalDetails, handleChange, handleError, handleSubmit } from './checkout-handlers';
+import { cancelOrder, checkBalance, createOrder, getPaymentMethods, makePayment } from './checkout-api-calls';
+import { handleAdditionalDetails, handleChange, handleError, handleFinalState } from './checkout-handlers';
 import getCurrency from '../utils/get-currency';
 import { AdyenCheckoutProps } from '../stories/types';
 import Checkout from '../../src/core/core';
@@ -32,13 +32,34 @@ async function createAdvancedFlowCheckout({
         locale: shopperLocale,
         showPayButton,
 
-        onSubmit: (state, component) => {
-            const paymentData = {
-                amount: paymentAmount,
-                countryCode,
-                shopperLocale
-            };
-            handleSubmit(state, component, checkout, paymentData);
+        onSubmit: async (state, component, actions) => {
+            try {
+                const paymentData = {
+                    amount: paymentAmount,
+                    countryCode,
+                    shopperLocale
+                };
+
+                const result = await makePayment(state.data, paymentData);
+
+                // happpy flow
+                if (result.resultCode.includes('Refused', 'Cancelled', 'Error')) {
+                    actions.reject({
+                        error: {
+                            googlePayError: {}
+                        }
+                    });
+                } else {
+                    actions.resolve({
+                        action: result.action,
+                        order: result.order,
+                        resultCode: result.resultCode
+                    });
+                }
+            } catch (error) {
+                // Something failed in the request
+                actions.reject();
+            }
         },
 
         onChange: (state, component) => {
@@ -82,6 +103,10 @@ async function createAdvancedFlowCheckout({
 
         onError: (error, component) => {
             handleError(error, component);
+        },
+
+        onPaymentCompleted: (result, component) => {
+            handleFinalState(result, component);
         }
     });
 
