@@ -1,4 +1,4 @@
-import { setupSecuredField } from './createSecuredFields';
+import { createSecuredFields, setupSecuredField } from './createSecuredFields';
 import { DATA_ENCRYPTED_FIELD_ATTR, ENCRYPTED_CARD_NUMBER, ENCRYPTED_EXPIRY_DATE, SF_CONFIG_TIMEOUT } from '../../configuration/constants';
 import { SecuredFields } from '../../types';
 import Language from '../../../../../../language';
@@ -18,12 +18,14 @@ let MySecuredField;
 const myCSF = {
     state: { type: 'card', hasSeparateDateFields: null, securedFields: {} as SecuredFields, iframeCount: 0, originalNumIframes: 2, numIframes: 2 },
     config: { shouldDisableIOSArrowKeys: null },
-    props: { i18n: new Language('en-US', {}) },
+    props: { rootNode: null, i18n: new Language('en-US', {}) },
     callbacks: {
         onLoad: jest.fn(() => {}),
         onTouchstartIOS: jest.fn(() => {})
     },
+    createSecuredFields,
     setupSecuredField,
+    createNonCardSecuredFields: jest.fn(() => {}),
     encryptedAttrName: DATA_ENCRYPTED_FIELD_ATTR,
     destroySecuredFields: jest.fn(() => {
         console.log('### createSecuredFields.test::calling destroySecuredFields:: ');
@@ -52,6 +54,7 @@ const dummyObj = { foo: 'bar' };
 describe('Testing CSFs setupSecuredField functionality', () => {
     beforeEach(() => {
         console.log = jest.fn(() => {});
+        console.warn = jest.fn(() => {});
 
         MySecuredField = {
             fieldType: ENCRYPTED_CARD_NUMBER,
@@ -106,6 +109,23 @@ describe('Testing CSFs setupSecuredField functionality', () => {
         mockedSecuredField.mockReset();
         mockedSecuredField.mockImplementation(() => SecuredFieldMock());
         SecuredFieldMock.mockClear();
+    });
+
+    test('Calling setupSecuredField with an unsupported value for the data-cse attribute should see that a SF is not created and that a warning is given', () => {
+        const rootNode = document.createElement('div');
+        const unsupportedEl = makeDiv('encryptedCustomField');
+        rootNode.appendChild(unsupportedEl);
+        myCSF.props.rootNode = rootNode;
+
+        const numIframes: number = myCSF.createSecuredFields();
+
+        expect(numIframes).toEqual(0);
+
+        expect(console.warn).toBeCalledWith(
+            `WARNING: 'encryptedCustomField' is not a valid type for the '${DATA_ENCRYPTED_FIELD_ATTR}' attribute. A SecuredField will not be created for this element.`
+        );
+
+        expect(myCSF.createNonCardSecuredFields).toBeCalledWith([]);
     });
 
     test('Calling setupSecuredField to see that an "encryptedCardNumber" SF is created and stored in state', () => {

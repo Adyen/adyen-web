@@ -47,7 +47,7 @@ describe("Testing setupSecuredField's createCardSecuredFields functionality", ()
         SecuredFieldMock.mockClear();
     });
 
-    test("setupSecuredField's createCardSecuredFields function should call the onBrand callback", async () => {
+    test("setupSecuredField's createCardSecuredFields function, as a single-branded card, should call the onBrand callback", async () => {
         myCSF.state.type = 'mc';
         myCSF.isSingleBrandedCard = true;
 
