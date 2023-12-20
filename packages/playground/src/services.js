@@ -81,3 +81,10 @@ export const cancelOrder = data => {
         })
         .catch(err => console.error(err));
 };
+
+export const patchPaypalOrder = ({ pspReference, paymentData, amount }) => {
+    if (!pspReference || !paymentData || !amount.value || !amount.currency) {
+        throw Error('PayPal patching order - Field is missing');
+    }
+    return httpPost('paypal/updateOrder', { pspReference, paymentData, amount });
+};
