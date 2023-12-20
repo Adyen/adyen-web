@@ -3,7 +3,7 @@ import { RawPaymentResponse, PaymentResponseData } from '../../../types/global-t
 
 const ALLOWED_PROPERTIES = ['action', 'resultCode', 'sessionData', 'order', 'sessionResult', 'donationToken'];
 
-export function getSanitizedResponse(response: RawPaymentResponse): PaymentResponseData {
+export function sanitizeResponse(response: RawPaymentResponse): PaymentResponseData {
     const removedProperties = [];
 
     const sanitizedObject = Object.keys(response).reduce((acc, cur) => {

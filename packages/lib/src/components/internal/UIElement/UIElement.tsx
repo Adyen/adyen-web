@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import BaseElement from '../BaseElement/BaseElement';
 import PayButton from '../PayButton';
-import { getSanitizedResponse } from './utils';
+import { sanitizeResponse } from './utils';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { hasOwnProperty } from '../../../utils/hasOwnProperty';
 import { CoreConfiguration, ICore } from '../../../core/types';
@@ -9,17 +9,17 @@ import { Resources } from '../../../core/Context/Resources';
 import { NewableComponent } from '../../../core/core.registry';
 import { ComponentMethodsRef, IUIElement, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
 import {
-    PaymentAction,
-    PaymentResponseData,
-    PaymentData,
-    RawPaymentResponse,
-    PaymentResponseAdvancedFlow,
     OnPaymentFailedData,
+    Order,
+    PaymentAction,
+    PaymentData,
     PaymentMethodsResponse,
-    Order
+    PaymentResponseAdvancedFlow,
+    PaymentResponseData,
+    RawPaymentResponse
 } from '../../../types/global-types';
 import './UIElement.scss';
-import { CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
+import { CheckoutSessionDetailsResponse, CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps>
     extends BaseElement<P>
@@ -50,11 +50,14 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
         this.setState = this.setState.bind(this);
         this.onValid = this.onValid.bind(this);
         this.onComplete = this.onComplete.bind(this);
-        this.makePaymentsCall = this.makePaymentsCall.bind(this);
         this.handleAction = this.handleAction.bind(this);
         this.handleOrder = this.handleOrder.bind(this);
+        this.handleAdditionalDetails = this.handleAdditionalDetails.bind(this);
         this.handleResponse = this.handleResponse.bind(this);
         this.setElementStatus = this.setElementStatus.bind(this);
+
+        this.makePaymentsCall = this.makePaymentsCall.bind(this);
+        this.makeAdditionalDetailsCall = this.makeAdditionalDetailsCall.bind(this);
 
         this.submitUsingSessionsFlow = this.submitUsingSessionsFlow.bind(this);
 
@@ -97,6 +100,23 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
         this.onChange();
     }
 
+    public showValidation(): this {
+        if (this.componentRef && this.componentRef.showValidation) this.componentRef.showValidation();
+        return this;
+    }
+
+    public setElementStatus(status: UIElementStatus, props?: any): this {
+        this.elementRef?.setStatus(status, props);
+        return this;
+    }
+
+    public setStatus(status: UIElementStatus, props?): this {
+        if (this.componentRef?.setStatus) {
+            this.componentRef.setStatus(status, props);
+        }
+        return this;
+    }
+
     protected onChange(): object {
         const isValid = this.isValid;
         const state = { data: this.data, errors: this.state.errors, valid: this.state.valid, isValid };
@@ -106,9 +126,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
         return state;
     }
 
-    /**
-     * Submit payment method data. If the form is not valid, it will trigger validation.
-     */
     public submit(): void {
         if (!this.isValid) {
             this.showValidation();
@@ -116,15 +133,12 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
         }
 
         this.makePaymentsCall()
-            .then(this.sanitizeResponse)
+            .then(sanitizeResponse)
             .then(this.verifyPaymentDidNotFail)
             .then(this.handleResponse)
             .catch(this.handleFailedResult);
     }
 
-    /**
-     * Triggers the payment flow
-     */
     protected makePaymentsCall(): Promise<PaymentResponseAdvancedFlow | CheckoutSessionPaymentResponse> {
         if (this.props.setStatusAutomatically) {
             this.setElementStatus('loading');
@@ -147,7 +161,12 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
             return beforeSubmitEvent.then(this.submitUsingSessionsFlow);
         }
 
-        this.handleError(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Could not submit the payment'));
+        this.handleError(
+            new AdyenCheckoutError(
+                'IMPLEMENTATION_ERROR',
+                'Could not perform /payments call. Callback "onSubmit" is missing or Checkout session is not available'
+            )
+        );
     }
 
     private async submitUsingAdvancedFlow(): Promise<PaymentResponseAdvancedFlow> {
@@ -164,11 +183,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
     }
 
     private async submitUsingSessionsFlow(data: PaymentData): Promise<CheckoutSessionPaymentResponse> {
-        let paymentsResponse: CheckoutSessionPaymentResponse = null;
-
         try {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            paymentsResponse = await this.core.session.submitPayment(data);
+            return await this.core.session.submitPayment(data);
         } catch (error) {
             this.handleError(error);
             return Promise.reject(error);
@@ -182,12 +198,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
         //     sessionResult:
         //         'X3XtfGC7!H4sIAAAAAAAA/6tWykxRslJyDjaxNDMyM3E2MXIyNDUys3RU0lHKTS1KzkjMK3FMTs4vzSsBKgtJLS7xhYo6Z6QmZ+eXlgAVFpcklpQWA+WLUtNKi1NTlGoBMEEbz1cAAAA=iMsCaEJ5LcnsqIUtmNxjm8HtfQ8gZW8JewEU3wHz4qg='
         // };
-
-        return paymentsResponse;
-    }
-
-    protected sanitizeResponse(rawResponse: RawPaymentResponse): PaymentResponseData {
-        return getSanitizedResponse(rawResponse);
     }
 
     protected verifyPaymentDidNotFail(response: PaymentResponseData): Promise<PaymentResponseData> {
@@ -208,40 +218,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
         if (this.props.onComplete) this.props.onComplete(state, this.elementRef);
     }
 
-    public showValidation(): this {
-        if (this.componentRef && this.componentRef.showValidation) this.componentRef.showValidation();
-        return this;
-    }
-
-    public setElementStatus(status: UIElementStatus, props?: any): this {
-        this.elementRef?.setStatus(status, props);
-        return this;
-    }
-
-    public setStatus(status: UIElementStatus, props?): this {
-        if (this.componentRef?.setStatus) {
-            this.componentRef.setStatus(status, props);
-        }
-        return this;
-    }
-
-    /**
-     * Submit the payment using sessions flow
-     *
-     * @param data
-     * @private
-     */
-    private submitPayment(data): Promise<void> {
-        return this.core.session
-            .submitPayment(data)
-            .then(this.handleResponse)
-            .catch(error => this.handleError(error));
-    }
-
-    private submitAdditionalDetails(data): Promise<void> {
-        return this.core.session.submitDetails(data).then(this.handleResponse).catch(this.handleError);
-    }
-
     protected handleError = (error: AdyenCheckoutError): void => {
         /**
          * Set status using elementRef, which:
@@ -255,15 +231,47 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
         }
     };
 
-    protected handleAdditionalDetails = state => {
-        if (this.props.onAdditionalDetails) {
-            this.props.onAdditionalDetails(state, this.elementRef);
-        } else if (this.props.session) {
-            this.submitAdditionalDetails(state.data);
+    protected handleAdditionalDetails(state: any): void {
+        this.makeAdditionalDetailsCall(state)
+            .then(sanitizeResponse)
+            .then(this.verifyPaymentDidNotFail)
+            .then(this.handleResponse)
+            .catch(this.handleFailedResult);
+    }
+
+    private makeAdditionalDetailsCall(
+        state: any
+    ): Promise<CheckoutSessionDetailsResponse | PaymentResponseAdvancedFlow> {
+        if (this.props.setStatusAutomatically) {
+            this.setElementStatus('loading');
         }
 
-        return state;
-    };
+        if (this.props.onAdditionalDetails) {
+            return new Promise<PaymentResponseAdvancedFlow>((resolve, reject) => {
+                this.props.onAdditionalDetails(state, this.elementRef, { resolve, reject });
+            });
+        }
+
+        if (this.props.session) {
+            return this.submitAdditionalDetailsUsingSessionsFlow(state.data);
+        }
+
+        this.handleError(
+            new AdyenCheckoutError(
+                'IMPLEMENTATION_ERROR',
+                'Could not perform /payments/details call. Callback "onAdditionalDetails" is missing or Checkout session is not available'
+            )
+        );
+    }
+
+    private async submitAdditionalDetailsUsingSessionsFlow(data: any): Promise<CheckoutSessionDetailsResponse> {
+        try {
+            return this.core.session.submitDetails(data);
+        } catch (error) {
+            this.handleError(error);
+            return Promise.reject(error);
+        }
+    }
 
     public handleAction(action: PaymentAction, props = {}): UIElement<P> | null {
         if (!action || !action.type) {
@@ -342,7 +350,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
      * @param rawResponse -
      */
     protected handleResponse(rawResponse: RawPaymentResponse): void {
-        const response = getSanitizedResponse(rawResponse);
+        const response = sanitizeResponse(rawResponse);
 
         if (response.action) {
             this.elementRef.handleAction(response.action);

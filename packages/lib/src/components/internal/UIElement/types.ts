@@ -16,7 +16,12 @@ export type PayButtonFunctionProps = Omit<PayButtonProps, 'amount'>;
 
 type CoreCallbacks = Pick<
     CoreConfiguration,
-    'onSubmit' | 'onPaymentFailed' | 'onPaymentCompleted' | 'onOrderUpdated' | 'onPaymentMethodsRequest'
+    | 'onSubmit'
+    | 'onAdditionalDetails'
+    | 'onPaymentFailed'
+    | 'onPaymentCompleted'
+    | 'onOrderUpdated'
+    | 'onPaymentMethodsRequest'
 >;
 
 export type UIElementProps = BaseElementProps &
@@ -29,7 +34,6 @@ export type UIElementProps = BaseElementProps &
 
         onComplete?: (state, element: UIElement) => void;
         onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
-        onAdditionalDetails?: (state: any, element: UIElement) => void;
         onError?: (error, element?: UIElement) => void;
         beforeRedirect?: (resolve, reject, redirectData, element: UIElement) => void;
 

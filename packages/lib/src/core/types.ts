@@ -204,7 +204,21 @@ export interface CoreConfiguration {
         }
     ): void;
 
-    onAdditionalDetails?(state: any, element?: UIElement): void;
+    /**
+     * Callback used in the Advanced flow to perform the /payments/details API call.
+     *
+     * @param state
+     * @param element
+     * @param actions
+     */
+    onAdditionalDetails?(
+        state: any,
+        element: UIElement,
+        actions: {
+            resolve: (response: PaymentResponseAdvancedFlow) => void;
+            reject: (error?: onSubmitReject) => void;
+        }
+    ): void;
 
     onActionHandled?(data: ActionHandledReturnObject): void;
 

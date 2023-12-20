@@ -47,11 +47,11 @@ export async function initManual() {
 
                 if (result.resultCode.includes('Refused', 'Cancelled', 'Error')) {
                     actions.reject({
-                        resultCode: result.resultCode,
-                        error: {
-                            googlePayError: {},
-                            applePayError: {}
-                        }
+                        resultCode: result.resultCode
+                        // error: {
+                        //     googlePayError: {},
+                        //     applePayError: {}
+                        // }
                     });
                 } else {
                     actions.resolve({
@@ -78,26 +78,31 @@ export async function initManual() {
             console.log('onPaymentFailed', result, element);
         },
 
-        onAdditionalDetails: async (state, component) => {
-            const result = await makeDetailsCall(state.data);
+        onAdditionalDetails: async (state, component, actions) => {
+            try {
+                const result = await makeDetailsCall(state.data);
 
-            if (result.action) {
-                component.handleAction(result.action);
-            } else if (result.order && result.order?.remainingAmount?.value > 0) {
-                // handle orders
-                const order = {
-                    orderData: result.order.orderData,
-                    pspReference: result.order.pspReference
-                };
+                if (!result.resultCode) actions.reject();
 
-                const orderPaymentMethods = await getPaymentMethods({ order, amount, shopperLocale });
-                checkout.update({
-                    paymentMethodsResponse: orderPaymentMethods,
-                    order,
-                    amount: result.order.remainingAmount
-                });
-            } else {
-                handleFinalState(result.resultCode, component);
+                if (result.resultCode.includes('Refused', 'Cancelled', 'Error')) {
+                    actions.reject({
+                        resultCode: result.resultCode
+                        // error: {
+                        //     googlePayError: {},
+                        //     applePayError: {}
+                        // }
+                    });
+                } else {
+                    actions.resolve({
+                        action: result.action,
+                        order: result.order,
+                        resultCode: result.resultCode,
+                        donationToken: result.donationToken
+                    });
+                }
+            } catch (error) {
+                console.error('## onAdditionalDetails - critical error', error);
+                actions.reject();
             }
         },
         onBalanceCheck: async (resolve, reject, data) => {

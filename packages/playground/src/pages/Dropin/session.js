@@ -28,7 +28,7 @@ export async function initSession() {
             actions.resolve(data);
         },
         onPaymentCompleted: (result, component) => {
-            console.info(result, component);
+            console.info('onPaymentCompleted', result, component);
         },
         onPaymentFailed(result, element) {
             console.log('onPaymentFailed', result, element);

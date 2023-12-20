@@ -110,9 +110,10 @@ class Core implements ICore {
      * @param details -
      */
     public submitDetails(details): void {
-        if (this.options.onAdditionalDetails) {
-            return this.options.onAdditionalDetails(details);
-        }
+        // TODO: Check this
+        // if (this.options.onAdditionalDetails) {
+        //     return this.options.onAdditionalDetails(details);
+        // }
 
         if (this.session) {
             this.session
