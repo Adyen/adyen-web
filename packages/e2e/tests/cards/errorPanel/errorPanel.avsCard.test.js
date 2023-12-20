@@ -30,7 +30,7 @@ test('#1 avsCard error fields and inputs should have correct aria attributes', a
     await t.switchToMainWindow().switchToIframe(cardPage.iframeSelector.nth(0));
     const adb = await getInputSelector('encryptedCardNumber', true).getAttribute('aria-describedby');
     await t.expect(adb).contains('adyen-checkout-encryptedCardNumber-');
-    await t.expect(adb).contains('-ariaError');
+    await t.expect(adb).contains('-ariaContext');
     await t.switchToMainWindow();
 
     // Address input's error field should have correct aria attrs

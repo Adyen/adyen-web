@@ -50,7 +50,7 @@ export class ANCVElement extends UIElement<ANCVProps> {
      * Called when the /paymentDetails endpoint returns PartiallyAuthorised. The /paymentDetails happens once the /status
      * returns PartiallyAuthorised
      *
-     * @param order
+     * @param order -
      */
     protected handleOrder = ({ order }: PaymentResponse) => {
         this.updateParent({ order });

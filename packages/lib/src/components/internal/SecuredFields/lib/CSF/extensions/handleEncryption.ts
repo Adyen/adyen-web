@@ -14,6 +14,7 @@ export function handleEncryption(pFeedbackObj: SFFeedbackObj): void {
 
     // SET FOCUS ON OTHER INPUT - If user has just typed a correct expiryDate - set focus on the cvc field OR typed a correct expiryMonth - focus on year field
     if (this.config.autoFocus) {
+        // pFeedbackObj.type === 'year' when the encryption is happening on an expiryDate field c.f. a separate year field (when it equals ENCRYPTED_EXPIRY_YEAR)
         if (pFeedbackObj.type === 'year' || fieldType === ENCRYPTED_EXPIRY_YEAR) {
             this.setFocusOnFrame(ENCRYPTED_SECURITY_CODE);
         }

@@ -310,7 +310,8 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
      * Get the element icon URL for the current environment
      */
     get icon(): string {
-        return this.props.icon ?? this.resources.getImage()(this.type);
+        const type = this.props.paymentMethodType || this.type;
+        return this.props.icon ?? this.resources.getImage()(type);
     }
 
     /**

@@ -1,5 +1,23 @@
 # @adyen/adyen-web
 
+## 5.55.1
+
+### Patch Changes
+
+-   Loading the logo images properly when handling qrCode/await actions ([#2490](https://github.com/Adyen/adyen-web/pull/2490))
+
+## 5.55.0
+
+### Minor Changes
+
+-   Bumping sf version to 4.8.0 which includes a more comprehensive startup log (to help with debugging) ([#2488](https://github.com/Adyen/adyen-web/pull/2488))
+
+### Patch Changes
+
+-   Renaming detectInIframe to the more accurate, but lengthy, detectInIframeInSameOrigin. ([#2475](https://github.com/Adyen/adyen-web/pull/2475))
+
+    Now the functionality only considers itself to be running in an iframe _if_ it is possible to access the parent domain and thus be able to redirect the top, parent, window
+
 ## 5.54.0
 
 ### Minor Changes
