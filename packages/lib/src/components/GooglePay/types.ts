@@ -152,11 +152,8 @@ export interface GooglePayConfiguration extends UIElementProps {
     onClick?: (resolve, reject) => void;
 
     /**
-     * Callback called when GooglePay authorize the payment.
+     * Callback called when GooglePay authorizes the payment.
      * Must be resolved/rejected with the action object.
-     *
-     * @param paymentData
-     * @returns
      */
     onAuthorized?: (
         data: {
@@ -164,7 +161,7 @@ export interface GooglePayConfiguration extends UIElementProps {
             billingAddress?: Partial<AddressData>;
             deliveryAddress?: Partial<AddressData>;
         },
-        actions: { resolve: () => void; reject: () => void }
+        actions: { resolve: () => void; reject: (error?: google.payments.api.PaymentDataError | string) => void }
     ) => void;
 }
 

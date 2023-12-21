@@ -13,7 +13,7 @@ import {
     PaymentAction,
     PaymentData,
     PaymentMethodsResponse,
-    PaymentResponseAdvancedFlow,
+    CheckoutAdvancedFlowResponse,
     PaymentResponseData,
     RawPaymentResponse
 } from '../../../types/global-types';
@@ -138,7 +138,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
             .catch(this.handleFailedResult);
     }
 
-    protected makePaymentsCall(): Promise<PaymentResponseAdvancedFlow | CheckoutSessionPaymentResponse> {
+    protected makePaymentsCall(): Promise<CheckoutAdvancedFlowResponse | CheckoutSessionPaymentResponse> {
         if (this.props.setStatusAutomatically) {
             this.setElementStatus('loading');
         }
@@ -168,8 +168,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
         );
     }
 
-    private async submitUsingAdvancedFlow(): Promise<PaymentResponseAdvancedFlow> {
-        return new Promise<PaymentResponseAdvancedFlow>((resolve, reject) => {
+    private async submitUsingAdvancedFlow(): Promise<CheckoutAdvancedFlowResponse> {
+        return new Promise<CheckoutAdvancedFlowResponse>((resolve, reject) => {
             this.props.onSubmit(
                 {
                     data: this.data,
@@ -232,13 +232,13 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
 
     private makeAdditionalDetailsCall(
         state: any
-    ): Promise<CheckoutSessionDetailsResponse | PaymentResponseAdvancedFlow> {
+    ): Promise<CheckoutSessionDetailsResponse | CheckoutAdvancedFlowResponse> {
         if (this.props.setStatusAutomatically) {
             this.setElementStatus('loading');
         }
 
         if (this.props.onAdditionalDetails) {
-            return new Promise<PaymentResponseAdvancedFlow>((resolve, reject) => {
+            return new Promise<CheckoutAdvancedFlowResponse>((resolve, reject) => {
                 this.props.onAdditionalDetails(state, this.elementRef, { resolve, reject });
             });
         }

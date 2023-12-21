@@ -343,30 +343,31 @@ export interface PaymentMethodsRequestData {
     countryCode?: string;
 }
 
-export interface PaymentResponseAdvancedFlow {
+export interface CheckoutAdvancedFlowResponse {
     resultCode: ResultCode;
     action?: PaymentAction;
     order?: Order;
     donationToken?: string;
     error?: {
-        googlePayError?: Partial<google.payments.api.PaymentDataError>;
+        googlePayError?: google.payments.api.PaymentDataError | string;
         applePayError?: ApplePayJS.ApplePayError[] | ApplePayJS.ApplePayError;
     };
 }
 
 export interface PaymentResponseData {
+    resultCode: ResultCode;
     type?: string;
     action?: PaymentAction;
-    resultCode: ResultCode;
     sessionData?: string;
     sessionResult?: string;
     order?: Order;
     donationToken?: string;
 }
 
-export interface RawPaymentResponse extends PaymentResponseData {
-    [key: string]: any;
-}
+export type RawPaymentResponse = PaymentResponseData &
+    CheckoutAdvancedFlowResponse & {
+        [key: string]: any;
+    };
 
 export type ActionDescriptionType =
     | 'qr-code-loaded'

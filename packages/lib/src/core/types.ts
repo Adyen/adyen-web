@@ -6,7 +6,7 @@ import {
     PaymentMethodsResponse,
     ActionHandledReturnObject,
     PaymentData,
-    PaymentResponseAdvancedFlow,
+    CheckoutAdvancedFlowResponse,
     PaymentMethodsRequestData,
     SessionsResponse,
     ResultCode
@@ -156,23 +156,23 @@ export interface CoreConfiguration {
     setStatusAutomatically?: boolean;
 
     beforeRedirect?(
-        resolve: PromiseResolve,
+        resolve: () => void,
         reject: PromiseReject,
         redirectData: {
             url: string;
             method: string;
             data?: any;
         }
-    ): Promise<void>;
+    ): void;
 
     beforeSubmit?(
         state: any,
         element: UIElement,
         actions: {
-            resolve: PromiseResolve;
-            reject: PromiseReject;
+            resolve: (data: any) => void;
+            reject: () => void;
         }
-    ): Promise<void>;
+    ): void;
 
     /**
      * Called when the payment succeeds.
@@ -199,7 +199,7 @@ export interface CoreConfiguration {
         state: any,
         element: UIElement,
         actions: {
-            resolve: (response: PaymentResponseAdvancedFlow) => void;
+            resolve: (response: CheckoutAdvancedFlowResponse) => void;
             reject: () => void;
             // reject: (error?: onSubmitReject) => void;
         }
@@ -216,7 +216,7 @@ export interface CoreConfiguration {
         state: any,
         element: UIElement,
         actions: {
-            resolve: (response: PaymentResponseAdvancedFlow) => void;
+            resolve: (response: CheckoutAdvancedFlowResponse) => void;
             reject: () => void;
             // reject: (error?: onSubmitReject) => void;
         }

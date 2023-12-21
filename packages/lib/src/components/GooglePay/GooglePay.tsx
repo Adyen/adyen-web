@@ -8,8 +8,7 @@ import { formatGooglePayContactToAdyenAddressFormat, getGooglePayLocale } from '
 import collectBrowserInfo from '../../utils/browserInfo';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
-import { onSubmitReject } from '../../core/types';
-import { AddressData, PaymentResponseData } from '../../types/global-types';
+import { AddressData, PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 
 class GooglePay extends UIElement<GooglePayConfiguration> {
@@ -118,19 +117,30 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
                 .then(paymentResponse => {
                     this.handleResponse(paymentResponse);
                 })
-                .catch((error: onSubmitReject) => {
+                .catch((paymentResponse: RawPaymentResponse) => {
                     this.setElementStatus('ready');
+
+                    const googlePayError = paymentResponse.error?.googlePayError;
+
+                    const error: google.payments.api.PaymentDataError =
+                        typeof googlePayError === 'string' || undefined
+                            ? {
+                                  intent: 'PAYMENT_AUTHORIZATION',
+                                  reason: 'OTHER_ERROR',
+                                  message: (googlePayError as string) || 'Payment failed'
+                              }
+                            : {
+                                  intent: googlePayError?.intent || 'PAYMENT_AUTHORIZATION',
+                                  reason: googlePayError?.reason || 'OTHER_ERROR',
+                                  message: googlePayError?.message || 'Payment failed'
+                              };
 
                     resolve({
                         transactionState: 'ERROR',
-                        error: {
-                            intent: error?.error?.googlePayError?.intent || 'PAYMENT_AUTHORIZATION',
-                            message: error?.error?.googlePayError?.message || 'Payment failed',
-                            reason: error?.error?.googlePayError?.reason || 'OTHER_ERROR'
-                        }
+                        error
                     });
 
-                    this.handleFailedResult(error);
+                    this.handleFailedResult(paymentResponse);
                 });
         });
     };
@@ -155,6 +165,10 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
                 },
                 { resolve, reject }
             );
+        }).catch((error?: google.payments.api.PaymentDataError | string) => {
+            // Format error in a way that the 'catch' of the 'onPaymentAuthorize' block accepts it
+            const data = { error: { googlePayError: error } };
+            return Promise.reject(data);
         });
     }
 

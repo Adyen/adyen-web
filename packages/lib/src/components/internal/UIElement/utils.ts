@@ -1,7 +1,7 @@
 import { UIElementStatus } from './types';
 import { RawPaymentResponse, PaymentResponseData } from '../../../types/global-types';
 
-const ALLOWED_PROPERTIES = ['action', 'resultCode', 'sessionData', 'order', 'sessionResult', 'donationToken'];
+const ALLOWED_PROPERTIES = ['action', 'resultCode', 'sessionData', 'order', 'sessionResult', 'donationToken', 'error'];
 
 export function sanitizeResponse(response: RawPaymentResponse): PaymentResponseData {
     const removedProperties = [];

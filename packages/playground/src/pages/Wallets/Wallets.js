@@ -167,8 +167,17 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
         // Callbacks
         onAuthorized(data, actions) {
-            console.log(data, actions);
-            actions.resolve();
+            console.log('onAuthorized', data, actions);
+
+            actions.reject();
+
+            // actions.reject('Failed with string');
+
+            // actions.reject({
+            //     intent: 'PAYMENT_AUTHORIZATION',
+            //     reason: 'OTHER_ERROR',
+            //     message: 'Failed with object'
+            // });
         },
 
         // onError: console.error,
