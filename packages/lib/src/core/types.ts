@@ -208,7 +208,7 @@ export interface CoreConfiguration {
      * Callback used in the Advanced flow to perform the /payments/details API call.
      *
      * @param state
-     * @param element
+     * @param element - Component submitting details. It is undefined when using checkout.submitDetails()
      * @param actions
      */
     onAdditionalDetails?(

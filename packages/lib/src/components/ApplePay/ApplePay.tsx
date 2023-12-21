@@ -18,7 +18,7 @@ import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
 import { onSubmitReject } from '../../core/types';
 import { PaymentResponseData } from '../../types/global-types';
-import { sanitizeResponse } from '../internal/UIElement/utils';
+import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 
 const latestSupportedVersion = 14;
 
@@ -115,7 +115,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
                 this.handleAuthorization()
                     .then(this.makePaymentsCall)
                     .then(sanitizeResponse)
-                    .then(this.verifyPaymentDidNotFail)
+                    .then(verifyPaymentDidNotFail)
                     .then(this.collectOrderTrackingDetailsIfNeeded)
                     .then(({ paymentResponse, orderDetails }) => {
                         resolve({

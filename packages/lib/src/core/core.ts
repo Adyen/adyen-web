@@ -5,7 +5,7 @@ import PaymentMethods from './ProcessResponse/PaymentMethods';
 import getComponentForAction from './ProcessResponse/PaymentAction';
 import { resolveEnvironment, resolveCDNEnvironment } from './Environment';
 import Analytics from './Analytics';
-import { PaymentAction } from '../types/global-types';
+import { OnPaymentFailedData, PaymentAction, PaymentResponseData } from '../types/global-types';
 import { CoreConfiguration, ICore } from './types';
 import { processGlobalOptions } from './utils';
 import Session from './CheckoutSession';
@@ -14,6 +14,8 @@ import { Resources } from './Context/Resources';
 import { SRPanel } from './Errors/SRPanel';
 import registry, { NewableComponent } from './core.registry';
 import { DEFAULT_LOCALE } from '../language/config';
+import { cleanupFinalResult, sanitizeResponse, verifyPaymentDidNotFail } from '../components/internal/UIElement/utils';
+import AdyenCheckoutError from './Errors/AdyenCheckoutError';
 
 class Core implements ICore {
     public session?: Session;
@@ -106,25 +108,48 @@ class Core implements ICore {
     }
 
     /**
-     * Submits details using onAdditionalDetails or the session flow if available
-     * @param details -
+     * Method used when handling redirects. It submits details using 'onAdditionalDetails' or the Sessions flow if available.
+     *
+     * @public
+     * @see {https://docs.adyen.com/online-payments/build-your-integration/?platform=Web&integration=Components&version=5.55.1#handle-the-redirect}
+     * @param details - Details object containing the redirectResult
      */
-    public submitDetails(details): void {
-        // TODO: Check this
-        // if (this.options.onAdditionalDetails) {
-        //     return this.options.onAdditionalDetails(details);
-        // }
+    public submitDetails(details: { details: { redirectResult: string } }): void {
+        let promise = null;
+
+        if (this.options.onAdditionalDetails) {
+            promise = new Promise((resolve, reject) => {
+                this.options.onAdditionalDetails({ data: details }, undefined, { resolve, reject });
+            });
+        }
 
         if (this.session) {
-            this.session
-                .submitDetails(details)
-                .then(response => {
-                    this.options.onPaymentCompleted?.(response);
-                })
-                .catch(error => {
-                    this.options.onError?.(error);
-                });
+            promise = this.session.submitDetails(details).catch(error => {
+                this.options.onError?.(error);
+                return Promise.reject(error);
+            });
         }
+
+        if (!promise) {
+            this.options.onError?.(
+                new AdyenCheckoutError(
+                    'IMPLEMENTATION_ERROR',
+                    'It can not submit the details. The callback "onAdditionalDetails" or the Session is not setup correctly.'
+                )
+            );
+            return;
+        }
+
+        promise
+            .then(sanitizeResponse)
+            .then(verifyPaymentDidNotFail)
+            .then((response: PaymentResponseData) => {
+                cleanupFinalResult(response);
+                this.options.onPaymentCompleted?.(response);
+            })
+            .catch((result: OnPaymentFailedData) => {
+                this.options.onPaymentFailed?.(result);
+            });
     }
 
     /**

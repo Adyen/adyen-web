@@ -10,7 +10,7 @@ import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
 import { onSubmitReject } from '../../core/types';
 import { AddressData, PaymentResponseData } from '../../types/global-types';
-import { sanitizeResponse } from '../internal/UIElement/utils';
+import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 
 class GooglePay extends UIElement<GooglePayConfiguration> {
     public static type = TxVariants.googlepay;
@@ -110,7 +110,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
             this.handleAuthorization()
                 .then(this.makePaymentsCall)
                 .then(sanitizeResponse)
-                .then(this.verifyPaymentDidNotFail)
+                .then(verifyPaymentDidNotFail)
                 .then((paymentResponse: PaymentResponseData) => {
                     resolve({ transactionState: 'SUCCESS' });
                     return paymentResponse;

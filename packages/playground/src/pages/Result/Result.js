@@ -14,6 +14,10 @@ async function handleRedirectResult(redirectResult, sessionId) {
             console.log('onPaymentCompleted', result);
             document.querySelector('#result-container > pre').innerHTML = JSON.stringify(result, null, '\t');
         },
+        onPaymentFailed: result => {
+            console.log('onPaymentFailed', result);
+            document.querySelector('#result-container > pre').innerHTML = JSON.stringify(result, null, '\t');
+        },
         onError: obj => {
             console.log('checkout level merchant defined onError handler obj=', obj);
         }

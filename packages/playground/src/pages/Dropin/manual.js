@@ -1,6 +1,7 @@
 import {
     AdyenCheckout,
     Dropin,
+    Ideal,
     Card,
     GooglePay,
     PayPal,
@@ -137,8 +138,6 @@ export async function initManual() {
     });
 
     function handleFinalState(resultCode, dropin) {
-        localStorage.removeItem('storedPaymentData');
-
         if (resultCode === 'Authorised' || resultCode === 'Received') {
             dropin.setStatus('success');
         } else {
@@ -147,26 +146,10 @@ export async function initManual() {
     }
 
     function handleRedirectResult() {
-        const storedPaymentData = localStorage.getItem('storedPaymentData');
         const { amazonCheckoutSessionId, redirectResult, payload } = getSearchParameters(window.location.search);
 
-        if (redirectResult || payload) {
-            dropin.setStatus('loading');
-            return makeDetailsCall({
-                ...(storedPaymentData && { paymentData: storedPaymentData }),
-                details: {
-                    ...(redirectResult && { redirectResult }),
-                    ...(payload && { payload })
-                }
-            }).then(result => {
-                if (result.action) {
-                    dropin.handleAction(result.action);
-                } else {
-                    handleFinalState(result.resultCode, dropin);
-                }
-
-                return true;
-            });
+        if (redirectResult) {
+            window.checkout.submitDetails({ details: { redirectResult } });
         }
 
         // Handle Amazon Pay redirect result
@@ -204,7 +187,7 @@ export async function initManual() {
 
     const dropin = new Dropin({
         core: checkout,
-        paymentMethodComponents: [Card, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay],
+        paymentMethodComponents: [Card, Ideal, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay],
         instantPaymentTypes: ['googlepay'],
         paymentMethodsConfiguration: {
             card: {

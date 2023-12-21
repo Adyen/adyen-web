@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import BaseElement from '../BaseElement/BaseElement';
 import PayButton from '../PayButton';
-import { sanitizeResponse } from './utils';
+import { cleanupFinalResult, sanitizeResponse, verifyPaymentDidNotFail } from './utils';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { hasOwnProperty } from '../../../utils/hasOwnProperty';
 import { CoreConfiguration, ICore } from '../../../core/types';
@@ -134,7 +134,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
 
         this.makePaymentsCall()
             .then(sanitizeResponse)
-            .then(this.verifyPaymentDidNotFail)
+            .then(verifyPaymentDidNotFail)
             .then(this.handleResponse)
             .catch(this.handleFailedResult);
     }
@@ -164,7 +164,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
         this.handleError(
             new AdyenCheckoutError(
                 'IMPLEMENTATION_ERROR',
-                'Could not perform /payments call. Callback "onSubmit" is missing or Checkout session is not available'
+                'It can not perform /payments call. Callback "onSubmit" is missing or Checkout session is not available'
             )
         );
     }
@@ -200,14 +200,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
         // };
     }
 
-    protected verifyPaymentDidNotFail(response: PaymentResponseData): Promise<PaymentResponseData> {
-        if (['Cancelled', 'Error', 'Refused'].includes(response.resultCode)) {
-            return Promise.reject(response);
-        }
-
-        return Promise.resolve(response);
-    }
-
     private onValid() {
         const state = { data: this.data };
         if (this.props.onValid) this.props.onValid(state, this.elementRef);
@@ -234,7 +226,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
     protected handleAdditionalDetails(state: any): void {
         this.makeAdditionalDetailsCall(state)
             .then(sanitizeResponse)
-            .then(this.verifyPaymentDidNotFail)
+            .then(verifyPaymentDidNotFail)
             .then(this.handleResponse)
             .catch(this.handleFailedResult);
     }
@@ -259,7 +251,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
         this.handleError(
             new AdyenCheckoutError(
                 'IMPLEMENTATION_ERROR',
-                'Could not perform /payments/details call. Callback "onAdditionalDetails" is missing or Checkout session is not available'
+                'It can not perform /payments/details call. Callback "onAdditionalDetails" is missing or Checkout session is not available'
             )
         );
     }
@@ -328,17 +320,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
     };
 
     protected handleSuccessResult = (result: PaymentResponseData): void => {
-        const sanitizeResult = (result: PaymentResponseData) => {
-            delete result.order;
-            delete result.action;
-            if (!result.donationToken || result.donationToken.length === 0) delete result.donationToken;
-        };
-
         if (this.props.setStatusAutomatically) {
             this.setElementStatus('success');
         }
 
-        sanitizeResult(result);
+        cleanupFinalResult(result);
 
         this.props.onPaymentCompleted?.(result, this.elementRef);
     };
