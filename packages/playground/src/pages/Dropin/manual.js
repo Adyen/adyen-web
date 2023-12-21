@@ -42,26 +42,21 @@ export async function initManual() {
             console.log('onSubmit', state, component.authorizedEvent);
 
             try {
-                const result = await makePayment(state.data);
+                const { action, order, resultCode, donationToken } = await makePayment(state.data);
 
-                if (!result.resultCode) actions.reject();
+                if (!resultCode) actions.reject();
 
-                if (result.resultCode.includes('Refused', 'Cancelled', 'Error')) {
-                    actions.reject({
-                        resultCode: result.resultCode
-                        // error: {
-                        //     googlePayError: {},
-                        //     applePayError: {}
-                        // }
-                    });
-                } else {
-                    actions.resolve({
-                        action: result.action,
-                        order: result.order,
-                        resultCode: result.resultCode,
-                        donationToken: result.donationToken
-                    });
-                }
+                actions.resolve({
+                    resultCode,
+                    action,
+                    order,
+                    donationToken
+                    // error: {
+                    //              googlePayError: {},
+                    //              applePayError: {}
+                    //          }
+                    // }
+                });
             } catch (error) {
                 console.error('## onSubmit - critical error', error);
                 actions.reject();
@@ -81,26 +76,20 @@ export async function initManual() {
 
         onAdditionalDetails: async (state, component, actions) => {
             try {
-                const result = await makeDetailsCall(state.data);
+                console.log('onAdditionalDetails', state, component, actions);
 
-                if (!result.resultCode) actions.reject();
+                const { resultCode, action, order, resultCode, donationToken } = await makeDetailsCall(state.data);
 
-                if (result.resultCode.includes('Refused', 'Cancelled', 'Error')) {
-                    actions.reject({
-                        resultCode: result.resultCode
-                        // error: {
-                        //     googlePayError: {},
-                        //     applePayError: {}
-                        // }
-                    });
-                } else {
-                    actions.resolve({
-                        action: result.action,
-                        order: result.order,
-                        resultCode: result.resultCode,
-                        donationToken: result.donationToken
-                    });
-                }
+                if (!resultCode) actions.reject();
+
+                actions.resolve({
+                    resultCode,
+                    action,
+                    order,
+                    donationToken
+                    // error: {},
+                });
+                return;
             } catch (error) {
                 console.error('## onAdditionalDetails - critical error', error);
                 actions.reject();

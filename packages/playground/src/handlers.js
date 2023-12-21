@@ -32,42 +32,43 @@ export function handleError(obj) {
 export async function handleSubmit(state, component, actions) {
     component.setStatus('loading');
 
+    console.log('onSubmit', state, actions);
+
     try {
-        const result = await makePayment(state.data);
+        const { action, order, resultCode, donationToken } = await makePayment(state.data);
 
-        if (!result.resultCode) actions.reject();
+        if (!resultCode) actions.reject();
 
-        if (result.resultCode.includes('Refused', 'Cancelled', 'Error')) {
-            actions.reject({
-                resultCode: result.resultCode,
-                error: {
-                    googlePayError: {},
-                    applePayError: {}
-                }
-            });
-        } else {
-            actions.resolve({
-                action: result.action,
-                order: result.order,
-                resultCode: result.resultCode,
-                donationToken: result.donationToken
-            });
-        }
+        actions.resolve({
+            resultCode,
+            action,
+            order,
+            donationToken
+        });
     } catch (error) {
         console.error('## onSubmit - critical error', error);
         actions.reject();
     }
 }
 
-export function handleAdditionalDetails(details, component) {
-    // component.setStatus('processing');
+export async function handleAdditionalDetails(state, component, actions) {
+    try {
+        console.log('onAdditionalDetails', state, component, actions);
 
-    return makeDetailsCall(details.data)
-        .then(response => {
-            component.setStatus('ready');
-            handleResponse(response, component);
-        })
-        .catch(error => {
-            throw Error(error);
+        const { resultCode, action, order, resultCode, donationToken } = await makeDetailsCall(state.data);
+
+        if (!resultCode) actions.reject();
+
+        actions.resolve({
+            resultCode,
+            action,
+            order,
+            donationToken
+            // error: {},
         });
+        return;
+    } catch (error) {
+        console.error('## onAdditionalDetails - critical error', error);
+        actions.reject();
+    }
 }

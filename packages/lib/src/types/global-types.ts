@@ -1,6 +1,6 @@
 import { ADDRESS_SCHEMA } from '../components/internal/Address/constants';
 import actionTypes from '../core/ProcessResponse/PaymentAction/actionTypes';
-import { onSubmitReject } from '../core/types';
+// import { onSubmitReject } from '../core/types';
 
 export type PaymentActionsType = keyof typeof actionTypes;
 
@@ -335,9 +335,6 @@ export type SessionsResponse = {
     sessionResult: string;
     resultCode: ResultCode;
 };
-export type OnPaymentCompletedData = SessionsResponse | { resultCode: ResultCode };
-
-export type OnPaymentFailedData = SessionsResponse | onSubmitReject;
 
 //TODO double check these values
 export interface PaymentMethodsRequestData {
@@ -351,6 +348,10 @@ export interface PaymentResponseAdvancedFlow {
     action?: PaymentAction;
     order?: Order;
     donationToken?: string;
+    error?: {
+        googlePayError?: Partial<google.payments.api.PaymentDataError>;
+        applePayError?: ApplePayJS.ApplePayError[] | ApplePayJS.ApplePayError;
+    };
 }
 
 export interface PaymentResponseData {

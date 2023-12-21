@@ -5,7 +5,7 @@ import PaymentMethods from './ProcessResponse/PaymentMethods';
 import getComponentForAction from './ProcessResponse/PaymentAction';
 import { resolveEnvironment, resolveCDNEnvironment } from './Environment';
 import Analytics from './Analytics';
-import { OnPaymentFailedData, PaymentAction, PaymentResponseData } from '../types/global-types';
+import { PaymentAction, PaymentResponseData } from '../types/global-types';
 import { CoreConfiguration, ICore } from './types';
 import { processGlobalOptions } from './utils';
 import Session from './CheckoutSession';
@@ -147,8 +147,9 @@ class Core implements ICore {
                 cleanupFinalResult(response);
                 this.options.onPaymentCompleted?.(response);
             })
-            .catch((result: OnPaymentFailedData) => {
-                this.options.onPaymentFailed?.(result);
+            .catch((response: PaymentResponseData) => {
+                cleanupFinalResult(response);
+                this.options.onPaymentFailed?.(response);
             });
     }
 

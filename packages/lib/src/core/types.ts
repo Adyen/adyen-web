@@ -5,11 +5,11 @@ import {
     PaymentAction,
     PaymentMethodsResponse,
     ActionHandledReturnObject,
-    OnPaymentCompletedData,
     PaymentData,
     PaymentResponseAdvancedFlow,
-    OnPaymentFailedData,
-    PaymentMethodsRequestData
+    PaymentMethodsRequestData,
+    SessionsResponse,
+    ResultCode
 } from '../types/global-types';
 import { AnalyticsOptions } from './Analytics/types';
 import { RiskModuleOptions } from './RiskModule/RiskModule';
@@ -51,12 +51,12 @@ export interface ICore {
 
 export type AdyenEnvironment = 'test' | 'live' | 'live-us' | 'live-au' | 'live-apse' | 'live-in' | string;
 
-export type onSubmitReject = {
-    error?: {
-        googlePayError?: Partial<google.payments.api.PaymentDataError>;
-        applePayError?: ApplePayJS.ApplePayError[] | ApplePayJS.ApplePayError;
-    };
-};
+// export type onSubmitReject = {
+//     error?: {
+//         googlePayError?: Partial<google.payments.api.PaymentDataError>;
+//         applePayError?: ApplePayJS.ApplePayError[] | ApplePayJS.ApplePayError;
+//     };
+// };
 
 export interface CoreConfiguration {
     session?: any;
@@ -182,7 +182,7 @@ export interface CoreConfiguration {
      * @param data
      * @param element
      */
-    onPaymentCompleted?(data: OnPaymentCompletedData, element?: UIElement): void;
+    onPaymentCompleted?(data: SessionsResponse | { resultCode: ResultCode }, element?: UIElement): void;
 
     /**
      * Called when the payment fails.
@@ -193,14 +193,15 @@ export interface CoreConfiguration {
      * @param data
      * @param element
      */
-    onPaymentFailed?(data?: OnPaymentFailedData, element?: UIElement): void;
+    onPaymentFailed?(data?: SessionsResponse | { resultCode: ResultCode }, element?: UIElement): void;
 
     onSubmit?(
         state: any,
         element: UIElement,
         actions: {
             resolve: (response: PaymentResponseAdvancedFlow) => void;
-            reject: (error?: onSubmitReject) => void;
+            reject: () => void;
+            // reject: (error?: onSubmitReject) => void;
         }
     ): void;
 
@@ -216,7 +217,8 @@ export interface CoreConfiguration {
         element: UIElement,
         actions: {
             resolve: (response: PaymentResponseAdvancedFlow) => void;
-            reject: (error?: onSubmitReject) => void;
+            reject: () => void;
+            // reject: (error?: onSubmitReject) => void;
         }
     ): void;
 

@@ -9,7 +9,6 @@ import { Resources } from '../../../core/Context/Resources';
 import { NewableComponent } from '../../../core/core.registry';
 import { ComponentMethodsRef, IUIElement, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
 import {
-    OnPaymentFailedData,
     Order,
     PaymentAction,
     PaymentData,
@@ -311,10 +310,12 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
      *
      * @param result
      */
-    protected handleFailedResult = (result: OnPaymentFailedData): void => {
+    protected handleFailedResult = (result: PaymentResponseData): void => {
         if (this.props.setStatusAutomatically) {
             this.setElementStatus('error');
         }
+
+        cleanupFinalResult(result);
 
         this.props.onPaymentFailed?.(result, this.elementRef);
     };
