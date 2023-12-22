@@ -25,7 +25,6 @@ export const GENERIC_OPTIONS = [
     'onSubmit',
     'onActionHandled',
     'onAdditionalDetails',
-    'onCancel',
     'onChange',
     'onError',
     'onBalanceCheck',

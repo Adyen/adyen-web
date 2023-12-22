@@ -21,10 +21,6 @@ import { NewableComponent } from './core.registry';
 import Session from './CheckoutSession';
 import PaymentMethods from './ProcessResponse/PaymentMethods';
 
-type PromiseResolve = typeof Promise.resolve;
-
-type PromiseReject = typeof Promise.reject;
-
 export interface ICore {
     initialize(): Promise<ICore>;
 
@@ -50,13 +46,6 @@ export interface ICore {
 }
 
 export type AdyenEnvironment = 'test' | 'live' | 'live-us' | 'live-au' | 'live-apse' | 'live-in' | string;
-
-// export type onSubmitReject = {
-//     error?: {
-//         googlePayError?: Partial<google.payments.api.PaymentDataError>;
-//         applePayError?: ApplePayJS.ApplePayError[] | ApplePayJS.ApplePayError;
-//     };
-// };
 
 export interface CoreConfiguration {
     session?: any;
@@ -157,7 +146,7 @@ export interface CoreConfiguration {
 
     beforeRedirect?(
         resolve: () => void,
-        reject: PromiseReject,
+        reject: () => void,
         redirectData: {
             url: string;
             method: string;
@@ -228,9 +217,9 @@ export interface CoreConfiguration {
 
     onError?(error: AdyenCheckoutError, element?: UIElement): void;
 
-    onBalanceCheck?(resolve: PromiseResolve, reject: PromiseReject, data: GiftCardElementData): Promise<void>;
+    onBalanceCheck?(resolve: () => void, reject: () => void, data: GiftCardElementData): Promise<void>;
 
-    onOrderRequest?(resolve: PromiseResolve, reject: PromiseReject, data: PaymentData): Promise<void>;
+    onOrderRequest?(resolve: () => void, reject: () => void, data: PaymentData): Promise<void>;
 
     onPaymentMethodsRequest?(
         data: PaymentMethodsRequestData,
@@ -245,12 +234,6 @@ export interface CoreConfiguration {
      * https://docs.adyen.com/payment-methods/gift-cards/web-component?tab=config-sessions_1
      */
     onOrderUpdated?(data: { order: Order }): void;
-
-    /**
-     * Used only in the Donation Component when shopper declines to donate
-     * https://docs.adyen.com/online-payments/donations/web-component
-     */
-    onCancel?(): void;
 
     /**
      * @internal

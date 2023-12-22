@@ -16,8 +16,7 @@ import {
 } from './types';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
-import { onSubmitReject } from '../../core/types';
-import { PaymentResponseData } from '../../types/global-types';
+import { PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 
 const latestSupportedVersion = 14;
@@ -127,16 +126,15 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
                     .then(paymentResponse => {
                         this.handleResponse(paymentResponse);
                     })
-                    .catch((error: onSubmitReject) => {
-                        console.error(error);
-                        const errors = error?.error?.applePayError;
+                    .catch((paymentResponse: RawPaymentResponse) => {
+                        const errors = paymentResponse?.error?.applePayError;
 
                         reject({
                             status: ApplePaySession.STATUS_FAILURE,
                             errors: errors ? (Array.isArray(errors) ? errors : [errors]) : undefined
                         });
 
-                        this.handleFailedResult(error);
+                        this.handleFailedResult(paymentResponse);
                     });
             }
         });
@@ -172,6 +170,10 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
                 },
                 { resolve, reject }
             );
+        }).catch((error?: ApplePayJS.ApplePayError) => {
+            // Format error in a way that the 'catch' of the 'onPaymentAuthorize' block accepts it
+            const data = { error: { applePayError: error } };
+            return Promise.reject(data);
         });
     }
 

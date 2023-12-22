@@ -15,6 +15,7 @@ import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { TxVariants } from '../tx-variants';
 import { UIElementStatus } from '../internal/UIElement/types';
 
+// @ts-ignore TODO: Check with nick
 export class CardElement extends UIElement<CardConfiguration> {
     public static type = TxVariants.scheme;
 
@@ -29,7 +30,11 @@ export class CardElement extends UIElement<CardConfiguration> {
         super(props);
 
         if (props && !props._disableClickToPay) {
-            this.clickToPayService = createClickToPayService(this.props.configuration, this.props.clickToPayConfiguration, this.props.environment);
+            this.clickToPayService = createClickToPayService(
+                this.props.configuration,
+                this.props.clickToPayConfiguration,
+                this.props.environment
+            );
             this.clickToPayService?.initialize();
         }
     }
@@ -85,8 +90,10 @@ export class CardElement extends UIElement<CardConfiguration> {
             clickToPayConfiguration: {
                 ...props.clickToPayConfiguration,
                 disableOtpAutoFocus: props.clickToPayConfiguration?.disableOtpAutoFocus || false,
-                shopperEmail: props.clickToPayConfiguration?.shopperEmail || props?.core?.options?.session?.shopperEmail,
-                telephoneNumber: props.clickToPayConfiguration?.telephoneNumber || props?.core?.options?.session?.telephoneNumber,
+                shopperEmail:
+                    props.clickToPayConfiguration?.shopperEmail || props?.core?.options?.session?.shopperEmail,
+                telephoneNumber:
+                    props.clickToPayConfiguration?.telephoneNumber || props?.core?.options?.session?.telephoneNumber,
                 locale: props.clickToPayConfiguration?.locale || props.i18n?.locale?.replace('-', '_')
             }
         };
@@ -103,7 +110,8 @@ export class CardElement extends UIElement<CardConfiguration> {
          *  - or, in the case of a storedCard
          */
         const cardBrand = this.state.selectedBrandValue;
-        const includeStorePaymentMethod = this.props.enableStoreDetails && typeof this.state.storePaymentMethod !== 'undefined';
+        const includeStorePaymentMethod =
+            this.props.enableStoreDetails && typeof this.state.storePaymentMethod !== 'undefined';
 
         return {
             paymentMethod: {
@@ -137,7 +145,8 @@ export class CardElement extends UIElement<CardConfiguration> {
     };
 
     processBinLookupResponse(binLookupResponse: BinLookupResponse, isReset = false) {
-        if (this.componentRef?.processBinLookupResponse) this.componentRef.processBinLookupResponse(binLookupResponse, isReset);
+        if (this.componentRef?.processBinLookupResponse)
+            this.componentRef.processBinLookupResponse(binLookupResponse, isReset);
         return this;
     }
 
@@ -194,7 +203,8 @@ export class CardElement extends UIElement<CardConfiguration> {
         return (
             (this.props.name || CardElement.type) +
             (this.props.storedPaymentMethodId
-                ? ' ' + this.props.i18n.get('creditCard.storedCard.description.ariaLabel').replace('%@', this.props.lastFour)
+                ? ' ' +
+                  this.props.i18n.get('creditCard.storedCard.description.ariaLabel').replace('%@', this.props.lastFour)
                 : '')
         );
     }

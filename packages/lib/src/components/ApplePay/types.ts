@@ -153,8 +153,12 @@ export interface ApplePayConfiguration extends UIElementProps {
      * Callback called when ApplePay authorize the payment.
      * Must be resolved/rejected with the action object.
      *
-     * @param paymentData
-     * @returns
+     * @param data - Authorization event from ApplePay, along with formatted billingAddress and deliveryAddress
+     * @param actions - Object to continue/stop with the payment flow
+     *
+     * @remarks
+     * If actions.resolve() is called, the payment flow will be triggered.
+     * If actions.reject() is called, the overlay will display an error
      */
     onAuthorized?: (
         data: {
@@ -162,7 +166,7 @@ export interface ApplePayConfiguration extends UIElementProps {
             billingAddress?: Partial<AddressData>;
             deliveryAddress?: Partial<AddressData>;
         },
-        actions: { resolve: () => void; reject: () => void }
+        actions: { resolve: () => void; reject: (error?: ApplePayJS.ApplePayError) => void }
     ) => void;
 
     /**

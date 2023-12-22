@@ -23,6 +23,7 @@ const defaultComponents = {
 };
 
 class Registry implements IRegistry {
+    // @ts-ignore TODO: Check with nick
     public componentsMap: Record<string, NewableComponent> = defaultComponents;
 
     public supportedTxVariants: Set<string> = new Set(Object.values(TxVariants));

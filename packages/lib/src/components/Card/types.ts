@@ -17,6 +17,7 @@ import { DisclaimerMsgObject } from '../internal/DisclaimerMessage/DisclaimerMes
 import { Placeholders } from './components/CardInput/types';
 import { UIElementProps } from '../internal/UIElement/types';
 
+// @ts-ignore TODO: Check with nick
 export interface CardConfiguration extends UIElementProps {
     /**
      * Only set for a stored card,

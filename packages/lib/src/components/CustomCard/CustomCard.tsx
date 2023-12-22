@@ -15,6 +15,7 @@ import { CustomCardConfiguration } from './types';
 // type
 // countryCode
 
+// @ts-ignore TODO: Check with nick
 export class CustomCard extends UIElement<CustomCardConfiguration> {
     public static type = TxVariants.customCard;
 
@@ -80,7 +81,8 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
         if (!nuObj.isReset) {
             // Add brandImage urls, first checking if the merchant has configured their own one for the brand
             nuObj.supportedBrandsRaw = obj.supportedBrandsRaw?.map((item: BrandObject) => {
-                item.brandImageUrl = this.props.brandsConfiguration[item.brand]?.icon ?? getCardImageUrl(item.brand, this.resources);
+                item.brandImageUrl =
+                    this.props.brandsConfiguration[item.brand]?.icon ?? getCardImageUrl(item.brand, this.resources);
                 return item;
             });
         }

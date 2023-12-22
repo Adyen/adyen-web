@@ -344,9 +344,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
             return;
         }
 
-        /**
-         * TODO: handle order properly on advanced flow.
-         */
         if (response.order?.remainingAmount?.value > 0) {
             // we don't want to call elementRef here, use the component handler
             // we do this way so the logic on handlingOrder is associated with payment method
