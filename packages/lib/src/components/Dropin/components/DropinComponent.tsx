@@ -135,25 +135,23 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                     <div className={`adyen-checkout__dropin adyen-checkout__dropin--${status.type}`}>
                         {isRedirecting && status.props.component && status.props.component.render()}
                         {isLoading && status.props && status.props.component && status.props.component.render()}
-                        {elements && !!elements.length && (
-                            <PaymentMethodList
-                                isLoading={isLoading || isRedirecting}
-                                isDisablingPaymentMethod={this.state.isDisabling}
-                                paymentMethods={elements}
-                                instantPaymentMethods={instantPaymentElements}
-                                storedPaymentMethods={storedPaymentElements}
-                                activePaymentMethod={activePaymentMethod}
-                                cachedPaymentMethods={cachedPaymentMethods}
-                                order={this.props.order}
-                                orderStatus={this.state.orderStatus}
-                                onOrderCancel={this.onOrderCancel}
-                                onSelect={this.handleOnSelectPaymentMethod}
-                                openFirstPaymentMethod={this.props.openFirstPaymentMethod}
-                                openFirstStoredPaymentMethod={this.props.openFirstStoredPaymentMethod}
-                                onDisableStoredPaymentMethod={this.handleDisableStoredPaymentMethod}
-                                showRemovePaymentMethodButton={this.props.showRemovePaymentMethodButton}
-                            />
-                        )}
+                        <PaymentMethodList
+                            isLoading={isLoading || isRedirecting}
+                            isDisablingPaymentMethod={this.state.isDisabling}
+                            paymentMethods={elements}
+                            instantPaymentMethods={instantPaymentElements}
+                            storedPaymentMethods={storedPaymentElements}
+                            activePaymentMethod={activePaymentMethod}
+                            cachedPaymentMethods={cachedPaymentMethods}
+                            order={this.props.order}
+                            orderStatus={this.state.orderStatus}
+                            onOrderCancel={this.onOrderCancel}
+                            onSelect={this.handleOnSelectPaymentMethod}
+                            openFirstPaymentMethod={this.props.openFirstPaymentMethod}
+                            openFirstStoredPaymentMethod={this.props.openFirstStoredPaymentMethod}
+                            onDisableStoredPaymentMethod={this.handleDisableStoredPaymentMethod}
+                            showRemovePaymentMethodButton={this.props.showRemovePaymentMethodButton}
+                        />
                     </div>
                 );
         }
