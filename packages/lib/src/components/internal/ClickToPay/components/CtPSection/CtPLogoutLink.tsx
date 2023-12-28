@@ -3,10 +3,10 @@ import useClickToPayContext from '../../context/useClickToPayContext';
 import { CtpState } from '../../services/ClickToPayService';
 import classnames from 'classnames';
 import { useMemo } from 'preact/hooks';
-import './CtPLogoutLink.scss';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
+import './CtPLogoutLink.scss';
 
-const CtPLogoutLink = (): h.JSX.Element => {
+const CtPLogoutLink = () => {
     const { ctpState, logoutShopper, status, cards } = useClickToPayContext();
     const { i18n } = useCoreContext();
 
