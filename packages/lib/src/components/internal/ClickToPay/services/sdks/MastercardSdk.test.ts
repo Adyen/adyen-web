@@ -61,15 +61,12 @@ afterEach(() => {
     delete window.SRCSDK_MASTERCARD;
 });
 
-describe('Default behavior', () => {
-    test('should set the intial config correctly', () => {
+describe('SDK urls', () => {
+    test('should load sdk script with correct URL for live', async () => {
         const sdk = new MastercardSdk('live', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
         expect(sdk.schemeSdk).toBeNull;
         expect(sdk.schemeName).toBe('mc');
-    });
 
-    test('should load sdk script with correct URL for live', async () => {
-        const sdk = new MastercardSdk('live', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
         await sdk.loadSdkScript();
 
         expect(Script).toHaveBeenCalledWith(MC_SDK_PROD);
@@ -83,7 +80,9 @@ describe('Default behavior', () => {
         expect(Script).toHaveBeenCalledWith(MC_SDK_TEST);
         expect(mockScriptLoaded).toHaveBeenCalledTimes(1);
     });
+});
 
+describe('init()', () => {
     test('should init with the correct values', async () => {
         const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
         await sdk.loadSdkScript();
@@ -115,106 +114,6 @@ describe('Default behavior', () => {
         });
     });
 
-    test('should call identityLookup with the correct values', async () => {
-        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
-        await sdk.loadSdkScript();
-
-        const response = await sdk.identityLookup({ identityValue: 'john@example.com', type: 'email' });
-
-        expect(response.consumerPresent).toBeTruthy();
-        expect(sdk.schemeSdk.identityLookup).toHaveBeenCalledWith({
-            consumerIdentity: {
-                identityValue: 'john@example.com',
-                identityType: 'EMAIL_ADDRESS'
-            }
-        });
-    });
-
-    test('should call completeIdentityValidation with the correct values', async () => {
-        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
-        await sdk.loadSdkScript();
-
-        const otp = '123456';
-
-        const response = await sdk.completeIdentityValidation(otp);
-
-        expect(response.idToken).toBeDefined();
-        expect(sdk.schemeSdk.completeIdentityValidation).toHaveBeenCalledWith({
-            validationData: otp
-        });
-    });
-
-    test('should call checkout with the correct values', async () => {
-        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
-        await sdk.loadSdkScript();
-
-        const response = await sdk.checkout({
-            srcDigitalCardId: 'digital-id',
-            srcCorrelationId: 'correlation-id',
-            complianceSettings: { complianceResources: [{ complianceType: 'REMEMBER_ME', uri: '' }] }
-        });
-
-        expect(response.dcfActionCode).toBe('COMPLETE');
-        expect(response.checkoutResponse).toBe('checkout-response');
-        expect(sdk.schemeSdk.checkout).toHaveBeenCalledWith({
-            srcDigitalCardId: 'digital-id',
-            srcCorrelationId: 'correlation-id',
-            complianceSettings: { complianceResources: [{ complianceType: 'REMEMBER_ME', uri: '' }] }
-        });
-    });
-
-    test('should call unbind', async () => {
-        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
-        await sdk.loadSdkScript();
-        await sdk.unbindAppInstance();
-
-        expect(sdk.schemeSdk.unbindAppInstance).toHaveBeenCalled();
-    });
-
-    test('should call isRecognized', async () => {
-        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
-        await sdk.loadSdkScript();
-
-        const response = await sdk.isRecognized();
-
-        expect(sdk.schemeSdk.isRecognized).toHaveBeenCalledTimes(1);
-        expect(response.recognized).toBeTruthy();
-        expect(response.idTokens).toBeDefined();
-    });
-
-    test('should call initiateIdentityValidation', async () => {
-        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
-        await sdk.loadSdkScript();
-
-        const response = await sdk.initiateIdentityValidation();
-
-        expect(response.maskedValidationChannel).toBe('+31*******55');
-        expect(sdk.schemeSdk.initiateIdentityValidation).toHaveBeenCalledTimes(1);
-    });
-
-    test('should call getSrcProfile', async () => {
-        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
-        await sdk.loadSdkScript();
-
-        const response = await sdk.getSrcProfile(['id-token']);
-
-        expect(response.srcCorrelationId).toBe('1a2b3c');
-        expect(response.profiles[0].maskedCards[0]).toBeDefined();
-        expect(sdk.schemeSdk.getSrcProfile).toHaveBeenCalledWith({
-            idTokens: ['id-token']
-        });
-    });
-
-    test('should remove script', async () => {
-        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
-        await sdk.loadSdkScript();
-        sdk.removeSdkScript();
-
-        expect(mockScriptRemoved).toHaveBeenCalledTimes(1);
-    });
-});
-
-describe('Throwing errors', () => {
     test('should trigger error if init fails', async () => {
         const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
         await sdk.loadSdkScript();
@@ -233,6 +132,23 @@ describe('Throwing errors', () => {
             expect(error.source).toBe('init');
             expect(error.reason).toBe('FAILED');
             expect(error.message).toBe('Something went wrong');
+        });
+    });
+});
+
+describe('identityLookup()', () => {
+    test('should call identityLookup with the correct values', async () => {
+        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        await sdk.loadSdkScript();
+
+        const response = await sdk.identityLookup({ identityValue: 'john@example.com', type: 'email' });
+
+        expect(response.consumerPresent).toBeTruthy();
+        expect(sdk.schemeSdk.identityLookup).toHaveBeenCalledWith({
+            consumerIdentity: {
+                identityValue: 'john@example.com',
+                identityType: 'EMAIL_ADDRESS'
+            }
         });
     });
 
@@ -256,6 +172,22 @@ describe('Throwing errors', () => {
             expect(error.message).toBe('Something went wrong');
         });
     });
+});
+
+describe('completeIdentityValidation()', () => {
+    test('should call completeIdentityValidation with the correct values', async () => {
+        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        await sdk.loadSdkScript();
+
+        const otp = '123456';
+
+        const response = await sdk.completeIdentityValidation(otp);
+
+        expect(response.idToken).toBeDefined();
+        expect(sdk.schemeSdk.completeIdentityValidation).toHaveBeenCalledWith({
+            validationData: otp
+        });
+    });
 
     test('should trigger error if completeIdentityValidation fails', async () => {
         const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
@@ -275,6 +207,27 @@ describe('Throwing errors', () => {
             expect(error.source).toBe('completeIdentityValidation');
             expect(error.reason).toBe('FAILED');
             expect(error.message).toBe('Something went wrong');
+        });
+    });
+});
+
+describe('checkout()', () => {
+    test('should call checkout with the correct values', async () => {
+        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        await sdk.loadSdkScript();
+
+        const response = await sdk.checkout({
+            srcDigitalCardId: 'digital-id',
+            srcCorrelationId: 'correlation-id',
+            complianceSettings: { complianceResources: [{ complianceType: 'REMEMBER_ME', uri: '' }] }
+        });
+
+        expect(response.dcfActionCode).toBe('COMPLETE');
+        expect(response.checkoutResponse).toBe('checkout-response');
+        expect(sdk.schemeSdk.checkout).toHaveBeenCalledWith({
+            srcDigitalCardId: 'digital-id',
+            srcCorrelationId: 'correlation-id',
+            complianceSettings: { complianceResources: [{ complianceType: 'REMEMBER_ME', uri: '' }] }
         });
     });
 
@@ -298,6 +251,16 @@ describe('Throwing errors', () => {
             expect(error.message).toBe('Something went wrong');
         });
     });
+});
+
+describe('unbindAppInstance()', () => {
+    test('should call unbind', async () => {
+        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        await sdk.loadSdkScript();
+        await sdk.unbindAppInstance();
+
+        expect(sdk.schemeSdk.unbindAppInstance).toHaveBeenCalled();
+    });
 
     test('should trigger error if unbindAppInstance fails', async () => {
         const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
@@ -318,6 +281,19 @@ describe('Throwing errors', () => {
             expect(error.reason).toBe('FAILED');
             expect(error.message).toBe('Something went wrong');
         });
+    });
+});
+
+describe('isRecognized()', () => {
+    test('should call isRecognized', async () => {
+        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        await sdk.loadSdkScript();
+
+        const response = await sdk.isRecognized();
+
+        expect(sdk.schemeSdk.isRecognized).toHaveBeenCalledTimes(1);
+        expect(response.recognized).toBeTruthy();
+        expect(response.idTokens).toBeDefined();
     });
 
     test('should trigger error if isRecognized fails', async () => {
@@ -340,6 +316,18 @@ describe('Throwing errors', () => {
             expect(error.message).toBe('Something went wrong');
         });
     });
+});
+
+describe('initiateIdentityValidation()', () => {
+    test('should call initiateIdentityValidation', async () => {
+        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        await sdk.loadSdkScript();
+
+        const response = await sdk.initiateIdentityValidation();
+
+        expect(response.maskedValidationChannel).toBe('+31*******55');
+        expect(sdk.schemeSdk.initiateIdentityValidation).toHaveBeenCalledTimes(1);
+    });
 
     test('should trigger error if initiateIdentityValidation fails', async () => {
         const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
@@ -359,6 +347,21 @@ describe('Throwing errors', () => {
             expect(error.source).toBe('initiateIdentityValidation');
             expect(error.reason).toBe('FAILED');
             expect(error.message).toBe('Something went wrong');
+        });
+    });
+});
+
+describe('getSrcProfile()', () => {
+    test('should call getSrcProfile', async () => {
+        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        await sdk.loadSdkScript();
+
+        const response = await sdk.getSrcProfile(['id-token']);
+
+        expect(response.srcCorrelationId).toBe('1a2b3c');
+        expect(response.profiles[0].maskedCards[0]).toBeDefined();
+        expect(sdk.schemeSdk.getSrcProfile).toHaveBeenCalledWith({
+            idTokens: ['id-token']
         });
     });
 
@@ -381,5 +384,15 @@ describe('Throwing errors', () => {
             expect(error.reason).toBe('FAILED');
             expect(error.message).toBe('Something went wrong');
         });
+    });
+});
+
+describe('Removing script', () => {
+    test('should remove script', async () => {
+        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        await sdk.loadSdkScript();
+        sdk.removeSdkScript();
+
+        expect(mockScriptRemoved).toHaveBeenCalledTimes(1);
     });
 });

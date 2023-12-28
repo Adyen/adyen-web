@@ -1,6 +1,9 @@
 declare global {
     interface Window {
         SRCSDK_MASTERCARD?: object;
+        vAdapters: {
+            VisaSRCI?: object;
+        };
     }
 }
 
