@@ -19,8 +19,6 @@ const customRender = (children: ComponentChildren, providerProps: IClickToPayCon
 };
 
 test('should not render if shopper is not recognized', async () => {
-    // const user = userEvent.setup();
-
     const contextProps = mock<IClickToPayContext>();
     contextProps.ctpState = CtpState.Login;
 

@@ -7,14 +7,6 @@ import AdyenCheckoutError from '../../../../../core/Errors/AdyenCheckoutError';
 jest.mock('./VisaSdk');
 jest.mock('./MastercardSdk');
 
-// beforeEach(() => {
-//     // @ts-ignore 'mockClear' is provided by jest.mock
-//     VisaSdk.mockClear();
-//     // @ts-ignore 'mockClear' is provided by jest.mock
-//     MastercardSdk.mockClear();
-//     jest.resetModules();
-// });
-
 describe('load()', () => {
     test('should resolve Promise when all SDKs load sucessfully', async () => {
         jest.spyOn(VisaSdk.prototype, 'loadSdkScript').mockResolvedValueOnce();
