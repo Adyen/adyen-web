@@ -3,6 +3,8 @@ import PhoneInput from '../../../src/components/internal/PhoneInput';
 import CoreProvider from '../../../src/core/Context/CoreProvider';
 import Language from '../../../src/language';
 import { Resources } from '../../../src/core/Context/Resources';
+import { PhoneInputProps, PhoneInputSchema } from '../../../src/components/internal/PhoneInput/types';
+import { DataSet, DataSetItem } from '../../../src/core/Services/data-set';
 
 const COUNTRIES = [
     { id: '+7', name: 'Russian Federation', code: 'RU' },
@@ -56,20 +58,27 @@ const formatPrefixName = item => {
 
 const meta: Meta = {
     title: 'Internals/PhoneInput',
-    component: PhoneInput
+    component: PhoneInput,
+    argTypes: {
+        items: { control: { type: 'array' } },
+        requiredFields: { control: { type: 'array' } },
+        data: { control: { type: 'object' } }
+    },
+    args: {
+        items: COUNTRIES.map(formatPrefixName).filter(Boolean),
+        data: { phonePrefix: COUNTRIES[0].id },
+        onChange: (item: DataSetItem) => {
+            console.log({ item });
+        },
+        phoneNumberErrorKey: 'mobileNumber.invalid'
+    }
 };
 
 export const Default: StoryObj = {
-    render: args => {
+    render: (args: PhoneInputProps) => {
         return (
             <CoreProvider loadingContext={'test'} i18n={new Language('en-US')} resources={new Resources()}>
-                <PhoneInput
-                    items={COUNTRIES.map(formatPrefixName).filter(Boolean)}
-                    data={{ phonePrefix: COUNTRIES[0].id }}
-                    onChange={item => console.log({ item })}
-                    phoneNumberErrorKey={'mobileNumber.invalid'}
-                    {...args}
-                />
+                <PhoneInput {...args} />
             </CoreProvider>
         );
     },

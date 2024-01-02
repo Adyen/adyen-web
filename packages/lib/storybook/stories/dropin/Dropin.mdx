@@ -1,0 +1,18 @@
+import { Meta, Controls,Canvas } from '@storybook/blocks';
+import * as ButtonStories from './Dropin.stories';
+
+<Meta of={ButtonStories} />
+# Definition
+Drop-in component.
+
+## Usage
+Here is an example of standard drop-in component.
+<Canvas of={ButtonStories.Auto} />
+
+Here is an example of drop-in component customization - by overriding css variables and selectors styles.
+<Canvas of={ButtonStories.Customization} />
+
+## Inputs
+
+Drop-in has the following properties:
+<Controls of={ButtonStories.Auto}/>

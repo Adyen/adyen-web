@@ -3,9 +3,10 @@ import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '
 import { Container } from '../Container';
 import { DropinConfiguration } from '../../../src/components/Dropin/types';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
+import './customization.scss';
 
 type DropinStory = StoryConfiguration<DropinConfiguration>;
-
+// todo: add the configuration type for dropin or all other components
 const meta: MetaConfiguration<DropinConfiguration> = {
     title: 'Dropin/Default',
     argTypes: {
@@ -40,4 +41,20 @@ export const Auto: DropinStory = {
     }
 };
 
+export const Customization: DropinStory = {
+    render: (args: PaymentMethodStoryProps<DropinConfiguration>, context) => {
+        const { componentConfiguration } = args;
+        // Register all Components
+        const { Dropin, ...Components } = components;
+        const Classes = Object.keys(Components).map(key => Components[key]);
+        AdyenCheckout.register(...Classes);
+        const checkout = getStoryContextCheckout(context);
+        const dropin = new DropinComponent({ core: checkout, ...componentConfiguration });
+        return (
+            <div className={'dropin-customization'}>
+                <Container element={dropin} />
+            </div>
+        );
+    }
+};
 export default meta;

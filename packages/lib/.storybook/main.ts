@@ -6,22 +6,23 @@ import eslint from '@rollup/plugin-eslint';
 import stylelint from 'vite-plugin-stylelint';
 
 const config: StorybookConfig = {
-    stories: ['../storybook/**/*.stories.@(js|jsx|ts|tsx)'],
+    stories: ['../storybook/**/*.mdx', '../storybook/**/*.stories.@(js|jsx|ts|tsx)'],
+
     addons: [
         {
-            name: '@storybook/addon-essentials',
-            options: {
-                docs: false
-            }
+            name: '@storybook/addon-essentials'
         },
         {
             name: '@storybook/addon-a11y'
-        }
+        },
+        getAbsolutePath('@storybook/addon-mdx-gfm')
     ],
+
     framework: {
         name: getAbsolutePath('@storybook/preact-vite'),
         options: {}
     },
+
     async viteFinal(config, options) {
         const env = loadEnv(options.configType, path.resolve('../../', '.env'), '');
         return mergeConfig(config, {
@@ -60,6 +61,10 @@ const config: StorybookConfig = {
                 }
             ]
         });
+    },
+
+    docs: {
+        autodocs: true
     }
 };
 export default config;

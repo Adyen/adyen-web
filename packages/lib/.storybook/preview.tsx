@@ -1,4 +1,5 @@
 import './main.css';
+import '../storybook/stories/dropin/customization.scss';
 import { Preview } from '@storybook/preact';
 import { DEFAULT_COUNTRY_CODE, DEFAULT_SHOPPER_LOCALE, DEFAULT_AMOUNT_VALUE } from '../storybook/config/commonConfig';
 import { createCheckout } from '../storybook/helpers/create-checkout';
@@ -6,7 +7,9 @@ import { createCheckout } from '../storybook/helpers/create-checkout';
 const preview: Preview = {
     argTypes: {
         useSessions: {
-            control: 'boolean'
+            control: 'boolean',
+            description: 'Should use sessions or not',
+            defaultValue: 'false'
         },
         countryCode: {
             control: 'text'

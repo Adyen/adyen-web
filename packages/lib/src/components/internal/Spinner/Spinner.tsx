@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import './Spinner.scss';
 
-interface SpinnerProps {
+export interface SpinnerProps {
     /**
      * Whether the spinner should be rendered inline
      */

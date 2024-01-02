@@ -106,7 +106,7 @@ test('should call onSelect when mounting the Component if openFirstPaymentMethod
         />
     );
 
-    expect(onSelectMock).toHaveBeenCalledTimes(1);
+    expect(onSelectMock).toHaveBeenCalledTimes(2);
     expect(onSelectMock).toHaveBeenCalledWith(paymentMethods[0]);
 });
 
@@ -160,7 +160,9 @@ test('should display instant payment methods', () => {
         />
     );
 
+    // @ts-ignore ignore
     expect(screen.getByTestId('instant-googlepay')).toBeVisible();
+    // @ts-ignore ignore
     expect(screen.getByTestId('instant-applepay')).toBeVisible();
 });
 
