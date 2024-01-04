@@ -11,8 +11,8 @@ import { NewableComponent } from '../../../core/core.registry';
 import './UIElement.scss';
 import { ComponentMethodsRef, IUIElement, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
 import { PaymentAction, PaymentResponseData, RawPaymentResponse } from '../../../types/global-types';
-import { ANALYTICS_MOUNTED_STR, ANALYTICS_SELECTED_STR, ANALYTICS_SUBMIT_STR } from '../core/Analytics/constants';
-import { AnalyticsInitialEvent } from '../core/Analytics/types';
+import { ANALYTICS_MOUNTED_STR, ANALYTICS_SELECTED_STR, ANALYTICS_SUBMIT_STR } from '../../../core/Analytics/constants';
+import { AnalyticsInitialEvent } from '../../../core/Analytics/types';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
@@ -131,7 +131,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
                 if (hasOwnProperty(this.props, 'supportedShopperInteractions')) {
                     storedCardIndicator = {
                         isStoredPaymentMethod: true,
-                        brand: this.props.brand
+                        brand: this.props['brand']
                     };
                 }
             }

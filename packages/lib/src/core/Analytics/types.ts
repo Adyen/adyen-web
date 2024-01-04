@@ -1,5 +1,5 @@
 import { PaymentAmount } from '../../types';
-import { CoreOptions } from '../types';
+import { CoreConfiguration } from '../types';
 
 export interface Experiment {
     controlGroup: boolean;
@@ -34,7 +34,9 @@ export interface AnalyticsOptions {
     experiments?: Experiment[];
 }
 
-export type AnalyticsProps = Pick<CoreOptions, 'loadingContext' | 'locale' | 'clientKey' | 'analytics' | 'amount'> & { analyticsContext?: string };
+export type AnalyticsProps = Pick<CoreConfiguration, 'loadingContext' | 'locale' | 'clientKey' | 'analytics' | 'amount'> & {
+    analyticsContext?: string;
+};
 
 export interface AnalyticsObject {
     timestamp: string;

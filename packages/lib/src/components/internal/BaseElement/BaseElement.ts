@@ -5,7 +5,7 @@ import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { ICore } from '../../../core/types';
 import { BaseElementProps, IBaseElement } from './types';
 import { PaymentData } from '../../../types/global-types';
-import { AnalyticsInitialEvent } from '../core/Analytics/types';
+import { AnalyticsInitialEvent } from '../../../core/Analytics/types';
 
 class BaseElement<P extends BaseElementProps> implements IBaseElement {
     public readonly _id = `${this.constructor['type']}-${uuid()}`;
