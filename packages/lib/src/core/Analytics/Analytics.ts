@@ -48,7 +48,7 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
     };
 
     const anlModule: AnalyticsModule = {
-        send: async (initialEvent: AnalyticsInitialEvent) => {
+        setUp: async (initialEvent: AnalyticsInitialEvent) => {
             const { enabled, payload, telemetry } = props; // TODO what is payload, is it ever used?
 
             if (enabled === true) {

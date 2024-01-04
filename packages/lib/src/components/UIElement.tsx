@@ -52,7 +52,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         const sessionId = this.props.session?.id;
 
         this.props.modules.analytics
-            .send({
+            .setUp({
                 ...setUpAnalyticsObj,
                 ...(sessionId && { sessionId })
             })

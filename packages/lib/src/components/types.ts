@@ -78,7 +78,7 @@ export interface RawPaymentResponse extends PaymentResponse {
 }
 
 export interface AnalyticsModule {
-    send: (a: AnalyticsInitialEvent) => Promise<any>;
+    setUp: (a: AnalyticsInitialEvent) => Promise<any>;
     sendAnalyticsActions: () => Promise<any>;
     getCheckoutAttemptId: () => string;
     getEventsQueue: () => EventsQueueModule;
