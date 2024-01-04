@@ -47,7 +47,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         return state;
     }
 
-    // Only called once, for non Dropin based UIElements, as they are being mounted
+    // Only called once, for UIElements (including Dropin), as they are being mounted
     protected setUpAnalytics(setUpAnalyticsObj: AnalyticsInitialEvent) {
         const sessionId = this.props.session?.id;
 
@@ -59,7 +59,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
             .then(() => {
                 // Once the initial analytics set up call has been made...
                 // ...create an analytics-action "event" declaring that the component has been mounted
-                this.submitAnalytics('mounted');
+                this.submitAnalytics(ANALYTICS_MOUNTED_STR);
             });
     }
 
@@ -76,8 +76,8 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
 
         // console.log('### UIElement::submitAnalytics:: component=', component);
 
-        // Dropin PM selected, or, standalone comp mounted
-        if (type === 'selected' || type === 'mounted') {
+        // Dropin PM selected, or, UIElement mounted (called once only)
+        if (type === ANALYTICS_SELECTED_STR || type === ANALYTICS_MOUNTED_STR) {
             let storedCardIndicator;
             // Check if it's a storedCard
             if (component === 'scheme') {
@@ -89,7 +89,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
                 }
             }
 
-            const data = { component, type: this.props.isDropin ? ANALYTICS_SELECTED_STR : ANALYTICS_MOUNTED_STR, ...storedCardIndicator };
+            const data = { component, type, ...storedCardIndicator };
             // console.log('### UIElement::submitAnalytics:: SELECTED data=', data);
 
             // AnalyticsAction: action: 'event' type:'mounted'|'selected'
