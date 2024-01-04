@@ -1,7 +1,7 @@
-import { AdyenCheckout, ANCV, Card } from '@adyen/adyen-web';
+import { AdyenCheckout, ANCV } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
-import { handleSubmit, handleAdditionalDetails, handleError, handleOrderRequest, showAuthorised } from '../../handlers';
-import { amount, shopperLocale, countryCode } from '../../services/commonConfig';
+import { handleError, showAuthorised } from '../../handlers';
+import { shopperLocale, countryCode } from '../../services/commonConfig';
 import '../../style.scss';
 import { createSession } from '../../services';
 
@@ -16,13 +16,8 @@ const initCheckout = async () => {
         returnUrl: 'http://localhost:3024/'
     });
 
-    // console.log('env env', process.env.__CLIENT_ENV__);
-    // console.log('env key', process.env.__CLIENT_KEY__);
     const checkout = await AdyenCheckout({
         environment: process.env.__CLIENT_ENV__,
-        // environmentUrls: {
-        //     api: process.env.__CLIENT_ENV__
-        // },
         analytics: {
             enabled: false
         },
@@ -31,32 +26,14 @@ const initCheckout = async () => {
         clientKey: process.env.__CLIENT_KEY__,
         locale: shopperLocale,
         countryCode,
-        showPayButton: false,
-        //onSubmit: handleSubmit,
-        //onOrderRequest: handleOrderRequest,
-        //onAdditionalDetails: handleAdditionalDetails,
+        showPayButton: true,
         onOrderCreated: data => {
-            console.log('=== onOrderCreated ===', data);
-
-            window.paymentMethod = new Card({ core: checkout }).mount('.ancv-field');
+            showAuthorised('Partially Authorised');
         },
-        onPaymentCompleted: () => {
-            showAuthorised();
-        },
-        onError: handleError,
-        paymentMethodsConfiguration: {
-            ideal: {
-                highlightedIssuers: ['1121', '1154', '1153']
-            }
-        }
-        // ...window.mainConfiguration
+        onError: handleError
     });
 
     window.paymentMethod = new ANCV({ core: checkout }).mount('.ancv-field');
-
-    document.querySelector('#ancv-pay-button').addEventListener('click', () => {
-        window.paymentMethod.submit();
-    });
 };
 
 initCheckout();

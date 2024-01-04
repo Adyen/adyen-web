@@ -1,70 +1,56 @@
 import { Fragment, h } from 'preact';
-import classNames from 'classnames';
-import PaymentMethodItem from './PaymentMethodItem';
 import getProp from '../../../../utils/getProp';
-import UIElement from '../../../UIElement';
-import { Order, OrderStatus } from '../../../../types';
+import UIElement from '../../../internal/UIElement/UIElement';
+import { Order, OrderStatus } from '../../../../types/global-types';
 import OrderPaymentMethods from './OrderPaymentMethods';
 import InstantPaymentMethods from './InstantPaymentMethods';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import { useBrandLogoConfiguration } from './useBrandLogoConfiguration';
+import PaymentMethodsContainer, { PaymentMethodsContainerProps } from './PaymentMethodsContainer';
 import { useEffect } from 'preact/hooks';
 
-interface PaymentMethodListProps {
-    paymentMethods: UIElement[];
-    activePaymentMethod?: UIElement;
+interface PaymentMethodListProps extends Omit<PaymentMethodsContainerProps, 'label' | 'classNameModifiers'> {
     instantPaymentMethods?: UIElement[];
-    /**
-     * Map that keeps track of which Payment methods (UIElements) already got rendered in the UI
-     */
-    cachedPaymentMethods: Record<string, boolean>;
-    order?: Order;
-    orderStatus?: OrderStatus;
+    storedPaymentMethods?: UIElement[];
     openFirstStoredPaymentMethod?: boolean;
     openFirstPaymentMethod?: boolean;
-    showRemovePaymentMethodButton?: boolean;
-
-    onSelect?: (paymentMethod: UIElement) => void;
-    onDisableStoredPaymentMethod?: (storedPaymentMethod) => void;
+    order?: Order;
+    orderStatus?: OrderStatus;
     onOrderCancel?: (order) => void;
-
-    isDisablingPaymentMethod?: boolean;
-    isLoading: boolean;
 }
 
 const PaymentMethodList = ({
-    paymentMethods = [],
+    paymentMethods = [], // Non-stored payments
     instantPaymentMethods = [],
-    activePaymentMethod = null,
-    cachedPaymentMethods = {},
-    isLoading = false,
-    isDisablingPaymentMethod = false,
+    storedPaymentMethods = [],
     openFirstStoredPaymentMethod,
     openFirstPaymentMethod,
-    showRemovePaymentMethodButton,
-    orderStatus = null,
     order,
+    orderStatus = null,
     onOrderCancel,
-    onDisableStoredPaymentMethod = () => {},
-    onSelect = () => {}
+    onSelect = () => {},
+    ...rest
 }: PaymentMethodListProps) => {
     const { i18n } = useCoreContext();
     const brandLogoConfiguration = useBrandLogoConfiguration(paymentMethods);
-
-    const paymentMethodListClassnames = classNames({
-        'adyen-checkout__payment-methods-list': true,
-        'adyen-checkout__payment-methods-list--loading': isLoading
-    });
+    const hasInstantPaymentMethods = instantPaymentMethods.length > 0;
+    const hasStoredPaymentMethods = storedPaymentMethods.length > 0;
+    const pmListLabel = hasInstantPaymentMethods || hasStoredPaymentMethods ? i18n.get('paymentMethodsList.otherPayments.label') : '';
 
     useEffect(() => {
         // Open first PaymentMethodItem
-        if (paymentMethods[0]) {
-            const firstPaymentMethod = paymentMethods[0];
-            const shouldOpenFirstStored = openFirstStoredPaymentMethod && getProp(firstPaymentMethod, 'props.oneClick') === true;
-            const shouldOpenFirstPaymentMethod = shouldOpenFirstStored || openFirstPaymentMethod;
+        const firstStoredPayment = storedPaymentMethods[0];
+        const firstNonStoredPayment = paymentMethods[0];
 
-            if (shouldOpenFirstPaymentMethod) {
-                onSelect(firstPaymentMethod);
+        if (firstStoredPayment || firstNonStoredPayment) {
+            const shouldOpenFirstStored = openFirstStoredPaymentMethod && getProp(firstStoredPayment, 'props.oneClick') === true;
+            if (shouldOpenFirstStored) {
+                onSelect(firstStoredPayment);
+                return;
+            }
+
+            if (openFirstPaymentMethod) {
+                onSelect(firstNonStoredPayment);
             }
         }
     }, []);
@@ -80,34 +66,27 @@ const PaymentMethodList = ({
                 />
             )}
 
-            {!!instantPaymentMethods.length && <InstantPaymentMethods paymentMethods={instantPaymentMethods} />}
+            {hasInstantPaymentMethods && <InstantPaymentMethods paymentMethods={instantPaymentMethods} />}
 
-            <ul className={paymentMethodListClassnames} role="radiogroup" aria-label={i18n.get('paymentMethodsList.aria.label')} required>
-                {paymentMethods.map((paymentMethod, index, paymentMethodsCollection) => {
-                    const isSelected = activePaymentMethod && activePaymentMethod._id === paymentMethod._id;
-                    const isLoaded = paymentMethod._id in cachedPaymentMethods;
-                    const isNextOneSelected =
-                        activePaymentMethod &&
-                        paymentMethodsCollection[index + 1] &&
-                        activePaymentMethod._id === paymentMethodsCollection[index + 1]._id;
+            {hasStoredPaymentMethods && (
+                <PaymentMethodsContainer
+                    {...rest}
+                    label={i18n.get('paymentMethodsList.storedPayments.label')}
+                    classNameModifiers={['storedPayments']}
+                    paymentMethods={storedPaymentMethods}
+                    onSelect={onSelect}
+                ></PaymentMethodsContainer>
+            )}
 
-                    return (
-                        <PaymentMethodItem
-                            className={classNames({ 'adyen-checkout__payment-method--next-selected': isNextOneSelected })}
-                            standalone={paymentMethods.length === 1}
-                            paymentMethod={paymentMethod}
-                            isSelected={isSelected}
-                            isDisablingPaymentMethod={isSelected && isDisablingPaymentMethod}
-                            isLoaded={isLoaded}
-                            isLoading={isLoading}
-                            onSelect={onSelect}
-                            key={paymentMethod._id}
-                            showRemovePaymentMethodButton={showRemovePaymentMethodButton}
-                            onDisableStoredPaymentMethod={onDisableStoredPaymentMethod}
-                        />
-                    );
-                })}
-            </ul>
+            {!!paymentMethods.length && (
+                <PaymentMethodsContainer
+                    {...rest}
+                    label={pmListLabel}
+                    classNameModifiers={['otherPayments']}
+                    paymentMethods={paymentMethods}
+                    onSelect={onSelect}
+                ></PaymentMethodsContainer>
+            )}
         </Fragment>
     );
 };

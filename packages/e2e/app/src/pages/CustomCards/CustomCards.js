@@ -1,5 +1,5 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
+import { AdyenCheckout, CustomCard} from '@adyen/adyen-web';
+import '@adyen/adyen-web/styles/adyen.css';
 import { handleSubmit, handleAdditionalDetails } from '../../handlers';
 import { amount, shopperLocale, countryCode } from '../../services/commonConfig';
 import '../../style.scss';
@@ -20,8 +20,8 @@ const initCheckout = async () => {
         ...window.mainConfiguration
     });
 
-    window.securedFields = checkout
-        .create('customcard', {
+    window.securedFields = new CustomCard({
+            core: checkout,
             type: 'card',
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire'],
             onConfigSuccess,
@@ -35,8 +35,8 @@ const initCheckout = async () => {
 
     createPayButton('.secured-fields', window.securedFields, 'securedfields');
 
-    window.securedFields2 = checkout
-        .create('customcard', {
+    window.securedFields2 = new CustomCard({
+            core: checkout,
             //            type: 'card',// Deliberately exclude to ensure a default value is set
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire'],
             onConfigSuccess,

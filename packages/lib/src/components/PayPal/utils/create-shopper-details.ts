@@ -1,4 +1,4 @@
-import { AddressData, ShopperDetails } from '../../../types';
+import { AddressData, ShopperDetails } from '../../../types/global-types';
 
 /**
  * Parses the Order data from PayPal, and create the shopper details object according to how Adyen expects

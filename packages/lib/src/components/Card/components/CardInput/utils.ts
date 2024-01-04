@@ -125,7 +125,6 @@ export const extractPropsForCardFields = (props: CardInputProps) => {
         positionHolderNameOnTop: props.positionHolderNameOnTop,
         // Extract props for CardFields > CardNumber
         showBrandIcon: props.showBrandIcon,
-        showBrandsUnderCardNumber: props.showBrandsUnderCardNumber,
         showContextualElement: props.showContextualElement,
         // Extract props for StoredCardFields
         lastFour: props.lastFour,
@@ -137,7 +136,6 @@ export const extractPropsForCardFields = (props: CardInputProps) => {
 
 export const extractPropsForSFP = (props: CardInputProps) => {
     return {
-        allowedDOMAccess: props.allowedDOMAccess,
         autoFocus: props.autoFocus,
         brands: props.brands,
         brandsConfiguration: props.brandsConfiguration,
@@ -149,6 +147,7 @@ export const extractPropsForSFP = (props: CardInputProps) => {
         keypadFix: props.keypadFix,
         legacyInputMode: props.legacyInputMode,
         loadingContext: props.loadingContext,
+        maskSecurityCode: props.maskSecurityCode,
         minimumExpiryDate: props.minimumExpiryDate,
         onAdditionalSFConfig: props.onAdditionalSFConfig,
         onAdditionalSFRemoved: props.onAdditionalSFRemoved,
@@ -159,12 +158,11 @@ export const extractPropsForSFP = (props: CardInputProps) => {
         onError: props.onError,
         onFieldValid: props.onFieldValid,
         onLoad: props.onLoad,
-        showWarnings: props.showWarnings,
-        trimTrailingSeparator: props.trimTrailingSeparator,
-        maskSecurityCode: props.maskSecurityCode,
-        resources: props.resources,
         placeholders: props.placeholders,
-        showContextualElement: props.showContextualElement
+        resources: props.resources,
+        showContextualElement: props.showContextualElement,
+        showWarnings: props.showWarnings,
+        trimTrailingSeparator: props.trimTrailingSeparator
     } as SFPProps; // Can't set as return type on fn or it will complain about missing, mandatory, props
 };
 

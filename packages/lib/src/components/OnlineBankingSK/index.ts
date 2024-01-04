@@ -1,4 +1,4 @@
-import IssuerListContainer from '../helpers/IssuerListContainer';
+import IssuerListContainer from '../helpers/IssuerListContainer/IssuerListContainer';
 import { TxVariants } from '../tx-variants';
 
 const TERMS_AND_CONDITIONS = 'https://static.payu.com/sites/terms/files/payu_privacy_policy_sk.pdf';

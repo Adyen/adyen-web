@@ -1,6 +1,6 @@
 import { filterPresent, filterAvailable } from './filters';
 import { mock } from 'jest-mock-extended';
-import UIElement from '../../UIElement';
+import UIElement from '../../internal/UIElement/UIElement';
 
 describe('Elements filters', () => {
     describe('filterPresent', () => {

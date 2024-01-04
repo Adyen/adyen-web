@@ -1,5 +1,5 @@
 import { makePayment, makeDetailsCall, getPaymentMethods } from './checkout-api-calls';
-import UIElement from '../../src/components/UIElement';
+import UIElement from '../../src/components/internal/UIElement/UIElement';
 import Core from '../../src/core';
 
 function displayResultMessage(isAuthorized: boolean, resultCode: string): void {

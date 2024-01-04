@@ -7,12 +7,12 @@ window.cardConfig = {
 };
 
 window.dropinConfig = {
-    showStoredPaymentMethods: false // hide stored PMs so credit card is first on list
-};
-
-window.mainConfiguration = {
-    removePaymentMethods: ['paywithgoogle', 'applepay'],
+    showStoredPaymentMethods: false, // hide stored PMs so credit card is first on list
     paymentMethodsConfiguration: {
         card: { brands: ['mc', 'amex', 'visa', 'cartebancaire', 'bcmc', 'maestro'], _disableClickToPay: true }
     }
+};
+
+window.mainConfiguration = {
+    removePaymentMethods: ['paywithgoogle', 'applepay']
 };

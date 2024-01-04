@@ -1,7 +1,7 @@
 import createClickToPayService from './create-clicktopay-service';
 import { CtpState } from './ClickToPayService';
 import { IClickToPayService } from './types';
-import { CardConfiguration } from '../../../Card/types';
+import { CardBackendConfiguration } from '../../../Card/types';
 
 const ENVIRONMENT = 'test';
 
@@ -18,7 +18,7 @@ test('should not create the service if card `configuration` property is not prov
 
 test('should not create the service if Visa config properties are missing', () => {
     let service: IClickToPayService = null,
-        configuration: CardConfiguration = {
+        configuration: CardBackendConfiguration = {
             visaSrciDpaId: 'xxxx'
         };
     service = createClickToPayService(configuration, null, ENVIRONMENT);
@@ -33,7 +33,7 @@ test('should not create the service if Visa config properties are missing', () =
 
 test('should not create the service if MC config properties are missing', () => {
     let service: IClickToPayService = null,
-        configuration: CardConfiguration = {
+        configuration: CardBackendConfiguration = {
             mcDpaId: 'xxxx'
         };
     service = createClickToPayService(configuration, null, ENVIRONMENT);
@@ -47,7 +47,7 @@ test('should not create the service if MC config properties are missing', () => 
 });
 
 test('should create service if Visa config is set properly', () => {
-    const configuration: CardConfiguration = {
+    const configuration: CardBackendConfiguration = {
         visaSrciDpaId: 'xxx',
         visaSrcInitiatorId: 'yyyy'
     };
@@ -56,7 +56,7 @@ test('should create service if Visa config is set properly', () => {
 });
 
 test('should create service if MC config is set properly', () => {
-    const configuration: CardConfiguration = {
+    const configuration: CardBackendConfiguration = {
         mcSrcClientId: 'xxx',
         mcDpaId: 'yyyy'
     };
@@ -65,7 +65,7 @@ test('should create service if MC config is set properly', () => {
 });
 
 test('should create service if MC config is set properly', () => {
-    const configuration: CardConfiguration = {
+    const configuration: CardBackendConfiguration = {
         mcSrcClientId: 'xxx',
         mcDpaId: 'yyyy',
         visaSrciDpaId: 'xxx',

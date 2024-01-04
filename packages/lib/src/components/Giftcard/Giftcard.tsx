@@ -1,15 +1,14 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import GiftcardComponent from './components/GiftcardComponent';
 import CoreProvider from '../../core/Context/CoreProvider';
 import PayButton from '../internal/PayButton';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
-import { PaymentAmount } from '../../types';
-import { PaymentResponse } from '../types';
-import { GiftCardElementData, GiftCardProps } from './types';
+import { PaymentAmount, PaymentResponseData } from '../../types//global-types';
+import { GiftCardElementData, GiftCardConfiguration } from './types';
 import { TxVariants } from '../tx-variants';
 
-export class GiftcardElement extends UIElement<GiftCardProps> {
+export class GiftcardElement extends UIElement<GiftCardConfiguration> {
     public static type = TxVariants.giftcard;
 
     protected static defaultProps = {
@@ -69,7 +68,7 @@ export class GiftcardElement extends UIElement<GiftCardProps> {
         }
     };
 
-    protected handleOrder = ({ order }: PaymentResponse) => {
+    protected handleOrder = ({ order }: PaymentResponseData) => {
         this.updateParent({ order });
         if (this.props.session && this.props.onOrderCreated) {
             return this.props.onOrderCreated(order);

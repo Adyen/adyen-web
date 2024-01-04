@@ -1,21 +1,20 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import defaultProps from './defaultProps';
 import DropinComponent from '../../components/Dropin/components/DropinComponent';
 import CoreProvider from '../../core/Context/CoreProvider';
-import { PaymentAction } from '../../types';
-import { DropinElementProps, InstantPaymentTypes } from './types';
+import { PaymentAction, PaymentResponseData } from '../../types/global-types';
+import { DropinConfiguration, InstantPaymentTypes, PaymentMethodsConfiguration } from './types';
 import { getCommonProps } from './components/utils';
 import { createElements, createStoredElements } from './elements';
 import createInstantPaymentElements from './elements/createInstantPaymentElements';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
-import { PaymentMethodsConfiguration, PaymentResponse } from '../types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import splitPaymentMethods from './elements/splitPaymentMethods';
 
 const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay'];
 
-class DropinElement extends UIElement<DropinElementProps> {
+class DropinElement extends UIElement<DropinConfiguration> {
     protected static defaultProps = defaultProps;
 
     public dropinRef = null;
@@ -26,7 +25,7 @@ class DropinElement extends UIElement<DropinElementProps> {
      */
     public componentFromAction?: UIElement;
 
-    constructor(props: DropinElementProps) {
+    constructor(props: DropinConfiguration) {
         super(props);
         this.submit = this.submit.bind(this);
         this.handleAction = this.handleAction.bind(this);
@@ -156,7 +155,7 @@ class DropinElement extends UIElement<DropinElementProps> {
      * handleOrder is implemented so we don't trigger a callback like in the components
      * @param response - PaymentResponse
      */
-    protected handleOrder = ({ order }: PaymentResponse): void => {
+    protected handleOrder = ({ order }: PaymentResponseData): void => {
         this.updateParent({ order });
     };
 

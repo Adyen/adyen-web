@@ -3,7 +3,7 @@ import SecuredFieldsProvider from '../../internal/SecuredFields/SFP/SecuredField
 import Alert from '../../internal/Alert';
 import GiftcardResult from './GiftcardResult';
 import useCoreContext from '../../../core/Context/useCoreContext';
-import { PaymentAmount } from '../../../types';
+import { PaymentAmount } from '../../../types/global-types';
 import { GIFT_CARD } from '../../internal/SecuredFields/lib/configuration/constants';
 import { GiftCardFields } from './GiftcardFields';
 import { GiftcardFieldsProps, Placeholders } from './types';

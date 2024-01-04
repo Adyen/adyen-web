@@ -2,7 +2,7 @@ import { SocialSecurityMode } from '../../types';
 import { AddressModeOptions } from './types';
 
 export default {
-    type: 'card',
+    type: 'scheme',
 
     setComponentRef: () => {},
 
@@ -12,7 +12,6 @@ export default {
     enableStoreDetails: false,
     hasCVC: true,
     showBrandIcon: true,
-    showBrandsUnderCardNumber: true,
     positionHolderNameOnTop: false,
     billingAddressRequired: false,
     billingAddressMode: AddressModeOptions.full,

@@ -2,13 +2,12 @@ import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import Field from '../../internal/FormFields/Field';
-
-import { UIElementProps } from '../../types';
 import './BlikInput.scss';
 import useForm from '../../../utils/useForm';
 import { digitsOnlyFormatter } from '../../../utils/Formatters/formatters';
 import useImage from '../../../core/Context/useImage';
 import InputText from '../../internal/FormFields/InputText';
+import { UIElementProps } from '../../internal/UIElement/types';
 
 interface BlikInputProps extends UIElementProps {
     data?: BlikInputDataState;

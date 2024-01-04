@@ -7,11 +7,12 @@
   "scripts": {
     "test:start-playground": "cross-env NODE_ENV=test webpack-dev-server --config app/config/webpack.config.js",
     "test:headless": "npx playwright test",
-    "test:headed": "npx playwright test --headed"
+    "test:headed": "npx playwright test --headed",
+    "test:ui-mode": "npx playwright test --ui"
   },
   "devDependencies": {
     "@adyen/adyen-web-server": "1.0.0",
-    "@playwright/test": "1.30.0",
+    "@playwright/test": "1.39.0",
     "cross-env": "^7.0.3",
     "css-loader": "^6.0.0",
     "dotenv": "^16.0.2",
@@ -20,11 +21,11 @@
     "style-loader": "^2.0.0",
     "ts-loader": "9.4.4",
     "typescript": "5.2.2",
-    "webpack": "5.81.0",
-    "webpack-cli": "5.0.2",
-    "webpack-dev-server": "4.13.3"
+    "webpack": "5.89.0",
+    "webpack-cli": "5.1.4",
+    "webpack-dev-server": "4.15.1"
   },
   "dependencies": {
-    "@adyen/adyen-web": "5.53.1"
+    "@adyen/adyen-web": "5.53.3"
   }
 }

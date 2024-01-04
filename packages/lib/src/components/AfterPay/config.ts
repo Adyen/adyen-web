@@ -1,7 +1,13 @@
-const AFTERPAY_CONSENT_URL_EN = 'https://www.afterpay.nl/en/algemeen/pay-with-afterpay/payment-conditions';
-const AFTERPAY_CONSENT_URL_BE = 'https://www.afterpay.be/be/footer/betalen-met-afterpay/betalingsvoorwaarden';
-const AFTERPAY_CONSENT_URL_NL = 'https://www.afterpay.nl/nl/algemeen/betalen-met-afterpay/betalingsvoorwaarden';
-const AFTERPAY_B2B_CONSENT_URL = 'https://www.afterpay.nl/nl/algemeen/zakelijke-partners/betalingsvoorwaarden-zakelijk';
 const ALLOWED_COUNTRIES = ['BE', 'NL'];
-
-export { AFTERPAY_CONSENT_URL_EN, AFTERPAY_CONSENT_URL_BE, AFTERPAY_CONSENT_URL_NL, AFTERPAY_B2B_CONSENT_URL, ALLOWED_COUNTRIES };
+const rivertyConsentUrlMap = {
+    be: {
+        en: 'https://documents.riverty.com/terms_conditions/payment_methods/invoice/be_en',
+        fr: 'https://documents.riverty.com/terms_conditions/payment_methods/invoice/be_fr',
+        nl: 'https://documents.riverty.com/terms_conditions/payment_methods/invoice/be_nl'
+    },
+    nl: {
+        en: 'https://documents.riverty.com/terms_conditions/payment_methods/invoice/nl_en',
+        nl: 'https://documents.riverty.com/terms_conditions/payment_methods/invoice/nl_nl'
+    }
+};
+export { ALLOWED_COUNTRIES, rivertyConsentUrlMap };

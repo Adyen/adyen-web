@@ -1,12 +1,12 @@
 import Language from '../language';
-import UIElement from '../components/UIElement';
+import UIElement from '../components/internal/UIElement/UIElement';
 import RiskModule from './RiskModule';
 import PaymentMethods from './ProcessResponse/PaymentMethods';
 import getComponentForAction from './ProcessResponse/PaymentAction';
 import { resolveEnvironment, resolveCDNEnvironment, resolveAnalyticsEnvironment } from './Environment';
 import Analytics from './Analytics';
-import { PaymentAction } from '../types';
-import { CoreOptions, ICore } from './types';
+import { PaymentAction } from '../types/global-types';
+import { CoreConfiguration, ICore } from './types';
 import { processGlobalOptions } from './utils';
 import Session from './CheckoutSession';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
@@ -21,7 +21,7 @@ class Core implements ICore {
     public session?: Session;
     public paymentMethodsResponse: PaymentMethods;
     public modules: any;
-    public options: CoreOptions;
+    public options: CoreConfiguration;
     public loadingContext?: string;
     public cdnContext?: string;
     public analyticsContext?: string;
@@ -54,7 +54,7 @@ class Core implements ICore {
         return registry.getComponent(txVariant);
     }
 
-    constructor(props: CoreOptions) {
+    constructor(props: CoreConfiguration) {
         this.createFromAction = this.createFromAction.bind(this);
 
         this.setOptions(props);
@@ -171,7 +171,7 @@ class Core implements ICore {
      * @param options - props to update
      * @returns this - the element instance
      */
-    public update = (options: CoreOptions = {}): Promise<this> => {
+    public update = (options: CoreConfiguration = {}): Promise<this> => {
         this.setOptions(options);
 
         return this.initialize().then(() => {
@@ -198,7 +198,7 @@ class Core implements ICore {
      * @internal
      * Create or update the config object passed when AdyenCheckout is initialised (environment, clientKey, etc...)
      */
-    private setOptions = (options: CoreOptions): void => {
+    private setOptions = (options: CoreConfiguration): void => {
         if (hasOwnProperty(options, 'paymentMethodsConfiguration')) {
             console.warn('WARNING:  "paymentMethodsConfiguration" is supported only by Drop-in.');
         }

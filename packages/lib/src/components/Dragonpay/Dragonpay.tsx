@@ -1,12 +1,12 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import DragonpayInput from './components/DragonpayInput';
 import DragonpayVoucherResult from './components/DragonpayVoucherResult';
 import CoreProvider from '../../core/Context/CoreProvider';
-import { DragonpayElementProps } from './types';
+import { DragonpayConfiguraton } from './types';
 import { TxVariants } from '../tx-variants';
 
-export class DragonpayElement extends UIElement<DragonpayElementProps> {
+export class DragonpayElement extends UIElement<DragonpayConfiguraton> {
     public static type = TxVariants.dragonpay;
 
     public static txVariants = [
@@ -36,7 +36,7 @@ export class DragonpayElement extends UIElement<DragonpayElementProps> {
         };
     }
 
-    protected formatProps(props: DragonpayElementProps) {
+    protected formatProps(props: DragonpayConfiguraton) {
         return {
             ...props,
             issuers: props.details?.find(detail => detail.key === 'issuer')?.items ?? props.issuers

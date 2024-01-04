@@ -17,7 +17,7 @@ export const getInputSelector = (fieldType, withSelector = false) => {
 };
 
 export const getAriaErrorField = (fieldType, withSelector = false) => {
-    const selStr = `#${fieldType}-ariaError`;
+    const selStr = `#${fieldType}-ariaContext`;
     return withSelector ? Selector(selStr) : selStr;
 };
 

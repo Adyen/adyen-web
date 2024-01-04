@@ -1,13 +1,13 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import CoreProvider from '../../core/Context/CoreProvider';
-import { KlarnaPaymentsProps } from './types';
+import { KlarnConfiguration } from './types';
 import PayButton from '../internal/PayButton';
 import { KlarnaContainer } from './components/KlarnaContainer/KlarnaContainer';
-import { PaymentAction } from '../../types';
+import { PaymentAction } from '../../types/global-types';
 import { TxVariants } from '../tx-variants';
 
-class KlarnaPayments extends UIElement<KlarnaPaymentsProps> {
+class KlarnaPayments extends UIElement<KlarnConfiguration> {
     public static type = TxVariants.klarna;
     public static txVariants = [TxVariants.klarna, TxVariants.klarna_account, TxVariants.klarna_paynow];
 
@@ -15,7 +15,7 @@ class KlarnaPayments extends UIElement<KlarnaPaymentsProps> {
         useKlarnaWidget: false
     };
 
-    constructor(props: KlarnaPaymentsProps) {
+    constructor(props: KlarnConfiguration) {
         super(props);
 
         this.onComplete = this.onComplete.bind(this);

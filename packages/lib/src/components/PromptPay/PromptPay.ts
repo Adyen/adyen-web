@@ -1,4 +1,4 @@
-import QRLoaderContainer from '../helpers/QRLoaderContainer';
+import QRLoaderContainer from '../helpers/QRLoaderContainer/QRLoaderContainer';
 import { delay, countdownTime } from './config';
 import { TxVariants } from '../tx-variants';
 
