@@ -1,5 +1,5 @@
 {
-    "payButton": "Zahlen",
+    "payButton": "Zahle",
     "payButton.redirecting": "Umleiten…",
     "payButton.with": "%{value} mit %{maskedData} zahlen",
     "close": "Schließen",
