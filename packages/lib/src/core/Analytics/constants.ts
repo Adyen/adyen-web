@@ -1,5 +1,7 @@
 export const ANALYTICS_PATH = 'v3/analytics';
 
+export const ANALYTICS_EVENT_TIMER_INTERVAL = 10000;
+
 export const ANALYTICS_ACTION_LOG = 'log';
 export const ANALYTICS_ACTION_ERROR = 'error';
 export const ANALYTICS_ACTION_EVENT = 'event';
