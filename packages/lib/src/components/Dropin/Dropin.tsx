@@ -40,6 +40,7 @@ class DropinElement extends UIElement<DropinConfiguration> {
 
     formatProps(props) {
         return {
+            type: 'dropin', // for analytics
             ...super.formatProps(props),
             instantPaymentTypes: Array.from<InstantPaymentTypes>(new Set(props.instantPaymentTypes)).filter(value =>
                 SUPPORTED_INSTANT_PAYMENTS.includes(value)

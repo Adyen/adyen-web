@@ -1,5 +1,6 @@
 import { PaymentAmount } from '../../types';
 import { CoreConfiguration } from '../types';
+import { EventsQueueModule } from './EventsQueue';
 
 export interface Experiment {
     controlGroup: boolean;
@@ -80,3 +81,11 @@ export type CreateAnalyticsActionObject = {
 };
 
 export type EventQueueProps = Pick<AnalyticsConfig, 'analyticsContext' | 'clientKey'> & { analyticsPath: string };
+
+export interface AnalyticsModule {
+    setUp: (a: AnalyticsInitialEvent) => Promise<any>;
+    getCheckoutAttemptId: () => string;
+    getEventsQueue: () => EventsQueueModule;
+    createAnalyticsAction: (a: CreateAnalyticsActionObject) => void;
+    getEnabled: () => boolean;
+}

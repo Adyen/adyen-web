@@ -5,6 +5,7 @@ import getOrderStatus from '../../../core/Services/order-status';
 import { DropinComponentProps, DropinComponentState, DropinStatusProps, onOrderCancelData } from '../types';
 import './DropinComponent.scss';
 import { UIElementStatus } from '../../internal/UIElement/types';
+import { ANALYTICS_SELECTED_STR } from '../../../core/Analytics/constants';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
@@ -31,18 +32,6 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
             ([storedPaymentElements, elements, instantPaymentElements, orderStatus]) => {
                 this.setState({ instantPaymentElements, elements, storedPaymentElements, orderStatus });
                 this.setStatus('ready');
-
-                const sessionId = this.props?.session?.id;
-
-                if (this.props.modules.analytics) {
-                    this.props.modules.analytics.send({
-                        containerWidth: this.base && (this.base as HTMLElement).offsetWidth,
-                        // paymentMethods: elements.map(e => e.props.type), // TODO will be supported in the initial request to checkoutanalytics
-                        component: 'dropin',
-                        flavor: 'dropin',
-                        ...(sessionId && { sessionId })
-                    });
-                }
             }
         );
 
@@ -79,7 +68,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         if ((activePaymentMethod && activePaymentMethod._id !== paymentMethod._id) || !activePaymentMethod) {
             this.props.onSelect(paymentMethod);
 
-            paymentMethod.submitAnalytics('selected');
+            paymentMethod.submitAnalytics(ANALYTICS_SELECTED_STR);
         }
     };
 

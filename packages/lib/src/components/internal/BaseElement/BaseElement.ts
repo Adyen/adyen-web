@@ -109,11 +109,11 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
             this.unmount(); // new, if this._node exists then we are "remounting" so we first need to unmount if it's not already been done
         } else {
             // Set up analytics (once, since this._node is undefined)
-            if (this.props.modules && this.props.modules.analytics && !this.props.isDropin) {
+            if (this.props.modules && this.props.modules.analytics) {
                 this.setUpAnalytics({
                     containerWidth: node && (node as HTMLElement).offsetWidth,
-                    component: this.constructor['analyticsType'] ?? this.constructor['type'],
-                    flavor: 'components'
+                    component: !this.props.isDropin ? this.constructor['analyticsType'] ?? this.constructor['type'] : 'dropin',
+                    flavor: !this.props.isDropin ? 'components' : 'dropin'
                 });
             }
         }

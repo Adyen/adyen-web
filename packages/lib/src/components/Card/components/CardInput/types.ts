@@ -11,8 +11,9 @@ import { SRPanel } from '../../../../core/Errors/SRPanel';
 import RiskElement from '../../../../core/RiskModule';
 import { DisclaimerMsgObject } from '../../../internal/DisclaimerMessage/DisclaimerMessage';
 import { OnAddressLookupType } from '../../../internal/Address/components/AddressSearch';
-import { AnalyticsModule, ComponentMethodsRef } from '../../../internal/UIElement/types';
+import { ComponentMethodsRef } from '../../../internal/UIElement/types';
 import { AddressData, PaymentAmount } from '../../../../types/global-types';
+import { AnalyticsModule } from '../../../../core/Analytics/types';
 
 export interface CardInputValidState {
     holderName?: boolean;

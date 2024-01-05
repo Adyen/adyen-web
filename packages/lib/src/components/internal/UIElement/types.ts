@@ -25,6 +25,8 @@ export interface UIElementProps extends BaseElementProps {
 
     isInstantPayment?: boolean;
 
+    brand?: string;
+
     /**
      * Flags if the element is Stored payment method
      * @internal
