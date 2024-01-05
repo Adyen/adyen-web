@@ -6,6 +6,7 @@ import { ICore } from '../../../core/types';
 import { BaseElementProps, IBaseElement } from './types';
 import { PaymentData } from '../../../types/global-types';
 import { AnalyticsInitialEvent } from '../../../core/Analytics/types';
+import { ANALYTICS_MOUNTED_STR } from '../../../core/Analytics/constants';
 
 class BaseElement<P extends BaseElementProps> implements IBaseElement {
     public readonly _id = `${this.constructor['type']}-${uuid()}`;
@@ -61,6 +62,11 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
         return null;
     }
 
+    /* eslint-disable-next-line */
+    protected submitAnalytics(type = 'action', obj?) {
+        return null;
+    }
+
     protected setState(newState: object): void {
         this.state = { ...this.state, ...newState };
     }
@@ -107,21 +113,28 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
 
         if (this._node) {
             this.unmount(); // new, if this._node exists then we are "remounting" so we first need to unmount if it's not already been done
-        } else {
-            // Set up analytics (once, since this._node is undefined)
+        }
+
+        this._component = this.render();
+
+        render(this._component, node);
+
+        // Set up analytics (once, since this._node is currently undefined) now that we have mounted and rendered
+        if (!this._node) {
             if (this.props.modules && this.props.modules.analytics) {
                 this.setUpAnalytics({
                     containerWidth: node && (node as HTMLElement).offsetWidth,
                     component: !this.props.isDropin ? this.constructor['analyticsType'] ?? this.constructor['type'] : 'dropin',
                     flavor: !this.props.isDropin ? 'components' : 'dropin'
+                }).then(() => {
+                    // Once the initial analytics set up call has been made...
+                    // ...create an analytics-action "event" declaring that the component has been mounted
+                    this.submitAnalytics(ANALYTICS_MOUNTED_STR);
                 });
             }
         }
 
         this._node = node;
-        this._component = this.render();
-
-        render(this._component, node);
 
         return this;
     }

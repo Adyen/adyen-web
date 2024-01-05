@@ -39,7 +39,7 @@ const collectId = ({ analyticsContext, clientKey, locale, analyticsPath }: Colle
             // The data team want both platform & channel properties:
             channel: 'Web',
             platform: 'Web',
-            buildType: window['AdyenCheckout'] ? 'umd' : 'compiled',
+            buildType: window['AdyenWeb'] ? 'umd' : 'compiled',
             locale,
             referrer: window.location.href,
             screenWidth: window.screen.width,
