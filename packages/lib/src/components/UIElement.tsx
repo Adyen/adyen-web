@@ -51,16 +51,10 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
     protected setUpAnalytics(setUpAnalyticsObj: AnalyticsInitialEvent) {
         const sessionId = this.props.session?.id;
 
-        this.props.modules.analytics
-            .setUp({
-                ...setUpAnalyticsObj,
-                ...(sessionId && { sessionId })
-            })
-            .then(() => {
-                // Once the initial analytics set up call has been made...
-                // ...create an analytics-action "event" declaring that the component has been mounted
-                this.submitAnalytics(ANALYTICS_MOUNTED_STR);
-            });
+        return this.props.modules.analytics.setUp({
+            ...setUpAnalyticsObj,
+            ...(sessionId && { sessionId })
+        });
     }
 
     /* eslint-disable-next-line */
