@@ -124,9 +124,9 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
     };
 
     private checkStatus = () => {
-        const { paymentData, clientKey, loadingContext } = this.props;
+        const { paymentData, clientKey, loadingContext, throttledInterval } = this.props;
 
-        return checkPaymentStatus(paymentData, clientKey, loadingContext)
+        return checkPaymentStatus(paymentData, clientKey, loadingContext, throttledInterval)
             .then(processResponse)
             .catch(response => ({ type: 'network-error', props: response }))
             .then((status: StatusObject) => {
