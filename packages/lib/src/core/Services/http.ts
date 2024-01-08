@@ -42,7 +42,7 @@ export function http<T>(options: HttpOptions, data?: any): Promise<T> {
         },
         redirect: 'follow',
         referrerPolicy: 'no-referrer-when-downgrade',
-        signal: AbortSignal.timeout(timeout),
+        ...(AbortSignal?.timeout && { signal: AbortSignal?.timeout(timeout) }),
         ...(data && { body: JSON.stringify(data) })
     };
 
