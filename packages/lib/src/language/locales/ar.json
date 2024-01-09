@@ -301,5 +301,11 @@
     "ancv.input.label": "تعريف ANCV الخاص بك",
     "ancv.confirmPayment": "استخدم تطبيق ANCV الخاص بك لتأكيد الدفع.",
     "ancv.form.instruction": "يعد تطبيق Cheque-Vacances ضروريًا للمصادقة على هذه المدفوعات.",
-    "ancv.beneficiaryId.invalid": "أدخل عنوان بريد إلكتروني صحيحًا أو معرف ANCV"
+    "ancv.beneficiaryId.invalid": "أدخل عنوان بريد إلكتروني صحيحًا أو معرف ANCV",
+    "payme.openPayMeApp": "أكمل الدفع في تطبيق PayMe من خلال الإذن بالدفع في التطبيق وانتظر التأكيد.",
+    "payme.redirectButtonLabel": "افتح تطبيق PayMe",
+    "payme.scanQrCode": "أكمل الدفع باستخدام رمز الاستجابة السريعة",
+    "payme.timeToPay": "رمز الاستجابة السريعة هذا صالح لـ %@",
+    "payme.instructions.steps": "افتح تطبيق PayMe. %@امسح رمز الاستجابة السريعة ضوئيًا للإذن بالدفع. %@أكمل عملية الدفع في التطبيق وانتظر التأكيد.",
+    "payme.instructions.footnote": "يرجى عدم إغلاق هذه الصفحة قبل إتمام الدفع"
 }

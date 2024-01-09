@@ -1,5 +1,5 @@
 {
-    "payButton": "Zahlen",
+    "payButton": "Zahle",
     "payButton.redirecting": "Umleiten…",
     "payButton.with": "%{value} mit %{maskedData} zahlen",
     "close": "Schließen",
@@ -297,5 +297,11 @@
     "ancv.input.label": "Ihre ANCV-Identifikation",
     "ancv.confirmPayment": "Bestätigen Sie die Zahlung mit Ihrem ANCV-Antrag.",
     "ancv.form.instruction": "Zur Validierung dieser Zahlung ist der Antrag „Cheque-Vacances“ erforderlich.",
-    "ancv.beneficiaryId.invalid": "Geben Sie eine gültige E-Mail-Adresse oder ANCV-ID ein"
+    "ancv.beneficiaryId.invalid": "Geben Sie eine gültige E-Mail-Adresse oder ANCV-ID ein",
+    "payme.openPayMeApp": "Schließen Sie Ihre Zahlung in der PayMe-App ab, indem Sie die Zahlung in der App autorisieren und auf die Bestätigung warten.",
+    "payme.redirectButtonLabel": "Öffnen Sie die PayMe-App",
+    "payme.scanQrCode": "Schließen Sie Ihre Zahlung per QR-Code ab",
+    "payme.timeToPay": "Dieser QR-Code gilt für %@",
+    "payme.instructions.steps": "Öffnen Sie die PayMe-App.%@Scannen Sie den QR-Code, um die Zahlung zu autorisieren.%@Schließen Sie die Zahlung in der App ab und warten Sie auf eine Bestätigung.",
+    "payme.instructions.footnote": "Bitte schließen Sie diese Seite nicht, bevor die Zahlung abgeschlossen ist"
 }

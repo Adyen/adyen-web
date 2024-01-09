@@ -298,5 +298,11 @@
     "ancv.input.label": "Il tuo identificativo ANCV",
     "ancv.confirmPayment": "Utilizza la tua richiesta ANCV per confermare il pagamento.",
     "ancv.form.instruction": "Per confermare il pagamento è necessario utilizzare la richiesta Cheque-Vacances.",
-    "ancv.beneficiaryId.invalid": "Inserisci un indirizzo e-mail o un identificativo ANCV valido"
+    "ancv.beneficiaryId.invalid": "Inserisci un indirizzo e-mail o un identificativo ANCV valido",
+    "payme.openPayMeApp": "Completa il pagamento nell'app PayMe concedendo l'autorizzazione e attendendo il messaggio di conferma.",
+    "payme.redirectButtonLabel": "Apri l'app PayMe",
+    "payme.scanQrCode": "Completa il pagamento con il codice QR",
+    "payme.timeToPay": "Questo codice QR è valido per %@",
+    "payme.instructions.steps": "Apri l'app PayMe.%@Scansiona il codice QR per autorizzare il pagamento.%@Completa il pagamento nell'app e attendi la conferma.",
+    "payme.instructions.footnote": "Rimani su questa pagina fino a quando il pagamento sarà completato"
 }

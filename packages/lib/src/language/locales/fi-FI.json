@@ -297,5 +297,11 @@
     "ancv.input.label": "ANCV-tunnuksesi",
     "ancv.confirmPayment": "Vahvista maksusi ANCV-sovelluksella.",
     "ancv.form.instruction": "Tämän maksun vahvistaminen edellyttää Cheque-Vacances -sovelluksen.",
-    "ancv.beneficiaryId.invalid": "Anna kelvollinen sähköpostiosoite tai ANCV-tunnus"
+    "ancv.beneficiaryId.invalid": "Anna kelvollinen sähköpostiosoite tai ANCV-tunnus",
+    "payme.openPayMeApp": "Viimeistele maksu PayMe-sovelluksessa hyväksymällä maksu sovelluksessa, ja odota vahvistusta.",
+    "payme.redirectButtonLabel": "Avaa PayMe-sovellus",
+    "payme.scanQrCode": "Viimeistele maksusi QR-koodilla",
+    "payme.timeToPay": "Tämä QR-koodi on voimassa %@",
+    "payme.instructions.steps": "Avaa PayMe-sovellus.%@Hyväksy maksu skannaamalla QR-koodi.%@Viimeistele maksu sovelluksessa, ja odota vahvistusta.",
+    "payme.instructions.footnote": "Älä sulje tätä sivua ennen kuin maksu on suoritettu"
 }

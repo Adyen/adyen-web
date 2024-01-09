@@ -5,6 +5,7 @@ import checkPaymentStatus from '../../../core/Services/payment-status';
 import Language from '../../../language/Language';
 
 jest.mock('../../../core/Services/payment-status');
+jest.useFakeTimers();
 
 const i18n = { get: key => key } as Language;
 
@@ -13,6 +14,11 @@ describe('WeChat', () => {
         Object.defineProperty(window, 'matchMedia', {
             value: jest.fn(() => ({ matches: true }))
         });
+    });
+
+    afterEach(() => {
+        jest.clearAllTimers();
+        jest.restoreAllMocks();
     });
 
     describe('checkStatus', () => {
@@ -83,6 +89,33 @@ describe('WeChat', () => {
                     expect(onCompleteMock.mock.calls.length).toBe(0);
                     expect(onErrorMock.mock.calls.length).toBe(1);
                 });
+        });
+
+        describe('statusInterval', () => {
+            let qrLoader;
+
+            beforeEach(() => {
+                const checkPaymentStatusValue = { payload: 'Ab02b4c0!', resultCode: 'pending', type: 'complete' };
+                (checkPaymentStatus as jest.Mock).mockResolvedValue(checkPaymentStatusValue);
+            });
+
+            test('should set a timeout recursively', async () => {
+                jest.spyOn(global, 'setTimeout');
+                qrLoader = new QRLoader({ delay: 1000 });
+                qrLoader.statusInterval();
+                expect(setTimeout).toHaveBeenCalledTimes(1);
+                expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 1000);
+                await jest.runOnlyPendingTimersAsync();
+                expect(setTimeout).toHaveBeenCalledTimes(2);
+            });
+
+            test('should change the delay to the throttledInterval if the timePassed exceeds the throttleTime', async () => {
+                jest.spyOn(global, 'setTimeout');
+                qrLoader = new QRLoader({ throttleTime: 0, throttledInterval: 2000, delay: 1000 });
+                qrLoader.statusInterval();
+                expect(setTimeout).toHaveBeenCalledTimes(1);
+                expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 2000);
+            });
         });
     });
 });

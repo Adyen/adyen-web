@@ -300,5 +300,11 @@
     "ancv.input.label": "Vaša identifikácia ANCV",
     "ancv.confirmPayment": "Na potvrdenie platby použite svoju aplikáciu ANCV.",
     "ancv.form.instruction": "Na potvrdenie tejto platby je potrebná aplikácia Cheque-Vacances.",
-    "ancv.beneficiaryId.invalid": "Zadajte platnú e-mailovú adresu alebo ANCV ID"
+    "ancv.beneficiaryId.invalid": "Zadajte platnú e-mailovú adresu alebo ANCV ID",
+    "payme.openPayMeApp": "Dokončite platbu v aplikácii PayMe tak, že v aplikácii autorizujete platbu a počkáte na potvrdenie.",
+    "payme.redirectButtonLabel": "Otvoriť aplikáciu PayMe",
+    "payme.scanQrCode": "Dokončite platbu pomocou kódu QR",
+    "payme.timeToPay": "Tento kód QR platí %@",
+    "payme.instructions.steps": "Otvorte aplikáciu PayMe.%@Autorizujte platbu naskenovaním QR kódu.%@Dokončite platbu v aplikácii a počkajte na potvrdenie.",
+    "payme.instructions.footnote": "Nezatvárajte túto stránku pred dokončením platby"
 }
