@@ -76,35 +76,42 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
             component = this.constructor['type'] === 'scheme' || this.constructor['type'] === 'bcmc' ? this.constructor['type'] : this.props.type;
         }
 
-        // Dropin PM selected, or, UIElement mounted (called once only)
-        if (type === ANALYTICS_SELECTED_STR || type === ANALYTICS_MOUNTED_STR) {
-            let storedCardIndicator;
-            // Check if it's a storedCard
-            if (component === 'scheme') {
-                if (hasOwnProperty(this.props, 'supportedShopperInteractions')) {
-                    storedCardIndicator = {
-                        isStoredPaymentMethod: true,
-                        brand: this.props.brand
-                    };
+        switch (type) {
+            // BaseElement mounted (called once only)
+            // Dropin PM selected
+            case ANALYTICS_MOUNTED_STR:
+            case ANALYTICS_SELECTED_STR: {
+                let storedCardIndicator;
+                // Check if it's a storedCard
+                if (component === 'scheme') {
+                    if (hasOwnProperty(this.props, 'supportedShopperInteractions')) {
+                        storedCardIndicator = {
+                            isStoredPaymentMethod: true,
+                            brand: this.props.brand
+                        };
+                    }
                 }
+
+                const data = { component, type, ...storedCardIndicator };
+                // console.log('### UIElement::submitAnalytics:: SELECTED data=', data);
+
+                // AnalyticsAction: action: 'event' type:'mounted'|'selected'
+                this.props.modules?.analytics.createAnalyticsAction({
+                    action: 'event',
+                    data
+                });
+                break;
             }
 
-            const data = { component, type, ...storedCardIndicator };
-            // console.log('### UIElement::submitAnalytics:: SELECTED data=', data);
-
-            // AnalyticsAction: action: 'event' type:'mounted'|'selected'
-            this.props.modules?.analytics.createAnalyticsAction({
-                action: 'event',
-                data
-            });
-            return;
+            // PM pay button pressed - AnalyticsAction: action: 'log' type:'submit'
+            default: {
+                // PM pay button pressed - AnalyticsAction: action: 'log' type:'submit'
+                this.props.modules?.analytics.createAnalyticsAction({
+                    action: 'log',
+                    data: { component, type: ANALYTICS_SUBMIT_STR, target: 'payButton', message: 'Shopper clicked pay' }
+                });
+            }
         }
-
-        // PM pay button pressed - AnalyticsAction: action: 'log' type:'submit'
-        this.props.modules?.analytics.createAnalyticsAction({
-            action: 'log',
-            data: { component, type: ANALYTICS_SUBMIT_STR, target: 'payButton', message: 'Shopper clicked pay' }
-        });
     }
 
     private onSubmit(): void {

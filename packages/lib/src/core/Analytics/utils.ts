@@ -5,7 +5,7 @@ export const getUTCTimestamp = () => Date.now();
 
 /**
  * All objects for the /checkoutanalytics endpoint have base props:
- *  "timestamp" & "component" (and an optional "metadata" object of key-value pairs)
+ *  "timestamp" & "component"
  *
  * Error objects have, in addition to the base props:
  *  "code", "errorType" & "message"
@@ -20,7 +20,7 @@ export const getUTCTimestamp = () => Date.now();
  *   "type" & "target" &
  *   "isStoredPaymentMethod" & "brand" (when a storedCard is "selected")
  *
- *  All objects can also have a "metadata" prop
+ *  All objects can also have a "metadata" object of key-value pairs
  */
 export const createAnalyticsObject = (aObj: CreateAnalyticsObject): AnalyticsObject => ({
     timestamp: String(getUTCTimestamp()),
