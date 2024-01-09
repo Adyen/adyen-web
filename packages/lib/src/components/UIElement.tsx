@@ -57,6 +57,14 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         });
     }
 
+    /**
+     * A function for all UIElements, or BaseElement, to use to create an analytics action for when it's been:
+     *  - mounted,
+     *  - a PM has been selected
+     *  - onSubmit has been called (as a result of the pay button being pressed)
+     *
+     *  In some other cases e.g. 3DS2 components, this function is overridden to allow more specific analytics actions to be created
+     */
     /* eslint-disable-next-line */
     protected submitAnalytics(type = 'action', obj?) {
         /** Work out what the component's "type" is:
@@ -67,8 +75,6 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         if (!component) {
             component = this.constructor['type'] === 'scheme' || this.constructor['type'] === 'bcmc' ? this.constructor['type'] : this.props.type;
         }
-
-        // console.log('### UIElement::submitAnalytics:: component=', component);
 
         // Dropin PM selected, or, UIElement mounted (called once only)
         if (type === ANALYTICS_SELECTED_STR || type === ANALYTICS_MOUNTED_STR) {

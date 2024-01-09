@@ -19,6 +19,8 @@ export const getUTCTimestamp = () => Date.now();
  * Event objects have, in addition to the base props:
  *   "type" & "target" &
  *   "isStoredPaymentMethod" & "brand" (when a storedCard is "selected")
+ *
+ *  All objects can also have a "metadata" prop
  */
 export const createAnalyticsObject = (aObj: CreateAnalyticsObject): AnalyticsObject => ({
     timestamp: String(getUTCTimestamp()),
@@ -29,5 +31,6 @@ export const createAnalyticsObject = (aObj: CreateAnalyticsObject): AnalyticsObj
     ...(aObj.action === 'log' && aObj.type === ANALYTICS_ACTION_STR && { subType: aObj.subtype }), // only added if we have a log object of Action type
     ...(aObj.action === 'log' && aObj.type === ANALYTICS_SUBMIT_STR && { target: aObj.target }), // only added if we have a log object of Submit type
     ...(aObj.action === 'event' && { type: aObj.type, target: aObj.target }), // only added if we have an event object
-    ...(aObj.action === 'event' && aObj.isStoredPaymentMethod && { isStoredPaymentMethod: aObj.isStoredPaymentMethod, brand: aObj.brand })
+    ...(aObj.action === 'event' && aObj.isStoredPaymentMethod && { isStoredPaymentMethod: aObj.isStoredPaymentMethod, brand: aObj.brand }),
+    ...(aObj.metadata && { metadata: aObj.metadata })
 });

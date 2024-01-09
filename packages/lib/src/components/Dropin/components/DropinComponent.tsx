@@ -31,6 +31,15 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
             ([storedElements, elements, instantPaymentElements, orderStatus]) => {
                 this.setState({ instantPaymentElements, elements: [...storedElements, ...elements], orderStatus });
                 this.setStatus('ready');
+
+                // TODO b/e can't yet handle type:rendered - so we are using metadata as a workaround
+                // const data = { component: 'dropin', type: 'rendered' };
+                const data = { component: 'dropin', type: 'mounted', metadata: { subtype: 'rendered' } };
+                // AnalyticsAction: action: 'event' type:'rendered'
+                this.props.modules?.analytics.createAnalyticsAction({
+                    action: 'event',
+                    data
+                });
             }
         );
 
