@@ -13,7 +13,6 @@ import { CoreOptions } from '../core/types';
 import Core from '../core';
 import { ANALYTICS_MOUNTED_STR, ANALYTICS_SELECTED_STR, ANALYTICS_SUBMIT_STR } from '../core/Analytics/constants';
 import { AnalyticsInitialEvent } from '../core/Analytics/types';
-import { ThreeDS2AnalyticsObject } from './ThreeDS2/types';
 
 export class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
