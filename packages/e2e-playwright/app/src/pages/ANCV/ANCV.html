@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <title>Adyen Web | ANCV</title>
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    </head>
+    <body>
+        <main>
+            <form class="merchant-checkout__form" method="post">
+                <div class="merchant-checkout__payment-method">
+                    <div class="merchant-checkout__payment-method__header">
+                        <h2>ANCV</h2>
+                    </div>
+                    <div class="merchant-checkout__payment-method__details">
+                        <div class="ancv-field"></div>
+                    </div>
+                </div>
+            </form>
+
+            <div id='result-message' class="merchant-checkout__result hide"></div>
+
+        </main>
+
+        <script type="text/javascript">
+            window.htmlPages = <%= JSON.stringify(htmlWebpackPlugin.htmlPages) || '' %>;
+        </script>
+    </body>
+</html>

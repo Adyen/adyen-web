@@ -1,17 +1,20 @@
 import AdyenCheckout from '@adyen/adyen-web';
 import '@adyen/adyen-web/dist/es/adyen.css';
 import { getPaymentMethods } from '../../services';
-import { handleSubmit, handleAdditionalDetails, handleError, handleChange } from '../../handlers';
+import { handleSubmit, handleAdditionalDetails, handleError } from '../../handlers';
 import { amount, shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
 import { MockReactApp } from './MockReactApp';
 import { searchFunctionExample } from '../../utils';
 
+const onlyShowCard = false;
+
 const showComps = {
     clickToPay: true,
     storedCard: true,
     card: true,
+    cardWithInstallments: true,
     cardInReact: true,
     bcmcCard: true,
     avsCard: true,
@@ -27,7 +30,7 @@ const disclaimerMessage = {
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
     window.checkout = await AdyenCheckout({
         amount,
-        resourceEnvironment: 'https://checkoutshopper-beta.adyen.com/checkoutshopper/',
+        resourceEnvironment: 'https://checkoutshopper-test.adyen.com/checkoutshopper/',
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
         locale: shopperLocale,
@@ -36,17 +39,19 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
         onError: handleError,
-        onChange: handleChange,
         paymentMethodsConfiguration: {
             card: {
                 hasHolderName: true,
                 holderNameRequired: true
             }
+        },
+        risk: {
+            enabled: false
         }
     });
 
     // Stored Card
-    if (showComps.storedCard) {
+    if (!onlyShowCard && showComps.storedCard) {
         if (checkout.paymentMethodsResponse.storedPaymentMethods && checkout.paymentMethodsResponse.storedPaymentMethods.length > 0) {
             const storedCardData = checkout.paymentMethodsResponse.storedPaymentMethods[0];
             window.storedCard = checkout
@@ -58,10 +63,30 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         }
     }
 
-    // Credit card with installments
-    if (showComps.card) {
+    if (onlyShowCard || showComps.card) {
         window.card = checkout
             .create('card', {
+                challengeWindowSize: '01',
+                _disableClickToPay: true,
+                // hasHolderName: true,
+                // holderNameRequired: true,
+                // maskSecurityCode: true,
+                // enableStoreDetails: true
+                onError: obj => {
+                    console.log('### Cards::onError:: obj=', obj);
+                },
+                onBinLookup: obj => {
+                    console.log('### Cards::onBinLookup:: obj=', obj);
+                }
+            })
+            .mount('.card-field');
+    }
+
+    // Credit card with installments
+    if (!onlyShowCard && showComps.cardWithInstallments) {
+        window.cardWithInstallments = checkout
+            .create('card', {
+                _disableClickToPay: true,
                 brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
                 installmentOptions: {
                     mc: {
@@ -76,32 +101,24 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 },
                 disclaimerMessage,
                 showBrandsUnderCardNumber: true,
-                showInstallmentAmounts: true,
-                onError: obj => {
-                    console.log('### Cards::onError:: obj=', obj);
-                },
-                onBinLookup: obj => {
-                    console.log('### Cards::onBinLookup:: obj=', obj);
-                },
-                billingAddressRequired: true,
-                onAddressLookup: searchFunctionExample
+                showInstallmentAmounts: true
             })
-            .mount('.card-field');
+            .mount('.card-field-installments');
     }
 
     // Card mounted in a React app
-    if (showComps.cardInReact) {
+    if (!onlyShowCard && showComps.cardInReact) {
         window.cardReact = checkout.create('card', {});
         MockReactApp(window, 'cardReact', document.querySelector('.react-card-field'), false);
     }
 
     // Bancontact card
-    if (showComps.bcmcCard) {
+    if (!onlyShowCard && showComps.bcmcCard) {
         window.bancontact = checkout.create('bcmc').mount('.bancontact-field');
     }
 
     // Credit card with AVS
-    if (showComps.avsCard) {
+    if (!onlyShowCard && showComps.avsCard) {
         window.cardAvs = checkout
             .create('card', {
                 type: 'scheme',
@@ -138,7 +155,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             .mount('.card-avs-field');
     }
 
-    if (showComps.avsPartialCard) {
+    if (!onlyShowCard && showComps.avsPartialCard) {
         window.avsPartialCard = checkout
             .create('card', {
                 type: 'scheme',
@@ -154,7 +171,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     }
 
     // Credit card with KCP Authentication
-    if (showComps.kcpCard) {
+    if (!onlyShowCard && showComps.kcpCard) {
         window.kcpCard = checkout
             .create('card', {
                 type: 'scheme',
@@ -169,7 +186,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             .mount('.card-kcp-field');
     }
 
-    if (showComps.clickToPay) {
+    if (!onlyShowCard && showComps.clickToPay) {
         /**
          * Make sure that the initialization values are being set in the /paymentMethods response,
          * as part of the 'scheme' configuration object
@@ -185,7 +202,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                     mcSrcClientId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1'
                 },
                 clickToPayConfiguration: {
-                    shopperEmail: 'shopper@example.com',
+                    shopperEmail: 'shopper@adyen.com',
                     merchantDisplayName: 'Adyen Merchant Name',
                     onReady: () => {
                         console.log('Component is ready to be used');

@@ -81,18 +81,20 @@ test('Should send expected data to http service', () => {
         {
             errorLevel: 'fatal',
             loadingContext: 'https://checkoutanalytics-test.adyen.com/checkoutanalytics/',
-            path: 'v2/analytics?clientKey=xxxx-yyyy'
+            path: `${ANALYTICS_PATH}?clientKey=xxxx-yyyy`
         },
         {
             // amount: configuration.amount,// TODO will be supported in the future
             channel: 'Web',
+            platform: 'Web',
             locale: configuration.locale,
             referrer: 'http://localhost/',
             screenWidth: 0,
             version: 'x.x.x',
             flavor: customEvent.flavor,
             containerWidth: customEvent.containerWidth,
-            component: customEvent.component
+            component: customEvent.component,
+            buildType: 'compiled'
         }
     );
 

@@ -11,7 +11,9 @@ import { hasOwnProperty } from '../utils/hasOwnProperty';
 import DropinElement from './Dropin';
 import { CoreOptions } from '../core/types';
 import Core from '../core';
-import { ANALYTICS_SUBMIT_STR } from '../core/Analytics/constants';
+import { ANALYTICS_MOUNTED_STR, ANALYTICS_SELECTED_STR, ANALYTICS_SUBMIT_STR } from '../core/Analytics/constants';
+import { AnalyticsInitialEvent } from '../core/Analytics/types';
+import { ThreeDS2AnalyticsObject } from './ThreeDS2/types';
 
 export class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
@@ -46,16 +48,72 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         return state;
     }
 
+    // Only called once, for UIElements (including Dropin), as they are being mounted
+    protected setUpAnalytics(setUpAnalyticsObj: AnalyticsInitialEvent) {
+        const sessionId = this.props.session?.id;
+
+        return this.props.modules.analytics.setUp({
+            ...setUpAnalyticsObj,
+            ...(sessionId && { sessionId })
+        });
+    }
+
+    /**
+     * A function for all UIElements, or BaseElement, to use to create an analytics action for when it's been:
+     *  - mounted,
+     *  - a PM has been selected
+     *  - onSubmit has been called (as a result of the pay button being pressed)
+     *
+     *  In some other cases e.g. 3DS2 components, this function is overridden to allow more specific analytics actions to be created
+     */
     /* eslint-disable-next-line */
-    protected submitAnalytics(obj?) {
-        // Call analytics endpoint
-        let component = this.elementRef._id?.substring(0, this.elementRef._id.indexOf('-'));
-        if (component === 'dropin') {
-            const subCompID = this.elementRef['dropinRef'].state.activePaymentMethod._id;
-            component = `${component}-${subCompID.substring(0, subCompID.indexOf('-'))}`;
+    // protected submitAnalytics(type = 'action', obj?) {
+    protected submitAnalytics(analyticsObj?: any) {
+        /** Work out what the component's "type" is:
+         * - first check for a dedicated "analyticsType" (currently only applies to custom-cards)
+         * - otherwise, distinguish cards from non-cards: cards will use their static type property, everything else will use props.type
+         */
+        let component = this.constructor['analyticsType'];
+        if (!component) {
+            component = this.constructor['type'] === 'scheme' || this.constructor['type'] === 'bcmc' ? this.constructor['type'] : this.props.type;
         }
 
-        this.props.modules?.analytics.createAnalyticsAction({ action: 'log', data: { component, type: ANALYTICS_SUBMIT_STR, target: 'pay_button' } });
+        switch (analyticsObj.type) {
+            // BaseElement mounted (called once only)
+            // Dropin PM selected
+            case ANALYTICS_MOUNTED_STR:
+            case ANALYTICS_SELECTED_STR: {
+                let storedCardIndicator;
+                // Check if it's a storedCard
+                if (component === 'scheme') {
+                    if (hasOwnProperty(this.props, 'supportedShopperInteractions')) {
+                        storedCardIndicator = {
+                            isStoredPaymentMethod: true,
+                            brand: this.props.brand
+                        };
+                    }
+                }
+
+                const data = { component, type: analyticsObj.type, ...storedCardIndicator };
+                // console.log('### UIElement::submitAnalytics:: SELECTED data=', data);
+
+                // AnalyticsAction: action: 'event' type:'mounted'|'selected'
+                this.props.modules?.analytics.createAnalyticsAction({
+                    action: 'event',
+                    data
+                });
+                break;
+            }
+
+            // PM pay button pressed - AnalyticsAction: action: 'log' type:'submit'
+            default: {
+                // PM pay button pressed - AnalyticsAction: action: 'log' type:'submit'
+                this.props.modules?.analytics.createAnalyticsAction({
+                    action: 'log',
+                    data: { component, type: ANALYTICS_SUBMIT_STR, target: 'payButton', message: 'Shopper clicked pay' }
+                });
+            }
+        }
     }
 
     private onSubmit(): void {
@@ -261,7 +319,8 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
      * Get the element icon URL for the current environment
      */
     get icon(): string {
-        return this.props.icon ?? this.resources.getImage({ loadingContext: this.props.loadingContext })(this.constructor['type']);
+        const type = this.props.paymentMethodType || this.type;
+        return this.props.icon ?? this.resources.getImage()(type);
     }
 
     /**

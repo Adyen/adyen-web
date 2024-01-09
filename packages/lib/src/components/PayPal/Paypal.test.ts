@@ -3,12 +3,18 @@ import Paypal from './Paypal';
 describe('Paypal', () => {
     test('Returns a data object', () => {
         const paypal = new Paypal({});
-        expect(paypal.data).toEqual({ clientStateDataIndicator: true, paymentMethod: { subtype: 'sdk', type: 'paypal' } });
+        expect(paypal.data).toEqual({
+            clientStateDataIndicator: true,
+            paymentMethod: { subtype: 'sdk', type: 'paypal', checkoutAttemptId: 'do-not-track' }
+        });
     });
 
     test('should return subtype express if isExpress flag is set', () => {
         const paypal = new Paypal({ isExpress: true });
-        expect(paypal.data).toEqual({ clientStateDataIndicator: true, paymentMethod: { subtype: 'express', type: 'paypal' } });
+        expect(paypal.data).toEqual({
+            clientStateDataIndicator: true,
+            paymentMethod: { subtype: 'express', type: 'paypal', checkoutAttemptId: 'do-not-track' }
+        });
     });
 
     test('Is always valid', () => {

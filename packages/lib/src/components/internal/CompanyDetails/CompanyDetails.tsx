@@ -3,13 +3,13 @@ import { useEffect, useRef } from 'preact/hooks';
 import Fieldset from '../FormFields/Fieldset';
 import Field from '../FormFields/Field';
 import ReadOnlyCompanyDetails from './ReadOnlyCompanyDetails';
-import { renderFormField } from '../FormFields';
 import { companyDetailsValidationRules } from './validate';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { getFormattedData } from './utils';
 import { CompanyDetailsSchema, CompanyDetailsProps } from './types';
 import useForm from '../../../utils/useForm';
 import { ComponentMethodsRef } from '../../types';
+import InputText from '../FormFields/InputText';
 
 export const COMPANY_DETAILS_SCHEMA = ['name', 'registrationNumber'];
 
@@ -37,8 +37,8 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
     const generateFieldName = (name: string): string => `${namePrefix ? `${namePrefix}.` : ''}${name}`;
 
     const eventHandler =
-        (mode: string): Function =>
-        (e: Event): void => {
+        (mode: string): h.JSX.FocusEventHandler<HTMLInputElement> =>
+        (e): void => {
             const { name } = e.target as HTMLInputElement;
             const key = name.split(`${namePrefix}.`).pop();
 
@@ -63,14 +63,14 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
                     i18n={i18n}
                     name={generateFieldName('companyName')}
                 >
-                    {renderFormField('text', {
-                        name: generateFieldName('companyName'),
-                        value: data.name,
-                        classNameModifiers: ['name'],
-                        onInput: eventHandler('input'),
-                        onBlur: eventHandler('blur'),
-                        spellCheck: false
-                    })}
+                    <InputText
+                        name={generateFieldName('name')}
+                        value={data.name}
+                        classNameModifiers={['name']}
+                        onInput={eventHandler('input')}
+                        onBlur={eventHandler('blur')}
+                        spellCheck={false}
+                    />
                 </Field>
             )}
 
@@ -82,14 +82,14 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
                     i18n={i18n}
                     name={generateFieldName('registrationNumber')}
                 >
-                    {renderFormField('text', {
-                        name: generateFieldName('registrationNumber'),
-                        value: data.registrationNumber,
-                        classNameModifiers: ['registrationNumber'],
-                        onInput: eventHandler('input'),
-                        onBlur: eventHandler('blur'),
-                        spellCheck: false
-                    })}
+                    <InputText
+                        name={generateFieldName('registrationNumber')}
+                        value={data.registrationNumber}
+                        classNameModifiers={['registrationNumber']}
+                        onInput={eventHandler('input')}
+                        onBlur={eventHandler('blur')}
+                        spellCheck={false}
+                    />
                 </Field>
             )}
         </Fieldset>

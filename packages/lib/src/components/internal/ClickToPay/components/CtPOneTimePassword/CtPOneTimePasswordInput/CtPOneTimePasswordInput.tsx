@@ -5,9 +5,9 @@ import CtPResendOtpLink from './CtPResendOtpLink';
 import useClickToPayContext from '../../../context/useClickToPayContext';
 import useCoreContext from '../../../../../../core/Context/useCoreContext';
 import useForm from '../../../../../../utils/useForm';
-import renderFormField from '../../../../FormFields';
 import Field from '../../../../FormFields/Field';
 import './CtPOneTimePasswordInput.scss';
+import InputText from '../../../../FormFields/InputText';
 
 type OnChangeProps = { data: CtPOneTimePasswordInputDataState; valid; errors; isValid: boolean };
 
@@ -43,7 +43,7 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
         rules: otpValidationRules
     });
     const otpInputHandlersRef = useRef<CtPOneTimePasswordInputHandlers>({ validateInput: null });
-    const [inputRef, setInputRef] = useState<HTMLInputElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
     const [isOtpFielDirty, setIsOtpFieldDirty] = useState<boolean>(false);
 
     const validateInput = useCallback(() => {
@@ -59,10 +59,10 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
     }, [data.otp]);
 
     useEffect(() => {
-        if (!disableOtpAutoFocus && inputRef) {
-            inputRef.focus();
+        if (!disableOtpAutoFocus && inputRef.current) {
+            inputRef.current.focus();
         }
-    }, [inputRef, disableOtpAutoFocus]);
+    }, [inputRef.current, disableOtpAutoFocus]);
 
     useEffect(() => {
         otpInputHandlersRef.current.validateInput = validateInput;
@@ -73,10 +73,10 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
         setData('otp', '');
         setResendOtpError(null);
         if (!disableOtpAutoFocus) {
-            inputRef.focus();
+            inputRef.current.focus();
         }
         props.onResendCode();
-    }, [props.onResendCode, inputRef, disableOtpAutoFocus]);
+    }, [props.onResendCode, inputRef.current, disableOtpAutoFocus]);
 
     const handleOnResendOtpError = useCallback(
         (errorCode: string) => {
@@ -116,18 +116,20 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
             errorMessage={isOtpFielDirty ? resendOtpError || props.errorMessage || !!errors.otp : null}
             classNameModifiers={['otp']}
         >
-            {renderFormField('text', {
-                name: 'otp',
-                autocorrect: 'off',
-                spellcheck: false,
-                value: data.otp,
-                disabled: props.disabled,
-                onInput: handleChangeFor('otp', 'input'),
-                onBlur: handleChangeFor('otp', 'blur'),
-                onKeyUp: handleOnKeyUp,
-                onKeyPress: handleOnKeyPress,
-                onCreateRef: setInputRef
-            })}
+            <InputText
+                name={'otp'}
+                autocorrect={'off'}
+                spellcheck={false}
+                value={data.otp}
+                disabled={props.disabled}
+                onInput={handleChangeFor('otp', 'input')}
+                onBlur={handleChangeFor('otp', 'blur')}
+                onKeyUp={handleOnKeyUp}
+                onKeyPress={handleOnKeyPress}
+                setRef={(ref: HTMLInputElement) => {
+                    inputRef.current = ref;
+                }}
+            />
         </Field>
     );
 };

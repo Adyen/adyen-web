@@ -1,5 +1,151 @@
 # @adyen/adyen-web
 
+## 5.55.1
+
+### Patch Changes
+
+-   Loading the logo images properly when handling qrCode/await actions ([#2490](https://github.com/Adyen/adyen-web/pull/2490))
+
+## 5.55.0
+
+### Minor Changes
+
+-   Bumping sf version to 4.8.0 which includes a more comprehensive startup log (to help with debugging) ([#2488](https://github.com/Adyen/adyen-web/pull/2488))
+
+### Patch Changes
+
+-   Renaming detectInIframe to the more accurate, but lengthy, detectInIframeInSameOrigin. ([#2475](https://github.com/Adyen/adyen-web/pull/2475))
+
+    Now the functionality only considers itself to be running in an iframe _if_ it is possible to access the parent domain and thus be able to redirect the top, parent, window
+
+## 5.54.0
+
+### Minor Changes
+
+-   feature: adds new onAddressSelected to fill data when an item is selected in AddressSearch ([#2406](https://github.com/Adyen/adyen-web/pull/2406))
+
+-   Click to Pay - Enabling MC/Visa to drop cookies if the shopper gives consent ([#2409](https://github.com/Adyen/adyen-web/pull/2409))
+
+-   Click to Pay - Replacing loading gif by animated SVGs ([#2435](https://github.com/Adyen/adyen-web/pull/2435))
+
+### Patch Changes
+
+-   For all PaymentMethodItems we were adding a class `adyen-checkout__payment-method--{fundingSource}` (where fundingSource was either "credit" or "debit") ([#2465](https://github.com/Adyen/adyen-web/pull/2465))
+
+    This is meant to be a Card PM specific class to indicate, in the paymentMethods list, whether the card is a credit or debit card.
+
+-   Fixed Klarna B2B logo for Drop-in ([#2458](https://github.com/Adyen/adyen-web/pull/2458))
+
+-   Pass the `browserInfo` in the `state.data` for the Redirect payments, in order to fix the mobile web integration for some redirect payments. ([#2469](https://github.com/Adyen/adyen-web/pull/2469))
+
+## 5.53.3
+
+### Patch Changes
+
+-   Correct the T&C links for Riverty, remove the B2B T&C link, and change the text from 'AfterPay' to 'Riverty'. ([#2422](https://github.com/Adyen/adyen-web/pull/2422))
+
+## 5.53.2
+
+### Patch Changes
+
+-   chore: fix ts config ([#2313](https://github.com/Adyen/adyen-web/pull/2313))
+
+-   UX improvement for the `QRLoader` component - the QR loader shows amount and redirect button before the QR code image. ([#2359](https://github.com/Adyen/adyen-web/pull/2359))
+
+## 5.53.1
+
+### Patch Changes
+
+-   Typescript: Fixed types for paymentMethodsConfiguration object ([#2363](https://github.com/Adyen/adyen-web/pull/2363))
+
+## 5.53.0
+
+### Minor Changes
+
+-   Add `klarna_b2b` tx variant so that Billie (klarna_b2b) is supported. ([#2355](https://github.com/Adyen/adyen-web/pull/2355))
+
+### Patch Changes
+
+-   Fixes an issue with CtPOneTimePassword getting updates to the input element reference it relies upon ([#2353](https://github.com/Adyen/adyen-web/pull/2353))
+
+-   Improvements: add `authorization_token` in the Klarna widget AdditionalDetails state data, so that we are aligned with the API specs. ([#2358](https://github.com/Adyen/adyen-web/pull/2358))
+
+-   Fix Typescript definition for paymentMethodsConfiguration, allowing usage of Tx variants that are not defined in the codebase ([#2349](https://github.com/Adyen/adyen-web/pull/2349))
+
+-   Populate data with initial values (empty strings) for 'ibanNumber' and 'ownerName' ([#2354](https://github.com/Adyen/adyen-web/pull/2354))
+
+## 5.52.0
+
+### Minor Changes
+
+-   adds support for ANCV payment method ([#2293](https://github.com/Adyen/adyen-web/pull/2293))
+
+### Patch Changes
+
+-   fix: remove inline style applied to iframe ([#2343](https://github.com/Adyen/adyen-web/pull/2343))
+
+-   fix: Clear timeouts on SecuredFieldsProvider when unmounting the component ([#2334](https://github.com/Adyen/adyen-web/pull/2334))
+
+-   fix(personalDetails): classNameModifiers for dateOfBirth ([#2344](https://github.com/Adyen/adyen-web/pull/2344))
+
+## 5.51.0
+
+### Minor Changes
+
+-   Add 'redirectFromTopWhenInIframe' config prop to allow top level redirect when Checkout loaded in an iframe ([#2325](https://github.com/Adyen/adyen-web/pull/2325))
+
+## 5.50.1
+
+### Patch Changes
+
+-   Perform extra checks that a valid value has been passed when a dual branding selection is made ([#2321](https://github.com/Adyen/adyen-web/pull/2321))
+
+## 5.50.0
+
+### Minor Changes
+
+-   Bancontact now returns paymentMethod.type 'bcmc' instead of 'scheme' ([#2286](https://github.com/Adyen/adyen-web/pull/2286))
+
+-   Added environmentUrls parameter to Core, which allows PBL to use custom URLs for the API and assets ([#2262](https://github.com/Adyen/adyen-web/pull/2262))
+
+### Patch Changes
+
+-   For some storedCards it is not allowed to store the expiryDate, so when this info is not present in the storedCardData, we hide the readonly expiryDate field ([#2315](https://github.com/Adyen/adyen-web/pull/2315))
+
+## 5.49.6
+
+### Patch Changes
+
+-   fixes bug where storedetails had state value of true by default without visually showing it ([#2307](https://github.com/Adyen/adyen-web/pull/2307))
+
+## 5.49.5
+
+### Patch Changes
+
+-   Fixes postalCode having maxlength 0 ([#2305](https://github.com/Adyen/adyen-web/pull/2305))
+
+## 5.49.4
+
+### Patch Changes
+
+-   Fixed e2e tests that were failing due to recent changes in how alt attributes are assigned ([#2289](https://github.com/Adyen/adyen-web/pull/2289))
+
+-   Handling Safari's Responsive Design Mode to prevent undesired behaviour revolving around our "disable arrow keys on the iOS soft keyboard" feature ([#2299](https://github.com/Adyen/adyen-web/pull/2299))
+
+-   Send 'do-not-track' as value for checkoutAttemptId when analytics is disabled ([#2290](https://github.com/Adyen/adyen-web/pull/2290))
+
+-   Removes internal function renderFormField, improving typescript for all form fields ([#2298](https://github.com/Adyen/adyen-web/pull/2298))
+
+-   Fixed bug where initial value for cvcPolicy &/or expiryDatePolicy could be overwritten if multiple card components on the same page ([#2297](https://github.com/Adyen/adyen-web/pull/2297))
+
+## 5.49.3
+
+### Patch Changes
+
+-   fixes missing ResultCode typings ([#2287](https://github.com/Adyen/adyen-web/pull/2287))
+
+-   fix issuer list logos not loading from resources url ([#2278](https://github.com/Adyen/adyen-web/pull/2278))
+
 ## 5.49.2
 
 ### Patch Changes

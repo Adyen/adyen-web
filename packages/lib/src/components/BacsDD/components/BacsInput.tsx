@@ -3,7 +3,6 @@ import { useState, useEffect } from 'preact/hooks';
 import classNames from 'classnames';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import Field from '../../internal/FormFields/Field';
-import { renderFormField } from '../../internal/FormFields';
 import ConsentCheckbox from '../../internal/FormFields/ConsentCheckbox';
 import { bacsValidationRules, bacsFormatters } from './validate';
 import { BacsDataState, BacsInputProps } from './types';
@@ -11,6 +10,8 @@ import './BacsInput.scss';
 
 import useForm from '../../../utils/useForm';
 import useImage from '../../../core/Context/useImage';
+import InputText from '../../internal/FormFields/InputText';
+import InputEmail from '../../internal/FormFields/InputEmail';
 import FormInstruction from '../../internal/FormInstruction';
 
 const ENTER_STATE = 'enter-data';
@@ -64,14 +65,14 @@ function BacsInput(props: BacsInputProps) {
                         'adyen-checkout__bacs--edit-dropin': props.isDropin
                     })}
                 >
-                    {renderFormField('text', {
-                        name: 'bacsEdit',
-                        className: 'adyen-checkout__bacs--edit-button',
-                        value: i18n.get('edit'),
-                        'aria-label': i18n.get('edit'),
-                        readonly: true,
-                        onClick: handleEdit
-                    })}
+                    <InputText
+                        name={'bacsEdit'}
+                        className={'adyen-checkout__bacs--edit-button'}
+                        value={i18n.get('edit')}
+                        aria-label={i18n.get('edit')}
+                        readonly={true}
+                        onClick={handleEdit}
+                    />
                 </div>
             )}
 
@@ -86,20 +87,20 @@ function BacsInput(props: BacsInputProps) {
                 name={'accountHolderName'}
                 i18n={i18n}
             >
-                {renderFormField('text', {
-                    name: 'bacs.accountHolderName',
-                    className: 'adyen-checkout__bacs-input--holder-name',
-                    placeholder: props.placeholders.holderName,
-                    value: data.holderName,
-                    'aria-invalid': !valid.holderName,
-                    'aria-label': i18n.get('bacs.accountHolderName'),
-                    'aria-required': 'true',
-                    required: true,
-                    readonly: status === CONFIRM_STATE || status === 'loading',
-                    autocorrect: 'off',
-                    onBlur: handleChangeFor('holderName', 'blur'),
-                    onInput: handleChangeFor('holderName', 'input')
-                })}
+                <InputText
+                    name={'bacs.accountHolderName'}
+                    className={'adyen-checkout__bacs-input--holder-name'}
+                    placeholder={props.placeholders.holderName}
+                    value={data.holderName}
+                    aria-invalid={!valid.holderName}
+                    aria-label={i18n.get('bacs.accountHolderName')}
+                    aria-required={'true'}
+                    required={true}
+                    readonly={status === CONFIRM_STATE || status === 'loading'}
+                    autocorrect={'off'}
+                    onBlur={handleChangeFor('holderName', 'blur')}
+                    onInput={handleChangeFor('holderName', 'input')}
+                />
             </Field>
 
             <div className="adyen-checkout__bacs__num-id adyen-checkout__field-wrapper">
@@ -115,19 +116,19 @@ function BacsInput(props: BacsInputProps) {
                     name={'bankAccountNumber'}
                     i18n={i18n}
                 >
-                    {renderFormField('text', {
-                        value: data.bankAccountNumber,
-                        className: 'adyen-checkout__bacs-input--bank-account-number',
-                        placeholder: props.placeholders.bankAccountNumber,
-                        'aria-invalid': !valid.bankAccountNumber,
-                        'aria-label': i18n.get('bacs.accountNumber'),
-                        'aria-required': 'true',
-                        required: true,
-                        readonly: status === CONFIRM_STATE || status === 'loading',
-                        autocorrect: 'off',
-                        onBlur: handleChangeFor('bankAccountNumber', 'blur'),
-                        onInput: handleChangeFor('bankAccountNumber', 'input')
-                    })}
+                    <InputText
+                        value={data.bankAccountNumber}
+                        className={'adyen-checkout__bacs-input--bank-account-number'}
+                        placeholder={props.placeholders.bankAccountNumber}
+                        aria-invalid={!valid.bankAccountNumber}
+                        aria-label={i18n.get('bacs.accountNumber')}
+                        aria-required={'true'}
+                        required={true}
+                        readonly={status === CONFIRM_STATE || status === 'loading'}
+                        autocorrect={'off'}
+                        onBlur={handleChangeFor('bankAccountNumber', 'blur')}
+                        onInput={handleChangeFor('bankAccountNumber', 'input')}
+                    />
                 </Field>
 
                 <Field
@@ -142,19 +143,19 @@ function BacsInput(props: BacsInputProps) {
                     name={'bankLocationId'}
                     i18n={i18n}
                 >
-                    {renderFormField('text', {
-                        value: data.bankLocationId,
-                        className: 'adyen-checkout__bacs-input--bank-location-id',
-                        placeholder: props.placeholders.bankLocationId,
-                        'aria-invalid': !valid.bankLocationId,
-                        'aria-label': i18n.get('bacs.bankLocationId'),
-                        'aria-required': 'true',
-                        required: true,
-                        readonly: status === CONFIRM_STATE || status === 'loading',
-                        autocorrect: 'off',
-                        onBlur: handleChangeFor('bankLocationId', 'blur'),
-                        onInput: handleChangeFor('bankLocationId', 'input')
-                    })}
+                    <InputText
+                        value={data.bankLocationId}
+                        className={'adyen-checkout__bacs-input--bank-location-id'}
+                        placeholder={props.placeholders.bankLocationId}
+                        aria-invalid={!valid.bankLocationId}
+                        aria-label={i18n.get('bacs.bankLocationId')}
+                        aria-required={'true'}
+                        required={true}
+                        readonly={status === CONFIRM_STATE || status === 'loading'}
+                        autocorrect={'off'}
+                        onBlur={handleChangeFor('bankLocationId', 'blur')}
+                        onInput={handleChangeFor('bankLocationId', 'input')}
+                    />
                 </Field>
             </div>
 
@@ -169,22 +170,22 @@ function BacsInput(props: BacsInputProps) {
                 name={'emailAddress'}
                 i18n={i18n}
             >
-                {renderFormField('emailAddress', {
-                    value: data.shopperEmail,
-                    name: 'shopperEmail',
-                    className: 'adyen-checkout__bacs-input--shopper-email',
-                    classNameModifiers: ['large'],
-                    placeholder: props.placeholders.shopperEmail,
-                    spellcheck: false,
-                    'aria-invalid': !valid.shopperEmail,
-                    'aria-label': i18n.get('shopperEmail'),
-                    'aria-required': 'true',
-                    required: true,
-                    readonly: status === CONFIRM_STATE || status === 'loading',
-                    autocorrect: 'off',
-                    onInput: handleChangeFor('shopperEmail', 'input'),
-                    onBlur: handleChangeFor('shopperEmail', 'blur')
-                })}
+                <InputEmail
+                    value={data.shopperEmail}
+                    name={'shopperEmail'}
+                    className={'adyen-checkout__bacs-input--shopper-email'}
+                    classNameModifiers={['large']}
+                    placeholder={props.placeholders.shopperEmail}
+                    spellcheck={false}
+                    aria-invalid={!valid.shopperEmail}
+                    aria-label={i18n.get('shopperEmail')}
+                    aria-required={'true'}
+                    required={true}
+                    readonly={status === CONFIRM_STATE || status === 'loading'}
+                    autocorrect={'off'}
+                    onInput={handleChangeFor('shopperEmail', 'input')}
+                    onBlur={handleChangeFor('shopperEmail', 'blur')}
+                />
             </Field>
 
             {status === ENTER_STATE && (

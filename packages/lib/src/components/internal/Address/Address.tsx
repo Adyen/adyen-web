@@ -1,5 +1,5 @@
 import { Fragment, h } from 'preact';
-import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import Fieldset from '../FormFields/Fieldset';
 import ReadOnlyAddress from './components/ReadOnlyAddress';
 import { getAddressValidationRules } from './validate';
@@ -49,22 +49,25 @@ export default function Address(props: AddressProps) {
         formatters: addressFormatters
     });
 
-    const setSearchData = selectedAddress => {
-        const propsKeysToProcess = ADDRESS_SCHEMA;
-        propsKeysToProcess.forEach(propKey => {
-            // Make sure the data provided by the merchant is always strings
-            const providedValue = selectedAddress[propKey];
-            if (providedValue === null || providedValue === undefined) return;
-            // Cast everything to string
-            setData(propKey, String(providedValue));
+    const setSearchData = useCallback(
+        (selectedAddress: AddressData) => {
+            const propsKeysToProcess = ADDRESS_SCHEMA;
+            propsKeysToProcess.forEach(propKey => {
+                // Make sure the data provided by the merchant is always strings
+                const providedValue = selectedAddress[propKey];
+                if (providedValue === null || providedValue === undefined) return;
+                // Cast everything to string
+                setData(propKey, String(providedValue));
+            });
             triggerValidation();
-        });
-        setHasSelectedAddress(true);
-    };
+            setHasSelectedAddress(true);
+        },
+        [setHasSelectedAddress, triggerValidation, setData]
+    );
 
-    const onManualAddress = () => {
+    const onManualAddress = useCallback(() => {
         setUseManualAddress(true);
-    };
+    }, []);
 
     // Expose method expected by (parent) Address.tsx
     addressRef.current.showValidation = () => {
@@ -151,7 +154,7 @@ export default function Address(props: AddressProps) {
                 onBlur={handleChangeFor(fieldName, 'blur')}
                 onDropdownChange={handleChangeFor(fieldName, 'blur')}
                 specifications={specifications}
-                maxlength={getMaxLengthByFieldAndCountry(countrySpecificFormatters, fieldName, data.country, true)}
+                maxLength={getMaxLengthByFieldAndCountry(countrySpecificFormatters, fieldName, data.country, true)}
                 trimOnBlur={true}
                 disabled={!enabledFields.includes(fieldName)}
             />
@@ -172,10 +175,12 @@ export default function Address(props: AddressProps) {
                 {showAddressSearch && (
                     <AddressSearch
                         onAddressLookup={props.onAddressLookup}
+                        onAddressSelected={props.onAddressSelected}
                         onSelect={setSearchData}
                         onManualAddress={onManualAddress}
                         externalErrorMessage={searchErrorMessage}
                         hideManualButton={showAddressFields}
+                        addressSearchDebounceMs={props.addressSearchDebounceMs}
                     />
                 )}
                 {showAddressFields && (

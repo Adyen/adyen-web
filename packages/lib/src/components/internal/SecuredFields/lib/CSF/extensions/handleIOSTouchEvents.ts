@@ -93,9 +93,10 @@ function touchendListener(e: Event): void {
 /**
  * re. Disabling arrow keys in iOS - need to enable all fields in the form and tell SFs to disable
  *
- * NOTE: Only called when iOS detected & this.config.disableIOSArrowKeys = true
+ * NOTE: Only called when iOS detected & this.config.shouldDisableIOSArrowKeys = true
  */
 function touchstartListener(e: Event): void {
+    this.hasGenuineTouchEvents = true;
     const targetEl: EventTarget = e.target;
     // If other element is Input or Span (i.e. label text) TODO apply to other types of el?
     if (targetEl instanceof HTMLInputElement || targetEl instanceof HTMLSpanElement) {
@@ -127,18 +128,20 @@ function handleTouchend(): void {
     this.state.registerFieldForIos = true;
 }
 
-function destroyTouchendListener(): void {
-    if (!ua.__IS_IOS) return; // For when fn is called as result of destroy being called on main csf instance
+function destroyTouchendListener(): boolean {
+    if (!ua.__IS_IOS) return false; // For when fn is called as result of destroy being called on main csf instance
 
     const bodyEl: HTMLBodyElement = selectOne(document, 'body');
     bodyEl.style.cursor = 'auto';
     off(bodyEl, 'touchend', this.touchendListener);
+    return true;
 }
 
-function destroyTouchstartListener(): void {
-    if (!ua.__IS_IOS) return; // For when fn is called as result of destroy being called on main csf instance
+function destroyTouchstartListener(): boolean {
+    if (!ua.__IS_IOS) return false; // For when fn is called as result of destroy being called on main csf instance
 
     off(document, 'touchstart', this.touchstartListener);
+    return true;
 }
 
 export default {

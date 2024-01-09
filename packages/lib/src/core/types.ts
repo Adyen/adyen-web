@@ -3,7 +3,7 @@ import { PaymentMethods, PaymentMethodOptions, PaymentActionsType, PaymentAmount
 import { AnalyticsOptions } from './Analytics/types';
 import { PaymentMethodsResponse } from './ProcessResponse/PaymentMethodsResponse/types';
 import { RiskModuleOptions } from './RiskModule/RiskModule';
-import { ActionHandledReturnObject, OnPaymentCompletedData, PaymentData } from '../components/types';
+import { ActionHandledReturnObject, OnPaymentCompletedData, PaymentData, UIElementProps } from '../components/types';
 import UIElement from '../components/UIElement';
 import AdyenCheckoutError from './Errors/AdyenCheckoutError';
 import { GiftCardElementData } from '../components/Giftcard/types';
@@ -19,6 +19,16 @@ export interface CoreOptions {
      * Use test. When you're ready to accept live payments, change the value to one of our {@link https://docs.adyen.com/checkout/drop-in-web#testing-your-integration | live environments}.
      */
     environment?: 'test' | 'live' | 'live-us' | 'live-au' | 'live-apse' | 'live-in' | string;
+
+    /**
+     * Used internally by Pay By Link in order to set its own URL's instead of using the ones mapped in our codebase.
+     *
+     * @internal
+     */
+    environmentUrls?: {
+        api?: string;
+        analytics?: string;
+    };
 
     /**
      * Show or hides a Pay Button for each payment method
@@ -156,10 +166,19 @@ export interface CoreOptions {
     loadingContext?: string;
 }
 
-export type PaymentMethodsConfiguration =
-    | {
-          [key in keyof PaymentMethods]?: Partial<PaymentMethodOptions<key>>;
-      }
-    | {
-          [key in PaymentActionsType]?: any;
-      };
+type PaymentMethodsConfigurationMap = {
+    [key in keyof PaymentMethods]?: Partial<PaymentMethodOptions<key>>;
+};
+
+type PaymentActionTypesMap = {
+    [key in PaymentActionsType]?: Partial<UIElementProps>;
+};
+
+/**
+ * Type must be loose, otherwise it will take priority over the rest
+ */
+type NonMappedPaymentMethodsMap = {
+    [key: string]: any;
+};
+
+export type PaymentMethodsConfiguration = PaymentMethodsConfigurationMap & PaymentActionTypesMap & NonMappedPaymentMethodsMap;

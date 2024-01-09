@@ -227,7 +227,7 @@ function handlePaymentResult(result, component) {
 function startPayment(component) {
     if (!component.isValid) return component.showValidation();
 
-    const allow3DS2 = paymentsConfig.additionalData.allow3DS2 || false;
+    const allow3DS2 = paymentsConfig.additionalData?.allow3DS2 || false;
 
     const riskdata = checkout.modules.risk.data;
 

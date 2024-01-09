@@ -6,6 +6,8 @@ import Core from '../core';
 import { BaseElementProps, PaymentData } from './types';
 import { RiskData } from '../core/RiskModule/RiskModule';
 import { Resources } from '../core/Context/Resources';
+import { AnalyticsInitialEvent } from '../core/Analytics/types';
+import { ANALYTICS_MOUNTED_STR } from '../core/Analytics/constants';
 
 class BaseElement<P extends BaseElementProps> {
     public readonly _id = `${this.constructor['type']}-${uuid()}`;
@@ -46,6 +48,16 @@ class BaseElement<P extends BaseElementProps> {
         return {};
     }
 
+    /* eslint-disable-next-line */
+    protected setUpAnalytics(setUpAnalyticsObj: AnalyticsInitialEvent) {
+        return null;
+    }
+
+    /* eslint-disable-next-line */
+    protected submitAnalytics(analyticsObj?: any) {
+        return null;
+    }
+
     protected setState(newState: object): void {
         this.state = { ...this.state, ...newState };
     }
@@ -56,7 +68,8 @@ class BaseElement<P extends BaseElementProps> {
      */
     get data(): PaymentData | RiskData {
         const clientData = getProp(this.props, 'modules.risk.data');
-        const checkoutAttemptId = getProp(this.props, 'modules.analytics.getCheckoutAttemptId')?.();
+        const useAnalytics = !!getProp(this.props, 'modules.analytics.getEnabled')?.();
+        const checkoutAttemptId = useAnalytics ? getProp(this.props, 'modules.analytics.getCheckoutAttemptId')?.() : 'do-not-track';
         const order = this.state.order || this.props.order;
 
         const componentData = this.formatData();
@@ -91,21 +104,28 @@ class BaseElement<P extends BaseElementProps> {
 
         if (this._node) {
             this.unmount(); // new, if this._node exists then we are "remounting" so we first need to unmount if it's not already been done
-        } else {
-            // Set up analytics, once
-            if (this.props.modules && this.props.modules.analytics && !this.props.isDropin) {
-                this.props.modules.analytics.send({
+        }
+
+        this._component = this.render();
+
+        render(this._component, node);
+
+        // Set up analytics (once, since this._node is currently undefined) now that we have mounted and rendered
+        if (!this._node) {
+            if (this.props.modules && this.props.modules.analytics) {
+                this.setUpAnalytics({
                     containerWidth: node && (node as HTMLElement).offsetWidth,
-                    component: this.constructor['analyticsType'] ?? this.constructor['type'],
-                    flavor: 'components'
+                    component: !this.props.isDropin ? this.constructor['analyticsType'] ?? this.constructor['type'] : 'dropin',
+                    flavor: !this.props.isDropin ? 'components' : 'dropin'
+                }).then(() => {
+                    // Once the initial analytics set up call has been made...
+                    // ...create an analytics-action "event" declaring that the component has been mounted
+                    this.submitAnalytics({ type: ANALYTICS_MOUNTED_STR });
                 });
             }
         }
 
         this._node = node;
-        this._component = this.render();
-
-        render(this._component, node);
 
         return this;
     }

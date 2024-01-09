@@ -1,6 +1,6 @@
 import AbstractCSF from './AbstractCSF';
-import { CSFReturnObject, CSFSetupObject, CSFStateObject } from './types';
-import { StylesObject, CbObjOnAdditionalSF } from '../types';
+import { CSFReturnObject, CSFSetupObject, CSFStateObject, CSFThisObject } from './types';
+import { StylesObject, CbObjOnAdditionalSF, SFFieldType } from '../types';
 import { BinLookupResponse } from '../../../../Card/types';
 import { handleConfig } from './extensions/handleConfig';
 import { configureCallbacks } from './extensions/configureCallbacks';
@@ -72,7 +72,7 @@ class CSF extends AbstractCSF {
             isKCP: false
         } as CSFStateObject;
 
-        const thisObj = { csfState: this.state, csfConfig: this.config, csfProps: this.props, csfCallbacks: this.callbacks };
+        const thisObj: CSFThisObject = { csfState: this.state, csfConfig: this.config, csfProps: this.props, csfCallbacks: this.callbacks };
 
         // Setup 'this' references
         this.configHandler = handleConfig;
@@ -96,14 +96,14 @@ class CSF extends AbstractCSF {
 
         this.postMessageToAllIframes = partial(postMessageToAllIframes, thisObj);
 
-        this.setFocusOnFrame = partial(setFocusOnFrame, thisObj);
-        this.handleFocus = partial(handleFocus, thisObj);
-
         this.handleIOSTouchEvents = handleIOSTouchEvents.handleTouchend;
         this.touchendListener = handleIOSTouchEvents.touchendListener.bind(this);
         this.destroyTouchendListener = handleIOSTouchEvents.destroyTouchendListener;
         this.touchstartListener = handleIOSTouchEvents.touchstartListener.bind(this);
         this.destroyTouchstartListener = handleIOSTouchEvents.destroyTouchstartListener;
+
+        this.setFocusOnFrame = partial(setFocusOnFrame, thisObj);
+        this.handleFocus = partial(handleFocus, thisObj, this.handleIOSTouchEvents);
 
         this.handleSFShiftTab = handleTab.handleSFShiftTab;
         this.handleShiftTab = handleTab.handleShiftTab;
@@ -139,7 +139,8 @@ class CSF extends AbstractCSF {
          * Add touchstart listener
          * re. Disabling arrow keys in iOS
          */
-        if (ua.__IS_IOS && this.config.disableIOSArrowKeys) {
+        if (ua.__IS_IOS && this.config.shouldDisableIOSArrowKeys) {
+            this.hasGenuineTouchEvents = false;
             on(document, 'touchstart', this.touchstartListener);
         }
     }
@@ -159,7 +160,7 @@ class CSF extends AbstractCSF {
                     );
                 }
             },
-            setFocusOnFrame: (pFieldType: string): void => {
+            setFocusOnFrame: (pFieldType: SFFieldType): void => {
                 if (this.state.isConfigured) {
                     this.setFocusOnFrame(pFieldType);
                     // Comment in a quick way to test destroying secured fields (also see comment in destroySecuredFields)
@@ -170,7 +171,7 @@ class CSF extends AbstractCSF {
             },
             // For component based implementation - if showValidation function is called on the component use this
             // function as a way to notify the CSF that a field is in error
-            isValidated: (pFieldType: string, code: string): void => {
+            isValidated: (pFieldType: SFFieldType, code: string): void => {
                 if (this.state.isConfigured) {
                     if (hasOwnProperty(this.state.securedFields, pFieldType)) {
                         this.state.securedFields[pFieldType].hasError = true;
@@ -196,7 +197,7 @@ class CSF extends AbstractCSF {
                     notConfiguredWarning('You cannot set validated on any secured field');
                 }
             },
-            hasUnsupportedCard: (pFieldType: string, code: string): void => {
+            hasUnsupportedCard: (pFieldType: SFFieldType, code: string): void => {
                 if (this.state.isConfigured) {
                     if (hasOwnProperty(this.state.securedFields, pFieldType)) {
                         //
@@ -233,14 +234,14 @@ class CSF extends AbstractCSF {
                     notConfiguredWarning('You cannot set pass brands to secured fields');
                 }
             },
-            addSecuredField: (pFieldType: string): void => {
+            addSecuredField: (pFieldType: SFFieldType): void => {
                 const securedField: HTMLElement = selectOne(this.props.rootNode, `[data-cse="${pFieldType}"]`);
                 if (securedField) {
                     this.state.numIframes += 1;
                     this.setupSecuredField(securedField);
                 }
             },
-            removeSecuredField: (pFieldType: string): void => {
+            removeSecuredField: (pFieldType: SFFieldType): void => {
                 if (this.state.securedFields[pFieldType]) {
                     this.state.securedFields[pFieldType].destroy();
                     delete this.state.securedFields[pFieldType];

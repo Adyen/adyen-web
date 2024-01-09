@@ -41,10 +41,6 @@ export class EcontextElement extends UIElement<EcontextElementProps> {
         };
     }
 
-    get icon() {
-        return this.resources.getImage({ loadingContext: this.props.loadingContext })(this.props.type);
-    }
-
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>

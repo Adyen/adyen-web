@@ -14,7 +14,7 @@ class CardAvsPage {
     }
 
     async goto(url?: string) {
-        await this.page.goto('http://localhost:3024/');
+        await this.page.goto('http://localhost:3024/cards');
     }
 }
 

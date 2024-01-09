@@ -44,7 +44,20 @@ export interface PaymentData extends PaymentMethodData {
     storePaymentMethod?: boolean;
 }
 
-export type ResultCode = 'Authorised' | 'Cancelled' | 'ChallengeShopper' | 'Error' | 'IdentifyShopper' | 'Pending';
+export type ResultCode =
+    | 'AuthenticationFinished'
+    | 'AuthenticationNotRequired'
+    | 'Authorised'
+    | 'Cancelled'
+    | 'ChallengeShopper'
+    | 'Error'
+    | 'IdentifyShopper'
+    | 'PartiallyAuthorised'
+    | 'Pending'
+    | 'PresentToShopper'
+    | 'Received'
+    | 'RedirectShopper'
+    | 'Refused';
 
 export interface OnPaymentCompletedData {
     sessionData: string;
@@ -65,11 +78,11 @@ export interface RawPaymentResponse extends PaymentResponse {
 }
 
 export interface AnalyticsModule {
-    send: (a: AnalyticsInitialEvent) => Promise<any>;
-    sendAnalyticsActions: () => Promise<any>;
+    setUp: (a: AnalyticsInitialEvent) => Promise<any>;
     getCheckoutAttemptId: () => string;
     getEventsQueue: () => EventsQueueModule;
     createAnalyticsAction: (a: CreateAnalyticsActionObject) => void;
+    getEnabled: () => boolean;
 }
 
 export interface BaseElementProps {
@@ -129,6 +142,7 @@ export interface UIElementProps extends BaseElementProps {
     icon?: string;
     amount?: PaymentAmount;
     secondaryAmount?: PaymentAmountExtended;
+    brand?: string;
 
     /**
      * Show/Hide pay button
@@ -153,6 +167,13 @@ export interface UIElementProps extends BaseElementProps {
 
     /** @internal */
     clientKey?: string;
+
+    /**
+     * Returned after the payments call, when an action is returned. It represents the payment method tx variant
+     * that was used for the payment
+     * @internal
+     */
+    paymentMethodType?: string;
 
     /** @internal */
     elementRef?: any;

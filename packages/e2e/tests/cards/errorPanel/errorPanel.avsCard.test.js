@@ -30,7 +30,7 @@ test('#1 avsCard error fields and inputs should have correct aria attributes', a
     await t.switchToMainWindow().switchToIframe(cardPage.iframeSelector.nth(0));
     const adb = await getInputSelector('encryptedCardNumber', true).getAttribute('aria-describedby');
     await t.expect(adb).contains('adyen-checkout-encryptedCardNumber-');
-    await t.expect(adb).contains('-ariaError');
+    await t.expect(adb).contains('-ariaContext');
     await t.switchToMainWindow();
 
     // Address input's error field should have correct aria attrs
@@ -79,6 +79,8 @@ test('#2 Click pay with empty fields and error panel in avsCard is populated', a
 
     // no 9th element
     await t.expect(cardPage.errorPanelEls.nth(8).exists).notOk();
+
+    await t.wait(500);
 
     // Expect focus to be place on Card number field - since SRConfig for this card comp says we should move focus
     await t.expect(cardPage.numLabelWithFocus.exists).ok();

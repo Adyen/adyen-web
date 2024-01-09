@@ -1,5 +1,6 @@
 import { Component, h } from 'preact';
 import classNames from 'classnames';
+import './Iframe.scss';
 
 interface IframeProps {
     width?: string;
@@ -75,7 +76,6 @@ class Iframe extends Component<IframeProps> {
                 src={src}
                 width={width}
                 height={height}
-                style={{ border: 0 }}
                 frameBorder="0"
                 title={title}
                 /* eslint-disable react/no-unknown-property */

@@ -2,12 +2,14 @@ import LogEvent from '../Services/analytics/log-event';
 import CollectId from '../Services/analytics/collect-id';
 import EventsQueue, { EventsQueueModule } from './EventsQueue';
 import { ANALYTICS_ACTION, AnalyticsInitialEvent, AnalyticsObject, AnalyticsProps, CreateAnalyticsActionObject } from './types';
-import { ANALYTICS_ACTION_ERROR, ANALYTICS_ACTION_LOG, ANALYTICS_PATH } from './constants';
+import { ANALYTICS_ACTION_ERROR, ANALYTICS_ACTION_EVENT, ANALYTICS_ACTION_LOG, ANALYTICS_EVENT_TIMER_INTERVAL, ANALYTICS_PATH } from './constants';
 import { debounce } from '../../components/internal/Address/utils';
 import { AnalyticsModule } from '../../components/types';
 import { createAnalyticsObject } from './utils';
 
 let capturedCheckoutAttemptId = null;
+let hasLoggedPixel = false;
+let sendEventsTimerId = null;
 
 const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analyticsContext }: AnalyticsProps): AnalyticsModule => {
     const defaultProps = {
@@ -30,25 +32,45 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
     const collectId = CollectId({ analyticsContext, clientKey, locale, amount, analyticsPath: ANALYTICS_PATH });
     const eventsQueue: EventsQueueModule = EventsQueue({ analyticsContext, clientKey, analyticsPath: ANALYTICS_PATH });
 
+    const sendAnalyticsActions = () => {
+        if (capturedCheckoutAttemptId) {
+            return eventsQueue.run(capturedCheckoutAttemptId);
+        }
+        return Promise.resolve(null);
+    };
+
     const addAnalyticsAction = (type: ANALYTICS_ACTION, obj: AnalyticsObject) => {
         eventsQueue.add(`${type}s`, obj);
 
         /**
          * The logic is:
-         *  - events are stored until a log or error comes along
+         *  - events are stored until a log or error comes along,
+         *  but, if after a set time, no other analytics-action has come along then we send the events anyway
+         */
+        if (type === ANALYTICS_ACTION_EVENT) {
+            clearTimeout(sendEventsTimerId);
+            sendEventsTimerId = setTimeout(sendAnalyticsActions, ANALYTICS_EVENT_TIMER_INTERVAL);
+        }
+
+        /**
+         * The logic is:
          *  - errors get sent straightaway
          *  - logs also get sent straightaway... but... tests with the 3DS2 process show that many logs can happen almost at the same time,
          *  so instead of making (up to 4 or 5) sequential api calls we "batch" them using debounce
          */
         if (type === ANALYTICS_ACTION_LOG || type === ANALYTICS_ACTION_ERROR) {
+            clearTimeout(sendEventsTimerId); // clear any time that might be about to dispatch the events array
+
             const debounceFn = type === ANALYTICS_ACTION_ERROR ? fn => fn : debounce;
-            debounceFn(anlModule.sendAnalyticsActions)();
+            debounceFn(sendAnalyticsActions)();
         }
     };
 
     const anlModule: AnalyticsModule = {
-        send: async (initialEvent: AnalyticsInitialEvent) => {
+        setUp: async (initialEvent: AnalyticsInitialEvent) => {
             const { enabled, payload, telemetry } = props; // TODO what is payload, is it ever used?
+
+            // console.log('### Analytics::setUp:: initialEvent', initialEvent);
 
             if (enabled === true) {
                 if (telemetry === true && !capturedCheckoutAttemptId) {
@@ -61,21 +83,18 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
                         console.debug(`Fetching checkoutAttemptId failed.${e ? ` Error=${e}` : ''}`);
                     }
                 }
-                // Log pixel
-                // TODO once we stop using the pixel we can stop requiring both "enabled" & "telemetry" config options.
-                //  And v6 will have a "level: 'none" | "all" | "minimal" config prop
-                logEvent(initialEvent);
+
+                if (!hasLoggedPixel) {
+                    // Log pixel
+                    // TODO once we stop using the pixel we can stop requiring both "enabled" & "telemetry" config options.
+                    //  And v6 will have a "level: 'none" | "all" | "minimal" config prop
+                    logEvent(initialEvent);
+                    hasLoggedPixel = true;
+                }
             }
         },
 
         getCheckoutAttemptId: (): string => capturedCheckoutAttemptId,
-
-        sendAnalyticsActions: () => {
-            if (capturedCheckoutAttemptId) {
-                return eventsQueue.run(capturedCheckoutAttemptId);
-            }
-            return Promise.resolve(null);
-        },
 
         // Expose getter for testing purposes
         getEventsQueue: () => eventsQueue,
@@ -85,9 +104,12 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
                 action,
                 ...data
             });
+            // console.log('### Analytics::createAnalyticsAction:: action=', action, ' aObj=', aObj);
 
             addAnalyticsAction(action, aObj);
-        }
+        },
+
+        getEnabled: () => props.enabled
     };
 
     return anlModule;

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'preact/hooks';
 import { h } from 'preact';
-import { renderFormField } from '../FormFields';
 import useCoreContext from '../../../core/Context/useCoreContext';
+import Checkbox from '../FormFields/Checkbox';
 
 /**
  * "Store details" generic checkbox
@@ -20,12 +20,7 @@ function StoreDetails({ storeDetails = false, ...props }) {
 
     return (
         <div className="adyen-checkout__store-details">
-            {renderFormField('boolean', {
-                onChange,
-                label: i18n.get('storeDetails'),
-                value,
-                name: 'storeDetails'
-            })}
+            <Checkbox onChange={onChange} label={i18n.get('storeDetails')} name={'storeDetails'} />
         </div>
     );
 }

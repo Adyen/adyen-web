@@ -1,7 +1,7 @@
 import AdyenCheckout from '@adyen/adyen-web';
 import '@adyen/adyen-web/dist/es/adyen.css';
 import { getPaymentMethods, makePayment, checkBalance, createOrder, cancelOrder, makeDetailsCall } from '../../services';
-import { amount, shopperLocale, countryCode, returnUrl } from '../../config/commonConfig';
+import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
 import { getSearchParameters } from '../../utils';
 
 export async function initManual() {
@@ -47,6 +47,15 @@ export async function initManual() {
 
             if (result.action) {
                 component.handleAction(result.action);
+            } else if (result.order && result.order?.remainingAmount?.value > 0) {
+                // handle orders
+                const order = {
+                    orderData: result.order.orderData,
+                    pspReference: result.order.pspReference
+                };
+
+                const orderPaymentMethods = await getPaymentMethods({ order, amount, shopperLocale });
+                checkout.update({ paymentMethodsResponse: orderPaymentMethods, order, amount: result.order.remainingAmount });
             } else {
                 handleFinalState(result.resultCode, component);
             }

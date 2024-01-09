@@ -49,6 +49,8 @@ describe('Analytics initialisation and event queue', () => {
         expect(analytics.send).not.toBe(null);
         expect(analytics.getCheckoutAttemptId).not.toBe(null);
         expect(analytics.sendAnalyticsActions).not.toBe(null);
+        expect(analytics.getEnabled).not.toBe(null);
+        expect(analytics.getEnabled()).toBe(true);
         expect(collectIdPromiseMock).toHaveLength(0);
     });
 

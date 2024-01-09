@@ -1,7 +1,7 @@
 @import "../../../style/index";
 
 .adyen-checkout__open-invoice .adyen-checkout__fieldset--billingAddress {
-    padding-bottom: 8px;
+    margin-bottom: 16px;
 }
 
 .adyen-checkout__open-invoice .adyen-checkout__fieldset--deliveryAddress {
@@ -14,7 +14,7 @@
 }
 
 .adyen-checkout__open-invoice .adyen-checkout__field--consentCheckbox {
-    margin-top: 22px;
+    margin-top: 16px;
 }
 
 .adyen-checkout__input--separateDeliveryAddress + .adyen-checkout__checkbox__label {
