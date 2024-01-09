@@ -42,7 +42,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
     }
 
     public submitAnalytics = (what: ThreeDS2AnalyticsObject) => {
-        console.log('### PrepareFingerprint3DS2::submitAnalytics:: what', what);
+        // console.log('### PrepareFingerprint3DS2::submitAnalytics:: what', what);
         this.props.onSubmitAnalytics(what);
     };
 
