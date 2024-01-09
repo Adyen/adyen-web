@@ -66,7 +66,8 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
      *  In some other cases e.g. 3DS2 components, this function is overridden to allow more specific analytics actions to be created
      */
     /* eslint-disable-next-line */
-    protected submitAnalytics(type = 'action', obj?) {
+    // protected submitAnalytics(type = 'action', obj?) {
+    protected submitAnalytics(analyticsObj: any) {
         /** Work out what the component's "type" is:
          * - first check for a dedicated "analyticsType" (currently only applies to custom-cards)
          * - otherwise, distinguish cards from non-cards: cards will use their static type property, everything else will use props.type
@@ -76,7 +77,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
             component = this.constructor['type'] === 'scheme' || this.constructor['type'] === 'bcmc' ? this.constructor['type'] : this.props.type;
         }
 
-        switch (type) {
+        switch (analyticsObj.type) {
             // BaseElement mounted (called once only)
             // Dropin PM selected
             case ANALYTICS_MOUNTED_STR:
@@ -92,7 +93,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
                     }
                 }
 
-                const data = { component, type, ...storedCardIndicator };
+                const data = { component, type: analyticsObj.type, ...storedCardIndicator };
                 // console.log('### UIElement::submitAnalytics:: SELECTED data=', data);
 
                 // AnalyticsAction: action: 'event' type:'mounted'|'selected'
@@ -128,7 +129,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         if (this.props.onSubmit) {
             /** Classic flow */
             // Call analytics endpoint
-            this.submitAnalytics();
+            this.submitAnalytics({ type: 'submit' });
 
             // Call onSubmit handler
             this.props.onSubmit({ data: this.data, isValid: this.isValid }, this.elementRef);
@@ -147,7 +148,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
             beforeSubmitEvent
                 .then(data => {
                     // Call analytics endpoint
-                    this.submitAnalytics();
+                    this.submitAnalytics({ type: 'submit' });
                     // Submit payment
                     return this.submitPayment(data);
                 })

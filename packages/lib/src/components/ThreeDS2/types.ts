@@ -1,3 +1,5 @@
+import { ANALYTICS_ACTION, AnalyticsObject } from '../../core/Analytics/types';
+
 /**
  * See
  * https://docs.adyen.com/checkout/3d-secure/api-reference#threeds2result
@@ -78,4 +80,14 @@ type CheckoutThreeDS2Action = {
     token: string;
     subtype: string;
     authorisationToken: string;
+};
+
+export type DecodeObject = {
+    success: boolean;
+    error?: string;
+    data?: string;
+};
+
+export type ThreeDS2AnalyticsObject = Pick<AnalyticsObject, 'code' | 'errorType' | 'message' | 'type' | 'metadata'> & {
+    action: ANALYTICS_ACTION;
 };

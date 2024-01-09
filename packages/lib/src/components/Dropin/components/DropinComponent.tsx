@@ -80,7 +80,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         if ((activePaymentMethod && activePaymentMethod._id !== paymentMethod._id) || !activePaymentMethod) {
             this.props.onSelect(paymentMethod);
 
-            paymentMethod.submitAnalytics(ANALYTICS_SELECTED_STR);
+            paymentMethod.submitAnalytics({ type: ANALYTICS_SELECTED_STR });
         }
     };
 

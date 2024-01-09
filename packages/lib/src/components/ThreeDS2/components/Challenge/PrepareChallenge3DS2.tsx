@@ -2,12 +2,15 @@ import { Component, h } from 'preact';
 import DoChallenge3DS2 from './DoChallenge3DS2';
 import { createChallengeResolveData, handleErrorCode, prepareChallengeData, createOldChallengeResolveData } from '../utils';
 import { PrepareChallenge3DS2Props, PrepareChallenge3DS2State } from './types';
-import { ChallengeData, ThreeDS2FlowObject } from '../../types';
+import { ChallengeData, ThreeDS2AnalyticsObject, ThreeDS2FlowObject } from '../../types';
 import '../../ThreeDS2.scss';
 import Img from '../../../internal/Img';
 import './challenge.scss';
 import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
 import useImage from '../../../../core/Context/useImage';
+import { ActionHandledReturnObject } from '../../../types';
+import { ANALYTICS_ACTION_LOG } from '../../../../core/Analytics/constants';
+import { THREEDS2_FULL } from '../../config';
 
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
     public static defaultProps = {
@@ -53,6 +56,25 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         }
     }
 
+    public submitAnalytics = (what: ThreeDS2AnalyticsObject) => {
+        // console.log('### PrepareChallenge3DS2::submitAnalytics:: what=', what);
+        this.props.onSubmitAnalytics(what);
+    };
+
+    public onActionHandled = (rtnObj: ActionHandledReturnObject) => {
+        this.submitAnalytics({ action: ANALYTICS_ACTION_LOG, type: THREEDS2_FULL, message: rtnObj.actionDescription });
+
+        this.props.onActionHandled(rtnObj);
+    };
+
+    public onFormSubmit = (msg: string) => {
+        this.submitAnalytics({
+            action: ANALYTICS_ACTION_LOG,
+            type: THREEDS2_FULL,
+            message: msg
+        } as ThreeDS2AnalyticsObject);
+    };
+
     setStatusComplete(resultObj) {
         this.setState({ status: 'complete' }, () => {
             /**
@@ -72,7 +94,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         this.props.onError(errorInfoObj); // For some reason this doesn't fire if it's in a callback passed to the setState function
     }
 
-    render({ onActionHandled }, { challengeData }) {
+    render(_, { challengeData }) {
         const getImage = useImage();
         if (this.state.status === 'retrievingChallengeToken') {
             return (
@@ -99,7 +121,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                         }
                     }}
                     {...challengeData}
-                    onActionHandled={onActionHandled}
+                    onActionHandled={this.onActionHandled}
+                    onFormSubmit={this.onFormSubmit}
                 />
             );
         }

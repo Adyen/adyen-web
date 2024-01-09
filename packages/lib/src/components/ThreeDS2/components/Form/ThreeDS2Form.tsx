@@ -7,6 +7,7 @@ interface ThreeDS2FormProps {
     target: string;
     inputName: string;
     inputValue: string;
+    onFormSubmit: (w) => void;
 }
 
 export default class ThreeDS2Form extends Component<ThreeDS2FormProps> {
@@ -14,6 +15,7 @@ export default class ThreeDS2Form extends Component<ThreeDS2FormProps> {
 
     componentDidMount() {
         this.formEl.submit();
+        this.props.onFormSubmit(`${this.props.inputName} sent`);
     }
 
     render({ name, action, target, inputName, inputValue }) {

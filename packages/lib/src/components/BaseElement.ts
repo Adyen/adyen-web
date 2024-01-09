@@ -54,7 +54,7 @@ class BaseElement<P extends BaseElementProps> {
     }
 
     /* eslint-disable-next-line */
-    protected submitAnalytics(type = 'action', obj?) {
+    protected submitAnalytics(analyticsObj?: any) {
         return null;
     }
 
@@ -120,7 +120,7 @@ class BaseElement<P extends BaseElementProps> {
                 }).then(() => {
                     // Once the initial analytics set up call has been made...
                     // ...create an analytics-action "event" declaring that the component has been mounted
-                    this.submitAnalytics(ANALYTICS_MOUNTED_STR);
+                    this.submitAnalytics({ type: ANALYTICS_MOUNTED_STR });
                 });
             }
         }
