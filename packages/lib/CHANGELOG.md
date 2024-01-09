@@ -1,5 +1,21 @@
 # @adyen/adyen-web
 
+## 5.56.0
+
+### Minor Changes
+
+-   Add support for the PayMe payment method. ([#2476](https://github.com/Adyen/adyen-web/pull/2476))
+
+### Patch Changes
+
+-   Improve the payment status check call for QR payments. ([#2506](https://github.com/Adyen/adyen-web/pull/2506))
+
+-   Fix incorrect grammar German pay button ([#2505](https://github.com/Adyen/adyen-web/pull/2505))
+
+-   update sessionData after /setup call ([#2504](https://github.com/Adyen/adyen-web/pull/2504))
+
+-   Detect when the value of a data-cse attribute is not supported, and don't create a SF for it ([#2495](https://github.com/Adyen/adyen-web/pull/2495))
+
 ## 5.55.1
 
 ### Patch Changes
