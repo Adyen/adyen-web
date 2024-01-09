@@ -23,7 +23,9 @@ export interface QRLoaderContainerProps extends UIElementProps {
     qrCodeImage?: string;
     paymentData?: string;
     introduction: string;
-    instructions?: string;
+    redirectIntroduction?: string;
+    timeToPay?: string;
+    instructions?: string | (() => h.JSX.Element);
     copyBtn?: boolean;
 }
 

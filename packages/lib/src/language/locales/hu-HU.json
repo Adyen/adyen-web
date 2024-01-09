@@ -300,5 +300,11 @@
     "ancv.input.label": "Az Ön ANCV-azonosítója",
     "ancv.confirmPayment": "A fizetés megerősítéséhez használja az ANCV alkalmazást.",
     "ancv.form.instruction": "A fizetés érvényesítéséhez a Cheque-Vacances alkalmazás szükséges.",
-    "ancv.beneficiaryId.invalid": "Adjon meg egy érvényes e-mail-címet vagy ANCV-azonosítót"
+    "ancv.beneficiaryId.invalid": "Adjon meg egy érvényes e-mail-címet vagy ANCV-azonosítót",
+    "payme.openPayMeApp": "A fizetésnek a PayMe alkalmazásban való engedélyezésével hajtsa végre a fizetést, és várja meg a visszaigazolást.",
+    "payme.redirectButtonLabel": "PayMe alkalmazás megnyitása",
+    "payme.scanQrCode": "Fizetés végrehajtása QR-kóddal",
+    "payme.timeToPay": "A QR-kód ennyi ideig érvényes: %@",
+    "payme.instructions.steps": "Nyissa meg a PayMe alkalmazást.%@A fizetés engedélyezéséhez olvassa be a QR-kódot.%@Hajtsa végre a fizetést az alkalmazásban, és várja meg a visszaigazolást.",
+    "payme.instructions.footnote": "A fizetés befejezése előtt ne zárja be ezt az oldalt"
 }

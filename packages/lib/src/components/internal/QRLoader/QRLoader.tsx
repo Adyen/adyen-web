@@ -43,7 +43,9 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
         throttleTime: 60000,
         classNameModifiers: [],
         throttledInterval: 10000,
-        introduction: 'wechatpay.scanqrcode'
+        introduction: 'wechatpay.scanqrcode',
+        timeToPay: 'wechatpay.timetopay',
+        buttonLabel: 'openApp'
     };
 
     componentDidMount() {
@@ -148,7 +150,6 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
         const { i18n, loadingContext } = useCoreContext();
         const getImage = useImage();
         const qrCodeImage = this.props.qrCodeData ? `${loadingContext}${QRCODE_URL}${this.props.qrCodeData}` : this.props.qrCodeImage;
-
         const finalState = (image, message) => {
             const status = i18n.get(message);
             useA11yReporter(status);
@@ -181,7 +182,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
             );
         }
 
-        const timeToPayString = i18n.get('wechatpay.timetopay').split('%@');
+        const timeToPayString = i18n.get(this.props.timeToPay).split('%@');
 
         const qrSubtitleRef = useAutoFocus();
 
@@ -201,7 +202,10 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
 
                 {url && (
                     <div className="adyen-checkout__qr-loader__app-link">
-                        <Button classNameModifiers={['qr-loader']} onClick={() => this.redirectToApp(url)} label={i18n.get('openApp')} />
+                        {this.props.redirectIntroduction && (
+                            <div className="adyen-checkout__qr-loader__subtitle">{i18n.get(this.props.redirectIntroduction)}</div>
+                        )}
+                        <Button classNameModifiers={['qr-loader']} onClick={() => this.redirectToApp(url)} label={i18n.get(this.props.buttonLabel)} />
                         <ContentSeparator />
                     </div>
                 )}
@@ -229,7 +233,11 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                     &nbsp;{timeToPayString[1]}
                 </div>
 
-                {this.props.instructions && <div className="adyen-checkout__qr-loader__instructions">{i18n.get(this.props.instructions)}</div>}
+                {typeof this.props.instructions === 'string' ? (
+                    <div className="adyen-checkout__qr-loader__instructions">{i18n.get(this.props.instructions)}</div>
+                ) : (
+                    this.props.instructions?.()
+                )}
 
                 {this.props.copyBtn && (
                     <div className="adyen-checkout__qr-loader__actions">
