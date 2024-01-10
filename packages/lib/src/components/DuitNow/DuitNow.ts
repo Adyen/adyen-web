@@ -5,11 +5,7 @@ class DuitNowElement extends QRLoaderContainer {
     public static type = 'duitnow';
 
     formatProps(props) {
-        return {
-            delay,
-            countdownTime,
-            ...super.formatProps(props)
-        };
+        return super.formatProps({ delay, countdownTime, ...props });
     }
 }
 

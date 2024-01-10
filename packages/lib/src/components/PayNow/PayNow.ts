@@ -5,11 +5,7 @@ class PayNowElement extends QRLoaderContainer {
     public static type = 'paynow';
 
     formatProps(props) {
-        return {
-            delay,
-            countdownTime,
-            ...super.formatProps(props)
-        };
+        return super.formatProps({ delay, countdownTime, ...props });
     }
 }
 

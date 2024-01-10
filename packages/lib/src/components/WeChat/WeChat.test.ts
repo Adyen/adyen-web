@@ -1,7 +1,25 @@
 import WeChat from './WeChat';
+import * as utils from '../../utils/getTimeDiffInMinutesFromNow';
+import { countdownTime } from './config';
+
+const calculateTimeDiffMock = jest.spyOn(utils, 'getTimeDiffInMinutesFromNow').mockImplementation(() => 5);
 
 describe('WeChat', () => {
-    describe('formatProps', () => {});
+    describe('formatProps', () => {
+        test('should calculate the time difference if expiresAt exists', () => {
+            const expiresAt = '2024-01-15T14:00:48.321283089Z';
+            const wechat = new WeChat({ expiresAt });
+            expect(calculateTimeDiffMock).toHaveBeenCalledWith(expiresAt, wechat.props.delay);
+        });
+        test('should use the countdownTime from the props if it exists', () => {
+            const wechat = new WeChat({ countdownTime: 3 });
+            expect(wechat.props.countdownTime).toBe(3);
+        });
+        test('should use the default countdownTime if neither expiresAt nor countdownTime value exists', () => {
+            const wechat = new WeChat({});
+            expect(wechat.props.countdownTime).toBe(countdownTime);
+        });
+    });
 
     describe('isValid', () => {
         test('should be always true', () => {
@@ -21,6 +39,17 @@ describe('WeChat', () => {
         test('does not render anything by default', () => {
             const wechat = new WeChat({});
             expect(wechat.render()).toBe(null);
+        });
+    });
+
+    describe('formatProps', () => {
+        describe('countdownTime', () => {
+            test('should calculate the time difference if expiresAt is provided', () => {});
+            test('should return the default countdown time if expiresAt is not provided', () => {});
+            test('should return the default countdown time if there are errors calculating the time difference', () => {});
+        });
+        describe('other props', () => {
+            test('should return the correct values for other props', () => {});
         });
     });
 });

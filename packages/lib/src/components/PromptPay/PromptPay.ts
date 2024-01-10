@@ -5,11 +5,7 @@ class PromptPayElement extends QRLoaderContainer {
     public static type = 'promptpay';
 
     formatProps(props) {
-        return {
-            delay,
-            countdownTime,
-            ...super.formatProps(props)
-        };
+        return super.formatProps({ delay, countdownTime, ...props });
     }
 }
 

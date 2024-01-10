@@ -5,10 +5,11 @@ import QRLoader from '../internal/QRLoader';
 import CoreProvider from '../../core/Context/CoreProvider';
 import RedirectButton from '../internal/RedirectButton';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
+import { getTimeDiffInMinutesFromNow } from '../../utils/getTimeDiffInMinutesFromNow';
 
 export interface QRLoaderContainerProps extends UIElementProps {
     /**
-     * Number of miliseconds that the component will wait in between status calls
+     * Number of milliseconds that the component will wait in between status calls
      */
     delay?: number;
 
@@ -17,12 +18,19 @@ export interface QRLoaderContainerProps extends UIElementProps {
      */
     countdownTime?: number;
 
+    /**
+     * UTC timestamp from the /payments response.
+     * If it presents we should calculate the countdown time between the expiresAt and the current local time.
+     * Otherwise, it falls back to the merchant's countdownTime prop or the default one per QR payment.
+     */
+    expiresAt?: string;
+
     type?: string;
     brandLogo?: string;
     buttonLabel?: string;
     qrCodeImage?: string;
     paymentData?: string;
-    introduction: string;
+    introduction?: string;
     redirectIntroduction?: string;
     timeToPay?: string;
     instructions?: string | (() => h.JSX.Element);
@@ -39,6 +47,22 @@ class QRLoaderContainer<T extends QRLoaderContainerProps = QRLoaderContainerProp
         onComplete: () => {},
         onActionHandled: () => {}
     };
+
+    formatProps(props) {
+        return {
+            ...props,
+            countdownTime: this.getCountDownTime(props)
+        };
+    }
+
+    getCountDownTime({ expiresAt, delay, countdownTime }): number {
+        try {
+            return expiresAt ? getTimeDiffInMinutesFromNow(expiresAt, delay) : countdownTime;
+        } catch (e) {
+            console.warn(e?.message);
+            return countdownTime;
+        }
+    }
 
     formatData() {
         return {

@@ -5,9 +5,9 @@
  */
 export function getTimeDiffInMinutesFromNow(futureTime: string, delayFromNow = 0) {
     const future = new Date(futureTime);
-    const localDate = new Date();
-    localDate.setTime(localDate.getTime() + delayFromNow);
-    const diff = (future.getTime() - localDate.getTime()) / 60000;
+    const now = new Date();
+    now.setTime(now.getTime() + delayFromNow);
+    const diff = (future.getTime() - now.getTime()) / 60000;
     if (Number.isNaN(diff) || diff < 0) {
         throw new Error('Invalid countdown duration. A default one will be used.');
     }

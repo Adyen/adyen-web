@@ -7,7 +7,7 @@ class PayMeElement extends QRLoaderContainer {
     private static defaultDelay = 2000; // ms
 
     formatProps(props) {
-        return {
+        return super.formatProps({
             delay: PayMeElement.defaultDelay,
             countdownTime: PayMeElement.defaultCountdown,
             redirectIntroduction: 'payme.openPayMeApp',
@@ -15,8 +15,8 @@ class PayMeElement extends QRLoaderContainer {
             timeToPay: 'payme.timeToPay',
             buttonLabel: 'payme.redirectButtonLabel',
             instructions: Instructions,
-            ...super.formatProps(props)
-        };
+            ...props
+        });
     }
 }
 
