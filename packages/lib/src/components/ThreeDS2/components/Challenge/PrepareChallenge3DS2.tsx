@@ -11,6 +11,7 @@ import useImage from '../../../../core/Context/useImage';
 import { ActionHandledReturnObject } from '../../../types';
 import { ANALYTICS_ACTION_LOG } from '../../../../core/Analytics/constants';
 import { THREEDS2_FULL } from '../../config';
+import { ErrorObject } from '../../../../core/Errors/types';
 
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
     public static defaultProps = {
@@ -23,7 +24,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         super(props);
 
         if (this.props.token) {
-            const challengeData: ChallengeData = prepareChallengeData({
+            const challengeData: ChallengeData | ErrorObject = prepareChallengeData({
                 token: this.props.token,
                 size: this.props.challengeWindowSize || this.props.size
             });
@@ -31,10 +32,12 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             /**
              * Check the structure of the created challengeData
              */
-            const { acsTransID, messageVersion, threeDSServerTransID } = challengeData.cReqData;
+            const { acsTransID, messageVersion, threeDSServerTransID } = (challengeData as ChallengeData).cReqData;
+
+            const { acsURL } = challengeData as ChallengeData;
 
             /** Missing props */
-            if (!challengeData.acsURL || !acsTransID || !messageVersion || !threeDSServerTransID) {
+            if (!acsURL || !acsTransID || !messageVersion || !threeDSServerTransID) {
                 this.setStatusError({
                     errorInfo:
                         'Challenge Data missing one or more of the following properties (acsURL | acsTransID | messageVersion | threeDSServerTransID)',
@@ -46,7 +49,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             /** All good */
             this.state = {
                 status: 'retrievingChallengeToken',
-                challengeData,
+                challengeData: challengeData as ChallengeData,
                 errorInfo: null
             };
         } else {

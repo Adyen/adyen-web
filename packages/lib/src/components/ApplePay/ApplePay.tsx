@@ -10,6 +10,7 @@ import { preparePaymentRequest } from './payment-request';
 import { resolveSupportedVersion, mapBrands } from './utils';
 import { ApplePayElementProps, ApplePayElementData, ApplePaySessionRequest, OnAuthorizedCallback } from './types';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import { DecodeObject } from '../types';
 
 const latestSupportedVersion = 14;
 
@@ -104,10 +105,13 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
 
         try {
             const response = await httpPost(options, request);
-            const decodedData = base64.decode(response.data);
-            if (!decodedData) reject('Could not decode Apple Pay session');
-            const session = JSON.parse(decodedData as string);
-            resolve(session);
+            const decodedData: DecodeObject = base64.decode(response.data);
+            if (!decodedData.success) {
+                reject('Could not decode Apple Pay session');
+            } else {
+                const session = JSON.parse(decodedData.data);
+                resolve(session);
+            }
         } catch (e) {
             reject('Could not get Apple Pay session');
         }

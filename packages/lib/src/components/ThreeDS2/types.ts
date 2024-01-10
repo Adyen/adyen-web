@@ -82,12 +82,6 @@ type CheckoutThreeDS2Action = {
     authorisationToken: string;
 };
 
-export type DecodeObject = {
-    success: boolean;
-    error?: string;
-    data?: string;
-};
-
 export type ThreeDS2AnalyticsObject = Pick<AnalyticsObject, 'code' | 'errorType' | 'message' | 'type' | 'metadata'> & {
     action: ANALYTICS_ACTION;
 };

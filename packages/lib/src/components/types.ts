@@ -187,3 +187,9 @@ export interface ComponentMethodsRef {
     showValidation?: () => void;
     setStatus?(status: UIElementStatus): void;
 }
+
+export type DecodeObject = {
+    success: boolean;
+    error?: string;
+    data?: string;
+};
