@@ -13,6 +13,7 @@ export default function PaypalButtons({
     onCancel,
     onError,
     onShippingChange,
+    onShippingAddressChange,
     onSubmit,
     isProcessingPayment,
     paypalRef,
@@ -30,7 +31,8 @@ export default function PaypalButtons({
         const configuration = {
             ...(isTokenize && { createBillingAgreement: onSubmit }),
             ...(!isTokenize && { createOrder: onSubmit }),
-            ...(!isTokenize && fundingSource !== 'venmo' && { onShippingChange }),
+            ...(!isTokenize && fundingSource !== 'venmo' && onShippingChange && { onShippingChange }),
+            ...(!isTokenize && fundingSource !== 'venmo' && onShippingAddressChange && { onShippingAddressChange }),
             fundingSource,
             style: getStyle(fundingSource, style),
             onInit,
@@ -40,12 +42,22 @@ export default function PaypalButtons({
             onApprove
         };
 
+        console.log('config', configuration);
+
         const button = paypalRef.Buttons(configuration);
 
         if (button.isEligible()) {
             button.render(buttonRef.current);
         }
     };
+
+    useEffect(() => {
+        if (onShippingChange && onShippingAddressChange) {
+            console.warn(
+                'PayPal - "onShippingChange" and "onShippingAddressChange" are defined. It is recommended to only use "onShippingAddressChange", as "onShippingChange" is getting deprecated'
+            );
+        }
+    }, [onShippingChange, onShippingAddressChange]);
 
     useEffect(() => {
         const { PAYPAL, CREDIT, PAYLATER, VENMO } = paypalRef.FUNDING;

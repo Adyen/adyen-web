@@ -151,6 +151,12 @@ interface PayPalCommonProps {
     onShippingChange?: (data, actions) => void;
 
     /**
+     * While the buyer is on the PayPal site, you can update their shopping cart to reflect the shipping address they chose on PayPal
+     * @see {@link https://developer.paypal.com/sdk/js/reference/#onshippingaddresschange}
+     */
+    onShippingAddressChange?: (data: any, actions: { reject: () => Promise<void> }) => Promise<void>;
+
+    /**
      *  Identifies if the payment is Express.
      *  @defaultValue false
      */

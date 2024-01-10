@@ -162,7 +162,10 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 console.log('paypal onError', error);
             },
 
-            onShippingChange(data, actions) {
+            onShippingAddressChange(data, actions) {
+                console.log(data);
+                console.log('onShippingAddressChange');
+
                 const patch = {
                     pspReference: window.paypalPatchData.pspReference,
                     paymentData: window.paypalPatchData.paymentData,
@@ -172,13 +175,33 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                     }
                 };
 
-                console.log('### onShippingChange', patch, data);
-                if (data.shipping_address.country_code === 'US') {
+                console.log('### onShippingAddressChange', patch, data);
+                if (data.shippingAddress.countryCode === 'US') {
                     return patchPaypalOrder(patch);
                 }
 
                 return actions.reject();
             }
+
+            // onShippingChange(data, actions) {
+            //     console.log('onShippingChange');
+            //
+            //     const patch = {
+            //         pspReference: window.paypalPatchData.pspReference,
+            //         paymentData: window.paypalPatchData.paymentData,
+            //         amount: {
+            //             currency: 'USD',
+            //             value: 20000
+            //         }
+            //     };
+            //
+            //     console.log('### onShippingChange', patch, data);
+            //     if (data.shipping_address.country_code === 'US') {
+            //         return patchPaypalOrder(patch);
+            //     }
+            //
+            //     return actions.reject();
+            // }
         })
         .mount('.paypal-field');
 
