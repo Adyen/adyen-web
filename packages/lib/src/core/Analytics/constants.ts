@@ -33,3 +33,6 @@ export const ANALYTICS_ERROR_CODE_3DS2_TIMEOUT = 'web_705'; // 3DS2 process has 
 
 export const ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_ACSURL = 'web_800'; // Decoded token is missing a valid acsURL property
 export const ANALYTICS_ERROR_CODE_NO_TRANSSTATUS = 'web_801'; // Challenge has resulted in an error (no transStatus could be retrieved by the backend)
+export const ANALYTICS_ERROR_CODE_NO_DETAILS_FOR_FRICTIONLESS = 'web_802'; // callSubmit3DS2Fingerprint has received a response indicating a "frictionless" flow but without a details object
+export const ANALYTICS_ERROR_CODE_NO_COMPONENT_FOR_ACTION = 'web_803'; // callSubmit3DS2Fingerprint cannot find a component to handle the action response
+export const ANALYTICS_ERROR_CODE_NO_ACTION_FOR_CHALLENGE = 'web_804'; // callSubmit3DS2Fingerprint has received a response indicating a "challenge" but without an action object
