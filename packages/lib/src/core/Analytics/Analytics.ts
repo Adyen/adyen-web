@@ -40,7 +40,8 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
     };
 
     const addAnalyticsEvent = (type: ANALYTICS_EVENT, obj: AnalyticsObject) => {
-        eventsQueue.add(`${type}s`, obj);
+        const arrayName = type === ANALYTICS_EVENT_INFO ? type : `${type}s`;
+        eventsQueue.add(`${arrayName}`, obj);
 
         /**
          * The logic is:
