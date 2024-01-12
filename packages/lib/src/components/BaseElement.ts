@@ -7,7 +7,7 @@ import { BaseElementProps, PaymentData } from './types';
 import { RiskData } from '../core/RiskModule/RiskModule';
 import { Resources } from '../core/Context/Resources';
 import { AnalyticsInitialEvent } from '../core/Analytics/types';
-import { ANALYTICS_MOUNTED_STR } from '../core/Analytics/constants';
+import { ANALYTICS_RENDERED_STR } from '../core/Analytics/constants';
 
 class BaseElement<P extends BaseElementProps> {
     public readonly _id = `${this.constructor['type']}-${uuid()}`;
@@ -54,7 +54,7 @@ class BaseElement<P extends BaseElementProps> {
     }
 
     /* eslint-disable-next-line */
-    protected submitAnalytics(type = 'action', obj?) {
+    protected submitAnalytics(analyticsObj?: any) {
         return null;
     }
 
@@ -119,8 +119,11 @@ class BaseElement<P extends BaseElementProps> {
                     flavor: !this.props.isDropin ? 'components' : 'dropin'
                 }).then(() => {
                     // Once the initial analytics set up call has been made...
-                    // ...create an analytics-action "event" declaring that the component has been mounted
-                    this.submitAnalytics(ANALYTICS_MOUNTED_STR);
+                    // ...create an analytics event  declaring that the component has been rendered
+                    // (The dropin will do this itself from DropinComponent once the PM list has rendered)
+                    if (!this.props.isDropin) {
+                        this.submitAnalytics({ type: ANALYTICS_RENDERED_STR });
+                    }
                 });
             }
         }
