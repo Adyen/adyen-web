@@ -11,7 +11,7 @@ import { hasOwnProperty } from '../utils/hasOwnProperty';
 import DropinElement from './Dropin';
 import { CoreOptions } from '../core/types';
 import Core from '../core';
-import { ANALYTICS_MOUNTED_STR, ANALYTICS_SELECTED_STR, ANALYTICS_SUBMIT_STR } from '../core/Analytics/constants';
+import { ANALYTICS_RENDERED_STR, ANALYTICS_SUBMIT_STR } from '../core/Analytics/constants';
 import { AnalyticsInitialEvent } from '../core/Analytics/types';
 
 export class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
@@ -66,7 +66,6 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
      *  In some other cases e.g. 3DS2 components, this function is overridden to allow more specific analytics actions to be created
      */
     /* eslint-disable-next-line */
-    // protected submitAnalytics(type = 'action', obj?) {
     protected submitAnalytics(analyticsObj: any) {
         /** Work out what the component's "type" is:
          * - first check for a dedicated "analyticsType" (currently only applies to custom-cards)
@@ -78,10 +77,9 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         }
 
         switch (analyticsObj.type) {
-            // BaseElement mounted (called once only)
-            // Dropin PM selected
-            case ANALYTICS_MOUNTED_STR:
-            case ANALYTICS_SELECTED_STR: {
+            // Called from BaseElement (when component mounted) or, from DropinComponent (after mounting, when it has finished resolving all the PM promises)
+            // &/or, from DropinComponent when a PM is selected
+            case ANALYTICS_RENDERED_STR: {
                 let storedCardIndicator;
                 // Check if it's a storedCard
                 if (component === 'scheme') {
@@ -94,9 +92,8 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
                 }
 
                 const data = { component, type: analyticsObj.type, ...storedCardIndicator };
-                // console.log('### UIElement::submitAnalytics:: SELECTED data=', data);
 
-                // AnalyticsAction: action: 'event' type:'mounted'|'selected'
+                // AnalyticsAction: action: 'event' type:'rendered'|'selected'
                 this.props.modules?.analytics.createAnalyticsAction({
                     action: 'event',
                     data
