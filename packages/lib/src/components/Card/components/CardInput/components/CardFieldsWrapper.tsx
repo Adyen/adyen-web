@@ -45,6 +45,8 @@ export const CardFieldsWrapper = ({
     setAddressRef,
     partialAddressSchema,
     onAddressLookup,
+    onAddressSelected,
+    addressSearchDebounceMs,
     // For this comp (props passed through from CardInput)
     amount,
     billingAddressRequired,
@@ -161,6 +163,8 @@ export const CardFieldsWrapper = ({
                     iOSFocusedField={iOSFocusedField}
                     onAddressLookup={onAddressLookup}
                     showContextualElement={showContextualElement}
+                    onAddressSelected={onAddressSelected}
+                    addressSearchDebounceMs={addressSearchDebounceMs}
                 />
             )}
 

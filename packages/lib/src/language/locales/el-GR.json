@@ -4,6 +4,7 @@
     "payButton.with": "Πληρωμή %{value} με %{maskedData}",
     "close": "Κλείσιμο",
     "storeDetails": "Αποθήκευση για την επόμενη πληρωμή μου",
+    "readMore": "Ανάγνωση περισσότερων",
     "creditCard.holderName": "Όνομα στην κάρτα",
     "creditCard.holderName.invalid": "Εισαγάγετε το όνομα όπως αναγράφεται στην κάρτα",
     "creditCard.expiryDateField.month": "Μήνας",
@@ -229,6 +230,7 @@
     "ctp.otp.subtitle": "Εισαγάγετε τον κωδικό %@ που στάλθηκε στο %@ για να επαληθεύσετε ότι είστε εσείς.",
     "ctp.otp.saveCookiesCheckbox.label": "Παράβλεψη επαλήθευσης την επόμενη φορά",
     "ctp.otp.saveCookiesCheckbox.information": "Επιλέξτε να απομνημονεύεται στη συσκευή και στο πρόγραμμα περιήγησής σας στα συμμετέχοντα καταστήματα για ταχύτερη ολοκλήρωση της πληρωμής. Δεν συνιστάται για κοινόχρηστες συσκευές.",
+    "ctp.otp.saveCookiesCheckbox.shorterInfo": "Επιλέξτε να απομνημονεύεται στη συσκευή και στο πρόγραμμα περιήγησής σας",
     "ctp.emptyProfile.message": "Δεν υπάρχουν καταχωρισμένες κάρτες σε αυτό το προφίλ Click to Pay",
     "ctp.separatorText": "ή χρησιμοποιήστε το",
     "ctp.cards.title": "Ολοκληρώστε την πληρωμή με το Click to Pay",
@@ -286,5 +288,11 @@
     "ach.bankAccountNumber.label": "Αριθμός λογαριασμού",
     "ach.bankLocationId.label": "Αριθμός δρομολόγησης ABA",
     "dragonpayVoucher.selectField.contextualText.nonBank": "Επιλέξτε τον πάροχό σας",
-    "dragonpayVoucher.selectField.contextualText.bank": "Επιλέξτε την τράπεζά σας"
+    "dragonpayVoucher.selectField.contextualText.bank": "Επιλέξτε την τράπεζά σας",
+    "payme.openPayMeApp": "Ολοκληρώστε την πληρωμή σας στην εφαρμογή PayMe εξουσιοδοτώντας την πληρωμή στην εφαρμογή και περιμένετε την επιβεβαίωση.",
+    "payme.redirectButtonLabel": "Ανοίξτε την εφαρμογή PayMe",
+    "payme.scanQrCode": "Ολοκληρώστε την πληρωμή σας με κωδικό QR",
+    "payme.timeToPay": "Αυτός ο κωδικός QR ισχύει για %@",
+    "payme.instructions.steps": "Ανοίξτε την εφαρμογή PayMe.%@Σκανάρετε τον κωδικό QR για να εξουσιοδοτήσετε την πληρωμή.%@Ολοκληρώστε την πληρωμή στην εφαρμογή και περιμένετε την επιβεβαίωση.",
+    "payme.instructions.footnote": "Μην κλείσετε αυτήν τη σελίδα προτού ολοκληρωθεί η πληρωμή."
 }

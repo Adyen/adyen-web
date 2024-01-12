@@ -4,6 +4,7 @@
     "payButton.with": "Plačajte %{value} z %{maskedData}",
     "close": "Zapri",
     "storeDetails": "Shrani za moje naslednje plačilo",
+    "readMore": "Preberi več",
     "creditCard.holderName": "Ime na kartici",
     "creditCard.holderName.invalid": "Vnesite ime, kot je prikazano na kartici",
     "creditCard.expiryDateField.month": "Mesec",
@@ -229,6 +230,7 @@
     "ctp.otp.subtitle": "Vnesite kodo %@, ki smo jo poslali na %@, da potrdite, da ste to res vi.",
     "ctp.otp.saveCookiesCheckbox.label": "Naslednjič preskoči preverjanje",
     "ctp.otp.saveCookiesCheckbox.information": "Izberite če želite, da se v vaši napravi in brskalniku v sodelujočih trgovinah vaši podatki shranijo za hitrejši zaključek zakupa. Ni priporočljivo za naprave v skupni rabi.",
+    "ctp.otp.saveCookiesCheckbox.shorterInfo": "Izberite, če želite, da se v vaši napravi in brskalniku shranijo vaši podatki",
     "ctp.emptyProfile.message": "V tem profilu Click to Pay ni registriranih nobenih kartic",
     "ctp.separatorText": "ali uporabite",
     "ctp.cards.title": "Dokončajte plačilo s storitvijo Click to Pay",
@@ -286,5 +288,11 @@
     "ach.bankAccountNumber.label": "Številka računa",
     "ach.bankLocationId.label": "Koda banke ABA",
     "dragonpayVoucher.selectField.contextualText.nonBank": "Izberite svojega ponudnika",
-    "dragonpayVoucher.selectField.contextualText.bank": "Izberite svojo banko"
+    "dragonpayVoucher.selectField.contextualText.bank": "Izberite svojo banko",
+    "payme.openPayMeApp": "Plačilo dokončajte v aplikaciji PayMe tako, da ga odobrite v aplikaciji in počakate na potrditev.",
+    "payme.redirectButtonLabel": "Odprite aplikacijo PayMe",
+    "payme.scanQrCode": "Izvedite plačilo s kodo QR",
+    "payme.timeToPay": "Ta koda QR velja za %@",
+    "payme.instructions.steps": "Odprite aplikacijo PayMe.%@Skenirajte kodo QR, da odobrite plačilo.%@Zaključite plačilo v aplikaciji in počakajte na potrditev.",
+    "payme.instructions.footnote": "Ne zapirajte te strani, preden je plačilo zaključeno."
 }

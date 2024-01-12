@@ -1,6 +1,7 @@
 // Count how many iframes have successfully been configured and, if its all of them, call callback function
 
 import { CbObjOnAdditionalSF } from '../../types';
+import { CSFThisObject } from '../types';
 
 // First, object, param comes from partial implementation
 /**
@@ -10,7 +11,7 @@ import { CbObjOnAdditionalSF } from '../../types';
  *
  * @param pFeedbackObj -
  */
-export function handleIframeConfigFeedback({ csfState, csfCallbacks }, isConfigured, pFeedbackObj): boolean {
+export function handleIframeConfigFeedback({ csfState, csfCallbacks }: CSFThisObject, isConfigured, pFeedbackObj): boolean {
     csfState.iframeConfigCount += 1;
 
     if (window._b$dl)

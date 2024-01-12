@@ -4,8 +4,94 @@ import { ISrcSdkLoader } from './sdks/SrcSdkLoader';
 import VisaSdk from './sdks/VisaSdk';
 import MastercardSdk from './sdks/MastercardSdk';
 import { IdentityLookupParams, SchemesConfiguration } from './types';
-import { SrciIdentityLookupResponse, SrcProfile } from './sdks/types';
+import { SrciCheckoutResponse, SrciIdentityLookupResponse, SrcProfile } from './sdks/types';
 import SrciError from './sdks/SrciError';
+import ShopperCard from '../models/ShopperCard';
+
+test('should be able to tweak the configuration to store the cookie', () => {
+    const visa = mock<VisaSdk>();
+    const schemesConfig = mock<SchemesConfiguration>();
+    const sdkLoader = mock<ISrcSdkLoader>();
+    sdkLoader.load.mockResolvedValue([visa]);
+
+    const service = new ClickToPayService(schemesConfig, sdkLoader, 'test');
+    expect(service.storeCookies).toBe(false);
+
+    service.updateStoreCookiesConsent(true);
+    expect(service.storeCookies).toBe(true);
+
+    service.updateStoreCookiesConsent(false);
+    expect(service.storeCookies).toBe(false);
+});
+
+test('should pass the complianceSettings if the cookie is set to be stored', async () => {
+    const checkoutResponseMock = mock<SrciCheckoutResponse>();
+    checkoutResponseMock.dcfActionCode = 'COMPLETE';
+
+    const profileFromVisaSrcSystem: SrcProfile = {
+        srcCorrelationId: '123456',
+        profiles: [
+            {
+                maskedCards: [
+                    {
+                        srcDigitalCardId: 'xxxx',
+                        panLastFour: '8902',
+                        dateOfCardLastUsed: '2019-09-28T08:10:02.312Z',
+                        paymentCardDescriptor: 'visa',
+                        panExpirationMonth: '12',
+                        panExpirationYear: '2020',
+                        digitalCardData: {
+                            descriptorName: 'Visa',
+                            artUri: 'https://image.com/visa'
+                        },
+                        tokenId: '9w8e8e'
+                    }
+                ]
+            }
+        ]
+    };
+
+    const visa = mock<VisaSdk>();
+    // @ts-ignore Mocking readonly property
+    visa.schemeName = 'visa';
+    visa.checkout.mockResolvedValue(checkoutResponseMock);
+    visa.init.mockResolvedValue();
+    visa.isRecognized.mockResolvedValue({ recognized: true, idTokens: ['id-token'] });
+    visa.getSrcProfile.mockResolvedValue(profileFromVisaSrcSystem);
+
+    const sdkLoader = mock<ISrcSdkLoader>();
+    const schemesConfig = mock<SchemesConfiguration>();
+
+    const shopperCard = mock<ShopperCard>();
+    shopperCard.srcDigitalCardId = 'xxxx';
+    shopperCard.srcCorrelationId = 'zzzz';
+    shopperCard.scheme = 'visa';
+    Object.defineProperty(shopperCard, 'isDcfPopupEmbedded', {
+        get: jest.fn(() => false)
+    });
+
+    sdkLoader.load.mockResolvedValue([visa]);
+
+    const service = new ClickToPayService(schemesConfig, sdkLoader, 'test');
+    service.updateStoreCookiesConsent(true);
+
+    await service.initialize();
+    await service.checkout(shopperCard);
+
+    expect(visa.checkout).toHaveBeenCalledTimes(1);
+    expect(visa.checkout).toHaveBeenCalledWith({
+        complianceSettings: {
+            complianceResources: [
+                {
+                    complianceType: 'REMEMBER_ME',
+                    uri: ''
+                }
+            ]
+        },
+        srcCorrelationId: 'zzzz',
+        srcDigitalCardId: 'xxxx'
+    });
+});
 
 test('should pass the correct configuration to the respective scheme SDKs', async () => {
     const visa = mock<VisaSdk>();

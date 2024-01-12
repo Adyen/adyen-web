@@ -4,6 +4,7 @@
     "payButton.with": "%{value} fizetése a következővel: %{maskedData}",
     "close": "Bezárás",
     "storeDetails": "Mentés a következő fizetéshez",
+    "readMore": "Bővebben",
     "creditCard.holderName": "A kártyán szereplő név",
     "creditCard.holderName.invalid": "Adja meg a kártyán szereplő nevet",
     "creditCard.expiryDateField.month": "Hónap",
@@ -229,6 +230,7 @@
     "ctp.otp.subtitle": "Írja be a kódot, amit a(z) %@ küldött %@ részére ellenőrzés céljából.",
     "ctp.otp.saveCookiesCheckbox.label": "Ellenőrzés kihagyása a következő alkalommal",
     "ctp.otp.saveCookiesCheckbox.information": "Jelölje be, hogy a résztvevő üzletek a gyorsabb fizetés érdekében emlékezzenek az eszközre és a böngészőre. Megosztott eszközök esetén nem ajánlott.",
+    "ctp.otp.saveCookiesCheckbox.shorterInfo": "Jelölje be, hogy a rendszer emlékezzen az eszközre és a böngészőre",
     "ctp.emptyProfile.message": "Ebben a Click to Pay-profilban nincs regisztrált kártya",
     "ctp.separatorText": "vagy használja a következőt",
     "ctp.cards.title": "Fizetés Click to Pay használatával",
@@ -286,5 +288,11 @@
     "ach.bankAccountNumber.label": "Számlaszám",
     "ach.bankLocationId.label": "ABA-irányítószám",
     "dragonpayVoucher.selectField.contextualText.nonBank": "Szolgáltató kiválasztása",
-    "dragonpayVoucher.selectField.contextualText.bank": "Bank kiválasztása"
+    "dragonpayVoucher.selectField.contextualText.bank": "Bank kiválasztása",
+    "payme.openPayMeApp": "A fizetésnek a PayMe alkalmazásban való engedélyezésével hajtsa végre a fizetést, és várja meg a visszaigazolást.",
+    "payme.redirectButtonLabel": "PayMe alkalmazás megnyitása",
+    "payme.scanQrCode": "Fizetés végrehajtása QR-kóddal",
+    "payme.timeToPay": "A QR-kód ennyi ideig érvényes: %@",
+    "payme.instructions.steps": "Nyissa meg a PayMe alkalmazást.%@A fizetés engedélyezéséhez olvassa be a QR-kódot.%@Hajtsa végre a fizetést az alkalmazásban, és várja meg a visszaigazolást.",
+    "payme.instructions.footnote": "A fizetés befejezése előtt ne zárja be ezt az oldalt"
 }

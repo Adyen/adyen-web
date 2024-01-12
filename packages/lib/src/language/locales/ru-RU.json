@@ -4,6 +4,7 @@
     "payButton.with": "Оплатить %{value} %{maskedData}",
     "close": "Закрыть",
     "storeDetails": "Сохранить для следующего платежа",
+    "readMore": "Подробнее",
     "creditCard.holderName": "Имя на карте",
     "creditCard.holderName.invalid": "Введите имя, как оно указано на карте",
     "creditCard.expiryDateField.month": "Месяц",
@@ -227,6 +228,7 @@
     "ctp.otp.subtitle": "Для подтверждения своей личности введите код %@, отправленный %@.",
     "ctp.otp.saveCookiesCheckbox.label": "Пропустить подтверждение в следующий раз",
     "ctp.otp.saveCookiesCheckbox.information": "Чтобы в соответствующих магазинах запомнили ваше устройство и браузер, выберите эту опцию. Это позволит быстрее оформлять заказы. Не рекомендуется на устройствах совместного использования.",
+    "ctp.otp.saveCookiesCheckbox.shorterInfo": "Выберите, чтобы запомнили ваше устройство и браузер",
     "ctp.emptyProfile.message": "В данном профиле Click to Pay нет зарегистрированных карт",
     "ctp.separatorText": "или используйте",
     "ctp.cards.title": "Оформите оплату с помощью Click to Pay",
@@ -284,5 +286,11 @@
     "ach.bankAccountNumber.label": "Номер счета",
     "ach.bankLocationId.label": "Маршрутный номер ABA",
     "dragonpayVoucher.selectField.contextualText.nonBank": "Выберите своего оператора",
-    "dragonpayVoucher.selectField.contextualText.bank": "Выберите банк"
+    "dragonpayVoucher.selectField.contextualText.bank": "Выберите банк",
+    "payme.openPayMeApp": "Для завершения оплаты разрешите ее в приложении PayMe и дождитесь подтверждения.",
+    "payme.redirectButtonLabel": "Открыть приложение PayMe",
+    "payme.scanQrCode": "Завершить платеж с помощью QR-кода",
+    "payme.timeToPay": "Данный QR-код действителен в течение %@",
+    "payme.instructions.steps": "Откройте приложение PayMe.%@Отсканируйте QR-код, чтобы разрешить платеж.%@Завершите платеж в приложении и дождитесь подтверждения.",
+    "payme.instructions.footnote": "Не закрывайте эту страницу до завершения платежа"
 }

@@ -1,5 +1,7 @@
 import postMessageToIframe from '../utils/iframes/postMessageToIframe';
 import getIframeContentWin from '../utils/iframes/getIframeContentWin';
+import { CSFThisObject } from '../types';
+import { SFFieldType } from '../../types';
 
 /**
  * UTIL TO BROADCAST TO ALL IFRAMES AT ONCE
@@ -10,16 +12,16 @@ import getIframeContentWin from '../utils/iframes/getIframeContentWin';
  *
  * @param pDataObj -
  */
-export function postMessageToAllIframes({ csfState, csfConfig }, pDataObj: object): void {
+export function postMessageToAllIframes({ csfState, csfConfig }: CSFThisObject, pDataObj: object): boolean {
     const objKeys: string[] = Object.keys(pDataObj || {});
     if (!objKeys.length) {
         // pDataObj is an object with the 'special' key(s) that represent the reason for making this postMessage
         // without it/them there is no reason to postMessage
-        return;
+        return false;
     }
 
     const securedFieldKeys: string[] = Object.keys(csfState.securedFields);
-    securedFieldKeys.forEach(pFieldType => {
+    securedFieldKeys.forEach((pFieldType: SFFieldType) => {
         const dataObj: object = {
             txVariant: csfState.type,
             fieldType: pFieldType,
@@ -33,4 +35,5 @@ export function postMessageToAllIframes({ csfState, csfConfig }, pDataObj: objec
 
         postMessageToIframe(dataObj, getIframeContentWin(csfState, pFieldType), csfConfig.loadingContext);
     });
+    return true;
 }

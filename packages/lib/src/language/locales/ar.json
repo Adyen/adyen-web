@@ -4,6 +4,7 @@
     "payButton.with": "ادفع %{value} باستخدام %{maskedData}",
     "close": "إغلاق",
     "storeDetails": "حفظ لمدفوعاتي القادمة",
+    "readMore": "اقرأ المزيد",
     "creditCard.holderName": "الاسم على البطاقة",
     "creditCard.holderName.invalid": "أدخل الاسم كما هو موضح على البطاقة",
     "creditCard.expiryDateField.month": "شهر",
@@ -230,6 +231,7 @@
     "ctp.otp.subtitle": "أدخل الرمز %@ الذي أرسلناه إلى ٪@ للتحقق من هويتك.",
     "ctp.otp.saveCookiesCheckbox.label": "تخطي التحقق في المرة القادمة",
     "ctp.otp.saveCookiesCheckbox.information": "حدد حفظ البيانات على جهازك ومتصفحك في المتاجر المشاركة لإتمام عملية الدفع بشكل أسرع. لا يوصى به للأجهزة المشتركة.",
+    "ctp.otp.saveCookiesCheckbox.shorterInfo": "حدد تذكرني على جهازك ومتصفحك.",
     "ctp.emptyProfile.message": "لا توجد بطاقات مسجلة في هذا الملف التعريفي على Click to Pay",
     "ctp.separatorText": "أو استخدم",
     "ctp.cards.title": "أكمل الدفع باستخدام بطاقة Click to Pay",
@@ -287,5 +289,11 @@
     "ach.bankAccountNumber.label": "رقم الحساب",
     "ach.bankLocationId.label": "رقم توجيه ABA",
     "dragonpayVoucher.selectField.contextualText.nonBank": "حدد مقدم الخدمة",
-    "dragonpayVoucher.selectField.contextualText.bank": "حدد البنك الذي تتعامل معه"
+    "dragonpayVoucher.selectField.contextualText.bank": "حدد البنك الذي تتعامل معه",
+    "payme.openPayMeApp": "أكمل الدفع في تطبيق PayMe من خلال الإذن بالدفع في التطبيق وانتظر التأكيد.",
+    "payme.redirectButtonLabel": "افتح تطبيق PayMe",
+    "payme.scanQrCode": "أكمل الدفع باستخدام رمز الاستجابة السريعة",
+    "payme.timeToPay": "رمز الاستجابة السريعة هذا صالح لـ %@",
+    "payme.instructions.steps": "افتح تطبيق PayMe. %@امسح رمز الاستجابة السريعة ضوئيًا للإذن بالدفع. %@أكمل عملية الدفع في التطبيق وانتظر التأكيد.",
+    "payme.instructions.footnote": "يرجى عدم إغلاق هذه الصفحة قبل إتمام الدفع"
 }

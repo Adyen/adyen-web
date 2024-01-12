@@ -71,6 +71,10 @@ class Session {
                 this.configuration = { ...response.configuration };
             }
 
+            if (response.sessionData) {
+                this.updateSessionData(response.sessionData);
+            }
+
             return response;
         });
     }

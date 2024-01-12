@@ -4,6 +4,7 @@
     "payButton.with": "Maksa %{value} käyttäen maksutapaa %{maskedData}",
     "close": "Sulje",
     "storeDetails": "Tallenna seuraavaa maksuani varten",
+    "readMore": "Lue lisää",
     "creditCard.holderName": "Nimi kortilla",
     "creditCard.holderName.invalid": "Syötä nimi sellaisena kuin se on kortissa",
     "creditCard.expiryDateField.month": "Kuukausi",
@@ -229,6 +230,7 @@
     "ctp.otp.subtitle": "Syötä koodi, jonka %@ lähetti osoitteeseen %@ vahvistaaksesi, että kyseessä olet sinä.",
     "ctp.otp.saveCookiesCheckbox.label": "Ohita vahvistus seuraavalla kerralla",
     "ctp.otp.saveCookiesCheckbox.information": "Valitse, että sinut muistetaan laitteellasi ja selaimessa osallistuvissa myymälöissä, jotta voit maksaa nopeammin. Ei suositella jaetuilla laitteilla.",
+    "ctp.otp.saveCookiesCheckbox.shorterInfo": "Valitse, jotta sinut muistetaan laitteellasi ja selaimessa",
     "ctp.emptyProfile.message": "Tähän Click to Pay -profiiliin ei ole rekisteröity kortteja",
     "ctp.separatorText": "tai käytä",
     "ctp.cards.title": "Suorita maksu Click to Paylla",
@@ -283,5 +285,11 @@
     "ach.bankAccountNumber.label": "Tilinumero",
     "ach.bankLocationId.label": "ABA-reititysnumero",
     "dragonpayVoucher.selectField.contextualText.nonBank": "Valitse toimittajasi",
-    "dragonpayVoucher.selectField.contextualText.bank": "Valitse pankkisi"
+    "dragonpayVoucher.selectField.contextualText.bank": "Valitse pankkisi",
+    "payme.openPayMeApp": "Viimeistele maksu PayMe-sovelluksessa hyväksymällä maksu sovelluksessa, ja odota vahvistusta.",
+    "payme.redirectButtonLabel": "Avaa PayMe-sovellus",
+    "payme.scanQrCode": "Viimeistele maksusi QR-koodilla",
+    "payme.timeToPay": "Tämä QR-koodi on voimassa %@",
+    "payme.instructions.steps": "Avaa PayMe-sovellus.%@Hyväksy maksu skannaamalla QR-koodi.%@Viimeistele maksu sovelluksessa, ja odota vahvistusta.",
+    "payme.instructions.footnote": "Älä sulje tätä sivua ennen kuin maksu on suoritettu"
 }

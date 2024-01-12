@@ -4,6 +4,7 @@
     "payButton.with": "Pay %{value} with %{maskedData}",
     "close": "Close",
     "storeDetails": "Save for my next payment",
+    "readMore": "Read more",
     "creditCard.holderName": "Name on card",
     "creditCard.holderName.invalid": "Enter name as shown on card",
     "creditCard.expiryDateField.month": "Month",
@@ -231,6 +232,7 @@
     "ctp.otp.subtitle": "Enter the code %@ sent to %@ to verify it‘s you.",
     "ctp.otp.saveCookiesCheckbox.label": "Skip verification next time",
     "ctp.otp.saveCookiesCheckbox.information": "Select to be remembered on your device and browser at participating stores for faster checkout. Not recommended for shared devices.",
+    "ctp.otp.saveCookiesCheckbox.shorterInfo": "Select to be remembered on your device and browser",
     "ctp.emptyProfile.message": "No cards registered in this Click to Pay profile",
     "ctp.separatorText": "or use",
     "ctp.cards.title": "Complete payment with Click to Pay",
@@ -288,5 +290,11 @@
     "ach.bankAccountNumber.label": "Account number",
     "ach.bankLocationId.label": "ABA routing number",
     "dragonpayVoucher.selectField.contextualText.nonBank": "Select your provider",
-    "dragonpayVoucher.selectField.contextualText.bank": "Select your bank"
+    "dragonpayVoucher.selectField.contextualText.bank": "Select your bank",
+    "payme.openPayMeApp": "Complete your payment in the PayMe app by authorizing the payment in the app and wait for the confirmation.",
+    "payme.redirectButtonLabel": "Open PayMe app",
+    "payme.scanQrCode": "Complete your payment by QR code",
+    "payme.timeToPay": "This QR code is valid for %@",
+    "payme.instructions.steps": "Open the PayMe app.%@Scan the QR code to authorize the payment.%@Complete the payment in the app and wait for confirmation.",
+    "payme.instructions.footnote": "Please do not close this page before the payment is completed"
 }

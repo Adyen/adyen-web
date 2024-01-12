@@ -1,4 +1,5 @@
 import { SFFeedbackObj, CbObjOnBinValue } from '../../types';
+import { CSFThisObject } from '../types';
 
 interface DestructuredFeedbackObj {
     binValue?: string;
@@ -12,7 +13,7 @@ interface DestructuredFeedbackObj {
  *
  * @param pFeedbackObj -
  */
-export function handleBinValue({ csfState, csfCallbacks }, pFeedbackObj: SFFeedbackObj): void {
+export function handleBinValue({ csfState, csfCallbacks }: CSFThisObject, pFeedbackObj: SFFeedbackObj): void {
     const { binValue, encryptedBin, uuid }: DestructuredFeedbackObj = pFeedbackObj;
 
     const callbacksObj: CbObjOnBinValue = { binValue, type: csfState.type };

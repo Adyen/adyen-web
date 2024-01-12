@@ -4,6 +4,7 @@
     "payButton.with": "Zapłać %{value} za pomocą %{maskedData}",
     "close": "Zamknij",
     "storeDetails": "Zapisz na potrzeby następnej płatności",
+    "readMore": "Czytaj więcej",
     "creditCard.holderName": "Imię i nazwisko na karcie",
     "creditCard.holderName.invalid": "Wpisz imię i nazwisko w takim formacie, jak na karcie",
     "creditCard.expiryDateField.month": "Miesiąc",
@@ -229,6 +230,7 @@
     "ctp.otp.subtitle": "Wprowadź kod %@ wysłany na adres %@, aby potwierdzić swoją tożsamość.",
     "ctp.otp.saveCookiesCheckbox.label": "Następnym razem pomiń weryfikację",
     "ctp.otp.saveCookiesCheckbox.information": "Wybierz opcję zapamiętywania na urządzeniu i w przeglądarce w sklepach uczestniczących w programie, aby przyspieszyć realizację transakcji. Niezalecane dla współużytkowanych urządzeń.",
+    "ctp.otp.saveCookiesCheckbox.shorterInfo": "Wybierz, aby zapamiętać dane logowania na Twoim urządzeniu i przeglądarce",
     "ctp.emptyProfile.message": "W tym profilu Click to Pay nie zarejestrowano żadnych kart",
     "ctp.separatorText": "lub przypadków jej użycia",
     "ctp.cards.title": "Dokończ płatność za pomocą funkcji Click to Pay",
@@ -286,5 +288,11 @@
     "ach.bankAccountNumber.label": "Numer rachunku",
     "ach.bankLocationId.label": "Kod bankowy ABA Routing Number",
     "dragonpayVoucher.selectField.contextualText.nonBank": "Wybierz dostawcę",
-    "dragonpayVoucher.selectField.contextualText.bank": "Wybierz swój bank"
+    "dragonpayVoucher.selectField.contextualText.bank": "Wybierz swój bank",
+    "payme.openPayMeApp": "Dokończ płatność w aplikacji PayMe, autoryzując płatność w aplikacji, i poczekaj na potwierdzenie.",
+    "payme.redirectButtonLabel": "Otwórz aplikację PayMe",
+    "payme.scanQrCode": "Dokończ płatność za pomocą kodu QR",
+    "payme.timeToPay": "Okres ważności kodu QR: %@",
+    "payme.instructions.steps": "Otwórz aplikację PayMe.%@Zeskanuj kod QR, aby autoryzować płatność.%@Dokończ płatność w aplikacji i poczekaj na potwierdzenie.",
+    "payme.instructions.footnote": "Nie zamykaj tej strony, dopóki płatność nie zostanie zakończona"
 }

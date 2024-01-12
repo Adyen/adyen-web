@@ -10,16 +10,18 @@ import { MockReactApp } from './MockReactApp';
 import getTranslationFile from '../../config/getTranslation';
 import { searchFunctionExample } from '../../utils';
 
+const onlyShowCard = false;
+
 const showComps = {
     clickToPay: true,
     storedCard: true,
     card: true,
     cardWithInstallments: true,
+    cardInReact: true,
     bcmcCard: true,
     avsCard: true,
     avsPartialCard: true,
     addressLookup: true,
-    cardInReact: true,
     kcpCard: true
 };
 
@@ -49,7 +51,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     });
 
     // Stored Card
-    if (showComps.storedCard) {
+    if (!onlyShowCard && showComps.storedCard) {
         if (checkout.paymentMethodsResponse.storedPaymentMethods && checkout.paymentMethodsResponse.storedPaymentMethods.length > 0) {
             const storedCardData = checkout.paymentMethodsResponse.storedPaymentMethods[2];
 
@@ -67,21 +69,28 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             // }).mount('.storedcard-field');
         }
     }
-    //
-    if (showComps.card) {
-        const card = new Card({
-            core: checkout,
-            challengeWindowSize: '01',
-            _disableClickToPay: true
-            // hasHolderName: true,
-            // holderNameRequired: true,
-            // maskSecurityCode: true,
-            // enableStoreDetails: true
-        }).mount('.card-field');
+
+    if (onlyShowCard || showComps.card) {
+        window.card = checkout
+            .create('card', {
+                challengeWindowSize: '01',
+                _disableClickToPay: true,
+                // hasHolderName: true,
+                // holderNameRequired: true,
+                // maskSecurityCode: true,
+                // enableStoreDetails: true
+                onError: obj => {
+                    console.log('### Cards::onError:: obj=', obj);
+                },
+                onBinLookup: obj => {
+                    console.log('### Cards::onBinLookup:: obj=', obj);
+                }
+            })
+            .mount('.card-field');
     }
 
     // Credit card with installments
-    if (showComps.cardWithInstallments) {
+    if (!onlyShowCard && showComps.cardWithInstallments) {
         window.cardWithInstallments = new Card({
             core: checkout,
             _disableClickToPay: true,
@@ -111,18 +120,18 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     //
     // Card mounted in a React app
-    if (showComps.cardInReact) {
+    if (!onlyShowCard && showComps.cardInReact) {
         window.cardReact = new Card({ core: checkout });
         MockReactApp(window, 'cardReact', document.querySelector('.react-card-field'), false);
     }
 
     // Bancontact card
-    if (showComps.bcmcCard) {
+    if (!onlyShowCard && showComps.bcmcCard) {
         window.bancontact = new Bancontact({ core: checkout }).mount('.bancontact-field');
     }
 
     // Credit card with AVS
-    if (showComps.avsCard) {
+    if (!onlyShowCard && showComps.avsCard) {
         window.cardAvs = new Card({
             core: checkout,
             // type: 'scheme',
@@ -158,7 +167,16 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         }).mount('.card-avs-field');
     }
 
-    if (showComps.avsPartialCard) {
+    if (!onlyShowCard && showComps.addressLookup) {
+        window.addressLookupCard = new Card({
+            core: checkout,
+            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
+            billingAddressRequired: true,
+            onAddressLookup: searchFunctionExample
+        }).mount('.card-address-lookup-field');
+    }
+
+    if (!onlyShowCard && showComps.avsPartialCard) {
         window.avsPartialCard = new Card({
             core: checkout,
             // type: 'scheme',
@@ -172,17 +190,8 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         }).mount('.card-avs-partial-field');
     }
 
-    if (showComps.addressLookup) {
-        window.addressLookupCard = new Card({
-            core: checkout,
-            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
-            billingAddressRequired: true,
-            onAddressLookup: searchFunctionExample
-        }).mount('.card-address-lookup-field');
-    }
-
     // Credit card with KCP Authentication
-    if (showComps.kcpCard) {
+    if (!onlyShowCard && showComps.kcpCard) {
         window.kcpCard = new Card({
             core: checkout,
             // type: 'scheme',
@@ -196,7 +205,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         }).mount('.card-kcp-field');
     }
 
-    if (showComps.clickToPay) {
+    if (!onlyShowCard && showComps.clickToPay) {
         /**
          * Make sure that the initialization values are being set in the /paymentMethods response,
          * as part of the 'scheme' configuration object

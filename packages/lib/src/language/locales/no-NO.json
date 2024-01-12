@@ -4,6 +4,7 @@
     "payButton.with": "Betal %{value} med %{maskedData}",
     "close": "Lukk",
     "storeDetails": "Lagre til min neste betaling",
+    "readMore": "Les mer",
     "creditCard.holderName": "Navn på kortet",
     "creditCard.holderName.invalid": "Skriv inn navnet som vist på kortet",
     "creditCard.expiryDateField.month": "Måned",
@@ -229,6 +230,7 @@
     "ctp.otp.subtitle": "Tast inn koden vi sendte til %@, for å verifisere at det er deg.",
     "ctp.otp.saveCookiesCheckbox.label": "Hopp over verifisering neste gang",
     "ctp.otp.saveCookiesCheckbox.information": "Velg for å bli husket på enheten og i nettleseren din i deltakende butikker for raskere betaling. Anbefales ikke for delte enheter.",
+    "ctp.otp.saveCookiesCheckbox.shorterInfo": "Velg for å bli husket på enheten og i nettleseren din",
     "ctp.emptyProfile.message": "Ingen kort er registrert i denne Click to Pay-profilen",
     "ctp.separatorText": "eller bruk",
     "ctp.cards.title": "Fullfør betalingen med Click to Pay",
@@ -283,5 +285,11 @@
     "ach.bankAccountNumber.label": "Kontonummer",
     "ach.bankLocationId.label": "ABA-dirigeringsnummer",
     "dragonpayVoucher.selectField.contextualText.nonBank": "Velg din leverandør",
-    "dragonpayVoucher.selectField.contextualText.bank": "Velg din bank"
+    "dragonpayVoucher.selectField.contextualText.bank": "Velg din bank",
+    "payme.openPayMeApp": "Fullfør betalingen i PayMe-appen ved å godkjenne betalingen i appen og vente på bekreftelse.",
+    "payme.redirectButtonLabel": "Åpne PayMe-appen",
+    "payme.scanQrCode": "Fullfør betalingen via QR-kode",
+    "payme.timeToPay": "Denne QR-koden er gyldig i %@",
+    "payme.instructions.steps": "Åpne PayMe-appen.%@Skann QR-koden for å autorisere betalingen.%@Fullfør betalingen i appen, og vent på bekreftelsen.",
+    "payme.instructions.footnote": "Ikke lukk denne siden før betalingen er fullført"
 }

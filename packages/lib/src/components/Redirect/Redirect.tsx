@@ -5,6 +5,7 @@ import RedirectShopper from './components/RedirectShopper';
 import RedirectButton from '../internal/RedirectButton';
 import { TxVariants } from '../tx-variants';
 import { RedirectConfiguration } from './types';
+import collectBrowserInfo from '../../utils/browserInfo';
 
 class RedirectElement extends UIElement<RedirectConfiguration> {
     public static type = TxVariants.redirect;
@@ -17,7 +18,8 @@ class RedirectElement extends UIElement<RedirectConfiguration> {
         return {
             paymentMethod: {
                 type: this.type
-            }
+            },
+            browserInfo: this.browserInfo
         };
     }
 
@@ -25,8 +27,8 @@ class RedirectElement extends UIElement<RedirectConfiguration> {
         return true;
     }
 
-    get icon() {
-        return this.resources.getImage()(this.props.type);
+    get browserInfo() {
+        return collectBrowserInfo();
     }
 
     render() {

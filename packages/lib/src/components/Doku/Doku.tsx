@@ -44,10 +44,6 @@ export class DokuElement extends UIElement<VoucherConfiguration> {
         };
     }
 
-    get icon() {
-        return this.resources.getImage()(this.props.type);
-    }
-
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
