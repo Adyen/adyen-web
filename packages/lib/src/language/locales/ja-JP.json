@@ -120,6 +120,7 @@
     "donateButton": "寄付する",
     "notNowButton": "今はしない",
     "thanksForYourSupport": "ご支援いただきありがとうございます。",
+    "resultMessages.preauthorized": "詳細が保存されました",
     "preauthorizeWith": "次で事前認証する：",
     "confirmPreauthorization": "事前承認を確認する",
     "confirmPurchase": "購入を確認する",

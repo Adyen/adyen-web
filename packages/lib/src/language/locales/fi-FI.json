@@ -120,6 +120,7 @@
     "donateButton": "Lahjoita",
     "notNowButton": "Ei nyt",
     "thanksForYourSupport": "Kiitos tuestasi!",
+    "resultMessages.preauthorized": "Tiedot tallennettu",
     "preauthorizeWith": "Ennkkolupa käyttäjän kanssa",
     "confirmPreauthorization": "Vahvista ennakkolupa",
     "confirmPurchase": "Vahvista hankinta",
