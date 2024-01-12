@@ -39,8 +39,8 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                 };
 
                 // AnalyticsAction: action: 'event' type:'rendered'
-                this.props.modules?.analytics.createAnalyticsAction({
-                    action: 'event',
+                this.props.modules?.analytics.createAnalyticsEvent({
+                    event: 'info',
                     data
                 });
             }
