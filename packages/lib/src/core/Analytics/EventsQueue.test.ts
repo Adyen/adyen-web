@@ -12,8 +12,8 @@ describe('CAEventsQueue', () => {
     });
 
     test('adds event to the queue', () => {
-        queue.add('events', task1);
-        expect(queue.getQueue().events.length).toBe(1);
+        queue.add('info', task1);
+        expect(queue.getQueue().info.length).toBe(1);
     });
 
     test('adds error to the queue', () => {
@@ -25,7 +25,7 @@ describe('CAEventsQueue', () => {
         queue.run('checkoutAttemptId');
 
         expect(queue.getQueue().logs.length).toBe(0);
-        expect(queue.getQueue().events.length).toBe(0);
+        expect(queue.getQueue().info.length).toBe(0);
         expect(queue.getQueue().errors.length).toBe(0);
     });
 });

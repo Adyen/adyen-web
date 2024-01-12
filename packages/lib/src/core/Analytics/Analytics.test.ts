@@ -5,7 +5,7 @@ import { PaymentAmount } from '../../types';
 import { createAnalyticsObject } from './utils';
 import wait from '../../utils/wait';
 import { DEFAULT_DEBOUNCE_TIME_MS } from '../../components/internal/Address/utils';
-import { ANALYTICS_ACTION } from './types';
+import { ANALYTICS_EVENT } from './types';
 
 jest.mock('../Services/analytics/collect-id');
 jest.mock('../Services/analytics/log-event');
@@ -24,7 +24,7 @@ const event = {
 };
 
 const analyticsEventObj = {
-    action: 'event' as ANALYTICS_ACTION,
+    event: 'info' as ANALYTICS_EVENT,
     component: 'cardComponent',
     type: 'Focus',
     target: 'PAN input'
@@ -46,9 +46,8 @@ describe('Analytics initialisation and event queue', () => {
 
     test('Creates an Analytics module with defaultProps', () => {
         const analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount });
-        expect(analytics.send).not.toBe(null);
+        expect(analytics.setUp).not.toBe(null);
         expect(analytics.getCheckoutAttemptId).not.toBe(null);
-        expect(analytics.sendAnalyticsActions).not.toBe(null);
         expect(analytics.getEnabled).not.toBe(null);
         expect(analytics.getEnabled()).toBe(true);
         expect(collectIdPromiseMock).toHaveLength(0);
@@ -57,7 +56,7 @@ describe('Analytics initialisation and event queue', () => {
     test('Should not fire any calls if analytics is disabled', () => {
         const analytics = Analytics({ analytics: { enabled: false }, loadingContext: '', locale: '', clientKey: '', amount });
 
-        analytics.send(event);
+        analytics.setUp(event);
         expect(collectIdPromiseMock).not.toHaveBeenCalled();
         expect(logEventPromiseMock).not.toHaveBeenCalled();
     });
@@ -65,7 +64,7 @@ describe('Analytics initialisation and event queue', () => {
     test('Will not call the collectId endpoint if telemetry is disabled, but will call the logEvent (analytics pixel)', () => {
         const analytics = Analytics({ analytics: { telemetry: false }, loadingContext: '', locale: '', clientKey: '', amount });
         expect(collectIdPromiseMock).not.toHaveBeenCalled();
-        analytics.send(event);
+        analytics.setUp(event);
         expect(collectIdPromiseMock).not.toHaveBeenCalled();
 
         expect(logEventPromiseMock).toHaveBeenCalledWith({ ...event });
@@ -73,7 +72,7 @@ describe('Analytics initialisation and event queue', () => {
 
     test('Calls the collectId endpoint by default, adding expected fields', async () => {
         const analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount });
-        analytics.send(event);
+        analytics.setUp(event);
 
         expect(collectIdPromiseMock).toHaveBeenCalled();
         await Promise.resolve(); // wait for the next tick
@@ -88,7 +87,7 @@ describe('Analytics initialisation and event queue', () => {
         };
         const analytics = Analytics({ analytics: { payload }, loadingContext: '', locale: '', clientKey: '', amount });
 
-        analytics.send(event);
+        analytics.setUp(event);
 
         expect(collectIdPromiseMock).toHaveLength(0);
     });
@@ -105,22 +104,22 @@ describe('Analytics initialisation and event queue', () => {
         // no message prop for events
         expect(aObj.message).toBe(undefined);
 
-        analytics.createAnalyticsAction({ action: 'event', data: aObj });
+        analytics.createAnalyticsEvent({ event: 'info', data: aObj });
 
         // event object should not be sent immediately
-        expect(analytics.getEventsQueue().getQueue().events.length).toBe(1);
+        expect(analytics.getEventsQueue().getQueue().info.length).toBe(1);
     });
 
     test('Analytics events queue sends error object', async () => {
         const analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount });
 
         const evObj = createAnalyticsObject(analyticsEventObj);
-        analytics.createAnalyticsAction({ action: 'event', data: evObj });
+        analytics.createAnalyticsEvent({ event: 'info', data: evObj });
 
-        expect(analytics.getEventsQueue().getQueue().events.length).toBe(1);
+        expect(analytics.getEventsQueue().getQueue().info.length).toBe(1);
 
         const aObj = createAnalyticsObject({
-            action: 'error',
+            event: 'error',
             component: 'threeDS2Fingerprint',
             code: 'web_704',
             errorType: 'APIError',
@@ -132,18 +131,18 @@ describe('Analytics initialisation and event queue', () => {
         expect(aObj.errorType).toEqual('APIError');
         expect(aObj.message).not.toBe(undefined);
 
-        analytics.createAnalyticsAction({ action: 'error', data: aObj });
+        analytics.createAnalyticsEvent({ event: 'error', data: aObj });
 
         // error object should be sent immediately, sending any events as well
         expect(analytics.getEventsQueue().getQueue().errors.length).toBe(0);
-        expect(analytics.getEventsQueue().getQueue().events.length).toBe(0);
+        expect(analytics.getEventsQueue().getQueue().info.length).toBe(0);
     });
 
     test('Analytics events queue sends log object', async () => {
         const analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount });
 
         const aObj = createAnalyticsObject({
-            action: 'log',
+            event: 'log',
             component: 'scheme',
             type: 'Submit'
         });
@@ -155,7 +154,7 @@ describe('Analytics initialisation and event queue', () => {
         // no message prop for a log with type 'Submit'
         expect(aObj.message).toBe(undefined);
 
-        analytics.createAnalyticsAction({ action: 'log', data: aObj });
+        analytics.createAnalyticsEvent({ event: 'log', data: aObj });
 
         // log object should be sent almost immediately (after a debounce interval)
         await wait(DEFAULT_DEBOUNCE_TIME_MS);
