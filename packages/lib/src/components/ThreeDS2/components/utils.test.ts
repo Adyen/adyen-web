@@ -1,4 +1,7 @@
-import { decodeAndParseToken, encodeObject, handleErrorCode, encodeBase64URL } from './utils';
+import { decodeAndParseToken, encodeObject, encodeBase64URL } from './utils';
+import { ErrorObject } from '../../../core/Errors/types';
+import { ThreeDS2Token } from '../types';
+import { NOT_BASE64_ERROR } from '../../../utils/base64';
 
 const encodedToken =
     'eyJ0aHJlZURTTWV0aG9kTm90aWZpY2F0aW9uVVJMIjoiaHR0cHM6XC9cL2NoZWNrb3V0c2hvcHBlci10ZXN0LmFkeWVuLmNvbVwvY2hlY2tvdXRzaG9wcGVyXC90aHJlZURTTWV0aG9kTm90aWZpY2F0aW9uLnNodG1sP29yaWdpbktleT1wdWIudjIuODcxNDI4OTE0NTM2ODQ0NS5hSFIwY0RvdkwyeHZZMkZzYUc5emREb3pNREl3LmdRMUtpejZPTm1SNlBla0ZEZkZ0VUw0VW9YQkxxLVNfcEQtdUtnZ0UtOXMiLCJ0aHJlZURTTWV0aG9kVXJsIjoiaHR0cHM6XC9cL3BhbC10ZXN0LmFkeWVuLmNvbVwvdGhyZWVkczJzaW11bGF0b3JcL2Fjc1wvc3RhcnRNZXRob2Quc2h0bWwiLCJ0aHJlZURTU2VydmVyVHJhbnNJRCI6IjE1ZTQ4OTQyLWJlOGYtNDYxNy1iYTc1LWI1ODdlMzBlOTM2MiJ9';
@@ -11,7 +14,9 @@ describe('decodeAndParseToken', () => {
     });
 
     test('should return false if the token is incorrect', () => {
-        expect(decodeAndParseToken('124343434')).toBe(false);
+        const res: ThreeDS2Token | ErrorObject = decodeAndParseToken('124343434');
+        expect((res as ErrorObject).success).toBe(false);
+        expect((res as ErrorObject).error).toEqual(NOT_BASE64_ERROR);
     });
 });
 
@@ -27,32 +32,6 @@ describe('encodeResult', () => {
     test('should return a string if everything is passed correctly', () => {
         expect(typeof encodeObject({ threeDSCompInd: 'Y' })).toBe('string');
         expect(typeof encodeObject({ transStatus: 'Y' })).toBe('string');
-    });
-});
-
-describe('handleErrorCode', () => {
-    const errorCodeResultEmpty = {
-        errorCode: undefined,
-        message: 'An unknown error occurred'
-    };
-
-    const errorCodeUnknown = {
-        errorCode: '100',
-        message: 'An unknown error occurred'
-    };
-
-    test('should return an object containing unknown when pased with no errorCode or unknown error code', () => {
-        expect(handleErrorCode(undefined)).toEqual(errorCodeResultEmpty);
-        expect(handleErrorCode('100')).toEqual(errorCodeUnknown);
-    });
-
-    const errorCodeTimeout = {
-        errorCode: 'timeout',
-        message: 'ThreeDS2 timed out'
-    };
-
-    test('should return an object containing a proper error message when passed a known error code', () => {
-        expect(handleErrorCode('timeout')).toEqual(errorCodeTimeout);
     });
 });
 
