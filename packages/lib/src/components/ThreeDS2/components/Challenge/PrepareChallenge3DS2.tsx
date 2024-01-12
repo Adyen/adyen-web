@@ -9,7 +9,7 @@ import './challenge.scss';
 import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
 import useImage from '../../../../core/Context/useImage';
 import { ActionHandledReturnObject } from '../../../types';
-import { ANALYTICS_ACTION_LOG } from '../../../../core/Analytics/constants';
+import { ANALYTICS_EVENT_LOG } from '../../../../core/Analytics/constants';
 import { THREEDS2_FULL } from '../../config';
 import { ErrorObject } from '../../../../core/Errors/types';
 
@@ -65,14 +65,14 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
     };
 
     public onActionHandled = (rtnObj: ActionHandledReturnObject) => {
-        this.submitAnalytics({ action: ANALYTICS_ACTION_LOG, type: THREEDS2_FULL, message: rtnObj.actionDescription });
+        this.submitAnalytics({ event: ANALYTICS_EVENT_LOG, type: THREEDS2_FULL, message: rtnObj.actionDescription });
 
         this.props.onActionHandled(rtnObj);
     };
 
     public onFormSubmit = (msg: string) => {
         this.submitAnalytics({
-            action: ANALYTICS_ACTION_LOG,
+            event: ANALYTICS_EVENT_LOG,
             type: THREEDS2_FULL,
             message: msg
         } as ThreeDS2AnalyticsObject);
