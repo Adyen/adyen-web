@@ -80,8 +80,8 @@ export default function callSubmit3DS2Fingerprint({ data }): void {
 
             /**
              * We have an action but do we have a way to handle it?
+             * TODO - check logs: do we ever *not* have an actionHandler?
              */
-            // TODO - check logs: does this ever happen?
             if (!actionHandler) {
                 console.debug('Handled Error::callSubmit3DS2Fingerprint::FAILED:: no actionHandler');
 
