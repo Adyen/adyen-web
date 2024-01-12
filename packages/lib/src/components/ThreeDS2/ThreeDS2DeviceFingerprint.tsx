@@ -6,7 +6,7 @@ import callSubmit3DS2Fingerprint from './callSubmit3DS2Fingerprint';
 import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
 import { ActionHandledReturnObject, AnalyticsModule } from '../types';
 import { THREEDS2_FINGERPRINT_ERROR } from './config';
-import { ANALYTICS_ACTION_ERROR, ANALYTICS_API_ERROR, ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_PAYMENT_DATA } from '../../core/Analytics/constants';
+import { ANALYTICS_EVENT_ERROR, ANALYTICS_API_ERROR, ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_PAYMENT_DATA } from '../../core/Analytics/constants';
 import { ThreeDS2AnalyticsObject } from './types';
 
 export interface ThreeDS2DeviceFingerprintProps {
@@ -36,7 +36,7 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
     private callSubmit3DS2Fingerprint = callSubmit3DS2Fingerprint.bind(this); // New 3DS2 flow
 
     protected submitAnalytics = (aObj: ThreeDS2AnalyticsObject) => {
-        this.props.analytics.createAnalyticsAction({ action: aObj.action, data: { component: ThreeDS2DeviceFingerprint.type, ...aObj } });
+        this.props.analytics.createAnalyticsEvent({ event: aObj.event, data: { component: ThreeDS2DeviceFingerprint.type, ...aObj } });
     };
 
     onComplete(state) {
@@ -57,7 +57,7 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
 
             // TODO - check logs to see if this *ever* happens
             this.submitAnalytics({
-                action: ANALYTICS_ACTION_ERROR,
+                event: ANALYTICS_EVENT_ERROR,
                 code: ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_PAYMENT_DATA,
                 errorType: ANALYTICS_API_ERROR,
                 message: `${THREEDS2_FINGERPRINT_ERROR}: Missing 'paymentData' property from threeDS2 action`

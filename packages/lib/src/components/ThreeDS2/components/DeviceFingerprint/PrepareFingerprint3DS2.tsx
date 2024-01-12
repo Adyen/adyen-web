@@ -4,7 +4,7 @@ import { createFingerprintResolveData, createOldFingerprintResolveData, handleEr
 import { PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State } from './types';
 import { FingerPrintData, ResultObject, ThreeDS2AnalyticsObject } from '../../types';
 import { ActionHandledReturnObject } from '../../../types';
-import { ANALYTICS_ACTION_LOG } from '../../../../core/Analytics/constants';
+import { ANALYTICS_EVENT_LOG } from '../../../../core/Analytics/constants';
 import { THREEDS2_FULL } from '../../config';
 
 class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State> {
@@ -48,13 +48,13 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
 
     public onActionHandled = (rtnObj: ActionHandledReturnObject) => {
         // Leads to an "iframe loaded" log action
-        this.submitAnalytics({ action: ANALYTICS_ACTION_LOG, type: THREEDS2_FULL, message: rtnObj.actionDescription });
+        this.submitAnalytics({ event: ANALYTICS_EVENT_LOG, type: THREEDS2_FULL, message: rtnObj.actionDescription });
         this.props.onActionHandled(rtnObj);
     };
 
     public onFormSubmit = (msg: string) => {
         this.submitAnalytics({
-            action: ANALYTICS_ACTION_LOG,
+            event: ANALYTICS_EVENT_LOG,
             type: THREEDS2_FULL,
             message: msg
         } as ThreeDS2AnalyticsObject);
