@@ -1,8 +1,8 @@
 import LogEvent from '../Services/analytics/log-event';
 import CollectId from '../Services/analytics/collect-id';
 import EventsQueue, { EventsQueueModule } from './EventsQueue';
-import { ANALYTICS_ACTION, AnalyticsInitialEvent, AnalyticsObject, AnalyticsProps, CreateAnalyticsActionObject } from './types';
-import { ANALYTICS_ACTION_ERROR, ANALYTICS_ACTION_EVENT, ANALYTICS_ACTION_LOG, ANALYTICS_EVENT_TIMER_INTERVAL, ANALYTICS_PATH } from './constants';
+import { ANALYTICS_EVENT, AnalyticsInitialEvent, AnalyticsObject, AnalyticsProps, CreateAnalyticsEventObject } from './types';
+import { ANALYTICS_EVENT_ERROR, ANALYTICS_EVENT_INFO, ANALYTICS_EVENT_LOG, ANALYTICS_INFO_TIMER_INTERVAL, ANALYTICS_PATH } from './constants';
 import { debounce } from '../../components/internal/Address/utils';
 import { AnalyticsModule } from '../../components/types';
 import { createAnalyticsObject } from './utils';
@@ -32,24 +32,24 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
     const collectId = CollectId({ analyticsContext, clientKey, locale, amount, analyticsPath: ANALYTICS_PATH });
     const eventsQueue: EventsQueueModule = EventsQueue({ analyticsContext, clientKey, analyticsPath: ANALYTICS_PATH });
 
-    const sendAnalyticsActions = () => {
+    const sendAnalyticsEvents = () => {
         if (capturedCheckoutAttemptId) {
             return eventsQueue.run(capturedCheckoutAttemptId);
         }
         return Promise.resolve(null);
     };
 
-    const addAnalyticsAction = (type: ANALYTICS_ACTION, obj: AnalyticsObject) => {
+    const addAnalyticsEvent = (type: ANALYTICS_EVENT, obj: AnalyticsObject) => {
         eventsQueue.add(`${type}s`, obj);
 
         /**
          * The logic is:
-         *  - events are stored until a log or error comes along,
-         *  but, if after a set time, no other analytics-action has come along then we send the events anyway
+         *  - info events are stored until a log or error comes along,
+         *  but, if after a set time, no other analytics event (log or error) has come along then we send the info events anyway
          */
-        if (type === ANALYTICS_ACTION_EVENT) {
+        if (type === ANALYTICS_EVENT_INFO) {
             clearTimeout(sendEventsTimerId);
-            sendEventsTimerId = setTimeout(sendAnalyticsActions, ANALYTICS_EVENT_TIMER_INTERVAL);
+            sendEventsTimerId = setTimeout(sendAnalyticsEvents, ANALYTICS_INFO_TIMER_INTERVAL);
         }
 
         /**
@@ -58,11 +58,11 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
          *  - logs also get sent straightaway... but... tests with the 3DS2 process show that many logs can happen almost at the same time,
          *  so instead of making (up to 4) sequential api calls we "batch" them using debounce
          */
-        if (type === ANALYTICS_ACTION_LOG || type === ANALYTICS_ACTION_ERROR) {
-            clearTimeout(sendEventsTimerId); // clear any time that might be about to dispatch the events array
+        if (type === ANALYTICS_EVENT_LOG || type === ANALYTICS_EVENT_ERROR) {
+            clearTimeout(sendEventsTimerId); // clear any timer that might be about to dispatch the info events array
 
-            const debounceFn = type === ANALYTICS_ACTION_ERROR ? fn => fn : debounce;
-            debounceFn(sendAnalyticsActions)();
+            const debounceFn = type === ANALYTICS_EVENT_ERROR ? fn => fn : debounce;
+            debounceFn(sendAnalyticsEvents)();
         }
     };
 
@@ -99,14 +99,14 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
         // Expose getter for testing purposes
         getEventsQueue: () => eventsQueue,
 
-        createAnalyticsAction: ({ action, data }: CreateAnalyticsActionObject) => {
+        createAnalyticsEvent: ({ event, data }: CreateAnalyticsEventObject) => {
             const aObj: AnalyticsObject = createAnalyticsObject({
-                action,
+                event,
                 ...data
             });
-            // console.log('### Analytics::createAnalyticsAction:: action=', action, ' aObj=', aObj);
+            // console.log('### Analytics::createAnalyticsEvent:: event=', event, ' aObj=', aObj);
 
-            addAnalyticsAction(action, aObj);
+            addAnalyticsEvent(event, aObj);
         },
 
         getEnabled: () => props.enabled

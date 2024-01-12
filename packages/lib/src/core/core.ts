@@ -149,8 +149,8 @@ class Core {
 
         if (action.type) {
             // AnalyticsAction: action: 'log' type:'action'
-            this.modules.analytics.createAnalyticsAction({
-                action: 'log',
+            this.modules.analytics.createAnalyticsEvent({
+                event: 'log',
                 data: {
                     component: `${action.type}${action.subtype ?? ''}`,
                     type: ANALYTICS_ACTION_STR,
