@@ -2,6 +2,7 @@
     "payButton": "Plătiți",
     "payButton.redirecting": "Se redirecționează...",
     "payButton.with": "Plătiți %{value} cu %{maskedData}",
+    "payButton.saveDetails": "Salvați detaliile",
     "close": "Închidere",
     "storeDetails": "Salvează pentru următoarea mea plată",
     "readMore": "Citiți mai mult",

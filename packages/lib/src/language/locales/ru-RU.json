@@ -2,6 +2,7 @@
     "payButton": "Заплатить",
     "payButton.redirecting": "Перенаправление...",
     "payButton.with": "Оплатить %{value} %{maskedData}",
+    "payButton.saveDetails": "Сохранить данные",
     "close": "Закрыть",
     "storeDetails": "Сохранить для следующего платежа",
     "readMore": "Подробнее",

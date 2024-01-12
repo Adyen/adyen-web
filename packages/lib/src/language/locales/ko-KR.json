@@ -2,6 +2,7 @@
     "payButton": "결제",
     "payButton.redirecting": "리디렉션 중...",
     "payButton.with": "%{maskedData}(으)로 %{value} 결제",
+    "payButton.saveDetails": "세부 정보 저장",
     "close": "닫기",
     "storeDetails": "다음 결제를 위해 이 수단 저장",
     "readMore": "자세히 보기",

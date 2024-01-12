@@ -2,6 +2,7 @@
     "payButton": "دفع",
     "payButton.redirecting": "جارِ إعادة التوجيه...",
     "payButton.with": "ادفع %{value} باستخدام %{maskedData}",
+    "payButton.saveDetails": "حفظ التفاصيل",
     "close": "إغلاق",
     "storeDetails": "حفظ لمدفوعاتي القادمة",
     "readMore": "اقرأ المزيد",

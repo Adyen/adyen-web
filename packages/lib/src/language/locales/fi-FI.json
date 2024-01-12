@@ -2,6 +2,7 @@
     "payButton": "Maksa",
     "payButton.redirecting": "Uudelleenohjataan...",
     "payButton.with": "Maksa %{value} käyttäen maksutapaa %{maskedData}",
+    "payButton.saveDetails": "Tallenna tiedot",
     "close": "Sulje",
     "storeDetails": "Tallenna seuraavaa maksuani varten",
     "readMore": "Lue lisää",

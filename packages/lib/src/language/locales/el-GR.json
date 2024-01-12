@@ -2,6 +2,7 @@
     "payButton": "Πληρωμή",
     "payButton.redirecting": "Ανακατεύθυνση...",
     "payButton.with": "Πληρωμή %{value} με %{maskedData}",
+    "payButton.saveDetails": "Αποθήκευση στοιχείων",
     "close": "Κλείσιμο",
     "storeDetails": "Αποθήκευση για την επόμενη πληρωμή μου",
     "readMore": "Ανάγνωση περισσότερων",

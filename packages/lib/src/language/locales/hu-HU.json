@@ -2,6 +2,7 @@
     "payButton": "Fizetés",
     "payButton.redirecting": "Átirányítás...",
     "payButton.with": "%{value} fizetése a következővel: %{maskedData}",
+    "payButton.saveDetails": "Részletek mentése",
     "close": "Bezárás",
     "storeDetails": "Mentés a következő fizetéshez",
     "readMore": "Bővebben",

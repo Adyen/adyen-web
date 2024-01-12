@@ -2,6 +2,7 @@
     "payButton": "Payer",
     "payButton.redirecting": "Redirection...",
     "payButton.with": "Payer %{value} avec %{maskedData}",
+    "payButton.saveDetails": "Enregistrer les détails",
     "close": "Fermer",
     "storeDetails": "Sauvegarder pour mon prochain paiement",
     "readMore": "Lire la suite",

@@ -2,6 +2,7 @@
     "payButton": "支付",
     "payButton.redirecting": "正在重定向...",
     "payButton.with": "使用 %{maskedData} 支付 %{value}",
+    "payButton.saveDetails": "保存详情",
     "close": "关闭",
     "storeDetails": "保存以便下次支付使用",
     "readMore": "阅读更多",

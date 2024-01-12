@@ -2,6 +2,7 @@
     "payButton": "Zaplatiť",
     "payButton.redirecting": "Prebieha presmerovanie...",
     "payButton.with": "Zaplatiť %{value} pomocou %{maskedData}",
+    "payButton.saveDetails": "Uložiť údaje",
     "close": "Zavrieť",
     "storeDetails": "Uložiť pre moju ďalšiu platbu",
     "readMore": "Prečítajte si viac",

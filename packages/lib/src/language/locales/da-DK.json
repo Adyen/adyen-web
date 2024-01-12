@@ -2,6 +2,7 @@
     "payButton": "Betal",
     "payButton.redirecting": "Omdirigerer...",
     "payButton.with": "Betal %{value} med %{maskedData}",
+    "payButton.saveDetails": "Gem oplysninger",
     "close": "Luk",
     "storeDetails": "Gem til min næste betaling",
     "readMore": "Læs mere",

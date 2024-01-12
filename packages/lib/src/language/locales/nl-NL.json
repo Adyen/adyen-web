@@ -2,6 +2,7 @@
     "payButton": "Betaal",
     "payButton.redirecting": "U wordt doorverwezen...",
     "payButton.with": "Betaal %{value} met %{maskedData}",
+    "payButton.saveDetails": "Gegevens opslaan",
     "close": "Sluiten",
     "storeDetails": "Bewaar voor mijn volgende betaling",
     "readMore": "Verder lezen",

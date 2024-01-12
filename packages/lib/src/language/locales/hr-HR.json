@@ -2,6 +2,7 @@
     "payButton": "Platiti",
     "payButton.redirecting": "Preusmjeravanje...",
     "payButton.with": "Platite iznos od %{value} uporabom stavke %{maskedData}",
+    "payButton.saveDetails": "Spremi pojedinosti",
     "close": "Zatvori",
     "storeDetails": "Pohrani za moje sljedeće plaćanje",
     "readMore": "Opširnije",

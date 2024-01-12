@@ -2,6 +2,7 @@
     "payButton": "支払う",
     "payButton.redirecting": "リダイレクトしています...",
     "payButton.with": "%{value}を%{maskedData}で支払う",
+    "payButton.saveDetails": "詳細を保存",
     "close": "終了",
     "storeDetails": "次回のお支払いのため詳細を保存",
     "readMore": "詳細を確認",
