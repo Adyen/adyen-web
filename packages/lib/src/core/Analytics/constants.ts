@@ -1,10 +1,10 @@
 export const ANALYTICS_PATH = 'v3/analytics';
 
-export const ANALYTICS_EVENT_TIMER_INTERVAL = 10000;
+export const ANALYTICS_INFO_TIMER_INTERVAL = 10000; // ANALYTICS_EVENT_TIMER_INTERVAL
 
-export const ANALYTICS_ACTION_LOG = 'log';
-export const ANALYTICS_ACTION_ERROR = 'error';
-export const ANALYTICS_ACTION_EVENT = 'event';
+export const ANALYTICS_EVENT_LOG = 'log'; // ANALYTICS_ACTION_LOG
+export const ANALYTICS_EVENT_ERROR = 'error'; // ANALYTICS_ACTION_ERROR
+export const ANALYTICS_EVENT_INFO = 'info'; // ANALYTICS_ACTION_EVENT
 
 export const ANALYTICS_ACTION_STR = 'Action';
 export const ANALYTICS_SUBMIT_STR = 'Submit';

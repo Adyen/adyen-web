@@ -50,9 +50,9 @@ export interface AnalyticsObject {
     brand?: string;
 }
 
-export type ANALYTICS_ACTION = 'log' | 'error' | 'event';
+export type ANALYTICS_EVENT = 'log' | 'error' | 'info';
 
-export type CreateAnalyticsObject = Omit<AnalyticsObject, 'timestamp'> & { action: ANALYTICS_ACTION };
+export type CreateAnalyticsObject = Omit<AnalyticsObject, 'timestamp'> & { event: ANALYTICS_EVENT };
 
 export type AnalyticsInitialEvent = {
     containerWidth: number;
@@ -70,11 +70,11 @@ export type AnalyticsConfig = {
     loadingContext?: string;
 };
 
-export type CreateAnalyticsActionData = Omit<AnalyticsObject, 'timestamp'>;
+export type CreateAnalyticsEventData = Omit<AnalyticsObject, 'timestamp'>;
 
-export type CreateAnalyticsActionObject = {
-    action: ANALYTICS_ACTION;
-    data: CreateAnalyticsActionData;
+export type CreateAnalyticsEventObject = {
+    event: ANALYTICS_EVENT;
+    data: CreateAnalyticsEventData;
 };
 
 export type EventQueueProps = Pick<AnalyticsConfig, 'analyticsContext' | 'clientKey'> & { analyticsPath: string };

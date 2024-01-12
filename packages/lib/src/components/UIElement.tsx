@@ -94,8 +94,8 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
                 const data = { component, type: analyticsObj.type, ...storedCardIndicator };
 
                 // AnalyticsAction: action: 'event' type:'rendered'|'selected'
-                this.props.modules?.analytics.createAnalyticsAction({
-                    action: 'event',
+                this.props.modules?.analytics.createAnalyticsEvent({
+                    event: 'info',
                     data
                 });
                 break;
@@ -104,8 +104,8 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
             // PM pay button pressed - AnalyticsAction: action: 'log' type:'submit'
             default: {
                 // PM pay button pressed - AnalyticsAction: action: 'log' type:'submit'
-                this.props.modules?.analytics.createAnalyticsAction({
-                    action: 'log',
+                this.props.modules?.analytics.createAnalyticsEvent({
+                    event: 'log',
                     data: { component, type: ANALYTICS_SUBMIT_STR, target: 'payButton', message: 'Shopper clicked pay' }
                 });
             }
