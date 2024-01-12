@@ -1,4 +1,4 @@
-import { ANALYTICS_ACTION, AnalyticsObject } from '../../core/Analytics/types';
+import { ANALYTICS_EVENT, AnalyticsObject } from '../../core/Analytics/types';
 
 /**
  * See
@@ -83,5 +83,5 @@ type CheckoutThreeDS2Action = {
 };
 
 export type ThreeDS2AnalyticsObject = Pick<AnalyticsObject, 'code' | 'errorType' | 'message' | 'type' | 'metadata'> & {
-    action: ANALYTICS_ACTION;
+    event: ANALYTICS_EVENT;
 };

@@ -8,8 +8,8 @@ import { isValidHttpUrl } from '../../../../utils/isValidURL';
 import { THREEDS2_FULL, THREEDS2_FINGERPRINT, THREEDS2_FINGERPRINT_ERROR, THREEDS2_NUM, MISSING_TOKEN_IN_ACTION_MSG } from '../../config';
 import { ActionHandledReturnObject } from '../../../types';
 import {
-    ANALYTICS_ACTION_ERROR,
-    ANALYTICS_ACTION_LOG,
+    ANALYTICS_EVENT_ERROR,
+    ANALYTICS_EVENT_LOG,
     ANALYTICS_API_ERROR,
     ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_TOKEN,
     ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_THREEDSMETHODURL,
@@ -58,13 +58,13 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
 
     public onActionHandled = (rtnObj: ActionHandledReturnObject) => {
         // Leads to an "iframe loaded" log action
-        this.submitAnalytics({ action: ANALYTICS_ACTION_LOG, type: THREEDS2_FULL, message: rtnObj.actionDescription });
+        this.submitAnalytics({ event: ANALYTICS_EVENT_LOG, type: THREEDS2_FULL, message: rtnObj.actionDescription });
         this.props.onActionHandled(rtnObj);
     };
 
     public onFormSubmit = (msg: string) => {
         this.submitAnalytics({
-            action: ANALYTICS_ACTION_LOG,
+            event: ANALYTICS_EVENT_LOG,
             type: THREEDS2_FULL,
             message: msg
         } as ThreeDS2AnalyticsObject);
@@ -177,7 +177,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                 //  - decoded token is missing one or more of the following properties (threeDSMethodNotificationURL | postMessageDomain | threeDSServerTransID)
                 //  - or, token could not be base64 decoded &/or JSON.parsed
                 const analyticsErrorObject: ThreeDS2AnalyticsObject = {
-                    action: ANALYTICS_ACTION_ERROR,
+                    event: ANALYTICS_EVENT_ERROR,
                     message: finalResObject.message,
                     metadata: resultObj,
                     ...errorTypeAndCode
@@ -189,7 +189,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
 
             /** The fingerprint process is completed one way or another */
             const analyticsLogObject: ThreeDS2AnalyticsObject = {
-                action: ANALYTICS_ACTION_LOG,
+                event: ANALYTICS_EVENT_LOG,
                 type: THREEDS2_FULL,
                 message: `${THREEDS2_NUM} fingerprinting has completed`,
                 metadata: resultObj

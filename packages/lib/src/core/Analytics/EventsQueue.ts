@@ -3,7 +3,7 @@ import { AnalyticsObject, EventQueueProps } from './types';
 
 interface CAActions {
     channel: 'Web';
-    events: AnalyticsObject[];
+    info: AnalyticsObject[];
     errors: AnalyticsObject[];
     logs: AnalyticsObject[];
 }
@@ -17,13 +17,13 @@ export interface EventsQueueModule {
 const EventsQueue = ({ analyticsContext, clientKey, analyticsPath }: EventQueueProps): EventsQueueModule => {
     const caActions: CAActions = {
         channel: 'Web',
-        events: [],
+        info: [],
         errors: [],
         logs: []
     };
 
     const runQueue = (checkoutAttemptId: string): Promise<any> => {
-        if (!caActions.events.length && !caActions.logs.length && !caActions.errors.length) {
+        if (!caActions.info.length && !caActions.logs.length && !caActions.errors.length) {
             return Promise.resolve(null);
         }
 
@@ -54,7 +54,7 @@ const EventsQueue = ({ analyticsContext, clientKey, analyticsPath }: EventQueueP
         run: (checkoutAttemptId: string) => {
             const promise = runQueue(checkoutAttemptId);
 
-            caActions.events = [];
+            caActions.info = [];
             caActions.errors = [];
             caActions.logs = [];
 

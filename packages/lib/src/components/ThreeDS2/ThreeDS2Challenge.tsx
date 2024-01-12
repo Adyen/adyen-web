@@ -7,7 +7,7 @@ import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import Language from '../../language';
 import { ActionHandledReturnObject, AnalyticsModule } from '../types';
-import { ANALYTICS_API_ERROR, ANALYTICS_ACTION_ERROR, ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_PAYMENT_DATA } from '../../core/Analytics/constants';
+import { ANALYTICS_API_ERROR, ANALYTICS_EVENT_ERROR, ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_PAYMENT_DATA } from '../../core/Analytics/constants';
 import { ThreeDS2AnalyticsObject } from './types';
 
 export interface ThreeDS2ChallengeProps {
@@ -36,7 +36,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
     };
 
     protected submitAnalytics = (aObj: ThreeDS2AnalyticsObject) => {
-        this.props.analytics.createAnalyticsAction({ action: aObj.action, data: { component: ThreeDS2Challenge.type, ...aObj } });
+        this.props.analytics.createAnalyticsEvent({ event: aObj.event, data: { component: ThreeDS2Challenge.type, ...aObj } });
     };
 
     onComplete(state) {
@@ -57,7 +57,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
             this.props.onError({ errorCode: 'threeds2.challenge', message: `No ${dataTypeForError} received. Challenge cannot proceed` });
 
             this.submitAnalytics({
-                action: ANALYTICS_ACTION_ERROR,
+                event: ANALYTICS_EVENT_ERROR,
                 code: ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_PAYMENT_DATA,
                 errorType: ANALYTICS_API_ERROR,
                 message: `${THREEDS2_CHALLENGE_ERROR}: Missing 'paymentData' property from threeDS2 action`

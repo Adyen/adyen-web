@@ -13,8 +13,8 @@ import { ErrorObject } from '../../../../core/Errors/types';
 import { THREEDS2_CHALLENGE, THREEDS2_CHALLENGE_ERROR, THREEDS2_FULL, THREEDS2_NUM, MISSING_TOKEN_IN_ACTION_MSG } from '../../config';
 import { isValidHttpUrl } from '../../../../utils/isValidURL';
 import {
-    ANALYTICS_ACTION_ERROR,
-    ANALYTICS_ACTION_LOG,
+    ANALYTICS_EVENT_ERROR,
+    ANALYTICS_EVENT_LOG,
     ANALYTICS_API_ERROR,
     ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_TOKEN,
     ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_OTHER_PROPS,
@@ -68,14 +68,14 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
     };
 
     public onActionHandled = (rtnObj: ActionHandledReturnObject) => {
-        this.submitAnalytics({ action: ANALYTICS_ACTION_LOG, type: THREEDS2_FULL, message: rtnObj.actionDescription });
+        this.submitAnalytics({ event: ANALYTICS_EVENT_LOG, type: THREEDS2_FULL, message: rtnObj.actionDescription });
 
         this.props.onActionHandled(rtnObj);
     };
 
     public onFormSubmit = (msg: string) => {
         this.submitAnalytics({
-            action: ANALYTICS_ACTION_LOG,
+            event: ANALYTICS_EVENT_LOG,
             type: THREEDS2_FULL,
             message: msg
         } as ThreeDS2AnalyticsObject);
@@ -98,7 +98,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             if (!hasValidAcsURL) {
                 // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
                 this.submitAnalytics({
-                    action: ANALYTICS_ACTION_ERROR,
+                    event: ANALYTICS_EVENT_ERROR,
                     code: ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_ACSURL,
                     errorType: ANALYTICS_API_ERROR,
                     message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing a valid acsURL property`,
@@ -131,7 +131,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
                 // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
                 this.submitAnalytics({
-                    action: ANALYTICS_ACTION_ERROR,
+                    event: ANALYTICS_EVENT_ERROR,
                     code: ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_OTHER_PROPS,
                     errorType: ANALYTICS_API_ERROR,
                     message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)`
@@ -151,7 +151,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
             // Send error to analytics endpoint // TODO - check logs to see if the base64 decoding errors *ever* happen
             this.submitAnalytics({
-                action: ANALYTICS_ACTION_ERROR,
+                event: ANALYTICS_EVENT_ERROR,
                 code: errorCode,
                 errorType: ANALYTICS_API_ERROR,
                 message: `${THREEDS2_CHALLENGE_ERROR}: ${errorMsg}` // can be: 'Missing "token" property from threeDS2 action', 'not base64', 'malformed URI sequence' or 'Could not JSON parse token'
@@ -184,14 +184,14 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 // Challenge process has timed out,
                 // or, It's an error reported by the backend 'cos no transStatus could be retrieved // TODO - check logs to see if this *ever* happens
                 analyticsObject = {
-                    action: ANALYTICS_ACTION_ERROR,
+                    event: ANALYTICS_EVENT_ERROR,
                     message: finalResObject.message,
                     metadata: resultObj,
                     ...errorTypeAndCode
                 };
             } else {
                 analyticsObject = {
-                    action: ANALYTICS_ACTION_LOG,
+                    event: ANALYTICS_EVENT_LOG,
                     type: THREEDS2_FULL,
                     message: `${THREEDS2_NUM} challenge has completed`,
                     metadata: resultObj
