@@ -2,6 +2,7 @@ import { PaymentAmount, PaymentMethod, ShopperDetails } from '../../types';
 import UIElement from '../UIElement';
 import { UIElementProps } from '../types';
 import { SUPPORTED_LOCALES } from './config';
+import PaypalElement from './Paypal';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare global {
@@ -147,6 +148,7 @@ interface PayPalCommonProps {
 
     /**
      * @see {@link https://developer.paypal.com/docs/business/javascript-sdk/javascript-sdk-reference/#onshippingchange}
+     * @deprecated - Use 'onShippingAddressChange' instead, as described in the PayPal docs
      */
     onShippingChange?: (data, actions) => void;
 
@@ -174,12 +176,29 @@ export interface PayPalConfig {
     intent?: Intent;
 }
 
-export interface PayPalElementProps extends PayPalCommonProps, UIElementProps {
+export interface PayPalElementProps extends Omit<PayPalCommonProps, 'onShippingAddressChange'>, UIElementProps {
     onSubmit?: (state: any, element: UIElement) => void;
     onComplete?: (state, element?: UIElement) => void;
     onAdditionalDetails?: (state: any, element: UIElement) => void;
     onCancel?: (state: any, element: UIElement) => void;
     onError?: (state: any, element?: UIElement) => void;
+
+    /**
+     * While the buyer is on the PayPal site, you can update their shopping cart to reflect the shipping address they chose on PayPal
+     * @see {@link https://developer.paypal.com/sdk/js/reference/#onshippingaddresschange}
+     *
+     * @param data - PayPal data object
+     * @param actions - Used to reject the address change in case the address is invalid
+     * @param component - Adyen instance of its PayPal implementation. It must be used to manipulate the 'paymentData' in order to apply the amount patch correctly
+     */
+    onShippingAddressChange?: (data: any, actions: { reject: () => Promise<void> }, component: PaypalElement) => Promise<void>;
+
+    /**
+     * If set to 'continue' , the button inside the lightbox will display the 'Continue' button
+     * @default pay
+     */
+    userAction?: 'continue' | 'pay';
+
     onShopperDetails?(shopperDetails: ShopperDetails, rawData: any, actions: { resolve: () => void; reject: () => void }): void;
     paymentMethods?: PaymentMethod[];
     showPayButton?: boolean;

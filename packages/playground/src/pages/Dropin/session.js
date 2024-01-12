@@ -1,6 +1,6 @@
 import AdyenCheckout from '@adyen/adyen-web';
 import '@adyen/adyen-web/dist/es/adyen.css';
-import { createSession } from '../../services';
+import { createSession, patchPaypalOrder } from '../../services';
 import { amount, shopperLocale, shopperReference, countryCode, returnUrl } from '../../config/commonConfig';
 
 export async function initSession() {
@@ -46,6 +46,30 @@ export async function initSession() {
                 // billingAddress config:
                 billingAddressRequired: true,
                 billingAddressMode: 'partial'
+            },
+            paypal: {
+                isExpress: true,
+
+                onShippingAddressChange: async (data, actions, component) => {
+                    const patch = {
+                        sessionId: session.id,
+                        paymentData: component.paymentData,
+                        amount: {
+                            currency: 'USD',
+                            value: 29900
+                        }
+                    };
+
+                    console.log('### onShippingAddressChange Sessions', data, actions, component, patch);
+
+                    if (data.shippingAddress.countryCode === 'US') {
+                        const { paymentData } = await patchPaypalOrder(patch);
+                        component.updatePaymentData(paymentData);
+                        return;
+                    }
+
+                    return actions.reject();
+                }
             }
         }
     });

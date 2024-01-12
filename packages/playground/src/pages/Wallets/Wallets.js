@@ -143,13 +143,14 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         .create('paypal', {
             isExpress: true,
 
+            // userAction: 'continue',
+
             onSubmit: async (state, component) => {
                 const response = await makePayment(state.data);
                 component.setStatus('ready');
 
                 window.paypalPatchData = {
-                    pspReference: response.pspReference,
-                    paymentData: response.action.paymentData
+                    pspReference: response.pspReference
                 };
 
                 console.log(window.paypalPatchData);
@@ -162,26 +163,49 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 console.log('paypal onError', error);
             },
 
-            onShippingAddressChange(data, actions) {
-                console.log(data);
-                console.log('onShippingAddressChange');
+            onShippingAddressChange: async (data, actions, component) => {
+                console.log('onShippingAddressChange', data, actions, component);
 
                 const patch = {
                     pspReference: window.paypalPatchData.pspReference,
-                    paymentData: window.paypalPatchData.paymentData,
+                    paymentData: component.paymentData,
                     amount: {
                         currency: 'USD',
-                        value: 20000
+                        value: 28000
                     }
                 };
 
                 console.log('### onShippingAddressChange', patch, data);
                 if (data.shippingAddress.countryCode === 'US') {
-                    return patchPaypalOrder(patch);
+                    const { paymentData } = await patchPaypalOrder(patch);
+                    component.updatePaymentData(paymentData);
+                    return;
                 }
 
                 return actions.reject();
             }
+
+            // onShippingChange: async (data, actions) => {
+            //     console.log(data);
+            //     console.log('onShippingChange');
+            //
+            //     const patch = {
+            //         pspReference: window.paypalPatchData.pspReference,
+            //         paymentData: window.paypalPatchData.paymentData,
+            //         amount: {
+            //             currency: 'USD',
+            //             value: 28000
+            //         }
+            //     };
+            //
+            //     console.log('### onShippingChange', patch, data);
+            //     if (data.shipping_address.country_code === 'US') {
+            //         await patchPaypalOrder(patch);
+            //         return actions.resolve();
+            //     }
+            //
+            //     return actions.reject();
+            // }
 
             // onShippingChange(data, actions) {
             //     console.log('onShippingChange');
