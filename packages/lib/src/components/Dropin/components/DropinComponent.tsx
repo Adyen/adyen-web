@@ -5,7 +5,7 @@ import getOrderStatus from '../../../core/Services/order-status';
 import { DropinComponentProps, DropinComponentState, DropinStatusProps, onOrderCancelData } from '../types';
 import './DropinComponent.scss';
 import { UIElementStatus } from '../../types';
-import { ANALYTICS_SELECTED_STR } from '../../../core/Analytics/constants';
+import { ANALYTICS_RENDERED_STR } from '../../../core/Analytics/constants';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
@@ -32,13 +32,12 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                 this.setState({ instantPaymentElements, elements: [...storedElements, ...elements], orderStatus });
                 this.setStatus('ready');
 
-                // const data = { component: 'dropin', type: 'rendered' }; // TODO b/e can't yet handle type:rendered - so we are using metadata as a workaround
                 const data = {
                     component: 'dropin',
-                    type: 'mounted',
-                    metadata: { subtype: 'rendered' }
+                    type: ANALYTICS_RENDERED_STR
                     // paymentMethods: elements.map(e => e.props.type), // TODO might be added (used to be in original analytics, in the setup call)
                 };
+
                 // AnalyticsAction: action: 'event' type:'rendered'
                 this.props.modules?.analytics.createAnalyticsAction({
                     action: 'event',
@@ -80,7 +79,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         if ((activePaymentMethod && activePaymentMethod._id !== paymentMethod._id) || !activePaymentMethod) {
             this.props.onSelect(paymentMethod);
 
-            paymentMethod.submitAnalytics({ type: ANALYTICS_SELECTED_STR });
+            paymentMethod.submitAnalytics({ type: ANALYTICS_RENDERED_STR });
         }
     };
 
