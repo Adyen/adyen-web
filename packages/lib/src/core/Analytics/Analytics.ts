@@ -55,15 +55,14 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
 
         /**
          * The logic is:
-         *  - errors get sent straightaway
-         *  - logs also get sent straightaway... but... tests with the 3DS2 process show that many logs can happen almost at the same time,
-         *  so instead of making (up to 4) sequential api calls we "batch" them using debounce
+         *  - errors and logs get sent straightaway
+         *  ...but... tests with the 3DS2 process show that many logs can happen almost at the same time (or you can have an error followed immediately by a log),
+         *  so instead of making several sequential api calls we see if we can "batch" them using debounce
          */
         if (type === ANALYTICS_EVENT_LOG || type === ANALYTICS_EVENT_ERROR) {
             clearTimeout(sendEventsTimerId); // clear any timer that might be about to dispatch the info events array
 
-            const debounceFn = type === ANALYTICS_EVENT_ERROR ? fn => fn : debounce;
-            debounceFn(sendAnalyticsEvents)();
+            debounce(sendAnalyticsEvents)();
         }
     };
 
