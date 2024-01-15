@@ -133,7 +133,8 @@ describe('Analytics initialisation and event queue', () => {
 
         analytics.createAnalyticsEvent({ event: 'error', data: aObj });
 
-        // error object should be sent immediately, sending any events as well
+        // error object should be sent almost immediately (after a debounce interval), sending any events as well
+        await wait(DEFAULT_DEBOUNCE_TIME_MS);
         expect(analytics.getEventsQueue().getQueue().errors.length).toBe(0);
         expect(analytics.getEventsQueue().getQueue().info.length).toBe(0);
     });
