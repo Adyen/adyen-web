@@ -31,7 +31,7 @@ class SrcSdkLoader implements ISrcSdkLoader {
     }
 
     public async load(environment: string): Promise<ISrcInitiator[]> {
-        if (!this.schemes) {
+        if (!this.schemes || this.schemes.length === 0) {
             throw new AdyenCheckoutError('ERROR', 'ClickToPay -> SrcSdkLoader: There are no schemes set to be loaded');
         }
 
