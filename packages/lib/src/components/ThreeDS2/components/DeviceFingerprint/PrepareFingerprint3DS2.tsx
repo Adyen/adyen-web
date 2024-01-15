@@ -162,18 +162,17 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             const resolveDataFunction = this.props.useOriginalFlow ? createOldFingerprintResolveData : createFingerprintResolveData;
             const data = resolveDataFunction(this.props.dataKey, resultObj, this.props.paymentData);
 
-            const finalResObject = errorCodeObject ? errorCodeObject : resultObj;
-
             let analyticsObject: ThreeDS2AnalyticsObject;
 
-            /** Are we in an error scenario? If so submit analytics about it */
+            /** Are we in an error scenario? If so, submit analytics about it */
+            const finalResObject = errorCodeObject ? errorCodeObject : resultObj;
             if (finalResObject.errorCode) {
                 const errorTypeAndCode = {
                     code: finalResObject.errorCode === 'timeout' ? ANALYTICS_ERROR_CODE_3DS2_TIMEOUT : finalResObject.errorCode,
                     errorType: finalResObject.errorCode === 'timeout' ? ANALYTICS_NETWORK_ERROR : ANALYTICS_API_ERROR // TODO - for a timeout is this really a Network error? Or is it a "ThirdParty" error i.e. the ACS has had a problem serving the fingerprinting page in a timely manner?
                 };
 
-                // Fingerprint process has timed out,
+                // Fingerprint process has timed out, // TODO - do we want to know about this timeout event (which is a "valid" 3DS2 scenario) from an analytics perspective, and, if so, how do we classify it? ...error? info?
                 // or, Decoded token is missing a valid threeDSMethodURL property (threeDSCompInd:"U"),
                 // or, (threeDSCompInd:"N"):
                 //  - decoded token is missing one or more of the following properties (threeDSMethodNotificationURL | postMessageDomain | threeDSServerTransID)

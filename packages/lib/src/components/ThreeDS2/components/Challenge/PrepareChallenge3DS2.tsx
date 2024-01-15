@@ -19,11 +19,12 @@ import {
     ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_TOKEN,
     ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_OTHER_PROPS,
     ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_ACSURL,
-    ANALYTICS_ERROR_CODE_TOKEN_DECODE_OR_PARSING_FAILED,
-    ANALYTICS_ERROR_CODE_3DS2_TIMEOUT,
-    ANALYTICS_ERROR_CODE_NO_TRANSSTATUS,
-    ANALYTICS_NETWORK_ERROR,
-    ANALYTICS_INTERNAL_ERROR
+    ANALYTICS_ERROR_CODE_TOKEN_DECODE_OR_PARSING_FAILED
+    // ANALYTICS_ERROR_CODE_3DS2_TIMEOUT,
+    // ANALYTICS_ERROR_CODE_NO_TRANSSTATUS,
+    // ANALYTICS_NETWORK_ERROR,
+    // ANALYTICS_INTERNAL_ERROR,
+    // ANALYTICS_EVENT_INFO
 } from '../../../../core/Analytics/constants';
 import { ANALYTICS_EVENT } from '../../../../core/Analytics/types';
 
@@ -181,28 +182,28 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             const resolveDataFunction = this.props.useOriginalFlow ? createOldChallengeResolveData : createChallengeResolveData;
             const data = resolveDataFunction(this.props.dataKey, resultObj.transStatus, this.props.paymentData);
 
-            const finalResObject = errorCodeObject ? errorCodeObject : resultObj;
-
             let analyticsObject: ThreeDS2AnalyticsObject;
 
-            if (finalResObject.errorCode) {
-                const errorTypeAndCode = {
-                    code: finalResObject.errorCode === 'timeout' ? ANALYTICS_ERROR_CODE_3DS2_TIMEOUT : ANALYTICS_ERROR_CODE_NO_TRANSSTATUS,
-                    errorType: finalResObject.errorCode === 'timeout' ? ANALYTICS_NETWORK_ERROR : ANALYTICS_INTERNAL_ERROR // TODO - for a timeout is this really a Network error? Or is it a "ThirdParty" error i.e. the ACS has had a problem serving the fingerprinting page in a timely manner?
-                };
-
-                // Challenge process has timed out,
-                // or, It's an error reported by the backend 'cos no transStatus could be retrieved // TODO - check logs to see if this *ever* happens
-                analyticsObject = {
-                    event: ANALYTICS_EVENT_ERROR,
-                    message: finalResObject.message,
-                    metadata: { errorCodeObject, resultObject: resultObj }, // pass along both the full error object as well as the result object that came from the backend
-                    ...errorTypeAndCode
-                };
-
-                // Send error to analytics endpoint
-                this.submitAnalytics(analyticsObject);
-            }
+            // TODO - do we want to know about these events (timeout or no transStatus - which are "valid" 3DS2 scenarios) from an analytics perspective, and, if so, how do we classify them? ...errors? info?
+            // const finalResObject = errorCodeObject ? errorCodeObject : resultObj;
+            // if (finalResObject.errorCode) {
+            //     const errorTypeAndCode = {
+            //         code: finalResObject.errorCode === 'timeout' ? ANALYTICS_ERROR_CODE_3DS2_TIMEOUT : ANALYTICS_ERROR_CODE_NO_TRANSSTATUS,
+            //         errorType: finalResObject.errorCode === 'timeout' ? ANALYTICS_NETWORK_ERROR : ANALYTICS_INTERNAL_ERROR // TODO - for a timeout is this really a Network error? Or is it a "ThirdParty" error i.e. the ACS has had a problem serving the fingerprinting page in a timely manner?
+            //     };
+            //
+            //     // Challenge process has timed out,
+            //     // or, It's an error reported by the backend 'cos no transStatus could be retrieved // TODO - check logs to see if this *ever* happens
+            //     analyticsObject = {
+            //         event: ANALYTICS_EVENT_ERROR,
+            //         message: finalResObject.message,
+            //         metadata: { errorCodeObject, resultObject: resultObj }, // pass along both the full error object as well as the result object that came from the backend
+            //         ...errorTypeAndCode
+            //     };
+            //
+            //     // Send info about the error to analytics endpoint
+            //     this.submitAnalytics(analyticsObject);
+            // }
 
             // Create log object - the process is completed, one way or another
             analyticsObject = {
