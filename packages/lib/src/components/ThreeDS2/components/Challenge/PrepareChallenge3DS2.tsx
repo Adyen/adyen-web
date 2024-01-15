@@ -108,14 +108,6 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 };
                 this.submitAnalytics(errorCodeObject);
 
-                // Tell analytics the challenge process has ended
-                // this.submitAnalytics({
-                //     event: ANALYTICS_EVENT_LOG,
-                //     type: THREEDS2_FULL,
-                //     message: `${THREEDS2_NUM} challenge has ended`,
-                //     metadata: { resultObject: null, errorCodeObject } // if the challenge has concluded due to an error - pass this information along
-                // });
-
                 this.setStatusError(
                     {
                         errorInfo: 'Challenge Data does not have a valid acsURL'

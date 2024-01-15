@@ -99,9 +99,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                  *  - this is problematic in the regular flow since merchants tend to treat any calls to their onError handler as 'fatal',
                  *   but in the MDFlow we control what the onError handler does.
                  */
-                if (this.props.isMDFlow) {
-                    // TODO - Decide whether to call this.props.onError
-                }
+                // if (this.props.isMDFlow) {}
 
                 console.debug('### PrepareFingerprint3DS2::exiting:: no valid threeDSMethodURL');
                 return;
@@ -131,7 +129,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             this.setState({ status: 'retrievingFingerPrint' });
             //
         } else {
-            // Only render component if we have fingerPrintData. Otherwise, exit with threeDSCompInd: 'N'
+            // Only render component if we have fingerPrintData. Otherwise, complete with threeDSCompInd: 'N'
 
             const errorMsg: string = (this.state.fingerPrintData as ErrorObject).error;
 
@@ -188,7 +186,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                 this.submitAnalytics(analyticsObject);
             }
 
-            /** The fingerprint process is completed one way or another */
+            /** The fingerprint process is completed, one way or another */
             analyticsObject = {
                 event: ANALYTICS_EVENT_LOG,
                 type: THREEDS2_FULL,
@@ -223,7 +221,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                             message: `${THREEDS2_FINGERPRINT}: ${fingerprint.errorCode}`
                         };
 
-                        this.setStatusComplete(fingerprint.result, timeoutObject);
+                        this.setStatusComplete(fingerprint.result, timeoutObject); // fingerprint.result = threeDSCompInd: 'N'
                     }}
                     showSpinner={showSpinner}
                     {...fingerPrintData}
