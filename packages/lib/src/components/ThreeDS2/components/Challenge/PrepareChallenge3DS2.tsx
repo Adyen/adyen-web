@@ -25,6 +25,7 @@ import {
     ANALYTICS_NETWORK_ERROR,
     ANALYTICS_INTERNAL_ERROR
 } from '../../../../core/Analytics/constants';
+import { ANALYTICS_EVENT } from '../../../../core/Analytics/types';
 
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
     public static defaultProps = {
@@ -97,13 +98,22 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             // Only render component if we have an acsURL.
             if (!hasValidAcsURL) {
                 // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
-                this.submitAnalytics({
-                    event: ANALYTICS_EVENT_ERROR,
+                const errorCodeObject = {
+                    event: ANALYTICS_EVENT_ERROR as ANALYTICS_EVENT,
                     code: ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_ACSURL,
                     errorType: ANALYTICS_API_ERROR,
                     message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing a valid acsURL property`,
                     metadata: { acsURL } // NEW TODO - check acsURL isn't secret
-                });
+                };
+                this.submitAnalytics(errorCodeObject);
+
+                // Tell analytics the challenge process has ended
+                // this.submitAnalytics({
+                //     event: ANALYTICS_EVENT_LOG,
+                //     type: THREEDS2_FULL,
+                //     message: `${THREEDS2_NUM} challenge has ended`,
+                //     metadata: { resultObject: null, errorCodeObject } // if the challenge has concluded due to an error - pass this information along
+                // });
 
                 this.setStatusError(
                     {
@@ -186,22 +196,27 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 analyticsObject = {
                     event: ANALYTICS_EVENT_ERROR,
                     message: finalResObject.message,
-                    metadata: resultObj,
+                    metadata: { errorCodeObject, resultObject: resultObj }, // pass along both the full error object as well as the result object that came from the backend
                     ...errorTypeAndCode
                 };
-            } else {
-                analyticsObject = {
-                    event: ANALYTICS_EVENT_LOG,
-                    type: THREEDS2_FULL,
-                    message: `${THREEDS2_NUM} challenge has completed`,
-                    metadata: resultObj
-                };
+
+                // Send error to analytics endpoint
+                this.submitAnalytics(analyticsObject);
             }
 
-            // Send error or log to analytics endpoint
+            // Create log object - the process is completed, one way or another
+            analyticsObject = {
+                event: ANALYTICS_EVENT_LOG,
+                type: THREEDS2_FULL,
+                message: `${THREEDS2_NUM} challenge has completed`,
+                metadata: { resultObject: resultObj, ...(errorCodeObject && { errorCodeObject }) } // if the challenge has concluded due to an error - also pass this information along
+            };
+
+            // Send log to analytics endpoint
             this.submitAnalytics(analyticsObject);
 
-            this.props.onComplete(data); // (equals onAdditionalDetails - except for 3DS2InMDFlow)
+            // call onComplete (equals onAdditionalDetails - except for 3DS2InMDFlow)
+            this.props.onComplete(data);
         });
     }
 

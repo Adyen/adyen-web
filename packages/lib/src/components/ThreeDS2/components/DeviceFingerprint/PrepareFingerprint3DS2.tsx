@@ -164,6 +164,8 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
 
             const finalResObject = errorCodeObject ? errorCodeObject : resultObj;
 
+            let analyticsObject: ThreeDS2AnalyticsObject;
+
             /** Are we in an error scenario? If so submit analytics about it */
             if (finalResObject.errorCode) {
                 const errorTypeAndCode = {
@@ -176,27 +178,27 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                 // or, (threeDSCompInd:"N"):
                 //  - decoded token is missing one or more of the following properties (threeDSMethodNotificationURL | postMessageDomain | threeDSServerTransID)
                 //  - or, token could not be base64 decoded &/or JSON.parsed
-                const analyticsErrorObject: ThreeDS2AnalyticsObject = {
+                analyticsObject = {
                     event: ANALYTICS_EVENT_ERROR,
                     message: finalResObject.message,
-                    metadata: resultObj,
+                    metadata: { errorCodeObject, resultObject: resultObj }, // pass along both the full error object as well as the result object that came from the backend
                     ...errorTypeAndCode
                 };
 
                 // Send error to analytics endpoint
-                this.submitAnalytics(analyticsErrorObject);
+                this.submitAnalytics(analyticsObject);
             }
 
             /** The fingerprint process is completed one way or another */
-            const analyticsLogObject: ThreeDS2AnalyticsObject = {
+            analyticsObject = {
                 event: ANALYTICS_EVENT_LOG,
                 type: THREEDS2_FULL,
                 message: `${THREEDS2_NUM} fingerprinting has completed`,
-                metadata: resultObj
+                metadata: { resultObject: resultObj, ...(errorCodeObject && { errorCodeObject }) } // if the fingerprint has concluded due to an error - also pass this information along
             };
 
             // Send log to analytics endpoint
-            this.submitAnalytics(analyticsLogObject);
+            this.submitAnalytics(analyticsObject);
 
             /**
              * For 'threeDS2' action = call to callSubmit3DS2Fingerprint
