@@ -39,6 +39,6 @@
         "@changesets/cli": "^2.26.1",
         "@changesets/get-github-info": "^0.5.2",
         "dotenv": "^16.0.3",
-        "prettier": "2.8.8"
+        "prettier": "3.1.1"
     }
 }
