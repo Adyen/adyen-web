@@ -1,5 +1,4 @@
 import { h } from 'preact';
-import { UIElement } from '../internal/UIElement/UIElement';
 import CardInput from './components/CardInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import collectBrowserInfo from '../../utils/browserInfo';
@@ -12,9 +11,11 @@ import createClickToPayService from '../internal/ClickToPay/services/create-clic
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';
 import ClickToPayWrapper from './components/ClickToPayWrapper';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
-import { PayButton, PayButtonProps } from '../internal/PayButton';
 import { TxVariants } from '../tx-variants';
 import { UIElementStatus } from '../internal/UIElement/types';
+import UIElement from '../internal/UIElement';
+import PayButton from '../internal/PayButton';
+import { PayButtonProps } from '../internal/PayButton/PayButton';
 
 export class CardElement extends UIElement<CardConfiguration> {
     public static type = TxVariants.scheme;
