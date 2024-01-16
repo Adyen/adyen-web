@@ -11,9 +11,15 @@ const meta: Meta = {
 };
 export default meta;
 
-export const Paypal: Story = {
+export const Default: Story = {
     render: (args, context) => {
         const checkout = getStoryContextCheckout(context);
         return <Container type={'paypal'} componentConfiguration={args.componentConfiguration} checkout={checkout} />;
+    },
+    argTypes: {
+        showPayButton: {
+            control: false,
+            description: 'This property is not supported'
+        }
     }
 };

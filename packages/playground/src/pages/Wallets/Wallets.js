@@ -143,7 +143,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         .create('paypal', {
             isExpress: true,
 
-            // userAction: 'continue',
+            userAction: 'continue',
 
             onSubmit: async (state, component) => {
                 const response = await makePayment(state.data);
@@ -183,6 +183,11 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 }
 
                 return actions.reject();
+            },
+
+            onShopperDetails(shopperDetails, paypalOrder, actions) {
+                console.log(shopperDetails, paypalOrder, actions);
+                actions.resolve();
             }
 
             // onShippingChange: async (data, actions) => {

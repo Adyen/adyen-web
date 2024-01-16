@@ -22,6 +22,36 @@ export const createSession = async (data: any): Promise<CheckoutSessionSetupResp
     return await httpPost('sessions', { ...data, lineItems: paymentsConfig.lineItems });
 };
 
+export const patchPaypalOrder = async ({
+    sessionId,
+    pspReference,
+    paymentData,
+    amount
+}: {
+    sessionId?: string;
+    pspReference?: string;
+    paymentData: string;
+    amount: { value: number; currency: string };
+}): Promise<{ paymentData: string }> => {
+    if (!(pspReference || sessionId) || !paymentData || !amount.value || !amount.currency) {
+        throw Error('PayPal patching order - Field is missing');
+    }
+
+    const response = await httpPost('paypal/updateOrder', {
+        ...(sessionId && { sessionId }),
+        ...(pspReference && { pspReference }),
+        paymentData,
+        amount
+    });
+
+    // @ts-ignore Error from API
+    if (response.errorCode) {
+        throw Error('Patch failed');
+    }
+
+    return response as { paymentData: string };
+};
+
 export const checkBalance = async (
     giftcardStateData: any
 ): Promise<{

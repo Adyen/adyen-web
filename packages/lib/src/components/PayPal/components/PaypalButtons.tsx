@@ -42,8 +42,6 @@ export default function PaypalButtons({
             onApprove
         };
 
-        console.log('config', configuration);
-
         const button = paypalRef.Buttons(configuration);
 
         if (button.isEligible()) {
