@@ -98,6 +98,14 @@ const Component = () => {
                     };
 
                     if (data.shippingAddress.countryCode === 'US') {
+                        patch.amount.value = 27999;
+                        const { paymentData } = await patchPaypalOrder(patch);
+                        component.updatePaymentData(paymentData);
+                        return;
+                    }
+
+                    if (data.shippingAddress.countryCode === 'BR') {
+                        patch.amount.value = 26599;
                         const { paymentData } = await patchPaypalOrder(patch);
                         component.updatePaymentData(paymentData);
                         return;
