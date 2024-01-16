@@ -11,8 +11,9 @@ import { hasValidInstallmentsObject } from './components/CardInput/utils';
 import createClickToPayService from '../internal/ClickToPay/services/create-clicktopay-service';
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';
 import ClickToPayWrapper from './components/ClickToPayWrapper';
-import { UIElementStatus } from '../types';
+import { PayButtonFunctionProps, UIElementStatus } from '../types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
+import PayButton from '../internal/PayButton';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
@@ -55,6 +56,9 @@ export class CardElement extends UIElement<CardElementProps> {
     };
 
     formatProps(props: CardElementProps) {
+        const isZeroAuth = props.amount?.value === 0;
+        const enableStoreDetails = isZeroAuth ? false : props.session?.configuration?.enableStoreDetails || props.enableStoreDetails;
+
         return {
             ...props,
             // Mismatch between hasHolderName & holderNameRequired which can mean card can never be valid
@@ -76,7 +80,7 @@ export class CardElement extends UIElement<CardElementProps> {
             icon: props.icon || props.configuration?.icon,
             // installmentOptions of a session should be used before falling back to the merchant configuration
             installmentOptions: props.session?.configuration?.installmentOptions || props.installmentOptions,
-            enableStoreDetails: props.session?.configuration?.enableStoreDetails || props.enableStoreDetails,
+            enableStoreDetails,
             /**
              * Click to Pay configuration
              * - If email is set explicitly in the configuration, then it can override the one used in the session creation
@@ -205,6 +209,20 @@ export class CardElement extends UIElement<CardElementProps> {
     get browserInfo() {
         return collectBrowserInfo();
     }
+    // Override
+    protected payButton = (props: PayButtonFunctionProps) => {
+        const isZeroAuth = this.props.amount?.value === 0;
+        const isStoredCard = this.props.storedPaymentMethodId?.length > 0;
+        return (
+            <PayButton
+                {...props}
+                amount={this.props.amount}
+                secondaryAmount={this.props.secondaryAmount}
+                label={isZeroAuth && !isStoredCard ? this.props.i18n.get('payButton.saveDetails') : ''}
+                onClick={this.submit}
+            />
+        );
+    };
 
     private renderCardInput(isCardPrimaryInput = true): h.JSX.Element {
         return (
