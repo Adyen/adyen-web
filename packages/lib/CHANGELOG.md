@@ -1,5 +1,13 @@
 # @adyen/adyen-web
 
+## 5.56.1
+
+### Patch Changes
+
+-   For the regular card payment, in case of a zero-auth transaction, the pay button label is changed to `Save details`, and the `Save for my next payment` checkbox is removed. ([#2514](https://github.com/Adyen/adyen-web/pull/2514))
+
+    The drop-in component shows `Details saved` as the success message for such transaction.
+
 ## 5.56.0
 
 ### Minor Changes

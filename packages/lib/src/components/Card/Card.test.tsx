@@ -1,4 +1,9 @@
+import { h } from 'preact';
 import { CardElement } from './Card';
+import { render, screen } from '@testing-library/preact';
+import CoreProvider from '../../core/Context/CoreProvider';
+import Language from '../../language';
+import { Resources } from '../../core/Context/Resources';
 
 describe('Card', () => {
     describe('formatProps', function () {
@@ -11,6 +16,40 @@ describe('Card', () => {
         test('should format countryCode to lowerCase', () => {
             const card = new CardElement({ core: global.core, countryCode: 'KR' });
             expect(card.props.countryCode).toEqual('kr');
+        });
+
+        test('should return false for enableStoreDetails in case of zero-auto transaction', () => {
+            const card = new CardElement({ amount: { value: 0 }, enableStoreDetails: true });
+            expect(card.props.enableStoreDetails).toEqual(false);
+        });
+    });
+
+    describe('payButton', () => {
+        describe('Zero auth transaction', () => {
+            const i18n = new Language();
+            const props = { amount: { value: 0 }, enableStoreDetails: true, i18n };
+            const customRender = (ui: h.JSX.Element) => {
+                return render(
+                    // @ts-ignore ignore
+                    <CoreProvider i18n={i18n} loadingContext="test" resources={new Resources()}>
+                        {ui}
+                    </CoreProvider>
+                );
+            };
+
+            test('should show the label "Save details" for the regular card', async () => {
+                const card = new CardElement(props);
+                // @ts-ignore ignore
+                customRender(card.payButton());
+                expect(await screen.findByRole('button', { name: 'Save details' })).toBeTruthy();
+            });
+
+            test('should show the label "Confirm preauthorization" for the stored card', async () => {
+                const card = new CardElement({ ...props, storedPaymentMethodId: 'test' });
+                // @ts-ignore ignore
+                customRender(card.payButton());
+                expect(await screen.findByRole('button', { name: 'Confirm preauthorization' })).toBeTruthy();
+            });
         });
     });
 
