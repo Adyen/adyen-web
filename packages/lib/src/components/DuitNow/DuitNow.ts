@@ -4,9 +4,11 @@ import { delay, countdownTime } from './config';
 class DuitNowElement extends QRLoaderContainer {
     public static type = 'duitnow';
 
-    formatProps(props) {
-        return super.formatProps({ delay, countdownTime, ...props });
-    }
+    protected static defaultProps = {
+        countdownTime,
+        delay,
+        ...QRLoaderContainer.defaultProps
+    };
 }
 
 export default DuitNowElement;

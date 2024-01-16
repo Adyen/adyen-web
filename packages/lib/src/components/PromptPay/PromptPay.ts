@@ -4,9 +4,11 @@ import { delay, countdownTime } from './config';
 class PromptPayElement extends QRLoaderContainer {
     public static type = 'promptpay';
 
-    formatProps(props) {
-        return super.formatProps({ delay, countdownTime, ...props });
-    }
+    protected static defaultProps = {
+        countdownTime,
+        delay,
+        ...QRLoaderContainer.defaultProps
+    };
 }
 
 export default PromptPayElement;

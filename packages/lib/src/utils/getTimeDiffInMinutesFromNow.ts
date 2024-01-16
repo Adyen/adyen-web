@@ -1,6 +1,6 @@
 /**
- * Calculate the time difference in minutes, between the future time and the current time (plus delay).
- * @param futureTime - string in utc datetime format
+ * Calculate the time difference in minutes, between the future UTC time and the current time (plus delay).
+ * @param futureTime - UTC date time string in the ISO 8601 format
  * @param delayFromNow - milliseconds delay from now
  */
 export function getTimeDiffInMinutesFromNow(futureTime: string, delayFromNow = 0) {

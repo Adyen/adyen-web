@@ -3,21 +3,19 @@ import Instructions from './Instructions';
 
 class PayMeElement extends QRLoaderContainer {
     public static type = 'payme';
-    private static defaultCountdown = 10; // min
+    private static defaultCountdown = 30; // min
     private static defaultDelay = 2000; // ms
 
-    formatProps(props) {
-        return super.formatProps({
-            delay: PayMeElement.defaultDelay,
-            countdownTime: PayMeElement.defaultCountdown,
-            redirectIntroduction: 'payme.openPayMeApp',
-            introduction: 'payme.scanQrCode',
-            timeToPay: 'payme.timeToPay',
-            buttonLabel: 'payme.redirectButtonLabel',
-            instructions: Instructions,
-            ...props
-        });
-    }
+    protected static defaultProps = {
+        delay: PayMeElement.defaultDelay,
+        countdownTime: PayMeElement.defaultCountdown,
+        redirectIntroduction: 'payme.openPayMeApp',
+        introduction: 'payme.scanQrCode',
+        timeToPay: 'payme.timeToPay',
+        buttonLabel: 'payme.redirectButtonLabel',
+        instructions: Instructions,
+        ...QRLoaderContainer.defaultProps
+    };
 }
 
 export default PayMeElement;
