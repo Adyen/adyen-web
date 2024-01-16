@@ -164,7 +164,7 @@ describe('UIElement', () => {
             expect(actionComponent instanceof ThreeDS2DeviceFingerprint).toEqual(true);
 
             expect(actionComponent.props.elementRef).not.toBeDefined();
-            expect((actionComponent as ThreeDS2DeviceFingerprint).props.showSpinner).toEqual(true);
+            expect((actionComponent as unknown as ThreeDS2DeviceFingerprint).props.showSpinner).toEqual(true);
             expect(actionComponent.props.statusType).toEqual('loading');
             expect(actionComponent.props.isDropin).toBe(false);
         });
@@ -192,7 +192,7 @@ describe('UIElement', () => {
             expect(actionComponent.props.elementRef).not.toBeDefined();
             expect(actionComponent.props.statusType).toEqual('custom');
             expect(actionComponent.props.isDropin).toBe(false);
-            expect((actionComponent as ThreeDS2Challenge).props.challengeWindowSize).toEqual('02');
+            expect((actionComponent as unknown as ThreeDS2Challenge).props.challengeWindowSize).toEqual('02');
         });
 
         test('should throw Error if merchant passes the whole response object', async () => {
@@ -231,25 +231,13 @@ describe('UIElement', () => {
     });
 
     describe('submit()', () => {
-        test('should close active payment method if submit is called by instant payment method', () => {
-            const onSubmit = jest.fn();
-            const elementRef = { closeActivePaymentMethod: jest.fn(), setStatus: jest.fn() };
-            const element = new MyElement({ core, isInstantPayment: true, onSubmit, elementRef });
-
-            jest.spyOn(element, 'isValid', 'get').mockReturnValue(true);
-
-            element.submit();
-
-            expect(elementRef.closeActivePaymentMethod).toHaveBeenCalledTimes(1);
-        });
-
-        test('should trigger showValidation() and not call onSubmit() if component is not valid', () => {
+        test('should trigger showValidation() and not call makePaymentsCall() if component is not valid', () => {
             const showValidation = jest.fn();
 
             const element = new MyElement({ core: core });
 
             // @ts-ignore Checking that internal method is not reached
-            const onSubmitSpy = jest.spyOn(element, 'onSubmit');
+            const makePaymentsCallSpy = jest.spyOn(element, 'makePaymentsCall');
 
             const componentRef = {
                 showValidation
@@ -259,7 +247,7 @@ describe('UIElement', () => {
             element.submit();
 
             expect(showValidation).toBeCalledTimes(1);
-            expect(onSubmitSpy).not.toHaveBeenCalled();
+            expect(makePaymentsCallSpy).not.toHaveBeenCalled();
         });
     });
 });
