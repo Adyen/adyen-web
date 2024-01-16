@@ -41,15 +41,4 @@ describe('WeChat', () => {
             expect(wechat.render()).toBe(null);
         });
     });
-
-    describe('formatProps', () => {
-        describe('countdownTime', () => {
-            test('should calculate the time difference if expiresAt is provided', () => {});
-            test('should return the default countdown time if expiresAt is not provided', () => {});
-            test('should return the default countdown time if there are errors calculating the time difference', () => {});
-        });
-        describe('other props', () => {
-            test('should return the correct values for other props', () => {});
-        });
-    });
 });
