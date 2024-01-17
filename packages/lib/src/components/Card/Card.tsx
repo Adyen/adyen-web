@@ -14,7 +14,7 @@ import ClickToPayWrapper from './components/ClickToPayWrapper';
 import { PayButtonFunctionProps, UIElementStatus } from '../types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import PayButton from '../internal/PayButton';
-import { ANALYTICS_FOCUS_STR, ANALYTICS_UNFOCUS_STR } from '../../core/Analytics/constants';
+import { ANALYTICS_FOCUS_STR, ANALYTICS_UNFOCUS_STR, ANALYTICS_VALIDATION_ERROR_STR } from '../../core/Analytics/constants';
 import { ALL_SECURED_FIELDS, ENCRYPTED } from '../internal/SecuredFields/lib/configuration/constants';
 import { camelCaseToSnakeCase } from '../../utils/textUtils';
 
@@ -165,17 +165,19 @@ export class CardElement extends UIElement<CardElementProps> {
         }
     }
 
-    private onFocus = obj => {
-        let target = camelCaseToSnakeCase(obj.fieldType);
-
+    private fieldTypeToSnakeCase(fieldType) {
+        let str = camelCaseToSnakeCase(fieldType);
         // SFs need their fieldType mapped to what the endpoint expects
-        if (ALL_SECURED_FIELDS.includes(obj.fieldType)) {
-            target = target.substring(ENCRYPTED.length + 1); // strip 'encrypted_' off the string
+        if (ALL_SECURED_FIELDS.includes(fieldType)) {
+            str = str.substring(ENCRYPTED.length + 1); // strip 'encrypted_' off the string
         }
+        return str;
+    }
 
+    private onFocus = obj => {
         this.submitAnalytics({
             event: 'info',
-            data: { component: CardElement.type, type: ANALYTICS_FOCUS_STR, target }
+            data: { component: this.constructor['type'], type: ANALYTICS_FOCUS_STR, target: this.fieldTypeToSnakeCase(obj.fieldType) }
         });
 
         // Call merchant defined callback
@@ -183,20 +185,26 @@ export class CardElement extends UIElement<CardElementProps> {
     };
 
     private onBlur = obj => {
-        let target = camelCaseToSnakeCase(obj.fieldType);
-
-        // SFs need their fieldType mapped to what the endpoint expects
-        if (ALL_SECURED_FIELDS.includes(obj.fieldType)) {
-            target = target.substring(ENCRYPTED.length + 1); // strip 'encrypted_' off the string
-        }
-
         this.submitAnalytics({
             event: 'info',
-            data: { component: CardElement.type, type: ANALYTICS_UNFOCUS_STR, target }
+            data: { component: this.constructor['type'], type: ANALYTICS_UNFOCUS_STR, target: this.fieldTypeToSnakeCase(obj.fieldType) }
         });
 
         // Call merchant defined callback
         this.props.onBlur?.(obj);
+    };
+
+    private onErrorAnalytics = obj => {
+        this.submitAnalytics({
+            event: 'info',
+            data: {
+                component: this.constructor['type'],
+                type: ANALYTICS_VALIDATION_ERROR_STR,
+                target: this.fieldTypeToSnakeCase(obj.fieldType),
+                validationErrorCode: obj.errorCode,
+                validationErrorMessage: obj.errorMessage
+            }
+        });
     };
 
     public onBinValue = triggerBinLookUp(this);
@@ -278,6 +286,7 @@ export class CardElement extends UIElement<CardElementProps> {
                 resources={this.resources}
                 onFocus={this.onFocus}
                 onBlur={this.onBlur}
+                onErrorAnalytics={this.onErrorAnalytics}
             />
         );
     }
