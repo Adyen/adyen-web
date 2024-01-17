@@ -48,6 +48,8 @@ export interface AnalyticsObject {
     metadata?: Record<string, any>;
     isStoredPaymentMethod?: boolean;
     brand?: string;
+    validationErrorCode?: string;
+    validationErrorMessage?: string;
 }
 
 export type ANALYTICS_EVENT = 'log' | 'error' | 'info';

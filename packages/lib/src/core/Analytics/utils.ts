@@ -1,5 +1,5 @@
 import { AnalyticsObject, CreateAnalyticsObject } from './types';
-import { ANALYTICS_ACTION_STR, ANALYTICS_SUBMIT_STR } from './constants';
+import { ANALYTICS_ACTION_STR, ANALYTICS_SUBMIT_STR, ANALYTICS_VALIDATION_ERROR_STR } from './constants';
 
 export const getUTCTimestamp = () => Date.now();
 
@@ -33,5 +33,10 @@ export const createAnalyticsObject = (aObj: CreateAnalyticsObject): AnalyticsObj
     ...(aObj.event === 'log' && aObj.type === ANALYTICS_SUBMIT_STR && { target: aObj.target }), // only added if we have a log object of Submit type
     ...(aObj.event === 'info' && { type: aObj.type, target: aObj.target }), // only added if we have an info object
     ...(aObj.event === 'info' && aObj.isStoredPaymentMethod && { isStoredPaymentMethod: aObj.isStoredPaymentMethod, brand: aObj.brand }), // only added if we have an info object about a storedPM
+    ...(aObj.event === 'info' &&
+        aObj.type === ANALYTICS_VALIDATION_ERROR_STR && {
+            validationErrorCode: aObj.validationErrorCode,
+            validationErrorMessage: aObj.validationErrorMessage
+        }),
     ...(aObj.metadata && { metadata: aObj.metadata })
 });

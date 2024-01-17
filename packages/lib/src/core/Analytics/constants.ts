@@ -10,6 +10,7 @@ export const ANALYTICS_ACTION_STR = 'action';
 export const ANALYTICS_SUBMIT_STR = 'submit';
 export const ANALYTICS_SELECTED_STR = 'selected';
 export const ANALYTICS_RENDERED_STR = 'rendered';
+export const ANALYTICS_VALIDATION_ERROR_STR = 'validationError';
 
 export const ANALYTICS_FOCUS_STR = 'focus';
 export const ANALYTICS_UNFOCUS_STR = 'blur';

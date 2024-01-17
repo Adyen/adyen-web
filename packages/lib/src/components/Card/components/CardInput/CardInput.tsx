@@ -198,7 +198,6 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
             return;
         }
 
-        // console.log('### CardInput::handleSecuredFieldsChange:: .sfState.errors', sfState.errors);
         /**
          * If PAN has just become valid: decide if we can shift focus to the next field.
          *
@@ -404,8 +403,10 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                     // Use the error code to look up whether error is actually a blur based one (most are but some SF ones aren't)
                     const isBlurBasedError = lookupBlurBasedErrors(latestErrorMsg.errorCode);
 
-                    // Only add blur based errors to the error panel - doing this step prevents the non-blur based errors from being read out twice
-                    // (once from the aria-live, error panel & once from the aria-describedby element)
+                    /**
+                     *  ONLY ADD BLUR BASED ERRORS TO THE ERROR PANEL - doing this step prevents the non-blur based errors from being read out twice
+                     *  (once from the aria-live, error panel & once from the aria-describedby element)
+                     */
                     const latestSRError = isBlurBasedError ? latestErrorMsg.errorMessage : null;
                     // console.log('### CardInput2::componentDidUpdate:: #2 (not validating) single error:: latestSRError', latestSRError);
                     setSRMessagesFromStrings(latestSRError);
@@ -419,6 +420,20 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
             default:
                 break;
         }
+
+        // Analytics
+        const newErrors = getArrayDifferences<SortedErrorObject, string>(currentErrorsSortedByLayout, previousSortedErrors, 'field');
+        // console.log('### CardInput:::: new errors', newErrors);
+        newErrors?.forEach(errorItem => {
+            const aObj = {
+                fieldType: errorItem.field,
+                errorCode: errorItem.errorCode,
+                errorMessage: errorItem.errorMessage
+            };
+
+            // console.log('### CardInput:::: analytics error obj=', aObj);
+            props.onErrorAnalytics(aObj);
+        });
 
         props.onChange({
             data,
