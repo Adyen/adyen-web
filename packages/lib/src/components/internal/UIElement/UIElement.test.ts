@@ -249,5 +249,18 @@ describe('UIElement', () => {
             expect(showValidation).toBeCalledTimes(1);
             expect(makePaymentsCallSpy).not.toHaveBeenCalled();
         });
+
+        // test.todo('should make successfull payment using advanced flow');
+        // test.todo('should make successfull payment using sessions flow');
+        // test.todo('should call onPaymentFailed if payment contains resultCode non-sucessfull result code');
+        // test.todo('should call onPaymentFailed if payment is rejected');
+        // test.todo('should call component.handleAction if payment is resolved with action');
     });
+
+    // describe('Handling additional details', () => {
+    //     test.todo('should make successfull payment using advanced flow');
+    //     test.todo('should make successfull payment using sessions flow');
+    //     test.todo('should call onPaymentFailed if payment contains resultCode non-sucessfull result code');
+    //     test.todo('should call onPaymentFailed if payment is rejected');
+    // });
 });
