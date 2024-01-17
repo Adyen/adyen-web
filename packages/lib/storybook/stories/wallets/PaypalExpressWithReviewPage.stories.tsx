@@ -75,6 +75,8 @@ const Component = () => {
 
                 userAction: 'continue',
 
+                commit: false,
+
                 blockPayPalVenmoButton: true,
                 blockPayPalCreditButton: true,
                 blockPayPalPayLaterButton: true,
