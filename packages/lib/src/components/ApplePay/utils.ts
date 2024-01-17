@@ -58,7 +58,7 @@ export function formatApplePayContactToAdyenAddressFormat(
         country: paymentContact.countryCode,
         houseNumberOrName: 'ZZ',
         postalCode: paymentContact.postalCode,
-        street: paymentContact.addressLines.join(' ').trim(),
+        street: paymentContact.addressLines?.join(' ').trim(),
         ...(paymentContact.administrativeArea && { stateOrProvince: paymentContact.administrativeArea }),
         ...(isDeliveryAddress && {
             firstName: paymentContact.givenName,
