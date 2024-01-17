@@ -1,15 +1,18 @@
 export const ANALYTICS_PATH = 'v3/analytics';
 
-export const ANALYTICS_INFO_TIMER_INTERVAL = 10000; // ANALYTICS_EVENT_TIMER_INTERVAL
+export const ANALYTICS_INFO_TIMER_INTERVAL = 10000;
 
-export const ANALYTICS_EVENT_LOG = 'log'; // ANALYTICS_ACTION_LOG
-export const ANALYTICS_EVENT_ERROR = 'error'; // ANALYTICS_ACTION_ERROR
-export const ANALYTICS_EVENT_INFO = 'info'; // ANALYTICS_ACTION_EVENT
+export const ANALYTICS_EVENT_LOG = 'log';
+export const ANALYTICS_EVENT_ERROR = 'error';
+export const ANALYTICS_EVENT_INFO = 'info';
 
-export const ANALYTICS_ACTION_STR = 'Action';
-export const ANALYTICS_SUBMIT_STR = 'Submit';
+export const ANALYTICS_ACTION_STR = 'action';
+export const ANALYTICS_SUBMIT_STR = 'submit';
 export const ANALYTICS_SELECTED_STR = 'selected';
 export const ANALYTICS_RENDERED_STR = 'rendered';
+
+export const ANALYTICS_FOCUS_STR = 'focus';
+export const ANALYTICS_UNFOCUS_STR = 'blur';
 
 export const ANALYTICS_IMPLEMENTATION_ERROR = 'ImplementationError';
 export const ANALYTICS_API_ERROR = 'APIError';

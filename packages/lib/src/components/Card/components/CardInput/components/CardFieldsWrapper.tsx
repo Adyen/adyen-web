@@ -66,7 +66,10 @@ export const CardFieldsWrapper = ({
     showBrandsUnderCardNumber,
     //
     iOSFocusedField,
-    disclaimerMessage
+    disclaimerMessage,
+    //
+    onFieldFocusAnalytics,
+    onFieldBlurAnalytics
 }) => {
     const cardHolderField = (
         <CardHolderName
@@ -78,6 +81,8 @@ export const CardFieldsWrapper = ({
             onBlur={handleChangeFor('holderName', 'blur')}
             onInput={handleChangeFor('holderName', 'input')}
             disabled={iOSFocusedField && iOSFocusedField !== 'holderName'}
+            onFieldFocusAnalytics={onFieldFocusAnalytics}
+            onFieldBlurAnalytics={onFieldBlurAnalytics}
         />
     );
 
@@ -120,6 +125,8 @@ export const CardFieldsWrapper = ({
                     onBlur={handleChangeFor('taxNumber', 'blur')}
                     onInput={handleChangeFor('taxNumber', 'input')}
                     disabled={iOSFocusedField && iOSFocusedField !== 'kcpTaxNumberOrDOB'}
+                    onFieldFocusAnalytics={onFieldFocusAnalytics}
+                    onFieldBlurAnalytics={onFieldBlurAnalytics}
                 />
             )}
 
@@ -133,6 +140,8 @@ export const CardFieldsWrapper = ({
                         data={socialSecurityNumber}
                         required={true}
                         disabled={iOSFocusedField && iOSFocusedField !== 'socialSecurityNumber'}
+                        onFieldFocusAnalytics={onFieldFocusAnalytics}
+                        onFieldBlurAnalytics={onFieldBlurAnalytics}
                     />
                 </div>
             )}

@@ -142,6 +142,14 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     // SecuredField-only handler
     const handleFocus = getFocusHandler(setFocusedElement, props.onFocus, props.onBlur);
 
+    // Handlers for focus & blur on non-securedFields. Can be renamed to onFieldFocus once the onFocusField is renamed in Field.tsx
+    const onFieldFocusAnalytics = (who, e) => {
+        props.onFocus({ fieldType: who, event: e });
+    };
+    const onFieldBlurAnalytics = (who, e) => {
+        props.onBlur({ fieldType: who, event: e });
+    };
+
     const retrieveLayout = (): string[] => {
         return getLayout({
             props,
@@ -190,6 +198,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
             return;
         }
 
+        // console.log('### CardInput::handleSecuredFieldsChange:: .sfState.errors', sfState.errors);
         /**
          * If PAN has just become valid: decide if we can shift focus to the next field.
          *
@@ -497,6 +506,9 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                             addressSearchDebounceMs={props.addressSearchDebounceMs}
                             //
                             iOSFocusedField={iOSFocusedField}
+                            //
+                            onFieldFocusAnalytics={onFieldFocusAnalytics}
+                            onFieldBlurAnalytics={onFieldBlurAnalytics}
                         />
                     </div>
                 )}

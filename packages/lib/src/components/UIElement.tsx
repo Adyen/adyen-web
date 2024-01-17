@@ -101,13 +101,17 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
                 break;
             }
 
-            // PM pay button pressed - AnalyticsAction: action: 'log' type:'submit'
-            default: {
+            case ANALYTICS_SUBMIT_STR: {
                 // PM pay button pressed - AnalyticsAction: action: 'log' type:'submit'
                 this.props.modules?.analytics.createAnalyticsEvent({
                     event: 'log',
-                    data: { component, type: ANALYTICS_SUBMIT_STR, target: 'payButton', message: 'Shopper clicked pay' }
+                    data: { component, type: analyticsObj.type, target: 'payButton', message: 'Shopper clicked pay' }
                 });
+                break;
+            }
+
+            default: {
+                this.props.modules?.analytics.createAnalyticsEvent(analyticsObj);
             }
         }
     }
@@ -126,7 +130,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         if (this.props.onSubmit) {
             /** Classic flow */
             // Call analytics endpoint
-            this.submitAnalytics({ type: 'submit' });
+            this.submitAnalytics({ type: ANALYTICS_SUBMIT_STR });
 
             // Call onSubmit handler
             this.props.onSubmit({ data: this.data, isValid: this.isValid }, this.elementRef);
@@ -145,7 +149,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
             beforeSubmitEvent
                 .then(data => {
                     // Call analytics endpoint
-                    this.submitAnalytics({ type: 'submit' });
+                    this.submitAnalytics({ type: ANALYTICS_SUBMIT_STR });
                     // Submit payment
                     return this.submitPayment(data);
                 })

@@ -14,6 +14,9 @@ import ClickToPayWrapper from './components/ClickToPayWrapper';
 import { PayButtonFunctionProps, UIElementStatus } from '../types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import PayButton from '../internal/PayButton';
+import { ANALYTICS_FOCUS_STR, ANALYTICS_UNFOCUS_STR } from '../../core/Analytics/constants';
+import { ALL_SECURED_FIELDS, ENCRYPTED } from '../internal/SecuredFields/lib/configuration/constants';
+import { camelCaseToSnakeCase } from '../../utils/textUtils';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
@@ -162,6 +165,40 @@ export class CardElement extends UIElement<CardElementProps> {
         }
     }
 
+    private onFocus = obj => {
+        let target = camelCaseToSnakeCase(obj.fieldType);
+
+        // SFs need their fieldType mapped to what the endpoint expects
+        if (ALL_SECURED_FIELDS.includes(obj.fieldType)) {
+            target = target.substring(ENCRYPTED.length + 1); // strip 'encrypted_' off the string
+        }
+
+        this.submitAnalytics({
+            event: 'info',
+            data: { component: CardElement.type, type: ANALYTICS_FOCUS_STR, target }
+        });
+
+        // Call merchant defined callback
+        this.props.onFocus?.(obj);
+    };
+
+    private onBlur = obj => {
+        let target = camelCaseToSnakeCase(obj.fieldType);
+
+        // SFs need their fieldType mapped to what the endpoint expects
+        if (ALL_SECURED_FIELDS.includes(obj.fieldType)) {
+            target = target.substring(ENCRYPTED.length + 1); // strip 'encrypted_' off the string
+        }
+
+        this.submitAnalytics({
+            event: 'info',
+            data: { component: CardElement.type, type: ANALYTICS_UNFOCUS_STR, target }
+        });
+
+        // Call merchant defined callback
+        this.props.onBlur?.(obj);
+    };
+
     public onBinValue = triggerBinLookUp(this);
 
     get isValid() {
@@ -239,6 +276,8 @@ export class CardElement extends UIElement<CardElementProps> {
                 brandsIcons={this.brands}
                 isPayButtonPrimaryVariant={isCardPrimaryInput}
                 resources={this.resources}
+                onFocus={this.onFocus}
+                onBlur={this.onBlur}
             />
         );
     }
