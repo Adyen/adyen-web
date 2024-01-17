@@ -195,9 +195,9 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         // Shopper info (optional)
         emailRequired: true,
 
-        // billingAddressRequired: true,
+        billingAddressRequired: true,
 
-        // shippingAddressRequired: true,
+        shippingAddressRequired: true,
         // shippingAddressParameters: {}, // https://developers.google.com/pay/api/web/reference/object#ShippingAddressParameters
 
         // Button config (optional)
