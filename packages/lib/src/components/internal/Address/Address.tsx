@@ -157,6 +157,8 @@ export default function Address(props: AddressProps) {
                 maxLength={getMaxLengthByFieldAndCountry(countrySpecificFormatters, fieldName, data.country, true)}
                 trimOnBlur={true}
                 disabled={!enabledFields.includes(fieldName)}
+                onFieldFocusAnalytics={props.onFieldFocusAnalytics}
+                onFieldBlurAnalytics={props.onFieldBlurAnalytics}
             />
         );
     };

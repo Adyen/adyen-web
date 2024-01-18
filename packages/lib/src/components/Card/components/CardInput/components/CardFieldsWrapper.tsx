@@ -172,6 +172,8 @@ export const CardFieldsWrapper = ({
                     onAddressLookup={onAddressLookup}
                     onAddressSelected={onAddressSelected}
                     addressSearchDebounceMs={addressSearchDebounceMs}
+                    onFieldFocusAnalytics={onFieldFocusAnalytics}
+                    onFieldBlurAnalytics={onFieldBlurAnalytics}
                 />
             )}
 
