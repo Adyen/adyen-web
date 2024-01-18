@@ -23,8 +23,8 @@ export default function ({
             errorMessage={error && error.errorMessage ? i18n.get(error.errorMessage) : !!error}
             isValid={Boolean(valid)}
             name={'socialSecurityNumber'}
-            onFocus={e => onFieldFocusAnalytics('socialSecurityNumber', e)}
-            onBlur={e => onFieldBlurAnalytics('socialSecurityNumber', e)}
+            onFocus={e => onFieldFocusAnalytics?.('socialSecurityNumber', e)}
+            onBlur={e => onFieldBlurAnalytics?.('socialSecurityNumber', e)}
         >
             <InputText
                 name={'socialSecurityNumber'}

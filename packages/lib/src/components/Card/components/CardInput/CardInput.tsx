@@ -423,18 +423,18 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         }
 
         // Analytics
-        const newErrors = getArrayDifferences<SortedErrorObject, string>(currentErrorsSortedByLayout, previousSortedErrors, 'field');
-        // console.log('### CardInput:::: new errors', newErrors);
-        newErrors?.forEach(errorItem => {
-            const aObj = {
-                fieldType: errorItem.field,
-                errorCode: errorItem.errorCode,
-                errorMessage: errorItem.errorMessage
-            };
+        if (currentErrorsSortedByLayout) {
+            const newErrors = getArrayDifferences<SortedErrorObject, string>(currentErrorsSortedByLayout, previousSortedErrors, 'field');
+            newErrors?.forEach(errorItem => {
+                const aObj = {
+                    fieldType: errorItem.field,
+                    errorCode: errorItem.errorCode,
+                    errorMessage: errorItem.errorMessage
+                };
 
-            // console.log('### CardInput:::: analytics error obj=', aObj);
-            props.onErrorAnalytics(aObj);
-        });
+                props.onErrorAnalytics(aObj);
+            });
+        }
 
         props.onChange({
             data,
