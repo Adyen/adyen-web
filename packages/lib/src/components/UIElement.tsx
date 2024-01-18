@@ -14,6 +14,7 @@ import Core from '../core';
 import {
     ANALYTICS_FOCUS_STR,
     ANALYTICS_RENDERED_STR,
+    ANALYTICS_SELECTED_STR,
     ANALYTICS_SUBMIT_STR,
     ANALYTICS_UNFOCUS_STR,
     ANALYTICS_VALIDATION_ERROR_STR
@@ -133,6 +134,13 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
                 });
                 break;
             }
+
+            case ANALYTICS_SELECTED_STR:
+                this.props.modules?.analytics.createAnalyticsEvent({
+                    event: 'info',
+                    data: { component, type, target }
+                });
+                break;
 
             default: {
                 this.props.modules?.analytics.createAnalyticsEvent(analyticsObj);
