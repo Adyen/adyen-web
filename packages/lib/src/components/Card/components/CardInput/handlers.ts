@@ -1,6 +1,8 @@
 import { ENCRYPTED_CARD_NUMBER, CREDIT_CARD_SF_FIELDS } from '../../../internal/SecuredFields/lib/configuration/constants';
 import { selectOne } from '../../../internal/SecuredFields/lib/utilities/dom';
 import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
+import { ANALYTICS_FOCUS_STR, ANALYTICS_UNFOCUS_STR } from '../../../../core/Analytics/constants';
+import { fieldTypeToSnakeCase } from './utils';
 
 /**
  * Helper for CardInput - gets a field name and sets focus on it
@@ -26,11 +28,17 @@ export const getAddressHandler = (setFormData, setFormValid, setFormErrors) => {
     };
 };
 
-export const getFocusHandler = (setFocusedElement, onFocus, onBlur) => {
+export const getFocusHandler = (setFocusedElement, onFocus, onBlur, onSubmitAnalytics?) => {
     // Return Handler fn:
     return (e: CbObjOnFocus) => {
         setFocusedElement(e.currentFocusObject);
         e.focus === true ? onFocus(e) : onBlur(e);
+        // console.log('### handlers:::: ONFOCUS e', e);
+
+        // onSubmitAnalytics({
+        //     type: e.focus === true ? ANALYTICS_FOCUS_STR : ANALYTICS_UNFOCUS_STR,
+        //     target: fieldTypeToSnakeCase(e.fieldType)
+        // });
     };
 };
 

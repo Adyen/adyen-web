@@ -128,6 +128,7 @@ export interface CardInputProps {
     maskSecurityCode?: boolean;
     disclaimerMessage?: DisclaimerMsgObject;
     onErrorAnalytics?: (obj) => {};
+    onSubmitAnalytics?: (obj) => {};
 }
 
 export interface CardInputState {

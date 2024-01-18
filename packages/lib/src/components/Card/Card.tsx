@@ -176,8 +176,8 @@ export class CardElement extends UIElement<CardElementProps> {
 
     private onFocus = obj => {
         this.submitAnalytics({
-            event: 'info',
-            data: { component: this.constructor['type'], type: ANALYTICS_FOCUS_STR, target: this.fieldTypeToSnakeCase(obj.fieldType) }
+            type: ANALYTICS_FOCUS_STR,
+            target: this.fieldTypeToSnakeCase(obj.fieldType)
         });
 
         // Call merchant defined callback
@@ -186,8 +186,8 @@ export class CardElement extends UIElement<CardElementProps> {
 
     private onBlur = obj => {
         this.submitAnalytics({
-            event: 'info',
-            data: { component: this.constructor['type'], type: ANALYTICS_UNFOCUS_STR, target: this.fieldTypeToSnakeCase(obj.fieldType) }
+            type: ANALYTICS_UNFOCUS_STR,
+            target: this.fieldTypeToSnakeCase(obj.fieldType)
         });
 
         // Call merchant defined callback
@@ -196,14 +196,10 @@ export class CardElement extends UIElement<CardElementProps> {
 
     private onErrorAnalytics = obj => {
         this.submitAnalytics({
-            event: 'info',
-            data: {
-                component: this.constructor['type'],
-                type: ANALYTICS_VALIDATION_ERROR_STR,
-                target: this.fieldTypeToSnakeCase(obj.fieldType),
-                validationErrorCode: obj.errorCode,
-                validationErrorMessage: obj.errorMessage
-            }
+            type: ANALYTICS_VALIDATION_ERROR_STR,
+            target: this.fieldTypeToSnakeCase(obj.fieldType),
+            validationErrorCode: obj.errorCode,
+            validationErrorMessage: obj.errorMessage
         });
     };
 
@@ -287,6 +283,7 @@ export class CardElement extends UIElement<CardElementProps> {
                 onFocus={this.onFocus}
                 onBlur={this.onBlur}
                 onErrorAnalytics={this.onErrorAnalytics}
+                // onSubmitAnalytics={this.submitAnalytics}
             />
         );
     }
