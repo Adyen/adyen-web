@@ -13,7 +13,7 @@ export const ANALYTICS_RENDERED_STR = 'rendered';
 export const ANALYTICS_VALIDATION_ERROR_STR = 'validationError';
 
 export const ANALYTICS_FOCUS_STR = 'focus';
-export const ANALYTICS_UNFOCUS_STR = 'blur';
+export const ANALYTICS_UNFOCUS_STR = 'unfocus';
 
 export const ANALYTICS_IMPLEMENTATION_ERROR = 'ImplementationError';
 export const ANALYTICS_API_ERROR = 'APIError';
