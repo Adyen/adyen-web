@@ -11,8 +11,8 @@ export default function ({
     data = '',
     required = false,
     disabled = false,
-    onFieldFocusAnalytics,
-    onFieldBlurAnalytics
+    onFieldFocusAnalytics = null,
+    onFieldBlurAnalytics = null
 }) {
     const { i18n } = useCoreContext();
 
