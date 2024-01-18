@@ -113,7 +113,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
                 // PM pay button pressed - AnalyticsAction: action: 'log' type:'submit'
                 this.props.modules?.analytics.createAnalyticsEvent({
                     event: 'log',
-                    data: { component, type, target: 'payButton', message: 'Shopper clicked pay' }
+                    data: { component, type, target: 'pay_button', message: 'Shopper clicked pay' }
                 });
                 break;
 
