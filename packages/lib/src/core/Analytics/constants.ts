@@ -1,6 +1,6 @@
 export const ANALYTICS_PATH = 'v3/analytics';
 
-export const ANALYTICS_INFO_TIMER_INTERVAL = 10000;
+export const ANALYTICS_INFO_TIMER_INTERVAL = process.env.NODE_ENV === 'development' ? 5000 : 10000;
 
 export const ANALYTICS_EVENT_LOG = 'log';
 export const ANALYTICS_EVENT_ERROR = 'error';
