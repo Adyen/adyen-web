@@ -175,6 +175,7 @@ export class CardElement extends UIElement<CardElementProps> {
     }
 
     private onFocus = obj => {
+        // console.log('### Card::onFocus:: fieldType', obj.fieldType, 'target', this.fieldTypeToSnakeCase(obj.fieldType));
         this.submitAnalytics({
             type: ANALYTICS_FOCUS_STR,
             target: this.fieldTypeToSnakeCase(obj.fieldType)
@@ -184,12 +185,14 @@ export class CardElement extends UIElement<CardElementProps> {
 
         // TODO - decide if this is a breaking change now we call onFocus/onBlur callbacks for non-SF fields
         //  if so: then for v5 don't call this callback for for non-SF fields (and only send obj.event)
-        if (ALL_SECURED_FIELDS.includes(obj.fieldType)) {
-            this.props.onFocus?.(obj.event);
-        }
+        // if (ALL_SECURED_FIELDS.includes(obj.fieldType)) {
+        //     this.props.onFocus?.(obj.event);
+        // } else {
+        //     this.props.onFocus?.(obj);
+        // }
 
         // v6 version
-        // this.props.onFocus?.(obj);
+        this.props.onFocus?.(obj);
     };
 
     private onBlur = obj => {
@@ -202,12 +205,12 @@ export class CardElement extends UIElement<CardElementProps> {
 
         // TODO - decide if this is a breaking change now we call onFocus/onBlur callbacks for non-SF fields
         //  if so: then for v5 don't call this callback for for non-SF fields (and only send obj.event)
-        if (ALL_SECURED_FIELDS.includes(obj.fieldType)) {
-            this.props.onBlur?.(obj.event);
-        }
+        // if (ALL_SECURED_FIELDS.includes(obj.fieldType)) {
+        //     this.props.onBlur?.(obj.event);
+        // }
 
         // v6 version
-        // this.props.onBlur?.(obj);
+        this.props.onBlur?.(obj);
     };
 
     private onErrorAnalytics = obj => {
