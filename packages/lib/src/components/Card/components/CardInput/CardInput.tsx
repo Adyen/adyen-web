@@ -139,16 +139,17 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     /**
      * HANDLERS
      */
-    // SecuredField-only handler
-    const handleFocus = getFocusHandler(setFocusedElement, props.onFocus, props.onBlur); //, props.onSubmitAnalytics);
-
-    // Handlers for focus & blur on non-securedFields. Can be renamed to onFieldFocus once the onFocusField is renamed in Field.tsx
+    // Handlers for focus & blur on all fields. Can be renamed to onFieldFocus once the onFocusField is renamed in Field.tsx
     const onFieldFocusAnalytics = (who, e) => {
         props.onFocus({ fieldType: who, event: e });
     };
     const onFieldBlurAnalytics = (who, e) => {
         props.onBlur({ fieldType: who, event: e });
     };
+
+    // Make SecuredFields aware of the focus & blur handlers
+    // const handleFocus = getFocusHandler(setFocusedElement, props.onFocus, props.onBlur);
+    const handleFocus = getFocusHandler(setFocusedElement, onFieldFocusAnalytics, onFieldBlurAnalytics);
 
     const retrieveLayout = (): string[] => {
         return getLayout({

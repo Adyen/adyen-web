@@ -15,9 +15,8 @@ import { AddressSpecifications, StringObject } from '../../../internal/Address/t
 import { PARTIAL_ADDRESS_SCHEMA } from '../../../internal/Address/constants';
 import { InstallmentsObj } from './components/Installments/Installments';
 import { SFPProps } from '../../../internal/SecuredFields/SFP/types';
-import { ALL_SECURED_FIELDS, BRAND_READABLE_NAME_MAP, ENCRYPTED } from '../../../internal/SecuredFields/lib/configuration/constants';
+import { BRAND_READABLE_NAME_MAP } from '../../../internal/SecuredFields/lib/configuration/constants';
 import { UseImageHookType } from '../../../../core/Context/useImage';
-import { camelCaseToSnakeCase } from '../../../../utils/textUtils';
 
 export const getCardImageUrl = (brand: string, getImage: UseImageHookType): string => {
     const imageOptions = {
@@ -177,13 +176,4 @@ export function lookupBlurBasedErrors(errorCode) {
 
 export function getFullBrandName(brand) {
     return BRAND_READABLE_NAME_MAP[brand] ?? brand;
-}
-
-export function fieldTypeToSnakeCase(fieldType) {
-    let str = camelCaseToSnakeCase(fieldType);
-    // SFs need their fieldType mapped to what the endpoint expects
-    if (ALL_SECURED_FIELDS.includes(fieldType)) {
-        str = str.substring(ENCRYPTED.length + 1); // strip 'encrypted_' off the string
-    }
-    return str;
 }
