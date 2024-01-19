@@ -182,17 +182,11 @@ export class CardElement extends UIElement<CardElementProps> {
         });
 
         // Call merchant defined callback
-
-        // TODO - decide if this is a breaking change now we call onFocus/onBlur callbacks for non-SF fields
-        //  if so: then for v5 don't call this callback for for non-SF fields (and only send obj.event)
-        // if (ALL_SECURED_FIELDS.includes(obj.fieldType)) {
-        //     this.props.onFocus?.(obj.event);
-        // } else {
-        //     this.props.onFocus?.(obj);
-        // }
-
-        // v6 version
-        this.props.onFocus?.(obj);
+        if (ALL_SECURED_FIELDS.includes(obj.fieldType)) {
+            this.props.onFocus?.(obj.event);
+        } else {
+            this.props.onFocus?.(obj);
+        }
     };
 
     private onBlur = obj => {
@@ -202,15 +196,11 @@ export class CardElement extends UIElement<CardElementProps> {
         });
 
         // Call merchant defined callback
-
-        // TODO - decide if this is a breaking change now we call onFocus/onBlur callbacks for non-SF fields
-        //  if so: then for v5 don't call this callback for for non-SF fields (and only send obj.event)
-        // if (ALL_SECURED_FIELDS.includes(obj.fieldType)) {
-        //     this.props.onBlur?.(obj.event);
-        // }
-
-        // v6 version
-        this.props.onBlur?.(obj);
+        if (ALL_SECURED_FIELDS.includes(obj.fieldType)) {
+            this.props.onBlur?.(obj.event);
+        } else {
+            this.props.onBlur?.(obj);
+        }
     };
 
     private onErrorAnalytics = obj => {
