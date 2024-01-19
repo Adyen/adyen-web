@@ -48,6 +48,7 @@ class BlikElement extends UIElement {
         if (this.props.storedPaymentMethodId && this.props.label) {
             return this.props.name;
         }
+        return null;
     }
 
     /**
