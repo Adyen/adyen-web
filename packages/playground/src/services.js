@@ -13,9 +13,9 @@ export const getPaymentMethods = configuration =>
 export const makePayment = (data, config = {}) => {
     // NOTE: Merging data object. DO NOT do this in production.
     const paymentRequest = { ...paymentsConfig, ...config, ...data };
-    if (paymentRequest.order) {
-        delete paymentRequest.amount;
-    }
+    // if (paymentRequest.order) {
+    //     delete paymentRequest.amount;
+    // }
     return httpPost('payments', paymentRequest)
         .then(response => {
             if (response.error) throw 'Payment initiation failed';
@@ -49,7 +49,8 @@ export const getOriginKey = (originKeyOrigin = document.location.origin) =>
     httpPost('originKeys', { originDomains: [originKeyOrigin] }).then(response => response.originKeys[originKeyOrigin]);
 
 export const checkBalance = data => {
-    return httpPost('paymentMethods/balance', data)
+    const payload = { amount: paymentsConfig.amount, ...data };
+    return httpPost('paymentMethods/balance', payload)
         .then(response => {
             if (response.error) throw 'Balance call failed';
             return response;

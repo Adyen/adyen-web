@@ -11,7 +11,7 @@ interface StoredGiftCardFieldsProps extends GiftcardFieldsProps {
 }
 
 export const StoredGiftCardFields = (props: Readonly<StoredGiftCardFieldsProps>) => {
-    const { pinRequired, expiryMonth, expiryYear } = props;
+    const { setRootNode, pinRequired, expiryMonth, expiryYear } = props;
     const { i18n } = useCoreContext();
     // const storedCardDescription = i18n.get('creditCard.storedCard.description.ariaLabel').replace('%@', lastFour);
     // const storedCardDescriptionSuffix =
@@ -26,7 +26,7 @@ export const StoredGiftCardFields = (props: Readonly<StoredGiftCardFieldsProps>)
     return (
         // TODO missing aria-label
         <div className="adyen-checkout__card__form adyen-checkout__card__form--oneClick">
-            <div className="adyen-checkout__card__exp-cvc adyen-checkout__field-wrapper">
+            <div ref={setRootNode} className="adyen-checkout__card__exp-cvc adyen-checkout__field-wrapper">
                 {expiryMonth && expiryYear && (
                     <Field
                         label={i18n.get('creditCard.expiryDateField.title')}

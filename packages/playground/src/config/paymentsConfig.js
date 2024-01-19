@@ -56,6 +56,7 @@ const paymentsConfig = {
             taxCategory: 'None',
             amountExcludingTax: 10000
         }
-    ]
+    ],
+    recurringProcessingModel: 'CardOnFile'
 };
 export default paymentsConfig;

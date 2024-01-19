@@ -28,7 +28,8 @@ export class MealVoucherFRElement extends GiftcardElement {
             encryptedCardNumber: this.state.data?.encryptedCardNumber,
             encryptedSecurityCode: this.state.data?.encryptedSecurityCode,
             encryptedExpiryMonth: this.state.data?.encryptedExpiryMonth,
-            encryptedExpiryYear: this.state.data?.encryptedExpiryYear
+            encryptedExpiryYear: this.state.data?.encryptedExpiryYear,
+            ...(this.props.storedPaymentMethodId && { storedPaymentMethodId: this.props.storedPaymentMethodId })
         };
     }
 

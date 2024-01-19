@@ -29,7 +29,8 @@ export class GiftcardElement extends UIElement {
                 type: this.constructor['type'],
                 brand: this.props.brand,
                 encryptedCardNumber: this.state.data?.encryptedCardNumber,
-                encryptedSecurityCode: this.state.data?.encryptedSecurityCode
+                encryptedSecurityCode: this.state.data?.encryptedSecurityCode,
+                ...(this.props.storedPaymentMethodId && { storedPaymentMethodId: this.props.storedPaymentMethodId })
             }
         };
     }
@@ -104,13 +105,12 @@ export class GiftcardElement extends UIElement {
         }
 
         this.setStatus('loading');
-
         this.handleBalanceCheck(this.formatBalanceCheckData())
-            .then(({ balance, transactionLimit = {} as PaymentAmount }) => {
+            .then(({ balance, transactionLimit = {} as PaymentAmount }: { balance: PaymentAmount; transactionLimit: PaymentAmount }) => {
                 if (!balance) throw new Error('card-error'); // card doesn't exist
                 if (balance?.currency !== this.props.amount?.currency) throw new Error('currency-error');
                 if (balance?.value <= 0) throw new Error('no-balance');
-
+                debugger;
                 this.componentRef.setBalance({ balance, transactionLimit });
 
                 if (this.props.amount.value > balance.value || this.props.amount.value > transactionLimit.value) {
