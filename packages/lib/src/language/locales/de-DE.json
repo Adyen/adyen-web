@@ -1,9 +1,11 @@
 {
-    "payButton": "Zahlen",
+    "payButton": "Zahle",
     "payButton.redirecting": "Umleiten…",
     "payButton.with": "%{value} mit %{maskedData} zahlen",
+    "payButton.saveDetails": "Angaben speichern",
     "close": "Schließen",
     "storeDetails": "Für zukünftige Zahlvorgänge speichern",
+    "readMore": "Mehr lesen",
     "creditCard.holderName": "Name auf der Karte",
     "creditCard.holderName.invalid": "Geben Sie den Namen wie auf der Karte gezeigt ein",
     "creditCard.expiryDateField.month": "Monat",
@@ -103,6 +105,7 @@
     "donateButton": "Spenden",
     "notNowButton": "Nicht jetzt",
     "thanksForYourSupport": "Danke für Ihre Unterstützung!",
+    "resultMessages.preauthorized": "Angaben gespeichert",
     "preauthorizeWith": "Vorautorisieren mit",
     "confirmPreauthorization": "Vorautorisierung bestätigen",
     "confirmPurchase": "Kauf bestätigen",
@@ -229,6 +232,7 @@
     "ctp.otp.subtitle": "Geben Sie den Code ein, der von %@ an %@ gesendet wurde, um Ihre Identität zu bestätigen.",
     "ctp.otp.saveCookiesCheckbox.label": "Verifizierung beim nächsten Mal überspringen",
     "ctp.otp.saveCookiesCheckbox.information": "Wählen Sie diese Option, um bei teilnehmenden Geschäften auf Ihrem Gerät und Browser gespeichert zu werden, um den Bestellvorgang zu beschleunigen. Nicht für gemeinsam genutzte Geräte empfohlen.",
+    "ctp.otp.saveCookiesCheckbox.shorterInfo": "Wählen Sie diese Option aus, um auf Ihrem Gerät und Browser gespeichert zu werden",
     "ctp.emptyProfile.message": "In diesem Click-to-Pay-Profil sind keine Karten registriert",
     "ctp.separatorText": "oder verwenden",
     "ctp.cards.title": "Zahlung mit Click to Pay abschließen",
@@ -283,5 +287,11 @@
     "ach.bankAccountNumber.label": "Kontonummer",
     "ach.bankLocationId.label": "ABA-Nummer",
     "dragonpayVoucher.selectField.contextualText.nonBank": "Anbieter auswählen",
-    "dragonpayVoucher.selectField.contextualText.bank": "Bank auswählen"
+    "dragonpayVoucher.selectField.contextualText.bank": "Bank auswählen",
+    "payme.openPayMeApp": "Schließen Sie Ihre Zahlung in der PayMe-App ab, indem Sie die Zahlung in der App autorisieren und auf die Bestätigung warten.",
+    "payme.redirectButtonLabel": "Öffnen Sie die PayMe-App",
+    "payme.scanQrCode": "Schließen Sie Ihre Zahlung per QR-Code ab",
+    "payme.timeToPay": "Dieser QR-Code gilt für %@",
+    "payme.instructions.steps": "Öffnen Sie die PayMe-App.%@Scannen Sie den QR-Code, um die Zahlung zu autorisieren.%@Schließen Sie die Zahlung in der App ab und warten Sie auf eine Bestätigung.",
+    "payme.instructions.footnote": "Bitte schließen Sie diese Seite nicht, bevor die Zahlung abgeschlossen ist"
 }

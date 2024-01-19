@@ -8,7 +8,6 @@ import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
 export const setFocusOnFirstField = (isValidating, sfp, fieldToFocus) => {
     if (isValidating) {
         // If not a cardInput related securedField - find field and set focus on it
-        // if (!ALL_RELATED_SECURED_FIELDS.includes(who)) {
         if (!CREDIT_CARD_SF_FIELDS.includes(fieldToFocus)) {
             setFocusOnNonSF(fieldToFocus, sfp);
         } else {

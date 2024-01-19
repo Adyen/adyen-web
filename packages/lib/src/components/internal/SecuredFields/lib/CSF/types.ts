@@ -1,5 +1,5 @@
 import Language from '../../../../../language/Language';
-import { BrandStorageObject } from '../types';
+import { BrandStorageObject, SecuredFields } from '../types';
 import { Placeholders } from '../../SFP/types';
 
 /**
@@ -22,7 +22,12 @@ export interface CSFReturnObject {
 /**
  * Base interface for CSFSetupObject & CSFConfigObject
  *
+<<<<<<< HEAD
  * These are the props that are passed from SFP when CSF is initialised and which end up as props in (CSF) this.config: CSFConfigObject
+=======
+ * These are the props that are passed from SFP when CSF is initialised but which also end up
+ * as props in CSF--this.config: CSFConfigObject
+>>>>>>> main
  */
 interface CSFCommonProps {
     autoFocus?: boolean | string;
@@ -56,12 +61,16 @@ export interface CSFConfigObject extends CSFCommonProps {
 /**
  * The object sent when SecuredFieldsProvider initialises CSF
  *
+<<<<<<< HEAD
  * The properties defined here are ones that will *not* end up on (CSF) this.config
+=======
+ * The properties defined here are ones that will not end up on CSF--this.config
+>>>>>>> main
  */
 export interface CSFSetupObject extends CSFCommonProps {
     type: string;
     clientKey: string;
-    rootNode: string | HTMLElement;
+    rootNode: string | HTMLElement; // TODO - when is this a string?
     callbacks?: object;
     isKCP?: boolean;
     i18n?: Language;
@@ -100,6 +109,13 @@ export interface CSFStateObject {
     hasSeparateDateFields: boolean;
     currentFocusObject: string;
     registerFieldForIos: boolean;
-    securedFields: object;
+    securedFields: SecuredFields;
     isKCP: boolean;
+}
+
+export interface CSFThisObject {
+    csfState?: CSFStateObject;
+    csfConfig?: CSFConfigObject;
+    csfProps?: CSFSetupObject;
+    csfCallbacks?: CSFCallbacksConfig;
 }

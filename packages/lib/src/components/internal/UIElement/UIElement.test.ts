@@ -1,9 +1,10 @@
 import { UIElement } from './UIElement';
 import { ICore } from '../../../core/types';
-import { any, mockDeep } from 'jest-mock-extended';
+import { any, mock, mockDeep } from 'jest-mock-extended';
 import { AdyenCheckout, ThreeDS2Challenge, ThreeDS2DeviceFingerprint } from '../../../index';
 import { UIElementProps } from './types';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
+import { Resources } from '../../../core/Context/Resources';
 
 interface MyElementProps extends UIElementProps {
     challengeWindowSize?: string;
@@ -34,6 +35,23 @@ beforeEach(() => {
 });
 
 describe('UIElement', () => {
+    describe('icon()', () => {
+        test('should generate the icon URL by getting the tx variant from type() getter', () => {
+            const resources = mock<Resources>();
+            resources.getImage.mockReturnValue((icon: string) => `https://checkout-adyen.com/${icon}`);
+
+            const txVariant = 'klarna_b2b';
+
+            const element = new MyElement({ core: core, type: txVariant, modules: { resources } });
+
+            const typeSpy = jest.spyOn(element, 'type', 'get');
+            const iconUrl = element.icon;
+
+            expect(typeSpy).toHaveBeenCalledTimes(1);
+            expect(iconUrl).toBe(`https://checkout-adyen.com/${txVariant}`);
+        });
+    });
+
     describe('onComplete()', () => {
         test('should call "onComplete" prop if available', () => {
             const onCompleteCb = jest.fn();

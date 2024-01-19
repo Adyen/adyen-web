@@ -8,6 +8,7 @@ import { CtPInfo } from '../CtPInfo';
 import CtPSection from '../CtPSection';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
 import './CtPOneTimePassword.scss';
+import CtPSaveCookiesCheckbox from './CtPSaveCookiesCheckbox';
 
 type CtPOneTimePasswordProps = {
     onDisplayCardComponent?(): void;
@@ -80,6 +81,9 @@ const CtPOneTimePassword = ({ onDisplayCardComponent }: CtPOneTimePasswordProps)
                 onResendCode={onResendCode}
                 isValidatingOtp={isValidatingOtp}
             />
+
+            <CtPSaveCookiesCheckbox />
+
             <Button
                 disabled={isAccountLocked}
                 label={i18n.get('continue')}

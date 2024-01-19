@@ -1,25 +1,7 @@
-import {
-    AdyenCheckout,
-    Dropin,
-    Ideal,
-    Card,
-    GooglePay,
-    PayPal,
-    Ach,
-    Affirm,
-    WeChat,
-    Giftcard,
-    AmazonPay
-} from '@adyen/adyen-web';
+import { AdyenCheckout, Dropin, Ideal, Card, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
-import {
-    getPaymentMethods,
-    makePayment,
-    checkBalance,
-    createOrder,
-    cancelOrder,
-    makeDetailsCall
-} from '../../services';
+import { getPaymentMethods, makePayment, checkBalance, createOrder, cancelOrder, makeDetailsCall } from '../../services';
+
 import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
 import { getSearchParameters } from '../../utils';
 import getTranslationFile from '../../config/getTranslation';
@@ -78,7 +60,7 @@ export async function initManual() {
             try {
                 console.log('onAdditionalDetails', state, component, actions);
 
-                const { resultCode, action, order, resultCode, donationToken } = await makeDetailsCall(state.data);
+                const { resultCode, action, order, donationToken } = await makeDetailsCall(state.data);
 
                 if (!resultCode) actions.reject();
 

@@ -11,7 +11,7 @@ import { SRPanel } from '../../../../core/Errors/SRPanel';
 import Analytics from '../../../../core/Analytics';
 import RiskElement from '../../../../core/RiskModule';
 import { DisclaimerMsgObject } from '../../../internal/DisclaimerMessage/DisclaimerMessage';
-import { OnAddressLookupType } from '../../../internal/Address/components/AddressSearch';
+import { OnAddressLookupType, OnAddressSelectedType } from '../../../internal/Address/components/AddressSearch';
 import { ComponentMethodsRef } from '../../../internal/UIElement/types';
 import { AddressData, PaymentAmount } from '../../../../types/global-types';
 
@@ -114,6 +114,8 @@ export interface CardInputProps {
     onFocus?: (e) => {};
     onLoad?: () => {};
     onAddressLookup?: OnAddressLookupType;
+    onAddressSelected?: OnAddressSelectedType;
+    addressSearchDebounceMs?: number;
     payButton?: (obj) => {};
     placeholders?: Placeholders;
     positionHolderNameOnTop?: boolean;

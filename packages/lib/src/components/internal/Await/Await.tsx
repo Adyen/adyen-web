@@ -76,14 +76,14 @@ function Await(props: AwaitComponentProps) {
     };
 
     const checkStatus = (): void => {
-        const { paymentData, clientKey } = props;
+        const { paymentData, clientKey, throttleInterval } = props;
 
         if (!hasCalledActionHandled) {
             props.onActionHandled({ componentType: props.type, actionDescription: 'polling-started' });
             setHasCalledActionHandled(true);
         }
 
-        checkPaymentStatus(paymentData, clientKey, loadingContext)
+        checkPaymentStatus(paymentData, clientKey, loadingContext, throttleInterval)
             .then(processResponse)
             .catch(({ message, ...response }) => ({
                 type: 'network-error',

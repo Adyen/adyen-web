@@ -76,6 +76,7 @@ export { default as WeChat } from './WeChat';
 export { default as PromptPay } from './PromptPay';
 export { default as PayNow } from './PayNow';
 export { default as DuitNow } from './DuitNow';
+export { default as PayMe } from './PayMe';
 
 /** Await */
 export { default as Blik } from './Blik';

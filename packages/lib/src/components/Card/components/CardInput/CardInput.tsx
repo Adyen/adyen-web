@@ -491,6 +491,8 @@ const CardInput = (props: CardInputProps) => {
                             partialAddressSchema={partialAddressSchema}
                             handleAddress={handleAddress}
                             onAddressLookup={props.onAddressLookup}
+                            onAddressSelected={props.onAddressSelected}
+                            addressSearchDebounceMs={props.addressSearchDebounceMs}
                             //
                             iOSFocusedField={iOSFocusedField}
                         />

@@ -4,17 +4,16 @@ import {
     ENCRYPTED_EXPIRY_DATE,
     ENCRYPTED_EXPIRY_MONTH,
     ENCRYPTED_EXPIRY_YEAR,
-    ENCRYPTED_PWD_FIELD,
-    ENCRYPTED_PIN_FIELD
+    ENCRYPTED_PWD_FIELD
 } from '../../../configuration/constants';
 import { getPreviousTabbableNonSFElement } from './utils';
-import { ShiftTabObject } from '../../../types';
+import { SFFieldType, ShiftTabObject } from '../../../types';
 
 // KCP scenario: Regular credit card but with additional fields -
 // an encrypted pin/password field preceded by a form field of a non-SF type (d.o.b/taxRefNum)
-export function shiftTabKCP(fieldType: string, rootNode: HTMLElement, hasSeparateDateFields: boolean): ShiftTabObject {
+export function shiftTabKCP(fieldType: SFFieldType, rootNode: HTMLElement, hasSeparateDateFields: boolean): ShiftTabObject {
     let additionalField: HTMLElement;
-    let fieldToFocus: string;
+    let fieldToFocus: SFFieldType;
 
     switch (fieldType) {
         case ENCRYPTED_CARD_NUMBER:
@@ -38,7 +37,6 @@ export function shiftTabKCP(fieldType: string, rootNode: HTMLElement, hasSeparat
             break;
 
         case ENCRYPTED_PWD_FIELD:
-        case ENCRYPTED_PIN_FIELD:
             additionalField = getPreviousTabbableNonSFElement(fieldType, rootNode);
             break;
 

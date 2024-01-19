@@ -1,4 +1,5 @@
 import { UIElementProps } from '../../internal/UIElement/types';
+import { h } from 'preact';
 
 export interface QRLoaderConfiguration extends UIElementProps {
     /**
@@ -17,6 +18,8 @@ export interface QRLoaderConfiguration extends UIElementProps {
     qrCodeImage?: string;
     paymentData?: string;
     introduction?: string;
-    instructions?: string;
+    redirectIntroduction?: string;
+    timeToPay?: string;
+    instructions?: string | (() => h.JSX.Element);
     copyBtn?: boolean;
 }

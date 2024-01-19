@@ -45,3 +45,13 @@ export const getPreviousTabbableNonSFElement = (passedFieldType, rootNode, getPr
     const sfEl = selectOne(rootNode, `[data-cse=${passedFieldType}]`);
     return getPreviousTabbableEl(sfEl, getPrevious);
 };
+
+export const focusExternalField = (pAdditionalField: HTMLElement): void => {
+    if (pAdditionalField) {
+        pAdditionalField.focus();
+
+        // Quirky! - Needed to work in the Components scenario
+        pAdditionalField.blur();
+        pAdditionalField.focus();
+    }
+};

@@ -21,10 +21,7 @@ import {
 import './UIElement.scss';
 import { CheckoutSessionDetailsResponse, CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
 
-export abstract class UIElement<P extends UIElementProps = UIElementProps>
-    extends BaseElement<P>
-    implements IUIElement
-{
+export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
 
     protected resources: Resources;
@@ -132,11 +129,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
             return;
         }
 
-        this.makePaymentsCall()
-            .then(sanitizeResponse)
-            .then(verifyPaymentDidNotFail)
-            .then(this.handleResponse)
-            .catch(this.handleFailedResult);
+        this.makePaymentsCall().then(sanitizeResponse).then(verifyPaymentDidNotFail).then(this.handleResponse).catch(this.handleFailedResult);
     }
 
     protected makePaymentsCall(): Promise<CheckoutAdvancedFlowResponse | CheckoutSessionPaymentResponse> {
@@ -231,9 +224,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
             .catch(this.handleFailedResult);
     }
 
-    private makeAdditionalDetailsCall(
-        state: AdditionalDetailsStateData
-    ): Promise<CheckoutSessionDetailsResponse | CheckoutAdvancedFlowResponse> {
+    private makeAdditionalDetailsCall(state: AdditionalDetailsStateData): Promise<CheckoutSessionDetailsResponse | CheckoutAdvancedFlowResponse> {
         if (this.props.setStatusAutomatically) {
             this.setElementStatus('loading');
         }
@@ -293,9 +284,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
     protected handleOrder = (response: PaymentResponseData): void => {
         const { order } = response;
 
-        const updateCorePromise = this.core.session
-            ? this.core.update({ order })
-            : this.handleAdvanceFlowPaymentMethodsUpdate(order);
+        const updateCorePromise = this.core.session ? this.core.update({ order }) : this.handleAdvanceFlowPaymentMethodsUpdate(order);
 
         updateCorePromise.then(() => {
             this.props.onOrderUpdated?.({ order });
@@ -378,17 +367,17 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
     /**
      * Get the element icon URL for the current environment
      */
+
     public get icon(): string {
-        return this.props.icon ?? this.resources.getImage()(this.constructor['type']);
+        const type = this.props.paymentMethodType || this.type;
+        return this.props.icon ?? this.resources.getImage()(type);
     }
 
     /**
      * Get the element's displayable name
      */
     public get displayName(): string {
-        const paymentMethodFromResponse = this.core.paymentMethodsResponse?.paymentMethods?.find(
-            pm => pm.type === this.type
-        );
+        const paymentMethodFromResponse = this.core.paymentMethodsResponse?.paymentMethods?.find(pm => pm.type === this.type);
         return this.props.name || paymentMethodFromResponse?.name || this.type;
     }
 
@@ -410,14 +399,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
      * Get the payButton component for the current element
      */
     protected payButton = (props: PayButtonFunctionProps) => {
-        return (
-            <PayButton
-                {...props}
-                amount={this.props.amount}
-                secondaryAmount={this.props.secondaryAmount}
-                onClick={this.submit}
-            />
-        );
+        return <PayButton {...props} amount={this.props.amount} secondaryAmount={this.props.secondaryAmount} onClick={this.submit} />;
     };
 
     private async handleAdvanceFlowPaymentMethodsUpdate(order: Order) {

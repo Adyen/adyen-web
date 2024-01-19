@@ -1,5 +1,4 @@
 import { h } from 'preact';
-import { UIElement } from '../internal/UIElement/UIElement';
 import CardInput from './components/CardInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import collectBrowserInfo from '../../utils/browserInfo';
@@ -14,6 +13,9 @@ import ClickToPayWrapper from './components/ClickToPayWrapper';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { TxVariants } from '../tx-variants';
 import { UIElementStatus } from '../internal/UIElement/types';
+import UIElement from '../internal/UIElement';
+import PayButton from '../internal/PayButton';
+import { PayButtonProps } from '../internal/PayButton/PayButton';
 
 // @ts-ignore TODO: Check with nick
 export class CardElement extends UIElement<CardConfiguration> {
@@ -30,11 +32,7 @@ export class CardElement extends UIElement<CardConfiguration> {
         super(props);
 
         if (props && !props._disableClickToPay) {
-            this.clickToPayService = createClickToPayService(
-                this.props.configuration,
-                this.props.clickToPayConfiguration,
-                this.props.environment
-            );
+            this.clickToPayService = createClickToPayService(this.props.configuration, this.props.clickToPayConfiguration, this.props.environment);
             this.clickToPayService?.initialize();
         }
     }
@@ -60,6 +58,9 @@ export class CardElement extends UIElement<CardConfiguration> {
     };
 
     formatProps(props: CardConfiguration) {
+        const isZeroAuth = props.amount?.value === 0;
+        const enableStoreDetails = isZeroAuth ? false : props.session?.configuration?.enableStoreDetails || props.enableStoreDetails;
+
         return {
             ...props,
             // Mismatch between hasHolderName & holderNameRequired which can mean card can never be valid
@@ -82,7 +83,7 @@ export class CardElement extends UIElement<CardConfiguration> {
             icon: props.icon || props.configuration?.icon,
             // installmentOptions of a session should be used before falling back to the merchant configuration
             installmentOptions: props.session?.configuration?.installmentOptions || props.installmentOptions,
-            enableStoreDetails: props.session?.configuration?.enableStoreDetails || props.enableStoreDetails,
+            enableStoreDetails,
             /**
              * Click to Pay configuration
              * - If email is set explicitly in the configuration, then it can override the one used in the session creation
@@ -90,10 +91,8 @@ export class CardElement extends UIElement<CardConfiguration> {
             clickToPayConfiguration: {
                 ...props.clickToPayConfiguration,
                 disableOtpAutoFocus: props.clickToPayConfiguration?.disableOtpAutoFocus || false,
-                shopperEmail:
-                    props.clickToPayConfiguration?.shopperEmail || props?.core?.options?.session?.shopperEmail,
-                telephoneNumber:
-                    props.clickToPayConfiguration?.telephoneNumber || props?.core?.options?.session?.telephoneNumber,
+                shopperEmail: props.clickToPayConfiguration?.shopperEmail || props?.core?.options?.session?.shopperEmail,
+                telephoneNumber: props.clickToPayConfiguration?.telephoneNumber || props?.core?.options?.session?.telephoneNumber,
                 locale: props.clickToPayConfiguration?.locale || props.i18n?.locale?.replace('-', '_')
             }
         };
@@ -110,8 +109,7 @@ export class CardElement extends UIElement<CardConfiguration> {
          *  - or, in the case of a storedCard
          */
         const cardBrand = this.state.selectedBrandValue;
-        const includeStorePaymentMethod =
-            this.props.enableStoreDetails && typeof this.state.storePaymentMethod !== 'undefined';
+        const includeStorePaymentMethod = this.props.enableStoreDetails && typeof this.state.storePaymentMethod !== 'undefined';
 
         return {
             paymentMethod: {
@@ -145,8 +143,7 @@ export class CardElement extends UIElement<CardConfiguration> {
     };
 
     processBinLookupResponse(binLookupResponse: BinLookupResponse, isReset = false) {
-        if (this.componentRef?.processBinLookupResponse)
-            this.componentRef.processBinLookupResponse(binLookupResponse, isReset);
+        if (this.componentRef?.processBinLookupResponse) this.componentRef.processBinLookupResponse(binLookupResponse, isReset);
         return this;
     }
 
@@ -203,8 +200,7 @@ export class CardElement extends UIElement<CardConfiguration> {
         return (
             (this.props.name || CardElement.type) +
             (this.props.storedPaymentMethodId
-                ? ' ' +
-                  this.props.i18n.get('creditCard.storedCard.description.ariaLabel').replace('%@', this.props.lastFour)
+                ? ' ' + this.props.i18n.get('creditCard.storedCard.description.ariaLabel').replace('%@', this.props.lastFour)
                 : '')
         );
     }
@@ -212,6 +208,20 @@ export class CardElement extends UIElement<CardConfiguration> {
     get browserInfo() {
         return collectBrowserInfo();
     }
+    // Override
+    protected payButton = (props: PayButtonProps) => {
+        const isZeroAuth = this.props.amount?.value === 0;
+        const isStoredCard = this.props.storedPaymentMethodId?.length > 0;
+        return (
+            <PayButton
+                {...props}
+                amount={this.props.amount}
+                secondaryAmount={this.props.secondaryAmount}
+                label={isZeroAuth && !isStoredCard ? this.props.i18n.get('payButton.saveDetails') : ''}
+                onClick={this.submit}
+            />
+        );
+    };
 
     private renderCardInput(isCardPrimaryInput = true): h.JSX.Element {
         return (

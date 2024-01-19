@@ -81,8 +81,7 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
         if (!nuObj.isReset) {
             // Add brandImage urls, first checking if the merchant has configured their own one for the brand
             nuObj.supportedBrandsRaw = obj.supportedBrandsRaw?.map((item: BrandObject) => {
-                item.brandImageUrl =
-                    this.props.brandsConfiguration[item.brand]?.icon ?? getCardImageUrl(item.brand, this.resources);
+                item.brandImageUrl = this.props.brandsConfiguration[item.brand]?.icon ?? getCardImageUrl(item.brand, this.resources);
                 return item;
             });
         }
@@ -94,10 +93,6 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
 
     get isValid() {
         return !!this.state.isValid;
-    }
-
-    get icon() {
-        return this.resources.getImage()(this.props.type);
     }
 
     get browserInfo() {
