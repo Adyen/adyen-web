@@ -8,7 +8,7 @@ import '../../style.scss';
 import { MockReactApp } from './MockReactApp';
 import { searchFunctionExample } from '../../utils';
 
-const onlyShowCard = true;
+const onlyShowCard = false;
 
 const showComps = {
     clickToPay: true,
@@ -66,7 +66,6 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     if (onlyShowCard || showComps.card) {
         window.card = checkout
             .create('card', {
-                // brands: ['visa', 'amex', 'bcmc', 'maestro'],
                 challengeWindowSize: '01',
                 _disableClickToPay: true,
                 // hasHolderName: true,

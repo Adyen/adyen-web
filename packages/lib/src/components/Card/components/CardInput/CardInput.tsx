@@ -148,7 +148,6 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     };
 
     // Make SecuredFields aware of the focus & blur handlers
-    // const handleFocus = getFocusHandler(setFocusedElement, props.onFocus, props.onBlur);
     const handleFocus = getFocusHandler(setFocusedElement, onFieldFocusAnalytics, onFieldBlurAnalytics);
 
     const retrieveLayout = (): string[] => {
