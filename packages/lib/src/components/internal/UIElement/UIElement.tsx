@@ -15,7 +15,8 @@ import {
     PaymentMethodsResponse,
     CheckoutAdvancedFlowResponse,
     PaymentResponseData,
-    RawPaymentResponse
+    RawPaymentResponse,
+    AdditionalDetailsStateData
 } from '../../../types/global-types';
 import './UIElement.scss';
 import { CheckoutSessionDetailsResponse, CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
@@ -222,7 +223,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
         }
     };
 
-    protected handleAdditionalDetails(state: any): void {
+    protected handleAdditionalDetails(state: AdditionalDetailsStateData): void {
         this.makeAdditionalDetailsCall(state)
             .then(sanitizeResponse)
             .then(verifyPaymentDidNotFail)
@@ -231,7 +232,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
     }
 
     private makeAdditionalDetailsCall(
-        state: any
+        state: AdditionalDetailsStateData
     ): Promise<CheckoutSessionDetailsResponse | CheckoutAdvancedFlowResponse> {
         if (this.props.setStatusAutomatically) {
             this.setElementStatus('loading');
@@ -243,7 +244,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
             });
         }
 
-        if (this.props.session) {
+        if (this.core.session) {
             return this.submitAdditionalDetailsUsingSessionsFlow(state.data);
         }
 
@@ -303,14 +304,14 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps>
 
     /**
      * Handles when the payment fails. The payment fails when:
-     * - adv flow: the merchant rejects the payment
+     * - adv flow: the merchant rejects the payment due to a critical error
      * - adv flow: the merchant resolves the payment with a failed resultCode
-     * - sessions: an error occurs during session when making the payment
-     * - sessions: the payment fail
+     * - sessions: a network error occurs when making the payment
+     * - sessions: the payment fails with a failed resultCode
      *
      * @param result
      */
-    protected handleFailedResult = (result: PaymentResponseData): void => {
+    protected handleFailedResult = (result?: PaymentResponseData): void => {
         if (this.props.setStatusAutomatically) {
             this.setElementStatus('error');
         }

@@ -379,3 +379,15 @@ export interface ActionHandledReturnObject {
     componentType: string;
     actionDescription: ActionDescriptionType;
 }
+
+export type AdditionalDetailsStateData = {
+    data: {
+        details: {
+            redirectResult?: string;
+            threeDSResult?: string;
+            [key: string]: any;
+        };
+        paymentData?: string;
+        sessionData?: string;
+    };
+};

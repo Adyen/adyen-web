@@ -9,7 +9,8 @@ import {
     CheckoutAdvancedFlowResponse,
     PaymentMethodsRequestData,
     SessionsResponse,
-    ResultCode
+    ResultCode,
+    AdditionalDetailsStateData
 } from '../types/global-types';
 import { AnalyticsOptions } from './Analytics/types';
 import { RiskModuleOptions } from './RiskModule/RiskModule';
@@ -176,10 +177,10 @@ export interface CoreConfiguration {
     /**
      * Called when the payment fails.
      *
-     * The first parameter is poppulated when merchant is using sessions, or when the payment was rejected
+     * The first parameter is populated when merchant is using sessions, or when the payment was rejected
      * with an object. (Ex: 'action.reject(obj)' ). Otherwise, it will be empty.
      *
-     * @param data
+     * @param data - session response or resultCode. It can also be undefined if payment was rejected without argument ('action.reject()')
      * @param element
      */
     onPaymentFailed?(data?: SessionsResponse | { resultCode: ResultCode }, element?: UIElement): void;
@@ -202,7 +203,7 @@ export interface CoreConfiguration {
      * @param actions
      */
     onAdditionalDetails?(
-        state: any,
+        state: AdditionalDetailsStateData,
         element: UIElement,
         actions: {
             resolve: (response: CheckoutAdvancedFlowResponse) => void;

@@ -5,7 +5,7 @@ import PaymentMethods from './ProcessResponse/PaymentMethods';
 import getComponentForAction from './ProcessResponse/PaymentAction';
 import { resolveEnvironment, resolveCDNEnvironment } from './Environment';
 import Analytics from './Analytics';
-import { PaymentAction, PaymentResponseData } from '../types/global-types';
+import { AdditionalDetailsStateData, PaymentAction, PaymentResponseData } from '../types/global-types';
 import { CoreConfiguration, ICore } from './types';
 import { processGlobalOptions } from './utils';
 import Session from './CheckoutSession';
@@ -114,7 +114,7 @@ class Core implements ICore {
      * @see {https://docs.adyen.com/online-payments/build-your-integration/?platform=Web&integration=Components&version=5.55.1#handle-the-redirect}
      * @param details - Details object containing the redirectResult
      */
-    public submitDetails(details: { details: { redirectResult: string } }): void {
+    public submitDetails(details: AdditionalDetailsStateData['data']): void {
         let promise = null;
 
         if (this.options.onAdditionalDetails) {

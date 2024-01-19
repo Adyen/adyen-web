@@ -26,7 +26,9 @@ export function sanitizeResponse(response: RawPaymentResponse): PaymentResponseD
  *
  * @param paymentResponse
  */
-export function cleanupFinalResult(paymentResponse: PaymentResponseData): void {
+export function cleanupFinalResult(paymentResponse?: PaymentResponseData): void {
+    if (!paymentResponse) return;
+
     delete paymentResponse.order;
     delete paymentResponse.action;
     if (!paymentResponse.donationToken || paymentResponse.donationToken.length === 0) {
