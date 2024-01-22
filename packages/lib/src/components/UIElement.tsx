@@ -11,14 +11,7 @@ import { hasOwnProperty } from '../utils/hasOwnProperty';
 import DropinElement from './Dropin';
 import { CoreOptions } from '../core/types';
 import Core from '../core';
-import {
-    ANALYTICS_FOCUS_STR,
-    ANALYTICS_RENDERED_STR,
-    ANALYTICS_SELECTED_STR,
-    ANALYTICS_SUBMIT_STR,
-    ANALYTICS_UNFOCUS_STR,
-    ANALYTICS_VALIDATION_ERROR_STR
-} from '../core/Analytics/constants';
+import { ANALYTICS_RENDERED_STR, ANALYTICS_SUBMIT_STR } from '../core/Analytics/constants';
 import { AnalyticsInitialEvent } from '../core/Analytics/types';
 
 export class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
@@ -83,69 +76,22 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
             component = this.constructor['type'] === 'scheme' || this.constructor['type'] === 'bcmc' ? this.constructor['type'] : this.props.type;
         }
 
-        const { type, target } = analyticsObj;
+        const { type } = analyticsObj;
 
-        switch (type) {
-            // Called from BaseElement (when component mounted) or, from DropinComponent (after mounting, when it has finished resolving all the PM promises)
-            // &/or, from DropinComponent when a PM is selected
-            case ANALYTICS_RENDERED_STR: {
-                let storedCardIndicator;
-                // Check if it's a storedCard
-                if (component === 'scheme') {
-                    if (hasOwnProperty(this.props, 'supportedShopperInteractions')) {
-                        storedCardIndicator = {
-                            isStoredPaymentMethod: true,
-                            brand: this.props.brand
-                        };
-                    }
+        let storedCardIndicator;
+        if (type === ANALYTICS_RENDERED_STR) {
+            // Check if it's a storedCard
+            if (component === 'scheme') {
+                if (hasOwnProperty(this.props, 'supportedShopperInteractions')) {
+                    storedCardIndicator = {
+                        isStoredPaymentMethod: true,
+                        brand: this.props.brand
+                    };
                 }
-
-                const data = { component, type, ...storedCardIndicator };
-
-                // AnalyticsAction: action: 'event' type:'rendered'|'selected'
-                this.props.modules?.analytics.createAnalyticsEvent({
-                    event: 'info',
-                    data
-                });
-                break;
-            }
-
-            case ANALYTICS_SUBMIT_STR:
-                // PM pay button pressed - AnalyticsAction: action: 'log' type:'submit'
-                this.props.modules?.analytics.createAnalyticsEvent({
-                    event: 'log',
-                    data: { component, type, target: 'pay_button', message: 'Shopper clicked pay' }
-                });
-                break;
-
-            case ANALYTICS_FOCUS_STR:
-            case ANALYTICS_UNFOCUS_STR:
-                this.props.modules?.analytics.createAnalyticsEvent({
-                    event: 'info',
-                    data: { component, type, target }
-                });
-                break;
-
-            case ANALYTICS_VALIDATION_ERROR_STR: {
-                const { validationErrorCode, validationErrorMessage } = analyticsObj;
-                this.props.modules?.analytics.createAnalyticsEvent({
-                    event: 'info',
-                    data: { component, type, target, validationErrorCode, validationErrorMessage }
-                });
-                break;
-            }
-
-            case ANALYTICS_SELECTED_STR:
-                this.props.modules?.analytics.createAnalyticsEvent({
-                    event: 'info',
-                    data: { component, type, target }
-                });
-                break;
-
-            default: {
-                this.props.modules?.analytics.createAnalyticsEvent(analyticsObj);
             }
         }
+
+        this.props.modules?.analytics.sendAnalytics(component, analyticsObj, storedCardIndicator);
     }
 
     private onSubmit(): void {

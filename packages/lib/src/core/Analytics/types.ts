@@ -80,3 +80,8 @@ export type CreateAnalyticsEventObject = {
 };
 
 export type EventQueueProps = Pick<AnalyticsConfig, 'analyticsContext' | 'clientKey'> & { analyticsPath: string };
+
+export type StoredCardIndicator = {
+    isStoredPaymentMethod: boolean;
+    brand: string;
+};

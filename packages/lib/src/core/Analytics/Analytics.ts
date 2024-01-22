@@ -1,8 +1,20 @@
 import LogEvent from '../Services/analytics/log-event';
 import CollectId from '../Services/analytics/collect-id';
 import EventsQueue, { EventsQueueModule } from './EventsQueue';
-import { ANALYTICS_EVENT, AnalyticsInitialEvent, AnalyticsObject, AnalyticsProps, CreateAnalyticsEventObject } from './types';
-import { ANALYTICS_EVENT_ERROR, ANALYTICS_EVENT_INFO, ANALYTICS_EVENT_LOG, ANALYTICS_INFO_TIMER_INTERVAL, ANALYTICS_PATH } from './constants';
+import { ANALYTICS_EVENT, AnalyticsInitialEvent, AnalyticsObject, AnalyticsProps, CreateAnalyticsEventObject, StoredCardIndicator } from './types';
+import {
+    ANALYTICS_EVENT_ERROR,
+    ANALYTICS_EVENT_INFO,
+    ANALYTICS_EVENT_LOG,
+    ANALYTICS_FOCUS_STR,
+    ANALYTICS_INFO_TIMER_INTERVAL,
+    ANALYTICS_PATH,
+    ANALYTICS_RENDERED_STR,
+    ANALYTICS_SELECTED_STR,
+    ANALYTICS_SUBMIT_STR,
+    ANALYTICS_UNFOCUS_STR,
+    ANALYTICS_VALIDATION_ERROR_STR
+} from './constants';
 import { debounce } from '../../components/internal/Address/utils';
 import { AnalyticsModule } from '../../components/types';
 import { createAnalyticsObject } from './utils';
@@ -109,7 +121,64 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
             addAnalyticsEvent(event, aObj);
         },
 
-        getEnabled: () => props.enabled
+        getEnabled: () => props.enabled,
+
+        sendAnalytics: (component: string, analyticsObj: any, storedCardIndicator?: StoredCardIndicator) => {
+            const { type, target } = analyticsObj;
+
+            // analyticsObj type: type, target, validationErrorCode, validationErrorMessage, storedCardIndicator?
+
+            switch (type) {
+                // Called from BaseElement (when component mounted) or, from DropinComponent (after mounting, when it has finished resolving all the PM promises)
+                // &/or, from DropinComponent when a PM is selected
+                case ANALYTICS_RENDERED_STR: {
+                    const data = { component, type, ...storedCardIndicator };
+
+                    // AnalyticsAction: action: 'event' type:'rendered'|'selected'
+                    anlModule.createAnalyticsEvent({
+                        event: 'info',
+                        data
+                    });
+                    break;
+                }
+
+                case ANALYTICS_SUBMIT_STR:
+                    // PM pay button pressed - AnalyticsAction: action: 'log' type:'submit'
+                    anlModule.createAnalyticsEvent({
+                        event: 'log',
+                        data: { component, type, target: 'pay_button', message: 'Shopper clicked pay' }
+                    });
+                    break;
+
+                case ANALYTICS_FOCUS_STR:
+                case ANALYTICS_UNFOCUS_STR:
+                    anlModule.createAnalyticsEvent({
+                        event: 'info',
+                        data: { component, type, target }
+                    });
+                    break;
+
+                case ANALYTICS_VALIDATION_ERROR_STR: {
+                    const { validationErrorCode, validationErrorMessage } = analyticsObj;
+                    anlModule.createAnalyticsEvent({
+                        event: 'info',
+                        data: { component, type, target, validationErrorCode, validationErrorMessage }
+                    });
+                    break;
+                }
+
+                case ANALYTICS_SELECTED_STR:
+                    anlModule.createAnalyticsEvent({
+                        event: 'info',
+                        data: { component, type, target }
+                    });
+                    break;
+
+                default: {
+                    anlModule.createAnalyticsEvent(analyticsObj);
+                }
+            }
+        }
     };
 
     return anlModule;

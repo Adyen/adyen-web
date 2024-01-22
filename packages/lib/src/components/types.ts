@@ -8,7 +8,7 @@ import { PayButtonProps } from './internal/PayButton/PayButton';
 import Session from '../core/CheckoutSession';
 import { SRPanel } from '../core/Errors/SRPanel';
 import { Resources } from '../core/Context/Resources';
-import { AnalyticsInitialEvent, CreateAnalyticsEventObject } from '../core/Analytics/types';
+import { AnalyticsInitialEvent, CreateAnalyticsEventObject, StoredCardIndicator } from '../core/Analytics/types';
 import { EventsQueueModule } from '../core/Analytics/EventsQueue';
 
 export interface PaymentMethodData {
@@ -83,6 +83,7 @@ export interface AnalyticsModule {
     getEventsQueue: () => EventsQueueModule;
     createAnalyticsEvent: (a: CreateAnalyticsEventObject) => void;
     getEnabled: () => boolean;
+    sendAnalytics: (component: string, analyticsObj: any, storedCardIndicator?: StoredCardIndicator) => void;
 }
 
 export interface BaseElementProps {
