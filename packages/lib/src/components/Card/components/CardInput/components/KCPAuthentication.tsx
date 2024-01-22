@@ -27,6 +27,8 @@ export default function KCPAuthentication(props: KCPProps) {
                 isValid={props.isValid}
                 dir={'ltr'}
                 name={'kcpTaxNumberOrDOB'}
+                onFocus={e => props.onFieldFocusAnalytics('taxNumber', e)}
+                onBlur={e => props.onFieldBlurAnalytics('taxNumber', e)}
             >
                 <InputTelephone
                     name={'kcpTaxNumberOrDOB'}
