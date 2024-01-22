@@ -48,6 +48,8 @@ export interface AnalyticsObject {
     metadata?: Record<string, any>;
     isStoredPaymentMethod?: boolean;
     brand?: string;
+    validationErrorCode?: string;
+    validationErrorMessage?: string;
 }
 
 export type ANALYTICS_EVENT = 'log' | 'error' | 'info';
@@ -78,3 +80,14 @@ export type CreateAnalyticsEventObject = {
 };
 
 export type EventQueueProps = Pick<AnalyticsConfig, 'analyticsContext' | 'clientKey'> & { analyticsPath: string };
+
+export type SendAnalyticsObject = Pick<
+    AnalyticsObject,
+    'type' | 'target' | 'validationErrorCode' | 'validationErrorMessage' | 'isStoredPaymentMethod' | 'brand'
+>;
+
+export type FieldErrorAnalyticsObject = {
+    fieldType: string;
+    errorCode: string;
+    errorMessage: string;
+};

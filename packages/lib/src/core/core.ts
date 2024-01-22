@@ -155,7 +155,7 @@ class Core {
                     component: `${action.type}${action.subtype ?? ''}`,
                     type: ANALYTICS_ACTION_STR,
                     subtype: capitalizeFirstLetter(action.type),
-                    message: `${action.type}${action.subtype ?? ''} is initiating`
+                    message: `${action.type}${action.subtype ?? ''} action was handled by the SDK`
                 }
             });
 

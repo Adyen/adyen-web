@@ -35,6 +35,8 @@ export interface CardHolderNameProps {
     required?: boolean;
     value?: string;
     disabled?: boolean;
+    onFieldFocusAnalytics?: (who: string, event: Event) => void;
+    onFieldBlurAnalytics?: (who: string, event: Event) => void;
 }
 
 export interface CardNumberProps {
@@ -131,6 +133,8 @@ export interface KCPProps {
     isValid: boolean;
     value: string;
     disabled?: boolean;
+    onFieldFocusAnalytics?: (who: string, event: Event) => void;
+    onFieldBlurAnalytics?: (who: string, event: Event) => void;
 }
 
 export type RtnType_ParamBooleanFn = (tn) => boolean;

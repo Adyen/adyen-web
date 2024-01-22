@@ -28,6 +28,8 @@ export interface AddressProps {
     payButton?: (obj) => {};
     showPayButton?: boolean;
     setComponentRef?: (ref) => void;
+    onFieldFocusAnalytics?: (who: string, event: Event) => void;
+    onFieldBlurAnalytics?: (who: string, event: Event) => void;
 }
 
 export interface AddressLookupItem extends AddressData {
@@ -60,6 +62,8 @@ export interface FieldContainerProps {
     maxLength?: number;
     trimOnBlur?: boolean;
     disabled?: boolean;
+    onFieldFocusAnalytics?: (who: string, event: Event) => void;
+    onFieldBlurAnalytics?: (who: string, event: Event) => void;
 }
 
 export interface ReadOnlyAddressProps {

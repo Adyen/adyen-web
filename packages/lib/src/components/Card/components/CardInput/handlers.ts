@@ -30,7 +30,7 @@ export const getFocusHandler = (setFocusedElement, onFocus, onBlur) => {
     // Return Handler fn:
     return (e: CbObjOnFocus) => {
         setFocusedElement(e.currentFocusObject);
-        e.focus === true ? onFocus(e) : onBlur(e);
+        e.focus === true ? onFocus(e.fieldType, e) : onBlur(e.fieldType, e);
     };
 };
 

@@ -32,17 +32,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                 this.setState({ instantPaymentElements, elements: [...storedElements, ...elements], orderStatus });
                 this.setStatus('ready');
 
-                const data = {
-                    component: 'dropin',
-                    type: ANALYTICS_RENDERED_STR
-                    // paymentMethods: elements.map(e => e.props.type), // TODO might be added (used to be in original analytics, in the setup call)
-                };
-
-                // AnalyticsAction: action: 'event' type:'rendered'
-                this.props.modules?.analytics.createAnalyticsEvent({
-                    event: 'info',
-                    data
-                });
+                this.props.modules?.analytics.sendAnalytics('dropin', { type: ANALYTICS_RENDERED_STR });
             }
         );
 
