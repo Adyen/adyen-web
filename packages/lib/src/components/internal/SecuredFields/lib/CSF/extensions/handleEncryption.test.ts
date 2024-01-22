@@ -1,11 +1,8 @@
 import postMessageToIframe from '../utils/iframes/postMessageToIframe';
-import { addEncryptedElements } from '../utils/encryptedElements';
 import { handleEncryption } from './handleEncryption';
 
-jest.mock('../utils/encryptedElements');
 jest.mock('../utils/iframes/postMessageToIframe');
 
-const mockedAddEncryptedElementMock = addEncryptedElements as jest.Mock;
 const mockedPostMessageToIframe = postMessageToIframe as jest.Mock;
 
 let fieldToFocus = null;
@@ -161,15 +158,10 @@ const expected_callbackObj_onFieldValid_PAN = {
 };
 
 describe('Testing CSFs handleEncryption functionality', () => {
-    const addEncryptedElementMock = jest.fn((obj, id) => console.log('### handleEncryption.test::Mock FN call to addEncryptedElement:: ', obj, id));
     const postMessageToIframeMock = jest.fn(obj => console.log('### handleEncryption.test::Mock FN call to postMessageToIframe:: ', obj));
 
     beforeEach(() => {
         console.log = jest.fn(() => {});
-
-        mockedAddEncryptedElementMock.mockReset();
-        mockedAddEncryptedElementMock.mockImplementation((obj, id) => addEncryptedElementMock(obj, id));
-        addEncryptedElementMock.mockClear();
 
         mockedPostMessageToIframe.mockReset();
         mockedPostMessageToIframe.mockImplementation(obj => postMessageToIframeMock(obj));
@@ -193,9 +185,6 @@ describe('Testing CSFs handleEncryption functionality', () => {
 
             expect(myCSF.state.securedFields.encryptedSecurityCode.isEncrypted).toEqual(true);
 
-            // check for a call to addEncryptedElement
-            expect(addEncryptedElementMock).toHaveBeenCalled();
-
             expect(myCSF.callbacks.onError).not.toHaveBeenCalled();
 
             expect(myCSF.callbacks.onFieldValid).toHaveBeenCalled();
@@ -215,9 +204,6 @@ describe('Testing CSFs handleEncryption functionality', () => {
             myCSF.handleEncryption(feedbackObj_encryptedDate);
 
             expect(myCSF.state.securedFields.encryptedExpiryDate.isEncrypted).toEqual(true);
-
-            // check call to addEncryptedElement not made
-            expect(addEncryptedElementMock).not.toHaveBeenCalled();
 
             expect(myCSF.callbacks.onError).not.toHaveBeenCalled();
 

@@ -71,22 +71,21 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     }
 
     if (onlyShowCard || showComps.card) {
-        window.card = checkout
-            .create('card', {
-                challengeWindowSize: '01',
-                _disableClickToPay: true,
-                // hasHolderName: true,
-                // holderNameRequired: true,
-                // maskSecurityCode: true,
-                // enableStoreDetails: true
-                onError: obj => {
-                    console.log('### Cards::onError:: obj=', obj);
-                },
-                onBinLookup: obj => {
-                    console.log('### Cards::onBinLookup:: obj=', obj);
-                }
-            })
-            .mount('.card-field');
+        window.card = new Card({
+            core: checkout,
+            challengeWindowSize: '01',
+            _disableClickToPay: true,
+            // hasHolderName: true,
+            // holderNameRequired: true,
+            // maskSecurityCode: true,
+            // enableStoreDetails: true
+            onError: obj => {
+                console.log('### Cards::onError:: obj=', obj);
+            },
+            onBinLookup: obj => {
+                console.log('### Cards::onBinLookup:: obj=', obj);
+            }
+        }).mount('.card-field');
     }
 
     // Credit card with installments
