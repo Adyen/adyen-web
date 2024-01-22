@@ -6,7 +6,7 @@ import Core from '../core';
 import { BaseElementProps, PaymentData } from './types';
 import { RiskData } from '../core/RiskModule/RiskModule';
 import { Resources } from '../core/Context/Resources';
-import { AnalyticsInitialEvent } from '../core/Analytics/types';
+import { AnalyticsInitialEvent, SendAnalyticsObject } from '../core/Analytics/types';
 import { ANALYTICS_RENDERED_STR } from '../core/Analytics/constants';
 
 class BaseElement<P extends BaseElementProps> {
@@ -54,7 +54,7 @@ class BaseElement<P extends BaseElementProps> {
     }
 
     /* eslint-disable-next-line */
-    protected submitAnalytics(analyticsObj?: any) {
+    protected submitAnalytics(analyticsObj?: SendAnalyticsObject) {
         return null;
     }
 

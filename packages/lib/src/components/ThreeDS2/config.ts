@@ -1,5 +1,16 @@
 import { ThreeDS2FlowObject } from './types';
 
+export const THREEDS2_FINGERPRINT = '3DS2Fingerprint';
+export const THREEDS2_FINGERPRINT_ERROR = '3DS2Fingerprint_Error';
+export const THREEDS2_FINGERPRINT_SUBMIT = 'callSubmit3DS2Fingerprint_Response';
+export const THREEDS2_CHALLENGE = '3DS2Challenge';
+export const THREEDS2_CHALLENGE_ERROR = '3DS2Challenge_Error';
+
+export const THREEDS2_FULL = 'threeDS2';
+export const THREEDS2_NUM = '3DS2';
+
+export const MISSING_TOKEN_IN_ACTION_MSG = 'Missing "token" property from threeDS2 action';
+
 export const DEFAULT_CHALLENGE_WINDOW_SIZE = '02';
 
 export const THREEDS_METHOD_TIMEOUT = 10000;
