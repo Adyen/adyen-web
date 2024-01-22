@@ -14,7 +14,8 @@ import { getMaxLengthByFieldAndCountry } from '../../../utils/validator-utils';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { ComponentMethodsRef } from '../../types';
 import AddressSearch from './components/AddressSearch';
-
+// todo: make it more flexible, why address schema ties to country?
+// todo: test deliveryAddressSpecification prop
 export default function Address(props: AddressProps) {
     const { i18n } = useCoreContext();
 
@@ -51,8 +52,7 @@ export default function Address(props: AddressProps) {
 
     const setSearchData = useCallback(
         (selectedAddress: AddressData) => {
-            const propsKeysToProcess = ADDRESS_SCHEMA;
-            propsKeysToProcess.forEach(propKey => {
+            ADDRESS_SCHEMA.forEach(propKey => {
                 // Make sure the data provided by the merchant is always strings
                 const providedValue = selectedAddress[propKey];
                 if (providedValue === null || providedValue === undefined) return;
@@ -168,7 +168,7 @@ export default function Address(props: AddressProps) {
     );
 
     const addressSchema = specifications.getAddressSchemaForCountry(data.country);
-
+    console.log({ addressSchema });
     return (
         <Fragment>
             <Fieldset classNameModifiers={[label || 'address']} label={label}>

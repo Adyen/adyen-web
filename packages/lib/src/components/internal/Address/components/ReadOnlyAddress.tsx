@@ -2,7 +2,7 @@ import { h } from 'preact';
 import Fieldset from '../../FormFields/Fieldset';
 import { ReadOnlyAddressProps } from '../types';
 import { FALLBACK_VALUE } from '../constants';
-
+// todo: add first name and last name?
 const ReadOnlyAddress = ({ data, label }: ReadOnlyAddressProps) => {
     const { street, houseNumberOrName, city, postalCode, stateOrProvince, country } = data;
 
