@@ -17,8 +17,8 @@ let MySecuredField;
 
 const myCSF = {
     state: { type: 'card', hasSeparateDateFields: null, securedFields: {} as SecuredFields, iframeCount: 0, originalNumIframes: 2, numIframes: 2 },
-    config: { shouldDisableIOSArrowKeys: null },
-    props: { rootNode: null, i18n: new Language('en-US', {}) },
+    config: {},
+    props: { rootNode: null, i18n: new Language('en-US', {}), shouldDisableIOSArrowKeys: null },
     callbacks: {
         onLoad: jest.fn(() => {}),
         onTouchstartIOS: jest.fn(() => {})
@@ -216,7 +216,7 @@ describe('Testing CSFs setupSecuredField functionality', () => {
         'Calling setupSecuredField to see that expected onTouchstartCallback is set. Running it sees that because myCSF is not configured to allow it ' +
             '- the callback function and postMessageToAllIframes are not called',
         () => {
-            myCSF.config.shouldDisableIOSArrowKeys = true;
+            myCSF.props.shouldDisableIOSArrowKeys = true;
             myCSF.hasGenuineTouchEvents = false;
 
             myCSF.setupSecuredField(makeDiv(ENCRYPTED_CARD_NUMBER));
