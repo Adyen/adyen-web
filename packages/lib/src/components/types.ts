@@ -8,8 +8,9 @@ import { PayButtonProps } from './internal/PayButton/PayButton';
 import Session from '../core/CheckoutSession';
 import { SRPanel } from '../core/Errors/SRPanel';
 import { Resources } from '../core/Context/Resources';
-import { AnalyticsInitialEvent, CreateAnalyticsEventObject } from '../core/Analytics/types';
+import { AnalyticsInitialEvent, CreateAnalyticsEventObject, SendAnalyticsObject } from '../core/Analytics/types';
 import { EventsQueueModule } from '../core/Analytics/EventsQueue';
+import { CbObjOnFocus } from './internal/SecuredFields/lib/types';
 
 export interface PaymentMethodData {
     paymentMethod: {
@@ -83,6 +84,7 @@ export interface AnalyticsModule {
     getEventsQueue: () => EventsQueueModule;
     createAnalyticsEvent: (a: CreateAnalyticsEventObject) => void;
     getEnabled: () => boolean;
+    sendAnalytics: (component: string, analyticsObj: SendAnalyticsObject) => void;
 }
 
 export interface BaseElementProps {
@@ -187,3 +189,8 @@ export interface ComponentMethodsRef {
     showValidation?: () => void;
     setStatus?(status: UIElementStatus): void;
 }
+
+export type ComponentFocusObject = {
+    fieldType: string;
+    event: Event | CbObjOnFocus;
+};
