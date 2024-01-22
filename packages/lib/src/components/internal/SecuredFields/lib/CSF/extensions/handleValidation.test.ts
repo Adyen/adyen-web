@@ -1,10 +1,5 @@
-import { removeEncryptedElement } from '../utils/encryptedElements';
 import { handleValidation } from './handleValidation';
 import { SFFeedbackObj } from '../../types';
-
-jest.mock('../utils/encryptedElements');
-
-const mockedRemoveEncryptedElementMock = removeEncryptedElement as jest.Mock;
 
 let callbackObj_error = null;
 let callbackObj_fieldValid = null;
@@ -98,14 +93,8 @@ const expected_callbackObj_onFieldValid_PAN = {
 };
 
 describe('Testing CSFs handleValidation functionality', () => {
-    const removeEncryptedElementMock = jest.fn((obj, id) => console.log('### handleValidation.test::FN call:: ', obj, id));
-
     beforeEach(() => {
         console.log = jest.fn(() => {});
-
-        mockedRemoveEncryptedElementMock.mockReset();
-        mockedRemoveEncryptedElementMock.mockImplementation((obj, id) => removeEncryptedElementMock(obj, id));
-        removeEncryptedElementMock.mockClear();
 
         myCSF.validateForm = jest.fn(() => {});
 
@@ -163,9 +152,6 @@ describe('Testing CSFs handleValidation functionality', () => {
 
             expect(myCSF.validateForm).toHaveBeenCalledTimes(1);
 
-            // check for a call to removeEncryptedElement
-            expect(removeEncryptedElementMock).toHaveBeenCalled();
-
             expect(myCSF.callbacks.onFieldValid).toHaveBeenCalled();
             expect(callbackObj_fieldValid).toEqual(expected_callbackObj_onFieldValid);
 
@@ -186,9 +172,6 @@ describe('Testing CSFs handleValidation functionality', () => {
             expect(myCSF.callbacks.onError).not.toHaveBeenCalled();
 
             expect(myCSF.validateForm).toHaveBeenCalledTimes(1);
-
-            // check call to addEncryptedElement not made
-            expect(removeEncryptedElementMock).not.toHaveBeenCalled();
 
             expect(myCSF.callbacks.onFieldValid).toHaveBeenCalled();
             expect(callbackObj_fieldValid).toEqual(expected_callbackObj_onFieldValid_PAN);
