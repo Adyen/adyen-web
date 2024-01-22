@@ -37,6 +37,20 @@ class BlikElement extends UIElement {
         return !!this.state.isValid;
     }
 
+    get displayName() {
+        if (this.props.storedPaymentMethodId && this.props.label) {
+            return this.props.label;
+        }
+        return this.props.name;
+    }
+
+    get additionalInfo() {
+        if (this.props.storedPaymentMethodId && this.props.label) {
+            return this.props.name;
+        }
+        return null;
+    }
+
     /**
      * NOTE: for future reference:
      *  this.props.onComplete (which is called from this.onComplete) equates to the merchant defined onAdditionalDetails callback
