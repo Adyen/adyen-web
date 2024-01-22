@@ -30,6 +30,8 @@ import { SetSRMessagesReturnFn } from '../../../../core/Errors/SRPanelProvider';
 import useImage from '../../../../core/Context/useImage';
 import { getArrayDifferences } from '../../../../utils/arrayUtils';
 import FormInstruction from '../../../internal/FormInstruction';
+import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
+import { FieldErrorAnalyticsObject } from '../../../../core/Analytics/types';
 
 const CardInput: FunctionalComponent<CardInputProps> = props => {
     const sfp = useRef(null);
@@ -140,10 +142,10 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
      * HANDLERS
      */
     // Handlers for focus & blur on all fields. Can be renamed to onFieldFocus once the onFocusField is renamed in Field.tsx
-    const onFieldFocusAnalytics = (who, e) => {
+    const onFieldFocusAnalytics = (who: string, e: Event | CbObjOnFocus) => {
         props.onFocus({ fieldType: who, event: e });
     };
-    const onFieldBlurAnalytics = (who, e) => {
+    const onFieldBlurAnalytics = (who: string, e: Event | CbObjOnFocus) => {
         props.onBlur({ fieldType: who, event: e });
     };
 
@@ -425,7 +427,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         if (currentErrorsSortedByLayout) {
             const newErrors = getArrayDifferences<SortedErrorObject, string>(currentErrorsSortedByLayout, previousSortedErrors, 'field');
             newErrors?.forEach(errorItem => {
-                const aObj = {
+                const aObj: FieldErrorAnalyticsObject = {
                     fieldType: errorItem.field,
                     errorCode: errorItem.errorCode,
                     errorMessage: errorItem.errorMessage

@@ -13,6 +13,7 @@ import RiskElement from '../../../../core/RiskModule';
 import { AnalyticsModule, ComponentMethodsRef } from '../../../types';
 import { DisclaimerMsgObject } from '../../../internal/DisclaimerMessage/DisclaimerMessage';
 import { OnAddressLookupType, OnAddressSelectedType } from '../../../internal/Address/components/AddressSearch';
+import { FieldErrorAnalyticsObject } from '../../../../core/Analytics/types';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -127,7 +128,7 @@ export interface CardInputProps {
     type?: string;
     maskSecurityCode?: boolean;
     disclaimerMessage?: DisclaimerMsgObject;
-    onErrorAnalytics?: (obj) => {};
+    onErrorAnalytics?: (obj: FieldErrorAnalyticsObject) => {};
 }
 
 export interface CardInputState {

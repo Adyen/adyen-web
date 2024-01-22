@@ -1,7 +1,7 @@
 import LogEvent from '../Services/analytics/log-event';
 import CollectId from '../Services/analytics/collect-id';
 import EventsQueue, { EventsQueueModule } from './EventsQueue';
-import { ANALYTICS_EVENT, AnalyticsInitialEvent, AnalyticsObject, AnalyticsProps, CreateAnalyticsEventObject, StoredCardIndicator } from './types';
+import { ANALYTICS_EVENT, AnalyticsInitialEvent, AnalyticsObject, AnalyticsProps, CreateAnalyticsEventObject, SendAnalyticsObject } from './types';
 import {
     ANALYTICS_EVENT_ERROR,
     ANALYTICS_EVENT_INFO,
@@ -123,16 +123,15 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
 
         getEnabled: () => props.enabled,
 
-        sendAnalytics: (component: string, analyticsObj: any, storedCardIndicator?: StoredCardIndicator) => {
+        sendAnalytics: (component: string, analyticsObj: SendAnalyticsObject) => {
             const { type, target } = analyticsObj;
-
-            // analyticsObj type: type, target, validationErrorCode, validationErrorMessage, storedCardIndicator?
 
             switch (type) {
                 // Called from BaseElement (when component mounted) or, from DropinComponent (after mounting, when it has finished resolving all the PM promises)
                 // &/or, from DropinComponent when a PM is selected
                 case ANALYTICS_RENDERED_STR: {
-                    const data = { component, type, ...storedCardIndicator };
+                    const { isStoredPaymentMethod, brand } = analyticsObj;
+                    const data = { component, type, isStoredPaymentMethod, brand };
 
                     // AnalyticsAction: action: 'event' type:'rendered'|'selected'
                     anlModule.createAnalyticsEvent({
@@ -175,7 +174,7 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
                     break;
 
                 default: {
-                    anlModule.createAnalyticsEvent(analyticsObj);
+                    anlModule.createAnalyticsEvent(analyticsObj as CreateAnalyticsEventObject);
                 }
             }
         }

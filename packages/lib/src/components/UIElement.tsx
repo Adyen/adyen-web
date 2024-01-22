@@ -12,7 +12,7 @@ import DropinElement from './Dropin';
 import { CoreOptions } from '../core/types';
 import Core from '../core';
 import { ANALYTICS_RENDERED_STR, ANALYTICS_SUBMIT_STR } from '../core/Analytics/constants';
-import { AnalyticsInitialEvent } from '../core/Analytics/types';
+import { AnalyticsInitialEvent, SendAnalyticsObject } from '../core/Analytics/types';
 
 export class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
@@ -66,7 +66,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
      *  In some other cases e.g. 3DS2 components, this function is overridden to allow more specific analytics actions to be created
      */
     /* eslint-disable-next-line */
-    protected submitAnalytics(analyticsObj: any) {
+    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
         /** Work out what the component's "type" is:
          * - first check for a dedicated "analyticsType" (currently only applies to custom-cards)
          * - otherwise, distinguish cards from non-cards: cards will use their static type property, everything else will use props.type
@@ -78,20 +78,18 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
 
         const { type } = analyticsObj;
 
-        let storedCardIndicator;
+        // let storedCardIndicator;
         if (type === ANALYTICS_RENDERED_STR) {
             // Check if it's a storedCard
             if (component === 'scheme') {
                 if (hasOwnProperty(this.props, 'supportedShopperInteractions')) {
-                    storedCardIndicator = {
-                        isStoredPaymentMethod: true,
-                        brand: this.props.brand
-                    };
+                    analyticsObj.isStoredPaymentMethod = true;
+                    analyticsObj.brand = this.props.brand;
                 }
             }
         }
 
-        this.props.modules?.analytics.sendAnalytics(component, analyticsObj, storedCardIndicator);
+        this.props.modules?.analytics.sendAnalytics(component, analyticsObj);
     }
 
     private onSubmit(): void {

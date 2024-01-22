@@ -81,7 +81,13 @@ export type CreateAnalyticsEventObject = {
 
 export type EventQueueProps = Pick<AnalyticsConfig, 'analyticsContext' | 'clientKey'> & { analyticsPath: string };
 
-export type StoredCardIndicator = {
-    isStoredPaymentMethod: boolean;
-    brand: string;
+export type SendAnalyticsObject = Pick<
+    AnalyticsObject,
+    'type' | 'target' | 'validationErrorCode' | 'validationErrorMessage' | 'isStoredPaymentMethod' | 'brand'
+>;
+
+export type FieldErrorAnalyticsObject = {
+    fieldType: string;
+    errorCode: string;
+    errorMessage: string;
 };
