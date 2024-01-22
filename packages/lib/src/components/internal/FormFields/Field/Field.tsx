@@ -27,6 +27,8 @@ const Field: FunctionalComponent<FieldProps> = props => {
         onBlur,
         onFieldBlur,
         onFocus,
+        // onFocusField is a securedField related function that allows a label click to set focus on a securedField (equates to CardInput setFocusOn)
+        // TODO should rename it to make its purpose clear => setFocusOnSecuredField
         onFocusField,
         showValidIcon,
         useLabelElement,
@@ -65,7 +67,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
         (event: h.JSX.TargetedEvent<HTMLInputElement>) => {
             setFocused(false);
             onBlur?.(event);
-            // When we also need to fire a specific function when a field blurs
+            // When we also need to fire a specific function when a field blurs // TODO - what is the use case?
             onFieldBlur?.(event);
         },
         [onBlur, onFieldBlur]

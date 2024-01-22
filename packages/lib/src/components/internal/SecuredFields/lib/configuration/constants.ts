@@ -1,5 +1,7 @@
 import { CVCPolicyType, DatePolicyType } from '../types';
 
+export const ENCRYPTED = 'encrypted';
+
 export const ENCRYPTED_CARD_NUMBER = 'encryptedCardNumber';
 export const ENCRYPTED_EXPIRY_DATE = 'encryptedExpiryDate';
 export const ENCRYPTED_EXPIRY_MONTH = 'encryptedExpiryMonth';
