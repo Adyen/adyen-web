@@ -1,16 +1,5 @@
 import { makePayment, makeDetailsCall } from './services';
 
-export function handleResponse(response, component) {
-    const type = component.data.paymentMethod ? component.data.paymentMethod.type : component.constructor.name;
-    console.log('\ntype=', type, 'response=', response);
-
-    if (response.action) {
-        component.handleAction(response.action);
-    } else if (response.resultCode) {
-        alert(response.resultCode);
-    }
-}
-
 export function handleChange(state, component) {
     console.group(`onChange - ${state.data.paymentMethod.type}`);
     console.log('isValid', state.isValid);
@@ -32,8 +21,6 @@ export function handleError(obj) {
 export async function handleSubmit(state, component, actions) {
     component.setStatus('loading');
 
-    console.log('onSubmit', state, actions);
-
     try {
         const { action, order, resultCode, donationToken } = await makePayment(state.data);
 
@@ -53,9 +40,7 @@ export async function handleSubmit(state, component, actions) {
 
 export async function handleAdditionalDetails(state, component, actions) {
     try {
-        console.log('onAdditionalDetails', state, component, actions);
-
-        const { resultCode, action, order, resultCode, donationToken } = await makeDetailsCall(state.data);
+        const { resultCode, action, order, donationToken } = await makeDetailsCall(state.data);
 
         if (!resultCode) actions.reject();
 
@@ -64,9 +49,7 @@ export async function handleAdditionalDetails(state, component, actions) {
             action,
             order,
             donationToken
-            // error: {},
         });
-        return;
     } catch (error) {
         console.error('## onAdditionalDetails - critical error', error);
         actions.reject();

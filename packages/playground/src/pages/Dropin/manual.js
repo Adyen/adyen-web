@@ -1,7 +1,6 @@
 import { AdyenCheckout, Dropin, Ideal, Card, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { getPaymentMethods, makePayment, checkBalance, createOrder, cancelOrder, makeDetailsCall } from '../../services';
-
 import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
 import { getSearchParameters } from '../../utils';
 import getTranslationFile from '../../config/getTranslation';
@@ -21,8 +20,6 @@ export async function initManual() {
         environment: process.env.__CLIENT_ENV__,
 
         onSubmit: async (state, component, actions) => {
-            console.log('onSubmit', state, component.authorizedEvent);
-
             try {
                 const { action, order, resultCode, donationToken } = await makePayment(state.data);
 
@@ -33,33 +30,14 @@ export async function initManual() {
                     action,
                     order,
                     donationToken
-                    // error: {
-                    //              googlePayError: {},
-                    //              applePayError: {}
-                    //          }
-                    // }
                 });
             } catch (error) {
                 console.error('## onSubmit - critical error', error);
                 actions.reject();
             }
         },
-
-        onChange(state, element) {
-            console.log('onChange', state, element);
-        },
-
-        onPaymentCompleted(result, element) {
-            console.log('onPaymentCompleted', result, element);
-        },
-        onPaymentFailed(result, element) {
-            console.log('onPaymentFailed', result, element);
-        },
-
         onAdditionalDetails: async (state, component, actions) => {
             try {
-                console.log('onAdditionalDetails', state, component, actions);
-
                 const { resultCode, action, order, donationToken } = await makeDetailsCall(state.data);
 
                 if (!resultCode) actions.reject();
@@ -69,13 +47,17 @@ export async function initManual() {
                     action,
                     order,
                     donationToken
-                    // error: {},
                 });
-                return;
             } catch (error) {
                 console.error('## onAdditionalDetails - critical error', error);
                 actions.reject();
             }
+        },
+        onPaymentCompleted(result, element) {
+            console.log('onPaymentCompleted', result, element);
+        },
+        onPaymentFailed(result, element) {
+            console.log('onPaymentFailed', result, element);
         },
         onBalanceCheck: async (resolve, reject, data) => {
             console.log('onBalanceCheck', data);
@@ -173,9 +155,6 @@ export async function initManual() {
             klarna: {
                 useKlarnaWidget: true
             }
-            // storedCard: {
-            //     hideCVC: true
-            // }
         }
     }).mount('#dropin-container');
 

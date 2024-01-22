@@ -10,12 +10,12 @@ async function handleRedirectResult(redirectResult, sessionId) {
         session: { id: sessionId },
         clientKey: process.env.__CLIENT_KEY__,
         environment: process.env.__CLIENT_ENV__,
-        onPaymentCompleted: result => {
-            console.log('onPaymentCompleted', result);
+        onPaymentCompleted: (result, element) => {
+            console.log('onPaymentCompleted', result, element);
             document.querySelector('#result-container > pre').innerHTML = JSON.stringify(result, null, '\t');
         },
-        onPaymentFailed: result => {
-            console.log('onPaymentFailed', result);
+        onPaymentFailed: (result, element) => {
+            console.log('onPaymentFailed', result, element);
             document.querySelector('#result-container > pre').innerHTML = JSON.stringify(result, null, '\t');
         },
         onError: obj => {

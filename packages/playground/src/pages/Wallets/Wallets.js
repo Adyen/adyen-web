@@ -22,14 +22,12 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         onError(error) {
             console.log(error);
         },
-
         onPaymentCompleted(result, element) {
             console.log('onPaymentCompleted', result, element);
         },
         onPaymentFailed(result, element) {
             console.log('onPaymentFailed', result, element);
         },
-
         showPayButton: true
     });
 
@@ -162,43 +160,21 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     // GOOGLE PAY
     const googlepay = new GooglePay({
         core: window.checkout,
-        // environment: 'PRODUCTION',
         environment: 'TEST',
 
         // Callbacks
         onAuthorized(data, actions) {
             console.log('onAuthorized', data, actions);
-
-            actions.reject();
-
-            // actions.reject('Failed with string');
-
-            // actions.reject({
-            //     intent: 'PAYMENT_AUTHORIZATION',
-            //     reason: 'OTHER_ERROR',
-            //     message: 'Failed with object'
-            // });
+            actions.resolve();
         },
-
-        // onError: console.error,
 
         // Payment info
         countryCode: 'NL',
 
-        // Merchant config (required)
-        //            configuration: {
-        //                gatewayMerchantId: 'TestMerchant', // name of MerchantAccount
-        //                merchantName: 'Adyen Test merchant', // Name to be displayed
-        //                merchantId: '06946223745213860250' // Required in Production environment. Google's merchantId: https://developers.google.com/pay/api/web/guides/test-and-deploy/deploy-production-environment#obtain-your-merchantID
-        //            },
-
         // Shopper info (optional)
         emailRequired: true,
-
         billingAddressRequired: true,
-
         shippingAddressRequired: true,
-        // shippingAddressParameters: {}, // https://developers.google.com/pay/api/web/reference/object#ShippingAddressParameters
 
         // Button config (optional)
         buttonType: 'long', // https://developers.google.com/pay/api/web/reference/object#ButtonOptions
@@ -222,9 +198,9 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             console.log('Apple Pay - Button clicked');
             resolve();
         },
-        onAuthorized: (resolve, reject, event) => {
+        onAuthorized: (data, actions) => {
             console.log('Apple Pay onAuthorized', event);
-            resolve();
+            actions.resolve();
         },
         buttonType: 'buy'
     });
