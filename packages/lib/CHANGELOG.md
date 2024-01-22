@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 5.57.0
+
+### Minor Changes
+
+-   Use the label provided by the backend in stored blik payments ([#2522](https://github.com/Adyen/adyen-web/pull/2522))
+
 ## 5.56.1
 
 ### Patch Changes
