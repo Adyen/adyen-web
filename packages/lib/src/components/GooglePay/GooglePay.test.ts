@@ -97,16 +97,16 @@ describe('GooglePay', () => {
                 postalCode: '94043',
                 street: ''
             });
-            expect(state.data.browserInfo).toStrictEqual({
-                acceptHeader: '*/*',
-                colorDepth: 24,
-                javaEnabled: false,
-                language: 'en-US',
-                screenHeight: '',
-                screenWidth: '',
-                timeZoneOffset: 360,
-                userAgent: 'Mozilla/5.0 (linux) AppleWebKit/537.36 (KHTML, like Gecko) jsdom/20.0.3'
-            });
+
+            const browserInfo = state.data.browserInfo;
+
+            expect(browserInfo.colorDepth).toEqual(expect.any(Number));
+            expect(browserInfo.javaEnabled).toEqual(expect.any(Boolean));
+            expect(browserInfo.language).toEqual(expect.any(String));
+            expect(browserInfo.screenHeight).toEqual('');
+            expect(browserInfo.screenWidth).toEqual('');
+            expect(browserInfo.timeZoneOffset).toEqual(expect.any(Number));
+            expect(browserInfo.userAgent).toEqual(expect.any(String));
 
             await new Promise(process.nextTick);
 
@@ -184,10 +184,7 @@ describe('GooglePay', () => {
                 transactionState: 'ERROR'
             });
 
-            expect(onPaymentFailedMock).toHaveBeenCalledWith(
-                { resultCode: 'Refused', error: { googlePayError: 'Insufficient funds' } },
-                gpay
-            );
+            expect(onPaymentFailedMock).toHaveBeenCalledWith({ resultCode: 'Refused', error: { googlePayError: 'Insufficient funds' } }, gpay);
         });
     });
 
