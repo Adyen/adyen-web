@@ -48,7 +48,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
 
     render() {
         // existy used because threeds2InMDFlow will send empty string for paymentData and we should be allowed to proceed with this
-        if (existy(this.props.paymentData)) {
+        if (!existy(this.props.paymentData)) {
             /**
              *  One component is used for both old and new 3DS2 challenge flows
              *   - The presence of useOriginalFlow indicates the old flow which used paymentData from the 3DS2 action
