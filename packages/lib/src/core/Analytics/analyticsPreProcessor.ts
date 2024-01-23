@@ -1,6 +1,7 @@
 import { AnalyticsModule } from '../../components/types';
 import { CreateAnalyticsEventObject, SendAnalyticsObject } from './types';
 import {
+    ANALYTICS_ACTION_STR,
     ANALYTICS_FOCUS_STR,
     ANALYTICS_RENDERED_STR,
     ANALYTICS_SELECTED_STR,
@@ -11,6 +12,7 @@ import {
 import { THREEDS2_ERROR, THREEDS2_FULL } from '../../components/ThreeDS2/config';
 
 export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
+    // return function with an analyticsModule reference
     return (component: string, analyticsObj: SendAnalyticsObject) => {
         const { type, target } = analyticsObj;
 
@@ -21,7 +23,6 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
                 const { isStoredPaymentMethod, brand } = analyticsObj;
                 const data = { component, type, isStoredPaymentMethod, brand };
 
-                // AnalyticsAction: action: 'event' type:'rendered'|'selected'
                 analyticsModule.createAnalyticsEvent({
                     event: 'info',
                     data
@@ -30,12 +31,20 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
             }
 
             case ANALYTICS_SUBMIT_STR:
-                // PM pay button pressed - AnalyticsAction: action: 'log' type:'submit'
                 analyticsModule.createAnalyticsEvent({
                     event: 'log',
                     data: { component, type, target: 'pay_button', message: 'Shopper clicked pay' }
                 });
                 break;
+
+            case ANALYTICS_ACTION_STR: {
+                const { subtype, message } = analyticsObj;
+                analyticsModule.createAnalyticsEvent({
+                    event: 'log',
+                    data: { component, type, subtype, message }
+                });
+                break;
+            }
 
             case ANALYTICS_FOCUS_STR:
             case ANALYTICS_UNFOCUS_STR:
