@@ -2,15 +2,15 @@ import { Component, h } from 'preact';
 import DoChallenge3DS2 from './DoChallenge3DS2';
 import { createChallengeResolveData, handleErrorCode, prepareChallengeData, createOldChallengeResolveData } from '../utils';
 import { PrepareChallenge3DS2Props, PrepareChallenge3DS2State } from './types';
-import { ChallengeData, ThreeDS2AnalyticsObject, ThreeDS2FlowObject } from '../../types';
+import { ChallengeData, ThreeDS2FlowObject } from '../../types';
 import '../../ThreeDS2.scss';
 import Img from '../../../internal/Img';
 import './challenge.scss';
 import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
 import useImage from '../../../../core/Context/useImage';
 import { ActionHandledReturnObject } from '../../../types';
-import { ANALYTICS_EVENT_LOG } from '../../../../core/Analytics/constants';
 import { THREEDS2_FULL } from '../../config';
+import { SendAnalyticsObject } from '../../../../core/Analytics/types';
 
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
     public static defaultProps = {
@@ -56,23 +56,22 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         }
     }
 
-    public submitAnalytics = (what: ThreeDS2AnalyticsObject) => {
-        console.log('### PrepareChallenge3DS2::submitAnalytics:: what=', what);
+    public submitAnalytics = (what: SendAnalyticsObject) => {
+        console.log('\n### PrepareChallenge3DS2::submitAnalytics:: what=', what);
         this.props.onSubmitAnalytics(what);
     };
 
     public onActionHandled = (rtnObj: ActionHandledReturnObject) => {
-        this.submitAnalytics({ event: ANALYTICS_EVENT_LOG, type: THREEDS2_FULL, message: rtnObj.actionDescription });
+        this.submitAnalytics({ type: THREEDS2_FULL, message: rtnObj.actionDescription });
 
         this.props.onActionHandled(rtnObj);
     };
 
     public onFormSubmit = (msg: string) => {
         this.submitAnalytics({
-            event: ANALYTICS_EVENT_LOG,
             type: THREEDS2_FULL,
             message: msg
-        } as ThreeDS2AnalyticsObject);
+        });
     };
 
     setStatusComplete(resultObj) {

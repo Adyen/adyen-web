@@ -5,9 +5,9 @@ import { ErrorCodeObject } from './components/utils';
 import callSubmit3DS2Fingerprint from './callSubmit3DS2Fingerprint';
 import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
 import { ActionHandledReturnObject, AnalyticsModule } from '../types';
-import { THREEDS2_FINGERPRINT_ERROR } from './config';
-import { ANALYTICS_EVENT_ERROR, ANALYTICS_API_ERROR, ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_PAYMENT_DATA } from '../../core/Analytics/constants';
-import { ThreeDS2AnalyticsObject } from './types';
+import { THREEDS2_ERROR, THREEDS2_FINGERPRINT, THREEDS2_FINGERPRINT_ERROR } from './config';
+import { ANALYTICS_API_ERROR, ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_PAYMENT_DATA } from '../../core/Analytics/constants';
+import { SendAnalyticsObject } from '../../core/Analytics/types';
 
 export interface ThreeDS2DeviceFingerprintProps {
     dataKey: string;
@@ -30,18 +30,15 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
 
     public static defaultProps = {
         dataKey: 'fingerprintResult',
-        type: 'IdentifyShopper'
+        // type: 'IdentifyShopper'
+        type: THREEDS2_FINGERPRINT
     };
 
     private callSubmit3DS2Fingerprint = callSubmit3DS2Fingerprint.bind(this); // New 3DS2 flow
 
-    protected submitAnalytics = (aObj: ThreeDS2AnalyticsObject) => {
-        // {
-        //     "event": "log",
-        //     "type": "threeDS2",
-        //     "message": "3DS2 fingerprint iframe loaded"
-        // }
-        this.props.analytics.createAnalyticsEvent({ event: aObj.event, data: { component: ThreeDS2DeviceFingerprint.type, ...aObj } });
+    protected submitAnalytics = (aObj: SendAnalyticsObject) => {
+        console.log('### ThreeDS2DeviceFingerprint::submitAnalytics:: aObj', aObj);
+        super.submitAnalytics(aObj);
     };
 
     onComplete(state) {
@@ -62,7 +59,7 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
 
             // TODO - check logs to see if this *ever* happens
             this.submitAnalytics({
-                event: ANALYTICS_EVENT_ERROR,
+                type: THREEDS2_ERROR,
                 code: ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_PAYMENT_DATA,
                 errorType: ANALYTICS_API_ERROR,
                 message: `${THREEDS2_FINGERPRINT_ERROR}: Missing 'paymentData' property from threeDS2 action`

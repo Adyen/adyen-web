@@ -2,13 +2,13 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import PrepareChallenge from './components/Challenge';
 import { ErrorCodeObject } from './components/utils';
-import { DEFAULT_CHALLENGE_WINDOW_SIZE, THREEDS2_CHALLENGE_ERROR } from './config';
+import { DEFAULT_CHALLENGE_WINDOW_SIZE, THREEDS2_CHALLENGE, THREEDS2_CHALLENGE_ERROR, THREEDS2_ERROR } from './config';
 import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import Language from '../../language';
 import { ActionHandledReturnObject, AnalyticsModule } from '../types';
-import { ANALYTICS_API_ERROR, ANALYTICS_EVENT_ERROR, ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_PAYMENT_DATA } from '../../core/Analytics/constants';
-import { ThreeDS2AnalyticsObject } from './types';
+import { ANALYTICS_API_ERROR, ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_PAYMENT_DATA } from '../../core/Analytics/constants';
+import { SendAnalyticsObject } from '../../core/Analytics/types';
 
 export interface ThreeDS2ChallengeProps {
     token?: string;
@@ -32,11 +32,13 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
     public static defaultProps = {
         dataKey: 'threeDSResult',
         size: DEFAULT_CHALLENGE_WINDOW_SIZE,
-        type: 'ChallengeShopper'
+        // type: 'ChallengeShopper'
+        type: THREEDS2_CHALLENGE
     };
 
-    protected submitAnalytics = (aObj: ThreeDS2AnalyticsObject) => {
-        this.props.analytics.createAnalyticsEvent({ event: aObj.event, data: { component: ThreeDS2Challenge.type, ...aObj } });
+    protected submitAnalytics = (aObj: SendAnalyticsObject) => {
+        console.log('### ThreeDS2Challenge::submitAnalytics:: aObj', aObj);
+        super.submitAnalytics(aObj);
     };
 
     onComplete(state) {
@@ -46,7 +48,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
 
     render() {
         // existy used because threeds2InMDFlow will send empty string for paymentData and we should be allowed to proceed with this
-        if (!existy(this.props.paymentData)) {
+        if (existy(this.props.paymentData)) {
             /**
              *  One component is used for both old and new 3DS2 challenge flows
              *   - The presence of useOriginalFlow indicates the old flow which used paymentData from the 3DS2 action
@@ -57,7 +59,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
             this.props.onError({ errorCode: 'threeds2.challenge', message: `No ${dataTypeForError} received. Challenge cannot proceed` });
 
             this.submitAnalytics({
-                event: ANALYTICS_EVENT_ERROR,
+                type: THREEDS2_ERROR,
                 code: ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_PAYMENT_DATA,
                 errorType: ANALYTICS_API_ERROR,
                 message: `${THREEDS2_CHALLENGE_ERROR}: Missing 'paymentData' property from threeDS2 action`

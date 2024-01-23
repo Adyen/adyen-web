@@ -18,6 +18,7 @@ import {
 import { debounce } from '../../components/internal/Address/utils';
 import { AnalyticsModule } from '../../components/types';
 import { createAnalyticsObject } from './utils';
+import { THREEDS2_ERROR, THREEDS2_FULL } from '../../components/ThreeDS2/config';
 
 let capturedCheckoutAttemptId = null;
 let hasLoggedPixel = false;
@@ -172,6 +173,24 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
                         data: { component, type, target }
                     });
                     break;
+
+                case THREEDS2_FULL: {
+                    const { message } = analyticsObj;
+                    anlModule.createAnalyticsEvent({
+                        event: 'log',
+                        data: { component, type, message }
+                    });
+                    break;
+                }
+
+                case THREEDS2_ERROR: {
+                    const { message, code, errorType } = analyticsObj;
+                    anlModule.createAnalyticsEvent({
+                        event: 'error',
+                        data: { component, type, message, code, errorType }
+                    });
+                    break;
+                }
 
                 default: {
                     anlModule.createAnalyticsEvent(analyticsObj as CreateAnalyticsEventObject);
