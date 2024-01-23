@@ -6,7 +6,7 @@ import callSubmit3DS2Fingerprint from './callSubmit3DS2Fingerprint';
 import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
 import { ActionHandledReturnObject, AnalyticsModule } from '../types';
 import { THREEDS2_ERROR, THREEDS2_FINGERPRINT, THREEDS2_FINGERPRINT_ERROR } from './config';
-import { ANALYTICS_API_ERROR, ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_PAYMENT_DATA } from '../../core/Analytics/constants';
+import { ANALYTICS_API_ERROR, ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_PAYMENT_DATA, ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
 import { SendAnalyticsObject } from '../../core/Analytics/types';
 
 export interface ThreeDS2DeviceFingerprintProps {
@@ -38,6 +38,8 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
 
     protected submitAnalytics = (aObj: SendAnalyticsObject) => {
         console.log('### ThreeDS2DeviceFingerprint::submitAnalytics:: aObj', aObj);
+        if (aObj.type === ANALYTICS_RENDERED_STR) return; // suppress the rendered event (it will have the same timestamp as the "threeDSMethodData sent" event)
+
         super.submitAnalytics(aObj);
     };
 

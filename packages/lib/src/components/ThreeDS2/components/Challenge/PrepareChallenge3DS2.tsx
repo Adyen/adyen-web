@@ -56,19 +56,14 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         }
     }
 
-    public submitAnalytics = (what: SendAnalyticsObject) => {
-        console.log('\n### PrepareChallenge3DS2::submitAnalytics:: what=', what);
-        this.props.onSubmitAnalytics(what);
-    };
-
     public onActionHandled = (rtnObj: ActionHandledReturnObject) => {
-        this.submitAnalytics({ type: THREEDS2_FULL, message: rtnObj.actionDescription });
+        this.props.onSubmitAnalytics({ type: THREEDS2_FULL, message: rtnObj.actionDescription });
 
         this.props.onActionHandled(rtnObj);
     };
 
     public onFormSubmit = (msg: string) => {
-        this.submitAnalytics({
+        this.props.onSubmitAnalytics({
             type: THREEDS2_FULL,
             message: msg
         });

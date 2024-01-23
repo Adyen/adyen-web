@@ -7,7 +7,7 @@ import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import Language from '../../language';
 import { ActionHandledReturnObject, AnalyticsModule } from '../types';
-import { ANALYTICS_API_ERROR, ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_PAYMENT_DATA } from '../../core/Analytics/constants';
+import { ANALYTICS_API_ERROR, ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_PAYMENT_DATA, ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
 import { SendAnalyticsObject } from '../../core/Analytics/types';
 
 export interface ThreeDS2ChallengeProps {
@@ -38,6 +38,8 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
 
     protected submitAnalytics = (aObj: SendAnalyticsObject) => {
         console.log('### ThreeDS2Challenge::submitAnalytics:: aObj', aObj);
+        if (aObj.type === ANALYTICS_RENDERED_STR) return; // suppress the rendered event (it will have the same timestamp as the "creq sent" event)
+
         super.submitAnalytics(aObj);
     };
 

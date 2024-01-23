@@ -41,19 +41,14 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
         }
     }
 
-    public submitAnalytics = (what: SendAnalyticsObject) => {
-        console.log('\n### PrepareFingerprint3DS2::submitAnalytics:: what', what);
-        this.props.onSubmitAnalytics(what);
-    };
-
     public onActionHandled = (rtnObj: ActionHandledReturnObject) => {
         // Leads to an "iframe loaded" log action
-        this.submitAnalytics({ type: THREEDS2_FULL, message: rtnObj.actionDescription });
+        this.props.onSubmitAnalytics({ type: THREEDS2_FULL, message: rtnObj.actionDescription });
         this.props.onActionHandled(rtnObj);
     };
 
     public onFormSubmit = (msg: string) => {
-        this.submitAnalytics({
+        this.props.onSubmitAnalytics({
             type: THREEDS2_FULL,
             message: msg
         });
