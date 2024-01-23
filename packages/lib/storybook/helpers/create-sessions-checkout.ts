@@ -25,13 +25,19 @@ async function createSessionsCheckout({ showPayButton, countryCode, shopperLocal
         environment: process.env.CLIENT_ENV,
         session,
         showPayButton,
-        // @ts-ignore TODO: Fix beforeSubmit type
+
         beforeSubmit: (data, component, actions) => {
             actions.resolve(data);
         },
 
-        onPaymentCompleted: (result, component) => {
-            handleFinalState(result, component);
+        onPaymentCompleted(result, element) {
+            console.log('onPaymentCompleted', result, element);
+            handleFinalState(result, element);
+        },
+
+        onPaymentFailed(result, element) {
+            console.log('onPaymentFailed', result, element);
+            handleFinalState(result, element);
         },
 
         onError: (error, component) => {
