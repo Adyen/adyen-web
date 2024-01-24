@@ -17,6 +17,7 @@ export default class Riverty extends OpenInvoiceContainer {
     formatProps(props) {
         return {
             ...super.formatProps(props),
+            allowedCountries: props.countryCode ? [props.countryCode] : allowedCountries,
             consentCheckboxLabel: <ConsentCheckboxLabel url={getConsentUrl(props.countryCode, props.i18n?.locale, termsAndConditionsUrlMap)} />
         };
     }

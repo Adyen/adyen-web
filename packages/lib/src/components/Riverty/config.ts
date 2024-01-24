@@ -1,4 +1,4 @@
-import { CITY, COUNTRY, FIRST_NAME, HOUSE_NUMBER_OR_NAME, LAST_NAME, POSTAL_CODE, STATE_OR_PROVINCE, STREET } from '../internal/Address/constants';
+import { CITY, COUNTRY, FIRST_NAME, HOUSE_NUMBER_OR_NAME, LAST_NAME, POSTAL_CODE, STREET } from '../internal/Address/constants';
 import { AddressSpecifications } from '../internal/Address/types';
 
 export const allowedCountries = ['AT', 'CH', 'DE'];
@@ -23,8 +23,7 @@ export const deliveryAddressSpecification: AddressSpecifications = {
             [
                 [POSTAL_CODE, 30],
                 [CITY, 70]
-            ],
-            STATE_OR_PROVINCE
+            ]
         ]
     }
 };

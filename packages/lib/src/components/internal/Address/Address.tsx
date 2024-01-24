@@ -14,8 +14,7 @@ import { getMaxLengthByFieldAndCountry } from '../../../utils/validator-utils';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { ComponentMethodsRef } from '../../types';
 import AddressSearch from './components/AddressSearch';
-// todo: make it more flexible, why address schema ties to country?
-// todo: test deliveryAddressSpecification prop
+
 export default function Address(props: AddressProps) {
     const { i18n } = useCoreContext();
 
