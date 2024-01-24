@@ -34,7 +34,6 @@ const loggerSubmitThreeDS2 = RequestLogger(
 fixture`Testing default size of the 3DS2 challenge window, & the challenge flows, on the Card component, since all other tests are for Dropin`
     .beforeEach(async t => {
         await t.navigateTo(cardPage.pageUrl);
-        await turnOffSDKMocking();
     })
     .clientScripts('./threeDS2.default.size.clientScripts.js')
     .requestHooks([loggerDetails, loggerSubmitThreeDS2]);
@@ -78,9 +77,7 @@ test('#1 Fill in card number that will trigger full flow (fingerprint & challeng
         .expect(loggerDetails.contains(r => r.response.statusCode === 200))
         // Allow time for the /details call, which we expect to be successful
         .ok({ timeout: 5000 })
-        .wait(1000);
-
-    // console.log(logger.requests[1].response.headers);
+        .wait(3000);
 
     // Check the value of the alert text
     const history = await t.getNativeDialogHistory();
@@ -117,7 +114,7 @@ test('#2 Fill in card number that will trigger challenge-only flow', async t => 
         .expect(loggerDetails.contains(r => r.response.statusCode === 200))
         // Allow time for the ONLY details call, which we expect to be successful
         .ok({ timeout: 5000 })
-        .wait(2000);
+        .wait(3000);
 
     // Check the value of the alert text
     const history = await t.getNativeDialogHistory();

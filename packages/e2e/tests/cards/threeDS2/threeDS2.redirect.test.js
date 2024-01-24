@@ -15,7 +15,7 @@ import CardComponentPage from '../../_models/CardComponent.page';
 
 const dropinPage = new DropinPage({
     components: {
-        cc: new CardComponentPage('.adyen-checkout__payment-method--card')
+        cc: new CardComponentPage('.adyen-checkout__payment-method--scheme')
     }
 });
 

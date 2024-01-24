@@ -1,5 +1,11 @@
 window.dropinConfig = {
-    showStoredPaymentMethods: false // hide stored PMs so credit card is first on list
+    showStoredPaymentMethods: false, // hide stored PMs so credit card is first on list
+    paymentMethodsConfiguration: {
+        card: {
+            _disableClickToPay: true,
+            challengeWindowSize: '04'
+        }
+    }
 };
 
 /**
@@ -10,15 +16,5 @@ window.dropinConfig = {
  *    at https://pay.google.com/gp/p/js/pay.js:237:404
  */
 window.mainConfiguration = {
-    removePaymentMethods: ['paywithgoogle', 'applepay'],
-    paymentMethodsConfiguration: {
-        threeDS2: {
-            challengeWindowSize: '04'
-        },
-        card: {
-            _disableClickToPay: true
-        }
-    }
+    removePaymentMethods: ['paywithgoogle', 'applepay']
 };
-
-window.actionConfigObject = { challengeWindowSize: '01' };

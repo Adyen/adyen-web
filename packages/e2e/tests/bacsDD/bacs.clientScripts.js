@@ -1,12 +1,12 @@
 window.dropinConfig = {
-    showStoredPaymentMethods: false // hide stored PMs
-};
-
-window.mainConfiguration = {
-    removePaymentMethods: ['paywithgoogle', 'applepay'],
+    showStoredPaymentMethods: false,
     paymentMethodsConfiguration: {
         card: {
             _disableClickToPay: true
         }
     }
+};
+
+window.mainConfiguration = {
+    removePaymentMethods: ['paywithgoogle', 'applepay']
 };
