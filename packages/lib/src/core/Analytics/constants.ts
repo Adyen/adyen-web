@@ -15,6 +15,8 @@ export const ANALYTICS_VALIDATION_ERROR_STR = 'validationError';
 export const ANALYTICS_FOCUS_STR = 'focus';
 export const ANALYTICS_UNFOCUS_STR = 'unfocus';
 
+export const ANALYTICS_CONFIGURED_STR = 'configured';
+
 export const ANALYTICS_IMPLEMENTATION_ERROR = 'ImplementationError';
 export const ANALYTICS_API_ERROR = 'APIError';
 

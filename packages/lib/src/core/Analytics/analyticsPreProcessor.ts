@@ -2,6 +2,7 @@ import { AnalyticsModule } from '../../components/types';
 import { CreateAnalyticsEventObject, SendAnalyticsObject } from './types';
 import {
     ANALYTICS_ACTION_STR,
+    ANALYTICS_CONFIGURED_STR,
     ANALYTICS_FOCUS_STR,
     ANALYTICS_RENDERED_STR,
     ANALYTICS_SELECTED_STR,
@@ -45,6 +46,13 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
                 });
                 break;
             }
+
+            case ANALYTICS_CONFIGURED_STR:
+                analyticsModule.createAnalyticsEvent({
+                    event: 'info',
+                    data: { component, type }
+                });
+                break;
 
             case ANALYTICS_FOCUS_STR:
             case ANALYTICS_UNFOCUS_STR:
