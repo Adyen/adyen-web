@@ -102,16 +102,20 @@ class BaseElement<P extends BaseElementProps> {
             throw new Error('Component could not mount. Root node was not found.');
         }
 
+        const setupAnalytics = !this._node;
+
         if (this._node) {
             this.unmount(); // new, if this._node exists then we are "remounting" so we first need to unmount if it's not already been done
         }
+
+        this._node = node;
 
         this._component = this.render();
 
         render(this._component, node);
 
         // Set up analytics (once, since this._node is currently undefined) now that we have mounted and rendered
-        if (!this._node) {
+        if (setupAnalytics) {
             if (this.props.modules && this.props.modules.analytics) {
                 this.setUpAnalytics({
                     containerWidth: node && (node as HTMLElement).offsetWidth,
@@ -127,8 +131,6 @@ class BaseElement<P extends BaseElementProps> {
                 });
             }
         }
-
-        this._node = node;
 
         return this;
     }
