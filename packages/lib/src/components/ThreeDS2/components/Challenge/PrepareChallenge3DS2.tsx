@@ -9,7 +9,7 @@ import './challenge.scss';
 import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
 import useImage from '../../../../core/Context/useImage';
 import { ActionHandledReturnObject } from '../../../types';
-import { THREEDS2_FULL } from '../../config';
+import { THREEDS2_FULL, THREEDS2_NUM } from '../../config';
 import { SendAnalyticsObject } from '../../../../core/Analytics/types';
 
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
@@ -78,6 +78,16 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
              */
             const resolveDataFunction = this.props.useOriginalFlow ? createOldChallengeResolveData : createChallengeResolveData;
             const data = resolveDataFunction(this.props.dataKey, resultObj.transStatus, this.props.paymentData);
+
+            // Create log object - the process is completed, one way or another
+            const analyticsObject: SendAnalyticsObject = {
+                type: THREEDS2_FULL,
+                message: `${THREEDS2_NUM} challenge has completed`,
+                metadata: { ...resultObj }
+            };
+
+            // Send log to analytics endpoint
+            this.props.onSubmitAnalytics(analyticsObject);
 
             this.props.onComplete(data); // (equals onAdditionalDetails - except for 3DS2InMDFlow)
         });

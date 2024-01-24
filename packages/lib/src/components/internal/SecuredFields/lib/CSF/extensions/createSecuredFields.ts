@@ -226,6 +226,7 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
                 // One of our existing securedFields has just loaded new content!
                 if (this.state.iframeCount > this.state.numIframes) {
                     this.destroySecuredFields();
+                    // TODO send analytics about this error
                     throw new AdyenCheckoutError(
                         'ERROR',
                         `One or more securedFields has just loaded new content. This should never happen. securedFields have been removed.

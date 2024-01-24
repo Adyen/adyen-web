@@ -79,10 +79,10 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
                 break;
 
             case THREEDS2_FULL: {
-                const { message } = analyticsObj;
+                const { message, metadata } = analyticsObj;
                 analyticsModule.createAnalyticsEvent({
                     event: 'log',
-                    data: { component, type, message }
+                    data: { component, type, message, metadata }
                 });
                 break;
             }
