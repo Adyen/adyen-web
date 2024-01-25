@@ -32,14 +32,10 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
     }
 
     formatProps(props): GooglePayConfiguration {
-        // const allowedCardNetworks = props.brands?.length ? mapBrands(props.brands) : props.allowedCardNetworks;
         const buttonSizeMode = props.buttonSizeMode ?? (props.isDropin ? 'fill' : 'static');
         const buttonLocale = getGooglePayLocale(props.buttonLocale ?? props.i18n?.locale);
 
-        const callbackIntents: google.payments.api.CallbackIntent[] = [
-            ...props.callbackIntents,
-            'PAYMENT_AUTHORIZATION'
-        ];
+        const callbackIntents: google.payments.api.CallbackIntent[] = [...props.callbackIntents, 'PAYMENT_AUTHORIZATION'];
 
         return {
             ...props,
@@ -86,16 +82,9 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
      *
      * @see https://developers.google.com/pay/api/web/reference/client#onPaymentAuthorized
      **/
-    private onPaymentAuthorized = async (
-        paymentData: google.payments.api.PaymentData
-    ): Promise<google.payments.api.PaymentAuthorizationResult> => {
-        const billingAddress: AddressData = formatGooglePayContactToAdyenAddressFormat(
-            paymentData.paymentMethodData.info.billingAddress
-        );
-        const deliveryAddress: AddressData = formatGooglePayContactToAdyenAddressFormat(
-            paymentData.shippingAddress,
-            true
-        );
+    private onPaymentAuthorized = async (paymentData: google.payments.api.PaymentData): Promise<google.payments.api.PaymentAuthorizationResult> => {
+        const billingAddress: AddressData = formatGooglePayContactToAdyenAddressFormat(paymentData.paymentMethodData.info.billingAddress);
+        const deliveryAddress: AddressData = formatGooglePayContactToAdyenAddressFormat(paymentData.shippingAddress, true);
 
         this.setState({
             authorizedEvent: paymentData,

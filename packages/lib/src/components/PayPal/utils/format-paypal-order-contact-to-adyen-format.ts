@@ -3,10 +3,7 @@ import { AddressData } from '../../../types/global-types';
 /**
  * This function formats PayPal contact format to Adyen address format
  */
-export const formatPaypalOrderContatcToAdyenFormat = (
-    paymentContact: any,
-    isDeliveryAddress?: boolean
-): AddressData | null => {
+export const formatPaypalOrderContatcToAdyenFormat = (paymentContact: any, isDeliveryAddress?: boolean): AddressData | null => {
     const getStreet = (addressPart1 = null, addressPart2 = null): string | null => {
         if (addressPart1 && addressPart2) return `${addressPart1}, ${addressPart2}`;
         if (addressPart1) return addressPart1;
@@ -14,7 +11,7 @@ export const formatPaypalOrderContatcToAdyenFormat = (
         return null;
     };
 
-    if (!paymentContact || !paymentContact.address) return null;
+    if (paymentContact?.address === undefined) return null;
 
     const { address, name } = paymentContact;
     const street = getStreet(address.address_line_1, address.address_line_2);

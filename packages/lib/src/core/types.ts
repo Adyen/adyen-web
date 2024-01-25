@@ -191,7 +191,6 @@ export interface CoreConfiguration {
         actions: {
             resolve: (response: CheckoutAdvancedFlowResponse) => void;
             reject: () => void;
-            // reject: (error?: onSubmitReject) => void;
         }
     ): void;
 
@@ -208,7 +207,6 @@ export interface CoreConfiguration {
         actions: {
             resolve: (response: CheckoutAdvancedFlowResponse) => void;
             reject: () => void;
-            // reject: (error?: onSubmitReject) => void;
         }
     ): void;
 

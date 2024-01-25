@@ -220,7 +220,7 @@ export interface ApplePayElementData {
         type: string;
         applePayToken: string;
         billingAddress?: AddressData;
-        shippingAddress?: AddressData;
+        deliveryAddress?: AddressData;
     };
 }
 

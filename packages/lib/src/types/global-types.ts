@@ -1,6 +1,5 @@
 import { ADDRESS_SCHEMA } from '../components/internal/Address/constants';
 import actionTypes from '../core/ProcessResponse/PaymentAction/actionTypes';
-// import { onSubmitReject } from '../core/types';
 
 export type PaymentActionsType = keyof typeof actionTypes;
 
@@ -206,19 +205,6 @@ export interface PaymentAmountExtended extends PaymentAmount {
     currencyDisplay?: string;
 }
 
-export type ShopperDetails = {
-    shopperName?: {
-        firstName?: string;
-        lastName?: string;
-    };
-    shopperEmail?: string;
-    countryCode?: string;
-    telephoneNumber?: string;
-    dateOfBirth?: string;
-    billingAddress?: Partial<AddressData>;
-    shippingAddress?: Partial<AddressData>;
-};
-
 export type AddressField = (typeof ADDRESS_SCHEMA)[number];
 
 export type AddressData = {
@@ -336,7 +322,6 @@ export type SessionsResponse = {
     resultCode: ResultCode;
 };
 
-//TODO double check these values
 export interface PaymentMethodsRequestData {
     order?: Order;
     locale?: string;

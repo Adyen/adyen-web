@@ -8,12 +8,7 @@ import { httpPost } from '../../core/Services/http';
 import { APPLEPAY_SESSION_ENDPOINT } from './config';
 import { preparePaymentRequest } from './payment-request';
 import { resolveSupportedVersion, mapBrands, formatApplePayContactToAdyenAddressFormat } from './utils';
-import {
-    ApplePayConfiguration,
-    ApplePayElementData,
-    ApplePayPaymentOrderDetails,
-    ApplePaySessionRequest
-} from './types';
+import { ApplePayConfiguration, ApplePayElementData, ApplePayPaymentOrderDetails, ApplePaySessionRequest } from './types';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
 import { PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
@@ -71,13 +66,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
     };
 
     private startSession() {
-        const {
-            version,
-            onValidateMerchant,
-            onPaymentMethodSelected,
-            onShippingMethodSelected,
-            onShippingContactSelected
-        } = this.props;
+        const { version, onValidateMerchant, onPaymentMethodSelected, onShippingMethodSelected, onShippingContactSelected } = this.props;
 
         const paymentRequest = preparePaymentRequest({
             companyName: this.props.configuration.merchantName,
@@ -244,12 +233,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
      */
     public override async isAvailable(): Promise<void> {
         if (document.location.protocol !== 'https:') {
-            return Promise.reject(
-                new AdyenCheckoutError(
-                    'IMPLEMENTATION_ERROR',
-                    'Trying to start an Apple Pay session from an insecure document'
-                )
-            );
+            return Promise.reject(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to start an Apple Pay session from an insecure document'));
         }
 
         if (!this.props.onValidateMerchant && !this.props.clientKey) {
@@ -257,11 +241,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         }
 
         try {
-            if (
-                window.ApplePaySession &&
-                ApplePaySession.canMakePayments() &&
-                ApplePaySession.supportsVersion(this.props.version)
-            ) {
+            if (window.ApplePaySession && ApplePaySession.canMakePayments() && ApplePaySession.supportsVersion(this.props.version)) {
                 return Promise.resolve();
             }
         } catch (error) {

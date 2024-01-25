@@ -9,14 +9,14 @@ import { Resources } from '../../../core/Context/Resources';
 import { NewableComponent } from '../../../core/core.registry';
 import { ComponentMethodsRef, IUIElement, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
 import {
+    AdditionalDetailsStateData,
+    CheckoutAdvancedFlowResponse,
     Order,
     PaymentAction,
     PaymentData,
     PaymentMethodsResponse,
-    CheckoutAdvancedFlowResponse,
     PaymentResponseData,
-    RawPaymentResponse,
-    AdditionalDetailsStateData
+    RawPaymentResponse
 } from '../../../types/global-types';
 import './UIElement.scss';
 import { CheckoutSessionDetailsResponse, CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
@@ -249,7 +249,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     private async submitAdditionalDetailsUsingSessionsFlow(data: any): Promise<CheckoutSessionDetailsResponse> {
         try {
-            return this.core.session.submitDetails(data);
+            return await this.core.session.submitDetails(data);
         } catch (error) {
             this.handleError(error);
             return Promise.reject(error);
@@ -402,10 +402,16 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         return <PayButton {...props} amount={this.props.amount} secondaryAmount={this.props.secondaryAmount} onClick={this.submit} />;
     };
 
+    /**
+     * Used in the Partial Orders flow.
+     * When the Order is updated, the merchant can request new payment methods based on the new remaining amount
+     *
+     * @private
+     */
     private async handleAdvanceFlowPaymentMethodsUpdate(order: Order) {
         return new Promise<PaymentMethodsResponse>((resolve, reject) => {
             if (!this.props.onPaymentMethodsRequest) {
-                return reject();
+                return reject(new Error('onPaymentMethodsRequest is not implemented'));
             }
 
             this.props.onPaymentMethodsRequest(

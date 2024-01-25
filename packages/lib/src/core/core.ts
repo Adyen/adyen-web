@@ -59,18 +59,12 @@ class Core implements ICore {
         this.setOptions(props);
 
         this.loadingContext = resolveEnvironment(this.options.environment, this.options.environmentUrls?.api);
-        this.cdnContext = resolveCDNEnvironment(
-            this.options.resourceEnvironment || this.options.environment,
-            this.options.environmentUrls?.api
-        );
-        this.session =
-            this.options.session && new Session(this.options.session, this.options.clientKey, this.loadingContext);
+        this.cdnContext = resolveCDNEnvironment(this.options.resourceEnvironment || this.options.environment, this.options.environmentUrls?.api);
+        this.session = this.options.session && new Session(this.options.session, this.options.clientKey, this.loadingContext);
 
         const clientKeyType = this.options.clientKey?.substr(0, 4);
         if ((clientKeyType === 'test' || clientKeyType === 'live') && !this.loadingContext.includes(clientKeyType)) {
-            throw new Error(
-                `Error: you are using a '${clientKeyType}' clientKey against the '${this.options.environment}' environment`
-            );
+            throw new Error(`Error: you are using a '${clientKeyType}' clientKey against the '${this.options.environment}' environment`);
         }
 
         // Expose version number for npm builds
@@ -168,9 +162,7 @@ class Core implements ICore {
                         'a "resultCode": have you passed in the whole response object by mistake?'
                 );
             }
-            throw new Error(
-                'createFromAction::Invalid Action - the passed action object does not have a "type" property'
-            );
+            throw new Error('createFromAction::Invalid Action - the passed action object does not have a "type" property');
         }
 
         if (action.type) {
@@ -260,8 +252,7 @@ class Core implements ICore {
      * @internal
      */
     private handleCreateError(paymentMethod?): never {
-        const paymentMethodName =
-            paymentMethod && paymentMethod.name ? paymentMethod.name : 'The passed payment method';
+        const paymentMethodName = paymentMethod?.name ?? 'The passed payment method';
         const errorMessage = paymentMethod
             ? `${paymentMethodName} is not a valid Checkout Component. What was passed as a txVariant was: ${JSON.stringify(
                   paymentMethod
@@ -272,10 +263,7 @@ class Core implements ICore {
     }
 
     private createPaymentMethodsList(paymentMethodsResponse?: PaymentMethods): void {
-        this.paymentMethodsResponse = new PaymentMethods(
-            this.options.paymentMethodsResponse || paymentMethodsResponse,
-            this.options
-        );
+        this.paymentMethodsResponse = new PaymentMethods(this.options.paymentMethodsResponse || paymentMethodsResponse, this.options);
     }
 
     private createCoreModules(): void {
