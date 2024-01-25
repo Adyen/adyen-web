@@ -110,18 +110,19 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
                     this.setElementStatus('ready');
 
                     const googlePayError = paymentResponse.error?.googlePayError;
+                    const fallbackMessage = this.props.i18n.get('error.subtitle.payment');
 
                     const error: google.payments.api.PaymentDataError =
                         typeof googlePayError === 'string' || undefined
                             ? {
                                   intent: 'PAYMENT_AUTHORIZATION',
                                   reason: 'OTHER_ERROR',
-                                  message: (googlePayError as string) || 'Payment failed'
+                                  message: (googlePayError as string) || fallbackMessage
                               }
                             : {
                                   intent: googlePayError?.intent || 'PAYMENT_AUTHORIZATION',
                                   reason: googlePayError?.reason || 'OTHER_ERROR',
-                                  message: googlePayError?.message || 'Payment failed'
+                                  message: googlePayError?.message || fallbackMessage
                               };
 
                     resolve({
