@@ -10,5 +10,10 @@ module.exports = {
     moduleNameMapper: {
         '\\.scss$': '<rootDir>/config/testMocks/styleMock.js'
     },
-    coveragePathIgnorePatterns: ['node_modules/', 'config/', 'scripts/']
+    collectCoverageFrom: [
+        'src/**/*.{ts,tsx}',
+        '!src/**/types.ts',
+        '!src/language/locales/**'
+    ],
+    coveragePathIgnorePatterns: ['node_modules/', 'config/', 'scripts/', 'storybook/', '.storybook/', 'auto/']
 };
