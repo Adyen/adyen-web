@@ -81,7 +81,6 @@ class DoFingerprint3DS2 extends Component<DoFingerprint3DS2Props, DoFingerprint3
                     <Iframe
                         name={iframeName}
                         callback={() => {
-                            console.log('### DoFingerprint3DS2:::: iframe callback');
                             onActionHandled({ componentType: '3DS2Fingerprint', actionDescription: `${THREEDS2_NUM} fingerprint iframe loaded` });
                         }}
                     />
