@@ -3,6 +3,9 @@ import { CreateAnalyticsEventObject, SendAnalyticsObject } from './types';
 import {
     ANALYTICS_ACTION_STR,
     ANALYTICS_CONFIGURED_STR,
+    ANALYTICS_EVENT_ERROR,
+    ANALYTICS_EVENT_INFO,
+    ANALYTICS_EVENT_LOG,
     ANALYTICS_FOCUS_STR,
     ANALYTICS_RENDERED_STR,
     ANALYTICS_SELECTED_STR,
@@ -20,12 +23,13 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
         switch (type) {
             // Called from BaseElement (when component mounted) or, from DropinComponent (after mounting, when it has finished resolving all the PM promises)
             // &/or, from DropinComponent when a PM is selected
-            case ANALYTICS_RENDERED_STR: {
+            case ANALYTICS_RENDERED_STR:
+            case ANALYTICS_CONFIGURED_STR: {
                 const { isStoredPaymentMethod, brand } = analyticsObj;
                 const data = { component, type, isStoredPaymentMethod, brand };
 
                 analyticsModule.createAnalyticsEvent({
-                    event: 'info',
+                    event: ANALYTICS_EVENT_INFO,
                     data
                 });
                 break;
@@ -33,7 +37,7 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
 
             case ANALYTICS_SUBMIT_STR:
                 analyticsModule.createAnalyticsEvent({
-                    event: 'log',
+                    event: ANALYTICS_EVENT_LOG,
                     data: { component, type, target: 'pay_button', message: 'Shopper clicked pay' }
                 });
                 break;
@@ -41,23 +45,17 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
             case ANALYTICS_ACTION_STR: {
                 const { subtype, message } = analyticsObj;
                 analyticsModule.createAnalyticsEvent({
-                    event: 'log',
+                    event: ANALYTICS_EVENT_LOG,
                     data: { component, type, subtype, message }
                 });
                 break;
             }
 
-            case ANALYTICS_CONFIGURED_STR:
-                analyticsModule.createAnalyticsEvent({
-                    event: 'info',
-                    data: { component, type }
-                });
-                break;
-
             case ANALYTICS_FOCUS_STR:
             case ANALYTICS_UNFOCUS_STR:
+            case ANALYTICS_SELECTED_STR:
                 analyticsModule.createAnalyticsEvent({
-                    event: 'info',
+                    event: ANALYTICS_EVENT_INFO,
                     data: { component, type, target }
                 });
                 break;
@@ -65,23 +63,16 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
             case ANALYTICS_VALIDATION_ERROR_STR: {
                 const { validationErrorCode, validationErrorMessage } = analyticsObj;
                 analyticsModule.createAnalyticsEvent({
-                    event: 'info',
+                    event: ANALYTICS_EVENT_INFO,
                     data: { component, type, target, validationErrorCode, validationErrorMessage }
                 });
                 break;
             }
 
-            case ANALYTICS_SELECTED_STR:
-                analyticsModule.createAnalyticsEvent({
-                    event: 'info',
-                    data: { component, type, target }
-                });
-                break;
-
             case THREEDS2_FULL: {
                 const { message, metadata } = analyticsObj;
                 analyticsModule.createAnalyticsEvent({
-                    event: 'log',
+                    event: ANALYTICS_EVENT_LOG,
                     data: { component, type, message, metadata }
                 });
                 break;
@@ -90,7 +81,7 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
             case THREEDS2_ERROR: {
                 const { message, code, errorType } = analyticsObj;
                 analyticsModule.createAnalyticsEvent({
-                    event: 'error',
+                    event: ANALYTICS_EVENT_ERROR,
                     data: { component, type, message, code, errorType }
                 });
                 break;
