@@ -36,7 +36,7 @@ describe('ThreeDS2DeviceFingerprint: calls that generate analytics should produc
     });
 
     test('ThreeDS2DeviceFingerprint instantiated without paymentData should generate an analytics error', () => {
-        const renderedFP = fingerprint.render();
+        const view = fingerprint.render();
 
         expect(analyticsModule.createAnalyticsEvent).toHaveBeenCalledWith({
             event: ANALYTICS_EVENT_ERROR,
@@ -49,6 +49,6 @@ describe('ThreeDS2DeviceFingerprint: calls that generate analytics should produc
             }
         });
 
-        expect(renderedFP).toBe(null);
+        expect(view).toBe(null);
     });
 });

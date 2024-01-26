@@ -35,7 +35,7 @@ describe('ThreeDS2Challenge: calls that generate analytics should produce object
     });
 
     test('ThreeDS2Challenge instantiated without paymentData should generate an analytics error', () => {
-        const renderedChall = challenge.render();
+        const view = challenge.render();
 
         expect(analyticsModule.createAnalyticsEvent).toHaveBeenCalledWith({
             event: ANALYTICS_EVENT_ERROR,
@@ -48,6 +48,6 @@ describe('ThreeDS2Challenge: calls that generate analytics should produce object
             }
         });
 
-        expect(renderedChall).toBe(null);
+        expect(view).toBe(null);
     });
 });
