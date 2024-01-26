@@ -23,7 +23,7 @@ export interface ThreeDS2ChallengeProps {
     useOriginalFlow?: boolean;
     i18n?: Language;
     onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
-    analytics?: AnalyticsModule;
+    modules?: { analytics: AnalyticsModule };
 }
 
 class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
@@ -32,12 +32,10 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeProps> {
     public static defaultProps = {
         dataKey: 'threeDSResult',
         size: DEFAULT_CHALLENGE_WINDOW_SIZE,
-        // type: 'ChallengeShopper'
         type: THREEDS2_CHALLENGE
     };
 
     protected submitAnalytics = (aObj: SendAnalyticsObject) => {
-        console.log('### ThreeDS2Challenge::submitAnalytics:: aObj', aObj);
         if (aObj.type === ANALYTICS_RENDERED_STR) return; // suppress the rendered event (it will have the same timestamp as the "creq sent" event)
 
         super.submitAnalytics(aObj);

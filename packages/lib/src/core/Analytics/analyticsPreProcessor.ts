@@ -69,6 +69,7 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
                 break;
             }
 
+            // General 3DS2 log events: "action handled" (i.e. iframe loaded), data sent, process completed
             case THREEDS2_FULL: {
                 const { message, metadata } = analyticsObj;
                 analyticsModule.createAnalyticsEvent({

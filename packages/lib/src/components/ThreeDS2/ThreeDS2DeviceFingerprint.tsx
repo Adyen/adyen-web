@@ -10,19 +10,19 @@ import { ANALYTICS_API_ERROR, ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_PAYMENT_DAT
 import { SendAnalyticsObject } from '../../core/Analytics/types';
 
 export interface ThreeDS2DeviceFingerprintProps {
-    dataKey: string;
-    token: string;
-    notificationURL: string;
-    onError: (error?: string | ErrorCodeObject) => void;
-    paymentData: string;
-    showSpinner: boolean;
-    type: string;
+    dataKey?: string;
+    token?: string;
+    notificationURL?: string;
+    onError?: (error?: string | ErrorCodeObject) => void;
+    paymentData?: string;
+    showSpinner?: boolean;
+    type?: string;
     useOriginalFlow?: boolean;
     loadingContext?: string;
     clientKey?: string;
     elementRef?: UIElement;
     onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
-    analytics?: AnalyticsModule;
+    modules?: { analytics: AnalyticsModule };
 }
 
 class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps> {
@@ -30,14 +30,12 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
 
     public static defaultProps = {
         dataKey: 'fingerprintResult',
-        // type: 'IdentifyShopper'
         type: THREEDS2_FINGERPRINT
     };
 
     private callSubmit3DS2Fingerprint = callSubmit3DS2Fingerprint.bind(this); // New 3DS2 flow
 
     protected submitAnalytics = (aObj: SendAnalyticsObject) => {
-        console.log('### ThreeDS2DeviceFingerprint::submitAnalytics:: aObj', aObj);
         if (aObj.type === ANALYTICS_RENDERED_STR) return; // suppress the rendered event (it will have the same timestamp as the "threeDSMethodData sent" event)
 
         super.submitAnalytics(aObj);
