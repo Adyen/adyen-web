@@ -15,7 +15,7 @@ export interface ThreeDS2DeviceFingerprintProps {
     notificationURL?: string;
     onError?: (error?: string | ErrorCodeObject) => void;
     paymentData?: string;
-    showSpinner?: boolean;
+    showSpinner: boolean;
     type?: string;
     useOriginalFlow?: boolean;
     loadingContext?: string;

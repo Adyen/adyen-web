@@ -20,7 +20,8 @@ describe('ThreeDS2DeviceFingerprint: calls that generate analytics should produc
             modules: {
                 analytics: analyticsModule
             },
-            onError: () => {}
+            onError: () => {},
+            showSpinner: null
         });
 
         analyticsModule.createAnalyticsEvent = jest.fn(obj => {
