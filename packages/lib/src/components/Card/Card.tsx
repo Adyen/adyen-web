@@ -6,7 +6,7 @@ import collectBrowserInfo from '../../utils/browserInfo';
 import { BinLookupResponse, CardElementData, CardElementProps } from './types';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
 import { CbObjOnBinLookup, CbObjOnConfigSuccess, CbObjOnFocus } from '../internal/SecuredFields/lib/types';
-import { reject } from '../internal/SecuredFields/utils';
+import { fieldTypeToSnakeCase, reject } from '../internal/SecuredFields/utils';
 import { hasValidInstallmentsObject } from './components/CardInput/utils';
 import createClickToPayService from '../internal/ClickToPay/services/create-clicktopay-service';
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';
@@ -21,8 +21,7 @@ import {
     ANALYTICS_VALIDATION_ERROR_STR,
     ANALYTICS_RENDERED_STR
 } from '../../core/Analytics/constants';
-import { ALL_SECURED_FIELDS, ENCRYPTED } from '../internal/SecuredFields/lib/configuration/constants';
-import { camelCaseToSnakeCase } from '../../utils/textUtils';
+import { ALL_SECURED_FIELDS } from '../internal/SecuredFields/lib/configuration/constants';
 import { FieldErrorAnalyticsObject, SendAnalyticsObject } from '../../core/Analytics/types';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 
@@ -189,15 +188,6 @@ export class CardElement extends UIElement<CardElementProps> {
         super.submitAnalytics(analyticsObj);
     }
 
-    private fieldTypeToSnakeCase(fieldType) {
-        let str = camelCaseToSnakeCase(fieldType);
-        // SFs need their fieldType mapped to what the endpoint expects
-        if (ALL_SECURED_FIELDS.includes(fieldType)) {
-            str = str.substring(ENCRYPTED.length + 1); // strip 'encrypted_' off the string
-        }
-        return str;
-    }
-
     private onConfigSuccess = (obj: CbObjOnConfigSuccess) => {
         this.submitAnalytics({
             type: ANALYTICS_CONFIGURED_STR
@@ -207,10 +197,9 @@ export class CardElement extends UIElement<CardElementProps> {
     };
 
     private onFocus = (obj: ComponentFocusObject) => {
-        // console.log('### Card::onFocus:: fieldType', obj.fieldType, 'target', this.fieldTypeToSnakeCase(obj.fieldType));
         this.submitAnalytics({
             type: ANALYTICS_FOCUS_STR,
-            target: this.fieldTypeToSnakeCase(obj.fieldType)
+            target: fieldTypeToSnakeCase(obj.fieldType)
         });
 
         // Call merchant defined callback
@@ -224,7 +213,7 @@ export class CardElement extends UIElement<CardElementProps> {
     private onBlur = (obj: ComponentFocusObject) => {
         this.submitAnalytics({
             type: ANALYTICS_UNFOCUS_STR,
-            target: this.fieldTypeToSnakeCase(obj.fieldType)
+            target: fieldTypeToSnakeCase(obj.fieldType)
         });
 
         // Call merchant defined callback
@@ -238,7 +227,7 @@ export class CardElement extends UIElement<CardElementProps> {
     private onErrorAnalytics = (obj: FieldErrorAnalyticsObject) => {
         this.submitAnalytics({
             type: ANALYTICS_VALIDATION_ERROR_STR,
-            target: this.fieldTypeToSnakeCase(obj.fieldType),
+            target: fieldTypeToSnakeCase(obj.fieldType),
             validationErrorCode: obj.errorCode,
             validationErrorMessage: obj.errorMessage
         });

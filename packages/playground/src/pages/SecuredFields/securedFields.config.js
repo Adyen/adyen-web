@@ -280,7 +280,7 @@ export function onChange(state, component) {
     }
 }
 
-const setErrorClasses = function(pNode, pSetErrors) {
+const setErrorClasses = function (pNode, pSetErrors) {
     if (pSetErrors) {
         if (pNode.className.indexOf('pm-input-field--error') === -1) {
             pNode.className += ' pm-input-field--error';
@@ -295,7 +295,7 @@ const setErrorClasses = function(pNode, pSetErrors) {
     }
 };
 
-const setFocusClasses = function(pNode, pSetFocus) {
+const setFocusClasses = function (pNode, pSetFocus) {
     if (pSetFocus) {
         if (pNode.className.indexOf('pm-input-field--focus') === -1) {
             pNode.className += ' pm-input-field--focus';

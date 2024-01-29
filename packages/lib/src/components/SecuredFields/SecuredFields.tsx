@@ -4,9 +4,10 @@ import SecuredFields from './SecuredFieldsInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import collectBrowserInfo from '../../utils/browserInfo';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
-import { CbObjOnBinLookup } from '../internal/SecuredFields/lib/types';
+import { CbObjOnBinLookup, CbObjOnFocus } from '../internal/SecuredFields/lib/types';
 import { BrandObject } from '../Card/types';
-import { getCardImageUrl } from '../internal/SecuredFields/utils';
+import { fieldTypeToSnakeCase, getCardImageUrl } from '../internal/SecuredFields/utils';
+import { ANALYTICS_FOCUS_STR, ANALYTICS_UNFOCUS_STR } from '../../core/Analytics/constants';
 
 export class SecuredFieldsElement extends UIElement {
     public static type = 'scheme';
@@ -89,6 +90,16 @@ export class SecuredFieldsElement extends UIElement {
         return collectBrowserInfo();
     }
 
+    private onFocus = (obj: CbObjOnFocus) => {
+        this.submitAnalytics({
+            type: obj.focus === true ? ANALYTICS_FOCUS_STR : ANALYTICS_UNFOCUS_STR,
+            target: fieldTypeToSnakeCase(obj.fieldType)
+        });
+
+        // Call merchant defined callback
+        this.props.onFocus?.(obj);
+    };
+
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
@@ -103,6 +114,7 @@ export class SecuredFieldsElement extends UIElement {
                     onBinValue={this.onBinValue}
                     implementationType={'custom'}
                     resources={this.resources}
+                    onFocus={this.onFocus}
                 />
             </CoreProvider>
         );
