@@ -78,6 +78,8 @@
     "houseNumberOrName": "门牌号",
     "separateDeliveryAddress": "指定一个单独的寄送地址",
     "deliveryAddress": "寄送地址",
+    "deliveryAddress.firstName": "收件人名字",
+    "deliveryAddress.lastName": "收件人姓氏",
     "zipCode": "邮政编码",
     "apartmentSuite": "公寓 / 套房",
     "provinceOrTerritory": "省或地区",

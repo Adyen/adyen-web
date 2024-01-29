@@ -78,6 +78,8 @@
     "houseNumberOrName": "Număr",
     "separateDeliveryAddress": "Specificați o adresă de livrare separată",
     "deliveryAddress": "Adresă de livrare",
+    "deliveryAddress.firstName": "Prenumele destinatarului",
+    "deliveryAddress.lastName": "Numele de familie al destinatarului",
     "zipCode": "Cod poștal",
     "apartmentSuite": "Apartament",
     "provinceOrTerritory": "Provincie sau teritoriu",

@@ -78,6 +78,8 @@
     "houseNumberOrName": "Αριθμός οικίας",
     "separateDeliveryAddress": "Καθορίστε μια ξεχωριστή διεύθυνση παράδοσης",
     "deliveryAddress": "Διεύθυνση παράδοσης",
+    "deliveryAddress.firstName": "Όνομα παραλήπτη",
+    "deliveryAddress.lastName": "Επώνυμο παραλήπτη",
     "zipCode": "Ταχυδρομικός κώδικας",
     "apartmentSuite": "Διαμέρισμα/Γραφείο",
     "provinceOrTerritory": "Επαρχία ή περιφέρεια",
