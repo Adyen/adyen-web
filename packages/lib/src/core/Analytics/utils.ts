@@ -1,5 +1,5 @@
 import { AnalyticsObject, CreateAnalyticsObject } from './types';
-import { ANALYTICS_ACTION_STR, ANALYTICS_SUBMIT_STR, ANALYTICS_VALIDATION_ERROR_STR } from './constants';
+import { ANALYTICS_ACTION_STR, ANALYTICS_VALIDATION_ERROR_STR } from './constants';
 
 export const getUTCTimestamp = () => Date.now();
 
@@ -12,7 +12,6 @@ export const getUTCTimestamp = () => Date.now();
  *
  * Log objects have, in addition to the base props:
  *  "message" & "type" &
- *    "target" (e.g. when onSubmit is called after a pay button click), or,
  *    "subtype" (e.g. when an action is handled)
  *
  * Info objects have, in addition to the base props:
@@ -30,7 +29,6 @@ export const createAnalyticsObject = (aObj: CreateAnalyticsObject): AnalyticsObj
     /** LOG */
     ...(aObj.event === 'log' && { type: aObj.type, message: aObj.message }), // log event
     ...(aObj.event === 'log' && aObj.type === ANALYTICS_ACTION_STR && { subType: aObj.subtype }), // only added if we have a log event of Action type
-    ...(aObj.event === 'log' && aObj.type === ANALYTICS_SUBMIT_STR && { target: aObj.target }), // only added if we have a log event of Submit type
     /** INFO */
     ...(aObj.event === 'info' && { type: aObj.type, target: aObj.target }), // info event
     ...(aObj.event === 'info' && aObj.isStoredPaymentMethod && { isStoredPaymentMethod: aObj.isStoredPaymentMethod, brand: aObj.brand }), // only added if we have an info event about a storedPM

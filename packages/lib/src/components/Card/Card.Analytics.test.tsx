@@ -162,7 +162,6 @@ describe('Card: calls that generate "log" analytics should produce objects with 
             data: {
                 component: card.constructor['type'],
                 type: ANALYTICS_SUBMIT_STR,
-                target: 'pay_button',
                 message: 'Shopper clicked pay'
             }
         });

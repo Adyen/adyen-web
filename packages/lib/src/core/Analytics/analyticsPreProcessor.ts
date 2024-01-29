@@ -38,7 +38,7 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
             case ANALYTICS_SUBMIT_STR:
                 analyticsModule.createAnalyticsEvent({
                     event: ANALYTICS_EVENT_LOG,
-                    data: { component, type, target: 'pay_button', message: 'Shopper clicked pay' }
+                    data: { component, type, message: 'Shopper clicked pay' }
                 });
                 break;
 
