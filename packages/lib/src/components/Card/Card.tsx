@@ -14,10 +14,17 @@ import ClickToPayWrapper from './components/ClickToPayWrapper';
 import { ComponentFocusObject, PayButtonFunctionProps, UIElementStatus } from '../types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import PayButton from '../internal/PayButton';
-import { ANALYTICS_FOCUS_STR, ANALYTICS_CONFIGURED_STR, ANALYTICS_UNFOCUS_STR, ANALYTICS_VALIDATION_ERROR_STR } from '../../core/Analytics/constants';
+import {
+    ANALYTICS_FOCUS_STR,
+    ANALYTICS_CONFIGURED_STR,
+    ANALYTICS_UNFOCUS_STR,
+    ANALYTICS_VALIDATION_ERROR_STR,
+    ANALYTICS_RENDERED_STR
+} from '../../core/Analytics/constants';
 import { ALL_SECURED_FIELDS, ENCRYPTED } from '../internal/SecuredFields/lib/configuration/constants';
 import { camelCaseToSnakeCase } from '../../utils/textUtils';
-import { FieldErrorAnalyticsObject } from '../../core/Analytics/types';
+import { FieldErrorAnalyticsObject, SendAnalyticsObject } from '../../core/Analytics/types';
+import { hasOwnProperty } from '../../utils/hasOwnProperty';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
@@ -164,6 +171,22 @@ export class CardElement extends UIElement<CardElementProps> {
             const nuObj = reject('supportedBrandsRaw').from(obj);
             this.props.onBinLookup(nuObj);
         }
+    }
+
+    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
+        const { type } = analyticsObj;
+
+        if (type === ANALYTICS_RENDERED_STR || type === ANALYTICS_CONFIGURED_STR) {
+            // Check if it's a storedCard
+            if (this.constructor['type'] === 'scheme') {
+                if (hasOwnProperty(this.props, 'supportedShopperInteractions')) {
+                    analyticsObj.isStoredPaymentMethod = true;
+                    analyticsObj.brand = this.props.brand;
+                }
+            }
+        }
+
+        super.submitAnalytics(analyticsObj);
     }
 
     private fieldTypeToSnakeCase(fieldType) {

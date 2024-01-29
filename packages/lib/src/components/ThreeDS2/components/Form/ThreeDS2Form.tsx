@@ -7,7 +7,7 @@ interface ThreeDS2FormProps {
     target: string;
     inputName: string;
     inputValue: string;
-    onFormSubmit: (w) => void;
+    onFormSubmit: (msg: string) => void;
 }
 
 export default class ThreeDS2Form extends Component<ThreeDS2FormProps> {

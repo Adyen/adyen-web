@@ -11,7 +11,7 @@ import { hasOwnProperty } from '../utils/hasOwnProperty';
 import DropinElement from './Dropin';
 import { CoreOptions } from '../core/types';
 import Core from '../core';
-import { ANALYTICS_CONFIGURED_STR, ANALYTICS_RENDERED_STR, ANALYTICS_SUBMIT_STR } from '../core/Analytics/constants';
+import { ANALYTICS_SUBMIT_STR } from '../core/Analytics/constants';
 import { AnalyticsInitialEvent, SendAnalyticsObject } from '../core/Analytics/types';
 
 export class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
@@ -74,18 +74,6 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         let component = this.constructor['analyticsType'];
         if (!component) {
             component = this.constructor['type'] === 'scheme' || this.constructor['type'] === 'bcmc' ? this.constructor['type'] : this.props.type;
-        }
-
-        const { type } = analyticsObj;
-
-        if (type === ANALYTICS_RENDERED_STR || type === ANALYTICS_CONFIGURED_STR) {
-            // Check if it's a storedCard
-            if (component === 'scheme') {
-                if (hasOwnProperty(this.props, 'supportedShopperInteractions')) {
-                    analyticsObj.isStoredPaymentMethod = true;
-                    analyticsObj.brand = this.props.brand;
-                }
-            }
         }
 
         this.props.modules?.analytics.sendAnalytics(component, analyticsObj);
