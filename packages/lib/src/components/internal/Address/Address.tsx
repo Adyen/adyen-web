@@ -51,7 +51,8 @@ export default function Address(props: AddressProps) {
 
     const setSearchData = useCallback(
         (selectedAddress: AddressData) => {
-            ADDRESS_SCHEMA.forEach(propKey => {
+            const propsKeysToProcess = ADDRESS_SCHEMA;
+            propsKeysToProcess.forEach(propKey => {
                 // Make sure the data provided by the merchant is always strings
                 const providedValue = selectedAddress[propKey];
                 if (providedValue === null || providedValue === undefined) return;
@@ -167,6 +168,7 @@ export default function Address(props: AddressProps) {
     );
 
     const addressSchema = specifications.getAddressSchemaForCountry(data.country);
+
     return (
         <Fragment>
             <Fieldset classNameModifiers={[label || 'address']} label={label}>

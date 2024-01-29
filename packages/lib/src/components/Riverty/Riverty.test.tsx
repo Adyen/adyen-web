@@ -5,6 +5,7 @@ import { Resources } from '../../core/Context/Resources';
 import { SRPanel } from '../../core/Errors/SRPanel';
 import Language from '../../language';
 import getDataset from '../../core/Services/get-dataset';
+import { termsAndConditionsUrlMap } from './config';
 
 jest.mock('../../core/Services/get-dataset');
 const countriesMock = [
@@ -76,6 +77,14 @@ describe('Riverty', () => {
             expect(houseNumber.length).toBe(2);
             expect(postalCode.length).toBe(2);
             expect(city.length).toBe(2);
+        });
+    });
+
+    describe('delivery address', () => {
+        test('should show required fields', async () => {
+            render(new Riverty(props).render());
+            const tcLink = await screen.findByRole('link', { name: 'payment conditions' });
+            expect(tcLink).toHaveAttribute('href', termsAndConditionsUrlMap[props.countryCode.toLowerCase()].en);
         });
     });
 });
