@@ -18,7 +18,6 @@ export interface ChallengeData {
     cReqData: CReqData;
     iframeSizeArr: string[];
     postMessageDomain: string;
-    onFormSubmit: (msg: string) => void;
 }
 
 export interface ResultObject {
@@ -59,7 +58,6 @@ export interface FingerPrintData {
     threeDSMethodURL: string;
     threeDSMethodNotificationURL: string;
     postMessageDomain: string;
-    onFormSubmit?: (msg: string) => void;
 }
 
 export type ThreeDS2FingerprintResponse = {
