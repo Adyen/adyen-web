@@ -59,7 +59,7 @@ export interface FingerPrintData {
     threeDSMethodURL: string;
     threeDSMethodNotificationURL: string;
     postMessageDomain: string;
-    onFormSubmit: (msg: string) => void;
+    onFormSubmit?: (msg: string) => void;
 }
 
 export type ThreeDS2FingerprintResponse = {
