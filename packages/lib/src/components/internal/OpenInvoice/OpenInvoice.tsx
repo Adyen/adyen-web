@@ -234,7 +234,6 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
         setValid(prevValid => ({ ...prevValid, consentCheckbox: checked }));
         setErrors(prevErrors => ({ ...prevErrors, consentCheckbox: !checked }));
     };
-
     return (
         <div className="adyen-checkout__open-invoice">
             {props.showFormInstruction && <FormInstruction />}

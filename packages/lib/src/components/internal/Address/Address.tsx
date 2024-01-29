@@ -167,7 +167,6 @@ export default function Address(props: AddressProps) {
     );
 
     const addressSchema = specifications.getAddressSchemaForCountry(data.country);
-    console.log({ addressSchema });
     return (
         <Fragment>
             <Fieldset classNameModifiers={[label || 'address']} label={label}>
