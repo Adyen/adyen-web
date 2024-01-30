@@ -5,7 +5,7 @@ import ConsentCheckboxLabel from '../internal/ConsentCheckboxLabel';
 import { getConsentUrl } from '../../utils/getConsentUrl';
 
 export default class Riverty extends OpenInvoiceContainer {
-    public static type = 'riverty';
+    public static readonly type = 'riverty';
 
     protected static defaultProps = {
         personalDetailsRequiredFields,
