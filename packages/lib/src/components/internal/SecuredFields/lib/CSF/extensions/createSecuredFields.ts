@@ -7,7 +7,8 @@ import {
     DATA_INFO,
     DATA_UID,
     SF_CONFIG_TIMEOUT,
-    ALL_SECURED_FIELDS
+    ALL_SECURED_FIELDS,
+    ENCRYPTED_EXPIRY_MONTH
 } from '../../configuration/constants';
 import { existy } from '../../utilities/commonUtils';
 import cardType from '../utils/cardType';
@@ -26,6 +27,11 @@ export function createSecuredFields(): number {
     // Detect DOM elements that qualify as securedField holders & filter them for valid types
     const securedFields: HTMLElement[] = select(this.props.rootNode, `[${this.encryptedAttrName}]`).filter(field => {
         const fieldType: string = getAttribute(field, this.encryptedAttrName);
+
+        if (fieldType === ENCRYPTED_EXPIRY_MONTH) {
+            // TODO send analytics about separate date fields
+        }
+
         const isValidType = ALL_SECURED_FIELDS.includes(fieldType);
         if (!isValidType) {
             console.warn(
@@ -220,6 +226,7 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
                 // One of our existing securedFields has just loaded new content!
                 if (this.state.iframeCount > this.state.numIframes) {
                     this.destroySecuredFields();
+                    // TODO send analytics about this error
                     throw new AdyenCheckoutError(
                         'ERROR',
                         `One or more securedFields has just loaded new content. This should never happen. securedFields have been removed.
