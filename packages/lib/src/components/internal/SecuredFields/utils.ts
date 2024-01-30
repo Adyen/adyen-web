@@ -9,10 +9,14 @@ import {
     ENCRYPTED_SECURITY_CODE_3_DIGITS,
     ENCRYPTED_SECURITY_CODE_4_DIGITS,
     ENCRYPTED_BANK_ACCNT_NUMBER_FIELD,
-    ENCRYPTED_BANK_LOCATION_FIELD
+    ENCRYPTED_BANK_LOCATION_FIELD,
+    ALL_SECURED_FIELDS,
+    ENCRYPTED
 } from './lib/configuration/constants';
 import { SFPlaceholdersObject } from './lib/securedField/AbstractSecuredField';
 import { Resources } from '../../../core/Context/Resources';
+import { camelCaseToSnakeCase } from '../../../utils/textUtils';
+import { isArray } from './lib/utilities/commonUtils';
 
 /**
  * Lookup translated values for the placeholders for the SecuredFields
@@ -58,24 +62,20 @@ export const getCardImageUrl = (brand, resources: Resources) => {
     return resources.getImage(imageOptions)(type);
 };
 
-// REGULAR "UTIL" UTILS
 /**
- * Checks if `prop` is classified as an `Array` primitive or object.
- * @internal
- * @param prop - The value to check.
- * @returns Returns `true` if `prop` is correctly classified, else `false`.
- * @example
- * ```
- * isArray([1, 2, 3]);
- * // => true
- *
- * isArray(1);
- * // => false
- * ```
+ * Used by Card.tsx & SecuredFields.tsx
+ * @param fieldType -
  */
-export function isArray(prop) {
-    return typeof prop === 'object' && prop !== null && Object.prototype.toString.call(prop) === '[object Array]';
-}
+export const fieldTypeToSnakeCase = (fieldType: string) => {
+    let str = camelCaseToSnakeCase(fieldType);
+    // SFs need their fieldType mapped to what the endpoint expects
+    if (ALL_SECURED_FIELDS.includes(fieldType)) {
+        str = str.substring(ENCRYPTED.length + 1); // strip 'encrypted_' off the string
+    }
+    return str;
+};
+
+// REGULAR "UTIL" UTILS
 
 /**
  * 'Destructures' properties from object - returns a new object only containing those properties that were asked for (including if those properties
