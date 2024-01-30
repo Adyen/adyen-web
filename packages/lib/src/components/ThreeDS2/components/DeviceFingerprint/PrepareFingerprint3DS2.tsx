@@ -2,8 +2,9 @@ import { Component, h } from 'preact';
 import DoFingerprint3DS2 from './DoFingerprint3DS2';
 import { createFingerprintResolveData, createOldFingerprintResolveData, ErrorCodeObject, prepareFingerPrintData } from '../utils';
 import { PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State } from './types';
-import { FingerPrintData, ResultObject, ThreeDS2AnalyticsObject } from '../../types';
+import { FingerPrintData, ResultObject } from '../../types';
 import { ErrorObject } from '../../../../core/Errors/types';
+import { SendAnalyticsObject } from '../../../../core/Analytics/types';
 import { isValidHttpUrl } from '../../../../utils/isValidURL';
 import { THREEDS2_FULL, THREEDS2_FINGERPRINT, THREEDS2_FINGERPRINT_ERROR, THREEDS2_NUM, MISSING_TOKEN_IN_ACTION_MSG } from '../../config';
 import { ActionHandledReturnObject } from '../../../types';
@@ -51,23 +52,17 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
         }
     }
 
-    public submitAnalytics = (what: ThreeDS2AnalyticsObject) => {
-        // console.log('### PrepareFingerprint3DS2::submitAnalytics:: what', what);
-        this.props.onSubmitAnalytics(what);
-    };
-
     public onActionHandled = (rtnObj: ActionHandledReturnObject) => {
         // Leads to an "iframe loaded" log action
-        this.submitAnalytics({ event: ANALYTICS_EVENT_LOG, type: THREEDS2_FULL, message: rtnObj.actionDescription });
+        this.props.onSubmitAnalytics({ type: THREEDS2_FULL, message: rtnObj.actionDescription });
         this.props.onActionHandled(rtnObj);
     };
 
     public onFormSubmit = (msg: string) => {
-        this.submitAnalytics({
-            event: ANALYTICS_EVENT_LOG,
+        this.props.onSubmitAnalytics({
             type: THREEDS2_FULL,
             message: msg
-        } as ThreeDS2AnalyticsObject);
+        });
     };
 
     componentDidMount() {
@@ -160,7 +155,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             const resolveDataFunction = this.props.useOriginalFlow ? createOldFingerprintResolveData : createFingerprintResolveData;
             const data = resolveDataFunction(this.props.dataKey, resultObj, this.props.paymentData);
 
-            let analyticsObject: ThreeDS2AnalyticsObject;
+            let analyticsObject: SendAnalyticsObject;
 
             /** Are we in an error scenario? If so, submit analytics about it */
             const finalResObject = errorCodeObject ? errorCodeObject : resultObj;
@@ -183,19 +178,20 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                 };
 
                 // Send error to analytics endpoint
-                this.submitAnalytics(analyticsObject);
+                this.props.onSubmitAnalytics(analyticsObject);
             }
 
             /** The fingerprint process is completed, one way or another */
             analyticsObject = {
-                event: ANALYTICS_EVENT_LOG,
+                // event: ANALYTICS_EVENT_LOG,
                 type: THREEDS2_FULL,
                 message: `${THREEDS2_NUM} fingerprinting has completed`,
+                // TODO can we use metadata this way?
                 metadata: { resultObject: resultObj, ...(errorCodeObject && { errorCodeObject }) } // if the fingerprint has concluded due to an error - also pass this information along
             };
 
             // Send log to analytics endpoint
-            this.submitAnalytics(analyticsObject);
+            this.props.onSubmitAnalytics(analyticsObject);
 
             /**
              * For 'threeDS2' action = call to callSubmit3DS2Fingerprint

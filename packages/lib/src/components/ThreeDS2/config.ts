@@ -1,11 +1,12 @@
 import { ThreeDS2FlowObject } from './types';
 
-export const THREEDS2_FINGERPRINT = '3DS2Fingerprint';
+export const THREEDS2_FINGERPRINT = 'threeDS2Fingerprint';
 export const THREEDS2_FINGERPRINT_ERROR = '3DS2Fingerprint_Error';
 export const THREEDS2_FINGERPRINT_SUBMIT = 'callSubmit3DS2Fingerprint_Response';
-export const THREEDS2_CHALLENGE = '3DS2Challenge';
+export const THREEDS2_CHALLENGE = 'threeDS2Challenge';
 export const THREEDS2_CHALLENGE_ERROR = '3DS2Challenge_Error';
 
+export const THREEDS2_ERROR = 'threeDS2Error';
 export const THREEDS2_FULL = 'threeDS2';
 export const THREEDS2_NUM = '3DS2';
 

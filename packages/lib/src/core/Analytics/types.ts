@@ -81,10 +81,7 @@ export type CreateAnalyticsEventObject = {
 
 export type EventQueueProps = Pick<AnalyticsConfig, 'analyticsContext' | 'clientKey'> & { analyticsPath: string };
 
-export type SendAnalyticsObject = Pick<
-    AnalyticsObject,
-    'type' | 'target' | 'validationErrorCode' | 'validationErrorMessage' | 'isStoredPaymentMethod' | 'brand'
->;
+export type SendAnalyticsObject = Omit<AnalyticsObject, 'timestamp' | 'component'>;
 
 export type FieldErrorAnalyticsObject = {
     fieldType: string;

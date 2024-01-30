@@ -15,7 +15,7 @@ import { hasOwnProperty } from '../utils/hasOwnProperty';
 import { Resources } from './Context/Resources';
 import { SRPanel } from './Errors/SRPanel';
 import { ANALYTICS_ACTION_STR } from './Analytics/constants';
-import { capitalizeFirstLetter } from '../utils/Formatters/formatters';
+import { THREEDS2_FULL } from '../components/ThreeDS2/config';
 
 class Core {
     public session: Session;
@@ -148,15 +148,13 @@ class Core {
         }
 
         if (action.type) {
-            // AnalyticsAction: action: 'log' type:'action'
-            this.modules.analytics.createAnalyticsEvent({
-                event: 'log',
-                data: {
-                    component: `${action.type}${action.subtype ?? ''}`,
-                    type: ANALYTICS_ACTION_STR,
-                    subtype: capitalizeFirstLetter(action.type),
-                    message: `${action.type}${action.subtype ?? ''} action was handled by the SDK`
-                }
+            // 'threeDS2' OR 'qrCode', 'voucher', 'redirect', 'await', 'bankTransfer`
+            const component = action.type === THREEDS2_FULL ? `${action.type}${action.subtype}` : action.paymentMethodType;
+
+            this.modules.analytics.sendAnalytics(component, {
+                type: ANALYTICS_ACTION_STR,
+                subtype: action.type,
+                message: `${component} action was handled by the SDK`
             });
 
             // Create a component based on the action

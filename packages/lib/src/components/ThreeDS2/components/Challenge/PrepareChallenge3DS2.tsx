@@ -2,7 +2,7 @@ import { Component, h } from 'preact';
 import DoChallenge3DS2 from './DoChallenge3DS2';
 import { createChallengeResolveData, prepareChallengeData, createOldChallengeResolveData, ErrorCodeObject } from '../utils';
 import { PrepareChallenge3DS2Props, PrepareChallenge3DS2State } from './types';
-import { ChallengeData, ThreeDS2AnalyticsObject, ThreeDS2FlowObject } from '../../types';
+import { ChallengeData, ThreeDS2FlowObject } from '../../types';
 import '../../ThreeDS2.scss';
 import Img from '../../../internal/Img';
 import './challenge.scss';
@@ -10,6 +10,7 @@ import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
 import useImage from '../../../../core/Context/useImage';
 import { ActionHandledReturnObject } from '../../../types';
 import { ErrorObject } from '../../../../core/Errors/types';
+import { SendAnalyticsObject } from '../../../../core/Analytics/types';
 import { THREEDS2_CHALLENGE, THREEDS2_CHALLENGE_ERROR, THREEDS2_FULL, THREEDS2_NUM, MISSING_TOKEN_IN_ACTION_MSG } from '../../config';
 import { isValidHttpUrl } from '../../../../utils/isValidURL';
 import {
@@ -64,23 +65,17 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         }
     }
 
-    public submitAnalytics = (what: ThreeDS2AnalyticsObject) => {
-        // console.log('### PrepareChallenge3DS2::submitAnalytics:: what=', what);
-        this.props.onSubmitAnalytics(what);
-    };
-
     public onActionHandled = (rtnObj: ActionHandledReturnObject) => {
-        this.submitAnalytics({ event: ANALYTICS_EVENT_LOG, type: THREEDS2_FULL, message: rtnObj.actionDescription });
+        this.props.onSubmitAnalytics({ type: THREEDS2_FULL, message: rtnObj.actionDescription });
 
         this.props.onActionHandled(rtnObj);
     };
 
     public onFormSubmit = (msg: string) => {
-        this.submitAnalytics({
-            event: ANALYTICS_EVENT_LOG,
+        this.props.onSubmitAnalytics({
             type: THREEDS2_FULL,
             message: msg
-        } as ThreeDS2AnalyticsObject);
+        });
     };
 
     componentDidMount() {
@@ -100,13 +95,13 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             if (!hasValidAcsURL) {
                 // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
                 const errorCodeObject = {
-                    event: ANALYTICS_EVENT_ERROR as ANALYTICS_EVENT,
+                    // event: ANALYTICS_EVENT_ERROR as ANALYTICS_EVENT,
                     code: ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_ACSURL,
                     errorType: ANALYTICS_API_ERROR,
                     message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing a valid acsURL property`,
                     metadata: { acsURL } // NEW TODO - check acsURL isn't secret
                 };
-                this.submitAnalytics(errorCodeObject);
+                this.props.onSubmitAnalytics(errorCodeObject);
 
                 this.setStatusError(
                     {
@@ -133,8 +128,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 );
 
                 // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
-                this.submitAnalytics({
-                    event: ANALYTICS_EVENT_ERROR,
+                this.props.onSubmitAnalytics({
+                    // event: ANALYTICS_EVENT_ERROR,
                     code: ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_OTHER_PROPS,
                     errorType: ANALYTICS_API_ERROR,
                     message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)`
@@ -153,8 +148,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                     : ANALYTICS_ERROR_CODE_TOKEN_DECODE_OR_PARSING_FAILED;
 
             // Send error to analytics endpoint // TODO - check logs to see if the base64 decoding errors *ever* happen
-            this.submitAnalytics({
-                event: ANALYTICS_EVENT_ERROR,
+            this.props.onSubmitAnalytics({
+                // event: ANALYTICS_EVENT_ERROR,
                 code: errorCode,
                 errorType: ANALYTICS_API_ERROR,
                 message: `${THREEDS2_CHALLENGE_ERROR}: ${errorMsg}` // can be: 'Missing "token" property from threeDS2 action', 'not base64', 'malformed URI sequence' or 'Could not JSON parse token'
@@ -174,7 +169,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             const resolveDataFunction = this.props.useOriginalFlow ? createOldChallengeResolveData : createChallengeResolveData;
             const data = resolveDataFunction(this.props.dataKey, resultObj.transStatus, this.props.paymentData);
 
-            let analyticsObject: ThreeDS2AnalyticsObject;
+            let analyticsObject: SendAnalyticsObject;
 
             // TODO - do we want to know about these events (timeout or no transStatus - which are "valid" 3DS2 scenarios) from an analytics perspective, and, if so, how do we classify them? ...errors? info?
             // const finalResObject = errorCodeObject ? errorCodeObject : resultObj;
@@ -194,19 +189,19 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             //     };
             //
             //     // Send info about the error to analytics endpoint
-            //     this.submitAnalytics(analyticsObject);
+            //     this.props.onSubmitAnalytics(analyticsObject);
             // }
 
             // Create log object - the process is completed, one way or another
             analyticsObject = {
-                event: ANALYTICS_EVENT_LOG,
                 type: THREEDS2_FULL,
                 message: `${THREEDS2_NUM} challenge has completed`,
+                // TODO - can we use metadata for this purpose?
                 metadata: { resultObject: resultObj, ...(errorCodeObject && { errorCodeObject }) } // if the challenge has concluded due to an error - also pass this information along
             };
 
             // Send log to analytics endpoint
-            this.submitAnalytics(analyticsObject);
+            this.props.onSubmitAnalytics(analyticsObject);
 
             // call onComplete (equals onAdditionalDetails - except for 3DS2InMDFlow)
             this.props.onComplete(data);
