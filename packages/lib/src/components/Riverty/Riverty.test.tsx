@@ -6,6 +6,7 @@ import { SRPanel } from '../../core/Errors/SRPanel';
 import Language from '../../language';
 import getDataset from '../../core/Services/get-dataset';
 import { termsAndConditionsUrlMap } from './config';
+import { OpenInvoiceContainerProps } from '../helpers/OpenInvoiceContainer/OpenInvoiceContainer';
 
 jest.mock('../../core/Services/get-dataset');
 const countriesMock = [
@@ -18,7 +19,7 @@ const countriesMock = [
 (getDataset as jest.Mock).mockImplementation(jest.fn(() => Promise.resolve(countriesMock)));
 
 describe('Riverty', () => {
-    const props = {
+    const props: OpenInvoiceContainerProps = {
         i18n: new Language(),
         loadingContext: 'test',
         countryCode: 'DE',
@@ -78,10 +79,34 @@ describe('Riverty', () => {
             expect(postalCode.length).toBe(2);
             expect(city.length).toBe(2);
         });
+
+        test('should show the correct read-only fields', async () => {
+            const withReadOnlyDeliveryAddressData: OpenInvoiceContainerProps = {
+                ...props,
+                visibility: {
+                    deliveryAddress: 'readOnly'
+                },
+                data: {
+                    deliveryAddress: {
+                        firstName: 'dummy first name',
+                        lastName: 'dummy last name',
+                        street: 'dummy street',
+                        houseNumberOrName: 'dummy houseNumberOrName',
+                        city: 'dummy city'
+                    }
+                }
+            };
+
+            render(new Riverty(withReadOnlyDeliveryAddressData).render());
+            for (const value of Object.values(withReadOnlyDeliveryAddressData.data.deliveryAddress)) {
+                const element = await screen.findByText(new RegExp(value), { exact: false });
+                expect(element).toBeInTheDocument();
+            }
+        });
     });
 
-    describe('delivery address', () => {
-        test('should show required fields', async () => {
+    describe('terms and conditions', () => {
+        test('should show the correct t&c urls', async () => {
             render(new Riverty(props).render());
             const tcLink = await screen.findByRole('link', { name: 'payment conditions' });
             expect(tcLink).toHaveAttribute('href', termsAndConditionsUrlMap[props.countryCode.toLowerCase()].en);
