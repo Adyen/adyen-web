@@ -247,7 +247,7 @@ class Core implements ICore {
         }
 
         this.modules = Object.freeze({
-            risk: new RiskModule({ ...this.options, loadingContext: this.loadingContext, core: this }),
+            risk: new RiskModule(this, { ...this.options, loadingContext: this.loadingContext }),
             analytics: new Analytics({
                 loadingContext: this.loadingContext,
                 clientKey: this.options.clientKey,
@@ -257,7 +257,7 @@ class Core implements ICore {
             }),
             resources: new Resources(this.cdnContext),
             i18n: new Language(this.options.locale, this.options.translations, this.options.translationFile),
-            srPanel: new SRPanel({ core: this, ...this.options.srConfig })
+            srPanel: new SRPanel(this, { ...this.options.srConfig })
         });
     }
 }

@@ -11,6 +11,7 @@ import ClickToPayProvider from '../internal/ClickToPay/context/ClickToPayProvide
 import ClickToPayComponent from '../internal/ClickToPay';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
+import type { ICore } from '../../core/types';
 
 export class ClickToPayElement extends UIElement<ClickToPayConfiguration> {
     public static type = TxVariants.clicktopay;
@@ -18,8 +19,8 @@ export class ClickToPayElement extends UIElement<ClickToPayConfiguration> {
     private readonly clickToPayService: IClickToPayService | null;
     private readonly ctpConfiguration: ClickToPayProps;
 
-    constructor(props: ClickToPayConfiguration) {
-        super(props);
+    constructor(checkout: ICore, props: ClickToPayConfiguration) {
+        super(checkout, props);
 
         this.ctpConfiguration = {
             shopperEmail: this.props.shopperEmail,
@@ -68,8 +69,8 @@ export class ClickToPayElement extends UIElement<ClickToPayConfiguration> {
         return {
             ...props,
             disableOtpAutoFocus: props.disableOtpAutoFocus || false,
-            shopperEmail: props.shopperEmail || props?.core?.options?.session?.shopperEmail,
-            telephoneNumber: props.telephoneNumber || props?.core?.options?.session?.telephoneNumber,
+            shopperEmail: props.shopperEmail || this.core.options?.session?.shopperEmail,
+            telephoneNumber: props.telephoneNumber || this.core.options?.session?.telephoneNumber,
             locale: props.locale || props.i18n?.locale?.replace('-', '_')
         };
     }

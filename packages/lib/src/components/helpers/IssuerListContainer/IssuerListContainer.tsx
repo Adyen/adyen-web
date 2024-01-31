@@ -7,6 +7,7 @@ import CoreProvider from '../../../core/Context/CoreProvider';
 import RedirectButton from '../../internal/RedirectButton';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { IssuerListConfiguration, IssuerListData } from './types';
+import type { ICore } from '../../../core/types';
 
 class IssuerListContainer extends UIElement<IssuerListConfiguration> {
     protected static defaultProps = {
@@ -18,8 +19,8 @@ class IssuerListContainer extends UIElement<IssuerListConfiguration> {
         showPaymentMethodItemImages: false
     };
 
-    constructor(props: IssuerListConfiguration) {
-        super(props);
+    constructor(checkout: ICore, props: IssuerListConfiguration) {
+        super(checkout, props);
 
         const getImage = props => this.resources.getImage(props);
 

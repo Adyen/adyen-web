@@ -18,8 +18,8 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
 
     protected static defaultProps = {};
 
-    constructor(props: P) {
-        this.core = props.core;
+    constructor(checkout: ICore, props: P) {
+        this.core = checkout;
 
         if (!this.core) {
             throw new AdyenCheckoutError(
@@ -32,8 +32,8 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
     }
 
     protected buildElementProps(componentProps: P) {
-        const { core, ...rest } = componentProps;
-        this.props = this.formatProps({ ...this.constructor['defaultProps'], ...rest });
+        // const { core, ...rest } = componentProps;
+        this.props = this.formatProps({ ...this.constructor['defaultProps'], ...componentProps });
     }
 
     /**

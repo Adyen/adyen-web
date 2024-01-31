@@ -3,6 +3,7 @@ import './SRPanel.scss';
 import { AriaAttributes, SRPanelProps } from './types';
 import BaseElement from '../../components/internal/BaseElement/BaseElement';
 import { SRMessages, SRMessagesRef } from './SRMessages';
+import type { ICore } from '../types';
 
 /**
  * A panel meant to hold messages that will be read out by ScreenReaders on an aria-live="polite" basis
@@ -33,8 +34,8 @@ export class SRPanel extends BaseElement<SRPanelProps> {
 
     private componentRef: SRMessagesRef;
 
-    constructor(props: SRPanelProps) {
-        super(props);
+    constructor(checkout: ICore, props: SRPanelProps) {
+        super(checkout, props);
         this.id = this.props.id;
         this.showPanel = process.env.NODE_ENV !== 'production' ? this.props.showPanel : false;
         this._enabled = false;

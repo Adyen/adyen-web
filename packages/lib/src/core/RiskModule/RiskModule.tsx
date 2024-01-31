@@ -4,6 +4,7 @@ import DeviceFingerprint from './components/DeviceFingerprint';
 import base64 from '../../utils/base64';
 import { RISK_DATA_VERSION, DEVICE_FINGERPRINT } from './constants';
 import { BaseElementProps } from '../../components/internal/BaseElement/types';
+import type { ICore } from '../types';
 
 export interface RiskModuleOptions {
     enabled: boolean;
@@ -32,8 +33,8 @@ export default class RiskElement extends BaseElement<RiskModuleProps> {
 
     private nodeRiskContainer = null;
 
-    constructor(props) {
-        super(props);
+    constructor(checkout: ICore, props) {
+        super(checkout, props);
 
         // Populate state with null values
         const riskElements = {

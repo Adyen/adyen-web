@@ -5,6 +5,7 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import { SepaElementData, SepaConfiguration } from './types';
 import { TxVariants } from '../tx-variants';
 import FormInstruction from '../internal/FormInstruction';
+import type { ICore } from '../../core/types';
 
 class SepaElement extends UIElement<SepaConfiguration> {
     public static type = TxVariants.sepadirectdebit;
@@ -13,8 +14,8 @@ class SepaElement extends UIElement<SepaConfiguration> {
         showFormInstruction: true
     };
 
-    constructor(props) {
-        super(props);
+    constructor(checkout: ICore, props) {
+        super(checkout, props);
         this.state = { ...this.state, ...{ data: { ibanNumber: '', ownerName: '' } } };
     }
 

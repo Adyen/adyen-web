@@ -26,8 +26,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      */
     public static txVariants: string[] = [];
 
-    constructor(props: P) {
-        super(props);
+    constructor(checkout: ICore, props: P) {
+        super(checkout, props);
 
         // Only register UIElements that have the 'type' set. Drop-in for example does not have.
         if (this.constructor['type']) {

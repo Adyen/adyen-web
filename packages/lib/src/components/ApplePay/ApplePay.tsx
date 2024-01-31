@@ -11,6 +11,7 @@ import { resolveSupportedVersion, mapBrands } from './utils';
 import { ApplePayConfiguration, ApplePayElementData, ApplePaySessionRequest, OnAuthorizedCallback } from './types';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
+import type { ICore } from '../../core/types';
 
 const latestSupportedVersion = 14;
 
@@ -18,8 +19,8 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
     public static type = TxVariants.applepay;
     protected static defaultProps = defaultProps;
 
-    constructor(props: ApplePayConfiguration) {
-        super(props);
+    constructor(checkout: ICore, props: ApplePayConfiguration) {
+        super(checkout, props);
         this.startSession = this.startSession.bind(this);
         this.submit = this.submit.bind(this);
         this.validateMerchant = this.validateMerchant.bind(this);

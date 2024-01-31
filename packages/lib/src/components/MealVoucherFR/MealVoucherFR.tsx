@@ -2,6 +2,7 @@ import GiftcardElement from '../Giftcard/Giftcard';
 import { MealVoucherFields } from './components/MealVoucherFields';
 import { TxVariants } from '../tx-variants';
 import { GiftCardConfiguration } from '../Giftcard/types';
+import type { ICore } from '../../core/types';
 
 export class MealVoucherFRElement extends GiftcardElement {
     public static type = TxVariants.mealVoucher_FR;
@@ -12,8 +13,8 @@ export class MealVoucherFRElement extends GiftcardElement {
         TxVariants.mealVoucher_FR_groupeup
     ];
 
-    constructor(props: GiftCardConfiguration) {
-        super({
+    constructor(checkout: ICore, props: GiftCardConfiguration) {
+        super(checkout, {
             ...props,
             pinRequired: true,
             expiryDateRequired: true,

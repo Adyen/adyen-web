@@ -1,8 +1,8 @@
 import createElements from './createElements';
 import { StoredPaymentMethod } from '../../../types/global-types';
 import { ICore } from '../../../core/types';
-import UIElement from '../../internal/UIElement/UIElement';
 import { PaymentMethodsConfiguration } from '../types';
+import type { IUIElement } from '../../internal/UIElement/types';
 
 /**
  * Returns a filtered (available) list of oneClick paymentMethod Elements
@@ -17,6 +17,6 @@ const createStoredElements = (
     paymentMethodsConfiguration: PaymentMethodsConfiguration,
     commonProps,
     core: ICore
-): Promise<UIElement[]> => createElements(paymentMethods, paymentMethodsConfiguration, { ...commonProps, oneClick: true }, core);
+): Promise<IUIElement[]> => createElements(paymentMethods, paymentMethodsConfiguration, { ...commonProps, oneClick: true }, core);
 
 export default createStoredElements;

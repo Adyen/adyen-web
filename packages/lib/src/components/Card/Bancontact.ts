@@ -2,12 +2,13 @@ import { CardElement } from './Card';
 import { CardElementData, CardConfiguration } from './types';
 import { CVC_POLICY_HIDDEN } from '../internal/SecuredFields/lib/configuration/constants';
 import { TxVariants } from '../tx-variants';
+import type { ICore } from '../../core/types';
 
 class BancontactElement extends CardElement {
     public static type = TxVariants.bcmc;
 
-    constructor(props: CardConfiguration) {
-        super(props);
+    constructor(checkout: ICore, props: CardConfiguration) {
+        super(checkout, props);
     }
 
     protected static defaultProps = {
