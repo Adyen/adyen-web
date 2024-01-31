@@ -1,6 +1,7 @@
 /* global expect, describe, jest, beforeEach */
 import { processErrors } from './processErrors';
 import SecuredField from '../../securedField/SecuredField';
+import { SFFeedbackObj } from '../../types';
 const ERROR_MSG_CARD_TOO_FAR_IN_FUTURE = 'ERROR_MSG_CARD_TOO_FAR_IN_FUTURE';
 const ERROR_MSG_CARD_TOO_OLD = 'ERROR_MSG_CARD_TOO_OLD';
 const ERROR_MSG_INCOMPLETE_FIELD = 'ERROR_MSG_INCOMPLETE_FIELD';
@@ -26,21 +27,21 @@ const errorObj_dateTooOld = {
     action: 'dateKeyPressed',
     fieldType: 'encryptedExpiryDate',
     numKey: 3522473789
-};
+} as SFFeedbackObj;
 
 const erroObj_dateTooFar = {
     error: ERROR_MSG_CARD_TOO_FAR_IN_FUTURE,
     action: 'dateKeyPressed',
     fieldType: 'encryptedExpiryDate',
     numKey: 3522473789
-};
+} as SFFeedbackObj;
 
 const errorObj_incompleteField = {
     error: ERROR_MSG_INCOMPLETE_FIELD,
     action: 'blur',
     fieldType: 'encryptedCardNumber',
     numKey: 3522473789
-};
+} as SFFeedbackObj;
 
 // const errorObj_luhnCheck = {
 //    "action": "luhnCheck",
@@ -61,14 +62,14 @@ const noErrorObj = {
     action: 'dateKeyPressed',
     fieldType: 'encryptedCardNumber',
     numKey: 3522473789
-};
+} as SFFeedbackObj;
 
 const noErrorObj_date = {
     error: '',
     action: 'dateKeyPressed',
     fieldType: 'encryptedExpiryDate',
     numKey: 3522473789
-};
+} as SFFeedbackObj;
 
 beforeEach(() => {
     console.error = jest.fn(error => {

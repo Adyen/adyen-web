@@ -1,5 +1,67 @@
 # @adyen/adyen-web
 
+## 5.56.1
+
+### Patch Changes
+
+-   For the regular card payment, in case of a zero-auth transaction, the pay button label is changed to `Save details`, and the `Save for my next payment` checkbox is removed. ([#2514](https://github.com/Adyen/adyen-web/pull/2514))
+
+    The drop-in component shows `Details saved` as the success message for such transaction.
+
+## 5.56.0
+
+### Minor Changes
+
+-   Add support for the PayMe payment method. ([#2476](https://github.com/Adyen/adyen-web/pull/2476))
+
+### Patch Changes
+
+-   Improve the payment status check call for QR payments. ([#2506](https://github.com/Adyen/adyen-web/pull/2506))
+
+-   Fix incorrect grammar German pay button ([#2505](https://github.com/Adyen/adyen-web/pull/2505))
+
+-   update sessionData after /setup call ([#2504](https://github.com/Adyen/adyen-web/pull/2504))
+
+-   Detect when the value of a data-cse attribute is not supported, and don't create a SF for it ([#2495](https://github.com/Adyen/adyen-web/pull/2495))
+
+## 5.55.1
+
+### Patch Changes
+
+-   Loading the logo images properly when handling qrCode/await actions ([#2490](https://github.com/Adyen/adyen-web/pull/2490))
+
+## 5.55.0
+
+### Minor Changes
+
+-   Bumping sf version to 4.8.0 which includes a more comprehensive startup log (to help with debugging) ([#2488](https://github.com/Adyen/adyen-web/pull/2488))
+
+### Patch Changes
+
+-   Renaming detectInIframe to the more accurate, but lengthy, detectInIframeInSameOrigin. ([#2475](https://github.com/Adyen/adyen-web/pull/2475))
+
+    Now the functionality only considers itself to be running in an iframe _if_ it is possible to access the parent domain and thus be able to redirect the top, parent, window
+
+## 5.54.0
+
+### Minor Changes
+
+-   feature: adds new onAddressSelected to fill data when an item is selected in AddressSearch ([#2406](https://github.com/Adyen/adyen-web/pull/2406))
+
+-   Click to Pay - Enabling MC/Visa to drop cookies if the shopper gives consent ([#2409](https://github.com/Adyen/adyen-web/pull/2409))
+
+-   Click to Pay - Replacing loading gif by animated SVGs ([#2435](https://github.com/Adyen/adyen-web/pull/2435))
+
+### Patch Changes
+
+-   For all PaymentMethodItems we were adding a class `adyen-checkout__payment-method--{fundingSource}` (where fundingSource was either "credit" or "debit") ([#2465](https://github.com/Adyen/adyen-web/pull/2465))
+
+    This is meant to be a Card PM specific class to indicate, in the paymentMethods list, whether the card is a credit or debit card.
+
+-   Fixed Klarna B2B logo for Drop-in ([#2458](https://github.com/Adyen/adyen-web/pull/2458))
+
+-   Pass the `browserInfo` in the `state.data` for the Redirect payments, in order to fix the mobile web integration for some redirect payments. ([#2469](https://github.com/Adyen/adyen-web/pull/2469))
+
 ## 5.53.3
 
 ### Patch Changes

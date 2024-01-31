@@ -3,6 +3,7 @@ import { ENCRYPTED_EXPIRY_DATE, ENCRYPTED_EXPIRY_MONTH, ENCRYPTED_EXPIRY_YEAR } 
 import { SFFeedbackObj, CbObjOnAutoComplete } from '../../types';
 import { hasOwnProperty } from '../../../../../../utils/hasOwnProperty';
 import getIframeContentWin from '../utils/iframes/getIframeContentWin';
+import { CSFThisObject } from '../types';
 
 /**
  *
@@ -12,7 +13,7 @@ import getIframeContentWin from '../utils/iframes/getIframeContentWin';
  *
  * @param pFeedbackObj -
  */
-export function processAutoComplete({ csfState, csfConfig, csfCallbacks }, pFeedbackObj: SFFeedbackObj): boolean {
+export function processAutoComplete({ csfState, csfConfig, csfCallbacks }: CSFThisObject, pFeedbackObj: SFFeedbackObj): boolean {
     /**
      * NOTE: It seems Chrome has started autofilling across cross-origin iframes. Have tested as far back as v104 but have no resources to test further back
      * So, in theory for Chrome \>= v104 we don't need to do any of this, including having special listeners in the securedFields
@@ -24,6 +25,7 @@ export function processAutoComplete({ csfState, csfConfig, csfCallbacks }, pFeed
         delete feedbackObj.numKey;
         const ACFeedbackObj: CbObjOnAutoComplete = feedbackObj as CbObjOnAutoComplete;
         csfCallbacks.onAutoComplete(ACFeedbackObj);
+        return true;
     }
 
     // Send date info to relevant secured fields (needed for Safari whose Security model won't allow direct population of fields in 3rd party iframes)
@@ -32,7 +34,10 @@ export function processAutoComplete({ csfState, csfConfig, csfCallbacks }, pFeed
 
         const dateValArr: string[] = splittableDateVal.split('/');
 
-        if (dateValArr.length !== 2) return false; // To avoid bug in some versions of Safari where date doesn't come through as expected
+        if (dateValArr.length !== 2) {
+            // To avoid bug in some versions of Safari where date doesn't come through as expected
+            return false;
+        }
 
         if (dateValArr[0].length === 1) dateValArr[0] = `0${dateValArr[0]}`; // pad, if required
 
@@ -41,7 +46,9 @@ export function processAutoComplete({ csfState, csfConfig, csfCallbacks }, pFeed
         // Extra checks that passed year is a valid value
         const year = dateValArr[1];
         const isValidYear = (year?.length === 4 || year?.length === 2) && !isNaN(parseInt(year));
-        if (!isValidYear) return false;
+        if (!isValidYear) {
+            return false;
+        }
 
         const acYearVal: string = year.slice(-2); // take last 2 digits of year
         const acDateVal = `${acMonthVal}/${acYearVal}`;
@@ -81,4 +88,6 @@ export function processAutoComplete({ csfState, csfConfig, csfCallbacks }, pFeed
         }
         return true;
     }
+
+    return false;
 }

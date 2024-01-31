@@ -94,10 +94,6 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
         return !!this.state.isValid;
     }
 
-    get icon() {
-        return this.resources.getImage()(this.props.type);
-    }
-
     get browserInfo() {
         return collectBrowserInfo();
     }

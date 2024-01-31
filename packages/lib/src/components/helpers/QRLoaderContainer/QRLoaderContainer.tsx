@@ -7,7 +7,7 @@ import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { QRLoaderConfiguration } from './types';
 
 class QRLoaderContainer<T extends QRLoaderConfiguration = QRLoaderConfiguration> extends UIElement<T> {
-    // Using the generic here allow to fully extend the QRLoaderContainer (including its props)
+    // Using the generic here allow to fully extend the QRLoaderContainer (including it's props)
     protected static defaultProps = {
         qrCodeImage: '',
         amount: null,

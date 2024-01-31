@@ -55,6 +55,11 @@ class ClickToPayService implements IClickToPayService {
     public shopperCards: ShopperCard[] = null;
     public identityValidationData: IdentityValidationData = null;
 
+    /**
+     * Indicates if the shopper opted for saving cookies during the transaction
+     */
+    public storeCookies = false;
+
     constructor(
         schemesConfig: SchemesConfiguration,
         sdkLoader: ISrcSdkLoader,
@@ -77,12 +82,17 @@ class ClickToPayService implements IClickToPayService {
         return this.sdkLoader.schemes;
     }
 
+    public updateStoreCookiesConsent(shouldStore: boolean) {
+        this.storeCookies = shouldStore;
+    }
+
     public async initialize(): Promise<void> {
         this.setState(CtpState.Loading);
 
         try {
             this.sdks = await this.sdkLoader.load(this.environment);
             await this.initiateSdks();
+
             const { recognized = false, idTokens = null } = await this.verifyIfShopperIsRecognized();
 
             if (recognized) {
@@ -104,10 +114,14 @@ class ClickToPayService implements IClickToPayService {
 
             this.setState(CtpState.NotAvailable);
         } catch (error) {
-            if (error instanceof SrciError) console.warn(`Error at ClickToPayService # init: ${error.toString()}`);
-            if (error instanceof TimeoutError) {
+            if (error instanceof SrciError && error?.reason === 'REQUEST_TIMEOUT') {
+                const timeoutError = new TimeoutError(`ClickToPayService - Timeout during ${error.source}() of the scheme '${error.scheme}'`);
+                this.onTimeout?.(timeoutError);
+            } else if (error instanceof TimeoutError) {
                 console.warn(error.toString());
                 this.onTimeout?.(error);
+            } else if (error instanceof SrciError) {
+                console.warn(`Error at ClickToPayService # init: ${error.toString()}`);
             } else {
                 console.warn(error);
             }
@@ -168,7 +182,8 @@ class ClickToPayService implements IClickToPayService {
         const checkoutResponse = await checkoutSdk.checkout({
             srcDigitalCardId: card.srcDigitalCardId,
             srcCorrelationId: card.srcCorrelationId,
-            ...(card.isDcfPopupEmbedded && { windowRef: window.frames[CTP_IFRAME_NAME] })
+            ...(card.isDcfPopupEmbedded && { windowRef: window.frames[CTP_IFRAME_NAME] }),
+            ...(this.storeCookies && { complianceSettings: { complianceResources: [{ complianceType: 'REMEMBER_ME', uri: '' }] } })
         });
 
         if (checkoutResponse.dcfActionCode !== 'COMPLETE') {

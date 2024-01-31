@@ -1,11 +1,11 @@
 import { ClickToPayScheme } from '../../types';
 
-type MastercardError = {
+export type MastercardError = {
     message: string;
     reason: string;
 };
 
-type VisaError = {
+export type VisaError = {
     error: {
         message: string;
         reason: string;

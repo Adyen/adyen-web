@@ -18,7 +18,7 @@ export const amount = {
 
 export const useSession = urlParams.session !== 'manual';
 
-export const returnUrl = 'http://localhost:3020/result';
+export const returnUrl = `${window.location.protocol}//localhost:3020/result`;
 
 export default {
     amount,
