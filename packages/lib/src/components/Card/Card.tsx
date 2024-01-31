@@ -17,7 +17,6 @@ import UIElement from '../internal/UIElement';
 import PayButton from '../internal/PayButton';
 import { PayButtonProps } from '../internal/PayButton/PayButton';
 
-// @ts-ignore TODO: Check with nick
 export class CardElement extends UIElement<CardConfiguration> {
     public static type = TxVariants.scheme;
 

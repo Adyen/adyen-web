@@ -6,8 +6,8 @@ import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import { TxVariants } from '../tx-variants';
 import { ThreeDS2ChallengeConfiguration } from './types';
+import AdyenCheckoutError, { API_ERROR } from '../../core/Errors/AdyenCheckoutError';
 
-// @ts-ignore TODO: Check with nick
 class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
     public static type = TxVariants.threeDS2Challenge;
 
@@ -31,10 +31,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
              */
             const dataTypeForError = hasOwnProperty(this.props, 'isMDFlow') ? 'paymentData' : 'authorisationToken';
 
-            this.props.onError({
-                errorCode: 'threeds2.challenge',
-                message: `No ${dataTypeForError} received. Challenge cannot proceed`
-            });
+            this.props.onError(new AdyenCheckoutError(API_ERROR, `No ${dataTypeForError} received. 3DS2 Challenge cannot proceed`));
             return null;
         }
 

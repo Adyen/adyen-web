@@ -1,5 +1,8 @@
 import { ThreeDS2FlowObject } from './types';
 
+export const THREEDS2_FINGERPRINT_ERROR = '3DS2Fingerprint_Error';
+export const THREEDS2_CHALLENGE_ERROR = '3DS2Challenge_Error';
+
 export const DEFAULT_CHALLENGE_WINDOW_SIZE = '02';
 
 export const THREEDS_METHOD_TIMEOUT = 10000;

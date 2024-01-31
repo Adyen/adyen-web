@@ -5,8 +5,8 @@ import callSubmit3DS2Fingerprint from './callSubmit3DS2Fingerprint';
 import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
 import { TxVariants } from '../tx-variants';
 import { ThreeDS2DeviceFingerprintConfiguration } from './types';
+import AdyenCheckoutError, { API_ERROR } from '../../core/Errors/AdyenCheckoutError';
 
-// @ts-ignore TODO: Check with nick
 class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfiguration> {
     public static type = TxVariants.threeDS2Fingerprint;
 
@@ -28,10 +28,7 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
          * In the MDFlow the paymentData is always present (albeit an empty string, which is why we use 'existy' since we should be allowed to proceed with this)
          */
         if (!existy(this.props.paymentData)) {
-            this.props.onError({
-                errorCode: ThreeDS2DeviceFingerprint.defaultProps.dataKey,
-                message: 'No paymentData received. Fingerprinting cannot proceed'
-            });
+            this.props.onError(new AdyenCheckoutError(API_ERROR, `No paymentData received. 3DS2 Fingerprint cannot proceed`));
             return null;
         }
 
@@ -39,12 +36,7 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
          * this.props.isMDFlow indicates a threeds2InMDFlow process. It means the action to create this component came from the threeds2InMDFlow process
          * and upon completion should call the passed onComplete callback (instead of the /submitThreeDS2Fingerprint endpoint for the regular, "native" flow)
          */
-        return (
-            <PrepareFingerprint
-                {...this.props}
-                onComplete={this.props.isMDFlow ? this.onComplete : this.callSubmit3DS2Fingerprint}
-            />
-        );
+        return <PrepareFingerprint {...this.props} onComplete={this.props.isMDFlow ? this.onComplete : this.callSubmit3DS2Fingerprint} />;
     }
 }
 

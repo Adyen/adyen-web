@@ -16,8 +16,8 @@ import { InstallmentOptions } from './components/CardInput/components/types';
 import { DisclaimerMsgObject } from '../internal/DisclaimerMessage/DisclaimerMessage';
 import { Placeholders } from './components/CardInput/types';
 import { UIElementProps } from '../internal/UIElement/types';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 
-// @ts-ignore TODO: Check with nick
 export interface CardConfiguration extends UIElementProps {
     /**
      * Only set for a stored card,
@@ -150,7 +150,7 @@ export interface CardConfiguration extends UIElementProps {
     /**
      * Called in case of an invalid Card Number, invalid Expiry Date, or incomplete field. Called again when errors are cleared.
      */
-    onError?: (event: CbObjOnError) => void;
+    onError?: (error: CbObjOnError | AdyenCheckoutError) => void;
 
     /**
      * Called when a field gains or loses focus.

@@ -15,7 +15,6 @@ import { CustomCardConfiguration } from './types';
 // type
 // countryCode
 
-// @ts-ignore TODO: Check with nick
 export class CustomCard extends UIElement<CustomCardConfiguration> {
     public static type = TxVariants.customCard;
 
