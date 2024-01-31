@@ -171,7 +171,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                 //  - decoded token is missing one or more of the following properties (threeDSMethodNotificationURL | postMessageDomain | threeDSServerTransID)
                 //  - or, token could not be base64 decoded &/or JSON.parsed
                 analyticsObject = {
-                    event: ANALYTICS_EVENT_ERROR,
+                    // event: ANALYTICS_EVENT_ERROR,
                     message: finalResObject.message,
                     metadata: { errorCodeObject, resultObject: resultObj }, // pass along both the full error object as well as the result object that came from the backend
                     ...errorTypeAndCode
