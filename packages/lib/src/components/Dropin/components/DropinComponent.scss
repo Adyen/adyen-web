@@ -51,8 +51,6 @@
         height: 26px;
 
         &__wrapper {
-            margin-right: var(--adyen-checkout-spacer-040);
-
             [dir='rtl'] & {
                 margin-right: 0;
                 margin-left: var(--adyen-checkout-spacer-040);
@@ -67,7 +65,7 @@
     transition: grid-template-rows 250ms ease;
 }
 
-.adyen-checkout-pm-details-wrapper[aria-expanded='true'] {
+.adyen-checkout-pm-details-wrapper[aria-hidden='false'] {
     grid-template-rows: 1fr;
 
     .adyen-checkout__payment-method__details {

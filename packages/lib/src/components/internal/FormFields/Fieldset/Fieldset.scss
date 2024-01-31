@@ -25,12 +25,11 @@
 .adyen-checkout__fieldset__title {
     color: var(--adyen-checkout-color-label-tertiary);
     display: block;
-    font-size: var(--adyen-checkout-font-size-xxsmall);
+    font-size: var(--adyen-checkout-font-size-small);
     font-weight: bold;
     letter-spacing: 1px;
     margin: 0;
     padding: 0 0 var(--adyen-checkout-spacer-060);
-    text-transform: uppercase;
 }
 
 .adyen-checkout__fieldset__fields,
