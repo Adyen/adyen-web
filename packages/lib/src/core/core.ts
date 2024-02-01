@@ -74,12 +74,13 @@ class Core implements ICore {
             return this.session
                 .setupSession(this.options)
                 .then(sessionResponse => {
-                    const { amount, shopperLocale, paymentMethods, ...rest } = sessionResponse;
+                    const { amount, shopperLocale, countryCode, paymentMethods, ...rest } = sessionResponse;
 
                     this.setOptions({
                         ...rest,
                         amount: this.options.order ? this.options.order.remainingAmount : amount,
-                        locale: this.options.locale || shopperLocale
+                        locale: this.options.locale || shopperLocale,
+                        countryCode: this.options.countryCode || countryCode
                     });
 
                     this.createPaymentMethodsList(paymentMethods);

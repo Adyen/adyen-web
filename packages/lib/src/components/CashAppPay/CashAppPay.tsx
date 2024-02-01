@@ -19,7 +19,7 @@ export class CashAppPay extends UIElement<CashAppPayConfiguration> {
 
     protected static defaultProps = defaultProps;
 
-    constructor(checkout: ICore, props: CashAppPayConfiguration) {
+    constructor(checkout: ICore, props?: CashAppPayConfiguration) {
         super(checkout, props);
 
         if (this.props.enableStoreDetails && this.props.storePaymentMethod) {

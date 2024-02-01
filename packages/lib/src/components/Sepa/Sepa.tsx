@@ -14,7 +14,7 @@ class SepaElement extends UIElement<SepaConfiguration> {
         showFormInstruction: true
     };
 
-    constructor(checkout: ICore, props) {
+    constructor(checkout: ICore, props?: SepaConfiguration) {
         super(checkout, props);
         this.state = { ...this.state, ...{ data: { ibanNumber: '', ownerName: '' } } };
     }

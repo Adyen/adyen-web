@@ -16,7 +16,7 @@ class KlarnaPayments extends UIElement<KlarnConfiguration> {
         useKlarnaWidget: false
     };
 
-    constructor(checkout: ICore, props: KlarnConfiguration) {
+    constructor(checkout: ICore, props?: KlarnConfiguration) {
         super(checkout, props);
 
         this.onComplete = this.onComplete.bind(this);

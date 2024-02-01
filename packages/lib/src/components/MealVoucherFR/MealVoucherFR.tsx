@@ -13,7 +13,7 @@ export class MealVoucherFRElement extends GiftcardElement {
         TxVariants.mealVoucher_FR_groupeup
     ];
 
-    constructor(checkout: ICore, props: GiftCardConfiguration) {
+    constructor(checkout: ICore, props?: GiftCardConfiguration) {
         super(checkout, {
             ...props,
             pinRequired: true,

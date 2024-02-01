@@ -16,7 +16,7 @@ class OnlineBankingPL extends IssuerListContainer {
         urls: [OnlineBankingPL.disclaimerUrlsMap.regulation, OnlineBankingPL.disclaimerUrlsMap.obligation]
     };
 
-    constructor(checkout: ICore, props: IssuerListConfiguration) {
+    constructor(checkout: ICore, props?: IssuerListConfiguration) {
         super(checkout, { ...props, termsAndConditions: OnlineBankingPL.termsAndConditions });
     }
 }

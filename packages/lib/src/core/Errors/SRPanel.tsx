@@ -34,7 +34,7 @@ export class SRPanel extends BaseElement<SRPanelProps> {
 
     private componentRef: SRMessagesRef;
 
-    constructor(checkout: ICore, props: SRPanelProps) {
+    constructor(checkout: ICore, props?: SRPanelProps) {
         super(checkout, props);
         this.id = this.props.id;
         this.showPanel = process.env.NODE_ENV !== 'production' ? this.props.showPanel : false;

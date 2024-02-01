@@ -33,7 +33,7 @@ export default class RiskElement extends BaseElement<RiskModuleProps> {
 
     private nodeRiskContainer = null;
 
-    constructor(checkout: ICore, props) {
+    constructor(checkout: ICore, props?) {
         super(checkout, props);
 
         // Populate state with null values

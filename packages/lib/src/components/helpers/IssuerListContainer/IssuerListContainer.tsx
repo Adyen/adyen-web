@@ -19,7 +19,7 @@ class IssuerListContainer extends UIElement<IssuerListConfiguration> {
         showPaymentMethodItemImages: false
     };
 
-    constructor(checkout: ICore, props: IssuerListConfiguration) {
+    constructor(checkout: ICore, props?: IssuerListConfiguration) {
         super(checkout, props);
 
         const getImage = props => this.resources.getImage(props);

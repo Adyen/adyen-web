@@ -40,11 +40,6 @@ export interface ApplePayConfiguration extends UIElementProps {
     version?: number;
 
     /**
-     * The merchant’s two-letter ISO 3166 country code.
-     */
-    countryCode: string;
-
-    /**
      * Part of the 'ApplePayLineItem' object, which sets the label of the payment request
      * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaylineitem ApplePayLineItem docs}
      */

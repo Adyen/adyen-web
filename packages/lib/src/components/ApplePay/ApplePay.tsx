@@ -19,7 +19,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
     public static type = TxVariants.applepay;
     protected static defaultProps = defaultProps;
 
-    constructor(checkout: ICore, props: ApplePayConfiguration) {
+    constructor(checkout: ICore, props?: ApplePayConfiguration) {
         super(checkout, props);
         this.startSession = this.startSession.bind(this);
         this.submit = this.submit.bind(this);
@@ -63,6 +63,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
 
         const paymentRequest = preparePaymentRequest({
             companyName: this.props.configuration.merchantName,
+            countryCode: this.core.options.countryCode,
             ...this.props
         });
 

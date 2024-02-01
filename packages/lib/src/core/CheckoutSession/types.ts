@@ -17,7 +17,7 @@ export type SessionConfiguration = {
 export type CheckoutSessionSetupResponse = {
     id: string;
     sessionData: string;
-
+    countryCode?: string;
     amount: PaymentAmount;
     expiresAt: string;
     paymentMethods: any;
