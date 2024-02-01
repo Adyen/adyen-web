@@ -168,9 +168,9 @@ export interface FieldError {
 }
 
 export interface SFError {
-    isValid: boolean;
-    errorMessage: string;
-    errorI18n: string;
+    isValid?: boolean;
+    errorMessage?: string;
+    errorI18n?: string;
     error: string;
     rootNode: HTMLElement;
     detectedBrands?: string[];

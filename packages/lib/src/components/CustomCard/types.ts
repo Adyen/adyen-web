@@ -1,4 +1,5 @@
 import { CardConfiguration } from '../Card/types';
+import { SFError } from '../Card/components/CardInput/types';
 
 export type CustomCardConfiguration = Omit<
     CardConfiguration,
@@ -20,4 +21,10 @@ export type CustomCardConfiguration = Omit<
     | 'installmentOptions'
     | 'showInstallmentAmounts'
     | 'configuration'
->;
+> & {
+    onValidationError?: (validationErrors: ValidationError[]) => void;
+};
+
+export type ValidationError = SFError & {
+    fieldType: string;
+};

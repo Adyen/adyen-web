@@ -258,18 +258,6 @@ export function onBinLookup(pCallbackObj) {
 }
 
 export function onChange(state, component) {
-    // From v5 the onError handler is no longer only for card comp related errors
-    // - so watch state.errors and use it to call the custom card specific 'setErrors' function
-    if (!!Object.keys(state.errors).length) {
-        const errors = Object.entries(state.errors).map(([fieldType, error]) => {
-            return {
-                fieldType,
-                ...(error ? error : { error: '', rootNode: component._node })
-            };
-        });
-        errors.forEach(setCCErrors);
-    }
-
     /**
      * If we're in a dual branding scenario & the number field becomes valid or is valid and become invalid
      * - set the brand logos to the required 'state'
