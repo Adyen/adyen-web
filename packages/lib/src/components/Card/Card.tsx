@@ -28,7 +28,7 @@ export class CardElement extends UIElement<CardConfiguration> {
      */
     private clickToPayRef = null;
 
-    constructor(checkout: ICore, props: CardConfiguration) {
+    constructor(checkout: ICore, props?: CardConfiguration) {
         super(checkout, props);
 
         if (props && !props._disableClickToPay) {

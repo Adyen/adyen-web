@@ -21,8 +21,7 @@ import getTranslationFile from '../../config/getTranslation';
         amount
     });
 
-    window.giftcard = new Giftcard({
-        core: window.checkout,
+    window.giftcard = new Giftcard(window.checkout, {
         type: 'giftcard',
         brand: 'valuelink',
         onBalanceCheck: async (resolve, reject, data) => {
@@ -38,8 +37,7 @@ import getTranslationFile from '../../config/getTranslation';
     }).mount('#genericgiftcard-container');
 
     // TODO: Double-check if it is supposed to be like that
-    window.giftcard = new MealVoucherFR({
-        core: window.checkout,
+    window.giftcard = new MealVoucherFR(window.checkout, {
         type: 'mealVoucher_FR_natixis',
         brand: 'mealVoucher_FR_natixis',
         onBalanceCheck: async (resolve, reject, data) => {
@@ -92,8 +90,7 @@ import getTranslationFile from '../../config/getTranslation';
     checkoutConfirmButton.addEventListener('click', giftcardSubmit);
     checkoutCardButton.addEventListener('click', cardSubmit);
 
-    window.giftcard = new Giftcard({
-        core: sessionCheckout,
+    window.giftcard = new Giftcard(sessionCheckout, {
         type: 'giftcard',
         brand: 'svs',
         onOrderCreated: () => {
@@ -106,5 +103,5 @@ import getTranslationFile from '../../config/getTranslation';
         }
     }).mount('#giftcard-session-container');
 
-    window.card = new Card({ core: sessionCheckout }).mount('#payment-method-container');
+    window.card = new Card(sessionCheckout).mount('#payment-method-container');
 })();

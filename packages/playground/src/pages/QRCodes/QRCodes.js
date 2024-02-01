@@ -34,8 +34,7 @@ const makeQRCodePayment = (state, component, countryCode) => {
     });
 
     // WechatPay QR
-    new WeChat({
-        core: checkout,
+    new WeChat(window.checkout, {
         type: 'wechatpayQR',
         onSubmit: (state, component) => {
             return makeQRCodePayment(state, component, 'CN');
@@ -43,36 +42,31 @@ const makeQRCodePayment = (state, component, countryCode) => {
     }).mount('#wechatpayqr-container');
 
     // BCMC Mobile
-    new BcmcMobile({
-        core: checkout,
+    new BcmcMobile(window.checkout, {
         onSubmit: (state, component) => {
             return makeQRCodePayment(state, component, 'BE');
         }
     }).mount('#bcmcqr-container');
 
-    new Swish({
-        core: checkout,
+    new Swish(window.checkout, {
         onSubmit: (state, component) => {
             return makeQRCodePayment(state, component, 'SE');
         }
     }).mount('#swish-container');
 
-    new PromptPay({
-        core: checkout,
+    new PromptPay(window.checkout, {
         onSubmit: (state, component) => {
             return makeQRCodePayment(state, component, 'TH');
         }
     }).mount('#promptpay-container');
 
-    new PayNow({
-        core: checkout,
+    new PayNow(window.checkout, {
         onSubmit: (state, component) => {
             return makeQRCodePayment(state, component, 'SG');
         }
     }).mount('#paynow-container');
 
-    new DuitNow({
-        core: checkout,
+    new DuitNow(window.checkout, {
         onSubmit: (state, component) => {
             return makeQRCodePayment(state, component, 'MY');
         }

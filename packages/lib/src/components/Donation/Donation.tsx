@@ -9,7 +9,7 @@ import type { ICore } from '../../core/types';
 class DonationElement extends UIElement<DonationConfiguration> {
     public static type = TxVariants.donation;
 
-    constructor(checkout: ICore, props: DonationConfiguration) {
+    constructor(checkout: ICore, props?: DonationConfiguration) {
         super(checkout, props);
         this.donate = this.donate.bind(this);
     }

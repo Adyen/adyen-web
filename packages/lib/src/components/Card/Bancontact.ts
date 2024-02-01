@@ -7,7 +7,7 @@ import type { ICore } from '../../core/types';
 class BancontactElement extends CardElement {
     public static type = TxVariants.bcmc;
 
-    constructor(checkout: ICore, props: CardConfiguration) {
+    constructor(checkout: ICore, props?: CardConfiguration) {
         super(checkout, props);
     }
 

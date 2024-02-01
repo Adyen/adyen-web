@@ -55,8 +55,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         if (checkout.paymentMethodsResponse.storedPaymentMethods && checkout.paymentMethodsResponse.storedPaymentMethods.length > 0) {
             const storedCardData = checkout.paymentMethodsResponse.storedPaymentMethods[2];
 
-            window.storedCard = new Card({
-                core: checkout,
+            window.storedCard = new Card(checkout, {
                 ...storedCardData,
                 disclaimerMessage
                 // maskSecurityCode: true
@@ -71,8 +70,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     }
 
     if (onlyShowCard || showComps.card) {
-        window.card = new Card({
-            core: checkout,
+        window.card = new Card(checkout, {
             challengeWindowSize: '01',
             _disableClickToPay: true,
             // hasHolderName: true,
@@ -90,8 +88,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     // Credit card with installments
     if (!onlyShowCard && showComps.cardWithInstallments) {
-        window.cardWithInstallments = new Card({
-            core: checkout,
+        window.cardWithInstallments = new Card(checkout, {
             _disableClickToPay: true,
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
             installmentOptions: {
@@ -120,19 +117,18 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     //
     // Card mounted in a React app
     if (!onlyShowCard && showComps.cardInReact) {
-        window.cardReact = new Card({ core: checkout });
+        window.cardReact = new Card(checkout);
         MockReactApp(window, 'cardReact', document.querySelector('.react-card-field'), false);
     }
 
     // Bancontact card
     if (!onlyShowCard && showComps.bcmcCard) {
-        window.bancontact = new Bancontact({ core: checkout }).mount('.bancontact-field');
+        window.bancontact = new Bancontact(checkout).mount('.bancontact-field');
     }
 
     // Credit card with AVS
     if (!onlyShowCard && showComps.avsCard) {
-        window.cardAvs = new Card({
-            core: checkout,
+        window.cardAvs = new Card(checkout, {
             // type: 'scheme',
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
             enableStoreDetails: true,
@@ -167,8 +163,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     }
 
     if (!onlyShowCard && showComps.addressLookup) {
-        window.addressLookupCard = new Card({
-            core: checkout,
+        window.addressLookupCard = new Card(checkout, {
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
             billingAddressRequired: true,
             onAddressLookup: searchFunctionExample
@@ -176,8 +171,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     }
 
     if (!onlyShowCard && showComps.avsPartialCard) {
-        window.avsPartialCard = new Card({
-            core: checkout,
+        window.avsPartialCard = new Card(checkout, {
             // type: 'scheme',
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
             // billingAddress config:
@@ -191,8 +185,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     // Credit card with KCP Authentication
     if (!onlyShowCard && showComps.kcpCard) {
-        window.kcpCard = new Card({
-            core: checkout,
+        window.kcpCard = new Card(checkout, {
             // type: 'scheme',
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'korean_local_card'],
             // Set koreanAuthenticationRequired AND countryCode so KCP fields show at start
@@ -209,8 +202,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
          * Make sure that the initialization values are being set in the /paymentMethods response,
          * as part of the 'scheme' configuration object
          */
-        window.ctpCard = new Card({
-            core: checkout,
+        window.ctpCard = new Card(checkout, {
             type: 'scheme',
             brands: ['mc', 'visa'],
             configuration: {

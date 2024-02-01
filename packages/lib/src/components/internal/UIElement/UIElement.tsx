@@ -26,7 +26,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      */
     public static txVariants: string[] = [];
 
-    constructor(checkout: ICore, props: P) {
+    constructor(checkout: ICore, props?: P) {
         super(checkout, props);
 
         // Only register UIElements that have the 'type' set. Drop-in for example does not have.
@@ -50,12 +50,12 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.storeElementRefOnCore(this.props);
     }
 
-    protected override buildElementProps(componentProps: P) {
+    protected override buildElementProps(componentProps?: P) {
         const globalCoreProps = this.core.getCorePropsForComponent();
-        const isStoredPaymentMethod = !!componentProps.isStoredPaymentMethod;
+        const isStoredPaymentMethod = !!componentProps?.isStoredPaymentMethod;
         const paymentMethodsResponseProps = isStoredPaymentMethod
             ? {}
-            : this.core.paymentMethodsResponse.find(componentProps.type || this.constructor['type']);
+            : this.core.paymentMethodsResponse.find(componentProps?.type || this.constructor['type']);
 
         const finalProps = {
             showPayButton: true,

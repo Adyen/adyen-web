@@ -109,8 +109,7 @@ export async function initManual() {
 
         // Handle Amazon Pay redirect result
         if (amazonCheckoutSessionId) {
-            window.amazonpay = new AmazonPay({
-                core: checkout,
+            window.amazonpay = new AmazonPay(checkout, {
                 amazonCheckoutSessionId,
                 showOrderButton: false,
                 onSubmit: state => {
@@ -130,8 +129,7 @@ export async function initManual() {
         return Promise.resolve(true);
     }
 
-    const dropin = new Dropin({
-        core: checkout,
+    const dropin = new Dropin(checkout, {
         instantPaymentTypes: ['googlepay'],
         paymentMethodsConfiguration: {
             card: {

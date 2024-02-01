@@ -18,7 +18,7 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
 
     protected static defaultProps = {};
 
-    constructor(checkout: ICore, props: P) {
+    constructor(checkout: ICore, props?: P) {
         this.core = checkout;
 
         if (!this.core) {
@@ -31,7 +31,7 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
         this.buildElementProps(props);
     }
 
-    protected buildElementProps(componentProps: P) {
+    protected buildElementProps(componentProps?: P) {
         // const { core, ...rest } = componentProps;
         this.props = this.formatProps({ ...this.constructor['defaultProps'], ...componentProps });
     }
