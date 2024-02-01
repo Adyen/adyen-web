@@ -3,7 +3,6 @@ import {
     CbObjOnBinValue,
     CbObjOnBrand,
     CbObjOnConfigSuccess,
-    CbObjOnError,
     CbObjOnFieldValid,
     CbObjOnFocus,
     CbObjOnLoad,
@@ -16,7 +15,6 @@ import { InstallmentOptions } from './components/CardInput/components/types';
 import { DisclaimerMsgObject } from '../internal/DisclaimerMessage/DisclaimerMessage';
 import { Placeholders } from './components/CardInput/types';
 import { UIElementProps } from '../internal/UIElement/types';
-import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 
 export interface CardConfiguration extends UIElementProps {
     /**
@@ -146,11 +144,6 @@ export interface CardConfiguration extends UIElementProps {
      * Called once we detect the card brand.
      */
     onBrand?: (event: CbObjOnBrand) => void;
-
-    /**
-     * Called in case of an invalid Card Number, invalid Expiry Date, or incomplete field. Called again when errors are cleared.
-     */
-    onError?: (error: CbObjOnError | AdyenCheckoutError) => void;
 
     /**
      * Called when a field gains or loses focus.
