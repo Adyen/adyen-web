@@ -1,23 +1,24 @@
 import { ICore } from '../../core/types';
 import { ErrorCodeObject } from './components/utils';
 import UIElement from '../internal/UIElement';
-import { ActionHandledReturnObject } from '../../types/global-types';
+import { ActionHandledReturnObject, AnalyticsModule } from '../../types/global-types';
 import Language from '../../language';
 
 export interface ThreeDS2DeviceFingerprintConfiguration {
     core: ICore;
-    dataKey: string;
-    token: string;
-    notificationURL: string;
-    onError: (error?: string | ErrorCodeObject) => void;
-    paymentData: string;
+    dataKey?: string;
+    token?: string;
+    notificationURL?: string;
+    onError?: (error?: string | ErrorCodeObject) => void;
+    paymentData?: string;
     showSpinner: boolean;
-    type: string;
+    type?: string;
     isMDFlow?: boolean;
     loadingContext?: string;
     clientKey?: string;
     elementRef?: UIElement;
     onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
+    modules?: { analytics: AnalyticsModule };
 }
 
 export interface ThreeDS2ChallengeConfiguration {
@@ -34,6 +35,7 @@ export interface ThreeDS2ChallengeConfiguration {
     isMDFlow?: boolean;
     i18n?: Language;
     onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
+    modules?: { analytics: AnalyticsModule };
 }
 
 /**

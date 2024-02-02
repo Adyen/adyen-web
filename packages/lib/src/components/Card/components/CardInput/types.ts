@@ -13,7 +13,8 @@ import { DisclaimerMsgObject } from '../../../internal/DisclaimerMessage/Disclai
 import { OnAddressLookupType, OnAddressSelectedType } from '../../../internal/Address/components/AddressSearch';
 import { ComponentMethodsRef } from '../../../internal/UIElement/types';
 import { AddressData, PaymentAmount } from '../../../../types/global-types';
-import { AnalyticsModule } from '../../../../core/Analytics/types';
+import { AnalyticsModule } from '../../../../types/global-types';
+import { FieldErrorAnalyticsObject } from '../../../../core/Analytics/types';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -134,6 +135,7 @@ export interface CardInputProps {
     type?: string;
     maskSecurityCode?: boolean;
     disclaimerMessage?: DisclaimerMsgObject;
+    onErrorAnalytics?: (obj: FieldErrorAnalyticsObject) => {};
 }
 
 export interface CardInputState {

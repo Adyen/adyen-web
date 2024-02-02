@@ -8,6 +8,7 @@ import { mapBrands, getGooglePayLocale } from './utils';
 import collectBrowserInfo from '../../utils/browserInfo';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
+import { ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
 
 class GooglePay extends UIElement<GooglePayConfiguration> {
     public static type = TxVariants.googlepay;
@@ -48,6 +49,11 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
     }
 
     public submit = () => {
+        // Analytics
+        if (this.props.isInstantPayment) {
+            this.submitAnalytics({ type: ANALYTICS_SELECTED_STR, target: 'instant_payment_button' });
+        }
+
         const { onAuthorized = () => {} } = this.props;
 
         return new Promise((resolve, reject) => this.props.onClick(resolve, reject))

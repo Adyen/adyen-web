@@ -8,6 +8,9 @@ import Img from '../../../internal/Img';
 import './challenge.scss';
 import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
 import useImage from '../../../../core/Context/useImage';
+import { ActionHandledReturnObject } from '../../../../types/global-types';
+import { THREEDS2_FULL, THREEDS2_NUM } from '../../config';
+import { SendAnalyticsObject } from '../../../../core/Analytics/types';
 
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
     public static defaultProps = {
@@ -53,6 +56,19 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         }
     }
 
+    public onActionHandled = (rtnObj: ActionHandledReturnObject) => {
+        this.props.onSubmitAnalytics({ type: THREEDS2_FULL, message: rtnObj.actionDescription });
+
+        this.props.onActionHandled(rtnObj);
+    };
+
+    public onFormSubmit = (msg: string) => {
+        this.props.onSubmitAnalytics({
+            type: THREEDS2_FULL,
+            message: msg
+        });
+    };
+
     setStatusComplete(resultObj) {
         this.setState({ status: 'complete' }, () => {
             /**
@@ -61,6 +77,16 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
              */
             const resolveDataFunction = this.props.isMDFlow ? createOldChallengeResolveData : createChallengeResolveData;
             const data = resolveDataFunction(this.props.dataKey, resultObj.transStatus, this.props.paymentData);
+
+            // Create log object - the process is completed, one way or another
+            const analyticsObject: SendAnalyticsObject = {
+                type: THREEDS2_FULL,
+                message: `${THREEDS2_NUM} challenge has completed`,
+                metadata: { ...resultObj }
+            };
+
+            // Send log to analytics endpoint
+            this.props.onSubmitAnalytics(analyticsObject);
 
             this.props.onComplete(data); // (equals onAdditionalDetails - except for 3DS2InMDFlow)
         });
@@ -71,7 +97,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         this.props.onError(errorInfoObj); // For some reason this doesn't fire if it's in a callback passed to the setState function
     }
 
-    render({ onActionHandled }, { challengeData }) {
+    render(_, { challengeData }) {
         const getImage = useImage();
         if (this.state.status === 'retrievingChallengeToken') {
             return (
@@ -98,7 +124,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                         }
                     }}
                     {...challengeData}
-                    onActionHandled={onActionHandled}
+                    onActionHandled={this.onActionHandled}
+                    onFormSubmit={this.onFormSubmit}
                 />
             );
         }

@@ -1,6 +1,5 @@
 import { PaymentAmount } from '../../types';
 import { CoreConfiguration } from '../types';
-import { EventsQueueModule } from './EventsQueue';
 
 export interface Experiment {
     controlGroup: boolean;
@@ -51,11 +50,13 @@ export interface AnalyticsObject {
     metadata?: Record<string, any>;
     isStoredPaymentMethod?: boolean;
     brand?: string;
+    validationErrorCode?: string;
+    validationErrorMessage?: string;
 }
 
-export type ANALYTICS_ACTION = 'log' | 'error' | 'event';
+export type ANALYTICS_EVENT = 'log' | 'error' | 'info';
 
-export type CreateAnalyticsObject = Omit<AnalyticsObject, 'timestamp'> & { action: ANALYTICS_ACTION };
+export type CreateAnalyticsObject = Omit<AnalyticsObject, 'timestamp'> & { event: ANALYTICS_EVENT };
 
 export type AnalyticsInitialEvent = {
     containerWidth: number;
@@ -73,19 +74,19 @@ export type AnalyticsConfig = {
     loadingContext?: string;
 };
 
-export type CreateAnalyticsActionData = Omit<AnalyticsObject, 'timestamp'>;
+export type CreateAnalyticsEventData = Omit<AnalyticsObject, 'timestamp'>;
 
-export type CreateAnalyticsActionObject = {
-    action: ANALYTICS_ACTION;
-    data: CreateAnalyticsActionData;
+export type CreateAnalyticsEventObject = {
+    event: ANALYTICS_EVENT;
+    data: CreateAnalyticsEventData;
 };
 
 export type EventQueueProps = Pick<AnalyticsConfig, 'analyticsContext' | 'clientKey'> & { analyticsPath: string };
 
-export interface AnalyticsModule {
-    setUp: (a: AnalyticsInitialEvent) => Promise<any>;
-    getCheckoutAttemptId: () => string;
-    getEventsQueue: () => EventsQueueModule;
-    createAnalyticsAction: (a: CreateAnalyticsActionObject) => void;
-    getEnabled: () => boolean;
-}
+export type SendAnalyticsObject = Omit<AnalyticsObject, 'timestamp' | 'component'>;
+
+export type FieldErrorAnalyticsObject = {
+    fieldType: string;
+    errorCode: string;
+    errorMessage: string;
+};

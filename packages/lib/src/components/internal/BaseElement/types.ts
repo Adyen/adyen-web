@@ -1,7 +1,7 @@
 import { ICore } from '../../../core/types';
 import { Order } from '../../../types/global-types';
 import { SRPanel } from '../../../core/Errors/SRPanel';
-import { AnalyticsModule } from '../../../core/Analytics/types';
+import { AnalyticsModule } from '../../../types/global-types';
 import { Resources } from '../../../core/Context/Resources';
 import RiskElement from '../../../core/RiskModule';
 import { ComponentChild } from 'preact';

@@ -1,4 +1,4 @@
-import { AddressData, BrowserInfo } from '../../types/global-types';
+import { ComponentFocusObject, AddressData, BrowserInfo } from '../../types/global-types';
 import {
     CbObjOnBinValue,
     CbObjOnBrand,
@@ -152,9 +152,14 @@ export interface CardConfiguration extends UIElementProps {
     onError?: (event: CbObjOnError) => void;
 
     /**
-     * Called when a field gains or loses focus.
+     * Called when a field gains focus.
      */
-    onFocus?: (event: CbObjOnFocus) => void;
+    onFocus?: (event: CbObjOnFocus | ComponentFocusObject) => void;
+
+    /**
+     * Called when a field gains loses focus.
+     */
+    onBlur?: (event: CbObjOnFocus | ComponentFocusObject) => void;
 
     /**
      * Provides the BIN Number of the card (up to 6 digits), called as the user types in the PAN.
