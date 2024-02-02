@@ -22,9 +22,13 @@
     --adyen-checkout-spacer-110: #{$spacer-110};
     --adyen-checkout-spacer-100: #{$spacer-100};
     --adyen-checkout-line-height-600: #{$line-height-600};
+    --adyen-checkout-line-height-400: #{$line-height-400};
     --adyen-checkout-line-height-200: #{$line-height-200};
     --adyen-checkout-line-height-100: #{$line-height-100};
     --adyen-checkout-font-weight-200: #{$font-weight-200};
+    --adyen-checkout-font-weight-500: #{$font-weight-500};
+    --adyen-checkout-font-weight-600: #{$font-weight-600};
+    --adyen-checkout-font-weight-700: #{$font-weight-700};
     --adyen-checkout-border-width-l: #{$border-width-l};
     --adyen-checkout-border-width-m: #{$border-width-m};
     --adyen-checkout-border-width-s: #{$border-width-s};
@@ -47,13 +51,16 @@
     --adyen-checkout-color-green: #{$color-green-1700};
     --adyen-checkout-color-blue: #{$color-blue-1700};
     --adyen-checkout-text-title-font-weight: #{$text-title-font-weight};
-    --adyen-checkout-text-body-strongest-font-weight: #{$text-body-strongest-font-weight};
-    --adyen-checkout-text-body-stronger-font-weight: #{$text-body-stronger-font-weight};
-    --adyen-checkout-text-body-font-weight: #{$text-body-font-weight};
-    --adyen-checkout-text-body-font-size: #{$text-body-font-size};
     --adyen-checkout-text-title-line-height: var(--adyen-checkout-line-height-600);
-    --adyen-checkout-text-caption-stronger-wide-line-height: var(--adyen-checkout-line-height-200);
+    --adyen-checkout-text-body-font-size: #{$text-body-font-size};
+    --adyen-checkout-text-body-font-weight: #{$text-body-font-weight};
+    --adyen-checkout-text-body-stronger-font-weight: #{$text-body-stronger-font-weight};
+    --adyen-checkout-text-body-strongest-font-weight: #{$text-body-strongest-font-weight};
     --adyen-checkout-text-caption-line-height: var(--adyen-checkout-line-height-100);
+    --adyen-checkout-text-subtitle-line-height: var(--adyen-checkout-line-height-400);
+    --adyen-checkout-text-subtitle-font-size: var(--adyen-checkout-font-size-medium);
+    --adyen-checkout-text-subtitle-font-weight: var(--adyen-checkout-font-weight-500);
+    --adyen-checkout-text-subtitle-stronger-font-weight: var(--adyen-checkout-font-weight-600);
     --adyen-checkout-focus-ring-color: var(--adyen-checkout-color-focus);
     --adyen-checkout-color-separator-primary: var(--adyen-checkout-color-grey-200);
     --adyen-checkout-color-outline-active: var(--adyen-checkout-color-grey-3200);
@@ -78,15 +85,15 @@
     --adyen-checkout-color-background-secondary: var(--adyen-checkout-color-grey-100);
 
     /* Drop-in */
+    --adyen-checkout-dropin-payment-list-gap: var(--adyen-checkout-spacer-100);
     --adyen-checkout-dropin-payment-item-gap: var(--adyen-checkout-spacer-070);
     --adyen-checkout-dropin-payment-item-border-color: var(--adyen-checkout-color-separator-primary);
     --adyen-checkout-dropin-payment-item-border-radius: var(--adyen-checkout-border-radius-m);
     --adyen-checkout-dropin-payment-item-border-width: var(--adyen-checkout-border-width-s);
     --adyen-checkout-dropin-selected-item-background: var(--adyen-checkout-color-grey-100);
-    --adyen-checkout-dropin-selected-item-border-color: var(--adyen-checkout-color-outline-secondary);
+    --adyen-checkout-dropin-selected-item-border-color: var(--adyen-checkout-color-outline-active);
+    --adyen-checkout-dropin-hover-item-border-color: var(--adyen-checkout-color-outline-secondary);
     --adyen-checkout-dropin-list-label-color: var(--adyen-checkout-color-label-primary);
-    --adyen-checkout-dropin-list-label-font-size: var(--adyen-checkout-font-size-small);
-    --adyen-checkout-dropin-list-label-font-weight: var(--adyen-checkout-text-body-strongest-font-weight);
 
     /* Spinner */
     --adyen-checkout-loading-indicator-color: var(--adyen-checkout-color-surface-inverse);
@@ -103,7 +110,7 @@
     --adyen-checkout-input-wrapper-hover-border-color: var(--adyen-checkout-color-outline-tertiary);
     --adyen-checkout-input-field-height: var(--adyen-checkout-spacer-110);
     --adyen-checkout-input-field-label-color: var(--adyen-checkout-color-label-primary);
-    --adyen-checkout-input-field-context-color: var(--adyen-checkout-color-label-secondary);
+    --adyen-checkout-input-field-context-color: var(--adyen-checkout-color-label-primary);
     --adyen-checkout-input-field-label-margin-bottom: var(--adyen-checkout-spacer-020);
     --adyen-checkout-input-field-context-margin-top: var(--adyen-checkout-spacer-020);
 

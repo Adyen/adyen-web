@@ -23,11 +23,10 @@
 }
 
 .adyen-checkout__fieldset__title {
-    color: var(--adyen-checkout-color-label-tertiary);
+    @include index.adyen-checkout-text-subtitle;
+
+    color: var(--adyen-checkout-color-label-primary);
     display: block;
-    font-size: var(--adyen-checkout-font-size-small);
-    font-weight: bold;
-    letter-spacing: 1px;
     margin: 0;
     padding: 0 0 var(--adyen-checkout-spacer-060);
 }

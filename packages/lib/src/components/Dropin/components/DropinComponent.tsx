@@ -131,7 +131,6 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                 return status.props?.component?.render();
 
             default:
-                console.log('this.props.showRadioButton', this.props.showRadioButton);
                 return (
                     <div className={`adyen-checkout__dropin adyen-checkout__dropin--${status.type}`}>
                         {isRedirecting && status.props.component && status.props.component.render()}

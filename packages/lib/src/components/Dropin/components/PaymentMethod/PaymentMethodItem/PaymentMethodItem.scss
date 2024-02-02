@@ -13,10 +13,14 @@
         color 0.15s ease,
         box-shadow 0.15s ease,
         border-radius 0.15s ease;
-}
 
-.adyen-checkout__payment-method:focus {
-    outline: 0;
+    &:focus {
+        outline: 0;
+    }
+
+    &:hover:not(&--selected) {
+        border-color: var(--adyen-checkout-dropin-hover-item-border-color);
+    }
 }
 
 .adyen-checkout__payment-method--loading {
