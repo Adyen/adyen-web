@@ -23,10 +23,12 @@ test('should show regulations and information obligation links', async () => {
 
     const regulationLink = await screen.findByRole('link', { name: 'regulations' });
     expect(regulationLink).toBeTruthy();
+    // @ts-ignore FIX TYPES
     expect(regulationLink).toHaveAttribute('href', 'https://www.przelewy24.pl/regulamin');
 
     const obligationLink = await screen.findByRole('link', { name: 'information obligation' });
     expect(obligationLink).toBeTruthy();
+    // @ts-ignore FIX TYPES
     expect(obligationLink).toHaveAttribute('href', 'https://www.przelewy24.pl/obowiazek-informacyjny-rodo-platnicy');
 });
 test('should show regulations and information obligation links', async () => {
@@ -44,9 +46,11 @@ test('should show regulations and information obligation links', async () => {
 
     const regulationLink = await screen.findByRole('link', { name: 'regulations' });
     expect(regulationLink).toBeTruthy();
+    // @ts-ignore FIX TYPES
     expect(regulationLink).toHaveAttribute('href', 'https://www.przelewy24.pl/regulamin');
 
     const obligationLink = await screen.findByRole('link', { name: 'information obligation' });
     expect(obligationLink).toBeTruthy();
+    // @ts-ignore FIX TYPES
     expect(obligationLink).toHaveAttribute('href', 'https://www.przelewy24.pl/obowiazek-informacyjny-rodo-platnicy');
 });

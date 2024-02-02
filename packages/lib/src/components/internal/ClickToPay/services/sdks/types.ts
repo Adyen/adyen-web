@@ -1,3 +1,12 @@
+declare global {
+    interface Window {
+        SRCSDK_MASTERCARD?: object;
+        vAdapters: {
+            VisaSRCI?: object;
+        };
+    }
+}
+
 /**
  * Type that represent the object which contains the customizable properties of the SDK initialization
  */
@@ -59,6 +68,16 @@ export type SrcCard = {
 export type SrcCheckoutParams = {
     srcCorrelationId: string;
     srcDigitalCardId: string;
+    complianceSettings?: {
+        complianceResources: [
+            {
+                complianceType: 'REMEMBER_ME';
+                uri: string;
+                version?: string;
+                dataPublished?: string;
+            }
+        ];
+    };
     windowRef?: Window;
 };
 

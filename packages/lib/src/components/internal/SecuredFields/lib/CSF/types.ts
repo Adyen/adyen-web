@@ -1,5 +1,5 @@
 import Language from '../../../../../language/Language';
-import { BrandStorageObject } from '../types';
+import { BrandStorageObject, SecuredFields } from '../types';
 import { Placeholders } from '../../SFP/types';
 
 /**
@@ -61,7 +61,7 @@ export interface CSFConfigObject extends CSFCommonProps {
 export interface CSFSetupObject extends CSFCommonProps {
     type: string;
     clientKey: string;
-    rootNode: string | HTMLElement;
+    rootNode: string | HTMLElement; // TODO - when is this a string?
     callbacks?: object;
     isKCP?: boolean;
     i18n?: Language;
@@ -100,6 +100,13 @@ export interface CSFStateObject {
     hasSeparateDateFields: boolean;
     currentFocusObject: string;
     registerFieldForIos: boolean;
-    securedFields: object;
+    securedFields: SecuredFields;
     isKCP: boolean;
+}
+
+export interface CSFThisObject {
+    csfState?: CSFStateObject;
+    csfConfig?: CSFConfigObject;
+    csfProps?: CSFSetupObject;
+    csfCallbacks?: CSFCallbacksConfig;
 }

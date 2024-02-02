@@ -26,7 +26,8 @@ function Select({
     uniqueId,
     disabled,
     disableTextFilter,
-    clearOnSelect
+    clearOnSelect,
+    blurOnClose
 }: SelectProps) {
     const filterInputRef = useRef(null);
     const selectContainerRef = useRef(null);
@@ -77,6 +78,8 @@ function Select({
      * Closes the selectList, empties the text filter and focuses the button element
      */
     const closeList = () => {
+        //blurs the field when the list is closed, makes for a better UX for most users, needs more testing
+        blurOnClose && filterInputRef.current.blur();
         setShowList(false);
     };
 

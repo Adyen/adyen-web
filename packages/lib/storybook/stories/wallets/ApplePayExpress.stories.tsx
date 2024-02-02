@@ -16,10 +16,16 @@ const meta: MetaConfiguration<ApplePayConfiguration> = {
     title: 'Wallets/ApplePay'
 };
 
-const getShippingMethods = (countryCode: string): ApplePayJS.ApplePayShippingMethod[] => {
+/**
+ * Method that fetches the shipping options according to the country.
+ * This function in most of the cases is asynchronous, as it will request shipping options in the backend
+ *
+ * @param countryCode - country code
+ */
+const getShippingMethods = (countryCode: string): Promise<ApplePayJS.ApplePayShippingMethod[]> => {
     switch (countryCode) {
         case 'US': {
-            return [
+            return Promise.resolve([
                 {
                     label: 'Standard Shipping',
                     detail: 'Arrives in 5 to 7 days',
@@ -32,11 +38,11 @@ const getShippingMethods = (countryCode: string): ApplePayJS.ApplePayShippingMet
                     amount: '10.99',
                     identifier: 'Express'
                 }
-            ];
+            ]);
         }
         case 'NL':
         default: {
-            return [
+            return Promise.resolve([
                 {
                     label: 'Free Shipping',
                     detail: 'Arrives in 10 to 15 days',
@@ -55,7 +61,7 @@ const getShippingMethods = (countryCode: string): ApplePayJS.ApplePayShippingMet
                     amount: '15.99',
                     identifier: 'Express'
                 }
-            ];
+            ]);
         }
     }
 };
@@ -177,7 +183,7 @@ export const Express: ApplePayStory = {
                     return;
                 }
 
-                const newShippingMethods = getShippingMethods(countryCode);
+                const newShippingMethods = await getShippingMethods(countryCode);
                 const newLineItems = createLineItems(newShippingMethods[0]);
                 const newTotal = createApplePayTotal(newLineItems);
 

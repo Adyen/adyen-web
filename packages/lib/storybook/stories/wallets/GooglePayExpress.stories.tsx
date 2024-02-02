@@ -18,6 +18,11 @@ const meta: MetaConfiguration<GooglePayConfiguration> = {
     title: 'Wallets/GooglePay'
 };
 
+/**
+ * Method that calculate the shipping costs based on the country/shipping options
+ *
+ * @param countryCode - country code
+ */
 function getShippingCost(countryCode) {
     switch (countryCode) {
         case 'BR':
@@ -35,10 +40,16 @@ function getShippingCost(countryCode) {
     }
 }
 
+/**
+ * Method that fetches the shipping options according to the country.
+ * This function in most of the cases is asynchronous, as it will request shipping options in the backend
+ *
+ * @param countryCode - country code
+ */
 function getShippingOptions(countryCode?: string) {
     switch (countryCode) {
         case 'BR': {
-            return {
+            return Promise.resolve({
                 defaultSelectedOptionId: 'shipping-001',
                 shippingOptions: [
                     {
@@ -52,10 +63,10 @@ function getShippingOptions(countryCode?: string) {
                         description: 'Standard shipping delivered in 2 business days.'
                     }
                 ]
-            };
+            });
         }
         default: {
-            return {
+            return Promise.resolve({
                 defaultSelectedOptionId: 'shipping-001',
                 shippingOptions: [
                     {
@@ -74,7 +85,7 @@ function getShippingOptions(countryCode?: string) {
                         description: 'Express shipping delivered in 1 business day.'
                     }
                 ]
-            };
+            });
         }
     }
 }
@@ -180,7 +191,8 @@ export const Express: GooglePayStory = {
 
             paymentDataCallbacks: {
                 onPaymentDataChanged(intermediatePaymentData) {
-                    return new Promise(resolve => {
+                    // eslint-disable-next-line no-async-promise-executor
+                    return new Promise(async resolve => {
                         const { callbackTrigger, shippingAddress, shippingOptionData } = intermediatePaymentData;
                         const paymentDataRequestUpdate: google.payments.api.PaymentDataRequestUpdate = {};
 
@@ -194,7 +206,7 @@ export const Express: GooglePayStory = {
                         }
                         /** If it initializes or changes the shipping address, we calculate the shipping options and transaction info  */
                         if (callbackTrigger === 'INITIALIZE' || callbackTrigger === 'SHIPPING_ADDRESS') {
-                            paymentDataRequestUpdate.newShippingOptionParameters = getShippingOptions(shippingAddress.countryCode);
+                            paymentDataRequestUpdate.newShippingOptionParameters = await getShippingOptions(shippingAddress.countryCode);
                             const selectedShippingOptionId = paymentDataRequestUpdate.newShippingOptionParameters.defaultSelectedOptionId;
                             paymentDataRequestUpdate.newTransactionInfo = calculateNewTransactionInfo(
                                 shippingAddress.countryCode,

@@ -85,6 +85,13 @@ export interface UIElementProps extends BaseElementProps {
     /** @internal */
     elementRef?: any;
 
+    /**
+     * Returned after the payments call, when an action is returned. It represents the payment method tx variant
+     * that was used for the payment
+     * @internal
+     */
+    paymentMethodType?: string;
+
     /** @internal */
     i18n?: Language;
 }

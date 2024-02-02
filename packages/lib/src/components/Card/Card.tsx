@@ -1,5 +1,4 @@
 import { h } from 'preact';
-import { UIElement } from '../internal/UIElement/UIElement';
 import CardInput from './components/CardInput';
 import CoreProvider from '../../core/Context/CoreProvider';
 import collectBrowserInfo from '../../utils/browserInfo';
@@ -14,6 +13,9 @@ import ClickToPayWrapper from './components/ClickToPayWrapper';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { TxVariants } from '../tx-variants';
 import { UIElementStatus } from '../internal/UIElement/types';
+import UIElement from '../internal/UIElement';
+import PayButton from '../internal/PayButton';
+import { PayButtonProps } from '../internal/PayButton/PayButton';
 
 export class CardElement extends UIElement<CardConfiguration> {
     public static type = TxVariants.scheme;
@@ -55,6 +57,9 @@ export class CardElement extends UIElement<CardConfiguration> {
     };
 
     formatProps(props: CardConfiguration) {
+        const isZeroAuth = props.amount?.value === 0;
+        const enableStoreDetails = isZeroAuth ? false : props.session?.configuration?.enableStoreDetails || props.enableStoreDetails;
+
         return {
             ...props,
             // Mismatch between hasHolderName & holderNameRequired which can mean card can never be valid
@@ -77,7 +82,7 @@ export class CardElement extends UIElement<CardConfiguration> {
             icon: props.icon || props.configuration?.icon,
             // installmentOptions of a session should be used before falling back to the merchant configuration
             installmentOptions: props.session?.configuration?.installmentOptions || props.installmentOptions,
-            enableStoreDetails: props.session?.configuration?.enableStoreDetails || props.enableStoreDetails,
+            enableStoreDetails,
             /**
              * Click to Pay configuration
              * - If email is set explicitly in the configuration, then it can override the one used in the session creation
@@ -202,6 +207,20 @@ export class CardElement extends UIElement<CardConfiguration> {
     get browserInfo() {
         return collectBrowserInfo();
     }
+    // Override
+    protected payButton = (props: PayButtonProps) => {
+        const isZeroAuth = this.props.amount?.value === 0;
+        const isStoredCard = this.props.storedPaymentMethodId?.length > 0;
+        return (
+            <PayButton
+                {...props}
+                amount={this.props.amount}
+                secondaryAmount={this.props.secondaryAmount}
+                label={isZeroAuth && !isStoredCard ? this.props.i18n.get('payButton.saveDetails') : ''}
+                onClick={this.submit}
+            />
+        );
+    };
 
     private renderCardInput(isCardPrimaryInput = true): h.JSX.Element {
         return (
