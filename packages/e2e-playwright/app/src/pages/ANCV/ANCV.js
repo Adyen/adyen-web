@@ -33,7 +33,7 @@ const initCheckout = async () => {
         onError: handleError
     });
 
-    window.paymentMethod = new ANCV({ core: checkout }).mount('.ancv-field');
+    window.paymentMethod = new ANCV(checkout).mount('.ancv-field');
 };
 
 initCheckout();

@@ -20,8 +20,7 @@ const initCheckout = async () => {
     });
 
     // Credit card with installments
-    window.card = new Card({
-        core: checkout,
+    window.card = new Card(checkout, {
         brands: ['mc', 'visa', 'amex', 'maestro', 'bcmc'],
         onChange: state => {
             /**
