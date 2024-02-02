@@ -25,7 +25,7 @@ const initCheckout = async () => {
         // ...window.mainConfiguration
     });
 
-    window.afterpay = new AfterPay({core: checkout}).mount('.afterpay-field');
+    window.afterpay = new AfterPay(checkout).mount('.afterpay-field');
 };
 
 initCheckout();

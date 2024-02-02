@@ -1,4 +1,4 @@
-import { AdyenCheckout, CustomCard} from '@adyen/adyen-web';
+import { AdyenCheckout, CustomCard } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { handleSubmit, handleAdditionalDetails } from '../../handlers';
 import { amount, shopperLocale, countryCode } from '../../services/commonConfig';
@@ -20,33 +20,30 @@ const initCheckout = async () => {
         ...window.mainConfiguration
     });
 
-    window.securedFields = new CustomCard({
-            core: checkout,
-            type: 'card',
-            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire'],
-            onConfigSuccess,
-            onBrand,
-            onFocus: setFocus,
-            onBinLookup,
-            onChange,
-            ...window.cardConfig
-        })
-        .mount('.secured-fields');
+    window.securedFields = new CustomCard(checkout, {
+        type: 'card',
+        brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire'],
+        onConfigSuccess,
+        onBrand,
+        onFocus: setFocus,
+        onBinLookup,
+        onChange,
+        ...window.cardConfig
+    }).mount('.secured-fields');
 
     createPayButton('.secured-fields', window.securedFields, 'securedfields');
 
     window.securedFields2 = new CustomCard({
-            core: checkout,
-            //            type: 'card',// Deliberately exclude to ensure a default value is set
-            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire'],
-            onConfigSuccess,
-            onBrand,
-            onFocus: setFocus,
-            onBinLookup,
-            onChange,
-            ...window.cardConfig
-        })
-        .mount('.secured-fields-2');
+        core: checkout,
+        //            type: 'card',// Deliberately exclude to ensure a default value is set
+        brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire'],
+        onConfigSuccess,
+        onBrand,
+        onFocus: setFocus,
+        onBinLookup,
+        onChange,
+        ...window.cardConfig
+    }).mount('.secured-fields-2');
 
     createPayButton('.secured-fields-2', window.securedFields2, 'securedfields2');
 

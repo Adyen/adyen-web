@@ -19,18 +19,16 @@ const initCheckout = async () => {
         ...window.mainConfiguration
     });
 
-    window.giftcard = new Giftcard({
-            core: window.checkout,
-            type: 'giftcard',
-            brand: 'valuelink',
-            onBalanceCheck: async (resolve, reject, data) => {
-                resolve(await checkBalance(data));
-            },
-            onOrderRequest: async (resolve, reject) => {
-                resolve(await createOrder({ amount }));
-            }
-        })
-        .mount('.card-field');
+    window.giftcard = new Giftcard(window.checkout, {
+        type: 'giftcard',
+        brand: 'valuelink',
+        onBalanceCheck: async (resolve, reject, data) => {
+            resolve(await checkBalance(data));
+        },
+        onOrderRequest: async (resolve, reject) => {
+            resolve(await createOrder({ amount }));
+        }
+    }).mount('.card-field');
 };
 
 initCheckout();

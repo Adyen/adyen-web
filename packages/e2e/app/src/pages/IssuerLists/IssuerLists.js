@@ -28,7 +28,7 @@ const initCheckout = async () => {
         // ...window.mainConfiguration
     });
 
-    window.ideal = new Ideal({ core: checkout, highlightedIssuers: ['1121', '1154', '1153'] }).mount('.ideal-field');
+    window.ideal = new Ideal(checkout, { highlightedIssuers: ['1121', '1154', '1153'] }).mount('.ideal-field');
 };
 
 initCheckout();

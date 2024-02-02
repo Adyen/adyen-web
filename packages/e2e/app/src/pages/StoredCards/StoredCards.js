@@ -34,7 +34,7 @@ const initCheckout = async () => {
     };
 
     // Credit card with installments
-    window.storedCard = new Card({ core: checkout, ...storedCardData}).mount('.stored-card-field');
+    window.storedCard = new Card(checkout, { ...storedCardData }).mount('.stored-card-field');
 };
 
 initCheckout();
