@@ -15,7 +15,7 @@ export const Default: ANCVStory = {
     render: (args, context) => {
         const { componentConfiguration } = args;
         const checkout = getStoryContextCheckout(context);
-        const ancv = new ANCV({ core: checkout, ...componentConfiguration });
+        const ancv = new ANCV(checkout, componentConfiguration);
         return <Container element={ancv} />;
     },
     args: {

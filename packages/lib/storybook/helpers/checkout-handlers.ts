@@ -76,6 +76,7 @@ export function handleChange(state: any, component: UIElement) {
     console.groupCollapsed(`onChange - ${state.data.paymentMethod.type}`);
     console.log('isValid', state.isValid);
     console.log('data', state.data);
+    // @ts-ignore Logging internal data for testing purposes
     console.log('node', component._node);
     console.log('state', state);
     console.groupEnd();

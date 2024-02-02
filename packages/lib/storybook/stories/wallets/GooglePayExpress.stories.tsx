@@ -142,7 +142,7 @@ function calculateNewTransactionInfo(countryCode: string, selectedShippingOption
 const createComponent = (args: PaymentMethodStoryProps<GooglePayConfiguration>, context) => {
     const { componentConfiguration } = args;
     const checkout = getStoryContextCheckout(context);
-    const googlepay = new GooglePay({ core: checkout, ...componentConfiguration });
+    const googlepay = new GooglePay(checkout, componentConfiguration);
     return <Container element={googlepay} />;
 };
 

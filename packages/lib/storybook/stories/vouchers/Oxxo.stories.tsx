@@ -14,7 +14,7 @@ export const Default: OxxoStory = {
     render: (args: PaymentMethodStoryProps<VoucherConfiguration>, context) => {
         const { componentConfiguration } = args;
         const checkout = getStoryContextCheckout(context);
-        const oxxo = new Oxxo({ core: checkout, ...componentConfiguration });
+        const oxxo = new Oxxo(checkout, componentConfiguration);
         return <Container element={oxxo} />;
     },
     args: {

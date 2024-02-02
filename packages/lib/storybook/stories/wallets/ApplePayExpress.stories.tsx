@@ -123,7 +123,7 @@ const ApplePayAmountHelper = createApplePayAmountHelper();
 const createComponent = (args: PaymentMethodStoryProps<ApplePayConfiguration>, context) => {
     const { componentConfiguration } = args;
     const checkout = getStoryContextCheckout(context);
-    const applepay = new ApplePay({ core: checkout, ...componentConfiguration });
+    const applepay = new ApplePay(checkout, componentConfiguration);
     return <Container element={applepay} />;
 };
 
@@ -152,8 +152,6 @@ export const Express: ApplePayStory = {
         amount: INITIAL_AMOUNT,
         shopperLocale: SHOPPER_LOCALE,
         componentConfiguration: {
-            countryCode: COUNTRY_CODE,
-
             onSubmit: (state, component) => {
                 const paymentData = {
                     amount: {
