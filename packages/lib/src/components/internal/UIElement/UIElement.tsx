@@ -5,12 +5,14 @@ import { getSanitizedResponse, resolveFinalResult } from './utils';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { hasOwnProperty } from '../../../utils/hasOwnProperty';
 import DropinElement from '../../Dropin';
-import { CoreConfiguration, ICore } from '../../../core/types';
 import { Resources } from '../../../core/Context/Resources';
-import { NewableComponent } from '../../../core/core.registry';
+
+import type { CoreConfiguration, ICore } from '../../../core/types';
+import type { NewableComponent } from '../../../core/core.registry';
+import type { ComponentMethodsRef, IUIElement, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
+import type { PaymentAction, PaymentResponseData, RawPaymentResponse } from '../../../types/global-types';
+
 import './UIElement.scss';
-import { ComponentMethodsRef, IUIElement, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
-import { PaymentAction, PaymentResponseData, RawPaymentResponse } from '../../../types/global-types';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;

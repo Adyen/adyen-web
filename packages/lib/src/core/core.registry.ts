@@ -11,7 +11,7 @@ function assertClassHasType(Class: any): Class is typeof UIElement {
     return hasValidType;
 }
 
-export type NewableComponent = new (checkout: ICore, props) => IUIElement;
+export type NewableComponent = new (checkout: ICore, props?) => IUIElement;
 
 export interface IRegistry {
     add(...items: NewableComponent[]): void;

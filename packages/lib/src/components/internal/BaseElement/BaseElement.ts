@@ -2,9 +2,21 @@ import { ComponentChild, render } from 'preact';
 import getProp from '../../../utils/getProp';
 import uuid from '../../../utils/uuid';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
-import { ICore } from '../../../core/types';
-import { BaseElementProps, IBaseElement } from './types';
-import { PaymentData } from '../../../types/global-types';
+
+import type { ICore } from '../../../core/types';
+import type { BaseElementProps, IBaseElement } from './types';
+import type { PaymentData } from '../../../types/global-types';
+
+/**
+ * Verify if the first parameter is instance of Core.
+ * We do not use 'instanceof' to avoid importing the Core class directly into this class.
+ * @param checkout
+ */
+function assertIsCoreInstance(checkout: ICore): checkout is ICore {
+    if (!checkout) return false;
+    const isCoreObject = typeof checkout.initialize === 'function' && typeof checkout.createFromAction === 'function';
+    return isCoreObject;
+}
 
 class BaseElement<P extends BaseElementProps> implements IBaseElement {
     public readonly _id = `${this.constructor['type']}-${uuid()}`;
@@ -19,20 +31,20 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
     protected static defaultProps = {};
 
     constructor(checkout: ICore, props?: P) {
-        this.core = checkout;
+        const isCoreInstance = assertIsCoreInstance(checkout);
 
-        if (!this.core) {
+        if (!isCoreInstance) {
             throw new AdyenCheckoutError(
                 'IMPLEMENTATION_ERROR',
-                `Trying to initialise the component '${this.constructor['type']}' without a reference to an instance of Checkout ('core' prop)`
+                `Trying to initialise the component '${this.constructor['type']}' without a reference to an instance of AdyenCheckout`
             );
         }
 
+        this.core = checkout;
         this.buildElementProps(props);
     }
 
     protected buildElementProps(componentProps?: P) {
-        // const { core, ...rest } = componentProps;
         this.props = this.formatProps({ ...this.constructor['defaultProps'], ...componentProps });
     }
 
