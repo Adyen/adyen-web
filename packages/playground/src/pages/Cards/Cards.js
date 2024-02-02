@@ -10,7 +10,7 @@ import { MockReactApp } from './MockReactApp';
 import getTranslationFile from '../../config/getTranslation';
 import { searchFunctionExample } from '../../utils';
 
-const onlyShowCard = false;
+const onlyShowCard = true;
 
 const showComps = {
     clickToPay: true,
@@ -81,8 +81,8 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             core: checkout,
             challengeWindowSize: '01',
             _disableClickToPay: true,
-            // hasHolderName: true,
-            // holderNameRequired: true,
+            hasHolderName: true,
+            holderNameRequired: true,
             // maskSecurityCode: true,
             // enableStoreDetails: true
             onBinLookup: obj => {

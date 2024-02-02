@@ -10,6 +10,7 @@ import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
 import { AddressData, PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
+import { ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
 
 class GooglePay extends UIElement<GooglePayConfiguration> {
     public static type = TxVariants.googlepay;
@@ -66,6 +67,11 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
     }
 
     public override submit = () => {
+        // Analytics
+        if (this.props.isInstantPayment) {
+            this.submitAnalytics({ type: ANALYTICS_SELECTED_STR, target: 'instant_payment_button' });
+        }
+
         new Promise((resolve, reject) => this.props.onClick(resolve, reject))
             .then(() => this.googlePay.initiatePayment(this.props))
             .catch((error: google.payments.api.PaymentsError) => {

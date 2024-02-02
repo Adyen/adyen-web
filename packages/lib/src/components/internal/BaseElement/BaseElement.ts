@@ -5,6 +5,8 @@ import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { ICore } from '../../../core/types';
 import { BaseElementProps, IBaseElement } from './types';
 import { PaymentData } from '../../../types/global-types';
+import { AnalyticsInitialEvent, SendAnalyticsObject } from '../../../core/Analytics/types';
+import { ANALYTICS_RENDERED_STR } from '../../../core/Analytics/constants';
 
 class BaseElement<P extends BaseElementProps> implements IBaseElement {
     public readonly _id = `${this.constructor['type']}-${uuid()}`;
@@ -55,6 +57,16 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
         return {};
     }
 
+    /* eslint-disable-next-line */
+    protected setUpAnalytics(setUpAnalyticsObj: AnalyticsInitialEvent) {
+        return null;
+    }
+
+    /* eslint-disable-next-line */
+    protected submitAnalytics(analyticsObj?: SendAnalyticsObject) {
+        return null;
+    }
+
     protected setState(newState: object): void {
         this.state = { ...this.state, ...newState };
     }
@@ -65,10 +77,8 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
      */
     public get data(): PaymentData {
         const clientData = getProp(this.props, 'modules.risk.data');
-        const useAnalytics = !!getProp(this.props, 'modules.analytics.props.enabled');
-        const checkoutAttemptId = useAnalytics
-            ? getProp(this.props, 'modules.analytics.checkoutAttemptId')
-            : 'do-not-track';
+        const useAnalytics = !!getProp(this.props, 'modules.analytics.getEnabled')?.();
+        const checkoutAttemptId = useAnalytics ? getProp(this.props, 'modules.analytics.getCheckoutAttemptId')?.() : 'do-not-track';
         const order = this.state.order || this.props.order;
 
         const componentData = this.formatData();
@@ -101,23 +111,35 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
             throw new Error('Component could not mount. Root node was not found.');
         }
 
+        const setupAnalytics = !this._node;
+
         if (this._node) {
             this.unmount(); // new, if this._node exists then we are "remounting" so we first need to unmount if it's not already been done
-        } else {
-            // Set up analytics, once
-            if (this.props.modules && this.props.modules.analytics && !this.props.isDropin) {
-                this.props.modules.analytics.send({
-                    containerWidth: this._node && this._node.offsetWidth,
-                    component: this.constructor['analyticsType'] ?? this.constructor['type'],
-                    flavor: 'components'
-                });
-            }
         }
 
         this._node = node;
+
         this._component = this.render();
 
         render(this._component, node);
+
+        // Set up analytics (once, since this._node is currently undefined) now that we have mounted and rendered
+        if (setupAnalytics) {
+            if (this.props.modules && this.props.modules.analytics) {
+                this.setUpAnalytics({
+                    containerWidth: node && (node as HTMLElement).offsetWidth,
+                    component: !this.props.isDropin ? this.constructor['analyticsType'] ?? this.constructor['type'] : 'dropin',
+                    flavor: !this.props.isDropin ? 'components' : 'dropin'
+                }).then(() => {
+                    // Once the initial analytics set up call has been made...
+                    // ...create an analytics event  declaring that the component has been rendered
+                    // (The dropin will do this itself from DropinComponent once the PM list has rendered)
+                    if (!this.props.isDropin) {
+                        this.submitAnalytics({ type: ANALYTICS_RENDERED_STR });
+                    }
+                });
+            }
+        }
 
         return this;
     }

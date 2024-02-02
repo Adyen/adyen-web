@@ -40,6 +40,7 @@ class DropinElement extends UIElement<DropinConfiguration> {
 
     formatProps(props) {
         return {
+            type: 'dropin', // for analytics
             ...super.formatProps(props),
             instantPaymentTypes: Array.from<InstantPaymentTypes>(new Set(props.instantPaymentTypes)).filter(value =>
                 SUPPORTED_INSTANT_PAYMENTS.includes(value)
@@ -48,11 +49,7 @@ class DropinElement extends UIElement<DropinConfiguration> {
     }
 
     get isValid() {
-        return (
-            !!this.dropinRef &&
-            !!this.dropinRef.state.activePaymentMethod &&
-            !!this.dropinRef.state.activePaymentMethod.isValid
-        );
+        return !!this.dropinRef && !!this.dropinRef.state.activePaymentMethod && !!this.dropinRef.state.activePaymentMethod.isValid;
     }
 
     showValidation() {
@@ -107,8 +104,7 @@ class DropinElement extends UIElement<DropinConfiguration> {
      * Creates the Drop-in elements
      */
     private handleCreate = () => {
-        const { paymentMethodsConfiguration, showStoredPaymentMethods, showPaymentMethods, instantPaymentTypes } =
-            this.props;
+        const { paymentMethodsConfiguration, showStoredPaymentMethods, showPaymentMethods, instantPaymentTypes } = this.props;
 
         const { paymentMethods, storedPaymentMethods, instantPaymentMethods } = splitPaymentMethods(
             this.core.paymentMethodsResponse,
@@ -120,15 +116,8 @@ class DropinElement extends UIElement<DropinConfiguration> {
         const storedElements = showStoredPaymentMethods
             ? createStoredElements(storedPaymentMethods, paymentMethodsConfiguration, commonProps, this.core)
             : [];
-        const elements = showPaymentMethods
-            ? createElements(paymentMethods, paymentMethodsConfiguration, commonProps, this.core)
-            : [];
-        const instantPaymentElements = createInstantPaymentElements(
-            instantPaymentMethods,
-            paymentMethodsConfiguration,
-            commonProps,
-            this.core
-        );
+        const elements = showPaymentMethods ? createElements(paymentMethods, paymentMethodsConfiguration, commonProps, this.core) : [];
+        const instantPaymentElements = createInstantPaymentElements(instantPaymentMethods, paymentMethodsConfiguration, commonProps, this.core);
 
         return [storedElements, elements, instantPaymentElements];
     };
