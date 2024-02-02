@@ -35,13 +35,13 @@ beforeEach(() => {
 
 describe('UIElement', () => {
     describe('icon()', () => {
-        test('should generate the icon URL by getting the tx variant from type() getter', () => {
+        test('should generate the icon URL by gettcoreing the tx variant from type() getter', () => {
             const resources = mock<Resources>();
             resources.getImage.mockReturnValue((icon: string) => `https://checkout-adyen.com/${icon}`);
 
             const txVariant = 'klarna_b2b';
 
-            const element = new MyElement({ core: core, type: txVariant, modules: { resources } });
+            const element = new MyElement(core, { type: txVariant, modules: { resources } });
 
             const typeSpy = jest.spyOn(element, 'type', 'get');
             const iconUrl = element.icon;
@@ -54,7 +54,7 @@ describe('UIElement', () => {
     describe('onComplete()', () => {
         test('should call "onComplete" prop if available', () => {
             const onCompleteCb = jest.fn();
-            const element = new MyElement({ core: core, onComplete: onCompleteCb });
+            const element = new MyElement(core, { onComplete: onCompleteCb });
 
             element.callOnComplete();
 
@@ -65,7 +65,7 @@ describe('UIElement', () => {
     describe('onChange()', () => {
         test('should call "onChange" prop if available', () => {
             const onChange = jest.fn();
-            const element = new MyElement({ core: core, onChange });
+            const element = new MyElement(core, { onChange });
 
             element.callOnChange();
 
@@ -74,7 +74,7 @@ describe('UIElement', () => {
 
         test('should not trigger onValid method if the component is not valid', () => {
             const onValid = jest.fn();
-            const element = new MyElement({ core: core, onValid });
+            const element = new MyElement(core, { onValid });
 
             element.callOnChange();
 
@@ -92,7 +92,7 @@ describe('UIElement', () => {
             }
 
             const onValid = jest.fn();
-            const element = new MyValidElement({ core: core, onValid });
+            const element = new MyValidElement(core, { onValid });
             element.onChange();
 
             expect(onValid.mock.calls.length).toBe(1);
@@ -102,7 +102,7 @@ describe('UIElement', () => {
     describe('isValid()', () => {
         test('should be false by default', () => {
             class PristineUiElement extends UIElement {}
-            const element = new PristineUiElement({ core: core });
+            const element = new PristineUiElement(core);
             expect(element.isValid).toBe(false);
         });
     });
@@ -110,7 +110,7 @@ describe('UIElement', () => {
     describe('showValidation()', () => {
         test("should trigger the component's showValidation method", () => {
             const showValidation = jest.fn();
-            const element = new MyElement({ core: core });
+            const element = new MyElement(core);
 
             const componentRef = {
                 showValidation
@@ -125,12 +125,12 @@ describe('UIElement', () => {
 
     describe('get displayName()', () => {
         test('should use the name property if available', () => {
-            const element = new MyElement({ core: core, name: 'SuperPay' });
+            const element = new MyElement(core, { name: 'SuperPay' });
             expect(element.displayName).toEqual('SuperPay');
         });
 
         test('should use the constructor type if no name property is passed', () => {
-            const element = new MyElement({ core: core });
+            const element = new MyElement(core);
             expect(element.displayName).toEqual('super_pay');
         });
 
@@ -142,7 +142,7 @@ describe('UIElement', () => {
                 }
             ];
 
-            const element = new MyElement({ core: core });
+            const element = new MyElement(core);
             expect(element.displayName).toEqual('SuperPayeee');
         });
 
@@ -154,7 +154,7 @@ describe('UIElement', () => {
                 }
             ];
 
-            const element = new MyElement({ core: core, name: 'SuperbPay' });
+            const element = new MyElement(core, { name: 'SuperbPay' });
             expect(element.displayName).toEqual('SuperbPay');
         });
     });
@@ -176,7 +176,7 @@ describe('UIElement', () => {
                 analytics: { enabled: false }
             });
 
-            const element = new MyElement({ core: checkout }).mount('body');
+            const element = new MyElement(checkout).mount('body');
 
             const actionComponent = element.handleAction(fingerprintAction);
             expect(actionComponent instanceof ThreeDS2DeviceFingerprint).toEqual(true);
@@ -203,7 +203,7 @@ describe('UIElement', () => {
                 analytics: { enabled: false }
             });
 
-            const element = new MyElement({ core: checkout, challengeWindowSize: '02' }).mount('body');
+            const element = new MyElement(checkout, { challengeWindowSize: '02' }).mount('body');
 
             const actionComponent = element.handleAction(challengeAction);
             expect(actionComponent instanceof ThreeDS2Challenge).toEqual(true);
@@ -226,7 +226,7 @@ describe('UIElement', () => {
                 resultCode: 'IdentifyShopper'
             };
 
-            const element = new MyElement({ core }).mount('body');
+            const element = new MyElement(core).mount('body');
 
             expect(() => {
                 // @ts-ignore tslint is not applicable here as merchant can potentially pass wrong object
@@ -239,7 +239,7 @@ describe('UIElement', () => {
                 paymentMethodType: 'scheme'
             };
 
-            const element = new MyElement({ core }).mount('body');
+            const element = new MyElement(core).mount('body');
 
             expect(() => {
                 // @ts-ignore tslint is not applicable here as merchant can potentially pass wrong object
@@ -252,7 +252,7 @@ describe('UIElement', () => {
         test('should close active payment method if submit is called by instant payment method', () => {
             const onSubmit = jest.fn();
             const elementRef = { closeActivePaymentMethod: jest.fn(), setStatus: jest.fn() };
-            const element = new MyElement({ core, isInstantPayment: true, onSubmit, elementRef });
+            const element = new MyElement(core, { isInstantPayment: true, onSubmit, elementRef });
 
             jest.spyOn(element, 'isValid', 'get').mockReturnValue(true);
 
@@ -264,7 +264,7 @@ describe('UIElement', () => {
         test('should trigger showValidation() and not call onSubmit() if component is not valid', () => {
             const showValidation = jest.fn();
 
-            const element = new MyElement({ core: core });
+            const element = new MyElement(core);
 
             // @ts-ignore Checking that internal method is not reached
             const onSubmitSpy = jest.spyOn(element, 'onSubmit');

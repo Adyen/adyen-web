@@ -169,7 +169,6 @@ describe('Gift card', () => {
 
     beforeEach(() => {
         const props = {
-            core: global.core,
             id: '3',
             type: 'giftcard',
             brand: 'givex',
@@ -178,7 +177,7 @@ describe('Gift card', () => {
                 givex: { icon: 'https://example.com' }
             }
         };
-        giftCardPayment = new Giftcard(props);
+        giftCardPayment = new Giftcard(global.core, props);
     });
 
     test('should display the gift card custom icon in the payment method list', async () => {

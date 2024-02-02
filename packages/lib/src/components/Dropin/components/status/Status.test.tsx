@@ -7,7 +7,7 @@ import Success from './Success';
 import CoreProvider from '../../../../core/Context/CoreProvider';
 
 describe('Status', () => {
-    const srPanel = new SRPanel({ core: global.core });
+    const srPanel = new SRPanel(global.core);
     const customRender = ui => {
         return render(
             <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>

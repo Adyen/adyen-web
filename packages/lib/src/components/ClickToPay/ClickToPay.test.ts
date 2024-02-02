@@ -22,7 +22,7 @@ test('should initialize ClickToPayService when creating the element', () => {
     };
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const element = new ClickToPayElement({ core: global.core, environment: 'test', configuration, ...ctpConfiguration });
+    const element = new ClickToPayElement(global.core, { environment: 'test', configuration, ...ctpConfiguration });
 
     expect(createClickToPayService).toHaveBeenCalledWith(configuration, ctpConfiguration, 'test');
     expect(mockCtpService.initialize).toHaveBeenCalledTimes(1);
@@ -35,7 +35,7 @@ test('should formatData() to click to pay /payment request format', () => {
         srcScheme: 'mc'
     };
 
-    const element = new ClickToPayElement({ core: global.core });
+    const element = new ClickToPayElement(global.core);
     element.setState({ data: paymentDataReceivedFromScheme });
 
     const data = element.formatData();
@@ -61,7 +61,7 @@ test('should get shopperEmail from session if available', () => {
         }
     };
 
-    const element = new ClickToPayElement({ core: global.core });
+    const element = new ClickToPayElement(global.core);
 
     expect(element.props.shopperEmail).toBe('shopper@example.com');
 });
@@ -76,7 +76,7 @@ test('should resolve isAvailable if shopper account is found', async () => {
         get: jest.fn(() => true)
     });
 
-    const element = new ClickToPayElement({ core: global.core });
+    const element = new ClickToPayElement(global.core);
 
     await expect(element.isAvailable()).resolves.not.toThrow();
 });
@@ -95,7 +95,7 @@ test('should reject isAvailable if shopper account is not found', async () => {
         get: jest.fn(() => false)
     });
 
-    const element = new ClickToPayElement({ core: global.core });
+    const element = new ClickToPayElement(global.core);
 
     await expect(element.isAvailable()).rejects.toBeFalsy();
 });

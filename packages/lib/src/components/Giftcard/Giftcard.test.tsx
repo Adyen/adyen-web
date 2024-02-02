@@ -7,7 +7,7 @@ describe('Giftcard', () => {
     describe('onBalanceCheck', () => {
         test('If onBalanceCheck is not provided, step is skipped and calls onSubmit', async () => {
             const onSubmitMock = jest.fn();
-            const giftcard = new Giftcard({ core: global.core, ...baseProps, onSubmit: onSubmitMock });
+            const giftcard = new Giftcard(global.core, { ...baseProps, onSubmit: onSubmitMock });
             giftcard.setState({ isValid: true });
             giftcard.onBalanceCheck();
             await flushPromises();
@@ -17,7 +17,7 @@ describe('Giftcard', () => {
 
         test('onBalanceCheck will be skipped if the component is not valid', () => {
             const onBalanceCheck = jest.fn();
-            const giftcard = new Giftcard({ core: global.core, ...baseProps, onBalanceCheck });
+            const giftcard = new Giftcard(global.core, { ...baseProps, onBalanceCheck });
             giftcard.setState({ isValid: false });
             giftcard.onBalanceCheck();
 
