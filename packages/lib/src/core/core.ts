@@ -17,7 +17,7 @@ import { DEFAULT_LOCALE } from '../language/config';
 import { cleanupFinalResult, sanitizeResponse, verifyPaymentDidNotFail } from '../components/internal/UIElement/utils';
 import AdyenCheckoutError from './Errors/AdyenCheckoutError';
 import { ANALYTICS_ACTION_STR } from './Analytics/constants';
-import { capitalizeFirstLetter } from '../utils/Formatters/formatters';
+import { capitalizeFirstLetter } from '../utils/textUtils';
 
 class Core implements ICore {
     public session?: Session;
