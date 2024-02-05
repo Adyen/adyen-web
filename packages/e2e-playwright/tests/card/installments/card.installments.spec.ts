@@ -84,4 +84,30 @@ test.describe('Cards (Installments)', () => {
         const paymentDataInstallments: any = await page.evaluate('window.card.data.installments');
         await expect(paymentDataInstallments.value).toEqual(2);
     });
+
+    test('#5 installments with full width dropdown: should add installments value property if regular installment > 1 is selected', async ({
+        cardInstallmentsFullWidthPage
+    }) => {
+        const { card, page } = cardInstallmentsFullWidthPage;
+
+        await card.isComponentVisible();
+
+        await card.typeCardNumber(REGULAR_TEST_CARD);
+        await card.typeExpiryDate(TEST_DATE_VALUE);
+        await card.typeCvc(TEST_CVC_VALUE);
+
+        await card.installmentsDropdown.click();
+        await pressKeyboardToNextItem(page);
+        await pressKeyboardToNextItem(page);
+
+        const listItem = await card.selectListItem('2');
+        await listItem.click();
+
+        // Headless test seems to need time for UI interaction to register on state
+        await page.waitForTimeout(500);
+
+        // Inspect card.data
+        const paymentDataInstallments: any = await page.evaluate('window.card.data.installments');
+        await expect(paymentDataInstallments.value).toEqual(2);
+    });
 });
