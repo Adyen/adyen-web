@@ -35,7 +35,7 @@ function PaymentMethodsContainer({
     onDisableStoredPaymentMethod = () => {},
     onSelect,
     showRadioButton
-}: PaymentMethodsContainerProps) {
+}: Readonly<PaymentMethodsContainerProps>) {
     const { i18n } = useCoreContext();
     const selectListId: string = useMemo(() => `select-${uuid()}`, []);
     const paymentMethodListClassnames = classNames([

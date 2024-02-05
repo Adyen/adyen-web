@@ -16,7 +16,7 @@ import RadioGroup from '../FormFields/RadioGroup';
 import InputDate from '../FormFields/InputDate';
 import InputEmail from '../FormFields/InputEmail';
 import InputTelephone from '../FormFields/InputTelephone';
-import { getErrorMessage } from '../../../utils/getErrorMessage'; //todo: we need to fix it, each field should have its own sentence.
+import { getErrorMessage } from '../../../utils/getErrorMessage';
 import { ComponentMethodsRef } from '../UIElement/types';
 
 export const PERSONAL_DETAILS_SCHEMA = ['firstName', 'lastName', 'gender', 'dateOfBirth', 'shopperEmail', 'telephoneNumber'];

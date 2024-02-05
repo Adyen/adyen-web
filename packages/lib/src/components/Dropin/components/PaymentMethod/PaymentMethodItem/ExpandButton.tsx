@@ -9,7 +9,7 @@ interface ExpandButton {
     showRadioButton?: boolean;
 }
 
-export function ExpandButton({ buttonId, showRadioButton, isSelected, expandContentId, children }: ExpandButton) {
+export function ExpandButton({ buttonId, showRadioButton, isSelected, expandContentId, children }: Readonly<ExpandButton>) {
     return (
         // See discussion: https://github.com/w3c/aria/issues/1404
         // eslint-disable-next-line jsx-a11y/role-supports-aria-props
