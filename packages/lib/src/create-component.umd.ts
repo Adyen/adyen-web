@@ -7,32 +7,26 @@ import Redirect from './components/Redirect/Redirect';
  *
  * WARNING: This function breaks tree-shaking as it import all Components to create the mapping. It must be used only with UMD bundle
  *
- * @param txVariant - Component txVariant
+ * @param paymentType - Component payment type
  * @param options - Component configuration
  */
-function createComponentFromTxVariant<T extends keyof PaymentMethods>(
-    txVariant: T,
-    options: PaymentMethodOptions<T>
-): InstanceType<PaymentMethods[T]>;
-function createComponentFromTxVariant(
-    txVariant: string,
-    options: PaymentMethodOptions<TxVariants.redirect>
-): InstanceType<PaymentMethods['redirect']>;
-function createComponentFromTxVariant(txVariant: any, options: any): any {
-    if (typeof txVariant !== 'string' || !txVariant) {
-        throw Error('createComponentFromTxVariant: Invalid txVariant');
+function createComponent<T extends keyof PaymentMethods>(paymentType: T, options: PaymentMethodOptions<T>): InstanceType<PaymentMethods[T]>;
+function createComponent(paymentType: string, options: PaymentMethodOptions<TxVariants.redirect>): InstanceType<PaymentMethods['redirect']>;
+function createComponent(paymentType: any, options: any): any {
+    if (typeof paymentType !== 'string' || !paymentType) {
+        throw Error('createComponent: Invalid payment type. Make sure to pass a string value');
     }
 
-    if (txVariant === 'dropin') {
-        throw Error('createComponentFromTxVariant: Drop-in is not a txVariant');
+    if (paymentType === 'dropin') {
+        throw Error('createComponent: Drop-in is not a payment type');
     }
 
-    const Class = componentsMap[txVariant] || Redirect;
+    const Class = componentsMap[paymentType] || Redirect;
 
     return new Class({
-        type: txVariant,
+        type: paymentType,
         ...options
     });
 }
 
-export default createComponentFromTxVariant;
+export default createComponent;

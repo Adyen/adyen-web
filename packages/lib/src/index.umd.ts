@@ -2,7 +2,7 @@ import { AdyenCheckout } from './AdyenCheckout';
 import { NewableComponent } from './core/core.registry';
 import * as components from './components';
 import * as locales from './language/locales';
-import createComponentFromTxVariant from './create-component.umd';
+import createComponent from './create-component.umd';
 
 const { Dropin, ...Components } = components;
 const Classes: NewableComponent[] = Object.keys(Components).map(key => Components[key]);
@@ -12,7 +12,7 @@ AdyenCheckout.register(...Classes);
 
 const AdyenWeb = {
     AdyenCheckout,
-    createComponentFromTxVariant,
+    createComponent,
     ...components,
     ...locales
 };

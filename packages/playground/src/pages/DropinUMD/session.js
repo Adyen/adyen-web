@@ -14,7 +14,7 @@ export async function initSession() {
         countryCode
     });
 
-    const { AdyenCheckout, Dropin, createComponentFromTxVariant } = window.AdyenWeb;
+    const { AdyenCheckout, Dropin, createComponent } = window.AdyenWeb;
 
     const checkout = await AdyenCheckout({
         environment: process.env.__CLIENT_ENV__,
@@ -39,7 +39,7 @@ export async function initSession() {
         }
     });
 
-    createComponentFromTxVariant('card', {
+    createComponent('card', {
         core: checkout
     }).mount('#dropin-container');
 
