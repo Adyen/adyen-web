@@ -1,7 +1,7 @@
 import createElements from './createElements';
-import { StoredPaymentMethod } from '../../../types/global-types';
-import { ICore } from '../../../core/types';
-import { PaymentMethodsConfiguration } from '../types';
+import type { StoredPaymentMethod } from '../../../types/global-types';
+import type { ICore } from '../../../core/types';
+import type { PaymentMethodsConfiguration } from '../types';
 import type { IUIElement } from '../../internal/UIElement/types';
 
 /**

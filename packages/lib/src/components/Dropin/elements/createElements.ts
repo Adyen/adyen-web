@@ -1,8 +1,8 @@
 import { filterUnsupported, filterPresent, filterAvailable } from './filters';
-import { PaymentMethod, StoredPaymentMethod } from '../../../types/global-types';
 import { getComponentConfiguration } from './getComponentConfiguration';
-import { PaymentMethodsConfiguration } from '../types';
-import { componentsMapToString } from '../componentsMapToString';
+import getComponentNameOfPaymentType from '../../components-name-map';
+import type { PaymentMethod, StoredPaymentMethod } from '../../../types/global-types';
+import type { PaymentMethodsConfiguration } from '../types';
 import type { ICore } from '../../../core/types';
 import type { IUIElement } from '../../internal/UIElement/types';
 
@@ -33,9 +33,9 @@ const createElements = (
                 console.warn(
                     `Dropin: You support the payment method '${
                         paymentMethod.type
-                    }' but this component has not been configured. Make sure to import the Class  '${
-                        componentsMapToString[paymentMethod.type]
-                    }' and then pass it in the Dropin's 'paymentMethodComponents' config property if you wish to offer this payment method.`
+                    }' but this component has not been configured. Make sure to import the Class  '${getComponentNameOfPaymentType(
+                        paymentMethod.type
+                    )}' and then pass it in the Dropin's 'paymentMethodComponents' config property if you wish to offer this payment method.`
                 );
                 return null;
             }

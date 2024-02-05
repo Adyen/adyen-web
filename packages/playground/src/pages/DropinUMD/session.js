@@ -57,5 +57,6 @@ export async function initSession() {
             }
         }
     }).mount('#dropin-container');
+
     return [checkout, dropin];
 }
