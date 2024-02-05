@@ -1,7 +1,7 @@
 import { SUPPORTED_LOCALES_EU, SUPPORTED_LOCALES_US } from './config';
-import UIElement from '../internal/UIElement/UIElement';
 import { UIElementProps } from '../internal/UIElement/types';
 import { BrowserInfo, PaymentAmount } from '../../types/global-types';
+import AmazonPayElement from './AmazonPay';
 
 declare global {
     interface Window {
@@ -52,7 +52,7 @@ export interface AmazonPayConfiguration extends UIElementProps {
     loadingContext?: string;
     locale?: string;
     merchantMetadata?: MerchantMetadata;
-    onSubmit?: (state: any, element: UIElement) => void;
+    onSubmit?: (state: any, element: AmazonPayElement) => void;
     payButton?: any;
     placement?: Placement;
     productType?: ProductType;
@@ -69,6 +69,14 @@ export interface AmazonPayConfiguration extends UIElementProps {
 }
 
 export interface AmazonPayComponentProps extends AmazonPayConfiguration {
+    showPayButton: boolean;
+    showSignOutButton?: boolean;
+    amazonCheckoutSessionId?: string;
+    showOrderButton?: boolean;
+    showChangePaymentDetailsButton?: boolean;
+    onClick: (resolve, reject) => Promise<void>;
+    onError: (error, component) => void;
+    onSignOut: (resolve, reject) => Promise<void>;
     ref: any;
 }
 
