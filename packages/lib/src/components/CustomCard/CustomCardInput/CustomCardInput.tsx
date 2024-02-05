@@ -133,7 +133,7 @@ function CustomCardInput(props: SecuredFieldsProps) {
                 };
                 return valErr;
             });
-            this.props.onValidationError(validationErrors);
+            this.props.onValidationError?.(validationErrors);
         }
     }, [data, valid, errors, selectedBrandValue]);
 
