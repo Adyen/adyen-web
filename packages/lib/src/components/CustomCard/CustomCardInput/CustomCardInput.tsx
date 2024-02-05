@@ -47,7 +47,8 @@ interface SecuredFieldsProps {
 
 const defaultProps = {
     onChange: () => {},
-    onError: () => {}
+    onError: () => {},
+    onValidationError: () => {}
 };
 
 function CustomCardInput(props: SecuredFieldsProps) {
@@ -133,7 +134,7 @@ function CustomCardInput(props: SecuredFieldsProps) {
                 };
                 return valErr;
             });
-            this.props.onValidationError?.(validationErrors);
+            this.props.onValidationError(validationErrors);
         }
     }, [data, valid, errors, selectedBrandValue]);
 
