@@ -6,7 +6,7 @@ import { TxVariants } from './tx-variants';
  * It is used to give nicer error messages when creating components using Drop-in.
  * Example: paymentMethods response contains blik, but Blik component is not configured. So it warns that 'Blik' must be imported and added to the Drop-in configuration.
  */
-const componentsNameMap = {
+const ComponentsNameMap = {
     /** internal */
     [TxVariants.address]: 'Address',
     [TxVariants.bankTransfer_IBAN]: 'BankTransfer',
@@ -155,7 +155,7 @@ const componentsNameMap = {
  * @param paymentType
  */
 function getComponentNameOfPaymentType(paymentType: string): string {
-    return componentsNameMap[paymentType];
+    return ComponentsNameMap[paymentType];
 }
 
 export default getComponentNameOfPaymentType;
