@@ -26,7 +26,6 @@ export default {
         currency: 'USD'
     },
 
-    countryCode: 'US',
     totalPriceStatus: 'FINAL' as google.payments.api.TotalPriceStatus,
 
     // Callbacks

@@ -16,10 +16,6 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
 
     protected googlePay = new GooglePayService(this.props);
 
-    /**
-     * Formats the component data input
-     * For legacy support - maps configuration.merchantIdentifier to configuration.merchantId
-     */
     formatProps(props): GooglePayConfiguration {
         const allowedCardNetworks = props.brands?.length ? mapBrands(props.brands) : props.allowedCardNetworks;
         const buttonSizeMode = props.buttonSizeMode ?? (props.isDropin ? 'fill' : 'static');
@@ -51,7 +47,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         const { onAuthorized = () => {} } = this.props;
 
         return new Promise((resolve, reject) => this.props.onClick(resolve, reject))
-            .then(() => this.googlePay.initiatePayment(this.props))
+            .then(() => this.googlePay.initiatePayment(this.props, this.core.options.countryCode))
             .then(paymentData => {
                 this.setState({
                     googlePayToken: paymentData.paymentMethodData.tokenizationData.token,
@@ -109,7 +105,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
      * Use this method to prefetch a PaymentDataRequest configuration to improve loadPaymentData execution time on later user interaction. No value is returned.
      */
     public prefetch = (): void => {
-        return this.googlePay.prefetchPaymentData(this.props);
+        return this.googlePay.prefetchPaymentData(this.props, this.core.options.countryCode);
     };
 
     get browserInfo() {
