@@ -1,4 +1,3 @@
-import Language from '../../language/Language';
 import { SUPPORTED_LOCALES_EU, SUPPORTED_LOCALES_US } from './config';
 import UIElement from '../internal/UIElement/UIElement';
 import { UIElementProps } from '../internal/UIElement/types';
@@ -50,7 +49,6 @@ export interface AmazonPayConfiguration extends UIElementProps {
     currency?: Currency;
     deliverySpecifications?: DeliverySpecifications;
     environment?: string;
-    i18n: Language;
     loadingContext?: string;
     locale?: string;
     merchantMetadata?: MerchantMetadata;
@@ -60,14 +58,14 @@ export interface AmazonPayConfiguration extends UIElementProps {
     productType?: ProductType;
     recurringMetadata?: RecurringMetadata;
     returnUrl?: string;
-    showChangePaymentDetailsButton: boolean;
-    showOrderButton: boolean;
-    showPayButton: boolean;
-    showSignOutButton: boolean;
+    showChangePaymentDetailsButton?: boolean;
+    showOrderButton?: boolean;
+    showPayButton?: boolean;
+    showSignOutButton?: boolean;
     signature?: string;
-    onClick: (resolve, reject) => Promise<void>;
-    onError: (error, component) => void;
-    onSignOut: (resolve, reject) => Promise<void>;
+    onClick?: (resolve, reject) => Promise<void>;
+    onError?: (error, component) => void;
+    onSignOut?: (resolve, reject) => Promise<void>;
 }
 
 export interface AmazonPayComponentProps extends AmazonPayConfiguration {
