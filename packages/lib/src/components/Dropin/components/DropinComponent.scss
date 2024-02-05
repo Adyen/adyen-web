@@ -1,7 +1,26 @@
+@use '../../../style/index';
+
+.adyen-checkout-payment-methods-container {
+    margin: var(--adyen-checkout-spacer-070) 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--adyen-checkout-spacer-070);
+}
+
+.adyen-checkout-payment-methods-list-label {
+    color: var(--adyen-checkout-dropin-list-label-color);
+    font-size: var(--adyen-checkout-dropin-list-label-font-size);
+    font-weight: var(--adyen-checkout-dropin-list-label-font-weight);
+    line-height: var(--adyen-checkout-text-caption-stronger-wide-line-height);
+}
+
 .adyen-checkout__payment-methods-list {
     list-style: none;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--adyen-checkout-dropin-payment-item-gap);
 
     &--loading {
         user-select: none;
@@ -11,32 +30,35 @@
 
 .adyen-checkout__instant-payment-methods-list {
     list-style: none;
-    margin: 0;
     padding: 0;
+    display: flex;
+    gap: var(--adyen-checkout-spacer-070);
 
-    li:not(:last-child) {
-        margin-bottom: var(--b-spacer-040);
+    li {
+        flex: 1;
     }
 }
 
 .adyen-checkout__payment-method {
     display: block;
-    max-height: 60px;
 
     &__details {
-        display: none;
+        opacity: 0;
+        height: 0;
+        overflow: hidden;
+        transition: opacity 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
     }
 
     &__image {
-        width: var(--b-spacer-110);
+        width: var(--adyen-checkout-spacer-110);
         height: 26px;
 
         &__wrapper {
-            margin-right: var(--b-spacer-040);
+            margin-right: var(--adyen-checkout-spacer-040);
 
-            [dir="rtl"] & {
+            [dir='rtl'] & {
                 margin-right: 0;
-                margin-left: var(--b-spacer-040);
+                margin-left: var(--adyen-checkout-spacer-040);
             }
         }
     }
@@ -45,7 +67,9 @@
         max-height: 100%;
 
         .adyen-checkout__payment-method__details {
-            display: block;
+            opacity: 1;
+            height: auto;
+            overflow: visible;
         }
     }
 }

@@ -1,6 +1,7 @@
-import { componentsMap, PaymentMethodOptions, PaymentMethods } from './components/types';
 import { TxVariants } from './components/tx-variants';
 import Redirect from './components/Redirect/Redirect';
+import { ComponentsMap } from './components/components-map';
+import type { PaymentMethodOptions, PaymentMethods } from './components/Dropin/types';
 
 /**
  * Helper function designed to be used internally by Adyen Plugins to create components
@@ -21,7 +22,7 @@ function createComponent(paymentType: any, options: any): any {
         throw Error('createComponent: Drop-in is not a payment type');
     }
 
-    const Class = componentsMap[paymentType] || Redirect;
+    const Class = ComponentsMap[paymentType] || Redirect;
 
     return new Class({
         type: paymentType,

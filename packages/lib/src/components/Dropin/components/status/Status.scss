@@ -8,15 +8,15 @@
     justify-content: center;
     height: 350px;
     margin: 0;
-    padding: var(--b-spacer-100);
-    background-color: var(--b-color-white);
-    border-radius: var(--b-border-radius-m);
-    border: var(--b-border-width-s) solid var(--b-color-outline-secondary);
-    font-size: index.$font-size-medium;
-    color: var(--b-color-label-primary);
+    padding: var(--adyen-checkout-spacer-100);
+    background-color: var(--adyen-checkout-color-background-primary);
+    border-radius: var(--adyen-checkout-border-radius-m);
+    border: var(--adyen-checkout-border-width-s) solid var(--adyen-checkout-color-outline-secondary);
+    font-size: var(--adyen-checkout-font-size-medium);
+    color: var(--adyen-checkout-color-label-primary);
 
     &__icon {
-        margin-bottom: var(--b-spacer-090);
+        margin-bottom: var(--adyen-checkout-spacer-090);
     }
 
     .adyen-checkout__spinner__wrapper {

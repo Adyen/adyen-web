@@ -1,4 +1,4 @@
-import { PaymentAmount } from '../../../../../types';
+import { PaymentAmount } from '../../../../../types/global-types';
 import { BrandConfiguration, CardBrandsConfiguration } from '../../../types';
 import { ComponentChildren } from 'preact';
 import { CVCPolicyType, DatePolicyType } from '../../../../internal/SecuredFields/lib/types';
@@ -22,7 +22,6 @@ export interface CardFieldsProps {
     expiryDatePolicy?: DatePolicyType;
     onFocusField?: any;
     showBrandIcon?: boolean;
-    showBrandsUnderCardNumber: boolean;
     valid?: any;
     showContextualElement?: boolean;
 }

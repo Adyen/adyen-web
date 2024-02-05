@@ -1,30 +1,12 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import PrepareFingerprint from './components/DeviceFingerprint';
-import { ErrorCodeObject } from './components/utils';
 import callSubmit3DS2Fingerprint from './callSubmit3DS2Fingerprint';
 import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
-import { ActionHandledReturnObject } from '../types';
 import { TxVariants } from '../tx-variants';
-import { ICore } from '../../core/types';
+import { ThreeDS2DeviceFingerprintConfiguration } from './types';
 
-export interface ThreeDS2DeviceFingerprintProps {
-    core: ICore;
-    dataKey: string;
-    token: string;
-    notificationURL: string;
-    onError: (error?: string | ErrorCodeObject) => void;
-    paymentData: string;
-    showSpinner: boolean;
-    type: string;
-    isMDFlow?: boolean;
-    loadingContext?: string;
-    clientKey?: string;
-    elementRef?: UIElement;
-    onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
-}
-
-class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps> {
+class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfiguration> {
     public static type = TxVariants.threeDS2Fingerprint;
 
     public static defaultProps = {

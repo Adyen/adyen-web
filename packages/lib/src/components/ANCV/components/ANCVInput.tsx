@@ -5,9 +5,9 @@ import LoadingWrapper from '../../internal/LoadingWrapper';
 import InputText from '../../internal/FormFields/InputText';
 import Field from '../../internal/FormFields/Field';
 import useForm from '../../../utils/useForm';
-import { UIElementProps } from '../../types';
 import { ancvValidationRules } from '../validate';
-import { ANCVDataState } from '../ANCV';
+import { ANCVDataState } from '../types';
+import { UIElementProps } from '../../internal/UIElement/types';
 
 export interface ANCVInputProps extends UIElementProps {
     ref?: any;

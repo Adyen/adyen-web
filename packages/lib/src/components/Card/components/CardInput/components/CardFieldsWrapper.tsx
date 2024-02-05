@@ -45,6 +45,8 @@ export const CardFieldsWrapper = ({
     setAddressRef,
     partialAddressSchema,
     onAddressLookup,
+    onAddressSelected,
+    addressSearchDebounceMs,
     // For this comp (props passed through from CardInput)
     amount,
     billingAddressRequired,
@@ -61,7 +63,6 @@ export const CardFieldsWrapper = ({
     positionHolderNameOnTop,
     // For CardFields > CardNumber
     showBrandIcon,
-    showBrandsUnderCardNumber,
     showContextualElement,
     //
     iOSFocusedField,
@@ -86,7 +87,6 @@ export const CardFieldsWrapper = ({
 
             <CardFields
                 showBrandIcon={showBrandIcon}
-                showBrandsUnderCardNumber={showBrandsUnderCardNumber}
                 showContextualElement={showContextualElement}
                 brand={sfpState.brand}
                 brandsIcons={brandsIcons}
@@ -163,6 +163,8 @@ export const CardFieldsWrapper = ({
                     iOSFocusedField={iOSFocusedField}
                     onAddressLookup={onAddressLookup}
                     showContextualElement={showContextualElement}
+                    onAddressSelected={onAddressSelected}
+                    addressSearchDebounceMs={addressSearchDebounceMs}
                 />
             )}
 

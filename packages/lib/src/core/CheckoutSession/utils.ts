@@ -1,4 +1,4 @@
-import { CheckoutSession } from '../../types';
+import { CheckoutSession } from './types';
 import AdyenCheckoutError from '../Errors/AdyenCheckoutError';
 
 export function sanitizeSession(session): Partial<CheckoutSession> {

@@ -20,7 +20,7 @@ class ANCV {
         this.rootElementSelector = rootElementSelector;
 
         this.ancvInput = this.rootElement.getByRole('textbox');
-        this.submitButton = this.page.getByRole('button', { name: /Pay/i });
+        this.submitButton = this.page.getByRole('button', { name: /Confirm purchase/i });
 
         this.awaitText = this.rootElement.getByText('Use your ANCV application to confirm the payment.');
     }

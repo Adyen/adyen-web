@@ -1,21 +1,14 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import CoreProvider from '../../core/Context/CoreProvider';
 import DonationComponent from './components/DonationComponent';
 import { TxVariants } from '../tx-variants';
-import { UIElementProps } from '../types';
+import { DonationConfiguration } from './types';
 
-interface DonationProps extends UIElementProps {
-    onDonate(data: any, component: DonationElement): void;
-}
-
-/**
- * DonationElement
- */
-class DonationElement extends UIElement<DonationProps> {
+class DonationElement extends UIElement<DonationConfiguration> {
     public static type = TxVariants.donation;
 
-    constructor(props: DonationProps) {
+    constructor(props: DonationConfiguration) {
         super(props);
         this.donate = this.donate.bind(this);
     }

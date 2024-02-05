@@ -3,11 +3,11 @@
     flex-basis: auto;
     flex-shrink: 1;
     flex-wrap: wrap;
-    gap: var(--b-spacer-020);
-    height: var(--b-spacer-070);
+    gap: var(--adyen-checkout-spacer-020);
+    height: var(--adyen-checkout-spacer-070);
     overflow: hidden;
     margin-top: -8px;
-    margin-bottom: var(--b-spacer-070);
+    margin-bottom: var(--adyen-checkout-spacer-070);
     transition: all 0.3s ease-out;
 }
 
@@ -28,9 +28,9 @@
 .adyen-checkout__card__brands__brand-wrapper {
     overflow: hidden;
     display: inline-block;
-    height: var(--b-spacer-070);
-    width: var(--b-spacer-090);
+    height: var(--adyen-checkout-spacer-070);
+    width: var(--adyen-checkout-spacer-090);
     position: relative;
-    border-radius: var(--b-border-radius-s);
+    border-radius: var(--adyen-checkout-border-radius-s);
 }
 

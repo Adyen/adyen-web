@@ -1,4 +1,4 @@
-import IssuerListContainer from '../helpers/IssuerListContainer';
+import IssuerListContainer from '../helpers/IssuerListContainer/IssuerListContainer';
 import collectBrowserInfo from '../../utils/browserInfo';
 import { TxVariants } from '../tx-variants';
 

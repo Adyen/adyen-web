@@ -1,6 +1,6 @@
-import { PaymentAmount } from '../../../types';
+import { ActionHandledReturnObject, PaymentAmount } from '../../../types/global-types';
 import Language from '../../../language/Language';
-import { ActionHandledReturnObject } from '../../types';
+import { h } from 'preact';
 
 export interface QRLoaderProps {
     delay?: number;
@@ -21,8 +21,11 @@ export interface QRLoaderProps {
     classNameModifiers?: string[];
     brandLogo?: string;
     brandName?: string;
+    buttonLabel?: string;
     introduction?: string;
-    instructions?: string;
+    redirectIntroduction?: string;
+    timeToPay?: string;
+    instructions?: string | (() => h.JSX.Element);
     copyBtn?: boolean;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
 }

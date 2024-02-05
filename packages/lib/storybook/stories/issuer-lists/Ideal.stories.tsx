@@ -1,12 +1,12 @@
 import { MetaConfiguration, StoryConfiguration } from '../types';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 import { Container } from '../Container';
-import { IssuerListContainerProps } from '../../../src/components/helpers/IssuerListContainer';
+import { IssuerListConfiguration } from '../../../src/components/helpers/IssuerListContainer/types';
 import { Ideal } from '../../../src';
 
-type IdealStory = StoryConfiguration<IssuerListContainerProps>;
+type IdealStory = StoryConfiguration<IssuerListConfiguration>;
 
-const meta: MetaConfiguration<IssuerListContainerProps> = {
+const meta: MetaConfiguration<IssuerListConfiguration> = {
     title: 'IssuerList/IDEAL'
 };
 

@@ -30,7 +30,7 @@ export default parent => {
                     path: `v3/bin/binLookup?token=${parent.props.clientKey}`
                 },
                 {
-                    type: parent.props.type,
+                    type: parent.props.brand,
                     supportedBrands: parent.props.brands || DEFAULT_CARD_GROUP_TYPES,
                     encryptedBin: callbackObj.encryptedBin,
                     requestId: callbackObj.uuid // Pass id of request

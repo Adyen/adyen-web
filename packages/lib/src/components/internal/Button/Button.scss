@@ -1,14 +1,14 @@
 @use '../../../style/index';
 
 .adyen-checkout__button {
-    background: var(--b-color-label-primary);
+    background: var(--adyen-checkout-button-background-color);
     border: 0;
-    border-radius: var(--b-border-radius-m);
-    color: var(--b-color-white);
+    border-radius: var(--adyen-checkout-button-border-radius);
+    color: var(--adyen-checkout-button-color);
     cursor: pointer;
-    font-size: index.$font-size-medium;
-    font-weight: var(--b-text-body-stronger-font-weight);
-    height: var(--b-spacer-120);
+    font-size: var(--adyen-checkout-button-font-size);
+    font-weight: var(--adyen-checkout-button-font-weight);
+    height: var(--adyen-checkout-button-height);
     margin: 0;
     padding: 15px;
     text-decoration: none;
@@ -16,21 +16,23 @@
     width: 100%;
 
     &:focus {
-        box-shadow: 0 0 0 1px var(--b-color-outline-tertiary);
+        box-shadow: 0 0 0 1px var(--adyen-checkout-color-outline-tertiary);
         outline: 0;
     }
 
     &:hover {
-        background: var(--b-color-interactive-primary-hovered);
-        box-shadow: 0 0, 0 var(--b-spacer-010) var(--b-spacer-020) -1px rgb(0 0 0 / 20%), 0 var(--b-spacer-020) 5px 0 rgb(0 0 0 / 14%);
+        background: var(--adyen-checkout-color-interactive-primary-hovered);
+        box-shadow: 0 0, 0 var(--adyen-checkout-spacer-010) var(--adyen-checkout-spacer-020) -1px rgb(0 0 0 / 20%),
+            0 var(--adyen-checkout-spacer-020) 5px 0 rgb(0 0 0 / 14%);
     }
 
     &:active {
-        background: var(--b-color-interactive-primary-pressed);
+        background: var(--adyen-checkout-color-interactive-primary-pressed);
     }
 
     &:hover:focus {
-        box-shadow: 0 0 0 var(--b-spacer-010) var(--b-color-outline-tertiary), 0 3px var(--b-spacer-020) rgb(0 15 45 / 20%);
+        box-shadow: 0 0 0 var(--adyen-checkout-spacer-010) var(--adyen-checkout-color-outline-tertiary),
+            0 3px var(--adyen-checkout-spacer-020) rgb(0 15 45 / 20%);
     }
 
     &:disabled {
@@ -44,14 +46,14 @@
     }
 
     &.adyen-checkout__button--loading {
-        background: var(--b-color-grey-500);
+        background: var(--adyen-checkout-color-on-interactive-disabled);
         box-shadow: none;
         pointer-events: none;
         user-select: none;
     }
 
     &.adyen-checkout__button--pay {
-        margin-top: var(--b-spacer-090);
+        margin-top: var(--adyen-checkout-spacer-090);
 
         &:disabled {
             opacity: 0.4;
@@ -69,40 +71,41 @@
         display: block;
         width: auto;
         height: auto;
-        padding: var(--b-spacer-050) var(--b-spacer-040);
+        padding: var(--adyen-checkout-spacer-050) var(--adyen-checkout-spacer-040);
         font-size: 0.81em;
     }
 
     &.adyen-checkout__button--ghost {
         background: none;
         border: 0;
-        color: var(--b-color-label-primary);
+        color: var(--adyen-checkout-color-label-primary);
 
         &:hover {
-            background: var(--b-color-grey-100);
+            background: var(--adyen-checkout-color-background-secondary);
             box-shadow: none;
         }
 
         &:active {
-            background: var(--b-color-grey-500);
+            background: var(--adyen-checkout-color-interactive-primary-pressed);
             box-shadow: none;
         }
     }
 
     &.adyen-checkout__button--secondary {
-        padding: var(--b-spacer-050) var(--b-spacer-060);
-        background: var(--b-color-white);
-        border: var(--b-border-width-s) solid var(--b-color-label-primary);
-        color: var(--b-color-label-primary);
+        padding: var(--adyen-checkout-spacer-050) var(--adyen-checkout-spacer-060);
+        background: var(--adyen-checkout-color-background-primary);
+        border: var(--adyen-checkout-border-width-s) solid var(--adyen-checkout-color-label-primary);
+        color: var(--adyen-checkout-color-label-primary);
 
         &:hover {
-            background: var(--b-color-grey-100);
-            box-shadow: 0 var(--b-spacer-010) var(--b-spacer-020) rgb(27 42 60 / 20%), 0 var(--b-spacer-020) 5px rgb(27 42 60 / 14%);
+            background: var(--adyen-checkout-color-background-secondary);
+            box-shadow: 0 var(--adyen-checkout-spacer-010) var(--adyen-checkout-spacer-020) rgb(27 42 60 / 20%),
+                0 var(--adyen-checkout-spacer-020) 5px rgb(27 42 60 / 14%);
         }
 
         &:active,
         &:active:hover {
-            background: var(--b-color-grey-100);
+            background: var(--adyen-checkout-color-background-secondary);
             box-shadow: none;
         }
 
@@ -112,44 +115,44 @@
                 box-shadow: none;
                 cursor: not-allowed;
                 border-color: #99a3ad;
-                background-color: var(--b-color-grey-100);
+                background-color: var(--adyen-checkout-color-background-secondary);
                 opacity: 0.5;
                 user-select: all;
             }
         }
 
         .adyen-checkout__spinner {
-            border-color: var(--b-color-label-primary);
+            border-color: var(--adyen-checkout-color-label-primary);
             border-top-color: transparent;
         }
     }
 
     &.adyen-checkout__button--action {
-        padding: var(--b-spacer-050) var(--b-spacer-060);
-        background: var(--b-color-background-always-dark);
-        border: var(--b-border-width-s) solid transparent;
-        color: var(--b-color-white);
+        padding: var(--adyen-checkout-spacer-050) var(--adyen-checkout-spacer-060);
+        background: var(--adyen-checkout-color-background-always-dark);
+        border: var(--adyen-checkout-border-width-s) solid transparent;
+        color: var(--adyen-checkout-color-white);
 
         &:hover {
-            background: var(--b-color-interactive-primary-hovered);
+            background: var(--adyen-checkout-color-interactive-primary-hovered);
             box-shadow: none;
         }
 
         &:active,
         &:active:hover {
-            background: var(--b-color-interactive-primary-pressed);
+            background: var(--adyen-checkout-color-interactive-primary-pressed);
             box-shadow: none;
         }
     }
 
     &.adyen-checkout__button--link {
         background: transparent;
-        border: var(--b-border-width-s) solid transparent;
-        color: var(--b-color-surface-highlight-strong);
+        border: var(--adyen-checkout-border-width-s) solid transparent;
+        color: var(--adyen-checkout-link-text-color);
         text-decoration: none;
-        font-weight: var(--b-text-body-font-weight);
-        border-radius: var(--b-border-radius-s);
-        padding: var(--b-spacer-010);
+        font-weight: var(--adyen-checkout-text-body-font-weight);
+        border-radius: var(--adyen-checkout-border-radius-s);
+        padding: var(--adyen-checkout-spacer-010);
 
         &:hover {
             background: transparent;
@@ -163,8 +166,8 @@
         &:hover,
         &:active,
         &:active:hover {
-            background: var(--b-color-label-success);
-            color: var(--b-color-white);
+            background: var(--adyen-checkout-color-label-success);
+            color: var(--adyen-checkout-color-white);
         }
 
         .adyen-checkout__button__icon {
@@ -180,11 +183,11 @@
     }
 
     &__icon {
-        margin-right: var(--b-spacer-060);
+        margin-right: var(--adyen-checkout-spacer-060);
 
         [dir='rtl'] & {
             margin-right: 0;
-            margin-left: var(--b-spacer-060);
+            margin-left: var(--adyen-checkout-spacer-060);
         }
     }
 
@@ -197,12 +200,7 @@
     }
 
     .adyen-checkout__spinner {
-        &::before {
-            border-color: var(--b-color-surface-modal);
-        }
-
-        &::after {
-            border-top-color: var(--b-color-surface-modal);
-        }
+        --adyen-checkout-loading-indicator-background-color: var(--adyen-checkout-color-surface-modal);
+        --adyen-checkout-loading-indicator-color: var(--adyen-checkout-color-surface-modal);
     }
 }

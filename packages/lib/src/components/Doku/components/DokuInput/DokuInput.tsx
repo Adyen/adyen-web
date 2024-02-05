@@ -2,8 +2,8 @@ import { h } from 'preact';
 import { useRef, useState } from 'preact/hooks';
 import PersonalDetails from '../../../internal/PersonalDetails/PersonalDetails';
 import useCoreContext from '../../../../core/Context/useCoreContext';
-import { ComponentMethodsRef } from '../../../types';
 import FormInstruction from '../../../internal/FormInstruction';
+import { ComponentMethodsRef } from '../../../internal/UIElement/types';
 
 export default function DokuInput(props) {
     const personalDetailsRef = useRef(null);

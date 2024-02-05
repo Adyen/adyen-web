@@ -12,13 +12,11 @@ describe('useForm', () => {
 
     describe('schema', () => {
         let useFormHook;
-        beforeEach(() => {
-            // eslint-disable-next-line testing-library/no-render-in-setup
-            const { result } = renderHook(() => useForm({ schema: defaultSchema }));
-            useFormHook = result;
-        });
 
         it('should set a default schema', () => {
+            const { result } = renderHook(() => useForm({ schema: defaultSchema }));
+            useFormHook = result;
+
             expect(useFormHook.current.schema).toEqual(defaultSchema);
             expect(useFormHook.current.data[defaultSchema[0]]).toEqual(null);
             expect(useFormHook.current.errors[defaultSchema[0]]).toEqual(null);
@@ -29,6 +27,9 @@ describe('useForm', () => {
         });
 
         it('should update the schema', () => {
+            const { result } = renderHook(() => useForm({ schema: defaultSchema }));
+            useFormHook = result;
+
             act(() => {
                 useFormHook.current.setSchema(['email']);
             });

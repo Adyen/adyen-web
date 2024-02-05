@@ -1,19 +1,19 @@
 import { Fragment, h } from 'preact';
-import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import Fieldset from '../FormFields/Fieldset';
 import ReadOnlyAddress from './components/ReadOnlyAddress';
 import { getAddressValidationRules } from './validate';
 import { addressFormatters, countrySpecificFormatters } from './validate.formats';
 import { AddressProps } from './types';
-import { AddressData } from '../../../types';
+import { AddressData } from '../../../types/global-types';
 import FieldContainer from './components/FieldContainer';
 import useForm from '../../../utils/useForm';
 import Specifications from './Specifications';
 import { ADDRESS_SCHEMA, FALLBACK_VALUE } from './constants';
 import { getMaxLengthByFieldAndCountry } from '../../../utils/validator-utils';
 import useCoreContext from '../../../core/Context/useCoreContext';
-import { ComponentMethodsRef } from '../../types';
 import AddressSearch from './components/AddressSearch';
+import { ComponentMethodsRef } from '../UIElement/types';
 
 export default function Address(props: AddressProps) {
     const { i18n } = useCoreContext();
@@ -49,22 +49,25 @@ export default function Address(props: AddressProps) {
         formatters: addressFormatters
     });
 
-    const setSearchData = selectedAddress => {
-        const propsKeysToProcess = ADDRESS_SCHEMA;
-        propsKeysToProcess.forEach(propKey => {
-            // Make sure the data provided by the merchant is always strings
-            const providedValue = selectedAddress[propKey];
-            if (providedValue === null || providedValue === undefined) return;
-            // Cast everything to string
-            setData(propKey, String(providedValue));
+    const setSearchData = useCallback(
+        (selectedAddress: AddressData) => {
+            const propsKeysToProcess = ADDRESS_SCHEMA;
+            propsKeysToProcess.forEach(propKey => {
+                // Make sure the data provided by the merchant is always strings
+                const providedValue = selectedAddress[propKey];
+                if (providedValue === null || providedValue === undefined) return;
+                // Cast everything to string
+                setData(propKey, String(providedValue));
+            });
             triggerValidation();
-        });
-        setHasSelectedAddress(true);
-    };
+            setHasSelectedAddress(true);
+        },
+        [setHasSelectedAddress, triggerValidation, setData]
+    );
 
-    const onManualAddress = () => {
+    const onManualAddress = useCallback(() => {
         setUseManualAddress(true);
-    };
+    }, []);
 
     // Expose method expected by (parent) Address.tsx
     addressRef.current.showValidation = () => {
@@ -172,12 +175,14 @@ export default function Address(props: AddressProps) {
                 {showAddressSearch && (
                     <AddressSearch
                         onAddressLookup={props.onAddressLookup}
+                        onAddressSelected={props.onAddressSelected}
                         onSelect={setSearchData}
                         onManualAddress={onManualAddress}
                         externalErrorMessage={searchErrorMessage}
                         hideManualButton={showAddressFields}
                         showContextualElement={showContextualElement}
                         contextualText={i18n.get('address.search.contextualText')}
+                        addressSearchDebounceMs={props.addressSearchDebounceMs}
                     />
                 )}
                 {showAddressFields && (

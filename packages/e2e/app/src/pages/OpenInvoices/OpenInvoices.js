@@ -1,5 +1,5 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
+import { AdyenCheckout, AfterPay } from '@adyen/adyen-web';
+import '@adyen/adyen-web/styles/adyen.css';
 import { handleSubmit, handleAdditionalDetails, handleError } from '../../handlers';
 import { amount, shopperLocale, countryCode } from '../../services/commonConfig';
 import '../../style.scss';
@@ -25,7 +25,7 @@ const initCheckout = async () => {
         // ...window.mainConfiguration
     });
 
-    window.afterpay = checkout.create('afterpay').mount('.afterpay-field');
+    window.afterpay = new AfterPay({core: checkout}).mount('.afterpay-field');
 };
 
 initCheckout();

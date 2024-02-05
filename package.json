@@ -32,13 +32,13 @@
         "**/regenerator-runtime": "^0.13.9"
     },
     "dependencies": {
-        "concurrently": "8.0.1"
+        "concurrently": "8.2.2"
     },
     "devDependencies": {
         "@adyen/adyen-web-server": "1.0.0",
         "@changesets/cli": "^2.26.1",
         "@changesets/get-github-info": "^0.5.2",
         "dotenv": "^16.0.3",
-        "prettier": "2.8.8"
+        "prettier": "3.1.1"
     }
 }

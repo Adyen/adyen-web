@@ -1,11 +1,38 @@
-import { Order, OrderStatus } from '../../types';
-import UIElement from '../UIElement';
-import { PaymentMethodsConfiguration, UIElementProps, UIElementStatus } from '../types';
-import { NewableComponent } from '../../core/core.registry';
+import type { Order, OrderStatus, PaymentActionsType } from '../../types/global-types';
+import type { UIElementProps, UIElementStatus } from '../internal/UIElement/types';
+import type { NewableComponent } from '../../core/core.registry';
+
+import UIElement from '../internal/UIElement/UIElement';
+import { ComponentsMap } from '../components-map';
+
+/**
+ * Available components
+ */
+export type PaymentMethods = typeof ComponentsMap;
+
+/**
+ * Options for a component
+ */
+export type PaymentMethodOptions<P extends keyof PaymentMethods> = InstanceType<PaymentMethods[P]>['props'];
+
+type PaymentMethodsConfigurationMap = {
+    [key in keyof PaymentMethods]?: Partial<PaymentMethodOptions<key>>;
+};
+type PaymentActionTypesMap = {
+    [key in PaymentActionsType]?: Partial<UIElementProps>;
+};
+/**
+ * Type must be loose, otherwise it will take priority over the rest
+ */
+type NonMappedPaymentMethodsMap = {
+    [key: string]: any;
+};
+
+export type PaymentMethodsConfiguration = PaymentMethodsConfigurationMap & PaymentActionTypesMap & NonMappedPaymentMethodsMap;
 
 export type InstantPaymentTypes = 'paywithgoogle' | 'googlepay' | 'applepay';
 
-export interface DropinElementProps extends UIElementProps {
+export interface DropinConfiguration extends UIElementProps {
     /**
      * Configure each payment method displayed on the Drop-in
      */
@@ -46,7 +73,7 @@ export interface DropinElementProps extends UIElementProps {
 
     /**
      * Show/Hide the remove payment method button on stored payment methods
-     * Requires {@link DropinElementProps.onDisableStoredPaymentMethod}
+     * Requires {@link DropinConfiguration.onDisableStoredPaymentMethod}
      * @defaultValue false
      */
     showRemovePaymentMethodButton?: boolean;
@@ -64,7 +91,7 @@ export interface onOrderCancelData {
     order: Order;
 }
 
-export interface DropinComponentProps extends DropinElementProps {
+export interface DropinComponentProps extends DropinConfiguration {
     onCreateElements: any;
     onChange: (newState?: object) => void;
     onOrderCancel?: (data: onOrderCancelData) => void;
@@ -82,6 +109,7 @@ export interface DropinStatusProps {
 export interface DropinComponentState {
     elements: any[];
     instantPaymentElements: UIElement[];
+    storedPaymentElements: UIElement[];
     status: DropinStatus;
     activePaymentMethod: UIElement;
     cachedPaymentMethods: object;

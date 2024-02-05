@@ -1,15 +1,15 @@
 .adyen-checkout-ctp__section {
     position: relative;
     background-color: white;
-    box-shadow: 0 var(--b-spacer-040) var(--b-spacer-090) rgb(0 0 0 / 15%);
-    border-radius: var(--b-spacer-060);
-    padding: var(--b-spacer-070);
+    box-shadow: 0 6px 12px rgb(0 17 44 / 8%), 0 2px 4px rgb(0 17 44 / 4%);
+    border-radius: var(--adyen-checkout-spacer-060);
+    padding: var(--adyen-checkout-spacer-070);
 
     &-brand {
         display: flex;
         align-items: center;
         height: 18px;
-        margin-bottom: 14px;
+        margin-bottom: 16px;
     }
 
     &--standalone {
@@ -17,7 +17,7 @@
     }
 
     .adyen-checkout__fieldset {
-        margin-bottom: var(--b-spacer-090);
+        margin-bottom: var(--adyen-checkout-spacer-090);
     }
 }
 
@@ -27,10 +27,10 @@
 
     &-title {
         font-size: 17px;
-        font-weight: var(--b-text-title-font-weight);
+        font-weight: var(--adyen-checkout-text-title-font-weight);
         line-height: 22px;
-        margin: 0 0 var(--b-spacer-020);
         padding: 0;
+        margin: 0;
         width: auto;
 
         @media screen and (max-width: 400px) {
@@ -45,14 +45,14 @@
 
 .adyen-checkout-ctp__section-text {
     font-size: 13px;
-    font-weight: var(--b-text-body-font-weight);
-    line-height: var(--b-text-caption-line-height);
-    color: var(--b-color-grey-500);
-    margin: 0 0 var(--b-spacer-070);
+    font-weight: var(--adyen-checkout-text-body-font-weight);
+    line-height: var(--adyen-checkout-text-caption-line-height);
+    color: var(--adyen-checkout-color-grey-1300);
+    margin: 0 0 var(--adyen-checkout-spacer-070);
 }
 
 .adyen-checkout-ctp__separator {
-    color: var(--b-color-label-primary);
+    color: var(--adyen-checkout-color-label-primary);
     font-size: 13px;
-    font-weight: var(--b-text-body-font-weight);
+    font-weight: var(--adyen-checkout-text-body-font-weight);
 }

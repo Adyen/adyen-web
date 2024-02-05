@@ -33,7 +33,10 @@ export const GENERIC_OPTIONS = [
     'setStatusAutomatically'
 ];
 
+export const DEFAULT_HTTP_TIMEOUT = 60000;
+
 export default {
     FALLBACK_CONTEXT,
-    GENERIC_OPTIONS
+    GENERIC_OPTIONS,
+    DEFAULT_HTTP_TIMEOUT
 };

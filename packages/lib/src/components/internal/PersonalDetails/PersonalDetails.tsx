@@ -7,16 +7,16 @@ import { personalDetailsValidationRules } from './validate';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { PersonalDetailsProps } from './types';
 import { checkDateInputSupport } from '../FormFields/InputDate/utils';
-import { PersonalDetailsSchema } from '../../../types';
+import { PersonalDetailsSchema } from '../../../types/global-types';
 import { getFormattedData } from './utils';
 import useForm from '../../../utils/useForm';
 import './PersonalDetails.scss';
-import { ComponentMethodsRef } from '../../types';
 import InputText from '../FormFields/InputText';
 import RadioGroup from '../FormFields/RadioGroup';
 import InputDate from '../FormFields/InputDate';
 import InputEmail from '../FormFields/InputEmail';
 import InputTelephone from '../FormFields/InputTelephone';
+import { ComponentMethodsRef } from '../UIElement/types';
 
 export const PERSONAL_DETAILS_SCHEMA = ['firstName', 'lastName', 'gender', 'dateOfBirth', 'shopperEmail', 'telephoneNumber'];
 

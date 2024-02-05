@@ -1,5 +1,5 @@
 import { ADYEN_CLIENTID_TEST, ADYEN_CLIENTID_LIVE, INTEGRATION_DATE, PAYPAL_JS_URL, SUPPORTED_LOCALES, SUPPORTED_COLORS_FOR_CREDIT } from './config';
-import { PaypalSettings, SupportedLocale, FundingSource, PayPalComponentProps } from './types';
+import { PaypalSettings, PayPalSupportedLocale, FundingSource, PayPalComponentProps } from './types';
 
 /**
  * Processes and returns a new style object.
@@ -19,10 +19,10 @@ const getStyle = (fundingSource: FundingSource, style = {}) => {
 /**
  * Returns either a locale supported by PayPal or null, in order to let the PayPal SDK auto-detect the shopper locale.
  */
-const getSupportedLocale = (locale: string): SupportedLocale => {
+const getSupportedLocale = (locale: string): PayPalSupportedLocale => {
     const formattedLocale = locale ? locale.replace('-', '_') : null;
-    const supportedLocale = SUPPORTED_LOCALES.includes(formattedLocale as SupportedLocale) ? formattedLocale : null;
-    return supportedLocale as SupportedLocale;
+    const supportedLocale = SUPPORTED_LOCALES.includes(formattedLocale as PayPalSupportedLocale) ? formattedLocale : null;
+    return supportedLocale as PayPalSupportedLocale;
 };
 
 /**
@@ -39,7 +39,7 @@ const getPaypalSettings = ({
     vault,
     enableMessages
 }: Partial<PayPalComponentProps>): PaypalSettings => {
-    const shopperLocale: SupportedLocale = getSupportedLocale(locale);
+    const shopperLocale: PayPalSupportedLocale = getSupportedLocale(locale);
     const currency: string = amount ? amount.currency : null;
     const isTestEnvironment: boolean = environment.toLowerCase() === 'test';
     const clientId: string = isTestEnvironment ? ADYEN_CLIENTID_TEST : ADYEN_CLIENTID_LIVE;

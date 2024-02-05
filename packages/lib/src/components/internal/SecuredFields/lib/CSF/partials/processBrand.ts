@@ -1,10 +1,11 @@
 import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_SECURITY_CODE } from '../../configuration/constants';
 import postMessageToIframe from '../utils/iframes/postMessageToIframe';
 import { objectsDeepEqual } from '../../utilities/commonUtils';
-import { BrandStorageObject, CbObjOnBrand, SFFeedbackObj } from '../../types';
+import { BrandStorageObject, CbObjOnBrand, SFFeedbackObj, SFFieldType } from '../../types';
 import { pick } from '../../../utils';
 import { hasOwnProperty } from '../../../../../../utils/hasOwnProperty';
 import getIframeContentWin from '../utils/iframes/getIframeContentWin';
+import { CSFThisObject } from '../types';
 
 const checkForBrandChange = (pBrand: BrandStorageObject, storedBrand: BrandStorageObject): boolean => {
     // if the objects aren't the same - then return true = brandChange has happened
@@ -24,8 +25,8 @@ const checkForBrandChange = (pBrand: BrandStorageObject, storedBrand: BrandStora
  *
  * @param pFeedbackObj -
  */
-export default function processBrand({ csfState, csfConfig, csfProps, csfCallbacks }, pFeedbackObj: SFFeedbackObj): boolean {
-    const fieldType: string = pFeedbackObj.fieldType;
+export default function processBrand({ csfState, csfConfig, csfProps, csfCallbacks }: CSFThisObject, pFeedbackObj: SFFeedbackObj): boolean {
+    const fieldType: SFFieldType = pFeedbackObj.fieldType;
 
     if (fieldType === ENCRYPTED_CARD_NUMBER) {
         // Check for new brand...
@@ -71,9 +72,9 @@ export default function processBrand({ csfState, csfConfig, csfProps, csfCallbac
         if (brandInfoObj && brandInfoObj.brand) {
             const callbackObj: CbObjOnBrand = brandInfoObj as CbObjOnBrand;
             callbackObj.type = csfState.type;
-            callbackObj.rootNode = csfProps.rootNode;
+            callbackObj.rootNode = csfProps.rootNode as HTMLElement;
 
-            /// ...and call SFPHandlers.handleOnBrand
+            // ...and call SFPHandlers.handleOnBrand
             csfCallbacks.onBrand(callbackObj);
         }
 

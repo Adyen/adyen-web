@@ -13,7 +13,6 @@ import useForm from '../../../../utils/useForm';
 import { SetSRMessagesReturnObject, SortedErrorObject } from '../../../../core/Errors/types';
 import { handlePartialAddressMode, extractPropsForCardFields, extractPropsForSFP, getLayout, lookupBlurBasedErrors, mapFieldKey } from './utils';
 import { usePrevious } from '../../../../utils/hookUtils';
-import { AddressData } from '../../../../types';
 import Specifications from '../../../internal/Address/Specifications';
 import { StoredCardFieldsWrapper } from './components/StoredCardFieldsWrapper';
 import { CardFieldsWrapper } from './components/CardFieldsWrapper';
@@ -28,6 +27,7 @@ import { SetSRMessagesReturnFn } from '../../../../core/Errors/SRPanelProvider';
 import useImage from '../../../../core/Context/useImage';
 import { getArrayDifferences } from '../../../../utils/arrayUtils';
 import FormInstruction from '../../../internal/FormInstruction';
+import { AddressData } from '../../../../types/global-types';
 
 const CardInput = (props: CardInputProps) => {
     const sfp = useRef(null);
@@ -84,7 +84,7 @@ const CardInput = (props: CardInputProps) => {
     const [issuingCountryCode, setIssuingCountryCode] = useState<string>(null);
 
     const [dualBrandSelectElements, setDualBrandSelectElements] = useState([]);
-    const [selectedBrandValue, setSelectedBrandValue] = useState('');
+    const [selectedBrandValue, setSelectedBrandValue] = useState(props.storedPaymentMethodId ? props.brand : ''); // If this is a storedCard comp initialise state with the storedCard's brand
 
     const showBillingAddress = props.billingAddressMode !== AddressModeOptions.none && props.billingAddressRequired;
 
@@ -491,6 +491,8 @@ const CardInput = (props: CardInputProps) => {
                             partialAddressSchema={partialAddressSchema}
                             handleAddress={handleAddress}
                             onAddressLookup={props.onAddressLookup}
+                            onAddressSelected={props.onAddressSelected}
+                            addressSearchDebounceMs={props.addressSearchDebounceMs}
                             //
                             iOSFocusedField={iOSFocusedField}
                         />

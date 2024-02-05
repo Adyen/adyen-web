@@ -1,7 +1,7 @@
-import { UIElementProps } from '../types';
 import { Placeholders } from './components/AchInput/types';
+import { UIElementProps } from '../internal/UIElement/types';
 
-export interface AchElementProps extends UIElementProps {
+export interface AchConfiguration extends UIElementProps {
     storedPaymentMethodId?: string;
     holderNameRequired?: boolean;
     hasHolderName?: boolean;

@@ -1,12 +1,12 @@
 @use "../../../style/index";
 
 .adyen-checkout-disclaimer__label {
-    margin-top: var(--b-spacer-070);
+    margin-top: var(--adyen-checkout-spacer-070);
     padding-left: 0;
     display: inline-block;
-    line-height: var(--b-text-caption-line-height);
-    color: var(--b-color-label-secondary);
-    font-size: index.$font-size-small;
+    line-height: var(--adyen-checkout-text-caption-line-height);
+    color: var(--adyen-checkout-color-label-secondary);
+    font-size: var(--adyen-checkout-font-size-small);
     font-weight: normal;
 
 

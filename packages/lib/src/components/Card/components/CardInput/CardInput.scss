@@ -4,10 +4,10 @@
     }
 
     &__icon {
-        border-radius: var(--b-input-field-static-value-border-radius);
+        border-radius: var(--adyen-checkout-border-radius-s);
         height: 18px;
         width: 27px;
-        margin-right: var(--b-spacer-060);
+        margin-right: var(--adyen-checkout-spacer-060);
     }
 
     &__form {
@@ -38,8 +38,8 @@
     max-height: 100px;
 }
 
-.adyen-checkout__card__cvc__input--hidden,
-.adyen-checkout__card__exp-date__input--hidden {
+.adyen-checkout__field.adyen-checkout__card__cvc__input--hidden,
+.adyen-checkout__field.adyen-checkout__card__exp-date__input--hidden {
     display: none;
 }
 
@@ -63,12 +63,12 @@
 }
 
 .adyen-checkout__card__cardNumber__input {
-    padding-left: var(--b-spacer-060);
+    padding-left: var(--adyen-checkout-spacer-060);
 }
 
 .adyen-checkout__card__exp-date__input--oneclick {
-    line-height: var(--b-text-title-line-height);
-    font-weight: var(--b-text-body-font-weight);
+    line-height: var(--adyen-checkout-text-title-line-height);
+    font-weight: var(--adyen-checkout-text-body-font-weight);
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
@@ -84,11 +84,11 @@
 .adyen-checkout__store-details {
     display: flex;
     align-items: center;
-    gap: var(--b-spacer-060);
-    padding: var(--b-spacer-060) var(--b-spacer-070);
-    margin-top: var(--b-spacer-070);
-    border: var(--b-border-width-s) solid var(--b-color-outline-secondary);
-    border-radius: var(--b-border-radius-m);
+    gap: var(--adyen-checkout-spacer-060);
+    padding: var(--adyen-checkout-spacer-060) var(--adyen-checkout-spacer-070);
+    margin-top: var(--adyen-checkout-spacer-070);
+    border: var(--adyen-checkout-border-width-s) solid var(--adyen-checkout-color-outline-secondary);
+    border-radius: var(--adyen-checkout-border-radius-m);
 }
 
 .adyen-checkout__card__holderName,
@@ -96,7 +96,7 @@
 .adyen-checkout__card__socialSecurityNumber,
 .adyen-checkout__installments,
 .adyen-checkout__card-input .adyen-checkout__fieldset--billingAddress {
-    margin-top: var(--b-spacer-070);
+    margin-top: var(--adyen-checkout-spacer-070);
 }
 
 .adyen-checkout__card-input.adyen-checkout__card-input--loading {
@@ -104,7 +104,7 @@
 }
 
 .adyen-checkout__card__holderName:first-child {
-    margin: 0 0 var(--b-input-field-label-margin-bottom);
+    margin: 0 0 var(--adyen-checkout-input-field-label-margin-bottom);
 }
 
 /* Hide card brand icon when cardNumber is in an error state */
@@ -149,7 +149,7 @@
     width: 27px;
     display: flex;
     align-items: center;
-    margin-right: var(--b-spacer-060);
+    margin-right: var(--adyen-checkout-spacer-060);
 
     // Card Flip animation
     transition: transform 0.3s cubic-bezier(0.455, 0.03, 0.515, 0.955);
@@ -175,7 +175,7 @@
     display: flex;
     align-items: center;
     transition: opacity 0.1s linear;
-    margin-right: var(--b-spacer-060);
+    margin-right: var(--adyen-checkout-spacer-060);
 
     &.adyen-checkout__field__exp-date_hint_wrapper--hidden {
         opacity: 0;
@@ -209,13 +209,13 @@
     }
 
     .adyen-checkout__radio_group__input-wrapper {
-        margin-top: var(--b-spacer-080);
+        margin-top: var(--adyen-checkout-spacer-080);
     }
 
     .adyen-checkout__field--revolving-plan-installments {
         position: relative;
         top: 42px;
         width: 30%;
-        margin-left: var(--b-spacer-070);
+        margin-left: var(--adyen-checkout-spacer-070);
     }
 }

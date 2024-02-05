@@ -1,9 +1,16 @@
 import { CustomTranslations, Translation } from '../language/types';
-import { PaymentAmountExtended, Order, PaymentAction, PaymentMethodsResponse } from '../types';
+import {
+    PaymentAmountExtended,
+    Order,
+    PaymentAction,
+    PaymentMethodsResponse,
+    ActionHandledReturnObject,
+    OnPaymentCompletedData,
+    PaymentData
+} from '../types/global-types';
 import { AnalyticsOptions } from './Analytics/types';
 import { RiskModuleOptions } from './RiskModule/RiskModule';
-import { ActionHandledReturnObject, OnPaymentCompletedData, PaymentData } from '../components/types';
-import UIElement from '../components/UIElement';
+import UIElement from '../components/internal/UIElement/UIElement';
 import AdyenCheckoutError from './Errors/AdyenCheckoutError';
 import { GiftCardElementData } from '../components/Giftcard/types';
 import { SRPanelConfig } from './Errors/types';
@@ -25,12 +32,12 @@ export interface ICore {
     getComponent(txVariant: string): NewableComponent | undefined;
     createFromAction(action: PaymentAction, options: any): any;
     storeElementReference(element: UIElement): void;
-    options: CoreOptions;
+    options: CoreConfiguration;
     paymentMethodsResponse: PaymentMethods;
     session?: Session;
 }
 
-export interface CoreOptions {
+export interface CoreConfiguration {
     session?: any;
     /**
      * Use test. When you're ready to accept live payments, change the value to one of our {@link https://docs.adyen.com/checkout/drop-in-web#testing-your-integration | live environments}.

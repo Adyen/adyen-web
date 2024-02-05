@@ -2,24 +2,26 @@ import { createContext } from 'preact';
 import { CtpState } from '../services/ClickToPayService';
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../services/types';
 import ShopperCard from '../models/ShopperCard';
-import { ClickToPayConfiguration } from '../types';
-import { UIElementStatus } from '../../../types';
-import { PaymentAmount } from '../../../../types';
+import { ClickToPayProps } from '../types';
+import { PaymentAmount } from '../../../../types/global-types';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
+import { UIElementStatus } from '../../UIElement/types';
 
 export interface IClickToPayContext
     extends Pick<IClickToPayService, 'checkout' | 'startIdentityValidation' | 'finishIdentityValidation' | 'verifyIfShopperIsEnrolled'> {
     isStandaloneComponent: boolean;
     isCtpPrimaryPaymentMethod: boolean;
+    isStoringCookies: boolean;
     setIsCtpPrimaryPaymentMethod(isPrimary: boolean): void;
     logoutShopper(): Promise<void>;
+    updateStoreCookiesConsent(shouldStore: boolean): void;
     ctpState: CtpState;
     cards: ShopperCard[];
     schemes: string[];
     otpMaskedContact: string;
     otpNetwork: string;
     amount: PaymentAmount;
-    configuration: ClickToPayConfiguration;
+    configuration: ClickToPayProps;
     status: UIElementStatus;
     onSubmit(payload: ClickToPayCheckoutPayload): void;
     onSetStatus(status: UIElementStatus): void;
@@ -37,8 +39,10 @@ const ClickToPayContext = createContext<IClickToPayContext>({
     configuration: null,
     isStandaloneComponent: null,
     isCtpPrimaryPaymentMethod: null,
+    isStoringCookies: false,
     setIsCtpPrimaryPaymentMethod: null,
     logoutShopper: null,
+    updateStoreCookiesConsent: null,
     ctpState: null,
     cards: [],
     schemes: [],

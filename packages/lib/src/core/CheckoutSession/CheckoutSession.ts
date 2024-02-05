@@ -13,7 +13,7 @@ import {
     CheckoutSessionPaymentResponse,
     CheckoutSessionSetupResponse,
     SessionConfiguration
-} from '../../types';
+} from './types';
 import cancelOrder from '../Services/sessions/cancel-order';
 import { onOrderCancelData } from '../../components/Dropin/types';
 
@@ -69,6 +69,10 @@ class Session {
         return setupSession(this, options).then(response => {
             if (response.configuration) {
                 this.configuration = { ...response.configuration };
+            }
+
+            if (response.sessionData) {
+                this.updateSessionData(response.sessionData);
             }
 
             return response;

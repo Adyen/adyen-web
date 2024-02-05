@@ -1,19 +1,13 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import CoreProvider from '../../core/Context/CoreProvider';
 import RedirectShopper from './components/RedirectShopper';
 import RedirectButton from '../internal/RedirectButton';
 import { TxVariants } from '../tx-variants';
-import { UIElementProps } from '../types';
+import { RedirectConfiguration } from './types';
+import collectBrowserInfo from '../../utils/browserInfo';
 
-export interface RedirectProps extends UIElementProps {
-    type?: string;
-    url?: string;
-    method?: 'GET' | 'POST';
-    beforeRedirect?: (resolve, reject, url) => Promise<void>;
-}
-
-class RedirectElement extends UIElement<RedirectProps> {
+class RedirectElement extends UIElement<RedirectConfiguration> {
     public static type = TxVariants.redirect;
 
     public static defaultProps = {
@@ -24,7 +18,8 @@ class RedirectElement extends UIElement<RedirectProps> {
         return {
             paymentMethod: {
                 type: this.type
-            }
+            },
+            browserInfo: this.browserInfo
         };
     }
 
@@ -32,8 +27,8 @@ class RedirectElement extends UIElement<RedirectProps> {
         return true;
     }
 
-    get icon() {
-        return this.resources.getImage()(this.props.type);
+    get browserInfo() {
+        return collectBrowserInfo();
     }
 
     render() {

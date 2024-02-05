@@ -2,7 +2,7 @@ import { Page } from '@playwright/test';
 import { IssuerList } from '../../models/issuer-list';
 
 class IssuerListPage {
-    private readonly page: Page;
+    readonly page: Page;
 
     public readonly issuerList: IssuerList;
 

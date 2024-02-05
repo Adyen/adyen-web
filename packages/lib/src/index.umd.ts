@@ -1,4 +1,4 @@
-import { AdyenCheckout } from './AdyenCheckout';
+import { AdyenCheckout } from './core/AdyenCheckout';
 import { NewableComponent } from './core/core.registry';
 import * as components from './components';
 import * as locales from './language/locales';

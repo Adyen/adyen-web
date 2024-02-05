@@ -1,28 +1,28 @@
 .adyen-checkout-ctp__card-list-single-card {
-    border-radius: var(--b-spacer-030);
-    background-color: var(--b-color-grey-100);
-    height: var(--b-spacer-110);
-    padding: var(--b-spacer-060);
+    border-radius: var(--adyen-checkout-spacer-030);
+    background-color: var(--adyen-checkout-color-background-secondary);
+    height: var(--adyen-checkout-spacer-110);
+    padding: var(--adyen-checkout-spacer-060);
     display: flex;
     align-items: center;
     font-size: 13px;
-    font-weight: var(--b-text-body-font-weight);
-    line-height: var(--b-text-caption-line-height);
+    font-weight: var(--adyen-checkout-text-body-font-weight);
+    line-height: var(--adyen-checkout-text-caption-line-height);
 
     &-expired {
         text-decoration: line-through;
-        color: var(--b-color-grey-500);
+        color: var(--adyen-checkout-color-grey-1300);
     }
 }
 
 .adyen-checkout-ctp__expired-label {
-    color: var(--b-color-grey-500);
-    font-weight: var(--b-text-body-stronger-font-weight);
+    color: var(--adyen-checkout-color-grey-1300);
+    font-weight: var(--adyen-checkout-text-body-stronger-font-weight);
     line-height: 17px;
     margin-left: auto;
 }
 
 .adyen-checkout-ctp__card-image {
     border-radius: 3px;
-    margin-right: var(--b-spacer-040);
+    margin-right: var(--adyen-checkout-spacer-040);
 }

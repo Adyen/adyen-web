@@ -1,4 +1,4 @@
-window.mainConfiguration = {
+window.dropinConfig = {
     paymentMethodsConfiguration: {
         card: {
             showBrandsUnderCardNumber: false

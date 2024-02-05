@@ -5,7 +5,7 @@ import PaymentMethodIcon from './PaymentMethodIcon';
 import DisableOneClickConfirmation from './DisableOneClickConfirmation';
 import './PaymentMethodItem.scss';
 import useCoreContext from '../../../../core/Context/useCoreContext';
-import UIElement from '../../../UIElement';
+import UIElement from '../../../internal/UIElement/UIElement';
 import PaymentMethodBrands from './PaymentMethodBrands/PaymentMethodBrands';
 import { BRAND_ICON_UI_EXCLUSION_LIST } from '../../../internal/SecuredFields/lib/configuration/constants';
 import PaymentMethodName from './PaymentMethodName';
@@ -33,21 +33,8 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
     };
 
     public state = {
-        showDisableStoredPaymentMethodConfirmation: false,
-        activeBrand: null
+        showDisableStoredPaymentMethodConfirmation: false
     };
-
-    componentDidMount() {
-        this.props.paymentMethod.eventEmitter.on('brand', e => {
-            this.setState({ activeBrand: e.brand });
-        });
-    }
-
-    componentWillUnmount() {
-        this.props.paymentMethod.eventEmitter.off('brand', e => {
-            this.setState({ activeBrand: e.brand });
-        });
-    }
 
     public toggleDisableConfirmation = () => {
         this.setState({ showDisableStoredPaymentMethodConfirmation: !this.state.showDisableStoredPaymentMethodConfirmation });
@@ -63,17 +50,19 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
         onSelect(paymentMethod);
     };
 
-    render({ paymentMethod, isSelected, isDisablingPaymentMethod, isLoaded, isLoading, standalone }, { activeBrand }) {
+    render({ paymentMethod, isSelected, isDisablingPaymentMethod, isLoaded, isLoading, standalone }) {
         const { i18n } = useCoreContext();
 
         if (!paymentMethod) {
             return null;
         }
 
+        const isCard = paymentMethod.props.type === 'card' || paymentMethod.props.type === 'scheme';
+
         const paymentMethodClassnames = classNames({
             'adyen-checkout__payment-method': true,
             [`adyen-checkout__payment-method--${paymentMethod.props.type}`]: true,
-            [`adyen-checkout__payment-method--${paymentMethod.props.fundingSource ?? 'credit'}`]: true,
+            ...(isCard && { [`adyen-checkout__payment-method--${paymentMethod.props.fundingSource ?? 'credit'}`]: true }),
             'adyen-checkout__payment-method--selected': isSelected,
             'adyen-checkout__payment-method--loading': isLoading,
             'adyen-checkout__payment-method--disabling': isDisablingPaymentMethod,
@@ -136,11 +125,9 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
 
                     {showBrands && (
                         <PaymentMethodBrands
-                            activeBrand={activeBrand}
                             brands={paymentMethod.brands}
                             excludedUIBrands={BRAND_ICON_UI_EXCLUSION_LIST}
                             isPaymentMethodSelected={isSelected}
-                            isCompactView={paymentMethod.props.showBrandsUnderCardNumber}
                         />
                     )}
                 </div>

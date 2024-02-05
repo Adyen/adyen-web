@@ -1,10 +1,11 @@
-import IssuerListContainer, { IssuerListContainerProps } from '../helpers/IssuerListContainer';
+import IssuerListContainer from '../helpers/IssuerListContainer/IssuerListContainer';
 import { TxVariants } from '../tx-variants';
+import { IssuerListConfiguration } from '../helpers/IssuerListContainer/types';
 
 class PayByBank extends IssuerListContainer {
     public static type = TxVariants.paybybank;
 
-    constructor(props: IssuerListContainerProps) {
+    constructor(props: IssuerListConfiguration) {
         super({ ...props, showPaymentMethodItemImages: true });
     }
 }
