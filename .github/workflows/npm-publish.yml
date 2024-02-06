@@ -23,8 +23,21 @@ jobs:
       - run: cp README.md packages/lib/
       # Copy LICENSE to adyen-web package
       - run: cp LICENSE packages/lib/
+      # Build and publish to npm with alpha tag
+      - name: Build and prerelease
+        if: ${{ github.event.release.prerelease }}
+        run: |
+          echo "Pre-release alpha"
+          cd packages/lib && npm publish --tag alpha --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          CI: true
       # Build and publish to npm
-      - run: cd packages/lib && npm publish --access public
+      - name: Build and release
+        if: ${{ !github.event.release.prerelease }}
+        run: |
+          echo "Release:"
+          cd packages/lib && npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
           CI: true
