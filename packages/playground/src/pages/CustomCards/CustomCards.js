@@ -2,7 +2,7 @@ import { AdyenCheckout, CustomCard } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 
 import { makePayment, makeDetailsCall } from '../../services';
-import { styles, setFocus, onBrand, onConfigSuccess, onBinLookup, onChange } from './customCards.config';
+import { styles, setFocus, onBrand, onConfigSuccess, onBinLookup, onChange, setCCErrors } from './customCards.config';
 import { styles_si, onConfigSuccess_si, onFieldValid_si, onBrand_si, onError_si, onFocus_si } from './customCards-si.config';
 import { fancyStyles, fancyChangeBrand, fancyErrors, fancyFieldValid, fancyFocus } from './customCards-fancy.config';
 import { materialStyles, materialFocus, handleMaterialError, onMaterialFieldValid } from './customCards-material.config';
@@ -91,7 +91,10 @@ const initCheckout = async () => {
         },
         onFocus: setFocus,
         onBinLookup,
-        onChange
+        onChange,
+        onValidationError: errors => {
+            errors.forEach(setCCErrors);
+        }
         // brandsConfiguration: {
         //     synchrony_plcc: {
         //         icon: 'http://localhost:3000/test_images/smartmoney.png'

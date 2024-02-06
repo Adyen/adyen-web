@@ -34,7 +34,7 @@ function createComponent(paymentType: any, checkout: ICore, options?: any): any 
 
     const Class = ComponentsMap[paymentType] || Redirect;
 
-    return new Class({
+    return new Class(checkout, {
         type: paymentType,
         ...options
     });

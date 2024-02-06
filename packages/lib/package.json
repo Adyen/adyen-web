@@ -143,8 +143,8 @@
     },
     "dependencies": {
         "@adyen/bento-design-tokens": "0.5.4",
-        "@types/applepayjs": "3.0.4",
-        "@types/googlepay": "0.7.0",
+        "@types/applepayjs": "14.0.3",
+        "@types/googlepay": "0.7.5",
         "classnames": "2.3.1",
         "preact": "10.13.2"
     },

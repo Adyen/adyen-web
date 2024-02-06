@@ -47,6 +47,12 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         onError: handleError,
         risk: {
             enabled: false
+        },
+        onPaymentCompleted(result, element) {
+            console.log('onPaymentCompleted', result, element);
+        },
+        onPaymentFailed(result, element) {
+            console.log('onPaymentFailed', result, element);
         }
     });
 
@@ -77,9 +83,6 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             // holderNameRequired: true,
             // maskSecurityCode: true,
             // enableStoreDetails: true
-            onError: obj => {
-                console.log('### Cards::onError:: obj=', obj);
-            },
             onBinLookup: obj => {
                 console.log('### Cards::onBinLookup:: obj=', obj);
             }

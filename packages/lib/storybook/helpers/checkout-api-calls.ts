@@ -1,7 +1,16 @@
 import paymentMethodsConfig from '../config/paymentMethodsConfig';
 import paymentsConfig from '../config/paymentsConfig';
 import { httpPost } from '../utils/http-post';
-import type { Order, OrderStatus, PaymentAction, PaymentAmount, PaymentMethodsResponse, RawPaymentResponse } from '../../src/types';
+import type {
+    Order,
+    OrderStatus,
+    PaymentAction,
+    PaymentAmount,
+    PaymentMethodsResponse,
+    RawPaymentResponse,
+    AdditionalDetailsStateData,
+    ResultCode
+} from '../../src/types';
 import type { CheckoutSessionSetupResponse } from '../../src/core/CheckoutSession/types';
 
 export const getPaymentMethods = async (configuration?: any): Promise<PaymentMethodsResponse> =>
@@ -13,9 +22,9 @@ export const makePayment = async (stateData: any, paymentData: any): Promise<Raw
     return await httpPost('payments', paymentRequest);
 };
 
-export const makeDetailsCall = async (detailsData: {
-    details: { redirectResult: string };
-}): Promise<{ resultCode: string; action?: PaymentAction }> => await httpPost('details', detailsData);
+export const makeDetailsCall = async (
+    detailsData: AdditionalDetailsStateData['data']
+): Promise<{ resultCode: ResultCode; action?: PaymentAction; order?: Order; donationToken?: string }> => await httpPost('details', detailsData);
 
 export const createSession = async (data: any): Promise<CheckoutSessionSetupResponse> => {
     return await httpPost('sessions', { ...data, lineItems: paymentsConfig.lineItems });

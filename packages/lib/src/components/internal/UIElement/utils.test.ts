@@ -1,4 +1,4 @@
-import { getSanitizedResponse } from './utils';
+import { sanitizeResponse } from './utils';
 
 describe('components utils', () => {
     describe('getSanitizedResponse', () => {
@@ -13,7 +13,7 @@ describe('components utils', () => {
                 sessionResult: 'XYZ123'
             };
 
-            const sanitizedResponse = getSanitizedResponse(rawResponse);
+            const sanitizedResponse = sanitizeResponse(rawResponse);
             expect(sanitizedResponse.resultCode).toBeTruthy();
             expect(sanitizedResponse.sessionResult).toBeTruthy();
             expect((sanitizedResponse as any).someBackendProperty).toBeUndefined();

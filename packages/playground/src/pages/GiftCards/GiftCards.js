@@ -17,6 +17,12 @@ import getTranslationFile from '../../config/getTranslation';
         environment: process.env.__CLIENT_ENV__,
         onChange: handleChange,
         onSubmit: handleSubmit,
+        onPaymentCompleted(result, element) {
+            console.log('onPaymentCompleted', result, element);
+        },
+        onPaymentFailed(result, element) {
+            console.log('onPaymentFailed', result, element);
+        },
         showPayButton: true,
         amount
     });
@@ -68,8 +74,11 @@ import getTranslationFile from '../../config/getTranslation';
         beforeSubmit: (data, component, actions) => {
             actions.resolve(data);
         },
-        onPaymentCompleted: (result, component) => {
-            console.info(result, component);
+        onPaymentCompleted(result, element) {
+            console.log('onPaymentCompleted', result, element);
+        },
+        onPaymentFailed(result, element) {
+            console.log('onPaymentFailed', result, element);
         },
         onError: (error, component) => {
             console.error(error.message, component);
@@ -93,8 +102,8 @@ import getTranslationFile from '../../config/getTranslation';
     window.giftcard = new Giftcard(sessionCheckout, {
         type: 'giftcard',
         brand: 'svs',
-        onOrderCreated: () => {
-            console.log('onOrderCreated');
+        onOrderUpdated: () => {
+            console.log('onOrderUpdated');
         },
         onRequiringConfirmation: () => {
             console.log('onRequiringConfirmation');

@@ -205,19 +205,6 @@ export interface PaymentAmountExtended extends PaymentAmount {
     currencyDisplay?: string;
 }
 
-export type ShopperDetails = {
-    shopperName?: {
-        firstName?: string;
-        lastName?: string;
-    };
-    shopperEmail?: string;
-    countryCode?: string;
-    telephoneNumber?: string;
-    dateOfBirth?: string;
-    billingAddress?: Partial<AddressData>;
-    shippingAddress?: Partial<AddressData>;
-};
-
 export type AddressField = (typeof ADDRESS_SCHEMA)[number];
 
 export type AddressData = {
@@ -329,24 +316,43 @@ export type ResultCode =
     | 'RedirectShopper'
     | 'Refused';
 
-export interface OnPaymentCompletedData {
+export type SessionsResponse = {
     sessionData: string;
     sessionResult: string;
     resultCode: ResultCode;
+};
+
+export interface PaymentMethodsRequestData {
+    order?: Order;
+    locale?: string;
+    countryCode?: string;
+}
+
+export interface CheckoutAdvancedFlowResponse {
+    resultCode: ResultCode;
+    action?: PaymentAction;
+    order?: Order;
+    donationToken?: string;
+    error?: {
+        googlePayError?: google.payments.api.PaymentDataError | string;
+        applePayError?: ApplePayJS.ApplePayError[] | ApplePayJS.ApplePayError;
+    };
 }
 
 export interface PaymentResponseData {
+    resultCode: ResultCode;
     type?: string;
     action?: PaymentAction;
-    resultCode: ResultCode;
     sessionData?: string;
     sessionResult?: string;
     order?: Order;
+    donationToken?: string;
 }
 
-export interface RawPaymentResponse extends PaymentResponseData {
-    [key: string]: any;
-}
+export type RawPaymentResponse = PaymentResponseData &
+    CheckoutAdvancedFlowResponse & {
+        [key: string]: any;
+    };
 
 export type ActionDescriptionType = 'qr-code-loaded' | 'polling-started' | 'fingerprint-iframe-loaded' | 'challenge-iframe-loaded';
 
@@ -354,3 +360,15 @@ export interface ActionHandledReturnObject {
     componentType: string;
     actionDescription: ActionDescriptionType;
 }
+
+export type AdditionalDetailsStateData = {
+    data: {
+        details: {
+            redirectResult?: string;
+            threeDSResult?: string;
+            [key: string]: any;
+        };
+        paymentData?: string;
+        sessionData?: string;
+    };
+};

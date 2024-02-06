@@ -32,6 +32,7 @@ export type CheckoutSessionSetupResponse = {
 
 export type CheckoutSessionPaymentResponse = {
     sessionData: string;
+    sessionResult: string;
     status?: string;
     resultCode: ResultCode;
     action?: PaymentAction;

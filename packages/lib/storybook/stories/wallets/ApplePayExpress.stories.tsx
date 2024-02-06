@@ -2,9 +2,9 @@ import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 import { Container } from '../Container';
 import { ApplePayConfiguration } from '../../../src/components/ApplePay/types';
-import { handleSubmit } from '../../helpers/checkout-handlers';
 import getCurrency from '../../utils/get-currency';
 import { ApplePay } from '../../../src';
+import { makePayment } from '../../helpers/checkout-api-calls';
 
 type ApplePayStory = StoryConfiguration<ApplePayConfiguration>;
 
@@ -152,20 +152,36 @@ export const Express: ApplePayStory = {
         amount: INITIAL_AMOUNT,
         shopperLocale: SHOPPER_LOCALE,
         componentConfiguration: {
-            onSubmit: (state, component) => {
-                const paymentData = {
-                    amount: {
-                        currency: getCurrency(COUNTRY_CODE),
-                        value: ApplePayAmountHelper.getFinalAdyenAmount()
-                    },
-                    countryCode: COUNTRY_CODE,
-                    shopperLocale: SHOPPER_LOCALE
-                };
-                handleSubmit(state, component, null, paymentData);
+            onSubmit: async (state, component, actions) => {
+                try {
+                    const paymentData = {
+                        amount: {
+                            currency: getCurrency(COUNTRY_CODE),
+                            value: ApplePayAmountHelper.getFinalAdyenAmount()
+                        },
+                        countryCode: COUNTRY_CODE,
+                        shopperLocale: SHOPPER_LOCALE
+                    };
+
+                    const { action, order, resultCode, donationToken } = await makePayment(state.data, paymentData);
+
+                    if (!resultCode) actions.reject();
+
+                    actions.resolve({
+                        resultCode,
+                        action,
+                        order,
+                        donationToken
+                    });
+                } catch (error) {
+                    console.error('## onSubmit - critical error', error);
+                    actions.reject();
+                }
             },
 
-            onAuthorized: paymentData => {
-                console.log('Shopper details', paymentData);
+            onAuthorized: (data, actions) => {
+                console.log('Authorized event', data);
+                actions.resolve();
             },
 
             onShippingContactSelected: async (resolve, reject, event) => {

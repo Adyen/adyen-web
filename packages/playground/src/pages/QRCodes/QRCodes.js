@@ -6,22 +6,30 @@ import '../../../config/polyfills';
 import '../../utils';
 import '../../style.scss';
 import './QRCodes.scss';
-import { handleResponse } from '../../handlers';
 import getCurrency from '../../config/getCurrency';
 import getTranslationFile from '../../config/getTranslation';
 
-const makeQRCodePayment = (state, component, countryCode) => {
+const handleQRCodePayment = async (state, component, actions, countryCode) => {
     const currency = getCurrency(countryCode);
     const config = { countryCode, amount: { currency, value: 25940 } };
 
-    return makePayment(state.data, config)
-        .then(response => {
-            component.setStatus('ready');
-            handleResponse(response, component);
-        })
-        .catch(error => {
-            throw Error(error);
+    component.setStatus('loading');
+
+    try {
+        const { action, order, resultCode, donationToken } = await makePayment(state.data, config);
+
+        if (!resultCode) actions.reject();
+
+        actions.resolve({
+            resultCode,
+            action,
+            order,
+            donationToken
         });
+    } catch (error) {
+        console.error('## onSubmit - critical error', error);
+        actions.reject();
+    }
 };
 
 (async () => {
@@ -30,45 +38,51 @@ const makeQRCodePayment = (state, component, countryCode) => {
         locale: shopperLocale,
         translationFile: getTranslationFile(shopperLocale),
         environment: process.env.__CLIENT_ENV__,
-        risk: { node: 'body', onError: console.error }
+        risk: { node: 'body', onError: console.error },
+        onPaymentCompleted(result, element) {
+            console.log('onPaymentCompleted', result, element);
+        },
+        onPaymentFailed(result, element) {
+            console.log('onPaymentFailed', result, element);
+        }
     });
 
     // WechatPay QR
-    new WeChat(window.checkout, {
+    new WeChat(checkout, {
         type: 'wechatpayQR',
-        onSubmit: (state, component) => {
-            return makeQRCodePayment(state, component, 'CN');
+        onSubmit: (state, component, actions) => {
+            handleQRCodePayment(state, component, actions, 'CN');
         }
     }).mount('#wechatpayqr-container');
 
     // BCMC Mobile
-    new BcmcMobile(window.checkout, {
-        onSubmit: (state, component) => {
-            return makeQRCodePayment(state, component, 'BE');
+    new BcmcMobile(checkout, {
+        onSubmit: (state, component, actions) => {
+            handleQRCodePayment(state, component, actions, 'BE');
         }
     }).mount('#bcmcqr-container');
 
-    new Swish(window.checkout, {
-        onSubmit: (state, component) => {
-            return makeQRCodePayment(state, component, 'SE');
+    new Swish(checkout, {
+        onSubmit: (state, component, actions) => {
+            handleQRCodePayment(state, component, actions, 'SE');
         }
     }).mount('#swish-container');
 
-    new PromptPay(window.checkout, {
-        onSubmit: (state, component) => {
-            return makeQRCodePayment(state, component, 'TH');
+    new PromptPay(checkout, {
+        onSubmit: (state, component, actions) => {
+            handleQRCodePayment(state, component, actions, 'TH');
         }
     }).mount('#promptpay-container');
 
-    new PayNow(window.checkout, {
-        onSubmit: (state, component) => {
-            return makeQRCodePayment(state, component, 'SG');
+    new PayNow(checkout, {
+        onSubmit: (state, component, actions) => {
+            handleQRCodePayment(state, component, actions, 'SG');
         }
     }).mount('#paynow-container');
 
-    new DuitNow(window.checkout, {
-        onSubmit: (state, component) => {
-            return makeQRCodePayment(state, component, 'MY');
+    new DuitNow(checkout, {
+        onSubmit: (state, component, actions) => {
+            handleQRCodePayment(state, component, actions, 'MY');
         }
     }).mount('#duitnow-container');
 })();

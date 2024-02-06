@@ -15,7 +15,7 @@ const validTicks = Selector('.adyen-checkout-input__inline-validation--valid');
 const voucher = Selector('.adyen-checkout__voucher-result--directdebit_GB');
 const voucherButton = Selector('.adyen-checkout__voucher-result--directdebit_GB .adyen-checkout__button--action');
 
-const TEST_SPEED = 1;
+const TEST_SPEED = 0.8;
 
 fixture`Testing BacsDD in dropin`.page(BASE_URL + '?countryCode=GB').clientScripts('bacs.clientScripts.js');
 

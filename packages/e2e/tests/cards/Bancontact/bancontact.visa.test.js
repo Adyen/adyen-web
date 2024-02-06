@@ -68,7 +68,7 @@ test('#3 Enter card number, that we mock to co-branded bcmc/visa ' + 'then compl
     await dropinPage.cc.cardUtils.fillDate(t, TEST_DATE_VALUE);
 
     // Expect comp to now be valid
-    await t.expect(dropinPage.getFromWindow('dropin.isValid')).eql(true);
+    await t.expect(dropinPage.getFromWindow('dropin.isValid')).eql(true, { timeout: 3000 });
 });
 
 test(

@@ -5,44 +5,54 @@ import {
     PaymentAction,
     PaymentMethodsResponse,
     ActionHandledReturnObject,
-    OnPaymentCompletedData,
-    PaymentData
+    CheckoutAdvancedFlowResponse,
+    PaymentMethodsRequestData,
+    SessionsResponse,
+    ResultCode,
+    AdditionalDetailsStateData
 } from '../types/global-types';
 import { AnalyticsOptions } from './Analytics/types';
 import { RiskModuleOptions } from './RiskModule/RiskModule';
 import UIElement from '../components/internal/UIElement/UIElement';
 import AdyenCheckoutError from './Errors/AdyenCheckoutError';
-import { GiftCardElementData } from '../components/Giftcard/types';
+import { onBalanceCheckCallbackType, onOrderRequestCallbackType } from '../components/Giftcard/types';
 import { SRPanelConfig } from './Errors/types';
 import { NewableComponent } from './core.registry';
 import Session from './CheckoutSession';
 import PaymentMethods from './ProcessResponse/PaymentMethods';
 
-type PromiseResolve = typeof Promise.resolve;
-
-type PromiseReject = typeof Promise.reject;
-
 export interface ICore {
     initialize(): Promise<ICore>;
+
     register(...items: NewableComponent[]): void;
-    update({ order }: { order?: Order }): Promise<ICore>;
+
+    update(options: CoreConfiguration): Promise<ICore>;
+
     remove(component): ICore;
+
     submitDetails(details: any): void;
+
     getCorePropsForComponent(): any;
+
     getComponent(txVariant: string): NewableComponent | undefined;
+
     createFromAction(action: PaymentAction, options: any): any;
+
     storeElementReference(element: UIElement): void;
+
     options: CoreConfiguration;
     paymentMethodsResponse: PaymentMethods;
     session?: Session;
 }
+
+export type AdyenEnvironment = 'test' | 'live' | 'live-us' | 'live-au' | 'live-apse' | 'live-in' | string;
 
 export interface CoreConfiguration {
     session?: any;
     /**
      * Use test. When you're ready to accept live payments, change the value to one of our {@link https://docs.adyen.com/checkout/drop-in-web#testing-your-integration | live environments}.
      */
-    environment?: 'test' | 'live' | 'live-us' | 'live-au' | 'live-apse' | 'live-in' | string;
+    environment?: AdyenEnvironment;
 
     /**
      * Used internally by Pay By Link in order to set its own URL's instead of using the ones mapped in our codebase.
@@ -135,29 +145,69 @@ export interface CoreConfiguration {
     setStatusAutomatically?: boolean;
 
     beforeRedirect?(
-        resolve: PromiseResolve,
-        reject: PromiseReject,
+        resolve: () => void,
+        reject: () => void,
         redirectData: {
             url: string;
             method: string;
             data?: any;
         }
-    ): Promise<void>;
+    ): void;
 
     beforeSubmit?(
         state: any,
         element: UIElement,
         actions: {
-            resolve: PromiseResolve;
-            reject: PromiseReject;
+            resolve: (data: any) => void;
+            reject: () => void;
         }
-    ): Promise<void>;
+    ): void;
 
-    onPaymentCompleted?(data: OnPaymentCompletedData, element?: UIElement): void;
+    /**
+     * Called when the payment succeeds.
+     *
+     * The first parameter is the sessions response (when using sessions flow), or the result code.
+     *
+     * @param data
+     * @param element
+     */
+    onPaymentCompleted?(data: SessionsResponse | { resultCode: ResultCode }, element?: UIElement): void;
 
-    onSubmit?(state: any, element: UIElement): void;
+    /**
+     * Called when the payment fails.
+     *
+     * The first parameter is populated when merchant is using sessions, or when the payment was rejected
+     * with an object. (Ex: 'action.reject(obj)' ). Otherwise, it will be empty.
+     *
+     * @param data - session response or resultCode. It can also be undefined if payment was rejected without argument ('action.reject()')
+     * @param element
+     */
+    onPaymentFailed?(data?: SessionsResponse | { resultCode: ResultCode }, element?: UIElement): void;
 
-    onAdditionalDetails?(state: any, element?: UIElement): void;
+    onSubmit?(
+        state: any,
+        element: UIElement,
+        actions: {
+            resolve: (response: CheckoutAdvancedFlowResponse) => void;
+            reject: () => void;
+        }
+    ): void;
+
+    /**
+     * Callback used in the Advanced flow to perform the /payments/details API call.
+     *
+     * @param state
+     * @param element - Component submitting details. It is undefined when using checkout.submitDetails()
+     * @param actions
+     */
+    onAdditionalDetails?(
+        state: AdditionalDetailsStateData,
+        element: UIElement,
+        actions: {
+            resolve: (response: CheckoutAdvancedFlowResponse) => void;
+            reject: () => void;
+        }
+    ): void;
 
     onActionHandled?(data: ActionHandledReturnObject): void;
 
@@ -165,24 +215,23 @@ export interface CoreConfiguration {
 
     onError?(error: AdyenCheckoutError, element?: UIElement): void;
 
-    onBalanceCheck?(resolve: PromiseResolve, reject: PromiseReject, data: GiftCardElementData): Promise<void>;
+    onBalanceCheck?: onBalanceCheckCallbackType;
 
-    onOrderRequest?(resolve: PromiseResolve, reject: PromiseReject, data: PaymentData): Promise<void>;
+    onOrderRequest?: onOrderRequestCallbackType;
+
+    onPaymentMethodsRequest?(
+        data: PaymentMethodsRequestData,
+        actions: { resolve: (response: PaymentMethodsResponse) => void; reject: () => void }
+    ): void;
 
     onOrderCancel?(order: Order): void;
 
     /**
-     * Only used in Components combined with Sessions flow
-     * Callback used to inform when the order is created.
+     * Called when the gift card balance is less than the transaction amount.
+     * Returns an Order object that includes the remaining amount to be paid.
      * https://docs.adyen.com/payment-methods/gift-cards/web-component?tab=config-sessions_1
      */
-    onOrderCreated?(data: { order: Order }): void;
-
-    /**
-     * Used only in the Donation Component when shopper declines to donate
-     * https://docs.adyen.com/online-payments/donations/web-component
-     */
-    onCancel?(): void;
+    onOrderUpdated?(data: { order: Order }): void;
 
     /**
      * @internal

@@ -52,7 +52,7 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
         return getCheckoutDetails(loadingContext, clientKey, request);
     }
 
-    handleDeclineFlow() {
+    public handleDeclineFlow() {
         const { amazonCheckoutSessionId, configuration = {}, loadingContext, clientKey } = this.props;
         if (!amazonCheckoutSessionId) return console.error('Could handle the decline flow. Missing checkoutSessionId.');
 
@@ -96,6 +96,10 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
                     ref={ref => {
                         this.componentRef = ref;
                     }}
+                    showPayButton={this.props.showPayButton}
+                    onClick={this.props.onClick}
+                    onError={this.props.onError}
+                    onSignOut={this.props.onSignOut}
                     {...this.props}
                 />
             </CoreProvider>

@@ -28,6 +28,12 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
         environment: process.env.__CLIENT_ENV__,
         onChange: handleChange,
         onSubmit: handleSubmit,
+        onPaymentCompleted(result, element) {
+            console.log('onPaymentCompleted', result, element);
+        },
+        onPaymentFailed(result, element) {
+            console.log('onPaymentFailed', result, element);
+        },
         onError: console.error,
         showPayButton: true,
         amount // Optional. Used to display the amount in the Pay Button.
@@ -105,7 +111,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
         window.affirm = new Affirm(window.core, {
             countryCode: 'US', // 'US' / 'CA'
             visibility: {
-                personalDetails: 'editable', // editable [default] / readOnly / hidden
+                personalDetails: 'hidden', // editable [default] / readOnly / hidden
                 billingAddress: 'editable',
                 deliveryAddress: 'editable'
             },

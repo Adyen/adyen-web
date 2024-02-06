@@ -11,7 +11,7 @@ import { setupMock } from '../../mocks/setup/setup.mock';
 import { statusMock } from '../../mocks/status/status.mock';
 
 test.describe('ANCV - Sessions', () => {
-    test('should call onOrderCreated when payment is partially authorised (Sessions flow)', async ({ ancvPage }) => {
+    test('should call onOrderUpdated when payment is partially authorised (Sessions flow)', async ({ ancvPage }) => {
         const { ancv, page } = ancvPage;
 
         await createOrderMock(page, orderCreatedMockData);

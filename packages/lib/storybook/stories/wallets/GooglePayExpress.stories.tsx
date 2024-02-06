@@ -2,9 +2,9 @@ import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 import { Container } from '../Container';
 import { GooglePayConfiguration } from '../../../src/components/GooglePay/types';
-import { handleSubmit } from '../../helpers/checkout-handlers';
 import getCurrency from '../../utils/get-currency';
 import { GooglePay } from '../../../src';
+import { makePayment } from '../../helpers/checkout-api-calls';
 
 type GooglePayStory = StoryConfiguration<GooglePayConfiguration>;
 
@@ -171,20 +171,38 @@ export const Express: GooglePayStory = {
         amount: INITIAL_AMOUNT,
         shopperLocale: SHOPPER_LOCALE,
         componentConfiguration: {
-            onSubmit: (state, component) => {
-                const paymentData = {
-                    amount: {
-                        currency: getCurrency(COUNTRY_CODE),
-                        value: finalAmount
-                    },
-                    countryCode: COUNTRY_CODE,
-                    shopperLocale: SHOPPER_LOCALE
-                };
-                handleSubmit(state, component, null, paymentData);
+            onSubmit: async (state, component, actions) => {
+                try {
+                    const paymentData = {
+                        amount: {
+                            currency: getCurrency(COUNTRY_CODE),
+                            value: finalAmount
+                        },
+                        countryCode: COUNTRY_CODE,
+                        shopperLocale: SHOPPER_LOCALE
+                    };
+
+                    const { action, order, resultCode, donationToken } = await makePayment(state.data, paymentData);
+
+                    if (!resultCode) actions.reject();
+
+                    actions.resolve({
+                        resultCode,
+                        action,
+                        order,
+                        donationToken
+                    });
+                } catch (error) {
+                    console.error('## onSubmit - critical error', error);
+                    actions.reject();
+                }
             },
-            onAuthorized: paymentData => {
-                console.log('Shopper details', paymentData);
+
+            onAuthorized: (data, actions) => {
+                console.log('Authorized data', data);
+                actions.resolve();
             },
+
             transactionInfo: getTransactionInfo(),
 
             callbackIntents: ['SHIPPING_ADDRESS', 'SHIPPING_OPTION'],

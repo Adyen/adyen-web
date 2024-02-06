@@ -2,7 +2,7 @@ import { AdyenCheckout, Dropin } from '@adyen/adyen-web/auto';
 import '@adyen/adyen-web/styles/adyen.css';
 import { getPaymentMethods } from '../../services';
 import { amount, shopperLocale, countryCode } from '../../services/commonConfig';
-import { handleSubmit, handleAdditionalDetails, handleError } from '../../handlers';
+import { handleSubmit, handleAdditionalDetails, handleError, handlePaymentCompleted } from '../../handlers';
 import '../../style.scss';
 
 const initCheckout = async () => {
@@ -17,6 +17,7 @@ const initCheckout = async () => {
         environment: 'test',
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
+        onPaymentCompleted: handlePaymentCompleted,
         onError: handleError,
         ...window.mainConfiguration
     });
