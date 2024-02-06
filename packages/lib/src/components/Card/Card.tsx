@@ -16,6 +16,7 @@ import { UIElementStatus } from '../internal/UIElement/types';
 import UIElement from '../internal/UIElement';
 import PayButton from '../internal/PayButton';
 import { PayButtonProps } from '../internal/PayButton/PayButton';
+import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from '../../core/Errors/AdyenCheckoutError';
 
 export class CardElement extends UIElement<CardConfiguration> {
     public static type = TxVariants.scheme;
@@ -60,6 +61,18 @@ export class CardElement extends UIElement<CardConfiguration> {
         const isZeroAuth = props.amount?.value === 0;
         const enableStoreDetails = isZeroAuth ? false : props.session?.configuration?.enableStoreDetails || props.enableStoreDetails;
 
+        const storedCardID = props.storedPaymentMethodId || props.id; // check if we've been passed a (checkout) processed storedCard or one that merchant has pulled from the PMs response
+        const isEcommerceStoredCard = storedCardID && props?.supportedShopperInteractions?.includes('Ecommerce'); // If we have a storedCard does it support Ecommerce (it might not if the merchant has pulled it from the PMs response)
+
+        // If we have a storedPM but it doesn't support Ecommerce - we can't make a storedCard component from it
+        if (storedCardID && !isEcommerceStoredCard) {
+            // console.warn('WARNING: you are trying to create a storedCard from a stored PM that does not support Ecommerce interactions');
+            throw new AdyenCheckoutError(
+                IMPLEMENTATION_ERROR,
+                'You are trying to create a storedCard from a stored PM that does not support Ecommerce interactions'
+            );
+        }
+
         return {
             ...props,
             // Mismatch between hasHolderName & holderNameRequired which can mean card can never be valid
@@ -93,7 +106,8 @@ export class CardElement extends UIElement<CardConfiguration> {
                 shopperEmail: props.clickToPayConfiguration?.shopperEmail || props?.core?.options?.session?.shopperEmail,
                 telephoneNumber: props.clickToPayConfiguration?.telephoneNumber || props?.core?.options?.session?.telephoneNumber,
                 locale: props.clickToPayConfiguration?.locale || props.i18n?.locale?.replace('-', '_')
-            }
+            },
+            ...(storedCardID && { storedPaymentMethodId: storedCardID })
         };
     }
 
