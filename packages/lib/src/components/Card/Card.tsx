@@ -66,7 +66,7 @@ export class CardElement extends UIElement<CardConfiguration> {
 
         // If we have a storedPM but it doesn't support Ecommerce - we can't make a storedCard component from it
         if (storedCardID && !isEcommerceStoredCard) {
-            // console.warn('WARNING: you are trying to create a storedCard from a stored PM that does not support Ecommerce interactions');
+            // TODO - Decide if an error is too severe? Would a console.warning suffice?
             throw new AdyenCheckoutError(
                 IMPLEMENTATION_ERROR,
                 'You are trying to create a storedCard from a stored PM that does not support Ecommerce interactions'
