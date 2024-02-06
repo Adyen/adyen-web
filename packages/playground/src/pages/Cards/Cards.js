@@ -59,7 +59,14 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     // Stored Card
     if (!onlyShowCard && showComps.storedCard) {
         if (checkout.paymentMethodsResponse.storedPaymentMethods && checkout.paymentMethodsResponse.storedPaymentMethods.length > 0) {
-            const storedCardData = checkout.paymentMethodsResponse.storedPaymentMethods[2];
+            // We are only interested in card based storedPaymentMethods
+            let storedCardData;
+            for (let i = 0; i < checkout.paymentMethodsResponse.storedPaymentMethods.length; i++) {
+                if (checkout.paymentMethodsResponse.storedPaymentMethods[i].brand) {
+                    storedCardData = checkout.paymentMethodsResponse.storedPaymentMethods[i];
+                    break;
+                }
+            }
 
             window.storedCard = new Card({
                 core: checkout,
