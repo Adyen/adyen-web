@@ -83,9 +83,17 @@ class DropinElement extends UIElement<DropinConfiguration> {
     /**
      * Calls the onSubmit event with the state of the activePaymentMethod
      */
-    public submit(): void {
+    public override submit(): void {
         if (!this.activePaymentMethod) {
             throw new Error('No active payment method.');
+        }
+
+        if (!this.activePaymentMethod.isValid) {
+            this.activePaymentMethod.showValidation();
+        }
+
+        if (this.activePaymentMethod.isInstantPayment) {
+            this.closeActivePaymentMethod();
         }
 
         this.activePaymentMethod.submit();

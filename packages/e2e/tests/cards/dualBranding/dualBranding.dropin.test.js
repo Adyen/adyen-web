@@ -4,8 +4,8 @@ import cu from '../utils/cardUtils';
 import { DUAL_BRANDED_CARD, REGULAR_TEST_CARD, DUAL_BRANDED_CARD_EXCLUDED } from '../utils/constants';
 import { BASE_URL } from '../../pages';
 
-const dualBrandingIconHolder = Selector('.adyen-checkout__payment-method--card .adyen-checkout__card__dual-branding__buttons');
-const dualBrandingIconHolderActive = Selector('.adyen-checkout__payment-method--card .adyen-checkout__card__dual-branding__buttons--active');
+const dualBrandingIconHolder = Selector('.adyen-checkout__payment-method--scheme .adyen-checkout__card__dual-branding__buttons');
+const dualBrandingIconHolderActive = Selector('.adyen-checkout__payment-method--scheme .adyen-checkout__card__dual-branding__buttons--active');
 
 const NOT_SELECTED_CLASS = 'adyen-checkout__card__cardNumber__brandIcon--not-selected';
 
@@ -15,7 +15,7 @@ const getPropFromPMData = ClientFunction(prop => {
 
 const TEST_SPEED = 1;
 
-const iframeSelector = getIframeSelector('.adyen-checkout__payment-method--card iframe');
+const iframeSelector = getIframeSelector('.adyen-checkout__payment-method--scheme iframe');
 
 const cardUtils = cu(iframeSelector);
 

@@ -19,18 +19,19 @@ export const GENERIC_OPTIONS = [
 
     // Events
     'onPaymentCompleted',
+    'onPaymentFailed',
     'beforeRedirect',
     'beforeSubmit',
     'onSubmit',
     'onActionHandled',
     'onAdditionalDetails',
-    'onCancel',
     'onChange',
     'onError',
     'onBalanceCheck',
     'onOrderRequest',
-    'onOrderCreated',
-    'setStatusAutomatically'
+    'onOrderUpdated',
+    'setStatusAutomatically',
+    'onPaymentMethodsRequest'
 ];
 
 export const DEFAULT_HTTP_TIMEOUT = 60000;

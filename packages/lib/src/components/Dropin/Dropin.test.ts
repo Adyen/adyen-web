@@ -63,7 +63,7 @@ describe('Dropin', () => {
 
             dropin.handleAction(fingerprintAction);
             expect(dropin.componentFromAction instanceof ThreeDS2DeviceFingerprint).toEqual(true);
-            expect((dropin.componentFromAction as ThreeDS2DeviceFingerprint).props.showSpinner).toEqual(false);
+            expect((dropin.componentFromAction as unknown as ThreeDS2DeviceFingerprint).props.showSpinner).toEqual(false);
             expect(dropin.componentFromAction.props.statusType).toEqual('loading');
             expect(dropin.componentFromAction.props.isDropin).toBe(true);
         });
@@ -83,7 +83,7 @@ describe('Dropin', () => {
             expect(dropin.componentFromAction instanceof ThreeDS2Challenge).toEqual(true);
             expect(dropin.componentFromAction.props.statusType).toEqual('custom');
             expect(dropin.componentFromAction.props.isDropin).toBe(true);
-            expect((dropin.componentFromAction as ThreeDS2Challenge).props.size).toEqual('02');
+            expect((dropin.componentFromAction as unknown as ThreeDS2Challenge).props.size).toEqual('02');
         });
 
         test('new challenge action gets challengeWindowSize from paymentMethodsConfiguration', async () => {
@@ -101,12 +101,15 @@ describe('Dropin', () => {
                 analytics: { enabled: false }
             });
 
-            const dropin = new Dropin({ core: checkout, paymentMethodsConfiguration: { card: { challengeWindowSize: '02' } } });
+            const dropin = new Dropin({
+                core: checkout,
+                paymentMethodsConfiguration: { card: { challengeWindowSize: '02' } }
+            });
             jest.spyOn(dropin, 'activePaymentMethod', 'get').mockReturnValue({ props: { challengeWindowSize: '02' } });
 
             dropin.handleAction(challengeAction);
             expect(dropin.componentFromAction instanceof ThreeDS2Challenge).toEqual(true);
-            expect((dropin.componentFromAction as ThreeDS2Challenge).props.challengeWindowSize).toEqual('02');
+            expect((dropin.componentFromAction as unknown as ThreeDS2Challenge).props.challengeWindowSize).toEqual('02');
         });
 
         test('new challenge action gets challengeWindowSize from handleAction config', async () => {
@@ -124,14 +127,17 @@ describe('Dropin', () => {
                 challengeWindowSize: '03'
             });
             expect(dropin.componentFromAction instanceof ThreeDS2Challenge).toEqual(true);
-            expect((dropin.componentFromAction as ThreeDS2Challenge).props.challengeWindowSize).toEqual('03');
+            expect((dropin.componentFromAction as unknown as ThreeDS2Challenge).props.challengeWindowSize).toEqual('03');
         });
     });
 
     describe('Instant Payments feature', () => {
         test('formatProps formats instantPaymentTypes removing duplicates and invalid values', async () => {
-            // @ts-ignore Testing invalid interface
-            const dropin = new Dropin({ core: checkout, instantPaymentTypes: ['paywithgoogle', 'paywithgoogle', 'paypal', 'alipay'] });
+            const dropin = new Dropin({
+                core: checkout,
+                // @ts-ignore Valid test case
+                instantPaymentTypes: ['paywithgoogle', 'paywithgoogle', 'paypal', 'alipay']
+            });
             expect(dropin.props.instantPaymentTypes).toStrictEqual(['paywithgoogle']);
         });
     });

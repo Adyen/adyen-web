@@ -1,6 +1,6 @@
 import { AdyenCheckout } from '../../src/index';
-import { cancelOrder, checkBalance, createOrder, getPaymentMethods } from './checkout-api-calls';
-import { handleAdditionalDetails, handleChange, handleError, handleSubmit } from './checkout-handlers';
+import { cancelOrder, checkBalance, createOrder, getPaymentMethods, makeDetailsCall, makePayment } from './checkout-api-calls';
+import { handleChange, handleError, handleFinalState } from './checkout-handlers';
 import getCurrency from '../utils/get-currency';
 import { AdyenCheckoutProps } from '../stories/types';
 import Checkout from '../../src/core/core';
@@ -12,7 +12,11 @@ async function createAdvancedFlowCheckout({ showPayButton, countryCode, shopperL
         value: Number(amount)
     };
 
-    const paymentMethodsResponse: PaymentMethodsResponse = await getPaymentMethods({ amount: paymentAmount, shopperLocale, countryCode });
+    const paymentMethodsResponse: PaymentMethodsResponse = await getPaymentMethods({
+        amount: paymentAmount,
+        shopperLocale,
+        countryCode
+    });
 
     const checkout = await AdyenCheckout({
         clientKey: process.env.CLIENT_KEY,
@@ -23,26 +27,69 @@ async function createAdvancedFlowCheckout({ showPayButton, countryCode, shopperL
         locale: shopperLocale,
         showPayButton,
 
-        onSubmit: (state, component) => {
-            const paymentData = {
-                amount: paymentAmount,
-                countryCode,
-                shopperLocale
-            };
-            handleSubmit(state, component, checkout, paymentData);
+        onSubmit: async (state, component, actions) => {
+            try {
+                const paymentData = {
+                    amount: paymentAmount,
+                    countryCode,
+                    shopperLocale
+                };
+
+                const { action, order, resultCode, donationToken } = await makePayment(state.data, paymentData);
+
+                if (!resultCode) actions.reject();
+
+                actions.resolve({
+                    resultCode,
+                    action,
+                    order,
+                    donationToken
+                });
+            } catch (error) {
+                console.error('## onSubmit - critical error', error);
+                actions.reject();
+            }
+        },
+
+        onAdditionalDetails: async (state, component, actions) => {
+            try {
+                const { resultCode, action, order, donationToken } = await makeDetailsCall(state.data);
+
+                if (!resultCode) actions.reject();
+
+                actions.resolve({
+                    resultCode,
+                    action,
+                    order,
+                    donationToken
+                });
+            } catch (error) {
+                console.error('## onAdditionalDetails - critical error', error);
+                actions.reject();
+            }
+        },
+
+        onPaymentCompleted(result, element) {
+            console.log('onPaymentCompleted', result, element);
+            handleFinalState(result, element);
+        },
+
+        onPaymentFailed(result, element) {
+            console.log('onPaymentFailed', result, element);
+            handleFinalState(result, element);
         },
 
         onChange: (state, component) => {
             handleChange(state, component);
         },
 
-        onAdditionalDetails: async (state, component) => {
-            await handleAdditionalDetails(state, component, checkout);
-        },
-
         onBalanceCheck: async (resolve, reject, data) => {
+            const payload = {
+                amount: paymentAmount,
+                ...data
+            };
             try {
-                const res = await checkBalance(data);
+                const res = await checkBalance(payload);
                 resolve(res);
             } catch (e) {
                 reject(e);

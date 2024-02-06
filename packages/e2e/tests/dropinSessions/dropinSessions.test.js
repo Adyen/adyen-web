@@ -5,7 +5,7 @@ import { getIframeSelector } from '../utils/commonUtils';
 import cu from '../cards/utils/cardUtils';
 import { TEST_CVC_VALUE } from '../cards/utils/constants';
 
-const iframeSelector = getIframeSelector('.adyen-checkout__payment-method--card iframe');
+const iframeSelector = getIframeSelector('.adyen-checkout__payment-method--scheme iframe');
 const cardUtils = cu(iframeSelector);
 const { setupLogger, paymentLogger } = loggers;
 

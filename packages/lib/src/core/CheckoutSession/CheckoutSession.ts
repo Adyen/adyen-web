@@ -16,6 +16,7 @@ import {
 } from './types';
 import cancelOrder from '../Services/sessions/cancel-order';
 import { onOrderCancelData } from '../../components/Dropin/types';
+import { AdditionalDetailsStateData } from '../../types/global-types';
 
 class Session {
     private readonly session: CheckoutSession;
@@ -95,7 +96,7 @@ class Session {
     /**
      * Submits session payment additional details
      */
-    submitDetails(data): Promise<CheckoutSessionDetailsResponse> {
+    submitDetails(data: AdditionalDetailsStateData['data']): Promise<CheckoutSessionDetailsResponse> {
         return submitDetails(data, this).then(response => {
             if (response.sessionData) {
                 this.updateSessionData(response.sessionData);

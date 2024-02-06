@@ -30,7 +30,6 @@ export default {
     totalPriceStatus: 'FINAL' as google.payments.api.TotalPriceStatus,
 
     // Callbacks
-    onAuthorized: params => params,
     onClick: resolve => resolve(),
 
     // CardParameters
@@ -48,5 +47,7 @@ export default {
     shippingAddressParameters: undefined, // https://developers.google.com/pay/api/web/reference/object#ShippingAddressParameters
     shippingOptionRequired: false,
     shippingOptionParameters: undefined,
-    paymentMethods: []
+    paymentMethods: [],
+
+    callbackIntents: []
 };

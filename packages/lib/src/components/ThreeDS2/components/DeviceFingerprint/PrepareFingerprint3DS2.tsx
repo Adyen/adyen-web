@@ -3,6 +3,8 @@ import DoFingerprint3DS2 from './DoFingerprint3DS2';
 import { createFingerprintResolveData, createOldFingerprintResolveData, handleErrorCode, prepareFingerPrintData } from '../utils';
 import { PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State } from './types';
 import { FingerPrintData, ResultObject } from '../../types';
+import AdyenCheckoutError, { ERROR } from '../../../../core/Errors/AdyenCheckoutError';
+import { THREEDS2_FINGERPRINT_ERROR } from '../../config';
 
 class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State> {
     public static type = 'scheme';
@@ -23,10 +25,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             this.state = { status: 'error' };
             // TODO - confirm that we should do this, or is it possible to proceed to the challenge anyway?
             //  ...in which case we should console.debug the error object and then call: this.setStatusComplete({ threeDSCompInd: 'N' });
-            this.props.onError({
-                errorCode: this.props.dataKey,
-                message: 'Missing fingerprintToken parameter'
-            });
+            this.props.onError(new AdyenCheckoutError(ERROR, `${THREEDS2_FINGERPRINT_ERROR}: Missing "token" property from 3DS2Fingerprint action`));
         }
     }
 

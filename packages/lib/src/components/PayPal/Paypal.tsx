@@ -8,8 +8,8 @@ import './Paypal.scss';
 import CoreProvider from '../../core/Context/CoreProvider';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { ERRORS } from './constants';
-import { createShopperDetails } from './utils/create-shopper-details';
 import { TxVariants } from '../tx-variants';
+import { formatPaypalOrderContatcToAdyenFormat } from './utils/format-paypal-order-contact-to-adyen-format';
 
 class PaypalElement extends UIElement<PayPalConfiguration> {
     public static type = TxVariants.paypal;
@@ -90,24 +90,37 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         return true;
     }
 
-    private handleCancel = () => {
-        this.handleError(new AdyenCheckoutError('CANCEL'));
-    };
-
     private handleOnApprove = (data: any, actions: any): Promise<void> | void => {
-        const { onShopperDetails } = this.props;
+        const { onAuthorized } = this.props;
         const state = { data: { details: data, paymentData: this.paymentData } };
 
-        if (!onShopperDetails) {
+        if (!onAuthorized) {
             this.handleAdditionalDetails(state);
             return;
         }
 
         return actions.order
             .get()
-            .then(paypalOrder => {
-                const shopperDetails = createShopperDetails(paypalOrder);
-                return new Promise<void>((resolve, reject) => onShopperDetails(shopperDetails, paypalOrder, { resolve, reject }));
+            .then((paypalOrder: any) => {
+                const billingAddress = formatPaypalOrderContatcToAdyenFormat(paypalOrder?.payer);
+                const deliveryAddress = formatPaypalOrderContatcToAdyenFormat(paypalOrder?.purchase_units?.[0].shipping, true);
+
+                this.setState({
+                    authorizedEvent: paypalOrder,
+                    ...(billingAddress && { billingAddress }),
+                    ...(deliveryAddress && { deliveryAddress })
+                });
+
+                return new Promise<void>((resolve, reject) =>
+                    onAuthorized(
+                        {
+                            authorizedEvent: paypalOrder,
+                            ...(billingAddress && { billingAddress }),
+                            ...(deliveryAddress && { deliveryAddress })
+                        },
+                        { resolve, reject }
+                    )
+                );
             })
             .then(() => this.handleAdditionalDetails(state))
             .catch(error => this.handleError(new AdyenCheckoutError('ERROR', 'Something went wrong while parsing PayPal Order', { cause: error })));
@@ -142,7 +155,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                         this.componentRef = ref;
                     }}
                     {...this.props}
-                    onCancel={this.handleCancel}
+                    onCancel={() => this.handleError(new AdyenCheckoutError('CANCEL'))}
                     onChange={this.setState}
                     onApprove={this.handleOnApprove}
                     onError={error => {

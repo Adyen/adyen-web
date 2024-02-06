@@ -34,6 +34,12 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         onChange: handleChange,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
+        onPaymentCompleted(result, element) {
+            console.log('onPaymentCompleted', result, element);
+        },
+        onPaymentFailed(result, element) {
+            console.log('onPaymentFailed', result, element);
+        },
         onError: (error, component) => {
             console.info(error, component);
         },

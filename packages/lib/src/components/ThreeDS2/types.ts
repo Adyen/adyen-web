@@ -1,15 +1,15 @@
 import { ICore } from '../../core/types';
-import { ErrorCodeObject } from './components/utils';
 import UIElement from '../internal/UIElement';
 import { ActionHandledReturnObject } from '../../types/global-types';
 import Language from '../../language';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 
 export interface ThreeDS2DeviceFingerprintConfiguration {
     core: ICore;
     dataKey: string;
     token: string;
     notificationURL: string;
-    onError: (error?: string | ErrorCodeObject) => void;
+    onError: (error: AdyenCheckoutError, element?: UIElement) => void;
     paymentData: string;
     showSpinner: boolean;
     type: string;
@@ -25,7 +25,7 @@ export interface ThreeDS2ChallengeConfiguration {
     token?: string;
     dataKey?: string;
     notificationURL?: string;
-    onError?: (error: string | ErrorCodeObject) => void;
+    onError?: (error: AdyenCheckoutError, element?: UIElement) => void;
     paymentData?: string;
     size?: string;
     challengeWindowSize?: '01' | '02' | '03' | '04' | '05';

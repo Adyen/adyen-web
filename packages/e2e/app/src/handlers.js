@@ -17,26 +17,43 @@ export function handleError(obj) {
     }
 }
 
-export function handleSubmit(state, component) {
-    component.setStatus('loading');
+export async function handleSubmit(state, component, actions) {
+    try {
+        const { action, order, resultCode, donationToken } = await makePayment(state.data);
 
-    return makePayment(state.data)
-        .then(response => {
-            component.setStatus('ready');
-            handleResponse(response, component);
-        })
-        .catch(error => {
-            throw Error(error);
+        if (!resultCode) actions.reject();
+
+        actions.resolve({
+            resultCode,
+            action,
+            order,
+            donationToken
         });
+    } catch (error) {
+        console.error('## onSubmit - critical error', error);
+        actions.reject();
+    }
 }
 
-export function handleAdditionalDetails(details, component) {
-    return makeDetailsCall(details.data)
-        .then(response => {
-            component.setStatus('ready');
-            handleResponse(response, component);
-        })
-        .catch(error => {
-            throw Error(error);
+export async function handleAdditionalDetails(state, component, actions) {
+    try {
+        const { resultCode, action, order, donationToken } = await makeDetailsCall(state.data);
+
+        if (!resultCode) actions.reject();
+
+        actions.resolve({
+            resultCode,
+            action,
+            order,
+            donationToken
         });
+    } catch (error) {
+        console.error('## onAdditionalDetails - critical error', error);
+        actions.reject();
+    }
+}
+
+export function handlePaymentCompleted(data, component) {
+    component.remove();
+    alert(data.resultCode);
 }

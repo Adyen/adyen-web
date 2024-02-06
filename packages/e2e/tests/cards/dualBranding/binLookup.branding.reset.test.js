@@ -7,7 +7,7 @@ import { BCMC_CARD, UNKNOWN_VISA_CARD, REGULAR_TEST_CARD } from '../utils/consta
 const cvcSpan = Selector('.adyen-checkout__dropin .adyen-checkout__field__cvc');
 
 const brandingIcon = Selector('.adyen-checkout__dropin .adyen-checkout__card__cardNumber__brandIcon');
-const dualBrandingIconHolderActive = Selector('.adyen-checkout__payment-method--card .adyen-checkout__card__dual-branding__buttons--active');
+const dualBrandingIconHolderActive = Selector('.adyen-checkout__payment-method--scheme .adyen-checkout__card__dual-branding__buttons--active');
 
 const getPropFromPMData = ClientFunction(prop => {
     return window.dropin.dropinRef.state.activePaymentMethod.formatData().paymentMethod[prop];
@@ -15,7 +15,7 @@ const getPropFromPMData = ClientFunction(prop => {
 
 const TEST_SPEED = 1;
 
-const iframeSelector = getIframeSelector('.adyen-checkout__payment-method--card iframe');
+const iframeSelector = getIframeSelector('.adyen-checkout__payment-method--scheme iframe');
 
 const cardUtils = cu(iframeSelector);
 

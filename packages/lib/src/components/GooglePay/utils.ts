@@ -1,3 +1,5 @@
+import { AddressData } from '../../types/global-types';
+
 /**
  *
  */
@@ -16,20 +18,31 @@ export function resolveEnvironment(env = 'TEST'): google.payments.api.Environmen
     }
 }
 
-export function mapBrands(brands) {
-    const brandMapping = {
-        mc: 'MASTERCARD',
-        amex: 'AMEX',
-        visa: 'VISA',
-        interac: 'INTERAC',
-        discover: 'DISCOVER'
+/**
+ * This function formats Google Pay contact format to Adyen address format
+ *
+ * Setting 'houseNumberOrName' to ZZ won't affect the AVS check, and it will make the algorithm take the
+ * house number from the 'street' property.
+ */
+export function formatGooglePayContactToAdyenAddressFormat(
+    paymentContact?: Partial<google.payments.api.Address>,
+    isDeliveryAddress?: boolean
+): AddressData | undefined {
+    if (!paymentContact) {
+        return;
+    }
+
+    return {
+        postalCode: paymentContact.postalCode,
+        country: paymentContact.countryCode,
+        street: [paymentContact.address1, paymentContact.address2, paymentContact.address3].join(' ').trim(),
+        houseNumberOrName: 'ZZ',
+        city: paymentContact.locality || '',
+        ...(paymentContact.administrativeArea && { stateOrProvince: paymentContact.administrativeArea }),
+        ...(isDeliveryAddress && {
+            firstName: paymentContact.name
+        })
     };
-    return brands.reduce((accumulator, item) => {
-        if (!!brandMapping[item] && !accumulator.includes(brandMapping[item])) {
-            accumulator.push(brandMapping[item]);
-        }
-        return accumulator;
-    }, []);
 }
 
 const supportedLocales = [

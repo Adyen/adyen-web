@@ -5,7 +5,7 @@ import PaymentMethods from './ProcessResponse/PaymentMethods';
 import getComponentForAction from './ProcessResponse/PaymentAction';
 import { resolveEnvironment, resolveCDNEnvironment } from './Environment';
 import Analytics from './Analytics';
-import { PaymentAction } from '../types/global-types';
+import { AdditionalDetailsStateData, PaymentAction, PaymentResponseData } from '../types/global-types';
 import { CoreConfiguration, ICore } from './types';
 import { processGlobalOptions } from './utils';
 import Session from './CheckoutSession';
@@ -14,6 +14,8 @@ import { Resources } from './Context/Resources';
 import { SRPanel } from './Errors/SRPanel';
 import registry, { NewableComponent } from './core.registry';
 import { DEFAULT_LOCALE } from '../language/config';
+import { cleanupFinalResult, sanitizeResponse, verifyPaymentDidNotFail } from '../components/internal/UIElement/utils';
+import AdyenCheckoutError from './Errors/AdyenCheckoutError';
 
 class Core implements ICore {
     public session?: Session;
@@ -100,24 +102,49 @@ class Core implements ICore {
     }
 
     /**
-     * Submits details using onAdditionalDetails or the session flow if available
-     * @param details -
+     * Method used when handling redirects. It submits details using 'onAdditionalDetails' or the Sessions flow if available.
+     *
+     * @public
+     * @see {https://docs.adyen.com/online-payments/build-your-integration/?platform=Web&integration=Components&version=5.55.1#handle-the-redirect}
+     * @param details - Details object containing the redirectResult
      */
-    public submitDetails(details): void {
+    public submitDetails(details: AdditionalDetailsStateData['data']): void {
+        let promise = null;
+
         if (this.options.onAdditionalDetails) {
-            return this.options.onAdditionalDetails(details);
+            promise = new Promise((resolve, reject) => {
+                this.options.onAdditionalDetails({ data: details }, undefined, { resolve, reject });
+            });
         }
 
         if (this.session) {
-            this.session
-                .submitDetails(details)
-                .then(response => {
-                    this.options.onPaymentCompleted?.(response);
-                })
-                .catch(error => {
-                    this.options.onError?.(error);
-                });
+            promise = this.session.submitDetails(details).catch(error => {
+                this.options.onError?.(error);
+                return Promise.reject(error);
+            });
         }
+
+        if (!promise) {
+            this.options.onError?.(
+                new AdyenCheckoutError(
+                    'IMPLEMENTATION_ERROR',
+                    'It can not submit the details. The callback "onAdditionalDetails" or the Session is not setup correctly.'
+                )
+            );
+            return;
+        }
+
+        promise
+            .then(sanitizeResponse)
+            .then(verifyPaymentDidNotFail)
+            .then((response: PaymentResponseData) => {
+                cleanupFinalResult(response);
+                this.options.onPaymentCompleted?.(response);
+            })
+            .catch((response: PaymentResponseData) => {
+                cleanupFinalResult(response);
+                this.options.onPaymentFailed?.(response);
+            });
     }
 
     /**
@@ -156,12 +183,13 @@ class Core implements ICore {
      * @param options - props to update
      * @returns this - the element instance
      */
-    public update = (options: CoreConfiguration = {}): Promise<this> => {
+    public update = (options: Partial<CoreConfiguration> = {}): Promise<this> => {
         this.setOptions(options);
 
         return this.initialize().then(() => {
             // Update each component under this instance
-            this.components.forEach(c => c.update(this.getCorePropsForComponent()));
+            // here we should update only the new options that have been received from core
+            this.components.forEach(c => c.update(options));
             return this;
         });
     };
@@ -224,7 +252,7 @@ class Core implements ICore {
      * @internal
      */
     private handleCreateError(paymentMethod?): never {
-        const paymentMethodName = paymentMethod && paymentMethod.name ? paymentMethod.name : 'The passed payment method';
+        const paymentMethodName = paymentMethod?.name ?? 'The passed payment method';
         const errorMessage = paymentMethod
             ? `${paymentMethodName} is not a valid Checkout Component. What was passed as a txVariant was: ${JSON.stringify(
                   paymentMethod

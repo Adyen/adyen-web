@@ -126,8 +126,8 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
      * @param props - props to update
      * @returns this - the element instance
      */
-    public update(props: P): this {
-        this.buildElementProps({ ...this.props, ...props });
+    public update(props: Partial<P>): this {
+        this.props = this.formatProps({ ...this.props, ...props });
         this.state = {};
 
         return this.unmount().mount(this._node); // for new mount fny
