@@ -5,7 +5,6 @@ import {
     PaymentAction,
     PaymentMethodsResponse,
     ActionHandledReturnObject,
-    PaymentData,
     CheckoutAdvancedFlowResponse,
     PaymentMethodsRequestData,
     SessionsResponse,
@@ -16,7 +15,7 @@ import { AnalyticsOptions } from './Analytics/types';
 import { RiskModuleOptions } from './RiskModule/RiskModule';
 import UIElement from '../components/internal/UIElement/UIElement';
 import AdyenCheckoutError from './Errors/AdyenCheckoutError';
-import { GiftCardElementData } from '../components/Giftcard/types';
+import { onBalanceCheckCallbackType, onOrderRequestCallbackType } from '../components/Giftcard/types';
 import { SRPanelConfig } from './Errors/types';
 import { NewableComponent } from './core.registry';
 import Session from './CheckoutSession';
@@ -216,9 +215,9 @@ export interface CoreConfiguration {
 
     onError?(error: AdyenCheckoutError, element?: UIElement): void;
 
-    onBalanceCheck?(resolve: () => void, reject: () => void, data: GiftCardElementData): Promise<void>;
+    onBalanceCheck?: onBalanceCheckCallbackType;
 
-    onOrderRequest?(resolve: () => void, reject: () => void, data: PaymentData): Promise<void>;
+    onOrderRequest?: onOrderRequestCallbackType;
 
     onPaymentMethodsRequest?(
         data: PaymentMethodsRequestData,

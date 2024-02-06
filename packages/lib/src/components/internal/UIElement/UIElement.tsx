@@ -177,12 +177,12 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         if (this.core.session) {
             const beforeSubmitEvent: Promise<PaymentData> = this.props.beforeSubmit
-                ? new Promise((resolve, reject) => {
+                ? new Promise((resolve, reject) =>
                       this.props.beforeSubmit(this.data, this.elementRef, {
                           resolve,
                           reject
-                      });
-                  })
+                      })
+                  )
                 : Promise.resolve(this.data);
 
             return beforeSubmitEvent.then(this.submitUsingSessionsFlow);
