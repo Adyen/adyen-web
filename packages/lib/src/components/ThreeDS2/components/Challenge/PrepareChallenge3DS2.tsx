@@ -1,6 +1,6 @@
 import { Component, h } from 'preact';
 import DoChallenge3DS2 from './DoChallenge3DS2';
-import { createChallengeResolveData, handleErrorCode, prepareChallengeData, createOldChallengeResolveData } from '../utils';
+import { createChallengeResolveData, prepareChallengeData, createOldChallengeResolveData } from '../utils';
 import { PrepareChallenge3DS2Props, PrepareChallenge3DS2State } from './types';
 import { ChallengeData, ThreeDS2FlowObject } from '../../types';
 import '../../ThreeDS2.scss';
@@ -8,6 +8,8 @@ import Img from '../../../internal/Img';
 import './challenge.scss';
 import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
 import useImage from '../../../../core/Context/useImage';
+import AdyenCheckoutError, { ERROR } from '../../../../core/Errors/AdyenCheckoutError';
+import { THREEDS2_CHALLENGE_ERROR } from '../../config';
 
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
     public static defaultProps = {
@@ -80,8 +82,15 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                         // Challenge has resulted in an error (no transStatus could be retrieved) - but we still treat this as a valid scenario
                         if (hasOwnProperty(challenge.result, 'errorCode') && challenge.result.errorCode.length) {
                             // Tell the merchant there's been an error
-                            const errorCodeObject = handleErrorCode(challenge.result.errorCode, challenge.result.errorDescription);
-                            this.props.onError(errorCodeObject);
+                            this.props.onError(
+                                new AdyenCheckoutError(
+                                    ERROR,
+                                    `${THREEDS2_CHALLENGE_ERROR}: ${
+                                        challenge.result.errorDescription ? challenge.result.errorDescription : 'no transStatus could be retrieved'
+                                    }`,
+                                    { cause: challenge.result.errorCode }
+                                )
+                            );
                         }
 
                         this.setStatusComplete(challenge.result);
@@ -91,8 +100,12 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                          * Called when challenge times-out (which is still a valid scenario)...
                          */
                         if (hasOwnProperty(challenge, 'errorCode')) {
-                            const errorCodeObject = handleErrorCode(challenge.errorCode);
-                            this.props.onError(errorCodeObject);
+                            this.props.onError(
+                                new AdyenCheckoutError(ERROR, `${THREEDS2_CHALLENGE_ERROR}: '3DS2 challenge timed out'`, {
+                                    cause: challenge.errorCode
+                                })
+                            );
+
                             this.setStatusComplete(challenge.result);
                             return;
                         }

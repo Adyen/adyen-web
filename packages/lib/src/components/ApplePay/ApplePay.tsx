@@ -7,10 +7,12 @@ import defaultProps from './defaultProps';
 import { httpPost } from '../../core/Services/http';
 import { APPLEPAY_SESSION_ENDPOINT } from './config';
 import { preparePaymentRequest } from './payment-request';
-import { resolveSupportedVersion, mapBrands } from './utils';
-import { ApplePayConfiguration, ApplePayElementData, ApplePaySessionRequest, OnAuthorizedCallback } from './types';
+import { resolveSupportedVersion, mapBrands, formatApplePayContactToAdyenAddressFormat } from './utils';
+import { ApplePayConfiguration, ApplePayElementData, ApplePayPaymentOrderDetails, ApplePaySessionRequest } from './types';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
+import { PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
+import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 
 const latestSupportedVersion = 14;
 
@@ -23,6 +25,8 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         this.startSession = this.startSession.bind(this);
         this.submit = this.submit.bind(this);
         this.validateMerchant = this.validateMerchant.bind(this);
+        this.collectOrderTrackingDetailsIfNeeded = this.collectOrderTrackingDetailsIfNeeded.bind(this);
+        this.handleAuthorization = this.handleAuthorization.bind(this);
     }
 
     /**
@@ -45,19 +49,23 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
      * Formats the component data output
      */
     protected formatData(): ApplePayElementData {
+        const { applePayToken, billingAddress, deliveryAddress } = this.state;
+
         return {
             paymentMethod: {
                 type: ApplePayElement.type,
-                ...this.state
-            }
+                applePayToken
+            },
+            ...(billingAddress && { billingAddress }),
+            ...(deliveryAddress && { deliveryAddress })
         };
     }
 
-    submit() {
-        return this.startSession(this.props.onAuthorized);
-    }
+    public submit = (): void => {
+        void this.startSession();
+    };
 
-    private startSession(onPaymentAuthorized: OnAuthorizedCallback) {
+    private startSession() {
         const { version, onValidateMerchant, onPaymentMethodSelected, onShippingMethodSelected, onShippingContactSelected } = this.props;
 
         const paymentRequest = preparePaymentRequest({
@@ -68,7 +76,11 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         const session = new ApplePayService(paymentRequest, {
             version,
             onError: (error: unknown) => {
-                this.handleError(new AdyenCheckoutError('ERROR', 'ApplePay - Something went wrong on ApplePayService', { cause: error }));
+                this.handleError(
+                    new AdyenCheckoutError('ERROR', 'ApplePay - Something went wrong on ApplePayService', {
+                        cause: error
+                    })
+                );
             },
             onCancel: event => {
                 this.handleError(new AdyenCheckoutError('CANCEL', 'ApplePay UI dismissed', { cause: event }));
@@ -78,11 +90,41 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             onShippingContactSelected,
             onValidateMerchant: onValidateMerchant || this.validateMerchant,
             onPaymentAuthorized: (resolve, reject, event) => {
-                if (event?.payment?.token?.paymentData) {
-                    this.setState({ applePayToken: btoa(JSON.stringify(event.payment.token.paymentData)) });
-                }
-                super.submit();
-                onPaymentAuthorized(resolve, reject, event);
+                const billingAddress = formatApplePayContactToAdyenAddressFormat(event.payment.billingContact);
+                const deliveryAddress = formatApplePayContactToAdyenAddressFormat(event.payment.shippingContact, true);
+
+                this.setState({
+                    applePayToken: btoa(JSON.stringify(event.payment.token.paymentData)),
+                    authorizedEvent: event,
+                    ...(billingAddress && { billingAddress }),
+                    ...(deliveryAddress && { deliveryAddress })
+                });
+
+                this.handleAuthorization()
+                    .then(this.makePaymentsCall)
+                    .then(sanitizeResponse)
+                    .then(verifyPaymentDidNotFail)
+                    .then(this.collectOrderTrackingDetailsIfNeeded)
+                    .then(({ paymentResponse, orderDetails }) => {
+                        resolve({
+                            status: ApplePaySession.STATUS_SUCCESS,
+                            ...(orderDetails && { orderDetails })
+                        });
+                        return paymentResponse;
+                    })
+                    .then(paymentResponse => {
+                        this.handleResponse(paymentResponse);
+                    })
+                    .catch((paymentResponse: RawPaymentResponse) => {
+                        const errors = paymentResponse?.error?.applePayError;
+
+                        reject({
+                            status: ApplePaySession.STATUS_FAILURE,
+                            errors: errors ? (Array.isArray(errors) ? errors : [errors]) : undefined
+                        });
+
+                        this.handleFailedResult(paymentResponse);
+                    });
             }
         });
 
@@ -95,13 +137,74 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             }));
     }
 
+    /**
+     * Call the 'onAuthorized' callback if available.
+     * Must be resolved/reject for the payment flow to continue
+     *
+     * @private
+     */
+    private async handleAuthorization(): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            if (!this.props.onAuthorized) {
+                resolve();
+            }
+
+            const { authorizedEvent, billingAddress, deliveryAddress } = this.state;
+
+            this.props.onAuthorized(
+                {
+                    authorizedEvent,
+                    ...(billingAddress && { billingAddress }),
+                    ...(deliveryAddress && { deliveryAddress })
+                },
+                { resolve, reject }
+            );
+        }).catch((error?: ApplePayJS.ApplePayError) => {
+            // Format error in a way that the 'catch' of the 'onPaymentAuthorize' block accepts it
+            const data = { error: { applePayError: error } };
+            return Promise.reject(data);
+        });
+    }
+
+    /**
+     * Verify if the 'onOrderTrackingRequest' is provided. If so, triggers the callback expecting an
+     * Apple Pay order details back
+     *
+     * @private
+     */
+    private async collectOrderTrackingDetailsIfNeeded(
+        paymentResponse: PaymentResponseData
+    ): Promise<{ orderDetails?: ApplePayPaymentOrderDetails; paymentResponse: PaymentResponseData }> {
+        return new Promise<ApplePayPaymentOrderDetails | void>((resolve, reject) => {
+            if (!this.props.onOrderTrackingRequest) {
+                return resolve();
+            }
+
+            this.props.onOrderTrackingRequest(resolve, reject);
+        })
+            .then(orderDetails => {
+                return {
+                    paymentResponse,
+                    ...(orderDetails && { orderDetails })
+                };
+            })
+            .catch(() => {
+                return { paymentResponse };
+            });
+    }
+
     private async validateMerchant(resolve, reject) {
         const { hostname: domainName } = window.location;
         const { clientKey, configuration, loadingContext, initiative } = this.props;
         const { merchantName, merchantId } = configuration;
         const path = `${APPLEPAY_SESSION_ENDPOINT}?clientKey=${clientKey}`;
         const options = { loadingContext, path };
-        const request: ApplePaySessionRequest = { displayName: merchantName, domainName, initiative, merchantIdentifier: merchantId };
+        const request: ApplePaySessionRequest = {
+            displayName: merchantName,
+            domainName,
+            initiative,
+            merchantIdentifier: merchantId
+        };
 
         try {
             const response = await httpPost(options, request);

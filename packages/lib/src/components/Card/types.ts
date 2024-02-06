@@ -3,7 +3,6 @@ import {
     CbObjOnBinValue,
     CbObjOnBrand,
     CbObjOnConfigSuccess,
-    CbObjOnError,
     CbObjOnFieldValid,
     CbObjOnFocus,
     CbObjOnLoad,
@@ -145,11 +144,6 @@ export interface CardConfiguration extends UIElementProps {
      * Called once we detect the card brand.
      */
     onBrand?: (event: CbObjOnBrand) => void;
-
-    /**
-     * Called in case of an invalid Card Number, invalid Expiry Date, or incomplete field. Called again when errors are cleared.
-     */
-    onError?: (event: CbObjOnError) => void;
 
     /**
      * Called when a field gains or loses focus.

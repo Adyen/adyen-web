@@ -64,7 +64,6 @@ export const WithInstallments: CardStory = {
     args: {
         componentConfiguration: {
             _disableClickToPay: true,
-            showBrandsUnderCardNumber: true,
             showInstallmentAmounts: true,
             installmentOptions: {
                 mc: {

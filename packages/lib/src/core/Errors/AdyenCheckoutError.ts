@@ -2,19 +2,28 @@ interface CheckoutErrorOptions {
     cause?: any;
 }
 
+export const NETWORK_ERROR = 'NETWORK_ERROR';
+export const CANCEL = 'CANCEL';
+export const IMPLEMENTATION_ERROR = 'IMPLEMENTATION_ERROR';
+export const API_ERROR = 'API_ERROR';
+export const ERROR = 'ERROR';
+
 class AdyenCheckoutError extends Error {
     protected static errorTypes = {
         /** Network error. */
-        NETWORK_ERROR: 'NETWORK_ERROR',
+        NETWORK_ERROR,
 
         /** Shopper canceled the current transaction. */
-        CANCEL: 'CANCEL',
+        CANCEL,
 
         /** Implementation error. The method or parameter are incorrect or are not supported. */
-        IMPLEMENTATION_ERROR: 'IMPLEMENTATION_ERROR',
+        IMPLEMENTATION_ERROR,
+
+        /** API error. The API has not returned the expected data  */
+        API_ERROR,
 
         /** Generic error. */
-        ERROR: 'ERROR'
+        ERROR
     };
 
     public cause: unknown;

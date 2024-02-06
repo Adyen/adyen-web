@@ -11,7 +11,7 @@ import { turnOffSDKMocking } from '../../_common/cardMocks';
 
 const dropinPage = new DropinPage({
     components: {
-        cc: new CardComponentPage('.adyen-checkout__payment-method--card')
+        cc: new CardComponentPage('.adyen-checkout__payment-method--scheme')
     }
 });
 

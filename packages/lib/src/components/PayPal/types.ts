@@ -1,5 +1,4 @@
-import { PaymentAmount, PaymentMethod, ShopperDetails } from '../../types/global-types';
-import UIElement from '../internal/UIElement/UIElement';
+import { AddressData, PaymentAmount, PaymentMethod } from '../../types/global-types';
 import { SUPPORTED_LOCALES } from './config';
 import { UIElementProps } from '../internal/UIElement/types';
 
@@ -169,12 +168,15 @@ export interface PayPalConfig {
 }
 
 export interface PayPalConfiguration extends PayPalCommonProps, UIElementProps {
-    onSubmit?: (state: any, element: UIElement) => void;
-    onComplete?: (state, element?: UIElement) => void;
-    onAdditionalDetails?: (state: any, element: UIElement) => void;
-    onCancel?: (state: any, element: UIElement) => void;
-    onError?: (state: any, element?: UIElement) => void;
-    onShopperDetails?(shopperDetails: ShopperDetails, rawData: any, actions: { resolve: () => void; reject: () => void }): void;
+    /**
+     * Callback called when PayPal authorizes the payment.
+     * Must be resolved/rejected with the action object. If resolved, the additional details will be invoked. Otherwise it will be skipped
+     */
+    onAuthorized?: (
+        data: { authorizedEvent: any; billingAddress?: Partial<AddressData>; deliveryAddress?: Partial<AddressData> },
+        actions: { resolve: () => void; reject: () => void }
+    ) => void;
+
     paymentMethods?: PaymentMethod[];
     showPayButton?: boolean;
 }

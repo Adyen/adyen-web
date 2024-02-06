@@ -17,38 +17,45 @@ export async function initManual() {
         locale: shopperLocale,
         translationFile: getTranslationFile(shopperLocale),
         environment: process.env.__CLIENT_ENV__,
-        onSubmit: async (state, component) => {
-            const result = await makePayment(state.data);
+        onSubmit: async (state, component, actions) => {
+            try {
+                const { action, order, resultCode, donationToken } = await makePayment(state.data);
 
-            // handle actions
-            if (result.action) {
-                // demo only - store paymentData & order
-                if (result.action.paymentData) localStorage.setItem('storedPaymentData', result.action.paymentData);
-                component.handleAction(result.action);
-            } else if (result.order && result.order?.remainingAmount?.value > 0) {
-                // handle orders
-                const order = {
-                    orderData: result.order.orderData,
-                    pspReference: result.order.pspReference
-                };
+                if (!resultCode) actions.reject();
 
-                const orderPaymentMethods = await getPaymentMethods({ order, amount, shopperLocale });
-                checkout.update({ paymentMethodsResponse: orderPaymentMethods, order, amount: result.order.remainingAmount });
-            } else {
-                handleFinalState(result.resultCode, component);
+                actions.resolve({
+                    resultCode,
+                    action,
+                    order,
+                    donationToken
+                });
+            } catch (error) {
+                console.error('## onSubmit - critical error', error);
+                actions.reject();
             }
         },
-        // onChange: state => {
-        //     console.log('onChange', state);
-        // },
-        onAdditionalDetails: async (state, component) => {
-            const result = await makeDetailsCall(state.data);
+        onAdditionalDetails: async (state, component, actions) => {
+            try {
+                const { resultCode, action, order, donationToken } = await makeDetailsCall(state.data);
 
-            if (result.action) {
-                component.handleAction(result.action);
-            } else {
-                handleFinalState(result.resultCode, component);
+                if (!resultCode) actions.reject();
+
+                actions.resolve({
+                    resultCode,
+                    action,
+                    order,
+                    donationToken
+                });
+            } catch (error) {
+                console.error('## onAdditionalDetails - critical error', error);
+                actions.reject();
             }
+        },
+        onPaymentCompleted(data, component) {
+            component.setStatus('success');
+        },
+        onPaymentFailed(data, component) {
+            component.setStatus('error');
         },
         onBalanceCheck: async (resolve, reject, data) => {
             resolve(await checkBalance(data));
@@ -100,27 +107,6 @@ export async function initManual() {
                 return true;
             });
         }
-
-        // Handle Amazon Pay redirect result
-        if (amazonCheckoutSessionId) {
-            window.amazonpay = new AmazonPay({
-                core: checkout,
-                amazonCheckoutSessionId,
-                showOrderButton: false,
-                onSubmit: state => {
-                    makePayment(state.data).then(result => {
-                        if (result.action) {
-                            dropin.handleAction(result.action);
-                        } else {
-                            handleFinalState(result.resultCode, dropin);
-                        }
-                    });
-                }
-            }).mount('body');
-
-            window.amazonpay.submit();
-        }
-
         return Promise.resolve(true);
     }
 
@@ -136,9 +122,6 @@ export async function initManual() {
             paywithgoogle: {
                 buttonType: 'plain'
             },
-            // storedCard: {
-            //     hideCVC: true
-            // }
             klarna: {
                 useKlarnaWidget: true
             }

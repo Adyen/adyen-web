@@ -1,3 +1,4 @@
+import { AddressData } from '../../types';
 import { UIElementProps } from '../internal/UIElement/types';
 
 export interface GooglePayPropsConfiguration {
@@ -35,7 +36,6 @@ export interface GooglePayPropsConfiguration {
 export interface GooglePayConfiguration extends UIElementProps {
     type?: 'googlepay' | 'paywithgoogle';
 
-    environment?: google.payments.api.Environment | string;
     configuration?: GooglePayPropsConfiguration;
 
     /**
@@ -150,7 +150,19 @@ export interface GooglePayConfiguration extends UIElementProps {
 
     // Events
     onClick?: (resolve, reject) => void;
-    onAuthorized?: (paymentData: google.payments.api.PaymentData) => void;
+
+    /**
+     * Callback called when GooglePay authorizes the payment.
+     * Must be resolved/rejected with the action object.
+     */
+    onAuthorized?: (
+        data: {
+            authorizedEvent: google.payments.api.PaymentData;
+            billingAddress?: Partial<AddressData>;
+            deliveryAddress?: Partial<AddressData>;
+        },
+        actions: { resolve: () => void; reject: (error?: google.payments.api.PaymentDataError | string) => void }
+    ) => void;
 }
 
 // Used to add undocumented google payment options

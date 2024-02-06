@@ -1,4 +1,4 @@
-import { AdyenCheckout, Dropin, Card, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay } from '@adyen/adyen-web';
+import { AdyenCheckout, Dropin, Ideal, Card, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { getPaymentMethods, makePayment, checkBalance, createOrder, cancelOrder, makeDetailsCall } from '../../services';
 import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
@@ -16,73 +16,81 @@ export async function initManual() {
 
         locale: 'pt-BR',
         translationFile: getTranslationFile(shopperLocale),
-        // translationFile: nl_NL,
 
         environment: process.env.__CLIENT_ENV__,
-        onSubmit: async (state, component) => {
-            const result = await makePayment(state.data);
 
-            // handle actions
-            if (result.action) {
-                // demo only - store paymentData & order
-                if (result.action.paymentData) localStorage.setItem('storedPaymentData', result.action.paymentData);
-                component.handleAction(result.action, { challengeWindowSize: '01' });
-            } else if (result.order && result.order?.remainingAmount?.value > 0) {
-                // handle orders
-                const order = {
-                    orderData: result.order.orderData,
-                    pspReference: result.order.pspReference
-                };
+        onSubmit: async (state, component, actions) => {
+            try {
+                const { action, order, resultCode, donationToken } = await makePayment(state.data);
 
-                const orderPaymentMethods = await getPaymentMethods({ order, amount, shopperLocale });
-                checkout.update({ paymentMethodsResponse: orderPaymentMethods, order, amount: result.order.remainingAmount });
-            } else {
-                handleFinalState(result.resultCode, component);
+                if (!resultCode) actions.reject();
+
+                actions.resolve({
+                    resultCode,
+                    action,
+                    order,
+                    donationToken
+                });
+            } catch (error) {
+                console.error('## onSubmit - critical error', error);
+                actions.reject();
             }
         },
-        // srConfig: { showPanel: true },
-        // onChange: state => {
-        //     console.log('onChange', state);
-        // },
-        onAdditionalDetails: async (state, component) => {
-            const result = await makeDetailsCall(state.data);
+        onAdditionalDetails: async (state, component, actions) => {
+            try {
+                const { resultCode, action, order, donationToken } = await makeDetailsCall(state.data);
 
-            if (result.action) {
-                component.handleAction(result.action);
-            } else if (result.order && result.order?.remainingAmount?.value > 0) {
-                // handle orders
-                const order = {
-                    orderData: result.order.orderData,
-                    pspReference: result.order.pspReference
-                };
+                if (!resultCode) actions.reject();
 
-                const orderPaymentMethods = await getPaymentMethods({ order, amount, shopperLocale });
-                checkout.update({ paymentMethodsResponse: orderPaymentMethods, order, amount: result.order.remainingAmount });
-            } else {
-                handleFinalState(result.resultCode, component);
+                actions.resolve({
+                    resultCode,
+                    action,
+                    order,
+                    donationToken
+                });
+            } catch (error) {
+                console.error('## onAdditionalDetails - critical error', error);
+                actions.reject();
             }
+        },
+        onPaymentCompleted(result, element) {
+            console.log('onPaymentCompleted', result, element);
+        },
+        onPaymentFailed(result, element) {
+            console.log('onPaymentFailed', result, element);
         },
         onBalanceCheck: async (resolve, reject, data) => {
+            console.log('onBalanceCheck', data);
             resolve(await checkBalance(data));
         },
-        onOrderRequest: async (resolve, reject) => {
+        onOrderRequest: async resolve => {
+            console.log('onOrderRequested');
             resolve(await createOrder({ amount }));
+        },
+        onOrderUpdated: data => {
+            console.log('onOrderUpdated', data);
         },
         onOrderCancel: async order => {
             await cancelOrder(order);
-            checkout.update({ paymentMethodsResponse: await getPaymentMethods({ amount, shopperLocale }), order: null, amount });
+            checkout.update({
+                paymentMethodsResponse: await getPaymentMethods({ amount, shopperLocale }),
+                order: null,
+                amount
+            });
         },
         onError: (error, component) => {
             console.info(error.name, error.message, error.stack, component);
         },
         onActionHandled: rtnObj => {
             console.log('onActionHandled', rtnObj);
+        },
+        onPaymentMethodsRequest: async (data, { resolve, reject }) => {
+            console.log('onPaymentMethodsRequest', data);
+            resolve(await getPaymentMethods({ amount, shopperLocale: data.locale, order: data.order }));
         }
     });
 
     function handleFinalState(resultCode, dropin) {
-        localStorage.removeItem('storedPaymentData');
-
         if (resultCode === 'Authorised' || resultCode === 'Received') {
             dropin.setStatus('success');
         } else {
@@ -91,26 +99,10 @@ export async function initManual() {
     }
 
     function handleRedirectResult() {
-        const storedPaymentData = localStorage.getItem('storedPaymentData');
         const { amazonCheckoutSessionId, redirectResult, payload } = getSearchParameters(window.location.search);
 
-        if (redirectResult || payload) {
-            dropin.setStatus('loading');
-            return makeDetailsCall({
-                ...(storedPaymentData && { paymentData: storedPaymentData }),
-                details: {
-                    ...(redirectResult && { redirectResult }),
-                    ...(payload && { payload })
-                }
-            }).then(result => {
-                if (result.action) {
-                    dropin.handleAction(result.action);
-                } else {
-                    handleFinalState(result.resultCode, dropin);
-                }
-
-                return true;
-            });
+        if (redirectResult) {
+            window.checkout.submitDetails({ details: { redirectResult } });
         }
 
         // Handle Amazon Pay redirect result
@@ -136,9 +128,19 @@ export async function initManual() {
         return Promise.resolve(true);
     }
 
+    // const gpay = new GooglePay({
+    //     core: checkout,
+    //     shippingAddressRequired: true,
+    //     shippingAddressParameters: {
+    //         phoneNumberRequired: true
+    //     },
+
+    //     billingAddressRequired: true
+    // }).mount('#dropin-container');
+
     const dropin = new Dropin({
         core: checkout,
-        paymentMethodComponents: [Card, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay],
+        paymentMethodComponents: [Card, Ideal, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay],
         instantPaymentTypes: ['googlepay'],
         paymentMethodsConfiguration: {
             card: {
@@ -153,13 +155,10 @@ export async function initManual() {
             klarna: {
                 useKlarnaWidget: true
             }
-            // storedCard: {
-            //     hideCVC: true
-            // }
         }
     }).mount('#dropin-container');
 
     handleRedirectResult();
 
-    return [checkout, dropin];
+    return [checkout];
 }

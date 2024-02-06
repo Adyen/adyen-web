@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { IUIElement } from '../../src/components/types';
+import { IUIElement } from '../../src/components/internal/UIElement/types';
 
 interface IContainer {
     element: IUIElement;

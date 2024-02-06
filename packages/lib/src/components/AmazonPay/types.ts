@@ -1,8 +1,7 @@
-import Language from '../../language/Language';
 import { SUPPORTED_LOCALES_EU, SUPPORTED_LOCALES_US } from './config';
-import UIElement from '../internal/UIElement/UIElement';
 import { UIElementProps } from '../internal/UIElement/types';
 import { BrowserInfo, PaymentAmount } from '../../types/global-types';
+import AmazonPayElement from './AmazonPay';
 
 declare global {
     interface Window {
@@ -50,27 +49,34 @@ export interface AmazonPayConfiguration extends UIElementProps {
     currency?: Currency;
     deliverySpecifications?: DeliverySpecifications;
     environment?: string;
-    i18n: Language;
     loadingContext?: string;
     locale?: string;
     merchantMetadata?: MerchantMetadata;
-    onSubmit?: (state: any, element: UIElement) => void;
+    onSubmit?: (state: any, element: AmazonPayElement) => void;
     payButton?: any;
     placement?: Placement;
     productType?: ProductType;
     recurringMetadata?: RecurringMetadata;
     returnUrl?: string;
-    showChangePaymentDetailsButton: boolean;
-    showOrderButton: boolean;
-    showPayButton: boolean;
-    showSignOutButton: boolean;
+    showChangePaymentDetailsButton?: boolean;
+    showOrderButton?: boolean;
+    showPayButton?: boolean;
+    showSignOutButton?: boolean;
     signature?: string;
-    onClick: (resolve, reject) => Promise<void>;
-    onError: (error, component) => void;
-    onSignOut: (resolve, reject) => Promise<void>;
+    onClick?: (resolve, reject) => Promise<void>;
+    onError?: (error, component) => void;
+    onSignOut?: (resolve, reject) => Promise<void>;
 }
 
 export interface AmazonPayComponentProps extends AmazonPayConfiguration {
+    showPayButton: boolean;
+    showSignOutButton?: boolean;
+    amazonCheckoutSessionId?: string;
+    showOrderButton?: boolean;
+    showChangePaymentDetailsButton?: boolean;
+    onClick: (resolve, reject) => Promise<void>;
+    onError: (error, component) => void;
+    onSignOut: (resolve, reject) => Promise<void>;
     ref: any;
 }
 

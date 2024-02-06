@@ -20,6 +20,10 @@ export const getPaymentMethods = configuration =>
         .catch(console.error);
 
 export const makePayment = (data, config = {}) => {
+    if (data.paymentMethod.storedPaymentMethodId) {
+        config = { recurringProcessingModel: 'CardOnFile', ...config };
+    }
+
     // NOTE: Merging data object. DO NOT do this in production.
     const paymentRequest = { ...paymentsConfig, ...config, ...data };
     return httpPost('payments', paymentRequest)
