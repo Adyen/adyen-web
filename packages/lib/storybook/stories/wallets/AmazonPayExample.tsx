@@ -4,6 +4,8 @@ import { createAdvancedFlowCheckout } from '../../helpers/create-advanced-checko
 import { PaymentMethodStoryProps } from '../types';
 import AmazonPay from '../../../src/components/AmazonPay';
 import { AmazonPayConfiguration } from '../../../src/components/AmazonPay/types';
+import { makePayment } from '../../helpers/checkout-api-calls';
+import getCurrency from '../../utils/get-currency';
 
 interface AmazonPayExampleProps {
     contextArgs: PaymentMethodStoryProps<AmazonPayConfiguration>;
@@ -18,6 +20,10 @@ export const AmazonPayExample = ({ contextArgs }: AmazonPayExampleProps) => {
     const createCheckout = async () => {
         const { useSessions, showPayButton, countryCode, shopperLocale, amount } = contextArgs;
 
+        const paymentAmount = {
+            currency: getCurrency(countryCode),
+            value: Number(amount)
+        };
         //URL selection
         // http://localhost:3020/iframe.html?id=wallets-amazonpay--default&viewMode=story
         // http://localhost:3020/?path=/story/wallets-amazonpay--default
@@ -67,32 +73,38 @@ export const AmazonPayExample = ({ contextArgs }: AmazonPayExampleProps) => {
                  */
                 amazonCheckoutSessionId,
                 showOrderButton: false,
-                onSubmit: (state, component) => {
-                    return makePayment(state.data)
+                onSubmit: async (state, component, actions) => {
+                    const paymentData = {
+                        amount: paymentAmount,
+                        countryCode: countryCode,
+                        shopperLocale: shopperLocale
+                    };
+
+                    return makePayment(state.data, paymentData)
                         .then(response => {
-                            if (response.action) {
-                                component.handleAction(response.action);
-                            } else if (response?.resultCode && checkPaymentResult(response.resultCode)) {
-                                alert(response.resultCode);
-                            } else {
-                                // Try handling the decline flow
-                                // This will redirect the shopper to select another payment method
-                                component.handleDeclineFlow();
-                            }
+                            const { errorCode, action, order, resultCode, donationToken } = response;
+                            debugger;
+                            actions.resolve({
+                                resultCode: errorCode ? 'Refused' : resultCode,
+                                action,
+                                order,
+                                donationToken
+                            });
                         })
                         .catch(error => {
                             throw Error(error);
                         });
                 },
-                onError: e => {
-                    if (e.resultCode) {
-                        alert(e.resultCode);
-                    } else {
-                        console.error(e);
-                    }
+                onPaymentCompleted(result, element) {
+                    console.log('onPaymentCompleted', result, element);
+                },
+                onPaymentFailed(result, element: AmazonPay) {
+                    element.handleDeclineFlow();
+                    console.log('onPaymentFailed', result, element);
                 }
             });
             setElement(amazonPayElement);
+            amazonPayElement.submit();
         } else {
             const amazonPayElement = new AmazonPay({
                 core: checkout.current,
@@ -103,7 +115,7 @@ export const AmazonPayExample = ({ contextArgs }: AmazonPayExampleProps) => {
                 // checkoutMode: 'ProcessOrder'
 
                 // Express Checkout flow:
-                returnUrl: 'http://localhost:3020/?path=/story/wallets-amazonpay--default&step=review'
+                returnUrl: ' http://localhost:3020/iframe.html?id=wallets-amazonpay--default&viewMode=story&step=review'
             });
             setElement(amazonPayElement);
         }
