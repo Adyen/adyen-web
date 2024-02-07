@@ -4,7 +4,7 @@ import '../../style.scss';
 
 const initCheckout = async () => {
     window.checkout = await AdyenCheckout();
-    window.address = new Address({core: checkout}).mount('.address-field');
+    window.address = new Address(checkout).mount('.address-field');
 };
 
 initCheckout();

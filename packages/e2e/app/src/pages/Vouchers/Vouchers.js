@@ -11,12 +11,10 @@ const initCheckout = async () => {
     });
 
     // Boleto Input
-    window.boletoInput = new Boleto({
-        core: window.checkout,
+    window.boletoInput = new Boleto(window.checkout, {
         type: 'boletobancario',
-            ...window.boletoConfig
-        })
-        .mount('#boleto-input-container');
+        ...window.boletoConfig
+    }).mount('#boleto-input-container');
 };
 
 initCheckout();

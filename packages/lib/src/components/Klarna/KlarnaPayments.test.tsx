@@ -3,9 +3,9 @@ import KlarnaPayments from './KlarnaPayments';
 import Dropin from '../Dropin';
 
 describe('KlarnaPayments', () => {
-    const coreProps = { core: global.core, name: 'Klarna', i18n: global.i18n, loadingContext: 'test', modules: { resources: global.resources } };
+    const coreProps = { name: 'Klarna', i18n: global.i18n, loadingContext: 'test', modules: { resources: global.resources } };
     const renderKlarna = props => {
-        const KlarnaPaymentsEle = new KlarnaPayments({
+        const KlarnaPaymentsEle = new KlarnaPayments(global.core, {
             ...coreProps,
             ...props
         });
@@ -23,11 +23,11 @@ describe('KlarnaPayments', () => {
     });
 
     test('should call setStatus if elementRef is a drop-in', async () => {
-        const KlarnaPaymentsEle = new KlarnaPayments({
+        const KlarnaPaymentsEle = new KlarnaPayments(global.core, {
             ...coreProps,
             ...{ paymentData: '', paymentMethodType: '', sdkData: undefined, useKlarnaWidget: false, showPayButton: false }
         });
-        KlarnaPaymentsEle.elementRef = new Dropin({ core: global.core });
+        KlarnaPaymentsEle.elementRef = new Dropin(global.core);
         render(KlarnaPaymentsEle.render());
         const spy = jest.spyOn(KlarnaPaymentsEle.elementRef, 'setStatus');
         // @ts-ignore to test
@@ -40,7 +40,7 @@ describe('KlarnaPayments', () => {
     test('should call handleAdditionalDetails onComplete', async () => {
         const onAdditionalDetailsMock = jest.fn(() => {});
 
-        const KlarnaPaymentsEle = new KlarnaPayments({
+        const KlarnaPaymentsEle = new KlarnaPayments(global.core, {
             ...coreProps,
             ...{
                 paymentData: '',

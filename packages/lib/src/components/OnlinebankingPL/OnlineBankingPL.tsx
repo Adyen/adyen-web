@@ -1,6 +1,7 @@
 import IssuerListContainer from '../helpers/IssuerListContainer/IssuerListContainer';
 import { TxVariants } from '../tx-variants';
 import { IssuerListConfiguration } from '../helpers/IssuerListContainer/types';
+import type { ICore } from '../../core/types';
 
 class OnlineBankingPL extends IssuerListContainer {
     public static type = TxVariants.onlineBanking_PL;
@@ -15,8 +16,8 @@ class OnlineBankingPL extends IssuerListContainer {
         urls: [OnlineBankingPL.disclaimerUrlsMap.regulation, OnlineBankingPL.disclaimerUrlsMap.obligation]
     };
 
-    constructor(props: IssuerListConfiguration) {
-        super({ ...props, termsAndConditions: OnlineBankingPL.termsAndConditions });
+    constructor(checkout: ICore, props?: IssuerListConfiguration) {
+        super(checkout, { ...props, termsAndConditions: OnlineBankingPL.termsAndConditions });
     }
 }
 

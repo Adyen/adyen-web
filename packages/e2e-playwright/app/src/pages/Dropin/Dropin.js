@@ -8,8 +8,6 @@ import '../../style.scss';
 const initCheckout = async () => {
     const paymentMethodsResponse = await getPaymentMethods({ amount, shopperLocale });
 
-    console.log(window.mainConfiguration);
-
     window.checkout = await AdyenCheckout({
         amount,
         countryCode,
@@ -24,7 +22,7 @@ const initCheckout = async () => {
         ...window.mainConfiguration
     });
 
-    window.dropin = new Dropin({ core: window.checkout, ...window.dropinConfig }).mount('#dropin-container');
+    window.dropin = new Dropin(window.checkout, { ...window.dropinConfig }).mount('#dropin-container');
 };
 
 initCheckout();

@@ -28,9 +28,7 @@ const initCheckout = async () => {
         ...window.mainConfiguration
     });
 
-    window.dropin = new Dropin({ core: checkout, paymentMethodComponents: [Card, Giftcard], ...window.dropinConfig }).mount(
-        '#dropin-sessions-container'
-    );
+    window.dropin = new Dropin(checkout, { paymentMethodComponents: [Card, Giftcard], ...window.dropinConfig }).mount('#dropin-sessions-container');
 };
 
 initCheckout();

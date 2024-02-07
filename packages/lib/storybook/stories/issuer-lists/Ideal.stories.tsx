@@ -13,7 +13,7 @@ const meta: MetaConfiguration<IssuerListConfiguration> = {
 const createComponent = (args, context) => {
     const { componentConfiguration } = args;
     const checkout = getStoryContextCheckout(context);
-    const ideal = new Ideal({ core: checkout, ...componentConfiguration });
+    const ideal = new Ideal(checkout, componentConfiguration);
     return <Container element={ideal} />;
 };
 

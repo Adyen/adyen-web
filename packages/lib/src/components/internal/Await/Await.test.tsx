@@ -29,7 +29,7 @@ describe('Await', () => {
         type: 'mbway',
         awaitText: 'test'
     };
-    const srPanel = new SRPanel({ core: global.core });
+    const srPanel = new SRPanel(global.core);
     const renderAwait = (props: AwaitComponentProps) => {
         return render(
             // @ts-ignore ignore

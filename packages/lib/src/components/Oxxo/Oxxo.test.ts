@@ -3,13 +3,12 @@ import userEvent from '@testing-library/user-event';
 import Oxxo from './Oxxo';
 
 test('should return expected data to perform the payment', () => {
-    const oxxoElement = new Oxxo({ core: global.core });
+    const oxxoElement = new Oxxo(global.core);
     expect(oxxoElement.formatData()).toEqual({ paymentMethod: { type: 'oxxo' } });
 });
 
 test('should show pay button if property is set to true', async () => {
-    const oxxoElement = new Oxxo({
-        core: global.core,
+    const oxxoElement = new Oxxo(global.core, {
         loadingContext: 'test',
         showPayButton: true,
         i18n: global.i18n,
@@ -23,8 +22,7 @@ test('should show pay button if property is set to true', async () => {
 test('should trigger submit when Pay button is pressed', async () => {
     const user = userEvent.setup();
 
-    const oxxoElement = new Oxxo({
-        core: global.core,
+    const oxxoElement = new Oxxo(global.core, {
         loadingContext: 'test',
         showPayButton: true,
         i18n: global.i18n,

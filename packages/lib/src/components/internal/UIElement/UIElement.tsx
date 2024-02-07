@@ -4,11 +4,13 @@ import PayButton from '../PayButton';
 import { cleanupFinalResult, sanitizeResponse, verifyPaymentDidNotFail } from './utils';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { hasOwnProperty } from '../../../utils/hasOwnProperty';
-import { CoreConfiguration, ICore } from '../../../core/types';
 import { Resources } from '../../../core/Context/Resources';
-import { NewableComponent } from '../../../core/core.registry';
-import { ComponentMethodsRef, IUIElement, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
-import {
+
+import type { CoreConfiguration, ICore } from '../../../core/types';
+import type { NewableComponent } from '../../../core/core.registry';
+import type { ComponentMethodsRef, IUIElement, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
+import type { CheckoutSessionDetailsResponse, CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
+import type {
     AdditionalDetailsStateData,
     CheckoutAdvancedFlowResponse,
     Order,
@@ -18,8 +20,8 @@ import {
     PaymentResponseData,
     RawPaymentResponse
 } from '../../../types/global-types';
+
 import './UIElement.scss';
-import { CheckoutSessionDetailsResponse, CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
@@ -35,8 +37,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      */
     public static txVariants: string[] = [];
 
-    constructor(props: P) {
-        super(props);
+    constructor(checkout: ICore, props?: P) {
+        super(checkout, props);
 
         // Only register UIElements that have the 'type' set. Drop-in for example does not have.
         if (this.constructor['type']) {
@@ -64,12 +66,12 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.storeElementRefOnCore(this.props);
     }
 
-    protected override buildElementProps(componentProps: P) {
+    protected override buildElementProps(componentProps?: P) {
         const globalCoreProps = this.core.getCorePropsForComponent();
-        const isStoredPaymentMethod = !!componentProps.isStoredPaymentMethod;
+        const isStoredPaymentMethod = !!componentProps?.isStoredPaymentMethod;
         const paymentMethodsResponseProps = isStoredPaymentMethod
             ? {}
-            : this.core.paymentMethodsResponse.find(componentProps.type || this.constructor['type']);
+            : this.core.paymentMethodsResponse.find(componentProps?.type || this.constructor['type']);
 
         const finalProps = {
             showPayButton: true,
@@ -306,7 +308,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         }
 
         cleanupFinalResult(result);
-
         this.props.onPaymentFailed?.(result, this.elementRef);
     };
 
@@ -316,7 +317,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         }
 
         cleanupFinalResult(result);
-
         this.props.onPaymentCompleted?.(result, this.elementRef);
     };
 

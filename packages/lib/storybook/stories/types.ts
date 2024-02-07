@@ -9,8 +9,7 @@ type GlobalStoryProps = {
 };
 
 export interface PaymentMethodStoryProps<T> extends GlobalStoryProps {
-    // Core is passed in the 'render' step, so no need to enforce it here
-    componentConfiguration: Omit<T, 'core'>;
+    componentConfiguration: T;
 }
 
 export type StoryConfiguration<T> = StoryObj<PaymentMethodStoryProps<T>>;

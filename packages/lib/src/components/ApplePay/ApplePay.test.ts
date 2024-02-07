@@ -31,9 +31,7 @@ describe('ApplePay', () => {
                 }
             });
 
-            const applepay = new ApplePay({
-                core: global.core,
-                countryCode: 'US',
+            const applepay = new ApplePay(global.core, {
                 amount: { currency: 'EUR', value: 2000 },
                 onPaymentFailed: onPaymentFailedMock,
                 onSubmit(state, component, actions) {
@@ -88,9 +86,7 @@ describe('ApplePay', () => {
                 resolve(orderDetails);
             });
 
-            const applepay = new ApplePay({
-                core: global.core,
-                countryCode: 'US',
+            const applepay = new ApplePay(global.core, {
                 amount: { currency: 'EUR', value: 2000 },
                 onOrderTrackingRequest: onOrderTrackingRequestMock,
                 onPaymentCompleted: onPaymentCompletedMock
@@ -140,9 +136,7 @@ describe('ApplePay', () => {
                 resolve();
             });
 
-            const applepay = new ApplePay({
-                core: global.core,
-                countryCode: 'US',
+            const applepay = new ApplePay(global.core, {
                 amount: { currency: 'EUR', value: 2000 },
                 onOrderTrackingRequest: onOrderTrackingRequestMock,
                 onPaymentCompleted: onPaymentCompletedMock
@@ -186,9 +180,7 @@ describe('ApplePay', () => {
                 reject();
             });
 
-            const applepay = new ApplePay({
-                core: global.core,
-                countryCode: 'US',
+            const applepay = new ApplePay(global.core, {
                 amount: { currency: 'EUR', value: 2000 },
                 onOrderTrackingRequest: onOrderTrackingRequestMock,
                 onPaymentCompleted: onPaymentCompletedMock
@@ -264,9 +256,7 @@ describe('ApplePay', () => {
                 actions.reject();
             });
 
-            const applepay = new ApplePay({
-                core: global.core,
-                countryCode: 'US',
+            const applepay = new ApplePay(global.core, {
                 amount: { currency: 'EUR', value: 2000 },
                 onAuthorized: onAuthorizedMock,
                 onChange: onChangeMock,
@@ -347,9 +337,7 @@ describe('ApplePay', () => {
 
     describe('formatProps', () => {
         test('accepts an amount in a regular format', () => {
-            const applepay = new ApplePay({
-                core: global.core,
-                countryCode: 'US',
+            const applepay = new ApplePay(global.core, {
                 amount: { currency: 'EUR', value: 2000 }
             });
             expect(applepay.props.amount.value).toEqual(2000);
@@ -357,24 +345,18 @@ describe('ApplePay', () => {
         });
 
         test('accepts an amount with default values', () => {
-            const applepay = new ApplePay({ core: global.core, countryCode: 'US' });
+            const applepay = new ApplePay(global.core);
             expect(applepay.props.amount.value).toEqual(0);
             expect(applepay.props.amount.currency).toEqual('USD');
         });
 
         test('uses merchantName if no totalPriceLabel was defined', () => {
-            const applepay = new ApplePay({
-                core: global.core,
-                countryCode: 'US',
-                configuration: { merchantName: 'Test' }
-            });
+            const applepay = new ApplePay(global.core, { configuration: { merchantName: 'Test' } });
             expect(applepay.props.totalPriceLabel).toEqual('Test');
         });
 
         test('can set totalPriceLabel', () => {
-            const applepay = new ApplePay({
-                core: global.core,
-                countryCode: 'US',
+            const applepay = new ApplePay(global.core, {
                 configuration: { merchantName: 'Test' },
                 totalPriceLabel: 'Total'
             });
@@ -384,7 +366,7 @@ describe('ApplePay', () => {
 
     describe('get data', () => {
         test('always returns a type', () => {
-            const applepay = new ApplePay({ core: global.core, countryCode: 'US' });
+            const applepay = new ApplePay(global.core);
             expect(applepay.data).toMatchObject({ paymentMethod: { type: 'applepay' } });
         });
     });

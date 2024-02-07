@@ -6,7 +6,7 @@ import { ICore } from '../types';
 const core = mock<ICore>();
 
 describe('SRPanel disabled', () => {
-    new SRPanel({ core, enabled: false });
+    new SRPanel(core, { enabled: false });
 
     test('Does not render the SRPanel in the DOM', async () => {
         // Expect panel to not be present
@@ -17,7 +17,7 @@ describe('SRPanel disabled', () => {
 
 describe('SRPanel in use', () => {
     test('Renders the SRPanel in the DOM, adds & clears messages in the panel', async () => {
-        const srPanel = new SRPanel({ core });
+        const srPanel = new SRPanel(core);
 
         // Expect panel present - but empty
         expect(screen.getByTestId('ariaLiveSRPanel')).toBeTruthy();

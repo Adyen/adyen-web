@@ -32,8 +32,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     });
 
     // Cash App Pay
-    window.cashApp = new CashAppPay({
-        core: window.checkout,
+    window.cashApp = new CashAppPay(window.checkout, {
         onClick(actions) {
             console.log('CashAppApp: onClick');
             actions.resolve();
@@ -41,8 +40,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     }).mount('.cashapp-field');
 
     // CLICK TO PAY
-    window.clickToPay = new ClickToPay({
-        core: window.checkout,
+    window.clickToPay = new ClickToPay(window.checkout, {
         shopperEmail: 'gui.ctp@adyen.com',
         onReady() {
             console.log('ClickToPay is ready');
@@ -79,8 +77,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     // Initial state
     if (!step) {
-        window.amazonpay = new AmazonPay({
-            core: window.checkout,
+        window.amazonpay = new AmazonPay(window.checkout, {
             productType: 'PayOnly',
             ...chargeOptions,
             // Regular checkout:
@@ -94,8 +91,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     // Review and confirm order
     if (step === 'review') {
-        window.amazonpay = new AmazonPay({
-            core: window.checkout,
+        window.amazonpay = new AmazonPay(window.checkout, {
             ...chargeOptions,
             /**
              * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
@@ -108,9 +104,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     // Make payment
     if (step === 'result') {
-        window.amazonpay = new AmazonPay({
-            core: window.checkout,
-
+        window.amazonpay = new AmazonPay(window.checkout, {
             /**
              * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
              */
@@ -146,8 +140,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     }
 
     // PAYPAL
-    window.paypalButtons = new PayPal({
-        core: window.checkout,
+    window.paypalButtons = new PayPal(window.checkout, {
         onAuthorized(data, actions) {
             console.log('onAuthorized', data, actions);
             actions.resolve();
@@ -158,8 +151,8 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     }).mount('.paypal-field');
 
     // GOOGLE PAY
-    const googlepay = new GooglePay({
-        core: window.checkout,
+    const googlepay = new GooglePay(window.checkout, {
+        // environment: 'PRODUCTION',
         environment: 'TEST',
 
         // Callbacks
@@ -192,8 +185,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     window.googlepay = googlepay;
 
     // APPLE PAY
-    const applepay = new ApplePay({
-        core: window.checkout,
+    const applepay = new ApplePay(window.checkout, {
         onClick: (resolve, reject) => {
             console.log('Apple Pay - Button clicked');
             resolve();

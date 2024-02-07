@@ -20,8 +20,7 @@ const initCheckout = async () => {
         ...window.mainConfiguration
     });
 
-    window.customCard = new CustomCard({
-        core: checkout,
+    window.customCard = new CustomCard(checkout, {
         type: 'card',
         brands: ['mc', 'visa', 'synchrony_plcc'],
         onConfigSuccess,
@@ -34,8 +33,7 @@ const initCheckout = async () => {
 
     createPayButton('.secured-fields', window.customCard, 'customCardRegular');
 
-    window.customCardSeparate = new CustomCard({
-        core: checkout,
+    window.customCardSeparate = new CustomCard(checkout, {
         type: 'card',
         brands: ['mc', 'visa', 'synchrony_plcc'],
         onConfigSuccess,

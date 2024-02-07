@@ -13,17 +13,13 @@ const meta: MetaConfiguration<ApplePayConfiguration> = {
 const createComponent = (args: PaymentMethodStoryProps<ApplePayConfiguration>, context) => {
     const { componentConfiguration } = args;
     const checkout = getStoryContextCheckout(context);
-    const applepay = new ApplePay({ core: checkout, ...componentConfiguration });
+    const applepay = new ApplePay(checkout, componentConfiguration);
     return <Container element={applepay} />;
 };
 
 export const Default: ApplePayStory = {
     render: createComponent,
-    args: {
-        componentConfiguration: {
-            countryCode: 'US'
-        }
-    }
+    args: {}
 };
 
 export default meta;
