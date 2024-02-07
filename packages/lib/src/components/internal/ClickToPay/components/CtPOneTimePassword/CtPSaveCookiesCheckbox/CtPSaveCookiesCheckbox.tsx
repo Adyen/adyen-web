@@ -26,7 +26,13 @@ function CtPSaveCookiesCheckbox() {
                 'adyen-checkout-ctp__otp-checkbox-container--checked': checked
             })}
         >
-            <Field name={'clickToPayCookiesCheckbox'} showContextualElement={false} useLabelElement={false} i18n={i18n}>
+            <Field
+                classNameModifiers={['consentCheckbox']}
+                name={'clickToPayCookiesCheckbox'}
+                showContextualElement={false}
+                useLabelElement={false}
+                i18n={i18n}
+            >
                 <Checkbox
                     name={'clickToPayCookiesCheckbox'}
                     onInput={handleOnChange}

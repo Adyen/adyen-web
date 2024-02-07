@@ -7,7 +7,7 @@ import { personalDetailsValidationRules } from './validate';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { PersonalDetailsProps } from './types';
 import { checkDateInputSupport } from '../FormFields/InputDate/utils';
-import { PersonalDetailsSchema } from '../../../types/global-types';
+import { PersonalDetailsSchema } from '../../../types';
 import { getFormattedData } from './utils';
 import useForm from '../../../utils/useForm';
 import './PersonalDetails.scss';
@@ -16,6 +16,7 @@ import RadioGroup from '../FormFields/RadioGroup';
 import InputDate from '../FormFields/InputDate';
 import InputEmail from '../FormFields/InputEmail';
 import InputTelephone from '../FormFields/InputTelephone';
+import { getErrorMessage } from '../../../utils/getErrorMessage';
 import { ComponentMethodsRef } from '../UIElement/types';
 
 export const PERSONAL_DETAILS_SCHEMA = ['firstName', 'lastName', 'gender', 'dateOfBirth', 'shopperEmail', 'telephoneNumber'];
@@ -55,7 +56,6 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
         };
 
     const generateFieldName = (name: string): string => `${namePrefix ? `${namePrefix}.` : ''}${name}`;
-    const getErrorMessage = error => (error && error.errorMessage ? i18n.get(error.errorMessage) : !!error);
 
     useEffect(() => {
         const formattedData = getFormattedData(data);
@@ -72,7 +72,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                     <Field
                         label={i18n.get('firstName')}
                         classNameModifiers={['col-50', 'firstName']}
-                        errorMessage={getErrorMessage(errors.firstName)}
+                        errorMessage={getErrorMessage(i18n, errors.firstName, i18n.get('firstName'))}
                         name={'firstName'}
                         i18n={i18n}
                     >
@@ -93,7 +93,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                     <Field
                         label={i18n.get('lastName')}
                         classNameModifiers={['col-50', 'lastName']}
-                        errorMessage={getErrorMessage(errors.lastName)}
+                        errorMessage={getErrorMessage(i18n, errors.lastName, i18n.get('lastName'))}
                         name={'lastName'}
                         i18n={i18n}
                     >
@@ -111,7 +111,12 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                 )}
 
                 {requiredFields.includes('gender') && (
-                    <Field errorMessage={getErrorMessage(errors.gender)} classNameModifiers={['gender']} name={'gender'} useLabelElement={false}>
+                    <Field
+                        errorMessage={getErrorMessage(i18n, errors.gender)}
+                        classNameModifiers={['gender']}
+                        name={'gender'}
+                        useLabelElement={false}
+                    >
                         <RadioGroup
                             name={generateFieldName('gender')}
                             value={data.gender}
@@ -131,7 +136,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                     <Field
                         label={i18n.get('dateOfBirth')}
                         classNameModifiers={['col-50', 'dateOfBirth']}
-                        errorMessage={getErrorMessage(errors.dateOfBirth)}
+                        errorMessage={getErrorMessage(i18n, errors.dateOfBirth, i18n.get('dateOfBirth'))}
                         helper={isDateInputSupported ? null : i18n.get('dateOfBirth.format')}
                         name={'dateOfBirth'}
                         i18n={i18n}
@@ -152,7 +157,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                     <Field
                         label={i18n.get('shopperEmail')}
                         classNameModifiers={['shopperEmail']}
-                        errorMessage={getErrorMessage(errors.shopperEmail)}
+                        errorMessage={getErrorMessage(i18n, errors.shopperEmail, i18n.get('shopperEmail'))}
                         dir={'ltr'}
                         name={'emailAddress'}
                         i18n={i18n}
@@ -173,7 +178,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                     <Field
                         label={i18n.get('telephoneNumber')}
                         classNameModifiers={['telephoneNumber']}
-                        errorMessage={getErrorMessage(errors.telephoneNumber)}
+                        errorMessage={getErrorMessage(i18n, errors.telephoneNumber, i18n.get('telephoneNumber'))}
                         dir={'ltr'}
                         name={'telephoneNumber'}
                         i18n={i18n}

@@ -28,18 +28,15 @@ class ApplePayService {
         this.session.oncancel = event => this.oncancel(event, options.onCancel);
 
         if (typeof options.onPaymentMethodSelected === 'function') {
-            this.session.onpaymentmethodselected = event =>
-                this.onpaymentmethodselected(event, options.onPaymentMethodSelected);
+            this.session.onpaymentmethodselected = event => this.onpaymentmethodselected(event, options.onPaymentMethodSelected);
         }
 
         if (typeof options.onShippingContactSelected === 'function') {
-            this.session.onshippingcontactselected = event =>
-                this.onshippingcontactselected(event, options.onShippingContactSelected);
+            this.session.onshippingcontactselected = event => this.onshippingcontactselected(event, options.onShippingContactSelected);
         }
 
         if (typeof options.onShippingMethodSelected === 'function') {
-            this.session.onshippingmethodselected = event =>
-                this.onshippingmethodselected(event, options.onShippingMethodSelected);
+            this.session.onshippingmethodselected = event => this.onshippingmethodselected(event, options.onShippingMethodSelected);
         }
     }
 

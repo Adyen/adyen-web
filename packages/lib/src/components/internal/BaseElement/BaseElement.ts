@@ -66,9 +66,7 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
     public get data(): PaymentData {
         const clientData = getProp(this.props, 'modules.risk.data');
         const useAnalytics = !!getProp(this.props, 'modules.analytics.props.enabled');
-        const checkoutAttemptId = useAnalytics
-            ? getProp(this.props, 'modules.analytics.checkoutAttemptId')
-            : 'do-not-track';
+        const checkoutAttemptId = useAnalytics ? getProp(this.props, 'modules.analytics.checkoutAttemptId') : 'do-not-track';
         const order = this.state.order || this.props.order;
 
         const componentData = this.formatData();

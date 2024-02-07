@@ -2,8 +2,12 @@
 
 .adyen-checkout__field--separateDeliveryAddress {
     .adyen-checkout__input-wrapper {
-       @include index.adyen-checkout-input-wrapper-reset;
+        @include index.adyen-checkout-input-wrapper-reset;
     }
+}
+
+.adyen-checkout__open-invoice .adyen-checkout__fieldset--personalDetails {
+    padding-bottom: var(--adyen-checkout-spacer-040);
 }
 
 .adyen-checkout__open-invoice .adyen-checkout__fieldset--billingAddress {
@@ -20,9 +24,5 @@
 }
 
 .adyen-checkout__open-invoice .adyen-checkout__field--consentCheckbox {
-    margin-top: 16px;
-}
-
-.adyen-checkout__input--separateDeliveryAddress + .adyen-checkout__checkbox__label {
     margin-top: var(--adyen-checkout-spacer-070);
 }
