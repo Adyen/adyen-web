@@ -15,7 +15,7 @@ import { SRPanel } from './Errors/SRPanel';
 import registry, { NewableComponent } from './core.registry';
 import { DEFAULT_LOCALE } from '../language/config';
 import { cleanupFinalResult, sanitizeResponse, verifyPaymentDidNotFail } from '../components/internal/UIElement/utils';
-import AdyenCheckoutError from './Errors/AdyenCheckoutError';
+import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from './Errors/AdyenCheckoutError';
 
 class Core implements ICore {
     public session?: Session;
@@ -185,7 +185,7 @@ class Core implements ICore {
      * @returns this - the element instance
      */
     public update = (options: Partial<CoreConfiguration> = {}): Promise<this> => {
-        this.setOptions(options);
+        this.setOptions(options, true);
 
         return this.initialize().then(() => {
             // Update each component under this instance
@@ -212,9 +212,15 @@ class Core implements ICore {
      * @internal
      * Create or update the config object passed when AdyenCheckout is initialised (environment, clientKey, etc...)
      */
-    private setOptions = (options: CoreConfiguration): void => {
+    private setOptions = (options: CoreConfiguration, isUpdate = false): void => {
         if (hasOwnProperty(options, 'paymentMethodsConfiguration')) {
             console.warn('WARNING:  "paymentMethodsConfiguration" is supported only by Drop-in.');
+        }
+
+        if (!isUpdate && !options.session) {
+            if (!hasOwnProperty(options, 'countryCode')) {
+                throw new AdyenCheckoutError(IMPLEMENTATION_ERROR, 'You must specify a countryCode when initializing checkout');
+            }
         }
 
         this.options = {
