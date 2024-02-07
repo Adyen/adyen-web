@@ -17,7 +17,7 @@ import { DEFAULT_LOCALE } from '../language/config';
 import { cleanupFinalResult, sanitizeResponse, verifyPaymentDidNotFail } from '../components/internal/UIElement/utils';
 import AdyenCheckoutError from './Errors/AdyenCheckoutError';
 import { ANALYTICS_ACTION_STR } from './Analytics/constants';
-import { capitalizeFirstLetter } from '../utils/textUtils';
+import { THREEDS2_FULL } from '../components/ThreeDS2/config';
 
 class Core implements ICore {
     public session?: Session;
@@ -171,15 +171,13 @@ class Core implements ICore {
         }
 
         if (action.type) {
-            // Call analytics endpoint
-            this.modules.analytics.createAnalyticsAction({
-                action: 'log',
-                data: {
-                    component: `${action.type}${action.subtype ?? ''}`,
-                    type: ANALYTICS_ACTION_STR,
-                    subtype: capitalizeFirstLetter(action.type),
-                    message: `${action.type}${action.subtype ?? ''} is initiating`
-                }
+            // 'threeDS2' OR 'qrCode', 'voucher', 'redirect', 'await', 'bankTransfer`
+            const component = action.type === THREEDS2_FULL ? `${action.type}${action.subtype}` : action.paymentMethodType;
+
+            this.modules.analytics.sendAnalytics(component, {
+                type: ANALYTICS_ACTION_STR,
+                subtype: action.type,
+                message: `${component} action was handled by the SDK`
             });
 
             const props = {
