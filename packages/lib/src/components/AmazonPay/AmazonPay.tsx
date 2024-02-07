@@ -8,6 +8,7 @@ import defaultProps from './defaultProps';
 import { getCheckoutDetails } from './services';
 import './AmazonPay.scss';
 import { TxVariants } from '../tx-variants';
+import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 
 export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
     public static type = TxVariants.amazonpay;
@@ -53,6 +54,7 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
     }
 
     public handleDeclineFlow() {
+        debugger;
         const { amazonCheckoutSessionId, configuration = {}, loadingContext, clientKey } = this.props;
         if (!amazonCheckoutSessionId) return console.error('Could handle the decline flow. Missing checkoutSessionId.');
 
@@ -81,12 +83,12 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
         return collectBrowserInfo();
     }
 
-    submit() {
-        const { data, isValid } = this;
-        const { onSubmit = () => {} } = this.props;
-
-        if (this.componentRef && this.componentRef.submit) return this.componentRef.submit();
-        return onSubmit({ data, isValid }, this);
+    public submit(): void {
+        const amazonComponentSubmit = this.componentRef && this.componentRef.getSubmitFunction();
+        if (amazonComponentSubmit) {
+            return amazonComponentSubmit();
+        }
+        this.makePaymentsCall().then(sanitizeResponse).then(verifyPaymentDidNotFail).then(this.handleResponse).catch(this.handleFailedResult);
     }
 
     render() {
