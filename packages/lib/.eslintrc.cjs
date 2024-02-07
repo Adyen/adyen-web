@@ -22,7 +22,6 @@ module.exports = {
         jest: true,
         es6: true
     },
-    ignorePatterns: [ "*_*.*", "*2*.*", "adyen*.js"],
     settings: {
         react: {
             pragma: 'h',
