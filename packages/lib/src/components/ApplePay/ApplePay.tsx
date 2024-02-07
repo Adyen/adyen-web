@@ -8,11 +8,12 @@ import { httpPost } from '../../core/Services/http';
 import { APPLEPAY_SESSION_ENDPOINT } from './config';
 import { preparePaymentRequest } from './payment-request';
 import { resolveSupportedVersion, mapBrands, formatApplePayContactToAdyenAddressFormat } from './utils';
-import { ApplePayConfiguration, ApplePayElementData, ApplePayPaymentOrderDetails, ApplePaySessionRequest } from './types';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
-import { PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
+import type { ApplePayConfiguration, ApplePayElementData, ApplePayPaymentOrderDetails, ApplePaySessionRequest } from './types';
+import type { ICore } from '../../core/types';
+import type { PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
 
 const latestSupportedVersion = 14;
 
@@ -20,8 +21,8 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
     public static type = TxVariants.applepay;
     protected static defaultProps = defaultProps;
 
-    constructor(props: ApplePayConfiguration) {
-        super(props);
+    constructor(checkout: ICore, props?: ApplePayConfiguration) {
+        super(checkout, props);
         this.startSession = this.startSession.bind(this);
         this.submit = this.submit.bind(this);
         this.validateMerchant = this.validateMerchant.bind(this);
@@ -70,6 +71,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
 
         const paymentRequest = preparePaymentRequest({
             companyName: this.props.configuration.merchantName,
+            countryCode: this.core.options.countryCode,
             ...this.props
         });
 

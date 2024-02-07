@@ -1,6 +1,7 @@
 import type { Order, OrderStatus, PaymentActionsType } from '../../types/global-types';
 import type { UIElementProps, UIElementStatus } from '../internal/UIElement/types';
 import type { NewableComponent } from '../../core/core.registry';
+import type { ICore } from '../../core/types';
 
 import UIElement from '../internal/UIElement/UIElement';
 import { ComponentsMap } from '../components-map';
@@ -98,6 +99,7 @@ export interface onOrderCancelData {
 }
 
 export interface DropinComponentProps extends DropinConfiguration {
+    core: ICore;
     onCreateElements: any;
     onChange: (newState?: object) => void;
     onOrderCancel?: (data: onOrderCancelData) => void;

@@ -1,5 +1,5 @@
 import promiseTimeout from '../../../utils/promiseTimeout';
-import UIElement from '../../internal/UIElement/UIElement';
+import type { IUIElement } from '../../internal/UIElement/types';
 
 export const UNSUPPORTED_PAYMENT_METHODS = ['androidpay', 'samsungpay', 'clicktopay'];
 
@@ -10,7 +10,7 @@ export const filterUnsupported = paymentMethod => !UNSUPPORTED_PAYMENT_METHODS.i
 export const filterPresent = paymentMethod => !!paymentMethod;
 
 // filter payment methods that are available to the user
-export const filterAvailable = (elements: UIElement[]) => {
+export const filterAvailable = (elements: IUIElement[]) => {
     const elementIsAvailablePromises = elements.map(element => {
         const { promise } = promiseTimeout(5000, element.isAvailable(), {});
         return promise;

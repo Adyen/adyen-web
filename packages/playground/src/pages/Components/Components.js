@@ -50,7 +50,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     // // SEPA Bank Transfer
     // window.bankTransfer = new BankTransfer(checkout, { type: 'bankTransfer_IBAN' }).mount('.bankTransfer-field');// BankTransfer doesn't need constructor
-    window.bankTransfer = new BankTransfer({ core: checkout }).mount('.bankTransfer-field'); // BankTransfer needs constructor
+    window.bankTransfer = new BankTransfer(checkout).mount('.bankTransfer-field'); // BankTransfer needs constructor
     window.bankTransferResult = checkout
         .createFromAction({
             paymentMethodType: 'bankTransfer_IBAN',
@@ -68,14 +68,13 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         .mount('.bankTransfer-result-field');
     //
     // MBWay
-    window.mbway = new MBWay({ core: checkout }).mount('.mbway-field');
+    window.mbway = new MBWay(checkout).mount('.mbway-field');
 
     // Klarna Widget
-    window.klarnaButton = new Klarna({ core: checkout, useKlarnaWidget: true }).mount('.klarna-field');
+    window.klarnaButton = new Klarna(checkout, { useKlarnaWidget: true }).mount('.klarna-field');
 
     // ACH
-    window.ach = new Ach({
-        core: checkout,
+    window.ach = new Ach(checkout, {
         // holderNameRequired: false,
         // hasHolderName: false,
         //            onConfigSuccess: obj => {
@@ -97,33 +96,32 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     }).mount('.ach-field');
 
     // SEPA Direct Debit
-    window.sepa = new SepaDirectDebit({
-        core: checkout,
+    window.sepa = new SepaDirectDebit(checkout, {
         countryCode: 'NL',
         holderName: true
     }).mount('.sepa-field');
 
     // // SEPA Direct Debit
-    window.vipps = new Vipps({ core: checkout }).mount('.vipps-field');
+    window.vipps = new Vipps(checkout).mount('.vipps-field');
     //
     // // BLIK
-    window.blik = new Blik({ core: checkout }).mount('.blik-field');
+    window.blik = new Blik(checkout).mount('.blik-field');
     //
     // // Giropay
-    window.giropay = new Giropay({ core: checkout }).mount('.giropay-field');
+    window.giropay = new Giropay(checkout).mount('.giropay-field');
     //
     // // UPI
-    window.upi = new UPI({ core: checkout }).mount('.upi-field');
+    window.upi = new UPI(checkout).mount('.upi-field');
 
     // PIX
-    window.pix = new Pix({ core: checkout, countdownTime: 5 }).mount('.pix-field');
+    window.pix = new Pix(checkout, { countdownTime: 5 }).mount('.pix-field');
 
     // Oxxo
-    window.oxxo = new Oxxo({ core: checkout }).mount('.oxxo-field');
+    window.oxxo = new Oxxo(checkout).mount('.oxxo-field');
 
     // Twint
-    window.twint = new Twint({ core: checkout }).mount('.twint-field');
+    window.twint = new Twint(checkout).mount('.twint-field');
 
     // Redirect
-    window.alipay = new Redirect({ core: checkout, type: 'alipay' }).mount('.redirect-field');
+    window.alipay = new Redirect(checkout, { type: 'alipay' }).mount('.redirect-field');
 });

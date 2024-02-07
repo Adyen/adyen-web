@@ -107,8 +107,7 @@ export async function initManual() {
 
         // Handle Amazon Pay redirect result
         if (amazonCheckoutSessionId) {
-            window.amazonpay = new AmazonPay({
-                core: checkout,
+            window.amazonpay = new AmazonPay(checkout, {
                 amazonCheckoutSessionId,
                 showOrderButton: false,
                 onSubmit: state => {
@@ -128,19 +127,8 @@ export async function initManual() {
         return Promise.resolve(true);
     }
 
-    // const gpay = new GooglePay({
-    //     core: checkout,
-    //     shippingAddressRequired: true,
-    //     shippingAddressParameters: {
-    //         phoneNumberRequired: true
-    //     },
-
-    //     billingAddressRequired: true
-    // }).mount('#dropin-container');
-
-    const dropin = new Dropin({
-        core: checkout,
-        paymentMethodComponents: [Card, Ideal, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay],
+    const dropin = new Dropin(checkout, {
+        paymentMethodComponents: [Card, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay],
         instantPaymentTypes: ['googlepay'],
         paymentMethodsConfiguration: {
             card: {
@@ -160,5 +148,5 @@ export async function initManual() {
 
     handleRedirectResult();
 
-    return [checkout];
+    return [checkout, dropin];
 }

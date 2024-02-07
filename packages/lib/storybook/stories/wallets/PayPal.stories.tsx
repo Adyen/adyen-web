@@ -14,7 +14,7 @@ export const Default: PayPalStory = {
     render: (args: PaymentMethodStoryProps<PayPalConfiguration>, context) => {
         const { componentConfiguration } = args;
         const checkout = getStoryContextCheckout(context);
-        const paypal = new PayPal({ core: checkout, ...componentConfiguration });
+        const paypal = new PayPal(checkout, componentConfiguration);
         return <Container element={paypal} />;
     }
 };

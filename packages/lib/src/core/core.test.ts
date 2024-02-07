@@ -149,8 +149,7 @@ describe('Core', () => {
             });
             await checkout.initialize();
 
-            const dropin = new Ideal({
-                core: checkout,
+            const dropin = new Ideal(checkout, {
                 onAdditionalDetails: onAdditionalDetailsComponent
             });
 
@@ -165,9 +164,7 @@ describe('Core', () => {
             });
             await checkout.initialize();
 
-            const dropin = new Ideal({
-                core: checkout
-            });
+            const dropin = new Ideal(checkout);
 
             expect(dropin.props.onAdditionalDetails).toBe(onAdditionalDetailsGlobal);
         });
@@ -190,8 +187,7 @@ describe('Core', () => {
 
             await checkout.initialize();
 
-            const dropin = new Dropin({
-                core: checkout,
+            const dropin = new Dropin(checkout, {
                 onAdditionalDetails: onAdditionalDetailsComponent,
                 paymentMethodComponents: [Ideal],
                 paymentMethodsConfiguration: {
@@ -244,7 +240,7 @@ describe('Core', () => {
             });
             await checkout.initialize();
 
-            const component = new Dropin({ core: checkout }).mount('body');
+            const component = new Dropin(checkout).mount('body');
             const spy = jest.spyOn(component, 'update');
 
             await checkout.update();

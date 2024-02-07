@@ -15,11 +15,10 @@ const spyFetch = (httpPost as jest.Mock).mockImplementation(jest.fn(() => Promis
 describe('AmazonPay', () => {
     const amazonProps = mock<AmazonPayConfiguration>();
     const getElement = (props = {}) =>
-        new AmazonPay({
+        new AmazonPay(global.core, {
             ...defaultProps,
             ...props,
-            ...amazonProps,
-            core: global.core
+            ...amazonProps
         });
 
     test('always returns isValid as true', () => {

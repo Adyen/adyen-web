@@ -48,8 +48,7 @@ const handleQRCodePayment = async (state, component, actions, countryCode) => {
     });
 
     // WechatPay QR
-    new WeChat({
-        core: checkout,
+    new WeChat(checkout, {
         type: 'wechatpayQR',
         onSubmit: (state, component, actions) => {
             handleQRCodePayment(state, component, actions, 'CN');
@@ -57,36 +56,31 @@ const handleQRCodePayment = async (state, component, actions, countryCode) => {
     }).mount('#wechatpayqr-container');
 
     // BCMC Mobile
-    new BcmcMobile({
-        core: checkout,
+    new BcmcMobile(checkout, {
         onSubmit: (state, component, actions) => {
             handleQRCodePayment(state, component, actions, 'BE');
         }
     }).mount('#bcmcqr-container');
 
-    new Swish({
-        core: checkout,
+    new Swish(checkout, {
         onSubmit: (state, component, actions) => {
             handleQRCodePayment(state, component, actions, 'SE');
         }
     }).mount('#swish-container');
 
-    new PromptPay({
-        core: checkout,
+    new PromptPay(checkout, {
         onSubmit: (state, component, actions) => {
             handleQRCodePayment(state, component, actions, 'TH');
         }
     }).mount('#promptpay-container');
 
-    new PayNow({
-        core: checkout,
+    new PayNow(checkout, {
         onSubmit: (state, component, actions) => {
             handleQRCodePayment(state, component, actions, 'SG');
         }
     }).mount('#paynow-container');
 
-    new DuitNow({
-        core: checkout,
+    new DuitNow(checkout, {
         onSubmit: (state, component, actions) => {
             handleQRCodePayment(state, component, actions, 'MY');
         }

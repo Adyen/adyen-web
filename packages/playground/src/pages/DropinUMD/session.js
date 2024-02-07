@@ -41,8 +41,7 @@ export async function initSession() {
         }
     });
 
-    const dropin = new Dropin({
-        core: checkout,
+    const dropin = new Dropin(checkout, {
         instantPaymentTypes: ['googlepay'],
         paymentMethodsConfiguration: {
             paywithgoogle: {

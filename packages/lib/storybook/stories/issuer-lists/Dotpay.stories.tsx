@@ -14,7 +14,7 @@ export const Default: DotpayStory = {
     render: (args: PaymentMethodStoryProps<IssuerListConfiguration>, context) => {
         const { componentConfiguration } = args;
         const checkout = getStoryContextCheckout(context);
-        const dotpay = new Dotpay({ core: checkout, ...componentConfiguration });
+        const dotpay = new Dotpay(checkout, componentConfiguration);
         return <Container element={dotpay} />;
     },
     args: {

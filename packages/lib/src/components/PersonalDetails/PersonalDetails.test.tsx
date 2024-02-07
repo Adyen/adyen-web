@@ -3,8 +3,7 @@ import PersonalDetails from './PersonalDetails';
 
 describe('PersonalDetails', () => {
     test('should render FormInstruction by default', async () => {
-        const personalDetails = new PersonalDetails({
-            core: global.core,
+        const personalDetails = new PersonalDetails(global.core, {
             i18n: global.i18n,
             loadingContext: 'test',
             modules: { resources: global.resources }

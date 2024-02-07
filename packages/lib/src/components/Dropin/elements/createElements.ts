@@ -1,10 +1,10 @@
 import { filterUnsupported, filterPresent, filterAvailable } from './filters';
-import { PaymentMethod, StoredPaymentMethod } from '../../../types/global-types';
 import { getComponentConfiguration } from './getComponentConfiguration';
-import { ICore } from '../../../core/types';
-import UIElement from '../../internal/UIElement/UIElement';
-import { PaymentMethodsConfiguration } from '../types';
 import getComponentNameOfPaymentType from '../../components-name-map';
+import type { PaymentMethod, StoredPaymentMethod } from '../../../types/global-types';
+import type { PaymentMethodsConfiguration } from '../types';
+import type { ICore } from '../../../core/types';
+import type { IUIElement } from '../../internal/UIElement/types';
 
 /**
  * Returns a filtered (available) list of component Elements
@@ -19,7 +19,7 @@ const createElements = (
     paymentMethodsConfiguration: PaymentMethodsConfiguration,
     commonProps,
     core: ICore
-): Promise<UIElement[]> => {
+): Promise<IUIElement[]> => {
     const elements = paymentMethods
         .map(paymentMethod => {
             const paymentMethodConfigurationProps = getComponentConfiguration(
@@ -40,9 +40,9 @@ const createElements = (
                 return null;
             }
 
-            const elementProps = { core, ...paymentMethod, ...commonProps, ...paymentMethodConfigurationProps };
+            const elementProps = { ...paymentMethod, ...commonProps, ...paymentMethodConfigurationProps };
 
-            return new PaymentMethodElement(elementProps);
+            return new PaymentMethodElement(core, elementProps);
         })
         .filter(filterPresent)
         .filter(filterUnsupported);

@@ -20,8 +20,7 @@ const initCheckout = async () => {
         ...window.mainConfiguration
     });
 
-    window.giftcard = new Giftcard({
-        core: window.checkout,
+    window.giftcard = new Giftcard(window.checkout, {
         type: 'giftcard',
         brand: 'valuelink',
         onBalanceCheck: async (resolve, reject, data) => {

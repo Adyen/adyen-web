@@ -114,11 +114,29 @@ export async function initManual() {
             });
         }
 
+        // Handle Amazon Pay redirect result
+        if (amazonCheckoutSessionId) {
+            window.amazonpay = new AmazonPay(checkout, {
+                amazonCheckoutSessionId,
+                showOrderButton: false,
+                onSubmit: state => {
+                    makePayment(state.data).then(result => {
+                        if (result.action) {
+                            dropin.handleAction(result.action);
+                        } else {
+                            handleFinalState(result.resultCode, dropin);
+                        }
+                    });
+                }
+            }).mount('body');
+
+            window.amazonpay.submit();
+        }
+
         return Promise.resolve(true);
     }
 
-    const dropin = new Dropin({
-        core: checkout,
+    const dropin = new Dropin(checkout, {
         instantPaymentTypes: ['googlepay'],
         paymentMethodsConfiguration: {
             card: {

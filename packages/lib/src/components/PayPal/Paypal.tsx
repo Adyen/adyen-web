@@ -9,6 +9,7 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { ERRORS } from './constants';
 import { TxVariants } from '../tx-variants';
+import type { ICore } from '../../core/types';
 import { formatPaypalOrderContatcToAdyenFormat } from './utils/format-paypal-order-contact-to-adyen-format';
 
 class PaypalElement extends UIElement<PayPalConfiguration> {
@@ -20,8 +21,8 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
 
     protected static defaultProps = defaultProps;
 
-    constructor(props: PayPalConfiguration) {
-        super(props);
+    constructor(checkout: ICore, props?: PayPalConfiguration) {
+        super(checkout, props);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 

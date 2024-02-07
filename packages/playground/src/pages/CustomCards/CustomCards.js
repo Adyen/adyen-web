@@ -76,8 +76,7 @@ const initCheckout = async () => {
     window.checkout = await AdyenCheckout(configObj);
 
     // SECURED FIELDS
-    window.customCard = new CustomCard({
-        core: window.checkout,
+    window.customCard = new CustomCard(window.checkout, {
         type: 'card',
         brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire', 'synchrony_plcc'],
         styles,
@@ -113,8 +112,7 @@ const initCheckout = async () => {
 
     window.customCardSi =
         showOtherExamples &&
-        new CustomCard({
-            core: window.checkout,
+        new CustomCard(window.checkout, {
             type: 'card',
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
             styles: styles_si,
@@ -128,8 +126,7 @@ const initCheckout = async () => {
 
     window.fancyCustomCard =
         showOtherExamples &&
-        new CustomCard({
-            core: window.checkout,
+        new CustomCard(window.checkout, {
             type: 'card',
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
             styles: fancyStyles,
@@ -158,8 +155,7 @@ const initCheckout2 = async () => {
 
     window.materialDesignCustomCard =
         showOtherExamples &&
-        new CustomCard({
-            core: window.checkout,
+        new CustomCard(window.checkout, {
             type: 'card',
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
             styles: materialStyles,

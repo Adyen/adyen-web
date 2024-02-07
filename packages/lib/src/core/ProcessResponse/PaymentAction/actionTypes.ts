@@ -2,7 +2,7 @@ import { PaymentAction } from '../../../types/global-types';
 import { get3DS2FlowProps } from '../../../components/ThreeDS2/components/utils';
 import uuid from '../../../utils/uuid';
 import type { IRegistry } from '../../core.registry';
-import { ICore } from '../../types';
+import type { ICore } from '../../types';
 
 const createComponent = (core: ICore, registry: IRegistry, componentType, props) => {
     const Element = registry.getComponent(componentType);
@@ -12,7 +12,7 @@ const createComponent = (core: ICore, registry: IRegistry, componentType, props)
         return;
     }
 
-    return new Element({ core, ...props, id: `${componentType}-${uuid()}` });
+    return new Element(core, { ...props, id: `${componentType}-${uuid()}` });
 };
 
 const getActionHandler = statusType => {
