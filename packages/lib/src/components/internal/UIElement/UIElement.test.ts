@@ -172,6 +172,7 @@ describe('UIElement', () => {
             };
 
             const checkout = await AdyenCheckout({
+                countryCode: 'US',
                 environment: 'test',
                 clientKey: 'test_123456',
                 analytics: { enabled: false }
@@ -199,6 +200,7 @@ describe('UIElement', () => {
             };
 
             const checkout = await AdyenCheckout({
+                countryCode: 'US',
                 environment: 'test',
                 clientKey: 'test_123456',
                 analytics: { enabled: false }
