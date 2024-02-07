@@ -15,6 +15,7 @@ const meta: MetaConfiguration<DropinConfiguration> = {
     },
     args: {
         componentConfiguration: {
+            showRadioButton: true,
             instantPaymentTypes: ['googlepay'],
             paymentMethodsConfiguration: {
                 googlepay: {

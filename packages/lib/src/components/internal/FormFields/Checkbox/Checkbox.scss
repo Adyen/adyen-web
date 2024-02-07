@@ -91,7 +91,7 @@
         height: var(--adyen-checkout-spacer-070);
         border-radius: var(--adyen-checkout-border-radius-s);
         background-color: var(--adyen-checkout-color-background-primary);
-        border: var(--adyen-checkout-border-width-s) solid var(--adyen-checkout-color-outline-tertiary);
+        border: var(--adyen-checkout-border-width-s) solid var(--adyen-checkout-color-outline-primary);
         z-index: 0;
         transition: background 0.15s ease-out, border 0.05s ease-out, box-shadow 0.1s ease-out;
 
@@ -115,10 +115,11 @@
     }
 
     .adyen-checkout__input-wrapper {
+        @include index.adyen-checkout-input-wrapper-reset;
+
         flex: 1;
         justify-content: space-between;
 
-        @include index.adyen-checkout-input-wrapper-reset;
     }
 
     &.adyen-checkout__field--error {

@@ -1,17 +1,21 @@
 @use '../../../style/index';
 
+.adyen-checkout__dropin {
+    display: flex;
+    flex-direction: column;
+    gap: var(--adyen-checkout-dropin-payment-list-gap);
+}
+
 .adyen-checkout-payment-methods-container {
-    margin: var(--adyen-checkout-spacer-070) 0;
     display: flex;
     flex-direction: column;
     gap: var(--adyen-checkout-spacer-070);
 }
 
 .adyen-checkout-payment-methods-list-label {
+    @include index.adyen-checkout-text-subtitle;
+
     color: var(--adyen-checkout-dropin-list-label-color);
-    font-size: var(--adyen-checkout-dropin-list-label-font-size);
-    font-weight: var(--adyen-checkout-dropin-list-label-font-weight);
-    line-height: var(--adyen-checkout-text-caption-stronger-wide-line-height);
 }
 
 .adyen-checkout__payment-methods-list {
@@ -31,6 +35,7 @@
 .adyen-checkout__instant-payment-methods-list {
     list-style: none;
     padding: 0;
+    margin: 0;
     display: flex;
     gap: var(--adyen-checkout-spacer-070);
 
@@ -43,10 +48,7 @@
     display: block;
 
     &__details {
-        opacity: 0;
-        height: 0;
         overflow: hidden;
-        transition: opacity 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
     }
 
     &__image {
@@ -54,22 +56,24 @@
         height: 26px;
 
         &__wrapper {
-            margin-right: var(--adyen-checkout-spacer-040);
-
             [dir='rtl'] & {
                 margin-right: 0;
                 margin-left: var(--adyen-checkout-spacer-040);
             }
         }
     }
+}
 
-    &--selected {
-        max-height: 100%;
+.adyen-checkout-pm-details-wrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 250ms ease;
+}
 
-        .adyen-checkout__payment-method__details {
-            opacity: 1;
-            height: auto;
-            overflow: visible;
-        }
+.adyen-checkout-pm-details-wrapper[aria-hidden='false'] {
+    grid-template-rows: 1fr;
+
+    .adyen-checkout__payment-method__details{
+        overflow: visible;
     }
 }

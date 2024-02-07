@@ -153,6 +153,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                                 openFirstStoredPaymentMethod={this.props.openFirstStoredPaymentMethod}
                                 onDisableStoredPaymentMethod={this.handleDisableStoredPaymentMethod}
                                 showRemovePaymentMethodButton={this.props.showRemovePaymentMethodButton}
+                                showRadioButton={this.props.showRadioButton}
                             />
                         )}
                     </div>

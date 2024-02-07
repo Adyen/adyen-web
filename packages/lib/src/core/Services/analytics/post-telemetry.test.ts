@@ -47,7 +47,7 @@ test('should send proper data to http service', () => {
             locale: 'en-US',
             referrer: 'http://localhost/',
             screenWidth: 0,
-            userAgent: 'Mozilla/5.0 (linux) AppleWebKit/537.36 (KHTML, like Gecko) jsdom/20.0.3',
+            userAgent: global.navigator.userAgent,
             version: 'x.x.x'
         }
     );

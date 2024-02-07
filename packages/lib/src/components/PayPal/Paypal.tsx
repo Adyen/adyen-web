@@ -103,10 +103,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
             .get()
             .then((paypalOrder: any) => {
                 const billingAddress = formatPaypalOrderContatcToAdyenFormat(paypalOrder?.payer);
-                const deliveryAddress = formatPaypalOrderContatcToAdyenFormat(
-                    paypalOrder?.purchase_units?.[0].shipping,
-                    true
-                );
+                const deliveryAddress = formatPaypalOrderContatcToAdyenFormat(paypalOrder?.purchase_units?.[0].shipping, true);
 
                 this.setState({
                     authorizedEvent: paypalOrder,
@@ -126,11 +123,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                 );
             })
             .then(() => this.handleAdditionalDetails(state))
-            .catch(error =>
-                this.handleError(
-                    new AdyenCheckoutError('ERROR', 'Something went wrong while parsing PayPal Order', { cause: error })
-                )
-            );
+            .catch(error => this.handleError(new AdyenCheckoutError('ERROR', 'Something went wrong while parsing PayPal Order', { cause: error })));
     };
 
     handleResolve(token: string) {

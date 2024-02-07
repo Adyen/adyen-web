@@ -63,13 +63,5 @@ export const GiftcardExample = ({ contextArgs }: GiftcardExampleProps) => {
         }
     }, [element]);
 
-    return (
-        <div>
-            {errorMessage ? (
-                <div>{errorMessage}</div>
-            ) : (
-                <div ref={container} id="component-root" className="component-wrapper" />
-            )}
-        </div>
-    );
+    return <div>{errorMessage ? <div>{errorMessage}</div> : <div ref={container} id="component-root" className="component-wrapper" />}</div>;
 };

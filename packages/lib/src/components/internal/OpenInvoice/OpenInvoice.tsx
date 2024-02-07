@@ -285,7 +285,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
 
             {showSeparateDeliveryAddressCheckbox && (
                 <Field
-                    classNameModifiers={['separateDeliveryAddress']}
+                    classNameModifiers={['separateDeliveryAddress', 'consentCheckbox']}
                     name={'separateDeliveryAddress'}
                     useLabelElement={false}
                     showErrorElement={false}
