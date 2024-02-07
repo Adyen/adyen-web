@@ -15,8 +15,7 @@ describe('ThreeDS2Challenge: calls that generate analytics should produce object
     beforeEach(() => {
         console.log = jest.fn(() => {});
 
-        challenge = new ThreeDS2Challenge({
-            core: null,
+        challenge = new ThreeDS2Challenge(global.core, {
             onActionHandled: () => {},
             modules: {
                 analytics: analyticsModule

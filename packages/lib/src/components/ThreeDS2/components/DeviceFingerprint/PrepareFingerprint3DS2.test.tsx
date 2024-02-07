@@ -42,13 +42,7 @@ describe('ThreeDS2DeviceFingerprint', () => {
 
         mount(
             // @ts-ignore Component is proper JSX
-            <PrepareFingerprint3DS2
-                core={global.core}
-                {...propsMock}
-                onError={errorFunction}
-                onComplete={completeFunction}
-                onSubmitAnalytics={() => {}}
-            />
+            <PrepareFingerprint3DS2 {...propsMock} onError={errorFunction} onComplete={completeFunction} onSubmitAnalytics={() => {}} />
         );
         expect(errorFunction.mock.calls.length).toBe(0);
     });

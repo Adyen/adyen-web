@@ -1,11 +1,9 @@
-import { ICore } from '../../core/types';
 import UIElement from '../internal/UIElement';
 import { ActionHandledReturnObject, AnalyticsModule } from '../../types/global-types';
 import Language from '../../language';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 
 export interface ThreeDS2DeviceFingerprintConfiguration {
-    core: ICore;
     dataKey?: string;
     token?: string;
     notificationURL?: string;
@@ -22,7 +20,6 @@ export interface ThreeDS2DeviceFingerprintConfiguration {
 }
 
 export interface ThreeDS2ChallengeConfiguration {
-    core: ICore;
     token?: string;
     dataKey?: string;
     notificationURL?: string;

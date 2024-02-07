@@ -383,8 +383,7 @@ describe('GooglePay', () => {
         beforeEach(() => {
             console.log = jest.fn(() => {});
 
-            gpay = new GooglePay({
-                core: null,
+            gpay = new GooglePay(global.core, {
                 type: 'googlepay',
                 isInstantPayment: true,
                 modules: {

@@ -15,8 +15,7 @@ describe('ThreeDS2DeviceFingerprint: calls that generate analytics should produc
     beforeEach(() => {
         console.log = jest.fn(() => {});
 
-        fingerprint = new ThreeDS2DeviceFingerprint({
-            core: null,
+        fingerprint = new ThreeDS2DeviceFingerprint(global.core, {
             onActionHandled: () => {},
             modules: {
                 analytics: analyticsModule

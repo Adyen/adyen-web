@@ -20,8 +20,7 @@ describe('Card: calls that generate "info" analytics should produce objects with
     beforeEach(() => {
         console.log = jest.fn(() => {});
 
-        card = new CardElement({
-            core: null,
+        card = new CardElement(global.core, {
             modules: {
                 analytics: analyticsModule
             }
@@ -144,8 +143,7 @@ describe('Card: calls that generate "log" analytics should produce objects with 
     beforeEach(() => {
         console.log = jest.fn(() => {});
 
-        card = new CardElement({
-            core: null,
+        card = new CardElement(global.core, {
             modules: {
                 analytics: analyticsModule
             }
