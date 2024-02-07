@@ -13,7 +13,7 @@ const meta: MetaConfiguration<PixConfiguration> = {
 const createComponent = (args: PaymentMethodStoryProps<PixConfiguration>, context) => {
     const { componentConfiguration } = args;
     const checkout = getStoryContextCheckout(context);
-    const pix = new Pix({ core: checkout, ...componentConfiguration });
+    const pix = new Pix(checkout, componentConfiguration);
     return <Container element={pix} />;
 };
 

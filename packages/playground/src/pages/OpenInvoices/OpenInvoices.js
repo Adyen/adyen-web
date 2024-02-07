@@ -41,8 +41,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
 
     // RATEPAY
     if (showComps.ratepay) {
-        window.ratepay = new RatePay({
-            core: window.core,
+        window.ratepay = new RatePay(window.core, {
             countryCode: 'DE', // 'DE' / 'AT' / 'CH'
             visibility: {
                 personalDetails: 'editable', // editable [default] / readOnly / hidden
@@ -54,8 +53,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
 
     // RATEPAY
     if (showComps.ratepaydd) {
-        window.ratepaydd = new RatePayDirectDebit({
-            core: window.core,
+        window.ratepaydd = new RatePayDirectDebit(window.core, {
             //countryCode: 'DE', // 'DE' / 'AT' / 'CH'
             visibility: {
                 personalDetails: 'editable', // editable [default] / readOnly / hidden
@@ -67,8 +65,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
 
     // AFTERPAY
     if (showComps.afterpay) {
-        window.afterpay = new AfterPay({
-            core: window.core,
+        window.afterpay = new AfterPay(window.core, {
             countryCode: 'NL', // 'NL' / 'BE'
             visibility: {
                 personalDetails: 'editable', // editable [default] / readOnly / hidden
@@ -89,8 +86,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
 
     // AFTERPAY B2B
     if (showComps.afterpayb2b) {
-        window.afterpayb2b = new AfterPayB2B({
-            core: window.core,
+        window.afterpayb2b = new AfterPayB2B(window.core, {
             countryCode: 'NL', // 'NL' / 'BE'
             visibility: {
                 companyDetails: 'editable' // editable [default] / readOnly / hidden
@@ -100,8 +96,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
 
     // FACILYPAY_3x
     if (showComps.facilypay_3x) {
-        window.facilypay_3x = new FacilPay3x({
-            core: window.core,
+        window.facilypay_3x = new FacilPay3x(window.core, {
             countryCode: 'ES', // 'ES' / 'FR'
             visibility: {
                 personalDetails: 'editable', // editable [default] / readOnly / hidden
@@ -113,8 +108,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
 
     // AFFIRM
     if (showComps.affirm) {
-        window.affirm = new Affirm({
-            core: window.core,
+        window.affirm = new Affirm(window.core, {
             countryCode: 'US', // 'US' / 'CA'
             visibility: {
                 personalDetails: 'hidden', // editable [default] / readOnly / hidden
@@ -142,8 +136,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
 
     // ATOME
     if (showComps.atome) {
-        window.atome = new Atome({
-            core: window.core,
+        window.atome = new Atome(window.core, {
             countryCode: 'SG',
             data: {
                 personalDetails: {

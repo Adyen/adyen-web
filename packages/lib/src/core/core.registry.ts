@@ -3,13 +3,15 @@ import ThreeDS2Challenge from '../components/ThreeDS2/ThreeDS2Challenge';
 import ThreeDS2DeviceFingerprint from '../components/ThreeDS2/ThreeDS2DeviceFingerprint';
 import Redirect from '../components/Redirect';
 import { TxVariants } from '../components/tx-variants';
+import type { ICore } from './types';
+import type { IUIElement } from '../components/internal/UIElement/types';
 
 function assertClassHasType(Class: any): Class is typeof UIElement {
     const hasValidType = typeof Class.type === 'string' && !!Class.type;
     return hasValidType;
 }
 
-export type NewableComponent = new (props) => UIElement;
+export type NewableComponent = new (checkout: ICore, props?) => IUIElement;
 
 export interface IRegistry {
     add(...items: NewableComponent[]): void;

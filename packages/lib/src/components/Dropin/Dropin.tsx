@@ -11,6 +11,7 @@ import createInstantPaymentElements from './elements/createInstantPaymentElement
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import splitPaymentMethods from './elements/splitPaymentMethods';
+import type { ICore } from '../../core/types';
 
 const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay'];
 
@@ -25,8 +26,8 @@ class DropinElement extends UIElement<DropinConfiguration> {
      */
     public componentFromAction?: UIElement;
 
-    constructor(props: DropinConfiguration) {
-        super(props);
+    constructor(checkout: ICore, props?: DropinConfiguration) {
+        super(checkout, props);
         this.submit = this.submit.bind(this);
         this.handleAction = this.handleAction.bind(this);
 
@@ -178,6 +179,7 @@ class DropinElement extends UIElement<DropinConfiguration> {
                 <SRPanelProvider srPanel={this.props.modules.srPanel}>
                     <DropinComponent
                         {...this.props}
+                        core={this.core}
                         onChange={this.setState}
                         elementRef={this.elementRef}
                         onCreateElements={this.handleCreate}

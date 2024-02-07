@@ -3,8 +3,7 @@ import Trustly from './Trustly';
 
 describe('TrustlyElement', () => {
     test('should render payment description by default', async () => {
-        const trustly = new Trustly({
-            core: global.core,
+        const trustly = new Trustly(global.core, {
             i18n: global.i18n,
             loadingContext: 'test',
             modules: { resources: global.resources }
@@ -17,8 +16,7 @@ describe('TrustlyElement', () => {
     });
 
     test('should render redirect button by default', async () => {
-        const trustly = new Trustly({
-            core: global.core,
+        const trustly = new Trustly(global.core, {
             i18n: global.i18n,
             loadingContext: 'test',
             modules: { resources: global.resources }
@@ -29,8 +27,7 @@ describe('TrustlyElement', () => {
     });
 
     test('should not render pay button if showPayButton is false', () => {
-        const trustly = new Trustly({
-            core: global.core,
+        const trustly = new Trustly(global.core, {
             i18n: global.i18n,
             loadingContext: 'test',
             modules: { resources: global.resources },

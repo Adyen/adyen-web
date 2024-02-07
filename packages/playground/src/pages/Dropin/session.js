@@ -41,8 +41,7 @@ export async function initSession() {
         }
     });
 
-    const dropin = new Dropin({
-        core: checkout,
+    const dropin = new Dropin(checkout, {
         instantPaymentTypes: ['googlepay'],
         paymentMethodComponents: [Card, WeChat, Giftcard, PayPal, Ach, GooglePay, Ideal],
         paymentMethodsConfiguration: {

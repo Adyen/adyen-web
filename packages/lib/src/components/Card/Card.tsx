@@ -17,6 +17,7 @@ import { UIElementStatus } from '../internal/UIElement/types';
 import UIElement from '../internal/UIElement';
 import PayButton from '../internal/PayButton';
 import { PayButtonProps } from '../internal/PayButton/PayButton';
+import type { ICore } from '../../core/types';
 import {
     ANALYTICS_FOCUS_STR,
     ANALYTICS_CONFIGURED_STR,
@@ -38,8 +39,8 @@ export class CardElement extends UIElement<CardConfiguration> {
      */
     private clickToPayRef = null;
 
-    constructor(props: CardConfiguration) {
-        super(props);
+    constructor(checkout: ICore, props?: CardConfiguration) {
+        super(checkout, props);
 
         if (props && !props._disableClickToPay) {
             this.clickToPayService = createClickToPayService(this.props.configuration, this.props.clickToPayConfiguration, this.props.environment);
@@ -101,8 +102,8 @@ export class CardElement extends UIElement<CardConfiguration> {
             clickToPayConfiguration: {
                 ...props.clickToPayConfiguration,
                 disableOtpAutoFocus: props.clickToPayConfiguration?.disableOtpAutoFocus || false,
-                shopperEmail: props.clickToPayConfiguration?.shopperEmail || props?.core?.options?.session?.shopperEmail,
-                telephoneNumber: props.clickToPayConfiguration?.telephoneNumber || props?.core?.options?.session?.telephoneNumber,
+                shopperEmail: props.clickToPayConfiguration?.shopperEmail || this.core.options?.session?.shopperEmail,
+                telephoneNumber: props.clickToPayConfiguration?.telephoneNumber || this.core.options?.session?.telephoneNumber,
                 locale: props.clickToPayConfiguration?.locale || props.i18n?.locale?.replace('-', '_')
             }
         };

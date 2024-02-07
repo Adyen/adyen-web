@@ -10,7 +10,7 @@ jest.mock('../../../core/Services/payment-status');
 jest.useFakeTimers();
 
 const getWrapper = ui => {
-    const srPanel = new SRPanel({ core: global.core });
+    const srPanel = new SRPanel(global.core);
     return mount(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
             <SRPanelProvider srPanel={srPanel}> {ui}</SRPanelProvider>

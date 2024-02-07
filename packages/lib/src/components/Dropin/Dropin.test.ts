@@ -25,21 +25,21 @@ describe('Dropin', () => {
 
     describe('isValid', () => {
         test('should fail if no activePaymentMethod', () => {
-            const dropin = new Dropin({ core: checkout });
+            const dropin = new Dropin(checkout);
             expect(dropin.isValid).toEqual(false);
         });
     });
 
     describe('submit', () => {
         test('should fail if no activePaymentMethod', () => {
-            const dropin = new Dropin({ core: checkout });
+            const dropin = new Dropin(checkout);
             expect(() => dropin.submit()).toThrow();
         });
     });
 
     describe('closeActivePaymentMethod', () => {
         test('should close active payment method', async () => {
-            const dropin = new Dropin({ core: checkout });
+            const dropin = new Dropin(checkout);
             const component = await mount(dropin.render());
             await component.update();
 
@@ -59,7 +59,7 @@ describe('Dropin', () => {
                 type: 'threeDS2'
             };
 
-            const dropin = new Dropin({ core: checkout });
+            const dropin = new Dropin(checkout);
 
             dropin.handleAction(fingerprintAction);
             expect(dropin.componentFromAction instanceof ThreeDS2DeviceFingerprint).toEqual(true);
@@ -77,7 +77,7 @@ describe('Dropin', () => {
                 paymentMethodType: 'scheme'
             };
 
-            const dropin = new Dropin({ core: checkout });
+            const dropin = new Dropin(checkout);
 
             dropin.handleAction(challengeAction);
             expect(dropin.componentFromAction instanceof ThreeDS2Challenge).toEqual(true);
@@ -101,10 +101,7 @@ describe('Dropin', () => {
                 analytics: { enabled: false }
             });
 
-            const dropin = new Dropin({
-                core: checkout,
-                paymentMethodsConfiguration: { card: { challengeWindowSize: '02' } }
-            });
+            const dropin = new Dropin(checkout, { paymentMethodsConfiguration: { card: { challengeWindowSize: '02' } } });
             jest.spyOn(dropin, 'activePaymentMethod', 'get').mockReturnValue({ props: { challengeWindowSize: '02' } });
 
             dropin.handleAction(challengeAction);
@@ -121,7 +118,7 @@ describe('Dropin', () => {
                 paymentMethodType: 'scheme'
             };
 
-            const dropin = new Dropin({ core: checkout });
+            const dropin = new Dropin(checkout);
 
             dropin.handleAction(challengeAction, {
                 challengeWindowSize: '03'
@@ -133,18 +130,15 @@ describe('Dropin', () => {
 
     describe('Instant Payments feature', () => {
         test('formatProps formats instantPaymentTypes removing duplicates and invalid values', async () => {
-            const dropin = new Dropin({
-                core: checkout,
-                // @ts-ignore Valid test case
-                instantPaymentTypes: ['paywithgoogle', 'paywithgoogle', 'paypal', 'alipay']
-            });
+            // @ts-ignore Testing invalid interface
+            const dropin = new Dropin(checkout, { instantPaymentTypes: ['paywithgoogle', 'paywithgoogle', 'paypal', 'alipay'] });
             expect(dropin.props.instantPaymentTypes).toStrictEqual(['paywithgoogle']);
         });
     });
 
     describe('Payment status', () => {
         test('should show success status', async () => {
-            const dropin = new Dropin({ core: checkout });
+            const dropin = new Dropin(checkout);
             render(dropin.render());
             expect(await screen.findByRole('radio')).toBeTruthy();
             dropin.setStatus('success');
@@ -152,7 +146,7 @@ describe('Dropin', () => {
         });
 
         test('should show Error status', async () => {
-            const dropin = new Dropin({ core: checkout });
+            const dropin = new Dropin(checkout);
             render(dropin.render());
             expect(await screen.findByRole('radio')).toBeTruthy();
             dropin.setStatus('error');

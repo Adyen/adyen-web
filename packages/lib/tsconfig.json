@@ -40,5 +40,5 @@
         "./src/**/*",
         "./src/types/custom.d.ts",
     ],
-    "exclude": ["node_modules", "./dist/**", "**/*.scss", "**/*_*/**", "**/*2*/**"]
+    "exclude": ["node_modules", "./dist/**", "**/*.scss"],
 }

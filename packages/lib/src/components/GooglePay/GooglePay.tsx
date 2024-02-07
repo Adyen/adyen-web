@@ -3,13 +3,14 @@ import UIElement from '../internal/UIElement/UIElement';
 import GooglePayService from './GooglePayService';
 import GooglePayButton from './components/GooglePayButton';
 import defaultProps from './defaultProps';
-import { GooglePayConfiguration } from './types';
 import { formatGooglePayContactToAdyenAddressFormat, getGooglePayLocale } from './utils';
 import collectBrowserInfo from '../../utils/browserInfo';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
-import { AddressData, PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
+import type { AddressData, PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
+import type { GooglePayConfiguration } from './types';
+import { ICore } from '../../core/types';
 import { ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
 
 class GooglePay extends UIElement<GooglePayConfiguration> {
@@ -19,8 +20,8 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
 
     protected readonly googlePay;
 
-    constructor(props) {
-        super(props);
+    constructor(checkout: ICore, props?: GooglePayConfiguration) {
+        super(checkout, props);
         this.handleAuthorization = this.handleAuthorization.bind(this);
 
         this.googlePay = new GooglePayService({
@@ -73,7 +74,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         }
 
         new Promise((resolve, reject) => this.props.onClick(resolve, reject))
-            .then(() => this.googlePay.initiatePayment(this.props))
+            .then(() => this.googlePay.initiatePayment(this.props, this.core.options.countryCode))
             .catch((error: google.payments.api.PaymentsError) => {
                 if (error.statusCode === 'CANCELED') {
                     this.handleError(new AdyenCheckoutError('CANCEL', error.toString(), { cause: error }));
@@ -207,7 +208,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
      * Use this method to prefetch a PaymentDataRequest configuration to improve loadPaymentData execution time on later user interaction. No value is returned.
      */
     public prefetch = (): void => {
-        return this.googlePay.prefetchPaymentData(this.props);
+        return this.googlePay.prefetchPaymentData(this.props, this.core.options.countryCode);
     };
 
     get browserInfo() {

@@ -13,7 +13,7 @@ const meta: MetaConfiguration<CardConfiguration> = {
 const createComponent = (args: PaymentMethodStoryProps<CardConfiguration>, context) => {
     const { componentConfiguration } = args;
     const checkout = getStoryContextCheckout(context);
-    const bancontact = new Bancontact({ core: checkout, ...componentConfiguration });
+    const bancontact = new Bancontact(checkout, componentConfiguration);
 
     return <Container element={bancontact} />;
 };

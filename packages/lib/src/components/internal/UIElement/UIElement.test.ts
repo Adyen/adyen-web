@@ -42,7 +42,7 @@ describe('UIElement', () => {
 
             const txVariant = 'klarna_b2b';
 
-            const element = new MyElement({ core: core, type: txVariant, modules: { resources } });
+            const element = new MyElement(core, { type: txVariant, modules: { resources } });
 
             const typeSpy = jest.spyOn(element, 'type', 'get');
             const iconUrl = element.icon;
@@ -55,7 +55,7 @@ describe('UIElement', () => {
     describe('onComplete()', () => {
         test('should call "onComplete" prop if available', () => {
             const onCompleteCb = jest.fn();
-            const element = new MyElement({ core: core, onComplete: onCompleteCb });
+            const element = new MyElement(core, { onComplete: onCompleteCb });
 
             element.callOnComplete();
 
@@ -66,7 +66,7 @@ describe('UIElement', () => {
     describe('onChange()', () => {
         test('should call "onChange" prop if available', () => {
             const onChange = jest.fn();
-            const element = new MyElement({ core: core, onChange });
+            const element = new MyElement(core, { onChange });
 
             element.callOnChange();
 
@@ -75,7 +75,7 @@ describe('UIElement', () => {
 
         test('should not trigger onValid method if the component is not valid', () => {
             const onValid = jest.fn();
-            const element = new MyElement({ core: core, onValid });
+            const element = new MyElement(core, { onValid });
 
             element.callOnChange();
 
@@ -93,7 +93,7 @@ describe('UIElement', () => {
             }
 
             const onValid = jest.fn();
-            const element = new MyValidElement({ core: core, onValid });
+            const element = new MyValidElement(core, { onValid });
             element.onChange();
 
             expect(onValid.mock.calls.length).toBe(1);
@@ -103,7 +103,7 @@ describe('UIElement', () => {
     describe('isValid()', () => {
         test('should be false by default', () => {
             class PristineUiElement extends UIElement {}
-            const element = new PristineUiElement({ core: core });
+            const element = new PristineUiElement(core);
             expect(element.isValid).toBe(false);
         });
     });
@@ -111,7 +111,7 @@ describe('UIElement', () => {
     describe('showValidation()', () => {
         test("should trigger the component's showValidation method", () => {
             const showValidation = jest.fn();
-            const element = new MyElement({ core: core });
+            const element = new MyElement(core);
 
             const componentRef = {
                 showValidation
@@ -126,12 +126,12 @@ describe('UIElement', () => {
 
     describe('get displayName()', () => {
         test('should use the name property if available', () => {
-            const element = new MyElement({ core: core, name: 'SuperPay' });
+            const element = new MyElement(core, { name: 'SuperPay' });
             expect(element.displayName).toEqual('SuperPay');
         });
 
         test('should use the constructor type if no name property is passed', () => {
-            const element = new MyElement({ core: core });
+            const element = new MyElement(core);
             expect(element.displayName).toEqual('super_pay');
         });
 
@@ -143,7 +143,7 @@ describe('UIElement', () => {
                 }
             ];
 
-            const element = new MyElement({ core: core });
+            const element = new MyElement(core);
             expect(element.displayName).toEqual('SuperPayeee');
         });
 
@@ -155,7 +155,7 @@ describe('UIElement', () => {
                 }
             ];
 
-            const element = new MyElement({ core: core, name: 'SuperbPay' });
+            const element = new MyElement(core, { name: 'SuperbPay' });
             expect(element.displayName).toEqual('SuperbPay');
         });
     });
@@ -177,7 +177,7 @@ describe('UIElement', () => {
                 analytics: { enabled: false }
             });
 
-            const element = new MyElement({ core: checkout }).mount('body');
+            const element = new MyElement(checkout).mount('body');
 
             const actionComponent = element.handleAction(fingerprintAction);
             expect(actionComponent instanceof ThreeDS2DeviceFingerprint).toEqual(true);
@@ -204,7 +204,7 @@ describe('UIElement', () => {
                 analytics: { enabled: false }
             });
 
-            const element = new MyElement({ core: checkout, challengeWindowSize: '02' }).mount('body');
+            const element = new MyElement(checkout, { challengeWindowSize: '02' }).mount('body');
 
             const actionComponent = element.handleAction(challengeAction);
             expect(actionComponent instanceof ThreeDS2Challenge).toEqual(true);
@@ -227,7 +227,7 @@ describe('UIElement', () => {
                 resultCode: 'IdentifyShopper'
             };
 
-            const element = new MyElement({ core }).mount('body');
+            const element = new MyElement(core).mount('body');
 
             expect(() => {
                 // @ts-ignore tslint is not applicable here as merchant can potentially pass wrong object
@@ -240,7 +240,7 @@ describe('UIElement', () => {
                 paymentMethodType: 'scheme'
             };
 
-            const element = new MyElement({ core }).mount('body');
+            const element = new MyElement(core).mount('body');
 
             expect(() => {
                 // @ts-ignore tslint is not applicable here as merchant can potentially pass wrong object
@@ -253,7 +253,7 @@ describe('UIElement', () => {
         test('should trigger showValidation() and not call makePaymentsCall() if component is not valid', () => {
             const showValidation = jest.fn();
 
-            const element = new MyElement({ core: core });
+            const element = new MyElement(core);
 
             // @ts-ignore Checking that internal method is not reached
             const makePaymentsCallSpy = jest.spyOn(element, 'makePaymentsCall');
@@ -284,8 +284,7 @@ describe('UIElement', () => {
                 }
             });
 
-            const element = new MyElement({
-                core: core,
+            const element = new MyElement(core, {
                 onSubmit: onSubmitMock,
                 onPaymentCompleted: onPaymentCompletedMock
             });
@@ -315,8 +314,7 @@ describe('UIElement', () => {
                 }
             });
 
-            const element = new MyElement({
-                core: core,
+            const element = new MyElement(core, {
                 onPaymentCompleted: onPaymentCompletedMock
             });
 
@@ -350,8 +348,7 @@ describe('UIElement', () => {
                 }
             });
 
-            const element = new MyElement({
-                core: core,
+            const element = new MyElement(core, {
                 onSubmit: onSubmitMock,
                 onPaymentFailed: onPaymentFailedMock
             });
@@ -371,8 +368,7 @@ describe('UIElement', () => {
             });
             jest.spyOn(MyElement.prototype, 'isValid', 'get').mockReturnValue(true);
 
-            const element = new MyElement({
-                core: core,
+            const element = new MyElement(core, {
                 onSubmit: onSubmitMock,
                 onPaymentFailed: onPaymentFailedMock
             });
@@ -399,8 +395,7 @@ describe('UIElement', () => {
 
             jest.spyOn(MyElement.prototype, 'isValid', 'get').mockReturnValue(true);
 
-            const element = new MyElement({
-                core: core,
+            const element = new MyElement(core, {
                 onSubmit: onSubmitMock
             });
 
@@ -446,8 +441,7 @@ describe('UIElement', () => {
                 sessionResult: 'session-result'
             });
 
-            const element = new MyElement({
-                core: core,
+            const element = new MyElement(core, {
                 onOrderUpdated: onOrderUpdatedMock
             });
 
@@ -496,8 +490,7 @@ describe('UIElement', () => {
             core.options.locale = 'en-US';
             core.session = null;
 
-            const element = new MyElement({
-                core: core,
+            const element = new MyElement(core, {
                 onSubmit: onSubmitMock,
                 onPaymentMethodsRequest: onPaymentMethodsRequestMock,
                 onOrderUpdated: onOrderUpdatedMock
@@ -559,8 +552,7 @@ describe('UIElement', () => {
             core.options.locale = 'en-US';
             core.session = null;
 
-            const element = new MyElement({
-                core: core,
+            const element = new MyElement(core, {
                 onSubmit: onSubmitMock,
                 onOrderUpdated: onOrderUpdatedMock,
                 onError: onErrorMock
@@ -593,8 +585,7 @@ describe('UIElement', () => {
                 });
             });
 
-            const element = new MyElement({
-                core: core,
+            const element = new MyElement(core, {
                 onAdditionalDetails: onAdditionalDetailsMock,
                 onPaymentCompleted: onPaymentCompletedMock
             });
@@ -623,8 +614,7 @@ describe('UIElement', () => {
         test('should make successfully payment/details using sessions flow', async () => {
             const onPaymentCompletedMock = jest.fn();
 
-            const element = new MyElement({
-                core: core,
+            const element = new MyElement(core, {
                 onPaymentCompleted: onPaymentCompletedMock
             });
 
@@ -666,8 +656,7 @@ describe('UIElement', () => {
                 });
             });
 
-            const element = new MyElement({
-                core: core,
+            const element = new MyElement(core, {
                 onAdditionalDetails: onAdditionalDetailsMock,
                 onPaymentFailed: onPaymentFailedMock
             });
@@ -696,8 +685,7 @@ describe('UIElement', () => {
                 actions.reject();
             });
 
-            const element = new MyElement({
-                core: core,
+            const element = new MyElement(core, {
                 onAdditionalDetails: onAdditionalDetailsMock,
                 onPaymentFailed: onPaymentFailedMock
             });

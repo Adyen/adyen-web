@@ -14,7 +14,7 @@ export const Default: UpiStory = {
     render: (args: PaymentMethodStoryProps<UPIConfiguration>, context) => {
         const { componentConfiguration } = args;
         const checkout = getStoryContextCheckout(context);
-        const upi = new UPI({ core: checkout, ...componentConfiguration });
+        const upi = new UPI(checkout, componentConfiguration);
         return <Container element={upi} />;
     },
     args: {

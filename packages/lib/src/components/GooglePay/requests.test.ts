@@ -49,7 +49,7 @@ describe('Google Pay Requests', () => {
 
     describe('initiatePaymentRequest', () => {
         test('should get an initiatePaymentRequest', () => {
-            const paymentRequest = initiatePaymentRequest(defaultProps);
+            const paymentRequest = initiatePaymentRequest(defaultProps, 'US');
 
             expect(paymentRequest.allowedPaymentMethods.length).toBeGreaterThan(0);
             expect(paymentRequest.allowedPaymentMethods[0].parameters.allowedAuthMethods).toBe(defaultProps.allowedAuthMethods);
@@ -58,16 +58,19 @@ describe('Google Pay Requests', () => {
         });
 
         test('should pass merchantOrigin correctly', () => {
-            const paymentRequest = initiatePaymentRequest({
-                ...defaultProps,
-                configuration: { ...defaultProps.configuration, merchantOrigin: 'example.com' }
-            });
+            const paymentRequest = initiatePaymentRequest(
+                {
+                    ...defaultProps,
+                    configuration: { ...defaultProps.configuration, merchantOrigin: 'example.com' }
+                },
+                'US'
+            );
 
             expect(paymentRequest.merchantInfo.merchantOrigin).toBe('example.com');
         });
 
         test('should not have merchantOrigin when not in use', () => {
-            const paymentRequest = initiatePaymentRequest({ ...defaultProps });
+            const paymentRequest = initiatePaymentRequest({ ...defaultProps }, 'US');
 
             // eslint-disable-next-line no-prototype-builtins
             expect(paymentRequest.merchantInfo.hasOwnProperty('merchantOrigin')).toBe(false);

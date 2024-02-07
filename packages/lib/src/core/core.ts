@@ -80,12 +80,13 @@ class Core implements ICore {
             return this.session
                 .setupSession(this.options)
                 .then(sessionResponse => {
-                    const { amount, shopperLocale, paymentMethods, ...rest } = sessionResponse;
+                    const { amount, shopperLocale, countryCode, paymentMethods, ...rest } = sessionResponse;
 
                     this.setOptions({
                         ...rest,
                         amount: this.options.order ? this.options.order.remainingAmount : amount,
-                        locale: this.options.locale || shopperLocale
+                        locale: this.options.locale || shopperLocale,
+                        countryCode: this.options.countryCode || countryCode
                     });
 
                     this.createPaymentMethodsList(paymentMethods);
@@ -290,7 +291,7 @@ class Core implements ICore {
         }
 
         this.modules = Object.freeze({
-            risk: new RiskModule({ ...this.options, loadingContext: this.loadingContext, core: this }),
+            risk: new RiskModule(this, { ...this.options, loadingContext: this.loadingContext }),
             analytics: Analytics({
                 loadingContext: this.loadingContext,
                 analyticsContext: this.analyticsContext,
@@ -301,7 +302,7 @@ class Core implements ICore {
             }),
             resources: new Resources(this.cdnContext),
             i18n: new Language(this.options.locale, this.options.translations, this.options.translationFile),
-            srPanel: new SRPanel({ core: this, ...this.options.srConfig })
+            srPanel: new SRPanel(this, { ...this.options.srConfig })
         });
     }
 }

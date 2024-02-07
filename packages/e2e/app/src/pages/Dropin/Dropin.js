@@ -22,7 +22,7 @@ const initCheckout = async () => {
         ...window.mainConfiguration
     });
 
-    window.dropin = new Dropin({ core: checkout, ...window.dropinConfig }).mount('#dropin-container');
+    window.dropin = new Dropin(checkout, { ...window.dropinConfig }).mount('#dropin-container');
 };
 
 initCheckout();

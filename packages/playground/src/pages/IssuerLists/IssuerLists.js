@@ -44,30 +44,30 @@ import getTranslationFile from '../../config/getTranslation';
     });
 
     // iDEAL
-    window.ideal = new Ideal({ core: window.core }).mount('.ideal-field');
+    window.ideal = new Ideal(window.core).mount('.ideal-field');
 
     // BillDesk Online
-    window.billdesk_online = new BillDeskOnline({ core: window.core }).mount('.billdesk_online-field');
+    window.billdesk_online = new BillDeskOnline(window.core).mount('.billdesk_online-field');
     // return;
 
     //  BillDesk Wallet
-    window.billdesk_wallet = new BillDeskWallet({ core: window.core }).mount('.billdesk_wallet-field');
+    window.billdesk_wallet = new BillDeskWallet(window.core).mount('.billdesk_wallet-field');
 
     // PayU CashCard
-    window.payu_cashcard = new PayuCashcard({ core: window.core }).mount('.payu_cc-field');
+    window.payu_cashcard = new PayuCashcard(window.core).mount('.payu_cc-field');
 
     //  PayU NetBanking
-    window.payu_nb = new PayuNetBanking({ core: window.core }).mount('.payu_nb-field');
+    window.payu_nb = new PayuNetBanking(window.core).mount('.payu_nb-field');
 
     // Dotpay
-    window.dotpay = new Dotpay({ core: window.core }).mount('.dotpay-field');
+    window.dotpay = new Dotpay(window.core).mount('.dotpay-field');
 
     // Online banking PL
-    window.onlineBanking_PL = new OnlineBankingPL({ core: window.core }).mount('.onlinebanking_PL-field');
+    window.onlineBanking_PL = new OnlineBankingPL(window.core).mount('.onlinebanking_PL-field');
 
     // Molpay MY
-    window.molpay = new MolPayEBankingMY({ core: window.core }).mount('.molpay-field');
+    window.molpay = new MolPayEBankingMY(window.core).mount('.molpay-field');
 
     // Pay By Bank
-    window.paybybank_NL = new PayByBank({ core: window.core }).mount('.paybybank_NL-field');
+    window.paybybank_NL = new PayByBank(window.core).mount('.paybybank_NL-field');
 })();

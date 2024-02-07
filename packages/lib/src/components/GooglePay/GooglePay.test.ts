@@ -64,8 +64,7 @@ describe('GooglePay', () => {
             });
             const onPaymentCompletedMock = jest.fn();
 
-            const gpay = new GooglePay({
-                core: global.core,
+            const gpay = new GooglePay(global.core, {
                 onSubmit: onSubmitMock,
                 onPaymentCompleted: onPaymentCompletedMock
             });
@@ -129,8 +128,7 @@ describe('GooglePay', () => {
                 });
             });
 
-            new GooglePay({
-                core: global.core,
+            new GooglePay(global.core, {
                 onSubmit: onSubmitMock
             });
 
@@ -168,8 +166,8 @@ describe('GooglePay', () => {
             });
             const onPaymentFailedMock = jest.fn();
 
-            const gpay = new GooglePay({
-                core: global.core,
+            const gpay = new GooglePay(global.core, {
+                i18n: global.i18n,
                 onSubmit: onSubmitMock,
                 onPaymentFailed: onPaymentFailedMock
             });
@@ -248,7 +246,7 @@ describe('GooglePay', () => {
 
         test('should provide GooglePay auth event and formatted data', () => {
             const onAuthorizedMock = jest.fn();
-            new GooglePay({ core: global.core, onAuthorized: onAuthorizedMock });
+            new GooglePay(global.core, { onAuthorized: onAuthorizedMock });
 
             // @ts-ignore GooglePayService is mocked
             const onPaymentAuthorized = GooglePayService.mock.calls[0][0].paymentDataCallbacks.onPaymentAuthorized;
@@ -259,13 +257,12 @@ describe('GooglePay', () => {
 
         test('should pass error to GooglePay if the action.reject happens on onAuthorized', async () => {
             const onAuthorizedMock = jest.fn().mockImplementation((_data, actions) => {
-                console.log('reject');
                 actions.reject('Not supported network scheme');
             });
             const onPaymentFailedMock = jest.fn();
 
-            new GooglePay({
-                core: global.core,
+            new GooglePay(global.core, {
+                i18n: global.i18n,
                 onAuthorized: onAuthorizedMock,
                 onPaymentFailed: onPaymentFailedMock
             });
@@ -293,8 +290,8 @@ describe('GooglePay', () => {
             });
             const onPaymentCompletedMock = jest.fn();
 
-            const gpay = new GooglePay({
-                core: global.core,
+            const gpay = new GooglePay(global.core, {
+                i18n: global.i18n,
                 onAuthorized: onAuthorizedMock,
                 onPaymentCompleted: onPaymentCompletedMock
             });
@@ -310,9 +307,7 @@ describe('GooglePay', () => {
         });
 
         test('should make the payments call if onAuthorized is not provided', async () => {
-            const gpay = new GooglePay({
-                core: global.core
-            });
+            const gpay = new GooglePay(global.core, { i18n: global.i18n });
 
             const paymentCall = jest.spyOn(gpay as any, 'makePaymentsCall');
 
@@ -327,7 +322,7 @@ describe('GooglePay', () => {
 
     describe('isAvailable()', () => {
         test('should resolve if GooglePay is available', async () => {
-            const gpay = new GooglePay({ core: global.core });
+            const gpay = new GooglePay(global.core);
             gpay.isReadyToPay = jest.fn(() => {
                 return Promise.resolve({ result: true });
             });
@@ -336,7 +331,7 @@ describe('GooglePay', () => {
         });
 
         test('should reject if is not available', async () => {
-            const gpay = new GooglePay({ core: global.core });
+            const gpay = new GooglePay(global.core);
             gpay.isReadyToPay = jest.fn(() => {
                 return Promise.resolve({ result: false });
             });
@@ -345,7 +340,7 @@ describe('GooglePay', () => {
         });
 
         test('should reject if "paymentMethodPresent" is false', async () => {
-            const gpay = new GooglePay({ core: global.core });
+            const gpay = new GooglePay(global.core);
             gpay.isReadyToPay = jest.fn(() => {
                 return Promise.resolve({ result: true, paymentMethodPresent: false });
             });
@@ -356,21 +351,17 @@ describe('GooglePay', () => {
 
     describe('Process CA based configuration data', () => {
         test('Retrieves default merchantId', () => {
-            const gpay = new GooglePay({ core: global.core });
+            const gpay = new GooglePay(global.core);
             expect(gpay.props.configuration.merchantId).toEqual('');
         });
 
         test('Retrieves merchantId from configuration', () => {
-            const gpay = new GooglePay({
-                core: global.core,
-                configuration: { merchantId: 'abcdef', gatewayMerchantId: 'TestMerchant' }
-            });
+            const gpay = new GooglePay(global.core, { configuration: { merchantId: 'abcdef', gatewayMerchantId: 'TestMerchant' } });
             expect(gpay.props.configuration.merchantId).toEqual('abcdef');
         });
 
         test('Retrieves merchantId from configuration', () => {
-            const gpay = new GooglePay({
-                core: global.core,
+            const gpay = new GooglePay(global.core, {
                 configuration: {
                     gatewayMerchantId: 'TestMerchant',
                     merchantOrigin: 'example.com'
@@ -380,8 +371,7 @@ describe('GooglePay', () => {
         });
 
         test('Retrieves authJwt from configuration', () => {
-            const gpay = new GooglePay({
-                core: global.core,
+            const gpay = new GooglePay(global.core, {
                 configuration: { merchantId: 'abcdef', gatewayMerchantId: 'TestMerchant', authJwt: 'jwt.code' }
             });
             expect(gpay.props.configuration.authJwt).toEqual('jwt.code');

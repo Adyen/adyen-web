@@ -1,4 +1,3 @@
-import { ICore } from '../../../core/types';
 import { Order } from '../../../types/global-types';
 import { SRPanel } from '../../../core/Errors/SRPanel';
 import { AnalyticsModule } from '../../../types/global-types';
@@ -7,7 +6,6 @@ import RiskElement from '../../../core/RiskModule';
 import { ComponentChild } from 'preact';
 
 export interface BaseElementProps {
-    core: ICore;
     order?: Order;
     modules?: {
         srPanel?: SRPanel;
