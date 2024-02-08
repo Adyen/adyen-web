@@ -40,7 +40,7 @@ export default function DonationComponent(props: DonationComponentProps) {
     };
 
     const handleDecline = () => {
-        setStatus('loading');
+        setStatus('ready');
         onCancel({ data: { amount }, isValid });
     };
 
