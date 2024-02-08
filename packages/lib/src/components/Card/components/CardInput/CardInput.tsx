@@ -28,6 +28,8 @@ import useImage from '../../../../core/Context/useImage';
 import { getArrayDifferences } from '../../../../utils/arrayUtils';
 import FormInstruction from '../../../internal/FormInstruction';
 import { AddressData } from '../../../../types/global-types';
+import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
+import { FieldErrorAnalyticsObject } from '../../../../core/Analytics/types';
 
 const CardInput = (props: CardInputProps) => {
     const sfp = useRef(null);
@@ -137,8 +139,18 @@ const CardInput = (props: CardInputProps) => {
     /**
      * HANDLERS
      */
-    // SecuredField-only handler
-    const handleFocus = getFocusHandler(setFocusedElement, props.onFocus, props.onBlur);
+    // Handlers for focus & blur on all fields. Can be renamed to onFieldFocus once the onFocusField is renamed in Field.tsx
+    const onFieldFocusAnalytics = (who: string, e: Event | CbObjOnFocus) => {
+        console.log('### CardInput::onFieldFocusAnalytics::who ', who);
+        console.log('### CardInput::onFieldFocusAnalytics::e ', e);
+        props.onFocus({ fieldType: who, event: e });
+    };
+    const onFieldBlurAnalytics = (who: string, e: Event | CbObjOnFocus) => {
+        props.onBlur({ fieldType: who, event: e });
+    };
+
+    // Make SecuredFields aware of the focus & blur handlers
+    const handleFocus = getFocusHandler(setFocusedElement, onFieldFocusAnalytics, onFieldBlurAnalytics);
 
     const retrieveLayout = (): string[] => {
         return getLayout({
@@ -393,8 +405,10 @@ const CardInput = (props: CardInputProps) => {
                     // Use the error code to look up whether error is actually a blur based one (most are but some SF ones aren't)
                     const isBlurBasedError = lookupBlurBasedErrors(latestErrorMsg.errorCode);
 
-                    // Only add blur based errors to the error panel - doing this step prevents the non-blur based errors from being read out twice
-                    // (once from the aria-live, error panel & once from the aria-describedby element)
+                    /**
+                     *  ONLY ADD BLUR BASED ERRORS TO THE ERROR PANEL - doing this step prevents the non-blur based errors from being read out twice
+                     *  (once from the aria-live, error panel & once from the aria-describedby element)
+                     */
                     const latestSRError = isBlurBasedError ? latestErrorMsg.errorMessage : null;
                     // console.log('### CardInput2::componentDidUpdate:: #2 (not validating) single error:: latestSRError', latestSRError);
                     setSRMessagesFromStrings(latestSRError);
@@ -407,6 +421,20 @@ const CardInput = (props: CardInputProps) => {
             }
             default:
                 break;
+        }
+
+        // Analytics
+        if (currentErrorsSortedByLayout) {
+            const newErrors = getArrayDifferences<SortedErrorObject, string>(currentErrorsSortedByLayout, previousSortedErrors, 'field');
+            newErrors?.forEach(errorItem => {
+                const aObj: FieldErrorAnalyticsObject = {
+                    fieldType: errorItem.field,
+                    errorCode: errorItem.errorCode,
+                    errorMessage: errorItem.errorMessage
+                };
+
+                props.onErrorAnalytics(aObj);
+            });
         }
 
         props.onChange({
@@ -495,6 +523,9 @@ const CardInput = (props: CardInputProps) => {
                             addressSearchDebounceMs={props.addressSearchDebounceMs}
                             //
                             iOSFocusedField={iOSFocusedField}
+                            //
+                            onFieldFocusAnalytics={onFieldFocusAnalytics}
+                            onFieldBlurAnalytics={onFieldBlurAnalytics}
                         />
                     </div>
                 )}

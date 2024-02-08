@@ -3,7 +3,7 @@ import UIElement from '../components/internal/UIElement/UIElement';
 import RiskModule from './RiskModule';
 import PaymentMethods from './ProcessResponse/PaymentMethods';
 import getComponentForAction from './ProcessResponse/PaymentAction';
-import { resolveEnvironment, resolveCDNEnvironment } from './Environment';
+import { resolveEnvironment, resolveCDNEnvironment, resolveAnalyticsEnvironment } from './Environment';
 import Analytics from './Analytics';
 import { AdditionalDetailsStateData, PaymentAction, PaymentResponseData } from '../types/global-types';
 import { CoreConfiguration, ICore } from './types';
@@ -16,6 +16,8 @@ import registry, { NewableComponent } from './core.registry';
 import { DEFAULT_LOCALE } from '../language/config';
 import { cleanupFinalResult, sanitizeResponse, verifyPaymentDidNotFail } from '../components/internal/UIElement/utils';
 import AdyenCheckoutError from './Errors/AdyenCheckoutError';
+import { ANALYTICS_ACTION_STR } from './Analytics/constants';
+import { THREEDS2_FULL } from '../components/ThreeDS2/config';
 
 class Core implements ICore {
     public session?: Session;
@@ -24,6 +26,7 @@ class Core implements ICore {
     public options: CoreConfiguration;
     public loadingContext?: string;
     public cdnContext?: string;
+    public analyticsContext?: string;
 
     private components: UIElement[] = [];
 
@@ -60,6 +63,7 @@ class Core implements ICore {
 
         this.loadingContext = resolveEnvironment(this.options.environment, this.options.environmentUrls?.api);
         this.cdnContext = resolveCDNEnvironment(this.options.resourceEnvironment || this.options.environment, this.options.environmentUrls?.api);
+        this.analyticsContext = resolveAnalyticsEnvironment(this.options.environment);
         this.session = this.options.session && new Session(this.options.session, this.options.clientKey, this.loadingContext);
 
         const clientKeyType = this.options.clientKey?.substr(0, 4);
@@ -167,6 +171,15 @@ class Core implements ICore {
         }
 
         if (action.type) {
+            // 'threeDS2' OR 'qrCode', 'voucher', 'redirect', 'await', 'bankTransfer`
+            const component = action.type === THREEDS2_FULL ? `${action.type}${action.subtype}` : action.paymentMethodType;
+
+            this.modules.analytics.sendAnalytics(component, {
+                type: ANALYTICS_ACTION_STR,
+                subtype: action.type,
+                message: `${component} action was handled by the SDK`
+            });
+
             const props = {
                 ...this.getCorePropsForComponent(),
                 ...options
@@ -277,8 +290,9 @@ class Core implements ICore {
 
         this.modules = Object.freeze({
             risk: new RiskModule(this, { ...this.options, loadingContext: this.loadingContext }),
-            analytics: new Analytics({
+            analytics: Analytics({
                 loadingContext: this.loadingContext,
+                analyticsContext: this.analyticsContext,
                 clientKey: this.options.clientKey,
                 locale: this.options.locale,
                 analytics: this.options.analytics,

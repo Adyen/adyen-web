@@ -20,6 +20,8 @@ import type {
     PaymentResponseData,
     RawPaymentResponse
 } from '../../../types/global-types';
+import { ANALYTICS_SUBMIT_STR } from '../../../core/Analytics/constants';
+import { AnalyticsInitialEvent, SendAnalyticsObject } from '../../../core/Analytics/types';
 
 import './UIElement.scss';
 
@@ -125,6 +127,38 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         return state;
     }
 
+    // Only called once, for UIElements (including Dropin), as they are being mounted
+    protected setUpAnalytics(setUpAnalyticsObj: AnalyticsInitialEvent) {
+        const sessionId = this.props.session?.id;
+
+        return this.props.modules.analytics.setUp({
+            ...setUpAnalyticsObj,
+            ...(sessionId && { sessionId })
+        });
+    }
+
+    /**
+     * A function for all UIElements, or BaseElement, to use to create an analytics action for when it's been:
+     *  - mounted,
+     *  - a PM has been selected
+     *  - onSubmit has been called (as a result of the pay button being pressed)
+     *
+     *  In some other cases e.g. 3DS2 components, this function is overridden to allow more specific analytics actions to be created
+     */
+    /* eslint-disable-next-line */
+    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
+        /** Work out what the component's "type" is:
+         * - first check for a dedicated "analyticsType" (currently only applies to custom-cards)
+         * - otherwise, distinguish cards from non-cards: cards will use their static type property, everything else will use props.type
+         */
+        let component = this.constructor['analyticsType'];
+        if (!component) {
+            component = this.constructor['type'] === 'scheme' || this.constructor['type'] === 'bcmc' ? this.constructor['type'] : this.props.type;
+        }
+
+        this.props.modules?.analytics.sendAnalytics(component, analyticsObj);
+    }
+
     public submit(): void {
         if (!this.isValid) {
             this.showValidation();
@@ -166,6 +200,9 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     private async submitUsingAdvancedFlow(): Promise<CheckoutAdvancedFlowResponse> {
         return new Promise<CheckoutAdvancedFlowResponse>((resolve, reject) => {
+            // Call analytics endpoint
+            this.submitAnalytics({ type: ANALYTICS_SUBMIT_STR });
+
             this.props.onSubmit(
                 {
                     data: this.data,
@@ -178,6 +215,9 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     private async submitUsingSessionsFlow(data: PaymentData): Promise<CheckoutSessionPaymentResponse> {
+        // Call analytics endpoint
+        this.submitAnalytics({ type: ANALYTICS_SUBMIT_STR });
+
         try {
             return await this.core.session.submitPayment(data);
         } catch (error) {

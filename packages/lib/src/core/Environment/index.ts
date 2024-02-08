@@ -1,1 +1,1 @@
-export { resolveCDNEnvironment, resolveEnvironment } from './Environment';
+export { resolveCDNEnvironment, resolveEnvironment, resolveAnalyticsEnvironment } from './Environment';

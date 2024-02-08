@@ -66,7 +66,10 @@ export const CardFieldsWrapper = ({
     showContextualElement,
     //
     iOSFocusedField,
-    disclaimerMessage
+    disclaimerMessage,
+    //
+    onFieldFocusAnalytics,
+    onFieldBlurAnalytics
 }) => {
     const cardHolderField = (
         <CardHolderName
@@ -78,6 +81,8 @@ export const CardFieldsWrapper = ({
             onBlur={handleChangeFor('holderName', 'blur')}
             onInput={handleChangeFor('holderName', 'input')}
             disabled={iOSFocusedField && iOSFocusedField !== 'holderName'}
+            onFieldFocusAnalytics={onFieldFocusAnalytics}
+            onFieldBlurAnalytics={onFieldBlurAnalytics}
         />
     );
 
@@ -121,6 +126,8 @@ export const CardFieldsWrapper = ({
                     onInput={handleChangeFor('taxNumber', 'input')}
                     disabled={iOSFocusedField && iOSFocusedField !== 'kcpTaxNumberOrDOB'}
                     placeholder={placeholders.taxNumber}
+                    onFieldFocusAnalytics={onFieldFocusAnalytics}
+                    onFieldBlurAnalytics={onFieldBlurAnalytics}
                 />
             )}
 
@@ -134,6 +141,8 @@ export const CardFieldsWrapper = ({
                         data={socialSecurityNumber}
                         required={true}
                         disabled={iOSFocusedField && iOSFocusedField !== 'socialSecurityNumber'}
+                        onFieldFocusAnalytics={onFieldFocusAnalytics}
+                        onFieldBlurAnalytics={onFieldBlurAnalytics}
                     />
                 </div>
             )}
@@ -165,6 +174,8 @@ export const CardFieldsWrapper = ({
                     showContextualElement={showContextualElement}
                     onAddressSelected={onAddressSelected}
                     addressSearchDebounceMs={addressSearchDebounceMs}
+                    onFieldFocusAnalytics={onFieldFocusAnalytics}
+                    onFieldBlurAnalytics={onFieldBlurAnalytics}
                 />
             )}
 

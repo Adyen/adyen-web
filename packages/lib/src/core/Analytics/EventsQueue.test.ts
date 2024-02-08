@@ -1,23 +1,31 @@
-import { default as EventsQueue } from './EventsQueue';
+import EventsQueue from './EventsQueue';
+import { ANALYTICS_PATH } from './constants';
 
-describe('EventsQueue', () => {
-    let queue;
+const task1 = { foo: 'bar', timestamp: '1234', component: 'scheme' };
 
-    beforeEach(() => {
-        queue = new EventsQueue();
+describe('CAEventsQueue', () => {
+    const queue = EventsQueue({ analyticsContext: 'https://mydomain.com', clientKey: 'fsdjkh', analyticsPath: ANALYTICS_PATH });
+
+    test('adds log to the queue', () => {
+        queue.add('logs', task1);
+        expect(queue.getQueue().logs.length).toBe(1);
     });
 
-    test('adds events to the queue', () => {
-        const task1 = () => jest.fn();
-        queue.add(task1);
-        expect(queue.events.length).toBe(1);
+    test('adds event to the queue', () => {
+        queue.add('info', task1);
+        expect(queue.getQueue().info.length).toBe(1);
+    });
+
+    test('adds error to the queue', () => {
+        queue.add('errors', task1);
+        expect(queue.getQueue().errors.length).toBe(1);
     });
 
     test('run flushes the queue', () => {
-        const task1 = () => jest.fn();
-        queue.add(task1);
-        expect(queue.events.length).toBe(1);
-        queue.run();
-        expect(queue.events.length).toBe(0);
+        queue.run('checkoutAttemptId');
+
+        expect(queue.getQueue().logs.length).toBe(0);
+        expect(queue.getQueue().info.length).toBe(0);
+        expect(queue.getQueue().errors.length).toBe(0);
     });
 });

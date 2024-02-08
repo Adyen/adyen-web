@@ -4,12 +4,13 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import collectBrowserInfo from '../../utils/browserInfo';
 import { BinLookupResponse, CardElementData, CardConfiguration } from './types';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
-import { CbObjOnBinLookup } from '../internal/SecuredFields/lib/types';
-import { reject } from '../internal/SecuredFields/utils';
+import { CbObjOnBinLookup, CbObjOnConfigSuccess, CbObjOnFocus } from '../internal/SecuredFields/lib/types';
+import { fieldTypeToSnakeCase, reject } from '../internal/SecuredFields/utils';
 import { hasValidInstallmentsObject } from './components/CardInput/utils';
 import createClickToPayService from '../internal/ClickToPay/services/create-clicktopay-service';
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';
 import ClickToPayWrapper from './components/ClickToPayWrapper';
+import { ComponentFocusObject } from '../../types/global-types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { TxVariants } from '../tx-variants';
 import { UIElementStatus } from '../internal/UIElement/types';
@@ -17,6 +18,16 @@ import UIElement from '../internal/UIElement';
 import PayButton from '../internal/PayButton';
 import { PayButtonProps } from '../internal/PayButton/PayButton';
 import type { ICore } from '../../core/types';
+import {
+    ANALYTICS_FOCUS_STR,
+    ANALYTICS_CONFIGURED_STR,
+    ANALYTICS_UNFOCUS_STR,
+    ANALYTICS_VALIDATION_ERROR_STR,
+    ANALYTICS_RENDERED_STR
+} from '../../core/Analytics/constants';
+import { ALL_SECURED_FIELDS } from '../internal/SecuredFields/lib/configuration/constants';
+import { FieldErrorAnalyticsObject, SendAnalyticsObject } from '../../core/Analytics/types';
+import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from '../../core/Errors/AdyenCheckoutError';
 
 export class CardElement extends UIElement<CardConfiguration> {
@@ -179,6 +190,67 @@ export class CardElement extends UIElement<CardConfiguration> {
         }
     }
 
+    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
+        const { type } = analyticsObj;
+
+        if (type === ANALYTICS_RENDERED_STR || type === ANALYTICS_CONFIGURED_STR) {
+            // Check if it's a storedCard
+            if (this.constructor['type'] === 'scheme') {
+                if (hasOwnProperty(this.props, 'supportedShopperInteractions')) {
+                    analyticsObj.isStoredPaymentMethod = true;
+                    analyticsObj.brand = this.props.brand;
+                }
+            }
+        }
+
+        super.submitAnalytics(analyticsObj);
+    }
+
+    private onConfigSuccess = (obj: CbObjOnConfigSuccess) => {
+        this.submitAnalytics({
+            type: ANALYTICS_CONFIGURED_STR
+        });
+
+        this.props.onConfigSuccess?.(obj);
+    };
+
+    private onFocus = (obj: ComponentFocusObject) => {
+        this.submitAnalytics({
+            type: ANALYTICS_FOCUS_STR,
+            target: fieldTypeToSnakeCase(obj.fieldType)
+        });
+
+        // Call merchant defined callback
+        if (ALL_SECURED_FIELDS.includes(obj.fieldType)) {
+            this.props.onFocus?.(obj.event as CbObjOnFocus);
+        } else {
+            this.props.onFocus?.(obj);
+        }
+    };
+
+    private onBlur = (obj: ComponentFocusObject) => {
+        this.submitAnalytics({
+            type: ANALYTICS_UNFOCUS_STR,
+            target: fieldTypeToSnakeCase(obj.fieldType)
+        });
+
+        // Call merchant defined callback
+        if (ALL_SECURED_FIELDS.includes(obj.fieldType)) {
+            this.props.onBlur?.(obj.event as CbObjOnFocus);
+        } else {
+            this.props.onBlur?.(obj);
+        }
+    };
+
+    private onErrorAnalytics = (obj: FieldErrorAnalyticsObject) => {
+        this.submitAnalytics({
+            type: ANALYTICS_VALIDATION_ERROR_STR,
+            target: fieldTypeToSnakeCase(obj.fieldType),
+            validationErrorCode: obj.errorCode,
+            validationErrorMessage: obj.errorMessage
+        });
+    };
+
     public onBinValue = triggerBinLookUp(this);
 
     get isValid() {
@@ -252,6 +324,10 @@ export class CardElement extends UIElement<CardConfiguration> {
                 brandsIcons={this.brands}
                 isPayButtonPrimaryVariant={isCardPrimaryInput}
                 resources={this.resources}
+                onFocus={this.onFocus}
+                onBlur={this.onBlur}
+                onErrorAnalytics={this.onErrorAnalytics}
+                onConfigSuccess={this.onConfigSuccess}
             />
         );
     }

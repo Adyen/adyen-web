@@ -34,6 +34,8 @@ export type UIElementProps = BaseElementProps &
 
         isInstantPayment?: boolean;
 
+        // brand?: string; // TODO confirm it this is needed
+
         /**
          * Flags if the element is Stored payment method
          * @internal
