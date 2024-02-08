@@ -78,6 +78,9 @@ class Core implements ICore {
 
     public initialize(): Promise<this> {
         if (this.session) {
+            if (!hasOwnProperty(this.options.session, 'countryCode')) {
+                throw new AdyenCheckoutError(IMPLEMENTATION_ERROR, 'You must specify a countryCode when creating a session');
+            }
             return this.session
                 .setupSession(this.options)
                 .then(sessionResponse => {
