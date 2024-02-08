@@ -3,14 +3,14 @@ import { ClientFunction } from 'testcafe';
 import { fillIFrame, getInputSelector } from '../../utils/commonUtils';
 import { GIFTCARD_NUMBER, GIFTCARD_PIN } from '../utils/constants';
 import { GIFTCARDS_SESSIONS_URL } from '../../pages';
-import { mock, noCallbackMock, loggers, MOCK_SESSION_DATA } from './onOrderCreated.mocks';
+import { mock, noCallbackMock, loggers, MOCK_SESSION_DATA } from './onOrderUpdated.mocks';
 
 import { GiftCardSessionPage } from '../../_models/GiftCardComponent.page';
 
 const giftCard = new GiftCardSessionPage();
 const { setupLogger, balanceLogger, ordersLogger } = loggers;
 
-const getCallBackData = ClientFunction(() => window.onOrderCreatedTestData);
+const getCallBackData = ClientFunction(() => window.onOrderUpdatedTestData);
 
 // only setup the loggers for the endpoints so we can setup different responses for different scenarios
 fixture`Testing gift cards`.page(GIFTCARDS_SESSIONS_URL).requestHooks([setupLogger, balanceLogger, ordersLogger]);

@@ -15,6 +15,7 @@ const meta: MetaConfiguration<DropinConfiguration> = {
     },
     args: {
         componentConfiguration: {
+            showRadioButton: true,
             instantPaymentTypes: ['googlepay'],
             paymentMethodsConfiguration: {
                 googlepay: {
@@ -35,7 +36,7 @@ export const Auto: DropinStory = {
         AdyenCheckout.register(...Classes);
 
         const checkout = getStoryContextCheckout(context);
-        const dropin = new DropinComponent({ core: checkout, ...componentConfiguration });
+        const dropin = new DropinComponent(checkout, componentConfiguration);
         return <Container element={dropin} />;
     }
 };

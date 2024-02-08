@@ -4,7 +4,7 @@ import '@adyen/adyen-web/styles/adyen.css';
 import { getPaymentMethods, makePayment } from '../../services';
 import { handleSubmit, handleAdditionalDetails } from '../../handlers';
 import { checkPaymentResult } from '../../utils';
-import { amount, shopperLocale } from '../../config/commonConfig';
+import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
 import getTranslationFile from '../../config/getTranslation';
@@ -12,6 +12,7 @@ import getTranslationFile from '../../config/getTranslation';
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
     window.checkout = await AdyenCheckout({
         amount, // Optional. Used to display the amount in the Pay Button.
+        countryCode,
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
         locale: shopperLocale,
@@ -22,12 +23,17 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         onError(error) {
             console.log(error);
         },
+        onPaymentCompleted(result, element) {
+            console.log('onPaymentCompleted', result, element);
+        },
+        onPaymentFailed(result, element) {
+            console.log('onPaymentFailed', result, element);
+        },
         showPayButton: true
     });
 
     // Cash App Pay
-    window.cashApp = new CashAppPay({
-        core: window.checkout,
+    window.cashApp = new CashAppPay(window.checkout, {
         onClick(actions) {
             console.log('CashAppApp: onClick');
             actions.resolve();
@@ -35,8 +41,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     }).mount('.cashapp-field');
 
     // CLICK TO PAY
-    window.clickToPay = new ClickToPay({
-        core: window.checkout,
+    window.clickToPay = new ClickToPay(window.checkout, {
         shopperEmail: 'gui.ctp@adyen.com',
         onReady() {
             console.log('ClickToPay is ready');
@@ -73,8 +78,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     // Initial state
     if (!step) {
-        window.amazonpay = new AmazonPay({
-            core: window.checkout,
+        window.amazonpay = new AmazonPay(window.checkout, {
             productType: 'PayOnly',
             ...chargeOptions,
             // Regular checkout:
@@ -88,8 +92,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     // Review and confirm order
     if (step === 'review') {
-        window.amazonpay = new AmazonPay({
-            core: window.checkout,
+        window.amazonpay = new AmazonPay(window.checkout, {
             ...chargeOptions,
             /**
              * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
@@ -102,9 +105,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     // Make payment
     if (step === 'result') {
-        window.amazonpay = new AmazonPay({
-            core: window.checkout,
-
+        window.amazonpay = new AmazonPay(window.checkout, {
             /**
              * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
              */
@@ -140,43 +141,34 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     }
 
     // PAYPAL
-    window.paypalButtons = new PayPal({
-        core: window.checkout,
-        onShopperDetails: (shopperDetails, rawData, actions) => {
-            console.log('Shopper details', shopperDetails);
-            console.log('Raw data', rawData);
+    window.paypalButtons = new PayPal(window.checkout, {
+        onAuthorized(data, actions) {
+            console.log('onAuthorized', data, actions);
             actions.resolve();
         },
         onError: (error, component) => {
-            component.setStatus('ready');
             console.log('paypal onError', error);
         }
     }).mount('.paypal-field');
 
     // GOOGLE PAY
-    const googlepay = new GooglePay({
-        core: window.checkout,
+    const googlepay = new GooglePay(window.checkout, {
         // environment: 'PRODUCTION',
         environment: 'TEST',
 
         // Callbacks
-        onAuthorized: console.info,
-        // onError: console.error,
+        onAuthorized(data, actions) {
+            console.log('onAuthorized', data, actions);
+            actions.resolve();
+        },
 
         // Payment info
         countryCode: 'NL',
 
-        // Merchant config (required)
-        //            configuration: {
-        //                gatewayMerchantId: 'TestMerchant', // name of MerchantAccount
-        //                merchantName: 'Adyen Test merchant', // Name to be displayed
-        //                merchantId: '06946223745213860250' // Required in Production environment. Google's merchantId: https://developers.google.com/pay/api/web/guides/test-and-deploy/deploy-production-environment#obtain-your-merchantID
-        //            },
-
         // Shopper info (optional)
         emailRequired: true,
+        billingAddressRequired: true,
         shippingAddressRequired: true,
-        shippingAddressParameters: {}, // https://developers.google.com/pay/api/web/reference/object#ShippingAddressParameters
 
         // Button config (optional)
         buttonType: 'long', // https://developers.google.com/pay/api/web/reference/object#ButtonOptions
@@ -194,15 +186,14 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     window.googlepay = googlepay;
 
     // APPLE PAY
-    const applepay = new ApplePay({
-        core: window.checkout,
+    const applepay = new ApplePay(window.checkout, {
         onClick: (resolve, reject) => {
             console.log('Apple Pay - Button clicked');
             resolve();
         },
-        onAuthorized: (resolve, reject, event) => {
+        onAuthorized: (data, actions) => {
             console.log('Apple Pay onAuthorized', event);
-            resolve();
+            actions.resolve();
         },
         buttonType: 'buy'
     });

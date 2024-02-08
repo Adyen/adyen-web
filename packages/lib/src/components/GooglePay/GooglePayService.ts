@@ -2,11 +2,12 @@ import { isReadyToPayRequest, initiatePaymentRequest } from './requests';
 import { resolveEnvironment } from './utils';
 import Script from '../../utils/Script';
 import config from './config';
+import type { GooglePayConfiguration } from './types';
 
 class GooglePayService {
     public readonly paymentsClient: Promise<google.payments.api.PaymentsClient>;
 
-    constructor(props) {
+    constructor(props: GooglePayConfiguration) {
         const environment = resolveEnvironment(props.environment);
         if (environment === 'TEST' && process.env.NODE_ENV === 'development') {
             console.warn('Google Pay initiated in TEST mode. Request non-chargeable payment methods suitable for testing.');
@@ -43,10 +44,10 @@ class GooglePayService {
         return this.paymentsClient.then(client => client.isReadyToPay(isReadyToPayRequest(props)));
     }
 
-    prefetchPaymentData(props): void {
+    prefetchPaymentData(props: GooglePayConfiguration, countryCode: string): void {
         if (!this.paymentsClient) throw new Error('Google Pay is not available');
 
-        const paymentDataRequest = initiatePaymentRequest(props);
+        const paymentDataRequest = initiatePaymentRequest(props, countryCode);
         this.paymentsClient.then(client => client.prefetchPaymentData(paymentDataRequest));
     }
 
@@ -55,10 +56,10 @@ class GooglePayService {
      * @returns paymentData response from Google Pay API after user approves payment
      * @see {@link https://developers.google.com/pay/api/web/reference/object#PaymentData|PaymentData object reference}
      */
-    initiatePayment(props): Promise<google.payments.api.PaymentData> {
+    initiatePayment(props: GooglePayConfiguration, countryCode: string): Promise<google.payments.api.PaymentData> {
         if (!this.paymentsClient) throw new Error('Google Pay is not available');
 
-        const paymentDataRequest = initiatePaymentRequest(props);
+        const paymentDataRequest = initiatePaymentRequest(props, countryCode);
         return this.paymentsClient.then(client => client.loadPaymentData(paymentDataRequest));
     }
 }

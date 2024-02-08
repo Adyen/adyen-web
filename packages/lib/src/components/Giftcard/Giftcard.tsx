@@ -4,7 +4,7 @@ import GiftcardComponent from './components/GiftcardComponent';
 import CoreProvider from '../../core/Context/CoreProvider';
 import PayButton from '../internal/PayButton';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
-import { PaymentAmount, PaymentResponseData } from '../../types//global-types';
+import { PaymentAmount } from '../../types//global-types';
 import { GiftCardElementData, GiftCardConfiguration } from './types';
 import { TxVariants } from '../tx-variants';
 
@@ -65,13 +65,6 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
 
         if (this.props.session) {
             return this.props.session.createOrder();
-        }
-    };
-
-    protected handleOrder = ({ order }: PaymentResponseData) => {
-        this.updateParent({ order });
-        if (this.props.session && this.props.onOrderCreated) {
-            return this.props.onOrderCreated(order);
         }
     };
 

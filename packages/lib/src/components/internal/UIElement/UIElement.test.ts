@@ -1,8 +1,9 @@
-import UIElement from './UIElement';
+import { UIElement } from './UIElement';
 import { ICore } from '../../../core/types';
-import { mock, mockDeep, mockReset } from 'jest-mock-extended';
+import { any, mock, mockDeep } from 'jest-mock-extended';
 import { AdyenCheckout, ThreeDS2Challenge, ThreeDS2DeviceFingerprint } from '../../../index';
 import { UIElementProps } from './types';
+import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { Resources } from '../../../core/Context/Resources';
 
 interface MyElementProps extends UIElementProps {
@@ -28,9 +29,9 @@ class MyElement extends UIElement<MyElementProps> {
 const submitMock = jest.fn();
 (global as any).HTMLFormElement.prototype.submit = () => submitMock;
 
-const core = mockDeep<ICore>();
+let core;
 beforeEach(() => {
-    mockReset(core);
+    core = mockDeep<ICore>();
 });
 
 describe('UIElement', () => {
@@ -41,7 +42,7 @@ describe('UIElement', () => {
 
             const txVariant = 'klarna_b2b';
 
-            const element = new MyElement({ core: core, type: txVariant, modules: { resources } });
+            const element = new MyElement(core, { type: txVariant, modules: { resources } });
 
             const typeSpy = jest.spyOn(element, 'type', 'get');
             const iconUrl = element.icon;
@@ -54,7 +55,7 @@ describe('UIElement', () => {
     describe('onComplete()', () => {
         test('should call "onComplete" prop if available', () => {
             const onCompleteCb = jest.fn();
-            const element = new MyElement({ core: core, onComplete: onCompleteCb });
+            const element = new MyElement(core, { onComplete: onCompleteCb });
 
             element.callOnComplete();
 
@@ -65,7 +66,7 @@ describe('UIElement', () => {
     describe('onChange()', () => {
         test('should call "onChange" prop if available', () => {
             const onChange = jest.fn();
-            const element = new MyElement({ core: core, onChange });
+            const element = new MyElement(core, { onChange });
 
             element.callOnChange();
 
@@ -74,7 +75,7 @@ describe('UIElement', () => {
 
         test('should not trigger onValid method if the component is not valid', () => {
             const onValid = jest.fn();
-            const element = new MyElement({ core: core, onValid });
+            const element = new MyElement(core, { onValid });
 
             element.callOnChange();
 
@@ -92,7 +93,7 @@ describe('UIElement', () => {
             }
 
             const onValid = jest.fn();
-            const element = new MyValidElement({ core: core, onValid });
+            const element = new MyValidElement(core, { onValid });
             element.onChange();
 
             expect(onValid.mock.calls.length).toBe(1);
@@ -102,7 +103,7 @@ describe('UIElement', () => {
     describe('isValid()', () => {
         test('should be false by default', () => {
             class PristineUiElement extends UIElement {}
-            const element = new PristineUiElement({ core: core });
+            const element = new PristineUiElement(core);
             expect(element.isValid).toBe(false);
         });
     });
@@ -110,7 +111,7 @@ describe('UIElement', () => {
     describe('showValidation()', () => {
         test("should trigger the component's showValidation method", () => {
             const showValidation = jest.fn();
-            const element = new MyElement({ core: core });
+            const element = new MyElement(core);
 
             const componentRef = {
                 showValidation
@@ -125,12 +126,12 @@ describe('UIElement', () => {
 
     describe('get displayName()', () => {
         test('should use the name property if available', () => {
-            const element = new MyElement({ core: core, name: 'SuperPay' });
+            const element = new MyElement(core, { name: 'SuperPay' });
             expect(element.displayName).toEqual('SuperPay');
         });
 
         test('should use the constructor type if no name property is passed', () => {
-            const element = new MyElement({ core: core });
+            const element = new MyElement(core);
             expect(element.displayName).toEqual('super_pay');
         });
 
@@ -142,7 +143,7 @@ describe('UIElement', () => {
                 }
             ];
 
-            const element = new MyElement({ core: core });
+            const element = new MyElement(core);
             expect(element.displayName).toEqual('SuperPayeee');
         });
 
@@ -154,7 +155,7 @@ describe('UIElement', () => {
                 }
             ];
 
-            const element = new MyElement({ core: core, name: 'SuperbPay' });
+            const element = new MyElement(core, { name: 'SuperbPay' });
             expect(element.displayName).toEqual('SuperbPay');
         });
     });
@@ -171,18 +172,19 @@ describe('UIElement', () => {
             };
 
             const checkout = await AdyenCheckout({
+                countryCode: 'US',
                 environment: 'test',
                 clientKey: 'test_123456',
                 analytics: { enabled: false }
             });
 
-            const element = new MyElement({ core: checkout }).mount('body');
+            const element = new MyElement(checkout).mount('body');
 
             const actionComponent = element.handleAction(fingerprintAction);
             expect(actionComponent instanceof ThreeDS2DeviceFingerprint).toEqual(true);
 
             expect(actionComponent.props.elementRef).not.toBeDefined();
-            expect((actionComponent as ThreeDS2DeviceFingerprint).props.showSpinner).toEqual(true);
+            expect((actionComponent as unknown as ThreeDS2DeviceFingerprint).props.showSpinner).toEqual(true);
             expect(actionComponent.props.statusType).toEqual('loading');
             expect(actionComponent.props.isDropin).toBe(false);
         });
@@ -198,19 +200,20 @@ describe('UIElement', () => {
             };
 
             const checkout = await AdyenCheckout({
+                countryCode: 'US',
                 environment: 'test',
                 clientKey: 'test_123456',
                 analytics: { enabled: false }
             });
 
-            const element = new MyElement({ core: checkout, challengeWindowSize: '02' }).mount('body');
+            const element = new MyElement(checkout, { challengeWindowSize: '02' }).mount('body');
 
             const actionComponent = element.handleAction(challengeAction);
             expect(actionComponent instanceof ThreeDS2Challenge).toEqual(true);
             expect(actionComponent.props.elementRef).not.toBeDefined();
             expect(actionComponent.props.statusType).toEqual('custom');
             expect(actionComponent.props.isDropin).toBe(false);
-            expect((actionComponent as ThreeDS2Challenge).props.challengeWindowSize).toEqual('02');
+            expect((actionComponent as unknown as ThreeDS2Challenge).props.challengeWindowSize).toEqual('02');
         });
 
         test('should throw Error if merchant passes the whole response object', async () => {
@@ -226,7 +229,7 @@ describe('UIElement', () => {
                 resultCode: 'IdentifyShopper'
             };
 
-            const element = new MyElement({ core }).mount('body');
+            const element = new MyElement(core).mount('body');
 
             expect(() => {
                 // @ts-ignore tslint is not applicable here as merchant can potentially pass wrong object
@@ -239,7 +242,7 @@ describe('UIElement', () => {
                 paymentMethodType: 'scheme'
             };
 
-            const element = new MyElement({ core }).mount('body');
+            const element = new MyElement(core).mount('body');
 
             expect(() => {
                 // @ts-ignore tslint is not applicable here as merchant can potentially pass wrong object
@@ -249,25 +252,13 @@ describe('UIElement', () => {
     });
 
     describe('submit()', () => {
-        test('should close active payment method if submit is called by instant payment method', () => {
-            const onSubmit = jest.fn();
-            const elementRef = { closeActivePaymentMethod: jest.fn(), setStatus: jest.fn() };
-            const element = new MyElement({ core, isInstantPayment: true, onSubmit, elementRef });
-
-            jest.spyOn(element, 'isValid', 'get').mockReturnValue(true);
-
-            element.submit();
-
-            expect(elementRef.closeActivePaymentMethod).toHaveBeenCalledTimes(1);
-        });
-
-        test('should trigger showValidation() and not call onSubmit() if component is not valid', () => {
+        test('should trigger showValidation() and not call makePaymentsCall() if component is not valid', () => {
             const showValidation = jest.fn();
 
-            const element = new MyElement({ core: core });
+            const element = new MyElement(core);
 
             // @ts-ignore Checking that internal method is not reached
-            const onSubmitSpy = jest.spyOn(element, 'onSubmit');
+            const makePaymentsCallSpy = jest.spyOn(element, 'makePaymentsCall');
 
             const componentRef = {
                 showValidation
@@ -277,7 +268,446 @@ describe('UIElement', () => {
             element.submit();
 
             expect(showValidation).toBeCalledTimes(1);
-            expect(onSubmitSpy).not.toHaveBeenCalled();
+            expect(makePaymentsCallSpy).not.toHaveBeenCalled();
+        });
+
+        test('should make successfully payment using advanced flow', async () => {
+            const onPaymentCompletedMock = jest.fn();
+            const onSubmitMock = jest.fn().mockImplementation((data, component, actions) => {
+                actions.resolve({
+                    resultCode: 'Authorized'
+                });
+            });
+            jest.spyOn(MyElement.prototype, 'isValid', 'get').mockReturnValue(true);
+            jest.spyOn(MyElement.prototype, 'data', 'get').mockReturnValue({
+                clientStateDataIndicator: true,
+                paymentMethod: {
+                    type: 'payment-type'
+                }
+            });
+
+            const element = new MyElement(core, {
+                onSubmit: onSubmitMock,
+                onPaymentCompleted: onPaymentCompletedMock
+            });
+
+            element.submit();
+
+            await new Promise(process.nextTick);
+
+            expect(onPaymentCompletedMock).toHaveBeenCalledTimes(1);
+            expect(onPaymentCompletedMock).toHaveBeenCalledWith({ resultCode: 'Authorized' }, element);
+        });
+
+        test('should make successfull payment using sessions flow', async () => {
+            const onPaymentCompletedMock = jest.fn();
+
+            core.session.submitPayment.calledWith(any()).mockResolvedValue({
+                resultCode: 'Authorised',
+                sessionData: 'session-data',
+                sessionResult: 'session-result'
+            });
+
+            jest.spyOn(MyElement.prototype, 'isValid', 'get').mockReturnValue(true);
+            jest.spyOn(MyElement.prototype, 'data', 'get').mockReturnValue({
+                clientStateDataIndicator: true,
+                paymentMethod: {
+                    type: 'payment-type'
+                }
+            });
+
+            const element = new MyElement(core, {
+                onPaymentCompleted: onPaymentCompletedMock
+            });
+
+            element.submit();
+
+            await new Promise(process.nextTick);
+
+            expect(onPaymentCompletedMock).toHaveBeenCalledTimes(1);
+            expect(onPaymentCompletedMock).toHaveBeenCalledWith(
+                {
+                    resultCode: 'Authorised',
+                    sessionData: 'session-data',
+                    sessionResult: 'session-result'
+                },
+                element
+            );
+        });
+
+        test('should call onPaymentFailed if payment contains non-successful result code', async () => {
+            const onPaymentFailedMock = jest.fn();
+            const onSubmitMock = jest.fn().mockImplementation((data, component, actions) => {
+                actions.resolve({
+                    resultCode: 'Refused'
+                });
+            });
+            jest.spyOn(MyElement.prototype, 'isValid', 'get').mockReturnValue(true);
+            jest.spyOn(MyElement.prototype, 'data', 'get').mockReturnValue({
+                clientStateDataIndicator: true,
+                paymentMethod: {
+                    type: 'payment-type'
+                }
+            });
+
+            const element = new MyElement(core, {
+                onSubmit: onSubmitMock,
+                onPaymentFailed: onPaymentFailedMock
+            });
+
+            element.submit();
+
+            await new Promise(process.nextTick);
+
+            expect(onPaymentFailedMock).toHaveBeenCalledTimes(1);
+            expect(onPaymentFailedMock).toHaveBeenCalledWith({ resultCode: 'Refused' }, element);
+        });
+
+        test('should call onPaymentFailed if payment is rejected', async () => {
+            const onPaymentFailedMock = jest.fn();
+            const onSubmitMock = jest.fn().mockImplementation((data, component, actions) => {
+                actions.reject();
+            });
+            jest.spyOn(MyElement.prototype, 'isValid', 'get').mockReturnValue(true);
+
+            const element = new MyElement(core, {
+                onSubmit: onSubmitMock,
+                onPaymentFailed: onPaymentFailedMock
+            });
+
+            element.submit();
+
+            await new Promise(process.nextTick);
+
+            expect(onPaymentFailedMock).toHaveBeenCalledTimes(1);
+            expect(onPaymentFailedMock).toHaveBeenCalledWith(undefined, element);
+        });
+
+        test('should call component.handleAction if payment is resolved with action', async () => {
+            const onSubmitMock = jest.fn().mockImplementation((data, component, actions) => {
+                actions.resolve({
+                    resultCode: 'Pending',
+                    action: {
+                        type: 'sdk',
+                        paymentMethodType: 'payment-type',
+                        paymentData: 'payment-data'
+                    }
+                });
+            });
+
+            jest.spyOn(MyElement.prototype, 'isValid', 'get').mockReturnValue(true);
+
+            const element = new MyElement(core, {
+                onSubmit: onSubmitMock
+            });
+
+            const handleActionSpy = jest.spyOn(element, 'handleAction');
+
+            element.submit();
+
+            await new Promise(process.nextTick);
+
+            expect(handleActionSpy).toHaveBeenCalledTimes(1);
+            expect(handleActionSpy).toHaveBeenCalledWith({
+                type: 'sdk',
+                paymentMethodType: 'payment-type',
+                paymentData: 'payment-data'
+            });
+        });
+
+        test('should trigger core.update if there is pending order when using sessions', async () => {
+            const order = {
+                amount: {
+                    currency: 'EUR',
+                    value: 2001
+                },
+                expiresAt: '2023-10-10T13:12:59.00Z',
+                orderData: 'order-mock',
+                pspReference: 'MHCDBZCH4NF96292',
+                reference: 'ABC123',
+                remainingAmount: {
+                    currency: 'EUR',
+                    value: 100
+                }
+            };
+
+            const onOrderUpdatedMock = jest.fn();
+
+            jest.spyOn(MyElement.prototype, 'isValid', 'get').mockReturnValue(true);
+            core.update.calledWith(any()).mockResolvedValue(core);
+            core.session.submitPayment.calledWith(any()).mockResolvedValue({
+                resultCode: 'Pending',
+                // @ts-ignore  ADD ORDER TO SESSION CHECKOUT RESPONSE
+                order,
+                sessionData: 'session-data',
+                sessionResult: 'session-result'
+            });
+
+            const element = new MyElement(core, {
+                onOrderUpdated: onOrderUpdatedMock
+            });
+
+            element.submit();
+
+            await new Promise(process.nextTick);
+
+            expect(core.update).toHaveBeenCalledTimes(1);
+            expect(core.update).toHaveBeenCalledWith({ order });
+
+            expect(onOrderUpdatedMock).toHaveBeenCalledTimes(1);
+            expect(onOrderUpdatedMock).toHaveBeenCalledWith({ order });
+        });
+
+        test('should trigger onPaymentMethodsRequest if there is a pending order when using advanced flow', async () => {
+            const order = {
+                amount: {
+                    currency: 'EUR',
+                    value: 2001
+                },
+                expiresAt: '2023-10-10T13:12:59.00Z',
+                orderData: 'order-mock',
+                pspReference: 'MHCDBZCH4NF96292',
+                reference: 'ABC123',
+                remainingAmount: {
+                    currency: 'EUR',
+                    value: 100
+                }
+            };
+            const onSubmitMock = jest.fn().mockImplementation((data, component, actions) => {
+                actions.resolve({
+                    resultCode: 'Pending',
+                    order
+                });
+            });
+            const onPaymentMethodsRequestMock = jest.fn().mockImplementation((data, actions) => {
+                actions.resolve({
+                    paymentMethods: [],
+                    storedPaymentMethods: []
+                });
+            });
+            const onOrderUpdatedMock = jest.fn();
+
+            jest.spyOn(MyElement.prototype, 'isValid', 'get').mockReturnValue(true);
+            core.update.calledWith(any()).mockResolvedValue(core);
+            core.options.locale = 'en-US';
+            core.session = null;
+
+            const element = new MyElement(core, {
+                onSubmit: onSubmitMock,
+                onPaymentMethodsRequest: onPaymentMethodsRequestMock,
+                onOrderUpdated: onOrderUpdatedMock
+            });
+
+            element.submit();
+
+            await new Promise(process.nextTick);
+
+            expect(onPaymentMethodsRequestMock).toHaveBeenCalledTimes(1);
+            expect(onPaymentMethodsRequestMock.mock.calls[0][0]).toStrictEqual({
+                order: {
+                    orderData: 'order-mock',
+                    pspReference: 'MHCDBZCH4NF96292'
+                },
+                locale: 'en-US'
+            });
+
+            expect(core.update).toHaveBeenCalledTimes(1);
+            expect(core.update).toHaveBeenCalledWith({
+                paymentMethodsResponse: {
+                    paymentMethods: [],
+                    storedPaymentMethods: []
+                },
+                order,
+                amount: order.remainingAmount
+            });
+
+            expect(onOrderUpdatedMock).toHaveBeenCalledTimes(1);
+            expect(onOrderUpdatedMock).toHaveBeenCalledWith({ order });
+        });
+
+        test('should throw an error if onPaymentMethodsRequest is not implemented, although the flow will continue', async () => {
+            const order = {
+                amount: {
+                    currency: 'EUR',
+                    value: 2001
+                },
+                expiresAt: '2023-10-10T13:12:59.00Z',
+                orderData: 'order-mock',
+                pspReference: 'MHCDBZCH4NF96292',
+                reference: 'ABC123',
+                remainingAmount: {
+                    currency: 'EUR',
+                    value: 100
+                }
+            };
+            const onSubmitMock = jest.fn().mockImplementation((data, component, actions) => {
+                actions.resolve({
+                    resultCode: 'Pending',
+                    order
+                });
+            });
+            const onOrderUpdatedMock = jest.fn();
+            const onErrorMock = jest.fn();
+
+            jest.spyOn(MyElement.prototype, 'isValid', 'get').mockReturnValue(true);
+            core.update.calledWith(any()).mockResolvedValue(core);
+            core.options.locale = 'en-US';
+            core.session = null;
+
+            const element = new MyElement(core, {
+                onSubmit: onSubmitMock,
+                onOrderUpdated: onOrderUpdatedMock,
+                onError: onErrorMock
+            });
+
+            element.submit();
+
+            await new Promise(process.nextTick);
+
+            expect(onErrorMock).toHaveBeenCalledTimes(1);
+            expect(onErrorMock.mock.calls[0][0]).toBeInstanceOf(AdyenCheckoutError);
+
+            expect(core.update).toHaveBeenCalledTimes(1);
+            expect(core.update).toHaveBeenCalledWith({
+                order,
+                amount: order.remainingAmount
+            });
+
+            expect(onOrderUpdatedMock).toHaveBeenCalledTimes(1);
+            expect(onOrderUpdatedMock).toHaveBeenCalledWith({ order });
+        });
+    });
+
+    describe('[Internal] handleAdditionalDetails()', () => {
+        test('should make successfully payment/details using advanced flow', async () => {
+            const onPaymentCompletedMock = jest.fn();
+            const onAdditionalDetailsMock = jest.fn().mockImplementation((data, component, actions) => {
+                actions.resolve({
+                    resultCode: 'Authorized'
+                });
+            });
+
+            const element = new MyElement(core, {
+                onAdditionalDetails: onAdditionalDetailsMock,
+                onPaymentCompleted: onPaymentCompletedMock
+            });
+
+            const data = {
+                data: {
+                    details: {
+                        paymentSource: 'paypal'
+                    },
+                    paymentData: 'payment-data'
+                }
+            };
+
+            // @ts-ignore Testing internal implementation
+            element.handleAdditionalDetails(data);
+
+            await new Promise(process.nextTick);
+
+            expect(onAdditionalDetailsMock).toHaveBeenCalledTimes(1);
+            expect(onAdditionalDetailsMock.mock.calls[0][0]).toEqual(data);
+
+            expect(onPaymentCompletedMock).toHaveBeenCalledTimes(1);
+            expect(onPaymentCompletedMock).toHaveBeenCalledWith({ resultCode: 'Authorized' }, element);
+        });
+
+        test('should make successfully payment/details using sessions flow', async () => {
+            const onPaymentCompletedMock = jest.fn();
+
+            const element = new MyElement(core, {
+                onPaymentCompleted: onPaymentCompletedMock
+            });
+
+            core.session.submitDetails.calledWith(any()).mockResolvedValue({
+                resultCode: 'Authorised',
+                sessionData: 'session-data',
+                sessionResult: 'session-result'
+            });
+
+            const state = {
+                data: {
+                    details: {
+                        paymentSource: 'paypal'
+                    },
+                    paymentData: 'payment-data'
+                }
+            };
+
+            // @ts-ignore Testing internal implementation
+            element.handleAdditionalDetails(state);
+
+            await new Promise(process.nextTick);
+
+            expect(core.session.submitDetails).toHaveBeenCalledTimes(1);
+            expect(core.session.submitDetails).toHaveBeenCalledWith(state.data);
+
+            expect(onPaymentCompletedMock).toHaveBeenCalledTimes(1);
+            expect(onPaymentCompletedMock).toHaveBeenCalledWith(
+                { resultCode: 'Authorised', sessionData: 'session-data', sessionResult: 'session-result' },
+                element
+            );
+        });
+
+        test('should call onPaymentFailed if payment/details contains non-successful result code', async () => {
+            const onPaymentFailedMock = jest.fn();
+            const onAdditionalDetailsMock = jest.fn().mockImplementation((data, component, actions) => {
+                actions.resolve({
+                    resultCode: 'Refused'
+                });
+            });
+
+            const element = new MyElement(core, {
+                onAdditionalDetails: onAdditionalDetailsMock,
+                onPaymentFailed: onPaymentFailedMock
+            });
+
+            const data = {
+                data: {
+                    details: {
+                        paymentSource: 'paypal'
+                    },
+                    paymentData: 'payment-data'
+                }
+            };
+
+            // @ts-ignore Testing internal implementation
+            element.handleAdditionalDetails(data);
+
+            await new Promise(process.nextTick);
+
+            expect(onPaymentFailedMock).toHaveBeenCalledTimes(1);
+            expect(onPaymentFailedMock).toHaveBeenCalledWith({ resultCode: 'Refused' }, element);
+        });
+
+        test('should call onPaymentFailed if payment is rejected', async () => {
+            const onPaymentFailedMock = jest.fn();
+            const onAdditionalDetailsMock = jest.fn().mockImplementation((data, component, actions) => {
+                actions.reject();
+            });
+
+            const element = new MyElement(core, {
+                onAdditionalDetails: onAdditionalDetailsMock,
+                onPaymentFailed: onPaymentFailedMock
+            });
+
+            const data = {
+                data: {
+                    details: {
+                        paymentSource: 'paypal'
+                    },
+                    paymentData: 'payment-data'
+                }
+            };
+
+            // @ts-ignore Testing internal implementation
+            element.handleAdditionalDetails(data);
+
+            await new Promise(process.nextTick);
+
+            expect(onPaymentFailedMock).toHaveBeenCalledTimes(1);
+            expect(onPaymentFailedMock).toHaveBeenCalledWith(undefined, element);
         });
     });
 });

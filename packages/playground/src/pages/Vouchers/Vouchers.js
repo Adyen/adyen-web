@@ -1,6 +1,6 @@
 import { AdyenCheckout, BacsDirectDebit, Multibanco, Oxxo, Dragonpay, Boleto, Doku, Econtext } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
-import { shopperLocale } from '../../config/commonConfig';
+import { shopperLocale, countryCode } from '../../config/commonConfig';
 import { handleChange } from '../../handlers';
 import '../../../config/polyfills';
 import '../../style.scss';
@@ -10,14 +10,14 @@ import getTranslationFile from '../../config/getTranslation';
 (async () => {
     window.checkout = await AdyenCheckout({
         clientKey: process.env.__CLIENT_KEY__,
+        countryCode,
         locale: shopperLocale,
         translationFile: getTranslationFile(shopperLocale),
         environment: process.env.__CLIENT_ENV__,
         onChange: handleChange
     });
 
-    window.bacsdd = new BacsDirectDebit({
-        core: window.checkout,
+    window.bacsdd = new BacsDirectDebit(window.checkout, {
         countryCode: 'GB',
         data: {
             holderName: 'Philip Dog',
@@ -58,8 +58,7 @@ import getTranslationFile from '../../config/getTranslation';
         .mount('#multibanco-result-container');
 
     // Boleto Input
-    window.boletoInput = new Boleto({
-        core: window.checkout,
+    window.boletoInput = new Boleto(window.checkout, {
         type: 'boletobancario', // -->  HAS MULTIPLE TX VARIANTS.. HOW TO ENFORCE IT?
         // personalDetailsRequired: false,
         // billingAddressRequired: false,
@@ -101,7 +100,6 @@ import getTranslationFile from '../../config/getTranslation';
 
     // Oxxo Result
     AdyenCheckout.register(Oxxo);
-
     window.oxxoResult = checkout
         .createFromAction({
             expiresAt: '2019-08-17T23:59:59',
@@ -124,8 +122,7 @@ import getTranslationFile from '../../config/getTranslation';
         .mount('#oxxo-result-container');
 
     // Dragonpay Input
-    window.dragonpayInput = new Dragonpay({
-        core: window.checkout,
+    window.dragonpayInput = new Dragonpay(window.checkout, {
         type: 'dragonpay_otc_philippines' // --> // HAS MULTIPLE TX VARIANTS.. HOW TO ENFORCE IT?
     }).mount('#dragonpay-input-container');
 
@@ -157,8 +154,7 @@ import getTranslationFile from '../../config/getTranslation';
         .mount('#dragonpay-result-container');
 
     // Doku Input
-    window.dokuInput = new Doku({
-        core: window.checkout,
+    window.dokuInput = new Doku(window.checkout, {
         type: 'doku_alfamart'
     }).mount('#doku-input-container');
 
@@ -185,16 +181,14 @@ import getTranslationFile from '../../config/getTranslation';
         .mount('#doku-result-container');
 
     // Econtext Stores Input without personal details form
-    window.econtextStoresInput = new Econtext({
-        core: window.checkout,
+    window.econtextStoresInput = new Econtext(window.checkout, {
         type: 'econtext_stores', // -->  HAS MULTIPLE TX VARIANTS.. HOW TO ENFORCE IT?
         personalDetailsRequired: false,
         onSubmit: e => console.log('SUBMIT:', e)
     }).mount('#econtext-stores-without-form-input-container');
 
     // Econtext Stores Input
-    window.econtextStoresInput = new Econtext({
-        core: window.checkout,
+    window.econtextStoresInput = new Econtext(window.checkout, {
         type: 'econtext_stores',
         data: {
             firstName: 'Joe',
@@ -227,8 +221,7 @@ import getTranslationFile from '../../config/getTranslation';
         .mount('#econtext-stores-result-container');
 
     // Econtext ATM Input
-    window.econtextAtmInput = new Econtext({
-        core: window.checkout,
+    window.econtextAtmInput = new Econtext(window.checkout, {
         type: 'econtext_atm',
         data: {
             firstName: 'Joe',
@@ -261,8 +254,7 @@ import getTranslationFile from '../../config/getTranslation';
         .mount('#econtext-atm-result-container');
 
     // Econtext 7 11 input
-    window.econtext711Input = new Econtext({
-        core: window.checkout,
+    window.econtext711Input = new Econtext(window.checkout, {
         type: 'econtext_seven_eleven'
     }).mount('#econtext-seven-eleven-input-container');
 

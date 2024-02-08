@@ -19,10 +19,6 @@ const initCheckout = async () => {
         clientKey: process.env.__CLIENT_KEY__,
         session,
 
-        // Events
-        beforeSubmit: (data, component, actions) => {
-            actions.resolve(data);
-        },
         onPaymentCompleted: (result, component) => {
             console.info(result, component);
         },
@@ -32,9 +28,7 @@ const initCheckout = async () => {
         ...window.mainConfiguration
     });
 
-    window.dropin = new Dropin({ core: checkout, paymentMethodComponents: [Card, Giftcard], ...window.dropinConfig }).mount(
-        '#dropin-sessions-container'
-    );
+    window.dropin = new Dropin(checkout, { paymentMethodComponents: [Card, Giftcard], ...window.dropinConfig }).mount('#dropin-sessions-container');
 };
 
 initCheckout();

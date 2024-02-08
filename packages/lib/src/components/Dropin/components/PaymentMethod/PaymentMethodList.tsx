@@ -53,7 +53,7 @@ const PaymentMethodList = ({
                 onSelect(firstNonStoredPayment);
             }
         }
-    }, []);
+    }, [storedPaymentMethods, paymentMethods, openFirstStoredPaymentMethod, openFirstPaymentMethod]);
 
     return (
         <Fragment>

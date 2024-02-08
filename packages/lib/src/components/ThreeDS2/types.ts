@@ -1,31 +1,29 @@
-import { ICore } from '../../core/types';
-import { ErrorCodeObject } from './components/utils';
 import UIElement from '../internal/UIElement';
-import { ActionHandledReturnObject } from '../../types/global-types';
+import { ActionHandledReturnObject, AnalyticsModule } from '../../types/global-types';
 import Language from '../../language';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 
 export interface ThreeDS2DeviceFingerprintConfiguration {
-    core: ICore;
-    dataKey: string;
-    token: string;
-    notificationURL: string;
-    onError: (error?: string | ErrorCodeObject) => void;
-    paymentData: string;
+    dataKey?: string;
+    token?: string;
+    notificationURL?: string;
+    onError?: (error: AdyenCheckoutError, element?: UIElement) => void;
+    paymentData?: string;
     showSpinner: boolean;
-    type: string;
+    type?: string;
     isMDFlow?: boolean;
     loadingContext?: string;
     clientKey?: string;
     elementRef?: UIElement;
     onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
+    modules?: { analytics: AnalyticsModule };
 }
 
 export interface ThreeDS2ChallengeConfiguration {
-    core: ICore;
     token?: string;
     dataKey?: string;
     notificationURL?: string;
-    onError?: (error: string | ErrorCodeObject) => void;
+    onError?: (error: AdyenCheckoutError, element?: UIElement) => void;
     paymentData?: string;
     size?: string;
     challengeWindowSize?: '01' | '02' | '03' | '04' | '05';
@@ -34,6 +32,7 @@ export interface ThreeDS2ChallengeConfiguration {
     isMDFlow?: boolean;
     i18n?: Language;
     onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
+    modules?: { analytics: AnalyticsModule };
 }
 
 /**

@@ -76,7 +76,6 @@ const defaultProps = {
 
     // Events
     onClick: resolve => resolve(),
-    onAuthorized: resolve => resolve(),
     onPaymentMethodSelected: null,
     onShippingContactSelected: null,
     onShippingMethodSelected: null,

@@ -33,12 +33,11 @@ const initCheckout = async () => {
         }
     });
 
-    window.giftcard = new Giftcard({
-        core: window.sessionCheckout,
+    window.giftcard = new Giftcard(window.sessionCheckout, {
         type: 'giftcard',
         brand: 'valuelink',
-        onOrderCreated: data => {
-            window.onOrderCreatedTestData = data;
+        onOrderUpdated: data => {
+            window.onOrderUpdatedTestData = data;
         },
         onRequiringConfirmation: () => {
             window.onRequiringConfirmationTestData = true;

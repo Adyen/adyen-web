@@ -4,7 +4,7 @@ import OnlineBankingPL from './OnlineBankingPL';
 import { SRPanel } from '../../core/Errors/SRPanel';
 
 test('should return expected data to perform the payment', () => {
-    const onlineBankingPL = new OnlineBankingPL({ core: global.core });
+    const onlineBankingPL = new OnlineBankingPL(global.core);
     expect(onlineBankingPL.formatData()).toEqual({ paymentMethod: { type: 'onlineBanking_PL' } });
 });
 
@@ -13,8 +13,7 @@ test('should show regulations and information obligation links', async () => {
     srPanel.props.moveFocus = false;
     const resources = global.resources;
 
-    const onlineBankingPL = new OnlineBankingPL({
-        core: global.core,
+    const onlineBankingPL = new OnlineBankingPL(global.core, {
         issuers: [{ name: 'Issuer 1', id: '1' }],
         i18n: global.i18n,
         modules: { srPanel, resources }
@@ -36,8 +35,7 @@ test('should show regulations and information obligation links', async () => {
     srPanel.props.moveFocus = false;
     const resources = global.resources;
 
-    const onlineBankingPL = new OnlineBankingPL({
-        core: global.core,
+    const onlineBankingPL = new OnlineBankingPL(global.core, {
         issuers: [{ name: 'Issuer 1', id: '1' }],
         i18n: global.i18n,
         modules: { srPanel, resources }

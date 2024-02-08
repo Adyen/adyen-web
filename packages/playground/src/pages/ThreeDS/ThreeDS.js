@@ -3,22 +3,32 @@ import '@adyen/adyen-web/styles/adyen.css';
 import '../../../config/polyfills';
 import '../../style.scss';
 import { makeDetailsCall } from '../../services';
-import { shopperLocale } from '../../config/commonConfig';
+import { shopperLocale, countryCode } from '../../config/commonConfig';
 import getTranslationFile from '../../config/getTranslation';
 
 (async () => {
     const checkout = await AdyenCheckout({
+        countryCode,
         locale: shopperLocale,
         translationFile: getTranslationFile(shopperLocale),
         environment: 'test',
         clientKey: process.env.__CLIENT_KEY__,
-        onAdditionalDetails: async (state, element) => {
-            const result = await makeDetailsCall(state.data);
 
-            if (result.action) {
-                component.handleAction(result.action);
-            } else {
-                alert(result.resultCode);
+        onAdditionalDetails: async (state, element, actions) => {
+            try {
+                const { resultCode, action, order, donationToken } = await makeDetailsCall(state.data);
+
+                if (!resultCode) actions.reject();
+
+                actions.resolve({
+                    resultCode,
+                    action,
+                    order,
+                    donationToken
+                });
+            } catch (error) {
+                console.error('## onAdditionalDetails - critical error', error);
+                actions.reject();
             }
         }
     });

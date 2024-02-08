@@ -39,6 +39,7 @@ const paymentMethodsResponse: PaymentMethodsResponse = {
 };
 
 const coreOptions: CoreConfiguration = {
+    countryCode: 'US',
     amount: {
         currency: 'USD',
         value: 19000
@@ -60,14 +61,15 @@ describe('Core - tests ensuring props reach components', () => {
             const checkout = new AdyenCheckout(coreOptions);
             await checkout.initialize();
 
-            const component = new Card({
-                core: checkout,
+            const component = new Card(checkout, {
                 ...paymentMethodsResponse.storedPaymentMethods[0],
                 hideCVC: true
             });
 
+            // @ts-ignore Testing that property is available on component
+            expect(component.core).toEqual(checkout);
+
             // Props from core.getCorePropsForComponent()
-            expect(component.props.core).toEqual(checkout);
             expect(component.props.loadingContext).toEqual('https://checkoutshopper-test.adyen.com/checkoutshopper/');
             expect(component.props.clientKey).toEqual('test_F7_FEKJHF');
             expect(component.props.amount.value).toEqual(19000);
@@ -81,10 +83,12 @@ describe('Core - tests ensuring props reach components', () => {
         test('Test that expected props are propagated to a standalone Card ', async () => {
             const checkout = new AdyenCheckout(coreOptions);
             await checkout.initialize();
-            const component = new Card({ core: checkout, showInstallmentAmounts: true });
+            const component = new Card(checkout, { showInstallmentAmounts: true });
+
+            // @ts-ignore Testing that property is available on component
+            expect(component.core).toEqual(checkout);
 
             // Props from core.getCorePropsForComponent()
-            expect(component.props.core).toEqual(checkout);
             expect(component.props.loadingContext).toEqual('https://checkoutshopper-test.adyen.com/checkoutshopper/');
             expect(component.props.clientKey).toEqual('test_F7_FEKJHF');
             expect(component.props.amount.value).toEqual(19000);
@@ -101,10 +105,12 @@ describe('Core - tests ensuring props reach components', () => {
 
             const checkout = new AdyenCheckout(coreOptions);
             await checkout.initialize();
-            const component = new Redirect({ core: checkout, type: 'unionpay', ...pmObj });
+            const component = new Redirect(checkout, { type: 'unionpay', ...pmObj });
+
+            // @ts-ignore Testing that property is available on component
+            expect(component.core).toEqual(checkout);
 
             // Props from core.getCorePropsForComponent()
-            expect(component.props.core).toEqual(checkout);
             expect(component.props.clientKey).toEqual('test_F7_FEKJHF');
             expect(component.props.amount.value).toEqual(19000);
 
@@ -115,10 +121,12 @@ describe('Core - tests ensuring props reach components', () => {
         test('Test that expected props are propagated to a standalone PayPal', async () => {
             const checkout = new AdyenCheckout(coreOptions);
             await checkout.initialize();
-            const component = new PayPal({ core: checkout, enableMessages: true });
+            const component = new PayPal(checkout, { enableMessages: true });
+
+            // @ts-ignore Testing that property is available on component
+            expect(component.core).toEqual(checkout);
 
             // Props from core.getCorePropsForComponent()
-            expect(component.props.core).toEqual(checkout);
             expect(component.props.clientKey).toEqual('test_F7_FEKJHF');
             expect(component.props.amount.value).toEqual(19000);
 
@@ -135,14 +143,14 @@ describe('Core - tests ensuring props reach components', () => {
         test('Dropin component receives correct props ', async () => {
             const checkout = new AdyenCheckout(coreOptions);
             await checkout.initialize();
-            const dropin = new Dropin({
-                core: checkout,
+            const dropin = new Dropin(checkout, {
                 showStoredPaymentMethods: false,
                 openFirstPaymentMethod: false
             });
 
             // Props from core.getCorePropsForComponent()
-            expect(dropin.props.core).toEqual(checkout);
+            // @ts-ignore Testing that property is available on component
+            expect(dropin.core).toEqual(checkout);
             expect(dropin.props.clientKey).toEqual('test_F7_FEKJHF');
             expect(dropin.props.amount.value).toEqual(19000);
 
@@ -162,8 +170,7 @@ describe('Core - tests ensuring props reach components', () => {
         beforeEach(async () => {
             checkout = new AdyenCheckout(coreOptions);
             await checkout.initialize();
-            dropin = new Dropin({
-                core: checkout,
+            dropin = new Dropin(checkout, {
                 paymentMethodsConfiguration: {
                     card: {
                         hasHolderName: true,
@@ -190,8 +197,9 @@ describe('Core - tests ensuring props reach components', () => {
 
             const storedCard = dropin.dropinRef.state.storedPaymentElements[0];
 
+            expect(storedCard.core).toEqual(checkout);
+
             // Props from core.getCorePropsForComponent()
-            expect(storedCard.props.core).toEqual(checkout);
             expect(storedCard.props.i18n).not.toEqual(null);
             expect(storedCard.props.clientKey).toEqual('test_F7_FEKJHF');
             expect(storedCard.props.amount.value).toEqual(19000);
@@ -218,8 +226,9 @@ describe('Core - tests ensuring props reach components', () => {
 
             const card = dropin.dropinRef.state.elements[0];
 
+            expect(card.core).toEqual(checkout);
+
             // Props from core.getCorePropsForComponent()
-            expect(card.props.core).toEqual(checkout);
             expect(card.props.clientKey).toEqual('test_F7_FEKJHF');
             expect(card.props.amount.value).toEqual(19000);
 
@@ -246,8 +255,9 @@ describe('Core - tests ensuring props reach components', () => {
 
             const paypal = dropin.dropinRef.state.elements[1];
 
+            expect(paypal.core).toEqual(checkout);
+
             // Props from core.getCorePropsForComponent()
-            expect(paypal.props.core).toEqual(checkout);
             expect(paypal.props.clientKey).toEqual('test_F7_FEKJHF');
             expect(paypal.props.amount.value).toEqual(19000);
 
@@ -271,8 +281,9 @@ describe('Core - tests ensuring props reach components', () => {
 
             const redirect = dropin.dropinRef.state.elements[2];
 
+            expect(redirect.core).toEqual(checkout);
+
             // Props from core.getCorePropsForComponent()
-            expect(redirect.props.core).toEqual(checkout);
             expect(redirect.props.clientKey).toEqual('test_F7_FEKJHF');
             expect(redirect.props.amount.value).toEqual(19000);
 

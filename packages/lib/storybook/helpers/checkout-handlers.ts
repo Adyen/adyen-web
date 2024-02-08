@@ -72,11 +72,13 @@ export async function handleResponse(response, component, checkout?, paymentData
     handleFinalState(response, component);
 }
 
-export function handleChange(state: any, component: UIElement) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function handleChange(state: any, _component: UIElement) {
     console.groupCollapsed(`onChange - ${state.data.paymentMethod.type}`);
     console.log('isValid', state.isValid);
     console.log('data', state.data);
-    console.log('node', component._node);
+    // @ts-ignore Logging internal prop
+    console.log('node', _component._node);
     console.log('state', state);
     console.groupEnd();
 }

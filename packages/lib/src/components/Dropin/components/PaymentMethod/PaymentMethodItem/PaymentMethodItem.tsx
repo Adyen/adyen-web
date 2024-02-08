@@ -1,14 +1,15 @@
 import { Component, h } from 'preact';
 import classNames from 'classnames';
-import PaymentMethodDetails from './PaymentMethodDetails';
-import PaymentMethodIcon from './PaymentMethodIcon';
-import DisableOneClickConfirmation from './DisableOneClickConfirmation';
+import PaymentMethodDetails from '../PaymentMethodDetails';
+import PaymentMethodIcon from '../PaymentMethodIcon';
+import DisableOneClickConfirmation from '../DisableOneClickConfirmation';
 import './PaymentMethodItem.scss';
-import useCoreContext from '../../../../core/Context/useCoreContext';
-import UIElement from '../../../internal/UIElement/UIElement';
-import PaymentMethodBrands from './PaymentMethodBrands/PaymentMethodBrands';
-import { BRAND_ICON_UI_EXCLUSION_LIST } from '../../../internal/SecuredFields/lib/configuration/constants';
-import PaymentMethodName from './PaymentMethodName';
+import useCoreContext from '../../../../../core/Context/useCoreContext';
+import UIElement from '../../../../internal/UIElement/UIElement';
+import PaymentMethodBrands from '../PaymentMethodBrands/PaymentMethodBrands';
+import { BRAND_ICON_UI_EXCLUSION_LIST } from '../../../../internal/SecuredFields/lib/configuration/constants';
+import PaymentMethodName from '../PaymentMethodName';
+import { ExpandButton } from './ExpandButton';
 
 interface PaymentMethodItemProps {
     paymentMethod: UIElement;
@@ -21,6 +22,7 @@ interface PaymentMethodItemProps {
     onSelect: (paymentMethod: UIElement) => void;
     standalone: boolean;
     className?: string;
+    showRadioButton?: boolean;
 }
 
 class PaymentMethodItem extends Component<PaymentMethodItemProps> {
@@ -29,7 +31,8 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
         isSelected: false,
         isLoaded: false,
         isLoading: false,
-        showDisableStoredPaymentMethodConfirmation: false
+        showDisableStoredPaymentMethodConfirmation: false,
+        showRadioButton: false
     };
 
     public state = {
@@ -50,7 +53,8 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
         onSelect(paymentMethod);
     };
 
-    render({ paymentMethod, isSelected, isDisablingPaymentMethod, isLoaded, isLoading, standalone }) {
+    // @ts-ignore need to refine the type for paymentMethod
+    render({ paymentMethod, isSelected, isDisablingPaymentMethod, isLoaded, isLoading, standalone, showRadioButton }) {
         const { i18n } = useCoreContext();
 
         if (!paymentMethod) {
@@ -82,21 +86,7 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
         return (
             <li key={paymentMethod._id} className={paymentMethodClassnames} onClick={this.handleOnListItemClick}>
                 <div className="adyen-checkout__payment-method__header">
-                    <button
-                        className="adyen-checkout__payment-method__header__title"
-                        id={buttonId}
-                        role="radio"
-                        aria-checked={isSelected}
-                        type="button"
-                    >
-                        <span
-                            className={classNames({
-                                'adyen-checkout__payment-method__radio': true,
-                                'adyen-checkout__payment-method__radio--selected': isSelected
-                            })}
-                            aria-hidden="true"
-                        />
-
+                    <ExpandButton buttonId={buttonId} showRadioButton={showRadioButton} isSelected={isSelected} expandContentId={containerId}>
                         <PaymentMethodIcon
                             // Only add alt attribute to storedPaymentMethods (to avoid SR reading the PM name twice)
                             {...(paymentMethod.props.oneClick && { altDescription: paymentMethod.props.name })}
@@ -109,7 +99,7 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
                             isSelected={isSelected}
                             additionalInfo={paymentMethod.additionalInfo}
                         />
-                    </button>
+                    </ExpandButton>
 
                     {showRemovePaymentMethodButton && (
                         <button
@@ -132,17 +122,19 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
                     )}
                 </div>
 
-                <div className="adyen-checkout__payment-method__details" id={containerId} role="region">
-                    {showRemovePaymentMethodButton && (
-                        <DisableOneClickConfirmation
-                            id={disableConfirmationId}
-                            open={this.state.showDisableStoredPaymentMethodConfirmation}
-                            onDisable={this.onDisableStoredPaymentMethod}
-                            onCancel={this.toggleDisableConfirmation}
-                        />
-                    )}
+                <div className="adyen-checkout-pm-details-wrapper" aria-hidden={!isSelected}>
+                    <div className="adyen-checkout__payment-method__details" id={containerId} role="region">
+                        {showRemovePaymentMethodButton && (
+                            <DisableOneClickConfirmation
+                                id={disableConfirmationId}
+                                open={this.state.showDisableStoredPaymentMethodConfirmation}
+                                onDisable={this.onDisableStoredPaymentMethod}
+                                onCancel={this.toggleDisableConfirmation}
+                            />
+                        )}
 
-                    <PaymentMethodDetails paymentMethodComponent={paymentMethod.render()} isLoaded={isLoaded} />
+                        <PaymentMethodDetails paymentMethodComponent={paymentMethod.render()} isLoaded={isLoaded} />
+                    </div>
                 </div>
             </li>
         );

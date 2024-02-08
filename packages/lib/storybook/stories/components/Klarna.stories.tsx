@@ -13,7 +13,7 @@ const meta: MetaConfiguration<KlarnConfiguration> = {
 const createComponent = (args: PaymentMethodStoryProps<KlarnConfiguration>, context) => {
     const { componentConfiguration } = args;
     const checkout = getStoryContextCheckout(context);
-    const klarna = new Klarna({ core: checkout, ...componentConfiguration });
+    const klarna = new Klarna(checkout, componentConfiguration);
     return <Container element={klarna} />;
 };
 

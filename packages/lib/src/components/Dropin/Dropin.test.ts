@@ -11,6 +11,7 @@ describe('Dropin', () => {
 
     beforeEach(async () => {
         checkout = await AdyenCheckout({
+            countryCode: 'US',
             environment: 'test',
             clientKey: 'test_123456',
             analytics: { enabled: false },
@@ -25,21 +26,21 @@ describe('Dropin', () => {
 
     describe('isValid', () => {
         test('should fail if no activePaymentMethod', () => {
-            const dropin = new Dropin({ core: checkout });
+            const dropin = new Dropin(checkout);
             expect(dropin.isValid).toEqual(false);
         });
     });
 
     describe('submit', () => {
         test('should fail if no activePaymentMethod', () => {
-            const dropin = new Dropin({ core: checkout });
+            const dropin = new Dropin(checkout);
             expect(() => dropin.submit()).toThrow();
         });
     });
 
     describe('closeActivePaymentMethod', () => {
         test('should close active payment method', async () => {
-            const dropin = new Dropin({ core: checkout });
+            const dropin = new Dropin(checkout);
             const component = await mount(dropin.render());
             await component.update();
 
@@ -59,11 +60,11 @@ describe('Dropin', () => {
                 type: 'threeDS2'
             };
 
-            const dropin = new Dropin({ core: checkout });
+            const dropin = new Dropin(checkout);
 
             dropin.handleAction(fingerprintAction);
             expect(dropin.componentFromAction instanceof ThreeDS2DeviceFingerprint).toEqual(true);
-            expect((dropin.componentFromAction as ThreeDS2DeviceFingerprint).props.showSpinner).toEqual(false);
+            expect((dropin.componentFromAction as unknown as ThreeDS2DeviceFingerprint).props.showSpinner).toEqual(false);
             expect(dropin.componentFromAction.props.statusType).toEqual('loading');
             expect(dropin.componentFromAction.props.isDropin).toBe(true);
         });
@@ -77,13 +78,13 @@ describe('Dropin', () => {
                 paymentMethodType: 'scheme'
             };
 
-            const dropin = new Dropin({ core: checkout });
+            const dropin = new Dropin(checkout);
 
             dropin.handleAction(challengeAction);
             expect(dropin.componentFromAction instanceof ThreeDS2Challenge).toEqual(true);
             expect(dropin.componentFromAction.props.statusType).toEqual('custom');
             expect(dropin.componentFromAction.props.isDropin).toBe(true);
-            expect((dropin.componentFromAction as ThreeDS2Challenge).props.size).toEqual('02');
+            expect((dropin.componentFromAction as unknown as ThreeDS2Challenge).props.size).toEqual('02');
         });
 
         test('new challenge action gets challengeWindowSize from paymentMethodsConfiguration', async () => {
@@ -96,17 +97,18 @@ describe('Dropin', () => {
             };
 
             const checkout = await AdyenCheckout({
+                countryCode: 'US',
                 environment: 'test',
                 clientKey: 'test_123456',
                 analytics: { enabled: false }
             });
 
-            const dropin = new Dropin({ core: checkout, paymentMethodsConfiguration: { card: { challengeWindowSize: '02' } } });
+            const dropin = new Dropin(checkout, { paymentMethodsConfiguration: { card: { challengeWindowSize: '02' } } });
             jest.spyOn(dropin, 'activePaymentMethod', 'get').mockReturnValue({ props: { challengeWindowSize: '02' } });
 
             dropin.handleAction(challengeAction);
             expect(dropin.componentFromAction instanceof ThreeDS2Challenge).toEqual(true);
-            expect((dropin.componentFromAction as ThreeDS2Challenge).props.challengeWindowSize).toEqual('02');
+            expect((dropin.componentFromAction as unknown as ThreeDS2Challenge).props.challengeWindowSize).toEqual('02');
         });
 
         test('new challenge action gets challengeWindowSize from handleAction config', async () => {
@@ -118,27 +120,27 @@ describe('Dropin', () => {
                 paymentMethodType: 'scheme'
             };
 
-            const dropin = new Dropin({ core: checkout });
+            const dropin = new Dropin(checkout);
 
             dropin.handleAction(challengeAction, {
                 challengeWindowSize: '03'
             });
             expect(dropin.componentFromAction instanceof ThreeDS2Challenge).toEqual(true);
-            expect((dropin.componentFromAction as ThreeDS2Challenge).props.challengeWindowSize).toEqual('03');
+            expect((dropin.componentFromAction as unknown as ThreeDS2Challenge).props.challengeWindowSize).toEqual('03');
         });
     });
 
     describe('Instant Payments feature', () => {
         test('formatProps formats instantPaymentTypes removing duplicates and invalid values', async () => {
             // @ts-ignore Testing invalid interface
-            const dropin = new Dropin({ core: checkout, instantPaymentTypes: ['paywithgoogle', 'paywithgoogle', 'paypal', 'alipay'] });
+            const dropin = new Dropin(checkout, { instantPaymentTypes: ['paywithgoogle', 'paywithgoogle', 'paypal', 'alipay'] });
             expect(dropin.props.instantPaymentTypes).toStrictEqual(['paywithgoogle']);
         });
     });
 
     describe('Payment status', () => {
         test('should show success status', async () => {
-            const dropin = new Dropin({ core: checkout });
+            const dropin = new Dropin(checkout);
             render(dropin.render());
             expect(await screen.findByRole('radio')).toBeTruthy();
             dropin.setStatus('success');
@@ -146,7 +148,7 @@ describe('Dropin', () => {
         });
 
         test('should show Error status', async () => {
-            const dropin = new Dropin({ core: checkout });
+            const dropin = new Dropin(checkout);
             render(dropin.render());
             expect(await screen.findByRole('radio')).toBeTruthy();
             dropin.setStatus('error');

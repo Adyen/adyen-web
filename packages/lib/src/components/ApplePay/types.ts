@@ -1,5 +1,5 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { UIElementProps } from '../internal/UIElement/types';
+import { AddressData } from '../../types/global-types';
 
 declare global {
     interface Window {
@@ -8,6 +8,18 @@ declare global {
 }
 
 type Initiative = 'web' | 'messaging';
+
+export type ApplePayPaymentOrderDetails = {
+    orderTypeIdentifier: string;
+    orderIdentifier: string;
+    webServiceURL: string;
+    authenticationToken: string;
+};
+
+// @types/applepayjs package does not contain 'orderDetails' yet, so we create our own type
+export type ApplePayPaymentAuthorizationResult = ApplePayJS.ApplePayPaymentAuthorizationResult & {
+    orderDetails?: ApplePayPaymentOrderDetails;
+};
 
 export type ApplePayButtonType =
     | 'plain'
@@ -25,12 +37,6 @@ export type ApplePayButtonType =
     | 'tip'
     | 'top-up';
 
-export type OnAuthorizedCallback = (
-    resolve: (result?: ApplePayJS.ApplePayPaymentAuthorizationResult) => void,
-    reject: (result?: ApplePayJS.ApplePayPaymentAuthorizationResult) => void,
-    event: ApplePayJS.ApplePayPaymentAuthorizedEvent
-) => void;
-
 export interface ApplePayConfiguration extends UIElementProps {
     /**
      * The Apple Pay version number your website supports.
@@ -38,11 +44,6 @@ export interface ApplePayConfiguration extends UIElementProps {
      * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/apple_pay_on_the_web_version_history Apple Pay on the Web Version History}
      */
     version?: number;
-
-    /**
-     * The merchant’s two-letter ISO 3166 country code.
-     */
-    countryCode: string;
 
     /**
      * Part of the 'ApplePayLineItem' object, which sets the label of the payment request
@@ -143,7 +144,35 @@ export interface ApplePayConfiguration extends UIElementProps {
 
     onClick?: (resolve, reject) => void;
 
-    onAuthorized?: OnAuthorizedCallback;
+    /**
+     * Callback called when ApplePay authorize the payment.
+     * Must be resolved/rejected with the action object.
+     *
+     * @param data - Authorization event from ApplePay, along with formatted billingAddress and deliveryAddress
+     * @param actions - Object to continue/stop with the payment flow
+     *
+     * @remarks
+     * If actions.resolve() is called, the payment flow will be triggered.
+     * If actions.reject() is called, the overlay will display an error
+     */
+    onAuthorized?: (
+        data: {
+            authorizedEvent: ApplePayJS.ApplePayPaymentAuthorizedEvent;
+            billingAddress?: Partial<AddressData>;
+            deliveryAddress?: Partial<AddressData>;
+        },
+        actions: { resolve: () => void; reject: (error?: ApplePayJS.ApplePayError) => void }
+    ) => void;
+
+    /**
+     * Collect the order tracking details if available.
+     * This callback is invoked when a successfull payment is resolved
+     *
+     * {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaypaymentorderdetails}
+     * @param resolve - Must be called with the orderDetails fields
+     * @param reject - Must be called if something failed during the order creation. Calling 'reject' won't cancel the payment flow
+     */
+    onOrderTrackingRequest?: (resolve: (orderDetails: ApplePayPaymentOrderDetails) => void, reject: () => void) => void;
 
     onValidateMerchant?: (resolve, reject, validationURL: string) => void;
 
@@ -185,6 +214,8 @@ export interface ApplePayElementData {
     paymentMethod: {
         type: string;
         applePayToken: string;
+        billingAddress?: AddressData;
+        deliveryAddress?: AddressData;
     };
 }
 

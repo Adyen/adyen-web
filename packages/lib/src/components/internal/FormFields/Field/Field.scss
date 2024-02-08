@@ -78,8 +78,6 @@
 .adyen-checkout__helper-text {
     display: block;
     font-size: var(--adyen-checkout-font-size-small);
-    font-weight: normal;
-    line-height: 13px;
     margin-bottom: var(--adyen-checkout-input-field-label-margin-bottom);
 }
 
@@ -91,10 +89,14 @@
 
 .adyen-checkout__helper-text {
     color: var(--adyen-checkout-input-field-context-color);
+    font-weight: normal;
+    line-height: var(--adyen-checkout-line-height-100);
 }
 
 .adyen-checkout__label__text {
     color: var(--adyen-checkout-input-field-label-color);
+    font-weight: var(--adyen-checkout-text-body-stronger-font-weight);
+    line-height: var(--adyen-checkout-line-height-200);
     transition: color 0.1s ease-out;
     display: block;
     text-overflow: ellipsis;
@@ -115,6 +117,7 @@
     font-weight: normal;
     margin-top: var(--adyen-checkout-input-field-context-margin-top);
     font-size: var(--adyen-checkout-font-size-xsmall);
+    line-height: var(--adyen-checkout-line-height-100);
     align-items: center;
     color: var(--adyen-checkout-input-field-context-color);
 }

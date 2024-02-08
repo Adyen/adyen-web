@@ -1,74 +1,123 @@
-import logEvent from '../Services/analytics/log-event';
-import postTelemetry from '../Services/analytics/post-telemetry';
-import collectId from '../Services/analytics/collect-id';
-import EventsQueue from './EventsQueue';
-import { CoreConfiguration } from '../types';
+import LogEvent from '../Services/analytics/log-event';
+import CollectId from '../Services/analytics/collect-id';
+import EventsQueue, { EventsQueueModule } from './EventsQueue';
+import { ANALYTICS_EVENT, AnalyticsInitialEvent, AnalyticsObject, AnalyticsProps, CreateAnalyticsEventObject } from './types';
+import { ANALYTICS_EVENT_ERROR, ANALYTICS_EVENT_INFO, ANALYTICS_EVENT_LOG, ANALYTICS_INFO_TIMER_INTERVAL, ANALYTICS_PATH } from './constants';
+import { debounce } from '../../components/internal/Address/utils';
+import { AnalyticsModule } from '../../types/global-types';
+import { createAnalyticsObject } from './utils';
+import { analyticsPreProcessor } from './analyticsPreProcessor';
 
-export type AnalyticsProps = Pick<CoreConfiguration, 'loadingContext' | 'locale' | 'clientKey' | 'analytics' | 'amount'>;
+let capturedCheckoutAttemptId = null;
+let hasLoggedPixel = false;
+let sendEventsTimerId = null;
 
-class Analytics {
-    private static defaultProps = {
+const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analyticsContext }: AnalyticsProps): AnalyticsModule => {
+    const defaultProps = {
         enabled: true,
         telemetry: true,
-        checkoutAttemptId: null,
-        experiments: []
+        checkoutAttemptId: null
     };
 
-    public checkoutAttemptId: string = null;
-    public props;
-    private readonly logEvent;
-    private readonly logTelemetry;
-    private readonly queue = new EventsQueue();
-    public readonly collectId;
+    const props = { ...defaultProps, ...analytics };
 
-    constructor({ loadingContext, locale, clientKey, analytics, amount }: AnalyticsProps) {
-        this.props = { ...Analytics.defaultProps, ...analytics };
-
-        this.logEvent = logEvent({ loadingContext, locale: locale });
-        this.logTelemetry = postTelemetry({ loadingContext, locale: locale, clientKey, amount });
-        this.collectId = collectId({ loadingContext, clientKey, experiments: this.props.experiments });
-
-        const { telemetry, enabled } = this.props;
-        if (telemetry === true && enabled === true) {
-            if (this.props.checkoutAttemptId) {
-                // handle prefilled checkoutAttemptId
-                this.checkoutAttemptId = this.props.checkoutAttemptId;
-                this.queue.run(this.checkoutAttemptId);
-            }
+    const { telemetry, enabled } = props;
+    if (telemetry === true && enabled === true) {
+        if (props.checkoutAttemptId) {
+            // handle prefilled checkoutAttemptId // TODO is this still something that ever happens?
+            capturedCheckoutAttemptId = props.checkoutAttemptId;
         }
     }
 
-    send(event) {
-        const { enabled, payload, telemetry } = this.props;
+    const logEvent = LogEvent({ loadingContext, locale });
+    const collectId = CollectId({ analyticsContext, clientKey, locale, amount, analyticsPath: ANALYTICS_PATH });
+    const eventsQueue: EventsQueueModule = EventsQueue({ analyticsContext, clientKey, analyticsPath: ANALYTICS_PATH });
 
-        if (enabled === true) {
-            if (telemetry === true && !this.checkoutAttemptId) {
-                // fetch a new checkoutAttemptId if none is already available
-                this.collectId()
-                    .then(checkoutAttemptId => {
-                        this.checkoutAttemptId = checkoutAttemptId;
-                        this.queue.run(this.checkoutAttemptId);
-                    })
-                    .catch(e => {
-                        console.warn(`Fetching checkoutAttemptId failed.${e ? ` Error=${e}` : ''}`);
-                    });
-            }
+    const sendAnalyticsEvents = () => {
+        if (capturedCheckoutAttemptId) {
+            return eventsQueue.run(capturedCheckoutAttemptId);
+        }
+        return Promise.resolve(null);
+    };
 
-            if (telemetry === true) {
-                const telemetryTask = checkoutAttemptId =>
-                    this.logTelemetry({ ...event, ...(payload && { ...payload }), checkoutAttemptId }).catch(() => {});
+    const addAnalyticsEvent = (type: ANALYTICS_EVENT, obj: AnalyticsObject) => {
+        const arrayName = type === ANALYTICS_EVENT_INFO ? type : `${type}s`;
+        eventsQueue.add(`${arrayName}`, obj);
 
-                this.queue.add(telemetryTask);
+        /**
+         * The logic is:
+         *  - info events are stored until a log or error comes along,
+         *  but, if after a set time, no other analytics event (log or error) has come along then we send the info events anyway
+         */
+        if (type === ANALYTICS_EVENT_INFO) {
+            clearTimeout(sendEventsTimerId);
+            sendEventsTimerId = setTimeout(sendAnalyticsEvents, ANALYTICS_INFO_TIMER_INTERVAL);
+        }
 
-                if (this.checkoutAttemptId) {
-                    this.queue.run(this.checkoutAttemptId);
+        /**
+         * The logic is:
+         *  - errors and logs get sent straightaway
+         *  ...but... tests with the 3DS2 process show that many logs can happen almost at the same time (or you can have an error followed immediately by a log),
+         *  so instead of making several sequential api calls we see if we can "batch" them using debounce
+         */
+        if (type === ANALYTICS_EVENT_LOG || type === ANALYTICS_EVENT_ERROR) {
+            clearTimeout(sendEventsTimerId); // clear any timer that might be about to dispatch the info events array
+
+            debounce(sendAnalyticsEvents)();
+        }
+    };
+
+    const anlModule: AnalyticsModule = {
+        setUp: async (initialEvent: AnalyticsInitialEvent) => {
+            const { enabled, payload, telemetry } = props; // TODO what is payload, is it ever used?
+
+            // console.log('### Analytics::setUp:: initialEvent', initialEvent);
+
+            if (enabled === true) {
+                if (telemetry === true && !capturedCheckoutAttemptId) {
+                    try {
+                        // fetch a new checkoutAttemptId if none is already available
+                        const checkoutAttemptId = await collectId({ ...initialEvent, ...(payload && { ...payload }) });
+                        capturedCheckoutAttemptId = checkoutAttemptId;
+                    } catch (e) {
+                        // Caught at collectId level. We do not expect this catch block to ever fire, but... just in case...
+                        console.debug(`Fetching checkoutAttemptId failed.${e ? ` Error=${e}` : ''}`);
+                    }
+                }
+
+                if (!hasLoggedPixel) {
+                    // Log pixel
+                    // TODO once we stop using the pixel we can stop requiring both "enabled" & "telemetry" config options.
+                    //  And v6 will have a "level: 'none" | "all" | "minimal" config prop
+                    logEvent(initialEvent);
+                    hasLoggedPixel = true;
                 }
             }
+        },
 
-            // Log pixel
-            this.logEvent(event);
-        }
-    }
-}
+        getCheckoutAttemptId: (): string => capturedCheckoutAttemptId,
+
+        // Expose getter for testing purposes
+        getEventsQueue: () => eventsQueue,
+
+        createAnalyticsEvent: ({ event, data }: CreateAnalyticsEventObject) => {
+            const aObj: AnalyticsObject = createAnalyticsObject({
+                event,
+                ...data
+            });
+            // console.log('### Analytics::createAnalyticsEvent:: event=', event, ' aObj=', aObj);
+
+            addAnalyticsEvent(event, aObj);
+        },
+
+        getEnabled: () => props.enabled,
+
+        sendAnalytics: null
+    };
+
+    anlModule.sendAnalytics = analyticsPreProcessor(anlModule);
+
+    return anlModule;
+};
 
 export default Analytics;

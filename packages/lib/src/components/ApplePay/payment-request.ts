@@ -5,8 +5,11 @@ const formatAmount = (amount: PaymentAmount) => String(getDecimalAmount(amount.v
 
 export const preparePaymentRequest = (paymentRequest): ApplePayJS.ApplePayPaymentRequest => {
     const { countryCode, companyName, amount, ...props } = paymentRequest;
-
     const formattedAmount = formatAmount(amount);
+
+    if (!countryCode) {
+        console.warn('ApplePay - Make sure to set the countryCode in the AdyenCheckout configuration or in the Checkout Session creation');
+    }
 
     return {
         countryCode,

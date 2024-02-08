@@ -32,7 +32,7 @@ class ApplePayButton extends Component<ApplePayButtonProps> {
                     'apple-pay',
                     'apple-pay-button',
                     `apple-pay-button-${buttonColor}`,
-                    `apple-pay-button--type-add-money`
+                    `apple-pay-button--type-${buttonType}`
                 )}
                 onClick={this.props.onClick}
             />

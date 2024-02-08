@@ -1,6 +1,6 @@
 import { AdyenCheckout, Giftcard } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
-import { handleSubmit, handleAdditionalDetails, handleError } from '../../handlers';
+import { handleSubmit, handleAdditionalDetails, handleError, handlePaymentCompleted } from '../../handlers';
 import { checkBalance, createOrder } from '../../services';
 import { amount, shopperLocale, countryCode } from '../../services/commonConfig';
 import '../../style.scss';
@@ -15,22 +15,21 @@ const initCheckout = async () => {
         showPayButton: true,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
+        onPaymentCompleted: handlePaymentCompleted,
         onError: handleError,
         ...window.mainConfiguration
     });
 
-    window.giftcard = new Giftcard({
-            core: window.checkout,
-            type: 'giftcard',
-            brand: 'valuelink',
-            onBalanceCheck: async (resolve, reject, data) => {
-                resolve(await checkBalance(data));
-            },
-            onOrderRequest: async (resolve, reject) => {
-                resolve(await createOrder({ amount }));
-            }
-        })
-        .mount('.card-field');
+    window.giftcard = new Giftcard(window.checkout, {
+        type: 'giftcard',
+        brand: 'valuelink',
+        onBalanceCheck: async (resolve, reject, data) => {
+            resolve(await checkBalance(data));
+        },
+        onOrderRequest: async (resolve, reject) => {
+            resolve(await createOrder({ amount }));
+        }
+    }).mount('.card-field');
 };
 
 initCheckout();

@@ -30,14 +30,20 @@ jest.spyOn(Session.prototype, 'setupSession').mockImplementation(() => {
 describe('Core', () => {
     describe('Setting locale', () => {
         test('should default locale to en-US', async () => {
-            const checkout = new AdyenCheckout({ environment: 'test', clientKey: 'test_123456' });
+            const checkout = new AdyenCheckout({ countryCode: 'US', environment: 'test', clientKey: 'test_123456' });
             await checkout.initialize();
             expect(checkout.options.locale).toBe('en-US');
             expect(checkout.modules.i18n.locale).toBe('en-US');
         });
 
         test('should set a custom locale', async () => {
-            const checkout = new AdyenCheckout({ environment: 'test', clientKey: 'test_123456', locale: 'es-ES', translationFile: es_ES });
+            const checkout = new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456',
+                locale: 'es-ES',
+                translationFile: es_ES
+            });
             await checkout.initialize();
 
             expect(checkout.options.locale).toBe('es-ES');
@@ -47,16 +53,17 @@ describe('Core', () => {
 
     describe('Creating modules', () => {
         test('should create the modules when initializing on Advanced Flow', async () => {
-            const checkout = new AdyenCheckout({ environment: 'test', clientKey: 'test_123456' });
+            const checkout = new AdyenCheckout({ countryCode: 'US', environment: 'test', clientKey: 'test_123456' });
             await checkout.initialize();
             expect(Object.keys(checkout.modules).length).toBe(5);
         });
 
         test('should create the modules when initializing on Sesssions flow', async () => {
             const checkout = new AdyenCheckout({
+                countryCode: 'US',
                 environment: 'test',
                 clientKey: 'test_123456',
-                session: { id: 'session-id', sessionData: 'sesssion-data' }
+                session: { id: 'session-id', sessionData: 'session-data', countryCode: 'US' }
             });
 
             await checkout.initialize();
@@ -68,6 +75,7 @@ describe('Core', () => {
     describe('createFromAction', () => {
         test('should create a component from an action object', async () => {
             const checkout = new AdyenCheckout({
+                countryCode: 'US',
                 environment: 'test',
                 clientKey: 'test_123456'
             });
@@ -86,6 +94,7 @@ describe('Core', () => {
 
         test('should handle threeDS2 subtype "fingerprint" action', async () => {
             const checkout = new AdyenCheckout({
+                countryCode: 'US',
                 environment: 'test',
                 clientKey: 'test_123456'
             });
@@ -112,6 +121,7 @@ describe('Core', () => {
 
         test('should handle threeDS2 subtype "challenge" action', async () => {
             const checkout = new AdyenCheckout({
+                countryCode: 'US',
                 environment: 'test',
                 clientKey: 'test_123456'
             });
@@ -143,14 +153,14 @@ describe('Core', () => {
 
         test('should use Component property instead of the global one', async () => {
             const checkout = new AdyenCheckout({
+                countryCode: 'US',
                 environment: 'test',
                 clientKey: 'test_123456',
                 onAdditionalDetails: onAdditionalDetailsGlobal
             });
             await checkout.initialize();
 
-            const dropin = new Ideal({
-                core: checkout,
+            const dropin = new Ideal(checkout, {
                 onAdditionalDetails: onAdditionalDetailsComponent
             });
 
@@ -159,21 +169,21 @@ describe('Core', () => {
 
         test('should use global property as the Component property is omitted', async () => {
             const checkout = new AdyenCheckout({
+                countryCode: 'US',
                 environment: 'test',
                 clientKey: 'test_123456',
                 onAdditionalDetails: onAdditionalDetailsGlobal
             });
             await checkout.initialize();
 
-            const dropin = new Ideal({
-                core: checkout
-            });
+            const dropin = new Ideal(checkout);
 
             expect(dropin.props.onAdditionalDetails).toBe(onAdditionalDetailsGlobal);
         });
 
         test('should use prop from "paymentMethodsConfiguration" instead of global and local Component properties', async () => {
             const checkout = new AdyenCheckout({
+                countryCode: 'US',
                 environment: 'test',
                 analytics: { enabled: false },
                 clientKey: 'test_123456',
@@ -190,8 +200,7 @@ describe('Core', () => {
 
             await checkout.initialize();
 
-            const dropin = new Dropin({
-                core: checkout,
+            const dropin = new Dropin(checkout, {
                 onAdditionalDetails: onAdditionalDetailsComponent,
                 paymentMethodComponents: [Ideal],
                 paymentMethodsConfiguration: {
@@ -212,6 +221,7 @@ describe('Core', () => {
 
         test('createFromAction - should use local property instead of global configuration property', async () => {
             const checkout = new AdyenCheckout({
+                countryCode: 'US',
                 environment: 'test',
                 clientKey: 'test_123456',
                 onAdditionalDetails: onAdditionalDetailsGlobal
@@ -238,13 +248,14 @@ describe('Core', () => {
     describe('update()', () => {
         test('should update all components under main instance', async () => {
             const checkout = new AdyenCheckout({
+                countryCode: 'US',
                 environment: 'test',
                 clientKey: 'test_123456',
                 analytics: { enabled: false }
             });
             await checkout.initialize();
 
-            const component = new Dropin({ core: checkout }).mount('body');
+            const component = new Dropin(checkout).mount('body');
             const spy = jest.spyOn(component, 'update');
 
             await checkout.update();
@@ -254,6 +265,7 @@ describe('Core', () => {
 
         test('should update the payment method list for the advanced flow', async () => {
             const checkout = new AdyenCheckout({
+                countryCode: 'US',
                 environment: 'test',
                 clientKey: 'xxxx'
             });
@@ -268,6 +280,7 @@ describe('Core', () => {
     describe('Customizing URLs (PBL use-case)', () => {
         test('should use custom checkoutshopper URL url if available', () => {
             const checkout = new AdyenCheckout({
+                countryCode: 'US',
                 environment: 'test',
                 environmentUrls: {
                     api: 'https://localhost:8080/checkoutshopper/'
@@ -276,6 +289,33 @@ describe('Core', () => {
             });
 
             expect(checkout.loadingContext).toBe('https://localhost:8080/checkoutshopper/');
+        });
+    });
+
+    describe('Initialising without a countryCode', () => {
+        test('AdvancedFlow, without a countryCode, should throw an error', () => {
+            expect(() => {
+                new AdyenCheckout({
+                    environment: 'test',
+                    environmentUrls: {
+                        api: 'https://localhost:8080/checkoutshopper/'
+                    },
+                    clientKey: 'devl_FX923810'
+                });
+            }).toThrow('You must specify a countryCode when initializing checkout');
+        });
+
+        test('SessionsFlow, without a countryCode, should throw an error', async () => {
+            expect(() => {
+                const checkout = new AdyenCheckout({
+                    countryCode: 'US',
+                    environment: 'test',
+                    clientKey: 'test_123456',
+                    session: { id: 'session-id', sessionData: 'session-data' }
+                });
+
+                checkout.initialize();
+            }).toThrow('You must specify a countryCode when creating a session');
         });
     });
 });

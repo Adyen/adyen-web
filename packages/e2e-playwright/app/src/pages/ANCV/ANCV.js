@@ -1,6 +1,6 @@
 import { AdyenCheckout, ANCV } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
-import { handleError, showAuthorised } from '../../handlers';
+import { handleError, handlePaymentCompleted, showAuthorised } from '../../handlers';
 import { shopperLocale, countryCode } from '../../services/commonConfig';
 import '../../style.scss';
 import { createSession } from '../../services';
@@ -27,13 +27,14 @@ const initCheckout = async () => {
         locale: shopperLocale,
         countryCode,
         showPayButton: true,
-        onOrderCreated: data => {
+        onPaymentCompleted: handlePaymentCompleted,
+        onOrderUpdated: data => {
             showAuthorised('Partially Authorised');
         },
         onError: handleError
     });
 
-    window.paymentMethod = new ANCV({ core: checkout }).mount('.ancv-field');
+    window.paymentMethod = new ANCV(checkout).mount('.ancv-field');
 };
 
 initCheckout();

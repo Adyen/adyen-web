@@ -5,6 +5,7 @@ import getOrderStatus from '../../../core/Services/order-status';
 import { DropinComponentProps, DropinComponentState, DropinStatusProps, onOrderCancelData } from '../types';
 import './DropinComponent.scss';
 import { UIElementStatus } from '../../internal/UIElement/types';
+import { ANALYTICS_RENDERED_STR } from '../../../core/Analytics/constants';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
@@ -32,14 +33,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                 this.setState({ instantPaymentElements, elements, storedPaymentElements, orderStatus });
                 this.setStatus('ready');
 
-                if (this.props.modules.analytics) {
-                    this.props.modules.analytics.send({
-                        containerWidth: this.base && (this.base as HTMLElement).offsetWidth,
-                        paymentMethods: elements.map(e => e.props.type),
-                        component: 'dropin',
-                        flavor: 'dropin'
-                    });
-                }
+                this.props.modules?.analytics.sendAnalytics('dropin', { type: ANALYTICS_RENDERED_STR });
             }
         );
 
@@ -75,6 +69,8 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         // onSelect event
         if ((activePaymentMethod && activePaymentMethod._id !== paymentMethod._id) || !activePaymentMethod) {
             this.props.onSelect(paymentMethod);
+
+            paymentMethod.submitAnalytics({ type: ANALYTICS_RENDERED_STR });
         }
     };
 
@@ -119,6 +115,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
     render(props, { elements, instantPaymentElements, storedPaymentElements, status, activePaymentMethod, cachedPaymentMethods }) {
         const isLoading = status.type === 'loading';
         const isRedirecting = status.type === 'redirect';
+        const hasPaymentMethodsToBeDisplayed = elements?.length || instantPaymentElements?.length || storedPaymentElements?.length;
 
         switch (status.type) {
             case 'success':
@@ -135,7 +132,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                     <div className={`adyen-checkout__dropin adyen-checkout__dropin--${status.type}`}>
                         {isRedirecting && status.props.component && status.props.component.render()}
                         {isLoading && status.props && status.props.component && status.props.component.render()}
-                        {elements && !!elements.length && (
+                        {hasPaymentMethodsToBeDisplayed && (
                             <PaymentMethodList
                                 isLoading={isLoading || isRedirecting}
                                 isDisablingPaymentMethod={this.state.isDisabling}
@@ -152,6 +149,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                                 openFirstStoredPaymentMethod={this.props.openFirstStoredPaymentMethod}
                                 onDisableStoredPaymentMethod={this.handleDisableStoredPaymentMethod}
                                 showRemovePaymentMethodButton={this.props.showRemovePaymentMethodButton}
+                                showRadioButton={this.props.showRadioButton}
                             />
                         )}
                     </div>

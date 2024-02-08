@@ -1,6 +1,6 @@
 import { Component, h } from 'preact';
 import DoChallenge3DS2 from './DoChallenge3DS2';
-import { createChallengeResolveData, handleErrorCode, prepareChallengeData, createOldChallengeResolveData } from '../utils';
+import { createChallengeResolveData, prepareChallengeData, createOldChallengeResolveData } from '../utils';
 import { PrepareChallenge3DS2Props, PrepareChallenge3DS2State } from './types';
 import { ChallengeData, ThreeDS2FlowObject } from '../../types';
 import '../../ThreeDS2.scss';
@@ -8,6 +8,11 @@ import Img from '../../../internal/Img';
 import './challenge.scss';
 import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
 import useImage from '../../../../core/Context/useImage';
+import AdyenCheckoutError, { ERROR } from '../../../../core/Errors/AdyenCheckoutError';
+import { THREEDS2_CHALLENGE_ERROR } from '../../config';
+import { ActionHandledReturnObject } from '../../../../types/global-types';
+import { THREEDS2_FULL, THREEDS2_NUM } from '../../config';
+import { SendAnalyticsObject } from '../../../../core/Analytics/types';
 
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
     public static defaultProps = {
@@ -53,6 +58,19 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         }
     }
 
+    public onActionHandled = (rtnObj: ActionHandledReturnObject) => {
+        this.props.onSubmitAnalytics({ type: THREEDS2_FULL, message: rtnObj.actionDescription });
+
+        this.props.onActionHandled(rtnObj);
+    };
+
+    public onFormSubmit = (msg: string) => {
+        this.props.onSubmitAnalytics({
+            type: THREEDS2_FULL,
+            message: msg
+        });
+    };
+
     setStatusComplete(resultObj) {
         this.setState({ status: 'complete' }, () => {
             /**
@@ -61,6 +79,16 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
              */
             const resolveDataFunction = this.props.isMDFlow ? createOldChallengeResolveData : createChallengeResolveData;
             const data = resolveDataFunction(this.props.dataKey, resultObj.transStatus, this.props.paymentData);
+
+            // Create log object - the process is completed, one way or another
+            const analyticsObject: SendAnalyticsObject = {
+                type: THREEDS2_FULL,
+                message: `${THREEDS2_NUM} challenge has completed`,
+                metadata: { ...resultObj }
+            };
+
+            // Send log to analytics endpoint
+            this.props.onSubmitAnalytics(analyticsObject);
 
             this.props.onComplete(data); // (equals onAdditionalDetails - except for 3DS2InMDFlow)
         });
@@ -71,7 +99,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         this.props.onError(errorInfoObj); // For some reason this doesn't fire if it's in a callback passed to the setState function
     }
 
-    render({ onActionHandled }, { challengeData }) {
+    render(_, { challengeData }) {
         const getImage = useImage();
         if (this.state.status === 'retrievingChallengeToken') {
             return (
@@ -80,8 +108,15 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                         // Challenge has resulted in an error (no transStatus could be retrieved) - but we still treat this as a valid scenario
                         if (hasOwnProperty(challenge.result, 'errorCode') && challenge.result.errorCode.length) {
                             // Tell the merchant there's been an error
-                            const errorCodeObject = handleErrorCode(challenge.result.errorCode, challenge.result.errorDescription);
-                            this.props.onError(errorCodeObject);
+                            this.props.onError(
+                                new AdyenCheckoutError(
+                                    ERROR,
+                                    `${THREEDS2_CHALLENGE_ERROR}: ${
+                                        challenge.result.errorDescription ? challenge.result.errorDescription : 'no transStatus could be retrieved'
+                                    }`,
+                                    { cause: challenge.result.errorCode }
+                                )
+                            );
                         }
 
                         this.setStatusComplete(challenge.result);
@@ -91,14 +126,19 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                          * Called when challenge times-out (which is still a valid scenario)...
                          */
                         if (hasOwnProperty(challenge, 'errorCode')) {
-                            const errorCodeObject = handleErrorCode(challenge.errorCode);
-                            this.props.onError(errorCodeObject);
+                            this.props.onError(
+                                new AdyenCheckoutError(ERROR, `${THREEDS2_CHALLENGE_ERROR}: '3DS2 challenge timed out'`, {
+                                    cause: challenge.errorCode
+                                })
+                            );
+
                             this.setStatusComplete(challenge.result);
                             return;
                         }
                     }}
                     {...challengeData}
-                    onActionHandled={onActionHandled}
+                    onActionHandled={this.onActionHandled}
+                    onFormSubmit={this.onFormSubmit}
                 />
             );
         }

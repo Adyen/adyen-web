@@ -90,7 +90,7 @@ export default function Voucher({ voucherDetails = [], className = '', ...props 
                                         copyToClipboard(props.reference);
                                         complete();
                                     }}
-                                    icon={getImage({ imageFolder: 'components/' })('copy')}
+                                    icon={getImage({ imageFolder: 'components/' })('copy_white')}
                                     label={i18n.get('button.copy')}
                                 />
                             </li>
@@ -102,7 +102,7 @@ export default function Voucher({ voucherDetails = [], className = '', ...props 
                                     inline
                                     variant="action"
                                     href={props.downloadUrl}
-                                    icon={getImage({ imageFolder: 'components/' })('download')}
+                                    icon={getImage({ imageFolder: 'components/' })('download_white')}
                                     label={props.downloadButtonText || i18n.get('button.download')}
                                     target="_blank"
                                     rel="noopener noreferrer"

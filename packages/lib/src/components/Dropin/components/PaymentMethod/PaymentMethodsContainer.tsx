@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import PaymentMethodItem from './PaymentMethodItem';
+import PaymentMethodItem from './PaymentMethodItem/PaymentMethodItem';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import { useMemo } from 'preact/hooks';
 import uuid from '../../../../utils/uuid';
@@ -20,6 +20,7 @@ export interface PaymentMethodsContainerProps {
     onDisableStoredPaymentMethod?: (storedPaymentMethod) => void;
     isDisablingPaymentMethod?: boolean;
     isLoading: boolean;
+    showRadioButton?: boolean;
 }
 
 function PaymentMethodsContainer({
@@ -32,8 +33,9 @@ function PaymentMethodsContainer({
     isDisablingPaymentMethod = false,
     showRemovePaymentMethodButton,
     onDisableStoredPaymentMethod = () => {},
-    onSelect
-}: PaymentMethodsContainerProps) {
+    onSelect,
+    showRadioButton
+}: Readonly<PaymentMethodsContainerProps>) {
     const { i18n } = useCoreContext();
     const selectListId: string = useMemo(() => `select-${uuid()}`, []);
     const paymentMethodListClassnames = classNames([
@@ -76,6 +78,7 @@ function PaymentMethodsContainer({
                             onSelect={onSelect}
                             key={paymentMethod._id}
                             showRemovePaymentMethodButton={showRemovePaymentMethodButton}
+                            showRadioButton={showRadioButton}
                             onDisableStoredPaymentMethod={onDisableStoredPaymentMethod}
                         />
                     );

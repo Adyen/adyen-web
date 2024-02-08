@@ -2,7 +2,7 @@ import { AdyenCheckout, RatePay, RatePayDirectDebit, AfterPay, AfterPayB2B, Faci
 import '@adyen/adyen-web/styles/adyen.css';
 import { getPaymentMethods } from '../../services';
 import { handleChange, handleSubmit } from '../../handlers';
-import { amount, shopperLocale } from '../../config/commonConfig';
+import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
 import getTranslationFile from '../../config/getTranslation';
@@ -22,12 +22,19 @@ const showComps = {
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
     window.core = await AdyenCheckout({
         clientKey: process.env.__CLIENT_KEY__,
+        countryCode,
         locale: shopperLocale,
         translationFile: getTranslationFile(shopperLocale),
         paymentMethodsResponse: paymentMethodsData,
         environment: process.env.__CLIENT_ENV__,
         onChange: handleChange,
         onSubmit: handleSubmit,
+        onPaymentCompleted(result, element) {
+            console.log('onPaymentCompleted', result, element);
+        },
+        onPaymentFailed(result, element) {
+            console.log('onPaymentFailed', result, element);
+        },
         onError: console.error,
         showPayButton: true,
         amount // Optional. Used to display the amount in the Pay Button.
@@ -35,8 +42,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
 
     // RATEPAY
     if (showComps.ratepay) {
-        window.ratepay = new RatePay({
-            core: window.core,
+        window.ratepay = new RatePay(window.core, {
             countryCode: 'DE', // 'DE' / 'AT' / 'CH'
             visibility: {
                 personalDetails: 'editable', // editable [default] / readOnly / hidden
@@ -48,8 +54,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
 
     // RATEPAY
     if (showComps.ratepaydd) {
-        window.ratepaydd = new RatePayDirectDebit({
-            core: window.core,
+        window.ratepaydd = new RatePayDirectDebit(window.core, {
             //countryCode: 'DE', // 'DE' / 'AT' / 'CH'
             visibility: {
                 personalDetails: 'editable', // editable [default] / readOnly / hidden
@@ -61,8 +66,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
 
     // AFTERPAY
     if (showComps.afterpay) {
-        window.afterpay = new AfterPay({
-            core: window.core,
+        window.afterpay = new AfterPay(window.core, {
             countryCode: 'NL', // 'NL' / 'BE'
             visibility: {
                 personalDetails: 'editable', // editable [default] / readOnly / hidden
@@ -83,8 +87,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
 
     // AFTERPAY B2B
     if (showComps.afterpayb2b) {
-        window.afterpayb2b = new AfterPayB2B({
-            core: window.core,
+        window.afterpayb2b = new AfterPayB2B(window.core, {
             countryCode: 'NL', // 'NL' / 'BE'
             visibility: {
                 companyDetails: 'editable' // editable [default] / readOnly / hidden
@@ -94,8 +97,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
 
     // FACILYPAY_3x
     if (showComps.facilypay_3x) {
-        window.facilypay_3x = new FacilPay3x({
-            core: window.core,
+        window.facilypay_3x = new FacilPay3x(window.core, {
             countryCode: 'ES', // 'ES' / 'FR'
             visibility: {
                 personalDetails: 'editable', // editable [default] / readOnly / hidden
@@ -107,11 +109,10 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
 
     // AFFIRM
     if (showComps.affirm) {
-        window.affirm = new Affirm({
-            core: window.core,
+        window.affirm = new Affirm(window.core, {
             countryCode: 'US', // 'US' / 'CA'
             visibility: {
-                personalDetails: 'editable', // editable [default] / readOnly / hidden
+                personalDetails: 'hidden', // editable [default] / readOnly / hidden
                 billingAddress: 'editable',
                 deliveryAddress: 'editable'
             },
@@ -136,8 +137,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
 
     // ATOME
     if (showComps.atome) {
-        window.atome = new Atome({
-            core: window.core,
+        window.atome = new Atome(window.core, {
             countryCode: 'SG',
             data: {
                 personalDetails: {

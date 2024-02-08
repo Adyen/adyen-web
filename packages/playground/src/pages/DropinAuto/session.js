@@ -28,8 +28,13 @@ export async function initSession() {
         beforeSubmit: (data, component, actions) => {
             actions.resolve(data);
         },
-        onPaymentCompleted: (result, component) => {
-            console.info(result, component);
+        onPaymentCompleted(data, component) {
+            console.info('onPaymentCompleted', data, component);
+            component.setStatus('success');
+        },
+        onPaymentFailed(data, component) {
+            console.info('onPaymentFailed', data, component);
+            component.setStatus('error');
         },
         onError: (error, component) => {
             console.info(JSON.stringify(error), component);
@@ -39,8 +44,7 @@ export async function initSession() {
         }
     });
 
-    const dropin = new Dropin({
-        core: checkout,
+    const dropin = new Dropin(checkout, {
         instantPaymentTypes: ['googlepay'],
         paymentMethodsConfiguration: {
             paywithgoogle: {

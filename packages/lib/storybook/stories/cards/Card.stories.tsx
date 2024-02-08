@@ -13,7 +13,7 @@ const meta: MetaConfiguration<CardConfiguration> = {
 const createComponent = (args: PaymentMethodStoryProps<CardConfiguration>, context) => {
     const { componentConfiguration } = args;
     const checkout = getStoryContextCheckout(context);
-    const card = new Card({ core: checkout, ...componentConfiguration });
+    const card = new Card(checkout, componentConfiguration);
 
     return <Container element={card} />;
 };
@@ -64,7 +64,6 @@ export const WithInstallments: CardStory = {
     args: {
         componentConfiguration: {
             _disableClickToPay: true,
-            showBrandsUnderCardNumber: true,
             showInstallmentAmounts: true,
             installmentOptions: {
                 mc: {

@@ -6,6 +6,7 @@ import PayButton from '../internal/PayButton';
 import { KlarnaContainer } from './components/KlarnaContainer/KlarnaContainer';
 import { PaymentAction } from '../../types/global-types';
 import { TxVariants } from '../tx-variants';
+import type { ICore } from '../../core/types';
 
 class KlarnaPayments extends UIElement<KlarnConfiguration> {
     public static type = TxVariants.klarna;
@@ -15,8 +16,8 @@ class KlarnaPayments extends UIElement<KlarnConfiguration> {
         useKlarnaWidget: false
     };
 
-    constructor(props: KlarnConfiguration) {
-        super(props);
+    constructor(checkout: ICore, props?: KlarnConfiguration) {
+        super(checkout, props);
 
         this.onComplete = this.onComplete.bind(this);
         this.updateWithAction = this.updateWithAction.bind(this);

@@ -7,7 +7,8 @@ import { BinLookupResponse, CardBrandsConfiguration } from '../../Card/types';
 import SFExtensions from '../../internal/SecuredFields/binLookup/extensions';
 import { StylesObject } from '../../internal/SecuredFields/lib/types';
 import { Resources } from '../../../core/Context/Resources';
-import { Placeholders } from '../../Card/components/CardInput/types';
+import { Placeholders, SFError } from '../../Card/components/CardInput/types';
+import { ValidationError } from '../types';
 
 interface SecuredFieldsProps {
     autoFocus?: boolean;
@@ -46,7 +47,8 @@ interface SecuredFieldsProps {
 
 const defaultProps = {
     onChange: () => {},
-    onError: () => {}
+    onError: () => {},
+    onValidationError: () => {}
 };
 
 function CustomCardInput(props: SecuredFieldsProps) {
@@ -113,13 +115,27 @@ function CustomCardInput(props: SecuredFieldsProps) {
     useEffect(() => {
         const sfStateErrorsObj = sfp.current.mapErrorsToValidationRuleResult();
 
+        const mappedErrors = { ...errors, ...sfStateErrorsObj }; // maps sfErrors
+
         props.onChange({
             data,
             valid,
-            errors: { ...errors, ...sfStateErrorsObj }, // maps sfErrors
+            errors: mappedErrors,
             isValid: isSfpValid,
             selectedBrandValue
         });
+
+        // Create an array of Validation error objects and send to callback
+        if (Object.keys(mappedErrors).length) {
+            const validationErrors: ValidationError[] = Object.entries(mappedErrors).map(([fieldType, error]) => {
+                const valErr: ValidationError = {
+                    fieldType,
+                    ...(error ? (error as SFError) : { error: '', rootNode: this.props.rootNode })
+                };
+                return valErr;
+            });
+            this.props.onValidationError?.(validationErrors);
+        }
     }, [data, valid, errors, selectedBrandValue]);
 
     /**

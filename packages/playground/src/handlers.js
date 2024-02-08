@@ -1,16 +1,5 @@
 import { makePayment, makeDetailsCall } from './services';
 
-export function handleResponse(response, component) {
-    const type = component.data.paymentMethod ? component.data.paymentMethod.type : component.constructor.name;
-    console.log('\ntype=', type, 'response=', response);
-
-    if (response.action) {
-        component.handleAction(response.action);
-    } else if (response.resultCode) {
-        alert(response.resultCode);
-    }
-}
-
 export function handleChange(state, component) {
     console.group(`onChange - ${state.data.paymentMethod.type}`);
     console.log('isValid', state.isValid);
@@ -29,28 +18,40 @@ export function handleError(obj) {
     }
 }
 
-export function handleSubmit(state, component) {
+export async function handleSubmit(state, component, actions) {
     component.setStatus('loading');
 
-    return makePayment(state.data)
-        .then(response => {
-            component.setStatus('ready');
-            handleResponse(response, component);
-        })
-        .catch(error => {
-            throw Error(error);
+    try {
+        const { action, order, resultCode, donationToken } = await makePayment(state.data);
+
+        if (!resultCode) actions.reject();
+
+        actions.resolve({
+            resultCode,
+            action,
+            order,
+            donationToken
         });
+    } catch (error) {
+        console.error('## onSubmit - critical error', error);
+        actions.reject();
+    }
 }
 
-export function handleAdditionalDetails(details, component) {
-    // component.setStatus('processing');
+export async function handleAdditionalDetails(state, component, actions) {
+    try {
+        const { resultCode, action, order, donationToken } = await makeDetailsCall(state.data);
 
-    return makeDetailsCall(details.data)
-        .then(response => {
-            component.setStatus('ready');
-            handleResponse(response, component);
-        })
-        .catch(error => {
-            throw Error(error);
+        if (!resultCode) actions.reject();
+
+        actions.resolve({
+            resultCode,
+            action,
+            order,
+            donationToken
         });
+    } catch (error) {
+        console.error('## onAdditionalDetails - critical error', error);
+        actions.reject();
+    }
 }

@@ -24,12 +24,14 @@ export async function initSession() {
         locale: shopperLocale,
         translationFile: getTranslationFile(shopperLocale),
 
-        // Events
         beforeSubmit: (data, component, actions) => {
             actions.resolve(data);
         },
         onPaymentCompleted: (result, component) => {
-            console.info(result, component);
+            console.info('onPaymentCompleted', result, component);
+        },
+        onPaymentFailed: (result, component) => {
+            console.info('onPaymentFailed', result, component);
         },
         onError: (error, component) => {
             console.info(JSON.stringify(error), component);
@@ -39,8 +41,7 @@ export async function initSession() {
         }
     });
 
-    const dropin = new Dropin({
-        core: checkout,
+    const dropin = new Dropin(checkout, {
         instantPaymentTypes: ['googlepay'],
         paymentMethodsConfiguration: {
             paywithgoogle: {
@@ -58,5 +59,6 @@ export async function initSession() {
             }
         }
     }).mount('#dropin-container');
+
     return [checkout, dropin];
 }

@@ -1,4 +1,4 @@
-import { AdyenCheckout, Dropin, Card, WeChat, Giftcard, PayPal, Ach, GooglePay } from '@adyen/adyen-web';
+import { AdyenCheckout, Dropin, Card, WeChat, Giftcard, PayPal, Ach, GooglePay, Ideal } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { createSession } from '../../services';
 import { amount, shopperLocale, shopperReference, countryCode, returnUrl } from '../../config/commonConfig';
@@ -28,7 +28,10 @@ export async function initSession() {
             actions.resolve(data);
         },
         onPaymentCompleted: (result, component) => {
-            console.info(result, component);
+            console.info('onPaymentCompleted', result, component);
+        },
+        onPaymentFailed(result, element) {
+            console.log('onPaymentFailed', result, element);
         },
         onError: (error, component) => {
             console.info(JSON.stringify(error), component);
@@ -38,13 +41,17 @@ export async function initSession() {
         }
     });
 
-    const dropin = new Dropin({
-        core: checkout,
+    const dropin = new Dropin(checkout, {
         instantPaymentTypes: ['googlepay'],
-        paymentMethodComponents: [Card, WeChat, Giftcard, PayPal, Ach, GooglePay],
+        paymentMethodComponents: [Card, WeChat, Giftcard, PayPal, Ach, GooglePay, Ideal],
         paymentMethodsConfiguration: {
-            paywithgoogle: {
-                buttonType: 'plain'
+            googlepay: {
+                buttonType: 'plain',
+
+                onAuthorized(data, actions) {
+                    console.log(data, actions);
+                    actions.reject();
+                }
             },
             card: {
                 hasHolderName: true,

@@ -2,11 +2,11 @@ import { AdyenCheckout, CustomCard } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 
 import { makePayment, makeDetailsCall } from '../../services';
-import { styles, setFocus, onBrand, onConfigSuccess, onBinLookup, onChange } from './customCards.config';
+import { styles, setFocus, onBrand, onConfigSuccess, onBinLookup, onChange, setCCErrors } from './customCards.config';
 import { styles_si, onConfigSuccess_si, onFieldValid_si, onBrand_si, onError_si, onFocus_si } from './customCards-si.config';
 import { fancyStyles, fancyChangeBrand, fancyErrors, fancyFieldValid, fancyFocus } from './customCards-fancy.config';
 import { materialStyles, materialFocus, handleMaterialError, onMaterialFieldValid } from './customCards-material.config';
-import { shopperLocale } from '../../config/commonConfig';
+import { shopperLocale, countryCode } from '../../config/commonConfig';
 import paymentsConfig from '../../config/paymentsConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
@@ -49,6 +49,7 @@ if (showOtherExamples === false) {
 
 const configObj = {
     clientKey: process.env.__CLIENT_KEY__,
+    countryCode,
     locale: shopperLocale,
     translationFile: getTranslationFile(shopperLocale),
     //        environment: 'http://localhost:8080/checkoutshopper/',
@@ -76,8 +77,7 @@ const initCheckout = async () => {
     window.checkout = await AdyenCheckout(configObj);
 
     // SECURED FIELDS
-    window.customCard = new CustomCard({
-        core: window.checkout,
+    window.customCard = new CustomCard(window.checkout, {
         type: 'card',
         brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire', 'synchrony_plcc'],
         styles,
@@ -92,7 +92,10 @@ const initCheckout = async () => {
         },
         onFocus: setFocus,
         onBinLookup,
-        onChange
+        onChange,
+        onValidationError: errors => {
+            errors.forEach(setCCErrors);
+        }
         // brandsConfiguration: {
         //     synchrony_plcc: {
         //         icon: 'http://localhost:3000/test_images/smartmoney.png'
@@ -110,8 +113,7 @@ const initCheckout = async () => {
 
     window.customCardSi =
         showOtherExamples &&
-        new CustomCard({
-            core: window.checkout,
+        new CustomCard(window.checkout, {
             type: 'card',
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
             styles: styles_si,
@@ -125,8 +127,7 @@ const initCheckout = async () => {
 
     window.fancyCustomCard =
         showOtherExamples &&
-        new CustomCard({
-            core: window.checkout,
+        new CustomCard(window.checkout, {
             type: 'card',
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
             styles: fancyStyles,
@@ -155,8 +156,7 @@ const initCheckout2 = async () => {
 
     window.materialDesignCustomCard =
         showOtherExamples &&
-        new CustomCard({
-            core: window.checkout,
+        new CustomCard(window.checkout, {
             type: 'card',
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
             styles: materialStyles,

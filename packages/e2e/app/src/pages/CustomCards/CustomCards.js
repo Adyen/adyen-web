@@ -1,10 +1,11 @@
-import { AdyenCheckout, CustomCard} from '@adyen/adyen-web';
+import { AdyenCheckout, CustomCard } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { handleSubmit, handleAdditionalDetails } from '../../handlers';
 import { amount, shopperLocale, countryCode } from '../../services/commonConfig';
 import '../../style.scss';
 import './customcards.style.scss';
 import { setFocus, onBrand, onConfigSuccess, onBinLookup, onChange } from './customCards.config';
+import { makePayment } from '@adyen/adyen-web-playwright/app/src/services';
 
 const initCheckout = async () => {
     // window.TextEncoder = null; // Comment in to force use of "compat" version
@@ -20,23 +21,20 @@ const initCheckout = async () => {
         ...window.mainConfiguration
     });
 
-    window.securedFields = new CustomCard({
-            core: checkout,
-            type: 'card',
-            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire'],
-            onConfigSuccess,
-            onBrand,
-            onFocus: setFocus,
-            onBinLookup,
-            onChange,
-            ...window.cardConfig
-        })
-        .mount('.secured-fields');
+    window.securedFields = new CustomCard(checkout, {
+        type: 'card',
+        brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire'],
+        onConfigSuccess,
+        onBrand,
+        onFocus: setFocus,
+        onBinLookup,
+        onChange,
+        ...window.cardConfig
+    }).mount('.secured-fields');
 
     createPayButton('.secured-fields', window.securedFields, 'securedfields');
 
-    window.securedFields2 = new CustomCard({
-            core: checkout,
+    window.securedFields2 = new CustomCard(checkout, {
             //            type: 'card',// Deliberately exclude to ensure a default value is set
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire'],
             onConfigSuccess,
@@ -57,7 +55,7 @@ const initCheckout = async () => {
         payBtn.name = 'pay';
         payBtn.classList.add('adyen-checkout__button', 'js-components-button--one-click', `js-${attribute}`);
 
-        payBtn.addEventListener('click', e => {
+        payBtn.addEventListener('click', async e => {
             e.preventDefault();
 
             if (!component.isValid) return component.showValidation();
@@ -69,7 +67,14 @@ const initCheckout = async () => {
             };
             component.state.data = { paymentMethod };
 
-            handleSubmit(component.state, component);
+            const response = await makePayment(component.state.data);
+            component.setStatus('ready');
+
+            if (response.action) {
+                component.handleAction(response.action, window.actionConfigObject || {});
+            } else if (response.resultCode) {
+                alert(response.resultCode);
+            }
         });
 
         document.querySelector(parent).appendChild(payBtn);
