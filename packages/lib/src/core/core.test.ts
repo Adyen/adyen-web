@@ -292,7 +292,7 @@ describe('Core', () => {
         });
     });
 
-    describe.only('Initialising without a countryCode', () => {
+    describe('Initialising without a countryCode', () => {
         test('should throw an error', () => {
             expect(() => {
                 new AdyenCheckout({
