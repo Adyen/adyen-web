@@ -63,7 +63,7 @@ describe('Core', () => {
                 countryCode: 'US',
                 environment: 'test',
                 clientKey: 'test_123456',
-                session: { id: 'session-id', sessionData: 'sesssion-data' }
+                session: { id: 'session-id', sessionData: 'session-data', countryCode: 'US' }
             });
 
             await checkout.initialize();
@@ -293,7 +293,7 @@ describe('Core', () => {
     });
 
     describe('Initialising without a countryCode', () => {
-        test('should throw an error', () => {
+        test('AdvancedFlow - should throw an error', () => {
             expect(() => {
                 new AdyenCheckout({
                     environment: 'test',
