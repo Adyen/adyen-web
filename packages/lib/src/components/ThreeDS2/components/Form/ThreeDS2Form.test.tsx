@@ -16,7 +16,8 @@ const propsMock = {
 let wrapper;
 
 beforeEach(() => {
-    wrapper = shallow(<ThreeDS2Form {...propsMock} />);
+    // @ts-ignore Component is proper JSX
+    wrapper = shallow(<ThreeDS2Form {...propsMock} onFormSubmit={() => {}} />);
 });
 
 describe('<ThreeDS2Form /> rendering', () => {

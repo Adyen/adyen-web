@@ -24,12 +24,16 @@ class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2Sta
          */
         const jsonStr = JSON.stringify(this.props.cReqData);
         const base64URLencodedData = encodeBase64URL(jsonStr);
-        this.state = { base64URLencodedData };
+        this.state = { base64URLencodedData, status: 'init' };
     }
 
     private iframeCallback = () => {
         this.setState({ status: 'iframeLoaded' });
-        this.props.onActionHandled({ componentType: '3DS2Challenge', actionDescription: 'challenge-iframe-loaded' });
+        // On Test - actually calls-back 3 times: once for challenge screen, once again as challenge.html reloads after the challenge is submitted, and once for redirect to threeDSNotificationURL.
+        // But for the purposes of calling the merchant defined onActionHandled callback - we only want to do it once
+        if (this.state.status === 'init') {
+            this.props.onActionHandled({ componentType: '3DS2Challenge', actionDescription: 'challenge-iframe-loaded' });
+        }
     };
 
     private get3DS2ChallengePromise(): Promise<any> {
@@ -64,7 +68,7 @@ class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2Sta
         window.removeEventListener('message', this.processMessageHandler);
     }
 
-    render({ acsURL, cReqData, iframeSizeArr }, { base64URLencodedData, status }) {
+    render({ acsURL, cReqData, iframeSizeArr, onFormSubmit }, { base64URLencodedData, status }) {
         const [width, height] = iframeSizeArr;
 
         return (
@@ -77,7 +81,14 @@ class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2Sta
                 {status !== 'iframeLoaded' && <Spinner />}
 
                 <Iframe name={iframeName} width={width} height={height} callback={this.iframeCallback} />
-                <ThreeDS2Form name={'cReqForm'} action={acsURL} target={iframeName} inputName={'creq'} inputValue={base64URLencodedData} />
+                <ThreeDS2Form
+                    name={'cReqForm'}
+                    action={acsURL}
+                    target={iframeName}
+                    inputName={'creq'}
+                    inputValue={base64URLencodedData}
+                    onFormSubmit={onFormSubmit}
+                />
             </div>
         );
     }
