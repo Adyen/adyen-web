@@ -196,6 +196,11 @@ export interface CardConfiguration extends UIElementProps {
     billingAddressAllowedCountries?: string[];
 
     /**
+     * Relates to storedCards
+     */
+    id?: string;
+
+    /**
      * Configure the installment options for the card
      */
     installmentOptions?: InstallmentOptions;
@@ -251,6 +256,11 @@ export interface CardConfiguration extends UIElementProps {
      * Object to configure the styling of the inputs in the iframes that are used to present the PAN, Expiry Date & Security Code fields
      */
     styles?: StylesObject;
+
+    /**
+     * Relates to storedCards and the type of interactions they support e.g. "Ecommerce", "ContAuth" etc
+     */
+    supportedShopperInteractions?: string[];
 
     /**
      * Implements a workaround for iOS/Safari bug where keypad doesn't retract when SF paymentMethod is no longer active
