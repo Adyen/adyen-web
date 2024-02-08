@@ -29,15 +29,13 @@ export const GiftcardExample = ({ contextArgs }: GiftcardExampleProps) => {
               });
 
         const onOrderUpdated = () => {
-            const card = new Card({
-                core: checkout.current,
+            const card = new Card(checkout.current, {
                 _disableClickToPay: true
             });
             setElement(card);
         };
 
-        const giftcardElement = new Giftcard({
-            core: checkout.current,
+        const giftcardElement = new Giftcard(checkout.current, {
             ...contextArgs.componentConfiguration,
             onOrderUpdated: onOrderUpdated
         });
