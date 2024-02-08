@@ -291,4 +291,18 @@ describe('Core', () => {
             expect(checkout.loadingContext).toBe('https://localhost:8080/checkoutshopper/');
         });
     });
+
+    describe.only('Initialising without a countryCode', () => {
+        test('should throw an error', () => {
+            expect(() => {
+                new AdyenCheckout({
+                    environment: 'test',
+                    environmentUrls: {
+                        api: 'https://localhost:8080/checkoutshopper/'
+                    },
+                    clientKey: 'devl_FX923810'
+                });
+            }).toThrow('You must specify a countryCode when initializing checkout');
+        });
+    });
 });
