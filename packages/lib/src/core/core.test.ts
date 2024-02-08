@@ -293,7 +293,7 @@ describe('Core', () => {
     });
 
     describe('Initialising without a countryCode', () => {
-        test('AdvancedFlow - should throw an error', () => {
+        test('AdvancedFlow, without a countryCode, should throw an error', () => {
             expect(() => {
                 new AdyenCheckout({
                     environment: 'test',
@@ -303,6 +303,19 @@ describe('Core', () => {
                     clientKey: 'devl_FX923810'
                 });
             }).toThrow('You must specify a countryCode when initializing checkout');
+        });
+
+        test('SessionsFlow, without a countryCode, should throw an error', async () => {
+            expect(() => {
+                const checkout = new AdyenCheckout({
+                    countryCode: 'US',
+                    environment: 'test',
+                    clientKey: 'test_123456',
+                    session: { id: 'session-id', sessionData: 'session-data' }
+                });
+
+                checkout.initialize();
+            }).toThrow('You must specify a countryCode when creating a session');
         });
     });
 });
