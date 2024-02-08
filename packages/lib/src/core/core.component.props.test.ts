@@ -39,6 +39,7 @@ const paymentMethodsResponse: PaymentMethodsResponse = {
 };
 
 const coreOptions: CoreConfiguration = {
+    countryCode: 'US',
     amount: {
         currency: 'USD',
         value: 19000

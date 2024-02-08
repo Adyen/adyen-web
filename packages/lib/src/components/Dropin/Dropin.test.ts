@@ -11,6 +11,7 @@ describe('Dropin', () => {
 
     beforeEach(async () => {
         checkout = await AdyenCheckout({
+            countryCode: 'US',
             environment: 'test',
             clientKey: 'test_123456',
             analytics: { enabled: false },
@@ -96,6 +97,7 @@ describe('Dropin', () => {
             };
 
             const checkout = await AdyenCheckout({
+                countryCode: 'US',
                 environment: 'test',
                 clientKey: 'test_123456',
                 analytics: { enabled: false }

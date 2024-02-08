@@ -4,7 +4,7 @@ import '@adyen/adyen-web/styles/adyen.css';
 import { getPaymentMethods, makePayment } from '../../services';
 import { handleSubmit, handleAdditionalDetails } from '../../handlers';
 import { checkPaymentResult } from '../../utils';
-import { amount, shopperLocale } from '../../config/commonConfig';
+import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
 import getTranslationFile from '../../config/getTranslation';
@@ -12,6 +12,7 @@ import getTranslationFile from '../../config/getTranslation';
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
     window.checkout = await AdyenCheckout({
         amount, // Optional. Used to display the amount in the Pay Button.
+        countryCode,
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
         locale: shopperLocale,

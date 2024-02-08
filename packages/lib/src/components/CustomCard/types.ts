@@ -6,7 +6,6 @@ export type CustomCardConfiguration = Omit<
     | 'clickToPayConfiguration'
     | '_disableClickToPay'
     | 'fundingSource'
-    | 'showBrandsUnderCardNumber'
     | 'positionHolderNameOnTop'
     | 'showBrandIcon'
     | 'showFormInstruction'

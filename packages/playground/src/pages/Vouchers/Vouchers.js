@@ -1,6 +1,6 @@
 import { AdyenCheckout, BacsDirectDebit, Multibanco, Oxxo, Dragonpay, Boleto, Doku, Econtext } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
-import { shopperLocale } from '../../config/commonConfig';
+import { shopperLocale, countryCode } from '../../config/commonConfig';
 import { handleChange } from '../../handlers';
 import '../../../config/polyfills';
 import '../../style.scss';
@@ -10,6 +10,7 @@ import getTranslationFile from '../../config/getTranslation';
 (async () => {
     window.checkout = await AdyenCheckout({
         clientKey: process.env.__CLIENT_KEY__,
+        countryCode,
         locale: shopperLocale,
         translationFile: getTranslationFile(shopperLocale),
         environment: process.env.__CLIENT_ENV__,

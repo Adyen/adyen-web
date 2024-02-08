@@ -15,7 +15,7 @@ import { SRPanel } from './Errors/SRPanel';
 import registry, { NewableComponent } from './core.registry';
 import { DEFAULT_LOCALE } from '../language/config';
 import { cleanupFinalResult, sanitizeResponse, verifyPaymentDidNotFail } from '../components/internal/UIElement/utils';
-import AdyenCheckoutError from './Errors/AdyenCheckoutError';
+import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from './Errors/AdyenCheckoutError';
 import { ANALYTICS_ACTION_STR } from './Analytics/constants';
 import { THREEDS2_FULL } from '../components/ThreeDS2/config';
 
@@ -59,6 +59,11 @@ class Core implements ICore {
     constructor(props: CoreConfiguration) {
         this.createFromAction = this.createFromAction.bind(this);
 
+        // If it's not a session - check if we have the required countryCode
+        if (!props.session && !hasOwnProperty(props, 'countryCode')) {
+            throw new AdyenCheckoutError(IMPLEMENTATION_ERROR, 'You must specify a countryCode when initializing checkout');
+        }
+
         this.setOptions(props);
 
         this.loadingContext = resolveEnvironment(this.options.environment, this.options.environmentUrls?.api);
@@ -77,6 +82,9 @@ class Core implements ICore {
 
     public initialize(): Promise<this> {
         if (this.session) {
+            if (!hasOwnProperty(this.options.session, 'countryCode')) {
+                throw new AdyenCheckoutError(IMPLEMENTATION_ERROR, 'You must specify a countryCode when creating a session');
+            }
             return this.session
                 .setupSession(this.options)
                 .then(sessionResponse => {

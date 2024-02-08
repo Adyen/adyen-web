@@ -3,11 +3,12 @@ import '@adyen/adyen-web/styles/adyen.css';
 import '../../../config/polyfills';
 import '../../style.scss';
 import { makeDetailsCall } from '../../services';
-import { shopperLocale } from '../../config/commonConfig';
+import { shopperLocale, countryCode } from '../../config/commonConfig';
 import getTranslationFile from '../../config/getTranslation';
 
 (async () => {
     const checkout = await AdyenCheckout({
+        countryCode,
         locale: shopperLocale,
         translationFile: getTranslationFile(shopperLocale),
         environment: 'test',
