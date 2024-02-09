@@ -4,7 +4,6 @@ const handleCallback = require('../utils/handleCallback');
 const { MERCHANT_ACCOUNT: merchantAccount } = require('../utils/config');
 
 module.exports = (res, request) => {
-    const params = getPostParameters('paymentMethods', { merchantAccount, ...request });
-    console.log({ params });
+    const params = getPostParameters('donationCampaigns', { merchantAccount, ...request });
     post(params, (error, response, body) => handleCallback({ error, response, body }, res));
 };

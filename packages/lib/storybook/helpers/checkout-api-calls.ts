@@ -45,3 +45,7 @@ export const createOrder = async (amount: PaymentAmount): Promise<Order & OrderS
     await httpPost('orders', { reference: `order-reference-${Date.now()}`, amount });
 
 export const cancelOrder = async (order: Order): Promise<{ resultCode: string; pspReference: string }> => await httpPost('orders/cancel', order);
+
+export const createDonationCampaigns = async (request: any): Promise<any> => await httpPost('donationCampaigns', request);
+
+export const createDonation = async (request: any): Promise<any> => await httpPost('donations', request);

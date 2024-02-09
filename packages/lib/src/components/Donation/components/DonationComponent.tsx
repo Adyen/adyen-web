@@ -11,7 +11,7 @@ import { DonationComponentProps } from './types';
 import useImage from '../../../core/Context/useImage';
 
 export default function DonationComponent(props: DonationComponentProps) {
-    const { amounts, onCancel, onDonate, showCancelButton = true, disclaimerMessage } = props;
+    const { amounts, onCancel, onDonate, showCancelButton = true, termsAndConditionsUrl } = props;
     const { i18n } = useCoreContext();
     const getImage = useImage();
     const { currency } = amounts;
@@ -92,11 +92,8 @@ export default function DonationComponent(props: DonationComponentProps) {
                         onChange={handleAmountSelected}
                     />
                 </div>
-                {disclaimerMessage && (
-                    <DisclaimerMessage
-                        message={disclaimerMessage.message.replace('%{linkText}', `%#${disclaimerMessage.linkText}%#`)}
-                        urls={[disclaimerMessage.link]}
-                    />
+                {termsAndConditionsUrl && (
+                    <DisclaimerMessage message={'By donating you agree to the %#terms and conditions%#'} urls={[termsAndConditionsUrl]} />
                 )}
                 <Button
                     classNameModifiers={['donate']}

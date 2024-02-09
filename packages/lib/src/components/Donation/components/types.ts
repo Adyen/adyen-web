@@ -1,4 +1,4 @@
-import { DisclaimerMsgObject } from '../../internal/DisclaimerMessage/DisclaimerMessage';
+import { CampaignContentProps } from './CampaignContent';
 
 interface DonationAmounts {
     currency: string;
@@ -13,15 +13,11 @@ interface DonationPayload {
     isValid?: boolean;
 }
 
-export interface DonationComponentProps {
+export interface DonationComponentProps extends CampaignContentProps {
     amounts: DonationAmounts;
-    backgroundUrl?: string;
-    description?: string;
-    logoUrl?: string;
-    name?: string;
+    termsAndConditionsUrl?: string;
+    causeName?: string;
     showCancelButton?: boolean;
-    url?: string;
-    disclaimerMessage?: DisclaimerMsgObject;
     onDonate: (payload: DonationPayload) => void;
     onCancel?: (payload: DonationPayload) => void;
     onChange?: (payload: DonationPayload) => void;
