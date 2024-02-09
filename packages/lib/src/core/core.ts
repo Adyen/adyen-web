@@ -7,7 +7,7 @@ import { resolveEnvironment, resolveCDNEnvironment, resolveAnalyticsEnvironment 
 import Analytics from './Analytics';
 import { AdditionalDetailsStateData, PaymentAction, PaymentResponseData } from '../types/global-types';
 import { CoreConfiguration, ICore } from './types';
-import { processGlobalOptions } from './utils';
+import { getDefaultPropsByCountryCode, processGlobalOptions } from './utils';
 import Session from './CheckoutSession';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
 import { Resources } from './Context/Resources';
@@ -262,6 +262,10 @@ class Core implements ICore {
             cdnContext: this.cdnContext,
             createFromAction: this.createFromAction
         };
+    }
+
+    public getRegulatoryDefaults(): Record<string, any> {
+        return getDefaultPropsByCountryCode(this.options.countryCode);
     }
 
     public storeElementReference(element: UIElement) {

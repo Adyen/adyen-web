@@ -40,6 +40,8 @@ export interface ICore {
 
     storeElementReference(element: UIElement): void;
 
+    getRegulatoryDefaults(): Record<string, any>;
+
     options: CoreConfiguration;
     paymentMethodsResponse: PaymentMethods;
     session?: Session;

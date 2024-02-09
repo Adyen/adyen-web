@@ -83,7 +83,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             ...componentProps
         };
 
-        this.props = this.formatProps({ ...this.constructor['defaultProps'], ...finalProps });
+        this.props = this.formatProps({
+            ...this.constructor['defaultProps'], // component defaults
+            ...this.core.getRegulatoryDefaults(), // regulatory defaults
+            ...finalProps // the rest (inc. merchant defined config)
+        });
     }
 
     protected storeElementRefOnCore(props?: P) {
