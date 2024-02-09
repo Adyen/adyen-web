@@ -159,7 +159,14 @@ describe('Dropin', () => {
     });
 
     describe('Complying with local regulations', () => {
-        test('when countryCode is Finland openFirstPaymentMethod & openFirstStoredPaymentMethod should be false', async () => {
+        test('Default values for openFirstPaymentMethod & openFirstStoredPaymentMethod are true', () => {
+            const dropin = new Dropin(checkout);
+
+            expect(dropin.props.openFirstPaymentMethod).toBe(true);
+            expect(dropin.props.openFirstStoredPaymentMethod).toBe(true);
+        });
+
+        test('when countryCode is Finland openFirstPaymentMethod & openFirstStoredPaymentMethod should be false by default', () => {
             checkout.options.countryCode = 'FI';
 
             const dropin = new Dropin(checkout);
@@ -168,7 +175,7 @@ describe('Dropin', () => {
             expect(dropin.props.openFirstStoredPaymentMethod).toBe(false);
         });
 
-        test('if openFirstPaymentMethod & openFirstStoredPaymentMethod are set by merchant then these values should be used', async () => {
+        test('if openFirstPaymentMethod & openFirstStoredPaymentMethod are set by merchant then these values should be used', () => {
             checkout.options.countryCode = 'FI';
 
             const dropin = new Dropin(checkout, { openFirstPaymentMethod: true, openFirstStoredPaymentMethod: true });
