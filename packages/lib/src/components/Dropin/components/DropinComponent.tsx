@@ -121,7 +121,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
 
         switch (status.type) {
             case 'success':
-                return <Status.Success message={status.props?.message} />;
+                return <Status.Success message={props?.amount?.value === 0 ? 'resultMessages.preauthorized' : status.props?.message} />;
 
             case 'error':
                 return <Status.Error message={status.props?.message} />;

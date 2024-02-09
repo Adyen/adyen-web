@@ -2,6 +2,7 @@
     "payButton": "Platiti",
     "payButton.redirecting": "Preusmjeravanje...",
     "payButton.with": "Platite iznos od %{value} uporabom stavke %{maskedData}",
+    "payButton.saveDetails": "Spremi pojedinosti",
     "close": "Zatvori",
     "storeDetails": "Pohrani za moje sljedeće plaćanje",
     "readMore": "Opširnije",
@@ -119,6 +120,7 @@
     "donateButton": "Doniraj",
     "notNowButton": "Ne sada",
     "thanksForYourSupport": "Hvala na podršci!",
+    "resultMessages.preauthorized": "Spremljeni podatci",
     "preauthorizeWith": "Prethodno odobri s",
     "confirmPreauthorization": "Potvrdite prethodno odobrenje",
     "confirmPurchase": "Potvrdite kupnju",
@@ -300,5 +302,11 @@
     "ancv.input.label": "Vaša ANCV identifikacija",
     "ancv.confirmPayment": "Koristite svoju ANCV aplikaciju za potvrdu plaćanja.",
     "ancv.form.instruction": "Za potvrdu ove uplate neophodna je aplikacija Cheque-Vacances.",
-    "ancv.beneficiaryId.invalid": "Unesite valjanu adresu e-pošte ili ANCV ID"
+    "ancv.beneficiaryId.invalid": "Unesite valjanu adresu e-pošte ili ANCV ID",
+    "payme.openPayMeApp": "Dovršite plaćanje u aplikaciji PayMe: autorizirajte plaćanje u aplikaciji i pričekajte potvrdu.",
+    "payme.redirectButtonLabel": "Otvaranje aplikacije PayMe",
+    "payme.scanQrCode": "Dovršite svoje plaćanja QR kodom",
+    "payme.timeToPay": "Ovaj QR kôd vrijedi za %@",
+    "payme.instructions.steps": "Otvorite aplikaciju PayMe.%@Skenirajte QR kod za autorizaciju plaćanja.%@Dovršite plaćanje u aplikaciji i pričekajte potvrdu.",
+    "payme.instructions.footnote": "Ne zatvarajte ovu stranicu prije nego što se plaćanje završi"
 }

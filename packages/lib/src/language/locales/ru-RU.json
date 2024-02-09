@@ -2,6 +2,7 @@
     "payButton": "Заплатить",
     "payButton.redirecting": "Перенаправление...",
     "payButton.with": "Оплатить %{value} %{maskedData}",
+    "payButton.saveDetails": "Сохранить данные",
     "close": "Закрыть",
     "storeDetails": "Сохранить для следующего платежа",
     "readMore": "Подробнее",
@@ -119,6 +120,7 @@
     "donateButton": "Пожертвовать",
     "notNowButton": "Позже",
     "thanksForYourSupport": "Благодарим за поддержку!",
+    "resultMessages.preauthorized": "Данные сохранены",
     "preauthorizeWith": "Предавторизация в",
     "confirmPreauthorization": "Подтвердить предавторизацию",
     "confirmPurchase": "Подтвердить покупку",
@@ -297,5 +299,11 @@
     "ancv.input.label": "Ваш идентификатор ANCV",
     "ancv.confirmPayment": "Используйте приложение ANCV для подтверждения платежа.",
     "ancv.form.instruction": "Для подтверждения этого платежа необходимо приложение Cheque-Vacances.",
-    "ancv.beneficiaryId.invalid": "Введите действительный адрес электронной почты или идентификатор ANCV"
+    "ancv.beneficiaryId.invalid": "Введите действительный адрес электронной почты или идентификатор ANCV",
+    "payme.openPayMeApp": "Для завершения оплаты разрешите ее в приложении PayMe и дождитесь подтверждения.",
+    "payme.redirectButtonLabel": "Открыть приложение PayMe",
+    "payme.scanQrCode": "Завершить платеж с помощью QR-кода",
+    "payme.timeToPay": "Данный QR-код действителен в течение %@",
+    "payme.instructions.steps": "Откройте приложение PayMe.%@Отсканируйте QR-код, чтобы разрешить платеж.%@Завершите платеж в приложении и дождитесь подтверждения.",
+    "payme.instructions.footnote": "Не закрывайте эту страницу до завершения платежа"
 }

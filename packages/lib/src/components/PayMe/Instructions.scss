@@ -1,0 +1,15 @@
+@import '../../style/index';
+
+.adyen-checkout-payme-instructions {
+    font-size: $font-size-small;
+    text-align: center;
+    color: #5c687c;
+    line-height: 20px;
+
+    &__steps {
+        list-style-position: inside;
+        padding-inline-start: 0;
+        margin: 16px 0;
+        padding-bottom: 8px;
+    }
+}

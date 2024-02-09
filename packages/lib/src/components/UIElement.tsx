@@ -251,6 +251,13 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
     }
 
     /**
+     * Used to display the second line of a payment method item
+     */
+    get additionalInfo(): string {
+        return null;
+    }
+
+    /**
      * Get the element accessible name, used in the aria-label of the button that controls selected payment method
      */
     get accessibleName(): string {

@@ -2,6 +2,7 @@
     "payButton": "Pagar",
     "payButton.redirecting": "Redirecionando...",
     "payButton.with": "Pague %{value} com %{maskedData}",
+    "payButton.saveDetails": "Salvar informações",
     "close": "Fechar",
     "storeDetails": "Salvar para meu próximo pagamento",
     "readMore": "Leia mais",
@@ -117,6 +118,7 @@
     "donateButton": "Doar",
     "notNowButton": "Agora não",
     "thanksForYourSupport": "Obrigado pelo apoio!",
+    "resultMessages.preauthorized": "Informações salvas",
     "preauthorizeWith": "Pré-autorizar com",
     "confirmPreauthorization": "Confirmar pré-autorização",
     "confirmPurchase": "Confirmar compra",
@@ -298,5 +300,11 @@
     "ancv.input.label": "Sua identificação da ANCV",
     "ancv.confirmPayment": "Use o aplicativo da ANCV para confirmar o pagamento.",
     "ancv.form.instruction": "É necessário ter o aplicativo da Cheque-Vacances para validar este pagamento.",
-    "ancv.beneficiaryId.invalid": "Insira um endereço de e-mail válido ou uma ID da ANCV"
+    "ancv.beneficiaryId.invalid": "Insira um endereço de e-mail válido ou uma ID da ANCV",
+    "payme.openPayMeApp": "Para concluir o pagamento no PayMe, autorize-o no aplicativo e aguarde a confirmação.",
+    "payme.redirectButtonLabel": "Abrir o aplicativo PayMe",
+    "payme.scanQrCode": "Concluir o pagamento com um código QR",
+    "payme.timeToPay": "Este QR code é válido para %@",
+    "payme.instructions.steps": "Abra o aplicativo PayMe.%@Escaneie o QR code para autorizar o pagamento.%@Conclua o pagamento no aplicativo e aguarde a confirmação.",
+    "payme.instructions.footnote": "Não feche esta página antes de concluir o pagamento"
 }

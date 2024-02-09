@@ -1,5 +1,5 @@
 import fetch from './fetch';
-import { FALLBACK_CONTEXT } from '../config';
+import { DEFAULT_HTTP_TIMEOUT, FALLBACK_CONTEXT } from '../config';
 import AdyenCheckoutError from '../Errors/AdyenCheckoutError';
 
 interface HttpOptions {
@@ -11,6 +11,7 @@ interface HttpOptions {
     method?: string;
     path: string;
     errorLevel?: ErrorLevel;
+    timeout?: number;
 }
 
 type ErrorLevel = 'silent' | 'info' | 'warn' | 'error' | 'fatal';
@@ -27,7 +28,7 @@ function isAdyenErrorResponse(data: any): data is AdyenErrorResponse {
 }
 
 export function http<T>(options: HttpOptions, data?: any): Promise<T> {
-    const { headers = [], errorLevel = 'warn', loadingContext = FALLBACK_CONTEXT, method = 'GET', path } = options;
+    const { headers = [], errorLevel = 'warn', loadingContext = FALLBACK_CONTEXT, method = 'GET', path, timeout = DEFAULT_HTTP_TIMEOUT } = options;
 
     const request: RequestInit = {
         method,
@@ -41,6 +42,7 @@ export function http<T>(options: HttpOptions, data?: any): Promise<T> {
         },
         redirect: 'follow',
         referrerPolicy: 'no-referrer-when-downgrade',
+        ...(AbortSignal?.timeout && { signal: AbortSignal?.timeout(timeout) }),
         ...(data && { body: JSON.stringify(data) })
     };
 

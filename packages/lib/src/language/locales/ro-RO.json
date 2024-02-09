@@ -2,6 +2,7 @@
     "payButton": "Plătiți",
     "payButton.redirecting": "Se redirecționează...",
     "payButton.with": "Plătiți %{value} cu %{maskedData}",
+    "payButton.saveDetails": "Salvați detaliile",
     "close": "Închidere",
     "storeDetails": "Salvează pentru următoarea mea plată",
     "readMore": "Citiți mai mult",
@@ -119,6 +120,7 @@
     "donateButton": "Donați",
     "notNowButton": "Nu acum",
     "thanksForYourSupport": "Vă mulțumim pentru sprijin!",
+    "resultMessages.preauthorized": "Detalii salvate",
     "preauthorizeWith": "Preautorizare cu",
     "confirmPreauthorization": "Confirmați preautorizarea",
     "confirmPurchase": "Confirmați achiziția",
@@ -300,5 +302,11 @@
     "ancv.input.label": "Identificarea dvs. ANCV",
     "ancv.confirmPayment": "Utilizați aplicația ANCV pentru a confirma plata.",
     "ancv.form.instruction": "Aplicația Cheque-Vacances este necesară pentru a valida această plată.",
-    "ancv.beneficiaryId.invalid": "Completați o adresă de e-mail sau un ID ANCV valabil"
+    "ancv.beneficiaryId.invalid": "Completați o adresă de e-mail sau un ID ANCV valabil",
+    "payme.openPayMeApp": "Finalizați plata în aplicația PayMe, autorizând plata în aplicație, și așteptați confirmarea.",
+    "payme.redirectButtonLabel": "Deschideți aplicația PayMe",
+    "payme.scanQrCode": "Finalizați plata folosind codul QR",
+    "payme.timeToPay": "Acest cod QR este valabil pentru %@",
+    "payme.instructions.steps": "Deschideți aplicația PayMe.%@Scanați codul QR pentru a autoriza plata.%@Finalizați plata în aplicație și așteptați confirmarea.",
+    "payme.instructions.footnote": "Nu închideți această pagină înainte de finalizarea plății."
 }

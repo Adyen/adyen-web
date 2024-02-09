@@ -1,5 +1,35 @@
 # @adyen/adyen-web
 
+## 5.57.0
+
+### Minor Changes
+
+-   Use the label provided by the backend in stored blik payments ([#2522](https://github.com/Adyen/adyen-web/pull/2522))
+
+## 5.56.1
+
+### Patch Changes
+
+-   For the regular card payment, in case of a zero-auth transaction, the pay button label is changed to `Save details`, and the `Save for my next payment` checkbox is removed. ([#2514](https://github.com/Adyen/adyen-web/pull/2514))
+
+    The drop-in component shows `Details saved` as the success message for such transaction.
+
+## 5.56.0
+
+### Minor Changes
+
+-   Add support for the PayMe payment method. ([#2476](https://github.com/Adyen/adyen-web/pull/2476))
+
+### Patch Changes
+
+-   Improve the payment status check call for QR payments. ([#2506](https://github.com/Adyen/adyen-web/pull/2506))
+
+-   Fix incorrect grammar German pay button ([#2505](https://github.com/Adyen/adyen-web/pull/2505))
+
+-   update sessionData after /setup call ([#2504](https://github.com/Adyen/adyen-web/pull/2504))
+
+-   Detect when the value of a data-cse attribute is not supported, and don't create a SF for it ([#2495](https://github.com/Adyen/adyen-web/pull/2495))
+
 ## 5.55.1
 
 ### Patch Changes

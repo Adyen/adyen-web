@@ -2,6 +2,7 @@
     "payButton": "Πληρωμή",
     "payButton.redirecting": "Ανακατεύθυνση...",
     "payButton.with": "Πληρωμή %{value} με %{maskedData}",
+    "payButton.saveDetails": "Αποθήκευση στοιχείων",
     "close": "Κλείσιμο",
     "storeDetails": "Αποθήκευση για την επόμενη πληρωμή μου",
     "readMore": "Ανάγνωση περισσότερων",
@@ -119,6 +120,7 @@
     "donateButton": "Δωρεά",
     "notNowButton": "Όχι τώρα",
     "thanksForYourSupport": "Σας ευχαριστούμε για την υποστήριξη!",
+    "resultMessages.preauthorized": "Τα στοιχεία αποθηκεύτηκαν",
     "preauthorizeWith": "Προεξουσιοδότηση με",
     "confirmPreauthorization": "Επιβεβαίωση προεξουσιοδότησης",
     "confirmPurchase": "Επιβεβαίωση αγοράς",
@@ -300,5 +302,11 @@
     "ancv.input.label": "Η ταυτότητά σας ANCV",
     "ancv.confirmPayment": "Χρησιμοποιήστε την εφαρμογή ANCV για επιβεβαίωση της πληρωμής.",
     "ancv.form.instruction": "Η εφαρμογή Cheque-Vacances είναι απαραίτητη για επικύρωση της πληρωμής αυτής.",
-    "ancv.beneficiaryId.invalid": "Εισαγάγετε έγκυρη διεύθυνση email ή αναγνωριστικό ANCV"
+    "ancv.beneficiaryId.invalid": "Εισαγάγετε έγκυρη διεύθυνση email ή αναγνωριστικό ANCV",
+    "payme.openPayMeApp": "Ολοκληρώστε την πληρωμή σας στην εφαρμογή PayMe εξουσιοδοτώντας την πληρωμή στην εφαρμογή και περιμένετε την επιβεβαίωση.",
+    "payme.redirectButtonLabel": "Ανοίξτε την εφαρμογή PayMe",
+    "payme.scanQrCode": "Ολοκληρώστε την πληρωμή σας με κωδικό QR",
+    "payme.timeToPay": "Αυτός ο κωδικός QR ισχύει για %@",
+    "payme.instructions.steps": "Ανοίξτε την εφαρμογή PayMe.%@Σκανάρετε τον κωδικό QR για να εξουσιοδοτήσετε την πληρωμή.%@Ολοκληρώστε την πληρωμή στην εφαρμογή και περιμένετε την επιβεβαίωση.",
+    "payme.instructions.footnote": "Μην κλείσετε αυτήν τη σελίδα προτού ολοκληρωθεί η πληρωμή."
 }

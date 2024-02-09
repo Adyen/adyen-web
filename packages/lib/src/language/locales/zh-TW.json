@@ -2,6 +2,7 @@
     "payButton": "支付",
     "payButton.redirecting": "重新導向中......",
     "payButton.with": "用 %{maskedData} 支付 %{value}",
+    "payButton.saveDetails": "儲存詳細資料",
     "close": "關閉",
     "storeDetails": "儲存以供下次付款使用",
     "readMore": "閱讀全文",
@@ -119,6 +120,7 @@
     "donateButton": "捐贈",
     "notNowButton": "稍後再說",
     "thanksForYourSupport": "感謝您的支持！",
+    "resultMessages.preauthorized": "已儲存詳細資料",
     "preauthorizeWith": "透過以下方式進行預先授權：",
     "confirmPreauthorization": "確認預先授權",
     "confirmPurchase": "確認購買",
@@ -300,5 +302,11 @@
     "ancv.input.label": "您的 ANCV 身分識別",
     "ancv.confirmPayment": "使用您的 ANCV 應用程式確認付款。",
     "ancv.form.instruction": "必須申請 Cheque-Vacances 才能驗證此付款。",
-    "ancv.beneficiaryId.invalid": "輸入有效的電子郵件地址或 ANCV ID"
+    "ancv.beneficiaryId.invalid": "輸入有效的電子郵件地址或 ANCV ID",
+    "payme.openPayMeApp": "在 PayMe 應用程式中授權付款，完成付款並等待確認。",
+    "payme.redirectButtonLabel": "開啟 PayMe 應用程式",
+    "payme.scanQrCode": "使用 QR 代碼完成付款",
+    "payme.timeToPay": "此 QR 代碼對 %@ 有效",
+    "payme.instructions.steps": "開啟 PayMe 應用程式。%@掃描 QR 代碼授權付款。%@在應用程式中完成付款並等待確認。",
+    "payme.instructions.footnote": "完成付款前，請勿關閉此頁面"
 }
