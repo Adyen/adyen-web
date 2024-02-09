@@ -3,7 +3,7 @@ import '@adyen/adyen-web/styles/adyen.css';
 
 import { getPaymentMethods } from '../../services';
 import { handleSubmit, handleAdditionalDetails, handleError } from '../../handlers';
-import { amount, shopperLocale } from '../../config/commonConfig';
+import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
 import { MockReactApp } from './MockReactApp';
@@ -34,6 +34,7 @@ const disclaimerMessage = {
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
     window.checkout = await AdyenCheckout({
         amount,
+        countryCode,
         resourceEnvironment: 'https://checkoutshopper-test.adyen.com/checkoutshopper/',
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
@@ -59,7 +60,14 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     // Stored Card
     if (!onlyShowCard && showComps.storedCard) {
         if (checkout.paymentMethodsResponse.storedPaymentMethods && checkout.paymentMethodsResponse.storedPaymentMethods.length > 0) {
-            const storedCardData = checkout.paymentMethodsResponse.storedPaymentMethods[2];
+            // We are only interested in card based storedPaymentMethods
+            let storedCardData;
+            for (let i = 0; i < checkout.paymentMethodsResponse.storedPaymentMethods.length; i++) {
+                if (checkout.paymentMethodsResponse.storedPaymentMethods[i].brand) {
+                    storedCardData = checkout.paymentMethodsResponse.storedPaymentMethods[i];
+                    break;
+                }
+            }
 
             window.storedCard = new Card(checkout, {
                 ...storedCardData,
@@ -79,8 +87,8 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         window.card = new Card(checkout, {
             challengeWindowSize: '01',
             _disableClickToPay: true,
-            // hasHolderName: true,
-            // holderNameRequired: true,
+            hasHolderName: true,
+            holderNameRequired: true,
             // maskSecurityCode: true,
             // enableStoreDetails: true
             onBinLookup: obj => {

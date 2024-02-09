@@ -7,6 +7,7 @@ import './DropinComponent.scss';
 import { UIElementStatus } from '../../internal/UIElement/types';
 import { sanitizeOrder } from '../../internal/UIElement/utils';
 import { PaymentAmount } from '../../../types/global-types';
+import { ANALYTICS_RENDERED_STR } from '../../../core/Analytics/constants';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
@@ -34,14 +35,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                 this.setState({ instantPaymentElements, elements, storedPaymentElements, orderStatus });
                 this.setStatus('ready');
 
-                if (this.props.modules.analytics) {
-                    this.props.modules.analytics.send({
-                        containerWidth: this.base && (this.base as HTMLElement).offsetWidth,
-                        paymentMethods: elements.map(e => e.props.type),
-                        component: 'dropin',
-                        flavor: 'dropin'
-                    });
-                }
+                this.props.modules?.analytics.sendAnalytics('dropin', { type: ANALYTICS_RENDERED_STR });
             }
         );
 
@@ -77,6 +71,8 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         // onSelect event
         if ((activePaymentMethod && activePaymentMethod._id !== paymentMethod._id) || !activePaymentMethod) {
             this.props.onSelect(paymentMethod);
+
+            paymentMethod.submitAnalytics({ type: ANALYTICS_RENDERED_STR });
         }
     };
 

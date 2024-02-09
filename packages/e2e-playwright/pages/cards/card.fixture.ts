@@ -10,6 +10,7 @@ type Fixture = {
     cardBrandingPage: CardPage;
     cardExpiryDatePoliciesPage: CardPage;
     cardInstallmentsPage: CardPage;
+    cardInstallmentsFullWidthPage: CardPage;
 };
 
 const test = base.extend<Fixture>({
@@ -77,6 +78,21 @@ const test = base.extend<Fixture>({
                 mc: {
                     values: [1, 2, 3],
                     plans: ['regular', 'revolving']
+                }
+            }
+        });
+        await page.addInitScript({
+            content: `window.cardConfig = ${installmentsConfig}`
+        });
+
+        await useCardPage(page, use);
+    },
+
+    cardInstallmentsFullWidthPage: async ({ page }, use) => {
+        const installmentsConfig = JSON.stringify({
+            installmentOptions: {
+                mc: {
+                    values: [1, 2, 3]
                 }
             }
         });

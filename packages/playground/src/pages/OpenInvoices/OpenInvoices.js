@@ -2,7 +2,7 @@ import { AdyenCheckout, RatePay, RatePayDirectDebit, AfterPay, AfterPayB2B, Faci
 import '@adyen/adyen-web/styles/adyen.css';
 import { getPaymentMethods } from '../../services';
 import { handleChange, handleSubmit } from '../../handlers';
-import { amount, shopperLocale } from '../../config/commonConfig';
+import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
 import getTranslationFile from '../../config/getTranslation';
@@ -22,6 +22,7 @@ const showComps = {
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
     window.core = await AdyenCheckout({
         clientKey: process.env.__CLIENT_KEY__,
+        countryCode,
         locale: shopperLocale,
         translationFile: getTranslationFile(shopperLocale),
         paymentMethodsResponse: paymentMethodsData,

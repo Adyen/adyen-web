@@ -47,7 +47,8 @@ interface SecuredFieldsProps {
 
 const defaultProps = {
     onChange: () => {},
-    onError: () => {}
+    onError: () => {},
+    onValidationError: () => {}
 };
 
 function CustomCardInput(props: SecuredFieldsProps) {

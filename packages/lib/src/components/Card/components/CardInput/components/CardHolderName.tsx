@@ -4,7 +4,18 @@ import useCoreContext from '../../../../../core/Context/useCoreContext';
 import { CardHolderNameProps } from './types';
 import InputText from '../../../../internal/FormFields/InputText';
 
-export default function CardHolderName({ onBlur, onInput, placeholder, value, required, error = false, isValid, disabled }: CardHolderNameProps) {
+export default function CardHolderName({
+    onBlur,
+    onInput,
+    placeholder,
+    value,
+    required,
+    error = false,
+    isValid,
+    disabled,
+    onFieldFocusAnalytics,
+    onFieldBlurAnalytics
+}: CardHolderNameProps) {
     const { i18n } = useCoreContext();
 
     return (
@@ -15,6 +26,8 @@ export default function CardHolderName({ onBlur, onInput, placeholder, value, re
             isValid={!!isValid}
             name={'holderName'}
             i18n={i18n}
+            onFocus={e => onFieldFocusAnalytics('holderName', e)}
+            onBlur={e => onFieldBlurAnalytics('holderName', e)}
         >
             <InputText
                 name={'holderName'}
