@@ -82,13 +82,14 @@ export const cancelOrder = data => {
         .catch(err => console.error(err));
 };
 
-export const patchPaypalOrder = ({ sessionId, pspReference, paymentData, amount }) => {
+export const patchPaypalOrder = ({ sessionId, pspReference, paymentData, amount, deliveryMethods }) => {
     if (!(pspReference || sessionId) || !paymentData || !amount.value || !amount.currency) {
         throw Error('PayPal patching order - Field is missing');
     }
     return httpPost('paypal/updateOrder', {
         ...(sessionId && { sessionId }),
         ...(pspReference && { pspReference }),
+        ...(deliveryMethods && { deliveryMethods }),
         paymentData,
         amount
     });

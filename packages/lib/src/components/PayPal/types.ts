@@ -159,6 +159,12 @@ interface PayPalCommonProps {
     onShippingAddressChange?: (data: any, actions: { reject: () => Promise<void> }) => Promise<void>;
 
     /**
+     * While the buyer is on the PayPal site, you can update their shopping cart to reflect the shipping options they chose on PayPal
+     * @see {@link https://developer.paypal.com/sdk/js/reference/#onshippingoptionschange}
+     */
+    onShippingOptionsChange?: (data: any, actions: { reject: (reason: string) => Promise<void> }) => Promise<void>;
+
+    /**
      *  Identifies if the payment is Express.
      *  @defaultValue false
      */
@@ -176,7 +182,7 @@ export interface PayPalConfig {
     intent?: Intent;
 }
 
-export interface PayPalElementProps extends Omit<PayPalCommonProps, 'onShippingAddressChange'>, UIElementProps {
+export interface PayPalElementProps extends Omit<PayPalCommonProps, 'onShippingAddressChange' | 'onShippingOptionsChange'>, UIElementProps {
     onSubmit?: (state: any, element: UIElement) => void;
     onComplete?: (state, element?: UIElement) => void;
     onAdditionalDetails?: (state: any, element: UIElement) => void;
@@ -192,6 +198,16 @@ export interface PayPalElementProps extends Omit<PayPalCommonProps, 'onShippingA
      * @param component - Adyen instance of its PayPal implementation. It must be used to manipulate the 'paymentData' in order to apply the amount patch correctly
      */
     onShippingAddressChange?: (data: any, actions: { reject: () => Promise<void> }, component: PaypalElement) => Promise<void>;
+
+    /**
+     * This callback is triggered any time the user selects a new shipping option.
+     * @see {@link https://developer.paypal.com/sdk/js/reference/#onshippingoptionschange}
+     *
+     * @param data - An PayPal object containing the payer’s selected shipping option
+     * @param actions - Used to indicates to PayPal that you will not support the shipping method selected by the buyer
+     * @param component - Adyen instance of its PayPal implementation. It must be used to manipulate the 'paymentData' in order to apply the amount patch correctly
+     */
+    onShippingOptionsChange?: (data: any, actions: { reject: (reason: string) => Promise<void> }, component: PaypalElement) => Promise<void>;
 
     /**
      * If set to 'continue' , the button inside the lightbox will display the 'Continue' button

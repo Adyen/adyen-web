@@ -25,6 +25,7 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleOnShippingAddressChange = this.handleOnShippingAddressChange.bind(this);
+        this.handleOnShippingOptionsChange = this.handleOnShippingOptionsChange.bind(this);
     }
 
     formatProps(props: PayPalElementProps): PayPalElementProps {
@@ -34,8 +35,11 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         const intent: Intent = isZeroAuth ? 'tokenize' : props.intent || intentFromConfig;
         const vault = intent === 'tokenize' || props.vault;
 
+        const displayContinueButton = props.userAction === 'continue';
+
         return {
             ...props,
+            commit: displayContinueButton ? false : props.commit,
             vault,
             configuration: {
                 intent,
@@ -156,8 +160,22 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         return this.props.onShippingAddressChange(data, actions, this);
     }
 
+    /**
+     * If the merchant provides the 'onShippingOptionsChange' callback, then this method is used as a wrapper to it, in order
+     * to expose to the merchant the 'component' instance. The merchant needs the 'component' in order to manipulate the
+     * paymentData
+     *
+     * @param data - PayPal data
+     * @param actions - PayPal actions.
+     */
+    private handleOnShippingOptionsChange(data, actions): Promise<void> {
+        return this.props.onShippingOptionsChange(data, actions, this);
+    }
+
     render() {
         if (!this.props.showPayButton) return null;
+
+        const { onShippingAddressChange, onShippingOptionsChange, ...rest } = this.props;
 
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
@@ -165,8 +183,9 @@ class PaypalElement extends UIElement<PayPalElementProps> {
                     ref={ref => {
                         this.componentRef = ref;
                     }}
-                    {...this.props}
-                    {...(this.props.onShippingAddressChange && { onShippingAddressChange: this.handleOnShippingAddressChange })}
+                    {...rest}
+                    {...(onShippingAddressChange && { onShippingAddressChange: this.handleOnShippingAddressChange })}
+                    {...(onShippingOptionsChange && { onShippingOptionsChange: this.handleOnShippingOptionsChange })}
                     onCancel={this.handleCancel}
                     onChange={this.setState}
                     onApprove={this.handleOnApprove}

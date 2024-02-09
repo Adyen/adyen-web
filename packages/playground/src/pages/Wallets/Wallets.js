@@ -138,6 +138,111 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     //     window.amazonpay.submit();
     // }
 
+    function getDeliveryMethodsByCountry(country) {
+        if (country === 'NL') {
+            return [
+                {
+                    DeliveryMethod: {
+                        reference: '1',
+                        description: 'PostNL (5 days)',
+                        type: 'Shipping',
+                        amount: {
+                            currency: 'USD',
+                            value: '500'
+                        },
+                        selected: true
+                    }
+                },
+                {
+                    DeliveryMethod: {
+                        reference: '2',
+                        description: 'DHL (1 day)',
+                        type: 'Shipping',
+                        amount: {
+                            currency: 'USD',
+                            value: '999'
+                        },
+                        selected: false
+                    }
+                },
+                {
+                    DeliveryMethod: {
+                        reference: '3',
+                        description: 'Pick up',
+                        type: 'Shipping',
+                        amount: {
+                            currency: 'USD',
+                            value: '0'
+                        },
+                        selected: false
+                    }
+                }
+            ];
+        }
+
+        if (country === 'US') {
+            return [
+                {
+                    DeliveryMethod: {
+                        reference: '1',
+                        description: 'Express Shipping',
+                        type: 'Shipping',
+                        amount: {
+                            currency: 'USD',
+                            value: '1599'
+                        },
+                        selected: false
+                    }
+                },
+                {
+                    DeliveryMethod: {
+                        reference: '2',
+                        description: 'Standard Ground',
+                        type: 'Shipping',
+                        amount: {
+                            currency: 'USD',
+                            value: '500'
+                        },
+                        selected: false
+                    }
+                },
+                {
+                    DeliveryMethod: {
+                        reference: '3',
+                        description: 'Teleport Shipping Ultra fast',
+                        type: 'Shipping',
+                        amount: {
+                            currency: 'USD',
+                            value: '5000'
+                        },
+                        selected: false
+                    }
+                }
+            ];
+        }
+
+        throw Error('INVALID COUNTRY CODE');
+    }
+
+    function getDeliveryMethods({ countryCode, deliveryMethodId }) {
+        const deliveryMethods = getDeliveryMethodsByCountry(countryCode);
+
+        const options = deliveryMethods.map(method => {
+            method.DeliveryMethod.selected = method.DeliveryMethod.reference === deliveryMethodId;
+            return method;
+        });
+
+        return options;
+    }
+
+    function getSelectedDeliveryMethodAmount({ countryCode, deliveryMethodId }) {
+        const deliveryMethods = getDeliveryMethodsByCountry(countryCode);
+        const option = deliveryMethods.find(method => method.DeliveryMethod.reference === deliveryMethodId);
+        return Number(option.DeliveryMethod.amount.value);
+    }
+
+    let SHOPPER_SHIPPING_COUNTRY_CODE = '';
+
     // PAYPAL
     window.paypalButtons = checkout
         .create('paypal', {
@@ -164,25 +269,61 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             },
 
             onShippingAddressChange: async (data, actions, component) => {
-                console.log('onShippingAddressChange', data, actions, component);
+                SHOPPER_SHIPPING_COUNTRY_CODE = data.shippingAddress.countryCode;
+
+                if (data.shippingAddress.countryCode !== 'US' && data.shippingAddress.countryCode !== 'NL') {
+                    return actions.reject();
+                }
 
                 const patch = {
                     pspReference: window.paypalPatchData.pspReference,
                     paymentData: component.paymentData,
                     amount: {
                         currency: 'USD',
-                        value: 28000
-                    }
+                        value:
+                            amount.value + getSelectedDeliveryMethodAmount({ countryCode: data.shippingAddress.countryCode, deliveryMethodId: '1' })
+                    },
+                    deliveryMethods: getDeliveryMethods({
+                        countryCode: data.shippingAddress.countryCode,
+                        deliveryMethodId: '1'
+                    })
                 };
 
-                console.log('### onShippingAddressChange', patch, data);
-                if (data.shippingAddress.countryCode === 'US') {
-                    const { paymentData } = await patchPaypalOrder(patch);
-                    component.updatePaymentData(paymentData);
-                    return;
+                console.log('onShippingAddressChange');
+                console.log(patch);
+
+                const { paymentData } = await patchPaypalOrder(patch);
+                component.updatePaymentData(paymentData);
+            },
+
+            onShippingOptionsChange: async (data, actions, component) => {
+                if (data.selectedShippingOption.label.includes('Teleport')) {
+                    return actions.reject(data.errors.METHOD_UNAVAILABLE);
                 }
 
-                return actions.reject();
+                const patch = {
+                    pspReference: window.paypalPatchData.pspReference,
+                    paymentData: component.paymentData,
+                    amount: {
+                        currency: 'USD',
+                        value:
+                            amount.value +
+                            getSelectedDeliveryMethodAmount({
+                                countryCode: SHOPPER_SHIPPING_COUNTRY_CODE,
+                                deliveryMethodId: data.selectedShippingOption.id
+                            })
+                    },
+                    deliveryMethods: getDeliveryMethods({
+                        countryCode: SHOPPER_SHIPPING_COUNTRY_CODE,
+                        deliveryMethodId: data.selectedShippingOption.id
+                    })
+                };
+
+                console.log('onShippingOptionsChange');
+                console.log(patch);
+
+                const { paymentData } = await patchPaypalOrder(patch);
+                component.updatePaymentData(paymentData);
             },
 
             onShopperDetails(shopperDetails, paypalOrder, actions) {
