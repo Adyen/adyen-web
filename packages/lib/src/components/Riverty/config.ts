@@ -2,8 +2,7 @@ import { CITY, COUNTRY, FIRST_NAME, HOUSE_NUMBER_OR_NAME, LAST_NAME, POSTAL_CODE
 import { AddressSpecifications } from '../internal/Address/types';
 
 export const allowedCountries = ['AT', 'CH', 'DE'];
-// todo: remove the gender after the playground testing
-export const personalDetailsRequiredFields = ['firstName', 'lastName', 'dateOfBirth', 'shopperEmail', 'telephoneNumber', 'gender'];
+export const personalDetailsRequiredFields = ['firstName', 'lastName', 'dateOfBirth', 'shopperEmail', 'telephoneNumber'];
 export const deliveryAddressSpecification: AddressSpecifications = {
     default: {
         labels: {

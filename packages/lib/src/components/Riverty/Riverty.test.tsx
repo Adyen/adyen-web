@@ -38,17 +38,16 @@ describe('Riverty', () => {
             const dateOfBirth = await screen.findByLabelText('Date of birth', { selector: 'input' });
             const email = await screen.findByLabelText('Email address', { selector: 'input' });
             const telephone = await screen.findByLabelText('Telephone number', { selector: 'input' });
-            //const male = screen.queryByLabelText('Male');
-            //const female = screen.queryByLabelText('Female');
+            const male = screen.queryByLabelText('Male');
+            const female = screen.queryByLabelText('Female');
 
             expect(firstName).not.toBeNull();
             expect(lastName).not.toBeNull();
             expect(dateOfBirth).not.toBeNull();
             expect(email).not.toBeNull();
             expect(telephone).not.toBeNull();
-            //todo: add the test back after the playground testing
-            //expect(male).toBeNull();
-            //expect(female).toBeNull();
+            expect(male).toBeNull();
+            expect(female).toBeNull();
         });
     });
 
