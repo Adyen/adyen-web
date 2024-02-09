@@ -70,18 +70,11 @@ const config: PlaywrightTestConfig = {
     // outputDir: 'test-results/',
 
     /* Run your local dev server before starting the tests */
-    webServer: [
-        {
-            command: 'npm run test:start-playground',
-            port: 3024,
-            reuseExistingServer: !process.env.CI
-        },
-        {
-            command: 'npm run test:start-storybook',
-            port: 3020,
-            reuseExistingServer: !process.env.CI
-        }
-    ]
+    webServer: {
+        command: 'npm run test:start-playground',
+        port: 3024,
+        reuseExistingServer: !process.env.CI
+    }
 };
 
 export default config;
