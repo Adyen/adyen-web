@@ -5,6 +5,8 @@ import getOrderStatus from '../../../core/Services/order-status';
 import { DropinComponentProps, DropinComponentState, DropinStatusProps, onOrderCancelData } from '../types';
 import './DropinComponent.scss';
 import { UIElementStatus } from '../../internal/UIElement/types';
+import { sanitizeOrder } from '../../internal/UIElement/utils';
+import { PaymentAmount } from '../../../types/global-types';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
@@ -101,7 +103,15 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
     private getOnOrderCancel = () => {
         if (this.props.onOrderCancel) {
             return (data: onOrderCancelData) => {
-                this.props.onOrderCancel(data);
+                const order = sanitizeOrder(data.order);
+                new Promise<{ amount: PaymentAmount }>((resolve, reject) => {
+                    this.props.onOrderCancel({ order }, { resolve, reject });
+                })
+                    .then(({ amount }) => this.props.elementRef.handleAdvanceFlowPaymentMethodsUpdate(null, amount))
+                    .catch(error => {
+                        console.error(error);
+                        this.setStatus(error?.message || 'error');
+                    });
             };
         }
         if (this.props.session) {
@@ -109,7 +119,10 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                 this.props.session
                     .cancelOrder(data)
                     .then(() => this.props.core.update({ order: null }))
-                    .catch(error => this.setStatus(error?.message || 'error'));
+                    .catch(error => {
+                        console.error(error);
+                        this.setStatus(error?.message || 'error');
+                    });
         }
         return null;
     };

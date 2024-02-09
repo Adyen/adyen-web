@@ -1,5 +1,5 @@
 import { UIElementStatus } from './types';
-import { RawPaymentResponse, PaymentResponseData } from '../../../types/global-types';
+import { RawPaymentResponse, PaymentResponseData, Order } from '../../../types/global-types';
 
 const ALLOWED_PROPERTIES = ['action', 'resultCode', 'sessionData', 'order', 'sessionResult', 'donationToken', 'error'];
 
@@ -56,4 +56,12 @@ export function verifyPaymentDidNotFail(response: PaymentResponseData): Promise<
     }
 
     return Promise.resolve(response);
+}
+
+export function sanitizeOrder(order: Order) {
+    if (!order || !order.orderData || !order.pspReference) return null;
+    return {
+        orderData: order.orderData,
+        pspReference: order.pspReference
+    };
 }

@@ -30,6 +30,7 @@ export const GENERIC_OPTIONS = [
     'onBalanceCheck',
     'onOrderRequest',
     'onOrderUpdated',
+    'onOrderCancel',
     'setStatusAutomatically',
     'onPaymentMethodsRequest'
 ];

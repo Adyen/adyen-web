@@ -15,6 +15,7 @@ import type {
     CheckoutAdvancedFlowResponse,
     Order,
     PaymentAction,
+    PaymentAmount,
     PaymentData,
     PaymentMethodsResponse,
     PaymentResponseData,
@@ -408,7 +409,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      *
      * @private
      */
-    private async handleAdvanceFlowPaymentMethodsUpdate(order: Order) {
+    protected async handleAdvanceFlowPaymentMethodsUpdate(order: Order | null, amount?: PaymentAmount) {
         return new Promise<PaymentMethodsResponse>((resolve, reject) => {
             if (!this.props.onPaymentMethodsRequest) {
                 return reject(new Error('onPaymentMethodsRequest is not implemented'));
@@ -416,10 +417,12 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
             this.props.onPaymentMethodsRequest(
                 {
-                    order: {
-                        orderData: order.orderData,
-                        pspReference: order.pspReference
-                    },
+                    ...(order && {
+                        order: {
+                            orderData: order.orderData,
+                            pspReference: order.pspReference
+                        }
+                    }),
                     locale: this.core.options.locale
                 },
                 { resolve, reject }
@@ -437,10 +440,14 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
                 );
             })
             .then(paymentMethodsResponse => {
+                // in the case of the session flow we get order, amount, countryCode and shopperLocale from initialize()
+                // apply the same logic here for order and amount
+                // in the future it might be worth moving this logic to be performed by the core on update()
+                // it would make this more consistent
                 return this.core.update({
                     ...(paymentMethodsResponse && { paymentMethodsResponse }),
                     order,
-                    amount: order.remainingAmount
+                    amount: order ? order.remainingAmount : amount
                 });
             });
     }

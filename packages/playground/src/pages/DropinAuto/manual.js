@@ -69,9 +69,9 @@ export async function initManual() {
         onOrderRequest: async (resolve, reject) => {
             resolve(await createOrder({ amount }));
         },
-        onOrderCancel: async order => {
+        onOrderCancel: async (order, actions) => {
             await cancelOrder(order);
-            checkout.update({ paymentMethodsResponse: await getPaymentMethods({ amount, shopperLocale }), order: null, amount });
+            actions.resolve({ amount });
         },
         onError: (error, component) => {
             console.info(error.name, error.message, error.stack, component);

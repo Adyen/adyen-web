@@ -4,8 +4,6 @@ import { createAdvancedFlowCheckout } from '../../helpers/create-advanced-checko
 import { PaymentMethodStoryProps } from '../types';
 import AmazonPay from '../../../src/components/AmazonPay';
 import { AmazonPayConfiguration } from '../../../src/components/AmazonPay/types';
-import { makePayment } from '../../helpers/checkout-api-calls';
-import getCurrency from '../../utils/get-currency';
 
 interface AmazonPayExampleProps {
     contextArgs: PaymentMethodStoryProps<AmazonPayConfiguration>;
@@ -19,11 +17,6 @@ export const AmazonPayExample = ({ contextArgs }: AmazonPayExampleProps) => {
 
     const createCheckout = async () => {
         const { useSessions, showPayButton, countryCode, shopperLocale, amount } = contextArgs;
-
-        const paymentAmount = {
-            currency: getCurrency(countryCode),
-            value: Number(amount)
-        };
         //URL selection
         // http://localhost:3020/iframe.html?id=wallets-amazonpay--default&viewMode=story
         // http://localhost:3020/?path=/story/wallets-amazonpay--default
@@ -54,8 +47,7 @@ export const AmazonPayExample = ({ contextArgs }: AmazonPayExampleProps) => {
               });
 
         if (step === 'review') {
-            const amazonPayElement = new AmazonPay({
-                core: checkout.current,
+            const amazonPayElement = new AmazonPay(checkout.current, {
                 ...chargeOptions,
                 /**
                  * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
@@ -66,35 +58,12 @@ export const AmazonPayExample = ({ contextArgs }: AmazonPayExampleProps) => {
             });
             setElement(amazonPayElement);
         } else if (step === 'result') {
-            const amazonPayElement = new AmazonPay({
-                core: checkout.current,
+            const amazonPayElement = new AmazonPay(checkout.current, {
                 /**
                  * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
                  */
                 amazonCheckoutSessionId,
                 showOrderButton: false,
-                onSubmit: async (state, component, actions) => {
-                    const paymentData = {
-                        amount: paymentAmount,
-                        countryCode: countryCode,
-                        shopperLocale: shopperLocale
-                    };
-
-                    return makePayment(state.data, paymentData)
-                        .then(response => {
-                            const { errorCode, action, order, resultCode, donationToken } = response;
-                            debugger;
-                            actions.resolve({
-                                resultCode: errorCode ? 'Refused' : resultCode,
-                                action,
-                                order,
-                                donationToken
-                            });
-                        })
-                        .catch(error => {
-                            throw Error(error);
-                        });
-                },
                 onPaymentCompleted(result, element) {
                     console.log('onPaymentCompleted', result, element);
                 },
@@ -106,9 +75,7 @@ export const AmazonPayExample = ({ contextArgs }: AmazonPayExampleProps) => {
             setElement(amazonPayElement);
             amazonPayElement.submit();
         } else {
-            const amazonPayElement = new AmazonPay({
-                core: checkout.current,
-
+            const amazonPayElement = new AmazonPay(checkout.current, {
                 productType: 'PayOnly',
                 ...chargeOptions,
                 // Regular checkout:

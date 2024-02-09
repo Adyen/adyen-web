@@ -54,7 +54,6 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
     }
 
     public handleDeclineFlow() {
-        debugger;
         const { amazonCheckoutSessionId, configuration = {}, loadingContext, clientKey } = this.props;
         if (!amazonCheckoutSessionId) return console.error('Could handle the decline flow. Missing checkoutSessionId.');
 
