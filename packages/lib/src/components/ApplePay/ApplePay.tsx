@@ -10,7 +10,7 @@ import { preparePaymentRequest } from './payment-request';
 import { resolveSupportedVersion, mapBrands } from './utils';
 import { ApplePayElementProps, ApplePayElementData, ApplePaySessionRequest, OnAuthorizedCallback } from './types';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
-import { ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
+import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
 
 const latestSupportedVersion = 14;
 
@@ -56,7 +56,7 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
     submit() {
         // Analytics
         if (this.props.isInstantPayment) {
-            this.submitAnalytics({ type: ANALYTICS_SELECTED_STR, target: 'instant_payment_button' });
+            this.submitAnalytics({ type: ANALYTICS_SELECTED_STR, target: ANALYTICS_INSTANT_PAYMENT_BUTTON });
         }
 
         return this.startSession(this.props.onAuthorized);

@@ -30,7 +30,7 @@ export const createAnalyticsObject = (aObj: CreateAnalyticsObject): AnalyticsObj
     ...(aObj.event === 'log' && { type: aObj.type, message: aObj.message }), // log event
     ...(aObj.event === 'log' && aObj.type === ANALYTICS_ACTION_STR && { subType: aObj.subtype }), // only added if we have a log event of Action type
     /** INFO */
-    ...(aObj.event === 'info' && { type: aObj.type, target: aObj.target }), // info event
+    ...(aObj.event === 'info' && { type: aObj.type, target: aObj.target, issuer: aObj.issuer }), // info event
     ...(aObj.event === 'info' && aObj.isStoredPaymentMethod && { isStoredPaymentMethod: aObj.isStoredPaymentMethod, brand: aObj.brand }), // only added if we have an info event about a storedPM
     ...(aObj.event === 'info' &&
         aObj.type === ANALYTICS_VALIDATION_ERROR_STR && {

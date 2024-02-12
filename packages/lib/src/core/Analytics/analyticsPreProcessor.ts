@@ -21,6 +21,9 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
         const { type, target } = analyticsObj;
 
         switch (type) {
+            /**
+             * INFO
+             */
             // Called from BaseElement (when component mounted) or, from DropinComponent (after mounting, when it has finished resolving all the PM promises)
             // &/or, from DropinComponent when a PM is selected
             case ANALYTICS_RENDERED_STR:
@@ -35,6 +38,37 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
                 break;
             }
 
+            case ANALYTICS_FOCUS_STR:
+            case ANALYTICS_UNFOCUS_STR:
+                analyticsModule.createAnalyticsEvent({
+                    event: ANALYTICS_EVENT_INFO,
+                    data: { component, type, target }
+                });
+                break;
+
+            // - ApplePay & GooglePay when instant PMs
+            // - issuerList buttons
+            case ANALYTICS_SELECTED_STR: {
+                const { issuer } = analyticsObj;
+                analyticsModule.createAnalyticsEvent({
+                    event: ANALYTICS_EVENT_INFO,
+                    data: { component, type, target, issuer }
+                });
+                break;
+            }
+
+            case ANALYTICS_VALIDATION_ERROR_STR: {
+                const { validationErrorCode, validationErrorMessage } = analyticsObj;
+                analyticsModule.createAnalyticsEvent({
+                    event: ANALYTICS_EVENT_INFO,
+                    data: { component, type, target, validationErrorCode, validationErrorMessage }
+                });
+                break;
+            }
+
+            /**
+             * LOGS
+             */
             case ANALYTICS_SUBMIT_STR:
                 analyticsModule.createAnalyticsEvent({
                     event: ANALYTICS_EVENT_LOG,
@@ -51,24 +85,6 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
                 break;
             }
 
-            case ANALYTICS_FOCUS_STR:
-            case ANALYTICS_UNFOCUS_STR:
-            case ANALYTICS_SELECTED_STR:
-                analyticsModule.createAnalyticsEvent({
-                    event: ANALYTICS_EVENT_INFO,
-                    data: { component, type, target }
-                });
-                break;
-
-            case ANALYTICS_VALIDATION_ERROR_STR: {
-                const { validationErrorCode, validationErrorMessage } = analyticsObj;
-                analyticsModule.createAnalyticsEvent({
-                    event: ANALYTICS_EVENT_INFO,
-                    data: { component, type, target, validationErrorCode, validationErrorMessage }
-                });
-                break;
-            }
-
             // General 3DS2 log events: "action handled" (i.e. iframe loaded), data sent, process completed
             case THREEDS2_FULL: {
                 const { message, metadata } = analyticsObj;
@@ -79,6 +95,9 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
                 break;
             }
 
+            /**
+             * ERRORS
+             */
             case THREEDS2_ERROR: {
                 const { message, code, errorType } = analyticsObj;
                 analyticsModule.createAnalyticsEvent({

@@ -93,6 +93,7 @@ function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder'
                         selectedIssuerId={inputType === IssuerListInputTypes.ButtonGroup ? data['issuer'] : null}
                         items={highlightedItems}
                         onChange={handleInputChange(IssuerListInputTypes.ButtonGroup)}
+                        onSubmitAnalytics={props.onSubmitAnalytics}
                     />
                     <ContentSeparator />
                 </Fragment>
