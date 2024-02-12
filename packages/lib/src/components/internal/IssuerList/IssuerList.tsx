@@ -24,7 +24,7 @@ import {
     ANALYTICS_LIST_SEARCH,
     ANALYTICS_SELECTED_STR
 } from '../../../core/Analytics/constants';
-import { debounce } from '../Address/utils';
+import { debounce } from '../../../utils/debounce';
 
 const payButtonLabel = ({ issuer, items }, i18n): string => {
     const issuerName = items.find(i => i.id === issuer)?.name;
