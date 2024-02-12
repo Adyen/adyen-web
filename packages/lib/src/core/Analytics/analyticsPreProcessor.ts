@@ -8,6 +8,7 @@ import {
     ANALYTICS_EVENT_INFO,
     ANALYTICS_EVENT_LOG,
     ANALYTICS_FOCUS_STR,
+    ANALYTICS_INPUT_STR,
     ANALYTICS_RENDERED_STR,
     ANALYTICS_SELECTED_STR,
     ANALYTICS_SUBMIT_STR,
@@ -42,6 +43,7 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
             case ANALYTICS_FOCUS_STR:
             case ANALYTICS_UNFOCUS_STR:
             case ANALYTICS_DISPLAYED_STR: // issuerList
+            case ANALYTICS_INPUT_STR: // issuerList
                 analyticsModule.createAnalyticsEvent({
                     event: ANALYTICS_EVENT_INFO,
                     data: { component, type, target }

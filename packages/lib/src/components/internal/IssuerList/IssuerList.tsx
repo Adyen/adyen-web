@@ -1,5 +1,5 @@
 import { Fragment, h } from 'preact';
-import { useState, useEffect, useCallback } from 'preact/hooks';
+import { useState, useEffect, useCallback, useRef } from 'preact/hooks';
 import useForm from '../../../utils/useForm';
 import Field from '../FormFields/Field';
 import IssuerButtonGroup from './IssuerButtonGroup';
@@ -16,7 +16,15 @@ import { setFocusOnField } from '../../../utils/setFocus';
 import DisclaimerMessage from '../DisclaimerMessage';
 import Select from '../FormFields/Select';
 import { SelectTargetObject } from '../FormFields/Select/types';
-import { ANALYTICS_DISPLAYED_STR, ANALYTICS_FEATURED_ISSUER, ANALYTICS_LIST, ANALYTICS_SELECTED_STR } from '../../../core/Analytics/constants';
+import {
+    ANALYTICS_DISPLAYED_STR,
+    ANALYTICS_FEATURED_ISSUER,
+    ANALYTICS_INPUT_STR,
+    ANALYTICS_LIST,
+    ANALYTICS_LIST_SEARCH,
+    ANALYTICS_SELECTED_STR
+} from '../../../core/Analytics/constants';
+import { debounce } from '../Address/utils';
 
 const payButtonLabel = ({ issuer, items }, i18n): string => {
     const issuerName = items.find(i => i.id === issuer)?.name;
@@ -75,6 +83,13 @@ function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder'
         }
     }, []);
 
+    const debounceSearchAnalytics = useRef(debounce(props.onSubmitAnalytics, 1000));
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const handleSearch = useCallback((value: string) => {
+        debounceSearchAnalytics.current({ type: ANALYTICS_INPUT_STR, target: ANALYTICS_LIST_SEARCH });
+    }, []);
+
     useEffect(() => {
         props.onChange({ data, valid, errors, isValid });
 
@@ -119,6 +134,7 @@ function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder'
                     className={'adyen-checkout__issuer-list__dropdown'}
                     onChange={handleInputChange(IssuerListInputTypes.Dropdown)}
                     onListToggle={handleListToggle}
+                    onInput={handleSearch}
                 />
             </Field>
 
