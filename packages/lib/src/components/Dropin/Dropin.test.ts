@@ -10,9 +10,10 @@ const submitMock = jest.fn();
 
 describe('Dropin', () => {
     let dropin: DropinElement;
+    let checkout;
 
     beforeEach(async () => {
-        const checkout = await AdyenCheckout({ environment: 'test', clientKey: 'test_123456', analytics: { enabled: false } });
+        checkout = await AdyenCheckout({ environment: 'test', clientKey: 'test_123456', analytics: { enabled: false } });
         dropin = checkout.create('dropin');
     });
 
@@ -190,6 +191,33 @@ describe('Dropin', () => {
             expect(await screen.findByRole('radio')).toBeTruthy();
             dropin.setStatus('error');
             expect(await screen.findByText(/An unknown error occurred/i)).toBeTruthy();
+        });
+    });
+
+    describe('Complying with local regulations', () => {
+        test('Default values for openFirstPaymentMethod & openFirstStoredPaymentMethod are true', () => {
+            dropin = checkout.create('dropin');
+
+            expect(dropin.props.openFirstPaymentMethod).toBe(true);
+            expect(dropin.props.openFirstStoredPaymentMethod).toBe(true);
+        });
+
+        test('when countryCode is Finland openFirstPaymentMethod & openFirstStoredPaymentMethod should be false by default', () => {
+            checkout.options.countryCode = 'FI';
+
+            dropin = checkout.create('dropin');
+
+            expect(dropin.props.openFirstPaymentMethod).toBe(false);
+            expect(dropin.props.openFirstStoredPaymentMethod).toBe(false);
+        });
+
+        test('if openFirstPaymentMethod & openFirstStoredPaymentMethod are set by merchant then these values should be used', () => {
+            checkout.options.countryCode = 'FI';
+
+            dropin = checkout.create('dropin', { openFirstPaymentMethod: true, openFirstStoredPaymentMethod: true });
+
+            expect(dropin.props.openFirstPaymentMethod).toBe(true);
+            expect(dropin.props.openFirstStoredPaymentMethod).toBe(true);
         });
     });
 });
