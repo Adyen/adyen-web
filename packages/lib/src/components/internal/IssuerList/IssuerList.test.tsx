@@ -16,6 +16,7 @@ describe('IssuerList', () => {
                 showPayButton={false}
                 onChange={jest.fn()}
                 payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
+                onSubmitAnalytics={() => {}}
             />
         );
         expect(wrapper.props().items).toHaveLength(3);
@@ -37,6 +38,7 @@ describe('IssuerList', () => {
                 showPayButton={false}
                 onChange={jest.fn()}
                 payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
+                onSubmitAnalytics={() => {}}
             />
         );
         expect(wrapper.props().highlightedIds).toHaveLength(2);
@@ -61,6 +63,7 @@ describe('IssuerList', () => {
                 showPayButton={false}
                 onChange={onChangeCb}
                 payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
+                onSubmitAnalytics={() => {}}
             />
         );
 
@@ -93,6 +96,7 @@ describe('IssuerList', () => {
                 showPayButton={false}
                 onChange={jest.fn()}
                 payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
+                onSubmitAnalytics={() => {}}
             />
         );
 
@@ -117,6 +121,7 @@ describe('IssuerList', () => {
                 showPayButton={false}
                 onChange={jest.fn()}
                 payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
+                onSubmitAnalytics={() => {}}
             />
         );
 

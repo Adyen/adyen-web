@@ -233,7 +233,7 @@ function Select({
         if (showList && filterable && filterInputRef.current) {
             filterInputRef.current.focus();
         }
-        onListToggle(showList);
+        onListToggle?.(showList);
     }, [showList]);
 
     useEffect(() => {
