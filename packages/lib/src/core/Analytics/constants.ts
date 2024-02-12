@@ -19,6 +19,7 @@ export const ANALYTICS_CONFIGURED_STR = 'configured';
 
 export const ANALYTICS_INSTANT_PAYMENT_BUTTON = 'instant_payment_button';
 export const ANALYTICS_FEATURED_ISSUER = 'featured_issuer';
+export const ANALYTICS_LIST = 'list';
 
 export const ANALYTICS_IMPLEMENTATION_ERROR = 'ImplementationError';
 export const ANALYTICS_API_ERROR = 'APIError';

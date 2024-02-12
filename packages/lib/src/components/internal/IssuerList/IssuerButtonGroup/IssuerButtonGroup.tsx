@@ -4,27 +4,20 @@ import IssuerButton from './IssuerButton';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import './IssuerButtonGroup.scss';
 import { IssuerItem } from '../types';
-import { SendAnalyticsObject } from '../../../../core/Analytics/types';
-import { ANALYTICS_FEATURED_ISSUER, ANALYTICS_SELECTED_STR } from '../../../../core/Analytics/constants';
 
 interface IssuerButtonGroupProps {
     items: IssuerItem[];
     selectedIssuerId: string;
     onChange: (event: UIEvent) => void;
-    onSubmitAnalytics: (aObj: SendAnalyticsObject) => void;
 }
 
-const IssuerButtonGroup = ({ items = [], selectedIssuerId, onChange, onSubmitAnalytics }: IssuerButtonGroupProps) => {
+const IssuerButtonGroup = ({ items = [], selectedIssuerId, onChange }: IssuerButtonGroupProps) => {
     const { i18n } = useCoreContext();
 
     const handleClick = useCallback(
         (event: UIEvent) => {
             const value = (event.currentTarget as HTMLButtonElement).value;
             Object.defineProperty(event.target, 'value', { value });
-
-            const issuerObj = items.find(issuer => issuer.id === value);
-            onSubmitAnalytics({ type: ANALYTICS_SELECTED_STR, target: ANALYTICS_FEATURED_ISSUER, issuer: issuerObj.name });
-
             onChange(event);
         },
         [onChange]
