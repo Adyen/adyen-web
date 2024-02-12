@@ -16,7 +16,7 @@ import { setFocusOnField } from '../../../utils/setFocus';
 import DisclaimerMessage from '../DisclaimerMessage';
 import Select from '../FormFields/Select';
 import { SelectTargetObject } from '../FormFields/Select/types';
-import { ANALYTICS_FEATURED_ISSUER, ANALYTICS_LIST, ANALYTICS_SELECTED_STR } from '../../../core/Analytics/constants';
+import { ANALYTICS_DISPLAYED_STR, ANALYTICS_FEATURED_ISSUER, ANALYTICS_LIST, ANALYTICS_SELECTED_STR } from '../../../core/Analytics/constants';
 
 const payButtonLabel = ({ issuer, items }, i18n): string => {
     const issuerName = items.find(i => i.id === issuer)?.name;
@@ -69,6 +69,12 @@ function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder'
         [handleChangeFor]
     );
 
+    const handleListToggle = useCallback((isOpen: boolean) => {
+        if (isOpen) {
+            props.onSubmitAnalytics({ type: ANALYTICS_DISPLAYED_STR, target: ANALYTICS_LIST });
+        }
+    }, []);
+
     useEffect(() => {
         props.onChange({ data, valid, errors, isValid });
 
@@ -112,6 +118,7 @@ function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder'
                     name={'issuer'}
                     className={'adyen-checkout__issuer-list__dropdown'}
                     onChange={handleInputChange(IssuerListInputTypes.Dropdown)}
+                    onListToggle={handleListToggle}
                 />
             </Field>
 

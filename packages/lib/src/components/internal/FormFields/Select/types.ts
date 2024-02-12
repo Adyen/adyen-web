@@ -38,6 +38,7 @@ export interface SelectProps {
     disableTextFilter?: boolean;
     clearOnSelect?: boolean;
     blurOnClose?: boolean;
+    onListToggle?: (isOpen: boolean) => void;
 }
 
 export interface SelectButtonProps {

@@ -3,6 +3,7 @@ import { CreateAnalyticsEventObject, SendAnalyticsObject } from './types';
 import {
     ANALYTICS_ACTION_STR,
     ANALYTICS_CONFIGURED_STR,
+    ANALYTICS_DISPLAYED_STR,
     ANALYTICS_EVENT_ERROR,
     ANALYTICS_EVENT_INFO,
     ANALYTICS_EVENT_LOG,
@@ -40,6 +41,7 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
 
             case ANALYTICS_FOCUS_STR:
             case ANALYTICS_UNFOCUS_STR:
+            case ANALYTICS_DISPLAYED_STR: // issuerList
                 analyticsModule.createAnalyticsEvent({
                     event: ANALYTICS_EVENT_INFO,
                     data: { component, type, target }
