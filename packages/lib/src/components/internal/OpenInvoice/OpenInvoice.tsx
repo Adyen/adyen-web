@@ -270,7 +270,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
 
             {activeFieldsets.billingAddress && (
                 <Address
-                    allowedCountries={props.allowedCountries}
+                    allowedCountries={props?.billingAddressSpecification?.allowedCountries ?? props.allowedCountries}
                     countryCode={countryCode}
                     requiredFields={props.billingAddressRequiredFields}
                     specifications={props.billingAddressSpecification}
@@ -296,7 +296,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
 
             {activeFieldsets.deliveryAddress && (
                 <Address
-                    allowedCountries={props.allowedCountries}
+                    allowedCountries={props?.deliveryAddressSpecification?.allowedCountries ?? props.allowedCountries}
                     countryCode={countryCode}
                     requiredFields={props.deliveryAddressRequiredFields}
                     specifications={props.deliveryAddressSpecification}

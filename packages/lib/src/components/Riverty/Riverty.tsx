@@ -9,7 +9,6 @@ export default class Riverty extends OpenInvoiceContainer {
 
     protected static defaultProps = {
         personalDetailsRequiredFields,
-        allowedCountries,
         deliveryAddressSpecification,
         ...OpenInvoiceContainer.defaultProps
     };
@@ -17,7 +16,8 @@ export default class Riverty extends OpenInvoiceContainer {
     formatProps(props) {
         return {
             ...super.formatProps(props),
-            allowedCountries: props.countryCode ? [props.countryCode] : allowedCountries,
+            billingAddressSpecification: { ...props.billingAddressSpecification, allowedCountries },
+            deliveryAddressSpecification: { ...props.deliveryAddressSpecification, allowedCountries: [] }, // Allow all the countries
             consentCheckboxLabel: <ConsentCheckboxLabel url={getConsentUrl(props.countryCode, props.i18n?.locale, termsAndConditionsUrlMap)} />
         };
     }
