@@ -60,8 +60,6 @@ export async function initSession() {
                         }
                     };
 
-                    console.log('### onShippingAddressChange Sessions', data, actions, component, patch);
-
                     if (data.shippingAddress.countryCode === 'US') {
                         const { paymentData } = await patchPaypalOrder(patch);
                         component.updatePaymentData(paymentData);

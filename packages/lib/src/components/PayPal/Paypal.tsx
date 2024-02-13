@@ -35,11 +35,11 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         const intent: Intent = isZeroAuth ? 'tokenize' : props.intent || intentFromConfig;
         const vault = intent === 'tokenize' || props.vault;
 
-        const displayContinueButton = props.userAction === 'continue';
+        const displayContinueToReviewPageButton = props.userAction === 'continue';
 
         return {
             ...props,
-            commit: displayContinueButton ? false : props.commit,
+            commit: displayContinueToReviewPageButton ? false : props.commit,
             vault,
             configuration: {
                 intent,

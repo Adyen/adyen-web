@@ -1,7 +1,7 @@
 import AdyenCheckout from '@adyen/adyen-web';
 import '@adyen/adyen-web/dist/es/adyen.css';
-import { getPaymentMethods, makePayment, patchPaypalOrder } from '../../services';
-import { handleSubmit, handleAdditionalDetails, handleResponse } from '../../handlers';
+import { getPaymentMethods, makePayment } from '../../services';
+import { handleSubmit, handleAdditionalDetails } from '../../handlers';
 import { checkPaymentResult } from '../../utils';
 import { amount, shopperLocale } from '../../config/commonConfig';
 import '../../../config/polyfills';
@@ -22,422 +22,200 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         showPayButton: true
     });
 
-    // // Cash App Pay
-    // window.cashApp = checkout
-    //     .create('cashapp', {
-    //         onClick(actions) {
-    //             console.log('CashAppApp: onClick');
-    //             actions.resolve();
-    //         }
-    //     })
-    //     .mount('.cashapp-field');
+    // Cash App Pay
+    window.cashApp = checkout
+        .create('cashapp', {
+            onClick(actions) {
+                console.log('CashAppApp: onClick');
+                actions.resolve();
+            }
+        })
+        .mount('.cashapp-field');
 
-    // // CLICK TO PAY
-    // window.clickToPay = checkout.create('clicktopay', {
-    //     shopperEmail: 'shopper@example.com',
-    //     onReady() {
-    //         console.log('ClickToPay is ready');
-    //     },
-    //     onTimeout(error) {
-    //         console.log(error);
-    //     }
-    // });
-    // window.clickToPay
-    //     .isAvailable()
-    //     .then(() => {
-    //         document.querySelector('#clicktopay').classList.remove('merchant-checkout__payment-method--hidden');
-    //         window.clickToPay.mount('.clicktopay-field');
-    //     })
-    //     .catch(e => {
-    //         console.warn('ClickToPay is NOT available');
-    //     });
-
-    // // AMAZON PAY
-    // // Demo only
-    // const urlSearchParams = new URLSearchParams(window.location.search);
-    // const amazonCheckoutSessionId = urlSearchParams.get('amazonCheckoutSessionId');
-    // const step = urlSearchParams.get('step');
-
-    // const chargeOptions = {
-    //     // chargePermissionType: 'Recurring',
-    //     // recurringMetadata: {
-    //     //     frequency: {
-    //     //         unit: 'Month',
-    //     //         value: '1'
-    //     //     }
-    //     // }
-    // };
-
-    // // Initial state
-    // if (!step) {
-    //     window.amazonpay = checkout
-    //         .create('amazonpay', {
-    //             productType: 'PayOnly',
-    //             ...chargeOptions,
-    //             // Regular checkout:
-    //             // returnUrl: 'http://localhost:3020/wallets?step=result',
-    //             // checkoutMode: 'ProcessOrder'
-
-    //             // Express Checkout flow:
-    //             returnUrl: 'http://localhost:3020/wallets?step=review'
-    //         })
-    //         .mount('.amazonpay-field');
-    // }
-
-    // // Review and confirm order
-    // if (step === 'review') {
-    //     window.amazonpay = checkout
-    //         .create('amazonpay', {
-    //             ...chargeOptions,
-    //             /**
-    //              * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
-    //              */
-    //             amazonCheckoutSessionId,
-    //             cancelUrl: 'http://localhost:3020/wallets',
-    //             returnUrl: 'http://localhost:3020/wallets?step=result'
-    //         })
-    //         .mount('.amazonpay-field');
-    // }
-
-    // // Make payment
-    // if (step === 'result') {
-    //     window.amazonpay = checkout
-    //         .create('amazonpay', {
-    //             /**
-    //              * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
-    //              */
-    //             amazonCheckoutSessionId,
-    //             showOrderButton: false,
-    //             onSubmit: (state, component) => {
-    //                 return makePayment(state.data)
-    //                     .then(response => {
-    //                         if (response.action) {
-    //                             component.handleAction(response.action);
-    //                         } else if (response?.resultCode && checkPaymentResult(response.resultCode)) {
-    //                             alert(response.resultCode);
-    //                         } else {
-    //                             // Try handling the decline flow
-    //                             // This will redirect the shopper to select another payment method
-    //                             component.handleDeclineFlow();
-    //                         }
-    //                     })
-    //                     .catch(error => {
-    //                         throw Error(error);
-    //                     });
-    //             },
-    //             onError: e => {
-    //                 if (e.resultCode) {
-    //                     alert(e.resultCode);
-    //                 } else {
-    //                     console.error(e);
-    //                 }
-    //             }
-    //         })
-    //         .mount('.amazonpay-field');
-
-    //     window.amazonpay.submit();
-    // }
-
-    function getDeliveryMethodsByCountry(country) {
-        if (country === 'NL') {
-            return [
-                {
-                    DeliveryMethod: {
-                        reference: '1',
-                        description: 'PostNL (5 days)',
-                        type: 'Shipping',
-                        amount: {
-                            currency: 'USD',
-                            value: '500'
-                        },
-                        selected: true
-                    }
-                },
-                {
-                    DeliveryMethod: {
-                        reference: '2',
-                        description: 'DHL (1 day)',
-                        type: 'Shipping',
-                        amount: {
-                            currency: 'USD',
-                            value: '999'
-                        },
-                        selected: false
-                    }
-                },
-                {
-                    DeliveryMethod: {
-                        reference: '3',
-                        description: 'Pick up',
-                        type: 'Shipping',
-                        amount: {
-                            currency: 'USD',
-                            value: '0'
-                        },
-                        selected: false
-                    }
-                }
-            ];
+    // CLICK TO PAY
+    window.clickToPay = checkout.create('clicktopay', {
+        shopperEmail: 'shopper@example.com',
+        onReady() {
+            console.log('ClickToPay is ready');
+        },
+        onTimeout(error) {
+            console.log(error);
         }
-
-        if (country === 'US') {
-            return [
-                {
-                    DeliveryMethod: {
-                        reference: '1',
-                        description: 'Express Shipping',
-                        type: 'Shipping',
-                        amount: {
-                            currency: 'USD',
-                            value: '1599'
-                        },
-                        selected: false
-                    }
-                },
-                {
-                    DeliveryMethod: {
-                        reference: '2',
-                        description: 'Standard Ground',
-                        type: 'Shipping',
-                        amount: {
-                            currency: 'USD',
-                            value: '500'
-                        },
-                        selected: false
-                    }
-                },
-                {
-                    DeliveryMethod: {
-                        reference: '3',
-                        description: 'Teleport Shipping Ultra fast',
-                        type: 'Shipping',
-                        amount: {
-                            currency: 'USD',
-                            value: '5000'
-                        },
-                        selected: false
-                    }
-                }
-            ];
-        }
-
-        throw Error('INVALID COUNTRY CODE');
-    }
-
-    function getDeliveryMethods({ countryCode, deliveryMethodId }) {
-        const deliveryMethods = getDeliveryMethodsByCountry(countryCode);
-
-        const options = deliveryMethods.map(method => {
-            method.DeliveryMethod.selected = method.DeliveryMethod.reference === deliveryMethodId;
-            return method;
+    });
+    window.clickToPay
+        .isAvailable()
+        .then(() => {
+            document.querySelector('#clicktopay').classList.remove('merchant-checkout__payment-method--hidden');
+            window.clickToPay.mount('.clicktopay-field');
+        })
+        .catch(e => {
+            console.warn('ClickToPay is NOT available');
         });
 
-        return options;
+    // AMAZON PAY
+    // Demo only
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const amazonCheckoutSessionId = urlSearchParams.get('amazonCheckoutSessionId');
+    const step = urlSearchParams.get('step');
+
+    const chargeOptions = {
+        // chargePermissionType: 'Recurring',
+        // recurringMetadata: {
+        //     frequency: {
+        //         unit: 'Month',
+        //         value: '1'
+        //     }
+        // }
+    };
+
+    // Initial state
+    if (!step) {
+        window.amazonpay = checkout
+            .create('amazonpay', {
+                productType: 'PayOnly',
+                ...chargeOptions,
+                // Regular checkout:
+                // returnUrl: 'http://localhost:3020/wallets?step=result',
+                // checkoutMode: 'ProcessOrder'
+
+                // Express Checkout flow:
+                returnUrl: 'http://localhost:3020/wallets?step=review'
+            })
+            .mount('.amazonpay-field');
     }
 
-    function getSelectedDeliveryMethodAmount({ countryCode, deliveryMethodId }) {
-        const deliveryMethods = getDeliveryMethodsByCountry(countryCode);
-        const option = deliveryMethods.find(method => method.DeliveryMethod.reference === deliveryMethodId);
-        return Number(option.DeliveryMethod.amount.value);
+    // Review and confirm order
+    if (step === 'review') {
+        window.amazonpay = checkout
+            .create('amazonpay', {
+                ...chargeOptions,
+                /**
+                 * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
+                 */
+                amazonCheckoutSessionId,
+                cancelUrl: 'http://localhost:3020/wallets',
+                returnUrl: 'http://localhost:3020/wallets?step=result'
+            })
+            .mount('.amazonpay-field');
     }
 
-    let SHOPPER_SHIPPING_COUNTRY_CODE = '';
+    // Make payment
+    if (step === 'result') {
+        window.amazonpay = checkout
+            .create('amazonpay', {
+                /**
+                 * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
+                 */
+                amazonCheckoutSessionId,
+                showOrderButton: false,
+                onSubmit: (state, component) => {
+                    return makePayment(state.data)
+                        .then(response => {
+                            if (response.action) {
+                                component.handleAction(response.action);
+                            } else if (response?.resultCode && checkPaymentResult(response.resultCode)) {
+                                alert(response.resultCode);
+                            } else {
+                                // Try handling the decline flow
+                                // This will redirect the shopper to select another payment method
+                                component.handleDeclineFlow();
+                            }
+                        })
+                        .catch(error => {
+                            throw Error(error);
+                        });
+                },
+                onError: e => {
+                    if (e.resultCode) {
+                        alert(e.resultCode);
+                    } else {
+                        console.error(e);
+                    }
+                }
+            })
+            .mount('.amazonpay-field');
+
+        window.amazonpay.submit();
+    }
 
     // PAYPAL
     window.paypalButtons = checkout
         .create('paypal', {
-            isExpress: true,
-
-            userAction: 'continue',
-
-            onSubmit: async (state, component) => {
-                const response = await makePayment(state.data);
-                component.setStatus('ready');
-
-                window.paypalPatchData = {
-                    pspReference: response.pspReference
-                };
-
-                console.log(window.paypalPatchData);
-
-                handleResponse(response, component);
+            onShopperDetails: (shopperDetails, rawData, actions) => {
+                console.log('Shopper details', shopperDetails);
+                console.log('Raw data', rawData);
+                actions.resolve();
             },
-
             onError: (error, component) => {
                 component.setStatus('ready');
                 console.log('paypal onError', error);
-            },
-
-            onShippingAddressChange: async (data, actions, component) => {
-                SHOPPER_SHIPPING_COUNTRY_CODE = data.shippingAddress.countryCode;
-
-                if (data.shippingAddress.countryCode !== 'US' && data.shippingAddress.countryCode !== 'NL') {
-                    return actions.reject();
-                }
-
-                const patch = {
-                    pspReference: window.paypalPatchData.pspReference,
-                    paymentData: component.paymentData,
-                    amount: {
-                        currency: 'USD',
-                        value:
-                            amount.value + getSelectedDeliveryMethodAmount({ countryCode: data.shippingAddress.countryCode, deliveryMethodId: '1' })
-                    },
-                    deliveryMethods: getDeliveryMethods({
-                        countryCode: data.shippingAddress.countryCode,
-                        deliveryMethodId: '1'
-                    })
-                };
-
-                console.log('onShippingAddressChange');
-                console.log(patch);
-
-                const { paymentData } = await patchPaypalOrder(patch);
-                component.updatePaymentData(paymentData);
-            },
-
-            onShippingOptionsChange: async (data, actions, component) => {
-                if (data.selectedShippingOption.label.includes('Teleport')) {
-                    return actions.reject(data.errors.METHOD_UNAVAILABLE);
-                }
-
-                const patch = {
-                    pspReference: window.paypalPatchData.pspReference,
-                    paymentData: component.paymentData,
-                    amount: {
-                        currency: 'USD',
-                        value:
-                            amount.value +
-                            getSelectedDeliveryMethodAmount({
-                                countryCode: SHOPPER_SHIPPING_COUNTRY_CODE,
-                                deliveryMethodId: data.selectedShippingOption.id
-                            })
-                    },
-                    deliveryMethods: getDeliveryMethods({
-                        countryCode: SHOPPER_SHIPPING_COUNTRY_CODE,
-                        deliveryMethodId: data.selectedShippingOption.id
-                    })
-                };
-
-                console.log('onShippingOptionsChange');
-                console.log(patch);
-
-                const { paymentData } = await patchPaypalOrder(patch);
-                component.updatePaymentData(paymentData);
-            },
-
-            onShopperDetails(shopperDetails, paypalOrder, actions) {
-                console.log(shopperDetails, paypalOrder, actions);
-                actions.resolve();
             }
-
-            // onShippingChange: async (data, actions) => {
-            //     console.log(data);
-            //     console.log('onShippingChange');
-            //
-            //     const patch = {
-            //         pspReference: window.paypalPatchData.pspReference,
-            //         paymentData: window.paypalPatchData.paymentData,
-            //         amount: {
-            //             currency: 'USD',
-            //             value: 28000
-            //         }
-            //     };
-            //
-            //     console.log('### onShippingChange', patch, data);
-            //     if (data.shipping_address.country_code === 'US') {
-            //         await patchPaypalOrder(patch);
-            //         return actions.resolve();
-            //     }
-            //
-            //     return actions.reject();
-            // }
-
-            // onShippingChange(data, actions) {
-            //     console.log('onShippingChange');
-            //
-            //     const patch = {
-            //         pspReference: window.paypalPatchData.pspReference,
-            //         paymentData: window.paypalPatchData.paymentData,
-            //         amount: {
-            //             currency: 'USD',
-            //             value: 20000
-            //         }
-            //     };
-            //
-            //     console.log('### onShippingChange', patch, data);
-            //     if (data.shipping_address.country_code === 'US') {
-            //         return patchPaypalOrder(patch);
-            //     }
-            //
-            //     return actions.reject();
-            // }
         })
         .mount('.paypal-field');
 
-    // // GOOGLE PAY
-    // const googlepay = checkout.create('paywithgoogle', {
-    //     // environment: 'PRODUCTION',
-    //     environment: 'TEST',
+    // GOOGLE PAY
+    const googlepay = checkout.create('paywithgoogle', {
+        // environment: 'PRODUCTION',
+        environment: 'TEST',
 
-    //     // Callbacks
-    //     onAuthorized: console.info,
-    //     // onError: console.error,
+        // Callbacks
+        onAuthorized: console.info,
+        // onError: console.error,
 
-    //     // Payment info
-    //     countryCode: 'NL',
+        // Payment info
+        countryCode: 'NL',
 
-    //     // Merchant config (required)
-    //     //            configuration: {
-    //     //                gatewayMerchantId: 'TestMerchant', // name of MerchantAccount
-    //     //                merchantName: 'Adyen Test merchant', // Name to be displayed
-    //     //                merchantId: '06946223745213860250' // Required in Production environment. Google's merchantId: https://developers.google.com/pay/api/web/guides/test-and-deploy/deploy-production-environment#obtain-your-merchantID
-    //     //            },
+        // Merchant config (required)
+        //            configuration: {
+        //                gatewayMerchantId: 'TestMerchant', // name of MerchantAccount
+        //                merchantName: 'Adyen Test merchant', // Name to be displayed
+        //                merchantId: '06946223745213860250' // Required in Production environment. Google's merchantId: https://developers.google.com/pay/api/web/guides/test-and-deploy/deploy-production-environment#obtain-your-merchantID
+        //            },
 
-    //     // Shopper info (optional)
-    //     emailRequired: true,
-    //     shippingAddressRequired: true,
-    //     shippingAddressParameters: {}, // https://developers.google.com/pay/api/web/reference/object#ShippingAddressParameters
+        // Shopper info (optional)
+        emailRequired: true,
+        shippingAddressRequired: true,
+        shippingAddressParameters: {}, // https://developers.google.com/pay/api/web/reference/object#ShippingAddressParameters
 
-    //     // Button config (optional)
-    //     buttonType: 'long', // https://developers.google.com/pay/api/web/reference/object#ButtonOptions
-    //     buttonColor: 'default' // https://developers.google.com/pay/api/web/reference/object#ButtonOptions
-    // });
+        // Button config (optional)
+        buttonType: 'long', // https://developers.google.com/pay/api/web/reference/object#ButtonOptions
+        buttonColor: 'default' // https://developers.google.com/pay/api/web/reference/object#ButtonOptions
+    });
 
-    // // First, check availability. If environment is TEST, Google Pay will always be considered available.
-    // googlepay
-    //     .isAvailable()
-    //     .then(() => {
-    //         googlepay.mount('.googlepay-field');
-    //     })
-    //     .catch(e => console.warn(e));
+    // First, check availability. If environment is TEST, Google Pay will always be considered available.
+    googlepay
+        .isAvailable()
+        .then(() => {
+            googlepay.mount('.googlepay-field');
+        })
+        .catch(e => console.warn(e));
 
-    // window.googlepay = googlepay;
+    window.googlepay = googlepay;
 
-    // // APPLE PAY
-    // const applepay = checkout.create('applepay', {
-    //     onClick: (resolve, reject) => {
-    //         console.log('Apple Pay - Button clicked');
-    //         resolve();
-    //     },
-    //     onAuthorized: (resolve, reject, event) => {
-    //         console.log('Apple Pay onAuthorized', event);
-    //         resolve();
-    //     },
-    //     buttonType: 'buy'
-    // });
+    // APPLE PAY
+    const applepay = checkout.create('applepay', {
+        onClick: (resolve, reject) => {
+            console.log('Apple Pay - Button clicked');
+            resolve();
+        },
+        onAuthorized: (resolve, reject, event) => {
+            console.log('Apple Pay onAuthorized', event);
+            resolve();
+        },
+        buttonType: 'buy'
+    });
 
-    // applepay
-    //     .isAvailable()
-    //     .then(isAvailable => {
-    //         if (isAvailable) {
-    //             // For this Demo only
-    //             document.querySelector('#applepay').classList.remove('merchant-checkout__payment-method--hidden');
-    //             // Required: mount ApplePay component
-    //             applepay.mount('.applepay-field');
-    //         }
-    //     })
-    //     .catch(e => {
-    //         console.warn(e);
-    //     });
+    applepay
+        .isAvailable()
+        .then(isAvailable => {
+            if (isAvailable) {
+                // For this Demo only
+                document.querySelector('#applepay').classList.remove('merchant-checkout__payment-method--hidden');
+                // Required: mount ApplePay component
+                applepay.mount('.applepay-field');
+            }
+        })
+        .catch(e => {
+            console.warn(e);
+        });
 });

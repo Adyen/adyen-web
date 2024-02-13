@@ -1,8 +1,8 @@
 import { Meta, StoryObj } from '@storybook/preact';
-import { PaymentMethodStoryProps } from '../types';
-import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
-import { PayPalElementProps } from '../../../src/components/PayPal/types';
-import { Container } from '../Container';
+import { PaymentMethodStoryProps } from '../../types';
+import { getStoryContextCheckout } from '../../../utils/get-story-context-checkout';
+import { PayPalElementProps } from '../../../../src/components/PayPal/types';
+import { Container } from '../../Container';
 
 type Story = StoryObj<PaymentMethodStoryProps<PayPalElementProps>>;
 

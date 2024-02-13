@@ -26,12 +26,14 @@ export const patchPaypalOrder = async ({
     sessionId,
     pspReference,
     paymentData,
-    amount
+    amount,
+    deliveryMethods
 }: {
     sessionId?: string;
     pspReference?: string;
     paymentData: string;
     amount: { value: number; currency: string };
+    deliveryMethods: any;
 }): Promise<{ paymentData: string }> => {
     if (!(pspReference || sessionId) || !paymentData || !amount.value || !amount.currency) {
         throw Error('PayPal patching order - Field is missing');
@@ -40,6 +42,7 @@ export const patchPaypalOrder = async ({
     const response = await httpPost('paypal/updateOrder', {
         ...(sessionId && { sessionId }),
         ...(pspReference && { pspReference }),
+        ...(deliveryMethods && { deliveryMethods }),
         paymentData,
         amount
     });

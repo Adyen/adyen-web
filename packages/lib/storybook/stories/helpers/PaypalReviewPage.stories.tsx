@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/preact';
 import { useState } from 'preact/hooks';
-import { makeDetailsCall, patchPaypalOrder } from '../../helpers/checkout-api-calls';
+import { makeDetailsCall } from '../../helpers/checkout-api-calls';
 
 const meta: Meta = {
     title: 'Helpers/PaypalReviewPage'
@@ -14,73 +14,24 @@ export const PaypalReviewPage = {
     }
 };
 
-const DELIVERY_TYPES = {
-    pickup: {
-        fee: 0,
-        value: 'pickup',
-        label: 'Pick up'
-    },
-    standard: {
-        fee: 500,
-        value: 'standard',
-        label: 'Standard'
-    },
-    express: {
-        fee: 1500,
-        value: 'express',
-        label: 'Express'
-    }
-};
-
-function getTotal(total: number, deliveryType: 'pickup' | 'standard' | 'express') {
-    return total + DELIVERY_TYPES[deliveryType].fee;
-}
-
 function formatTotal(total: number) {
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(total / 100);
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(total);
 }
 
 function fetchTransactionDetails() {
-    const { amountValue, paymentDetails, pspReference, shopperDetails } = JSON.parse(sessionStorage.getItem('adyen-paypal-review-page-data'));
-    return { amountValue, paymentDetails, pspReference, shopperDetails };
+    const { amountValue, paymentDetails, pspReference, shopperDetails, paypalOrder } = JSON.parse(
+        sessionStorage.getItem('adyen-paypal-review-page-data')
+    );
+    return { amountValue, paymentDetails, pspReference, shopperDetails, paypalOrder };
 }
 
-const ReviewPage = ({ amountValue, paymentDetails, pspReference, shopperDetails }) => {
-    const [deliveryType, setDeliveryType] = useState<'pickup' | 'standard' | 'express'>('pickup');
-    const [details, setDetails] = useState(paymentDetails);
-    const [isPatching, setIsPatching] = useState(false);
+const ReviewPage = ({ paymentDetails, shopperDetails, paypalOrder }) => {
     const [isCompletingPayment, setIsCompletingPayment] = useState(false);
-
-    const handleDeliveryChange = async event => {
-        setIsPatching(true);
-
-        const newTotal = amountValue + DELIVERY_TYPES[event.target.value].fee;
-
-        const patch = {
-            pspReference: pspReference,
-            paymentData: details.data.paymentData,
-            amount: {
-                currency: 'USD',
-                value: newTotal
-            }
-        };
-
-        try {
-            const data = await patchPaypalOrder(patch);
-            const updatedDetails = { ...details, data: { ...details.data, paymentData: data.paymentData } };
-
-            setDetails(updatedDetails);
-            setDeliveryType(event.target.value);
-        } catch (error) {
-            alert('Error during patch');
-        }
-        setIsPatching(false);
-    };
 
     const completePayment = async () => {
         setIsCompletingPayment(true);
         try {
-            const result = await makeDetailsCall(details.data);
+            const result = await makeDetailsCall(paymentDetails.data);
             alert(result.resultCode);
         } catch (error) {
             alert('Error when completing the payment');
@@ -93,7 +44,6 @@ const ReviewPage = ({ amountValue, paymentDetails, pspReference, shopperDetails 
         <div>
             <h1>Review page</h1>
 
-            {isPatching && <div> Patching order ... </div>}
             {isCompletingPayment && <div> Completing payment ... </div>}
 
             <div>
@@ -112,33 +62,20 @@ const ReviewPage = ({ amountValue, paymentDetails, pspReference, shopperDetails 
             </div>
 
             <div>
-                <h2>Delivery or Pick up</h2>
-                {Object.keys(DELIVERY_TYPES).map(type => (
-                    <div key={type}>
-                        <input
-                            type="radio"
-                            name="deliveryType"
-                            value={DELIVERY_TYPES[type].value}
-                            id={DELIVERY_TYPES[type].value}
-                            checked={deliveryType === DELIVERY_TYPES[type].value}
-                            disabled={isPatching}
-                            onChange={handleDeliveryChange}
-                        />
-                        <label>
-                            {DELIVERY_TYPES[type].label} {formatTotal(DELIVERY_TYPES[type].fee)}
-                        </label>
-                    </div>
-                ))}
+                <h2>Delivery type</h2>
+                <div>
+                    {paypalOrder.purchase_units[0].shipping.options[0].label}: ${paypalOrder.purchase_units[0].shipping.options[0].amount.value}
+                </div>
             </div>
 
             <div>
                 <h2>Summary</h2>
-                <div>Subtotal: {formatTotal(amountValue)}</div>
-                <div>Shipping: {formatTotal(DELIVERY_TYPES[deliveryType].fee)}</div>
-                <div>Total: {formatTotal(getTotal(amountValue, deliveryType))}</div>
+                <div>Subtotal: {formatTotal(paypalOrder.purchase_units[0].amount.breakdown.item_total.value)}</div>
+                <div>Shipping: {formatTotal(paypalOrder.purchase_units[0].amount.breakdown.shipping.value)}</div>
+                <div>Total: {formatTotal(paypalOrder.purchase_units[0].amount.value)}</div>
 
-                <button disabled={isPatching} onClick={completePayment}>
-                    Complete order
+                <button disabled={isCompletingPayment} onClick={completePayment}>
+                    Complete Payment
                 </button>
             </div>
         </div>

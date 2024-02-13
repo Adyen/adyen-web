@@ -68,6 +68,8 @@ export default function PaypalButtons({
         if (!props.blockPayPalVenmoButton) createButton(VENMO, venmoButtonRef);
     }, []);
 
+    const displayContinueToReviewPageButton = props.commit === false;
+
     return (
         <div className={classnames('adyen-checkout__paypal__buttons', { 'adyen-checkout__paypal-processing': isProcessingPayment })}>
             <div className="adyen-checkout__paypal__button adyen-checkout__paypal__button--paypal" ref={paypalButtonRef} />
@@ -78,7 +80,8 @@ export default function PaypalButtons({
             {isProcessingPayment && (
                 <div className="adyen-checkout__paypal">
                     <div className="adyen-checkout__paypal__status adyen-checkout__paypal__status--processing">
-                        <Spinner size="medium" inline /> {i18n.get('paypal.processingPayment')}
+                        <Spinner size="medium" inline />
+                        {!displayContinueToReviewPageButton && i18n.get('paypal.processingPayment')}
                     </div>
                 </div>
             )}
