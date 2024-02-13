@@ -30,7 +30,7 @@ export interface QRLoaderProps {
     instructions?: string | (() => h.JSX.Element);
     copyBtn?: boolean;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
-    onSubmitAnalytics: (aObj: SendAnalyticsObject) => void;
+    onSubmitAnalytics?: (aObj: SendAnalyticsObject) => void;
 }
 
 export interface QRLoaderState {
