@@ -5,6 +5,7 @@ import QRLoader from '../internal/QRLoader';
 import CoreProvider from '../../core/Context/CoreProvider';
 import RedirectButton from '../internal/RedirectButton';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
+import { SendAnalyticsObject } from '../../core/Analytics/types';
 
 export interface QRLoaderContainerProps extends UIElementProps {
     /**
@@ -49,6 +50,10 @@ class QRLoaderContainer<T extends QRLoaderContainerProps = QRLoaderContainerProp
         };
     }
 
+    protected submitAnalytics = (aObj: SendAnalyticsObject) => {
+        super.submitAnalytics(aObj);
+    };
+
     get isValid() {
         return true;
     }
@@ -71,6 +76,7 @@ class QRLoaderContainer<T extends QRLoaderContainerProps = QRLoaderContainerProp
                         instructions={this.props.instructions}
                         onActionHandled={this.props.onActionHandled}
                         brandName={this.displayName}
+                        onSubmitAnalytics={this.submitAnalytics}
                     />
                 </SRPanelProvider>
             </CoreProvider>
