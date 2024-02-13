@@ -22,6 +22,7 @@ import {
     ANALYTICS_INPUT_STR,
     ANALYTICS_LIST,
     ANALYTICS_LIST_SEARCH,
+    ANALYTICS_SEARCH_DEBOUNCE_TIME,
     ANALYTICS_SELECTED_STR
 } from '../../../core/Analytics/constants';
 import { debounce } from '../../../utils/debounce';
@@ -83,7 +84,7 @@ function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder'
         }
     }, []);
 
-    const debounceSearchAnalytics = useRef(debounce(props.onSubmitAnalytics, 1000));
+    const debounceSearchAnalytics = useRef(debounce(props.onSubmitAnalytics, ANALYTICS_SEARCH_DEBOUNCE_TIME));
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const handleSearch = useCallback((value: string) => {
