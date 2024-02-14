@@ -2,6 +2,7 @@ import { mount } from 'enzyme';
 import { h } from 'preact';
 import IssuerList from './IssuerList';
 import PayButton from '../PayButton';
+import { ANALYTICS_FEATURED_ISSUER, ANALYTICS_LIST, ANALYTICS_SELECTED_STR } from '../../../core/Analytics/constants';
 
 describe('IssuerList', () => {
     test('Accepts Items as props', () => {
@@ -130,5 +131,75 @@ describe('IssuerList', () => {
 
         expect(highlightedIssuerButton.text()).toBe(highlightedIssuerDropdownItem.text());
         expect(highlightedIssuerButton.prop('value')).toBe(highlightedIssuerDropdownItem.prop('data-value'));
+    });
+});
+
+describe('IssuerList: calls that generate analytics should produce objects with the expected shapes ', () => {
+    let onSubmitAnalytics;
+    beforeEach(() => {
+        console.log = jest.fn(() => {});
+
+        onSubmitAnalytics = jest.fn(obj => {
+            console.log('### IssuerList.test::callbacks.onSubmitAnalytics:: obj', obj);
+        });
+    });
+
+    test('Clicking on a highlighted issuer button triggers call to onSubmitAnalytics with expected analytics object', () => {
+        const items = [
+            { name: 'Issuer 1', id: '1' },
+            { name: 'Issuer 2', id: '2' },
+            { name: 'Issuer 3', id: '3' }
+        ];
+        const highlightedIds = ['2', '3'];
+
+        expect(onSubmitAnalytics).toBeCalledTimes(0);
+
+        const wrapper = mount(
+            <IssuerList
+                items={items}
+                highlightedIds={highlightedIds}
+                showPayButton={false}
+                onChange={() => {}}
+                payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
+                onSubmitAnalytics={onSubmitAnalytics}
+            />
+        );
+
+        wrapper.find('.adyen-checkout__issuer-button-group button').at(1).simulate('click');
+
+        expect(onSubmitAnalytics).toHaveBeenCalledWith({
+            type: ANALYTICS_SELECTED_STR,
+            target: ANALYTICS_FEATURED_ISSUER,
+            issuer: 'Issuer 3'
+        });
+    });
+
+    test('Clicking on a issuer in the dropdown triggers call to onSubmitAnalytics with expected analytics object', () => {
+        const items = [
+            { name: 'Issuer 1', id: '1' },
+            { name: 'Issuer 2', id: '2' },
+            { name: 'Issuer 3', id: '3' }
+        ];
+
+        expect(onSubmitAnalytics).toBeCalledTimes(0);
+
+        const wrapper = mount(
+            <IssuerList
+                items={items}
+                showPayButton={false}
+                onChange={() => {}}
+                payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
+                onSubmitAnalytics={onSubmitAnalytics}
+            />
+        );
+
+        const highlightedIssuerDropdownItem = wrapper.find('ul li').at(1);
+        highlightedIssuerDropdownItem.simulate('click');
+
+        expect(onSubmitAnalytics).toHaveBeenCalledWith({
+            type: ANALYTICS_SELECTED_STR,
+            target: ANALYTICS_LIST,
+            issuer: 'Issuer 2'
+        });
     });
 });
