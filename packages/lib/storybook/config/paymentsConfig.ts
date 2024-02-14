@@ -1,12 +1,13 @@
+import { RETURN_URL } from './commonConfig';
+
 const identifier = new Date().getMilliseconds();
 const protocol = process.env.IS_HTTPS === 'true' ? 'https' : 'http';
 
-const { origin = `${protocol}://localhost:3020`, search } = window.location;
-const returnUrl = origin + search;
+const { origin = `${protocol}://localhost:3020` } = window.location;
 
 const paymentsConfig = {
     origin,
-    returnUrl,
+    returnUrl: RETURN_URL,
     reference: `${identifier}-checkout-components-ref`,
     additionalData: {
         // Force response code. See https://docs.adyen.com/development-resources/test-cards/result-code-testing/adyen-response-codes
