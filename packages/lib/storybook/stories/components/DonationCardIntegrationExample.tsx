@@ -11,7 +11,7 @@ interface DonationIntegrationExampleProps {
     contextArgs: PaymentMethodStoryProps<DonationConfiguration>;
 }
 
-export const DonationIntegrationExample = ({ contextArgs }: DonationIntegrationExampleProps) => {
+export const DonationCardIntegrationExample = ({ contextArgs }: DonationIntegrationExampleProps) => {
     const checkout = useRef(null);
     const [element, setElement] = useState(null);
 
@@ -42,7 +42,7 @@ export const DonationIntegrationExample = ({ contextArgs }: DonationIntegrationE
                         resultCode,
                         donationToken,
                         pspReference,
-                        paymentMethod: { type },
+                        paymentMethod: { type }, // For Ideal, we get type = 'ideal' in the response. When making a donation, we need to map the value to 'sepadirectdebit'
                         merchantReference
                     } = await makePayment(state.data, paymentData);
 
