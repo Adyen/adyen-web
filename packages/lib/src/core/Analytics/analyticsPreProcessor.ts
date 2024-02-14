@@ -4,6 +4,7 @@ import {
     ANALYTICS_ACTION_STR,
     ANALYTICS_CONFIGURED_STR,
     ANALYTICS_DISPLAYED_STR,
+    ANALYTICS_DOWNLOAD_STR,
     ANALYTICS_EVENT_ERROR,
     ANALYTICS_EVENT_INFO,
     ANALYTICS_EVENT_LOG,
@@ -44,6 +45,7 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
             case ANALYTICS_UNFOCUS_STR:
             case ANALYTICS_DISPLAYED_STR: // issuerList
             case ANALYTICS_INPUT_STR: // issuerList
+            case ANALYTICS_DOWNLOAD_STR: // QR codes
                 analyticsModule.createAnalyticsEvent({
                     event: ANALYTICS_EVENT_INFO,
                     data: { component, type, target }

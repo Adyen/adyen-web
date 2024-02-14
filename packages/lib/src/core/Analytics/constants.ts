@@ -14,12 +14,17 @@ export const ANALYTICS_SELECTED_STR = 'selected';
 export const ANALYTICS_RENDERED_STR = 'rendered';
 export const ANALYTICS_DISPLAYED_STR = 'displayed';
 export const ANALYTICS_INPUT_STR = 'input';
+
+export const ANALYTICS_DOWNLOAD_STR = 'download';
+
 export const ANALYTICS_VALIDATION_ERROR_STR = 'validationError';
 
 export const ANALYTICS_FOCUS_STR = 'focus';
 export const ANALYTICS_UNFOCUS_STR = 'unfocus';
 
 export const ANALYTICS_CONFIGURED_STR = 'configured';
+
+export const ANALYTICS_QR_CODE_DOWNLOAD = 'qr_download_button';
 
 export const ANALYTICS_INSTANT_PAYMENT_BUTTON = 'instant_payment_button';
 export const ANALYTICS_FEATURED_ISSUER = 'featured_issuer';
