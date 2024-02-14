@@ -11,7 +11,7 @@ export interface CampaignContentProps {
 
 export default function CampaignContent({
     logoUrl = '',
-    nonprofitDescription = 'test description',
+    nonprofitDescription = '',
     nonprofitName = '',
     nonprofitUrl = '',
     bannerUrl = ''
