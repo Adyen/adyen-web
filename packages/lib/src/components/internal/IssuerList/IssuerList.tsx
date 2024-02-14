@@ -86,8 +86,7 @@ function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder'
 
     const debounceSearchAnalytics = useRef(debounce(props.onSubmitAnalytics, ANALYTICS_SEARCH_DEBOUNCE_TIME));
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const handleSearch = useCallback((value: string) => {
+    const handleSearch = useCallback(() => {
         debounceSearchAnalytics.current({ type: ANALYTICS_INPUT_STR, target: ANALYTICS_LIST_SEARCH });
     }, []);
 

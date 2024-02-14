@@ -9,7 +9,6 @@ import Language from '../../language/Language';
 import { IssuerItem, TermsAndConditions } from '../internal/IssuerList/types';
 import RedirectButton from '../internal/RedirectButton';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
-import { SendAnalyticsObject } from '../../core/Analytics/types';
 
 interface IssuerListContainerProps extends UIElementProps {
     showImage?: boolean;
@@ -75,10 +74,6 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
             }
         };
     }
-
-    protected submitAnalytics = (aObj: SendAnalyticsObject) => {
-        super.submitAnalytics(aObj);
-    };
 
     /**
      * Returns whether the component state is valid or not
