@@ -29,6 +29,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         this.handleOrder = this.handleOrder.bind(this);
         this.handleResponse = this.handleResponse.bind(this);
         this.setElementStatus = this.setElementStatus.bind(this);
+        this.submitAnalytics = this.submitAnalytics.bind(this);
 
         this.elementRef = (props && props.elementRef) || this;
     }

@@ -50,6 +50,7 @@ export interface AnalyticsObject {
     brand?: string;
     validationErrorCode?: string;
     validationErrorMessage?: string;
+    issuer?: string;
 }
 
 export type ANALYTICS_EVENT = 'log' | 'error' | 'info';
