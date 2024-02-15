@@ -96,11 +96,11 @@ class CSF extends AbstractCSF {
 
         this.postMessageToAllIframes = partial(postMessageToAllIframes, thisObj);
 
-        this.handleIOSTouchEvents = handleIOSTouchEvents.handleTouchend;
+        this.handleIOSTouchEvents = handleIOSTouchEvents.handleTouchend.bind(this);
         this.touchendListener = handleIOSTouchEvents.touchendListener.bind(this);
-        this.destroyTouchendListener = handleIOSTouchEvents.destroyTouchendListener;
+        this.destroyTouchendListener = handleIOSTouchEvents.destroyTouchendListener.bind(this);
         this.touchstartListener = handleIOSTouchEvents.touchstartListener.bind(this);
-        this.destroyTouchstartListener = handleIOSTouchEvents.destroyTouchstartListener;
+        this.destroyTouchstartListener = handleIOSTouchEvents.destroyTouchstartListener.bind(this);
 
         this.setFocusOnFrame = partial(setFocusOnFrame, thisObj);
         this.handleFocus = partial(handleFocus, thisObj, this.handleIOSTouchEvents);
