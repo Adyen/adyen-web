@@ -24,7 +24,15 @@ export const makePayment = async (stateData: any, paymentData: any): Promise<Raw
 
 export const makeDetailsCall = async (
     detailsData: AdditionalDetailsStateData['data']
-): Promise<{ resultCode: ResultCode; action?: PaymentAction; order?: Order; donationToken?: string }> => await httpPost('details', detailsData);
+): Promise<{
+    resultCode: ResultCode;
+    action?: PaymentAction;
+    order?: Order;
+    donationToken?: string;
+    pspReference?: string;
+    merchantReference?: string;
+    paymentMethod?: any;
+}> => await httpPost('details', detailsData);
 
 export const createSession = async (data: any): Promise<CheckoutSessionSetupResponse> => {
     return await httpPost('sessions', { ...data, lineItems: paymentsConfig.lineItems });

@@ -4,7 +4,7 @@ import { Card } from '../../../src';
 import { PaymentMethodStoryProps } from '../types';
 import { Container } from '../Container';
 import Donation from '../../../src/components/Donation/Donation';
-import { createDonation, createDonationCampaigns, makePayment } from '../../helpers/checkout-api-calls';
+import { createDonation, createDonationCampaigns, makeDetailsCall, makePayment } from '../../helpers/checkout-api-calls';
 import { DonationConfiguration } from '../../../src/components/Donation/types';
 
 interface DonationIntegrationExampleProps {
@@ -33,7 +33,8 @@ export const DonationCardIntegrationExample = ({ contextArgs }: DonationIntegrat
                     const paymentData = {
                         amount: { value: Number(amount), currency: 'EUR' },
                         countryCode,
-                        shopperLocale
+                        shopperLocale,
+                        returnUrl: 'https://localhost:3020/?path=/story/components-donation--integrate-with-card'
                     };
 
                     const {
@@ -42,7 +43,7 @@ export const DonationCardIntegrationExample = ({ contextArgs }: DonationIntegrat
                         resultCode,
                         donationToken,
                         pspReference,
-                        paymentMethod: { type }, // For Ideal, we get type = 'ideal' in the response. When making a donation, we need to map the value to 'sepadirectdebit'
+                        paymentMethod = {}, // For Ideal, we get type = 'ideal' in the response. When making a donation, we need to map the value to 'sepadirectdebit'
                         merchantReference
                     } = await makePayment(state.data, paymentData);
 
@@ -55,24 +56,64 @@ export const DonationCardIntegrationExample = ({ contextArgs }: DonationIntegrat
                         donationToken
                     });
 
-                    sessionStorage.setItem(
-                        'donation',
-                        JSON.stringify({
-                            donationOriginalPspReference: pspReference,
-                            reference: merchantReference,
-                            paymentMethod: { type },
-                            donationToken
-                        })
-                    );
+                    if (donationToken) {
+                        sessionStorage.setItem(
+                            'donation',
+                            JSON.stringify({
+                                donationOriginalPspReference: pspReference,
+                                reference: merchantReference,
+                                paymentMethod: { type: paymentMethod.type },
+                                donationToken
+                            })
+                        );
+                    }
                 } catch (error) {
                     console.error('## onSubmit - critical error', error);
                     actions.reject();
                 }
             },
 
+            onAdditionalDetails: async (state, _, actions) => {
+                try {
+                    const {
+                        action,
+                        order,
+                        resultCode,
+                        donationToken,
+                        pspReference,
+                        paymentMethod = {}, // For Ideal, we get type = 'ideal' in the response. When making a donation, we need to map the value to 'sepadirectdebit'
+                        merchantReference
+                    } = await makeDetailsCall(state.data);
+
+                    if (!resultCode) actions.reject();
+
+                    actions.resolve({
+                        resultCode,
+                        action,
+                        order,
+                        donationToken
+                    });
+
+                    if (donationToken) {
+                        sessionStorage.setItem(
+                            'donation',
+                            JSON.stringify({
+                                donationOriginalPspReference: pspReference,
+                                reference: merchantReference,
+                                paymentMethod: { type: paymentMethod.type },
+                                donationToken
+                            })
+                        );
+                    }
+                } catch (error) {
+                    console.error('## onAdditionalDetails - critical error', error);
+                    actions.reject();
+                }
+            },
+
             onPaymentCompleted({ donationToken }) {
                 if (donationToken) {
-                    mountDonationComponent();
+                    tryMountDonation();
                 }
             }
         });
@@ -82,31 +123,38 @@ export const DonationCardIntegrationExample = ({ contextArgs }: DonationIntegrat
         setElement(cardElement);
     };
 
-    const mountDonationComponent = async () => {
+    const tryMountDonation = async () => {
         try {
             const { donationCampaigns } = await createDonationCampaigns({ currency: 'EUR' });
-            const donationSession = JSON.parse(sessionStorage.getItem('donation'));
-            const donationElement = new Donation(checkout.current, {
-                ...donationCampaigns[0],
-                onDonate: ({ data: { amount } }, component) => {
-                    createDonation({ amount, donationCampaignId: donationCampaigns[0].id, ...donationSession })
-                        .then(res => {
-                            if (res.status !== 'refused') {
-                                component.setStatus('success');
-                                sessionStorage.removeItem('donation');
-                            } else {
+
+            if (donationCampaigns?.length > 0) {
+                const firstCampaign = donationCampaigns[0];
+                const donationSession = JSON.parse(sessionStorage.getItem('donation'));
+                const donationElement = new Donation(checkout.current, {
+                    ...firstCampaign,
+                    onDonate: ({ data: { amount } }, component) => {
+                        createDonation({ amount, donationCampaignId: firstCampaign.id, ...donationSession })
+                            .then(res => {
+                                if (res.status !== 'refused') {
+                                    component.setStatus('success');
+                                } else {
+                                    component.setStatus('error');
+                                }
+                            })
+                            .catch(error => {
                                 component.setStatus('error');
-                            }
-                        })
-                        .catch(error => {
-                            component.setStatus('error');
-                            sessionStorage.removeItem('donation');
-                            console.error(error);
-                        });
-                },
-                onCancel: () => alert('Donation canceled')
-            });
-            setElement(donationElement);
+                                console.error(error);
+                            })
+                            .finally(() => {
+                                sessionStorage.removeItem('donation');
+                            });
+                    },
+                    onCancel: () => alert('Donation canceled')
+                });
+                setElement(donationElement);
+            } else {
+                alert('Payment completed, no donation config is returned.');
+            }
         } catch (e) {
             console.error(e);
         }
