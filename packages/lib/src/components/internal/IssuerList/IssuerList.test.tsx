@@ -166,14 +166,16 @@ describe('IssuerList: calls that generate analytics should produce objects with 
         expect(onSubmitAnalytics).toBeCalledTimes(0);
 
         const wrapper = mount(
-            <IssuerList
-                items={items}
-                highlightedIds={highlightedIds}
-                showPayButton={false}
-                onChange={() => {}}
-                payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
-                onSubmitAnalytics={onSubmitAnalytics}
-            />
+            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                <IssuerList
+                    items={items}
+                    highlightedIds={highlightedIds}
+                    showPayButton={false}
+                    onChange={() => {}}
+                    payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
+                    onSubmitAnalytics={onSubmitAnalytics}
+                />
+            </CoreProvider>
         );
 
         wrapper.find('.adyen-checkout__issuer-button-group button').at(1).simulate('click');
@@ -195,13 +197,15 @@ describe('IssuerList: calls that generate analytics should produce objects with 
         expect(onSubmitAnalytics).toBeCalledTimes(0);
 
         const wrapper = mount(
-            <IssuerList
-                items={items}
-                showPayButton={false}
-                onChange={() => {}}
-                payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
-                onSubmitAnalytics={onSubmitAnalytics}
-            />
+            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                <IssuerList
+                    items={items}
+                    showPayButton={false}
+                    onChange={() => {}}
+                    payButton={props => <PayButton {...props} amount={{ value: 50, currency: 'USD' }} />}
+                    onSubmitAnalytics={onSubmitAnalytics}
+                />
+            </CoreProvider>
         );
 
         const highlightedIssuerDropdownItem = wrapper.find('ul li').at(1);
