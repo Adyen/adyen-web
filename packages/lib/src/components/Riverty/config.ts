@@ -1,7 +1,8 @@
 import { CITY, COUNTRY, FIRST_NAME, HOUSE_NUMBER_OR_NAME, LAST_NAME, POSTAL_CODE, STREET } from '../internal/Address/constants';
 import { AddressSpecifications } from '../internal/Address/types';
 
-export const allowedCountries = ['AT', 'CH', 'DE'];
+export const allowedBillingCountries = ['AT', 'CH', 'DE'];
+export const allowedDeliveryCountries = ['NO', 'SE', 'FI', 'DK', 'DE', 'AT', 'CH', 'NL', 'BE'];
 export const personalDetailsRequiredFields = ['firstName', 'lastName', 'dateOfBirth', 'shopperEmail', 'telephoneNumber'];
 export const deliveryAddressSpecification: AddressSpecifications = {
     default: {

@@ -1,8 +1,15 @@
 import { h } from 'preact';
 import OpenInvoiceContainer from '../helpers/OpenInvoiceContainer';
-import { allowedCountries, deliveryAddressSpecification, personalDetailsRequiredFields, termsAndConditionsUrlMap } from './config';
+import {
+    allowedBillingCountries,
+    allowedDeliveryCountries,
+    deliveryAddressSpecification,
+    personalDetailsRequiredFields,
+    termsAndConditionsUrlMap
+} from './config';
 import ConsentCheckboxLabel from '../internal/ConsentCheckboxLabel';
 import { getConsentUrl } from '../../utils/getConsentUrl';
+import { OpenInvoiceContainerProps } from '../helpers/OpenInvoiceContainer/OpenInvoiceContainer';
 
 export default class Riverty extends OpenInvoiceContainer {
     public static readonly type = 'riverty';
@@ -13,11 +20,14 @@ export default class Riverty extends OpenInvoiceContainer {
         ...OpenInvoiceContainer.defaultProps
     };
 
-    formatProps(props) {
+    formatProps(props: OpenInvoiceContainerProps) {
         return {
             ...super.formatProps(props),
-            billingAddressSpecification: { ...props.billingAddressSpecification, allowedCountries },
-            deliveryAddressSpecification: { ...props.deliveryAddressSpecification, allowedCountries: [] }, // Allow all the countries
+            billingAddressSpecification: {
+                ...props.billingAddressSpecification,
+                allowedCountries: props.countryCode ? [props.countryCode] : allowedBillingCountries
+            },
+            deliveryAddressSpecification: { ...props.deliveryAddressSpecification, allowedCountries: allowedDeliveryCountries },
             consentCheckboxLabel: <ConsentCheckboxLabel url={getConsentUrl(props.countryCode, props.i18n?.locale, termsAndConditionsUrlMap)} />
         };
     }
