@@ -1,7 +1,7 @@
 import IssuerListContainer from '../helpers/IssuerListContainer';
 
-class EBankingFI extends IssuerListContainer {
+class OnlineBankingFI extends IssuerListContainer {
     public static type = 'ebanking_FI';
 }
 
-export default EBankingFI;
+export default OnlineBankingFI;
