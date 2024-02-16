@@ -62,6 +62,9 @@ export async function initSession() {
                 // billingAddress config:
                 billingAddressRequired: true,
                 billingAddressMode: 'partial'
+            },
+            ideal: {
+                highlightedIssuers: ['1121', '1154', '1152']
             }
         }
     }).mount('#dropin-container');

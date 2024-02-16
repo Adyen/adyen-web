@@ -35,16 +35,13 @@ import getTranslationFile from '../../config/getTranslation';
         locale: shopperLocale,
         translationFile: getTranslationFile(shopperLocale),
         environment: process.env.__CLIENT_ENV__,
-        onError: console.error,
-        paymentMethodsConfiguration: {
-            ideal: {
-                highlightedIssuers: ['1121', '1154', '1152']
-            }
-        }
+        onError: console.error
     });
 
     // iDEAL
-    window.ideal = new Ideal(window.core).mount('.ideal-field');
+    window.ideal = new Ideal(window.core, {
+        highlightedIssuers: ['1121', '1154', '1152']
+    }).mount('.ideal-field');
 
     // BillDesk Online
     window.billdesk_online = new BillDeskOnline(window.core).mount('.billdesk_online-field');

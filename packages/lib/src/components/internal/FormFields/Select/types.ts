@@ -9,6 +9,11 @@ export interface SelectItem {
     selectedOptionName?: string;
 }
 
+export interface SelectTargetObject {
+    value?: string | number;
+    name?: string;
+}
+
 export interface SelectProps {
     className: string;
     classNameModifiers: string[];
@@ -20,7 +25,7 @@ export interface SelectProps {
     onChange: (
         e:
             | {
-                  target: { value: string | number; name: string };
+                  target: SelectTargetObject;
               }
             | Partial<h.JSX.TargetedKeyboardEvent<HTMLInputElement>>
     ) => void;
@@ -33,6 +38,7 @@ export interface SelectProps {
     disableTextFilter?: boolean;
     clearOnSelect?: boolean;
     blurOnClose?: boolean;
+    onListToggle?: (isOpen: boolean) => void;
 }
 
 export interface SelectButtonProps {
