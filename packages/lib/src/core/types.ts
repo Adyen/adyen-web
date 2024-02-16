@@ -110,8 +110,6 @@ export interface CoreOptions {
 
     setStatusAutomatically?: boolean;
 
-    getRegulatoryDefaults(): Record<string, any>;
-
     beforeRedirect?(
         resolve: PromiseResolve,
         reject: PromiseReject,

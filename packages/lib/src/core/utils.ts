@@ -11,16 +11,3 @@ export function processGlobalOptions(globalOptions) {
         return r;
     }, {});
 }
-
-export function getDefaultPropsByCountryCode(countryCode: string): Record<string, any> {
-    switch (countryCode) {
-        // Finnish regulations state that no payment method can be open by default
-        case 'FI':
-            return {
-                openFirstPaymentMethod: false,
-                openFirstStoredPaymentMethod: false
-            };
-        default:
-            return {};
-    }
-}

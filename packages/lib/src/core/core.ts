@@ -9,11 +9,12 @@ import Analytics from './Analytics';
 import { PaymentAction } from '../types';
 import { CoreOptions } from './types';
 import { PaymentMethods, PaymentMethodOptions } from '../types';
-import { getDefaultPropsByCountryCode, processGlobalOptions } from './utils';
+import { processGlobalOptions } from './utils';
 import Session from './CheckoutSession';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
 import { Resources } from './Context/Resources';
 import { SRPanel } from './Errors/SRPanel';
+import { getRegulatoryDefaults } from '../components/utils';
 
 class Core {
     public session: Session;
@@ -217,7 +218,7 @@ class Core {
         return {
             paymentMethods: this.paymentMethodsResponse.paymentMethods,
             storedPaymentMethods: this.paymentMethodsResponse.storedPaymentMethods,
-            ...this.getRegulatoryDefaults(),
+            ...getRegulatoryDefaults(this.options.countryCode),
             ...options,
             i18n: this.modules.i18n,
             modules: this.modules,
@@ -227,10 +228,6 @@ class Core {
             createFromAction: this.createFromAction,
             _parentInstance: this
         };
-    }
-
-    public getRegulatoryDefaults(): Record<string, any> {
-        return getDefaultPropsByCountryCode(this.options.countryCode);
     }
 
     /**
