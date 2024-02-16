@@ -104,7 +104,6 @@ class Core implements ICore {
                     return this;
                 })
                 .catch(error => {
-                    console.log('### core:::: error');
                     if (this.options.onError) this.options.onError(error);
                     return Promise.reject(error);
                 });
@@ -210,17 +209,12 @@ class Core implements ICore {
     public update = (options: Partial<CoreConfiguration> = {}): Promise<this> => {
         this.setOptions(options);
 
-        return this.initialize()
-            .then(() => {
-                // Update each component under this instance
-                // here we should update only the new options that have been received from core
-                this.components.forEach(c => c.update(options));
-                return this;
-            })
-            .catch(e => {
-                console.log('### core:::: CATCH e', e);
-                return this;
-            });
+        return this.initialize().then(() => {
+            // Update each component under this instance
+            // here we should update only the new options that have been received from core
+            this.components.forEach(c => c.update(options));
+            return this;
+        });
     };
 
     /**

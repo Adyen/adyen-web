@@ -10,7 +10,7 @@ export async function initManual() {
 
     window.checkout = await AdyenCheckout({
         amount,
-        // countryCode,
+        countryCode,
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
 

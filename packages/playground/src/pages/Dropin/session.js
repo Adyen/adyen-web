@@ -12,8 +12,8 @@ export async function initSession() {
         shopperLocale,
         shopperReference,
         telephoneNumber: '+611223344',
-        shopperEmail: 'shopper.ctp1@adyen.com'
-        // countryCode
+        shopperEmail: 'shopper.ctp1@adyen.com',
+        countryCode
     });
 
     const checkout = await AdyenCheckout({
