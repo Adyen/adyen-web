@@ -6,7 +6,7 @@ name: Publish Package
 on:
   release:
     types: [created]
-  workflow_dispatch:  
+  workflow_dispatch:
 
 jobs:
   publish-npm:
@@ -16,7 +16,7 @@ jobs:
       # Setup .npmrc file to publish to npm
       - uses: actions/setup-node@v4
         with:
-          node-version: 18.15
+          node-version: 18.18
           registry-url: https://registry.npmjs.org/
       - run: yarn install --frozen-lockfile
       # Copy README to adyen-web package

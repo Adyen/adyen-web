@@ -1,5 +1,6 @@
 {
     "name": "@adyen/adyen-web-main",
+    "private": true,
     "keywords": [
         "adyen",
         "adyen-web",
@@ -8,7 +9,6 @@
         "payments",
         "components"
     ],
-    "private": true,
     "workspaces": [
         "packages/*"
     ],
@@ -28,17 +28,11 @@
         "changeset": "changeset",
         "version": "changeset version"
     },
-    "resolutions": {
-        "**/regenerator-runtime": "^0.13.9"
-    },
-    "dependencies": {
-        "concurrently": "8.2.2"
-    },
     "devDependencies": {
         "@adyen/adyen-web-server": "1.0.0",
         "@changesets/cli": "2.27.1",
         "@changesets/get-github-info": "0.6.0",
-        "dotenv": "16.4.1",
+        "concurrently": "8.2.2",
         "prettier": "3.2.5"
     }
 }

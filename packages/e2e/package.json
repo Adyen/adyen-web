@@ -27,7 +27,7 @@
         "concurrently": "8.2.2",
         "cross-env": "^7.0.3",
         "css-loader": "^6.0.0",
-        "dotenv": "^16.0.3",
+        "dotenv": "16.4.4",
         "html-webpack-plugin": "5.5.1",
         "sass-loader": "^10.2.0",
         "source-map-loader": "^1.1.3",
