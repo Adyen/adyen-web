@@ -82,13 +82,14 @@ class Core implements ICore {
 
     public initialize(): Promise<this> {
         if (this.session) {
-            if (!hasOwnProperty(this.options.session, 'countryCode')) {
-                throw new AdyenCheckoutError(IMPLEMENTATION_ERROR, 'You must specify a countryCode when creating a session');
-            }
             return this.session
                 .setupSession(this.options)
                 .then(sessionResponse => {
                     const { amount, shopperLocale, countryCode, paymentMethods, ...rest } = sessionResponse;
+
+                    if (!hasOwnProperty(sessionResponse, 'countryCode')) {
+                        throw new AdyenCheckoutError(IMPLEMENTATION_ERROR, 'You must specify a countryCode when creating a session');
+                    }
 
                     this.setOptions({
                         ...rest,
@@ -103,8 +104,9 @@ class Core implements ICore {
                     return this;
                 })
                 .catch(error => {
+                    console.log('### core:::: error');
                     if (this.options.onError) this.options.onError(error);
-                    return this;
+                    return Promise.reject(error);
                 });
         }
 
@@ -208,12 +210,17 @@ class Core implements ICore {
     public update = (options: Partial<CoreConfiguration> = {}): Promise<this> => {
         this.setOptions(options);
 
-        return this.initialize().then(() => {
-            // Update each component under this instance
-            // here we should update only the new options that have been received from core
-            this.components.forEach(c => c.update(options));
-            return this;
-        });
+        return this.initialize()
+            .then(() => {
+                // Update each component under this instance
+                // here we should update only the new options that have been received from core
+                this.components.forEach(c => c.update(options));
+                return this;
+            })
+            .catch(e => {
+                console.log('### core:::: CATCH e', e);
+                return this;
+            });
     };
 
     /**

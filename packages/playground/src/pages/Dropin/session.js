@@ -12,8 +12,8 @@ export async function initSession() {
         shopperLocale,
         shopperReference,
         telephoneNumber: '+611223344',
-        shopperEmail: 'shopper.ctp1@adyen.com',
-        countryCode
+        shopperEmail: 'shopper.ctp1@adyen.com'
+        // countryCode
     });
 
     const checkout = await AdyenCheckout({
@@ -34,7 +34,7 @@ export async function initSession() {
             console.log('onPaymentFailed', result, element);
         },
         onError: (error, component) => {
-            console.info(JSON.stringify(error), component);
+            console.error('error', JSON.stringify(error.name), JSON.stringify(error.message), component);
         },
         onChange: (state, component) => {
             console.log('onChange', state);
