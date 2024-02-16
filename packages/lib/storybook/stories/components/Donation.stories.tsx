@@ -4,6 +4,7 @@ import { DonationConfiguration } from '../../../src/components/Donation/types';
 import Donation from '../../../src/components/Donation';
 import { Container } from '../Container';
 import { DonationCardIntegrationExample } from './DonationCardIntegrationExample';
+import { getSearchParameter } from '../../utils/get-query-parameters';
 
 const componentConfiguration = {
     onDonate: (_, component) => setTimeout(() => component.setStatus('success'), 1000),
@@ -40,8 +41,11 @@ export const Default: DonationStory = {
     }
 };
 
-export const IntegrateWithCard: DonationStory = {
-    render: args => <DonationCardIntegrationExample contextArgs={args} />
+export const IntegrateWithCard = {
+    render: args => <DonationCardIntegrationExample contextArgs={args} />,
+    args: {
+        redirectResult: getSearchParameter('redirectResult')
+    }
 };
 
 export default meta;

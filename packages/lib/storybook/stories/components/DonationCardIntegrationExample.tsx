@@ -1,40 +1,39 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { createAdvancedFlowCheckout } from '../../helpers/create-advanced-checkout';
-import { Card } from '../../../src';
+import { AdyenCheckout, Card } from '../../../src';
 import { PaymentMethodStoryProps } from '../types';
 import { Container } from '../Container';
 import Donation from '../../../src/components/Donation/Donation';
 import { createDonation, createDonationCampaigns, makeDetailsCall, makePayment } from '../../helpers/checkout-api-calls';
 import { DonationConfiguration } from '../../../src/components/Donation/types';
+import { AdditionalDetailsStateData } from '../../../src/types/global-types';
+import { handleError, handleFinalState } from '../../helpers/checkout-handlers';
 
-interface DonationIntegrationExampleProps {
-    contextArgs: PaymentMethodStoryProps<DonationConfiguration>;
+export interface DonationIntegrationExampleProps {
+    contextArgs: PaymentMethodStoryProps<DonationConfiguration> & { redirectResult: string };
 }
 
-export const DonationCardIntegrationExample = ({ contextArgs }: DonationIntegrationExampleProps) => {
+export const DonationCardIntegrationExample = ({ contextArgs: { countryCode, amount, redirectResult } }: DonationIntegrationExampleProps) => {
     const checkout = useRef(null);
     const [element, setElement] = useState(null);
 
     useEffect(() => {
-        createCheckout();
-    }, [contextArgs]);
+        if (redirectResult) {
+            handleRedirectResult(redirectResult);
+        } else {
+            createCheckout();
+        }
+    }, [countryCode, amount, redirectResult]);
 
     const createCheckout = async () => {
-        const { showPayButton, countryCode, shopperLocale, amount } = contextArgs;
-
-        checkout.current = await createAdvancedFlowCheckout({
-            showPayButton,
+        checkout.current = await AdyenCheckout({
+            clientKey: process.env.CLIENT_KEY,
+            environment: process.env.CLIENT_ENV,
             countryCode,
-            shopperLocale,
-
-            // @ts-ignore ignore
             onSubmit: async (state, _, actions) => {
                 try {
                     const paymentData = {
                         amount: { value: Number(amount), currency: 'EUR' },
-                        countryCode,
-                        shopperLocale,
-                        returnUrl: 'https://localhost:3020/?path=/story/components-donation--integrate-with-card'
+                        countryCode
                     };
 
                     const {
@@ -72,8 +71,28 @@ export const DonationCardIntegrationExample = ({ contextArgs }: DonationIntegrat
                     actions.reject();
                 }
             },
+            onPaymentCompleted: (result, component) => {
+                handlePaymentCompleted(result, component);
+            }
+        });
 
-            onAdditionalDetails: async (state, _, actions) => {
+        const cardElement = new Card(checkout.current, {
+            _disableClickToPay: true
+        });
+
+        setElement(cardElement);
+    };
+
+    const handleRedirectResult = async (redirectResult: string) => {
+        if (!redirectResult) {
+            return;
+        }
+
+        checkout.current = await AdyenCheckout({
+            clientKey: process.env.CLIENT_KEY,
+            environment: process.env.CLIENT_ENV,
+            countryCode,
+            onAdditionalDetails: async (state: AdditionalDetailsStateData, _, actions) => {
                 try {
                     const {
                         action,
@@ -110,54 +129,57 @@ export const DonationCardIntegrationExample = ({ contextArgs }: DonationIntegrat
                     actions.reject();
                 }
             },
-
-            onPaymentCompleted({ donationToken }) {
-                if (donationToken) {
-                    tryMountDonation();
-                }
+            onPaymentCompleted: (result, component) => {
+                handlePaymentCompleted(result, component);
+            },
+            onError: (error, component) => {
+                handleError(error, component);
             }
         });
-        const cardElement = new Card(checkout.current, {
-            _disableClickToPay: true
-        });
-        setElement(cardElement);
+
+        checkout.current.submitDetails({ details: { redirectResult } });
     };
 
-    const tryMountDonation = async () => {
+    const handlePaymentCompleted = async (result, component) => {
         try {
-            const { donationCampaigns } = await createDonationCampaigns({ currency: 'EUR' });
-
-            if (donationCampaigns?.length > 0) {
-                const firstCampaign = donationCampaigns[0];
-                const donationSession = JSON.parse(sessionStorage.getItem('donation'));
-                const donationElement = new Donation(checkout.current, {
-                    ...firstCampaign,
-                    onDonate: ({ data: { amount } }, component) => {
-                        createDonation({ amount, donationCampaignId: firstCampaign.id, ...donationSession })
-                            .then(res => {
-                                if (res.status !== 'refused') {
-                                    component.setStatus('success');
-                                } else {
-                                    component.setStatus('error');
-                                }
-                            })
-                            .catch(error => {
-                                component.setStatus('error');
-                                console.error(error);
-                            })
-                            .finally(() => {
-                                sessionStorage.removeItem('donation');
-                            });
-                    },
-                    onCancel: () => alert('Donation canceled')
-                });
-                setElement(donationElement);
-            } else {
-                alert('Payment completed, no donation config is returned.');
-            }
+            await tryMountDonation(result);
         } catch (e) {
-            console.error(e);
+            console.warn(e);
+            handleFinalState(result, component);
         }
+    };
+
+    const tryMountDonation = async ({ donationToken }) => {
+        if (!donationToken) throw new Error('Cannot mount the Donation');
+
+        const { donationCampaigns } = await createDonationCampaigns({ currency: 'EUR' });
+
+        if (donationCampaigns.length === 0) throw new Error('Cannot mount the Donation, no donation campaign');
+
+        const firstCampaign = donationCampaigns[0];
+        const donationSession = JSON.parse(sessionStorage.getItem('donation'));
+        const donationElement = new Donation(checkout.current, {
+            ...firstCampaign,
+            onDonate: ({ data: { amount } }, component) => {
+                createDonation({ amount, donationCampaignId: firstCampaign.id, ...donationSession })
+                    .then(res => {
+                        if (res.status !== 'refused') {
+                            component.setStatus('success');
+                        } else {
+                            component.setStatus('error');
+                        }
+                    })
+                    .catch(error => {
+                        component.setStatus('error');
+                        console.error(error);
+                    })
+                    .finally(() => {
+                        sessionStorage.removeItem('donation');
+                    });
+            },
+            onCancel: () => alert('Donation canceled')
+        });
+        setElement(donationElement);
     };
 
     return <Container element={element} />;
