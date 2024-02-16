@@ -12,7 +12,7 @@ import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import splitPaymentMethods from './elements/splitPaymentMethods';
 import type { ICore } from '../../core/types';
-import { IDropin } from './types';
+import type { IDropin } from './types';
 
 const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay'];
 
