@@ -145,7 +145,7 @@ export const ComponentsMap = {
     [TxVariants.molpay_ebanking_TH]: MolPayEBankingTH,
     [TxVariants.molpay_ebanking_VN]: MolPayEBankingVN,
     [TxVariants.onlineBanking_CZ]: OnlineBankingCZ,
-    [TxVariants.onlinebanking_IN]: OnlineBankingIN, // NOTE ]: the txVariant does have a lowercase "b"
+    [TxVariants.onlinebanking_IN]: OnlineBankingIN, // NOTE: the txVariant does have a lowercase "b"
     [TxVariants.onlineBanking_PL]: OnlineBankingPL,
     [TxVariants.onlineBanking_SK]: OnlineBankingSK,
     [TxVariants.paybybank]: PayByBank,
