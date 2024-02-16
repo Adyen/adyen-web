@@ -56,6 +56,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.handleAdditionalDetails = this.handleAdditionalDetails.bind(this);
         this.handleResponse = this.handleResponse.bind(this);
         this.setElementStatus = this.setElementStatus.bind(this);
+        this.submitAnalytics = this.submitAnalytics.bind(this);
 
         this.makePaymentsCall = this.makePaymentsCall.bind(this);
         this.makeAdditionalDetailsCall = this.makeAdditionalDetailsCall.bind(this);

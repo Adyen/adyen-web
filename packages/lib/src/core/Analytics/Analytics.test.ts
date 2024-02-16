@@ -4,7 +4,7 @@ import logEvent from '../Services/analytics/log-event';
 import { PaymentAmount } from '../../types';
 import { createAnalyticsObject } from './utils';
 import wait from '../../utils/wait';
-import { DEFAULT_DEBOUNCE_TIME_MS } from '../../components/internal/Address/utils';
+import { DEFAULT_DEBOUNCE_TIME_MS } from '../../utils/debounce';
 import { ANALYTICS_EVENT } from './types';
 
 jest.mock('../Services/analytics/collect-id');

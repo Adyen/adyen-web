@@ -2,6 +2,8 @@ export const ANALYTICS_PATH = 'v3/analytics';
 
 export const ANALYTICS_INFO_TIMER_INTERVAL = process.env.NODE_ENV === 'development' ? 5000 : 10000;
 
+export const ANALYTICS_SEARCH_DEBOUNCE_TIME = 3000;
+
 export const ANALYTICS_EVENT_LOG = 'log';
 export const ANALYTICS_EVENT_ERROR = 'error';
 export const ANALYTICS_EVENT_INFO = 'info';
@@ -10,12 +12,24 @@ export const ANALYTICS_ACTION_STR = 'action';
 export const ANALYTICS_SUBMIT_STR = 'submit';
 export const ANALYTICS_SELECTED_STR = 'selected';
 export const ANALYTICS_RENDERED_STR = 'rendered';
+export const ANALYTICS_DISPLAYED_STR = 'displayed';
+export const ANALYTICS_INPUT_STR = 'input';
+
+export const ANALYTICS_DOWNLOAD_STR = 'download';
+
 export const ANALYTICS_VALIDATION_ERROR_STR = 'validationError';
 
 export const ANALYTICS_FOCUS_STR = 'focus';
 export const ANALYTICS_UNFOCUS_STR = 'unfocus';
 
 export const ANALYTICS_CONFIGURED_STR = 'configured';
+
+export const ANALYTICS_QR_CODE_DOWNLOAD = 'qr_download_button';
+
+export const ANALYTICS_INSTANT_PAYMENT_BUTTON = 'instant_payment_button';
+export const ANALYTICS_FEATURED_ISSUER = 'featured_issuer';
+export const ANALYTICS_LIST = 'list';
+export const ANALYTICS_LIST_SEARCH = 'list_search';
 
 export const ANALYTICS_IMPLEMENTATION_ERROR = 'ImplementationError';
 export const ANALYTICS_API_ERROR = 'APIError';

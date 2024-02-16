@@ -4,7 +4,7 @@ import { AddressLookupItem } from '../types';
 import { useCallback, useEffect, useState, useMemo } from 'preact/hooks';
 import './AddressSearch.scss';
 import useCoreContext from '../../../../core/Context/useCoreContext';
-import { debounce } from '../utils';
+import { debounce } from '../../../../utils/debounce';
 import Select from '../../FormFields/Select';
 import { AddressData } from '../../../../types';
 
