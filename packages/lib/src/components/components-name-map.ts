@@ -83,10 +83,10 @@ const ComponentsNameMap = {
     [TxVariants.molpay_ebanking_fpx_MY]: 'MolPayEBankingMY',
     [TxVariants.molpay_ebanking_TH]: 'MolPayEBankingTH',
     [TxVariants.molpay_ebanking_VN]: 'MolPayEBankingVN',
-    [TxVariants.onlineBanking_CZ]: 'OnlineBankingCZElement',
-    [TxVariants.onlinebanking_IN]: 'OnlineBankingINElement', // NOTE ]: the txVariant does have a lowercase "b"
-    [TxVariants.onlineBanking_PL]: 'OnlinebankingPL',
-    [TxVariants.onlineBanking_SK]: 'OnlineBankingSKElement',
+    [TxVariants.onlineBanking_CZ]: 'OnlineBankingCZ',
+    [TxVariants.onlinebanking_IN]: 'OnlineBankingIN', // NOTE: the txVariant does have a lowercase "b"
+    [TxVariants.onlineBanking_PL]: 'OnlineBankingPL',
+    [TxVariants.onlineBanking_SK]: 'OnlineBankingSK',
     [TxVariants.paybybank]: 'PayByBank',
     [TxVariants.payu_IN_cashcard]: 'PayuCashcard',
     [TxVariants.payu_IN_nb]: 'PayuNetBanking',
