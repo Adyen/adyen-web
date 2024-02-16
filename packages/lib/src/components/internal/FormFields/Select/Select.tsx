@@ -27,7 +27,8 @@ function Select({
     disabled,
     disableTextFilter,
     clearOnSelect,
-    blurOnClose
+    blurOnClose,
+    onListToggle
 }: SelectProps) {
     const filterInputRef = useRef(null);
     const selectContainerRef = useRef(null);
@@ -234,6 +235,7 @@ function Select({
         if (showList && filterable && filterInputRef.current) {
             filterInputRef.current.focus();
         }
+        onListToggle?.(showList);
     }, [showList]);
 
     useEffect(() => {

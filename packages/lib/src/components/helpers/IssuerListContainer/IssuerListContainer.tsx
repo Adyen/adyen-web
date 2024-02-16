@@ -96,6 +96,7 @@ class IssuerListContainer extends UIElement<IssuerListConfiguration> {
                             onSubmit={this.submit}
                             payButton={this.payButton}
                             contextualText={this.props.i18n.get('issuerList.selectField.contextualText')}
+                            onSubmitAnalytics={this.submitAnalytics}
                         />
                     </SRPanelProvider>
                 ) : (

@@ -38,12 +38,14 @@ describe('Dropin', () => {
         });
     });
 
+    // TODO - this test doesn't do anything
     describe('closeActivePaymentMethod', () => {
         test('should close active payment method', async () => {
             const dropin = new Dropin(checkout);
             const component = await mount(dropin.render());
             await component.update();
 
+            // re. TODO: dropin.dropinRef.state.activePaymentMethod = null, which is defined, so this assertion passes
             expect(dropin.dropinRef.state.activePaymentMethod).toBeDefined();
             dropin.closeActivePaymentMethod();
             expect(dropin.dropinRef.state.activePaymentMethod).toBeNull();
@@ -153,6 +155,33 @@ describe('Dropin', () => {
             expect(await screen.findByRole('radio')).toBeTruthy();
             dropin.setStatus('error');
             expect(await screen.findByText(/An unknown error occurred/i)).toBeTruthy();
+        });
+    });
+
+    describe('Complying with local regulations', () => {
+        test('Default values for openFirstPaymentMethod & openFirstStoredPaymentMethod are true', () => {
+            const dropin = new Dropin(checkout);
+
+            expect(dropin.props.openFirstPaymentMethod).toBe(true);
+            expect(dropin.props.openFirstStoredPaymentMethod).toBe(true);
+        });
+
+        test('when countryCode is Finland openFirstPaymentMethod & openFirstStoredPaymentMethod should be false by default', () => {
+            checkout.options.countryCode = 'FI';
+
+            const dropin = new Dropin(checkout);
+
+            expect(dropin.props.openFirstPaymentMethod).toBe(false);
+            expect(dropin.props.openFirstStoredPaymentMethod).toBe(false);
+        });
+
+        test('if openFirstPaymentMethod & openFirstStoredPaymentMethod are set by merchant then these values should be used', () => {
+            checkout.options.countryCode = 'FI';
+
+            const dropin = new Dropin(checkout, { openFirstPaymentMethod: true, openFirstStoredPaymentMethod: true });
+
+            expect(dropin.props.openFirstPaymentMethod).toBe(true);
+            expect(dropin.props.openFirstStoredPaymentMethod).toBe(true);
         });
     });
 });

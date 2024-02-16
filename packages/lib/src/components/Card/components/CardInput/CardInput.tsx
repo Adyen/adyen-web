@@ -141,8 +141,6 @@ const CardInput = (props: CardInputProps) => {
      */
     // Handlers for focus & blur on all fields. Can be renamed to onFieldFocus once the onFocusField is renamed in Field.tsx
     const onFieldFocusAnalytics = (who: string, e: Event | CbObjOnFocus) => {
-        console.log('### CardInput::onFieldFocusAnalytics::who ', who);
-        console.log('### CardInput::onFieldFocusAnalytics::e ', e);
         props.onFocus({ fieldType: who, event: e });
     };
     const onFieldBlurAnalytics = (who: string, e: Event | CbObjOnFocus) => {

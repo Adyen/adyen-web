@@ -124,3 +124,8 @@ export interface DropinComponentState {
     isDisabling: boolean;
     orderStatus: OrderStatus;
 }
+
+export interface IDropin {
+    activePaymentMethod: () => null;
+    closeActivePaymentMethod: () => void;
+}
