@@ -42,7 +42,7 @@ jobs:
         API_VERSION: v70
     - name: Archive test result artifacts
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: html-report
         path: packages/e2e-playwright/playwright-report
