@@ -1,5 +1,6 @@
 import { UIElementStatus } from './types';
 import { RawPaymentResponse, PaymentResponseData } from '../../../types/global-types';
+import { IDropin } from '../../Dropin/types';
 
 const ALLOWED_PROPERTIES = ['action', 'resultCode', 'sessionData', 'order', 'sessionResult', 'donationToken', 'error'];
 
@@ -56,4 +57,26 @@ export function verifyPaymentDidNotFail(response: PaymentResponseData): Promise<
     }
 
     return Promise.resolve(response);
+}
+
+export function assertIsDropin(dropin: IDropin) {
+    if (!dropin) return false;
+
+    const isDropin = typeof dropin.activePaymentMethod === 'object' && typeof dropin.closeActivePaymentMethod === 'function';
+    return isDropin;
+}
+
+export function getRegulatoryDefaults(countryCode: string, isDropin: boolean): Record<string, any> {
+    switch (countryCode) {
+        // Finnish regulations state that no payment method can be open by default
+        case 'FI':
+            return isDropin
+                ? {
+                      openFirstPaymentMethod: false,
+                      openFirstStoredPaymentMethod: false
+                  }
+                : {};
+        default:
+            return {};
+    }
 }
