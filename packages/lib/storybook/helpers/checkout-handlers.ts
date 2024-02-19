@@ -1,7 +1,7 @@
 import { makePayment, makeDetailsCall, getPaymentMethods } from './checkout-api-calls';
 import UIElement from '../../src/components/internal/UIElement/UIElement';
 import Core from '../../src/core';
-
+// todo: we can make it a preact component in the storybook, so that we don't need to manipulate the DOM
 function displayResultMessage(isAuthorized: boolean, resultCode: string): void {
     const image = document.createElement('img');
     image.setAttribute(
