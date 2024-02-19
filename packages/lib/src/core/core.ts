@@ -111,9 +111,15 @@ class Core implements ICore {
     }
 
     private validateCoreConfiguration(): void {
+        // @ts-ignore This property does not exist, although merchants might be using when migrating from v5 to v6
+        if (this.options.paymentMethodsConfiguration) {
+            console.warn('WARNING:  "paymentMethodsConfiguration" is supported only by Drop-in.');
+        }
+
         if (!this.options.locale) {
             this.setOptions({ locale: DEFAULT_LOCALE });
         }
+
         if (!this.options.countryCode) {
             throw new AdyenCheckoutError(IMPLEMENTATION_ERROR, 'You must specify a countryCode when initializing checkout');
         }
@@ -239,10 +245,6 @@ class Core implements ICore {
      * Create or update the config object passed when AdyenCheckout is initialised (environment, clientKey, etc...)
      */
     private setOptions = (options: CoreConfiguration): void => {
-        if (hasOwnProperty(options, 'paymentMethodsConfiguration')) {
-            console.warn('WARNING:  "paymentMethodsConfiguration" is supported only by Drop-in.');
-        }
-
         this.options = {
             ...this.options,
             ...options,
