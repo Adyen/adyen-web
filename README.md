@@ -41,6 +41,10 @@ You can also import Adyen Web using a `<script>` tag, as shown in the [Web Compo
 
 ## Development
 
+Requirements:
+- Node v18.18.0
+- Yarn
+
 To run the development environment:
 
 1. Clone [this repository](https://github.com/Adyen/adyen-web).

@@ -15,7 +15,7 @@
     "@playwright/test": "1.39.0",
     "cross-env": "^7.0.3",
     "css-loader": "^6.0.0",
-    "dotenv": "^16.0.2",
+    "dotenv": "16.4.4",
     "html-webpack-plugin": "5.5.1",
     "sass-loader": "^10.2.0",
     "style-loader": "^2.0.0",
