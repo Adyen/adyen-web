@@ -63,6 +63,7 @@ import Duitnow from './DuitNow';
 import ANCV from './ANCV';
 import Trustly from './Trustly';
 import PayMe from './PayMe';
+import OnlineBankingFI from './OnlineBankingFI';
 
 /**
  * Maps each component with a Component element.
@@ -169,6 +170,7 @@ const componentsMap = {
     payu_IN_cashcard: PayuCashcard,
     payu_IN_nb: PayuNetBanking,
     wallet_IN: WalletINElement,
+    ebanking_FI: OnlineBankingFI,
     /** issuerList */
 
     /** Dragonpay */
