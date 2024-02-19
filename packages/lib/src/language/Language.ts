@@ -11,7 +11,7 @@ export class Language {
     public translations: Record<string, string>;
     public readonly customTranslations;
 
-    constructor(locale: string, customTranslations: CustomTranslations = {}, translationFile?: Translation) {
+    constructor(locale = DEFAULT_LOCALE, customTranslations: CustomTranslations = {}, translationFile?: Translation) {
         this.customTranslations = formatCustomTranslations(customTranslations, SUPPORTED_LOCALES);
         const localesFromCustomTranslations = Object.keys(this.customTranslations);
         this.supportedLocales = [...SUPPORTED_LOCALES, ...localesFromCustomTranslations].filter((v, i, a) => a.indexOf(v) === i); // our locales + validated custom locales
