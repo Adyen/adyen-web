@@ -78,6 +78,8 @@
     "houseNumberOrName": "Hišna številka",
     "separateDeliveryAddress": "Navedite ločen naslov za dostavo",
     "deliveryAddress": "Naslov za dostavo",
+    "deliveryAddress.firstName": "Ime prejemnika",
+    "deliveryAddress.lastName": "Priimek prejemnika",
     "zipCode": "Poštna številka",
     "apartmentSuite": "Št. apartmaja/stanovanja",
     "provinceOrTerritory": "Območje ali ozemlje",

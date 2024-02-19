@@ -78,6 +78,8 @@
     "houseNumberOrName": "Номер дома",
     "separateDeliveryAddress": "Укажите отдельный адрес доставки",
     "deliveryAddress": "Адрес доставки",
+    "deliveryAddress.firstName": "Имя получателя",
+    "deliveryAddress.lastName": "Фамилия получателя",
     "zipCode": "Почтовый индекс",
     "apartmentSuite": "Квартира / помещение",
     "provinceOrTerritory": "Провинция или территория",
