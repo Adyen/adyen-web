@@ -13,6 +13,15 @@ import {
 
 dotenv.config({ path: path.resolve('../../', '.env') });
 
+/**
+ * Rollup throws a warning when compiling to ES2017 and CJS regarding PURE annotation.
+ * The log is not relevant.
+ */
+function suppressRollupPureAnnotationWarning(level, log, handler) {
+    if (log.code === 'INVALID_ANNOTATION') return;
+    handler(level, log);
+}
+
 export default () => {
     return [
         // ESM
@@ -24,7 +33,7 @@ export default () => {
                 replaceValues({ moduleType: 'es' }),
                 convertJsonToESM(),
                 compileCSS(),
-                compileJavascript({ sourceMaps: true }),
+                compileJavascript({ target: 'es2022', sourceMaps: true }),
                 minify()
             ],
             output: [
@@ -59,6 +68,7 @@ export default () => {
                 compileJavascript({ target: 'es2017', sourceMaps: true }),
                 minify()
             ],
+            onLog: suppressRollupPureAnnotationWarning,
             output: [
                 {
                     dir: './dist/es-legacy',
@@ -112,6 +122,7 @@ export default () => {
                 compileJavascript({ target: 'es2017', sourceMaps: true }),
                 minify({ isESM: false })
             ],
+            onLog: suppressRollupPureAnnotationWarning,
             output: {
                 file: 'dist/cjs/index.cjs',
                 format: 'commonjs',

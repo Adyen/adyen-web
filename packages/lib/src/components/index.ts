@@ -47,7 +47,7 @@ export { default as MolPayEBankingTH } from './MolPayEBanking/MolPayEBankingTH';
 export { default as MolPayEBankingVN } from './MolPayEBanking/MolPayEBankingVN';
 export { default as OnlineBankingCZ } from './OnlineBankingCZ';
 export { default as OnlineBankingIN } from './OnlineBankingIN';
-export { default as OnlineBankingPL } from './OnlinebankingPL';
+export { default as OnlineBankingPL } from './OnlineBankingPL';
 export { default as OnlineBankingSK } from './OnlineBankingSK';
 export { default as PayByBank } from './PayByBank/PayByBank';
 export { default as PayuCashcard } from './PayU/PayuCashcard';

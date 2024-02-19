@@ -11,7 +11,7 @@ import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement
 import type { AddressData, PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
 import type { GooglePayConfiguration } from './types';
 import { ICore } from '../../core/types';
-import { ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
+import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
 
 class GooglePay extends UIElement<GooglePayConfiguration> {
     public static type = TxVariants.googlepay;
@@ -70,7 +70,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
     public override submit = () => {
         // Analytics
         if (this.props.isInstantPayment) {
-            this.submitAnalytics({ type: ANALYTICS_SELECTED_STR, target: 'instant_payment_button' });
+            this.submitAnalytics({ type: ANALYTICS_SELECTED_STR, target: ANALYTICS_INSTANT_PAYMENT_BUTTON });
         }
 
         new Promise((resolve, reject) => this.props.onClick(resolve, reject))

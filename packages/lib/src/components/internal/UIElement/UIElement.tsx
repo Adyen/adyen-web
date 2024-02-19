@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import BaseElement from '../BaseElement/BaseElement';
 import PayButton from '../PayButton';
-import { cleanupFinalResult, sanitizeResponse, verifyPaymentDidNotFail } from './utils';
+import { assertIsDropin, cleanupFinalResult, getRegulatoryDefaults, sanitizeResponse, verifyPaymentDidNotFail } from './utils';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { hasOwnProperty } from '../../../utils/hasOwnProperty';
 import { Resources } from '../../../core/Context/Resources';
@@ -22,6 +22,7 @@ import type {
 } from '../../../types/global-types';
 import { ANALYTICS_SUBMIT_STR } from '../../../core/Analytics/constants';
 import { AnalyticsInitialEvent, SendAnalyticsObject } from '../../../core/Analytics/types';
+import { IDropin } from '../../Dropin/types';
 
 import './UIElement.scss';
 
@@ -56,6 +57,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.handleAdditionalDetails = this.handleAdditionalDetails.bind(this);
         this.handleResponse = this.handleResponse.bind(this);
         this.setElementStatus = this.setElementStatus.bind(this);
+        this.submitAnalytics = this.submitAnalytics.bind(this);
 
         this.makePaymentsCall = this.makePaymentsCall.bind(this);
         this.makeAdditionalDetailsCall = this.makeAdditionalDetailsCall.bind(this);
@@ -83,7 +85,13 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             ...componentProps
         };
 
-        this.props = this.formatProps({ ...this.constructor['defaultProps'], ...finalProps });
+        const isDropin = assertIsDropin(this as unknown as IDropin);
+
+        this.props = this.formatProps({
+            ...this.constructor['defaultProps'], // component defaults
+            ...getRegulatoryDefaults(this.core.options.countryCode, isDropin), // regulatory defaults
+            ...finalProps // the rest (inc. merchant defined config)
+        });
     }
 
     protected storeElementRefOnCore(props?: P) {

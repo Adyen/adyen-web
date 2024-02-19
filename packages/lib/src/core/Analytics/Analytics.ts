@@ -3,7 +3,7 @@ import CollectId from '../Services/analytics/collect-id';
 import EventsQueue, { EventsQueueModule } from './EventsQueue';
 import { ANALYTICS_EVENT, AnalyticsInitialEvent, AnalyticsObject, AnalyticsProps, CreateAnalyticsEventObject } from './types';
 import { ANALYTICS_EVENT_ERROR, ANALYTICS_EVENT_INFO, ANALYTICS_EVENT_LOG, ANALYTICS_INFO_TIMER_INTERVAL, ANALYTICS_PATH } from './constants';
-import { debounce } from '../../components/internal/Address/utils';
+import { debounce } from '../../utils/debounce';
 import { AnalyticsModule } from '../../types/global-types';
 import { createAnalyticsObject } from './utils';
 import { analyticsPreProcessor } from './analyticsPreProcessor';

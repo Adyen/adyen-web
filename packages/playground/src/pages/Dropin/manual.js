@@ -128,7 +128,7 @@ export async function initManual() {
     }
 
     const dropin = new Dropin(checkout, {
-        paymentMethodComponents: [Card, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay],
+        paymentMethodComponents: [Card, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay, Ideal],
         instantPaymentTypes: ['googlepay'],
         paymentMethodsConfiguration: {
             card: {

@@ -34,7 +34,7 @@ export async function initSession() {
             console.log('onPaymentFailed', result, element);
         },
         onError: (error, component) => {
-            console.info(JSON.stringify(error), component);
+            console.error('error', JSON.stringify(error.name), JSON.stringify(error.message), component);
         },
         onChange: (state, component) => {
             console.log('onChange', state);
@@ -62,6 +62,9 @@ export async function initSession() {
                 // billingAddress config:
                 billingAddressRequired: true,
                 billingAddressMode: 'partial'
+            },
+            ideal: {
+                highlightedIssuers: ['1121', '1154', '1152']
             }
         }
     }).mount('#dropin-container');
