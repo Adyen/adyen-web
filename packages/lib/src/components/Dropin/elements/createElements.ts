@@ -31,7 +31,7 @@ const createElements = (
 
             if (!PaymentMethodElement) {
                 console.warn(
-                    `Dropin: You support the payment method '${
+                    `\nDropin: You support the payment method '${
                         paymentMethod.type
                     }' but this component has not been configured. Make sure to import the Class  '${getComponentNameOfPaymentType(
                         paymentMethod.type

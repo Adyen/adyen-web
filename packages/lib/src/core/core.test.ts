@@ -6,24 +6,25 @@ import { Dropin, Ideal } from '../components';
 import { es_ES } from '../language/locales';
 import { CheckoutSessionSetupResponse } from './CheckoutSession/types';
 
-jest.spyOn(Session.prototype, 'setupSession').mockImplementation(() => {
-    const sessionSetupResponseMock: CheckoutSessionSetupResponse = {
-        id: 'session-id',
-        sessionData: 'session-data',
-        amount: {
-            value: 1000,
-            currency: 'USD'
-        },
-        expiresAt: '',
-        paymentMethods: {
-            paymentMethods: [{ name: 'Ideal', type: 'ideal' }],
-            storedPaymentMethods: []
-        },
-        returnUrl: '',
-        configuration: {},
-        shopperLocale: 'en-US'
-    };
+const sessionSetupResponseMock: CheckoutSessionSetupResponse = {
+    id: 'session-id',
+    sessionData: 'session-data',
+    amount: {
+        value: 1000,
+        currency: 'USD'
+    },
+    expiresAt: '',
+    paymentMethods: {
+        paymentMethods: [{ name: 'Ideal', type: 'ideal' }],
+        storedPaymentMethods: []
+    },
+    returnUrl: '',
+    configuration: {},
+    shopperLocale: 'en-US',
+    countryCode: 'US'
+};
 
+jest.spyOn(Session.prototype, 'setupSession').mockImplementation(() => {
     return Promise.resolve(sessionSetupResponseMock);
 });
 
@@ -58,7 +59,7 @@ describe('Core', () => {
             expect(Object.keys(checkout.modules).length).toBe(5);
         });
 
-        test('should create the modules when initializing on Sesssions flow', async () => {
+        test('should create the modules when initializing on Sessions flow', async () => {
             const checkout = new AdyenCheckout({
                 countryCode: 'US',
                 environment: 'test',
@@ -305,17 +306,26 @@ describe('Core', () => {
             }).toThrow('You must specify a countryCode when initializing checkout');
         });
 
-        test('SessionsFlow, without a countryCode, should throw an error', async () => {
-            expect(() => {
-                const checkout = new AdyenCheckout({
-                    countryCode: 'US',
-                    environment: 'test',
-                    clientKey: 'test_123456',
-                    session: { id: 'session-id', sessionData: 'session-data' }
-                });
+        const onError = jest.fn(() => {});
 
-                checkout.initialize();
-            }).toThrow('You must specify a countryCode when creating a session');
+        test('SessionsFlow, without a countryCode, should throw an error', async () => {
+            delete sessionSetupResponseMock.countryCode;
+
+            const checkout = new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456',
+                session: { id: 'session-id', sessionData: 'session-data' },
+                onError
+            });
+
+            let err;
+
+            await checkout.initialize().catch(e => {
+                err = e;
+            });
+
+            expect(onError).toBeCalledWith(err);
         });
     });
 });
