@@ -39,6 +39,7 @@ export type AnalyticsProps = Pick<CoreOptions, 'loadingContext' | 'locale' | 'cl
 export interface AnalyticsObject {
     timestamp: string;
     component: string;
+    id: string;
     code?: string;
     errorType?: string;
     message?: string;
@@ -55,7 +56,7 @@ export interface AnalyticsObject {
 
 export type ANALYTICS_EVENT = 'log' | 'error' | 'info';
 
-export type CreateAnalyticsObject = Omit<AnalyticsObject, 'timestamp'> & { event: ANALYTICS_EVENT };
+export type CreateAnalyticsObject = Omit<AnalyticsObject, 'timestamp' | 'uuid'> & { event: ANALYTICS_EVENT };
 
 export type AnalyticsInitialEvent = {
     containerWidth: number;
@@ -73,7 +74,7 @@ export type AnalyticsConfig = {
     loadingContext?: string;
 };
 
-export type CreateAnalyticsEventData = Omit<AnalyticsObject, 'timestamp'>;
+export type CreateAnalyticsEventData = Omit<AnalyticsObject, 'timestamp' | 'uuid'>;
 
 export type CreateAnalyticsEventObject = {
     event: ANALYTICS_EVENT;
@@ -82,7 +83,7 @@ export type CreateAnalyticsEventObject = {
 
 export type EventQueueProps = Pick<AnalyticsConfig, 'analyticsContext' | 'clientKey'> & { analyticsPath: string };
 
-export type SendAnalyticsObject = Omit<AnalyticsObject, 'timestamp' | 'component'>;
+export type SendAnalyticsObject = Omit<AnalyticsObject, 'timestamp' | 'component' | 'uuid'>;
 
 export type FieldErrorAnalyticsObject = {
     fieldType: string;
