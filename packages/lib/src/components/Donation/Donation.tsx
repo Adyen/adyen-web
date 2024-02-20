@@ -3,13 +3,13 @@ import UIElement from '../internal/UIElement/UIElement';
 import CoreProvider from '../../core/Context/CoreProvider';
 import DonationComponent from './components/DonationComponent';
 import { TxVariants } from '../tx-variants';
-import { DonationConfiguration } from './types';
 import type { ICore } from '../../core/types';
+import { DonationElementProps } from './types';
 
-class DonationElement extends UIElement<DonationConfiguration> {
+class DonationElement extends UIElement<DonationElementProps> {
     public static type = TxVariants.donation;
 
-    constructor(checkout: ICore, props?: DonationConfiguration) {
+    constructor(checkout: ICore, props?: DonationElementProps) {
         super(checkout, props);
         this.donate = this.donate.bind(this);
     }

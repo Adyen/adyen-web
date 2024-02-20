@@ -1,6 +1,6 @@
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
-import { DonationConfiguration } from '../../../src/components/Donation/types';
+import { DonationElementProps } from '../../../src/components/Donation/types';
 import Donation from '../../../src/components/Donation';
 import { Container } from '../Container';
 import { DonationCardIntegrationExample } from './DonationCardIntegrationExample';
@@ -22,13 +22,13 @@ const componentConfiguration = {
     logoUrl: 'https://i.ebayimg.com/images/g/aTwAAOSwfu9dfX4u/s-l300.jpg'
 };
 
-type DonationStory = StoryConfiguration<DonationConfiguration>;
+type DonationStory = StoryConfiguration<DonationElementProps>;
 
-const meta: MetaConfiguration<DonationConfiguration> = {
+const meta: MetaConfiguration<DonationElementProps> = {
     title: 'Components/Donation'
 };
 
-const createComponent = (args: PaymentMethodStoryProps<DonationConfiguration>, context) => {
+const createComponent = (args: PaymentMethodStoryProps<DonationElementProps>, context) => {
     const { componentConfiguration } = args;
     const checkout = getStoryContextCheckout(context);
     return <Container element={new Donation(checkout, componentConfiguration)} />;

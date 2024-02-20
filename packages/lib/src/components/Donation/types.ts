@@ -1,7 +1,9 @@
 import { UIElementProps } from '../internal/UIElement/types';
 import DonationElement from './Donation';
+import { DonationComponentProps, DonationPayload } from './components/types';
 
-export interface DonationConfiguration extends UIElementProps {
-    onDonate(data: any, component: DonationElement): void;
-    onCancel(data: any): void;
-}
+export type DonationElementProps = UIElementProps &
+    Omit<DonationComponentProps, 'onDonate' | 'onCancel'> & {
+        onDonate(data: DonationPayload, component: DonationElement): void;
+        onCancel(data: DonationPayload): void;
+    };

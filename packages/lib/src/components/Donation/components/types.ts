@@ -4,15 +4,14 @@ interface DonationAmounts {
     currency: string;
     values: Array<number>;
 }
-interface DonationAmount {
+export interface DonationAmount {
     currency: string;
     value: number;
 }
-interface DonationPayload {
+export interface DonationPayload {
     data: { amount: DonationAmount };
     isValid?: boolean;
 }
-
 export interface DonationComponentProps extends CampaignContentProps {
     amounts: DonationAmounts;
     termsAndConditionsUrl?: string;

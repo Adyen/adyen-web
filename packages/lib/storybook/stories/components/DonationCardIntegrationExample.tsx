@@ -4,12 +4,12 @@ import { PaymentMethodStoryProps } from '../types';
 import { Container } from '../Container';
 import Donation from '../../../src/components/Donation/Donation';
 import { createDonation, createDonationCampaigns, makeDetailsCall, makePayment } from '../../helpers/checkout-api-calls';
-import { DonationConfiguration } from '../../../src/components/Donation/types';
+import { DonationElementProps } from '../../../src/components/Donation/types';
 import { AdditionalDetailsStateData } from '../../../src/types/global-types';
 import { handleError, handleFinalState } from '../../helpers/checkout-handlers';
 
 export interface DonationIntegrationExampleProps {
-    contextArgs: PaymentMethodStoryProps<DonationConfiguration> & { redirectResult: string };
+    contextArgs: PaymentMethodStoryProps<DonationElementProps> & { redirectResult: string };
 }
 
 export const DonationCardIntegrationExample = ({ contextArgs: { countryCode, amount, redirectResult } }: DonationIntegrationExampleProps) => {
