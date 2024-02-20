@@ -27,8 +27,8 @@ type DonationRequest = {
     paymentMethod: { type: 'scheme' | 'sepadirectdebit' };
     donationToken: string;
     donationOriginalPspReference: string;
-    donationAccount: string;
-    returnUrl: string;
+    donationAccount?: string;
+    returnUrl?: string;
     merchantAccount: string;
 };
 
@@ -73,7 +73,6 @@ export const createOrder = async (amount: PaymentAmount): Promise<Order & OrderS
 
 export const cancelOrder = async (order: Order): Promise<{ resultCode: string; pspReference: string }> => await httpPost('orders/cancel', order);
 
-export const createDonationCampaigns = async (request: { currency: string }): Promise<DonationResponse> =>
-    await httpPost('donationCampaigns', request);
+export const getDonationCampaigns = async (request: { currency: string }): Promise<DonationResponse> => await httpPost('donationCampaigns', request);
 
 export const createDonation = async (request: DonationRequest): Promise<any> => await httpPost('donations', request);

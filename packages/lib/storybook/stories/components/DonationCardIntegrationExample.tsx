@@ -3,7 +3,7 @@ import { AdyenCheckout, Card } from '../../../src';
 import { PaymentMethodStoryProps } from '../types';
 import { Container } from '../Container';
 import Donation from '../../../src/components/Donation/Donation';
-import { createDonation, createDonationCampaigns, makeDetailsCall, makePayment } from '../../helpers/checkout-api-calls';
+import { createDonation, getDonationCampaigns, makeDetailsCall, makePayment } from '../../helpers/checkout-api-calls';
 import { DonationElementProps } from '../../../src/components/Donation/types';
 import { AdditionalDetailsStateData } from '../../../src/types/global-types';
 import { handleError, handleFinalState } from '../../helpers/checkout-handlers';
@@ -152,7 +152,7 @@ export const DonationCardIntegrationExample = ({ contextArgs: { countryCode, amo
     const tryMountDonation = async ({ donationToken }) => {
         if (!donationToken) throw new Error('Cannot mount the Donation');
 
-        const { donationCampaigns } = await createDonationCampaigns({ currency: 'EUR' });
+        const { donationCampaigns } = await getDonationCampaigns({ currency: 'EUR' });
 
         if (donationCampaigns.length === 0) throw new Error('Cannot mount the Donation, no donation campaign');
 
