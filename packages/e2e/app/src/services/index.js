@@ -21,6 +21,12 @@ export const getPaymentMethods = configuration =>
 
 export const makePayment = (data, config = {}) => {
     // NOTE: Merging data object. DO NOT do this in production.
+
+    // Needed for storedPMs in v70 if a standalone comp, or, in Dropin, advanced flow. (Sessions, v70, works with or without this prop)
+    if (data.paymentMethod.storedPaymentMethodId) {
+        config = { recurringProcessingModel: 'CardOnFile', ...config };
+    }
+
     const paymentRequest = { ...paymentsConfig, ...config, ...data };
     return httpPost('payments', paymentRequest)
         .then(response => {
