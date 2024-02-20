@@ -31,7 +31,6 @@ class PaypalElement extends UIElement<PayPalElementProps> {
     formatProps(props: PayPalElementProps): PayPalElementProps {
         const { merchantId, intent: intentFromConfig } = props.configuration;
         const isZeroAuth = props.amount?.value === 0;
-
         const intent: Intent = isZeroAuth ? 'tokenize' : props.intent || intentFromConfig;
         const vault = intent === 'tokenize' || props.vault;
 

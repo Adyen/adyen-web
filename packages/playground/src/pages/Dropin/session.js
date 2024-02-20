@@ -46,28 +46,6 @@ export async function initSession() {
                 // billingAddress config:
                 billingAddressRequired: true,
                 billingAddressMode: 'partial'
-            },
-            paypal: {
-                isExpress: true,
-
-                onShippingAddressChange: async (data, actions, component) => {
-                    const patch = {
-                        sessionId: session.id,
-                        paymentData: component.paymentData,
-                        amount: {
-                            currency: 'USD',
-                            value: 29900
-                        }
-                    };
-
-                    if (data.shippingAddress.countryCode === 'US') {
-                        const { paymentData } = await patchPaypalOrder(patch);
-                        component.updatePaymentData(paymentData);
-                        return;
-                    }
-
-                    return actions.reject();
-                }
             }
         }
     });
