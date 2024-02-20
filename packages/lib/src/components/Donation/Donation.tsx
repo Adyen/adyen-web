@@ -2,11 +2,13 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import CoreProvider from '../../core/Context/CoreProvider';
 import DonationComponent from './components/DonationComponent';
+import { DonationComponentProps } from './components/types';
+import { DonationElementProps, NewDonationComponentProps } from './types';
 
 /**
  * DonationElement
  */
-class DonationElement extends UIElement {
+class DonationElement extends UIElement<DonationElementProps> {
     public static type = 'donation';
 
     constructor(props) {
@@ -18,6 +20,27 @@ class DonationElement extends UIElement {
         onCancel: () => {},
         onDonate: () => {}
     };
+
+    protected formatProps(props: DonationElementProps): DonationComponentProps {
+        if ('bannerUrl' in props) {
+            const newDonation = props as NewDonationComponentProps;
+            const { bannerUrl, nonprofitDescription, nonprofitName, nonprofitUrl, termsAndConditionsUrl, ...rest } = newDonation;
+            return {
+                ...rest,
+                backgroundUrl: bannerUrl,
+                description: nonprofitDescription,
+                name: nonprofitName,
+                url: nonprofitUrl,
+                disclaimerMessage: {
+                    message: '',
+                    linkText: '',
+                    link: termsAndConditionsUrl
+                }
+            };
+        } else {
+            // todo
+        }
+    }
 
     /**
      * Returns the component payment data ready to submit to the Checkout API
