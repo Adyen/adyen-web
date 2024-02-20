@@ -76,6 +76,8 @@
     "houseNumberOrName": "Número de vivienda",
     "separateDeliveryAddress": "Especificar otra dirección de envío",
     "deliveryAddress": "Dirección de envío",
+    "deliveryAddress.firstName": "Nombre del destinatario",
+    "deliveryAddress.lastName": "Apellidos del destinatario",
     "zipCode": "Código postal",
     "apartmentSuite": "Apartamento/suite",
     "provinceOrTerritory": "Provincia o territorio",

@@ -14,6 +14,7 @@ import Session from './CheckoutSession';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
 import { Resources } from './Context/Resources';
 import { SRPanel } from './Errors/SRPanel';
+import { getRegulatoryDefaults } from '../components/utils';
 import { ANALYTICS_ACTION_STR } from './Analytics/constants';
 import { THREEDS2_FULL } from '../components/ThreeDS2/config';
 
@@ -231,6 +232,7 @@ class Core {
         return {
             paymentMethods: this.paymentMethodsResponse.paymentMethods,
             storedPaymentMethods: this.paymentMethodsResponse.storedPaymentMethods,
+            ...getRegulatoryDefaults(this.options.countryCode),
             ...options,
             i18n: this.modules.i18n,
             modules: this.modules,
