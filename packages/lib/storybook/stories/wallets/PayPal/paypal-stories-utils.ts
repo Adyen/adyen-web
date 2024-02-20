@@ -7,40 +7,34 @@ export function getDeliveryMethodsByCountry(country) {
     if (country === 'NL') {
         return [
             {
-                DeliveryMethod: {
-                    reference: '1',
-                    description: 'PostNL (5 days)',
-                    type: 'Shipping',
-                    amount: {
-                        currency: 'USD',
-                        value: '500'
-                    },
-                    selected: true
-                }
+                reference: '1',
+                description: 'PostNL (5 days)',
+                type: 'Shipping',
+                amount: {
+                    currency: 'USD',
+                    value: '500'
+                },
+                selected: true
             },
             {
-                DeliveryMethod: {
-                    reference: '2',
-                    description: 'DHL (1 day)',
-                    type: 'Shipping',
-                    amount: {
-                        currency: 'USD',
-                        value: '999'
-                    },
-                    selected: false
-                }
+                reference: '2',
+                description: 'DHL (1 day)',
+                type: 'Shipping',
+                amount: {
+                    currency: 'USD',
+                    value: '999'
+                },
+                selected: false
             },
             {
-                DeliveryMethod: {
-                    reference: '3',
-                    description: 'Pick up',
-                    type: 'Shipping',
-                    amount: {
-                        currency: 'USD',
-                        value: '0'
-                    },
-                    selected: false
-                }
+                reference: '3',
+                description: 'Pick up',
+                type: 'Shipping',
+                amount: {
+                    currency: 'USD',
+                    value: '0'
+                },
+                selected: false
             }
         ];
     }
@@ -48,40 +42,34 @@ export function getDeliveryMethodsByCountry(country) {
     if (country === 'US') {
         return [
             {
-                DeliveryMethod: {
-                    reference: '1',
-                    description: 'Express Shipping',
-                    type: 'Shipping',
-                    amount: {
-                        currency: 'USD',
-                        value: '1599'
-                    },
-                    selected: false
-                }
+                reference: '1',
+                description: 'Express Shipping',
+                type: 'Shipping',
+                amount: {
+                    currency: 'USD',
+                    value: '1599'
+                },
+                selected: false
             },
             {
-                DeliveryMethod: {
-                    reference: '2',
-                    description: 'Standard Ground',
-                    type: 'Shipping',
-                    amount: {
-                        currency: 'USD',
-                        value: '500'
-                    },
-                    selected: false
-                }
+                reference: '2',
+                description: 'Standard Ground',
+                type: 'Shipping',
+                amount: {
+                    currency: 'USD',
+                    value: '500'
+                },
+                selected: false
             },
             {
-                DeliveryMethod: {
-                    reference: '3',
-                    description: 'Teleport Shipping Ultra fast',
-                    type: 'Shipping',
-                    amount: {
-                        currency: 'USD',
-                        value: '5000'
-                    },
-                    selected: false
-                }
+                reference: '3',
+                description: 'Teleport Shipping Ultra fast',
+                type: 'Shipping',
+                amount: {
+                    currency: 'USD',
+                    value: '5000'
+                },
+                selected: false
             }
         ];
     }
@@ -93,7 +81,7 @@ export function getDeliveryMethods({ countryCode, deliveryMethodId }) {
     const deliveryMethods = getDeliveryMethodsByCountry(countryCode);
 
     const options = deliveryMethods.map(method => {
-        method.DeliveryMethod.selected = method.DeliveryMethod.reference === deliveryMethodId;
+        method.selected = method.reference === deliveryMethodId;
         return method;
     });
 
@@ -102,6 +90,6 @@ export function getDeliveryMethods({ countryCode, deliveryMethodId }) {
 
 export function getSelectedDeliveryMethodAmount({ countryCode, deliveryMethodId }) {
     const deliveryMethods = getDeliveryMethodsByCountry(countryCode);
-    const option = deliveryMethods.find(method => method.DeliveryMethod.reference === deliveryMethodId);
-    return Number(option.DeliveryMethod.amount.value);
+    const option = deliveryMethods.find(method => method.reference === deliveryMethodId);
+    return Number(option.amount.value);
 }
