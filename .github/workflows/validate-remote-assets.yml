@@ -4,7 +4,6 @@ on:
   pull_request:
     branches:
       - main
-      - v6
 
 jobs:
   check-secured-fields-assets:

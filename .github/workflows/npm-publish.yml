@@ -25,16 +25,16 @@ jobs:
       - run: cp LICENSE packages/lib/
       # Build and publish to npm with alpha tag
       - name: Build and prerelease
-        if: ${{ github.event.release.prerelease }}
+        if: "github.event.release.prerelease"
         run: |
-          echo "Pre-release alpha"
+          echo "Pre-release alpha:"
           cd packages/lib && npm publish --tag alpha --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
           CI: true
       # Build and publish to npm
       - name: Build and release
-        if: ${{ !github.event.release.prerelease }}
+        if: "!github.event.release.prerelease"
         run: |
           echo "Release:"
           cd packages/lib && npm publish --access public
