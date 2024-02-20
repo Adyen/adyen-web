@@ -1,5 +1,17 @@
 # @adyen/adyen-web
 
+## 5.58.0
+
+### Minor Changes
+
+-   Add the support for new Riverty component. It will replace the old AfterPay component in the future, currently only supports AT, CH and DE countries. ([#2532](https://github.com/Adyen/adyen-web/pull/2532))
+
+-   Adds new Paytrail component (EBanking_FI) ([#2528](https://github.com/Adyen/adyen-web/pull/2528))
+
+### Patch Changes
+
+-   Fix missing bindings for 'this' that had started causing errors in iOS ([#2557](https://github.com/Adyen/adyen-web/pull/2557))
+
 ## 5.57.0
 
 ### Minor Changes
