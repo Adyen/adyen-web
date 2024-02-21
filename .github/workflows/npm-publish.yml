@@ -37,7 +37,6 @@ jobs:
         if: "!github.event.release.prerelease"
         run: |
           echo "Release:"
-          cd packages/lib && npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
           CI: true
