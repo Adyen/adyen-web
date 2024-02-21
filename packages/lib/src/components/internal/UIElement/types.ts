@@ -98,6 +98,12 @@ export type UIElementProps = BaseElementProps &
         i18n?: Language;
 
         /**
+         * The shopper’s issuer account label. It can be available for stored payment method
+         * @internal
+         */
+        label?: string;
+
+        /**
          * Returned after the payments call, when an action is returned. It represents the payment method tx variant
          * that was used for the payment
          * @internal

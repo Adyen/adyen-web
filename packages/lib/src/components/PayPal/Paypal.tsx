@@ -2,15 +2,17 @@ import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import PaypalComponent from './components/PaypalComponent';
 import defaultProps from './defaultProps';
-import { PaymentAction } from '../../types/global-types';
-import { Intent, PayPalConfiguration } from './types';
-import './Paypal.scss';
 import CoreProvider from '../../core/Context/CoreProvider';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { ERRORS } from './constants';
 import { TxVariants } from '../tx-variants';
-import type { ICore } from '../../core/types';
 import { formatPaypalOrderContatcToAdyenFormat } from './utils/format-paypal-order-contact-to-adyen-format';
+
+import type { ICore } from '../../core/types';
+import type { PaymentAction } from '../../types/global-types';
+import type { Intent, PayPalConfiguration } from './types';
+
+import './Paypal.scss';
 
 class PaypalElement extends UIElement<PayPalConfiguration> {
     public static type = TxVariants.paypal;

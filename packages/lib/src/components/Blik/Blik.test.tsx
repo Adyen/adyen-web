@@ -1,21 +1,25 @@
 import { render, screen } from '@testing-library/preact';
-import AdyenCheckout from '../../index';
+import { AdyenCheckout } from '../../core/AdyenCheckout';
+
+import Dropin from '../Dropin';
+import Blik from './Blik';
 
 describe('Blik', () => {
     const createDropin = async paymentMethodsResponse => {
         const checkout = await AdyenCheckout({
+            countryCode: 'US',
             environment: 'test',
             clientKey: 'test_123456',
             analytics: { enabled: false },
             paymentMethodsResponse: paymentMethodsResponse
         });
-        return checkout.create('dropin');
+        return new Dropin(checkout, { paymentMethodComponents: [Blik] });
     };
 
     describe('in Dropin display correct payment method name', () => {
         test('display only blik if it is not stored', async () => {
-            const blik = await createDropin({ paymentMethods: [{ type: 'blik', name: 'Blik' }] });
-            render(blik.render());
+            const dropin = await createDropin({ paymentMethods: [{ type: 'blik', name: 'Blik' }] });
+            render(dropin.render());
 
             const blikText = await screen.findByText('Blik');
 
@@ -23,7 +27,7 @@ describe('Blik', () => {
         });
 
         test('display blik payment method name and label', async () => {
-            const blik = await createDropin({
+            const dropin = await createDropin({
                 storedPaymentMethods: [
                     {
                         id: 'X8CN3VMB6XXZTX43',
@@ -35,7 +39,7 @@ describe('Blik', () => {
                     }
                 ]
             });
-            render(blik.render());
+            render(dropin.render());
 
             const blikText = await screen.findByText('Blik');
             const storedPaymentMethodLabel = await screen.findByText('mBank PMM');

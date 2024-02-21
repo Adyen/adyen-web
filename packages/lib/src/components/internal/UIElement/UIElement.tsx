@@ -159,12 +159,16 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
          * - first check for a dedicated "analyticsType" (currently only applies to custom-cards)
          * - otherwise, distinguish cards from non-cards: cards will use their static type property, everything else will use props.type
          */
-        let component = this.constructor['analyticsType'];
-        if (!component) {
-            component = this.constructor['type'] === 'scheme' || this.constructor['type'] === 'bcmc' ? this.constructor['type'] : this.props.type;
-        }
+        try {
+            let component = this.constructor['analyticsType'];
+            if (!component) {
+                component = this.constructor['type'] === 'scheme' || this.constructor['type'] === 'bcmc' ? this.constructor['type'] : this.props.type;
+            }
 
-        this.props.modules?.analytics.sendAnalytics(component, analyticsObj);
+            this.props.modules.analytics.sendAnalytics(component, analyticsObj);
+        } catch (error) {
+            console.warn('Failed to submit the analytics event');
+        }
     }
 
     public submit(): void {

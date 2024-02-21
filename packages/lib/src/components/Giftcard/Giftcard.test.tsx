@@ -21,7 +21,7 @@ describe('Giftcard', () => {
     };
 
     describe('onBalanceCheck', () => {
-        test('If onBalanceCheck is not provided, step is skipped and calls onSubmit', async () => {
+        test('If onBalanceCheck is not provided, step is skipped ayarnnd calls onSubmit', async () => {
             const onSubmitMock = jest.fn();
             const giftcard = new Giftcard(global.core, { ...baseProps, onSubmit: onSubmitMock });
             giftcard.setState({ isValid: true });
@@ -43,19 +43,19 @@ describe('Giftcard', () => {
 
     describe('icon getters', () => {
         test('should default to loading from resources', async () => {
-            const giftcard = new Giftcard({ ...baseProps });
+            const giftcard = new Giftcard(global.core, { ...baseProps });
 
             expect(giftcard.icon).toBe('MOCK');
         });
 
         test('should use the prop .icon as 2. priority', async () => {
-            const giftcard = new Giftcard({ ...baseProps, icon: 'PROP_ICON_MOCK' });
+            const giftcard = new Giftcard(global.core, { ...baseProps, icon: 'PROP_ICON_MOCK' });
 
             expect(giftcard.icon).toBe('PROP_ICON_MOCK');
         });
 
         test('should use brandsConfiguration as 1. priority', async () => {
-            const giftcard = new Giftcard({
+            const giftcard = new Giftcard(global.core, {
                 ...baseProps,
                 icon: 'PROP_ICON_MOCK',
                 brandsConfiguration: {
@@ -71,13 +71,13 @@ describe('Giftcard', () => {
 
     describe('displayName getters', () => {
         test('should default to props.name', async () => {
-            const giftcard = new Giftcard({ ...baseProps });
+            const giftcard = new Giftcard(global.core, { ...baseProps });
 
             expect(giftcard.displayName).toBe('My Test Gift Card');
         });
 
         test('should use brandsConfiguration as 1. priority', async () => {
-            const giftcard = new Giftcard({
+            const giftcard = new Giftcard(global.core, {
                 ...baseProps,
                 brandsConfiguration: {
                     genericgiftcard: { name: 'genericgiftcard brand name' },
@@ -95,7 +95,7 @@ describe('Giftcard', () => {
             const onBalanceCheck = jest.fn();
 
             // mounting and clicking pay button
-            const giftcard = new Giftcard({
+            const giftcard = new Giftcard(global.core, {
                 ...baseProps,
                 onBalanceCheck
             });
@@ -117,7 +117,7 @@ describe('Giftcard', () => {
             const onOrderRequest = jest.fn();
 
             // mounting and clicking pay button
-            const giftcard = new Giftcard({
+            const giftcard = new Giftcard(global.core, {
                 ...baseProps,
                 onBalanceCheck,
                 onOrderRequest
@@ -140,7 +140,7 @@ describe('Giftcard', () => {
             const onRequiringConfirmation = jest.fn();
 
             // mounting and clicking pay button
-            const giftcard = new Giftcard({
+            const giftcard = new Giftcard(global.core, {
                 ...baseProps,
                 onBalanceCheck,
                 onRequiringConfirmation
@@ -164,7 +164,7 @@ describe('Giftcard', () => {
 
             // mounting and clicking pay button
             const onError = jest.fn();
-            const giftcard = new Giftcard({
+            const giftcard = new Giftcard(global.core, {
                 ...baseProps,
                 onBalanceCheck,
                 onError
@@ -195,7 +195,7 @@ describe('Giftcard', () => {
             const onSubmit = jest.fn();
 
             // mounting and clicking pay button
-            const giftcard = new Giftcard({
+            const giftcard = new Giftcard(global.core, {
                 ...baseProps,
                 onBalanceCheck,
                 onOrderRequest,
@@ -224,10 +224,11 @@ describe('Giftcard', () => {
             const onSubmit = jest.fn();
 
             // mounting and clicking pay button
-            const giftcard = new Giftcard({
+            const giftcard = new Giftcard(global.core, {
                 ...baseProps,
                 order: {
-                    orderData: 'mock'
+                    orderData: 'mock',
+                    pspReference: 'xxxx'
                 },
                 onBalanceCheck,
                 onOrderRequest,

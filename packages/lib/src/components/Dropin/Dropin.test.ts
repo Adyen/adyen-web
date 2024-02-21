@@ -22,7 +22,6 @@ describe('Dropin', () => {
                 enabled: false
             }
         });
-        checkout = await AdyenCheckout({ environment: 'test', clientKey: 'test_123456', analytics: { enabled: false } });
     });
 
     describe('isValid', () => {
