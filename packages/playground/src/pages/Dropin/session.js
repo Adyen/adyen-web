@@ -1,6 +1,6 @@
 import AdyenCheckout from '@adyen/adyen-web';
 import '@adyen/adyen-web/dist/es/adyen.css';
-import { createSession } from '../../services';
+import { createSession, patchPaypalOrder } from '../../services';
 import { amount, shopperLocale, shopperReference, countryCode, returnUrl } from '../../config/commonConfig';
 
 export async function initSession() {
