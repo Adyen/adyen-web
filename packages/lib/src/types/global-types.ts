@@ -154,6 +154,8 @@ export interface StoredPaymentMethod extends PaymentMethod {
     networkTxReference?: string;
     ownerName?: string;
     shopperEmail?: string;
+    /** The shopper’s issuer account label */
+    label?: string;
     /**
      * A unique identifier of this stored payment method. Mapped from 'storedPaymentMethod.id'
      * @internal
