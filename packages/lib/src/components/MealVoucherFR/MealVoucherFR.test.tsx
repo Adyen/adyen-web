@@ -30,9 +30,10 @@ describe('MealVoucherFR', () => {
             // skip feeling in fields
             mealVoucherFR.setState({ isValid: true });
             const payButton = await screen.findByRole('button');
+
             await user.click(payButton);
 
-            const card = await screen.findByText('Card number');
+            const card = await screen.findByText('Card Number');
             const expiryDate = await screen.findByText('Expiry date');
             const cvc = await screen.findByText('Security code');
 
@@ -81,8 +82,10 @@ describe('MealVoucherFR', () => {
                 ...baseProps,
                 onBalanceCheck,
                 onOrderRequest,
-                onSubmit
+                onSubmit,
+                clientKey: 'xxx'
             });
+
             render(mealVoucherFR.render());
             mealVoucherFR.setState({ isValid: true });
             const payButton = await screen.findByRole('button');

@@ -180,7 +180,7 @@ describe('Giftcard', () => {
     });
 
     describe('onOrderRequest handling', () => {
-        test.only('after creating an order we should call submit / payments endpoint', async () => {
+        test('after creating an order we should call submit / payments endpoint', async () => {
             const onBalanceCheck = jest.fn(resolve =>
                 resolve({
                     balance: { value: 500, currency: 'EUR' }
