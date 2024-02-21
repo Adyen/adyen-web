@@ -2,7 +2,6 @@ import { h } from 'preact';
 import UIElement from '../UIElement';
 import CoreProvider from '../../core/Context/CoreProvider';
 import DonationComponent from './components/DonationComponent';
-import { DonationComponentProps } from './components/types';
 import { DonationElementProps, NewDonationComponentProps } from './types';
 
 /**
@@ -21,10 +20,11 @@ class DonationElement extends UIElement<DonationElementProps> {
         onDonate: () => {}
     };
 
-    protected formatProps(props: DonationElementProps): DonationComponentProps {
-        if ('bannerUrl' in props) {
-            const newDonation = props as NewDonationComponentProps;
-            const { bannerUrl, nonprofitDescription, nonprofitName, nonprofitUrl, termsAndConditionsUrl, ...rest } = newDonation;
+    protected formatProps(props: DonationElementProps) {
+        if ('nonprofitUrl' in props && props.nonprofitUrl) {
+            const { bannerUrl, nonprofitDescription, nonprofitName, nonprofitUrl, termsAndConditionsUrl, ...rest } =
+                props as NewDonationComponentProps;
+
             return {
                 ...rest,
                 backgroundUrl: bannerUrl,
@@ -32,14 +32,14 @@ class DonationElement extends UIElement<DonationElementProps> {
                 name: nonprofitName,
                 url: nonprofitUrl,
                 disclaimerMessage: {
-                    message: '',
-                    linkText: '',
+                    message: 'By donating you agree to the %{linkText} ',
+                    linkText: 'terms and conditions',
                     link: termsAndConditionsUrl
                 }
             };
-        } else {
-            // todo
         }
+
+        return props;
     }
 
     /**
@@ -62,6 +62,7 @@ class DonationElement extends UIElement<DonationElementProps> {
 
     donate() {
         const { data, isValid } = this;
+        // @ts-ignore fixed in v6
         this.props.onDonate({ data, isValid }, this);
     }
 
@@ -72,6 +73,7 @@ class DonationElement extends UIElement<DonationElementProps> {
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
+                {/* @ts-ignore ref handled by Preact internally */}
                 <DonationComponent {...this.props} ref={this.handleRef} onChange={this.setState} onDonate={this.donate} />
             </CoreProvider>
         );

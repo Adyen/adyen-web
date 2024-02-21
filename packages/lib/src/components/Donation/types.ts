@@ -1,4 +1,5 @@
 import { DonationAmounts, DonationComponentProps, DonationPayload } from './components/types';
+import { UIElementProps } from '../types';
 
 export interface NewDonationComponentProps {
     amounts: DonationAmounts;
@@ -15,4 +16,4 @@ export interface NewDonationComponentProps {
     onChange?: (payload: DonationPayload) => void;
 }
 
-export type DonationElementProps = NewDonationComponentProps | DonationComponentProps;
+export type DonationElementProps = UIElementProps & (NewDonationComponentProps | DonationComponentProps);
