@@ -65,6 +65,8 @@
     "houseNumberOrName": "Numer domu i mieszkania",
     "separateDeliveryAddress": "Podaj osobny adres dostawy",
     "deliveryAddress": "Adres dostawy",
+    "deliveryAddress.firstName": "Imię odbiorcy",
+    "deliveryAddress.lastName": "Nazwisko odbiorcy",
     "zipCode": "Kod pocztowy",
     "apartmentSuite": "Numer domu/mieszkania",
     "provinceOrTerritory": "Region lub terytorium",

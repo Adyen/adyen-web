@@ -12,6 +12,7 @@ const createSession = require('./api/sessions');
 const mockAddressSearch = require('./api/mock/addressSearch');
 const getDonationCampaigns = require('./api/donationCampaign');
 const createDonation = require('./api/donation');
+const paypalUpdateOrder = require('./api/paypalUpdateOrder');
 
 module.exports = (app = express(), options = {}) => {
     app.use(express.json());
@@ -24,6 +25,8 @@ module.exports = (app = express(), options = {}) => {
     });
 
     app.all('/originKeys', (req, res) => getOriginKeys(res, req));
+
+    app.all('/paypal/updateOrder', (req, res) => paypalUpdateOrder(res, req.body));
 
     app.all('/paymentMethods', (req, res) => getPaymentMethods(res, req.body));
 

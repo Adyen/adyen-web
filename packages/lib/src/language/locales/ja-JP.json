@@ -65,6 +65,8 @@
     "houseNumberOrName": "部屋番号",
     "separateDeliveryAddress": "別の配送先住所を指定してください",
     "deliveryAddress": "配送先住所",
+    "deliveryAddress.firstName": "受信者の名",
+    "deliveryAddress.lastName": "受信者の姓",
     "zipCode": "郵便番号",
     "apartmentSuite": "アパート名/部屋名",
     "provinceOrTerritory": "州または準州",

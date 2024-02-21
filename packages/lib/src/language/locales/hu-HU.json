@@ -65,6 +65,8 @@
     "houseNumberOrName": "Házszám",
     "separateDeliveryAddress": "Eltérő szállítási cím megadása",
     "deliveryAddress": "Szállítási cím",
+    "deliveryAddress.firstName": "Címzett keresztneve",
+    "deliveryAddress.lastName": "Címzett vezetékneve",
     "zipCode": "Irányítószám",
     "apartmentSuite": "Lakás/ajtószám",
     "provinceOrTerritory": "Tartomány vagy terület",

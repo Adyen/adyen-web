@@ -437,6 +437,13 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     /**
+     * Used to display the second line of a payment method item
+     */
+    get additionalInfo(): string {
+        return null;
+    }
+
+    /**
      * Return the type of an element
      */
     public get type(): string {

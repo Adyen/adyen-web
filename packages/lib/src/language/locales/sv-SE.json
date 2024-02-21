@@ -65,6 +65,8 @@
     "houseNumberOrName": "Husnummer",
     "separateDeliveryAddress": "Ange en separat leveransadress",
     "deliveryAddress": "Leveransadress",
+    "deliveryAddress.firstName": "Mottagarens förnamn",
+    "deliveryAddress.lastName": "Mottagarens efternamn",
     "zipCode": "Postnummer",
     "apartmentSuite": "Lägenhetsnummer",
     "provinceOrTerritory": "Provins eller territorium",
