@@ -119,7 +119,7 @@ class Core implements ICore {
         if (!this.options.locale) {
             this.setOptions({ locale: DEFAULT_LOCALE });
         }
-        console.log('### core::validateCoreConfiguration:: this.options.countryCode', this.options.countryCode);
+
         if (!this.options.countryCode) {
             throw new AdyenCheckoutError(
                 IMPLEMENTATION_ERROR,
