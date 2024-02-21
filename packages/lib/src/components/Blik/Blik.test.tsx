@@ -1,15 +1,17 @@
 import { render, screen } from '@testing-library/preact';
-import AdyenCheckout from '../../index';
+import { AdyenCheckout } from '../../core/AdyenCheckout';
+import Dropin from '../Dropin';
 
 describe('Blik', () => {
     const createDropin = async paymentMethodsResponse => {
         const checkout = await AdyenCheckout({
+            countryCode: 'US',
             environment: 'test',
             clientKey: 'test_123456',
             analytics: { enabled: false },
             paymentMethodsResponse: paymentMethodsResponse
         });
-        return checkout.create('dropin');
+        return new Dropin(checkout);
     };
 
     describe('in Dropin display correct payment method name', () => {

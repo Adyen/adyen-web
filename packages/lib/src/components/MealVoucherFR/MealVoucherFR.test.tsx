@@ -22,7 +22,7 @@ describe('MealVoucherFR', () => {
             const onBalanceCheck = jest.fn();
 
             // mounting and clicking pay button
-            const mealVoucherFR = new MealVoucherFR({
+            const mealVoucherFR = new MealVoucherFR(global.core, {
                 ...baseProps,
                 onBalanceCheck
             });
@@ -49,7 +49,7 @@ describe('MealVoucherFR', () => {
             const onBalanceCheck = jest.fn();
 
             // mounting and clicking pay button
-            const mealVoucherFR = new MealVoucherFR({
+            const mealVoucherFR = new MealVoucherFR(global.core, {
                 ...baseProps,
                 onBalanceCheck
             });
@@ -77,7 +77,7 @@ describe('MealVoucherFR', () => {
             const onSubmit = jest.fn();
 
             // mounting and clicking pay button
-            const mealVoucherFR = new MealVoucherFR({
+            const mealVoucherFR = new MealVoucherFR(global.core, {
                 ...baseProps,
                 onBalanceCheck,
                 onOrderRequest,
