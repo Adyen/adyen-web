@@ -119,9 +119,12 @@ class Core implements ICore {
         if (!this.options.locale) {
             this.setOptions({ locale: DEFAULT_LOCALE });
         }
-
+        console.log('### core::validateCoreConfiguration:: this.options.countryCode', this.options.countryCode);
         if (!this.options.countryCode) {
-            throw new AdyenCheckoutError(IMPLEMENTATION_ERROR, 'You must specify a countryCode when initializing checkout');
+            throw new AdyenCheckoutError(
+                IMPLEMENTATION_ERROR,
+                'You must specify a countryCode when initializing checkout. (If you are using a session then this session should be initialized with a countryCode.)'
+            );
         }
     }
 
