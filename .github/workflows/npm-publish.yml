@@ -16,7 +16,7 @@ jobs:
       # Setup .npmrc file to publish to npm
       - uses: actions/setup-node@v4
         with:
-          node-version: 18.15
+          node-version: 18.18
           registry-url: https://registry.npmjs.org/
       - run: yarn install --frozen-lockfile
       # Copy README to adyen-web package
@@ -42,7 +42,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
           CI: true
       # Upload artifacts
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: dist
           path: packages/lib/dist
