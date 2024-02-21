@@ -211,6 +211,12 @@ export interface PayPalConfiguration extends Omit<PayPalCommonProps, 'onShipping
      */
     onShippingOptionsChange?: (data: any, actions: { reject: (reason?: string) => Promise<void> }, component: PaypalElement) => Promise<void>;
 
+    /**
+     * If set to 'continue' , the button inside the lightbox will display the 'Continue' button
+     * @default pay
+     */
+    userAction?: 'continue' | 'pay';
+
     paymentMethods?: PaymentMethod[];
     showPayButton?: boolean;
 }

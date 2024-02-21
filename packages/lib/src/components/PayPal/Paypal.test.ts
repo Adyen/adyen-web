@@ -18,7 +18,7 @@ describe('Paypal', () => {
     });
 
     test('should return userAction=pay as default', () => {
-        const paypal = new Paypal({});
+        const paypal = new Paypal(global.core);
         expect(paypal.data).toEqual({
             clientStateDataIndicator: true,
             paymentMethod: { subtype: 'sdk', type: 'paypal', userAction: 'pay', checkoutAttemptId: 'do-not-track' }
@@ -26,7 +26,7 @@ describe('Paypal', () => {
     });
 
     test('should return userAction=continue if set', () => {
-        const paypal = new Paypal({ isExpress: true, userAction: 'continue' });
+        const paypal = new Paypal(global.core, { isExpress: true, userAction: 'continue' });
         expect(paypal.data).toEqual({
             clientStateDataIndicator: true,
             paymentMethod: { subtype: 'express', type: 'paypal', userAction: 'continue', checkoutAttemptId: 'do-not-track' }
