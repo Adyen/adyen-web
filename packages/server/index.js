@@ -10,6 +10,8 @@ const createOrder = require('./api/orders');
 const cancelOrder = require('./api/ordersCancel');
 const createSession = require('./api/sessions');
 const mockAddressSearch = require('./api/mock/addressSearch');
+const getDonationCampaigns = require('./api/donationCampaign');
+const createDonation = require('./api/donation');
 
 module.exports = (app = express(), options = {}) => {
     app.use(express.json());
@@ -38,6 +40,10 @@ module.exports = (app = express(), options = {}) => {
     app.all('/sessions', (req, res) => createSession(res, req.body));
 
     app.all('/mock/addressSearch', (req, res) => mockAddressSearch(res, req));
+
+    app.all('/donationCampaigns', (req, res) => getDonationCampaigns(res, req.body));
+
+    app.all('/donations', (req, res) => createDonation(res, req.body));
 
     if (options.listen) {
         const port = process.env.PORT || 3020;

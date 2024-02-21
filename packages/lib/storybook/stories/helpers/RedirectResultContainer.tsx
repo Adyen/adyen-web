@@ -17,17 +17,21 @@ export const RedirectResultContainer = ({ redirectResult, sessionId, countryCode
         AdyenCheckout({
             clientKey: process.env.CLIENT_KEY,
             environment: process.env.CLIENT_ENV,
+            countryCode,
             ...(sessionId && { session: { id: sessionId, countryCode } }),
-            onAdditionalDetails: (state: AdditionalDetailsStateData, _, actions) => {
-                makeDetailsCall(state.data)
-                    .then(res => {
-                        actions.resolve(res);
-                    })
-                    .catch(e => {
-                        console.error({ e });
-                        actions.reject();
-                    });
-            },
+            // Advanced flow
+            ...(!sessionId && {
+                onAdditionalDetails: (state: AdditionalDetailsStateData, _, actions) => {
+                    makeDetailsCall(state.data)
+                        .then(res => {
+                            actions.resolve(res);
+                        })
+                        .catch(e => {
+                            console.error({ e });
+                            actions.reject();
+                        });
+                }
+            }),
             onPaymentCompleted: (result, component) => {
                 setIsRedirecting(false);
                 handleFinalState(result, component);

@@ -3,8 +3,8 @@ import UIElement from '../internal/UIElement/UIElement';
 import CoreProvider from '../../core/Context/CoreProvider';
 import DonationComponent from './components/DonationComponent';
 import { TxVariants } from '../tx-variants';
-import { DonationConfiguration } from './types';
 import type { ICore } from '../../core/types';
+import type { DonationConfiguration } from './types';
 
 class DonationElement extends UIElement<DonationConfiguration> {
     public static type = TxVariants.donation;
