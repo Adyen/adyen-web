@@ -295,37 +295,27 @@ describe('Core', () => {
 
     describe('Initialising without a countryCode', () => {
         test('AdvancedFlow, without a countryCode, should throw an error', () => {
-            expect(() => {
-                new AdyenCheckout({
-                    environment: 'test',
-                    environmentUrls: {
-                        api: 'https://localhost:8080/checkoutshopper/'
-                    },
-                    clientKey: 'devl_FX923810'
-                });
-            }).toThrow('You must specify a countryCode when initializing checkout');
+            const core = new AdyenCheckout({
+                environment: 'test',
+                environmentUrls: {
+                    api: 'https://localhost:8080/checkoutshopper/'
+                },
+                clientKey: 'devl_FX923810'
+            });
+
+            expect(async () => await core.initialize()).rejects.toThrow('You must specify a countryCode');
         });
 
-        const onError = jest.fn(() => {});
-
-        test('SessionsFlow, without a countryCode, should throw an error', async () => {
+        test('SessionsFlow, without a countryCode, should throw an error', () => {
             delete sessionSetupResponseMock.countryCode;
 
             const checkout = new AdyenCheckout({
-                countryCode: 'US',
                 environment: 'test',
                 clientKey: 'test_123456',
-                session: { id: 'session-id', sessionData: 'session-data' },
-                onError
+                session: { id: 'session-id', sessionData: 'session-data' }
             });
 
-            let err;
-
-            await checkout.initialize().catch(e => {
-                err = e;
-            });
-
-            expect(onError).toBeCalledWith(err);
+            expect(async () => await checkout.initialize()).rejects.toThrow('You must specify a countryCode');
         });
     });
 });
