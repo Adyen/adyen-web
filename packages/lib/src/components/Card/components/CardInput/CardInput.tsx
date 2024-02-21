@@ -211,7 +211,7 @@ const CardInput = (props: CardInputProps) => {
             props.autoFocus &&
             hasPanLengthRef.current > 0 &&
             ((!valid.encryptedCardNumber && sfState.valid?.encryptedCardNumber) ||
-                (valid.encryptedCardNumber && sfState.valid.encryptedCardNumber && eventDetails.event === 'handleOnBrand'))
+                (valid.encryptedCardNumber && sfState.valid.encryptedCardNumber && eventDetails?.event === 'handleOnBrand'))
         ) {
             doPanAutoJump();
         }

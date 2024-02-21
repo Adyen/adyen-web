@@ -46,3 +46,17 @@ test('#1 Fill out PAN (binLookup w. panLength) see that focus moves to tax numbe
     // Expect focus to be place on tax number field
     await t.expect(cardPage.kcpTaxNumberLabelWithFocus.exists).ok();
 });
+
+test('#2 Paste non KCP PAN and see focus move to date field', async t => {
+    await t.addRequestHooks(getMock('visaMock'));
+
+    // Wait for field to appear in DOM
+    await cardPage.numHolder();
+
+    await t.wait(1000);
+
+    await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD, 'paste');
+
+    // Expect focus to be place on date field
+    await t.expect(cardPage.dateLabelWithFocus.exists).ok();
+});

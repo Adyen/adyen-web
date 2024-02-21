@@ -6,7 +6,7 @@ name: Publish Package
 on:
   release:
     types: [created]
-  workflow_dispatch:  
+  workflow_dispatch:
 
 jobs:
   publish-npm:
@@ -16,20 +16,33 @@ jobs:
       # Setup .npmrc file to publish to npm
       - uses: actions/setup-node@v4
         with:
-          node-version: 18.15
+          node-version: 18.18
           registry-url: https://registry.npmjs.org/
       - run: yarn install --frozen-lockfile
       # Copy README to adyen-web package
       - run: cp README.md packages/lib/
       # Copy LICENSE to adyen-web package
       - run: cp LICENSE packages/lib/
+      # Build and publish to npm with alpha tag
+      - name: Build and prerelease
+        if: "github.event.release.prerelease"
+        run: |
+          echo "Pre-release alpha:"
+          cd packages/lib && npm publish --tag alpha --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          CI: true
       # Build and publish to npm
-      - run: cd packages/lib && npm publish --access public
+      - name: Build and release
+        if: "!github.event.release.prerelease"
+        run: |
+          echo "Release:"
+          cd packages/lib && npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
           CI: true
       # Upload artifacts
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: dist
           path: packages/lib/dist

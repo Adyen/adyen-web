@@ -65,6 +65,8 @@
     "houseNumberOrName": "집 전화번호",
     "separateDeliveryAddress": "배송 주소 별도 지정",
     "deliveryAddress": "배송 주소",
+    "deliveryAddress.firstName": "받는 사람 이름",
+    "deliveryAddress.lastName": "받는 사람 성",
     "zipCode": "우편번호",
     "apartmentSuite": "아파트/건물",
     "provinceOrTerritory": "도",

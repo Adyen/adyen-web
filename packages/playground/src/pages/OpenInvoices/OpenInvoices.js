@@ -16,7 +16,8 @@ const showComps = {
     afterpayb2b: true,
     facilypay_3x: true,
     affirm: true,
-    atome: true
+    atome: true,
+    riverty: true
 };
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
@@ -39,6 +40,20 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
         showPayButton: true,
         amount // Optional. Used to display the amount in the Pay Button.
     });
+
+    // RIVERTY
+    if (showComps.riverty) {
+        window.riverty = checkout
+            .create('riverty', {
+                countryCode: 'DE', // 'DE' / 'AT' / 'CH'
+                visibility: {
+                    personalDetails: 'editable', // editable [default] / readOnly / hidden
+                    billingAddress: 'editable',
+                    deliveryAddress: 'editable'
+                }
+            })
+            .mount('.riverty-field');
+    }
 
     // RATEPAY
     if (showComps.ratepay) {

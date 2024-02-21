@@ -171,7 +171,7 @@ export interface CoreConfiguration {
      * @param data
      * @param element
      */
-    onPaymentCompleted?(data: SessionsResponse | { resultCode: ResultCode }, element?: UIElement): void;
+    onPaymentCompleted?(data: SessionsResponse | { resultCode: ResultCode; donationToken?: string }, element?: UIElement): void;
 
     /**
      * Called when the payment fails.

@@ -5,6 +5,8 @@ import UIElement from '../UIElement/UIElement';
 import { GenericError, ValidationRuleErrorObj } from '../../../core/Errors/types';
 import { UIElementProps } from '../UIElement/types';
 
+type OpenInvoiceAddressSpecification = AddressSpecifications & { allowedCountries?: string[] };
+
 export interface OpenInvoiceVisibility {
     companyDetails?: FieldsetVisibility;
     personalDetails?: FieldsetVisibility;
@@ -36,7 +38,9 @@ export interface OpenInvoiceProps extends UIElementProps {
     visibility?: OpenInvoiceVisibility;
     personalDetailsRequiredFields?: string[];
     billingAddressRequiredFields?: string[];
-    billingAddressSpecification?: AddressSpecifications;
+    billingAddressSpecification?: OpenInvoiceAddressSpecification;
+    deliveryAddressRequiredFields?: string[];
+    deliveryAddressSpecification?: OpenInvoiceAddressSpecification;
     setComponentRef?: (ref) => void;
     showFormInstruction?: boolean;
 }

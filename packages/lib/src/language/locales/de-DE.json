@@ -65,6 +65,8 @@
     "houseNumberOrName": "Hausnummer",
     "separateDeliveryAddress": "Abweichende Lieferadresse angeben",
     "deliveryAddress": "Lieferadresse",
+    "deliveryAddress.firstName": "Vorname des Empfängers",
+    "deliveryAddress.lastName": "Nachname des Empfängers",
     "zipCode": "PLZ",
     "apartmentSuite": "Wohnung/Geschoss",
     "provinceOrTerritory": "Provinz oder Territorium",

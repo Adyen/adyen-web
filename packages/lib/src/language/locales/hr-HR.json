@@ -65,6 +65,8 @@
     "houseNumberOrName": "Kućni broj",
     "separateDeliveryAddress": "Navedite zasebnu adresu za dostavu",
     "deliveryAddress": "Adresa za dostavu",
+    "deliveryAddress.firstName": "Ime primatelja",
+    "deliveryAddress.lastName": "Prezime primatelja",
     "zipCode": "Poštanski broj",
     "apartmentSuite": "Stan/apartman",
     "provinceOrTerritory": "Pokrajina ili teritorij",

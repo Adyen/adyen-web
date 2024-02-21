@@ -65,6 +65,8 @@
     "houseNumberOrName": "رقم المنزل",
     "separateDeliveryAddress": "حدد عنوان تسليم منفصل",
     "deliveryAddress": "عنوان التسليم",
+    "deliveryAddress.firstName": "الاسم الأول للمستلم",
+    "deliveryAddress.lastName": "الاسم الأخير للمستلم",
     "zipCode": "الرمز البريدي",
     "apartmentSuite": "الشقة / الجناح",
     "provinceOrTerritory": "المقاطعة أو الإقليم",

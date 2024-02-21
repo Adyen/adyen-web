@@ -1,6 +1,7 @@
 import { AddressData, PaymentAmount, PaymentMethod } from '../../types/global-types';
 import { SUPPORTED_LOCALES } from './config';
 import { UIElementProps } from '../internal/UIElement/types';
+import PaypalElement from './Paypal';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare global {
@@ -146,8 +147,21 @@ interface PayPalCommonProps {
 
     /**
      * @see {@link https://developer.paypal.com/docs/business/javascript-sdk/javascript-sdk-reference/#onshippingchange}
+     * @deprecated - Use 'onShippingAddressChange' instead, as described in the PayPal docs
      */
     onShippingChange?: (data, actions) => void;
+
+    /**
+     * While the buyer is on the PayPal site, you can update their shopping cart to reflect the shipping address they chose on PayPal
+     * @see {@link https://developer.paypal.com/sdk/js/reference/#onshippingaddresschange}
+     */
+    onShippingAddressChange?: (data: any, actions: { reject: (reason?: string) => Promise<void> }) => Promise<void>;
+
+    /**
+     * While the buyer is on the PayPal site, you can update their shopping cart to reflect the shipping options they chose on PayPal
+     * @see {@link https://developer.paypal.com/sdk/js/reference/#onshippingoptionschange}
+     */
+    onShippingOptionsChange?: (data: any, actions: { reject: (reason?: string) => Promise<void> }) => Promise<void>;
 
     /**
      *  Identifies if the payment is Express.
@@ -167,7 +181,7 @@ export interface PayPalConfig {
     intent?: Intent;
 }
 
-export interface PayPalConfiguration extends PayPalCommonProps, UIElementProps {
+export interface PayPalConfiguration extends Omit<PayPalCommonProps, 'onShippingAddressChange' | 'onShippingOptionsChange'>, UIElementProps {
     /**
      * Callback called when PayPal authorizes the payment.
      * Must be resolved/rejected with the action object. If resolved, the additional details will be invoked. Otherwise it will be skipped
@@ -176,6 +190,26 @@ export interface PayPalConfiguration extends PayPalCommonProps, UIElementProps {
         data: { authorizedEvent: any; billingAddress?: Partial<AddressData>; deliveryAddress?: Partial<AddressData> },
         actions: { resolve: () => void; reject: () => void }
     ) => void;
+
+    /**
+     * While the buyer is on the PayPal site, you can update their shopping cart to reflect the shipping address they chose on PayPal
+     * @see {@link https://developer.paypal.com/sdk/js/reference/#onshippingaddresschange}
+     *
+     * @param data - PayPal data object
+     * @param actions - Used to reject the address change in case the address is invalid
+     * @param component - Adyen instance of its PayPal implementation. It must be used to manipulate the 'paymentData' in order to apply the amount patch correctly
+     */
+    onShippingAddressChange?: (data: any, actions: { reject: (reason?: string) => Promise<void> }, component: PaypalElement) => Promise<void>;
+
+    /**
+     * This callback is triggered any time the user selects a new shipping option.
+     * @see {@link https://developer.paypal.com/sdk/js/reference/#onshippingoptionschange}
+     *
+     * @param data - An PayPal object containing the payer’s selected shipping option
+     * @param actions - Used to indicates to PayPal that you will not support the shipping method selected by the buyer
+     * @param component - Adyen instance of its PayPal implementation. It must be used to manipulate the 'paymentData' in order to apply the amount patch correctly
+     */
+    onShippingOptionsChange?: (data: any, actions: { reject: (reason?: string) => Promise<void> }, component: PaypalElement) => Promise<void>;
 
     paymentMethods?: PaymentMethod[];
     showPayButton?: boolean;

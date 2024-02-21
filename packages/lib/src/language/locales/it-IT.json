@@ -65,6 +65,8 @@
     "houseNumberOrName": "Numero civico",
     "separateDeliveryAddress": "Specifica un indirizzo di consegna alternativo",
     "deliveryAddress": "Indirizzo di consegna",
+    "deliveryAddress.firstName": "Nome del destinatario",
+    "deliveryAddress.lastName": "Cognome del destinatario",
     "zipCode": "CAP",
     "apartmentSuite": "Appartamento/suite",
     "provinceOrTerritory": "Provincia o territorio",

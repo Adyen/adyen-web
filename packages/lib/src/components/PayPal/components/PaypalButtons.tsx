@@ -13,6 +13,8 @@ export default function PaypalButtons({
     onCancel,
     onError,
     onShippingChange,
+    onShippingAddressChange,
+    onShippingOptionsChange,
     onSubmit,
     isProcessingPayment,
     paypalRef,
@@ -30,7 +32,9 @@ export default function PaypalButtons({
         const configuration = {
             ...(isTokenize && { createBillingAgreement: onSubmit }),
             ...(!isTokenize && { createOrder: onSubmit }),
-            ...(!isTokenize && fundingSource !== 'venmo' && { onShippingChange }),
+            ...(!isTokenize && fundingSource !== 'venmo' && onShippingChange && { onShippingChange }),
+            ...(!isTokenize && fundingSource !== 'venmo' && onShippingAddressChange && { onShippingAddressChange }),
+            ...(!isTokenize && fundingSource !== 'venmo' && onShippingOptionsChange && { onShippingOptionsChange }),
             fundingSource,
             style: getStyle(fundingSource, style),
             onInit,
@@ -48,6 +52,14 @@ export default function PaypalButtons({
     };
 
     useEffect(() => {
+        if (onShippingChange && onShippingAddressChange) {
+            console.warn(
+                'PayPal - "onShippingChange" and "onShippingAddressChange" are defined. It is recommended to only use "onShippingAddressChange", as "onShippingChange" is getting deprecated'
+            );
+        }
+    }, [onShippingChange, onShippingAddressChange]);
+
+    useEffect(() => {
         const { PAYPAL, CREDIT, PAYLATER, VENMO } = paypalRef.FUNDING;
         createButton(PAYPAL, paypalButtonRef);
 
@@ -55,6 +67,8 @@ export default function PaypalButtons({
         if (!props.blockPayPalPayLaterButton) createButton(PAYLATER, payLaterButtonRef);
         if (!props.blockPayPalVenmoButton) createButton(VENMO, venmoButtonRef);
     }, []);
+
+    const isProcessingPaymentWithoutReviewPage = props.commit === true;
 
     return (
         <div className={classnames('adyen-checkout__paypal__buttons', { 'adyen-checkout__paypal-processing': isProcessingPayment })}>
@@ -66,7 +80,8 @@ export default function PaypalButtons({
             {isProcessingPayment && (
                 <div className="adyen-checkout__paypal">
                     <div className="adyen-checkout__paypal__status adyen-checkout__paypal__status--processing">
-                        <Spinner size="medium" inline /> {i18n.get('paypal.processingPayment')}
+                        <Spinner size="medium" inline />
+                        {isProcessingPaymentWithoutReviewPage && i18n.get('paypal.processingPayment')}
                     </div>
                 </div>
             )}

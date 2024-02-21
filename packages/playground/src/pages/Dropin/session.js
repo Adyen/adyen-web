@@ -34,7 +34,7 @@ export async function initSession() {
             console.log('onPaymentFailed', result, element);
         },
         onError: (error, component) => {
-            console.info(JSON.stringify(error), component);
+            console.error('error', JSON.stringify(error.name), JSON.stringify(error.message), component);
         },
         onChange: (state, component) => {
             console.log('onChange', state);

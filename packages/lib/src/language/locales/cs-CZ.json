@@ -65,6 +65,8 @@
     "houseNumberOrName": "Číslo popisné",
     "separateDeliveryAddress": "Zadat dodací adresu odlišnou od fakturační",
     "deliveryAddress": "Dodací adresa",
+    "deliveryAddress.firstName": "Jméno příjemce",
+    "deliveryAddress.lastName": "Příjmení příjemce",
     "zipCode": "PSČ",
     "apartmentSuite": "Byt",
     "provinceOrTerritory": "Provincie nebo teritorium",

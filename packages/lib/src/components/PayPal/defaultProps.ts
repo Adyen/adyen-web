@@ -4,6 +4,8 @@ const defaultProps: Partial<PayPalConfiguration> = {
     environment: 'TEST',
     status: 'loading',
 
+    userAction: 'pay',
+
     // Config
     /**
      * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#merchant-id}
