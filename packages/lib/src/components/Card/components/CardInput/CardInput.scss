@@ -84,6 +84,7 @@
 .adyen-checkout__store-details {
     display: flex;
     align-items: center;
+    background: var(--adyen-checkout-color-background-primary);
     gap: var(--adyen-checkout-spacer-060);
     padding: var(--adyen-checkout-spacer-060) var(--adyen-checkout-spacer-070);
     margin-top: var(--adyen-checkout-spacer-070);
