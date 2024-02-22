@@ -21,7 +21,7 @@ class DonationElement extends UIElement<DonationElementProps> {
     };
 
     protected formatProps(props: DonationElementProps) {
-        if ('nonprofitUrl' in props && props.nonprofitUrl) {
+        if (this.isNewDonation(props)) {
             const { bannerUrl, nonprofitDescription, nonprofitName, nonprofitUrl, termsAndConditionsUrl, ...rest } =
                 props as NewDonationComponentProps;
 
@@ -40,6 +40,10 @@ class DonationElement extends UIElement<DonationElementProps> {
         }
 
         return props;
+    }
+
+    isNewDonation(prop: DonationElementProps): boolean {
+        return Object.keys(prop).some(key => key.includes('nonprofit') && prop[key]);
     }
 
     /**
