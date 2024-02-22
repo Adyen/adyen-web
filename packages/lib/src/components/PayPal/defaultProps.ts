@@ -66,8 +66,7 @@ const defaultProps: Partial<PayPalConfiguration> = {
     // Events
     onInit: () => {},
     onClick: () => {},
-    onError: () => {},
-    onShippingChange: () => {}
+    onError: () => {}
 };
 
 export default defaultProps;

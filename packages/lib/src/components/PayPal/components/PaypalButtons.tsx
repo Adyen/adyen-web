@@ -1,10 +1,10 @@
 import { h } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
 import classnames from 'classnames';
-import { PayPalButtonsProps, FundingSource } from '../types';
-import { getStyle } from '../utils';
+import { getStyle } from '../utils/get-paypal-styles';
 import Spinner from '../../internal/Spinner';
 import useCoreContext from '../../../core/Context/useCoreContext';
+import type { PayPalButtonsProps, FundingSource } from '../types';
 
 export default function PaypalButtons({
     onInit,
@@ -12,7 +12,6 @@ export default function PaypalButtons({
     onClick,
     onCancel,
     onError,
-    onShippingChange,
     onShippingAddressChange,
     onShippingOptionsChange,
     onSubmit,
@@ -32,7 +31,6 @@ export default function PaypalButtons({
         const configuration = {
             ...(isTokenize && { createBillingAgreement: onSubmit }),
             ...(!isTokenize && { createOrder: onSubmit }),
-            ...(!isTokenize && fundingSource !== 'venmo' && onShippingChange && { onShippingChange }),
             ...(!isTokenize && fundingSource !== 'venmo' && onShippingAddressChange && { onShippingAddressChange }),
             ...(!isTokenize && fundingSource !== 'venmo' && onShippingOptionsChange && { onShippingOptionsChange }),
             fundingSource,
@@ -50,14 +48,6 @@ export default function PaypalButtons({
             button.render(buttonRef.current);
         }
     };
-
-    useEffect(() => {
-        if (onShippingChange && onShippingAddressChange) {
-            console.warn(
-                'PayPal - "onShippingChange" and "onShippingAddressChange" are defined. It is recommended to only use "onShippingAddressChange", as "onShippingChange" is getting deprecated'
-            );
-        }
-    }, [onShippingChange, onShippingAddressChange]);
 
     useEffect(() => {
         const { PAYPAL, CREDIT, PAYLATER, VENMO } = paypalRef.FUNDING;

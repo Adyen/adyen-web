@@ -1,9 +1,8 @@
-import { AddressData, PaymentAmount, PaymentMethod } from '../../types/global-types';
+import { AddressData, PaymentAmount } from '../../types/global-types';
 import { SUPPORTED_LOCALES } from './config';
 import { UIElementProps } from '../internal/UIElement/types';
 import PaypalElement from './Paypal';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare global {
     interface Window {
         paypal: object;
@@ -72,6 +71,10 @@ interface PayPalCommonProps {
     debug?: boolean;
     environment?: string;
 
+    /**
+     * Set to true to force the UI to not render PayPal Credit button
+     * @defaultValue false
+     */
     blockPayPalCreditButton?: boolean;
 
     /**
@@ -146,12 +149,6 @@ interface PayPalCommonProps {
     onClick?: () => void;
 
     /**
-     * @see {@link https://developer.paypal.com/docs/business/javascript-sdk/javascript-sdk-reference/#onshippingchange}
-     * @deprecated - Use 'onShippingAddressChange' instead, as described in the PayPal docs
-     */
-    onShippingChange?: (data, actions) => void;
-
-    /**
      * While the buyer is on the PayPal site, you can update their shopping cart to reflect the shipping address they chose on PayPal
      * @see {@link https://developer.paypal.com/sdk/js/reference/#onshippingaddresschange}
      */
@@ -162,12 +159,6 @@ interface PayPalCommonProps {
      * @see {@link https://developer.paypal.com/sdk/js/reference/#onshippingoptionschange}
      */
     onShippingOptionsChange?: (data: any, actions: { reject: (reason?: string) => Promise<void> }) => Promise<void>;
-
-    /**
-     *  Identifies if the payment is Express.
-     *  @defaultValue false
-     */
-    isExpress?: boolean;
 }
 
 export interface PayPalConfig {
@@ -183,8 +174,17 @@ export interface PayPalConfig {
 
 export interface PayPalConfiguration extends Omit<PayPalCommonProps, 'onShippingAddressChange' | 'onShippingOptionsChange'>, UIElementProps {
     /**
+     *  Identifies if the payment is Express.
+     *  @defaultValue false
+     */
+    isExpress?: boolean;
+
+    /**
      * Callback called when PayPal authorizes the payment.
      * Must be resolved/rejected with the action object. If resolved, the additional details will be invoked. Otherwise it will be skipped
+     *
+     * @param data - Contains the raw event from PayPal, along with the billingAddress and deliveryAddress parsed by Adyen based on the raw event data
+     * @param actions - Used to indicate that payment flow must continue or must stop
      */
     onAuthorized?: (
         data: { authorizedEvent: any; billingAddress?: Partial<AddressData>; deliveryAddress?: Partial<AddressData> },
@@ -217,7 +217,6 @@ export interface PayPalConfiguration extends Omit<PayPalCommonProps, 'onShipping
      */
     userAction?: 'continue' | 'pay';
 
-    paymentMethods?: PaymentMethod[];
     showPayButton?: boolean;
 }
 
