@@ -33,7 +33,8 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
     }
 
     formatProps(props: PayPalConfiguration): PayPalConfiguration {
-        const { merchantId, intent: intentFromConfig } = props.configuration;
+        const merchantId = props.configuration?.merchantId;
+        const intentFromConfig = props.configuration?.intent;
         const isZeroAuth = props.amount?.value === 0;
         const intent: Intent = isZeroAuth ? 'tokenize' : props.intent || intentFromConfig;
         const vault = intent === 'tokenize' || props.vault;
@@ -172,7 +173,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
      * @param data - PayPal data
      * @param actions - PayPal actions.
      */
-    private handleOnShippingAddressChange(data, actions): Promise<void> {
+    private handleOnShippingAddressChange(data: any, actions: any): Promise<void> {
         return this.props.onShippingAddressChange(data, actions, this);
     }
 
@@ -184,7 +185,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
      * @param data - PayPal data
      * @param actions - PayPal actions.
      */
-    private handleOnShippingOptionsChange(data, actions): Promise<void> {
+    private handleOnShippingOptionsChange(data: any, actions: any): Promise<void> {
         return this.props.onShippingOptionsChange(data, actions, this);
     }
 

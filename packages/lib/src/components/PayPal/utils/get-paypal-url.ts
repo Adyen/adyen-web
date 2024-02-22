@@ -1,6 +1,6 @@
 import { getPaypalSettings } from './get-paypal-settings';
 import { PAYPAL_JS_URL } from '../config';
-import type { PayPalComponentProps } from '../types';
+import type { PayPalComponentProps } from '../components/types';
 
 /**
  * Returns the PayPal SDK script URL with query parameters

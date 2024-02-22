@@ -1,72 +1,17 @@
 import { PayPalConfiguration } from './types';
 
 const defaultProps: Partial<PayPalConfiguration> = {
-    environment: 'TEST',
-    status: 'loading',
-
-    userAction: 'pay',
-
-    // Config
-    /**
-     * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#merchant-id}
-     */
-    merchantId: '',
-
-    /**
-     * @see {@link https://developer.paypal.com/docs/business/javascript-sdk/javascript-sdk-configuration/#csp-nonce}
-     */
-    cspNonce: null,
-
-    /**
-     * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#intent}
-     */
-    intent: null,
-
-    /**
-     * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#commit}
-     */
-    commit: true,
-
-    /**
-     * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#vault}
-     */
-    vault: false,
-
-    /**
-     * @see {@link https://developer.paypal.com/docs/checkout/integration-features/customize-button/}
-     */
-    style: {
-        /**
-         * The height of the buttons is set to 48px to align with the default size of our Pay buttons.
-         */
-        height: 48
-    },
-
-    blockPayPalCreditButton: false,
-
-    blockPayPalPayLaterButton: false,
-
-    enableMessages: false,
-
-    blockPayPalVenmoButton: false,
-
     isExpress: false,
-
-    configuration: {
-        /**
-         * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#merchant-id}
-         */
-        merchantId: '',
-        /**
-         * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#intent}
-         */
-        intent: null
+    userAction: 'pay',
+    commit: true,
+    vault: false,
+    enableMessages: false,
+    style: {
+        height: 48 // The height of the buttons is set to 48px to align with the default size of our Pay buttons.
     },
-
-    // Events
-    onInit: () => {},
-    onClick: () => {},
-    onError: () => {}
+    blockPayPalCreditButton: false,
+    blockPayPalPayLaterButton: false,
+    blockPayPalVenmoButton: false
 };
 
 export default defaultProps;

@@ -2,6 +2,8 @@ import { h } from 'preact';
 import PaypalButtons from './PaypalButtons';
 import { render } from '@testing-library/preact';
 import CoreProvider from '../../../core/Context/CoreProvider';
+import { mock } from 'jest-mock-extended';
+import { PayPalButtonsProps } from './types';
 
 const paypalIsEligibleMock = jest.fn(() => true);
 const paypalRenderMock = jest.fn(() => Promise.resolve());
@@ -30,13 +32,19 @@ describe('PaypalButtons', () => {
 
     test('should call paypalRef.Buttons for each funding source', async () => {
         jest.clearAllMocks();
-        renderWithCoreProvider(<PaypalButtons isProcessingPayment={false} onApprove={jest.fn()} paypalRef={paypalRefMock} />);
+        const buttonPropsMock = mock<PayPalButtonsProps>({
+            paypalRef: paypalRefMock
+        });
+        renderWithCoreProvider(<PaypalButtons {...buttonPropsMock} />);
         expect(paypalRefMock.Buttons).toHaveBeenCalledTimes(4);
     });
 
     test('should call paypalRef.Buttons().render for each funding source', async () => {
         jest.clearAllMocks();
-        renderWithCoreProvider(<PaypalButtons isProcessingPayment={false} onApprove={jest.fn()} paypalRef={paypalRefMock} />);
+        const buttonPropsMock = mock<PayPalButtonsProps>({
+            paypalRef: paypalRefMock
+        });
+        renderWithCoreProvider(<PaypalButtons {...buttonPropsMock} />);
         expect(paypalRefMock.Buttons().render).toHaveBeenCalledTimes(4);
     });
 
@@ -48,11 +56,13 @@ describe('PaypalButtons', () => {
         const onClick = jest.fn();
         const onError = jest.fn();
         const onInit = jest.fn();
+        const onChange = jest.fn();
+        const onCancel = jest.fn();
         const style = {};
 
         renderWithCoreProvider(
             <PaypalButtons
-                configuration={{intent: 'authorize', merchantId: 'xxxx'}}
+                configuration={{ intent: 'authorize', merchantId: 'xxxx' }}
                 paypalRef={paypalRefMock}
                 isProcessingPayment={false}
                 onApprove={onApprove}
@@ -62,6 +72,8 @@ describe('PaypalButtons', () => {
                 onClick={onClick}
                 onError={onError}
                 onInit={onInit}
+                onChange={onChange}
+                onCancel={onCancel}
                 blockPayPalCreditButton
                 blockPayPalPayLaterButton
                 blockPayPalVenmoButton
@@ -75,6 +87,7 @@ describe('PaypalButtons', () => {
             onApprove,
             createOrder,
             onClick,
+            onCancel,
             onError,
             onInit,
             style,

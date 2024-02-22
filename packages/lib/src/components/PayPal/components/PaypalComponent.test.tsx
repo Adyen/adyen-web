@@ -1,12 +1,18 @@
-import { mount } from 'enzyme';
 import { h } from 'preact';
+import { render, screen } from '@testing-library/preact';
 import PaypalComponent from './PaypalComponent';
+import { mock } from 'jest-mock-extended';
+import { PayPalComponentProps } from './types';
 
 describe('PaypalComponent', () => {
-    const getWrapper = (props?: object) => mount(<PaypalComponent onApprove={jest.fn()} {...props} />);
-
-    test('Renders a loading spinner', async () => {
-        const wrapper = getWrapper({ configuration: {} });
-        expect(wrapper.find('.adyen-checkout__spinner')).toHaveLength(1);
+    test('should render a loading spinner', async () => {
+        const props = mock<PayPalComponentProps>({
+            configuration: {
+                merchantId: 'TestMerchant',
+                intent: 'authorize'
+            }
+        });
+        render(<PaypalComponent {...props} />);
+        screen.getByTestId('spinner');
     });
 });

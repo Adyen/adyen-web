@@ -4,7 +4,9 @@ import classnames from 'classnames';
 import { getStyle } from '../utils/get-paypal-styles';
 import Spinner from '../../internal/Spinner';
 import useCoreContext from '../../../core/Context/useCoreContext';
-import type { PayPalButtonsProps, FundingSource } from '../types';
+
+import type { PayPalButtonsProps } from './types';
+import type { FundingSource } from '../types';
 
 export default function PaypalButtons({
     onInit,

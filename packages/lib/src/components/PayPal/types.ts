@@ -1,5 +1,4 @@
-import { AddressData, PaymentAmount } from '../../types/global-types';
-import { SUPPORTED_LOCALES } from './config';
+import { AddressData } from '../../types/global-types';
 import { UIElementProps } from '../internal/UIElement/types';
 import PaypalElement from './Paypal';
 
@@ -9,175 +8,45 @@ declare global {
     }
 }
 
-/**
- * The intent for the transaction. This determines whether the funds are captured immediately, or later.
- * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#intent}
- */
-export type Intent = 'sale' | 'capture' | 'authorize' | 'order' | 'tokenize';
-
-export type FundingSource = 'paypal' | 'credit' | 'paylater' | 'venmo';
-
-export interface PayPalStyles {
+export interface PayPalConfiguration extends UIElementProps {
     /**
-     * @see {@link https://developer.paypal.com/docs/checkout/integration-features/customize-button/#color}
+     * Configuration returned by the backend
+     * @internal
      */
-    color?: 'gold' | 'blue' | 'silver' | 'white' | 'black';
+    configuration?: {
+        /**
+         * @see {@link https://developer.paypal.com/sdk/js/configuration/#link-merchantid}
+         */
+        merchantId: string;
+        /**
+         * @see {@link https://developer.paypal.com/sdk/js/configuration/#link-intent}
+         */
+        intent?: Intent;
+    };
 
-    /**
-     * @see {@link https://developer.paypal.com/docs/checkout/integration-features/customize-button/#shape}
-     */
-    shape?: 'rect' | 'pill';
-
-    /**
-     * @see {@link https://developer.paypal.com/docs/checkout/integration-features/customize-button/#height}
-     */
-    height?: string | number;
-
-    /**
-     * @see {@link https://developer.paypal.com/docs/checkout/integration-features/customize-button/#label}
-     */
-    label?: 'paypal' | 'checkout' | 'buynow' | 'pay';
-
-    /**
-     * @see {@link https://developer.paypal.com/docs/checkout/integration-features/customize-button/#tagline}
-     */
-    tagline?: boolean;
-
-    /**
-     * @see {@link https://developer.paypal.com/docs/checkout/integration-features/customize-button/#layout}
-     */
-    layout?: 'vertical' | 'horizontal';
-}
-
-interface PayPalCommonProps {
-    /**
-     * An Adyen formatted amount object which will be used to pass a currency to the PayPal SDK.
-     * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#currency}
-     */
-    amount?: PaymentAmount;
-
-    configuration?: PayPalConfig;
-
-    /**
-     * A two-letter ISO 3166 country code which will be passed to the PayPal SDK as the buyer-country.
-     * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#buyer-country}
-     */
-    countryCode?: string;
-
-    /**
-     * Set to true to enable debug mode. Defaults to false.
-     * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#debug}
-     */
-    debug?: boolean;
-    environment?: string;
-
-    /**
-     * Set to true to force the UI to not render PayPal Credit button
-     * @defaultValue false
-     */
-    blockPayPalCreditButton?: boolean;
-
-    /**
-     * Set to true to force the UI to not render PayPal Pay Later button
-     * @defaultValue false
-     */
-    blockPayPalPayLaterButton?: boolean;
-
-    /**
-     * Set to true to force the UI to not render PayPal Venmo button
-     * @defaultValue false
-     */
-    blockPayPalVenmoButton?: boolean;
-
-    /*
-     * Set to true to force the UI to load Paypal Messages Component
-     * @defaultValue false
-     */
-    enableMessages?: boolean;
-
-    /**
-     * @see {@link https://developer.paypal.com/docs/business/javascript-sdk/javascript-sdk-configuration/#csp-nonce}
-     */
-    cspNonce?: string;
-
-    /**
-     * Determines whether the funds are captured immediately on checkout or if the buyer authorizes the funds to be captured later.
-     * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#intent}
-     *
-     * If set, it will override the intent passed inside the 'configuration' object
-     */
-    intent?: Intent;
-
-    /**
-     * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#commit}
-     */
-    commit?: boolean;
-
-    /**
-     * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#vault}
-     */
-    vault?: boolean;
-
-    /**
-     * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#locale}
-     */
-    locale?: string;
-
-    /**
-     * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#merchant-id}
-     */
-    merchantId?: string;
-
-    /**
-     * Internal statuses the component can have.
-     */
-    status?: 'loading' | 'pending' | 'processing' | 'ready';
-
-    /**
-     * @see {@link https://developer.paypal.com/docs/checkout/integration-features/customize-button/}
-     */
-    style?: PayPalStyles;
-
-    /**
-     * @see {@link https://developer.paypal.com/docs/business/javascript-sdk/javascript-sdk-reference/#oninitonclick}
-     */
-    onInit?: (data?: object, actions?: object) => void;
-
-    /**
-     * @see {@link https://developer.paypal.com/docs/business/javascript-sdk/javascript-sdk-reference/#oninitonclick}
-     */
-    onClick?: () => void;
-
-    /**
-     * While the buyer is on the PayPal site, you can update their shopping cart to reflect the shipping address they chose on PayPal
-     * @see {@link https://developer.paypal.com/sdk/js/reference/#onshippingaddresschange}
-     */
-    onShippingAddressChange?: (data: any, actions: { reject: (reason?: string) => Promise<void> }) => Promise<void>;
-
-    /**
-     * While the buyer is on the PayPal site, you can update their shopping cart to reflect the shipping options they chose on PayPal
-     * @see {@link https://developer.paypal.com/sdk/js/reference/#onshippingoptionschange}
-     */
-    onShippingOptionsChange?: (data: any, actions: { reject: (reason?: string) => Promise<void> }) => Promise<void>;
-}
-
-export interface PayPalConfig {
-    /**
-     * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#merchant-id}
-     */
-    merchantId: string;
-    /**
-     * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#intent}
-     */
-    intent?: Intent;
-}
-
-export interface PayPalConfiguration extends Omit<PayPalCommonProps, 'onShippingAddressChange' | 'onShippingOptionsChange'>, UIElementProps {
     /**
      *  Identifies if the payment is Express.
      *  @defaultValue false
      */
     isExpress?: boolean;
+
+    /**
+     * Set to true to force the UI to not render PayPal Credit button
+     * @default false
+     */
+    blockPayPalCreditButton?: boolean;
+
+    /**
+     * Set to true to force the UI to not render PayPal Pay Later button
+     * @default false
+     */
+    blockPayPalPayLaterButton?: boolean;
+
+    /**
+     * Set to true to force the UI to not render PayPal Venmo button
+     * @default false
+     */
+    blockPayPalVenmoButton?: boolean;
 
     /**
      * Callback called when PayPal authorizes the payment.
@@ -217,36 +86,105 @@ export interface PayPalConfiguration extends Omit<PayPalCommonProps, 'onShipping
      */
     userAction?: 'continue' | 'pay';
 
+    /**
+     * Customize your buttons using the style option.
+     *
+     * @see {@link https://developer.paypal.com/sdk/js/reference/#link-style}
+     * @default style.height 48px
+     */
+    style?: {
+        layout?: 'vertical' | 'horizontal';
+        color?: 'gold' | 'blue' | 'silver' | 'white' | 'black';
+        shape?: 'rect' | 'pill';
+        height?: string | number;
+        disableMaxWidth?: boolean;
+        label?: 'paypal' | 'checkout' | 'buynow' | 'pay';
+        tagline?: boolean;
+    };
+
     showPayButton?: boolean;
-}
 
-export interface PayPalComponentProps extends PayPalCommonProps {
-    onApprove: (data: any, actions: any) => void;
-    onCancel?: (data: object) => void;
-    onChange?: (newState: object) => void;
-    onError?: (data: object) => void;
-    onSubmit?: () => Promise<any>;
-    ref?: any;
-}
+    /**
+     * Called when the button first renders. You can use it for validations on your page if you are unable to do so prior to rendering.
+     * @see {@link https://developer.paypal.com/sdk/js/reference/#link-oninitonclick}
+     */
+    onInit?: (data?: any, actions?: any) => void;
 
-export interface PayPalButtonsProps extends PayPalComponentProps {
-    paypalRef: any;
-    isProcessingPayment: boolean;
-}
+    /**
+     * @see {@link https://developer.paypal.com/sdk/js/reference/#link-oninitonclick}
+     */
+    onClick?: () => void;
 
-export interface PaypalSettings {
-    'merchant-id'?: string;
-    locale?: string;
-    'buyer-country': string;
-    currency?: string;
-    debug?: boolean;
-    intent?: Intent;
+    /**
+     * The commit status of the transaction. Determines whether to show a Pay Now or Continue button in the Checkout flow.
+     *
+     * @see {@link https://developer.paypal.com/sdk/js/configuration/#link-commit}
+     * @default true
+     */
     commit?: boolean;
+
+    /**
+     * Whether the payment information in the transaction will be saved. Save your customers' payment information for billing agreements, subscriptions, or recurring payments.
+     *
+     * @see {@link https://developer.paypal.com/sdk/js/configuration/#link-vault}
+     * @default false
+     */
     vault?: boolean;
-    'client-id': string;
-    'integration-date': string;
-    'enable-funding': string;
-    components: string;
+
+    /**
+     * The locale renders components. By default PayPal detects the correct locale for the buyer based on their geolocation and browser preferences.
+     *
+     * @see {@link https://developer.paypal.com/sdk/js/configuration/#link-locale}
+     * @default undefined
+     */
+    locale?: string;
+
+    /**
+     * Determines whether the funds are captured immediately on checkout or if the buyer authorizes the funds to be captured later.
+     * If set, it will override the intent passed inside the 'configuration' object
+     *
+     * @see {@link https://developer.paypal.com/sdk/js/configuration/#link-intent}
+     * @default undefined
+     */
+    intent?: Intent;
+
+    /**
+     * Pass a Content Security Policy single-use token if you use them on your site
+     *
+     * @see {@link https://developer.paypal.com/sdk/js/configuration/#link-datacspnonce}
+     * @default undefined
+     */
+    cspNonce?: string;
+
+    /*
+     * Set to true to force the UI to load PayPal Messages Component
+     *
+     * @see {@link https://developer.paypal.com/sdk/js/configuration/#link-components}
+     * @default false
+     */
+    enableMessages?: boolean;
+
+    /**
+     * Set to true to enable debug mode. Defaults to false.
+     * @see {@link https://developer.paypal.com/sdk/js/configuration/#link-debug}
+     * @default undefined
+     */
+    debug?: boolean;
+
+    /**
+     * A two-letter ISO 3166 country code which will be passed to the PayPal SDK as the buyer-country.
+     * Note: The buyer country is only used in the sandbox. Don't pass this query parameter in production.
+     *
+     * @see {@link https://developer.paypal.com/sdk/js/configuration/#link-buyercountry}
+     * @default undefined
+     */
+    countryCode?: string;
 }
 
-export type PayPalSupportedLocale = (typeof SUPPORTED_LOCALES)[number];
+/**
+ * The intent for the transaction. This determines whether the funds are captured immediately, or later.
+ * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#intent}
+ */
+export type Intent = 'sale' | 'capture' | 'authorize' | 'order' | 'tokenize';
+
+export type FundingSource = 'paypal' | 'credit' | 'paylater' | 'venmo';

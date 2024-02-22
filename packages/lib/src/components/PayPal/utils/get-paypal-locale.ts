@@ -1,5 +1,5 @@
 import { SUPPORTED_LOCALES } from '../config';
-import type { PayPalSupportedLocale } from '../types';
+import type { PayPalSupportedLocale } from './types';
 
 /**
  * Returns either a locale supported by PayPal or null, in order to let the PayPal SDK auto-detect the shopper locale.

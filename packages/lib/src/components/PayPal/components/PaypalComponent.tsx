@@ -4,7 +4,8 @@ import PaypalButtons from './PaypalButtons';
 import Spinner from '../../internal/Spinner';
 import { getPaypalUrl } from '../utils/get-paypal-url';
 import Script from '../../../utils/Script';
-import type { PayPalComponentProps } from '../types';
+
+import type { PayPalComponentProps } from './types';
 
 export default function PaypalComponent({ onApprove, onCancel, onChange, onError, onSubmit, ...props }: PayPalComponentProps) {
     const [status, setStatus] = useState('pending');

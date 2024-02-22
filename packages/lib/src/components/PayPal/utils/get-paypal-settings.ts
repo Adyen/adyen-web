@@ -1,6 +1,7 @@
 import { getSupportedLocale } from './get-paypal-locale';
 import { ADYEN_CLIENTID_LIVE, ADYEN_CLIENTID_TEST, INTEGRATION_DATE } from '../config';
-import type { PayPalComponentProps, PaypalSettings, PayPalSupportedLocale } from '../types';
+import type { PaypalSettings, PayPalSupportedLocale } from './types';
+import type { PayPalComponentProps } from '../components/types';
 
 /**
  * Returns an object of settings for the PayPal SDK

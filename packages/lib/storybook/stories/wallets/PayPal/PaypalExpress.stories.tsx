@@ -111,11 +111,11 @@ const Component = () => {
                             value:
                                 AMOUNT.value +
                                 getSelectedDeliveryMethodAmount({ countryCode: data.shippingAddress.countryCode, deliveryMethodId: '1' })
-                        }
-                        // deliveryMethods: getDeliveryMethods({
-                        //     countryCode: data.shippingAddress.countryCode,
-                        //     deliveryMethodId: '1'
-                        // })
+                        },
+                        deliveryMethods: getDeliveryMethods({
+                            countryCode: data.shippingAddress.countryCode,
+                            deliveryMethodId: '1'
+                        })
                     };
 
                     const { paymentData } = await patchPaypalOrder(patch);
