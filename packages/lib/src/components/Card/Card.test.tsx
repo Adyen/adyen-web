@@ -76,6 +76,37 @@ describe('Card', () => {
             card.setState({ storePaymentMethod: true });
             expect(card.data.storePaymentMethod).not.toBeDefined();
         });
+
+        test('should always return storePaymentMethod for regular card, zero auth payments', () => {
+            expect(new CardElement({ amount: { value: 0 }, enableStoreDetails: true }).data.storePaymentMethod).toBe(true);
+            expect(new CardElement({ amount: { value: 0 }, enableStoreDetails: false }).data.storePaymentMethod).toBe(true);
+        });
+
+        test('should return storePaymentMethod based on the checkbox value, for regular card, non-zero auth payments', () => {
+            const card = new CardElement({ amount: { value: 10 }, enableStoreDetails: true });
+            card.setState({ storePaymentMethod: true });
+            expect(card.data.storePaymentMethod).toBe(true);
+            card.setState({ storePaymentMethod: false });
+            expect(card.data.storePaymentMethod).toBe(false);
+        });
+
+        test('should not return storePaymentMethod for stored card, non-zero auth payments', () => {
+            expect(
+                new CardElement({ amount: { value: 10 }, storedPaymentMethodId: 'xxx', enableStoreDetails: true }).data.storePaymentMethod
+            ).not.toBeDefined();
+            expect(
+                new CardElement({ amount: { value: 10 }, storedPaymentMethodId: 'xxx', enableStoreDetails: false }).data.storePaymentMethod
+            ).not.toBeDefined();
+        });
+
+        test('should not return storePaymentMethod for stored card, zero auth payments', () => {
+            expect(
+                new CardElement({ amount: { value: 0 }, storedPaymentMethodId: 'xxx', enableStoreDetails: true }).data.storePaymentMethod
+            ).not.toBeDefined();
+            expect(
+                new CardElement({ amount: { value: 0 }, storedPaymentMethodId: 'xxx', enableStoreDetails: false }).data.storePaymentMethod
+            ).not.toBeDefined();
+        });
     });
 
     describe('isValid', () => {
