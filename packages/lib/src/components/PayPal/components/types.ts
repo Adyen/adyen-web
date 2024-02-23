@@ -1,4 +1,5 @@
 import type { PayPalConfiguration } from '../types';
+import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 
 export interface PayPalComponentProps extends PayPalConfiguration {
     onApprove: (data: any, actions: any) => void;
@@ -7,6 +8,7 @@ export interface PayPalComponentProps extends PayPalConfiguration {
     onError: (data: any) => void;
     onSubmit: () => Promise<any>;
     ref?: any;
+    onScriptLoadFailure(error: AdyenCheckoutError): void;
 
     /**
      * While the buyer is on the PayPal site, you can update their shopping cart to reflect the shipping address they chose on PayPal
@@ -21,7 +23,7 @@ export interface PayPalComponentProps extends PayPalConfiguration {
     onShippingOptionsChange?: (data: any, actions: { reject: (reason?: string) => Promise<void> }) => Promise<void>;
 }
 
-export interface PayPalButtonsProps extends Omit<PayPalComponentProps, 'ref'> {
+export interface PayPalButtonsProps extends Omit<PayPalComponentProps, 'ref' | 'onScriptLoadFailure'> {
     paypalRef: any;
     isProcessingPayment: boolean;
 }
