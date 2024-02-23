@@ -155,6 +155,7 @@ const Component = () => {
                 },
 
                 onAuthorized(data, actions) {
+                    console.log('onAuthorized', data);
                     store.setState({
                         deliveryAddress: data.deliveryAddress,
                         paypalOrder: data.authorizedEvent

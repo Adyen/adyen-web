@@ -150,7 +150,7 @@ const Component = () => {
                 },
 
                 onAuthorized(data, actions) {
-                    console.log('onShopperDetails', data);
+                    console.log('onAuthorized', data);
                     actions.resolve();
                 }
             });
