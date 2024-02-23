@@ -40,10 +40,9 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 linkText: 'terms and conditions',
                 link: 'https://www.adyen.com'
             },
-            backgroundUrl:
-                'https://www.patagonia.com/static/on/demandware.static/-/Library-Sites-PatagoniaShared/default/dwb396273f/content-banners/100-planet-hero-desktop.jpg',
+            backgroundUrl: '/banner.png',
             description: 'Lorem ipsum...',
-            logoUrl: 'https://i.ebayimg.com/images/g/aTwAAOSwfu9dfX4u/s-l300.jpg',
+            logoUrl: '/logo.png',
             name: 'Test Charity',
             onCancel(data) {
                 console.log(data);
@@ -63,9 +62,8 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 values: [50, 199, 300]
             },
             termsAndConditionsUrl: 'https://www.adyen.com',
-            bannerUrl:
-                'https://www.patagonia.com/static/on/demandware.static/-/Library-Sites-PatagoniaShared/default/dwb396273f/content-banners/100-planet-hero-desktop.jpg',
-            logoUrl: 'https://i.ebayimg.com/images/g/aTwAAOSwfu9dfX4u/s-l300.jpg',
+            bannerUrl: '/banner.png',
+            logoUrl: '/logo.png',
             nonprofitDescription: 'Lorem ipsum...',
             nonprofitName: 'Test Charity',
             nonprofitUrl: 'https://example.org',
