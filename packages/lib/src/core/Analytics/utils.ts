@@ -1,5 +1,6 @@
 import { AnalyticsObject, CreateAnalyticsObject } from './types';
 import { ANALYTICS_ACTION_STR, ANALYTICS_VALIDATION_ERROR_STR } from './constants';
+import uuid from '../../utils/uuid';
 
 export const getUTCTimestamp = () => Date.now();
 
@@ -24,6 +25,7 @@ export const getUTCTimestamp = () => Date.now();
 export const createAnalyticsObject = (aObj: CreateAnalyticsObject): AnalyticsObject => ({
     timestamp: String(getUTCTimestamp()),
     component: aObj.component,
+    id: uuid(),
     /** ERROR */
     ...(aObj.event === 'error' && { code: aObj.code, errorType: aObj.errorType, message: aObj.message }), // error event
     /** LOG */

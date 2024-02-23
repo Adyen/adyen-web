@@ -1,7 +1,7 @@
 import EventsQueue from './EventsQueue';
 import { ANALYTICS_PATH } from './constants';
 
-const task1 = { foo: 'bar', timestamp: '1234', component: 'scheme' };
+const task1 = { foo: 'bar', timestamp: '1234', component: 'scheme', id: '678' };
 
 describe('CAEventsQueue', () => {
     const queue = EventsQueue({ analyticsContext: 'https://mydomain.com', clientKey: 'fsdjkh', analyticsPath: ANALYTICS_PATH });
