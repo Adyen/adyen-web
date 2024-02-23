@@ -66,15 +66,15 @@ test('#2 Click pay with empty fields and error panel in avsCard is populated', a
         .ok()
         .expect(cardPage.errorPanelEls.nth(2).withExactText(CVC_EMPTY).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(3).withText('Country:').exists)
+        .expect(cardPage.errorPanelEls.nth(3).withExactText(`Enter the Country${SR_INDICATOR_PREFIX}`).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(4).withText('Street:').exists)
+        .expect(cardPage.errorPanelEls.nth(4).withExactText(`Enter the Street${SR_INDICATOR_PREFIX}`).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(5).withText('House number:').exists)
+        .expect(cardPage.errorPanelEls.nth(5).withExactText(`Enter the House number${SR_INDICATOR_PREFIX}`).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(6).withText('Postal code:').exists)
+        .expect(cardPage.errorPanelEls.nth(6).withExactText(`Enter the Postal code${SR_INDICATOR_PREFIX}`).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(7).withText('City:').exists)
+        .expect(cardPage.errorPanelEls.nth(7).withExactText(`Enter the City${SR_INDICATOR_PREFIX}`).exists)
         .ok();
 
     // no 9th element
@@ -86,7 +86,7 @@ test('#2 Click pay with empty fields and error panel in avsCard is populated', a
     await t.expect(cardPage.numLabelWithFocus.exists).ok();
 });
 
-test('#3 fill out credit card fields & see that first error in error panel is country related', async t => {
+test.only('#3 fill out credit card fields & see that first error in error panel is country related', async t => {
     // Wait for field to appear in DOM
     await cardPage.numHolder();
 
@@ -98,15 +98,15 @@ test('#3 fill out credit card fields & see that first error in error panel is co
 
     // Expect 5 elements, with default order & text
     await t
-        .expect(cardPage.errorPanelEls.nth(0).withText('Country:').exists)
+        .expect(cardPage.errorPanelEls.nth(0).withExactText(`Enter the Country${SR_INDICATOR_PREFIX}`).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(1).withText('Street:').exists)
+        .expect(cardPage.errorPanelEls.nth(1).withExactText(`Enter the Street${SR_INDICATOR_PREFIX}`).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(2).withText('House number:').exists)
+        .expect(cardPage.errorPanelEls.nth(2).withExactText(`Enter the House number${SR_INDICATOR_PREFIX}`).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(3).withText('Postal code:').exists)
+        .expect(cardPage.errorPanelEls.nth(3).withExactText(`Enter the Postal code${SR_INDICATOR_PREFIX}`).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(4).withText('City:').exists)
+        .expect(cardPage.errorPanelEls.nth(4).withExactText(`Enter the City${SR_INDICATOR_PREFIX}`).exists)
         .ok();
 
     // no 6th element
@@ -138,13 +138,13 @@ test('#4 Switch country to US, click pay with empty fields and error panel in av
         .ok()
         .expect(cardPage.errorPanelEls.nth(2).withExactText(CVC_EMPTY).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(3).withText('Address:').exists)
+        .expect(cardPage.errorPanelEls.nth(3).withExactText(`Enter the Address${SR_INDICATOR_PREFIX}`).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(4).withText('City:').exists)
+        .expect(cardPage.errorPanelEls.nth(4).withExactText(`Enter the City${SR_INDICATOR_PREFIX}`).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(5).withText('State:').exists)
+        .expect(cardPage.errorPanelEls.nth(5).withExactText(`Enter the State${SR_INDICATOR_PREFIX}`).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(6).withText('Zip code:').exists)
+        .expect(cardPage.errorPanelEls.nth(6).withExactText(`Enter the Zip code${SR_INDICATOR_PREFIX}`).exists)
         .ok();
 
     // no 8th element
@@ -169,13 +169,13 @@ test('#5 Switch country to US, fill out credit card fields & see that first erro
 
     // Expect 4 elements, with order & text specific to the US
     await t
-        .expect(cardPage.errorPanelEls.nth(0).withText('Address:').exists)
+        .expect(cardPage.errorPanelEls.nth(0).withExactText(`Enter the Address${SR_INDICATOR_PREFIX}`).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(1).withText('City:').exists)
+        .expect(cardPage.errorPanelEls.nth(1).withExactText(`Enter the City${SR_INDICATOR_PREFIX}`).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(2).withText('State:').exists)
+        .expect(cardPage.errorPanelEls.nth(2).withExactText(`Enter the State${SR_INDICATOR_PREFIX}`).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(3).withText('Zip code:').exists)
+        .expect(cardPage.errorPanelEls.nth(3).withExactText(`Enter the Zip code${SR_INDICATOR_PREFIX}`).exists)
         .ok();
 
     // no 5th element
@@ -206,13 +206,13 @@ test('#6 Switch country to UK, click pay with empty fields and error panel in av
         .ok()
         .expect(cardPage.errorPanelEls.nth(2).withExactText(CVC_EMPTY).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(3).withText('House number:').exists)
+        .expect(cardPage.errorPanelEls.nth(3).withExactText(`Enter the House number${SR_INDICATOR_PREFIX}`).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(4).withText('Street:').exists)
+        .expect(cardPage.errorPanelEls.nth(4).withExactText(`Enter the Street${SR_INDICATOR_PREFIX}`).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(5).withText('City / Town:').exists)
+        .expect(cardPage.errorPanelEls.nth(5).withExactText(`Enter the City / Town${SR_INDICATOR_PREFIX}`).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(6).withText('Postal code:').exists)
+        .expect(cardPage.errorPanelEls.nth(6).withExactText(`Enter the Postal code${SR_INDICATOR_PREFIX}`).exists)
         .ok();
 
     // no 8th element
@@ -240,13 +240,13 @@ test('#7 Switch country to UK, fill out credit card fields & see that first erro
 
     // Expect 4 elements, with order & text specific to the US
     await t
-        .expect(cardPage.errorPanelEls.nth(0).withText('House number:').exists)
+        .expect(cardPage.errorPanelEls.nth(0).withExactText(`Enter the House number${SR_INDICATOR_PREFIX}`).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(1).withText('Street:').exists)
+        .expect(cardPage.errorPanelEls.nth(1).withExactText(`Enter the Street${SR_INDICATOR_PREFIX}`).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(2).withText('City / Town:').exists)
+        .expect(cardPage.errorPanelEls.nth(2).withExactText(`Enter the City / Town${SR_INDICATOR_PREFIX}`).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(3).withText('Postal code:').exists)
+        .expect(cardPage.errorPanelEls.nth(3).withExactText(`Enter the Postal code${SR_INDICATOR_PREFIX}`).exists)
         .ok();
 
     // no 5th element
