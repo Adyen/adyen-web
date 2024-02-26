@@ -189,7 +189,7 @@ export interface CoreConfiguration {
         element: UIElement,
         actions: {
             resolve: (response: CheckoutAdvancedFlowResponse) => void;
-            reject: () => void;
+            reject: (error?: Pick<CheckoutAdvancedFlowResponse, 'error'>) => void;
         }
     ): void;
 

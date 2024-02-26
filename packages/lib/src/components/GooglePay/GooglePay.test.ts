@@ -187,7 +187,52 @@ describe('GooglePay', () => {
                 transactionState: 'ERROR'
             });
 
-            expect(onPaymentFailedMock).toHaveBeenCalledWith({ resultCode: 'Refused', error: { googlePayError: 'Insufficient funds' } }, gpay);
+            expect(onPaymentFailedMock).toHaveBeenCalledWith(
+                {
+                    resultCode: 'Refused',
+                    error: {
+                        googlePayError: {
+                            intent: 'PAYMENT_AUTHORIZATION',
+                            message: 'Insufficient funds',
+                            reason: 'OTHER_ERROR'
+                        }
+                    }
+                },
+                gpay
+            );
+        });
+
+        test('should pass error to GooglePay when action.reject is called without parameters', async () => {
+            const onSubmitMock = jest.fn().mockImplementation((data, component, actions) => {
+                actions.reject();
+            });
+            const onPaymentFailedMock = jest.fn();
+
+            const gpay = new GooglePay(global.core, {
+                i18n: global.i18n,
+                onSubmit: onSubmitMock,
+                onPaymentFailed: onPaymentFailedMock
+            });
+
+            // @ts-ignore GooglePayService is mocked
+            const onPaymentAuthorized = GooglePayService.mock.calls[0][0].paymentDataCallbacks.onPaymentAuthorized;
+            const promise = onPaymentAuthorized(googlePaymentData);
+
+            await new Promise(process.nextTick);
+
+            expect(promise).resolves.toEqual({
+                error: {
+                    intent: 'PAYMENT_AUTHORIZATION',
+                    message: 'Payment failed',
+                    reason: 'OTHER_ERROR'
+                },
+                transactionState: 'ERROR'
+            });
+
+            expect(onPaymentFailedMock).toHaveBeenCalledWith(
+                { error: { googlePayError: { intent: 'PAYMENT_AUTHORIZATION', message: 'Payment failed', reason: 'OTHER_ERROR' } } },
+                gpay
+            );
         });
     });
 
