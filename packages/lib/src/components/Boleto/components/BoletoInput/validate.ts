@@ -1,17 +1,18 @@
 import { ValidatorRules } from '../../../../utils/Validator/types';
 import validateSSN from '../../../internal/SocialSecurityNumberBrazil/validate';
 import { validationRules } from '../../../../utils/Validator/defaultRules';
+import { ERROR_CODES, ERROR_MSG_INVALID_FIELD } from '../../../../core/Errors/constants';
 
 export const boletoValidationRules: ValidatorRules = {
     socialSecurityNumber: {
         validate: validateSSN,
-        errorMessage: 'error.va.gen.02',
+        errorMessage: ERROR_CODES[ERROR_MSG_INVALID_FIELD], // = 'error.va.gen.02',
         modes: ['blur']
     },
     shopperEmail: validationRules.emailRule,
     default: {
         validate: value => !!value && value.length > 0,
-        errorMessage: 'error.va.gen.02',
+        errorMessage: ERROR_CODES[ERROR_MSG_INVALID_FIELD],
         modes: ['blur']
     },
     firstName: {

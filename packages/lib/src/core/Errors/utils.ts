@@ -36,8 +36,8 @@ export const addAriaErrorTranslationsObject = (i18n, errorCodeIdentifier) => {
 
     const transObj = errorKeys.reduce((acc, item) => {
         const value = ERROR_CODES[item];
-        // Limit to errors related to specific sf (or general errors) TODO check if general errors are still used
-        if (value.includes(errorCodeIdentifier) || value.indexOf('gen.01') > -1) {
+        // Limit to errors related to specific sf
+        if (value.includes(errorCodeIdentifier)) {
             acc[value] = i18n.get(value);
         }
         return acc;
@@ -62,32 +62,36 @@ export const addErrorTranslationsToObject = (originalObj, i18n, fieldType) => {
     return nuObj;
 };
 
+/**
+ * errorCodeIdentifiers must match the prefixes to the numbers in ERROR_CODES (Errors/constants.ts)
+ * (Which in turn must match the keys in the translations files)
+ */
 const fieldTypeToErrorCodeIdentifier = fieldType => {
     let errorCodeIdentifier;
     switch (fieldType) {
         case ENCRYPTED_CARD_NUMBER:
-            errorCodeIdentifier = 'sf-cc-num';
+            errorCodeIdentifier = 'cc-num';
             break;
         case ENCRYPTED_EXPIRY_DATE:
-            errorCodeIdentifier = 'sf-cc-dat';
+            errorCodeIdentifier = 'cc-dat';
             break;
         case ENCRYPTED_EXPIRY_MONTH:
-            errorCodeIdentifier = 'sf-cc-mth';
+            errorCodeIdentifier = 'cc-mth';
             break;
         case ENCRYPTED_EXPIRY_YEAR:
-            errorCodeIdentifier = 'sf-cc-yr';
+            errorCodeIdentifier = 'cc-yr';
             break;
         case ENCRYPTED_SECURITY_CODE:
-            errorCodeIdentifier = 'sf-cc-cvc';
+            errorCodeIdentifier = 'cc-cvc';
             break;
         case ENCRYPTED_PWD_FIELD:
-            errorCodeIdentifier = 'sf-kcp-pwd';
+            errorCodeIdentifier = 'kcp-pwd';
             break;
         case ENCRYPTED_BANK_ACCNT_NUMBER_FIELD:
-            errorCodeIdentifier = 'sf-ach-num';
+            errorCodeIdentifier = 'ach-num';
             break;
         case ENCRYPTED_BANK_LOCATION_FIELD:
-            errorCodeIdentifier = 'sf-ach-loc';
+            errorCodeIdentifier = 'ach-loc';
             break;
         default:
     }

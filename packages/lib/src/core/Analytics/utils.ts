@@ -1,6 +1,7 @@
 import { AnalyticsObject, CreateAnalyticsObject } from './types';
-import { ANALYTICS_ACTION_STR, ANALYTICS_VALIDATION_ERROR_STR } from './constants';
+import { ANALYTICS_ACTION_STR, ANALYTICS_VALIDATION_ERROR_STR, errorCodeMapping } from './constants';
 import uuid from '../../utils/uuid';
+import { digitsOnlyFormatter } from '../../utils/Formatters/formatters';
 
 export const getUTCTimestamp = () => Date.now();
 
@@ -36,9 +37,27 @@ export const createAnalyticsObject = (aObj: CreateAnalyticsObject): AnalyticsObj
     ...(aObj.event === 'info' && aObj.isStoredPaymentMethod && { isStoredPaymentMethod: aObj.isStoredPaymentMethod, brand: aObj.brand }), // only added if we have an info event about a storedPM
     ...(aObj.event === 'info' &&
         aObj.type === ANALYTICS_VALIDATION_ERROR_STR && {
-            validationErrorCode: aObj.validationErrorCode,
+            validationErrorCode: mapErrorCodesForAnalytics(aObj.validationErrorCode, aObj.target),
+            oldValidationCode: aObj.validationErrorCode, // TODO temp: just for testing
             validationErrorMessage: aObj.validationErrorMessage
         }), // only added if we have an info event describing a validation error
     /** All */
     ...(aObj.metadata && { metadata: aObj.metadata })
 });
+
+const mapErrorCodesForAnalytics = (errorCode: string, target: string) => {
+    // Some of the more generic error codes required combination with target to retrieve a specific code
+    if (errorCode === 'field.error.required' || errorCode === 'invalidFormatExpects') {
+        return errorCodeMapping[`${errorCode}.${target}`] ?? errorCode;
+    }
+
+    let errCode = errorCodeMapping[errorCode] ?? errorCode;
+
+    // If errorCode hasn't come back as a straight number - then we just need to remove any non-digits
+    // since the correct error code is already contained within the string e.g. securedField related errors
+    if (isNaN(Number(errCode))) {
+        errCode = digitsOnlyFormatter(errCode);
+    }
+
+    return errCode;
+};

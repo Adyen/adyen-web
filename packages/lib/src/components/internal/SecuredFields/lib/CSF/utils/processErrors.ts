@@ -30,17 +30,6 @@ export const processErrors = (
         return null;
     }
 
-    // TODO - probably not needed after sf 3.5.3 is available
-    // Ignore other errors whilst the field is in an "unsupportedCard" error state
-    if (field.errorType === ERROR_CODES[ERROR_MSG_UNSUPPORTED_CARD_ENTERED]) {
-        // Temporary - for testing in development after sf 3.5.3 is ready
-        // if (process.env.NODE_ENV === 'development') {
-        //     throw new Error('processErrors:: RETURNING BECAUSE errorType = "unsupported card"');
-        // }
-        return null;
-    }
-    // TODO - end
-
     // Add props to error callback object
     dataObj.error = isError ? pFeedbackObj.error : '';
     dataObj.type = type;
