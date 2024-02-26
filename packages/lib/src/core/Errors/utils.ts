@@ -110,7 +110,6 @@ export const sortErrorsByLayout = ({ errors, i18n, layout, countrySpecificLabels
     const sortedErrors: SortedErrorObject[] = Object.entries(errors).reduce((acc, [key, value]) => {
         if (value) {
             const errObj: ValidationRuleResult | SFError | GenericError = errors[key];
-            // console.log('### utils::sortErrorsByLayout:: key', key, 'errObj', errObj);
 
             /**
              * Get error codes - these are used if we need to distinguish between showValidation & onBlur errors
@@ -121,7 +120,7 @@ export const sortErrorsByLayout = ({ errors, i18n, layout, countrySpecificLabels
             if (!(errObj instanceof ValidationRuleResult)) {
                 errorCode = errObj.error; // is SFError
             } else {
-                /** Special handling for Address~postalCode which can have be passed an object in the 'errorMessage' prop containing a country specific error */
+                /** Special handling for Address~postalCode which can have be passed an object in the 'errorMessage' prop */
                 if (typeof errObj.errorMessage === 'object') {
                     errorCode = errObj.errorMessage.translationKey; // is ValidationRuleResult w. country specific error
                 } else {
@@ -138,27 +137,17 @@ export const sortErrorsByLayout = ({ errors, i18n, layout, countrySpecificLabels
             if (!(errObj instanceof ValidationRuleResult) && 'errorI18n' in errObj) {
                 errorMsg = errObj.errorI18n + SR_INDICATOR_PREFIX; // is SFError
             } else {
-                /** Special handling for Address~postalCode (see above) */
+                /** Special handling for Address~postalCode where the errorMessage comes as an object containing the details of the country specific format that should have been used for the postcode */
                 if (typeof errObj.errorMessage === 'object') {
                     /* prettier-ignore */
                     errorMsg = `${i18n.get(errObj.errorMessage.translationKey)} ${errObj.errorMessage.translationObject.values.format}${SR_INDICATOR_PREFIX}`; // is ValidationRuleResult  w. country specific error
                 } else {
-                    errorMsg = i18n.get(errObj.errorMessage) + SR_INDICATOR_PREFIX; // is ValidationRuleResult || GenericError || an as yet incorrectly formed error
+                    const mappedLabel = fieldTypeMappingFn ? fieldTypeMappingFn(key, i18n, countrySpecificLabels) : '';
+                    errorMsg = i18n.get(errObj.errorMessage, { values: { label: mappedLabel } }) + SR_INDICATOR_PREFIX; // is ValidationRuleResult || GenericError || an as yet incorrectly formed error
                 }
             }
 
-            let errorMessage = errorMsg;
-            /**
-             * For some fields we might need to append the field type to the start of the error message (varies on a component by component basis)
-             * - necessary for a11y, when we know the translated error msg doesn't contain a reference to the field it refers to
-             * TODO - in the future this should be something we can get rid of once we align all our error texts and translations
-             */
-            if (fieldTypeMappingFn) {
-                const fieldType: string = fieldTypeMappingFn(key, i18n, countrySpecificLabels); // Get translation for field type
-                if (fieldType) errorMessage = `${fieldType}: ${errorMsg}`;
-            }
-
-            acc.push({ field: key, errorMessage, errorCode });
+            acc.push({ field: key, errorMessage: errorMsg, errorCode });
 
             if (layout) acc.sort((a, b) => layout.indexOf(a.field) - layout.indexOf(b.field));
         }
