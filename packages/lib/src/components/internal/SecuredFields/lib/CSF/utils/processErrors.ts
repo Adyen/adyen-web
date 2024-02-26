@@ -1,6 +1,5 @@
 import { CbObjOnError, SFFeedbackObj } from '../../types';
 import SecuredField from '../../securedField/SecuredField';
-import { ERROR_CODES, ERROR_MSG_UNSUPPORTED_CARD_ENTERED } from '../../../../../../core/Errors/constants';
 import { hasOwnProperty } from '../../../../../../utils/hasOwnProperty';
 
 type RtnType_callbackFn = (obj: CbObjOnError) => void;
