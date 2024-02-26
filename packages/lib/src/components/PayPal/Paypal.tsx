@@ -6,7 +6,7 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { ERRORS } from './constants';
 import { TxVariants } from '../tx-variants';
-import { formatPaypalOrderContatcToAdyenFormat } from './utils/format-paypal-order-contact-to-adyen-format';
+import { formatPaypalOrderContactToAdyenFormat } from './utils/format-paypal-order-contact-to-adyen-format';
 
 import type { ICore } from '../../core/types';
 import type { PaymentAction } from '../../types/global-types';
@@ -33,7 +33,8 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
     }
 
     formatProps(props: PayPalConfiguration): PayPalConfiguration {
-        const { merchantId, intent: intentFromConfig } = props.configuration;
+        const merchantId = props.configuration?.merchantId;
+        const intentFromConfig = props.configuration?.intent;
         const isZeroAuth = props.amount?.value === 0;
         const intent: Intent = isZeroAuth ? 'tokenize' : props.intent || intentFromConfig;
         const vault = intent === 'tokenize' || props.vault;
@@ -121,8 +122,8 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         return actions.order
             .get()
             .then((paypalOrder: any) => {
-                const billingAddress = formatPaypalOrderContatcToAdyenFormat(paypalOrder?.payer);
-                const deliveryAddress = formatPaypalOrderContatcToAdyenFormat(paypalOrder?.purchase_units?.[0].shipping, true);
+                const billingAddress = formatPaypalOrderContactToAdyenFormat(paypalOrder?.payer);
+                const deliveryAddress = formatPaypalOrderContactToAdyenFormat(paypalOrder?.purchase_units?.[0].shipping, true);
 
                 this.setState({
                     authorizedEvent: paypalOrder,
@@ -172,7 +173,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
      * @param data - PayPal data
      * @param actions - PayPal actions.
      */
-    private handleOnShippingAddressChange(data, actions): Promise<void> {
+    private handleOnShippingAddressChange(data: any, actions: any): Promise<void> {
         return this.props.onShippingAddressChange(data, actions, this);
     }
 
@@ -184,7 +185,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
      * @param data - PayPal data
      * @param actions - PayPal actions.
      */
-    private handleOnShippingOptionsChange(data, actions): Promise<void> {
+    private handleOnShippingOptionsChange(data: any, actions: any): Promise<void> {
         return this.props.onShippingOptionsChange(data, actions, this);
     }
 
@@ -208,6 +209,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                     onError={error => {
                         this.handleError(new AdyenCheckoutError('ERROR', error.toString(), { cause: error }));
                     }}
+                    onScriptLoadFailure={error => this.handleError(error)}
                     onSubmit={this.handleSubmit}
                 />
             </CoreProvider>

@@ -22,5 +22,5 @@ export type AdyenCheckoutProps = {
     countryCode: string;
     shopperLocale: string;
     amount: number;
-    onPaymentCompleted: (data: any, element?: UIElement) => void;
+    onPaymentCompleted?: (data: any, element?: UIElement) => void;
 };

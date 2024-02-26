@@ -19,13 +19,13 @@ function formatTotal(total: number) {
 }
 
 function fetchTransactionDetails() {
-    const { amountValue, paymentDetails, pspReference, shopperDetails, paypalOrder } = JSON.parse(
+    const { amountValue, paymentDetails, pspReference, deliveryAddress, paypalOrder } = JSON.parse(
         sessionStorage.getItem('adyen-paypal-review-page-data')
     );
-    return { amountValue, paymentDetails, pspReference, shopperDetails, paypalOrder };
+    return { amountValue, paymentDetails, pspReference, deliveryAddress, paypalOrder };
 }
 
-const ReviewPage = ({ paymentDetails, shopperDetails, paypalOrder }) => {
+const ReviewPage = ({ paymentDetails, deliveryAddress, paypalOrder }) => {
     const [isCompletingPayment, setIsCompletingPayment] = useState(false);
 
     const completePayment = async () => {
@@ -49,16 +49,16 @@ const ReviewPage = ({ paymentDetails, shopperDetails, paypalOrder }) => {
             <div>
                 <h2>Shipping to</h2>
                 <div>
-                    {shopperDetails.shopperName.firstName} {shopperDetails.shopperName.lastName}
+                    {deliveryAddress.shopperName.firstName} {deliveryAddress.shopperName.lastName}
                 </div>
                 <div>
-                    {shopperDetails.shippingAddress.street}, {shopperDetails.shippingAddress.stateOrProvince}
+                    {deliveryAddress.shippingAddress.street}, {deliveryAddress.shippingAddress.stateOrProvince}
                 </div>
                 <div>
-                    {shopperDetails.shippingAddress.postalCode}, {shopperDetails.shippingAddress.city}
+                    {deliveryAddress.postalCode}, {deliveryAddress.city}
                 </div>
-                <div>{shopperDetails.shippingAddress.country}</div>
-                <div>{shopperDetails.telephoneNumber}</div>
+                <div>{deliveryAddress.shippingAddress.country}</div>
+                <div>{deliveryAddress.telephoneNumber}</div>
             </div>
 
             <div>
