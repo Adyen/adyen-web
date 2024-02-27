@@ -12,7 +12,6 @@ import type { ICore } from '../../../core/types';
 class IssuerListContainer extends UIElement<IssuerListConfiguration> {
     protected static defaultProps = {
         showImage: true,
-        onValid: () => {},
         issuers: [],
         highlightedIssuers: [],
         loadingContext: FALLBACK_CONTEXT,

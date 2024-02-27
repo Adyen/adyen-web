@@ -50,8 +50,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         this.submit = this.submit.bind(this);
         this.setState = this.setState.bind(this);
-        this.onValid = this.onValid.bind(this);
-        this.onComplete = this.onComplete.bind(this);
         this.handleAction = this.handleAction.bind(this);
         this.handleOrder = this.handleOrder.bind(this);
         this.handleAdditionalDetails = this.handleAdditionalDetails.bind(this);
@@ -127,8 +125,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     protected onChange(): object {
         const isValid = this.isValid;
         const state = { data: this.data, errors: this.state.errors, valid: this.state.valid, isValid };
-        if (this.props.onChange) this.props.onChange(state, this.elementRef);
-        if (isValid) this.onValid();
+
+        this.props.onChange?.(state, this.elementRef);
 
         return state;
     }
@@ -243,12 +241,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         //     sessionResult:
         //         'X3XtfGC7!H4sIAAAAAAAA/6tWykxRslJyDjaxNDMyM3E2MXIyNDUys3RU0lHKTS1KzkjMK3FMTs4vzSsBKgtJLS7xhYo6Z6QmZ+eXlgAVFpcklpQWA+WLUtNKi1NTlGoBMEEbz1cAAAA=iMsCaEJ5LcnsqIUtmNxjm8HtfQ8gZW8JewEU3wHz4qg='
         // };
-    }
-
-    private onValid() {
-        const state = { data: this.data };
-        if (this.props.onValid) this.props.onValid(state, this.elementRef);
-        return state;
     }
 
     protected onComplete(state): void {

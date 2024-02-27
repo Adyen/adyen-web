@@ -183,11 +183,11 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         return this.isReadyToPay()
             .then(response => {
                 if (!response.result) {
-                    throw new Error('Google Pay is not available');
+                    throw new AdyenCheckoutError('ERROR', 'GooglePay is not available');
                 }
 
                 if (response.paymentMethodPresent === false) {
-                    throw new Error('Google Pay - No paymentMethodPresent');
+                    throw new AdyenCheckoutError('ERROR', 'GooglePay - No paymentMethodPresent');
                 }
 
                 return Promise.resolve();
