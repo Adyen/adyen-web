@@ -50,6 +50,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         this.submit = this.submit.bind(this);
         this.setState = this.setState.bind(this);
+        this.onComplete = this.onComplete.bind(this);
         this.handleAction = this.handleAction.bind(this);
         this.handleOrder = this.handleOrder.bind(this);
         this.handleAdditionalDetails = this.handleAdditionalDetails.bind(this);
