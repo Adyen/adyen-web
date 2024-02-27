@@ -170,23 +170,6 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
     }
 
     /**
-     * Unmounts an element and mounts it again on the same node i.e. allows mount w/o having to pass a node.
-     * Should be "private" & undocumented (although being a public function is useful for testing).
-     * Left in for legacy reasons
-     */
-    public remount(component?): this {
-        if (!this._node) {
-            throw new Error('Component is not mounted.');
-        }
-
-        const newComponent = component || this.render();
-
-        render(newComponent, this._node, null);
-
-        return this;
-    }
-
-    /**
      * Unmounts a payment element from the DOM
      */
     public unmount(): this {
