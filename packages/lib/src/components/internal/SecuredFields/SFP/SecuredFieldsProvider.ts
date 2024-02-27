@@ -24,7 +24,6 @@ import {
     ENCRYPTED_PWD_FIELD
 } from '../lib/configuration/constants';
 import { BinLookupResponse } from '../../../Card/types';
-import { getError } from '../../../../core/Errors/utils';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
 import { SFStateErrorObj } from '../../../Card/components/CardInput/types';
 
@@ -314,7 +313,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             if (this.state.errors[key]) {
                 acc[key] = {
                     isValid: false,
-                    errorMessage: getError(this.state.errors[key]),
+                    // errorMessage: getError(this.state.errors[key]),
                     // For v5 the object found in state.errors should also contain the additional properties that used to be sent to the onError callback
                     // namely: translation, errorCode, a ref to rootNode &, in the case of failed binLookup, an array of the detectedBrands
                     errorI18n: this.props.i18n.get(this.state.errors[key]),

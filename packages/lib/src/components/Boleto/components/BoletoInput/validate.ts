@@ -1,18 +1,18 @@
 import { ValidatorRules } from '../../../../utils/Validator/types';
 import validateSSN from '../../../internal/SocialSecurityNumberBrazil/validate';
 import { validationRules } from '../../../../utils/Validator/defaultRules';
-import { ERROR_CODES, ERROR_MSG_INVALID_FIELD } from '../../../../core/Errors/constants';
+import { TrafficLight } from '../../../../core/Errors/constants';
 
 export const boletoValidationRules: ValidatorRules = {
     socialSecurityNumber: {
         validate: validateSSN,
-        errorMessage: ERROR_CODES[ERROR_MSG_INVALID_FIELD], // = 'err-gen-9101',
+        errorMessage: TrafficLight.ERROR_MSG_INVALID_FIELD, // = 'err-gen-9101',
         modes: ['blur']
     },
     shopperEmail: validationRules.emailRule,
     default: {
         validate: value => !!value && value.length > 0,
-        errorMessage: ERROR_CODES[ERROR_MSG_INVALID_FIELD],
+        errorMessage: TrafficLight.ERROR_MSG_INVALID_FIELD,
         modes: ['blur']
     },
     firstName: {

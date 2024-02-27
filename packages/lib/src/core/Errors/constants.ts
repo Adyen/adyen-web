@@ -12,89 +12,55 @@ import {
 export const ARIA_ERROR_SUFFIX = '-ariaError';
 export const ARIA_CONTEXT_SUFFIX = '-ariaContext';
 
-export const ERROR_MSG_CARD_TOO_OLD = 'Card too old'; // Exported for unit tests
-export const ERROR_MSG_LUHN_CHECK_FAILED = 'luhn check failed'; // Exported for unit tests
-export const ERROR_MSG_INCOMPLETE_FIELD = 'incomplete field';
-export const ERROR_MSG_UNSUPPORTED_CARD_ENTERED = 'Unsupported card entered';
-export const ERROR_MSG_INVALID_FIELD = 'field not valid';
-
-const ERROR_MSG_CARD_TOO_FAR_IN_FUTURE = 'Date too far in future';
-const ERROR_MSG_CARD_EXPIRES_TOO_SOON = 'Your card expires before check out date';
-
-const ERROR_MSG_EMPTY_PAN = 'Card number field empty';
-const ERROR_MSG_EMPTY_DATE = 'Expiry date field empty';
-const ERROR_MSG_EMPTY_YEAR = 'Expiry year field empty';
-const ERROR_MSG_EMPTY_MONTH = 'Expiry month field empty';
-const ERROR_MSG_EMPTY_CVC = 'Security code field empty';
-const ERROR_MSG_EMPTY_KCP_PWD = 'KCP password field empty';
-const ERROR_MSG_EMPTY_ACH_ACCOUNT_NUMBER = 'ACH bank account field empty';
-const ERROR_MSG_EMPTY_ACH_BANK_LOCATION_ID = 'ACH bank location field empty';
-
-const ERROR_MSG_INCORRECTLY_FILLED_PAN = 'Card number not filled correctly';
-const ERROR_MSG_INCORRECTLY_FILLED__DATE = 'Expiry date not filled correctly';
-const ERROR_MSG_INCORRECTLY_FILLED_YEAR = 'Expiry year not filled correctly';
-const ERROR_MSG_INCORRECTLY_FILLED_CVC = 'Security code not filled correctly';
-const ERROR_MSG_INCORRECTLY_FILLED_KCP_PWD = 'KCP password not filled correctly';
-const ERROR_MSG_INCORRECTLY_FILLED_ACH_ACCOUNT_NUMBER = 'ACH bank account not filled correctly';
-const ERROR_MSG_INCORRECTLY_FILLED_ACH_BANK_LOCATION_ID = 'ACH bank location id not filled correctly';
-
-// export const ERROR_MSG_CLEARED = 'error was cleared';
-// export const ERROR_MSG_MBWAY_EMAIL_INVALID = 'Not valid email address';
-// export const ERROR_MSG_KCP_INVALID_PWD = 'invalid password';
-// export const ERROR_MSG_INCORRECTLY_FILLED_MONTH = 'Expiry month not filled correctly';
-
-/**
- * Map of human readable error strings to the codes, used as keys, in the translations files
- */
-export const ERROR_CODES = {
-    [ERROR_MSG_INCOMPLETE_FIELD]: 'err-gen-9100',
-    [ERROR_MSG_INVALID_FIELD]: 'err-gen-9101',
-
-    [ERROR_MSG_LUHN_CHECK_FAILED]: 'cc-num-902',
-    [ERROR_MSG_EMPTY_PAN]: 'cc-num-900',
-    [ERROR_MSG_UNSUPPORTED_CARD_ENTERED]: 'cc-num-903',
-    [ERROR_MSG_INCORRECTLY_FILLED_PAN]: 'cc-num-901', // 'Enter the complete card number'
-
-    [ERROR_MSG_CARD_TOO_OLD]: 'cc-dat-912',
-    [ERROR_MSG_CARD_TOO_FAR_IN_FUTURE]: 'cc-dat-913',
-    [ERROR_MSG_CARD_EXPIRES_TOO_SOON]: 'cc-dat-914',
-    [ERROR_MSG_EMPTY_DATE]: 'cc-dat-910',
-    [ERROR_MSG_INCORRECTLY_FILLED__DATE]: 'cc-dat-911',
-
-    [ERROR_MSG_EMPTY_YEAR]: 'cc-yr-917',
-    [ERROR_MSG_INCORRECTLY_FILLED_YEAR]: 'cc-yr-918',
-
-    // [ERROR_MSG_INCORRECTLY_FILLED_MONTH]: 'cc-mth-916',
-    [ERROR_MSG_EMPTY_MONTH]: 'cc-mth-915',
-
-    [ERROR_MSG_EMPTY_CVC]: 'cc-cvc-920',
-    [ERROR_MSG_INCORRECTLY_FILLED_CVC]: 'cc-cvc-921',
-
-    [ERROR_MSG_EMPTY_KCP_PWD]: 'kcp-pwd-940',
-    [ERROR_MSG_INCORRECTLY_FILLED_KCP_PWD]: 'kcp-pwd-941',
-
-    [ERROR_MSG_EMPTY_ACH_ACCOUNT_NUMBER]: 'ach-num-945',
-    [ERROR_MSG_INCORRECTLY_FILLED_ACH_ACCOUNT_NUMBER]: 'ach-num-946',
-
-    [ERROR_MSG_EMPTY_ACH_BANK_LOCATION_ID]: 'ach-loc-947',
-    [ERROR_MSG_INCORRECTLY_FILLED_ACH_BANK_LOCATION_ID]: 'ach-loc-948'
-};
-
-// export const DEFAULT_ERROR = ERROR_CODES[ERROR_MSG_INCOMPLETE_FIELD];
-
-// All "empty field" errors are triggered in Components
-export const EMPTY_FIELD_ERROR_MESSAGES = {
-    [ENCRYPTED_CARD_NUMBER]: ERROR_CODES[ERROR_MSG_EMPTY_PAN],
-    [ENCRYPTED_EXPIRY_DATE]: ERROR_CODES[ERROR_MSG_EMPTY_DATE],
-    [ENCRYPTED_EXPIRY_MONTH]: ERROR_CODES[ERROR_MSG_EMPTY_MONTH],
-    [ENCRYPTED_EXPIRY_YEAR]: ERROR_CODES[ERROR_MSG_EMPTY_YEAR],
-    [ENCRYPTED_SECURITY_CODE]: ERROR_CODES[ERROR_MSG_EMPTY_CVC],
-    [ENCRYPTED_PWD_FIELD]: ERROR_CODES[ERROR_MSG_EMPTY_KCP_PWD],
-    [ENCRYPTED_BANK_ACCNT_NUMBER_FIELD]: ERROR_CODES[ERROR_MSG_EMPTY_ACH_ACCOUNT_NUMBER],
-    [ENCRYPTED_BANK_LOCATION_FIELD]: ERROR_CODES[ERROR_MSG_EMPTY_ACH_BANK_LOCATION_ID]
-};
-
 export const ERROR_ACTION_FOCUS_FIELD = 'focusField';
 export const ERROR_ACTION_BLUR_SCENARIO = 'notValidating:blurScenario';
 export const ERROR_KEY_REQUIRED = 'field.error.required';
 export const ERROR_KEY_INVALID = 'field.error.invalid';
+
+/**
+ * Map of human readable error strings to the codes, used as keys, in the translations files
+ */
+export enum TrafficLight {
+    ERROR_MSG_INCOMPLETE_FIELD = 'err-gen-9100',
+    ERROR_MSG_INVALID_FIELD = 'err-gen-9101',
+
+    ERROR_MSG_LUHN_CHECK_FAILED = 'cc-num-902',
+    ERROR_MSG_EMPTY_PAN = 'cc-num-900',
+    ERROR_MSG_UNSUPPORTED_CARD_ENTERED = 'cc-num-903',
+    ERROR_MSG_INCORRECTLY_FILLED_PAN = 'cc-num-901', // 'Enter the complete card number'
+
+    ERROR_MSG_CARD_TOO_OLD = 'cc-dat-912',
+    ERROR_MSG_CARD_TOO_FAR_IN_FUTURE = 'cc-dat-913',
+    ERROR_MSG_CARD_EXPIRES_TOO_SOON = 'cc-dat-914',
+    ERROR_MSG_EMPTY_DATE = 'cc-dat-910',
+    ERROR_MSG_INCORRECTLY_FILLED__DATE = 'cc-dat-911',
+
+    ERROR_MSG_EMPTY_YEAR = 'cc-yr-917',
+    ERROR_MSG_INCORRECTLY_FILLED_YEAR = 'cc-yr-918',
+
+    // ERROR_MSG_INCORRECTLY_FILLED_MONTH= 'cc-mth-916',
+    ERROR_MSG_EMPTY_MONTH = 'cc-mth-915',
+
+    ERROR_MSG_EMPTY_CVC = 'cc-cvc-920',
+    ERROR_MSG_INCORRECTLY_FILLED_CVC = 'cc-cvc-921',
+
+    ERROR_MSG_EMPTY_KCP_PWD = 'kcp-pwd-940',
+    ERROR_MSG_INCORRECTLY_FILLED_KCP_PWD = 'kcp-pwd-941',
+
+    ERROR_MSG_EMPTY_ACH_ACCOUNT_NUMBER = 'ach-num-945',
+    ERROR_MSG_INCORRECTLY_FILLED_ACH_ACCOUNT_NUMBER = 'ach-num-946',
+
+    ERROR_MSG_EMPTY_ACH_BANK_LOCATION_ID = 'ach-loc-947',
+    ERROR_MSG_INCORRECTLY_FILLED_ACH_BANK_LOCATION_ID = 'ach-loc-948'
+}
+
+export const EMPTY_FIELD_ERROR_MESSAGES = {
+    [ENCRYPTED_CARD_NUMBER]: TrafficLight.ERROR_MSG_EMPTY_PAN,
+    [ENCRYPTED_EXPIRY_DATE]: TrafficLight.ERROR_MSG_EMPTY_DATE,
+    [ENCRYPTED_EXPIRY_MONTH]: TrafficLight.ERROR_MSG_EMPTY_MONTH,
+    [ENCRYPTED_EXPIRY_YEAR]: TrafficLight.ERROR_MSG_EMPTY_YEAR,
+    [ENCRYPTED_SECURITY_CODE]: TrafficLight.ERROR_MSG_EMPTY_CVC,
+    [ENCRYPTED_PWD_FIELD]: TrafficLight.ERROR_MSG_EMPTY_KCP_PWD,
+    [ENCRYPTED_BANK_ACCNT_NUMBER_FIELD]: TrafficLight.ERROR_MSG_EMPTY_ACH_ACCOUNT_NUMBER,
+    [ENCRYPTED_BANK_LOCATION_FIELD]: TrafficLight.ERROR_MSG_EMPTY_ACH_BANK_LOCATION_ID
+};

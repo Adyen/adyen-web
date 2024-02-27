@@ -1,6 +1,6 @@
 import { ValidatorRules } from '../../../utils/Validator/types';
 import { isEmpty } from '../../../utils/validator-utils';
-import { ERROR_CODES, ERROR_MSG_INCOMPLETE_FIELD } from '../../../core/Errors/constants';
+import { TrafficLight } from '../../../core/Errors/constants';
 
 export const companyDetailsValidationRules: ValidatorRules = {
     default: {
@@ -8,7 +8,7 @@ export const companyDetailsValidationRules: ValidatorRules = {
             return value && value.length > 0;
         },
         modes: ['blur'],
-        errorMessage: ERROR_CODES[ERROR_MSG_INCOMPLETE_FIELD] // = 'err-gen-9100'
+        errorMessage: TrafficLight.ERROR_MSG_INCOMPLETE_FIELD // = 'err-gen-9100'
     },
     name: {
         validate: value => (isEmpty(value) ? null : true), // valid, if there are chars other than spaces

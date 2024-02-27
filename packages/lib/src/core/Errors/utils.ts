@@ -1,4 +1,4 @@
-import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD, ERROR_CODES } from './constants';
+import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD, TrafficLight } from './constants';
 import { SFError } from '../../components/Card/components/CardInput/types';
 import { SortErrorsObj, SortedErrorObject, GenericError, SetSRMessagesReturnObject } from './types';
 import { ValidationRuleResult } from '../../utils/Validator/ValidationRuleResult';
@@ -14,33 +14,12 @@ import {
 } from '../../components/internal/SecuredFields/lib/configuration/constants';
 
 /**
- * Access items stored in the ERROR_CODES object by either sending in the key - in which case you get the value
- * or by sending in the value - in which case you get the key
- * @param keyOrValue - key (or value) by which to retrieve the corresponding value (or key)
- */
-export const getError = (keyOrValue: string): string => {
-    // Retrieve value
-    let rtnVal = ERROR_CODES[keyOrValue];
-    if (rtnVal) return rtnVal;
-
-    // Retrieve key
-    rtnVal = Object.keys(ERROR_CODES).find(key => ERROR_CODES[key] === keyOrValue);
-    if (rtnVal) return rtnVal;
-
-    // Neither exist
-    return keyOrValue;
-};
-
-/**
  * Extract and translate all the errorCodes related to a specific securedField
  * @param i18n
  * @param errorCodeIdentifier - the identifier for which type of errorCodes we need to collect e.g. 'cc-num'
  */
 export const addAriaErrorTranslationsObject = (i18n, errorCodeIdentifier) => {
-    const errorKeys = Object.keys(ERROR_CODES);
-
-    const transObj = errorKeys.reduce((acc, item) => {
-        const value = ERROR_CODES[item];
+    const transObj = Object.values(TrafficLight).reduce((acc, value) => {
         // Limit to errors related to specific sf
         if (value.includes(errorCodeIdentifier)) {
             acc[value] = i18n.get(value);
