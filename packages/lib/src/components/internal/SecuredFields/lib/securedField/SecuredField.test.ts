@@ -3,7 +3,7 @@ import SecuredField from './SecuredField';
 import { CVCPolicyType, DatePolicyType } from '../types';
 import en from '../../../../../language/locales/en-US';
 
-import { TrafficLight } from '../../../../../core/Errors/constants';
+import { ErrorCodes } from '../../../../../core/Errors/constants';
 import {
     CVC_POLICY_REQUIRED,
     DATE_POLICY_REQUIRED,
@@ -31,15 +31,15 @@ const TRANSLATED_DATE_IFRAME_LABEL = en['creditCard.expiryDate.label'];
 const TRANSLATED_CVC_IFRAME_TITLE = en['creditCard.encryptedSecurityCode.aria.iframeTitle'];
 const TRANSLATED_CVC_IFRAME_LABEL = en['creditCard.securityCode.label'];
 
-const ERROR_MSG_LUHN_CHECK_FAILED = TrafficLight.ERROR_MSG_LUHN_CHECK_FAILED;
+const ERROR_MSG_LUHN_CHECK_FAILED = ErrorCodes.ERROR_MSG_LUHN_CHECK_FAILED;
 
 const TRANSLATED_LUHN_CHECK_FAILED_ERROR = en[ERROR_MSG_LUHN_CHECK_FAILED];
 
-const CARD_TOO_OLD_ERROR_CODE = TrafficLight.ERROR_MSG_CARD_TOO_OLD;
+const CARD_TOO_OLD_ERROR_CODE = ErrorCodes.ERROR_MSG_CARD_TOO_OLD;
 const TRANSLATED_CARD_TOO_OLD_ERROR = en[CARD_TOO_OLD_ERROR_CODE];
 
-const ERROR_MSG_INVALID_FIELD = TrafficLight.ERROR_MSG_INVALID_FIELD;
-const ERROR_MSG_CARD_TOO_OLD = TrafficLight.ERROR_MSG_CARD_TOO_OLD;
+const ERROR_MSG_INVALID_FIELD = ErrorCodes.ERROR_MSG_INVALID_FIELD;
+const ERROR_MSG_CARD_TOO_OLD = ErrorCodes.ERROR_MSG_CARD_TOO_OLD;
 
 const nodeHolder = document.createElement('div');
 

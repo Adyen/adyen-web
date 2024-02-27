@@ -1,7 +1,7 @@
 import { httpPost } from '../../../../core/Services/http';
 import { CbObjOnBinLookup, CbObjOnBinValue, CbObjOnError } from '../lib/types';
 import { DEFAULT_CARD_GROUP_TYPES } from '../lib/configuration/constants';
-import { TrafficLight } from '../../../../core/Errors/constants';
+import { ErrorCodes } from '../../../../core/Errors/constants';
 import { BinLookupResponse, BinLookupResponseRaw } from '../../../Card/types';
 
 if (process.env.NODE_ENV === 'development') {
@@ -133,7 +133,7 @@ export default parent => {
                             const errObj: CbObjOnError = {
                                 type: 'card',
                                 fieldType: 'encryptedCardNumber',
-                                error: TrafficLight.ERROR_MSG_UNSUPPORTED_CARD_ENTERED,
+                                error: ErrorCodes.ERROR_MSG_UNSUPPORTED_CARD_ENTERED,
                                 detectedBrands: mappedResponse.detectedBrands
                             };
                             parent.handleUnsupportedCard(errObj);

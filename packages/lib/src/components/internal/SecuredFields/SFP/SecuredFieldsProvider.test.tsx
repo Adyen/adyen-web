@@ -2,7 +2,7 @@ import { shallow } from 'enzyme';
 import { h } from 'preact';
 import SecuredFieldsProvider from './SecuredFieldsProvider';
 import Language from '../../../../language/Language';
-import { TrafficLight } from '../../../../core/Errors/constants';
+import { ErrorCodes } from '../../../../core/Errors/constants';
 
 jest.mock('../lib/CSF', () => {
     return () => true;
@@ -56,12 +56,12 @@ const styles = {
 const unsupportedCardErrObj = {
     type: 'card',
     fieldType: 'encryptedCardNumber',
-    error: TrafficLight.ERROR_MSG_UNSUPPORTED_CARD_ENTERED,
+    error: ErrorCodes.ERROR_MSG_UNSUPPORTED_CARD_ENTERED,
     detectedBrands: ['cartebancaire']
 };
 
 const regularErrObj = {
-    error: TrafficLight.ERROR_MSG_INCOMPLETE_FIELD,
+    error: ErrorCodes.ERROR_MSG_INCOMPLETE_FIELD,
     fieldType: 'encryptedCardNumber',
     type: 'card'
 };
@@ -173,7 +173,7 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
 
     it('should see that the "unsupported card" error has set state on the SecuredFieldsProvider', () => {
         expect(wrapper.instance().state.detectedUnsupportedBrands.length).toEqual(1);
-        expect(wrapper.instance().state.errors.encryptedCardNumber).toEqual(TrafficLight.ERROR_MSG_UNSUPPORTED_CARD_ENTERED);
+        expect(wrapper.instance().state.errors.encryptedCardNumber).toEqual(ErrorCodes.ERROR_MSG_UNSUPPORTED_CARD_ENTERED);
     });
 
     it('should clear the previously generated "unsupported card" error & propagate to the onError callback', () => {
@@ -193,7 +193,7 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
 
         expect(wrapper.instance().handleOnError(regularErrObj)).toBe(true);
 
-        expect(wrapper.instance().state.errors.encryptedCardNumber).toEqual(TrafficLight.ERROR_MSG_INCOMPLETE_FIELD);
+        expect(wrapper.instance().state.errors.encryptedCardNumber).toEqual(ErrorCodes.ERROR_MSG_INCOMPLETE_FIELD);
     });
 
     it('should re-generate an "unsupported card" error and then a handleOnFieldValid call should be ignored', () => {
