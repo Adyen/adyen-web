@@ -120,7 +120,7 @@
         "postcss": "8.4.35",
         "react": "18.2.0",
         "react-dom": "18.2.0",
-        "rollup": "4.11.0",
+        "rollup": "4.12.0",
         "rollup-plugin-dts": "6.1.0",
         "rollup-plugin-postcss": "4.0.2",
         "rollup-plugin-stylelint": "1.0.0",
