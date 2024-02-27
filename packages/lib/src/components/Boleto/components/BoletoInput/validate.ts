@@ -6,7 +6,7 @@ import { ERROR_CODES, ERROR_MSG_INVALID_FIELD } from '../../../../core/Errors/co
 export const boletoValidationRules: ValidatorRules = {
     socialSecurityNumber: {
         validate: validateSSN,
-        errorMessage: ERROR_CODES[ERROR_MSG_INVALID_FIELD], // = 'error.va.gen.02',
+        errorMessage: ERROR_CODES[ERROR_MSG_INVALID_FIELD], // = 'err-gen-9101',
         modes: ['blur']
     },
     shopperEmail: validationRules.emailRule,

@@ -8,7 +8,7 @@ export const companyDetailsValidationRules: ValidatorRules = {
             return value && value.length > 0;
         },
         modes: ['blur'],
-        errorMessage: ERROR_CODES[ERROR_MSG_INCOMPLETE_FIELD] // = 'error.va.gen.01'
+        errorMessage: ERROR_CODES[ERROR_MSG_INCOMPLETE_FIELD] // = 'err-gen-9100'
     },
     name: {
         validate: value => (isEmpty(value) ? null : true), // valid, if there are chars other than spaces

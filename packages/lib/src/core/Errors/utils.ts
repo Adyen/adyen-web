@@ -31,6 +31,11 @@ export const getError = (keyOrValue: string): string => {
     return keyOrValue;
 };
 
+/**
+ * Extract and translate all the errorCodes related to a specific securedField
+ * @param i18n
+ * @param errorCodeIdentifier - the identifier for which type of errorCodes we need to collect e.g. 'cc-num'
+ */
 export const addAriaErrorTranslationsObject = (i18n, errorCodeIdentifier) => {
     const errorKeys = Object.keys(ERROR_CODES);
 
