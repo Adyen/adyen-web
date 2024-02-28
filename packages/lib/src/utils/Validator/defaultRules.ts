@@ -1,12 +1,12 @@
 import { ValidatorRule } from './types';
 import { isEmpty } from '../validator-utils';
-import { ERROR_KEY_INVALID, ERROR_KEY_REQUIRED } from '../../core/Errors/constants';
+import { ERROR_KEY_INVALID, ERROR_FIELD_REQUIRED } from '../../core/Errors/constants';
 import { email, telephoneNumber } from '../regex';
 import { unformatDate } from '../../components/internal/FormFields/InputDate/utils';
 
 const isPhoneValid = (value: string, validationRule: ValidatorRule): boolean | null => {
     if (isEmpty(value)) {
-        validationRule.errorMessage = ERROR_KEY_REQUIRED;
+        validationRule.errorMessage = ERROR_FIELD_REQUIRED;
         return null;
     }
     validationRule.errorMessage = ERROR_KEY_INVALID;
@@ -15,7 +15,7 @@ const isPhoneValid = (value: string, validationRule: ValidatorRule): boolean | n
 
 const isEmailValid = (value: string, validationRule: ValidatorRule): boolean | null => {
     if (isEmpty(value)) {
-        validationRule.errorMessage = ERROR_KEY_REQUIRED;
+        validationRule.errorMessage = ERROR_FIELD_REQUIRED;
         return null;
     }
     validationRule.errorMessage = ERROR_KEY_INVALID;
@@ -24,7 +24,7 @@ const isEmailValid = (value: string, validationRule: ValidatorRule): boolean | n
 
 const isDateOfBirthValid = (value: string, validationRule: ValidatorRule): boolean | null => {
     if (!value) {
-        validationRule.errorMessage = ERROR_KEY_REQUIRED;
+        validationRule.errorMessage = ERROR_FIELD_REQUIRED;
         return false;
     }
     validationRule.errorMessage = 'dateOfBirth.invalid';

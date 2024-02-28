@@ -14,7 +14,7 @@ export const ARIA_CONTEXT_SUFFIX = '-ariaContext';
 
 export const ERROR_ACTION_FOCUS_FIELD = 'focusField';
 export const ERROR_ACTION_BLUR_SCENARIO = 'notValidating:blurScenario';
-export const ERROR_KEY_REQUIRED = 'field.error.required';
+export const ERROR_FIELD_REQUIRED = 'field.error.required';
 export const ERROR_KEY_INVALID = 'field.error.invalid';
 
 /**
