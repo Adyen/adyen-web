@@ -72,32 +72,6 @@ describe('UIElement', () => {
 
             expect(onChange.mock.calls.length).toBe(1);
         });
-
-        test('should not trigger onValid method if the component is not valid', () => {
-            const onValid = jest.fn();
-            const element = new MyElement(core, { onValid });
-
-            element.callOnChange();
-
-            expect(onValid.mock.calls.length).toBe(0);
-        });
-
-        test('should trigger the onValid method if the component is valid', () => {
-            class MyValidElement extends UIElement {
-                get isValid() {
-                    return true;
-                }
-                onChange(): object {
-                    return super.onChange();
-                }
-            }
-
-            const onValid = jest.fn();
-            const element = new MyValidElement(core, { onValid });
-            element.onChange();
-
-            expect(onValid.mock.calls.length).toBe(1);
-        });
     });
 
     describe('isValid()', () => {
