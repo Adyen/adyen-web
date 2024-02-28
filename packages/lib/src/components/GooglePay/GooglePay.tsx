@@ -8,10 +8,10 @@ import collectBrowserInfo from '../../utils/browserInfo';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
+import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
 import type { AddressData, PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
 import type { GooglePayConfiguration } from './types';
-import { ICore } from '../../core/types';
-import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
+import type { ICore } from '../../core/types';
 
 class GooglePay extends UIElement<GooglePayConfiguration> {
     public static type = TxVariants.googlepay;
@@ -113,10 +113,10 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
                 .then(paymentResponse => {
                     this.handleResponse(paymentResponse);
                 })
-                .catch((paymentResponse: RawPaymentResponse) => {
+                .catch((paymentResponse?: RawPaymentResponse) => {
                     this.setElementStatus('ready');
 
-                    const googlePayError = paymentResponse.error?.googlePayError;
+                    const googlePayError = paymentResponse?.error?.googlePayError;
                     const fallbackMessage = this.props.i18n.get('error.subtitle.payment');
 
                     const error: google.payments.api.PaymentDataError =
@@ -137,7 +137,14 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
                         error
                     });
 
-                    this.handleFailedResult(paymentResponse);
+                    const responseWithError = {
+                        ...paymentResponse,
+                        error: {
+                            googlePayError: error
+                        }
+                    };
+
+                    this.handleFailedResult(responseWithError);
                 });
         });
     };
