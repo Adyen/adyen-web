@@ -322,7 +322,8 @@ class Core implements ICore {
                 clientKey: this.options.clientKey,
                 locale: this.options.locale,
                 analytics: this.options.analytics,
-                amount: this.options.amount
+                amount: this.options.amount,
+                bundleType: Core.metadata.bundleType
             }),
             resources: new Resources(this.cdnContext),
             i18n: new Language(this.options.locale, this.options.translations, this.options.translationFile),

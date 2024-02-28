@@ -8,7 +8,7 @@ import {
 } from '../../core/Analytics/constants';
 import { THREEDS2_CHALLENGE_ERROR, THREEDS2_ERROR } from './config';
 
-const analyticsModule = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '' });
+const analyticsModule = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', bundleType: 'umd' });
 
 describe('ThreeDS2Challenge: calls that generate analytics should produce objects with the expected shapes ', () => {
     let challenge;

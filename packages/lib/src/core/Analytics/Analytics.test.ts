@@ -45,7 +45,7 @@ describe('Analytics initialisation and event queue', () => {
     });
 
     test('Creates an Analytics module with defaultProps', () => {
-        const analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount });
+        const analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount, bundleType: 'umd' });
         expect(analytics.setUp).not.toBe(null);
         expect(analytics.getCheckoutAttemptId).not.toBe(null);
         expect(analytics.getEnabled).not.toBe(null);
@@ -56,7 +56,7 @@ describe('Analytics initialisation and event queue', () => {
     });
 
     test('Should not fire any calls if analytics is disabled', () => {
-        const analytics = Analytics({ analytics: { enabled: false }, loadingContext: '', locale: '', clientKey: '', amount });
+        const analytics = Analytics({ analytics: { enabled: false }, loadingContext: '', locale: '', clientKey: '', amount, bundleType: 'umd' });
 
         analytics.setUp(event);
         expect(collectIdPromiseMock).not.toHaveBeenCalled();
@@ -64,7 +64,7 @@ describe('Analytics initialisation and event queue', () => {
     });
 
     test('Will not call the collectId endpoint if telemetry is disabled, but will call the logEvent (analytics pixel)', () => {
-        const analytics = Analytics({ analytics: { telemetry: false }, loadingContext: '', locale: '', clientKey: '', amount });
+        const analytics = Analytics({ analytics: { telemetry: false }, loadingContext: '', locale: '', clientKey: '', amount, bundleType: 'umd' });
         expect(collectIdPromiseMock).not.toHaveBeenCalled();
         analytics.setUp(event);
         expect(collectIdPromiseMock).not.toHaveBeenCalled();
@@ -73,7 +73,7 @@ describe('Analytics initialisation and event queue', () => {
     });
 
     test('Calls the collectId endpoint by default, adding expected fields', async () => {
-        const analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount });
+        const analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount, bundleType: 'umd' });
         analytics.setUp(event);
 
         expect(collectIdPromiseMock).toHaveBeenCalled();
@@ -87,7 +87,7 @@ describe('Analytics initialisation and event queue', () => {
         const payload = {
             payloadData: 'test'
         };
-        const analytics = Analytics({ analytics: { payload }, loadingContext: '', locale: '', clientKey: '', amount });
+        const analytics = Analytics({ analytics: { payload }, loadingContext: '', locale: '', clientKey: '', amount, bundleType: 'umd' });
 
         analytics.setUp(event);
 
@@ -95,7 +95,7 @@ describe('Analytics initialisation and event queue', () => {
     });
 
     test('Analytics events queue sends event object', async () => {
-        const analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount });
+        const analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount, bundleType: 'umd' });
 
         const aObj = createAnalyticsObject(analyticsEventObj);
 
@@ -113,7 +113,7 @@ describe('Analytics initialisation and event queue', () => {
     });
 
     test('Analytics events queue sends error object', async () => {
-        const analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount });
+        const analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount, bundleType: 'umd' });
 
         const evObj = createAnalyticsObject(analyticsEventObj);
         analytics.createAnalyticsEvent({ event: 'info', data: evObj });
@@ -142,7 +142,7 @@ describe('Analytics initialisation and event queue', () => {
     });
 
     test('Analytics events queue sends log object', async () => {
-        const analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount });
+        const analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount, bundleType: 'umd' });
 
         const aObj = createAnalyticsObject({
             event: 'log',

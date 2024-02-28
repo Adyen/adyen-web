@@ -4,7 +4,7 @@ import GooglePayService from './GooglePayService';
 import Analytics from '../../core/Analytics';
 import { ANALYTICS_EVENT_INFO, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
 
-const analyticsModule = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '' });
+const analyticsModule = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', bundleType: 'umd' });
 
 jest.mock('./GooglePayService');
 

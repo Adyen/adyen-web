@@ -14,7 +14,7 @@ export default () => {
                 resolveExtensions(),
                 loadCommonjsPackage(),
                 lint(),
-                replaceValues({ bundleType: BUNDLE_TYPES.ESM }),
+                replaceValues({ bundleType: BUNDLE_TYPES.esm }),
                 convertJsonToESM(),
                 compileCSS({}),
                 compileJavascript({ target: 'es2022' })

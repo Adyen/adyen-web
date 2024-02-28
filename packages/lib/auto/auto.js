@@ -8,6 +8,6 @@ const { Dropin, ...Components } = components;
 const Classes = Object.keys(Components).map(key => Components[key]);
 
 AdyenCheckout.register(...Classes);
-AdyenCheckout.setBundleType(BUNDLE_TYPES.AUTO);
+AdyenCheckout.setBundleType(BUNDLE_TYPES.auto);
 
 export * from '../dist/es-legacy/index.js';
