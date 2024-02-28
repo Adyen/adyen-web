@@ -30,15 +30,19 @@ class Core implements ICore {
 
     private components: UIElement[] = [];
 
-    public static readonly version = {
+    public static readonly metadata = {
         version: process.env.VERSION,
         revision: process.env.COMMIT_HASH,
         branch: process.env.COMMIT_BRANCH,
         buildId: process.env.ADYEN_BUILD_ID,
-        moduleType: process.env.MODULE_TYPE
+        bundleType: process.env.BUNDLE_TYPE
     };
 
     public static registry = registry;
+
+    public static setBundleType(type: string): void {
+        Core.metadata.bundleType = type;
+    }
 
     public static register(...items: NewableComponent[]) {
         registry.add(...items);
@@ -59,7 +63,7 @@ class Core implements ICore {
     constructor(props: CoreConfiguration) {
         this.createFromAction = this.createFromAction.bind(this);
 
-        this.setOptions(props);
+        this.setOptions({ exposeLibraryMetadata: true, ...props });
 
         this.loadingContext = resolveEnvironment(this.options.environment, this.options.environmentUrls?.api);
         this.cdnContext = resolveCDNEnvironment(this.options.resourceEnvironment || this.options.environment, this.options.environmentUrls?.api);
@@ -68,11 +72,15 @@ class Core implements ICore {
 
         const clientKeyType = this.options.clientKey?.substr(0, 4);
         if ((clientKeyType === 'test' || clientKeyType === 'live') && !this.loadingContext.includes(clientKeyType)) {
-            throw new Error(`Error: you are using a '${clientKeyType}' clientKey against the '${this.options.environment}' environment`);
+            throw new AdyenCheckoutError(
+                'IMPLEMENTATION_ERROR',
+                `Error: you are using a ${clientKeyType} clientKey against the ${this.options.environment} environment`
+            );
         }
 
-        // Expose version number for npm builds
-        window['adyenWebVersion'] = Core.version.version;
+        if (this.options.exposeLibraryMetadata) {
+            window['AdyenWebMetadata'] = Core.metadata;
+        }
     }
 
     public async initialize(): Promise<this> {
@@ -314,7 +322,8 @@ class Core implements ICore {
                 clientKey: this.options.clientKey,
                 locale: this.options.locale,
                 analytics: this.options.analytics,
-                amount: this.options.amount
+                amount: this.options.amount,
+                bundleType: Core.metadata.bundleType
             }),
             resources: new Resources(this.cdnContext),
             i18n: new Language(this.options.locale, this.options.translations, this.options.translationFile),

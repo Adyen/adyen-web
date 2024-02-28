@@ -1,7 +1,7 @@
 import { CardElement } from './Card';
 import Analytics from '../../core/Analytics';
 
-const analyticsModule = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '' });
+const analyticsModule = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', bundleType: 'umd' });
 
 let card;
 

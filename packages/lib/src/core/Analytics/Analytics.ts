@@ -12,7 +12,7 @@ let capturedCheckoutAttemptId = null;
 let hasLoggedPixel = false;
 let sendEventsTimerId = null;
 
-const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analyticsContext }: AnalyticsProps): AnalyticsModule => {
+const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analyticsContext, bundleType }: AnalyticsProps): AnalyticsModule => {
     const defaultProps = {
         enabled: true,
         telemetry: true,
@@ -30,7 +30,7 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
     }
 
     const logEvent = LogEvent({ loadingContext, locale });
-    const collectId = CollectId({ analyticsContext, clientKey, locale, amount, analyticsPath: ANALYTICS_PATH });
+    const collectId = CollectId({ analyticsContext, clientKey, locale, amount, analyticsPath: ANALYTICS_PATH, bundleType });
     const eventsQueue: EventsQueueModule = EventsQueue({ analyticsContext, clientKey, analyticsPath: ANALYTICS_PATH });
 
     const sendAnalyticsEvents = () => {
