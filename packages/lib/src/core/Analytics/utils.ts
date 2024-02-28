@@ -2,6 +2,7 @@ import { AnalyticsObject, CreateAnalyticsObject } from './types';
 import { ANALYTICS_ACTION_STR, ANALYTICS_VALIDATION_ERROR_STR, errorCodeMapping } from './constants';
 import uuid from '../../utils/uuid';
 import { digitsOnlyFormatter } from '../../utils/Formatters/formatters';
+import { ERROR_FIELD_REQUIRED, ERROR_INVALID_FORMAT_EXPECTS } from '../Errors/constants';
 
 export const getUTCTimestamp = () => Date.now();
 
@@ -46,7 +47,7 @@ export const createAnalyticsObject = (aObj: CreateAnalyticsObject): AnalyticsObj
 
 const mapErrorCodesForAnalytics = (errorCode: string, target: string) => {
     // Some of the more generic error codes required combination with target to retrieve a specific code
-    if (errorCode === 'field.error.required' || errorCode === 'invalidFormatExpects') {
+    if (errorCode === ERROR_FIELD_REQUIRED || errorCode === ERROR_INVALID_FORMAT_EXPECTS) {
         return errorCodeMapping[`${errorCode}.${target}`] ?? errorCode;
     }
 

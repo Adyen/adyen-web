@@ -1,3 +1,5 @@
+import { ERROR_FIELD_REQUIRED, ERROR_INVALID_FORMAT_EXPECTS } from '../Errors/constants';
+
 export const ANALYTICS_PATH = 'v3/analytics';
 
 export const ANALYTICS_INFO_TIMER_INTERVAL = process.env.NODE_ENV === 'development' ? 5000 : 10000;
@@ -55,13 +57,13 @@ export const errorCodeMapping: Record<string, string> = {
     ['creditCard.holderName.invalid']: '925',
     ['boleto.socialSecurityNumber.invalid']: '926',
     //
-    ['field.error.required.country']: '930',
-    ['field.error.required.street']: '931',
-    ['field.error.required.house_number_or_name']: '932',
-    ['field.error.required.postal_code']: '933',
-    ['invalidFormatExpects.postal_code']: '934',
-    ['field.error.required.city']: '935',
-    ['field.error.required.state_or_province']: '936',
+    [`${ERROR_FIELD_REQUIRED}.country`]: '930',
+    [`${ERROR_FIELD_REQUIRED}.street`]: '931',
+    [`${ERROR_FIELD_REQUIRED}.house_number_or_name`]: '932',
+    [`${ERROR_FIELD_REQUIRED}.postal_code`]: '933',
+    [`${ERROR_FIELD_REQUIRED}.city`]: '935',
+    [`${ERROR_FIELD_REQUIRED}.state_or_province`]: '936',
+    [`${ERROR_INVALID_FORMAT_EXPECTS}.postal_code`]: '934',
     //
     ['creditCard.taxNumber.invalid']: '942'
 };

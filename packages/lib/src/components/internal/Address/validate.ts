@@ -1,6 +1,6 @@
 import { ValidatorRules, ValidatorRule } from '../../../utils/Validator/types';
 import { countrySpecificFormatters } from './validate.formats';
-import { ERROR_FIELD_REQUIRED } from '../../../core/Errors/constants';
+import { ERROR_FIELD_REQUIRED, ERROR_INVALID_FORMAT_EXPECTS } from '../../../core/Errors/constants';
 import { isEmpty } from '../../../utils/validator-utils';
 
 const createPatternByDigits = (digits: number) => {
@@ -16,7 +16,7 @@ const validatePostalCode = (val: string, countryCode: string, validatorRules: Va
 
         // Dynamically create errorMessage
         (validatorRules.postalCode as ValidatorRule).errorMessage = {
-            translationKey: 'invalidFormatExpects',
+            translationKey: ERROR_INVALID_FORMAT_EXPECTS,
             translationObject: {
                 values: {
                     format: countrySpecificFormatters[countryCode]?.postalCode.format || null

@@ -1,6 +1,6 @@
 import { ValidatorRule } from './types';
 import { isEmpty } from '../validator-utils';
-import { ERROR_KEY_INVALID, ERROR_FIELD_REQUIRED } from '../../core/Errors/constants';
+import { ERROR_FIELD_INVALID, ERROR_FIELD_REQUIRED } from '../../core/Errors/constants';
 import { email, telephoneNumber } from '../regex';
 import { unformatDate } from '../../components/internal/FormFields/InputDate/utils';
 
@@ -9,7 +9,7 @@ const isPhoneValid = (value: string, validationRule: ValidatorRule): boolean | n
         validationRule.errorMessage = ERROR_FIELD_REQUIRED;
         return null;
     }
-    validationRule.errorMessage = ERROR_KEY_INVALID;
+    validationRule.errorMessage = ERROR_FIELD_INVALID;
     return telephoneNumber.test(value);
 };
 
@@ -18,7 +18,7 @@ const isEmailValid = (value: string, validationRule: ValidatorRule): boolean | n
         validationRule.errorMessage = ERROR_FIELD_REQUIRED;
         return null;
     }
-    validationRule.errorMessage = ERROR_KEY_INVALID;
+    validationRule.errorMessage = ERROR_FIELD_INVALID;
     return value.length >= 6 && value.length <= 320 && email.test(value);
 };
 
