@@ -197,7 +197,7 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
     });
 
     it('should re-generate an "unsupported card" error and then a handleOnFieldValid call should be ignored', () => {
-        // @ts-ignore
+        // @ts-ignore - it's a test!
         unsupportedCardErrObj.error = 'Unsupported card';
         unsupportedCardErrObj.detectedBrands = ['cartebancaire'];
 

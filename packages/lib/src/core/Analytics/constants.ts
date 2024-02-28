@@ -51,7 +51,7 @@ export const ANALYTICS_ERROR_CODE_3DS2_TIMEOUT = 'web_705'; // 3DS2 process has 
 export const ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_ACSURL = 'web_800'; // Decoded token is missing a valid acsURL property
 export const ANALYTICS_ERROR_CODE_NO_TRANSSTATUS = 'web_801'; // Challenge has resulted in an error (no transStatus could be retrieved by the backend)
 
-export const errorCodeMapping = {
+export const errorCodeMapping: Record<string, string> = {
     ['creditCard.holderName.invalid']: '925',
     ['boleto.socialSecurityNumber.invalid']: '926',
     //

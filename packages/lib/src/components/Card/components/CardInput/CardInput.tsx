@@ -431,7 +431,7 @@ const CardInput = (props: CardInputProps) => {
                     errorMessage: errorItem.errorMessage
                 };
 
-                props.onErrorAnalytics(aObj);
+                props.onValidationErrorAnalytics(aObj);
             });
         }
 

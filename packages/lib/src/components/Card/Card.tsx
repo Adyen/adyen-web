@@ -244,7 +244,7 @@ export class CardElement extends UIElement<CardConfiguration> {
         }
     };
 
-    private onErrorAnalytics = (obj: FieldErrorAnalyticsObject) => {
+    private onValidationErrorAnalytics = (obj: FieldErrorAnalyticsObject) => {
         this.submitAnalytics({
             type: ANALYTICS_VALIDATION_ERROR_STR,
             target: fieldTypeToSnakeCase(obj.fieldType),
@@ -328,7 +328,7 @@ export class CardElement extends UIElement<CardConfiguration> {
                 resources={this.resources}
                 onFocus={this.onFocus}
                 onBlur={this.onBlur}
-                onErrorAnalytics={this.onErrorAnalytics}
+                onValidationErrorAnalytics={this.onValidationErrorAnalytics}
                 onConfigSuccess={this.onConfigSuccess}
             />
         );
