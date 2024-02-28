@@ -17,7 +17,7 @@ export const ERROR_ACTION_BLUR_SCENARIO = 'notValidating:blurScenario';
 export const ERROR_FIELD_REQUIRED = 'field.error.required';
 export const ERROR_FIELD_INVALID = 'field.error.invalid';
 
-export const ERROR_INVALID_FORMAT_EXPECTS = 'invalidFormatExpects';
+export const ERROR_INVALID_FORMAT_EXPECTS = 'invalid.format.expects';
 
 /**
  * For SecuredFields
