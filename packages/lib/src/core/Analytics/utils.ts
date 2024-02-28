@@ -38,7 +38,6 @@ export const createAnalyticsObject = (aObj: CreateAnalyticsObject): AnalyticsObj
     ...(aObj.event === 'info' &&
         aObj.type === ANALYTICS_VALIDATION_ERROR_STR && {
             validationErrorCode: mapErrorCodesForAnalytics(aObj.validationErrorCode, aObj.target),
-            oldValidationCode: aObj.validationErrorCode, // TODO temp: just for testing
             validationErrorMessage: aObj.validationErrorMessage
         }), // only added if we have an info event describing a validation error
     /** All */

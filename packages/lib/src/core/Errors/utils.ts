@@ -82,6 +82,17 @@ const fieldTypeToErrorCodeIdentifier = fieldType => {
     return errorCodeIdentifier;
 };
 
+export const getErrorMessageFromCode = (errorCode: string, codeMap: Record<string, string>): string => {
+    let errMsg = errorCode;
+    for (const [key, value] of Object.entries(codeMap)) {
+        if (value === errorCode) {
+            errMsg = key;
+            break;
+        }
+    }
+    return errMsg?.toLowerCase().replace(/[_,.]/g, '-');
+};
+
 /**
  * sortErrorsByLayout - takes a list of errors and a layout, and returns a sorted array of error objects with translated error messages
  *

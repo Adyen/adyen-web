@@ -18,6 +18,7 @@ export const ERROR_KEY_REQUIRED = 'field.error.required';
 export const ERROR_KEY_INVALID = 'field.error.invalid';
 
 /**
+ * For SecuredFields
  * Map of human readable error strings to the codes, used as keys, in the translations files
  */
 export enum ErrorCodes {
