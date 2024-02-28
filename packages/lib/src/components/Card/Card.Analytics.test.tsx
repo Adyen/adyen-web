@@ -120,10 +120,9 @@ describe('Card: calls that generate "info" analytics should produce objects with
     });
 
     test('Analytics should produce an "info" event, of type "validationError", with the expected properties', () => {
-        card.onErrorAnalytics({
+        card.onValidationErrorAnalytics({
             fieldType: 'encryptedCardNumber',
-            errorCode: 'error.va.sf-cc-num.04',
-            errorMessage: 'Enter the complete card number-sr'
+            errorCode: 'cc-num-901'
         });
 
         expect(analyticsModule.createAnalyticsEvent).toHaveBeenCalledWith({
@@ -132,8 +131,8 @@ describe('Card: calls that generate "info" analytics should produce objects with
                 component: card.constructor['type'],
                 type: ANALYTICS_VALIDATION_ERROR_STR,
                 target: 'card_number',
-                validationErrorCode: 'error.va.sf-cc-num.04',
-                validationErrorMessage: 'Enter the complete card number-sr'
+                validationErrorCode: 'cc-num-901',
+                validationErrorMessage: 'error-msg-incorrectly-filled-pan'
             }
         });
     });

@@ -427,8 +427,7 @@ const CardInput = (props: CardInputProps) => {
             newErrors?.forEach(errorItem => {
                 const aObj: FieldErrorAnalyticsObject = {
                     fieldType: errorItem.field,
-                    errorCode: errorItem.errorCode,
-                    errorMessage: errorItem.errorMessage
+                    errorCode: errorItem.errorCode
                 };
 
                 props.onValidationErrorAnalytics(aObj);
