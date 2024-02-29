@@ -80,8 +80,7 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
                         const checkoutAttemptId = await collectId({ ...initialEvent, ...(payload && { ...payload }) });
                         capturedCheckoutAttemptId = checkoutAttemptId;
                     } catch (e) {
-                        // Caught at collectId level. We do not expect this catch block to ever fire, but... just in case...
-                        console.debug(`Fetching checkoutAttemptId failed.${e ? ` Error=${e}` : ''}`);
+                        console.warn(`Fetching checkoutAttemptId failed.${e ? ` Error=${e}` : ''}`);
                     }
                 }
 
