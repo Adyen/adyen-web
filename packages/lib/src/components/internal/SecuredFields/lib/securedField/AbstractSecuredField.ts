@@ -12,6 +12,7 @@ import {
     ENCRYPTED_SECURITY_CODE_4_DIGITS
 } from '../configuration/constants';
 import { Placeholders } from '../../SFP/types';
+import { SF_ErrorCodes } from '../../../../../core/Errors/constants';
 
 /**
  * Base interface for SecuredFieldSetupObject & IframeConfigObject
@@ -105,7 +106,7 @@ export interface AriaConfigObject {
     iframeTitle?: string;
     label?: string;
     contextualTexts?: ContextualTexts;
-    error?: object;
+    error?: Record<SF_ErrorCodes, string>;
 }
 
 abstract class AbstractSecuredField {
