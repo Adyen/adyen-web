@@ -391,9 +391,7 @@ describe('GooglePay', () => {
                 }
             });
 
-            analyticsModule.createAnalyticsEvent = jest.fn(obj => {
-                console.log('### analyticsPreProcessor.test:::: obj=', obj);
-            });
+            analyticsModule.createAnalyticsEvent = jest.fn(() => null);
         });
 
         test('Analytics should produce an "info" event, of type "selected", for GooglePay as an instant PM', () => {

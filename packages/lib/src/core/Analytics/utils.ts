@@ -53,7 +53,7 @@ const mapErrorCodesForAnalytics = (errorCode: string, target: string) => {
 
     let errCode = errorCodeMapping[errorCode] ?? errorCode;
 
-    // If errorCode hasn't come back as a straight number - then we just need to remove any non-digits
+    // If errCode isn't now a number - then we just need to remove any non-digits
     // since the correct error code is already contained within the string e.g. securedField related errors
     if (isNaN(Number(errCode))) {
         errCode = digitsOnlyFormatter(errCode);

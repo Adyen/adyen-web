@@ -27,9 +27,7 @@ describe('Card: calls that generate "info" analytics should produce objects with
             }
         });
 
-        analyticsModule.createAnalyticsEvent = jest.fn(obj => {
-            console.log('### analyticsPreProcessor.test:::: obj=', obj);
-        });
+        analyticsModule.createAnalyticsEvent = jest.fn(() => null);
     });
 
     test('Analytics should produce an "info" event, of type "rendered", for a card PM', () => {
@@ -149,9 +147,7 @@ describe('Card: calls that generate "log" analytics should produce objects with 
             }
         });
 
-        analyticsModule.createAnalyticsEvent = jest.fn(obj => {
-            console.log('### analyticsPreProcessor.test:::: obj=', obj);
-        });
+        analyticsModule.createAnalyticsEvent = jest.fn(() => null);
     });
 
     test('Analytics should produce an "log" event, of type "submit", for a card PM', () => {

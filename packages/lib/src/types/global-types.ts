@@ -1,6 +1,6 @@
 import { ADDRESS_SCHEMA } from '../components/internal/Address/constants';
 import actionTypes from '../core/ProcessResponse/PaymentAction/actionTypes';
-import { AnalyticsInitialEvent, CreateAnalyticsEventObject, SendAnalyticsObject } from '../core/Analytics/types';
+import { AnalyticsInitialEvent, AnalyticsObject, CreateAnalyticsEventObject, SendAnalyticsObject } from '../core/Analytics/types';
 import { EventsQueueModule } from '../core/Analytics/EventsQueue';
 import { CbObjOnFocus } from '../components/internal/SecuredFields/lib/types';
 
@@ -382,7 +382,7 @@ export interface AnalyticsModule {
     setUp: (a: AnalyticsInitialEvent) => Promise<any>;
     getCheckoutAttemptId: () => string;
     getEventsQueue: () => EventsQueueModule;
-    createAnalyticsEvent: (a: CreateAnalyticsEventObject) => void;
+    createAnalyticsEvent: (a: CreateAnalyticsEventObject) => AnalyticsObject;
     getEnabled: () => boolean;
     sendAnalytics: (component: string, analyticsObj: SendAnalyticsObject) => void;
 }

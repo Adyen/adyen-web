@@ -23,9 +23,7 @@ describe('ThreeDS2Challenge: calls that generate analytics should produce object
             onError: () => {}
         });
 
-        analyticsModule.createAnalyticsEvent = jest.fn(obj => {
-            console.log('### analyticsPreProcessor.test:::: obj=', obj);
-        });
+        analyticsModule.createAnalyticsEvent = jest.fn(() => null);
     });
 
     test('A call to ThreeDS2Challenge.submitAnalytics with an object with type "rendered" should not lead to an analytics event', () => {
