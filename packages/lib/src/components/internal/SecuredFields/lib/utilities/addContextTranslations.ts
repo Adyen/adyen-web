@@ -5,7 +5,7 @@ import {
     GIFT_CARD,
     SF_FIELDS_MAP
 } from '../configuration/constants';
-import { AriaConfigObject } from '../securedField/AbstractSecuredField';
+import { AriaConfigObject } from '../types';
 import type Language from '../../../../../language';
 
 /**

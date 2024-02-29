@@ -1,8 +1,8 @@
 import { addErrorTranslationsToObject } from '../../../../../../core/Errors/utils';
 import addContextTranslationsToObject from '../../utilities/addContextTranslations';
-import { AriaConfigObject, AriaConfig } from '../AbstractSecuredField';
 import Language from '../../../../../../language/Language';
 import { SF_FIELDS_MAP } from '../../configuration/constants';
+import { AriaConfig, AriaConfigObject } from '../../types';
 
 /**
  * Creates an ariaConfig object with 'iframeTitle' and 'label' properties, whose values are retrieved from the translations object.
