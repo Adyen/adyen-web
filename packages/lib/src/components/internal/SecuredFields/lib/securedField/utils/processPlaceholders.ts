@@ -1,4 +1,4 @@
-import { SFPlaceholdersObject } from '../AbstractSecuredField';
+import { SFPlaceholdersObject } from '../../types';
 import { Placeholders } from '../../../SFP/types';
 import {
     ENCRYPTED_SECURITY_CODE,
