@@ -5,12 +5,14 @@ import {
     GIFT_CARD,
     SF_FIELDS_MAP
 } from '../configuration/constants';
+import { AriaConfigObject } from '../securedField/AbstractSecuredField';
+import type Language from '../../../../../language';
 
 /**
  * Based on txVariant & fieldType, add a field specific contextualTexts object to the passed object
  */
-export default (originalObj, i18n, txVariant, fieldType) => {
-    const nuObj = { ...originalObj };
+export default (originalObj: AriaConfigObject, i18n: Language, txVariant: string, fieldType: string): AriaConfigObject => {
+    const nuObj: AriaConfigObject = { ...originalObj };
 
     const contextualTexts = {};
 
