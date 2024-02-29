@@ -99,7 +99,7 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
         // Expose getter for testing purposes
         getEventsQueue: () => eventsQueue,
 
-        createAnalyticsEvent: ({ event, data }: CreateAnalyticsEventObject) => {
+        createAnalyticsEvent: ({ event, data }: CreateAnalyticsEventObject): AnalyticsObject => {
             const aObj: AnalyticsObject = createAnalyticsObject({
                 event,
                 ...data
@@ -107,6 +107,8 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
             // console.log('### Analytics::createAnalyticsEvent:: event=', event, ' aObj=', aObj);
 
             addAnalyticsEvent(event, aObj);
+
+            return aObj;
         },
 
         getEnabled: () => props.enabled,
