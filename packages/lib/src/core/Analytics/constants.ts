@@ -1,4 +1,10 @@
-import { ERROR_FIELD_REQUIRED, ERROR_INVALID_FORMAT_EXPECTS } from '../Errors/constants';
+import {
+    BOLETO_SOCIAL_SECURITY_NUMBER_INVALID,
+    CREDITCARD_HOLDER_NAME_INVALID,
+    CREDITCARD_TAX_NUMBER_INVALID,
+    ERROR_FIELD_REQUIRED,
+    ERROR_INVALID_FORMAT_EXPECTS
+} from '../Errors/constants';
 
 export const ANALYTICS_PATH = 'v3/analytics';
 
@@ -53,9 +59,14 @@ export const ANALYTICS_ERROR_CODE_3DS2_TIMEOUT = 'web_705'; // 3DS2 process has 
 export const ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_ACSURL = 'web_800'; // Decoded token is missing a valid acsURL property
 export const ANALYTICS_ERROR_CODE_NO_TRANSSTATUS = 'web_801'; // Challenge has resulted in an error (no transStatus could be retrieved by the backend)
 
+/**
+ * Function to map errorCodes based on translation keys to the codes expected by the analytics endpoint
+ */
 export const errorCodeMapping: Record<string, string> = {
-    ['creditCard.holderName.invalid']: '925',
-    ['boleto.socialSecurityNumber.invalid']: '926',
+    [CREDITCARD_HOLDER_NAME_INVALID]: '925',
+    [CREDITCARD_TAX_NUMBER_INVALID]: '942',
+    //
+    [BOLETO_SOCIAL_SECURITY_NUMBER_INVALID]: '926',
     //
     [`${ERROR_FIELD_REQUIRED}.country`]: '930',
     [`${ERROR_FIELD_REQUIRED}.street`]: '931',
@@ -63,7 +74,7 @@ export const errorCodeMapping: Record<string, string> = {
     [`${ERROR_FIELD_REQUIRED}.postal_code`]: '933',
     [`${ERROR_FIELD_REQUIRED}.city`]: '935',
     [`${ERROR_FIELD_REQUIRED}.state_or_province`]: '936',
-    [`${ERROR_INVALID_FORMAT_EXPECTS}.postal_code`]: '934',
     //
-    ['creditCard.taxNumber.invalid']: '942'
+    [`${ERROR_INVALID_FORMAT_EXPECTS}.postal_code`]: '934'
+    //
 };

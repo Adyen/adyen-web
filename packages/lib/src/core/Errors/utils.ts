@@ -1,4 +1,4 @@
-import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD, ErrorCodes } from './constants';
+import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD, SF_ErrorCodes } from './constants';
 import { SFError } from '../../components/Card/components/CardInput/types';
 import { SortErrorsObj, SortedErrorObject, GenericError, SetSRMessagesReturnObject } from './types';
 import { ValidationRuleResult } from '../../utils/Validator/ValidationRuleResult';
@@ -19,7 +19,7 @@ import {
  * @param errorCodeIdentifier - the identifier for which type of errorCodes we need to collect e.g. 'cc-num'
  */
 export const addAriaErrorTranslationsObject = (i18n, errorCodeIdentifier) => {
-    const transObj = Object.values(ErrorCodes).reduce((acc, value) => {
+    const transObj = Object.values(SF_ErrorCodes).reduce((acc, value) => {
         // Limit to errors related to specific sf
         if (value.includes(errorCodeIdentifier)) {
             acc[value] = i18n.get(value);
@@ -90,7 +90,7 @@ export const getErrorMessageFromCode = (errorCode: string, codeMap: Record<strin
             break;
         }
     }
-    return errMsg?.toLowerCase().replace(/[_,.]/g, '-');
+    return errMsg?.toLowerCase().replace(/./g, '-');
 };
 
 /**

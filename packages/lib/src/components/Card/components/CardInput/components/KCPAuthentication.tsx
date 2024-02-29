@@ -7,6 +7,7 @@ import { KCPProps } from './types';
 import DataSfSpan from './DataSfSpan';
 import InputTelephone from '../../../../internal/FormFields/InputTelephone';
 import { alternativeLabelContent } from './IframeLabelAlternative';
+import { CREDITCARD_TAX_NUMBER_INVALID } from '../../../../../core/Errors/constants';
 
 export default function KCPAuthentication(props: KCPProps) {
     const { i18n } = useCoreContext();
@@ -23,7 +24,7 @@ export default function KCPAuthentication(props: KCPProps) {
                 label={taxNumberLabel}
                 filled={props.filled}
                 classNameModifiers={['kcp-taxNumber']}
-                errorMessage={props.error && i18n.get('creditCard.taxNumber.invalid')}
+                errorMessage={props.error && i18n.get(CREDITCARD_TAX_NUMBER_INVALID)}
                 isValid={props.isValid}
                 dir={'ltr'}
                 name={'kcpTaxNumberOrDOB'}

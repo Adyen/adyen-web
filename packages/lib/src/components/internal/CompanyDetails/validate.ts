@@ -1,6 +1,6 @@
 import { ValidatorRules } from '../../../utils/Validator/types';
 import { isEmpty } from '../../../utils/validator-utils';
-import { ErrorCodes } from '../../../core/Errors/constants';
+import { SF_ErrorCodes } from '../../../core/Errors/constants';
 
 export const companyDetailsValidationRules: ValidatorRules = {
     default: {
@@ -8,7 +8,7 @@ export const companyDetailsValidationRules: ValidatorRules = {
             return value && value.length > 0;
         },
         modes: ['blur'],
-        errorMessage: ErrorCodes.ERROR_MSG_INCOMPLETE_FIELD // = 'err-gen-9100'
+        errorMessage: SF_ErrorCodes.ERROR_MSG_INCOMPLETE_FIELD // = 'err-gen-9100'
     },
     name: {
         validate: value => (isEmpty(value) ? null : true), // valid, if there are chars other than spaces

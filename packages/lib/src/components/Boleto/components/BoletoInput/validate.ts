@@ -1,18 +1,18 @@
 import { ValidatorRules } from '../../../../utils/Validator/types';
 import validateSSN from '../../../internal/SocialSecurityNumberBrazil/validate';
 import { validationRules } from '../../../../utils/Validator/defaultRules';
-import { ErrorCodes } from '../../../../core/Errors/constants';
+import { BOLETO_SOCIAL_SECURITY_NUMBER_INVALID, SF_ErrorCodes } from '../../../../core/Errors/constants';
 
 export const boletoValidationRules: ValidatorRules = {
     socialSecurityNumber: {
         validate: validateSSN,
-        errorMessage: ErrorCodes.ERROR_MSG_INVALID_FIELD, // = 'err-gen-9101',
+        errorMessage: BOLETO_SOCIAL_SECURITY_NUMBER_INVALID,
         modes: ['blur']
     },
     shopperEmail: validationRules.emailRule,
     default: {
         validate: value => !!value && value.length > 0,
-        errorMessage: ErrorCodes.ERROR_MSG_INVALID_FIELD,
+        errorMessage: SF_ErrorCodes.ERROR_MSG_INVALID_FIELD,
         modes: ['blur']
     },
     firstName: {

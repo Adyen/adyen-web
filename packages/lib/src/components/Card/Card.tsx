@@ -30,7 +30,7 @@ import { FieldErrorAnalyticsObject, SendAnalyticsObject } from '../../core/Analy
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from '../../core/Errors/AdyenCheckoutError';
 import { getErrorMessageFromCode } from '../../core/Errors/utils';
-import { ErrorCodes } from '../../core/Errors/constants';
+import { SF_ErrorCodes } from '../../core/Errors/constants';
 
 export class CardElement extends UIElement<CardConfiguration> {
     public static type = TxVariants.scheme;
@@ -249,7 +249,7 @@ export class CardElement extends UIElement<CardConfiguration> {
             type: ANALYTICS_VALIDATION_ERROR_STR,
             target: fieldTypeToSnakeCase(obj.fieldType),
             validationErrorCode: obj.errorCode,
-            validationErrorMessage: getErrorMessageFromCode(obj.errorCode, ErrorCodes)
+            validationErrorMessage: getErrorMessageFromCode(obj.errorCode, SF_ErrorCodes)
         });
     };
 
