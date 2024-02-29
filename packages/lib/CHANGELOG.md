@@ -1,5 +1,15 @@
 # @adyen/adyen-web
 
+## 5.59.0
+
+### Minor Changes
+
+-   Adding support for PayPal Express Flow ([#2551](https://github.com/Adyen/adyen-web/pull/2551))
+
+### Patch Changes
+
+-   For zero auth payments, we always send the `storePaymentMethod` to save the payment details. ([#2571](https://github.com/Adyen/adyen-web/pull/2571))
+
 ## 5.58.0
 
 ### Minor Changes
