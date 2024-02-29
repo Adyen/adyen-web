@@ -1,4 +1,4 @@
-import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD, SF_ErrorCodes } from './constants';
+import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD, ErrorCodePrefixes, SF_ErrorCodes } from './constants';
 import { SFError } from '../../components/Card/components/CardInput/types';
 import { SortErrorsObj, SortedErrorObject, GenericError, SetSRMessagesReturnObject } from './types';
 import { ValidationRuleResult } from '../../utils/Validator/ValidationRuleResult';
@@ -56,28 +56,28 @@ const fieldTypeToErrorCodeIdentifier = (fieldType: string): string => {
     let errorCodeIdentifier;
     switch (fieldType) {
         case ENCRYPTED_CARD_NUMBER:
-            errorCodeIdentifier = 'cc.num';
+            errorCodeIdentifier = ErrorCodePrefixes.CC_NUM;
             break;
         case ENCRYPTED_EXPIRY_DATE:
-            errorCodeIdentifier = 'cc.dat';
+            errorCodeIdentifier = ErrorCodePrefixes.CC_DAT;
             break;
         case ENCRYPTED_EXPIRY_MONTH:
-            errorCodeIdentifier = 'cc.mth';
+            errorCodeIdentifier = ErrorCodePrefixes.CC_MTH;
             break;
         case ENCRYPTED_EXPIRY_YEAR:
-            errorCodeIdentifier = 'cc.yr';
+            errorCodeIdentifier = ErrorCodePrefixes.CC_YR;
             break;
         case ENCRYPTED_SECURITY_CODE:
-            errorCodeIdentifier = 'cc-cvc';
+            errorCodeIdentifier = ErrorCodePrefixes.CC_CVC;
             break;
         case ENCRYPTED_PWD_FIELD:
-            errorCodeIdentifier = 'kcp.pwd';
+            errorCodeIdentifier = ErrorCodePrefixes.KCP_PWD;
             break;
         case ENCRYPTED_BANK_ACCNT_NUMBER_FIELD:
-            errorCodeIdentifier = 'ach.num';
+            errorCodeIdentifier = ErrorCodePrefixes.ACH_NUM;
             break;
         case ENCRYPTED_BANK_LOCATION_FIELD:
-            errorCodeIdentifier = 'ach.loc';
+            errorCodeIdentifier = ErrorCodePrefixes.ACH_LOC;
             break;
         default:
     }
