@@ -45,7 +45,7 @@ describe('Analytics initialisation and event queue', () => {
         mockedLogEvent.mockImplementation(() => logEventPromiseMock);
         logEventPromiseMock.mockClear();
 
-        analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount });
+        analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount, bundleType: '' });
     });
 
     test('Creates an Analytics module with defaultProps', () => {
@@ -59,7 +59,7 @@ describe('Analytics initialisation and event queue', () => {
     });
 
     test('Should not fire any calls if analytics is disabled', () => {
-        const analytics = Analytics({ analytics: { enabled: false }, loadingContext: '', locale: '', clientKey: '', amount });
+        const analytics = Analytics({ analytics: { enabled: false }, loadingContext: '', locale: '', clientKey: '', amount, bundleType: '' });
 
         analytics.setUp(event);
         expect(collectIdPromiseMock).not.toHaveBeenCalled();
@@ -67,7 +67,7 @@ describe('Analytics initialisation and event queue', () => {
     });
 
     test('Will not call the collectId endpoint if telemetry is disabled, but will call the logEvent (analytics pixel)', () => {
-        const analytics = Analytics({ analytics: { telemetry: false }, loadingContext: '', locale: '', clientKey: '', amount });
+        const analytics = Analytics({ analytics: { telemetry: false }, loadingContext: '', locale: '', clientKey: '', amount, bundleType: '' });
         expect(collectIdPromiseMock).not.toHaveBeenCalled();
         analytics.setUp(event);
         expect(collectIdPromiseMock).not.toHaveBeenCalled();
@@ -89,7 +89,7 @@ describe('Analytics initialisation and event queue', () => {
         const payload = {
             payloadData: 'test'
         };
-        const analytics = Analytics({ analytics: { payload }, loadingContext: '', locale: '', clientKey: '', amount });
+        const analytics = Analytics({ analytics: { payload }, loadingContext: '', locale: '', clientKey: '', amount, bundleType: '' });
 
         analytics.setUp(event);
 
