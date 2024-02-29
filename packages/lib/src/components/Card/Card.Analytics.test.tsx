@@ -15,6 +15,7 @@ import {
     ANALYTICS_UNFOCUS_STR,
     ANALYTICS_VALIDATION_ERROR_STR
 } from '../../core/Analytics/constants';
+import { SF_ErrorCodes } from '../../core/Errors/constants';
 
 describe('Card: calls that generate "info" analytics should produce objects with the expected shapes ', () => {
     beforeEach(() => {
@@ -122,7 +123,7 @@ describe('Card: calls that generate "info" analytics should produce objects with
     test('Analytics should produce an "info" event, of type "validationError", with the expected properties', () => {
         card.onValidationErrorAnalytics({
             fieldType: 'encryptedCardNumber',
-            errorCode: 'cc-num-901'
+            errorCode: SF_ErrorCodes.ERROR_MSG_INCORRECTLY_FILLED_PAN
         });
 
         expect(analyticsModule.createAnalyticsEvent).toHaveBeenCalledWith({
@@ -131,7 +132,7 @@ describe('Card: calls that generate "info" analytics should produce objects with
                 component: card.constructor['type'],
                 type: ANALYTICS_VALIDATION_ERROR_STR,
                 target: 'card_number',
-                validationErrorCode: 'cc-num-901',
+                validationErrorCode: SF_ErrorCodes.ERROR_MSG_INCORRECTLY_FILLED_PAN,
                 validationErrorMessage: 'error-msg-incorrectly-filled-pan'
             }
         });

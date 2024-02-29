@@ -1,5 +1,6 @@
 import { BrandObject } from '../../../Card/types';
 import SecuredField from './securedField/SecuredField';
+import { HIDDEN, OPTIONAL, REQUIRED } from './configuration/constants';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare global {
@@ -239,5 +240,5 @@ export type RtnType_noParamVoidFn = () => void;
 export type RtnType_postMessageListener = (event: Event) => void;
 export type RtnType_callbackFn = (feedbackObj: SFFeedbackObj) => void;
 
-export type CVCPolicyType = 'required' | 'optional' | 'hidden';
-export type DatePolicyType = 'required' | 'optional' | 'hidden';
+export type CVCPolicyType = typeof REQUIRED | typeof OPTIONAL | typeof HIDDEN;
+export type DatePolicyType = typeof REQUIRED | typeof OPTIONAL | typeof HIDDEN;

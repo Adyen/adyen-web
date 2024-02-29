@@ -12,20 +12,22 @@ import {
     ENCRYPTED_PWD_FIELD,
     ENCRYPTED_SECURITY_CODE
 } from '../../components/internal/SecuredFields/lib/configuration/constants';
+import { AriaConfigObject } from '../../components/internal/SecuredFields/lib/securedField/AbstractSecuredField';
+import type Language from '../../language';
 
 /**
  * Extract and translate all the errorCodes related to a specific securedField
  * @param i18n
  * @param errorCodeIdentifier - the identifier for which type of errorCodes we need to collect e.g. 'cc-num'
  */
-export const addAriaErrorTranslationsObject = (i18n, errorCodeIdentifier) => {
+export const getTranslatedErrors = (i18n: Language, errorCodeIdentifier: string): Record<SF_ErrorCodes, string> => {
     const transObj = Object.values(SF_ErrorCodes).reduce((acc, value) => {
         // Limit to errors related to specific sf
         if (value.includes(errorCodeIdentifier)) {
             acc[value] = i18n.get(value);
         }
         return acc;
-    }, {});
+    }, {}) as Record<SF_ErrorCodes, string>;
 
     return transObj;
 };
@@ -37,11 +39,11 @@ export const addAriaErrorTranslationsObject = (i18n, errorCodeIdentifier) => {
  * @param i18n - an i18n object to use to get translations
  * @returns a duplicate of the original object with a new property: "error" whose value is a object containing the translated errors
  */
-export const addErrorTranslationsToObject = (originalObj, i18n, fieldType) => {
-    const nuObj = { ...originalObj };
+export const addErrorTranslationsToObject = (originalObj: AriaConfigObject, i18n: Language, fieldType: string): AriaConfigObject => {
+    const nuObj: AriaConfigObject = { ...originalObj };
 
     const errorCodeIdentifier = fieldTypeToErrorCodeIdentifier(fieldType);
-    nuObj.error = addAriaErrorTranslationsObject(i18n, errorCodeIdentifier);
+    nuObj.error = getTranslatedErrors(i18n, errorCodeIdentifier);
 
     return nuObj;
 };
@@ -50,32 +52,32 @@ export const addErrorTranslationsToObject = (originalObj, i18n, fieldType) => {
  * errorCodeIdentifiers must match the prefixes to the numbers in ERROR_CODES (Errors/constants.ts)
  * (Which in turn must match the keys in the translations files)
  */
-const fieldTypeToErrorCodeIdentifier = fieldType => {
+const fieldTypeToErrorCodeIdentifier = (fieldType: string): string => {
     let errorCodeIdentifier;
     switch (fieldType) {
         case ENCRYPTED_CARD_NUMBER:
-            errorCodeIdentifier = 'cc-num';
+            errorCodeIdentifier = 'cc.num';
             break;
         case ENCRYPTED_EXPIRY_DATE:
-            errorCodeIdentifier = 'cc-dat';
+            errorCodeIdentifier = 'cc.dat';
             break;
         case ENCRYPTED_EXPIRY_MONTH:
-            errorCodeIdentifier = 'cc-mth';
+            errorCodeIdentifier = 'cc.mth';
             break;
         case ENCRYPTED_EXPIRY_YEAR:
-            errorCodeIdentifier = 'cc-yr';
+            errorCodeIdentifier = 'cc.yr';
             break;
         case ENCRYPTED_SECURITY_CODE:
             errorCodeIdentifier = 'cc-cvc';
             break;
         case ENCRYPTED_PWD_FIELD:
-            errorCodeIdentifier = 'kcp-pwd';
+            errorCodeIdentifier = 'kcp.pwd';
             break;
         case ENCRYPTED_BANK_ACCNT_NUMBER_FIELD:
-            errorCodeIdentifier = 'ach-num';
+            errorCodeIdentifier = 'ach.num';
             break;
         case ENCRYPTED_BANK_LOCATION_FIELD:
-            errorCodeIdentifier = 'ach-loc';
+            errorCodeIdentifier = 'ach.loc';
             break;
         default:
     }
@@ -90,7 +92,7 @@ export const getErrorMessageFromCode = (errorCode: string, codeMap: Record<strin
             break;
         }
     }
-    return errMsg?.toLowerCase().replace(/./g, '-');
+    return errMsg?.toLowerCase().replace(/[_.]/g, '-');
 };
 
 /**

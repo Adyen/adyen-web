@@ -26,7 +26,7 @@ export function processAriaConfig(txVariant: string, fieldType: string, i18n: La
     const ariaFieldConfigObj: AriaConfigObject = { iframeTitle, label };
 
     // Add error translations object
-    let enhancedAriaFieldConfigObj = addErrorTranslationsToObject(ariaFieldConfigObj, i18n, fieldType);
+    let enhancedAriaFieldConfigObj: AriaConfigObject = addErrorTranslationsToObject(ariaFieldConfigObj, i18n, fieldType);
 
     // If allowed, add the translated contextual texts
     if (showContextuaElement) {
