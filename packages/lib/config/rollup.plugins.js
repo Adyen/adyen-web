@@ -19,13 +19,13 @@ export const lint = () =>
         exclude: ['./src/**/*.json', './src/**/*.scss']
     });
 
-export const replaceValues = ({ moduleType = undefined } = {}) => {
-    if (!moduleType) {
-        throw Error('Rollup plugins: replaceValues: moduleType is missing');
+export const replaceValues = ({ bundleType = undefined } = {}) => {
+    if (!bundleType) {
+        throw Error('Rollup plugins: replaceValues: "bundleType" is missing');
     }
     return replace({
         values: {
-            'process.env.MODULE_TYPE': JSON.stringify(moduleType),
+            'process.env.BUNDLE_TYPE': JSON.stringify(bundleType),
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
             'process.env.VERSION': JSON.stringify(currentVersion.ADYEN_WEB_VERSION),
             'process.env.COMMIT_HASH': JSON.stringify(currentVersion.COMMIT_HASH),

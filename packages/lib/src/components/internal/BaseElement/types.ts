@@ -25,7 +25,6 @@ export interface IBaseElement {
     render(): ComponentChild | Error;
     mount(domNode: HTMLElement | string): IBaseElement;
     update(props): IBaseElement;
-    remount(component): IBaseElement;
     unmount(): IBaseElement;
     remove(): void;
 }

@@ -10,6 +10,7 @@ import {
     generateTypes,
     minify
 } from './rollup.plugins.js';
+import { BUNDLE_TYPES } from './utils/bundle-types.js';
 
 dotenv.config({ path: path.resolve('../../', '.env') });
 
@@ -30,7 +31,7 @@ export default () => {
             plugins: [
                 resolveExtensions(),
                 loadCommonjsPackage(),
-                replaceValues({ moduleType: 'es' }),
+                replaceValues({ bundleType: BUNDLE_TYPES.esm }),
                 convertJsonToESM(),
                 compileCSS(),
                 compileJavascript({ target: 'es2022', sourceMaps: true }),
@@ -62,7 +63,7 @@ export default () => {
             plugins: [
                 resolveExtensions(),
                 loadCommonjsPackage(),
-                replaceValues({ moduleType: 'es-legacy' }),
+                replaceValues({ bundleType: BUNDLE_TYPES.eslegacy }),
                 convertJsonToESM(),
                 compileCSS(),
                 compileJavascript({ target: 'es2017', sourceMaps: true }),
@@ -95,7 +96,7 @@ export default () => {
             plugins: [
                 resolveExtensions(),
                 loadCommonjsPackage(),
-                replaceValues({ moduleType: 'umd' }),
+                replaceValues({ bundleType: BUNDLE_TYPES.umd }),
                 convertJsonToESM(),
                 compileCSS(),
                 compileJavascript({ sourceMaps: true }),
@@ -116,7 +117,7 @@ export default () => {
             plugins: [
                 resolveExtensions(),
                 loadCommonjsPackage(),
-                replaceValues({ moduleType: 'commonjs' }),
+                replaceValues({ bundleType: BUNDLE_TYPES.commonjs }),
                 convertJsonToESM(),
                 compileCSS(),
                 compileJavascript({ target: 'es2017', sourceMaps: true }),

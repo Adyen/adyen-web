@@ -65,6 +65,47 @@ describe('ApplePay', () => {
 
             expect(onPaymentFailedMock).toHaveBeenCalledTimes(1);
         });
+
+        test('should pass an empty error to ApplePay if action.reject is used without errors being passed to it', async () => {
+            const onPaymentFailedMock = jest.fn();
+            const event = mock<ApplePayJS.ApplePayPaymentAuthorizedEvent>({
+                payment: {
+                    token: {
+                        paymentData: 'payment-data'
+                    }
+                }
+            });
+
+            const applepay = new ApplePay(global.core, {
+                amount: { currency: 'EUR', value: 2000 },
+                onPaymentFailed: onPaymentFailedMock,
+                onSubmit(state, component, actions) {
+                    actions.reject();
+                }
+            });
+
+            applepay.submit();
+
+            // Session initialized
+            await new Promise(process.nextTick);
+            expect(jest.spyOn(ApplePayService.prototype, 'begin')).toHaveBeenCalledTimes(1);
+
+            // Trigger ApplePayService onPaymentAuthorized property
+            // @ts-ignore ApplePayService is mocked
+            const onPaymentAuthorized = ApplePayService.mock.calls[0][1].onPaymentAuthorized;
+            const resolveMock = jest.fn();
+            const rejectMock = jest.fn();
+            onPaymentAuthorized(resolveMock, rejectMock, event);
+
+            await new Promise(process.nextTick);
+            expect(rejectMock).toHaveBeenCalledWith({
+                errors: undefined,
+                status: 0
+            });
+
+            expect(onPaymentFailedMock).toHaveBeenCalledTimes(1);
+            expect(onPaymentFailedMock).toHaveBeenCalledWith({ error: { applePayError: undefined } }, applepay);
+        });
     });
     describe('onOrderTrackingRequest()', () => {
         test('should collect order details and pass it to Apple', async () => {

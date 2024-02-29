@@ -35,6 +35,7 @@ export interface AnalyticsOptions {
 }
 
 export type AnalyticsProps = Pick<CoreConfiguration, 'loadingContext' | 'locale' | 'clientKey' | 'analytics' | 'amount'> & {
+    bundleType: string;
     analyticsContext?: string;
 };
 

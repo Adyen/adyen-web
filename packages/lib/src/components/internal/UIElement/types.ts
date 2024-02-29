@@ -28,13 +28,10 @@ export type UIElementProps = BaseElementProps &
     CoreCallbacks & {
         environment?: string;
         session?: Session;
-        onValid?: (state: any, element: UIElement) => void;
 
         onComplete?: (state, element: UIElement) => void;
 
         isInstantPayment?: boolean;
-
-        // brand?: string; // TODO confirm it this is needed
 
         /**
          * Flags if the element is Stored payment method

@@ -11,10 +11,10 @@ import { resolveSupportedVersion, mapBrands, formatApplePayContactToAdyenAddress
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
+import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
 import type { ApplePayConfiguration, ApplePayElementData, ApplePayPaymentOrderDetails, ApplePaySessionRequest } from './types';
 import type { ICore } from '../../core/types';
 import type { PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
-import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
 
 const latestSupportedVersion = 14;
 
@@ -122,7 +122,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
                     .then(paymentResponse => {
                         this.handleResponse(paymentResponse);
                     })
-                    .catch((paymentResponse: RawPaymentResponse) => {
+                    .catch((paymentResponse?: RawPaymentResponse) => {
                         const errors = paymentResponse?.error?.applePayError;
 
                         reject({
@@ -130,7 +130,14 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
                             errors: errors ? (Array.isArray(errors) ? errors : [errors]) : undefined
                         });
 
-                        this.handleFailedResult(paymentResponse);
+                        const responseWithError: RawPaymentResponse = {
+                            ...paymentResponse,
+                            error: {
+                                applePayError: errors
+                            }
+                        };
+
+                        this.handleFailedResult(responseWithError);
                     });
             }
         });

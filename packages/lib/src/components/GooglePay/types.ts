@@ -40,7 +40,7 @@ export interface GooglePayConfiguration extends UIElementProps {
 
     /**
      * @see https://developers.google.com/pay/api/web/reference/request-objects#IsReadyToPayRequest
-     * @defaultValue true
+     * @defaultValue false
      */
     existingPaymentMethodRequired?: boolean;
 

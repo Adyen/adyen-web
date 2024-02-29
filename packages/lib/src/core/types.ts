@@ -144,6 +144,14 @@ export interface CoreConfiguration {
 
     setStatusAutomatically?: boolean;
 
+    /**
+     * Add @adyen/web metadata to the window object.
+     * It helps to identify version number and bundle type in the merchant environment
+     *
+     * @default true
+     */
+    exposeLibraryMetadata?: boolean;
+
     beforeRedirect?(
         resolve: () => void,
         reject: () => void,
@@ -189,7 +197,7 @@ export interface CoreConfiguration {
         element: UIElement,
         actions: {
             resolve: (response: CheckoutAdvancedFlowResponse) => void;
-            reject: () => void;
+            reject: (error?: Pick<CheckoutAdvancedFlowResponse, 'error'>) => void;
         }
     ): void;
 
