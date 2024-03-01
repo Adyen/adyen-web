@@ -98,10 +98,6 @@ class SecuredField extends AbstractSecuredField {
         // Set result back onto config object
         this.sfConfig.iframeUIConfig.ariaConfig = processedAriaConfig;
 
-        // console.log('### SecuredField::init:: processedAriaConfig', processedAriaConfig);
-
-        console.log('### SecuredField::init:: processedAriaConfig', processedAriaConfig);
-
         // Set result back onto config object
         this.sfConfig.iframeUIConfig.placeholders = processPlaceholders(this.sfConfig.txVariant, this.sfConfig.fieldType, placeholders);
 
