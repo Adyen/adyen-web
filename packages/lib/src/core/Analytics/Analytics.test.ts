@@ -175,7 +175,7 @@ describe('Analytics initialisation and event queue', () => {
         expect(aObj.timestamp).not.toBe(undefined);
         expect(aObj.target).toEqual('card_number');
         expect(aObj.type).toEqual(ANALYTICS_VALIDATION_ERROR_STR);
-        expect(aObj.validationErrorCode).toEqual('error.va.sf-cc-num.04');
+        expect(aObj.validationErrorCode).toEqual('901');
         expect(aObj.validationErrorMessage).toEqual('error-msg-incorrectly-filled-pan');
 
         // info event should not be sent immediately
