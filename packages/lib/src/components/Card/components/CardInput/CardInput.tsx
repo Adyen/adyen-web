@@ -429,8 +429,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
             newErrors?.forEach(errorItem => {
                 const aObj: FieldErrorAnalyticsObject = {
                     fieldType: errorItem.field,
-                    errorCode: errorItem.errorCode,
-                    errorMessage: errorItem.errorMessage
+                    errorCode: errorItem.errorCode
                 };
 
                 props.onErrorAnalytics(aObj);
