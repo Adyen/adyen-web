@@ -88,5 +88,4 @@ export type SendAnalyticsObject = Omit<AnalyticsObject, 'timestamp' | 'component
 export type FieldErrorAnalyticsObject = {
     fieldType: string;
     errorCode: string;
-    errorMessage: string;
 };

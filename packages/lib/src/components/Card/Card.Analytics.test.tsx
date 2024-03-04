@@ -26,9 +26,7 @@ describe('Card: calls that generate "info" analytics should produce objects with
             }
         });
 
-        analyticsModule.createAnalyticsEvent = jest.fn(obj => {
-            console.log('### analyticsPreProcessor.test:::: obj=', obj);
-        });
+        analyticsModule.createAnalyticsEvent = jest.fn(() => null);
     });
 
     test('Analytics should produce an "info" event, of type "rendered", for a card PM', () => {
@@ -122,8 +120,7 @@ describe('Card: calls that generate "info" analytics should produce objects with
     test('Analytics should produce an "info" event, of type "validationError", with the expected properties', () => {
         card.onErrorAnalytics({
             fieldType: 'encryptedCardNumber',
-            errorCode: 'error.va.sf-cc-num.04',
-            errorMessage: 'Enter the complete card number-sr'
+            errorCode: 'error.va.sf-cc-num.04'
         });
 
         expect(analyticsModule.createAnalyticsEvent).toHaveBeenCalledWith({
@@ -133,7 +130,7 @@ describe('Card: calls that generate "info" analytics should produce objects with
                 type: ANALYTICS_VALIDATION_ERROR_STR,
                 target: 'card_number',
                 validationErrorCode: 'error.va.sf-cc-num.04',
-                validationErrorMessage: 'Enter the complete card number-sr'
+                validationErrorMessage: 'card-number-not-filled-correctly'
             }
         });
     });
@@ -147,10 +144,6 @@ describe('Card: calls that generate "log" analytics should produce objects with 
             modules: {
                 analytics: analyticsModule
             }
-        });
-
-        analyticsModule.createAnalyticsEvent = jest.fn(obj => {
-            console.log('### analyticsPreProcessor.test:::: obj=', obj);
         });
     });
 

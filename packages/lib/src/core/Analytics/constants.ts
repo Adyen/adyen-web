@@ -50,3 +50,43 @@ export const ANALYTICS_ERROR_CODE_3DS2_TIMEOUT = 'web_705'; // 3DS2 process has 
 
 export const ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_ACSURL = 'web_800'; // Decoded token is missing a valid acsURL property
 export const ANALYTICS_ERROR_CODE_NO_TRANSSTATUS = 'web_801'; // Challenge has resulted in an error (no transStatus could be retrieved by the backend)
+
+export const errorCodeMapping = {
+    ['error.va.sf-cc-num.02']: '900',
+    ['error.va.sf-cc-num.04']: '901',
+    ['error.va.sf-cc-num.01']: '902',
+    ['error.va.sf-cc-num.03']: '903',
+    //
+    ['error.va.sf-cc-dat.04']: '910',
+    ['error.va.sf-cc-dat.05']: '911',
+    ['error.va.sf-cc-dat.01']: '912',
+    ['error.va.sf-cc-dat.02']: '913',
+    ['error.va.sf-cc-dat.03']: '914',
+    ['error.va.sf-cc-mth.01']: '915',
+    ['error.va.sf-cc-yr.01']: '917',
+    ['error.va.sf-cc-yr.02']: '918',
+    //
+    ['error.va.sf-cc-cvc.01']: '920',
+    ['error.va.sf-cc-cvc.02']: '921',
+    //
+    ['creditCard.holderName.invalid']: '925',
+    //
+    ['boleto.socialSecurityNumber.invalid']: '926',
+    //
+    ['error.va.gen.01.country']: '930',
+    ['error.va.gen.01.street']: '931',
+    ['error.va.gen.01.house_number_or_name']: '932',
+    ['error.va.gen.01.postal_code']: '933',
+    ['invalidFormatExpects.postal_code']: '934',
+    ['error.va.gen.01.city']: '935',
+    ['error.va.gen.01.state_or_province']: '936',
+    //
+    ['error.va.sf-kcp-pwd.01']: '940',
+    ['error.va.sf-kcp-pwd.02']: '941',
+    ['creditCard.taxNumber.invalid']: '942',
+    //
+    ['error.va.sf-ach-num.01']: '945',
+    ['error.va.sf-ach-num.02']: '946',
+    ['error.va.sf-ach-loc.01']: '947',
+    ['error.va.sf-ach-loc.02']: '948'
+};

@@ -104,7 +104,8 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
                 event,
                 ...data
             });
-            // console.log('### Analytics::createAnalyticsEvent:: event=', event, ' aObj=', aObj);
+
+            // if (aObj.type === 'validationError') console.log('### Analytics::createAnalyticsEvent:: event=', event, ' aObj=', aObj);
 
             addAnalyticsEvent(event, aObj);
 

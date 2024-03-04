@@ -24,6 +24,8 @@ import {
 import { ALL_SECURED_FIELDS } from '../internal/SecuredFields/lib/configuration/constants';
 import { FieldErrorAnalyticsObject, SendAnalyticsObject } from '../../core/Analytics/types';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
+import { ERROR_CODES } from '../../core/Errors/constants';
+import { getErrorMessageFromCode } from '../../core/Errors/utils';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
@@ -228,7 +230,7 @@ export class CardElement extends UIElement<CardElementProps> {
             type: ANALYTICS_VALIDATION_ERROR_STR,
             target: fieldTypeToSnakeCase(obj.fieldType),
             validationErrorCode: obj.errorCode,
-            validationErrorMessage: obj.errorMessage
+            validationErrorMessage: getErrorMessageFromCode(obj.errorCode, ERROR_CODES)
         });
     };
 
