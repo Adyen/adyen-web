@@ -14,20 +14,12 @@ import { SendAnalyticsObject } from '../../../../core/Analytics/types';
 import { THREEDS2_CHALLENGE, THREEDS2_CHALLENGE_ERROR, THREEDS2_FULL, THREEDS2_NUM, MISSING_TOKEN_IN_ACTION_MSG } from '../../config';
 import { isValidHttpUrl } from '../../../../utils/isValidURL';
 import {
-    ANALYTICS_EVENT_ERROR,
-    ANALYTICS_EVENT_LOG,
     ANALYTICS_API_ERROR,
     ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_TOKEN,
     ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_OTHER_PROPS,
     ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_ACSURL,
     ANALYTICS_ERROR_CODE_TOKEN_DECODE_OR_PARSING_FAILED
-    // ANALYTICS_ERROR_CODE_3DS2_TIMEOUT,
-    // ANALYTICS_ERROR_CODE_NO_TRANSSTATUS,
-    // ANALYTICS_NETWORK_ERROR,
-    // ANALYTICS_INTERNAL_ERROR,
-    // ANALYTICS_EVENT_INFO
 } from '../../../../core/Analytics/constants';
-import { ANALYTICS_EVENT } from '../../../../core/Analytics/types';
 
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
     public static defaultProps = {
@@ -95,7 +87,6 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             if (!hasValidAcsURL) {
                 // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
                 const errorCodeObject = {
-                    // event: ANALYTICS_EVENT_ERROR as ANALYTICS_EVENT,
                     code: ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_ACSURL,
                     errorType: ANALYTICS_API_ERROR,
                     message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing a valid acsURL property`,
@@ -129,7 +120,6 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
                 // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
                 this.props.onSubmitAnalytics({
-                    // event: ANALYTICS_EVENT_ERROR,
                     code: ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_OTHER_PROPS,
                     errorType: ANALYTICS_API_ERROR,
                     message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)`
@@ -149,7 +139,6 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
             // Send error to analytics endpoint // TODO - check logs to see if the base64 decoding errors *ever* happen
             this.props.onSubmitAnalytics({
-                // event: ANALYTICS_EVENT_ERROR,
                 code: errorCode,
                 errorType: ANALYTICS_API_ERROR,
                 message: `${THREEDS2_CHALLENGE_ERROR}: ${errorMsg}` // can be: 'Missing "token" property from threeDS2 action', 'not base64', 'malformed URI sequence' or 'Could not JSON parse token'
@@ -169,9 +158,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             const resolveDataFunction = this.props.useOriginalFlow ? createOldChallengeResolveData : createChallengeResolveData;
             const data = resolveDataFunction(this.props.dataKey, resultObj.transStatus, this.props.paymentData);
 
-            let analyticsObject: SendAnalyticsObject;
-
             // TODO - do we want to know about these events (timeout or no transStatus - which are "valid" 3DS2 scenarios) from an analytics perspective, and, if so, how do we classify them? ...errors? info?
+            // let analyticsObject: SendAnalyticsObject;
             // const finalResObject = errorCodeObject ? errorCodeObject : resultObj;
             // if (finalResObject.errorCode) {
             //     const errorTypeAndCode = {
@@ -193,7 +181,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             // }
 
             // Create log object - the process is completed, one way or another
-            analyticsObject = {
+            const analyticsObject: SendAnalyticsObject = {
                 type: THREEDS2_FULL,
                 message: `${THREEDS2_NUM} challenge has completed`,
                 // TODO - can we use metadata for this purpose?
@@ -214,8 +202,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
      * This can be problematic in the regular flow since merchants tend to treat any calls to their onError handler as 'fatal',
      * In the MDFlow however we control what the onError handler does - so we can use the isMDFlow param, if necessary, to make this decision
      *
-     * @param errorInfoObj
-     * @param isMDFlow
+     * @param errorInfoObj -
+     * @param isMDFlow -
      */
     setStatusError(errorInfoObj, isFatal) {
         this.setState({ status: 'error', errorInfo: errorInfoObj.errorInfo });

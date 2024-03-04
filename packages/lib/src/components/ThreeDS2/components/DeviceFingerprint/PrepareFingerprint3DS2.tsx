@@ -9,8 +9,6 @@ import { isValidHttpUrl } from '../../../../utils/isValidURL';
 import { THREEDS2_FULL, THREEDS2_FINGERPRINT, THREEDS2_FINGERPRINT_ERROR, THREEDS2_NUM, MISSING_TOKEN_IN_ACTION_MSG } from '../../config';
 import { ActionHandledReturnObject } from '../../../types';
 import {
-    ANALYTICS_EVENT_ERROR,
-    ANALYTICS_EVENT_LOG,
     ANALYTICS_API_ERROR,
     ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_TOKEN,
     ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_THREEDSMETHODURL,
@@ -171,7 +169,6 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                 //  - decoded token is missing one or more of the following properties (threeDSMethodNotificationURL | postMessageDomain | threeDSServerTransID)
                 //  - or, token could not be base64 decoded &/or JSON.parsed
                 analyticsObject = {
-                    // event: ANALYTICS_EVENT_ERROR,
                     message: finalResObject.message,
                     metadata: { errorCodeObject, resultObject: resultObj }, // pass along both the full error object as well as the result object that came from the backend
                     ...errorTypeAndCode
