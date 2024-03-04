@@ -64,8 +64,8 @@ import { TxVariants } from './tx-variants';
  * Maps each tx variant to a Component element.
  *
  * WARNING: This mapping must be imported carefully as it breaks the tree-shaking. It is now used in:
- * - The utility function 'createComponents' for UMD bundle (UMD bundle does not have tree-shaking, so this use-case is fine)
- * - Generating Drop-in Typescript types (Typescript types does not break tree-shaking)
+ * - The utility function 'createComponent' for UMD bundle (UMD bundle does not have tree-shaking, so this use-case is fine)
+ * - Generating Drop-in Typescript types (Typescript types do not break tree-shaking)
  */
 export const ComponentsMap = {
     /** internal */
