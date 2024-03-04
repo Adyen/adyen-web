@@ -53,6 +53,12 @@ export interface DropinConfiguration extends UIElementProps {
     showStoredPaymentMethods?: boolean;
 
     /**
+     * Disable the final animation when the payment is successful or if it fails.
+     * @defaultValue false
+     */
+    disableFinalAnimation?: boolean;
+
+    /**
      * Show/Hide regular (non-stored) payment methods
      * @defaultValue true
      */
@@ -126,6 +132,13 @@ export interface DropinComponentState {
 }
 
 export interface IDropin {
+    /**
+     * Used to make the Dropin display the final animation
+     *
+     * @internal
+     * @param type - animation type
+     */
+    displayFinalAnimation(type: 'success' | 'error'): void;
     activePaymentMethod: () => null;
     closeActivePaymentMethod: () => void;
 }

@@ -59,10 +59,10 @@ export function verifyPaymentDidNotFail(response: PaymentResponseData): Promise<
     return Promise.resolve(response);
 }
 
-export function assertIsDropin(dropin: IDropin) {
-    if (!dropin) return false;
+export function assertIsDropin(element: any): element is IDropin {
+    if (!element) return false;
 
-    const isDropin = typeof dropin.activePaymentMethod === 'object' && typeof dropin.closeActivePaymentMethod === 'function';
+    const isDropin = typeof element.activePaymentMethod === 'object' && typeof element.closeActivePaymentMethod === 'function';
     return isDropin;
 }
 

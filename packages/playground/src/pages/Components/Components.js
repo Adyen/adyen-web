@@ -19,7 +19,7 @@ import '@adyen/adyen-web/styles/adyen.css';
 import '../../../config/polyfills';
 import '../../style.scss';
 import { getPaymentMethods } from '../../services';
-import { handleSubmit, handleAdditionalDetails, handleChange } from '../../handlers';
+import { handleSubmit, handleAdditionalDetails, handleChange, handleOnPaymentFailed, handleOnPaymentCompleted } from '../../handlers';
 import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
 import getTranslationFile from '../../config/getTranslation';
 
@@ -35,12 +35,8 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         onChange: handleChange,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
-        onPaymentCompleted(result, element) {
-            console.log('onPaymentCompleted', result, element);
-        },
-        onPaymentFailed(result, element) {
-            console.log('onPaymentFailed', result, element);
-        },
+        onPaymentCompleted: handleOnPaymentCompleted,
+        onPaymentFailed: handleOnPaymentFailed,
         onError: (error, component) => {
             console.info(error, component);
         },

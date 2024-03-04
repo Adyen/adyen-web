@@ -142,8 +142,6 @@ export interface CoreConfiguration {
 
     order?: Order;
 
-    setStatusAutomatically?: boolean;
-
     /**
      * Add @adyen/web metadata to the window object.
      * It helps to identify version number and bundle type in the merchant environment

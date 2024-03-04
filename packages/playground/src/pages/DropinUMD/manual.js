@@ -3,6 +3,7 @@ import { getPaymentMethods, makePayment, checkBalance, createOrder, cancelOrder,
 import { amount, shopperLocale, countryCode, returnUrl } from '../../config/commonConfig';
 import { getSearchParameters } from '../../utils';
 import getTranslationFile from '../../config/getTranslation';
+import { handleOnPaymentCompleted, handleOnPaymentFailed } from '../../handlers';
 
 export async function initManual() {
     const paymentMethodsResponse = await getPaymentMethods({ amount, shopperLocale });
@@ -51,12 +52,9 @@ export async function initManual() {
                 actions.reject();
             }
         },
-        onPaymentCompleted(data, component) {
-            component.setStatus('success');
-        },
-        onPaymentFailed(data, component) {
-            component.setStatus('error');
-        },
+        onPaymentCompleted: handleOnPaymentCompleted,
+        onPaymentFailed: handleOnPaymentFailed,
+
         onBalanceCheck: async (resolve, reject, data) => {
             resolve(await checkBalance(data));
         },

@@ -20,16 +20,16 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         environment: process.env.__CLIENT_ENV__,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
-        onError(error) {
-            console.log(error);
-        },
-        onPaymentCompleted(result, element) {
+        onPaymentCompleted: (result, element) => {
             console.log('onPaymentCompleted', result, element);
         },
-        onPaymentFailed(result, element) {
+        onPaymentFailed: (result, element) => {
+            alert(`onPaymentFailed - ${result.resultCode}`);
             console.log('onPaymentFailed', result, element);
         },
-        showPayButton: true
+        onError(error) {
+            console.log(error);
+        }
     });
 
     // Cash App Pay
@@ -145,9 +145,6 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         onAuthorized(data, actions) {
             console.log('onAuthorized', data, actions);
             actions.resolve();
-        },
-        onError: (error, component) => {
-            console.log('paypal onError', error);
         }
     }).mount('.paypal-field');
 

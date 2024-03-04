@@ -9,6 +9,16 @@ export function handleChange(state, component) {
     console.groupEnd();
 }
 
+export function handleOnPaymentCompleted(result, element) {
+    alert(`onPaymentCompleted - ${result.resultCode}`);
+    console.log('onPaymentCompleted', result, element);
+}
+
+export function handleOnPaymentFailed(result, element) {
+    alert(`onPaymentFailed - ${result.resultCode}`);
+    console.log('onPaymentFailed', result, element);
+}
+
 export function handleError(obj) {
     // SecuredField related errors should not go straight to console.error
     if (obj.type === 'card') {
@@ -19,8 +29,6 @@ export function handleError(obj) {
 }
 
 export async function handleSubmit(state, component, actions) {
-    component.setStatus('loading');
-
     try {
         const { action, order, resultCode, donationToken } = await makePayment(state.data);
 
