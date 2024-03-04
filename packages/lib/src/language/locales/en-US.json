@@ -78,6 +78,8 @@
     "houseNumberOrName": "House number",
     "separateDeliveryAddress": "Specify a separate delivery address",
     "deliveryAddress": "Delivery Address",
+    "deliveryAddress.firstName": "Recipient first name",
+    "deliveryAddress.lastName": "Recipient last name",
     "zipCode": "Zip code",
     "apartmentSuite": "Apartment / Suite",
     "provinceOrTerritory": "Province or Territory",

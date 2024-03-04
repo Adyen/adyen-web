@@ -6,7 +6,7 @@ import defaultProps from './defaultProps';
 import defaultStyles from './defaultStyles';
 import './CardInput.scss';
 import { AddressModeOptions, CardInputDataState, CardInputErrorState, CardInputProps, CardInputRef, CardInputValidState } from './types';
-import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED } from '../../../internal/SecuredFields/lib/configuration/constants';
+import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER } from '../../../internal/SecuredFields/lib/configuration/constants';
 import { BinLookupResponse } from '../../types';
 import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } from './validate';
 import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';
@@ -201,19 +201,17 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         }
 
         /**
-         * If PAN has just become valid: decide if we can shift focus to the next field.
+         * Decide if we can shift focus to the expiryDate field.
          *
-         * We can if the config prop, autoFocus, is true AND we have a panLength value from binLookup AND one of the following scenarios is true:
-         *  - If encryptedCardNumber was invalid but now is valid
-         *      [scenario: shopper has typed in a number and field is now valid]
-         *  - If encryptedCardNumber was valid and still is valid and we're handling an onBrand event (triggered by binLookup which has happened after the handleOnFieldValid event)
-         *     [scenario: shopper has pasted in a full, valid, number]
+         * We can if... the config prop, autoFocus, is true AND we have a panLength value from binLookup
+         * AND we are responding to a handleOnFieldValid message about the PAN that says it is valid
          */
         if (
             props.autoFocus &&
             hasPanLengthRef.current > 0 &&
-            ((!valid.encryptedCardNumber && sfState.valid?.encryptedCardNumber) ||
-                (valid.encryptedCardNumber && sfState.valid.encryptedCardNumber && eventDetails.event === 'handleOnBrand'))
+            eventDetails?.event === 'handleOnFieldValid' &&
+            eventDetails?.fieldType === ENCRYPTED_CARD_NUMBER &&
+            sfState.valid.encryptedCardNumber
         ) {
             doPanAutoJump();
         }
@@ -429,8 +427,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
             newErrors?.forEach(errorItem => {
                 const aObj: FieldErrorAnalyticsObject = {
                     fieldType: errorItem.field,
-                    errorCode: errorItem.errorCode,
-                    errorMessage: errorItem.errorMessage
+                    errorCode: errorItem.errorCode
                 };
 
                 props.onErrorAnalytics(aObj);

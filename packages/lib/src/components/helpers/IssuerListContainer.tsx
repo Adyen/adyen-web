@@ -119,6 +119,7 @@ class IssuerListContainer extends UIElement<IssuerListContainerProps> {
                             onChange={this.setState}
                             onSubmit={this.submit}
                             payButton={this.payButton}
+                            onSubmitAnalytics={this.submitAnalytics}
                         />
                     </SRPanelProvider>
                 ) : (

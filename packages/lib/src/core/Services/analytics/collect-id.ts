@@ -67,8 +67,7 @@ const collectId = ({ analyticsContext, clientKey, locale, analyticsPath }: Colle
                 return undefined;
             })
             .catch(() => {
-                console.debug(FAILURE_MSG);
-                return FAILURE_MSG;
+                return Promise.reject(FAILURE_MSG);
             });
 
         return promise;

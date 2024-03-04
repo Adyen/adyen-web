@@ -3,6 +3,7 @@ import { AnalyticsObject, EventQueueProps } from './types';
 
 interface CAActions {
     channel: 'Web';
+    platform: 'Web';
     info: AnalyticsObject[];
     errors: AnalyticsObject[];
     logs: AnalyticsObject[];
@@ -17,6 +18,7 @@ export interface EventsQueueModule {
 const EventsQueue = ({ analyticsContext, clientKey, analyticsPath }: EventQueueProps): EventsQueueModule => {
     const caActions: CAActions = {
         channel: 'Web',
+        platform: 'Web',
         info: [],
         errors: [],
         logs: []

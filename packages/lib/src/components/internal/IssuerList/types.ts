@@ -1,5 +1,6 @@
 import { PayButtonProps } from '../PayButton/PayButton';
 import { ComponentChildren } from 'preact';
+import { SendAnalyticsObject } from '../../../core/Analytics/types';
 
 export interface IssuerListProps {
     items: IssuerItem[];
@@ -10,6 +11,7 @@ export interface IssuerListProps {
     placeholder?: string;
     issuer?: string;
     termsAndConditions?: TermsAndConditions;
+    onSubmitAnalytics: (aObj: SendAnalyticsObject) => void;
 }
 
 export interface IssuerItem {

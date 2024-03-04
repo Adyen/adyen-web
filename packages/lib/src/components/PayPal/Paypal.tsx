@@ -13,7 +13,9 @@ import { createShopperDetails } from './utils/create-shopper-details';
 class PaypalElement extends UIElement<PayPalElementProps> {
     public static type = 'paypal';
     public static subtype = 'sdk';
-    private paymentData = null;
+
+    public paymentData: string = null;
+
     private resolve = null;
     private reject = null;
 
@@ -22,17 +24,21 @@ class PaypalElement extends UIElement<PayPalElementProps> {
     constructor(props) {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleOnShippingAddressChange = this.handleOnShippingAddressChange.bind(this);
+        this.handleOnShippingOptionsChange = this.handleOnShippingOptionsChange.bind(this);
     }
 
     formatProps(props: PayPalElementProps): PayPalElementProps {
         const { merchantId, intent: intentFromConfig } = props.configuration;
         const isZeroAuth = props.amount?.value === 0;
-
         const intent: Intent = isZeroAuth ? 'tokenize' : props.intent || intentFromConfig;
         const vault = intent === 'tokenize' || props.vault;
 
+        const displayContinueToReviewPageButton = props.userAction === 'continue';
+
         return {
             ...props,
+            commit: displayContinueToReviewPageButton ? false : props.commit,
             vault,
             configuration: {
                 intent,
@@ -46,14 +52,24 @@ class PaypalElement extends UIElement<PayPalElementProps> {
     };
 
     /**
+     * Updates the paymentData value. It must be used in the PayPal Express flow, when patching the amount
+     * @param paymentData - Payment data value
+     */
+    public updatePaymentData(paymentData: string): void {
+        if (!paymentData) console.warn('PayPal - Updating payment data with an invalid value');
+        this.paymentData = paymentData;
+    }
+
+    /**
      * Formats the component data output
      */
     protected formatData() {
-        const { isExpress } = this.props;
+        const { isExpress, userAction } = this.props;
 
         return {
             paymentMethod: {
                 type: PaypalElement.type,
+                userAction,
                 subtype: isExpress ? 'express' : PaypalElement.subtype
             }
         };
@@ -131,8 +147,34 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         });
     }
 
+    /**
+     * If the merchant provides the 'onShippingAddressChange' callback, then this method is used as a wrapper to it, in order
+     * to expose to the merchant the 'component' instance. The merchant needs the 'component' in order to manipulate the
+     * paymentData
+     *
+     * @param data - PayPal data
+     * @param actions - PayPal actions.
+     */
+    private handleOnShippingAddressChange(data, actions): Promise<void> {
+        return this.props.onShippingAddressChange(data, actions, this);
+    }
+
+    /**
+     * If the merchant provides the 'onShippingOptionsChange' callback, then this method is used as a wrapper to it, in order
+     * to expose to the merchant the 'component' instance. The merchant needs the 'component' in order to manipulate the
+     * paymentData
+     *
+     * @param data - PayPal data
+     * @param actions - PayPal actions.
+     */
+    private handleOnShippingOptionsChange(data, actions): Promise<void> {
+        return this.props.onShippingOptionsChange(data, actions, this);
+    }
+
     render() {
         if (!this.props.showPayButton) return null;
+
+        const { onShippingAddressChange, onShippingOptionsChange, ...rest } = this.props;
 
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
@@ -140,7 +182,9 @@ class PaypalElement extends UIElement<PayPalElementProps> {
                     ref={ref => {
                         this.componentRef = ref;
                     }}
-                    {...this.props}
+                    {...rest}
+                    {...(onShippingAddressChange && { onShippingAddressChange: this.handleOnShippingAddressChange })}
+                    {...(onShippingOptionsChange && { onShippingOptionsChange: this.handleOnShippingOptionsChange })}
                     onCancel={this.handleCancel}
                     onChange={this.setState}
                     onApprove={this.handleOnApprove}

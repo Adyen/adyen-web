@@ -3,6 +3,7 @@ import Specifications from './Specifications';
 import { ValidatorRules } from '../../../utils/Validator/types';
 import { ValidationRuleResult } from '../../../utils/Validator/ValidationRuleResult';
 import { OnAddressLookupType, OnAddressSelectedType } from './components/AddressSearch';
+import { SelectTargetObject } from '../FormFields/Select/types';
 
 // Describes an object with unknown keys whose value is always a string
 export type StringObject = {
@@ -56,7 +57,7 @@ export interface FieldContainerProps {
     valid?: object;
     onInput?: (e: Event) => void;
     onBlur?: (e: Event) => void;
-    onDropdownChange: (e: { target: { value: string | number; name: string } }) => void;
+    onDropdownChange: (e: { target: SelectTargetObject }) => void;
     readOnly?: boolean;
     specifications: Specifications;
     maxLength?: number;
@@ -76,7 +77,7 @@ export interface CountryFieldProps {
     classNameModifiers: string[];
     label: string;
     errorMessage: boolean | string;
-    onDropdownChange: (e: { target: { value: string | number; name: string } }) => void;
+    onDropdownChange: (e: { target: SelectTargetObject }) => void;
     readOnly?: boolean;
     value: string;
 }
@@ -90,7 +91,7 @@ export interface StateFieldProps {
     classNameModifiers: string[];
     label: string;
     errorMessage: boolean | string;
-    onDropdownChange: (e: { target: { value: string | number; name: string } }) => void;
+    onDropdownChange: (e: { target: SelectTargetObject }) => void;
     readOnly?: boolean;
     selectedCountry: string;
     specifications: Specifications;

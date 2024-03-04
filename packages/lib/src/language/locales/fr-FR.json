@@ -78,6 +78,8 @@
     "houseNumberOrName": "Numéro de rue",
     "separateDeliveryAddress": "Indiquer une adresse de livraison distincte",
     "deliveryAddress": "Adresse de livraison",
+    "deliveryAddress.firstName": "Prénom du destinataire",
+    "deliveryAddress.lastName": "Nom du destinataire",
     "zipCode": "Code postal",
     "apartmentSuite": "Appartement",
     "provinceOrTerritory": "Province ou territoire",
