@@ -78,6 +78,8 @@
     "houseNumberOrName": "Číslo domu",
     "separateDeliveryAddress": "Zadajte samostatnú dodaciu adresu",
     "deliveryAddress": "Dodacia adresa",
+    "deliveryAddress.firstName": "Krstné meno príjemcu",
+    "deliveryAddress.lastName": "Priezvisko príjemcu",
     "zipCode": "PSČ",
     "apartmentSuite": "Byt/apartmán",
     "provinceOrTerritory": "Okres alebo územie",

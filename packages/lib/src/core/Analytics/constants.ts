@@ -2,6 +2,8 @@ export const ANALYTICS_PATH = 'v3/analytics';
 
 export const ANALYTICS_INFO_TIMER_INTERVAL = process.env.NODE_ENV === 'development' ? 5000 : 10000;
 
+export const ANALYTICS_SEARCH_DEBOUNCE_TIME = 3000;
+
 export const ANALYTICS_EVENT_LOG = 'log';
 export const ANALYTICS_EVENT_ERROR = 'error';
 export const ANALYTICS_EVENT_INFO = 'info';
@@ -10,12 +12,24 @@ export const ANALYTICS_ACTION_STR = 'action';
 export const ANALYTICS_SUBMIT_STR = 'submit';
 export const ANALYTICS_SELECTED_STR = 'selected';
 export const ANALYTICS_RENDERED_STR = 'rendered';
+export const ANALYTICS_DISPLAYED_STR = 'displayed';
+export const ANALYTICS_INPUT_STR = 'input';
+
+export const ANALYTICS_DOWNLOAD_STR = 'download';
+
 export const ANALYTICS_VALIDATION_ERROR_STR = 'validationError';
 
 export const ANALYTICS_FOCUS_STR = 'focus';
 export const ANALYTICS_UNFOCUS_STR = 'unfocus';
 
 export const ANALYTICS_CONFIGURED_STR = 'configured';
+
+export const ANALYTICS_QR_CODE_DOWNLOAD = 'qr_download_button';
+
+export const ANALYTICS_INSTANT_PAYMENT_BUTTON = 'instant_payment_button';
+export const ANALYTICS_FEATURED_ISSUER = 'featured_issuer';
+export const ANALYTICS_LIST = 'list';
+export const ANALYTICS_LIST_SEARCH = 'list_search';
 
 export const ANALYTICS_IMPLEMENTATION_ERROR = 'ImplementationError';
 export const ANALYTICS_API_ERROR = 'ApiError';
@@ -42,3 +56,43 @@ export const ANALYTICS_ERROR_CODE_NO_TRANSSTATUS = 'web_801'; // Challenge has r
 export const ANALYTICS_ERROR_CODE_NO_DETAILS_FOR_FRICTIONLESS = 'web_802'; // callSubmit3DS2Fingerprint has received a response indicating a "frictionless" flow but without a details object
 export const ANALYTICS_ERROR_CODE_NO_COMPONENT_FOR_ACTION = 'web_803'; // callSubmit3DS2Fingerprint cannot find a component to handle the action response
 export const ANALYTICS_ERROR_CODE_NO_ACTION_FOR_CHALLENGE = 'web_804'; // callSubmit3DS2Fingerprint has received a response indicating a "challenge" but without an action object
+
+export const errorCodeMapping = {
+    ['error.va.sf-cc-num.02']: '900',
+    ['error.va.sf-cc-num.04']: '901',
+    ['error.va.sf-cc-num.01']: '902',
+    ['error.va.sf-cc-num.03']: '903',
+    //
+    ['error.va.sf-cc-dat.04']: '910',
+    ['error.va.sf-cc-dat.05']: '911',
+    ['error.va.sf-cc-dat.01']: '912',
+    ['error.va.sf-cc-dat.02']: '913',
+    ['error.va.sf-cc-dat.03']: '914',
+    ['error.va.sf-cc-mth.01']: '915',
+    ['error.va.sf-cc-yr.01']: '917',
+    ['error.va.sf-cc-yr.02']: '918',
+    //
+    ['error.va.sf-cc-cvc.01']: '920',
+    ['error.va.sf-cc-cvc.02']: '921',
+    //
+    ['creditCard.holderName.invalid']: '925',
+    //
+    ['boleto.socialSecurityNumber.invalid']: '926',
+    //
+    ['error.va.gen.01.country']: '930',
+    ['error.va.gen.01.street']: '931',
+    ['error.va.gen.01.house_number_or_name']: '932',
+    ['error.va.gen.01.postal_code']: '933',
+    ['invalidFormatExpects.postal_code']: '934',
+    ['error.va.gen.01.city']: '935',
+    ['error.va.gen.01.state_or_province']: '936',
+    //
+    ['error.va.sf-kcp-pwd.01']: '940',
+    ['error.va.sf-kcp-pwd.02']: '941',
+    ['creditCard.taxNumber.invalid']: '942',
+    //
+    ['error.va.sf-ach-num.01']: '945',
+    ['error.va.sf-ach-num.02']: '946',
+    ['error.va.sf-ach-loc.01']: '947',
+    ['error.va.sf-ach-loc.02']: '948'
+};

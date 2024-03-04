@@ -1,5 +1,5 @@
 import { Fragment, h } from 'preact';
-import useCoreContext from '../../../../core/Context/useCoreContext';
+import useCoreContext from '../../../core/Context/useCoreContext';
 
 interface ConsentCheckboxLabelProps {
     url: string;

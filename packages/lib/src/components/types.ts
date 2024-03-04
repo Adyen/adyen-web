@@ -8,7 +8,7 @@ import { PayButtonProps } from './internal/PayButton/PayButton';
 import Session from '../core/CheckoutSession';
 import { SRPanel } from '../core/Errors/SRPanel';
 import { Resources } from '../core/Context/Resources';
-import { AnalyticsInitialEvent, CreateAnalyticsEventObject, SendAnalyticsObject } from '../core/Analytics/types';
+import { AnalyticsInitialEvent, AnalyticsObject, CreateAnalyticsEventObject, SendAnalyticsObject } from '../core/Analytics/types';
 import { EventsQueueModule } from '../core/Analytics/EventsQueue';
 import { CbObjOnFocus } from './internal/SecuredFields/lib/types';
 
@@ -82,7 +82,7 @@ export interface AnalyticsModule {
     setUp: (a: AnalyticsInitialEvent) => Promise<any>;
     getCheckoutAttemptId: () => string;
     getEventsQueue: () => EventsQueueModule;
-    createAnalyticsEvent: (a: CreateAnalyticsEventObject) => void;
+    createAnalyticsEvent: (a: CreateAnalyticsEventObject) => AnalyticsObject;
     getEnabled: () => boolean;
     sendAnalytics: (component: string, analyticsObj: SendAnalyticsObject) => void;
 }

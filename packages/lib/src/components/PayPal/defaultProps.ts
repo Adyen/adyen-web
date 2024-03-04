@@ -5,6 +5,8 @@ const defaultProps: PayPalElementProps = {
     status: 'loading',
     showPayButton: true,
 
+    userAction: 'pay',
+
     // Config
     /**
      * @see {@link https://developer.paypal.com/docs/checkout/reference/customize-sdk/#merchant-id}
@@ -66,8 +68,7 @@ const defaultProps: PayPalElementProps = {
     onInit: () => {},
     onClick: () => {},
     onCancel: () => {},
-    onError: () => {},
-    onShippingChange: () => {}
+    onError: () => {}
 };
 
 export default defaultProps;

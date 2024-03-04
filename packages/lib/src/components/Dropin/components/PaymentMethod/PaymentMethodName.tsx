@@ -13,14 +13,16 @@ const PaymentMethodName = ({ displayName, additionalInfo, isSelected }) => (
             {displayName}
         </span>
 
-        <span
-            className={classNames({
-                'adyen-checkout__payment-method__additional-info': true,
-                'adyen-checkout__payment-method__additional-info--selected': isSelected
-            })}
-        >
-            {additionalInfo}
-        </span>
+        {additionalInfo && (
+            <span
+                className={classNames({
+                    'adyen-checkout__payment-method__additional-info': true,
+                    'adyen-checkout__payment-method__additional-info--selected': isSelected
+                })}
+            >
+                {additionalInfo}
+            </span>
+        )}
     </span>
 );
 

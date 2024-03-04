@@ -78,6 +78,8 @@
     "houseNumberOrName": "Huisnummer",
     "separateDeliveryAddress": "Een afwijkend bezorgadres opgeven",
     "deliveryAddress": "Bezorgadres",
+    "deliveryAddress.firstName": "Voornaam ontvanger",
+    "deliveryAddress.lastName": "Achternaam ontvanger",
     "zipCode": "Postcode",
     "apartmentSuite": "Appartement/Suite",
     "provinceOrTerritory": "Provincie of territorium",

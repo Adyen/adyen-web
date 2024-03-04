@@ -24,6 +24,8 @@ import {
 import { ALL_SECURED_FIELDS } from '../internal/SecuredFields/lib/configuration/constants';
 import { FieldErrorAnalyticsObject, SendAnalyticsObject } from '../../core/Analytics/types';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
+import { ERROR_CODES } from '../../core/Errors/constants';
+import { getErrorMessageFromCode } from '../../core/Errors/utils';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
@@ -115,7 +117,6 @@ export class CardElement extends UIElement<CardElementProps> {
          *  the shopper makes a brand selection
          */
         const cardBrand = this.state.selectedBrandValue || this.props.brand;
-        const includeStorePaymentMethod = this.props.enableStoreDetails && typeof this.state.storePaymentMethod !== 'undefined';
 
         return {
             paymentMethod: {
@@ -127,7 +128,7 @@ export class CardElement extends UIElement<CardElementProps> {
             },
             ...(this.state.billingAddress && { billingAddress: this.state.billingAddress }),
             ...(this.state.socialSecurityNumber && { socialSecurityNumber: this.state.socialSecurityNumber }),
-            ...(includeStorePaymentMethod && { storePaymentMethod: Boolean(this.state.storePaymentMethod) }),
+            ...this.storePaymentMethodPayload,
             ...(hasValidInstallmentsObject(this.state.installments) && { installments: this.state.installments }),
             browserInfo: this.browserInfo,
             origin: !!window && window.location.origin
@@ -229,11 +230,26 @@ export class CardElement extends UIElement<CardElementProps> {
             type: ANALYTICS_VALIDATION_ERROR_STR,
             target: fieldTypeToSnakeCase(obj.fieldType),
             validationErrorCode: obj.errorCode,
-            validationErrorMessage: obj.errorMessage
+            validationErrorMessage: getErrorMessageFromCode(obj.errorCode, ERROR_CODES)
         });
     };
 
     public onBinValue = triggerBinLookUp(this);
+
+    get storePaymentMethodPayload() {
+        const isStoredCard = this.props.storedPaymentMethodId?.length > 0;
+        if (isStoredCard) {
+            return {};
+        }
+        // For regular card, zero auth payments, we always store the payment method.
+        const isZeroAuth = this.props.amount?.value === 0;
+        if (isZeroAuth) {
+            return { storePaymentMethod: true };
+        }
+        // For regular card, non-zero auth payments, we store the payment method based on the checkbox value.
+        const includeStorePaymentMethod = this.props.enableStoreDetails && typeof this.state.storePaymentMethod !== 'undefined';
+        return includeStorePaymentMethod ? { storePaymentMethod: Boolean(this.state.storePaymentMethod) } : {};
+    }
 
     get isValid() {
         return !!this.state.isValid;
