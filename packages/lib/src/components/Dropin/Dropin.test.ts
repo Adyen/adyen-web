@@ -24,6 +24,33 @@ describe('Dropin', () => {
         });
     });
 
+    describe('Configuration "disableFinalAnimation"', () => {
+        test('should not set the Dropin status if disableFinalAnimation is set to true', () => {
+            const dropin = new Dropin(checkout, { disableFinalAnimation: true });
+            const setStatusMock = jest.fn();
+            dropin.dropinRef = {
+                setStatus: setStatusMock
+            };
+            dropin.displayFinalAnimation('success');
+
+            expect(dropin.props.disableFinalAnimation).toBeTruthy();
+            expect(setStatusMock).toHaveBeenCalledTimes(0);
+        });
+
+        test('should set the Dropin final status if configuration is not provided', () => {
+            const dropin = new Dropin(checkout);
+            const setStatusMock = jest.fn();
+            dropin.dropinRef = {
+                setStatus: setStatusMock
+            };
+            dropin.displayFinalAnimation('success');
+
+            expect(dropin.props.disableFinalAnimation).toBeFalsy();
+            expect(setStatusMock).toHaveBeenCalledWith('success');
+            expect(setStatusMock).toHaveBeenCalledTimes(1);
+        });
+    });
+
     describe('isValid', () => {
         test('should fail if no activePaymentMethod', () => {
             const dropin = new Dropin(checkout);

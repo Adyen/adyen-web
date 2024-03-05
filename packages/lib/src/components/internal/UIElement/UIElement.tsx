@@ -5,7 +5,9 @@ import { assertIsDropin, cleanupFinalResult, getRegulatoryDefaults, sanitizeResp
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { hasOwnProperty } from '../../../utils/hasOwnProperty';
 import { Resources } from '../../../core/Context/Resources';
+import { ANALYTICS_SUBMIT_STR } from '../../../core/Analytics/constants';
 
+import type { AnalyticsInitialEvent, SendAnalyticsObject } from '../../../core/Analytics/types';
 import type { CoreConfiguration, ICore } from '../../../core/types';
 import type { NewableComponent } from '../../../core/core.registry';
 import type { ComponentMethodsRef, IUIElement, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
@@ -20,9 +22,7 @@ import type {
     PaymentResponseData,
     RawPaymentResponse
 } from '../../../types/global-types';
-import { ANALYTICS_SUBMIT_STR } from '../../../core/Analytics/constants';
-import { AnalyticsInitialEvent, SendAnalyticsObject } from '../../../core/Analytics/types';
-import { IDropin } from '../../Dropin/types';
+import type { IDropin } from '../../Dropin/types';
 
 import './UIElement.scss';
 
@@ -76,7 +76,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         const finalProps = {
             showPayButton: true,
-            setStatusAutomatically: true,
             ...globalCoreProps,
             ...paymentMethodsResponseProps,
             ...componentProps
@@ -178,9 +177,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     protected makePaymentsCall(): Promise<CheckoutAdvancedFlowResponse | CheckoutSessionPaymentResponse> {
-        if (this.props.setStatusAutomatically) {
-            this.setElementStatus('loading');
-        }
+        this.setElementStatus('loading');
 
         if (this.props.onSubmit) {
             return this.submitUsingAdvancedFlow();
@@ -270,9 +267,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     private makeAdditionalDetailsCall(state: AdditionalDetailsStateData): Promise<CheckoutSessionDetailsResponse | CheckoutAdvancedFlowResponse> {
-        if (this.props.setStatusAutomatically) {
-            this.setElementStatus('loading');
-        }
+        this.setElementStatus('loading');
 
         if (this.props.onAdditionalDetails) {
             return new Promise<CheckoutAdvancedFlowResponse>((resolve, reject) => {
@@ -346,8 +341,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * @param result
      */
     protected handleFailedResult = (result?: PaymentResponseData): void => {
-        if (this.props.setStatusAutomatically) {
-            this.setElementStatus('error');
+        if (assertIsDropin(this.elementRef)) {
+            this.elementRef.displayFinalAnimation('error');
         }
 
         cleanupFinalResult(result);
@@ -355,8 +350,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     };
 
     protected handleSuccessResult = (result: PaymentResponseData): void => {
-        if (this.props.setStatusAutomatically) {
-            this.setElementStatus('success');
+        if (assertIsDropin(this.elementRef)) {
+            this.elementRef.displayFinalAnimation('success');
         }
 
         cleanupFinalResult(result);

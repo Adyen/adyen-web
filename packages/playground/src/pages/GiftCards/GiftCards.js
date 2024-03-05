@@ -1,6 +1,6 @@
 import { AdyenCheckout, Giftcard, MealVoucherFR, Card, fr_FR } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
-import { handleChange, handleSubmit } from '../../handlers';
+import { handleChange, handleOnPaymentCompleted, handleOnPaymentFailed, handleSubmit } from '../../handlers';
 import { amount, shopperLocale, countryCode, returnUrl, shopperReference } from '../../config/commonConfig';
 import { checkBalance, createOrder, createSession } from '../../services';
 import '../../../config/polyfills';
@@ -17,12 +17,8 @@ import getTranslationFile from '../../config/getTranslation';
         environment: process.env.__CLIENT_ENV__,
         onChange: handleChange,
         onSubmit: handleSubmit,
-        onPaymentCompleted(result, element) {
-            console.log('onPaymentCompleted', result, element);
-        },
-        onPaymentFailed(result, element) {
-            console.log('onPaymentFailed', result, element);
-        },
+        onPaymentCompleted: handleOnPaymentCompleted,
+        onPaymentFailed: handleOnPaymentFailed,
         showPayButton: true,
         amount
     });

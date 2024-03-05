@@ -3,14 +3,15 @@ import UIElement from '../internal/UIElement/UIElement';
 import defaultProps from './defaultProps';
 import DropinComponent from '../../components/Dropin/components/DropinComponent';
 import CoreProvider from '../../core/Context/CoreProvider';
-import { PaymentAction, PaymentResponseData } from '../../types/global-types';
-import { DropinConfiguration, InstantPaymentTypes, PaymentMethodsConfiguration } from './types';
 import { getCommonProps } from './components/utils';
 import { createElements, createStoredElements } from './elements';
 import createInstantPaymentElements from './elements/createInstantPaymentElements';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import splitPaymentMethods from './elements/splitPaymentMethods';
+
+import type { DropinConfiguration, InstantPaymentTypes, PaymentMethodsConfiguration } from './types';
+import type { PaymentAction, PaymentResponseData } from '../../types/global-types';
 import type { ICore } from '../../core/types';
 import type { IDropin } from './types';
 
@@ -81,6 +82,12 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         }
 
         return this.dropinRef.state.activePaymentMethod.data;
+    }
+
+    public displayFinalAnimation(type: 'success' | 'error') {
+        if (this.props.disableFinalAnimation) return;
+
+        this.dropinRef.setStatus(type);
     }
 
     /**

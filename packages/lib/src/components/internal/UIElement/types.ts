@@ -70,12 +70,6 @@ export type UIElementProps = BaseElementProps &
          */
         showPayButton?: boolean;
 
-        /**
-         *  Set to false to not set the Component status to 'loading' when onSubmit is triggered.
-         *  @defaultValue true
-         */
-        setStatusAutomatically?: boolean;
-
         /** @internal */
         payButton?: (options: PayButtonFunctionProps) => h.JSX.Element;
 

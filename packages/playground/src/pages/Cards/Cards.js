@@ -2,7 +2,7 @@ import { AdyenCheckout, Card, Bancontact, nl_NL } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 
 import { getPaymentMethods } from '../../services';
-import { handleSubmit, handleAdditionalDetails, handleError } from '../../handlers';
+import { handleSubmit, handleAdditionalDetails, handleError, handleOnPaymentFailed, handleOnPaymentCompleted } from '../../handlers';
 import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
@@ -49,12 +49,8 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         risk: {
             enabled: false
         },
-        onPaymentCompleted(result, element) {
-            console.log('onPaymentCompleted', result, element);
-        },
-        onPaymentFailed(result, element) {
-            console.log('onPaymentFailed', result, element);
-        }
+        onPaymentCompleted: handleOnPaymentCompleted,
+        onPaymentFailed: handleOnPaymentFailed
     });
 
     // Stored Card

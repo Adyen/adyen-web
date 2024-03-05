@@ -2,6 +2,7 @@ import '@adyen/adyen-web/styles/adyen.css';
 import { createSession } from '../../services';
 import { amount, shopperLocale, shopperReference, countryCode, returnUrl } from '../../config/commonConfig';
 import getTranslationFile from '../../config/getTranslation';
+import { handleOnPaymentCompleted, handleOnPaymentFailed } from '../../handlers';
 
 export async function initSession() {
     const session = await createSession({
@@ -24,14 +25,11 @@ export async function initSession() {
         locale: shopperLocale,
         translationFile: getTranslationFile(shopperLocale),
 
+        onPaymentCompleted: handleOnPaymentCompleted,
+        onPaymentFailed: handleOnPaymentFailed,
+
         beforeSubmit: (data, component, actions) => {
             actions.resolve(data);
-        },
-        onPaymentCompleted: (result, component) => {
-            console.info('onPaymentCompleted', result, component);
-        },
-        onPaymentFailed: (result, component) => {
-            console.info('onPaymentFailed', result, component);
         },
         onError: (error, component) => {
             console.info(JSON.stringify(error), component);

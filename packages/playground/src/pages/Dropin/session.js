@@ -3,6 +3,7 @@ import '@adyen/adyen-web/styles/adyen.css';
 import { createSession } from '../../services';
 import { amount, shopperLocale, shopperReference, countryCode, returnUrl } from '../../config/commonConfig';
 import getTranslationFile from '../../config/getTranslation';
+import { handleOnPaymentCompleted, handleOnPaymentFailed } from '../../handlers';
 
 export async function initSession() {
     const session = await createSession({
@@ -27,18 +28,14 @@ export async function initSession() {
         beforeSubmit: (data, component, actions) => {
             actions.resolve(data);
         },
-        onPaymentCompleted: (result, component) => {
-            console.info('onPaymentCompleted', result, component);
-        },
-        onPaymentFailed(result, element) {
-            console.log('onPaymentFailed', result, element);
-        },
         onError: (error, component) => {
             console.error('error', JSON.stringify(error.name), JSON.stringify(error.message), component);
         },
         onChange: (state, component) => {
             console.log('onChange', state);
-        }
+        },
+        onPaymentCompleted: handleOnPaymentCompleted,
+        onPaymentFailed: handleOnPaymentFailed
     });
 
     const dropin = new Dropin(checkout, {
