@@ -54,7 +54,7 @@ export const CardFieldsWrapper = ({
     billingAddressAllowedCountries,
     billingAddressValidationRules = null,
     brandsConfiguration,
-    enableStoreDetails,
+    showStoreDetailsCheckbox,
     hasCVC,
     hasHolderName,
     holderNameRequired,
@@ -137,7 +137,7 @@ export const CardFieldsWrapper = ({
                 </div>
             )}
 
-            {enableStoreDetails && <StoreDetails onChange={handleOnStoreDetails} />}
+            {showStoreDetailsCheckbox && <StoreDetails onChange={handleOnStoreDetails} />}
 
             {hasInstallments && (
                 <Installments

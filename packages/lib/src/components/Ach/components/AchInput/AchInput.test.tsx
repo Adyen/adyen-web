@@ -33,7 +33,7 @@ describe('AchInput', () => {
     });
 
     test('should render StoreDetails when enabled', async () => {
-        withCoreProvider(<AchInput enableStoreDetails resources={new Resources()} />);
+        withCoreProvider(<AchInput enableStoreDetails={true} resources={new Resources()} />);
         expect(await screen.findByText(/save for my next payment/i)).toBeTruthy();
     });
 

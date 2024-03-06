@@ -17,9 +17,10 @@ describe('Card', () => {
             expect(card.props.countryCode).toEqual('kr');
         });
 
-        test('should return false for enableStoreDetails in case of zero-auto transaction', () => {
+        test('should return false for showStoreDetailsCheckbox in case of zero-auto transaction, whilst preserving the original value of enableStoreDetails', () => {
             const card = new CardElement({ amount: { value: 0 }, enableStoreDetails: true });
-            expect(card.props.enableStoreDetails).toEqual(false);
+            expect(card.props.enableStoreDetails).toEqual(true);
+            expect(card.props.showStoreDetailsCheckbox).toEqual(false);
         });
     });
 
@@ -67,19 +68,37 @@ describe('Card', () => {
 
         test('should return storePaymentMethod if enableStoreDetails is enabled', () => {
             const card = new CardElement({ enableStoreDetails: true });
+            expect(card.props.showStoreDetailsCheckbox).toEqual(true);
             card.setState({ storePaymentMethod: true });
             expect(card.data.storePaymentMethod).toBe(true);
         });
 
         test('should not return storePaymentMethod if enableStoreDetails is disabled', () => {
             const card = new CardElement({ enableStoreDetails: false });
+            expect(card.props.showStoreDetailsCheckbox).toEqual(false);
             card.setState({ storePaymentMethod: true });
             expect(card.data.storePaymentMethod).not.toBeDefined();
         });
 
-        test('should always return storePaymentMethod for regular card, zero auth payments', () => {
+        test('should only return storePaymentMethod:true for regular card, zero auth payments, *if* the conditions are right', () => {
+            // Manual flow
             expect(new CardElement({ amount: { value: 0 }, enableStoreDetails: true }).data.storePaymentMethod).toBe(true);
-            expect(new CardElement({ amount: { value: 0 }, enableStoreDetails: false }).data.storePaymentMethod).toBe(true);
+            expect(new CardElement({ amount: { value: 0 }, enableStoreDetails: false }).data.storePaymentMethod).toBe(undefined);
+
+            // Session flow - session configuration should override merchant configuration
+            let cardElement = new CardElement({
+                amount: { value: 0 },
+                enableStoreDetails: false,
+                session: { configuration: { enableStoreDetails: true } }
+            });
+            expect(cardElement.data.storePaymentMethod).toBe(true);
+
+            cardElement = new CardElement({
+                amount: { value: 0 },
+                enableStoreDetails: true,
+                session: { configuration: { enableStoreDetails: false } }
+            });
+            expect(cardElement.data.storePaymentMethod).toBe(undefined);
         });
 
         test('should return storePaymentMethod based on the checkbox value, for regular card, non-zero auth payments', () => {
