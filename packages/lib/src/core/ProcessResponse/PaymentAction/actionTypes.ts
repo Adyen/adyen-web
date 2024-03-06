@@ -50,6 +50,22 @@ const actionTypes = {
         });
     },
 
+    delegatedAuthentication: (action: PaymentAction, props) => {
+        return getComponent('delegatedAuthentication', {
+            ...props,
+            token: action.token,
+            paymentData: action.paymentData,
+            onComplete: props.onAdditionalDetails,
+            onError: props.onError,
+            isDropin: !!props.isDropin,
+            type: 'AuthenticateShopper',
+            statusType: 'custom',
+            loadingContext: props.loadingContext,
+            clientKey: props.clientKey,
+            challengeWindowSize: props.challengeWindowSize
+        });
+    },
+
     threeDS2: (action: PaymentAction, props) => {
         const componentType = action.subtype === 'fingerprint' ? 'threeDS2DeviceFingerprint' : 'threeDS2Challenge';
         const paymentData = action.subtype === 'fingerprint' ? action.paymentData : action.authorisationToken;
