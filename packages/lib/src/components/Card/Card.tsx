@@ -56,8 +56,11 @@ export class CardElement extends UIElement<CardElementProps> {
     };
 
     formatProps(props: CardElementProps) {
+        // The value from a session should be used, before falling back to the merchant configuration
+        const enableStoreDetails = props.session?.configuration?.enableStoreDetails ?? props.enableStoreDetails;
+
         const isZeroAuth = props.amount?.value === 0;
-        const enableStoreDetails = isZeroAuth ? false : props.session?.configuration?.enableStoreDetails || props.enableStoreDetails;
+        const showStoreDetailsCheckbox = isZeroAuth ? false : enableStoreDetails;
 
         return {
             ...props,
@@ -81,6 +84,7 @@ export class CardElement extends UIElement<CardElementProps> {
             // installmentOptions of a session should be used before falling back to the merchant configuration
             installmentOptions: props.session?.configuration?.installmentOptions || props.installmentOptions,
             enableStoreDetails,
+            showStoreDetailsCheckbox,
             /**
              * Click to Pay configuration
              * - If email is set explicitly in the configuration, then it can override the one used in the session creation
@@ -168,13 +172,23 @@ export class CardElement extends UIElement<CardElementProps> {
         if (isStoredCard) {
             return {};
         }
-        // For regular card, zero auth payments, we always store the payment method.
+
+        /**
+         * For regular card, zero auth payments, we store the payment method, *if* the configuration says we should:
+         *  - For sessions, this means if the session has been created with storePaymentMethodMode: 'askForConsent'
+         *  - For the advanced flow, this means if the merchant has still set enableStoreDetails: true
+         *
+         * What we are doing is.. if for a normal payment we would show the "Save for my next payment" checkbox,
+         * for a zero-auth payment we effectively click the checkbox on behalf of the shopper.
+         */
         const isZeroAuth = this.props.amount?.value === 0;
         if (isZeroAuth) {
-            return { storePaymentMethod: true };
+            return this.props.enableStoreDetails ? { storePaymentMethod: true } : {};
         }
+
         // For regular card, non-zero auth payments, we store the payment method based on the checkbox value.
-        const includeStorePaymentMethod = this.props.enableStoreDetails && typeof this.state.storePaymentMethod !== 'undefined';
+        // const includeStorePaymentMethod = this.props.enableStoreDetails && typeof this.state.storePaymentMethod !== 'undefined';
+        const includeStorePaymentMethod = this.props.showStoreDetailsCheckbox && typeof this.state.storePaymentMethod !== 'undefined';
         return includeStorePaymentMethod ? { storePaymentMethod: Boolean(this.state.storePaymentMethod) } : {};
     }
 
