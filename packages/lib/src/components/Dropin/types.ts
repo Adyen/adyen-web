@@ -111,24 +111,16 @@ export interface DropinComponentProps extends DropinConfiguration {
     onOrderCancel?: (data: onOrderCancelData) => void;
 }
 
-interface DropinStatus {
-    type: UIElementStatus;
-    props?: DropinStatusProps;
-}
-
-export interface DropinStatusProps {
-    component?: UIElement;
-}
-
 export interface DropinComponentState {
     elements: any[];
     instantPaymentElements: UIElement[];
     storedPaymentElements: UIElement[];
-    status: DropinStatus;
+    status: UIElementStatus;
     activePaymentMethod: UIElement;
     cachedPaymentMethods: object;
     isDisabling: boolean;
     orderStatus: OrderStatus;
+    actionComponent: UIElement | null;
 }
 
 export interface IDropin {

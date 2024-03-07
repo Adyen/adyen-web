@@ -1,10 +1,24 @@
 import { h, Fragment } from 'preact';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { useState } from 'preact/hooks';
+import { PaymentAmount } from '../../../types/global-types';
+import { PayButtonFunctionProps } from '../UIElement/types';
 
-function RedirectButton({ label = null, icon = null, payButton, onSubmit, amount = null, name, ...props }) {
+type RedirectButtonState = 'ready' | 'loading' | 'redirecting';
+
+type RedirectButtonProps = {
+    label: string;
+    icon: string;
+    name: string;
+    isRedirecting: boolean;
+    amount: PaymentAmount;
+    payButton(props: PayButtonFunctionProps): h.JSX.Element;
+    onSubmit(): void;
+};
+
+function RedirectButton({ label = null, icon = null, payButton, onSubmit, amount = null, name, ...props }: RedirectButtonProps) {
     const { i18n } = useCoreContext();
-    const [status, setStatus] = useState('ready');
+    const [status, setStatus] = useState<RedirectButtonState>('ready');
 
     this.setStatus = newStatus => {
         setStatus(newStatus);

@@ -55,12 +55,12 @@ export class CardElement extends UIElement<CardConfiguration> {
         _disableClickToPay: false
     };
 
-    public setStatus(status: UIElementStatus, props?): this {
+    public setStatus(status: UIElementStatus): this {
         if (this.componentRef?.setStatus) {
-            this.componentRef.setStatus(status, props);
+            this.componentRef.setStatus(status);
         }
         if (this.clickToPayRef?.setStatus) {
-            this.clickToPayRef.setStatus(status, props);
+            this.clickToPayRef.setStatus(status);
         }
         return this;
     }
@@ -342,7 +342,7 @@ export class CardElement extends UIElement<CardConfiguration> {
                         clickToPayService={this.clickToPayService}
                         isStandaloneComponent={false}
                         setClickToPayRef={this.setClickToPayRef}
-                        onSetStatus={this.setElementStatus}
+                        onSetStatus={this.setStatus}
                         onSubmit={this.handleClickToPaySubmit}
                         onError={this.handleError}
                     >

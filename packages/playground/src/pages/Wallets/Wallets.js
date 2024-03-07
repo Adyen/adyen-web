@@ -21,6 +21,8 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
         onPaymentCompleted: (result, element) => {
+            alert(`onPaymentCompleted - ${result.resultCode}`);
+            element.setStatus('ready');
             console.log('onPaymentCompleted', result, element);
         },
         onPaymentFailed: (result, element) => {

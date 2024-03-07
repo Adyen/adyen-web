@@ -20,8 +20,6 @@ const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay'];
 class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
     protected static defaultProps = defaultProps;
 
-    public dropinRef = null;
-
     private paymentMethodsConfiguration: PaymentMethodsConfiguration;
     /**
      * Reference to the component created from `handleAction` (Ex.: ThreeDS2Challenge)
@@ -52,28 +50,23 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
     }
 
     get isValid() {
-        return !!this.dropinRef && !!this.dropinRef.state.activePaymentMethod && !!this.dropinRef.state.activePaymentMethod.isValid;
+        return !!this.componentRef && !!this.componentRef.state.activePaymentMethod && !!this.componentRef.state.activePaymentMethod.isValid;
     }
 
     showValidation() {
-        if (this.dropinRef.state.activePaymentMethod) {
-            this.dropinRef.state.activePaymentMethod.showValidation();
+        if (this.componentRef.state.activePaymentMethod) {
+            this.componentRef.state.activePaymentMethod.showValidation();
         }
 
-        return this;
-    }
-
-    public setStatus(status, props = {}): this {
-        this.dropinRef?.setStatus(status, props);
         return this;
     }
 
     get activePaymentMethod() {
-        if (!this.dropinRef?.state && !this.dropinRef?.state.activePaymentMethod) {
+        if (!this.componentRef?.state && !this.componentRef?.state.activePaymentMethod) {
             return null;
         }
 
-        return this.dropinRef.state.activePaymentMethod;
+        return this.componentRef.state.activePaymentMethod;
     }
 
     get data() {
@@ -81,13 +74,13 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
             return null;
         }
 
-        return this.dropinRef.state.activePaymentMethod.data;
+        return this.componentRef.state.activePaymentMethod.data;
     }
 
     public displayFinalAnimation(type: 'success' | 'error') {
         if (this.props.disableFinalAnimation) return;
 
-        this.dropinRef.setStatus(type);
+        this.componentRef.setStatus(type);
     }
 
     /**
@@ -161,7 +154,7 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         });
 
         if (paymentAction) {
-            this.setStatus(paymentAction.props.statusType, { component: paymentAction });
+            this.componentRef.setActionComponent(paymentAction);
             this.componentFromAction = paymentAction;
             return this;
         }
@@ -174,11 +167,11 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
      * @param response - PaymentResponse
      */
     protected handleOrder = ({ order }: PaymentResponseData): void => {
-        this.updateParent({ order });
+        this.core.update({ order });
     };
 
     closeActivePaymentMethod() {
-        this.dropinRef.closeActivePaymentMethod();
+        this.componentRef.closeActivePaymentMethod();
     }
 
     render() {
@@ -191,9 +184,7 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
                         onChange={this.setState}
                         elementRef={this.elementRef}
                         onCreateElements={this.handleCreate}
-                        ref={dropinRef => {
-                            this.dropinRef = dropinRef;
-                        }}
+                        ref={this.setComponentRef}
                     />
                 </SRPanelProvider>
             </CoreProvider>

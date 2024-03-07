@@ -2,10 +2,11 @@ import { Component, h } from 'preact';
 import PaymentMethodList from './PaymentMethod/PaymentMethodList';
 import Status from './status';
 import getOrderStatus from '../../../core/Services/order-status';
-import { DropinComponentProps, DropinComponentState, DropinStatusProps, onOrderCancelData } from '../types';
-import './DropinComponent.scss';
-import { UIElementStatus } from '../../internal/UIElement/types';
+import { DropinComponentProps, DropinComponentState, onOrderCancelData } from '../types';
 import { ANALYTICS_RENDERED_STR } from '../../../core/Analytics/constants';
+import './DropinComponent.scss';
+import UIElement from '../../internal/UIElement';
+import type { UIElementStatus } from '../../internal/UIElement/types';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
@@ -14,9 +15,10 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         storedPaymentElements: [],
         orderStatus: null,
         isDisabling: false,
-        status: { type: 'loading', props: undefined },
+        status: 'loading',
         activePaymentMethod: null,
-        cachedPaymentMethods: {}
+        cachedPaymentMethods: {},
+        actionComponent: null
     };
 
     componentDidMount() {
@@ -30,8 +32,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
 
         Promise.all([storedElementsPromises, elementsPromises, instantPaymentsPromises, orderStatusPromise]).then(
             ([storedPaymentElements, elements, instantPaymentElements, orderStatus]) => {
-                this.setState({ instantPaymentElements, elements, storedPaymentElements, orderStatus });
-                this.setStatus('ready');
+                this.setState({ instantPaymentElements, elements, storedPaymentElements, orderStatus, status: 'ready' });
 
                 this.props.modules?.analytics.sendAnalytics('dropin', { type: ANALYTICS_RENDERED_STR });
             }
@@ -40,9 +41,14 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         this.onOrderCancel = this.getOnOrderCancel();
     };
 
-    public setStatus = (status: UIElementStatus, props: DropinStatusProps = {}) => {
-        this.setState({ status: { type: status, props } });
-    };
+    public setStatus(status: UIElementStatus) {
+        this.setState({ status });
+    }
+
+    public setActionComponent(component: UIElement) {
+        const isRedirect = component.props.actionType === 'redirect';
+        this.setState({ actionComponent: component, ...(isRedirect && { status: 'redirect' }) });
+    }
 
     private setActivePaymentMethod = paymentMethod => {
         this.setState(prevState => ({
@@ -52,11 +58,11 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
     };
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.status.type !== this.state.status.type && this.state.activePaymentMethod) {
-            this.state.activePaymentMethod.setStatus(this.state.status.type);
+        if (prevState.status !== this.state.status && this.state.activePaymentMethod) {
+            this.state.activePaymentMethod.componentRef.setStatus(this.state.status);
         }
 
-        if (this.state.status.type === 'ready' && prevState.status.type !== 'ready' && this.props.onReady) {
+        if (this.state.status === 'ready' && prevState.status !== 'ready' && this.props.onReady) {
             this.props.onReady();
         }
     }
@@ -105,56 +111,56 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                 this.props.session
                     .cancelOrder(data)
                     .then(() => this.props.core.update({ order: null }))
-                    .catch(error => this.setStatus(error?.message || 'error'));
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    .catch(error => this.setState({ status: 'error' }));
         }
         return null;
     };
 
     private onOrderCancel: (data: onOrderCancelData) => void;
 
-    render(props, { elements, instantPaymentElements, storedPaymentElements, status, activePaymentMethod, cachedPaymentMethods }) {
-        const isLoading = status.type === 'loading';
-        const isRedirecting = status.type === 'redirect';
+    render(props, { elements, instantPaymentElements, storedPaymentElements, status, activePaymentMethod, cachedPaymentMethods, actionComponent }) {
+        if (status === 'success') {
+            return <Status.Success message={props?.amount?.value === 0 ? 'resultMessages.preauthorized' : status.props?.message} />;
+        }
+
+        if (status === 'error') {
+            return <Status.Error message={status.props?.message} />;
+        }
+
+        if (actionComponent?.props.actionType === 'custom') {
+            return actionComponent.render();
+        }
+
+        const isLoading = status === 'redirect' || status === 'loading';
         const hasPaymentMethodsToBeDisplayed = elements?.length || instantPaymentElements?.length || storedPaymentElements?.length;
 
-        switch (status.type) {
-            case 'success':
-                return <Status.Success message={props?.amount?.value === 0 ? 'resultMessages.preauthorized' : status.props?.message} />;
+        return (
+            <div className={`adyen-checkout__dropin adyen-checkout__dropin--${status.type}`}>
+                {['redirect', 'fingerprint'].includes(actionComponent?.props.actionType) && actionComponent.render()}
 
-            case 'error':
-                return <Status.Error message={status.props?.message} />;
-
-            case 'custom':
-                return status.props?.component?.render();
-
-            default:
-                return (
-                    <div className={`adyen-checkout__dropin adyen-checkout__dropin--${status.type}`}>
-                        {isRedirecting && status.props.component && status.props.component.render()}
-                        {isLoading && status.props && status.props.component && status.props.component.render()}
-                        {hasPaymentMethodsToBeDisplayed && (
-                            <PaymentMethodList
-                                isLoading={isLoading || isRedirecting}
-                                isDisablingPaymentMethod={this.state.isDisabling}
-                                paymentMethods={elements}
-                                instantPaymentMethods={instantPaymentElements}
-                                storedPaymentMethods={storedPaymentElements}
-                                activePaymentMethod={activePaymentMethod}
-                                cachedPaymentMethods={cachedPaymentMethods}
-                                order={this.props.order}
-                                orderStatus={this.state.orderStatus}
-                                onOrderCancel={this.onOrderCancel}
-                                onSelect={this.handleOnSelectPaymentMethod}
-                                openFirstPaymentMethod={this.props.openFirstPaymentMethod}
-                                openFirstStoredPaymentMethod={this.props.openFirstStoredPaymentMethod}
-                                onDisableStoredPaymentMethod={this.handleDisableStoredPaymentMethod}
-                                showRemovePaymentMethodButton={this.props.showRemovePaymentMethodButton}
-                                showRadioButton={this.props.showRadioButton}
-                            />
-                        )}
-                    </div>
-                );
-        }
+                {hasPaymentMethodsToBeDisplayed && (
+                    <PaymentMethodList
+                        isLoading={isLoading}
+                        isDisablingPaymentMethod={this.state.isDisabling}
+                        paymentMethods={elements}
+                        instantPaymentMethods={instantPaymentElements}
+                        storedPaymentMethods={storedPaymentElements}
+                        activePaymentMethod={activePaymentMethod}
+                        cachedPaymentMethods={cachedPaymentMethods}
+                        order={this.props.order}
+                        orderStatus={this.state.orderStatus}
+                        onOrderCancel={this.onOrderCancel}
+                        onSelect={this.handleOnSelectPaymentMethod}
+                        openFirstPaymentMethod={this.props.openFirstPaymentMethod}
+                        openFirstStoredPaymentMethod={this.props.openFirstStoredPaymentMethod}
+                        onDisableStoredPaymentMethod={this.handleDisableStoredPaymentMethod}
+                        showRemovePaymentMethodButton={this.props.showRemovePaymentMethodButton}
+                        showRadioButton={this.props.showRadioButton}
+                    />
+                )}
+            </div>
+        );
     }
 }
 
