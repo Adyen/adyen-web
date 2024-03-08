@@ -52,6 +52,8 @@ export interface AnalyticsObject {
     validationErrorCode?: string;
     validationErrorMessage?: string;
     issuer?: string;
+    isExpress?: boolean;
+    expressPage?: string;
 }
 
 export type ANALYTICS_EVENT = 'log' | 'error' | 'info';

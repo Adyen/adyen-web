@@ -7,12 +7,26 @@ import { GooglePayProps } from './types';
 import { mapBrands, getGooglePayLocale } from './utils';
 import collectBrowserInfo from '../../utils/browserInfo';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
-import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
+import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_RENDERED_STR, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
+import { SendAnalyticsObject } from '../../core/Analytics/types';
 
 class GooglePay extends UIElement<GooglePayProps> {
     public static type = 'paywithgoogle';
     public static defaultProps = defaultProps;
     protected googlePay = new GooglePayService(this.props);
+
+    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
+        let extraAnalyticsObject = {};
+        if (analyticsObj.type === ANALYTICS_RENDERED_STR) {
+            const isExpress = this.props['isExpress'] ?? null;
+            const expressPage = this.props['expressPage'] ?? null;
+            extraAnalyticsObject = {
+                ...(isExpress && { isExpress }),
+                ...(expressPage && { expressPage })
+            };
+        }
+        super.submitAnalytics({ ...analyticsObj, ...extraAnalyticsObject });
+    }
 
     /**
      * Formats the component data input

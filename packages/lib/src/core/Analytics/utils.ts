@@ -35,6 +35,7 @@ export const createAnalyticsObject = (aObj: CreateAnalyticsObject): AnalyticsObj
     /** INFO */
     ...(aObj.event === 'info' && { type: aObj.type, target: aObj.target }), // info event
     ...(aObj.event === 'info' && aObj.issuer && { issuer: aObj.issuer }), // relates to issuerLists
+    ...(aObj.event === 'info' && { isExpress: aObj.isExpress, expressPage: aObj.expressPage }), // relates to Plugins & detecting Express PMs
     ...(aObj.event === 'info' && aObj.isStoredPaymentMethod && { isStoredPaymentMethod: aObj.isStoredPaymentMethod, brand: aObj.brand }), // only added if we have an info event about a storedPM
     ...(aObj.event === 'info' &&
         aObj.type === ANALYTICS_VALIDATION_ERROR_STR && {
