@@ -22,7 +22,6 @@ export const preparePaymentRequest = (paymentRequest): ApplePayJS.ApplePayPaymen
         shippingMethods: props.shippingMethods,
         shippingType: props.shippingType,
 
-        // @ts-ignore 'recurringPaymentRequest' isn't defined in the @types/applepayjs
         recurringPaymentRequest: props.recurringPaymentRequest,
 
         merchantCapabilities: props.merchantCapabilities,
