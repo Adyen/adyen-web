@@ -38,8 +38,8 @@ jobs:
         MERCHANT_ACCOUNT: ${{secrets.ADYEN_CHECKOUT_MERCHANT_ACCOUNT}}
         CLIENT_KEY: ${{secrets.ADYEN_CHECKOUT_CLIENT_KEY}}
         CLIENT_ENV: test
-        TESTING_ENVIRONMENT: https://checkout-test.adyen.com/checkout/v70
-        API_VERSION: v70
+        TESTING_ENVIRONMENT: https://checkout-test.adyen.com/checkout/v71
+        API_VERSION: v71
     - name: Archive test result artifacts
       if: always()
       uses: actions/upload-artifact@v3
