@@ -1,14 +1,16 @@
 import { DisclaimerMsgObject } from '../../internal/DisclaimerMessage/DisclaimerMessage';
 
-interface DonationAmounts {
+export interface DonationAmounts {
     currency: string;
     values: Array<number>;
 }
+
 interface DonationAmount {
     currency: string;
     value: number;
 }
-interface DonationPayload {
+
+export interface DonationPayload {
     data: { amount: DonationAmount };
     isValid?: boolean;
 }

@@ -171,7 +171,7 @@ type PaymentMethodsConfigurationMap = {
 };
 
 type PaymentActionTypesMap = {
-    [key in PaymentActionsType]?: Partial<UIElementProps>;
+    [key in PaymentActionsType]?: Partial<UIElementProps> & { challengeWindowSize?: string };
 };
 
 /**
