@@ -6,6 +6,7 @@ import { FingerPrintData, ResultObject } from '../../types';
 import { ActionHandledReturnObject } from '../../../types';
 import { THREEDS2_FULL, THREEDS2_NUM } from '../../config';
 import { SendAnalyticsObject } from '../../../../core/Analytics/types';
+import { ErrorObject } from '../../../../core/Errors/types';
 
 class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State> {
     public static type = 'scheme';
@@ -24,7 +25,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
         const { token, notificationURL } = this.props; // See comments on prepareFingerPrintData regarding notificationURL
 
         if (token) {
-            const fingerPrintData: FingerPrintData = prepareFingerPrintData({ token, notificationURL });
+            const fingerPrintData: FingerPrintData | ErrorObject = prepareFingerPrintData({ token, notificationURL });
 
             this.state = {
                 status: 'init',
@@ -56,7 +57,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
 
     componentDidMount() {
         // If no fingerPrintData or no threeDSMethodURL - don't render component. Instead exit with threeDSCompInd: 'U'
-        if (!this.state.fingerPrintData || !this.state.fingerPrintData.threeDSMethodURL) {
+        if (!this.state.fingerPrintData || !(this.state.fingerPrintData as FingerPrintData).threeDSMethodURL) {
             this.setStatusComplete({ threeDSCompInd: 'U' });
             console.debug('### PrepareFingerprint3DS2::exiting:: no fingerPrintData or no threeDSMethodURL');
             return;

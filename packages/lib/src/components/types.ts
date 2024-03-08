@@ -114,7 +114,7 @@ export interface IUIElement {
 }
 
 export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';
-export type ActionDescriptionType = 'qr-code-loaded' | 'polling-started' | 'fingerprint-iframe-loaded' | 'challenge-iframe-loaded';
+export type ActionDescriptionType = 'qr-code-loaded' | 'polling-started' | string;
 
 export type PayButtonFunctionProps = Omit<PayButtonProps, 'amount'>;
 
@@ -189,6 +189,12 @@ export interface ComponentMethodsRef {
     showValidation?: () => void;
     setStatus?(status: UIElementStatus): void;
 }
+
+export type DecodeObject = {
+    success: boolean;
+    error?: string;
+    data?: string;
+};
 
 export type ComponentFocusObject = {
     fieldType: string;
