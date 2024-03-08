@@ -102,14 +102,7 @@ export interface ApplePayElementProps extends UIElementProps {
      * ApplePayRecurringPaymentRequest - Represents a request to set up a recurring payment, typically a subscription.
      * {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepayrecurringpaymentrequest}
      */
-    recurringPaymentRequest?: {
-        paymentDescription: string;
-        regularBilling: ApplePayJS.ApplePayLineItem;
-        trialBilling?: ApplePayJS.ApplePayLineItem;
-        billingAgreement?: string;
-        managementURL: string;
-        tokenNotificationURL?: string;
-    };
+    recurringPaymentRequest?: ApplePayJS.ApplePayRecurringPaymentRequest;
 
     // Requested Billing and Shipping Contact Information
 

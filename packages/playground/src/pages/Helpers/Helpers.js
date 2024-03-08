@@ -40,16 +40,38 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 linkText: 'terms and conditions',
                 link: 'https://www.adyen.com'
             },
-            backgroundUrl:
-                'https://www.patagonia.com/static/on/demandware.static/-/Library-Sites-PatagoniaShared/default/dwb396273f/content-banners/100-planet-hero-desktop.jpg',
+            backgroundUrl: '/banner.png',
             description: 'Lorem ipsum...',
-            logoUrl: 'https://i.ebayimg.com/images/g/aTwAAOSwfu9dfX4u/s-l300.jpg',
+            logoUrl: '/logo.png',
             name: 'Test Charity',
             onCancel(data) {
                 console.log(data);
             }
         })
         .mount('.donation-field');
+
+    // Adyen New Giving
+    window.new_donation = checkout
+        .create('donation', {
+            onDonate: (state, component) => {
+                console.log({ state, component });
+                setTimeout(() => component.setStatus('ready'), 1000);
+            },
+            amounts: {
+                currency: 'EUR',
+                values: [50, 199, 300]
+            },
+            termsAndConditionsUrl: 'https://www.adyen.com',
+            bannerUrl: '/banner.png',
+            logoUrl: '/logo.png',
+            nonprofitDescription: 'Lorem ipsum...',
+            nonprofitName: 'Test Charity',
+            nonprofitUrl: 'https://example.org',
+            onCancel(data) {
+                console.log(data);
+            }
+        })
+        .mount('.new-donation-field');
 
     // Personal details
     window.personalDetails = checkout

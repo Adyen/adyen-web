@@ -124,7 +124,7 @@
     "dependencies": {
         "@babel/runtime": "^7.15.4",
         "@babel/runtime-corejs3": "^7.20.1",
-        "@types/applepayjs": "^3.0.4",
+        "@types/applepayjs": "14.0.6",
         "@types/googlepay": "^0.7.0",
         "classnames": "^2.3.1",
         "core-js-pure": "^3.25.3",
