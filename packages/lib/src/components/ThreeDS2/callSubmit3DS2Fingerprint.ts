@@ -5,7 +5,7 @@ import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { THREEDS2_ERROR, THREEDS2_FINGERPRINT_SUBMIT } from './config';
 import {
     ANALYTICS_API_ERROR,
-    ANALYTICS_ERROR_CODE_NO_DETAILS_FOR_FRICTIONLESS,
+    ANALYTICS_ERROR_CODE_NO_DETAILS_FOR_FRICTIONLESS_OR_REFUSED,
     ANALYTICS_ERROR_CODE_NO_ACTION_FOR_CHALLENGE,
     ANALYTICS_SDK_ERROR,
     ANALYTICS_ERROR_CODE_NO_COMPONENT_FOR_ACTION
@@ -38,15 +38,15 @@ export default function callSubmit3DS2Fingerprint({ data }): void {
 
                 if (!resData.details) {
                     console.debug(
-                        'Handled Error::callSubmit3DS2Fingerprint::FAILED:: no details object in a response indicating a "frictionless" flow". resData=',
+                        'Handled Error::callSubmit3DS2Fingerprint::FAILED:: no details object in a response indicating either a "frictionless" flow, or a "refused" response. resData=',
                         resData
                     );
 
                     analyticsErrorObject = {
                         type: THREEDS2_ERROR,
-                        code: ANALYTICS_ERROR_CODE_NO_DETAILS_FOR_FRICTIONLESS,
+                        code: ANALYTICS_ERROR_CODE_NO_DETAILS_FOR_FRICTIONLESS_OR_REFUSED,
                         errorType: ANALYTICS_API_ERROR,
-                        message: `${THREEDS2_FINGERPRINT_SUBMIT}: no details object in a response indicating a "frictionless" flow`
+                        message: `${THREEDS2_FINGERPRINT_SUBMIT}: no details object in a response indicating either a "frictionless" flow, or a "refused" response`
                     };
 
                     this.submitAnalytics(analyticsErrorObject);
