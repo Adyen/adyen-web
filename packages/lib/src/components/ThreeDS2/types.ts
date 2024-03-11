@@ -1,5 +1,3 @@
-import { ANALYTICS_EVENT, AnalyticsObject } from '../../core/Analytics/types';
-
 /**
  * See
  * https://docs.adyen.com/checkout/3d-secure/api-reference#threeds2result
@@ -80,8 +78,4 @@ type CheckoutThreeDS2Action = {
     token: string;
     subtype: string;
     authorisationToken: string;
-};
-
-export type ThreeDS2AnalyticsObject = Pick<AnalyticsObject, 'code' | 'errorType' | 'message' | 'type' | 'metadata'> & {
-    event: ANALYTICS_EVENT;
 };
