@@ -8,6 +8,7 @@ import { UIElementStatus } from '../../internal/UIElement/types';
 import { sanitizeOrder } from '../../internal/UIElement/utils';
 import { PaymentAmount } from '../../../types/global-types';
 import { ANALYTICS_RENDERED_STR } from '../../../core/Analytics/constants';
+import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
@@ -105,8 +106,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                 })
                     .then(({ amount }) => this.props.elementRef.handleAdvanceFlowPaymentMethodsUpdate(null, amount))
                     .catch(error => {
-                        console.error(error);
-                        this.setStatus(error?.message || 'error');
+                        throw new AdyenCheckoutError('NETWORK_ERROR', error);
                     });
             };
         }

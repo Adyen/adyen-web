@@ -101,17 +101,19 @@ export interface onOrderCancelData {
     };
 }
 
+export type onOrderCancelType = (
+    data: onOrderCancelData,
+    actions: {
+        resolve: (data: { amount: PaymentAmount }) => void;
+        reject: () => void;
+    }
+) => void;
+
 export interface DropinComponentProps extends DropinConfiguration {
     core: ICore;
     onCreateElements: any;
     onChange: (newState?: object) => void;
-    onOrderCancel?: (
-        data: onOrderCancelData,
-        actions: {
-            resolve: (data: { amount: PaymentAmount }) => void;
-            reject: () => void;
-        }
-    ) => void;
+    onOrderCancel?: onOrderCancelType;
 }
 
 interface DropinStatus {
