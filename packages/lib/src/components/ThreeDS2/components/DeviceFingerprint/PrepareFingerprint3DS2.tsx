@@ -6,7 +6,14 @@ import { FingerPrintData, ResultObject } from '../../types';
 import { ErrorObject } from '../../../../core/Errors/types';
 import { SendAnalyticsObject } from '../../../../core/Analytics/types';
 import { isValidHttpUrl } from '../../../../utils/isValidURL';
-import { THREEDS2_FULL, THREEDS2_FINGERPRINT, THREEDS2_FINGERPRINT_ERROR, THREEDS2_NUM, MISSING_TOKEN_IN_ACTION_MSG } from '../../config';
+import {
+    THREEDS2_FULL,
+    THREEDS2_FINGERPRINT,
+    THREEDS2_FINGERPRINT_ERROR,
+    THREEDS2_NUM,
+    MISSING_TOKEN_IN_ACTION_MSG,
+    THREEDS2_ERROR
+} from '../../config';
 import { ActionHandledReturnObject } from '../../../types';
 import {
     ANALYTICS_API_ERROR,
@@ -169,8 +176,8 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                 //  - decoded token is missing one or more of the following properties (threeDSMethodNotificationURL | postMessageDomain | threeDSServerTransID)
                 //  - or, token could not be base64 decoded &/or JSON.parsed
                 analyticsObject = {
+                    type: THREEDS2_ERROR,
                     message: finalResObject.message,
-                    metadata: { errorCodeObject, resultObject: resultObj }, // pass along both the full error object as well as the result object that came from the backend
                     ...errorTypeAndCode
                 };
 
@@ -182,8 +189,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             analyticsObject = {
                 type: THREEDS2_FULL,
                 message: `${THREEDS2_NUM} fingerprinting has completed`,
-                // TODO can we use metadata this way?
-                metadata: { resultObject: resultObj, ...(errorCodeObject && { errorCodeObject }) } // if the fingerprint has concluded due to an error - also pass this information along
+                metadata: { ...resultObj, ...errorCodeObject } // add the error to the final result, for debugging purposes
             };
 
             // Send log to analytics endpoint

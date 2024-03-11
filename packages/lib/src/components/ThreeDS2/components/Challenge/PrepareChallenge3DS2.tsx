@@ -170,9 +170,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             //     // Challenge process has timed out,
             //     // or, It's an error reported by the backend 'cos no transStatus could be retrieved // TODO - check logs to see if this *ever* happens
             //     analyticsObject = {
-            //         event: ANALYTICS_EVENT_ERROR,
+            //         type: THREEDS2_ERROR,
             //         message: finalResObject.message,
-            //         metadata: { errorCodeObject, resultObject: resultObj }, // pass along both the full error object as well as the result object that came from the backend
             //         ...errorTypeAndCode
             //     };
             //
@@ -184,8 +183,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             const analyticsObject: SendAnalyticsObject = {
                 type: THREEDS2_FULL,
                 message: `${THREEDS2_NUM} challenge has completed`,
-                // TODO - can we use metadata for this purpose?
-                metadata: { resultObject: resultObj, ...(errorCodeObject && { errorCodeObject }) } // if the challenge has concluded due to an error - also pass this information along
+                metadata: { resultObject: resultObj, ...errorCodeObject } // add the error to the final result, for debugging purposes
             };
 
             // Send log to analytics endpoint
