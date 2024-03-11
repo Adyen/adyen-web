@@ -26,11 +26,19 @@ export interface ErrorCodeObject {
     message: string;
 }
 
+/**
+ * Check if we have been passed an ErrorObject because either base64 decoding or JSON.parse failed
+ * @param obj -
+ */
+export const isErrorObject = (obj: ErrorObject | ThreeDS2Token): boolean => {
+    return 'success' in obj && !obj.success;
+};
+
 export const decodeAndParseToken = (token: string): ThreeDS2Token | ErrorObject => {
     const decodedToken: DecodeObject = base64.decode(token);
     if (decodedToken.success) {
         try {
-            return JSON.parse(decodedToken.data);
+            return JSON.parse(decodedToken.data) as ThreeDS2Token;
         } catch (e) {
             return {
                 success: false,
@@ -83,9 +91,8 @@ export const getChallengeWindowSize = (sizeStr: string): string[] => CHALLENGE_W
 export const prepareChallengeData = ({ token, size }): ChallengeData | ErrorObject => {
     const decodedChallengeToken = decodeAndParseToken(token);
 
-    // base64 decoding or JSON.parse has failed
-    if ('success' in decodedChallengeToken && !decodedChallengeToken.success) {
-        return decodedChallengeToken;
+    if (isErrorObject(decodedChallengeToken)) {
+        return decodedChallengeToken as ErrorObject;
     }
 
     const { acsTransID, acsURL, messageVersion, threeDSNotificationURL, threeDSServerTransID } = decodedChallengeToken as ThreeDS2Token;
@@ -102,7 +109,7 @@ export const prepareChallengeData = ({ token, size }): ChallengeData | ErrorObje
         },
         iframeSizeArr: getChallengeWindowSize(size),
         postMessageDomain: notificationURLOrigin
-    };
+    } as ChallengeData;
 };
 
 /**
@@ -121,9 +128,8 @@ export const prepareChallengeData = ({ token, size }): ChallengeData | ErrorObje
 export const prepareFingerPrintData = ({ token, notificationURL }): FingerPrintData | ErrorObject => {
     const decodedFingerPrintToken = decodeAndParseToken(token);
 
-    // base64 decoding or JSON.parse has failed
-    if ('success' in decodedFingerPrintToken && !decodedFingerPrintToken.success) {
-        return decodedFingerPrintToken;
+    if (isErrorObject(decodedFingerPrintToken)) {
+        return decodedFingerPrintToken as ErrorObject;
     }
 
     const { threeDSMethodNotificationURL, threeDSMethodUrl: threeDSMethodURL, threeDSServerTransID } = decodedFingerPrintToken as ThreeDS2Token;
@@ -135,7 +141,7 @@ export const prepareFingerPrintData = ({ token, notificationURL }): FingerPrintD
         threeDSMethodURL,
         threeDSMethodNotificationURL: receivedNotificationURL,
         postMessageDomain: notificationURLOrigin
-    };
+    } as FingerPrintData;
 };
 
 export const createFingerprintResolveData = (dataKey: string, resultObj: ResultObject, paymentData: string): FingerprintResolveData => ({

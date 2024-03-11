@@ -120,6 +120,7 @@ export interface CardInputProps {
     showFormInstruction?: boolean;
     showInstallmentAmounts?: boolean;
     showPayButton?: boolean;
+    showStoreDetailsCheckbox?: boolean;
     showWarnings?: boolean;
     specifications?: Specifications;
     storedPaymentMethodId?: string;

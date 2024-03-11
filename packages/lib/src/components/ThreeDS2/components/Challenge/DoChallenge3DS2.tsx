@@ -6,7 +6,7 @@ import ThreeDS2Form from '../Form';
 import getProcessMessageHandler from '../../../../utils/get-process-message-handler';
 import { encodeBase64URL } from '../utils';
 import promiseTimeout from '../../../../utils/promiseTimeout';
-import { CHALLENGE_TIMEOUT, CHALLENGE_TIMEOUT_REJECT_OBJECT } from '../../config';
+import { CHALLENGE_TIMEOUT, CHALLENGE_TIMEOUT_REJECT_OBJECT, THREEDS2_NUM } from '../../config';
 import { DoChallenge3DS2Props, DoChallenge3DS2State } from './types';
 import { ThreeDS2FlowObject } from '../../types';
 
@@ -32,7 +32,7 @@ class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2Sta
         // On Test - actually calls-back 3 times: once for challenge screen, once again as challenge.html reloads after the challenge is submitted, and once for redirect to threeDSNotificationURL.
         // But for the purposes of calling the merchant defined onActionHandled callback - we only want to do it once
         if (this.state.status === 'init') {
-            this.props.onActionHandled({ componentType: '3DS2Challenge', actionDescription: 'challenge-iframe-loaded' });
+            this.props.onActionHandled({ componentType: '3DS2Challenge', actionDescription: `${THREEDS2_NUM} challenge iframe loaded` });
         }
     };
 

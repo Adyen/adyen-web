@@ -114,7 +114,7 @@ export interface IUIElement {
 }
 
 export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';
-export type ActionDescriptionType = 'qr-code-loaded' | 'polling-started' | 'fingerprint-iframe-loaded' | 'challenge-iframe-loaded';
+export type ActionDescriptionType = 'qr-code-loaded' | 'polling-started' | string;
 
 export type PayButtonFunctionProps = Omit<PayButtonProps, 'amount'>;
 

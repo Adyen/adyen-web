@@ -20,9 +20,7 @@ const mockData = {
         houseNumberOrName: '123',
         city: 'Sao Paulo',
         postalCode: '11111555',
-        stateOrProvince: 'SP',
-        firstName: 'N/A',
-        lastName: 'N/A'
+        stateOrProvince: 'SP'
     },
     shopperEmail: 'shopper@adyen.nl'
 };
