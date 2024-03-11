@@ -53,7 +53,7 @@ export async function initSession() {
 
     const dropin = checkout
         .create('dropin', {
-            // instantPaymentTypes: ['googlepay']
+            instantPaymentTypes: ['googlepay']
         })
         .mount('#dropin-container');
     return [checkout, dropin];
