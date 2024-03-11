@@ -1,6 +1,6 @@
 import { Component, h } from 'preact';
 import DoFingerprint3DS2 from './DoFingerprint3DS2';
-import { createFingerprintResolveData, createOldFingerprintResolveData, ErrorCodeObject, prepareFingerPrintData } from '../utils';
+import { createFingerprintResolveData, createOldFingerprintResolveData, ErrorCodeObject, isErrorObject, prepareFingerPrintData } from '../utils';
 import { PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State } from './types';
 import { FingerPrintData, ResultObject } from '../../types';
 import { ErrorObject } from '../../../../core/Errors/types';
@@ -64,7 +64,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
     };
 
     componentDidMount() {
-        const hasFingerPrintData = !('success' in this.state.fingerPrintData && !this.state.fingerPrintData.success);
+        const hasFingerPrintData = !isErrorObject(this.state.fingerPrintData); //!('success' in this.state.fingerPrintData && !this.state.fingerPrintData.success);
 
         if (hasFingerPrintData) {
             const shouldAllowHttpDomains = process.env.NODE_ENV === 'development' && process.env.__CLIENT_ENV__?.indexOf('localhost:8080') > -1; // allow http urls if in development and testing against localhost:8080
@@ -180,7 +180,6 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
 
             /** The fingerprint process is completed, one way or another */
             analyticsObject = {
-                // event: ANALYTICS_EVENT_LOG,
                 type: THREEDS2_FULL,
                 message: `${THREEDS2_NUM} fingerprinting has completed`,
                 // TODO can we use metadata this way?
