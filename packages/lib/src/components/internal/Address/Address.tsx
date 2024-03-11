@@ -157,6 +157,8 @@ export default function Address(props: AddressProps) {
                 maxLength={getMaxLengthByFieldAndCountry(countrySpecificFormatters, fieldName, data.country, true)}
                 trimOnBlur={true}
                 disabled={!enabledFields.includes(fieldName)}
+                onFieldFocusAnalytics={props.onFieldFocusAnalytics}
+                onFieldBlurAnalytics={props.onFieldBlurAnalytics}
             />
         );
     };
@@ -200,5 +202,7 @@ Address.defaultProps = {
     onChange: () => {},
     visibility: 'editable',
     requiredFields: ADDRESS_SCHEMA,
-    specifications: {}
+    specifications: {},
+    onFieldFocusAnalytics: () => {},
+    onFieldBlurAnalytics: () => {}
 };

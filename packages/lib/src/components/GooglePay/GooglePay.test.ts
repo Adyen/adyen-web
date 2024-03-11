@@ -1,4 +1,8 @@
 import GooglePay from './GooglePay';
+import Analytics from '../../core/Analytics';
+import { ANALYTICS_EVENT_INFO, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
+
+const analyticsModule = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '' });
 
 describe('GooglePay', () => {
     describe('get data', () => {
@@ -64,6 +68,38 @@ describe('GooglePay', () => {
         test('Retrieves authJwt from configuration', () => {
             const gpay = new GooglePay({ configuration: { merchantId: 'abcdef', gatewayMerchantId: 'TestMerchant', authJwt: 'jwt.code' } });
             expect(gpay.props.configuration.authJwt).toEqual('jwt.code');
+        });
+    });
+
+    describe('GooglePay: calls that generate "info" analytics should produce objects with the expected shapes ', () => {
+        let gpay;
+        beforeEach(() => {
+            console.log = jest.fn(() => {});
+
+            gpay = new GooglePay({
+                type: 'googlepay',
+                isInstantPayment: true,
+                modules: {
+                    analytics: analyticsModule
+                }
+            });
+
+            analyticsModule.createAnalyticsEvent = jest.fn(obj => {
+                console.log('### analyticsPreProcessor.test:::: obj=', obj);
+            });
+        });
+
+        test('Analytics should produce an "info" event, of type "selected", for GooglePay as an instant PM', () => {
+            gpay.submit();
+
+            expect(analyticsModule.createAnalyticsEvent).toHaveBeenCalledWith({
+                event: ANALYTICS_EVENT_INFO,
+                data: {
+                    component: gpay.props.type,
+                    type: ANALYTICS_SELECTED_STR,
+                    target: 'instant_payment_button'
+                }
+            });
         });
     });
 });

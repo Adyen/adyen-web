@@ -71,6 +71,7 @@ class QRLoaderContainer<T extends QRLoaderContainerProps = QRLoaderContainerProp
                         instructions={this.props.instructions}
                         onActionHandled={this.props.onActionHandled}
                         brandName={this.displayName}
+                        onSubmitAnalytics={this.submitAnalytics}
                     />
                 </SRPanelProvider>
             </CoreProvider>

@@ -6,7 +6,7 @@ import defaultProps from './defaultProps';
 import defaultStyles from './defaultStyles';
 import './CardInput.scss';
 import { AddressModeOptions, CardInputDataState, CardInputErrorState, CardInputProps, CardInputRef, CardInputValidState } from './types';
-import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED } from '../../../internal/SecuredFields/lib/configuration/constants';
+import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER } from '../../../internal/SecuredFields/lib/configuration/constants';
 import { BinLookupResponse } from '../../types';
 import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } from './validate';
 import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';
@@ -30,6 +30,8 @@ import { SetSRMessagesReturnFn } from '../../../../core/Errors/SRPanelProvider';
 import useImage from '../../../../core/Context/useImage';
 import { getArrayDifferences } from '../../../../utils/arrayUtils';
 import FormInstruction from '../../../internal/FormInstruction';
+import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
+import { FieldErrorAnalyticsObject } from '../../../../core/Analytics/types';
 
 const CardInput: FunctionalComponent<CardInputProps> = props => {
     const sfp = useRef(null);
@@ -139,8 +141,16 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     /**
      * HANDLERS
      */
-    // SecuredField-only handler
-    const handleFocus = getFocusHandler(setFocusedElement, props.onFocus, props.onBlur);
+    // Handlers for focus & blur on all fields. Can be renamed to onFieldFocus once the onFocusField is renamed in Field.tsx
+    const onFieldFocusAnalytics = (who: string, e: Event | CbObjOnFocus) => {
+        props.onFocus({ fieldType: who, event: e });
+    };
+    const onFieldBlurAnalytics = (who: string, e: Event | CbObjOnFocus) => {
+        props.onBlur({ fieldType: who, event: e });
+    };
+
+    // Make SecuredFields aware of the focus & blur handlers
+    const handleFocus = getFocusHandler(setFocusedElement, onFieldFocusAnalytics, onFieldBlurAnalytics);
 
     const retrieveLayout = (): string[] => {
         return getLayout({
@@ -191,19 +201,17 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         }
 
         /**
-         * If PAN has just become valid: decide if we can shift focus to the next field.
+         * Decide if we can shift focus to the expiryDate field.
          *
-         * We can if the config prop, autoFocus, is true AND we have a panLength value from binLookup AND one of the following scenarios is true:
-         *  - If encryptedCardNumber was invalid but now is valid
-         *      [scenario: shopper has typed in a number and field is now valid]
-         *  - If encryptedCardNumber was valid and still is valid and we're handling an onBrand event (triggered by binLookup which has happened after the handleOnFieldValid event)
-         *     [scenario: shopper has pasted in a full, valid, number]
+         * We can if... the config prop, autoFocus, is true AND we have a panLength value from binLookup
+         * AND we are responding to a handleOnFieldValid message about the PAN that says it is valid
          */
         if (
             props.autoFocus &&
             hasPanLengthRef.current > 0 &&
-            ((!valid.encryptedCardNumber && sfState.valid?.encryptedCardNumber) ||
-                (valid.encryptedCardNumber && sfState.valid.encryptedCardNumber && eventDetails?.event === 'handleOnBrand'))
+            eventDetails?.event === 'handleOnFieldValid' &&
+            eventDetails?.fieldType === ENCRYPTED_CARD_NUMBER &&
+            sfState.valid.encryptedCardNumber
         ) {
             doPanAutoJump();
         }
@@ -395,8 +403,10 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                     // Use the error code to look up whether error is actually a blur based one (most are but some SF ones aren't)
                     const isBlurBasedError = lookupBlurBasedErrors(latestErrorMsg.errorCode);
 
-                    // Only add blur based errors to the error panel - doing this step prevents the non-blur based errors from being read out twice
-                    // (once from the aria-live, error panel & once from the aria-describedby element)
+                    /**
+                     *  ONLY ADD BLUR BASED ERRORS TO THE ERROR PANEL - doing this step prevents the non-blur based errors from being read out twice
+                     *  (once from the aria-live, error panel & once from the aria-describedby element)
+                     */
                     const latestSRError = isBlurBasedError ? latestErrorMsg.errorMessage : null;
                     // console.log('### CardInput2::componentDidUpdate:: #2 (not validating) single error:: latestSRError', latestSRError);
                     setSRMessagesFromStrings(latestSRError);
@@ -409,6 +419,19 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
             }
             default:
                 break;
+        }
+
+        // Analytics
+        if (currentErrorsSortedByLayout) {
+            const newErrors = getArrayDifferences<SortedErrorObject, string>(currentErrorsSortedByLayout, previousSortedErrors, 'field');
+            newErrors?.forEach(errorItem => {
+                const aObj: FieldErrorAnalyticsObject = {
+                    fieldType: errorItem.field,
+                    errorCode: errorItem.errorCode
+                };
+
+                props.onErrorAnalytics(aObj);
+            });
         }
 
         props.onChange({
@@ -497,6 +520,9 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
                             addressSearchDebounceMs={props.addressSearchDebounceMs}
                             //
                             iOSFocusedField={iOSFocusedField}
+                            //
+                            onFieldFocusAnalytics={onFieldFocusAnalytics}
+                            onFieldBlurAnalytics={onFieldBlurAnalytics}
                         />
                     </div>
                 )}

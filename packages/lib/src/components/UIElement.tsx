@@ -11,6 +11,8 @@ import { hasOwnProperty } from '../utils/hasOwnProperty';
 import DropinElement from './Dropin';
 import { CoreOptions } from '../core/types';
 import Core from '../core';
+import { ANALYTICS_SUBMIT_STR } from '../core/Analytics/constants';
+import { AnalyticsInitialEvent, SendAnalyticsObject } from '../core/Analytics/types';
 
 export class UIElement<P extends UIElementProps = any> extends BaseElement<P> implements IUIElement {
     protected componentRef: any;
@@ -27,6 +29,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         this.handleOrder = this.handleOrder.bind(this);
         this.handleResponse = this.handleResponse.bind(this);
         this.setElementStatus = this.setElementStatus.bind(this);
+        this.submitAnalytics = this.submitAnalytics.bind(this);
 
         this.elementRef = (props && props.elementRef) || this;
     }
@@ -45,6 +48,38 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         return state;
     }
 
+    // Only called once, for UIElements (including Dropin), as they are being mounted
+    protected setUpAnalytics(setUpAnalyticsObj: AnalyticsInitialEvent) {
+        const sessionId = this.props.session?.id;
+
+        return this.props.modules.analytics.setUp({
+            ...setUpAnalyticsObj,
+            ...(sessionId && { sessionId })
+        });
+    }
+
+    /**
+     * A function for all UIElements, or BaseElement, to use to create an analytics action for when it's been:
+     *  - mounted,
+     *  - a PM has been selected
+     *  - onSubmit has been called (as a result of the pay button being pressed)
+     *
+     *  In some other cases e.g. 3DS2 components, this function is overridden to allow more specific analytics actions to be created
+     */
+    /* eslint-disable-next-line */
+    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
+        /** Work out what the component's "type" is:
+         * - first check for a dedicated "analyticsType" (currently only applies to custom-cards)
+         * - otherwise, distinguish cards from non-cards: cards will use their static type property, everything else will use props.type
+         */
+        let component = this.constructor['analyticsType'];
+        if (!component) {
+            component = this.constructor['type'] === 'scheme' || this.constructor['type'] === 'bcmc' ? this.constructor['type'] : this.props.type;
+        }
+
+        this.props.modules?.analytics.sendAnalytics(component, analyticsObj);
+    }
+
     private onSubmit(): void {
         //TODO: refactor this, instant payment methods are part of Dropin logic not UIElement
         if (this.props.isInstantPayment) {
@@ -57,10 +92,14 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         }
 
         if (this.props.onSubmit) {
-            // Classic flow
+            /** Classic flow */
+            // Call analytics endpoint
+            this.submitAnalytics({ type: ANALYTICS_SUBMIT_STR });
+
+            // Call onSubmit handler
             this.props.onSubmit({ data: this.data, isValid: this.isValid }, this.elementRef);
         } else if (this._parentInstance.session) {
-            // Session flow
+            /** Session flow */
             // wrap beforeSubmit callback in a promise
             const beforeSubmitEvent = this.props.beforeSubmit
                 ? new Promise((resolve, reject) =>
@@ -72,7 +111,12 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
                 : Promise.resolve(this.data);
 
             beforeSubmitEvent
-                .then(data => this.submitPayment(data))
+                .then(data => {
+                    // Call analytics endpoint
+                    this.submitAnalytics({ type: ANALYTICS_SUBMIT_STR });
+                    // Submit payment
+                    return this.submitPayment(data);
+                })
                 .catch(() => {
                     // set state as ready to submit if the merchant cancels the action
                     this.elementRef.setStatus('ready');

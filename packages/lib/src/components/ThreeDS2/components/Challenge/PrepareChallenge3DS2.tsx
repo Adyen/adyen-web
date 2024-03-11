@@ -8,6 +8,10 @@ import Img from '../../../internal/Img';
 import './challenge.scss';
 import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
 import useImage from '../../../../core/Context/useImage';
+import { ActionHandledReturnObject } from '../../../types';
+import { THREEDS2_FULL, THREEDS2_NUM } from '../../config';
+import { SendAnalyticsObject } from '../../../../core/Analytics/types';
+import { ErrorObject } from '../../../../core/Errors/types';
 
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
     public static defaultProps = {
@@ -20,7 +24,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         super(props);
 
         if (this.props.token) {
-            const challengeData: ChallengeData = prepareChallengeData({
+            const challengeData: ChallengeData | ErrorObject = prepareChallengeData({
                 token: this.props.token,
                 size: this.props.challengeWindowSize || this.props.size
             });
@@ -28,10 +32,12 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             /**
              * Check the structure of the created challengeData
              */
-            const { acsTransID, messageVersion, threeDSServerTransID } = challengeData.cReqData;
+            const { acsTransID, messageVersion, threeDSServerTransID } = (challengeData as ChallengeData).cReqData;
+
+            const { acsURL } = challengeData as ChallengeData;
 
             /** Missing props */
-            if (!challengeData.acsURL || !acsTransID || !messageVersion || !threeDSServerTransID) {
+            if (!acsURL || !acsTransID || !messageVersion || !threeDSServerTransID) {
                 this.setStatusError({
                     errorInfo:
                         'Challenge Data missing one or more of the following properties (acsURL | acsTransID | messageVersion | threeDSServerTransID)',
@@ -43,7 +49,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             /** All good */
             this.state = {
                 status: 'retrievingChallengeToken',
-                challengeData,
+                challengeData: challengeData as ChallengeData,
                 errorInfo: null
             };
         } else {
@@ -52,6 +58,19 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             });
         }
     }
+
+    public onActionHandled = (rtnObj: ActionHandledReturnObject) => {
+        this.props.onSubmitAnalytics({ type: THREEDS2_FULL, message: rtnObj.actionDescription });
+
+        this.props.onActionHandled(rtnObj);
+    };
+
+    public onFormSubmit = (msg: string) => {
+        this.props.onSubmitAnalytics({
+            type: THREEDS2_FULL,
+            message: msg
+        });
+    };
 
     setStatusComplete(resultObj) {
         this.setState({ status: 'complete' }, () => {
@@ -63,6 +82,16 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             const resolveDataFunction = this.props.useOriginalFlow ? createOldChallengeResolveData : createChallengeResolveData;
             const data = resolveDataFunction(this.props.dataKey, resultObj.transStatus, this.props.paymentData);
 
+            // Create log object - the process is completed, one way or another
+            const analyticsObject: SendAnalyticsObject = {
+                type: THREEDS2_FULL,
+                message: `${THREEDS2_NUM} challenge has completed`,
+                metadata: { ...resultObj }
+            };
+
+            // Send log to analytics endpoint
+            this.props.onSubmitAnalytics(analyticsObject);
+
             this.props.onComplete(data); // (equals onAdditionalDetails - except for 3DS2InMDFlow)
         });
     }
@@ -72,7 +101,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         this.props.onError(errorInfoObj); // For some reason this doesn't fire if it's in a callback passed to the setState function
     }
 
-    render({ onActionHandled }, { challengeData }) {
+    render(_, { challengeData }) {
         const getImage = useImage();
         if (this.state.status === 'retrievingChallengeToken') {
             return (
@@ -99,7 +128,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                         }
                     }}
                     {...challengeData}
-                    onActionHandled={onActionHandled}
+                    onActionHandled={this.onActionHandled}
+                    onFormSubmit={this.onFormSubmit}
                 />
             );
         }

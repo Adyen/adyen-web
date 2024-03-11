@@ -3,9 +3,10 @@ import classNames from 'classnames';
 import styles from '../AchInput.module.scss';
 import Field from '../../../../internal/FormFields/Field';
 import DataSfSpan from '../../../../Card/components/CardInput/components/DataSfSpan';
+import { capitalizeFirstLetter } from '../../../../../utils/Formatters/formatters';
 
 const AchSFInput = ({ id, dataInfo, className = '', label, focused, filled, errorMessage = '', isValid = false, onFocusField, dir }) => {
-    const capitalisedId = id.charAt(0).toUpperCase() + id.slice(1);
+    const capitalisedId = capitalizeFirstLetter(id);
     const encryptedIdStr = `encrypted${capitalisedId}`;
 
     return (

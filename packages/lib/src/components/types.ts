@@ -3,12 +3,14 @@ import { Order, PaymentAction, PaymentAmount, PaymentAmountExtended } from '../t
 import Language from '../language/Language';
 import UIElement from './UIElement';
 import Core from '../core';
-import Analytics from '../core/Analytics';
 import RiskElement from '../core/RiskModule';
 import { PayButtonProps } from './internal/PayButton/PayButton';
 import Session from '../core/CheckoutSession';
 import { SRPanel } from '../core/Errors/SRPanel';
 import { Resources } from '../core/Context/Resources';
+import { AnalyticsInitialEvent, AnalyticsObject, CreateAnalyticsEventObject, SendAnalyticsObject } from '../core/Analytics/types';
+import { EventsQueueModule } from '../core/Analytics/EventsQueue';
+import { CbObjOnFocus } from './internal/SecuredFields/lib/types';
 
 export interface PaymentMethodData {
     paymentMethod: {
@@ -76,12 +78,21 @@ export interface RawPaymentResponse extends PaymentResponse {
     [key: string]: any;
 }
 
+export interface AnalyticsModule {
+    setUp: (a: AnalyticsInitialEvent) => Promise<any>;
+    getCheckoutAttemptId: () => string;
+    getEventsQueue: () => EventsQueueModule;
+    createAnalyticsEvent: (a: CreateAnalyticsEventObject) => AnalyticsObject;
+    getEnabled: () => boolean;
+    sendAnalytics: (component: string, analyticsObj: SendAnalyticsObject) => void;
+}
+
 export interface BaseElementProps {
     _parentInstance?: Core;
     order?: Order;
     modules?: {
         srPanel?: SRPanel;
-        analytics?: Analytics;
+        analytics?: AnalyticsModule;
         resources?: Resources;
         risk?: RiskElement;
     };
@@ -103,7 +114,7 @@ export interface IUIElement {
 }
 
 export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';
-export type ActionDescriptionType = 'qr-code-loaded' | 'polling-started' | 'fingerprint-iframe-loaded' | 'challenge-iframe-loaded';
+export type ActionDescriptionType = 'qr-code-loaded' | 'polling-started' | string;
 
 export type PayButtonFunctionProps = Omit<PayButtonProps, 'amount'>;
 
@@ -133,6 +144,7 @@ export interface UIElementProps extends BaseElementProps {
     icon?: string;
     amount?: PaymentAmount;
     secondaryAmount?: PaymentAmountExtended;
+    brand?: string;
 
     /**
      * Show/Hide pay button
@@ -177,3 +189,14 @@ export interface ComponentMethodsRef {
     showValidation?: () => void;
     setStatus?(status: UIElementStatus): void;
 }
+
+export type DecodeObject = {
+    success: boolean;
+    error?: string;
+    data?: string;
+};
+
+export type ComponentFocusObject = {
+    fieldType: string;
+    event: Event | CbObjOnFocus;
+};

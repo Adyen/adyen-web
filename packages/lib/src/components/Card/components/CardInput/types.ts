@@ -9,11 +9,11 @@ import { AddressSchema } from '../../../internal/Address/types';
 import { CbObjOnError, StylesObject } from '../../../internal/SecuredFields/lib/types';
 import { Resources } from '../../../../core/Context/Resources';
 import { SRPanel } from '../../../../core/Errors/SRPanel';
-import Analytics from '../../../../core/Analytics';
 import RiskElement from '../../../../core/RiskModule';
-import { ComponentMethodsRef } from '../../../types';
+import { AnalyticsModule, ComponentMethodsRef } from '../../../types';
 import { DisclaimerMsgObject } from '../../../internal/DisclaimerMessage/DisclaimerMessage';
 import { OnAddressLookupType, OnAddressSelectedType } from '../../../internal/Address/components/AddressSearch';
+import { FieldErrorAnalyticsObject } from '../../../../core/Analytics/types';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -90,7 +90,7 @@ export interface CardInputProps {
     minimumExpiryDate?: string;
     modules?: {
         srPanel: SRPanel;
-        analytics: Analytics;
+        analytics: AnalyticsModule;
         risk: RiskElement;
         resources: Resources;
     };
@@ -129,6 +129,7 @@ export interface CardInputProps {
     type?: string;
     maskSecurityCode?: boolean;
     disclaimerMessage?: DisclaimerMsgObject;
+    onErrorAnalytics?: (obj: FieldErrorAnalyticsObject) => {};
 }
 
 export interface CardInputState {

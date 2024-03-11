@@ -4,7 +4,7 @@ import RiskModule from './RiskModule';
 import paymentMethods, { getComponentConfiguration } from '../components';
 import PaymentMethodsResponse from './ProcessResponse/PaymentMethodsResponse';
 import getComponentForAction from './ProcessResponse/PaymentAction';
-import { resolveEnvironment, resolveCDNEnvironment } from './Environment';
+import { resolveEnvironment, resolveCDNEnvironment, resolveAnalyticsEnvironment } from './Environment';
 import Analytics from './Analytics';
 import { PaymentAction } from '../types';
 import { CoreOptions } from './types';
@@ -15,6 +15,8 @@ import { hasOwnProperty } from '../utils/hasOwnProperty';
 import { Resources } from './Context/Resources';
 import { SRPanel } from './Errors/SRPanel';
 import { getRegulatoryDefaults } from '../components/utils';
+import { ANALYTICS_ACTION_STR } from './Analytics/constants';
+import { THREEDS2_FULL } from '../components/ThreeDS2/config';
 
 class Core {
     public session: Session;
@@ -26,6 +28,7 @@ class Core {
     public loadingContext?: string;
 
     public cdnContext?: string;
+    public analyticsContext?: string;
 
     public static readonly version = {
         version: process.env.VERSION,
@@ -42,6 +45,7 @@ class Core {
 
         this.loadingContext = resolveEnvironment(this.options.environment, this.options.environmentUrls?.api);
         this.cdnContext = resolveCDNEnvironment(this.options.resourceEnvironment || this.options.environment, this.options.environmentUrls?.api);
+        this.analyticsContext = resolveAnalyticsEnvironment(this.options.environment);
 
         const clientKeyType = this.options.clientKey?.substr(0, 4);
         if ((clientKeyType === 'test' || clientKeyType === 'live') && !this.loadingContext.includes(clientKeyType)) {
@@ -145,6 +149,16 @@ class Core {
         }
 
         if (action.type) {
+            // 'threeDS2' OR 'qrCode', 'voucher', 'redirect', 'await', 'bankTransfer`
+            const component = action.type === THREEDS2_FULL ? `${action.type}${action.subtype}` : action.paymentMethodType;
+
+            this.modules.analytics.sendAnalytics(component, {
+                type: ANALYTICS_ACTION_STR,
+                subtype: action.type,
+                message: `${component} action was handled by the SDK`
+            });
+
+            // Create a component based on the action
             const actionTypeConfiguration = getComponentConfiguration(action.type, this.options.paymentMethodsConfiguration);
 
             const props = {
@@ -367,8 +381,9 @@ class Core {
 
         this.modules = Object.freeze({
             risk: new RiskModule({ ...this.options, loadingContext: this.loadingContext }),
-            analytics: new Analytics({
+            analytics: Analytics({
                 loadingContext: this.loadingContext,
+                analyticsContext: this.analyticsContext,
                 clientKey: this.options.clientKey,
                 locale: this.options.locale,
                 analytics: this.options.analytics,

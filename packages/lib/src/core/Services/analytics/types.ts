@@ -1,14 +1,23 @@
-import { Experiment } from '../../Analytics/types';
+import { AnalyticsConfig } from '../../Analytics/types';
+import { PaymentAmount } from '../../../types';
 
-type CheckoutAttemptIdSession = {
+export type CheckoutAttemptIdSession = {
     id: string;
     timestamp: number;
 };
 
-type CollectIdProps = {
-    clientKey: string;
-    loadingContext: string;
-    experiments: Experiment[];
-};
+export type CollectIdProps = Pick<AnalyticsConfig, 'clientKey' | 'analyticsContext' | 'locale' | 'amount'> & { analyticsPath: string };
 
-export { CheckoutAttemptIdSession, CollectIdProps };
+export type LogEventProps = Pick<AnalyticsConfig, 'loadingContext' | 'locale'>;
+
+export type TelemetryEvent = {
+    version: string;
+    channel: 'Web';
+    locale: string;
+    referrer: string;
+    screenWidth: number;
+    containerWidth: number;
+    component: string;
+    flavor: string;
+    amount?: PaymentAmount;
+};

@@ -66,6 +66,8 @@ function FieldContainer(props: FieldContainerProps) {
                     isValid={valid[fieldName]}
                     name={fieldName}
                     i18n={i18n}
+                    onFocus={e => props.onFieldFocusAnalytics(fieldName, e)}
+                    onBlur={e => props.onFieldBlurAnalytics(fieldName, e)}
                 >
                     <InputText
                         name={fieldName}

@@ -40,7 +40,7 @@ describe('ThreeDS2DeviceFingerprint', () => {
 
         HTMLFormElement.prototype.submit = jest.fn().mockImplementation(() => formResult);
 
-        mount(<PrepareFingerprint3DS2 {...propsMock} onError={errorFunction} onComplete={completeFunction} />);
+        mount(<PrepareFingerprint3DS2 {...propsMock} onError={errorFunction} onComplete={completeFunction} onSubmitAnalytics={() => {}} />);
         expect(errorFunction.mock.calls.length).toBe(0);
     });
 });

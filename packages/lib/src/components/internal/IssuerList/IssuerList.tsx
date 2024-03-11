@@ -1,5 +1,5 @@
 import { Fragment, h } from 'preact';
-import { useState, useEffect, useCallback } from 'preact/hooks';
+import { useState, useEffect, useCallback, useRef } from 'preact/hooks';
 import useForm from '../../../utils/useForm';
 import Field from '../FormFields/Field';
 import IssuerButtonGroup from './IssuerButtonGroup';
@@ -15,6 +15,17 @@ import { ERROR_ACTION_FOCUS_FIELD } from '../../../core/Errors/constants';
 import { setFocusOnField } from '../../../utils/setFocus';
 import DisclaimerMessage from '../DisclaimerMessage';
 import Select from '../FormFields/Select';
+import { SelectTargetObject } from '../FormFields/Select/types';
+import {
+    ANALYTICS_DISPLAYED_STR,
+    ANALYTICS_FEATURED_ISSUER,
+    ANALYTICS_INPUT_STR,
+    ANALYTICS_LIST,
+    ANALYTICS_LIST_SEARCH,
+    ANALYTICS_SEARCH_DEBOUNCE_TIME,
+    ANALYTICS_SELECTED_STR
+} from '../../../core/Analytics/constants';
+import { debounce } from '../../../utils/debounce';
 
 const payButtonLabel = ({ issuer, items }, i18n): string => {
     const issuerName = items.find(i => i.id === issuer)?.name;
@@ -57,11 +68,27 @@ function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder'
 
     const handleInputChange = useCallback(
         (type: IssuerListInputTypes) => (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
+            const target = type === IssuerListInputTypes.Dropdown ? ANALYTICS_LIST : ANALYTICS_FEATURED_ISSUER;
+            const issuerObj = items.find(issuer => issuer.id === (event.target as SelectTargetObject).value);
+            props.onSubmitAnalytics({ type: ANALYTICS_SELECTED_STR, target, issuer: issuerObj.name });
+
             setInputType(type);
             handleChangeFor('issuer')(event);
         },
         [handleChangeFor]
     );
+
+    const handleListToggle = useCallback((isOpen: boolean) => {
+        if (isOpen) {
+            props.onSubmitAnalytics({ type: ANALYTICS_DISPLAYED_STR, target: ANALYTICS_LIST });
+        }
+    }, []);
+
+    const debounceSearchAnalytics = useRef(debounce(props.onSubmitAnalytics, ANALYTICS_SEARCH_DEBOUNCE_TIME));
+
+    const handleSearch = useCallback(() => {
+        debounceSearchAnalytics.current({ type: ANALYTICS_INPUT_STR, target: ANALYTICS_LIST_SEARCH });
+    }, []);
 
     useEffect(() => {
         props.onChange({ data, valid, errors, isValid });
@@ -106,6 +133,8 @@ function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder'
                     name={'issuer'}
                     className={'adyen-checkout__issuer-list__dropdown'}
                     onChange={handleInputChange(IssuerListInputTypes.Dropdown)}
+                    onListToggle={handleListToggle}
+                    onInput={handleSearch}
                 />
             </Field>
 

@@ -1,5 +1,7 @@
 import { CVCPolicyType, DatePolicyType } from '../types';
 
+export const ENCRYPTED = 'encrypted';
+
 export const ENCRYPTED_CARD_NUMBER = 'encryptedCardNumber';
 export const ENCRYPTED_EXPIRY_DATE = 'encryptedExpiryDate';
 export const ENCRYPTED_EXPIRY_MONTH = 'encryptedExpiryMonth';
@@ -15,7 +17,7 @@ export const ENCRYPTED_SECURITY_CODE_4_DIGITS = 'encryptedSecurityCode4digits';
 
 export const GIFT_CARD = 'giftcard';
 
-export const SF_VERSION = '4.8.0';
+export const SF_VERSION = '4.8.2';
 
 export const DEFAULT_CARD_GROUP_TYPES = ['amex', 'mc', 'visa'];
 

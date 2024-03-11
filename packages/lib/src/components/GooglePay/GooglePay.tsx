@@ -7,6 +7,7 @@ import { GooglePayProps } from './types';
 import { mapBrands, getGooglePayLocale } from './utils';
 import collectBrowserInfo from '../../utils/browserInfo';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
 
 class GooglePay extends UIElement<GooglePayProps> {
     public static type = 'paywithgoogle';
@@ -45,6 +46,11 @@ class GooglePay extends UIElement<GooglePayProps> {
     }
 
     public submit = () => {
+        // Analytics
+        if (this.props.isInstantPayment) {
+            this.submitAnalytics({ type: ANALYTICS_SELECTED_STR, target: ANALYTICS_INSTANT_PAYMENT_BUTTON });
+        }
+
         const { onAuthorized = () => {} } = this.props;
 
         return new Promise((resolve, reject) => this.props.onClick(resolve, reject))

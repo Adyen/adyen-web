@@ -123,7 +123,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             .create('card', {
                 type: 'scheme',
                 brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
-                enableStoreDetails: true,
+                _disableClickToPay: true,
 
                 // holderName config:
                 hasHolderName: true,
@@ -148,8 +148,8 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                         stateOrProvince: 'CA'
                     }
                 },
-                onError: objdobj => {
-                    console.log('component level merchant defined error handler for Card objdobj=', objdobj);
+                onError: obj => {
+                    console.log('component level merchant defined error handler for Card obj=', obj);
                 }
             })
             .mount('.card-avs-field');
