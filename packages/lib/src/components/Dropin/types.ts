@@ -105,7 +105,7 @@ export type onOrderCancelType = (
     data: onOrderCancelData,
     actions: {
         resolve: (data: { amount: PaymentAmount }) => void;
-        reject: () => void;
+        reject: (error: string) => void;
     }
 ) => void;
 
