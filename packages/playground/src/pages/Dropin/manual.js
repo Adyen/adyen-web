@@ -131,9 +131,9 @@ export async function initManual() {
         paymentMethodsConfiguration: {
             card: {
                 challengeWindowSize: '03',
-                enableStoreDetails: true,
-                hasHolderName: true,
-                holderNameRequired: true
+                enableStoreDetails: true
+                // hasHolderName: true,
+                // holderNameRequired: true
             },
             paywithgoogle: {
                 buttonType: 'plain'

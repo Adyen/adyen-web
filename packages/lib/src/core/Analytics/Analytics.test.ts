@@ -2,10 +2,10 @@ import Analytics from './Analytics';
 import collectId from '../Services/analytics/collect-id';
 import logEvent from '../Services/analytics/log-event';
 import { PaymentAmount } from '../../types';
-import { createAnalyticsObject } from './utils';
 import wait from '../../utils/wait';
 import { DEFAULT_DEBOUNCE_TIME_MS } from '../../utils/debounce';
-import { ANALYTICS_EVENT } from './types';
+import { ANALYTICS_EVENT, AnalyticsObject, CreateAnalyticsObject } from './types';
+import { ANALYTICS_VALIDATION_ERROR_STR } from './constants';
 
 jest.mock('../Services/analytics/collect-id');
 jest.mock('../Services/analytics/log-event');
@@ -28,7 +28,9 @@ const analyticsEventObj = {
     component: 'cardComponent',
     type: 'Focus',
     target: 'PAN input'
-};
+} as CreateAnalyticsObject;
+
+let analytics;
 
 describe('Analytics initialisation and event queue', () => {
     const collectIdPromiseMock = jest.fn(() => Promise.resolve(mockCheckoutAttemptId));
@@ -42,10 +44,11 @@ describe('Analytics initialisation and event queue', () => {
         mockedLogEvent.mockReset();
         mockedLogEvent.mockImplementation(() => logEventPromiseMock);
         logEventPromiseMock.mockClear();
+
+        analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount, bundleType: '' });
     });
 
     test('Creates an Analytics module with defaultProps', () => {
-        const analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount, bundleType: 'umd' });
         expect(analytics.setUp).not.toBe(null);
         expect(analytics.getCheckoutAttemptId).not.toBe(null);
         expect(analytics.getEnabled).not.toBe(null);
@@ -56,7 +59,7 @@ describe('Analytics initialisation and event queue', () => {
     });
 
     test('Should not fire any calls if analytics is disabled', () => {
-        const analytics = Analytics({ analytics: { enabled: false }, loadingContext: '', locale: '', clientKey: '', amount, bundleType: 'umd' });
+        const analytics = Analytics({ analytics: { enabled: false }, loadingContext: '', locale: '', clientKey: '', amount, bundleType: '' });
 
         analytics.setUp(event);
         expect(collectIdPromiseMock).not.toHaveBeenCalled();
@@ -64,7 +67,7 @@ describe('Analytics initialisation and event queue', () => {
     });
 
     test('Will not call the collectId endpoint if telemetry is disabled, but will call the logEvent (analytics pixel)', () => {
-        const analytics = Analytics({ analytics: { telemetry: false }, loadingContext: '', locale: '', clientKey: '', amount, bundleType: 'umd' });
+        const analytics = Analytics({ analytics: { telemetry: false }, loadingContext: '', locale: '', clientKey: '', amount, bundleType: '' });
         expect(collectIdPromiseMock).not.toHaveBeenCalled();
         analytics.setUp(event);
         expect(collectIdPromiseMock).not.toHaveBeenCalled();
@@ -73,7 +76,6 @@ describe('Analytics initialisation and event queue', () => {
     });
 
     test('Calls the collectId endpoint by default, adding expected fields', async () => {
-        const analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount, bundleType: 'umd' });
         analytics.setUp(event);
 
         expect(collectIdPromiseMock).toHaveBeenCalled();
@@ -87,45 +89,43 @@ describe('Analytics initialisation and event queue', () => {
         const payload = {
             payloadData: 'test'
         };
-        const analytics = Analytics({ analytics: { payload }, loadingContext: '', locale: '', clientKey: '', amount, bundleType: 'umd' });
+        const analytics = Analytics({ analytics: { payload }, loadingContext: '', locale: '', clientKey: '', amount, bundleType: '' });
 
         analytics.setUp(event);
 
         expect(collectIdPromiseMock).toHaveLength(0);
     });
 
-    test('Analytics events queue sends event object', async () => {
-        const analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount, bundleType: 'umd' });
-
-        const aObj = createAnalyticsObject(analyticsEventObj);
+    test('Create info event and see that it is held in a queue', async () => {
+        const aObj: AnalyticsObject = analytics.createAnalyticsEvent({ event: 'info', data: analyticsEventObj });
 
         expect(aObj.timestamp).not.toBe(undefined);
         expect(aObj.target).toEqual('PAN input');
         expect(aObj.type).toEqual('Focus');
 
-        // no message prop for events
+        // no message prop for info events
         expect(aObj.message).toBe(undefined);
 
-        analytics.createAnalyticsEvent({ event: 'info', data: aObj });
-
-        // event object should not be sent immediately
+        // info event should not be sent immediately
         expect(analytics.getEventsQueue().getQueue().info.length).toBe(1);
     });
 
-    test('Analytics events queue sends error object', async () => {
-        const analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount, bundleType: 'umd' });
-
-        const evObj = createAnalyticsObject(analyticsEventObj);
-        analytics.createAnalyticsEvent({ event: 'info', data: evObj });
+    test('Create error event and see that it is sent immediately, also flushing the queued info object', async () => {
+        // first create info event
+        analytics.createAnalyticsEvent({ event: 'info', data: analyticsEventObj });
 
         expect(analytics.getEventsQueue().getQueue().info.length).toBe(1);
 
-        const aObj = createAnalyticsObject({
+        // create error event
+        const aObj = analytics.createAnalyticsEvent({
             event: 'error',
-            component: 'threeDS2Fingerprint',
-            code: 'web_704',
-            errorType: 'APIError',
-            message: 'threeDS2Fingerprint Missing paymentData property from threeDS2 action'
+            data: {
+                // event: 'error',
+                component: 'threeDS2Fingerprint',
+                code: 'web_704',
+                errorType: 'APIError',
+                message: 'threeDS2Fingerprint Missing paymentData property from threeDS2 action'
+            }
         });
 
         expect(aObj.timestamp).not.toBe(undefined);
@@ -133,34 +133,52 @@ describe('Analytics initialisation and event queue', () => {
         expect(aObj.errorType).toEqual('APIError');
         expect(aObj.message).not.toBe(undefined);
 
-        analytics.createAnalyticsEvent({ event: 'error', data: aObj });
-
         // error object should be sent almost immediately (after a debounce interval), sending any events as well
         await wait(DEFAULT_DEBOUNCE_TIME_MS);
         expect(analytics.getEventsQueue().getQueue().errors.length).toBe(0);
         expect(analytics.getEventsQueue().getQueue().info.length).toBe(0);
     });
 
-    test('Analytics events queue sends log object', async () => {
-        const analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount, bundleType: 'umd' });
-
-        const aObj = createAnalyticsObject({
+    test('Create log event and see that it is sent (almost) immediately', async () => {
+        const aObj = analytics.createAnalyticsEvent({
             event: 'log',
-            component: 'scheme',
-            type: 'Submit'
+            data: {
+                component: 'scheme',
+                type: 'Submit'
+            }
         });
 
         expect(aObj.timestamp).not.toBe(undefined);
         expect(aObj.component).toEqual('scheme');
         expect(aObj.type).toEqual('Submit');
 
-        // no message prop for a log with type 'Submit'
+        // no message prop for a log
         expect(aObj.message).toBe(undefined);
 
-        analytics.createAnalyticsEvent({ event: 'log', data: aObj });
-
-        // log object should be sent almost immediately (after a debounce interval)
+        // log event should be sent almost immediately (after a debounce interval)
         await wait(DEFAULT_DEBOUNCE_TIME_MS);
         expect(analytics.getEventsQueue().getQueue().logs.length).toBe(0);
+    });
+
+    test('Creating a validation error info event object with the expected properties', async () => {
+        const aObj = analytics.createAnalyticsEvent({
+            event: 'info',
+            data: {
+                component: 'scheme',
+                type: ANALYTICS_VALIDATION_ERROR_STR,
+                target: 'card_number',
+                validationErrorCode: 'cc.num.901',
+                validationErrorMessage: 'error-msg-incorrectly-filled-pan'
+            }
+        });
+
+        expect(aObj.timestamp).not.toBe(undefined);
+        expect(aObj.target).toEqual('card_number');
+        expect(aObj.type).toEqual(ANALYTICS_VALIDATION_ERROR_STR);
+        expect(aObj.validationErrorCode).toEqual('901');
+        expect(aObj.validationErrorMessage).toEqual('error-msg-incorrectly-filled-pan');
+
+        // info event should not be sent immediately
+        expect(analytics.getEventsQueue().getQueue().info.length).toBe(1);
     });
 });

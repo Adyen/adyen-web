@@ -1,4 +1,4 @@
-import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD, ERROR_CODES } from './constants';
+import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD, ErrorCodePrefixes, SF_ErrorCodes } from './constants';
 import { SFError } from '../../components/Card/components/CardInput/types';
 import { SortErrorsObj, SortedErrorObject, GenericError, SetSRMessagesReturnObject } from './types';
 import { ValidationRuleResult } from '../../utils/Validator/ValidationRuleResult';
@@ -12,36 +12,22 @@ import {
     ENCRYPTED_PWD_FIELD,
     ENCRYPTED_SECURITY_CODE
 } from '../../components/internal/SecuredFields/lib/configuration/constants';
+import { AriaConfigObject } from '../../components/internal/SecuredFields/lib/types';
+import type Language from '../../language';
 
 /**
- * Access items stored in the ERROR_CODES object by either sending in the key - in which case you get the value
- * or by sending in the value - in which case you get the key
- * @param keyOrValue - key (or value) by which to retrieve the corresponding value (or key)
+ * Extract and translate all the errorCodes related to a specific securedField
+ * @param i18n
+ * @param errorCodeIdentifier - the identifier for which type of errorCodes we need to collect e.g. 'cc-num'
  */
-export const getError = (keyOrValue: string): string => {
-    // Retrieve value
-    let rtnVal = ERROR_CODES[keyOrValue];
-    if (rtnVal) return rtnVal;
-
-    // Retrieve key
-    rtnVal = Object.keys(ERROR_CODES).find(key => ERROR_CODES[key] === keyOrValue);
-    if (rtnVal) return rtnVal;
-
-    // Neither exist
-    return keyOrValue;
-};
-
-export const addAriaErrorTranslationsObject = (i18n, errorCodeIdentifier) => {
-    const errorKeys = Object.keys(ERROR_CODES);
-
-    const transObj = errorKeys.reduce((acc, item) => {
-        const value = ERROR_CODES[item];
-        // Limit to errors related to specific sf (or general errors) TODO check if general errors are still used
-        if (value.includes(errorCodeIdentifier) || value.indexOf('gen.01') > -1) {
+export const getTranslatedErrors = (i18n: Language, errorCodeIdentifier: string): Record<SF_ErrorCodes, string> => {
+    const transObj = Object.values(SF_ErrorCodes).reduce((acc, value) => {
+        // Limit to errors related to specific sf
+        if (value.includes(errorCodeIdentifier)) {
             acc[value] = i18n.get(value);
         }
         return acc;
-    }, {});
+    }, {}) as Record<SF_ErrorCodes, string>;
 
     return transObj;
 };
@@ -53,45 +39,60 @@ export const addAriaErrorTranslationsObject = (i18n, errorCodeIdentifier) => {
  * @param i18n - an i18n object to use to get translations
  * @returns a duplicate of the original object with a new property: "error" whose value is a object containing the translated errors
  */
-export const addErrorTranslationsToObject = (originalObj, i18n, fieldType) => {
-    const nuObj = { ...originalObj };
+export const addErrorTranslationsToObject = (originalObj: AriaConfigObject, i18n: Language, fieldType: string): AriaConfigObject => {
+    const nuObj: AriaConfigObject = { ...originalObj };
 
     const errorCodeIdentifier = fieldTypeToErrorCodeIdentifier(fieldType);
-    nuObj.error = addAriaErrorTranslationsObject(i18n, errorCodeIdentifier);
+    nuObj.error = getTranslatedErrors(i18n, errorCodeIdentifier);
 
     return nuObj;
 };
 
-const fieldTypeToErrorCodeIdentifier = fieldType => {
+/**
+ * errorCodeIdentifiers must match the prefixes to the numbers in ERROR_CODES (Errors/constants.ts)
+ * (Which in turn must match the keys in the translations files)
+ */
+const fieldTypeToErrorCodeIdentifier = (fieldType: string): string => {
     let errorCodeIdentifier;
     switch (fieldType) {
         case ENCRYPTED_CARD_NUMBER:
-            errorCodeIdentifier = 'sf-cc-num';
+            errorCodeIdentifier = ErrorCodePrefixes.CC_NUM;
             break;
         case ENCRYPTED_EXPIRY_DATE:
-            errorCodeIdentifier = 'sf-cc-dat';
+            errorCodeIdentifier = ErrorCodePrefixes.CC_DAT;
             break;
         case ENCRYPTED_EXPIRY_MONTH:
-            errorCodeIdentifier = 'sf-cc-mth';
+            errorCodeIdentifier = ErrorCodePrefixes.CC_MTH;
             break;
         case ENCRYPTED_EXPIRY_YEAR:
-            errorCodeIdentifier = 'sf-cc-yr';
+            errorCodeIdentifier = ErrorCodePrefixes.CC_YR;
             break;
         case ENCRYPTED_SECURITY_CODE:
-            errorCodeIdentifier = 'sf-cc-cvc';
+            errorCodeIdentifier = ErrorCodePrefixes.CC_CVC;
             break;
         case ENCRYPTED_PWD_FIELD:
-            errorCodeIdentifier = 'sf-kcp-pwd';
+            errorCodeIdentifier = ErrorCodePrefixes.KCP_PWD;
             break;
         case ENCRYPTED_BANK_ACCNT_NUMBER_FIELD:
-            errorCodeIdentifier = 'sf-ach-num';
+            errorCodeIdentifier = ErrorCodePrefixes.ACH_NUM;
             break;
         case ENCRYPTED_BANK_LOCATION_FIELD:
-            errorCodeIdentifier = 'sf-ach-loc';
+            errorCodeIdentifier = ErrorCodePrefixes.ACH_LOC;
             break;
         default:
     }
     return errorCodeIdentifier;
+};
+
+export const getErrorMessageFromCode = (errorCode: string, codeMap: Record<string, string>): string => {
+    let errMsg = errorCode;
+    for (const [key, value] of Object.entries(codeMap)) {
+        if (value === errorCode) {
+            errMsg = key;
+            break;
+        }
+    }
+    return errMsg?.toLowerCase().replace(/[_.]/g, '-');
 };
 
 /**

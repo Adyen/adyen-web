@@ -10,7 +10,7 @@ import {
     ENCRYPTED_SECURITY_CODE
 } from '../lib/configuration/constants';
 import getProp from '../../../../utils/getProp';
-import { DEFAULT_ERROR, EMPTY_FIELD_ERROR_MESSAGES } from '../../../../core/Errors/constants';
+import { EMPTY_FIELD_ERROR_MESSAGES } from '../../../../core/Errors/constants';
 
 /**
  * Make an array of encrypted field names based on the value of the 'data-cse' attribute of elements in the rootNode
@@ -97,7 +97,7 @@ export const getErrorReducer = (numDateFields, state) => (acc, field) => {
  */
 export const getErrorObject = (fieldType, rootNode, state) => {
     // Get existing error OR field is empty in which case get field specific msg OR use default
-    const error = getProp(state, `errors.${fieldType}`) || EMPTY_FIELD_ERROR_MESSAGES[fieldType] || DEFAULT_ERROR;
+    const error = getProp(state, `errors.${fieldType}`) || EMPTY_FIELD_ERROR_MESSAGES[fieldType];
     return {
         rootNode,
         fieldType,

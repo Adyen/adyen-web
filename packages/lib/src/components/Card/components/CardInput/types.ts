@@ -135,7 +135,7 @@ export interface CardInputProps {
     type?: string;
     maskSecurityCode?: boolean;
     disclaimerMessage?: DisclaimerMsgObject;
-    onErrorAnalytics?: (obj: FieldErrorAnalyticsObject) => {};
+    onValidationErrorAnalytics?: (obj: FieldErrorAnalyticsObject) => {};
 }
 
 export interface CardInputState {
