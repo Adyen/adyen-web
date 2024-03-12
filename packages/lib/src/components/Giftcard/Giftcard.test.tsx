@@ -12,14 +12,7 @@ describe('Giftcard', () => {
     const baseProps = {
         modules: {
             resources,
-            analytics: {
-                sendAnalytics: () => {},
-                setUp: () => null,
-                getCheckoutAttemptId: () => null,
-                getEventsQueue: () => null,
-                createAnalyticsEvent: () => null,
-                getEnabled: () => null
-            }
+            analytics: global.analytics
         },
         amount: { value: 1000, currency: 'EUR' },
         name: 'My Test Gift Card',
