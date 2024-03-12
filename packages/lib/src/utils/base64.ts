@@ -1,4 +1,4 @@
-import { DecodeObject } from '../components/types';
+import { DecodeObject } from '../types/global-types';
 
 export const NOT_BASE64_ERROR = 'not base64';
 export const BASE64_MALFORMED_URI_ERROR = 'malformed URI sequence';

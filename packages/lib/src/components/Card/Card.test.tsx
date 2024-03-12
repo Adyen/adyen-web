@@ -87,27 +87,33 @@ describe('Card', () => {
 
         test('should only return storePaymentMethod:true for regular card, zero auth payments, *if* the conditions are right', () => {
             // Manual flow
-            expect(new CardElement(global.core, { amount: { value: 0 }, enableStoreDetails: true }).data.storePaymentMethod).toBe(true);
-            expect(new CardElement(global.core, { amount: { value: 0 }, enableStoreDetails: false }).data.storePaymentMethod).toBe(undefined);
+            expect(new CardElement(global.core, { amount: { value: 0, currency: 'USD' }, enableStoreDetails: true }).data.storePaymentMethod).toBe(
+                true
+            );
+            expect(new CardElement(global.core, { amount: { value: 0, currency: 'USD' }, enableStoreDetails: false }).data.storePaymentMethod).toBe(
+                undefined
+            );
 
             // Session flow - session configuration should override merchant configuration
             let cardElement = new CardElement(global.core, {
-                amount: { value: 0 },
+                amount: { value: 0, currency: 'USD' },
                 enableStoreDetails: false,
+                // @ts-ignore it's just a test
                 session: { configuration: { enableStoreDetails: true } }
             });
             expect(cardElement.data.storePaymentMethod).toBe(true);
 
             cardElement = new CardElement(global.core, {
-                amount: { value: 0 },
+                amount: { value: 0, currency: 'USD' },
                 enableStoreDetails: true,
+                // @ts-ignore it's just a test
                 session: { configuration: { enableStoreDetails: false } }
             });
             expect(cardElement.data.storePaymentMethod).toBe(undefined);
         });
 
         test('should return storePaymentMethod based on the checkbox value, for regular card, non-zero auth payments', () => {
-            const card = new CardElement(global.core, { amount: { value: 10 }, enableStoreDetails: true });
+            const card = new CardElement(global.core, { amount: { value: 10, currency: 'USD' }, enableStoreDetails: true });
             card.setState({ storePaymentMethod: true });
             expect(card.data.storePaymentMethod).toBe(true);
             card.setState({ storePaymentMethod: false });
@@ -116,19 +122,23 @@ describe('Card', () => {
 
         test('should not return storePaymentMethod for stored card, non-zero auth payments', () => {
             expect(
-                new CardElement(global.core, { amount: { value: 10 }, storedPaymentMethodId: 'xxx', enableStoreDetails: true }).data.storePaymentMethod
+                new CardElement(global.core, { amount: { value: 10, currency: 'USD' }, storedPaymentMethodId: 'xxx', enableStoreDetails: true }).data
+                    .storePaymentMethod
             ).not.toBeDefined();
             expect(
-                new CardElement(global.core, { amount: { value: 10 }, storedPaymentMethodId: 'xxx', enableStoreDetails: false }).data.storePaymentMethod
+                new CardElement(global.core, { amount: { value: 10, currency: 'USD' }, storedPaymentMethodId: 'xxx', enableStoreDetails: false }).data
+                    .storePaymentMethod
             ).not.toBeDefined();
         });
 
         test('should not return storePaymentMethod for stored card, zero auth payments', () => {
             expect(
-                new CardElement(global.core, { amount: { value: 0 }, storedPaymentMethodId: 'xxx', enableStoreDetails: true }).data.storePaymentMethod
+                new CardElement(global.core, { amount: { value: 0, currency: 'USD' }, storedPaymentMethodId: 'xxx', enableStoreDetails: true }).data
+                    .storePaymentMethod
             ).not.toBeDefined();
             expect(
-                new CardElement(global.core, { amount: { value: 0 }, storedPaymentMethodId: 'xxx', enableStoreDetails: false }).data.storePaymentMethod
+                new CardElement(global.core, { amount: { value: 0, currency: 'USD' }, storedPaymentMethodId: 'xxx', enableStoreDetails: false }).data
+                    .storePaymentMethod
             ).not.toBeDefined();
         });
     });

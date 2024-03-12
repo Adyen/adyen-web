@@ -3,7 +3,7 @@ import { getOrigin } from '../../../utils/getOrigin';
 import base64 from '../../../utils/base64';
 import { ChallengeData, ThreeDS2Token, FingerPrintData, ResultObject } from '../types';
 import { pick } from '../../internal/SecuredFields/utils';
-import { DecodeObject } from '../../types';
+import { DecodeObject } from '../../../types/global-types';
 import { ErrorObject } from '../../../core/Errors/types';
 
 export interface FingerprintResolveData {
