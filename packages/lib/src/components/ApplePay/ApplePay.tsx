@@ -34,7 +34,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
     /**
      * Formats the component props
      */
-    protected formatProps(props) {
+    protected override formatProps(props) {
         const version = props.version || resolveSupportedVersion(latestSupportedVersion);
         const supportedNetworks = props.brands?.length ? mapBrands(props.brands) : props.supportedNetworks;
 
@@ -50,20 +50,22 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
     /**
      * Formats the component data output
      */
-    protected formatData(): ApplePayElementData {
+    protected override formatData(): ApplePayElementData {
         const { applePayToken, billingAddress, deliveryAddress } = this.state;
+        const { isExpress } = this.props;
 
         return {
             paymentMethod: {
                 type: ApplePayElement.type,
-                applePayToken
+                applePayToken,
+                ...(isExpress && { subtype: 'express' })
             },
             ...(billingAddress && { billingAddress }),
             ...(deliveryAddress && { deliveryAddress })
         };
     }
 
-    public submit = (): void => {
+    public override submit = (): void => {
         // Analytics
         if (this.props.isInstantPayment) {
             this.submitAnalytics({ type: ANALYTICS_SELECTED_STR, target: ANALYTICS_INSTANT_PAYMENT_BUTTON });

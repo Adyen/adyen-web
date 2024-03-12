@@ -55,6 +55,17 @@ beforeEach(() => {
 });
 
 describe('GooglePay', () => {
+    describe('isExpress flag', () => {
+        test('should add subtype: express when isExpress is configured', () => {
+            const googlepay = new GooglePay(global.core, { isExpress: true });
+            expect(googlepay.data.paymentMethod).toHaveProperty('subtype', 'express');
+        });
+        test('should not add subtype: express when isExpress is omitted', () => {
+            const googlepay = new GooglePay(global.core);
+            expect(googlepay.data.paymentMethod).not.toHaveProperty('subtype', 'express');
+        });
+    });
+
     describe('submit()', () => {
         test('should make the payments call passing deliveryAddress and billingAddress', async () => {
             const onSubmitMock = jest.fn().mockImplementation((data, component, actions) => {

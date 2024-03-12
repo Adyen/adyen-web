@@ -1,11 +1,8 @@
-const defaultProps = {
+import { ApplePayConfiguration } from './types';
+
+const defaultProps: ApplePayConfiguration = {
     // Transaction Information
     amount: { currency: 'USD', value: 0 },
-
-    /**
-     * The merchant’s two-letter ISO 3166 country code.
-     */
-    countryCode: 'US',
 
     totalPriceStatus: 'final',
     totalPriceLabel: undefined,
@@ -82,8 +79,7 @@ const defaultProps = {
 
     // ButtonOptions
     buttonType: 'plain',
-    buttonColor: 'black',
-    showPayButton: true // show or hide the Apple Pay button
+    buttonColor: 'black'
 };
 
 export default defaultProps;

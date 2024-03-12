@@ -39,6 +39,12 @@ export type ApplePayButtonType =
 
 export interface ApplePayConfiguration extends UIElementProps {
     /**
+     * Flag used to enable Express Flow reports on Customer Area
+     * @defaultValue false
+     */
+    isExpress?: boolean;
+
+    /**
      * The Apple Pay version number your website supports.
      * @default highest supported version by the shopper device
      * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/apple_pay_on_the_web_version_history Apple Pay on the Web Version History}
@@ -203,20 +209,16 @@ export interface ApplePayConfiguration extends UIElementProps {
     // ButtonOptions
     buttonColor?: 'black' | 'white' | 'white-with-line';
     buttonType?: ApplePayButtonType;
-
-    /**
-     * Show or hide the Apple Pay button
-     */
-    showPayButton?: boolean;
 }
 
 export interface ApplePayElementData {
     paymentMethod: {
         type: string;
         applePayToken: string;
-        billingAddress?: AddressData;
-        deliveryAddress?: AddressData;
+        isExpress?: boolean;
     };
+    billingAddress?: AddressData;
+    deliveryAddress?: AddressData;
 }
 
 export interface ApplePaySessionRequest {

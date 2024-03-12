@@ -19,6 +19,17 @@ beforeEach(() => {
 });
 
 describe('ApplePay', () => {
+    describe('isExpress flag', () => {
+        test('should add subtype: express when isExpress is configured', () => {
+            const applepay = new ApplePay(global.core, { isExpress: true });
+            expect(applepay.data.paymentMethod).toHaveProperty('subtype', 'express');
+        });
+        test('should not add subtype: express when isExpress is omitted', () => {
+            const applepay = new ApplePay(global.core);
+            expect(applepay.data.paymentMethod).not.toHaveProperty('subtype', 'express');
+        });
+    });
+
     describe('submit()', () => {
         test('should forward apple pay error (if available) to ApplePay if payment fails', async () => {
             const onPaymentFailedMock = jest.fn();

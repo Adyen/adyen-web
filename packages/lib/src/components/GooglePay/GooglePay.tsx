@@ -33,7 +33,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         });
     }
 
-    formatProps(props): GooglePayConfiguration {
+    protected override formatProps(props): GooglePayConfiguration {
         const buttonSizeMode = props.buttonSizeMode ?? (props.isDropin ? 'fill' : 'static');
         const buttonLocale = getGooglePayLocale(props.buttonLocale ?? props.i18n?.locale);
 
@@ -51,14 +51,16 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
     /**
      * Formats the component data output
      */
-    formatData() {
+    protected override formatData() {
         const { googlePayCardNetwork, googlePayToken, billingAddress, deliveryAddress } = this.state;
+        const { isExpress } = this.props;
 
         return {
             paymentMethod: {
                 type: this.type,
                 googlePayCardNetwork,
-                googlePayToken
+                googlePayToken,
+                ...(isExpress && { subtype: 'express' })
             },
             browserInfo: this.browserInfo,
             origin: !!window && window.location.origin,

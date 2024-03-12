@@ -47,6 +47,7 @@ describe('preparePaymentRequest', () => {
         test('works with defaultProps', () => {
             const paymentRequest = preparePaymentRequest({
                 ...defaultProps,
+                countryCode: 'US',
                 companyName: 'Test'
             });
 
