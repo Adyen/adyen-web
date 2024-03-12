@@ -79,10 +79,17 @@ export interface CardConfiguration extends UIElementProps {
      */
     showContextualElement?: boolean;
 
-    /** Show/hide the "store details" checkbox */
+    /** Config option related to whether we set storePaymentMethod in the card data, and showing/hiding the "store details" checkbox */
     enableStoreDetails?: boolean;
 
     /** Show/hide the Security Code field - merchant set config option */
+    /**
+     * Show/hide the "store details" checkbox
+     * @internal
+     */
+    showStoreDetailsCheckbox?: boolean;
+
+    /** Show/hide the CVC field - merchant set config option */
     hideCVC?: boolean;
 
     /**
@@ -151,7 +158,7 @@ export interface CardConfiguration extends UIElementProps {
     onFocus?: (event: CbObjOnFocus | ComponentFocusObject) => void;
 
     /**
-     * Called when a field gains loses focus.
+     * Called when a field loses focus.
      */
     onBlur?: (event: CbObjOnFocus | ComponentFocusObject) => void;
 

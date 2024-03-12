@@ -33,7 +33,7 @@ export default function Img(props: ImgProps) {
     }, []);
 
     if (backgroundUrl) {
-        return <div style={{ backgroundUrl } as JSX.CSSProperties} {...props} className={classNames} />;
+        return <div data-testid="background" style={{ backgroundUrl } as JSX.CSSProperties} {...props} className={classNames} />;
     }
 
     return <img {...props} alt={alt} ref={imageRef} className={classNames} onError={handleError} />;

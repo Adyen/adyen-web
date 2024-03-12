@@ -2,6 +2,7 @@ import { ThreeDS2FlowObject, FingerPrintData, ThreeDS2DeviceFingerprintConfigura
 import { FingerprintResolveData } from '../utils';
 import { ActionHandledReturnObject } from '../../../../types/global-types';
 import { SendAnalyticsObject } from '../../../../core/Analytics/types';
+import { ErrorObject } from '../../../../core/Errors/types';
 
 export interface DoFingerprint3DS2Props extends FingerPrintData {
     onCompleteFingerprint: (resolveObject: ThreeDS2FlowObject) => void;
@@ -18,9 +19,10 @@ export interface DoFingerprint3DS2State {
 export interface PrepareFingerprint3DS2Props extends ThreeDS2DeviceFingerprintConfiguration {
     onComplete: (data: FingerprintResolveData) => void;
     onSubmitAnalytics: (aObj: SendAnalyticsObject) => void;
+    isMDFlow: boolean;
 }
 
 export interface PrepareFingerprint3DS2State {
     status?: string;
-    fingerPrintData?: FingerPrintData;
+    fingerPrintData?: FingerPrintData | ErrorObject;
 }

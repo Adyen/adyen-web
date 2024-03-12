@@ -10,7 +10,7 @@ describe('Giftcard', () => {
     const user = userEvent.setup();
 
     const baseProps = {
-        modules: { resources },
+        modules: { resources, analytics: { sendAnalytics: () => {} } },
         amount: { value: 1000, currency: 'EUR' },
         name: 'My Test Gift Card',
         type: 'giftcard',

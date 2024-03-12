@@ -9,6 +9,8 @@ import { APPLEPAY_SESSION_ENDPOINT } from './config';
 import { preparePaymentRequest } from './payment-request';
 import { resolveSupportedVersion, mapBrands, formatApplePayContactToAdyenAddressFormat } from './utils';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
+import { DecodeObject } from '../types';
 import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
@@ -222,10 +224,13 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
 
         try {
             const response = await httpPost(options, request);
-            const decodedData = base64.decode(response.data);
-            if (!decodedData) reject('Could not decode Apple Pay session');
-            const session = JSON.parse(decodedData as string);
-            resolve(session);
+            const decodedData: DecodeObject = base64.decode(response.data);
+            if (!decodedData.success) {
+                reject('Could not decode Apple Pay session');
+            } else {
+                const session = JSON.parse(decodedData.data);
+                resolve(session);
+            }
         } catch (e) {
             reject('Could not get Apple Pay session');
         }

@@ -42,6 +42,22 @@ describe('BaseElement', () => {
             expect(baseElement.data).toEqual({ clientStateDataIndicator: true });
             expect(spy).toHaveBeenCalled();
         });
+
+        test('return correct billingAddress data', () => {
+            const Element = class extends BaseElement<{}> {
+                constructor(props) {
+                    super(props);
+                }
+                protected formatData(): any {
+                    return { billingAddress: { firstName: 'bla' } };
+                }
+            };
+            let element;
+            element = new Element({ type: 'riverty' });
+            expect(element.data).toEqual({ clientStateDataIndicator: true, billingAddress: { firstName: 'bla' } });
+            element = new Element({ type: 'card' });
+            expect(element.data).toEqual({ clientStateDataIndicator: true, billingAddress: {} });
+        });
     });
 
     describe('render', () => {

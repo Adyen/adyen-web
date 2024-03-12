@@ -204,5 +204,7 @@ Address.defaultProps = {
     onChange: () => {},
     visibility: 'editable',
     requiredFields: ADDRESS_SCHEMA,
-    specifications: {}
+    specifications: {},
+    onFieldFocusAnalytics: () => {},
+    onFieldBlurAnalytics: () => {}
 };
