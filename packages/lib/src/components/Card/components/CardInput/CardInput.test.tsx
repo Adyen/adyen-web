@@ -27,7 +27,8 @@ const cardInputRequiredProps = {
     clientKey: 'xxxx',
     loadingContext: 'test',
     resources: global.resources,
-    brandsIcons: []
+    brandsIcons: [],
+    showPayButton: false
 };
 
 const getWrapper = ui => {

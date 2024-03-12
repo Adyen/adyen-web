@@ -11,7 +11,6 @@ describe('MealVoucherFR', () => {
         modules: { resources },
         amount: { value: 1000, currency: 'EUR' },
         name: 'MealVoucher',
-        showPayButton: true,
         i18n,
         loadingContext: 'mock'
     };

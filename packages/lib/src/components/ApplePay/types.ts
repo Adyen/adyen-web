@@ -203,11 +203,6 @@ export interface ApplePayConfiguration extends UIElementProps {
     // ButtonOptions
     buttonColor?: 'black' | 'white' | 'white-with-line';
     buttonType?: ApplePayButtonType;
-
-    /**
-     * Show or hide the Apple Pay button
-     */
-    showPayButton?: boolean;
 }
 
 export interface ApplePayElementData {

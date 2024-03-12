@@ -32,7 +32,7 @@ export interface DragonpayInputProps {
     type?: string;
     onChange: (state) => void;
     onSubmit?: (state, component) => void;
-    showPayButton?: boolean;
+    showPayButton: boolean;
     payButton: any;
     ref?: any;
 }

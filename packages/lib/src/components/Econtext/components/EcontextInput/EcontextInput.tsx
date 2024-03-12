@@ -12,7 +12,7 @@ interface EcontextInputProps {
     personalDetailsRequired?: boolean;
     showFormInstruction?: boolean;
     data?: PersonalDetailsSchema;
-    showPayButton?: boolean;
+    showPayButton: boolean;
     payButton(config: any): VNode;
     onChange?(data: any): void;
     onSubmit?(state: any, component: any): void;

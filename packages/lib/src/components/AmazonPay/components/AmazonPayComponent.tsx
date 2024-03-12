@@ -82,7 +82,7 @@ export default function AmazonPayComponent(props: AmazonPayComponentProps) {
 
     return (
         <div className="adyen-checkout__amazonpay">
-            <AmazonPayButton {...props} amazonRef={window.amazon} ref={amazonPayButtonRef} />
+            <AmazonPayButton {...props} showPayButton={this.props.showPayButton} amazonRef={window.amazon} ref={amazonPayButtonRef} />
         </div>
     );
 }

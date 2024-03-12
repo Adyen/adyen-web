@@ -191,8 +191,6 @@ export default function Address(props: AddressProps) {
                     <Fragment>{addressSchema.map(field => (field instanceof Array ? getWrapper(field) : getComponent(field, {})))}</Fragment>
                 )}
             </Fieldset>
-            {/* Needed to easily test when showValidation is called */}
-            {process.env.NODE_ENV !== 'production' && props.showPayButton && props.payButton({ label: i18n.get('continue') })}
         </Fragment>
     );
 }

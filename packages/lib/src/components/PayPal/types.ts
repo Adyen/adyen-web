@@ -102,8 +102,6 @@ export interface PayPalConfiguration extends UIElementProps {
         tagline?: boolean;
     };
 
-    showPayButton?: boolean;
-
     /**
      * Called when the button first renders. You can use it for validations on your page if you are unable to do so prior to rendering.
      * @see {@link https://developer.paypal.com/sdk/js/reference/#link-oninitonclick}

@@ -27,7 +27,6 @@ export interface AddressProps {
     overrideSchema?: AddressSpecifications;
     iOSFocusedField?: string;
     payButton?: (obj) => {};
-    showPayButton?: boolean;
     setComponentRef?: (ref) => void;
     showContextualElement?: boolean;
     onFieldFocusAnalytics?: (who: string, event: Event) => void;

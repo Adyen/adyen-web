@@ -82,8 +82,7 @@ const defaultProps = {
 
     // ButtonOptions
     buttonType: 'plain',
-    buttonColor: 'black',
-    showPayButton: true // show or hide the Apple Pay button
+    buttonColor: 'black'
 };
 
 export default defaultProps;

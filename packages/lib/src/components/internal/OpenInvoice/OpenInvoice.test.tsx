@@ -88,7 +88,7 @@ describe('OpenInvoice', () => {
 
     test('should be possible to change the status', () => {
         const payButton = jest.fn();
-        const wrapper = getWrapper({ showPayButton: true, payButton });
+        const wrapper = getWrapper({ payButton, showPayButton: true });
         const status = 'loading';
         componentRef.setStatus(status);
         wrapper.update();

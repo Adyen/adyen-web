@@ -8,7 +8,6 @@ import { VoucherConfiguration } from '../internal/Voucher/types';
 
 export class MultibancoElement extends UIElement<VoucherConfiguration> {
     public static type = TxVariants.multibanco;
-    public static defaultProps = { showPayButton: true };
 
     get isValid() {
         return true;

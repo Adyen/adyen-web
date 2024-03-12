@@ -7,10 +7,9 @@ test('should return expected data to perform the payment', () => {
     expect(oxxoElement.formatData()).toEqual({ paymentMethod: { type: 'oxxo' } });
 });
 
-test('should show pay button if property is set to true', async () => {
+test('should show pay button by default', async () => {
     const oxxoElement = new Oxxo(global.core, {
         loadingContext: 'test',
-        showPayButton: true,
         i18n: global.i18n,
         modules: { resources: global.resources }
     });
@@ -24,7 +23,6 @@ test('should trigger submit when Pay button is pressed', async () => {
 
     const oxxoElement = new Oxxo(global.core, {
         loadingContext: 'test',
-        showPayButton: true,
         i18n: global.i18n,
         modules: { resources: global.resources }
     });
