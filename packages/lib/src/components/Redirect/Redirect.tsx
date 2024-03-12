@@ -40,13 +40,12 @@ class RedirectElement extends UIElement<RedirectConfiguration> {
             return (
                 <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                     <RedirectButton
+                        // @ts-ignore Ref is used by preact component
+                        ref={this.setComponentRef}
                         {...this.props}
                         name={this.displayName}
                         onSubmit={this.submit}
                         payButton={this.payButton}
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
                     />
                 </CoreProvider>
             );

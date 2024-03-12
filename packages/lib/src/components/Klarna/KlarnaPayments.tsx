@@ -48,7 +48,7 @@ class KlarnaPayments extends UIElement<KlarnConfiguration> {
 
     onLoaded() {
         // When action/widget is loaded, set the 'drop-in' back to ready
-        this.setElementStatus('ready');
+        this.setStatus('ready');
     }
 
     render() {

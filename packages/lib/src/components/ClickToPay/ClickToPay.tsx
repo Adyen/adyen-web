@@ -112,7 +112,7 @@ export class ClickToPayElement extends UIElement<ClickToPayConfiguration> {
                     amount={this.props.amount}
                     clickToPayService={this.clickToPayService}
                     setClickToPayRef={this.setComponentRef}
-                    onSetStatus={this.setElementStatus}
+                    onSetStatus={this.setStatus}
                     onSubmit={this.handleClickToPaySubmit}
                     onError={this.handleError}
                 >

@@ -114,7 +114,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
                     this.handleResponse(paymentResponse);
                 })
                 .catch((paymentResponse?: RawPaymentResponse) => {
-                    this.setElementStatus('ready');
+                    this.setStatus('ready');
 
                     const googlePayError = paymentResponse?.error?.googlePayError;
                     const fallbackMessage = this.props.i18n.get('error.subtitle.payment');

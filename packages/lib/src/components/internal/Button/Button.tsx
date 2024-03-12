@@ -4,6 +4,9 @@ import Spinner from '../Spinner';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import './Button.scss';
 import { ButtonProps, ButtonState } from './types';
+import { UIElementStatus } from '../UIElement/types';
+
+type ButtonStatus = Exclude<UIElementStatus, 'ready' | 'error' | 'success'>;
 
 class Button extends Component<ButtonProps, ButtonState> {
     public static defaultProps = {
@@ -46,23 +49,24 @@ class Button extends Component<ButtonProps, ButtonState> {
 
         const buttonClasses = classNames(['adyen-checkout__button', ...modifiers.map(m => `adyen-checkout__button--${m}`)]);
 
-        const buttonStates = {
+        const defaultButtonContent = (
+            <span className="adyen-checkout__button__content">
+                {buttonIcon}
+                <span className="adyen-checkout__button__text">{label}</span>
+            </span>
+        );
+
+        const buttonStates: Record<ButtonStatus, h.JSX.Element> = {
             loading: <Spinner size="medium" />,
             redirect: (
                 <span className="adyen-checkout__button__content">
                     <Spinner size="medium" inline />
                     {i18n.get('payButton.redirecting')}
                 </span>
-            ),
-            default: (
-                <span className="adyen-checkout__button__content">
-                    {buttonIcon}
-                    <span className="adyen-checkout__button__text">{label}</span>
-                </span>
             )
         };
 
-        const buttonText = buttonStates[status] || buttonStates.default;
+        const buttonText = buttonStates[status] || defaultButtonContent;
 
         if (href) {
             return (

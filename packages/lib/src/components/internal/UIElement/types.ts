@@ -6,6 +6,7 @@ import Language from '../../../language';
 import { BaseElementProps, IBaseElement } from '../BaseElement/types';
 import { PayButtonProps } from '../PayButton/PayButton';
 import { CoreConfiguration, ICore } from '../../../core/types';
+import type { ActionType } from '../../../core/ProcessResponse/PaymentAction/actionTypes';
 
 export type PayButtonFunctionProps = Omit<PayButtonProps, 'amount'>;
 
@@ -52,12 +53,6 @@ export type UIElementProps = BaseElementProps &
          */
         storedPaymentMethodId?: string;
 
-        /**
-         * Status set when creating the Component from action
-         * @internal
-         */
-        statusType?: 'redirect' | 'loading' | 'custom';
-
         type?: string;
         name?: string;
         icon?: string;
@@ -100,6 +95,12 @@ export type UIElementProps = BaseElementProps &
          * @internal
          */
         paymentMethodType?: string;
+
+        /**
+         * When the Component is created from action, it will contain this property identifying which type of action it is
+         * @internal
+         */
+        actionType?: ActionType;
     };
 
 export interface IUIElement extends IBaseElement {
@@ -111,16 +112,14 @@ export interface IUIElement extends IBaseElement {
     elementRef: IUIElement;
     submit(): void;
     setComponentRef(ref): void;
-    updateParent(options?: CoreConfiguration): Promise<ICore>;
-    setElementStatus(status: UIElementStatus, props: any): UIElement;
-    setStatus(status: UIElementStatus, props?: { message?: string; [key: string]: any }): UIElement;
+    setStatus(status: UIElementStatus): void;
     handleAction(action: PaymentAction): UIElement | null;
     showValidation(): void;
     setState(newState: object): void;
     isAvailable(): Promise<void>;
 }
 
-export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';
+export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success' | 'redirect';
 
 // An interface for the members exposed by a component to its parent UIElement
 export interface ComponentMethodsRef {

@@ -8,7 +8,7 @@ import { Resources } from '../../../core/Context/Resources';
 import { ANALYTICS_SUBMIT_STR } from '../../../core/Analytics/constants';
 
 import type { AnalyticsInitialEvent, SendAnalyticsObject } from '../../../core/Analytics/types';
-import type { CoreConfiguration, ICore } from '../../../core/types';
+import type { ICore } from '../../../core/types';
 import type { NewableComponent } from '../../../core/core.registry';
 import type { ComponentMethodsRef, IUIElement, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
 import type { CheckoutSessionDetailsResponse, CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
@@ -27,11 +27,17 @@ import type { IDropin } from '../../Dropin/types';
 import './UIElement.scss';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> implements IUIElement {
-    protected componentRef: any;
+    /**
+     * Reference to the UIElement
+     */
+    public elementRef: UIElement;
+
+    /**
+     * Reference to the Component rendered by Preact
+     */
+    public componentRef: any;
 
     protected resources: Resources;
-
-    public elementRef: UIElement;
 
     public static type = undefined;
 
@@ -55,7 +61,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.handleOrder = this.handleOrder.bind(this);
         this.handleAdditionalDetails = this.handleAdditionalDetails.bind(this);
         this.handleResponse = this.handleResponse.bind(this);
-        this.setElementStatus = this.setElementStatus.bind(this);
         this.submitAnalytics = this.submitAnalytics.bind(this);
         this.makePaymentsCall = this.makePaymentsCall.bind(this);
         this.makeAdditionalDetailsCall = this.makeAdditionalDetailsCall.bind(this);
@@ -110,16 +115,14 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         return this;
     }
 
-    public setElementStatus(status: UIElementStatus, props?: any): this {
-        this.elementRef?.setStatus(status, props);
-        return this;
-    }
-
-    public setStatus(status: UIElementStatus, props?): this {
-        if (this.componentRef?.setStatus) {
-            this.componentRef.setStatus(status, props);
+    public setStatus(status: UIElementStatus): void {
+        // If the Component is part of Dropin, it then directly trigger the setStatus of the DropinComponent. This updates Drop-in and the Component itself
+        if (assertIsDropin(this.elementRef)) {
+            const dropinComponent = this.elementRef.componentRef;
+            dropinComponent.setStatus(status);
+        } else {
+            this.componentRef?.setStatus(status);
         }
-        return this;
     }
 
     protected onChange(): object {
@@ -177,7 +180,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     protected makePaymentsCall(): Promise<CheckoutAdvancedFlowResponse | CheckoutSessionPaymentResponse> {
-        this.setElementStatus('loading');
+        this.setStatus('loading');
 
         if (this.props.onSubmit) {
             return this.submitUsingAdvancedFlow();
@@ -246,16 +249,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     protected handleError = (error: AdyenCheckoutError): void => {
-        /**
-         * Set status using elementRef, which:
-         * - If Drop-in, will set status for Dropin component, and then it will propagate the new status for the active payment method component
-         * - If Component, it will set its own status
-         */
-        this.setElementStatus('ready');
-
-        if (this.props.onError) {
-            this.props.onError(error, this.elementRef);
-        }
+        this.setStatus('ready');
+        this.props.onError?.(error, this.elementRef);
     };
 
     protected handleAdditionalDetails(state: AdditionalDetailsStateData): void {
@@ -267,7 +262,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     private makeAdditionalDetailsCall(state: AdditionalDetailsStateData): Promise<CheckoutSessionDetailsResponse | CheckoutAdvancedFlowResponse> {
-        this.setElementStatus('loading');
+        this.setStatus('loading');
 
         if (this.props.onAdditionalDetails) {
             return new Promise<CheckoutAdvancedFlowResponse>((resolve, reject) => {
@@ -380,15 +375,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         }
 
         this.handleSuccessResult(response);
-    }
-
-    /**
-     * Call update on parent instance
-     * This function exist to make safe access to the protect _parentInstance
-     * @param options - CoreOptions
-     */
-    public updateParent(options: CoreConfiguration = {}): Promise<ICore> {
-        return this.elementRef.core.update(options);
     }
 
     public setComponentRef = (ref: ComponentMethodsRef) => {

@@ -4,6 +4,8 @@ import uuid from '../../../utils/uuid';
 import type { IRegistry } from '../../core.registry';
 import type { ICore } from '../../types';
 
+export type ActionType = 'custom' | 'redirect' | 'fingerprint';
+
 const createComponent = (core: ICore, registry: IRegistry, componentType, props) => {
     const Element = registry.getComponent(componentType);
 
@@ -15,14 +17,14 @@ const createComponent = (core: ICore, registry: IRegistry, componentType, props)
     return new Element(core, { ...props, id: `${componentType}-${uuid()}` });
 };
 
-const getActionHandler = statusType => {
+const getActionHandler = (actionType: ActionType) => {
     return (core: ICore, registry: IRegistry, action: PaymentAction, props) => {
         const config = {
             ...props,
             ...action,
             onComplete: props.onAdditionalDetails,
             onError: props.onError,
-            statusType
+            actionType
         };
 
         return createComponent(core, registry, action.paymentMethodType, config);
@@ -34,7 +36,7 @@ const actionTypes = {
         const config = {
             ...props,
             ...action,
-            statusType: 'redirect'
+            actionType: 'redirect'
         };
 
         return createComponent(core, registry, 'redirect', config);

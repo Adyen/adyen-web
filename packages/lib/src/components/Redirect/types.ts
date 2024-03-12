@@ -5,4 +5,5 @@ export interface RedirectConfiguration extends UIElementProps {
     url?: string;
     method?: 'GET' | 'POST';
     beforeRedirect?: (resolve, reject, url) => Promise<void>;
+    isRedirecting: boolean;
 }

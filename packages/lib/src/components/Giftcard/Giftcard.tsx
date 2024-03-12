@@ -108,7 +108,7 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
                 }
             })
             .catch(error => {
-                this.setStatus(error?.message || 'error');
+                this.setStatus('error');
                 if (this.props.onError) this.handleError(new AdyenCheckoutError('ERROR', error));
             });
     };

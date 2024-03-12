@@ -197,13 +197,13 @@ export const get3DS2FlowProps = (actionSubtype, props) => {
         const fingerprintProps = props.elementRef ? fingerprintFlowPropsDropin : fingerprintFlowProps;
         const rtnObj = pick(fingerprintProps).from(props);
         rtnObj.showSpinner = !props.isDropin;
-        rtnObj.statusType = 'loading';
+        rtnObj.actionType = 'fingerprint';
         return rtnObj;
     }
 
     // Challenge
     return {
-        statusType: 'custom',
+        actionType: 'custom',
         i18n: props.i18n
     };
 };

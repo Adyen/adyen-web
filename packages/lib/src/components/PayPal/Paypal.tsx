@@ -197,9 +197,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <PaypalComponent
-                    ref={ref => {
-                        this.componentRef = ref;
-                    }}
+                    ref={this.setComponentRef}
                     {...rest}
                     {...(onShippingAddressChange && { onShippingAddressChange: this.handleOnShippingAddressChange })}
                     {...(onShippingOptionsChange && { onShippingOptionsChange: this.handleOnShippingOptionsChange })}

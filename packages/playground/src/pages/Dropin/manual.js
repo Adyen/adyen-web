@@ -144,6 +144,8 @@ export async function initManual() {
         }
     }).mount('#dropin-container');
 
+    console.log(dropin);
+
     handleRedirectResult();
 
     return [checkout, dropin];
