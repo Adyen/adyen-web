@@ -8,7 +8,17 @@ describe('MealVoucherFR', () => {
     const user = userEvent.setup();
 
     const baseProps = {
-        modules: { resources, analytics: { sendAnalytics: () => {} } },
+        modules: {
+            resources,
+            analytics: {
+                sendAnalytics: () => {},
+                setUp: () => null,
+                getCheckoutAttemptId: () => null,
+                getEventsQueue: () => null,
+                createAnalyticsEvent: () => null,
+                getEnabled: () => null
+            }
+        },
         amount: { value: 1000, currency: 'EUR' },
         name: 'MealVoucher',
         showPayButton: true,

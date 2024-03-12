@@ -122,23 +122,39 @@ describe('Card', () => {
 
         test('should not return storePaymentMethod for stored card, non-zero auth payments', () => {
             expect(
-                new CardElement(global.core, { amount: { value: 10, currency: 'USD' }, storedPaymentMethodId: 'xxx', enableStoreDetails: true }).data
-                    .storePaymentMethod
+                new CardElement(global.core, {
+                    amount: { value: 10, currency: 'USD' },
+                    storedPaymentMethodId: 'xxx',
+                    supportedShopperInteractions: ['Ecommerce'],
+                    enableStoreDetails: true
+                }).data.storePaymentMethod
             ).not.toBeDefined();
             expect(
-                new CardElement(global.core, { amount: { value: 10, currency: 'USD' }, storedPaymentMethodId: 'xxx', enableStoreDetails: false }).data
-                    .storePaymentMethod
+                new CardElement(global.core, {
+                    amount: { value: 10, currency: 'USD' },
+                    storedPaymentMethodId: 'xxx',
+                    supportedShopperInteractions: ['Ecommerce'],
+                    enableStoreDetails: false
+                }).data.storePaymentMethod
             ).not.toBeDefined();
         });
 
         test('should not return storePaymentMethod for stored card, zero auth payments', () => {
             expect(
-                new CardElement(global.core, { amount: { value: 0, currency: 'USD' }, storedPaymentMethodId: 'xxx', enableStoreDetails: true }).data
-                    .storePaymentMethod
+                new CardElement(global.core, {
+                    amount: { value: 0, currency: 'USD' },
+                    storedPaymentMethodId: 'xxx',
+                    supportedShopperInteractions: ['Ecommerce'],
+                    enableStoreDetails: true
+                }).data.storePaymentMethod
             ).not.toBeDefined();
             expect(
-                new CardElement(global.core, { amount: { value: 0, currency: 'USD' }, storedPaymentMethodId: 'xxx', enableStoreDetails: false }).data
-                    .storePaymentMethod
+                new CardElement(global.core, {
+                    amount: { value: 0, currency: 'USD' },
+                    storedPaymentMethodId: 'xxx',
+                    supportedShopperInteractions: ['Ecommerce'],
+                    enableStoreDetails: false
+                }).data.storePaymentMethod
             ).not.toBeDefined();
         });
     });

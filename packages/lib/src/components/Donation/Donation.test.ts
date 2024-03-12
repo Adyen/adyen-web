@@ -48,7 +48,7 @@ describe.each([
     const core = { i18n: new Language(), loadingContext: 'test', modules: { resources: new Resources('test') } };
 
     beforeEach(() => {
-        donationEle = new DonationElement({ ...core, ...componentProps });
+        donationEle = new DonationElement(global.core, { ...componentProps });
     });
 
     test('should show the banner', async () => {
@@ -65,7 +65,7 @@ describe.each([
 
     test('should show the non-profit organization url', async () => {
         render(donationEle.render());
-        expect((await screen.findAllByRole('link')).some(ele => ele.href.includes('https://example.org'))).toBeTruthy();
+        expect((await screen.findAllByRole('link')).some(ele => (ele as HTMLAnchorElement).href.includes('https://example.org'))).toBeTruthy();
     });
 
     test('should show the non-profit organization description', async () => {

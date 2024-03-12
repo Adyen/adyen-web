@@ -45,17 +45,17 @@ describe('BaseElement', () => {
 
         test('return correct billingAddress data', () => {
             const Element = class extends BaseElement<{}> {
-                constructor(props) {
-                    super(props);
+                constructor(core, props) {
+                    super(core, props);
                 }
                 protected formatData(): any {
                     return { billingAddress: { firstName: 'bla' } };
                 }
             };
             let element;
-            element = new Element({ type: 'riverty' });
+            element = new Element(global.core, { type: 'riverty' });
             expect(element.data).toEqual({ clientStateDataIndicator: true, billingAddress: { firstName: 'bla' } });
-            element = new Element({ type: 'card' });
+            element = new Element(global.core, { type: 'card' });
             expect(element.data).toEqual({ clientStateDataIndicator: true, billingAddress: {} });
         });
     });
