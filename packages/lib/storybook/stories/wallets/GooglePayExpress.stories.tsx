@@ -171,6 +171,8 @@ export const Express: GooglePayStory = {
         amount: INITIAL_AMOUNT,
         shopperLocale: SHOPPER_LOCALE,
         componentConfiguration: {
+            isExpress: true,
+
             onSubmit: async (state, component, actions) => {
                 try {
                     const paymentData = {

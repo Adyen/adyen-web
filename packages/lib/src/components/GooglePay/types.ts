@@ -5,7 +5,7 @@ export interface GooglePayConfiguration extends UIElementProps {
     type?: 'googlepay' | 'paywithgoogle';
 
     /**
-     * Flag used to enable Express Flow reports on Customer Area
+     * Enables the GooglePay Express Flow
      * @defaultValue false
      */
     isExpress?: boolean;
@@ -104,9 +104,12 @@ export interface GooglePayConfiguration extends UIElementProps {
     callbackIntents?: google.payments.api.CallbackIntent[];
 
     /**
+     * Disclaimer: 'onPaymentAuthorized' is not exposed as we are using our own method internally to
+     * handle the authorization part
+     *
      * @see https://developers.google.com/pay/api/web/reference/request-objects#PaymentDataCallbacks
      */
-    paymentDataCallbacks?: google.payments.api.PaymentDataCallbacks;
+    paymentDataCallbacks?: Pick<google.payments.api.PaymentDataCallbacks, 'onPaymentDataChanged'>;
 
     /**
      * @see https://developers.google.com/pay/api/web/reference/request-objects#TransactionInfo
