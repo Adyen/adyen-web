@@ -7,9 +7,9 @@ import LANG from '../../../../lib/src/language/locales/en-US.json';
 const errorHolder = Selector('.card-field .adyen-checkout__field--error');
 const errorLabel = Selector('.card-field .adyen-checkout-contextual-text--error');
 
-const CARD_TOO_OLD = LANG['error.va.sf-cc-dat.01'];
-const CARD_TOO_FAR = LANG['error.va.sf-cc-dat.02'];
-const CARD_EXPIRES_BEFORE = LANG['error.va.sf-cc-dat.03'];
+const CARD_TOO_OLD = LANG['cc.dat.912'];
+const CARD_TOO_FAR = LANG['cc.dat.913'];
+const CARD_EXPIRES_BEFORE = LANG['cc.dat.914'];
 
 const TEST_SPEED = 1;
 

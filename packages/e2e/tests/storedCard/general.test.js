@@ -4,7 +4,7 @@ import LANG from '../../../lib/src/language/locales/en-US.json';
 
 const cardPage = new CardComponentPage('.stored-card-field', {}, 'storedcards');
 
-const EMPTY_FIELD = LANG['error.va.sf-cc-cvc.01'];
+const EMPTY_FIELD = LANG['cc.cvc.920'];
 
 fixture`Testing some general functionality and UI on the stored card component`.beforeEach(async t => {
     await t.navigateTo(cardPage.pageUrl);
