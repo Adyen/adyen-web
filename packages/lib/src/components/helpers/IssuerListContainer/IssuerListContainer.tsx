@@ -15,7 +15,8 @@ class IssuerListContainer extends UIElement<IssuerListConfiguration> {
         issuers: [],
         highlightedIssuers: [],
         loadingContext: FALLBACK_CONTEXT,
-        showPaymentMethodItemImages: false
+        showPaymentMethodItemImages: false,
+        showPayButton: true
     };
 
     constructor(checkout: ICore, props?: IssuerListConfiguration) {

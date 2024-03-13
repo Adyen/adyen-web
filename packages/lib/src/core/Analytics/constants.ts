@@ -41,9 +41,6 @@ export const ANALYTICS_LIST_SEARCH = 'list_search';
 
 export const ANALYTICS_IMPLEMENTATION_ERROR = 'ImplementationError';
 export const ANALYTICS_API_ERROR = 'APIError';
-export const ANALYTICS_SDK_ERROR = 'SdkError';// v5_into_v6
-export const ANALYTICS_NETWORK_ERROR = 'Network';// v5_into_v6
-export const ANALYTICS_INTERNAL_ERROR = 'Internal';// v5_into_v6
 
 export const ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_PAYMENT_DATA = 'web_700'; // Missing 'paymentData' property from threeDS2 action
 export const ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_TOKEN = 'web_701'; // Missing 'token' property from threeDS2 action`

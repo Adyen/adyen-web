@@ -1,6 +1,6 @@
 import { AdyenCheckout, Dropin, Card, WeChat, Giftcard, PayPal, Ach, GooglePay, Ideal } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
-import { createSession, patchPaypalOrder } from '../../services';
+import { createSession } from '../../services';
 import { amount, shopperLocale, shopperReference, countryCode, returnUrl } from '../../config/commonConfig';
 import getTranslationFile from '../../config/getTranslation';
 import { handleOnPaymentCompleted, handleOnPaymentFailed } from '../../handlers';

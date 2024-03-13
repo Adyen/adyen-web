@@ -139,7 +139,7 @@ export class CardElement extends UIElement<CardConfiguration> {
          *  - when /binLookup detects a dual-branded card and the shopper makes a brand selection
          *  - or, in the case of a storedCard
          */
-        const cardBrand = this.state.selectedBrandValue; // || this.props.brand;  v5_into_v6
+        const cardBrand = this.state.selectedBrandValue;
 
         return {
             paymentMethod: {
