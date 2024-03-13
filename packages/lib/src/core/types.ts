@@ -48,14 +48,6 @@ export interface ICore {
 
 export type AdyenEnvironment = 'test' | 'live' | 'live-us' | 'live-au' | 'live-apse' | 'live-in' | string;
 
-export type onSubmitGenericType<T> = (
-    state: any,
-    element: T,
-    actions: {
-        resolve: (response: CheckoutAdvancedFlowResponse) => void;
-        reject: () => void;
-    }
-) => void;
 export interface CoreConfiguration {
     session?: any;
     /**
@@ -193,7 +185,14 @@ export interface CoreConfiguration {
      */
     onPaymentFailed?(data?: SessionsResponse | { resultCode: ResultCode }, element?: UIElement): void;
 
-    onSubmit?: onSubmitGenericType<UIElement>;
+    onSubmit?(
+        state: any,
+        element: UIElement,
+        actions: {
+            resolve: (response: CheckoutAdvancedFlowResponse) => void;
+            reject: () => void;
+        }
+    ): void;
 
     /**
      * Callback used in the Advanced flow to perform the /payments/details API call.
