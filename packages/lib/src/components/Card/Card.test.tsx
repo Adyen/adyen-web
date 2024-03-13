@@ -22,9 +22,10 @@ describe('Card', () => {
             expect(card.props.countryCode).toEqual('kr');
         });
 
-        test('should return false for enableStoreDetails in case of zero-auto transaction', () => {
+        test('should return false for showStoreDetailsCheckbox in case of zero-auto transaction, whilst preserving the original value of enableStoreDetail', () => {
             const card = new CardElement(global.core, { amount: { value: 0, currency: 'eur' }, enableStoreDetails: true });
-            expect(card.props.enableStoreDetails).toEqual(false);
+            expect(card.props.enableStoreDetails).toEqual(true);
+            expect(card.props.showStoreDetailsCheckbox).toEqual(false);
         });
     });
 
@@ -72,14 +73,89 @@ describe('Card', () => {
 
         test('should return storePaymentMethod if enableStoreDetails is enabled', () => {
             const card = new CardElement(global.core, { enableStoreDetails: true });
+            expect(card.props.showStoreDetailsCheckbox).toEqual(true);
             card.setState({ storePaymentMethod: true });
             expect(card.data.storePaymentMethod).toBe(true);
         });
 
         test('should not return storePaymentMethod if enableStoreDetails is disabled', () => {
             const card = new CardElement(global.core, { enableStoreDetails: false });
+            expect(card.props.showStoreDetailsCheckbox).toEqual(false);
             card.setState({ storePaymentMethod: true });
             expect(card.data.storePaymentMethod).not.toBeDefined();
+        });
+
+        test('should only return storePaymentMethod:true for regular card, zero auth payments, *if* the conditions are right', () => {
+            // Manual flow
+            expect(new CardElement(global.core, { amount: { value: 0, currency: 'USD' }, enableStoreDetails: true }).data.storePaymentMethod).toBe(
+                true
+            );
+            expect(new CardElement(global.core, { amount: { value: 0, currency: 'USD' }, enableStoreDetails: false }).data.storePaymentMethod).toBe(
+                undefined
+            );
+
+            // Session flow - session configuration should override merchant configuration
+            let cardElement = new CardElement(global.core, {
+                amount: { value: 0, currency: 'USD' },
+                enableStoreDetails: false,
+                // @ts-ignore it's just a test
+                session: { configuration: { enableStoreDetails: true } }
+            });
+            expect(cardElement.data.storePaymentMethod).toBe(true);
+
+            cardElement = new CardElement(global.core, {
+                amount: { value: 0, currency: 'USD' },
+                enableStoreDetails: true,
+                // @ts-ignore it's just a test
+                session: { configuration: { enableStoreDetails: false } }
+            });
+            expect(cardElement.data.storePaymentMethod).toBe(undefined);
+        });
+
+        test('should return storePaymentMethod based on the checkbox value, for regular card, non-zero auth payments', () => {
+            const card = new CardElement(global.core, { amount: { value: 10, currency: 'USD' }, enableStoreDetails: true });
+            card.setState({ storePaymentMethod: true });
+            expect(card.data.storePaymentMethod).toBe(true);
+            card.setState({ storePaymentMethod: false });
+            expect(card.data.storePaymentMethod).toBe(false);
+        });
+
+        test('should not return storePaymentMethod for stored card, non-zero auth payments', () => {
+            expect(
+                new CardElement(global.core, {
+                    amount: { value: 10, currency: 'USD' },
+                    storedPaymentMethodId: 'xxx',
+                    supportedShopperInteractions: ['Ecommerce'],
+                    enableStoreDetails: true
+                }).data.storePaymentMethod
+            ).not.toBeDefined();
+            expect(
+                new CardElement(global.core, {
+                    amount: { value: 10, currency: 'USD' },
+                    storedPaymentMethodId: 'xxx',
+                    supportedShopperInteractions: ['Ecommerce'],
+                    enableStoreDetails: false
+                }).data.storePaymentMethod
+            ).not.toBeDefined();
+        });
+
+        test('should not return storePaymentMethod for stored card, zero auth payments', () => {
+            expect(
+                new CardElement(global.core, {
+                    amount: { value: 0, currency: 'USD' },
+                    storedPaymentMethodId: 'xxx',
+                    supportedShopperInteractions: ['Ecommerce'],
+                    enableStoreDetails: true
+                }).data.storePaymentMethod
+            ).not.toBeDefined();
+            expect(
+                new CardElement(global.core, {
+                    amount: { value: 0, currency: 'USD' },
+                    storedPaymentMethodId: 'xxx',
+                    supportedShopperInteractions: ['Ecommerce'],
+                    enableStoreDetails: false
+                }).data.storePaymentMethod
+            ).not.toBeDefined();
         });
     });
 

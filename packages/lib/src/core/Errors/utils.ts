@@ -48,6 +48,17 @@ export const addErrorTranslationsToObject = (originalObj: AriaConfigObject, i18n
     return nuObj;
 };
 
+export const getErrorMessageFromCode = (errorCode: string, codeMap: Record<string, string>): string => {
+    let errMsg = errorCode;
+    for (const [key, value] of Object.entries(codeMap)) {
+        if (value === errorCode) {
+            errMsg = key;
+            break;
+        }
+    }
+    return errMsg?.toLowerCase().replace(/[_.\s]/g, '-');
+};
+
 /**
  * errorCodeIdentifiers must match the prefixes to the numbers in ERROR_CODES (Errors/constants.ts)
  * (Which in turn must match the keys in the translations files)
@@ -82,17 +93,6 @@ const fieldTypeToErrorCodeIdentifier = (fieldType: string): string => {
         default:
     }
     return errorCodeIdentifier;
-};
-
-export const getErrorMessageFromCode = (errorCode: string, codeMap: Record<string, string>): string => {
-    let errMsg = errorCode;
-    for (const [key, value] of Object.entries(codeMap)) {
-        if (value === errorCode) {
-            errMsg = key;
-            break;
-        }
-    }
-    return errMsg?.toLowerCase().replace(/[_.]/g, '-');
 };
 
 /**

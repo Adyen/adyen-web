@@ -2,9 +2,9 @@ import { test, expect } from '../../pages/cards/card.fixture';
 import { REGULAR_TEST_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE } from '../utils/constants';
 import LANG from '../../../lib/src/language/locales/en-US.json';
 
-const PAN_ERROR_NOT_VALID = LANG['error.va.sf-cc-num.01'];
-const PAN_ERROR_EMPTY = LANG['error.va.sf-cc-num.02'];
-const PAN_ERROR_NOT_COMPLETE = LANG['error.va.sf-cc-num.04'];
+const PAN_ERROR_NOT_VALID = LANG['cc.num.902'];
+const PAN_ERROR_EMPTY = LANG['cc.num.900'];
+const PAN_ERROR_NOT_COMPLETE = LANG['cc.num.901'];
 
 test.describe('Card - Standard flow', () => {
     test('#1 Should fill in card fields and complete the payment', async ({ cardPage }) => {

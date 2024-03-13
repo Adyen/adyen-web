@@ -3,6 +3,7 @@ import DoFingerprint3DS2 from './DoFingerprint3DS2';
 import { createFingerprintResolveData, createOldFingerprintResolveData, handleErrorCode, prepareFingerPrintData } from '../utils';
 import { PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State } from './types';
 import { FingerPrintData, ResultObject } from '../../types';
+import { ErrorObject } from '../../../../core/Errors/types';
 import AdyenCheckoutError, { ERROR } from '../../../../core/Errors/AdyenCheckoutError';
 import { THREEDS2_FINGERPRINT_ERROR } from '../../config';
 import { ActionHandledReturnObject } from '../../../../types/global-types';
@@ -26,7 +27,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
         const { token, notificationURL } = this.props; // See comments on prepareFingerPrintData regarding notificationURL
 
         if (token) {
-            const fingerPrintData: FingerPrintData = prepareFingerPrintData({ token, notificationURL });
+            const fingerPrintData: FingerPrintData | ErrorObject = prepareFingerPrintData({ token, notificationURL });
 
             this.state = {
                 status: 'init',
@@ -55,7 +56,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
 
     componentDidMount() {
         // If no fingerPrintData or no threeDSMethodURL - don't render component. Instead exit with threeDSCompInd: 'U'
-        if (!this.state.fingerPrintData || !this.state.fingerPrintData.threeDSMethodURL) {
+        if (!this.state.fingerPrintData || !(this.state.fingerPrintData as FingerPrintData).threeDSMethodURL) {
             this.setStatusComplete({ threeDSCompInd: 'U' });
             console.debug('### PrepareFingerprint3DS2::exiting:: no fingerPrintData or no threeDSMethodURL');
             return;

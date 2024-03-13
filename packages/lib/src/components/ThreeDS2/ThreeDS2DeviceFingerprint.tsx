@@ -59,6 +59,7 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
                 {...this.props}
                 onComplete={this.props.isMDFlow ? this.onComplete : this.callSubmit3DS2Fingerprint}
                 onSubmitAnalytics={this.submitAnalytics}
+                isMDFlow={this.props.paymentData.length < 15}
             />
         );
     }

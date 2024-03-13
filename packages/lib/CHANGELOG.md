@@ -1,5 +1,31 @@
 # @adyen/adyen-web
 
+## 5.60.0
+
+### Minor Changes
+
+-   Add support for new Donation properties. ([#2572](https://github.com/Adyen/adyen-web/pull/2572))
+
+-   Starting using /checkoutanalytics endpoint to retrieve "checkoutAttemptId" log "submit" and "action-handled" events ([#2234](https://github.com/Adyen/adyen-web/pull/2234))
+
+### Patch Changes
+
+-   Sanitize `billingAddress` when making a `/payments` call. Remove `firstName` and `lastName` in the `billingAddress` for non Riverty payments. ([#2591](https://github.com/Adyen/adyen-web/pull/2591))
+
+-   For regular card, zero auth payments, we store the payment method only if the configuration says we should ([#2589](https://github.com/Adyen/adyen-web/pull/2589))
+
+-   Updating applepay typescript types and fixing challengeWindowSize prop ([#2584](https://github.com/Adyen/adyen-web/pull/2584))
+
+## 5.59.0
+
+### Minor Changes
+
+-   Adding support for PayPal Express Flow ([#2551](https://github.com/Adyen/adyen-web/pull/2551))
+
+### Patch Changes
+
+-   For zero auth payments, we always send the `storePaymentMethod` to save the payment details. ([#2571](https://github.com/Adyen/adyen-web/pull/2571))
+
 ## 5.58.0
 
 ### Minor Changes

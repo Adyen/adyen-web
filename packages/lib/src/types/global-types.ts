@@ -359,7 +359,7 @@ export type RawPaymentResponse = PaymentResponseData &
         [key: string]: any;
     };
 
-export type ActionDescriptionType = 'qr-code-loaded' | 'polling-started' | 'fingerprint-iframe-loaded' | 'challenge-iframe-loaded';
+export type ActionDescriptionType = 'qr-code-loaded' | 'polling-started' | 'fingerprint-iframe-loaded' | string;
 
 export interface ActionHandledReturnObject {
     componentType: string;
@@ -390,4 +390,10 @@ export interface AnalyticsModule {
 export type ComponentFocusObject = {
     fieldType: string;
     event: Event | CbObjOnFocus;
+};
+
+export type DecodeObject = {
+    success: boolean;
+    error?: string;
+    data?: string;
 };

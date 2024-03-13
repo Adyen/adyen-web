@@ -2,10 +2,10 @@ import { test, expect } from '../../../pages/cards/card.fixture';
 import { SYNCHRONY_PLCC_NO_DATE, TEST_CVC_VALUE, ENCRYPTED_CARD_NUMBER, ENCRYPTED_EXPIRY_DATE, ENCRYPTED_SECURITY_CODE } from '../../utils/constants';
 import LANG from '../../../../lib/src/language/locales/en-US.json';
 
-const PAN_ERROR = LANG['error.va.sf-cc-num.02'];
-const DATE_INVALID_ERROR = LANG['error.va.sf-cc-dat.01'];
-const DATE_EMPTY_ERROR = LANG['error.va.sf-cc-dat.04'];
-const CVC_ERROR = LANG['error.va.sf-cc-cvc.01'];
+const PAN_ERROR = LANG['cc.num.900'];
+const DATE_INVALID_ERROR = LANG['cc.dat.912'];
+const DATE_EMPTY_ERROR = LANG['cc.dat.910'];
+const CVC_ERROR = LANG['cc.cvc.920'];
 
 test.describe('Test how Card Component handles hidden expiryDate policy', () => {
     test('#1 how UI & state respond', async ({ cardExpiryDatePoliciesPage }) => {
