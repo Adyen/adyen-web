@@ -66,11 +66,12 @@ To run the development environment:
 Adyen Web is themeable and uses CSS variables that can be overridden in order to achieve the desired style.
 
 ### Overriding styles example
+For elements that are not inside iframes, you can customize the styles by overriding the styles in a css file.
 
 1. Create `override.css` with the variables that you would like to style
 
    ```css
-   .adyen-checkout__input {
+   :root {
      --adyen-checkout-input-wrapper-focus-border-color: #ff8888;
    }
    ```
@@ -78,11 +79,11 @@ Adyen Web is themeable and uses CSS variables that can be overridden in order to
 2. Make sure to import the `override.css` after importing library's main CSS
 
    ```js
-   import '@adyen/adyen-web/dist/adyen.css';
+   import '@adyen/adyen-web/styles/adyen.css';
    import './override.css';
    ```
    
-### Available CSS variables
+#### Available CSS variables
 
 ```css
 :root {
@@ -223,6 +224,9 @@ Adyen Web is themeable and uses CSS variables that can be overridden in order to
     --adyen-checkout-button-height: var(--adyen-checkout-spacer-120);
 }
 ```
+### Style the secured fields
+
+To style the secured fields such as card number, CVC, and expiry date of a card, you can follow the link [Styling card input fields](https://docs.adyen.com/payment-methods/cards/custom-card-integration/#styling).
 
 ## Analytics and data tracking
 Starting [v5.16.0](https://github.com/Adyen/adyen-web/releases/tag/v5.16.0) the Drop-in and Components integrations contain analytics and tracking features that are turned on by default. Find out more about [what we track and how you can control it](https://docs.adyen.com/online-payments/analytics-and-data-tracking).
