@@ -29,6 +29,8 @@ import { ALL_SECURED_FIELDS } from '../internal/SecuredFields/lib/configuration/
 import { FieldErrorAnalyticsObject, SendAnalyticsObject } from '../../core/Analytics/types';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from '../../core/Errors/AdyenCheckoutError';
+import { getErrorMessageFromCode } from '../../core/Errors/utils';
+import { SF_ErrorCodes } from '../../core/Errors/constants';
 
 export class CardElement extends UIElement<CardConfiguration> {
     public static type = TxVariants.scheme;
@@ -70,8 +72,11 @@ export class CardElement extends UIElement<CardConfiguration> {
     };
 
     formatProps(props: CardConfiguration) {
+        // The value from a session should be used, before falling back to the merchant configuration
+        const enableStoreDetails = props.session?.configuration?.enableStoreDetails ?? props.enableStoreDetails;
+
         const isZeroAuth = props.amount?.value === 0;
-        const enableStoreDetails = isZeroAuth ? false : props.session?.configuration?.enableStoreDetails || props.enableStoreDetails;
+        const showStoreDetailsCheckbox = isZeroAuth ? false : enableStoreDetails;
 
         const storedCardID = props.storedPaymentMethodId || props.id; // check if we've been passed a (checkout) processed storedCard or one that merchant has pulled from the PMs response
         const isEcommerceStoredCard = storedCardID && props?.supportedShopperInteractions?.includes('Ecommerce'); // If we have a storedCard does it support Ecommerce (it might not if the merchant has pulled it from the PMs response)
@@ -108,6 +113,7 @@ export class CardElement extends UIElement<CardConfiguration> {
             // installmentOptions of a session should be used before falling back to the merchant configuration
             installmentOptions: props.session?.configuration?.installmentOptions || props.installmentOptions,
             enableStoreDetails,
+            showStoreDetailsCheckbox,
             /**
              * Click to Pay configuration
              * - If email is set explicitly in the configuration, then it can override the one used in the session creation
@@ -134,7 +140,6 @@ export class CardElement extends UIElement<CardConfiguration> {
          *  - or, in the case of a storedCard
          */
         const cardBrand = this.state.selectedBrandValue;
-        const includeStorePaymentMethod = this.props.enableStoreDetails && typeof this.state.storePaymentMethod !== 'undefined';
 
         return {
             paymentMethod: {
@@ -146,7 +151,7 @@ export class CardElement extends UIElement<CardConfiguration> {
             },
             ...(this.state.billingAddress && { billingAddress: this.state.billingAddress }),
             ...(this.state.socialSecurityNumber && { socialSecurityNumber: this.state.socialSecurityNumber }),
-            ...(includeStorePaymentMethod && { storePaymentMethod: Boolean(this.state.storePaymentMethod) }),
+            ...this.storePaymentMethodPayload,
             ...(hasValidInstallmentsObject(this.state.installments) && { installments: this.state.installments }),
             browserInfo: this.browserInfo,
             origin: !!window && window.location.origin
@@ -242,16 +247,41 @@ export class CardElement extends UIElement<CardConfiguration> {
         }
     };
 
-    private onErrorAnalytics = (obj: FieldErrorAnalyticsObject) => {
+    private onValidationErrorAnalytics = (obj: FieldErrorAnalyticsObject) => {
         this.submitAnalytics({
             type: ANALYTICS_VALIDATION_ERROR_STR,
             target: fieldTypeToSnakeCase(obj.fieldType),
             validationErrorCode: obj.errorCode,
-            validationErrorMessage: obj.errorMessage
+            validationErrorMessage: getErrorMessageFromCode(obj.errorCode, SF_ErrorCodes)
         });
     };
 
     public onBinValue = triggerBinLookUp(this);
+
+    get storePaymentMethodPayload() {
+        const isStoredCard = this.props.storedPaymentMethodId?.length > 0;
+        if (isStoredCard) {
+            return {};
+        }
+
+        /**
+         * For regular card, zero auth payments, we store the payment method, *if* the configuration says we should:
+         *  - For sessions, this means if the session has been created with storePaymentMethodMode: 'askForConsent'
+         *  - For the advanced flow, this means if the merchant has still set enableStoreDetails: true
+         *
+         * What we are doing is.. if for a normal payment we would show the "Save for my next payment" checkbox,
+         * for a zero-auth payment we effectively click the checkbox on behalf of the shopper.
+         */
+        const isZeroAuth = this.props.amount?.value === 0;
+        if (isZeroAuth) {
+            return this.props.enableStoreDetails ? { storePaymentMethod: true } : {};
+        }
+
+        // For regular card, non-zero auth payments, we store the payment method based on the checkbox value.
+        // const includeStorePaymentMethod = this.props.enableStoreDetails && typeof this.state.storePaymentMethod !== 'undefined';
+        const includeStorePaymentMethod = this.props.showStoreDetailsCheckbox && typeof this.state.storePaymentMethod !== 'undefined';
+        return includeStorePaymentMethod ? { storePaymentMethod: Boolean(this.state.storePaymentMethod) } : {};
+    }
 
     get isValid() {
         return !!this.state.isValid;
@@ -326,7 +356,7 @@ export class CardElement extends UIElement<CardConfiguration> {
                 resources={this.resources}
                 onFocus={this.onFocus}
                 onBlur={this.onBlur}
-                onErrorAnalytics={this.onErrorAnalytics}
+                onValidationErrorAnalytics={this.onValidationErrorAnalytics}
                 onConfigSuccess={this.onConfigSuccess}
             />
         );

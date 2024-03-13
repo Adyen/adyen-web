@@ -62,3 +62,8 @@ export interface SetSRMessagesReturnObject {
     action: string;
     fieldToFocus?: string;
 }
+
+export type ErrorObject = {
+    success: false;
+    error: string;
+};

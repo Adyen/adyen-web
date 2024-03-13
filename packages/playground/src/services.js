@@ -11,8 +11,10 @@ export const getPaymentMethods = configuration =>
         .catch(console.error);
 
 export const makePayment = (data, config = {}) => {
-    // Needed for storedPMs in v70 if a standalone comp, or, in Dropin, advanced flow. (Sessions, v70, works with or without this prop)
-    if (data.paymentMethod.storedPaymentMethodId) {
+    // Needed for v70 if a standalone comp, or, in Dropin, advanced flow. (Sessions, v70, works with or without this prop).
+    //  - Needed for storedPMs
+    //  - Also needed for regular card, if the "save for my next payment" checkbox is clicked
+    if (data.paymentMethod.storedPaymentMethodId || data.storePaymentMethod) {
         config = { recurringProcessingModel: 'CardOnFile', ...config };
     }
 
@@ -84,4 +86,17 @@ export const cancelOrder = data => {
             return response;
         })
         .catch(err => console.error(err));
+};
+
+export const patchPaypalOrder = ({ sessionId, pspReference, paymentData, amount, deliveryMethods }) => {
+    if (!(pspReference || sessionId) || !paymentData || !amount.value || !amount.currency) {
+        throw Error('PayPal patching order - Field is missing');
+    }
+    return httpPost('paypal/updateOrder', {
+        ...(sessionId && { sessionId }),
+        ...(pspReference && { pspReference }),
+        ...(deliveryMethods && { deliveryMethods }),
+        paymentData,
+        amount
+    });
 };

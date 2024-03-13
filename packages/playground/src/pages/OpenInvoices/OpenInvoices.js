@@ -1,7 +1,7 @@
-import { AdyenCheckout, RatePay, RatePayDirectDebit, AfterPay, AfterPayB2B, FacilPay3x, Affirm, Atome, en_US } from '@adyen/adyen-web';
+import { AdyenCheckout, RatePay, Riverty, RatePayDirectDebit, AfterPay, AfterPayB2B, FacilPay3x, Affirm, Atome, en_US } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { getPaymentMethods } from '../../services';
-import { handleChange, handleSubmit } from '../../handlers';
+import { handleChange, handleOnPaymentCompleted, handleOnPaymentFailed, handleSubmit } from '../../handlers';
 import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
@@ -16,7 +16,8 @@ const showComps = {
     afterpayb2b: true,
     facilypay_3x: true,
     affirm: true,
-    atome: true
+    atome: true,
+    riverty: true
 };
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
@@ -29,16 +30,24 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
         environment: process.env.__CLIENT_ENV__,
         onChange: handleChange,
         onSubmit: handleSubmit,
-        onPaymentCompleted(result, element) {
-            console.log('onPaymentCompleted', result, element);
-        },
-        onPaymentFailed(result, element) {
-            console.log('onPaymentFailed', result, element);
-        },
+        onPaymentCompleted: handleOnPaymentCompleted,
+        onPaymentFailed: handleOnPaymentFailed,
         onError: console.error,
         showPayButton: true,
         amount // Optional. Used to display the amount in the Pay Button.
     });
+
+    // RIVERTY
+    if (showComps.riverty) {
+        window.riverty = new Riverty(window.core, {
+            countryCode: 'DE', // 'DE' / 'AT' / 'CH'
+            visibility: {
+                personalDetails: 'editable', // editable [default] / readOnly / hidden
+                billingAddress: 'editable',
+                deliveryAddress: 'editable'
+            }
+        }).mount('.riverty-field');
+    }
 
     // RATEPAY
     if (showComps.ratepay) {

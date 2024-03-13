@@ -13,6 +13,7 @@ const httpPromiseFailMock = jest.fn(() => Promise.reject(' url incorrect'));
 const BASE_CONFIGURATION = {
     analyticsContext: 'https://checkoutanalytics-test.adyen.com/checkoutanalytics/',
     locale: 'en-US',
+    bundleType: 'umd',
     amount: {
         value: 10000,
         currency: 'USD'
@@ -45,7 +46,8 @@ test('Should fail since path is incorrect', () => {
     const configuration = {
         ...BASE_CONFIGURATION,
         clientKey: 'xxxx-yyyy',
-        analyticsPath: 'v99/analytics'
+        analyticsPath: 'v99/analytics',
+        bundleType: 'umd'
     };
 
     const log = collectId(configuration);
@@ -94,7 +96,7 @@ test('Should send expected data to http service', () => {
             flavor: customEvent.flavor,
             containerWidth: customEvent.containerWidth,
             component: customEvent.component,
-            buildType: 'compiled'
+            buildType: 'umd'
         }
     );
 

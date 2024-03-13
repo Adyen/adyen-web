@@ -1,7 +1,7 @@
 import { CardElement } from './Card';
 import Analytics from '../../core/Analytics';
 
-const analyticsModule = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '' });
+const analyticsModule = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', bundleType: 'umd' });
 
 let card;
 
@@ -15,6 +15,7 @@ import {
     ANALYTICS_UNFOCUS_STR,
     ANALYTICS_VALIDATION_ERROR_STR
 } from '../../core/Analytics/constants';
+import { SF_ErrorCodes } from '../../core/Errors/constants';
 
 describe('Card: calls that generate "info" analytics should produce objects with the expected shapes ', () => {
     beforeEach(() => {
@@ -26,9 +27,7 @@ describe('Card: calls that generate "info" analytics should produce objects with
             }
         });
 
-        analyticsModule.createAnalyticsEvent = jest.fn(obj => {
-            console.log('### analyticsPreProcessor.test:::: obj=', obj);
-        });
+        analyticsModule.createAnalyticsEvent = jest.fn(() => null);
     });
 
     test('Analytics should produce an "info" event, of type "rendered", for a card PM', () => {
@@ -120,10 +119,9 @@ describe('Card: calls that generate "info" analytics should produce objects with
     });
 
     test('Analytics should produce an "info" event, of type "validationError", with the expected properties', () => {
-        card.onErrorAnalytics({
+        card.onValidationErrorAnalytics({
             fieldType: 'encryptedCardNumber',
-            errorCode: 'error.va.sf-cc-num.04',
-            errorMessage: 'Enter the complete card number-sr'
+            errorCode: SF_ErrorCodes.ERROR_MSG_INCORRECTLY_FILLED_PAN
         });
 
         expect(analyticsModule.createAnalyticsEvent).toHaveBeenCalledWith({
@@ -132,8 +130,8 @@ describe('Card: calls that generate "info" analytics should produce objects with
                 component: card.constructor['type'],
                 type: ANALYTICS_VALIDATION_ERROR_STR,
                 target: 'card_number',
-                validationErrorCode: 'error.va.sf-cc-num.04',
-                validationErrorMessage: 'Enter the complete card number-sr'
+                validationErrorCode: SF_ErrorCodes.ERROR_MSG_INCORRECTLY_FILLED_PAN,
+                validationErrorMessage: 'error-msg-incorrectly-filled-pan'
             }
         });
     });
@@ -149,9 +147,7 @@ describe('Card: calls that generate "log" analytics should produce objects with 
             }
         });
 
-        analyticsModule.createAnalyticsEvent = jest.fn(obj => {
-            console.log('### analyticsPreProcessor.test:::: obj=', obj);
-        });
+        analyticsModule.createAnalyticsEvent = jest.fn(() => null);
     });
 
     test('Analytics should produce an "log" event, of type "submit", for a card PM', () => {

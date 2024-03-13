@@ -9,12 +9,13 @@ import { APPLEPAY_SESSION_ENDPOINT } from './config';
 import { preparePaymentRequest } from './payment-request';
 import { resolveSupportedVersion, mapBrands, formatApplePayContactToAdyenAddressFormat } from './utils';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import { DecodeObject } from '../../types/global-types';
 import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
+import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
 import type { ApplePayConfiguration, ApplePayElementData, ApplePayPaymentOrderDetails, ApplePaySessionRequest } from './types';
 import type { ICore } from '../../core/types';
 import type { PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
-import { ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
 
 const latestSupportedVersion = 14;
 
@@ -66,7 +67,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
     public submit = (): void => {
         // Analytics
         if (this.props.isInstantPayment) {
-            this.submitAnalytics({ type: ANALYTICS_SELECTED_STR, target: 'instant_payment_button' });
+            this.submitAnalytics({ type: ANALYTICS_SELECTED_STR, target: ANALYTICS_INSTANT_PAYMENT_BUTTON });
         }
         void this.startSession();
     };
@@ -122,7 +123,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
                     .then(paymentResponse => {
                         this.handleResponse(paymentResponse);
                     })
-                    .catch((paymentResponse: RawPaymentResponse) => {
+                    .catch((paymentResponse?: RawPaymentResponse) => {
                         const errors = paymentResponse?.error?.applePayError;
 
                         reject({
@@ -130,7 +131,14 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
                             errors: errors ? (Array.isArray(errors) ? errors : [errors]) : undefined
                         });
 
-                        this.handleFailedResult(paymentResponse);
+                        const responseWithError: RawPaymentResponse = {
+                            ...paymentResponse,
+                            error: {
+                                applePayError: errors
+                            }
+                        };
+
+                        this.handleFailedResult(responseWithError);
                     });
             }
         });
@@ -215,10 +223,13 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
 
         try {
             const response = await httpPost(options, request);
-            const decodedData = base64.decode(response.data);
-            if (!decodedData) reject('Could not decode Apple Pay session');
-            const session = JSON.parse(decodedData as string);
-            resolve(session);
+            const decodedData: DecodeObject = base64.decode(response.data);
+            if (!decodedData.success) {
+                reject('Could not decode Apple Pay session');
+            } else {
+                const session = JSON.parse(decodedData.data);
+                resolve(session);
+            }
         } catch (e) {
             reject('Could not get Apple Pay session');
         }

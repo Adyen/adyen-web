@@ -28,13 +28,10 @@ export type UIElementProps = BaseElementProps &
     CoreCallbacks & {
         environment?: string;
         session?: Session;
-        onValid?: (state: any, element: UIElement) => void;
 
         onComplete?: (state, element: UIElement) => void;
 
         isInstantPayment?: boolean;
-
-        // brand?: string; // TODO confirm it this is needed
 
         /**
          * Flags if the element is Stored payment method
@@ -73,12 +70,6 @@ export type UIElementProps = BaseElementProps &
          */
         showPayButton?: boolean;
 
-        /**
-         *  Set to false to not set the Component status to 'loading' when onSubmit is triggered.
-         *  @defaultValue true
-         */
-        setStatusAutomatically?: boolean;
-
         /** @internal */
         payButton?: (options: PayButtonFunctionProps) => h.JSX.Element;
 
@@ -96,6 +87,12 @@ export type UIElementProps = BaseElementProps &
 
         /** @internal */
         i18n?: Language;
+
+        /**
+         * The shopper’s issuer account label. It can be available for stored payment method
+         * @internal
+         */
+        label?: string;
 
         /**
          * Returned after the payments call, when an action is returned. It represents the payment method tx variant

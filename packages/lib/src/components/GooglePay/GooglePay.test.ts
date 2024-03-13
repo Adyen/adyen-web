@@ -4,7 +4,7 @@ import GooglePayService from './GooglePayService';
 import Analytics from '../../core/Analytics';
 import { ANALYTICS_EVENT_INFO, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
 
-const analyticsModule = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '' });
+const analyticsModule = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', bundleType: 'umd' });
 
 jest.mock('./GooglePayService');
 
@@ -187,7 +187,52 @@ describe('GooglePay', () => {
                 transactionState: 'ERROR'
             });
 
-            expect(onPaymentFailedMock).toHaveBeenCalledWith({ resultCode: 'Refused', error: { googlePayError: 'Insufficient funds' } }, gpay);
+            expect(onPaymentFailedMock).toHaveBeenCalledWith(
+                {
+                    resultCode: 'Refused',
+                    error: {
+                        googlePayError: {
+                            intent: 'PAYMENT_AUTHORIZATION',
+                            message: 'Insufficient funds',
+                            reason: 'OTHER_ERROR'
+                        }
+                    }
+                },
+                gpay
+            );
+        });
+
+        test('should pass error to GooglePay when action.reject is called without parameters', async () => {
+            const onSubmitMock = jest.fn().mockImplementation((data, component, actions) => {
+                actions.reject();
+            });
+            const onPaymentFailedMock = jest.fn();
+
+            const gpay = new GooglePay(global.core, {
+                i18n: global.i18n,
+                onSubmit: onSubmitMock,
+                onPaymentFailed: onPaymentFailedMock
+            });
+
+            // @ts-ignore GooglePayService is mocked
+            const onPaymentAuthorized = GooglePayService.mock.calls[0][0].paymentDataCallbacks.onPaymentAuthorized;
+            const promise = onPaymentAuthorized(googlePaymentData);
+
+            await new Promise(process.nextTick);
+
+            expect(promise).resolves.toEqual({
+                error: {
+                    intent: 'PAYMENT_AUTHORIZATION',
+                    message: 'Payment failed',
+                    reason: 'OTHER_ERROR'
+                },
+                transactionState: 'ERROR'
+            });
+
+            expect(onPaymentFailedMock).toHaveBeenCalledWith(
+                { error: { googlePayError: { intent: 'PAYMENT_AUTHORIZATION', message: 'Payment failed', reason: 'OTHER_ERROR' } } },
+                gpay
+            );
         });
     });
 
@@ -391,9 +436,7 @@ describe('GooglePay', () => {
                 }
             });
 
-            analyticsModule.createAnalyticsEvent = jest.fn(obj => {
-                console.log('### analyticsPreProcessor.test:::: obj=', obj);
-            });
+            analyticsModule.createAnalyticsEvent = jest.fn(() => null);
         });
 
         test('Analytics should produce an "info" event, of type "selected", for GooglePay as an instant PM', () => {

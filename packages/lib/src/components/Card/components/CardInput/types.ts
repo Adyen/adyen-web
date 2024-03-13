@@ -126,6 +126,7 @@ export interface CardInputProps {
     showFormInstruction?: boolean;
     showInstallmentAmounts?: boolean;
     showPayButton?: boolean;
+    showStoreDetailsCheckbox?: boolean;
     showWarnings?: boolean;
     showContextualElement?: boolean;
     specifications?: Specifications;
@@ -135,7 +136,7 @@ export interface CardInputProps {
     type?: string;
     maskSecurityCode?: boolean;
     disclaimerMessage?: DisclaimerMsgObject;
-    onErrorAnalytics?: (obj: FieldErrorAnalyticsObject) => {};
+    onValidationErrorAnalytics?: (obj: FieldErrorAnalyticsObject) => {};
 }
 
 export interface CardInputState {

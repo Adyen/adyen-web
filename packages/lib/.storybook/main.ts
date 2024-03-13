@@ -22,6 +22,7 @@ const config: StorybookConfig = {
         name: getAbsolutePath('@storybook/preact-vite'),
         options: {}
     },
+    staticDirs: ['../storybook/assets'],
     async viteFinal(config, options) {
         const env = loadEnv(options.configType, path.resolve('../../', '.env'), '');
         return mergeConfig(config, {

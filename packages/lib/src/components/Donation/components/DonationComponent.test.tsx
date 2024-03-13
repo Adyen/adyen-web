@@ -86,24 +86,20 @@ describe('DonationComponent', () => {
         expect(callbackData.data.amount.value).toBe(50);
     });
 
-    test('Should render the disclaimer if disclaimerMessage presents', () => {
-        const disclaimerMessage = {
-            message: 'By continuing you accept the %{linkText} of MyStore',
-            linkText: 'terms and conditions',
-            link: 'https://www.adyen.com'
-        };
+    test('Should render the disclaimer if termsAndConditionUrl presents', () => {
+        const termsAndConditionUrl = 'https://www.adyen.com';
 
         render(
             <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-                <DonationComponent amounts={amounts} disclaimerMessage={disclaimerMessage} onDonate={onDonate} />
+                <DonationComponent amounts={amounts} termsAndConditionsUrl={termsAndConditionUrl} onDonate={onDonate} />
             </CoreProvider>
         );
-        expect(screen.getByText('By continuing', { exact: false }).textContent).toEqual(
-            'By continuing you accept the terms and conditions of MyStore'
+        expect(screen.getByText('By donating you agree to the', { exact: false }).textContent).toEqual(
+            'By donating you agree to the terms and conditions'
         );
     });
 
-    test('Should not render the disclaimer if there is no disclaimerMessage', () => {
+    test('Should not render the disclaimer if there is no termsAndConditionUrl', () => {
         render(
             <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
                 <DonationComponent amounts={amounts} onDonate={onDonate} />

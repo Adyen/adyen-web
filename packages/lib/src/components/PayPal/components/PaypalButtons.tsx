@@ -1,10 +1,12 @@
 import { h } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
 import classnames from 'classnames';
-import { PayPalButtonsProps, FundingSource } from '../types';
-import { getStyle } from '../utils';
+import { getStyle } from '../utils/get-paypal-styles';
 import Spinner from '../../internal/Spinner';
 import useCoreContext from '../../../core/Context/useCoreContext';
+
+import type { PayPalButtonsProps } from './types';
+import type { FundingSource } from '../types';
 
 export default function PaypalButtons({
     onInit,
@@ -12,7 +14,8 @@ export default function PaypalButtons({
     onClick,
     onCancel,
     onError,
-    onShippingChange,
+    onShippingAddressChange,
+    onShippingOptionsChange,
     onSubmit,
     isProcessingPayment,
     paypalRef,
@@ -30,7 +33,8 @@ export default function PaypalButtons({
         const configuration = {
             ...(isTokenize && { createBillingAgreement: onSubmit }),
             ...(!isTokenize && { createOrder: onSubmit }),
-            ...(!isTokenize && fundingSource !== 'venmo' && { onShippingChange }),
+            ...(!isTokenize && fundingSource !== 'venmo' && onShippingAddressChange && { onShippingAddressChange }),
+            ...(!isTokenize && fundingSource !== 'venmo' && onShippingOptionsChange && { onShippingOptionsChange }),
             fundingSource,
             style: getStyle(fundingSource, style),
             onInit,
@@ -56,6 +60,8 @@ export default function PaypalButtons({
         if (!props.blockPayPalVenmoButton) createButton(VENMO, venmoButtonRef);
     }, []);
 
+    const isProcessingPaymentWithoutReviewPage = props.commit === true;
+
     return (
         <div className={classnames('adyen-checkout__paypal__buttons', { 'adyen-checkout__paypal-processing': isProcessingPayment })}>
             <div className="adyen-checkout__paypal__button adyen-checkout__paypal__button--paypal" ref={paypalButtonRef} />
@@ -66,7 +72,8 @@ export default function PaypalButtons({
             {isProcessingPayment && (
                 <div className="adyen-checkout__paypal">
                     <div className="adyen-checkout__paypal__status adyen-checkout__paypal__status--processing">
-                        <Spinner size="medium" inline /> {i18n.get('paypal.processingPayment')}
+                        <Spinner size="medium" inline />
+                        {isProcessingPaymentWithoutReviewPage && i18n.get('paypal.processingPayment')}
                     </div>
                 </div>
             )}

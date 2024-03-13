@@ -1,4 +1,4 @@
-![npm](https://img.shields.io/npm/v/@adyen/adyen-web.svg)
+[![npm](https://img.shields.io/npm/v/@adyen/adyen-web.svg)](https://www.npmjs.com/package/@adyen/adyen-web)
 
 ![Web](https://user-images.githubusercontent.com/7724351/198588741-f522c3ed-ff3c-4f70-b8cb-8ff9e6d41cfa.png)
 
@@ -40,6 +40,10 @@ We only provide full support when you use one of these methods of installation.
 You can also import Adyen Web using a `<script>` tag, as shown in the [Web Components integration guide](https://docs.adyen.com/checkout/components-web#step-2-add-components).
 
 ## Development
+
+Requirements:
+- Node v18.18.0
+- Yarn
 
 To run the development environment:
 

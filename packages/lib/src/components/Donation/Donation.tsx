@@ -3,8 +3,8 @@ import UIElement from '../internal/UIElement/UIElement';
 import CoreProvider from '../../core/Context/CoreProvider';
 import DonationComponent from './components/DonationComponent';
 import { TxVariants } from '../tx-variants';
-import { DonationConfiguration } from './types';
 import type { ICore } from '../../core/types';
+import type { DonationConfiguration } from './types';
 
 class DonationElement extends UIElement<DonationConfiguration> {
     public static type = TxVariants.donation;
@@ -49,7 +49,7 @@ class DonationElement extends UIElement<DonationConfiguration> {
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                {/* @ts-ignore ref handled by Preact internally */}
+                {/*@ts-ignore ref*/}
                 <DonationComponent {...this.props} ref={this.handleRef} onChange={this.setState} onDonate={this.donate} />
             </CoreProvider>
         );

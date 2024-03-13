@@ -6,7 +6,7 @@ import { GiftcardNumberField } from '../../Giftcard/components/GiftcardNumberFie
 
 export const MealVoucherFields = (props: GiftcardFieldsProps) => {
     const { setRootNode } = props;
-    const pinFieldProps = { ...props, label: props.i18n.get('giftcard.securityCode.label') };
+    const pinFieldProps = { ...props, label: props.i18n.get('creditCard.securityCode.label') };
     return (
         <div ref={setRootNode}>
             <GiftcardNumberField {...props} classNameModifiers={['100']} />

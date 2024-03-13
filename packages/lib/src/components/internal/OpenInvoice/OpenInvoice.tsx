@@ -234,7 +234,6 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
         setValid(prevValid => ({ ...prevValid, consentCheckbox: checked }));
         setErrors(prevErrors => ({ ...prevErrors, consentCheckbox: !checked }));
     };
-
     return (
         <div className="adyen-checkout__open-invoice">
             {props.showFormInstruction && <FormInstruction />}
@@ -271,7 +270,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
 
             {activeFieldsets.billingAddress && (
                 <Address
-                    allowedCountries={props.allowedCountries}
+                    allowedCountries={props?.billingAddressSpecification?.allowedCountries ?? props.allowedCountries}
                     countryCode={countryCode}
                     requiredFields={props.billingAddressRequiredFields}
                     specifications={props.billingAddressSpecification}
@@ -302,8 +301,10 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
 
             {activeFieldsets.deliveryAddress && (
                 <Address
-                    allowedCountries={props.allowedCountries}
+                    allowedCountries={props?.deliveryAddressSpecification?.allowedCountries ?? props.allowedCountries}
                     countryCode={countryCode}
+                    requiredFields={props.deliveryAddressRequiredFields}
+                    specifications={props.deliveryAddressSpecification}
                     data={data.deliveryAddress}
                     label="deliveryAddress"
                     onChange={handleFieldset('deliveryAddress')}

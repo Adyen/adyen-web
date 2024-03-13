@@ -1,11 +1,13 @@
 import { h } from 'preact';
 import BaseElement from '../BaseElement/BaseElement';
 import PayButton from '../PayButton';
-import { cleanupFinalResult, sanitizeResponse, verifyPaymentDidNotFail } from './utils';
+import { assertIsDropin, cleanupFinalResult, getRegulatoryDefaults, sanitizeResponse, verifyPaymentDidNotFail } from './utils';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { hasOwnProperty } from '../../../utils/hasOwnProperty';
 import { Resources } from '../../../core/Context/Resources';
+import { ANALYTICS_SUBMIT_STR } from '../../../core/Analytics/constants';
 
+import type { AnalyticsInitialEvent, SendAnalyticsObject } from '../../../core/Analytics/types';
 import type { CoreConfiguration, ICore } from '../../../core/types';
 import type { NewableComponent } from '../../../core/core.registry';
 import type { ComponentMethodsRef, IUIElement, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
@@ -21,8 +23,7 @@ import type {
     PaymentResponseData,
     RawPaymentResponse
 } from '../../../types/global-types';
-import { ANALYTICS_SUBMIT_STR } from '../../../core/Analytics/constants';
-import { AnalyticsInitialEvent, SendAnalyticsObject } from '../../../core/Analytics/types';
+import type { IDropin } from '../../Dropin/types';
 
 import './UIElement.scss';
 
@@ -50,17 +51,15 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         this.submit = this.submit.bind(this);
         this.setState = this.setState.bind(this);
-        this.onValid = this.onValid.bind(this);
         this.onComplete = this.onComplete.bind(this);
         this.handleAction = this.handleAction.bind(this);
         this.handleOrder = this.handleOrder.bind(this);
         this.handleAdditionalDetails = this.handleAdditionalDetails.bind(this);
         this.handleResponse = this.handleResponse.bind(this);
         this.setElementStatus = this.setElementStatus.bind(this);
-
+        this.submitAnalytics = this.submitAnalytics.bind(this);
         this.makePaymentsCall = this.makePaymentsCall.bind(this);
         this.makeAdditionalDetailsCall = this.makeAdditionalDetailsCall.bind(this);
-
         this.submitUsingSessionsFlow = this.submitUsingSessionsFlow.bind(this);
 
         this.elementRef = (props && props.elementRef) || this;
@@ -78,13 +77,18 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         const finalProps = {
             showPayButton: true,
-            setStatusAutomatically: true,
             ...globalCoreProps,
             ...paymentMethodsResponseProps,
             ...componentProps
         };
 
-        this.props = this.formatProps({ ...this.constructor['defaultProps'], ...finalProps });
+        const isDropin = assertIsDropin(this as unknown as IDropin);
+
+        this.props = this.formatProps({
+            ...this.constructor['defaultProps'], // component defaults
+            ...getRegulatoryDefaults(this.core.options.countryCode, isDropin), // regulatory defaults
+            ...finalProps // the rest (inc. merchant defined config)
+        });
     }
 
     protected storeElementRefOnCore(props?: P) {
@@ -122,8 +126,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     protected onChange(): object {
         const isValid = this.isValid;
         const state = { data: this.data, errors: this.state.errors, valid: this.state.valid, isValid };
-        if (this.props.onChange) this.props.onChange(state, this.elementRef);
-        if (isValid) this.onValid();
+
+        this.props.onChange?.(state, this.elementRef);
 
         return state;
     }
@@ -152,12 +156,16 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
          * - first check for a dedicated "analyticsType" (currently only applies to custom-cards)
          * - otherwise, distinguish cards from non-cards: cards will use their static type property, everything else will use props.type
          */
-        let component = this.constructor['analyticsType'];
-        if (!component) {
-            component = this.constructor['type'] === 'scheme' || this.constructor['type'] === 'bcmc' ? this.constructor['type'] : this.props.type;
-        }
+        try {
+            let component = this.constructor['analyticsType'];
+            if (!component) {
+                component = this.constructor['type'] === 'scheme' || this.constructor['type'] === 'bcmc' ? this.constructor['type'] : this.props.type;
+            }
 
-        this.props.modules?.analytics.sendAnalytics(component, analyticsObj);
+            this.props.modules.analytics.sendAnalytics(component, analyticsObj);
+        } catch (error) {
+            console.warn('Failed to submit the analytics event');
+        }
     }
 
     public submit(): void {
@@ -170,9 +178,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     protected makePaymentsCall(): Promise<CheckoutAdvancedFlowResponse | CheckoutSessionPaymentResponse> {
-        if (this.props.setStatusAutomatically) {
-            this.setElementStatus('loading');
-        }
+        this.setElementStatus('loading');
 
         if (this.props.onSubmit) {
             return this.submitUsingAdvancedFlow();
@@ -236,12 +242,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         // };
     }
 
-    private onValid() {
-        const state = { data: this.data };
-        if (this.props.onValid) this.props.onValid(state, this.elementRef);
-        return state;
-    }
-
     protected onComplete(state): void {
         if (this.props.onComplete) this.props.onComplete(state, this.elementRef);
     }
@@ -268,9 +268,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     private makeAdditionalDetailsCall(state: AdditionalDetailsStateData): Promise<CheckoutSessionDetailsResponse | CheckoutAdvancedFlowResponse> {
-        if (this.props.setStatusAutomatically) {
-            this.setElementStatus('loading');
-        }
+        this.setElementStatus('loading');
 
         if (this.props.onAdditionalDetails) {
             return new Promise<CheckoutAdvancedFlowResponse>((resolve, reject) => {
@@ -344,8 +342,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * @param result
      */
     protected handleFailedResult = (result?: PaymentResponseData): void => {
-        if (this.props.setStatusAutomatically) {
-            this.setElementStatus('error');
+        if (assertIsDropin(this.elementRef)) {
+            this.elementRef.displayFinalAnimation('error');
         }
 
         cleanupFinalResult(result);
@@ -353,8 +351,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     };
 
     protected handleSuccessResult = (result: PaymentResponseData): void => {
-        if (this.props.setStatusAutomatically) {
-            this.setElementStatus('success');
+        if (assertIsDropin(this.elementRef)) {
+            this.elementRef.displayFinalAnimation('success');
         }
 
         cleanupFinalResult(result);
@@ -427,6 +425,13 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      */
     public get accessibleName(): string {
         return this.displayName;
+    }
+
+    /**
+     * Used to display the second line of a payment method item
+     */
+    get additionalInfo(): string {
+        return null;
     }
 
     /**

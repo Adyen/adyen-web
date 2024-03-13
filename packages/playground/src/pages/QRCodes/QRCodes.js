@@ -8,6 +8,7 @@ import '../../style.scss';
 import './QRCodes.scss';
 import getCurrency from '../../config/getCurrency';
 import getTranslationFile from '../../config/getTranslation';
+import { handleOnPaymentCompleted, handleOnPaymentFailed } from '../../handlers';
 
 const handleQRCodePayment = async (state, component, actions, countryCode) => {
     const currency = getCurrency(countryCode);
@@ -40,12 +41,8 @@ const handleQRCodePayment = async (state, component, actions, countryCode) => {
         translationFile: getTranslationFile(shopperLocale),
         environment: process.env.__CLIENT_ENV__,
         risk: { node: 'body', onError: console.error },
-        onPaymentCompleted(result, element) {
-            console.log('onPaymentCompleted', result, element);
-        },
-        onPaymentFailed(result, element) {
-            console.log('onPaymentFailed', result, element);
-        }
+        onPaymentCompleted: handleOnPaymentCompleted,
+        onPaymentFailed: handleOnPaymentFailed
     });
 
     // WechatPay QR

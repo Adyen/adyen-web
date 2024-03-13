@@ -1,8 +1,8 @@
 import { addErrorTranslationsToObject } from '../../../../../../core/Errors/utils';
 import addContextTranslationsToObject from '../../utilities/addContextTranslations';
-import { AriaConfigObject, AriaConfig } from '../AbstractSecuredField';
 import Language from '../../../../../../language/Language';
 import { SF_FIELDS_MAP } from '../../configuration/constants';
+import { AriaConfig, AriaConfigObject } from '../../types';
 
 /**
  * Creates an ariaConfig object with 'iframeTitle' and 'label' properties, whose values are retrieved from the translations object.
@@ -26,7 +26,7 @@ export function processAriaConfig(txVariant: string, fieldType: string, i18n: La
     const ariaFieldConfigObj: AriaConfigObject = { iframeTitle, label };
 
     // Add error translations object
-    let enhancedAriaFieldConfigObj = addErrorTranslationsToObject(ariaFieldConfigObj, i18n, fieldType);
+    let enhancedAriaFieldConfigObj: AriaConfigObject = addErrorTranslationsToObject(ariaFieldConfigObj, i18n, fieldType);
 
     // If allowed, add the translated contextual texts
     if (showContextuaElement) {

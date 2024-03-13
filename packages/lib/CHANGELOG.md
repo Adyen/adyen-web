@@ -1,5 +1,49 @@
 # @adyen/adyen-web
 
+## 5.60.0
+
+### Minor Changes
+
+-   Add support for new Donation properties. ([#2572](https://github.com/Adyen/adyen-web/pull/2572))
+
+-   Starting using /checkoutanalytics endpoint to retrieve "checkoutAttemptId" log "submit" and "action-handled" events ([#2234](https://github.com/Adyen/adyen-web/pull/2234))
+
+### Patch Changes
+
+-   Sanitize `billingAddress` when making a `/payments` call. Remove `firstName` and `lastName` in the `billingAddress` for non Riverty payments. ([#2591](https://github.com/Adyen/adyen-web/pull/2591))
+
+-   For regular card, zero auth payments, we store the payment method only if the configuration says we should ([#2589](https://github.com/Adyen/adyen-web/pull/2589))
+
+-   Updating applepay typescript types and fixing challengeWindowSize prop ([#2584](https://github.com/Adyen/adyen-web/pull/2584))
+
+## 5.59.0
+
+### Minor Changes
+
+-   Adding support for PayPal Express Flow ([#2551](https://github.com/Adyen/adyen-web/pull/2551))
+
+### Patch Changes
+
+-   For zero auth payments, we always send the `storePaymentMethod` to save the payment details. ([#2571](https://github.com/Adyen/adyen-web/pull/2571))
+
+## 5.58.0
+
+### Minor Changes
+
+-   Add the support for new Riverty component. It will replace the old AfterPay component in the future, currently only supports AT, CH and DE countries. ([#2532](https://github.com/Adyen/adyen-web/pull/2532))
+
+-   Adds new Paytrail component (EBanking_FI) ([#2528](https://github.com/Adyen/adyen-web/pull/2528))
+
+### Patch Changes
+
+-   Fix missing bindings for 'this' that had started causing errors in iOS ([#2557](https://github.com/Adyen/adyen-web/pull/2557))
+
+## 5.57.0
+
+### Minor Changes
+
+-   Use the label provided by the backend in stored blik payments ([#2522](https://github.com/Adyen/adyen-web/pull/2522))
+
 ## 5.56.1
 
 ### Patch Changes

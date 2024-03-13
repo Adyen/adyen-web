@@ -1,8 +1,8 @@
 import { h } from 'preact';
 import OpenInvoiceContainer from '../helpers/OpenInvoiceContainer';
-import ConsentCheckboxLabel from './components/ConsentCheckboxLabel';
-import { getConsentLinkUrl } from './utils';
-import { ALLOWED_COUNTRIES } from './config';
+import ConsentCheckboxLabel from '../internal/ConsentCheckboxLabel';
+import { ALLOWED_COUNTRIES, rivertyConsentUrlMap } from './config';
+import { getConsentUrl } from '../../utils/getConsentUrl';
 import { TxVariants } from '../tx-variants';
 
 export default class AfterPay extends OpenInvoiceContainer {
@@ -13,7 +13,7 @@ export default class AfterPay extends OpenInvoiceContainer {
         return {
             ...super.formatProps(props),
             allowedCountries: props.countryCode ? [props.countryCode] : ALLOWED_COUNTRIES,
-            consentCheckboxLabel: <ConsentCheckboxLabel url={getConsentLinkUrl(props.countryCode, props.i18n?.locale)} />
+            consentCheckboxLabel: <ConsentCheckboxLabel url={getConsentUrl(props.countryCode, props.i18n?.locale, rivertyConsentUrlMap)} />
         };
     }
 }

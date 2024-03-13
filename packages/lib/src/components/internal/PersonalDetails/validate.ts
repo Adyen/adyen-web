@@ -1,6 +1,6 @@
 import { ValidatorRules } from '../../../utils/Validator/types';
 import { isEmpty } from '../../../utils/validator-utils';
-import { ERROR_KEY_REQUIRED } from '../../../core/Errors/constants';
+import { ERROR_FIELD_REQUIRED } from '../../../core/Errors/constants';
 import { validationRules } from '../../../utils/Validator/defaultRules';
 
 export const personalDetailsValidationRules: ValidatorRules = {
@@ -8,7 +8,7 @@ export const personalDetailsValidationRules: ValidatorRules = {
         validate: value => {
             return value && value.length > 0;
         },
-        errorMessage: ERROR_KEY_REQUIRED,
+        errorMessage: ERROR_FIELD_REQUIRED,
         modes: ['blur']
     },
     gender: {

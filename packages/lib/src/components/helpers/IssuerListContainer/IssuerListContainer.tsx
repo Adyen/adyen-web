@@ -12,11 +12,11 @@ import type { ICore } from '../../../core/types';
 class IssuerListContainer extends UIElement<IssuerListConfiguration> {
     protected static defaultProps = {
         showImage: true,
-        onValid: () => {},
         issuers: [],
         highlightedIssuers: [],
         loadingContext: FALLBACK_CONTEXT,
-        showPaymentMethodItemImages: false
+        showPaymentMethodItemImages: false,
+        showPayButton: true
     };
 
     constructor(checkout: ICore, props?: IssuerListConfiguration) {
@@ -96,6 +96,7 @@ class IssuerListContainer extends UIElement<IssuerListConfiguration> {
                             onSubmit={this.submit}
                             payButton={this.payButton}
                             contextualText={this.props.i18n.get('issuerList.selectField.contextualText')}
+                            onSubmitAnalytics={this.submitAnalytics}
                         />
                     </SRPanelProvider>
                 ) : (

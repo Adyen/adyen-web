@@ -1,4 +1,4 @@
-import { AdyenCheckout } from '../../src/index';
+import { AdyenCheckout } from '../../src';
 import { cancelOrder, checkBalance, createOrder, getPaymentMethods, makeDetailsCall, makePayment } from './checkout-api-calls';
 import { handleChange, handleError, handleFinalState } from './checkout-handlers';
 import getCurrency from '../utils/get-currency';
@@ -6,7 +6,7 @@ import { AdyenCheckoutProps } from '../stories/types';
 import Checkout from '../../src/core/core';
 import { PaymentMethodsResponse } from '../../src/types';
 
-async function createAdvancedFlowCheckout({ showPayButton, countryCode, shopperLocale, amount }: AdyenCheckoutProps): Promise<Checkout> {
+async function createAdvancedFlowCheckout({ showPayButton, countryCode, shopperLocale, amount, ...rest }: AdyenCheckoutProps): Promise<Checkout> {
     const paymentAmount = {
         currency: getCurrency(countryCode),
         value: Number(amount)
@@ -116,7 +116,9 @@ async function createAdvancedFlowCheckout({ showPayButton, countryCode, shopperL
 
         onError: (error, component) => {
             handleError(error, component);
-        }
+        },
+
+        ...rest
     });
 
     return checkout;

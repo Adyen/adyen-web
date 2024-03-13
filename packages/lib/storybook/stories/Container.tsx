@@ -10,6 +10,8 @@ export const Container = ({ element }: IContainer) => {
     const [errorMessage, setErrorMessage] = useState(null);
 
     useEffect(() => {
+        if (!element) return;
+
         if (element.isAvailable) {
             element
                 .isAvailable()
@@ -22,7 +24,7 @@ export const Container = ({ element }: IContainer) => {
         } else {
             element.mount(container.current);
         }
-    }, []);
+    }, [element]);
 
     return <div>{errorMessage ? <div>{errorMessage}</div> : <div ref={container} id="component-root" className="component-wrapper" />}</div>;
 };

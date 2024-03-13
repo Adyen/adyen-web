@@ -3,7 +3,7 @@ import CollectId from '../Services/analytics/collect-id';
 import EventsQueue, { EventsQueueModule } from './EventsQueue';
 import { ANALYTICS_EVENT, AnalyticsInitialEvent, AnalyticsObject, AnalyticsProps, CreateAnalyticsEventObject } from './types';
 import { ANALYTICS_EVENT_ERROR, ANALYTICS_EVENT_INFO, ANALYTICS_EVENT_LOG, ANALYTICS_INFO_TIMER_INTERVAL, ANALYTICS_PATH } from './constants';
-import { debounce } from '../../components/internal/Address/utils';
+import { debounce } from '../../utils/debounce';
 import { AnalyticsModule } from '../../types/global-types';
 import { createAnalyticsObject } from './utils';
 import { analyticsPreProcessor } from './analyticsPreProcessor';
@@ -12,7 +12,7 @@ let capturedCheckoutAttemptId = null;
 let hasLoggedPixel = false;
 let sendEventsTimerId = null;
 
-const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analyticsContext }: AnalyticsProps): AnalyticsModule => {
+const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analyticsContext, bundleType }: AnalyticsProps): AnalyticsModule => {
     const defaultProps = {
         enabled: true,
         telemetry: true,
@@ -30,7 +30,7 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
     }
 
     const logEvent = LogEvent({ loadingContext, locale });
-    const collectId = CollectId({ analyticsContext, clientKey, locale, amount, analyticsPath: ANALYTICS_PATH });
+    const collectId = CollectId({ analyticsContext, clientKey, locale, amount, analyticsPath: ANALYTICS_PATH, bundleType });
     const eventsQueue: EventsQueueModule = EventsQueue({ analyticsContext, clientKey, analyticsPath: ANALYTICS_PATH });
 
     const sendAnalyticsEvents = () => {
@@ -80,8 +80,7 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
                         const checkoutAttemptId = await collectId({ ...initialEvent, ...(payload && { ...payload }) });
                         capturedCheckoutAttemptId = checkoutAttemptId;
                     } catch (e) {
-                        // Caught at collectId level. We do not expect this catch block to ever fire, but... just in case...
-                        console.debug(`Fetching checkoutAttemptId failed.${e ? ` Error=${e}` : ''}`);
+                        console.warn(`Fetching checkoutAttemptId failed.${e ? ` Error=${e}` : ''}`);
                     }
                 }
 
@@ -100,7 +99,7 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
         // Expose getter for testing purposes
         getEventsQueue: () => eventsQueue,
 
-        createAnalyticsEvent: ({ event, data }: CreateAnalyticsEventObject) => {
+        createAnalyticsEvent: ({ event, data }: CreateAnalyticsEventObject): AnalyticsObject => {
             const aObj: AnalyticsObject = createAnalyticsObject({
                 event,
                 ...data
@@ -108,6 +107,8 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
             // console.log('### Analytics::createAnalyticsEvent:: event=', event, ' aObj=', aObj);
 
             addAnalyticsEvent(event, aObj);
+
+            return aObj;
         },
 
         getEnabled: () => props.enabled,

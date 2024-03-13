@@ -143,7 +143,13 @@ export interface CoreConfiguration {
 
     order?: Order;
 
-    setStatusAutomatically?: boolean;
+    /**
+     * Add @adyen/web metadata to the window object.
+     * It helps to identify version number and bundle type in the merchant environment
+     *
+     * @default true
+     */
+    exposeLibraryMetadata?: boolean;
 
     beforeRedirect?(
         resolve: () => void,
@@ -172,7 +178,7 @@ export interface CoreConfiguration {
      * @param data
      * @param element
      */
-    onPaymentCompleted?(data: SessionsResponse | { resultCode: ResultCode }, element?: UIElement): void;
+    onPaymentCompleted?(data: SessionsResponse | { resultCode: ResultCode; donationToken?: string }, element?: UIElement): void;
 
     /**
      * Called when the payment fails.
@@ -190,7 +196,7 @@ export interface CoreConfiguration {
         element: UIElement,
         actions: {
             resolve: (response: CheckoutAdvancedFlowResponse) => void;
-            reject: () => void;
+            reject: (error?: Pick<CheckoutAdvancedFlowResponse, 'error'>) => void;
         }
     ): void;
 

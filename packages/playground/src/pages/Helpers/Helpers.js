@@ -52,6 +52,28 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         }
     }).mount('.donation-field');
 
+    // Adyen New Giving
+    window.new_donation = new Donation(window.checkout, {
+            onDonate: (state, component) => {
+                console.log({ state, component });
+                setTimeout(() => component.setStatus('ready'), 1000);
+            },
+            amounts: {
+                currency: 'EUR',
+                values: [50, 199, 300]
+            },
+            termsAndConditionsUrl: 'https://www.adyen.com',
+            bannerUrl: '/banner.png',
+            logoUrl: '/logo.png',
+            nonprofitDescription: 'Lorem ipsum...',
+            nonprofitName: 'Test Charity',
+            nonprofitUrl: 'https://example.org',
+            onCancel(data) {
+                console.log(data);
+            }
+        })
+        .mount('.new-donation-field');
+
     // Personal details
     window.personalDetails = new PersonalDetails(window.checkout, {
         onChange: console.log

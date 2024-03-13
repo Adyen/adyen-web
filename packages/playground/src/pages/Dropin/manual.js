@@ -4,6 +4,7 @@ import { getPaymentMethods, makePayment, checkBalance, createOrder, cancelOrder,
 import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
 import { getSearchParameters } from '../../utils';
 import getTranslationFile from '../../config/getTranslation';
+import { handleOnPaymentCompleted, handleOnPaymentFailed } from '../../handlers';
 
 export async function initManual() {
     const paymentMethodsResponse = await getPaymentMethods({ amount, shopperLocale });
@@ -53,12 +54,6 @@ export async function initManual() {
                 actions.reject();
             }
         },
-        onPaymentCompleted(result, element) {
-            console.log('onPaymentCompleted', result, element);
-        },
-        onPaymentFailed(result, element) {
-            console.log('onPaymentFailed', result, element);
-        },
         onBalanceCheck: async (resolve, reject, data) => {
             console.log('onBalanceCheck', data);
             resolve(await checkBalance(data));
@@ -83,7 +78,9 @@ export async function initManual() {
         onPaymentMethodsRequest: async (data, { resolve, reject }) => {
             console.log('onPaymentMethodsRequest', data);
             resolve(await getPaymentMethods({ amount, shopperLocale: data.locale, order: data.order }));
-        }
+        },
+        onPaymentCompleted: handleOnPaymentCompleted,
+        onPaymentFailed: handleOnPaymentFailed
     });
 
     function handleFinalState(resultCode, dropin) {
@@ -124,14 +121,15 @@ export async function initManual() {
     }
 
     const dropin = new Dropin(checkout, {
-        paymentMethodComponents: [Card, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay],
+        paymentMethodComponents: [Card, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay, Ideal],
         instantPaymentTypes: ['googlepay'],
+        disableFinalAnimation: true,
         paymentMethodsConfiguration: {
             card: {
                 challengeWindowSize: '03',
-                enableStoreDetails: true,
-                hasHolderName: true,
-                holderNameRequired: true
+                enableStoreDetails: true
+                // hasHolderName: true,
+                // holderNameRequired: true
             },
             paywithgoogle: {
                 buttonType: 'plain'

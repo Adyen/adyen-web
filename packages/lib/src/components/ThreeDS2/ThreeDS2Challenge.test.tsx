@@ -8,7 +8,7 @@ import {
 } from '../../core/Analytics/constants';
 import { THREEDS2_CHALLENGE_ERROR, THREEDS2_ERROR } from './config';
 
-const analyticsModule = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '' });
+const analyticsModule = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', bundleType: 'umd' });
 
 describe('ThreeDS2Challenge: calls that generate analytics should produce objects with the expected shapes ', () => {
     let challenge;
@@ -23,9 +23,7 @@ describe('ThreeDS2Challenge: calls that generate analytics should produce object
             onError: () => {}
         });
 
-        analyticsModule.createAnalyticsEvent = jest.fn(obj => {
-            console.log('### analyticsPreProcessor.test:::: obj=', obj);
-        });
+        analyticsModule.createAnalyticsEvent = jest.fn(() => null);
     });
 
     test('A call to ThreeDS2Challenge.submitAnalytics with an object with type "rendered" should not lead to an analytics event', () => {

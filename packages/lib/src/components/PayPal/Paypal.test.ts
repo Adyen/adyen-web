@@ -5,7 +5,7 @@ describe('Paypal', () => {
         const paypal = new Paypal(global.core);
         expect(paypal.data).toEqual({
             clientStateDataIndicator: true,
-            paymentMethod: { subtype: 'sdk', type: 'paypal', checkoutAttemptId: 'do-not-track' }
+            paymentMethod: { subtype: 'sdk', type: 'paypal', userAction: 'pay', checkoutAttemptId: 'do-not-track' }
         });
     });
 
@@ -13,7 +13,23 @@ describe('Paypal', () => {
         const paypal = new Paypal(global.core, { isExpress: true });
         expect(paypal.data).toEqual({
             clientStateDataIndicator: true,
-            paymentMethod: { subtype: 'express', type: 'paypal', checkoutAttemptId: 'do-not-track' }
+            paymentMethod: { subtype: 'express', type: 'paypal', userAction: 'pay', checkoutAttemptId: 'do-not-track' }
+        });
+    });
+
+    test('should return userAction=pay as default', () => {
+        const paypal = new Paypal(global.core);
+        expect(paypal.data).toEqual({
+            clientStateDataIndicator: true,
+            paymentMethod: { subtype: 'sdk', type: 'paypal', userAction: 'pay', checkoutAttemptId: 'do-not-track' }
+        });
+    });
+
+    test('should return userAction=continue if set', () => {
+        const paypal = new Paypal(global.core, { isExpress: true, userAction: 'continue' });
+        expect(paypal.data).toEqual({
+            clientStateDataIndicator: true,
+            paymentMethod: { subtype: 'express', type: 'paypal', userAction: 'continue', checkoutAttemptId: 'do-not-track' }
         });
     });
 
@@ -33,8 +49,8 @@ describe('Paypal', () => {
 describe('Paypal configuration prop configures correctly', () => {
     test('Paypal element has configuration object with default values', () => {
         const paypal = new Paypal(global.core);
-        expect(paypal.props.configuration.merchantId).toEqual('');
-        expect(paypal.props.configuration.intent).toEqual(null);
+        expect(paypal.props.configuration.merchantId).toEqual(undefined);
+        expect(paypal.props.configuration.intent).toEqual(undefined);
     });
 
     test('Paypal element has configuration object with values pulled from props.configuration', () => {

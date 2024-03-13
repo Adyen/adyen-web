@@ -10,8 +10,18 @@ import {
     generateTypes,
     minify
 } from './rollup.plugins.js';
+import { BUNDLE_TYPES } from './utils/bundle-types.js';
 
 dotenv.config({ path: path.resolve('../../', '.env') });
+
+/**
+ * Rollup throws a warning when compiling to ES2017 and CJS regarding PURE annotation.
+ * The log is not relevant.
+ */
+function suppressRollupPureAnnotationWarning(level, log, handler) {
+    if (log.code === 'INVALID_ANNOTATION') return;
+    handler(level, log);
+}
 
 export default () => {
     return [
@@ -21,10 +31,10 @@ export default () => {
             plugins: [
                 resolveExtensions(),
                 loadCommonjsPackage(),
-                replaceValues({ moduleType: 'es' }),
+                replaceValues({ bundleType: BUNDLE_TYPES.esm }),
                 convertJsonToESM(),
                 compileCSS(),
-                compileJavascript({ sourceMaps: true }),
+                compileJavascript({ target: 'es2022', sourceMaps: true }),
                 minify()
             ],
             output: [
@@ -53,12 +63,13 @@ export default () => {
             plugins: [
                 resolveExtensions(),
                 loadCommonjsPackage(),
-                replaceValues({ moduleType: 'es-legacy' }),
+                replaceValues({ bundleType: BUNDLE_TYPES.eslegacy }),
                 convertJsonToESM(),
                 compileCSS(),
                 compileJavascript({ target: 'es2017', sourceMaps: true }),
                 minify()
             ],
+            onLog: suppressRollupPureAnnotationWarning,
             output: [
                 {
                     dir: './dist/es-legacy',
@@ -85,7 +96,7 @@ export default () => {
             plugins: [
                 resolveExtensions(),
                 loadCommonjsPackage(),
-                replaceValues({ moduleType: 'umd' }),
+                replaceValues({ bundleType: BUNDLE_TYPES.umd }),
                 convertJsonToESM(),
                 compileCSS(),
                 compileJavascript({ sourceMaps: true }),
@@ -106,12 +117,13 @@ export default () => {
             plugins: [
                 resolveExtensions(),
                 loadCommonjsPackage(),
-                replaceValues({ moduleType: 'commonjs' }),
+                replaceValues({ bundleType: BUNDLE_TYPES.commonjs }),
                 convertJsonToESM(),
                 compileCSS(),
                 compileJavascript({ target: 'es2017', sourceMaps: true }),
                 minify({ isESM: false })
             ],
+            onLog: suppressRollupPureAnnotationWarning,
             output: {
                 file: 'dist/cjs/index.cjs',
                 format: 'commonjs',

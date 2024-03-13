@@ -10,10 +10,10 @@ const CVC_LABEL_OPTIONAL = LANG['creditCard.securityCode.label.optional'];
 
 const OPTIONAL = LANG['field.title.optional'];
 
-const PAN_ERROR = LANG['error.va.sf-cc-num.02'];
-const DATE_INVALID_ERROR = LANG['error.va.sf-cc-dat.01'];
-const DATE_EMPTY_ERROR = LANG['error.va.sf-cc-dat.04'];
-const CVC_ERROR = LANG['error.va.sf-cc-cvc.01'];
+const PAN_ERROR = LANG['cc.num.900'];
+const DATE_INVALID_ERROR = LANG['cc.dat.912'];
+const DATE_EMPTY_ERROR = LANG['cc.dat.910'];
+const CVC_ERROR = LANG['cc.cvc.920'];
 
 test.describe('Test how Custom Card Component with regular date field handles hidden expiryDate policy', () => {
     test('#1 how UI & state respond', async ({ customCardPage }) => {

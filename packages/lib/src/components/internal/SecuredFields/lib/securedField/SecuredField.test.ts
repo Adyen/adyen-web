@@ -1,19 +1,9 @@
 import SecuredField from './SecuredField';
-// <<<<<<< HEAD
-// // import { AriaConfig } from './AbstractSecuredField';
-// import en from '../../../../../language/locales/en-US';
-// import { CVCPolicyType, DatePolicyType } from '../types';
-// import { ERROR_CODES, ERROR_MSG_CARD_TOO_OLD, ERROR_MSG_INVALID_FIELD, ERROR_MSG_LUHN_CHECK_FAILED } from '../../../../../core/Errors/constants';
-// import { ERROR_MSG_INCOMPLETE_FIELD } from '../../../../../core/Errors/constants';
-// import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED } from '../configuration/constants';
-// import Language from '../../../../../language';
-// =======
+
 import { CVCPolicyType, DatePolicyType } from '../types';
 import en from '../../../../../language/locales/en-US';
-// @ts-ignore ignore
-// import LANG from '../../../../../language/locales/en-US.json';
-import { ERROR_CODES, ERROR_MSG_CARD_TOO_OLD, ERROR_MSG_INVALID_FIELD, ERROR_MSG_LUHN_CHECK_FAILED } from '../../../../../core/Errors/constants';
-import { ERROR_MSG_INCOMPLETE_FIELD } from '../../../../../core/Errors/constants';
+
+import { SF_ErrorCodes } from '../../../../../core/Errors/constants';
 import {
     CVC_POLICY_REQUIRED,
     DATE_POLICY_REQUIRED,
@@ -25,8 +15,6 @@ import {
 import { Placeholders as AchPlaceholders } from '../../../../Ach/components/AchInput/types';
 import { Placeholders as GiftcardPlaceholders } from '../../../../Giftcard/components/types';
 import { Placeholders as CardPlaceholders } from '../../../../Card/components/CardInput/types';
-// import Language from '../../../../../language';
-// >>>>>>> v6
 
 const ENCRYPTED_CARD_NUMBER = 'encryptedCardNumber';
 const ENCRYPTED_EXPIRY_DATE = 'encryptedExpiryDate';
@@ -43,16 +31,15 @@ const TRANSLATED_DATE_IFRAME_LABEL = en['creditCard.expiryDate.label'];
 const TRANSLATED_CVC_IFRAME_TITLE = en['creditCard.encryptedSecurityCode.aria.iframeTitle'];
 const TRANSLATED_CVC_IFRAME_LABEL = en['creditCard.securityCode.label'];
 
-const GENERAL_ERROR_CODE = ERROR_CODES[ERROR_MSG_INCOMPLETE_FIELD];
-const CARD_TOO_OLD_ERROR_CODE = ERROR_CODES[ERROR_MSG_CARD_TOO_OLD];
+const ERROR_MSG_LUHN_CHECK_FAILED = SF_ErrorCodes.ERROR_MSG_LUHN_CHECK_FAILED;
 
-const TRANSLATED_INCOMPLETE_FIELD_ERROR = en[GENERAL_ERROR_CODE];
+const TRANSLATED_LUHN_CHECK_FAILED_ERROR = en[ERROR_MSG_LUHN_CHECK_FAILED];
+
+const CARD_TOO_OLD_ERROR_CODE = SF_ErrorCodes.ERROR_MSG_CARD_TOO_OLD;
 const TRANSLATED_CARD_TOO_OLD_ERROR = en[CARD_TOO_OLD_ERROR_CODE];
 
-// const TRANSLATED_NUMBER_PLACEHOLDER = en['creditCard.numberField.placeholder'];
-// const TRANSLATED_DATE_PLACEHOLDER = en['creditCard.expiryDateField.placeholder'];
-// const TRANSLATED_CVC_PLACEHOLDER_3_DIGITS = en['creditCard.cvcField.placeholder.3digits'];
-// const TRANSLATED_CVC_PLACEHOLDER_4_DIGITS = en['creditCard.cvcField.placeholder.4digits'];
+const ERROR_MSG_INVALID_FIELD = SF_ErrorCodes.ERROR_MSG_INVALID_FIELD;
+const ERROR_MSG_CARD_TOO_OLD = SF_ErrorCodes.ERROR_MSG_CARD_TOO_OLD;
 
 const nodeHolder = document.createElement('div');
 
@@ -104,7 +91,9 @@ describe('SecuredField handling ariaConfig object - should set defaults', () => 
 
         expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_CARD_NUMBER].iframeTitle).toEqual(TRANSLATED_NUMBER_IFRAME_TITLE);
         expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_CARD_NUMBER].label).toEqual(TRANSLATED_NUMBER_IFRAME_LABEL);
-        expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_CARD_NUMBER].error[GENERAL_ERROR_CODE]).toEqual(TRANSLATED_INCOMPLETE_FIELD_ERROR);
+        expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_CARD_NUMBER].error[ERROR_MSG_LUHN_CHECK_FAILED]).toEqual(
+            TRANSLATED_LUHN_CHECK_FAILED_ERROR
+        );
         expect(card.sfConfig.iframeUIConfig.ariaConfig.lang).toEqual(global.i18n.locale); // = 'en-US'
     });
 
@@ -115,7 +104,7 @@ describe('SecuredField handling ariaConfig object - should set defaults', () => 
 
         expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE].iframeTitle).toEqual(TRANSLATED_DATE_IFRAME_TITLE);
         expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE].label).toEqual(TRANSLATED_DATE_IFRAME_LABEL);
-        expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE].error[GENERAL_ERROR_CODE]).toEqual(TRANSLATED_INCOMPLETE_FIELD_ERROR);
+        expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE].error[CARD_TOO_OLD_ERROR_CODE]).toEqual(TRANSLATED_CARD_TOO_OLD_ERROR);
         expect(card.sfConfig.iframeUIConfig.ariaConfig.lang).toEqual(global.i18n.locale);
     });
 
@@ -126,7 +115,6 @@ describe('SecuredField handling ariaConfig object - should set defaults', () => 
 
         expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_SECURITY_CODE].iframeTitle).toEqual(TRANSLATED_CVC_IFRAME_TITLE);
         expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_SECURITY_CODE].label).toEqual(TRANSLATED_CVC_IFRAME_LABEL);
-        expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_SECURITY_CODE].error[GENERAL_ERROR_CODE]).toEqual(TRANSLATED_INCOMPLETE_FIELD_ERROR);
         expect(card.sfConfig.iframeUIConfig.ariaConfig.lang).toEqual(global.i18n.locale);
     });
 });
@@ -158,31 +146,25 @@ describe('SecuredField handling ariaConfig object - should trim the config objec
 
         const card = new SecuredField(setupObj, global.i18n);
 
-        expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_CARD_NUMBER].error[GENERAL_ERROR_CODE]).not.toBe(undefined);
-        expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_CARD_NUMBER].error[ERROR_CODES[ERROR_MSG_LUHN_CHECK_FAILED]]).not.toBe(undefined);
+        expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_CARD_NUMBER].error[ERROR_MSG_LUHN_CHECK_FAILED]).not.toBe(undefined);
 
         // non sf-related key should not be present
-        expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_CARD_NUMBER].error[ERROR_CODES[ERROR_MSG_INVALID_FIELD]]).toBe(undefined);
+        expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_CARD_NUMBER].error[ERROR_MSG_INVALID_FIELD]).toBe(undefined);
     });
 
     test('date field, with default ariaConfig, should have expected, translated, error strings', () => {
         setupObj.fieldType = ENCRYPTED_EXPIRY_DATE;
         const card = new SecuredField(setupObj, global.i18n);
 
-        expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE].error[GENERAL_ERROR_CODE]).toEqual(TRANSLATED_INCOMPLETE_FIELD_ERROR);
-
-        expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE].error[ERROR_CODES[ERROR_MSG_CARD_TOO_OLD]]).toEqual(
-            TRANSLATED_CARD_TOO_OLD_ERROR
-        );
+        expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_EXPIRY_DATE].error[ERROR_MSG_CARD_TOO_OLD]).toEqual(TRANSLATED_CARD_TOO_OLD_ERROR);
     });
 
     test('Card number field with default ariaConfig should have an error object containing certain keys whose values are the correct translations', () => {
         setupObj.fieldType = ENCRYPTED_CARD_NUMBER;
         setupObj.iframeUIConfig.ariaConfig = {};
         const card = new SecuredField(setupObj, global.i18n);
-        expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_CARD_NUMBER].error[GENERAL_ERROR_CODE]).toEqual(global.i18n.get(GENERAL_ERROR_CODE));
 
-        const errorCode = ERROR_CODES[ERROR_MSG_LUHN_CHECK_FAILED];
+        const errorCode = ERROR_MSG_LUHN_CHECK_FAILED;
         expect(card.sfConfig.iframeUIConfig.ariaConfig[ENCRYPTED_CARD_NUMBER].error[errorCode]).toEqual(global.i18n.get(errorCode));
     });
 });

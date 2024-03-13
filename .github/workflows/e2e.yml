@@ -1,6 +1,6 @@
 name: E2E for Checkout Components
 
-on: 
+on:
   pull_request:
   workflow_dispatch:
 
@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [18.15]
+        node-version: [18.18]
         # node-version: [16.x, 18.x, 19.x]
         # Currently 18 and 19 are not supported, still keeping it
         # as a reminder for compatibility check
@@ -38,11 +38,11 @@ jobs:
         MERCHANT_ACCOUNT: ${{secrets.ADYEN_CHECKOUT_MERCHANT_ACCOUNT}}
         CLIENT_KEY: ${{secrets.ADYEN_CHECKOUT_CLIENT_KEY}}
         CLIENT_ENV: test
-        TESTING_ENVIRONMENT: https://checkout-test.adyen.com/checkout/v70
-        API_VERSION: v70
+        TESTING_ENVIRONMENT: https://checkout-test.adyen.com/checkout/v71
+        API_VERSION: v71
     - name: Archive test result artifacts
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: html-report
         path: packages/e2e-playwright/playwright-report

@@ -1,6 +1,6 @@
 import { ADDRESS_SCHEMA } from '../components/internal/Address/constants';
 import actionTypes from '../core/ProcessResponse/PaymentAction/actionTypes';
-import { AnalyticsInitialEvent, CreateAnalyticsEventObject, SendAnalyticsObject } from '../core/Analytics/types';
+import { AnalyticsInitialEvent, AnalyticsObject, CreateAnalyticsEventObject, SendAnalyticsObject } from '../core/Analytics/types';
 import { EventsQueueModule } from '../core/Analytics/EventsQueue';
 import { CbObjOnFocus } from '../components/internal/SecuredFields/lib/types';
 
@@ -154,6 +154,8 @@ export interface StoredPaymentMethod extends PaymentMethod {
     networkTxReference?: string;
     ownerName?: string;
     shopperEmail?: string;
+    /** The shopper’s issuer account label */
+    label?: string;
     /**
      * A unique identifier of this stored payment method. Mapped from 'storedPaymentMethod.id'
      * @internal
@@ -357,7 +359,7 @@ export type RawPaymentResponse = PaymentResponseData &
         [key: string]: any;
     };
 
-export type ActionDescriptionType = 'qr-code-loaded' | 'polling-started' | 'fingerprint-iframe-loaded' | 'challenge-iframe-loaded';
+export type ActionDescriptionType = 'qr-code-loaded' | 'polling-started' | 'fingerprint-iframe-loaded' | string;
 
 export interface ActionHandledReturnObject {
     componentType: string;
@@ -380,7 +382,7 @@ export interface AnalyticsModule {
     setUp: (a: AnalyticsInitialEvent) => Promise<any>;
     getCheckoutAttemptId: () => string;
     getEventsQueue: () => EventsQueueModule;
-    createAnalyticsEvent: (a: CreateAnalyticsEventObject) => void;
+    createAnalyticsEvent: (a: CreateAnalyticsEventObject) => AnalyticsObject;
     getEnabled: () => boolean;
     sendAnalytics: (component: string, analyticsObj: SendAnalyticsObject) => void;
 }
@@ -388,4 +390,10 @@ export interface AnalyticsModule {
 export type ComponentFocusObject = {
     fieldType: string;
     event: Event | CbObjOnFocus;
+};
+
+export type DecodeObject = {
+    success: boolean;
+    error?: string;
+    data?: string;
 };

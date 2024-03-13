@@ -98,6 +98,14 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
             componentData.paymentMethod.checkoutAttemptId = checkoutAttemptId;
         }
 
+        // Workaround, to be fixed properly
+        // Remove the firstName & lastName in the billingAddress for non Riverty components
+        // @ts-ignore type exists
+        if (this.props.type !== 'riverty' && componentData.billingAddress) {
+            const { firstName, lastName, ...rest } = componentData.billingAddress;
+            componentData.billingAddress = { ...rest };
+        }
+
         return {
             ...(clientData && { riskData: { clientData } }),
             ...(order && { order: { orderData: order.orderData, pspReference: order.pspReference } }),
@@ -167,23 +175,6 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
         this.state = {};
 
         return this.unmount().mount(this._node); // for new mount fny
-    }
-
-    /**
-     * Unmounts an element and mounts it again on the same node i.e. allows mount w/o having to pass a node.
-     * Should be "private" & undocumented (although being a public function is useful for testing).
-     * Left in for legacy reasons
-     */
-    public remount(component?): this {
-        if (!this._node) {
-            throw new Error('Component is not mounted.');
-        }
-
-        const newComponent = component || this.render();
-
-        render(newComponent, this._node, null);
-
-        return this;
     }
 
     /**

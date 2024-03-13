@@ -13,11 +13,11 @@ import { hasOwnProperty } from '../utils/hasOwnProperty';
 import { Resources } from './Context/Resources';
 import { SRPanel } from './Errors/SRPanel';
 import registry, { NewableComponent } from './core.registry';
-import { DEFAULT_LOCALE } from '../language/config';
 import { cleanupFinalResult, sanitizeResponse, verifyPaymentDidNotFail } from '../components/internal/UIElement/utils';
 import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from './Errors/AdyenCheckoutError';
 import { ANALYTICS_ACTION_STR } from './Analytics/constants';
 import { THREEDS2_FULL } from '../components/ThreeDS2/config';
+import { DEFAULT_LOCALE } from '../language/config';
 
 class Core implements ICore {
     public session?: Session;
@@ -30,15 +30,19 @@ class Core implements ICore {
 
     private components: UIElement[] = [];
 
-    public static readonly version = {
+    public static readonly metadata = {
         version: process.env.VERSION,
         revision: process.env.COMMIT_HASH,
         branch: process.env.COMMIT_BRANCH,
         buildId: process.env.ADYEN_BUILD_ID,
-        moduleType: process.env.MODULE_TYPE
+        bundleType: process.env.BUNDLE_TYPE
     };
 
     public static registry = registry;
+
+    public static setBundleType(type: string): void {
+        Core.metadata.bundleType = type;
+    }
 
     public static register(...items: NewableComponent[]) {
         registry.add(...items);
@@ -59,12 +63,7 @@ class Core implements ICore {
     constructor(props: CoreConfiguration) {
         this.createFromAction = this.createFromAction.bind(this);
 
-        // If it's not a session - check if we have the required countryCode
-        if (!props.session && !hasOwnProperty(props, 'countryCode')) {
-            throw new AdyenCheckoutError(IMPLEMENTATION_ERROR, 'You must specify a countryCode when initializing checkout');
-        }
-
-        this.setOptions(props);
+        this.setOptions({ exposeLibraryMetadata: true, ...props });
 
         this.loadingContext = resolveEnvironment(this.options.environment, this.options.environmentUrls?.api);
         this.cdnContext = resolveCDNEnvironment(this.options.resourceEnvironment || this.options.environment, this.options.environmentUrls?.api);
@@ -73,18 +72,26 @@ class Core implements ICore {
 
         const clientKeyType = this.options.clientKey?.substr(0, 4);
         if ((clientKeyType === 'test' || clientKeyType === 'live') && !this.loadingContext.includes(clientKeyType)) {
-            throw new Error(`Error: you are using a '${clientKeyType}' clientKey against the '${this.options.environment}' environment`);
+            throw new AdyenCheckoutError(
+                'IMPLEMENTATION_ERROR',
+                `Error: you are using a ${clientKeyType} clientKey against the ${this.options.environment} environment`
+            );
         }
 
-        // Expose version number for npm builds
-        window['adyenWebVersion'] = Core.version.version;
+        if (this.options.exposeLibraryMetadata) {
+            window['AdyenWebMetadata'] = Core.metadata;
+        }
     }
 
-    public initialize(): Promise<this> {
+    public async initialize(): Promise<this> {
+        await this.initializeCore();
+        this.validateCoreConfiguration();
+        this.createCoreModules();
+        return this;
+    }
+
+    private async initializeCore(): Promise<this> {
         if (this.session) {
-            if (!hasOwnProperty(this.options.session, 'countryCode')) {
-                throw new AdyenCheckoutError(IMPLEMENTATION_ERROR, 'You must specify a countryCode when creating a session');
-            }
             return this.session
                 .setupSession(this.options)
                 .then(sessionResponse => {
@@ -98,20 +105,35 @@ class Core implements ICore {
                     });
 
                     this.createPaymentMethodsList(paymentMethods);
-                    this.createCoreModules();
 
                     return this;
                 })
                 .catch(error => {
                     if (this.options.onError) this.options.onError(error);
-                    return this;
+                    return Promise.reject(error);
                 });
         }
 
         this.createPaymentMethodsList();
-        this.createCoreModules();
-
         return Promise.resolve(this);
+    }
+
+    private validateCoreConfiguration(): void {
+        // @ts-ignore This property does not exist, although merchants might be using when migrating from v5 to v6
+        if (this.options.paymentMethodsConfiguration) {
+            console.warn('WARNING:  "paymentMethodsConfiguration" is supported only by Drop-in.');
+        }
+
+        if (!this.options.locale) {
+            this.setOptions({ locale: DEFAULT_LOCALE });
+        }
+
+        if (!this.options.countryCode) {
+            throw new AdyenCheckoutError(
+                IMPLEMENTATION_ERROR,
+                'You must specify a countryCode when initializing checkout. (If you are using a session then this session should be initialized with a countryCode.)'
+            );
+        }
     }
 
     /**
@@ -234,14 +256,10 @@ class Core implements ICore {
      * Create or update the config object passed when AdyenCheckout is initialised (environment, clientKey, etc...)
      */
     private setOptions = (options: CoreConfiguration): void => {
-        if (hasOwnProperty(options, 'paymentMethodsConfiguration')) {
-            console.warn('WARNING:  "paymentMethodsConfiguration" is supported only by Drop-in.');
-        }
-
         this.options = {
             ...this.options,
             ...options,
-            locale: options?.locale || this.options?.locale || DEFAULT_LOCALE
+            locale: options?.locale || this.options?.locale
         };
     };
 
@@ -304,7 +322,8 @@ class Core implements ICore {
                 clientKey: this.options.clientKey,
                 locale: this.options.locale,
                 analytics: this.options.analytics,
-                amount: this.options.amount
+                amount: this.options.amount,
+                bundleType: Core.metadata.bundleType
             }),
             resources: new Resources(this.cdnContext),
             i18n: new Language(this.options.locale, this.options.translations, this.options.translationFile),

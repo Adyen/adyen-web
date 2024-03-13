@@ -25,7 +25,6 @@ const initCheckout = async () => {
         session,
         clientKey: process.env.__CLIENT_KEY__,
         locale: shopperLocale,
-        countryCode,
         showPayButton: true,
         onPaymentCompleted: handlePaymentCompleted,
         onOrderUpdated: data => {

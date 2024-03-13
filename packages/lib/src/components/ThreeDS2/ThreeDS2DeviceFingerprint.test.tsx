@@ -8,7 +8,7 @@ import {
 } from '../../core/Analytics/constants';
 import { THREEDS2_ERROR, THREEDS2_FINGERPRINT_ERROR } from './config';
 
-const analyticsModule = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '' });
+const analyticsModule = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', bundleType: 'umd' });
 
 describe('ThreeDS2DeviceFingerprint: calls that generate analytics should produce objects with the expected shapes ', () => {
     let fingerprint;
@@ -24,9 +24,7 @@ describe('ThreeDS2DeviceFingerprint: calls that generate analytics should produc
             showSpinner: null
         });
 
-        analyticsModule.createAnalyticsEvent = jest.fn(obj => {
-            console.log('### analyticsPreProcessor.test:::: obj=', obj);
-        });
+        analyticsModule.createAnalyticsEvent = jest.fn(() => null);
     });
 
     test('A call to ThreeDS2DeviceFingerprint.submitAnalytics with an object with type "rendered" should not lead to an analytics event', () => {

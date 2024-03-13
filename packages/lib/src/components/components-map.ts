@@ -47,13 +47,13 @@ import PersonalDetails from './PersonalDetails';
 import Klarna from './Klarna';
 import Twint from './Twint';
 import MealVoucherFR from './MealVoucherFR';
-import OnlineBankingINElement from './OnlineBankingIN';
-import OnlinebankingPL from './OnlinebankingPL';
+import OnlineBankingIN from './OnlineBankingIN';
+import OnlineBankingPL from './OnlineBankingPL';
 import RatePayDirectDebit from './RatePay/RatePayDirectDebit';
 import UPI from './UPI';
 import WalletINElement from './WalletIN';
-import OnlineBankingCZElement from './OnlineBankingCZ';
-import OnlineBankingSKElement from './OnlineBankingSK';
+import OnlineBankingCZ from './OnlineBankingCZ';
+import OnlineBankingSK from './OnlineBankingSK';
 import PayByBank from './PayByBank';
 import PromptPay from './PromptPay';
 import Duitnow from './DuitNow';
@@ -64,8 +64,8 @@ import { TxVariants } from './tx-variants';
  * Maps each tx variant to a Component element.
  *
  * WARNING: This mapping must be imported carefully as it breaks the tree-shaking. It is now used in:
- * - The utility function 'createComponents' for UMD bundle (UMD bundle does not have tree-shaking, so this use-case is fine)
- * - Generating Drop-in Typescript types (Typescript types does not break tree-shaking)
+ * - The utility function 'createComponent' for UMD bundle (UMD bundle does not have tree-shaking, so this use-case is fine)
+ * - Generating Drop-in Typescript types (Typescript types do not break tree-shaking)
  */
 export const ComponentsMap = {
     /** internal */
@@ -144,10 +144,10 @@ export const ComponentsMap = {
     [TxVariants.molpay_ebanking_fpx_MY]: MolPayEBankingMY,
     [TxVariants.molpay_ebanking_TH]: MolPayEBankingTH,
     [TxVariants.molpay_ebanking_VN]: MolPayEBankingVN,
-    [TxVariants.onlineBanking_CZ]: OnlineBankingCZElement,
-    [TxVariants.onlinebanking_IN]: OnlineBankingINElement, // NOTE ]: the txVariant does have a lowercase "b"
-    [TxVariants.onlineBanking_PL]: OnlinebankingPL,
-    [TxVariants.onlineBanking_SK]: OnlineBankingSKElement,
+    [TxVariants.onlineBanking_CZ]: OnlineBankingCZ,
+    [TxVariants.onlinebanking_IN]: OnlineBankingIN, // NOTE: the txVariant does have a lowercase "b"
+    [TxVariants.onlineBanking_PL]: OnlineBankingPL,
+    [TxVariants.onlineBanking_SK]: OnlineBankingSK,
     [TxVariants.paybybank]: PayByBank,
     [TxVariants.payu_IN_cashcard]: PayuCashcard,
     [TxVariants.payu_IN_nb]: PayuNetBanking,

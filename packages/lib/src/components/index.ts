@@ -22,6 +22,7 @@ export { default as FacilPay10x } from './FacilyPay/FacilyPay10x';
 export { default as FacilPay12x } from './FacilyPay/FacilyPay12x';
 export { default as RatePay } from './RatePay';
 export { default as RatePayDirectDebit } from './RatePay/RatePayDirectDebit';
+export { default as Riverty } from './Riverty';
 
 /** Wallets **/
 export { default as AmazonPay } from './AmazonPay';
@@ -47,8 +48,9 @@ export { default as MolPayEBankingTH } from './MolPayEBanking/MolPayEBankingTH';
 export { default as MolPayEBankingVN } from './MolPayEBanking/MolPayEBankingVN';
 export { default as OnlineBankingCZ } from './OnlineBankingCZ';
 export { default as OnlineBankingIN } from './OnlineBankingIN';
-export { default as OnlineBankingPL } from './OnlinebankingPL';
+export { default as OnlineBankingPL } from './OnlineBankingPL';
 export { default as OnlineBankingSK } from './OnlineBankingSK';
+export { default as OnlineBankingFI } from './OnlineBankingFI';
 export { default as PayByBank } from './PayByBank/PayByBank';
 export { default as PayuCashcard } from './PayU/PayuCashcard';
 export { default as PayuNetBanking } from './PayU/PayuNetBanking';
