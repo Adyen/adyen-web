@@ -1,11 +1,33 @@
 @import '~@adyen/bento-design-tokens/dist/scss/bento/variables';
 
 :root {
+    /* Fonts */
     --adyen-checkout-font-size-large: 1.5em;
     --adyen-checkout-font-size-medium: 1em;
     --adyen-checkout-font-size-small: 0.81em;
     --adyen-checkout-font-size-xsmall: 0.75em;
     --adyen-checkout-font-size-xxsmall: 0.68em;
+    --adyen-checkout-line-height-600: #{$line-height-600};
+    --adyen-checkout-line-height-400: #{$line-height-400};
+    --adyen-checkout-line-height-200: #{$line-height-200};
+    --adyen-checkout-line-height-100: #{$line-height-100};
+    --adyen-checkout-font-weight-200: #{$font-weight-200};
+    --adyen-checkout-font-weight-500: #{$font-weight-500};
+    --adyen-checkout-font-weight-600: #{$font-weight-600};
+    --adyen-checkout-font-weight-700: #{$font-weight-700};
+    --adyen-checkout-text-title-font-weight: #{$text-title-font-weight};
+    --adyen-checkout-text-body-font-size: #{$text-body-font-size};
+    --adyen-checkout-text-body-font-weight: #{$text-body-font-weight};
+    --adyen-checkout-text-body-stronger-font-weight: #{$text-body-stronger-font-weight};
+    --adyen-checkout-text-body-strongest-font-weight: #{$text-body-strongest-font-weight};
+    --adyen-checkout-text-title-line-height: var(--adyen-checkout-line-height-600);
+    --adyen-checkout-text-caption-line-height: var(--adyen-checkout-line-height-100);
+    --adyen-checkout-text-subtitle-line-height: var(--adyen-checkout-line-height-400);
+    --adyen-checkout-text-subtitle-font-size: var(--adyen-checkout-font-size-medium);
+    --adyen-checkout-text-subtitle-font-weight: var(--adyen-checkout-font-weight-500);
+    --adyen-checkout-text-subtitle-stronger-font-weight: var(--adyen-checkout-font-weight-600);
+
+    /* Spacing */
     --adyen-checkout-spacer-090: #{$spacer-090};
     --adyen-checkout-spacer-080: #{$spacer-080};
     --adyen-checkout-spacer-070: #{$spacer-070};
@@ -21,14 +43,8 @@
     --adyen-checkout-spacer-120: #{$spacer-120};
     --adyen-checkout-spacer-110: #{$spacer-110};
     --adyen-checkout-spacer-100: #{$spacer-100};
-    --adyen-checkout-line-height-600: #{$line-height-600};
-    --adyen-checkout-line-height-400: #{$line-height-400};
-    --adyen-checkout-line-height-200: #{$line-height-200};
-    --adyen-checkout-line-height-100: #{$line-height-100};
-    --adyen-checkout-font-weight-200: #{$font-weight-200};
-    --adyen-checkout-font-weight-500: #{$font-weight-500};
-    --adyen-checkout-font-weight-600: #{$font-weight-600};
-    --adyen-checkout-font-weight-700: #{$font-weight-700};
+
+    /* Borders */
     --adyen-checkout-border-width-l: #{$border-width-l};
     --adyen-checkout-border-width-m: #{$border-width-m};
     --adyen-checkout-border-width-s: #{$border-width-s};
@@ -37,6 +53,8 @@
     --adyen-checkout-border-radius-m: #{$border-radius-m};
     --adyen-checkout-border-radius-s: #{$border-radius-s};
     --adyen-checkout-border-radius-xs: #{$border-radius-xs};
+
+    /* Colors */
     --adyen-checkout-color-focus: #{$color-focus};
     --adyen-checkout-color-black: #{$color-black};
     --adyen-checkout-color-white: #{$color-white};
@@ -50,18 +68,6 @@
     --adyen-checkout-color-grey-100: #{$color-grey-100};
     --adyen-checkout-color-green: #{$color-green-1700};
     --adyen-checkout-color-blue: #{$color-blue-1700};
-    --adyen-checkout-text-title-font-weight: #{$text-title-font-weight};
-    --adyen-checkout-text-title-line-height: var(--adyen-checkout-line-height-600);
-    --adyen-checkout-text-body-font-size: #{$text-body-font-size};
-    --adyen-checkout-text-body-font-weight: #{$text-body-font-weight};
-    --adyen-checkout-text-body-stronger-font-weight: #{$text-body-stronger-font-weight};
-    --adyen-checkout-text-body-strongest-font-weight: #{$text-body-strongest-font-weight};
-    --adyen-checkout-text-caption-line-height: var(--adyen-checkout-line-height-100);
-    --adyen-checkout-text-subtitle-line-height: var(--adyen-checkout-line-height-400);
-    --adyen-checkout-text-subtitle-font-size: var(--adyen-checkout-font-size-medium);
-    --adyen-checkout-text-subtitle-font-weight: var(--adyen-checkout-font-weight-500);
-    --adyen-checkout-text-subtitle-stronger-font-weight: var(--adyen-checkout-font-weight-600);
-    --adyen-checkout-focus-ring-color: var(--adyen-checkout-color-focus);
     --adyen-checkout-color-separator-primary: var(--adyen-checkout-color-grey-200);
     --adyen-checkout-color-outline-active: var(--adyen-checkout-color-grey-3200);
     --adyen-checkout-color-outline-tertiary: var(--adyen-checkout-color-grey-1300);
@@ -84,6 +90,9 @@
     --adyen-checkout-color-background-primary: var(--adyen-checkout-color-white);
     --adyen-checkout-color-background-secondary: var(--adyen-checkout-color-grey-100);
     --adyen-checkout-color-background-tertiary: var(--adyen-checkout-color-grey-200);
+
+    /* Focus ring */
+    --adyen-checkout-focus-ring-color: var(--adyen-checkout-color-focus);
 
     /* Drop-in */
     --adyen-checkout-dropin-payment-list-gap: var(--adyen-checkout-spacer-100);
