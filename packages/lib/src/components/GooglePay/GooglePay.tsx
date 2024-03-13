@@ -27,7 +27,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
 
         const { isExpress, paymentDataCallbacks } = this.props;
 
-        if (paymentDataCallbacks?.onPaymentDataChanged && isExpress === false) {
+        if (isExpress === false && paymentDataCallbacks?.onPaymentDataChanged) {
             throw new AdyenCheckoutError(
                 'IMPLEMENTATION_ERROR',
                 'GooglePay - You must set "isExpress" flag to "true" in order to use "onPaymentDataChanged" callback'

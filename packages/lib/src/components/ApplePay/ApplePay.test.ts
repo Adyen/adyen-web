@@ -28,6 +28,10 @@ describe('ApplePay', () => {
             const applepay = new ApplePay(global.core);
             expect(applepay.data.paymentMethod).not.toHaveProperty('subtype', 'express');
         });
+
+        test('should throw error when express callbacks are passed but isExpress flag is not set', () => {
+            expect(() => new ApplePay(global.core, { onShippingContactSelected: jest.fn() })).toThrow();
+        });
     });
 
     describe('submit()', () => {

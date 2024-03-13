@@ -12,6 +12,7 @@ import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
+
 import type { ApplePayConfiguration, ApplePayElementData, ApplePayPaymentOrderDetails, ApplePaySessionRequest } from './types';
 import type { ICore } from '../../core/types';
 import type { PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
@@ -24,6 +25,16 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
 
     constructor(checkout: ICore, props?: ApplePayConfiguration) {
         super(checkout, props);
+
+        const { isExpress, onShippingContactSelected, onShippingMethodSelected } = this.props;
+
+        if (isExpress === false && (onShippingContactSelected || onShippingMethodSelected)) {
+            throw new AdyenCheckoutError(
+                'IMPLEMENTATION_ERROR',
+                'ApplePay - You must set "isExpress" flag to "true" in order to use "onShippingContactSelected" and/or "onShippingMethodSelected" callback'
+            );
+        }
+
         this.startSession = this.startSession.bind(this);
         this.submit = this.submit.bind(this);
         this.validateMerchant = this.validateMerchant.bind(this);

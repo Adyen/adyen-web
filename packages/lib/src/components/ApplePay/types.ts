@@ -39,7 +39,7 @@ export type ApplePayButtonType =
 
 export interface ApplePayConfiguration extends UIElementProps {
     /**
-     * Flag used to enable Express Flow reports on Customer Area
+     * Enables the ApplePay Express Flow
      * @defaultValue false
      */
     isExpress?: boolean;

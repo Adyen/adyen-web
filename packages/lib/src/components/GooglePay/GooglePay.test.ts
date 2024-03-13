@@ -64,6 +64,10 @@ describe('GooglePay', () => {
             const googlepay = new GooglePay(global.core);
             expect(googlepay.data.paymentMethod).not.toHaveProperty('subtype', 'express');
         });
+
+        test('should throw error when express callbacks are passed but isExpress flag is not set', () => {
+            expect(() => new GooglePay(global.core, { paymentDataCallbacks: { onPaymentDataChanged: jest.fn() } })).toThrow();
+        });
     });
 
     describe('submit()', () => {
