@@ -18,6 +18,11 @@ beforeEach(() => {
     };
 });
 
+const configurationMock = {
+    merchantName: 'TestMerchant',
+    merchantId: 'test-merchant'
+};
+
 describe('ApplePay', () => {
     describe('isExpress flag', () => {
         test('should add subtype: express when isExpress is configured', () => {
@@ -47,6 +52,7 @@ describe('ApplePay', () => {
             });
 
             const applepay = new ApplePay(global.core, {
+                configuration: configurationMock,
                 amount: { currency: 'EUR', value: 2000 },
                 onPaymentFailed: onPaymentFailedMock,
                 onSubmit(state, component, actions) {
@@ -92,6 +98,7 @@ describe('ApplePay', () => {
             });
 
             const applepay = new ApplePay(global.core, {
+                configuration: configurationMock,
                 amount: { currency: 'EUR', value: 2000 },
                 onPaymentFailed: onPaymentFailedMock,
                 onSubmit(state, component, actions) {
@@ -143,6 +150,7 @@ describe('ApplePay', () => {
             });
 
             const applepay = new ApplePay(global.core, {
+                configuration: configurationMock,
                 amount: { currency: 'EUR', value: 2000 },
                 onOrderTrackingRequest: onOrderTrackingRequestMock,
                 onPaymentCompleted: onPaymentCompletedMock
@@ -193,6 +201,7 @@ describe('ApplePay', () => {
             });
 
             const applepay = new ApplePay(global.core, {
+                configuration: configurationMock,
                 amount: { currency: 'EUR', value: 2000 },
                 onOrderTrackingRequest: onOrderTrackingRequestMock,
                 onPaymentCompleted: onPaymentCompletedMock
@@ -237,6 +246,7 @@ describe('ApplePay', () => {
             });
 
             const applepay = new ApplePay(global.core, {
+                configuration: configurationMock,
                 amount: { currency: 'EUR', value: 2000 },
                 onOrderTrackingRequest: onOrderTrackingRequestMock,
                 onPaymentCompleted: onPaymentCompletedMock
@@ -313,6 +323,7 @@ describe('ApplePay', () => {
             });
 
             const applepay = new ApplePay(global.core, {
+                configuration: configurationMock,
                 amount: { currency: 'EUR', value: 2000 },
                 onAuthorized: onAuthorizedMock,
                 onChange: onChangeMock,
