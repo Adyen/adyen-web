@@ -6,7 +6,9 @@ type Fixture = {
     dropinPage: DropinPage;
     dropinPage_cardBrands: DropinPage;
     dropinPage_cardBrands_withExcluded: DropinPage;
-    dropinSessions_zeroAuthCard: DropinSessionsPage;
+    dropinSessions_regular: DropinSessionsPage;
+    dropinSessions_zeroAuthCard_success: DropinSessionsPage;
+    dropinSessions_zeroAuthCard_fail: DropinSessionsPage;
 };
 
 const test = base.extend<Fixture>({
@@ -46,16 +48,74 @@ const test = base.extend<Fixture>({
         await useDropinPage(page, use);
     },
 
-    dropinSessions_zeroAuthCard: async ({ page }, use) => {
+    dropinSessions_regular: async ({ page }, use) => {
+        const mainConfig = JSON.stringify({
+            allowPaymentMethods: ['scheme']
+        });
+
+        const pmsConfig = JSON.stringify({
+            paymentMethodsConfiguration: {
+                card: {
+                    _disableClickToPay: true
+                }
+            }
+        });
+
+        await page.addInitScript({
+            content: `window.mainConfiguration = ${mainConfig}`
+        });
+
+        await page.addInitScript({
+            content: `window.dropinConfig = ${pmsConfig}`
+        });
+
+        await useDropinPage(page, use, DropinSessionsPage);
+    },
+
+    dropinSessions_zeroAuthCard_success: async ({ page }, use) => {
         const sessionConfig = JSON.stringify({
             amount: { currency: 'USD', value: 0 },
             recurringProcessingModel: 'CardOnFile',
             storePaymentMethodMode: 'askForConsent'
-            // enableOneClick: true
         });
 
         const mainConfig = JSON.stringify({
-            // allowPaymentMethods: ['scheme']
+            allowPaymentMethods: ['scheme']
+        });
+
+        const pmsConfig = JSON.stringify({
+            paymentMethodsConfiguration: {
+                card: {
+                    _disableClickToPay: true
+                }
+            }
+        });
+
+        await page.addInitScript({
+            content: `window.sessionConfig = ${sessionConfig}`
+        });
+
+        await page.addInitScript({
+            content: `window.mainConfiguration = ${mainConfig}`
+        });
+
+        await page.addInitScript({
+            content: `window.dropinConfig = ${pmsConfig}`
+        });
+
+        await useDropinPage(page, use, DropinSessionsPage);
+    },
+
+    dropinSessions_zeroAuthCard_fail: async ({ page }, use) => {
+        const sessionConfig = JSON.stringify({
+            amount: { currency: 'USD', value: 0 },
+            recurringProcessingModel: 'CardOnFile',
+            storePaymentMethodMode: 'askForConsent',
+            enableOneClick: true
+        });
+
+        const mainConfig = JSON.stringify({
+            allowPaymentMethods: ['scheme']
         });
 
         const pmsConfig = JSON.stringify({

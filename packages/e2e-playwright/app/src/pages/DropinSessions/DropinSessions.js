@@ -13,8 +13,6 @@ const initCheckout = async () => {
         reference: 'mock-playwright',
         returnUrl: 'http://localhost:3024/dropinsessions',
         ...window.sessionConfig
-        // recurringProcessingModel: 'CardOnFile',
-        // storePaymentMethodMode: 'askForConsent'
     });
 
     window.checkout = await AdyenCheckout({
