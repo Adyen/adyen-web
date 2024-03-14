@@ -1,5 +1,6 @@
 import { test, expect } from '../../../pages/dropin/dropin.fixture';
 import { REGULAR_TEST_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE } from '../../utils/constants';
+import { typeIntoSecuredField } from '../../../models/dropinModelUtils/utils';
 
 import LANG from '../../../../lib/src/language/locales/en-US.json';
 
@@ -22,9 +23,9 @@ test.describe('Dropin Sessions flow', () => {
 
         await page.waitForTimeout(500); // needs this else card number isn't guaranteed to fill correctly !?
 
-        await dropin.typeIntoSecuredField(creditCard, CARD_IFRAME_TITLE, CARD_IFRAME_LABEL, REGULAR_TEST_CARD);
-        await dropin.typeIntoSecuredField(creditCard, CVC_IFRAME_TITLE, CVC_IFRAME_LABEL, TEST_CVC_VALUE);
-        await dropin.typeIntoSecuredField(creditCard, EXPIRY_DATE_IFRAME_TITLE, EXPIRY_DATE_IFRAME_LABEL, TEST_DATE_VALUE);
+        await typeIntoSecuredField(creditCard, CARD_IFRAME_TITLE, CARD_IFRAME_LABEL, REGULAR_TEST_CARD);
+        await typeIntoSecuredField(creditCard, CVC_IFRAME_TITLE, CVC_IFRAME_LABEL, TEST_CVC_VALUE);
+        await typeIntoSecuredField(creditCard, EXPIRY_DATE_IFRAME_TITLE, EXPIRY_DATE_IFRAME_LABEL, TEST_DATE_VALUE);
 
         await dropinSessions_regular.pay();
 
@@ -44,9 +45,9 @@ test.describe('Dropin Sessions flow', () => {
 
         await page.waitForTimeout(500); // needs this else card number isn't guaranteed to fill correctly !?
 
-        await dropin.typeIntoSecuredField(creditCard, CARD_IFRAME_TITLE, CARD_IFRAME_LABEL, REGULAR_TEST_CARD);
-        await dropin.typeIntoSecuredField(creditCard, CVC_IFRAME_TITLE, CVC_IFRAME_LABEL, TEST_CVC_VALUE);
-        await dropin.typeIntoSecuredField(creditCard, EXPIRY_DATE_IFRAME_TITLE, EXPIRY_DATE_IFRAME_LABEL, TEST_DATE_VALUE);
+        await typeIntoSecuredField(creditCard, CARD_IFRAME_TITLE, CARD_IFRAME_LABEL, REGULAR_TEST_CARD);
+        await typeIntoSecuredField(creditCard, CVC_IFRAME_TITLE, CVC_IFRAME_LABEL, TEST_CVC_VALUE);
+        await typeIntoSecuredField(creditCard, EXPIRY_DATE_IFRAME_TITLE, EXPIRY_DATE_IFRAME_LABEL, TEST_DATE_VALUE);
 
         // A payment successfully registered as a zero-auth payment should have a "save details" button instead of "pay"
         await dropinSessions_zeroAuthCard_success.saveDetails();
@@ -66,9 +67,9 @@ test.describe('Dropin Sessions flow', () => {
 
         await page.waitForTimeout(500); // needs this else card number isn't guaranteed to fill correctly !?
 
-        await dropin.typeIntoSecuredField(creditCard, CARD_IFRAME_TITLE, CARD_IFRAME_LABEL, REGULAR_TEST_CARD);
-        await dropin.typeIntoSecuredField(creditCard, CVC_IFRAME_TITLE, CVC_IFRAME_LABEL, TEST_CVC_VALUE);
-        await dropin.typeIntoSecuredField(creditCard, EXPIRY_DATE_IFRAME_TITLE, EXPIRY_DATE_IFRAME_LABEL, TEST_DATE_VALUE);
+        await typeIntoSecuredField(creditCard, CARD_IFRAME_TITLE, CARD_IFRAME_LABEL, REGULAR_TEST_CARD);
+        await typeIntoSecuredField(creditCard, CVC_IFRAME_TITLE, CVC_IFRAME_LABEL, TEST_CVC_VALUE);
+        await typeIntoSecuredField(creditCard, EXPIRY_DATE_IFRAME_TITLE, EXPIRY_DATE_IFRAME_LABEL, TEST_DATE_VALUE);
 
         await dropinSessions_zeroAuthCard_fail.saveDetails();
 
