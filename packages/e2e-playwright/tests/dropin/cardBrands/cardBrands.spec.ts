@@ -1,5 +1,5 @@
 import { test, expect } from '../../../pages/dropin/dropin.fixture';
-import { getCreditCardPM } from '../../../models/dropinModelUtils/getDropinCardComp';
+import { getCreditCardPM_withBrandsInfo } from '../../../models/dropinModelUtils/utils';
 
 test.describe('Dropin - Card brands displayed in the Payment Method List and underneath the PAN field', () => {
     test('should display the 3 logos and left over amount of brands, and then display all available brands under the PAN field', async ({
@@ -9,7 +9,7 @@ test.describe('Dropin - Card brands displayed in the Payment Method List and und
 
         await dropin.isComponentVisible();
 
-        const creditCard = getCreditCardPM(dropin);
+        const creditCard = getCreditCardPM_withBrandsInfo(dropin);
         await creditCard.pm.scrollIntoViewIfNeeded();
         const imgCount = await creditCard.getImageCount(creditCard.brandsHolder);
 
@@ -41,7 +41,7 @@ test.describe('Dropin - Card brands displayed in the Payment Method List and und
 
         await dropin.isComponentVisible();
 
-        const creditCard = getCreditCardPM(dropin);
+        const creditCard = getCreditCardPM_withBrandsInfo(dropin);
         await creditCard.pm.scrollIntoViewIfNeeded();
         const imgCount = await creditCard.getImageCount(creditCard.brandsHolder);
 
