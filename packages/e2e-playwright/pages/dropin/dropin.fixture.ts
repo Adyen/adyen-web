@@ -1,10 +1,12 @@
 import { test as base, expect, Page } from '@playwright/test';
 import { DropinPage } from './dropin.page';
+import { DropinSessionsPage } from './dropin.sessions.page';
 
 type Fixture = {
     dropinPage: DropinPage;
     dropinPage_cardBrands: DropinPage;
     dropinPage_cardBrands_withExcluded: DropinPage;
+    dropinSessions_zeroAuthCard: DropinSessionsPage;
 };
 
 const test = base.extend<Fixture>({
@@ -42,6 +44,41 @@ const test = base.extend<Fixture>({
         });
 
         await useDropinPage(page, use);
+    },
+
+    dropinSessions_zeroAuthCard: async ({ page }, use) => {
+        const sessionConfig = JSON.stringify({
+            amount: { currency: 'USD', value: 0 },
+            recurringProcessingModel: 'CardOnFile',
+            storePaymentMethodMode: 'askForConsent'
+            // enableOneClick: true
+        });
+
+        const mainConfig = JSON.stringify({
+            // allowPaymentMethods: ['scheme']
+        });
+
+        const pmsConfig = JSON.stringify({
+            paymentMethodsConfiguration: {
+                card: {
+                    _disableClickToPay: true
+                }
+            }
+        });
+
+        await page.addInitScript({
+            content: `window.sessionConfig = ${sessionConfig}`
+        });
+
+        await page.addInitScript({
+            content: `window.mainConfiguration = ${mainConfig}`
+        });
+
+        await page.addInitScript({
+            content: `window.dropinConfig = ${pmsConfig}`
+        });
+
+        await useDropinPage(page, use, DropinSessionsPage);
     }
 });
 
