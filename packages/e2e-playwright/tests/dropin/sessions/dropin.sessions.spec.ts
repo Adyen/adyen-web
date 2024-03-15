@@ -30,7 +30,6 @@ test.describe('Dropin Sessions flow', () => {
         await dropinSessions_regular.pay();
 
         await expect(page.locator('#result-message')).toHaveText('Authorised');
-        // await page.waitForTimeout(15000);
     });
 
     test('#2 Should succeed in making a zeroAuth payment since there is no conflicting configuration on the session', async ({
@@ -43,7 +42,7 @@ test.describe('Dropin Sessions flow', () => {
         const creditCard = dropin.getPaymentMethodItem('Cards');
         await creditCard.scrollIntoViewIfNeeded();
 
-        await page.waitForTimeout(500); // needs this else card number isn't guaranteed to fill correctly !?
+        await page.waitForTimeout(500);
 
         await typeIntoSecuredField(creditCard, CARD_IFRAME_TITLE, CARD_IFRAME_LABEL, REGULAR_TEST_CARD);
         await typeIntoSecuredField(creditCard, CVC_IFRAME_TITLE, CVC_IFRAME_LABEL, TEST_CVC_VALUE);
@@ -65,7 +64,7 @@ test.describe('Dropin Sessions flow', () => {
         const creditCard = dropin.getPaymentMethodItem('Cards');
         await creditCard.scrollIntoViewIfNeeded();
 
-        await page.waitForTimeout(500); // needs this else card number isn't guaranteed to fill correctly !?
+        await page.waitForTimeout(500);
 
         await typeIntoSecuredField(creditCard, CARD_IFRAME_TITLE, CARD_IFRAME_LABEL, REGULAR_TEST_CARD);
         await typeIntoSecuredField(creditCard, CVC_IFRAME_TITLE, CVC_IFRAME_LABEL, TEST_CVC_VALUE);
