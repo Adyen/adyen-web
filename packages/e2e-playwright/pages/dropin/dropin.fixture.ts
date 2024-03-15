@@ -111,7 +111,7 @@ const test = base.extend<Fixture>({
             amount: { currency: 'USD', value: 0 },
             recurringProcessingModel: 'CardOnFile',
             storePaymentMethodMode: 'askForConsent',
-            enableOneClick: true
+            enableOneClick: true // this will conflict with storePaymentMethod in the /payments request and cause the payment to fail
         });
 
         const mainConfig = JSON.stringify({
