@@ -50,7 +50,6 @@ export async function initSession() {
             }
         }
     });
-
     const dropin = checkout
         .create('dropin', {
             instantPaymentTypes: ['googlepay']

@@ -4,50 +4,92 @@ import UPIComponent from './components/UPIComponent';
 import CoreProvider from '../../core/Context/CoreProvider';
 import Await from '../internal/Await';
 import QRLoader from '../internal/QRLoader';
-import { UPIElementProps, UpiMode, UpiPaymentData } from './types';
+import { TX_VARIANT, UPIElementProps, UpiMode, UpiPaymentData } from './types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
+import isMobile from '../../utils/isMobile';
+import RedirectShopper from '../Redirect/components/RedirectShopper';
 
 /**
  * 'upi' tx variant is the parent one.
  * 'upi_collect' and 'upi_qr' are the sub variants which are submitted according to the shopper interaction.
+ *
+ * Small screens:
+ * upi_collect + upi_intent on the first tab (if appIds are returned in paymentMethods response
+ * QR always on the second tab
+ *
+ * Large screens:
+ * Never upi_intent (ignore appIds in /paymentMethods response)
+ * QR on the first tab and upi_collect on second tab
  */
-enum TX_VARIANT {
-    UpiCollect = 'upi_collect',
-    UpiQr = 'upi_qr'
-}
 
 class UPI extends UIElement<UPIElementProps> {
     public static type = 'upi';
 
-    private useQrCodeVariant: boolean;
+    private selectedMode: UpiMode;
 
-    protected static defaultProps = {
-        defaultMode: UpiMode.Vpa
-    };
+    constructor(props: UPIElementProps) {
+        super(props);
+        this.selectedMode = this.props.defaultMode;
+    }
+
+    formatProps(props: UPIElementProps) {
+        if (!isMobile()) {
+            return {
+                ...super.formatProps(props),
+                defaultMode: UpiMode.QrCode,
+                // For large screen, ignore the appIds
+                appIds: []
+            };
+        }
+
+        const hasIntentApps = props.appIds?.length > 0;
+        const defaultMode = hasIntentApps ? UpiMode.Intent : UpiMode.Collect;
+        const upiCollectApp = {
+            id: UpiMode.Collect,
+            name: props.i18n.get('upi.collect.enterUpiId'),
+            type: TX_VARIANT.UpiCollect
+        };
+        const appIds = hasIntentApps ? [...props.appIds.map(appId => ({ ...appId, type: TX_VARIANT.UpiIntent })), upiCollectApp] : [];
+
+        return {
+            ...super.formatProps(props),
+            defaultMode,
+            appIds
+        };
+    }
 
     public get isValid(): boolean {
-        return this.useQrCodeVariant || !!this.state.isValid;
+        return this.state.isValid;
     }
 
     public formatData(): UpiPaymentData {
-        const { virtualPaymentAddress } = this.state.data;
+        if (this.selectedMode === UpiMode.QrCode) {
+            return {
+                paymentMethod: {
+                    type: TX_VARIANT.UpiQr
+                }
+            };
+        }
+
+        const { virtualPaymentAddress, appId } = this.state.data;
+        const type = this.selectedMode === UpiMode.Collect ? TX_VARIANT.UpiCollect : appId?.type;
         return {
             paymentMethod: {
-                type: this.useQrCodeVariant ? TX_VARIANT.UpiQr : TX_VARIANT.UpiCollect,
-                ...(virtualPaymentAddress && !this.useQrCodeVariant && { virtualPaymentAddress })
+                ...(type && { type }),
+                ...(type === TX_VARIANT.UpiCollect && virtualPaymentAddress && { virtualPaymentAddress }),
+                ...(type === TX_VARIANT.UpiIntent && appId && { appId: appId.id })
             }
         };
     }
 
     private onUpdateMode = (mode: UpiMode): void => {
+        // todo: switching tabs does not preserve vpa
+        this.selectedMode = mode;
         if (mode === UpiMode.QrCode) {
-            this.useQrCodeVariant = true;
             /**
              * When selecting QR code mode, we need to clear the state data and trigger the 'onChange'.
              */
             this.setState({ data: {}, valid: {}, errors: {}, isValid: true });
-        } else {
-            this.useQrCodeVariant = false;
         }
     };
 
@@ -88,6 +130,9 @@ class UPI extends UIElement<UPIElementProps> {
                         onActionHandled={this.props.onActionHandled}
                     />
                 );
+            case 'redirect':
+                // todo: fix it
+                return <RedirectShopper url={''} method={'GET'} data={{}} />;
             default:
                 return (
                     <UPIComponent
@@ -97,6 +142,7 @@ class UPI extends UIElement<UPIElementProps> {
                         payButton={this.payButton}
                         onChange={this.setState}
                         onUpdateMode={this.onUpdateMode}
+                        appIds={this.props.appIds}
                         defaultMode={this.props.defaultMode}
                         showPayButton={this.props.showPayButton}
                     />

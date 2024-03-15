@@ -1,3 +1,5 @@
+@import '../../../../style/index';
+
 .adyen-checkout_upi-mode-selection-text {
     font-weight: 400;
     font-size: 13px;
@@ -8,4 +10,15 @@
 
 .adyen-checkout__segmented-control--upi-margin-bottom {
     margin-bottom: 16px;
+
+    .adyen-checkout__segmented-control-segment {
+        order: 1;
+    }
+}
+
+// Large screens: QR is always on the first tab
+#upi-button-qr-code {
+    @include screen-m-and-up {
+        order: 0;
+    }
 }
