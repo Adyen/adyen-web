@@ -7,8 +7,6 @@ export function showAuthorised(message = 'Authorised') {
 }
 
 export function handleError(obj) {
-    console.log('### handlers::handleError:: obj', obj);
-
     const resultElement = document.getElementById('result-message');
     resultElement.classList.remove('hide');
     resultElement.classList.add('error');

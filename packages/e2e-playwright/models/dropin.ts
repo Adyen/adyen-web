@@ -1,5 +1,4 @@
 import { Locator, Page } from '@playwright/test';
-// import { USER_TYPE_DELAY } from '../tests/utils/constants';
 
 class Dropin {
     readonly page: Page;
