@@ -5,16 +5,19 @@ import { PayButtonFunctionProps, UIElementStatus } from '../../../types';
 import { VpaInputDataState, VpaInputHandlers } from '../VpaInput/VpaInput';
 import VpaInput from '../VpaInput';
 import SegmentedControl from '../../../internal/SegmentedControl';
-import { UpiMode } from '../../types';
+import { apiId, UpiMode } from '../../types';
 import './UPIComponent.scss';
 import isMobile from '../../../../utils/isMobile';
 import useImage from '../../../../core/Context/useImage';
+import UPIIntentAppList from '../UPIIntentAppList';
 
 type OnChangeProps = { data: VpaInputDataState; valid; errors; isValid: boolean };
 
 interface UPIComponentProps {
     defaultMode: UpiMode;
     showPayButton: boolean;
+    // upi_intent
+    appIds?: Array<apiId>;
 
     ref(ref: RefObject<typeof UPIComponent>): void;
 
@@ -66,7 +69,22 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
     return (
         <Fragment>
             <p className="adyen-checkout_upi-mode-selection-text">{i18n.get('upi.modeSelection')}</p>
-
+            <UPIIntentAppList
+                appIds={[
+                    {
+                        id: 'bhim',
+                        name: 'BHIM'
+                    },
+                    {
+                        id: 'gpay',
+                        name: 'Google Pay'
+                    },
+                    {
+                        id: 'PhonePe',
+                        name: 'phonepe'
+                    }
+                ]}
+            />
             <SegmentedControl
                 onChange={onChangeUpiMode}
                 selectedValue={mode}

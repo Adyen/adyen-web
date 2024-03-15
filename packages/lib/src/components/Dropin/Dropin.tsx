@@ -13,6 +13,14 @@ import { PaymentResponse } from '../types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 
 const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay'];
+// todo: only show one UPI PM
+// if(isMobile) {
+//  types includes "upi" & appIds list is not empty => render upi_intent (first tab) & upi_qr -> a list of redirects and 'Other UPI (input element for the UPI account)', one entry inside dropin
+//  types includes "upi" & appIds list is empty => render old upi_collect & upi_qr, one entry inside dropin
+//  types includes "upi_qr" || "upi_collect" || "upi_intent" => only render old upi_collect & upi_qr
+// } else {
+//   types includes "upi_qr" || "upi_collect" || "upi_intent" => only render old upi_collect & upi_qr
+// }
 
 class DropinElement extends UIElement<DropinElementProps> {
     public static type = 'dropin';

@@ -23,7 +23,27 @@ class PaymentMethodsResponse {
     }
 
     find(paymentMethod: string): PaymentMethod {
-        return this.paymentMethods.find(pm => pm.type === this.mapCreatedComponentType(paymentMethod));
+        const found = this.paymentMethods.find(pm => pm.type === this.mapCreatedComponentType(paymentMethod));
+        if (paymentMethod === 'upi') {
+            return {
+                ...found,
+                appIds: [
+                    {
+                        id: 'bhim',
+                        name: 'BHIM'
+                    },
+                    {
+                        id: 'gpay',
+                        name: 'Google Pay'
+                    },
+                    {
+                        id: 'PhonePe',
+                        name: 'phonepe'
+                    }
+                ]
+            };
+        }
+        return found;
     }
 }
 

@@ -13,7 +13,8 @@ import SRPanelProvider from '../../core/Errors/SRPanelProvider';
  */
 enum TX_VARIANT {
     UpiCollect = 'upi_collect',
-    UpiQr = 'upi_qr'
+    UpiQr = 'upi_qr',
+    UpiIntent = 'upi_intent'
 }
 
 class UPI extends UIElement<UPIElementProps> {
@@ -106,6 +107,7 @@ class UPI extends UIElement<UPIElementProps> {
 
     public render(): h.JSX.Element {
         const { type } = this.props;
+        console.log('this.props', this.props);
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <SRPanelProvider srPanel={this.props.modules.srPanel}>{this.renderContent(type)}</SRPanelProvider>

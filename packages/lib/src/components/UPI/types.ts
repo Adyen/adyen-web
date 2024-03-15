@@ -12,8 +12,12 @@ export enum UpiMode {
     QrCode = 'qrCode'
 }
 
+export type apiId = { id: string; name: string };
+
 export interface UPIElementProps extends UIElementProps {
     defaultMode: UpiMode;
+    // upi_intent
+    appIds?: Array<apiId>;
     // Await
     paymentData?: string;
     // QR code
