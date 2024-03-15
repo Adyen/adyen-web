@@ -7,7 +7,7 @@ import { resolveEnvironment, resolveCDNEnvironment, resolveAnalyticsEnvironment 
 import Analytics from './Analytics';
 import { AdditionalDetailsStateData, PaymentAction, PaymentResponseData } from '../types/global-types';
 import { CoreConfiguration, ICore } from './types';
-import { processGlobalOptions } from './utils';
+import { assertConfigurationPropertiesAreValid, processGlobalOptions } from './utils';
 import Session from './CheckoutSession';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
 import { Resources } from './Context/Resources';
@@ -61,6 +61,8 @@ class Core implements ICore {
     }
 
     constructor(props: CoreConfiguration) {
+        assertConfigurationPropertiesAreValid(props);
+
         this.createFromAction = this.createFromAction.bind(this);
 
         this.setOptions({ exposeLibraryMetadata: true, ...props });

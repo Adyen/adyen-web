@@ -15,6 +15,8 @@ export async function initManual() {
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
 
+        onShippingOptionsChange: true,
+
         locale: 'pt-BR',
         translationFile: getTranslationFile(shopperLocale),
 
