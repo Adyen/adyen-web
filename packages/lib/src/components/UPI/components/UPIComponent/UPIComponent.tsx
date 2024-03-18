@@ -31,11 +31,13 @@ interface UPIComponentProps {
 const A11Y = {
     ButtonId: {
         VPA: `upi-button-${UpiMode.Vpa}`,
-        QR: `upi-button-${UpiMode.QrCode}`
+        QR: `upi-button-${UpiMode.QrCode}`,
+        INTENT: `upi-button-${UpiMode.Intent}`
     },
     AreaId: {
         VPA: `upi-area-${UpiMode.Vpa}`,
-        QR: `upi-area-${UpiMode.QrCode}`
+        QR: `upi-area-${UpiMode.QrCode}`,
+        INTENT: `upi-area-${UpiMode.Intent}`
     }
 };
 
@@ -115,8 +117,9 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
                 ]}
             />
             {mode === UpiMode.Intent && (
-                <div>
+                <div id={A11Y.AreaId.INTENT} aria-labelledby={A11Y.ButtonId.INTENT} role="region">
                     <UPIIntentAppList appIds={mockAppList} />
+
                     {showPayButton &&
                         payButton({
                             label: i18n.get('continue'),
