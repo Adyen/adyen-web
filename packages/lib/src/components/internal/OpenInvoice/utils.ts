@@ -52,7 +52,8 @@ export const mapFieldKey = (key: string, i18n: Language, countrySpecificLabels: 
     }
 
     const addressKey = mapFieldKeyAddress(refKey, i18n, countrySpecificLabels);
-    if (addressKey) return hasSplitKey ? `${i18n.get(label)} ${addressKey}` : addressKey;
+    // Also use the presence of a label to know that we are dealing with address related fields. (This matters now that addresses can contain first & last name fields.)
+    if (addressKey && label) return hasSplitKey ? `${i18n.get(label)} ${addressKey}` : addressKey;
 
     // Personal details related
     switch (refKey) {

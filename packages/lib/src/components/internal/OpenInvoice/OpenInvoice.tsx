@@ -59,7 +59,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
         fieldTypeMappingFn: mapFieldKey
     });
 
-    const specifications = useMemo(() => new Specifications(), []);
+    const specifications = useMemo(() => new Specifications(props.deliveryAddressSpecification), []);
     /** end SR stuff */
 
     const initialActiveFieldsets: OpenInvoiceActiveFieldsets = getInitialActiveFieldsets(visibility, props.data);
@@ -114,6 +114,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
         const newData: OpenInvoiceStateData = getActiveFieldsData(activeFieldsets, data);
 
         const DELIVERY_ADDRESS_PREFIX = 'deliveryAddress:';
+        const BILLING_ADDRESS_PREFIX = 'billingAddress:';
 
         /** Create messages for SRPanel */
         // Extract nested errors from the various child components...
@@ -126,7 +127,9 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
             ...remainingErrors
         } = errors;
 
-        // (Differentiate between billingAddress and deliveryAddress errors by adding a prefix to the latter)
+        // Differentiate between billingAddress and deliveryAddress errors by adding a prefix.
+        // This also allows overlapping errors e.g. now that addresses can contain first & last name fields
+        const enhancedBillingAddressErrors = enhanceErrorObjectKeys(extractedBillingAddressErrors, BILLING_ADDRESS_PREFIX);
         const enhancedDeliveryAddressErrors = enhanceErrorObjectKeys(extractedDeliveryAddressErrors, DELIVERY_ADDRESS_PREFIX);
 
         // ...and then collate the errors into a new object so that they all sit at top level
@@ -134,7 +137,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
             ...(typeof extractedCompanyDetailsErrors === 'object' && extractedCompanyDetailsErrors),
             ...(typeof extractedPersonalDetailsErrors === 'object' && extractedPersonalDetailsErrors),
             ...(typeof extractedBankAccountErrors === 'object' && extractedBankAccountErrors),
-            ...(typeof extractedBillingAddressErrors === 'object' && extractedBillingAddressErrors),
+            ...(typeof enhancedBillingAddressErrors === 'object' && enhancedBillingAddressErrors),
             ...(typeof enhancedDeliveryAddressErrors === 'object' && enhancedDeliveryAddressErrors),
             ...remainingErrors
         };
@@ -148,14 +151,19 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
         const bankAccountLayout = ['holder', 'iban'];
 
         const billingAddressLayout = specifications.getAddressSchemaForCountryFlat(data.billingAddress?.country);
+        // In order to sort the address errors the layout entries need to have the same (prefixed) identifier as the errors themselves
+        const billingAddressLayoutEnhanced = billingAddressLayout.map(item => `${BILLING_ADDRESS_PREFIX}${item}`);
 
         const deliveryAddressLayout = specifications.getAddressSchemaForCountryFlat(data.deliveryAddress?.country);
-        // In order to sort the deliveryAddress errors the layout entries need to have the same (prefixed) identifier as the errors themselves
         const deliveryAddressLayoutEnhanced = deliveryAddressLayout.map(item => `${DELIVERY_ADDRESS_PREFIX}${item}`);
 
-        const fullLayout = companyDetailsLayout.concat(personalDetailLayout, bankAccountLayout, billingAddressLayout, deliveryAddressLayoutEnhanced, [
-            'consentCheckbox'
-        ]);
+        const fullLayout = companyDetailsLayout.concat(
+            personalDetailLayout,
+            bankAccountLayout,
+            billingAddressLayoutEnhanced,
+            deliveryAddressLayoutEnhanced,
+            ['consentCheckbox']
+        );
 
         // Country specific address labels
         const countrySpecificLabels = specifications.getAddressLabelsForCountry(data.billingAddress?.country ?? data.deliveryAddress?.country);
