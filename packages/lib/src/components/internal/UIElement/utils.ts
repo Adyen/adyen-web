@@ -1,5 +1,5 @@
 import { UIElementStatus } from './types';
-import { RawPaymentResponse, PaymentResponseData } from '../../../types/global-types';
+import { RawPaymentResponse, PaymentResponseData, Order } from '../../../types/global-types';
 import { IDropin } from '../../Dropin/types';
 
 const ALLOWED_PROPERTIES = ['action', 'resultCode', 'sessionData', 'order', 'sessionResult', 'donationToken', 'error'];
@@ -79,4 +79,12 @@ export function getRegulatoryDefaults(countryCode: string, isDropin: boolean): R
         default:
             return {};
     }
+}
+
+export function sanitizeOrder(order: Order) {
+    if (!order || !order.orderData || !order.pspReference) return null;
+    return {
+        orderData: order.orderData,
+        pspReference: order.pspReference
+    };
 }

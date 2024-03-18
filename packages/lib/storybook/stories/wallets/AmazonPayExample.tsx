@@ -17,7 +17,6 @@ export const AmazonPayExample = ({ contextArgs }: AmazonPayExampleProps) => {
 
     const createCheckout = async () => {
         const { useSessions, showPayButton, countryCode, shopperLocale, amount } = contextArgs;
-
         //URL selection
         // http://localhost:3020/iframe.html?id=wallets-amazonpay--default&viewMode=story
         // http://localhost:3020/?path=/story/wallets-amazonpay--default
@@ -48,8 +47,7 @@ export const AmazonPayExample = ({ contextArgs }: AmazonPayExampleProps) => {
               });
 
         if (step === 'review') {
-            const amazonPayElement = new AmazonPay({
-                core: checkout.current,
+            const amazonPayElement = new AmazonPay(checkout.current, {
                 ...chargeOptions,
                 /**
                  * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
@@ -60,50 +58,31 @@ export const AmazonPayExample = ({ contextArgs }: AmazonPayExampleProps) => {
             });
             setElement(amazonPayElement);
         } else if (step === 'result') {
-            const amazonPayElement = new AmazonPay({
-                core: checkout.current,
+            const amazonPayElement = new AmazonPay(checkout.current, {
                 /**
                  * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
                  */
                 amazonCheckoutSessionId,
                 showOrderButton: false,
-                onSubmit: (state, component) => {
-                    return makePayment(state.data)
-                        .then(response => {
-                            if (response.action) {
-                                component.handleAction(response.action);
-                            } else if (response?.resultCode && checkPaymentResult(response.resultCode)) {
-                                alert(response.resultCode);
-                            } else {
-                                // Try handling the decline flow
-                                // This will redirect the shopper to select another payment method
-                                component.handleDeclineFlow();
-                            }
-                        })
-                        .catch(error => {
-                            throw Error(error);
-                        });
+                onPaymentCompleted(result, element) {
+                    console.log('onPaymentCompleted', result, element);
                 },
-                onError: e => {
-                    if (e.resultCode) {
-                        alert(e.resultCode);
-                    } else {
-                        console.error(e);
-                    }
+                onPaymentFailed(result, element: AmazonPay) {
+                    element.handleDeclineFlow();
+                    console.log('onPaymentFailed', result, element);
                 }
             });
             setElement(amazonPayElement);
+            amazonPayElement.submit();
         } else {
-            const amazonPayElement = new AmazonPay({
-                core: checkout.current,
-
+            const amazonPayElement = new AmazonPay(checkout.current, {
                 productType: 'PayOnly',
                 ...chargeOptions,
                 // Regular checkout:
                 // checkoutMode: 'ProcessOrder'
 
                 // Express Checkout flow:
-                returnUrl: 'http://localhost:3020/?path=/story/wallets-amazonpay--default&step=review'
+                returnUrl: ' http://localhost:3020/iframe.html?id=wallets-amazonpay--default&viewMode=story&step=review'
             });
             setElement(amazonPayElement);
         }

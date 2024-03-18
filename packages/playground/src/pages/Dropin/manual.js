@@ -1,4 +1,4 @@
-import { AdyenCheckout, Dropin, Ideal, Card, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay } from '@adyen/adyen-web';
+import { AdyenCheckout, Dropin, Card, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { getPaymentMethods, makePayment, checkBalance, createOrder, cancelOrder, makeDetailsCall } from '../../services';
 import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
@@ -65,13 +65,9 @@ export async function initManual() {
         onOrderUpdated: data => {
             console.log('onOrderUpdated', data);
         },
-        onOrderCancel: async order => {
+        onOrderCancel: async (order, actions) => {
             await cancelOrder(order);
-            checkout.update({
-                paymentMethodsResponse: await getPaymentMethods({ amount, shopperLocale }),
-                order: null,
-                amount
-            });
+            actions.resolve({ amount });
         },
         onError: (error, component) => {
             console.info(error.name, error.message, error.stack, component);
