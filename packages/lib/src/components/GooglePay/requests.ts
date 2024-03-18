@@ -12,7 +12,10 @@ export function isReadyToPayRequest({
     allowedAuthMethods,
     allowedCardNetworks,
     existingPaymentMethodRequired = false
-}): google.payments.api.IsReadyToPayRequest {
+}: Pick<
+    GooglePayConfiguration,
+    'allowedAuthMethods' | 'allowedCardNetworks' | 'existingPaymentMethodRequired'
+>): google.payments.api.IsReadyToPayRequest {
     return {
         apiVersion: config.API_VERSION,
         apiVersionMinor: config.API_VERSION_MINOR,

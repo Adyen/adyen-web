@@ -55,6 +55,21 @@ beforeEach(() => {
 });
 
 describe('GooglePay', () => {
+    describe('isExpress flag', () => {
+        test('should add subtype: express when isExpress is configured', () => {
+            const googlepay = new GooglePay(global.core, { isExpress: true });
+            expect(googlepay.data.paymentMethod).toHaveProperty('subtype', 'express');
+        });
+        test('should not add subtype: express when isExpress is omitted', () => {
+            const googlepay = new GooglePay(global.core);
+            expect(googlepay.data.paymentMethod).not.toHaveProperty('subtype', 'express');
+        });
+
+        test('should throw error when express callbacks are passed but isExpress flag is not set', () => {
+            expect(() => new GooglePay(global.core, { paymentDataCallbacks: { onPaymentDataChanged: jest.fn() } })).toThrow();
+        });
+    });
+
     describe('submit()', () => {
         test('should make the payments call passing deliveryAddress and billingAddress', async () => {
             const onSubmitMock = jest.fn().mockImplementation((data, component, actions) => {
@@ -70,7 +85,7 @@ describe('GooglePay', () => {
             });
 
             // @ts-ignore GooglePayService is mocked
-            const onPaymentAuthorized = GooglePayService.mock.calls[0][0].paymentDataCallbacks.onPaymentAuthorized;
+            const onPaymentAuthorized = GooglePayService.mock.calls[0][1].onPaymentAuthorized;
             const promise = onPaymentAuthorized(googlePaymentData);
 
             await new Promise(process.nextTick);
@@ -133,7 +148,7 @@ describe('GooglePay', () => {
             });
 
             // @ts-ignore GooglePayService is mocked
-            const onPaymentAuthorized = GooglePayService.mock.calls[0][0].paymentDataCallbacks.onPaymentAuthorized;
+            const onPaymentAuthorized = GooglePayService.mock.calls[0][1].onPaymentAuthorized;
             const googlePaymentDataWithoutAddresses = { ...googlePaymentData };
             delete googlePaymentDataWithoutAddresses.shippingAddress;
             delete googlePaymentDataWithoutAddresses.paymentMethodData.info.billingAddress;
@@ -173,7 +188,7 @@ describe('GooglePay', () => {
             });
 
             // @ts-ignore GooglePayService is mocked
-            const onPaymentAuthorized = GooglePayService.mock.calls[0][0].paymentDataCallbacks.onPaymentAuthorized;
+            const onPaymentAuthorized = GooglePayService.mock.calls[0][1].onPaymentAuthorized;
             const promise = onPaymentAuthorized(googlePaymentData);
 
             await new Promise(process.nextTick);
@@ -215,7 +230,7 @@ describe('GooglePay', () => {
             });
 
             // @ts-ignore GooglePayService is mocked
-            const onPaymentAuthorized = GooglePayService.mock.calls[0][0].paymentDataCallbacks.onPaymentAuthorized;
+            const onPaymentAuthorized = GooglePayService.mock.calls[0][1].onPaymentAuthorized;
             const promise = onPaymentAuthorized(googlePaymentData);
 
             await new Promise(process.nextTick);
@@ -294,7 +309,7 @@ describe('GooglePay', () => {
             new GooglePay(global.core, { onAuthorized: onAuthorizedMock });
 
             // @ts-ignore GooglePayService is mocked
-            const onPaymentAuthorized = GooglePayService.mock.calls[0][0].paymentDataCallbacks.onPaymentAuthorized;
+            const onPaymentAuthorized = GooglePayService.mock.calls[0][1].onPaymentAuthorized;
             onPaymentAuthorized(googlePaymentData);
 
             expect(onAuthorizedMock.mock.calls[0][0]).toStrictEqual(event);
@@ -313,7 +328,7 @@ describe('GooglePay', () => {
             });
 
             // @ts-ignore GooglePayService is mocked
-            const onPaymentAuthorized = GooglePayService.mock.calls[0][0].paymentDataCallbacks.onPaymentAuthorized;
+            const onPaymentAuthorized = GooglePayService.mock.calls[0][1].onPaymentAuthorized;
             const promise = onPaymentAuthorized(googlePaymentData);
 
             expect(promise).resolves.toEqual({
@@ -344,7 +359,7 @@ describe('GooglePay', () => {
             const paymentCall = jest.spyOn(gpay as any, 'makePaymentsCall');
 
             // @ts-ignore GooglePayService is mocked
-            const onPaymentAuthorized = GooglePayService.mock.calls[0][0].paymentDataCallbacks.onPaymentAuthorized;
+            const onPaymentAuthorized = GooglePayService.mock.calls[0][1].onPaymentAuthorized;
             onPaymentAuthorized(googlePaymentData);
 
             await new Promise(process.nextTick);
@@ -357,7 +372,7 @@ describe('GooglePay', () => {
             const paymentCall = jest.spyOn(gpay as any, 'makePaymentsCall');
 
             // @ts-ignore GooglePayService is mocked
-            const onPaymentAuthorized = GooglePayService.mock.calls[0][0].paymentDataCallbacks.onPaymentAuthorized;
+            const onPaymentAuthorized = GooglePayService.mock.calls[0][1].onPaymentAuthorized;
             onPaymentAuthorized(googlePaymentData);
 
             await new Promise(process.nextTick);

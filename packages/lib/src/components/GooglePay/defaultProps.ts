@@ -1,5 +1,7 @@
-export default {
-    environment: 'TEST',
+import { GooglePayConfiguration } from './types';
+
+const defaultProps: GooglePayConfiguration = {
+    isExpress: false,
 
     // isReadyToPayRequest
     existingPaymentMethodRequired: false,
@@ -46,7 +48,7 @@ export default {
     shippingAddressParameters: undefined, // https://developers.google.com/pay/api/web/reference/object#ShippingAddressParameters
     shippingOptionRequired: false,
     shippingOptionParameters: undefined,
-    paymentMethods: [],
-
     callbackIntents: []
 };
+
+export default defaultProps;

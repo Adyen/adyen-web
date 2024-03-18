@@ -7,15 +7,12 @@ import type { GooglePayConfiguration } from './types';
 class GooglePayService {
     public readonly paymentsClient: Promise<google.payments.api.PaymentsClient>;
 
-    constructor(props: GooglePayConfiguration) {
-        const environment = resolveEnvironment(props.environment);
-        if (environment === 'TEST' && process.env.NODE_ENV === 'development') {
-            console.warn('Google Pay initiated in TEST mode. Request non-chargeable payment methods suitable for testing.');
-        }
+    constructor(environment: string, paymentDataCallbacks: google.payments.api.PaymentDataCallbacks) {
+        const googlePayEnvironment = resolveEnvironment(environment);
 
         this.paymentsClient = this.getGooglePaymentsClient({
-            environment,
-            paymentDataCallbacks: props.paymentDataCallbacks
+            environment: googlePayEnvironment,
+            paymentDataCallbacks
         });
     }
 

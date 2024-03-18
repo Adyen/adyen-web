@@ -9,6 +9,7 @@ import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
+
 import type { AddressData, PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
 import type { GooglePayConfiguration } from './types';
 import type { ICore } from '../../core/types';
@@ -24,16 +25,22 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         super(checkout, props);
         this.handleAuthorization = this.handleAuthorization.bind(this);
 
-        this.googlePay = new GooglePayService({
-            ...this.props,
-            paymentDataCallbacks: {
-                ...this.props.paymentDataCallbacks,
-                onPaymentAuthorized: this.onPaymentAuthorized
-            }
+        const { isExpress, paymentDataCallbacks } = this.props;
+
+        if (isExpress === false && paymentDataCallbacks?.onPaymentDataChanged) {
+            throw new AdyenCheckoutError(
+                'IMPLEMENTATION_ERROR',
+                'GooglePay - You must set "isExpress" flag to "true" in order to use "onPaymentDataChanged" callback'
+            );
+        }
+
+        this.googlePay = new GooglePayService(this.props.environment, {
+            ...(isExpress && paymentDataCallbacks?.onPaymentDataChanged && { onPaymentDataChanged: paymentDataCallbacks.onPaymentDataChanged }),
+            onPaymentAuthorized: this.onPaymentAuthorized
         });
     }
 
-    formatProps(props): GooglePayConfiguration {
+    protected override formatProps(props): GooglePayConfiguration {
         const buttonSizeMode = props.buttonSizeMode ?? (props.isDropin ? 'fill' : 'static');
         const buttonLocale = getGooglePayLocale(props.buttonLocale ?? props.i18n?.locale);
 
@@ -51,14 +58,16 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
     /**
      * Formats the component data output
      */
-    formatData() {
+    protected override formatData() {
         const { googlePayCardNetwork, googlePayToken, billingAddress, deliveryAddress } = this.state;
+        const { isExpress } = this.props;
 
         return {
             paymentMethod: {
                 type: this.type,
                 googlePayCardNetwork,
-                googlePayToken
+                googlePayToken,
+                ...(isExpress && { subtype: 'express' })
             },
             browserInfo: this.browserInfo,
             origin: !!window && window.location.origin,

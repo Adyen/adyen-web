@@ -5,8 +5,6 @@ import PaymentMethods from './ProcessResponse/PaymentMethods';
 import getComponentForAction from './ProcessResponse/PaymentAction';
 import { resolveEnvironment, resolveCDNEnvironment, resolveAnalyticsEnvironment } from './Environment';
 import Analytics from './Analytics';
-import { AdditionalDetailsStateData, PaymentAction, PaymentResponseData } from '../types/global-types';
-import { CoreConfiguration, ICore } from './types';
 import { assertConfigurationPropertiesAreValid, processGlobalOptions } from './utils';
 import Session from './CheckoutSession';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
@@ -18,6 +16,9 @@ import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from './Errors/AdyenCheckout
 import { ANALYTICS_ACTION_STR } from './Analytics/constants';
 import { THREEDS2_FULL } from '../components/ThreeDS2/config';
 import { DEFAULT_LOCALE } from '../language/config';
+
+import type { AdditionalDetailsStateData, PaymentAction, PaymentResponseData } from '../types/global-types';
+import type { CoreConfiguration, ICore } from './types';
 
 class Core implements ICore {
     public session?: Session;
