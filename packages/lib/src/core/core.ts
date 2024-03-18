@@ -5,7 +5,7 @@ import PaymentMethods from './ProcessResponse/PaymentMethods';
 import getComponentForAction from './ProcessResponse/PaymentAction';
 import { resolveEnvironment, resolveCDNEnvironment, resolveAnalyticsEnvironment } from './Environment';
 import Analytics from './Analytics';
-import { processGlobalOptions } from './utils';
+import { assertConfigurationPropertiesAreValid, processGlobalOptions } from './utils';
 import Session from './CheckoutSession';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
 import { Resources } from './Context/Resources';
@@ -62,6 +62,8 @@ class Core implements ICore {
     }
 
     constructor(props: CoreConfiguration) {
+        assertConfigurationPropertiesAreValid(props);
+
         this.createFromAction = this.createFromAction.bind(this);
 
         this.setOptions({ exposeLibraryMetadata: true, ...props });

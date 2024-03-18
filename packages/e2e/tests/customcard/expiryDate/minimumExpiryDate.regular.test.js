@@ -6,9 +6,9 @@ import LANG from '../../../../lib/src/language/locales/en-US.json';
 
 const errorHolder = Selector('.pm-form-label__error-text');
 
-const CARD_TOO_OLD = LANG['error.va.sf-cc-dat.01'];
-const CARD_TOO_FAR = LANG['error.va.sf-cc-dat.02'];
-const CARD_EXPIRES_BEFORE = LANG['error.va.sf-cc-dat.03'];
+const CARD_TOO_OLD = LANG['cc.dat.912'];
+const CARD_TOO_FAR = LANG['cc.dat.913'];
+const CARD_EXPIRES_BEFORE = LANG['cc.dat.914'];
 
 const TEST_SPEED = 1;
 
@@ -28,11 +28,7 @@ test('With minimumExpiryDate set - input an expiry date that is too old & expect
     await cardUtilsRegular.fillDate(t, '12/20');
 
     // Expect visible error: "Card too old"
-    await t
-        .expect(errorHolder.filterVisible().exists)
-        .ok()
-        .expect(errorHolder.withExactText(CARD_TOO_OLD).exists)
-        .ok();
+    await t.expect(errorHolder.filterVisible().exists).ok().expect(errorHolder.withExactText(CARD_TOO_OLD).exists).ok();
 });
 
 test('With minimumExpiryDate set - input an expiry date that is 1 month before it & expect the correct error', async t => {
@@ -43,11 +39,7 @@ test('With minimumExpiryDate set - input an expiry date that is 1 month before i
     await cardUtilsRegular.fillDate(t, '08/24');
 
     // Expect visible error: "Card expires before..."
-    await t
-        .expect(errorHolder.filterVisible().exists)
-        .ok()
-        .expect(errorHolder.withExactText(CARD_EXPIRES_BEFORE).exists)
-        .ok();
+    await t.expect(errorHolder.filterVisible().exists).ok().expect(errorHolder.withExactText(CARD_EXPIRES_BEFORE).exists).ok();
 });
 
 test('With minimumExpiryDate set - input an expiry date that is matches it & expect no error ', async t => {
@@ -80,11 +72,7 @@ test('With minimumExpiryDate set - input an expiry date that is too far in the f
     await cardUtilsRegular.fillDate(t, '12/90');
 
     // Expect visible error: "Card too far in the future"
-    await t
-        .expect(errorHolder.filterVisible().exists)
-        .ok()
-        .expect(errorHolder.withExactText(CARD_TOO_FAR).exists)
-        .ok();
+    await t.expect(errorHolder.filterVisible().exists).ok().expect(errorHolder.withExactText(CARD_TOO_FAR).exists).ok();
 });
 
 test(
@@ -104,11 +92,7 @@ test(
         await cardUtilsRegular.fillDate(t, '08/24', 'paste');
 
         // Expect visible error: "Card expires before..."
-        await t
-            .expect(errorHolder.filterVisible().exists)
-            .ok()
-            .expect(errorHolder.withExactText(CARD_EXPIRES_BEFORE).exists)
-            .ok();
+        await t.expect(errorHolder.filterVisible().exists).ok().expect(errorHolder.withExactText(CARD_EXPIRES_BEFORE).exists).ok();
     }
 );
 
@@ -129,10 +113,6 @@ test(
         await cardUtilsRegular.fillDate(t, '04/10', 'paste');
 
         // Expect visible error: "Card too old"
-        await t
-            .expect(errorHolder.filterVisible().exists)
-            .ok()
-            .expect(errorHolder.withExactText(CARD_TOO_OLD).exists)
-            .ok();
+        await t.expect(errorHolder.filterVisible().exists).ok().expect(errorHolder.withExactText(CARD_TOO_OLD).exists).ok();
     }
 );

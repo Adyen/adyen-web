@@ -21,7 +21,7 @@ const logger = RequestLogger(
 
 const errorLabel = Selector('.card-field .adyen-checkout-contextual-text--error');
 
-const UNSUPPORTED_CARD = LANG['error.va.sf-cc-num.03'];
+const UNSUPPORTED_CARD = LANG['cc.num.903'];
 
 const TEST_SPEED = 1;
 
@@ -225,7 +225,7 @@ test('#7 Enter number of unsupported card, ' + 'then inspect callbacks for expec
         .eql(['mc', 'visa', 'amex', 'cartebancaire']);
 
     const cardError = await getFromWindow('errorObj', 'encryptedCardNumber');
-    await t.expect(cardError.errorMessage).eql('Unsupported card entered');
+    await t.expect(cardError.errorMessage).eql('error-msg-unsupported-card-entered'); // This is generated from the relevant key (ERROR_MSG_UNSUPPORTED_CARD_ENTERED) in SF_ErrorCodes
 });
 
 test('#8 Enter number of card that is not in the test Dbs, ' + 'then inspect callbacks for expected properties ', async t => {
