@@ -19,6 +19,7 @@ import { DEFAULT_LOCALE } from '../language/config';
 
 import type { AdditionalDetailsStateData, PaymentAction, PaymentResponseData } from '../types/global-types';
 import type { CoreConfiguration, ICore } from './types';
+import getTranslations from './Services/get-translations';
 
 class Core implements ICore {
     public session?: Session;
@@ -88,8 +89,11 @@ class Core implements ICore {
 
     public async initialize(): Promise<this> {
         await this.initializeCore();
-        this.validateCoreConfiguration();
-        this.createCoreModules();
+        const translations = await getTranslations(this.options.locale);
+
+        await this.validateCoreConfiguration();
+
+        this.createCoreModules({ translations });
         return this;
     }
 
@@ -309,7 +313,7 @@ class Core implements ICore {
         this.paymentMethodsResponse = new PaymentMethods(this.options.paymentMethodsResponse || paymentMethodsResponse, this.options);
     }
 
-    private createCoreModules(): void {
+    private createCoreModules({ translations }: { translations: Record<string, string> }): void {
         if (this.modules) {
             if (process.env.NODE_ENV === 'development') {
                 console.warn('Core: Core modules are already created.');
@@ -329,7 +333,11 @@ class Core implements ICore {
                 bundleType: Core.metadata.bundleType
             }),
             resources: new Resources(this.cdnContext),
-            i18n: new Language(this.options.locale, this.options.translations, this.options.translationFile),
+            i18n: new Language({
+                locale: this.options.locale,
+                translations,
+                customTranslations: this.options.translations
+            }),
             srPanel: new SRPanel(this, { ...this.options.srConfig })
         });
     }

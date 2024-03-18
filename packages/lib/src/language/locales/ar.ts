@@ -1,4 +1,4 @@
 import ar from './ar.json';
-import { Translation } from '../types';
+import { Translations } from '../types';
 
-export default ar as Translation;
+export default ar as Translations;

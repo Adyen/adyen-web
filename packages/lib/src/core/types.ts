@@ -1,4 +1,4 @@
-import { CustomTranslations, Translation } from '../language/types';
+import { CustomTranslations } from '../language/types';
 import {
     PaymentAmountExtended,
     Order,
@@ -81,12 +81,6 @@ export interface CoreConfiguration {
      * For adding a custom locale, see {@link https://docs.adyen.com/checkout/components-web/localization-components#create-localization | Create localization}.*
      */
     locale?: string;
-
-    /**
-     * Translation file which contains the translations to a certain locale.
-     * @default en_US
-     */
-    translationFile?: Translation;
 
     /**
      * Custom translations and localizations

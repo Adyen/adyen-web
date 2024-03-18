@@ -1,4 +1,4 @@
 import en_US from './en-US.json';
-import { Translation } from '../types';
+import { Translations } from '../types';
 
-export default en_US as Translation;
+export default en_US as Translations;

@@ -1,4 +1,4 @@
 import sk_SK from './sk-SK.json';
-import { Translation } from '../types';
+import { Translations } from '../types';
 
-export default sk_SK as Translation;
+export default sk_SK as Translations;

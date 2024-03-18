@@ -1,4 +1,4 @@
 import fr_FR from './fr-FR.json';
-import { Translation } from '../types';
+import { Translations } from '../types';
 
-export default fr_FR as Translation;
+export default fr_FR as Translations;

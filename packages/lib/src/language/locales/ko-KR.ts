@@ -1,4 +1,4 @@
 import ko_KR from './ko-KR.json';
-import { Translation } from '../types';
+import { Translations } from '../types';
 
-export default ko_KR as Translation;
+export default ko_KR as Translations;

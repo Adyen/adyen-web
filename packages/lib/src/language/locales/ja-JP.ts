@@ -1,4 +1,4 @@
 import ja_JP from './ja-JP.json';
-import { Translation } from '../types';
+import { Translations } from '../types';
 
-export default ja_JP as Translation;
+export default ja_JP as Translations;

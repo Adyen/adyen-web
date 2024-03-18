@@ -1,4 +1,4 @@
 import ru_RU from './ru-RU.json';
-import { Translation } from '../types';
+import { Translations } from '../types';
 
-export default ru_RU as Translation;
+export default ru_RU as Translations;

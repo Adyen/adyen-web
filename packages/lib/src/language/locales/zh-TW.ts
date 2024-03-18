@@ -1,4 +1,4 @@
 import zh_TW from './zh-TW.json';
-import { Translation } from '../types';
+import { Translations } from '../types';
 
-export default zh_TW as Translation;
+export default zh_TW as Translations;

@@ -71,7 +71,7 @@ export function parseLocale(locale: string, supportedLocales: string[] = []): st
  * @param customTranslations -
  * @param supportedLocales -
  */
-export function formatCustomTranslations(customTranslations: CustomTranslations = {}, supportedLocales: string[]): object {
+export function formatCustomTranslations(customTranslations: CustomTranslations = {}, supportedLocales: string[]): CustomTranslations {
     return Object.keys(customTranslations).reduce((acc, cur) => {
         const formattedLocale = formatLocale(cur) || parseLocale(cur, supportedLocales);
         if (formattedLocale) {

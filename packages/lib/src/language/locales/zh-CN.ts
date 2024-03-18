@@ -1,4 +1,4 @@
 import zh_CN from './zh-CN.json';
-import { Translation } from '../types';
+import { Translations } from '../types';
 
-export default zh_CN as Translation;
+export default zh_CN as Translations;

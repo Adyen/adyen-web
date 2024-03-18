@@ -1,4 +1,4 @@
 import pt_BR from './pt-BR.json';
-import { Translation } from '../types';
+import { Translations } from '../types';
 
-export default pt_BR as Translation;
+export default pt_BR as Translations;

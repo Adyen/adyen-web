@@ -1,4 +1,4 @@
 import da_DK from './da-DK.json';
-import { Translation } from '../types';
+import { Translations } from '../types';
 
-export default da_DK as Translation;
+export default da_DK as Translations;

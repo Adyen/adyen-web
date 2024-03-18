@@ -1,4 +1,4 @@
 import fi_FI from './fi-FI.json';
-import { Translation } from '../types';
+import { Translations } from '../types';
 
-export default fi_FI as Translation;
+export default fi_FI as Translations;

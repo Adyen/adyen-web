@@ -1,4 +1,4 @@
 import pl_PL from './pl-PL.json';
-import { Translation } from '../types';
+import { Translations } from '../types';
 
-export default pl_PL as Translation;
+export default pl_PL as Translations;

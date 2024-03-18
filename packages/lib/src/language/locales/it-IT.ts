@@ -1,4 +1,4 @@
 import it_IT from './it-IT.json';
-import { Translation } from '../types';
+import { Translations } from '../types';
 
-export default it_IT as Translation;
+export default it_IT as Translations;
