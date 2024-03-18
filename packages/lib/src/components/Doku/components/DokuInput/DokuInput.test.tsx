@@ -27,9 +27,4 @@ describe('DokuInput', () => {
         customRender(<DokuInput showFormInstruction />);
         expect(await screen.findByText(/All fields are required unless marked otherwise./i)).toBeTruthy();
     });
-
-    test('should render payButton if showPayButton sets to true', async () => {
-        customRender(<DokuInput showPayButton payButton={() => <button>Test button</button>} />);
-        expect(await screen.findByText(/test button/i)).toBeTruthy();
-    });
 });

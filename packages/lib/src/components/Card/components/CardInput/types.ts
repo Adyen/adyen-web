@@ -125,7 +125,7 @@ export interface CardInputProps {
     showBrandIcon?: boolean;
     showFormInstruction?: boolean;
     showInstallmentAmounts?: boolean;
-    showPayButton?: boolean;
+    showPayButton: boolean;
     showStoreDetailsCheckbox?: boolean;
     showWarnings?: boolean;
     showContextualElement?: boolean;

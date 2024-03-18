@@ -7,7 +7,6 @@ export interface IssuerListConfiguration extends UIElementProps {
     issuers?: IssuerItem[];
     highlightedIssuers?: string[];
     showPaymentMethodItemImages?: boolean;
-    showPayButton?: boolean;
     termsAndConditions?: TermsAndConditions;
     showContextualElement?: boolean;
 }

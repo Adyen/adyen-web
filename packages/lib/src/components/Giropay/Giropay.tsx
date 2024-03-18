@@ -7,13 +7,6 @@ import { TxVariants } from '../tx-variants';
 class GiropayElement extends RedirectElement {
     public static type = TxVariants.giropay;
 
-    formatProps(props) {
-        return {
-            ...props,
-            showPayButton: props.showButton ?? props.showPayButton
-        };
-    }
-
     get displayName() {
         return this.props.name || this.constructor['type'];
     }

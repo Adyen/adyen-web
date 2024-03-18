@@ -54,6 +54,7 @@ export class EcontextElement extends UIElement<EcontextConfiguration> {
                     <EcontextInput
                         setComponentRef={this.setComponentRef}
                         {...this.props}
+                        showPayButton={this.props.showPayButton}
                         onChange={this.setState}
                         onSubmit={this.submit}
                         payButton={this.payButton}

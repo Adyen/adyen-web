@@ -34,7 +34,6 @@ export interface OpenInvoiceProps extends UIElementProps {
     };
     onChange: (state: any, element?: UIElement) => void;
     payButton: any;
-    showPayButton?: boolean;
     visibility?: OpenInvoiceVisibility;
     personalDetailsRequiredFields?: string[];
     billingAddressRequiredFields?: string[];

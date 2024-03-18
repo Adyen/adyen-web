@@ -67,7 +67,6 @@ export interface AmazonPayConfiguration extends UIElementProps {
     returnUrl?: string;
     showChangePaymentDetailsButton?: boolean;
     showOrderButton?: boolean;
-    showPayButton?: boolean;
     showSignOutButton?: boolean;
     signature?: string;
     onClick?: (resolve, reject) => Promise<void>;
@@ -76,7 +75,6 @@ export interface AmazonPayConfiguration extends UIElementProps {
 }
 
 export interface AmazonPayComponentProps extends AmazonPayConfiguration {
-    showPayButton: boolean;
     showSignOutButton?: boolean;
     amazonCheckoutSessionId?: string;
     showOrderButton?: boolean;

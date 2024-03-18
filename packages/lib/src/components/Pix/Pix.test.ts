@@ -22,9 +22,9 @@ test('should show personal details form if enabled', async () => {
     expect(await screen.findByLabelText('CPF/CNPJ')).toBeTruthy();
 });
 
-test('should show pay button if property is set to true', async () => {
+test('should show pay button by default', async () => {
     const i18n = global.i18n;
-    const pixElement = new Pix(global.core, { showPayButton: true, i18n, loadingContext: 'ggg', modules: { resources: global.resources } });
+    const pixElement = new Pix(global.core, { i18n, loadingContext: 'ggg', modules: { resources: global.resources } });
     render(pixElement.render());
 
     expect(await screen.findByRole('button', { name: 'Continue to pix' })).toBeTruthy();
@@ -62,7 +62,7 @@ test('should validate Brazil SSN', async () => {
 test('should trigger submit when Pay button is pressed', async () => {
     const user = userEvent.setup();
     const i18n = global.i18n;
-    const pixElement = new Pix(global.core, { showPayButton: true, i18n, loadingContext: 'ggg', modules: { resources: global.resources } });
+    const pixElement = new Pix(global.core, { i18n, loadingContext: 'ggg', modules: { resources: global.resources } });
     pixElement.submit = jest.fn();
     render(pixElement.render());
 
