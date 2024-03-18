@@ -195,8 +195,6 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
                     </Field>
                 )}
             </Fieldset>
-            {/* Needed to easily test when showValidation is called */}
-            {process.env.NODE_ENV !== 'production' && props.showPayButton && props.payButton({ label: i18n.get('continue') })}
         </Fragment>
     );
 }

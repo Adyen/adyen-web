@@ -10,7 +10,6 @@ class PixElement extends QRLoaderContainer<PixConfiguration> {
     public static type = TxVariants.pix;
 
     public static defaultProps = {
-        showPayButton: false,
         personalDetailsRequired: false,
         countdownTime: 15,
         delay: 2000,

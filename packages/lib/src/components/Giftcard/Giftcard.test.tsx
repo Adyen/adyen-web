@@ -18,7 +18,6 @@ describe('Giftcard', () => {
         name: 'My Test Gift Card',
         type: 'giftcard',
         brand: 'genericgiftcard',
-        showPayButton: true,
         i18n,
         loadingContext: 'mock'
     };

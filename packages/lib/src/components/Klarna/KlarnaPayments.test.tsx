@@ -12,8 +12,8 @@ describe('KlarnaPayments', () => {
         render(KlarnaPaymentsEle.render());
     };
 
-    test('should show the pay button if sets to true', async () => {
-        renderKlarna({ paymentData: '', paymentMethodType: '', sdkData: undefined, useKlarnaWidget: false, showPayButton: true });
+    test('should show the pay button by default', async () => {
+        renderKlarna({ paymentData: '', paymentMethodType: '', sdkData: undefined, useKlarnaWidget: false });
         expect(await screen.findByRole('button', { name: 'Continue to Klarna' })).toBeTruthy();
     });
 

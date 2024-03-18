@@ -34,7 +34,6 @@ test('should trigger submit when Pay button is pressed', async () => {
     const user = userEvent.setup();
 
     const payByBankEle = new PayByBank(global.core, {
-        showPayButton: true,
         name: 'Pay By Bank',
         i18n: global.i18n,
         loadingContext: 'test',
