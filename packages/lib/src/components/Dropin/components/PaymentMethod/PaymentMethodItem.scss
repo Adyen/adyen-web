@@ -79,6 +79,15 @@
     }
 }
 
+.adyen-checkout__payment-method__header__title{
+    margin-right: 16px;
+
+    [dir='rtl'] & {
+        margin-right: 0;
+        margin-left: 16px;
+    }
+}
+
 .adyen-checkout__payment-method__surcharge {
     color: $color-gray-darker;
     margin-left: 5px;

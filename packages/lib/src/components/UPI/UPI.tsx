@@ -6,6 +6,7 @@ import Await from '../internal/Await';
 import QRLoader from '../internal/QRLoader';
 import { UPIElementProps, UpiMode, UpiPaymentData } from './types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
+import isMobile from '../../utils/isMobile';
 
 /**
  * 'upi' tx variant is the parent one.
@@ -23,7 +24,7 @@ class UPI extends UIElement<UPIElementProps> {
     private useQrCodeVariant: boolean;
 
     protected static defaultProps = {
-        defaultMode: UpiMode.Vpa
+        defaultMode: isMobile() ? UpiMode.Intent : UpiMode.Vpa
     };
 
     public get isValid(): boolean {
@@ -107,7 +108,6 @@ class UPI extends UIElement<UPIElementProps> {
 
     public render(): h.JSX.Element {
         const { type } = this.props;
-        console.log('this.props', this.props);
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <SRPanelProvider srPanel={this.props.modules.srPanel}>{this.renderContent(type)}</SRPanelProvider>

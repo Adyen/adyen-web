@@ -5,7 +5,7 @@ import { PayButtonFunctionProps, UIElementStatus } from '../../../types';
 import { VpaInputDataState, VpaInputHandlers } from '../VpaInput/VpaInput';
 import VpaInput from '../VpaInput';
 import SegmentedControl from '../../../internal/SegmentedControl';
-import { apiId, UpiMode } from '../../types';
+import { ApiId, UpiMode } from '../../types';
 import './UPIComponent.scss';
 import isMobile from '../../../../utils/isMobile';
 import useImage from '../../../../core/Context/useImage';
@@ -17,7 +17,7 @@ interface UPIComponentProps {
     defaultMode: UpiMode;
     showPayButton: boolean;
     // upi_intent
-    appIds?: Array<apiId>;
+    appIds?: Array<ApiId>;
 
     ref(ref: RefObject<typeof UPIComponent>): void;
 
@@ -38,6 +38,25 @@ const A11Y = {
         QR: `upi-area-${UpiMode.QrCode}`
     }
 };
+
+const mockAppList = [
+    {
+        id: 'bhim',
+        name: 'BHIM'
+    },
+    {
+        id: 'gpay',
+        name: 'Google Pay'
+    },
+    {
+        id: 'PhonePe',
+        name: 'phonepe'
+    },
+    {
+        id: 'upi_intent',
+        name: 'Other UPI'
+    }
+];
 
 export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payButton, showPayButton }: UPIComponentProps): h.JSX.Element {
     const { i18n } = useCoreContext();
@@ -69,22 +88,6 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
     return (
         <Fragment>
             <p className="adyen-checkout_upi-mode-selection-text">{i18n.get('upi.modeSelection')}</p>
-            <UPIIntentAppList
-                appIds={[
-                    {
-                        id: 'bhim',
-                        name: 'BHIM'
-                    },
-                    {
-                        id: 'gpay',
-                        name: 'Google Pay'
-                    },
-                    {
-                        id: 'PhonePe',
-                        name: 'phonepe'
-                    }
-                ]}
-            />
             <SegmentedControl
                 onChange={onChangeUpiMode}
                 selectedValue={mode}
@@ -92,8 +95,8 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
                 classNameModifiers={['upi-margin-bottom']}
                 options={[
                     {
-                        label: isMobile() ? 'VPA' : 'Virtual Payment Address',
-                        value: UpiMode.Vpa,
+                        label: isMobile() ? 'Intent' : 'Virtual Payment Address',
+                        value: UpiMode.Intent, //todo test only
                         htmlProps: {
                             id: A11Y.ButtonId.VPA,
                             'aria-expanded': mode === UpiMode.Vpa,
@@ -111,8 +114,17 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
                     }
                 ]}
             />
-
-            {mode === UpiMode.Vpa ? (
+            {mode === UpiMode.Intent && (
+                <div>
+                    <UPIIntentAppList appIds={mockAppList} />
+                    {showPayButton &&
+                        payButton({
+                            label: i18n.get('continue'),
+                            status
+                        })}
+                </div>
+            )}
+            {mode === UpiMode.Vpa && (
                 <div id={A11Y.AreaId.VPA} aria-labelledby={A11Y.ButtonId.VPA} role="region">
                     <VpaInput disabled={status === 'loading'} onChange={onChange} onSetInputHandlers={onSetVpaInputHandlers} />
 
@@ -122,7 +134,8 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
                             status
                         })}
                 </div>
-            ) : (
+            )}
+            {mode === UpiMode.QrCode && (
                 <div id={A11Y.AreaId.QR} aria-labelledby={A11Y.ButtonId.QR} role="region">
                     {showPayButton &&
                         payButton({

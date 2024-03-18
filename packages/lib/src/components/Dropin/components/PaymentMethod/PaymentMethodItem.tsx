@@ -100,7 +100,7 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
         return (
             <li key={paymentMethod._id} className={paymentMethodClassnames} onClick={this.handleOnListItemClick}>
                 <div className="adyen-checkout__payment-method__header">
-                    <RadioButton buttonId={buttonId} isSelected={isSelected}>
+                    <RadioButton classNames={['adyen-checkout__payment-method__header__title']} buttonId={buttonId} isSelected={isSelected}>
                         <PaymentMethodIcon
                             // Only add alt attribute to storedPaymentMethods (to avoid SR reading the PM name twice)
                             {...(paymentMethod.props.oneClick && { altDescription: paymentMethod.props.name })}

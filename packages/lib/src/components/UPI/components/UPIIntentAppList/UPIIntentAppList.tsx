@@ -1,43 +1,43 @@
 import { h } from 'preact';
-import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
-import { apiId } from '../../types';
+import { useState } from 'preact/hooks';
+import { ApiId, UpiMode } from '../../types';
 import useCoreContext from '../../../../core/Context/useCoreContext';
-import RadioButton from '../../../internal/RadioButton';
-import uuidv4 from '../../../../utils/uuid';
+import uuid from '../../../../utils/uuid';
 import './UPIIntentAppList.scss';
+import UPIIntentAppItem from './UPIIntentAppItem';
+import VpaInput from '../VpaInput';
 
 interface UPIIntentAppListProps {
-    appIds: Array<apiId>;
+    appIds: Array<ApiId>;
     onSelect?: Function;
 }
 
 const UPIIntentAppList = ({ appIds, onSelect = () => {} }: UPIIntentAppListProps): h.JSX.Element => {
     const { i18n } = useCoreContext();
     const [selectedAppId, setSelectedAppId] = useState('');
-    const handleAppItemSelected = ({ id }) => {
+    const handleAppItemSelected = id => {
         setSelectedAppId(id);
         onSelect(id);
     };
 
     return (
         <ul className="adyen-checkout-upi-app-list" role="radiogroup" aria-label={i18n.get('paymentMethodsList.aria.label')} required>
-            {appIds.map(app => {
-                const uniqueId = `${app.id}-${uuidv4()}`;
-                const itemKey = `app-list-item-${uniqueId}`;
-                const buttonId = `radio-button-${uniqueId}`;
-
+            {appIds.map((appId, index, array) => {
+                const _id = `adyen-checkout-upi-${appId.id}-${uuid()}`;
+                const isSelected = selectedAppId === appId.id;
+                const next = array[index + 1];
+                const isNextSelected = selectedAppId === next?.id;
+                const showOtherUpi = appId.id === UpiMode.Intent;
                 return (
-                    <li
-                        key={itemKey}
-                        className="adyen-checkout-upi-app-item"
-                        role="button"
-                        aria-expanded="false"
-                        onClick={() => handleAppItemSelected(app)}
+                    <UPIIntentAppItem
+                        key={`adyen-checkout-upi-app-item-${_id}`}
+                        appId={appId}
+                        isSelected={isSelected}
+                        isNextSelected={isNextSelected}
+                        onSelect={handleAppItemSelected}
                     >
-                        <RadioButton buttonId={buttonId} isSelected={selectedAppId === app.id}>
-                            <label htmlFor={buttonId}>{app.name}</label>
-                        </RadioButton>
-                    </li>
+                        {showOtherUpi && <VpaInput onChange={() => {}} onSetInputHandlers={() => {}} />}
+                    </UPIIntentAppItem>
                 );
             })}
         </ul>

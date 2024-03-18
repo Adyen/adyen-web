@@ -1,10 +1,9 @@
 @import '../../../style/index';
 
-.adyen-checkout__payment-method__header__title {
+.adyen-checkout-radio-button {
     display: flex;
     align-items: center;
     flex-shrink: 0;
-    margin-right: 16px;
     max-width: 100%;
 
     // reset button styles
@@ -15,14 +14,9 @@
     color: $color-black;
     font-size: 1em;
     font-weight: 400;
-
-    [dir='rtl'] & {
-        margin-right: 0;
-        margin-left: 16px;
-    }
 }
 
-.adyen-checkout__payment-method__header__title[aria-checked='false']:hover > .adyen-checkout__payment-method__radio {
+.adyen-checkout-radio-button[aria-checked='false']:hover > .adyen-checkout__payment-method__radio {
     border-color: #99a3ad;
     box-shadow: 0 0 0 2px $color-gray;
     cursor: pointer;

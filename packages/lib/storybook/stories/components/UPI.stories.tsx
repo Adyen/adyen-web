@@ -20,7 +20,7 @@ export const UPI: UpiStory = {
         countryCode: 'IN',
         componentConfiguration: {
             // @ts-ignore Seems like enum isnt the best way to export fixed strings
-            defaultMode: 'vpa'
+            //defaultMode: 'upi_intent'
         }
     }
 };
