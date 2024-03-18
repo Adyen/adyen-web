@@ -8,7 +8,10 @@ describe('MealVoucherFR', () => {
     const user = userEvent.setup();
 
     const baseProps = {
-        modules: { resources },
+        modules: {
+            resources,
+            analytics: global.analytics
+        },
         amount: { value: 1000, currency: 'EUR' },
         name: 'MealVoucher',
         i18n,

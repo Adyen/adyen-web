@@ -1,4 +1,4 @@
-import type { Order, OrderStatus, PaymentActionsType } from '../../types/global-types';
+import type { Order, OrderStatus, PaymentActionsType, PaymentAmount } from '../../types/global-types';
 import type { UIElementProps, UIElementStatus } from '../internal/UIElement/types';
 import type { NewableComponent } from '../../core/core.registry';
 import type { ICore } from '../../core/types';
@@ -101,14 +101,25 @@ export interface DropinConfiguration extends UIElementProps {
 }
 
 export interface onOrderCancelData {
-    order: Order;
+    order: {
+        orderData: string;
+        pspReference: string;
+    };
 }
+
+export type onOrderCancelType = (
+    data: onOrderCancelData,
+    actions: {
+        resolve: (data: { amount: PaymentAmount }) => void;
+        reject: (error: string) => void;
+    }
+) => void;
 
 export interface DropinComponentProps extends DropinConfiguration {
     core: ICore;
     onCreateElements: any;
     onChange: (newState?: object) => void;
-    onOrderCancel?: (data: onOrderCancelData) => void;
+    onOrderCancel?: onOrderCancelType;
 }
 
 interface DropinStatus {

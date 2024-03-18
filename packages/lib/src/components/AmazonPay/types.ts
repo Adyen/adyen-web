@@ -1,7 +1,7 @@
 import { SUPPORTED_LOCALES_EU, SUPPORTED_LOCALES_US } from './config';
 import { UIElementProps } from '../internal/UIElement/types';
-import { BrowserInfo, PaymentAmount } from '../../types/global-types';
-import AmazonPayElement from './AmazonPay';
+import { BrowserInfo, CheckoutAdvancedFlowResponse, PaymentAmount } from '../../types/global-types';
+import { AmazonPayElement } from './AmazonPay';
 
 declare global {
     interface Window {
@@ -52,7 +52,14 @@ export interface AmazonPayConfiguration extends UIElementProps {
     loadingContext?: string;
     locale?: string;
     merchantMetadata?: MerchantMetadata;
-    onSubmit?: (state: any, element: AmazonPayElement) => void;
+    onSubmit?(
+        state: any,
+        element: AmazonPayElement,
+        actions: {
+            resolve: (response: CheckoutAdvancedFlowResponse) => void;
+            reject: () => void;
+        }
+    ): void;
     payButton?: any;
     placement?: Placement;
     productType?: ProductType;

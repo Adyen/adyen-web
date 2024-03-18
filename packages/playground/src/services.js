@@ -11,8 +11,10 @@ export const getPaymentMethods = configuration =>
         .catch(console.error);
 
 export const makePayment = (data, config = {}) => {
-    // Needed for storedPMs in v70 if a standalone comp, or, in Dropin, advanced flow. (Sessions, v70, works with or without this prop)
-    if (data.paymentMethod.storedPaymentMethodId) {
+    // Needed for v70 if a standalone comp, or, in Dropin, advanced flow. (Sessions, v70, works with or without this prop).
+    //  - Needed for storedPMs
+    //  - Also needed for regular card, if the "save for my next payment" checkbox is clicked
+    if (data.paymentMethod.storedPaymentMethodId || data.storePaymentMethod) {
         config = { recurringProcessingModel: 'CardOnFile', ...config };
     }
 

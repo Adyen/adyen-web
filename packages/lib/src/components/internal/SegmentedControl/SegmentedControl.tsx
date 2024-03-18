@@ -2,7 +2,7 @@ import { h } from 'preact';
 import cx from 'classnames';
 import './SegmentedControl.scss';
 
-interface SegmentedControlProps<T> {
+export interface SegmentedControlProps<T> {
     classNameModifiers?: string[];
     selectedValue: T;
     disabled?: boolean;
@@ -10,7 +10,7 @@ interface SegmentedControlProps<T> {
     onChange(value: T, event: MouseEvent): void;
 }
 
-function SegmentedControl<T>({ classNameModifiers, selectedValue, disabled = false, options, onChange }: SegmentedControlProps<T>) {
+function SegmentedControl<T>({ classNameModifiers = [], selectedValue, disabled = false, options, onChange }: SegmentedControlProps<T>) {
     if (!options || options.length === 0) {
         return null;
     }
@@ -35,6 +35,7 @@ function SegmentedControl<T>({ classNameModifiers, selectedValue, disabled = fal
                     type="button"
                     {...htmlProps}
                 >
+                    {selectedValue === value && <span className="adyen-checkout-checkmark"></span>}
                     {label}
                 </button>
             ))}

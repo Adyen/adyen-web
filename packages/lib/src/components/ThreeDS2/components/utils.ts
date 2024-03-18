@@ -3,6 +3,8 @@ import { getOrigin } from '../../../utils/getOrigin';
 import base64 from '../../../utils/base64';
 import { ChallengeData, ThreeDS2Token, FingerPrintData, ResultObject } from '../types';
 import { pick } from '../../internal/SecuredFields/utils';
+import { DecodeObject } from '../../../types/global-types';
+import { ErrorObject } from '../../../core/Errors/types';
 
 export interface FingerprintResolveData {
     data: {
@@ -24,13 +26,29 @@ export interface ErrorCodeObject {
     message: string;
 }
 
-export const decodeAndParseToken = (token: string): ThreeDS2Token => {
-    const decodedToken = base64.decode(token);
-    try {
-        return decodedToken && JSON.parse(decodedToken);
-    } catch (e) {
-        throw new Error('Could not decode token');
+/**
+ * Check if we have been passed an ErrorObject because either base64 decoding or JSON.parse failed
+ * @param obj -
+ */
+export const isErrorObject = (obj: ErrorObject | ThreeDS2Token): boolean => {
+    return 'success' in obj && !obj.success;
+};
+
+export const decodeAndParseToken = (token: string): ThreeDS2Token | ErrorObject => {
+    const decodedToken: DecodeObject = base64.decode(token);
+    if (decodedToken.success) {
+        try {
+            return JSON.parse(decodedToken.data) as ThreeDS2Token;
+        } catch (e) {
+            return {
+                success: false,
+                error: 'Could not JSON parse token'
+            };
+        }
     }
+
+    // base64.decode failed - object will contain error msg: 'not base64' or 'malformed URI sequence'
+    return decodedToken as ErrorObject;
 };
 
 /**
@@ -70,9 +88,14 @@ export const getChallengeWindowSize = (sizeStr: string): string[] => CHALLENGE_W
  *     threeDSNotificationURL and threeDSServerTransID
  *  @param size - one of five possible challenge window sizes
  */
-export const prepareChallengeData = ({ token, size }): ChallengeData => {
+export const prepareChallengeData = ({ token, size }): ChallengeData | ErrorObject => {
     const decodedChallengeToken = decodeAndParseToken(token);
-    const { acsTransID, acsURL, messageVersion, threeDSNotificationURL, threeDSServerTransID } = decodedChallengeToken;
+
+    if (isErrorObject(decodedChallengeToken)) {
+        return decodedChallengeToken as ErrorObject;
+    }
+
+    const { acsTransID, acsURL, messageVersion, threeDSNotificationURL, threeDSServerTransID } = decodedChallengeToken as ThreeDS2Token;
     const notificationURLOrigin = getOrigin(threeDSNotificationURL);
 
     return {
@@ -86,7 +109,7 @@ export const prepareChallengeData = ({ token, size }): ChallengeData => {
         },
         iframeSizeArr: getChallengeWindowSize(size),
         postMessageDomain: notificationURLOrigin
-    };
+    } as ChallengeData;
 };
 
 /**
@@ -102,9 +125,14 @@ export const prepareChallengeData = ({ token, size }): ChallengeData => {
  *  But if the merchant is using checkout.create('threeDS2DeviceFingerprint') we still support the fact that they might want to set their own
  *  notificationURL (aka threeDSMethodNotificationURL)
  */
-export const prepareFingerPrintData = ({ token, notificationURL }): FingerPrintData => {
+export const prepareFingerPrintData = ({ token, notificationURL }): FingerPrintData | ErrorObject => {
     const decodedFingerPrintToken = decodeAndParseToken(token);
-    const { threeDSMethodNotificationURL, threeDSMethodUrl: threeDSMethodURL, threeDSServerTransID } = decodedFingerPrintToken;
+
+    if (isErrorObject(decodedFingerPrintToken)) {
+        return decodedFingerPrintToken as ErrorObject;
+    }
+
+    const { threeDSMethodNotificationURL, threeDSMethodUrl: threeDSMethodURL, threeDSServerTransID } = decodedFingerPrintToken as ThreeDS2Token;
     const receivedNotificationURL = notificationURL || threeDSMethodNotificationURL;
     const notificationURLOrigin = getOrigin(receivedNotificationURL);
 
@@ -113,7 +141,7 @@ export const prepareFingerPrintData = ({ token, notificationURL }): FingerPrintD
         threeDSMethodURL,
         threeDSMethodNotificationURL: receivedNotificationURL,
         postMessageDomain: notificationURLOrigin
-    };
+    } as FingerPrintData;
 };
 
 export const createFingerprintResolveData = (dataKey: string, resultObj: ResultObject, paymentData: string): FingerprintResolveData => ({

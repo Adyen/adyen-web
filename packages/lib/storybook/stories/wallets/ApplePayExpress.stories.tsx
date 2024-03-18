@@ -152,6 +152,8 @@ export const Express: ApplePayStory = {
         amount: INITIAL_AMOUNT,
         shopperLocale: SHOPPER_LOCALE,
         componentConfiguration: {
+            isExpress: true,
+
             onSubmit: async (state, component, actions) => {
                 try {
                     const paymentData = {

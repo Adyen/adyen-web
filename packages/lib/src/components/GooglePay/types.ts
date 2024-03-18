@@ -1,42 +1,14 @@
-import { AddressData } from '../../types';
-import { UIElementProps } from '../internal/UIElement/types';
-
-export interface GooglePayPropsConfiguration {
-    /**
-     * Adyen's merchant account name
-     * @see https://developers.google.com/pay/api/web/reference/request-objects#gateway
-     */
-    gatewayMerchantId: string;
-
-    /**
-     * A Google merchant identifier issued after registration with the {@link https://pay.google.com/business/console | Google Pay Business Console}.
-     * Required when PaymentsClient is initialized with an environment property of PRODUCTION.
-     * @see https://developers.google.com/pay/api/web/reference/request-objects#MerchantInfo
-     */
-    merchantId?: string;
-
-    /**
-     * Merchant name is rendered in the payment sheet.
-     * @see https://developers.google.com/pay/api/web/reference/request-objects#MerchantInfo
-     */
-    merchantName?: string;
-
-    /**
-     * Merchant fully qualified domain name.
-     */
-    merchantOrigin?: string;
-
-    /**
-     * Google JWT solution for platforms
-     * To request Google Pay credentials, you can enable platforms to send requests that are authenticated with the platform credentials. You don't need to register individual domain names to call Google Pay APIs.
-     */
-    authJwt?: string;
-}
+import type { AddressData } from '../../types';
+import type { UIElementProps } from '../internal/UIElement/types';
 
 export interface GooglePayConfiguration extends UIElementProps {
     type?: 'googlepay' | 'paywithgoogle';
 
-    configuration?: GooglePayPropsConfiguration;
+    /**
+     * Enables the GooglePay Express Flow
+     * @defaultValue false
+     */
+    isExpress?: boolean;
 
     /**
      * @see https://developers.google.com/pay/api/web/reference/request-objects#IsReadyToPayRequest
@@ -132,9 +104,12 @@ export interface GooglePayConfiguration extends UIElementProps {
     callbackIntents?: google.payments.api.CallbackIntent[];
 
     /**
+     * Disclaimer: 'onPaymentAuthorized' is not exposed as we are using our own method internally to
+     * handle the authorization part
+     *
      * @see https://developers.google.com/pay/api/web/reference/request-objects#PaymentDataCallbacks
      */
-    paymentDataCallbacks?: google.payments.api.PaymentDataCallbacks;
+    paymentDataCallbacks?: Pick<google.payments.api.PaymentDataCallbacks, 'onPaymentDataChanged'>;
 
     /**
      * @see https://developers.google.com/pay/api/web/reference/request-objects#TransactionInfo
@@ -163,6 +138,38 @@ export interface GooglePayConfiguration extends UIElementProps {
         },
         actions: { resolve: () => void; reject: (error?: google.payments.api.PaymentDataError | string) => void }
     ) => void;
+
+    configuration?: {
+        /**
+         * Adyen's merchant account name
+         * @see https://developers.google.com/pay/api/web/reference/request-objects#gateway
+         */
+        gatewayMerchantId: string;
+
+        /**
+         * A Google merchant identifier issued after registration with the {@link https://pay.google.com/business/console | Google Pay Business Console}.
+         * Required when PaymentsClient is initialized with an environment property of PRODUCTION.
+         * @see https://developers.google.com/pay/api/web/reference/request-objects#MerchantInfo
+         */
+        merchantId?: string;
+
+        /**
+         * Merchant name is rendered in the payment sheet.
+         * @see https://developers.google.com/pay/api/web/reference/request-objects#MerchantInfo
+         */
+        merchantName?: string;
+
+        /**
+         * Merchant fully qualified domain name.
+         */
+        merchantOrigin?: string;
+
+        /**
+         * Google JWT solution for platforms
+         * To request Google Pay credentials, you can enable platforms to send requests that are authenticated with the platform credentials. You don't need to register individual domain names to call Google Pay APIs.
+         */
+        authJwt?: string;
+    };
 }
 
 // Used to add undocumented google payment options

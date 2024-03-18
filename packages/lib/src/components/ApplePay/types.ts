@@ -39,6 +39,12 @@ export type ApplePayButtonType =
 
 export interface ApplePayConfiguration extends UIElementProps {
     /**
+     * Enables the ApplePay Express Flow
+     * @defaultValue false
+     */
+    isExpress?: boolean;
+
+    /**
      * The Apple Pay version number your website supports.
      * @default highest supported version by the shopper device
      * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/apple_pay_on_the_web_version_history Apple Pay on the Web Version History}
@@ -103,14 +109,7 @@ export interface ApplePayConfiguration extends UIElementProps {
      * ApplePayRecurringPaymentRequest - Represents a request to set up a recurring payment, typically a subscription.
      * {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepayrecurringpaymentrequest}
      */
-    recurringPaymentRequest?: {
-        paymentDescription: string;
-        regularBilling: ApplePayJS.ApplePayLineItem;
-        trialBilling?: ApplePayJS.ApplePayLineItem;
-        billingAgreement?: string;
-        managementURL: string;
-        tokenNotificationURL?: string;
-    };
+    recurringPaymentRequest?: ApplePayJS.ApplePayRecurringPaymentRequest;
 
     // Requested Billing and Shipping Contact Information
 
@@ -209,9 +208,10 @@ export interface ApplePayElementData {
     paymentMethod: {
         type: string;
         applePayToken: string;
-        billingAddress?: AddressData;
-        deliveryAddress?: AddressData;
+        isExpress?: boolean;
     };
+    billingAddress?: AddressData;
+    deliveryAddress?: AddressData;
 }
 
 export interface ApplePaySessionRequest {

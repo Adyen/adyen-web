@@ -18,9 +18,9 @@ export default function AmazonPayComponent(props: AmazonPayComponentProps) {
         setStatus('ready');
     };
 
-    this.submit = () => {
-        if (amazonPayButtonRef.current && amazonPayButtonRef.current.initCheckout) return amazonPayButtonRef.current.initCheckout();
-        if (orderButtonRef.current && orderButtonRef.current.createOrder) return orderButtonRef.current.createOrder();
+    this.getSubmitFunction = () => {
+        if (amazonPayButtonRef.current && amazonPayButtonRef.current.initCheckout) return () => amazonPayButtonRef.current.initCheckout();
+        if (orderButtonRef.current && orderButtonRef.current.createOrder) return () => orderButtonRef.current.createOrder();
     };
 
     useEffect(() => {

@@ -3,7 +3,7 @@ import CardComponentPage from '../../../../_models/CardComponent.page';
 import { REGULAR_TEST_CARD, MAESTRO_CARD, UNKNOWN_VISA_CARD } from '../../../utils/constants';
 import LANG from '../../../../../../lib/src/language/locales/en-US.json';
 
-const UNSUPPORTED_CARD = LANG['error.va.sf-cc-num.03'];
+const UNSUPPORTED_CARD = LANG['cc.num.903'];
 
 const path = require('path');
 require('dotenv').config({ path: path.resolve('../../', '.env') }); // 2 dirs up

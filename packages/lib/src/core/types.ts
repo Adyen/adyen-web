@@ -20,6 +20,7 @@ import { SRPanelConfig } from './Errors/types';
 import { NewableComponent } from './core.registry';
 import Session from './CheckoutSession';
 import PaymentMethods from './ProcessResponse/PaymentMethods';
+import { onOrderCancelType } from '../components/Dropin/types';
 
 export interface ICore {
     initialize(): Promise<ICore>;
@@ -230,7 +231,7 @@ export interface CoreConfiguration {
         actions: { resolve: (response: PaymentMethodsResponse) => void; reject: () => void }
     ): void;
 
-    onOrderCancel?(order: Order): void;
+    onOrderCancel?: onOrderCancelType;
 
     /**
      * Called when the gift card balance is less than the transaction amount.
