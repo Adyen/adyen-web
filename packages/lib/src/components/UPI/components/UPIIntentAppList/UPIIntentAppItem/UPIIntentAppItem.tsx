@@ -26,7 +26,7 @@ const UPIIntentAppItem = ({
     const handleAppItemSelected = (id: string) => {
         onSelect(id);
     };
-
+    // https://checkoutshopper-live.adyen.com/checkoutshopper/images/logos/[pm-type]/[gpay].svg
     return (
         <li
             className={cx({

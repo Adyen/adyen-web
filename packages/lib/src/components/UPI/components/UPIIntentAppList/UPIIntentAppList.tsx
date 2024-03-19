@@ -14,8 +14,8 @@ interface UPIIntentAppListProps {
 
 const UPIIntentAppList = ({ appIds, onSelect = () => {} }: UPIIntentAppListProps): h.JSX.Element => {
     const { i18n } = useCoreContext();
-    const [selectedAppId, setSelectedAppId] = useState('');
-    const handleAppItemSelected = id => {
+    const [selectedAppId, setSelectedAppId] = useState<string>('');
+    const handleAppItemSelected = (id: string) => {
         setSelectedAppId(id);
         onSelect(id);
     };
