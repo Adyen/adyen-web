@@ -8,10 +8,13 @@ import { RiskData } from '../core/RiskModule/RiskModule';
 import { Resources } from '../core/Context/Resources';
 import { AnalyticsInitialEvent, SendAnalyticsObject } from '../core/Analytics/types';
 import { ANALYTICS_RENDERED_STR } from '../core/Analytics/constants';
+import { signal } from '@preact/signals';
+
+export const componentProps = signal({});
 
 class BaseElement<P extends BaseElementProps> {
     public readonly _id = `${this.constructor['type']}-${uuid()}`;
-    public props: P;
+    public props: P; // we can use signal for props & state
     public state;
     protected static defaultProps = {};
     public _node;
@@ -22,7 +25,8 @@ class BaseElement<P extends BaseElementProps> {
     protected resources: Resources;
 
     protected constructor(props: P) {
-        this.props = this.formatProps({ ...this.constructor['defaultProps'], setStatusAutomatically: true, ...props });
+        this.props = this.formatProps({ ...this.constructor['defaultProps'], setStatusAutomatically: true, ...props, title: 'Original title' });
+        componentProps.value = this.props;
         this._parentInstance = this.props._parentInstance;
         this._node = null;
         this.state = {};
@@ -148,11 +152,20 @@ class BaseElement<P extends BaseElementProps> {
      * @param props - props to update
      * @returns this - the element instance
      */
-    public update(props: P): this {
+    /*    public update(props: P): this {
+        console.log('calling update old flow');
         this.props = this.formatProps({ ...this.props, ...props });
         this.state = {};
 
         return this.unmount().mount(this._node); // for new mount fny
+    }*/
+
+    public update(props: P): this {
+        console.log('calling update with signal');
+        componentProps.value = { ...this.props, ...props };
+        this.state = {};
+
+        return this;
     }
 
     /**

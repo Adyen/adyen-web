@@ -6,6 +6,7 @@ import { DropinComponentProps, DropinComponentState, DropinStatusProps, onOrderC
 import './DropinComponent.scss';
 import { UIElementStatus } from '../../types';
 import { ANALYTICS_RENDERED_STR } from '../../../core/Analytics/constants';
+import { componentProps } from '../../BaseElement';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
@@ -128,6 +129,8 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
             default:
                 return (
                     <div className={`adyen-checkout__dropin adyen-checkout__dropin--${status.type}`}>
+                        <div>From props: {this.props.title}</div>
+                        <div>From signal: {componentProps.value.title}</div>
                         {isRedirecting && status.props.component && status.props.component.render()}
                         {isLoading && status.props && status.props.component && status.props.component.render()}
                         {elements && !!elements.length && (

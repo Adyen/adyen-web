@@ -31,6 +31,9 @@ export const Container = <T extends keyof PaymentMethods>({ type, componentConfi
                 });
         } else {
             element.mount(container.current);
+            setTimeout(() => {
+                element.update({ title: 'from storybook' });
+            }, 3000);
         }
     }, []);
 

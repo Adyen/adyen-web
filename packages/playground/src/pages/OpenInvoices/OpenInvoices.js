@@ -10,17 +10,21 @@ window.paymentData = {};
 
 const showComps = {
     ratepay: true,
-    ratepaydd: true,
-    afterpay: true,
-    afterpayb2b: true,
-    facilypay_3x: true,
-    affirm: true,
-    atome: true,
+    /*  ratepaydd: true,
+afterpay: true,
+afterpayb2b: true,
+facilypay_3x: true,
+affirm: true,
+atome: true*/
     riverty: true
 };
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
     window.checkout = await AdyenCheckout({
+        srConfig: {
+            moveFocus: false,
+            showPanel: true
+        },
         clientKey: process.env.__CLIENT_KEY__,
         locale: shopperLocale,
         paymentMethodsResponse: paymentMethodsData,
