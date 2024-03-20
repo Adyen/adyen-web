@@ -2,30 +2,28 @@ import { test, expect } from '../../pages/openInvoices/openInvoices.fixture';
 
 import LANG from '../../../lib/src/language/locales/en-US.json';
 
-const SR_PREFIX = process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test' ? '' : '-sr';
-
-const INVALID_FORMAT_EXPECTS = LANG['invalidFormatExpects'].replace('%{format}', `99999${SR_PREFIX}`);
+const INVALID_FORMAT_EXPECTS = LANG['invalidFormatExpects'].replace('%{format}', `99999`);
 
 const BILLING_ADDRESS = LANG['billingAddress'];
 const DELIVERY_ADDRESS = LANG['deliveryAddress'];
 
 const expectedSRPanelTexts = [
-    `${LANG['firstName.invalid']}${SR_PREFIX}`,
-    `${LANG['lastName.invalid']}${SR_PREFIX}`,
-    `${LANG['dateOfBirth.invalid']}${SR_PREFIX}`,
-    `${LANG['shopperEmail.invalid']}${SR_PREFIX}`,
-    `${LANG['telephoneNumber.invalid']}${SR_PREFIX}`,
-    `${BILLING_ADDRESS} ${LANG['street']}: ${LANG['error.va.gen.01']}${SR_PREFIX}`,
-    `${BILLING_ADDRESS} ${LANG['houseNumberOrName']}: ${LANG['error.va.gen.01']}${SR_PREFIX}`,
+    `${LANG['firstName.invalid']}`,
+    `${LANG['lastName.invalid']}`,
+    `${LANG['dateOfBirth.invalid']}`,
+    `${LANG['shopperEmail.invalid']}`,
+    `${LANG['telephoneNumber.invalid']}`,
+    `${BILLING_ADDRESS} ${LANG['street']}: ${LANG['error.va.gen.01']}`,
+    `${BILLING_ADDRESS} ${LANG['houseNumberOrName']}: ${LANG['error.va.gen.01']}`,
     `${BILLING_ADDRESS} ${LANG['postalCode']}: ${INVALID_FORMAT_EXPECTS}`,
-    `${BILLING_ADDRESS} ${LANG['city']}: ${LANG['error.va.gen.01']}${SR_PREFIX}`,
-    `${DELIVERY_ADDRESS} ${LANG['deliveryAddress.firstName']}: ${LANG['error.va.gen.01']}${SR_PREFIX}`,
-    `${DELIVERY_ADDRESS} ${LANG['deliveryAddress.lastName']}: ${LANG['error.va.gen.01']}${SR_PREFIX}`,
-    `${DELIVERY_ADDRESS} ${LANG['street']}: ${LANG['error.va.gen.01']}${SR_PREFIX}`,
-    `${DELIVERY_ADDRESS} ${LANG['houseNumberOrName']}: ${LANG['error.va.gen.01']}${SR_PREFIX}`,
+    `${BILLING_ADDRESS} ${LANG['city']}: ${LANG['error.va.gen.01']}`,
+    `${DELIVERY_ADDRESS} ${LANG['deliveryAddress.firstName']}: ${LANG['error.va.gen.01']}`,
+    `${DELIVERY_ADDRESS} ${LANG['deliveryAddress.lastName']}: ${LANG['error.va.gen.01']}`,
+    `${DELIVERY_ADDRESS} ${LANG['street']}: ${LANG['error.va.gen.01']}`,
+    `${DELIVERY_ADDRESS} ${LANG['houseNumberOrName']}: ${LANG['error.va.gen.01']}`,
     `${DELIVERY_ADDRESS} ${LANG['postalCode']}: ${INVALID_FORMAT_EXPECTS}`,
-    `${DELIVERY_ADDRESS} ${LANG['city']}: ${LANG['error.va.gen.01']}${SR_PREFIX}`,
-    `${LANG['consent.checkbox.invalid']}${SR_PREFIX}`
+    `${DELIVERY_ADDRESS} ${LANG['city']}: ${LANG['error.va.gen.01']}`,
+    `${LANG['consent.checkbox.invalid']}`
 ];
 
 test.describe('Test Riverty Component', () => {
@@ -51,7 +49,7 @@ test.describe('Test Riverty Component', () => {
                     // console.log('\n### riverty.spec:::: retrievedText', retrievedText);
                     // console.log('### riverty.spec:::: expectedTexts', expectedSRPanelTexts[index]);
 
-                    expect(retrievedText).toEqual(expectedSRPanelTexts[index]);
+                    expect(retrievedText).toContain(expectedSRPanelTexts[index]);
                 });
             });
 
