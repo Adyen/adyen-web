@@ -2,7 +2,7 @@ import { test, expect } from '../../pages/openInvoices/openInvoices.fixture';
 
 import LANG from '../../../lib/src/language/locales/en-US.json';
 
-const SR_PREFIX = '-sr';
+const SR_PREFIX = ''; // needs to be '-sr' if running locally;
 
 const INVALID_FORMAT_EXPECTS = LANG['invalidFormatExpects'].replace('%{format}', `99999${SR_PREFIX}`);
 
