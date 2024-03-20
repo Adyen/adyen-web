@@ -168,8 +168,6 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
         // Country specific address labels
         const countrySpecificLabels = specifications.getAddressLabelsForCountry(data.billingAddress?.country ?? data.deliveryAddress?.country);
 
-        console.log('### OpenInvoice:::: errorsForPanel', errorsForPanel);
-
         // Set messages: Pass dynamic props (errors, layout etc) to SRPanel via partial
         const srPanelResp: SetSRMessagesReturnObject = setSRMessages?.({
             errors: errorsForPanel,
