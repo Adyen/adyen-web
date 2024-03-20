@@ -1,7 +1,6 @@
 import { formatCustomTranslations, formatLocale, getTranslation, parseLocale } from './utils';
-import { SUPPORTED_LOCALES, DEFAULT_LOCALE, DEFAULT_TRANSLATION_FILE } from './config';
+import { SUPPORTED_LOCALES } from './constants';
 import { getLocalisedAmount } from '../utils/amount-util';
-import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 
 import type { CustomTranslations, LanguageOptions, Translations } from './types';
 
@@ -19,11 +18,11 @@ export class Language {
         const localesFromCustomTranslations = Object.keys(this.customTranslations);
         const supportedLocales = [...SUPPORTED_LOCALES, ...localesFromCustomTranslations].filter((v, i, a) => a.indexOf(v) === i); // our locales + validated custom locales
 
-        this.locale = formatLocale(locale) || parseLocale(locale, supportedLocales) || DEFAULT_LOCALE;
+        this.locale = formatLocale(locale) || parseLocale(locale, supportedLocales);
+
         this.languageCode = this.locale.split('-')[0];
 
         this.translations = {
-            ...DEFAULT_TRANSLATION_FILE,
             ...translations,
             ...(!!this.customTranslations[this.locale] && this.customTranslations[this.locale])
         };
@@ -60,7 +59,7 @@ export class Language {
      * @param options - Options for {@link Date.toLocaleDateString}
      */
     public date(date: string, options: object = {}) {
-        const dateOptions: DateTimeFormatOptions = { year: 'numeric', month: '2-digit', day: '2-digit', ...options };
+        const dateOptions: Intl.DateTimeFormatOptions = { year: 'numeric', month: '2-digit', day: '2-digit', ...options };
         return new Date(date).toLocaleDateString(this.locale, dateOptions);
     }
 }

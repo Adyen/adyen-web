@@ -15,11 +15,12 @@ import { cleanupFinalResult, sanitizeResponse, verifyPaymentDidNotFail } from '.
 import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from './Errors/AdyenCheckoutError';
 import { ANALYTICS_ACTION_STR } from './Analytics/constants';
 import { THREEDS2_FULL } from '../components/ThreeDS2/config';
-import { DEFAULT_LOCALE } from '../language/config';
+import { DEFAULT_LOCALE } from '../language/constants';
+import getTranslations from './Services/get-translations';
 
 import type { AdditionalDetailsStateData, PaymentAction, PaymentResponseData } from '../types/global-types';
 import type { CoreConfiguration, ICore } from './types';
-import getTranslations from './Services/get-translations';
+import type { Translations } from '../language/types';
 
 class Core implements ICore {
     public session?: Session;
@@ -89,12 +90,23 @@ class Core implements ICore {
 
     public async initialize(): Promise<this> {
         await this.initializeCore();
-        const translations = await getTranslations(this.options.locale);
-
-        await this.validateCoreConfiguration();
-
-        this.createCoreModules({ translations });
+        this.validateCoreConfiguration();
+        await this.createCoreModules();
         return this;
+    }
+
+    /**
+     * scenario 1 - use his own locale with custom language
+     * scenario 2 -
+     * @private
+     */
+    private async fetchTranslations(): Promise<Translations> {
+        try {
+            const translation = await getTranslations(this.loadingContext, Core.metadata.version, this.options.locale, this.options.translations);
+            return translation;
+        } catch (error) {
+            this.options.onError?.(error);
+        }
     }
 
     private async initializeCore(): Promise<this> {
@@ -313,13 +325,15 @@ class Core implements ICore {
         this.paymentMethodsResponse = new PaymentMethods(this.options.paymentMethodsResponse || paymentMethodsResponse, this.options);
     }
 
-    private createCoreModules({ translations }: { translations: Record<string, string> }): void {
+    private async createCoreModules(): Promise<void> {
         if (this.modules) {
             if (process.env.NODE_ENV === 'development') {
                 console.warn('Core: Core modules are already created.');
             }
             return;
         }
+
+        const translations = await this.fetchTranslations();
 
         this.modules = Object.freeze({
             risk: new RiskModule(this, { ...this.options, loadingContext: this.loadingContext }),

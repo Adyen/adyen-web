@@ -1,7 +1,6 @@
 import '@adyen/adyen-web/styles/adyen.css';
 import { createSession } from '../../services';
 import { amount, shopperLocale, shopperReference, countryCode, returnUrl } from '../../config/commonConfig';
-import getTranslationFile from '../../config/getTranslation';
 import { handleOnPaymentCompleted, handleOnPaymentFailed } from '../../handlers';
 
 export async function initSession() {
@@ -23,7 +22,6 @@ export async function initSession() {
         session,
 
         locale: shopperLocale,
-        translationFile: getTranslationFile(shopperLocale),
 
         onPaymentCompleted: handleOnPaymentCompleted,
         onPaymentFailed: handleOnPaymentFailed,

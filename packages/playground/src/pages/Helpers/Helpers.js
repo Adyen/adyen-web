@@ -5,7 +5,6 @@ import '../../style.scss';
 import { getPaymentMethods } from '../../services';
 import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
 import { searchFunctionExample } from '../../utils';
-import getTranslationFile from '../../config/getTranslation';
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
     window.checkout = await AdyenCheckout({
@@ -14,7 +13,6 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
         locale: shopperLocale,
-        translationFile: getTranslationFile(shopperLocale),
         translations: {
             'en-US': {
                 addressTown: 'Address + Town',
@@ -54,25 +52,24 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     // Adyen New Giving
     window.new_donation = new Donation(window.checkout, {
-            onDonate: (state, component) => {
-                console.log({ state, component });
-                setTimeout(() => component.setStatus('ready'), 1000);
-            },
-            amounts: {
-                currency: 'EUR',
-                values: [50, 199, 300]
-            },
-            termsAndConditionsUrl: 'https://www.adyen.com',
-            bannerUrl: '/banner.png',
-            logoUrl: '/logo.png',
-            nonprofitDescription: 'Lorem ipsum...',
-            nonprofitName: 'Test Charity',
-            nonprofitUrl: 'https://example.org',
-            onCancel(data) {
-                console.log(data);
-            }
-        })
-        .mount('.new-donation-field');
+        onDonate: (state, component) => {
+            console.log({ state, component });
+            setTimeout(() => component.setStatus('ready'), 1000);
+        },
+        amounts: {
+            currency: 'EUR',
+            values: [50, 199, 300]
+        },
+        termsAndConditionsUrl: 'https://www.adyen.com',
+        bannerUrl: '/banner.png',
+        logoUrl: '/logo.png',
+        nonprofitDescription: 'Lorem ipsum...',
+        nonprofitName: 'Test Charity',
+        nonprofitUrl: 'https://example.org',
+        onCancel(data) {
+            console.log(data);
+        }
+    }).mount('.new-donation-field');
 
     // Personal details
     window.personalDetails = new PersonalDetails(window.checkout, {

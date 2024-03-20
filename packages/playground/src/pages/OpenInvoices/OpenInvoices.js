@@ -5,7 +5,6 @@ import { handleChange, handleOnPaymentCompleted, handleOnPaymentFailed, handleSu
 import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
-import getTranslationFile from '../../config/getTranslation';
 
 window.paymentData = {};
 
@@ -25,7 +24,6 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
         clientKey: process.env.__CLIENT_KEY__,
         countryCode,
         locale: shopperLocale,
-        translationFile: getTranslationFile(shopperLocale),
         paymentMethodsResponse: paymentMethodsData,
         environment: process.env.__CLIENT_ENV__,
         onChange: handleChange,

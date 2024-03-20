@@ -13,10 +13,21 @@ const mockAddressSearch = require('./api/mock/addressSearch');
 const getDonationCampaigns = require('./api/donationCampaign');
 const createDonation = require('./api/donation');
 const paypalUpdateOrder = require('./api/paypalUpdateOrder');
+const getTranslation = require('./api/translations');
+
+// const logger = (req, res, next) => {
+//     console.log(`
+//       ${req.method}
+//       ${req.url}
+//       ${req.ip}`);
+//     next();
+// };
 
 module.exports = (app = express(), options = {}) => {
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
+
+    // app.use(logger);
 
     app.use((req, res, next) => {
         res.header('Access-Control-Allow-Origin', '*');
@@ -47,6 +58,20 @@ module.exports = (app = express(), options = {}) => {
     app.all('/donationCampaigns', (req, res) => getDonationCampaigns(res, req.body));
 
     app.all('/donations', (req, res) => createDonation(res, req.body));
+
+    app.all('/translations/:adyenWebVersion/:locale.json', (req, res) => getTranslation(res, req));
+    //
+    // app.all('*', (req, res) => {
+    //     console.log('NOT FOUND');
+    //     res.status(404).send('what???');
+    // });
+
+    // app.error((err, req, res, next) => {
+    //     console.log('Error');
+    //     console.log(err);
+    //
+    //     next(err);
+    // });
 
     if (options.listen) {
         const port = process.env.PORT || 3020;

@@ -4,13 +4,11 @@ import '../../../config/polyfills';
 import '../../style.scss';
 import { makeDetailsCall } from '../../services';
 import { shopperLocale, countryCode } from '../../config/commonConfig';
-import getTranslationFile from '../../config/getTranslation';
 
 (async () => {
     const checkout = await AdyenCheckout({
         countryCode,
         locale: shopperLocale,
-        translationFile: getTranslationFile(shopperLocale),
         environment: 'test',
         clientKey: process.env.__CLIENT_KEY__,
 

@@ -134,6 +134,19 @@ module.exports = {
         https: httpsConfig,
         hot: true,
         compress: true,
+        // proxy: {
+        //     '/checkoutshopper': {
+        //         target: 'http://localhost:3020/',
+        //         changeOrigin: true,
+        //         logger: console
+        //     }
+        // https://checkoutshopper-test.adyen.com/checkoutshopper/translations/6.0.0-alpha.3/pt-BR.json
+        // context: ['https://checkoutshopper-test.adyen.com/**'],
+        // context: ['/checkoutshopper/translations/'],
+        // target: 'http://localhost:3020/',
+        // changeOrigin: true,
+        // logger: console
+        // },
         onBeforeSetupMiddleware: devServer => {
             if (!devServer) {
                 throw new Error('webpack-dev-server is not defined');

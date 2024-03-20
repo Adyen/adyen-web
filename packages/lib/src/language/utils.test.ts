@@ -1,6 +1,6 @@
 import { formatCustomTranslations, formatLocale, getTranslation, interpolateElement, matchLocale, parseLocale } from './utils';
 import { createElement } from 'preact';
-import { SUPPORTED_LOCALES } from './config';
+import { SUPPORTED_LOCALES } from './constants';
 
 describe('parseLocale()', () => {
     test('should return the passed locale if formatted properly', () => {

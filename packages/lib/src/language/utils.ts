@@ -1,4 +1,4 @@
-import { DEFAULT_LOCALE } from './config';
+import { DEFAULT_LOCALE } from './constants';
 import { h } from 'preact';
 import { CustomTranslations } from './types';
 

@@ -2,7 +2,6 @@ import { AdyenCheckout, Dropin, Card, WeChat, Giftcard, PayPal, Ach, GooglePay, 
 import '@adyen/adyen-web/styles/adyen.css';
 import { createSession } from '../../services';
 import { amount, shopperLocale, shopperReference, countryCode, returnUrl } from '../../config/commonConfig';
-import getTranslationFile from '../../config/getTranslation';
 import { handleOnPaymentCompleted, handleOnPaymentFailed } from '../../handlers';
 
 export async function initSession() {
@@ -22,7 +21,6 @@ export async function initSession() {
         clientKey: process.env.__CLIENT_KEY__,
 
         session,
-        translationFile: getTranslationFile(shopperLocale),
 
         // Events
         beforeSubmit: (data, component, actions) => {
