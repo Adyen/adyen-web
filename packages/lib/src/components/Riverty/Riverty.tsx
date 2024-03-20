@@ -10,9 +10,10 @@ import {
 import ConsentCheckboxLabel from '../internal/ConsentCheckboxLabel';
 import { getConsentUrl } from '../../utils/getConsentUrl';
 import type { OpenInvoiceConfiguration } from '../helpers/OpenInvoiceContainer/types';
+import { TxVariants } from '../tx-variants';
 
 export default class Riverty extends OpenInvoiceContainer {
-    public static readonly type = 'riverty';
+    public static readonly type = TxVariants.riverty;
 
     protected static defaultProps = {
         personalDetailsRequiredFields,
