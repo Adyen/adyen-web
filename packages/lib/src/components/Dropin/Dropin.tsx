@@ -14,6 +14,7 @@ import type { DropinConfiguration, InstantPaymentTypes, PaymentMethodsConfigurat
 import type { PaymentAction, PaymentResponseData } from '../../types/global-types';
 import type { ICore } from '../../core/types';
 import type { IDropin } from './types';
+import { computed, signal } from '@preact/signals';
 
 const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay'];
 
@@ -63,10 +64,10 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         return this;
     }
 
-    public setStatus(status, props = {}): this {
-        this.dropinRef?.setStatus(status, props);
-        return this;
-    }
+    /*    public setStatus(status, props = {}): this {
+            this.dropinRef?.setStatus(status, props);
+            return this;
+        }*/
 
     get activePaymentMethod() {
         if (!this.dropinRef?.state && !this.dropinRef?.state.activePaymentMethod) {
@@ -187,6 +188,7 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
                 <SRPanelProvider srPanel={this.props.modules.srPanel}>
                     <DropinComponent
                         {...this.props}
+                        dropinStatus={this.dropinStatus}
                         core={this.core}
                         onChange={this.setState}
                         elementRef={this.elementRef}

@@ -9,6 +9,7 @@ import { sanitizeOrder } from '../../internal/UIElement/utils';
 import { PaymentAmount } from '../../../types/global-types';
 import { ANALYTICS_RENDERED_STR } from '../../../core/Analytics/constants';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
+import { effect, signal } from '@preact/signals';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
@@ -45,6 +46,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
 
     public setStatus = (status: UIElementStatus, props: DropinStatusProps = {}) => {
         this.setState({ status: { type: status, props } });
+        //todo: remove this function and pass the state
     };
 
     private setActivePaymentMethod = paymentMethod => {

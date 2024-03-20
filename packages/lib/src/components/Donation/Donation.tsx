@@ -5,13 +5,16 @@ import DonationComponent from './components/DonationComponent';
 import { TxVariants } from '../tx-variants';
 import type { ICore } from '../../core/types';
 import type { DonationConfiguration } from './types';
+import { computed, signal } from '@preact/signals';
 
 class DonationElement extends UIElement<DonationConfiguration> {
     public static type = TxVariants.donation;
+    private dropinStatus = signal({});
 
     constructor(checkout: ICore, props?: DonationConfiguration) {
         super(checkout, props);
         this.donate = this.donate.bind(this);
+        this.dropinStatus = computed(() => this.stateSignal?.value?.status);
     }
 
     public static defaultProps = {
@@ -40,6 +43,7 @@ class DonationElement extends UIElement<DonationConfiguration> {
     donate() {
         const { data, isValid } = this;
         this.props.onDonate({ data, isValid }, this);
+        this.stateSignal.value = { status: 'bla' };
     }
 
     public handleRef = ref => {
@@ -50,7 +54,13 @@ class DonationElement extends UIElement<DonationConfiguration> {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 {/*@ts-ignore ref*/}
-                <DonationComponent {...this.props} ref={this.handleRef} onChange={this.setState} onDonate={this.donate} />
+                <DonationComponent
+                    {...this.props}
+                    ref={this.handleRef}
+                    onChange={this.setState}
+                    onDonate={this.donate}
+                    dropinStatus={this.dropinStatus}
+                />
             </CoreProvider>
         );
     }

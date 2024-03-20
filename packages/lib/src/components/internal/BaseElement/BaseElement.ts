@@ -8,6 +8,7 @@ import type { BaseElementProps, IBaseElement } from './types';
 import type { PaymentData } from '../../../types/global-types';
 import { AnalyticsInitialEvent, SendAnalyticsObject } from '../../../core/Analytics/types';
 import { ANALYTICS_RENDERED_STR } from '../../../core/Analytics/constants';
+import { signal } from '@preact/signals';
 
 /**
  * Verify if the first parameter is instance of Core.
@@ -25,6 +26,9 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
 
     public props: P;
     public state: any = {};
+    protected stateSignal = signal<any>({});
+    protected dropinStatus = signal<any>({});
+
     public _component;
 
     protected _node: HTMLElement = null;
@@ -81,6 +85,7 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
 
     protected setState(newState: object): void {
         this.state = { ...this.state, ...newState };
+        //this.stateSignal.value = { ...this.stateSignal.value, ...newState };
     }
 
     /**
@@ -173,6 +178,7 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
     public update(props: Partial<P>): this {
         this.props = this.formatProps({ ...this.props, ...props });
         this.state = {};
+        this.stateSignal.value = {};
 
         return this.unmount().mount(this._node); // for new mount fny
     }

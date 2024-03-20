@@ -102,7 +102,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     public setState(newState: object): void {
-        this.state = { ...this.state, ...newState };
+        super.setState(newState);
         this.onChange();
     }
 
@@ -113,6 +113,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     public setElementStatus(status: UIElementStatus, props?: any): this {
         this.elementRef?.setStatus(status, props);
+        this.setState({ self: { status } });
         return this;
     }
 
@@ -126,7 +127,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     protected onChange(): object {
         const isValid = this.isValid;
         const state = { data: this.data, errors: this.state.errors, valid: this.state.valid, isValid };
-
         this.props.onChange?.(state, this.elementRef);
 
         return state;
@@ -345,7 +345,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         if (assertIsDropin(this.elementRef)) {
             this.elementRef.displayFinalAnimation('error');
         }
-
         cleanupFinalResult(result);
         this.props.onPaymentFailed?.(result, this.elementRef);
     };
@@ -367,7 +366,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      */
     protected handleResponse(rawResponse: RawPaymentResponse): void {
         const response = sanitizeResponse(rawResponse);
-
+        this.dropinStatus.value = { status: 'success' };
         if (response.action) {
             this.elementRef.handleAction(response.action);
             return;
