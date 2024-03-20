@@ -9,6 +9,7 @@ import './UPIComponent.scss';
 import isMobile from '../../../../utils/isMobile';
 import useImage from '../../../../core/Context/useImage';
 import { PayButtonFunctionProps, UIElementStatus } from '../../../internal/UIElement/types';
+import { Status } from '../../../internal/BaseElement/types';
 
 type OnChangeProps = { data: VpaInputDataState; valid; errors; isValid: boolean };
 
@@ -36,7 +37,7 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
     const { i18n } = useCoreContext();
     const getImage = useImage();
     const [vpaInputHandlers, setVpaInputHandlers] = useState<VpaInputHandlers>(null);
-    const [status, setStatus] = useState<UIElementStatus>('ready');
+    const [status, setStatus] = useState<UIElementStatus>(Status.Ready);
     const [mode, setMode] = useState<UpiMode>(defaultMode);
 
     this.setStatus = (status: UIElementStatus) => {
@@ -66,7 +67,7 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
             <SegmentedControl
                 onChange={onChangeUpiMode}
                 selectedValue={mode}
-                disabled={status === 'loading'}
+                disabled={status === Status.Loading}
                 classNameModifiers={['upi-margin-bottom']}
                 options={[
                     {
@@ -92,7 +93,7 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
 
             {mode === 'vpa' ? (
                 <div id={A11Y.AreaId.VPA} aria-labelledby={A11Y.ButtonId.VPA} role="region">
-                    <VpaInput disabled={status === 'loading'} onChange={onChange} onSetInputHandlers={onSetVpaInputHandlers} />
+                    <VpaInput disabled={status === Status.Loading} onChange={onChange} onSetInputHandlers={onSetVpaInputHandlers} />
 
                     {showPayButton &&
                         payButton({

@@ -6,6 +6,7 @@ import './MBWayInput.scss';
 import PhoneInput from '../../../internal/PhoneInput';
 import LoadingWrapper from '../../../internal/LoadingWrapper';
 import usePhonePrefixes from '../../../internal/PhoneInput/usePhonePrefixes';
+import { Status } from '../../../internal/BaseElement/types';
 
 function MBWayInput(props: MBWayInputProps) {
     const { i18n, loadingContext } = useCoreContext();
@@ -14,7 +15,7 @@ function MBWayInput(props: MBWayInputProps) {
 
     const { allowedCountries = [] } = props;
 
-    const [status, setStatus] = useState<string>('ready');
+    const [status, setStatus] = useState<string>(Status.Ready);
 
     this.setStatus = setStatus;
     this.showValidation = phoneInputRef?.current?.triggerValidation;

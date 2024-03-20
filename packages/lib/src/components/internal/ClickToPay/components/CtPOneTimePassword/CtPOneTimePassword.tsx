@@ -9,6 +9,7 @@ import CtPSection from '../CtPSection';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
 import './CtPOneTimePassword.scss';
 import CtPSaveCookiesCheckbox from './CtPSaveCookiesCheckbox';
+import { Status } from '../../../BaseElement/types';
 
 type CtPOneTimePasswordProps = {
     onDisplayCardComponent?(): void;
@@ -89,7 +90,7 @@ const CtPOneTimePassword = ({ onDisplayCardComponent }: CtPOneTimePasswordProps)
                 label={i18n.get('continue')}
                 variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'}
                 onClick={onSubmitPassword}
-                status={isValidatingOtp && 'loading'}
+                status={isValidatingOtp && Status.Loading}
             />
         </Fragment>
     );

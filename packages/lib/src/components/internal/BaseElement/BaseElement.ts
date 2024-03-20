@@ -4,10 +4,11 @@ import uuid from '../../../utils/uuid';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 
 import type { ICore } from '../../../core/types';
-import type { BaseElementProps, IBaseElement } from './types';
+import { BaseElementProps, IBaseElement, State, Status } from './types';
 import type { PaymentData } from '../../../types/global-types';
 import { AnalyticsInitialEvent, SendAnalyticsObject } from '../../../core/Analytics/types';
 import { ANALYTICS_RENDERED_STR } from '../../../core/Analytics/constants';
+import { signal } from '@preact/signals';
 
 /**
  * Verify if the first parameter is instance of Core.
@@ -24,7 +25,16 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
     public readonly _id = `${this.constructor['type']}-${uuid()}`;
 
     public props: P;
-    public state: any = {};
+    // todo: replace state with _state
+    // todo: remove component ref
+    // State is reactive
+    public state: any = {
+        status: signal<Status>(Status.Ready),
+        isValid: signal<boolean>(true),
+        props: signal<any>({ component: null }),
+        data: {}
+    };
+
     public _component;
 
     protected _node: HTMLElement = null;
@@ -79,8 +89,18 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
         return null;
     }
 
-    protected setState(newState: object): void {
-        this.state = { ...this.state, ...newState };
+    protected setState(newState: State): void {
+        const { status, isValid, props, ...rest } = newState;
+        this.state = { ...this.state, ...rest };
+        if (status && status !== this.state.status.value) {
+            this.state.status.value = status;
+        }
+        if (isValid != null) {
+            this.state.isValid.value = isValid;
+        }
+        if (props) {
+            this.state.props.value = { ...props };
+        }
     }
 
     /**

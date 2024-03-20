@@ -1,6 +1,6 @@
 import { Component, h } from 'preact';
 import PaymentMethodList from './PaymentMethod/PaymentMethodList';
-import Status from './status';
+import FinalStatus from './status';
 import getOrderStatus from '../../../core/Services/order-status';
 import { DropinComponentProps, DropinComponentState, DropinStatusProps, onOrderCancelData } from '../types';
 import './DropinComponent.scss';
@@ -9,6 +9,8 @@ import { sanitizeOrder } from '../../internal/UIElement/utils';
 import { PaymentAmount } from '../../../types/global-types';
 import { ANALYTICS_RENDERED_STR } from '../../../core/Analytics/constants';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
+import { Status } from '../../internal/BaseElement/types';
+import { computed } from '@preact/signals';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
@@ -17,7 +19,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         storedPaymentElements: [],
         orderStatus: null,
         isDisabling: false,
-        status: { type: 'loading', props: undefined },
+        status: { type: Status.Loading, props: undefined },
         activePaymentMethod: null,
         cachedPaymentMethods: {}
     };
@@ -34,7 +36,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         Promise.all([storedElementsPromises, elementsPromises, instantPaymentsPromises, orderStatusPromise]).then(
             ([storedPaymentElements, elements, instantPaymentElements, orderStatus]) => {
                 this.setState({ instantPaymentElements, elements, storedPaymentElements, orderStatus });
-                this.setStatus('ready');
+                this.setStatus(Status.Ready);
 
                 this.props.modules?.analytics.sendAnalytics('dropin', { type: ANALYTICS_RENDERED_STR });
             }
@@ -59,7 +61,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
             this.state.activePaymentMethod.setStatus(this.state.status.type);
         }
 
-        if (this.state.status.type === 'ready' && prevState.status.type !== 'ready' && this.props.onReady) {
+        if (this.state.status.type === Status.Ready && prevState.status.type !== Status.Ready && this.props.onReady) {
             this.props.onReady();
         }
     }
@@ -126,25 +128,31 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
     private onOrderCancel: (data: onOrderCancelData) => void;
 
     render(props, { elements, instantPaymentElements, storedPaymentElements, status, activePaymentMethod, cachedPaymentMethods }) {
-        const isLoading = status.type === 'loading';
-        const isRedirecting = status.type === 'redirect';
+        const paymentStatus = computed(() => props.state.status.value);
+        const isLoading = computed(() => paymentStatus.value === Status.Loading);
+        const isRedirecting = computed(() => paymentStatus.value === Status.Redirect);
+
+        const next = computed(() => props.state.props.value.component);
         const hasPaymentMethodsToBeDisplayed = elements?.length || instantPaymentElements?.length || storedPaymentElements?.length;
 
-        switch (status.type) {
+        if (next.value) {
+            return next.value.render();
+        }
+
+        switch (paymentStatus.value) {
             case 'success':
-                return <Status.Success message={props?.amount?.value === 0 ? 'resultMessages.preauthorized' : status.props?.message} />;
+                return (
+                    !props.disableFinalAnimation && (
+                        <FinalStatus.Success message={props?.amount?.value === 0 ? 'resultMessages.preauthorized' : status.props?.message} />
+                    )
+                );
 
             case 'error':
-                return <Status.Error message={status.props?.message} />;
-
-            case 'custom':
-                return status.props?.component?.render();
+                return !props.disableFinalAnimation && <FinalStatus.Error message={status.props?.message} />;
 
             default:
                 return (
                     <div className={`adyen-checkout__dropin adyen-checkout__dropin--${status.type}`}>
-                        {isRedirecting && status.props.component && status.props.component.render()}
-                        {isLoading && status.props && status.props.component && status.props.component.render()}
                         {hasPaymentMethodsToBeDisplayed && (
                             <PaymentMethodList
                                 isLoading={isLoading || isRedirecting}

@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import { useMemo } from 'preact/hooks';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
 import './CtPLogoutLink.scss';
+import { Status } from '../../../BaseElement/types';
 
 const CtPLogoutLink = () => {
     const { ctpState, logoutShopper, status, cards } = useClickToPayContext();
@@ -26,7 +27,7 @@ const CtPLogoutLink = () => {
             role="button"
             tabIndex={0}
             className={classnames('adyen-checkout-ctp__section-logout-button', {
-                'adyen-checkout-ctp__section-logout-button--disabled': status === 'loading'
+                'adyen-checkout-ctp__section-logout-button--disabled': status === Status.Loading
             })}
             onClick={logoutShopper}
         >

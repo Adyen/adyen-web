@@ -120,9 +120,11 @@ export interface DropinComponentProps extends DropinConfiguration {
     onCreateElements: any;
     onChange: (newState?: object) => void;
     onOrderCancel?: onOrderCancelType;
+    //status?: Signal<Status>;
+    state: any;
 }
 
-interface DropinStatus {
+export interface DropinStatus {
     type: UIElementStatus;
     props?: DropinStatusProps;
 }
@@ -149,7 +151,7 @@ export interface IDropin {
      * @internal
      * @param type - animation type
      */
-    displayFinalAnimation(type: 'success' | 'error'): void;
+    //displayFinalAnimation(type: 'success' | 'error'): void;
     activePaymentMethod: () => null;
     closeActivePaymentMethod: () => void;
 }

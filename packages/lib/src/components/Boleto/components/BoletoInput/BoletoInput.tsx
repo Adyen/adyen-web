@@ -10,6 +10,7 @@ import useForm from '../../../../utils/useForm';
 import { BrazilPersonalDetail } from '../../../internal/SocialSecurityNumberBrazil/BrazilPersonalDetail';
 import FormInstruction from '../../../internal/FormInstruction';
 import { ComponentMethodsRef } from '../../../internal/UIElement/types';
+import { Status } from '../../../internal/BaseElement/types';
 
 interface BoletoInputProps {
     onChange(data: any): void;
@@ -51,7 +52,7 @@ function BoletoInput(props: BoletoInputProps) {
         setErrors('billingAddress', address.errors);
     };
 
-    const [status, setStatus] = useState('ready');
+    const [status, setStatus] = useState(Status.Ready);
 
     /** An object by which to expose 'public' members to the parent UIElement */
     const boletoRef = useRef<ComponentMethodsRef>({});

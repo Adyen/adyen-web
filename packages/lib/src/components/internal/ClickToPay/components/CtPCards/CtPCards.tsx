@@ -16,6 +16,7 @@ import isMobile from '../../../../../utils/isMobile';
 import Language from '../../../../../language';
 import { PaymentAmount } from '../../../../../types/global-types';
 import './CtPCards.scss';
+import { Status } from '../../../BaseElement/types';
 
 type CtPCardsProps = {
     onDisplayCardComponent?(): void;
@@ -59,7 +60,7 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
         try {
             setIsShopperCheckingOutWithCtp(true);
             setErrorCode(null);
-            onSetStatus('loading');
+            onSetStatus(Status.Loading);
             const payload = await checkout(checkoutCard);
             onSubmit(payload);
         } catch (error) {
@@ -83,8 +84,8 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
      * Therefore, we use the flag 'isShopperCheckingOutWithCtp' to flag that the iframe should be displayed only in case the
      * Shopper is checking out with Click to Pay.
      */
-    const displayNetworkDcf = isShopperCheckingOutWithCtp && status === 'loading' && checkoutCard?.isDcfPopupEmbedded;
-    const displayCardCheckoutView = status !== 'loading' || !displayNetworkDcf;
+    const displayNetworkDcf = isShopperCheckingOutWithCtp && status === Status.Loading && checkoutCard?.isDcfPopupEmbedded;
+    const displayCardCheckoutView = status !== Status.Loading || !displayNetworkDcf;
 
     return (
         <Fragment>

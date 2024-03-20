@@ -8,6 +8,7 @@ import ChangePaymentDetailsButton from './ChangePaymentDetailsButton';
 import OrderButton from './OrderButton';
 import SignOutButton from './SignOutButton';
 import Script from '../../../utils/Script';
+import { Status } from '../../internal/BaseElement/types';
 
 export default function AmazonPayComponent(props: AmazonPayComponentProps) {
     const [status, setStatus] = useState('pending');
@@ -15,7 +16,7 @@ export default function AmazonPayComponent(props: AmazonPayComponentProps) {
     const orderButtonRef = useRef(null);
 
     const handleLoad = () => {
-        setStatus('ready');
+        setStatus(Status.Ready);
     };
 
     this.getSubmitFunction = () => {

@@ -10,6 +10,7 @@ import Select from '../../../internal/FormFields/Select';
 import useImage from '../../../../core/Context/useImage';
 import { validationRules } from '../../../../utils/Validator/defaultRules';
 import { getErrorMessage } from '../../../../utils/getErrorMessage';
+import { Status } from '../../../internal/BaseElement/types';
 
 export default function DragonpayInput(props: DragonpayInputProps) {
     const { i18n } = useCoreContext();
@@ -49,7 +50,7 @@ export default function DragonpayInput(props: DragonpayInputProps) {
         props.onChange({ isValid, data, valid, errors });
     }, [isValid, data, valid, errors]);
 
-    const [status, setStatus] = useState('ready');
+    const [status, setStatus] = useState(Status.Ready);
     this.setStatus = setStatus;
     this.showValidation = triggerValidation;
 

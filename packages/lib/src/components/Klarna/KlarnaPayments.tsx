@@ -7,6 +7,7 @@ import { KlarnaContainer } from './components/KlarnaContainer/KlarnaContainer';
 import { PaymentAction } from '../../types/global-types';
 import { TxVariants } from '../tx-variants';
 import type { ICore } from '../../core/types';
+import { Status } from '../internal/BaseElement/types';
 
 class KlarnaPayments extends UIElement<KlarnConfiguration> {
     public static type = TxVariants.klarna;
@@ -48,7 +49,7 @@ class KlarnaPayments extends UIElement<KlarnConfiguration> {
 
     onLoaded() {
         // When action/widget is loaded, set the 'drop-in' back to ready
-        this.setElementStatus('ready');
+        this.setElementStatus(Status.Ready);
     }
 
     render() {

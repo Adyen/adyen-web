@@ -7,6 +7,7 @@ import { PaymentAmount } from '../../../types/global-types';
 import { GIFT_CARD } from '../../internal/SecuredFields/lib/configuration/constants';
 import { GiftCardFields } from './GiftcardFields';
 import { GiftcardFieldsProps, Placeholders } from './types';
+import { Status } from '../../internal/BaseElement/types';
 
 interface GiftcardComponentProps {
     onChange: (state) => void;
@@ -27,7 +28,7 @@ interface GiftcardComponentProps {
 
 class Giftcard extends Component<GiftcardComponentProps> {
     public state = {
-        status: 'ready',
+        status: Status.Ready,
         data: {},
         balance: null,
         transactionLimit: null,
@@ -90,10 +91,13 @@ class Giftcard extends Component<GiftcardComponentProps> {
             if (sfpState.errors.encryptedCardNumber) return i18n.get(sfpState.errors.encryptedCardNumber);
 
             switch (this.state.status) {
+                // @ts-ignore bla
                 case 'no-balance':
                     return i18n.get('error.giftcard.no-balance');
+                // @ts-ignore bla
                 case 'card-error':
                     return i18n.get('error.giftcard.card-error');
+                // @ts-ignore bla
                 case 'currency-error':
                     return i18n.get('error.giftcard.currency-error');
                 default:

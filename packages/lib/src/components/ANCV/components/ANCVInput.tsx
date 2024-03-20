@@ -8,6 +8,7 @@ import useForm from '../../../utils/useForm';
 import { ancvValidationRules } from '../validate';
 import { ANCVDataState } from '../types';
 import { UIElementProps } from '../../internal/UIElement/types';
+import { Status } from '../../internal/BaseElement/types';
 
 export interface ANCVInputProps extends UIElementProps {
     ref?: any;
@@ -29,7 +30,7 @@ function ANCVInput({ showPayButton, payButton, onChange, onSubmit }: ANCVInputPr
         onChange({ data, errors, valid, isValid }, this);
     }, [data, valid, errors, isValid]);
 
-    const [status, setStatus] = useState<string>('ready');
+    const [status, setStatus] = useState<Status>(Status.Ready);
 
     this.setStatus = setStatus;
     this.showValidation = triggerValidation;

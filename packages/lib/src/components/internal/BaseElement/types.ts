@@ -5,6 +5,24 @@ import { Resources } from '../../../core/Context/Resources';
 import RiskElement from '../../../core/RiskModule';
 import { ComponentChild } from 'preact';
 
+// Element / Component status
+// todo: there are more, to be discovered
+export enum Status {
+    Ready = 'ready',
+    Loading = 'loading',
+    Success = 'success',
+    Error = 'error',
+    Redirect = 'redirect'
+}
+
+export interface State {
+    status?: Status;
+    isValid?: boolean;
+    data?: object;
+    props?: any;
+    [key: string]: any; // todo: this should be updated once we check all the pms
+}
+
 export interface BaseElementProps {
     order?: Order;
     modules?: {
@@ -18,7 +36,7 @@ export interface BaseElementProps {
 
 export interface IBaseElement {
     data: object;
-    state: any;
+    state: State; // todo: state also contains data ...
     props: any;
     _id: string;
     _component: any;

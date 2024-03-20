@@ -1,4 +1,3 @@
-import { UIElementStatus } from './types';
 import { RawPaymentResponse, PaymentResponseData, Order } from '../../../types/global-types';
 import { IDropin } from '../../Dropin/types';
 
@@ -36,7 +35,7 @@ export function cleanupFinalResult(paymentResponse?: PaymentResponseData): void 
     }
 }
 
-export function resolveFinalResult(result: PaymentResponseData): [status: UIElementStatus, statusProps?: any] {
+/*export function resolveFinalResult(result: PaymentResponseData): [status: UIElementStatus, statusProps?: any] {
     switch (result.resultCode) {
         case 'Authorised':
         case 'Received':
@@ -49,7 +48,7 @@ export function resolveFinalResult(result: PaymentResponseData): [status: UIElem
             return ['error'];
         default:
     }
-}
+}*/
 
 export function verifyPaymentDidNotFail(response: PaymentResponseData): Promise<PaymentResponseData> {
     if (['Cancelled', 'Error', 'Refused'].includes(response.resultCode)) {

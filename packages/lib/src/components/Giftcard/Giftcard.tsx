@@ -5,8 +5,9 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import PayButton from '../internal/PayButton';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { PaymentAmount } from '../../types//global-types';
-import { GiftCardElementData, GiftCardConfiguration } from './types';
+import { GiftCardConfiguration, GiftCardElementData } from './types';
 import { TxVariants } from '../tx-variants';
+import { Status } from '../internal/BaseElement/types';
 
 export class GiftcardElement extends UIElement<GiftCardConfiguration> {
     public static type = TxVariants.giftcard;
@@ -82,7 +83,7 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
             return false;
         }
 
-        this.setStatus('loading');
+        this.setStatus(Status.Loading);
 
         this.handleBalanceCheck(this.formatData())
             .then(({ balance, transactionLimit = {} as PaymentAmount }) => {

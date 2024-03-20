@@ -5,6 +5,7 @@ import { ButtonProps } from '../Button/types';
 import { payAmountLabel, secondaryAmountLabel } from './utils';
 import { PaymentAmountExtended } from '../../../types/global-types';
 import SecondaryButtonLabel from './components/SecondaryButtonLabel';
+import { Status } from '../BaseElement/types';
 
 export interface PayButtonProps extends ButtonProps {
     /**
@@ -40,7 +41,7 @@ const PayButton = ({ amount, secondaryAmount, classNameModifiers = [], label, ..
     return (
         <Button
             {...props}
-            disabled={props.disabled || props.status === 'loading'}
+            disabled={props.disabled || props.status === Status.Loading}
             classNameModifiers={[...classNameModifiers, 'pay']}
             label={label || defaultLabel}
         >

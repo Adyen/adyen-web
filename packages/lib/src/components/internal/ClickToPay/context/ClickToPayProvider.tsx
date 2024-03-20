@@ -8,6 +8,7 @@ import { ClickToPayProps } from '../types';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
 import { PaymentAmount } from '../../../../types/global-types';
 import { UIElementStatus } from '../../UIElement/types';
+import { Status } from '../../BaseElement/types';
 
 type ClickToPayProviderRef = {
     setStatus?(status: UIElementStatus): void;
@@ -39,7 +40,7 @@ const ClickToPayProvider = ({
     const [ctpService] = useState<IClickToPayService | null>(clickToPayService);
     const [ctpState, setCtpState] = useState<CtpState>(clickToPayService?.state || CtpState.NotAvailable);
     const [isCtpPrimaryPaymentMethod, setIsCtpPrimaryPaymentMethod] = useState<boolean>(true);
-    const [status, setStatus] = useState<UIElementStatus>('ready');
+    const [status, setStatus] = useState<UIElementStatus>(Status.Ready);
     const clickToPayRef = useRef<ClickToPayProviderRef>({});
     const isOnReadyInvoked = useRef<boolean>(false);
 

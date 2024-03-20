@@ -4,6 +4,7 @@ import Spinner from '../Spinner';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import './Button.scss';
 import { ButtonProps, ButtonState } from './types';
+import { Status } from '../BaseElement/types';
 
 class Button extends Component<ButtonProps, ButtonState> {
     public static defaultProps = {
@@ -41,7 +42,7 @@ class Button extends Component<ButtonProps, ButtonState> {
             ...(variant !== 'primary' ? [variant] : []),
             ...(inline ? ['inline'] : []),
             ...(completed ? ['completed'] : []),
-            ...(status === 'loading' || status === 'redirect' ? ['loading'] : [])
+            ...(status === Status.Loading || status === 'redirect' ? ['loading'] : [])
         ];
 
         const buttonClasses = classNames(['adyen-checkout__button', ...modifiers.map(m => `adyen-checkout__button--${m}`)]);
@@ -75,7 +76,7 @@ class Button extends Component<ButtonProps, ButtonState> {
         return (
             <button className={buttonClasses} type="button" disabled={disabled} onClick={this.onClick}>
                 {buttonText}
-                {status !== 'loading' && status !== 'redirect' && this.props.children}
+                {status !== Status.Loading && status !== 'redirect' && this.props.children}
             </button>
         );
     }

@@ -1,4 +1,5 @@
 import { CampaignContentProps } from './CampaignContent';
+import { Signal } from '@preact/signals';
 
 interface DonationAmounts {
     currency: string;
@@ -17,6 +18,7 @@ export interface DonationComponentProps extends CampaignContentProps {
     termsAndConditionsUrl?: string;
     causeName?: string;
     showCancelButton?: boolean;
+    status?: Signal<string>;
     onDonate: (payload: DonationPayload) => void;
     onCancel?: (payload: DonationPayload) => void;
     onChange?: (payload: DonationPayload) => void;

@@ -10,12 +10,13 @@ import PaymentMethodBrands from '../PaymentMethodBrands/PaymentMethodBrands';
 import { BRAND_ICON_UI_EXCLUSION_LIST } from '../../../../internal/SecuredFields/lib/configuration/constants';
 import PaymentMethodName from '../PaymentMethodName';
 import { ExpandButton } from './ExpandButton';
+import { signal, Signal } from '@preact/signals';
 
 interface PaymentMethodItemProps {
     paymentMethod: UIElement;
     isSelected: boolean;
     isLoaded: boolean;
-    isLoading: boolean;
+    isLoading: Signal<boolean>;
     isDisablingPaymentMethod: boolean;
     showRemovePaymentMethodButton: boolean;
     onDisableStoredPaymentMethod: (paymentMethod) => void;
@@ -30,7 +31,7 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
         paymentMethod: null,
         isSelected: false,
         isLoaded: false,
-        isLoading: false,
+        isLoading: signal(false),
         showDisableStoredPaymentMethodConfirmation: false,
         showRadioButton: false
     };
@@ -68,7 +69,7 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
             [`adyen-checkout__payment-method--${paymentMethod.props.type}`]: true,
             ...(isCard && { [`adyen-checkout__payment-method--${paymentMethod.props.fundingSource ?? 'credit'}`]: true }),
             'adyen-checkout__payment-method--selected': isSelected,
-            'adyen-checkout__payment-method--loading': isLoading,
+            'adyen-checkout__payment-method--loading': isLoading.value,
             'adyen-checkout__payment-method--disabling': isDisablingPaymentMethod,
             'adyen-checkout__payment-method--confirming': this.state.showDisableStoredPaymentMethodConfirmation,
             'adyen-checkout__payment-method--standalone': standalone,

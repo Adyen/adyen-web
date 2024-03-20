@@ -8,6 +8,7 @@ import { digitsOnlyFormatter } from '../../../utils/Formatters/formatters';
 import useImage from '../../../core/Context/useImage';
 import InputText from '../../internal/FormFields/InputText';
 import { UIElementProps } from '../../internal/UIElement/types';
+import { Status } from '../../internal/BaseElement/types';
 
 interface BlikInputProps extends UIElementProps {
     data?: BlikInputDataState;
@@ -39,7 +40,7 @@ function BlikInput(props: BlikInputProps) {
         props.onChange({ data, errors, valid, isValid }, this);
     }, [data, valid, errors, isValid]);
 
-    const [status, setStatus] = useState('ready');
+    const [status, setStatus] = useState(Status.Ready);
     this.setStatus = setStatus;
     this.showValidation = triggerValidation;
 

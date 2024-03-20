@@ -15,6 +15,7 @@ import StoreDetails from '../../../internal/StoreDetails';
 import InputText from '../../../internal/FormFields/InputText';
 import FormInstruction from '../../../internal/FormInstruction';
 import { ComponentMethodsRef } from '../../../internal/UIElement/types';
+import { Status } from '../../../internal/BaseElement/types';
 
 function validateHolderName(holderName, holderNameRequired = false) {
     if (holderNameRequired) {
@@ -89,7 +90,7 @@ function AchInput(props: ACHInputProps) {
         billingAddressRef.current = ref;
     };
 
-    const [status, setStatus] = useState('ready');
+    const [status, setStatus] = useState(Status.Ready);
 
     /** An object by which to expose 'public' members to the parent UIElement */
     const achRef = useRef<ComponentMethodsRef>({});

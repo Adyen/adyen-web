@@ -3,9 +3,10 @@ import getDataset from '../../../core/Services/get-dataset';
 import { DataSet } from '../../../core/Services/data-set';
 import { PhonePrefixes } from './types';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
+import { Status } from '../BaseElement/types';
 
 function usePhonePrefixes({ allowedCountries, loadingContext, handleError }): PhonePrefixes {
-    const [loadingStatus, setLoadingStatus] = useState<string>('loading');
+    const [loadingStatus, setLoadingStatus] = useState<string>(Status.Loading);
     const [phonePrefixes, setPhonePrefixes] = useState<DataSet>([]);
 
     useLayoutEffect(() => {
@@ -27,11 +28,11 @@ function usePhonePrefixes({ allowedCountries, loadingContext, handleError }): Ph
                 });
 
                 setPhonePrefixes(mappedCountries || []);
-                setLoadingStatus('ready');
+                setLoadingStatus(Status.Ready);
             })
             .catch(error => {
                 setPhonePrefixes([]);
-                setLoadingStatus('ready');
+                setLoadingStatus(Status.Ready);
                 handleError?.(new AdyenCheckoutError('ERROR', error));
             });
     }, []);

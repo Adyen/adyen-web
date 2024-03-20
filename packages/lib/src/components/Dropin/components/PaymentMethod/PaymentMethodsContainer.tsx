@@ -5,6 +5,7 @@ import { useMemo } from 'preact/hooks';
 import uuid from '../../../../utils/uuid';
 import classNames from 'classnames';
 import UIElement from '../../../internal/UIElement';
+import { Signal } from '@preact/signals';
 
 export interface PaymentMethodsContainerProps {
     label: string;
@@ -19,7 +20,7 @@ export interface PaymentMethodsContainerProps {
     onSelect?: (paymentMethod: UIElement) => void;
     onDisableStoredPaymentMethod?: (storedPaymentMethod) => void;
     isDisablingPaymentMethod?: boolean;
-    isLoading: boolean;
+    isLoading: Signal<boolean>;
     showRadioButton?: boolean;
 }
 
@@ -29,7 +30,7 @@ function PaymentMethodsContainer({
     paymentMethods = [],
     activePaymentMethod = null,
     cachedPaymentMethods = {},
-    isLoading = false,
+    isLoading,
     isDisablingPaymentMethod = false,
     showRemovePaymentMethodButton,
     onDisableStoredPaymentMethod = () => {},
@@ -40,7 +41,7 @@ function PaymentMethodsContainer({
     const selectListId: string = useMemo(() => `select-${uuid()}`, []);
     const paymentMethodListClassnames = classNames([
         'adyen-checkout__payment-methods-list',
-        { 'adyen-checkout__payment-methods-list--loading': isLoading },
+        { 'adyen-checkout__payment-methods-list--loading': isLoading.value },
         ...classNameModifiers.map(m => `adyen-checkout__payment-methods-list--${m}`)
     ]);
 

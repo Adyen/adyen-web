@@ -13,6 +13,7 @@ import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../
 import type { AddressData, PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
 import type { GooglePayConfiguration } from './types';
 import type { ICore } from '../../core/types';
+import { Status } from '../internal/BaseElement/types';
 
 class GooglePay extends UIElement<GooglePayConfiguration> {
     public static type = TxVariants.googlepay;
@@ -123,7 +124,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
                     this.handleResponse(paymentResponse);
                 })
                 .catch((paymentResponse?: RawPaymentResponse) => {
-                    this.setElementStatus('ready');
+                    this.setElementStatus(Status.Ready);
 
                     const googlePayError = paymentResponse?.error?.googlePayError;
                     const fallbackMessage = this.props.i18n.get('error.subtitle.payment');

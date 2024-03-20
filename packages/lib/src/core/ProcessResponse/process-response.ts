@@ -1,4 +1,5 @@
 import { PaymentResponseData, ProcessedResponse } from '../../types/global-types';
+import { Status } from '../../components/internal/BaseElement/types';
 
 /**
  * Processes a complete response from Adyen by resultCode
@@ -17,9 +18,9 @@ const processCompleteResponse = (response: PaymentResponseData): ProcessedRespon
         case 'received':
             return { type: response.resultCode.toLowerCase(), props: response };
         case 'authorised':
-            return { type: 'success', props: response };
+            return { type: Status.Success, props: response };
         default:
-            return { type: 'success', props: response };
+            return { type: Status.Success, props: response };
     }
 };
 

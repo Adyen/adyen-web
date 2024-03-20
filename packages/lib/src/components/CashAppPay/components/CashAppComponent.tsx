@@ -7,6 +7,7 @@ import { CashAppPayEventData } from '../types';
 import StoreDetails from '../../internal/StoreDetails';
 import './CashAppComponent.scss';
 import { UIElementStatus } from '../../internal/UIElement/types';
+import { Status } from '../../internal/BaseElement/types';
 
 interface CashAppComponentProps {
     enableStoreDetails?: boolean;
@@ -27,7 +28,7 @@ export function CashAppComponent({
     onError
 }: CashAppComponentProps): h.JSX.Element {
     const cashAppRef = useRef<HTMLDivElement>(null);
-    const [status, setStatus] = useState<UIElementStatus>('loading');
+    const [status, setStatus] = useState<UIElementStatus>(Status.Loading);
     const subscriptions = useRef<Function[]>([]);
     const [storePaymentMethod, setStorePaymentMethod] = useState<boolean>(false);
 
@@ -64,7 +65,7 @@ export function CashAppComponent({
 
             await cashAppService.renderButton(cashAppRef.current);
 
-            setStatus('ready');
+            setStatus(Status.Ready);
         } catch (error) {
             onError(error);
         }
@@ -86,9 +87,9 @@ export function CashAppComponent({
     }, [cashAppService, initializeCashAppSdk]);
 
     return (
-        <div className="adyen-checkout__cashapp" aria-live="polite" aria-busy={status === 'loading'}>
-            {status === 'loading' && <Spinner />}
-            {status !== 'loading' && enableStoreDetails && <StoreDetails storeDetails={storePaymentMethod} onChange={setStorePaymentMethod} />}
+        <div className="adyen-checkout__cashapp" aria-live="polite" aria-busy={status === Status.Loading}>
+            {status === Status.Loading && <Spinner />}
+            {status !== Status.Loading && enableStoreDetails && <StoreDetails storeDetails={storePaymentMethod} onChange={setStorePaymentMethod} />}
 
             {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
             <div onClick={onClick} className={'adyen-checkout__cashapp-button'} ref={cashAppRef}></div>

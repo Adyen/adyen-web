@@ -13,6 +13,7 @@ import './Await.scss';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import ContentSeparator from '../ContentSeparator';
 import useImage from '../../../core/Context/useImage';
+import { Status } from '../BaseElement/types';
 
 function Await(props: AwaitComponentProps) {
     const { i18n, loadingContext } = useCoreContext();
@@ -94,7 +95,7 @@ function Await(props: AwaitComponentProps) {
             }))
             .then((status: StatusObject) => {
                 switch (status.type) {
-                    case 'success':
+                    case Status.Success:
                         onComplete(status);
                         break;
 

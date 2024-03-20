@@ -50,7 +50,7 @@ class DonationElement extends UIElement<DonationConfiguration> {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 {/*@ts-ignore ref*/}
-                <DonationComponent {...this.props} ref={this.handleRef} onChange={this.setState} onDonate={this.donate} />
+                <DonationComponent {...this.props} ref={this.handleRef} onChange={this.setState} onDonate={this.donate} status={this.stateSignal} />
             </CoreProvider>
         );
     }

@@ -26,13 +26,14 @@ import type {
 import type { IDropin } from '../../Dropin/types';
 
 import './UIElement.scss';
+import { State, Status } from '../BaseElement/types';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> implements IUIElement {
-    protected componentRef: any;
+    protected componentRef: any; // todo: idea is remove the component ref, and pass the signal to component directly
 
     protected resources: Resources;
 
-    public elementRef: UIElement;
+    public elementRef: UIElement; // self
 
     public static type = undefined;
 
@@ -61,7 +62,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.makePaymentsCall = this.makePaymentsCall.bind(this);
         this.makeAdditionalDetailsCall = this.makeAdditionalDetailsCall.bind(this);
         this.submitUsingSessionsFlow = this.submitUsingSessionsFlow.bind(this);
-
+        // todo: what's the use case when we want to pass a different element ref than `this`?
         this.elementRef = (props && props.elementRef) || this;
         this.resources = this.props.modules ? this.props.modules.resources : undefined;
 
@@ -101,8 +102,9 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         return Promise.resolve();
     }
 
-    public setState(newState: object): void {
-        this.state = { ...this.state, ...newState };
+    // Also update signal
+    public setState(newState: State): void {
+        super.setState(newState);
         this.onChange();
     }
 
@@ -116,17 +118,18 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         return this;
     }
 
+    // todo: the idea is to remove this function and pass signal as prop to Preact component.
     public setStatus(status: UIElementStatus, props?): this {
-        if (this.componentRef?.setStatus) {
+        /*   if (this.componentRef?.setStatus) {
             this.componentRef.setStatus(status, props);
-        }
+        }*/
+        this.setState({ status, props });
         return this;
     }
 
     protected onChange(): object {
         const isValid = this.isValid;
         const state = { data: this.data, errors: this.state.errors, valid: this.state.valid, isValid };
-
         this.props.onChange?.(state, this.elementRef);
 
         return state;
@@ -178,7 +181,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     protected makePaymentsCall(): Promise<CheckoutAdvancedFlowResponse | CheckoutSessionPaymentResponse> {
-        this.setElementStatus('loading');
+        this.setElementStatus(Status.Loading);
 
         if (this.props.onSubmit) {
             return this.submitUsingAdvancedFlow();
@@ -252,7 +255,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
          * - If Drop-in, will set status for Dropin component, and then it will propagate the new status for the active payment method component
          * - If Component, it will set its own status
          */
-        this.setElementStatus('ready');
+        this.setElementStatus(Status.Ready);
 
         if (this.props.onError) {
             this.props.onError(error, this.elementRef);
@@ -268,7 +271,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     private makeAdditionalDetailsCall(state: AdditionalDetailsStateData): Promise<CheckoutSessionDetailsResponse | CheckoutAdvancedFlowResponse> {
-        this.setElementStatus('loading');
+        this.setElementStatus(Status.Loading);
 
         if (this.props.onAdditionalDetails) {
             return new Promise<CheckoutAdvancedFlowResponse>((resolve, reject) => {
@@ -343,21 +346,20 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      */
     protected handleFailedResult = (result?: PaymentResponseData): void => {
         if (assertIsDropin(this.elementRef)) {
-            this.elementRef.displayFinalAnimation('error');
+            this.setElementStatus(Status.Error);
         }
-
         cleanupFinalResult(result);
         this.props.onPaymentFailed?.(result, this.elementRef);
     };
 
-    protected handleSuccessResult = (result: PaymentResponseData): void => {
+    protected handleSuccessResult(result: PaymentResponseData) {
         if (assertIsDropin(this.elementRef)) {
-            this.elementRef.displayFinalAnimation('success');
+            this.setElementStatus(Status.Success);
         }
 
         cleanupFinalResult(result);
         this.props.onPaymentCompleted?.(result, this.elementRef);
-    };
+    }
 
     /**
      * Handles a session /payments or /payments/details response.

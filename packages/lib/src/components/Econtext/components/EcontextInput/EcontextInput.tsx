@@ -7,6 +7,7 @@ import { PersonalDetailsSchema } from '../../../../types/global-types';
 import './EcontextInput.scss';
 import FormInstruction from '../../../internal/FormInstruction';
 import { ComponentMethodsRef } from '../../../internal/UIElement/types';
+import { Status } from '../../../internal/BaseElement/types';
 
 interface EcontextInputProps {
     personalDetailsRequired?: boolean;
@@ -26,7 +27,7 @@ export default function EcontextInput({ personalDetailsRequired = true, data, on
     };
     const { i18n } = useCoreContext();
 
-    const [status, setStatus] = useState('ready');
+    const [status, setStatus] = useState(Status.Ready);
 
     /** An object by which to expose 'public' members to the parent UIElement */
     const econtextRef = useRef<ComponentMethodsRef>({});

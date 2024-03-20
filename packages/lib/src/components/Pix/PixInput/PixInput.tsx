@@ -6,6 +6,7 @@ import useCoreContext from '../../../core/Context/useCoreContext';
 import useForm from '../../../utils/useForm';
 import { BrazilPersonalDetail } from '../../internal/SocialSecurityNumberBrazil/BrazilPersonalDetail';
 import { PixInputDataState, PixInputProps } from './types';
+import { Status } from '../../internal/BaseElement/types';
 
 function PixInput({ name, data: dataProps, personalDetailsRequired, showPayButton, onChange, payButton }: PixInputProps) {
     const { i18n } = useCoreContext();
@@ -23,7 +24,7 @@ function PixInput({ name, data: dataProps, personalDetailsRequired, showPayButto
         setSchema(newSchema);
     }, [personalDetailsRequired]);
 
-    const [status, setStatus] = useState('ready');
+    const [status, setStatus] = useState(Status.Ready);
     this.setStatus = setStatus;
 
     this.showValidation = () => {

@@ -1,10 +1,11 @@
 import { h, Fragment } from 'preact';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import { useState } from 'preact/hooks';
+import { Status } from '../BaseElement/types';
 
 function RedirectButton({ label = null, icon = null, payButton, onSubmit, amount = null, name, ...props }) {
     const { i18n } = useCoreContext();
-    const [status, setStatus] = useState('ready');
+    const [status, setStatus] = useState(Status.Ready);
 
     this.setStatus = newStatus => {
         setStatus(newStatus);

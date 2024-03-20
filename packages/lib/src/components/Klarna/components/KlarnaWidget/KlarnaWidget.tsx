@@ -4,13 +4,14 @@ import { h } from 'preact';
 import { KlarnaWidgetAuthorizeResponse, KlarnaWidgetProps } from '../../types';
 import { KLARNA_WIDGET_URL } from '../../constants';
 import './KlarnaWidget.scss';
+import { Status } from '../../../internal/BaseElement/types';
 
 export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }: KlarnaWidgetProps) {
     const klarnaWidgetRef = useRef(null);
-    const [status, setStatus] = useState('ready');
+    const [status, setStatus] = useState(Status.Ready);
 
     const handleError = () => {
-        setStatus('error');
+        setStatus(Status.Error);
         props.onComplete({
             data: {
                 paymentData: props.paymentData,
@@ -44,7 +45,7 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
     };
 
     const authorizeKlarna = () => {
-        setStatus('loading');
+        setStatus(Status.Loading);
         try {
             window.Klarna.Payments.authorize(
                 {
@@ -53,7 +54,7 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
                 function (res: KlarnaWidgetAuthorizeResponse) {
                     if (res.approved === true && res.show_form === true) {
                         // Klarna has approved the authorization of credit for this order.
-                        setStatus('success');
+                        setStatus(Status.Success);
                         props.onComplete({
                             data: {
                                 paymentData: props.paymentData,
@@ -66,7 +67,7 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
                         });
                     } else if (!res.approved && res.show_form === true) {
                         // Fixable error
-                        setStatus('ready');
+                        setStatus(Status.Ready);
                         props.onError(res);
                     } else {
                         // The purchase is declined. The widget should be hidden and the user
@@ -94,11 +95,11 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
         };
     }, []);
 
-    if (status !== 'error' && status !== 'success') {
+    if (status !== 'error' && status !== Status.Success) {
         return (
             <div className="adyen-checkout__klarna-widget">
                 <div ref={klarnaWidgetRef} />
-                {payButton({ status, disabled: status === 'loading', onClick: authorizeKlarna })}
+                {payButton({ status, disabled: status === Status.Loading, onClick: authorizeKlarna })}
             </div>
         );
     }

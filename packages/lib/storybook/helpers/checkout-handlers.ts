@@ -95,15 +95,15 @@ export function handleError(error, component) {
 }
 
 export async function handleSubmit(state: any, component: UIElement, checkout: Core, paymentData: any) {
-    component.setStatus('loading');
+    component.setStatus(Status.Loading);
     const response = await makePayment(state.data, paymentData);
-    component.setStatus('ready');
+    component.setStatus(Status.Ready);
     return handleResponse(response, component, checkout, paymentData);
 }
 
 export async function handleAdditionalDetails(details, component: UIElement, checkout: Core) {
-    component.setStatus('loading');
+    component.setStatus(Status.Loading);
     const response = await makeDetailsCall(details.data);
-    component.setStatus('ready');
+    component.setStatus(Status.Ready);
     await handleResponse(response, component, checkout);
 }

@@ -41,6 +41,7 @@ export default function InputBase({ setRef, ...props }: InputBaseProps) {
 
     const handleInput = useCallback(
         (event: h.JSX.TargetedEvent<HTMLInputElement>) => {
+            // @ts-ignore bla
             props.onInput(event);
         },
         [props.onInput]

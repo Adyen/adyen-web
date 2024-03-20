@@ -9,13 +9,14 @@ import '../Donation.scss';
 import DisclaimerMessage from '../../internal/DisclaimerMessage';
 import { DonationComponentProps } from './types';
 import useImage from '../../../core/Context/useImage';
+import { Status } from '../../internal/BaseElement/types';
 
 export default function DonationComponent(props: DonationComponentProps) {
     const { amounts, onCancel, onDonate, showCancelButton = true, termsAndConditionsUrl } = props;
     const { i18n } = useCoreContext();
     const getImage = useImage();
     const { currency } = amounts;
-    const [status, setStatus] = useState('ready');
+    const [status, setStatus] = useState(Status.Ready);
     const [isValid, setIsValid] = useState(false);
     const [amount, setAmount] = useState({
         currency,
@@ -35,12 +36,12 @@ export default function DonationComponent(props: DonationComponentProps) {
     };
 
     const handleDonate = () => {
-        setStatus('loading');
+        setStatus(Status.Loading);
         onDonate({ data: { amount } });
     };
 
     const handleDecline = () => {
-        setStatus('ready');
+        setStatus(Status.Ready);
         onCancel({ data: { amount }, isValid });
     };
 
@@ -61,7 +62,7 @@ export default function DonationComponent(props: DonationComponentProps) {
         );
     }
 
-    if (status === 'success') {
+    if (status === Status.Success) {
         return (
             <div className="adyen-checkout__adyen-giving">
                 <Img
@@ -77,6 +78,7 @@ export default function DonationComponent(props: DonationComponentProps) {
 
     return (
         <div className="adyen-checkout__adyen-giving">
+            <div>status:{props.status?.value}</div>
             <CampaignContainer {...props} />
 
             <div className="adyen-checkout__adyen-giving-actions">
@@ -85,7 +87,7 @@ export default function DonationComponent(props: DonationComponentProps) {
                         options={amounts.values.map(value => ({
                             value,
                             label: getAmount(value, currency),
-                            disabled: status === 'loading',
+                            disabled: status === Status.Loading,
                             selected: value === amount.value
                         }))}
                         name="amount"
@@ -108,7 +110,7 @@ export default function DonationComponent(props: DonationComponentProps) {
                         classNameModifiers={['decline']}
                         variant="ghost"
                         onClick={handleDecline}
-                        disabled={status === 'loading'}
+                        disabled={status === Status.Loading}
                         label={`${i18n.get('notNowButton')} ›`}
                     />
                 )}

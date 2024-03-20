@@ -8,6 +8,8 @@ import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import PayButton from '../internal/PayButton';
 import { ANCVConfiguration } from './types';
+import { Status } from '../internal/BaseElement/types';
+
 export class ANCVElement extends UIElement<ANCVConfiguration> {
     public static type = 'ancv';
 
@@ -40,7 +42,7 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
             return false;
         }
 
-        this.setStatus('loading');
+        this.setStatus(Status.Loading);
 
         return this.onOrderRequest(this.data)
             .then((order: { orderData: string; pspReference: string }) => {

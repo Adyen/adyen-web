@@ -26,6 +26,7 @@ import {
     ANALYTICS_SELECTED_STR
 } from '../../../core/Analytics/constants';
 import { debounce } from '../../../utils/debounce';
+import { Status } from '../BaseElement/types';
 
 const payButtonLabel = ({ issuer, items }, i18n): string => {
     const issuerName = items.find(i => i.id === issuer)?.name;
@@ -54,7 +55,7 @@ function IssuerList({ items, placeholder, issuer, highlightedIds = [], showConte
         defaultData: { issuer },
         rules: validationRules
     });
-    const [status, setStatus] = useState('ready');
+    const [status, setStatus] = useState(Status.Ready);
     const [inputType, setInputType] = useState<IssuerListInputTypes>(IssuerListInputTypes.Dropdown);
 
     const { setSRMessagesFromObjects, shouldMoveFocusSR } = useSRPanelContext();

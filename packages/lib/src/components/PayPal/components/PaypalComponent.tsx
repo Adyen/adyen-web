@@ -6,6 +6,7 @@ import { getPaypalUrl } from '../utils/get-paypal-url';
 import Script from '../../../utils/Script';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import type { PayPalComponentProps } from './types';
+import { Status } from '../../internal/BaseElement/types';
 
 export default function PaypalComponent({ onApprove, onCancel, onChange, onError, onSubmit, onScriptLoadFailure, ...props }: PayPalComponentProps) {
     const [status, setStatus] = useState('pending');
@@ -21,7 +22,7 @@ export default function PaypalComponent({ onApprove, onCancel, onChange, onError
     );
 
     const handlePaypalLoad = () => {
-        setStatus('ready');
+        setStatus(Status.Ready);
     };
 
     const handlePaypalLoadFailure = (error: AdyenCheckoutError) => {

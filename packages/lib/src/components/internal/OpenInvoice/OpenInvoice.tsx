@@ -31,6 +31,7 @@ import { getArrayDifferences } from '../../../utils/arrayUtils';
 import Field from '../FormFields/Field';
 import FormInstruction from '../FormInstruction';
 import { ComponentMethodsRef } from '../UIElement/types';
+import { Status } from '../BaseElement/types';
 
 const consentCBErrorObj: GenericError = {
     isValid: false,
@@ -86,7 +87,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
     });
     const [errors, setErrors] = useState<OpenInvoiceStateError>({});
     const [valid, setValid] = useState<OpenInvoiceStateValid>({});
-    const [status, setStatus] = useState('ready');
+    const [status, setStatus] = useState(Status.Ready);
 
     // Relates to onBlur errors
     const [sortedErrorList, setSortedErrorList] = useState<SortedErrorObject[]>(null);

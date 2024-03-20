@@ -9,6 +9,7 @@ import SrciError from '../../services/sdks/SrciError';
 import useCoreContext from '../../../../../core/Context/useCoreContext';
 import './CtPLogin.scss';
 import TimeoutError from '../../errors/TimeoutError';
+import { Status } from '../../../BaseElement/types';
 
 const CtPLogin = (): h.JSX.Element => {
     const { i18n } = useCoreContext();
@@ -76,7 +77,7 @@ const CtPLogin = (): h.JSX.Element => {
             <Button
                 label={i18n.get('continue')}
                 variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'}
-                status={isLoggingIn && 'loading'}
+                status={isLoggingIn && Status.Loading}
                 onClick={() => {
                     void handleOnLoginButtonClick();
                 }}

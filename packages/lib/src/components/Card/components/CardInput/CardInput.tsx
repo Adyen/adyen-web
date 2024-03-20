@@ -30,6 +30,7 @@ import FormInstruction from '../../../internal/FormInstruction';
 import { AddressData } from '../../../../types/global-types';
 import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
 import { FieldErrorAnalyticsObject } from '../../../../core/Analytics/types';
+import { Status } from '../../../internal/BaseElement/types';
 
 const CardInput = (props: CardInputProps) => {
     const sfp = useRef(null);
@@ -67,7 +68,7 @@ const CardInput = (props: CardInputProps) => {
     /**
      * STATE HOOKS
      */
-    const [status, setStatus] = useState('ready');
+    const [status, setStatus] = useState(Status.Ready);
 
     const [errors, setErrors] = useState<CardInputErrorState>({});
     const [valid, setValid] = useState<CardInputValidState>({
@@ -470,7 +471,7 @@ const CardInput = (props: CardInputProps) => {
                             'adyen-checkout__card-input': true,
                             'adyen-checkout-card-input__wrapper': true,
                             [`adyen-checkout__card-input--${props.fundingSource ?? 'credit'}`]: true,
-                            'adyen-checkout__card-input--loading': status === 'loading'
+                            'adyen-checkout__card-input--loading': status === Status.Loading
                         })}
                         role={'form'}
                     >

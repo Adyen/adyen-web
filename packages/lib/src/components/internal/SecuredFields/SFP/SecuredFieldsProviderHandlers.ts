@@ -22,6 +22,7 @@ import {
 } from '../lib/types';
 import { existy } from '../lib/utilities/commonUtils';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
+import { Status } from '../../BaseElement/types';
 
 /**
  * Emits the onLoad event
@@ -43,7 +44,7 @@ function handleOnLoad(cbObj: CbObjOnLoad): void {
      * - so we need to clear the loading spinner to see if the securedFields are reporting anything
      */
     this.csfConfigFailTimeout = setTimeout(() => {
-        if (this.state.status !== 'ready') {
+        if (this.state.status !== Status.Ready) {
             // Hide the spinner
             this.setState({ status: 'csfConfigFailure' });
             // Report the error
@@ -61,7 +62,7 @@ function handleOnConfigSuccess(cbObj: CbObjOnConfigSuccess): void {
     clearTimeout(this.csfConfigFailTimeout);
     this.csfConfigFailTimeout = null;
 
-    this.setState({ status: 'ready' }, () => {
+    this.setState({ status: Status.Ready }, () => {
         // Propagate onConfigSuccess event
         this.props.onConfigSuccess(cbObj);
     });
@@ -226,7 +227,7 @@ function handleOnAutoComplete(cbObj: CbObjOnAutoComplete): void {
  * Automatically resolves with a valid state
  */
 function handleOnNoDataRequired(): void {
-    this.setState({ status: 'ready' }, () => this.props.onChange({ isSfpValid: true }));
+    this.setState({ status: Status.Ready }, () => this.props.onChange({ isSfpValid: true }));
 }
 
 export default {

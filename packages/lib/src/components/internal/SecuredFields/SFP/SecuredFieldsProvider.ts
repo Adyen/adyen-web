@@ -28,6 +28,7 @@ import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
 import { SFStateErrorObj } from '../../../Card/components/CardInput/types';
 import { getErrorMessageFromCode } from '../../../../core/Errors/utils';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
+import { Status } from '../../BaseElement/types';
 
 /**
  * SecuredFieldsProvider:
@@ -60,7 +61,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         super(props);
 
         const stateObj: SFPState = {
-            status: 'loading',
+            status: Status.Loading,
             brand: props.type,
             errors: {},
             valid: {},
@@ -203,7 +204,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
          */
         // @ts-ignore - timout 'type' is a number
         this.csfLoadFailTimeout = setTimeout(() => {
-            if (this.state.status !== 'ready') {
+            if (this.state.status !== Status.Ready) {
                 // Hide the spinner
                 this.setState({ status: 'csfLoadFailure' });
                 // Report the error

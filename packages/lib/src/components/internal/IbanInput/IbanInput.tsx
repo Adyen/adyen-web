@@ -6,6 +6,7 @@ import { electronicFormat, formatIban, getCountryCode, getNextCursorPosition } f
 import Fieldset from '../FormFields/Fieldset';
 import { GenericError } from '../../../core/Errors/types';
 import InputText from '../FormFields/InputText';
+import { Status } from '../BaseElement/types';
 
 interface IbanInputProps {
     holderName?: boolean;
@@ -52,7 +53,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
         super(props);
 
         this.state = {
-            status: 'ready',
+            status: Status.Ready,
             data: {
                 ownerName: props?.data?.ownerName || '',
                 ibanNumber: props?.data?.ibanNumber || '',

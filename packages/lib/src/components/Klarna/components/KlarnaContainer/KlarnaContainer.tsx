@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import { KlarnaWidget } from '../KlarnaWidget/KlarnaWidget';
 import { useState } from 'preact/hooks';
+import { Status } from '../../../internal/BaseElement/types';
 
 export function KlarnaContainer(props) {
     const [action, setAction] = useState({
@@ -8,7 +9,7 @@ export function KlarnaContainer(props) {
         paymentMethodType: props.paymentMethodType,
         paymentData: props.paymentData
     });
-    const [status, setStatus] = useState('ready');
+    const [status, setStatus] = useState(Status.Ready);
 
     this.setAction = setAction;
     this.setStatus = setStatus;
@@ -31,7 +32,7 @@ export function KlarnaContainer(props) {
         return props.payButton({
             ...props,
             status,
-            disabled: status === 'loading',
+            disabled: status === Status.Loading,
             classNameModifiers: ['standalone'],
             label: `${this.props.i18n.get('continueTo')} ${props.displayName}`
         });

@@ -9,6 +9,7 @@ import isMobile from '../../../../../../utils/isMobile';
 import Field from '../../../../FormFields/Field';
 import './CtPCardsList.scss';
 import Select from '../../../../FormFields/Select';
+import { Status } from '../../../../BaseElement/types';
 
 type CtPCardsListProps = {
     cards: ShopperCard[];
@@ -49,14 +50,14 @@ const CtPCardsList = ({ cardSelected, cards, errorMessage, onChangeCard }: CtPCa
     }, [data, onChangeCard]);
 
     return (
-        <Field name="clickToPayCards" errorMessage={errorMessage} readOnly={status === 'loading'}>
+        <Field name="clickToPayCards" errorMessage={errorMessage} readOnly={status === Status.Loading}>
             <Select
                 items={items}
                 selectedValue={data['srcDigitalCardId']}
                 name={'cards'}
                 filterable={false}
                 className={'adyen-checkout-ctp__cards-list-dropdown'}
-                readonly={status === 'loading'}
+                readonly={status === Status.Loading}
                 onChange={handleChangeFor('srcDigitalCardId')}
             />
         </Field>

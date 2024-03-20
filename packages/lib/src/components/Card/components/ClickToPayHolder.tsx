@@ -6,6 +6,7 @@ import ClickToPayComponent from '../../internal/ClickToPay';
 import ContentSeparator from '../../internal/ContentSeparator';
 import Button from '../../internal/Button';
 import useCoreContext from '../../../core/Context/useCoreContext';
+import { Status } from '../../internal/BaseElement/types';
 
 type ClickToPayWrapperProps = {
     children(isCardPrimaryInput?: boolean): h.JSX.Element;
@@ -56,7 +57,7 @@ const ClickToPayHolder = ({ children }: ClickToPayWrapperProps) => {
             ) : (
                 <Button
                     variant="secondary"
-                    disabled={status === 'loading'}
+                    disabled={status === Status.Loading}
                     label={i18n.get('ctp.manualCardEntry')}
                     onClick={handleOnShowCardButtonClick}
                 />
