@@ -1,21 +1,21 @@
 import { httpGet, HttpOptions } from './http';
+import type { CustomTranslations, Translations } from '../../language/types';
 import { SUPPORTED_LOCALES } from '../../language/constants';
 import AdyenCheckoutError from '../Errors/AdyenCheckoutError';
-
-import type { CustomTranslations, Translations } from '../../language/types';
 
 export default function getTranslations(
     loadingContext: string,
     adyenWebVersion: string,
     locale: string,
-    customTranslations: CustomTranslations = {}
+    customTranslation: CustomTranslations = {}
 ): Promise<Translations> {
-    const isUsingCustomLocaleNotSupportedByAdyen = SUPPORTED_LOCALES.includes(locale) === false && Object.keys(customTranslations).includes(locale);
+    const isUsingCustomLocaleNotSupportedByAdyen = !SUPPORTED_LOCALES.includes(locale) && Object.keys(customTranslation).includes(locale);
+
     if (isUsingCustomLocaleNotSupportedByAdyen) {
         return Promise.resolve({});
     }
 
-    if (SUPPORTED_LOCALES.includes(locale) === false) {
+    if (!SUPPORTED_LOCALES.includes(locale)) {
         throw new AdyenCheckoutError(
             'IMPLEMENTATION_ERROR',
             `Translations: Locale '${locale}' is not supported. You can provide your own locale/translations by configuring the 'translations' property"`

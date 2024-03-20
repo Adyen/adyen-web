@@ -1,7 +1,6 @@
 import { h } from 'preact';
 import { mount } from 'enzyme';
 import CardInput from './CardInput';
-import Language from '../../../../language/Language';
 import { CardInputDataState, CardInputValidState } from './types';
 import { render, screen, fireEvent } from '@testing-library/preact';
 import { CardFieldsWrapper } from './components/CardFieldsWrapper';
@@ -19,7 +18,7 @@ beforeEach(() => {
     });
 });
 
-const i18n = new Language('en-US', {});
+const i18n = global.i18n;
 const configuration = { koreanAuthenticationRequired: true };
 
 const cardInputRequiredProps = {

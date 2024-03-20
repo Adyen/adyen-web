@@ -2,7 +2,6 @@ import { h } from 'preact';
 import { CardElement } from './Card';
 import { render, screen } from '@testing-library/preact';
 import CoreProvider from '../../core/Context/CoreProvider';
-import Language from '../../language';
 import { Resources } from '../../core/Context/Resources';
 
 describe('Card', () => {
@@ -31,12 +30,11 @@ describe('Card', () => {
 
     describe('payButton', () => {
         describe('Zero auth transaction', () => {
-            const i18n = new Language('en-US');
-            const props = { amount: { value: 0, currency: 'eur' }, enableStoreDetails: true, i18n };
+            const props = { amount: { value: 0, currency: 'eur' }, enableStoreDetails: true, i18n: global.i18n };
             const customRender = (ui: h.JSX.Element) => {
                 return render(
                     // @ts-ignore ignore
-                    <CoreProvider i18n={i18n} loadingContext="test" resources={new Resources()}>
+                    <CoreProvider i18n={global.i18n} loadingContext="test" resources={new Resources()}>
                         {ui}
                     </CoreProvider>
                 );

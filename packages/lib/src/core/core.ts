@@ -21,6 +21,7 @@ import getTranslations from './Services/get-translations';
 import type { AdditionalDetailsStateData, PaymentAction, PaymentResponseData } from '../types/global-types';
 import type { CoreConfiguration, ICore } from './types';
 import type { Translations } from '../language/types';
+import { formatCustomTranslations, formatLocale } from '../language/utils';
 
 class Core implements ICore {
     public session?: Session;
@@ -95,20 +96,6 @@ class Core implements ICore {
         return this;
     }
 
-    /**
-     * scenario 1 - use his own locale with custom language
-     * scenario 2 -
-     * @private
-     */
-    private async fetchTranslations(): Promise<Translations> {
-        try {
-            const translation = await getTranslations(this.loadingContext, Core.metadata.version, this.options.locale, this.options.translations);
-            return translation;
-        } catch (error) {
-            this.options.onError?.(error);
-        }
-    }
-
     private async initializeCore(): Promise<this> {
         if (this.session) {
             return this.session
@@ -137,14 +124,19 @@ class Core implements ICore {
         return Promise.resolve(this);
     }
 
+    private async fetchLocaleTranslations(): Promise<Translations> {
+        try {
+            const translation = await getTranslations(this.loadingContext, Core.metadata.version, this.options.locale, this.options.translations);
+            return translation;
+        } catch (error) {
+            this.options.onError?.(error);
+        }
+    }
+
     private validateCoreConfiguration(): void {
         // @ts-ignore This property does not exist, although merchants might be using when migrating from v5 to v6
         if (this.options.paymentMethodsConfiguration) {
             console.warn('WARNING:  "paymentMethodsConfiguration" is supported only by Drop-in.');
-        }
-
-        if (!this.options.locale) {
-            this.setOptions({ locale: DEFAULT_LOCALE });
         }
 
         if (!this.options.countryCode) {
@@ -153,6 +145,13 @@ class Core implements ICore {
                 'You must specify a countryCode when initializing checkout. (If you are using a session then this session should be initialized with a countryCode.)'
             );
         }
+
+        if (!this.options.locale) {
+            this.setOptions({ locale: DEFAULT_LOCALE });
+        }
+
+        this.options.locale = formatLocale(this.options.locale);
+        this.options.translations = formatCustomTranslations(this.options.translations);
     }
 
     /**
@@ -333,7 +332,7 @@ class Core implements ICore {
             return;
         }
 
-        const translations = await this.fetchTranslations();
+        const translations = await this.fetchLocaleTranslations();
 
         this.modules = Object.freeze({
             risk: new RiskModule(this, { ...this.options, loadingContext: this.loadingContext }),

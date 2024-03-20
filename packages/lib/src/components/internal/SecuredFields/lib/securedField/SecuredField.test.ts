@@ -1,7 +1,9 @@
 import SecuredField from './SecuredField';
 
 import { CVCPolicyType, DatePolicyType } from '../types';
-import en from '../../../../../language/locales/en-US';
+
+// @ts-ignore Importing JSON for the test
+import en from '../../../../../../../server/translations/en-US.json';
 
 import { SF_ErrorCodes } from '../../../../../core/Errors/constants';
 import {

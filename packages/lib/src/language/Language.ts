@@ -1,6 +1,6 @@
-import { formatCustomTranslations, formatLocale, getTranslation, parseLocale } from './utils';
-import { SUPPORTED_LOCALES } from './constants';
+import { getTranslation } from './utils';
 import { getLocalisedAmount } from '../utils/amount-util';
+import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 
 import type { CustomTranslations, LanguageOptions, Translations } from './types';
 
@@ -14,13 +14,13 @@ export class Language {
     constructor(props: LanguageOptions) {
         const { locale, translations, customTranslations } = props;
 
-        this.customTranslations = formatCustomTranslations(customTranslations, SUPPORTED_LOCALES);
-        const localesFromCustomTranslations = Object.keys(this.customTranslations);
-        const supportedLocales = [...SUPPORTED_LOCALES, ...localesFromCustomTranslations].filter((v, i, a) => a.indexOf(v) === i); // our locales + validated custom locales
+        if (!locale) {
+            throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Language: "locale" property is not defined');
+        }
 
-        this.locale = formatLocale(locale) || parseLocale(locale, supportedLocales);
-
+        this.locale = locale;
         this.languageCode = this.locale.split('-')[0];
+        this.customTranslations = customTranslations || {};
 
         this.translations = {
             ...translations,

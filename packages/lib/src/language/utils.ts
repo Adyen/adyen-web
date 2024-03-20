@@ -1,84 +1,50 @@
-import { DEFAULT_LOCALE } from './constants';
 import { h } from 'preact';
 import { CustomTranslations } from './types';
-
-/**
- * Convert to ISO 639-1
- */
-const toTwoLetterCode = locale => locale.toLowerCase().substring(0, 2);
-
-/**
- * Matches a string with one of the locales
- * @param locale -
- * @param supportedLocales -
-
- * @example
- * matchLocale('en-GB');
- * // 'en-US'
- */
-export function matchLocale(locale: string, supportedLocales: any): string {
-    if (!locale || typeof locale !== 'string') return null;
-    return supportedLocales.find(supLoc => toTwoLetterCode(supLoc) === toTwoLetterCode(locale)) || null;
-}
+import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
 
 /**
  * Returns a locale with the proper format
- * @param localeParam -
  *
  * @example
- * formatLocale('En_us');
- * // 'en-US'
+ * formatLocale('En_us'); -> en-US
+ * formatLocale('ar') -> ar
  */
 export function formatLocale(localeParam: string): string {
     const locale = localeParam.replace('_', '-');
     const format = new RegExp('([a-z]{2})([-])([A-Z]{2})');
 
     // If it's already formatted, return the locale
-    if (format.test(locale)) return locale;
+    if (format.test(locale)) {
+        return locale;
+    }
 
-    // Split the string in two
+    // If no country code is defined (Ex: 'ar') , then returns 'ar'
     const [languageCode, countryCode] = locale.split('-');
-
-    // If the locale or the country codes are missing, return null
-    if (!languageCode || !countryCode) return null;
+    if (languageCode.length !== 2) {
+        throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', `Locale '${localeParam}' does not match the expected format`);
+    }
+    if (!countryCode) {
+        return languageCode.toLowerCase();
+    }
 
     // Ensure correct format and join the strings back together
     const fullLocale = [languageCode.toLowerCase(), countryCode.toUpperCase()].join('-');
-
-    return fullLocale.length === 5 ? fullLocale : null;
+    if (format.test(fullLocale)) {
+        return fullLocale;
+    } else {
+        throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', `Locale '${localeParam}' does not match the expected format`);
+    }
 }
 
 /**
- * Checks the locale format.
- * Also checks if it's on the locales array.
- * If it is not, tries to match it with one.
- * @param locale -
- * @param supportedLocales -
+ * Makes sure that if custom translation is defined using not properly formatted locale keys, then it gets formatted correctly
+ * Ex: Custom translation defined as { en_US: { ... }} will be adjusted to { 'en-US': { ... }}
  */
-export function parseLocale(locale: string, supportedLocales: string[] = []): string {
-    if (!locale || locale.length < 1 || locale.length > 5) return DEFAULT_LOCALE;
-
-    const formattedLocale = formatLocale(locale);
-    const hasMatch = supportedLocales.indexOf(formattedLocale) > -1;
-
-    if (hasMatch) return formattedLocale;
-
-    return matchLocale(formattedLocale || locale, supportedLocales);
-}
-
-/**
- * Formats the locales inside the customTranslations object against the supportedLocales
- * @param customTranslations -
- * @param supportedLocales -
- */
-export function formatCustomTranslations(customTranslations: CustomTranslations = {}, supportedLocales: string[]): CustomTranslations {
-    return Object.keys(customTranslations).reduce((acc, cur) => {
-        const formattedLocale = formatLocale(cur) || parseLocale(cur, supportedLocales);
-        if (formattedLocale) {
-            acc[formattedLocale] = customTranslations[cur];
-        }
-
-        return acc;
+export function formatCustomTranslations(customTranslations: CustomTranslations = {}): CustomTranslations {
+    return Object.keys(customTranslations).reduce((memo, customTranslationLocaleKey) => {
+        const locale = formatLocale(customTranslationLocaleKey);
+        memo[locale] = customTranslations[customTranslationLocaleKey];
+        return memo;
     }, {});
 }
 
