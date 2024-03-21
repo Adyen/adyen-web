@@ -146,15 +146,25 @@ export const sortErrorsByLayout = ({ errors, i18n, layout, countrySpecificLabels
             if (TREAT_AS_SF_ERROR && 'errorI18n' in errObj) {
                 errorMsg = errObj.errorI18n + SR_INDICATOR_PREFIX;
             } else {
+                /**
+                 * For some fields, for a11y reasons (when the translated error msg doesn't contain a reference to the field it refers to), we need to
+                 * add the field type into the translated error message.
+                 *
+                 * This happens with generic errors
+                 *  e.g. "field.error.required": "Enter the %{label}"
+                 *   or "invalid.format.expects": "%{label} Invalid format. Expected format: %{format}"
+                 */
+                const mappedLabel = fieldTypeMappingFn ? fieldTypeMappingFn(key, i18n, countrySpecificLabels) : ''; // Retrieve the translated field name, if required
+
                 /** Special handling for Address~postalCode where the errorMessage object contains the details of the country specific format that should have been used for the postcode */
                 if (ERROR_MSG_IS_OBJECT) {
                     /**  is ValidationRuleResult  w. country specific error */
-                    errorMsg = `${i18n.get((errObj.errorMessage as ErrorMessageObject).translationKey)} ${(errObj.errorMessage as ErrorMessageObject).translationObject.values.format}${SR_INDICATOR_PREFIX}`;
+                    const translationKey = (errObj.errorMessage as ErrorMessageObject).translationKey;
+                    const countrySpecificFormat = (errObj.errorMessage as ErrorMessageObject).translationObject.values.format;
+
+                    errorMsg = `${i18n.get(translationKey, { values: { label: mappedLabel, format: countrySpecificFormat } })}${SR_INDICATOR_PREFIX}`;
                 } else {
                     /** is ValidationRuleResult || GenericError || an as yet incorrectly formed error */
-                    const mappedLabel = fieldTypeMappingFn ? fieldTypeMappingFn(key, i18n, countrySpecificLabels) : ''; // Retrieve the translated field name, if applicable
-                    // In the case of a generic error e.g. "field.error.required": "Enter the %{label}"
-                    //  - also pass in a label value (the translated field name) to be added into the translated error message
                     errorMsg = i18n.get(errObj.errorMessage as string, { values: { label: mappedLabel } }) + SR_INDICATOR_PREFIX;
                 }
             }

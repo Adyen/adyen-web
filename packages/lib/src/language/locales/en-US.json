@@ -214,7 +214,7 @@
     "pix.instructions": "Open the app with the PIX registered key, choose Pay with PIX and scan the QR Code or copy and paste the code",
     "twint.saved": "saved",
     "orPayWith": "or pay with",
-    "invalid.format.expects": "Invalid format. Expected format: %{format}",
+    "invalid.format.expects": "%{label} Invalid format. Expected format: %{format}",
     "upi.qrCodeWaitingMessage": "Scan the QR code using your preferred UPI app to complete the payment",
     "upi.vpaWaitingMessage": "Open your UPI app to confirm the payment",
     "upi.modeSelection": "Make a selection on how you would like to use UPI.",
