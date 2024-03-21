@@ -134,7 +134,7 @@ export default () => {
 
         // Types CJS
         {
-            input: 'dist/temp-types/types.d.ts',
+            input: 'dist/temp-types/lib/src/types.d.ts',
             output: [{ file: './dist/cjs/index.d.cts', format: 'commonjs' }],
             external: [/\.scss$/u],
             plugins: [generateTypes()]
@@ -142,7 +142,7 @@ export default () => {
 
         // Types ES
         {
-            input: 'dist/temp-types/types.d.ts',
+            input: 'dist/temp-types/lib/src/types.d.ts',
             output: [{ file: './dist/es/index.d.ts', format: 'es' }],
             external: [/\.scss$/u, /\.json$/u],
             plugins: [generateTypes()]
