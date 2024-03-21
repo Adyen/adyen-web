@@ -62,7 +62,6 @@ import '../../style.scss';
         clientKey: process.env.__CLIENT_KEY__,
         session,
         showPayButton: true,
-        translationFile: getTranslationFile(shopperLocale),
 
         // Events
         beforeSubmit: (data, component, actions) => {

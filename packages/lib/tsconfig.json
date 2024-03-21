@@ -39,7 +39,6 @@
     "include": [
         "./src/**/*",
         "./src/types/custom.d.ts",
-        "./config/testMocks/*"
     ],
     "exclude": ["node_modules", "./dist/**", "**/*.scss", "**/*_*/**"],
 }

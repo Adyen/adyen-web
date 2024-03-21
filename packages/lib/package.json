@@ -53,6 +53,7 @@
     "files": [
         "auto/**",
         "dist/**",
+        "translations/**",
         "LICENSE",
         "README"
     ],

@@ -2,3 +2,4 @@ dist
 /*.tgz
 .stylelintcache
 lib-test
+translations
