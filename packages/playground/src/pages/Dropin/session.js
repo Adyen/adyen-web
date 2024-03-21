@@ -31,9 +31,9 @@ export async function initSession() {
         onError: (error, component) => {
             console.error('error', JSON.stringify(error.name), JSON.stringify(error.message), component);
         },
-        onChange: (state, component) => {
-            console.log('onChange', state);
-        },
+        // onChange: (state, component) => {
+        //     console.log('onChange', state);
+        // },
         onPaymentCompleted: handleOnPaymentCompleted,
         onPaymentFailed: handleOnPaymentFailed
     });
@@ -53,12 +53,10 @@ export async function initSession() {
             card: {
                 hasHolderName: true,
                 holderNameRequired: true,
-                holderName: 'J. Smith',
-                positionHolderNameOnTop: true,
-
-                // billingAddress config:
-                billingAddressRequired: true,
-                billingAddressMode: 'partial'
+                data: {
+                    holderName: 'J. Smith'
+                },
+                _disableClickToPay: true
             },
             ideal: {
                 highlightedIssuers: ['1121', '1154', '1152']

@@ -7,6 +7,11 @@ export function showAuthorised(message = 'Authorised') {
 }
 
 export function handleError(obj) {
+    const resultElement = document.getElementById('result-message');
+    resultElement.classList.remove('hide');
+    resultElement.classList.add('error');
+    resultElement.innerText = obj;
+
     // SecuredField related errors should not go straight to console.error
     if (obj.type === 'card') {
         console.log('### Card::onError:: obj=', obj);
