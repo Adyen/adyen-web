@@ -6,7 +6,7 @@ import { screen, render } from '@testing-library/preact';
 import Dropin from './Dropin';
 import { ICore } from '../../core/types';
 
-describe.skip('Dropin', () => {
+describe('Dropin', () => {
     let checkout: ICore;
 
     beforeEach(async () => {
