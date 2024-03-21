@@ -5,6 +5,11 @@ import Session from './CheckoutSession';
 import { Dropin, Ideal } from '../components';
 import { CheckoutSessionSetupResponse } from './CheckoutSession/types';
 
+import getTranslations from './Services/get-translations';
+jest.mock('./Services/get-translations');
+const mockedGetTranslations = getTranslations as jest.Mock;
+mockedGetTranslations.mockResolvedValue({});
+
 const sessionSetupResponseMock: CheckoutSessionSetupResponse = {
     id: 'session-id',
     sessionData: 'session-data',
@@ -28,27 +33,27 @@ jest.spyOn(Session.prototype, 'setupSession').mockImplementation(() => {
 });
 
 describe('Core', () => {
-    // describe('Setting locale', () => {
-    //     test('should default locale to en-US', async () => {
-    //         const checkout = new AdyenCheckout({ countryCode: 'US', environment: 'test', clientKey: 'test_123456' });
-    //         await checkout.initialize();
-    //         expect(checkout.options.locale).toBe('en-US');
-    //         expect(checkout.modules.i18n.locale).toBe('en-US');
-    //     });
-    //
-    //     test('should set a custom locale', async () => {
-    //         const checkout = new AdyenCheckout({
-    //             countryCode: 'US',
-    //             environment: 'test',
-    //             clientKey: 'test_123456',
-    //             locale: 'es-ES',
-    //         });
-    //         await checkout.initialize();
-    //
-    //         expect(checkout.options.locale).toBe('es-ES');
-    //         expect(checkout.modules.i18n.locale).toBe('es-ES');
-    //     });
-    // });
+    describe('Setting locale', () => {
+        test('should default locale to en-US', async () => {
+            const checkout = new AdyenCheckout({ countryCode: 'US', environment: 'test', clientKey: 'test_123456' });
+            await checkout.initialize();
+            expect(checkout.options.locale).toBe('en-US');
+            expect(checkout.modules.i18n.locale).toBe('en-US');
+        });
+
+        test('should set a custom locale', async () => {
+            const checkout = new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456',
+                locale: 'es-ES'
+            });
+            await checkout.initialize();
+
+            expect(checkout.options.locale).toBe('es-ES');
+            expect(checkout.modules.i18n.locale).toBe('es-ES');
+        });
+    });
 
     describe('Creating modules', () => {
         test('should create the modules when initializing on Advanced Flow', async () => {
