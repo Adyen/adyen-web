@@ -5,16 +5,14 @@ import useCoreContext from '../../../../core/Context/useCoreContext';
 import getDataset from '../../../../core/Services/get-dataset';
 import { CountryFieldProps, CountryFieldItem } from '../types';
 import Select from '../../FormFields/Select';
-import { getFlagEmoji } from '../../../../utils/getFlagEmoji';
 
 const formatCountries = (countries: Array<CountryFieldItem>, allowedCountries: string[]) => {
     const applyFilter = (country: CountryFieldItem) => allowedCountries.includes(country.id);
     const applyMapper = (country: CountryFieldItem) => {
-        const flag = getFlagEmoji(country.id);
         return {
             ...country,
-            name: `${flag} ${country.name}`,
-            selectedOptionName: `${flag} ${country.name}`
+            name: country.name,
+            selectedOptionName: country.name
         };
     };
     return allowedCountries.length ? countries.filter(applyFilter).map(applyMapper) : countries.map(applyMapper);

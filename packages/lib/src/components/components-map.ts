@@ -58,6 +58,7 @@ import PayByBank from './PayByBank';
 import PromptPay from './PromptPay';
 import Duitnow from './DuitNow';
 import Trustly from './Trustly';
+import Riverty from './Riverty';
 import { TxVariants } from './tx-variants';
 
 /**
@@ -102,6 +103,7 @@ export const ComponentsMap = {
     [TxVariants.facilypay_12x]: FacilyPay12x,
     [TxVariants.ratepay]: RatePay,
     [TxVariants.ratepay_directdebit]: RatePayDirectDebit,
+    [TxVariants.riverty]: Riverty,
     /** Open Invoice */
 
     /** Wallets */

@@ -39,6 +39,7 @@ export enum TxVariants {
     facilypay_12x = 'facilypay_12x',
     ratepay = 'ratepay',
     ratepay_directdebit = 'ratepay_directdebit',
+    riverty = 'riverty',
     /** Open Invoice */
 
     /** Wallets */

@@ -93,6 +93,7 @@ describe('Card', () => {
             expect(new CardElement(global.core, { amount: { value: 0, currency: 'USD' }, enableStoreDetails: false }).data.storePaymentMethod).toBe(
                 undefined
             );
+            expect(new CardElement(global.core, { amount: { value: 0, currency: 'USD' } }).data.storePaymentMethod).toBe(undefined);
 
             // Session flow - session configuration should override merchant configuration
             let cardElement = new CardElement(global.core, {
