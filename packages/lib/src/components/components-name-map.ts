@@ -41,6 +41,7 @@ const ComponentsNameMap = {
     [TxVariants.facilypay_12x]: 'FacilyPay12x',
     [TxVariants.ratepay]: 'RatePay',
     [TxVariants.ratepay_directdebit]: 'RatePayDirectDebit',
+    [TxVariants.riverty]: 'Riverty',
     /** Open Invoice */
 
     /** Wallets */
