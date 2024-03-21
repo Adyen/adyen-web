@@ -1,6 +1,6 @@
-import { Dropin } from '../dropin';
-import { getImageCount } from '../../tests/utils/image';
-import { USER_TYPE_DELAY } from '../../tests/utils/constants';
+import { Dropin } from './dropin';
+import { getImageCount } from '../tests/utils/image';
+import { USER_TYPE_DELAY } from '../tests/utils/constants';
 
 export const getCreditCardPM_withBrandsInfo = (dropin: Dropin) => {
     const creditCard = dropin.getPaymentMethodItem('Cards');

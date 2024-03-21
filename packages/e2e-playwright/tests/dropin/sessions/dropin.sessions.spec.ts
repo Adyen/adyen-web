@@ -1,6 +1,6 @@
 import { test, expect } from '../../../pages/dropin/dropin.fixture';
 import { REGULAR_TEST_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE } from '../../utils/constants';
-import { typeIntoSecuredField } from '../../../models/dropinModelUtils/utils';
+import { typeIntoSecuredField } from '../../../models/utils';
 
 import LANG from '../../../../lib/src/language/locales/en-US.json';
 

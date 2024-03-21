@@ -1,5 +1,5 @@
 import { test, expect } from '../../../pages/dropin/dropin.fixture';
-import { getCreditCardPM_withBrandsInfo } from '../../../models/dropinModelUtils/utils';
+import { getCreditCardPM_withBrandsInfo } from '../../../models/utils';
 
 test.describe('Dropin - Card brands displayed in the Payment Method List and underneath the PAN field', () => {
     test('should display the 3 logos and left over amount of brands, and then display all available brands under the PAN field', async ({
