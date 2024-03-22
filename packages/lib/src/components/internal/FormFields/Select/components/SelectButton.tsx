@@ -38,6 +38,9 @@ function SelectButton(props: SelectButtonProps) {
 
     const onFocusHandler = readonly ? null : props.onFocus;
 
+    // check COWEB-1301 [Investigate] Drop-in Accessibility - ADA Compliance questions
+    const currentSelectedItemId = active.id ? `listItem-${active.id}` : '';
+
     return (
         <SelectButtonElement
             className={cx({
@@ -78,7 +81,7 @@ function SelectButton(props: SelectButtonProps) {
                         placeholder={i18n.get('select.filter.placeholder')}
                         ref={props.filterInputRef}
                         role="combobox"
-                        aria-activedescendant={`listItem-${active.id}`}
+                        aria-activedescendant={currentSelectedItemId}
                         type="text"
                         readOnly={props.readonly}
                         id={props.id}
