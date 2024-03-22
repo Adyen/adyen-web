@@ -113,7 +113,7 @@ export const sortErrorsByLayout = ({ errors, i18n, layout, countrySpecificLabels
         if (value) {
             const errObj: ValidationRuleResult | SFError | GenericError = errors[key];
 
-            const TREAT_AS_SF_ERROR = !(errObj instanceof ValidationRuleResult);
+            const TREAT_AS_SF_ERROR = 'errorI18n' in errObj && `rootNode` in errObj; // look for expected props, unique to an SFError
 
             // Some ValidationRuleResults can be passed an object in the 'errorMessage' prop (to give country specific errors)
             const ERROR_MSG_IS_OBJECT = typeof errObj.errorMessage === 'object';
