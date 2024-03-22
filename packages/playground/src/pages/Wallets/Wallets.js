@@ -19,7 +19,18 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         onError(error) {
             console.log(error);
         },
-        showPayButton: true
+        showPayButton: true,
+        applicationInfo: {
+            merchantApplication: {
+                name: 'merchant_application_name',
+                version: 'version'
+            },
+            externalPlatform: {
+                name: 'external_platform_name',
+                version: 'external_platform_version',
+                integrator: 'getSystemIntegratorName'
+            }
+        }
     });
 
     // Cash App Pay
@@ -164,6 +175,10 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
         // Payment info
         countryCode: 'NL',
+
+        // Analytics info
+        isExpress: true,
+        expressPage: 'pdp',
 
         // Merchant config (required)
         //            configuration: {

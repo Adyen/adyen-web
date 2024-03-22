@@ -7,11 +7,25 @@ import { AmazonPayElementData, AmazonPayElementProps, CheckoutDetailsRequest } f
 import defaultProps from './defaultProps';
 import { getCheckoutDetails } from './services';
 import './AmazonPay.scss';
+import { SendAnalyticsObject } from '../../core/Analytics/types';
+import { ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
 
 export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
     public static type = 'amazonpay';
     protected static defaultProps = defaultProps;
 
+    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
+        let extraAnalyticsObject = {};
+        if (analyticsObj.type === ANALYTICS_RENDERED_STR) {
+            const isExpress = this.props.isExpress;
+            const expressPage = this.props.expressPage ?? null;
+            extraAnalyticsObject = {
+                isExpress,
+                ...(isExpress && expressPage && { expressPage }) // We only care about the expressPage value if isExpress is true
+            };
+        }
+        super.submitAnalytics({ ...analyticsObj, ...extraAnalyticsObject });
+    }
     formatProps(props) {
         return {
             ...props,
