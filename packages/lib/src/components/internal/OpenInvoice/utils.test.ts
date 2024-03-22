@@ -1,7 +1,6 @@
 import { getActiveFieldsData, getInitialActiveFieldsets, mapFieldKey } from './utils';
 import { OpenInvoiceActiveFieldsets, OpenInvoiceStateData, OpenInvoiceVisibility } from './types';
 import Language from '../../../language';
-import { FIRST_NAME, LAST_NAME } from '../Address/constants';
 
 describe('OpenInvoice utils', () => {
     describe('getActiveFieldsData', () => {
