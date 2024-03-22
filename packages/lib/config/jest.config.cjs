@@ -15,5 +15,5 @@ module.exports = {
         '!src/**/types.ts',
         '!src/language/locales/**'
     ],
-    coveragePathIgnorePatterns: ['node_modules/', 'config/', 'scripts/', 'storybook/', '.storybook/', 'auto/']
+    coveragePathIgnorePatterns: ['node_modules/', 'config/', 'scripts/', 'storybook/', '.storybook/', 'auto/', '_']
 };
