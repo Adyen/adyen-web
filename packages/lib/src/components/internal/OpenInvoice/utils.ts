@@ -1,6 +1,5 @@
 import { OpenInvoiceActiveFieldsets, OpenInvoiceStateData, OpenInvoiceVisibility } from './types';
 import Language from '../../../language';
-import { mapFieldKey as mapFieldKeyPD } from '../PersonalDetails/utils';
 import { mapFieldKey as mapFieldKeyAddress } from '../Address/utils';
 import { StringObject } from '../Address/types';
 
@@ -52,16 +51,8 @@ export const mapFieldKey = (key: string, i18n: Language, countrySpecificLabels: 
     }
 
     const addressKey = mapFieldKeyAddress(refKey, i18n, countrySpecificLabels);
-    if (addressKey) return hasSplitKey ? `${i18n.get(label)} ${addressKey}` : addressKey;
-
-    // Personal details related
-    switch (refKey) {
-        case 'gender':
-        case 'dateOfBirth':
-            return mapFieldKeyPD(refKey, i18n);
-        default:
-            break;
-    }
+    // Also use the presence of a label to know that we are dealing with address related fields. (This matters now that addresses can contain first & last name fields.)
+    if (addressKey && label) return hasSplitKey ? `${i18n.get(label)} ${addressKey}` : addressKey;
 
     // We know that the translated error messages do contain a reference to the field they refer to, so we won't need to map them
     return null;
