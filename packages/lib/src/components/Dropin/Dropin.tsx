@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import defaultProps from './defaultProps';
-import DropinComponent from '../../components/Dropin/components/DropinComponent';
+import DropinComponent, { Bla } from '../../components/Dropin/components/DropinComponent';
 import CoreProvider from '../../core/Context/CoreProvider';
 import { getCommonProps } from './components/utils';
 import { createElements, createStoredElements } from './elements';
@@ -15,6 +15,7 @@ import type { PaymentAction, PaymentResponseData } from '../../types/global-type
 import type { ICore } from '../../core/types';
 import type { IDropin } from './types';
 import { computed, signal } from '@preact/signals';
+import Icon from '../internal/Icon';
 
 const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay'];
 
@@ -186,9 +187,10 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <SRPanelProvider srPanel={this.props.modules.srPanel}>
+                    <Icon type={this.stateSignal}></Icon>
                     <DropinComponent
                         {...this.props}
-                        dropinStatus={this.dropinStatus}
+                        //state={this.stateSignal}
                         core={this.core}
                         onChange={this.setState}
                         elementRef={this.elementRef}

@@ -113,7 +113,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     public setElementStatus(status: UIElementStatus, props?: any): this {
         this.elementRef?.setStatus(status, props);
-        this.setState({ self: { status } });
+        this.setState({ status });
         return this;
     }
 
@@ -351,7 +351,9 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     protected handleSuccessResult = (result: PaymentResponseData): void => {
         if (assertIsDropin(this.elementRef)) {
-            this.elementRef.displayFinalAnimation('success');
+            //this.elementRef.displayFinalAnimation('success');
+            debugger;
+            this.setState({ status: 'success' });
         }
 
         cleanupFinalResult(result);
@@ -366,7 +368,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      */
     protected handleResponse(rawResponse: RawPaymentResponse): void {
         const response = sanitizeResponse(rawResponse);
-        this.dropinStatus.value = { status: 'success' };
+
         if (response.action) {
             this.elementRef.handleAction(response.action);
             return;

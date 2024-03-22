@@ -26,8 +26,7 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
 
     public props: P;
     public state: any = {};
-    protected stateSignal = signal<any>({});
-    protected dropinStatus = signal<any>({});
+    protected stateSignal = signal('ready');
 
     public _component;
 
@@ -85,7 +84,8 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
 
     protected setState(newState: object): void {
         this.state = { ...this.state, ...newState };
-        //this.stateSignal.value = { ...this.stateSignal.value, ...newState };
+        debugger;
+        this.stateSignal.value = 'success';
     }
 
     /**
@@ -178,7 +178,7 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
     public update(props: Partial<P>): this {
         this.props = this.formatProps({ ...this.props, ...props });
         this.state = {};
-        this.stateSignal.value = {};
+        //this.stateSignal.value = {};
 
         return this.unmount().mount(this._node); // for new mount fny
     }

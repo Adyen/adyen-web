@@ -9,7 +9,7 @@ import { sanitizeOrder } from '../../internal/UIElement/utils';
 import { PaymentAmount } from '../../../types/global-types';
 import { ANALYTICS_RENDERED_STR } from '../../../core/Analytics/constants';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
-import { effect, signal } from '@preact/signals';
+import { computed, effect, signal } from '@preact/signals';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {

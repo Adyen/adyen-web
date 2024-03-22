@@ -77,7 +77,6 @@ export default function DonationComponent(props: DonationComponentProps) {
 
     return (
         <div className="adyen-checkout__adyen-giving">
-            {props?.dropinStatus?.value === 'bla' ? <div>bla status</div> : <div>no change</div>}
             <CampaignContainer {...props} />
 
             <div className="adyen-checkout__adyen-giving-actions">
