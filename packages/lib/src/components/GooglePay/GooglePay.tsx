@@ -18,11 +18,11 @@ class GooglePay extends UIElement<GooglePayProps> {
     protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
         let extraAnalyticsObject = {};
         if (analyticsObj.type === ANALYTICS_RENDERED_STR) {
-            const isExpress = this.props['isExpress'] ?? null;
-            const expressPage = this.props['expressPage'] ?? null;
+            const isExpress = this.props.isExpress;
+            const expressPage = this.props.expressPage ?? null;
             extraAnalyticsObject = {
-                ...(isExpress && { isExpress }),
-                ...(expressPage && { expressPage })
+                isExpress,
+                ...(isExpress && expressPage && { expressPage }) // We only care about the expressPage value if isExpress is true
             };
         }
         super.submitAnalytics({ ...analyticsObj, ...extraAnalyticsObject });

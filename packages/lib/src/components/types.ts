@@ -189,9 +189,19 @@ export interface UIElementProps extends BaseElementProps {
      * @internal
      */
     applicationInfo?: {
-        merchantApplication: string;
-        merchantApplicationVersion: string;
-        // ...etc
+        externalPlatform: {
+            name: string;
+            version: string;
+            integrator: string;
+        };
+        merchantApplication: {
+            name: string;
+            version: string;
+        };
+        merchantDevice?: {
+            os: string;
+            osVersion: string;
+        };
     };
 }
 

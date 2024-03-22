@@ -100,6 +100,17 @@ export interface GooglePayProps extends UIElementProps {
     emailRequired?: boolean;
 
     /**
+     * Used for analytics
+     */
+    expressPage?: 'cart' | 'minicart' | 'pdp' | 'checkout';
+
+    /**
+     * Used for analytics
+     * @defaultValue false
+     */
+    isExpress?: boolean;
+
+    /**
      * Set to true to request a full shipping address.
      * @defaultValue false
      */

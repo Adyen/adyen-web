@@ -1,6 +1,8 @@
 export default {
     environment: 'TEST',
 
+    isExpress: false,
+
     // isReadyToPayRequest
     existingPaymentMethodRequired: false,
 
