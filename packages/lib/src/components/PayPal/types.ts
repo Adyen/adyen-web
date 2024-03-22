@@ -165,10 +165,15 @@ interface PayPalCommonProps {
     onShippingOptionsChange?: (data: any, actions: { reject: (reason?: string) => Promise<void> }) => Promise<void>;
 
     /**
-     *  Identifies if the payment is Express.
+     *  Identifies if the payment is Express. Also used for analytics.
      *  @defaultValue false
      */
     isExpress?: boolean;
+
+    /**
+     * Used for analytics
+     */
+    expressPage?: 'cart' | 'minicart' | 'pdp' | 'checkout';
 }
 
 export interface PayPalConfig {
