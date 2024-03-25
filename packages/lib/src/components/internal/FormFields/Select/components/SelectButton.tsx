@@ -11,7 +11,7 @@ function SelectButtonElement({ filterable, toggleButtonRef, ...props }) {
     return <button id={props.id} aria-describedby={props.ariaDescribedBy} type={'button'} {...props} ref={toggleButtonRef} />;
 }
 
-function SelectButton(props: SelectButtonProps) {
+function SelectButton(props: Readonly<SelectButtonProps>) {
     const { i18n } = useCoreContext();
     const { active, selected, inputText, readonly, showList } = props;
 
