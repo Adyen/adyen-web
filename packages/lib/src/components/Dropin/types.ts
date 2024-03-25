@@ -5,6 +5,7 @@ import type { ICore } from '../../core/types';
 
 import UIElement from '../internal/UIElement/UIElement';
 import { ComponentsMap } from '../components-map';
+import { Signal } from '@preact/signals';
 
 /**
  * Available components
@@ -120,9 +121,10 @@ export interface DropinComponentProps extends DropinConfiguration {
     onCreateElements: any;
     onChange: (newState?: object) => void;
     onOrderCancel?: onOrderCancelType;
+    status?: Signal<string>;
 }
 
-interface DropinStatus {
+export interface DropinStatus {
     type: UIElementStatus;
     props?: DropinStatusProps;
 }

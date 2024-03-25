@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import defaultProps from './defaultProps';
-import DropinComponent, { Bla } from '../../components/Dropin/components/DropinComponent';
+import DropinComponent from '../../components/Dropin/components/DropinComponent';
 import CoreProvider from '../../core/Context/CoreProvider';
 import { getCommonProps } from './components/utils';
 import { createElements, createStoredElements } from './elements';
@@ -14,8 +14,6 @@ import type { DropinConfiguration, InstantPaymentTypes, PaymentMethodsConfigurat
 import type { PaymentAction, PaymentResponseData } from '../../types/global-types';
 import type { ICore } from '../../core/types';
 import type { IDropin } from './types';
-import { computed, signal } from '@preact/signals';
-import Icon from '../internal/Icon';
 
 const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay'];
 
@@ -40,6 +38,7 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
     }
 
     protected override storeElementRefOnCore() {
+        // @ts-ignore bla
         this.core.storeElementReference(this);
     }
 
@@ -65,10 +64,10 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         return this;
     }
 
-    /*    public setStatus(status, props = {}): this {
-            this.dropinRef?.setStatus(status, props);
-            return this;
-        }*/
+    // @ts-ignore bla
+    public setStatus(status) {
+        super.setState({ status });
+    }
 
     get activePaymentMethod() {
         if (!this.dropinRef?.state && !this.dropinRef?.state.activePaymentMethod) {
@@ -133,6 +132,7 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         return [storedElements, elements, instantPaymentElements];
     };
 
+    // @ts-ignore bla
     public handleAction(action: PaymentAction, props = {}): this | null {
         if (!action || !action.type) {
             if (hasOwnProperty(action, 'action') && hasOwnProperty(action, 'resultCode')) {
@@ -163,6 +163,7 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         });
 
         if (paymentAction) {
+            // @ts-ignore bla
             this.setStatus(paymentAction.props.statusType, { component: paymentAction });
             this.componentFromAction = paymentAction;
             return this;
@@ -183,14 +184,17 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         this.dropinRef.closeActivePaymentMethod();
     }
 
+    setState(newState) {
+        this.state = { ...this.state, ...newState };
+    }
+
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <SRPanelProvider srPanel={this.props.modules.srPanel}>
-                    <Icon type={this.stateSignal}></Icon>
                     <DropinComponent
                         {...this.props}
-                        //state={this.stateSignal}
+                        status={this.stateSignal}
                         core={this.core}
                         onChange={this.setState}
                         elementRef={this.elementRef}

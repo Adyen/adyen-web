@@ -28,11 +28,11 @@ import type { IDropin } from '../../Dropin/types';
 import './UIElement.scss';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> implements IUIElement {
-    protected componentRef: any;
+    protected componentRef: any; // todo: idea is remove the component ref, and pass the signal to component directly
 
     protected resources: Resources;
 
-    public elementRef: UIElement;
+    public elementRef: UIElement; // self
 
     public static type = undefined;
 
@@ -113,10 +113,10 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     public setElementStatus(status: UIElementStatus, props?: any): this {
         this.elementRef?.setStatus(status, props);
-        this.setState({ status });
         return this;
     }
 
+    // todo: the idea is to remove this function and pass signal as prop to Preact component.
     public setStatus(status: UIElementStatus, props?): this {
         if (this.componentRef?.setStatus) {
             this.componentRef.setStatus(status, props);
@@ -343,22 +343,22 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      */
     protected handleFailedResult = (result?: PaymentResponseData): void => {
         if (assertIsDropin(this.elementRef)) {
-            this.elementRef.displayFinalAnimation('error');
+            //this.elementRef.displayFinalAnimation('error');
         }
         cleanupFinalResult(result);
         this.props.onPaymentFailed?.(result, this.elementRef);
     };
 
-    protected handleSuccessResult = (result: PaymentResponseData): void => {
-        if (assertIsDropin(this.elementRef)) {
-            //this.elementRef.displayFinalAnimation('success');
-            debugger;
-            this.setState({ status: 'success' });
+    protected handleSuccessResult(result: PaymentResponseData) {
+        if (this.elementRef) {
+            this.setElementStatus('success');
+            //this.setElementStatus('success');
+            //this.setState({ status: 'success' });
         }
 
         cleanupFinalResult(result);
         this.props.onPaymentCompleted?.(result, this.elementRef);
-    };
+    }
 
     /**
      * Handles a session /payments or /payments/details response.

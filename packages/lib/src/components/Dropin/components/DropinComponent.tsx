@@ -9,7 +9,6 @@ import { sanitizeOrder } from '../../internal/UIElement/utils';
 import { PaymentAmount } from '../../../types/global-types';
 import { ANALYTICS_RENDERED_STR } from '../../../core/Analytics/constants';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
-import { computed, effect, signal } from '@preact/signals';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
@@ -131,8 +130,8 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         const isLoading = status.type === 'loading';
         const isRedirecting = status.type === 'redirect';
         const hasPaymentMethodsToBeDisplayed = elements?.length || instantPaymentElements?.length || storedPaymentElements?.length;
-
-        switch (status.type) {
+        console.log('props.status.value', props.status.value);
+        switch (props.status.value) {
             case 'success':
                 return <Status.Success message={props?.amount?.value === 0 ? 'resultMessages.preauthorized' : status.props?.message} />;
 
@@ -145,8 +144,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
             default:
                 return (
                     <div className={`adyen-checkout__dropin adyen-checkout__dropin--${status.type}`}>
-                        {isRedirecting && status.props.component && status.props.component.render()}
-                        {isLoading && status.props && status.props.component && status.props.component.render()}
+                        <div>status: {props?.status?.value}</div>
                         {hasPaymentMethodsToBeDisplayed && (
                             <PaymentMethodList
                                 isLoading={isLoading || isRedirecting}

@@ -84,8 +84,11 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
 
     protected setState(newState: object): void {
         this.state = { ...this.state, ...newState };
-        debugger;
-        this.stateSignal.value = 'success';
+        // @ts-ignore bla
+        if (newState?.status) {
+            // @ts-ignore bla
+            this.stateSignal.value = newState.status;
+        }
     }
 
     /**
@@ -178,7 +181,6 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
     public update(props: Partial<P>): this {
         this.props = this.formatProps({ ...this.props, ...props });
         this.state = {};
-        //this.stateSignal.value = {};
 
         return this.unmount().mount(this._node); // for new mount fny
     }
