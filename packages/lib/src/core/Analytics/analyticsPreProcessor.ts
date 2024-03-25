@@ -29,7 +29,16 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
              */
             // Called from BaseElement (when component mounted) or, from DropinComponent (after mounting, when it has finished resolving all the PM promises)
             // &/or, from DropinComponent when a PM is selected
-            case ANALYTICS_RENDERED_STR:
+            case ANALYTICS_RENDERED_STR: {
+                const { isStoredPaymentMethod, brand, isExpress, expressPage } = analyticsObj;
+                const data = { component, type, isStoredPaymentMethod, brand, isExpress, expressPage };
+
+                analyticsModule.createAnalyticsEvent({
+                    event: ANALYTICS_EVENT_INFO,
+                    data
+                });
+                break;
+            }
             case ANALYTICS_CONFIGURED_STR: {
                 const { isStoredPaymentMethod, brand } = analyticsObj;
                 const data = { component, type, isStoredPaymentMethod, brand };

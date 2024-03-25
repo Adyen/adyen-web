@@ -17,6 +17,8 @@ const defaultProps = {
 
     initiative: 'web',
 
+    isExpress: false,
+
     /**
      * https://developer.apple.com/documentation/apple_pay_on_the_web/applepaypaymentrequest/1916120-lineitems
      * A set of line items that explain recurring payments and additional charges and discounts.

@@ -1,4 +1,4 @@
-import { AnalyticsObject, CreateAnalyticsObject } from './types';
+import { ALLOWED_ANALYTICS_DATA, AnalyticsData, AnalyticsObject, CreateAnalyticsObject } from './types';
 import { ANALYTICS_ACTION_STR, ANALYTICS_VALIDATION_ERROR_STR, errorCodeMapping } from './constants';
 import uuid from '../../utils/uuid';
 import { ERROR_CODES, ERROR_MSG_INCOMPLETE_FIELD } from '../Errors/constants';
@@ -35,6 +35,7 @@ export const createAnalyticsObject = (aObj: CreateAnalyticsObject): AnalyticsObj
     /** INFO */
     ...(aObj.event === 'info' && { type: aObj.type, target: aObj.target }), // info event
     ...(aObj.event === 'info' && aObj.issuer && { issuer: aObj.issuer }), // relates to issuerLists
+    ...(aObj.event === 'info' && { isExpress: aObj.isExpress, expressPage: aObj.expressPage }), // relates to Plugins & detecting Express PMs
     ...(aObj.event === 'info' && aObj.isStoredPaymentMethod && { isStoredPaymentMethod: aObj.isStoredPaymentMethod, brand: aObj.brand }), // only added if we have an info event about a storedPM
     ...(aObj.event === 'info' &&
         aObj.type === ANALYTICS_VALIDATION_ERROR_STR && {
@@ -52,4 +53,11 @@ const mapErrorCodesForAnalytics = (errorCode: string, target: string) => {
     }
 
     return errorCodeMapping[errorCode] ?? errorCode;
+};
+
+export const processAnalyticsData = (analyticsData: AnalyticsData) => {
+    return Object.keys(analyticsData).reduce((r, e) => {
+        if (ALLOWED_ANALYTICS_DATA.includes(e)) r[e] = analyticsData[e];
+        return r;
+    }, {});
 };

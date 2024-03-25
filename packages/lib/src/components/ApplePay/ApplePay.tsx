@@ -10,8 +10,9 @@ import { preparePaymentRequest } from './payment-request';
 import { resolveSupportedVersion, mapBrands } from './utils';
 import { ApplePayElementProps, ApplePayElementData, ApplePaySessionRequest, OnAuthorizedCallback } from './types';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
-import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
+import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_RENDERED_STR, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
 import { DecodeObject } from '../types';
+import { SendAnalyticsObject } from '../../core/Analytics/types';
 
 const latestSupportedVersion = 14;
 
@@ -24,6 +25,19 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
         this.startSession = this.startSession.bind(this);
         this.submit = this.submit.bind(this);
         this.validateMerchant = this.validateMerchant.bind(this);
+    }
+
+    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
+        let extraAnalyticsObject = {};
+        if (analyticsObj.type === ANALYTICS_RENDERED_STR) {
+            const isExpress = this.props.isExpress;
+            const expressPage = this.props.expressPage ?? null;
+            extraAnalyticsObject = {
+                isExpress,
+                ...(isExpress && expressPage && { expressPage }) // We only care about the expressPage value if isExpress is true
+            };
+        }
+        super.submitAnalytics({ ...analyticsObj, ...extraAnalyticsObject });
     }
 
     /**
