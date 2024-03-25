@@ -1,5 +1,19 @@
 # @adyen/adyen-web
 
+## 5.61.0
+
+### Minor Changes
+
+-   Allow forward slashes in address fields ([#2607](https://github.com/Adyen/adyen-web/pull/2607))
+
+### Patch Changes
+
+-   Fixing SRPanel issues in OpenInvoice comp now that (delivery) addresses can have first & last Names ([#2604](https://github.com/Adyen/adyen-web/pull/2604))
+
+-   Fix(a11y): select/combobox aria-activedescendant is now empty when active item is null ([#2612](https://github.com/Adyen/adyen-web/pull/2612))
+
+-   Add analytics to ascertain when certain "wallets" are explicitly used as express payment methods ([#2616](https://github.com/Adyen/adyen-web/pull/2616))
+
 ## 5.60.0
 
 ### Minor Changes
