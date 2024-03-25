@@ -11,7 +11,7 @@ function SelectButtonElement({ filterable, toggleButtonRef, ...props }) {
     return <button id={props.id} aria-describedby={props.ariaDescribedBy} type={'button'} {...props} ref={toggleButtonRef} />;
 }
 
-function SelectButton(props: SelectButtonProps) {
+function SelectButton(props: Readonly<SelectButtonProps>) {
     const { i18n } = useCoreContext();
     const { active, selected, inputText, readonly, showList } = props;
 
@@ -37,6 +37,9 @@ function SelectButton(props: SelectButtonProps) {
     const onClickHandler = readonly ? null : props.filterable ? setFocus : props.toggleList;
 
     const onFocusHandler = readonly ? null : props.onFocus;
+
+    // check COWEB-1301 [Investigate] Drop-in Accessibility - ADA Compliance questions
+    const currentSelectedItemId = active.id ? `listItem-${active.id}` : '';
 
     return (
         <SelectButtonElement
@@ -78,7 +81,7 @@ function SelectButton(props: SelectButtonProps) {
                         placeholder={i18n.get('select.filter.placeholder')}
                         ref={props.filterInputRef}
                         role="combobox"
-                        aria-activedescendant={`listItem-${active.id}`}
+                        aria-activedescendant={currentSelectedItemId}
                         type="text"
                         readOnly={props.readonly}
                         id={props.id}
