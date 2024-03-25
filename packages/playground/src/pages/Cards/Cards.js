@@ -8,18 +8,18 @@ import '../../style.scss';
 import { MockReactApp } from './MockReactApp';
 import { searchFunctionExample } from '../../utils';
 
-const onlyShowCard = true;
+const onlyShowCard = false;
 
 const showComps = {
-    // clickToPay: true,
-    // storedCard: true,
-    // card: true,
-    // cardWithInstallments: true,
-    // cardInReact: true,
-    // bcmcCard: true,
-    avsCard: true
-    // avsPartialCard: true,
-    // kcpCard: true
+    clickToPay: true,
+    storedCard: true,
+    card: true,
+    cardWithInstallments: true,
+    cardInReact: true,
+    bcmcCard: true,
+    avsCard: true,
+    avsPartialCard: true,
+    kcpCard: true
 };
 const disclaimerMessage = {
     message: 'By continuing you accept the %{linkText} of MyStore',
@@ -138,20 +138,19 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 billingAddressAllowedCountries: ['US', 'CA', 'GB'],
                 // billingAddressRequiredFields: ['postalCode', 'country'],
 
-                onAddressLookup: searchFunctionExample,
+                // onAddressLookup: searchFunctionExample,
 
-                // data:
-                // data: {
-                //     holderName: 'J. Smith',
-                //     billingAddress: {
-                //         street: 'Infinite Loop',
-                //         postalCode: '95014',
-                //         city: 'Cupertino',
-                //         houseNumberOrName: '1',
-                //         country: 'US',
-                //         stateOrProvince: 'CA'
-                //     }
-                // },
+                data: {
+                    holderName: 'J. Smith',
+                    billingAddress: {
+                        street: 'Infinite Loop',
+                        postalCode: '95014',
+                        city: 'Cupertino',
+                        houseNumberOrName: '1',
+                        country: 'US',
+                        stateOrProvince: 'CA'
+                    }
+                },
                 onError: obj => {
                     console.log('component level merchant defined error handler for Card obj=', obj);
                 }

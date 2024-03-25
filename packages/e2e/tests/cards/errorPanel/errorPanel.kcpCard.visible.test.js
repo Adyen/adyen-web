@@ -46,6 +46,8 @@ test('#1 Click pay with empty fields and error panel is populated', async t => {
     // no 7th element
     await t.expect(cardPage.errorPanelEls.nth(6).exists).notOk();
 
+    await t.wait(500);
+
     // Expect focus to be place on Card number field - since SRConfig for this card comp says it should be
     await t.expect(cardPage.numLabelWithFocus.exists).ok();
 });
