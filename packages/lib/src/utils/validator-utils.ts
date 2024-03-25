@@ -22,7 +22,7 @@ export const isEmpty = input => !!(input == null || /^[\s]*$/.test(input));
 export const isString = input => typeof input === 'string' || input instanceof String;
 export const hasText = input => isString(input) && !isEmpty(input);
 
-export const SPECIAL_CHARS = '?\\+_=!@#$%^&*(){}~<>\\[\\]\\/\\\\'; // N.B. difficulty escaping \
+export const SPECIAL_CHARS = '?\\+_=!@#$%^&*(){}~<>\\[\\]\\\\'; // N.B. difficulty escaping \ (takes 3 backslashes!)
 
 // Generates a regEx ideal for use in a String.replace call for use in a formatter
 // e.g. getFormattingRegEx('^\\d', 'g') will generate: /[^\d]/g which is a regEx to match anything that is not a digit
