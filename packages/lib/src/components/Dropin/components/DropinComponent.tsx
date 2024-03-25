@@ -130,13 +130,17 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         const isLoading = status.type === 'loading';
         const isRedirecting = status.type === 'redirect';
         const hasPaymentMethodsToBeDisplayed = elements?.length || instantPaymentElements?.length || storedPaymentElements?.length;
-        console.log('props.status.value', props.status.value);
+
         switch (props.status.value) {
             case 'success':
-                return <Status.Success message={props?.amount?.value === 0 ? 'resultMessages.preauthorized' : status.props?.message} />;
+                return (
+                    !props.disableFinalAnimation && (
+                        <Status.Success message={props?.amount?.value === 0 ? 'resultMessages.preauthorized' : status.props?.message} />
+                    )
+                );
 
             case 'error':
-                return <Status.Error message={status.props?.message} />;
+                return !props.disableFinalAnimation && <Status.Error message={status.props?.message} />;
 
             case 'custom':
                 return status.props?.component?.render();

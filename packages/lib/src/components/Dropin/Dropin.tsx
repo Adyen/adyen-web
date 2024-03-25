@@ -85,12 +85,6 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         return this.dropinRef.state.activePaymentMethod.data;
     }
 
-    public displayFinalAnimation(type: 'success' | 'error') {
-        if (this.props.disableFinalAnimation) return;
-
-        this.dropinRef.setStatus(type);
-    }
-
     /**
      * Calls the onSubmit event with the state of the activePaymentMethod
      */

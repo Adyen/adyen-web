@@ -5,6 +5,7 @@ import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 
 import type { ICore } from '../../../core/types';
 import type { BaseElementProps, IBaseElement } from './types';
+import { Status } from './types';
 import type { PaymentData } from '../../../types/global-types';
 import { AnalyticsInitialEvent, SendAnalyticsObject } from '../../../core/Analytics/types';
 import { ANALYTICS_RENDERED_STR } from '../../../core/Analytics/constants';
@@ -26,7 +27,7 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
 
     public props: P;
     public state: any = {};
-    protected stateSignal = signal('ready');
+    protected stateSignal = signal<Status>(Status.Ready);
 
     public _component;
 
@@ -86,7 +87,6 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
         this.state = { ...this.state, ...newState };
         // @ts-ignore bla
         if (newState?.status) {
-            // @ts-ignore bla
             this.stateSignal.value = newState.status;
         }
     }

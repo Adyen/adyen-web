@@ -3,7 +3,7 @@ import Session from '../../../core/CheckoutSession';
 import UIElement from './UIElement';
 import { PaymentAction, PaymentAmount, PaymentAmountExtended } from '../../../types/global-types';
 import Language from '../../../language';
-import { BaseElementProps, IBaseElement } from '../BaseElement/types';
+import { BaseElementProps, IBaseElement, Status } from '../BaseElement/types';
 import { PayButtonProps } from '../PayButton/PayButton';
 import { CoreConfiguration, ICore } from '../../../core/types';
 
@@ -120,7 +120,7 @@ export interface IUIElement extends IBaseElement {
     isAvailable(): Promise<void>;
 }
 
-export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';
+export type UIElementStatus = Status;
 
 // An interface for the members exposed by a component to its parent UIElement
 export interface ComponentMethodsRef {

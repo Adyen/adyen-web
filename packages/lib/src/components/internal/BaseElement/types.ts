@@ -5,6 +5,14 @@ import { Resources } from '../../../core/Context/Resources';
 import RiskElement from '../../../core/RiskModule';
 import { ComponentChild } from 'preact';
 
+// Element / Component status
+export enum Status {
+    Ready = 'ready',
+    Loading = 'loading',
+    Success = 'success',
+    Error = 'error'
+}
+
 export interface BaseElementProps {
     order?: Order;
     modules?: {

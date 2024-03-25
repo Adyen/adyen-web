@@ -26,6 +26,7 @@ import type {
 import type { IDropin } from '../../Dropin/types';
 
 import './UIElement.scss';
+import { Status } from '../BaseElement/types';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> implements IUIElement {
     protected componentRef: any; // todo: idea is remove the component ref, and pass the signal to component directly
@@ -62,7 +63,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.makeAdditionalDetailsCall = this.makeAdditionalDetailsCall.bind(this);
         this.submitUsingSessionsFlow = this.submitUsingSessionsFlow.bind(this);
 
-        this.elementRef = (props && props.elementRef) || this;
+        this.elementRef = (props && props.elementRef) || this; // what's the use case when we want to pass a different element ref than this?
         this.resources = this.props.modules ? this.props.modules.resources : undefined;
 
         this.storeElementRefOnCore(this.props);
@@ -101,7 +102,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         return Promise.resolve();
     }
 
-    public setState(newState: object): void {
+    // Also update signal
+    protected setState(newState: object): void {
         super.setState(newState);
         this.onChange();
     }
@@ -117,10 +119,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     // todo: the idea is to remove this function and pass signal as prop to Preact component.
-    public setStatus(status: UIElementStatus, props?): this {
-        if (this.componentRef?.setStatus) {
+    protected setStatus(status: UIElementStatus, props?): this {
+        /*   if (this.componentRef?.setStatus) {
             this.componentRef.setStatus(status, props);
-        }
+        }*/
+        this.setState({ status });
         return this;
     }
 
@@ -178,7 +181,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     protected makePaymentsCall(): Promise<CheckoutAdvancedFlowResponse | CheckoutSessionPaymentResponse> {
-        this.setElementStatus('loading');
+        this.setElementStatus(Status.Loading);
 
         if (this.props.onSubmit) {
             return this.submitUsingAdvancedFlow();
@@ -252,7 +255,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
          * - If Drop-in, will set status for Dropin component, and then it will propagate the new status for the active payment method component
          * - If Component, it will set its own status
          */
-        this.setElementStatus('ready');
+        this.setElementStatus(Status.Ready);
 
         if (this.props.onError) {
             this.props.onError(error, this.elementRef);
@@ -268,7 +271,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     private makeAdditionalDetailsCall(state: AdditionalDetailsStateData): Promise<CheckoutSessionDetailsResponse | CheckoutAdvancedFlowResponse> {
-        this.setElementStatus('loading');
+        this.setElementStatus(Status.Loading);
 
         if (this.props.onAdditionalDetails) {
             return new Promise<CheckoutAdvancedFlowResponse>((resolve, reject) => {
@@ -343,17 +346,15 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      */
     protected handleFailedResult = (result?: PaymentResponseData): void => {
         if (assertIsDropin(this.elementRef)) {
-            //this.elementRef.displayFinalAnimation('error');
+            this.setElementStatus(Status.Error);
         }
         cleanupFinalResult(result);
         this.props.onPaymentFailed?.(result, this.elementRef);
     };
 
     protected handleSuccessResult(result: PaymentResponseData) {
-        if (this.elementRef) {
-            this.setElementStatus('success');
-            //this.setElementStatus('success');
-            //this.setState({ status: 'success' });
+        if (assertIsDropin(this.elementRef)) {
+            this.setElementStatus(Status.Success);
         }
 
         cleanupFinalResult(result);
