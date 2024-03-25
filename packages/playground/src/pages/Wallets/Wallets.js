@@ -20,15 +20,19 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             console.log(error);
         },
         showPayButton: true,
-        applicationInfo: {
-            merchantApplication: {
-                name: 'merchant_application_name',
-                version: 'version'
-            },
-            externalPlatform: {
-                name: 'external_platform_name',
-                version: 'external_platform_version',
-                integrator: 'getSystemIntegratorName'
+        analytics: {
+            analyticsData: {
+                applicationInfo: {
+                    merchantApplication: {
+                        name: 'merchant_application_name',
+                        version: 'version'
+                    },
+                    externalPlatform: {
+                        name: 'external_platform_name',
+                        version: 'external_platform_version',
+                        integrator: 'getSystemIntegratorName'
+                    }
+                }
             }
         }
     });
