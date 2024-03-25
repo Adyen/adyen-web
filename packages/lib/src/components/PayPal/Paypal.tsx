@@ -9,6 +9,8 @@ import CoreProvider from '../../core/Context/CoreProvider';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { ERRORS } from './constants';
 import { createShopperDetails } from './utils/create-shopper-details';
+import { SendAnalyticsObject } from '../../core/Analytics/types';
+import { ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
 
 class PaypalElement extends UIElement<PayPalElementProps> {
     public static type = 'paypal';
@@ -26,6 +28,19 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleOnShippingAddressChange = this.handleOnShippingAddressChange.bind(this);
         this.handleOnShippingOptionsChange = this.handleOnShippingOptionsChange.bind(this);
+    }
+
+    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
+        let extraAnalyticsObject = {};
+        if (analyticsObj.type === ANALYTICS_RENDERED_STR) {
+            const isExpress = this.props.isExpress;
+            const expressPage = this.props.expressPage ?? null;
+            extraAnalyticsObject = {
+                isExpress,
+                ...(isExpress && expressPage && { expressPage }) // We only care about the expressPage value if isExpress is true
+            };
+        }
+        super.submitAnalytics({ ...analyticsObj, ...extraAnalyticsObject });
     }
 
     formatProps(props: PayPalElementProps): PayPalElementProps {

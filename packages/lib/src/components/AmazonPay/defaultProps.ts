@@ -13,7 +13,8 @@ const defautProps: Partial<AmazonPayElementProps> = {
     showSignOutButton: false,
     showPayButton: true,
     onClick: resolve => resolve(),
-    onSignOut: resolve => resolve()
+    onSignOut: resolve => resolve(),
+    isExpress: false
 };
 
 export default defautProps;

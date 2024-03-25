@@ -33,6 +33,17 @@ export type OnAuthorizedCallback = (
 
 export interface ApplePayElementProps extends UIElementProps {
     /**
+     * Used for analytics
+     * @defaultValue false
+     */
+    isExpress?: boolean;
+
+    /**
+     * Used for analytics
+     */
+    expressPage?: 'cart' | 'minicart' | 'pdp' | 'checkout';
+
+    /**
      * The Apple Pay version number your website supports.
      * @default highest supported version by the shopper device
      * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/apple_pay_on_the_web_version_history Apple Pay on the Web Version History}
