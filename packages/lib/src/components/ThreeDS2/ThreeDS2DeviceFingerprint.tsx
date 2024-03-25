@@ -69,9 +69,11 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintProps
         }
 
         /**
-         * this.props.useOriginalFlow indicates the old 3DS2 flow.
-         * It means the call to create this component came from the old 'threeDS2Fingerprint' action and upon completion should call the /details endpoint
-         * instead of the new /submitThreeDS2Fingerprint endpoint
+         * NOTE: this.props.useOriginalFlow (used below) indicates either the old 3DS2 flow *OR* the 3DS2InMDFlow
+         * - In the first case (old 3DS2 flow) - it means the call to create this component came from the old 'threeDS2Fingerprint' action and
+         * upon completion should call the /details endpoint instead of the new /submitThreeDS2Fingerprint endpoint.
+         * - In the 3DS2InMDFlow case the challenge isn't initiated by handling an action and instead creates a new ThreeDS2Challenge component
+         * with an onComplete prop, which should be called instead of this.callSubmit3DS2Fingerprint
          */
         return (
             <PrepareFingerprint

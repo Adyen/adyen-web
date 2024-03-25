@@ -92,7 +92,9 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             // Send log to analytics endpoint
             this.props.onSubmitAnalytics(analyticsObject);
 
-            this.props.onComplete(data); // (equals onAdditionalDetails - except for 3DS2InMDFlow)
+            // Equals a call to onAdditionalDetails (mapped in actionTypes.ts) - except for 3DS2InMDFlow which doesn't handle an action
+            // and instead creates a new ThreeDS2Challenge component, with an onComplete prop
+            this.props.onComplete(data);
         });
     }
 
