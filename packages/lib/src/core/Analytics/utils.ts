@@ -1,4 +1,4 @@
-import { AnalyticsObject, CreateAnalyticsObject } from './types';
+import { ALLOWED_ANALYTICS_DATA, AnalyticsData, AnalyticsObject, CreateAnalyticsObject } from './types';
 import { ANALYTICS_ACTION_STR, ANALYTICS_VALIDATION_ERROR_STR, errorCodeMapping } from './constants';
 import uuid from '../../utils/uuid';
 import { ERROR_CODES, ERROR_MSG_INCOMPLETE_FIELD } from '../Errors/constants';
@@ -53,4 +53,11 @@ const mapErrorCodesForAnalytics = (errorCode: string, target: string) => {
     }
 
     return errorCodeMapping[errorCode] ?? errorCode;
+};
+
+export const processAnalyticsData = (analyticsData: AnalyticsData) => {
+    return Object.keys(analyticsData).reduce((r, e) => {
+        if (ALLOWED_ANALYTICS_DATA.includes(e)) r[e] = analyticsData[e];
+        return r;
+    }, {});
 };

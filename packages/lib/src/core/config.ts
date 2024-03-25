@@ -17,7 +17,6 @@ export const GENERIC_OPTIONS = [
     'showPayButton',
     'redirectFromTopWhenInIframe',
     'installmentOptions',
-    'applicationInfo',
 
     // Events
     'onPaymentCompleted',

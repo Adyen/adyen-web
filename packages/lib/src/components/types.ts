@@ -182,27 +182,6 @@ export interface UIElementProps extends BaseElementProps {
 
     /** @internal */
     i18n?: Language;
-
-    /**
-     * Relates to PMs used within Plugins
-     * https://docs.adyen.com/development-resources/application-information/?tab=integrator_built_2#application-information-fields
-     * @internal
-     */
-    applicationInfo?: {
-        externalPlatform: {
-            name: string;
-            version: string;
-            integrator: string;
-        };
-        merchantApplication: {
-            name: string;
-            version: string;
-        };
-        merchantDevice?: {
-            os: string;
-            osVersion: string;
-        };
-    };
 }
 
 // An interface for the members exposed by a component to its parent UIElement
