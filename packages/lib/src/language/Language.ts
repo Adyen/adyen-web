@@ -2,7 +2,6 @@ import { formatCustomTranslations, formatLocale, getTranslation, loadTranslation
 import { FALLBACK_LOCALE, defaultTranslation } from './config';
 import locales from './locales';
 import { getLocalisedAmount } from '../utils/amount-util';
-import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 
 export class Language {
     private readonly supportedLocales: string[];
@@ -13,6 +12,18 @@ export class Language {
     public readonly customTranslations;
     public loaded: Promise<any>;
 
+    public readonly timeFormatOptions: Intl.DateTimeFormatOptions = {
+        hour: 'numeric',
+        minute: 'numeric'
+    };
+    public readonly timeAndDateFormatOptions: Intl.DateTimeFormatOptions = {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        ...this.timeFormatOptions
+    };
+    public readonly timeAndDateFormatter: Intl.DateTimeFormat;
+
     constructor(locale: string = FALLBACK_LOCALE, customTranslations: object = {}) {
         const defaultLocales = Object.keys(locales);
         this.customTranslations = formatCustomTranslations(customTranslations, defaultLocales);
@@ -22,6 +33,8 @@ export class Language {
         this.locale = formatLocale(locale) || parseLocale(locale, this.supportedLocales) || FALLBACK_LOCALE;
         const [languageCode] = this.locale.split('-');
         this.languageCode = languageCode;
+
+        this.timeAndDateFormatter = Intl.DateTimeFormat(undefined, this.timeAndDateFormatOptions);
 
         this.loaded = loadTranslations(this.locale, this.customTranslations).then(translations => {
             this.translations = translations;
@@ -61,6 +74,14 @@ export class Language {
     date(date: string, options: object = {}) {
         const dateOptions: DateTimeFormatOptions = { year: 'numeric', month: '2-digit', day: '2-digit', ...options };
         return new Date(date).toLocaleDateString(this.locale, dateOptions);
+    }
+
+    /**
+     * Returns a localized string for a date and time
+     * @param date - Date to be localized
+     */
+    dateTime(date: string) {
+        return this.timeAndDateFormatter.format(new Date(date));
     }
 }
 
