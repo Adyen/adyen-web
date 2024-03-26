@@ -7,6 +7,7 @@ const initCheckout = async () => {
     window.checkout = await AdyenCheckout({
         clientKey: process.env.__CLIENT_KEY__,
         locale: shopperLocale,
+        translationEnvironment: 'local',
         environment: 'test',
         countryCode
     });

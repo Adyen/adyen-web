@@ -2,7 +2,7 @@ import { Selector } from 'testcafe';
 import { start, getIframeSelector } from '../../utils/commonUtils';
 import cu from '../utils/cardUtils';
 import { CARDS_URL } from '../../pages';
-import LANG from '../../../../lib/src/language/locales/en-US.json';
+import LANG from '../../../../server/translations/en-US.json';
 
 const errorHolder = Selector('.card-field .adyen-checkout__field--error');
 const errorLabel = Selector('.card-field .adyen-checkout-contextual-text--error');

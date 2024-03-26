@@ -17,11 +17,12 @@ import { ANALYTICS_ACTION_STR } from './Analytics/constants';
 import { THREEDS2_FULL } from '../components/ThreeDS2/config';
 import { DEFAULT_LOCALE } from '../language/constants';
 import getTranslations from './Services/get-translations';
+import { defaultProps } from './core.defaultProps';
+import { formatCustomTranslations, formatLocale } from '../language/utils';
 
 import type { AdditionalDetailsStateData, PaymentAction, PaymentResponseData } from '../types/global-types';
 import type { CoreConfiguration, ICore } from './types';
 import type { Translations } from '../language/types';
-import { formatCustomTranslations, formatLocale } from '../language/utils';
 
 class Core implements ICore {
     public session?: Session;
@@ -36,9 +37,6 @@ class Core implements ICore {
 
     public static readonly metadata = {
         version: process.env.VERSION,
-        revision: process.env.COMMIT_HASH,
-        branch: process.env.COMMIT_BRANCH,
-        buildId: process.env.ADYEN_BUILD_ID,
         bundleType: process.env.BUNDLE_TYPE
     };
 
@@ -65,14 +63,17 @@ class Core implements ICore {
     }
 
     constructor(props: CoreConfiguration) {
+        console.log('CORE pr ggocess.env.NODE_ENV', process.env.NODE_ENV);
+
         assertConfigurationPropertiesAreValid(props);
 
         this.createFromAction = this.createFromAction.bind(this);
 
-        this.setOptions({ exposeLibraryMetadata: true, ...props });
+        this.setOptions({ ...defaultProps, ...props });
 
         this.loadingContext = resolveEnvironment(this.options.environment, this.options.environmentUrls?.api);
         this.cdnContext = resolveCDNEnvironment(this.options.resourceEnvironment || this.options.environment, this.options.environmentUrls?.api);
+
         this.analyticsContext = resolveAnalyticsEnvironment(this.options.environment);
         this.session = this.options.session && new Session(this.options.session, this.options.clientKey, this.loadingContext);
 
@@ -126,7 +127,13 @@ class Core implements ICore {
 
     private async fetchLocaleTranslations(): Promise<Translations> {
         try {
-            const translation = await getTranslations(this.loadingContext, Core.metadata.version, this.options.locale, this.options.translations);
+            const translation = await getTranslations(
+                this.cdnContext,
+                Core.metadata.version,
+                this.options.locale,
+                this.options.translationEnvironment,
+                this.options.translations
+            );
             return translation;
         } catch (error) {
             this.options.onError?.(error);

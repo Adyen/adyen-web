@@ -23,6 +23,8 @@ export async function initSession() {
 
         locale: shopperLocale,
 
+        translationEnvironment: 'local',
+
         onPaymentCompleted: handleOnPaymentCompleted,
         onPaymentFailed: handleOnPaymentFailed,
 

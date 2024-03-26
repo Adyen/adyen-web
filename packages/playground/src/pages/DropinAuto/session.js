@@ -22,6 +22,7 @@ export async function initSession() {
         session,
 
         locale: shopperLocale,
+        translationEnvironment: 'local',
 
         // Events
         beforeSubmit: (data, component, actions) => {

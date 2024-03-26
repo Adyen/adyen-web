@@ -31,7 +31,7 @@ export default () => {
             plugins: [
                 resolveExtensions(),
                 loadCommonjsPackage(),
-                replaceValues({ bundleType: BUNDLE_TYPES.esm }),
+                replaceValues({ bundleType: BUNDLE_TYPES.esm, buildType: 'production' }),
                 convertJsonToESM(),
                 compileCSS(),
                 compileJavascript({ target: 'es2022', sourceMaps: true }),

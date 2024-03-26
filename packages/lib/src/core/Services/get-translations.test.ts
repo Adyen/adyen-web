@@ -18,7 +18,7 @@ describe('Service: getTranslations', () => {
         };
         mockedHttpGet.mockResolvedValue(mockedEnUS);
 
-        const translation = await getTranslations(LOADING_CONTEXT, ADYEN_WEB_VERSION, 'en-US');
+        const translation = await getTranslations(LOADING_CONTEXT, ADYEN_WEB_VERSION, 'en-US', 'local');
 
         expect(mockedHttpGet).toHaveBeenCalledTimes(1);
         expect(mockedHttpGet).toHaveBeenCalledWith({
@@ -42,7 +42,7 @@ describe('Service: getTranslations', () => {
             }
         };
 
-        const translation = await getTranslations(LOADING_CONTEXT, ADYEN_WEB_VERSION, 'en-US', customTranslation);
+        const translation = await getTranslations(LOADING_CONTEXT, ADYEN_WEB_VERSION, 'en-US', 'local', customTranslation);
 
         expect(mockedHttpGet).toHaveBeenCalledTimes(1);
         expect(mockedHttpGet).toHaveBeenCalledWith({
@@ -61,13 +61,15 @@ describe('Service: getTranslations', () => {
             }
         };
 
-        const translation = await getTranslations(LOADING_CONTEXT, ADYEN_WEB_VERSION, 'en-CA', customTranslation);
+        const translation = await getTranslations(LOADING_CONTEXT, ADYEN_WEB_VERSION, 'en-CA', 'local', customTranslation);
 
         expect(translation).toStrictEqual({});
         expect(mockedHttpGet).toHaveBeenCalledTimes(0);
     });
 
     test('should throw an error and not make http request if locale is not supported', () => {
-        expect(() => getTranslations(LOADING_CONTEXT, ADYEN_WEB_VERSION, 'en-CA')).toThrowError("Translations: Locale 'en-CA' is not supported");
+        expect(() => getTranslations(LOADING_CONTEXT, ADYEN_WEB_VERSION, 'en-CA', 'local')).toThrowError(
+            "Translations: Locale 'en-CA' is not supported"
+        );
     });
 });

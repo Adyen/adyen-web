@@ -40,6 +40,7 @@ export function assertConfigurationPropertiesAreValid(propsSetByMerchant: CoreCo
         'locale',
         'translations',
         'paymentMethodsResponse',
+        'translationEnvironment',
         'amount',
         'secondaryAmount',
         'countryCode',

@@ -19,6 +19,7 @@ const initCheckout = async () => {
         clientKey: process.env.__CLIENT_KEY__,
         showPayButton: true,
         session,
+        translationEnvironment: 'local',
 
         // Events
         beforeSubmit: (data, component, actions) => {

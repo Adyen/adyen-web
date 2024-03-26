@@ -8,7 +8,7 @@ import {
 } from '../../utils/constants';
 import { binLookupMock } from '../../../mocks/binLookup/binLookup.mock';
 import { optionalDateAndCvcMock } from '../../../mocks/binLookup/binLookup.data';
-import LANG from '../../../../lib/src/language/locales/en-US.json';
+import LANG from '../../../../server/translations/en-US.json';
 
 const MONTH_LABEL = 'Expiry month';
 const YEAR_LABEL = 'Expiry year';

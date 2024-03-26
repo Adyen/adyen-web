@@ -15,6 +15,7 @@ export async function initManual() {
         paymentMethodsResponse,
 
         locale: shopperLocale,
+        translationEnvironment: 'local',
 
         environment: process.env.__CLIENT_ENV__,
         installmentOptions: {

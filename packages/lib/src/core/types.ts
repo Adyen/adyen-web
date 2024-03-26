@@ -67,6 +67,7 @@ export interface CoreConfiguration {
 
     /**
      * Show or hides a Pay Button for each payment method
+     * @default true
      */
     showPayButton?: boolean;
 
@@ -144,6 +145,14 @@ export interface CoreConfiguration {
      * @default true
      */
     exposeLibraryMetadata?: boolean;
+
+    /**
+     *  Distinguish between loading translations directly from CDN or from the local web server
+     *  Used only internally
+     *
+     * @default 'local' if library is in dev mode ; 'remote' if is bundled
+     */
+    translationEnvironment?: 'local' | 'remote';
 
     beforeRedirect?(
         resolve: () => void,
