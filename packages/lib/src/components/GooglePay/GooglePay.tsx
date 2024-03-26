@@ -7,7 +7,7 @@ import { GooglePayProps } from './types';
 import { mapBrands, getGooglePayLocale } from './utils';
 import collectBrowserInfo from '../../utils/browserInfo';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
-import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_RENDERED_STR, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
+import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
 import { SendAnalyticsObject } from '../../core/Analytics/types';
 
 class GooglePay extends UIElement<GooglePayProps> {
@@ -16,16 +16,8 @@ class GooglePay extends UIElement<GooglePayProps> {
     protected googlePay = new GooglePayService(this.props);
 
     protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
-        let extraAnalyticsObject = {};
-        if (analyticsObj.type === ANALYTICS_RENDERED_STR) {
-            const isExpress = this.props.isExpress;
-            const expressPage = this.props.expressPage ?? null;
-            extraAnalyticsObject = {
-                isExpress,
-                ...(isExpress && expressPage && { expressPage }) // We only care about the expressPage value if isExpress is true
-            };
-        }
-        super.submitAnalytics({ ...analyticsObj, ...extraAnalyticsObject });
+        // Analytics will need to know about this.props.isExpress & this.props.expressPage
+        super.submitAnalytics({ ...analyticsObj }, this.props);
     }
 
     /**
