@@ -93,3 +93,5 @@ export const errorCodeMapping = {
     ['error.va.sf-ach-loc.01']: '947',
     ['error.va.sf-ach-loc.02']: '948'
 };
+
+export const ANALYTICS_EXPRESS_PAGES_ARRAY = ['cart', 'minicart', 'pdp', 'checkout'];

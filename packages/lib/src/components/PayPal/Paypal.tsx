@@ -10,7 +10,6 @@ import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { ERRORS } from './constants';
 import { createShopperDetails } from './utils/create-shopper-details';
 import { SendAnalyticsObject } from '../../core/Analytics/types';
-import { ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
 
 class PaypalElement extends UIElement<PayPalElementProps> {
     public static type = 'paypal';
@@ -31,16 +30,8 @@ class PaypalElement extends UIElement<PayPalElementProps> {
     }
 
     protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
-        let extraAnalyticsObject = {};
-        if (analyticsObj.type === ANALYTICS_RENDERED_STR) {
-            const isExpress = this.props.isExpress;
-            const expressPage = this.props.expressPage ?? null;
-            extraAnalyticsObject = {
-                isExpress,
-                ...(isExpress && expressPage && { expressPage }) // We only care about the expressPage value if isExpress is true
-            };
-        }
-        super.submitAnalytics({ ...analyticsObj, ...extraAnalyticsObject });
+        // Analytics will need to know about this.props.isExpress & this.props.expressPage
+        super.submitAnalytics({ ...analyticsObj }, this.props);
     }
 
     formatProps(props: PayPalElementProps): PayPalElementProps {
