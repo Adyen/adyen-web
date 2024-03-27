@@ -130,6 +130,9 @@ module.exports = {
         host,
         https: httpsConfig,
         hot: true,
+        allowedHosts: [
+            '.gitpod.io'
+        ],
         compress: true,
         onBeforeSetupMiddleware: devServer => {
             if (!devServer) {
