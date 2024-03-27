@@ -35,7 +35,7 @@ export class Language {
         const [languageCode] = this.locale.split('-');
         this.languageCode = languageCode;
 
-        this.timeAndDateFormatter = Intl.DateTimeFormat(locale, this.timeAndDateFormatOptions);
+        this.timeAndDateFormatter = DateTimeFormat(this.locale, this.timeAndDateFormatOptions);
 
         this.loaded = loadTranslations(this.locale, this.customTranslations).then(translations => {
             this.translations = translations;
