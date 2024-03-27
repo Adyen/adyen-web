@@ -2,7 +2,8 @@ import { formatCustomTranslations, formatLocale, getTranslation, loadTranslation
 import { FALLBACK_LOCALE, defaultTranslation } from './config';
 import locales from './locales';
 import { getLocalisedAmount } from '../utils/amount-util';
-
+import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
+import DateTimeFormat = Intl.DateTimeFormat;
 export class Language {
     private readonly supportedLocales: string[];
 
@@ -12,17 +13,17 @@ export class Language {
     public readonly customTranslations;
     public loaded: Promise<any>;
 
-    public readonly timeFormatOptions: Intl.DateTimeFormatOptions = {
+    public readonly timeFormatOptions: DateTimeFormatOptions = {
         hour: 'numeric',
         minute: 'numeric'
     };
-    public readonly timeAndDateFormatOptions: Intl.DateTimeFormatOptions = {
+    public readonly timeAndDateFormatOptions: DateTimeFormatOptions = {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
         ...this.timeFormatOptions
     };
-    public readonly timeAndDateFormatter: Intl.DateTimeFormat;
+    public readonly timeAndDateFormatter: DateTimeFormat;
 
     constructor(locale: string = FALLBACK_LOCALE, customTranslations: object = {}) {
         const defaultLocales = Object.keys(locales);
@@ -34,7 +35,7 @@ export class Language {
         const [languageCode] = this.locale.split('-');
         this.languageCode = languageCode;
 
-        this.timeAndDateFormatter = Intl.DateTimeFormat(undefined, this.timeAndDateFormatOptions);
+        this.timeAndDateFormatter = Intl.DateTimeFormat(locale, this.timeAndDateFormatOptions);
 
         this.loaded = loadTranslations(this.locale, this.customTranslations).then(translations => {
             this.translations = translations;
