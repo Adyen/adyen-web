@@ -9,6 +9,7 @@ export class MealVoucherFRElement extends GiftcardElement {
             ...props,
             pinRequired: true,
             expiryDateRequired: true,
+            enableStoreDetails: true,
             fieldsLayoutComponent: MealVoucherFields
         });
     }
@@ -20,19 +21,31 @@ export class MealVoucherFRElement extends GiftcardElement {
         };
     }
 
+    private formatPaymentMethod() {
+        return {
+            type: this.constructor['type'],
+            brand: this.props.brand,
+            encryptedCardNumber: this.state.data?.encryptedCardNumber,
+            encryptedSecurityCode: this.state.data?.encryptedSecurityCode,
+            encryptedExpiryMonth: this.state.data?.encryptedExpiryMonth,
+            encryptedExpiryYear: this.state.data?.encryptedExpiryYear,
+            ...(this.props.storedPaymentMethodId && { storedPaymentMethodId: this.props.storedPaymentMethodId })
+        };
+    }
+
     /**
      * Formats the component data output
      */
     formatData() {
         return {
-            paymentMethod: {
-                type: this.constructor['type'],
-                brand: this.props.brand,
-                encryptedCardNumber: this.state.data?.encryptedCardNumber,
-                encryptedSecurityCode: this.state.data?.encryptedSecurityCode,
-                encryptedExpiryMonth: this.state.data?.encryptedExpiryMonth,
-                encryptedExpiryYear: this.state.data?.encryptedExpiryYear
-            }
+            paymentMethod: this.formatPaymentMethod(),
+            ...(this.state.storePaymentMethod && { storePaymentMethod: this.state.storePaymentMethod })
+        };
+    }
+
+    formatBalanceCheckData() {
+        return {
+            paymentMethod: this.formatPaymentMethod()
         };
     }
 }

@@ -7,6 +7,8 @@ import { PaymentAmount } from '../../../types';
 import { GIFT_CARD } from '../../internal/SecuredFields/lib/configuration/constants';
 import { GiftCardFields } from './GiftcardFields';
 import { GiftcardFieldsProps } from './types';
+import StoreDetails from '../../internal/StoreDetails';
+import { StoredGiftCardFields } from './StoredGiftCardFields';
 
 interface GiftcardComponentProps {
     onChange: (state) => void;
@@ -18,10 +20,16 @@ interface GiftcardComponentProps {
     amount: PaymentAmount;
     showPayButton?: boolean;
     payButton: (config) => any;
+    brand: string;
 
     pinRequired: boolean;
     expiryDateRequired?: boolean;
     fieldsLayoutComponent: FunctionComponent<GiftcardFieldsProps>;
+
+    enableStoreDetails: boolean;
+    storedPaymentMethodId: string;
+    expiryMonth?: number;
+    expiryYear?: number;
 }
 
 class Giftcard extends Component<GiftcardComponentProps> {
@@ -45,15 +53,24 @@ class Giftcard extends Component<GiftcardComponentProps> {
 
     public sfp;
 
-    public onChange = sfpState => {
+    public handleSecureFieldsChange = sfpState => {
         this.props.onChange({
             data: sfpState.data,
             isValid: sfpState.isSfpValid
         });
     };
 
+    public handleOnStoreDetails = storedDetails => {
+        this.props.onChange({
+            storePaymentMethod: storedDetails
+        });
+    };
+
     public showValidation = () => {
-        this.sfp.showValidation();
+        // in case it's a stored gift card (stored mealvoucher) there will be no SFP
+        if (this.sfp) {
+            this.sfp.showValidation();
+        }
     };
 
     setStatus(status) {
@@ -75,7 +92,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
         this.setState({ balance, transactionLimit });
     };
 
-    render(props, { focusedElement, balance, transactionLimit }) {
+    render(props: GiftcardComponentProps, { focusedElement, balance, transactionLimit }) {
         const { i18n } = useCoreContext();
 
         const transactionAmount = transactionLimit?.value < balance?.value ? transactionLimit : balance;
@@ -109,21 +126,48 @@ class Giftcard extends Component<GiftcardComponentProps> {
                     ref={ref => {
                         this.sfp = ref;
                     }}
-                    onChange={this.onChange}
+                    onChange={this.handleSecureFieldsChange}
                     onFocus={this.handleFocus}
                     type={GIFT_CARD}
-                    render={({ setRootNode, setFocusOn }, sfpState) =>
-                        this.props.fieldsLayoutComponent({
+                    render={({ setRootNode, setFocusOn }, sfpState) => {
+                        if (props.storedPaymentMethodId) {
+                            // return this.props.payButton({
+                            //     status: this.state.status,
+                            //     onClick: this.props.onBalanceCheck,
+                            //     label: i18n.get('applyGiftcard'),
+                            //     classNameModifiers: ['standalone']
+                            // });
+                            return (
+                                <StoredGiftCardFields
+                                    i18n={i18n}
+                                    pinRequired={this.props.pinRequired}
+                                    sfpState={sfpState}
+                                    focusedElement={focusedElement}
+                                    setFocusOn={setFocusOn}
+                                    setRootNode={setRootNode}
+                                    getCardErrorMessage={getCardErrorMessage}
+                                    expiryMonth={props.expiryMonth}
+                                    expiryYear={props.expiryYear}
+                                    {...props}
+                                />
+                            );
+                        }
+
+                        return this.props.fieldsLayoutComponent({
                             i18n: i18n,
                             pinRequired: this.props.pinRequired,
                             focusedElement: focusedElement,
                             getCardErrorMessage: getCardErrorMessage,
                             setRootNode: setRootNode,
                             setFocusOn: setFocusOn,
-                            sfpState: sfpState
-                        })
-                    }
+                            sfpState: sfpState,
+                            // TODO maybe remove this?
+                            ...props
+                        });
+                    }}
                 />
+
+                {props.enableStoreDetails && <StoreDetails onChange={this.handleOnStoreDetails} />}
 
                 {this.props.showPayButton &&
                     this.props.payButton({
