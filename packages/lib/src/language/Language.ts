@@ -73,6 +73,7 @@ export class Language {
      * @param options - Options for {@link Date.toLocaleDateString}
      */
     date(date: string, options: object = {}) {
+        if (date === undefined) return '';
         const dateOptions: DateTimeFormatOptions = { year: 'numeric', month: '2-digit', day: '2-digit', ...options };
         return new Date(date).toLocaleDateString(this.locale, dateOptions);
     }
@@ -82,6 +83,7 @@ export class Language {
      * @param date - Date to be localized
      */
     dateTime(date: string) {
+        if (date === undefined) return '';
         return this.timeAndDateFormatter.format(new Date(date));
     }
 }
