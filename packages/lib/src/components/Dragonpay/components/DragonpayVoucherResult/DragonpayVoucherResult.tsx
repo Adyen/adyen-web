@@ -25,7 +25,7 @@ export default function DragonpayVoucherResult(props: DragonpayVoucherResultProp
             surcharge={surcharge && i18n.amount(surcharge.value, surcharge.currency)}
             voucherDetails={
                 [
-                    { label: i18n.get('voucher.expirationDate'), value: i18n.date(expiresAt) },
+                    { label: i18n.get('voucher.expirationDate'), value: i18n.dateTime(expiresAt) },
                     { label: i18n.get('voucher.alternativeReference'), value: alternativeReference }
                 ] as VoucherDetail[]
             }

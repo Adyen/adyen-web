@@ -3,7 +3,7 @@ import { FALLBACK_LOCALE, defaultTranslation } from './config';
 import locales from './locales';
 import { getLocalisedAmount } from '../utils/amount-util';
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
-
+import DateTimeFormat = Intl.DateTimeFormat;
 export class Language {
     private readonly supportedLocales: string[];
 
@@ -12,6 +12,18 @@ export class Language {
     public translations: Record<string, string> = defaultTranslation;
     public readonly customTranslations;
     public loaded: Promise<any>;
+
+    public readonly timeFormatOptions: DateTimeFormatOptions = {
+        hour: 'numeric',
+        minute: 'numeric'
+    };
+    public readonly timeAndDateFormatOptions: DateTimeFormatOptions = {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        ...this.timeFormatOptions
+    };
+    public readonly timeAndDateFormatter: DateTimeFormat;
 
     constructor(locale: string = FALLBACK_LOCALE, customTranslations: object = {}) {
         const defaultLocales = Object.keys(locales);
@@ -22,6 +34,8 @@ export class Language {
         this.locale = formatLocale(locale) || parseLocale(locale, this.supportedLocales) || FALLBACK_LOCALE;
         const [languageCode] = this.locale.split('-');
         this.languageCode = languageCode;
+
+        this.timeAndDateFormatter = DateTimeFormat(this.locale, this.timeAndDateFormatOptions);
 
         this.loaded = loadTranslations(this.locale, this.customTranslations).then(translations => {
             this.translations = translations;
@@ -59,8 +73,18 @@ export class Language {
      * @param options - Options for {@link Date.toLocaleDateString}
      */
     date(date: string, options: object = {}) {
+        if (date === undefined) return '';
         const dateOptions: DateTimeFormatOptions = { year: 'numeric', month: '2-digit', day: '2-digit', ...options };
         return new Date(date).toLocaleDateString(this.locale, dateOptions);
+    }
+
+    /**
+     * Returns a localized string for a date and time
+     * @param date - Date to be localized
+     */
+    dateTime(date: string) {
+        if (date === undefined) return '';
+        return this.timeAndDateFormatter.format(new Date(date));
     }
 }
 

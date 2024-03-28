@@ -20,7 +20,7 @@ const EcontextVoucherResult = (props: EcontextVoucherResultProps) => {
             amount={totalAmount && i18n.amount(totalAmount.value, totalAmount.currency)}
             voucherDetails={[
                 { label: i18n.get('voucher.collectionInstitutionNumber'), value: collectionInstitutionNumber },
-                { label: i18n.get('voucher.expirationDate'), value: i18n.date(expiresAt) },
+                { label: i18n.get('voucher.expirationDate'), value: i18n.dateTime(expiresAt) },
                 { label: i18n.get('voucher.telephoneNumber'), value: maskedTelephoneNumber }
             ]}
             copyBtn
