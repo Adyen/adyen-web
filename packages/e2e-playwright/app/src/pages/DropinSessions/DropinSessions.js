@@ -19,6 +19,7 @@ const initCheckout = async () => {
         clientKey: process.env.__CLIENT_KEY__,
         session,
         environment: 'test',
+        translationEnvironment: 'local',
         onPaymentCompleted: handlePaymentCompleted,
         onError: handleError,
         ...window.mainConfiguration
