@@ -1,7 +1,9 @@
 import { Locator, Page } from '@playwright/test';
+import { DropinPage } from '../pages/dropin/dropin.page';
 
 class Dropin {
     readonly page: Page;
+    readonly dropinPage: DropinPage;
 
     readonly rootElement: Locator;
     readonly rootElementSelector: string;
@@ -10,9 +12,9 @@ class Dropin {
     readonly creditCard: Locator;
     readonly brandsHolder: Locator;
 
-    constructor(page: Page, rootElementSelector = '.adyen-checkout__dropin') {
+    constructor(page: Page, dropinPage: DropinPage, rootElementSelector = '.adyen-checkout__dropin') {
         this.page = page;
-
+        this.dropinPage = dropinPage;
         this.rootElement = page.locator(rootElementSelector);
         this.rootElementSelector = rootElementSelector;
 
@@ -23,8 +25,10 @@ class Dropin {
         await this.pmList.waitFor({ state: 'visible' });
     }
 
-    getPaymentMethodItem(pmName: string) {
-        return this.pmList.locator(`.adyen-checkout__payment-method:has-text("${pmName}")`);
+    getPaymentMethodItem(pmType: string) {
+        // @ts-ignore
+        const pmLabel = this.dropinPage.paymentMethods.find((pm: { type: string }) => pm.type === pmType).name;
+        return this.pmList.locator(`.adyen-checkout__payment-method:has-text("${pmLabel}")`);
     }
 }
 
