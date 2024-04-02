@@ -26,7 +26,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
         locale: shopperLocale,
         paymentMethodsResponse: paymentMethodsData,
         environment: process.env.__CLIENT_ENV__,
-        onChange: handleChange,
+        // onChange: handleChange,
         onSubmit: handleSubmit,
         onPaymentCompleted: handleOnPaymentCompleted,
         onPaymentFailed: handleOnPaymentFailed,

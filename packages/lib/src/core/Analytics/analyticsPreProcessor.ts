@@ -14,13 +14,14 @@ import {
     ANALYTICS_SELECTED_STR,
     ANALYTICS_SUBMIT_STR,
     ANALYTICS_UNFOCUS_STR,
-    ANALYTICS_VALIDATION_ERROR_STR
+    ANALYTICS_VALIDATION_ERROR_STR,
+    ANALYTICS_EXPRESS_PAGES_ARRAY
 } from './constants';
 import { THREEDS2_ERROR, THREEDS2_FULL } from '../../components/ThreeDS2/config';
 
 export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
     // return function with an analyticsModule reference
-    return (component: string, analyticsObj: SendAnalyticsObject) => {
+    return (component: string, analyticsObj: SendAnalyticsObject, uiElementProps = {} as any) => {
         const { type, target } = analyticsObj;
 
         switch (type) {
@@ -29,7 +30,31 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
              */
             // Called from BaseElement (when component mounted) or, from DropinComponent (after mounting, when it has finished resolving all the PM promises)
             // &/or, from DropinComponent when a PM is selected
-            case ANALYTICS_RENDERED_STR:
+            case ANALYTICS_RENDERED_STR: {
+                const { isStoredPaymentMethod, brand } = analyticsObj;
+
+                // Expected from Wallet PMs
+                const { isExpress, expressPage } = uiElementProps;
+
+                const hasExpressPage = expressPage && ANALYTICS_EXPRESS_PAGES_ARRAY.includes(expressPage);
+
+                const data = {
+                    component,
+                    type,
+                    ...(typeof isStoredPaymentMethod === 'boolean' && { isStoredPaymentMethod }), // if defined and a boolean...
+                    ...(brand && { brand }),
+                    ...(typeof isExpress === 'boolean' && { isExpress }),
+                    ...(isExpress === true && hasExpressPage && { expressPage }) // We only care about the expressPage value if isExpress is true
+                };
+
+                analyticsModule.createAnalyticsEvent({
+                    event: ANALYTICS_EVENT_INFO,
+                    data
+                });
+
+                break;
+            }
+
             case ANALYTICS_CONFIGURED_STR: {
                 const { isStoredPaymentMethod, brand } = analyticsObj;
                 const data = { component, type, isStoredPaymentMethod, brand };

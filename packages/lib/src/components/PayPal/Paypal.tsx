@@ -13,6 +13,7 @@ import type { PaymentAction } from '../../types/global-types';
 import type { Intent, PayPalConfiguration } from './types';
 
 import './Paypal.scss';
+import { SendAnalyticsObject } from '../../core/Analytics/types';
 
 class PaypalElement extends UIElement<PayPalConfiguration> {
     public static type = TxVariants.paypal;
@@ -50,6 +51,11 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                 merchantId
             }
         };
+    }
+
+    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
+        // Analytics will need to know about this.props.isExpress & this.props.expressPage
+        super.submitAnalytics({ ...analyticsObj }, this.props);
     }
 
     public submit = () => {

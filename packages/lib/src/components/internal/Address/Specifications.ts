@@ -79,7 +79,6 @@ class Specifications {
      * Returns an array with the address schema of the selected country or the default address schema
      * Flat version of getAddressSchemaForCountry
      * @param country - The selected country
-     * @param mode - Address schema mode, can be 'full', 'partial' or 'none'
      * @returns Array
      */
     getAddressSchemaForCountryFlat(country: string): AddressField[] {

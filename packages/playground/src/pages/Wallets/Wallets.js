@@ -27,6 +27,21 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         },
         onError(error) {
             console.log(error);
+        },
+        analytics: {
+            analyticsData: {
+                applicationInfo: {
+                    merchantApplication: {
+                        name: 'merchant_application_name',
+                        version: 'version'
+                    },
+                    externalPlatform: {
+                        name: 'external_platform_name',
+                        version: 'external_platform_version',
+                        integrator: 'getSystemIntegratorName'
+                    }
+                }
+            }
         }
     });
 
@@ -167,7 +182,11 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
         // Button config (optional)
         buttonType: 'long', // https://developers.google.com/pay/api/web/reference/object#ButtonOptions
-        buttonColor: 'default' // https://developers.google.com/pay/api/web/reference/object#ButtonOptions
+        buttonColor: 'default', // https://developers.google.com/pay/api/web/reference/object#ButtonOptions
+
+        // Analytics info
+        isExpress: true,
+        expressPage: 'pdp'
     });
 
     // First, check availability. If environment is TEST, Google Pay will always be considered available.

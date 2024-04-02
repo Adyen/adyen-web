@@ -13,6 +13,7 @@ import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../
 import type { AddressData, PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
 import type { GooglePayConfiguration } from './types';
 import type { ICore } from '../../core/types';
+import { SendAnalyticsObject } from '../../core/Analytics/types';
 
 class GooglePay extends UIElement<GooglePayConfiguration> {
     public static type = TxVariants.googlepay;
@@ -74,6 +75,11 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
             ...(billingAddress && { billingAddress }),
             ...(deliveryAddress && { deliveryAddress })
         };
+    }
+
+    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
+        // Analytics will need to know about this.props.isExpress & this.props.expressPage
+        super.submitAnalytics({ ...analyticsObj }, this.props);
     }
 
     public override submit = () => {

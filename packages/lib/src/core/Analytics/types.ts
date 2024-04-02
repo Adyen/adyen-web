@@ -7,6 +7,29 @@ export interface Experiment {
     experimentName?: string;
 }
 
+export interface AnalyticsData {
+    /**
+     * Relates to PMs used within Plugins
+     * https://docs.adyen.com/development-resources/application-information/?tab=integrator_built_2#application-information-fields
+     * @internal
+     */
+    applicationInfo?: {
+        externalPlatform: {
+            name: string;
+            version: string;
+            integrator: string;
+        };
+        merchantApplication: {
+            name: string;
+            version: string;
+        };
+        merchantDevice?: {
+            os: string;
+            osVersion: string;
+        };
+    };
+}
+
 export interface AnalyticsOptions {
     /**
      * Enable/Disable all analytics
@@ -32,6 +55,11 @@ export interface AnalyticsOptions {
      * List of experiments to be sent in the collectId call // TODO - still used?
      */
     experiments?: Experiment[];
+
+    /**
+     * A wrapper to pass data needed when analytics is setup
+     */
+    analyticsData?: AnalyticsData;
 }
 
 export type AnalyticsProps = Pick<CoreConfiguration, 'loadingContext' | 'locale' | 'clientKey' | 'analytics' | 'amount'> & {
@@ -55,6 +83,8 @@ export interface AnalyticsObject {
     validationErrorCode?: string;
     validationErrorMessage?: string;
     issuer?: string;
+    isExpress?: boolean;
+    expressPage?: string;
 }
 
 export type ANALYTICS_EVENT = 'log' | 'error' | 'info';

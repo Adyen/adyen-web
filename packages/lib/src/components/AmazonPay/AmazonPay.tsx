@@ -9,6 +9,7 @@ import { getCheckoutDetails } from './services';
 import './AmazonPay.scss';
 import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
+import { SendAnalyticsObject } from '../../core/Analytics/types';
 
 export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
     public static type = TxVariants.amazonpay;
@@ -37,6 +38,11 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
             },
             browserInfo: this.browserInfo
         };
+    }
+
+    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
+        // Analytics will need to know about this.props.isExpress & this.props.expressPage
+        super.submitAnalytics({ ...analyticsObj }, this.props);
     }
 
     getShopperDetails() {

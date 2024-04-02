@@ -1,4 +1,4 @@
-import { AdyenCheckout, Dropin, Card, WeChat, Giftcard, PayPal, Ach, GooglePay, Ideal } from '@adyen/adyen-web';
+import { AdyenCheckout, Dropin, Card, WeChat, Giftcard, PayPal, Ach, GooglePay, Ideal, Riverty } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { createSession } from '../../services';
 import { amount, shopperLocale, shopperReference, countryCode, returnUrl } from '../../config/commonConfig';
@@ -29,16 +29,16 @@ export async function initSession() {
         onError: (error, component) => {
             console.error('error', JSON.stringify(error.name), JSON.stringify(error.message), component);
         },
-        onChange: (state, component) => {
-            console.log('onChange', state);
-        },
+        // onChange: (state, component) => {
+        //     console.log('onChange', state);
+        // },
         onPaymentCompleted: handleOnPaymentCompleted,
         onPaymentFailed: handleOnPaymentFailed
     });
 
     const dropin = new Dropin(checkout, {
         instantPaymentTypes: ['googlepay'],
-        paymentMethodComponents: [Card, WeChat, Giftcard, PayPal, Ach, GooglePay, Ideal],
+        paymentMethodComponents: [Card, WeChat, Giftcard, PayPal, Ach, GooglePay, Ideal, Riverty],
         paymentMethodsConfiguration: {
             googlepay: {
                 buttonType: 'plain',
@@ -51,12 +51,10 @@ export async function initSession() {
             card: {
                 hasHolderName: true,
                 holderNameRequired: true,
-                holderName: 'J. Smith',
-                positionHolderNameOnTop: true,
-
-                // billingAddress config:
-                billingAddressRequired: true,
-                billingAddressMode: 'partial'
+                data: {
+                    holderName: 'J. Smith'
+                },
+                _disableClickToPay: true
             },
             ideal: {
                 highlightedIssuers: ['1121', '1154', '1152']

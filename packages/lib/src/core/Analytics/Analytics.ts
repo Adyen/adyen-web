@@ -5,7 +5,7 @@ import { ANALYTICS_EVENT, AnalyticsInitialEvent, AnalyticsObject, AnalyticsProps
 import { ANALYTICS_EVENT_ERROR, ANALYTICS_EVENT_INFO, ANALYTICS_EVENT_LOG, ANALYTICS_INFO_TIMER_INTERVAL, ANALYTICS_PATH } from './constants';
 import { debounce } from '../../utils/debounce';
 import { AnalyticsModule } from '../../types/global-types';
-import { createAnalyticsObject } from './utils';
+import { createAnalyticsObject, processAnalyticsData } from './utils';
 import { analyticsPreProcessor } from './analyticsPreProcessor';
 
 let capturedCheckoutAttemptId = null;
@@ -16,7 +16,8 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
     const defaultProps = {
         enabled: true,
         telemetry: true,
-        checkoutAttemptId: null
+        checkoutAttemptId: null,
+        analyticsData: {}
     };
 
     const props = { ...defaultProps, ...analytics };
@@ -71,13 +72,17 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
         setUp: async (initialEvent: AnalyticsInitialEvent) => {
             const { enabled, payload, telemetry } = props; // TODO what is payload, is it ever used?
 
-            // console.log('### Analytics::setUp:: initialEvent', initialEvent);
+            const analyticsData = processAnalyticsData(props.analyticsData);
 
             if (enabled === true) {
                 if (telemetry === true && !capturedCheckoutAttemptId) {
                     try {
                         // fetch a new checkoutAttemptId if none is already available
-                        const checkoutAttemptId = await collectId({ ...initialEvent, ...(payload && { ...payload }) });
+                        const checkoutAttemptId = await collectId({
+                            ...initialEvent,
+                            ...(payload && { ...payload }),
+                            ...(Object.keys(analyticsData).length && { ...analyticsData })
+                        });
                         capturedCheckoutAttemptId = checkoutAttemptId;
                     } catch (e) {
                         console.warn(`Fetching checkoutAttemptId failed.${e ? ` Error=${e}` : ''}`);

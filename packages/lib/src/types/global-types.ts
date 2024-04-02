@@ -384,7 +384,7 @@ export interface AnalyticsModule {
     getEventsQueue: () => EventsQueueModule;
     createAnalyticsEvent: (a: CreateAnalyticsEventObject) => AnalyticsObject;
     getEnabled: () => boolean;
-    sendAnalytics: (component: string, analyticsObj: SendAnalyticsObject) => void;
+    sendAnalytics: (component: string, analyticsObj: SendAnalyticsObject, uiElementProps?: any) => void;
 }
 
 export type ComponentFocusObject = {

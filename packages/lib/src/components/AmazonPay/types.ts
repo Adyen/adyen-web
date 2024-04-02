@@ -72,6 +72,17 @@ export interface AmazonPayConfiguration extends UIElementProps {
     onClick?: (resolve, reject) => Promise<void>;
     onError?: (error, component) => void;
     onSignOut?: (resolve, reject) => Promise<void>;
+
+    /**
+     * Used for analytics
+     */
+    expressPage?: 'cart' | 'minicart' | 'pdp' | 'checkout';
+
+    /**
+     * Used for analytics
+     * @defaultValue false
+     */
+    isExpress?: boolean;
 }
 
 export interface AmazonPayComponentProps extends AmazonPayConfiguration {

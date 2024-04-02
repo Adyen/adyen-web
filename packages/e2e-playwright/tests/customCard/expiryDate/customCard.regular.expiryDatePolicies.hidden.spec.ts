@@ -52,6 +52,8 @@ test.describe('Test how Custom Card Component with regular date field handles hi
         await expect(card.cvcErrorElement).toBeVisible();
         await expect(card.cvcErrorElement).toHaveText(CVC_ERROR);
 
+        await page.waitForTimeout(500); // wait for UI to show errors
+
         // Expect errors in state
         let cardErrors: any = await page.evaluate('window.customCard.state.errors');
         await expect(cardErrors[ENCRYPTED_CARD_NUMBER]).not.toBe(undefined);

@@ -1,6 +1,5 @@
 import { OpenInvoiceActiveFieldsets, OpenInvoiceStateData, OpenInvoiceVisibility } from './types';
 import Language from '../../../language';
-import { mapFieldKey as mapFieldKeyPD } from '../PersonalDetails/utils';
 import { mapFieldKey as mapFieldKeyAddress } from '../Address/utils';
 import { StringObject } from '../Address/types';
 
@@ -35,8 +34,8 @@ export const getInitialActiveFieldsets = (visibility: OpenInvoiceVisibility, dat
     }, {} as OpenInvoiceActiveFieldsets);
 
 /**
- * Used by the SRPanel sorting function to tell it whether we need to prepend the field type to the SR panel message, and, if so, we retrieve the correct translation for the field type.
- * (Whether we need to prepend the field type depends on whether we know that the error message correctly reflects the label of the field. Ultimately all error messages should do this
+ * Used by the SRPanel sorting function to tell it whether we need to add the field type to the SR panel message, and, if so, we retrieve the correct translation for the field type.
+ * (Whether we need to add the field type depends on whether we know that the error message correctly reflects the label of the field. Ultimately all error messages should do this
  * and this mapping fn will become redundant)
  */
 export const mapFieldKey = (key: string, i18n: Language, countrySpecificLabels: StringObject): string => {
@@ -52,13 +51,14 @@ export const mapFieldKey = (key: string, i18n: Language, countrySpecificLabels: 
     }
 
     const addressKey = mapFieldKeyAddress(refKey, i18n, countrySpecificLabels);
-    if (addressKey) return hasSplitKey ? `${i18n.get(label)} ${addressKey}` : addressKey;
+    // Also use the presence of a label to know that we are dealing with address related fields. (This matters now that addresses can contain first & last name fields.)
+    if (addressKey && label) return hasSplitKey ? `${i18n.get(label)} ${addressKey}` : addressKey;
 
-    // Personal details related
     switch (refKey) {
-        case 'gender':
         case 'dateOfBirth':
-            return mapFieldKeyPD(refKey, i18n);
+        case 'shopperEmail':
+        case 'telephoneNumber':
+            return i18n.get(refKey);
         default:
             break;
     }

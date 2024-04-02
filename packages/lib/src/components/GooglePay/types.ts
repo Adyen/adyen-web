@@ -5,7 +5,12 @@ export interface GooglePayConfiguration extends UIElementProps {
     type?: 'googlepay' | 'paywithgoogle';
 
     /**
-     * Enables the GooglePay Express Flow
+     * Used for analytics
+     */
+    expressPage?: 'cart' | 'minicart' | 'pdp' | 'checkout';
+
+    /**
+     * Enables the GooglePay Express Flow & also used for analytics
      * @defaultValue false
      */
     isExpress?: boolean;
