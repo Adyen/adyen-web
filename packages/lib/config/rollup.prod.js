@@ -63,7 +63,7 @@ export default () => {
             plugins: [
                 resolveExtensions(),
                 loadCommonjsPackage(),
-                replaceValues({ bundleType: BUNDLE_TYPES.eslegacy }),
+                replaceValues({ bundleType: BUNDLE_TYPES.eslegacy, buildType: 'production' }),
                 convertJsonToESM(),
                 compileCSS(),
                 compileJavascript({ target: 'es2017', sourceMaps: true }),
@@ -96,7 +96,7 @@ export default () => {
             plugins: [
                 resolveExtensions(),
                 loadCommonjsPackage(),
-                replaceValues({ bundleType: BUNDLE_TYPES.umd }),
+                replaceValues({ bundleType: BUNDLE_TYPES.umd, buildType: 'production' }),
                 convertJsonToESM(),
                 compileCSS(),
                 compileJavascript({ sourceMaps: true }),
@@ -117,7 +117,7 @@ export default () => {
             plugins: [
                 resolveExtensions(),
                 loadCommonjsPackage(),
-                replaceValues({ bundleType: BUNDLE_TYPES.commonjs }),
+                replaceValues({ bundleType: BUNDLE_TYPES.commonjs, buildType: 'production' }),
                 convertJsonToESM(),
                 compileCSS(),
                 compileJavascript({ target: 'es2017', sourceMaps: true }),

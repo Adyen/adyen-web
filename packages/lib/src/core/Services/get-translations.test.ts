@@ -18,7 +18,7 @@ describe('Service: getTranslations', () => {
         };
         mockedHttpGet.mockResolvedValue(mockedEnUS);
 
-        const translation = await getTranslations(LOADING_CONTEXT, ADYEN_WEB_VERSION, 'en-US', 'local');
+        const translation = await getTranslations(LOADING_CONTEXT, ADYEN_WEB_VERSION, 'en-US', 'remote');
 
         expect(mockedHttpGet).toHaveBeenCalledTimes(1);
         expect(mockedHttpGet).toHaveBeenCalledWith({
@@ -48,7 +48,7 @@ describe('Service: getTranslations', () => {
         expect(mockedHttpGet).toHaveBeenCalledWith({
             errorLevel: 'fatal',
             errorMessage: 'Translations: Couldn\'t fetch translation for the locale "en-US".',
-            loadingContext: 'https://checkoutshopper-test.adyen.com/checkoutshopper/',
+            loadingContext: '/',
             path: 'translations/6.0.0/en-US.json'
         });
         expect(translation).toStrictEqual(mockedEnUS);
