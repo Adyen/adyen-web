@@ -39,10 +39,15 @@ export type ApplePayButtonType =
 
 export interface ApplePayConfiguration extends UIElementProps {
     /**
-     * Enables the ApplePay Express Flow
+     * Enables the ApplePay Express Flow & also used for analytics
      * @defaultValue false
      */
     isExpress?: boolean;
+
+    /**
+     * Used for analytics
+     */
+    expressPage?: 'cart' | 'minicart' | 'pdp' | 'checkout';
 
     /**
      * The Apple Pay version number your website supports.

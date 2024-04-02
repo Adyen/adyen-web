@@ -17,6 +17,7 @@ import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../
 import type { ApplePayConfiguration, ApplePayElementData, ApplePayPaymentOrderDetails, ApplePaySessionRequest } from './types';
 import type { ICore } from '../../core/types';
 import type { PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
+import { SendAnalyticsObject } from '../../core/Analytics/types';
 
 const latestSupportedVersion = 14;
 
@@ -75,6 +76,11 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             ...(billingAddress && { billingAddress }),
             ...(deliveryAddress && { deliveryAddress })
         };
+    }
+
+    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
+        // Analytics will need to know about this.props.isExpress & this.props.expressPage
+        super.submitAnalytics({ ...analyticsObj }, this.props);
     }
 
     public override submit = (): void => {

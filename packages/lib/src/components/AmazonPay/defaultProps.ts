@@ -12,7 +12,8 @@ const defaultProps: Partial<AmazonPayConfiguration> = {
     showChangePaymentDetailsButton: false,
     showSignOutButton: false,
     onClick: resolve => resolve(),
-    onSignOut: resolve => resolve()
+    onSignOut: resolve => resolve(),
+    isExpress: false
 };
 
 export default defaultProps;

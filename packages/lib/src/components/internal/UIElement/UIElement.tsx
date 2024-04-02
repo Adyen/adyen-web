@@ -151,7 +151,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      *  In some other cases e.g. 3DS2 components, this function is overridden to allow more specific analytics actions to be created
      */
     /* eslint-disable-next-line */
-    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
+    protected submitAnalytics(analyticsObj: SendAnalyticsObject, uiElementProps?) {
         /** Work out what the component's "type" is:
          * - first check for a dedicated "analyticsType" (currently only applies to custom-cards)
          * - otherwise, distinguish cards from non-cards: cards will use their static type property, everything else will use props.type
@@ -162,7 +162,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
                 component = this.constructor['type'] === 'scheme' || this.constructor['type'] === 'bcmc' ? this.constructor['type'] : this.props.type;
             }
 
-            this.props.modules.analytics.sendAnalytics(component, analyticsObj);
+            this.props.modules.analytics.sendAnalytics(component, analyticsObj, uiElementProps);
         } catch (error) {
             console.warn('Failed to submit the analytics event');
         }

@@ -25,10 +25,15 @@ export interface PayPalConfiguration extends UIElementProps {
     };
 
     /**
-     *  Identifies if the payment is Express.
+     *  Identifies if the payment is Express. Also used for analytics
      *  @defaultValue false
      */
     isExpress?: boolean;
+
+    /**
+     * Used for analytics
+     */
+    expressPage?: 'cart' | 'minicart' | 'pdp' | 'checkout';
 
     /**
      * Set to true to force the UI to not render PayPal Credit button

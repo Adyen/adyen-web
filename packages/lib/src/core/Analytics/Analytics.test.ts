@@ -17,7 +17,7 @@ const amount: PaymentAmount = { value: 50000, currency: 'USD' };
 
 const mockCheckoutAttemptId = '123456';
 
-const event = {
+const setUpEvent = {
     containerWidth: 100,
     component: 'card',
     flavor: 'components'
@@ -61,7 +61,7 @@ describe('Analytics initialisation and event queue', () => {
     test('Should not fire any calls if analytics is disabled', () => {
         const analytics = Analytics({ analytics: { enabled: false }, loadingContext: '', locale: '', clientKey: '', amount, bundleType: '' });
 
-        analytics.setUp(event);
+        analytics.setUp(setUpEvent);
         expect(collectIdPromiseMock).not.toHaveBeenCalled();
         expect(logEventPromiseMock).not.toHaveBeenCalled();
     });
@@ -69,18 +69,49 @@ describe('Analytics initialisation and event queue', () => {
     test('Will not call the collectId endpoint if telemetry is disabled, but will call the logEvent (analytics pixel)', () => {
         const analytics = Analytics({ analytics: { telemetry: false }, loadingContext: '', locale: '', clientKey: '', amount, bundleType: '' });
         expect(collectIdPromiseMock).not.toHaveBeenCalled();
-        analytics.setUp(event);
+        analytics.setUp(setUpEvent);
         expect(collectIdPromiseMock).not.toHaveBeenCalled();
 
-        expect(logEventPromiseMock).toHaveBeenCalledWith({ ...event });
+        expect(logEventPromiseMock).toHaveBeenCalledWith({ ...setUpEvent });
     });
 
-    test('Calls the collectId endpoint by default, adding expected fields', async () => {
-        analytics.setUp(event);
+    test('Calls the collectId endpoint by default, adding expected fields, including sanitising the passed analyticsData object', async () => {
+        const applicationInfo = {
+            merchantApplication: {
+                name: 'merchant_application_name',
+                version: 'version'
+            },
+            externalPlatform: {
+                name: 'external_platform_name',
+                version: 'external_platform_version',
+                integrator: 'getSystemIntegratorName'
+            }
+        };
+
+        analytics = Analytics({
+            analytics: {
+                analyticsData: {
+                    applicationInfo,
+                    // @ts-ignore - this is one of the things we're testing
+                    foo: {
+                        bar: 'val'
+                    }
+                }
+            },
+            loadingContext: '',
+            locale: '',
+            clientKey: '',
+            amount
+        });
+
+        analytics.setUp(setUpEvent);
 
         expect(collectIdPromiseMock).toHaveBeenCalled();
         await Promise.resolve(); // wait for the next tick
-        expect(collectIdPromiseMock).toHaveBeenCalledWith({ ...event });
+
+        const enhancedSetupEvent = { ...setUpEvent, applicationInfo };
+
+        expect(collectIdPromiseMock).toHaveBeenCalledWith({ ...enhancedSetupEvent });
 
         expect(analytics.getCheckoutAttemptId()).toEqual(mockCheckoutAttemptId);
     });
@@ -91,7 +122,7 @@ describe('Analytics initialisation and event queue', () => {
         };
         const analytics = Analytics({ analytics: { payload }, loadingContext: '', locale: '', clientKey: '', amount, bundleType: '' });
 
-        analytics.setUp(event);
+        analytics.setUp(setUpEvent);
 
         expect(collectIdPromiseMock).toHaveLength(0);
     });
