@@ -61,8 +61,6 @@ export function PhoneInput(props) {
                                 />
 
                                 <div className="adyen-checkout__phoneNumber">
-                                    <div>{data.phonePrefix}</div>
-
                                     <input
                                         type="tel"
                                         name={props.phoneName}

@@ -165,7 +165,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
                 // billingAddress config:
                 billingAddressRequired: true,
-                billingAddressMode: 'partial',
+                billingAddressMode: 'full',
                 onError: objdobj => {
                     console.log('component level merchant defined error handler for Card objdobj=', objdobj);
                 }
