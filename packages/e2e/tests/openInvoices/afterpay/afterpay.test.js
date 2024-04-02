@@ -1,7 +1,7 @@
 import { ClientFunction, Selector } from 'testcafe';
 import { OPENINVOICES_URL } from '../../pages';
 
-fixture.only`Testing AfterPay (OpenInvoices)`.page(`${OPENINVOICES_URL}?countryCode=NL`);
+fixture`Testing AfterPay (OpenInvoices)`.page(`${OPENINVOICES_URL}?countryCode=NL`);
 
 const getComponentData = ClientFunction(() => {
     return window.afterpay.data;
