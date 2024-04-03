@@ -2,6 +2,7 @@ import { ChallengeData, ThreeDS2ChallengeConfiguration, ThreeDS2FlowObject } fro
 import { ChallengeResolveData } from '../utils';
 import { ActionHandledReturnObject } from '../../../../types/global-types';
 import { SendAnalyticsObject } from '../../../../core/Analytics/types';
+import { ErrorObject } from '../../../../core/Errors/types';
 
 export interface DoChallenge3DS2Props extends ChallengeData {
     onCompleteChallenge: (resolveObject: ThreeDS2FlowObject) => void;
@@ -18,10 +19,11 @@ export interface DoChallenge3DS2State {
 export interface PrepareChallenge3DS2Props extends ThreeDS2ChallengeConfiguration {
     onComplete?: (data: ChallengeResolveData) => void;
     onSubmitAnalytics: (aObj: SendAnalyticsObject) => void;
+    isMDFlow: boolean;
 }
 
 export interface PrepareChallenge3DS2State {
-    challengeData?: ChallengeData;
+    challengeData?: ChallengeData | ErrorObject;
     status?: string;
     errorInfo?: string;
 }

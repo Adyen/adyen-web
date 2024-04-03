@@ -51,7 +51,14 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
             return null;
         }
 
-        return <PrepareChallenge {...this.props} onComplete={this.onComplete} onSubmitAnalytics={this.submitAnalytics} />;
+        return (
+            <PrepareChallenge
+                {...this.props}
+                onComplete={this.onComplete}
+                onSubmitAnalytics={this.submitAnalytics}
+                isMDFlow={this.props.paymentData.length < 15}
+            />
+        );
     }
 }
 
