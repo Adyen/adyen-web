@@ -26,7 +26,7 @@ const initCheckout = async () => {
         clientKey: process.env.__CLIENT_KEY__,
         locale: shopperLocale,
         showPayButton: true,
-        translationEnvironment: 'local',
+        _translationEnvironment: 'local',
         onPaymentCompleted: handlePaymentCompleted,
         onOrderUpdated: data => {
             showAuthorised('Partially Authorised');

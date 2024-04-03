@@ -146,14 +146,6 @@ export interface CoreConfiguration {
      */
     exposeLibraryMetadata?: boolean;
 
-    /**
-     *  Distinguish between loading translations directly from CDN or from the local web server
-     *  Used only internally
-     *
-     * @default 'local' if library is in dev mode ; 'remote' if is bundled
-     */
-    translationEnvironment?: 'local' | 'remote';
-
     beforeRedirect?(
         resolve: () => void,
         reject: () => void,
@@ -247,4 +239,13 @@ export interface CoreConfiguration {
      * @internal
      */
     loadingContext?: string;
+
+    /**
+     *  Distinguish between loading translations directly from CDN or from the local web server
+     *  Used only internally
+     *
+     * @internal
+     * @default 'local' if library is in dev mode ; 'remote' if is bundled
+     */
+    _translationEnvironment?: 'local' | 'remote';
 }

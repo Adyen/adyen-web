@@ -15,7 +15,7 @@ const initCheckout = async () => {
         locale: shopperLocale,
         countryCode,
         environment: 'test',
-        translationEnvironment: 'local',
+        _translationEnvironment: 'local',
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
         ...window.mainConfiguration

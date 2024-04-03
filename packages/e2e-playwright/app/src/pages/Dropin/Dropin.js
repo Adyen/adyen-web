@@ -14,7 +14,7 @@ const initCheckout = async () => {
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
         locale: shopperLocale,
-        translationEnvironment: 'local',
+        _translationEnvironment: 'local',
         environment: 'test',
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,

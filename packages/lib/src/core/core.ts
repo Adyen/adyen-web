@@ -63,8 +63,6 @@ class Core implements ICore {
     }
 
     constructor(props: CoreConfiguration) {
-        console.log('CORE pr ggocess.env.NODE_ENV', process.env.NODE_ENV);
-
         assertConfigurationPropertiesAreValid(props);
 
         this.createFromAction = this.createFromAction.bind(this);
@@ -131,7 +129,7 @@ class Core implements ICore {
                 this.cdnContext,
                 Core.metadata.version,
                 this.options.locale,
-                this.options.translationEnvironment,
+                this.options._translationEnvironment,
                 this.options.translations
             );
             return translation;
