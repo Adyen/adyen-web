@@ -5,9 +5,10 @@ import UIElement from '../../../UIElement';
 
 interface InstantPaymentMethodsProps {
     paymentMethods: UIElement[];
+    showContentSeparator: boolean;
 }
 
-function InstantPaymentMethods({ paymentMethods }: InstantPaymentMethodsProps) {
+function InstantPaymentMethods({ paymentMethods, showContentSeparator }: InstantPaymentMethodsProps) {
     const { i18n } = useCoreContext();
 
     return (
@@ -17,7 +18,7 @@ function InstantPaymentMethods({ paymentMethods }: InstantPaymentMethodsProps) {
                     <li key={pm.type}>{pm.render()}</li>
                 ))}
             </ul>
-            <ContentSeparator label={i18n.get('orPayWith')} />
+            {showContentSeparator && <ContentSeparator label={i18n.get('orPayWith')} />}
         </Fragment>
     );
 }

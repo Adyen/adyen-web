@@ -68,6 +68,7 @@ class PaymentMethodList extends Component<PaymentMethodListProps> {
         });
 
         const brandLogoConfiguration = useBrandLogoConfiguration(paymentMethods);
+        const showContentSeparator = paymentMethods?.length > 0;
 
         return (
             <Fragment>
@@ -80,7 +81,9 @@ class PaymentMethodList extends Component<PaymentMethodListProps> {
                     />
                 )}
 
-                {!!instantPaymentMethods.length && <InstantPaymentMethods paymentMethods={instantPaymentMethods} />}
+                {!!instantPaymentMethods.length && (
+                    <InstantPaymentMethods showContentSeparator={showContentSeparator} paymentMethods={instantPaymentMethods} />
+                )}
 
                 <ul className={paymentMethodListClassnames} role="radiogroup" aria-label={i18n.get('paymentMethodsList.aria.label')} required>
                     {paymentMethods.map((paymentMethod, index, paymentMethodsCollection) => {
