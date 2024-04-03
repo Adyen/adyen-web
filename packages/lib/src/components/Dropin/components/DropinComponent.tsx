@@ -145,7 +145,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                     <div className={`adyen-checkout__dropin adyen-checkout__dropin--${status.type}`}>
                         {isRedirecting && status.props.component && status.props.component.render()}
                         {isLoading && status.props && status.props.component && status.props.component.render()}
-                        {hasPaymentMethodsToBeDisplayed && (
+                        {!!hasPaymentMethodsToBeDisplayed && (
                             <PaymentMethodList
                                 isLoading={isLoading || isRedirecting}
                                 isDisablingPaymentMethod={this.state.isDisabling}
