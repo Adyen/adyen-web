@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 5.62.0
+
+### Minor Changes
+
+-   Using securedFields v4.8.3 to handle 19 digit Diners ([#2625](https://github.com/Adyen/adyen-web/pull/2625))
+
 ## 5.61.0
 
 ### Minor Changes
