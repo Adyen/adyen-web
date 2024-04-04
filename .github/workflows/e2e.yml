@@ -41,8 +41,8 @@ jobs:
         CLIENT_ENV: test
         TESTING_ENVIRONMENT: https://checkout-test.adyen.com/checkout/${{matrix.api-version}}
         API_VERSION: ${{matrix.api-version}}
-    - name: Archive test result artifacts on failure
-      if: failure()
+    - name: Archive test result artifacts
+      if: always()
       uses: actions/upload-artifact@v3
       with:
         name: playwright-report-${{ github.sha }}

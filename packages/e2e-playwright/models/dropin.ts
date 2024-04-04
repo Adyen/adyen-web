@@ -25,7 +25,7 @@ class Dropin {
         await this.pmList.waitFor({ state: 'visible' });
     }
 
-    getPaymentMethodItem(pmType: string) {
+    getPaymentMethodItemByType(pmType: string) {
         // @ts-ignore
         const pmLabel = this.dropinPage.paymentMethods.find((pm: { type: string }) => pm.type === pmType).name;
         return this.pmList.locator(`.adyen-checkout__payment-method:has-text("${pmLabel}")`);
