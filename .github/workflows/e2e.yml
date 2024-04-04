@@ -1,18 +1,19 @@
 name: E2E for Checkout Components
 
-on:
+on: 
   pull_request:
   workflow_dispatch:
 
 jobs:
   build-then-e2e:
     if: ${{ github.actor != 'renovate[bot]' && github.actor != 'lgtm-com[bot]' }}
-    timeout-minutes: 15
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         node-version: [18.18]
+        api-version: ["v68", "v69", "v70", "v71"]
         # node-version: [16.x, 18.x, 19.x]
         # Currently 18 and 19 are not supported, still keeping it
         # as a reminder for compatibility check
@@ -38,11 +39,12 @@ jobs:
         MERCHANT_ACCOUNT: ${{secrets.ADYEN_CHECKOUT_MERCHANT_ACCOUNT}}
         CLIENT_KEY: ${{secrets.ADYEN_CHECKOUT_CLIENT_KEY}}
         CLIENT_ENV: test
-        TESTING_ENVIRONMENT: https://checkout-test.adyen.com/checkout/v71
-        API_VERSION: v71
+        TESTING_ENVIRONMENT: https://checkout-test.adyen.com/checkout/${{matrix.api-version}}
+        API_VERSION: ${{matrix.api-version}}
     - name: Archive test result artifacts
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: html-report
+        name: playwright-report-${{ github.sha }}
         path: packages/e2e-playwright/playwright-report
+        retention-days: 5
