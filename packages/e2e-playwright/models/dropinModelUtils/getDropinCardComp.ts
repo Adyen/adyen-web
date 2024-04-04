@@ -2,7 +2,7 @@ import { Dropin } from '../dropin';
 import { getImageCount } from '../../tests/utils/image';
 
 export const getCreditCardPM = (dropin: Dropin) => {
-    const creditCard = dropin.getPaymentMethodItem('Cards');
+    const creditCard = dropin.getPaymentMethodItemByType('scheme');
 
     const brandsHolder = creditCard.locator('.adyen-checkout__payment-method__brands');
 
