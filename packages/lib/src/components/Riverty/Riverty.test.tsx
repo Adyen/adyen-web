@@ -66,7 +66,7 @@ describe('Riverty', () => {
             render(<Riverty {...withDeliveryAddressData} />);
             const firstName = await screen.findByLabelText('Recipient first name', { selector: 'input' });
             const lastName = await screen.findByLabelText('Recipient last name', { selector: 'input' });
-            const country = await screen.findAllByLabelText('Country');
+            const country = await screen.findAllByLabelText('Country/Region');
             const street = await screen.findAllByLabelText('Street');
             const houseNumber = await screen.findAllByLabelText('House number');
             const postalCode = await screen.findAllByLabelText('Postal code');
