@@ -1,5 +1,19 @@
 # @adyen/adyen-web
 
+## 5.63.0
+
+### Minor Changes
+
+-   Remove the country flag in the Phone select, change the label to `Country/Region` for the country/region field. ([#2628](https://github.com/Adyen/adyen-web/pull/2628))
+
+### Patch Changes
+
+-   fix: vouchers (econtext and dragonpay) can now show expiration date with time ([#2618](https://github.com/Adyen/adyen-web/pull/2618))
+
+-   Refactor how wallet PMs call submitAnalytics when they are used as express PMs ([#2617](https://github.com/Adyen/adyen-web/pull/2617))
+
+-   Fix the bug that the drop-in is not rendered when there are only instant payments. ([#2629](https://github.com/Adyen/adyen-web/pull/2629))
+
 ## 5.62.0
 
 ### Minor Changes
