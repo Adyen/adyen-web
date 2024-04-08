@@ -1,10 +1,9 @@
 import { Component, h } from 'preact';
 import DoFingerprint3DS2 from './DoFingerprint3DS2';
-import { createFingerprintResolveData, createOldFingerprintResolveData, ErrorCodeObject, isErrorObject, prepareFingerPrintData } from '../utils';
+import { createFingerprintResolveData, createOldFingerprintResolveData, isErrorObject, prepareFingerPrintData } from '../utils';
 import { PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State } from './types';
-import { FingerPrintData, ResultObject } from '../../types';
+import { FingerPrintData, ResultObject, ErrorCodeObject } from '../../types';
 import { ErrorObject } from '../../../../core/Errors/types';
-import AdyenCheckoutError, { ERROR } from '../../../../core/Errors/AdyenCheckoutError';
 import { ActionHandledReturnObject } from '../../../../types/global-types';
 import { SendAnalyticsObject } from '../../../../core/Analytics/types';
 import { isValidHttpUrl } from '../../../../utils/isValidURL';
@@ -14,17 +13,10 @@ import {
     THREEDS2_FINGERPRINT_ERROR,
     THREEDS2_NUM,
     MISSING_TOKEN_IN_ACTION_MSG,
-    THREEDS2_ERROR
+    THREEDS2_ERROR,
+    TIMEOUT
 } from '../../config';
-import {
-    ANALYTICS_API_ERROR,
-    ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_TOKEN,
-    ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_THREEDSMETHODURL,
-    ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_OTHER_PROPS,
-    ANALYTICS_ERROR_CODE_TOKEN_DECODE_OR_PARSING_FAILED,
-    ANALYTICS_ERROR_CODE_3DS2_TIMEOUT,
-    ANALYTICS_NETWORK_ERROR
-} from '../../../../core/Analytics/constants';
+import { ANALYTICS_API_ERROR, Analytics3DS2Errors, ANALYTICS_NETWORK_ERROR } from '../../../../core/Analytics/constants';
 
 class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State> {
     public static type = 'scheme';
@@ -90,7 +82,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                 this.setStatusComplete(
                     { threeDSCompInd: 'U' },
                     {
-                        errorCode: ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_THREEDSMETHODURL,
+                        errorCode: Analytics3DS2Errors.TOKEN_IS_MISSING_THREEDSMETHODURL,
                         message: `${THREEDS2_FINGERPRINT_ERROR}: Decoded token is missing a valid threeDSMethodURL property`
                     }
                 );
@@ -118,7 +110,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                 this.setStatusComplete(
                     { threeDSCompInd: 'N' },
                     {
-                        errorCode: ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_OTHER_PROPS,
+                        errorCode: Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS,
                         message: `${THREEDS2_FINGERPRINT_ERROR}: Decoded token is missing one or more of the following properties (threeDSMethodNotificationURL | postMessageDomain | threeDSServerTransID)`
                     }
                 );
@@ -136,8 +128,8 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
 
             const errorCode =
                 errorMsg.indexOf(MISSING_TOKEN_IN_ACTION_MSG) > -1
-                    ? ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_TOKEN
-                    : ANALYTICS_ERROR_CODE_TOKEN_DECODE_OR_PARSING_FAILED;
+                    ? Analytics3DS2Errors.ACTION_IS_MISSING_TOKEN
+                    : Analytics3DS2Errors.TOKEN_DECODE_OR_PARSING_FAILED;
 
             this.setStatusComplete(
                 { threeDSCompInd: 'N' },
@@ -151,7 +143,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
         }
     }
 
-    setStatusComplete(resultObj: ResultObject, errorCodeObject = null) {
+    setStatusComplete(resultObj: ResultObject, errorCodeObject: ErrorCodeObject = null) {
         this.setState({ status: 'complete' }, () => {
             /**
              * Create the data in the way that the /details endpoint expects.
@@ -166,18 +158,25 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             const finalResObject = errorCodeObject ? errorCodeObject : resultObj;
             if (finalResObject.errorCode) {
                 const errorTypeAndCode = {
-                    code: finalResObject.errorCode === 'timeout' ? ANALYTICS_ERROR_CODE_3DS2_TIMEOUT : finalResObject.errorCode,
-                    errorType: finalResObject.errorCode === 'timeout' ? ANALYTICS_NETWORK_ERROR : ANALYTICS_API_ERROR // TODO - for a timeout is this really a Network error? Or is it a "ThirdParty" error i.e. the ACS has had a problem serving the fingerprinting page in a timely manner?
+                    code: finalResObject.errorCode === TIMEOUT ? Analytics3DS2Errors.THREEDS2_TIMEOUT : finalResObject.errorCode,
+                    errorType: finalResObject.errorCode === TIMEOUT ? ANALYTICS_NETWORK_ERROR : ANALYTICS_API_ERROR // TODO - for a timeout is this really a Network error? Or is it a "ThirdParty" error i.e. the ACS has had a problem serving the fingerprinting page in a timely manner?
                 };
 
-                // Fingerprint process has timed out, // TODO - do we want to know about this timeout event (which is a "valid" 3DS2 scenario) from an analytics perspective, and, if so, how do we classify it? ...error? info?
-                // or, Decoded token is missing a valid threeDSMethodURL property (threeDSCompInd:"U"),
-                // or, (threeDSCompInd:"N"):
-                //  - decoded token is missing one or more of the following properties (threeDSMethodNotificationURL | postMessageDomain | threeDSServerTransID)
-                //  - or, token could not be base64 decoded &/or JSON.parsed
+                /**
+                 * Timeout or data parsing problems:
+                 *
+                 * (threeDSCompInd:"U"):
+                 *   - Decoded token is missing a valid threeDSMethodURL property,
+                 *  or, (threeDSCompInd:"N"):
+                 *   - Fingerprint process has timed out, // TODO - do we want to know about this timeout event (which is a "valid" 3DS2 scenario) from an analytics perspective, and, if so, how do we classify it? ...error? info?
+                 *  also, (threeDSCompInd:"N"):
+                 *   - Missing "token" property from threeDS2 action
+                 *   - or, decoded token is missing one or more of the following properties (threeDSMethodNotificationURL | postMessageDomain | threeDSServerTransID)
+                 *   - or, token could not be base64 decoded &/or JSON.parsed
+                 */
                 analyticsObject = {
                     type: THREEDS2_ERROR,
-                    message: finalResObject.message,
+                    message: (finalResObject as ErrorCodeObject).message,
                     ...errorTypeAndCode
                 };
 
@@ -185,7 +184,11 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                 this.props.onSubmitAnalytics(analyticsObject);
             }
 
-            /** The fingerprint process is completed, one way or another */
+            /**
+             * The fingerprint process is completed, one way or another.
+             * The resultObj will be {threeDSCompInd:"Y"} in the case of success,
+             * else {threeDSCompInd:"U"} or {threeDSCompInd:"N"} - if we've had some kind of timeout or data parsing problem (as described above)
+             */
             analyticsObject = {
                 type: THREEDS2_FULL,
                 message: `${THREEDS2_NUM} fingerprinting has completed`,
@@ -196,8 +199,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             this.props.onSubmitAnalytics(analyticsObject);
 
             /**
-             * For 'threeDS2' action = call to callSubmit3DS2Fingerprint
-             * For 'threeDS2Fingerprint' action = equals call to onAdditionalDetails (except for in 3DS2InMDFlow)
+             * Equals call to callSubmit3DS2Fingerprint (except for in 3DS2InMDFlow)
              */
             this.props.onComplete(data);
         });
@@ -215,7 +217,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                          * Called when fingerprint times-out (which is still a valid scenario)...
                          */
                         const timeoutObject: ErrorCodeObject = {
-                            errorCode: fingerprint.errorCode,
+                            errorCode: fingerprint.errorCode, // 'timeout'
                             message: `${THREEDS2_FINGERPRINT}: ${fingerprint.errorCode}`
                         };
 

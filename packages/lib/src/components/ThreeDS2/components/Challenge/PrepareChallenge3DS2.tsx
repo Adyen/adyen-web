@@ -1,8 +1,8 @@
 import { Component, h } from 'preact';
 import DoChallenge3DS2 from './DoChallenge3DS2';
-import { createChallengeResolveData, prepareChallengeData, createOldChallengeResolveData, ErrorCodeObject, isErrorObject } from '../utils';
-import { PrepareChallenge3DS2Props, PrepareChallenge3DS2State } from './types';
-import { ChallengeData, ThreeDS2FlowObject } from '../../types';
+import { createChallengeResolveData, prepareChallengeData, createOldChallengeResolveData, isErrorObject } from '../utils';
+import { PrepareChallenge3DS2Props, PrepareChallenge3DS2State, StatusErrorInfoObject } from './types';
+import { ChallengeData, ResultObject, ThreeDS2FlowObject, ErrorCodeObject } from '../../types';
 import '../../ThreeDS2.scss';
 import Img from '../../../internal/Img';
 import './challenge.scss';
@@ -13,13 +13,7 @@ import { ActionHandledReturnObject } from '../../../../types/global-types';
 import { SendAnalyticsObject } from '../../../../core/Analytics/types';
 import { THREEDS2_CHALLENGE, THREEDS2_CHALLENGE_ERROR, THREEDS2_FULL, THREEDS2_NUM, MISSING_TOKEN_IN_ACTION_MSG } from '../../config';
 import { isValidHttpUrl } from '../../../../utils/isValidURL';
-import {
-    ANALYTICS_API_ERROR,
-    ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_TOKEN,
-    ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_OTHER_PROPS,
-    ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_ACSURL,
-    ANALYTICS_ERROR_CODE_TOKEN_DECODE_OR_PARSING_FAILED
-} from '../../../../core/Analytics/constants';
+import { ANALYTICS_API_ERROR, Analytics3DS2Errors } from '../../../../core/Analytics/constants';
 import { ErrorObject } from '../../../../core/Errors/types';
 
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
@@ -81,13 +75,14 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             if (!hasValidAcsURL) {
                 // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
                 const errorCodeObject = {
-                    code: ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_ACSURL,
+                    code: Analytics3DS2Errors.TOKEN_IS_MISSING_ACSURL,
                     errorType: ANALYTICS_API_ERROR,
                     message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing a valid acsURL property`,
                     metadata: { acsURL } // NEW TODO - check acsURL isn't secret
                 };
                 this.props.onSubmitAnalytics(errorCodeObject);
 
+                // Set UI error
                 this.setStatusError(
                     {
                         errorInfo: 'Challenge Data does not have a valid acsURL'
@@ -103,6 +98,14 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
             // Only render component if we have a acsTransID, messageVersion & threeDSServerTransID
             if (!acsTransID || !messageVersion || !threeDSServerTransID) {
+                // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
+                this.props.onSubmitAnalytics({
+                    code: Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS,
+                    errorType: ANALYTICS_API_ERROR,
+                    message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)`
+                });
+
+                // Set UI error
                 this.setStatusError(
                     {
                         errorInfo:
@@ -112,24 +115,22 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                     true
                 );
 
-                // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
-                this.props.onSubmitAnalytics({
-                    code: ANALYTICS_ERROR_CODE_TOKEN_IS_MISSING_OTHER_PROPS,
-                    errorType: ANALYTICS_API_ERROR,
-                    message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)`
-                });
+                console.debug(
+                    '### PrepareChallenge3DS2::exiting:: missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)'
+                );
                 return;
             }
 
             // Proceed to allow component to render
             this.setState({ status: 'performingChallenge' });
+            //
         } else {
             const errorMsg: string = (this.state.challengeData as ErrorObject).error;
 
             const errorCode =
                 errorMsg.indexOf(MISSING_TOKEN_IN_ACTION_MSG) > -1
-                    ? ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_TOKEN
-                    : ANALYTICS_ERROR_CODE_TOKEN_DECODE_OR_PARSING_FAILED;
+                    ? Analytics3DS2Errors.ACTION_IS_MISSING_TOKEN
+                    : Analytics3DS2Errors.TOKEN_DECODE_OR_PARSING_FAILED;
 
             // Send error to analytics endpoint // TODO - check logs to see if the base64 decoding errors *ever* happen
             this.props.onSubmitAnalytics({
@@ -140,6 +141,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
             console.debug('### PrepareChallenge3DS2::exiting:: no challengeData');
 
+            // Set UI error
             this.setStatusError(
                 {
                     errorInfo:
@@ -153,7 +155,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         }
     }
 
-    setStatusComplete(resultObj, errorCodeObject: ErrorCodeObject = null) {
+    setStatusComplete(resultObj: ResultObject, errorCodeObject: ErrorCodeObject = null) {
         this.setState({ status: 'complete' }, () => {
             /**
              * Create the data in the way that the /details endpoint expects.
@@ -162,12 +164,14 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             const resolveDataFunction = this.props.isMDFlow ? createOldChallengeResolveData : createChallengeResolveData;
             const data = resolveDataFunction(this.props.dataKey, resultObj.transStatus, this.props.paymentData);
 
+            console.debug('### PrepareChallenge3DS2::errorCodeObject::', errorCodeObject);
+
             // TODO - do we want to know about these events (timeout or no transStatus - which are "valid" 3DS2 scenarios) from an analytics perspective, and, if so, how do we classify them? ...errors? info?
             // let analyticsObject: SendAnalyticsObject;
             // const finalResObject = errorCodeObject ? errorCodeObject : resultObj;
             // if (finalResObject.errorCode) {
             //     const errorTypeAndCode = {
-            //         code: finalResObject.errorCode === 'timeout' ? ANALYTICS_ERROR_CODE_3DS2_TIMEOUT : ANALYTICS_ERROR_CODE_NO_TRANSSTATUS,
+            //         code: finalResObject.errorCode === 'timeout' ? Analytics3DS2Errors.THREEDS2_TIMEOUT : Analytics3DS2Errors.NO_TRANSSTATUS,
             //         errorType: finalResObject.errorCode === 'timeout' ? ANALYTICS_NETWORK_ERROR : ANALYTICS_INTERNAL_ERROR // TODO - for a timeout is this really a Network error? Or is it a "ThirdParty" error i.e. the ACS has had a problem serving the fingerprinting page in a timely manner?
             //     };
             //
@@ -193,7 +197,9 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             // Send log to analytics endpoint
             this.props.onSubmitAnalytics(analyticsObject);
 
-            // call onComplete (equals onAdditionalDetails - except for 3DS2InMDFlow)
+            /**
+             * Equals call to onAdditionalDetails (except for in 3DS2InMDFlow)
+             */
             this.props.onComplete(data);
         });
     }
@@ -205,12 +211,19 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
      * @param errorInfoObj -
      * @param isFatal -
      */
-    setStatusError(errorInfoObj, isFatal) {
+    setStatusError(errorInfoObj: StatusErrorInfoObject, isFatal: boolean) {
         this.setState({ status: 'error', errorInfo: errorInfoObj.errorInfo });
 
         // Decide whether to call this.props.onError
         if (isFatal) {
-            this.props.onError(errorInfoObj); // For some reason this doesn't fire if it's in a callback passed to the setState function
+            // For some reason this doesn't fire if it's in a callback passed to the setState function
+            this.props.onError(
+                new AdyenCheckoutError(
+                    ERROR,
+                    errorInfoObj.errorInfo
+                    // { cause: errorInfoObj.errorObj }
+                )
+            );
         }
     }
 

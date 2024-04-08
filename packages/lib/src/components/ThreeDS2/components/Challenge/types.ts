@@ -1,5 +1,4 @@
-import { ChallengeData, ThreeDS2ChallengeConfiguration, ThreeDS2FlowObject } from '../../types';
-import { ChallengeResolveData } from '../utils';
+import { ChallengeData, ThreeDS2ChallengeConfiguration, ThreeDS2FlowObject, ChallengeResolveData } from '../../types';
 import { ActionHandledReturnObject } from '../../../../types/global-types';
 import { SendAnalyticsObject } from '../../../../core/Analytics/types';
 import { ErrorObject } from '../../../../core/Errors/types';
@@ -26,4 +25,9 @@ export interface PrepareChallenge3DS2State {
     challengeData?: ChallengeData | ErrorObject;
     status?: string;
     errorInfo?: string;
+}
+
+export interface StatusErrorInfoObject {
+    errorInfo: string;
+    errorObj?: ChallengeData | ErrorObject;
 }

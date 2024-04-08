@@ -6,7 +6,7 @@ import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
 import { TxVariants } from '../tx-variants';
 import { ThreeDS2DeviceFingerprintConfiguration } from './types';
 import AdyenCheckoutError, { API_ERROR } from '../../core/Errors/AdyenCheckoutError';
-import { ANALYTICS_API_ERROR, ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_PAYMENT_DATA, ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
+import { ANALYTICS_API_ERROR, Analytics3DS2Errors, ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
 import { SendAnalyticsObject } from '../../core/Analytics/types';
 import { THREEDS2_ERROR, THREEDS2_FINGERPRINT, THREEDS2_FINGERPRINT_ERROR } from './config';
 
@@ -42,7 +42,7 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
             // TODO - check logs to see if this *ever* happens
             this.submitAnalytics({
                 type: THREEDS2_ERROR,
-                code: ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_PAYMENT_DATA,
+                code: Analytics3DS2Errors.ACTION_IS_MISSING_PAYMENT_DATA,
                 errorType: ANALYTICS_API_ERROR,
                 message: `${THREEDS2_FINGERPRINT_ERROR}: Missing 'paymentData' property from threeDS2 action`
             });
@@ -51,8 +51,8 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
         }
 
         /**
-         * this.props.isMDFlow indicates a threeds2InMDFlow process. It means the action to create this component came from the threeds2InMDFlow process
-         * and upon completion should call the passed onComplete callback (instead of the /submitThreeDS2Fingerprint endpoint for the regular, "native" flow)
+         * this.props.isMDFlow indicates the action to create this component came from the 3DS2InMDFlow process and upon completion should call the
+         * passed onComplete callback (as defined in the 3DS2InMDFlow) instead of the /submitThreeDS2Fingerprint endpoint for the regular, "native" flow
          */
         return (
             <PrepareFingerprint

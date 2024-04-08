@@ -17,12 +17,14 @@ export const DEFAULT_CHALLENGE_WINDOW_SIZE = '02';
 export const THREEDS_METHOD_TIMEOUT = 10000;
 export const CHALLENGE_TIMEOUT = 600000;
 
+export const TIMEOUT = 'timeout';
+
 export const CHALLENGE_TIMEOUT_REJECT_OBJECT: ThreeDS2FlowObject = {
     result: {
         transStatus: 'U'
     },
     type: 'challengeResult',
-    errorCode: 'timeout'
+    errorCode: TIMEOUT
 };
 
 export const FAILED_METHOD_STATUS_RESOLVE_OBJECT: ThreeDS2FlowObject = {
@@ -37,11 +39,11 @@ export const FAILED_METHOD_STATUS_RESOLVE_OBJECT_TIMEOUT: ThreeDS2FlowObject = {
         threeDSCompInd: 'N'
     },
     type: 'fingerPrintResult',
-    errorCode: 'timeout'
+    errorCode: TIMEOUT
 };
 
 export const ERRORS = {
-    TIME_OUT: 'timeout',
+    TIME_OUT: TIMEOUT,
     WRONG_ORIGIN: 'wrongOrigin',
     HTML_ELEMENT: 'HTMLElementError',
     WRONG_DATA_TYPE: 'wrongDataType',
