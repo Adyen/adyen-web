@@ -216,7 +216,6 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
         // Decide whether to call this.props.onError
         if (isFatal) {
-            // For some reason this doesn't fire if it's in a callback passed to the setState function
             this.props.onError(
                 new AdyenCheckoutError(
                     ERROR,
