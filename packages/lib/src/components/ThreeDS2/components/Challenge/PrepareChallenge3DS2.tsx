@@ -85,7 +85,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 // Set UI error
                 this.setStatusError(
                     {
-                        errorInfo: 'Challenge Data does not have a valid acsURL'
+                        errorInfo: `${Analytics3DS2Errors.TOKEN_IS_MISSING_ACSURL}: Challenge Data does not have a valid acsURL`
                     },
                     true
                 );
@@ -108,8 +108,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 // Set UI error
                 this.setStatusError(
                     {
-                        errorInfo:
-                            'Challenge Data missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)',
+                        errorInfo: `${Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS}: Challenge Data missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)`,
                         errorObj: this.state.challengeData
                     },
                     true
@@ -146,8 +145,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 {
                     errorInfo:
                         errorMsg.indexOf(MISSING_TOKEN_IN_ACTION_MSG) > -1
-                            ? "Missing 'token' property from threeDS2 challenge action"
-                            : 'Challenge token could not be decoded/parsed',
+                            ? `${Analytics3DS2Errors.ACTION_IS_MISSING_TOKEN}: Missing 'token' property from threeDS2 challenge action`
+                            : `${Analytics3DS2Errors.TOKEN_DECODE_OR_PARSING_FAILED}: Challenge token could not be decoded/parsed`,
                     errorObj: this.state.challengeData
                 },
                 true
