@@ -11,7 +11,14 @@ import useImage from '../../../../core/Context/useImage';
 import AdyenCheckoutError, { ERROR } from '../../../../core/Errors/AdyenCheckoutError';
 import { ActionHandledReturnObject } from '../../../../types/global-types';
 import { SendAnalyticsObject } from '../../../../core/Analytics/types';
-import { THREEDS2_CHALLENGE, THREEDS2_CHALLENGE_ERROR, THREEDS2_FULL, THREEDS2_NUM, MISSING_TOKEN_IN_ACTION_MSG } from '../../constants';
+import {
+    THREEDS2_CHALLENGE,
+    THREEDS2_CHALLENGE_ERROR,
+    THREEDS2_FULL,
+    THREEDS2_NUM,
+    MISSING_TOKEN_IN_ACTION_MSG,
+    THREEDS2_ERROR
+} from '../../constants';
 import { isValidHttpUrl } from '../../../../utils/isValidURL';
 import { ANALYTICS_API_ERROR, Analytics3DS2Errors } from '../../../../core/Analytics/constants';
 import { ErrorObject } from '../../../../core/Errors/types';
@@ -75,6 +82,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             if (!hasValidAcsURL) {
                 // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
                 const errorCodeObject = {
+                    type: THREEDS2_ERROR,
                     code: Analytics3DS2Errors.TOKEN_IS_MISSING_ACSURL,
                     errorType: ANALYTICS_API_ERROR,
                     message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing a valid acsURL property`,
@@ -85,7 +93,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 // Set UI error
                 this.setStatusError(
                     {
-                        errorInfo: `${Analytics3DS2Errors.TOKEN_IS_MISSING_ACSURL}: Challenge Data does not have a valid acsURL`
+                        errorInfo: `${Analytics3DS2Errors.TOKEN_IS_MISSING_ACSURL}: ${this.props.i18n.get('3ds2.800')}` //
                     },
                     true
                 );
@@ -100,6 +108,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             if (!acsTransID || !messageVersion || !threeDSServerTransID) {
                 // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
                 this.props.onSubmitAnalytics({
+                    type: THREEDS2_ERROR,
                     code: Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS,
                     errorType: ANALYTICS_API_ERROR,
                     message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)`
@@ -108,7 +117,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 // Set UI error
                 this.setStatusError(
                     {
-                        errorInfo: `${Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS}: Challenge Data missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)`,
+                        errorInfo: `${Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS}: ${this.props.i18n.get('3ds2.703')}: (acsTransID | messageVersion | threeDSServerTransID)`,
                         errorObj: this.state.challengeData
                     },
                     true
@@ -133,6 +142,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
             // Send error to analytics endpoint // TODO - check logs to see if the base64 decoding errors *ever* happen
             this.props.onSubmitAnalytics({
+                type: THREEDS2_ERROR,
                 code: errorCode,
                 errorType: ANALYTICS_API_ERROR,
                 message: `${THREEDS2_CHALLENGE_ERROR}: ${errorMsg}` // can be: 'Missing "token" property from threeDS2 action', 'not base64', 'malformed URI sequence' or 'Could not JSON parse token'
@@ -145,8 +155,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 {
                     errorInfo:
                         errorMsg.indexOf(MISSING_TOKEN_IN_ACTION_MSG) > -1
-                            ? `${Analytics3DS2Errors.ACTION_IS_MISSING_TOKEN}: Missing 'token' property from threeDS2 challenge action`
-                            : `${Analytics3DS2Errors.TOKEN_DECODE_OR_PARSING_FAILED}: Challenge token could not be decoded/parsed`,
+                            ? `${Analytics3DS2Errors.ACTION_IS_MISSING_TOKEN}: ${this.props.i18n.get('3ds2.701')}`
+                            : `${Analytics3DS2Errors.TOKEN_DECODE_OR_PARSING_FAILED}:${this.props.i18n.get('3ds2.704')}`,
                     errorObj: this.state.challengeData
                 },
                 true
