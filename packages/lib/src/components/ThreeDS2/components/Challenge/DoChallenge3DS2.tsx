@@ -6,7 +6,7 @@ import ThreeDS2Form from '../Form';
 import getProcessMessageHandler from '../../../../utils/get-process-message-handler';
 import { encodeBase64URL } from '../utils';
 import promiseTimeout from '../../../../utils/promiseTimeout';
-import { CHALLENGE_TIMEOUT, CHALLENGE_TIMEOUT_REJECT_OBJECT, THREEDS2_NUM } from '../../config';
+import { CHALLENGE_TIMEOUT, CHALLENGE_TIMEOUT_REJECT_OBJECT, THREEDS2_NUM } from '../../constants';
 import { DoChallenge3DS2Props, DoChallenge3DS2State } from './types';
 import { ThreeDS2FlowObject } from '../../types';
 

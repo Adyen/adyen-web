@@ -2,7 +2,7 @@ import { httpPost } from '../../core/Services/http';
 import { pick } from '../internal/SecuredFields/utils';
 import { ThreeDS2FingerprintResponse } from './types';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
-import { THREEDS2_ERROR, THREEDS2_FINGERPRINT_SUBMIT } from './config';
+import { THREEDS2_ERROR, THREEDS2_FINGERPRINT_SUBMIT } from './constants';
 import { ANALYTICS_API_ERROR, Analytics3DS2Errors, ANALYTICS_SDK_ERROR } from '../../core/Analytics/constants';
 import { SendAnalyticsObject } from '../../core/Analytics/types';
 

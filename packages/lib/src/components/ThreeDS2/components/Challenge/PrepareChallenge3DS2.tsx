@@ -11,7 +11,7 @@ import useImage from '../../../../core/Context/useImage';
 import AdyenCheckoutError, { ERROR } from '../../../../core/Errors/AdyenCheckoutError';
 import { ActionHandledReturnObject } from '../../../../types/global-types';
 import { SendAnalyticsObject } from '../../../../core/Analytics/types';
-import { THREEDS2_CHALLENGE, THREEDS2_CHALLENGE_ERROR, THREEDS2_FULL, THREEDS2_NUM, MISSING_TOKEN_IN_ACTION_MSG } from '../../config';
+import { THREEDS2_CHALLENGE, THREEDS2_CHALLENGE_ERROR, THREEDS2_FULL, THREEDS2_NUM, MISSING_TOKEN_IN_ACTION_MSG } from '../../constants';
 import { isValidHttpUrl } from '../../../../utils/isValidURL';
 import { ANALYTICS_API_ERROR, Analytics3DS2Errors } from '../../../../core/Analytics/constants';
 import { ErrorObject } from '../../../../core/Errors/types';

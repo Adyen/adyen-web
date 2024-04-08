@@ -17,7 +17,7 @@ import {
     ANALYTICS_VALIDATION_ERROR_STR,
     ANALYTICS_EXPRESS_PAGES_ARRAY
 } from './constants';
-import { THREEDS2_ERROR, THREEDS2_FULL } from '../../components/ThreeDS2/config';
+import { THREEDS2_ERROR, THREEDS2_FULL } from '../../components/ThreeDS2/constants';
 
 export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
     // return function with an analyticsModule reference

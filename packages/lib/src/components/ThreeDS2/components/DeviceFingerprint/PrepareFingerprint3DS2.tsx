@@ -15,7 +15,7 @@ import {
     MISSING_TOKEN_IN_ACTION_MSG,
     THREEDS2_ERROR,
     TIMEOUT
-} from '../../config';
+} from '../../constants';
 import { ANALYTICS_API_ERROR, Analytics3DS2Errors, ANALYTICS_NETWORK_ERROR } from '../../../../core/Analytics/constants';
 
 class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State> {

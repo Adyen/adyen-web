@@ -14,7 +14,7 @@ import registry, { NewableComponent } from './core.registry';
 import { cleanupFinalResult, sanitizeResponse, verifyPaymentDidNotFail } from '../components/internal/UIElement/utils';
 import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from './Errors/AdyenCheckoutError';
 import { ANALYTICS_ACTION_STR } from './Analytics/constants';
-import { THREEDS2_FULL } from '../components/ThreeDS2/config';
+import { THREEDS2_FULL } from '../components/ThreeDS2/constants';
 import { DEFAULT_LOCALE } from '../language/config';
 
 import type { AdditionalDetailsStateData, PaymentAction, PaymentResponseData } from '../types/global-types';
@@ -272,8 +272,6 @@ class Core implements ICore {
      */
     public getCorePropsForComponent(): any {
         const globalOptions = processGlobalOptions(this.options);
-        console.log('\n### core::this.options:: ', this.options);
-        console.log('### core::globalOptions:: ', globalOptions);
 
         return {
             ...globalOptions,
