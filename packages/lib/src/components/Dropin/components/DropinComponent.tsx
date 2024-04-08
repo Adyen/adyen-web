@@ -114,6 +114,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
     render(props, { elements, instantPaymentElements, status, activePaymentMethod, cachedPaymentMethods }) {
         const isLoading = status.type === 'loading';
         const isRedirecting = status.type === 'redirect';
+        const hasPayments = elements?.length > 0 || instantPaymentElements?.length > 0;
 
         switch (status.type) {
             case 'success':
@@ -130,7 +131,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                     <div className={`adyen-checkout__dropin adyen-checkout__dropin--${status.type}`}>
                         {isRedirecting && status.props.component && status.props.component.render()}
                         {isLoading && status.props && status.props.component && status.props.component.render()}
-                        {elements && !!elements.length && (
+                        {hasPayments && (
                             <PaymentMethodList
                                 isLoading={isLoading || isRedirecting}
                                 isDisablingPaymentMethod={this.state.isDisabling}

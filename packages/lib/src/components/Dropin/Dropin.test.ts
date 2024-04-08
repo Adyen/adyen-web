@@ -8,6 +8,19 @@ import { screen, render } from '@testing-library/preact';
 const submitMock = jest.fn();
 (global as any).HTMLFormElement.prototype.submit = () => submitMock;
 
+const mockCreateGooglePayButton = jest.fn();
+jest.mock('../GooglePay/GooglePayService', () => {
+    return jest.fn().mockImplementation(() => {
+        const mockClient = {
+            createButton: mockCreateGooglePayButton
+        };
+        return {
+            isReadyToPay: () => Promise.resolve({ result: 'dummy', paymentMethodPresent: true }),
+            paymentsClient: Promise.resolve(mockClient)
+        };
+    });
+});
+
 describe('Dropin', () => {
     let dropin: DropinElement;
     let checkout;
@@ -15,6 +28,10 @@ describe('Dropin', () => {
     beforeEach(async () => {
         checkout = await AdyenCheckout({ environment: 'test', clientKey: 'test_123456', analytics: { enabled: false } });
         dropin = checkout.create('dropin');
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
     });
 
     describe('isValid', () => {
@@ -66,7 +83,11 @@ describe('Dropin', () => {
         });
 
         test('should handle new challenge action', async () => {
-            const checkout = await AdyenCheckout({ environment: 'test', clientKey: 'test_123456', analytics: { enabled: false } });
+            const checkout = await AdyenCheckout({
+                environment: 'test',
+                clientKey: 'test_123456',
+                analytics: { enabled: false }
+            });
 
             const dropin = checkout.create('dropin');
 
@@ -160,6 +181,53 @@ describe('Dropin', () => {
 
             expect(dropin.props.paymentMethods).toStrictEqual(paymentMethods);
             expect(dropin.props.instantPaymentMethods).toHaveLength(0);
+        });
+
+        describe('Render instant payments', () => {
+            let checkout;
+
+            beforeEach(async () => {
+                mockCreateGooglePayButton.mockImplementation(() => {
+                    const mockGooglePayElement = document.createElement('div');
+                    mockGooglePayElement.setAttribute('data-testid', 'mock-google-pay-element');
+                    return Promise.resolve(mockGooglePayElement);
+                });
+                checkout = await AdyenCheckout({
+                    environment: 'test',
+                    clientKey: 'test_123456',
+                    analytics: { enabled: false },
+                    paymentMethodsResponse: {
+                        paymentMethods: [
+                            {
+                                configuration: {
+                                    merchantId: '12345678',
+                                    gatewayMerchantId: 'testMerchant'
+                                },
+                                name: 'Google Pay',
+                                type: 'paywithgoogle'
+                            }
+                        ]
+                    }
+                });
+            });
+
+            test('should show the instant payment if the payment response includes the specified instantPaymentTypes', async () => {
+                const dropin = checkout.create('dropin', { instantPaymentTypes: ['paywithgoogle'] });
+                render(dropin.render());
+                expect(await screen.findByTestId('mock-google-pay-element')).toBeTruthy();
+            });
+
+            test('should not show the instant payment if instantPaymentTypes are not specified', async () => {
+                const dropin = checkout.create('dropin');
+                render(dropin.render());
+                expect(screen.queryByTestId('mock-google-pay-element')).not.toBeInTheDocument();
+            });
+
+            test('should not show the instant payment if the payment response does not include any instantPaymentTypes', async () => {
+                const dropin = checkout.create('dropin', { instantPaymentTypes: ['applepay'] });
+                render(dropin.render());
+                expect(screen.queryByTestId('mock-google-pay-element')).not.toBeInTheDocument();
+            });
         });
     });
 
