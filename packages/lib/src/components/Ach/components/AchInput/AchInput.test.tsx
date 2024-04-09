@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { render, screen } from '@testing-library/preact';
 import AchInput from './AchInput';
-import CoreProvider from '../../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../../core/Context/CoreProvider';
 
 jest.mock('../../../internal/SecuredFields/lib/CSF');
 

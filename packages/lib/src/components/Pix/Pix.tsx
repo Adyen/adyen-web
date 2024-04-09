@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import QRLoaderContainer from '../helpers/QRLoaderContainer/QRLoaderContainer';
-import CoreProvider from '../../core/Context/CoreProvider';
+import { CoreProvider } from '../../core/Context/CoreProvider';
 import PixInput from './PixInput';
 import { cleanCPFCNPJ } from '../internal/SocialSecurityNumberBrazil/utils';
 import { PixElementData, PixConfiguration } from './types';

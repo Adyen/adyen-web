@@ -6,7 +6,7 @@ import CtPOneTimePasswordInput from './CtPOneTimePasswordInput';
 import { CtPOneTimePasswordInputHandlers } from './CtPOneTimePasswordInput/CtPOneTimePasswordInput';
 import { CtPInfo } from '../CtPInfo';
 import CtPSection from '../CtPSection';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import './CtPOneTimePassword.scss';
 import CtPSaveCookiesCheckbox from './CtPSaveCookiesCheckbox';
 

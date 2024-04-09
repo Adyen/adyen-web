@@ -6,7 +6,7 @@ import { ClickToPayContext, IClickToPayContext } from '../../context/ClickToPayC
 import CtPLogoutLink from './CtPLogoutLink';
 import { CtpState } from '../../services/ClickToPayService';
 import ShopperCard from '../../models/ShopperCard';
-import CoreProvider from '../../../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../../../core/Context/CoreProvider';
 
 const customRender = (children: ComponentChildren, providerProps: IClickToPayContext) => {
     return render(

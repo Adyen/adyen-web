@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { render, screen } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import StoreDetails from './StoreDetails';
-import CoreProvider from '../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../core/Context/CoreProvider';
 
 const renderWithCoreProvider = ui => {
     return render(

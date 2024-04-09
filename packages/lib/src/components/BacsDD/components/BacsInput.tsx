@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import classNames from 'classnames';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import Field from '../../internal/FormFields/Field';
 import ConsentCheckbox from '../../internal/FormFields/ConsentCheckbox';
 import { bacsValidationRules, bacsFormatters } from './validate';

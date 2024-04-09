@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import Button from '../../internal/Button';
 import { updateAmazonCheckoutSession } from '../services';
 import { OrderButtonProps, UpdateAmazonCheckoutSessionRequest } from '../types';

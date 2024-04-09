@@ -2,7 +2,7 @@ import { h } from 'preact';
 import classNames from 'classnames';
 import CVCHint from './CVCHint';
 import Field from '../../../../internal/FormFields/Field';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import { CVCProps } from './types';
 import {
     CVC_POLICY_HIDDEN,

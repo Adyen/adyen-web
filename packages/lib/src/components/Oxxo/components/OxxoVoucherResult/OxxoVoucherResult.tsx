@@ -2,7 +2,7 @@ import { h } from 'preact';
 import Voucher from '../../../../components/internal/Voucher';
 import { VoucherDetail } from '../../../internal/Voucher/types';
 
-import useCoreContext from '../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { OxxoVoucherResultProps } from '../../types';
 import './OxxoVoucherResult.scss';
 import useImage from '../../../../core/Context/useImage';

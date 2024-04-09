@@ -5,7 +5,7 @@ import getDataset from '../../../../core/Services/get-dataset';
 import Specifications from '../Specifications';
 import { mock } from 'jest-mock-extended';
 import { StateFieldProps } from '../types';
-import CoreProvider from '../../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../../core/Context/CoreProvider';
 
 jest.mock('../../../../core/Services/get-dataset');
 const statesMock = [

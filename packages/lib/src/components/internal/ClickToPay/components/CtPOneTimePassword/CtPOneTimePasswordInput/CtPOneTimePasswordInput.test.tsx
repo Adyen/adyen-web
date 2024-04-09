@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { render, screen, waitFor } from '@testing-library/preact';
-import CoreProvider from '../../../../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../../../../core/Context/CoreProvider';
 import ClickToPayProvider from '../../../context/ClickToPayProvider';
 import { IClickToPayService } from '../../../services/types';
 import { mock } from 'jest-mock-extended';

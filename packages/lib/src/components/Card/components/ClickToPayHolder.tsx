@@ -5,7 +5,7 @@ import { CtpState } from '../../internal/ClickToPay/services/ClickToPayService';
 import ClickToPayComponent from '../../internal/ClickToPay';
 import ContentSeparator from '../../internal/ContentSeparator';
 import Button from '../../internal/Button';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 
 type ClickToPayWrapperProps = {
     children(isCardPrimaryInput?: boolean): h.JSX.Element;

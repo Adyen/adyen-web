@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import PaypalButtons from './PaypalButtons';
 import { render } from '@testing-library/preact';
-import CoreProvider from '../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { mock } from 'jest-mock-extended';
 import { PayPalButtonsProps } from './types';
 

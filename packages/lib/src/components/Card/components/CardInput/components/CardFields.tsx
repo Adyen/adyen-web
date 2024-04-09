@@ -2,7 +2,7 @@ import { h } from 'preact';
 import CardNumber from './CardNumber';
 import CVC from './CVC';
 import ExpirationDate from './ExpirationDate';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import { CardFieldsProps } from './types';
 import classNames from 'classnames';
 import {

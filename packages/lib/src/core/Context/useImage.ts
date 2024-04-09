@@ -1,4 +1,4 @@
-import useCoreContext from './useCoreContext';
+import { useCoreContext } from './CoreProvider';
 import { useCallback } from 'preact/hooks';
 import { GetImageFnType, ImageOptions } from './Resources';
 

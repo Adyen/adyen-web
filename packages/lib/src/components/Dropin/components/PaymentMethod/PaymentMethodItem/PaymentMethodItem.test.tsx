@@ -1,40 +1,68 @@
-import { shallow } from 'enzyme';
+import { render, screen } from '@testing-library/preact';
+import userEvent from '@testing-library/user-event';
+import { mock } from 'jest-mock-extended';
 import { h } from 'preact';
 import PaymentMethodItem from './PaymentMethodItem';
+import { CoreProvider } from '../../../../../core/Context/CoreProvider';
+import { Resources } from '../../../../../core/Context/Resources';
+import UIElement from '../../../../internal/UIElement';
 
-const i18n = { get: key => key };
-const index = 0;
-const paymentMethod = {
+import type { PaymentMethodItemProps } from './PaymentMethodItem';
+
+const paymentMethod = mock<UIElement>({
     _id: '123456',
+    displayName: 'iDeal',
     props: {
-        type: 'mytype'
+        type: 'ideal'
     },
     render: jest.fn()
+});
+
+const requiredProps: PaymentMethodItemProps = {
+    paymentMethod,
+    isDisablingPaymentMethod: false,
+    showRemovePaymentMethodButton: false,
+    onDisableStoredPaymentMethod: jest.fn(),
+    onSelect: jest.fn(),
+    standalone: true
 };
 
 describe('PaymentMethodItem', () => {
-    const getWrapper = props => shallow(<PaymentMethodItem i18n={i18n} {...props} />);
+    const user = userEvent.setup();
 
-    test('Renders a pay PaymentMethodItem', () => {
-        const wrapper = getWrapper({ paymentMethod });
-        expect(wrapper.hasClass('123456')).toBe(true);
-        expect(wrapper.hasClass('adyen-checkout__payment-method')).toBe(true);
-        expect(wrapper.hasClass('adyen-checkout__payment-method--mytype')).toBe(true);
+    const customRender = ui => {
+        return render(
+            <CoreProvider i18n={global.i18n} loadingContext="test" resources={new Resources()}>
+                {ui}
+            </CoreProvider>
+        );
+    };
+    test('should render a pay PaymentMethodItem', () => {
+        const { container } = customRender(<PaymentMethodItem {...requiredProps} paymentMethod={paymentMethod} />);
+
+        /* eslint-disable testing-library/no-node-access,testing-library/no-container */
+        expect(container.getElementsByClassName('123456').length).toBe(1);
+        expect(container.getElementsByClassName('adyen-checkout__payment-method').length).toBe(1);
+        expect(container.getElementsByClassName('adyen-checkout__payment-method--ideal').length).toBe(1);
+        /* eslint-enable testing-library/no-node-access,testing-library/no-container */
     });
 
-    test('Responds to events', () => {
+    test('should trigger onSelect if clicked', async () => {
         const onSelect = jest.fn();
-        const wrapper = getWrapper({ paymentMethod, index, onSelect });
+        customRender(<PaymentMethodItem {...requiredProps} paymentMethod={paymentMethod} onSelect={onSelect} />);
 
-        wrapper.simulate('click');
+        await user.click(screen.getByText('iDeal'));
+
         expect(onSelect.mock.calls.length).toBe(1);
     });
 
-    test('Focus should NOT trigger select', () => {
+    test('should not trigger onSelect when focusing', () => {
         const onSelect = jest.fn();
-        const wrapper = getWrapper({ paymentMethod, index, onSelect });
+        customRender(<PaymentMethodItem {...requiredProps} paymentMethod={paymentMethod} onSelect={onSelect} />);
 
-        wrapper.simulate('focus');
+        const element = screen.getByText('iDeal');
+        element.focus();
+
         expect(onSelect.mock.calls.length).toBe(0);
     });
 });

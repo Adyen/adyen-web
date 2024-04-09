@@ -1,6 +1,6 @@
 import { Fragment, h, RefObject } from 'preact';
 import { useCallback, useState } from 'preact/hooks';
-import useCoreContext from '../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { VpaInputDataState, VpaInputHandlers } from '../VpaInput/VpaInput';
 import VpaInput from '../VpaInput';
 import SegmentedControl from '../../../internal/SegmentedControl';

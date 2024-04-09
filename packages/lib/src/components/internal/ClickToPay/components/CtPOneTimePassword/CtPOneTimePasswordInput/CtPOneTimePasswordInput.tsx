@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { otpValidationRules } from './validate';
 import CtPResendOtpLink from './CtPResendOtpLink';
 import useClickToPayContext from '../../../context/useClickToPayContext';
-import useCoreContext from '../../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../../core/Context/CoreProvider';
 import useForm from '../../../../../../utils/useForm';
 import Field from '../../../../FormFields/Field';
 import './CtPOneTimePasswordInput.scss';

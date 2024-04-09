@@ -2,7 +2,7 @@ import { h } from 'preact';
 import userEvent from '@testing-library/user-event';
 import { render, screen, waitFor } from '@testing-library/preact';
 import AddressSearch from './AddressSearch';
-import CoreProvider from '../../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { Resources } from '../../../../core/Context/Resources';
 
 const ADDRESS_LOOKUP_RESULT = [

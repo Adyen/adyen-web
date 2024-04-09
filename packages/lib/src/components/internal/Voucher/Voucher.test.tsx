@@ -1,7 +1,7 @@
 import { mount } from 'enzyme';
 import { h } from 'preact';
 import Voucher from './Voucher';
-import CoreProvider from '../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../core/Context/CoreProvider';
 
 const outputDetails = {
     paymentMethodType: 'type',

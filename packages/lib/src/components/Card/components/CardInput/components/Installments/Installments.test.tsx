@@ -3,7 +3,7 @@ import { mount } from 'enzyme';
 import Installments from './Installments';
 import { InstallmentOptions } from '../types';
 import { render, screen } from '@testing-library/preact';
-import CoreProvider from '../../../../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../../../../core/Context/CoreProvider';
 
 describe('Installments', () => {
     let installmentOptions;

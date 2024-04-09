@@ -3,7 +3,7 @@ import { h } from 'preact';
 import PayButton, { PayButtonProps } from './PayButton';
 import { PAY_BTN_DIVIDER } from './utils';
 import { mock } from 'jest-mock-extended';
-import CoreProvider from '../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../core/Context/CoreProvider';
 
 const getWrapper = (props = {}) => {
     const mockedProps = mock<PayButtonProps>();

@@ -10,7 +10,7 @@ import { MockReactApp } from './MockReactApp';
 import getTranslationFile from '../../config/getTranslation';
 import { searchFunctionExample } from '../../utils';
 
-const onlyShowCard = false;
+const onlyShowCard = true;
 
 const showComps = {
     clickToPay: true,

@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { SignOutButtonProps } from '../types';
 
 export default function SignOutButton(props: SignOutButtonProps) {

@@ -1,8 +1,8 @@
 import { h } from 'preact';
 import PaymentMethodIcon from './PaymentMethodIcon';
-import useCoreContext from '../../../../core/Context/useCoreContext';
-import './OrderPaymentMethods.scss';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import useImage from '../../../../core/Context/useImage';
+import './OrderPaymentMethods.scss';
 
 export const OrderPaymentMethods = ({ order, orderStatus, onOrderCancel, brandLogoConfiguration }) => {
     const { i18n } = useCoreContext();
