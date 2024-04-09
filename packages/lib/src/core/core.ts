@@ -77,7 +77,7 @@ class Core implements ICore {
         if ((clientKeyType === 'test' || clientKeyType === 'live') && !this.loadingContext.includes(clientKeyType)) {
             throw new AdyenCheckoutError(
                 'IMPLEMENTATION_ERROR',
-                `Error: you are using a ${clientKeyType} clientKey against the ${this.options.environment} environment`
+                `Error: you are using a ${clientKeyType} clientKey against the ${this.options.environmentUrls?.api || this.options.environment} environment`
             );
         }
 
