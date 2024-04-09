@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { useEffect } from 'preact/hooks';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { ChangeActionOptions, ChangePaymentDetailsButtonProps } from '../types';
 
 export default function ChangePaymentDetailsButton(props: ChangePaymentDetailsButtonProps) {

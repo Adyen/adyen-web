@@ -9,7 +9,7 @@ import './QRLoader.scss';
 import { QRLoaderProps, QRLoaderState } from './types';
 import copyToClipboard from '../../../utils/clipboard';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import ContentSeparator from '../ContentSeparator';
 import { StatusObject } from '../Await/types';
 import useImage from '../../../core/Context/useImage';

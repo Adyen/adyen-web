@@ -4,7 +4,7 @@ import FieldContainer from './FieldContainer';
 import Specifications from '../Specifications';
 import { mock } from 'jest-mock-extended';
 import { FieldContainerProps } from '../types';
-import CoreProvider from '../../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../../core/Context/CoreProvider';
 
 const propsMock = {
     errors: {},

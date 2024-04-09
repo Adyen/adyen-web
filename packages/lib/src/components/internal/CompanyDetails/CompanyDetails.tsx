@@ -4,7 +4,7 @@ import Fieldset from '../FormFields/Fieldset';
 import Field from '../FormFields/Field';
 import ReadOnlyCompanyDetails from './ReadOnlyCompanyDetails';
 import { companyDetailsValidationRules } from './validate';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { getFormattedData } from './utils';
 import { CompanyDetailsSchema, CompanyDetailsProps } from './types';
 import useForm from '../../../utils/useForm';

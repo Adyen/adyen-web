@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
-import CoreProvider from '../../core/Context/CoreProvider';
+import { CoreProvider } from '../../core/Context/CoreProvider';
 import { ClickToPayConfiguration, ClickToPayPaymentData } from './types';
 import collectBrowserInfo from '../../utils/browserInfo';
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';

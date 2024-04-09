@@ -2,7 +2,7 @@ import { mount } from 'enzyme';
 import { h } from 'preact';
 import IssuerList from './IssuerList';
 import PayButton from '../PayButton';
-import CoreProvider from '../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { ANALYTICS_FEATURED_ISSUER, ANALYTICS_LIST, ANALYTICS_SELECTED_STR } from '../../../core/Analytics/constants';
 
 describe('IssuerList', () => {

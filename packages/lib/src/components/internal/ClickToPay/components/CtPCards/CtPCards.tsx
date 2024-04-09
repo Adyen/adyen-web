@@ -11,7 +11,7 @@ import CtPSection from '../CtPSection';
 import { CTP_IFRAME_NAME } from '../../services/utils';
 import Iframe from '../../../../internal/IFrame';
 import useImage from '../../../../../core/Context/useImage';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import isMobile from '../../../../../utils/isMobile';
 import Language from '../../../../../language';
 import { PaymentAmount } from '../../../../../types/global-types';

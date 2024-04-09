@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { mount } from 'enzyme';
 import Fieldset from './Fieldset';
-import CoreProvider from '../../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../../core/Context/CoreProvider';
 
 describe('Fieldset', () => {
     const i18n = { get: key => key };

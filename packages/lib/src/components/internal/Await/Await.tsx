@@ -7,7 +7,7 @@ import processResponse from '../../../core/ProcessResponse';
 import Spinner from '../../internal/Spinner';
 import Countdown from '../Countdown';
 import Button from '../Button';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { AwaitComponentProps, StatusObject } from './types';
 import './Await.scss';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';

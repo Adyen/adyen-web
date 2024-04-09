@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import classnames from 'classnames';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import './ContentSeparator.scss';
 
 interface ContentSeparatorProps {

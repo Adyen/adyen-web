@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import Field from '../../internal/FormFields/Field';
 import './BlikInput.scss';
 import useForm from '../../../utils/useForm';

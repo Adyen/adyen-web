@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import PaymentMethodItem from './PaymentMethodItem/PaymentMethodItem';
-import useCoreContext from '../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { useMemo } from 'preact/hooks';
 import uuid from '../../../../utils/uuid';
 import classNames from 'classnames';

@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
-import CoreProvider from '../../core/Context/CoreProvider';
+import { CoreProvider } from '../../core/Context/CoreProvider';
 import { KlarnConfiguration } from './types';
 import PayButton from '../internal/PayButton';
 import { KlarnaContainer } from './components/KlarnaContainer/KlarnaContainer';

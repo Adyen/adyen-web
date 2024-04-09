@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { CardElement } from './Card';
 import { render, screen } from '@testing-library/preact';
-import CoreProvider from '../../core/Context/CoreProvider';
+import { CoreProvider } from '../../core/Context/CoreProvider';
 import Language from '../../language';
 import { Resources } from '../../core/Context/Resources';
 

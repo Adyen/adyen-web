@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import IbanInput from '../internal/IbanInput';
-import CoreProvider from '../../core/Context/CoreProvider';
+import { CoreProvider } from '../../core/Context/CoreProvider';
 import { SepaElementData, SepaConfiguration } from './types';
 import { TxVariants } from '../tx-variants';
 import FormInstruction from '../internal/FormInstruction';

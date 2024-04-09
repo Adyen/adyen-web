@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import Field from '../../internal/FormFields/Field';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import InputText from '../FormFields/InputText';
 
 export default function ({

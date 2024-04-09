@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { render, screen } from '@testing-library/preact';
 import BoletoInput from './BoletoInput';
-import CoreProvider from '../../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../../core/Context/CoreProvider';
 
 describe('BoletoInput', () => {
     const customRender = ui => {

@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { pixValidationRules } from './validate';
 import { pixFormatters } from './utils';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import useForm from '../../../utils/useForm';
 import { BrazilPersonalDetail } from '../../internal/SocialSecurityNumberBrazil/BrazilPersonalDetail';
 import { PixInputDataState, PixInputProps } from './types';

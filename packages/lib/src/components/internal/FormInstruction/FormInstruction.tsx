@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import './FormInstruction.scss';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 
 const FormInstruction = () => {
     const { i18n } = useCoreContext();

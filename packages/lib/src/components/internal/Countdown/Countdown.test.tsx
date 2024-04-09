@@ -3,7 +3,7 @@ import Countdown from './index';
 import { render, screen } from '@testing-library/preact';
 import { SRPanel } from '../../../core/Errors/SRPanel';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
-import CoreProvider from '../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../core/Context/CoreProvider';
 
 describe('Countdown', () => {
     const srPanel = new SRPanel(global.core);

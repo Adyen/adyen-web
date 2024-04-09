@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
-import CoreProvider from '../../core/Context/CoreProvider';
+import { CoreProvider } from '../../core/Context/CoreProvider';
 import DonationComponent from './components/DonationComponent';
 import { TxVariants } from '../tx-variants';
 import type { ICore } from '../../core/types';

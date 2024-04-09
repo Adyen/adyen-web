@@ -4,7 +4,7 @@ import useForm from '../../../utils/useForm';
 import Field from '../FormFields/Field';
 import IssuerButtonGroup from './IssuerButtonGroup';
 import ContentSeparator from '../ContentSeparator';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { ValidatorRules } from '../../../utils/Validator/types';
 import { IssuerListProps } from './types';
 import './IssuerList.scss';

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'preact/hooks';
 import { getAmazonSignature } from '../services';
 import { getAmazonPaySettings, getPayloadJSON } from '../utils';
 import { AmazonPayButtonProps, CheckoutSessionConfig, PayloadJSON } from '../types';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 
 export default function AmazonPayButton(props: AmazonPayButtonProps) {
     const { loadingContext } = useCoreContext();

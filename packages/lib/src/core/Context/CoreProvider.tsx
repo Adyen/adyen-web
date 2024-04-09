@@ -1,21 +1,25 @@
-import { h, toChildArray } from 'preact';
-import { CoreContext } from './CoreContext';
+import { h, toChildArray, createContext } from 'preact';
+import { useContext, useEffect } from 'preact/hooks';
 import { Resources } from './Resources';
-import { useEffect } from 'preact/hooks';
+import Language from '../../language';
+import type { ComponentChildren } from 'preact';
 
 interface CoreProviderProps {
     loadingContext: string;
-    i18n: any;
+    i18n: Language;
     resources: Resources;
-    children?: any;
-    commonProps?: CommonPropsTypes;
+    children: ComponentChildren;
 }
 
-export interface CommonPropsTypes {
-    [key: string]: any;
-}
+type ContextValue = {
+    i18n: Language;
+    loadingContext: string;
+    resources: Resources;
+};
 
-const CoreProvider = ({ i18n, loadingContext, commonProps, resources, children }: CoreProviderProps) => {
+const CoreContext = createContext<ContextValue | undefined>(undefined);
+
+const CoreProvider = ({ i18n, loadingContext, resources, children }: CoreProviderProps) => {
     useEffect(() => {
         if (!i18n || !loadingContext || !resources) {
             console.error('CoreProvider - WARNING core provider is missing one of the following: i18n, loadingContext or resources');
@@ -27,7 +31,6 @@ const CoreProvider = ({ i18n, loadingContext, commonProps, resources, children }
             value={{
                 i18n,
                 loadingContext,
-                commonProps: commonProps || {},
                 resources
             }}
         >
@@ -36,4 +39,14 @@ const CoreProvider = ({ i18n, loadingContext, commonProps, resources, children }
     );
 };
 
-export default CoreProvider;
+const useCoreContext = (): ContextValue => {
+    const context = useContext(CoreContext);
+
+    if (context === undefined) {
+        throw new Error('"useCoreContext" must be used within a CoreProvider');
+    }
+
+    return context;
+};
+
+export { CoreProvider, useCoreContext };

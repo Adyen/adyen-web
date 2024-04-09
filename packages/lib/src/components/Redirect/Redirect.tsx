@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
-import CoreProvider from '../../core/Context/CoreProvider';
+import { CoreProvider } from '../../core/Context/CoreProvider';
 import RedirectShopper from './components/RedirectShopper';
 import RedirectButton from '../internal/RedirectButton';
 import { TxVariants } from '../tx-variants';

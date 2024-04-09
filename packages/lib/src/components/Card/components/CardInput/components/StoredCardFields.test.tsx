@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/preact';
 
 import { CVC_POLICY_REQUIRED } from '../../../../internal/SecuredFields/lib/configuration/constants';
 import StoredCardFields from './StoredCardFields';
-import CoreProvider from '../../../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../../../core/Context/CoreProvider';
 
 const storedCardProps = {
     brand: 'visa',

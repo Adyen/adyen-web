@@ -4,7 +4,7 @@ import { SRPanel } from '../../../../core/Errors/SRPanel';
 import SRPanelProvider from '../../../../core/Errors/SRPanelProvider';
 import Error from './Error';
 import Success from './Success';
-import CoreProvider from '../../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../../core/Context/CoreProvider';
 
 describe('Status', () => {
     const srPanel = new SRPanel(global.core);

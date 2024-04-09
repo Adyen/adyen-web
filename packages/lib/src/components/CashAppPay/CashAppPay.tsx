@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
-import CoreProvider from '../../core/Context/CoreProvider';
+import { CoreProvider } from '../../core/Context/CoreProvider';
 import { CashAppComponent } from './components/CashAppComponent';
 import CashAppService from './services/CashAppService';
 import { CashAppSdkLoader } from './services/CashAppSdkLoader';

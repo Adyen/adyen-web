@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import Field from '../../../../../internal/FormFields/Field';
-import useCoreContext from '../../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../../core/Context/CoreProvider';
 import { InstallmentsItem, InstallmentsProps } from '../types';
 import Fieldset from '../../../../../internal/FormFields/Fieldset/Fieldset';
 import RadioGroup from '../../../../../internal/FormFields/RadioGroup';

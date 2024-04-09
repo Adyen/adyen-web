@@ -8,7 +8,7 @@ import Field from '../../../internal/FormFields/Field';
 import LoadingWrapper from '../../../internal/LoadingWrapper/LoadingWrapper';
 import defaultProps from './defaultProps';
 import defaultStyles from './defaultStyles';
-import useCoreContext from '../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import './AchInput.scss';
 import { ACHInputDataState, ACHInputProps, ACHInputStateError, ACHInputStateValid } from './types';
 import StoreDetails from '../../../internal/StoreDetails';
