@@ -8,6 +8,7 @@ export const IMPLEMENTATION_ERROR = 'IMPLEMENTATION_ERROR';
 export const API_ERROR = 'API_ERROR';
 export const ERROR = 'ERROR';
 export const SCRIPT_ERROR = 'SCRIPT_ERROR';
+export const SDK_ERROR = 'SDK_ERROR';
 
 class AdyenCheckoutError extends Error {
     protected static errorTypes = {
@@ -27,7 +28,10 @@ class AdyenCheckoutError extends Error {
         ERROR,
 
         /** Script error. The browser failed to load 3rd party script */
-        SCRIPT_ERROR
+        SCRIPT_ERROR,
+
+        /** Something has gone wrong internally */
+        SDK_ERROR
     };
 
     public cause: unknown;
