@@ -59,7 +59,7 @@ const actionTypes = {
             paymentMethodType: props.paymentMethodType,
             challengeWindowSize: props.challengeWindowSize, // always pass challengeWindowSize in case it's been set directly in the handleAction config object
             isMDFlow: props.isMDFlow,
-            modules: { analytics: props.modules?.analytics },
+            modules: { analytics: props.modules?.analytics, resources: props.modules?.resources },
 
             // Props unique to a particular flow
             ...get3DS2FlowProps(action.subtype, props)
