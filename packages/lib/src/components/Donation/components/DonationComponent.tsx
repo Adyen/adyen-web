@@ -4,7 +4,7 @@ import CampaignContainer from './CampaignContainer';
 import ButtonGroup from '../../internal/ButtonGroup';
 import Button from '../../internal/Button';
 import Img from '../../internal/Img';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import '../Donation.scss';
 import DisclaimerMessage from '../../internal/DisclaimerMessage';
 import { DonationComponentProps } from './types';

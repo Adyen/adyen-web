@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import LoadingWrapper from '../../internal/LoadingWrapper';
 import InputText from '../../internal/FormFields/InputText';
 import Field from '../../internal/FormFields/Field';

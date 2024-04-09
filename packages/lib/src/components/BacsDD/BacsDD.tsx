@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import BacsInput from './components/BacsInput';
-import CoreProvider from '../../core/Context/CoreProvider';
+import { CoreProvider } from '../../core/Context/CoreProvider';
 import BacsResult from './components/BacsResult';
 import PayButton from '../internal/PayButton';
 import { TxVariants } from '../tx-variants';

@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { useEffect, useRef, useState, useMemo } from 'preact/hooks';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import CompanyDetails from '../CompanyDetails';
 import PersonalDetails from '../PersonalDetails';
 import Address from '../Address';

@@ -4,7 +4,7 @@ import CountryField from './CountryField';
 import getDataset from '../../../../core/Services/get-dataset';
 import { mock } from 'jest-mock-extended';
 import { CountryFieldProps } from '../types';
-import CoreProvider from '../../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../../core/Context/CoreProvider';
 
 jest.mock('../../../../core/Services/get-dataset');
 const countriesMock = [

@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import Field from '../../../../internal/FormFields/Field';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import { CardHolderNameProps } from './types';
 import InputText from '../../../../internal/FormFields/InputText';
 import { CREDITCARD_HOLDER_NAME_INVALID } from '../../../../../core/Errors/constants';

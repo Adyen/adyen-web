@@ -3,7 +3,7 @@ import useClickToPayContext from '../../context/useClickToPayContext';
 import { CtpState } from '../../services/ClickToPayService';
 import classnames from 'classnames';
 import { useMemo } from 'preact/hooks';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import './CtPLogoutLink.scss';
 
 const CtPLogoutLink = () => {

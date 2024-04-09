@@ -2,7 +2,7 @@ import { mount } from 'enzyme';
 import { h } from 'preact';
 import IbanInput from './IbanInput';
 import { GenericError } from '../../../core/Errors/types';
-import CoreProvider from '../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../core/Context/CoreProvider';
 
 const createWrapper = (props = {}) =>
     mount(

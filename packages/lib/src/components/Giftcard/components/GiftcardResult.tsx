@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import './GiftcardResult.scss';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 
 function GiftcardResult({ brand, amount, balance, transactionLimit, ...props }) {
     const { i18n } = useCoreContext();

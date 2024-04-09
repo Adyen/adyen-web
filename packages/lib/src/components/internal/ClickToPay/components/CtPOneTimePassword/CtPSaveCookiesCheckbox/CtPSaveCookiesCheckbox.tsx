@@ -2,7 +2,7 @@ import { h, Fragment } from 'preact';
 import classnames from 'classnames';
 import Field from '../../../../FormFields/Field';
 import Checkbox from '../../../../FormFields/Checkbox';
-import useCoreContext from '../../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../../core/Context/CoreProvider';
 import { useState, useCallback } from 'preact/hooks';
 import useClickToPayContext from '../../../context/useClickToPayContext';
 import isScreenSmall from '../../../../../../utils/isScreenSmall';

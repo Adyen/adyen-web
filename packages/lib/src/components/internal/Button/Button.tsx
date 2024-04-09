@@ -1,7 +1,7 @@
 import { Component, h } from 'preact';
 import classNames from 'classnames';
 import Spinner from '../Spinner';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import './Button.scss';
 import { ButtonProps, ButtonState } from './types';
 

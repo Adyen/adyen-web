@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'preact/hooks';
 import { h } from 'preact';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import Checkbox from '../FormFields/Checkbox';
 
 /**

@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import useCoreContext from '../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import './BankTransferInput.scss';
 import SendCopyToEmail from '../../../internal/SendCopyToEmail/SendCopyToEmail';
 import { useEffect, useState } from 'preact/hooks';

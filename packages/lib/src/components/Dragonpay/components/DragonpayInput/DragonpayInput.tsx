@@ -3,7 +3,7 @@ import { useEffect, useState } from 'preact/hooks';
 import useForm from '../../../../utils/useForm';
 import Field from '../../../internal/FormFields/Field';
 import getIssuerImageUrl from '../../../../utils/get-issuer-image';
-import useCoreContext from '../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { DragonpayInputData, DragonpayInputIssuerItem, DragonpayInputProps } from '../../types';
 import InputEmail from '../../../internal/FormFields/InputEmail';
 import Select from '../../../internal/FormFields/Select';

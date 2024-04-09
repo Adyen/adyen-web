@@ -11,7 +11,7 @@ import useForm from '../../../utils/useForm';
 import Specifications from './Specifications';
 import { ADDRESS_SCHEMA, FALLBACK_VALUE } from './constants';
 import { getMaxLengthByFieldAndCountry } from '../../../utils/validator-utils';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import AddressSearch from './components/AddressSearch';
 import { ComponentMethodsRef } from '../UIElement/types';
 

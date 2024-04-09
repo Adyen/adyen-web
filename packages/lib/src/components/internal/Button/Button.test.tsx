@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { mount } from 'enzyme';
 import Button from './Button';
-import CoreProvider from '../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../core/Context/CoreProvider';
 
 const getWrapper = props => {
     return mount(

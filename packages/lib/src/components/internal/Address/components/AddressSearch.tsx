@@ -3,7 +3,7 @@ import { h } from 'preact';
 import { AddressLookupItem } from '../types';
 import { useCallback, useEffect, useState, useMemo } from 'preact/hooks';
 import './AddressSearch.scss';
-import useCoreContext from '../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { debounce } from '../../../../utils/debounce';
 import Select from '../../FormFields/Select';
 import { AddressData } from '../../../../types';

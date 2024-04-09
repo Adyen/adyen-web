@@ -1,7 +1,7 @@
 import { h } from 'preact';
 
 import Img from '../../../internal/Img';
-import useCoreContext from '../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import useImage from '../../../../core/Context/useImage';
 import { useA11yReporter } from '../../../../core/Errors/useA11yReporter';
 

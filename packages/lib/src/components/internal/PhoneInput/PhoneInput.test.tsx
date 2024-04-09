@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { fireEvent, render, screen } from '@testing-library/preact';
-import CoreProvider from '../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { Resources } from '../../../core/Context/Resources';
 import userEvent from '@testing-library/user-event';
 import PhoneInput from './PhoneInput';

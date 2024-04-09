@@ -1,6 +1,6 @@
 import { h, ComponentChildren } from 'preact';
 import { SRPanelContext } from './SRPanelContext';
-import useCoreContext from '../Context/useCoreContext';
+import { useCoreContext } from '../Context/CoreProvider';
 import { partial } from '../../components/internal/SecuredFields/lib/utilities/commonUtils';
 import { setSRMessagesFromErrors } from './utils';
 import { SRPanel } from './SRPanel';

@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { useCallback, useEffect, useState } from 'preact/hooks';
 import useClickToPayContext from '../../../context/useClickToPayContext';
 import classnames from 'classnames';
-import useCoreContext from '../../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../../core/Context/CoreProvider';
 import Icon from '../../../../Icon';
 
 const CONFIRMATION_SHOWING_TIME = 2000;

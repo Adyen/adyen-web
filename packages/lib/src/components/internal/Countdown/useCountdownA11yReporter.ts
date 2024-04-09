@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'preact/hooks';
 import { CountdownA11yReporter } from './CountdownA11yReporter';
 import useSRPanelContext from '../../../core/Errors/useSRPanelContext';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { CountdownTime } from './types';
 
 export const useCountdownA11yReporter = (time: CountdownTime): void => {

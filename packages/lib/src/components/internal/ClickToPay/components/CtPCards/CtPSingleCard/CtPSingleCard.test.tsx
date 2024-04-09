@@ -2,7 +2,7 @@ import { ComponentChildren, h } from 'preact';
 import { render, screen } from '@testing-library/preact';
 import CtPSingleCard from './CtPSingleCard';
 import ShopperCard from '../../../models/ShopperCard';
-import CoreProvider from '../../../../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../../../../core/Context/CoreProvider';
 
 function createShopperCard({ panExpirationYear = '2030', panExpirationMonth = '09' }): ShopperCard {
     return new ShopperCard(

@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import CoreProvider from '../../core/Context/CoreProvider';
+import { CoreProvider } from '../../core/Context/CoreProvider';
 import RedirectElement from '../Redirect';
 import RedirectButton from '../internal/RedirectButton';
 import { TxVariants } from '../tx-variants';

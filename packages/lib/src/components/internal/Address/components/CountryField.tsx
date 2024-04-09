@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { useLayoutEffect, useState } from 'preact/hooks';
 import Field from '../../FormFields/Field';
-import useCoreContext from '../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import getDataset from '../../../../core/Services/get-dataset';
 import { CountryFieldProps, CountryFieldItem } from '../types';
 import Select from '../../FormFields/Select';
