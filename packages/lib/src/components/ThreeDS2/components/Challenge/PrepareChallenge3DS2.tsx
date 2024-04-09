@@ -80,6 +80,14 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
             // Only render component if we have an acsURL.
             if (!hasValidAcsURL) {
+                // Set UI error & call onError callback
+                this.setError(
+                    {
+                        errorInfo: `${Analytics3DS2Errors.TOKEN_IS_MISSING_ACSURL}: ${this.props.i18n.get('3ds2.800')}` //
+                    },
+                    true
+                );
+
                 // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
                 const errorCodeObject = {
                     type: THREEDS2_ERROR,
@@ -90,14 +98,6 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 };
                 this.props.onSubmitAnalytics(errorCodeObject);
 
-                // Set UI error
-                this.setStatusError(
-                    {
-                        errorInfo: `${Analytics3DS2Errors.TOKEN_IS_MISSING_ACSURL}: ${this.props.i18n.get('3ds2.800')}` //
-                    },
-                    true
-                );
-
                 console.debug('### PrepareChallenge3DS2::exiting:: no valid acsURL');
                 return;
             }
@@ -106,6 +106,15 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
             // Only render component if we have a acsTransID, messageVersion & threeDSServerTransID
             if (!acsTransID || !messageVersion || !threeDSServerTransID) {
+                // Set UI error & call onError callback
+                this.setError(
+                    {
+                        errorInfo: `${Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS}: ${this.props.i18n.get('3ds2.703')}: (acsTransID | messageVersion | threeDSServerTransID)`,
+                        errorObj: this.state.challengeData
+                    },
+                    true
+                );
+
                 // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
                 this.props.onSubmitAnalytics({
                     type: THREEDS2_ERROR,
@@ -113,15 +122,6 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                     errorType: ANALYTICS_API_ERROR,
                     message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)`
                 });
-
-                // Set UI error
-                this.setStatusError(
-                    {
-                        errorInfo: `${Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS}: ${this.props.i18n.get('3ds2.703')}: (acsTransID | messageVersion | threeDSServerTransID)`,
-                        errorObj: this.state.challengeData
-                    },
-                    true
-                );
 
                 console.debug(
                     '### PrepareChallenge3DS2::exiting:: missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)'
@@ -140,18 +140,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                     ? Analytics3DS2Errors.ACTION_IS_MISSING_TOKEN
                     : Analytics3DS2Errors.TOKEN_DECODE_OR_PARSING_FAILED;
 
-            // Send error to analytics endpoint // TODO - check logs to see if the base64 decoding errors *ever* happen
-            this.props.onSubmitAnalytics({
-                type: THREEDS2_ERROR,
-                code: errorCode,
-                errorType: ANALYTICS_API_ERROR,
-                message: `${THREEDS2_CHALLENGE_ERROR}: ${errorMsg}` // can be: 'Missing "token" property from threeDS2 action', 'not base64', 'malformed URI sequence' or 'Could not JSON parse token'
-            });
-
-            console.debug('### PrepareChallenge3DS2::exiting:: no challengeData');
-
-            // Set UI error
-            this.setStatusError(
+            // Set UI error & call onError callback
+            this.setError(
                 {
                     errorInfo:
                         errorMsg.indexOf(MISSING_TOKEN_IN_ACTION_MSG) > -1
@@ -161,6 +151,16 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 },
                 true
             );
+
+            // Send error to analytics endpoint // TODO - check logs to see if the base64 decoding errors *ever* happen
+            this.props.onSubmitAnalytics({
+                type: THREEDS2_ERROR,
+                code: errorCode,
+                errorType: ANALYTICS_API_ERROR,
+                message: `${THREEDS2_CHALLENGE_ERROR}: ${errorMsg}` // can be: 'Missing "token" property from threeDS2 action', 'not base64', 'malformed URI sequence' or 'Could not JSON parse token'
+            });
+
+            console.debug('### PrepareChallenge3DS2::exiting:: no challengeData');
         }
     }
 
@@ -220,7 +220,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
      * @param errorInfoObj -
      * @param isFatal -
      */
-    setStatusError(errorInfoObj: StatusErrorInfoObject, isFatal: boolean) {
+    setError(errorInfoObj: StatusErrorInfoObject, isFatal: boolean) {
         this.setState({ status: 'error', errorInfo: errorInfoObj.errorInfo });
 
         // Decide whether to call this.props.onError
