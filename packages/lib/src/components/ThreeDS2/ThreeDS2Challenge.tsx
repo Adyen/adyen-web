@@ -9,7 +9,7 @@ import { ThreeDS2ChallengeConfiguration } from './types';
 import AdyenCheckoutError, { API_ERROR } from '../../core/Errors/AdyenCheckoutError';
 import { ANALYTICS_API_ERROR, Analytics3DS2Errors, ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
 import { SendAnalyticsObject } from '../../core/Analytics/types';
-import CoreProvider from '../../core/Context/CoreProvider';
+import { CoreProvider } from '../../core/Context/CoreProvider';
 
 class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
     public static type = TxVariants.threeDS2Challenge;
