@@ -146,6 +146,8 @@
 }
 
 .adyen-checkout__card__cvc__hint__wrapper {
+    position: absolute;
+    right: 0;
     height: 100%;
     width: 27px;
     display: flex;
