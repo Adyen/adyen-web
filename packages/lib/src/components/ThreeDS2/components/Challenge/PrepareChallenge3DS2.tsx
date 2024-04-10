@@ -83,7 +83,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 // Set UI error & call onError callback
                 this.setError(
                     {
-                        errorInfo: `${Analytics3DS2Errors.TOKEN_IS_MISSING_ACSURL}: ${this.props.i18n.get('3ds2.800')}` //
+                        errorInfo: `${Analytics3DS2Errors.TOKEN_IS_MISSING_ACSURL}: ${this.props.i18n.get('err.gen.9102')}` //
                     },
                     true
                 );
@@ -109,7 +109,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 // Set UI error & call onError callback
                 this.setError(
                     {
-                        errorInfo: `${Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS}: ${this.props.i18n.get('3ds2.703')}: (acsTransID | messageVersion | threeDSServerTransID)`,
+                        errorInfo: `${Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS}: ${this.props.i18n.get('err.gen.9102')}`,
                         errorObj: this.state.challengeData
                     },
                     true
@@ -145,8 +145,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 {
                     errorInfo:
                         errorMsg.indexOf(MISSING_TOKEN_IN_ACTION_MSG) > -1
-                            ? `${Analytics3DS2Errors.ACTION_IS_MISSING_TOKEN}: ${this.props.i18n.get('3ds2.701')}`
-                            : `${Analytics3DS2Errors.TOKEN_DECODE_OR_PARSING_FAILED}:${this.props.i18n.get('3ds2.704')}`,
+                            ? `${Analytics3DS2Errors.ACTION_IS_MISSING_TOKEN}: ${this.props.i18n.get('err.gen.9102')}`
+                            : `${Analytics3DS2Errors.TOKEN_DECODE_OR_PARSING_FAILED}:${this.props.i18n.get('err.gen.9102')}`,
                     errorObj: this.state.challengeData
                 },
                 true

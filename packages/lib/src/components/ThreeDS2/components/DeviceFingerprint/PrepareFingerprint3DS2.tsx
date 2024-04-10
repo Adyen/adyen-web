@@ -115,6 +115,10 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                     }
                 );
 
+                console.debug(
+                    '### PrepareFingerprint3DS2::exiting:: Decoded token is missing one or more of the following properties (threeDSMethodNotificationURL | postMessageDomain | threeDSServerTransID)'
+                );
+
                 return;
             }
 
