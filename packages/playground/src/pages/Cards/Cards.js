@@ -35,7 +35,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     window.checkout = await AdyenCheckout({
         amount,
         countryCode,
-        resourceEnvironment: 'https://checkoutshopper-test.adyen.com/checkoutshopper/',
+        resourceEnvironment: 'test',
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
         locale: shopperLocale,
