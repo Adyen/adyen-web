@@ -22,6 +22,6 @@ export interface PrepareFingerprint3DS2Props extends ThreeDS2DeviceFingerprintCo
 }
 
 export interface PrepareFingerprint3DS2State {
-    status?: string;
+    status?: 'init' | 'retrievingFingerPrint' | 'complete';
     fingerPrintData?: FingerPrintData | ErrorObject;
 }

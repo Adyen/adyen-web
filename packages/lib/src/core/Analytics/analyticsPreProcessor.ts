@@ -25,7 +25,7 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
     return (component: string, analyticsObj: SendAnalyticsObject, uiElementProps = {} as any) => {
         const { type, target } = analyticsObj;
 
-        if (type == null) {
+        if (!type) {
             throw new AdyenCheckoutError(SDK_ERROR, 'You are trying to create an analytics event without a type');
         }
 

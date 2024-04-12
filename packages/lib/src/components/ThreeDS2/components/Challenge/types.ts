@@ -12,7 +12,7 @@ export interface DoChallenge3DS2Props extends ChallengeData {
 
 export interface DoChallenge3DS2State {
     base64URLencodedData?: string;
-    status?: string;
+    status?: 'init' | 'iframeLoaded';
 }
 
 export interface PrepareChallenge3DS2Props extends ThreeDS2ChallengeConfiguration {
@@ -23,7 +23,7 @@ export interface PrepareChallenge3DS2Props extends ThreeDS2ChallengeConfiguratio
 
 export interface PrepareChallenge3DS2State {
     challengeData?: ChallengeData | ErrorObject;
-    status?: string;
+    status?: 'init' | 'performingChallenge' | 'error' | 'complete';
     errorInfo?: string;
 }
 
