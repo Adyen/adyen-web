@@ -4,7 +4,7 @@
     line-height: var(--adyen-checkout-line-height-100);
     color: var(--adyen-checkout-color-label-primary);
     font-size: var(--adyen-checkout-font-size-small);
-    font-weight: normal;
+    font-weight: var(--adyen-checkout-font-weight-300);
     margin-top: 0;
 
     [dir="rtl"] & {

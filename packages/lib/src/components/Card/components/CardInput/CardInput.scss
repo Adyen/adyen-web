@@ -146,6 +146,8 @@
 }
 
 .adyen-checkout__card__cvc__hint__wrapper {
+    position: absolute;
+    right: 0;
     height: 100%;
     width: 27px;
     display: flex;
@@ -173,6 +175,8 @@
 }
 
 .adyen-checkout__field__exp-date_hint_wrapper {
+    position: absolute;
+    right: 0;
     display: flex;
     align-items: center;
     transition: opacity 0.1s linear;

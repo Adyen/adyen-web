@@ -139,6 +139,7 @@
 
 .adyen-checkout__payment-method__brands {
     display: flex;
+    gap: var(--adyen-checkout-spacer-020);
     flex-wrap: wrap;
     margin: var(--adyen-checkout-spacer-020) var(--adyen-checkout-spacer-000);
     height: var(--adyen-checkout-spacer-070);

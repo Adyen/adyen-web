@@ -12,6 +12,7 @@
     --adyen-checkout-line-height-200: #{$line-height-200};
     --adyen-checkout-line-height-100: #{$line-height-100};
     --adyen-checkout-font-weight-200: #{$font-weight-200};
+    --adyen-checkout-font-weight-300: #{$font-weight-300};
     --adyen-checkout-font-weight-500: #{$font-weight-500};
     --adyen-checkout-font-weight-600: #{$font-weight-600};
     --adyen-checkout-font-weight-700: #{$font-weight-700};
@@ -101,7 +102,7 @@
     --adyen-checkout-dropin-payment-item-border-radius: var(--adyen-checkout-border-radius-m);
     --adyen-checkout-dropin-payment-item-border-width: var(--adyen-checkout-border-width-s);
     --adyen-checkout-dropin-selected-item-background: var(--adyen-checkout-color-grey-100);
-    --adyen-checkout-dropin-selected-item-border-color: var(--adyen-checkout-color-outline-active);
+    --adyen-checkout-dropin-selected-item-border-color: var(--adyen-checkout-color-outline-secondary);
     --adyen-checkout-dropin-hover-item-border-color: var(--adyen-checkout-color-outline-secondary);
     --adyen-checkout-dropin-list-label-color: var(--adyen-checkout-color-label-primary);
 
