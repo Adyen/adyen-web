@@ -173,7 +173,9 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             const resolveDataFunction = this.props.isMDFlow ? createOldChallengeResolveData : createChallengeResolveData;
             const data = resolveDataFunction(this.props.dataKey, resultObj.transStatus, this.props.paymentData);
 
-            console.debug('### PrepareChallenge3DS2::errorCodeObject::', errorCodeObject);
+            if (errorCodeObject) {
+                console.debug('### PrepareChallenge3DS2::errorCodeObject::', errorCodeObject);
+            }
 
             // TODO - do we want to know about these events (timeout or no transStatus - which are "valid" 3DS2 scenarios) from an analytics perspective, and, if so, how do we classify them? ...errors? info?
             // let analyticsObject: SendAnalyticsObject;
