@@ -1,5 +1,4 @@
-import { ThreeDS2FlowObject, FingerPrintData, ThreeDS2DeviceFingerprintConfiguration } from '../../types';
-import { FingerprintResolveData } from '../utils';
+import { ThreeDS2FlowObject, FingerPrintData, ThreeDS2DeviceFingerprintConfiguration, FingerprintResolveData } from '../../types';
 import { ActionHandledReturnObject } from '../../../../types/global-types';
 import { SendAnalyticsObject } from '../../../../core/Analytics/types';
 import { ErrorObject } from '../../../../core/Errors/types';
@@ -23,6 +22,6 @@ export interface PrepareFingerprint3DS2Props extends ThreeDS2DeviceFingerprintCo
 }
 
 export interface PrepareFingerprint3DS2State {
-    status?: string;
+    status?: 'init' | 'retrievingFingerPrint' | 'complete';
     fingerPrintData?: FingerPrintData | ErrorObject;
 }

@@ -17,12 +17,14 @@ export const DEFAULT_CHALLENGE_WINDOW_SIZE = '02';
 export const THREEDS_METHOD_TIMEOUT = 10000;
 export const CHALLENGE_TIMEOUT = 600000;
 
+export const TIMEOUT = 'timeout';
+
 export const CHALLENGE_TIMEOUT_REJECT_OBJECT: ThreeDS2FlowObject = {
     result: {
         transStatus: 'U'
     },
     type: 'challengeResult',
-    errorCode: 'timeout'
+    errorCode: TIMEOUT
 };
 
 export const FAILED_METHOD_STATUS_RESOLVE_OBJECT: ThreeDS2FlowObject = {
@@ -37,25 +39,7 @@ export const FAILED_METHOD_STATUS_RESOLVE_OBJECT_TIMEOUT: ThreeDS2FlowObject = {
         threeDSCompInd: 'N'
     },
     type: 'fingerPrintResult',
-    errorCode: 'timeout'
-};
-
-export const ERRORS = {
-    TIME_OUT: 'timeout',
-    WRONG_ORIGIN: 'wrongOrigin',
-    HTML_ELEMENT: 'HTMLElementError',
-    WRONG_DATA_TYPE: 'wrongDataType',
-    MISSING_PROPERTY: 'missingProperty',
-    UNKNOWN: 'unknownError'
-};
-
-export const ERROR_MESSAGES = {
-    timeout: 'ThreeDS2 timed out',
-    wrongOrigin: 'Result came in the right format but not from the expected origin',
-    HTMLElementError: 'No proper HTML element was passed',
-    wrongDataType: 'Result data was not of the expected type',
-    missingProperty: 'Result data did not contain the expected properties',
-    unknownError: 'An unknown error occurred'
+    errorCode: TIMEOUT
 };
 
 // Re. EMV 3-D Specification: EMVCo_3DS_Spec_210_1017.pdf

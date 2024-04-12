@@ -158,6 +158,7 @@
     "error.giftcard.currency-error": "Gift cards are only valid in the currency they were issued in",
     "err.gen.9100": "Incomplete field",
     "err.gen.9101": "Field not valid",
+    "err.gen.9102": "Data parsing error",
     "cc.num.902": "Enter a valid card number",
     "cc.num.900": "Enter the card number",
     "cc.num.903": "Enter a supported card brand",
