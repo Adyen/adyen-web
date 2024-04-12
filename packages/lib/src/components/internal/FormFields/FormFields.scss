@@ -114,10 +114,7 @@
 }
 
 .adyen-checkout__input {
-    flex: 1;
-
-    // prevent overflow
-    min-width: 0;
+    width: 100%;
     color: var(--adyen-checkout-input-field-input-color);
     font-size: var(--adyen-checkout-font-size-medium);
     font-family: inherit;
@@ -126,7 +123,9 @@
     padding-left: var(--adyen-checkout-spacer-060);
     background: inherit;
     outline: none;
-    transition: border 0.2s ease-out, box-shadow 0.2s ease-out;
+    transition:
+        border 0.2s ease-out,
+        box-shadow 0.2s ease-out;
 
     &:required {
         box-shadow: none;
