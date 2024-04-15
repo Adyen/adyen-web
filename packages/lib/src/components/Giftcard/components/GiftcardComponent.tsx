@@ -4,7 +4,7 @@ import Alert from '../../internal/Alert';
 import GiftcardResult from './GiftcardResult';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { PaymentAmount } from '../../../types/global-types';
-import { GIFT_CARD } from '../../internal/SecuredFields/lib/configuration/constants';
+import { GIFT_CARD } from '../../internal/SecuredFields/lib/constants';
 import { GiftCardFields } from './GiftcardFields';
 import { GiftcardFieldsProps, Placeholders } from './types';
 

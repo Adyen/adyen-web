@@ -6,7 +6,7 @@ import {
     ENCRYPTED_SECURITY_CODE_4_DIGITS,
     GIFT_CARD,
     SF_FIELDS_MAP
-} from '../../configuration/constants';
+} from '../../constants';
 import { Placeholders as AchPlaceholders } from '../../../../../Ach/components/AchInput/types';
 import { Placeholders as GiftcardPlaceholders } from '../../../../../Giftcard/components/types';
 import { Placeholders as CardPlaceholders } from '../../../../../Card/components/CardInput/types';

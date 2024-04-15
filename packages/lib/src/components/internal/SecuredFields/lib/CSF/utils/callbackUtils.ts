@@ -1,4 +1,4 @@
-import { ENCRYPTED_EXPIRY_DATE } from '../../configuration/constants';
+import { ENCRYPTED_EXPIRY_DATE } from '../../constants';
 import { CbObjOnFieldValid, EncryptionObj } from '../../types';
 
 interface CallbackObjectProps {

@@ -1,5 +1,5 @@
 import { getCardGroupTypes } from '../utils/getCardGroupTypes';
-import { NON_CREDIT_CARD_TYPE_SECURED_FIELDS, SF_VERSION } from '../../configuration/constants';
+import { NON_CREDIT_CARD_TYPE_SECURED_FIELDS, SF_VERSION } from '../../constants';
 import * as logger from '../../utilities/logger';
 import { CSFSetupObject } from '../types';
 

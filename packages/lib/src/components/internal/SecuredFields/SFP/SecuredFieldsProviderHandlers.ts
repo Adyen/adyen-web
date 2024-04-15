@@ -9,7 +9,7 @@ import {
     HIDDEN,
     ENCRYPTED_EXPIRY_MONTH,
     ENCRYPTED_EXPIRY_YEAR
-} from '../lib/configuration/constants';
+} from '../lib/constants';
 import {
     CbObjOnError,
     CbObjOnFocus,

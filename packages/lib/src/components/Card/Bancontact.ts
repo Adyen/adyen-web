@@ -1,6 +1,6 @@
 import { CardElement } from './Card';
 import { CardElementData, CardConfiguration } from './types';
-import { CVC_POLICY_HIDDEN } from '../internal/SecuredFields/lib/configuration/constants';
+import { CVC_POLICY_HIDDEN } from '../internal/SecuredFields/lib/constants';
 import { TxVariants } from '../tx-variants';
 import type { ICore } from '../../core/types';
 

@@ -1,7 +1,7 @@
 import { addErrorTranslationsToObject } from '../../../../../../core/Errors/utils';
 import addContextTranslationsToObject from '../../utilities/addContextTranslations';
 import Language from '../../../../../../language/Language';
-import { SF_FIELDS_MAP } from '../../configuration/constants';
+import { SF_FIELDS_MAP } from '../../constants';
 import { AriaConfig, AriaConfigObject } from '../../types';
 
 /**

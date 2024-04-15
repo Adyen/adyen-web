@@ -3,7 +3,7 @@ import {
     ENCRYPTED_EXPIRY_DATE,
     ENCRYPTED_SECURITY_CODE,
     ENCRYPTED_PWD_FIELD
-} from '../../../internal/SecuredFields/lib/configuration/constants';
+} from '../../../internal/SecuredFields/lib/constants';
 
 const TAX_NUMBER = 'taxNumber';
 const HOLDER_NAME = 'holderName';

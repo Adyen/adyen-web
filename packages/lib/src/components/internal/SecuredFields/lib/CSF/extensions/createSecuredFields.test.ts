@@ -1,5 +1,5 @@
 import { createSecuredFields, setupSecuredField } from './createSecuredFields';
-import { DATA_ENCRYPTED_FIELD_ATTR, ENCRYPTED_CARD_NUMBER, ENCRYPTED_EXPIRY_DATE, SF_CONFIG_TIMEOUT } from '../../configuration/constants';
+import { DATA_ENCRYPTED_FIELD_ATTR, ENCRYPTED_CARD_NUMBER, ENCRYPTED_EXPIRY_DATE, SF_CONFIG_TIMEOUT } from '../../constants';
 import { SecuredFields } from '../../types';
 import Language from '../../../../../../language';
 import SecuredField from '../../securedField/SecuredField';

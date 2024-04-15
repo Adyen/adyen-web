@@ -1,7 +1,7 @@
 import postMessageToIframe from '../utils/iframes/postMessageToIframe';
 import { SFFeedbackObj } from '../../types';
 import { processAutoComplete } from './processAutoComplete';
-import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_EXPIRY_DATE } from '../../configuration/constants';
+import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_EXPIRY_DATE } from '../../constants';
 
 jest.mock('../utils/iframes/postMessageToIframe');
 

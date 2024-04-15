@@ -1,4 +1,4 @@
-import { CVCPolicyType, DatePolicyType } from '../types';
+import { CVCPolicyType, DatePolicyType } from './types';
 
 export const ENCRYPTED = 'encrypted';
 

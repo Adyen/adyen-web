@@ -1,4 +1,4 @@
-import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_SECURITY_CODE } from '../../../configuration/constants';
+import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_SECURITY_CODE } from '../../../constants';
 import { getPreviousTabbableNonSFElement } from './utils';
 import { SFFieldType, ShiftTabObject } from '../../../types';
 

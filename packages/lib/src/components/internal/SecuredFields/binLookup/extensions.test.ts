@@ -1,5 +1,5 @@
 import extensions, { cloneBrandsArr, containsExcludedBrand, removeExcludedBrand } from './extensions';
-import { BRAND_ICON_UI_EXCLUSION_LIST, CVC_POLICY_REQUIRED } from '../lib/configuration/constants';
+import { BRAND_ICON_UI_EXCLUSION_LIST, CVC_POLICY_REQUIRED } from '../lib/constants';
 
 let CIExtensions;
 

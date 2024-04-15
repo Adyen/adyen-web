@@ -16,13 +16,7 @@ import {
     CbObjOnLoad
 } from '../lib/types';
 import { CSFReturnObject, CSFSetupObject } from '../lib/CSF/types';
-import {
-    CVC_POLICY_REQUIRED,
-    DATE_POLICY_REQUIRED,
-    DEDICATED_CARD_COMPONENTS,
-    ENCRYPTED_CARD_NUMBER,
-    ENCRYPTED_PWD_FIELD
-} from '../lib/configuration/constants';
+import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, DEDICATED_CARD_COMPONENTS, ENCRYPTED_CARD_NUMBER, ENCRYPTED_PWD_FIELD } from '../lib/constants';
 import { BinLookupResponse } from '../../../Card/types';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
 import { SFStateErrorObj } from '../../../Card/components/CardInput/types';

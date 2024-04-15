@@ -1,7 +1,7 @@
 import postMessageToIframe from '../utils/iframes/postMessageToIframe';
 import processBrand from './processBrand';
 import { SFFeedbackObj } from '../../types';
-import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_SECURITY_CODE } from '../../configuration/constants';
+import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_SECURITY_CODE } from '../../constants';
 
 jest.mock('../utils/iframes/postMessageToIframe');
 

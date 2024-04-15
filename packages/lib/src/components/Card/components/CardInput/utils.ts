@@ -15,7 +15,7 @@ import { AddressSpecifications, StringObject } from '../../../internal/Address/t
 import { PARTIAL_ADDRESS_SCHEMA } from '../../../internal/Address/constants';
 import { InstallmentsObj } from './components/Installments/Installments';
 import { SFPProps } from '../../../internal/SecuredFields/SFP/types';
-import { BRAND_READABLE_NAME_MAP } from '../../../internal/SecuredFields/lib/configuration/constants';
+import { BRAND_READABLE_NAME_MAP } from '../../../internal/SecuredFields/lib/constants';
 import { UseImageHookType } from '../../../../core/Context/useImage';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 
