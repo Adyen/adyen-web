@@ -1,8 +1,6 @@
 import { getTranslation } from './utils';
 import { getLocalisedAmount } from '../utils/amount-util';
 import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
-import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
-import DateTimeFormat = Intl.DateTimeFormat;
 import type { CustomTranslations, LanguageOptions, Translations } from './types';
 
 export class Language {
@@ -12,17 +10,17 @@ export class Language {
     private readonly translations: Translations;
     private readonly customTranslations: CustomTranslations;
 
-    public readonly timeFormatOptions: DateTimeFormatOptions = {
+    public readonly timeFormatOptions: Intl.DateTimeFormatOptions = {
         hour: 'numeric',
         minute: 'numeric'
     };
-    public readonly timeAndDateFormatOptions: DateTimeFormatOptions = {
+    public readonly timeAndDateFormatOptions: Intl.DateTimeFormatOptions = {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
         ...this.timeFormatOptions
     };
-    public readonly timeAndDateFormatter: DateTimeFormat;
+    public readonly timeAndDateFormatter: Intl.DateTimeFormat;
 
     constructor(props: LanguageOptions) {
         const { locale, translations, customTranslations } = props;
@@ -35,15 +33,13 @@ export class Language {
         this.languageCode = this.locale.split('-')[0];
         this.customTranslations = customTranslations || {};
 
-        this.timeAndDateFormatter = DateTimeFormat(this.locale, this.timeAndDateFormatOptions);
-
+        this.timeAndDateFormatter = Intl.DateTimeFormat(this.locale, this.timeAndDateFormatOptions);
 
         this.translations = {
             ...translations,
             ...(!!this.customTranslations[this.locale] && this.customTranslations[this.locale])
         };
     }
-
 
     /**
      * Returns a translated string from a key in the current {@link Language.locale}
