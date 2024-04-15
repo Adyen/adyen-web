@@ -1,9 +1,10 @@
 import { Locator, Page } from '@playwright/test';
 import { DropinPage } from '../pages/dropin/dropin.page';
+import { DropinSessionsPage } from '../pages/dropin/dropin.sessions.page';
 
 class Dropin {
     readonly page: Page;
-    readonly dropinPage: DropinPage;
+    readonly dropinPage: DropinPage | DropinSessionsPage;
 
     readonly rootElement: Locator;
     readonly rootElementSelector: string;
@@ -12,7 +13,7 @@ class Dropin {
     readonly creditCard: Locator;
     readonly brandsHolder: Locator;
 
-    constructor(page: Page, dropinPage: DropinPage, rootElementSelector = '.adyen-checkout__dropin') {
+    constructor(page: Page, dropinPage: DropinPage | DropinSessionsPage, rootElementSelector = '.adyen-checkout__dropin') {
         this.page = page;
         this.dropinPage = dropinPage;
         this.rootElement = page.locator(rootElementSelector);
