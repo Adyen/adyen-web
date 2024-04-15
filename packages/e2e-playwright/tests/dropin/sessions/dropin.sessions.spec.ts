@@ -18,7 +18,7 @@ test.describe('Dropin Sessions flow', () => {
 
         await dropin.isComponentVisible();
 
-        const creditCard = dropin.getPaymentMethodItem('Cards');
+        const creditCard = dropin.getPaymentMethodItemByType('scheme');
         await creditCard.scrollIntoViewIfNeeded();
 
         await page.waitForTimeout(500); // needs this else card number isn't guaranteed to fill correctly !?
@@ -39,7 +39,7 @@ test.describe('Dropin Sessions flow', () => {
 
         await dropin.isComponentVisible();
 
-        const creditCard = dropin.getPaymentMethodItem('Cards');
+        const creditCard = dropin.getPaymentMethodItemByType('scheme');
         await creditCard.scrollIntoViewIfNeeded();
 
         await page.waitForTimeout(500);
@@ -61,7 +61,7 @@ test.describe('Dropin Sessions flow', () => {
 
         await dropin.isComponentVisible();
 
-        const creditCard = dropin.getPaymentMethodItem('Cards');
+        const creditCard = dropin.getPaymentMethodItemByType('scheme');
         await creditCard.scrollIntoViewIfNeeded();
 
         await page.waitForTimeout(500);

@@ -18,8 +18,11 @@ class DropinSessionsPage {
 
     async goto(url?: string) {
         await this.page.goto('http://localhost:3024/dropinsessions');
-        const response = await this.page.waitForResponse(response => response.url().includes('paymentMethods') && response.status() === 200);
-        this._paymentMethods = (await response.json()).paymentMethods.map(({ name, type }: { name: string; type: string }) => ({ name, type }));
+        const response = await this.page.waitForResponse(response => response.url().includes('setup') && response.status() === 200);
+        this._paymentMethods = (await response.json()).paymentMethods.paymentMethods.map(({ name, type }: { name: string; type: string }) => ({
+            name,
+            type
+        }));
     }
 
     async pay() {
