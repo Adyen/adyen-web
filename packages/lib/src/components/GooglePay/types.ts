@@ -121,10 +121,23 @@ export interface GooglePayConfiguration extends UIElementProps {
      */
     transactionInfo?: Partial<google.payments.api.TransactionInfo>;
 
-    // Button
+    /**
+     * Google button color
+     * @default default
+     */
     buttonColor?: google.payments.api.ButtonColor;
+    /**
+     * Changes the button UI label
+     * @default buy
+     */
     buttonType?: google.payments.api.ButtonType;
+
+    /**
+     * Decides if the button takes the whole space or use preset from Google
+     * @default fill
+     */
     buttonSizeMode?: google.payments.api.ButtonSizeMode;
+
     buttonRootNode?: HTMLDocument | ShadowRoot;
     buttonLocale?: string;
 
