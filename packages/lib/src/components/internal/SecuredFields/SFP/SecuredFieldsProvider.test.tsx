@@ -1,14 +1,11 @@
 import { shallow } from 'enzyme';
 import { h } from 'preact';
 import SecuredFieldsProvider from './SecuredFieldsProvider';
-import Language from '../../../../language/Language';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 
 jest.mock('../lib/CSF', () => {
     return () => true;
 });
-
-const i18n = new Language('en-US', {});
 
 let wrapper;
 let sfp;
@@ -96,7 +93,7 @@ wrapper = shallow(
         styles={styles}
         render={renderFn}
         onError={onError}
-        i18n={i18n}
+        i18n={global.i18n}
         configuration={{}}
     />
 );
@@ -161,7 +158,7 @@ describe('<SecuredFieldsProvider /> handling an unsupported card', () => {
                 styles={styles}
                 render={renderFn}
                 onError={onError}
-                i18n={i18n}
+                i18n={global.i18n}
                 configuration={{}}
             />
         );
@@ -251,7 +248,7 @@ describe('<SecuredFieldsProvider /> handling an binLookup response', () => {
                     styles={styles}
                     render={renderFn}
                     onError={onError}
-                    i18n={i18n}
+                    i18n={global.i18n}
                     configuration={{}}
                 />
             );

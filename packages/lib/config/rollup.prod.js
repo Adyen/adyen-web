@@ -31,7 +31,7 @@ export default () => {
             plugins: [
                 resolveExtensions(),
                 loadCommonjsPackage(),
-                replaceValues({ bundleType: BUNDLE_TYPES.esm }),
+                replaceValues({ bundleType: BUNDLE_TYPES.esm, buildType: 'production' }),
                 convertJsonToESM(),
                 compileCSS(),
                 compileJavascript({ target: 'es2022', sourceMaps: true }),
@@ -63,7 +63,7 @@ export default () => {
             plugins: [
                 resolveExtensions(),
                 loadCommonjsPackage(),
-                replaceValues({ bundleType: BUNDLE_TYPES.eslegacy }),
+                replaceValues({ bundleType: BUNDLE_TYPES.eslegacy, buildType: 'production' }),
                 convertJsonToESM(),
                 compileCSS(),
                 compileJavascript({ target: 'es2017', sourceMaps: true }),
@@ -96,7 +96,7 @@ export default () => {
             plugins: [
                 resolveExtensions(),
                 loadCommonjsPackage(),
-                replaceValues({ bundleType: BUNDLE_TYPES.umd }),
+                replaceValues({ bundleType: BUNDLE_TYPES.umd, buildType: 'production' }),
                 convertJsonToESM(),
                 compileCSS(),
                 compileJavascript({ sourceMaps: true }),
@@ -117,7 +117,7 @@ export default () => {
             plugins: [
                 resolveExtensions(),
                 loadCommonjsPackage(),
-                replaceValues({ bundleType: BUNDLE_TYPES.commonjs }),
+                replaceValues({ bundleType: BUNDLE_TYPES.commonjs, buildType: 'production' }),
                 convertJsonToESM(),
                 compileCSS(),
                 compileJavascript({ target: 'es2017', sourceMaps: true }),
@@ -134,7 +134,7 @@ export default () => {
 
         // Types CJS
         {
-            input: 'dist/temp-types/types.d.ts',
+            input: 'dist/temp-types/lib/src/types.d.ts',
             output: [{ file: './dist/cjs/index.d.cts', format: 'commonjs' }],
             external: [/\.scss$/u],
             plugins: [generateTypes()]
@@ -142,7 +142,7 @@ export default () => {
 
         // Types ES
         {
-            input: 'dist/temp-types/types.d.ts',
+            input: 'dist/temp-types/lib/src/types.d.ts',
             output: [{ file: './dist/es/index.d.ts', format: 'es' }],
             external: [/\.scss$/u, /\.json$/u],
             plugins: [generateTypes()]

@@ -7,7 +7,6 @@ import '../../utils';
 import '../../style.scss';
 import './QRCodes.scss';
 import getCurrency from '../../config/getCurrency';
-import getTranslationFile from '../../config/getTranslation';
 import { handleOnPaymentCompleted, handleOnPaymentFailed } from '../../handlers';
 
 const handleQRCodePayment = async (state, component, actions, countryCode) => {
@@ -38,7 +37,6 @@ const handleQRCodePayment = async (state, component, actions, countryCode) => {
         clientKey: process.env.__CLIENT_KEY__,
         countryCode,
         locale: shopperLocale,
-        translationFile: getTranslationFile(shopperLocale),
         environment: process.env.__CLIENT_ENV__,
         risk: { node: 'body', onError: console.error },
         onPaymentCompleted: handleOnPaymentCompleted,

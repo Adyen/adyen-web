@@ -1,7 +1,6 @@
 import { createSecuredFields, setupSecuredField } from './createSecuredFields';
 import { DATA_ENCRYPTED_FIELD_ATTR, ENCRYPTED_CARD_NUMBER, ENCRYPTED_EXPIRY_DATE, SF_CONFIG_TIMEOUT } from '../../constants';
 import { SecuredFields } from '../../types';
-import Language from '../../../../../../language';
 import SecuredField from '../../securedField/SecuredField';
 
 jest.useFakeTimers();
@@ -18,7 +17,7 @@ let MySecuredField;
 const myCSF = {
     state: { type: 'card', hasSeparateDateFields: null, securedFields: {} as SecuredFields, iframeCount: 0, originalNumIframes: 2, numIframes: 2 },
     config: {},
-    props: { rootNode: null, i18n: new Language('en-US', {}), shouldDisableIOSArrowKeys: null },
+    props: { rootNode: null, i18n: global.i18n, shouldDisableIOSArrowKeys: null },
     callbacks: {
         onLoad: jest.fn(() => {}),
         onTouchstartIOS: jest.fn(() => {})

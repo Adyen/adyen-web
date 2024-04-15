@@ -1,9 +1,13 @@
 export type CustomTranslations = {
-    [key: string]: {
-        [message: string]: string;
-    };
+    [locale: string]: Translations;
 };
 
-export type Translation = {
-    [message: string]: string;
+export type Translations = {
+    [translationKey: string]: string;
 };
+
+export interface LanguageOptions {
+    locale: string;
+    translations: Translations;
+    customTranslations?: CustomTranslations;
+}

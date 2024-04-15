@@ -1,6 +1,5 @@
 import { getActiveFieldsData, getInitialActiveFieldsets, mapFieldKey } from './utils';
 import { OpenInvoiceActiveFieldsets, OpenInvoiceStateData, OpenInvoiceVisibility } from './types';
-import Language from '../../../language';
 
 describe('OpenInvoice utils', () => {
     describe('getActiveFieldsData', () => {
@@ -62,7 +61,7 @@ describe('OpenInvoice utils', () => {
         });
     });
     describe('mapFieldKey functionality', () => {
-        const i18n = new Language('en-US');
+        const i18n = global.i18n;
 
         const BILLING_ADDRESS = i18n.get('billingAddress');
         const DELIVERY_ADDRESS = i18n.get('deliveryAddress');
