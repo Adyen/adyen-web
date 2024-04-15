@@ -1,6 +1,6 @@
 import { test, expect } from '../../../pages/cards/card.fixture';
 import { MAESTRO_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE } from '../../utils/constants';
-import LANG from '../../../../lib/src/language/locales/en-US.json';
+import LANG from '../../../../server/translations/en-US.json';
 
 const CVC_LABEL = LANG['creditCard.securityCode.label'];
 const CVC_LABEL_OPTIONAL = LANG['creditCard.securityCode.label.optional'];

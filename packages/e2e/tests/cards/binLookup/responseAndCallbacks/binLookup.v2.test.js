@@ -7,7 +7,7 @@ import cu from '../../utils/cardUtils';
 import { CARDS_URL } from '../../../pages';
 import { BIN_LOOKUP_VERSION, DUAL_BRANDED_CARD, REGULAR_TEST_CARD, MAESTRO_CARD, UNKNOWN_BIN_CARD } from '../../utils/constants';
 
-import LANG from '../../../../../lib/src/language/locales/en-US.json';
+import LANG from '../../../../../server/translations/en-US.json';
 
 const url = `https://checkoutshopper-test.adyen.com/checkoutshopper/${BIN_LOOKUP_VERSION}/bin/binLookup?token=${process.env.CLIENT_KEY}`;
 

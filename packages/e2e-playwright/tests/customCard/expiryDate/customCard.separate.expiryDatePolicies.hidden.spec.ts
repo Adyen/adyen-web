@@ -8,7 +8,7 @@ import {
 } from '../../utils/constants';
 import { binLookupMock } from '../../../mocks/binLookup/binLookup.mock';
 import { hiddenDateAndCvcMock } from '../../../mocks/binLookup/binLookup.data';
-import LANG from '../../../../lib/src/language/locales/en-US.json';
+import LANG from '../../../../server/translations/en-US.json';
 
 const PAN_ERROR = LANG['cc.num.900'];
 const MONTH_EMPTY_ERROR = LANG['cc.mth.915'];

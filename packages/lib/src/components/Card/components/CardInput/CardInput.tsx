@@ -5,7 +5,7 @@ import { OnChangeEventDetails, SFPState } from '../../../internal/SecuredFields/
 import defaultProps from './defaultProps';
 import './CardInput.scss';
 import { AddressModeOptions, CardInputDataState, CardInputErrorState, CardInputProps, CardInputRef, CardInputValidState } from './types';
-import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER } from '../../../internal/SecuredFields/lib/configuration/constants';
+import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER } from '../../../internal/SecuredFields/lib/constants';
 import { BinLookupResponse } from '../../types';
 import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } from './validate';
 import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';

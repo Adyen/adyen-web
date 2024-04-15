@@ -11,7 +11,7 @@ import {
     ENCRYPTED_CARD_NUMBER,
     ENCRYPTED_EXPIRY_DATE,
     ENCRYPTED_SECURITY_CODE
-} from '../../../../internal/SecuredFields/lib/configuration/constants';
+} from '../../../../internal/SecuredFields/lib/constants';
 import AvailableBrands from './AvailableBrands';
 
 export default function CardFields({

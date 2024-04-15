@@ -25,7 +25,7 @@ import {
     ANALYTICS_VALIDATION_ERROR_STR,
     ANALYTICS_RENDERED_STR
 } from '../../core/Analytics/constants';
-import { ALL_SECURED_FIELDS } from '../internal/SecuredFields/lib/configuration/constants';
+import { ALL_SECURED_FIELDS } from '../internal/SecuredFields/lib/constants';
 import { FieldErrorAnalyticsObject, SendAnalyticsObject } from '../../core/Analytics/types';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from '../../core/Errors/AdyenCheckoutError';

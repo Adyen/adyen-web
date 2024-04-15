@@ -3,8 +3,9 @@ import AdyenCheckout from './core';
 import BCMCMobileElement from '../components/BcmcMobile';
 import Session from './CheckoutSession';
 import { Dropin, Ideal } from '../components';
-import { es_ES } from '../language/locales';
 import { CheckoutSessionSetupResponse } from './CheckoutSession/types';
+
+jest.mock('./Services/get-translations');
 
 const sessionSetupResponseMock: CheckoutSessionSetupResponse = {
     id: 'session-id',
@@ -42,8 +43,7 @@ describe('Core', () => {
                 countryCode: 'US',
                 environment: 'test',
                 clientKey: 'test_123456',
-                locale: 'es-ES',
-                translationFile: es_ES
+                locale: 'es-ES'
             });
             await checkout.initialize();
 

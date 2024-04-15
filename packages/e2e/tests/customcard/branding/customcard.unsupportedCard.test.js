@@ -1,6 +1,6 @@
 import { start, getAriaErrorField, checkIframeElHasExactText } from '../../utils/commonUtils';
 import { REGULAR_TEST_CARD, MAESTRO_CARD, JWE_ALG, JWE_CONTENT_ALG, JWE_VERSION } from '../../cards/utils/constants';
-import LANG from '../../../../lib/src/language/locales/en-US.json';
+import LANG from '../../../../server/translations/en-US.json';
 
 import CustomCardComponentPage from '../../_models/CustomCardComponent.page';
 import { turnOffSDKMocking } from '../../_common/cardMocks';

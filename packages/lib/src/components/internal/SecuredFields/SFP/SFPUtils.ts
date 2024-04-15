@@ -8,7 +8,7 @@ import {
     ENCRYPTED_EXPIRY_MONTH,
     ENCRYPTED_EXPIRY_YEAR,
     ENCRYPTED_SECURITY_CODE
-} from '../lib/configuration/constants';
+} from '../lib/constants';
 import getProp from '../../../../utils/getProp';
 import { EMPTY_FIELD_ERROR_MESSAGES } from '../../../../core/Errors/constants';
 

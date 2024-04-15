@@ -12,7 +12,7 @@ const initCheckout = async () => {
         locale: shopperLocale,
         countryCode,
         environment: 'test',
-        showPayButton: true,
+        _translationEnvironment: 'local',
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
         onPaymentCompleted: handlePaymentCompleted,

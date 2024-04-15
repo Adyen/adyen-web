@@ -4,7 +4,7 @@ import {
     ENCRYPTED_EXPIRY_DATE,
     ENCRYPTED_EXPIRY_MONTH,
     ENCRYPTED_EXPIRY_YEAR
-} from '../../../configuration/constants';
+} from '../../../constants';
 import { getPreviousTabbableNonSFElement } from './utils';
 import { SFFieldType, ShiftTabObject } from '../../../types';
 

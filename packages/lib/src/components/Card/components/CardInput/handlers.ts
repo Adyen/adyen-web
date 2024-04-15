@@ -1,4 +1,4 @@
-import { ENCRYPTED_CARD_NUMBER, CREDIT_CARD_SF_FIELDS } from '../../../internal/SecuredFields/lib/configuration/constants';
+import { ENCRYPTED_CARD_NUMBER, CREDIT_CARD_SF_FIELDS } from '../../../internal/SecuredFields/lib/constants';
 import { selectOne } from '../../../internal/SecuredFields/lib/utilities/dom';
 import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
 

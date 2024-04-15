@@ -1,4 +1,4 @@
-import { CustomTranslations, Translation } from '../language/types';
+import { CustomTranslations } from '../language/types';
 import {
     PaymentAmountExtended,
     Order,
@@ -67,6 +67,7 @@ export interface CoreConfiguration {
 
     /**
      * Show or hides a Pay Button for each payment method
+     * @default true
      */
     showPayButton?: boolean;
 
@@ -81,12 +82,6 @@ export interface CoreConfiguration {
      * For adding a custom locale, see {@link https://docs.adyen.com/checkout/components-web/localization-components#create-localization | Create localization}.*
      */
     locale?: string;
-
-    /**
-     * Translation file which contains the translations to a certain locale.
-     * @default en_US
-     */
-    translationFile?: Translation;
 
     /**
      * Custom translations and localizations
@@ -244,4 +239,13 @@ export interface CoreConfiguration {
      * @internal
      */
     loadingContext?: string;
+
+    /**
+     *  Distinguish between loading translations directly from CDN or from the local web server
+     *  Used only internally
+     *
+     * @internal
+     * @default 'local' if library is in dev mode ; 'remote' if is bundled
+     */
+    _translationEnvironment?: 'local' | 'remote';
 }

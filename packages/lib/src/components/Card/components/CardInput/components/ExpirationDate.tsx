@@ -10,7 +10,7 @@ import {
     DATE_POLICY_OPTIONAL,
     DATE_POLICY_REQUIRED,
     ENCRYPTED_EXPIRY_DATE
-} from '../../../../internal/SecuredFields/lib/configuration/constants';
+} from '../../../../internal/SecuredFields/lib/constants';
 import useImage from '../../../../../core/Context/useImage';
 import { alternativeLabelContent } from './IframeLabelAlternative';
 

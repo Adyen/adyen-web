@@ -1,4 +1,4 @@
-import { DEFAULT_CARD_GROUP_TYPES } from '../../configuration/constants';
+import { DEFAULT_CARD_GROUP_TYPES } from '../../constants';
 import { getCardGroupTypes } from './getCardGroupTypes';
 
 beforeEach(() => {

@@ -1,6 +1,6 @@
 import postMessageToIframe from '../utils/iframes/postMessageToIframe';
 import { postMessageToAllIframes } from './postMessageToAllIframes';
-import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_EXPIRY_DATE, ENCRYPTED_SECURITY_CODE } from '../../configuration/constants';
+import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_EXPIRY_DATE, ENCRYPTED_SECURITY_CODE } from '../../constants';
 
 jest.mock('../utils/iframes/postMessageToIframe');
 

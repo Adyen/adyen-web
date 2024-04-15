@@ -11,7 +11,6 @@ import paymentsConfig from '../../config/paymentsConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
 import './customCards.style.scss';
-import getTranslationFile from '../../config/getTranslation';
 
 const showOtherExamples = true; // For testing: set to false to only instantiate the basic form of CustomCard
 
@@ -51,7 +50,6 @@ const configObj = {
     clientKey: process.env.__CLIENT_KEY__,
     countryCode,
     locale: shopperLocale,
-    translationFile: getTranslationFile(shopperLocale),
     //        environment: 'http://localhost:8080/checkoutshopper/',
     environment: 'test',
     onChange: handleOnChange,

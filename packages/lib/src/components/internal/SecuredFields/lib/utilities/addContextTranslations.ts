@@ -1,10 +1,4 @@
-import {
-    ENCRYPTED_SECURITY_CODE,
-    ENCRYPTED_SECURITY_CODE_3_DIGITS,
-    ENCRYPTED_SECURITY_CODE_4_DIGITS,
-    GIFT_CARD,
-    SF_FIELDS_MAP
-} from '../configuration/constants';
+import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_SECURITY_CODE_3_DIGITS, ENCRYPTED_SECURITY_CODE_4_DIGITS, GIFT_CARD, SF_FIELDS_MAP } from '../constants';
 import { AriaConfigObject } from '../types';
 import type Language from '../../../../../language';
 

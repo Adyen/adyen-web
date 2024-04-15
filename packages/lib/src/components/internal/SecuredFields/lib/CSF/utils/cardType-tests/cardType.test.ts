@@ -1,6 +1,6 @@
 /* global expect, describe, jest, beforeEach */
 import CardType from '../cardType';
-import { CVC_POLICY_HIDDEN, CVC_POLICY_OPTIONAL } from '../../../configuration/constants';
+import { CVC_POLICY_HIDDEN, CVC_POLICY_OPTIONAL } from '../../../constants';
 
 const allCards = CardType.allCards.map(pCard => pCard.cardType);
 

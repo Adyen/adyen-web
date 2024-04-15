@@ -6,13 +6,11 @@ import '../../../config/polyfills';
 import '../../style.scss';
 import '../../utils';
 import './Vouchers.scss';
-import getTranslationFile from '../../config/getTranslation';
 (async () => {
     window.checkout = await AdyenCheckout({
         clientKey: process.env.__CLIENT_KEY__,
         countryCode,
         locale: shopperLocale,
-        translationFile: getTranslationFile(shopperLocale),
         environment: process.env.__CLIENT_ENV__,
         onChange: handleChange
     });

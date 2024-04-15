@@ -1,6 +1,6 @@
 import CardComponentPage from '../../_models/CardComponent.page';
 
-import LANG from '../../../../lib/src/language/locales/en-US.json';
+import LANG from '../../../../server/translations/en-US.json';
 import { SR_INDICATOR_PREFIX } from '../utils/constants';
 
 const CARD_NUMBER_EMPTY = LANG['cc.num.900'] + SR_INDICATOR_PREFIX;

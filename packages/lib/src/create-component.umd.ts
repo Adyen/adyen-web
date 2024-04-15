@@ -1,6 +1,7 @@
 import { TxVariants } from './components/tx-variants';
 import Redirect from './components/Redirect/Redirect';
 import { ComponentsMap } from './components/components-map';
+
 import type { PaymentMethodOptions, PaymentMethods } from './components/Dropin/types';
 import type { ICore } from './core/types';
 

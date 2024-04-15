@@ -6,6 +6,12 @@ import { screen, render } from '@testing-library/preact';
 import Dropin from './Dropin';
 import { ICore } from '../../core/types';
 
+import enUS from '../../../../server/translations/en-US.json';
+import getTranslations from '../../core/Services/get-translations';
+jest.mock('../../core/Services/get-translations');
+const mockedGetTranslations = getTranslations as jest.Mock;
+mockedGetTranslations.mockResolvedValue(enUS);
+
 describe('Dropin', () => {
     let checkout: ICore;
 

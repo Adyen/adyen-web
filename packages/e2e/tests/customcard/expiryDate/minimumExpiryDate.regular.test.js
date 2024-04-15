@@ -2,7 +2,7 @@ import { Selector } from 'testcafe';
 import { start, getIframeSelector } from '../../utils/commonUtils';
 import cu from '../../cards/utils/cardUtils';
 import { CUSTOMCARDS_URL } from '../../pages';
-import LANG from '../../../../lib/src/language/locales/en-US.json';
+import LANG from '../../../../server/translations/en-US.json';
 
 const errorHolder = Selector('.pm-form-label__error-text');
 
