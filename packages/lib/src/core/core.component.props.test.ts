@@ -4,10 +4,7 @@ import { PaymentMethodsResponse } from '../types';
 import { PayPal, Card, Dropin, Redirect } from '../components';
 import { CoreConfiguration } from './types';
 
-import getTranslations from './Services/get-translations';
 jest.mock('./Services/get-translations');
-const mockedGetTranslations = getTranslations as jest.Mock;
-mockedGetTranslations.mockResolvedValue({});
 
 const paymentMethodsResponse: PaymentMethodsResponse = {
     paymentMethods: [

@@ -1,14 +1,9 @@
 import { render, screen } from '@testing-library/preact';
 import { AdyenCheckout } from '../../core/AdyenCheckout';
-
 import Dropin from '../Dropin';
 import Blik from './Blik';
 
-import getTranslations from '../../core/Services/get-translations';
 jest.mock('../../core/Services/get-translations');
-
-const mockedGetTranslations = getTranslations as jest.Mock;
-mockedGetTranslations.mockResolvedValue({});
 
 describe('Blik', () => {
     const createDropin = async paymentMethodsResponse => {

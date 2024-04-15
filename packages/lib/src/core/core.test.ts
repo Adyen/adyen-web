@@ -5,10 +5,7 @@ import Session from './CheckoutSession';
 import { Dropin, Ideal } from '../components';
 import { CheckoutSessionSetupResponse } from './CheckoutSession/types';
 
-import getTranslations from './Services/get-translations';
 jest.mock('./Services/get-translations');
-const mockedGetTranslations = getTranslations as jest.Mock;
-mockedGetTranslations.mockResolvedValue({});
 
 const sessionSetupResponseMock: CheckoutSessionSetupResponse = {
     id: 'session-id',

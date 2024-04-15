@@ -25,7 +25,7 @@ describe('Service: getTranslations', () => {
             errorLevel: 'fatal',
             errorMessage: 'Translations: Couldn\'t fetch translation for the locale "en-US".',
             loadingContext: 'https://checkoutshopper-test.adyen.com/checkoutshopper/',
-            path: 'translations/6.0.0/en-US.json'
+            path: 'sdk/6.0.0/translations/en-US.json'
         });
         expect(translation).toStrictEqual(mockedEnUS);
     });
@@ -49,7 +49,7 @@ describe('Service: getTranslations', () => {
             errorLevel: 'fatal',
             errorMessage: 'Translations: Couldn\'t fetch translation for the locale "en-US".',
             loadingContext: '/',
-            path: 'translations/6.0.0/en-US.json'
+            path: 'sdk/6.0.0/translations/en-US.json'
         });
         expect(translation).toStrictEqual(mockedEnUS);
     });

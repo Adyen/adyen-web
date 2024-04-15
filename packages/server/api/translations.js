@@ -2,8 +2,6 @@ const fs = require('fs');
 const path = require('path');
 
 module.exports = (res, req) => {
-    console.log(req.params);
-
     const locale = req.params.locale;
 
     try {

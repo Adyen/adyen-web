@@ -292,8 +292,6 @@ class Core implements ICore {
      */
     public getCorePropsForComponent(): any {
         const globalOptions = processGlobalOptions(this.options);
-        console.log('\n### core::this.options:: ', this.options);
-        console.log('### core::globalOptions:: ', globalOptions);
 
         return {
             ...globalOptions,

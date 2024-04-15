@@ -49,7 +49,7 @@ module.exports = (app = express(), options = {}) => {
 
     app.all('/donations', (req, res) => createDonation(res, req.body));
 
-    app.all('/translations/:adyenWebVersion/:locale.json', (req, res) => getTranslation(res, req));
+    app.all('/sdk/:adyenWebVersion/translations/:locale.json', (req, res) => getTranslation(res, req));
 
     if (options.listen) {
         const port = process.env.PORT || 3020;

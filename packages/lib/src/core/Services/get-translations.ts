@@ -27,7 +27,7 @@ export default function getTranslations(
         loadingContext: translationEnvironment === 'local' ? '/' : cdnContext,
         errorLevel: 'fatal',
         errorMessage: `Translations: Couldn't fetch translation for the locale "${locale}".`,
-        path: `translations/${adyenWebVersion}/${locale}.json`
+        path: `sdk/${adyenWebVersion}/translations/${locale}.json`
     };
 
     return httpGet(options);
