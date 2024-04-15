@@ -40,7 +40,7 @@ describe('Address', () => {
         expect(screen.getByLabelText('Street')).toBeInTheDocument();
         expect(screen.getByLabelText('House number')).toBeInTheDocument();
         expect(screen.getByLabelText('Postal code')).toBeInTheDocument();
-        expect(await screen.findByLabelText('Country')).toBeInTheDocument();
+        expect(await screen.findByLabelText('Country/Region')).toBeInTheDocument();
     });
 
     test('should show the address as readOnly', () => {
