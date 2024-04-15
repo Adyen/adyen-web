@@ -97,6 +97,7 @@ export type AnalyticsInitialEvent = {
     flavor: string;
     paymentMethods?: any[];
     sessionId?: string;
+    checkoutAttemptId?: string;
 };
 
 export type AnalyticsConfig = {

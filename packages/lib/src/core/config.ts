@@ -16,6 +16,7 @@ export const GENERIC_OPTIONS = [
     'clientKey',
     'showPayButton',
     'redirectFromTopWhenInIframe',
+    'checkoutAttemptId',
 
     // Events
     'onPaymentCompleted',
