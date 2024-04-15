@@ -5,8 +5,8 @@ test.describe('Dropin - Card brands displayed in the Payment Method List and und
     test('should display the 3 logos and left over amount of brands, and then display all available brands under the PAN field', async ({
         dropinPage_cardBrands
     }) => {
+        await dropinPage_cardBrands.goto();
         const { dropin, page } = dropinPage_cardBrands;
-
         await dropin.isComponentVisible();
 
         const creditCard = getCreditCardPM_withBrandsInfo(dropin);
@@ -37,6 +37,7 @@ test.describe('Dropin - Card brands displayed in the Payment Method List and und
     test('should exclude non-valid brands and display only the right amount in the payment header and underneath the PAN field', async ({
         dropinPage_cardBrands_withExcluded
     }) => {
+        await dropinPage_cardBrands_withExcluded.goto();
         const { dropin, page } = dropinPage_cardBrands_withExcluded;
 
         await dropin.isComponentVisible();
