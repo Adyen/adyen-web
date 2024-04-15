@@ -6,7 +6,7 @@ import UIElement from '../../../internal/UIElement/UIElement';
 import userEvent from '@testing-library/user-event';
 import Giftcard from '../../../Giftcard';
 import { Order, OrderStatus } from '../../../../types';
-import CoreProvider from '../../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../../core/Context/CoreProvider';
 
 function createInstantPaymentMethods() {
     return [

@@ -6,7 +6,7 @@ import CtPLoginInput, { CtPLoginInputHandlers } from './CtPLoginInput';
 import { CtPInfo } from '../CtPInfo';
 import CtPSection from '../CtPSection';
 import SrciError from '../../services/sdks/SrciError';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import './CtPLogin.scss';
 import TimeoutError from '../../errors/TimeoutError';
 

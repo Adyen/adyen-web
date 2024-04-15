@@ -4,7 +4,7 @@ import CardInput from './CardInput';
 import { CardInputDataState, CardInputValidState } from './types';
 import { render, screen, fireEvent } from '@testing-library/preact';
 import { CardFieldsWrapper } from './components/CardFieldsWrapper';
-import CoreProvider from '../../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../../core/Context/CoreProvider';
 
 jest.mock('../../../internal/SecuredFields/lib/CSF');
 

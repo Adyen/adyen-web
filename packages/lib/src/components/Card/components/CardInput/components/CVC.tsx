@@ -2,14 +2,14 @@ import { h } from 'preact';
 import classNames from 'classnames';
 import CVCHint from './CVCHint';
 import Field from '../../../../internal/FormFields/Field';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import { CVCProps } from './types';
 import {
     CVC_POLICY_HIDDEN,
     CVC_POLICY_OPTIONAL,
     CVC_POLICY_REQUIRED,
     ENCRYPTED_SECURITY_CODE
-} from '../../../../internal/SecuredFields/lib/configuration/constants';
+} from '../../../../internal/SecuredFields/lib/constants';
 import DataSfSpan from './DataSfSpan';
 import { alternativeLabelContent } from './IframeLabelAlternative';
 

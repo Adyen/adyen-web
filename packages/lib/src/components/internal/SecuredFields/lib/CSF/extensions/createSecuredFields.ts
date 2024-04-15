@@ -9,7 +9,7 @@ import {
     SF_CONFIG_TIMEOUT,
     ALL_SECURED_FIELDS,
     ENCRYPTED_EXPIRY_MONTH
-} from '../../configuration/constants';
+} from '../../constants';
 import { existy } from '../../utilities/commonUtils';
 import cardType from '../utils/cardType';
 import { SecuredFieldSetupObject } from '../../types';

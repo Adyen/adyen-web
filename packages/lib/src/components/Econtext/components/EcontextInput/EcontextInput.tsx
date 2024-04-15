@@ -1,7 +1,7 @@
 import { h, VNode } from 'preact';
 import { useRef, useState } from 'preact/hooks';
 import PersonalDetails from '../../../internal/PersonalDetails/PersonalDetails';
-import useCoreContext from '../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { econtextValidationRules } from '../../validate';
 import { PersonalDetailsSchema } from '../../../../types/global-types';
 import './EcontextInput.scss';

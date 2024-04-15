@@ -1,14 +1,15 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import PrepareChallenge from './components/Challenge';
-import { DEFAULT_CHALLENGE_WINDOW_SIZE, THREEDS2_CHALLENGE, THREEDS2_CHALLENGE_ERROR, THREEDS2_ERROR } from './config';
+import { DEFAULT_CHALLENGE_WINDOW_SIZE, THREEDS2_CHALLENGE, THREEDS2_CHALLENGE_ERROR, THREEDS2_ERROR } from './constants';
 import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import { TxVariants } from '../tx-variants';
 import { ThreeDS2ChallengeConfiguration } from './types';
 import AdyenCheckoutError, { API_ERROR } from '../../core/Errors/AdyenCheckoutError';
-import { ANALYTICS_API_ERROR, ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_PAYMENT_DATA, ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
+import { ANALYTICS_API_ERROR, Analytics3DS2Errors, ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
 import { SendAnalyticsObject } from '../../core/Analytics/types';
+import { CoreProvider } from '../../core/Context/CoreProvider';
 
 class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
     public static type = TxVariants.threeDS2Challenge;
@@ -26,6 +27,11 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
     };
 
     onComplete(state) {
+        /**
+         * Equals a call to onAdditionalDetails (as set in actionTypes.ts) for the regular, "native" flow.
+         * However, if the action to create this component came from the 3DS2InMDFlow process it will instead equal a call to the onComplete callback
+         * (as defined in the 3DS2InMDFlow and passed in as a config prop).
+         */
         if (state) super.onComplete(state);
         this.unmount(); // re. fixing issue around back to back challenge calls
     }
@@ -43,7 +49,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
 
             this.submitAnalytics({
                 type: THREEDS2_ERROR,
-                code: ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_PAYMENT_DATA,
+                code: Analytics3DS2Errors.ACTION_IS_MISSING_PAYMENT_DATA,
                 errorType: ANALYTICS_API_ERROR,
                 message: `${THREEDS2_CHALLENGE_ERROR}: Missing 'paymentData' property from threeDS2 action`
             });
@@ -51,7 +57,16 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
             return null;
         }
 
-        return <PrepareChallenge {...this.props} onComplete={this.onComplete} onSubmitAnalytics={this.submitAnalytics} />;
+        return (
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
+                <PrepareChallenge
+                    {...this.props}
+                    onComplete={this.onComplete}
+                    onSubmitAnalytics={this.submitAnalytics}
+                    isMDFlow={this.props.paymentData.length < 15}
+                />
+            </CoreProvider>
+        );
     }
 }
 

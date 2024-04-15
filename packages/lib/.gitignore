@@ -3,3 +3,4 @@ dist
 .stylelintcache
 lib-test
 translations
+/package

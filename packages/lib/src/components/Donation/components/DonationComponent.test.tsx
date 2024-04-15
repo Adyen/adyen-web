@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { mount } from 'enzyme';
 import DonationComponent from './DonationComponent';
 import { render, screen } from '@testing-library/preact';
-import CoreProvider from '../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../core/Context/CoreProvider';
 
 const onDonate = () => {};
 const amounts = {

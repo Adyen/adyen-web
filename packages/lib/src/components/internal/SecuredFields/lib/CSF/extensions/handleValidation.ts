@@ -1,7 +1,7 @@
 import { makeCallbackObjectsValidation } from '../utils/callbackUtils';
 import { processErrors } from '../utils/processErrors';
 import { existy } from '../../utilities/commonUtils';
-import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from '../../configuration/constants';
+import { ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from '../../constants';
 import { SFFeedbackObj, CbObjOnFieldValid } from '../../types';
 import { hasOwnProperty } from '../../../../../../utils/hasOwnProperty';
 

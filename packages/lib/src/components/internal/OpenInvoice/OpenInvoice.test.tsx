@@ -4,7 +4,7 @@ import OpenInvoice from './OpenInvoice';
 import { mock } from 'jest-mock-extended';
 import { OpenInvoiceProps } from './types';
 import { FieldsetVisibility } from '../../../types';
-import CoreProvider from '../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../core/Context/CoreProvider';
 
 let componentRef;
 const setComponentRef = ref => {

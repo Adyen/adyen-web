@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import AchSFInput from './AchSFInput';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 
 const AchSecuredFields = ({ focusedElement, onFocusField, errors, valid }) => {
     const { i18n } = useCoreContext();

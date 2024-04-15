@@ -3,7 +3,7 @@ import Field from '../../FormFields/Field';
 import StateField from './StateField';
 import CountryField from './CountryField';
 import { AddressStateError, FieldContainerProps } from '../types';
-import useCoreContext from '../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import Language from '../../../../language/Language';
 import InputText from '../../FormFields/InputText';
 

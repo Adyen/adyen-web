@@ -1,9 +1,9 @@
 import { h } from 'preact';
 import CVC from './CVC';
 import Field from '../../../../internal/FormFields/Field';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import { StoredCardFieldsProps } from './types';
-import { ENCRYPTED_SECURITY_CODE } from '../../../../internal/SecuredFields/lib/configuration/constants';
+import { ENCRYPTED_SECURITY_CODE } from '../../../../internal/SecuredFields/lib/constants';
 import InputText from '../../../../internal/FormFields/InputText';
 
 export default function StoredCardFields({

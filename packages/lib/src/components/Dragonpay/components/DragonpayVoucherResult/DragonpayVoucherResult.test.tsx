@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import DragonpayVoucherResult from './DragonpayVoucherResult';
 import { mount } from 'enzyme';
-import CoreProvider from '../../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../../core/Context/CoreProvider';
 
 describe('DragonpayVoucherResult', () => {
     test('should not render issuer image for dragonpay_otc_philippines', () => {

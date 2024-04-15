@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import CtPCards from './CtPCards';
 import ShopperCard from '../../models/ShopperCard';
 import { IClickToPayService, MastercardCheckout, VisaCheckout } from '../../services/types';
-import CoreProvider from '../../../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../../../core/Context/CoreProvider';
 import ClickToPayProvider, { ClickToPayProviderProps } from '../../context/ClickToPayProvider';
 
 const customRender = (children: ComponentChildren, providerProps?: ClickToPayProviderProps) => {

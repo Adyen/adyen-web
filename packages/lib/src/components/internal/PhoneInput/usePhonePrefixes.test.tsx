@@ -6,15 +6,6 @@ import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 
 jest.mock('../../../core/Services/get-dataset');
 
-const getFlagEmoji = ({ id }) => {
-    const codePoints: number[] = id
-        .toUpperCase()
-        .split('')
-        .map(char => 127397 + char.charCodeAt(0));
-
-    return String.fromCodePoint ? String.fromCodePoint(...codePoints) + '\u00A0\u00A0' : '';
-};
-
 describe('usePhonePrefixes', () => {
     const props = { allowedCountries: [], loadingContext: 'test', handleError: jest.fn() };
 
@@ -29,8 +20,8 @@ describe('usePhonePrefixes', () => {
         const { result } = renderHook(() => usePhonePrefixes(props));
         const expectedPrefixes = datasetMock.map(item => ({
             id: item.prefix,
-            name: `${getFlagEmoji(item)} ${item.prefix} (${item.id})`,
-            selectedOptionName: `${getFlagEmoji(item)} ${item.prefix}`
+            name: `${item.prefix} (${item.id})`,
+            selectedOptionName: item.prefix
         }));
         await waitFor(() => expect(result.current).toEqual({ loadingStatus: 'ready', phonePrefixes: expectedPrefixes }));
     });
@@ -46,8 +37,8 @@ describe('usePhonePrefixes', () => {
         const expectedPrefixes = [
             {
                 id: datasetMock[0].prefix,
-                name: `${getFlagEmoji(datasetMock[0])} ${datasetMock[0].prefix} (${datasetMock[0].id})`,
-                selectedOptionName: `${getFlagEmoji(datasetMock[0])} ${datasetMock[0].prefix}`
+                name: `${datasetMock[0].prefix} (${datasetMock[0].id})`,
+                selectedOptionName: `${datasetMock[0].prefix}`
             }
         ];
         await waitFor(() => expect(result.current).toEqual({ loadingStatus: 'ready', phonePrefixes: expectedPrefixes }));

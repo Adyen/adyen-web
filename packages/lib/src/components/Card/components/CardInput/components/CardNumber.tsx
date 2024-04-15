@@ -3,10 +3,10 @@ import classNames from 'classnames';
 import BrandIcon from './BrandIcon';
 import DualBrandingIcon from './DualBrandingIcon/DualBrandingIcon';
 import Field from '../../../../internal/FormFields/Field';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import { CardNumberProps } from './types';
 import DataSfSpan from './DataSfSpan';
-import { ENCRYPTED_CARD_NUMBER } from '../../../../internal/SecuredFields/lib/configuration/constants';
+import { ENCRYPTED_CARD_NUMBER } from '../../../../internal/SecuredFields/lib/constants';
 import { alternativeLabelContent } from './IframeLabelAlternative';
 
 export default function CardNumber(props: CardNumberProps) {

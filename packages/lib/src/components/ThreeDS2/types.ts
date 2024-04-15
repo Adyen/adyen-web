@@ -2,6 +2,7 @@ import UIElement from '../internal/UIElement';
 import { ActionHandledReturnObject, AnalyticsModule } from '../../types/global-types';
 import Language from '../../language';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import { Analytics3DS2Errors } from '../../core/Analytics/constants';
 
 export interface ThreeDS2DeviceFingerprintConfiguration {
     dataKey?: string;
@@ -116,3 +117,23 @@ type CheckoutThreeDS2Action = {
     subtype: string;
     authorisationToken: string;
 };
+
+export interface FingerprintResolveData {
+    data: {
+        [key: string]: string;
+        paymentData: string;
+    };
+}
+
+export interface ChallengeResolveData {
+    data: {
+        details: {
+            [key: string]: string;
+        };
+    };
+}
+
+export interface ErrorCodeObject {
+    errorCode: string | Analytics3DS2Errors;
+    message: string;
+}

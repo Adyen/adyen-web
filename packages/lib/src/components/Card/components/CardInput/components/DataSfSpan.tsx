@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { DATA_ENCRYPTED_FIELD_ATTR, DATA_INFO, DATA_UID } from '../../../../internal/SecuredFields/lib/configuration/constants';
+import { DATA_ENCRYPTED_FIELD_ATTR, DATA_INFO, DATA_UID } from '../../../../internal/SecuredFields/lib/constants';
 import { SfSpanProps } from './types';
 
 /**

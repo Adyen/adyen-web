@@ -1,4 +1,4 @@
-import useCoreContext from '../../core/Context/useCoreContext';
+import { useCoreContext } from '../../core/Context/CoreProvider';
 import { h } from 'preact';
 import './Instructions.scss';
 

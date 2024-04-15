@@ -14,7 +14,7 @@ import registry, { NewableComponent } from './core.registry';
 import { cleanupFinalResult, sanitizeResponse, verifyPaymentDidNotFail } from '../components/internal/UIElement/utils';
 import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from './Errors/AdyenCheckoutError';
 import { ANALYTICS_ACTION_STR } from './Analytics/constants';
-import { THREEDS2_FULL } from '../components/ThreeDS2/config';
+import { THREEDS2_FULL } from '../components/ThreeDS2/constants';
 import { DEFAULT_LOCALE } from '../language/constants';
 import getTranslations from './Services/get-translations';
 import { defaultProps } from './core.defaultProps';
@@ -79,7 +79,7 @@ class Core implements ICore {
         if ((clientKeyType === 'test' || clientKeyType === 'live') && !this.loadingContext.includes(clientKeyType)) {
             throw new AdyenCheckoutError(
                 'IMPLEMENTATION_ERROR',
-                `Error: you are using a ${clientKeyType} clientKey against the ${this.options.environment} environment`
+                `Error: you are using a ${clientKeyType} clientKey against the ${this.options.environmentUrls?.api || this.options.environment} environment`
             );
         }
 

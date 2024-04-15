@@ -1,5 +1,5 @@
 import { Component, h } from 'preact';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import Field from '../FormFields/Field';
 import { checkIbanStatus, isValidHolder } from './validate';
 import { electronicFormat, formatIban, getCountryCode, getNextCursorPosition } from './utils';

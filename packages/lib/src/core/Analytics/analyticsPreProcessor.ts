@@ -17,12 +17,17 @@ import {
     ANALYTICS_VALIDATION_ERROR_STR,
     ANALYTICS_EXPRESS_PAGES_ARRAY
 } from './constants';
-import { THREEDS2_ERROR, THREEDS2_FULL } from '../../components/ThreeDS2/config';
+import { THREEDS2_ERROR, THREEDS2_FULL } from '../../components/ThreeDS2/constants';
+import AdyenCheckoutError, { SDK_ERROR } from '../Errors/AdyenCheckoutError';
 
 export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
     // return function with an analyticsModule reference
     return (component: string, analyticsObj: SendAnalyticsObject, uiElementProps = {} as any) => {
         const { type, target } = analyticsObj;
+
+        if (!type) {
+            throw new AdyenCheckoutError(SDK_ERROR, 'You are trying to create an analytics event without a type');
+        }
 
         switch (type) {
             /**

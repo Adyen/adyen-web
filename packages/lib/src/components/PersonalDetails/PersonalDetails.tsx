@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import PersonalDetails from '../internal/PersonalDetails';
-import CoreProvider from '../../core/Context/CoreProvider';
+import { CoreProvider } from '../../core/Context/CoreProvider';
 import { TxVariants } from '../tx-variants';
 import FormInstruction from '../internal/FormInstruction';
 import { UIElementProps } from '../internal/UIElement/types';

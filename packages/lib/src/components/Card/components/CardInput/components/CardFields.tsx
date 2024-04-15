@@ -2,7 +2,7 @@ import { h } from 'preact';
 import CardNumber from './CardNumber';
 import CVC from './CVC';
 import ExpirationDate from './ExpirationDate';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import { CardFieldsProps } from './types';
 import classNames from 'classnames';
 import {
@@ -11,7 +11,7 @@ import {
     ENCRYPTED_CARD_NUMBER,
     ENCRYPTED_EXPIRY_DATE,
     ENCRYPTED_SECURITY_CODE
-} from '../../../../internal/SecuredFields/lib/configuration/constants';
+} from '../../../../internal/SecuredFields/lib/constants';
 import AvailableBrands from './AvailableBrands';
 
 export default function CardFields({

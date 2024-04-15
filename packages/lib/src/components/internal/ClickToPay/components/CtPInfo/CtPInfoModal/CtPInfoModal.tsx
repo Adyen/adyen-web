@@ -1,7 +1,7 @@
 import { Fragment, h } from 'preact';
 import { useRef } from 'preact/hooks';
 import { CtPBrand } from '../../CtPBrand';
-import useCoreContext from '../../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../../core/Context/CoreProvider';
 import useImage from '../../../../../../core/Context/useImage';
 import { Modal } from '../../../../Modal';
 import Img from '../../../../Img';

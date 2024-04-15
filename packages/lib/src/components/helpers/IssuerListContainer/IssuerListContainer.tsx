@@ -3,7 +3,7 @@ import UIElement from '../../internal/UIElement/UIElement';
 import IssuerList from '../../internal/IssuerList';
 import getIssuerImageUrl from '../../../utils/get-issuer-image';
 import { FALLBACK_CONTEXT } from '../../../core/config';
-import CoreProvider from '../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../core/Context/CoreProvider';
 import RedirectButton from '../../internal/RedirectButton';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { IssuerListConfiguration, IssuerListData } from './types';

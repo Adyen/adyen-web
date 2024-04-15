@@ -1,30 +1,10 @@
-import { ERROR_MESSAGES, ERRORS, CHALLENGE_WINDOW_SIZES, DEFAULT_CHALLENGE_WINDOW_SIZE } from '../config';
+import { CHALLENGE_WINDOW_SIZES, DEFAULT_CHALLENGE_WINDOW_SIZE } from '../constants';
 import { getOrigin } from '../../../utils/getOrigin';
 import base64 from '../../../utils/base64';
-import { ChallengeData, ThreeDS2Token, FingerPrintData, ResultObject } from '../types';
+import { ChallengeData, ThreeDS2Token, FingerPrintData, ResultObject, FingerprintResolveData, ChallengeResolveData } from '../types';
 import { pick } from '../../internal/SecuredFields/utils';
 import { DecodeObject } from '../../../types/global-types';
 import { ErrorObject } from '../../../core/Errors/types';
-
-export interface FingerprintResolveData {
-    data: {
-        [key: string]: string;
-        paymentData: string;
-    };
-}
-
-export interface ChallengeResolveData {
-    data: {
-        details: {
-            [key: string]: string;
-        };
-    };
-}
-
-export interface ErrorCodeObject {
-    errorCode: string;
-    message: string;
-}
 
 /**
  * Check if we have been passed an ErrorObject because either base64 decoding or JSON.parse failed
@@ -172,12 +152,6 @@ export const createOldChallengeResolveData = (dataKey: string, transStatus: stri
         paymentData: authorisationToken
     }
 });
-
-export const handleErrorCode = (errorCode: string, errorDescription?: string): ErrorCodeObject => {
-    const unknownMessage = ERROR_MESSAGES[ERRORS.UNKNOWN];
-    const message = ERROR_MESSAGES[errorCode] || errorDescription || unknownMessage;
-    return { errorCode, message };
-};
 
 /**
  *

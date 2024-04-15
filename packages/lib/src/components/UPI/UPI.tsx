@@ -1,7 +1,7 @@
 import { h, RefObject } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import UPIComponent from './components/UPIComponent';
-import CoreProvider from '../../core/Context/CoreProvider';
+import { CoreProvider } from '../../core/Context/CoreProvider';
 import Await from '../internal/Await';
 import QRLoader from '../internal/QRLoader';
 import { UPIConfiguration, UpiMode, UpiPaymentData } from './types';

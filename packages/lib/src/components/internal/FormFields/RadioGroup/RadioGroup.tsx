@@ -3,7 +3,7 @@ import cx from 'classnames';
 import './RadioGroup.scss';
 import { RadioGroupProps } from './types';
 import { getUniqueId } from '../../../../utils/idGenerator';
-import useCoreContext from '../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
 
 export default function RadioGroup(props: RadioGroupProps) {
     const { items, name, onChange, value, isInvalid, uniqueId } = props;

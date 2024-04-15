@@ -4,7 +4,7 @@ import Address from '../../../internal/Address';
 import { boletoValidationRules } from './validate';
 import { boletoFormatters } from './utils';
 import SendCopyToEmail from '../../../internal/SendCopyToEmail/SendCopyToEmail';
-import useCoreContext from '../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { BoletoInputDataState } from '../../types';
 import useForm from '../../../../utils/useForm';
 import { BrazilPersonalDetail } from '../../../internal/SocialSecurityNumberBrazil/BrazilPersonalDetail';

@@ -1,4 +1,4 @@
-import { CVC_POLICY_HIDDEN } from '../lib/configuration/constants';
+import { CVC_POLICY_HIDDEN } from '../lib/constants';
 
 /**
  * At some time in the future hopefully the /binLookup will be able to sort the returned brands array according to the criteria below

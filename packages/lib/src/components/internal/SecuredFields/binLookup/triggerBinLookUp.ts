@@ -1,6 +1,6 @@
 import { httpPost } from '../../../../core/Services/http';
 import { CbObjOnBinLookup, CbObjOnBinValue, CbObjOnError } from '../lib/types';
-import { DEFAULT_CARD_GROUP_TYPES } from '../lib/configuration/constants';
+import { DEFAULT_CARD_GROUP_TYPES } from '../lib/constants';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 import { BinLookupResponse, BinLookupResponseRaw } from '../../../Card/types';
 

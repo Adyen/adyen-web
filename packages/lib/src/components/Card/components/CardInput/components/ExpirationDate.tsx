@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import classNames from 'classnames';
 import Field from '../../../../internal/FormFields/Field';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import { ExpirationDateProps } from './types';
 import DataSfSpan from './DataSfSpan';
 
@@ -10,7 +10,7 @@ import {
     DATE_POLICY_OPTIONAL,
     DATE_POLICY_REQUIRED,
     ENCRYPTED_EXPIRY_DATE
-} from '../../../../internal/SecuredFields/lib/configuration/constants';
+} from '../../../../internal/SecuredFields/lib/constants';
 import useImage from '../../../../../core/Context/useImage';
 import { alternativeLabelContent } from './IframeLabelAlternative';
 

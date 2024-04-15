@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import cx from 'classnames';
 import SelectListItem from './SelectListItem';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import { SelectListProps } from '../types';
 
 function SelectList({ selected, active, filteredItems, showList, ...props }: SelectListProps) {

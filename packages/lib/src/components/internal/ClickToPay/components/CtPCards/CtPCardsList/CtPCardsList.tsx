@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { useEffect, useMemo } from 'preact/hooks';
 import ShopperCard from '../../../models/ShopperCard';
 import useClickToPayContext from '../../../context/useClickToPayContext';
-import useCoreContext from '../../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../../core/Context/CoreProvider';
 import useImage from '../../../../../../core/Context/useImage';
 import useForm from '../../../../../../utils/useForm';
 import isMobile from '../../../../../../utils/isMobile';

@@ -164,7 +164,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
             this.props.modules.analytics.sendAnalytics(component, analyticsObj, uiElementProps);
         } catch (error) {
-            console.warn('Failed to submit the analytics event');
+            console.warn('Failed to submit the analytics event. Error:', error);
         }
     }
 

@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import UIElement from '../../internal/UIElement/UIElement';
 import OpenInvoice from '../../internal/OpenInvoice';
-import CoreProvider from '../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../core/Context/CoreProvider';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
 import { OpenInvoiceConfiguration } from './types';
 

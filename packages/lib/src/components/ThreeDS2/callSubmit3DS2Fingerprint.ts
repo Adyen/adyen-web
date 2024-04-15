@@ -2,6 +2,9 @@ import { httpPost } from '../../core/Services/http';
 import { pick } from '../internal/SecuredFields/utils';
 import { ThreeDS2FingerprintResponse } from './types';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import { THREEDS2_ERROR, THREEDS2_FINGERPRINT_SUBMIT } from './constants';
+import { ANALYTICS_API_ERROR, Analytics3DS2Errors, ANALYTICS_SDK_ERROR } from '../../core/Analytics/constants';
+import { SendAnalyticsObject } from '../../core/Analytics/types';
 
 /**
  * ThreeDS2DeviceFingerprint, onComplete, calls a new, internal, endpoint which
@@ -19,25 +22,71 @@ export default function callSubmit3DS2Fingerprint({ data }): void {
         }
     )
         .then(resData => {
-            // elementRef exists when the fingerprint component is created from the Dropin
-            const actionHandler = this.props.elementRef ?? this;
-
-            if (!actionHandler) {
-                console.error('Handled Error::callSubmit3DS2Fingerprint::FAILED:: actionHandler=', actionHandler);
-                return;
-            }
-
-            if (!resData.action && !resData.details) {
-                console.error('Handled Error::callSubmit3DS2Fingerprint::FAILED:: resData=', resData);
-                return;
-            }
+            let analyticsErrorObject: SendAnalyticsObject;
 
             /**
              * Frictionless (no challenge) flow OR "refused" flow
              */
             if (resData.type === 'completed') {
                 const { details } = resData;
+
+                if (!resData.details) {
+                    console.debug(
+                        'Handled Error::callSubmit3DS2Fingerprint::FAILED:: no details object in a response indicating either a "frictionless" flow, or a "refused" response. resData=',
+                        resData
+                    );
+
+                    analyticsErrorObject = {
+                        type: THREEDS2_ERROR,
+                        code: Analytics3DS2Errors.NO_DETAILS_FOR_FRICTIONLESS_OR_REFUSED,
+                        errorType: ANALYTICS_API_ERROR,
+                        message: `${THREEDS2_FINGERPRINT_SUBMIT}: no details object in a response indicating either a "frictionless" flow, or a "refused" response`
+                    };
+
+                    this.submitAnalytics(analyticsErrorObject);
+                    return;
+                }
+
                 return this.onComplete({ data: { details } });
+            }
+
+            /**
+             * If we don't have a type: "completed", then we expect an action, because we must be in a Challenge or Redirect flow
+             */
+            if (!resData.action) {
+                console.debug(
+                    'Handled Error::callSubmit3DS2Fingerprint::FAILED:: no action object in a response indicating a "challenge". resData=',
+                    resData
+                );
+
+                analyticsErrorObject = {
+                    type: THREEDS2_ERROR,
+                    code: Analytics3DS2Errors.NO_ACTION_FOR_CHALLENGE,
+                    errorType: ANALYTICS_API_ERROR,
+                    message: `${THREEDS2_FINGERPRINT_SUBMIT}: no action object in a response indicating a "challenge" flow`
+                };
+                this.submitAnalytics(analyticsErrorObject);
+                return;
+            }
+
+            // elementRef exists when the fingerprint component is created from the Dropin
+            const actionHandler = this.props.elementRef ?? this;
+
+            /**
+             * We have an action but do we have a way to handle it?
+             * TODO - check logs: do we ever *not* have an actionHandler?
+             */
+            if (!actionHandler) {
+                console.debug('Handled Error::callSubmit3DS2Fingerprint::FAILED:: no actionHandler');
+
+                analyticsErrorObject = {
+                    type: THREEDS2_ERROR,
+                    code: Analytics3DS2Errors.NO_COMPONENT_FOR_ACTION,
+                    errorType: ANALYTICS_SDK_ERROR,
+                    message: `${THREEDS2_FINGERPRINT_SUBMIT}: no component defined to handle the action response`
+                };
+                this.submitAnalytics(analyticsErrorObject);
+                return;
             }
 
             /**
@@ -49,7 +98,8 @@ export default function callSubmit3DS2Fingerprint({ data }): void {
             }
 
             /**
-             * Redirect (usecase: we thought we could do 3DS2 but it turns out we can't)
+             * Redirect flow (usecase: we thought we could do 3DS2 but it turns out we can't)
+             * TODO - check logs: does this ever happen, anymore?
              */
             if (resData.action?.type === 'redirect') {
                 return actionHandler.handleAction(resData.action);

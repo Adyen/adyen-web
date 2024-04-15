@@ -2,7 +2,7 @@ import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import EcontextInput from './components/EcontextInput';
 import EcontextVoucherResult from './components/EcontextVoucherResult';
-import CoreProvider from '../../core/Context/CoreProvider';
+import { CoreProvider } from '../../core/Context/CoreProvider';
 import { TxVariants } from '../tx-variants';
 import { EcontextConfiguration } from './types';
 

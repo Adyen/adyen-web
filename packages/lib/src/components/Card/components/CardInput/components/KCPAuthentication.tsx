@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { useMemo } from 'preact/hooks';
 import classNames from 'classnames';
 import Field from '../../../../internal/FormFields/Field';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import { KCPProps } from './types';
 import DataSfSpan from './DataSfSpan';
 import InputTelephone from '../../../../internal/FormFields/InputTelephone';

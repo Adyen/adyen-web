@@ -1,7 +1,7 @@
 import { ComponentChildren, h } from 'preact';
 import { ClickToPayContext, IClickToPayContext } from '../../context/ClickToPayContext';
 import { render, screen } from '@testing-library/preact';
-import CoreProvider from '../../../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../../../core/Context/CoreProvider';
 import { mock } from 'jest-mock-extended';
 import CtPLogin from './CtPLogin';
 import userEvent from '@testing-library/user-event';

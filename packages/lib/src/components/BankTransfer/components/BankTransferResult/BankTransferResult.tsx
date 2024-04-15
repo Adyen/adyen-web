@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import Voucher from '../../../internal/Voucher';
 
-import useCoreContext from '../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import useImage from '../../../../core/Context/useImage';
 
 export default function BankTransferResult(props) {

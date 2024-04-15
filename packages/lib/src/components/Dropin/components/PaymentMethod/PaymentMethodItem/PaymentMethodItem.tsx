@@ -4,18 +4,18 @@ import PaymentMethodDetails from '../PaymentMethodDetails';
 import PaymentMethodIcon from '../PaymentMethodIcon';
 import DisableOneClickConfirmation from '../DisableOneClickConfirmation';
 import './PaymentMethodItem.scss';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
 import UIElement from '../../../../internal/UIElement/UIElement';
 import PaymentMethodBrands from '../PaymentMethodBrands/PaymentMethodBrands';
-import { BRAND_ICON_UI_EXCLUSION_LIST } from '../../../../internal/SecuredFields/lib/configuration/constants';
+import { BRAND_ICON_UI_EXCLUSION_LIST } from '../../../../internal/SecuredFields/lib/constants';
 import PaymentMethodName from '../PaymentMethodName';
 import { ExpandButton } from './ExpandButton';
+import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 
-interface PaymentMethodItemProps {
+export interface PaymentMethodItemProps {
     paymentMethod: UIElement;
-    isSelected: boolean;
-    isLoaded: boolean;
-    isLoading: boolean;
+    isSelected?: boolean;
+    isLoaded?: boolean;
+    isLoading?: boolean;
     isDisablingPaymentMethod: boolean;
     showRemovePaymentMethodButton: boolean;
     onDisableStoredPaymentMethod: (paymentMethod) => void;

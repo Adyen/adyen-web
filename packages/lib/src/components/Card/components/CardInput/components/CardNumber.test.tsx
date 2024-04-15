@@ -1,7 +1,7 @@
 import { mount } from 'enzyme';
 import { h } from 'preact';
 import CardNumber from './CardNumber';
-import CoreProvider from '../../../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../../../core/Context/CoreProvider';
 
 // https://github.com/enzymejs/enzyme/issues/1925#issuecomment-490637648
 const Proxy = props => (

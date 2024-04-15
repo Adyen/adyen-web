@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import cx from 'classnames';
 import { useState } from 'preact/hooks';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import Field from '../FormFields/Field';
 import Checkbox from '../FormFields/Checkbox';
 import InputEmail from '../FormFields/InputEmail';

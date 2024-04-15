@@ -4,7 +4,7 @@ import { mount } from 'enzyme';
 import BacsInput from './BacsInput';
 import { BacsInputProps } from './types';
 import { mock } from 'jest-mock-extended';
-import CoreProvider from '../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../core/Context/CoreProvider';
 
 const defaultProps = {
     onChange: () => {},

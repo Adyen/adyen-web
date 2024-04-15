@@ -2,7 +2,7 @@ import { Fragment, h } from 'preact';
 import classnames from 'classnames';
 import Img from '../../../../Img';
 import ShopperCard from '../../../models/ShopperCard';
-import useCoreContext from '../../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../../core/Context/CoreProvider';
 import useImage from '../../../../../../core/Context/useImage';
 import './CtPSingleCard.scss';
 
