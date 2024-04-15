@@ -21,7 +21,6 @@ import '../../style.scss';
 import { getPaymentMethods } from '../../services';
 import { handleSubmit, handleAdditionalDetails, handleChange, handleOnPaymentFailed, handleOnPaymentCompleted } from '../../handlers';
 import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
-import getTranslationFile from '../../config/getTranslation';
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
     window.checkout = await AdyenCheckout({
@@ -30,7 +29,6 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
         locale: shopperLocale,
-        translationFile: getTranslationFile(shopperLocale),
         environment: process.env.__CLIENT_ENV__,
         onChange: handleChange,
         onSubmit: handleSubmit,

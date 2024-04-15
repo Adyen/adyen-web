@@ -2,7 +2,7 @@ import { test, expect } from '../../../pages/customCard/customCard.fixture';
 import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_EXPIRY_DATE, ENCRYPTED_SECURITY_CODE, REGULAR_TEST_CARD } from '../../utils/constants';
 import { binLookupMock } from '../../../mocks/binLookup/binLookup.mock';
 import { optionalDateAndCvcMock } from '../../../mocks/binLookup/binLookup.data';
-import LANG from '../../../../lib/src/language/locales/en-US.json';
+import LANG from '../../../../server/translations/en-US.json';
 
 const DATE_LABEL = LANG['creditCard.expiryDate.label'];
 const CVC_LABEL = LANG['creditCard.securityCode.label'];

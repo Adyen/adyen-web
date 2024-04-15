@@ -15,7 +15,7 @@ const initCheckout = async () => {
         locale: shopperLocale,
         countryCode,
         environment: 'test',
-        showPayButton: true,
+        _translationEnvironment: 'local',
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
         ...window.mainConfiguration
@@ -35,16 +35,15 @@ const initCheckout = async () => {
     createPayButton('.secured-fields', window.securedFields, 'securedfields');
 
     window.securedFields2 = new CustomCard(checkout, {
-            //            type: 'card',// Deliberately exclude to ensure a default value is set
-            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire'],
-            onConfigSuccess,
-            onBrand,
-            onFocus: setFocus,
-            onBinLookup,
-            onChange,
-            ...window.cardConfig
-        })
-        .mount('.secured-fields-2');
+        //            type: 'card',// Deliberately exclude to ensure a default value is set
+        brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire'],
+        onConfigSuccess,
+        onBrand,
+        onFocus: setFocus,
+        onBinLookup,
+        onChange,
+        ...window.cardConfig
+    }).mount('.secured-fields-2');
 
     createPayButton('.secured-fields-2', window.securedFields2, 'securedfields2');
 
