@@ -68,6 +68,11 @@ export class ANCVElement extends UIElement<ANCVProps> {
 
         this.setStatus('loading');
 
+        // allow for multiple ANCV payments, follow giftcard logic and just use order if it exists
+        if (this.props.order) {
+            this.submit();
+        }
+
         return this.onOrderRequest(this.data)
             .then((order: { orderData: string; pspReference: string }) => {
                 this.setState({ order: { orderData: order.orderData, pspReference: order.pspReference } });
