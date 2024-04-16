@@ -2,6 +2,8 @@
 
 .adyen-checkout__payment-method {
     &__name {
+        display: inline-block;
+        width: 100%;
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
@@ -17,6 +19,7 @@
     }
 
     &__name_wrapper {
+        min-width: var(--adyen-checkout-spacer-120);
         display: flex;
         align-items: flex-start;
         flex-direction: column;
