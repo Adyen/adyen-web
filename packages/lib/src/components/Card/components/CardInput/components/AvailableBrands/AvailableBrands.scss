@@ -3,12 +3,24 @@
     flex-basis: auto;
     flex-shrink: 1;
     flex-wrap: wrap;
-    gap: var(--adyen-checkout-spacer-020);
-    height: var(--adyen-checkout-spacer-070);
+    height: var(--adyen-checkout-spacer-090);
     overflow: hidden;
-    margin-top: -8px;
-    margin-bottom: var(--adyen-checkout-spacer-070);
+    margin-top: -12px;
+    margin-bottom: var(--adyen-checkout-spacer-060);
     transition: all 0.3s ease-out;
+
+    &__brand-wrapper {
+        box-shadow:
+            0 1px 1px 0 rgb(0 17 44 / 2%),
+            0 1px var(--adyen-checkout-spacer-010) 0 rgb(0 17 44 / 4%);
+        overflow: hidden;
+        display: inline-block;
+        height: var(--adyen-checkout-spacer-070);
+        width: var(--adyen-checkout-spacer-090);
+        position: relative;
+        border-radius: var(--adyen-checkout-border-radius-s);
+        margin: var(--adyen-checkout-spacer-020) var(--adyen-checkout-spacer-010);
+    }
 }
 
 .adyen-checkout__card__brands--hidden {
@@ -24,13 +36,3 @@
     width: 100%;
     height: auto;
 }
-
-.adyen-checkout__card__brands__brand-wrapper {
-    overflow: hidden;
-    display: inline-block;
-    height: var(--adyen-checkout-spacer-070);
-    width: var(--adyen-checkout-spacer-090);
-    position: relative;
-    border-radius: var(--adyen-checkout-border-radius-s);
-}
-

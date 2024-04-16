@@ -47,9 +47,10 @@ const Field: FunctionalComponent<FieldProps> = props => {
     // Controls whether any error element has an aria-hidden="true" attr (which means it is the error for a securedField)
     // or whether it has an id attr that can be pointed to by an aria-describedby attr on an input element
     const contextVisibleToSR = contextVisibleToScreenReader ?? true;
+    const showError = showErrorElement && typeof errorMessage === 'string' && errorMessage.length > 0;
+    const showContext = showContextualElement && !showError && contextualText?.length > 0;
 
     const uniqueId = useRef(getUniqueId(`adyen-checkout-${name}`));
-
     const [focused, setFocused] = useState(false);
     const [filled, setFilled] = useState(false);
 
@@ -103,21 +104,18 @@ const Field: FunctionalComponent<FieldProps> = props => {
     }, [label, errorMessage, labelEndAdornment, helper]);
 
     const renderInputRelatedElements = useCallback(() => {
-        const showError = showErrorElement && typeof errorMessage === 'string' && errorMessage.length > 0;
-        const errorElem = showError && (
+        const errorElem = (
             <span
-                className={'adyen-checkout-contextual-text--error'}
+                className={classNames({ 'adyen-checkout-contextual-text--error': true, 'adyen-checkout-contextual-text--hidden': !showError })}
                 {...(contextVisibleToSR && { id: `${uniqueId.current}${ARIA_ERROR_SUFFIX}` })}
                 aria-hidden={contextVisibleToSR ? null : 'true'}
             >
                 {errorMessage}
             </span>
         );
-
-        const showContext = showContextualElement && !showError && contextualText?.length > 0;
-        const contextualElem = showContext && (
+        const contextualElem = (
             <span
-                className={'adyen-checkout-contextual-text'}
+                className={classNames({ 'adyen-checkout-contextual-text': true, 'adyen-checkout-contextual-text--hidden': !showContext })}
                 {...(contextVisibleToSR && { id: `${uniqueId.current}${ARIA_CONTEXT_SUFFIX}` })}
                 aria-hidden={contextVisibleToSR ? null : 'true'}
             >
