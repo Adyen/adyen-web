@@ -281,6 +281,11 @@ export interface CardConfiguration extends UIElementProps {
      */
     expiryMonth?: string;
 
+    /**
+     * Allows SF to return an unencrypted expiryDate
+     */
+    exposeExpiryDate?: boolean;
+
     // forceCompat?: boolean, // TODO - probably drop, if Checkout won't support IE then SF doesn't need to
 }
 

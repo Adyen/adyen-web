@@ -22,6 +22,7 @@ export default {
     isPayButtonPrimaryVariant: true,
     disableIOSArrowKeys: false,
     showContextualElement: true,
+    exposeExpiryDate: false,
 
     // Events
     onLoad: (): any => {},
