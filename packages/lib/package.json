@@ -1,19 +1,17 @@
 {
     "name": "@adyen/adyen-web",
-    "version": "6.0.0-alpha.3",
+    "version": "6.0.0-alpha.4",
     "license": "MIT",
     "homepage": "https://docs.adyen.com/checkout",
     "type": "module",
     "sideEffects": [
         "./auto/auto.js",
         "./auto/auto.cjs",
-        "./dist/umd/adyen.js",
         "**/*.css"
     ],
     "main": "dist/cjs/index.cjs",
     "module": "dist/es-legacy/index.js",
     "types": "dist/es/index.d.ts",
-    "unpkg": "dist/umd/adyen.js",
     "style": "dist/es/adyen.css",
     "exports": {
         ".": {
