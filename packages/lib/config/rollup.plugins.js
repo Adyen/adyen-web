@@ -38,7 +38,7 @@ export const compileCSS = ({ extract = 'adyen.css' } = {}) =>
         config: {
             path: 'postcss.config.cjs'
         },
-        sourceMap: false,
+        sourceMap: true,
         inject: false,
         extract: extract
     });
