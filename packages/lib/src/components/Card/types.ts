@@ -8,9 +8,10 @@ import {
     CbObjOnFieldValid,
     CbObjOnFocus,
     CbObjOnLoad,
-    CbObjOnBinLookup
+    CbObjOnBinLookup,
+    CVCPolicyType,
+    DatePolicyType
 } from '../internal/SecuredFields/lib/types';
-import { CVCPolicyType, DatePolicyType } from '../internal/SecuredFields/lib/types';
 import { ClickToPayConfiguration } from '../internal/ClickToPay/types';
 
 export interface CardElementProps extends UIElementProps {

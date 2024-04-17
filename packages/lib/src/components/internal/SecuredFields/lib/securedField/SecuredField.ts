@@ -14,7 +14,6 @@ import {
     ENCRYPTED_EXPIRY_YEAR
 } from '../configuration/constants';
 import { generateRandomNumber } from '../utilities/commonUtils';
-import { SFFeedbackObj } from '../types';
 import AbstractSecuredField, {
     SecuredFieldInitObj,
     IframeConfigObject,
@@ -22,7 +21,7 @@ import AbstractSecuredField, {
     SFPlaceholdersObject,
     SFInternalConfig
 } from './AbstractSecuredField';
-import { CVCPolicyType, DatePolicyType, RtnType_noParamVoidFn, RtnType_postMessageListener, RtnType_callbackFn } from '../types';
+import { CVCPolicyType, DatePolicyType, RtnType_noParamVoidFn, RtnType_postMessageListener, RtnType_callbackFn, SFFeedbackObj } from '../types';
 import { pick, reject } from '../../utils';
 import { processAriaConfig } from './utils/processAriaConfig';
 import { processPlaceholders } from './utils/processPlaceholders';
