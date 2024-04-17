@@ -149,6 +149,7 @@ class SecuredField extends AbstractSecuredField {
             minimumExpiryDate: this.sfConfig.minimumExpiryDate,
             implementationType: this.sfConfig.implementationType,
             maskSecurityCode: this.sfConfig.maskSecurityCode,
+            exposeExpiryDate: this.sfConfig.exposeExpiryDate,
             disableIOSArrowKeys: this.sfConfig.disableIOSArrowKeys
         };
 

@@ -40,6 +40,7 @@ export interface SFInternalConfig {
     minimumExpiryDate: string;
     implementationType: string;
     maskSecurityCode: boolean;
+    exposeExpiryDate: boolean;
     disableIOSArrowKeys: boolean;
 }
 

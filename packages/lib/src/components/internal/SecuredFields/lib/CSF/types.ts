@@ -54,6 +54,7 @@ export interface CSFSetupObject extends CSFCommonProps {
     isKCP?: boolean;
     i18n?: Language;
     forceCompat: boolean;
+    exposeExpiryDate: boolean;
 }
 
 /**

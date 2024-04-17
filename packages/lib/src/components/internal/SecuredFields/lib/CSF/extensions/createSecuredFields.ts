@@ -213,6 +213,7 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
             minimumExpiryDate: this.config.minimumExpiryDate,
             implementationType: this.config.implementationType,
             maskSecurityCode: this.config.maskSecurityCode,
+            exposeExpiryDate: this.props.exposeExpiryDate,
             disableIOSArrowKeys: this.config.shouldDisableIOSArrowKeys
         };
 

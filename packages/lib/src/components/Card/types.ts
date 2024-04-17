@@ -145,6 +145,11 @@ export interface CardElementProps extends UIElementProps {
     onBinLookup?: (event: CbObjOnBinLookup) => void;
 
     [key: string]: any; // TODO get rid of this and explicitly declare props
+
+    /**
+     * Allows SF to return an unencrypted expiryDate
+     */
+    exposeExpiryDate?: boolean;
 }
 
 export type SocialSecurityMode = 'show' | 'hide' | 'auto';

@@ -44,6 +44,7 @@ export interface SFPProps {
     render: () => {};
     resources: Resources;
     maskSecurityCode: boolean;
+    exposeExpiryDate: boolean;
     disableIOSArrowKeys: (obj: TouchStartEventObj) => void | null;
 }
 

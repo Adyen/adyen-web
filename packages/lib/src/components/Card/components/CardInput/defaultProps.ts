@@ -22,6 +22,7 @@ export default {
     autoFocus: true,
     isPayButtonPrimaryVariant: true,
     disableIOSArrowKeys: true,
+    exposeExpiryDate: false,
 
     // Events
     onLoad: (): any => {},
