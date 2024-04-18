@@ -56,7 +56,7 @@
 }
 
 .adyen-checkout__order-payment-method__deducted-amount__label {
-    font-size: var(--adyen-checkout-font-size-small);
+    font-size: var(--adyen-checkout-font-size-xsmall);
 }
 
 .adyen-checkout__order-payment-method__deducted-amount__value {
@@ -71,7 +71,7 @@
     color: var(--adyen-checkout-color-label-secondary);
     border-radius: var(--adyen-checkout-border-radius-m);
     margin-bottom: var(--adyen-checkout-spacer-070);
-    font-size: var(--adyen-checkout-font-size-small);
+    font-size: var(--adyen-checkout-font-size-xsmall);
 
     strong {
         font-weight: bold;

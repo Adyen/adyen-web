@@ -1,7 +1,7 @@
 @use "../../../../style/index";
 
 .adyen-checkout__bankTransfer__introduction {
-    font-size: var(--adyen-checkout-font-size-small);
+    font-size: var(--adyen-checkout-font-size-xsmall);
     color: var(--adyen-checkout-color-label-primary);
     font-weight: var(--adyen-checkout-text-body-font-weight);
     margin: 0 0 var(--adyen-checkout-spacer-070);

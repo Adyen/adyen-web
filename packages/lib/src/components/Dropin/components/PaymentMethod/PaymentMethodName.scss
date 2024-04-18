@@ -1,4 +1,4 @@
-@use "../../../../style/index";
+@use '../../../../style/index';
 
 .adyen-checkout__payment-method {
     &__name {
@@ -7,10 +7,13 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
+        font-weight: var(--adyen-checkout-text-body-strongest-font-weight);
+        font-size: var(--adyen-checkout-font-size-small);
     }
 
     &__name--selected {
-        font-weight:  var(--adyen-checkout-text-body-stronger-font-weight);
+        font-weight: var(--adyen-checkout-text-body-strongest-font-weight);
+        font-size: var(--adyen-checkout-font-size-small);
     }
 
     &__additional-info {
@@ -23,5 +26,6 @@
         display: flex;
         align-items: flex-start;
         flex-direction: column;
+        text-align: start;
     }
 }

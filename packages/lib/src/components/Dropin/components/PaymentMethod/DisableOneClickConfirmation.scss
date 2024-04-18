@@ -4,7 +4,7 @@ $color-alert: #e22d2d;
 
 .adyen-checkout__payment-method__disable-confirmation {
     background: $color-alert;
-    font-size: var(--adyen-checkout-font-size-small);
+    font-size: var(--adyen-checkout-font-size-xsmall);
     color: var(--adyen-checkout-color-white);
     border-right: 1px solid darken($color-alert, 2%);
     border-left: 1px solid darken($color-alert, 2%);
