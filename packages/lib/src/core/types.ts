@@ -76,6 +76,11 @@ export interface CoreConfiguration {
     clientKey?: string;
 
     /**
+     * Use a checkoutAttemptId from a previous page
+     */
+    checkoutAttemptId?: string;
+
+    /**
      * The shopper's locale. This is used to set the language rendered in the UI.
      * For a list of supported locales, see {@link https://docs.adyen.com/checkout/components-web/localization-components | Localization}.
      * For adding a custom locale, see {@link https://docs.adyen.com/checkout/components-web/localization-components#create-localization | Create localization}.*

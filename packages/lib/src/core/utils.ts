@@ -67,7 +67,8 @@ export function assertConfigurationPropertiesAreValid(propsSetByMerchant: CoreCo
         'onPaymentMethodsRequest',
         'onOrderCancel',
         'onOrderUpdated',
-        'loadingContext'
+        'loadingContext',
+        'checkoutAttemptId'
     ]);
 
     Object.keys(propsSetByMerchant).forEach((prop: keyof CoreConfiguration) => {
