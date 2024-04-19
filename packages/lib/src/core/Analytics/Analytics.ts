@@ -69,7 +69,6 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
             const { enabled, payload, telemetry } = props; // TODO what is payload, is it ever used?
 
             const analyticsData = processAnalyticsData(props.analyticsData);
-            console.log('### Analytics::setUp:: analyticsData', analyticsData);
 
             if (enabled === true) {
                 if (telemetry === true && !capturedCheckoutAttemptId) {
