@@ -1,7 +1,6 @@
 import { httpPost } from '../http';
 import Storage from '../../../utils/Storage';
-import { CheckoutAttemptIdSession, CollectIdProps, TelemetryEvent } from './types';
-import { AnalyticsData, AnalyticsInitialEvent } from '../../Analytics/types';
+import { CheckoutAttemptIdSession, CollectIdEvent, CollectIdProps, TelemetryEvent } from './types';
 
 export const FAILURE_MSG =
     'WARNING: Failed to retrieve "checkoutAttemptId". Consequently, analytics will not be available for this payment. The payment process, however, will not be affected.';
@@ -33,7 +32,7 @@ const collectId = ({ analyticsContext, clientKey, locale, analyticsPath, bundleT
         path: `${analyticsPath}?clientKey=${clientKey}`
     };
 
-    return (event: AnalyticsInitialEvent & AnalyticsData): Promise<string> => {
+    return (event: CollectIdEvent): Promise<string> => {
         const telemetryEvent: TelemetryEvent = {
             // amount,  // TODO will be supported in the future
             version: process.env.VERSION,

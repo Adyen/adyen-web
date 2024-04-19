@@ -27,3 +27,5 @@ export type TelemetryEvent = {
     amount?: PaymentAmount;
 } & AnalyticsInitialEvent &
     AnalyticsData;
+
+export type CollectIdEvent = AnalyticsInitialEvent & AnalyticsData;

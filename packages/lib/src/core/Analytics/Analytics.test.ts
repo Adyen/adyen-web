@@ -75,7 +75,7 @@ describe('Analytics initialisation and event queue', () => {
         expect(logEventPromiseMock).toHaveBeenCalledWith({ ...setUpEvent });
     });
 
-    test('Calls the collectId endpoint by default, adding expected fields, including sanitising the passed analyticsData object', async () => {
+    test.only('Calls the collectId endpoint by default, adding expected fields, including sanitising the passed analyticsData object', async () => {
         const applicationInfo = {
             merchantApplication: {
                 name: 'merchant_application_name',
@@ -88,11 +88,14 @@ describe('Analytics initialisation and event queue', () => {
             }
         };
 
+        const checkoutAttemptId = 'my.attempt.id';
+
         analytics = Analytics({
             analytics: {
                 analyticsData: {
                     applicationInfo,
-                    // @ts-ignore - this is one of the things we're testing
+                    checkoutAttemptId,
+                    // @ts-ignore - this is one of the things we're testing (that this object gets stripped out)
                     foo: {
                         bar: 'val'
                     }
@@ -109,7 +112,7 @@ describe('Analytics initialisation and event queue', () => {
         expect(collectIdPromiseMock).toHaveBeenCalled();
         await Promise.resolve(); // wait for the next tick
 
-        const enhancedSetupEvent = { ...setUpEvent, applicationInfo };
+        const enhancedSetupEvent = { ...setUpEvent, applicationInfo, checkoutAttemptId };
 
         expect(collectIdPromiseMock).toHaveBeenCalledWith({ ...enhancedSetupEvent });
 
