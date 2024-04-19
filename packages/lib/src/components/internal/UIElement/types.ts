@@ -100,8 +100,6 @@ export type UIElementProps = BaseElementProps &
          * @internal
          */
         paymentMethodType?: string;
-
-        checkoutAttemptId?: string;
     };
 
 export interface IUIElement extends IBaseElement {

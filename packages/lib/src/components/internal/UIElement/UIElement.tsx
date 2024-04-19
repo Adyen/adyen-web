@@ -134,8 +134,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     // Only called once, for UIElements (including Dropin), as they are being mounted
     protected setUpAnalytics(setUpAnalyticsObj: AnalyticsInitialEvent) {
-        const { session } = this.props;
-        const sessionId = session?.id;
+        const sessionId = this.props.session?.id;
 
         return this.props.modules.analytics.setUp({
             ...setUpAnalyticsObj,
