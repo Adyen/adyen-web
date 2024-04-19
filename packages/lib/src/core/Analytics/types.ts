@@ -28,6 +28,11 @@ export interface AnalyticsData {
             osVersion: string;
         };
     };
+
+    /**
+     * Use a checkoutAttemptId from a previous page
+     */
+    checkoutAttemptId?: string;
 }
 
 export interface AnalyticsOptions {
