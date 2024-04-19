@@ -1,4 +1,4 @@
-@use "../../../../style/index";
+@use '../../../../style/index';
 
 .adyen-checkout__payment-method {
     &__name {
@@ -10,7 +10,7 @@
     }
 
     &__name--selected {
-        font-weight:  var(--adyen-checkout-text-body-stronger-font-weight);
+        font-weight: var(--adyen-checkout-text-body-stronger-font-weight);
     }
 
     &__additional-info {
@@ -23,5 +23,6 @@
         display: flex;
         align-items: flex-start;
         flex-direction: column;
+        text-align: start;
     }
 }
