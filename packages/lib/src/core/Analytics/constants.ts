@@ -95,3 +95,5 @@ export const errorCodeMapping = {
 };
 
 export const ANALYTICS_EXPRESS_PAGES_ARRAY = ['cart', 'minicart', 'pdp', 'checkout'];
+
+export const ALLOWED_ANALYTICS_DATA = ['applicationInfo', 'checkoutAttemptId'];

@@ -28,9 +28,12 @@ export interface AnalyticsData {
             osVersion: string;
         };
     };
-}
 
-export const ALLOWED_ANALYTICS_DATA = ['applicationInfo'];
+    /**
+     * Use a checkoutAttemptId from a previous page
+     */
+    checkoutAttemptId?: string;
+}
 
 export interface AnalyticsOptions {
     /**
@@ -42,11 +45,6 @@ export interface AnalyticsOptions {
      * Enable/Disable telemetry data
      */
     telemetry?: boolean;
-
-    /**
-     * Reuse a previous checkoutAttemptId from a previous page
-     */
-    checkoutAttemptId?: string;
 
     /**
      * Data to be sent along with the event data
