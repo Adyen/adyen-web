@@ -14,7 +14,7 @@ import {
     HIDDEN,
     OPTIONAL,
     REQUIRED
-} from './configuration/constants';
+} from './constants';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 import { Placeholders } from '../SFP/types';
 

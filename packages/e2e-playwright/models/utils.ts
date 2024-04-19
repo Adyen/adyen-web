@@ -3,7 +3,7 @@ import { getImageCount } from '../tests/utils/image';
 import { USER_TYPE_DELAY } from '../tests/utils/constants';
 
 export const getCreditCardPM_withBrandsInfo = (dropin: Dropin) => {
-    const creditCard = dropin.getPaymentMethodItem('Cards');
+    const creditCard = dropin.getPaymentMethodItemByType('scheme');
 
     const brandsHolder = creditCard.locator('.adyen-checkout__payment-method__brands');
 

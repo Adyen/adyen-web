@@ -3,7 +3,6 @@ import '@adyen/adyen-web/styles/adyen.css';
 import { getPaymentMethods, makePayment, checkBalance, createOrder, cancelOrder, makeDetailsCall } from '../../services';
 import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
 import { getSearchParameters } from '../../utils';
-import getTranslationFile from '../../config/getTranslation';
 import { handleOnPaymentCompleted, handleOnPaymentFailed } from '../../handlers';
 
 export async function initManual() {
@@ -15,8 +14,7 @@ export async function initManual() {
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
 
-        locale: 'pt-BR',
-        translationFile: getTranslationFile(shopperLocale),
+        locale: shopperLocale,
 
         environment: process.env.__CLIENT_ENV__,
 

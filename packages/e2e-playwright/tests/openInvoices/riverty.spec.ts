@@ -1,6 +1,6 @@
 import { test, expect } from '../../pages/openInvoices/openInvoices.fixture';
 
-import LANG from '../../../lib/src/language/locales/en-US.json';
+import LANG from '../../../server/translations/en-US.json';
 import { USER_TYPE_DELAY } from '../utils/constants';
 
 const REQUIRED_FIELD = LANG['field.error.required'].replace('%{label}', '');

@@ -1,6 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { USER_TYPE_DELAY } from '../tests/utils/constants';
-import LANG from '../../lib/src/language/locales/en-US.json';
+import LANG from '../../server/translations/en-US.json';
 
 const CARD_IFRAME_TITLE = LANG['creditCard.encryptedCardNumber.aria.iframeTitle'];
 const EXPIRY_DATE_IFRAME_TITLE = LANG['creditCard.encryptedExpiryDate.aria.iframeTitle'];

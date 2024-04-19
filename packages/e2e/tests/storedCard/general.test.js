@@ -1,6 +1,6 @@
 import { TEST_CVC_VALUE } from '../cards/utils/constants';
 import CardComponentPage from '../_models/CardComponent.page';
-import LANG from '../../../lib/src/language/locales/en-US.json';
+import LANG from '../../../server/translations/en-US.json';
 
 const cardPage = new CardComponentPage('.stored-card-field', {}, 'storedcards');
 

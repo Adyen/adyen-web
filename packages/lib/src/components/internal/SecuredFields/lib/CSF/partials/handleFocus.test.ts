@@ -1,6 +1,6 @@
 import { handleFocus } from './handleFocus';
 import ua from '../utils/userAgent';
-import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_SECURITY_CODE } from '../../configuration/constants';
+import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_SECURITY_CODE } from '../../constants';
 
 ua.__IS_IOS = false;
 

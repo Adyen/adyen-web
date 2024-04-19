@@ -1,7 +1,7 @@
 import { turnOffSDKMocking } from '../../../../_common/cardMocks';
 import CardComponentPage from '../../../../_models/CardComponent.page';
 import { REGULAR_TEST_CARD, MAESTRO_CARD, UNKNOWN_VISA_CARD } from '../../../utils/constants';
-import LANG from '../../../../../../lib/src/language/locales/en-US.json';
+import LANG from '../../../../../../server/translations/en-US.json';
 
 const UNSUPPORTED_CARD = LANG['cc.num.903'];
 

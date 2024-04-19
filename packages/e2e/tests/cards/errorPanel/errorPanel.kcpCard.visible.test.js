@@ -1,6 +1,6 @@
 import CardComponentPage from '../../_models/CardComponent.page';
 import { KOREAN_TEST_CARD, SR_INDICATOR_PREFIX } from '../utils/constants';
-import LANG from '../../../../lib/src/language/locales/en-US.json';
+import LANG from '../../../../server/translations/en-US.json';
 
 const CARD_NUMBER_EMPTY = LANG['cc.num.900'] + SR_INDICATOR_PREFIX;
 const EXPIRY_DATE_EMPTY = LANG['cc.dat.910'] + SR_INDICATOR_PREFIX;

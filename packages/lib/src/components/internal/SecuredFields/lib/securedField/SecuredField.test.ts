@@ -1,7 +1,9 @@
 import SecuredField from './SecuredField';
 
 import { CVCPolicyType, DatePolicyType } from '../types';
-import en from '../../../../../language/locales/en-US';
+
+// @ts-ignore Importing JSON for the test
+import en from '../../../../../../../server/translations/en-US.json';
 
 import { SF_ErrorCodes } from '../../../../../core/Errors/constants';
 import {
@@ -11,7 +13,7 @@ import {
     ENCRYPTED_BANK_LOCATION_FIELD,
     ENCRYPTED_PWD_FIELD,
     GIFT_CARD
-} from '../configuration/constants';
+} from '../constants';
 import { Placeholders as AchPlaceholders } from '../../../../Ach/components/AchInput/types';
 import { Placeholders as GiftcardPlaceholders } from '../../../../Giftcard/components/types';
 import { Placeholders as CardPlaceholders } from '../../../../Card/components/CardInput/types';

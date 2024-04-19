@@ -12,7 +12,7 @@ import {
     ENCRYPTED_EXPIRY_YEAR,
     ENCRYPTED_PWD_FIELD,
     ENCRYPTED_SECURITY_CODE
-} from '../../components/internal/SecuredFields/lib/configuration/constants';
+} from '../../components/internal/SecuredFields/lib/constants';
 import { AriaConfigObject } from '../../components/internal/SecuredFields/lib/types';
 import type Language from '../../language';
 

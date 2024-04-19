@@ -1,5 +1,5 @@
 import { handleIframeConfigFeedback } from './handleIframeConfigFeedback';
-import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_PWD_FIELD } from '../../configuration/constants';
+import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_PWD_FIELD } from '../../constants';
 
 const csfState = { type: 'card', isConfigured: false, originalNumIframes: 3, iframeConfigCount: 0 };
 const csfCallbacks = { onAdditionalSFConfig: null };

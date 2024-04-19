@@ -6,13 +6,11 @@ import { checkBalance, createOrder, createSession } from '../../services';
 import '../../../config/polyfills';
 import '../../utils';
 import '../../style.scss';
-import getTranslationFile from '../../config/getTranslation';
 
 (async () => {
     window.checkout = await AdyenCheckout({
         clientKey: process.env.__CLIENT_KEY__,
         locale: shopperLocale,
-        translationFile: getTranslationFile(shopperLocale),
         countryCode,
         environment: process.env.__CLIENT_ENV__,
         onChange: handleChange,
@@ -64,7 +62,6 @@ import getTranslationFile from '../../config/getTranslation';
         clientKey: process.env.__CLIENT_KEY__,
         session,
         showPayButton: true,
-        translationFile: getTranslationFile(shopperLocale),
 
         // Events
         beforeSubmit: (data, component, actions) => {

@@ -9,7 +9,7 @@ import {
     ENCRYPTED_EXPIRY_YEAR,
     ENCRYPTED_PWD_FIELD,
     ENCRYPTED_SECURITY_CODE
-} from '../../configuration/constants';
+} from '../../constants';
 import { getPreviousTabbableNonSFElement, focusExternalField } from '../utils/tabbing/utils';
 import ua from '../utils/userAgent';
 

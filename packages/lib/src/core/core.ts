@@ -15,10 +15,14 @@ import { cleanupFinalResult, sanitizeResponse, verifyPaymentDidNotFail } from '.
 import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from './Errors/AdyenCheckoutError';
 import { ANALYTICS_ACTION_STR } from './Analytics/constants';
 import { THREEDS2_FULL } from '../components/ThreeDS2/constants';
-import { DEFAULT_LOCALE } from '../language/config';
+import { DEFAULT_LOCALE } from '../language/constants';
+import getTranslations from './Services/get-translations';
+import { defaultProps } from './core.defaultProps';
+import { formatCustomTranslations, formatLocale } from '../language/utils';
 
 import type { AdditionalDetailsStateData, PaymentAction, PaymentResponseData } from '../types/global-types';
 import type { CoreConfiguration, ICore } from './types';
+import type { Translations } from '../language/types';
 
 class Core implements ICore {
     public session?: Session;
@@ -33,9 +37,6 @@ class Core implements ICore {
 
     public static readonly metadata = {
         version: process.env.VERSION,
-        revision: process.env.COMMIT_HASH,
-        branch: process.env.COMMIT_BRANCH,
-        buildId: process.env.ADYEN_BUILD_ID,
         bundleType: process.env.BUNDLE_TYPE
     };
 
@@ -66,10 +67,11 @@ class Core implements ICore {
 
         this.createFromAction = this.createFromAction.bind(this);
 
-        this.setOptions({ exposeLibraryMetadata: true, ...props });
+        this.setOptions({ ...defaultProps, ...props });
 
         this.loadingContext = resolveEnvironment(this.options.environment, this.options.environmentUrls?.api);
         this.cdnContext = resolveCDNEnvironment(this.options.resourceEnvironment || this.options.environment, this.options.environmentUrls?.api);
+
         this.analyticsContext = resolveAnalyticsEnvironment(this.options.environment);
         this.session = this.options.session && new Session(this.options.session, this.options.clientKey, this.loadingContext);
 
@@ -89,7 +91,7 @@ class Core implements ICore {
     public async initialize(): Promise<this> {
         await this.initializeCore();
         this.validateCoreConfiguration();
-        this.createCoreModules();
+        await this.createCoreModules();
         return this;
     }
 
@@ -121,14 +123,25 @@ class Core implements ICore {
         return Promise.resolve(this);
     }
 
+    private async fetchLocaleTranslations(): Promise<Translations> {
+        try {
+            const translation = await getTranslations(
+                this.cdnContext,
+                Core.metadata.version,
+                this.options.locale,
+                this.options._translationEnvironment,
+                this.options.translations
+            );
+            return translation;
+        } catch (error) {
+            this.options.onError?.(error);
+        }
+    }
+
     private validateCoreConfiguration(): void {
         // @ts-ignore This property does not exist, although merchants might be using when migrating from v5 to v6
         if (this.options.paymentMethodsConfiguration) {
             console.warn('WARNING:  "paymentMethodsConfiguration" is supported only by Drop-in.');
-        }
-
-        if (!this.options.locale) {
-            this.setOptions({ locale: DEFAULT_LOCALE });
         }
 
         if (!this.options.countryCode) {
@@ -137,6 +150,13 @@ class Core implements ICore {
                 'You must specify a countryCode when initializing checkout. (If you are using a session then this session should be initialized with a countryCode.)'
             );
         }
+
+        if (!this.options.locale) {
+            this.setOptions({ locale: DEFAULT_LOCALE });
+        }
+
+        this.options.locale = formatLocale(this.options.locale);
+        this.options.translations = formatCustomTranslations(this.options.translations);
     }
 
     /**
@@ -309,13 +329,15 @@ class Core implements ICore {
         this.paymentMethodsResponse = new PaymentMethods(this.options.paymentMethodsResponse || paymentMethodsResponse, this.options);
     }
 
-    private createCoreModules(): void {
+    private async createCoreModules(): Promise<void> {
         if (this.modules) {
             if (process.env.NODE_ENV === 'development') {
                 console.warn('Core: Core modules are already created.');
             }
             return;
         }
+
+        const translations = await this.fetchLocaleTranslations();
 
         this.modules = Object.freeze({
             risk: new RiskModule(this, { ...this.options, loadingContext: this.loadingContext }),
@@ -329,7 +351,11 @@ class Core implements ICore {
                 bundleType: Core.metadata.bundleType
             }),
             resources: new Resources(this.cdnContext),
-            i18n: new Language(this.options.locale, this.options.translations, this.options.translationFile),
+            i18n: new Language({
+                locale: this.options.locale,
+                translations,
+                customTranslations: this.options.translations
+            }),
             srPanel: new SRPanel(this, { ...this.options.srConfig })
         });
     }

@@ -1,11 +1,10 @@
 import { mapFieldKey as mapFieldKeyOI } from '../../components/internal/OpenInvoice/utils';
 import { mapFieldKey as mapFieldKeyCC } from '../../components/Card/components/CardInput/utils';
-import Language from '../../language';
 import { SortErrorsObj } from './types';
 import { sortErrorsByLayout } from './utils';
 
 describe('Tests for Errors/utils', () => {
-    const i18n = new Language('en-US');
+    const i18n = global.i18n;
 
     describe('Test sortErrorsByLayout function for ValidationRuleResult type errors, with a US localization for some fields', () => {
         // ValidationRuleResult type errors, jumbled

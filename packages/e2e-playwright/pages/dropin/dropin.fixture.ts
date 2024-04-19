@@ -137,14 +137,12 @@ const test = base.extend<Fixture>({
         await page.addInitScript({
             content: `window.dropinConfig = ${pmsConfig}`
         });
-
         await useDropinPage(page, use, DropinSessionsPage);
     }
 });
 
-const useDropinPage = async (page: Page, use: any, PageType = DropinPage) => {
+const useDropinPage = async (page: Page, use: any, PageType: any = DropinPage) => {
     const dropinPage = new PageType(page);
-    await dropinPage.goto();
     await use(dropinPage);
 };
 

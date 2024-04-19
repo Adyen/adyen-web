@@ -9,7 +9,7 @@ import {
     CVC_POLICY_OPTIONAL,
     CVC_POLICY_REQUIRED,
     ENCRYPTED_SECURITY_CODE
-} from '../../../../internal/SecuredFields/lib/configuration/constants';
+} from '../../../../internal/SecuredFields/lib/constants';
 import DataSfSpan from './DataSfSpan';
 import { alternativeLabelContent } from './IframeLabelAlternative';
 

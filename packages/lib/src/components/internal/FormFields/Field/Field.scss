@@ -120,6 +120,10 @@
     line-height: var(--adyen-checkout-line-height-100);
     align-items: center;
     color: var(--adyen-checkout-input-field-context-color);
+    opacity: 1;
+    transition:
+        margin 200ms ease-out,
+        opacity 200ms ease-out;
 }
 
 .adyen-checkout-contextual-text {
@@ -130,4 +134,10 @@
 
         color: var(--adyen-checkout-color-label-critical);
     }
+}
+
+.adyen-checkout-contextual-text--hidden {
+    height: 0;
+    margin: 0;
+    opacity: 0;
 }

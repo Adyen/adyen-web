@@ -1,5 +1,5 @@
 import { createCardSecuredFields, createNonCardSecuredFields } from './createSecuredFields';
-import { DATA_ENCRYPTED_FIELD_ATTR, ENCRYPTED_CARD_NUMBER } from '../../configuration/constants';
+import { DATA_ENCRYPTED_FIELD_ATTR, ENCRYPTED_CARD_NUMBER } from '../../constants';
 import { SecuredFields } from '../../types';
 import SecuredField from '../../securedField/SecuredField';
 
