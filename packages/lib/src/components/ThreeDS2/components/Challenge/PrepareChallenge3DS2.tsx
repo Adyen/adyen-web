@@ -109,8 +109,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 // Set UI error & call onError callback
                 this.setError(
                     {
-                        errorInfo: `${Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS}: ${this.props.i18n.get('err.gen.9102')}`,
-                        errorObj: this.state.challengeData
+                        errorInfo: `${Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS}: ${this.props.i18n.get('err.gen.9102')}`
+                        // errorObj: this.state.challengeData // TODO Decide if we want to expose this data
                     },
                     true
                 );
@@ -146,8 +146,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                     errorInfo:
                         errorMsg.indexOf(MISSING_TOKEN_IN_ACTION_MSG) > -1
                             ? `${Analytics3DS2Errors.ACTION_IS_MISSING_TOKEN}: ${this.props.i18n.get('err.gen.9102')}`
-                            : `${Analytics3DS2Errors.TOKEN_DECODE_OR_PARSING_FAILED}:${this.props.i18n.get('err.gen.9102')}`,
-                    errorObj: this.state.challengeData
+                            : `${Analytics3DS2Errors.TOKEN_DECODE_OR_PARSING_FAILED}:${this.props.i18n.get('err.gen.9102')}`
+                    // errorObj: this.state.challengeData // TODO Decide if we want to expose this data
                 },
                 true
             );
@@ -227,13 +227,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
         // Decide whether to call this.props.onError
         if (isFatal) {
-            this.props.onError(
-                new AdyenCheckoutError(
-                    ERROR,
-                    errorInfoObj.errorInfo
-                    // { cause: errorInfoObj.errorObj }
-                )
-            );
+            this.props.onError(new AdyenCheckoutError(ERROR, errorInfoObj.errorInfo, { cause: errorInfoObj.errorObj }));
         }
     }
 
@@ -273,6 +267,32 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                                     )
                                 );
                             }
+                        }
+
+                        /**
+                         * An object has been returned, parsed & accepted as legit (according to the rules in getProcessMessageHandler),
+                         * but the result prop on that object is missing
+                         */
+                        if (!challenge.result) {
+                            this.setError(
+                                {
+                                    errorInfo: `${THREEDS2_CHALLENGE_ERROR}:  ${this.props.i18n.get('3ds.chal.805')}`,
+                                    errorObj: challenge as unknown as ErrorObject
+                                },
+                                true
+                            );
+
+                            // Send error to analytics endpoint
+                            this.props.onSubmitAnalytics({
+                                type: THREEDS2_ERROR,
+                                code: Analytics3DS2Errors.CHALLENGE_RESOLVED_WITHOUT_RESULT_PROP,
+                                errorType: ANALYTICS_API_ERROR,
+                                message: `${THREEDS2_CHALLENGE_ERROR}: challenge resolved without a "result" object`
+                            });
+
+                            console.debug('### PrepareChallenge3DS2::exiting:: challenge resolved without a "result" object');
+
+                            return;
                         }
 
                         // Proceed with call to onAdditionalDetails (except for in 3DS2InMDFlow)

@@ -55,6 +55,7 @@ class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2Sta
             .then((resolveObject: ThreeDS2FlowObject) => {
                 window.removeEventListener('message', this.processMessageHandler);
                 this.props.onCompleteChallenge(resolveObject);
+                // this.props.onCompleteChallenge({ foo: 'barr' } as unknown as ThreeDS2FlowObject);
             })
             /** Catch, for when Challenge times-out */
             .catch((rejectObject: ThreeDS2FlowObject) => {

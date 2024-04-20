@@ -63,7 +63,8 @@ export enum Analytics3DS2Errors {
     NO_TRANSSTATUS = '801', // Challenge has resulted in an error (no transStatus could be retrieved by the backend)
     NO_DETAILS_FOR_FRICTIONLESS_OR_REFUSED = '802', // callSubmit3DS2Fingerprint has received a response indicating either a "frictionless" flow, or a "refused" response, but without a details object
     NO_COMPONENT_FOR_ACTION = '803', // callSubmit3DS2Fingerprint cannot find a component to handle the action response
-    NO_ACTION_FOR_CHALLENGE = '804' // callSubmit3DS2Fingerprint has received a response indicating a "challenge" but without an action object
+    NO_ACTION_FOR_CHALLENGE = '804', // callSubmit3DS2Fingerprint has received a response indicating a "challenge" but without an action object
+    CHALLENGE_RESOLVED_WITHOUT_RESULT_PROP = '805' // The challenge process has happened, an object has been returned, parsed & accepted as legit, but the result prop on that object is either missing or doesn't have a transStatus prop
 }
 
 /**
