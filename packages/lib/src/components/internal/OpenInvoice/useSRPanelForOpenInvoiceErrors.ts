@@ -143,10 +143,10 @@ const useSRPanelForOpenInvoiceErrors = ({ errors, data, props, isValidating }: U
                 default:
                     break;
             }
-        } catch (e) {
-            console.warn('Error in useSafeSRPanelForErrors', e);
+        } catch (_) {
+            // We don't handle the error related to the sr panel, let it fail silently.
         }
-    }, [errors, data.billingAddress, data.deliveryAddress]);
+    }, [errors, data]);
 };
 
 export default useSRPanelForOpenInvoiceErrors;
