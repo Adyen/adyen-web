@@ -1,5 +1,5 @@
-import { ALLOWED_ANALYTICS_DATA, AnalyticsData, AnalyticsObject, CreateAnalyticsObject } from './types';
-import { ANALYTICS_ACTION_STR, ANALYTICS_VALIDATION_ERROR_STR, errorCodeMapping } from './constants';
+import { AnalyticsData, AnalyticsObject, CreateAnalyticsObject } from './types';
+import { ANALYTICS_ACTION_STR, ANALYTICS_VALIDATION_ERROR_STR, ALLOWED_ANALYTICS_DATA, errorCodeMapping } from './constants';
 import uuid from '../../utils/uuid';
 import { ERROR_CODES, ERROR_MSG_INCOMPLETE_FIELD } from '../Errors/constants';
 
@@ -55,9 +55,9 @@ const mapErrorCodesForAnalytics = (errorCode: string, target: string) => {
     return errorCodeMapping[errorCode] ?? errorCode;
 };
 
-export const processAnalyticsData = (analyticsData: AnalyticsData) => {
-    return Object.keys(analyticsData).reduce((r, e) => {
-        if (ALLOWED_ANALYTICS_DATA.includes(e)) r[e] = analyticsData[e];
-        return r;
+export const processAnalyticsData = (analyticsData: AnalyticsData): AnalyticsData => {
+    return Object.keys(analyticsData).reduce((acc, prop) => {
+        if (ALLOWED_ANALYTICS_DATA.includes(prop)) acc[prop] = analyticsData[prop];
+        return acc;
     }, {});
 };

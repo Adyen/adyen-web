@@ -1,6 +1,7 @@
 import { httpPost } from '../http';
 import collectId, { FAILURE_MSG } from './collect-id';
 import { ANALYTICS_PATH } from '../../Analytics/constants';
+import { CollectIdEvent } from './types';
 
 jest.mock('../http');
 
@@ -30,7 +31,7 @@ beforeEach(() => {
 
 test('Should lead to a rejected promise since no clientKey is provided', () => {
     const log = collectId(BASE_CONFIGURATION);
-    log({})
+    log({} as CollectIdEvent)
         .then()
         .catch(e => {
             expect(e).toEqual('no-client-key');
@@ -49,7 +50,7 @@ test('Should fail since path is incorrect', () => {
     };
 
     const log = collectId(configuration);
-    log({})
+    log({} as CollectIdEvent)
         .then(val => {
             expect(val).toEqual(FAILURE_MSG);
         })
