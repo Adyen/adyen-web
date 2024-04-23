@@ -62,7 +62,7 @@ const meta: Meta = {
 export const Default: StoryObj = {
     render: args => {
         return (
-            <CoreProvider loadingContext={'test'} i18n={new Language('en-US')} resources={new Resources()}>
+            <CoreProvider loadingContext={'test'} i18n={new Language('en-US')} resources={global.resources}>
                 <PhoneInput
                     items={COUNTRIES.map(formatPrefixName).filter(Boolean)}
                     data={{ phonePrefix: COUNTRIES[0].id }}

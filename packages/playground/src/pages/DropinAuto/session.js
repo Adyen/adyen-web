@@ -22,7 +22,11 @@ export async function initSession() {
         session,
 
         locale: shopperLocale,
-        _translationEnvironment: 'local',
+        _environmentUrls: {
+            cdn: {
+                translations: '/'
+            }
+        },
 
         // Events
         beforeSubmit: (data, component, actions) => {

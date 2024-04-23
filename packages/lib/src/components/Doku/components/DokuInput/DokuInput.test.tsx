@@ -3,12 +3,11 @@ import { h } from 'preact';
 import { render, screen } from '@testing-library/preact';
 import DokuInput from './DokuInput';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
-import { Resources } from '../../../../core/Context/Resources';
 
 describe('DokuInput', () => {
     const customRender = ui => {
         return render(
-            <CoreProvider i18n={global.i18n} loadingContext="test" resources={new Resources()}>
+            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
                 {ui}
             </CoreProvider>
         );

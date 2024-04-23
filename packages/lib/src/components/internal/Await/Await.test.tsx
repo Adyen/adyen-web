@@ -3,7 +3,6 @@ import checkPaymentStatus from '../../../core/Services/payment-status';
 import Await from './Await';
 import { fireEvent, render, screen, waitFor } from '@testing-library/preact';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
-import { Resources } from '../../../core/Context/Resources';
 import { AwaitComponentProps } from './types';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
@@ -33,7 +32,7 @@ describe('Await', () => {
     const renderAwait = (props: AwaitComponentProps) => {
         return render(
             // @ts-ignore ignore
-            <CoreProvider i18n={global.i18n} loadingContext="test" resources={new Resources()}>
+            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
                 <SRPanelProvider srPanel={srPanel}>
                     <Await {...props} />
                 </SRPanelProvider>

@@ -1,4 +1,4 @@
-import { FALLBACK_CDN_CONTEXT } from '../Environment/Environment';
+import AdyenCheckoutError from '../Errors/AdyenCheckoutError';
 
 export interface ImageOptions {
     extension?: string;
@@ -17,7 +17,10 @@ export type GetImageFnType = (name) => string;
 export class Resources {
     private readonly resourceContext: string;
 
-    constructor(cdnContext: string = FALLBACK_CDN_CONTEXT) {
+    constructor(cdnContext: string) {
+        if (!cdnContext) {
+            throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Resources: cdnContext is not valid');
+        }
         this.resourceContext = cdnContext;
     }
 
@@ -32,7 +35,7 @@ export class Resources {
     }: ImageOptions): string => `${resourceContext}images/${imageFolder}${subFolder}${parentFolder}${name}${size}.${extension}`;
 
     private getImageUrl =
-        ({ resourceContext = FALLBACK_CDN_CONTEXT, extension = 'svg', ...options }: ImageOptions): GetImageFnType =>
+        ({ resourceContext, extension = 'svg', ...options }: ImageOptions): GetImageFnType =>
         (name: string): string => {
             const imageOptions: ImageOptions = {
                 extension,

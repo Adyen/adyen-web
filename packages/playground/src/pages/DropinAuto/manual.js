@@ -15,7 +15,12 @@ export async function initManual() {
         paymentMethodsResponse,
 
         locale: shopperLocale,
-        _translationEnvironment: 'local',
+
+        _environmentUrls: {
+            cdn: {
+                translations: '/'
+            }
+        },
 
         environment: process.env.__CLIENT_ENV__,
         installmentOptions: {

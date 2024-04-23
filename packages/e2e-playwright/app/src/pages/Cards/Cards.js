@@ -10,9 +10,13 @@ const initCheckout = async () => {
         amount,
         clientKey: process.env.__CLIENT_KEY__,
         locale: shopperLocale,
-        _translationEnvironment: 'local',
         countryCode,
         environment: 'test',
+        _environmentUrls: {
+            cdn: {
+                translations: '/'
+            }
+        },
         showPayButton: true,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
