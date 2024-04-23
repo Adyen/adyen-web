@@ -80,7 +80,7 @@ export class UIElement<P extends UIElementProps = any> extends BaseElement<P> im
         this.props.modules?.analytics.sendAnalytics(component, analyticsObj, uiElementProps);
     }
 
-    private onSubmit(): void {
+    protected onSubmit(): void {
         //TODO: refactor this, instant payment methods are part of Dropin logic not UIElement
         if (this.props.isInstantPayment) {
             const dropinElementRef = this.elementRef as DropinElement;
