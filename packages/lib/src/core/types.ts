@@ -105,14 +105,6 @@ export interface CoreConfiguration {
      */
     srConfig?: SRPanelConfig;
 
-    // /**
-    //  * @internal
-    //  */
-    // //TODO: maybe type this?
-    // cdnContext?: string;
-    //
-    // resourceEnvironment?: string;
-
     analytics?: AnalyticsOptions;
 
     risk?: RiskModuleOptions;
