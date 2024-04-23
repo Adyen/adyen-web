@@ -78,8 +78,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 },
                 onBinLookup: obj => {
                     console.log('### Cards::onBinLookup:: obj=', obj);
-                },
-                onFieldValid: obj => console.log('### Cards::onFieldValid:: obj', obj)
+                }
             })
             .mount('.card-field');
     }
