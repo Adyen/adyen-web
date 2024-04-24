@@ -95,8 +95,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                     type: THREEDS2_ERROR,
                     code: Analytics3DS2Errors.TOKEN_IS_MISSING_ACSURL,
                     errorType: ANALYTICS_API_ERROR,
-                    message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing a valid acsURL property`,
-                    metadata: { acsURL } // NEW TODO - check acsURL isn't secret
+                    message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing a valid acsURL property`
+                    // metadata: { acsURL } // NEW TODO - check acsURL isn't secret
                 };
                 this.props.onSubmitAnalytics(errorCodeObject);
 
