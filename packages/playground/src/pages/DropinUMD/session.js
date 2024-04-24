@@ -23,7 +23,11 @@ export async function initSession() {
 
         locale: shopperLocale,
 
-        _translationEnvironment: 'local',
+        _environmentUrls: {
+            cdn: {
+                translations: '/'
+            }
+        },
 
         onPaymentCompleted: handleOnPaymentCompleted,
         onPaymentFailed: handleOnPaymentFailed,

@@ -1,7 +1,6 @@
 import { h } from 'preact';
 import { fireEvent, render, screen } from '@testing-library/preact';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
-import { Resources } from '../../../core/Context/Resources';
 import userEvent from '@testing-library/user-event';
 import PhoneInput from './PhoneInput';
 import { PhoneInputProps } from './types';
@@ -20,7 +19,7 @@ describe('PhoneInput', () => {
     const renderPhoneInput = (props: PhoneInputProps = defaultProps) => {
         return render(
             // @ts-ignore ignore
-            <CoreProvider i18n={global.i18n} loadingContext="test" resources={new Resources()}>
+            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
                 <PhoneInput {...props} />
             </CoreProvider>
         );

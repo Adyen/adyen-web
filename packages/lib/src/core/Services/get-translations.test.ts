@@ -18,7 +18,7 @@ describe('Service: getTranslations', () => {
         };
         mockedHttpGet.mockResolvedValue(mockedEnUS);
 
-        const translation = await getTranslations(LOADING_CONTEXT, ADYEN_WEB_VERSION, 'en-US', 'remote');
+        const translation = await getTranslations(LOADING_CONTEXT, ADYEN_WEB_VERSION, 'en-US');
 
         expect(mockedHttpGet).toHaveBeenCalledTimes(1);
         expect(mockedHttpGet).toHaveBeenCalledWith({
@@ -42,13 +42,13 @@ describe('Service: getTranslations', () => {
             }
         };
 
-        const translation = await getTranslations(LOADING_CONTEXT, ADYEN_WEB_VERSION, 'en-US', 'local', customTranslation);
+        const translation = await getTranslations(LOADING_CONTEXT, ADYEN_WEB_VERSION, 'en-US', customTranslation);
 
         expect(mockedHttpGet).toHaveBeenCalledTimes(1);
         expect(mockedHttpGet).toHaveBeenCalledWith({
             errorLevel: 'fatal',
             errorMessage: 'Translations: Couldn\'t fetch translation for the locale "en-US".',
-            loadingContext: '/',
+            loadingContext: 'https://checkoutshopper-test.adyen.com/checkoutshopper/',
             path: 'sdk/6.0.0/translations/en-US.json'
         });
         expect(translation).toStrictEqual(mockedEnUS);
@@ -61,15 +61,13 @@ describe('Service: getTranslations', () => {
             }
         };
 
-        const translation = await getTranslations(LOADING_CONTEXT, ADYEN_WEB_VERSION, 'en-CA', 'local', customTranslation);
+        const translation = await getTranslations(LOADING_CONTEXT, ADYEN_WEB_VERSION, 'en-CA', customTranslation);
 
         expect(translation).toStrictEqual({});
         expect(mockedHttpGet).toHaveBeenCalledTimes(0);
     });
 
     test('should throw an error and not make http request if locale is not supported', () => {
-        expect(() => getTranslations(LOADING_CONTEXT, ADYEN_WEB_VERSION, 'en-CA', 'local')).toThrowError(
-            "Translations: Locale 'en-CA' is not supported"
-        );
+        expect(() => getTranslations(LOADING_CONTEXT, ADYEN_WEB_VERSION, 'en-CA')).toThrowError("Translations: Locale 'en-CA' is not supported");
     });
 });

@@ -19,7 +19,11 @@ const initCheckout = async () => {
         paymentMethodsResponse,
         clientKey: process.env.__CLIENT_KEY__,
         locale: shopperLocale,
-        _translationEnvironment: 'local',
+        _environmentUrls: {
+            cdn: {
+                translations: '/'
+            }
+        },
         countryCode,
         environment: 'test',
         showPayButton: true,

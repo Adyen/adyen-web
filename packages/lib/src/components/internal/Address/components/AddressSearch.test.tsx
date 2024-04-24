@@ -3,7 +3,6 @@ import userEvent from '@testing-library/user-event';
 import { render, screen, waitFor } from '@testing-library/preact';
 import AddressSearch from './AddressSearch';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
-import { Resources } from '../../../../core/Context/Resources';
 
 const ADDRESS_LOOKUP_RESULT = [
     {
@@ -25,7 +24,7 @@ const ADDRESS_LOOKUP_RESULT = [
 
 const customRender = (ui: h.JSX.Element) => {
     return render(
-        <CoreProvider i18n={global.i18n} loadingContext="test" resources={new Resources()}>
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
             {ui}
         </CoreProvider>
     );

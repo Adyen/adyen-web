@@ -4,10 +4,9 @@ import { SUPPORTED_LOCALES } from '../../language/constants';
 import AdyenCheckoutError from '../Errors/AdyenCheckoutError';
 
 export default function getTranslations(
-    cdnContext: string,
+    cdnTranslationsUrl: string,
     adyenWebVersion: string,
     locale: string,
-    translationEnvironment: 'local' | 'remote',
     customTranslation: CustomTranslations = {}
 ): Promise<Translations> {
     const isUsingCustomLocaleNotSupportedByAdyen = !SUPPORTED_LOCALES.includes(locale) && Object.keys(customTranslation).includes(locale);
@@ -24,7 +23,7 @@ export default function getTranslations(
     }
 
     const options: HttpOptions = {
-        loadingContext: translationEnvironment === 'local' ? '/' : cdnContext,
+        loadingContext: cdnTranslationsUrl,
         errorLevel: 'fatal',
         errorMessage: `Translations: Couldn't fetch translation for the locale "${locale}".`,
         path: `sdk/${adyenWebVersion}/translations/${locale}.json`
