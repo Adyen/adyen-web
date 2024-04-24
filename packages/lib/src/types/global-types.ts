@@ -359,7 +359,7 @@ export type RawPaymentResponse = PaymentResponseData &
         [key: string]: any;
     };
 
-export type ActionDescriptionType = 'qr-code-loaded' | 'polling-started' | 'fingerprint-iframe-loaded' | string;
+export type ActionDescriptionType = 'qr-code-loaded' | 'polling-started' | '3DS2 fingerprint iframe loaded' | '3DS2 challenge iframe loaded';
 
 export interface ActionHandledReturnObject {
     componentType: string;

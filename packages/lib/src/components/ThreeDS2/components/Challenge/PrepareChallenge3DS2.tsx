@@ -20,7 +20,7 @@ import {
     THREEDS2_ERROR
 } from '../../constants';
 import { isValidHttpUrl } from '../../../../utils/isValidURL';
-import { ANALYTICS_API_ERROR, Analytics3DS2Errors } from '../../../../core/Analytics/constants';
+import { ANALYTICS_API_ERROR, ANALYTICS_NETWORK_ERROR, Analytics3DS2Errors } from '../../../../core/Analytics/constants';
 import { ErrorObject } from '../../../../core/Errors/types';
 
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
@@ -53,7 +53,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
     }
 
     public onActionHandled = (rtnObj: ActionHandledReturnObject) => {
-        this.props.onSubmitAnalytics({ type: THREEDS2_FULL, message: rtnObj.actionDescription });
+        // Leads to an "iframe loaded" log action
+        this.props.onSubmitAnalytics({ type: THREEDS2_FULL, message: rtnObj.actionDescription }); // TODO send subtype
 
         this.props.onActionHandled(rtnObj);
     };
@@ -62,6 +63,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         this.props.onSubmitAnalytics({
             type: THREEDS2_FULL,
             message: msg
+            // TODO send subtype
         });
     };
 
@@ -177,32 +179,33 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 console.debug('### PrepareChallenge3DS2::errorCodeObject::', errorCodeObject);
             }
 
-            // TODO - do we want to know about these events (timeout or no transStatus - which are "valid" 3DS2 scenarios) from an analytics perspective, and, if so, how do we classify them? ...errors? info?
-            // let analyticsObject: SendAnalyticsObject;
-            // const finalResObject = errorCodeObject ? errorCodeObject : resultObj;
-            // if (finalResObject.errorCode) {
-            //     const errorTypeAndCode = {
-            //         code: finalResObject.errorCode === 'timeout' ? Analytics3DS2Errors.THREEDS2_TIMEOUT : Analytics3DS2Errors.NO_TRANSSTATUS,
-            //         errorType: finalResObject.errorCode === 'timeout' ? ANALYTICS_NETWORK_ERROR : ANALYTICS_INTERNAL_ERROR // TODO - for a timeout is this really a Network error? Or is it a "ThirdParty" error i.e. the ACS has had a problem serving the fingerprinting page in a timely manner?
-            //     };
-            //
-            //     // Challenge process has timed out,
-            //     // or, It's an error reported by the backend 'cos no transStatus could be retrieved // TODO - check logs to see if this *ever* happens
-            //     analyticsObject = {
-            //         type: THREEDS2_ERROR,
-            //         message: finalResObject.message,
-            //         ...errorTypeAndCode
-            //     };
-            //
-            //     // Send info about the error to analytics endpoint
-            //     this.props.onSubmitAnalytics(analyticsObject);
-            // }
+            let analyticsObject: SendAnalyticsObject;
+
+            /** Are we in an "error" i.e. timeout or no transStatus, scenario? If so, submit analytics about it */
+            const finalResObject = errorCodeObject ? errorCodeObject : resultObj;
+            if (finalResObject.errorCode) {
+                const errorTypeAndCode = {
+                    code: finalResObject.errorCode === 'timeout' ? Analytics3DS2Errors.THREEDS2_TIMEOUT : Analytics3DS2Errors.NO_TRANSSTATUS,
+                    errorType: finalResObject.errorCode === 'timeout' ? ANALYTICS_NETWORK_ERROR : ANALYTICS_API_ERROR
+                };
+
+                // Challenge process has timed out,
+                // or, It's an error reported by the backend 'cos no transStatus could be retrieved // TODO - check logs to see if this *ever* happens
+                analyticsObject = {
+                    type: THREEDS2_ERROR,
+                    message: (finalResObject as ErrorCodeObject).message,
+                    ...errorTypeAndCode
+                };
+
+                // Send error to analytics endpoint
+                this.props.onSubmitAnalytics(analyticsObject);
+            }
 
             // Create log object - the process is completed, one way or another
-            const analyticsObject: SendAnalyticsObject = {
+            analyticsObject = {
                 type: THREEDS2_FULL,
-                message: `${THREEDS2_NUM} challenge has completed`,
-                metadata: { ...resultObj }
+                message: `${THREEDS2_NUM} challenge has completed`
+                // TODO send subtype and result
             };
 
             // Send log to analytics endpoint
