@@ -79,7 +79,8 @@ const setupObj = {
     implementationType: null,
     maskSecurityCode: false,
     disableIOSArrowKeys: false,
-    placeholders: cardPlaceholders
+    placeholders: cardPlaceholders,
+    exposeExpiryDate: false
 };
 
 /**
