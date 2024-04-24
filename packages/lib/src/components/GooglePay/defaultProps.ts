@@ -8,9 +8,9 @@ const defaultProps: GooglePayConfiguration = {
 
     // ButtonOptions
     // https://developers.google.com/pay/api/web/reference/object#ButtonOptions
-    buttonColor: 'default' as google.payments.api.ButtonColor, // default/black/white
-    buttonType: 'long' as google.payments.api.ButtonType, // long/short
-    buttonSizeMode: undefined,
+    buttonColor: 'default',
+    buttonType: 'buy',
+    buttonSizeMode: 'fill',
 
     // PaymentDataRequest
     configuration: {
@@ -28,7 +28,7 @@ const defaultProps: GooglePayConfiguration = {
         currency: 'USD'
     },
 
-    totalPriceStatus: 'FINAL' as google.payments.api.TotalPriceStatus,
+    totalPriceStatus: 'FINAL',
 
     // Callbacks
     onClick: resolve => resolve(),
