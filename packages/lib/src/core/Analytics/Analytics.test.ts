@@ -75,7 +75,7 @@ describe('Analytics initialisation and event queue', () => {
         expect(logEventPromiseMock).toHaveBeenCalledWith({ ...setUpEvent });
     });
 
-    test.only('Calls the collectId endpoint by default, adding expected fields, including sanitising the passed analyticsData object', async () => {
+    test('Calls the collectId endpoint by default, adding expected fields, including sanitising the passed analyticsData object', async () => {
         const applicationInfo = {
             merchantApplication: {
                 name: 'merchant_application_name',
