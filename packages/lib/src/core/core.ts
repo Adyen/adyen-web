@@ -3,7 +3,6 @@ import UIElement from '../components/internal/UIElement/UIElement';
 import RiskModule from './RiskModule';
 import PaymentMethods from './ProcessResponse/PaymentMethods';
 import getComponentForAction from './ProcessResponse/PaymentAction';
-import { resolveEnvironment } from './Environment';
 import Analytics from './Analytics';
 import { assertConfigurationPropertiesAreValid, processGlobalOptions } from './utils';
 import Session from './CheckoutSession';
@@ -19,7 +18,8 @@ import { DEFAULT_LOCALE } from '../language/constants';
 import getTranslations from './Services/get-translations';
 import { defaultProps } from './core.defaultProps';
 import { formatCustomTranslations, formatLocale } from '../language/utils';
-import { ANALYTICS_ENVIRONMENTS, API_ENVIRONMENTS, CDN_ENVIRONMENTS } from './Environment/constants';
+import { resolveEnvironments } from './Environment';
+
 import type { AdditionalDetailsStateData, PaymentAction, PaymentResponseData } from '../types/global-types';
 import type { CoreConfiguration, ICore } from './types';
 import type { Translations } from '../language/types';
@@ -71,13 +71,15 @@ class Core implements ICore {
 
         this.setOptions({ ...defaultProps, ...props });
 
-        this.loadingContext = resolveEnvironment(this.options.environment, API_ENVIRONMENTS, this.options._environmentUrls?.api);
-        this.analyticsContext = resolveEnvironment(this.options.environment, ANALYTICS_ENVIRONMENTS, this.options._environmentUrls?.analytics);
-        this.cdnImagesUrl = resolveEnvironment(this.options.environment, CDN_ENVIRONMENTS, this.options._environmentUrls?.cdn?.images);
-        this.cdnTranslationsUrl =
-            process.env.NODE_ENV === 'development'
-                ? '/'
-                : resolveEnvironment(this.options.environment, CDN_ENVIRONMENTS, this.options._environmentUrls?.cdn?.translations);
+        const { apiUrl, analyticsUrl, cdnImagesUrl, cdnTranslationsUrl } = resolveEnvironments(
+            this.options.environment,
+            this.options._environmentUrls
+        );
+
+        this.loadingContext = apiUrl;
+        this.analyticsContext = analyticsUrl;
+        this.cdnImagesUrl = cdnImagesUrl;
+        this.cdnTranslationsUrl = cdnTranslationsUrl;
 
         this.session = this.options.session && new Session(this.options.session, this.options.clientKey, this.loadingContext);
 

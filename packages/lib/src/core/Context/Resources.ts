@@ -19,7 +19,7 @@ export class Resources {
 
     constructor(cdnContext: string) {
         if (!cdnContext) {
-            throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Resources: cdnContext is not valid');
+            throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Resources module: "environmentsUrls.cdn" is not a valid URL');
         }
         this.resourceContext = cdnContext;
     }

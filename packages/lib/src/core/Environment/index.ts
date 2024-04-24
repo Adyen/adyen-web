@@ -1,1 +1,1 @@
-export { resolveEnvironment } from './Environment';
+export { resolveEnvironments } from './Environment';
