@@ -8,9 +8,10 @@ import {
     CbObjOnFieldValid,
     CbObjOnFocus,
     CbObjOnLoad,
-    CbObjOnBinLookup
+    CbObjOnBinLookup,
+    CVCPolicyType,
+    DatePolicyType
 } from '../internal/SecuredFields/lib/types';
-import { CVCPolicyType, DatePolicyType } from '../internal/SecuredFields/lib/types';
 import { ClickToPayConfiguration } from '../internal/ClickToPay/types';
 
 export interface CardElementProps extends UIElementProps {
@@ -145,6 +146,11 @@ export interface CardElementProps extends UIElementProps {
     onBinLookup?: (event: CbObjOnBinLookup) => void;
 
     [key: string]: any; // TODO get rid of this and explicitly declare props
+
+    /**
+     * Allows SF to return an unencrypted expiryDate
+     */
+    exposeExpiryDate?: boolean;
 }
 
 export type SocialSecurityMode = 'show' | 'hide' | 'auto';
