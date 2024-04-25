@@ -7,7 +7,6 @@ import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
 import { MockReactApp } from './MockReactApp';
-import getTranslationFile from '../../config/getTranslation';
 import { searchFunctionExample } from '../../utils';
 
 const onlyShowCard = false;
@@ -35,12 +34,9 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     window.checkout = await AdyenCheckout({
         amount,
         countryCode,
-        resourceEnvironment: 'test',
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
         locale: shopperLocale,
-        translationFile: getTranslationFile(shopperLocale),
-        // translationFile: nl_NL
         environment: process.env.__CLIENT_ENV__,
         showPayButton: true,
         onSubmit: handleSubmit,

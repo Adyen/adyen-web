@@ -1,5 +1,3 @@
-import { en_US } from './locales';
-
 export const SUPPORTED_LOCALES = [
     'ar',
     'cs-CZ',
@@ -30,4 +28,3 @@ export const SUPPORTED_LOCALES = [
 ];
 
 export const DEFAULT_LOCALE = 'en-US';
-export const DEFAULT_TRANSLATION_FILE = en_US;

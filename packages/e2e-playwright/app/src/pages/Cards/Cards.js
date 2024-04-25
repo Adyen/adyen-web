@@ -12,6 +12,11 @@ const initCheckout = async () => {
         locale: shopperLocale,
         countryCode,
         environment: 'test',
+        _environmentUrls: {
+            cdn: {
+                translations: '/'
+            }
+        },
         showPayButton: true,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,

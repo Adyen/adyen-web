@@ -6,6 +6,11 @@ import { UIElementProps } from './types';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { Resources } from '../../../core/Context/Resources';
 
+// import getTranslations from '../../../core/Services/get-translations';
+jest.mock('../../../core/Services/get-translations');
+// const mockedGetTranslations = getTranslations as jest.Mock;
+// mockedGetTranslations.mockResolvedValue({});
+
 interface MyElementProps extends UIElementProps {
     challengeWindowSize?: string;
 }

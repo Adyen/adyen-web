@@ -62,6 +62,10 @@ To run the development environment:
   yarn start
   ```
 
+## Localization
+
+We include UI localizations for many languages. You can check the languages and their respective translations [here](/packages/server/translations/). Furthermore, it is possible to customize the current translation [replacing the default text with your own text](https://docs.adyen.com/online-payments/build-your-integration/?platform=Web&integration=Components&version=5.60.0#customize-localization) in case you want that.  
+
 ## Styling
 Adyen Web is themeable and uses CSS variables that can be overridden in order to achieve the desired style.
 

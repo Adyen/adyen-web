@@ -1,8 +1,9 @@
 import { render, screen } from '@testing-library/preact';
 import { AdyenCheckout } from '../../core/AdyenCheckout';
-
 import Dropin from '../Dropin';
 import Blik from './Blik';
+
+jest.mock('../../core/Services/get-translations');
 
 describe('Blik', () => {
     const createDropin = async paymentMethodsResponse => {

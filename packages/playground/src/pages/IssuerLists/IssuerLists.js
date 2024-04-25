@@ -16,7 +16,6 @@ import { createSession } from '../../services';
 import { shopperLocale, countryCode, returnUrl } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
-import getTranslationFile from '../../config/getTranslation';
 
 (async () => {
     const session = await createSession({
@@ -33,7 +32,6 @@ import getTranslationFile from '../../config/getTranslation';
         session,
         clientKey: process.env.__CLIENT_KEY__,
         locale: shopperLocale,
-        translationFile: getTranslationFile(shopperLocale),
         environment: process.env.__CLIENT_ENV__,
         onError: console.error
     });

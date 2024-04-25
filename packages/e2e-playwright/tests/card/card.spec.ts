@@ -1,6 +1,6 @@
 import { test, expect } from '../../pages/cards/card.fixture';
 import { REGULAR_TEST_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE } from '../utils/constants';
-import LANG from '../../../lib/src/language/locales/en-US.json';
+import LANG from '../../../server/translations/en-US.json';
 
 const PAN_ERROR_NOT_VALID = LANG['cc.num.902'];
 const PAN_ERROR_EMPTY = LANG['cc.num.900'];

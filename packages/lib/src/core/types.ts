@@ -1,4 +1,4 @@
-import { CustomTranslations, Translation } from '../language/types';
+import { CustomTranslations } from '../language/types';
 import {
     PaymentAmountExtended,
     Order,
@@ -24,23 +24,14 @@ import { onOrderCancelType } from '../components/Dropin/types';
 
 export interface ICore {
     initialize(): Promise<ICore>;
-
     register(...items: NewableComponent[]): void;
-
     update(options: CoreConfiguration): Promise<ICore>;
-
     remove(component): ICore;
-
     submitDetails(details: any): void;
-
     getCorePropsForComponent(): any;
-
     getComponent(txVariant: string): NewableComponent | undefined;
-
     createFromAction(action: PaymentAction, options: any): any;
-
     storeElementReference(element: UIElement): void;
-
     options: CoreConfiguration;
     paymentMethodsResponse: PaymentMethods;
     session?: Session;
@@ -56,17 +47,8 @@ export interface CoreConfiguration {
     environment?: AdyenEnvironment;
 
     /**
-     * Used internally by Pay By Link in order to set its own URL's instead of using the ones mapped in our codebase.
-     *
-     * @internal
-     */
-    environmentUrls?: {
-        api?: string;
-        analytics?: string;
-    };
-
-    /**
      * Show or hides a Pay Button for each payment method
+     * @default true
      */
     showPayButton?: boolean;
 
@@ -81,12 +63,6 @@ export interface CoreConfiguration {
      * For adding a custom locale, see {@link https://docs.adyen.com/checkout/components-web/localization-components#create-localization | Create localization}.*
      */
     locale?: string;
-
-    /**
-     * Translation file which contains the translations to a certain locale.
-     * @default en_US
-     */
-    translationFile?: Translation;
 
     /**
      * Custom translations and localizations
@@ -128,14 +104,6 @@ export interface CoreConfiguration {
      * Screen Reader configuration
      */
     srConfig?: SRPanelConfig;
-
-    /**
-     * @internal
-     */
-    //TODO: maybe type this?
-    cdnContext?: string;
-
-    resourceEnvironment?: string;
 
     analytics?: AnalyticsOptions;
 
@@ -244,4 +212,18 @@ export interface CoreConfiguration {
      * @internal
      */
     loadingContext?: string;
+
+    /**
+     * Used internally in order to set different URL's instead of using the ones mapped in our codebase.
+     *
+     * @internal
+     */
+    _environmentUrls?: {
+        api?: string;
+        analytics?: string;
+        cdn?: {
+            images?: string;
+            translations?: string;
+        };
+    };
 }

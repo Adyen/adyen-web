@@ -1,47 +1,57 @@
-import { resolveCDNEnvironment, resolveEnvironment } from './Environment';
+import { resolveEnvironments } from './Environment';
 
-describe('Resolving API environment', () => {
-    test('should return the proper URL according to the environment type', () => {
-        expect(resolveEnvironment('test')).toBe('https://checkoutshopper-test.adyen.com/checkoutshopper/');
-        expect(resolveEnvironment('TEST')).toBe('https://checkoutshopper-test.adyen.com/checkoutshopper/');
-        expect(resolveEnvironment('live')).toBe('https://checkoutshopper-live.adyen.com/checkoutshopper/');
-        expect(resolveEnvironment('LIVE')).toBe('https://checkoutshopper-live.adyen.com/checkoutshopper/');
+describe('Environments', () => {
+    test('should return proper URLs for the "test" environment', () => {
+        const { apiUrl, analyticsUrl, cdnImagesUrl, cdnTranslationsUrl } = resolveEnvironments('test');
+
+        expect(apiUrl).toBe('https://checkoutshopper-test.adyen.com/checkoutshopper/');
+        expect(analyticsUrl).toBe('https://checkoutanalytics-test.adyen.com/checkoutanalytics/');
+        expect(cdnImagesUrl).toBe('https://cdf6519016.cdn.adyen.com/checkoutshopper/');
+        expect(cdnTranslationsUrl).toBe('https://cdf6519016.cdn.adyen.com/checkoutshopper/');
     });
 
-    test('should return environmentUrl if provided', () => {
-        expect(resolveEnvironment('devl', 'http://localhost:8080/checkoutshopper/')).toBe('http://localhost:8080/checkoutshopper/');
-        expect(resolveEnvironment('test', 'https://checkout-zeta.com/checkoutshopper/')).toBe('https://checkout-zeta.com/checkoutshopper/');
+    test('should return proper URLs for the "test" environment even passing upper case string', () => {
+        const { apiUrl, analyticsUrl, cdnImagesUrl, cdnTranslationsUrl } = resolveEnvironments('TEST');
+
+        expect(apiUrl).toBe('https://checkoutshopper-test.adyen.com/checkoutshopper/');
+        expect(analyticsUrl).toBe('https://checkoutanalytics-test.adyen.com/checkoutanalytics/');
+        expect(cdnImagesUrl).toBe('https://cdf6519016.cdn.adyen.com/checkoutshopper/');
+        expect(cdnTranslationsUrl).toBe('https://cdf6519016.cdn.adyen.com/checkoutshopper/');
+    });
+
+    test('should customize the URLs in case they are provided', () => {
+        const environmentUrls = {
+            api: 'https://checkoutshopper-beta.adyen.com/',
+            cdn: {
+                translations: '/',
+                images: 'https://cd91238.cdn.adyen.com/'
+            }
+        };
+
+        const { apiUrl, analyticsUrl, cdnImagesUrl, cdnTranslationsUrl } = resolveEnvironments('test', environmentUrls);
+
+        expect(apiUrl).toBe('https://checkoutshopper-beta.adyen.com/');
+        expect(analyticsUrl).toBe('https://checkoutanalytics-test.adyen.com/checkoutanalytics/');
+        expect(cdnImagesUrl).toBe('https://cd91238.cdn.adyen.com/');
+        expect(cdnTranslationsUrl).toBe('/');
     });
 
     test('should return the live environment URL if environment type is not valid', () => {
-        expect(resolveEnvironment('invalid-environment')).toBe('https://checkoutshopper-live.adyen.com/checkoutshopper/');
+        const { apiUrl, analyticsUrl, cdnImagesUrl, cdnTranslationsUrl } = resolveEnvironments('live-uk');
+
+        expect(apiUrl).toBe('https://checkoutshopper-live.adyen.com/checkoutshopper/');
+        expect(analyticsUrl).toBe('https://checkoutanalytics-live.adyen.com/checkoutanalytics/');
+        expect(cdnImagesUrl).toBe('https://bae81f955b.cdn.adyen.com/checkoutshopper/');
+        expect(cdnTranslationsUrl).toBe('https://bae81f955b.cdn.adyen.com/checkoutshopper/');
     });
 
     test('should return the live environment URL if environment type is not provided', () => {
-        // @ts-ignore It can happen that 'environment' property is not be passed by the merchant
-        expect(resolveEnvironment()).toBe('https://checkoutshopper-live.adyen.com/checkoutshopper/');
-    });
-});
+        // @ts-ignore Testing not passing valid environment
+        const { apiUrl, analyticsUrl, cdnImagesUrl, cdnTranslationsUrl } = resolveEnvironments();
 
-describe('Resolving CDN Environment', () => {
-    test('should return the proper URL according to the environment type', () => {
-        expect(resolveCDNEnvironment('beta')).toBe('https://cdf6519016.cdn.adyen.com/checkoutshopper/');
-        expect(resolveCDNEnvironment('BETA')).toBe('https://cdf6519016.cdn.adyen.com/checkoutshopper/');
-        expect(resolveCDNEnvironment('live')).toBe('https://checkoutshopper-live.adyen.com/checkoutshopper/');
-        expect(resolveCDNEnvironment('LIVE')).toBe('https://checkoutshopper-live.adyen.com/checkoutshopper/');
-    });
-
-    test('should return environmentUrl if provided', () => {
-        expect(resolveCDNEnvironment('devl', 'http://localhost:8080/checkoutshopper/')).toBe('http://localhost:8080/checkoutshopper/');
-        expect(resolveCDNEnvironment('beta', 'https://testing-beta-cdn.com/')).toBe('https://testing-beta-cdn.com/');
-    });
-
-    test('should return the live environment URL if environment type is not valid', () => {
-        expect(resolveCDNEnvironment('invalid-environment')).toBe('https://checkoutshopper-live.adyen.com/checkoutshopper/');
-    });
-
-    test('should return the live environment URL if environment type is not provided', () => {
-        // @ts-ignore It can happen that 'environment' property is not be passed by the merchant
-        expect(resolveCDNEnvironment()).toBe('https://checkoutshopper-live.adyen.com/checkoutshopper/');
+        expect(apiUrl).toBe('https://checkoutshopper-live.adyen.com/checkoutshopper/');
+        expect(analyticsUrl).toBe('https://checkoutanalytics-live.adyen.com/checkoutanalytics/');
+        expect(cdnImagesUrl).toBe('https://bae81f955b.cdn.adyen.com/checkoutshopper/');
+        expect(cdnTranslationsUrl).toBe('https://bae81f955b.cdn.adyen.com/checkoutshopper/');
     });
 });

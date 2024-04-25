@@ -6,7 +6,6 @@ import { AddressData } from '../../../types';
 import { FALLBACK_VALUE } from './constants';
 import { render, screen } from '@testing-library/preact';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
-import { Resources } from '../../../core/Context/Resources';
 
 jest.mock('../../../core/Services/get-dataset');
 (getDataset as jest.Mock).mockImplementation(jest.fn(() => Promise.resolve([{ id: 'NL', name: 'Netherlands' }])));
@@ -24,7 +23,7 @@ describe('Address', () => {
 
     const customRender = ui => {
         return render(
-            <CoreProvider i18n={global.i18n} loadingContext="test" resources={new Resources()}>
+            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
                 {ui}
             </CoreProvider>
         );

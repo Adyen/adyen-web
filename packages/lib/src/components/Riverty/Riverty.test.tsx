@@ -2,7 +2,6 @@ import Riverty from './Riverty';
 import { render, screen } from '@testing-library/preact';
 import { Resources } from '../../core/Context/Resources';
 import { SRPanel } from '../../core/Errors/SRPanel';
-import Language from '../../language';
 import getDataset from '../../core/Services/get-dataset';
 import { termsAndConditionsUrlMap } from './config';
 import type { OpenInvoiceConfiguration } from '../helpers/OpenInvoiceContainer/types';
@@ -19,7 +18,7 @@ const countriesMock = [
 
 describe('Riverty', () => {
     const props: OpenInvoiceConfiguration = {
-        i18n: new Language(),
+        i18n: global.i18n,
         loadingContext: 'test',
         countryCode: 'DE',
         modules: {
