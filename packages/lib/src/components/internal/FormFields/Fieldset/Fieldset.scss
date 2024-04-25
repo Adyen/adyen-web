@@ -26,6 +26,7 @@
     @include index.adyen-checkout-text-subtitle;
 
     color: var(--adyen-checkout-color-label-primary);
+    font-weight: var(--adyen-checkout-text-subtitle-font-weight);
     display: block;
     margin: 0;
     padding: 0 0 var(--adyen-checkout-spacer-060);
