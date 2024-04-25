@@ -10,12 +10,12 @@ export function handleChange(state, component) {
 }
 
 export function handleOnPaymentCompleted(result, element) {
-    alert(`onPaymentCompleted - ${result.resultCode}`);
+    alert(`onPaymentCompleted - ${result?.resultCode}`);
     console.log('onPaymentCompleted', result, element);
 }
 
 export function handleOnPaymentFailed(result, element) {
-    alert(`onPaymentFailed - ${result.resultCode}`);
+    alert(`onPaymentFailed - ${result?.resultCode}`);
     console.log('onPaymentFailed', result, element);
 }
 
