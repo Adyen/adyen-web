@@ -16,6 +16,7 @@ import isMobile from '../../../../../utils/isMobile';
 import Language from '../../../../../language';
 import { PaymentAmount } from '../../../../../types/global-types';
 import './CtPCards.scss';
+import { PREFIX } from '../../../Icon/constants';
 
 type CtPCardsProps = {
     onDisplayCardComponent?(): void;
@@ -112,7 +113,10 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
                         label={getPayButtonLabel(i18n, amount, checkoutCard)}
                         status={status}
                         variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'}
-                        icon={cards.length !== 0 && getImage({ imageFolder: 'components/' })(isCtpPrimaryPaymentMethod ? 'lock' : 'lock_black')}
+                        icon={
+                            cards.length !== 0 &&
+                            getImage({ imageFolder: 'components/' })(isCtpPrimaryPaymentMethod ? `${PREFIX}lock` : `${PREFIX}lock_black`)
+                        }
                         onClick={doCheckout}
                     />
                 </Fragment>
