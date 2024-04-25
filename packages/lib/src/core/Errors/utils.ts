@@ -77,7 +77,6 @@ export const sortErrorsByLayout = ({ errors, i18n, layout, countrySpecificLabels
         if (value) {
             const errObj: ValidationRuleResult | SFError | GenericError = errors[key];
             // console.log('### utils::sortErrorsByLayout:: key', key, 'errObj', errObj);
-
             /**
              * Get error codes - these are used if we need to distinguish between showValidation & onBlur errors
              * - For a ValidationRuleResult or GenericError the error "code" is contained in the errorMessage prop.
