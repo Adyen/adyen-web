@@ -276,7 +276,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                          * An object has been returned, parsed & accepted as legit (according to the rules in getProcessMessageHandler),
                          * but the result prop on that object is missing
                          */
-                        if (challenge.result) {
+                        if (!challenge.result) {
                             this.setError(
                                 {
                                     errorInfo: `${THREEDS2_CHALLENGE_ERROR}:  ${this.props.i18n.get('3ds.chal.805', { values: { result: '"result"' } })}`,
