@@ -89,4 +89,4 @@ export const errorCodeMapping: Record<string, string> = {
 
 export const ANALYTICS_EXPRESS_PAGES_ARRAY = ['cart', 'minicart', 'pdp', 'checkout'];
 
-export const ALLOWED_ANALYTICS_DATA = ['applicationInfo'];
+export const ALLOWED_ANALYTICS_DATA = ['applicationInfo', 'checkoutAttemptId'];

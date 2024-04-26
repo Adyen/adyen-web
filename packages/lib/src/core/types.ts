@@ -24,23 +24,14 @@ import { onOrderCancelType } from '../components/Dropin/types';
 
 export interface ICore {
     initialize(): Promise<ICore>;
-
     register(...items: NewableComponent[]): void;
-
     update(options: CoreConfiguration): Promise<ICore>;
-
     remove(component): ICore;
-
     submitDetails(details: any): void;
-
     getCorePropsForComponent(): any;
-
     getComponent(txVariant: string): NewableComponent | undefined;
-
     createFromAction(action: PaymentAction, options: any): any;
-
     storeElementReference(element: UIElement): void;
-
     options: CoreConfiguration;
     paymentMethodsResponse: PaymentMethods;
     session?: Session;
@@ -54,16 +45,6 @@ export interface CoreConfiguration {
      * Use test. When you're ready to accept live payments, change the value to one of our {@link https://docs.adyen.com/checkout/drop-in-web#testing-your-integration | live environments}.
      */
     environment?: AdyenEnvironment;
-
-    /**
-     * Used internally by Pay By Link in order to set its own URL's instead of using the ones mapped in our codebase.
-     *
-     * @internal
-     */
-    environmentUrls?: {
-        api?: string;
-        analytics?: string;
-    };
 
     /**
      * Show or hides a Pay Button for each payment method
@@ -123,14 +104,6 @@ export interface CoreConfiguration {
      * Screen Reader configuration
      */
     srConfig?: SRPanelConfig;
-
-    /**
-     * @internal
-     */
-    //TODO: maybe type this?
-    cdnContext?: string;
-
-    resourceEnvironment?: string;
 
     analytics?: AnalyticsOptions;
 
@@ -241,11 +214,16 @@ export interface CoreConfiguration {
     loadingContext?: string;
 
     /**
-     *  Distinguish between loading translations directly from CDN or from the local web server
-     *  Used only internally
+     * Used internally in order to set different URL's instead of using the ones mapped in our codebase.
      *
      * @internal
-     * @default 'local' if library is in dev mode ; 'remote' if is bundled
      */
-    _translationEnvironment?: 'local' | 'remote';
+    _environmentUrls?: {
+        api?: string;
+        analytics?: string;
+        cdn?: {
+            images?: string;
+            translations?: string;
+        };
+    };
 }

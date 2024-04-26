@@ -13,8 +13,12 @@ const initCheckout = async () => {
         amount,
         clientKey: process.env.__CLIENT_KEY__,
         locale: shopperLocale,
-        _translationEnvironment: 'local',
         countryCode,
+        _environmentUrls: {
+            cdn: {
+                translations: '/'
+            }
+        },
         environment: 'test',
         showPayButton: true,
         onPaymentCompleted: handlePaymentCompleted,

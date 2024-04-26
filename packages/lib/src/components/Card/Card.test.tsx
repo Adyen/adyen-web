@@ -2,7 +2,6 @@ import { h } from 'preact';
 import { CardElement } from './Card';
 import { render, screen } from '@testing-library/preact';
 import { CoreProvider } from '../../core/Context/CoreProvider';
-import { Resources } from '../../core/Context/Resources';
 
 describe('Card', () => {
     describe('formatProps', function () {
@@ -34,7 +33,7 @@ describe('Card', () => {
             const customRender = (ui: h.JSX.Element) => {
                 return render(
                     // @ts-ignore ignore
-                    <CoreProvider i18n={global.i18n} loadingContext="test" resources={new Resources()}>
+                    <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
                         {ui}
                     </CoreProvider>
                 );

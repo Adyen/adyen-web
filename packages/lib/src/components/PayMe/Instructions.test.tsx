@@ -1,13 +1,12 @@
 import { render, screen } from '@testing-library/preact';
 import { h } from 'preact';
-import { Resources } from '../../core/Context/Resources';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import Instructions from './Instructions';
 
 describe('Instructions', () => {
     const customRender = (ui: h.JSX.Element) => {
         return render(
-            <CoreProvider i18n={global.i18n} loadingContext="test" resources={new Resources()}>
+            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
                 {ui}
             </CoreProvider>
         );

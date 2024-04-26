@@ -283,7 +283,7 @@ describe('Core', () => {
             const checkout = new AdyenCheckout({
                 countryCode: 'US',
                 environment: 'test',
-                environmentUrls: {
+                _environmentUrls: {
                     api: 'https://localhost:8080/checkoutshopper/'
                 },
                 clientKey: 'devl_FX923810'
@@ -297,7 +297,7 @@ describe('Core', () => {
         test('AdvancedFlow, without a countryCode, should throw an error', () => {
             const core = new AdyenCheckout({
                 environment: 'test',
-                environmentUrls: {
+                _environmentUrls: {
                     api: 'https://localhost:8080/checkoutshopper/'
                 },
                 clientKey: 'devl_FX923810'

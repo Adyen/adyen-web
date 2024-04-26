@@ -3,8 +3,7 @@
     flex-basis: auto;
     flex-shrink: 1;
     flex-wrap: wrap;
-    height: var(--adyen-checkout-spacer-090);
-    overflow: hidden;
+    min-height: var(--adyen-checkout-spacer-090);
     margin-top: -12px;
     margin-bottom: var(--adyen-checkout-spacer-060);
     transition: all 0.3s ease-out;
@@ -25,7 +24,8 @@
 
 .adyen-checkout__card__brands--hidden {
     opacity: 0;
-    height: 0;
+    max-height: 0;
+    min-height: 0;
     margin: -8px 0 8px;
 }
 

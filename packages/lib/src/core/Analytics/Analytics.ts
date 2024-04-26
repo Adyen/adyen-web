@@ -22,14 +22,6 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
 
     const props = { ...defaultProps, ...analytics };
 
-    const { telemetry, enabled } = props;
-    if (telemetry === true && enabled === true) {
-        if (props.checkoutAttemptId) {
-            // handle prefilled checkoutAttemptId // TODO is this still something that ever happens?
-            capturedCheckoutAttemptId = props.checkoutAttemptId;
-        }
-    }
-
     const logEvent = LogEvent({ loadingContext, locale });
     const collectId = CollectId({ analyticsContext, clientKey, locale, amount, analyticsPath: ANALYTICS_PATH, bundleType });
     const eventsQueue: EventsQueueModule = EventsQueue({ analyticsContext, clientKey, analyticsPath: ANALYTICS_PATH });
@@ -69,6 +61,10 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
     };
 
     const anlModule: AnalyticsModule = {
+        /**
+         * Make "setup" call, to pass containerWidth, buildType, channel etc, and receive a checkoutAttemptId in return
+         * @param initialEvent -
+         */
         setUp: async (initialEvent: AnalyticsInitialEvent) => {
             const { enabled, payload, telemetry } = props; // TODO what is payload, is it ever used?
 
@@ -77,7 +73,6 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
             if (enabled === true) {
                 if (telemetry === true && !capturedCheckoutAttemptId) {
                     try {
-                        // fetch a new checkoutAttemptId if none is already available
                         const checkoutAttemptId = await collectId({
                             ...initialEvent,
                             ...(payload && { ...payload }),

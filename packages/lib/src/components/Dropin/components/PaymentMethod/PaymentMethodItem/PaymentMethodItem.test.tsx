@@ -4,7 +4,6 @@ import { mock } from 'jest-mock-extended';
 import { h } from 'preact';
 import PaymentMethodItem from './PaymentMethodItem';
 import { CoreProvider } from '../../../../../core/Context/CoreProvider';
-import { Resources } from '../../../../../core/Context/Resources';
 import UIElement from '../../../../internal/UIElement';
 
 import type { PaymentMethodItemProps } from './PaymentMethodItem';
@@ -32,7 +31,7 @@ describe('PaymentMethodItem', () => {
 
     const customRender = ui => {
         return render(
-            <CoreProvider i18n={global.i18n} loadingContext="test" resources={new Resources()}>
+            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
                 {ui}
             </CoreProvider>
         );

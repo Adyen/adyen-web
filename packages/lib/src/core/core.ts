@@ -3,7 +3,6 @@ import UIElement from '../components/internal/UIElement/UIElement';
 import RiskModule from './RiskModule';
 import PaymentMethods from './ProcessResponse/PaymentMethods';
 import getComponentForAction from './ProcessResponse/PaymentAction';
-import { resolveEnvironment, resolveCDNEnvironment, resolveAnalyticsEnvironment } from './Environment';
 import Analytics from './Analytics';
 import { assertConfigurationPropertiesAreValid, processGlobalOptions } from './utils';
 import Session from './CheckoutSession';
@@ -19,6 +18,7 @@ import { DEFAULT_LOCALE } from '../language/constants';
 import getTranslations from './Services/get-translations';
 import { defaultProps } from './core.defaultProps';
 import { formatCustomTranslations, formatLocale } from '../language/utils';
+import { resolveEnvironments } from './Environment';
 
 import type { AdditionalDetailsStateData, PaymentAction, PaymentResponseData } from '../types/global-types';
 import type { CoreConfiguration, ICore } from './types';
@@ -29,9 +29,11 @@ class Core implements ICore {
     public paymentMethodsResponse: PaymentMethods;
     public modules: any;
     public options: CoreConfiguration;
-    public loadingContext?: string;
-    public cdnContext?: string;
-    public analyticsContext?: string;
+
+    public analyticsContext: string;
+    public loadingContext: string;
+    public cdnImagesUrl: string;
+    public cdnTranslationsUrl: string;
 
     private components: UIElement[] = [];
 
@@ -69,17 +71,23 @@ class Core implements ICore {
 
         this.setOptions({ ...defaultProps, ...props });
 
-        this.loadingContext = resolveEnvironment(this.options.environment, this.options.environmentUrls?.api);
-        this.cdnContext = resolveCDNEnvironment(this.options.resourceEnvironment || this.options.environment, this.options.environmentUrls?.api);
+        const { apiUrl, analyticsUrl, cdnImagesUrl, cdnTranslationsUrl } = resolveEnvironments(
+            this.options.environment,
+            this.options._environmentUrls
+        );
 
-        this.analyticsContext = resolveAnalyticsEnvironment(this.options.environment);
+        this.loadingContext = apiUrl;
+        this.analyticsContext = analyticsUrl;
+        this.cdnImagesUrl = cdnImagesUrl;
+        this.cdnTranslationsUrl = cdnTranslationsUrl;
+
         this.session = this.options.session && new Session(this.options.session, this.options.clientKey, this.loadingContext);
 
         const clientKeyType = this.options.clientKey?.substr(0, 4);
         if ((clientKeyType === 'test' || clientKeyType === 'live') && !this.loadingContext.includes(clientKeyType)) {
             throw new AdyenCheckoutError(
                 'IMPLEMENTATION_ERROR',
-                `Error: you are using a ${clientKeyType} clientKey against the ${this.options.environmentUrls?.api || this.options.environment} environment`
+                `Error: you are using a ${clientKeyType} clientKey against the ${this.options._environmentUrls?.api || this.options.environment} environment`
             );
         }
 
@@ -125,13 +133,7 @@ class Core implements ICore {
 
     private async fetchLocaleTranslations(): Promise<Translations> {
         try {
-            const translation = await getTranslations(
-                this.cdnContext,
-                Core.metadata.version,
-                this.options.locale,
-                this.options._translationEnvironment,
-                this.options.translations
-            );
+            const translation = await getTranslations(this.cdnTranslationsUrl, Core.metadata.version, this.options.locale, this.options.translations);
             return translation;
         } catch (error) {
             this.options.onError?.(error);
@@ -300,7 +302,7 @@ class Core implements ICore {
             modules: this.modules,
             session: this.session,
             loadingContext: this.loadingContext,
-            cdnContext: this.cdnContext,
+            cdnContext: this.cdnImagesUrl,
             createFromAction: this.createFromAction
         };
     }
@@ -350,7 +352,7 @@ class Core implements ICore {
                 amount: this.options.amount,
                 bundleType: Core.metadata.bundleType
             }),
-            resources: new Resources(this.cdnContext),
+            resources: new Resources(this.cdnImagesUrl),
             i18n: new Language({
                 locale: this.options.locale,
                 translations,

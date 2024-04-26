@@ -18,7 +18,11 @@ const initCheckout = async () => {
         environment: 'test',
         clientKey: process.env.__CLIENT_KEY__,
         session,
-        _translationEnvironment: 'local',
+        _environmentUrls: {
+            cdn: {
+                translations: '/'
+            }
+        },
 
         onPaymentCompleted: (result, component) => {
             console.info(result, component);
