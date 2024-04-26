@@ -14,6 +14,7 @@ import InputText from '../../internal/FormFields/InputText';
 import InputEmail from '../../internal/FormFields/InputEmail';
 import FormInstruction from '../../internal/FormInstruction';
 import { getErrorMessage } from '../../../utils/getErrorMessage';
+import { PREFIX } from '../../internal/Icon/constants';
 
 const ENTER_STATE = 'enter-data';
 const CONFIRM_STATE = 'confirm-data';
@@ -220,7 +221,7 @@ function BacsInput(props: BacsInputProps) {
                             : `${i18n.get('bacs.confirm')} ${
                                   !!props.amount?.value && !!props.amount?.currency ? i18n.amount(props.amount.value, props.amount.currency) : ''
                               }`,
-                    icon: getImage({ imageFolder: 'components/' })('lock'),
+                    icon: getImage({ imageFolder: 'components/' })(`${PREFIX}lock`),
                     onClick: handlePayButton
                 })}
         </div>

@@ -5,6 +5,8 @@ import classnames from 'classnames';
 import { useCoreContext } from '../../../../../../core/Context/CoreProvider';
 import Icon from '../../../../Icon';
 import { isSrciError } from '../../../services/utils';
+import { PREFIX } from '../../../../Icon/constants';
+
 
 const CONFIRMATION_SHOWING_TIME = 2000;
 
@@ -67,7 +69,7 @@ const CtPResendOtpLink = ({ onError, onResendCode, disabled }: CtPResendOtpLinkP
         return (
             <div className="adyen-checkout-ctp__otp-resend-code--confirmation">
                 {i18n.get('ctp.otp.codeResent')}
-                <Icon type="checkmark" height={14} width={14} />
+                <Icon type={`${PREFIX}checkmark`} height={14} width={14} />
             </div>
         );
     }

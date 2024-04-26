@@ -5,13 +5,21 @@
 *:before {
     box-sizing: border-box;
 }
+
 html,
 body {
-    font: 16px/1.21 -apple-system, BlinkMacSystemFont, sans-serif;
+    font:
+        16px/1.21 -apple-system,
+        BlinkMacSystemFont,
+        sans-serif;
     font-weight: 400;
     margin: 0;
     min-height: 100vh;
     overflow-x: hidden;
+}
+
+button {
+    font-family: inherit;
 }
 
 body {
@@ -105,7 +113,9 @@ h2 {
     background: none;
     border: 0;
     cursor: pointer;
-    transition: background-color 0.3s ease-out, opacity 0.3s ease-out;
+    transition:
+        background-color 0.3s ease-out,
+        opacity 0.3s ease-out;
 
     @media screen and (min-width: 1240px) {
         display: none;
@@ -252,7 +262,9 @@ h2 {
             color: $color-primary;
             border-radius: 3px;
             padding: 4px 8px;
-            transition: background-color 0.25s linear, color 0.25s linear;
+            transition:
+                background-color 0.25s linear,
+                color 0.25s linear;
             cursor: pointer;
 
             &:hover,

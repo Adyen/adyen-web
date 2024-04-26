@@ -7,6 +7,7 @@ import { useCoreContext } from '../../../core/Context/CoreProvider';
 import './Voucher.scss';
 import { VoucherProps } from './types';
 import useImage from '../../../core/Context/useImage';
+import { PREFIX } from '../Icon/constants';
 
 export default function Voucher({ voucherDetails = [], className = '', ...props }: VoucherProps) {
     const { i18n } = useCoreContext();
@@ -90,7 +91,7 @@ export default function Voucher({ voucherDetails = [], className = '', ...props 
                                         copyToClipboard(props.reference);
                                         complete();
                                     }}
-                                    icon={getImage({ imageFolder: 'components/' })('copy_white')}
+                                    icon={getImage({ imageFolder: 'components/' })(`${PREFIX}copy`)}
                                     label={i18n.get('button.copy')}
                                 />
                             </li>
@@ -102,7 +103,7 @@ export default function Voucher({ voucherDetails = [], className = '', ...props 
                                     inline
                                     variant="action"
                                     href={props.downloadUrl}
-                                    icon={getImage({ imageFolder: 'components/' })('download_white')}
+                                    icon={getImage({ imageFolder: 'components/' })(`${PREFIX}download`)}
                                     label={props.downloadButtonText || i18n.get('button.download')}
                                     target="_blank"
                                     rel="noopener noreferrer"
