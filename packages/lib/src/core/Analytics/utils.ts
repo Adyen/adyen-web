@@ -64,7 +64,7 @@ const mapErrorCodesForAnalytics = (errorCode: string, target: string) => {
     return errCode;
 };
 
-export const processAnalyticsData = (analyticsData: AnalyticsData) => {
+export const processAnalyticsData = (analyticsData: AnalyticsData): AnalyticsData => {
     return Object.keys(analyticsData).reduce((acc, prop) => {
         if (ALLOWED_ANALYTICS_DATA.includes(prop)) acc[prop] = analyticsData[prop];
         return acc;
