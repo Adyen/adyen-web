@@ -40,8 +40,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             if (!acsURL || !acsTransID || !messageVersion || !threeDSServerTransID) {
                 this.setStatusError({
                     errorInfo:
-                        'Challenge Data missing one or more of the following properties (acsURL | acsTransID | messageVersion | threeDSServerTransID)',
-                    errorObj: challengeData
+                        'Challenge Data missing one or more of the following properties (acsURL | acsTransID | messageVersion | threeDSServerTransID)'
+                    // errorObj: challengeData // TODO Decide if we want to expose this data
                 });
                 return;
             }
@@ -85,8 +85,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             // Create log object - the process is completed, one way or another
             const analyticsObject: SendAnalyticsObject = {
                 type: THREEDS2_FULL,
-                message: `${THREEDS2_NUM} challenge has completed`,
-                metadata: { ...resultObj }
+                message: `${THREEDS2_NUM} challenge has completed`
             };
 
             // Send log to analytics endpoint
