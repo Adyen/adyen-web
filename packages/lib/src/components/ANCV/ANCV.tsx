@@ -61,23 +61,35 @@ export class ANCVElement extends UIElement<ANCVProps> {
     };
 
     public createOrder = () => {
-        if (!this.isValid) {
-            this.showValidation();
-            return false;
-        }
-
         this.setStatus('loading');
 
-        return this.onOrderRequest(this.data)
+        // allow for multiple ANCV payments, follow giftcard logic and just use order if it exists
+        if (this.props.order) {
+            this.onSubmit();
+            return;
+        }
+
+        this.onOrderRequest(this.data)
             .then((order: { orderData: string; pspReference: string }) => {
                 this.setState({ order: { orderData: order.orderData, pspReference: order.pspReference } });
-                this.submit();
+                // we should probably return here, breaks the promise chain for no reason
+                return this.onSubmit();
             })
             .catch(error => {
                 this.setStatus(error?.message || 'error');
                 if (this.props.onError) this.handleError(new AdyenCheckoutError('ERROR', error));
             });
+        return;
     };
+
+    public submit() {
+        if (!this.isValid) {
+            this.showValidation();
+            return false;
+        }
+
+        this.createOrder();
+    }
 
     // Reimplement payButton similar to GiftCard to allow to set onClick
     public payButton = props => {
@@ -126,7 +138,7 @@ export class ANCVElement extends UIElement<ANCVProps> {
                         this.componentRef = ref;
                     }}
                     {...this.props}
-                    onSubmit={this.createOrder}
+                    onSubmit={this.submit}
                     onChange={this.setState}
                     payButton={this.payButton}
                     showPayButton={this.props.showPayButton}
