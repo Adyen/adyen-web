@@ -9,6 +9,7 @@ import CtPSection from '../CtPSection';
 import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import './CtPOneTimePassword.scss';
 import CtPSaveCookiesCheckbox from './CtPSaveCookiesCheckbox';
+import { isSrciError } from '../../services/utils';
 
 type CtPOneTimePasswordProps = {
     onDisplayCardComponent?(): void;
@@ -48,7 +49,12 @@ const CtPOneTimePassword = ({ onDisplayCardComponent }: CtPOneTimePasswordProps)
 
         try {
             await finishIdentityValidation(otp);
-        } catch (error) {
+        } catch (error: unknown) {
+            if (!isSrciError(error)) {
+                setIsValidatingOtp(false);
+                return;
+            }
+
             setErrorCode(error?.reason);
             setIsValidatingOtp(false);
 

@@ -135,8 +135,9 @@ class Core implements ICore {
         try {
             const translation = await getTranslations(this.cdnTranslationsUrl, Core.metadata.version, this.options.locale, this.options.translations);
             return translation;
-        } catch (error) {
-            this.options.onError?.(error);
+        } catch (error: unknown) {
+            if (error instanceof AdyenCheckoutError) this.options.onError?.(error);
+            else this.options.onError?.(new AdyenCheckoutError('ERROR', 'Failed to fetch translation', { cause: error }));
         }
     }
 

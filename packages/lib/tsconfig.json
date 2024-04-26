@@ -17,14 +17,14 @@
         "moduleDetection": "force",
 
         /* Strictness */
-        "strict": false,
-        "noUncheckedIndexedAccess": true,
+        "strict": true,
         "noImplicitAny": false,
         "noImplicitThis": false,
-        "noImplicitReturns": false,
-        "noImplicitOverride": false,
-        "strictPropertyInitialization": false,
+        "alwaysStrict": false,
+        "strictBindCallApply": false,
         "strictNullChecks": false,
+        "strictFunctionTypes": false,
+        "strictPropertyInitialization": false,
         "useDefineForClassFields": false,
 
         /** Preact */

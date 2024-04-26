@@ -10,7 +10,7 @@ import {
     SrcInitParams,
     SrcProfile
 } from './types';
-import SrciError from './SrciError';
+import SrciError, { MastercardError, VisaError } from './SrciError';
 import { ClickToPayScheme } from '../../types';
 import Script from '../../../../../utils/Script';
 
@@ -86,7 +86,7 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
             const checkoutResponse = await this.schemeSdk.checkout(params);
             return checkoutResponse;
         } catch (error) {
-            const srciError = new SrciError(error, 'checkout', this.schemeName);
+            const srciError = new SrciError(error as VisaError | MastercardError, 'checkout', this.schemeName);
             throw srciError;
         }
     }
@@ -98,7 +98,7 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
         try {
             await this.schemeSdk.unbindAppInstance();
         } catch (error) {
-            const srciError = new SrciError(error, 'unbindAppInstance', this.schemeName);
+            const srciError = new SrciError(error as VisaError | MastercardError, 'unbindAppInstance', this.schemeName);
             throw srciError;
         }
     }
@@ -112,7 +112,7 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
             const isRecognizedResponse = await this.schemeSdk.isRecognized();
             return isRecognizedResponse;
         } catch (error) {
-            const srciError = new SrciError(error, 'isRecognized', this.schemeName);
+            const srciError = new SrciError(error as VisaError | MastercardError, 'isRecognized', this.schemeName);
             throw srciError;
         }
     }
@@ -126,7 +126,7 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
             const identityValidationResponse = await this.schemeSdk.initiateIdentityValidation();
             return identityValidationResponse;
         } catch (error) {
-            const srciError = new SrciError(error, 'initiateIdentityValidation', this.schemeName);
+            const srciError = new SrciError(error as VisaError | MastercardError, 'initiateIdentityValidation', this.schemeName);
             throw srciError;
         }
     }
@@ -139,7 +139,7 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
             const getSrcProfileResponse = await this.schemeSdk.getSrcProfile({ idTokens });
             return getSrcProfileResponse;
         } catch (error) {
-            const srciError = new SrciError(error, 'getSrcProfile', this.schemeName);
+            const srciError = new SrciError(error as VisaError | MastercardError, 'getSrcProfile', this.schemeName);
             throw srciError;
         }
     }
