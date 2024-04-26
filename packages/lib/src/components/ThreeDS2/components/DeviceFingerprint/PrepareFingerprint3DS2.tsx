@@ -80,8 +80,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             /** The fingerprint process is completed, one way or another */
             const analyticsObject: SendAnalyticsObject = {
                 type: THREEDS2_FULL,
-                message: `${THREEDS2_NUM} fingerprinting has completed`,
-                metadata: { ...resultObj }
+                message: `${THREEDS2_NUM} fingerprinting has completed`
             };
 
             // Send log to analytics endpoint
