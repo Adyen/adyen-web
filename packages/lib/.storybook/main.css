@@ -1,8 +1,15 @@
 html,
 body {
-    font: 16px/1.21 -apple-system, BlinkMacSystemFont, sans-serif;
+    font:
+        16px/1.21 -apple-system,
+        BlinkMacSystemFont,
+        sans-serif;
     font-weight: 400;
     background-color: #fbfbfb;
+}
+
+button {
+    font-family: inherit;
 }
 
 .component-wrapper {

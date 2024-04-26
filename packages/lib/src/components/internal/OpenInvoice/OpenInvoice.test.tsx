@@ -5,6 +5,14 @@ import { mock } from 'jest-mock-extended';
 import { OpenInvoiceProps } from './types';
 import { FieldsetVisibility } from '../../../types';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
+import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
+import userEvent from '@testing-library/user-event';
+import { SRPanel } from '../../../core/Errors/SRPanel';
+import { render, screen } from '@testing-library/preact';
+import getDataset from '../../../core/Services/get-dataset';
+
+jest.mock('../../../core/Services/get-dataset');
+(getDataset as jest.Mock).mockImplementation(jest.fn(() => Promise.resolve([{ id: 'NL', name: 'Netherlands' }])));
 
 let componentRef;
 const setComponentRef = ref => {
@@ -72,6 +80,48 @@ describe('OpenInvoice', () => {
     test('should render a consent checkbox if a consentCheckboxLabel is passed as a prop', () => {
         const wrapper = getWrapper({ consentCheckboxLabel: 'TEST' });
         expect(wrapper.find('ConsentCheckbox')).toHaveLength(1);
+    });
+
+    test('toggling consent checkbox should call the onChange', async () => {
+        const user = userEvent.setup();
+        const srPanel = new SRPanel(global.core);
+        const customRender = ui => {
+            return render(
+                // @ts-ignore render ui as children
+                <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                    <SRPanelProvider srPanel={srPanel}>{ui}</SRPanelProvider>
+                </CoreProvider>
+            );
+        };
+        const onChange = jest.fn();
+        const props = {
+            ...defaultProps,
+            visibility: { billingAddress: 'hidden' as FieldsetVisibility, deliveryAddress: 'hidden' as FieldsetVisibility },
+            consentCheckboxLabel: 'Test',
+            payButton: () => {},
+            onChange
+        };
+        customRender(<OpenInvoice {...props} />);
+
+        await user.click(await screen.findByRole('checkbox'));
+        expect(onChange).toHaveBeenCalledWith(
+            expect.objectContaining({
+                errors: expect.objectContaining({ consentCheckbox: null })
+            })
+        );
+
+        await user.click(await screen.findByRole('checkbox'));
+        expect(onChange).toHaveBeenCalledWith(
+            expect.objectContaining({
+                errors: expect.objectContaining({
+                    consentCheckbox: {
+                        isValid: false,
+                        errorMessage: 'consent.checkbox.invalid',
+                        error: 'consent.checkbox.invalid'
+                    }
+                })
+            })
+        );
     });
 
     test('should call the onChange', () => {
