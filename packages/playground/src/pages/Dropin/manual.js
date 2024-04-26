@@ -19,8 +19,6 @@ export async function initManual() {
         environment: process.env.__CLIENT_ENV__,
 
         onSubmit: async (state, component, actions) => {
-            debugger;
-
             try {
                 const { action, order, resultCode, donationToken } = await makePayment(state.data);
 
