@@ -7,6 +7,7 @@ import { useCallback, useRef, useState } from 'preact/hooks';
 import { getUniqueId } from '../../../../utils/idGenerator';
 import { FieldProps } from './types';
 import './Field.scss';
+import { PREFIX } from '../../Icon/constants';
 
 const Field: FunctionalComponent<FieldProps> = props => {
     //
@@ -152,13 +153,13 @@ const Field: FunctionalComponent<FieldProps> = props => {
 
                     {isValid && showValidIcon !== false && (
                         <span className="adyen-checkout-input__inline-validation adyen-checkout-input__inline-validation--valid">
-                            <Icon type="checkmark" alt={i18n?.get('field.valid')} />
+                            <Icon type={`${PREFIX}checkmark`} alt={i18n?.get('field.valid')} />
                         </span>
                     )}
 
                     {errorMessage && (
                         <span className="adyen-checkout-input__inline-validation adyen-checkout-input__inline-validation--invalid">
-                            <Icon type="field_error" alt={i18n?.get('error.title')} />
+                            <Icon type={`${PREFIX}field_error`} alt={i18n?.get('error.title')} />
                         </span>
                     )}
                 </div>

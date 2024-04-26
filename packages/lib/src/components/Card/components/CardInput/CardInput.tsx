@@ -30,6 +30,7 @@ import FormInstruction from '../../../internal/FormInstruction';
 import { AddressData } from '../../../../types/global-types';
 import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
 import { FieldErrorAnalyticsObject } from '../../../../core/Analytics/types';
+import { PREFIX } from '../../../internal/Icon/constants';
 
 const CardInput = (props: CardInputProps) => {
     const sfp = useRef(null);
@@ -529,7 +530,7 @@ const CardInput = (props: CardInputProps) => {
                 props.payButton({
                     status,
                     variant: props.isPayButtonPrimaryVariant ? 'primary' : 'secondary',
-                    icon: getImage({ imageFolder: 'components/' })('lock')
+                    icon: getImage({ imageFolder: 'components/' })(`${PREFIX}lock`)
                 })}
         </Fragment>
     );

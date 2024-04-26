@@ -74,10 +74,12 @@
     @include input-wrapper-inactive;
 }
 
-.adyen-checkout__label__text,
 .adyen-checkout__helper-text {
     display: block;
-    font-size: var(--adyen-checkout-font-size-small);
+    color: var(--adyen-checkout-input-field-context-color);
+    font-weight: var(--adyen-checkout-font-weight-300);
+    line-height: var(--adyen-checkout-line-height-100);
+    font-size: var(--adyen-checkout-font-size-xsmall);
     margin-bottom: var(--adyen-checkout-input-field-label-margin-bottom);
 }
 
@@ -87,18 +89,14 @@
     top: 0;
 }
 
-.adyen-checkout__helper-text {
-    color: var(--adyen-checkout-input-field-context-color);
-    font-weight: normal;
-    line-height: var(--adyen-checkout-line-height-100);
-}
-
-.adyen-checkout__label__text {
+.adyen-checkout__label__text{
+    display: block;
+    font-size: var(--adyen-checkout-font-size-small);
+    margin-bottom: var(--adyen-checkout-input-field-label-margin-bottom);
     color: var(--adyen-checkout-input-field-label-color);
-    font-weight: var(--adyen-checkout-text-body-stronger-font-weight);
+    font-weight: var(--adyen-checkout-text-body-font-weight);
     line-height: var(--adyen-checkout-line-height-200);
     transition: color 0.1s ease-out;
-    display: block;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
