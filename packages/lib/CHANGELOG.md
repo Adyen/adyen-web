@@ -1,5 +1,21 @@
 # @adyen/adyen-web
 
+## 5.64.0
+
+### Minor Changes
+
+-   Checkout analytics can be passed a checkoutAttemptId ([#2654](https://github.com/Adyen/adyen-web/pull/2654))
+
+-   Pass config to allow SF to expose expiryDate ([#2651](https://github.com/Adyen/adyen-web/pull/2651))
+
+### Patch Changes
+
+-   fix: ANCV ignoring exesting order & payButton not working as intended ([#2655](https://github.com/Adyen/adyen-web/pull/2655))
+
+-   Don't log threeDSCompInd or transStatus from 3DS2 process ([#2666](https://github.com/Adyen/adyen-web/pull/2666))
+
+-   Fix for the OpenInvoice uncaught error when checking and unchecking terms and conditions. This change also fixed the issue that payment goes through without accepting terms and conditions. ([#2660](https://github.com/Adyen/adyen-web/pull/2660))
+
 ## 5.63.0
 
 ### Minor Changes
