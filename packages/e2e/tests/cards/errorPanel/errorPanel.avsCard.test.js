@@ -66,7 +66,7 @@ test('#2 Click pay with empty fields and error panel in avsCard is populated', a
         .ok()
         .expect(cardPage.errorPanelEls.nth(2).withExactText(CVC_EMPTY).exists)
         .ok()
-        .expect(cardPage.errorPanelEls.nth(3).withExactText(`Enter the Country${SR_INDICATOR_PREFIX}`).exists)
+        .expect(cardPage.errorPanelEls.nth(3).withExactText(`Enter the Country/Region${SR_INDICATOR_PREFIX}`).exists)
         .ok()
         .expect(cardPage.errorPanelEls.nth(4).withExactText(`Enter the Street${SR_INDICATOR_PREFIX}`).exists)
         .ok()
@@ -98,7 +98,7 @@ test('#3 fill out credit card fields & see that first error in error panel is co
 
     // Expect 5 elements, with default order & text
     await t
-        .expect(cardPage.errorPanelEls.nth(0).withExactText(`Enter the Country${SR_INDICATOR_PREFIX}`).exists)
+        .expect(cardPage.errorPanelEls.nth(0).withExactText(`Enter the Country/Region${SR_INDICATOR_PREFIX}`).exists)
         .ok()
         .expect(cardPage.errorPanelEls.nth(1).withExactText(`Enter the Street${SR_INDICATOR_PREFIX}`).exists)
         .ok()
