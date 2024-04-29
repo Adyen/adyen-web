@@ -66,7 +66,8 @@ export function CashAppComponent({
 
             setStatus('ready');
         } catch (error) {
-            onError(error);
+            if (error instanceof AdyenCheckoutError) onError(error);
+            else onError(new AdyenCheckoutError('ERROR', 'Error when initializing CashAppPay', { cause: error }));
         }
     }, [cashAppService, onError, onAuthorize]);
 

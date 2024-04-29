@@ -16,7 +16,9 @@ import isMobile from '../../../../../utils/isMobile';
 import Language from '../../../../../language';
 import { PaymentAmount } from '../../../../../types/global-types';
 import './CtPCards.scss';
+import AdyenCheckoutError from '../../../../../core/Errors/AdyenCheckoutError';
 import { PREFIX } from '../../../Icon/constants';
+
 
 type CtPCardsProps = {
     onDisplayCardComponent?(): void;
@@ -63,13 +65,15 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
             onSetStatus('loading');
             const payload = await checkout(checkoutCard);
             onSubmit(payload);
-        } catch (error) {
+        } catch (error: unknown) {
             if (error instanceof SrciError) {
                 setErrorCode(error?.reason);
                 console.warn(`CtP - Checkout: Reason: ${error?.reason} / Source: ${error?.source} / Scheme: ${error?.scheme}`);
             }
             setIsShopperCheckingOutWithCtp(false);
-            onError(error);
+
+            if (error instanceof AdyenCheckoutError) onError(error);
+            else onError(new AdyenCheckoutError('ERROR', 'Error during ClickToPay checkout', { cause: error }));
         }
     }, [checkout, checkoutCard]);
 

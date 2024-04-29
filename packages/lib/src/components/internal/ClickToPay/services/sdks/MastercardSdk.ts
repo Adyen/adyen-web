@@ -1,6 +1,6 @@
 import { getMastercardSettings, MC_SDK_PROD, MC_SDK_TEST } from './config';
 import AbstractSrcInitiator from './AbstractSrcInitiator';
-import SrciError from './SrciError';
+import SrciError, { MastercardError, VisaError } from './SrciError';
 import {
     CustomSdkConfiguration,
     SrciCompleteIdentityValidationResponse,
@@ -41,7 +41,7 @@ class MastercardSdk extends AbstractSrcInitiator {
             };
             await this.schemeSdk.init(sdkProps);
         } catch (err) {
-            const srciError = new SrciError(err, 'init', this.schemeName);
+            const srciError = new SrciError(err as VisaError | MastercardError, 'init', this.schemeName);
             throw srciError;
         }
     }
@@ -56,7 +56,7 @@ class MastercardSdk extends AbstractSrcInitiator {
             const response = await this.schemeSdk.identityLookup({ consumerIdentity });
             return response;
         } catch (err) {
-            const srciError = new SrciError(err, 'identityLookup', this.schemeName);
+            const srciError = new SrciError(err as VisaError | MastercardError, 'identityLookup', this.schemeName);
             throw srciError;
         }
     }
@@ -66,7 +66,7 @@ class MastercardSdk extends AbstractSrcInitiator {
             const response = await this.schemeSdk.completeIdentityValidation({ validationData: otp });
             return response;
         } catch (err) {
-            const srciError = new SrciError(err, 'completeIdentityValidation', this.schemeName);
+            const srciError = new SrciError(err as VisaError | MastercardError, 'completeIdentityValidation', this.schemeName);
             throw srciError;
         }
     }

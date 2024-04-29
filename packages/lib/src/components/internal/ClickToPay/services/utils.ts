@@ -1,6 +1,7 @@
 import { CardTypes, ClickToPayCheckoutPayload, SrcProfileWithScheme } from './types';
 import { SrciCheckoutResponse } from './sdks/types';
 import ShopperCard from '../models/ShopperCard';
+import SrciError from './sdks/SrciError';
 
 export const CTP_IFRAME_NAME = 'ctpIframe';
 
@@ -64,4 +65,9 @@ function createShopperCardsList(srcProfiles: SrcProfileWithScheme[]): ShopperCar
     return [...availableCards.sort(sortCardByLastTimeUsed), ...expiredCards.sort(sortCardByLastTimeUsed)];
 }
 
-export { createShopperCardsList, createCheckoutPayloadBasedOnScheme };
+function isSrciError(error: unknown): error is SrciError {
+    if ((error as SrciError).reason) return true;
+    return false;
+}
+
+export { createShopperCardsList, createCheckoutPayloadBasedOnScheme, isSrciError };
