@@ -1,8 +1,7 @@
 import { Meta, StoryObj } from '@storybook/preact';
 import PhoneInput from '../../../src/components/internal/PhoneInput';
-import CoreProvider from '../../../src/core/Context/CoreProvider';
+import { CoreProvider } from '../../../src/core/Context/CoreProvider';
 import Language from '../../../src/language';
-import { Resources } from '../../../src/core/Context/Resources';
 
 const COUNTRIES = [
     { id: '+7', name: 'Russian Federation', code: 'RU' },
@@ -62,7 +61,7 @@ const meta: Meta = {
 export const Default: StoryObj = {
     render: args => {
         return (
-            <CoreProvider loadingContext={'test'} i18n={new Language('en-US')} resources={global.resources}>
+            <CoreProvider loadingContext={'test'} i18n={new Language({ locale: 'en-US', translations: {} })} resources={global.resources}>
                 <PhoneInput
                     items={COUNTRIES.map(formatPrefixName).filter(Boolean)}
                     data={{ phonePrefix: COUNTRIES[0].id }}

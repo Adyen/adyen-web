@@ -40,7 +40,7 @@ export default function InputBase({ setRef, ...props }: InputBaseProps) {
     }
 
     const handleInput = useCallback(
-        (event: h.JSX.TargetedEvent<HTMLInputElement>) => {
+        (event: h.JSX.TargetedInputEvent<HTMLInputElement>) => {
             props.onInput(event);
         },
         [props.onInput]
