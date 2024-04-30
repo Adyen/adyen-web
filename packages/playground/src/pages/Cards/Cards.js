@@ -105,9 +105,8 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                     preselectedValue: 4
                 }
             },
-            disclaimerMessage,
-            showBrandsUnderCardNumber: true,
             showInstallmentAmounts: true,
+            disclaimerMessage,
             onError: obj => {
                 console.log('### Cards::onError:: obj=', obj);
             },
