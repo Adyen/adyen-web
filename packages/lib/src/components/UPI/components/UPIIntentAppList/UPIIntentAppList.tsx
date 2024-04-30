@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { AppId, UpiMode } from '../../types';
+import { App, UpiMode } from '../../types';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import UPIIntentAppItem from './UPIIntentAppItem';
 import VpaInput from '../VpaInput';
@@ -8,16 +8,18 @@ import useImage from '../../../../core/Context/useImage';
 import './UPIIntentAppList.scss';
 
 interface UPIIntentAppListProps {
-    appIds: Array<AppId>;
+    apps: Array<App>;
     selectedAppId?: string;
+    disabled?: boolean;
     onAppSelect?: Function;
     onVpaInputChange?({ data, valid, errors, isValid }: OnChangeProps): void;
     onSetInputHandlers?(handlers: VpaInputHandlers): void;
 }
 
 const UPIIntentAppList = ({
-    appIds,
+    apps,
     selectedAppId,
+    disabled,
     onAppSelect = () => {},
     onVpaInputChange = () => {},
     onSetInputHandlers = () => {}
@@ -27,25 +29,27 @@ const UPIIntentAppList = ({
 
     return (
         <ul className="adyen-checkout-upi-app-list" role="radiogroup" aria-label={i18n.get('paymentMethodsList.aria.label')} required>
-            {appIds.map((appId, index, array) => {
-                const _id = `adyen-checkout-upi-${appId.id}}`;
-                const isSelected = selectedAppId === appId.id;
+            {apps.map((app, index, array) => {
+                const key = `adyen-checkout-upi-app-item-${app.id}}`;
+                const isSelected = selectedAppId === app.id;
                 const next = array[index + 1];
                 const isNextSelected = selectedAppId === next?.id;
-                const showUpiCollectInput = appId.id === UpiMode.Collect;
+
+                const showUpiCollectInput = app.id === UpiMode.Collect;
                 const imgPathConfig = showUpiCollectInput ? {} : { subFolder: 'upi/' };
-                const imgName = showUpiCollectInput ? 'upi' : appId.id;
+                const imgName = showUpiCollectInput ? 'upi' : app.id;
                 const imgSrc = getImage(imgPathConfig)(imgName);
+
                 return (
                     <UPIIntentAppItem
-                        key={`adyen-checkout-upi-app-item-${_id}`}
-                        appId={appId}
+                        key={key}
+                        app={app}
                         imgSrc={imgSrc}
                         isSelected={isSelected}
                         isNextSelected={isNextSelected}
                         onSelect={onAppSelect}
                     >
-                        {showUpiCollectInput && <VpaInput onChange={onVpaInputChange} onSetInputHandlers={onSetInputHandlers} />}
+                        {showUpiCollectInput && <VpaInput disabled={disabled} onChange={onVpaInputChange} onSetInputHandlers={onSetInputHandlers} />}
                     </UPIIntentAppItem>
                 );
             })}

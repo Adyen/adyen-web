@@ -21,7 +21,7 @@ export const UPI: UpiStory = {
         // @ts-ignore Seems like enum isnt the best way to export fixed strings
         componentConfiguration: {
             //defaultMode: 'upi_intent'
-            appIds: [
+            apps: [
                 {
                     id: 'bhim',
                     name: 'BHIM'

@@ -20,12 +20,12 @@ export enum TX_VARIANT {
     UpiIntent = 'upi_intent'
 }
 
-export type AppId = { id: string; name: string; type?: TX_VARIANT };
+export type App = { id: string; name: string; type?: TX_VARIANT };
 
 export interface UPIElementProps extends UIElementProps {
     defaultMode: UpiMode;
     // upi_intent
-    appIds?: Array<AppId>;
+    apps?: Array<App>;
     // Await
     paymentData?: string;
     // QR code

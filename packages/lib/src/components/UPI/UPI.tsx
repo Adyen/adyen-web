@@ -7,19 +7,14 @@ import QRLoader from '../internal/QRLoader';
 import { TX_VARIANT, UPIElementProps, UpiMode, UpiPaymentData } from './types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import isMobile from '../../utils/isMobile';
-import RedirectShopper from '../Redirect/components/RedirectShopper';
-
 /**
- * 'upi' tx variant is the parent one.
- * 'upi_collect' and 'upi_qr' are the sub variants which are submitted according to the shopper interaction.
- *
  * Small screens:
- * upi_collect + upi_intent on the first tab (if appIds are returned in paymentMethods response
- * QR always on the second tab
+ * We should show upi_collect or upi_intent depending on if `apps` are returned in /paymentMethods response
+ * The upi_qr should always be on the second tab
  *
  * Large screens:
- * Never upi_intent (ignore appIds in /paymentMethods response)
- * QR on the first tab and upi_collect on second tab
+ * We should never show the upi_intent (ignore `apps` in /paymentMethods response)
+ * The upi_qr should be on the first tab and the upi_collect should be on second tab
  */
 
 class UPI extends UIElement<UPIElementProps> {
@@ -37,24 +32,24 @@ class UPI extends UIElement<UPIElementProps> {
             return {
                 ...super.formatProps(props),
                 defaultMode: UpiMode.QrCode,
-                // For large screen, ignore the appIds
-                appIds: []
+                // For large screen, ignore the apps
+                apps: []
             };
         }
 
-        const hasIntentApps = props.appIds?.length > 0;
+        const hasIntentApps = props.apps?.length > 0;
         const defaultMode = hasIntentApps ? UpiMode.Intent : UpiMode.Collect;
         const upiCollectApp = {
             id: UpiMode.Collect,
-            name: props.i18n.get('upi.collect.enterUpiId'),
+            name: props.i18n.get('upi.collect.dropdown.label'),
             type: TX_VARIANT.UpiCollect
         };
-        const appIds = hasIntentApps ? [...props.appIds.map(appId => ({ ...appId, type: TX_VARIANT.UpiIntent })), upiCollectApp] : [];
+        const apps = hasIntentApps ? [...props.apps.map(app => ({ ...app, type: TX_VARIANT.UpiIntent })), upiCollectApp] : [];
 
         return {
             ...super.formatProps(props),
             defaultMode,
-            appIds
+            apps
         };
     }
 
@@ -71,19 +66,18 @@ class UPI extends UIElement<UPIElementProps> {
             };
         }
 
-        const { virtualPaymentAddress, appId } = this.state.data;
-        const type = this.selectedMode === UpiMode.Collect ? TX_VARIANT.UpiCollect : appId?.type;
+        const { virtualPaymentAddress, app } = this.state.data;
+        const type = this.selectedMode === UpiMode.Collect ? TX_VARIANT.UpiCollect : app?.type;
         return {
             paymentMethod: {
                 ...(type && { type }),
                 ...(type === TX_VARIANT.UpiCollect && virtualPaymentAddress && { virtualPaymentAddress }),
-                ...(type === TX_VARIANT.UpiIntent && appId && { appId: appId.id })
+                ...(type === TX_VARIANT.UpiIntent && app?.id && { appId: app.id })
             }
         };
     }
 
     private onUpdateMode = (mode: UpiMode): void => {
-        // todo: switching tabs does not preserve vpa
         this.selectedMode = mode;
         if (mode === UpiMode.QrCode) {
             /**
@@ -130,9 +124,6 @@ class UPI extends UIElement<UPIElementProps> {
                         onActionHandled={this.props.onActionHandled}
                     />
                 );
-            case 'redirect':
-                // todo: fix it
-                return <RedirectShopper url={''} method={'GET'} data={{}} />;
             default:
                 return (
                     <UPIComponent
@@ -142,7 +133,7 @@ class UPI extends UIElement<UPIElementProps> {
                         payButton={this.payButton}
                         onChange={this.setState}
                         onUpdateMode={this.onUpdateMode}
-                        appIds={this.props.appIds}
+                        apps={this.props.apps}
                         defaultMode={this.props.defaultMode}
                         showPayButton={this.props.showPayButton}
                     />

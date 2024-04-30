@@ -1,4 +1,4 @@
-import { filterUnsupported, filterPresent, filterAvailable } from './filters';
+import { filterUnsupported, filterPresent, filterAvailable, optionallyFilterUpiSubTxVariants } from './filters';
 import { PaymentMethod } from '../../../types';
 
 /**
@@ -8,7 +8,7 @@ import { PaymentMethod } from '../../../types';
  * @param create - Reference to the main instance `Core#create` method
  */
 const createElements = (components: PaymentMethod[] = [], props, create) => {
-    const elements = components
+    const elements = optionallyFilterUpiSubTxVariants(components)
         .map(c => create(c, props))
         .filter(filterPresent)
         .filter(filterUnsupported);

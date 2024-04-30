@@ -49,9 +49,8 @@ const VpaInput = (props: VpaInputProps): h.JSX.Element => {
 
     return (
         <Field
-            label="UPI ID"
+            label={i18n.get('upi.collect.field.label')}
             errorMessage={!!errors.virtualPaymentAddress}
-            helper={i18n.get('upi.collect.helper')}
             classNameModifiers={['vpa']}
             name="virtualPaymentAddress"
         >

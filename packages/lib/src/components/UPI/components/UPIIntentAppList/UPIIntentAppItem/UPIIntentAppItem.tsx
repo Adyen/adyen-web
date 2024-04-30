@@ -1,13 +1,13 @@
 import { ComponentChildren, h } from 'preact';
 import cx from 'classnames';
-import { AppId } from '../../../types';
+import { App } from '../../../types';
 import RadioButton from '../../../../internal/RadioButton';
 import uuid from '../../../../../utils/uuid';
 import PaymentMethodIcon from '../../../../Dropin/components/PaymentMethod/PaymentMethodIcon';
 import './UPIIntentAppItem.scss';
 
 interface UPIIntentAppItemProps {
-    appId: AppId;
+    app: App;
     imgSrc: string;
     isSelected: boolean;
     isNextSelected?: boolean;
@@ -15,11 +15,10 @@ interface UPIIntentAppItemProps {
     children?: ComponentChildren;
 }
 
-const UPIIntentAppItem = ({ appId, imgSrc, isSelected, isNextSelected, onSelect = () => {}, children }: UPIIntentAppItemProps): h.JSX.Element => {
-    const _id = `adyen-checkout-upi-${appId.id}-${uuid()}`;
-    const buttonId = `adyen-checkout-upi-app-item-radio-button-${_id}`;
-    const handleAppItemSelected = (appId: AppId) => {
-        onSelect(appId);
+const UPIIntentAppItem = ({ app, imgSrc, isSelected, isNextSelected, onSelect = () => {}, children }: UPIIntentAppItemProps): h.JSX.Element => {
+    const buttonId = `adyen-checkout-upi-app-item-radio-button-${app.id}-${uuid()}`;
+    const handleAppSelected = (app: App) => {
+        onSelect(app);
     };
 
     return (
@@ -31,12 +30,12 @@ const UPIIntentAppItem = ({ appId, imgSrc, isSelected, isNextSelected, onSelect 
             })}
             role="button"
             aria-expanded={isSelected}
-            onClick={() => handleAppItemSelected(appId)}
+            onClick={() => handleAppSelected(app)}
         >
             <div className="adyen-checkout-upi-app-item-header">
                 <RadioButton buttonId={buttonId} isSelected={isSelected}>
-                    <PaymentMethodIcon src={imgSrc} altDescription={appId.name} type={appId.id}></PaymentMethodIcon>
-                    <label htmlFor={buttonId}>{appId.name}</label>
+                    <PaymentMethodIcon src={imgSrc} altDescription={app.name} type={app.id}></PaymentMethodIcon>
+                    <label htmlFor={buttonId}>{app.name}</label>
                 </RadioButton>
             </div>
             {isSelected && children && <div className="adyen-checkout-upi-app-item-details">{children}</div>}

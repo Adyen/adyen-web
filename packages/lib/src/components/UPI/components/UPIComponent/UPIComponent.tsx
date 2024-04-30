@@ -5,21 +5,22 @@ import { PayButtonFunctionProps, UIElementStatus } from '../../../types';
 import { VpaInputHandlers } from '../VpaInput/VpaInput';
 import VpaInput from '../VpaInput';
 import SegmentedControl from '../../../internal/SegmentedControl';
-import { AppId, UpiMode } from '../../types';
+import { App, UpiMode } from '../../types';
 import useImage from '../../../../core/Context/useImage';
 import UPIIntentAppList from '../UPIIntentAppList';
 import useUpiSegmentedControlOptions from './useUpiSegmentedControlOptions';
 import { A11Y } from './constants';
 import './UPIComponent.scss';
+import ContentSeparator from '../../../internal/ContentSeparator';
 
-type UpiData = { appId?: AppId; virtualPaymentAddress?: string };
+type UpiData = { app?: App; virtualPaymentAddress?: string };
 
 type OnChangeProps = { data: UpiData; valid; errors; isValid: boolean };
 
 interface UPIComponentProps {
     defaultMode: UpiMode;
     showPayButton: boolean;
-    appIds?: Array<AppId>;
+    apps?: Array<App>;
 
     ref(ref: RefObject<typeof UPIComponent>): void;
 
@@ -30,14 +31,7 @@ interface UPIComponentProps {
     onUpdateMode?(mode: UpiMode): void;
 }
 
-export default function UPIComponent({
-    defaultMode,
-    onChange,
-    onUpdateMode,
-    payButton,
-    showPayButton,
-    appIds = []
-}: UPIComponentProps): h.JSX.Element {
+export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payButton, showPayButton, apps = [] }: UPIComponentProps): h.JSX.Element {
     const { i18n } = useCoreContext();
     const getImage = useImage();
     const [status, setStatus] = useState<UIElementStatus>('ready');
@@ -45,10 +39,10 @@ export default function UPIComponent({
     const [mode, setMode] = useState<UpiMode>(defaultMode);
     const [vpa, setVpa] = useState<string>('');
     const [vpaInputHandlers, setVpaInputHandlers] = useState<VpaInputHandlers>(null);
-    const [selectedApp, setSelectedApp] = useState<AppId>(null);
+    const [selectedApp, setSelectedApp] = useState<App>(null);
     const [valid, setValid] = useState(null);
     const [errors, setErrors] = useState(null);
-    const segmentedControlOptions = useUpiSegmentedControlOptions(appIds, mode);
+    const segmentedControlOptions = useUpiSegmentedControlOptions(apps, mode);
 
     this.setStatus = (status: UIElementStatus) => {
         setStatus(status);
@@ -73,8 +67,8 @@ export default function UPIComponent({
         [onUpdateMode]
     );
 
-    const handleAppSelect = useCallback((appId: AppId) => {
-        setSelectedApp(appId);
+    const handleAppSelect = useCallback((app: App) => {
+        setSelectedApp(app);
         setIsValid(true);
     }, []);
 
@@ -87,7 +81,7 @@ export default function UPIComponent({
 
     useEffect(() => {
         onChange({
-            data: { ...(vpa && { virtualPaymentAddress: vpa }), ...(selectedApp && { appId: selectedApp }) },
+            data: { ...(vpa && { virtualPaymentAddress: vpa }), ...(selectedApp && { app: selectedApp }) },
             errors,
             valid,
             isValid
@@ -104,10 +98,12 @@ export default function UPIComponent({
                 classNameModifiers={['upi-margin-bottom']}
                 options={segmentedControlOptions}
             />
+            <ContentSeparator label={i18n.get('upi.completePayment')} />
             {mode === UpiMode.Intent && (
                 <div id={A11Y.AreaId.INTENT} aria-labelledby={A11Y.ButtonId.INTENT} role="region">
                     <UPIIntentAppList
-                        appIds={appIds}
+                        disabled={status === 'loading'}
+                        apps={apps}
                         selectedAppId={selectedApp?.id}
                         onAppSelect={handleAppSelect}
                         onVpaInputChange={handleVpaInputChange}

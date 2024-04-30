@@ -1,13 +1,13 @@
 import { useMemo } from 'preact/hooks';
 import useCoreContext from '../../../../core/Context/useCoreContext';
-import { AppId, UpiMode } from '../../types';
+import { App, UpiMode } from '../../types';
 import { A11Y } from './constants';
 
-function useUpiSegmentedControlOptions(appIds: Array<AppId>, mode: UpiMode) {
+function useUpiSegmentedControlOptions(apps: Array<App>, mode: UpiMode) {
     const { i18n } = useCoreContext();
 
     return useMemo(() => {
-        const shouldShowUpiIntent = appIds.length > 0;
+        const shouldShowUpiIntent = apps.length > 0;
 
         const intentOption = {
             label: i18n.get('upi.intent.payByAnyUpi'),
@@ -30,7 +30,7 @@ function useUpiSegmentedControlOptions(appIds: Array<AppId>, mode: UpiMode) {
         };
 
         const qrOption = {
-            label: 'QR Code',
+            label: i18n.get('upi.mode.qrCode'),
             value: UpiMode.QrCode,
             htmlProps: {
                 id: A11Y.ButtonId.QR,
@@ -40,7 +40,7 @@ function useUpiSegmentedControlOptions(appIds: Array<AppId>, mode: UpiMode) {
         };
 
         return shouldShowUpiIntent ? [intentOption, qrOption] : [vpaOption, qrOption];
-    }, [appIds]);
+    }, [apps]);
 }
 
 export default useUpiSegmentedControlOptions;

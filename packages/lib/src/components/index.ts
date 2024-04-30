@@ -224,7 +224,7 @@ const componentsMap = {
     upi: UPI, // also QR
     upi_qr: UPI, // also QR
     upi_collect: UPI, // also QR
-    upi_intent: UPI, // also QR
+    upi_intent: UPI,
     ancv: ANCV,
     /** Await */
 
