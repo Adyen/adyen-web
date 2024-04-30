@@ -1,4 +1,4 @@
-@import "../../../../style/index";
+@import '../../../../style/index';
 
 .adyen-checkout__payment-method {
     position: relative;
@@ -65,7 +65,7 @@
     transition: background 0.1s ease-out;
     width: 100%;
 
-    [dir="rtl"] & {
+    [dir='rtl'] & {
         padding: $spacing-medium - $payment-button-padding;
         padding-right: $spacing-xxlarge - $payment-button-padding;
     }
@@ -73,14 +73,23 @@
     .adyen-checkout__payment-method--standalone & {
         padding: 16px;
     }
-
-    .adyen-checkout__payment-method__radio{
-        position: absolute;
-    }
 }
 
-.adyen-checkout__payment-method__header__title{
+.adyen-checkout__payment-method__header__title {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
     margin-right: 16px;
+    max-width: 100%;
+
+    // reset button styles
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: $spacing-xsmall;
+    color: $color-black;
+    font-size: 1em;
+    font-weight: 400;
 
     [dir='rtl'] & {
         margin-right: 0;
@@ -94,7 +103,9 @@
 }
 
 .adyen-checkout__payment-method--selected {
-    transition: margin 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, opacity 0.3s ease-out;
+    transition:
+        margin 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+        opacity 0.3s ease-out;
     background: $color-gray-lighter;
     border: 1px solid $color-gray-light;
     margin: 8px 0;
@@ -122,7 +133,7 @@
 }
 
 .adyen-checkout__payment-method__image__wrapper--outline::after {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     width: 100%;
@@ -184,10 +195,61 @@
     opacity: 0.25;
 }
 
-// todo: test what's this?
-
+/*  Payment Method Radio Button */
 .adyen-checkout__payment-method__radio {
+    position: absolute;
+    background-color: $color-white;
+    border: 1px solid $color-gray-dark;
+    border-radius: 50%;
+    height: 16px;
+    width: 16px;
+    left: 16px;
+    transition:
+        border-color 0.2s ease-out,
+        box-shadow 0.2s ease-out;
+
+    [dir='rtl'] & {
+        right: 16px;
+        left: auto;
+    }
+
     .adyen-checkout__payment-method--standalone & {
         display: none;
     }
+}
+
+.adyen-checkout__payment-method__radio::after {
+    content: '';
+    display: block;
+    position: absolute;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 6px;
+    width: 6px;
+    background-color: $color-white;
+    border-radius: 50%;
+    transform: translateY(-50%) scale(0);
+    transition: transform 0.3s ease-out;
+}
+
+.adyen-checkout__payment-method:hover:not(.adyen-checkout__payment-method--selected) .adyen-checkout__payment-method__radio {
+    border-color: #99a3ad;
+    box-shadow: 0 0 0 2px $color-gray;
+    cursor: pointer;
+}
+
+.adyen-checkout__payment-method__radio--selected {
+    background-color: $color-primary;
+    border: 0;
+    transition: all 0.3s ease-out;
+}
+
+.adyen-checkout__payment-method__radio--selected:hover {
+    box-shadow: 0 0 0 2px rgb(0 102 255 / 40%);
+}
+
+.adyen-checkout__payment-method__radio--selected::after {
+    transform: translateY(-50%) scale(1);
 }

@@ -10,7 +10,6 @@ import UIElement from '../../../UIElement';
 import PaymentMethodBrands from './PaymentMethodBrands/PaymentMethodBrands';
 import { BRAND_ICON_UI_EXCLUSION_LIST } from '../../../internal/SecuredFields/lib/configuration/constants';
 import PaymentMethodName from './PaymentMethodName';
-import RadioButton from '../../../internal/RadioButton';
 
 interface PaymentMethodItemProps {
     paymentMethod: UIElement;
@@ -100,7 +99,21 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
         return (
             <li key={paymentMethod._id} className={paymentMethodClassnames} onClick={this.handleOnListItemClick}>
                 <div className="adyen-checkout__payment-method__header">
-                    <RadioButton classNames={['adyen-checkout__payment-method__header__title']} buttonId={buttonId} isSelected={isSelected}>
+                    <button
+                        className="adyen-checkout__payment-method__header__title"
+                        id={buttonId}
+                        role="radio"
+                        aria-checked={isSelected}
+                        type="button"
+                    >
+                        <span
+                            className={classNames({
+                                'adyen-checkout__payment-method__radio': true,
+                                'adyen-checkout__payment-method__radio--selected': isSelected
+                            })}
+                            aria-hidden="true"
+                        />
+
                         <PaymentMethodIcon
                             // Only add alt attribute to storedPaymentMethods (to avoid SR reading the PM name twice)
                             {...(paymentMethod.props.oneClick && { altDescription: paymentMethod.props.name })}
@@ -113,7 +126,7 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
                             isSelected={isSelected}
                             additionalInfo={paymentMethod.additionalInfo}
                         />
-                    </RadioButton>
+                    </button>
 
                     {showRemovePaymentMethodButton && (
                         <button

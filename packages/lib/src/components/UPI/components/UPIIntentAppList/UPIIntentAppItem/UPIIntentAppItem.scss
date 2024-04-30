@@ -1,6 +1,7 @@
 @import '../../../../../style/index';
 
 .adyen-checkout-upi-app-item-header {
+    position: relative;
     padding: 6px 16px 6px 44px;
 }
 
@@ -48,7 +49,8 @@
         }
     }
 
-    .adyen-checkout__payment-method__radio{
+    .adyen-checkout-radio-button__radio{
+        left: 16px;
         position: absolute;
     }
 }
