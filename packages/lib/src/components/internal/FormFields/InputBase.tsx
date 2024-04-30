@@ -41,6 +41,7 @@ export default function InputBase({ setRef, ...props }: InputBaseProps) {
 
     const handleInput = useCallback(
         (event: h.JSX.TargetedEvent<HTMLInputElement>) => {
+            // @ts-ignore TODO fix type
             props.onInput(event);
         },
         [props.onInput]

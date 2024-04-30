@@ -67,6 +67,7 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
                         name={generateFieldName('name')}
                         value={data.name}
                         classNameModifiers={['name']}
+                        // @ts-ignore TODO fix type
                         onInput={eventHandler('input')}
                         onBlur={eventHandler('blur')}
                         spellCheck={false}
@@ -86,6 +87,7 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
                         name={generateFieldName('registrationNumber')}
                         value={data.registrationNumber}
                         classNameModifiers={['registrationNumber']}
+                        // @ts-ignore TODO fix type
                         onInput={eventHandler('input')}
                         onBlur={eventHandler('blur')}
                         spellCheck={false}
