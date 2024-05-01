@@ -148,10 +148,7 @@ class Core implements ICore {
         }
 
         if (!this.options.countryCode) {
-            throw new AdyenCheckoutError(
-                IMPLEMENTATION_ERROR,
-                'You must specify a countryCode when initializing checkout. (If you are using a session then this session should be initialized with a countryCode.)'
-            );
+            throw new AdyenCheckoutError(IMPLEMENTATION_ERROR, 'You must specify a countryCode when initializing checkout.');
         }
 
         if (!this.options.locale) {
