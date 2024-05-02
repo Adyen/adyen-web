@@ -7,6 +7,7 @@ import generateEnvironmentVariables from '../config/environment-variables';
 
 const config: StorybookConfig = {
     stories: ['../storybook/**/*.stories.@(js|jsx|ts|tsx)'],
+
     addons: [
         {
             name: '@storybook/addon-essentials',
@@ -18,10 +19,12 @@ const config: StorybookConfig = {
             name: '@storybook/addon-a11y'
         }
     ],
+
     framework: {
         name: getAbsolutePath('@storybook/preact-vite'),
         options: {}
     },
+
     staticDirs: ['../storybook/assets'],
 
     async viteFinal(config) {

@@ -3,6 +3,7 @@ import cx from 'classnames';
 import { SelectItemProps } from '../types';
 import Img from '../../../Img';
 import Icon from '../../../Icon';
+import { PREFIX } from '../../../Icon/constants';
 
 const SelectListItem = ({ item, active, selected, ...props }: SelectItemProps) => {
     return (
@@ -30,7 +31,7 @@ const SelectListItem = ({ item, active, selected, ...props }: SelectItemProps) =
             {item.icon && <Img className="adyen-checkout__dropdown__element__icon" alt={item.name} src={item.icon} />}
             <span className="adyen-checkout__dropdown__element__text">{item.name}</span>
             {item.secondaryText && <span className="adyen-checkout__dropdown__element__secondary-text">{item.secondaryText}</span>}
-            {selected && <Icon type="checkmark" height={14} width={14} />}
+            {selected && <Icon type={`${PREFIX}checkmark`} height={14} width={14} />}
         </li>
     );
 };

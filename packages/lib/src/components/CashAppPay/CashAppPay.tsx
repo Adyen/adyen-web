@@ -11,6 +11,7 @@ import RedirectButton from '../internal/RedirectButton';
 import { payAmountLabel } from '../internal/PayButton';
 import { TxVariants } from '../tx-variants';
 import type { ICore } from '../../core/types';
+import { PREFIX } from '../internal/Icon/constants';
 
 export class CashAppPay extends UIElement<CashAppPayConfiguration> {
     public static type = TxVariants.cashapp;
@@ -145,7 +146,7 @@ export class CashAppPay extends UIElement<CashAppPayConfiguration> {
                 {this.props.storedPaymentMethodId ? (
                     <RedirectButton
                         label={payAmountLabel(this.props.i18n, this.props.amount)}
-                        icon={this.resources?.getImage({ imageFolder: 'components/' })('lock')}
+                        icon={this.resources?.getImage({ imageFolder: 'components/' })(`${PREFIX}lock`)}
                         name={this.displayName}
                         amount={this.props.amount}
                         payButton={this.payButton}
