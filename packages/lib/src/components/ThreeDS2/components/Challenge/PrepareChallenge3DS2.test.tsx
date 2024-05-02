@@ -12,22 +12,40 @@ const challengeToken = {
     threeDSServerTransID: '3fc4ead'
 };
 
-const threeDS2ChallengeToken = JSON.stringify(challengeToken);
+let propsMaster: any;
 
-const propsMaster = {
-    challengeWindowSize: '01',
-    dataKey: 'threeDSResult',
-    i18n: global.i18n,
-    paymentData: 'Ab02b4c0!BQABAg',
-    token: btoa(threeDS2ChallengeToken)
+const prepareProps = (token = challengeToken) => {
+    const threeDS2ChallengeToken = JSON.stringify(token);
+
+    propsMaster = {
+        challengeWindowSize: '01',
+        dataKey: 'threeDSResult',
+        i18n: global.i18n,
+        paymentData: 'Ab02b4c0!BQABAg',
+        token: btoa(threeDS2ChallengeToken)
+    };
 };
 
 let onError: any;
 let errorMessage: string;
 
+const baseAnalyticsError = {
+    type: 'threeDS2Error',
+    errorType: 'ApiError'
+};
+
 let onSubmitAnalytics: any;
 
 const completeFunction = jest.fn();
+
+const mountPrepareChallenge = props => {
+    mount(
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            {/*@ts-ignore Ignore typing on props*/}
+            <PrepareChallenge3DS2 {...props} isMDFlow={false} onComplete={completeFunction} onSubmitAnalytics={onSubmitAnalytics} onError={onError} />
+        </CoreProvider>
+    );
+};
 
 describe('PrepareChallenge3DS2', () => {
     beforeEach(() => {
@@ -35,78 +53,137 @@ describe('PrepareChallenge3DS2', () => {
 
         onError = jest.fn(errObj => {
             errorMessage = errObj.message;
-            console.log('### PrepareChallenge3DS2.test:::: err.msg', errObj.message);
-            console.log('### PrepareChallenge3DS2.test:::: err.cause', errObj.cause);
         });
 
-        onSubmitAnalytics = jest.fn(obj => {
-            console.log('### PrepareChallenge3DS2.test::onSubmitAnalytics:: obj', obj);
-        });
+        onSubmitAnalytics = jest.fn(() => {});
     });
 
     test('Calls onError & onSubmitAnalytics callbacks when token is missing from props', () => {
+        // prep
+        prepareProps();
+
         const propsMock = { ...propsMaster };
         delete propsMock.token;
 
-        mount(
-            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-                {/*@ts-ignore Ignore typing on props*/}
-                <PrepareChallenge3DS2
-                    {...propsMock}
-                    isMDFlow={false}
-                    onComplete={completeFunction}
-                    onSubmitAnalytics={onSubmitAnalytics}
-                    onError={onError}
-                />
-            </CoreProvider>
-        );
+        // mount
+        mountPrepareChallenge(propsMock);
 
+        // assert
         expect(errorMessage).toBe('701: Data parsing error');
 
-        expect(onSubmitAnalytics).toBeCalled();
+        const analyticsError = { ...baseAnalyticsError, code: '701', message: '3DS2Challenge_Error: Missing "token" property from threeDS2 action' };
+        expect(onSubmitAnalytics).toBeCalledWith(analyticsError);
     });
 
     test('Calls onError & onSubmitAnalytics callbacks when token is not base64', () => {
+        // prep
+        prepareProps();
+
         const propsMock = { ...propsMaster };
         propsMock.token = 'some string';
 
-        mount(
-            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-                {/*@ts-ignore Ignore typing on props*/}
-                <PrepareChallenge3DS2
-                    {...propsMock}
-                    isMDFlow={false}
-                    onComplete={completeFunction}
-                    onSubmitAnalytics={onSubmitAnalytics}
-                    onError={onError}
-                />
-            </CoreProvider>
-        );
+        // mount
+        mountPrepareChallenge(propsMock);
 
+        // assert
         expect(errorMessage).toBe('704: Data parsing error');
 
-        expect(onSubmitAnalytics).toBeCalled();
+        const analyticsError = { ...baseAnalyticsError, code: '704', message: '3DS2Challenge_Error: not base64' };
+        expect(onSubmitAnalytics).toBeCalledWith(analyticsError);
     });
 
-    // test('Calls onError & onSubmitAnalytics callbacks when acsURL in not valid', () => {
-    //     const propsMock = { ...propsMaster };
-    //     propsMock.acsURL = 'some string';
-    //
-    //     mount(
-    //         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-    //             {/*@ts-ignore Ignore typing on props*/}
-    //             <PrepareChallenge3DS2
-    //                 {...propsMock}
-    //                 isMDFlow={false}
-    //                 onComplete={completeFunction}
-    //                 onSubmitAnalytics={onSubmitAnalytics}
-    //                 onError={onError}
-    //             />
-    //         </CoreProvider>
-    //     );
-    //
-    //     expect(errorMessage).toBe('704: Data parsing error');
-    //
-    //     expect(onSubmitAnalytics).toBeCalled();
-    // });
+    test('Calls onError & onSubmitAnalytics callbacks when acsURL in not valid', () => {
+        // prep
+        const alteredToken = { ...challengeToken };
+        alteredToken.acsURL = '';
+
+        prepareProps(alteredToken);
+
+        const propsMock = { ...propsMaster };
+
+        // mount
+        mountPrepareChallenge(propsMock);
+
+        // assert
+        expect(errorMessage).toBe('800: Data parsing error');
+
+        const analyticsError = {
+            ...baseAnalyticsError,
+            code: '800',
+            message: '3DS2Challenge_Error: Decoded token is missing a valid acsURL property'
+        };
+        expect(onSubmitAnalytics).toBeCalledWith(analyticsError);
+    });
+
+    test('Calls onError & onSubmitAnalytics callbacks when acsTransID in not valid', () => {
+        // prep
+        const alteredToken = { ...challengeToken };
+        alteredToken.acsTransID = '';
+
+        prepareProps(alteredToken);
+
+        const propsMock = { ...propsMaster };
+
+        // mount
+        mountPrepareChallenge(propsMock);
+
+        // assert
+        expect(errorMessage).toBe('703: Data parsing error');
+
+        const analyticsError = {
+            ...baseAnalyticsError,
+            code: '703',
+            message:
+                '3DS2Challenge_Error: Decoded token is missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)'
+        };
+        expect(onSubmitAnalytics).toBeCalledWith(analyticsError);
+    });
+
+    test('Calls onError & onSubmitAnalytics callbacks when messageVersion in not valid', () => {
+        // prep
+        const alteredToken = { ...challengeToken };
+        delete alteredToken.messageVersion;
+
+        prepareProps(alteredToken);
+
+        const propsMock = { ...propsMaster };
+
+        // mount
+        mountPrepareChallenge(propsMock);
+
+        // assert
+        expect(errorMessage).toBe('703: Data parsing error');
+
+        const analyticsError = {
+            ...baseAnalyticsError,
+            code: '703',
+            message:
+                '3DS2Challenge_Error: Decoded token is missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)'
+        };
+        expect(onSubmitAnalytics).toBeCalledWith(analyticsError);
+    });
+
+    test('Calls onError & onSubmitAnalytics callbacks when threeDSServerTransID in not valid', () => {
+        // prep
+        const alteredToken = { ...challengeToken };
+        delete alteredToken.threeDSServerTransID;
+
+        prepareProps(alteredToken);
+
+        const propsMock = { ...propsMaster };
+
+        // mount
+        mountPrepareChallenge(propsMock);
+
+        // assert
+        expect(errorMessage).toBe('703: Data parsing error');
+
+        const analyticsError = {
+            ...baseAnalyticsError,
+            code: '703',
+            message:
+                '3DS2Challenge_Error: Decoded token is missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)'
+        };
+        expect(onSubmitAnalytics).toBeCalledWith(analyticsError);
+    });
 });
