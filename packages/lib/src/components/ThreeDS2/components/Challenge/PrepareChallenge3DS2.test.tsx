@@ -49,6 +49,45 @@ const mountPrepareChallenge = props => {
 
 describe('PrepareChallenge3DS2', () => {
     beforeEach(() => {
+        onError = jest.fn();
+
+        onSubmitAnalytics = jest.fn();
+    });
+
+    test("Doesn't throw an error when passing correct properties", () => {
+        const formResult = `
+            <html>
+                <body>
+                    <script>
+                    var data = {};
+                    data.result = {};
+                    data.result.transStatus = 'Y';
+                    data.type = 'challengeResult';
+
+                    var result = JSON.stringify(data);
+                    window.parent.postMessage(result, 'http://localhost:8011');
+                    </script>
+                </body>
+            </html>
+        `;
+
+        HTMLFormElement.prototype.submit = jest.fn().mockImplementation(() => formResult);
+
+        prepareProps();
+
+        mountPrepareChallenge(propsMaster);
+
+        expect(onError.mock.calls.length).toBe(0);
+
+        expect(onSubmitAnalytics).toBeCalledWith({
+            type: 'threeDS2',
+            message: 'creq sent'
+        });
+    });
+});
+
+describe('PrepareChallenge3DS2 - testing what happens when expected props are not present', () => {
+    beforeEach(() => {
         errorMessage = null;
 
         onError = jest.fn(errObj => {
