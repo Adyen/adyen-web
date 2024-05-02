@@ -37,7 +37,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         if (this.props.token) {
             const challengeData: ChallengeData | ErrorObject = prepareChallengeData({
                 token: this.props.token,
-                size: this.props.challengeWindowSize || this.props.size
+                size: this.props.challengeWindowSize || this.props.size // TODO confirm that this.props.size is legacy and can be removed
             });
 
             this.state = {
@@ -91,7 +91,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 );
 
                 // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
-                const errorCodeObject = {
+                const errorCodeObject: SendAnalyticsObject = {
                     type: THREEDS2_ERROR,
                     code: Analytics3DS2Errors.TOKEN_IS_MISSING_ACSURL,
                     errorType: ANALYTICS_API_ERROR,
@@ -123,7 +123,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                     code: Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS,
                     errorType: ANALYTICS_API_ERROR,
                     message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)`
-                });
+                } as SendAnalyticsObject);
 
                 console.debug(
                     '### PrepareChallenge3DS2::exiting:: missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)'
@@ -148,7 +148,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                     errorInfo:
                         errorMsg.indexOf(MISSING_TOKEN_IN_ACTION_MSG) > -1
                             ? `${Analytics3DS2Errors.ACTION_IS_MISSING_TOKEN}: ${this.props.i18n.get('err.gen.9102')}`
-                            : `${Analytics3DS2Errors.TOKEN_DECODE_OR_PARSING_FAILED}:${this.props.i18n.get('err.gen.9102')}`
+                            : `${Analytics3DS2Errors.TOKEN_DECODE_OR_PARSING_FAILED}: ${this.props.i18n.get('err.gen.9102')}`
                     // errorObj: this.state.challengeData // TODO Decide if we want to expose this data
                 },
                 true
