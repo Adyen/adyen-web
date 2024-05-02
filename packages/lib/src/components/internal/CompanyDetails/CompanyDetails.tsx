@@ -45,6 +45,15 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
             handleChangeFor(key, mode)(e);
         };
 
+    const inputEventHandler =
+        (mode: string): h.JSX.InputEventHandler<HTMLInputElement> =>
+        (e): void => {
+            const { name } = e.target as HTMLInputElement;
+            const key = name.split(`${namePrefix}.`).pop();
+
+            handleChangeFor(key, mode)(e);
+        };
+
     useEffect(() => {
         const formattedData = getFormattedData(data);
         props.onChange({ data: formattedData, valid, errors, isValid });
@@ -67,7 +76,7 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
                         name={generateFieldName('name')}
                         value={data.name}
                         classNameModifiers={['name']}
-                        onInput={eventHandler('input')}
+                        onInput={inputEventHandler('input')}
                         onBlur={eventHandler('blur')}
                         spellCheck={false}
                     />
@@ -86,7 +95,7 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
                         name={generateFieldName('registrationNumber')}
                         value={data.registrationNumber}
                         classNameModifiers={['registrationNumber']}
-                        onInput={eventHandler('input')}
+                        onInput={inputEventHandler('input')}
                         onBlur={eventHandler('blur')}
                         spellCheck={false}
                     />

@@ -8,6 +8,7 @@ import { digitsOnlyFormatter } from '../../../utils/Formatters/formatters';
 import useImage from '../../../core/Context/useImage';
 import InputText from '../../internal/FormFields/InputText';
 import { UIElementProps } from '../../internal/UIElement/types';
+import { PREFIX } from '../../internal/Icon/constants';
 
 interface BlikInputProps extends UIElementProps {
     data?: BlikInputDataState;
@@ -72,7 +73,7 @@ function BlikInput(props: BlikInputProps) {
             {props.showPayButton &&
                 props.payButton({
                     status,
-                    icon: getImage({ imageFolder: 'components/' })('lock')
+                    icon: getImage({ imageFolder: 'components/' })(`${PREFIX}lock`)
                 })}
         </div>
     );

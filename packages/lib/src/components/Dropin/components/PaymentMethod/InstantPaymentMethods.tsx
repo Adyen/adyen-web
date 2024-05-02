@@ -1,5 +1,6 @@
 import { Fragment, h } from 'preact';
 import UIElement from '../../../internal/UIElement/UIElement';
+import './InstantPaymentMethods.scss';
 
 interface InstantPaymentMethodsProps {
     paymentMethods: UIElement[];

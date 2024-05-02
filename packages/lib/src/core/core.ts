@@ -135,8 +135,9 @@ class Core implements ICore {
         try {
             const translation = await getTranslations(this.cdnTranslationsUrl, Core.metadata.version, this.options.locale, this.options.translations);
             return translation;
-        } catch (error) {
-            this.options.onError?.(error);
+        } catch (error: unknown) {
+            if (error instanceof AdyenCheckoutError) this.options.onError?.(error);
+            else this.options.onError?.(new AdyenCheckoutError('ERROR', 'Failed to fetch translation', { cause: error }));
         }
     }
 
@@ -147,10 +148,7 @@ class Core implements ICore {
         }
 
         if (!this.options.countryCode) {
-            throw new AdyenCheckoutError(
-                IMPLEMENTATION_ERROR,
-                'You must specify a countryCode when initializing checkout. (If you are using a session then this session should be initialized with a countryCode.)'
-            );
+            throw new AdyenCheckoutError(IMPLEMENTATION_ERROR, 'You must specify a countryCode when initializing checkout.');
         }
 
         if (!this.options.locale) {

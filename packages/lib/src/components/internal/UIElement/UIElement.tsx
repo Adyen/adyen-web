@@ -222,13 +222,14 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     private async submitUsingSessionsFlow(data: PaymentData): Promise<CheckoutSessionPaymentResponse> {
-        // Call analytics endpoint
         this.submitAnalytics({ type: ANALYTICS_SUBMIT_STR });
 
         try {
             return await this.core.session.submitPayment(data);
-        } catch (error) {
-            this.handleError(error);
+        } catch (error: unknown) {
+            if (error instanceof AdyenCheckoutError) this.handleError(error);
+            else this.handleError(new AdyenCheckoutError('ERROR', 'Error when making /payments call', { cause: error }));
+
             return Promise.reject(error);
         }
 
@@ -268,8 +269,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     private makeAdditionalDetailsCall(state: AdditionalDetailsStateData): Promise<CheckoutSessionDetailsResponse | CheckoutAdvancedFlowResponse> {
-        this.setElementStatus('loading');
-
         if (this.props.onAdditionalDetails) {
             return new Promise<CheckoutAdvancedFlowResponse>((resolve, reject) => {
                 this.props.onAdditionalDetails(state, this.elementRef, { resolve, reject });
@@ -291,8 +290,10 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     private async submitAdditionalDetailsUsingSessionsFlow(data: any): Promise<CheckoutSessionDetailsResponse> {
         try {
             return await this.core.session.submitDetails(data);
-        } catch (error) {
-            this.handleError(error);
+        } catch (error: unknown) {
+            if (error instanceof AdyenCheckoutError) this.handleError(error);
+            else this.handleError(new AdyenCheckoutError('ERROR', 'Error when making /details call', { cause: error }));
+
             return Promise.reject(error);
         }
     }

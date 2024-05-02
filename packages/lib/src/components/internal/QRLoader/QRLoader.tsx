@@ -16,6 +16,7 @@ import useImage from '../../../core/Context/useImage';
 import { useA11yReporter } from '../../../core/Errors/useA11yReporter';
 import useAutoFocus from '../../../utils/useAutoFocus';
 import { ANALYTICS_DOWNLOAD_STR, ANALYTICS_QR_CODE_DOWNLOAD } from '../../../core/Analytics/constants';
+import { PREFIX } from '../Icon/constants';
 
 const QRCODE_URL = 'barcode.shtml?barcodeType=qrCode&fileType=png&data=';
 
@@ -253,7 +254,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                                 });
                                 complete();
                             }}
-                            icon={getImage({ imageFolder: 'components/' })('copy')}
+                            icon={getImage({ imageFolder: 'components/' })(`${PREFIX}copy`)}
                             label={i18n.get('button.copy')}
                         />
                     </div>
