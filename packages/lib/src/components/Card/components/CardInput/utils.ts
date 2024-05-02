@@ -149,6 +149,7 @@ export const extractPropsForSFP = (props: CardInputProps) => {
         legacyInputMode: props.legacyInputMode,
         loadingContext: props.loadingContext,
         maskSecurityCode: props.maskSecurityCode,
+        exposeExpiryDate: props.exposeExpiryDate,
         minimumExpiryDate: props.minimumExpiryDate,
         onAdditionalSFConfig: props.onAdditionalSFConfig,
         onAdditionalSFRemoved: props.onAdditionalSFRemoved,

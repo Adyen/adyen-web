@@ -1,5 +1,11 @@
 import { makeCallbackObjectsEncryption } from '../utils/callbackUtils';
-import { ENCRYPTED_EXPIRY_MONTH, ENCRYPTED_EXPIRY_YEAR, ENCRYPTED_SECURITY_CODE, ENCRYPTED_CARD_NUMBER } from '../../constants';
+import {
+    ENCRYPTED_EXPIRY_MONTH,
+    ENCRYPTED_EXPIRY_YEAR,
+    ENCRYPTED_SECURITY_CODE,
+    ENCRYPTED_CARD_NUMBER,
+    ENCRYPTED_EXPIRY_DATE
+} from '../../constants';
 import { processErrors } from '../utils/processErrors';
 import { truthy } from '../../utilities/commonUtils';
 import { SFFeedbackObj, CbObjOnFieldValid, EncryptionObj } from '../../types';
@@ -72,6 +78,11 @@ export function handleEncryption(pFeedbackObj: SFFeedbackObj): void {
     // For number field - add the 8 digit issuerBin to the encryption object
     if (fieldType === ENCRYPTED_CARD_NUMBER && truthy(pFeedbackObj.issuerBin)) {
         callbackObjectsArr[0].issuerBin = +pFeedbackObj.issuerBin;
+    }
+
+    // Add expiryDate to "encryptedExpiryYear" field. It will only be present if the correct config has been sent to SF
+    if (fieldType === ENCRYPTED_EXPIRY_DATE && truthy(pFeedbackObj.expiryDate)) {
+        callbackObjectsArr[1].expiryDate = pFeedbackObj.expiryDate;
     }
 
     // BROADCAST VALID STATE OF INDIVIDUAL INPUTS - passing the encryption objects
