@@ -2,56 +2,28 @@
 
 .adyen-checkout-upi-app-item-header {
     position: relative;
-    padding: 6px 16px 6px 44px;
-}
-
-.adyen-checkout-upi-app-item-details{
-    padding: 0 16px 16px;
+    padding: 6px 16px 6px 32px;
 }
 
 .adyen-checkout-upi-app-item {
-    --upi-app-item-border-radius: 8px;
-
-    position: relative;
-    background: $color-white;
-    border: 1px solid $color-gray-light;
     cursor: pointer;
     margin-top: -1px;
     width: 100%;
     transition: opacity 0.3s ease-out;
 
     &:first-child {
-        border-top-left-radius: var(--upi-app-item-border-radius);
-        border-top-right-radius: var(--upi-app-item-border-radius);
         margin-top: 0;
     }
 
-    &:last-child,
-    &--next-selected {
-        border-bottom-left-radius: var(--upi-app-item-border-radius);
-        border-bottom-right-radius: var(--upi-app-item-border-radius);
-    }
-
     &--selected {
+        cursor: default;
         transition:
             margin 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
             opacity 0.3s ease-out;
-        background: $color-gray-lighter;
-        border: 1px solid $color-gray-light;
-        margin: 8px 0;
-        border-radius: var(--upi-app-item-border-radius);
-        cursor: default;
-
-        + .adyen-checkout-upi-app-item {
-            margin-top: 0;
-            border-top-left-radius: var(--upi-app-item-border-radius);
-            border-top-right-radius: var(--upi-app-item-border-radius);
-        }
     }
 
-    .adyen-checkout-radio-button__radio{
-        left: 16px;
+    .adyen-checkout-radio-button__radio {
+        left: 0;
         position: absolute;
     }
 }
-

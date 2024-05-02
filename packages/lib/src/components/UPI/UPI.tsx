@@ -8,11 +8,11 @@ import { TX_VARIANT, UPIElementProps, UpiMode, UpiPaymentData } from './types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import isMobile from '../../utils/isMobile';
 /**
- * Small screens:
+ * For mobile:
  * We should show upi_collect or upi_intent depending on if `apps` are returned in /paymentMethods response
  * The upi_qr should always be on the second tab
  *
- * Large screens:
+ * For non-mobile:
  * We should never show the upi_intent (ignore `apps` in /paymentMethods response)
  * The upi_qr should be on the first tab and the upi_collect should be on second tab
  */
@@ -38,9 +38,9 @@ class UPI extends UIElement<UPIElementProps> {
         }
 
         const hasIntentApps = props.apps?.length > 0;
-        const defaultMode = hasIntentApps ? UpiMode.Intent : UpiMode.Collect;
+        const defaultMode = hasIntentApps ? UpiMode.Intent : UpiMode.Vpa;
         const upiCollectApp = {
-            id: UpiMode.Collect,
+            id: UpiMode.Vpa,
             name: props.i18n.get('upi.collect.dropdown.label'),
             type: TX_VARIANT.UpiCollect
         };
@@ -67,7 +67,7 @@ class UPI extends UIElement<UPIElementProps> {
         }
 
         const { virtualPaymentAddress, app } = this.state.data;
-        const type = this.selectedMode === UpiMode.Collect ? TX_VARIANT.UpiCollect : app?.type;
+        const type = this.selectedMode === UpiMode.Vpa ? TX_VARIANT.UpiCollect : app?.type;
         return {
             paymentMethod: {
                 ...(type && { type }),

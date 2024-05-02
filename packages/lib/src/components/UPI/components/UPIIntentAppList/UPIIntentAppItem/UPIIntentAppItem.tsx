@@ -10,12 +10,11 @@ interface UPIIntentAppItemProps {
     app: App;
     imgSrc: string;
     isSelected: boolean;
-    isNextSelected?: boolean;
     onSelect?: Function;
     children?: ComponentChildren;
 }
 
-const UPIIntentAppItem = ({ app, imgSrc, isSelected, isNextSelected, onSelect = () => {}, children }: UPIIntentAppItemProps): h.JSX.Element => {
+const UPIIntentAppItem = ({ app, imgSrc, isSelected, onSelect = () => {}, children }: UPIIntentAppItemProps): h.JSX.Element => {
     const buttonId = `adyen-checkout-upi-app-item-radio-button-${app.id}-${uuid()}`;
     const handleAppSelected = (app: App) => {
         onSelect(app);
@@ -25,8 +24,7 @@ const UPIIntentAppItem = ({ app, imgSrc, isSelected, isNextSelected, onSelect = 
         <li
             className={cx({
                 'adyen-checkout-upi-app-item': true,
-                'adyen-checkout-upi-app-item--selected': isSelected,
-                'adyen-checkout-upi-app-item--next-selected': isNextSelected
+                'adyen-checkout-upi-app-item--selected': isSelected
             })}
             role="button"
             aria-expanded={isSelected}

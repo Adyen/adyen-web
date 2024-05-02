@@ -52,12 +52,9 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
         vpaInputHandlers?.validateInput();
     };
 
-    const onSetVpaInputHandlers = useCallback(
-        (handlers: VpaInputHandlers) => {
-            setVpaInputHandlers(handlers);
-        },
-        [setVpaInputHandlers]
-    );
+    const onSetVpaInputHandlers = useCallback((handlers: VpaInputHandlers) => {
+        setVpaInputHandlers(handlers);
+    }, []);
 
     const onChangeUpiMode = useCallback(
         (newMode: UpiMode) => {
@@ -86,7 +83,7 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
             valid,
             isValid
         });
-    }, [vpa, selectedApp, errors, valid, isValid, mode]);
+    }, [vpa, selectedApp, errors, valid, isValid]);
 
     return (
         <Fragment>
@@ -100,7 +97,7 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
             />
             <ContentSeparator label={i18n.get('upi.completePayment')} />
             {mode === UpiMode.Intent && (
-                <div id={A11Y.AreaId.INTENT} aria-labelledby={A11Y.ButtonId.INTENT} role="region">
+                <div id={A11Y.AreaId.INTENT} aria-labelledby={A11Y.ButtonId.INTENT} className="adyen-checkout-upi-area-intent" role="region">
                     <UPIIntentAppList
                         disabled={status === 'loading'}
                         apps={apps}
@@ -118,8 +115,8 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
                         })}
                 </div>
             )}
-            {mode === UpiMode.Collect && (
-                <div id={A11Y.AreaId.VPA} aria-labelledby={A11Y.ButtonId.VPA} role="region">
+            {mode === UpiMode.Vpa && (
+                <div id={A11Y.AreaId.VPA} aria-labelledby={A11Y.ButtonId.VPA} className="adyen-checkout-upi-area-vpa" role="region">
                     <VpaInput disabled={status === 'loading'} onChange={onChange} onSetInputHandlers={onSetVpaInputHandlers} />
 
                     {showPayButton &&
@@ -130,7 +127,7 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
                 </div>
             )}
             {mode === UpiMode.QrCode && (
-                <div id={A11Y.AreaId.QR} aria-labelledby={A11Y.ButtonId.QR} role="region">
+                <div id={A11Y.AreaId.QR} aria-labelledby={A11Y.ButtonId.QR} className="adyen-checkout-upi-area-qr-code" role="region">
                     {showPayButton &&
                         payButton({
                             label: i18n.get('generateQRCode'),

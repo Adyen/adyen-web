@@ -10,15 +10,16 @@
 
 .adyen-checkout__segmented-control--upi-margin-bottom {
     margin-bottom: 16px;
+}
 
-    .adyen-checkout__segmented-control-segment {
-        order: 1;
+.adyen-checkout-upi-area-intent {
+    .adyen-checkout__button--pay {
+        margin-top: 16px;
     }
 }
 
-// Large screens: QR is always on the first tab
-#upi-button-qr-code {
-    @include screen-m-and-up {
-        order: 0;
+.adyen-checkout-upi-area-qr-code {
+    .adyen-checkout__button--pay {
+        margin-top: 0;
     }
 }

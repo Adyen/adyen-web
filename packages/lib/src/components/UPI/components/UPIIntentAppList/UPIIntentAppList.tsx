@@ -29,26 +29,16 @@ const UPIIntentAppList = ({
 
     return (
         <ul className="adyen-checkout-upi-app-list" role="radiogroup" aria-label={i18n.get('paymentMethodsList.aria.label')} required>
-            {apps.map((app, index, array) => {
+            {apps.map(app => {
                 const key = `adyen-checkout-upi-app-item-${app.id}}`;
                 const isSelected = selectedAppId === app.id;
-                const next = array[index + 1];
-                const isNextSelected = selectedAppId === next?.id;
 
-                const showUpiCollectInput = app.id === UpiMode.Collect;
-                const imgPathConfig = showUpiCollectInput ? {} : { subFolder: 'upi/' };
+                const showUpiCollectInput = app.id === UpiMode.Vpa;
                 const imgName = showUpiCollectInput ? 'upi' : app.id;
-                const imgSrc = getImage(imgPathConfig)(imgName);
+                const imgSrc = getImage()(imgName.toLowerCase());
 
                 return (
-                    <UPIIntentAppItem
-                        key={key}
-                        app={app}
-                        imgSrc={imgSrc}
-                        isSelected={isSelected}
-                        isNextSelected={isNextSelected}
-                        onSelect={onAppSelect}
-                    >
+                    <UPIIntentAppItem key={key} app={app} imgSrc={imgSrc} isSelected={isSelected} onSelect={onAppSelect}>
                         {showUpiCollectInput && <VpaInput disabled={disabled} onChange={onVpaInputChange} onSetInputHandlers={onSetInputHandlers} />}
                     </UPIIntentAppItem>
                 );

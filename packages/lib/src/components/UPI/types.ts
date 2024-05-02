@@ -9,8 +9,8 @@ export type UpiPaymentData = {
 };
 
 export enum UpiMode {
-    Collect = 'collect',
-    QrCode = 'qr-code',
+    Vpa = 'vpa',
+    QrCode = 'qrCode',
     Intent = 'intent'
 }
 
