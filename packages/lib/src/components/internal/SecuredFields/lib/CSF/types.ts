@@ -70,6 +70,7 @@ export interface CSFSetupObject extends CSFCommonProps {
     placeholders?: Placeholders;
     showContextualElement: boolean;
     maskSecurityCode: boolean;
+    exposeExpiryDate: boolean;
     shouldDisableIOSArrowKeys: boolean;
 }
 

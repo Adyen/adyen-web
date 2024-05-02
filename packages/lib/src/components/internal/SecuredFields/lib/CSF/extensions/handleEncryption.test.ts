@@ -78,6 +78,7 @@ const feedbackObj_encryptedDate: any = {
         }
     ],
     fieldType: 'encryptedExpiryDate',
+    expiryDate: '03/2030',
     numKey: 2083655694
 };
 
@@ -142,7 +143,8 @@ const expected_callbackObj_onFieldValid_Year = {
     valid: true,
     type: 'card',
     rootNode: 'div',
-    blob: 'eyJhbGc_'
+    blob: 'eyJhbGc_',
+    expiryDate: '03/2030'
 };
 
 const expected_callbackObj_onFieldValid_PAN = {

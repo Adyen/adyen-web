@@ -133,6 +133,7 @@ export interface CbObjOnFieldValid {
     rootNode: HTMLElement;
     blob?: string;
     endDigits?: string;
+    expiryDate?: string;
     issuerBin?: number;
 }
 
@@ -213,6 +214,7 @@ export interface SFFeedbackObj {
     error?: string;
     endDigits?: string;
     issuerBin?: string;
+    expiryDate?: string;
     type?: string;
     binValue?: string;
     focus?: boolean;
@@ -304,6 +306,7 @@ export interface SecuredFieldCommonProps {
     // originally from CSF->this.props
     implementationType: string;
     maskSecurityCode: boolean;
+    exposeExpiryDate: boolean;
     disableIOSArrowKeys: boolean;
 }
 

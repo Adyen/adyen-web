@@ -135,6 +135,7 @@ export interface CardInputProps {
     trimTrailingSeparator?: boolean;
     type?: string;
     maskSecurityCode?: boolean;
+    exposeExpiryDate?: boolean;
     disclaimerMessage?: DisclaimerMsgObject;
     onValidationErrorAnalytics?: (obj: FieldErrorAnalyticsObject) => {};
 }
