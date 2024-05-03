@@ -4,7 +4,9 @@
   "license": "MIT",
   "homepage": "https://docs.adyen.com/checkout",
   "type": "module",
-  "sideEffects": ["*.css"],
+  "sideEffects": [
+    "*.css"
+  ],
   "main": "dist/cjs/index.cjs",
   "module": "dist/es-legacy/index.js",
   "types": "dist/es/index.d.ts",
@@ -132,7 +134,7 @@
     "whatwg-fetch": "3.6.20"
   },
   "dependencies": {
-    "@adyen/bento-design-tokens": "0.5.4",
+    "@adyen/bento-design-tokens": "1.5.0",
     "@types/applepayjs": "14.0.8",
     "@types/googlepay": "0.7.6",
     "classnames": "2.5.1",
