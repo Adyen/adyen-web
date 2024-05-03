@@ -4,11 +4,21 @@ import { App, UpiMode } from '../../types';
 import { A11Y } from './constants';
 import isMobile from '../../../../utils/isMobile';
 
-function useUpiSegmentedControlOptions(apps: Array<App>, mode: UpiMode) {
+interface SegmentedControlOption {
+    label: string;
+    value: UpiMode;
+    htmlProps: {
+        id: string;
+        'aria-expanded': boolean;
+        'aria-controls': string;
+    };
+}
+
+function useUpiSegmentedControlOptions(apps: Array<App>, mode: UpiMode): Array<SegmentedControlOption> {
     const { i18n } = useCoreContext();
 
     return useMemo(() => {
-        const intentOption = {
+        const intentOption: SegmentedControlOption = {
             label: i18n.get('upi.mode.payByAnyUpi'),
             value: UpiMode.Intent,
             htmlProps: {
@@ -17,7 +27,7 @@ function useUpiSegmentedControlOptions(apps: Array<App>, mode: UpiMode) {
                 'aria-controls': A11Y.AreaId.INTENT
             }
         };
-        const vpaOption = {
+        const vpaOption: SegmentedControlOption = {
             label: i18n.get('upi.mode.enterUpiId'),
             value: UpiMode.Vpa,
             htmlProps: {
@@ -26,7 +36,7 @@ function useUpiSegmentedControlOptions(apps: Array<App>, mode: UpiMode) {
                 'aria-controls': A11Y.AreaId.VPA
             }
         };
-        const qrOption = {
+        const qrOption: SegmentedControlOption = {
             label: i18n.get('upi.mode.qrCode'),
             value: UpiMode.QrCode,
             htmlProps: {
@@ -41,7 +51,7 @@ function useUpiSegmentedControlOptions(apps: Array<App>, mode: UpiMode) {
         const segmentedControlOptions = new Array(2).fill(shouldShowUpiIntent ? intentOption : vpaOption);
         segmentedControlOptions[positionOfQrOption] = qrOption;
         return segmentedControlOptions;
-    }, [apps]);
+    }, [apps, mode]);
 }
 
 export default useUpiSegmentedControlOptions;
