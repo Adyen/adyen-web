@@ -4,7 +4,14 @@ import '../../style.scss';
 import { countryCode } from '../../services/commonConfig';
 
 const initCheckout = async () => {
-    window.checkout = await AdyenCheckout({ countryCode });
+    window.checkout = await AdyenCheckout({
+        countryCode,
+        _environmentUrls: {
+            cdn: {
+                translations: '/'
+            }
+        }
+    });
     window.address = new Address(checkout).mount('.address-field');
 };
 
