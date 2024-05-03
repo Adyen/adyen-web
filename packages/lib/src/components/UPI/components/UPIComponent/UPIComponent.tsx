@@ -22,9 +22,9 @@ interface UPIComponentProps {
     showPayButton: boolean;
     apps?: Array<App>;
 
-    ref(ref: RefObject<typeof UPIComponent>): void;
+    ref?(ref: RefObject<typeof UPIComponent>): void;
 
-    payButton(props: PayButtonFunctionProps): h.JSX.Element;
+    payButton?(props: PayButtonFunctionProps): h.JSX.Element;
 
     onChange({ data, valid, errors, isValid }: OnChangeProps): void;
 

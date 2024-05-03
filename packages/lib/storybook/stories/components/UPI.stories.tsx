@@ -20,7 +20,6 @@ export const UPI: UpiStory = {
         countryCode: 'IN',
         // @ts-ignore Seems like enum isnt the best way to export fixed strings
         componentConfiguration: {
-            //defaultMode: 'upi_intent'
             apps: [
                 {
                     id: 'bhim',
@@ -31,7 +30,7 @@ export const UPI: UpiStory = {
                     name: 'Google Pay'
                 },
                 {
-                    id: 'PhonePe',
+                    id: 'phonepe',
                     name: 'Phone Pe'
                 }
             ]

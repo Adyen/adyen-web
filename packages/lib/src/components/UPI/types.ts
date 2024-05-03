@@ -23,7 +23,7 @@ export enum TX_VARIANT {
 export type App = { id: string; name: string; type?: TX_VARIANT };
 
 export interface UPIElementProps extends UIElementProps {
-    defaultMode: UpiMode;
+    defaultMode?: UpiMode;
     // upi_intent
     apps?: Array<App>;
     // Await

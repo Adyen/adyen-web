@@ -1,4 +1,4 @@
-import { filterPresent, filterAvailable } from './filters';
+import { filterPresent, filterAvailable, optionallyFilterUpiSubTxVariants } from './filters';
 
 describe('elements filters', () => {
     // describe('filterUnsupported', () => {
@@ -38,6 +38,31 @@ describe('elements filters', () => {
             filterAvailable({ isAvailable: () => Promise.reject(false) }).catch(isAvailable => {
                 expect(isAvailable).toBe(false);
             });
+        });
+    });
+
+    describe('optionallyFilterUpiSubTxVariants', () => {
+        test('should filter out the other upi children pms, if the upi parent type presents', () => {
+            expect(
+                optionallyFilterUpiSubTxVariants([
+                    { type: 'upi', name: 'UPI' },
+                    { type: 'upi_intent', name: 'UPI Intent' }
+                ])
+            ).toEqual([{ type: 'upi', name: 'UPI' }]);
+        });
+
+        test('should return all pms, if the upi parent type does not present', () => {
+            expect(
+                optionallyFilterUpiSubTxVariants([
+                    { type: 'scheme', name: 'Card' },
+                    { type: 'upi_intent', name: 'UPI Intent' },
+                    { type: 'upi_collect', name: 'UPI Collect' }
+                ])
+            ).toEqual([
+                { type: 'scheme', name: 'Card' },
+                { type: 'upi_intent', name: 'UPI Intent' },
+                { type: 'upi_collect', name: 'UPI Collect' }
+            ]);
         });
     });
 });

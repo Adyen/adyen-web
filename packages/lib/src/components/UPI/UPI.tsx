@@ -31,24 +31,24 @@ class UPI extends UIElement<UPIElementProps> {
         if (!isMobile()) {
             return {
                 ...super.formatProps(props),
-                defaultMode: UpiMode.QrCode,
+                defaultMode: props?.defaultMode ?? UpiMode.QrCode,
                 // For large screen, ignore the apps
                 apps: []
             };
         }
 
         const hasIntentApps = props.apps?.length > 0;
-        const defaultMode = hasIntentApps ? UpiMode.Intent : UpiMode.Vpa;
+        const fallbackDefaultMode = hasIntentApps ? UpiMode.Intent : UpiMode.Vpa;
+        const allowedModes = [fallbackDefaultMode, UpiMode.QrCode];
         const upiCollectApp = {
             id: UpiMode.Vpa,
             name: props.i18n.get('upi.collect.dropdown.label'),
             type: TX_VARIANT.UpiCollect
         };
         const apps = hasIntentApps ? [...props.apps.map(app => ({ ...app, type: TX_VARIANT.UpiIntent })), upiCollectApp] : [];
-
         return {
             ...super.formatProps(props),
-            defaultMode,
+            defaultMode: allowedModes.includes(props?.defaultMode) ? props.defaultMode : fallbackDefaultMode,
             apps
         };
     }
