@@ -5,7 +5,7 @@ module.exports = [
     {
         name: 'UMD',
         path: 'dist/umd/adyen.js',
-        limit: '230 KB',
+        limit: '100 KB',
         running: false,
     },
     /**
@@ -15,7 +15,7 @@ module.exports = [
         name: 'Auto',
         path: 'auto/auto.js',
         import: "{ AdyenCheckout, Dropin }",
-        limit: '135 KB',
+        limit: '105 KB',
         running: false,
     },
     /**
@@ -25,21 +25,21 @@ module.exports = [
         name: 'ESM - Core',
         path: 'dist/es/index.js',
         import: "{ AdyenCheckout }",
-        limit: '30 KB',
+        limit: '25 KB',
         running: false,
     },
     {
         name: 'ESM - Core + Card',
         path: 'dist/es/index.js',
         import: "{ AdyenCheckout, Card }",
-        limit: '75 KB',
+        limit: '62 KB',
         running: false,
     },
     {
         name: 'ESM - Core + Dropin with Card and Ideal',
         path: 'dist/es/index.js',
         import: "{ AdyenCheckout, Dropin, Card, Ideal }",
-        limit: '80 KB',
+        limit: '68 KB',
         running: false,
     },
 ]

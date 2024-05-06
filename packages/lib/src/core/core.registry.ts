@@ -74,5 +74,4 @@ class Registry implements IRegistry {
     }
 }
 
-// singleton instance
-export default /* #__PURE__ */ new Registry();
+export default new Registry();
