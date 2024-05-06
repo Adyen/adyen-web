@@ -2,7 +2,7 @@ import { mount } from 'enzyme';
 import { h } from 'preact';
 import PrepareChallenge3DS2 from './PrepareChallenge3DS2';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
-import { THREEDS2_ERROR } from '../../constants';
+import { THREEDS2_ERROR, THREEDS2_FULL } from '../../constants';
 import { Analytics3DS2Errors, ANALYTICS_API_ERROR, ANALYTICS_NETWORK_ERROR } from '../../../../core/Analytics/constants';
 
 const challengeToken = {
@@ -67,7 +67,7 @@ const mountPrepareChallenge = props => {
     );
 };
 
-describe('PrepareChallenge3DS2', () => {
+describe('PrepareChallenge3DS2 - Happy flow', () => {
     beforeEach(() => {
         onError = jest.fn();
 
@@ -84,7 +84,7 @@ describe('PrepareChallenge3DS2', () => {
         expect(onError.mock.calls.length).toBe(0);
 
         expect(onSubmitAnalytics).toBeCalledWith({
-            type: 'threeDS2',
+            type: THREEDS2_FULL,
             message: 'creq sent'
         });
 
@@ -92,9 +92,32 @@ describe('PrepareChallenge3DS2', () => {
         expect(prepChallComp.props()).toHaveProperty('challengeWindowSize', '01');
         expect(prepChallComp.props()).toHaveProperty('paymentData', 'Ab02b4c0!BQABAg');
     });
+
+    test("Testing calls to component's setStatusComplete method - with completed result", done => {
+        HTMLFormElement.prototype.submit = jest.fn().mockImplementation(() => formResult);
+
+        prepareProps();
+
+        mountPrepareChallenge(propsMaster);
+
+        const prepChallComp = wrapper.find('PrepareChallenge3DS2');
+
+        // mock successful scenario
+        prepChallComp.instance().setStatusComplete({ transStatus: 'Y' });
+
+        // Wait for the component to make a call to setState
+        setTimeout(() => {
+            // analytics to say process is complete
+            expect(onSubmitAnalytics).toHaveBeenCalledWith({ type: THREEDS2_FULL, message: '3DS2 challenge has completed' });
+
+            expect(onSubmitAnalytics).toHaveBeenCalledTimes(2);
+            // console.log('### PrepareChallenge3DS2.test::CALLS:: ', onSubmitAnalytics.mock.calls);
+            done();
+        }, 0);
+    });
 });
 
-describe('PrepareChallenge3DS2', () => {
+describe('PrepareChallenge3DS2 - flow completes with expected errors', () => {
     beforeEach(() => {
         onError = jest.fn();
 
@@ -121,8 +144,6 @@ describe('PrepareChallenge3DS2', () => {
 
         // Wait for the component to make a call to setState
         setTimeout(() => {
-            // console.log('### PrepareChallenge3DS2.test::CALLS:: ', onSubmitAnalytics.mock.calls);
-
             // analytics for error
             expect(onSubmitAnalytics).toHaveBeenCalledWith({
                 type: THREEDS2_ERROR,
@@ -132,7 +153,9 @@ describe('PrepareChallenge3DS2', () => {
             });
 
             // analytics to say process is complete
-            expect(onSubmitAnalytics).toHaveBeenCalledWith({ type: 'threeDS2', message: '3DS2 challenge has completed' });
+            expect(onSubmitAnalytics).toHaveBeenCalledWith({ type: THREEDS2_FULL, message: '3DS2 challenge has completed' });
+
+            expect(onSubmitAnalytics).toHaveBeenCalledTimes(3);
             done();
         }, 0);
     });
@@ -146,7 +169,7 @@ describe('PrepareChallenge3DS2', () => {
 
         const prepChallComp = wrapper.find('PrepareChallenge3DS2');
 
-        // mock timed-out scenario
+        // mock no transStatus scenario
         prepChallComp.instance().setStatusComplete(
             {},
             {
@@ -166,13 +189,15 @@ describe('PrepareChallenge3DS2', () => {
             });
 
             // analytics to say process is complete
-            expect(onSubmitAnalytics).toHaveBeenCalledWith({ type: 'threeDS2', message: '3DS2 challenge has completed' });
+            expect(onSubmitAnalytics).toHaveBeenCalledWith({ type: THREEDS2_FULL, message: '3DS2 challenge has completed' });
+
+            expect(onSubmitAnalytics).toHaveBeenCalledTimes(3);
             done();
         }, 0);
     });
 });
 
-describe('PrepareChallenge3DS2 - testing what happens when expected props are not present', () => {
+describe('PrepareChallenge3DS2 - unhappy flows', () => {
     beforeEach(() => {
         errorMessage = null;
 
@@ -198,6 +223,8 @@ describe('PrepareChallenge3DS2 - testing what happens when expected props are no
 
         const analyticsError = { ...baseAnalyticsError, code: '701', message: '3DS2Challenge_Error: Missing "token" property from threeDS2 action' };
         expect(onSubmitAnalytics).toBeCalledWith(analyticsError);
+
+        expect(onSubmitAnalytics).toHaveBeenCalledTimes(1);
     });
 
     test('Calls onError & onSubmitAnalytics callbacks when token is not base64', () => {
@@ -215,6 +242,8 @@ describe('PrepareChallenge3DS2 - testing what happens when expected props are no
 
         const analyticsError = { ...baseAnalyticsError, code: '704', message: '3DS2Challenge_Error: not base64' };
         expect(onSubmitAnalytics).toBeCalledWith(analyticsError);
+
+        expect(onSubmitAnalytics).toHaveBeenCalledTimes(1);
     });
 
     test('Calls onError & onSubmitAnalytics callbacks when acsURL in not valid', () => {
@@ -238,6 +267,8 @@ describe('PrepareChallenge3DS2 - testing what happens when expected props are no
             message: '3DS2Challenge_Error: Decoded token is missing a valid acsURL property'
         };
         expect(onSubmitAnalytics).toBeCalledWith(analyticsError);
+
+        expect(onSubmitAnalytics).toHaveBeenCalledTimes(1);
     });
 
     test('Calls onError & onSubmitAnalytics callbacks when acsTransID in not valid', () => {
@@ -262,6 +293,8 @@ describe('PrepareChallenge3DS2 - testing what happens when expected props are no
                 '3DS2Challenge_Error: Decoded token is missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)'
         };
         expect(onSubmitAnalytics).toBeCalledWith(analyticsError);
+
+        expect(onSubmitAnalytics).toHaveBeenCalledTimes(1);
     });
 
     test('Calls onError & onSubmitAnalytics callbacks when messageVersion in not valid', () => {
@@ -286,6 +319,8 @@ describe('PrepareChallenge3DS2 - testing what happens when expected props are no
                 '3DS2Challenge_Error: Decoded token is missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)'
         };
         expect(onSubmitAnalytics).toBeCalledWith(analyticsError);
+
+        expect(onSubmitAnalytics).toHaveBeenCalledTimes(1);
     });
 
     test('Calls onError & onSubmitAnalytics callbacks when threeDSServerTransID in not valid', () => {
@@ -310,5 +345,7 @@ describe('PrepareChallenge3DS2 - testing what happens when expected props are no
                 '3DS2Challenge_Error: Decoded token is missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)'
         };
         expect(onSubmitAnalytics).toBeCalledWith(analyticsError);
+
+        expect(onSubmitAnalytics).toHaveBeenCalledTimes(1);
     });
 });
