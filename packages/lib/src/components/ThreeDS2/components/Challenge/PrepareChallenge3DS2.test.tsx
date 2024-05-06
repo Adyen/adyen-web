@@ -2,6 +2,8 @@ import { mount } from 'enzyme';
 import { h } from 'preact';
 import PrepareChallenge3DS2 from './PrepareChallenge3DS2';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
+import { THREEDS2_ERROR } from '../../constants';
+import { Analytics3DS2Errors, ANALYTICS_API_ERROR, ANALYTICS_NETWORK_ERROR } from '../../../../core/Analytics/constants';
 
 const challengeToken = {
     acsReferenceNumber: 'ADYEN-ACS-SIMULATOR',
@@ -30,32 +32,15 @@ let onError: any;
 let errorMessage: string;
 
 const baseAnalyticsError = {
-    type: 'threeDS2Error',
-    errorType: 'ApiError'
+    type: THREEDS2_ERROR,
+    errorType: ANALYTICS_API_ERROR
 };
 
 let onSubmitAnalytics: any;
 
 const completeFunction = jest.fn();
 
-const mountPrepareChallenge = props => {
-    mount(
-        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-            {/*@ts-ignore Ignore typing on props*/}
-            <PrepareChallenge3DS2 {...props} isMDFlow={false} onComplete={completeFunction} onSubmitAnalytics={onSubmitAnalytics} onError={onError} />
-        </CoreProvider>
-    );
-};
-
-describe('PrepareChallenge3DS2', () => {
-    beforeEach(() => {
-        onError = jest.fn();
-
-        onSubmitAnalytics = jest.fn();
-    });
-
-    test("Doesn't throw an error when passing correct properties", () => {
-        const formResult = `
+const formResult = `
             <html>
                 <body>
                     <script>
@@ -71,6 +56,25 @@ describe('PrepareChallenge3DS2', () => {
             </html>
         `;
 
+let wrapper: any;
+
+const mountPrepareChallenge = props => {
+    wrapper = mount(
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            {/*@ts-ignore Ignore typing on props*/}
+            <PrepareChallenge3DS2 {...props} isMDFlow={false} onComplete={completeFunction} onSubmitAnalytics={onSubmitAnalytics} onError={onError} />
+        </CoreProvider>
+    );
+};
+
+describe('PrepareChallenge3DS2', () => {
+    beforeEach(() => {
+        onError = jest.fn();
+
+        onSubmitAnalytics = jest.fn();
+    });
+
+    test("Doesn't throw an error when passing correct properties", () => {
         HTMLFormElement.prototype.submit = jest.fn().mockImplementation(() => formResult);
 
         prepareProps();
@@ -83,6 +87,55 @@ describe('PrepareChallenge3DS2', () => {
             type: 'threeDS2',
             message: 'creq sent'
         });
+
+        const prepChallComp = wrapper.find('PrepareChallenge3DS2');
+        expect(prepChallComp.props()).toHaveProperty('challengeWindowSize', '01');
+        expect(prepChallComp.props()).toHaveProperty('paymentData', 'Ab02b4c0!BQABAg');
+    });
+});
+
+describe('PrepareChallenge3DS2', () => {
+    beforeEach(() => {
+        onError = jest.fn();
+
+        onSubmitAnalytics = jest.fn();
+    });
+
+    test("Testing calls to component's setStatusComplete method - when challenge times-out", done => {
+        HTMLFormElement.prototype.submit = jest.fn().mockImplementation(() => formResult);
+
+        prepareProps();
+
+        mountPrepareChallenge(propsMaster);
+
+        const prepChallComp = wrapper.find('PrepareChallenge3DS2');
+
+        // mock timed-out scenario
+        prepChallComp.instance().setStatusComplete(
+            { transStatus: 'U' },
+            {
+                errorCode: 'timeout',
+                message: 'threeDS2Challenge: timeout'
+            }
+        );
+
+        // Wait for the component to make a call to setState
+        setTimeout(() => {
+            // console.log('### PrepareChallenge3DS2.test::CALLS:: ', onSubmitAnalytics.mock.calls);
+
+            // analytics for error
+            expect(onSubmitAnalytics).toHaveBeenCalledWith({
+                type: THREEDS2_ERROR,
+                message: 'threeDS2Challenge: timeout',
+                code: Analytics3DS2Errors.THREEDS2_TIMEOUT,
+                errorType: ANALYTICS_NETWORK_ERROR
+            });
+
+            // analytics to say process is complete
+            expect(onSubmitAnalytics).toHaveBeenCalledWith({ type: 'threeDS2', message: '3DS2 challenge has completed' });
+
+            done();
+        }, 0);
     });
 });
 
