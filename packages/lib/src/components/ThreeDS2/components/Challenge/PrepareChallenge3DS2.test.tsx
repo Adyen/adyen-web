@@ -133,7 +133,40 @@ describe('PrepareChallenge3DS2', () => {
 
             // analytics to say process is complete
             expect(onSubmitAnalytics).toHaveBeenCalledWith({ type: 'threeDS2', message: '3DS2 challenge has completed' });
+            done();
+        }, 0);
+    });
 
+    test("Testing calls to component's setStatusComplete method - when there is no transStatus", done => {
+        HTMLFormElement.prototype.submit = jest.fn().mockImplementation(() => formResult);
+
+        prepareProps();
+
+        mountPrepareChallenge(propsMaster);
+
+        const prepChallComp = wrapper.find('PrepareChallenge3DS2');
+
+        // mock timed-out scenario
+        prepChallComp.instance().setStatusComplete(
+            {},
+            {
+                errorCode: 'no trans status',
+                message: 'threeDS2Challenge: no transStatus could be retrieved'
+            }
+        );
+
+        // Wait for the component to make a call to setState
+        setTimeout(() => {
+            // analytics for error
+            expect(onSubmitAnalytics).toHaveBeenCalledWith({
+                type: THREEDS2_ERROR,
+                message: 'threeDS2Challenge: no transStatus could be retrieved',
+                code: Analytics3DS2Errors.NO_TRANSSTATUS,
+                errorType: ANALYTICS_API_ERROR
+            });
+
+            // analytics to say process is complete
+            expect(onSubmitAnalytics).toHaveBeenCalledWith({ type: 'threeDS2', message: '3DS2 challenge has completed' });
             done();
         }, 0);
     });
