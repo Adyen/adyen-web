@@ -1,28 +1,45 @@
 import { mount } from 'enzyme';
 import { h } from 'preact';
 import PrepareFingerprint3DS2 from './PrepareFingerprint3DS2';
+import { THREEDS2_ERROR, THREEDS2_FULL } from '../../constants';
+import { Analytics3DS2Errors, ANALYTICS_API_ERROR } from '../../../../core/Analytics/constants';
 
 const fingerPrintToken = {
-    threeDSMethodNotificationURL:
-        'http://localhost:8080/checkoutshopper/threeDSMethodNotification.shtml?originKey=pub.v2.9915577472872913.aHR0cDovL2xvY2FsaG9zdDo4MDgw.1lTNncM-m12vA2Qv7pdahcaZ8vbucNhpVmmYwrhEYx0',
-    threeDSMethodUrl: 'http://localhost:8080/fakeURL',
-    threeDSServerTransID: 'aaf9864a-a2a4-4ccf-8eeb-a17d4101e5ae'
+    threeDSMessageVersion: '2.1.0',
+    threeDSMethodNotificationURL: 'https://checkoutshopper-test.adyen.com/checkoutshopper/threeDSMethodNotification.shtml',
+    threeDSMethodUrl: 'https://pal-test.adyen.com/threeds2simulator/acs/startMethod.shtml',
+    threeDSServerTransID: 'dfa501d6'
 };
 
-const threeDS2FingerPrintToken = JSON.stringify(fingerPrintToken);
-const propsMock = {
-    dataKey: '',
-    notificationURL: '',
-    paymentData: '',
-    type: '',
-    token: btoa(threeDS2FingerPrintToken)
+let propsMaster: any;
+
+const prepareProps = (token = fingerPrintToken) => {
+    const threeDS2FingerPrintToken = JSON.stringify(token);
+
+    propsMaster = {
+        dataKey: 'fingerprintResult',
+        // notificationURL: '',
+        paymentData: 'Ab02b4c0!BQABAg',
+        type: 'threeDS2Fingerprint',
+        token: btoa(threeDS2FingerPrintToken)
+    };
 };
 
-describe('ThreeDS2DeviceFingerprint', () => {
-    test("Doesn't throw an error when passing correct properties", () => {
-        const completeFunction = jest.fn();
-        const errorFunction = jest.fn();
-        const formResult = `
+let onSubmitAnalytics: any;
+let wrapper: any;
+
+const onError: any = () => {};
+
+const baseAnalyticsError = {
+    type: THREEDS2_ERROR,
+    errorType: ANALYTICS_API_ERROR
+};
+
+let completeFunction: any;
+
+const completedAnalyticsObj = { message: '3DS2 fingerprinting has completed', type: THREEDS2_FULL };
+
+const formResult = `
             <html>
                 <body>
                     <script>
@@ -38,12 +55,91 @@ describe('ThreeDS2DeviceFingerprint', () => {
             </html>
         `;
 
+const mountPrepareFingerprint = props => {
+    wrapper = mount(
+        <PrepareFingerprint3DS2 {...props} isMDFlow={false} onError={onError} onComplete={completeFunction} onSubmitAnalytics={onSubmitAnalytics} />
+    );
+};
+
+describe('ThreeDS2DeviceFingerprint - Happy flow', () => {
+    beforeEach(() => {
+        completeFunction = jest.fn();
+
+        onSubmitAnalytics = jest.fn();
+    });
+
+    test("Doesn't throw an error when passing correct properties", () => {
         HTMLFormElement.prototype.submit = jest.fn().mockImplementation(() => formResult);
 
-        mount(
-            // @ts-ignore Component is proper JSX
-            <PrepareFingerprint3DS2 {...propsMock} onError={errorFunction} onComplete={completeFunction} onSubmitAnalytics={() => {}} />
-        );
-        expect(errorFunction.mock.calls.length).toBe(0);
+        prepareProps();
+
+        mountPrepareFingerprint(propsMaster);
+
+        expect(onSubmitAnalytics).toBeCalledWith({
+            type: THREEDS2_FULL,
+            message: 'threeDSMethodData sent'
+        });
+
+        const prepFingComp = wrapper.find('PrepareFingerprint3DS2');
+        expect(prepFingComp.props()).toHaveProperty('dataKey', 'fingerprintResult');
+        expect(prepFingComp.props()).toHaveProperty('paymentData', 'Ab02b4c0!BQABAg');
+    });
+});
+
+describe('ThreeDS2DeviceFingerprint - unhappy flows', () => {
+    beforeEach(() => {
+        completeFunction = jest.fn();
+
+        onSubmitAnalytics = jest.fn(() => {});
+    });
+
+    test('Calls onError & onSubmitAnalytics callbacks when token is missing from props', () => {
+        // prep
+        prepareProps();
+
+        const propsMock = { ...propsMaster };
+        delete propsMock.token;
+
+        // mount
+        mountPrepareFingerprint(propsMock);
+
+        // assert
+        const analyticsError = {
+            ...baseAnalyticsError,
+            code: Analytics3DS2Errors.ACTION_IS_MISSING_TOKEN,
+            message: '3DS2Fingerprint_Error: Missing "token" property from threeDS2 action'
+        };
+        expect(onSubmitAnalytics).toBeCalledWith(analyticsError);
+
+        // fingerprinting always completes
+        expect(onSubmitAnalytics).toBeCalledWith(completedAnalyticsObj);
+        expect(completeFunction).toHaveBeenCalledTimes(1);
+
+        expect(onSubmitAnalytics).toHaveBeenCalledTimes(2);
+    });
+
+    test('Calls onError & onSubmitAnalytics callbacks when token is not base64', () => {
+        // prep
+        prepareProps();
+
+        const propsMock = { ...propsMaster };
+        propsMock.token = 'some string';
+
+        // mount
+        mountPrepareFingerprint(propsMock);
+
+        // assert
+        const analyticsError = {
+            ...baseAnalyticsError,
+            code: Analytics3DS2Errors.TOKEN_DECODE_OR_PARSING_FAILED,
+            message: '3DS2Fingerprint_Error: not base64'
+        };
+        expect(onSubmitAnalytics).toBeCalledWith(analyticsError);
+
+        // fingerprinting always completes
+        expect(onSubmitAnalytics).toBeCalledWith(completedAnalyticsObj);
+        expect(completeFunction).toHaveBeenCalledTimes(1);
+
+        expect(onSubmitAnalytics).toHaveBeenCalledTimes(2);
     });
 });
