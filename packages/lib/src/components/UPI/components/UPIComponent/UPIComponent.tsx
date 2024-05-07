@@ -64,10 +64,15 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
         [onUpdateMode]
     );
 
-    const handleAppSelect = useCallback((app: App) => {
-        setSelectedApp(app);
-        setIsValid(true);
-    }, []);
+    const handleAppSelect = useCallback(
+        (app: App) => {
+            if (app?.id === selectedApp?.id) return;
+
+            setSelectedApp(app);
+            setIsValid(true);
+        },
+        [selectedApp]
+    );
 
     const handleVpaInputChange = useCallback(({ data: { virtualPaymentAddress }, errors, valid, isValid }: OnChangeProps) => {
         setVpa(virtualPaymentAddress);
@@ -77,13 +82,15 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
     }, []);
 
     useEffect(() => {
-        onChange({
-            data: { ...(vpa && { virtualPaymentAddress: vpa }), ...(selectedApp && { app: selectedApp }) },
-            errors,
-            valid,
-            isValid
-        });
-    }, [vpa, selectedApp, errors, valid, isValid]);
+        if (mode !== UpiMode.QrCode) {
+            onChange({
+                data: { ...(vpa && { virtualPaymentAddress: vpa }), ...(selectedApp && { app: selectedApp }) },
+                errors,
+                valid,
+                isValid
+            });
+        }
+    }, [vpa, selectedApp, errors, valid, isValid, mode]);
 
     return (
         <Fragment>
