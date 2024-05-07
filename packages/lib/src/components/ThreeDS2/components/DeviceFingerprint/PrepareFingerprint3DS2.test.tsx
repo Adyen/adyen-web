@@ -1,8 +1,8 @@
 import { mount } from 'enzyme';
 import { h } from 'preact';
 import PrepareFingerprint3DS2 from './PrepareFingerprint3DS2';
-import { THREEDS2_ERROR, THREEDS2_FULL } from '../../constants';
-import { Analytics3DS2Errors, ANALYTICS_API_ERROR } from '../../../../core/Analytics/constants';
+import { THREEDS2_ERROR, THREEDS2_FINGERPRINT_ERROR, THREEDS2_FULL } from '../../constants';
+import { Analytics3DS2Errors, ANALYTICS_API_ERROR, ANALYTICS_NETWORK_ERROR } from '../../../../core/Analytics/constants';
 
 const fingerPrintToken = {
     threeDSMessageVersion: '2.1.0',
@@ -84,6 +84,76 @@ describe('ThreeDS2DeviceFingerprint - Happy flow', () => {
         expect(prepFingComp.props()).toHaveProperty('dataKey', 'fingerprintResult');
         expect(prepFingComp.props()).toHaveProperty('paymentData', 'Ab02b4c0!BQABAg');
     });
+
+    test("Testing calls to component's setStatusComplete method - with completed result", done => {
+        HTMLFormElement.prototype.submit = jest.fn().mockImplementation(() => formResult);
+
+        prepareProps();
+
+        mountPrepareFingerprint(propsMaster);
+
+        const prepFingComp = wrapper.find('PrepareFingerprint3DS2');
+
+        // mock successful scenario
+        prepFingComp.instance().setStatusComplete({ threeDSCompInd: 'Y' });
+
+        // Wait for the component to make a call to setState
+        setTimeout(() => {
+            // analytics to say process is complete
+            expect(onSubmitAnalytics).toHaveBeenCalledWith({ type: THREEDS2_FULL, message: '3DS2 fingerprinting has completed' });
+
+            expect(onSubmitAnalytics).toHaveBeenCalledTimes(2);
+
+            expect(completeFunction).toHaveBeenCalledTimes(1);
+            done();
+        }, 0);
+    });
+});
+
+describe('ThreeDS2DeviceFingerprint - flow completes with errors that are considered valid scenarios', () => {
+    beforeEach(() => {
+        completeFunction = jest.fn();
+
+        onSubmitAnalytics = jest.fn();
+    });
+
+    test("Testing calls to component's setStatusComplete method - when fingerprint times-out", done => {
+        HTMLFormElement.prototype.submit = jest.fn().mockImplementation(() => formResult);
+
+        prepareProps();
+
+        mountPrepareFingerprint(propsMaster);
+
+        const prepFingComp = wrapper.find('PrepareFingerprint3DS2');
+
+        // mock timed-out scenario
+        prepFingComp.instance().setStatusComplete(
+            { threeDSCompInd: 'N' },
+            {
+                errorCode: 'timeout',
+                message: 'threeDS2Fingerprint: timeout'
+            }
+        );
+
+        // Wait for the component to make a call to setState
+        setTimeout(() => {
+            // analytics for error
+            expect(onSubmitAnalytics).toHaveBeenCalledWith({
+                type: THREEDS2_ERROR,
+                message: 'threeDS2Fingerprint: timeout',
+                code: Analytics3DS2Errors.THREEDS2_TIMEOUT,
+                errorType: ANALYTICS_NETWORK_ERROR
+            });
+
+            // analytics to say process is complete
+            expect(onSubmitAnalytics).toHaveBeenCalledWith({ type: THREEDS2_FULL, message: '3DS2 fingerprinting has completed' });
+
+            expect(onSubmitAnalytics).toHaveBeenCalledTimes(3);
+
+            expect(completeFunction).toHaveBeenCalledTimes(1);
+            done();
+        }, 0);
+    });
 });
 
 describe('ThreeDS2DeviceFingerprint - unhappy flows', () => {
@@ -93,7 +163,7 @@ describe('ThreeDS2DeviceFingerprint - unhappy flows', () => {
         onSubmitAnalytics = jest.fn(() => {});
     });
 
-    test('Calls onError & onSubmitAnalytics callbacks when token is missing from props', () => {
+    test('Calls onComplete & onSubmitAnalytics callbacks when token is missing from props', () => {
         // prep
         prepareProps();
 
@@ -112,13 +182,13 @@ describe('ThreeDS2DeviceFingerprint - unhappy flows', () => {
         expect(onSubmitAnalytics).toBeCalledWith(analyticsError);
 
         // fingerprinting always completes
-        expect(onSubmitAnalytics).toBeCalledWith(completedAnalyticsObj);
         expect(completeFunction).toHaveBeenCalledTimes(1);
 
+        expect(onSubmitAnalytics).toBeCalledWith(completedAnalyticsObj);
         expect(onSubmitAnalytics).toHaveBeenCalledTimes(2);
     });
 
-    test('Calls onError & onSubmitAnalytics callbacks when token is not base64', () => {
+    test('Calls onComplete & onSubmitAnalytics callbacks when token is not base64', () => {
         // prep
         prepareProps();
 
@@ -132,14 +202,92 @@ describe('ThreeDS2DeviceFingerprint - unhappy flows', () => {
         const analyticsError = {
             ...baseAnalyticsError,
             code: Analytics3DS2Errors.TOKEN_DECODE_OR_PARSING_FAILED,
-            message: '3DS2Fingerprint_Error: not base64'
+            message: `${THREEDS2_FINGERPRINT_ERROR}: not base64`
         };
         expect(onSubmitAnalytics).toBeCalledWith(analyticsError);
 
         // fingerprinting always completes
-        expect(onSubmitAnalytics).toBeCalledWith(completedAnalyticsObj);
         expect(completeFunction).toHaveBeenCalledTimes(1);
 
+        expect(onSubmitAnalytics).toBeCalledWith(completedAnalyticsObj);
+        expect(onSubmitAnalytics).toHaveBeenCalledTimes(2);
+    });
+
+    test('Calls onComplete & onSubmitAnalytics callbacks when threeDSMethodUrl in not valid', () => {
+        // prep
+        const alteredToken = { ...fingerPrintToken };
+        alteredToken.threeDSMethodUrl = '';
+
+        prepareProps(alteredToken);
+
+        const propsMock = { ...propsMaster };
+
+        // mount
+        mountPrepareFingerprint(propsMock);
+
+        // assert
+        const analyticsError = {
+            ...baseAnalyticsError,
+            code: Analytics3DS2Errors.TOKEN_IS_MISSING_THREEDSMETHODURL,
+            message: `${THREEDS2_FINGERPRINT_ERROR}: Decoded token is missing a valid threeDSMethodURL property`
+        };
+
+        // fingerprinting always completes
+        expect(completeFunction).toHaveBeenCalledTimes(1);
+
+        expect(onSubmitAnalytics).toBeCalledWith(analyticsError);
+        expect(onSubmitAnalytics).toHaveBeenCalledTimes(2);
+    });
+
+    test('Calls onComplete & onSubmitAnalytics callbacks when threeDSMethodNotificationURL in not valid', () => {
+        // prep
+        const alteredToken = { ...fingerPrintToken };
+        alteredToken.threeDSMethodNotificationURL = '';
+
+        prepareProps(alteredToken);
+
+        const propsMock = { ...propsMaster };
+
+        // mount
+        mountPrepareFingerprint(propsMock);
+
+        // assert
+        const analyticsError = {
+            ...baseAnalyticsError,
+            code: Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS,
+            message: `${THREEDS2_FINGERPRINT_ERROR}: Decoded token is missing one or more of the following properties (threeDSMethodNotificationURL | postMessageDomain | threeDSServerTransID)`
+        };
+
+        // fingerprinting always completes
+        expect(completeFunction).toHaveBeenCalledTimes(1);
+
+        expect(onSubmitAnalytics).toBeCalledWith(analyticsError);
+        expect(onSubmitAnalytics).toHaveBeenCalledTimes(2);
+    });
+
+    test('Calls onComplete & onSubmitAnalytics callbacks when threeDSServerTransID in not valid', () => {
+        // prep
+        const alteredToken = { ...fingerPrintToken };
+        alteredToken.threeDSServerTransID = '';
+
+        prepareProps(alteredToken);
+
+        const propsMock = { ...propsMaster };
+
+        // mount
+        mountPrepareFingerprint(propsMock);
+
+        // assert
+        const analyticsError = {
+            ...baseAnalyticsError,
+            code: Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS,
+            message: `${THREEDS2_FINGERPRINT_ERROR}: Decoded token is missing one or more of the following properties (threeDSMethodNotificationURL | postMessageDomain | threeDSServerTransID)`
+        };
+
+        // fingerprinting always completes
+        expect(completeFunction).toHaveBeenCalledTimes(1);
+
+        expect(onSubmitAnalytics).toBeCalledWith(analyticsError);
         expect(onSubmitAnalytics).toHaveBeenCalledTimes(2);
     });
 });

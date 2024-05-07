@@ -117,7 +117,7 @@ describe('PrepareChallenge3DS2 - Happy flow', () => {
     });
 });
 
-describe('PrepareChallenge3DS2 - flow completes with expected errors', () => {
+describe('PrepareChallenge3DS2 - flow completes with errors that are considered valid scenarios', () => {
     beforeEach(() => {
         onError = jest.fn();
 
