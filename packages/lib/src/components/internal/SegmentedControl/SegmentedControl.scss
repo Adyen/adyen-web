@@ -45,6 +45,7 @@
     font-weight: var(--adyen-checkout-text-body-stronger-font-weight);
     border-radius: var(--adyen-checkout-border-radius-m);
     border: 0;
+    background: transparent;
     transition: background 0.3s ease-out;
 
     &:not(&--selected):hover {
