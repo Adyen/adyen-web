@@ -219,9 +219,13 @@ describe('PrepareChallenge3DS2 - unhappy flows', () => {
         mountPrepareChallenge(propsMock);
 
         // assert
-        expect(errorMessage).toBe('701: Data parsing error');
+        expect(errorMessage).toBe(`${Analytics3DS2Errors.ACTION_IS_MISSING_TOKEN}: Data parsing error`);
 
-        const analyticsError = { ...baseAnalyticsError, code: '701', message: '3DS2Challenge_Error: Missing "token" property from threeDS2 action' };
+        const analyticsError = {
+            ...baseAnalyticsError,
+            code: Analytics3DS2Errors.ACTION_IS_MISSING_TOKEN,
+            message: '3DS2Challenge_Error: Missing "token" property from threeDS2 action'
+        };
         expect(onSubmitAnalytics).toBeCalledWith(analyticsError);
 
         expect(onSubmitAnalytics).toHaveBeenCalledTimes(1);
@@ -238,9 +242,13 @@ describe('PrepareChallenge3DS2 - unhappy flows', () => {
         mountPrepareChallenge(propsMock);
 
         // assert
-        expect(errorMessage).toBe('704: Data parsing error');
+        expect(errorMessage).toBe(`${Analytics3DS2Errors.TOKEN_DECODE_OR_PARSING_FAILED}: Data parsing error`);
 
-        const analyticsError = { ...baseAnalyticsError, code: '704', message: '3DS2Challenge_Error: not base64' };
+        const analyticsError = {
+            ...baseAnalyticsError,
+            code: Analytics3DS2Errors.TOKEN_DECODE_OR_PARSING_FAILED,
+            message: '3DS2Challenge_Error: not base64'
+        };
         expect(onSubmitAnalytics).toBeCalledWith(analyticsError);
 
         expect(onSubmitAnalytics).toHaveBeenCalledTimes(1);
@@ -259,11 +267,11 @@ describe('PrepareChallenge3DS2 - unhappy flows', () => {
         mountPrepareChallenge(propsMock);
 
         // assert
-        expect(errorMessage).toBe('800: Data parsing error');
+        expect(errorMessage).toBe(`${Analytics3DS2Errors.TOKEN_IS_MISSING_ACSURL}: Data parsing error`);
 
         const analyticsError = {
             ...baseAnalyticsError,
-            code: '800',
+            code: Analytics3DS2Errors.TOKEN_IS_MISSING_ACSURL,
             message: '3DS2Challenge_Error: Decoded token is missing a valid acsURL property'
         };
         expect(onSubmitAnalytics).toBeCalledWith(analyticsError);
@@ -284,11 +292,11 @@ describe('PrepareChallenge3DS2 - unhappy flows', () => {
         mountPrepareChallenge(propsMock);
 
         // assert
-        expect(errorMessage).toBe('703: Data parsing error');
+        expect(errorMessage).toBe(`${Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS}: Data parsing error`);
 
         const analyticsError = {
             ...baseAnalyticsError,
-            code: '703',
+            code: Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS,
             message:
                 '3DS2Challenge_Error: Decoded token is missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)'
         };
@@ -310,11 +318,11 @@ describe('PrepareChallenge3DS2 - unhappy flows', () => {
         mountPrepareChallenge(propsMock);
 
         // assert
-        expect(errorMessage).toBe('703: Data parsing error');
+        expect(errorMessage).toBe(`${Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS}: Data parsing error`);
 
         const analyticsError = {
             ...baseAnalyticsError,
-            code: '703',
+            code: Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS,
             message:
                 '3DS2Challenge_Error: Decoded token is missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)'
         };
@@ -336,11 +344,11 @@ describe('PrepareChallenge3DS2 - unhappy flows', () => {
         mountPrepareChallenge(propsMock);
 
         // assert
-        expect(errorMessage).toBe('703: Data parsing error');
+        expect(errorMessage).toBe(`${Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS}: Data parsing error`);
 
         const analyticsError = {
             ...baseAnalyticsError,
-            code: '703',
+            code: Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS,
             message:
                 '3DS2Challenge_Error: Decoded token is missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)'
         };
