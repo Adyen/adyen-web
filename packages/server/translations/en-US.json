@@ -219,7 +219,7 @@
     "invalid.format.expects": "%{label} Invalid format. Expected format: %{format}",
     "upi.qrCodeWaitingMessage": "Scan the QR code using your preferred UPI app to complete the payment",
     "upi.vpaWaitingMessage": "Open your UPI app to confirm the payment",
-    "upi.modeSelection": "Make a selection on how you would like to use UPI.",
+    "upi.modeSelection": "How would you like to use UPI?",
     "onlineBanking.termsAndConditions": "By continuing you agree with the %#terms and conditions%#",
     "onlineBankingPL.termsAndConditions": "By continuing you agree with the %#regulations%# and %#information obligation%# of Przelewy24",
     "ctp.loading.poweredByCtp": "Powered by Click to Pay",
