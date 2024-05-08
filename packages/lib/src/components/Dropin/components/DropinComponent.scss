@@ -43,8 +43,7 @@
     gap: var(--gap);
 
     li {
-        flex: 1 0 auto;
-        min-width: calc(50% - var(--gap) / 2);
+        flex: 1 0 calc(50% - var(--gap) / 2);
     }
 }
 
