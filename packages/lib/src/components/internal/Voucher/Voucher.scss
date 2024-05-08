@@ -56,8 +56,8 @@
 .adyen-checkout__voucher-result__image__wrapper::after {
     border-radius: var(--adyen-checkout-border-radius-m);
     box-shadow:
-        0 1px var(--adyen-checkout-spacer-010) 0 rgba(0, 17, 44, 0.02),
-        0 var(--adyen-checkout-spacer-010) var(--adyen-checkout-spacer-020) 0 rgba(0, 17, 44, 0.04);
+        0 1px var(--adyen-checkout-spacer-010) 0 rgb(0 17 44 / 2%),
+        0 var(--adyen-checkout-spacer-010) var(--adyen-checkout-spacer-020) 0 rgb(0 17 44 / 4%);
     content: '';
     height: 100%;
     left: 0;
