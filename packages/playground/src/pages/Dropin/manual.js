@@ -1,4 +1,19 @@
-import { AdyenCheckout, ApplePay, Dropin, Card, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay, Ideal, Pix } from '@adyen/adyen-web';
+import {
+    AdyenCheckout,
+    ApplePay,
+    Dropin,
+    Card,
+    GooglePay,
+    PayPal,
+    Ach,
+    Affirm,
+    WeChat,
+    Giftcard,
+    AmazonPay,
+    Ideal,
+    Pix,
+    Bancontact
+} from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { getPaymentMethods, makePayment, checkBalance, createOrder, cancelOrder, makeDetailsCall } from '../../services';
 import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
@@ -119,7 +134,7 @@ export async function initManual() {
     }
 
     const dropin = new Dropin(checkout, {
-        paymentMethodComponents: [Card, ApplePay, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay, Ideal, Pix],
+        paymentMethodComponents: [Card, ApplePay, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay, Ideal, Pix, Bancontact],
         instantPaymentTypes: ['googlepay', 'applepay'],
         paymentMethodsConfiguration: {
             card: {
