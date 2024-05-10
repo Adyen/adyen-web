@@ -5,7 +5,7 @@ import CoreProvider from '../../../../core/Context/CoreProvider';
 import SRPanelProvider from '../../../../core/Errors/SRPanelProvider';
 import { SRPanel } from '../../../../core/Errors/SRPanel';
 import UPIComponent from './UPIComponent';
-import { UpiMode } from '../../types';
+import { TX_VARIANT, UpiMode } from '../../types';
 import userEvent from '@testing-library/user-event';
 
 jest.mock('../../../../utils/isMobile');
@@ -53,7 +53,7 @@ describe('UPI component', () => {
             expect(segments[1]).toHaveTextContent('QR code');
         });
 
-        test('should call onUpdateMode', async () => {
+        test('should call onUpdateMode after selecting an upi mode', async () => {
             const onUpdatedModeMock = jest.fn();
             const user = userEvent.setup();
             customRender(
@@ -67,6 +67,22 @@ describe('UPI component', () => {
             const qrMode = await screen.findByRole('button', { name: /QR code/i });
             await user.click(qrMode);
             expect(onUpdatedModeMock).toHaveBeenCalledWith(UpiMode.QrCode);
+        });
+
+        test('should call onChange after selecting an upi mode', async () => {
+            const onUpdatedModeMock = jest.fn();
+            const user = userEvent.setup();
+            customRender(
+                <UPIComponent
+                    defaultMode={UpiMode.Intent}
+                    onChange={onChangeMock}
+                    onUpdateMode={onUpdatedModeMock}
+                    showPayButton={false}
+                ></UPIComponent>
+            );
+            const qrMode = await screen.findByRole('button', { name: /QR code/i });
+            await user.click(qrMode);
+            expect(onChangeMock).toHaveBeenCalledWith({ data: {}, valid: {}, errors: {}, isValid: true });
         });
     });
 
@@ -152,6 +168,33 @@ describe('UPI component', () => {
                 isValid: true,
                 errors: null,
                 valid: null
+            });
+        });
+
+        test('should call the onChange after selecting the upi collect and filling the data in the vpa input field', async () => {
+            const collectApp = { id: 'vpa', name: 'Enter UPI ID', type: TX_VARIANT.UpiCollect };
+            const payButtonMock = jest.fn();
+            const user = userEvent.setup();
+            customRender(
+                <UPIComponent
+                    apps={[collectApp]}
+                    defaultMode={UpiMode.Intent}
+                    showPayButton={true}
+                    onChange={onChangeMock}
+                    payButton={payButtonMock}
+                ></UPIComponent>
+            );
+            const upiCollect = await screen.findByRole('radio', { name: /Enter UPI ID/ });
+            await user.click(upiCollect);
+            const vpaInput = await screen.findByLabelText(/Enter UPI ID \/ VPA/);
+            await user.type(vpaInput, 'test');
+            await user.tab();
+
+            expect(onChangeMock).toHaveBeenCalledWith({
+                data: { app: collectApp, virtualPaymentAddress: 'test' },
+                valid: { virtualPaymentAddress: true },
+                errors: { virtualPaymentAddress: null },
+                isValid: true
             });
         });
     });

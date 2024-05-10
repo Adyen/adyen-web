@@ -89,6 +89,11 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
                 valid,
                 isValid
             });
+        } else {
+            /**
+             * When selecting QR code mode, we need to clear the state data and trigger the 'onChange'.
+             */
+            onChange({ data: {}, valid: {}, errors: {}, isValid: true });
         }
     }, [vpa, selectedApp, errors, valid, isValid, mode]);
 
