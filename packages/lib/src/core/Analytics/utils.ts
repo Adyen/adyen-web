@@ -3,6 +3,7 @@ import { ANALYTICS_ACTION_STR, ANALYTICS_VALIDATION_ERROR_STR, errorCodeMapping,
 import uuid from '../../utils/uuid';
 import { digitsOnlyFormatter } from '../../utils/Formatters/formatters';
 import { ERROR_FIELD_REQUIRED, ERROR_INVALID_FORMAT_EXPECTS } from '../Errors/constants';
+import { THREEDS2_FULL } from '../../components/ThreeDS2/constants';
 
 export const getUTCTimestamp = () => Date.now();
 
@@ -32,7 +33,7 @@ export const createAnalyticsObject = (aObj: CreateAnalyticsObject): AnalyticsObj
     ...(aObj.event === 'error' && { code: aObj.code, errorType: aObj.errorType, message: aObj.message }), // error event
     /** LOG */
     ...(aObj.event === 'log' && { type: aObj.type, message: aObj.message }), // log event
-    ...(aObj.event === 'log' && aObj.type === ANALYTICS_ACTION_STR && { subType: aObj.subtype }), // only added if we have a log event of Action type
+    ...(aObj.event === 'log' && (aObj.type === ANALYTICS_ACTION_STR || aObj.type === THREEDS2_FULL) && { subType: aObj.subtype }), // only added if we have a log event of Action type or ThreeDS2
     /** INFO */
     ...(aObj.event === 'info' && { type: aObj.type, target: aObj.target }), // info event
     ...(aObj.event === 'info' && aObj.issuer && { issuer: aObj.issuer }), // relates to issuerLists

@@ -20,7 +20,7 @@ import {
     THREEDS2_ERROR
 } from '../../constants';
 import { isValidHttpUrl } from '../../../../utils/isValidURL';
-import { ANALYTICS_API_ERROR, ANALYTICS_NETWORK_ERROR, Analytics3DS2Errors } from '../../../../core/Analytics/constants';
+import { ANALYTICS_API_ERROR, ANALYTICS_NETWORK_ERROR, Analytics3DS2Errors, Analytics3DS2Events } from '../../../../core/Analytics/constants';
 import { ErrorObject } from '../../../../core/Errors/types';
 
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
@@ -53,8 +53,11 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
     }
 
     public onActionHandled = (rtnObj: ActionHandledReturnObject) => {
-        // Leads to an "iframe loaded" log action
-        this.props.onSubmitAnalytics({ type: THREEDS2_FULL, message: rtnObj.actionDescription }); // TODO send subtype
+        this.props.onSubmitAnalytics({
+            type: THREEDS2_FULL,
+            message: rtnObj.actionDescription,
+            subtype: Analytics3DS2Events.CHALLENGE_IFRAME_LOADED
+        });
 
         this.props.onActionHandled(rtnObj);
     };
@@ -62,8 +65,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
     public onFormSubmit = (msg: string) => {
         this.props.onSubmitAnalytics({
             type: THREEDS2_FULL,
-            message: msg
-            // TODO send subtype
+            message: msg,
+            subtype: Analytics3DS2Events.CHALLENGE_DATA_SENT
         });
     };
 
@@ -204,8 +207,9 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             // Create log object - the process is completed, one way or another
             analyticsObject = {
                 type: THREEDS2_FULL,
-                message: `${THREEDS2_NUM} challenge has completed`
-                // TODO send subtype and result
+                message: `${THREEDS2_NUM} challenge has completed`,
+                subtype: Analytics3DS2Events.CHALLENGE_COMPLETED
+                // TODO send result
             };
 
             // Send log to analytics endpoint

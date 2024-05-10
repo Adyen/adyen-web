@@ -67,6 +67,15 @@ export enum Analytics3DS2Errors {
     CHALLENGE_RESOLVED_WITHOUT_RESULT_PROP = '805' // The challenge process has happened, an object has been returned, parsed & accepted as legit, but the result prop on that object is either missing or doesn't have a transStatus prop
 }
 
+export enum Analytics3DS2Events {
+    FINGERPRINT_DATA_SENT = 'fingerprintDataSentWeb',
+    FINGERPRINT_IFRAME_LOADED = 'fingerprintIframeLoaded',
+    FINGERPRINT_COMPLETED = 'fingerprintCompleted',
+    CHALLENGE_DATA_SENT = 'challengeDataSentWeb',
+    CHALLENGE_IFRAME_LOADED = 'challengeIframeLoaded',
+    CHALLENGE_COMPLETED = 'challengeCompleted'
+}
+
 /**
  * Function to map errorCodes based on translation keys to the codes expected by the analytics endpoint
  */

@@ -2,7 +2,7 @@ import { mount } from 'enzyme';
 import { h } from 'preact';
 import PrepareFingerprint3DS2 from './PrepareFingerprint3DS2';
 import { THREEDS2_ERROR, THREEDS2_FINGERPRINT_ERROR, THREEDS2_FULL } from '../../constants';
-import { Analytics3DS2Errors, ANALYTICS_API_ERROR, ANALYTICS_NETWORK_ERROR } from '../../../../core/Analytics/constants';
+import { Analytics3DS2Errors, Analytics3DS2Events, ANALYTICS_API_ERROR, ANALYTICS_NETWORK_ERROR } from '../../../../core/Analytics/constants';
 
 const fingerPrintToken = {
     threeDSMessageVersion: '2.1.0',
@@ -37,7 +37,11 @@ const baseAnalyticsError = {
 
 let completeFunction: any;
 
-const completedAnalyticsObj = { message: '3DS2 fingerprinting has completed', type: THREEDS2_FULL };
+const completedAnalyticsObj = {
+    message: '3DS2 fingerprinting has completed',
+    type: THREEDS2_FULL,
+    subtype: Analytics3DS2Events.FINGERPRINT_COMPLETED
+};
 
 const formResult = `
             <html>
@@ -77,7 +81,8 @@ describe('ThreeDS2DeviceFingerprint - Happy flow', () => {
 
         expect(onSubmitAnalytics).toBeCalledWith({
             type: THREEDS2_FULL,
-            message: 'threeDSMethodData sent'
+            message: 'threeDSMethodData sent',
+            subtype: Analytics3DS2Events.FINGERPRINT_DATA_SENT
         });
 
         const prepFingComp = wrapper.find('PrepareFingerprint3DS2');
@@ -100,7 +105,7 @@ describe('ThreeDS2DeviceFingerprint - Happy flow', () => {
         // Wait for the component to make a call to setState
         setTimeout(() => {
             // analytics to say process is complete
-            expect(onSubmitAnalytics).toHaveBeenCalledWith({ type: THREEDS2_FULL, message: '3DS2 fingerprinting has completed' });
+            expect(onSubmitAnalytics).toHaveBeenCalledWith(completedAnalyticsObj);
 
             expect(onSubmitAnalytics).toHaveBeenCalledTimes(2);
 
@@ -146,7 +151,7 @@ describe('ThreeDS2DeviceFingerprint - flow completes with errors that are consid
             });
 
             // analytics to say process is complete
-            expect(onSubmitAnalytics).toHaveBeenCalledWith({ type: THREEDS2_FULL, message: '3DS2 fingerprinting has completed' });
+            expect(onSubmitAnalytics).toHaveBeenCalledWith(completedAnalyticsObj);
 
             expect(onSubmitAnalytics).toHaveBeenCalledTimes(3);
 

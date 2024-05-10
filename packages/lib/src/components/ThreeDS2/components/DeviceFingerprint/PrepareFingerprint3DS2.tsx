@@ -16,7 +16,7 @@ import {
     THREEDS2_ERROR,
     TIMEOUT
 } from '../../constants';
-import { ANALYTICS_API_ERROR, ANALYTICS_NETWORK_ERROR, Analytics3DS2Errors } from '../../../../core/Analytics/constants';
+import { ANALYTICS_API_ERROR, ANALYTICS_NETWORK_ERROR, Analytics3DS2Errors, Analytics3DS2Events } from '../../../../core/Analytics/constants';
 
 class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State> {
     public static type = 'scheme';
@@ -51,16 +51,19 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
     }
 
     public onActionHandled = (rtnObj: ActionHandledReturnObject) => {
-        // Leads to an "iframe loaded" log action
-        this.props.onSubmitAnalytics({ type: THREEDS2_FULL, message: rtnObj.actionDescription }); // TODO send subtype
+        this.props.onSubmitAnalytics({
+            type: THREEDS2_FULL,
+            message: rtnObj.actionDescription,
+            subtype: Analytics3DS2Events.FINGERPRINT_IFRAME_LOADED
+        });
         this.props.onActionHandled(rtnObj);
     };
 
     public onFormSubmit = (msg: string) => {
         this.props.onSubmitAnalytics({
             type: THREEDS2_FULL,
-            message: msg
-            // TODO send subtype
+            message: msg,
+            subtype: Analytics3DS2Events.FINGERPRINT_DATA_SENT
         });
     };
 
@@ -196,8 +199,9 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
              */
             analyticsObject = {
                 type: THREEDS2_FULL,
-                message: `${THREEDS2_NUM} fingerprinting has completed`
-                // TODO send subtype and result
+                message: `${THREEDS2_NUM} fingerprinting has completed`,
+                subtype: Analytics3DS2Events.FINGERPRINT_COMPLETED
+                // TODO send result
             };
 
             // Send log to analytics endpoint

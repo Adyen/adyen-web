@@ -3,7 +3,7 @@ import { h } from 'preact';
 import PrepareChallenge3DS2 from './PrepareChallenge3DS2';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { THREEDS2_ERROR, THREEDS2_FULL } from '../../constants';
-import { Analytics3DS2Errors, ANALYTICS_API_ERROR, ANALYTICS_NETWORK_ERROR } from '../../../../core/Analytics/constants';
+import { Analytics3DS2Errors, Analytics3DS2Events, ANALYTICS_API_ERROR, ANALYTICS_NETWORK_ERROR } from '../../../../core/Analytics/constants';
 
 const challengeToken = {
     acsReferenceNumber: 'ADYEN-ACS-SIMULATOR',
@@ -85,7 +85,8 @@ describe('PrepareChallenge3DS2 - Happy flow', () => {
 
         expect(onSubmitAnalytics).toBeCalledWith({
             type: THREEDS2_FULL,
-            message: 'creq sent'
+            message: 'creq sent',
+            subtype: Analytics3DS2Events.CHALLENGE_DATA_SENT
         });
 
         const prepChallComp = wrapper.find('PrepareChallenge3DS2');
@@ -108,7 +109,11 @@ describe('PrepareChallenge3DS2 - Happy flow', () => {
         // Wait for the component to make a call to setState
         setTimeout(() => {
             // analytics to say process is complete
-            expect(onSubmitAnalytics).toHaveBeenCalledWith({ type: THREEDS2_FULL, message: '3DS2 challenge has completed' });
+            expect(onSubmitAnalytics).toHaveBeenCalledWith({
+                type: THREEDS2_FULL,
+                message: '3DS2 challenge has completed',
+                subtype: Analytics3DS2Events.CHALLENGE_COMPLETED
+            });
 
             expect(onSubmitAnalytics).toHaveBeenCalledTimes(2);
             // console.log('### PrepareChallenge3DS2.test::CALLS:: ', onSubmitAnalytics.mock.calls);
@@ -153,7 +158,11 @@ describe('PrepareChallenge3DS2 - flow completes with errors that are considered 
             });
 
             // analytics to say process is complete
-            expect(onSubmitAnalytics).toHaveBeenCalledWith({ type: THREEDS2_FULL, message: '3DS2 challenge has completed' });
+            expect(onSubmitAnalytics).toHaveBeenCalledWith({
+                type: THREEDS2_FULL,
+                message: '3DS2 challenge has completed',
+                subtype: Analytics3DS2Events.CHALLENGE_COMPLETED
+            });
 
             expect(onSubmitAnalytics).toHaveBeenCalledTimes(3);
             done();
@@ -189,7 +198,11 @@ describe('PrepareChallenge3DS2 - flow completes with errors that are considered 
             });
 
             // analytics to say process is complete
-            expect(onSubmitAnalytics).toHaveBeenCalledWith({ type: THREEDS2_FULL, message: '3DS2 challenge has completed' });
+            expect(onSubmitAnalytics).toHaveBeenCalledWith({
+                type: THREEDS2_FULL,
+                message: '3DS2 challenge has completed',
+                subtype: Analytics3DS2Events.CHALLENGE_COMPLETED
+            });
 
             expect(onSubmitAnalytics).toHaveBeenCalledTimes(3);
             done();
