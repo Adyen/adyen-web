@@ -11,6 +11,7 @@ import useImage from '../../../../core/Context/useImage';
 import { ActionHandledReturnObject } from '../../../types';
 import { THREEDS2_FULL, THREEDS2_NUM } from '../../config';
 import { SendAnalyticsObject } from '../../../../core/Analytics/types';
+import { Analytics3DS2Events } from '../../../../core/Analytics/constants';
 import { ErrorObject } from '../../../../core/Errors/types';
 
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
@@ -60,7 +61,11 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
     }
 
     public onActionHandled = (rtnObj: ActionHandledReturnObject) => {
-        this.props.onSubmitAnalytics({ type: THREEDS2_FULL, message: rtnObj.actionDescription });
+        this.props.onSubmitAnalytics({
+            type: THREEDS2_FULL,
+            message: rtnObj.actionDescription,
+            subtype: Analytics3DS2Events.CHALLENGE_IFRAME_LOADED
+        });
 
         this.props.onActionHandled(rtnObj);
     };
@@ -68,7 +73,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
     public onFormSubmit = (msg: string) => {
         this.props.onSubmitAnalytics({
             type: THREEDS2_FULL,
-            message: msg
+            message: msg,
+            subtype: Analytics3DS2Events.CHALLENGE_DATA_SENT
         });
     };
 
@@ -85,7 +91,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             // Create log object - the process is completed, one way or another
             const analyticsObject: SendAnalyticsObject = {
                 type: THREEDS2_FULL,
-                message: `${THREEDS2_NUM} challenge has completed`
+                message: `${THREEDS2_NUM} challenge has completed`,
+                subtype: Analytics3DS2Events.CHALLENGE_COMPLETED
             };
 
             // Send log to analytics endpoint

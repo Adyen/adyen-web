@@ -8,7 +8,7 @@ import '../../style.scss';
 import { MockReactApp } from './MockReactApp';
 import { searchFunctionExample } from '../../utils';
 
-const onlyShowCard = false;
+const onlyShowCard = true;
 
 const showComps = {
     clickToPay: true,

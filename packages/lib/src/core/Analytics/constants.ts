@@ -97,3 +97,12 @@ export const errorCodeMapping = {
 export const ANALYTICS_EXPRESS_PAGES_ARRAY = ['cart', 'minicart', 'pdp', 'checkout'];
 
 export const ALLOWED_ANALYTICS_DATA = ['applicationInfo', 'checkoutAttemptId'];
+
+export enum Analytics3DS2Events {
+    FINGERPRINT_DATA_SENT = 'fingerprintDataSentWeb',
+    FINGERPRINT_IFRAME_LOADED = 'fingerprintIframeLoaded',
+    FINGERPRINT_COMPLETED = 'fingerprintCompleted',
+    CHALLENGE_DATA_SENT = 'challengeDataSentWeb',
+    CHALLENGE_IFRAME_LOADED = 'challengeIframeLoaded',
+    CHALLENGE_COMPLETED = 'challengeCompleted'
+}
