@@ -10,9 +10,9 @@ import { Analytics3DS2Events } from '../../../../core/Analytics/constants';
 import { ErrorObject } from '../../../../core/Errors/types';
 
 class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State> {
-    public static type = 'scheme';
+    public static readonly type = 'scheme';
 
-    public static defaultProps = {
+    public static readonly defaultProps = {
         onComplete: () => {},
         onError: () => {},
         paymentData: '',

@@ -15,7 +15,7 @@ import { Analytics3DS2Events } from '../../../../core/Analytics/constants';
 import { ErrorObject } from '../../../../core/Errors/types';
 
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
-    public static defaultProps = {
+    public static readonly defaultProps = {
         onComplete: () => {},
         onError: () => {},
         onActionHandled: () => {}
@@ -42,7 +42,6 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 this.setStatusError({
                     errorInfo:
                         'Challenge Data missing one or more of the following properties (acsURL | acsTransID | messageVersion | threeDSServerTransID)'
-                    // errorObj: challengeData // TODO Decide if we want to expose this data
                 });
                 return;
             }
