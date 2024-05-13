@@ -34,8 +34,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             };
         } else {
             this.state = { status: 'error' };
-            // TODO - confirm that we should do this, or is it possible to proceed to the challenge anyway?
-            //  ...in which case we should console.debug the error object and then call: this.setStatusComplete({ threeDSCompInd: 'N' });
+
             this.props.onError({
                 errorCode: this.props.dataKey,
                 message: 'Missing fingerprintToken parameter'
@@ -73,7 +72,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
         this.setState({ status: 'retrievingFingerPrint' });
     }
 
-    setStatusComplete(resultObj: ResultObject) {
+    setStatusComplete(resultObj: ResultObject, isTimeout = false) {
         this.setState({ status: 'complete' }, () => {
             /**
              * Create the data in the way that the endpoint expects:
@@ -83,11 +82,33 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             const resolveDataFunction = this.props.useOriginalFlow ? createOldFingerprintResolveData : createFingerprintResolveData;
             const data = resolveDataFunction(this.props.dataKey, resultObj, this.props.paymentData);
 
+            // Calculate "result" for analytics
+            console.log('### PrepareFingerprintDS2::threeDSCompInd:: ', resultObj?.threeDSCompInd, 'isTimeout', isTimeout);
+            //
+            // let result: string;
+            //
+            // switch (resultObj?.threeDSCompInd) {
+            //     case 'Y':
+            //         result = 'success';
+            //         break;
+            //     case 'N': {
+            //         result = isTimeout ? 'timeout' : 'failed'; // timed-out; or, 'failed' ("N" being the result returned from the threeDSMethodURL)
+            //         break;
+            //     }
+            //     case 'U':
+            //         result = 'noThreeDSMethodURL';
+            //         break;
+            //     default:
+            // }
+            //
+            // console.log('### PrepareFingerprintDS2:::: result', result);
+
             /** The fingerprint process is completed, one way or another */
             const analyticsObject: SendAnalyticsObject = {
                 type: THREEDS2_FULL,
                 message: `${THREEDS2_NUM} fingerprinting has completed`,
                 subtype: Analytics3DS2Events.FINGERPRINT_COMPLETED
+                // result
             };
 
             // Send log to analytics endpoint
@@ -114,7 +135,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                          */
                         const errorCodeObject = handleErrorCode(fingerprint.errorCode);
                         console.debug('### PrepareFingerprint3DS2::fingerprint timed-out:: errorCodeObject=', errorCodeObject);
-                        this.setStatusComplete(fingerprint.result);
+                        this.setStatusComplete(fingerprint.result, true);
                     }}
                     showSpinner={showSpinner}
                     {...fingerPrintData}
