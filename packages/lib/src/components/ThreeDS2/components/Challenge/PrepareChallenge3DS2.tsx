@@ -87,42 +87,40 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             const resolveDataFunction = this.props.useOriginalFlow ? createOldChallengeResolveData : createChallengeResolveData;
             const data = resolveDataFunction(this.props.dataKey, resultObj.transStatus, this.props.paymentData);
 
-            // Calculate "result" for analytics
-            console.log('### PrepareChallenge3DS2::transStatus:: ', resultObj?.transStatus, 'isTimeout', isTimeout);
-            //
-            // let result: string;
-            //
-            // switch (resultObj?.transStatus) {
-            //     case 'Y':
-            //         result = 'success';
-            //         break;
-            //     case 'N':
-            //         result = 'failed';
-            //         break;
-            //     case 'U':
-            //         result = isTimeout ? 'timeout' : 'cancelled';
-            //         break;
-            //     default:
-            // }
-            // if (resultObj?.errorCode) {
-            //     result = 'noTransStatus';
-            // }
-            //
-            // console.log('### PrepareChallenge3DS2:::: result', result);
+            /** Calculate "result" for analytics */
+            let result: string;
 
-            // Create log object - the process is completed, one way or another
+            switch (resultObj?.transStatus) {
+                case 'Y':
+                    result = 'success';
+                    break;
+                case 'N':
+                    result = 'failed';
+                    break;
+                case 'U':
+                    result = isTimeout ? 'timeout' : 'cancelled';
+                    break;
+                default:
+            }
+            if (resultObj?.errorCode) {
+                result = 'noTransStatus';
+            }
+
+            /** Create log object - the process is completed, one way or another */
             const analyticsObject: SendAnalyticsObject = {
                 type: THREEDS2_FULL,
                 message: `${THREEDS2_NUM} challenge has completed`,
-                subtype: Analytics3DS2Events.CHALLENGE_COMPLETED
-                // result
+                subtype: Analytics3DS2Events.CHALLENGE_COMPLETED,
+                result
             };
 
             // Send log to analytics endpoint
             this.props.onSubmitAnalytics(analyticsObject);
 
-            // Equals a call to onAdditionalDetails (mapped in actionTypes.ts) - except for 3DS2InMDFlow which doesn't handle an action
-            // and instead creates a new ThreeDS2Challenge component, with an onComplete prop
+            /**
+             *  Equals a call to onAdditionalDetails (mapped in actionTypes.ts) - except for 3DS2InMDFlow which doesn't handle an action
+             *  and instead creates a new ThreeDS2Challenge component, with an onComplete prop
+             */
             this.props.onComplete(data);
         });
     }

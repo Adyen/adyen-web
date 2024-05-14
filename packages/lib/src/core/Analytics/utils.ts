@@ -33,6 +33,7 @@ export const createAnalyticsObject = (aObj: CreateAnalyticsObject): AnalyticsObj
     /** LOG */
     ...(aObj.event === 'log' && { type: aObj.type, message: aObj.message }), // log event
     ...(aObj.event === 'log' && (aObj.type === ANALYTICS_ACTION_STR || aObj.type === THREEDS2_FULL) && { subType: aObj.subtype }), // only added if we have a log event of Action type or ThreeDS2
+    ...(aObj.event === 'log' && aObj.type === THREEDS2_FULL && { result: aObj.result }), // only added if we have a log event ThreeDS2 type
     /** INFO */
     ...(aObj.event === 'info' && { type: aObj.type, target: aObj.target }), // info event
     ...(aObj.event === 'info' && aObj.issuer && { issuer: aObj.issuer }), // relates to issuerLists
