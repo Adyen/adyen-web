@@ -1,7 +1,7 @@
 import { mount } from 'enzyme';
 import { h } from 'preact';
 import PrepareFingerprint3DS2 from './PrepareFingerprint3DS2';
-import { THREEDS2_ERROR, THREEDS2_FINGERPRINT_ERROR, THREEDS2_FULL } from '../../constants';
+import { THREEDS2_ERROR, THREEDS2_FINGERPRINT_ERROR, THREEDS2_FULL, TIMEOUT } from '../../constants';
 import { Analytics3DS2Errors, Analytics3DS2Events, ANALYTICS_API_ERROR, ANALYTICS_NETWORK_ERROR } from '../../../../core/Analytics/constants';
 
 const fingerPrintToken = {
@@ -79,7 +79,7 @@ describe('ThreeDS2DeviceFingerprint - Happy flow', () => {
 
         mountPrepareFingerprint(propsMaster);
 
-        expect(onSubmitAnalytics).toBeCalledWith({
+        expect(onSubmitAnalytics).toHaveBeenCalledWith({
             type: THREEDS2_FULL,
             message: 'threeDSMethodData sent',
             subtype: Analytics3DS2Events.FINGERPRINT_DATA_SENT
@@ -105,7 +105,7 @@ describe('ThreeDS2DeviceFingerprint - Happy flow', () => {
         // Wait for the component to make a call to setState
         setTimeout(() => {
             // analytics to say process is complete
-            expect(onSubmitAnalytics).toHaveBeenCalledWith(completedAnalyticsObj);
+            expect(onSubmitAnalytics).toHaveBeenCalledWith({ ...completedAnalyticsObj, result: 'success' });
 
             expect(onSubmitAnalytics).toHaveBeenCalledTimes(2);
 
@@ -151,7 +151,7 @@ describe('ThreeDS2DeviceFingerprint - flow completes with errors that are consid
             });
 
             // analytics to say process is complete
-            expect(onSubmitAnalytics).toHaveBeenCalledWith(completedAnalyticsObj);
+            expect(onSubmitAnalytics).toHaveBeenCalledWith({ ...completedAnalyticsObj, result: TIMEOUT });
 
             expect(onSubmitAnalytics).toHaveBeenCalledTimes(3);
 
@@ -184,12 +184,12 @@ describe('ThreeDS2DeviceFingerprint - unhappy flows', () => {
             code: Analytics3DS2Errors.ACTION_IS_MISSING_TOKEN,
             message: '3DS2Fingerprint_Error: Missing "token" property from threeDS2 action'
         };
-        expect(onSubmitAnalytics).toBeCalledWith(analyticsError);
+        expect(onSubmitAnalytics).toHaveBeenCalledWith(analyticsError);
 
         // fingerprinting always completes
         expect(completeFunction).toHaveBeenCalledTimes(1);
 
-        expect(onSubmitAnalytics).toBeCalledWith(completedAnalyticsObj);
+        expect(onSubmitAnalytics).toHaveBeenCalledWith({ ...completedAnalyticsObj, result: 'failedInternal' });
         expect(onSubmitAnalytics).toHaveBeenCalledTimes(2);
     });
 
@@ -209,12 +209,12 @@ describe('ThreeDS2DeviceFingerprint - unhappy flows', () => {
             code: Analytics3DS2Errors.TOKEN_DECODE_OR_PARSING_FAILED,
             message: `${THREEDS2_FINGERPRINT_ERROR}: not base64`
         };
-        expect(onSubmitAnalytics).toBeCalledWith(analyticsError);
+        expect(onSubmitAnalytics).toHaveBeenCalledWith(analyticsError);
 
         // fingerprinting always completes
         expect(completeFunction).toHaveBeenCalledTimes(1);
 
-        expect(onSubmitAnalytics).toBeCalledWith(completedAnalyticsObj);
+        expect(onSubmitAnalytics).toHaveBeenCalledWith({ ...completedAnalyticsObj, result: 'failedInternal' });
         expect(onSubmitAnalytics).toHaveBeenCalledTimes(2);
     });
 
@@ -240,7 +240,10 @@ describe('ThreeDS2DeviceFingerprint - unhappy flows', () => {
         // fingerprinting always completes
         expect(completeFunction).toHaveBeenCalledTimes(1);
 
-        expect(onSubmitAnalytics).toBeCalledWith(analyticsError);
+        expect(onSubmitAnalytics).toHaveBeenCalledWith(analyticsError);
+
+        expect(onSubmitAnalytics).toHaveBeenCalledWith({ ...completedAnalyticsObj, result: 'noThreeDSMethodURL' });
+
         expect(onSubmitAnalytics).toHaveBeenCalledTimes(2);
     });
 
@@ -266,7 +269,10 @@ describe('ThreeDS2DeviceFingerprint - unhappy flows', () => {
         // fingerprinting always completes
         expect(completeFunction).toHaveBeenCalledTimes(1);
 
-        expect(onSubmitAnalytics).toBeCalledWith(analyticsError);
+        expect(onSubmitAnalytics).toHaveBeenCalledWith(analyticsError);
+
+        expect(onSubmitAnalytics).toHaveBeenCalledWith({ ...completedAnalyticsObj, result: 'failedInternal' });
+
         expect(onSubmitAnalytics).toHaveBeenCalledTimes(2);
     });
 
@@ -292,7 +298,10 @@ describe('ThreeDS2DeviceFingerprint - unhappy flows', () => {
         // fingerprinting always completes
         expect(completeFunction).toHaveBeenCalledTimes(1);
 
-        expect(onSubmitAnalytics).toBeCalledWith(analyticsError);
+        expect(onSubmitAnalytics).toHaveBeenCalledWith(analyticsError);
+
+        expect(onSubmitAnalytics).toHaveBeenCalledWith({ ...completedAnalyticsObj, result: 'failedInternal' });
+
         expect(onSubmitAnalytics).toHaveBeenCalledTimes(2);
     });
 });

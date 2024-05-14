@@ -123,11 +123,11 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
 
             // General 3DS2 log events: "action handled" (i.e. iframe loaded), data sent, process completed
             case THREEDS2_FULL: {
-                const { message, metadata, subtype } = analyticsObj;
-                // TODO get result
+                const { message, metadata, subtype, result } = analyticsObj;
+
                 analyticsModule.createAnalyticsEvent({
                     event: ANALYTICS_EVENT_LOG,
-                    data: { component, type, message, metadata, subtype }
+                    data: { component, type, message, metadata, subtype, result }
                 });
                 break;
             }

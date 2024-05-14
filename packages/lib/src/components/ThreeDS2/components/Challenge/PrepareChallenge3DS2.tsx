@@ -204,12 +204,31 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 this.props.onSubmitAnalytics(analyticsObject);
             }
 
-            // Create log object - the process is completed, one way or another
+            /** Calculate "result" for analytics */
+            let result: string;
+
+            switch (resultObj?.transStatus) {
+                case 'Y':
+                    result = 'success';
+                    break;
+                case 'N':
+                    result = 'failed';
+                    break;
+                case 'U':
+                    result = !errorCodeObject ? 'cancelled' : 'timeout';
+                    break;
+                default:
+            }
+            if (resultObj?.errorCode) {
+                result = 'noTransStatus';
+            }
+
+            /** Create log object - the process is completed, one way or another */
             analyticsObject = {
                 type: THREEDS2_FULL,
                 message: `${THREEDS2_NUM} challenge has completed`,
-                subtype: Analytics3DS2Events.CHALLENGE_COMPLETED
-                // TODO send result
+                subtype: Analytics3DS2Events.CHALLENGE_COMPLETED,
+                result
             };
 
             // Send log to analytics endpoint
@@ -283,7 +302,9 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                         if (!challenge.result) {
                             this.setError(
                                 {
-                                    errorInfo: `${THREEDS2_CHALLENGE_ERROR}:  ${this.props.i18n.get('3ds.chal.805', { values: { result: '"result"' } })}`,
+                                    errorInfo: `${THREEDS2_CHALLENGE_ERROR}:  ${this.props.i18n.get('3ds.chal.805', {
+                                        values: { result: '"result"' }
+                                    })}`,
                                     errorObj: challenge as unknown as ErrorObject
                                 },
                                 true

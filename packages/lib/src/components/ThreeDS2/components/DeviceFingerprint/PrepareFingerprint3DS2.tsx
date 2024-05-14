@@ -192,6 +192,27 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                 this.props.onSubmitAnalytics(analyticsObject);
             }
 
+            /** Calculate "result" for analytics */
+            let result: string;
+
+            switch (resultObj?.threeDSCompInd) {
+                case 'Y':
+                    result = 'success';
+                    break;
+                case 'N': {
+                    if (!errorCodeObject) {
+                        result = 'failed'; // 'failed' is the result returned from the threeDSMethodURL
+                    } else {
+                        result = errorCodeObject.errorCode === TIMEOUT ? TIMEOUT : 'failedInternal'; // timed-out; or, 'failed' as a result of internal checks
+                    }
+                    break;
+                }
+                case 'U':
+                    result = 'noThreeDSMethodURL';
+                    break;
+                default:
+            }
+
             /**
              * The fingerprint process is completed, one way or another.
              * The resultObj will be {threeDSCompInd:"Y"} in the case of success,
@@ -200,8 +221,8 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             analyticsObject = {
                 type: THREEDS2_FULL,
                 message: `${THREEDS2_NUM} fingerprinting has completed`,
-                subtype: Analytics3DS2Events.FINGERPRINT_COMPLETED
-                // TODO send result
+                subtype: Analytics3DS2Events.FINGERPRINT_COMPLETED,
+                result
             };
 
             // Send log to analytics endpoint
