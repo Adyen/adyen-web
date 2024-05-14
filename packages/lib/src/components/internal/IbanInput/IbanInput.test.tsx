@@ -8,7 +8,6 @@ import { CoreProvider } from '../../../core/Context/CoreProvider';
 const createWrapper = (props = {}) =>
     mount(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-            {/* @ts-ignore Iban is valid TSX */}
             <IbanInput data={{}} {...props} />
         </CoreProvider>
     );
@@ -87,7 +86,6 @@ describe('IbanInput', () => {
         const createElement = (props = {}) => {
             return (
                 <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-                    {/* @ts-ignore Iban is valid TSX */}
                     <IbanInput data={{}} {...props} />
                 </CoreProvider>
             );
