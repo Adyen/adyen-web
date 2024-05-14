@@ -19,7 +19,7 @@ describe('Redirect', () => {
     });
 
     describe('Redirect Status', () => {
-        test('Accepts a POST redirect status', () => {
+        test('Accepts a POST redirect status', done => {
             window.HTMLFormElement.prototype.submit = jest.fn();
 
             // @ts-ignore ignore
@@ -28,10 +28,14 @@ describe('Redirect', () => {
             expect(wrapper.find('form')).toHaveLength(1);
             expect(wrapper.find('form').prop('action')).toBe('http://www.adyen.com');
             expect(wrapper.find('form').prop('target')).toBe(undefined);
-            setTimeout(() => expect(window.HTMLFormElement.prototype.submit).toHaveBeenCalled(), 0);
+
+            setTimeout(() => {
+                expect(window.HTMLFormElement.prototype.submit).toHaveBeenCalled();
+                done();
+            }, 0);
         });
 
-        test('Accepts a POST redirect status, setting target to _top, when the config prop tells it to', () => {
+        test('Accepts a POST redirect status, setting target to _top, when the config prop tells it to', done => {
             window.HTMLFormElement.prototype.submit = jest.fn();
 
             // @ts-ignore ignore
@@ -39,7 +43,10 @@ describe('Redirect', () => {
 
             expect(wrapper.find('form')).toHaveLength(1);
             expect(wrapper.find('form').prop('target')).toBe('_top');
-            setTimeout(() => expect(window.HTMLFormElement.prototype.submit).toHaveBeenCalled(), 0);
+            setTimeout(() => {
+                expect(window.HTMLFormElement.prototype.submit).toHaveBeenCalled();
+                done();
+            }, 0);
         });
     });
 
