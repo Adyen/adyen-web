@@ -1,5 +1,6 @@
 import { mount } from 'enzyme';
 import { h } from 'preact';
+import { render, screen } from '@testing-library/preact';
 import IbanInput from './IbanInput';
 import { GenericError } from '../../../core/Errors/types';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
@@ -7,7 +8,6 @@ import { CoreProvider } from '../../../core/Context/CoreProvider';
 const createWrapper = (props = {}) =>
     mount(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-            {/* @ts-ignore Iban is valid TSX */}
             <IbanInput data={{}} {...props} />
         </CoreProvider>
     );
@@ -83,33 +83,39 @@ describe('IbanInput', () => {
     });
 
     describe('Send values from outside', () => {
-        test('Set ibanNumber', () => {
-            const wrapper = createWrapper({ data: { ibanNumber: 'NL13TEST0123456789' } });
-            setTimeout(() => {
-                expect(wrapper.find('input[name="ibanNumber"]').text()).toBe('NL13 TEST 0123 4567 89');
-            });
+        const createElement = (props = {}) => {
+            return (
+                <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                    <IbanInput data={{}} {...props} />
+                </CoreProvider>
+            );
+        };
+
+        test('Set ibanNumber', async () => {
+            const el = createElement({ data: { ibanNumber: 'NL13TEST0123456789' } });
+            render(el);
+
+            const inputEl = await screen.findByLabelText('Account Number (IBAN)');
+
+            expect(inputEl).toHaveValue('NL13 TEST 0123 4567 89');
         });
 
-        test('Set ibanNumber formatted', () => {
-            const wrapper = createWrapper({ data: { ibanNumber: 'NL13 TEST 0123 4567 89' } });
-            setTimeout(() => {
-                expect(wrapper.find('input[name="ibanNumber"]').text()).toBe('NL13 TEST 0123 4567 89');
-            });
+        test('Set ibanNumber formatted', async () => {
+            const el = createElement({ data: { ibanNumber: 'NL13 TEST 0123 4567 89' } });
+            render(el);
+
+            const inputEl = await screen.findByLabelText('Account Number (IBAN)');
+
+            expect(inputEl).toHaveValue('NL13 TEST 0123 4567 89');
         });
 
-        test('Set ownerName', () => {
-            const wrapper = createWrapper({ data: { ownerName: 'Hello World' } });
-            setTimeout(() => {
-                expect(wrapper.find('input[name="ownerName"]').text()).toBe('Hello World');
-            });
-        });
+        test('Set ownerName', async () => {
+            const el = createElement({ data: { ownerName: 'Hello World' } });
+            render(el);
 
-        test('Set ibanNumber and ownerName', () => {
-            const wrapper = createWrapper({ data: { ibanNumber: 'NL13TEST0123456789', ownerName: 'Hello World' } });
-            setTimeout(() => {
-                expect(wrapper.find('input[name="ibanNumber"]').text()).toBe('NL13 TEST 0123 4567 89');
-                expect(wrapper.find('input[name="ownerName"]').text()).toBe('Hello World');
-            });
+            const inputEl = await screen.findByLabelText('Holder Name');
+
+            expect(inputEl).toHaveValue('Hello World');
         });
     });
 });
