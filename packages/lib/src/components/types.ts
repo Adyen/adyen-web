@@ -42,3 +42,4 @@ export * from './internal/Await/types';
 export * from './internal/ClickToPay/types';
 export * from './internal/OpenInvoice/types';
 export * from './internal/Voucher/types';
+export * from './internal/UIElement/types';
