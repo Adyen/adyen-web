@@ -37,7 +37,7 @@ test.describe('Issuer List', () => {
         await pressKeyboardToNextItem(page);
         await pressKeyboardToSelectItem(page);
 
-        await expect(issuerList.submitButton).toHaveText('Continue to Test Issuer 4');
+        await expect(issuerList.submitButton).toHaveText('Continue to iDeal Test Issuer');
     });
 
     test('it should load a default when pressing enter', async ({ issuerListPage }) => {
