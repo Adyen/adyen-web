@@ -1,7 +1,7 @@
 import { FunctionComponent } from 'preact';
 import { GiftcardFieldsProps } from './components/types';
 import { UIElementProps } from '../internal/UIElement/types';
-import { Order, PaymentData } from '../../types/global-types';
+import { Order, PaymentAmount, PaymentData } from '../../types/global-types';
 
 export interface GiftCardElementData {
     paymentMethod: {
@@ -13,12 +13,11 @@ export interface GiftCardElementData {
 }
 
 export type balanceCheckResponseType = {
-    pspReference: string;
-    resultCode: string;
-    balance: {
-        currency: string;
-        value: number;
-    };
+    sessionData?: string;
+    pspReference?: string;
+    resultCode?: string;
+    balance?: PaymentAmount;
+    transactionLimit?: PaymentAmount;
 };
 
 export type onBalanceCheckCallbackType = (
