@@ -13,7 +13,6 @@ import GooglePay from './GooglePay';
 import Entercash from './Entercash';
 import Econtext from './Econtext';
 import { FacilyPay3x, FacilyPay4x, FacilyPay6x, FacilyPay10x, FacilyPay12x } from './FacilyPay';
-import Ideal from './Ideal';
 import PayPal from './PayPal';
 import QiwiWallet from './QiwiWallet';
 import Redirect from './Redirect';
@@ -159,7 +158,6 @@ const componentsMap = {
     dotpay: Dotpay,
     entercash: Entercash,
     eps: Eps,
-    ideal: Ideal,
     molpay_ebanking_fpx_MY: MolPayEBankingMY,
     molpay_ebanking_TH: MolPayEBankingTH,
     molpay_ebanking_VN: MolPayEBankingVN,
