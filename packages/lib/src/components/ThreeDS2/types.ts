@@ -3,37 +3,32 @@ import { ActionHandledReturnObject, AnalyticsModule } from '../../types/global-t
 import Language from '../../language';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { Analytics3DS2Errors } from '../../core/Analytics/constants';
+import { SendAnalyticsObject } from '../../core/Analytics/types';
 
-export interface ThreeDS2DeviceFingerprintConfiguration {
+interface ThreeDS2Configuration {
     dataKey?: string;
-    token?: string;
-    notificationURL?: string;
-    onError?: (error: AdyenCheckoutError, element?: UIElement) => void;
-    paymentData?: string;
-    showSpinner: boolean;
-    type?: string;
+    environment?: string;
     isMDFlow?: boolean;
     loadingContext?: string;
-    clientKey?: string;
-    elementRef?: UIElement;
-    onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
     modules?: { analytics: AnalyticsModule };
+    notificationURL?: string;
+    onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
+    onError?: (error: AdyenCheckoutError, element?: UIElement) => void;
+    paymentData?: string;
+    token?: string;
+    type?: string;
 }
 
-export interface ThreeDS2ChallengeConfiguration {
-    token?: string;
-    dataKey?: string;
-    notificationURL?: string;
-    onError?: (error: AdyenCheckoutError, element?: UIElement) => void;
-    paymentData?: string;
-    size?: string;
+export interface ThreeDS2DeviceFingerprintConfiguration extends ThreeDS2Configuration {
+    clientKey?: string;
+    elementRef?: UIElement;
+    showSpinner: boolean;
+}
+
+export interface ThreeDS2ChallengeConfiguration extends ThreeDS2Configuration {
     challengeWindowSize?: '01' | '02' | '03' | '04' | '05';
-    type?: string;
-    loadingContext?: string;
-    isMDFlow?: boolean;
     i18n?: Language;
-    onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
-    modules?: { analytics: AnalyticsModule };
+    size?: string;
 }
 
 /**
