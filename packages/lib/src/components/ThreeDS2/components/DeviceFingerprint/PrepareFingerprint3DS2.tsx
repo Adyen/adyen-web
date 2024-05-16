@@ -16,7 +16,7 @@ import {
     THREEDS2_ERROR,
     TIMEOUT
 } from '../../constants';
-import { ANALYTICS_API_ERROR, Analytics3DS2Errors, ANALYTICS_NETWORK_ERROR } from '../../../../core/Analytics/constants';
+import { ANALYTICS_API_ERROR, ANALYTICS_NETWORK_ERROR, Analytics3DS2Errors, Analytics3DS2Events } from '../../../../core/Analytics/constants';
 
 class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State> {
     public static type = 'scheme';
@@ -51,15 +51,19 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
     }
 
     public onActionHandled = (rtnObj: ActionHandledReturnObject) => {
-        // Leads to an "iframe loaded" log action
-        this.props.onSubmitAnalytics({ type: THREEDS2_FULL, message: rtnObj.actionDescription });
+        this.props.onSubmitAnalytics({
+            type: THREEDS2_FULL,
+            message: rtnObj.actionDescription,
+            subtype: Analytics3DS2Events.FINGERPRINT_IFRAME_LOADED
+        });
         this.props.onActionHandled(rtnObj);
     };
 
     public onFormSubmit = (msg: string) => {
         this.props.onSubmitAnalytics({
             type: THREEDS2_FULL,
-            message: msg
+            message: msg,
+            subtype: Analytics3DS2Events.FINGERPRINT_DATA_SENT
         });
     };
 
@@ -163,7 +167,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             if (finalResObject.errorCode) {
                 const errorTypeAndCode = {
                     code: finalResObject.errorCode === TIMEOUT ? Analytics3DS2Errors.THREEDS2_TIMEOUT : finalResObject.errorCode,
-                    errorType: finalResObject.errorCode === TIMEOUT ? ANALYTICS_NETWORK_ERROR : ANALYTICS_API_ERROR // TODO - for a timeout is this really a Network error? Or is it a "ThirdParty" error i.e. the ACS has had a problem serving the fingerprinting page in a timely manner?
+                    errorType: finalResObject.errorCode === TIMEOUT ? ANALYTICS_NETWORK_ERROR : ANALYTICS_API_ERROR
                 };
 
                 /**
@@ -172,7 +176,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                  * (threeDSCompInd:"U"):
                  *   - Decoded token is missing a valid threeDSMethodURL property,
                  *  or, (threeDSCompInd:"N"):
-                 *   - Fingerprint process has timed out, // TODO - do we want to know about this timeout event (which is a "valid" 3DS2 scenario) from an analytics perspective, and, if so, how do we classify it? ...error? info?
+                 *   - Fingerprint process has timed out,
                  *  also, (threeDSCompInd:"N"):
                  *   - Missing "token" property from threeDS2 action
                  *   - or, decoded token is missing one or more of the following properties (threeDSMethodNotificationURL | postMessageDomain | threeDSServerTransID)
@@ -188,6 +192,27 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                 this.props.onSubmitAnalytics(analyticsObject);
             }
 
+            /** Calculate "result" for analytics */
+            let result: string;
+
+            switch (resultObj?.threeDSCompInd) {
+                case 'Y':
+                    result = 'success';
+                    break;
+                case 'N': {
+                    if (!errorCodeObject) {
+                        result = 'failed'; // 'failed' is the result returned from the threeDSMethodURL
+                    } else {
+                        result = errorCodeObject.errorCode === TIMEOUT ? TIMEOUT : 'failedInternal'; // timed-out; or, 'failed' as a result of internal checks
+                    }
+                    break;
+                }
+                case 'U':
+                    result = 'noThreeDSMethodURL';
+                    break;
+                default:
+            }
+
             /**
              * The fingerprint process is completed, one way or another.
              * The resultObj will be {threeDSCompInd:"Y"} in the case of success,
@@ -196,7 +221,8 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             analyticsObject = {
                 type: THREEDS2_FULL,
                 message: `${THREEDS2_NUM} fingerprinting has completed`,
-                metadata: { ...resultObj }
+                subtype: Analytics3DS2Events.FINGERPRINT_COMPLETED,
+                result
             };
 
             // Send log to analytics endpoint

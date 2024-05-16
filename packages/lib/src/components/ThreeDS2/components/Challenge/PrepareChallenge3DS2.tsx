@@ -20,7 +20,7 @@ import {
     THREEDS2_ERROR
 } from '../../constants';
 import { isValidHttpUrl } from '../../../../utils/isValidURL';
-import { ANALYTICS_API_ERROR, Analytics3DS2Errors } from '../../../../core/Analytics/constants';
+import { ANALYTICS_API_ERROR, ANALYTICS_NETWORK_ERROR, Analytics3DS2Errors, Analytics3DS2Events } from '../../../../core/Analytics/constants';
 import { ErrorObject } from '../../../../core/Errors/types';
 
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
@@ -37,7 +37,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         if (this.props.token) {
             const challengeData: ChallengeData | ErrorObject = prepareChallengeData({
                 token: this.props.token,
-                size: this.props.challengeWindowSize || this.props.size
+                size: this.props.challengeWindowSize || this.props.size // TODO confirm that this.props.size is legacy and can be removed
             });
 
             this.state = {
@@ -53,7 +53,11 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
     }
 
     public onActionHandled = (rtnObj: ActionHandledReturnObject) => {
-        this.props.onSubmitAnalytics({ type: THREEDS2_FULL, message: rtnObj.actionDescription });
+        this.props.onSubmitAnalytics({
+            type: THREEDS2_FULL,
+            message: rtnObj.actionDescription,
+            subtype: Analytics3DS2Events.CHALLENGE_IFRAME_LOADED
+        });
 
         this.props.onActionHandled(rtnObj);
     };
@@ -61,7 +65,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
     public onFormSubmit = (msg: string) => {
         this.props.onSubmitAnalytics({
             type: THREEDS2_FULL,
-            message: msg
+            message: msg,
+            subtype: Analytics3DS2Events.CHALLENGE_DATA_SENT
         });
     };
 
@@ -89,12 +94,12 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 );
 
                 // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
-                const errorCodeObject = {
+                const errorCodeObject: SendAnalyticsObject = {
                     type: THREEDS2_ERROR,
                     code: Analytics3DS2Errors.TOKEN_IS_MISSING_ACSURL,
                     errorType: ANALYTICS_API_ERROR,
-                    message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing a valid acsURL property`,
-                    metadata: { acsURL } // NEW TODO - check acsURL isn't secret
+                    message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing a valid acsURL property`
+                    // metadata: { acsURL } // NEW TODO - check acsURL isn't secret
                 };
                 this.props.onSubmitAnalytics(errorCodeObject);
 
@@ -109,8 +114,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 // Set UI error & call onError callback
                 this.setError(
                     {
-                        errorInfo: `${Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS}: ${this.props.i18n.get('err.gen.9102')}`,
-                        errorObj: this.state.challengeData
+                        errorInfo: `${Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS}: ${this.props.i18n.get('err.gen.9102')}`
+                        // errorObj: this.state.challengeData // TODO Decide if we want to expose this data
                     },
                     true
                 );
@@ -121,7 +126,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                     code: Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS,
                     errorType: ANALYTICS_API_ERROR,
                     message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)`
-                });
+                } as SendAnalyticsObject);
 
                 console.debug(
                     '### PrepareChallenge3DS2::exiting:: missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)'
@@ -146,8 +151,8 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                     errorInfo:
                         errorMsg.indexOf(MISSING_TOKEN_IN_ACTION_MSG) > -1
                             ? `${Analytics3DS2Errors.ACTION_IS_MISSING_TOKEN}: ${this.props.i18n.get('err.gen.9102')}`
-                            : `${Analytics3DS2Errors.TOKEN_DECODE_OR_PARSING_FAILED}:${this.props.i18n.get('err.gen.9102')}`,
-                    errorObj: this.state.challengeData
+                            : `${Analytics3DS2Errors.TOKEN_DECODE_OR_PARSING_FAILED}: ${this.props.i18n.get('err.gen.9102')}`
+                    // errorObj: this.state.challengeData // TODO Decide if we want to expose this data
                 },
                 true
             );
@@ -177,32 +182,53 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 console.debug('### PrepareChallenge3DS2::errorCodeObject::', errorCodeObject);
             }
 
-            // TODO - do we want to know about these events (timeout or no transStatus - which are "valid" 3DS2 scenarios) from an analytics perspective, and, if so, how do we classify them? ...errors? info?
-            // let analyticsObject: SendAnalyticsObject;
-            // const finalResObject = errorCodeObject ? errorCodeObject : resultObj;
-            // if (finalResObject.errorCode) {
-            //     const errorTypeAndCode = {
-            //         code: finalResObject.errorCode === 'timeout' ? Analytics3DS2Errors.THREEDS2_TIMEOUT : Analytics3DS2Errors.NO_TRANSSTATUS,
-            //         errorType: finalResObject.errorCode === 'timeout' ? ANALYTICS_NETWORK_ERROR : ANALYTICS_INTERNAL_ERROR // TODO - for a timeout is this really a Network error? Or is it a "ThirdParty" error i.e. the ACS has had a problem serving the fingerprinting page in a timely manner?
-            //     };
-            //
-            //     // Challenge process has timed out,
-            //     // or, It's an error reported by the backend 'cos no transStatus could be retrieved // TODO - check logs to see if this *ever* happens
-            //     analyticsObject = {
-            //         type: THREEDS2_ERROR,
-            //         message: finalResObject.message,
-            //         ...errorTypeAndCode
-            //     };
-            //
-            //     // Send info about the error to analytics endpoint
-            //     this.props.onSubmitAnalytics(analyticsObject);
-            // }
+            let analyticsObject: SendAnalyticsObject;
 
-            // Create log object - the process is completed, one way or another
-            const analyticsObject: SendAnalyticsObject = {
+            /** Are we in an "error" i.e. timeout or no transStatus, scenario? If so, submit analytics about it */
+            const finalResObject = errorCodeObject ? errorCodeObject : resultObj;
+            if (finalResObject.errorCode) {
+                const errorTypeAndCode = {
+                    code: finalResObject.errorCode === 'timeout' ? Analytics3DS2Errors.THREEDS2_TIMEOUT : Analytics3DS2Errors.NO_TRANSSTATUS,
+                    errorType: finalResObject.errorCode === 'timeout' ? ANALYTICS_NETWORK_ERROR : ANALYTICS_API_ERROR
+                };
+
+                // Challenge process has timed out,
+                // or, It's an error reported by the backend 'cos no transStatus could be retrieved // TODO - check logs to see if this *ever* happens
+                analyticsObject = {
+                    type: THREEDS2_ERROR,
+                    message: (finalResObject as ErrorCodeObject).message,
+                    ...errorTypeAndCode
+                };
+
+                // Send error to analytics endpoint
+                this.props.onSubmitAnalytics(analyticsObject);
+            }
+
+            /** Calculate "result" for analytics */
+            let result: string;
+
+            switch (resultObj?.transStatus) {
+                case 'Y':
+                    result = 'success';
+                    break;
+                case 'N':
+                    result = 'failed';
+                    break;
+                case 'U':
+                    result = !errorCodeObject ? 'cancelled' : 'timeout';
+                    break;
+                default:
+            }
+            if (resultObj?.errorCode) {
+                result = 'noTransStatus';
+            }
+
+            /** Create log object - the process is completed, one way or another */
+            analyticsObject = {
                 type: THREEDS2_FULL,
                 message: `${THREEDS2_NUM} challenge has completed`,
-                metadata: { ...resultObj }
+                subtype: Analytics3DS2Events.CHALLENGE_COMPLETED,
+                result
             };
 
             // Send log to analytics endpoint
@@ -227,13 +253,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
         // Decide whether to call this.props.onError
         if (isFatal) {
-            this.props.onError(
-                new AdyenCheckoutError(
-                    ERROR,
-                    errorInfoObj.errorInfo
-                    // { cause: errorInfoObj.errorObj }
-                )
-            );
+            this.props.onError(new AdyenCheckoutError(ERROR, errorInfoObj.errorInfo, { cause: errorInfoObj.errorObj }));
         }
     }
 
@@ -273,6 +293,34 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                                     )
                                 );
                             }
+                        }
+
+                        /**
+                         * An object has been returned, parsed & accepted as legit (according to the rules in getProcessMessageHandler),
+                         * but the result prop on that object is missing
+                         */
+                        if (!challenge.result) {
+                            this.setError(
+                                {
+                                    errorInfo: `${THREEDS2_CHALLENGE_ERROR}:  ${this.props.i18n.get('3ds.chal.805', {
+                                        values: { result: '"result"' }
+                                    })}`,
+                                    errorObj: challenge as unknown as ErrorObject
+                                },
+                                true
+                            );
+
+                            // Send error to analytics endpoint
+                            this.props.onSubmitAnalytics({
+                                type: THREEDS2_ERROR,
+                                code: Analytics3DS2Errors.CHALLENGE_RESOLVED_WITHOUT_RESULT_PROP,
+                                errorType: ANALYTICS_API_ERROR,
+                                message: `${THREEDS2_CHALLENGE_ERROR}: challenge resolved without a "result" object`
+                            });
+
+                            console.debug('### PrepareChallenge3DS2::exiting:: challenge resolved without a "result" object');
+
+                            return;
                         }
 
                         // Proceed with call to onAdditionalDetails (except for in 3DS2InMDFlow)
