@@ -14,7 +14,6 @@ import Giropay from './Giropay';
 import GooglePay from './GooglePay';
 import Econtext from './Econtext';
 import { FacilyPay3x, FacilyPay4x, FacilyPay6x, FacilyPay10x, FacilyPay12x } from './FacilyPay';
-import Ideal from './Ideal';
 import PayPal from './PayPal';
 import Redirect from './Redirect';
 import CustomCard from './CustomCard';
@@ -142,7 +141,6 @@ export const ComponentsMap = {
     [TxVariants.billdesk_wallet]: BillDeskWallet,
     [TxVariants.dotpay]: Dotpay,
     [TxVariants.eps]: Eps,
-    [TxVariants.ideal]: Ideal,
     [TxVariants.molpay_ebanking_fpx_MY]: MolPayEBankingMY,
     [TxVariants.molpay_ebanking_TH]: MolPayEBankingTH,
     [TxVariants.molpay_ebanking_VN]: MolPayEBankingVN,
