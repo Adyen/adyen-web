@@ -13,11 +13,15 @@ async function handleRedirectResult(redirectResult) {
         clientKey: process.env.__CLIENT_KEY__,
         environment: process.env.__CLIENT_ENV__,
         onAdditionalDetails: handleAdditionalDetails,
+
+        // Called for: Authorised (Success), Received (Expired)
         onPaymentCompleted: result => {
             document.querySelector('#result-container ').innerHTML = '';
 
             showResult(result.resultCode, false);
         },
+
+        // Called for: Refused (Failed), Cancelled (Cancelled)
         onPaymentFailed: result => {
             document.querySelector('#result-container ').innerHTML = '';
 

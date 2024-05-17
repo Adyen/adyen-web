@@ -4,8 +4,10 @@ import { capitalizeFirstLetter } from '../../lib/src/utils/textUtils';
 const SELECT_YOUR_BANK = 'Select your Bank';
 const TEST_BANK_NAME = 'TESTNL2A';
 
-export const SIMULATION_TYPE_SUCCESS = 'SUCCESS';
-export const SIMULATION_TYPE_FAILURE = 'FAILURE';
+export const SIMULATION_TYPE_SUCCESS = 'Success';
+export const SIMULATION_TYPE_FAILURE = 'Failure';
+export const SIMULATION_TYPE_EXPIRATION = 'Expiration';
+export const SIMULATION_TYPE_CANCELLATION = 'Cancellation';
 
 class Redirect {
     readonly rootElement: Locator;
@@ -15,6 +17,8 @@ class Redirect {
     readonly selectTestBankButton: Locator;
     readonly simulateSuccessButton: Locator;
     readonly simulateFailureButton: Locator;
+    readonly simulateExpirationButton: Locator;
+    readonly simulateCancellationButton: Locator;
 
     readonly page: Page;
 
@@ -29,6 +33,8 @@ class Redirect {
 
         this.simulateSuccessButton = page.getByRole('button', { name: SIMULATION_TYPE_SUCCESS });
         this.simulateFailureButton = page.getByRole('button', { name: SIMULATION_TYPE_FAILURE });
+        this.simulateExpirationButton = page.getByRole('button', { name: SIMULATION_TYPE_EXPIRATION });
+        this.simulateCancellationButton = page.getByRole('button', { name: SIMULATION_TYPE_CANCELLATION, exact: true });
     }
 
     async isComponentVisible() {
