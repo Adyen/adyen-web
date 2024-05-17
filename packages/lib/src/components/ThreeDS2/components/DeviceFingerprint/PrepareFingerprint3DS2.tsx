@@ -6,12 +6,13 @@ import { FingerPrintData, ResultObject } from '../../types';
 import { ActionHandledReturnObject } from '../../../types';
 import { THREEDS2_FULL, THREEDS2_NUM } from '../../config';
 import { SendAnalyticsObject } from '../../../../core/Analytics/types';
+import { Analytics3DS2Events } from '../../../../core/Analytics/constants';
 import { ErrorObject } from '../../../../core/Errors/types';
 
 class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State> {
-    public static type = 'scheme';
+    public static readonly type = 'scheme';
 
-    public static defaultProps = {
+    public static readonly defaultProps = {
         onComplete: () => {},
         onError: () => {},
         paymentData: '',
@@ -33,8 +34,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             };
         } else {
             this.state = { status: 'error' };
-            // TODO - confirm that we should do this, or is it possible to proceed to the challenge anyway?
-            //  ...in which case we should console.debug the error object and then call: this.setStatusComplete({ threeDSCompInd: 'N' });
+
             this.props.onError({
                 errorCode: this.props.dataKey,
                 message: 'Missing fingerprintToken parameter'
@@ -43,15 +43,20 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
     }
 
     public onActionHandled = (rtnObj: ActionHandledReturnObject) => {
-        // Leads to an "iframe loaded" log action
-        this.props.onSubmitAnalytics({ type: THREEDS2_FULL, message: rtnObj.actionDescription });
+        this.props.onSubmitAnalytics({
+            type: THREEDS2_FULL,
+            message: rtnObj.actionDescription,
+            subtype: Analytics3DS2Events.FINGERPRINT_IFRAME_LOADED
+        });
+
         this.props.onActionHandled(rtnObj);
     };
 
     public onFormSubmit = (msg: string) => {
         this.props.onSubmitAnalytics({
             type: THREEDS2_FULL,
-            message: msg
+            message: msg,
+            subtype: Analytics3DS2Events.FINGERPRINT_DATA_SENT
         });
     };
 
@@ -67,7 +72,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
         this.setState({ status: 'retrievingFingerPrint' });
     }
 
-    setStatusComplete(resultObj: ResultObject) {
+    setStatusComplete(resultObj: ResultObject, isTimeout = false) {
         this.setState({ status: 'complete' }, () => {
             /**
              * Create the data in the way that the endpoint expects:
@@ -77,10 +82,29 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             const resolveDataFunction = this.props.useOriginalFlow ? createOldFingerprintResolveData : createFingerprintResolveData;
             const data = resolveDataFunction(this.props.dataKey, resultObj, this.props.paymentData);
 
-            /** The fingerprint process is completed, one way or another */
+            /** Calculate "result" for analytics */
+            let result: string;
+
+            switch (resultObj?.threeDSCompInd) {
+                case 'Y':
+                    result = 'success';
+                    break;
+                case 'N': {
+                    result = isTimeout ? 'timeout' : 'failed'; // timed-out; or, 'failed' ("N" being the result returned from the threeDSMethodURL)
+                    break;
+                }
+                case 'U':
+                    result = 'noThreeDSMethodURL';
+                    break;
+                default:
+            }
+
+            /** Create log object - the fingerprint process is completed, one way or another */
             const analyticsObject: SendAnalyticsObject = {
                 type: THREEDS2_FULL,
-                message: `${THREEDS2_NUM} fingerprinting has completed`
+                message: `${THREEDS2_NUM} fingerprinting has completed`,
+                subtype: Analytics3DS2Events.FINGERPRINT_COMPLETED,
+                result
             };
 
             // Send log to analytics endpoint
@@ -107,7 +131,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                          */
                         const errorCodeObject = handleErrorCode(fingerprint.errorCode);
                         console.debug('### PrepareFingerprint3DS2::fingerprint timed-out:: errorCodeObject=', errorCodeObject);
-                        this.setStatusComplete(fingerprint.result);
+                        this.setStatusComplete(fingerprint.result, true);
                     }}
                     showSpinner={showSpinner}
                     {...fingerPrintData}
