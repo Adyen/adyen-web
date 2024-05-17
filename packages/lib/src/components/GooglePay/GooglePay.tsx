@@ -47,7 +47,8 @@ class GooglePay extends UIElement<GooglePayProps> {
                 type: this.props.type ?? GooglePay.type,
                 ...this.state
             },
-            browserInfo: this.browserInfo
+            browserInfo: this.browserInfo,
+            origin: !!window && window.location.origin
         };
     }
 
