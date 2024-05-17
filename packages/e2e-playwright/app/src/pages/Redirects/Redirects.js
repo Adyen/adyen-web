@@ -12,7 +12,7 @@ const initCheckout = async () => {
     });
 
     const onSubmit = (state, component, actions) => {
-        state.data.returnUrl = 'http://localhost:3024/redirects?countryCode=NL';
+        state.data.returnUrl = 'http://localhost:3024/result';
         handleSubmit(state, component, actions);
     };
 
