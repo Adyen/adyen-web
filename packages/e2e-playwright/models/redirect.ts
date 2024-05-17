@@ -1,7 +1,11 @@
 import { Locator, Page } from '@playwright/test';
 import { capitalizeFirstLetter } from '../../lib/src/utils/textUtils';
 
-const SIMULATION_TYPE_SUCCESS = 'SUCCESS';
+const SELECT_YOUR_BANK = 'Select your Bank';
+const TEST_BANK_NAME = 'TESTNL2A';
+
+export const SIMULATION_TYPE_SUCCESS = 'SUCCESS';
+export const SIMULATION_TYPE_FAILURE = 'FAILURE';
 
 class Redirect {
     readonly rootElement: Locator;
@@ -10,6 +14,7 @@ class Redirect {
     readonly selectYourBankButton: Locator;
     readonly selectTestBankButton: Locator;
     readonly simulateSuccessButton: Locator;
+    readonly simulateFailureButton: Locator;
 
     readonly page: Page;
 
@@ -18,11 +23,12 @@ class Redirect {
         this.rootElement = page.locator(rootElementSelector);
         this.rootElementSelector = rootElementSelector;
 
-        this.selectYourBankButton = page.getByRole('button', { name: /Select your Bank/i });
+        this.selectYourBankButton = page.getByRole('button', { name: SELECT_YOUR_BANK });
 
-        this.selectTestBankButton = page.getByRole('button', { name: /TESTNL2A/i });
+        this.selectTestBankButton = page.getByRole('button', { name: TEST_BANK_NAME });
 
         this.simulateSuccessButton = page.getByRole('button', { name: SIMULATION_TYPE_SUCCESS });
+        this.simulateFailureButton = page.getByRole('button', { name: SIMULATION_TYPE_FAILURE });
     }
 
     async isComponentVisible() {
