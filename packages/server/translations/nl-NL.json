@@ -78,7 +78,7 @@
     "state": "Staat",
     "field.title.optional": "(optioneel)",
     "issuerList.selectField.contextualText": "Selecteer uw bank om door te gaan",
-    "issuerList.selectField.label": "Selectie bank",
+    "issuerList.selectField.label": "Bankselectie",
     "privacyPolicy": "Privacybeleid",
     "afterPay.agreement": "Ik ga akkoord met de %@ van Riverty",
     "paymentConditions": "betalingsvoorwaarden",
