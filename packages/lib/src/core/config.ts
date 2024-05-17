@@ -8,6 +8,7 @@ export const GENERIC_OPTIONS = [
     'secondaryAmount',
     'countryCode',
     'environment',
+    '_environmentUrls',
     'loadingContext',
     'i18n',
     'modules',
