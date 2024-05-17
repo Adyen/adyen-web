@@ -71,7 +71,14 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
         const hasFingerPrintData = !isErrorObject(this.state.fingerPrintData);
 
         if (hasFingerPrintData) {
-            const shouldAllowHttpDomains = process.env.NODE_ENV === 'development' && process.env.__CLIENT_ENV__?.indexOf('localhost:8080') > -1; // allow http urls if in development and testing against localhost:8080
+            const shouldAllowHttpDomains =
+                /** Allow http urls if in development and testing against localhost:8080 */
+                (process.env.NODE_ENV === 'development' && process.env.__CLIENT_ENV__?.indexOf('localhost:8080') > -1) ||
+                /**
+                 * Allows the checkoutshopper demo on localhost:8080 to work -
+                 *  requires a configuration in localhost of environment: 'test', _environmentUrls: {api: 'http://localhost:8080/'}
+                 */
+                (this.props.environment === 'test' && this.props._environmentUrls?.api?.includes('http://localhost:8080'));
 
             /**
              * Check the structure of the created fingerPrintData

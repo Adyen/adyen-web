@@ -74,14 +74,20 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
         const hasChallengeData = !isErrorObject(this.state.challengeData);
 
         if (hasChallengeData) {
+            const shouldAllowHttpDomains =
+                /** Allow http urls if in development and testing against localhost:8080 */
+                (process.env.NODE_ENV === 'development' && process.env.__CLIENT_ENV__?.indexOf('localhost:8080') > -1) ||
+                /**
+                 * Allows the checkoutshopper demo on localhost:8080 to work -
+                 *  requires a configuration in localhost of environment: 'test', _environmentUrls: {api: 'http://localhost:8080/'}
+                 */
+                (this.props.environment === 'test' && this.props._environmentUrls?.api?.includes('http://localhost:8080'));
+
             /**
              * Check the structure of the created challengeData
              */
             const { acsURL } = this.state.challengeData as ChallengeData;
-            const hasValidAcsURL = isValidHttpUrl(
-                acsURL,
-                process.env.NODE_ENV === 'development' && process.env.__CLIENT_ENV__?.indexOf('localhost:8080') > -1 // allow http urls if in development and testing against localhost:8080);
-            );
+            const hasValidAcsURL = isValidHttpUrl(acsURL, shouldAllowHttpDomains);
 
             // Only render component if we have an acsURL.
             if (!hasValidAcsURL) {

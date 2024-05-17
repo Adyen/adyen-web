@@ -18,7 +18,15 @@ export interface DoFingerprint3DS2State {
 export interface PrepareFingerprint3DS2Props extends ThreeDS2DeviceFingerprintConfiguration {
     onComplete: (data: FingerprintResolveData) => void;
     onSubmitAnalytics: (aObj: SendAnalyticsObject) => void;
-    isMDFlow: boolean;
+    environment?: string;
+    _environmentUrls?: {
+        api?: string;
+        analytics?: string;
+        cdn?: {
+            images?: string;
+            translations?: string;
+        };
+    };
 }
 
 export interface PrepareFingerprint3DS2State {

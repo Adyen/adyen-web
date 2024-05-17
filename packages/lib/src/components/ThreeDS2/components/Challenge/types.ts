@@ -18,7 +18,15 @@ export interface DoChallenge3DS2State {
 export interface PrepareChallenge3DS2Props extends ThreeDS2ChallengeConfiguration {
     onComplete?: (data: ChallengeResolveData) => void;
     onSubmitAnalytics: (aObj: SendAnalyticsObject) => void;
-    isMDFlow: boolean;
+    environment?: string;
+    _environmentUrls?: {
+        api?: string;
+        analytics?: string;
+        cdn?: {
+            images?: string;
+            translations?: string;
+        };
+    };
 }
 
 export interface PrepareChallenge3DS2State {
