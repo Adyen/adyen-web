@@ -2,19 +2,6 @@ import { test, expect } from '../../pages/issuerList/issuer-list.fixture';
 import { pressKeyboardToNextItem, pressKeyboardToSelectItem } from '../utils/keyboard';
 
 test.describe('Issuer List', () => {
-    // TODO use this space to test another issuerList component
-    // test('should select highlighted issuer and update pay button label', async ({ issuerListPage }) => {
-    //     const { issuerList } = issuerListPage;
-    //
-    //     await issuerList.selectHighlightedIssuer('Test Issuer 5');
-    //     await expect(issuerList.submitButton).toHaveText('Continue to Test Issuer 5');
-    //
-    //     await issuerList.selectHighlightedIssuer('Test Issuer 4');
-    //     await expect(issuerList.submitButton).toHaveText('Continue to Test Issuer 4');
-    //
-    //     await expect(issuerList.highlightedIssuerButtonGroup.getByRole('button', { pressed: true })).toHaveText('Test Issuer 4');
-    // });
-
     // TODO - these tests are very conditional on the expected issuers being listed and in the existing order.
     //  if this proves problematic in the future, we should mock it
     test('it should be able to filter and select using the keyboard', async ({ issuerListPage }) => {
@@ -72,4 +59,16 @@ test.describe('Issuer List', () => {
     });
 
     // TODO - Should do the same as the last test, but using a highlighted issuer
+
+    // test('should select highlighted issuer and update pay button label', async ({ issuerListPage }) => {
+    //     const { issuerList } = issuerListPage;
+    //
+    //     await issuerList.selectHighlightedIssuer('Test Issuer 5');
+    //     await expect(issuerList.submitButton).toHaveText('Continue to Test Issuer 5');
+    //
+    //     await issuerList.selectHighlightedIssuer('Test Issuer 4');
+    //     await expect(issuerList.submitButton).toHaveText('Continue to Test Issuer 4');
+    //
+    //     await expect(issuerList.highlightedIssuerButtonGroup.getByRole('button', { pressed: true })).toHaveText('Test Issuer 4');
+    // });
 });
