@@ -31,7 +31,7 @@ import '../../style.scss';
     });
 
     // iDEAL
-    window.ideal = checkout.create('ideal').mount('.ideal-field');
+    window.ideal = checkout.create('redirect', { type: 'ideal', name: 'iDEAL' }).mount('.ideal-field');
 
     // BillDesk Online
     window.billdesk_online = checkout.create('billdesk_online').mount('.billdesk_online-field');
