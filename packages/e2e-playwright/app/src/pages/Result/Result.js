@@ -2,19 +2,21 @@ import AdyenCheckout from '@adyen/adyen-web';
 import '@adyen/adyen-web/dist/es/adyen.css';
 import '../../style.scss';
 
-import { countryCode } from '../../services/commonConfig';
-import { handleAdditionalDetails, showResult } from '../../handlers';
+// import { countryCode } from '../../services/commonConfig';
+import { showResult } from '../../handlers';
 
 import { getSearchParameters } from '../../../../../playground/src/utils';
 
-async function handleRedirectResult(redirectResult) {
-    console.log('### Result::handleRedirectResult:: ', redirectResult);
+async function handleRedirectResult(redirectResult, sessionId) {
+    console.log('### Result::handleRedirectResult:: redirectResult', redirectResult);
+    console.log('### Result::handleRedirectResult:: sessionId', sessionId);
 
     window.checkout = await AdyenCheckout({
-        countryCode,
+        session: { id: sessionId },
+        // countryCode,
         clientKey: process.env.__CLIENT_KEY__,
         environment: process.env.__CLIENT_ENV__,
-        onAdditionalDetails: handleAdditionalDetails,
+        // onAdditionalDetails: handleAdditionalDetails,
 
         // Called for: Authorised (Success), Received (Expired)
         onPaymentCompleted: result => {
@@ -36,13 +38,13 @@ async function handleRedirectResult(redirectResult) {
         }
     });
 
-    checkout.submitDetails({ details: { redirectResult }, paymentData: window });
+    checkout.submitDetails({ details: { redirectResult } });
 }
 
-const { redirectResult } = getSearchParameters(window.location.search);
+const { redirectResult, sessionId } = getSearchParameters(window.location.search);
 
 if (!redirectResult) {
     window.location.href = '/';
 } else {
-    await handleRedirectResult(redirectResult);
+    await handleRedirectResult(redirectResult, sessionId);
 }

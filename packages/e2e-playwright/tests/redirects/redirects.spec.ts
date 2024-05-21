@@ -25,7 +25,8 @@ test.describe('Redirects', () => {
 
         await redirectModel.selectSimulation(SIMULATION_TYPE_SUCCESS);
 
-        await page.waitForTimeout(20000);
+        // await page.waitForTimeout(20000);
+        // await page.pause();
         await expect(page.locator('#result-message')).toHaveText('Authorised');
     });
 
