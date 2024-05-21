@@ -24,16 +24,16 @@ const initCheckout = async () => {
         showPayButton: true,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
-        onError: handleError,
-        paymentMethodsConfiguration: {
-            ideal: {
-                highlightedIssuers: ['1121', '1154', '1153']
-            }
-        }
+        onError: handleError
+        // paymentMethodsConfiguration: {
+        //     ideal: {
+        //         highlightedIssuers: ['1121', '1154', '1153']
+        //     }
+        // }
         // ...window.mainConfiguration
     });
 
-    window.ideal = checkout.create('ideal').mount('.ideal-field');
+    window.entercash = checkout.create('entercash').mount('.issuer-field');
 };
 
 initCheckout();

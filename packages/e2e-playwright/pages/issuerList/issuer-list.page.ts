@@ -12,7 +12,7 @@ class IssuerListPage {
     }
 
     async goto(url?: string) {
-        await this.page.goto('http://localhost:3024/issuerlists?countryCode=NL');
+        await this.page.goto('http://localhost:3024/issuerlists?countryCode=FI');
     }
 }
 
