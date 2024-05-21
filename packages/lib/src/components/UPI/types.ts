@@ -26,6 +26,11 @@ export interface UPIElementProps extends UIElementProps {
     defaultMode?: UpiMode;
     // upi_intent
     apps?: Array<App>;
+    /**
+     * Redirect url for upi intent apps
+     * @internal
+     */
+    url?: string;
     // Await
     paymentData?: string;
     // QR code
