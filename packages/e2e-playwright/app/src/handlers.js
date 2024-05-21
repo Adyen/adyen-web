@@ -10,6 +10,15 @@ export function showAuthorised(message = 'Authorised') {
     resultElement.innerText = message;
 }
 
+export function showResult(message, isError) {
+    const resultElement = document.getElementById('result-message');
+    resultElement.classList.remove('hide');
+    if (isError) {
+        resultElement.classList.add('error');
+    }
+    resultElement.innerText = message;
+}
+
 export function handleResponse(response, component) {
     if (response.action) {
         component.handleAction(response.action, window.actionConfigObject || {});
@@ -44,12 +53,18 @@ export function handleSubmit(state, component) {
 export function handleAdditionalDetails(details, component) {
     return makeDetailsCall(details.data)
         .then(response => {
-            component.setStatus('ready');
+            console.log('### handlers::handleAdditionalDetails:: response', response);
+            component?.setStatus('ready');
             handleResponse(response, component);
         })
         .catch(error => {
             throw Error(error);
         });
+}
+
+export function handlePaymentCompleted(data, component) {
+    component.remove();
+    showAuthorised();
 }
 
 export function handleOrderRequest(resolve, reject, data) {
