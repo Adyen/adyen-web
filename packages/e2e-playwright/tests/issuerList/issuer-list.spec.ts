@@ -58,17 +58,24 @@ test.describe('Issuer List', () => {
         });
     });
 
-    // TODO - Should do the same as the last test, but using a highlighted issuer
+    test('should select highlighted issuer, update pay button label, and see the expected data in state', async ({ issuerListPage }) => {
+        const { issuerList, page } = issuerListPage;
 
-    // test('should select highlighted issuer and update pay button label', async ({ issuerListPage }) => {
-    //     const { issuerList } = issuerListPage;
-    //
-    //     await issuerList.selectHighlightedIssuer('Test Issuer 5');
-    //     await expect(issuerList.submitButton).toHaveText('Continue to Test Issuer 5');
-    //
-    //     await issuerList.selectHighlightedIssuer('Test Issuer 4');
-    //     await expect(issuerList.submitButton).toHaveText('Continue to Test Issuer 4');
-    //
-    //     await expect(issuerList.highlightedIssuerButtonGroup.getByRole('button', { pressed: true })).toHaveText('Test Issuer 4');
-    // });
+        await issuerList.selectHighlightedIssuer('POP Pankki');
+        await expect(issuerList.submitButton).toHaveText('Continue to POP Pankki');
+
+        await issuerList.selectHighlightedIssuer('Aktia');
+        await expect(issuerList.submitButton).toHaveText('Continue to Aktia');
+
+        await expect(issuerList.highlightedIssuerButtonGroup.getByRole('button', { pressed: true })).toHaveText('Aktia');
+
+        let issuerListData = await page.evaluate('window.entercash.data');
+
+        // @ts-ignore
+        expect(issuerListData.paymentMethod).toEqual({
+            type: 'entercash',
+            issuer: '232',
+            checkoutAttemptId: 'do-not-track'
+        });
+    });
 });

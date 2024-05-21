@@ -24,12 +24,12 @@ const initCheckout = async () => {
         showPayButton: true,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
-        onError: handleError
-        // paymentMethodsConfiguration: {
-        //     ideal: {
-        //         highlightedIssuers: ['1121', '1154', '1153']
-        //     }
-        // }
+        onError: handleError,
+        paymentMethodsConfiguration: {
+            entercash: {
+                highlightedIssuers: ['231', '551', '232']
+            }
+        }
         // ...window.mainConfiguration
     });
 
