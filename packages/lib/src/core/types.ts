@@ -48,14 +48,12 @@ export interface CoreConfiguration {
     /**
      * The payment session object from your call to /sessions. Contains a session.id and session.sessionData
      */
-    // session?: {
-    //     id: string;
-    //     sessionData: string;
-    //     // TODO CHECK THIS
-    //     shopperEmail?: string;
-    //     telephoneNumber?: string;
-    // };
-    session?: any;
+    session?: {
+        id: string;
+        sessionData: string;
+        shopperEmail?: string;
+        telephoneNumber?: string;
+    };
     /**
      * Use test. When you're ready to accept live payments, change the value to one of our {@link https://docs.adyen.com/checkout/drop-in-web#testing-your-integration | live environments}.
      */

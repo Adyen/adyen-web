@@ -64,7 +64,7 @@ describe('Core', () => {
                 countryCode: 'US',
                 environment: 'test',
                 clientKey: 'test_123456',
-                session: { id: 'session-id', sessionData: 'session-data', countryCode: 'US' }
+                session: { id: 'session-id', sessionData: 'session-data' }
             });
 
             await checkout.initialize();

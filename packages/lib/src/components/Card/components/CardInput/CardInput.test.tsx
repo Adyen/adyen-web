@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { mount } from 'enzyme';
 import CardInput from './CardInput';
 import { CardInputDataState, CardInputValidState } from './types';
-import { render, screen, fireEvent, prettyDOM } from '@testing-library/preact';
+import { render, screen, fireEvent } from '@testing-library/preact';
 import { CardFieldsWrapper } from './components/CardFieldsWrapper';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
 
