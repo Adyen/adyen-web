@@ -3,21 +3,9 @@ import '@adyen/adyen-web/dist/es/adyen.css';
 import { handleError, handlePaymentCompleted } from '../../handlers';
 import { shopperLocale, countryCode } from '../../services/commonConfig';
 import '../../style.scss';
-// import { getPaymentMethods } from '../../services';
 import { createSession } from '../../services';
-// import { returnUrl } from '@adyen/adyen-web-playground/src/config/commonConfig';
 
 const initCheckout = async () => {
-    // const paymentMethodsResponse = await getPaymentMethods({
-    //     amount,
-    //     shopperLocale
-    // });
-    //
-    // const onSubmit = (state, component, actions) => {
-    //     state.data.returnUrl = 'http://localhost:3024/result';
-    //     handleSubmit(state, component, actions);
-    // };
-
     const session = await createSession({
         amount: {
             value: 123,
@@ -33,8 +21,6 @@ const initCheckout = async () => {
             enabled: false
         },
         session,
-        // amount,
-        // paymentMethodsResponse,
         clientKey: process.env.__CLIENT_KEY__,
         locale: shopperLocale,
         _environmentUrls: {
@@ -45,8 +31,6 @@ const initCheckout = async () => {
         countryCode,
         environment: 'test',
         showPayButton: true,
-        // onSubmit, //: handleSubmit,
-        // onAdditionalDetails: handleAdditionalDetails,
         onPaymentCompleted: handlePaymentCompleted,
         onError: handleError
         // ...window.mainConfiguration
