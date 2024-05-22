@@ -1,4 +1,5 @@
 import { h } from 'preact';
+import classNames from 'classnames';
 import { App, UpiMode } from '../../types';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import UPIIntentAppItem from './UPIIntentAppItem';
@@ -28,7 +29,15 @@ const UPIIntentAppList = ({
     const getImage = useImage();
 
     return (
-        <ul className="adyen-checkout-upi-app-list" role="radiogroup" aria-label={i18n.get('paymentMethodsList.aria.label')} required>
+        <ul
+            className={classNames({
+                'adyen-checkout-upi-app-list': true,
+                'adyen-checkout-upi-app-list--loading': disabled
+            })}
+            role="radiogroup"
+            aria-label={i18n.get('paymentMethodsList.aria.label')}
+            required
+        >
             {apps.map(app => {
                 const key = `adyen-checkout-upi-app-item-${app.id}}`;
                 const isSelected = selectedAppId === app.id;

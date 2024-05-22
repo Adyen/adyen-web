@@ -4,4 +4,9 @@
     list-style: none;
     margin: 0;
     padding: 0;
+
+    &--loading {
+        user-select: none;
+        pointer-events: none;
+    }
 }
