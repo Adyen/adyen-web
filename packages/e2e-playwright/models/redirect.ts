@@ -19,6 +19,7 @@ class Redirect {
     readonly simulateFailureButton: Locator;
     readonly simulateExpirationButton: Locator;
     readonly simulateCancellationButton: Locator;
+    readonly resultMessage: Locator;
 
     readonly page: Page;
 
@@ -35,6 +36,8 @@ class Redirect {
         this.simulateFailureButton = page.getByRole('button', { name: SIMULATION_TYPE_FAILURE });
         this.simulateExpirationButton = page.getByRole('button', { name: SIMULATION_TYPE_EXPIRATION });
         this.simulateCancellationButton = page.getByRole('button', { name: SIMULATION_TYPE_CANCELLATION, exact: true });
+
+        this.resultMessage = page.locator('#result-message');
     }
 
     async isComponentVisible() {
@@ -65,6 +68,10 @@ class Redirect {
         let simType = sim.toLowerCase();
         simType = capitalizeFirstLetter(simType);
         await this[`simulate${simType}Button`].click();
+    }
+
+    async isMessageVisible() {
+        await this.resultMessage.waitFor({ state: 'visible' });
     }
 }
 

@@ -2,7 +2,7 @@ import { test, expect } from '../../pages/redirects/redirect.fixture';
 import { SIMULATION_TYPE_CANCELLATION, SIMULATION_TYPE_EXPIRATION, SIMULATION_TYPE_FAILURE, SIMULATION_TYPE_SUCCESS } from '../../models/redirect';
 
 test.describe('Redirects', () => {
-    test.only('#1 Should succeed in making an iDeal payment', async ({ redirectPageIdeal }) => {
+    test('#1 Should succeed in making an iDeal payment', async ({ redirectPageIdeal }) => {
         const { redirectModel, page } = redirectPageIdeal;
 
         await redirectModel.isComponentVisible();
@@ -25,8 +25,9 @@ test.describe('Redirects', () => {
 
         await redirectModel.selectSimulation(SIMULATION_TYPE_SUCCESS);
 
-        // await page.waitForTimeout(20000);
-        // await page.pause();
+        // allow time for the details call
+        await redirectModel.isMessageVisible();
+
         await expect(page.locator('#result-message')).toHaveText('Authorised');
     });
 
@@ -52,6 +53,9 @@ test.describe('Redirects', () => {
         await redirectModel.areSimulationButtonsVisible();
 
         await redirectModel.selectSimulation(SIMULATION_TYPE_FAILURE);
+
+        // allow time for the details call
+        await redirectModel.isMessageVisible();
 
         await expect(page.locator('#result-message')).toHaveText('Refused');
     });
@@ -79,6 +83,9 @@ test.describe('Redirects', () => {
 
         await redirectModel.selectSimulation(SIMULATION_TYPE_EXPIRATION);
 
+        // allow time for the details call
+        await redirectModel.isMessageVisible();
+
         await expect(page.locator('#result-message')).toHaveText('Received');
     });
 
@@ -104,6 +111,9 @@ test.describe('Redirects', () => {
         await redirectModel.areSimulationButtonsVisible();
 
         await redirectModel.selectSimulation(SIMULATION_TYPE_CANCELLATION);
+
+        // allow time for the details call
+        await redirectModel.isMessageVisible();
 
         await expect(page.locator('#result-message')).toHaveText('Cancelled');
     });
