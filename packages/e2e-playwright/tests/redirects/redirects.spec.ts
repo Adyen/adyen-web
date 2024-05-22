@@ -27,7 +27,14 @@ test.describe('Redirects', () => {
 
         await redirectModel.selectSimulation(SIMULATION_TYPE_SUCCESS);
 
-        // allow time for the iDeal simulator
+        // Inspect iDeal simulator page for expected outcome
+        await expect(page.getByText('SUCCESS', { exact: true })).toBeVisible();
+
+        /**
+         * The time that the simulator takes to complete varies massively, meaning the test can often timeout, so we only try to test the full Redirect /details call in one test
+         */
+
+        // allow time for the iDeal simulator to complete
         await page.waitForTimeout(WAIT_FOR_SIMULATOR_MS);
 
         // allow time for the details call
@@ -59,13 +66,10 @@ test.describe('Redirects', () => {
 
         await redirectModel.selectSimulation(SIMULATION_TYPE_FAILURE);
 
-        // allow time for the iDeal simulator
-        await page.waitForTimeout(WAIT_FOR_SIMULATOR_MS);
+        // Inspect iDeal simulator page for expected outcome
+        await expect(page.getByText('FAILURE', { exact: true })).toBeVisible();
 
-        // allow time for the details call
-        await redirectModel.isMessageVisible();
-
-        await expect(page.locator('#result-message')).toHaveText('Refused');
+        // translates to a 'Refused' response from the /details call
     });
 
     test('#3 Should timeout in making an iDeal payment', async ({ redirectPageIdeal }) => {
@@ -91,13 +95,10 @@ test.describe('Redirects', () => {
 
         await redirectModel.selectSimulation(SIMULATION_TYPE_EXPIRATION);
 
-        // allow time for the iDeal simulator
-        await page.waitForTimeout(WAIT_FOR_SIMULATOR_MS);
+        // Inspect iDeal simulator page for expected outcome
+        await expect(page.getByText('TIMEOUT', { exact: true })).toBeVisible();
 
-        // allow time for the details call
-        await redirectModel.isMessageVisible();
-
-        await expect(page.locator('#result-message')).toHaveText('Received');
+        // translates to a 'Received' response from the /details call
     });
 
     test('#4 Should cancel an iDeal payment', async ({ redirectPageIdeal }) => {
@@ -123,12 +124,9 @@ test.describe('Redirects', () => {
 
         await redirectModel.selectSimulation(SIMULATION_TYPE_CANCELLATION);
 
-        // allow time for the iDeal simulator
-        await page.waitForTimeout(WAIT_FOR_SIMULATOR_MS);
+        // Inspect iDeal simulator page for expected outcome
+        await expect(page.getByText('CANCEL', { exact: true })).toBeVisible();
 
-        // allow time for the details call
-        await redirectModel.isMessageVisible();
-
-        await expect(page.locator('#result-message')).toHaveText('Cancelled');
+        // translates to a 'Cancelled' response from the /details call
     });
 });
