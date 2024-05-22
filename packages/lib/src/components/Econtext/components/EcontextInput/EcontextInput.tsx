@@ -1,4 +1,4 @@
-import { h, VNode } from 'preact';
+import { Fragment, h, VNode } from 'preact';
 import { useRef, useState } from 'preact/hooks';
 import PersonalDetails from '../../../internal/PersonalDetails/PersonalDetails';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
@@ -10,7 +10,6 @@ import { ComponentMethodsRef } from '../../../internal/UIElement/types';
 
 interface EcontextInputProps {
     personalDetailsRequired?: boolean;
-    showFormInstruction?: boolean;
     data?: PersonalDetailsSchema;
     showPayButton: boolean;
     payButton(config: any): VNode;
@@ -41,20 +40,20 @@ export default function EcontextInput({ personalDetailsRequired = true, data, on
 
     econtextRef.current.setStatus = setStatus;
 
-    const showFormInstruction = personalDetailsRequired && props.showFormInstruction;
-
     return (
         <div className="adyen-checkout__econtext-input__field">
-            {showFormInstruction && <FormInstruction />}
             {personalDetailsRequired && (
-                <PersonalDetails
-                    data={data}
-                    requiredFields={['firstName', 'lastName', 'telephoneNumber', 'shopperEmail']}
-                    onChange={onChange}
-                    namePrefix="econtext"
-                    setComponentRef={setPersonalDetailsRef}
-                    validationRules={econtextValidationRules}
-                />
+                <Fragment>
+                    <FormInstruction />
+                    <PersonalDetails
+                        data={data}
+                        requiredFields={['firstName', 'lastName', 'telephoneNumber', 'shopperEmail']}
+                        onChange={onChange}
+                        namePrefix="econtext"
+                        setComponentRef={setPersonalDetailsRef}
+                        validationRules={econtextValidationRules}
+                    />
+                </Fragment>
             )}
             {showPayButton && payButton({ status, label: i18n.get('confirmPurchase') })}
         </div>

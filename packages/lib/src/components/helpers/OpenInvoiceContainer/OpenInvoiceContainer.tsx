@@ -15,8 +15,7 @@ export default class OpenInvoiceContainer extends UIElement<OpenInvoiceConfigura
             billingAddress: 'editable',
             deliveryAddress: 'editable',
             bankAccount: 'hidden'
-        },
-        showFormInstruction: true
+        }
     };
 
     /**

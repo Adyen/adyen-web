@@ -68,12 +68,6 @@ export interface CardConfiguration extends UIElementProps {
     showBrandIcon?: boolean;
 
     /**
-     * Show/hide the sentence 'All fields are required unless marked otherwise.' on the top of the form
-     * @defaultValue `true`
-     */
-    showFormInstruction?: boolean;
-
-    /**
      * Show/hide the contextual text under each form field. The contextual text is to assist shoppers filling in the payment form.
      * @defaultValue `true`
      */

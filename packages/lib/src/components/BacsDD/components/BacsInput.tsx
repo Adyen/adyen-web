@@ -59,7 +59,8 @@ function BacsInput(props: BacsInputProps) {
                 'adyen-checkout__bacs--confirm': status === CONFIRM_STATE || status === 'loading'
             })}
         >
-            {props.showFormInstruction && <FormInstruction />}
+            <FormInstruction />
+
             {status == CONFIRM_STATE && (
                 <div
                     className={classNames({

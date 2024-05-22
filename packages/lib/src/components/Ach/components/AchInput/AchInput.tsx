@@ -136,7 +136,8 @@ function AchInput(props: ACHInputProps) {
 
     return (
         <div className="adyen-checkout__ach">
-            {props.showFormInstruction && <FormInstruction />}
+            <FormInstruction />
+
             <SecuredFieldsProvider
                 ref={sfp}
                 {...extractPropsForSFP(props)}

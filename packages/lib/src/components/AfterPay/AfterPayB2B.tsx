@@ -14,8 +14,7 @@ export default class AfterPayB2B extends OpenInvoiceContainer {
             personalDetails: 'editable',
             billingAddress: 'editable',
             deliveryAddress: 'editable'
-        },
-        showFormInstruction: true
+        }
     };
 
     formatProps(props) {

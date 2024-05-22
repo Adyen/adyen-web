@@ -7,6 +7,5 @@ export interface AchConfiguration extends UIElementProps {
     hasHolderName?: boolean;
     enableStoreDetails: boolean;
     bankAccountNumber: string;
-    showFormInstruction?: boolean;
     placeholders?: Placeholders;
 }
