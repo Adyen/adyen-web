@@ -8,6 +8,8 @@ import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import PayButton from '../internal/PayButton';
 import { ANCVConfiguration } from './types';
+import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
+
 export class ANCVElement extends UIElement<ANCVConfiguration> {
     public static type = 'ancv';
 
@@ -34,24 +36,43 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
         }
     };
 
-    public createOrder = () => {
-        if (!this.isValid) {
-            this.showValidation();
-            return false;
-        }
-
+    /**
+     * Check if order exists, if it does Resolve.
+     * Otherwise createOrder and then Resolve.
+     */
+    public createOrder = (): Promise<void> => {
         this.setStatus('loading');
+
+        // allow for multiple ANCV payments, follow giftcard logic and just use order if it exists
+        if (this.props.order) {
+            return Promise.resolve();
+        }
 
         return this.onOrderRequest(this.data)
             .then((order: { orderData: string; pspReference: string }) => {
-                this.setState({ order: { orderData: order.orderData, pspReference: order.pspReference } });
-                this.submit();
+                const stateOrder = { orderData: order.orderData, pspReference: order.pspReference };
+                this.setState(stateOrder);
+                return Promise.resolve();
             })
             .catch(error => {
                 this.setStatus(error?.message || 'error');
                 if (this.props.onError) this.handleError(new AdyenCheckoutError('ERROR', error));
             });
     };
+
+    public submit() {
+        if (!this.isValid) {
+            this.showValidation();
+            return false;
+        }
+
+        this.createOrder()
+            .then(this.makePaymentsCall)
+            .then(sanitizeResponse)
+            .then(verifyPaymentDidNotFail)
+            .then(this.handleResponse)
+            .catch(this.handleFailedResult);
+    }
 
     // Reimplement payButton similar to GiftCard to allow to set onClick
     public payButton = props => {
@@ -100,7 +121,7 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
                         this.componentRef = ref;
                     }}
                     {...this.props}
-                    onSubmit={this.createOrder}
+                    onSubmit={this.submit}
                     onChange={this.setState}
                     payButton={this.payButton}
                     showPayButton={this.props.showPayButton}
