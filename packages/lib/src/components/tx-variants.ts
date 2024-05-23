@@ -4,6 +4,7 @@ export enum TxVariants {
     bankTransfer_IBAN = 'bankTransfer_IBAN',
     donation = 'donation',
     personal_details = 'personal_details',
+    dropin = 'dropin',
     /** internal */
 
     /** Card */

@@ -278,16 +278,7 @@ export interface PaymentMethodData {
         [key: string]: any;
         checkoutAttemptId?: string;
     };
-    browserInfo?: {
-        acceptHeader: string;
-        colorDepth: number;
-        javaEnabled: boolean;
-        language: string;
-        screenHeight: number;
-        screenWidth: number;
-        timeZoneOffset: number;
-        userAgent: string;
-    };
+    browserInfo?: BrowserInfo;
 }
 
 /**

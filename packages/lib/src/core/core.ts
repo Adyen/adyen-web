@@ -23,7 +23,7 @@ import { resolveEnvironments } from './Environment';
 import type { AdditionalDetailsStateData, PaymentAction, PaymentResponseData } from '../types/global-types';
 import type { CoreConfiguration, ICore } from './types';
 import type { Translations } from '../language/types';
-import { UIElementProps } from '../components/internal/UIElement/types';
+import type { UIElementProps } from '../components/internal/UIElement/types';
 
 class Core implements ICore {
     public session?: Session;
@@ -213,7 +213,7 @@ class Core implements ICore {
      * @param options - options that will be merged to the global Checkout props
      * @returns new UIElement
      */
-    public createFromAction(action: PaymentAction, options = {}): any {
+    public createFromAction(action: PaymentAction, options = {}): UIElement {
         if (!action || !action.type) {
             if (hasOwnProperty(action, 'action') && hasOwnProperty(action, 'resultCode')) {
                 throw new Error(

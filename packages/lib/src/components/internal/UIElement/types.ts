@@ -1,11 +1,11 @@
 import { h } from 'preact';
 import Session from '../../../core/CheckoutSession';
-import UIElement from './UIElement';
-import { PaymentAction, PaymentAmount, PaymentAmountExtended } from '../../../types/global-types';
 import Language from '../../../language';
-import { BaseElementProps, IBaseElement } from '../BaseElement/types';
-import { PayButtonProps } from '../PayButton/PayButton';
-import { CoreConfiguration, ICore } from '../../../core/types';
+import UIElement from './UIElement';
+import type { PaymentAction, PaymentAmount, PaymentAmountExtended } from '../../../types/global-types';
+import type { BaseElementProps, IBaseElement } from '../BaseElement/types';
+import type { PayButtonProps } from '../PayButton/PayButton';
+import type { CoreConfiguration, ICore } from '../../../core/types';
 
 export type PayButtonFunctionProps = Omit<PayButtonProps, 'amount'>;
 
@@ -103,12 +103,13 @@ export type UIElementProps = BaseElementProps &
     };
 
 export interface IUIElement extends IBaseElement {
+    core: ICore;
+    type: string;
     isValid: boolean;
     displayName: string;
     accessibleName: string;
-    type: string;
     icon: string;
-    elementRef: IUIElement;
+    elementRef: UIElement;
     submit(): void;
     setComponentRef(ref): void;
     updateParent(options?: CoreConfiguration): Promise<ICore>;

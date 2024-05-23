@@ -9,11 +9,11 @@ import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
+import { SendAnalyticsObject } from '../../core/Analytics/types';
 
-import type { AddressData, PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
+import type { AddressData, BrowserInfo, PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
 import type { GooglePayConfiguration } from './types';
 import type { ICore } from '../../core/types';
-import { SendAnalyticsObject } from '../../core/Analytics/types';
 
 class GooglePay extends UIElement<GooglePayConfiguration> {
     public static type = TxVariants.googlepay;
@@ -233,7 +233,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         return this.googlePay.prefetchPaymentData(this.props, this.core.options.countryCode);
     };
 
-    get browserInfo() {
+    get browserInfo(): BrowserInfo {
         return collectBrowserInfo();
     }
 
