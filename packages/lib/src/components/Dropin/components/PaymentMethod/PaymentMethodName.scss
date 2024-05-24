@@ -9,18 +9,16 @@
         overflow: hidden;
     }
 
-    &__name--selected {
-        font-weight: var(--adyen-checkout-text-body-stronger-font-weight);
-    }
-
     &__additional-info {
-        font-size: var(--adyen-checkout-font-size-small);
+        font-size: var(--adyen-checkout-font-size-xsmall);
+        font-weight: var(--adyen-checkout-font-weight-300);
         color: var(--adyen-checkout-color-label-secondary);
     }
 
     &__name_wrapper {
-        min-width: var(--adyen-checkout-spacer-120);
         display: flex;
+        gap: var(--adyen-checkout-spacer-020);
+        min-width: var(--adyen-checkout-spacer-120);
         align-items: flex-start;
         flex-direction: column;
         text-align: start;

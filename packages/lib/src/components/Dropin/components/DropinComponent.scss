@@ -33,14 +33,17 @@
 }
 
 .adyen-checkout__instant-payment-methods-list {
+    --gap: var(--adyen-checkout-spacer-070);
+
     list-style: none;
     padding: 0;
     margin: 0;
     display: flex;
-    gap: var(--adyen-checkout-spacer-070);
+    flex-wrap: wrap;
+    gap: var(--gap);
 
     li {
-        flex: 1;
+        flex: 1 0 calc(50% - var(--gap) / 2);
     }
 }
 
