@@ -3,9 +3,9 @@ import { ActionHandledReturnObject, AnalyticsModule } from '../../types/global-t
 import Language from '../../language';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { Analytics3DS2Errors } from '../../core/Analytics/constants';
-import { SendAnalyticsObject } from '../../core/Analytics/types';
+import { UIElementProps } from '../internal/UIElement/types';
 
-interface ThreeDS2Configuration {
+interface ThreeDS2Configuration extends UIElementProps {
     dataKey?: string;
     environment?: string;
     isMDFlow?: boolean;
@@ -17,6 +17,7 @@ interface ThreeDS2Configuration {
     paymentData?: string;
     token?: string;
     type?: string;
+    challengeWindowSize?: '01' | '02' | '03' | '04' | '05';
 }
 
 export interface ThreeDS2DeviceFingerprintConfiguration extends ThreeDS2Configuration {
@@ -26,7 +27,6 @@ export interface ThreeDS2DeviceFingerprintConfiguration extends ThreeDS2Configur
 }
 
 export interface ThreeDS2ChallengeConfiguration extends ThreeDS2Configuration {
-    challengeWindowSize?: '01' | '02' | '03' | '04' | '05';
     i18n?: Language;
     size?: string;
 }

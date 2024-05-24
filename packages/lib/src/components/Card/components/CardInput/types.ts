@@ -123,7 +123,6 @@ export interface CardInputProps {
     resources: Resources;
     setComponentRef?: (ref) => void;
     showBrandIcon?: boolean;
-    showFormInstruction?: boolean;
     showInstallmentAmounts?: boolean;
     showPayButton: boolean;
     showStoreDetailsCheckbox?: boolean;

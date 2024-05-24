@@ -17,8 +17,7 @@ export class EcontextElement extends UIElement<EcontextConfiguration> {
     ];
 
     protected static defaultProps = {
-        personalDetailsRequired: true,
-        showFormInstruction: true
+        personalDetailsRequired: true
     };
 
     get isValid() {

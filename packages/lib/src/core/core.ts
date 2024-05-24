@@ -23,6 +23,7 @@ import { resolveEnvironments } from './Environment';
 import type { AdditionalDetailsStateData, PaymentAction, PaymentResponseData } from '../types/global-types';
 import type { CoreConfiguration, ICore } from './types';
 import type { Translations } from '../language/types';
+import type { UIElementProps } from '../components/internal/UIElement/types';
 
 class Core implements ICore {
     public session?: Session;
@@ -212,7 +213,7 @@ class Core implements ICore {
      * @param options - options that will be merged to the global Checkout props
      * @returns new UIElement
      */
-    public createFromAction(action: PaymentAction, options = {}): any {
+    public createFromAction(action: PaymentAction, options = {}): UIElement {
         if (!action || !action.type) {
             if (hasOwnProperty(action, 'action') && hasOwnProperty(action, 'resultCode')) {
                 throw new Error(
@@ -254,9 +255,14 @@ class Core implements ICore {
         this.setOptions(options);
 
         return this.initialize().then(() => {
-            // Update each component under this instance
-            // here we should update only the new options that have been received from core
-            this.components.forEach(c => c.update(options));
+            this.components.forEach(component => {
+                // We update only with the new options that have been received
+                const newProps: Partial<UIElementProps> = {
+                    ...options,
+                    ...(this.session && { session: this.session })
+                };
+                component.update(newProps);
+            });
             return this;
         });
     };

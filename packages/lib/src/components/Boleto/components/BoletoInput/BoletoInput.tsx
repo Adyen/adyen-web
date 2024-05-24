@@ -76,7 +76,7 @@ function BoletoInput(props: BoletoInputProps) {
 
     const buttonModifiers = [...(!props.personalDetailsRequired && !props.billingAddressRequired && !props.showEmailAddress ? ['standalone'] : [])];
 
-    const showFormInstruction = props.showFormInstruction && (props.personalDetailsRequired || props.billingAddressRequired);
+    const showFormInstruction = props.personalDetailsRequired || props.billingAddressRequired;
 
     return (
         <div className="adyen-checkout__boleto-input__field">
@@ -121,8 +121,7 @@ BoletoInput.defaultProps = {
     data: {},
     showEmailAddress: true,
     personalDetailsRequired: true,
-    billingAddressRequired: true,
-    showFormInstruction: true
+    billingAddressRequired: true
 };
 
 export default BoletoInput;

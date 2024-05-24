@@ -63,15 +63,4 @@ describe('SepaElement render', () => {
         render(sepa.render());
         expect(await screen.findByText(/All fields are required unless marked otherwise./i)).toBeTruthy();
     });
-
-    test('should not render FormInstruction if showFormInstruction sets to false', () => {
-        const sepa = new Sepa(global.core, {
-            i18n: global.i18n,
-            showFormInstruction: false,
-            loadingContext: 'test',
-            modules: { resources: global.resources }
-        });
-        render(sepa.render());
-        expect(screen.queryByText(/All fields are required unless marked otherwise./i)).toBeNull();
-    });
 });

@@ -9,6 +9,7 @@ import createInstantPaymentElements from './elements/createInstantPaymentElement
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import splitPaymentMethods from './elements/splitPaymentMethods';
+import { TxVariants } from '../tx-variants';
 
 import type { DropinConfiguration, InstantPaymentTypes, PaymentMethodsConfiguration } from './types';
 import type { PaymentAction, PaymentResponseData } from '../../types/global-types';
@@ -18,6 +19,8 @@ import type { IDropin } from './types';
 const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay'];
 
 class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
+    public static type = TxVariants.dropin;
+
     protected static defaultProps = defaultProps;
 
     public dropinRef = null;

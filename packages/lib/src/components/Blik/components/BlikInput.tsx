@@ -37,6 +37,7 @@ function BlikInput(props: BlikInputProps) {
     });
 
     useEffect(() => {
+        // @ts-ignore TODO: Fix this. Preact component types should not inherit from UIElementProps.
         props.onChange({ data, errors, valid, isValid }, this);
     }, [data, valid, errors, isValid]);
 

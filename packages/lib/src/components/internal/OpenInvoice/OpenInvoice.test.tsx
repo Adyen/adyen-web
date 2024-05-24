@@ -146,7 +146,7 @@ describe('OpenInvoice', () => {
     });
 
     test('should show FormInstruction', () => {
-        const wrapper = getWrapper({ showFormInstruction: true });
+        const wrapper = getWrapper({});
         expect(wrapper.find('FormInstruction')).toHaveLength(1);
     });
 });

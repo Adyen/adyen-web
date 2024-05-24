@@ -53,7 +53,6 @@ export class CardElement extends UIElement<CardConfiguration> {
 
     protected static defaultProps = {
         onBinLookup: () => {},
-        showFormInstruction: true,
         _disableClickToPay: false
     };
 

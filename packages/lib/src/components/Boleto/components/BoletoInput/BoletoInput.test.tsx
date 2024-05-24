@@ -32,18 +32,13 @@ describe('BoletoInput', () => {
         expect(await screen.findByText(/All fields are required unless marked otherwise./i)).toBeTruthy();
     });
 
-    test('should show form instruction if either the personal detail or the address form is shown and showFormInstruction sets to true', async () => {
+    test('should show form instruction if either the personal detail or the address form is shown', async () => {
         customRender(<BoletoInput personalDetailsRequired={false} onChange={jest.fn()} />);
         expect(await screen.findByText(/All fields are required unless marked otherwise./i)).toBeTruthy();
     });
 
     test('should not show form instruction if neither the personal detail nor the address form is shown', () => {
         customRender(<BoletoInput personalDetailsRequired={false} billingAddressRequired={false} onChange={jest.fn()} />);
-        expect(screen.queryByText(/All fields are required unless marked otherwise./i)).toBeNull();
-    });
-
-    test('should not show form instruction if showFormInstruction sets to false', () => {
-        customRender(<BoletoInput showFormInstruction={false} onChange={jest.fn()} />);
         expect(screen.queryByText(/All fields are required unless marked otherwise./i)).toBeNull();
     });
 });

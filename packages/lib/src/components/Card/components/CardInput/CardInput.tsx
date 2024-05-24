@@ -475,7 +475,8 @@ const CardInput = (props: CardInputProps) => {
                         })}
                         role={'form'}
                     >
-                        {props.showFormInstruction && <FormInstruction />}
+                        <FormInstruction />
+
                         <FieldToRender
                             // Extract exact props that we need to pass down
                             {...extractPropsForCardFields(props)}
