@@ -8,7 +8,8 @@ import {
     OnlineBankingPL,
     MolPayEBankingMY,
     PayByBank,
-    Redirect
+    // Redirect
+    Ideal
 } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 
@@ -37,7 +38,8 @@ import '../../style.scss';
     });
 
     // iDEAL
-    window.ideal = new Redirect(window.core, { type: 'ideal' }).mount('.ideal-field');
+    // window.ideal = new Redirect(window.core, { type: 'ideal' }).mount('.ideal-field');
+    window.ideal = new Ideal(window.core).mount('.ideal-field');
 
     // BillDesk Online
     window.billdesk_online = new BillDeskOnline(window.core).mount('.billdesk_online-field');
