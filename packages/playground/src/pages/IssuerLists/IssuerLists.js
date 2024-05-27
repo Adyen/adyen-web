@@ -22,16 +22,18 @@ import '../../style.scss';
         locale: shopperLocale,
         environment: process.env.__CLIENT_ENV__,
         showPayButton: true,
-        onError: console.error,
-        paymentMethodsConfiguration: {
-            ideal: {
-                highlightedIssuers: ['1121', '1154', '1152']
-            }
-        }
+        onError: console.error
+        // paymentMethodsConfiguration: {
+        //     entercash: {
+        //         highlightedIssuers: ['231', '551', '232']
+        //     }
+        // }
     });
 
     // iDEAL
     window.ideal = checkout.create('ideal').mount('.ideal-field');
+    // alt markup
+    // window.ideal = checkout.create('redirect', { type: 'ideal', name: 'iDEAL' }).mount('.ideal-field');
 
     // BillDesk Online
     window.billdesk_online = checkout.create('billdesk_online').mount('.billdesk_online-field');
