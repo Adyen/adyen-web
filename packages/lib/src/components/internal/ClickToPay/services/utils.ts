@@ -47,9 +47,19 @@ function sortCardByLastTimeUsed(card1: ShopperCard, card2: ShopperCard) {
     return new Date(card2.dateOfCardLastUsed).getTime() - new Date(card1.dateOfCardLastUsed).getTime();
 }
 
+function sortCardByLastTimeCreated(card1: ShopperCard, card2: ShopperCard) {
+    return new Date(card2.dateOfCardCreated).getTime() - new Date(card1.dateOfCardCreated).getTime();
+}
+
 function splitAvailableAndExpiredCards(memo: CardTypes, card: ShopperCard): CardTypes {
     if (card.isExpired) memo.expiredCards.push(card);
     else memo.availableCards.push(card);
+    return memo;
+}
+
+function splitUnusedAndUsedCards(memo: { unusedCards: ShopperCard[]; usedCards: ShopperCard[] }, card: ShopperCard) {
+    if (card.dateOfCardLastUsed) memo.usedCards.push(card);
+    else memo.unusedCards.push(card);
     return memo;
 }
 
@@ -57,11 +67,11 @@ function splitAvailableAndExpiredCards(memo: CardTypes, card: ShopperCard): Card
  * Creates the Shopper card list. The available cards are placed before the expired cards
  */
 function createShopperCardsList(srcProfiles: SrcProfileWithScheme[]): ShopperCard[] {
-    const { availableCards, expiredCards } = srcProfiles
-        .reduce(createShopperMaskedCardsData, [])
-        .reduce(splitAvailableAndExpiredCards, { availableCards: [], expiredCards: [] });
+    const cards: ShopperCard[] = srcProfiles.reduce(createShopperMaskedCardsData, []);
+    const { availableCards, expiredCards } = cards.reduce(splitAvailableAndExpiredCards, { availableCards: [], expiredCards: [] });
+    const { unusedCards, usedCards } = availableCards.reduce(splitUnusedAndUsedCards, { unusedCards: [], usedCards: [] });
 
-    return [...availableCards.sort(sortCardByLastTimeUsed), ...expiredCards.sort(sortCardByLastTimeUsed)];
+    return [...usedCards.sort(sortCardByLastTimeUsed), ...unusedCards.sort(sortCardByLastTimeCreated), ...expiredCards.sort(sortCardByLastTimeUsed)];
 }
 
 export { createShopperCardsList, createCheckoutPayloadBasedOnScheme };
