@@ -1,5 +1,17 @@
 # @adyen/adyen-web
 
+## 5.65.0
+
+### Minor Changes
+
+-   iDeal is now treated as a Redirect rather than an IssuerList PM ([#2689](https://github.com/Adyen/adyen-web/pull/2689))
+
+-   Adding subType to 3DS2 analytics events ([#2680](https://github.com/Adyen/adyen-web/pull/2680))
+
+### Patch Changes
+
+-   GooglePay adds origin to state.data ([#2690](https://github.com/Adyen/adyen-web/pull/2690))
+
 ## 5.64.0
 
 ### Minor Changes
