@@ -26,6 +26,8 @@ export type onBalanceCheckCallbackType = (
     data: GiftCardElementData
 ) => Promise<void>;
 
+export type onRequiringConfirmationCallbackType = (resolve: () => void, reject: (error: Error) => void) => Promise<void>;
+
 export type onOrderRequestCallbackType = (resolve: (order: Order) => void, reject: (error: Error) => void, data: PaymentData) => Promise<void>;
 
 // TODO: Fix these types
@@ -38,7 +40,7 @@ export interface GiftCardConfiguration extends UIElementProps {
     onBalanceCheck?: onBalanceCheckCallbackType;
     onOrderRequest?: onOrderRequestCallbackType;
 
-    onRequiringConfirmation?(): void;
+    onRequiringConfirmation?: onRequiringConfirmationCallbackType;
 
     /**
      * @internal

@@ -80,8 +80,10 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
 
         this.setStatus('loading');
 
+        debugger;
         return this.handleBalanceCheck(this.formatData())
             .then(({ balance, transactionLimit = {} as PaymentAmount }) => {
+                debugger;
                 if (!balance) throw new Error('card-error'); // card doesn't exist
                 if (balance?.currency !== this.props.amount?.currency) throw new Error('currency-error');
                 if (balance?.value <= 0) throw new Error('no-balance');
@@ -98,15 +100,21 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
                         return Promise.resolve();
                     });
                 } else {
-                    if (this.props.onRequiringConfirmation) {
-                        this.props.onRequiringConfirmation();
-                    }
+                    return this.handleOnRequiringConfirmation();
                 }
             })
             .catch(error => {
                 this.setStatus(error?.message || 'error');
                 if (this.props.onError) this.handleError(new AdyenCheckoutError('ERROR', error));
             });
+    };
+
+    private handleOnRequiringConfirmation = (): Promise<any> => {
+        if (this.props.onRequiringConfirmation) {
+            return new Promise<void>((resolve, reject) => {
+                this.props.onRequiringConfirmation(resolve, reject);
+            });
+        }
     };
 
     public submit() {

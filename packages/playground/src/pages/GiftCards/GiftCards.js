@@ -93,8 +93,9 @@ import '../../style.scss';
         onOrderUpdated: () => {
             console.log('onOrderUpdated');
         },
-        onRequiringConfirmation: () => {
-            console.log('onRequiringConfirmation');
+        onRequiringConfirmation: (resolve, reject) => {
+            checkoutCardButton.removeEventListener('click', cardSubmit);
+            checkoutCardButton.add('click', () => resolve());
         }
     }).mount('#giftcard-session-container');
 
