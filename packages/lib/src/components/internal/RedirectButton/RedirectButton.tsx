@@ -16,6 +16,10 @@ function RedirectButton({ label = null, icon = null, payButton, onSubmit, amount
         return `${i18n.get('continueTo')} ${name}`;
     };
 
+    if (!props.showPayButton) {
+        return;
+    }
+
     return (
         <Fragment>
             {payButton({
