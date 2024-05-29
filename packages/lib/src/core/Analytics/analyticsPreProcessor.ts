@@ -36,6 +36,14 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
                 // Expected from Wallet PMs
                 const { isExpress, expressPage } = uiElementProps;
 
+                // Expected from Cards
+                const { styles } = uiElementProps;
+
+                const isStylesConfigured = !!styles;
+
+                console.log('### analyticsPreProcessor::ANALYTICS_RENDERED_STR:: uiElementProps', uiElementProps);
+                console.log('### analyticsPreProcessor::ANALYTICS_RENDERED_STR:: isStylesConfigured', isStylesConfigured);
+
                 const hasExpressPage = expressPage && ANALYTICS_EXPRESS_PAGES_ARRAY.includes(expressPage);
 
                 const data = {

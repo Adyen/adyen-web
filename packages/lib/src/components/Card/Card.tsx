@@ -190,7 +190,7 @@ export class CardElement extends UIElement<CardElementProps> {
             }
         }
 
-        super.submitAnalytics(analyticsObj);
+        super.submitAnalytics(analyticsObj, this.props);
     }
 
     private onConfigSuccess = (obj: CbObjOnConfigSuccess) => {
