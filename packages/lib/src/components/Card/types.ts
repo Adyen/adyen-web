@@ -28,7 +28,7 @@ export interface CardConfiguration extends UIElementProps {
 
     /**
      * Config t olimit the countries that will show in the country dropdown
-     * - merchant set config options
+     * - merchant set config option
      */
     billingAddressAllowedCountries?: string[];
 
@@ -50,7 +50,7 @@ export interface CardConfiguration extends UIElementProps {
 
     /**
      * Config to specify which address field are required
-     * - merchant set config options
+     * - merchant set config option
      */
     billingAddressRequiredFields?: string[];
 
