@@ -194,8 +194,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             // Just set koreanAuthenticationRequired if KCP fields should only show if korean_local_card entered
             configuration: {
                 koreanAuthenticationRequired: true
-            },
-            countryCode: 'KR'
+            }
         }).mount('.card-kcp-field');
     }
 
