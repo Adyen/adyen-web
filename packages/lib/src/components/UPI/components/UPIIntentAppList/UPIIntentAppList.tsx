@@ -43,7 +43,7 @@ const UPIIntentAppList = ({
                 const isSelected = selectedAppId === app.id;
 
                 const showUpiCollectInput = app.id === UpiMode.Vpa;
-                const imgName = showUpiCollectInput ? 'upi' : app.id;
+                const imgName = showUpiCollectInput ? 'upi' : `upi/${app.id}`;
                 const imgSrc = getImage()(imgName.toLowerCase());
 
                 return (
