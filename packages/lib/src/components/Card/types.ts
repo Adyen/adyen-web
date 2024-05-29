@@ -251,6 +251,13 @@ export interface CardConfiguration extends UIElementProps {
     minimumExpiryDate?: string[];
 
     /**
+     * When in Dropin this is the name shown in the paymentMethods list
+     * @defaultValue - derived from PaymentMethods response
+     * @internal - but can also be overwritten by merchant config option
+     */
+    name?: string;
+
+    /**
      * After binLookup call - provides the brand(s) we detect the user is entering, and if we support the brand(s)
      * - merchant set config option
      */
