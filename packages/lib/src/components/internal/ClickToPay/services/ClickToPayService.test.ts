@@ -198,6 +198,7 @@ test('should load shopper cards when cookie is available AND shopper has CtP pro
     const expectedShopperCards = [
         {
             artUri: 'https://image.com/visa',
+            dateOfCardCreated: '2015-01-20T06:00:00.312Z',
             dateOfCardLastUsed: '2019-09-28T08:10:02.312Z',
             descriptorName: 'Visa',
             isExpired: true,
@@ -289,6 +290,7 @@ test('should load shopper cards when cookie is available AND shopper has CtP pro
     const expectedShopperCards = [
         {
             artUri: 'https://image.com/mc',
+            dateOfCardCreated: '2015-01-20T06:00:00.312Z',
             dateOfCardLastUsed: '2019-12-25T20:20:02.942Z',
             descriptorName: 'Mastercard',
             isExpired: true,
@@ -302,6 +304,7 @@ test('should load shopper cards when cookie is available AND shopper has CtP pro
         },
         {
             artUri: 'https://image.com/visa',
+            dateOfCardCreated: '2015-01-20T06:00:00.312Z',
             dateOfCardLastUsed: '2019-09-28T08:10:02.312Z',
             descriptorName: 'Visa',
             isExpired: true,
@@ -373,6 +376,7 @@ test('should clean up shopper cards and set CtP state as Login after performing 
     const expectedShopperCards = [
         {
             artUri: 'https://image.com/visa',
+            dateOfCardCreated: '2015-01-20T06:00:00.312Z',
             dateOfCardLastUsed: '2019-09-28T08:10:02.312Z',
             descriptorName: 'Visa',
             isExpired: true,
@@ -463,6 +467,7 @@ test('should authenticate the shopper with the fastest SDK that finds the shoppe
     const expectedShopperCards = [
         {
             artUri: 'https://image.com/mc',
+            dateOfCardCreated: '2015-01-20T06:00:00.312Z',
             dateOfCardLastUsed: '2019-12-25T20:20:02.942Z',
             descriptorName: 'Mastercard',
             isExpired: true,
