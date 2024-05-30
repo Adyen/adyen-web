@@ -36,6 +36,7 @@ test('should pass the complianceSettings if the cookie is set to be stored', asy
                     {
                         srcDigitalCardId: 'xxxx',
                         panLastFour: '8902',
+                        dateOfCardCreated: '2015-01-20T06:00:00.312Z',
                         dateOfCardLastUsed: '2019-09-28T08:10:02.312Z',
                         paymentCardDescriptor: 'visa',
                         panExpirationMonth: '12',
@@ -178,6 +179,7 @@ test('should load shopper cards when cookie is available AND shopper has CtP pro
                     {
                         srcDigitalCardId: 'xxxx',
                         panLastFour: '8902',
+                        dateOfCardCreated: '2015-01-20T06:00:00.312Z',
                         dateOfCardLastUsed: '2019-09-28T08:10:02.312Z',
                         paymentCardDescriptor: 'visa',
                         panExpirationMonth: '12',
@@ -244,6 +246,7 @@ test('should load shopper cards when cookie is available AND shopper has CtP pro
                     {
                         srcDigitalCardId: 'xxxx',
                         panLastFour: '8902',
+                        dateOfCardCreated: '2015-01-20T06:00:00.312Z',
                         dateOfCardLastUsed: '2019-09-28T08:10:02.312Z',
                         paymentCardDescriptor: 'visa',
                         panExpirationMonth: '12',
@@ -267,6 +270,7 @@ test('should load shopper cards when cookie is available AND shopper has CtP pro
                     {
                         srcDigitalCardId: 'yyyy',
                         panLastFour: '4302',
+                        dateOfCardCreated: '2015-01-20T06:00:00.312Z',
                         dateOfCardLastUsed: '2019-12-25T20:20:02.942Z',
                         paymentCardDescriptor: 'mc',
                         panExpirationMonth: '12',
@@ -350,6 +354,7 @@ test('should clean up shopper cards and set CtP state as Login after performing 
                     {
                         srcDigitalCardId: 'xxxx',
                         panLastFour: '8902',
+                        dateOfCardCreated: '2015-01-20T06:00:00.312Z',
                         dateOfCardLastUsed: '2019-09-28T08:10:02.312Z',
                         paymentCardDescriptor: 'visa',
                         panExpirationMonth: '12',
@@ -439,6 +444,7 @@ test('should authenticate the shopper with the fastest SDK that finds the shoppe
                     {
                         srcDigitalCardId: 'yyyy',
                         panLastFour: '4302',
+                        dateOfCardCreated: '2015-01-20T06:00:00.312Z',
                         dateOfCardLastUsed: '2019-12-25T20:20:02.942Z',
                         paymentCardDescriptor: 'mc',
                         panExpirationMonth: '12',
