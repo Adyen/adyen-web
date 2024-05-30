@@ -2,27 +2,27 @@
 
 .adyen-checkout__alert-message {
     display: flex;
-    border-radius: var(--adyen-checkout-border-radius-m);
-    margin: 0 0 var(--adyen-checkout-spacer-070);
+    border-radius: token(border-radius-m);
+    margin: 0 0 token(spacer-070);
     text-align: left;
-    padding: var(--adyen-checkout-spacer-060);
-    font-size: var(--adyen-checkout-font-size-xsmall);
+    padding: token(spacer-060);
+    font-size: token(font-size-xsmall);
 }
 
 .adyen-checkout__alert-message--error {
-    background: var(--adyen-checkout-color-label-critical);
+    background: token(color-label-critical);
 }
 
 .adyen-checkout__alert-message--warning {
-    background: var(--adyen-checkout-alert-severity-warning-background-color);
+    background: token(alert-severity-warning-background-color);
 }
 
 .adyen-checkout__alert-message--info {
-    background: var(--adyen-checkout-color-background-secondary);
+    background: token(color-background-secondary);
 }
 
 .adyen-checkout__alert-message__icon {
     width: 14px;
     height: 14px;
-    margin-right: var(--adyen-checkout-spacer-040);
+    margin-right: token(spacer-040);
 }

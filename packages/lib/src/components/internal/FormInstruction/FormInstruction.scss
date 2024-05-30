@@ -1,10 +1,10 @@
 @use "../../../style/index";
 
 .adyen-checkout-form-instruction {
-    line-height: var(--adyen-checkout-line-height-100);
-    color: var(--adyen-checkout-color-label-primary);
-    font-size: var(--adyen-checkout-font-size-xsmall);
-    font-weight: var(--adyen-checkout-font-weight-300);
+    line-height: token(line-height-100);
+    color: token(color-label-primary);
+    font-size: token(font-size-xsmall);
+    font-weight: token(font-weight-300);
     margin-top: 0;
 
     [dir="rtl"] & {

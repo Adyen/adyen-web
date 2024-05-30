@@ -5,7 +5,7 @@
     left: 0;
     overflow-y: auto;
     overscroll-behavior-y: contain;
-    padding: var(--adyen-checkout-spacer-090);
+    padding: token(spacer-090);
     position: fixed;
     top: 0;
     visibility: hidden;
@@ -39,11 +39,11 @@
 }
 
 .adyen-checkout__modal {
-    box-shadow: 0 var(--adyen-checkout-spacer-040) var(--adyen-checkout-spacer-090) rgb(0 17 44 / 15%);
-    border-radius: var(--adyen-checkout-border-radius-m);
-    background-color: var(--adyen-checkout-color-background-primary);
+    box-shadow: 0 token(spacer-040) token(spacer-090) rgb(0 17 44 / 15%);
+    border-radius: token(border-radius-m);
+    background-color: token(color-background-primary);
     margin: auto;
-    padding: var(--adyen-checkout-spacer-070);
+    padding: token(spacer-070);
     transition: opacity 0.2s ease, visibility 0.2s ease;
     opacity: 0;
     position: relative;

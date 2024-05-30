@@ -1,11 +1,11 @@
 .adyen-checkout__applepay__button {
     width: 240px;
-    height: var(--adyen-checkout-spacer-120);
+    height: token(spacer-120);
 }
 
 .adyen-checkout__dropin .adyen-checkout__applepay__button {
     width: 100%;
-    border-radius: var(--adyen-checkout-border-radius-m);
+    border-radius: token(border-radius-m);
 }
 
 @supports (-webkit-appearance: -apple-pay-button) {
@@ -104,8 +104,8 @@
         border-radius: 5px;
         padding: 0;
         min-width: 200px;
-        min-height: var(--adyen-checkout-spacer-100);
-        max-height: var(--adyen-checkout-spacer-140);
+        min-height: token(spacer-100);
+        max-height: token(spacer-140);
     }
 
     .apple-pay-button-black {

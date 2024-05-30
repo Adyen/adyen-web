@@ -4,7 +4,7 @@
     direction: ltr;
 
     .adyen-checkout__fieldset__fields {
-        gap: var(--adyen-checkout-spacer-070);
+        gap: token(spacer-070);
 
         > .adyen-checkout__field {
             margin-bottom: 0;

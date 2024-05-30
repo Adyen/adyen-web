@@ -3,7 +3,7 @@
     display: flex;
     flex-wrap: nowrap;
     font-size: 1em;
-    font-weight: var(--adyen-checkout-text-body-font-weight);
+    font-weight: token(text-body-font-weight);
     justify-content: space-between;
     position: relative;
     width: 100%;
@@ -15,22 +15,22 @@
 }
 
 .adyen-checkout__giftcard-result__name {
-    margin-left: var(--adyen-checkout-spacer-040);
+    margin-left: token(spacer-040);
 }
 
 .adyen-checkout__giftcard-result__balance {
     padding: 0;
     list-style: none;
-    margin: var(--adyen-checkout-spacer-070) 0 0;
+    margin: token(spacer-070) 0 0;
 }
 
 .adyen-checkout__giftcard-result__balance__item {
     display: flex;
     justify-content: space-between;
-    margin-bottom: var(--adyen-checkout-spacer-040);
+    margin-bottom: token(spacer-040);
 
     .adyen-checkout__giftcard-result__balance__title--transactionLimit {
-        color: var(--adyen-checkout-color-outline-tertiary);
+        color: token(color-outline-tertiary);
     }
 
     &:last-child {
@@ -46,8 +46,8 @@
 
 .adyen-checkout__giftcard-result__remaining-balance {
     font-size: 13px;
-    line-height: var(--adyen-checkout-text-caption-line-height);
+    line-height: token(text-caption-line-height);
     text-align: center;
-    color: var(--adyen-checkout-color-label-secondary);
-    margin: var(--adyen-checkout-spacer-040) auto 0;
+    color: token(color-label-secondary);
+    margin: token(spacer-040) auto 0;
 }

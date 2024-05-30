@@ -15,12 +15,12 @@
 }
 
 .adyen-checkout__ach-sf__form {
-    margin-top: var(--adyen-checkout-spacer-070);
+    margin-top: token(spacer-070);
 }
 
 .adyen-checkout__ach-input {
     .adyen-checkout__fieldset--address {
-        margin-top: var(--adyen-checkout-spacer-070);
+        margin-top: token(spacer-070);
     }
 }
 

@@ -7,16 +7,16 @@
 }
 
 .adyen-checkout__open-invoice .adyen-checkout__fieldset--personalDetails {
-    padding-bottom: var(--adyen-checkout-spacer-040);
+    padding-bottom: token(spacer-040);
 }
 
 .adyen-checkout__open-invoice .adyen-checkout__fieldset--billingAddress {
-    padding-bottom: var(--adyen-checkout-spacer-040);
+    padding-bottom: token(spacer-040);
 }
 
 .adyen-checkout__open-invoice .adyen-checkout__fieldset--deliveryAddress {
-    margin-top: var(--adyen-checkout-spacer-090);
-    padding-bottom: var(--adyen-checkout-spacer-040);
+    margin-top: token(spacer-090);
+    padding-bottom: token(spacer-040);
 }
 
 .adyen-checkout__open-invoice .adyen-checkout__input--separateDeliveryAddress {
@@ -24,5 +24,5 @@
 }
 
 .adyen-checkout__open-invoice .adyen-checkout__field--consentCheckbox {
-    margin-top: var(--adyen-checkout-spacer-070);
+    margin-top: token(spacer-070);
 }

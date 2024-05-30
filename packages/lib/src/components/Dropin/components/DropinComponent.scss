@@ -3,19 +3,19 @@
 .adyen-checkout__dropin {
     display: flex;
     flex-direction: column;
-    gap: var(--adyen-checkout-dropin-payment-list-gap);
+    gap: token(dropin-payment-list-gap);
 }
 
 .adyen-checkout-payment-methods-container {
     display: flex;
     flex-direction: column;
-    gap: var(--adyen-checkout-spacer-070);
+    gap: token(spacer-070);
 }
 
 .adyen-checkout-payment-methods-list-label {
     @include index.adyen-checkout-text-subtitle;
 
-    color: var(--adyen-checkout-dropin-list-label-color);
+    color: token(dropin-list-label-color);
 }
 
 .adyen-checkout__payment-methods-list {
@@ -24,7 +24,7 @@
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--adyen-checkout-dropin-payment-item-gap);
+    gap: token(dropin-payment-item-gap);
 
     &--loading {
         user-select: none;
@@ -33,7 +33,7 @@
 }
 
 .adyen-checkout__instant-payment-methods-list {
-    --gap: var(--adyen-checkout-spacer-070);
+    --gap: token(spacer-070);
 
     list-style: none;
     padding: 0;
@@ -55,13 +55,13 @@
     }
 
     &__image {
-        width: var(--adyen-checkout-spacer-110);
+        width: token(spacer-110);
         height: 26px;
 
         &__wrapper {
             [dir='rtl'] & {
                 margin-right: 0;
-                margin-left: var(--adyen-checkout-spacer-040);
+                margin-left: token(spacer-040);
             }
         }
     }

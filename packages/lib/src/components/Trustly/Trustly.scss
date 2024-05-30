@@ -1,19 +1,19 @@
 @use '../../style/index';
 
 .adyen-checkout-trustly {
-    margin-bottom: var(--adyen-checkout-spacer-070);
+    margin-bottom: token(spacer-070);
 
     &__descriptor {
-        margin: var(--adyen-checkout-spacer-000) var(--adyen-checkout-spacer-000) var(--adyen-checkout-spacer-020);
-        font-size: var(--adyen-checkout-font-size-medium);
-        font-weight: var(--adyen-checkout-text-body-stronger-font-weight);
+        margin: token(spacer-000) token(spacer-000) token(spacer-020);
+        font-size: token(font-size-medium);
+        font-weight: token(text-body-stronger-font-weight);
     }
 
     &__description-list {
         list-style-type: disc;
         margin: 0;
-        font-size: var(--adyen-checkout-font-size-small);
+        font-size: token(font-size-small);
         line-height: 1.5;
-        padding-left: var(--adyen-checkout-spacer-080);
+        padding-left: token(spacer-080);
     }
 }

@@ -3,22 +3,22 @@
     flex-basis: auto;
     flex-shrink: 1;
     flex-wrap: wrap;
-    min-height: var(--adyen-checkout-spacer-090);
+    min-height: token(spacer-090);
     margin-top: -12px;
-    margin-bottom: var(--adyen-checkout-spacer-060);
+    margin-bottom: token(spacer-060);
     transition: all 0.3s ease-out;
 
     &__brand-wrapper {
         box-shadow:
             0 1px 1px 0 rgb(0 17 44 / 2%),
-            0 1px var(--adyen-checkout-spacer-010) 0 rgb(0 17 44 / 4%);
+            0 1px token(spacer-010) 0 rgb(0 17 44 / 4%);
         overflow: hidden;
         display: inline-block;
-        height: var(--adyen-checkout-spacer-070);
-        width: var(--adyen-checkout-spacer-090);
+        height: token(spacer-070);
+        width: token(spacer-090);
         position: relative;
-        border-radius: var(--adyen-checkout-border-radius-s);
-        margin: var(--adyen-checkout-spacer-020) var(--adyen-checkout-spacer-010);
+        border-radius: token(border-radius-s);
+        margin: token(spacer-020) token(spacer-010);
     }
 }
 

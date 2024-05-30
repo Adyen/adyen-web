@@ -1,10 +1,10 @@
 @use "../../../style/index";
 
 .adyen-checkout__qr-loader {
-    background: var(--adyen-checkout-color-background-primary);
-    padding: var(--adyen-checkout-spacer-110);
-    border: var(--adyen-checkout-border-width-s) solid var(--adyen-checkout-color-outline-secondary);
-    border-radius: var(--adyen-checkout-border-radius-m);
+    background: token(color-background-primary);
+    padding: token(spacer-110);
+    border: token(border-width-s) solid token(color-outline-secondary);
+    border-radius: token(border-radius-m);
     text-align: center;
 }
 
@@ -25,18 +25,18 @@
 
 .adyen-checkout__qr-loader__subtitle {
     max-width: 400px;
-    margin: var(--adyen-checkout-spacer-100) auto 0;
+    margin: token(spacer-100) auto 0;
 }
 
 .adyen-checkout__qr-loader__subtitle--result {
-    margin-bottom: var(--adyen-checkout-spacer-100);
+    margin-bottom: token(spacer-100);
 }
 
 .adyen-checkout__qr-loader__subtitle,
 .adyen-checkout__qr-loader__payment_amount {
-    color: var(--adyen-checkout-color-label-primary);
-    font-size: var(--adyen-checkout-font-size-medium);
-    line-height: var(--adyen-checkout-text-caption-line-height);
+    color: token(color-label-primary);
+    font-size: token(font-size-medium);
+    line-height: token(text-caption-line-height);
 }
 
 .adyen-checkout__qr-loader__icon {
@@ -49,10 +49,10 @@
 }
 
 .adyen-checkout__qr-loader__progress {
-    height: var(--adyen-checkout-spacer-020);
-    background: var(--adyen-checkout-color-outline-secondary);
-    border-radius: var(--adyen-checkout-border-radius-l);
-    margin: var(--adyen-checkout-spacer-100) auto var(--adyen-checkout-spacer-060);
+    height: token(spacer-020);
+    background: token(color-outline-secondary);
+    border-radius: token(border-radius-l);
+    margin: token(spacer-100) auto token(spacer-060);
     width: 152px;
     padding-right: 3%;
 
@@ -65,13 +65,13 @@
 .adyen-checkout__qr-loader__percentage {
     display: block;
     height: 100%;
-    border-radius: var(--adyen-checkout-border-radius-l);
-    background: var(--adyen-checkout-color-label-primary);
+    border-radius: token(border-radius-l);
+    background: token(color-label-primary);
 }
 
 .adyen-checkout__qr-loader__countdown {
-    color: var(--adyen-checkout-color-label-secondary);
-    font-size: var(--adyen-checkout-font-size-small);
+    color: token(color-label-secondary);
+    font-size: token(font-size-small);
 }
 
 .adyen-checkout__qr-loader > .adyen-checkout__spinner__wrapper {
@@ -84,21 +84,21 @@
 
 .adyen-checkout__button.adyen-checkout__button--qr-loader {
     text-decoration: none;
-    margin-top: var(--adyen-checkout-spacer-090);
+    margin-top: token(spacer-090);
 }
 
 .adyen-checkout__qr-loader__instructions {
-    color: var(--adyen-checkout-color-label-tertiary);
-    font-size: var(--adyen-checkout-font-size-medium);
+    color: token(color-label-tertiary);
+    font-size: token(font-size-medium);
     line-height: 1.5;
-    margin-top: var(--adyen-checkout-spacer-100);
+    margin-top: token(spacer-100);
 }
 
 .adyen-checkout__qr-loader__actions {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: var(--adyen-checkout-spacer-100);
+    margin-top: token(spacer-100);
 }
 
 @media only screen and (max-device-width: 1200px) {

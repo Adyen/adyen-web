@@ -1,14 +1,14 @@
 .adyen-checkout__spinner__wrapper {
-    --adyen-checkout-loading-indicator-large-width: var(--adyen-checkout-spacer-120);
-    --adyen-checkout-loading-indicator-large-height: var(--adyen-checkout-spacer-120);
-    --adyen-checkout-loading-indicator-large-border-width: var(--adyen-checkout-spacer-020);
+    --adyen-checkout-loading-indicator-large-width: token(spacer-120);
+    --adyen-checkout-loading-indicator-large-height: token(spacer-120);
+    --adyen-checkout-loading-indicator-large-border-width: token(spacer-020);
     --adyen-checkout-loading-indicator-medium-width: 28px;
     --adyen-checkout-loading-indicator-medium-height: 28px;
-    --adyen-checkout-loading-indicator-small-width: var(--adyen-checkout-spacer-070);
-    --adyen-checkout-loading-indicator-small-height: var(--adyen-checkout-spacer-070);
-    --adyen-checkout-loading-indicator-small-border-width: var(--adyen-checkout-spacer-010);
-    --adyen-checkout-loading-indicator-width: var(--adyen-checkout-spacer-090);
-    --adyen-checkout-loading-indicator-height: var(--adyen-checkout-spacer-090);
+    --adyen-checkout-loading-indicator-small-width: token(spacer-070);
+    --adyen-checkout-loading-indicator-small-height: token(spacer-070);
+    --adyen-checkout-loading-indicator-small-border-width: token(spacer-010);
+    --adyen-checkout-loading-indicator-width: token(spacer-090);
+    --adyen-checkout-loading-indicator-height: token(spacer-090);
 
     height: 100%;
     display: flex;
@@ -19,23 +19,23 @@
 .adyen-checkout__spinner__wrapper--inline {
     height: auto;
     display: inline-block;
-    margin-right: var(--adyen-checkout-spacer-040);
+    margin-right: token(spacer-040);
 
     [dir='rtl'] & {
         margin-right: 0;
-        margin-left: var(--adyen-checkout-spacer-040);
+        margin-left: token(spacer-040);
     }
 }
 
 .adyen-checkout__spinner {
-    height: var(--adyen-checkout-loading-indicator-height);
-    width: var(--adyen-checkout-loading-indicator-width);
+    height: token(loading-indicator-height);
+    width: token(loading-indicator-width);
     position: relative;
 
     &::before,
     &::after {
         animation: bento-progress-circular-rotate 1s cubic-bezier(0.785, 0.135, 0.15, 0.86) infinite;
-        border: var(--adyen-checkout-border-width-l) solid transparent;
+        border: token(border-width-l) solid transparent;
         border-radius: 50%;
         box-sizing: border-box;
         content: '';
@@ -48,38 +48,38 @@
     }
 
     &::before {
-        border-color: var(--adyen-checkout-loading-indicator-background-color);
+        border-color: token(loading-indicator-background-color);
         border-top-color: transparent;
         opacity: 0.1;
     }
 
     &::after {
         border-color: transparent;
-        border-top-color: var(--adyen-checkout-loading-indicator-color);
+        border-top-color: token(loading-indicator-color);
     }
 
     &--small {
-        height: var(--adyen-checkout-loading-indicator-small-height);
-        width: var(--adyen-checkout-loading-indicator-small-width);
+        height: token(loading-indicator-small-height);
+        width: token(loading-indicator-small-width);
 
         &::before,
         &::after {
-            border-width: var(--adyen-checkout-loading-indicator-small-border-width);
+            border-width: token(loading-indicator-small-border-width);
         }
     }
 
     &--medium {
-        height: var(--adyen-checkout-loading-indicator-medium-height);
-        width: var(--adyen-checkout-loading-indicator-medium-width);
+        height: token(loading-indicator-medium-height);
+        width: token(loading-indicator-medium-width);
     }
 
     &--large {
-        height: var(--adyen-checkout-loading-indicator-large-height);
-        width: var(--adyen-checkout-loading-indicator-large-width);
+        height: token(loading-indicator-large-height);
+        width: token(loading-indicator-large-width);
 
         &::before,
         &::after {
-            border-width: var(--adyen-checkout-loading-indicator-large-border-width);
+            border-width: token(loading-indicator-large-border-width);
         }
     }
 }

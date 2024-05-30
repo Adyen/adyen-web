@@ -1,5 +1,5 @@
 .adyen-checkout__issuer-button-group {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--adyen-checkout-spacer-070) var(--adyen-checkout-spacer-070);
+    gap: token(spacer-070) token(spacer-070);
 }

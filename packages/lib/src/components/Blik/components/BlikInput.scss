@@ -1,9 +1,9 @@
 @use "../../../style/index";
 
 .adyen-checkout__blik__helper {
-    font-size: var(--adyen-checkout-font-size-medium);
+    font-size: token(font-size-medium);
     font-weight: normal;
-    color: var(--adyen-checkout-color-label-primary);
-    margin: 0 0 var(--adyen-checkout-spacer-070);
+    color: token(color-label-primary);
+    margin: 0 0 token(spacer-070);
     padding: 0;
 }

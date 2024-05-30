@@ -6,11 +6,11 @@
 
 .adyen-checkout__fieldset--personalDetails .adyen-checkout__radio_group {
     display: flex;
-    margin: var(--adyen-checkout-spacer-040) 0;
+    margin: token(spacer-040) 0;
 }
 
 .adyen-checkout__fieldset--personalDetails .adyen-checkout__radio_group__input-wrapper {
-    margin-right: var(--adyen-checkout-spacer-080);
+    margin-right: token(spacer-080);
 
     &:last-child {
         margin: 0;

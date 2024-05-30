@@ -10,15 +10,15 @@
     }
 
     &__additional-info {
-        font-size: var(--adyen-checkout-font-size-xsmall);
-        font-weight: var(--adyen-checkout-font-weight-300);
-        color: var(--adyen-checkout-color-label-secondary);
+        font-size: token(font-size-xsmall);
+        font-weight: token(font-weight-300);
+        color: token(color-label-secondary);
     }
 
     &__name_wrapper {
         display: flex;
-        gap: var(--adyen-checkout-spacer-020);
-        min-width: var(--adyen-checkout-spacer-120);
+        gap: token(spacer-020);
+        min-width: token(spacer-120);
         align-items: flex-start;
         flex-direction: column;
         text-align: start;
