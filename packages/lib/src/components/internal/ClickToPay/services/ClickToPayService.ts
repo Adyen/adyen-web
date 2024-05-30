@@ -279,8 +279,6 @@ class ClickToPayService implements IClickToPayService {
                     reject(srcProfilesResponses[0].reason);
                 }
 
-                console.log(srcProfilesResponses);
-
                 const createProfileWithScheme = (promiseResult: PromiseSettledResult<SrcProfile>, index) =>
                     isFulfilled(promiseResult) && { ...promiseResult.value, scheme: this.sdks[index].schemeName };
 
