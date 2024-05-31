@@ -32,6 +32,45 @@ describe('Testing creating a configData object for the Card components', () => {
     // TODO - test for billingAddressAllowedCountries once we confirm how to represent the presence, or absence, of the array
 
     /**
+     * billingAddressMode
+     */
+    describe.only('Testing billingAddressMode', () => {
+        const ANALYTICS_DATA_PROP = 'billingAddressMode';
+        const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
+
+        test('Expect the prop, when not passed, to equal "none"', () => {
+            const configData = getCardConfigData({});
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual('none');
+        });
+
+        test('Expect the prop, when passed, to equal "none", because billingAddressRequired is passed as false', () => {
+            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: 'partial', billingAddressRequired: false });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual('none');
+        });
+
+        test('Expect the prop, when not passed, to equal  the default, when billingAddressRequired is passed as true', () => {
+            const configData = getCardConfigData({ billingAddressRequired: true });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(CardDefaultProps[CARD_CONFIG_PROP]);
+        });
+
+        test('Expect the prop, when passed as "partial", to equal "partial", when billingAddressRequired is passed as true', () => {
+            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: 'partial', billingAddressRequired: true });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual('partial');
+        });
+
+        test('Expect the prop, when not passed, to equal "lookup", because onAddressLookup has been set', () => {
+            const configData = getCardConfigData({ onAddressLookup: () => {}, billingAddressRequired: true });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual('lookup');
+        });
+
+        // TODO work out what correct behaviour should be when both onAddressLookup AND billingAddressMode are set
+        // test('Expect the prop, when passed as "partial", to equal "lookup", because onAddressLookup has been set', () => {
+        //     const configData = getCardConfigData({ [CARD_CONFIG_PROP]: 'partial', onAddressLookup: () => {}, billingAddressRequired: true });
+        //     expect(configData[ANALYTICS_DATA_PROP]).toEqual('lookup');
+        // });
+    });
+
+    /**
      * billingAddressRequired
      */
     describe('Testing billingAddressRequired', () => {
