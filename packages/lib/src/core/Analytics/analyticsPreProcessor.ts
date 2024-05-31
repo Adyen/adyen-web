@@ -37,10 +37,10 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
                 // Expected from Wallet PMs
                 const { isExpress, expressPage } = uiElementProps;
 
-                const { type } = uiElementProps;
-                let configData;
+                const { type: componentType } = uiElementProps;
+                let configData = null;
 
-                if (type === 'card') {
+                if (componentType === 'card') {
                     // Expected from Cards
                     configData = getCardConfigData(uiElementProps);
                 }
