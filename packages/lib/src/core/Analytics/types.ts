@@ -121,3 +121,27 @@ export type FieldErrorAnalyticsObject = {
     fieldType: string;
     errorCode: string;
 };
+
+export type ConfigData = {
+    autoFocus: boolean;
+    // billingAddressAllowedCountries: 'none';
+    billingAddressMode: 'full' | 'partial' | 'lookup' | 'none';
+    billingAddressRequired: boolean;
+    // billingAddressRequiredFields,
+    brands: true | 'default' | 'single';
+    challengeWindowSize: string;
+    disableIOSArrowKeys: boolean;
+    doBinLookup: boolean;
+    enableStoreDetails: boolean;
+    exposeExpiryDate: boolean;
+    forceCompat: boolean;
+    hasBrandsConfiguration: boolean;
+    hasData: boolean;
+    hasDisclaimerMessage: boolean;
+    hasHolderName: boolean;
+    hasPlaceholders: boolean;
+    hasInstallmentOptions: boolean;
+    hideCVC: boolean;
+    holderNameRequired: boolean;
+    isStylesConfigured: boolean;
+};

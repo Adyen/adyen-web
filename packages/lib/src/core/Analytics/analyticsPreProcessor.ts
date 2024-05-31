@@ -1,5 +1,5 @@
 import { AnalyticsModule } from '../../components/types';
-import { CreateAnalyticsEventObject, SendAnalyticsObject } from './types';
+import { ConfigData, CreateAnalyticsEventObject, SendAnalyticsObject } from './types';
 import {
     ANALYTICS_ACTION_STR,
     ANALYTICS_CONFIGURED_STR,
@@ -38,7 +38,7 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
                 const { isExpress, expressPage } = uiElementProps;
 
                 const { type: componentType } = uiElementProps;
-                let configData = null;
+                let configData: ConfigData = null;
 
                 if (componentType === 'card') {
                     // Expected from Cards

@@ -1,4 +1,4 @@
-import { AnalyticsData, AnalyticsObject, CreateAnalyticsObject } from './types';
+import { AnalyticsData, AnalyticsObject, ConfigData, CreateAnalyticsObject } from './types';
 import { ANALYTICS_ACTION_STR, ANALYTICS_VALIDATION_ERROR_STR, ALLOWED_ANALYTICS_DATA, errorCodeMapping } from './constants';
 import uuid from '../../utils/uuid';
 import { ERROR_CODES, ERROR_MSG_INCOMPLETE_FIELD } from '../Errors/constants';
@@ -70,7 +70,7 @@ export const processAnalyticsData = (analyticsData: AnalyticsData): AnalyticsDat
     }, {});
 };
 
-export const getCardConfigData = (cardProps: CardElementProps) => {
+export const getCardConfigData = (cardProps: CardElementProps): ConfigData => {
     // Extract props from cardProps - mostly setting a default value, if prop not found
     const {
         autoFocus = CardDefaultProps.autoFocus,
@@ -89,6 +89,7 @@ export const getCardConfigData = (cardProps: CardElementProps) => {
         forceCompat = CardDefaultProps.forceCompat,
         hasHolderName = CardDefaultProps.hasHolderName,
         hideCVC = CardDefaultProps.hideCVC,
+        holderNameRequired = CardDefaultProps.holderNameRequired,
         installmentOptions,
         placeholders,
         styles
@@ -106,8 +107,7 @@ export const getCardConfigData = (cardProps: CardElementProps) => {
         hasBrands = 'single';
     }
 
-    // TODO make type, with all keys as required
-    const configData = {
+    const configData: ConfigData = {
         autoFocus,
         ...(billingAddressRequired ? { billingAddressAllowedCountries } : { billingAddressAllowedCountries: 'none' }),
         ...(billingAddressRequired ? { billingAddressMode: billingAddressModeValue } : { billingAddressMode: 'none' }),
@@ -128,6 +128,7 @@ export const getCardConfigData = (cardProps: CardElementProps) => {
         hasPlaceholders: !!placeholders, // has merchant defined placeholders
         hasInstallmentOptions: !!installmentOptions,
         hideCVC,
+        holderNameRequired,
         isStylesConfigured: !!styles
     };
 

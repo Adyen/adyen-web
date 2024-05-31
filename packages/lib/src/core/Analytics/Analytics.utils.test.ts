@@ -397,6 +397,29 @@ describe('Testing creating a configData object for the Card components', () => {
     });
 
     /**
+     * holderNameRequired
+     */
+    describe('Testing holderNameRequired', () => {
+        const ANALYTICS_DATA_PROP = 'holderNameRequired';
+        const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
+
+        test('Expect the prop, when not passed, to equal the default', () => {
+            const configData = getCardConfigData({});
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(CardDefaultProps[CARD_CONFIG_PROP]);
+        });
+
+        test('Expect the prop, passed as false, to equal false', () => {
+            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: false });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(false);
+        });
+
+        test('Expect the prop, passed as true, to equal true', () => {
+            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: true });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(true);
+        });
+    });
+
+    /**
      * isStylesConfigured
      */
     describe('Testing styles prop and how it maps to a isStylesConfigured value', () => {
