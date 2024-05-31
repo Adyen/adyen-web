@@ -436,4 +436,109 @@ describe('Testing creating a configData object for the Card components', () => {
             expect(configData[ANALYTICS_DATA_PROP]).toEqual(true);
         });
     });
+
+    /**
+     * keypadFix
+     */
+    describe('Testing keypadFix', () => {
+        const ANALYTICS_DATA_PROP = 'keypadFix';
+        const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
+
+        test('Expect the prop, when not passed, to equal the default', () => {
+            const configData = getCardConfigData({});
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(CardDefaultProps[CARD_CONFIG_PROP]);
+        });
+
+        test('Expect the prop, passed as false, to equal false', () => {
+            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: false });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(false);
+        });
+
+        test('Expect the prop, passed as true, to equal true', () => {
+            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: true });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(true);
+        });
+    });
+
+    /**
+     * legacyInputMode
+     */
+    describe('Testing legacyInputMode', () => {
+        const ANALYTICS_DATA_PROP = 'legacyInputMode';
+        const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
+
+        test('Expect the prop, when not passed, to equal the default', () => {
+            const configData = getCardConfigData({});
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(CardDefaultProps[CARD_CONFIG_PROP]);
+        });
+
+        test('Expect the prop, passed as false, to equal false', () => {
+            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: false });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(false);
+        });
+
+        test('Expect the prop, passed as true, to equal true', () => {
+            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: true });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(true);
+        });
+    });
+
+    /**
+     * maskSecurityCode
+     */
+    describe('Testing maskSecurityCode', () => {
+        const ANALYTICS_DATA_PROP = 'maskSecurityCode';
+        const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
+
+        test('Expect the prop, when not passed, to equal the default', () => {
+            const configData = getCardConfigData({});
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(CardDefaultProps[CARD_CONFIG_PROP]);
+        });
+
+        test('Expect the prop, passed as false, to equal false', () => {
+            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: false });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(false);
+        });
+
+        test('Expect the prop, passed as true, to equal true', () => {
+            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: true });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(true);
+        });
+    });
+
+    /**
+     * minimumExpiryDate
+     */
+    describe('Testing minimumExpiryDate', () => {
+        const ANALYTICS_DATA_PROP = 'minimumExpiryDate';
+        const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
+
+        test('Expect the prop, when not passed, to equal "none"', () => {
+            const configData = getCardConfigData({});
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual('none');
+        });
+
+        test('Expect the prop, passed as a value, to equal that value', () => {
+            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: '01/26' });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual('01/26');
+        });
+    });
+
+    /**
+     * name
+     */
+    describe('Testing name', () => {
+        const ANALYTICS_DATA_PROP = 'name';
+        const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
+
+        test('Expect the prop, when not passed, to equal "none"', () => {
+            const configData = getCardConfigData({});
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual('none');
+        });
+
+        test('Expect the prop, passed as a value, to equal that value', () => {
+            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: 'CCard' });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual('CCard');
+        });
+    });
 });

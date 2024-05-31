@@ -144,4 +144,11 @@ export type ConfigData = {
     hideCVC: boolean;
     holderNameRequired: boolean;
     isStylesConfigured: boolean;
+    keypadFix: boolean;
+    legacyInputMode: boolean;
+    maskSecurityCode: boolean;
+    minimumExpiryDate: string;
+    name: string;
+
+    // socialSecurityNumberMode: 'show' | 'hide' | 'auto';
 };

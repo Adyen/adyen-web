@@ -91,6 +91,11 @@ export const getCardConfigData = (cardProps: CardElementProps): ConfigData => {
         hideCVC = CardDefaultProps.hideCVC,
         holderNameRequired = CardDefaultProps.holderNameRequired,
         installmentOptions,
+        keypadFix = CardDefaultProps.keypadFix,
+        legacyInputMode = CardDefaultProps.legacyInputMode,
+        maskSecurityCode = CardDefaultProps.maskSecurityCode,
+        minimumExpiryDate = 'none',
+        name = 'none',
         placeholders,
         styles
     } = cardProps;
@@ -129,7 +134,12 @@ export const getCardConfigData = (cardProps: CardElementProps): ConfigData => {
         hasInstallmentOptions: !!installmentOptions,
         hideCVC,
         holderNameRequired,
-        isStylesConfigured: !!styles
+        isStylesConfigured: !!styles,
+        keypadFix,
+        legacyInputMode,
+        maskSecurityCode,
+        minimumExpiryDate, // TODO can we fwd this value or should we just report that it has been set?
+        name
     };
 
     console.log('### utils::getCardConfigData::configData ', configData);

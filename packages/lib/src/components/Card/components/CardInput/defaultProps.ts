@@ -25,6 +25,11 @@ export default {
     disableIOSArrowKeys: true,
     exposeExpiryDate: false,
     forceCompat: false,
+    keypadFix: true,
+    legacyInputMode: false,
+    maskSecurityCode: false,
+    minimumExpiryDate: null,
+    name: null,
 
     // Events
     onLoad: (): any => {},
