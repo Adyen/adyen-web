@@ -18,6 +18,7 @@ import {
     ANALYTICS_VALIDATION_ERROR_STR
 } from './constants';
 import { THREEDS2_ERROR, THREEDS2_FULL } from '../../components/ThreeDS2/config';
+import { getCardConfigData } from './utils';
 
 export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
     // return function with an analyticsModule reference
@@ -36,13 +37,15 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
                 // Expected from Wallet PMs
                 const { isExpress, expressPage } = uiElementProps;
 
-                // Expected from Cards
-                const { styles } = uiElementProps;
+                const { type } = uiElementProps;
+                let configData;
 
-                const isStylesConfigured = !!styles;
+                if (type === 'card') {
+                    // Expected from Cards
+                    configData = getCardConfigData(uiElementProps);
+                }
 
                 console.log('### analyticsPreProcessor::ANALYTICS_RENDERED_STR:: uiElementProps', uiElementProps);
-                console.log('### analyticsPreProcessor::ANALYTICS_RENDERED_STR:: isStylesConfigured', isStylesConfigured);
 
                 const hasExpressPage = expressPage && ANALYTICS_EXPRESS_PAGES_ARRAY.includes(expressPage);
 
@@ -52,7 +55,8 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
                     ...(typeof isStoredPaymentMethod === 'boolean' && { isStoredPaymentMethod }), // if defined and a boolean...
                     ...(brand && { brand }),
                     ...(typeof isExpress === 'boolean' && { isExpress }),
-                    ...(isExpress === true && hasExpressPage && { expressPage }) // We only care about the expressPage value if isExpress is true
+                    ...(isExpress === true && hasExpressPage && { expressPage }), // We only care about the expressPage value if isExpress is true
+                    ...(configData && { configData })
                 };
 
                 analyticsModule.createAnalyticsEvent({

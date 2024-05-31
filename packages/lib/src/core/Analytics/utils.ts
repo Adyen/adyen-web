@@ -2,7 +2,9 @@ import { AnalyticsData, AnalyticsObject, CreateAnalyticsObject } from './types';
 import { ANALYTICS_ACTION_STR, ANALYTICS_VALIDATION_ERROR_STR, ALLOWED_ANALYTICS_DATA, errorCodeMapping } from './constants';
 import uuid from '../../utils/uuid';
 import { ERROR_CODES, ERROR_MSG_INCOMPLETE_FIELD } from '../Errors/constants';
-import { THREEDS2_FULL } from '../../components/ThreeDS2/config';
+import { DEFAULT_CHALLENGE_WINDOW_SIZE, THREEDS2_FULL } from '../../components/ThreeDS2/config';
+import { CardElementProps } from '../../components/Card/types';
+import CardDefaultProps from '../../components/Card/components/CardInput/defaultProps';
 
 export const getUTCTimestamp = () => Date.now();
 
@@ -62,4 +64,40 @@ export const processAnalyticsData = (analyticsData: AnalyticsData): AnalyticsDat
         if (ALLOWED_ANALYTICS_DATA.includes(prop)) acc[prop] = analyticsData[prop];
         return acc;
     }, {});
+};
+
+export const getCardConfigData = (cardProps: CardElementProps) => {
+    // Extract props from cardProps - mostly setting a default value, if prop not found
+    const {
+        autoFocus = CardDefaultProps.autoFocus,
+        billingAddressAllowedCountries = [],
+        billingAddressMode = cardProps.onAddressLookup ? 'lookup' : CardDefaultProps.billingAddressMode,
+        billingAddressRequired = CardDefaultProps.billingAddressRequired,
+        brands,
+        challengeWindowSize = DEFAULT_CHALLENGE_WINDOW_SIZE,
+        styles
+    } = cardProps;
+
+    let hasBrands: true | 'default' | 'single' = true;
+    if (!brands) {
+        hasBrands = 'default';
+    } else if (brands.length === 1) {
+        hasBrands = 'single';
+    }
+
+    const configData = {
+        autoFocus,
+        ...(billingAddressRequired ? { billingAddressAllowedCountries } : { billingAddressAllowedCountries: 'none' }),
+        ...(billingAddressRequired ? { billingAddressMode } : { billingAddressMode: 'none' }),
+        billingAddressRequired,
+        // billingAddressRequiredFields,
+        // brands, // TODO might just want to know if the array is filled, and if so, whether it has more than 1 item
+        brands: hasBrands,
+        challengeWindowSize,
+        isStylesConfigured: !!styles
+    };
+
+    console.log('### utils::getCardConfigData::configData ', configData);
+
+    return configData;
 };
