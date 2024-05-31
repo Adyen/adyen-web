@@ -264,7 +264,7 @@
     "ctp.otp.subtitle": "Zadejte kód %@, který jsme vám odeslali na %@ a ověřte sami sebe.",
     "ctp.otp.saveCookiesCheckbox.label": "Příště přeskočte ověření",
     "ctp.otp.saveCookiesCheckbox.information": "Uložte si svoje zařízení a prohlížeč pro všechny obchody používající tuto platební metodu, a plaťte tak rychleji. Nedoporučuje se pro sdílená zařízení.",
-    "ctp.otp.saveCookiesCheckbox.shorterInfo": "Vyberte, abyste si je zapamatovali ve svém zařízení a prohlížeči",
+    "ctp.otp.saveCookiesCheckbox.shorterInfo": "Uložte si svoje údaje na tomto zařízení a prohlížeči",
     "ctp.emptyProfile.message": "V tomto profilu Click to Pay nejsou zaregistrovány žádné karty",
     "ctp.separatorText": "nebo použijte",
     "ctp.cards.title": "Dokončete platbu pomocí Click to Pay",
