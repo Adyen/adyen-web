@@ -11,6 +11,7 @@ export default {
     holderNameRequired: false,
     enableStoreDetails: false,
     hasCVC: true,
+    hideCVC: false,
     showBrandIcon: true,
     showBrandsUnderCardNumber: true,
     positionHolderNameOnTop: false,
@@ -23,6 +24,7 @@ export default {
     isPayButtonPrimaryVariant: true,
     disableIOSArrowKeys: true,
     exposeExpiryDate: false,
+    forceCompat: false,
 
     // Events
     onLoad: (): any => {},

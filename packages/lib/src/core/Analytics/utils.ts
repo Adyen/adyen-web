@@ -75,29 +75,59 @@ export const getCardConfigData = (cardProps: CardElementProps) => {
     const {
         autoFocus = CardDefaultProps.autoFocus,
         billingAddressAllowedCountries = [],
-        billingAddressMode = cardProps.onAddressLookup ? 'lookup' : CardDefaultProps.billingAddressMode,
+        billingAddressMode = CardDefaultProps.billingAddressMode,
         billingAddressRequired = CardDefaultProps.billingAddressRequired,
         brands,
+        brandsConfiguration,
         challengeWindowSize = DEFAULT_CHALLENGE_WINDOW_SIZE,
+        data,
+        disclaimerMessage,
+        disableIOSArrowKeys = CardDefaultProps.disableIOSArrowKeys,
+        doBinLookup = true, // from Card.defaultProps
+        enableStoreDetails = CardDefaultProps.enableStoreDetails,
+        exposeExpiryDate = CardDefaultProps.exposeExpiryDate,
+        forceCompat = CardDefaultProps.forceCompat,
+        hasHolderName = CardDefaultProps.hasHolderName,
+        hideCVC = CardDefaultProps.hideCVC,
+        installmentOptions,
+        placeholders,
         styles
     } = cardProps;
 
+    const billingAddressModeValue = cardProps.onAddressLookup ? 'lookup' : billingAddressMode;
+
     let hasBrands: true | 'default' | 'single' = true;
+    // If brands is not set it indicates that the merchant has not passed the paymentMethods response to Checkout
+    // and is therefore relying on the default array.
+    // If a single value it indicates the merchant is using a “single branded” card
     if (!brands) {
         hasBrands = 'default';
     } else if (brands.length === 1) {
         hasBrands = 'single';
     }
 
+    // TODO make type, with all keys as required
     const configData = {
         autoFocus,
         ...(billingAddressRequired ? { billingAddressAllowedCountries } : { billingAddressAllowedCountries: 'none' }),
-        ...(billingAddressRequired ? { billingAddressMode } : { billingAddressMode: 'none' }),
+        ...(billingAddressRequired ? { billingAddressMode: billingAddressModeValue } : { billingAddressMode: 'none' }),
         billingAddressRequired,
-        // billingAddressRequiredFields,
+        // billingAddressRequiredFields, // do same as for billingAddressAllowedCountries
         // brands, // TODO might just want to know if the array is filled, and if so, whether it has more than 1 item
         brands: hasBrands,
         challengeWindowSize,
+        disableIOSArrowKeys,
+        doBinLookup,
+        enableStoreDetails,
+        exposeExpiryDate,
+        forceCompat,
+        hasBrandsConfiguration: !!brandsConfiguration,
+        hasData: !!data,
+        hasDisclaimerMessage: !!disclaimerMessage,
+        hasHolderName,
+        hasPlaceholders: !!placeholders, // has merchant defined placeholders
+        hasInstallmentOptions: !!installmentOptions,
+        hideCVC,
         isStylesConfigured: !!styles
     };
 
