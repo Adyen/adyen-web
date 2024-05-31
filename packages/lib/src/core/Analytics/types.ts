@@ -83,6 +83,7 @@ export interface AnalyticsObject {
     isExpress?: boolean;
     expressPage?: string;
     result?: string;
+    configData?: any;
 }
 
 export type ANALYTICS_EVENT = 'log' | 'error' | 'info';
