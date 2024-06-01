@@ -1,4 +1,5 @@
-@use '../../../style/index';
+@use 'styles/index';
+@import 'styles/variable-generator';
 
 // Workaround to remove autofill background and text color, works on most browsers except for Chrome mobile
 .adyen-checkout__filter-input:-webkit-autofill,
@@ -75,19 +76,25 @@
 
 .adyen-checkout__field--col-70 {
     @include index.screen-s-and-up {
-        width: calc(70% - token(spacer-040));
+        --deduct-width: token(spacer-040);
+
+        width: calc(70% - var(--deduct-width));
     }
 }
 
 .adyen-checkout__field--col-30 {
     @include index.screen-s-and-up {
-        width: calc(30% - token(spacer-040));
+        --deduct-width: token(spacer-040);
+
+        width: calc(30% - var(--deduct-width));
     }
 }
 
 .adyen-checkout__field--col-50 {
     @include index.screen-s-and-up {
-        width: calc(50% - token(spacer-040));
+        --deduct-width: token(spacer-040);
+
+        width: calc(50% - var(--deduct-width));
     }
 }
 

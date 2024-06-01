@@ -1,4 +1,5 @@
-@use '../../../../style/index';
+@use 'styles/index';
+@import 'styles/variable-generator';
 
 .adyen-checkout__checkbox {
     display: flex;

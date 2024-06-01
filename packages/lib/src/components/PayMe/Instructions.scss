@@ -1,4 +1,4 @@
-@use '../../style/index';
+@import 'styles/variable-generator';
 
 .adyen-checkout-payme-instructions {
     font-size: token(font-size-small);

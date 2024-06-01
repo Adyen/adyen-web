@@ -19,7 +19,6 @@ import './CtPCards.scss';
 import AdyenCheckoutError from '../../../../../core/Errors/AdyenCheckoutError';
 import { PREFIX } from '../../../Icon/constants';
 
-
 type CtPCardsProps = {
     onDisplayCardComponent?(): void;
 };

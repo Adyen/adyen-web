@@ -1,4 +1,4 @@
-@use '../../../../style/index';
+@import 'styles/variable-generator';
 
 .adyen-checkout__issuer-button {
     background-color: token(color-background-primary);

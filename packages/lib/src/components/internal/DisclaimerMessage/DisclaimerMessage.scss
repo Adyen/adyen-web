@@ -1,4 +1,4 @@
-@use "../../../style/index";
+@import 'styles/variable-generator';
 
 .adyen-checkout-disclaimer__label {
     margin-top: token(spacer-070);

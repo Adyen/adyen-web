@@ -1,4 +1,4 @@
-@use "../../../../style/index";
+@import 'styles/variable-generator';
 
 .adyen-checkout__voucher-result--boletobancario .adyen-checkout__voucher-result__code {
     font-size: token(font-size-small);

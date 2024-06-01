@@ -1,4 +1,4 @@
-@use '../../../../../style/index';
+@import 'styles/variable-generator';
 
 .adyen-checkout__payment-method {
     position: relative;
@@ -56,8 +56,12 @@
     width: 100%;
 
     [dir='rtl'] & {
-        padding: calc(token(spacer-070) - token(spacer-020));
-        padding-right: calc(token(spacer-120) - token(spacer-020));
+        --pm-h-spacer-70: token(spacer-070);
+        --pm-h-spacer-20: token(spacer-020);
+        --pm-h-spacer-120: token(spacer-120);
+
+        padding: calc(var(--pm-h-spacer-70) - var(--pm-h-spacer-20));
+        padding-right: calc(var(--pm-h-spacer-120) - var(--pm-h-spacer-20));
     }
 
     .adyen-checkout__payment-method--standalone & {

@@ -1,4 +1,4 @@
-@use '../../../../../../style/index';
+@import 'styles/variable-generator';
 
 .adyen-checkout-ctp__otp-checkbox-container {
   padding: token(spacer-060);
