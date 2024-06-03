@@ -11,3 +11,15 @@
 .adyen-checkout__segmented-control--upi-margin-bottom {
     margin-bottom: token(spacer-070);
 }
+
+.adyen-checkout-upi-area-intent {
+    .adyen-checkout__button--pay {
+        margin-top: 16px;
+    }
+}
+
+.adyen-checkout-upi-area-qr-code {
+    .adyen-checkout__button--pay {
+        margin-top: 0;
+    }
+}

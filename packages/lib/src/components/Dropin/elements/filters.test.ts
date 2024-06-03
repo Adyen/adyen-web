@@ -1,4 +1,4 @@
-import { filterPresent, filterAvailable } from './filters';
+import { filterPresent, filterAvailable, optionallyFilterUpiSubTxVariants } from "./filters";
 import { mock } from 'jest-mock-extended';
 import UIElement from '../../internal/UIElement/UIElement';
 
@@ -56,6 +56,31 @@ describe('Elements filters', () => {
             ];
             const filteredElements = await filterAvailable(elements);
             expect(filteredElements.length).toBe(0);
+        });
+    });
+
+    describe('optionallyFilterUpiSubTxVariants', () => {
+        test('should filter out the other upi children pms, if the upi parent type presents', () => {
+            expect(
+                optionallyFilterUpiSubTxVariants([
+                    { type: 'upi', name: 'UPI' },
+                    { type: 'upi_intent', name: 'UPI Intent' }
+                ])
+            ).toEqual([{ type: 'upi', name: 'UPI' }]);
+        });
+
+        test('should return all pms, if the upi parent type does not present', () => {
+            expect(
+                optionallyFilterUpiSubTxVariants([
+                    { type: 'scheme', name: 'Card' },
+                    { type: 'upi_intent', name: 'UPI Intent' },
+                    { type: 'upi_collect', name: 'UPI Collect' }
+                ])
+            ).toEqual([
+                { type: 'scheme', name: 'Card' },
+                { type: 'upi_intent', name: 'UPI Intent' },
+                { type: 'upi_collect', name: 'UPI Collect' }
+            ]);
         });
     });
 });
