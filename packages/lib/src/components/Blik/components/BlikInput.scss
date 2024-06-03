@@ -1,7 +1,7 @@
 @import 'styles/variable-generator';
 
 .adyen-checkout__blik__helper {
-    font-size: token(font-size-medium);
+    font-size: token(text-subtitle-font-size);
     font-weight: normal;
     color: token(color-label-primary);
     margin: 0 0 token(spacer-070);

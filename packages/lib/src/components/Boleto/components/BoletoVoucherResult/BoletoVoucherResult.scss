@@ -1,7 +1,7 @@
 @import 'styles/variable-generator';
 
 .adyen-checkout__voucher-result--boletobancario .adyen-checkout__voucher-result__code {
-    font-size: token(font-size-small);
+    font-size: token(text-body-font-size);
     line-height: token(text-caption-line-height);
     word-break: break-all;
     padding: token(spacer-090);

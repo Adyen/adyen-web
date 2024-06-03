@@ -10,14 +10,15 @@
 }
 
 .adyen-checkout__radio_group__label {
+    margin:0;
     padding-bottom: 0;
     padding-left: token(spacer-090);
     position: relative;
     display: block;
     color: inherit;
-    font-size: token(font-size-small);
+    font-size: token(text-body-font-size);
     font-weight: normal;
-    line-height: token(spacer-070);
+    line-height: token(text-body-line-height);
     overflow: visible;
 }
 
@@ -34,13 +35,12 @@
     height: token(spacer-070);
     width: token(spacer-070);
     left: 0;
-    top: 0;
+    top: token(spacer-010);
     transition: border-color 0.2s ease-out, box-shadow 0.2s ease-out;
 }
 
 .adyen-checkout__radio_group__label:hover::before {
-    border-color: #99a3ad;
-    box-shadow: 0 0 0 token(spacer-010) token(color-outline-secondary);
+    box-shadow: 0 0 0 token(spacer-010) token(color-outline-primary-hover);
     cursor: pointer;
 }
 
@@ -50,7 +50,7 @@
     position: absolute;
     margin: 0 auto;
     left: 5px;
-    top: 5px;
+    top: 7px;
     height: token(spacer-030);
     width: token(spacer-030);
     background-color: token(color-background-primary);

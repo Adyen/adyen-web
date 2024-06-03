@@ -12,7 +12,7 @@
         }
 
         .adyen-checkout__dropdown__element__secondary-text {
-            color: token(color-grey-1300);
+            color: token(color-label-tertiary);
             font-weight: token(text-body-stronger-font-weight);
             line-height: 17px;
         }
@@ -28,7 +28,7 @@
         }
 
         .adyen-checkout__dropdown__button__secondary-text {
-            color: token(color-grey-1300);
+            color: token(color-label-tertiary);
             font-weight: token(text-body-stronger-font-weight);
             opacity: 1;
         }

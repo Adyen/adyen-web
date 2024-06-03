@@ -12,18 +12,18 @@
 .adyen-checkout__input:-webkit-autofill:hover,
 .adyen-checkout__input:-webkit-autofill:focus,
 .adyen-checkout__input:autofill {
-    color: token(input-field-input-color) !important;
-    -webkit-text-fill-color: token(input-field-input-color) !important;
+    color: token(color-label-primary) !important;
+    -webkit-text-fill-color: token(color-label-primary) !important;
     box-shadow: 0 0 0 1000px token(color-background-primary) inset !important;
     background-clip: text !important;
-    background-color: token(input-field-input-color) !important;
+    background-color: token(color-label-primary) !important;
     transition: none !important;
 }
 
 // Additional workaround for Chrome mobile to remove autofill background and text color
 .adyen-checkout__input,
 .adyen-checkout__filter-input {
-    color: token(input-field-input-color) !important;
+    color: token(color-label-primary) !important;
     background-clip: text !important;
 }
 
@@ -74,27 +74,23 @@
     }
 }
 
+$deduct-width: token(spacer-040);
+
 .adyen-checkout__field--col-70 {
     @include index.screen-s-and-up {
-        --deduct-width: token(spacer-040);
-
-        width: calc(70% - var(--deduct-width));
+        width: calc(70% - $deduct-width);
     }
 }
 
 .adyen-checkout__field--col-30 {
     @include index.screen-s-and-up {
-        --deduct-width: token(spacer-040);
-
-        width: calc(30% - var(--deduct-width));
+        width: calc(30% - $deduct-width);
     }
 }
 
 .adyen-checkout__field--col-50 {
     @include index.screen-s-and-up {
-        --deduct-width: token(spacer-040);
-
-        width: calc(50% - var(--deduct-width));
+        width: calc(50% - $deduct-width);
     }
 }
 
@@ -122,11 +118,11 @@
 
 .adyen-checkout__input {
     width: 100%;
-    color: token(input-field-input-color);
-    font-size: token(font-size-medium);
+    color: token(color-label-primary);
+    font-size: token(text-subtitle-font-size);
     font-family: inherit;
     display: block;
-    height: token(input-field-height);
+    height: token(spacer-110);
     padding-left: token(spacer-060);
     background: inherit;
     outline: none;

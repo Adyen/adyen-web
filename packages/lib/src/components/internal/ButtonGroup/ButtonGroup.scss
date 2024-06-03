@@ -8,9 +8,9 @@
     .adyen-checkout__button {
         background: transparent;
         border: 0;
-        box-shadow: inset 0 0 0 1px #99a3ad;
+        box-shadow: inset 0 0 0 1px token(color-outline-primary);
         color: token(color-label-primary);
-        font-size: token(font-size-small);
+        font-size: token(text-body-font-size);
         font-weight: normal;
         line-height: token(spacer-110);
         margin-right: token(spacer-040);
@@ -24,7 +24,7 @@
 
         &:hover {
             background: transparent;
-            box-shadow: inset 0 0 0 token(spacer-010) token(color-outline-tertiary);
+            box-shadow: inset 0 0 0 token(spacer-010) token(color-outline-primary-hover);
         }
 
         &:active {

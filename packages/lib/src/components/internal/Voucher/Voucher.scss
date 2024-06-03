@@ -57,9 +57,7 @@
 
 .adyen-checkout__voucher-result__image__wrapper::after {
     border-radius: token(border-radius-m);
-    box-shadow:
-        0 1px token(spacer-010) 0 rgb(0 17 44 / 2%),
-        0 token(spacer-010) token(spacer-020) 0 rgb(0 17 44 / 4%);
+    box-shadow: token(shadow-low);
     content: '';
     height: 100%;
     left: 0;
@@ -80,7 +78,7 @@
 
 .adyen-checkout__voucher-result__introduction {
     line-height: token(text-caption-line-height);
-    font-size: token(font-size-small);
+    font-size: token(text-body-font-size);
     text-align: center;
     color: token(color-label-primary);
     max-width: 400px;
@@ -89,14 +87,14 @@
 
 .adyen-checkout__voucher-result__amount {
     margin: token(spacer-090) auto 0;
-    font-size: token(font-size-medium);
+    font-size: token(text-subtitle-font-size);
     color: token(color-label-primary);
     text-align: center;
     font-weight: bold;
 }
 
 .adyen-checkout__voucher-result__surcharge {
-    font-size: token(font-size-small);
+    font-size: token(text-body-font-size);
     line-height: token(text-caption-line-height);
     text-align: center;
     color: token(color-label-secondary);
@@ -140,7 +138,7 @@
 
 .adyen-checkout__voucher-result__code {
     position: relative;
-    font-size: token(font-size-large);
+    font-size: token(text-title-l-font-size);
     text-align: center;
     letter-spacing: 1px;
     color: token(color-label-primary);
@@ -164,7 +162,7 @@
 .adyen-checkout__voucher-result__details__item {
     display: flex;
     justify-content: space-between;
-    font-size: token(font-size-small);
+    font-size: token(text-body-font-size);
     color: token(color-label-primary);
     padding: token(spacer-070) token(spacer-090);
     border-top: 1px solid token(color-separator-primary);

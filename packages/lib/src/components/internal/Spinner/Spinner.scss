@@ -1,17 +1,18 @@
+@use 'styles/index';
 @import 'styles/variable-generator';
 
-.adyen-checkout__spinner__wrapper {
-    --adyen-checkout-loading-indicator-large-width: token(spacer-120);
-    --adyen-checkout-loading-indicator-large-height: token(spacer-120);
-    --adyen-checkout-loading-indicator-large-border-width: token(spacer-020);
-    --adyen-checkout-loading-indicator-medium-width: 28px;
-    --adyen-checkout-loading-indicator-medium-height: 28px;
-    --adyen-checkout-loading-indicator-small-width: token(spacer-070);
-    --adyen-checkout-loading-indicator-small-height: token(spacer-070);
-    --adyen-checkout-loading-indicator-small-border-width: token(spacer-010);
-    --adyen-checkout-loading-indicator-width: token(spacer-090);
-    --adyen-checkout-loading-indicator-height: token(spacer-090);
+$loading-indicator-large-width: token(spacer-120);
+$loading-indicator-large-height: token(spacer-120);
+$loading-indicator-large-border-width: token(spacer-020);
+$loading-indicator-medium-width: 28px;
+$loading-indicator-medium-height: 28px;
+$loading-indicator-small-width: token(spacer-070);
+$loading-indicator-small-height: token(spacer-070);
+$loading-indicator-small-border-width: token(spacer-010);
+$loading-indicator-width: token(spacer-090);
+$loading-indicator-height: token(spacer-090);
 
+.adyen-checkout__spinner__wrapper {
     height: 100%;
     display: flex;
     justify-content: center;
@@ -30,13 +31,13 @@
 }
 
 .adyen-checkout__spinner {
-    height: token(loading-indicator-height);
-    width: token(loading-indicator-width);
+    height: $loading-indicator-height;
+    width: $loading-indicator-width;
     position: relative;
 
     &::before,
     &::after {
-        animation: bento-progress-circular-rotate 1s cubic-bezier(0.785, 0.135, 0.15, 0.86) infinite;
+        animation: rotate 1s cubic-bezier(0.785, 0.135, 0.15, 0.86) infinite;
         border: token(border-width-l) solid transparent;
         border-radius: 50%;
         box-sizing: border-box;
@@ -49,44 +50,36 @@
         width: 100%;
     }
 
-    &::before {
-        border-color: token(loading-indicator-background-color);
-        border-top-color: transparent;
-        opacity: 0.1;
-    }
-
-    &::after {
-        border-color: transparent;
-        border-top-color: token(loading-indicator-color);
-    }
+    // Need to place here, the order matters
+    @include index.set-spinner-color;
 
     &--small {
-        height: token(loading-indicator-small-height);
-        width: token(loading-indicator-small-width);
+        height: $loading-indicator-small-height;
+        width: $loading-indicator-small-width;
 
         &::before,
         &::after {
-            border-width: token(loading-indicator-small-border-width);
+            border-width: $loading-indicator-small-border-width;
         }
     }
 
     &--medium {
-        height: token(loading-indicator-medium-height);
-        width: token(loading-indicator-medium-width);
+        height: $loading-indicator-medium-height;
+        width: $loading-indicator-medium-width;
     }
 
     &--large {
-        height: token(loading-indicator-large-height);
-        width: token(loading-indicator-large-width);
+        height: $loading-indicator-large-height;
+        width: $loading-indicator-large-width;
 
         &::before,
         &::after {
-            border-width: token(loading-indicator-large-border-width);
+            border-width: $loading-indicator-large-border-width;
         }
     }
 }
 
-@keyframes bento-progress-circular-rotate {
+@keyframes rotate {
     0% {
         transform: rotate(0deg);
     }

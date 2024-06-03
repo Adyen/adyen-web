@@ -13,12 +13,12 @@
 
     &-expired {
         text-decoration: line-through;
-        color: token(color-grey-1300);
+        color: token(color-label-tertiary);
     }
 }
 
 .adyen-checkout-ctp__expired-label {
-    color: token(color-grey-1300);
+    color: token(color-label-tertiary);
     font-weight: token(text-body-stronger-font-weight);
     line-height: 17px;
     margin-left: auto;

@@ -5,14 +5,14 @@
 
     &__descriptor {
         margin: token(spacer-000) token(spacer-000) token(spacer-020);
-        font-size: token(font-size-medium);
+        font-size: token(text-subtitle-font-size);
         font-weight: token(text-body-stronger-font-weight);
     }
 
     &__description-list {
         list-style-type: disc;
         margin: 0;
-        font-size: token(font-size-small);
+        font-size: token(text-body-font-size);
         line-height: 1.5;
         padding-left: token(spacer-080);
     }

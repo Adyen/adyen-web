@@ -1,11 +1,12 @@
 @import 'styles/variable-generator';
 
 .adyen-checkout-form-instruction {
-    line-height: token(line-height-100);
+    line-height: token(text-caption-line-height);
     color: token(color-label-primary);
-    font-size: token(font-size-xsmall);
-    font-weight: token(font-weight-300);
+    font-size: token(text-caption-font-size);
+    font-weight: token(text-body-font-weight);
     margin-top: 0;
+    margin-bottom: token(spacer-070);
 
     [dir="rtl"] & {
         padding-right: 0;

@@ -32,7 +32,7 @@
     flex-wrap: nowrap;
     justify-content: space-between;
     font-weight: token(text-body-stronger-font-weight);
-    font-size: token(font-size-medium);
+    font-size: token(text-title-font-size);
     padding: token(spacer-070);
     position: relative;
     transition: background 0.1s ease-out;
@@ -51,12 +51,12 @@
 .adyen-checkout__order-payment-method__deducted-amount {
     display: flex;
     justify-content: space-between;
-    line-height: token(font-size-medium);
-    font-size: token(font-size-medium);
+    line-height: token(text-subtitle-font-size);
+    font-size: token(text-subtitle-font-size);
 }
 
 .adyen-checkout__order-payment-method__deducted-amount__label {
-    font-size: token(font-size-small);
+    font-size: token(text-body-font-size);
 }
 
 .adyen-checkout__order-payment-method__deducted-amount__value {
@@ -70,8 +70,7 @@
     padding: token(spacer-040) token(spacer-070);
     color: token(color-label-secondary);
     border-radius: token(border-radius-m);
-    margin-bottom: token(spacer-070);
-    font-size: token(font-size-small);
+    font-size: token(text-body-font-size);
 
     strong {
         font-weight: bold;

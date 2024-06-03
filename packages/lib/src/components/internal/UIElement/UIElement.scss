@@ -1,8 +1,7 @@
 /* Shared css variables and styles are imported once here at the root level for all UI components. */
 @use 'styles/index';
-@import 'styles/design-tokens';
 @import 'styles/link';
 
 [class^='adyen-checkout'] {
-    @include index.adl-box-sizing(true);
+    @include index.box-sizing-setter(true);
 }

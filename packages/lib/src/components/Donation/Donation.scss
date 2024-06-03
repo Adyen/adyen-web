@@ -76,18 +76,18 @@
 
 .adyen-checkout__campaign-title,
 .adyen-checkout__campaign-description {
-    color: token(color-white);
+    color: token(color-label-on-color);
     font-weight: normal;
     margin: 0;
 }
 
 .adyen-checkout__campaign-title {
-    font-size: token(font-size-medium);
+    font-size: token(text-title-font-size);
     margin-bottom: token(spacer-040);
 }
 
 .adyen-checkout__campaign-description {
-    font-size: token(font-size-small);
+    font-size: token(text-body-font-size);
     line-height: token(text-caption-line-height);
 }
 

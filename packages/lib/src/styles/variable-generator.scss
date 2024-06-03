@@ -1,5 +1,5 @@
 @import '~@adyen/bento-design-tokens/dist/scss-map/bento/aliases';
-@import "design-tokens";
+@import '~@adyen/bento-design-tokens/dist/scss-map/bento/definitions';
 
 @function adyen-sdk-generate-css-variables($maps...) {
     $adyen-output-map: ();
@@ -13,8 +13,15 @@
     @return $adyen-output-map;
 }
 
-@function token($token) {
-    $adyen-tokens-map: adyen-sdk-generate-css-variables($color, $text, $focus-ring, $adyen-sdk-variables);
+
+@function token($token, $generate-css-var: true) {
+    $adyen-tokens-map: ();
+
+    @if $generate-css-var {
+        $adyen-tokens-map: adyen-sdk-generate-css-variables($color, $text, $focus-ring, $border, $spacer, $shadow);
+    } @else {
+        $adyen-tokens-map: map-merge($color, $text, $focus-ring, $border, $spacer, $shadow)
+    }
 
     @return map-get($adyen-tokens-map, '#{$token}');
 }

@@ -11,9 +11,7 @@
     transition: all 0.3s ease-out;
 
     &__brand-wrapper {
-        box-shadow:
-            0 1px 1px 0 rgb(0 17 44 / 2%),
-            0 1px token(spacer-010) 0 rgb(0 17 44 / 4%);
+        box-shadow: token(shadow-low);
         overflow: hidden;
         display: inline-block;
         height: token(spacer-070);

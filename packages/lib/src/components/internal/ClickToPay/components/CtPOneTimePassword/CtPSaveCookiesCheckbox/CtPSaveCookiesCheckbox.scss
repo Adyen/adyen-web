@@ -22,9 +22,9 @@
 
 .adyen-checkout-ctp__otp-checkbox-info {
   color: #707070;
-  font-size: token(font-size-small);
+  font-size: token(text-body-font-size);
   font-weight: token(text-body-font-weight);
-  line-height: token(line-height-200);
+  line-height: token(text-body-line-height);
   margin: token(spacer-020) 0 0;
 }
 

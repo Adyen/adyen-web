@@ -1,18 +1,21 @@
+@use 'styles/index';
 @import 'styles/variable-generator';
 
 .adyen-checkout__button {
-    background: token(button-background-color);
+    background: token(color-background-always-dark);
     border: 0;
-    border-radius: token(button-border-radius);
-    color: token(button-color);
+    border-radius: token(border-radius-m);
+    color: token(color-label-on-color);
     cursor: pointer;
-    font-size: token(button-font-size);
-    font-weight: token(button-font-weight);
-    height: token(button-height);
+    font-size: token(text-title-font-size);
+    font-weight: token(text-body-stronger-font-weight);
+    height: token(spacer-120);
     margin: 0;
-    padding: 15px;
+    padding: token(spacer-060) token(spacer-000);
     text-decoration: none;
-    transition: background 0.3s ease-out, box-shadow 0.3s ease-out;
+    transition:
+        background 0.3s ease-out,
+        box-shadow 0.3s ease-out;
     width: 100%;
 
     &:focus {
@@ -21,17 +24,20 @@
     }
 
     &:hover {
-        background: token(color-interactive-primary-hovered);
-        box-shadow: 0 0, 0 token(spacer-010) token(spacer-020) -1px rgb(0 0 0 / 20%),
+        background: token(color-background-inverse-primary-hover);
+        box-shadow:
+            0 0,
+            0 token(spacer-010) token(spacer-020) -1px rgb(0 0 0 / 20%),
             0 token(spacer-020) 5px 0 rgb(0 0 0 / 14%);
     }
 
     &:active {
-        background: token(color-interactive-primary-pressed);
+        background: token(color-background-always-dark-active);
     }
 
     &:hover:focus {
-        box-shadow: 0 0 0 token(spacer-010) token(color-outline-tertiary),
+        box-shadow:
+            0 0 0 token(spacer-010) token(color-outline-tertiary),
             0 3px token(spacer-020) rgb(0 15 45 / 20%);
     }
 
@@ -46,7 +52,7 @@
     }
 
     &.adyen-checkout__button--loading {
-        background: token(color-on-interactive-disabled);
+        background: token(color-label-disabled);
         box-shadow: none;
         pointer-events: none;
         user-select: none;
@@ -80,13 +86,17 @@
         border: 0;
         color: token(color-label-primary);
 
+        .adyen-checkout__spinner {
+            @include index.set-spinner-color;
+        }
+
         &:hover {
-            background: token(color-background-secondary);
+            background: token(color-background-secondary-hover);
             box-shadow: none;
         }
 
         &:active {
-            background: token(color-interactive-primary-pressed);
+            background: token(color-background-secondary-active);
             box-shadow: none;
         }
     }
@@ -97,9 +107,14 @@
         border: token(border-width-s) solid token(color-label-primary);
         color: token(color-label-primary);
 
+        .adyen-checkout__spinner {
+            @include index.set-spinner-color;
+        }
+
         &:hover {
             background: token(color-background-secondary);
-            box-shadow: 0 token(spacer-010) token(spacer-020) rgb(27 42 60 / 20%),
+            box-shadow:
+                0 token(spacer-010) token(spacer-020) rgb(27 42 60 / 20%),
                 0 token(spacer-020) 5px rgb(27 42 60 / 14%);
         }
 
@@ -109,21 +124,21 @@
             box-shadow: none;
         }
 
+        &:focus {
+            box-shadow: 0 0 0 0.5px token(color-outline-tertiary);
+            outline: 0;
+        }
+
         &:disabled {
             &,
             &:hover {
                 box-shadow: none;
                 cursor: not-allowed;
-                border-color: #99a3ad;
+                border-color: token(color-outline-disabled);
                 background-color: token(color-background-secondary);
                 opacity: 0.5;
                 user-select: all;
             }
-        }
-
-        .adyen-checkout__spinner {
-            border-color: token(color-label-primary);
-            border-top-color: transparent;
         }
     }
 
@@ -131,16 +146,16 @@
         padding: token(spacer-050) token(spacer-060);
         background: token(color-background-always-dark);
         border: token(border-width-s) solid transparent;
-        color: token(color-white);
+        color: token(color-label-on-color);
 
         &:hover {
-            background: token(color-interactive-primary-hovered);
+            background: token(color-background-inverse-primary-hover);
             box-shadow: none;
         }
 
         &:active,
         &:active:hover {
-            background: token(color-interactive-primary-pressed);
+            background: token(color-background-always-dark-active);
             box-shadow: none;
         }
     }
@@ -148,7 +163,7 @@
     &.adyen-checkout__button--link {
         background: transparent;
         border: token(border-width-s) solid transparent;
-        color: token(link-text-color);
+        color: token(color-label-highlight);
         text-decoration: none;
         font-weight: token(text-body-font-weight);
         border-radius: token(border-radius-s);
@@ -167,7 +182,7 @@
         &:active,
         &:active:hover {
             background: token(color-label-success);
-            color: token(color-white);
+            color: token(color-label-on-color);
         }
 
         .adyen-checkout__button__icon {
@@ -200,7 +215,6 @@
     }
 
     .adyen-checkout__spinner {
-        --adyen-checkout-loading-indicator-background-color: token(color-surface-modal);
-        --adyen-checkout-loading-indicator-color: token(color-surface-modal);
+        @include index.set-spinner-color(token(color-label-on-color), token(color-label-on-color));
     }
 }

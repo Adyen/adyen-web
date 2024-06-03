@@ -10,8 +10,8 @@
     }
 
     &__additional-info {
-        font-size: token(font-size-xsmall);
-        font-weight: token(font-weight-300);
+        font-size: token(text-caption-font-size);
+        font-weight: token(text-body-font-weight);
         color: token(color-label-secondary);
     }
 

@@ -13,7 +13,7 @@
         display: inline-block;
         line-height: token(text-caption-line-height);
         color: token(color-label-primary);
-        font-size: token(font-size-small);
+        font-size: token(text-body-font-size);
         font-weight: normal;
         user-select: none;
 
@@ -61,8 +61,8 @@
     + .adyen-checkout__checkbox__label::before {
         border-left: 1px solid transparent;
         border-top: 1px solid transparent;
-        border-bottom: token(spacer-010) solid token(color-white);
-        border-right: token(spacer-010) solid token(color-white);
+        border-bottom: token(spacer-010) solid token(color-label-on-color);
+        border-right: token(spacer-010) solid token(color-label-on-color);
         border-radius: 0 token(spacer-010) 1px;
         content: '';
         height: 11px;

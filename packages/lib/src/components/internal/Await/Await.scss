@@ -26,7 +26,7 @@
 .adyen-checkout__await__subtitle,
 .adyen-checkout__await__indicator-text {
     color: token(color-label-primary);
-    font-size: token(font-size-medium);
+    font-size: token(text-subtitle-font-size);
     line-height: token(text-caption-line-height);
     margin-top: token(spacer-100);
 }
@@ -69,7 +69,7 @@
 
 .adyen-checkout__await__countdown {
     color: token(color-outline-tertiary);
-    font-size: token(font-size-small);
+    font-size: token(text-body-font-size);
 }
 
 .adyen-checkout__await > .adyen-checkout__spinner__wrapper {

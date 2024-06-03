@@ -1,7 +1,7 @@
 @import 'styles/variable-generator';
 
 @mixin input-wrapper-inactive {
-    background: token(input-wrapper-inactive-background);
+    background: token(color-background-disabled);
     border-color: transparent;
 }
 
@@ -15,9 +15,9 @@
     position: relative;
     display: flex;
     align-items: center;
-    background: token(input-wrapper-background);
-    border: token(input-wrapper-border-width) solid token(input-wrapper-border-color);
-    border-radius: token(input-wrapper-border-radius);
+    background: token(color-background-primary);
+    border: token(border-width-s) solid token(color-outline-primary);
+    border-radius: token(border-radius-m);
 
     & div,
     input,
@@ -35,24 +35,18 @@
     &:active:hover,
     &:focus-within,
     &:focus-within:hover {
-        box-shadow: 0 0 0 0.5px token(input-wrapper-focus-border-color);
-        border-color: token(input-wrapper-focus-border-color);
+        box-shadow: 0 0 0 0.5px token(color-outline-primary-active);
+        border-color: token(color-outline-primary-active);
     }
 
     &:hover {
-        border-color: token(input-wrapper-hover-border-color);
+        border-color: token(color-outline-tertiary);
     }
 }
 
 .adyen-checkout__field--inactive {
     > .adyen-checkout__input-wrapper {
         @include input-wrapper-inactive;
-    }
-}
-
-.adyen-checkout__field--valid:not(.adyen-checkout__field--inactive) {
-    > :not(.adyen-checkout__label--focused) + .adyen-checkout__input-wrapper:not(:focus-within, :active) {
-        border-bottom-color: token(color-label-success);
     }
 }
 
@@ -68,8 +62,8 @@
 }
 
 .adyen-checkout__label--focused + .adyen-checkout__input-wrapper {
-    box-shadow: 0 0 0 0.5px token(input-wrapper-focus-border-color);
-    border-color: token(input-wrapper-focus-border-color);
+    box-shadow: 0 0 0 0.5px token(color-outline-primary-active);
+    border-color: token(color-outline-primary-active);
 }
 
 .adyen-checkout__label--disabled + .adyen-checkout__input-wrapper {
@@ -78,11 +72,11 @@
 
 .adyen-checkout__helper-text {
     display: block;
-    color: token(input-field-context-color);
-    font-weight: token(font-weight-300);
-    line-height: token(line-height-100);
-    font-size: token(font-size-xsmall);
-    margin-bottom: token(input-field-label-margin-bottom);
+    color: token(color-label-primary);
+    font-weight: token(text-body-font-weight);
+    line-height: token(text-caption-line-height);
+    font-size: token(text-caption-font-size);
+    margin-bottom: token(spacer-020);
 }
 
 .adyen-checkout__label-adornment--end {
@@ -93,11 +87,11 @@
 
 .adyen-checkout__label__text{
     display: block;
-    font-size: token(font-size-small);
-    margin-bottom: token(input-field-label-margin-bottom);
-    color: token(input-field-label-color);
+    font-size: token(text-body-font-size);
+    margin-bottom: token(spacer-020);
+    color: token(color-label-primary);
     font-weight: token(text-body-font-weight);
-    line-height: token(line-height-200);
+    line-height: token(text-body-line-height);
     transition: color 0.1s ease-out;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -114,12 +108,12 @@
 
 %contextual-text {
     display: flex;
-    font-weight: token(font-weight-300);
-    margin-top: token(input-field-context-margin-top);
-    font-size: token(font-size-xsmall);
-    line-height: token(line-height-100);
+    font-weight: token(text-body-font-weight);
+    margin-top: token(spacer-020);
+    font-size: token(text-caption-font-size);
+    line-height: token(text-caption-line-height);
     align-items: center;
-    color: token(input-field-context-color);
+    color: token(color-label-primary);
     opacity: 1;
     transition:
         margin 200ms ease-out,

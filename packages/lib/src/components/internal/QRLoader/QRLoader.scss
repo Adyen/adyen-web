@@ -35,7 +35,7 @@
 .adyen-checkout__qr-loader__subtitle,
 .adyen-checkout__qr-loader__payment_amount {
     color: token(color-label-primary);
-    font-size: token(font-size-medium);
+    font-size: token(text-subtitle-font-size);
     line-height: token(text-caption-line-height);
 }
 
@@ -71,7 +71,7 @@
 
 .adyen-checkout__qr-loader__countdown {
     color: token(color-label-secondary);
-    font-size: token(font-size-small);
+    font-size: token(text-body-font-size);
 }
 
 .adyen-checkout__qr-loader > .adyen-checkout__spinner__wrapper {
@@ -89,7 +89,7 @@
 
 .adyen-checkout__qr-loader__instructions {
     color: token(color-label-tertiary);
-    font-size: token(font-size-medium);
+    font-size: token(text-subtitle-font-size);
     line-height: 1.5;
     margin-top: token(spacer-100);
 }
