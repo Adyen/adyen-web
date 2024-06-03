@@ -17,23 +17,6 @@ export const UPI: UpiStory = {
         return <Container type={'upi'} componentConfiguration={args.componentConfiguration} checkout={checkout} />;
     },
     args: {
-        countryCode: 'IN',
-        // @ts-ignore Seems like enum isnt the best way to export fixed strings
-        componentConfiguration: {
-            apps: [
-                {
-                    id: 'bhim',
-                    name: 'BHIM'
-                },
-                {
-                    id: 'gpay',
-                    name: 'Google Pay'
-                },
-                {
-                    id: 'phonepe',
-                    name: 'Phone Pe'
-                }
-            ]
-        }
+        countryCode: 'IN'
     }
 };
