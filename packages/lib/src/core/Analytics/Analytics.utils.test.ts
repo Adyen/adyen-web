@@ -337,8 +337,8 @@ describe('Testing creating a configData object for the Card components', () => {
      * hasInstallmentOptions
      */
     describe('Testing installmentOptions prop and how it maps to a hasInstallmentOptions value', () => {
-        const ANALYTICS_DATA_PROP = 'hasPlaceholders';
-        const CARD_CONFIG_PROP = 'placeholders';
+        const ANALYTICS_DATA_PROP = 'hasInstallmentOptions';
+        const CARD_CONFIG_PROP = 'installmentOptions';
 
         test('Expect the prop, when installmentOptions is not passed, to equal false', () => {
             const configData = getCardConfigData({});
@@ -539,6 +539,197 @@ describe('Testing creating a configData object for the Card components', () => {
         test('Expect the prop, passed as a value, to equal that value', () => {
             const configData = getCardConfigData({ [CARD_CONFIG_PROP]: 'CCard' });
             expect(configData[ANALYTICS_DATA_PROP]).toEqual('CCard');
+        });
+    });
+
+    /**
+     * positionHolderNameOnTop
+     */
+    describe('Testing positionHolderNameOnTop', () => {
+        const ANALYTICS_DATA_PROP = 'positionHolderNameOnTop';
+        const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
+
+        test('Expect the prop, when not passed, to equal the default', () => {
+            const configData = getCardConfigData({});
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(CardDefaultProps[CARD_CONFIG_PROP]);
+        });
+
+        test('Expect the prop, passed as false, to equal false', () => {
+            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: false });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(false);
+        });
+
+        test('Expect the prop, passed as true, to equal true', () => {
+            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: true });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(true);
+        });
+    });
+
+    /**
+     * showBrandsUnderCardNumber
+     */
+    describe('Testing showBrandsUnderCardNumber', () => {
+        const ANALYTICS_DATA_PROP = 'showBrandsUnderCardNumber';
+        const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
+
+        test('Expect the prop, when not passed, to equal the default', () => {
+            const configData = getCardConfigData({});
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(CardDefaultProps[CARD_CONFIG_PROP]);
+        });
+
+        test('Expect the prop, passed as false, to equal false', () => {
+            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: false });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(false);
+        });
+
+        test('Expect the prop, passed as true, to equal true', () => {
+            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: true });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(true);
+        });
+    });
+
+    /**
+     * showInstallmentAmounts
+     * TODO - if we want to pass what the merchant's configured
+     */
+    describe('Testing showInstallmentAmounts', () => {
+        const ANALYTICS_DATA_PROP = 'showInstallmentAmounts';
+        const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
+
+        test('Expect the prop, when not passed, to equal the default', () => {
+            const configData = getCardConfigData({});
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(CardDefaultProps[CARD_CONFIG_PROP]);
+        });
+
+        test('Expect the prop, passed as false, to equal false', () => {
+            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: false });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(false);
+        });
+
+        test('Expect the prop, passed as true, to equal true', () => {
+            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: true });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(true);
+        });
+    });
+
+    /**
+     * showInstallmentAmounts - ALT
+     * TODO - if we want to pass how the component is configured
+     */
+    // describe('Testing showInstallmentAmounts', () => {
+    //     const ANALYTICS_DATA_PROP = 'showInstallmentAmounts';
+    //     const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
+    //
+    //     test('Expect the prop, when not passed, to equal "none"', () => {
+    //         const configData = getCardConfigData({});
+    //         expect(configData[ANALYTICS_DATA_PROP]).toEqual('none');
+    //     });
+    //
+    //     test('Expect the prop, when passed, to equal "none", because installmentsOptions are not set', () => {
+    //         const configData = getCardConfigData({ [CARD_CONFIG_PROP]: true });
+    //         expect(configData[ANALYTICS_DATA_PROP]).toEqual('none');
+    //     });
+    //
+    //     test('Expect the prop, when not passed, to equal  the default, when installmentsOptions are set', () => {
+    //         const configData = getCardConfigData({
+    //             installmentOptions: { mc: { values: [1, 2] } }
+    //         });
+    //         expect(configData[ANALYTICS_DATA_PROP]).toEqual(CardDefaultProps[CARD_CONFIG_PROP]);
+    //     });
+    //
+    //     test('Expect the prop, when passed as true, to equal true, when installmentsOptions are set', () => {
+    //         const configData = getCardConfigData({
+    //             [CARD_CONFIG_PROP]: true,
+    //             installmentOptions: { mc: { values: [1, 2] } }
+    //         });
+    //         expect(configData[ANALYTICS_DATA_PROP]).toEqual(true);
+    //     });
+    //
+    //     test('Expect the prop, when passed as false, to equal false, when installmentsOptions are set', () => {
+    //         const configData = getCardConfigData({
+    //             [CARD_CONFIG_PROP]: false,
+    //             installmentOptions: { mc: { values: [1, 2] } }
+    //         });
+    //         expect(configData[ANALYTICS_DATA_PROP]).toEqual(false);
+    //     });
+    // });
+
+    /**
+     * showKCPType
+     */
+    describe('Testing showKCPType', () => {
+        const ANALYTICS_DATA_PROP = 'showKCPType';
+        const CARD_CONFIG_PROP = 'countryCode';
+
+        const configuration = { koreanAuthenticationRequired: true };
+
+        test('Expect the prop, when not passed, to equal "none"', () => {
+            const configData = getCardConfigData({});
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual('none');
+        });
+
+        test('Expect the prop, when passed, to equal "auto", because countryCode is not "KR"', () => {
+            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: 'US', configuration });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual('auto');
+        });
+
+        test('Expect the prop, when passed, to equal "atStart", because countryCode is "KR"', () => {
+            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: 'kr', configuration });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual('atStart');
+        });
+
+        test('Expect the prop, when passed as false, to equal "none", even if countryCode is "KR"', () => {
+            configuration.koreanAuthenticationRequired = false;
+            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: 'kr', configuration });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual('none');
+        });
+    });
+
+    /**
+     * showPayButton
+     */
+    describe('Testing showPayButton', () => {
+        const ANALYTICS_DATA_PROP = 'showPayButton';
+        const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
+
+        test('Expect the prop, when not passed, to equal the default', () => {
+            const configData = getCardConfigData({});
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(false);
+        });
+
+        test('Expect the prop, passed as false, to equal false', () => {
+            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: false });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(false);
+        });
+
+        test('Expect the prop, passed as true, to equal true', () => {
+            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: true });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(true);
+        });
+    });
+
+    /**
+     * socialSecurityNumberMode
+     */
+    describe('Testing socialSecurityNumberMode', () => {
+        const ANALYTICS_DATA_PROP = 'socialSecurityNumberMode';
+
+        const configuration: any = { socialSecurityNumberMode: 'show' };
+
+        test('Expect the prop, when not passed, to equal the default', () => {
+            const configData = getCardConfigData({});
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(CardDefaultProps.configuration.socialSecurityNumberMode);
+        });
+
+        test('Expect the prop, when passed as "show", to equal "show"', () => {
+            const configData = getCardConfigData({ configuration });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual('show');
+        });
+
+        test('Expect the prop, when passed as "hide", to equal "hide"', () => {
+            configuration.socialSecurityNumberMode = 'hide';
+            const configData = getCardConfigData({ configuration });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual('hide');
         });
     });
 });

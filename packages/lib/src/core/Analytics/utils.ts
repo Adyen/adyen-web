@@ -80,6 +80,8 @@ export const getCardConfigData = (cardProps: CardElementProps): ConfigData => {
         brands,
         brandsConfiguration,
         challengeWindowSize = DEFAULT_CHALLENGE_WINDOW_SIZE,
+        configuration = CardDefaultProps.configuration,
+        countryCode,
         data,
         disclaimerMessage,
         disableIOSArrowKeys = CardDefaultProps.disableIOSArrowKeys,
@@ -97,6 +99,11 @@ export const getCardConfigData = (cardProps: CardElementProps): ConfigData => {
         minimumExpiryDate = 'none',
         name = 'none',
         placeholders,
+        positionHolderNameOnTop = CardDefaultProps.positionHolderNameOnTop,
+        showBrandIcon = CardDefaultProps.showBrandIcon,
+        showBrandsUnderCardNumber = CardDefaultProps.showBrandsUnderCardNumber,
+        showInstallmentAmounts = CardDefaultProps.showInstallmentAmounts,
+        showPayButton = false,
         styles
     } = cardProps;
 
@@ -110,6 +117,11 @@ export const getCardConfigData = (cardProps: CardElementProps): ConfigData => {
         hasBrands = 'default';
     } else if (brands.length === 1) {
         hasBrands = 'single';
+    }
+
+    let showKCPType: 'none' | 'auto' | 'atStart' = 'none';
+    if (configuration?.koreanAuthenticationRequired === true) {
+        showKCPType = countryCode?.toLowerCase() === 'kr' ? 'atStart' : 'auto';
     }
 
     const configData: ConfigData = {
@@ -139,7 +151,15 @@ export const getCardConfigData = (cardProps: CardElementProps): ConfigData => {
         legacyInputMode,
         maskSecurityCode,
         minimumExpiryDate, // TODO can we fwd this value or should we just report that it has been set?
-        name
+        name,
+        positionHolderNameOnTop,
+        showBrandIcon,
+        showBrandsUnderCardNumber,
+        showInstallmentAmounts,
+        // ...(installmentOptions ? { showInstallmentAmounts } : { showInstallmentAmounts: 'none' })
+        showKCPType,
+        showPayButton,
+        socialSecurityNumberMode: configuration.socialSecurityNumberMode
     };
 
     console.log('### utils::getCardConfigData::configData ', configData);

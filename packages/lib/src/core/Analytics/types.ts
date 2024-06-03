@@ -1,5 +1,6 @@
 import { PaymentAmount } from '../../types';
 import { CoreOptions } from '../types';
+import { SocialSecurityMode } from '../../components/Card/types';
 
 export interface Experiment {
     controlGroup: boolean;
@@ -149,6 +150,14 @@ export type ConfigData = {
     maskSecurityCode: boolean;
     minimumExpiryDate: string;
     name: string;
+    positionHolderNameOnTop: boolean;
+    showBrandIcon: boolean;
+    showBrandsUnderCardNumber: boolean; // (v5 only)
+    showInstallmentAmounts: boolean;
+    // showInstallmentAmounts: boolean | 'none';
+    showKCPType: 'none' | 'auto' | 'atStart';
+    showPayButton: boolean;
+    socialSecurityNumberMode: SocialSecurityMode;
 
     // socialSecurityNumberMode: 'show' | 'hide' | 'auto';
 };
