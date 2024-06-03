@@ -36,6 +36,7 @@ test('should pass the complianceSettings if the cookie is set to be stored', asy
                     {
                         srcDigitalCardId: 'xxxx',
                         panLastFour: '8902',
+                        dateOfCardCreated: '2015-01-20T06:00:00.312Z',
                         dateOfCardLastUsed: '2019-09-28T08:10:02.312Z',
                         paymentCardDescriptor: 'visa',
                         panExpirationMonth: '12',
@@ -178,6 +179,7 @@ test('should load shopper cards when cookie is available AND shopper has CtP pro
                     {
                         srcDigitalCardId: 'xxxx',
                         panLastFour: '8902',
+                        dateOfCardCreated: '2015-01-20T06:00:00.312Z',
                         dateOfCardLastUsed: '2019-09-28T08:10:02.312Z',
                         paymentCardDescriptor: 'visa',
                         panExpirationMonth: '12',
@@ -196,6 +198,7 @@ test('should load shopper cards when cookie is available AND shopper has CtP pro
     const expectedShopperCards = [
         {
             artUri: 'https://image.com/visa',
+            dateOfCardCreated: '2015-01-20T06:00:00.312Z',
             dateOfCardLastUsed: '2019-09-28T08:10:02.312Z',
             descriptorName: 'Visa',
             isExpired: true,
@@ -244,6 +247,7 @@ test('should load shopper cards when cookie is available AND shopper has CtP pro
                     {
                         srcDigitalCardId: 'xxxx',
                         panLastFour: '8902',
+                        dateOfCardCreated: '2015-01-20T06:00:00.312Z',
                         dateOfCardLastUsed: '2019-09-28T08:10:02.312Z',
                         paymentCardDescriptor: 'visa',
                         panExpirationMonth: '12',
@@ -267,6 +271,7 @@ test('should load shopper cards when cookie is available AND shopper has CtP pro
                     {
                         srcDigitalCardId: 'yyyy',
                         panLastFour: '4302',
+                        dateOfCardCreated: '2015-01-20T06:00:00.312Z',
                         dateOfCardLastUsed: '2019-12-25T20:20:02.942Z',
                         paymentCardDescriptor: 'mc',
                         panExpirationMonth: '12',
@@ -285,6 +290,7 @@ test('should load shopper cards when cookie is available AND shopper has CtP pro
     const expectedShopperCards = [
         {
             artUri: 'https://image.com/mc',
+            dateOfCardCreated: '2015-01-20T06:00:00.312Z',
             dateOfCardLastUsed: '2019-12-25T20:20:02.942Z',
             descriptorName: 'Mastercard',
             isExpired: true,
@@ -298,6 +304,7 @@ test('should load shopper cards when cookie is available AND shopper has CtP pro
         },
         {
             artUri: 'https://image.com/visa',
+            dateOfCardCreated: '2015-01-20T06:00:00.312Z',
             dateOfCardLastUsed: '2019-09-28T08:10:02.312Z',
             descriptorName: 'Visa',
             isExpired: true,
@@ -350,6 +357,7 @@ test('should clean up shopper cards and set CtP state as Login after performing 
                     {
                         srcDigitalCardId: 'xxxx',
                         panLastFour: '8902',
+                        dateOfCardCreated: '2015-01-20T06:00:00.312Z',
                         dateOfCardLastUsed: '2019-09-28T08:10:02.312Z',
                         paymentCardDescriptor: 'visa',
                         panExpirationMonth: '12',
@@ -368,6 +376,7 @@ test('should clean up shopper cards and set CtP state as Login after performing 
     const expectedShopperCards = [
         {
             artUri: 'https://image.com/visa',
+            dateOfCardCreated: '2015-01-20T06:00:00.312Z',
             dateOfCardLastUsed: '2019-09-28T08:10:02.312Z',
             descriptorName: 'Visa',
             isExpired: true,
@@ -439,6 +448,7 @@ test('should authenticate the shopper with the fastest SDK that finds the shoppe
                     {
                         srcDigitalCardId: 'yyyy',
                         panLastFour: '4302',
+                        dateOfCardCreated: '2015-01-20T06:00:00.312Z',
                         dateOfCardLastUsed: '2019-12-25T20:20:02.942Z',
                         paymentCardDescriptor: 'mc',
                         panExpirationMonth: '12',
@@ -457,6 +467,7 @@ test('should authenticate the shopper with the fastest SDK that finds the shoppe
     const expectedShopperCards = [
         {
             artUri: 'https://image.com/mc',
+            dateOfCardCreated: '2015-01-20T06:00:00.312Z',
             dateOfCardLastUsed: '2019-12-25T20:20:02.942Z',
             descriptorName: 'Mastercard',
             isExpired: true,
