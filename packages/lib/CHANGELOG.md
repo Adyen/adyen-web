@@ -1,5 +1,20 @@
 # @adyen/adyen-web
 
+## 5.66.0
+
+### Minor Changes
+
+-   Add upi intent flow to the UPI component. The upi intent flow is shown only on the mobile device if the upi intent app list is provided. ([#2673](https://github.com/Adyen/adyen-web/pull/2673))
+
+    If the app list is not provided, we show the default `vpa` mode.
+    The drop-in component shows only one upi component if the parent `upi` tx_variant is found.
+
+### Patch Changes
+
+-   Fix: ACH not respecting showPayButton ([#2696](https://github.com/Adyen/adyen-web/pull/2696))
+
+-   Click to Pay - Fixed bug where newly created card was taking priority of used cards in the Card list view, and improved CSS specificity for the Card image size when displaying single Card ([#2694](https://github.com/Adyen/adyen-web/pull/2694))
+
 ## 5.65.0
 
 ### Minor Changes
