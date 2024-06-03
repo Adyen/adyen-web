@@ -53,7 +53,8 @@ export type DigitalCardStatus = 'ACTIVE' | 'SUSPENDED' | 'EXPIRED' | 'PENDING';
 export type SrcCard = {
     srcDigitalCardId: string;
     panLastFour: string;
-    dateOfCardLastUsed: string;
+    dateOfCardCreated: string;
+    dateOfCardLastUsed?: string;
     paymentCardDescriptor: string;
     panExpirationMonth: string;
     panExpirationYear: string;
