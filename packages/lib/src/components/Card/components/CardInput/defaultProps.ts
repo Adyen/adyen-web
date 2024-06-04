@@ -15,6 +15,7 @@ export default {
     showBrandIcon: true,
     showBrandsUnderCardNumber: true,
     positionHolderNameOnTop: false,
+    billingAddressAllowedCountries: [],
     billingAddressRequired: false,
     billingAddressMode: AddressModeOptions.full,
     billingAddressRequiredFields: ['street', 'houseNumberOrName', 'postalCode', 'city', 'stateOrProvince', 'country'],

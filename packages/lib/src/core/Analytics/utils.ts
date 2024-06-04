@@ -74,7 +74,7 @@ export const getCardConfigData = (cardProps: CardElementProps): ConfigData => {
     // Extract props from cardProps - mostly setting a default value, if prop not found
     const {
         autoFocus = CardDefaultProps.autoFocus,
-        billingAddressAllowedCountries = [],
+        billingAddressAllowedCountries = CardDefaultProps.billingAddressAllowedCountries,
         billingAddressMode = CardDefaultProps.billingAddressMode,
         billingAddressRequired = CardDefaultProps.billingAddressRequired,
         // billingAddressRequiredFields = CardDefaultProps.billingAddressRequiredFields,
@@ -104,7 +104,7 @@ export const getCardConfigData = (cardProps: CardElementProps): ConfigData => {
         showBrandIcon = CardDefaultProps.showBrandIcon,
         showBrandsUnderCardNumber = CardDefaultProps.showBrandsUnderCardNumber,
         showInstallmentAmounts = CardDefaultProps.showInstallmentAmounts,
-        showPayButton = false,
+        showPayButton = false, // hard coded default
         styles
     } = cardProps;
 
