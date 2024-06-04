@@ -38,17 +38,17 @@ describe('Testing creating a configData object for the Card components', () => {
         const ANALYTICS_DATA_PROP = 'billingAddressMode';
         const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
 
-        test('Expect the prop, when not passed, to equal "none"', () => {
+        test('Expect the prop, when not passed, to equal the default', () => {
             const configData = getCardConfigData({});
-            expect(configData[ANALYTICS_DATA_PROP]).toEqual('none');
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(CardDefaultProps[CARD_CONFIG_PROP]);
         });
 
-        test('Expect the prop, when passed, to equal "none", because billingAddressRequired is passed as false', () => {
+        test('Expect the prop, when passed as "partial", to equal "partial", regardless of what is set for billingAddressRequired', () => {
             const configData = getCardConfigData({ [CARD_CONFIG_PROP]: 'partial', billingAddressRequired: false });
-            expect(configData[ANALYTICS_DATA_PROP]).toEqual('none');
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual('partial');
         });
 
-        test('Expect the prop, when not passed, to equal  the default, when billingAddressRequired is passed as true', () => {
+        test('Expect the prop, when not passed, to equal the default, when billingAddressRequired is passed as true', () => {
             const configData = getCardConfigData({ billingAddressRequired: true });
             expect(configData[ANALYTICS_DATA_PROP]).toEqual(CardDefaultProps[CARD_CONFIG_PROP]);
         });
@@ -595,7 +595,7 @@ describe('Testing creating a configData object for the Card components', () => {
         const ANALYTICS_DATA_PROP = 'showInstallmentAmounts';
         const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
 
-        test('Expect the prop, when not passed, to equal the false', () => {
+        test('Expect the prop, when not passed, to equal false', () => {
             const configData = getCardConfigData({});
             expect(configData[ANALYTICS_DATA_PROP]).toEqual(false);
         });

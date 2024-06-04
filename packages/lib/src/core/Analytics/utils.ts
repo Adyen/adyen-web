@@ -77,6 +77,7 @@ export const getCardConfigData = (cardProps: CardElementProps): ConfigData => {
         billingAddressAllowedCountries = [],
         billingAddressMode = CardDefaultProps.billingAddressMode,
         billingAddressRequired = CardDefaultProps.billingAddressRequired,
+        // billingAddressRequiredFields = CardDefaultProps.billingAddressRequiredFields,
         brands,
         brandsConfiguration,
         challengeWindowSize = DEFAULT_CHALLENGE_WINDOW_SIZE,
@@ -127,7 +128,7 @@ export const getCardConfigData = (cardProps: CardElementProps): ConfigData => {
     const configData: ConfigData = {
         autoFocus,
         ...(billingAddressRequired ? { billingAddressAllowedCountries } : { billingAddressAllowedCountries: 'none' }),
-        ...(billingAddressRequired ? { billingAddressMode: billingAddressModeValue } : { billingAddressMode: 'none' }),
+        billingAddressMode: billingAddressModeValue,
         billingAddressRequired,
         // billingAddressRequiredFields, // do same as for billingAddressAllowedCountries
         // brands, // TODO might just want to know if the array is filled, and if so, whether it has more than 1 item
