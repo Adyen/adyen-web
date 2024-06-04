@@ -87,6 +87,7 @@ class QRLoaderContainer<T extends QRLoaderContainerProps = QRLoaderContainerProp
             return (
                 <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                     <RedirectButton
+                        showPayButton={this.props.showPayButton}
                         name={this.displayName}
                         onSubmit={this.submit}
                         payButton={this.payButton}

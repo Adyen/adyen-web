@@ -83,6 +83,14 @@ describe('Await', () => {
             fireEvent.click(await screen.findByRole('button'));
             expect(assignSpy).toHaveBeenCalled();
         });
+
+        test('should call location.assign if there is an url and shouldRedirectAutomatically is true', async () => {
+            assignSpy.mockReset();
+            renderAwait({ ...defaultProps, shouldRedirectAutomatically: true, url: 'redirect-url' });
+            await waitFor(() => expect(assignSpy).toHaveBeenCalled());
+            const button = screen.queryByRole('button');
+            expect(button).not.toBeInTheDocument();
+        });
     });
 
     describe('Expired', () => {

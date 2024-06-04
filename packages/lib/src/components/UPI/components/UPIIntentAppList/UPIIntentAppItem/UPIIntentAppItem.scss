@@ -1,0 +1,29 @@
+@import '../../../../../style/index';
+
+.adyen-checkout-upi-app-item-header {
+    position: relative;
+    padding: 6px 16px 6px 32px;
+}
+
+.adyen-checkout-upi-app-item {
+    cursor: pointer;
+    margin-top: -1px;
+    width: 100%;
+    transition: opacity 0.3s ease-out;
+
+    &:first-child {
+        margin-top: 0;
+    }
+
+    &--selected {
+        cursor: default;
+        transition:
+            margin 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+            opacity 0.3s ease-out;
+    }
+
+    .adyen-checkout-radio-button__radio {
+        left: 0;
+        position: absolute;
+    }
+}
