@@ -105,7 +105,16 @@ export const getCardConfigData = (cardProps: CardElementProps): ConfigData => {
         showBrandsUnderCardNumber = CardDefaultProps.showBrandsUnderCardNumber,
         showInstallmentAmounts = CardDefaultProps.showInstallmentAmounts,
         showPayButton = false, // hard coded default
-        styles
+        styles,
+        onAllValid = false,
+        onBinLookup = false,
+        onBinValue = false,
+        onBlur = false,
+        onBrand = false,
+        onConfigSuccess = false,
+        onFieldValid = false,
+        onFocus = false,
+        onLoad = false
     } = cardProps;
 
     const billingAddressModeValue = cardProps.onAddressLookup ? 'lookup' : billingAddressMode;
@@ -143,11 +152,11 @@ export const getCardConfigData = (cardProps: CardElementProps): ConfigData => {
         hasData: !!data,
         hasDisclaimerMessage: !!disclaimerMessage,
         hasHolderName,
-        hasPlaceholders: !!placeholders, // has merchant defined placeholders
         hasInstallmentOptions: !!installmentOptions,
+        hasPlaceholders: !!placeholders, // has merchant defined placeholders
+        hasStylesConfigured: !!styles,
         hideCVC,
         holderNameRequired,
-        isStylesConfigured: !!styles,
         keypadFix,
         legacyInputMode,
         maskSecurityCode,
@@ -159,7 +168,17 @@ export const getCardConfigData = (cardProps: CardElementProps): ConfigData => {
         showInstallmentAmounts: !!showInstallmentAmounts,
         showKCPType,
         showPayButton,
-        socialSecurityNumberMode: configuration.socialSecurityNumberMode
+        socialSecurityNumberMode: configuration.socialSecurityNumberMode,
+        // callbacks
+        onAllValid: !!onAllValid,
+        onBinLookup: !!onBinLookup,
+        onBinValue: !!onBinValue,
+        onBlur: !!onBlur,
+        onBrand: !!onBrand,
+        onConfigSuccess: !!onConfigSuccess,
+        onFieldValid: !!onFieldValid,
+        onFocus: !!onFocus,
+        onLoad: !!onLoad
     };
 
     console.log('### utils::getCardConfigData::configData ', configData);

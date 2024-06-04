@@ -106,17 +106,17 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 // showContextualElement: true, // v6 only
                 // showInstallmentAmounts: false,
                 // showPayButton: false,
-                // styles: {}
+                // styles: { base: { fontWeight: 300 } },
                 // onAddressLookup: searchFunctionExample,
-                // onAllValid: (): any => {},
+                // onAllValid: () => {},
                 // onBinLookup: () => {},
-                // onBinValue: (): any => {},
-                // onBlur: (): any => {},
-                // onBrand: (): any => {},
-                // onConfigSuccess: (): any => {},
-                // onFieldValid: (): any => {},
-                // onFocus: (): any => {},
-                // onLoad: (): any => {},
+                // onBinValue: () => {},
+                // onBlur: () => {},
+                // onBrand: () => {},
+                // onConfigSuccess: () => {},
+                // onFieldValid: () => {},
+                // onFocus: () => {},
+                // onLoad: () => {},
                 /** SINCE v5 onError IS NO LONGER SPECIFIC TO CARD, although if set here this callback will be called over the top level Checkout one */
                 onError: obj => {
                     console.log('### Cards::onError:: obj=', obj);

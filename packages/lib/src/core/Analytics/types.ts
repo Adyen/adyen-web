@@ -144,7 +144,7 @@ export type ConfigData = {
     hasInstallmentOptions: boolean;
     hideCVC: boolean;
     holderNameRequired: boolean;
-    isStylesConfigured: boolean;
+    hasStylesConfigured: boolean;
     keypadFix: boolean;
     legacyInputMode: boolean;
     maskSecurityCode: boolean;
@@ -158,6 +158,14 @@ export type ConfigData = {
     showKCPType: 'none' | 'auto' | 'atStart';
     showPayButton: boolean;
     socialSecurityNumberMode: SocialSecurityMode;
-
-    // socialSecurityNumberMode: 'show' | 'hide' | 'auto';
+    // callbacks
+    onAllValid: boolean;
+    onBinLookup: boolean;
+    onBinValue: boolean;
+    onBlur: boolean;
+    onBrand: boolean;
+    onConfigSuccess: boolean;
+    onFieldValid: boolean;
+    onFocus: boolean;
+    onLoad: boolean;
 };

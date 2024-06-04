@@ -420,10 +420,10 @@ describe('Testing creating a configData object for the Card components', () => {
     });
 
     /**
-     * isStylesConfigured
+     * hasStylesConfigured
      */
-    describe('Testing styles prop and how it maps to a isStylesConfigured value', () => {
-        const ANALYTICS_DATA_PROP = 'isStylesConfigured';
+    describe('Testing styles prop and how it maps to a hasStylesConfigured value', () => {
+        const ANALYTICS_DATA_PROP = 'hasStylesConfigured';
         const CARD_CONFIG_PROP = 'styles';
 
         test('Expect the prop, when styles is not passed, to equal false', () => {
