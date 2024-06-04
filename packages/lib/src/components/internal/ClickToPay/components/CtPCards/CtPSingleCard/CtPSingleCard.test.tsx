@@ -9,6 +9,7 @@ function createShopperCard({ panExpirationYear = '2030', panExpirationMonth = '0
         {
             srcDigitalCardId: 'xxxx-yyyy',
             panLastFour: '2024',
+            dateOfCardCreated: '2015-10-10T09:15:00.312Z',
             dateOfCardLastUsed: '2022-09-16T08:10:02.312Z',
             paymentCardDescriptor: 'visa',
             panExpirationMonth: panExpirationMonth,

@@ -3,7 +3,8 @@ import { SchemeNames } from '../services/sdks/utils';
 import { ClickToPayScheme } from '../types';
 
 class ShopperCard {
-    public dateOfCardLastUsed: string;
+    public dateOfCardLastUsed?: string;
+    public dateOfCardCreated: string;
     public panLastFour: string;
     public srcDigitalCardId: string;
     public scheme: ClickToPayScheme;
@@ -19,6 +20,7 @@ class ShopperCard {
 
     constructor(maskedCard: SrcCard, scheme: ClickToPayScheme, srcCorrelationId: string) {
         this.dateOfCardLastUsed = maskedCard.dateOfCardLastUsed;
+        this.dateOfCardCreated = maskedCard.dateOfCardCreated;
         this.panLastFour = maskedCard.panLastFour;
         this.srcDigitalCardId = maskedCard.srcDigitalCardId;
         this.descriptorName = maskedCard.digitalCardData.descriptorName;

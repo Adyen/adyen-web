@@ -13,6 +13,7 @@ test('should place expired cards at the end of the list, placing the most recent
                         {
                             srcDigitalCardId: 'xxxx',
                             panLastFour: '8902',
+                            dateOfCardCreated: '2022-09-20T06:00:00.312Z',
                             dateOfCardLastUsed: '2019-09-28T08:10:02.312Z',
                             paymentCardDescriptor: 'visa',
                             panExpirationMonth: '12',
@@ -27,6 +28,7 @@ test('should place expired cards at the end of the list, placing the most recent
                         {
                             srcDigitalCardId: 'xxxxxx',
                             panLastFour: '8902',
+                            dateOfCardCreated: '2022-09-20T06:00:00.312Z',
                             dateOfCardLastUsed: '2022-09-28T08:10:02.312Z',
                             paymentCardDescriptor: 'visa',
                             panExpirationMonth: '12',
@@ -51,6 +53,7 @@ test('should place expired cards at the end of the list, placing the most recent
                         {
                             srcDigitalCardId: 'yyyy',
                             panLastFour: '4302',
+                            dateOfCardCreated: '2022-09-20T06:00:00.312Z',
                             dateOfCardLastUsed: '2019-12-25T20:20:02.942Z',
                             paymentCardDescriptor: 'mc',
                             panExpirationMonth: '12',
@@ -74,6 +77,7 @@ test('should place expired cards at the end of the list, placing the most recent
     expect(cards).toEqual([
         {
             artUri: 'https://image.com/visa',
+            dateOfCardCreated: '2022-09-20T06:00:00.312Z',
             dateOfCardLastUsed: '2022-09-28T08:10:02.312Z',
             descriptorName: 'Visa',
             isExpired: false,
@@ -88,6 +92,7 @@ test('should place expired cards at the end of the list, placing the most recent
         },
         {
             artUri: 'https://image.com/mc',
+            dateOfCardCreated: '2022-09-20T06:00:00.312Z',
             dateOfCardLastUsed: '2019-12-25T20:20:02.942Z',
             descriptorName: 'Mastercard',
             isExpired: true,
@@ -102,6 +107,7 @@ test('should place expired cards at the end of the list, placing the most recent
         },
         {
             artUri: 'https://image.com/visa',
+            dateOfCardCreated: '2022-09-20T06:00:00.312Z',
             dateOfCardLastUsed: '2019-09-28T08:10:02.312Z',
             descriptorName: 'Visa',
             isExpired: true,
@@ -128,6 +134,7 @@ test('should sort available cards placing most recent ones on top of the list', 
                         {
                             srcDigitalCardId: 'xxxx',
                             panLastFour: '8902',
+                            dateOfCardCreated: '2022-09-20T06:00:00.312Z',
                             dateOfCardLastUsed: '2022-07-25T22:23:22.312Z',
                             paymentCardDescriptor: 'visa',
                             panExpirationMonth: '08',
@@ -142,6 +149,7 @@ test('should sort available cards placing most recent ones on top of the list', 
                         {
                             srcDigitalCardId: 'xxxxxx',
                             panLastFour: '8902',
+                            dateOfCardCreated: '2022-09-20T06:00:00.312Z',
                             dateOfCardLastUsed: '2021-12-28T08:10:02.512Z',
                             paymentCardDescriptor: 'visa',
                             panExpirationMonth: '01',
@@ -166,6 +174,7 @@ test('should sort available cards placing most recent ones on top of the list', 
                         {
                             srcDigitalCardId: 'yyyy',
                             panLastFour: '4302',
+                            dateOfCardCreated: '2022-09-20T06:00:00.312Z',
                             dateOfCardLastUsed: '2022-08-25T20:20:02.942Z',
                             paymentCardDescriptor: 'mc',
                             panExpirationMonth: '03',
@@ -188,6 +197,7 @@ test('should sort available cards placing most recent ones on top of the list', 
     expect(cards).toEqual([
         {
             artUri: 'https://image.com/mc',
+            dateOfCardCreated: '2022-09-20T06:00:00.312Z',
             dateOfCardLastUsed: '2022-08-25T20:20:02.942Z',
             descriptorName: 'Mastercard',
             isExpired: false,
@@ -202,6 +212,7 @@ test('should sort available cards placing most recent ones on top of the list', 
         },
         {
             artUri: 'https://image.com/visa',
+            dateOfCardCreated: '2022-09-20T06:00:00.312Z',
             dateOfCardLastUsed: '2022-07-25T22:23:22.312Z',
             descriptorName: 'Visa',
             isExpired: false,
@@ -216,6 +227,7 @@ test('should sort available cards placing most recent ones on top of the list', 
         },
         {
             artUri: 'https://image.com/visa',
+            dateOfCardCreated: '2022-09-20T06:00:00.312Z',
             dateOfCardLastUsed: '2021-12-28T08:10:02.512Z',
             descriptorName: 'Visa',
             isExpired: false,
@@ -227,6 +239,127 @@ test('should sort available cards placing most recent ones on top of the list', 
             srcDigitalCardId: 'xxxxxx',
             status: 'ACTIVE',
             tokenId: '3f3f6g'
+        }
+    ]);
+});
+
+test('should place unused cards after the used cards, sorted by dateOfCardCreated (most recent added cards must be on top)', () => {
+    const cardsFromSrcSystem: SrcProfileWithScheme[] = [
+        {
+            scheme: 'visa',
+            srcCorrelationId: '123456',
+            profiles: [
+                {
+                    maskedCards: [
+                        {
+                            srcDigitalCardId: 'xxxx',
+                            panLastFour: '8902',
+                            dateOfCardCreated: '2022-09-20T06:00:00.312Z',
+                            dateOfCardLastUsed: undefined,
+                            paymentCardDescriptor: 'visa',
+                            panExpirationMonth: '12',
+                            panExpirationYear: '2030',
+                            digitalCardData: {
+                                descriptorName: 'Visa',
+                                artUri: 'https://image.com/visa',
+                                status: 'ACTIVE'
+                            },
+                            tokenId: '9w8e8e'
+                        },
+                        {
+                            srcDigitalCardId: 'yyyy',
+                            panLastFour: '5535',
+                            dateOfCardCreated: '2022-09-20T10:30:00.312Z',
+                            dateOfCardLastUsed: undefined,
+                            paymentCardDescriptor: 'visa',
+                            panExpirationMonth: '12',
+                            panExpirationYear: '2030',
+                            digitalCardData: {
+                                descriptorName: 'Visa',
+                                artUri: 'https://image.com/visa',
+                                status: 'ACTIVE'
+                            },
+                            tokenId: '3f3f6g'
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            scheme: 'mc',
+            srcCorrelationId: '1a2b3c',
+            profiles: [
+                {
+                    maskedCards: [
+                        {
+                            srcDigitalCardId: 'yyyy',
+                            panLastFour: '4302',
+                            dateOfCardCreated: '2022-09-20T06:00:00.312Z',
+                            dateOfCardLastUsed: '2019-12-25T20:20:02.942Z',
+                            paymentCardDescriptor: 'mc',
+                            panExpirationMonth: '12',
+                            panExpirationYear: '2030',
+                            digitalCardData: {
+                                descriptorName: 'Mastercard',
+                                artUri: 'https://image.com/mc',
+                                // MC is only passing ACTIVE even if the card is EXPIRED
+                                status: 'ACTIVE'
+                            },
+                            tokenId: '2a2a3b3b'
+                        }
+                    ]
+                }
+            ]
+        }
+    ];
+
+    const cards = createShopperCardsList(cardsFromSrcSystem);
+
+    expect(cards).toEqual([
+        {
+            artUri: 'https://image.com/mc',
+            dateOfCardCreated: '2022-09-20T06:00:00.312Z',
+            dateOfCardLastUsed: '2019-12-25T20:20:02.942Z',
+            descriptorName: 'Mastercard',
+            isExpired: false,
+            panExpirationMonth: '12',
+            panExpirationYear: '2030',
+            panLastFour: '4302',
+            scheme: 'mc',
+            srcCorrelationId: '1a2b3c',
+            srcDigitalCardId: 'yyyy',
+            status: 'ACTIVE',
+            tokenId: '2a2a3b3b'
+        },
+        {
+            artUri: 'https://image.com/visa',
+            dateOfCardCreated: '2022-09-20T10:30:00.312Z',
+            dateOfCardLastUsed: undefined,
+            descriptorName: 'Visa',
+            isExpired: false,
+            panExpirationMonth: '12',
+            panExpirationYear: '2030',
+            panLastFour: '5535',
+            scheme: 'visa',
+            srcCorrelationId: '123456',
+            srcDigitalCardId: 'yyyy',
+            status: 'ACTIVE',
+            tokenId: '3f3f6g'
+        },
+        {
+            artUri: 'https://image.com/visa',
+            dateOfCardCreated: '2022-09-20T06:00:00.312Z',
+            dateOfCardLastUsed: undefined,
+            descriptorName: 'Visa',
+            isExpired: false,
+            panExpirationMonth: '12',
+            panExpirationYear: '2030',
+            panLastFour: '8902',
+            scheme: 'visa',
+            srcCorrelationId: '123456',
+            srcDigitalCardId: 'xxxx',
+            status: 'ACTIVE',
+            tokenId: '9w8e8e'
         }
     ]);
 });

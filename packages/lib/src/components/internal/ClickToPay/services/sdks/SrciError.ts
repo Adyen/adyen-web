@@ -17,6 +17,7 @@ class SrciError extends Error {
     public message: string;
     public source: string;
     public scheme: ClickToPayScheme;
+    public errorFromCardSchemeSdk: unknown;
 
     constructor(schemeError: VisaError | MastercardError, source: string, scheme: ClickToPayScheme) {
         super();
@@ -28,6 +29,7 @@ class SrciError extends Error {
         this.reason = reason;
         this.source = source;
         this.scheme = scheme;
+        this.errorFromCardSchemeSdk = schemeError;
     }
 
     toString() {
