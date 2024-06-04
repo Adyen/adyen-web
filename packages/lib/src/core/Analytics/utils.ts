@@ -155,7 +155,7 @@ export const getCardConfigData = (cardProps: CardElementProps): ConfigData => {
         positionHolderNameOnTop,
         showBrandIcon,
         showBrandsUnderCardNumber,
-        showInstallmentAmounts,
+        showInstallmentAmounts: !!showInstallmentAmounts,
         showKCPType,
         showPayButton,
         socialSecurityNumberMode: configuration.socialSecurityNumberMode

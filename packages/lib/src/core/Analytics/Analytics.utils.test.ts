@@ -595,9 +595,9 @@ describe('Testing creating a configData object for the Card components', () => {
         const ANALYTICS_DATA_PROP = 'showInstallmentAmounts';
         const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
 
-        test('Expect the prop, when not passed, to equal the default', () => {
+        test('Expect the prop, when not passed, to equal the false', () => {
             const configData = getCardConfigData({});
-            expect(configData[ANALYTICS_DATA_PROP]).toEqual(CardDefaultProps[CARD_CONFIG_PROP]);
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(false);
         });
 
         test('Expect the prop, passed as false, to equal false', () => {

@@ -30,7 +30,7 @@ export default {
     maskSecurityCode: false,
     minimumExpiryDate: null,
     name: null,
-    showInstallmentAmounts: true,
+    showInstallmentAmounts: null,
 
     // Events
     onLoad: (): any => {},
