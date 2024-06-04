@@ -148,7 +148,7 @@ export type ConfigData = {
     keypadFix: boolean;
     legacyInputMode: boolean;
     maskSecurityCode: boolean;
-    minimumExpiryDate: string;
+    minimumExpiryDate: boolean;
     name: string;
     positionHolderNameOnTop: boolean;
     showBrandIcon: boolean;

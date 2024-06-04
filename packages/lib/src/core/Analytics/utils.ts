@@ -96,7 +96,7 @@ export const getCardConfigData = (cardProps: CardElementProps): ConfigData => {
         keypadFix = CardDefaultProps.keypadFix,
         legacyInputMode = CardDefaultProps.legacyInputMode,
         maskSecurityCode = CardDefaultProps.maskSecurityCode,
-        minimumExpiryDate = 'none',
+        minimumExpiryDate = CardDefaultProps.minimumExpiryDate,
         name = 'none',
         placeholders,
         positionHolderNameOnTop = CardDefaultProps.positionHolderNameOnTop,
@@ -150,13 +150,12 @@ export const getCardConfigData = (cardProps: CardElementProps): ConfigData => {
         keypadFix,
         legacyInputMode,
         maskSecurityCode,
-        minimumExpiryDate, // TODO can we fwd this value or should we just report that it has been set?
+        minimumExpiryDate: !!minimumExpiryDate, // Potentially, in the future, we can send the actual string value
         name,
         positionHolderNameOnTop,
         showBrandIcon,
         showBrandsUnderCardNumber,
         showInstallmentAmounts,
-        // ...(installmentOptions ? { showInstallmentAmounts } : { showInstallmentAmounts: 'none' })
         showKCPType,
         showPayButton,
         socialSecurityNumberMode: configuration.socialSecurityNumberMode
