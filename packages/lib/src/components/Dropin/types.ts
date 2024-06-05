@@ -72,6 +72,13 @@ export interface DropinConfiguration extends UIElementProps {
      */
     instantPaymentTypes?: InstantPaymentTypes[];
 
+    /**
+     * Pre-select a specific payment method when Drop-in is rendered
+     * @default undefined
+     */
+    openPaymentMethod?: {
+        type: string;
+    };
     openFirstStoredPaymentMethod?: boolean;
     openFirstPaymentMethod?: boolean;
     onSubmit?: (data, component) => void;
@@ -118,7 +125,6 @@ export type onOrderCancelType = (
 export interface DropinComponentProps extends DropinConfiguration {
     core: ICore;
     onCreateElements: any;
-    onChange: (newState?: object) => void;
     onOrderCancel?: onOrderCancelType;
 }
 
