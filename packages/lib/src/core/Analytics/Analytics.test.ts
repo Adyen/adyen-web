@@ -1,6 +1,5 @@
 import Analytics from './Analytics';
 import collectId from '../Services/analytics/collect-id';
-import logEvent from '../Services/analytics/log-event';
 import { PaymentAmount } from '../../types';
 import wait from '../../utils/wait';
 import { DEFAULT_DEBOUNCE_TIME_MS } from '../../utils/debounce';
@@ -8,10 +7,8 @@ import { ANALYTICS_EVENT, AnalyticsObject, CreateAnalyticsObject } from './types
 import { ANALYTICS_VALIDATION_ERROR_STR } from './constants';
 
 jest.mock('../Services/analytics/collect-id');
-jest.mock('../Services/analytics/log-event');
 
 const mockedCollectId = collectId as jest.Mock;
-const mockedLogEvent = logEvent as jest.Mock;
 
 const amount: PaymentAmount = { value: 50000, currency: 'USD' };
 
@@ -34,16 +31,11 @@ let analytics;
 
 describe('Analytics initialisation and event queue', () => {
     const collectIdPromiseMock = jest.fn(() => Promise.resolve(mockCheckoutAttemptId));
-    const logEventPromiseMock = jest.fn(() => Promise.resolve(null));
 
     beforeEach(() => {
         mockedCollectId.mockReset();
         mockedCollectId.mockImplementation(() => collectIdPromiseMock);
         collectIdPromiseMock.mockClear();
-
-        mockedLogEvent.mockReset();
-        mockedLogEvent.mockImplementation(() => logEventPromiseMock);
-        logEventPromiseMock.mockClear();
 
         analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount, bundleType: '' });
     });
@@ -63,16 +55,6 @@ describe('Analytics initialisation and event queue', () => {
 
         analytics.setUp(setUpEvent);
         expect(collectIdPromiseMock).not.toHaveBeenCalled();
-        expect(logEventPromiseMock).not.toHaveBeenCalled();
-    });
-
-    test('Will not call the collectId endpoint if telemetry is disabled, but will call the logEvent (analytics pixel)', () => {
-        const analytics = Analytics({ analytics: { telemetry: false }, loadingContext: '', locale: '', clientKey: '', amount, bundleType: '' });
-        expect(collectIdPromiseMock).not.toHaveBeenCalled();
-        analytics.setUp(setUpEvent);
-        expect(collectIdPromiseMock).not.toHaveBeenCalled();
-
-        expect(logEventPromiseMock).toHaveBeenCalledWith({ ...setUpEvent });
     });
 
     test('Calls the collectId endpoint by default, adding expected fields, including sanitising the passed analyticsData object', async () => {
