@@ -10,7 +10,7 @@ import { analyticsPreProcessor } from './analyticsPreProcessor';
 let capturedCheckoutAttemptId = null;
 let sendEventsTimerId = null;
 
-const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analyticsContext, bundleType }: AnalyticsProps): AnalyticsModule => {
+const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bundleType }: AnalyticsProps): AnalyticsModule => {
     const defaultProps = {
         enabled: true,
         checkoutAttemptId: null,
