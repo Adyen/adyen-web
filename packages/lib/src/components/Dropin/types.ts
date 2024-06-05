@@ -124,7 +124,7 @@ export type onOrderCancelType = (
 
 export interface DropinComponentProps extends DropinConfiguration {
     core: ICore;
-    onCreateElements: any;
+    onCreateElements(): any;
     onOrderCancel?: onOrderCancelType;
 }
 
