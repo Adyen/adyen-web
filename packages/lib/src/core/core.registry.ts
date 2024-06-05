@@ -57,6 +57,9 @@ class Registry implements IRegistry {
                 console.error('CoreRegistry: Attempt to register Class failed. The Class is not a valid UIElement');
                 return memo;
             }
+            if (component.type === 'dropin') {
+                return memo;
+            }
 
             const supportedTxVariants = [component.type, ...component.txVariants].filter(txVariant => txVariant);
 

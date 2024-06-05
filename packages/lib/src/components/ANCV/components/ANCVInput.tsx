@@ -26,6 +26,7 @@ function ANCVInput({ showPayButton, payButton, onChange, onSubmit }: ANCVInputPr
     });
 
     useEffect(() => {
+        // @ts-ignore TODO: Fix this. Preact component types should not inherit from UIElementProps.
         onChange({ data, errors, valid, isValid }, this);
     }, [data, valid, errors, isValid]);
 

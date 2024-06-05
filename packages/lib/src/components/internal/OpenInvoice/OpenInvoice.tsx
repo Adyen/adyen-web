@@ -112,7 +112,8 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
     };
     return (
         <div className="adyen-checkout__open-invoice">
-            {props.showFormInstruction && <FormInstruction />}
+            <FormInstruction />
+
             {activeFieldsets.companyDetails && (
                 <CompanyDetails
                     data={props.data.companyDetails}

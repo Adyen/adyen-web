@@ -2,12 +2,12 @@ import { ComponentChild, render } from 'preact';
 import getProp from '../../../utils/getProp';
 import uuid from '../../../utils/uuid';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
+import { ANALYTICS_RENDERED_STR } from '../../../core/Analytics/constants';
 
 import type { ICore } from '../../../core/types';
 import type { BaseElementProps, IBaseElement } from './types';
 import type { PaymentData } from '../../../types/global-types';
-import { AnalyticsInitialEvent, SendAnalyticsObject } from '../../../core/Analytics/types';
-import { ANALYTICS_RENDERED_STR } from '../../../core/Analytics/constants';
+import type { AnalyticsInitialEvent, SendAnalyticsObject } from '../../../core/Analytics/types';
 
 /**
  * Verify if the first parameter is instance of Core.
@@ -20,15 +20,15 @@ function assertIsCoreInstance(checkout: ICore): checkout is ICore {
     return isCoreObject;
 }
 
-class BaseElement<P extends BaseElementProps> implements IBaseElement {
+abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
     public readonly _id = `${this.constructor['type']}-${uuid()}`;
+    public readonly core: ICore;
 
     public props: P;
     public state: any = {};
     public _component;
 
     protected _node: HTMLElement = null;
-    protected readonly core: ICore;
 
     protected static defaultProps = {};
 
@@ -61,9 +61,6 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
     /**
      * Executed on the `data` getter.
      * Returns the component data necessary for the /payments request
-     *
-     * TODO: Replace 'any' by type PaymentMethodData<T> - this change requires updating all payment methods,
-     *       properly adding the type of the formatData function
      */
     protected formatData(): any {
         return {};
@@ -92,8 +89,8 @@ class BaseElement<P extends BaseElementProps> implements IBaseElement {
         const useAnalytics = !!getProp(this.props, 'modules.analytics.getEnabled')?.();
         const checkoutAttemptId = useAnalytics ? getProp(this.props, 'modules.analytics.getCheckoutAttemptId')?.() : 'do-not-track';
         const order = this.state.order || this.props.order;
-
         const componentData = this.formatData();
+
         if (componentData.paymentMethod && checkoutAttemptId) {
             componentData.paymentMethod.checkoutAttemptId = checkoutAttemptId;
         }

@@ -23,5 +23,4 @@ export interface EcontextConfiguration extends UIElementProps {
     reference?: string;
     personalDetailsRequired?: boolean;
     data?: PersonalDetailsSchema;
-    showFormInstruction?: boolean;
 }

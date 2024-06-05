@@ -11,10 +11,6 @@ import { BacsElementData } from './types';
 class BacsElement extends UIElement<VoucherConfiguration> {
     public static type = TxVariants.directdebit_GB;
 
-    protected static defaultProps = {
-        showFormInstruction: true
-    };
-
     formatData(): BacsElementData {
         return {
             paymentMethod: {

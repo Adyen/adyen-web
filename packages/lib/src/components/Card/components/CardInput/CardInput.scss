@@ -105,7 +105,7 @@
 }
 
 .adyen-checkout__card__holderName:first-child {
-    margin: 0 0 var(--adyen-checkout-input-field-label-margin-bottom);
+    margin: 0 0 var(--adyen-checkout-spacer-060);
 }
 
 /* Hide card brand icon when cardNumber is in an error state */

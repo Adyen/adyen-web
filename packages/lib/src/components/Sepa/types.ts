@@ -8,6 +8,4 @@ export interface SepaElementData {
     };
 }
 
-export interface SepaConfiguration extends UIElementProps {
-    showFormInstruction?: boolean;
-}
+export interface SepaConfiguration extends UIElementProps {}

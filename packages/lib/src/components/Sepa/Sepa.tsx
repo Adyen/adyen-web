@@ -10,10 +10,6 @@ import type { ICore } from '../../core/types';
 class SepaElement extends UIElement<SepaConfiguration> {
     public static type = TxVariants.sepadirectdebit;
 
-    protected static defaultProps = {
-        showFormInstruction: true
-    };
-
     constructor(checkout: ICore, props?: SepaConfiguration) {
         super(checkout, props);
         this.state = { ...this.state, ...{ data: { ibanNumber: '', ownerName: '' } } };
@@ -52,7 +48,8 @@ class SepaElement extends UIElement<SepaConfiguration> {
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                {this.props.showFormInstruction && <FormInstruction />}
+                <FormInstruction />
+
                 {/* @ts-ignore TODO: add props */}
                 <IbanInput
                     ref={ref => {

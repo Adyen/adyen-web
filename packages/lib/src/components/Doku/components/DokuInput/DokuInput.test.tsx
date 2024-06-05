@@ -18,12 +18,7 @@ describe('DokuInput', () => {
         expect(await screen.findByText('First name')).toBeTruthy();
         expect(await screen.findByText('Last name')).toBeTruthy();
         expect(await screen.findByText('Email address')).toBeTruthy();
-        expect(screen.queryByText(/All fields are required unless marked otherwise./i)).toBeNull();
+        expect(screen.queryByText(/All fields are required unless marked otherwise./i)).toBeVisible();
         expect(screen.queryByText(/Confirm purchase/i)).toBeNull();
-    });
-
-    test('should render FormInstruction if showFormInstruction sets to true', async () => {
-        customRender(<DokuInput showFormInstruction />);
-        expect(await screen.findByText(/All fields are required unless marked otherwise./i)).toBeTruthy();
     });
 });

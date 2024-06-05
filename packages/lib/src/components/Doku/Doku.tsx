@@ -24,10 +24,6 @@ export class DokuElement extends UIElement<VoucherConfiguration> {
         TxVariants.doku_wallet
     ];
 
-    protected static defaultProps = {
-        showFormInstruction: true
-    };
-
     get isValid() {
         return !!this.state.isValid;
     }

@@ -152,7 +152,7 @@ describe('CardInput > holderName', () => {
         // eslint-disable-next-line testing-library/no-node-access
         const children = select.children;
 
-        const positionDiv = children.item(0);
+        const positionDiv = children.item(1);
         // eslint-disable-next-line testing-library/no-node-access
         const positionDivChildren = positionDiv.children;
 
@@ -186,7 +186,7 @@ describe('CardInput > holderName', () => {
         // eslint-disable-next-line testing-library/no-node-access
         const children = select.children;
 
-        const positionDiv = children.item(0);
+        const positionDiv = children.item(1);
         // eslint-disable-next-line testing-library/no-node-access
         const positionDivChildren = positionDiv.children;
 

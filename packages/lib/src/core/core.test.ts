@@ -4,6 +4,9 @@ import BCMCMobileElement from '../components/BcmcMobile';
 import Session from './CheckoutSession';
 import { Dropin, Ach } from '../components';
 import { CheckoutSessionSetupResponse } from './CheckoutSession/types';
+import ThreeDS2DeviceFingerprint from '../components/ThreeDS2/ThreeDS2DeviceFingerprint';
+import ThreeDS2Challenge from '../components/ThreeDS2/ThreeDS2Challenge';
+import Redirect from '../components/Redirect';
 
 jest.mock('./Services/get-translations');
 
@@ -64,7 +67,7 @@ describe('Core', () => {
                 countryCode: 'US',
                 environment: 'test',
                 clientKey: 'test_123456',
-                session: { id: 'session-id', sessionData: 'session-data', countryCode: 'US' }
+                session: { id: 'session-id', sessionData: 'session-data' }
             });
 
             await checkout.initialize();
@@ -87,7 +90,7 @@ describe('Core', () => {
                 paymentMethodType: 'alipay',
                 type: 'redirect',
                 url: 'https://example.com'
-            });
+            }) as Redirect;
 
             expect(paymentAction.constructor['type']).toBe('redirect');
             expect(paymentAction.props.url).toBe('https://example.com');
@@ -109,14 +112,13 @@ describe('Core', () => {
                 type: 'threeDS2'
             };
 
-            const actionComponent = checkout.createFromAction(fingerprintAction, { challengeWindowSize: '04' });
+            const actionComponent = checkout.createFromAction(fingerprintAction, { challengeWindowSize: '04' }) as ThreeDS2DeviceFingerprint;
 
             expect(actionComponent.constructor['type']).toBe('threeDS2Fingerprint');
 
             expect(actionComponent.props.elementRef).not.toBeDefined();
             expect(actionComponent.props.showSpinner).toEqual(true);
             expect(actionComponent.props.statusType).toEqual('loading');
-
             expect(actionComponent.props.challengeWindowSize).toEqual('04');
         });
 
@@ -136,13 +138,14 @@ describe('Core', () => {
                 paymentMethodType: 'scheme'
             };
 
-            const actionComponent = checkout.createFromAction(challengeAction, { challengeWindowSize: '03' });
+            const actionComponent = checkout.createFromAction(challengeAction, { challengeWindowSize: '03' }) as ThreeDS2Challenge;
 
             expect(actionComponent.constructor['type']).toBe('threeDS2Challenge');
             expect(actionComponent.props.elementRef).not.toBeDefined();
-            expect(actionComponent.props.showSpinner).not.toBeDefined();
             expect(actionComponent.props.statusType).toEqual('custom');
             expect(actionComponent.props.challengeWindowSize).toEqual('03');
+            // @ts-ignore showSpinner should be undefined for threeDS2Challenge
+            expect(actionComponent.props.showSpinner).not.toBeDefined();
         });
     });
 
@@ -242,6 +245,8 @@ describe('Core', () => {
             );
 
             expect(paymentAction.props.onAdditionalDetails).toBe(onAdditionalDetailsCreateFromAction);
+
+            // @ts-ignore onComplete is not public method, although we call it here to test the callback
             paymentAction.onComplete({});
             expect(onAdditionalDetailsCreateFromAction).toHaveBeenCalledWith({}, expect.any(BCMCMobileElement));
         });

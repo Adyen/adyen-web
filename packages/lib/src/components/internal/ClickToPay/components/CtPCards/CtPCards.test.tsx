@@ -25,6 +25,7 @@ test('should pre selected available card', async () => {
             {
                 srcDigitalCardId: '654321',
                 panLastFour: '8902',
+                dateOfCardCreated: '2015-10-10T09:15:00.312Z',
                 dateOfCardLastUsed: '2020-05-28T08:10:02.312Z',
                 paymentCardDescriptor: 'visa',
                 panExpirationMonth: '08',
@@ -43,6 +44,7 @@ test('should pre selected available card', async () => {
             {
                 srcDigitalCardId: '123456',
                 panLastFour: '3456',
+                dateOfCardCreated: '2015-10-10T09:15:00.312Z',
                 dateOfCardLastUsed: '2022-02-16T08:10:02.312Z',
                 paymentCardDescriptor: 'mc',
                 panExpirationMonth: '12',
@@ -90,6 +92,7 @@ test('should not be able to checkout with expired card (single card)', async () 
             {
                 srcDigitalCardId: 'xxxx-yyyy',
                 panLastFour: '2024',
+                dateOfCardCreated: '2015-10-10T09:15:00.312Z',
                 dateOfCardLastUsed: '2022-09-16T08:10:02.312Z',
                 paymentCardDescriptor: 'visa',
                 panExpirationMonth: '12',
@@ -129,6 +132,7 @@ test('should not be able to checkout with expired card (card list)', async () =>
             {
                 srcDigitalCardId: '123456',
                 panLastFour: '3456',
+                dateOfCardCreated: '2015-10-10T09:15:00.312Z',
                 dateOfCardLastUsed: '2021-02-16T08:10:02.312Z',
                 paymentCardDescriptor: 'mc',
                 panExpirationMonth: '05',
@@ -147,6 +151,7 @@ test('should not be able to checkout with expired card (card list)', async () =>
             {
                 srcDigitalCardId: '654321',
                 panLastFour: '8902',
+                dateOfCardCreated: '2015-10-10T09:15:00.312Z',
                 dateOfCardLastUsed: '2020-05-28T08:10:02.312Z',
                 paymentCardDescriptor: 'visa',
                 panExpirationMonth: '08',
@@ -200,6 +205,7 @@ test('should be able to checkout (card list)', async () => {
             {
                 srcDigitalCardId: '654321',
                 panLastFour: '8902',
+                dateOfCardCreated: '2015-10-10T09:15:00.312Z',
                 dateOfCardLastUsed: '2022-09-28T08:10:02.312Z',
                 paymentCardDescriptor: 'visa',
                 panExpirationMonth: '12',
@@ -218,6 +224,7 @@ test('should be able to checkout (card list)', async () => {
             {
                 srcDigitalCardId: '123456',
                 panLastFour: '3456',
+                dateOfCardCreated: '2015-10-10T09:15:00.312Z',
                 dateOfCardLastUsed: '2022-09-16T08:10:02.312Z',
                 paymentCardDescriptor: 'mc',
                 panExpirationMonth: '08',
@@ -268,6 +275,7 @@ test('should be able to checkout (single card)', async () => {
             {
                 srcDigitalCardId: 'xxxx-yyyy',
                 panLastFour: '2024',
+                dateOfCardCreated: '2015-10-10T09:15:00.312Z',
                 dateOfCardLastUsed: '2022-09-16T08:10:02.312Z',
                 paymentCardDescriptor: 'visa',
                 panExpirationMonth: '12',

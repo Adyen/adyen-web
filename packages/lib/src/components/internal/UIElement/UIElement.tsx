@@ -9,7 +9,6 @@ import { ANALYTICS_SUBMIT_STR } from '../../../core/Analytics/constants';
 
 import type { AnalyticsInitialEvent, SendAnalyticsObject } from '../../../core/Analytics/types';
 import type { CoreConfiguration, ICore } from '../../../core/types';
-import type { NewableComponent } from '../../../core/core.registry';
 import type { ComponentMethodsRef, IUIElement, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
 import type { CheckoutSessionDetailsResponse, CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
 import type {
@@ -24,6 +23,7 @@ import type {
     RawPaymentResponse
 } from '../../../types/global-types';
 import type { IDropin } from '../../Dropin/types';
+import type { NewableComponent } from '../../../core/core.registry';
 
 import './UIElement.scss';
 
@@ -44,10 +44,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     constructor(checkout: ICore, props?: P) {
         super(checkout, props);
 
-        // Only register UIElements that have the 'type' set. Drop-in for example does not have.
-        if (this.constructor['type']) {
-            this.core.register(this.constructor as NewableComponent);
-        }
+        this.core.register(this.constructor as NewableComponent);
 
         this.submit = this.submit.bind(this);
         this.setState = this.setState.bind(this);
@@ -123,13 +120,16 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         return this;
     }
 
-    protected onChange(): object {
-        const isValid = this.isValid;
-        const state = { data: this.data, errors: this.state.errors, valid: this.state.valid, isValid };
-
-        this.props.onChange?.(state, this.elementRef);
-
-        return state;
+    protected onChange(): void {
+        this.props.onChange?.(
+            {
+                data: this.data,
+                isValid: this.isValid,
+                errors: this.state.errors,
+                valid: this.state.valid
+            },
+            this.elementRef
+        );
     }
 
     // Only called once, for UIElements (including Dropin), as they are being mounted
@@ -298,7 +298,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         }
     }
 
-    public handleAction(action: PaymentAction, props = {}): UIElement<P> | null {
+    public handleAction(action: PaymentAction, props = {}): UIElement | null {
         if (!action || !action.type) {
             if (hasOwnProperty(action, 'action') && hasOwnProperty(action, 'resultCode')) {
                 throw new Error(

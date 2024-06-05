@@ -8,7 +8,6 @@ export type CustomCardConfiguration = Omit<
     | 'fundingSource'
     | 'positionHolderNameOnTop'
     | 'showBrandIcon'
-    | 'showFormInstruction'
     | 'enableStoreDetails'
     | 'hideCVC'
     | 'hasCVC'

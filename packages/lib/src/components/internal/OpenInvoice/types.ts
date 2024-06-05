@@ -41,7 +41,6 @@ export interface OpenInvoiceProps extends UIElementProps {
     deliveryAddressRequiredFields?: string[];
     deliveryAddressSpecification?: OpenInvoiceAddressSpecification;
     setComponentRef?: (ref) => void;
-    showFormInstruction?: boolean;
 }
 
 export interface OpenInvoiceStateData {

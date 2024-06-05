@@ -183,11 +183,11 @@
     }
 
     &__icon {
-        margin-right: var(--adyen-checkout-spacer-060);
+        margin-right: var(--adyen-checkout-spacer-040);
 
         [dir='rtl'] & {
             margin-right: 0;
-            margin-left: var(--adyen-checkout-spacer-060);
+            margin-left: var(--adyen-checkout-spacer-040);
         }
     }
 

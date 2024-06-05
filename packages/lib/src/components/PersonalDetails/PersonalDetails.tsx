@@ -6,16 +6,10 @@ import { TxVariants } from '../tx-variants';
 import FormInstruction from '../internal/FormInstruction';
 import { UIElementProps } from '../internal/UIElement/types';
 
-interface PersonalDetailsConfiguration extends UIElementProps {
-    showFormInstruction?: boolean;
-}
+interface PersonalDetailsConfiguration extends UIElementProps {}
 
 export class PersonalDetailsElement extends UIElement<PersonalDetailsConfiguration> {
     public static type = TxVariants.personal_details;
-
-    protected static defaultProps = {
-        showFormInstruction: true
-    };
 
     get data() {
         return this.state.data;
@@ -28,7 +22,7 @@ export class PersonalDetailsElement extends UIElement<PersonalDetailsConfigurati
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                {this.props.showFormInstruction && <FormInstruction />}
+                <FormInstruction />
                 <PersonalDetails
                     setComponentRef={this.setComponentRef}
                     {...this.props}

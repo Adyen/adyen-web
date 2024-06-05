@@ -68,28 +68,12 @@ describe('Econtext: EcontextInput', () => {
         expect(wrapper.find('FormInstruction')).toHaveLength(0);
     });
 
-    test('hide form instruction if showFormInstruction sets to false', () => {
-        const wrapper = mount(
-            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-                <EcontextInput
-                    {...requiredPropsFromUiElement}
-                    showFormInstruction={false}
-                    onChange={jest.fn()}
-                    onSubmit={jest.fn()}
-                    payButton={() => <button className="pay-button" />}
-                />
-            </CoreProvider>
-        );
-        expect(wrapper.find('FormInstruction')).toHaveLength(0);
-    });
-
-    test('show form instruction if personalDetailsRequired and showFormInstruction set to true', () => {
+    test('show form instruction if personalDetailsRequired is set to true', () => {
         const wrapper = mount(
             <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
                 <EcontextInput
                     {...requiredPropsFromUiElement}
                     personalDetailsRequired
-                    showFormInstruction
                     onChange={jest.fn()}
                     onSubmit={jest.fn()}
                     payButton={() => <button className="pay-button" />}

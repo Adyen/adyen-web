@@ -1,5 +1,9 @@
-import { CustomTranslations } from '../language/types';
-import {
+import Session from './CheckoutSession';
+import PaymentMethods from './ProcessResponse/PaymentMethods';
+import AdyenCheckoutError from './Errors/AdyenCheckoutError';
+import UIElement from '../components/internal/UIElement';
+import type { CustomTranslations } from '../language/types';
+import type {
     PaymentAmountExtended,
     Order,
     PaymentAction,
@@ -9,28 +13,26 @@ import {
     PaymentMethodsRequestData,
     SessionsResponse,
     ResultCode,
-    AdditionalDetailsStateData
+    AdditionalDetailsStateData,
+    PaymentData,
+    AddressData
 } from '../types/global-types';
-import { AnalyticsOptions } from './Analytics/types';
-import { RiskModuleOptions } from './RiskModule/RiskModule';
-import UIElement from '../components/internal/UIElement/UIElement';
-import AdyenCheckoutError from './Errors/AdyenCheckoutError';
-import { onBalanceCheckCallbackType, onOrderRequestCallbackType } from '../components/Giftcard/types';
-import { SRPanelConfig } from './Errors/types';
-import { NewableComponent } from './core.registry';
-import Session from './CheckoutSession';
-import PaymentMethods from './ProcessResponse/PaymentMethods';
-import { onOrderCancelType } from '../components/Dropin/types';
+import type { AnalyticsOptions } from './Analytics/types';
+import type { RiskModuleOptions } from './RiskModule/RiskModule';
+import type { onBalanceCheckCallbackType, onOrderRequestCallbackType } from '../components/Giftcard/types';
+import type { SRPanelConfig } from './Errors/types';
+import type { NewableComponent } from './core.registry';
+import type { onOrderCancelType } from '../components/Dropin/types';
 
 export interface ICore {
     initialize(): Promise<ICore>;
     register(...items: NewableComponent[]): void;
     update(options: CoreConfiguration): Promise<ICore>;
     remove(component): ICore;
-    submitDetails(details: any): void;
+    submitDetails(details: AdditionalDetailsStateData['data']): void;
     getCorePropsForComponent(): any;
     getComponent(txVariant: string): NewableComponent | undefined;
-    createFromAction(action: PaymentAction, options: any): any;
+    createFromAction(action: PaymentAction, options: any): UIElement;
     storeElementReference(element: UIElement): void;
     options: CoreConfiguration;
     paymentMethodsResponse: PaymentMethods;
@@ -39,10 +41,22 @@ export interface ICore {
 
 export type AdyenEnvironment = 'test' | 'live' | 'live-us' | 'live-au' | 'live-apse' | 'live-in' | string;
 
+export type PaymentCompletedData = SessionsResponse | { resultCode: ResultCode; donationToken?: string };
+
+export type PaymentFailedData = SessionsResponse | { resultCode: ResultCode };
+
 export interface CoreConfiguration {
-    session?: any;
     /**
-     * Use test. When you're ready to accept live payments, change the value to one of our {@link https://docs.adyen.com/checkout/drop-in-web#testing-your-integration | live environments}.
+     * The payment session object from your call to /sessions.
+     */
+    session?: {
+        id: string;
+        sessionData: string;
+        shopperEmail?: string;
+        telephoneNumber?: string;
+    };
+    /**
+     * Use 'test'. When you're ready to accept live payments, change the value to one of our {@link https://docs.adyen.com/checkout/drop-in-web#testing-your-integration | live environments}.
      */
     environment?: AdyenEnvironment;
 
@@ -119,6 +133,14 @@ export interface CoreConfiguration {
      */
     exposeLibraryMetadata?: boolean;
 
+    /**
+     * Called before the page redirect happens.
+     * Allows you to perform any sort of action before redirecting the shopper to another page.
+     *
+     * @param resolve
+     * @param reject
+     * @param redirectData
+     */
     beforeRedirect?(
         resolve: () => void,
         reject: () => void,
@@ -129,11 +151,23 @@ export interface CoreConfiguration {
         }
     ): void;
 
+    /**
+     * Called when the shopper selects the Pay button (it only works on Sessions flow)
+     *
+     * Allows you to add details which will be sent in the payment request to Adyen's servers.
+     * For example, you can add shopper details like 'billingAddress', 'deliveryAddress', 'shopperEmail' or 'shopperName'
+     *
+     * @param state
+     * @param component
+     * @param actions
+     */
     beforeSubmit?(
-        state: any,
-        element: UIElement,
+        state: PaymentData,
+        component: UIElement,
         actions: {
-            resolve: (data: any) => void;
+            resolve: (
+                data: PaymentData & { billingAddress?: AddressData; deliveryAddress?: AddressData; shopperEmail?: string; shopperName?: string }
+            ) => void;
             reject: () => void;
         }
     ): void;
@@ -144,9 +178,9 @@ export interface CoreConfiguration {
      * The first parameter is the sessions response (when using sessions flow), or the result code.
      *
      * @param data
-     * @param element
+     * @param component
      */
-    onPaymentCompleted?(data: SessionsResponse | { resultCode: ResultCode; donationToken?: string }, element?: UIElement): void;
+    onPaymentCompleted?(data: PaymentCompletedData, component?: UIElement): void;
 
     /**
      * Called when the payment fails.
@@ -155,13 +189,26 @@ export interface CoreConfiguration {
      * with an object. (Ex: 'action.reject(obj)' ). Otherwise, it will be empty.
      *
      * @param data - session response or resultCode. It can also be undefined if payment was rejected without argument ('action.reject()')
-     * @param element
+     * @param component
      */
-    onPaymentFailed?(data?: SessionsResponse | { resultCode: ResultCode }, element?: UIElement): void;
+    onPaymentFailed?(data?: PaymentFailedData, component?: UIElement): void;
 
+    /**
+     * Callback used in the Advanced flow to perform the /payments API call
+     *
+     * The payment response must be passed to the 'resolve' function, even if the payment wasn't authorized (Ex: resultCode = Refused).
+     * The 'reject' should be used only if a critical error occurred.
+     *
+     * @param state
+     * @param component
+     * @param actions
+     */
     onSubmit?(
-        state: any,
-        element: UIElement,
+        state: {
+            data: PaymentData;
+            isValid: boolean;
+        },
+        component: UIElement,
         actions: {
             resolve: (response: CheckoutAdvancedFlowResponse) => void;
             reject: (error?: Pick<CheckoutAdvancedFlowResponse, 'error'>) => void;
@@ -171,29 +218,72 @@ export interface CoreConfiguration {
     /**
      * Callback used in the Advanced flow to perform the /payments/details API call.
      *
+     * The payment response must be passed to the 'resolve' function, even if the payment wasn't authorized (Ex: resultCode = Refused).
+     * The 'reject' should be used only if a critical error occurred.
+     *
      * @param state
-     * @param element - Component submitting details. It is undefined when using checkout.submitDetails()
+     * @param component - Component submitting details. It is undefined when using checkout.submitDetails()
      * @param actions
      */
     onAdditionalDetails?(
         state: AdditionalDetailsStateData,
-        element: UIElement,
+        component: UIElement,
         actions: {
             resolve: (response: CheckoutAdvancedFlowResponse) => void;
             reject: () => void;
         }
     ): void;
 
-    onActionHandled?(data: ActionHandledReturnObject): void;
+    /**
+     * Callback called when an action (for example a QR code or 3D Secure 2 authentication screen) is shown to the shopper.
+     *
+     * @param actionHandled
+     */
+    onActionHandled?(actionHandled: ActionHandledReturnObject): void;
 
-    onChange?(state: any, element: UIElement): void;
+    onChange?(
+        state: {
+            data: PaymentData;
+            isValid: boolean;
+            valid?: {
+                [fieldKey: string]: boolean;
+            };
+            errors?: {
+                [fieldKey: string]: {
+                    isValid: boolean;
+                    errorMessage: string;
+                    errorI18n: string;
+                    error: string;
+                    rootNode: HTMLElement;
+                };
+            };
+        },
+        component: UIElement
+    ): void;
 
-    onError?(error: AdyenCheckoutError, element?: UIElement): void;
+    /**
+     * Callback called in two different scenarios:
+     * - when a critical error happened (network error; implementation error; script failed to load)
+     * - when the shopper cancels the payment flow in payment methods that have an overlay (GooglePay, PayPal, ApplePay)
+     *
+     * @param error
+     * @param component
+     */
+    onError?(error: AdyenCheckoutError, component?: UIElement): void;
 
     onBalanceCheck?: onBalanceCheckCallbackType;
 
     onOrderRequest?: onOrderRequestCallbackType;
 
+    /**
+     * Callback called when it is required to fetch/update the payment methods list.
+     * It is currently used mainly on Giftcard flow (Partial orders), since the payment method list might change depending on the amount left to be paid
+     *
+     * The /paymentMethods response must be passed to the 'resolve' function
+     *
+     * @param data
+     * @param actions
+     */
     onPaymentMethodsRequest?(
         data: PaymentMethodsRequestData,
         actions: { resolve: (response: PaymentMethodsResponse) => void; reject: () => void }
