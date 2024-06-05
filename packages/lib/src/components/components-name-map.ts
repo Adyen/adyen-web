@@ -112,7 +112,6 @@ const ComponentsNameMap = {
     [TxVariants.multibanco]: 'Multibanco',
     [TxVariants.redirect]: 'Redirect',
     [TxVariants.twint]: 'Twint',
-    [TxVariants.ideal]: 'Ideal',
     [TxVariants.vipps]: 'Vipps',
     [TxVariants.trustly]: 'Trustly',
     /** Redirect */

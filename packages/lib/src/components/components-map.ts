@@ -45,7 +45,6 @@ import Address from './Address';
 import PersonalDetails from './PersonalDetails';
 import Klarna from './Klarna';
 import Twint from './Twint';
-import Ideal from './Ideal';
 import MealVoucherFR from './MealVoucherFR';
 import OnlineBankingIN from './OnlineBankingIN';
 import OnlineBankingPL from './OnlineBankingPL';
@@ -176,7 +175,6 @@ export const ComponentsMap = {
     [TxVariants.twint]: Twint,
     [TxVariants.vipps]: Vipps,
     [TxVariants.trustly]: Trustly,
-    [TxVariants.ideal]: Ideal,
     /** Redirect */
 
     /** Klarna */
