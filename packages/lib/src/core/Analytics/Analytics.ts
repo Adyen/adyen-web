@@ -1,4 +1,3 @@
-import LogEvent from '../Services/analytics/log-event';
 import CollectId from '../Services/analytics/collect-id';
 import EventsQueue, { EventsQueueModule } from './EventsQueue';
 import { ANALYTICS_EVENT, AnalyticsInitialEvent, AnalyticsObject, AnalyticsProps, CreateAnalyticsEventObject } from './types';
@@ -9,20 +8,17 @@ import { createAnalyticsObject, processAnalyticsData } from './utils';
 import { analyticsPreProcessor } from './analyticsPreProcessor';
 
 let capturedCheckoutAttemptId = null;
-let hasLoggedPixel = false;
 let sendEventsTimerId = null;
 
-const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analyticsContext, bundleType }: AnalyticsProps): AnalyticsModule => {
+const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bundleType }: AnalyticsProps): AnalyticsModule => {
     const defaultProps = {
         enabled: true,
-        telemetry: true,
         checkoutAttemptId: null,
         analyticsData: {}
     };
 
     const props = { ...defaultProps, ...analytics };
 
-    const logEvent = LogEvent({ loadingContext, locale });
     const collectId = CollectId({ analyticsContext, clientKey, locale, amount, analyticsPath: ANALYTICS_PATH, bundleType });
     const eventsQueue: EventsQueueModule = EventsQueue({ analyticsContext, clientKey, analyticsPath: ANALYTICS_PATH });
 
@@ -66,30 +62,20 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
          * @param initialEvent -
          */
         setUp: async (initialEvent: AnalyticsInitialEvent) => {
-            const { enabled, payload, telemetry } = props; // TODO what is payload, is it ever used?
+            const { enabled, payload } = props; // TODO what is payload, is it ever used?
 
             const analyticsData = processAnalyticsData(props.analyticsData);
 
-            if (enabled === true) {
-                if (telemetry === true && !capturedCheckoutAttemptId) {
-                    try {
-                        const checkoutAttemptId = await collectId({
-                            ...initialEvent,
-                            ...(payload && { ...payload }),
-                            ...(Object.keys(analyticsData).length && { ...analyticsData })
-                        });
-                        capturedCheckoutAttemptId = checkoutAttemptId;
-                    } catch (e) {
-                        console.warn(`Fetching checkoutAttemptId failed.${e ? ` Error=${e}` : ''}`);
-                    }
-                }
-
-                if (!hasLoggedPixel) {
-                    // Log pixel
-                    // TODO once we stop using the pixel we can stop requiring both "enabled" & "telemetry" config options.
-                    //  And v6 will have a "level: 'none" | "all" | "minimal" config prop
-                    logEvent(initialEvent);
-                    hasLoggedPixel = true;
+            if (enabled === true && !capturedCheckoutAttemptId) {
+                try {
+                    const checkoutAttemptId = await collectId({
+                        ...initialEvent,
+                        ...(payload && { ...payload }),
+                        ...(Object.keys(analyticsData).length && { ...analyticsData })
+                    });
+                    capturedCheckoutAttemptId = checkoutAttemptId;
+                } catch (e) {
+                    console.warn(`Fetching checkoutAttemptId failed.${e ? ` Error=${e}` : ''}`);
                 }
             }
         },
