@@ -143,6 +143,7 @@ const test = base.extend<Fixture>({
 
 const useDropinPage = async (page: Page, use: any, PageType: any = DropinPage) => {
     const dropinPage = new PageType(page);
+    await dropinPage.goto();
     await use(dropinPage);
 };
 

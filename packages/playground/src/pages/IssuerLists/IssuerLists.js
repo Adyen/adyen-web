@@ -1,6 +1,5 @@
 import {
     AdyenCheckout,
-    Ideal,
     BillDeskOnline,
     BillDeskWallet,
     PayuCashcard,
@@ -8,7 +7,8 @@ import {
     Dotpay,
     OnlineBankingPL,
     MolPayEBankingMY,
-    PayByBank
+    PayByBank,
+    Redirect
 } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 
@@ -37,9 +37,7 @@ import '../../style.scss';
     });
 
     // iDEAL
-    window.ideal = new Ideal(window.core, {
-        highlightedIssuers: ['1121', '1154', '1152']
-    }).mount('.ideal-field');
+    window.ideal = new Redirect(window.core, { type: 'ideal' }).mount('.ideal-field');
 
     // BillDesk Online
     window.billdesk_online = new BillDeskOnline(window.core).mount('.billdesk_online-field');
