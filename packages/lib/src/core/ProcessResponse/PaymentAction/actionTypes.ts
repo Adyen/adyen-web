@@ -43,6 +43,10 @@ const actionTypes = {
     threeDS2: (core: ICore, registry, action: PaymentAction, props) => {
         const componentType = action.subtype === 'fingerprint' ? 'threeDS2DeviceFingerprint' : 'threeDS2Challenge';
 
+        /**
+         * NOTE: the isMDFlow prop comes from the options object, added within the MDFlow when it calls createFromAction(action, options) to initiate a 3DS2 component
+         * It replaces the useOriginalFlow config prop that the MDFlow used to pass when directly initiating the threeDS2Fingerprint or threeDS2Challenge components
+         */
         const paymentData = action.subtype === 'fingerprint' || props.isMDFlow ? action.paymentData : action.authorisationToken;
 
         const config = {
