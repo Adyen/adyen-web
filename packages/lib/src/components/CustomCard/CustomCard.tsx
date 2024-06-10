@@ -111,7 +111,7 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
     };
 
     private onEnterKeyDown = (obj: CbObjOnEnterKey) => {
-        this.props.onEnterKeyDown(obj);
+        this.props.onEnterKeyDown?.(obj);
     };
 
     render() {

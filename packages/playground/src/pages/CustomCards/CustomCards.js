@@ -93,6 +93,10 @@ const initCheckout = async () => {
         onChange,
         onValidationError: errors => {
             errors.forEach(setCCErrors);
+        },
+        onEnterKeyDown: obj => {
+            payBtn.focus();
+            payBtn.click();
         }
         // brandsConfiguration: {
         //     synchrony_plcc: {
@@ -107,7 +111,7 @@ const initCheckout = async () => {
         // }
     }).mount('.secured-fields');
 
-    createPayButton('.secured-fields', window.customCard, 'customcard');
+    const payBtn = createPayButton('.secured-fields', window.customCard, 'customcard');
 
     window.customCardSi =
         showOtherExamples &&
