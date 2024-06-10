@@ -102,8 +102,8 @@ describe('Testing CSFs setupSecuredField functionality', () => {
                 MySecuredField.onAutoCompleteCallback = cbFn;
                 return MySecuredField;
             },
-            onEnterKey: cbFn => {
-                MySecuredField.onEnterKeyCallback = cbFn;
+            onEnterKeyPressed: cbFn => {
+                MySecuredField.onEnterKeyPressedCallback = cbFn;
                 return MySecuredField;
             }
         };
