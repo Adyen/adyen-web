@@ -4,7 +4,7 @@ import { CoreProvider } from '../../core/Context/CoreProvider';
 import collectBrowserInfo from '../../utils/browserInfo';
 import { BinLookupResponse, CardElementData, CardConfiguration } from './types';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
-import { CbObjOnBinLookup, CbObjOnConfigSuccess, CbObjOnFocus } from '../internal/SecuredFields/lib/types';
+import { CbObjOnBinLookup, CbObjOnConfigSuccess, CbObjOnEnterKey, CbObjOnFocus } from '../internal/SecuredFields/lib/types';
 import { fieldTypeToSnakeCase, reject } from '../internal/SecuredFields/utils';
 import { hasValidInstallmentsObject } from './components/CardInput/utils';
 import createClickToPayService from '../internal/ClickToPay/services/create-clicktopay-service';
@@ -74,7 +74,6 @@ export class CardElement extends UIElement<CardConfiguration> {
 
     public setPayButtonRef = ref => {
         this.payButtonRef = ref;
-        console.log('### Card::setPayButtonRef:: this.payButtonRef', this.payButtonRef);
     };
 
     formatProps(props: CardConfiguration) {
@@ -331,7 +330,7 @@ export class CardElement extends UIElement<CardConfiguration> {
         return collectBrowserInfo();
     }
 
-    private onEnterKeyDown = () => {
+    private onEnterKeyDown = (obj: CbObjOnEnterKey) => {
         this.payButtonRef.buttonElRef.focus();
         this.payButtonRef.onClick(new Event('click'));
     };

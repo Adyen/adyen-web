@@ -21,6 +21,7 @@ export type CustomCardConfiguration = Omit<
     | 'configuration'
 > & {
     onValidationError?: (validationErrors: ValidationError[]) => void;
+    onEnterKeyDown?: (o) => {};
 };
 
 export type ValidationError = SFError & {

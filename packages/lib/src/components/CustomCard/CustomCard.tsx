@@ -4,7 +4,7 @@ import CustomCardInput from './CustomCardInput';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import collectBrowserInfo from '../../utils/browserInfo';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
-import { CbObjOnBinLookup, CbObjOnFocus } from '../internal/SecuredFields/lib/types';
+import { CbObjOnBinLookup, CbObjOnEnterKey, CbObjOnFocus } from '../internal/SecuredFields/lib/types';
 import { BrandObject } from '../Card/types';
 import { getCardImageUrl } from '../internal/SecuredFields/utils';
 import { TxVariants } from '../tx-variants';
@@ -110,6 +110,10 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
         this.props.onFocus?.(obj);
     };
 
+    private onEnterKeyDown = (obj: CbObjOnEnterKey) => {
+        this.props.onEnterKeyDown(obj);
+    };
+
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
@@ -119,6 +123,7 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
                     }}
                     {...this.props}
                     {...this.state}
+                    onEnterKeyDown={this.onEnterKeyDown}
                     rootNode={this._node}
                     onChange={this.setState}
                     onBinValue={this.onBinValue}

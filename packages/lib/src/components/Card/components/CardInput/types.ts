@@ -2,7 +2,7 @@ import Language from '../../../../language/Language';
 import { BinLookupResponse, BrandConfiguration, CardBrandsConfiguration, CardBackendConfiguration, DualBrandSelectElement } from '../../types';
 import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
-import { CVCPolicyType, DatePolicyType } from '../../../internal/SecuredFields/lib/types';
+import { CbObjOnEnterKey, CVCPolicyType, DatePolicyType } from '../../../internal/SecuredFields/lib/types';
 import Specifications from '../../../internal/Address/Specifications';
 import { AddressSchema } from '../../../internal/Address/types';
 import { CbObjOnError, StylesObject } from '../../../internal/SecuredFields/lib/types';
@@ -114,7 +114,7 @@ export interface CardInputProps {
     onFieldValid?: () => {};
     onFocus?: (e) => {};
     onLoad?: () => {};
-    onEnterKeyDown?: () => {};
+    onEnterKeyDown?: (o: CbObjOnEnterKey) => {};
     onAddressLookup?: OnAddressLookupType;
     onAddressSelected?: OnAddressSelectedType;
     addressSearchDebounceMs?: number;

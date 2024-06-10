@@ -31,6 +31,7 @@ interface SecuredFieldsProps {
     onBrand?: () => {};
     onConfigSuccess?: () => {};
     onChange: (data) => void;
+    onEnterKeyDown?: (o) => {};
     onError?: () => {};
     onFieldValid?: () => {};
     onFocus?: (e) => {};
@@ -179,6 +180,7 @@ const extractPropsForSFP = (props: SecuredFieldsProps) => {
         // onChange // set directly
         onConfigSuccess: props.onConfigSuccess,
         onError: props.onError,
+        onEnterKeyDown: props.onEnterKeyDown,
         onFieldValid: props.onFieldValid,
         onFocus: props.onFocus,
         onLoad: props.onLoad,

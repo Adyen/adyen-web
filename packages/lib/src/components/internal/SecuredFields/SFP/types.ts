@@ -1,4 +1,4 @@
-import { CVCPolicyType, DatePolicyType, StylesObject } from '../lib/types';
+import { CbObjOnEnterKey, CVCPolicyType, DatePolicyType, StylesObject } from '../lib/types';
 import { AddressData } from '../../../../types/global-types';
 import { CardBrandsConfiguration } from '../../../Card/types';
 import Language from '../../../../language';
@@ -40,7 +40,7 @@ export interface SFPProps {
     onFieldValid?: () => {};
     onFocus?: () => {};
     onLoad?: () => {};
-    onEnterKeyDown?: () => {};
+    onEnterKeyDown?: (o: CbObjOnEnterKey) => {};
     rootNode: HTMLElement; // Specific to SecuredFieldsInput
     showWarnings?: boolean;
     styles?: StylesObject;
