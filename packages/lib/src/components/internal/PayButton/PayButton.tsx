@@ -18,9 +18,10 @@ export interface PayButtonProps extends ButtonProps {
     disabled?: boolean;
     icon?: string;
     onClick?(): void;
+    setPayButtonRef?: any;
 }
 
-const PayButton = ({ amount, secondaryAmount, classNameModifiers = [], label, ...props }: PayButtonProps) => {
+const PayButton = ({ amount, secondaryAmount, classNameModifiers = [], label, setPayButtonRef, ...props }: PayButtonProps) => {
     const { i18n } = useCoreContext();
     const isZeroAuth = amount && {}.hasOwnProperty.call(amount, 'value') && amount.value === 0;
     const defaultLabel = isZeroAuth ? i18n.get('confirmPreauthorization') : payAmountLabel(i18n, amount);
@@ -39,6 +40,7 @@ const PayButton = ({ amount, secondaryAmount, classNameModifiers = [], label, ..
 
     return (
         <Button
+            ref={setPayButtonRef}
             {...props}
             disabled={props.disabled || props.status === 'loading'}
             classNameModifiers={[...classNameModifiers, 'pay']}

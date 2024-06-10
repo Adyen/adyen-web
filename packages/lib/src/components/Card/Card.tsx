@@ -13,7 +13,7 @@ import ClickToPayWrapper from './components/ClickToPayWrapper';
 import { ComponentFocusObject } from '../../types/global-types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { TxVariants } from '../tx-variants';
-import { UIElementStatus } from '../internal/UIElement/types';
+import { type ComponentMethodsRef, UIElementStatus } from '../internal/UIElement/types';
 import UIElement from '../internal/UIElement';
 import PayButton from '../internal/PayButton';
 import { PayButtonProps } from '../internal/PayButton/PayButton';
@@ -42,6 +42,8 @@ export class CardElement extends UIElement<CardConfiguration> {
      */
     private clickToPayRef = null;
 
+    private payButtonRef = null;
+
     constructor(checkout: ICore, props?: CardConfiguration) {
         super(checkout, props);
 
@@ -68,6 +70,11 @@ export class CardElement extends UIElement<CardConfiguration> {
 
     private setClickToPayRef = ref => {
         this.clickToPayRef = ref;
+    };
+
+    public setPayButtonRef = ref => {
+        this.payButtonRef = ref;
+        console.log('### Card::setPayButtonRef:: this.payButtonRef', this.payButtonRef);
     };
 
     formatProps(props: CardConfiguration) {
@@ -323,12 +330,21 @@ export class CardElement extends UIElement<CardConfiguration> {
     get browserInfo() {
         return collectBrowserInfo();
     }
+
+    private onEnterKeyDown = () => {
+        // this.submit();
+
+        this.payButtonRef.base.focus();
+        this.payButtonRef.onClick(new Event('click'));
+    };
+
     // Override
     protected payButton = (props: PayButtonProps) => {
         const isZeroAuth = this.props.amount?.value === 0;
         const isStoredCard = this.props.storedPaymentMethodId?.length > 0;
         return (
             <PayButton
+                setPayButtonRef={this.setPayButtonRef}
                 {...props}
                 amount={this.props.amount}
                 secondaryAmount={this.props.secondaryAmount}
@@ -346,6 +362,7 @@ export class CardElement extends UIElement<CardConfiguration> {
                 {...this.state}
                 onChange={this.setState}
                 onSubmit={this.submit}
+                onEnterKeyDown={this.onEnterKeyDown}
                 payButton={this.payButton}
                 onBrand={this.onBrand}
                 onBinValue={this.onBinValue}
