@@ -18,7 +18,8 @@ import {
     CbObjOnFieldValid,
     CbObjOnAutoComplete,
     CbObjOnConfigSuccess,
-    CbObjOnLoad
+    CbObjOnLoad,
+    CbObjOnEnterKey
 } from '../lib/types';
 import { existy } from '../lib/utilities/commonUtils';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
@@ -221,6 +222,12 @@ function handleOnAutoComplete(cbObj: CbObjOnAutoComplete): void {
     this.props.onAutoComplete(cbObj);
 }
 
+function handleOnEnterKey(obj: CbObjOnEnterKey): void {
+    console.log('### SecuredFieldsProviderHandlers::handleOnEnterKey:: obj', obj);
+    this.showValidation();
+    // this.props.onSubmit();
+}
+
 /**
  * Handles cases where no secured fields are necessary (one click payments without CVC)
  * Automatically resolves with a valid state
@@ -239,5 +246,6 @@ export default {
     handleOnBrand,
     handleOnError,
     handleOnNoDataRequired,
-    handleOnTouchstartIOS
+    handleOnTouchstartIOS,
+    handleOnEnterKey
 };

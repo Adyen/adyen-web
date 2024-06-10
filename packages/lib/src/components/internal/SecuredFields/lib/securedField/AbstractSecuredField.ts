@@ -34,6 +34,7 @@ abstract class AbstractSecuredField {
     protected onTouchstartCallback: RtnType_callbackFn;
     protected onShiftTabCallback: RtnType_callbackFn;
     protected onAutoCompleteCallback: RtnType_callbackFn;
+    protected onEnterKeyCallback: RtnType_callbackFn;
 
     protected constructor() {
         this.sfConfig = {} as any as SecuredFieldCommonProps;

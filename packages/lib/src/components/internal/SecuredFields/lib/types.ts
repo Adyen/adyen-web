@@ -144,6 +144,11 @@ export interface CbObjOnAutoComplete {
     action: string;
 }
 
+export interface CbObjOnEnterKey {
+    fieldType: string;
+    action: string;
+}
+
 export interface CbObjOnBinValue {
     type: string;
     binValue: string;

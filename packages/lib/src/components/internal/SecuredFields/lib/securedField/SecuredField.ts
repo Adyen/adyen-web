@@ -271,6 +271,10 @@ class SecuredField extends AbstractSecuredField {
                 this.onAutoCompleteCallback(feedbackObj);
                 break;
 
+            case 'enterKeyPressed':
+                this.onEnterKeyCallback(feedbackObj);
+                break;
+
             /**
              * Validate, because action =
              *
@@ -374,6 +378,11 @@ class SecuredField extends AbstractSecuredField {
 
     onAutoComplete(callbackFn: RtnType_callbackFn): SecuredField {
         this.onAutoCompleteCallback = callbackFn;
+        return this;
+    }
+
+    onEnterKey(callbackFn: RtnType_callbackFn): SecuredField {
+        this.onEnterKeyCallback = callbackFn;
         return this;
     }
     //------------------------------------
