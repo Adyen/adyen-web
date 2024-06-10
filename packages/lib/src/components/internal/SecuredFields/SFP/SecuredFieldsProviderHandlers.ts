@@ -223,7 +223,7 @@ function handleOnAutoComplete(cbObj: CbObjOnAutoComplete): void {
 }
 
 function handleOnEnterKey(obj: CbObjOnEnterKey): void {
-    this.props.onEnterKeyDown();
+    this.props.onEnterKeyDown?.();
 }
 
 /**
