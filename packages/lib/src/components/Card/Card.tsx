@@ -13,7 +13,7 @@ import ClickToPayWrapper from './components/ClickToPayWrapper';
 import { ComponentFocusObject } from '../../types/global-types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { TxVariants } from '../tx-variants';
-import { type ComponentMethodsRef, UIElementStatus } from '../internal/UIElement/types';
+import { UIElementStatus } from '../internal/UIElement/types';
 import UIElement from '../internal/UIElement';
 import PayButton from '../internal/PayButton';
 import { PayButtonProps } from '../internal/PayButton/PayButton';
@@ -332,9 +332,7 @@ export class CardElement extends UIElement<CardConfiguration> {
     }
 
     private onEnterKeyDown = () => {
-        // this.submit();
-
-        this.payButtonRef.base.focus();
+        this.payButtonRef.buttonElRef.focus();
         this.payButtonRef.onClick(new Event('click'));
     };
 

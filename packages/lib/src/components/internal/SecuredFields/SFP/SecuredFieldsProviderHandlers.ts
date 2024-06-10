@@ -223,9 +223,6 @@ function handleOnAutoComplete(cbObj: CbObjOnAutoComplete): void {
 }
 
 function handleOnEnterKey(obj: CbObjOnEnterKey): void {
-    console.log('### SecuredFieldsProviderHandlers::handleOnEnterKey:: obj', obj);
-    // this.showValidation();
-    // this.props.onSubmit();
     this.props.onEnterKeyDown();
 }
 
