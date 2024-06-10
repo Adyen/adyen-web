@@ -5,7 +5,7 @@ import SecuredFieldsProvider from '../../internal/SecuredFields/SFP/SecuredField
 import { SFPState } from '../../internal/SecuredFields/SFP/types';
 import { BinLookupResponse, CardBrandsConfiguration } from '../../Card/types';
 import SFExtensions from '../../internal/SecuredFields/binLookup/extensions';
-import { StylesObject } from '../../internal/SecuredFields/lib/types';
+import { CbObjOnEnterKey, StylesObject } from '../../internal/SecuredFields/lib/types';
 import { Resources } from '../../../core/Context/Resources';
 import { Placeholders, SFError } from '../../Card/components/CardInput/types';
 import { ValidationError } from '../types';
@@ -31,7 +31,7 @@ interface SecuredFieldsProps {
     onBrand?: () => {};
     onConfigSuccess?: () => {};
     onChange: (data) => void;
-    onEnterKeyDown?: (o) => {};
+    onEnterKeyDown?: (o: CbObjOnEnterKey) => void;
     onError?: () => {};
     onFieldValid?: () => {};
     onFocus?: (e) => {};

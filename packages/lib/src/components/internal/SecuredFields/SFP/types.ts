@@ -40,7 +40,7 @@ export interface SFPProps {
     onFieldValid?: () => {};
     onFocus?: () => {};
     onLoad?: () => {};
-    onEnterKeyDown?: (o: CbObjOnEnterKey) => {};
+    onEnterKeyDown?: (o: CbObjOnEnterKey) => void;
     rootNode: HTMLElement; // Specific to SecuredFieldsInput
     showWarnings?: boolean;
     styles?: StylesObject;

@@ -101,6 +101,10 @@ describe('Testing CSFs setupSecuredField functionality', () => {
             onAutoComplete: cbFn => {
                 MySecuredField.onAutoCompleteCallback = cbFn;
                 return MySecuredField;
+            },
+            onEnterKey: cbFn => {
+                MySecuredField.onEnterKeyCallback = cbFn;
+                return MySecuredField;
             }
         };
         const SecuredFieldMock = jest.fn(() => MySecuredField);

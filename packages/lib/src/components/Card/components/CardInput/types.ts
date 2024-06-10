@@ -114,7 +114,7 @@ export interface CardInputProps {
     onFieldValid?: () => {};
     onFocus?: (e) => {};
     onLoad?: () => {};
-    onEnterKeyDown?: (o: CbObjOnEnterKey) => {};
+    onEnterKeyDown?: (o: CbObjOnEnterKey) => void;
     onAddressLookup?: OnAddressLookupType;
     onAddressSelected?: OnAddressSelectedType;
     addressSearchDebounceMs?: number;

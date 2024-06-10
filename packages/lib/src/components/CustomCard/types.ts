@@ -1,5 +1,6 @@
 import { CardConfiguration } from '../Card/types';
 import { SFError } from '../Card/components/CardInput/types';
+import { CbObjOnEnterKey } from '../internal/SecuredFields/lib/types';
 
 export type CustomCardConfiguration = Omit<
     CardConfiguration,
@@ -21,7 +22,7 @@ export type CustomCardConfiguration = Omit<
     | 'configuration'
 > & {
     onValidationError?: (validationErrors: ValidationError[]) => void;
-    onEnterKeyDown?: (o) => {};
+    onEnterKeyDown?: (o: CbObjOnEnterKey) => void;
 };
 
 export type ValidationError = SFError & {

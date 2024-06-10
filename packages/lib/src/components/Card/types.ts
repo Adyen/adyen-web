@@ -7,7 +7,8 @@ import {
     CbObjOnFocus,
     CbObjOnLoad,
     CbObjOnBinLookup,
-    StylesObject
+    StylesObject,
+    CbObjOnEnterKey
 } from '../internal/SecuredFields/lib/types';
 import { CVCPolicyType, DatePolicyType } from '../internal/SecuredFields/lib/types';
 import { ClickToPayProps } from '../internal/ClickToPay/types';
@@ -286,6 +287,8 @@ export interface CardConfiguration extends UIElementProps {
      * - merchant set config option
      */
     onConfigSuccess?: (event: CbObjOnConfigSuccess) => void;
+
+    onEnterKeyDown?: (o: CbObjOnEnterKey) => void;
 
     /**
      * Called when a field becomes valid and also if a valid field changes and becomes invalid.

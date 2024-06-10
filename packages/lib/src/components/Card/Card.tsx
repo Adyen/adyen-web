@@ -331,8 +331,10 @@ export class CardElement extends UIElement<CardConfiguration> {
     }
 
     private onEnterKeyDown = (obj: CbObjOnEnterKey) => {
-        this.payButtonRef.buttonElRef.focus();
-        this.payButtonRef.onClick(new Event('click'));
+        this.payButtonRef?.buttonElRef?.focus();
+        this.payButtonRef?.onClick(new Event('click'));
+
+        this.props.onEnterKeyDown?.(obj);
     };
 
     // Override
