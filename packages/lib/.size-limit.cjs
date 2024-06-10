@@ -36,9 +36,9 @@ module.exports = [
         running: false,
     },
     {
-        name: 'ESM - Core + Dropin with Card and Ideal',
+        name: 'ESM - Core + Dropin with Card',
         path: 'dist/es/index.js',
-        import: "{ AdyenCheckout, Dropin, Card, Ideal }",
+        import: "{ AdyenCheckout, Dropin, Card }",
         limit: '70 KB',
         running: false,
     },
