@@ -32,7 +32,14 @@ const config: StorybookConfig = {
         return mergeConfig(config, {
             define: generateEnvironmentVariables(),
             resolve: {
-                alias: { styles: resolve(__dirname, '../src/style') }
+                alias: [
+                    {
+                        // this is required for the SCSS modules
+                        find: /^~(.*)$/,
+                        replacement: '$1'
+                    },
+                    { find: /^styles(.*)$/, replacement: resolve(__dirname, '../src/styles') }
+                ]
             },
             server: {
                 watch: {
