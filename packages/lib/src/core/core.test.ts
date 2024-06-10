@@ -2,7 +2,7 @@ import { mount } from 'enzyme';
 import AdyenCheckout from './core';
 import BCMCMobileElement from '../components/BcmcMobile';
 import Session from './CheckoutSession';
-import { Dropin, Ideal } from '../components';
+import { Dropin, Ach } from '../components';
 import { CheckoutSessionSetupResponse } from './CheckoutSession/types';
 import ThreeDS2DeviceFingerprint from '../components/ThreeDS2/ThreeDS2DeviceFingerprint';
 import ThreeDS2Challenge from '../components/ThreeDS2/ThreeDS2Challenge';
@@ -19,7 +19,7 @@ const sessionSetupResponseMock: CheckoutSessionSetupResponse = {
     },
     expiresAt: '',
     paymentMethods: {
-        paymentMethods: [{ name: 'Ideal', type: 'ideal' }],
+        paymentMethods: [],
         storedPaymentMethods: []
     },
     returnUrl: '',
@@ -87,7 +87,7 @@ describe('Core', () => {
 
             const paymentAction = checkout.createFromAction({
                 method: 'GET',
-                paymentMethodType: 'ideal',
+                paymentMethodType: 'alipay',
                 type: 'redirect',
                 url: 'https://example.com'
             }) as Redirect;
@@ -164,11 +164,12 @@ describe('Core', () => {
             });
             await checkout.initialize();
 
-            const dropin = new Ideal(checkout, {
+            // @ts-ignore it's just a test
+            const comp = new Ach(checkout, {
                 onAdditionalDetails: onAdditionalDetailsComponent
             });
 
-            expect(dropin.props.onAdditionalDetails).toBe(onAdditionalDetailsComponent);
+            expect(comp.props.onAdditionalDetails).toBe(onAdditionalDetailsComponent);
         });
 
         test('should use global property as the Component property is omitted', async () => {
@@ -180,9 +181,9 @@ describe('Core', () => {
             });
             await checkout.initialize();
 
-            const dropin = new Ideal(checkout);
+            const comp = new Ach(checkout);
 
-            expect(dropin.props.onAdditionalDetails).toBe(onAdditionalDetailsGlobal);
+            expect(comp.props.onAdditionalDetails).toBe(onAdditionalDetailsGlobal);
         });
 
         test('should use prop from "paymentMethodsConfiguration" instead of global and local Component properties', async () => {
@@ -194,8 +195,8 @@ describe('Core', () => {
                 paymentMethodsResponse: {
                     paymentMethods: [
                         {
-                            name: 'iDeal',
-                            type: 'ideal'
+                            name: 'ACH Direct Debit',
+                            type: 'ach'
                         }
                     ]
                 },
@@ -206,9 +207,9 @@ describe('Core', () => {
 
             const dropin = new Dropin(checkout, {
                 onAdditionalDetails: onAdditionalDetailsComponent,
-                paymentMethodComponents: [Ideal],
+                paymentMethodComponents: [Ach],
                 paymentMethodsConfiguration: {
-                    ideal: {
+                    ach: {
                         onAdditionalDetails: onAdditionalDetailsPaymentMethodConfig
                     }
                 }
@@ -218,9 +219,9 @@ describe('Core', () => {
             const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
-            const ideal = dropin.dropinRef.state.elements[0];
+            const ach = dropin.dropinRef.state.elements[0];
 
-            expect(ideal.props.onAdditionalDetails).toBe(onAdditionalDetailsPaymentMethodConfig);
+            expect(ach.props.onAdditionalDetails).toBe(onAdditionalDetailsPaymentMethodConfig);
         });
 
         test('createFromAction - should use local property instead of global configuration property', async () => {

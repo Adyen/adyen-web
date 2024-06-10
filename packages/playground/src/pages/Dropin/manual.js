@@ -10,7 +10,6 @@ import {
     WeChat,
     Giftcard,
     AmazonPay,
-    Ideal,
     Pix,
     Bancontact
 } from '@adyen/adyen-web';
@@ -134,7 +133,7 @@ export async function initManual() {
     }
 
     const dropin = new Dropin(checkout, {
-        paymentMethodComponents: [Card, ApplePay, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay, Ideal, Pix, Bancontact],
+        paymentMethodComponents: [Card, ApplePay, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay, Pix, Bancontact],
         instantPaymentTypes: ['googlepay', 'applepay'],
         paymentMethodsConfiguration: {
             card: {

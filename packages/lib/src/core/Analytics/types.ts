@@ -42,11 +42,6 @@ export interface AnalyticsOptions {
     enabled?: boolean;
 
     /**
-     * Enable/Disable telemetry data
-     */
-    telemetry?: boolean;
-
-    /**
      * Data to be sent along with the event data
      */
     payload?: any;

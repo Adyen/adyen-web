@@ -16,7 +16,6 @@ dotenv.config();
 
 test.describe('Dropin Sessions flow', () => {
     test('#1 Should succeed in making a payment', async ({ dropinSessions_regular }) => {
-        await dropinSessions_regular.goto();
         const { dropin, page } = dropinSessions_regular;
 
         await dropin.isComponentVisible();
@@ -43,7 +42,6 @@ test.describe('Dropin Sessions flow', () => {
             `Skipping test because api version ${process.env.API_VERSION} does not support the feature`
         );
 
-        await dropinSessions_zeroAuthCard_success.goto();
         const { dropin, page } = dropinSessions_zeroAuthCard_success;
         await dropin.isComponentVisible();
 
@@ -70,7 +68,6 @@ test.describe('Dropin Sessions flow', () => {
             `Skipping test because api version ${process.env.API_VERSION} does not support the feature`
         );
 
-        await dropinSessions_zeroAuthCard_fail.goto();
         const { dropin, page } = dropinSessions_zeroAuthCard_fail;
         await dropin.isComponentVisible();
 

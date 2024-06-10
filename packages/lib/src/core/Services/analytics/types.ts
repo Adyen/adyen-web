@@ -11,8 +11,6 @@ export type CollectIdProps = Pick<AnalyticsConfig, 'clientKey' | 'analyticsConte
     bundleType: string;
 };
 
-export type LogEventProps = Pick<AnalyticsConfig, 'loadingContext' | 'locale'>;
-
 export type TelemetryEvent = {
     version: string;
     channel: 'Web';

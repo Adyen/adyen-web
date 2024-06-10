@@ -6,6 +6,15 @@ export function showAuthorised(message = 'Authorised') {
     resultElement.innerText = message;
 }
 
+export function showResult(message, isError) {
+    const resultElement = document.getElementById('result-message');
+    resultElement.classList.remove('hide');
+    if (isError) {
+        resultElement.classList.add('error');
+    }
+    resultElement.innerText = message;
+}
+
 export function handleError(obj) {
     const resultElement = document.getElementById('result-message');
     resultElement.classList.remove('hide');
