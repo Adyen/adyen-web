@@ -292,7 +292,7 @@ export interface CardConfiguration extends UIElementProps {
      * Called when the Card component detects, or is told by a securedField, that the Enter key has been pressed.
      * - merchant set config option
      */
-    onEnterKeyDown?: (o: CbObjOnEnterKey) => void;
+    onEnterKeyPressed?: (o: CbObjOnEnterKey) => void;
 
     /**
      * Called when a field becomes valid and also if a valid field changes and becomes invalid.

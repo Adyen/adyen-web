@@ -222,8 +222,8 @@ function handleOnAutoComplete(cbObj: CbObjOnAutoComplete): void {
     this.props.onAutoComplete(cbObj);
 }
 
-function handleOnEnterKey(obj: CbObjOnEnterKey): void {
-    this.props.onEnterKeyDown?.(obj);
+function handleOnEnterKeyPressed(obj: CbObjOnEnterKey): void {
+    this.props.onEnterKeyPressed?.(obj);
 }
 
 /**
@@ -245,5 +245,5 @@ export default {
     handleOnError,
     handleOnNoDataRequired,
     handleOnTouchstartIOS,
-    handleOnEnterKey
+    handleOnEnterKeyPressed
 };

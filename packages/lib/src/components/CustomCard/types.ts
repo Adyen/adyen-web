@@ -22,7 +22,7 @@ export type CustomCardConfiguration = Omit<
     | 'configuration'
 > & {
     onValidationError?: (validationErrors: ValidationError[]) => void;
-    onEnterKeyDown?: (o: CbObjOnEnterKey) => void;
+    onEnterKeyPressed?: (o: CbObjOnEnterKey) => void;
 };
 
 export type ValidationError = SFError & {

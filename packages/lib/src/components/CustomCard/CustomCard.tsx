@@ -110,8 +110,8 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
         this.props.onFocus?.(obj);
     };
 
-    private onEnterKeyDown = (obj: CbObjOnEnterKey) => {
-        this.props.onEnterKeyDown?.(obj);
+    private onEnterKeyPressed = (obj: CbObjOnEnterKey) => {
+        this.props.onEnterKeyPressed?.(obj);
     };
 
     render() {
@@ -123,7 +123,7 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
                     }}
                     {...this.props}
                     {...this.state}
-                    onEnterKeyDown={this.onEnterKeyDown}
+                    onEnterKeyPressed={this.onEnterKeyPressed}
                     rootNode={this._node}
                     onChange={this.setState}
                     onBinValue={this.onBinValue}

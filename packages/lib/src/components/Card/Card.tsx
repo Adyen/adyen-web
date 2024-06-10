@@ -330,11 +330,13 @@ export class CardElement extends UIElement<CardConfiguration> {
         return collectBrowserInfo();
     }
 
-    private onEnterKeyDown = (obj: CbObjOnEnterKey) => {
-        this.payButtonRef?.buttonElRef?.focus();
-        this.payButtonRef?.onClick(new Event('click'));
-
-        this.props.onEnterKeyDown?.(obj);
+    private onEnterKeyPressed = (obj: CbObjOnEnterKey) => {
+        if (this.props.onEnterKeyPressed) {
+            this.props.onEnterKeyPressed(obj);
+        } else {
+            this.payButtonRef?.buttonElRef?.focus();
+            this.payButtonRef?.onClick(new Event('click'));
+        }
     };
 
     // Override
@@ -361,7 +363,7 @@ export class CardElement extends UIElement<CardConfiguration> {
                 {...this.state}
                 onChange={this.setState}
                 onSubmit={this.submit}
-                onEnterKeyDown={this.onEnterKeyDown}
+                onEnterKeyPressed={this.onEnterKeyPressed}
                 payButton={this.payButton}
                 onBrand={this.onBrand}
                 onBinValue={this.onBinValue}

@@ -28,5 +28,5 @@ export function configureCallbacks(callbacksObj: CSFCallbacksConfig = {} as any 
 
     this.callbacks.onTouchstartIOS = callbacksObj.onTouchstartIOS ? callbacksObj.onTouchstartIOS : noop;
 
-    this.callbacks.onEnterKey = callbacksObj.onEnterKey ? callbacksObj.onEnterKey : noop;
+    this.callbacks.onEnterKeyPressed = callbacksObj.onEnterKeyPressed ? callbacksObj.onEnterKeyPressed : noop;
 }
