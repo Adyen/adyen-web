@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 5.66.1
+
+### Patch Changes
+
+-   For sessions /setup call, we are passing the full error object instead of hardcoded 'ERROR: Invalid ClientKey' message ([#2706](https://github.com/Adyen/adyen-web/pull/2706))
+
 ## 5.66.0
 
 ### Minor Changes
