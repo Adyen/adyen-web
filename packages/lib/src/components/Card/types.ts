@@ -7,8 +7,7 @@ import {
     CbObjOnFocus,
     CbObjOnLoad,
     CbObjOnBinLookup,
-    StylesObject,
-    CbObjOnEnterKey
+    StylesObject
 } from '../internal/SecuredFields/lib/types';
 import { CVCPolicyType, DatePolicyType } from '../internal/SecuredFields/lib/types';
 import { ClickToPayProps } from '../internal/ClickToPay/types';
@@ -287,12 +286,6 @@ export interface CardConfiguration extends UIElementProps {
      * - merchant set config option
      */
     onConfigSuccess?: (event: CbObjOnConfigSuccess) => void;
-
-    /**
-     * Called when the Card component detects, or is told by a securedField, that the Enter key has been pressed.
-     * - merchant set config option
-     */
-    onEnterKeyPressed?: (o: CbObjOnEnterKey) => void;
 
     /**
      * Called when a field becomes valid and also if a valid field changes and becomes invalid.

@@ -4,13 +4,14 @@ import CustomCardInput from './CustomCardInput';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import collectBrowserInfo from '../../utils/browserInfo';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
-import { CbObjOnBinLookup, CbObjOnEnterKey, CbObjOnFocus } from '../internal/SecuredFields/lib/types';
+import { CbObjOnBinLookup, CbObjOnFocus } from '../internal/SecuredFields/lib/types';
 import { BrandObject } from '../Card/types';
 import { getCardImageUrl } from '../internal/SecuredFields/utils';
 import { TxVariants } from '../tx-variants';
 import { CustomCardConfiguration } from './types';
 import { fieldTypeToSnakeCase } from '../internal/SecuredFields/utils';
 import { ANALYTICS_FOCUS_STR, ANALYTICS_UNFOCUS_STR } from '../../core/Analytics/constants';
+import { OnKeyPressObj } from '../internal/UIElement/types';
 
 // TODO questions about
 // brand - does a merchant ever make a custom stored card?
@@ -110,7 +111,7 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
         this.props.onFocus?.(obj);
     };
 
-    private onEnterKeyPressed = (obj: CbObjOnEnterKey) => {
+    protected onEnterKeyPressed = (obj: OnKeyPressObj) => {
         this.props.onEnterKeyPressed?.(obj);
     };
 

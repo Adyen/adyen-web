@@ -9,7 +9,7 @@ import { ANALYTICS_SUBMIT_STR } from '../../../core/Analytics/constants';
 
 import type { AnalyticsInitialEvent, SendAnalyticsObject } from '../../../core/Analytics/types';
 import type { CoreConfiguration, ICore } from '../../../core/types';
-import type { ComponentMethodsRef, IUIElement, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
+import type { ComponentMethodsRef, IUIElement, OnKeyPressObj, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
 import type { CheckoutSessionDetailsResponse, CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
 import type {
     AdditionalDetailsStateData,
@@ -28,13 +28,15 @@ import type { NewableComponent } from '../../../core/core.registry';
 import './UIElement.scss';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> implements IUIElement {
+    public static type = undefined;
+
     protected componentRef: any;
 
     protected resources: Resources;
 
     public elementRef: UIElement;
 
-    public static type = undefined;
+    private payButtonRef = null;
 
     /**
      * Defines all txVariants that the Component supports (in case it support multiple ones besides the 'type' one)
@@ -131,6 +133,10 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             this.elementRef
         );
     }
+
+    protected setPayButtonRef = ref => {
+        this.payButtonRef = ref;
+    };
 
     // Only called once, for UIElements (including Dropin), as they are being mounted
     protected setUpAnalytics(setUpAnalyticsObj: AnalyticsInitialEvent) {
@@ -384,6 +390,30 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.handleSuccessResult(response);
     }
 
+    protected handleKeyPress(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) {
+        if (e.key === 'Enter' || e.code === 'Enter') {
+            e.preventDefault(); // Prevent <form> submission if Component is placed inside a form
+
+            this.onEnterKeyPressed({ component: null, fieldType: (e.target as HTMLInputElement).name, action: 'enterKeyPressed' });
+        }
+    }
+
+    /**
+     * Handle Enter key pressed either from a UIElement (in which case this function has been called from handleKeyPress)
+     * OR from a securedField (in which case this function has been called 'directly')
+     * @param obj
+     */
+    protected onEnterKeyPressed = (obj: OnKeyPressObj) => {
+        obj.component = this; // Add component here in case this function has *not* been called from handleKeyPress
+
+        if (this.props.onEnterKeyPressed) {
+            this.props.onEnterKeyPressed(obj);
+        } else {
+            this.payButtonRef?.buttonElRef?.focus();
+            this.payButtonRef?.onClick(new Event('click'));
+        }
+    };
+
     /**
      * Call update on parent instance
      * This function exist to make safe access to the protect _parentInstance
@@ -446,7 +476,15 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * Get the payButton component for the current element
      */
     protected payButton = (props: PayButtonFunctionProps) => {
-        return <PayButton {...props} amount={this.props.amount} secondaryAmount={this.props.secondaryAmount} onClick={this.submit} />;
+        return (
+            <PayButton
+                setPayButtonRef={this.setPayButtonRef}
+                {...props}
+                amount={this.props.amount}
+                secondaryAmount={this.props.secondaryAmount}
+                onClick={this.submit}
+            />
+        );
     };
 
     /**

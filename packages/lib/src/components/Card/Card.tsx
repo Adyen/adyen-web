@@ -4,7 +4,7 @@ import { CoreProvider } from '../../core/Context/CoreProvider';
 import collectBrowserInfo from '../../utils/browserInfo';
 import { BinLookupResponse, CardElementData, CardConfiguration } from './types';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
-import { CbObjOnBinLookup, CbObjOnConfigSuccess, CbObjOnEnterKey, CbObjOnFocus } from '../internal/SecuredFields/lib/types';
+import { CbObjOnBinLookup, CbObjOnConfigSuccess, CbObjOnFocus } from '../internal/SecuredFields/lib/types';
 import { fieldTypeToSnakeCase, reject } from '../internal/SecuredFields/utils';
 import { hasValidInstallmentsObject } from './components/CardInput/utils';
 import createClickToPayService from '../internal/ClickToPay/services/create-clicktopay-service';
@@ -42,8 +42,6 @@ export class CardElement extends UIElement<CardConfiguration> {
      */
     private clickToPayRef = null;
 
-    private payButtonRef = null;
-
     constructor(checkout: ICore, props?: CardConfiguration) {
         super(checkout, props);
 
@@ -70,10 +68,6 @@ export class CardElement extends UIElement<CardConfiguration> {
 
     private setClickToPayRef = ref => {
         this.clickToPayRef = ref;
-    };
-
-    public setPayButtonRef = ref => {
-        this.payButtonRef = ref;
     };
 
     formatProps(props: CardConfiguration) {
@@ -329,15 +323,6 @@ export class CardElement extends UIElement<CardConfiguration> {
     get browserInfo() {
         return collectBrowserInfo();
     }
-
-    private onEnterKeyPressed = (obj: CbObjOnEnterKey) => {
-        if (this.props.onEnterKeyPressed) {
-            this.props.onEnterKeyPressed(obj);
-        } else {
-            this.payButtonRef?.buttonElRef?.focus();
-            this.payButtonRef?.onClick(new Event('click'));
-        }
-    };
 
     // Override
     protected payButton = (props: PayButtonProps) => {

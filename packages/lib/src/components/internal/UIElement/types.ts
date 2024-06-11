@@ -100,6 +100,12 @@ export type UIElementProps = BaseElementProps &
          * @internal
          */
         paymentMethodType?: string;
+
+        /**
+         * Called when a Component detects, or is told by a SecuredField, that the Enter key has been pressed.
+         * - merchant set config option
+         */
+        onEnterKeyPressed?: (o: OnKeyPressObj) => void;
     };
 
 export interface IUIElement extends IBaseElement {
@@ -127,4 +133,10 @@ export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';
 export interface ComponentMethodsRef {
     showValidation?: () => void;
     setStatus?(status: UIElementStatus): void;
+}
+
+export interface OnKeyPressObj {
+    fieldType: string;
+    action: string;
+    component: UIElement;
 }
