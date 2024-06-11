@@ -85,7 +85,7 @@
         "autoprefixer": "10.4.16",
         "babel-jest": "29.7.0",
         "cross-env": "^7.0.3",
-        "cssnano": "6.0.1",
+        "cssnano": "6.1.2",
         "dotenv": "^16.0.3",
         "enzyme": "3.11.0",
         "enzyme-adapter-preact-pure": "4.1.0",
