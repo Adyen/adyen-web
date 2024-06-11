@@ -18,11 +18,11 @@ import {
     CbObjOnFieldValid,
     CbObjOnAutoComplete,
     CbObjOnConfigSuccess,
-    CbObjOnLoad,
-    CbObjOnEnterKey
+    CbObjOnLoad
 } from '../lib/types';
 import { existy } from '../lib/utilities/commonUtils';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
+import { OnKeyPressObj } from '../../UIElement/types';
 
 /**
  * Emits the onLoad event
@@ -222,7 +222,7 @@ function handleOnAutoComplete(cbObj: CbObjOnAutoComplete): void {
     this.props.onAutoComplete(cbObj);
 }
 
-function handleOnEnterKeyPressed(obj: CbObjOnEnterKey): void {
+function handleOnEnterKeyPressed(obj: OnKeyPressObj): void {
     this.props.onEnterKeyPressed?.(obj);
 }
 
