@@ -7,6 +7,7 @@ import { PaymentAmount } from '../../../types/global-types';
 import { GIFT_CARD } from '../../internal/SecuredFields/lib/constants';
 import { GiftCardFields } from './GiftcardFields';
 import { GiftcardFieldsProps, Placeholders } from './types';
+import { OnKeyPressObj } from '../../internal/UIElement/types';
 
 interface GiftcardComponentProps {
     onChange: (state) => void;
@@ -23,6 +24,7 @@ interface GiftcardComponentProps {
     expiryDateRequired?: boolean;
     fieldsLayoutComponent: FunctionComponent<GiftcardFieldsProps>;
     placeholders?: Placeholders;
+    onEnterKeyPressed?: (o: OnKeyPressObj) => void;
 }
 
 class Giftcard extends Component<GiftcardComponentProps> {

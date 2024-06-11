@@ -28,7 +28,7 @@ class BacsElement extends UIElement<VoucherConfiguration> {
     }
 
     public payButton = props => {
-        return <PayButton amount={this.props.amount} onClick={this.submit} {...props} />;
+        return <PayButton setPayButtonRef={this.setPayButtonRef} amount={this.props.amount} onClick={this.submit} {...props} />;
     };
 
     render() {

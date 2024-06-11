@@ -2,6 +2,7 @@ import Language from '../../../../language/Language';
 import { StylesObject } from '../../../internal/SecuredFields/lib/types';
 import UIElement from '../../../internal/UIElement/UIElement';
 import { Resources } from '../../../../core/Context/Resources';
+import { OnKeyPressObj } from '../../../internal/UIElement/types';
 
 export interface ACHInputStateValid {
     holderName?: boolean;
@@ -61,4 +62,5 @@ export interface ACHInputProps {
     type?: string;
     forceCompat?: boolean;
     setComponentRef?: (ref) => void;
+    onEnterKeyPressed?: (o: OnKeyPressObj) => void;
 }
