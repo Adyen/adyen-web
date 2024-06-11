@@ -6,20 +6,12 @@ import {
     AdyenCheckout,
     Dropin,
     Card,
-    PayPal,
-    Ach,
-    Affirm,
-    ApplePay,
     CashAppPay,
-    Doku,
-    Giftcard,
     GooglePay,
-    UPI,
-    WeChat,
+    PayPal,
 } from "@adyen/adyen-web";
 import "@adyen/adyen-web/styles/adyen.css";
 import type { CoreConfiguration, DropinConfiguration } from "@adyen/adyen-web";
-
 import {
     DEFAULT_AMOUNT,
     DEFAULT_COUNTRY,
@@ -79,19 +71,7 @@ export default function SessionsFlow() {
                     _disableClickToPay: true,
                 },
             },
-            paymentMethodComponents: [
-                Card,
-                PayPal,
-                Ach,
-                Affirm,
-                ApplePay,
-                CashAppPay,
-                Doku,
-                Giftcard,
-                GooglePay,
-                UPI,
-                WeChat,
-            ],
+            paymentMethodComponents: [Card, PayPal, CashAppPay, GooglePay],
         };
 
         if (dropinRef.current) {

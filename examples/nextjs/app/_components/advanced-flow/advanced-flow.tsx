@@ -6,28 +6,18 @@ import {
     AdyenCheckout,
     Dropin,
     Card,
-    Ach,
-    Affirm,
-    ApplePay,
     CashAppPay,
-    Doku,
-    Giftcard,
     GooglePay,
     PayPal,
-    UPI,
-    WeChat,
 } from "@adyen/adyen-web";
 import "@adyen/adyen-web/styles/adyen.css";
 import type {
     CoreConfiguration,
     DropinConfiguration,
-    PaymentMethodsRequestData,
-    PaymentMethodsResponse,
     CheckoutAdvancedFlowResponse,
     PaymentData,
     AdditionalDetailsStateData,
 } from "@adyen/adyen-web";
-
 import {
     DEFAULT_AMOUNT,
     DEFAULT_COUNTRY,
@@ -104,15 +94,6 @@ export default function AdvancedFlow() {
                     actions.reject();
                 }
             },
-            onPaymentMethodsRequest(
-                data: PaymentMethodsRequestData,
-                actions: {
-                    resolve: (response: PaymentMethodsResponse) => void;
-                    reject: () => void;
-                },
-            ) {
-                // TODO
-            },
 
             onAdditionalDetails: async (
                 state: AdditionalDetailsStateData,
@@ -143,12 +124,15 @@ export default function AdvancedFlow() {
                     actions.reject();
                 }
             },
+
             onError(error) {
                 console.error("Something went wrong", error);
             },
+
             onPaymentCompleted(data, element) {
                 console.log(data, element);
             },
+
             onPaymentFailed(data, element) {
                 console.log(data, element);
             },
@@ -162,19 +146,7 @@ export default function AdvancedFlow() {
                     _disableClickToPay: true,
                 },
             },
-            paymentMethodComponents: [
-                Card,
-                PayPal,
-                Ach,
-                Affirm,
-                ApplePay,
-                CashAppPay,
-                Doku,
-                Giftcard,
-                GooglePay,
-                UPI,
-                WeChat,
-            ],
+            paymentMethodComponents: [Card, PayPal, CashAppPay, GooglePay],
         };
 
         if (dropinRef.current) {
