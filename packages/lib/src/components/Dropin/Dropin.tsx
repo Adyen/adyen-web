@@ -15,6 +15,7 @@ import type { DropinConfiguration, InstantPaymentTypes, PaymentMethodsConfigurat
 import type { PaymentAction, PaymentResponseData } from '../../types/global-types';
 import type { ICore } from '../../core/types';
 import type { IDropin } from './types';
+import type { OnKeyPressObj } from '../internal/UIElement/types';
 
 const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay'];
 
@@ -43,6 +44,17 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
     protected override storeElementRefOnCore() {
         this.core.storeElementReference(this);
     }
+
+    protected onEnterKeyPressed = (obj: OnKeyPressObj) => {
+        obj.component = this.activePaymentMethod ?? this; // Add component here in case this function has *not* been called from handleKeyPress
+
+        if (this.props.onEnterKeyPressed) {
+            this.props.onEnterKeyPressed(obj);
+        } else {
+            this.activePaymentMethod?.payButtonRef?.buttonElRef?.focus();
+            this.activePaymentMethod?.payButtonRef?.onClick(new Event('click'));
+        }
+    };
 
     formatProps(props) {
         return {

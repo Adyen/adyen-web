@@ -36,7 +36,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     public elementRef: UIElement;
 
-    private payButtonRef = null;
+    protected payButtonRef = null;
 
     /**
      * Defines all txVariants that the Component supports (in case it support multiple ones besides the 'type' one)
