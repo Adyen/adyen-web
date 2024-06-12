@@ -24,6 +24,7 @@ import type {
 } from '../../../types/global-types';
 import type { IDropin } from '../../Dropin/types';
 import type { NewableComponent } from '../../../core/core.registry';
+import { debounce } from '../../../utils/debounce';
 
 import './UIElement.scss';
 
@@ -66,6 +67,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         this.storeElementRefOnCore(this.props);
     }
+
+    private debounceEnterKeyPress = debounce((obj: OnKeyPressObj) => this.onEnterKeyPressed(obj), 500);
 
     protected override buildElementProps(componentProps?: P) {
         const globalCoreProps = this.core.getCorePropsForComponent();
@@ -394,7 +397,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         if (e.key === 'Enter' || e.code === 'Enter') {
             e.preventDefault(); // Prevent <form> submission if Component is placed inside a form
 
-            this.onEnterKeyPressed({ component: null, fieldType: (e.target as HTMLInputElement).name, action: 'enterKeyPressed' });
+            this.debounceEnterKeyPress({ component: null, fieldType: (e.target as HTMLInputElement).name, action: 'enterKeyPressed' });
         }
     }
 
