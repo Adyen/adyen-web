@@ -32,22 +32,16 @@ const on = (node, event, callback, useCapture?) => {
         return;
     }
 
-    if (node.attachEvent) {
-        node.attachEvent(`on${event}`, callback);
-        return;
-    }
-
     throw new Error(`: Unable to bind ${event}-event`);
 };
 
 const off = (node, event, callback, useCapture?) => {
     if (typeof node.addEventListener === 'function') {
         node.removeEventListener(event, callback, useCapture);
-    } else if (node.attachEvent) {
-        node.detachEvent(`on${event}`, callback);
-    } else {
-        throw new Error(`: Unable to unbind ${event}-event`);
+        return;
     }
+
+    throw new Error(`: Unable to unbind ${event}-event`);
 };
 
 /**
