@@ -73,9 +73,9 @@ class GooglePay extends UIElement<GooglePayProps> {
             })
             .catch((error: google.payments.api.PaymentsError) => {
                 if (error.statusCode === 'CANCELED') {
-                    this.handleError(new AdyenCheckoutError('CANCEL', error.toString(), { cause: error }));
+                    this.handleError(new AdyenCheckoutError('CANCEL', error.statusMessage.toString(), { cause: error }));
                 } else {
-                    this.handleError(new AdyenCheckoutError('ERROR', error.toString(), { cause: error }));
+                    this.handleError(new AdyenCheckoutError('ERROR', error.statusMessage.toString(), { cause: error }));
                 }
             });
     };
