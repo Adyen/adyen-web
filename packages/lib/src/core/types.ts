@@ -51,7 +51,7 @@ export interface CoreConfiguration {
      */
     session?: {
         id: string;
-        sessionData: string;
+        sessionData?: string;
         shopperEmail?: string;
         telephoneNumber?: string;
     };
