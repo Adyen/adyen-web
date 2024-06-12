@@ -68,7 +68,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.storeElementRefOnCore(this.props);
     }
 
-    private debounceEnterKeyPress = debounce((obj: OnKeyPressObj) => this.onEnterKeyPressed(obj), 500);
+    private debounceEnterKeyPress = debounce((obj: OnKeyPressObj) => this.onEnterKeyPressed(obj));
 
     protected override buildElementProps(componentProps?: P) {
         const globalCoreProps = this.core.getCorePropsForComponent();

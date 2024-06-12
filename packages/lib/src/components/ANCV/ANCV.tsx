@@ -76,7 +76,7 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
 
     // Reimplement payButton similar to GiftCard to allow to set onClick
     public payButton = props => {
-        return <PayButton {...props} />;
+        return <PayButton setPayButtonRef={this.setPayButtonRef} {...props} />;
     };
 
     get isValid(): boolean {
