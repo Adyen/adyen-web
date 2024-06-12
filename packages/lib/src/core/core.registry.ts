@@ -4,14 +4,13 @@ import ThreeDS2DeviceFingerprint from '../components/ThreeDS2/ThreeDS2DeviceFing
 import Redirect from '../components/Redirect';
 import { TxVariants } from '../components/tx-variants';
 import type { ICore } from './types';
-import type { IUIElement } from '../components/internal/UIElement/types';
 
 function assertClassHasType(Class: any): Class is typeof UIElement {
     const hasValidType = typeof Class.type === 'string' && !!Class.type;
     return hasValidType;
 }
 
-export type NewableComponent = new (checkout: ICore, props?) => IUIElement;
+export type NewableComponent = new (checkout: ICore, props?) => UIElement;
 
 export interface IRegistry {
     add(...items: NewableComponent[]): void;
