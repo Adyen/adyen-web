@@ -137,6 +137,7 @@ const ComponentsNameMap = {
     /** Await */
     [TxVariants.blik]: 'Blik',
     [TxVariants.mbway]: 'MBWay',
+    [TxVariants.ancv]: 'ANCV',
     [TxVariants.upi]: 'UPI', // also QR
     [TxVariants.upi_qr]: 'UPI', // also QR
     [TxVariants.upi_collect]: 'UPI', // also QR
