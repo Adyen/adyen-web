@@ -68,6 +68,7 @@ describe('Testing CSFs setupSecuredField functionality', () => {
             onEncryptionCallback: null,
             onValidationCallback: null,
             onAutoCompleteCallback: null,
+            onEnterKeyPressedCallback: null,
             onIframeLoaded: cbFn => {
                 MySecuredField.onIframeLoadedCallback = cbFn;
                 return MySecuredField;
