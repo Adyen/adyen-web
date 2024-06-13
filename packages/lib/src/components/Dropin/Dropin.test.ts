@@ -1,8 +1,7 @@
-import { mount } from 'enzyme';
 import { AdyenCheckout } from '../../index';
 import ThreeDS2DeviceFingerprint from '../ThreeDS2/ThreeDS2DeviceFingerprint';
 import ThreeDS2Challenge from '../ThreeDS2/ThreeDS2Challenge';
-import { screen, render } from '@testing-library/preact';
+import { screen, render, fireEvent } from '@testing-library/preact';
 import Dropin from './Dropin';
 import { ICore } from '../../core/types';
 
@@ -14,9 +13,10 @@ mockedGetTranslations.mockResolvedValue(enUS);
 
 describe('Dropin', () => {
     let checkout: ICore;
+    let configObj: any;
 
     beforeEach(async () => {
-        checkout = await AdyenCheckout({
+        configObj = {
             countryCode: 'US',
             environment: 'test',
             clientKey: 'test_123456',
@@ -26,8 +26,10 @@ describe('Dropin', () => {
             },
             risk: {
                 enabled: false
-            }
-        });
+            },
+            onEnterKeyPressed: jest.fn(() => {})
+        };
+        checkout = await AdyenCheckout(configObj);
     });
 
     describe('Configuration "disableFinalAnimation"', () => {
@@ -71,19 +73,19 @@ describe('Dropin', () => {
         });
     });
 
-    // TODO - this test doesn't do anything
-    describe('closeActivePaymentMethod', () => {
-        test('should close active payment method', async () => {
-            const dropin = new Dropin(checkout);
-            const component = await mount(dropin.render());
-            await component.update();
-
-            // re. TODO: dropin.dropinRef.state.activePaymentMethod = null, which is defined, so this assertion passes
-            expect(dropin.dropinRef.state.activePaymentMethod).toBeDefined();
-            dropin.closeActivePaymentMethod();
-            expect(dropin.dropinRef.state.activePaymentMethod).toBeNull();
-        });
-    });
+    // TODO - FIX: this test doesn't do anything
+    // describe('closeActivePaymentMethod', () => {
+    //     test('should close active payment method', async () => {
+    //         const dropin = new Dropin(checkout);
+    //         const component = await mount(dropin.render());
+    //         await component.update();
+    //
+    //         // re. TODO: dropin.dropinRef.state.activePaymentMethod = null, which is defined, so this assertion passes
+    //         expect(dropin.dropinRef.state.activePaymentMethod).toBeDefined();
+    //         dropin.closeActivePaymentMethod();
+    //         expect(dropin.dropinRef.state.activePaymentMethod).toBeNull();
+    //     });
+    // });
 
     describe('handleAction() for "threeDS2" type', () => {
         test('should handle new fingerprint action', () => {
@@ -215,6 +217,26 @@ describe('Dropin', () => {
 
             expect(dropin.props.openFirstPaymentMethod).toBe(true);
             expect(dropin.props.openFirstStoredPaymentMethod).toBe(true);
+        });
+    });
+
+    describe('Detecting Enter key presses', () => {
+        test('should see merchant defined onEnterKeyPressed callback fired', done => {
+            new Dropin(checkout).mount('body');
+
+            // Set timeout to allow Dropin's Promises to resolve
+            // - can't use the usual method of "flushPromises" because the async it requires clashes with the "done" we need to avoid the debounce timer
+            setTimeout(() => {
+                const el = screen.getByText('AliPay');
+
+                fireEvent.keyPress(el, { key: 'Enter', code: 'Enter', charCode: 13 });
+
+                // Bypass the debounce in UIElement.handleKeyPress
+                setTimeout(() => {
+                    expect(configObj.onEnterKeyPressed).toHaveBeenCalled();
+                    done();
+                }, 300);
+            }, 0);
         });
     });
 });

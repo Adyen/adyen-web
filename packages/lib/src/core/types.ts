@@ -23,6 +23,7 @@ import type { onBalanceCheckCallbackType, onOrderRequestCallbackType } from '../
 import type { SRPanelConfig } from './Errors/types';
 import type { NewableComponent } from './core.registry';
 import type { onOrderCancelType } from '../components/Dropin/types';
+import { OnKeyPressObj } from '../components/internal/UIElement/types';
 
 export interface ICore {
     initialize(): Promise<ICore>;
@@ -274,6 +275,8 @@ export interface CoreConfiguration {
     onBalanceCheck?: onBalanceCheckCallbackType;
 
     onOrderRequest?: onOrderRequestCallbackType;
+
+    onEnterKeyPressed?(o: OnKeyPressObj): void;
 
     /**
      * Callback called when it is required to fetch/update the payment methods list.
