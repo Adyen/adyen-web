@@ -66,6 +66,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.resources = this.props.modules ? this.props.modules.resources : undefined;
 
         this.storeElementRefOnCore(this.props);
+
+        this.onEnterKeyPressed = this.onEnterKeyPressed.bind(this);
     }
 
     private debounceEnterKeyPress = debounce((obj: OnKeyPressObj) => this.onEnterKeyPressed(obj));
@@ -406,16 +408,17 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * OR from a securedField (in which case this function has been called 'directly')
      * @param obj
      */
-    protected onEnterKeyPressed = (obj: OnKeyPressObj) => {
-        obj.component = this; // Add component here in case this function has *not* been called from handleKeyPress
+    protected onEnterKeyPressed(obj: OnKeyPressObj, compRef = this) {
+        // Add component ref here, rather than in handleKeyPress in case this function has been called directly from a securedField
+        obj.component = compRef;
 
         if (this.props.onEnterKeyPressed) {
             this.props.onEnterKeyPressed(obj);
         } else {
-            this.payButtonRef?.buttonElRef?.focus();
-            this.payButtonRef?.onClick(new Event('click'));
+            compRef?.payButtonRef?.buttonElRef?.focus();
+            compRef?.payButtonRef?.onClick(new Event('click'));
         }
-    };
+    }
 
     /**
      * Call update on parent instance

@@ -185,16 +185,9 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         this.dropinRef.closeActivePaymentMethod();
     }
 
-    protected onEnterKeyPressed = (obj: OnKeyPressObj) => {
-        obj.component = this.activePaymentMethod ?? this; // Add component here in case this function has *not* been called from handleKeyPress
-
-        if (this.props.onEnterKeyPressed) {
-            this.props.onEnterKeyPressed(obj);
-        } else {
-            this.activePaymentMethod?.payButtonRef?.buttonElRef?.focus();
-            this.activePaymentMethod?.payButtonRef?.onClick(new Event('click'));
-        }
-    };
+    protected onEnterKeyPressed(obj: OnKeyPressObj) {
+        super.onEnterKeyPressed(obj, this.activePaymentMethod || this);
+    }
 
     render() {
         return (
