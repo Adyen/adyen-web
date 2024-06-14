@@ -1,29 +1,31 @@
+@import 'styles/variable-generator';
+
 .adyen-checkout-ctp__card-list-single-card {
-    border-radius: var(--adyen-checkout-spacer-030);
-    background-color: var(--adyen-checkout-color-background-secondary);
-    height: var(--adyen-checkout-spacer-110);
-    padding: var(--adyen-checkout-spacer-060);
+    border-radius: token(spacer-030);
+    background-color: token(color-background-secondary);
+    height: token(spacer-110);
+    padding: token(spacer-060);
     display: flex;
     align-items: center;
     font-size: 13px;
-    font-weight: var(--adyen-checkout-text-body-font-weight);
-    line-height: var(--adyen-checkout-text-caption-line-height);
+    font-weight: token(text-body-font-weight);
+    line-height: token(text-caption-line-height);
 
     &-expired {
         text-decoration: line-through;
-        color: var(--adyen-checkout-color-grey-1300);
+        color: token(color-label-tertiary);
     }
 }
 
 .adyen-checkout-ctp__expired-label {
-    color: var(--adyen-checkout-color-grey-1300);
-    font-weight: var(--adyen-checkout-text-body-stronger-font-weight);
+    color: token(color-label-tertiary);
+    font-weight: token(text-body-stronger-font-weight);
     line-height: 17px;
     margin-left: auto;
 }
 
 .adyen-checkout-ctp__card-image {
     border-radius: 3px;
-    margin-right: var(--adyen-checkout-spacer-040);
+    margin-right: token(spacer-040);
     height: 24px;
 }

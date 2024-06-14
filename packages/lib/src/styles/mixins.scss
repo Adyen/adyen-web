@@ -1,4 +1,6 @@
-@mixin adl-box-sizing($include-children: false, $value: border-box) {
+@import 'variable-generator';
+
+@mixin box-sizing-setter($include-children: false, $value: border-box) {
     &,
     &::before,
     &::after {
@@ -20,7 +22,9 @@
     $box-shadow-initial-width: 1px;
     $box-shadow-width: 3px;
 
-    box-shadow: 0 0 0 $box-shadow-initial-width #fff, 0 0 0 $box-shadow-width $color;
+    box-shadow:
+        0 0 0 $box-shadow-initial-width #fff,
+        0 0 0 $box-shadow-width $color;
     transition: $transition-duration $timing-function-ease-in-out;
 }
 
@@ -31,7 +35,7 @@
 }
 
 @mixin b-focus-ring {
-    @include b-outer-ring-generator(var(--adyen-checkout-focus-ring-color));
+    @include b-outer-ring-generator(token(focus-ring-color));
 }
 
 $adyen-checkout-media-query-s-min: 480px;
@@ -61,21 +65,18 @@ $adyen-checkout-media-query-l-min: 1024px;
 
     --text-decoration: none;
 
-    color: var(--adyen-checkout-link-text-color);
+    color: token(color-label-highlight);
     text-decoration: var(--text-decoration);
 
-    &:hover {
-        --text-decoration: var(--adyen-checkout-link-text-decoration);
-    }
-
+    &:hover,
     &:active {
-        --text-decoration: var(--adyen-checkout-link-text-decoration);
+        --text-decoration: underline;
     }
 
     &:focus-visible {
         @include b-focus-ring;
 
-        border-radius: var(--adyen-checkout-link-border-radius);
+        border-radius: token(border-radius-xs);
     }
 }
 
@@ -93,7 +94,20 @@ $adyen-checkout-media-query-l-min: 1024px;
 }
 
 @mixin adyen-checkout-text-subtitle {
-    font-size: var(--adyen-checkout-text-subtitle-font-size);
-    font-weight: var(--adyen-checkout-text-subtitle-stronger-font-weight);
-    line-height: var(--adyen-checkout-text-subtitle-line-height);
+    font-size: token(text-subtitle-font-size);
+    font-weight: token(text-subtitle-stronger-font-weight);
+    line-height: token(text-subtitle-line-height);
+}
+
+@mixin set-spinner-color($background-color: token(color-background-inverse-primary), $color: token(color-outline-primary-active)) {
+    &::before {
+        border-color: $background-color;
+        border-top-color: transparent;
+        opacity: 0.1;
+    }
+
+    &::after {
+        border-color: transparent;
+        border-top-color: $color;
+    }
 }

@@ -1,42 +1,36 @@
 .dropin-customization {
-    --adyen-checkout-dropin-selected-item-background: white;
-    --adyen-checkout-dropin-selected-item-border-color: orange;
-    --adyen-checkout-input-wrapper-border-radius: 2px;
-    --adyen-checkout-input-wrapper-focus-border-color: darkorange;
-    --adyen-checkout-dropin-payment-item-border-radius: 2px;
-    --adyen-checkout-button-border-radius: 2px;
-    --adyen-checkout-button-background-color: #f6a800;
+    .adyen-checkout__payment-method--selected {
+        --adyen-sdk-color-background-secondary: white;
+        --adyen-sdk-color-outline-secondary: orange;
 
-    .adyen-checkout__label__text {
-        position: absolute;
-        top: -10px;
-        left: 10px;
-        z-index: 1;
-        background-color: white;
+        .adyen-checkout__payment-method__header__title {
+            --adyen-sdk-color-label-secondary: orange;
+        }
+
+        .adyen-checkout__payment-method__radio--selected {
+            --adyen-sdk-color-label-primary: orange;
+        }
     }
 
-    .adyen-checkout__payment-method__radio--selected {
-        --adyen-checkout-color-label-primary: orange;
+    .adyen-checkout__input-wrapper {
+        --adyen-sdk-border-width-s: 2px;
+        --adyen-sdk-color-outline-primary-active: darkorange;
+    }
+
+    .adyen-checkout__button,
+    .adyen-checkout__button--pay {
+        --adyen-sdk-color-background-always-dark: orange;
+        --adyen-sdk-color-background-always-dark-active: #ba8000;
+        --adyen-sdk-color-background-inverse-primary-hover: #ba8000;
     }
 
     .adyen-checkout__payment-method__name--selected {
         color: orange;
     }
 
-    .adyen-checkout__button,
-    .adyen-checkout__button--pay {
-        --adyen-checkout-color-background-secondary: #ba8000;
-        --adyen-checkout-color-interactive-primary-pressed: #ba8000;
-        --adyen-checkout-color-interactive-primary-hovered: #ba8000;
-    }
-
     .adyen-checkout__field--valid:not(.adyen-checkout__field--inactive),
     > :not(.adyen-checkout__label--focused),
     + .adyen-checkout__input-wrapper:not(:focus-within, :active) {
         // remove any default styles
-    }
-
-    .adyen-checkout__field--consentCheckbox {
-        border-radius: var(--adyen-checkout-input-wrapper-border-radius);
     }
 }

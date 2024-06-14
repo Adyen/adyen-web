@@ -1,0 +1,27 @@
+@import '~@adyen/bento-design-tokens/dist/scss-map/bento/aliases';
+@import '~@adyen/bento-design-tokens/dist/scss-map/bento/definitions';
+
+@function adyen-sdk-generate-css-variables($maps...) {
+    $adyen-output-map: ();
+
+    @each $map in $maps {
+        @each $name, $value in $map {
+            $adyen-output-map: map-merge($adyen-output-map, (#{$name}: var(--adyen-sdk-#{$name}, #{$value})));
+        }
+    }
+
+    @return $adyen-output-map;
+}
+
+
+@function token($token, $generate-css-var: true) {
+    $adyen-tokens-map: ();
+
+    @if $generate-css-var {
+        $adyen-tokens-map: adyen-sdk-generate-css-variables($color, $text, $focus-ring, $border, $spacer, $shadow);
+    } @else {
+        $adyen-tokens-map: map-merge($color, $text, $focus-ring, $border, $spacer, $shadow)
+    }
+
+    @return map-get($adyen-tokens-map, '#{$token}');
+}

@@ -7,7 +7,6 @@ import Icon from '../../../../Icon';
 import { isSrciError } from '../../../services/utils';
 import { PREFIX } from '../../../../Icon/constants';
 
-
 const CONFIRMATION_SHOWING_TIME = 2000;
 
 interface CtPResendOtpLinkProps {
