@@ -178,7 +178,7 @@ describe('SecuredField handling ariaConfig object - should trim the config objec
 describe('SecuredField handling no placeholders config object - should set defaults', () => {
     test('Card number field with no placeholders config should set all placeholders to be an empty string', () => {
         // @ts-ignore ignore
-        const card = new SecuredField({ ...setupObj, placeholders: {} }, i18n);
+        const card = new SecuredField({ ...setupObj, placeholders: {} }, global.i18n);
         const allPlaceholders = Object.values(card.sfConfig.iframeUIConfig.placeholders);
         expect(allPlaceholders.every(placeholder => placeholder === '')).toBe(true);
     });
@@ -208,7 +208,7 @@ describe('SecuredField handling placeholders from the placeholders config', () =
 
     test('should set placeholders for txVariant gift card (cardNumber field)', () => {
         // @ts-ignore ignore
-        const giftCard = new SecuredField({ ...setupObj, txVariant: GIFT_CARD }, i18n, giftCardPlaceholders);
+        const giftCard = new SecuredField({ ...setupObj, txVariant: GIFT_CARD }, global.i18n, giftCardPlaceholders);
         expect(giftCard.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_CARD_NUMBER]).toBe(giftCardPlaceholders.cardNumber);
     });
 
@@ -253,5 +253,213 @@ describe('SecuredField handling placeholders from the placeholders config', () =
         // @ts-ignore ignore
         const card = new SecuredField({ ...setupObj, fieldType: ENCRYPTED_PWD_FIELD }, global.i18n);
         expect(card.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_PWD_FIELD]).toBe(cardPlaceholders.password);
+    });
+
+    /**
+     * Testing postMessageListenerFn
+     */
+    describe('Testing SecuredField postMessageListenerFn', () => {
+        const origin = 'https://checkoutshopper-test.adyen.com';
+        let card: any;
+        let data: any;
+        let myCallback: any;
+
+        beforeEach(() => {
+            setupObj.loadingContext = 'https://checkoutshopper-test.adyen.com/checkoutshopper/';
+            card = new SecuredField({ ...setupObj }, global.i18n);
+            data = {
+                action: '',
+                fieldType: 'encryptedSecurityCode',
+                numKey: card.numKey
+            };
+            myCallback = jest.fn(() => {});
+        });
+
+        test('Check postMessageListenerFn is called and that origin is validated', () => {
+            const messageEvent = {
+                origin,
+                data: JSON.stringify({})
+            };
+
+            const postMessageListenerFnSpy = jest.spyOn(card, 'postMessageListenerFn');
+
+            // @ts-ignore event type
+            card.postMessageListenerFn(messageEvent);
+
+            expect(postMessageListenerFnSpy).toHaveBeenCalledTimes(1);
+            expect(postMessageListenerFnSpy).toHaveBeenCalledWith(messageEvent);
+        });
+
+        test('Check callback is called after "encryption" action', () => {
+            expect(card.isValid).toEqual(false);
+
+            card.onEncryption(myCallback);
+
+            // Encryption action
+            data.action = 'encryption';
+
+            const messageEvent = {
+                origin,
+                data: JSON.stringify(data)
+            };
+
+            // @ts-ignore event type
+            card.postMessageListenerFn(messageEvent);
+
+            expect(myCallback).toHaveBeenCalledTimes(1);
+            expect(myCallback).toHaveBeenCalledWith(data);
+
+            // Should be valid after an encryption action
+            expect(card.isValid).toEqual(true);
+        });
+
+        test('Check callback is called after "config" action', () => {
+            card.onConfig(myCallback);
+
+            // Set action
+            data.action = 'config';
+
+            const messageEvent = {
+                origin,
+                data: JSON.stringify(data)
+            };
+
+            // @ts-ignore event type
+            card.postMessageListenerFn(messageEvent);
+
+            expect(myCallback).toHaveBeenCalledTimes(1);
+            expect(myCallback).toHaveBeenCalledWith(data);
+        });
+
+        test('Check callback is called after "focus" action', () => {
+            card.onFocus(myCallback);
+
+            // Set action
+            data.action = 'focus';
+
+            const messageEvent = {
+                origin,
+                data: JSON.stringify(data)
+            };
+
+            // @ts-ignore event type
+            card.postMessageListenerFn(messageEvent);
+
+            expect(myCallback).toHaveBeenCalledTimes(1);
+            expect(myCallback).toHaveBeenCalledWith(data);
+        });
+
+        test('Check callback is called after "binValue" action', () => {
+            card.onBinValue(myCallback);
+
+            // Set action
+            data.action = 'binValue';
+
+            const messageEvent = {
+                origin,
+                data: JSON.stringify(data)
+            };
+
+            // @ts-ignore event type
+            card.postMessageListenerFn(messageEvent);
+
+            expect(myCallback).toHaveBeenCalledTimes(1);
+            expect(myCallback).toHaveBeenCalledWith(data);
+        });
+
+        test('Check callback is called after "touch" action', () => {
+            card.onTouchstart(myCallback);
+
+            // Set action
+            data.action = 'touch';
+
+            const messageEvent = {
+                origin,
+                data: JSON.stringify(data)
+            };
+
+            // @ts-ignore event type
+            card.postMessageListenerFn(messageEvent);
+
+            expect(myCallback).toHaveBeenCalledTimes(1);
+            expect(myCallback).toHaveBeenCalledWith(data);
+        });
+
+        test('Check callback is called after "shifttab" action', () => {
+            card.onShiftTab(myCallback);
+
+            // Set action
+            data.action = 'shifttab';
+
+            const messageEvent = {
+                origin,
+                data: JSON.stringify(data)
+            };
+
+            // @ts-ignore event type
+            card.postMessageListenerFn(messageEvent);
+
+            expect(myCallback).toHaveBeenCalledTimes(1);
+            expect(myCallback).toHaveBeenCalledWith(data);
+        });
+
+        test('Check callback is called after "autoComplete" action', () => {
+            card.onAutoComplete(myCallback);
+
+            // Set action
+            data.action = 'autoComplete';
+
+            const messageEvent = {
+                origin,
+                data: JSON.stringify(data)
+            };
+
+            // @ts-ignore event type
+            card.postMessageListenerFn(messageEvent);
+
+            expect(myCallback).toHaveBeenCalledTimes(1);
+            expect(myCallback).toHaveBeenCalledWith(data);
+        });
+
+        test('Check callback is called after "enterKeyPressed" action', () => {
+            card.onEnterKeyPressed(myCallback);
+
+            // Set action
+            data.action = 'enterKeyPressed';
+
+            const messageEvent = {
+                origin,
+                data: JSON.stringify(data)
+            };
+
+            // @ts-ignore event type
+            card.postMessageListenerFn(messageEvent);
+
+            expect(myCallback).toHaveBeenCalledTimes(1);
+            expect(myCallback).toHaveBeenCalledWith(data);
+        });
+
+        test('Check callback is called after "brand" action', () => {
+            card.isValid = true; // mock card already being valid
+
+            card.onValidation(myCallback);
+
+            // Set action
+            data.action = 'brand';
+
+            const messageEvent = {
+                origin,
+                data: JSON.stringify(data)
+            };
+
+            // @ts-ignore event type
+            card.postMessageListenerFn(messageEvent);
+
+            expect(myCallback).toHaveBeenCalledTimes(1);
+            expect(myCallback).toHaveBeenCalledWith(data);
+
+            // Should not be valid after an encryption action
+            expect(card.isValid).toEqual(false);
+        });
     });
 });
