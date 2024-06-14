@@ -17,6 +17,7 @@ import {
 import { Placeholders as AchPlaceholders } from '../../../../Ach/components/AchInput/types';
 import { Placeholders as GiftcardPlaceholders } from '../../../../Giftcard/components/types';
 import { Placeholders as CardPlaceholders } from '../../../../Card/components/CardInput/types';
+import * as logger from '../utilities/logger';
 
 const ENCRYPTED_CARD_NUMBER = 'encryptedCardNumber';
 const ENCRYPTED_EXPIRY_DATE = 'encryptedExpiryDate';
@@ -263,6 +264,8 @@ describe('SecuredField handling placeholders from the placeholders config', () =
         let card: any;
         let data: any;
         let myCallback: any;
+        let warningMsg: string;
+        let loggingMsg: string;
 
         beforeEach(() => {
             setupObj.loadingContext = 'https://checkoutshopper-test.adyen.com/checkoutshopper/';
@@ -273,6 +276,19 @@ describe('SecuredField handling placeholders from the placeholders config', () =
                 numKey: card.numKey
             };
             myCallback = jest.fn(() => {});
+
+            warningMsg = '';
+            // @ts-ignore
+            console.warn = logger.warn = jest.fn(msg => {
+                // console.log('msg=', msg);
+                warningMsg = msg;
+            });
+
+            loggingMsg = '';
+            // @ts-ignore
+            console.log = logger.log = jest.fn(msg => {
+                loggingMsg = msg;
+            });
         });
 
         test('Check postMessageListenerFn is called and that origin is validated', () => {
@@ -288,6 +304,70 @@ describe('SecuredField handling placeholders from the placeholders config', () =
 
             expect(postMessageListenerFnSpy).toHaveBeenCalledTimes(1);
             expect(postMessageListenerFnSpy).toHaveBeenCalledWith(messageEvent);
+        });
+
+        test('Check that mismatching origins are detected', () => {
+            const messageEvent = {
+                origin: 'http://localhost',
+                data: JSON.stringify({})
+            };
+
+            card.sfConfig = { showWarnings: true };
+
+            // @ts-ignore event type
+            card.postMessageListenerFn(messageEvent);
+
+            expect(warningMsg.includes('WARNING postMessageValidation: postMessage listener for iframe::origin mismatch')).toEqual(true);
+        });
+
+        test('Check that non JSON data is detected', () => {
+            const messageEvent = {
+                origin,
+                data: {}
+            };
+
+            card.sfConfig = { showWarnings: true };
+
+            // @ts-ignore event type
+            card.postMessageListenerFn(messageEvent);
+
+            expect(loggingMsg.includes('SecuredField::postMessageListenerFn:: PARSE FAIL - UNKNOWN REASON')).toEqual(true);
+        });
+
+        test('Check that malformed data is detected', () => {
+            delete data.action;
+
+            const messageEvent = {
+                origin,
+                data: JSON.stringify(data)
+            };
+
+            card.sfConfig = { showWarnings: true };
+
+            // @ts-ignore event type
+            card.postMessageListenerFn(messageEvent);
+
+            expect(warningMsg.includes('WARNING SecuredField :: postMessage listener for iframe :: data mismatch!')).toEqual(true);
+        });
+
+        test('Check that mismatching numKeys are detected', () => {
+            data.numKey = 12345;
+
+            const messageEvent = {
+                origin,
+                data: JSON.stringify(data)
+            };
+
+            card.sfConfig = { showWarnings: true };
+
+            // @ts-ignore event type
+            card.postMessageListenerFn(messageEvent);
+
+            expect(
+                warningMsg.includes(
+                    'WARNING SecuredField :: postMessage listener for iframe :: data mismatch! (Probably a message from an unrelated securedField)'
+                )
+            ).toEqual(true);
         });
 
         test('Check callback is called after "encryption" action', () => {

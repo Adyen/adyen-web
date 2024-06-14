@@ -18,9 +18,10 @@ export const originCheckPassed = (event: MessageEvent, pLoadingContext: string, 
                 'WARNING postMessageValidation: postMessage listener for iframe::origin mismatch!\n Received message with origin:',
                 origin,
                 'but the only allowed origin for messages to CSF is',
-                adyenDomain
+                adyenDomain,
+                '### event.data=',
+                event.data
             );
-            logger.warn('### event.data=', event.data);
         }
         return false;
     }
@@ -32,5 +33,5 @@ export const originCheckPassed = (event: MessageEvent, pLoadingContext: string, 
 export const isWebpackPostMsg = (event: MessageEvent): boolean =>
     event.data && event.data.type && typeof event.data.type === 'string' && event.data.type.indexOf('webpack') > -1;
 
-// Catch webpack postMessages responses
+// Catch ChromeVox postMessages responses
 export const isChromeVoxPostMsg = (event: MessageEvent): boolean => event.data && typeof event.data === 'string' && event.data.indexOf('cvox') > -1;

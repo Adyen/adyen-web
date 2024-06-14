@@ -212,8 +212,7 @@ class SecuredField extends AbstractSecuredField {
         if (this.numKey !== feedbackObj.numKey) {
             if (this.sfConfig.showWarnings) {
                 logger.warn(
-                    'WARNING SecuredField :: postMessage listener for iframe :: data mismatch! ' +
-                        '(Probably a message from an unrelated securedField)'
+                    'WARNING SecuredField :: postMessage listener for iframe :: data mismatch! (Probably a message from an unrelated securedField)'
                 );
             }
             return;
