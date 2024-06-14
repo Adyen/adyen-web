@@ -29,12 +29,21 @@ export class GiftcardElement extends UIElement {
                 type: this.constructor['type'],
                 brand: this.props.brand,
                 encryptedCardNumber: this.state.data?.encryptedCardNumber,
-                encryptedSecurityCode: this.state.data?.encryptedSecurityCode
+                encryptedSecurityCode: this.state.data?.encryptedSecurityCode,
+                ...(this.props.storedPaymentMethodId && { storedPaymentMethodId: this.props.storedPaymentMethodId })
             }
         };
     }
 
+    formatBalanceCheckData(): GiftCardElementData {
+        return this.formatData();
+    }
+
     get isValid() {
+        if (this.props.storedPaymentMethodId) {
+            return true;
+        }
+
         return !!this.state.isValid;
     }
 
@@ -43,6 +52,11 @@ export class GiftcardElement extends UIElement {
     }
 
     get displayName() {
+        if (this.props.storedPaymentMethodId && this.props.lastFour) {
+            // this applies for MealVoucher since it has the logic for lastFour
+            return `•••• ${this.props.lastFour}`;
+        }
+
         return this.props.brandsConfiguration[this.props.brand]?.name || this.props.name;
     }
 
@@ -91,13 +105,12 @@ export class GiftcardElement extends UIElement {
         }
 
         this.setStatus('loading');
-
-        this.handleBalanceCheck(this.formatData())
-            .then(({ balance, transactionLimit = {} as PaymentAmount }) => {
+        this.handleBalanceCheck(this.formatBalanceCheckData())
+            .then(({ balance, transactionLimit = {} as PaymentAmount }: { balance: PaymentAmount; transactionLimit: PaymentAmount }) => {
                 if (!balance) throw new Error('card-error'); // card doesn't exist
                 if (balance?.currency !== this.props.amount?.currency) throw new Error('currency-error');
                 if (balance?.value <= 0) throw new Error('no-balance');
-
+                debugger;
                 this.componentRef.setBalance({ balance, transactionLimit });
 
                 if (this.props.amount.value > balance.value || this.props.amount.value > transactionLimit.value) {

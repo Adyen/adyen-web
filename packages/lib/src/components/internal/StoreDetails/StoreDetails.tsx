@@ -3,10 +3,15 @@ import { h } from 'preact';
 import useCoreContext from '../../../core/Context/useCoreContext';
 import Checkbox from '../FormFields/Checkbox';
 
+interface StoreDetailsProps {
+    storeDetails?: boolean;
+    onChange: any;
+}
+
 /**
  * "Store details" generic checkbox
  */
-function StoreDetails({ storeDetails = false, ...props }) {
+function StoreDetails({ storeDetails = false, ...props }: StoreDetailsProps) {
     const { i18n } = useCoreContext();
     const [value, setValue] = useState(storeDetails);
 

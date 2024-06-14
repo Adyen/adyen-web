@@ -10,6 +10,7 @@ export type GiftcardFieldsProps = {
     focusedElement;
     setFocusOn;
     label?: string;
+    enableStoreDetails?: boolean;
 };
 
 export type GiftcardFieldProps = {
