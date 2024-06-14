@@ -357,18 +357,6 @@ export interface ActionHandledReturnObject {
     actionDescription: ActionDescriptionType;
 }
 
-export type AdditionalDetailsStateData = {
-    data: {
-        details: {
-            redirectResult?: string;
-            threeDSResult?: string;
-            [key: string]: any;
-        };
-        paymentData?: string;
-        sessionData?: string;
-    };
-};
-
 export interface AnalyticsModule {
     setUp: (a: AnalyticsInitialEvent) => Promise<any>;
     getCheckoutAttemptId: () => string;
