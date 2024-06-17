@@ -1,38 +1,44 @@
-@use '../../../style/index';
+@use 'styles/index';
+@import 'styles/variable-generator';
 
 .adyen-checkout__button {
-    background: var(--adyen-checkout-button-background-color);
+    background: token(color-background-always-dark);
     border: 0;
-    border-radius: var(--adyen-checkout-button-border-radius);
-    color: var(--adyen-checkout-button-color);
+    border-radius: token(border-radius-m);
+    color: token(color-label-on-color);
     cursor: pointer;
-    font-size: var(--adyen-checkout-button-font-size);
-    font-weight: var(--adyen-checkout-button-font-weight);
-    height: var(--adyen-checkout-button-height);
+    font-size: token(text-title-font-size);
+    font-weight: token(text-body-stronger-font-weight);
+    height: token(spacer-120);
     margin: 0;
-    padding: 15px;
+    padding: token(spacer-060) token(spacer-000);
     text-decoration: none;
-    transition: background 0.3s ease-out, box-shadow 0.3s ease-out;
+    transition:
+        background 0.3s ease-out,
+        box-shadow 0.3s ease-out;
     width: 100%;
 
     &:focus {
-        box-shadow: 0 0 0 1px var(--adyen-checkout-color-outline-tertiary);
+        box-shadow: 0 0 0 1px token(color-outline-tertiary);
         outline: 0;
     }
 
     &:hover {
-        background: var(--adyen-checkout-color-interactive-primary-hovered);
-        box-shadow: 0 0, 0 var(--adyen-checkout-spacer-010) var(--adyen-checkout-spacer-020) -1px rgb(0 0 0 / 20%),
-            0 var(--adyen-checkout-spacer-020) 5px 0 rgb(0 0 0 / 14%);
+        background: token(color-background-inverse-primary-hover);
+        box-shadow:
+            0 0,
+            0 token(spacer-010) token(spacer-020) -1px rgb(0 0 0 / 20%),
+            0 token(spacer-020) 5px 0 rgb(0 0 0 / 14%);
     }
 
     &:active {
-        background: var(--adyen-checkout-color-interactive-primary-pressed);
+        background: token(color-background-always-dark-active);
     }
 
     &:hover:focus {
-        box-shadow: 0 0 0 var(--adyen-checkout-spacer-010) var(--adyen-checkout-color-outline-tertiary),
-            0 3px var(--adyen-checkout-spacer-020) rgb(0 15 45 / 20%);
+        box-shadow:
+            0 0 0 token(spacer-010) token(color-outline-tertiary),
+            0 3px token(spacer-020) rgb(0 15 45 / 20%);
     }
 
     &:disabled {
@@ -46,14 +52,14 @@
     }
 
     &.adyen-checkout__button--loading {
-        background: var(--adyen-checkout-color-on-interactive-disabled);
+        background: token(color-label-disabled);
         box-shadow: none;
         pointer-events: none;
         user-select: none;
     }
 
     &.adyen-checkout__button--pay {
-        margin-top: var(--adyen-checkout-spacer-090);
+        margin-top: token(spacer-090);
 
         &:disabled {
             opacity: 0.4;
@@ -71,42 +77,56 @@
         display: block;
         width: auto;
         height: auto;
-        padding: var(--adyen-checkout-spacer-050) var(--adyen-checkout-spacer-040);
+        padding: token(spacer-050) token(spacer-040);
         font-size: 0.81em;
     }
 
     &.adyen-checkout__button--ghost {
         background: none;
         border: 0;
-        color: var(--adyen-checkout-color-label-primary);
+        color: token(color-label-primary);
+
+        .adyen-checkout__spinner {
+            @include index.set-spinner-color;
+        }
 
         &:hover {
-            background: var(--adyen-checkout-color-background-secondary);
+            background: token(color-background-secondary-hover);
             box-shadow: none;
         }
 
         &:active {
-            background: var(--adyen-checkout-color-interactive-primary-pressed);
+            background: token(color-background-secondary-active);
             box-shadow: none;
         }
     }
 
     &.adyen-checkout__button--secondary {
-        padding: var(--adyen-checkout-spacer-050) var(--adyen-checkout-spacer-060);
-        background: var(--adyen-checkout-color-background-primary);
-        border: var(--adyen-checkout-border-width-s) solid var(--adyen-checkout-color-label-primary);
-        color: var(--adyen-checkout-color-label-primary);
+        padding: token(spacer-050) token(spacer-060);
+        background: token(color-background-primary);
+        border: token(border-width-s) solid token(color-label-primary);
+        color: token(color-label-primary);
+
+        .adyen-checkout__spinner {
+            @include index.set-spinner-color;
+        }
 
         &:hover {
-            background: var(--adyen-checkout-color-background-secondary);
-            box-shadow: 0 var(--adyen-checkout-spacer-010) var(--adyen-checkout-spacer-020) rgb(27 42 60 / 20%),
-                0 var(--adyen-checkout-spacer-020) 5px rgb(27 42 60 / 14%);
+            background: token(color-background-secondary);
+            box-shadow:
+                0 token(spacer-010) token(spacer-020) rgb(27 42 60 / 20%),
+                0 token(spacer-020) 5px rgb(27 42 60 / 14%);
         }
 
         &:active,
         &:active:hover {
-            background: var(--adyen-checkout-color-background-secondary);
+            background: token(color-background-secondary);
             box-shadow: none;
+        }
+
+        &:focus {
+            box-shadow: 0 0 0 0.5px token(color-outline-tertiary);
+            outline: 0;
         }
 
         &:disabled {
@@ -114,45 +134,40 @@
             &:hover {
                 box-shadow: none;
                 cursor: not-allowed;
-                border-color: #99a3ad;
-                background-color: var(--adyen-checkout-color-background-secondary);
+                border-color: token(color-outline-disabled);
+                background-color: token(color-background-secondary);
                 opacity: 0.5;
                 user-select: all;
             }
         }
-
-        .adyen-checkout__spinner {
-            border-color: var(--adyen-checkout-color-label-primary);
-            border-top-color: transparent;
-        }
     }
 
     &.adyen-checkout__button--action {
-        padding: var(--adyen-checkout-spacer-050) var(--adyen-checkout-spacer-060);
-        background: var(--adyen-checkout-color-background-always-dark);
-        border: var(--adyen-checkout-border-width-s) solid transparent;
-        color: var(--adyen-checkout-color-white);
+        padding: token(spacer-050) token(spacer-060);
+        background: token(color-background-always-dark);
+        border: token(border-width-s) solid transparent;
+        color: token(color-label-on-color);
 
         &:hover {
-            background: var(--adyen-checkout-color-interactive-primary-hovered);
+            background: token(color-background-inverse-primary-hover);
             box-shadow: none;
         }
 
         &:active,
         &:active:hover {
-            background: var(--adyen-checkout-color-interactive-primary-pressed);
+            background: token(color-background-always-dark-active);
             box-shadow: none;
         }
     }
 
     &.adyen-checkout__button--link {
         background: transparent;
-        border: var(--adyen-checkout-border-width-s) solid transparent;
-        color: var(--adyen-checkout-link-text-color);
+        border: token(border-width-s) solid transparent;
+        color: token(color-label-highlight);
         text-decoration: none;
-        font-weight: var(--adyen-checkout-text-body-font-weight);
-        border-radius: var(--adyen-checkout-border-radius-s);
-        padding: var(--adyen-checkout-spacer-010);
+        font-weight: token(text-body-font-weight);
+        border-radius: token(border-radius-s);
+        padding: token(spacer-010);
 
         &:hover {
             background: transparent;
@@ -166,8 +181,8 @@
         &:hover,
         &:active,
         &:active:hover {
-            background: var(--adyen-checkout-color-label-success);
-            color: var(--adyen-checkout-color-white);
+            background: token(color-label-success);
+            color: token(color-label-on-color);
         }
 
         .adyen-checkout__button__icon {
@@ -183,11 +198,11 @@
     }
 
     &__icon {
-        margin-right: var(--adyen-checkout-spacer-040);
+        margin-right: token(spacer-040);
 
         [dir='rtl'] & {
             margin-right: 0;
-            margin-left: var(--adyen-checkout-spacer-040);
+            margin-left: token(spacer-040);
         }
     }
 
@@ -200,7 +215,6 @@
     }
 
     .adyen-checkout__spinner {
-        --adyen-checkout-loading-indicator-background-color: var(--adyen-checkout-color-surface-modal);
-        --adyen-checkout-loading-indicator-color: var(--adyen-checkout-color-surface-modal);
+        @include index.set-spinner-color(token(color-label-on-color), token(color-label-on-color));
     }
 }
