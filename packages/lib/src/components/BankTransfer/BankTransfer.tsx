@@ -54,9 +54,13 @@ export class BankTransferElement extends UIElement<BankTransferConfiguration> {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 {this.props.showEmailAddress && <BankTransferInput ref={this.handleRef} {...this.props} onChange={this.setState} />}
-                {this.props.showPayButton && (
-                    <RedirectButton {...this.props} name={this.displayName} onSubmit={this.submit} payButton={this.payButton} />
-                )}
+                <RedirectButton
+                    {...this.props}
+                    showPayButton={this.props.showPayButton}
+                    name={this.displayName}
+                    onSubmit={this.submit}
+                    payButton={this.payButton}
+                />
             </CoreProvider>
         );
     }

@@ -48,6 +48,7 @@ export class MultibancoElement extends UIElement<VoucherConfiguration> {
             return (
                 <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                     <RedirectButton
+                        showPayButton={this.props.showPayButton}
                         name={this.displayName}
                         amount={this.props.amount}
                         payButton={this.payButton}

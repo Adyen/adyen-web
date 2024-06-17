@@ -110,8 +110,8 @@
     position: relative;
 }
 
-.adyen-checkout__payment-method__details__content {
-    margin: var(--adyen-checkout-spacer-000) var(--adyen-checkout-spacer-000) var(--adyen-checkout-spacer-070);
+.adyen-checkout__payment-method__details__content > *:last-child {
+    margin-bottom: var(--adyen-checkout-spacer-070);
 }
 
 .adyen-checkout__payment-method__image__wrapper {
