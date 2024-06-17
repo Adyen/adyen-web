@@ -72,11 +72,40 @@ export interface DropinConfiguration extends UIElementProps {
      */
     instantPaymentTypes?: InstantPaymentTypes[];
 
+    /**
+     * Pre-select a specific payment method when Drop-in is rendered
+     *
+     * @default undefined
+     */
+    openPaymentMethod?: {
+        type: string;
+    };
+
+    /**
+     * Pre-select the first stored payment method.
+     * It has priority over 'openFirstPaymentMethod' property
+     *
+     * @default true
+     */
     openFirstStoredPaymentMethod?: boolean;
+
+    /**
+     * Pre-select the first non-stored payment method.
+     * 'openFirstStoredPaymentMethod' has priority over this property
+     *
+     * @default true
+     */
     openFirstPaymentMethod?: boolean;
-    onSubmit?: (data, component) => void;
-    onReady?: () => void;
-    onSelect?: (paymentMethod: UIElement) => void;
+
+    /**
+     * Callback triggered once the Drop-in is ready to be used
+     */
+    onReady?(): void;
+
+    /**
+     * Callback triggered once the shopper selects a different payment method in the Drop-in
+     */
+    onSelect?(paymentMethod: UIElement): void;
 
     /**
      * Show/Hide the remove payment method button on stored payment methods
@@ -117,8 +146,7 @@ export type onOrderCancelType = (
 
 export interface DropinComponentProps extends DropinConfiguration {
     core: ICore;
-    onCreateElements: any;
-    onChange: (newState?: object) => void;
+    onCreateElements(): any;
     onOrderCancel?: onOrderCancelType;
 }
 
