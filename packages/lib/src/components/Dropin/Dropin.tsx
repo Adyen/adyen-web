@@ -186,7 +186,7 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
     }
 
     protected onEnterKeyPressed(obj: OnKeyPressObj) {
-        super.onEnterKeyPressed(obj, this.activePaymentMethod || this);
+        this.activePaymentMethod?.onEnterKeyPressed(obj);
     }
 
     render() {

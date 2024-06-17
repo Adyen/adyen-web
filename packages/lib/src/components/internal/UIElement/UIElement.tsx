@@ -408,15 +408,15 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * OR from a securedField (in which case this function has been called 'directly')
      * @param obj
      */
-    protected onEnterKeyPressed(obj: OnKeyPressObj, compRef = this) {
+    protected onEnterKeyPressed(obj: OnKeyPressObj) {
         // Add component ref here, rather than in handleKeyPress in case this function has been called directly from a securedField
-        obj.component = compRef;
+        obj.component = this;
 
         if (this.props.onEnterKeyPressed) {
             this.props.onEnterKeyPressed(obj);
         } else {
-            compRef?.payButtonRef?.buttonElRef?.focus();
-            compRef?.payButtonRef?.onClick(new Event('click'));
+            this.payButtonRef?.buttonElRef?.focus();
+            this.payButtonRef?.onClick(new Event('click'));
         }
     }
 
