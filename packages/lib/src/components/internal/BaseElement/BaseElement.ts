@@ -8,7 +8,7 @@ import type { ICore } from '../../../core/types';
 import type { BaseElementProps, IBaseElement } from './types';
 import type { PaymentData } from '../../../types/global-types';
 import type { AnalyticsInitialEvent, SendAnalyticsObject } from '../../../core/Analytics/types';
-import { off, on } from '../SecuredFields/lib/utilities/dom';
+import { off, on } from '../../../utils/listenerUtils';
 
 /**
  * Verify if the first parameter is instance of Core.

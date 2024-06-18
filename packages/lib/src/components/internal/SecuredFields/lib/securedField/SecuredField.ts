@@ -1,6 +1,7 @@
 import * as logger from '../utilities/logger';
 import createIframe from './utils/createIframe';
-import { off, on, removeAllChildren, selectOne } from '../utilities/dom';
+import { removeAllChildren, selectOne } from '../utilities/dom';
+import { off, on } from '../../../../../utils/listenerUtils';
 import postMessageToIframe from '../CSF/utils/iframes/postMessageToIframe';
 import { isChromeVoxPostMsg, isWebpackPostMsg, originCheckPassed } from '../CSF/utils/iframes/postMessageValidation';
 import {
