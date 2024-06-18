@@ -330,7 +330,6 @@ export class CardElement extends UIElement<CardConfiguration> {
         const isStoredCard = this.props.storedPaymentMethodId?.length > 0;
         return (
             <PayButton
-                setPayButtonRef={this.setPayButtonRef}
                 {...props}
                 amount={this.props.amount}
                 secondaryAmount={this.props.secondaryAmount}

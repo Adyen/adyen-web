@@ -16,8 +16,6 @@ class Button extends Component<ButtonProps, ButtonState> {
         onClick: () => {}
     };
 
-    public buttonElRef = null;
-
     public onClick = e => {
         e.preventDefault();
 
@@ -75,15 +73,7 @@ class Button extends Component<ButtonProps, ButtonState> {
         }
 
         return (
-            <button
-                ref={ref => {
-                    this.buttonElRef = ref;
-                }}
-                className={buttonClasses}
-                type="button"
-                disabled={disabled}
-                onClick={this.onClick}
-            >
+            <button className={buttonClasses} type="button" disabled={disabled} onClick={this.onClick}>
                 {buttonText}
                 {status !== 'loading' && status !== 'redirect' && this.props.children}
             </button>

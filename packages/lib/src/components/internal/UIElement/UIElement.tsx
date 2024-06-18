@@ -38,8 +38,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     public elementRef: UIElement;
 
-    protected payButtonRef = null;
-
     /**
      * Defines all txVariants that the Component supports (in case it support multiple ones besides the 'type' one)
      */
@@ -139,10 +137,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             this.elementRef
         );
     }
-
-    protected setPayButtonRef = ref => {
-        this.payButtonRef = ref;
-    };
 
     // Only called once, for UIElements (including Dropin), as they are being mounted
     protected setUpAnalytics(setUpAnalyticsObj: AnalyticsInitialEvent) {
@@ -413,11 +407,12 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     protected onEnterKeyPressed(obj: OnKeyPressObj) {
         console.log('### UIElement::onEnterKeyPressed:: obj', obj);
 
+        (document.activeElement as HTMLElement).blur();
+
         if (this.props.onEnterKeyPressed) {
             this.props.onEnterKeyPressed(obj);
         } else {
-            this.payButtonRef?.buttonElRef?.focus();
-            this.payButtonRef?.onClick(new Event('click'));
+            this.submit();
         }
     }
 
@@ -483,15 +478,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * Get the payButton component for the current element
      */
     protected payButton = (props: PayButtonFunctionProps) => {
-        return (
-            <PayButton
-                setPayButtonRef={this.setPayButtonRef}
-                {...props}
-                amount={this.props.amount}
-                secondaryAmount={this.props.secondaryAmount}
-                onClick={this.submit}
-            />
-        );
+        return <PayButton {...props} amount={this.props.amount} secondaryAmount={this.props.secondaryAmount} onClick={this.submit} />;
     };
 
     /**

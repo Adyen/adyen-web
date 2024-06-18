@@ -115,7 +115,7 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
 
     // Giftcards override the regular payButton flow
     public payButton = props => {
-        return <PayButton setPayButtonRef={this.setPayButtonRef} {...props} />;
+        return <PayButton {...props} />;
     };
 
     render() {
