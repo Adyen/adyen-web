@@ -27,6 +27,7 @@ import type { NewableComponent } from '../../../core/core.registry';
 import { debounce } from '../../../utils/debounce';
 
 import './UIElement.scss';
+import SFKeyboardEvent from '../SecuredFields/SFP/SFKeyboardEvent';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> implements IUIElement {
     public static type = undefined;
@@ -395,7 +396,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.handleSuccessResult(response);
     }
 
-    protected handleKeyPress(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) {
+    protected handleKeyPress(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement> | SFKeyboardEvent) {
         console.log('### UIElement::handleKeyPress:: e', e);
         if (e.key === 'Enter' || e.code === 'Enter') {
             e.preventDefault(); // Prevent <form> submission if Component is placed inside a form

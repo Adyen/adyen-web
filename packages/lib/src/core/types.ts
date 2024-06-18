@@ -276,6 +276,10 @@ export interface CoreConfiguration {
 
     onOrderRequest?: onOrderRequestCallbackType;
 
+    /**
+     * Called when a Component detects, or is told by a SecuredField, that the Enter key has been pressed.
+     * - merchant set config option
+     */
     onEnterKeyPressed?(o: OnKeyPressObj): void;
 
     /**
