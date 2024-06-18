@@ -3,7 +3,9 @@ class SFKeyboardEvent extends KeyboardEvent {
 
     constructor(type: string, eventInitDict: KeyboardEventInit, name: string) {
         super(type, eventInitDict);
-        this.target = { name };
+        try {
+            this.target = { name };
+        } catch (e) {}
     }
 }
 

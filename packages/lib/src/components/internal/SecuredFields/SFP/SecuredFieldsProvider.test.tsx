@@ -2,6 +2,7 @@ import { shallow } from 'enzyme';
 import { h } from 'preact';
 import SecuredFieldsProvider from './SecuredFieldsProvider';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
+import SFKeyboardEvent from './SFKeyboardEvent';
 
 jest.mock('../lib/CSF', () => {
     return () => true;
@@ -269,4 +270,63 @@ describe('<SecuredFieldsProvider /> handling an binLookup response', () => {
             expect(brandsFromBinLookup).toHaveBeenCalledTimes(3);
         }
     );
+});
+
+describe('<SecuredFieldsProvider /> handling an Enter key pressed event', () => {
+    it('should handle a key pressed event and since it is from the Enter key call the handleKeyPress function passed as a prop', () => {
+        let keyPressObj: any;
+
+        const handleKeyPress = jest.fn(obj => {
+            keyPressObj = obj;
+        });
+
+        wrapper = shallow(
+            <SecuredFieldsProvider
+                ref={handleSecuredFieldsRef}
+                rootNode={nodeHolder}
+                styles={styles}
+                render={renderFn}
+                onError={onError}
+                i18n={global.i18n}
+                configuration={{}}
+                handleKeyPress={handleKeyPress}
+            />
+        );
+
+        const sfp = wrapper.instance();
+
+        sfp.handleKeyPressed({
+            action: 'enterKeyPressed',
+            fieldType: 'encryptedCardNumber'
+        });
+
+        expect(handleKeyPress).toHaveBeenCalled();
+        expect(keyPressObj).toBeInstanceOf(SFKeyboardEvent);
+    });
+
+    it('should handle a key pressed event and since it is not from the Enter key should not call the handleKeyPress function', () => {
+        const handleKeyPress = jest.fn(() => {});
+
+        wrapper = shallow(
+            <SecuredFieldsProvider
+                ref={handleSecuredFieldsRef}
+                rootNode={nodeHolder}
+                styles={styles}
+                render={renderFn}
+                onError={onError}
+                i18n={global.i18n}
+                configuration={{}}
+                handleKeyPress={handleKeyPress}
+            />
+        );
+
+        const sfp = wrapper.instance();
+
+        sfp.handleKeyPressed({
+            action: 'shiftKeyPressed',
+            fieldType: 'encryptedCardNumber'
+        });
+
+        expect(handleKeyPress).not.toHaveBeenCalled();
+    });
 });
