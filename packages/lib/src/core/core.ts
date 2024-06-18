@@ -20,15 +20,21 @@ import { defaultProps } from './core.defaultProps';
 import { formatCustomTranslations, formatLocale } from '../language/utils';
 import { resolveEnvironments } from './Environment';
 
-import type { AdditionalDetailsStateData, PaymentAction, PaymentResponseData } from '../types/global-types';
-import type { CoreConfiguration, ICore } from './types';
+import type { AnalyticsModule, PaymentAction, PaymentResponseData } from '../types/global-types';
+import type { CoreConfiguration, ICore, AdditionalDetailsData } from './types';
 import type { Translations } from '../language/types';
 import type { UIElementProps } from '../components/internal/UIElement/types';
 
 class Core implements ICore {
     public session?: Session;
     public paymentMethodsResponse: PaymentMethods;
-    public modules: any;
+    public modules: Readonly<{
+        risk: RiskModule;
+        analytics: AnalyticsModule;
+        resources: Resources;
+        i18n: Language;
+        srPanel: SRPanel;
+    }>;
     public options: CoreConfiguration;
 
     public analyticsContext: string;
@@ -167,7 +173,7 @@ class Core implements ICore {
      * @see {https://docs.adyen.com/online-payments/build-your-integration/?platform=Web&integration=Components&version=5.55.1#handle-the-redirect}
      * @param details - Details object containing the redirectResult
      */
-    public submitDetails(details: AdditionalDetailsStateData['data']): void {
+    public submitDetails(details: AdditionalDetailsData['data']): void {
         let promise = null;
 
         if (this.options.onAdditionalDetails) {

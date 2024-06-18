@@ -2,7 +2,6 @@ import actionTypes from './actionTypes';
 import type { PaymentAction } from '../../../types/global-types';
 import type { IRegistry } from '../../core.registry';
 import type { ICore } from '../../types';
-// import type { IUIElement } from '../../../components/internal/UIElement/types';
 import UIElement from '../../../components/internal/UIElement';
 
 export function getComponentForAction(core: ICore, registry: IRegistry, action: PaymentAction, props = {}): UIElement {

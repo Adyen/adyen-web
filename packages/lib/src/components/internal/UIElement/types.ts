@@ -102,25 +102,6 @@ export type UIElementProps = BaseElementProps &
         paymentMethodType?: string;
     };
 
-export interface IUIElement extends IBaseElement {
-    core: ICore;
-    type: string;
-    isValid: boolean;
-    displayName: string;
-    accessibleName: string;
-    icon: string;
-    elementRef: UIElement;
-    submit(): void;
-    setComponentRef(ref): void;
-    updateParent(options?: CoreConfiguration): Promise<ICore>;
-    setElementStatus(status: UIElementStatus, props: any): UIElement;
-    setStatus(status: UIElementStatus, props?: { message?: string; [key: string]: any }): UIElement;
-    handleAction(action: PaymentAction): UIElement | null;
-    showValidation(): void;
-    setState(newState: object): void;
-    isAvailable(): Promise<void>;
-}
-
 export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';
 
 // An interface for the members exposed by a component to its parent UIElement
