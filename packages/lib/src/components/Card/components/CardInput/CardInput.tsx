@@ -34,15 +34,6 @@ const CardInput = (props: CardInputProps) => {
     const isValidating = useRef(false);
     const getImage = useImage();
 
-    /** SR stuff */
-    // const { setSRMessagesFromObjects, setSRMessagesFromStrings, clearSRPanel, shouldMoveFocusSR } = useSRPanelContext();
-    //
-    // // Generate a setSRMessages function - implemented as a partial, since the initial set of arguments don't change.
-    // const setSRMessages: SetSRMessagesReturnFn = setSRMessagesFromObjects?.({
-    //     fieldTypeMappingFn: mapFieldKey
-    // });
-    /** end SR stuff */
-
     const billingAddressRef = useRef(null);
     const setAddressRef = ref => {
         billingAddressRef.current = ref;
@@ -337,16 +328,13 @@ const CardInput = (props: CardInputProps) => {
         });
     }, [formData, formValid, formErrors]);
 
-    // Get the previous value
-    // const previousSortedErrors = usePrevious(sortedErrorList);
-
+    // Use the custom hook to set (or clear) errors in the SRPanel
     const {
         sortedErrorList: currentErrorsSortedByLayout,
         previousSortedErrors,
         clearSRPanel
     } = useSRPanelForCardInputErrors({
         errors,
-        // data,
         props,
         isValidating,
         retrieveLayout,
@@ -372,65 +360,6 @@ const CardInput = (props: CardInputProps) => {
 
         const sfStateErrorsObj = sfp.current.mapErrorsToValidationRuleResult();
         const mergedErrors = { ...errors, ...sfStateErrorsObj }; // maps sfErrors AND solves race condition problems for sfp from showValidation
-
-        // Extract and then flatten billingAddress errors into a new object with *all* the field errors at top level
-        // const { billingAddress: extractedAddressErrors, ...errorsWithoutAddress } = mergedErrors;
-        //
-        // const errorsForPanel = { ...errorsWithoutAddress, ...extractedAddressErrors };
-        //
-        // // Pass dynamic props (errors, layout etc) to SRPanel via partial
-        // const srPanelResp: SetSRMessagesReturnObject = setSRMessages?.({
-        //     errors: errorsForPanel,
-        //     isValidating: isValidating.current,
-        //     layout: retrieveLayout(),
-        //     // If we don't have country specific address labels, we might have a label related to a partialAddressSchema (i.e. zipCode)
-        //     countrySpecificLabels: specifications.getAddressLabelsForCountry(billingAddress?.country) ?? partialAddressSchema?.default?.labels
-        // });
-        //
-        // /**
-        //  * Need extra actions after setting SRPanel messages in order to focus field (if required) and because we have some errors that are fired onBlur
-        //  */
-        // const currentErrorsSortedByLayout = srPanelResp?.currentErrorsSortedByLayout;
-        //
-        // // Store the array of sorted error objects separately so that we can use it to make comparisons between the old and new arrays
-        // setSortedErrorList(currentErrorsSortedByLayout);
-        //
-        // switch (srPanelResp?.action) {
-        //     // A call to focus the first field in error will always follow the call to validate the whole form
-        //     case ERROR_ACTION_FOCUS_FIELD:
-        //         if (shouldMoveFocusSR) setFocusOnFirstField(isValidating.current, sfp, srPanelResp?.fieldToFocus);
-        //         // Remove 'showValidation' mode - allowing time for collation of all the fields in error whilst it is 'showValidation' mode (some errors come in a second render pass)
-        //         setTimeout(() => {
-        //             isValidating.current = false;
-        //         }, 300);
-        //         break;
-        //     /** On blur scenario: not validating, i.e. trying to submit form, but there might be an error, either to set or to clear */
-        //     case ERROR_ACTION_BLUR_SCENARIO: {
-        //         const difference = getArrayDifferences<SortedErrorObject, string>(currentErrorsSortedByLayout, previousSortedErrors, 'field');
-        //
-        //         const latestErrorMsg = difference?.[0];
-        //
-        //         if (latestErrorMsg) {
-        //             // Use the error code to look up whether error is actually a blur based one (most are but some SF ones aren't)
-        //             const isBlurBasedError = lookupBlurBasedErrors(latestErrorMsg.errorCode);
-        //
-        //             /**
-        //              *  ONLY ADD BLUR BASED ERRORS TO THE ERROR PANEL - doing this step prevents the non-blur based errors from being read out twice
-        //              *  (once from the aria-live, error panel & once from the aria-describedby element)
-        //              */
-        //             const latestSRError = isBlurBasedError ? latestErrorMsg.errorMessage : null;
-        //             // console.log('### CardInput2::componentDidUpdate:: #2 (not validating) single error:: latestSRError', latestSRError);
-        //             setSRMessagesFromStrings(latestSRError);
-        //         } else {
-        //             // called when previousSortedErrors.length >= currentErrorsSortedByLayout.length
-        //             // console.log('### CardInput2::componentDidUpdate:: #3(not validating) clearing errors:: NO latestErrorMsg');
-        //             clearSRPanel();
-        //         }
-        //         break;
-        //     }
-        //     default:
-        //         break;
-        // }
 
         // Analytics
         if (currentErrorsSortedByLayout) {

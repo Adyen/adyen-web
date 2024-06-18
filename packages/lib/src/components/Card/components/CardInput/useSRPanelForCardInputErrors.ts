@@ -9,27 +9,24 @@ import { setFocusOnFirstField } from './handlers';
 import { getArrayDifferences } from '../../../../utils/arrayUtils';
 
 const useSRPanelForCardInputErrors = ({ errors, props, isValidating, retrieveLayout, specifications, billingAddress, sfp }) => {
-    //
-    /** SR stuff */
+    // Extract fns from context
     const { setSRMessagesFromObjects, setSRMessagesFromStrings, clearSRPanel, shouldMoveFocusSR } = useSRPanelContext();
 
     // Generate a setSRMessages function - implemented as a partial, since the initial set of arguments don't change.
     const setSRMessages: SetSRMessagesReturnFn = setSRMessagesFromObjects?.({
         fieldTypeMappingFn: mapFieldKey
     });
-    /** end SR stuff */
 
     const partialAddressSchema = handlePartialAddressMode(props.billingAddressMode);
 
     const [sortedErrorList, setSortedErrorList] = useState<SortedErrorObject[]>(null);
 
-    // Get the previous value
+    // Get the previous list of errors
     const previousSortedErrors = usePrevious(sortedErrorList);
 
     const sfStateErrorsObj = sfp.current?.mapErrorsToValidationRuleResult();
     const mergedErrors = { ...errors, ...sfStateErrorsObj };
 
-    //
     useEffect(() => {
         // Extract and then flatten billingAddress errors into a new object with *all* the field errors at top level
         const { billingAddress: extractedAddressErrors, ...errorsWithoutAddress } = mergedErrors;
@@ -45,14 +42,13 @@ const useSRPanelForCardInputErrors = ({ errors, props, isValidating, retrieveLay
             countrySpecificLabels: specifications.getAddressLabelsForCountry(billingAddress?.country) ?? partialAddressSchema?.default?.labels
         });
 
+        // Store the array of sorted error objects separately so that we can use it to make comparisons between the old and new arrays
+        const currentErrorsSortedByLayout = srPanelResp?.currentErrorsSortedByLayout;
+        setSortedErrorList(currentErrorsSortedByLayout);
+
         /**
          * Need extra actions after setting SRPanel messages in order to focus field (if required) and because we have some errors that are fired onBlur
          */
-        const currentErrorsSortedByLayout = srPanelResp?.currentErrorsSortedByLayout;
-
-        // Store the array of sorted error objects separately so that we can use it to make comparisons between the old and new arrays
-        setSortedErrorList(currentErrorsSortedByLayout);
-
         switch (srPanelResp?.action) {
             // A call to focus the first field in error will always follow the call to validate the whole form
             case ERROR_ACTION_FOCUS_FIELD:
