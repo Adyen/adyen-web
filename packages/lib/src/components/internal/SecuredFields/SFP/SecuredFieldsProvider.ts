@@ -46,7 +46,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     private handleOnAutoComplete: (obj: CbObjOnAutoComplete) => void;
     private handleOnNoDataRequired: () => void;
     private handleOnTouchstartIOS: (obj) => void;
-    private handleOnEnterKeyPressed: (obj) => void;
+    private handleKeyPressed: (obj) => void;
     public state: SFPState;
     public props;
     private issuingCountryCode;
@@ -86,7 +86,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         this.handleOnNoDataRequired = handlers.handleOnNoDataRequired.bind(this);
         this.handleOnAutoComplete = handlers.handleOnAutoComplete.bind(this);
         this.handleOnTouchstartIOS = handlers.handleOnTouchstartIOS.bind(this); // Only called when iOS detected
-        this.handleOnEnterKeyPressed = handlers.handleOnEnterKeyPressed.bind(this);
+        this.handleKeyPressed = handlers.handleKeyPressed.bind(this);
 
         this.processBinLookupResponse = this.processBinLookupResponse.bind(this);
 
@@ -178,7 +178,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
                 onAdditionalSFConfig: this.props.onAdditionalSFConfig,
                 onAdditionalSFRemoved: this.props.onAdditionalSFRemoved,
                 onTouchstartIOS: this.handleOnTouchstartIOS,
-                onEnterKeyPressed: this.handleOnEnterKeyPressed
+                onKeyPressed: this.handleKeyPressed
             },
             isKCP: this.state.hasKoreanFields,
             legacyInputMode: this.props.legacyInputMode,

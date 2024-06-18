@@ -271,7 +271,7 @@ class SecuredField extends AbstractSecuredField {
                 break;
 
             case 'enterKeyPressed':
-                this.onEnterKeyPressedCallback(feedbackObj);
+                this.onKeyPressedCallback(feedbackObj);
                 break;
 
             /**
@@ -380,8 +380,8 @@ class SecuredField extends AbstractSecuredField {
         return this;
     }
 
-    onEnterKeyPressed(callbackFn: RtnType_callbackFn): SecuredField {
-        this.onEnterKeyPressedCallback = callbackFn;
+    onKeyPressed(callbackFn: RtnType_callbackFn): SecuredField {
+        this.onKeyPressedCallback = callbackFn;
         return this;
     }
     //------------------------------------

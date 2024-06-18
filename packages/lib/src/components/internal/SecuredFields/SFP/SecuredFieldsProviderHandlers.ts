@@ -223,27 +223,20 @@ function handleOnAutoComplete(cbObj: CbObjOnAutoComplete): void {
     this.props.onAutoComplete(cbObj);
 }
 
-function handleOnEnterKeyPressed(obj: OnKeyPressObj): void {
-    // this.props.onEnterKeyPressed?.(obj);
-
-    const kb = new SFKeyboardEvent(
-        'keypress',
-        {
-            bubbles: true,
-            cancelable: true,
-            key: 'Enter',
-            code: 'Enter'
-        },
-        obj.fieldType
-    );
-    this.props.handleKeyPress?.(kb);
-
-    // this.props.handleKeyPress?.( new KeyboardEvent('keypress', {
-    //     bubbles: true,
-    //     cancelable: true,
-    //     key: 'Enter',
-    //     code: 'Enter'
-    // }));
+function handleKeyPressed(obj: OnKeyPressObj): void {
+    if (obj.action === 'enterKeyPressed') {
+        const kb = new SFKeyboardEvent(
+            'keypress',
+            {
+                bubbles: true,
+                cancelable: true,
+                key: 'Enter',
+                code: 'Enter'
+            },
+            obj.fieldType
+        );
+        this.props.handleKeyPress?.(kb);
+    }
 }
 
 /**
@@ -265,5 +258,5 @@ export default {
     handleOnError,
     handleOnNoDataRequired,
     handleOnTouchstartIOS,
-    handleOnEnterKeyPressed
+    handleKeyPressed
 };
