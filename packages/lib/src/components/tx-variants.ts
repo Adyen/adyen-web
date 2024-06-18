@@ -138,6 +138,7 @@ export enum TxVariants {
     /** Await */
     blik = 'blik',
     mbway = 'mbway',
+    ancv = 'ancv',
     upi = 'upi', // also QR
     upi_qr = 'upi_qr', // also QR
     upi_collect = 'upi_collect', // also QR

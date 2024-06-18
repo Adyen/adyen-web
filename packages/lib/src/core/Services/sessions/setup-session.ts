@@ -3,8 +3,6 @@ import Session from '../../CheckoutSession';
 import { CheckoutSessionSetupResponse } from '../../CheckoutSession/types';
 import { API_VERSION } from './constants';
 
-/**
- */
 function setupSession(session: Session, options): Promise<CheckoutSessionSetupResponse> {
     const path = `${API_VERSION}/sessions/${session.id}/setup?clientKey=${session.clientKey}`;
     const data = {
@@ -20,8 +18,7 @@ function setupSession(session: Session, options): Promise<CheckoutSessionSetupRe
         {
             loadingContext: session.loadingContext,
             path,
-            errorLevel: 'fatal',
-            errorMessage: 'ERROR: Invalid ClientKey'
+            errorLevel: 'fatal'
         },
         data
     );

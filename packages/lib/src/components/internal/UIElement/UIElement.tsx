@@ -8,11 +8,10 @@ import { Resources } from '../../../core/Context/Resources';
 import { ANALYTICS_SUBMIT_STR } from '../../../core/Analytics/constants';
 
 import type { AnalyticsInitialEvent, SendAnalyticsObject } from '../../../core/Analytics/types';
-import type { CoreConfiguration, ICore } from '../../../core/types';
-import type { ComponentMethodsRef, IUIElement, OnKeyPressObj, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
+import type { CoreConfiguration, ICore, AdditionalDetailsData } from '../../../core/types';
+import type { ComponentMethodsRef, PayButtonFunctionProps, UIElementProps, UIElementStatus, OnKeyPressObj } from './types';
 import type { CheckoutSessionDetailsResponse, CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
 import type {
-    AdditionalDetailsStateData,
     CheckoutAdvancedFlowResponse,
     Order,
     PaymentAction,
@@ -29,14 +28,15 @@ import { debounce } from '../../../utils/debounce';
 import './UIElement.scss';
 import SFKeyboardEvent from '../SecuredFields/SFP/SFKeyboardEvent';
 
-export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> implements IUIElement {
-    public static type = undefined;
+export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
 
     protected componentRef: any;
 
     protected resources: Resources;
 
     public elementRef: UIElement;
+  
+  public static type = undefined;
 
     /**
      * Defines all txVariants that the Component supports (in case it support multiple ones besides the 'type' one)
@@ -266,7 +266,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         }
     };
 
-    protected handleAdditionalDetails(state: AdditionalDetailsStateData): void {
+    protected handleAdditionalDetails(state: AdditionalDetailsData): void {
         this.makeAdditionalDetailsCall(state)
             .then(sanitizeResponse)
             .then(verifyPaymentDidNotFail)
@@ -274,7 +274,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             .catch(this.handleFailedResult);
     }
 
-    private makeAdditionalDetailsCall(state: AdditionalDetailsStateData): Promise<CheckoutSessionDetailsResponse | CheckoutAdvancedFlowResponse> {
+    private makeAdditionalDetailsCall(state: AdditionalDetailsData): Promise<CheckoutSessionDetailsResponse | CheckoutAdvancedFlowResponse> {
         if (this.props.onAdditionalDetails) {
             return new Promise<CheckoutAdvancedFlowResponse>((resolve, reject) => {
                 this.props.onAdditionalDetails(state, this.elementRef, { resolve, reject });

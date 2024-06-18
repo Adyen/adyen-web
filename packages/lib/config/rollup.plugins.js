@@ -8,6 +8,10 @@ import postcss from 'rollup-plugin-postcss';
 import { dts } from 'rollup-plugin-dts';
 import { defineRollupSwcOption, swc } from 'rollup-plugin-swc3';
 import generateEnvironmentVariables from './environment-variables.js';
+import { dirname, resolve as pathResolve } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export const resolveExtensions = () => resolve({ extensions: ['.js', '.jsx', '.ts', '.tsx'] });
 
@@ -34,7 +38,7 @@ export const convertJsonToESM = () => json({ namedExports: false, compact: true,
 
 export const compileCSS = ({ extract = 'adyen.css' } = {}) =>
     postcss({
-        use: ['sass'],
+        use: { sass: { includePaths: [pathResolve(__dirname, '../src')] } },
         config: {
             path: 'postcss.config.cjs'
         },

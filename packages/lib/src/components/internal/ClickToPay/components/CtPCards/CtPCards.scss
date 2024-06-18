@@ -1,27 +1,29 @@
+@import 'styles/variable-generator';
+
 .adyen-checkout-ctp__card {
     width: 100%;
-    height: var(--adyen-checkout-spacer-110);
+    height: token(spacer-110);
     margin: 0;
     background-color: white;
     border: none;
-    border-radius: var(--adyen-checkout-spacer-020);
-    margin-bottom: var(--adyen-checkout-spacer-080);
-    box-shadow: 0 0 0 var(--adyen-checkout-spacer-010) #999595;
+    border-radius: token(spacer-020);
+    margin-bottom: token(spacer-080);
+    box-shadow: 0 0 0 token(spacer-010) #999595;
     cursor: pointer;
 }
 
 .adyen-checkout-ctp__empty-cards {
-    border-radius: var(--adyen-checkout-spacer-030);
-    background-color: var(--adyen-checkout-color-background-secondary);
-    color: var(--adyen-checkout-color-grey-1300);
-    height: var(--adyen-checkout-spacer-110);
+    border-radius: token(spacer-030);
+    background-color: token(color-background-secondary);
+    color: token(color-label-tertiary);
+    height: token(spacer-110);
     display: flex;
     align-items: center;
     font-size: 13px;
-    font-weight: var(--adyen-checkout-text-body-font-weight);
-    line-height: var(--adyen-checkout-text-caption-line-height);
-    padding: var(--adyen-checkout-spacer-060) var(--adyen-checkout-spacer-070);
-    margin-bottom: var(--adyen-checkout-spacer-090);
+    font-weight: token(text-body-font-weight);
+    line-height: token(text-caption-line-height);
+    padding: token(spacer-060) token(spacer-070);
+    margin-bottom: token(spacer-090);
 }
 
 .adyen-checkout__iframe--ctpIframe {

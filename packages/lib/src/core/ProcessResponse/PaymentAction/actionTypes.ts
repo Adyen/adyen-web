@@ -1,11 +1,11 @@
 import { get3DS2FlowProps } from '../../../components/ThreeDS2/components/utils';
 import uuid from '../../../utils/uuid';
+import UIElement from '../../../components/internal/UIElement';
 import type { PaymentAction } from '../../../types/global-types';
 import type { IRegistry } from '../../core.registry';
 import type { ICore } from '../../types';
-import type { IUIElement } from '../../../components/internal/UIElement/types';
 
-const createComponent = (core: ICore, registry: IRegistry, componentType, props): IUIElement => {
+const createComponent = (core: ICore, registry: IRegistry, componentType, props): UIElement => {
     const Element = registry.getComponent(componentType);
 
     if (!Element) {

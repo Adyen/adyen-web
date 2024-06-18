@@ -138,7 +138,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
             {activeFieldsets.bankAccount && (
                 <IbanInput
                     holderName={true}
-                    label="bankAccount"
+                    label="ach.bankAccount"
                     data={data.bankAccount}
                     onChange={handleFieldset('bankAccount')}
                     ref={fieldsetsRefs.bankAccount}

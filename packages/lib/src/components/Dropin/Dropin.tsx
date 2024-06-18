@@ -197,7 +197,6 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
                     <DropinComponent
                         {...this.props}
                         core={this.core}
-                        onChange={this.setState}
                         elementRef={this.elementRef}
                         onCreateElements={this.handleCreate}
                         ref={dropinRef => {

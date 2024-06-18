@@ -4,6 +4,7 @@ import * as path from 'path';
 import eslint from '@rollup/plugin-eslint';
 import stylelint from 'vite-plugin-stylelint';
 import generateEnvironmentVariables from '../config/environment-variables';
+import { resolve } from 'node:path';
 
 const config: StorybookConfig = {
     stories: ['../storybook/**/*.stories.@(js|jsx|ts|tsx)'],
@@ -36,7 +37,8 @@ const config: StorybookConfig = {
                         // this is required for the SCSS modules
                         find: /^~(.*)$/,
                         replacement: '$1'
-                    }
+                    },
+                    { find: /^styles(.*)$/, replacement: resolve(__dirname, '../src/styles') }
                 ]
             },
             server: {

@@ -1,7 +1,7 @@
 import { AdyenCheckout } from '../../index';
 import ThreeDS2DeviceFingerprint from '../ThreeDS2/ThreeDS2DeviceFingerprint';
 import ThreeDS2Challenge from '../ThreeDS2/ThreeDS2Challenge';
-import { screen, render, fireEvent } from '@testing-library/preact';
+import { screen, render, fireEvent, waitFor } from '@testing-library/preact';
 import Dropin from './Dropin';
 import { ICore } from '../../core/types';
 
@@ -22,7 +22,11 @@ describe('Dropin', () => {
             clientKey: 'test_123456',
             analytics: { enabled: false },
             paymentMethodsResponse: {
-                paymentMethods: [{ name: 'AliPay', type: 'alipay' }]
+                paymentMethods: [
+                    { name: 'AliPay', type: 'alipay' },
+                    { name: 'KakaoPay', type: 'kakaopay' },
+                    { name: 'Paytm', type: 'paytm' }
+                ]
             },
             risk: {
                 enabled: false
@@ -179,7 +183,7 @@ describe('Dropin', () => {
         test('should show success status', async () => {
             const dropin = new Dropin(checkout);
             render(dropin.render());
-            expect(await screen.findByRole('radio')).toBeTruthy();
+            expect(await screen.findAllByRole('radio')).toBeTruthy();
             dropin.setStatus('success');
             expect(await screen.findByText(/Payment Successful/i)).toBeTruthy();
         });
@@ -187,7 +191,7 @@ describe('Dropin', () => {
         test('should show Error status', async () => {
             const dropin = new Dropin(checkout);
             render(dropin.render());
-            expect(await screen.findByRole('radio')).toBeTruthy();
+            expect(await screen.findAllByRole('radio')).toBeTruthy();
             dropin.setStatus('error');
             expect(await screen.findByText(/An unknown error occurred/i)).toBeTruthy();
         });
@@ -237,6 +241,36 @@ describe('Dropin', () => {
                     done();
                 }, 300);
             }, 0);
+
+    describe('Open specific payment method', () => {
+        test('should open specific payment method if configured', async () => {
+            const dropin = new Dropin(checkout, { openPaymentMethod: { type: 'paytm' } });
+            render(dropin.render());
+
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+
+            await waitFor(() => expect(screen.getByRole('button', { name: 'Continue to Paytm' })).toBeVisible());
+        });
+
+        test('should open the first payment method by default', async () => {
+            const dropin = new Dropin(checkout);
+            render(dropin.render());
+
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+
+            await waitFor(() => expect(screen.getByRole('button', { name: 'Continue to AliPay' })).toBeVisible());
+        });
+
+        test('should not open any payment method if configured', async () => {
+            const dropin = new Dropin(checkout, { openFirstPaymentMethod: false, openFirstStoredPaymentMethod: false });
+            render(dropin.render());
+
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+
+            await waitFor(() => expect(screen.queryByRole('button', { name: /continue/i })).not.toBeInTheDocument());
         });
     });
 });

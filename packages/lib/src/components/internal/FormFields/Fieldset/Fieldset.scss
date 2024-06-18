@@ -1,8 +1,9 @@
-@use "../../../../style/index";
+@use 'styles/index';
+@import 'styles/variable-generator';
 
 .adyen-checkout__fieldset {
     display: block;
-    padding-bottom: var(--adyen-checkout-spacer-040);
+    padding-bottom: token(spacer-040);
     width: 100%;
     margin-inline-start: 0;
     margin-inline-end: 0;
@@ -19,17 +20,17 @@
 }
 
 .adyen-checkout__fieldset + .adyen-checkout__fieldset {
-    margin-top: var(--adyen-checkout-spacer-070);
+    margin-top: token(spacer-070);
 }
 
 .adyen-checkout__fieldset__title {
     @include index.adyen-checkout-text-subtitle;
 
-    color: var(--adyen-checkout-color-label-primary);
-    font-weight: var(--adyen-checkout-text-subtitle-font-weight);
+    color: token(color-label-primary);
+    font-weight: token(text-subtitle-font-weight);
     display: block;
     margin: 0;
-    padding: 0 0 var(--adyen-checkout-spacer-060);
+    padding: 0 0 token(spacer-060);
 }
 
 .adyen-checkout__fieldset__fields,
@@ -55,8 +56,8 @@
 }
 
 .adyen-checkout__fieldset--readonly .adyen-checkout__fieldset__fields {
-    color: var(--adyen-checkout-color-label-primary);
-    font-size: var(--adyen-checkout-font-size-small);
-    line-height: var(--adyen-checkout-text-caption-line-height);
+    color: token(color-label-primary);
+    font-size: token(text-body-font-size);
+    line-height: token(text-caption-line-height);
     margin: 0;
 }

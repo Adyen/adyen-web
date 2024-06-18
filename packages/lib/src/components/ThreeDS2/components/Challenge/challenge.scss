@@ -1,13 +1,15 @@
+@import 'styles/variable-generator';
+
 .adyen-checkout__threeds2-challenge-error {
     .adyen-checkout__status__icon {
         display: block;
-        margin: var(--adyen-checkout-spacer-130) auto var(--adyen-checkout-spacer-100);
+        margin: token(spacer-130) auto token(spacer-100);
     }
 
     .adyen-checkout__status__text {
-        color: var(--adyen-checkout-color-label-critical);
-        margin-bottom: var(--adyen-checkout-spacer-130);
+        color: token(color-label-critical);
+        margin-bottom: token(spacer-130);
         text-align: center;
-        font-size: var(--adyen-checkout-font-size-medium);
+        font-size: token(text-title-font-size);
     }
 }

@@ -1,31 +1,36 @@
+@import 'styles/variable-generator';
+
+@mixin set-checkmark-color($color: token(color-label-primary)) {
+    border-bottom: 1.5px solid $color;
+    border-right: 1.5px solid $color;
+}
+
 .adyen-checkout-checkmark {
-    --checkmark-color: var(--adyen-checkout-color-label-primary);
+    @include set-checkmark-color;
 
     transform: rotate(45deg);
-    height: var(--adyen-checkout-spacer-060);
-    width: var(--adyen-checkout-spacer-030);
-    border-bottom: 1.5px solid var(--checkmark-color);
-    border-right: 1.5px solid var(--checkmark-color);
+    height: token(spacer-060);
+    width: token(spacer-030);
 }
 
 .adyen-checkout__segmented-control {
     display: flex;
     justify-content: space-between;
-    gap: var(--adyen-checkout-spacer-020);
-    padding: var(--adyen-checkout-spacer-030);
-    background: var(--adyen-checkout-color-background-tertiary);
-    border-radius: var(--adyen-checkout-border-radius-l);
+    gap: token(spacer-020);
+    padding: token(spacer-030);
+    background: token(color-background-tertiary);
+    border-radius: token(border-radius-l);
 
     &--disabled {
         pointer-events: none;
 
         > .adyen-checkout__segmented-control-segment {
-            color: var(--adyen-checkout-color-on-interactive-disabled);
+            color: token(color-label-disabled);
         }
 
         > .adyen-checkout__segmented-control-segment--selected {
             .adyen-checkout-checkmark {
-                --checkmark-color: var(--adyen-checkout-color-on-interactive-disabled);
+                @include set-checkmark-color(token(color-label-disabled));
             }
         }
     }
@@ -35,32 +40,30 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: var(--adyen-checkout-spacer-050);
+    gap: token(spacer-050);
     flex-grow: 1;
     cursor: pointer;
     width: 100%;
-    height: var(--adyen-checkout-spacer-110);
-    color: var(--adyen-checkout-color-label-primary);
+    height: token(spacer-110);
+    color: token(color-label-primary);
     text-align: center;
-    font-weight: var(--adyen-checkout-text-body-stronger-font-weight);
-    border-radius: var(--adyen-checkout-border-radius-m);
+    font-weight: token(text-body-stronger-font-weight);
+    border-radius: token(border-radius-m);
     border: 0;
     background: transparent;
     transition: background 0.3s ease-out;
 
     &:not(&--selected):hover {
-        background-color: var(--adyen-checkout-color-background-secondary);
+        background-color: token(color-background-secondary);
     }
 
     &:active {
-        background-color: var(--adyen-checkout-color-background-secondary);
+        background-color: token(color-background-secondary);
     }
 
     &--selected {
-        background: var(--adyen-checkout-color-background-primary);
-        color: var(--adyen-checkout-color-label-primary);
-        box-shadow:
-            0 1px var(--adyen-checkout-spacer-010) 0 rgba(0 17 44 / 2%),
-            0 var(--adyen-checkout-spacer-010) var(--adyen-checkout-spacer-020) 0 rgba(0 17 44 / 4%);
+        background: token(color-background-primary);
+        color: token(color-label-primary);
+        box-shadow: token(shadow-low);
     }
 }

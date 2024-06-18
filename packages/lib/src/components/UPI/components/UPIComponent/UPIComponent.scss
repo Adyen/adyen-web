@@ -1,11 +1,13 @@
+@import 'styles/variable-generator';
+
 .adyen-checkout_upi-mode-selection-text {
-    font-weight: var(--adyen-checkout-text-body-font-weight);
+    font-weight: token(text-body-font-weight);
     font-size: 13px;
-    line-height: var(--adyen-checkout-text-caption-line-height);
+    line-height: token(text-caption-line-height);
     margin-top: 0;
     margin-bottom: 7px;
 }
 
 .adyen-checkout__segmented-control--upi-margin-bottom {
-    margin-bottom: var(--adyen-checkout-spacer-070);
+    margin-bottom: token(spacer-070);
 }

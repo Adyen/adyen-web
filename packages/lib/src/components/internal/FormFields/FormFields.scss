@@ -1,4 +1,5 @@
-@use '../../../style/index';
+@use 'styles/index';
+@import 'styles/variable-generator';
 
 // Workaround to remove autofill background and text color, works on most browsers except for Chrome mobile
 .adyen-checkout__filter-input:-webkit-autofill,
@@ -11,18 +12,18 @@
 .adyen-checkout__input:-webkit-autofill:hover,
 .adyen-checkout__input:-webkit-autofill:focus,
 .adyen-checkout__input:autofill {
-    color: var(--adyen-checkout-input-field-input-color) !important;
-    -webkit-text-fill-color: var(--adyen-checkout-input-field-input-color) !important;
-    box-shadow: 0 0 0 1000px var(--adyen-checkout-color-background-primary) inset !important;
+    color: token(color-label-primary) !important;
+    -webkit-text-fill-color: token(color-label-primary) !important;
+    box-shadow: 0 0 0 1000px token(color-background-primary) inset !important;
     background-clip: text !important;
-    background-color: var(--adyen-checkout-input-field-input-color) !important;
+    background-color: token(color-label-primary) !important;
     transition: none !important;
 }
 
 // Additional workaround for Chrome mobile to remove autofill background and text color
 .adyen-checkout__input,
 .adyen-checkout__filter-input {
-    color: var(--adyen-checkout-input-field-input-color) !important;
+    color: token(color-label-primary) !important;
     background-clip: text !important;
 }
 
@@ -73,39 +74,41 @@
     }
 }
 
+$deduct-width: token(spacer-040);
+
 .adyen-checkout__field--col-70 {
     @include index.screen-s-and-up {
-        width: calc(70% - var(--adyen-checkout-spacer-040));
+        width: calc(70% - $deduct-width);
     }
 }
 
 .adyen-checkout__field--col-30 {
     @include index.screen-s-and-up {
-        width: calc(30% - var(--adyen-checkout-spacer-040));
+        width: calc(30% - $deduct-width);
     }
 }
 
 .adyen-checkout__field--col-50 {
     @include index.screen-s-and-up {
-        width: calc(50% - var(--adyen-checkout-spacer-040));
+        width: calc(50% - $deduct-width);
     }
 }
 
 .adyen-checkout__field-wrapper > .adyen-checkout__field:first-child {
-    margin-right: var(--adyen-checkout-spacer-040);
+    margin-right: token(spacer-040);
 
     [dir='rtl'] & {
         margin-right: 0;
-        margin-left: var(--adyen-checkout-spacer-040);
+        margin-left: token(spacer-040);
     }
 }
 
 .adyen-checkout__field-wrapper > .adyen-checkout__field:nth-child(2) {
-    margin-left: var(--adyen-checkout-spacer-040);
+    margin-left: token(spacer-040);
 
     [dir='rtl'] & {
         margin-left: 0;
-        margin-right: var(--adyen-checkout-spacer-040);
+        margin-right: token(spacer-040);
     }
 }
 
@@ -115,12 +118,12 @@
 
 .adyen-checkout__input {
     width: 100%;
-    color: var(--adyen-checkout-input-field-input-color);
-    font-size: var(--adyen-checkout-font-size-medium);
+    color: token(color-label-primary);
+    font-size: token(text-subtitle-font-size);
     font-family: inherit;
     display: block;
-    height: var(--adyen-checkout-input-field-height);
-    padding-left: var(--adyen-checkout-spacer-060);
+    height: token(spacer-110);
+    padding-left: token(spacer-060);
     background: inherit;
     outline: none;
     transition:
@@ -133,7 +136,7 @@
 
     &:disabled,
     &:read-only {
-        color: var(--adyen-checkout-color-label-secondary) !important;
+        color: token(color-label-secondary) !important;
         cursor: default;
     }
 }
@@ -143,21 +146,21 @@ span.adyen-checkout__input {
 }
 
 .adyen-checkout-input__inline-validation {
-    width: var(--adyen-checkout-spacer-070);
-    height: var(--adyen-checkout-spacer-070);
-    margin-right: var(--adyen-checkout-spacer-060);
+    width: token(spacer-070);
+    height: token(spacer-070);
+    margin-right: token(spacer-060);
 
     [dir='rtl'] & {
-        margin-left: var(--adyen-checkout-spacer-060);
+        margin-left: token(spacer-060);
     }
 }
 
 .adyen-checkout-input__inline-validation--valid {
-    color: var(--adyen-checkout-color-label-success);
+    color: token(color-label-success);
 }
 
 .adyen-checkout-input__inline-validation--invalid {
-    color: var(--adyen-checkout-color-label-critical);
+    color: token(color-label-critical);
 }
 
 .adyen-checkout__input--date {

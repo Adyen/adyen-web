@@ -1,6 +1,6 @@
-@use "../../../style/index";
+@import 'styles/variable-generator';
 
 .adyen-checkout__voucher-result__introduction {
-    font-size: var(--adyen-checkout-font-size-medium);
+    font-size: token(text-title-font-size);
     max-width: 420px;
 }
