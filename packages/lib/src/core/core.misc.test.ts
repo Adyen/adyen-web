@@ -1,6 +1,6 @@
 import AdyenCheckout from './core';
 import { render, screen, within } from '@testing-library/preact';
-import { Dropin } from '../components';
+import { Ach, Card, Dropin } from '../components';
 
 // TODO copy
 const paymentMethodsResponse = {
@@ -51,14 +51,16 @@ const checkoutConfig = {
     shopperLocale: 'en-US',
     environment: 'test',
     clientKey: 'test_F7_FEKJHF',
-    paymentMethodsResponse
-    //storedPaymentMethods: [paymentMethodsResponse.storedPaymentMethods]
+    paymentMethodsResponse,
+    countryCode: 'en-US'
 };
 
 const createDropinComponent = async mergeConfig => {
     const checkout = new AdyenCheckout({ ...checkoutConfig, ...mergeConfig });
     await checkout.initialize();
-    const component = new Dropin(checkout, {});
+    const component = new Dropin(checkout, {
+        paymentMethodComponents: [Ach, Card]
+    });
     return component;
 };
 
