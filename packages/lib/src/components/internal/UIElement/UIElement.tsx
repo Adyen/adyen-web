@@ -29,14 +29,13 @@ import './UIElement.scss';
 import SFKeyboardEvent from '../SecuredFields/SFP/SFKeyboardEvent';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
-
     protected componentRef: any;
 
     protected resources: Resources;
 
     public elementRef: UIElement;
-  
-  public static type = undefined;
+
+    public static type = undefined;
 
     /**
      * Defines all txVariants that the Component supports (in case it support multiple ones besides the 'type' one)
