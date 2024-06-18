@@ -224,24 +224,6 @@ describe('Dropin', () => {
         });
     });
 
-    describe('Detecting Enter key presses', () => {
-        test('should see merchant defined onEnterKeyPressed callback fired', done => {
-            new Dropin(checkout).mount('body');
-
-            // Set timeout to allow Dropin's Promises to resolve
-            // - can't use the usual method of "flushPromises" because the async it requires clashes with the "done" we need to avoid the debounce timer
-            setTimeout(() => {
-                const el = screen.getByText('AliPay');
-
-                fireEvent.keyPress(el, { key: 'Enter', code: 'Enter', charCode: 13 });
-
-                // Bypass the debounce in UIElement.handleKeyPress
-                setTimeout(() => {
-                    expect(configObj.onEnterKeyPressed).toHaveBeenCalled();
-                    done();
-                }, 300);
-            }, 0);
-
     describe('Open specific payment method', () => {
         test('should open specific payment method if configured', async () => {
             const dropin = new Dropin(checkout, { openPaymentMethod: { type: 'paytm' } });
@@ -271,6 +253,26 @@ describe('Dropin', () => {
             await flushPromises();
 
             await waitFor(() => expect(screen.queryByRole('button', { name: /continue/i })).not.toBeInTheDocument());
+        });
+    });
+
+    describe('Detecting Enter key presses', () => {
+        test('should see merchant defined onEnterKeyPressed callback fired', done => {
+            new Dropin(checkout).mount('body');
+
+            // Set timeout to allow Dropin's Promises to resolve
+            // - can't use the usual method of "flushPromises" because the async it requires clashes with the "done" we need to avoid the debounce timer
+            setTimeout(() => {
+                const el = screen.getByText('AliPay');
+
+                fireEvent.keyPress(el, { key: 'Enter', code: 'Enter', charCode: 13 });
+
+                // Bypass the debounce in UIElement.handleKeyPress
+                setTimeout(() => {
+                    expect(configObj.onEnterKeyPressed).toHaveBeenCalled();
+                    done();
+                }, 300);
+            }, 0);
         });
     });
 });
