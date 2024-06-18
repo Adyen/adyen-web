@@ -396,10 +396,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     protected handleKeyPress(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) {
+        console.log('### UIElement::handleKeyPress:: e', e);
         if (e.key === 'Enter' || e.code === 'Enter') {
             e.preventDefault(); // Prevent <form> submission if Component is placed inside a form
 
-            this.debounceEnterKeyPress({ component: null, fieldType: (e.target as HTMLInputElement).name, action: 'enterKeyPressed' });
+            this.debounceEnterKeyPress({ component: this, fieldType: (e.target as HTMLInputElement)?.name });
         }
     }
 
@@ -409,8 +410,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * @param obj
      */
     protected onEnterKeyPressed(obj: OnKeyPressObj) {
-        // Add component ref here, rather than in handleKeyPress in case this function has been called directly from a securedField
-        obj.component = this;
+        console.log('### UIElement::onEnterKeyPressed:: obj', obj);
 
         if (this.props.onEnterKeyPressed) {
             this.props.onEnterKeyPressed(obj);

@@ -112,6 +112,7 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
     };
 
     protected onEnterKeyPressed = (obj: OnKeyPressObj) => {
+        console.log('### CustomCard::onEnterKeyPressed:: obj', obj);
         this.props.onEnterKeyPressed?.(obj);
     };
 
@@ -124,7 +125,7 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
                     }}
                     {...this.props}
                     {...this.state}
-                    onEnterKeyPressed={this.onEnterKeyPressed}
+                    handleKeyPress={this.handleKeyPress}
                     rootNode={this._node}
                     onChange={this.setState}
                     onBinValue={this.onBinValue}

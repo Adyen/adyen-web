@@ -348,7 +348,7 @@ export class CardElement extends UIElement<CardConfiguration> {
                 {...this.state}
                 onChange={this.setState}
                 onSubmit={this.submit}
-                onEnterKeyPressed={this.onEnterKeyPressed}
+                handleKeyPress={this.handleKeyPress}
                 payButton={this.payButton}
                 onBrand={this.onBrand}
                 onBinValue={this.onBinValue}

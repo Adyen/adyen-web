@@ -137,6 +137,6 @@ export interface ComponentMethodsRef {
 
 export interface OnKeyPressObj {
     fieldType: string;
-    action: string;
+    action?: string;
     component: UIElement;
 }
