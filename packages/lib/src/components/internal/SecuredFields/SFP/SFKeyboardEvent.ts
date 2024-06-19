@@ -5,7 +5,9 @@ class SFKeyboardEvent extends KeyboardEvent {
         super(type, eventInitDict);
         try {
             this.target = { name };
-        } catch (e) {}
+        } catch (e) {
+            // try...catch needed for unit tests
+        }
     }
 }
 

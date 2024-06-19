@@ -66,8 +66,6 @@ const CardInput = (props: CardInputProps) => {
         ...(props.hasHolderName && { holderName: props.data.holderName ?? '' })
     });
 
-    const [sortedErrorList, setSortedErrorList] = useState<SortedErrorObject[]>(null);
-
     const [focusedElement, setFocusedElement] = useState('');
     const [isSfpValid, setIsSfpValid] = useState(false);
     const [expiryDatePolicy, setExpiryDatePolicy] = useState(DATE_POLICY_REQUIRED);
