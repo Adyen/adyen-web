@@ -9,7 +9,7 @@ import { StylesObject } from '../../internal/SecuredFields/lib/types';
 import { Resources } from '../../../core/Context/Resources';
 import { Placeholders, SFError } from '../../Card/components/CardInput/types';
 import { ValidationError } from '../types';
-import { OnKeyPressObj } from '../../internal/UIElement/types';
+import SFKeyboardEvent from '../../internal/SecuredFields/SFP/SFKeyboardEvent';
 
 interface SecuredFieldsProps {
     autoFocus?: boolean;
@@ -32,7 +32,7 @@ interface SecuredFieldsProps {
     onBrand?: () => {};
     onConfigSuccess?: () => {};
     onChange: (data) => void;
-    handleKeyPress?: (o: OnKeyPressObj) => void;
+    handleKeyPress?: (o: SFKeyboardEvent) => void;
     onError?: () => {};
     onFieldValid?: () => {};
     onFocus?: (e) => {};

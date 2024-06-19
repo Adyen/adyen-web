@@ -22,7 +22,7 @@ import {
 } from '../lib/types';
 import { existy } from '../lib/utilities/commonUtils';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
-import { OnKeyPressObj } from '../../UIElement/types';
+import { SFKeyPressObj } from '../lib/types';
 import SFKeyboardEvent from './SFKeyboardEvent';
 
 /**
@@ -223,7 +223,7 @@ function handleOnAutoComplete(cbObj: CbObjOnAutoComplete): void {
     this.props.onAutoComplete(cbObj);
 }
 
-function handleKeyPressed(obj: OnKeyPressObj): void {
+function handleKeyPressed(obj: SFKeyPressObj): void {
     if (obj.action === 'enterKeyPressed') {
         const kb = new SFKeyboardEvent(
             'keypress',

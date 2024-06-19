@@ -1,4 +1,4 @@
-import { CVCPolicyType, DatePolicyType, StylesObject } from '../lib/types';
+import { CVCPolicyType, DatePolicyType, SFKeyPressObj, StylesObject } from '../lib/types';
 import { AddressData } from '../../../../types/global-types';
 import { CardBrandsConfiguration } from '../../../Card/types';
 import Language from '../../../../language';
@@ -7,7 +7,6 @@ import { TouchStartEventObj } from '../../../Card/components/CardInput/component
 import { Placeholders as CardPlaceholders } from '../../../Card/components/CardInput/types';
 import { Placeholders as AchPlaceholders } from '../../../Ach/components/AchInput/types';
 import { Placeholders as GiftcardPlaceholders } from '../../../Giftcard/components/types';
-import { OnKeyPressObj } from '../../UIElement/types';
 
 export type Placeholders = CardPlaceholders | AchPlaceholders | GiftcardPlaceholders;
 
@@ -41,7 +40,7 @@ export interface SFPProps {
     onFieldValid?: () => {};
     onFocus?: () => {};
     onLoad?: () => {};
-    handleKeyPress?: (o: OnKeyPressObj) => void;
+    handleKeyPress?: (o: SFKeyPressObj) => void;
     rootNode: HTMLElement; // Specific to SecuredFieldsInput
     showWarnings?: boolean;
     styles?: StylesObject;

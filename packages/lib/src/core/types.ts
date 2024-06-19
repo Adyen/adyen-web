@@ -22,7 +22,6 @@ import type { onBalanceCheckCallbackType, onOrderRequestCallbackType } from '../
 import type { SRPanelConfig } from './Errors/types';
 import type { NewableComponent } from './core.registry';
 import type { onOrderCancelType } from '../components/Dropin/types';
-import { OnKeyPressObj } from '../components/internal/UIElement/types';
 
 export interface ICore {
     initialize(): Promise<ICore>;
@@ -93,6 +92,12 @@ export type OnChangeData = {
         };
     };
 };
+
+export interface OnKeyPressedObject {
+    fieldType: string;
+    activeElement: HTMLElement;
+    component: UIElement;
+}
 
 export interface CoreConfiguration {
     /**
@@ -284,7 +289,7 @@ export interface CoreConfiguration {
      * Called when a Component detects, or is told by a SecuredField, that the Enter key has been pressed.
      * - merchant set config option
      */
-    onEnterKeyPressed?(o: OnKeyPressObj): void;
+    onEnterKeyPressed?(o: OnKeyPressedObject): void;
 
     /**
      * Callback called when it is required to fetch/update the payment methods list.

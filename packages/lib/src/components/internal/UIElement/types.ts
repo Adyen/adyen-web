@@ -3,9 +3,9 @@ import Session from '../../../core/CheckoutSession';
 import Language from '../../../language';
 import UIElement from './UIElement';
 import type { PaymentAction, PaymentAmount, PaymentAmountExtended } from '../../../types/global-types';
-import type { BaseElementProps, IBaseElement } from '../BaseElement/types';
+import type { BaseElementProps } from '../BaseElement/types';
 import type { PayButtonProps } from '../PayButton/PayButton';
-import type { CoreConfiguration, ICore } from '../../../core/types';
+import type { CoreConfiguration, OnKeyPressedObject } from '../../../core/types';
 
 export type PayButtonFunctionProps = Omit<PayButtonProps, 'amount'>;
 
@@ -105,7 +105,7 @@ export type UIElementProps = BaseElementProps &
          * Called when a Component detects, or is told by a SecuredField, that the Enter key has been pressed.
          * - merchant set config option
          */
-        onEnterKeyPressed?: (o: OnKeyPressObj) => void;
+        onEnterKeyPressed?: (o: OnKeyPressedObject) => void;
     };
 
 export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';
@@ -114,10 +114,4 @@ export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';
 export interface ComponentMethodsRef {
     showValidation?: () => void;
     setStatus?(status: UIElementStatus): void;
-}
-
-export interface OnKeyPressObj {
-    fieldType: string;
-    action?: string;
-    component: UIElement;
 }

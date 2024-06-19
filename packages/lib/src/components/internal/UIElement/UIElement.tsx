@@ -8,8 +8,8 @@ import { Resources } from '../../../core/Context/Resources';
 import { ANALYTICS_SUBMIT_STR } from '../../../core/Analytics/constants';
 
 import type { AnalyticsInitialEvent, SendAnalyticsObject } from '../../../core/Analytics/types';
-import type { CoreConfiguration, ICore, AdditionalDetailsData } from '../../../core/types';
-import type { ComponentMethodsRef, PayButtonFunctionProps, UIElementProps, UIElementStatus, OnKeyPressObj } from './types';
+import type { CoreConfiguration, ICore, AdditionalDetailsData, OnKeyPressedObject } from '../../../core/types';
+import type { ComponentMethodsRef, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
 import type { CheckoutSessionDetailsResponse, CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
 import type {
     CheckoutAdvancedFlowResponse,
@@ -68,7 +68,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.onEnterKeyPressed = this.onEnterKeyPressed.bind(this);
     }
 
-    private debounceEnterKeyPress = debounce((obj: OnKeyPressObj) => this.onEnterKeyPressed(obj));
+    private debounceEnterKeyPress = debounce((obj: OnKeyPressedObject) => this.onEnterKeyPressed(obj));
 
     protected override buildElementProps(componentProps?: P) {
         const globalCoreProps = this.core.getCorePropsForComponent();
@@ -393,7 +393,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         if (e.key === 'Enter' || e.code === 'Enter') {
             e.preventDefault(); // Prevent <form> submission if Component is placed inside a form
 
-            this.debounceEnterKeyPress({ component: this, fieldType: (e.target as HTMLInputElement)?.name });
+            this.debounceEnterKeyPress({ component: this, fieldType: (e.target as HTMLInputElement)?.name, activeElement: document?.activeElement });
         }
     }
 
@@ -401,12 +401,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * Handle Enter key pressed from a UIElement (called via handleKeyPress)
      * @param obj
      */
-    protected onEnterKeyPressed(obj: OnKeyPressObj) {
-        (document.activeElement as HTMLElement).blur();
-
+    protected onEnterKeyPressed(obj: OnKeyPressedObject) {
         if (this.props.onEnterKeyPressed) {
             this.props.onEnterKeyPressed(obj);
         } else {
+            obj.activeElement.blur();
             this.submit();
         }
     }

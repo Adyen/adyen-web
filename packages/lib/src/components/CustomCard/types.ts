@@ -1,6 +1,6 @@
 import { CardConfiguration } from '../Card/types';
 import { SFError } from '../Card/components/CardInput/types';
-import { OnKeyPressObj } from '../internal/UIElement/types';
+import { OnKeyPressedObject } from '../../core/types';
 
 export type CustomCardConfiguration = Omit<
     CardConfiguration,
@@ -22,7 +22,7 @@ export type CustomCardConfiguration = Omit<
     | 'configuration'
 > & {
     onValidationError?: (validationErrors: ValidationError[]) => void;
-    onEnterKeyPressed?: (o: OnKeyPressObj) => void;
+    onEnterKeyPressed?: (o: OnKeyPressedObject) => void;
 };
 
 export type ValidationError = SFError & {

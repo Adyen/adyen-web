@@ -11,10 +11,11 @@ import { SRPanel } from '../../../../core/Errors/SRPanel';
 import RiskElement from '../../../../core/RiskModule';
 import { DisclaimerMsgObject } from '../../../internal/DisclaimerMessage/DisclaimerMessage';
 import { OnAddressLookupType, OnAddressSelectedType } from '../../../internal/Address/components/AddressSearch';
-import { ComponentMethodsRef, OnKeyPressObj } from '../../../internal/UIElement/types';
+import { ComponentMethodsRef } from '../../../internal/UIElement/types';
 import { AddressData, PaymentAmount } from '../../../../types/global-types';
 import { AnalyticsModule } from '../../../../types/global-types';
 import { FieldErrorAnalyticsObject } from '../../../../core/Analytics/types';
+import SFKeyboardEvent from '../../../internal/SecuredFields/SFP/SFKeyboardEvent';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -114,7 +115,7 @@ export interface CardInputProps {
     onFieldValid?: () => {};
     onFocus?: (e) => {};
     onLoad?: () => {};
-    handleKeyPress?: (o: OnKeyPressObj) => void;
+    handleKeyPress?: (o: SFKeyboardEvent) => void;
     onAddressLookup?: OnAddressLookupType;
     onAddressSelected?: OnAddressSelectedType;
     addressSearchDebounceMs?: number;
