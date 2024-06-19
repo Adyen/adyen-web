@@ -13,7 +13,8 @@ import {
     CbObjOnFieldValid,
     CbObjOnAutoComplete,
     CbObjOnConfigSuccess,
-    CbObjOnLoad
+    CbObjOnLoad,
+    SFKeyPressObj
 } from '../lib/types';
 import { CSFReturnObject, CSFSetupObject } from '../lib/CSF/types';
 import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, DEDICATED_CARD_COMPONENTS, ENCRYPTED_CARD_NUMBER, ENCRYPTED_PWD_FIELD } from '../lib/constants';
@@ -46,7 +47,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     private handleOnAutoComplete: (obj: CbObjOnAutoComplete) => void;
     private handleOnNoDataRequired: () => void;
     private handleOnTouchstartIOS: (obj) => void;
-    private handleKeyPressed: (obj) => void;
+    private handleKeyPressed: (obj: SFKeyPressObj) => void;
     public state: SFPState;
     public props;
     private issuingCountryCode;
