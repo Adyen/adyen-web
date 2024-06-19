@@ -3,9 +3,9 @@ import Session from '../../../core/CheckoutSession';
 import Language from '../../../language';
 import UIElement from './UIElement';
 import type { PaymentAction, PaymentAmount, PaymentAmountExtended } from '../../../types/global-types';
-import type { BaseElementProps, IBaseElement } from '../BaseElement/types';
+import type { BaseElementProps } from '../BaseElement/types';
 import type { PayButtonProps } from '../PayButton/PayButton';
-import type { CoreConfiguration, ICore } from '../../../core/types';
+import type { CoreConfiguration } from '../../../core/types';
 
 export type PayButtonFunctionProps = Omit<PayButtonProps, 'amount'>;
 
