@@ -1,4 +1,4 @@
-import { AdyenCheckout, Ideal } from '@adyen/adyen-web';
+import { AdyenCheckout, Redirect } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { handleSubmit, handleAdditionalDetails, handleError, handlePaymentCompleted } from '../../handlers';
 import { amount, shopperLocale, countryCode } from '../../services/commonConfig';
@@ -34,7 +34,7 @@ const initCheckout = async () => {
         // ...window.mainConfiguration
     });
 
-    window.ideal = new Ideal(checkout, { highlightedIssuers: ['1121', '1154', '1153'] }).mount('.ideal-field');
+    window.ideal = new Redirect(checkout, { type: 'ideal' }).mount('.ideal-field');
 };
 
 initCheckout();
