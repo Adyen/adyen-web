@@ -55,6 +55,7 @@
     "README"
   ],
   "scripts": {
+    "eslint-inspector": "eslint --inspect-config --port 3020",
     "start": "npm run dev-server",
     "story": "storybook dev --port 3020 --disable-telemetry",
     "dev-server": "rollup --watch --config config/rollup.dev.js",
@@ -68,7 +69,7 @@
     "type-check": "tsc --noEmit",
     "types:generate": "tsc --emitDeclarationOnly",
     "format": "npm run lint:fix && npm run prettier:fix && npm run styles:fix",
-    "lint": "eslint .",
+    "lint": "eslint",
     "lint-styles": "stylelint '**/*.scss'",
     "styles:fix": "npm run lint-styles -- --fix",
     "lint:fix": "npm run lint -- --fix",
@@ -78,6 +79,7 @@
     "size": "npm run build && size-limit"
   },
   "devDependencies": {
+    "@eslint/js": "9.5.0",
     "@preact/preset-vite": "^2.8.2",
     "@rollup/plugin-commonjs": "26.0.1",
     "@rollup/plugin-eslint": "9.0.5",
@@ -96,6 +98,7 @@
     "@testing-library/preact": "3.2.4",
     "@testing-library/preact-hooks": "1.1.0",
     "@testing-library/user-event": "14.5.2",
+    "@types/eslint__js": "^8.42.3",
     "@types/jest": "29.5.12",
     "autoprefixer": "10.4.19",
     "cross-env": "7.0.3",
@@ -103,12 +106,13 @@
     "dotenv": "16.4.5",
     "enzyme": "3.11.0",
     "enzyme-adapter-preact-pure": "4.1.0",
-    "eslint": "8.57.0",
+    "eslint": "^9.5.0",
     "eslint-plugin-import": "2.29.1",
     "eslint-plugin-jsx-a11y": "6.8.0",
     "eslint-plugin-react": "7.34.2",
     "eslint-plugin-storybook": "0.8.0",
     "eslint-plugin-testing-library": "6.2.2",
+    "globals": "^15.6.0",
     "husky": "9.0.11",
     "jest": "29.7.0",
     "jest-environment-jsdom": "29.7.0",
