@@ -114,8 +114,8 @@
     position: relative;
 }
 
-.adyen-checkout__payment-method__details__content {
-    margin: token(spacer-000) token(spacer-000) token(spacer-070);
+.adyen-checkout__payment-method__details__content > *:last-child {
+    margin-bottom: token(spacer-070);
 }
 
 .adyen-checkout__payment-method__image__wrapper {
@@ -132,7 +132,7 @@
 
 .adyen-checkout__payment-method__image {
     display: block;
-    border-radius: token(border-radius-s);
+    border-radius: var(--adyen-checkout-border-radius-s);
     width: 100%;
     height: 100%;
     overflow: hidden;
