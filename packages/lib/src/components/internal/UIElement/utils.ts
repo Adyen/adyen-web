@@ -88,3 +88,43 @@ export function sanitizeOrder(order: Order) {
         pspReference: order.pspReference
     };
 }
+
+/**
+ * Recursive searches an object, e.g. this.state.errors, looking for a single 'truthy' result
+ *
+ * @param item
+ * @param searchTerm
+ * @param res
+ */
+export function searchObject(item: object, searchTerm: string, res?: object[]) {
+    try {
+        const result = res ?? [];
+
+        // If some recursion was already underway, but we've already found a result, then stop
+        if (result.length) {
+            return result;
+        }
+
+        const keysArray = Object.keys(item);
+        if (item && keysArray.length) {
+            for (const key of keysArray) {
+                if (typeof key === 'string') {
+                    if (key === searchTerm) {
+                        // If value is truthy... then we have a result
+                        if (item[key]) {
+                            result.push({ [key]: item[key] });
+                            break;
+                        }
+                    }
+                }
+                // Recurse
+                if (item[key] && typeof item[key] === 'object') {
+                    searchObject(item[key], searchTerm, result);
+                }
+            }
+        }
+        return result;
+    } catch (_) {
+        return [];
+    }
+}
