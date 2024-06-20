@@ -7,7 +7,6 @@ import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { PaymentAmount } from '../../types//global-types';
 import { GiftCardElementData, GiftCardConfiguration, balanceCheckResponseType } from './types';
 import { TxVariants } from '../tx-variants';
-import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 
 export class GiftcardElement extends UIElement<GiftCardConfiguration> {
     public static type = TxVariants.giftcard;
@@ -73,17 +72,15 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
         return this.onBalanceCheck();
     }
 
-    private onBalanceCheck = (): Promise<void> => {
+    private onBalanceCheck = (): void => {
         // skip balance check if no onBalanceCheck event has been defined
         const hasBalanceCheck = this.props.session || this.props.onBalanceCheck;
-        if (!hasBalanceCheck) return Promise.resolve();
+        if (!hasBalanceCheck) return super.submit();
 
         this.setStatus('loading');
 
-        debugger;
-        return this.handleBalanceCheck(this.formatData())
+        this.handleBalanceCheck(this.formatData())
             .then(({ balance, transactionLimit = {} as PaymentAmount }) => {
-                debugger;
                 if (!balance) throw new Error('card-error'); // card doesn't exist
                 if (balance?.currency !== this.props.amount?.currency) throw new Error('currency-error');
                 if (balance?.value <= 0) throw new Error('no-balance');
@@ -92,15 +89,15 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
 
                 if (this.props.amount.value > balance.value || this.props.amount.value > transactionLimit.value) {
                     if (this.props.order) {
-                        return Promise.resolve();
+                        return super.submit();
                     }
 
                     return this.onOrderRequest(this.data).then((order: { orderData: string; pspReference: string }) => {
                         this.setState({ order: { orderData: order.orderData, pspReference: order.pspReference } });
-                        return Promise.resolve();
+                        return super.submit();
                     });
                 } else {
-                    return this.handleOnRequiringConfirmation();
+                    return this.handleOnRequiringConfirmation().then(() => super.submit());
                 }
             })
             .catch(error => {
@@ -123,12 +120,7 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
             return false;
         }
 
-        this.balanceCheck()
-            .then(this.makePaymentsCall)
-            .then(sanitizeResponse)
-            .then(verifyPaymentDidNotFail)
-            .then(this.handleResponse)
-            .catch(this.handleFailedResult);
+        this.balanceCheck();
     }
 
     // Giftcards override the regular payButton flow
