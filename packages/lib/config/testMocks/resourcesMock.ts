@@ -3,7 +3,7 @@ import { Resources } from '../../src/core/Context/Resources';
 
 function setupResourceMock() {
     const resources = mock<Resources>();
-    resources.getImage.mockImplementation(props => props => 'MOCK');
+    resources.getImage.mockImplementation(() => () => 'MOCK');
     return resources;
 }
 
