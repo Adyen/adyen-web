@@ -7,14 +7,15 @@
 Adyen Web provides you with the building blocks to create a checkout experience for your shoppers, allowing them to pay using the payment method of their choice.
 
 You can integrate with Adyen Web in two ways:
-* [Web Drop-in](https://docs.adyen.com/online-payments/web-drop-in/): an all-in-one solution, the quickest way to accept payments on your website.
-* [Web Components](https://docs.adyen.com/online-payments/web-components): one Component per payment method and combine with your own payments form logic.
+
+-   [Web Drop-in](https://docs.adyen.com/online-payments/web-drop-in/): an all-in-one solution, the quickest way to accept payments on your website.
+-   [Web Components](https://docs.adyen.com/online-payments/web-components): one Component per payment method and combine with your own payments form logic.
 
 ## Prerequisites
 
-* [Adyen test account](https://www.adyen.com/signup)
-* [API key](https://docs.adyen.com/development-resources/how-to-get-the-api-key)
-* [Client key](https://docs.adyen.com/development-resources/client-side-authentication#get-your-client-key)
+-   [Adyen test account](https://www.adyen.com/signup)
+-   [API key](https://docs.adyen.com/development-resources/how-to-get-the-api-key)
+-   [Client key](https://docs.adyen.com/development-resources/client-side-authentication#get-your-client-key)
 
 ## Installation
 
@@ -24,16 +25,16 @@ We only provide full support when you use one of these methods of installation.
 
 1. Install the [Adyen Web Node package](https://www.npmjs.com/package/@adyen/adyen-web):
 
-  ```sh
-  npm install @adyen/adyen-web --save
-  ```
+```sh
+npm install @adyen/adyen-web --save
+```
 
 2. Import Adyen Web into your application:
 
-  ```js
-  import AdyenCheckout from '@adyen/adyen-web';
-  import '@adyen/adyen-web/dist/adyen.css';
-  ```
+```js
+import AdyenCheckout from '@adyen/adyen-web';
+import '@adyen/adyen-web/dist/adyen.css';
+```
 
 ### Using a <script> tag
 
@@ -42,197 +43,137 @@ You can also import Adyen Web using a `<script>` tag, as shown in the [Web Compo
 ## Development
 
 Requirements:
-- Node v18.18.0
-- Yarn
+
+-   Node v18.18.0
+-   Yarn
 
 To run the development environment:
 
 1. Clone [this repository](https://github.com/Adyen/adyen-web).
 2. Create a `.env` file on your project's root folder following the example in [`env.default`](env.default) and fill in the environment variables.
 3. Install the dependencies by running:
-  ```sh
-  yarn install
-  ```
+
+```sh
+yarn install
+```
+
 4. If you are running the project by the first time, run the build script
-  ```sh
-  yarn build
-  ```
+
+```sh
+yarn build
+```
+
 5. Run the development environment, which starts a server listening on [http://localhost:3020](http://localhost:3020):
-  ```sh
-  yarn start
-  ```
+
+```sh
+yarn start
+```
 
 ## Localization
 
-We include UI localizations for many languages. You can check the languages and their respective translations [here](/packages/server/translations/). Furthermore, it is possible to customize the current translation [replacing the default text with your own text](https://docs.adyen.com/online-payments/build-your-integration/?platform=Web&integration=Components&version=5.60.0#customize-localization) in case you want that.  
+We include UI localizations for many languages. You can check the languages and their respective translations [here](/packages/server/translations/). Furthermore, it is possible to customize the current translation [replacing the default text with your own text](https://docs.adyen.com/online-payments/build-your-integration/?platform=Web&integration=Components&version=5.60.0#customize-localization) in case you want that.
 
 ## Styling
-Adyen Web is themeable and uses CSS variables that can be overridden in order to achieve the desired style.
+
+Adyen Web is themeable and utilizing CSS variables that can be overridden in order to achieve the desired style.
 
 ### Overriding styles example
+
 For elements that are not inside iframes, you can customize the styles by overriding the styles in a css file.
+Most of our styles are defined with css variables with default values.
+To override those styles, you can inspect the DOM and change the value for the css variables either at the root level or targeting at specific elements.
+Be aware that if you change the values for css variables at the root level, you are also changing the styles for all the children elements that are using the same css variables.
 
 1. Create `override.css` with the variables that you would like to style
 
-   ```css
-   :root {
-     --adyen-checkout-input-wrapper-focus-border-color: #ff8888;
-   }
-   ```
+    ```css
+    :root {
+        --adyen-sdk-color-background-secondary: #f7f7f8;
+    }
+    ```
 
 2. Make sure to import the `override.css` after importing library's main CSS
 
-   ```js
-   import '@adyen/adyen-web/styles/adyen.css';
-   import './override.css';
-   ```
-   
-#### Available CSS variables
+    ```js
+    import '@adyen/adyen-web/styles/adyen.css';
+    import './override.css';
+    ```
 
-```css
-:root {
-    /* Fonts */
-    --adyen-checkout-font-size-large: 1.5em;
-    --adyen-checkout-font-size-medium: 1em;
-    --adyen-checkout-font-size-small: 0.81em;
-    --adyen-checkout-font-size-xsmall: 0.75em;
-    --adyen-checkout-font-size-xxsmall: 0.68em;
-    --adyen-checkout-line-height-600: #{$line-height-600};
-    --adyen-checkout-line-height-400: #{$line-height-400};
-    --adyen-checkout-line-height-200: #{$line-height-200};
-    --adyen-checkout-line-height-100: #{$line-height-100};
-    --adyen-checkout-font-weight-200: #{$font-weight-200};
-    --adyen-checkout-font-weight-500: #{$font-weight-500};
-    --adyen-checkout-font-weight-600: #{$font-weight-600};
-    --adyen-checkout-font-weight-700: #{$font-weight-700};
-    --adyen-checkout-text-title-font-weight: #{$text-title-font-weight};
-    --adyen-checkout-text-body-font-size: #{$text-body-font-size};
-    --adyen-checkout-text-body-font-weight: #{$text-body-font-weight};
-    --adyen-checkout-text-body-stronger-font-weight: #{$text-body-stronger-font-weight};
-    --adyen-checkout-text-body-strongest-font-weight: #{$text-body-strongest-font-weight};
-    --adyen-checkout-text-title-line-height: var(--adyen-checkout-line-height-600);
-    --adyen-checkout-text-caption-line-height: var(--adyen-checkout-line-height-100);
-    --adyen-checkout-text-subtitle-line-height: var(--adyen-checkout-line-height-400);
-    --adyen-checkout-text-subtitle-font-size: var(--adyen-checkout-font-size-medium);
-    --adyen-checkout-text-subtitle-font-weight: var(--adyen-checkout-font-weight-500);
-    --adyen-checkout-text-subtitle-stronger-font-weight: var(--adyen-checkout-font-weight-600);
+#### Where do we define those css variables and what is the default value?
 
-    /* Spacing */
-    --adyen-checkout-spacer-090: #{$spacer-090};
-    --adyen-checkout-spacer-080: #{$spacer-080};
-    --adyen-checkout-spacer-070: #{$spacer-070};
-    --adyen-checkout-spacer-060: #{$spacer-060};
-    --adyen-checkout-spacer-050: #{$spacer-050};
-    --adyen-checkout-spacer-040: #{$spacer-040};
-    --adyen-checkout-spacer-030: #{$spacer-030};
-    --adyen-checkout-spacer-020: #{$spacer-020};
-    --adyen-checkout-spacer-010: #{$spacer-010};
-    --adyen-checkout-spacer-000: #{$spacer-000};
-    --adyen-checkout-spacer-140: #{$spacer-140};
-    --adyen-checkout-spacer-130: #{$spacer-130};
-    --adyen-checkout-spacer-120: #{$spacer-120};
-    --adyen-checkout-spacer-110: #{$spacer-110};
-    --adyen-checkout-spacer-100: #{$spacer-100};
+| Css variable                                         | Default value                                                          | Scope                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+|------------------------------------------------------|------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `--adyen-sdk-color-label-primary`                    | ![#00112c](https://placehold.co/15x15/00112c/00112c.png) `#00112c`     | - Label color inside payment forms, such as form instruction, form field labels and contextual / helper texts. <br> - Fieldset title color <br> - Input field text color <br> - Drop-in payment method header, order payment method header, default status text color. <br> - Bacs Edit button text color <br> - Introduction text color for Bank Transfer, Vouchers, Blik <br> - Donation status text color, campaign background color <br> - UPI, ANCV, Blik, MBWay await container text color <br> - Secondary, ghost buttons text color <br> - (Consent) checkbox label color |
+| `--adyen-sdk-color-label-secondary`                  | ![#5c687c](https://placehold.co/15x15/5c687c/5c687c.png) `#5c687c`     | - Label color for the additional information in the drop-in payment method header. <br> - Disclaimer label color. <br> - QR count down label color. <br> - Readonly select and input color.                                                                                                                                                                                                                                                                                                                                                                                       |
+| `--adyen-sdk-color-label-tertiary`                   | ![#8d95a3](https://placehold.co/15x15/8d95a3/8d95a3.png) `#8d95a3`     | - Label color for the click to pay labels.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `--adyen-sdk-color-label-disabled`                   | ![#8d95a3](https://placehold.co/15x15/8d95a3/8d95a3.png) `#8d95a3`     | - Label color for the disabled Click to Pay logout button. <br> - Disabled segment. <br> - Background color for the payment button in the loading state.                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `--adyen-sdk-color-label-critical`                   | ![#e22d2d](https://placehold.co/15x15/e22d2d/e22d2d.png) `#e22d2d`     | - Border color for the error input fields and error validation message.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `--adyen-sdk-color-label-highlight`                  | ![#0070f5](https://placehold.co/15x15/0070f5/0070f5.png) `#0070f5`     | - Link button color.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `--adyen-sdk-color-label-on-color`                   | ![#ffffff](https://placehold.co/15x15/ffffff/ffffff.png) `#ffffff`     | - Button text color. <br> - Donation campaign description text color. <br> - Checkbox check color.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `--adyen-sdk-color-background-primary`               | ![#ffffff](https://placehold.co/15x15/ffffff/ffffff.png) `#ffffff`     | - Background color for the Secondary pay button. <br> - Background color for payment form elements: input element, radio, select, checkbox. <br> - Background color for drop-in unselected payment items.                                                                                                                                                                                                                                                                                                                                                                         |
+| `--adyen-sdk-color-background-secondary`             | ![#f7f7f8](https://placehold.co/15x15/f7f7f8/f7f7f8.png) `#f7f7f8`     | - Background color for drop-in selected payment method item. <br> - Background color for selected button inside button group (used in the Donation component).                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `--adyen-sdk-color-background-secondary-hover`       | ![#eeeff1](https://placehold.co/15x15/eeeff1/eeeff1.png) `#eeeff1`     | - Background color for ghost button hover.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `--adyen-sdk-color-background-secondary-active`      | ![#e3e5e9](https://placehold.co/15x15/e3e5e9/e3e5e9.png) `#e3e5e9`     | - Background color for ghost button active.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `--adyen-sdk-color-background-tertiary`              | ![#eeeff1](https://placehold.co/15x15/eeeff1/eeeff1.png) `#eeeff1`     | - Background color for segmented control used by the UPI.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `--adyen-sdk-color-background-disabled`              | ![#eeeff1](https://placehold.co/15x15/eeeff1/eeeff1.png) `#eeeff1`     | - Background color for disabled form elements.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `--adyen-sdk-color-background-critical-strong`       | ![#e22d2d](https://placehold.co/15x15/e22d2d/e22d2d.png) `#e22d2d`     | - Background color for drop-in remove stored payment methods confirmation button.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `--adyen-sdk-color-background-inverse-primary-hover` | ![#5c687c](https://placehold.co/15x15/5c687c/5c687c.png) `#5c687c`     | - Background color for hovering on payment button.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `--adyen-sdk-color-background-always-dark`           | ![#00112c](https://placehold.co/15x15/00112c/00112c.png) `#00112c`     | - Background color for the primary payment button.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `--adyen-sdk-color-background-always-dark-active`    | ![#8d95a3](https://placehold.co/15x15/8d95a3/8d95a3.png) `#8d95a3`     | - Background color for the active and hovered primary payment button.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `--adyen-sdk-color-background-critical-strong`       | ![#e22d2d](https://placehold.co/15x15/e22d2d/e22d2d.png) `#e22d2d`     | - Drop-in remove stored card confirmation, button background color <br> - Gift card alert background color                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `--adyen-sdk-color-outline-primary`                  | ![#dbdee2](https://placehold.co/15x15/dbdee2/dbdee2.png) `#dbdee2`     | - Drop-in payment method list item unselected border color. <br> - Highlighted issuers button box shadow color. <br> - Payment form elements (including checkbox and radio) border color.                                                                                                                                                                                                                                                                                                                                                                                         |
+| `--adyen-sdk-color-outline-primary-hover`            | ![#c9cdd3](https://placehold.co/15x15/c9cdd3/c9cdd3.png) `#c9cdd3`     | - Drop-in payment method list item hover and unselected box-shadow color. <br> - Radio and checkbox hover not focused box-shadow color.                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `--adyen-sdk-color-outline-primary-active`           | ![#00112c](https://placehold.co/15x15/00112c/00112c.png) `#00112c`     | - Form input elements focused box-shadow and border color.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `--adyen-sdk-color-outline-secondary`                | ![#c9cdd3](https://placehold.co/15x15/c9cdd3/c9cdd3.png) `#c9cdd3`     | - Drop-in selected payment item border color. <br> - Drop-in default status container border color. <br> - UPI, ANCV, Blik, MBWay await container border color. <br> - QR code container border color.                                                                                                                                                                                                                                                                                                                                                                            |
+| `--adyen-sdk-color-outline-tertiary`                 | ![#8d95a3](https://placehold.co/15x15/8d95a3/8d95a3.png) `#8d95a3`     | - Drop-in order payment border color, surcharge text color <br> - Gif card balance text color <br> - UPI, ANCV, Blik, MBWay await count down text color <br> - Radio, checkbox hover box-shadow color <br> - Pay / regular button focus box-shadow color <br> - Content separator color                                                                                                                                                                                                                                                                                           |
+| `--adyen-sdk-color-outline-disabled`                 | ![#dbdee2](https://placehold.co/15x15/dbdee2/dbdee2.png) `#dbdee2`     | - Secondary button disabled border color                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `--adyen-sdk-color-outline-critical`                 | ![#e22d2d](https://placehold.co/15x15/e22d2d/e22d2d.png) `#e22d2d`     | - Drop down invalid button border color                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `--adyen-sdk-color-separator-primary`                | ![#dbdee2](https://placehold.co/15x15/dbdee2/dbdee2.png) `#dbdee2`     | - Input, select, checkbox and radio form fields invalid border color                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `--adyen-sdk-text-caption-line-height`               | `18px`                                                                 | - Various places that are not body / subtitle / title                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `--adyen-sdk-text-caption-font-size`                 | `12px`                                                                 | - Gift card alert message font size <br> - Drop-in payment method list item additional information text font size <br> - Disclaimer message text font size <br> - Form field instruction, contextual, error text font size                                                                                                                                                                                                                                                                                                                                                        |
+| `--adyen-sdk-text-body-font-size`                    | `14px`                                                                 | - Various places that are not title / sub title / caption                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `--adyen-sdk-text-body-line-height`                  | `20px`                                                                 | - Radio text line height <br> - Payme instruction line height <br> - Click to pay otp checkbox info line height <br> - Form field label line height                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `--adyen-sdk-text-body-font-weight`                  | `400`                                                                  | - Stored card expiry date input text font weight                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `--adyen-sdk-text-body-stronger-font-weight`         | `500`                                                                  | - Selected issuer button text font weight <br> - Drop-in payment method list item title font weight <br> - Drop-in order header and deducted amount font weight <br> - Trustly description font weight <br> - Pay button text font weight <br> - UPI segmented control text font weight                                                                                                                                                                                                                                                                                           |
+| `--adyen-sdk-text-subtitle-font-size`                | `16px`                                                                 | - Blik helper font size <br> - Trustly description header <br> - UPI, ANCV, Blik, MBWay await subtitle and indicator font size <br> - QR subtitle and indicator font size <br> - Input, drop down input fields text font size <br> - Voucher amount font size                                                                                                                                                                                                                                                                                                                     |
+| `--adyen-sdk-text-subtitle-font-weight`              | `500`                                                                  | - Field set title font weight                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `--adyen-sdk-text-subtitle-stronger-font-weight`     | `600`                                                                  | - Drop-in payment method list label font weight                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `--adyen-sdk-text-subtitle-line-height`              | `26px`                                                                 | - Drop-in payment method list label line height <br> - Field set title line height                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `--adyen-sdk-text-title-font-size`                   | `16px`                                                                 | - Drop-in default final statuses font size <br> - Drop-in order header font size <br> - Drop-in payment method list item title font size <br> - Pay button text font size <br> - Directdebit_GB voucher result introduction font size <br> - Donation campaign title font size                                                                                                                                                                                                                                                                                                    |
+| `--adyen-sdk-text-title-font-weight`                 | `600`                                                                  | - Click to pay header title font weight                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `--adyen-sdk-text-title-line-height`                 | `26px`                                                                 | - Stored card expiry date input text line height                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `--adyen-sdk-text-title-l-font-size`                 | `24px`                                                                 | - Voucher reference text font-size                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `--adyen-sdk-spacer-100`                             | `32px`                                                                 | Various places for dimensions                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `--adyen-sdk-spacer-110`                             | `40px`                                                                 | Various places for dimensions                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `--adyen-sdk-spacer-120`                             | `48px`                                                                 | Various places for dimensions                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `--adyen-sdk-spacer-130`                             | `56px`                                                                 | Various places for dimensions                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `--adyen-sdk-spacer-140`                             | `64px`                                                                 | Various places for dimensions                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `--adyen-sdk-spacer-000`                             | `0px`                                                                  | Various places for dimensions                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `--adyen-sdk-spacer-010`                             | `2px`                                                                  | Various places for dimensions                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `--adyen-sdk-spacer-020`                             | `4px`                                                                  | Various places for dimensions                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `--adyen-sdk-spacer-030`                             | `6px`                                                                  | Various places for dimensions                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `--adyen-sdk-spacer-040`                             | `8px`                                                                  | Various places for dimensions                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `--adyen-sdk-spacer-050`                             | `10px`                                                                 | Various places for dimensions                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `--adyen-sdk-spacer-060`                             | `12px`                                                                 | Various places for dimensions                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `--adyen-sdk-spacer-070`                             | `16px`                                                                 | Various places for dimensions                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `--adyen-sdk-spacer-080`                             | `20px`                                                                 | Various places for dimensions                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `--adyen-sdk-spacer-090`                             | `24px`                                                                 | Various places for dimensions                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `--adyen-sdk-border-radius-xs`                       | `2px`                                                                  | Various places for border radius                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `--adyen-sdk-border-radius-s`                        | `4px`                                                                  | Various places for border radius                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `--adyen-sdk-border-radius-m`                        | `8px`                                                                  | Various places for border radius                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `--adyen-sdk-border-radius-l`                        | `12px`                                                                 | Various places for border radius                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `--adyen-sdk-border-radius-xl`                       | `24px`                                                                 | Various places for border radius                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `--adyen-sdk-border-width-s`                         | `1px`                                                                  | Various places for border radius                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `--adyen-sdk-border-width-m`                         | `2px`                                                                  | Various places for border radius                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `--adyen-sdk-border-width-l`                         | `3px`                                                                  | Various places for border radius                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `--adyen-sdk-shadow-low`                             | `0px 2px 4px rgba(0, 17, 44, 0.04), 0px 1px 2px rgba(0, 17, 44, 0.02)` | - Box shadow for Card available brand images and voucher brand images <br> - Box shadow for selected segment                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 
-    /* Borders */
-    --adyen-checkout-border-width-l: #{$border-width-l};
-    --adyen-checkout-border-width-m: #{$border-width-m};
-    --adyen-checkout-border-width-s: #{$border-width-s};
-    --adyen-checkout-border-radius-xl: #{$border-radius-xl};
-    --adyen-checkout-border-radius-l: #{$border-radius-l};
-    --adyen-checkout-border-radius-m: #{$border-radius-m};
-    --adyen-checkout-border-radius-s: #{$border-radius-s};
-    --adyen-checkout-border-radius-xs: #{$border-radius-xs};
-
-    /* Colors */
-    --adyen-checkout-color-focus: #{$color-focus};
-    --adyen-checkout-color-black: #{$color-black};
-    --adyen-checkout-color-white: #{$color-white};
-    --adyen-checkout-color-red: #{$color-red-1700};
-    --adyen-checkout-color-grey-3200: #{$color-grey-3200};
-    --adyen-checkout-color-grey-1900: #{$color-grey-1900};
-    --adyen-checkout-color-grey-1300: #{$color-grey-1300};
-    --adyen-checkout-color-grey-600: #{$color-grey-600};
-    --adyen-checkout-color-grey-400: #{$color-grey-400};
-    --adyen-checkout-color-grey-200: #{$color-grey-200};
-    --adyen-checkout-color-grey-100: #{$color-grey-100};
-    --adyen-checkout-color-green: #{$color-green-1700};
-    --adyen-checkout-color-blue: #{$color-blue-1700};
-    --adyen-checkout-color-separator-primary: var(--adyen-checkout-color-grey-200);
-    --adyen-checkout-color-outline-active: var(--adyen-checkout-color-grey-3200);
-    --adyen-checkout-color-outline-tertiary: var(--adyen-checkout-color-grey-1300);
-    --adyen-checkout-color-outline-secondary: var(--adyen-checkout-color-grey-600);
-    --adyen-checkout-color-outline-primary: var(--adyen-checkout-color-grey-400);
-    --adyen-checkout-color-on-interactive-disabled: var(--adyen-checkout-color-grey-1300);
-    --adyen-checkout-color-interactive-disabled: var(--adyen-checkout-color-grey-200);
-    --adyen-checkout-color-interactive-readonly: var(--adyen-checkout-color-grey-1900);
-    --adyen-checkout-color-interactive-primary-pressed: var(--adyen-checkout-color-grey-1300);
-    --adyen-checkout-color-interactive-primary-hovered: var(--adyen-checkout-color-grey-1900);
-    --adyen-checkout-color-label-success: var(--adyen-checkout-color-green);
-    --adyen-checkout-color-label-critical: var(--adyen-checkout-color-red);
-    --adyen-checkout-color-label-primary: var(--adyen-checkout-color-grey-3200);
-    --adyen-checkout-color-label-secondary: var(--adyen-checkout-color-grey-1900);
-    --adyen-checkout-color-label-tertiary: var(--adyen-checkout-color-grey-1300);
-    --adyen-checkout-color-surface-modal: var(--adyen-checkout-color-white);
-    --adyen-checkout-color-surface-inverse: var(--adyen-checkout-color-grey-3200);
-    --adyen-checkout-color-surface-primary: var(--adyen-checkout-color-white);
-    --adyen-checkout-color-background-always-dark: var(--adyen-checkout-color-grey-3200);
-    --adyen-checkout-color-background-primary: var(--adyen-checkout-color-white);
-    --adyen-checkout-color-background-secondary: var(--adyen-checkout-color-grey-100);
-    --adyen-checkout-color-background-tertiary: var(--adyen-checkout-color-grey-200);
-
-    /* Focus ring */
-    --adyen-checkout-focus-ring-color: var(--adyen-checkout-color-focus);
-
-    /* Drop-in */
-    --adyen-checkout-dropin-payment-list-gap: var(--adyen-checkout-spacer-100);
-    --adyen-checkout-dropin-payment-item-gap: var(--adyen-checkout-spacer-070);
-    --adyen-checkout-dropin-payment-item-border-color: var(--adyen-checkout-color-separator-primary);
-    --adyen-checkout-dropin-payment-item-border-radius: var(--adyen-checkout-border-radius-m);
-    --adyen-checkout-dropin-payment-item-border-width: var(--adyen-checkout-border-width-s);
-    --adyen-checkout-dropin-selected-item-background: var(--adyen-checkout-color-grey-100);
-    --adyen-checkout-dropin-selected-item-border-color: var(--adyen-checkout-color-outline-active);
-    --adyen-checkout-dropin-hover-item-border-color: var(--adyen-checkout-color-outline-secondary);
-    --adyen-checkout-dropin-list-label-color: var(--adyen-checkout-color-label-primary);
-
-    /* Spinner */
-    --adyen-checkout-loading-indicator-color: var(--adyen-checkout-color-surface-inverse);
-    --adyen-checkout-loading-indicator-background-color: var(--adyen-checkout-color-surface-inverse);
-
-    /* Input */
-    --adyen-checkout-input-field-input-color: var(--adyen-checkout-color-label-primary);
-    --adyen-checkout-input-wrapper-background: var(--adyen-checkout-color-background-primary);
-    --adyen-checkout-input-wrapper-inactive-background: var(--adyen-checkout-color-interactive-disabled);
-    --adyen-checkout-input-wrapper-border-color: var(--adyen-checkout-color-outline-primary);
-    --adyen-checkout-input-wrapper-border-radius: var(--adyen-checkout-border-radius-m);
-    --adyen-checkout-input-wrapper-border-width: var(--adyen-checkout-border-width-s);
-    --adyen-checkout-input-wrapper-focus-border-color: var(--adyen-checkout-color-outline-active);
-    --adyen-checkout-input-wrapper-hover-border-color: var(--adyen-checkout-color-outline-tertiary);
-    --adyen-checkout-input-field-height: var(--adyen-checkout-spacer-110);
-    --adyen-checkout-input-field-label-color: var(--adyen-checkout-color-label-primary);
-    --adyen-checkout-input-field-context-color: var(--adyen-checkout-color-label-primary);
-    --adyen-checkout-input-field-label-margin-bottom: var(--adyen-checkout-spacer-020);
-    --adyen-checkout-input-field-context-margin-top: var(--adyen-checkout-spacer-020);
-
-    /* Link */
-    --adyen-checkout-link-text-color: var(--adyen-checkout-color-blue);
-    --adyen-checkout-link-text-decoration: underline;
-    --adyen-checkout-link-border-radius: var(--adyen-checkout-border-radius-xs);
-
-    /* Pay button */
-    --adyen-checkout-button-background-color: var(--adyen-checkout-color-background-always-dark);
-    --adyen-checkout-button-color: var(--adyen-checkout-color-surface-modal);
-    --adyen-checkout-button-border-radius: var(--adyen-checkout-border-radius-m);
-    --adyen-checkout-button-font-size: var(--adyen-checkout-font-size-medium);
-    --adyen-checkout-button-font-weight: var(--adyen-checkout-text-body-stronger-font-weight);
-    --adyen-checkout-button-height: var(--adyen-checkout-spacer-120);
-}
-```
 ### Style the secured fields
 
 To style the secured fields such as card number, CVC, and expiry date of a card, you can follow the link [Styling card input fields](https://docs.adyen.com/payment-methods/cards/custom-card-integration/#styling).
 
 ## Analytics and data tracking
+
 Starting [v5.16.0](https://github.com/Adyen/adyen-web/releases/tag/v5.16.0) the Drop-in and Components integrations contain analytics and tracking features that are turned on by default. Find out more about [what we track and how you can control it](https://docs.adyen.com/online-payments/analytics-and-data-tracking).
 
 ## Contributing
@@ -243,11 +184,11 @@ Have a look at our [contributing guidelines](https://github.com/Adyen/.github/bl
 
 ## See also
 
-- [Why we open sourced Adyen Web](https://www.adyen.com/blog/why-we-opened-sourced-our-web-framework)
-- [Complete documentation for Adyen Web](https://docs.adyen.com/checkout/)
-- [API Explorer](https://docs.adyen.com/api-explorer/)
-- [Example integrations](https://github.com/adyen-examples)
-- [Adyen Components JS Sample Code](https://github.com/Adyen/adyen-components-js-sample-code)
+-   [Why we open sourced Adyen Web](https://www.adyen.com/blog/why-we-opened-sourced-our-web-framework)
+-   [Complete documentation for Adyen Web](https://docs.adyen.com/checkout/)
+-   [API Explorer](https://docs.adyen.com/api-explorer/)
+-   [Example integrations](https://github.com/adyen-examples)
+-   [Adyen Components JS Sample Code](https://github.com/Adyen/adyen-components-js-sample-code)
 
 ## Support
 
