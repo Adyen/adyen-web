@@ -145,6 +145,7 @@ export class CashAppPay extends UIElement<CashAppPayConfiguration> {
             <CoreProvider i18n={this.props.i18n} resources={this.resources} loadingContext={this.props.loadingContext}>
                 {this.props.storedPaymentMethodId ? (
                     <RedirectButton
+                        showPayButton={this.props.showPayButton}
                         label={payAmountLabel(this.props.i18n, this.props.amount)}
                         icon={this.resources?.getImage({ imageFolder: 'components/' })(`${PREFIX}lock`)}
                         name={this.displayName}
