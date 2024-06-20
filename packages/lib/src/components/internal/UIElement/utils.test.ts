@@ -20,7 +20,7 @@ describe('components utils', () => {
         });
     });
 
-    describe.only('searchObject util', () => {
+    describe('searchObject util', () => {
         test('test that no results are found because there is nothing to search', () => {
             const errors = null;
 
