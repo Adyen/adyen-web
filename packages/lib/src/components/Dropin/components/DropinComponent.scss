@@ -72,10 +72,12 @@
     display: grid;
     grid-template-rows: 0fr;
     transition: grid-template-rows 250ms ease;
+    visibility: hidden;
 }
 
 .adyen-checkout-pm-details-wrapper[aria-hidden='false'] {
     grid-template-rows: 1fr;
+    visibility: visible;
 
     .adyen-checkout__payment-method__details{
         overflow: visible;
