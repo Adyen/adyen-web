@@ -402,6 +402,37 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * @param obj
      */
     protected onEnterKeyPressed(obj: OnKeyPressedObject) {
+        console.log('### UIElement::onEnterKeyPressed:: this.state.errors', this.state.errors);
+
+        function searchItem(item: object, searchTerm: string, res?: any[]) {
+            const result = res ?? [];
+            if (item && Object.keys(item).length) {
+                console.log('### UIElement::searchItem::  Object.keys(item)', Object.keys(item));
+                Object.keys(item).forEach(key => {
+                    console.log('### UIElement::searchItem:: key', key);
+                    // console.log('### UIElement::searchItem:: typeof item[key]', item[key]);
+                    if (typeof key === 'string') {
+                        if (key === searchTerm) {
+                            console.log('### UIElement:::: MATCH', key);
+
+                            if (item[key]) {
+                                result.push({ [key]: item[key] });
+                            }
+                        }
+                    }
+                    if (typeof item[key] === 'object') {
+                        searchItem(item[key], searchTerm, result);
+                    }
+                });
+            }
+            return result;
+        }
+
+        console.log('### UIElement::onEnterKeyPressed:: obj=', obj);
+
+        const result = searchItem(this.state.errors, obj.fieldType);
+        console.log('### UIElement::onEnterKeyPressed:: res = ', result);
+
         if (this.props.onEnterKeyPressed) {
             this.props.onEnterKeyPressed(obj);
         } else {
