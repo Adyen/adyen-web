@@ -3,9 +3,9 @@ import Session from '../../../core/CheckoutSession';
 import Language from '../../../language';
 import UIElement from './UIElement';
 import type { PaymentAction, PaymentAmount, PaymentAmountExtended } from '../../../types/global-types';
-import type { BaseElementProps, IBaseElement } from '../BaseElement/types';
+import type { BaseElementProps } from '../BaseElement/types';
 import type { PayButtonProps } from '../PayButton/PayButton';
-import type { CoreConfiguration, ICore } from '../../../core/types';
+import type { CoreConfiguration } from '../../../core/types';
 
 export type PayButtonFunctionProps = Omit<PayButtonProps, 'amount'>;
 
@@ -101,25 +101,6 @@ export type UIElementProps = BaseElementProps &
          */
         paymentMethodType?: string;
     };
-
-export interface IUIElement extends IBaseElement {
-    core: ICore;
-    type: string;
-    isValid: boolean;
-    displayName: string;
-    accessibleName: string;
-    icon: string;
-    elementRef: UIElement;
-    submit(): void;
-    setComponentRef(ref): void;
-    updateParent(options?: CoreConfiguration): Promise<ICore>;
-    setElementStatus(status: UIElementStatus, props: any): UIElement;
-    setStatus(status: UIElementStatus, props?: { message?: string; [key: string]: any }): UIElement;
-    handleAction(action: PaymentAction): UIElement | null;
-    showValidation(): void;
-    setState(newState: object): void;
-    isAvailable(): Promise<void>;
-}
 
 export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';
 

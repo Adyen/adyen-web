@@ -14,6 +14,9 @@ interface PaymentMethodListProps extends Omit<PaymentMethodsContainerProps, 'lab
     storedPaymentMethods?: UIElement[];
     openFirstStoredPaymentMethod?: boolean;
     openFirstPaymentMethod?: boolean;
+    openPaymentMethod?: {
+        type: string;
+    };
     order?: Order;
     orderStatus?: OrderStatus;
     onOrderCancel?: (order) => void;
@@ -25,6 +28,7 @@ const PaymentMethodList = ({
     storedPaymentMethods = [],
     openFirstStoredPaymentMethod,
     openFirstPaymentMethod,
+    openPaymentMethod,
     order,
     orderStatus = null,
     onOrderCancel,
@@ -38,6 +42,16 @@ const PaymentMethodList = ({
     const pmListLabel = hasInstantPaymentMethods || hasStoredPaymentMethods ? i18n.get('paymentMethodsList.otherPayments.label') : '';
 
     useEffect(() => {
+        if (openPaymentMethod?.type) {
+            const paymentMethod = paymentMethods.find(paymentMethod => paymentMethod.type === openPaymentMethod?.type);
+            if (!paymentMethod) {
+                console.warn(`Drop-in: payment method type "${openPaymentMethod?.type}" not found`);
+            } else {
+                onSelect(paymentMethod);
+                return;
+            }
+        }
+
         // Open first PaymentMethodItem
         const firstStoredPayment = storedPaymentMethods[0];
         const firstNonStoredPayment = paymentMethods[0];
@@ -53,7 +67,7 @@ const PaymentMethodList = ({
                 onSelect(firstNonStoredPayment);
             }
         }
-    }, [storedPaymentMethods, paymentMethods, openFirstStoredPaymentMethod, openFirstPaymentMethod]);
+    }, [storedPaymentMethods, paymentMethods, openFirstStoredPaymentMethod, openFirstPaymentMethod, openPaymentMethod]);
 
     return (
         <Fragment>

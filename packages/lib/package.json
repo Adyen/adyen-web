@@ -69,7 +69,7 @@
     "type-check": "tsc --noEmit",
     "types:generate": "tsc --emitDeclarationOnly",
     "format": "npm run lint:fix && npm run prettier:fix && npm run styles:fix",
-    "lint": "eslint",
+    "lint": "eslint .",
     "lint-styles": "stylelint '**/*.scss'",
     "styles:fix": "npm run lint-styles -- --fix",
     "lint:fix": "npm run lint -- --fix",
