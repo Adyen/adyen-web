@@ -278,14 +278,14 @@ describe('SecuredField handling placeholders from the placeholders config', () =
             myCallback = jest.fn(() => {});
 
             warningMsg = '';
-            // @ts-ignore
+            // @ts-ignore - allow assignment, it's only a test!
             console.warn = logger.warn = jest.fn(msg => {
                 // console.log('msg=', msg);
                 warningMsg = msg;
             });
 
             loggingMsg = '';
-            // @ts-ignore
+            // @ts-ignore - allow assignment, it's only a test!
             console.log = logger.log = jest.fn(msg => {
                 loggingMsg = msg;
             });

@@ -1,4 +1,4 @@
-import { CVCPolicyType, DatePolicyType, SFKeyPressObj, StylesObject } from '../lib/types';
+import { CVCPolicyType, DatePolicyType, StylesObject } from '../lib/types';
 import { AddressData } from '../../../../types/global-types';
 import { CardBrandsConfiguration } from '../../../Card/types';
 import Language from '../../../../language';
