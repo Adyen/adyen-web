@@ -1,19 +1,15 @@
 export const on = (node, event, callback, useCapture?) => {
-    try {
-        if (node && typeof node.addEventListener === 'function') {
-            node.addEventListener(event, callback, useCapture);
-        }
-    } catch (_) {
-        // fail silently
+    if (node && typeof node.addEventListener === 'function') {
+        node.addEventListener(event, callback, useCapture);
+        return true;
     }
+    return false;
 };
 
 export const off = (node, event, callback, useCapture?) => {
-    try {
-        if (node && typeof node.addEventListener === 'function') {
-            node.removeEventListener(event, callback, useCapture);
-        }
-    } catch (_) {
-        // fail silently
+    if (node && typeof node.removeEventListener === 'function') {
+        node.removeEventListener(event, callback, useCapture);
+        return true;
     }
+    return false;
 };
