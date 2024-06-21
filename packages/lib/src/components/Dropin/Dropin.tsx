@@ -15,7 +15,6 @@ import type { DropinConfiguration, InstantPaymentTypes, PaymentMethodsConfigurat
 import type { PaymentAction, PaymentResponseData } from '../../types/global-types';
 import type { ICore, OnKeyPressedObject } from '../../core/types';
 import type { IDropin } from './types';
-import SFKeyboardEvent from '../internal/SecuredFields/SFP/SFKeyboardEvent';
 
 const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay'];
 
@@ -185,7 +184,7 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         this.dropinRef.closeActivePaymentMethod();
     }
 
-    protected handleKeyPress(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement> | SFKeyboardEvent) {
+    protected handleKeyPress(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement> | KeyboardEvent) {
         if (e.key === 'Enter' || e.code === 'Enter') {
             // If the active element has role="radio", we're on a header in the PMList, in which case we don't want to validate the form, or, prevent the default behaviour
             const isPMHeader = document?.activeElement?.getAttribute('role') === 'radio';

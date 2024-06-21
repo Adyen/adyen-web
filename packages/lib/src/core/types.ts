@@ -94,8 +94,7 @@ export type OnChangeData = {
 };
 
 export interface OnKeyPressedObject {
-    fieldType: string;
-    activeElement: HTMLElement;
+    activeElement: Element;
     component: UIElement;
 }
 
@@ -289,7 +288,7 @@ export interface CoreConfiguration {
      * Called when a Component detects, or is told by a SecuredField, that the Enter key has been pressed.
      * - merchant set config option
      */
-    onEnterKeyPressed?(o: OnKeyPressedObject): void;
+    onEnterKeyPressed?(elements: OnKeyPressedObject): void;
 
     /**
      * Callback called when it is required to fetch/update the payment methods list.

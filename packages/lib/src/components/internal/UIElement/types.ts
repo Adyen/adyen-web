@@ -105,7 +105,7 @@ export type UIElementProps = BaseElementProps &
          * Called when a Component detects, or is told by a SecuredField, that the Enter key has been pressed.
          * - merchant set config option
          */
-        onEnterKeyPressed?: (o: OnKeyPressedObject) => void;
+        onEnterKeyPressed?: (elements: OnKeyPressedObject) => void;
     };
 
 export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';

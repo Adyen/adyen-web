@@ -23,7 +23,6 @@ import {
 import { existy } from '../lib/utilities/commonUtils';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
 import { SFKeyPressObj } from '../lib/types';
-import SFKeyboardEvent from './SFKeyboardEvent';
 
 /**
  * Emits the onLoad event
@@ -225,16 +224,12 @@ function handleOnAutoComplete(cbObj: CbObjOnAutoComplete): void {
 
 function handleKeyPressed(obj: SFKeyPressObj): void {
     if (obj.action === 'enterKeyPressed') {
-        const kb = new SFKeyboardEvent(
-            'keypress',
-            {
-                bubbles: true,
-                cancelable: true,
-                key: 'Enter',
-                code: 'Enter'
-            },
-            obj.fieldType
-        );
+        const kb = new KeyboardEvent('keypress', {
+            bubbles: true,
+            cancelable: true,
+            key: 'Enter',
+            code: 'Enter'
+        });
         this.props.handleKeyPress?.(kb);
     }
 }

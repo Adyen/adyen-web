@@ -21,6 +21,7 @@ export default {
     onBinValue: () => {},
     onFocus: () => {},
     onAutoComplete: () => {},
+    handleKeyPress: () => {},
 
     // Customization
     styles: {}

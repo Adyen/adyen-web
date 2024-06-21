@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import BaseElement from '../BaseElement/BaseElement';
 import PayButton from '../PayButton';
-import { assertIsDropin, cleanupFinalResult, getRegulatoryDefaults, sanitizeResponse, searchObject, verifyPaymentDidNotFail } from './utils';
+import { assertIsDropin, cleanupFinalResult, getRegulatoryDefaults, sanitizeResponse, verifyPaymentDidNotFail } from './utils';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { hasOwnProperty } from '../../../utils/hasOwnProperty';
 import { Resources } from '../../../core/Context/Resources';
@@ -23,10 +23,8 @@ import type {
 } from '../../../types/global-types';
 import type { IDropin } from '../../Dropin/types';
 import type { NewableComponent } from '../../../core/core.registry';
-import { debounce } from '../../../utils/debounce';
 
 import './UIElement.scss';
-import SFKeyboardEvent from '../SecuredFields/SFP/SFKeyboardEvent';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     protected componentRef: any;
@@ -67,8 +65,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         this.onEnterKeyPressed = this.onEnterKeyPressed.bind(this);
     }
-
-    private debounceEnterKeyPress = debounce((obj: OnKeyPressedObject) => this.onEnterKeyPressed(obj));
 
     protected override buildElementProps(componentProps?: P) {
         const globalCoreProps = this.core.getCorePropsForComponent();
@@ -389,11 +385,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.handleSuccessResult(response);
     }
 
-    protected handleKeyPress(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement> | SFKeyboardEvent) {
+    protected handleKeyPress(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement> | KeyboardEvent) {
         if (e.key === 'Enter' || e.code === 'Enter') {
             e.preventDefault(); // Prevent <form> submission if Component is placed inside a form
 
-            this.debounceEnterKeyPress({ component: this, fieldType: (e.target as HTMLInputElement)?.name, activeElement: document?.activeElement });
+            this.onEnterKeyPressed({ component: this, activeElement: document?.activeElement });
         }
     }
 
@@ -402,21 +398,18 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * @param obj
      */
     protected onEnterKeyPressed(obj: OnKeyPressedObject) {
-        // To align with SecuredFields: if the field is already in error, then we expect that error to be fixed before we try to validate the whole form
-        const hasPreExistingError = searchObject(this.state.errors, obj.fieldType).length;
-        if (hasPreExistingError) return;
-
+        console.log('### UIElement::onEnterKeyPressed::obj ', obj);
         if (this.props.onEnterKeyPressed) {
             this.props.onEnterKeyPressed(obj);
         } else {
-            obj.activeElement.blur();
+            (obj.activeElement as HTMLElement).blur();
             this.submit();
         }
     }
 
     /**
      * Call update on parent instance
-     * This function exist to make safe access to the protect _parentInstance
+     * This function exist to make safe access to the protected _parentInstance
      * @param options - CoreOptions
      */
     public updateParent(options: CoreConfiguration = {}): Promise<ICore> {

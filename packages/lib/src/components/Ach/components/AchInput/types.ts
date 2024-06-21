@@ -2,7 +2,6 @@ import Language from '../../../../language/Language';
 import { StylesObject } from '../../../internal/SecuredFields/lib/types';
 import UIElement from '../../../internal/UIElement/UIElement';
 import { Resources } from '../../../../core/Context/Resources';
-import SFKeyboardEvent from '../../../internal/SecuredFields/SFP/SFKeyboardEvent';
 
 export interface ACHInputStateValid {
     holderName?: boolean;
@@ -62,5 +61,5 @@ export interface ACHInputProps {
     type?: string;
     forceCompat?: boolean;
     setComponentRef?: (ref) => void;
-    handleKeyPress?: (o: SFKeyboardEvent) => void;
+    handleKeyPress?: (obj: KeyboardEvent) => void;
 }
