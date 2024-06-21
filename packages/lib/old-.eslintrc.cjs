@@ -115,7 +115,6 @@ module.exports = {
             }
         ],
         '@typescript-eslint/explicit-module-boundary-types': 'off',
-        // TODO
 
         // React Rules
         'react/prop-types': 'off',
