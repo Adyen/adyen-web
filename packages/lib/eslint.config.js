@@ -10,7 +10,7 @@ import globals from 'globals';
 const config = tseslint.config(
     { 
         name: 'Global ignore',
-        ignores: ['coverage/*','dist/*', 'config/*', 'auto/*', 'postcss.config.cjs'],
+        ignores: ['coverage/*','dist/*', 'config/*', 'auto/*', 'postcss.config.cjs', '**/*_*/**'],
     },
     eslint.configs.recommended,
     jsxA11y.flatConfigs.strict,
