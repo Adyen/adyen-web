@@ -1,4 +1,7 @@
 import { ComponentChildren, h } from 'preact';
+
+
+import { unstable_NormalPriority  } from 'preact/compat';
 import { useRef } from 'preact/hooks';
 import cx from 'classnames';
 import './Modal.scss';
