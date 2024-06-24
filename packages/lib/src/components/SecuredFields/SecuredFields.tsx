@@ -8,6 +8,7 @@ import { CbObjOnBinLookup, CbObjOnFocus } from '../internal/SecuredFields/lib/ty
 import { BrandObject } from '../Card/types';
 import { fieldTypeToSnakeCase, getCardImageUrl } from '../internal/SecuredFields/utils';
 import { ANALYTICS_FOCUS_STR, ANALYTICS_UNFOCUS_STR } from '../../core/Analytics/constants';
+import { SendAnalyticsObject } from '../../core/Analytics/types';
 
 export class SecuredFieldsElement extends UIElement {
     public static type = 'scheme';
@@ -38,6 +39,10 @@ export class SecuredFieldsElement extends UIElement {
             },
             browserInfo: this.browserInfo
         };
+    }
+
+    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
+        super.submitAnalytics(analyticsObj, this.props);
     }
 
     updateStyles(stylesObj) {
