@@ -1,6 +1,7 @@
 import { getCardConfigData } from './utils';
 import CardDefaultProps from '../../components/Card/components/CardInput/defaultProps';
 import { DEFAULT_CHALLENGE_WINDOW_SIZE } from '../../components/ThreeDS2/config';
+import { DEFAULT_CARD_GROUP_TYPES } from '../../components/internal/SecuredFields/lib/configuration/constants';
 
 describe('Testing creating a configData object for the Card components', () => {
     /**
@@ -29,7 +30,20 @@ describe('Testing creating a configData object for the Card components', () => {
     /**
      * billingAddressAllowedCountries
      */
-    // TODO - test for billingAddressAllowedCountries once we confirm how to represent the presence, or absence, of the array
+    describe('Testing billingAddressAllowedCountries', () => {
+        const ANALYTICS_DATA_PROP = 'billingAddressAllowedCountries';
+        const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
+
+        test('Expect the prop, when not passed, to equal the default (as a JSON string)', () => {
+            const configData = getCardConfigData({});
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(JSON.stringify(CardDefaultProps[CARD_CONFIG_PROP]));
+        });
+
+        test('Expect the prop, passed as an array, to equal that array (as a JSON string)', () => {
+            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: ['US', 'PR'] });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(JSON.stringify(['US', 'PR']));
+        });
+    });
 
     /**
      * billingAddressMode
@@ -95,29 +109,41 @@ describe('Testing creating a configData object for the Card components', () => {
     /**
      * billingAddressRequiredFields
      */
-    // TODO - test for billingAddressRequiredFields once we confirm how to represent the presence, or absence, of the array
+    describe('Testing billingAddressRequiredFields', () => {
+        const ANALYTICS_DATA_PROP = 'billingAddressRequiredFields';
+        const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
+
+        test('Expect the prop, when not passed, to equal the default (as a JSON string)', () => {
+            const configData = getCardConfigData({});
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(JSON.stringify(CardDefaultProps[CARD_CONFIG_PROP]));
+        });
+
+        test('Expect the prop, passed as an array, to equal that array (as a JSON string)', () => {
+            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: ['postalCode', 'country'] });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(JSON.stringify(['postalCode', 'country']));
+        });
+    });
 
     /**
      * brands
      */
-    // TODO - still have to confirm that these are the desired values
     describe('Testing brands', () => {
         const ANALYTICS_DATA_PROP = 'brands';
         const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
 
-        test('Expect the prop, when not passed, to literally equal "default"', () => {
+        test('Expect the prop, when not passed, to equal the default (as a JSON string)', () => {
             const configData = getCardConfigData({});
-            expect(configData[ANALYTICS_DATA_PROP]).toEqual('default');
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(JSON.stringify(DEFAULT_CARD_GROUP_TYPES));
         });
 
-        test('Expect the prop, passed as an array, to equal true', () => {
+        test('Expect the prop, passed as an array, to equal that array (as a JSON string)', () => {
             const configData = getCardConfigData({ [CARD_CONFIG_PROP]: ['mc', 'bcmc', 'uatp', 'visa'] });
-            expect(configData[ANALYTICS_DATA_PROP]).toEqual(true);
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(JSON.stringify(['mc', 'bcmc', 'uatp', 'visa']));
         });
 
-        test('Expect the prop, passed as an array with one value, to equal "single"', () => {
+        test('Expect the prop, passed as an array with one value, to equal that array (as a JSON string)', () => {
             const configData = getCardConfigData({ [CARD_CONFIG_PROP]: ['mc'] });
-            expect(configData[ANALYTICS_DATA_PROP]).toEqual('single');
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(JSON.stringify(['mc']));
         });
     });
 
@@ -374,6 +400,24 @@ describe('Testing creating a configData object for the Card components', () => {
     });
 
     /**
+     * hasStylesConfigured
+     */
+    describe('Testing styles prop and how it maps to a hasStylesConfigured value', () => {
+        const ANALYTICS_DATA_PROP = 'hasStylesConfigured';
+        const CARD_CONFIG_PROP = 'styles';
+
+        test('Expect the prop, when styles is not passed, to equal false', () => {
+            const configData = getCardConfigData({});
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(false);
+        });
+
+        test('Expect the prop, when styles is passed, to equal true', () => {
+            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: { base: { fontWeight: 300 } } });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(true);
+        });
+    });
+
+    /**
      * hideCVC
      */
     describe('Testing hideCVC', () => {
@@ -415,24 +459,6 @@ describe('Testing creating a configData object for the Card components', () => {
 
         test('Expect the prop, passed as true, to equal true', () => {
             const configData = getCardConfigData({ [CARD_CONFIG_PROP]: true });
-            expect(configData[ANALYTICS_DATA_PROP]).toEqual(true);
-        });
-    });
-
-    /**
-     * hasStylesConfigured
-     */
-    describe('Testing styles prop and how it maps to a hasStylesConfigured value', () => {
-        const ANALYTICS_DATA_PROP = 'hasStylesConfigured';
-        const CARD_CONFIG_PROP = 'styles';
-
-        test('Expect the prop, when styles is not passed, to equal false', () => {
-            const configData = getCardConfigData({});
-            expect(configData[ANALYTICS_DATA_PROP]).toEqual(false);
-        });
-
-        test('Expect the prop, when styles is passed, to equal true', () => {
-            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: { base: { fontWeight: 300 } } });
             expect(configData[ANALYTICS_DATA_PROP]).toEqual(true);
         });
     });
@@ -548,6 +574,29 @@ describe('Testing creating a configData object for the Card components', () => {
     describe('Testing positionHolderNameOnTop', () => {
         const ANALYTICS_DATA_PROP = 'positionHolderNameOnTop';
         const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
+
+        test('Expect the prop, when not passed, to equal the default', () => {
+            const configData = getCardConfigData({});
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(CardDefaultProps[CARD_CONFIG_PROP]);
+        });
+
+        test('Expect the prop, passed as false, to equal false', () => {
+            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: false });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(false);
+        });
+
+        test('Expect the prop, passed as true, to equal true', () => {
+            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: true });
+            expect(configData[ANALYTICS_DATA_PROP]).toEqual(true);
+        });
+    });
+
+    /**
+     * showBrandIcon
+     */
+    describe('Testing showBrandIcon', () => {
+        const ANALYTICS_DATA_PROP = 'showBrandIcon'; // The name of the prop in the configData object sent to the analytics endpoint
+        const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP; // The name of the prop in the Card configuration
 
         test('Expect the prop, when not passed, to equal the default', () => {
             const configData = getCardConfigData({});

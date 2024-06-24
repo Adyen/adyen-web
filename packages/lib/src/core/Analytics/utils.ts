@@ -171,7 +171,5 @@ export const getCardConfigData = (cardProps: CardElementProps): ConfigData => {
         onLoad: !!onLoad
     };
 
-    console.log('### utils::getCardConfigData::configData ', configData);
-
     return configData;
 };
