@@ -5,6 +5,7 @@ import { ERROR_CODES, ERROR_MSG_INCOMPLETE_FIELD } from '../Errors/constants';
 import { DEFAULT_CHALLENGE_WINDOW_SIZE, THREEDS2_FULL } from '../../components/ThreeDS2/config';
 import { CardElementProps } from '../../components/Card/types';
 import CardDefaultProps from '../../components/Card/components/CardInput/defaultProps';
+import { DEFAULT_CARD_GROUP_TYPES } from '../../components/internal/SecuredFields/lib/configuration/constants';
 
 export const getUTCTimestamp = () => Date.now();
 
@@ -77,8 +78,8 @@ export const getCardConfigData = (cardProps: CardElementProps): ConfigData => {
         billingAddressAllowedCountries = CardDefaultProps.billingAddressAllowedCountries,
         billingAddressMode = CardDefaultProps.billingAddressMode,
         billingAddressRequired = CardDefaultProps.billingAddressRequired,
-        // billingAddressRequiredFields = CardDefaultProps.billingAddressRequiredFields,
-        brands,
+        billingAddressRequiredFields = CardDefaultProps.billingAddressRequiredFields,
+        brands = DEFAULT_CARD_GROUP_TYPES,
         brandsConfiguration,
         challengeWindowSize = DEFAULT_CHALLENGE_WINDOW_SIZE,
         configuration = CardDefaultProps.configuration,
@@ -119,16 +120,6 @@ export const getCardConfigData = (cardProps: CardElementProps): ConfigData => {
 
     const billingAddressModeValue = cardProps.onAddressLookup ? 'lookup' : billingAddressMode;
 
-    let hasBrands: true | 'default' | 'single' = true;
-    // If brands is not set it indicates that the merchant has not passed the paymentMethods response to Checkout
-    // and is therefore relying on the default array.
-    // If a single value it indicates the merchant is using a “single branded” card
-    if (!brands) {
-        hasBrands = 'default';
-    } else if (brands.length === 1) {
-        hasBrands = 'single';
-    }
-
     let showKCPType: 'none' | 'auto' | 'atStart' = 'none';
     if (configuration?.koreanAuthenticationRequired === true) {
         showKCPType = countryCode?.toLowerCase() === 'kr' ? 'atStart' : 'auto';
@@ -136,12 +127,11 @@ export const getCardConfigData = (cardProps: CardElementProps): ConfigData => {
 
     const configData: ConfigData = {
         autoFocus,
-        ...(billingAddressRequired ? { billingAddressAllowedCountries } : { billingAddressAllowedCountries: 'none' }),
+        billingAddressAllowedCountries: JSON.stringify(billingAddressAllowedCountries),
         billingAddressMode: billingAddressModeValue,
         billingAddressRequired,
-        // billingAddressRequiredFields, // do same as for billingAddressAllowedCountries
-        // brands, // TODO might just want to know if the array is filled, and if so, whether it has more than 1 item
-        brands: hasBrands,
+        billingAddressRequiredFields: JSON.stringify(billingAddressRequiredFields),
+        brands: JSON.stringify(brands),
         challengeWindowSize,
         disableIOSArrowKeys,
         doBinLookup,

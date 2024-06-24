@@ -45,8 +45,6 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
                     configData = getCardConfigData(uiElementProps);
                 }
 
-                console.log('### analyticsPreProcessor::ANALYTICS_RENDERED_STR:: uiElementProps', uiElementProps);
-
                 const hasExpressPage = expressPage && ANALYTICS_EXPRESS_PAGES_ARRAY.includes(expressPage);
 
                 const data = {

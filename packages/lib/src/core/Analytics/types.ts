@@ -125,11 +125,11 @@ export type FieldErrorAnalyticsObject = {
 
 export type ConfigData = {
     autoFocus: boolean;
-    // billingAddressAllowedCountries: 'none';
+    billingAddressAllowedCountries: string;
     billingAddressMode: 'full' | 'partial' | 'lookup' | 'none';
     billingAddressRequired: boolean;
-    // billingAddressRequiredFields,
-    brands: true | 'default' | 'single';
+    billingAddressRequiredFields: string;
+    brands: string;
     challengeWindowSize: string;
     disableIOSArrowKeys: boolean;
     doBinLookup: boolean;
@@ -154,7 +154,6 @@ export type ConfigData = {
     showBrandIcon: boolean;
     showBrandsUnderCardNumber: boolean; // (v5 only)
     showInstallmentAmounts: boolean;
-    // showInstallmentAmounts: boolean | 'none';
     showKCPType: 'none' | 'auto' | 'atStart';
     showPayButton: boolean;
     socialSecurityNumberMode: SocialSecurityMode;
@@ -168,4 +167,5 @@ export type ConfigData = {
     onFieldValid: boolean;
     onFocus: boolean;
     onLoad: boolean;
+    // TODO - add onEnterKeyPressed for v6
 };
