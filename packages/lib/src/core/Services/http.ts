@@ -5,25 +5,25 @@ import AdyenCheckoutError from '../Errors/AdyenCheckoutError';
 export interface HttpOptions {
     accept?: string;
     contentType?: string;
-    errorMessage?: string;
     headers?;
     loadingContext?: string;
     method?: string;
     path: string;
-    errorLevel?: ErrorLevel;
     timeout?: number;
+    errorLevel?: ErrorLevel;
+    errorMessage?: string;
 }
 
 type ErrorLevel = 'silent' | 'info' | 'warn' | 'error' | 'fatal';
 
-type AdyenErrorResponse = {
+type AdyenApiErrorResponse = {
     errorCode: string;
     message: string;
     errorType: string;
     status: number;
 };
 
-function isAdyenErrorResponse(data: any): data is AdyenErrorResponse {
+function isAdyenApiErrorResponse(data: any): data is AdyenApiErrorResponse {
     return data && data.errorCode && data.errorType && data.message && data.status;
 }
 
@@ -57,20 +57,20 @@ export function http<T>(options: HttpOptions, data?: any): Promise<T> {
                     return data;
                 }
 
-                if (isAdyenErrorResponse(data)) {
-                    handleFetchError(data.message, errorLevel);
+                if (isAdyenApiErrorResponse(data)) {
+                    handleFetchError(data.message, errorLevel, data);
                     return;
                 }
 
                 const errorMessage = options.errorMessage || `Service at ${url} is not available`;
-                handleFetchError(errorMessage, errorLevel);
+                handleFetchError(errorMessage, errorLevel, data);
                 return;
             })
             /**
              * Catch block handles Network error, CORS error, or exception throw by the `handleFetchError`
              * inside the `then` block
              */
-            .catch(error => {
+            .catch((error: unknown) => {
                 /**
                  * If error is instance of AdyenCheckoutError, which means that it was already
                  * handled by the `handleFetchError` on the `then` block, then we just throw it.
@@ -81,12 +81,12 @@ export function http<T>(options: HttpOptions, data?: any): Promise<T> {
                 }
 
                 const errorMessage = options.errorMessage || `Call to ${url} failed. Error= ${error}`;
-                handleFetchError(errorMessage, errorLevel);
+                handleFetchError(errorMessage, errorLevel, error);
             })
     );
 }
 
-function handleFetchError(message: string, level: ErrorLevel): void {
+function handleFetchError(message: string, level: ErrorLevel, error: unknown): void {
     switch (level) {
         case 'silent': {
             break;
@@ -98,7 +98,7 @@ function handleFetchError(message: string, level: ErrorLevel): void {
             break;
         }
         default:
-            throw new AdyenCheckoutError('NETWORK_ERROR', message);
+            throw new AdyenCheckoutError('NETWORK_ERROR', message, { cause: error });
     }
 }
 

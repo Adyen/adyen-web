@@ -28,7 +28,7 @@ export async function initSession() {
             console.info(result, component);
         },
         onError: (error, component) => {
-            console.info(JSON.stringify(error), component);
+            console.log(error.name, error.message, error.cause);
         },
         // onChange: (state, component) => {
         //     console.log('onChange', state);
