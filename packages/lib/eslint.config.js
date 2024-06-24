@@ -1,8 +1,10 @@
 // @ts-check
 import eslint from '@eslint/js';
+import { fixupPluginRules } from '@eslint/compat';
 import tseslint from 'typescript-eslint';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import testingLibrary from 'eslint-plugin-testing-library';
+import reactRecommended from 'eslint-plugin-react/configs/recommended.js';
 import globals from 'globals';
 
 const config = tseslint.config(
@@ -12,9 +14,10 @@ const config = tseslint.config(
     },
     eslint.configs.recommended,
     jsxA11y.flatConfigs.strict,
+    reactRecommended,
     ...tseslint.configs.recommended,
     {
-        name: 'Custom rules using plugins',
+        name: 'Custom rules',
         languageOptions: {
             globals: {
                 ...globals.browser,
@@ -62,17 +65,25 @@ const config = tseslint.config(
                     allow: ['arrowFunctions']
                 }
             ],
+
+            "react/react-in-jsx-scope": "off",
+            "react/prop-types": "off",
         }
     },
     {
-        name: 'Rules for testing files',
-        files: ['**/?(*.)+(spec|test).[jt]s?(x)'],
+        name: 'Testing files rules',
         plugins: {
-            'testing-library': testingLibrary
+            'testing-library': fixupPluginRules({
+				rules: testingLibrary.rules,
+			}),
+        },
+        files: ['**/?(*.)+(spec|test).[jt]s?(x)'],
+        rules: {
+            ...testingLibrary.configs.dom.rules,
+            ...testingLibrary.configs.react.rules,
         }
     }
 );
 
-console.log(config);
 
 export default config;
