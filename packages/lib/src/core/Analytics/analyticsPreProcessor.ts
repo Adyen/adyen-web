@@ -1,5 +1,5 @@
 import { AnalyticsModule } from '../../components/types';
-import { ConfigData, CreateAnalyticsEventObject, SendAnalyticsObject } from './types';
+import { ConfigData, CardConfigData, CreateAnalyticsEventObject, SendAnalyticsObject } from './types';
 import {
     ANALYTICS_ACTION_STR,
     ANALYTICS_CONFIGURED_STR,
@@ -42,7 +42,7 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
 
                 if (componentType === 'card') {
                     // Expected from Cards
-                    configData = getCardConfigData(uiElementProps);
+                    configData = getCardConfigData(uiElementProps) as CardConfigData;
                 }
 
                 const hasExpressPage = expressPage && ANALYTICS_EXPRESS_PAGES_ARRAY.includes(expressPage);

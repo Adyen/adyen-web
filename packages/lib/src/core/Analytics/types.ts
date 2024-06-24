@@ -123,7 +123,9 @@ export type FieldErrorAnalyticsObject = {
     errorCode: string;
 };
 
-export type ConfigData = {
+export type ConfigData = CardConfigData; // TODO extend in future as we get Dropin & Checkout related config data
+
+export type CardConfigData = {
     autoFocus: boolean;
     billingAddressAllowedCountries: string;
     billingAddressMode: 'full' | 'partial' | 'lookup' | 'none';

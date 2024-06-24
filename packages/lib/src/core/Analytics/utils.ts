@@ -1,4 +1,4 @@
-import { AnalyticsData, AnalyticsObject, ConfigData, CreateAnalyticsObject } from './types';
+import { AnalyticsData, AnalyticsObject, CardConfigData, CreateAnalyticsObject } from './types';
 import { ANALYTICS_ACTION_STR, ANALYTICS_VALIDATION_ERROR_STR, ALLOWED_ANALYTICS_DATA, errorCodeMapping } from './constants';
 import uuid from '../../utils/uuid';
 import { ERROR_CODES, ERROR_MSG_INCOMPLETE_FIELD } from '../Errors/constants';
@@ -71,7 +71,7 @@ export const processAnalyticsData = (analyticsData: AnalyticsData): AnalyticsDat
     }, {});
 };
 
-export const getCardConfigData = (cardProps: CardElementProps): ConfigData => {
+export const getCardConfigData = (cardProps: CardElementProps): CardConfigData => {
     // Extract props from cardProps - mostly setting a default value, if prop not found
     const {
         autoFocus = CardDefaultProps.autoFocus,
@@ -125,7 +125,7 @@ export const getCardConfigData = (cardProps: CardElementProps): ConfigData => {
         showKCPType = countryCode?.toLowerCase() === 'kr' ? 'atStart' : 'auto';
     }
 
-    const configData: ConfigData = {
+    const configData: CardConfigData = {
         autoFocus,
         billingAddressAllowedCountries: JSON.stringify(billingAddressAllowedCountries),
         billingAddressMode: billingAddressModeValue,
