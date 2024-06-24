@@ -15,10 +15,6 @@ const config = tseslint.config(
     ...tseslint.configs.recommended,
     {
         name: 'Custom rules using plugins',
-        plugins: {
-            // import: _import,
-            // react: react
-        },
         languageOptions: {
             globals: {
                 ...globals.browser,
