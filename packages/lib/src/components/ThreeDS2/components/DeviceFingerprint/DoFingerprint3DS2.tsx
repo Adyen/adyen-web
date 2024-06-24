@@ -49,7 +49,7 @@ class DoFingerprint3DS2 extends Component<DoFingerprint3DS2Props, DoFingerprint3
              */
             this.processMessageHandler = getProcessMessageHandler(this.props.postMessageDomain, resolve, reject, 'fingerPrintResult');
 
-            /* eslint-disable-next-line */
+             
             window.addEventListener('message', this.processMessageHandler);
         });
     }

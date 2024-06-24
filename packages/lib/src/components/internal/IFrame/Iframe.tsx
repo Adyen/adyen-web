@@ -78,11 +78,11 @@ class Iframe extends Component<IframeProps> {
                 height={height}
                 frameBorder="0"
                 title={title}
-                /* eslint-disable react/no-unknown-property */
+                 
                 referrerpolicy="origin"
                 min-width={minWidth}
                 min-height={minHeight}
-                /* eslint-enable react/no-unknown-property */
+                 
             />
         );
     }

@@ -12,7 +12,7 @@ const customRender = (children: ComponentChildren, providerProps: IClickToPayCon
     return render(
         // @ts-ignore TODO: Fix this weird complain
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-            {/* eslint-disable-next-line react/no-children-prop */}
+            { }
             <ClickToPayContext.Provider value={{ ...providerProps }} children={children} />
         </CoreProvider>
     );

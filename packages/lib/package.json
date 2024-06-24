@@ -55,7 +55,7 @@
     "README"
   ],
   "scripts": {
-    "eslint-inspector": "eslint --inspect-config --port 3020",
+    "eslint-inspector": "eslint --inspect-config",
     "start": "npm run dev-server",
     "story": "storybook dev --port 3020 --disable-telemetry",
     "dev-server": "rollup --watch --config config/rollup.dev.js",

@@ -10,7 +10,7 @@ import SrciError from '../../services/sdks/SrciError';
 const customRender = (children: ComponentChildren, providerProps: IClickToPayContext) => {
     return render(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-            {/* eslint-disable-next-line react/no-children-prop */}
+            { }
             <ClickToPayContext.Provider value={{ ...providerProps }} children={children} />
         </CoreProvider>
     );

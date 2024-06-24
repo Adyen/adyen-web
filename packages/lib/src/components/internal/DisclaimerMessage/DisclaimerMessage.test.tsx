@@ -22,9 +22,9 @@ describe('DisclaimerMessage', () => {
 
         render(<DisclaimerMessage {...nuMsg} />);
 
-        /* eslint-disable-next-line */
+         
         expect(screen.queryByText('By continuing', { exact: false })).toBeTruthy(); // presence
-        /* eslint-disable-next-line */
+         
         expect(screen.queryByRole('link')).toBeTruthy(); // presence
 
         expect(screen.getByText('By continuing', { exact: false }).textContent).toEqual('By continuing you accept the terms and conditions');
@@ -43,7 +43,7 @@ describe('DisclaimerMessage', () => {
         const nuMsg = { ...disclaimerMessage };
 
         // @ts-ignore Proper test case
-        // eslint-disable-next-line react/no-unescaped-entities
+         
         nuMsg.message = <script>alert("busted")</script>;
 
         render(<DisclaimerMessage {...nuMsg} />);

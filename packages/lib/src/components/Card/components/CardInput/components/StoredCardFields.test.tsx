@@ -31,7 +31,7 @@ describe('StoredCard', () => {
         renderWithCoreProvider(<StoredCardFields {...storedCardProps} />);
 
         // Look for expiryDate elements
-        /* eslint-disable-next-line */
+         
         expect(screen.queryByText('Expiry date', { exact: false })).toBeTruthy(); // presence
 
         expect(screen.getByLabelText('Expiry date', { exact: true })).toBeTruthy(); // presence
@@ -48,7 +48,7 @@ describe('StoredCard', () => {
 
         renderWithCoreProvider(<StoredCardFields {...newStoredCardProps} />);
 
-        /* eslint-disable-next-line */
+         
         expect(screen.queryByText('Expiry date', { exact: false })).toBeNull(); // non-presence
 
         expect(screen.getAllByText('Security code', { exact: true })).toBeTruthy();
@@ -62,7 +62,7 @@ describe('StoredCard', () => {
 
         renderWithCoreProvider(<StoredCardFields {...newStoredCardProps} />);
 
-        /* eslint-disable-next-line */
+         
         expect(screen.queryByText('Expiry date', { exact: false })).toBeNull(); // non-presence
 
         expect(screen.getAllByText('Security code', { exact: true })).toBeTruthy();
@@ -76,7 +76,7 @@ describe('StoredCard', () => {
 
         renderWithCoreProvider(<StoredCardFields {...newStoredCardProps} />);
 
-        /* eslint-disable-next-line */
+         
         expect(screen.queryByText('Expiry date', { exact: false })).toBeNull(); // non-presence
 
         expect(screen.getAllByText('Security code', { exact: true })).toBeTruthy();

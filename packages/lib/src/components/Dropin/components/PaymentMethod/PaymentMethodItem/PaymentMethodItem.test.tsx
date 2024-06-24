@@ -39,11 +39,11 @@ describe('PaymentMethodItem', () => {
     test('should render a pay PaymentMethodItem', () => {
         const { container } = customRender(<PaymentMethodItem {...requiredProps} paymentMethod={paymentMethod} />);
 
-        /* eslint-disable testing-library/no-node-access,testing-library/no-container */
+         
         expect(container.getElementsByClassName('123456').length).toBe(1);
         expect(container.getElementsByClassName('adyen-checkout__payment-method').length).toBe(1);
         expect(container.getElementsByClassName('adyen-checkout__payment-method--ideal').length).toBe(1);
-        /* eslint-enable testing-library/no-node-access,testing-library/no-container */
+         
     });
 
     test('should trigger onSelect if clicked', async () => {

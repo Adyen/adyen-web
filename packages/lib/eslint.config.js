@@ -9,10 +9,14 @@ import testingLibrary from 'eslint-plugin-testing-library';
 import globals from 'globals';
 
 const config = tseslint.config(
-    { ignores: ['dist/*', 'config/*', 'auto/*', 'postcss.config.cjs'] },
+    { 
+        name: 'Global ignore',
+        ignores: ['dist/*', 'config/*', 'auto/*', 'postcss.config.cjs'] 
+    },
     eslint.configs.recommended,
     ...tseslint.configs.recommended,
     {
+        name: 'Custom rules using plugins',
         plugins: {
             import: _import,
             'jsx-a11y': jsxA11y,
@@ -24,26 +28,8 @@ const config = tseslint.config(
                 ...globals.node,
                 ...globals.jest
             },
-
-            parserOptions: {
-                ecmaFeatures: {
-                    modules: true,
-                    jsx: true
-                }
-            }
         },
 
-        settings: {
-            react: {
-                pragma: 'h'
-            },
-
-            'import/resolver': {
-                node: {
-                    extensions: ['.js', '.jsx', '.ts', '.tsx']
-                }
-            }
-        },
         rules: {
             'no-restricted-imports': [
                 'error',
@@ -67,20 +53,8 @@ const config = tseslint.config(
                 }
             ],
 
-            'max-len': [
-                'error',
-                {
-                    code: 150,
-                    tabWidth: 2,
-                    ignoreComments: true,
-                    ignoreUrls: true,
-                    ignoreStrings: true,
-                    ignoreTemplateLiterals: true
-                }
-            ],
-
+        
             'prefer-destructuring': 'off',
-            'arrow-parens': ['error', 'as-needed'],
             'comma-dangle': 'off',
             'operator-linebreak': 'off',
             'implicit-arrow-linebreak': 'off',
@@ -148,13 +122,12 @@ const config = tseslint.config(
         }
     },
     {
-        files: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
+        name: 'Rules for testing files',
+        files: ['**/?(*.)+(spec|test).[jt]s?(x)'],
         plugins: {
             'testing-library': testingLibrary
         }
     }
 );
-
-console.log(config);
 
 export default config;
