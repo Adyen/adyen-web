@@ -1,16 +1,14 @@
 // @ts-check
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
-
 import jsxA11y from 'eslint-plugin-jsx-a11y';
-// import reactRules from 'eslint-plugin-react/configs/all.js';
 import testingLibrary from 'eslint-plugin-testing-library';
 import globals from 'globals';
 
 const config = tseslint.config(
     { 
         name: 'Global ignore',
-        ignores: ['dist/*', 'config/*', 'auto/*', 'postcss.config.cjs'],
+        ignores: ['coverage/*','dist/*', 'config/*', 'auto/*', 'postcss.config.cjs'],
     },
     eslint.configs.recommended,
     jsxA11y.flatConfigs.strict,
@@ -38,10 +36,7 @@ const config = tseslint.config(
             ],
 
             '@typescript-eslint/no-explicit-any': 'off',
-            '@typescript-eslint/explicit-function-return-type': 'off',
-            '@typescript-eslint/indent': 'off',
             '@typescript-eslint/ban-types': 'off',
-            '@typescript-eslint/explicit-module-boundary-types': 'off',
             '@typescript-eslint/ban-ts-comment': [
                 'error',
                 {
@@ -83,6 +78,5 @@ const config = tseslint.config(
 );
 
 console.log(config);
-
 
 export default config;
