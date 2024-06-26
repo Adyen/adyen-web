@@ -8,7 +8,7 @@ const core = mock<ICore>();
 describe('SRPanel disabled', () => {
     new SRPanel(core, { enabled: false });
 
-    test('Does not render the SRPanel in the DOM', async () => {
+    test('Does not render the SRPanel in the DOM', () => {
         // Expect panel to not be present
         expect(screen.queryByTestId('ariaLiveSRPanel')).toBeNull();
     });
@@ -30,13 +30,12 @@ describe('SRPanel in use', () => {
 
         // expect(await screen.findByTestId('message3')).toBeTruthy(); // KEEP: example of assertion that should fail (triggering log of available DOM)
 
-        await waitFor(() => expect(screen.queryByTestId('message1')).toBeTruthy()); // existence  
+        await screen.findByTestId('message1'); // existence
         await waitFor(() => expect(screen.queryByTestId('message3')).toBeNull()); // non-existence
 
         // Clear messages
         srPanel.setMessages(null);
 
-         
         await waitFor(() => expect(screen.queryByTestId('message1')).toBeNull());
     });
 });

@@ -194,6 +194,7 @@ describe('Core - tests ensuring props reach components', () => {
 
         test('StoredCard in Dropin receives correct props ', async () => {
             mount(dropin.render());
+            // eslint-disable-next-line @typescript-eslint/unbound-method
             const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
@@ -223,6 +224,7 @@ describe('Core - tests ensuring props reach components', () => {
 
         test('Card in Dropin receives correct props ', async () => {
             mount(dropin.render());
+            // eslint-disable-next-line @typescript-eslint/unbound-method
             const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
@@ -252,6 +254,7 @@ describe('Core - tests ensuring props reach components', () => {
 
         test('PayPal in Dropin receives correct props ', async () => {
             mount(dropin.render());
+            // eslint-disable-next-line @typescript-eslint/unbound-method
             const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
@@ -278,6 +281,7 @@ describe('Core - tests ensuring props reach components', () => {
 
         test('Redirect PM in Dropin receives correct props ', async () => {
             mount(dropin.render());
+            // eslint-disable-next-line @typescript-eslint/unbound-method
             const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 

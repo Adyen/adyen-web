@@ -13,7 +13,7 @@ export interface PaymentAction {
     /**
      * General type of action that needs to be taken by the client
      */
-    type: PaymentActionsType | string;
+    type: PaymentActionsType;
 
     /**
      * Refinement of type of action that needs to be taken by the client (currently only applies to the new 'threeDS2' type)

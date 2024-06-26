@@ -6,11 +6,15 @@ import jsxA11y from 'eslint-plugin-jsx-a11y';
 import testingLibrary from 'eslint-plugin-testing-library';
 import reactRecommended from 'eslint-plugin-react/configs/recommended.js';
 import globals from 'globals';
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const config = tseslint.config(
     {
         name: 'Global ignore',
-        ignores: ['coverage/*', 'dist/*', 'config/*', 'auto/*', 'postcss.config.cjs', '**/*_*/**']
+        ignores: ['coverage/*', 'dist/*', 'config/*', 'auto/*', 'postcss.config.cjs', '**/*_*/**', 'eslint.config.js']
     },
     eslint.configs.recommended,
     jsxA11y.flatConfigs.strict,
@@ -25,8 +29,8 @@ const config = tseslint.config(
                 ...globals.jest
             },
             parserOptions: {
-                project: true,
-                tsconfigRootDir: import.meta.dirname
+                project: './tsconfig.eslint.json',
+                tsconfigRootDir: __dirname
             }
         },
         rules: {
@@ -37,6 +41,14 @@ const config = tseslint.config(
                     message: 'preact/compat should be used to leverage a React app to start using Preact, which it is not the case for adyen-web SDK.'
                 }
             ],
+
+            // maybe apply for test files?
+            '@typescript-eslint/no-unsafe-assignment': 'off',
+            '@typescript-eslint/no-unsafe-return': 'off',
+            '@typescript-eslint/no-unsafe-call': 'off',
+            '@typescript-eslint/no-unsafe-argument': 'off',
+            '@typescript-eslint/no-unsafe-member-access': 'off',
+            '@typescript-eslint/unbound-method': 'off',
 
             '@typescript-eslint/no-explicit-any': 'off',
             '@typescript-eslint/ban-types': 'off',

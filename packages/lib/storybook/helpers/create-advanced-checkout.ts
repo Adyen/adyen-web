@@ -20,6 +20,7 @@ async function createAdvancedFlowCheckout({ showPayButton, countryCode, shopperL
 
     const checkout = await AdyenCheckout({
         clientKey: process.env.CLIENT_KEY,
+        // @ts-ignore CLIENT_ENV has valid value
         environment: process.env.CLIENT_ENV,
         amount: paymentAmount,
         countryCode,

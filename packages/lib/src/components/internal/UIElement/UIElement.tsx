@@ -149,7 +149,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      *
      *  In some other cases e.g. 3DS2 components, this function is overridden to allow more specific analytics actions to be created
      */
-     
+
     protected submitAnalytics(analyticsObj: SendAnalyticsObject, uiElementProps?) {
         /** Work out what the component's "type" is:
          * - first check for a dedicated "analyticsType" (currently only applies to custom-cards)

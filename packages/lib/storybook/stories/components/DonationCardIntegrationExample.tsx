@@ -18,9 +18,9 @@ export const DonationCardIntegrationExample = ({ contextArgs: { countryCode, amo
 
     useEffect(() => {
         if (redirectResult) {
-            handleRedirectResult(redirectResult);
+            void handleRedirectResult(redirectResult);
         } else {
-            createCheckout();
+            void createCheckout();
         }
     }, [countryCode, amount, redirectResult]);
 
@@ -72,7 +72,7 @@ export const DonationCardIntegrationExample = ({ contextArgs: { countryCode, amo
                 }
             },
             onPaymentCompleted: (result, component) => {
-                handlePaymentCompleted(result, component);
+                void handlePaymentCompleted(result, component);
             }
         });
 
@@ -130,7 +130,7 @@ export const DonationCardIntegrationExample = ({ contextArgs: { countryCode, amo
                 }
             },
             onPaymentCompleted: (result, component) => {
-                handlePaymentCompleted(result, component);
+                void handlePaymentCompleted(result, component);
             },
             onError: (error, component) => {
                 handleError(error, component);
