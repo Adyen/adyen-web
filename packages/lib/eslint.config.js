@@ -8,14 +8,14 @@ import reactRecommended from 'eslint-plugin-react/configs/recommended.js';
 import globals from 'globals';
 
 const config = tseslint.config(
-    { 
+    {
         name: 'Global ignore',
-        ignores: ['coverage/*','dist/*', 'config/*', 'auto/*', 'postcss.config.cjs', '**/*_*/**'],
+        ignores: ['coverage/*', 'dist/*', 'config/*', 'auto/*', 'postcss.config.cjs', '**/*_*/**']
     },
     eslint.configs.recommended,
     jsxA11y.flatConfigs.strict,
     reactRecommended,
-    ...tseslint.configs.recommended,
+    ...tseslint.configs.recommendedTypeChecked,
     {
         name: 'Custom rules',
         languageOptions: {
@@ -24,6 +24,10 @@ const config = tseslint.config(
                 ...globals.node,
                 ...globals.jest
             },
+            parserOptions: {
+                project: true,
+                tsconfigRootDir: import.meta.dirname
+            }
         },
         rules: {
             'no-restricted-imports': [
@@ -65,25 +69,23 @@ const config = tseslint.config(
                     allow: ['arrowFunctions']
                 }
             ],
-
-            "react/react-in-jsx-scope": "off",
-            "react/prop-types": "off",
+            'react/react-in-jsx-scope': 'off',
+            'react/prop-types': 'off'
         }
     },
     {
         name: 'Testing files rules',
         plugins: {
             'testing-library': fixupPluginRules({
-				rules: testingLibrary.rules,
-			}),
+                rules: testingLibrary.rules
+            })
         },
         files: ['**/?(*.)+(spec|test).[jt]s?(x)'],
         rules: {
             ...testingLibrary.configs.dom.rules,
-            ...testingLibrary.configs.react.rules,
+            ...testingLibrary.configs.react.rules
         }
     }
 );
-
 
 export default config;
