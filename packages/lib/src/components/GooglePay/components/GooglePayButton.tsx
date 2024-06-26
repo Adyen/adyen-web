@@ -18,7 +18,7 @@ const GooglePayButton = (props: GooglePayButtonProps) => {
     useEffect(() => {
         const { onClick, buttonColor, buttonType, buttonLocale, buttonSizeMode, buttonRootNode, paymentsClient } = props;
 
-        paymentsClient
+        void paymentsClient
             .then(client =>
                 client.createButton({
                     onClick,

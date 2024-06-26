@@ -13,6 +13,6 @@ export interface OxxoVoucherResultProps {
 
 export type OxxoElementData = {
     paymentMethod: {
-        type: 'oxxo' | string;
+        type: 'oxxo';
     };
 };

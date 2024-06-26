@@ -327,7 +327,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         const updateCorePromise = this.core.session ? this.core.update({ order }) : this.handleAdvanceFlowPaymentMethodsUpdate(order);
 
-        updateCorePromise.then(() => {
+        void updateCorePromise.then(() => {
             this.props.onOrderUpdated?.({ order });
         });
     };

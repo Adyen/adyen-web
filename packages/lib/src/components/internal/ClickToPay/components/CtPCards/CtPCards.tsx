@@ -120,7 +120,7 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
                             cards.length !== 0 &&
                             getImage({ imageFolder: 'components/' })(isCtpPrimaryPaymentMethod ? `${PREFIX}lock` : `${PREFIX}lock_black`)
                         }
-                        onClick={doCheckout}
+                        onClick={void doCheckout}
                     />
                 </Fragment>
             )}

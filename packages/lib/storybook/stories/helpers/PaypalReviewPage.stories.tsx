@@ -74,7 +74,7 @@ const ReviewPage = ({ paymentDetails, deliveryAddress, paypalOrder }) => {
                 <div>Shipping: {formatTotal(paypalOrder.purchase_units[0].amount.breakdown.shipping.value)}</div>
                 <div>Total: {formatTotal(paypalOrder.purchase_units[0].amount.value)}</div>
 
-                <button disabled={isCompletingPayment} onClick={completePayment}>
+                <button disabled={isCompletingPayment} onClick={void completePayment}>
                     Complete Payment
                 </button>
             </div>

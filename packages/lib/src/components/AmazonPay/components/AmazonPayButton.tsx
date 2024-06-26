@@ -13,7 +13,7 @@ export default function AmazonPayButton(props: AmazonPayButtonProps) {
     const settings = getAmazonPaySettings(props);
 
     const handleOnClick = () => {
-        new Promise(props.onClick).then(this.initCheckout).catch(error => {
+        new Promise(void props.onClick).then(this.initCheckout).catch(error => {
             if (props.onError) props.onError(error, this.componentRef);
         });
     };

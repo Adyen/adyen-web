@@ -23,20 +23,20 @@ class ApplePayService {
         this.options = options;
 
         this.session = new ApplePaySession(options.version, paymentRequest);
-        this.session.onvalidatemerchant = event => this.onvalidatemerchant(event, options.onValidateMerchant);
-        this.session.onpaymentauthorized = event => this.onpaymentauthorized(event, options.onPaymentAuthorized);
+        this.session.onvalidatemerchant = event => void this.onvalidatemerchant(event, options.onValidateMerchant);
+        this.session.onpaymentauthorized = event => void this.onpaymentauthorized(event, options.onPaymentAuthorized);
         this.session.oncancel = event => this.oncancel(event, options.onCancel);
 
         if (typeof options.onPaymentMethodSelected === 'function') {
-            this.session.onpaymentmethodselected = event => this.onpaymentmethodselected(event, options.onPaymentMethodSelected);
+            this.session.onpaymentmethodselected = event => void this.onpaymentmethodselected(event, options.onPaymentMethodSelected);
         }
 
         if (typeof options.onShippingContactSelected === 'function') {
-            this.session.onshippingcontactselected = event => this.onshippingcontactselected(event, options.onShippingContactSelected);
+            this.session.onshippingcontactselected = event => void this.onshippingcontactselected(event, options.onShippingContactSelected);
         }
 
         if (typeof options.onShippingMethodSelected === 'function') {
-            this.session.onshippingmethodselected = event => this.onshippingmethodselected(event, options.onShippingMethodSelected);
+            this.session.onshippingmethodselected = event => void this.onshippingmethodselected(event, options.onShippingMethodSelected);
         }
     }
 

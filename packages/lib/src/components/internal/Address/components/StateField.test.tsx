@@ -59,7 +59,7 @@ describe('StateField', () => {
         expect(wrapper.find('Select').prop('selectedValue')).toBe(value);
     });
 
-    test('should not load the dropdown if no states were loaded', async () => {
+    test('should not load the dropdown if no states were loaded', () => {
         const wrapper = getWrapper({ selectedCountry: 'AR' });
         expect(wrapper.find('Select')).toHaveLength(0);
     });

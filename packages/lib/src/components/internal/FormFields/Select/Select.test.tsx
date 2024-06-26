@@ -43,7 +43,7 @@ describe('Select', () => {
         expect(onChangeCb.mock.calls[0][0]).toStrictEqual(callbackData);
 
         // Test new option is displayed
-        await screen.getByRole('button').focus();
+        screen.getByRole('button').focus();
 
         // Test keyboard interaction
         await user.keyboard('[ArrowDown][Enter]');
@@ -85,7 +85,7 @@ describe('Select', () => {
         expect(onChangeCb.mock.calls[0][0]).toStrictEqual(callbackData);
 
         // Test new option is displayed
-        await screen.getByRole('combobox').focus();
+        screen.getByRole('combobox').focus();
 
         // Test keyboard interaction
         await user.keyboard('[ArrowDown][Enter]');

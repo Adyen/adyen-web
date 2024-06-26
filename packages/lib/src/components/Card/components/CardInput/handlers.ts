@@ -42,7 +42,7 @@ export const getAutoJumpHandler = (isAutoJumping, sfp, layout) => {
             // CardInput can call this more than once in quick succession
             // e.g. if field was in error (error + fieldValid) or other SFs are optional (fieldValid + allValid) etc
             // - so make async to avoid double setFocus call
-            Promise.resolve().then(() => {
+            void Promise.resolve().then(() => {
                 const panIndex = layout.findIndex(elem => elem === ENCRYPTED_CARD_NUMBER);
                 const subsequentFields = layout.slice(panIndex + 1);
 

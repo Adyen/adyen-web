@@ -149,25 +149,27 @@ describe('CardInput > holderName', () => {
         );
 
         const select = screen.getByRole('form');
-         
+
+        /* eslint-disable testing-library/no-node-access */
         const children = select.children;
 
         const positionDiv = children.item(1);
-         
+
         const positionDivChildren = positionDiv.children;
 
         const loadingWrapper = positionDivChildren.item(1); // children.item(0) is the spinner
-         
+
         const loadingWrapperChildren = loadingWrapper.children;
 
         // First visible element is the Card number
         const firstFormElement = loadingWrapperChildren.item(0);
-         
+
         const firstFormElementChildren = firstFormElement.children;
 
         const label = firstFormElementChildren.item(0);
-         
+
         const labelChildren = label.children;
+        /* eslint-enable testing-library/no-node-access */
 
         expect(labelChildren.item(0).textContent).toEqual('Card number');
     });
@@ -183,25 +185,27 @@ describe('CardInput > holderName', () => {
         );
 
         const select = screen.getByRole('form');
-         
+
+        /* eslint-disable testing-library/no-node-access */
         const children = select.children;
 
         const positionDiv = children.item(1);
-         
+
         const positionDivChildren = positionDiv.children;
 
         const loadingWrapper = positionDivChildren.item(1); // children.item(0) is the spinner
-         
+
         const loadingWrapperChildren = loadingWrapper.children;
 
         // First visible element is the Holder name
         const firstFormElement = loadingWrapperChildren.item(0);
-         
+
         const firstFormElementChildren = firstFormElement.children;
 
         const label = firstFormElementChildren.item(0);
-         
+
         const labelChildren = label.children;
+        /* eslint-enable testing-library/no-node-access */
 
         expect(labelChildren.item(0).textContent).toEqual('Name on card');
     });

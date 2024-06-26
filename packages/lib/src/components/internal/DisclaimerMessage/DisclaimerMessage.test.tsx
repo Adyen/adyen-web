@@ -22,10 +22,10 @@ describe('DisclaimerMessage', () => {
 
         render(<DisclaimerMessage {...nuMsg} />);
 
-         
+        /* eslint-disable testing-library/prefer-presence-queries */
         expect(screen.queryByText('By continuing', { exact: false })).toBeTruthy(); // presence
-         
         expect(screen.queryByRole('link')).toBeTruthy(); // presence
+        /* eslint-enable testing-library/prefer-presence-queries */
 
         expect(screen.getByText('By continuing', { exact: false }).textContent).toEqual('By continuing you accept the terms and conditions');
         expect(screen.getByRole('link', { name: 'terms and conditions' })).toHaveAttribute('href', 'https://www.adyen.com');
@@ -43,7 +43,8 @@ describe('DisclaimerMessage', () => {
         const nuMsg = { ...disclaimerMessage };
 
         // @ts-ignore Proper test case
-         
+
+        // eslint-disable-next-line react/no-unescaped-entities
         nuMsg.message = <script>alert("busted")</script>;
 
         render(<DisclaimerMessage {...nuMsg} />);

@@ -87,7 +87,7 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
         };
 
         const script = new Script(KLARNA_WIDGET_URL);
-        script.load();
+        void script.load();
 
         return () => {
             script.remove();

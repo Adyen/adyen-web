@@ -1,7 +1,5 @@
 import SecuredField from './SecuredField';
 
-import { CVCPolicyType, DatePolicyType } from '../types';
-
 // @ts-ignore Importing JSON for the test
 import en from '../../../../../../../server/translations/en-US.json';
 
@@ -70,8 +68,8 @@ const setupObj = {
     showWarnings: false,
     //
     fieldType: ENCRYPTED_CARD_NUMBER,
-    cvcPolicy: CVC_POLICY_REQUIRED as CVCPolicyType,
-    expiryDatePolicy: DATE_POLICY_REQUIRED as DatePolicyType,
+    cvcPolicy: CVC_POLICY_REQUIRED,
+    expiryDatePolicy: DATE_POLICY_REQUIRED,
     iframeSrc: null,
     loadingContext: null,
     holderEl: nodeHolder,

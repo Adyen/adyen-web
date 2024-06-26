@@ -94,7 +94,7 @@ const CtPOneTimePassword = ({ onDisplayCardComponent }: CtPOneTimePasswordProps)
                 disabled={isAccountLocked}
                 label={i18n.get('continue')}
                 variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'}
-                onClick={onSubmitPassword}
+                onClick={void onSubmitPassword}
                 status={isValidatingOtp && 'loading'}
             />
         </Fragment>

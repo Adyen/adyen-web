@@ -63,7 +63,8 @@ describe('Await', () => {
 
         test('should show brand logo', async () => {
             renderAwait(defaultProps);
-            const image = (await screen.findByAltText(defaultProps.type)) as HTMLImageElement;
+            const image = await screen.findByAltText(defaultProps.type);
+            // @ts-ignore src is part of img
             expect(image.src).toContain(defaultProps.brandLogo);
         });
 
@@ -163,7 +164,8 @@ describe('Await', () => {
 
         test('should show brand logo', async () => {
             renderAwait(defaultProps);
-            const image = (await screen.findByAltText(defaultProps.type)) as HTMLImageElement;
+            const image = await screen.findByAltText(defaultProps.type);
+            // @ts-ignore src is part of img
             expect(image.src).toContain(defaultProps.brandLogo);
         });
     });

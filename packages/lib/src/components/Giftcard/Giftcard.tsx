@@ -48,7 +48,7 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
     private handleBalanceCheck = data => {
         if (this.props.onBalanceCheck) {
             return new Promise((resolve, reject) => {
-                this.props.onBalanceCheck(resolve, reject, data);
+                void this.props.onBalanceCheck(resolve, reject, data);
             });
         }
 
@@ -60,7 +60,7 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
     private onOrderRequest = data => {
         if (this.props.onOrderRequest)
             return new Promise((resolve, reject) => {
-                this.props.onOrderRequest(resolve, reject, data);
+                void this.props.onOrderRequest(resolve, reject, data);
             });
 
         if (this.props.session) {

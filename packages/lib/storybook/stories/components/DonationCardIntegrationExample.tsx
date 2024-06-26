@@ -90,6 +90,7 @@ export const DonationCardIntegrationExample = ({ contextArgs: { countryCode, amo
 
         checkout.current = await AdyenCheckout({
             clientKey: process.env.CLIENT_KEY,
+            // @ts-ignore CLIENT_ENV has valid value
             environment: process.env.CLIENT_ENV,
             countryCode,
             onAdditionalDetails: async (state: AdditionalDetailsStateData, _, actions) => {

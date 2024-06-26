@@ -28,7 +28,7 @@ const config: StorybookConfig = {
 
     staticDirs: ['../storybook/assets'],
 
-    async viteFinal(config) {
+    viteFinal(config) {
         return mergeConfig(config, {
             define: generateEnvironmentVariables(),
             resolve: {

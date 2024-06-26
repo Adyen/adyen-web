@@ -68,9 +68,9 @@ export default function AddressSearch({
     }, []);
 
     const onTextInput = useCallback(
-        async (inputValue: string) => {
+        (inputValue: string) => {
             new Promise<Array<AddressLookupItem>>((resolve, reject) => {
-                onAddressLookup(inputValue, { resolve, reject });
+                void onAddressLookup(inputValue, { resolve, reject });
             })
                 .then(searchArray => {
                     setOriginalData(searchArray);
@@ -87,7 +87,7 @@ export default function AddressSearch({
         setErrorMessage(externalErrorMessage);
     }, [externalErrorMessage]);
 
-    const onSelectItem = async event => {
+    const onSelectItem = event => {
         if (!event.target.value) {
             setErrorMessage(i18n.get('address.errors.incomplete'));
             return;
@@ -103,7 +103,7 @@ export default function AddressSearch({
 
         // 2. in case callback is provided, create and call onAddressSelected
         new Promise<AddressLookupItem>((resolve, reject) => {
-            onAddressSelected(value, { resolve, reject });
+            void onAddressSelected(value, { resolve, reject });
         })
             .then(fullData => {
                 onSelect(fullData);
@@ -130,7 +130,7 @@ export default function AddressSearch({
                     placeholder={placeholder}
                     onInput={debounceInputHandler}
                     items={formattedData}
-                    onChange={onSelectItem}
+                    onChange={void onSelectItem}
                     disableTextFilter={true}
                     blurOnClose={true}
                 />
