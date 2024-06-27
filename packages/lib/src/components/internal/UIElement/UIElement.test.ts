@@ -3,7 +3,6 @@ import { ICore } from '../../../core/types';
 import { any, mock, mockDeep } from 'jest-mock-extended';
 import { AdyenCheckout, ThreeDS2Challenge, ThreeDS2DeviceFingerprint } from '../../../index';
 import { UIElementProps } from './types';
-import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { Resources } from '../../../core/Context/Resources';
 
 // import getTranslations from '../../../core/Services/get-translations';
