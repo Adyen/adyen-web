@@ -89,7 +89,7 @@ function Select({
     };
 
     const extractItemFromEvent = (e: Event): SelectItem => {
-        const value = (e.currentTarget as HTMLInputElement).getAttribute('data-value') as string;
+        const value = (e.currentTarget as HTMLInputElement).getAttribute('data-value');
         return filteredItems.find(listItem => listItem.id == value);
     };
 

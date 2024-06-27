@@ -47,9 +47,9 @@ export function pick(...args) {
     const myArgs = isArray(args[0]) ? args[0] : args;
     return {
         from: obj => {
-            // eslint-disable-line
+             
             return myArgs
-                .map(k => (k in obj ? { [k]: obj[k] } : {})) // eslint-disable-line
+                .map(k => (k in obj ? { [k]: obj[k] } : {}))  
                 .reduce((res, o) => ({ ...res, ...o }), {});
         }
     };

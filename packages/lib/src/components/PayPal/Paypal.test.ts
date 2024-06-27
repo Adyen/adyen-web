@@ -38,10 +38,10 @@ describe('Paypal', () => {
         expect(paypal.isValid).toBe(true);
     });
 
-    test('Prevents calling the submit method manually', async () => {
+    test('Prevents calling the submit method manually', () => {
         const onErrorMock = jest.fn();
         const paypal = new Paypal(global.core, { onError: onErrorMock });
-        await paypal.submit();
+        paypal.submit();
         expect(onErrorMock).toHaveBeenCalled();
     });
 });

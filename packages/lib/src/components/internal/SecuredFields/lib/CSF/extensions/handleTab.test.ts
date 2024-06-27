@@ -61,27 +61,27 @@ describe("Testing CSF's handleTab functionality in a regular card scenario", () 
         instantiateMocks();
     });
 
-    test('Calling handleSFShiftTab with a fieldType = "encryptedExpiryDate", should see setFocusOnFrame called with "encryptedCardNumber"', async () => {
+    test('Calling handleSFShiftTab with a fieldType = "encryptedExpiryDate", should see setFocusOnFrame called with "encryptedCardNumber"', () => {
         myCSF.handleSFShiftTab(ENCRYPTED_EXPIRY_DATE);
         expect(myCSF.setFocusOnFrame).toBeCalledWith(ENCRYPTED_CARD_NUMBER, false);
     });
 
-    test('Calling handleSFShiftTab with a fieldType = "encryptedExpiryMonth", should see setFocusOnFrame called with "encryptedCardNumber"', async () => {
+    test('Calling handleSFShiftTab with a fieldType = "encryptedExpiryMonth", should see setFocusOnFrame called with "encryptedCardNumber"', () => {
         myCSF.handleSFShiftTab(ENCRYPTED_EXPIRY_MONTH);
         expect(myCSF.setFocusOnFrame).toBeCalledWith(ENCRYPTED_CARD_NUMBER, false);
     });
 
-    test('Calling handleSFShiftTab with a fieldType = "encryptedExpiryYear", should see setFocusOnFrame called with "encryptedExpiryMonth"', async () => {
+    test('Calling handleSFShiftTab with a fieldType = "encryptedExpiryYear", should see setFocusOnFrame called with "encryptedExpiryMonth"', () => {
         myCSF.handleSFShiftTab(ENCRYPTED_EXPIRY_YEAR);
         expect(myCSF.setFocusOnFrame).toBeCalledWith(ENCRYPTED_EXPIRY_MONTH, false);
     });
 
-    test('Calling handleSFShiftTab with a fieldType = "encryptedSecurityCode", when hasSeparateDateFields = false, should see setFocusOnFrame called with "encryptedExpiryDate"', async () => {
+    test('Calling handleSFShiftTab with a fieldType = "encryptedSecurityCode", when hasSeparateDateFields = false, should see setFocusOnFrame called with "encryptedExpiryDate"', () => {
         myCSF.handleSFShiftTab(ENCRYPTED_SECURITY_CODE);
         expect(myCSF.setFocusOnFrame).toBeCalledWith(ENCRYPTED_EXPIRY_DATE, false);
     });
 
-    test('Calling handleSFShiftTab with a fieldType = "encryptedSecurityCode", when hasSeparateDateFields = true, should see setFocusOnFrame called with "encryptedExpiryYear"', async () => {
+    test('Calling handleSFShiftTab with a fieldType = "encryptedSecurityCode", when hasSeparateDateFields = true, should see setFocusOnFrame called with "encryptedExpiryYear"', () => {
         myCSF.state.hasSeparateDateFields = true;
 
         myCSF.handleSFShiftTab(ENCRYPTED_SECURITY_CODE);
@@ -92,7 +92,7 @@ describe("Testing CSF's handleTab functionality in a regular card scenario", () 
         'Calling handleSFShiftTab with a fieldType = "encryptedSecurityCode", when numIframes = 1 (i.e. a storedCard scenario), ' +
             'should see getPreviousTabbableNonSFElement called with "encryptedSecurityCode", and ' +
             'focusExternalField called with the object returned from getPreviousTabbableNonSFElement',
-        async () => {
+        () => {
             myCSF.state.numIframes = 1;
 
             myCSF.handleSFShiftTab(ENCRYPTED_SECURITY_CODE);
@@ -104,7 +104,7 @@ describe("Testing CSF's handleTab functionality in a regular card scenario", () 
     test(
         'Calling handleSFShiftTab with a fieldType = "encryptedCardNumber", should see getPreviousTabbableNonSFElement called with "encryptedCardNumber", and ' +
             'focusExternalField called with the object returned from getPreviousTabbableNonSFElement',
-        async () => {
+        () => {
             myCSF.handleSFShiftTab(ENCRYPTED_CARD_NUMBER);
             expect(getPreviousTabbableNonSFElement).toBeCalledWith(ENCRYPTED_CARD_NUMBER, 'div');
             expect(focusExternalField).toBeCalledWith('some-other-div');
@@ -124,27 +124,27 @@ describe("Testing CSF's handleTab functionality in a KCP card scenario", () => {
         instantiateMocks();
     });
 
-    test('Calling handleSFShiftTab with a fieldType = "encryptedExpiryDate", should see setFocusOnFrame called with "encryptedCardNumber"', async () => {
+    test('Calling handleSFShiftTab with a fieldType = "encryptedExpiryDate", should see setFocusOnFrame called with "encryptedCardNumber"', () => {
         myCSF.handleSFShiftTab(ENCRYPTED_EXPIRY_DATE);
         expect(myCSF.setFocusOnFrame).toBeCalledWith(ENCRYPTED_CARD_NUMBER, false);
     });
 
-    test('Calling handleSFShiftTab with a fieldType = "encryptedExpiryMonth", should see setFocusOnFrame called with "encryptedCardNumber"', async () => {
+    test('Calling handleSFShiftTab with a fieldType = "encryptedExpiryMonth", should see setFocusOnFrame called with "encryptedCardNumber"', () => {
         myCSF.handleSFShiftTab(ENCRYPTED_EXPIRY_MONTH);
         expect(myCSF.setFocusOnFrame).toBeCalledWith(ENCRYPTED_CARD_NUMBER, false);
     });
 
-    test('Calling handleSFShiftTab with a fieldType = "encryptedExpiryYear", should see setFocusOnFrame called with "encryptedExpiryMonth"', async () => {
+    test('Calling handleSFShiftTab with a fieldType = "encryptedExpiryYear", should see setFocusOnFrame called with "encryptedExpiryMonth"', () => {
         myCSF.handleSFShiftTab(ENCRYPTED_EXPIRY_YEAR);
         expect(myCSF.setFocusOnFrame).toBeCalledWith(ENCRYPTED_EXPIRY_MONTH, false);
     });
 
-    test('Calling handleSFShiftTab with a fieldType = "encryptedSecurityCode", when hasSeparateDateFields = false, should see setFocusOnFrame called with "encryptedExpiryDate"', async () => {
+    test('Calling handleSFShiftTab with a fieldType = "encryptedSecurityCode", when hasSeparateDateFields = false, should see setFocusOnFrame called with "encryptedExpiryDate"', () => {
         myCSF.handleSFShiftTab(ENCRYPTED_SECURITY_CODE);
         expect(myCSF.setFocusOnFrame).toBeCalledWith(ENCRYPTED_EXPIRY_DATE, false);
     });
 
-    test('Calling handleSFShiftTab with a fieldType = "encryptedSecurityCode", when hasSeparateDateFields = true, should see setFocusOnFrame called with "encryptedExpiryYear"', async () => {
+    test('Calling handleSFShiftTab with a fieldType = "encryptedSecurityCode", when hasSeparateDateFields = true, should see setFocusOnFrame called with "encryptedExpiryYear"', () => {
         myCSF.state.hasSeparateDateFields = true;
 
         myCSF.handleSFShiftTab(ENCRYPTED_SECURITY_CODE);
@@ -154,7 +154,7 @@ describe("Testing CSF's handleTab functionality in a KCP card scenario", () => {
     test(
         'Calling handleSFShiftTab with a fieldType = "encryptedCardNumber", should see getPreviousTabbableNonSFElement called with "encryptedCardNumber", and ' +
             'focusExternalField called with the object returned from getPreviousTabbableNonSFElement',
-        async () => {
+        () => {
             myCSF.handleSFShiftTab(ENCRYPTED_CARD_NUMBER);
             expect(getPreviousTabbableNonSFElement).toBeCalledWith(ENCRYPTED_CARD_NUMBER, 'div');
             expect(focusExternalField).toBeCalledWith('some-other-div');
@@ -164,7 +164,7 @@ describe("Testing CSF's handleTab functionality in a KCP card scenario", () => {
     test(
         'Calling handleSFShiftTab with a fieldType = "encryptedPassword", should see getPreviousTabbableNonSFElement called with "encryptedCardNumber", and ' +
             'focusExternalField called with the object returned from getPreviousTabbableNonSFElement',
-        async () => {
+        () => {
             myCSF.handleSFShiftTab(ENCRYPTED_PWD_FIELD);
             expect(getPreviousTabbableNonSFElement).toBeCalledWith(ENCRYPTED_PWD_FIELD, 'div');
             expect(focusExternalField).toBeCalledWith('some-other-div');
@@ -181,7 +181,7 @@ describe("Testing CSF's handleTab functionality in a ACH scenario", () => {
         myCSF.state.type = 'ach';
     });
 
-    test('Calling handleSFShiftTab with a fieldType = "encryptedBankLocationId", should see setFocusOnFrame called with "encryptedBankAccountNumber"', async () => {
+    test('Calling handleSFShiftTab with a fieldType = "encryptedBankLocationId", should see setFocusOnFrame called with "encryptedBankAccountNumber"', () => {
         myCSF.handleSFShiftTab(ENCRYPTED_BANK_LOCATION_FIELD);
         expect(myCSF.setFocusOnFrame).toBeCalledWith(ENCRYPTED_BANK_ACCNT_NUMBER_FIELD, false);
     });
@@ -198,7 +198,7 @@ describe("Testing CSF's handleTab functionality in a Giftcard scenario", () => {
         instantiateMocks();
     });
 
-    test('Calling handleSFShiftTab with a fieldType = "encryptedSecurityCode", should see setFocusOnFrame called with "encryptedCardNumber"', async () => {
+    test('Calling handleSFShiftTab with a fieldType = "encryptedSecurityCode", should see setFocusOnFrame called with "encryptedCardNumber"', () => {
         myCSF.handleSFShiftTab(ENCRYPTED_SECURITY_CODE);
         expect(myCSF.setFocusOnFrame).toBeCalledWith(ENCRYPTED_CARD_NUMBER, false);
     });
@@ -206,7 +206,7 @@ describe("Testing CSF's handleTab functionality in a Giftcard scenario", () => {
     test(
         'Calling handleSFShiftTab with a fieldType = "encryptedCardNumber", should see getPreviousTabbableNonSFElement called with "encryptedCardNumber", and ' +
             'focusExternalField called with the object returned from getPreviousTabbableNonSFElement',
-        async () => {
+        () => {
             myCSF.handleSFShiftTab(ENCRYPTED_CARD_NUMBER);
             expect(getPreviousTabbableNonSFElement).toBeCalledWith(ENCRYPTED_CARD_NUMBER, 'div');
             expect(focusExternalField).toBeCalledWith('some-other-div');

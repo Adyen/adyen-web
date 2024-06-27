@@ -251,7 +251,7 @@ class ClickToPayService implements IClickToPayService {
                 return identityLookupPromise;
             });
 
-            Promise.allSettled(lookupPromises).then(() => {
+            void Promise.allSettled(lookupPromises).then(() => {
                 resolve({ isEnrolled: false });
             });
         });
@@ -274,7 +274,7 @@ class ClickToPayService implements IClickToPayService {
         return new Promise((resolve, reject) => {
             const srcProfilesPromises = this.sdks.map(sdk => sdk.getSrcProfile(idTokens));
 
-            Promise.allSettled(srcProfilesPromises).then(srcProfilesResponses => {
+            void Promise.allSettled(srcProfilesPromises).then(srcProfilesResponses => {
                 if (srcProfilesResponses.every(isRejected)) {
                     reject(srcProfilesResponses[0].reason);
                 }
@@ -308,7 +308,7 @@ class ClickToPayService implements IClickToPayService {
             });
 
             // If the 'resolve' didn't happen until this point, then shopper is not recognized
-            Promise.allSettled(promises).then(() => resolve({ recognized: false }));
+            void Promise.allSettled(promises).then(() => resolve({ recognized: false }));
         });
     }
 

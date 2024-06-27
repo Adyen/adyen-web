@@ -5,7 +5,7 @@ import { mock } from 'jest-mock-extended';
 import { PayPalComponentProps } from './types';
 
 describe('PaypalComponent', () => {
-    test('should render a loading spinner', async () => {
+    test('should render a loading spinner', () => {
         const props = mock<PayPalComponentProps>({
             configuration: {
                 merchantId: 'TestMerchant',

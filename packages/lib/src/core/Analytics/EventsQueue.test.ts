@@ -22,7 +22,7 @@ describe('CAEventsQueue', () => {
     });
 
     test('run flushes the queue', () => {
-        queue.run('checkoutAttemptId');
+        void queue.run('checkoutAttemptId');
 
         expect(queue.getQueue().logs.length).toBe(0);
         expect(queue.getQueue().info.length).toBe(0);

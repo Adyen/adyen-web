@@ -79,9 +79,9 @@ export function CashAppComponent({
     }, [enableStoreDetails, storePaymentMethod]);
 
     useEffect(() => {
-        initializeCashAppSdk();
+        void initializeCashAppSdk();
         return () => {
-            cashAppService.restart();
+            void cashAppService.restart();
             subscriptions.current.forEach(unsubscribeFn => unsubscribeFn());
         };
     }, [cashAppService, initializeCashAppSdk]);
@@ -91,7 +91,7 @@ export function CashAppComponent({
             {status === 'loading' && <Spinner />}
             {status !== 'loading' && enableStoreDetails && <StoreDetails storeDetails={storePaymentMethod} onChange={setStorePaymentMethod} />}
 
-            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions,jsx-a11y/click-events-have-key-events */}
             <div onClick={onClick} className={'adyen-checkout__cashapp-button'} ref={cashAppRef}></div>
         </div>
     );

@@ -8,6 +8,7 @@ function SelectList({ selected, active, filteredItems, showList, ...props }: Sel
     const { i18n } = useCoreContext();
 
     return (
+        /* eslint-disable jsx-a11y/no-noninteractive-element-to-interactive-role */
         <ul
             className={cx({
                 'adyen-checkout__dropdown__list': true,

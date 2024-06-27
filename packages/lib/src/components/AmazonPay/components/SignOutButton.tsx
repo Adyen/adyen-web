@@ -6,6 +6,7 @@ export default function SignOutButton(props: SignOutButtonProps) {
     const { i18n } = useCoreContext();
 
     const handleClick = () => {
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         new Promise(props.onSignOut)
             .then(() => {
                 props.amazonRef.Pay.signout();

@@ -19,7 +19,6 @@ class ApplePayButton extends Component<ApplePayButtonProps> {
     };
 
     render({ buttonColor, buttonType }) {
-        /* eslint-disable jsx-a11y/no-static-element-interactions */
         return (
             <button
                 type="button"
@@ -37,7 +36,7 @@ class ApplePayButton extends Component<ApplePayButtonProps> {
                 onClick={this.props.onClick}
             />
         );
-        /* eslint-enable jsx-a11y/no-static-element-interactions */
+         
     }
 }
 

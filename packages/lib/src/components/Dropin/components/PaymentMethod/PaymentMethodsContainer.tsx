@@ -51,6 +51,7 @@ function PaymentMethodsContainer({
                     {label}
                 </label>
             )}
+            {/* eslint-disable jsx-a11y/no-noninteractive-element-to-interactive-role */}
             <ul
                 id={selectListId}
                 className={paymentMethodListClassnames}

@@ -4,20 +4,21 @@ import BoletoElement from '../../../components/Boleto';
 import { BcmcMobile, Redirect, WeChat } from '../../../components';
 import ThreeDS2DeviceFingerprint from '../../../components/ThreeDS2/ThreeDS2DeviceFingerprint';
 import ThreeDS2Challenge from '../../../components/ThreeDS2/ThreeDS2Challenge';
+import { PaymentActionsType } from '../../../types/global-types';
 
 describe('getComponentForAction', () => {
     describe('redirect', () => {
         const redirectActionMock = {
             method: 'GET',
             paymentMethodType: 'ideal',
-            type: 'redirect',
+            type: 'redirect' as PaymentActionsType,
             url: 'http://localhost:8080/hpp/redirectIdeal.shtml?brandCode=ideal&countryCode=NL¤cyCode=EUR&issuerId=1121&merchantAccount=TestMerchant&merchantIntegration.type=CHECKOUT_GENERIC&merchantIntegration.version=49&merchantReference=8&merchantReturnData=991558707124405K&merchantSig=g1KlViuS0JSr%2Fl9ah1uC4dpYjpn9T%2FvB7dAwHn81sdA%3D&paymentAmount=250&recurringContract=RECURRING&resURL=http%3A%2F%2Flocalhost%3A8080%2Fcheckoutshopper%2Fservices%2FPaymentIncomingRedirect%2Fv1%2FlocalPaymentMethod%3FmerchantAccount%3DTestMerchant%26returnURL%3Dapp%253A%252F%252Fyou&sessionValidity=2019-05-24T15%3A12%3A04Z&shopperReference=emred&skinCode=pub.v2.9915585372919700.W8YBZHHDHqOtHZK8ZC-X7_n9x1N3opO8Wbc_MQlh2IU'
         };
 
         const redirectPostActionMock = {
             method: 'POST',
             paymentMethodType: 'ideal',
-            type: 'redirect',
+            type: 'redirect' as PaymentActionsType,
             data: {
                 test: '123'
             },
@@ -43,8 +44,20 @@ describe('getComponentForAction', () => {
     });
 
     describe('ThreeDS2: with one "threeDS2" action with subtypes', () => {
-        const new3DS2FingerprintMock = { type: 'threeDS2', subtype: 'fingerprint', paymentMethodType: 'scheme', token: '...', paymentData: '...' };
-        const new3DS2ChallengeMock = { type: 'threeDS2', subtype: 'challenge', paymentMethodType: 'scheme', token: '...', paymentData: '...' };
+        const new3DS2FingerprintMock = {
+            type: 'threeDS2' as PaymentActionsType,
+            subtype: 'fingerprint',
+            paymentMethodType: 'scheme',
+            token: '...',
+            paymentData: '...'
+        };
+        const new3DS2ChallengeMock = {
+            type: 'threeDS2' as PaymentActionsType,
+            subtype: 'challenge',
+            paymentMethodType: 'scheme',
+            token: '...',
+            paymentData: '...'
+        };
 
         const mockCoreProps = { onAdditionalDetails: () => {}, challengeWindowSize: '02' };
         const mockDropinProps = { elementRef: {}, isDropin: true, challengeWindowSize: '02' };
@@ -100,7 +113,7 @@ describe('getComponentForAction', () => {
             const bcmcMock = {
                 paymentMethodType: 'bcmc_mobile_QR',
                 qrCodeData: 'BEP://1127.0.0.1$2B6VH2NNUBHGDIF3KHNQ3JRK',
-                type: 'qrCode'
+                type: 'qrCode' as PaymentActionsType
             };
 
             registry.add(BcmcMobile);
@@ -115,7 +128,7 @@ describe('getComponentForAction', () => {
             const weChatMock = {
                 paymentMethodType: 'wechatpayQR',
                 qrCodeData: 'BEP://1127.0.0.1$2B6VH2NNUBHGDIF3KHNQ3JRK',
-                type: 'qrCode'
+                type: 'qrCode' as PaymentActionsType
             };
 
             registry.add(WeChat);
@@ -140,7 +153,7 @@ describe('getComponentForAction', () => {
                 currency: 'BRL',
                 value: 1000
             },
-            type: 'voucher'
+            type: 'voucher' as PaymentActionsType
         };
 
         test('processes a voucher action for boletobancario_santander', () => {
@@ -154,6 +167,7 @@ describe('getComponentForAction', () => {
 
     describe('Error', () => {
         test('processes an incorrect action ', () => {
+            // @ts-ignore Passing incorrect action is expected here
             expect(() => getComponentForAction(global.core, registry, { type: 'test', paymentMethodType: 'test' })).toThrow();
         });
     });

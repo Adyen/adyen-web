@@ -13,6 +13,7 @@ export default function AmazonPayButton(props: AmazonPayButtonProps) {
     const settings = getAmazonPaySettings(props);
 
     const handleOnClick = () => {
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         new Promise(props.onClick).then(this.initCheckout).catch(error => {
             if (props.onError) props.onError(error, this.componentRef);
         });

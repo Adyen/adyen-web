@@ -75,7 +75,7 @@ test('Should send expected data to http service', () => {
 
     const log = collectId(configuration);
 
-    log(customEvent).then(val => {
+    void log(customEvent).then(val => {
         expect(val).toEqual('mockCheckoutAttemptId');
     });
 
@@ -103,7 +103,7 @@ test('Should send expected data to http service', () => {
 
     // A second attempt should return the previous promise and not lead to a new http call
     const log2 = log(customEvent);
-    log2.then(val => {
+    void log2.then(val => {
         expect(val).toEqual('mockCheckoutAttemptId');
     });
     expect(httpPost).toHaveBeenCalledTimes(1);

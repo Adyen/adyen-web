@@ -6,7 +6,6 @@
  * The domain name consists of one or more words separated by periods, where each word can include letters, digits, and hyphens. The top-level domain must consist of two or more letters.
  */
 export const email =
-    // eslint-disable-next-line max-len
     /^(([a-z0-9!#$%&'*+\-/=?^_`{|}~]+(\.[a-z0-9!#$%&'*+\-/=?^_`{|}~]+)*)|(".+"))@((\[((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}])|([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(\.[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)*\.([a-z]{2,})))$/i;
 
 /**

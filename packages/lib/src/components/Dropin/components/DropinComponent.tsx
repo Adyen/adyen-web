@@ -31,7 +31,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         const [storedElementsPromises, elementsPromises, instantPaymentsPromises] = this.props.onCreateElements();
         const orderStatusPromise = order ? getOrderStatus({ clientKey, loadingContext }, order) : null;
 
-        Promise.all([storedElementsPromises, elementsPromises, instantPaymentsPromises, orderStatusPromise]).then(
+        void Promise.all([storedElementsPromises, elementsPromises, instantPaymentsPromises, orderStatusPromise]).then(
             ([storedPaymentElements, elements, instantPaymentElements, orderStatus]) => {
                 this.setState({ instantPaymentElements, elements, storedPaymentElements, orderStatus });
                 this.setStatus('ready');

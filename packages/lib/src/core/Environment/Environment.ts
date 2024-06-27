@@ -1,11 +1,11 @@
 import { ANALYTICS_ENVIRONMENTS, API_ENVIRONMENTS, CDN_ENVIRONMENTS } from './constants';
 import type { CoreConfiguration } from '../types';
 
-const getUrlFromMap = (env: CoreConfiguration['environment'] = '', environmentMap: Record<string, string>, environmentUrl?: string): string => {
+const getUrlFromMap = (env: CoreConfiguration['environment'], environmentMap: Record<string, string>, environmentUrl?: string): string => {
     if (environmentUrl) {
         return environmentUrl;
     }
-    return environmentMap[env.toLowerCase()] || environmentMap.fallback;
+    return environmentMap[env?.toLowerCase()] || environmentMap.fallback;
 };
 
 export const resolveEnvironments = (environment: CoreConfiguration['environment'], environmentsUrls?: CoreConfiguration['_environmentUrls']) => {

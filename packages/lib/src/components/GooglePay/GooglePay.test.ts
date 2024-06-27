@@ -129,7 +129,7 @@ describe('GooglePay', () => {
 
             await new Promise(process.nextTick);
 
-            expect(promise).resolves.toEqual({
+            await expect(promise).resolves.toEqual({
                 transactionState: 'SUCCESS'
             });
 
@@ -193,7 +193,7 @@ describe('GooglePay', () => {
 
             await new Promise(process.nextTick);
 
-            expect(promise).resolves.toEqual({
+            await expect(promise).resolves.toEqual({
                 error: {
                     intent: 'PAYMENT_AUTHORIZATION',
                     message: 'Insufficient funds',
@@ -235,7 +235,7 @@ describe('GooglePay', () => {
 
             await new Promise(process.nextTick);
 
-            expect(promise).resolves.toEqual({
+            await expect(promise).resolves.toEqual({
                 error: {
                     intent: 'PAYMENT_AUTHORIZATION',
                     message: 'Payment failed',
@@ -331,7 +331,7 @@ describe('GooglePay', () => {
             const onPaymentAuthorized = GooglePayService.mock.calls[0][1].onPaymentAuthorized;
             const promise = onPaymentAuthorized(googlePaymentData);
 
-            expect(promise).resolves.toEqual({
+            await expect(promise).resolves.toEqual({
                 error: {
                     intent: 'PAYMENT_AUTHORIZATION',
                     message: 'Not supported network scheme',

@@ -3,7 +3,7 @@ import { InstantPaymentTypes } from '../types';
 import splitPaymentMethods from './splitPaymentMethods';
 
 describe('Dropin - splitPaymentMethods', () => {
-    test('formatProps filter out instantPaymentMethods from paymentMethods list ', async () => {
+    test('formatProps filter out instantPaymentMethods from paymentMethods list ', () => {
         const parsedPaymentMethods = new PaymentMethods({
             paymentMethods: [
                 { name: 'Google Pay', type: 'paywithgoogle' },

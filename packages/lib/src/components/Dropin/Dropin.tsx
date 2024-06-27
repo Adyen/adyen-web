@@ -177,7 +177,7 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
      * @param response - PaymentResponse
      */
     protected handleOrder = ({ order }: PaymentResponseData): void => {
-        this.updateParent({ order });
+        void this.updateParent({ order });
     };
 
     closeActivePaymentMethod() {

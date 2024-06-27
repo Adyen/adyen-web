@@ -54,7 +54,7 @@ export function getTransactionInfo({
         countryCode,
         currencyCode: amount.currency,
         totalPrice: formattedPrice,
-        totalPriceStatus: totalPriceStatus as google.payments.api.TotalPriceStatus,
+        totalPriceStatus: totalPriceStatus,
         ...props.transactionInfo
     };
 }

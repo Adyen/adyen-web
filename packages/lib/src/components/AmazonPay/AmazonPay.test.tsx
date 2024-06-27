@@ -49,7 +49,7 @@ describe('AmazonPay', () => {
         test('calls console.error if no checkoutSessionId is passed', () => {
             console.error = jest.fn();
             const amazonPay = getElement();
-            amazonPay.getShopperDetails();
+            void amazonPay.getShopperDetails();
             expect(console.error).toHaveBeenCalledTimes(1);
         });
 
@@ -75,7 +75,8 @@ describe('AmazonPay', () => {
                 value: { assign: jest.fn() }
             });
             const amazonPay = getElement({ amazonCheckoutSessionId: 'ABC123' });
-            await amazonPay.handleDeclineFlow();
+            /* eslint-disable @typescript-eslint/await-thenable */
+            void (await amazonPay.handleDeclineFlow());
             expect(window.location.assign).toHaveBeenCalledTimes(1);
         });
     });

@@ -53,7 +53,7 @@ describe('Analytics initialisation and event queue', () => {
     test('Should not fire any calls if analytics is disabled', () => {
         const analytics = Analytics({ analytics: { enabled: false }, loadingContext: '', locale: '', clientKey: '', amount, bundleType: '' });
 
-        analytics.setUp(setUpEvent);
+        void analytics.setUp(setUpEvent);
         expect(collectIdPromiseMock).not.toHaveBeenCalled();
     });
 
@@ -101,18 +101,18 @@ describe('Analytics initialisation and event queue', () => {
         expect(analytics.getCheckoutAttemptId()).toEqual(mockCheckoutAttemptId);
     });
 
-    test('A second attempt to call "send" should fail (since we already have a checkoutAttemptId)', async () => {
+    test('A second attempt to call "send" should fail (since we already have a checkoutAttemptId)', () => {
         const payload = {
             payloadData: 'test'
         };
         const analytics = Analytics({ analytics: { payload }, loadingContext: '', locale: '', clientKey: '', amount, bundleType: '' });
 
-        analytics.setUp(setUpEvent);
+        void analytics.setUp(setUpEvent);
 
         expect(collectIdPromiseMock).toHaveLength(0);
     });
 
-    test('Create info event and see that it is held in a queue', async () => {
+    test('Create info event and see that it is held in a queue', () => {
         const aObj: AnalyticsObject = analytics.createAnalyticsEvent({ event: 'info', data: analyticsEventObj });
 
         expect(aObj.timestamp).not.toBe(undefined);
@@ -176,7 +176,7 @@ describe('Analytics initialisation and event queue', () => {
         expect(analytics.getEventsQueue().getQueue().logs.length).toBe(0);
     });
 
-    test('Creating a validation error info event object with the expected properties', async () => {
+    test('Creating a validation error info event object with the expected properties', () => {
         const aObj = analytics.createAnalyticsEvent({
             event: 'info',
             data: {

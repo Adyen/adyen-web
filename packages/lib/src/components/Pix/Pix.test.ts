@@ -2,7 +2,7 @@ import Pix from './Pix';
 import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 
-test('should return only payment type if personalDetails is not required', async () => {
+test('should return only payment type if personalDetails is not required', () => {
     const pixElement = new Pix(global.core);
     expect(pixElement.data).toEqual({ clientStateDataIndicator: true, paymentMethod: { type: 'pix', checkoutAttemptId: 'do-not-track' } });
 });

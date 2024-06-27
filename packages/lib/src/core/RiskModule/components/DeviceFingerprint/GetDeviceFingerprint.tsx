@@ -27,7 +27,6 @@ class GetDeviceFingerprint extends Component<GetDeviceFingerprintProps> {
              */
             this.processMessageHandler = getProcessMessageHandler(this.postMessageDomain, resolve, reject, DEVICE_FINGERPRINT);
 
-            /* eslint-disable-next-line */
             window.addEventListener('message', this.processMessageHandler);
         });
     }

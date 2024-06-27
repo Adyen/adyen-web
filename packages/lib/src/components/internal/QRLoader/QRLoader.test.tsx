@@ -122,7 +122,7 @@ describe('QRLoader', () => {
                 expect(setTimeout).toHaveBeenCalledTimes(2);
             });
 
-            test('should change the delay to the throttledInterval if the timePassed exceeds the throttleTime', async () => {
+            test('should change the delay to the throttledInterval if the timePassed exceeds the throttleTime', () => {
                 jest.spyOn(global, 'setTimeout');
                 qrLoader = new QRLoader({ throttleTime: 0, throttledInterval: 2000, delay: 1000 });
                 qrLoader.statusInterval();

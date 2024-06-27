@@ -92,8 +92,10 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
             .then(() => this.googlePay.initiatePayment(this.props, this.core.options.countryCode))
             .catch((error: google.payments.api.PaymentsError) => {
                 if (error.statusCode === 'CANCELED') {
+                    // eslint-disable-next-line @typescript-eslint/no-base-to-string
                     this.handleError(new AdyenCheckoutError('CANCEL', error.toString(), { cause: error }));
                 } else {
+                    // eslint-disable-next-line @typescript-eslint/no-base-to-string
                     this.handleError(new AdyenCheckoutError('ERROR', error.toString(), { cause: error }));
                 }
             });

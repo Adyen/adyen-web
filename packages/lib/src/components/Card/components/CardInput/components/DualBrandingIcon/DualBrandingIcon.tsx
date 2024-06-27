@@ -13,6 +13,7 @@ const DualBrandingIcon = ({ brand, onClick, dataValue, notSelected, brandsConfig
     };
 
     return (
+        // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions
         <img
             className={`adyen-checkout-card-input__icon ${
                 notSelected ? 'adyen-checkout__card__cardNumber__brandIcon--not-selected' : ''

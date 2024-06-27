@@ -43,15 +43,18 @@ const ADDRESS_SELECT_RESULT = {
         raw: 'RAW_DATA_MOCK'
     }
 };
+// eslint-disable-next-line @typescript-eslint/require-await
 const onAddressLookupMockFn = async (value, { resolve }) => {
     resolve(ADDRESS_LOOKUP_RESULT);
 };
+// eslint-disable-next-line @typescript-eslint/require-await
 const onAddressSelectMockFn = async (value, { resolve }) => {
     resolve(ADDRESS_SELECT_RESULT);
 };
 
 const onAddressSelectMockFnReject =
     rejectReason =>
+    // eslint-disable-next-line @typescript-eslint/require-await
     async (value, { reject }) => {
         reject(rejectReason);
     };

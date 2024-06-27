@@ -3,6 +3,10 @@ class TimeoutError extends Error {
         super(message);
         this.name = 'TimeoutError';
     }
+
+    toString() {
+        return `Message: ${this.message}`;
+    }
 }
 
 export default TimeoutError;

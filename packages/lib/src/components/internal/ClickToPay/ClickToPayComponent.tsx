@@ -32,7 +32,7 @@ const ClickToPayComponent = ({ onDisplayCardComponent }: ClickToPayComponentProp
             }
         }
         if (ctpState === CtpState.ShopperIdentified) {
-            sendOneTimePassword();
+            void sendOneTimePassword();
         }
     }, [ctpState]);
 

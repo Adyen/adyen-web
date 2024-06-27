@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'preact/hooks';
 import { AdyenCheckout } from '../../../src';
 import { handleError, handleFinalState } from '../../helpers/checkout-handlers';
-import { AdditionalDetailsStateData } from '../../../src/types/global-types';
 import { makeDetailsCall } from '../../helpers/checkout-api-calls';
+import { AdditionalDetailsData } from '../../../src/core/types';
 
 export const RedirectResultContainer = ({ redirectResult, sessionId, countryCode }) => {
     const [isRedirecting, setIsRedirecting] = useState<boolean>(true);
@@ -14,14 +14,15 @@ export const RedirectResultContainer = ({ redirectResult, sessionId, countryCode
             return;
         }
 
-        AdyenCheckout({
+        void AdyenCheckout({
             clientKey: process.env.CLIENT_KEY,
+            // @ts-ignore CLIENT_ENV has valid value
             environment: process.env.CLIENT_ENV,
             countryCode,
             ...(sessionId && { session: { id: sessionId, countryCode } }),
             // Advanced flow
             ...(!sessionId && {
-                onAdditionalDetails: (state: AdditionalDetailsStateData, _, actions) => {
+                onAdditionalDetails: (state: AdditionalDetailsData, _, actions) => {
                     makeDetailsCall(state.data)
                         .then(res => {
                             actions.resolve(res);
