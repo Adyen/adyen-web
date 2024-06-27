@@ -130,7 +130,7 @@ export default function AddressSearch({
                     placeholder={placeholder}
                     onInput={debounceInputHandler}
                     items={formattedData}
-                    onChange={void onSelectItem}
+                    onChange={onSelectItem}
                     disableTextFilter={true}
                     blurOnClose={true}
                 />
