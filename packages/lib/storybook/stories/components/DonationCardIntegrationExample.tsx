@@ -30,7 +30,6 @@ export const DonationCardIntegrationExample = ({ contextArgs: { countryCode, amo
             // @ts-ignore CLIENT_ENV has valid value
             environment: process.env.CLIENT_ENV,
             countryCode,
-            // eslint-disable-next-line @typescript-eslint/no-misused-promises
             onSubmit: async (state, _, actions) => {
                 try {
                     const paymentData = {
@@ -95,7 +94,6 @@ export const DonationCardIntegrationExample = ({ contextArgs: { countryCode, amo
             // @ts-ignore CLIENT_ENV has valid value
             environment: process.env.CLIENT_ENV,
             countryCode,
-            // eslint-disable-next-line @typescript-eslint/no-misused-promises
             onAdditionalDetails: async (state: AdditionalDetailsData, _, actions) => {
                 try {
                     const {

@@ -173,7 +173,6 @@ export const Express: GooglePayStory = {
         componentConfiguration: {
             isExpress: true,
 
-            // eslint-disable-next-line @typescript-eslint/no-misused-promises
             onSubmit: async (state, component, actions) => {
                 try {
                     const paymentData = {
@@ -212,7 +211,7 @@ export const Express: GooglePayStory = {
 
             paymentDataCallbacks: {
                 onPaymentDataChanged(intermediatePaymentData) {
-                    // eslint-disable-next-line no-async-promise-executor,@typescript-eslint/no-misused-promises
+                    // eslint-disable-next-line no-async-promise-executor
                     return new Promise(async resolve => {
                         const { callbackTrigger, shippingAddress, shippingOptionData } = intermediatePaymentData;
                         const paymentDataRequestUpdate: google.payments.api.PaymentDataRequestUpdate = {};

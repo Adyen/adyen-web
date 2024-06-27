@@ -107,7 +107,7 @@ async function createAdvancedFlowCheckout({ showPayButton, countryCode, shopperL
         },
 
         onOrderCancel: async order => {
-            await cancelOrder(order);
+            await cancelOrder(order.order);
             await checkout.update({
                 paymentMethodsResponse: await getPaymentMethods({ amount: paymentAmount, shopperLocale, countryCode }),
                 order: null,

@@ -62,11 +62,7 @@ const config = tseslint.config(
                 'error',
                 {
                     checksVoidReturn: {
-                        arguments: true,
-                        attributes: false,
-                        properties: true,
-                        returns: true,
-                        variables: true
+                        attributes: false
                     }
                 }
             ],
@@ -95,6 +91,13 @@ const config = tseslint.config(
             ],
             'react/react-in-jsx-scope': 'off',
             'react/prop-types': 'off'
+        }
+    },
+    {
+        name: 'Storybook story rules',
+        files: ['storybook/**'],
+        rules: {
+            '@typescript-eslint/no-misused-promises': 'off'
         }
     },
     {

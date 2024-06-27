@@ -154,7 +154,6 @@ export const Express: ApplePayStory = {
         componentConfiguration: {
             isExpress: true,
 
-            // eslint-disable-next-line @typescript-eslint/no-misused-promises
             onSubmit: async (state, component, actions) => {
                 try {
                     const paymentData = {
@@ -187,7 +186,6 @@ export const Express: ApplePayStory = {
                 actions.resolve();
             },
 
-            // eslint-disable-next-line @typescript-eslint/no-misused-promises
             onShippingContactSelected: async (resolve, reject, event) => {
                 const { countryCode } = event.shippingContact;
                 let update: Partial<ApplePayJS.ApplePayShippingContactUpdate> = {};

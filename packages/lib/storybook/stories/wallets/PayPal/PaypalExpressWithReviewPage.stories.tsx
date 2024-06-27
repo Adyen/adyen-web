@@ -85,7 +85,6 @@ const Component = () => {
                 blockPayPalCreditButton: true,
                 blockPayPalPayLaterButton: true,
 
-                // eslint-disable-next-line @typescript-eslint/no-misused-promises
                 onSubmit: async (state, component) => {
                     const paymentData = {
                         amount: AMOUNT,
