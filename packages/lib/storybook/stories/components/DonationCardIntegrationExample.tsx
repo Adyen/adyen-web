@@ -5,8 +5,8 @@ import { Container } from '../Container';
 import Donation from '../../../src/components/Donation/Donation';
 import { createDonation, getDonationCampaigns, makeDetailsCall, makePayment } from '../../helpers/checkout-api-calls';
 import { DonationConfiguration } from '../../../src/components/Donation/types';
-import { AdditionalDetailsStateData } from '../../../src/types/global-types';
 import { handleError, handleFinalState } from '../../helpers/checkout-handlers';
+import { AdditionalDetailsData } from '../../../src/core/types';
 
 export interface DonationIntegrationExampleProps {
     contextArgs: PaymentMethodStoryProps<DonationConfiguration> & { redirectResult: string };
@@ -27,8 +27,10 @@ export const DonationCardIntegrationExample = ({ contextArgs: { countryCode, amo
     const createCheckout = async () => {
         checkout.current = await AdyenCheckout({
             clientKey: process.env.CLIENT_KEY,
+            // @ts-ignore CLIENT_ENV has valid value
             environment: process.env.CLIENT_ENV,
             countryCode,
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
             onSubmit: async (state, _, actions) => {
                 try {
                     const paymentData = {
@@ -93,7 +95,8 @@ export const DonationCardIntegrationExample = ({ contextArgs: { countryCode, amo
             // @ts-ignore CLIENT_ENV has valid value
             environment: process.env.CLIENT_ENV,
             countryCode,
-            onAdditionalDetails: async (state: AdditionalDetailsStateData, _, actions) => {
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            onAdditionalDetails: async (state: AdditionalDetailsData, _, actions) => {
                 try {
                     const {
                         action,
