@@ -12,7 +12,7 @@ export async function initSession() {
         shopperLocale,
         shopperReference,
         telephoneNumber: '+611223344',
-        shopperEmail: 'shopper.ctp1@adyen.com',
+        shopperEmail: 'guilherme.ribeiro-ctp1@adyen.com',
         countryCode
     });
 
@@ -54,7 +54,7 @@ export async function initSession() {
                 data: {
                     holderName: 'J. Smith'
                 },
-                _disableClickToPay: true
+                _disableClickToPay: false
             }
         }
     }).mount('#dropin-container');

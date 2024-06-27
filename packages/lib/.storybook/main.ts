@@ -47,15 +47,15 @@ const config: StorybookConfig = {
                 }
             },
             plugins: [
-                stylelint(),
-                {
-                    ...eslint({
-                        include: ['./src/**'],
-                        exclude: ['./src/**/*.json', './src/**/*.scss']
-                    }),
-                    enforce: 'pre',
-                    apply: 'serve'
-                }
+                stylelint()
+                // {
+                //     ...eslint({
+                //         include: ['./src/**'],
+                //         exclude: ['./src/**/*.json', './src/**/*.scss']
+                //     }),
+                //     enforce: 'pre',
+                //     apply: 'serve'
+                // }
             ]
         });
     }

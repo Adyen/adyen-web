@@ -13,7 +13,7 @@ export default () => {
             plugins: [
                 resolveExtensions(),
                 loadCommonjsPackage(),
-                lint(),
+                // lint(),
                 replaceValues({ bundleType: BUNDLE_TYPES.esm, buildType: 'development' }),
                 convertJsonToESM(),
                 compileCSS({}),

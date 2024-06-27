@@ -33,7 +33,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         if (isExpress === false && (onShippingContactSelected || onShippingMethodSelected)) {
             throw new AdyenCheckoutError(
                 'IMPLEMENTATION_ERROR',
-                'ApplePay - You must set "isExpress" flag to "true" in order to use "onShippingContactSelected" and/or "onShippingMethodSelected"'
+                'ApplePay - You must set "isExpress" flag to "true" in order to use "onShippingContactSelected" and/or "onShippingMethodSelected" callbacks'
             );
         }
 

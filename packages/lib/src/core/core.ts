@@ -74,8 +74,7 @@ class Core implements ICore {
     constructor(props: CoreConfiguration) {
         assertConfigurationPropertiesAreValid(props);
 
-        // Test Create from Action
-        // this.createFromAction = this.createFromAction.bind(this);
+        this.createFromAction = this.createFromAction.bind(this);
 
         this.setOptions({ ...defaultProps, ...props });
 
@@ -220,7 +219,7 @@ class Core implements ICore {
      * @param options - options that will be merged to the global Checkout props
      * @returns new UIElement
      */
-    public createFromAction = (action: PaymentAction, options = {}): UIElement => {
+    public createFromAction(action: PaymentAction, options = {}): UIElement {
         if (!action || !action.type) {
             if (hasOwnProperty(action, 'action') && hasOwnProperty(action, 'resultCode')) {
                 throw new Error(
@@ -250,7 +249,7 @@ class Core implements ICore {
         }
 
         return this.handleCreateError();
-    };
+    }
 
     /**
      * Updates global configurations, resets the internal state and remounts each element.

@@ -213,7 +213,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 mcSrcClientId: '6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1'
             },
             clickToPayConfiguration: {
-                shopperEmail: 'shopper@example.com',
+                shopperEmail: 'guilherme.ribeiro-ctp1@adyen.com',
                 merchantDisplayName: 'Adyen Merchant Name',
                 onReady: () => {
                     console.log('Component is ready to be used');

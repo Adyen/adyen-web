@@ -61,7 +61,9 @@ const config = tseslint.config(
             '@typescript-eslint/no-misused-promises': [
                 'error',
                 {
-                    checksVoidReturn: false
+                    checksVoidReturn: {
+                        attributes: false
+                    }
                 }
             ],
             '@typescript-eslint/explicit-member-accessibility': [

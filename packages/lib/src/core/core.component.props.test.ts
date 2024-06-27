@@ -194,7 +194,6 @@ describe('Core - tests ensuring props reach components', () => {
 
         test('StoredCard in Dropin receives correct props ', async () => {
             mount(dropin.render());
-
             const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
