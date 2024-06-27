@@ -22,6 +22,7 @@ const CtPLogoutLink = () => {
     }, [i18n, ctpState]);
 
     return (
+        // eslint-disable-next-line jsx-a11y/click-events-have-key-events
         <span
             role="button"
             tabIndex={0}

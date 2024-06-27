@@ -93,7 +93,6 @@ class CSF extends AbstractCSF {
         this.createSecuredFields = createSecuredFields;
         this.createNonCardSecuredFields = createNonCardSecuredFields;
         this.createCardSecuredFields = createCardSecuredFields;
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         this.setupSecuredField = setupSecuredField;
 
         this.postMessageToAllIframes = partial(postMessageToAllIframes, thisObj);
