@@ -1,15 +1,6 @@
 import path from 'path';
 import * as dotenv from 'dotenv';
-import {
-    compileCSS,
-    compileJavascript,
-    convertJsonToESM,
-    lint,
-    loadCommonjsPackage,
-    minify,
-    replaceValues,
-    resolveExtensions
-} from './rollup.plugins.js';
+import { compileCSS, compileJavascript, convertJsonToESM, lint, loadCommonjsPackage, replaceValues, resolveExtensions } from './rollup.plugins.js';
 import { BUNDLE_TYPES } from './utils/bundle-types.js';
 
 dotenv.config({ path: path.resolve('../../', '.env') });
