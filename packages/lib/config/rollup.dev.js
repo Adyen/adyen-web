@@ -1,6 +1,6 @@
 import path from 'path';
 import * as dotenv from 'dotenv';
-import { compileCSS, compileJavascript, convertJsonToESM, lint, loadCommonjsPackage, replaceValues, resolveExtensions } from './rollup.plugins.js';
+import { compileCSS, compileJavascript, convertJsonToESM, loadCommonjsPackage, replaceValues, resolveExtensions } from './rollup.plugins.js';
 import { BUNDLE_TYPES } from './utils/bundle-types.js';
 
 dotenv.config({ path: path.resolve('../../', '.env') });
@@ -13,6 +13,7 @@ export default () => {
             plugins: [
                 resolveExtensions(),
                 loadCommonjsPackage(),
+                // TODO: Enable this once @rollup/plugin-eslint supports ESLINT 9
                 // lint(),
                 replaceValues({ bundleType: BUNDLE_TYPES.esm, buildType: 'development' }),
                 convertJsonToESM(),

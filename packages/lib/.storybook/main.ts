@@ -1,7 +1,7 @@
 import type { StorybookConfig } from '@storybook/preact-vite';
 import { mergeConfig } from 'vite';
 import * as path from 'path';
-import eslint from '@rollup/plugin-eslint';
+// import eslint from '@rollup/plugin-eslint';
 import stylelint from 'vite-plugin-stylelint';
 import generateEnvironmentVariables from '../config/environment-variables';
 import { resolve } from 'node:path';
@@ -48,6 +48,7 @@ const config: StorybookConfig = {
             },
             plugins: [
                 stylelint()
+                // TODO: Enable this once @rollup/plugin-eslint supports ESLINT 9
                 // {
                 //     ...eslint({
                 //         include: ['./src/**'],

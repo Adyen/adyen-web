@@ -62,7 +62,11 @@ const config = tseslint.config(
                 'error',
                 {
                     checksVoidReturn: {
-                        attributes: false
+                        arguments: true,
+                        attributes: false,
+                        properties: true,
+                        returns: true,
+                        variables: true
                     }
                 }
             ],

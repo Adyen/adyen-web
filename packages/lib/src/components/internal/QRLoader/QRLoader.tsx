@@ -76,6 +76,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
     private pollStatus(delay: number) {
         clearTimeout(this.timeoutId);
 
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         this.timeoutId = setTimeout(async () => {
             // Wait for previous status call to finish.
             // Also taking the server response time into the consideration to calculate timePassed.
