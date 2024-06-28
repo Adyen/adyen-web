@@ -13,7 +13,8 @@ import {
     CbObjOnFieldValid,
     CbObjOnAutoComplete,
     CbObjOnConfigSuccess,
-    CbObjOnLoad
+    CbObjOnLoad,
+    SFKeyPressObj
 } from '../lib/types';
 import { CSFReturnObject, CSFSetupObject } from '../lib/CSF/types';
 import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, DEDICATED_CARD_COMPONENTS, ENCRYPTED_CARD_NUMBER, ENCRYPTED_PWD_FIELD } from '../lib/constants';
@@ -46,6 +47,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     private handleOnAutoComplete: (obj: CbObjOnAutoComplete) => void;
     private handleOnNoDataRequired: () => void;
     private handleOnTouchstartIOS: (obj) => void;
+    private handleKeyPressed: (obj: SFKeyPressObj) => void;
     public state: SFPState;
     public props;
     private issuingCountryCode;
@@ -85,6 +87,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         this.handleOnNoDataRequired = handlers.handleOnNoDataRequired.bind(this);
         this.handleOnAutoComplete = handlers.handleOnAutoComplete.bind(this);
         this.handleOnTouchstartIOS = handlers.handleOnTouchstartIOS.bind(this); // Only called when iOS detected
+        this.handleKeyPressed = handlers.handleKeyPressed.bind(this);
 
         this.processBinLookupResponse = this.processBinLookupResponse.bind(this);
 
@@ -175,7 +178,8 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
                 onAutoComplete: this.handleOnAutoComplete,
                 onAdditionalSFConfig: this.props.onAdditionalSFConfig,
                 onAdditionalSFRemoved: this.props.onAdditionalSFRemoved,
-                onTouchstartIOS: this.handleOnTouchstartIOS
+                onTouchstartIOS: this.handleOnTouchstartIOS,
+                onKeyPressed: this.handleKeyPressed
             },
             isKCP: this.state.hasKoreanFields,
             legacyInputMode: this.props.legacyInputMode,

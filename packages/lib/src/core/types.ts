@@ -280,6 +280,12 @@ export interface CoreConfiguration {
     onOrderRequest?: onOrderRequestCallbackType;
 
     /**
+     * Called when a Component detects, or is told by a SecuredField, that the Enter key has been pressed.
+     * - merchant set config option
+     */
+    onEnterKeyPressed?(activeElement: Element, component: UIElement): void;
+
+    /**
      * Callback called when it is required to fetch/update the payment methods list.
      * It is currently used mainly on Giftcard flow (Partial orders), since the payment method list might change depending on the amount left to be paid
      *

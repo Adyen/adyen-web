@@ -18,7 +18,8 @@ import {
     CbObjOnFieldValid,
     CbObjOnAutoComplete,
     CbObjOnConfigSuccess,
-    CbObjOnLoad
+    CbObjOnLoad,
+    SFKeyPressObj
 } from '../lib/types';
 import { existy } from '../lib/utilities/commonUtils';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
@@ -221,6 +222,18 @@ function handleOnAutoComplete(cbObj: CbObjOnAutoComplete): void {
     this.props.onAutoComplete(cbObj);
 }
 
+function handleKeyPressed(obj: SFKeyPressObj): void {
+    if (obj.action === 'enterKeyPressed') {
+        const kb = new KeyboardEvent('keypress', {
+            bubbles: true,
+            cancelable: true,
+            key: 'Enter',
+            code: 'Enter'
+        });
+        this.props.handleKeyPress?.(kb);
+    }
+}
+
 /**
  * Handles cases where no secured fields are necessary (one click payments without CVC)
  * Automatically resolves with a valid state
@@ -239,5 +252,6 @@ export default {
     handleOnBrand,
     handleOnError,
     handleOnNoDataRequired,
-    handleOnTouchstartIOS
+    handleOnTouchstartIOS,
+    handleKeyPressed
 };

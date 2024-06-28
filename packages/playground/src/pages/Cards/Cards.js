@@ -47,6 +47,9 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         },
         onPaymentCompleted: handleOnPaymentCompleted,
         onPaymentFailed: handleOnPaymentFailed
+        // onEnterKeyPressed: obj => {
+        //     console.log('### Cards::onEnterKeyPressed:: obj=', obj);
+        // }
     });
 
     // Stored Card

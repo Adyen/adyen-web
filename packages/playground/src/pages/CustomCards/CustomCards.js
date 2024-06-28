@@ -55,6 +55,10 @@ const configObj = {
     onChange: handleOnChange,
     onAdditionalDetails,
     onError: console.error,
+    onEnterKeyPressed: (activeEl, component) => {
+        window.payBtn.focus();
+        window.payBtn.click();
+    },
     risk: {
         enabled: true, // Means that "riskdata" will then show up in the data object sent to the onChange event
         // Also accessible via checkout.modules.risk.data
@@ -94,6 +98,7 @@ const initCheckout = async () => {
         onValidationError: errors => {
             errors.forEach(setCCErrors);
         }
+
         // brandsConfiguration: {
         //     synchrony_plcc: {
         //         icon: 'http://localhost:3000/test_images/smartmoney.png'
@@ -107,7 +112,7 @@ const initCheckout = async () => {
         // }
     }).mount('.secured-fields');
 
-    createPayButton('.secured-fields', window.customCard, 'customcard');
+    window.payBtn = createPayButton('.secured-fields', window.customCard, 'customcard');
 
     window.customCardSi =
         showOtherExamples &&

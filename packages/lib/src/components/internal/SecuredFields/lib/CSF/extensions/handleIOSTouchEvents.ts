@@ -1,5 +1,6 @@
-import { on, off, selectOne } from '../../utilities/dom';
+import { selectOne } from '../../utilities/dom';
 import ua from '../utils/userAgent';
+import { on, off } from '../../../../../../utils/listenerUtils';
 
 const getCaretPos = (pNode: HTMLInputElement | HTMLTextAreaElement): number => {
     if ('selectionStart' in pNode) {
