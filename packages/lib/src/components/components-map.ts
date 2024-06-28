@@ -182,6 +182,7 @@ export const ComponentsMap = {
     [TxVariants.klarna]: Klarna,
     [TxVariants.klarna_account]: Klarna,
     [TxVariants.klarna_paynow]: Klarna,
+    [TxVariants.klarna_b2b]: Klarna,
     /** Klarna */
 
     /** QRLoader */

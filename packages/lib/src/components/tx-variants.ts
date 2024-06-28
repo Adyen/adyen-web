@@ -121,6 +121,7 @@ export enum TxVariants {
     klarna = 'klarna',
     klarna_account = 'klarna_account',
     klarna_paynow = 'klarna_paynow',
+    klarna_b2b = 'klarna_b2b',
     /** Klarna */
 
     /** QRLoader */
