@@ -18,11 +18,11 @@ import {
     CbObjOnFieldValid,
     CbObjOnAutoComplete,
     CbObjOnConfigSuccess,
-    CbObjOnLoad
+    CbObjOnLoad,
+    SFKeyPressObj
 } from '../lib/types';
 import { existy } from '../lib/utilities/commonUtils';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
-import { SFKeyPressObj } from '../lib/types';
 
 /**
  * Emits the onLoad event

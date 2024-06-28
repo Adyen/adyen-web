@@ -196,9 +196,9 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
     }
 
     protected onEnterKeyPressed(activeElement: Element, component: UIElement) {
-        component = this.activePaymentMethod ?? this; // For Dropin we want to add a ref to the activePM, if we can
-
-        this.activePaymentMethod?.onEnterKeyPressed(activeElement, component);
+        // We want to have a ref to the activePM, if we can; not a ref to the Dropin
+        const pmComponent = this.activePaymentMethod ?? component;
+        this.activePaymentMethod?.onEnterKeyPressed(activeElement, pmComponent);
     }
 
     render() {
