@@ -55,7 +55,7 @@ const configObj = {
     onChange: handleOnChange,
     onAdditionalDetails,
     onError: console.error,
-    onEnterKeyPressed: obj => {
+    onEnterKeyPressed: (activeEl, component) => {
         window.payBtn.focus();
         window.payBtn.click();
     },

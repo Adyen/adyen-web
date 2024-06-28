@@ -8,7 +8,7 @@ import { Resources } from '../../../core/Context/Resources';
 import { ANALYTICS_SUBMIT_STR } from '../../../core/Analytics/constants';
 
 import type { AnalyticsInitialEvent, SendAnalyticsObject } from '../../../core/Analytics/types';
-import type { CoreConfiguration, ICore, AdditionalDetailsData, OnKeyPressedObject } from '../../../core/types';
+import type { CoreConfiguration, ICore, AdditionalDetailsData } from '../../../core/types';
 import type { ComponentMethodsRef, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
 import type { CheckoutSessionDetailsResponse, CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
 import type {
@@ -389,7 +389,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         if (e.key === 'Enter' || e.code === 'Enter') {
             e.preventDefault(); // Prevent <form> submission if Component is placed inside a form
 
-            this.onEnterKeyPressed({ component: this, activeElement: document?.activeElement });
+            this.onEnterKeyPressed(document?.activeElement, this);
         }
     }
 
@@ -397,12 +397,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * Handle Enter key pressed from a UIElement (called via handleKeyPress)
      * @param obj
      */
-    protected onEnterKeyPressed(obj: OnKeyPressedObject) {
-        console.log('### UIElement::onEnterKeyPressed::obj ', obj);
+    protected onEnterKeyPressed(activeElement: Element, component: UIElement) {
         if (this.props.onEnterKeyPressed) {
-            this.props.onEnterKeyPressed(obj);
+            this.props.onEnterKeyPressed(activeElement, component);
         } else {
-            (obj.activeElement as HTMLElement).blur();
+            (activeElement as HTMLElement).blur();
             this.submit();
         }
     }

@@ -13,7 +13,7 @@ import { TxVariants } from '../tx-variants';
 
 import type { DropinConfiguration, InstantPaymentTypes, PaymentMethodsConfiguration } from './types';
 import type { PaymentAction, PaymentResponseData } from '../../types/global-types';
-import type { ICore, OnKeyPressedObject } from '../../core/types';
+import type { ICore } from '../../core/types';
 import type { IDropin } from './types';
 
 const SUPPORTED_INSTANT_PAYMENTS = ['paywithgoogle', 'googlepay', 'applepay'];
@@ -195,10 +195,10 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         }
     }
 
-    protected onEnterKeyPressed(obj: OnKeyPressedObject) {
-        obj.component = this.activePaymentMethod ?? this; // For Dropin we want to add a ref to the activePM, if we can
+    protected onEnterKeyPressed(activeElement: Element, component: UIElement) {
+        component = this.activePaymentMethod ?? this; // For Dropin we want to add a ref to the activePM, if we can
 
-        this.activePaymentMethod?.onEnterKeyPressed(obj);
+        this.activePaymentMethod?.onEnterKeyPressed(activeElement, component);
     }
 
     render() {

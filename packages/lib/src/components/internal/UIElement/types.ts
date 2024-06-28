@@ -5,7 +5,7 @@ import UIElement from './UIElement';
 import type { PaymentAction, PaymentAmount, PaymentAmountExtended } from '../../../types/global-types';
 import type { BaseElementProps } from '../BaseElement/types';
 import type { PayButtonProps } from '../PayButton/PayButton';
-import type { CoreConfiguration, OnKeyPressedObject } from '../../../core/types';
+import type { CoreConfiguration } from '../../../core/types';
 
 export type PayButtonFunctionProps = Omit<PayButtonProps, 'amount'>;
 
@@ -105,7 +105,7 @@ export type UIElementProps = BaseElementProps &
          * Called when a Component detects, or is told by a SecuredField, that the Enter key has been pressed.
          * - merchant set config option
          */
-        onEnterKeyPressed?: (elements: OnKeyPressedObject) => void;
+        onEnterKeyPressed?: (activeElement: Element, component: UIElement) => void;
     };
 
 export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';

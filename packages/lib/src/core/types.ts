@@ -93,11 +93,6 @@ export type OnChangeData = {
     };
 };
 
-export interface OnKeyPressedObject {
-    activeElement: Element;
-    component: UIElement;
-}
-
 export interface CoreConfiguration {
     /**
      * The payment session object from your call to /sessions.
@@ -288,7 +283,7 @@ export interface CoreConfiguration {
      * Called when a Component detects, or is told by a SecuredField, that the Enter key has been pressed.
      * - merchant set config option
      */
-    onEnterKeyPressed?(elements: OnKeyPressedObject): void;
+    onEnterKeyPressed?(activeElement: Element, component: UIElement): void;
 
     /**
      * Callback called when it is required to fetch/update the payment methods list.
