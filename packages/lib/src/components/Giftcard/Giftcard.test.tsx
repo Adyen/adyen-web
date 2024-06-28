@@ -22,12 +22,14 @@ describe('Giftcard', () => {
         loadingContext: 'mock'
     };
 
-    describe('onBalanceCheck', () => {
+    // these test have been changed to trigger on submit instead of balance check
+    describe('onBalanceCheck func in submit', () => {
         test('If onBalanceCheck is not provided, step is skipped ayarnnd calls onSubmit', async () => {
             const onSubmitMock = jest.fn();
             const giftcard = new Giftcard(global.core, { ...baseProps, onSubmit: onSubmitMock });
             giftcard.setState({ isValid: true });
-            giftcard.onBalanceCheck();
+
+            giftcard.submit();
             await flushPromises();
 
             expect(onSubmitMock).toHaveBeenCalled();
@@ -37,7 +39,7 @@ describe('Giftcard', () => {
             const onBalanceCheck = jest.fn();
             const giftcard = new Giftcard(global.core, { ...baseProps, onBalanceCheck });
             giftcard.setState({ isValid: false });
-            giftcard.onBalanceCheck();
+            giftcard.submit();
 
             expect(onBalanceCheck).not.toHaveBeenCalled();
         });
