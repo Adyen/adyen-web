@@ -54,7 +54,7 @@
 
     &:hover:not(:focus) + .adyen-checkout__checkbox__label::after {
         border-color: token(color-outline-tertiary);
-        box-shadow: 0 0 0 token(spacer-010) token(color-outline-secondary);
+        box-shadow: 0 0 0 token(spacer-010) token(color-outline-primary-hover);
     }
 
     /* Check */
@@ -124,7 +124,7 @@
     }
 
     &.adyen-checkout__field--error {
-        border-color: token(color-label-critical);
+        border-color: token(color-outline-critical);
     }
 
     .adyen-checkout-input__inline-validation {
