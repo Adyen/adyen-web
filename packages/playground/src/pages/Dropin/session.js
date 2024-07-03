@@ -1,4 +1,4 @@
-import { AdyenCheckout, Dropin, Card, WeChat, Giftcard, PayPal, Ach, GooglePay, Riverty, Bancontact } from '@adyen/adyen-web';
+import { AdyenCheckout, Dropin, Card, WeChat, Giftcard, PayPal, Ach, GooglePay, Riverty, Bancontact, Klarna } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { createSession } from '../../services';
 import { amount, shopperLocale, shopperReference, countryCode, returnUrl } from '../../config/commonConfig';
@@ -12,7 +12,7 @@ export async function initSession() {
         shopperLocale,
         shopperReference,
         telephoneNumber: '+611223344',
-        shopperEmail: 'guilherme.ribeiro-ctp1@adyen.com',
+        shopperEmail: 'shopper.email@adyen.com',
         countryCode
     });
 
@@ -38,7 +38,7 @@ export async function initSession() {
 
     const dropin = new Dropin(checkout, {
         instantPaymentTypes: ['googlepay'],
-        paymentMethodComponents: [Card, WeChat, Giftcard, PayPal, Ach, GooglePay, Riverty, Bancontact],
+        paymentMethodComponents: [Card, WeChat, Giftcard, PayPal, Ach, GooglePay, Riverty, Bancontact, Klarna],
         paymentMethodsConfiguration: {
             googlepay: {
                 buttonType: 'plain',
@@ -55,6 +55,9 @@ export async function initSession() {
                     holderName: 'J. Smith'
                 },
                 _disableClickToPay: false
+            },
+            klarna: {
+                useKlarnaWidget: true
             }
         }
     }).mount('#dropin-container');

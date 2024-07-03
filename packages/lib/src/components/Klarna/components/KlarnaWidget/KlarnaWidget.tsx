@@ -58,8 +58,6 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
                             data: {
                                 paymentData: props.paymentData,
                                 details: {
-                                    // For the backward compatibility we need to pass both 'token' and 'authorization_token'
-                                    token: res.authorization_token,
                                     authorization_token: res.authorization_token
                                 }
                             }

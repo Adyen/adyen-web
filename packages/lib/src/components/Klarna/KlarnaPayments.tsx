@@ -10,7 +10,7 @@ import type { ICore } from '../../core/types';
 
 class KlarnaPayments extends UIElement<KlarnConfiguration> {
     public static type = TxVariants.klarna;
-    public static txVariants = [TxVariants.klarna, TxVariants.klarna_account, TxVariants.klarna_paynow];
+    public static txVariants = [TxVariants.klarna, TxVariants.klarna_account, TxVariants.klarna_paynow, TxVariants.klarna_b2b];
 
     protected static defaultProps = {
         useKlarnaWidget: false
