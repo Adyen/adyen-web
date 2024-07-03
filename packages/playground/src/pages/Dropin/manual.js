@@ -11,6 +11,7 @@ import {
     Giftcard,
     AmazonPay,
     Pix,
+    Klarna,
     Bancontact
 } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
@@ -133,7 +134,7 @@ export async function initManual() {
     }
 
     const dropin = new Dropin(checkout, {
-        paymentMethodComponents: [Card, ApplePay, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay, Pix, Bancontact],
+        paymentMethodComponents: [Card, ApplePay, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay, Pix, Bancontact, Klarna],
         instantPaymentTypes: ['googlepay', 'applepay'],
         paymentMethodsConfiguration: {
             card: {
