@@ -30,7 +30,7 @@ describe('useForm', () => {
             const { result } = renderHook(() => useForm({ schema: defaultSchema }));
             useFormHook = result;
 
-            act(() => {
+            void act(() => {
                 useFormHook.current.setSchema(['email']);
             });
 
@@ -52,7 +52,7 @@ describe('useForm', () => {
         it('should set default data after changing the schema', () => {
             const { result } = renderHook(() => useForm({ schema: defaultSchema, defaultData }));
 
-            act(() => {
+            void act(() => {
                 result.current.setSchema(['email']);
             });
 
@@ -60,7 +60,7 @@ describe('useForm', () => {
             expect(result.current.valid['firstName']).toEqual(undefined);
             expect(result.current.errors['firstName']).toEqual(undefined);
 
-            act(() => {
+            void act(() => {
                 result.current.setSchema(['firstName', 'email']);
             });
 
@@ -76,7 +76,7 @@ describe('useForm', () => {
         it('should handle changes for a field', () => {
             const { result } = renderHook<unknown, Form<defaultSchemaType>>(() => useForm({ schema: defaultSchema }));
 
-            act(() => {
+            void act(() => {
                 result.current.handleChangeFor('firstName')(firstNameValue);
             });
 
@@ -89,7 +89,7 @@ describe('useForm', () => {
             const formatterMock = jest.fn();
             const { result } = renderHook(() => useForm({ schema: defaultSchema, formatters: { firstName: formatterMock } }));
 
-            act(() => {
+            void act(() => {
                 result.current.handleChangeFor('firstName')(firstNameValue);
             });
 
@@ -123,14 +123,14 @@ describe('useForm', () => {
             const mockEvent = { target: { type: 'checkbox' } };
 
             // call once to set to "checked"
-            act(() => {
+            void act(() => {
                 result.current.handleChangeFor('firstName')(mockEvent);
             });
 
             expect(result.current.data.firstName).toEqual(true);
 
             // call again to set to "unchecked
-            act(() => {
+            void act(() => {
                 result.current.handleChangeFor('firstName')(mockEvent);
             });
 

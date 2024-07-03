@@ -17,9 +17,9 @@ describe('creating a promiseTimeout', () => {
         return newPromiseTimeout.promise.then(data => expect(data).toEqual({ resolved: true }));
     });
 
-    test('and rejecting it', () => {
+    test('and rejecting it', async () => {
         const newPromiseTimeout = promiseTimeout(1000, Promise.reject('rejected'), { timed_out: true });
-        expect(newPromiseTimeout.promise).rejects.toEqual('rejected');
+        await expect(newPromiseTimeout.promise).rejects.toEqual('rejected');
     });
 
     test('and letting it time out', async () => {
@@ -32,7 +32,7 @@ describe('creating a promiseTimeout', () => {
 
         // Fast-forward until all timers have been executed
         jest.advanceTimersByTime(1000);
-        expect(newPromiseTimeout.promise).rejects.toEqual({ timed_out: true });
+        await expect(newPromiseTimeout.promise).rejects.toEqual({ timed_out: true });
     });
 });
 
@@ -43,7 +43,7 @@ describe('canceling a promiseTimeout', () => {
         const callBackFunction = jest.fn();
         const newPromiseTimeout = promiseTimeout(2000, promiseOne(callBackFunction), { timed_out: true });
 
-        newPromiseTimeout.promise;
+        void newPromiseTimeout.promise;
 
         expect(timeoutSpy).toHaveBeenCalled();
 

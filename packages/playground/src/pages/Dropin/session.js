@@ -12,7 +12,7 @@ export async function initSession() {
         shopperLocale,
         shopperReference,
         telephoneNumber: '+611223344',
-        shopperEmail: 'shopper.ctp1@adyen.com',
+        shopperEmail: 'shopper.email@adyen.com',
         countryCode
     });
 
@@ -54,7 +54,7 @@ export async function initSession() {
                 data: {
                     holderName: 'J. Smith'
                 },
-                _disableClickToPay: true
+                _disableClickToPay: false
             },
             klarna: {
                 useKlarnaWidget: true

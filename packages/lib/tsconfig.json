@@ -9,6 +9,7 @@
         "module": "ESNext",
 
         /* Base Options: */
+        "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
         "skipLibCheck": true,
         "target": "es2022",

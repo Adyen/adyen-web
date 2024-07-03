@@ -1,4 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 import { UIElementProps } from '../internal/UIElement/types';
 
 declare global {

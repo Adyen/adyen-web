@@ -75,6 +75,8 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
 
     private pollStatus(delay: number) {
         clearTimeout(this.timeoutId);
+
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         this.timeoutId = setTimeout(async () => {
             // Wait for previous status call to finish.
             // Also taking the server response time into the consideration to calculate timePassed.
@@ -187,15 +189,10 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
         const timeToPayString = i18n.get(this.props.timeToPay).split('%@');
 
         const qrSubtitleRef = useAutoFocus();
+        const classnames = this.props.classNameModifiers.map(m => `adyen-checkout__qr-loader--${m}`);
 
         return (
-            <div
-                className={`
-                    adyen-checkout__qr-loader
-                    adyen-checkout__qr-loader--${type}
-                    ${this.props.classNameModifiers.map(m => `adyen-checkout__qr-loader--${m}`)}
-                `}
-            >
+            <div className={`adyen-checkout__qr-loader adyen-checkout__qr-loader--${type} ${classnames.join(' ')}`}>
                 {brandLogo && <img src={brandLogo} alt={brandName} className="adyen-checkout__qr-loader__brand-logo" />}
 
                 {amount && amount.value && amount.currency && (

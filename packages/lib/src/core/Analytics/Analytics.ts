@@ -40,7 +40,7 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
          */
         if (type === ANALYTICS_EVENT_INFO) {
             clearTimeout(sendEventsTimerId);
-            sendEventsTimerId = setTimeout(sendAnalyticsEvents, ANALYTICS_INFO_TIMER_INTERVAL);
+            sendEventsTimerId = setTimeout(() => void sendAnalyticsEvents(), ANALYTICS_INFO_TIMER_INTERVAL);
         }
 
         /**
@@ -74,7 +74,7 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
                         ...(Object.keys(analyticsData).length && { ...analyticsData })
                     });
                     capturedCheckoutAttemptId = checkoutAttemptId;
-                } catch (e) {
+                } catch (e: any) {
                     console.warn(`Fetching checkoutAttemptId failed.${e ? ` Error=${e}` : ''}`);
                 }
             }

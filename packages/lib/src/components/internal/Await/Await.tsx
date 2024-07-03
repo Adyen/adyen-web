@@ -83,7 +83,7 @@ function Await(props: AwaitComponentProps) {
             setHasCalledActionHandled(true);
         }
 
-        checkPaymentStatus(paymentData, clientKey, loadingContext, throttleInterval)
+        void checkPaymentStatus(paymentData, clientKey, loadingContext, throttleInterval)
             .then(processResponse)
             .catch(({ message, ...response }) => ({
                 type: 'network-error',

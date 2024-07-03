@@ -47,7 +47,7 @@ export class CardElement extends UIElement<CardConfiguration> {
 
         if (props && !props._disableClickToPay) {
             this.clickToPayService = createClickToPayService(this.props.configuration, this.props.clickToPayConfiguration, this.props.environment);
-            this.clickToPayService?.initialize();
+            void this.clickToPayService?.initialize();
         }
     }
 

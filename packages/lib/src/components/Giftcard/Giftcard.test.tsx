@@ -44,19 +44,19 @@ describe('Giftcard', () => {
     });
 
     describe('icon getters', () => {
-        test('should default to loading from resources', async () => {
+        test('should default to loading from resources', () => {
             const giftcard = new Giftcard(global.core, { ...baseProps });
 
             expect(giftcard.icon).toBe('MOCK');
         });
 
-        test('should use the prop .icon as 2. priority', async () => {
+        test('should use the prop .icon as 2. priority', () => {
             const giftcard = new Giftcard(global.core, { ...baseProps, icon: 'PROP_ICON_MOCK' });
 
             expect(giftcard.icon).toBe('PROP_ICON_MOCK');
         });
 
-        test('should use brandsConfiguration as 1. priority', async () => {
+        test('should use brandsConfiguration as 1. priority', () => {
             const giftcard = new Giftcard(global.core, {
                 ...baseProps,
                 icon: 'PROP_ICON_MOCK',
@@ -72,13 +72,13 @@ describe('Giftcard', () => {
     });
 
     describe('displayName getters', () => {
-        test('should default to props.name', async () => {
+        test('should default to props.name', () => {
             const giftcard = new Giftcard(global.core, { ...baseProps });
 
             expect(giftcard.displayName).toBe('My Test Gift Card');
         });
 
-        test('should use brandsConfiguration as 1. priority', async () => {
+        test('should use brandsConfiguration as 1. priority', () => {
             const giftcard = new Giftcard(global.core, {
                 ...baseProps,
                 brandsConfiguration: {

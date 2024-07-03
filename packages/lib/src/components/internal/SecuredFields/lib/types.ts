@@ -18,7 +18,7 @@ import {
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 import { Placeholders } from '../SFP/types';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 declare global {
     interface Window {
         _b$dl: boolean;

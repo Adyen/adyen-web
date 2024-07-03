@@ -9,7 +9,7 @@ export default function CVCHint({ frontCVC = false, fieldLabel }: CVCHintProps) 
         'adyen-checkout__field__cvc--back-hint': !frontCVC
     });
 
-    /* eslint-disable max-len */
+     
     return (
         <span className={hintClassnames}>
             <svg
@@ -62,5 +62,5 @@ export default function CVCHint({ frontCVC = false, fieldLabel }: CVCHintProps) 
             </svg>
         </span>
     );
-    /* eslint-enable max-len */
+     
 }

@@ -7,6 +7,7 @@ import { PREFIX } from '../../../Icon/constants';
 
 const SelectListItem = ({ item, active, selected, ...props }: SelectItemProps) => {
     return (
+        /* eslint-disable jsx-a11y/click-events-have-key-events  */
         <li
             aria-disabled={!!item.disabled}
             aria-selected={selected}
@@ -24,6 +25,7 @@ const SelectListItem = ({ item, active, selected, ...props }: SelectItemProps) =
             data-value={item.id}
             onClick={props.onSelect}
             onMouseEnter={props.onHover}
+            /* eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role */
             role="option"
             //tabIndex={-1}
             id={`listItem-${item.id}`}

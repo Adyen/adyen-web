@@ -23,7 +23,7 @@ export default parent => {
             // Store id of request we're about to make
             currentRequestId = callbackObj.uuid;
 
-            httpPost(
+            void httpPost(
                 {
                     loadingContext: parent.props.loadingContext,
                     path: `v3/bin/binLookup?token=${parent.props.clientKey}`

@@ -23,6 +23,7 @@ class ApplePayService {
         this.options = options;
 
         this.session = new ApplePaySession(options.version, paymentRequest);
+        /* eslint-disable @typescript-eslint/no-misused-promises */
         this.session.onvalidatemerchant = event => this.onvalidatemerchant(event, options.onValidateMerchant);
         this.session.onpaymentauthorized = event => this.onpaymentauthorized(event, options.onPaymentAuthorized);
         this.session.oncancel = event => this.oncancel(event, options.onCancel);
@@ -38,6 +39,7 @@ class ApplePayService {
         if (typeof options.onShippingMethodSelected === 'function') {
             this.session.onshippingmethodselected = event => this.onshippingmethodselected(event, options.onShippingMethodSelected);
         }
+        /* eslint-enable @typescript-eslint/no-misused-promises */
     }
 
     /**
