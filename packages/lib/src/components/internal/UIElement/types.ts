@@ -22,6 +22,7 @@ type CoreCallbacks = Pick<
     | 'onChange'
     | 'onActionHandled'
     | 'onError'
+    | 'onEnterKeyPressed'
 >;
 
 export type UIElementProps = BaseElementProps &
@@ -100,12 +101,6 @@ export type UIElementProps = BaseElementProps &
          * @internal
          */
         paymentMethodType?: string;
-
-        /**
-         * Called when a Component detects, or is told by a SecuredField, that the Enter key has been pressed.
-         * - merchant set config option
-         */
-        onEnterKeyPressed?: (activeElement: Element, component: UIElement) => void;
     };
 
 export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';
