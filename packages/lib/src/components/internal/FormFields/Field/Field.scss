@@ -52,7 +52,7 @@
 
 .adyen-checkout__field--error {
     > :not(.adyen-checkout__label--focused) + .adyen-checkout__input-wrapper:not(:focus-within, :active) {
-        border-color: token(color-label-critical);
+        border-color: token(color-outline-critical);
     }
 }
 

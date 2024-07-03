@@ -88,5 +88,5 @@
 }
 
 .adyen-checkout__radio_group__label.adyen-checkout__radio_group__label--invalid::before {
-    border: token(border-width-s) solid token(color-label-critical);
+    border: token(border-width-s) solid token(color-outline-critical);
 }
