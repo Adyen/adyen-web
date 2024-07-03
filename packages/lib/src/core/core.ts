@@ -90,11 +90,17 @@ class Core implements ICore {
 
         this.session = this.options.session && new Session(this.options.session, this.options.clientKey, this.loadingContext);
 
-        const clientKeyType = this.options.clientKey?.substr(0, 4);
+        const clientKeyType = this.options.clientKey?.substring(0, 4);
         if ((clientKeyType === 'test' || clientKeyType === 'live') && !this.loadingContext.includes(clientKeyType)) {
             throw new AdyenCheckoutError(
                 'IMPLEMENTATION_ERROR',
                 `Error: you are using a ${clientKeyType} clientKey against the ${this.options._environmentUrls?.api || this.options.environment} environment`
+            );
+        }
+        if (clientKeyType === 'pub.') {
+            throw new AdyenCheckoutError(
+                'IMPLEMENTATION_ERROR',
+                `Error: you are using something that looks like an originKey (${this.options.clientKey?.substring(0, 12)}..) when you should be using a clientKey. See the documentation (https://docs.adyen.com/development-resources/client-side-authentication/migrate-from-origin-key-to-client-key/) for more details.`
             );
         }
 
