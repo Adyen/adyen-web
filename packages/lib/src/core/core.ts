@@ -100,7 +100,7 @@ class Core implements ICore {
         if (clientKeyType === 'pub.') {
             throw new AdyenCheckoutError(
                 'IMPLEMENTATION_ERROR',
-                `Error: you are using something that looks like an originKey (${this.options.clientKey?.substring(0, 12)}..) when you should be using a clientKey. See the documentation (https://docs.adyen.com/development-resources/client-side-authentication/migrate-from-origin-key-to-client-key/) for more details.`
+                `Error: the value you are passing as your "clientKey" looks like an originKey (${this.options.clientKey?.substring(0, 12)}..). To generate a clientKey, see the documentation (https://docs.adyen.com/development-resources/client-side-authentication/migrate-from-origin-key-to-client-key/) for more details.`
             );
         }
 
