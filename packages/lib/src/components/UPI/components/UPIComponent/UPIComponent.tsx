@@ -1,17 +1,16 @@
 import { Fragment, h, RefObject } from 'preact';
 import { useCallback, useEffect, useState } from 'preact/hooks';
-import useCoreContext from '../../../../core/Context/useCoreContext';
 import { PayButtonFunctionProps, UIElementStatus } from '../../../types';
-import { VpaInputHandlers } from '../VpaInput/VpaInput';
-import VpaInput from '../VpaInput';
-import SegmentedControl from '../../../internal/SegmentedControl';
+import VpaInput, { VpaInputHandlers } from '../VpaInput/VpaInput';
 import { App, UpiMode } from '../../types';
 import useImage from '../../../../core/Context/useImage';
-import UPIIntentAppList from '../UPIIntentAppList';
 import useUpiSegmentedControlOptions from './useUpiSegmentedControlOptions';
 import { A11Y } from './constants';
 import './UPIComponent.scss';
-import ContentSeparator from "../../../internal/ContentSeparator";
+import SegmentedControl from '../../../internal/SegmentedControl';
+import ContentSeparator from '../../../internal/ContentSeparator';
+import UPIIntentAppList from '../UPIIntentAppList';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
 
 type UpiData = { app?: App; virtualPaymentAddress?: string };
 

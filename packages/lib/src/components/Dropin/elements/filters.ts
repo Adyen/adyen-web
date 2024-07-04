@@ -1,5 +1,5 @@
 import promiseTimeout from '../../../utils/promiseTimeout';
-import { PaymentMethod, UIElement } from "../../../types";
+import { PaymentMethod, type StoredPaymentMethod, UIElement } from '../../../types';
 
 export const UNSUPPORTED_PAYMENT_METHODS = ['androidpay', 'samsungpay', 'clicktopay'];
 
@@ -21,7 +21,7 @@ export const filterAvailable = (elements: UIElement[]) => {
     });
 };
 
-export const optionallyFilterUpiSubTxVariants = (paymentMethods: Array<PaymentMethod>) => {
+export const optionallyFilterUpiSubTxVariants = (paymentMethods: Array<PaymentMethod | StoredPaymentMethod>) => {
     const hasUpiParent = paymentMethods.some(pm => pm?.type === 'upi');
     // If we don't get the 'upi' parent, we render multiple upi components
     if (!hasUpiParent) return paymentMethods;

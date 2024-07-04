@@ -1,9 +1,12 @@
-@import '../../../../style/index';
+@import 'styles/variable-generator';
 
 .adyen-checkout-upi-app-list {
     list-style: none;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: token(spacer-070);
 
     &--loading {
         user-select: none;

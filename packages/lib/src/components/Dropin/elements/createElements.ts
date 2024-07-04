@@ -22,11 +22,8 @@ const createElements = (
 ): Promise<UIElement[]> => {
     const elements = optionallyFilterUpiSubTxVariants(paymentMethods)
         .map(paymentMethod => {
-            const paymentMethodConfigurationProps = getComponentConfiguration(
-                paymentMethod.type,
-                paymentMethodsConfiguration,
-                paymentMethod.isStoredPaymentMethod
-            );
+            const isStoredPaymentMethod = 'isStoredPaymentMethod' in paymentMethod && paymentMethod.isStoredPaymentMethod;
+            const paymentMethodConfigurationProps = getComponentConfiguration(paymentMethod.type, paymentMethodsConfiguration, isStoredPaymentMethod);
             const PaymentMethodElement = core.getComponent(paymentMethod.type);
 
             if (!PaymentMethodElement) {

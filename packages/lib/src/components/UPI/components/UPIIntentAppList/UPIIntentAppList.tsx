@@ -1,12 +1,12 @@
 import { h } from 'preact';
 import classNames from 'classnames';
-import { App, UpiMode } from '../../types';
-import useCoreContext from '../../../../core/Context/useCoreContext';
+import { App } from '../../types';
 import UPIIntentAppItem from './UPIIntentAppItem';
 import VpaInput from '../VpaInput';
 import { OnChangeProps, VpaInputHandlers } from '../VpaInput/VpaInput';
 import useImage from '../../../../core/Context/useImage';
 import './UPIIntentAppList.scss';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
 
 interface UPIIntentAppListProps {
     apps: Array<App>;
@@ -42,7 +42,7 @@ const UPIIntentAppList = ({
                 const key = `adyen-checkout-upi-app-item-${app.id}}`;
                 const isSelected = selectedAppId === app.id;
 
-                const showUpiCollectInput = app.id === UpiMode.Vpa;
+                const showUpiCollectInput = app.id === 'vpa';
                 const imgName = showUpiCollectInput ? 'upi' : `upi/${app.id}`;
                 const imgSrc = getImage()(imgName.toLowerCase());
 

@@ -1,4 +1,4 @@
-import { filterPresent, filterAvailable, optionallyFilterUpiSubTxVariants } from "./filters";
+import { filterPresent, filterAvailable, optionallyFilterUpiSubTxVariants } from './filters';
 import { mock } from 'jest-mock-extended';
 import UIElement from '../../internal/UIElement/UIElement';
 

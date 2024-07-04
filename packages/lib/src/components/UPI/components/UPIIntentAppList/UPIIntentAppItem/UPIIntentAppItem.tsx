@@ -1,9 +1,8 @@
 import { ComponentChildren, h } from 'preact';
 import cx from 'classnames';
 import { App } from '../../../types';
-import RadioButton from '../../../../internal/RadioButton';
-import uuid from '../../../../../utils/uuid';
 import PaymentMethodIcon from '../../../../Dropin/components/PaymentMethod/PaymentMethodIcon';
+import ExpandButton from '../../../../internal/ExpandButton';
 import './UPIIntentAppItem.scss';
 
 interface UPIIntentAppItemProps {
@@ -15,7 +14,8 @@ interface UPIIntentAppItemProps {
 }
 
 const UPIIntentAppItem = ({ app, imgSrc, isSelected, onSelect = () => {}, children }: UPIIntentAppItemProps): h.JSX.Element => {
-    const buttonId = `adyen-checkout-upi-app-item-radio-button-${app.id}-${uuid()}`;
+    const buttonId = `adyen-checkout-upi-app-item-button-${app.id}`;
+    const containerId = `adyen-checkout-upi-app-${app.id}`;
     const handleAppSelected = (app: App) => {
         onSelect(app);
     };
@@ -31,12 +31,18 @@ const UPIIntentAppItem = ({ app, imgSrc, isSelected, onSelect = () => {}, childr
             onClick={() => handleAppSelected(app)}
         >
             <div className="adyen-checkout-upi-app-item-header">
-                <RadioButton buttonId={buttonId} isSelected={isSelected}>
+                <ExpandButton classNameModifiers={['upi-app-item']} buttonId={buttonId} isSelected={isSelected} expandContentId={containerId}>
                     <PaymentMethodIcon src={imgSrc} altDescription={app.name} type={app.id}></PaymentMethodIcon>
-                    <label htmlFor={buttonId}>{app.name}</label>
-                </RadioButton>
+                    <label className="adyen-checkout-upi-app-item__label" htmlFor={buttonId}>
+                        {app.name}
+                    </label>
+                </ExpandButton>
             </div>
-            {isSelected && children && <div className="adyen-checkout-upi-app-item-details">{children}</div>}
+            {isSelected && children && (
+                <div className="adyen-checkout-upi-app-item-details" id={containerId}>
+                    {children}
+                </div>
+            )}
         </li>
     );
 };

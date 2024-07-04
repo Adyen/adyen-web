@@ -8,6 +8,7 @@ import { UPIConfiguration, UpiMode, UpiPaymentData, UpiType } from './types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { TxVariants } from '../tx-variants';
 import isMobile from '../../utils/isMobile';
+import type { ICore } from '../../core/types';
 
 /**
  * For mobile:
@@ -21,15 +22,16 @@ import isMobile from '../../utils/isMobile';
 
 class UPI extends UIElement<UPIConfiguration> {
     public static type = TxVariants.upi;
-    public static txVariants = [TxVariants.upi, TxVariants.upi_qr, TxVariants.upi_collect];
+    public static txVariants = [TxVariants.upi, TxVariants.upi_qr, TxVariants.upi_collect, TxVariants.upi_intent];
 
     private selectedMode: UpiMode;
 
-    constructor(props: UPIConfiguration) {
-        super(props);
+    constructor(checkout: ICore, props: UPIConfiguration) {
+        super(checkout, props);
         this.selectedMode = this.props.defaultMode;
     }
 
+    // @ts-ignore fix later
     formatProps(props: UPIConfiguration) {
         if (!isMobile()) {
             return {
@@ -48,7 +50,7 @@ class UPI extends UIElement<UPIConfiguration> {
             name: props.i18n.get('upi.collect.dropdown.label'),
             type: TxVariants.upi_collect
         };
-        const apps = hasIntentApps ? [...props.apps.map(app => ({ ...app, type: TxVariants.UpiIntent })), upiCollectApp] : [];
+        const apps = hasIntentApps ? [...props.apps.map(app => ({ ...app, type: TxVariants.upi_intent })), upiCollectApp] : [];
         return {
             ...super.formatProps(props),
             defaultMode: allowedModes.includes(props?.defaultMode) ? props.defaultMode : fallbackDefaultMode,
