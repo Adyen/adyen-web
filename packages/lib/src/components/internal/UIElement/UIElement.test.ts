@@ -3,7 +3,6 @@ import { ICore } from '../../../core/types';
 import { any, mock, mockDeep } from 'jest-mock-extended';
 import { AdyenCheckout, ThreeDS2Challenge, ThreeDS2DeviceFingerprint } from '../../../index';
 import { UIElementProps } from './types';
-import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { Resources } from '../../../core/Context/Resources';
 import { PaymentActionsType } from '../../../types/global-types';
 
@@ -502,7 +501,7 @@ describe('UIElement', () => {
             expect(onOrderUpdatedMock).toHaveBeenCalledWith({ order });
         });
 
-        test('should throw an error if onPaymentMethodsRequest is not implemented, although the flow will continue', async () => {
+        test('should NOT throw an error if onPaymentMethodsRequest is not implemented, and the flow should continue', async () => {
             const order = {
                 amount: {
                     currency: 'EUR',
@@ -541,8 +540,7 @@ describe('UIElement', () => {
 
             await new Promise(process.nextTick);
 
-            expect(onErrorMock).toHaveBeenCalledTimes(1);
-            expect(onErrorMock.mock.calls[0][0]).toBeInstanceOf(AdyenCheckoutError);
+            expect(onErrorMock).toHaveBeenCalledTimes(0);
 
             expect(core.update).toHaveBeenCalledTimes(1);
             expect(core.update).toHaveBeenCalledWith({

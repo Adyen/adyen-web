@@ -478,9 +478,9 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * @private
      */
     protected async handleAdvanceFlowPaymentMethodsUpdate(order: Order | null, amount?: PaymentAmount) {
-        return new Promise<PaymentMethodsResponse>((resolve, reject) => {
+        return new Promise<void | PaymentMethodsResponse>((resolve, reject) => {
             if (!this.props.onPaymentMethodsRequest) {
-                return reject(new Error('onPaymentMethodsRequest is not implemented'));
+                return resolve();
             }
 
             this.props.onPaymentMethodsRequest(
