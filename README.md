@@ -75,14 +75,14 @@ We include UI localizations for many languages. You can check the languages and 
 
 ## Styling
 
-Adyen Web is themeable and utilizing CSS variables that can be overridden in order to achieve the desired style.
+Adyen Web is themeable and utilizes CSS variables that can be overridden in order to achieve the desired style.
 
 ### Overriding styles example
 
-For elements that are not inside iframes, you can customize the styles by overriding the styles in a css file.
+For elements that are not inside iframes, you can customize the styles by overriding these styles in a css file.
 Most of our styles are defined with css variables with default values.
-To override those styles, you can inspect the DOM and change the value for the css variables either at the root level or targeting at specific elements.
-Be aware that if you change the values for css variables at the root level, you are also changing the styles for all the children elements that are using the same css variables.
+To override those styles, you can inspect the DOM and change the value for the css variables either at the root level or by targeting specific elements.
+Be aware that if you change the values for css variables at the root level, you are also changing the styles for all the child elements that are using the same css variables.
 
 1. Create `override.css` with the variables that you would like to style
 
