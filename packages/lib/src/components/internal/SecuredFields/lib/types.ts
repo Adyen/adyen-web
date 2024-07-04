@@ -356,3 +356,8 @@ export interface SFPlaceholdersObject {
     [ENCRYPTED_BANK_ACCNT_NUMBER_FIELD]?: string;
     [ENCRYPTED_BANK_LOCATION_FIELD]?: string;
 }
+
+export interface SFKeyPressObj {
+    fieldType: string;
+    action: string;
+}

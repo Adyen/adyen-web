@@ -1,6 +1,7 @@
 import * as logger from '../utilities/logger';
 import createIframe from './utils/createIframe';
-import { off, on, removeAllChildren, selectOne } from '../utilities/dom';
+import { removeAllChildren, selectOne } from '../utilities/dom';
+import { off, on } from '../../../../../utils/listenerUtils';
 import postMessageToIframe from '../CSF/utils/iframes/postMessageToIframe';
 import { isChromeVoxPostMsg, isWebpackPostMsg, originCheckPassed } from '../CSF/utils/iframes/postMessageValidation';
 import {
@@ -212,8 +213,7 @@ class SecuredField extends AbstractSecuredField {
         if (this.numKey !== feedbackObj.numKey) {
             if (this.sfConfig.showWarnings) {
                 logger.warn(
-                    'WARNING SecuredField :: postMessage listener for iframe :: data mismatch! ' +
-                        '(Probably a message from an unrelated securedField)'
+                    'WARNING SecuredField :: postMessage listener for iframe :: data mismatch! (Probably a message from an unrelated securedField)'
                 );
             }
             return;
@@ -269,6 +269,10 @@ class SecuredField extends AbstractSecuredField {
 
             case 'autoComplete':
                 this.onAutoCompleteCallback(feedbackObj);
+                break;
+
+            case 'enterKeyPressed':
+                this.onKeyPressedCallback(feedbackObj);
                 break;
 
             /**
@@ -374,6 +378,11 @@ class SecuredField extends AbstractSecuredField {
 
     onAutoComplete(callbackFn: RtnType_callbackFn): SecuredField {
         this.onAutoCompleteCallback = callbackFn;
+        return this;
+    }
+
+    onKeyPressed(callbackFn: RtnType_callbackFn): SecuredField {
+        this.onKeyPressedCallback = callbackFn;
         return this;
     }
     //------------------------------------

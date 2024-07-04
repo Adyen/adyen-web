@@ -90,6 +90,7 @@ export class AchElement extends UIElement<AchConfiguration> {
                 ) : (
                     <AchInput
                         setComponentRef={this.setComponentRef}
+                        handleKeyPress={this.handleKeyPress}
                         {...this.props}
                         onChange={this.setState}
                         onSubmit={this.submit}

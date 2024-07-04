@@ -1,4 +1,4 @@
-import { ComponentChild, render } from 'preact';
+import { ComponentChild, h, render } from 'preact';
 import getProp from '../../../utils/getProp';
 import uuid from '../../../utils/uuid';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
@@ -8,6 +8,7 @@ import type { ICore } from '../../../core/types';
 import type { BaseElementProps, IBaseElement } from './types';
 import type { PaymentData } from '../../../types/global-types';
 import type { AnalyticsInitialEvent, SendAnalyticsObject } from '../../../core/Analytics/types';
+import { off, on } from '../../../utils/listenerUtils';
 
 /**
  * Verify if the first parameter is instance of Core.
@@ -44,6 +45,8 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
 
         this.core = checkout;
         this.buildElementProps(props);
+
+        this.handleKeyPress = this.handleKeyPress.bind(this);
     }
 
     protected buildElementProps(componentProps?: P) {
@@ -73,6 +76,11 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
 
     /* eslint-disable-next-line */
     protected submitAnalytics(analyticsObj?: SendAnalyticsObject) {
+        return null;
+    }
+
+    /* eslint-disable-next-line */
+    protected handleKeyPress(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) {
         return null;
     }
 
@@ -136,6 +144,9 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
 
         this._node = node;
 
+        // Add listener for key press events, notably 'Enter' key presses
+        on(this._node, 'keypress', this.handleKeyPress);
+
         this._component = this.render();
 
         render(this._component, node);
@@ -178,6 +189,9 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
      * Unmounts a payment element from the DOM
      */
     public unmount(): this {
+        // Remove listener
+        off(this._node, 'keypress', this.handleKeyPress);
+
         if (this._node) {
             render(null, this._node);
         }

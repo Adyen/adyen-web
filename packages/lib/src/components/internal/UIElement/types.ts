@@ -22,6 +22,7 @@ type CoreCallbacks = Pick<
     | 'onChange'
     | 'onActionHandled'
     | 'onError'
+    | 'onEnterKeyPressed'
 >;
 
 export type UIElementProps = BaseElementProps &

@@ -62,6 +62,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.resources = this.props.modules ? this.props.modules.resources : undefined;
 
         this.storeElementRefOnCore(this.props);
+
+        this.onEnterKeyPressed = this.onEnterKeyPressed.bind(this);
     }
 
     protected override buildElementProps(componentProps?: P) {
@@ -383,9 +385,30 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.handleSuccessResult(response);
     }
 
+    protected handleKeyPress(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement> | KeyboardEvent) {
+        if (e.key === 'Enter' || e.code === 'Enter') {
+            e.preventDefault(); // Prevent <form> submission if Component is placed inside a form
+
+            this.onEnterKeyPressed(document?.activeElement, this);
+        }
+    }
+
+    /**
+     * Handle Enter key pressed from a UIElement (called via handleKeyPress)
+     * @param obj
+     */
+    protected onEnterKeyPressed(activeElement: Element, component: UIElement) {
+        if (this.props.onEnterKeyPressed) {
+            this.props.onEnterKeyPressed(activeElement, component);
+        } else {
+            (activeElement as HTMLElement).blur();
+            this.submit();
+        }
+    }
+
     /**
      * Call update on parent instance
-     * This function exist to make safe access to the protect _parentInstance
+     * This function exist to make safe access to the protected _parentInstance
      * @param options - CoreOptions
      */
     public updateParent(options: CoreConfiguration = {}): Promise<ICore> {

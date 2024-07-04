@@ -1,5 +1,6 @@
 import { CardConfiguration } from '../Card/types';
 import { SFError } from '../Card/components/CardInput/types';
+import UIElement from '../internal/UIElement';
 
 export type CustomCardConfiguration = Omit<
     CardConfiguration,
@@ -21,6 +22,7 @@ export type CustomCardConfiguration = Omit<
     | 'configuration'
 > & {
     onValidationError?: (validationErrors: ValidationError[]) => void;
+    onEnterKeyPressed?: (activeElement: Element, component: UIElement) => void;
 };
 
 export type ValidationError = SFError & {

@@ -23,6 +23,7 @@ interface GiftcardComponentProps {
     expiryDateRequired?: boolean;
     fieldsLayoutComponent: FunctionComponent<GiftcardFieldsProps>;
     placeholders?: Placeholders;
+    handleKeyPress?: (o: KeyboardEvent) => void;
 }
 
 class Giftcard extends Component<GiftcardComponentProps> {

@@ -323,6 +323,7 @@ export class CardElement extends UIElement<CardConfiguration> {
     get browserInfo() {
         return collectBrowserInfo();
     }
+
     // Override
     protected payButton = (props: PayButtonProps) => {
         const isZeroAuth = this.props.amount?.value === 0;
@@ -346,6 +347,7 @@ export class CardElement extends UIElement<CardConfiguration> {
                 {...this.state}
                 onChange={this.setState}
                 onSubmit={this.submit}
+                handleKeyPress={this.handleKeyPress}
                 payButton={this.payButton}
                 onBrand={this.onBrand}
                 onBinValue={this.onBinValue}

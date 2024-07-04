@@ -110,6 +110,10 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
         this.props.onFocus?.(obj);
     };
 
+    protected onEnterKeyPressed = (activeElement: Element, component: UIElement) => {
+        this.props.onEnterKeyPressed?.(activeElement, component);
+    };
+
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
@@ -119,6 +123,7 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
                     }}
                     {...this.props}
                     {...this.state}
+                    handleKeyPress={this.handleKeyPress}
                     rootNode={this._node}
                     onChange={this.setState}
                     onBinValue={this.onBinValue}
