@@ -29,6 +29,7 @@ const UPIIntentAppList = ({
     const getImage = useImage();
 
     return (
+        /* eslint-disable jsx-a11y/no-noninteractive-element-to-interactive-role */
         <ul
             className={classNames({
                 'adyen-checkout-upi-app-list': true,
