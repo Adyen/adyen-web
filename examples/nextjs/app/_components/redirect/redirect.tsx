@@ -2,11 +2,11 @@
 
 import { useCallback, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
-import { AdyenCheckout } from "@adyen/adyen-web";
+import { AdyenCheckout, AdyenCheckoutError, UIElement } from "@adyen/adyen-web";
 import makeDetailsCall from "@/app/_utils/makeDetailsCall";
 import type {
-    AdditionalDetailsStateData,
-    CheckoutAdvancedFlowResponse,
+    AdditionalDetailsActions,
+    AdditionalDetailsData,
     PaymentCompletedData,
     PaymentFailedData,
 } from "@adyen/adyen-web";
@@ -31,22 +31,15 @@ export default function Redirect() {
                 ...(isSessionsFlow && {
                     session: {
                         id: sessionId,
-                        // TODO: remove sesiondata once type is fixed
-                        sessionData: "",
                     },
                 }),
 
                 // If it is NOT sessions flow, add the 'onAdditionalDetails' so you can handle the /payment/details part here
                 ...(!isSessionsFlow && {
                     onAdditionalDetails: async (
-                        state: AdditionalDetailsStateData,
-                        component: any,
-                        actions: {
-                            resolve: (
-                                response: CheckoutAdvancedFlowResponse,
-                            ) => void;
-                            reject: () => void;
-                        },
+                        state: AdditionalDetailsData,
+                        component: UIElement,
+                        actions: AdditionalDetailsActions,
                     ) => {
                         try {
                             const { resultCode } = await makeDetailsCall(
@@ -62,18 +55,21 @@ export default function Redirect() {
 
                 onPaymentCompleted(
                     data: PaymentCompletedData,
-                    component?: any,
+                    component?: UIElement,
                 ) {
                     document.querySelector(
                         "#result-container > pre",
                     ).innerHTML = JSON.stringify(data, null, "\t");
                 },
-                onPaymentFailed(data?: PaymentFailedData, component?: any) {
+                onPaymentFailed(
+                    data?: PaymentFailedData,
+                    component?: UIElement,
+                ) {
                     document.querySelector(
                         "#result-container > pre",
                     ).innerHTML = "Payment failed";
                 },
-                onError: (error) => {
+                onError: (error: AdyenCheckoutError) => {
                     console.error("Something went wrong", error);
                 },
             });

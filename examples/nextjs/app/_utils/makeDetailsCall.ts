@@ -1,6 +1,6 @@
-import type { AdditionalDetailsStateData } from "@adyen/adyen-web";
+import type { AdditionalDetailsData } from "@adyen/adyen-web";
 
-async function makeDetailsCall(data: AdditionalDetailsStateData["data"]) {
+async function makeDetailsCall(data: AdditionalDetailsData["data"]) {
     try {
         const response = await fetch("/api/paymentDetails", {
             method: "POST",

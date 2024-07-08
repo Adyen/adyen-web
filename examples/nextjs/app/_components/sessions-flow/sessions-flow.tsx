@@ -9,9 +9,16 @@ import {
     CashAppPay,
     GooglePay,
     PayPal,
+    UIElement,
+    AdyenCheckoutError,
 } from "@adyen/adyen-web";
 import "@adyen/adyen-web/styles/adyen.css";
-import type { CoreConfiguration, DropinConfiguration } from "@adyen/adyen-web";
+import type {
+    PaymentFailedData,
+    PaymentCompletedData,
+    CoreConfiguration,
+    DropinConfiguration,
+} from "@adyen/adyen-web";
 import {
     DEFAULT_AMOUNT,
     DEFAULT_COUNTRY,
@@ -52,13 +59,13 @@ export default function SessionsFlow() {
             analytics: {
                 enabled: false,
             },
-            onError(error) {
+            onError(error: AdyenCheckoutError) {
                 console.error("Something went wrong", error);
             },
-            onPaymentCompleted(data, element) {
+            onPaymentCompleted(data: PaymentCompletedData, element: UIElement) {
                 console.log(data, element);
             },
-            onPaymentFailed(data, element) {
+            onPaymentFailed(data: PaymentFailedData, element: UIElement) {
                 console.log(data, element);
             },
         };
@@ -82,7 +89,7 @@ export default function SessionsFlow() {
     useEffect(() => {
         if (!isAdyenWebInitialized.current) {
             isAdyenWebInitialized.current = true;
-            loadAdyen();
+            void loadAdyen();
         }
     }, [loadAdyen]);
 

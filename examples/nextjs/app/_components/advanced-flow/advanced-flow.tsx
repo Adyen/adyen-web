@@ -9,14 +9,19 @@ import {
     CashAppPay,
     GooglePay,
     PayPal,
-} from "@adyen/adyen-web";
+    AdyenCheckoutError,
+    UIElement,
+} from "@adyen/adyen-web/auto";
 import "@adyen/adyen-web/styles/adyen.css";
 import type {
     CoreConfiguration,
     DropinConfiguration,
-    CheckoutAdvancedFlowResponse,
-    PaymentData,
-    AdditionalDetailsStateData,
+    SubmitData,
+    SubmitActions,
+    AdditionalDetailsData,
+    AdditionalDetailsActions,
+    PaymentCompletedData,
+    PaymentFailedData,
 } from "@adyen/adyen-web";
 import {
     DEFAULT_AMOUNT,
@@ -59,14 +64,9 @@ export default function AdvancedFlow() {
             paymentMethodsResponse,
 
             onSubmit: async (
-                state: { data: PaymentData; isValid: boolean },
-                component: any,
-                actions: {
-                    resolve: (response: CheckoutAdvancedFlowResponse) => void;
-                    reject: (
-                        error?: Pick<CheckoutAdvancedFlowResponse, "error">,
-                    ) => void;
-                },
+                state: SubmitData,
+                component: UIElement,
+                actions: SubmitActions,
             ) => {
                 try {
                     const result = await makePaymentsCall(
@@ -96,12 +96,9 @@ export default function AdvancedFlow() {
             },
 
             onAdditionalDetails: async (
-                state: AdditionalDetailsStateData,
-                component: any,
-                actions: {
-                    resolve: (response: CheckoutAdvancedFlowResponse) => void;
-                    reject: () => void;
-                },
+                state: AdditionalDetailsData,
+                component: UIElement,
+                actions: AdditionalDetailsActions,
             ) => {
                 try {
                     const result = await makeDetailsCall(state.data);
@@ -125,15 +122,15 @@ export default function AdvancedFlow() {
                 }
             },
 
-            onError(error) {
+            onError(error: AdyenCheckoutError) {
                 console.error("Something went wrong", error);
             },
 
-            onPaymentCompleted(data, element) {
+            onPaymentCompleted(data: PaymentCompletedData, element: UIElement) {
                 console.log(data, element);
             },
 
-            onPaymentFailed(data, element) {
+            onPaymentFailed(data: PaymentFailedData, element: UIElement) {
                 console.log(data, element);
             },
         };
@@ -157,7 +154,7 @@ export default function AdvancedFlow() {
     useEffect(() => {
         if (!isAdyenWebInitialized.current) {
             isAdyenWebInitialized.current = true;
-            loadAdyen();
+            void loadAdyen();
         }
     }, [loadAdyen]);
 
