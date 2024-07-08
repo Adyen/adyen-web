@@ -109,7 +109,7 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
     private handleOnRequiringConfirmation = (): Promise<any> => {
         if (this.props.onRequiringConfirmation) {
             return new Promise<void>((resolve, reject) => {
-                this.props.onRequiringConfirmation(resolve, reject);
+                this.props.onRequiringConfirmation(resolve, reject).catch(() => {});
             });
         }
     };
