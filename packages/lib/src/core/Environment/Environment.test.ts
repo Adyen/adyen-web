@@ -11,6 +11,7 @@ describe('Environments', () => {
     });
 
     test('should return proper URLs for the "test" environment even passing upper case string', () => {
+        // @ts-ignore Passing uppercase value is expected here
         const { apiUrl, analyticsUrl, cdnImagesUrl, cdnTranslationsUrl } = resolveEnvironments('TEST');
 
         expect(apiUrl).toBe('https://checkoutshopper-test.adyen.com/checkoutshopper/');
@@ -37,6 +38,7 @@ describe('Environments', () => {
     });
 
     test('should return the live environment URL if environment type is not valid', () => {
+        // @ts-ignore Using invalid valid is intentional here
         const { apiUrl, analyticsUrl, cdnImagesUrl, cdnTranslationsUrl } = resolveEnvironments('live-uk');
 
         expect(apiUrl).toBe('https://checkoutshopper-live.adyen.com/checkoutshopper/');

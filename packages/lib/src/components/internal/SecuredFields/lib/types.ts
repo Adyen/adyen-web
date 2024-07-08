@@ -18,7 +18,7 @@ import {
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 import { Placeholders } from '../SFP/types';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 declare global {
     interface Window {
         _b$dl: boolean;
@@ -355,4 +355,9 @@ export interface SFPlaceholdersObject {
     [ENCRYPTED_PWD_FIELD]?: string;
     [ENCRYPTED_BANK_ACCNT_NUMBER_FIELD]?: string;
     [ENCRYPTED_BANK_LOCATION_FIELD]?: string;
+}
+
+export interface SFKeyPressObj {
+    fieldType: string;
+    action: string;
 }

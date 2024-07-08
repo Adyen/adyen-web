@@ -19,8 +19,7 @@ export default function collectBrowserInfo(): BrowserInfo {
     const screenWidth = getProp(window, 'screen.width') || ''; // TODO: Shall we set this to null instead?
     const userAgent = getProp(window, 'navigator.userAgent') || '';
 
-    // IE <+ 10 supports navigator.browserLanguage instead of navigator.language
-    const language = getProp(window, 'navigator.language') || getProp(window, 'navigator.browserLanguage') || 'en';
+    const language = getProp(window, 'navigator.language') || 'en';
     const d = new Date();
     const timeZoneOffset = d.getTimezoneOffset();
 

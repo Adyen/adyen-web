@@ -1,9 +1,11 @@
+@import 'styles/variable-generator';
+
 .adyen-checkout-ctp__section {
     position: relative;
     background-color: white;
     box-shadow: 0 6px 12px rgb(0 17 44 / 8%), 0 2px 4px rgb(0 17 44 / 4%);
-    border-radius: var(--adyen-checkout-spacer-060);
-    padding: var(--adyen-checkout-spacer-070);
+    border-radius: token(spacer-060);
+    padding: token(spacer-070);
 
     &-brand {
         display: flex;
@@ -17,7 +19,7 @@
     }
 
     .adyen-checkout__fieldset {
-        margin-bottom: var(--adyen-checkout-spacer-090);
+        margin-bottom: token(spacer-090);
     }
 }
 
@@ -27,7 +29,7 @@
 
     &-title {
         font-size: 17px;
-        font-weight: var(--adyen-checkout-text-title-font-weight);
+        font-weight: token(text-title-font-weight);
         line-height: 22px;
         padding: 0;
         margin: 0;
@@ -45,14 +47,14 @@
 
 .adyen-checkout-ctp__section-text {
     font-size: 13px;
-    font-weight: var(--adyen-checkout-text-body-font-weight);
-    line-height: var(--adyen-checkout-text-caption-line-height);
-    color: var(--adyen-checkout-color-grey-1300);
-    margin: 0 0 var(--adyen-checkout-spacer-070);
+    font-weight: token(text-body-font-weight);
+    line-height: token(text-caption-line-height);
+    color: token(color-label-tertiary);
+    margin: 0 0 token(spacer-070);
 }
 
 .adyen-checkout-ctp__separator {
-    color: var(--adyen-checkout-color-label-primary);
+    color: token(color-label-primary);
     font-size: 13px;
-    font-weight: var(--adyen-checkout-text-body-font-weight);
+    font-weight: token(text-body-font-weight);
 }

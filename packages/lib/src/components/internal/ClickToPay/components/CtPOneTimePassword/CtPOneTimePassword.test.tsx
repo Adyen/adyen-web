@@ -36,6 +36,7 @@ describe('Click to Pay - CtPOneTimePassword', () => {
         customRender(<CtPOneTimePassword />, { clickToPayService: ctpServiceMock });
 
         // Default false
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
         const checkbox = (await screen.findByLabelText('Skip verification next time')) as HTMLInputElement;
         expect(checkbox.checked).toBe(false);
 

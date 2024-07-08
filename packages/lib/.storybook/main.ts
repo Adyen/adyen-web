@@ -1,9 +1,10 @@
 import type { StorybookConfig } from '@storybook/preact-vite';
 import { mergeConfig } from 'vite';
 import * as path from 'path';
-import eslint from '@rollup/plugin-eslint';
+// import eslint from '@rollup/plugin-eslint';
 import stylelint from 'vite-plugin-stylelint';
 import generateEnvironmentVariables from '../config/environment-variables';
+import { resolve } from 'node:path';
 
 const config: StorybookConfig = {
     stories: ['../storybook/**/*.stories.@(js|jsx|ts|tsx)'],
@@ -27,7 +28,7 @@ const config: StorybookConfig = {
 
     staticDirs: ['../storybook/assets'],
 
-    async viteFinal(config) {
+    viteFinal(config) {
         return mergeConfig(config, {
             define: generateEnvironmentVariables(),
             resolve: {
@@ -36,7 +37,8 @@ const config: StorybookConfig = {
                         // this is required for the SCSS modules
                         find: /^~(.*)$/,
                         replacement: '$1'
-                    }
+                    },
+                    { find: /^styles(.*)$/, replacement: resolve(__dirname, '../src/styles') }
                 ]
             },
             server: {
@@ -45,15 +47,16 @@ const config: StorybookConfig = {
                 }
             },
             plugins: [
-                stylelint(),
-                {
-                    ...eslint({
-                        include: ['./src/**'],
-                        exclude: ['./src/**/*.json', './src/**/*.scss']
-                    }),
-                    enforce: 'pre',
-                    apply: 'serve'
-                }
+                stylelint()
+                // TODO: Enable this once @rollup/plugin-eslint supports ESLINT 9
+                // {
+                //     ...eslint({
+                //         include: ['./src/**'],
+                //         exclude: ['./src/**/*.json', './src/**/*.scss']
+                //     }),
+                //     enforce: 'pre',
+                //     apply: 'serve'
+                // }
             ]
         });
     }

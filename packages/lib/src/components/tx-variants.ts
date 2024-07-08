@@ -121,6 +121,7 @@ export enum TxVariants {
     klarna = 'klarna',
     klarna_account = 'klarna_account',
     klarna_paynow = 'klarna_paynow',
+    klarna_b2b = 'klarna_b2b',
     /** Klarna */
 
     /** QRLoader */
@@ -138,6 +139,7 @@ export enum TxVariants {
     /** Await */
     blik = 'blik',
     mbway = 'mbway',
+    ancv = 'ancv',
     upi = 'upi', // also QR
     upi_qr = 'upi_qr', // also QR
     upi_collect = 'upi_collect', // also QR

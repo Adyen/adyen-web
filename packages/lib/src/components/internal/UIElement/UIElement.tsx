@@ -8,11 +8,10 @@ import { Resources } from '../../../core/Context/Resources';
 import { ANALYTICS_SUBMIT_STR } from '../../../core/Analytics/constants';
 
 import type { AnalyticsInitialEvent, SendAnalyticsObject } from '../../../core/Analytics/types';
-import type { CoreConfiguration, ICore } from '../../../core/types';
-import type { ComponentMethodsRef, IUIElement, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
+import type { CoreConfiguration, ICore, AdditionalDetailsData } from '../../../core/types';
+import type { ComponentMethodsRef, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
 import type { CheckoutSessionDetailsResponse, CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
 import type {
-    AdditionalDetailsStateData,
     CheckoutAdvancedFlowResponse,
     Order,
     PaymentAction,
@@ -27,7 +26,7 @@ import type { NewableComponent } from '../../../core/core.registry';
 
 import './UIElement.scss';
 
-export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> implements IUIElement {
+export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     protected componentRef: any;
 
     protected resources: Resources;
@@ -63,6 +62,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.resources = this.props.modules ? this.props.modules.resources : undefined;
 
         this.storeElementRefOnCore(this.props);
+
+        this.onEnterKeyPressed = this.onEnterKeyPressed.bind(this);
     }
 
     protected override buildElementProps(componentProps?: P) {
@@ -150,7 +151,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      *
      *  In some other cases e.g. 3DS2 components, this function is overridden to allow more specific analytics actions to be created
      */
-    /* eslint-disable-next-line */
+
     protected submitAnalytics(analyticsObj: SendAnalyticsObject, uiElementProps?) {
         /** Work out what the component's "type" is:
          * - first check for a dedicated "analyticsType" (currently only applies to custom-cards)
@@ -260,7 +261,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         }
     };
 
-    protected handleAdditionalDetails(state: AdditionalDetailsStateData): void {
+    protected handleAdditionalDetails(state: AdditionalDetailsData): void {
         this.makeAdditionalDetailsCall(state)
             .then(sanitizeResponse)
             .then(verifyPaymentDidNotFail)
@@ -268,7 +269,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             .catch(this.handleFailedResult);
     }
 
-    private makeAdditionalDetailsCall(state: AdditionalDetailsStateData): Promise<CheckoutSessionDetailsResponse | CheckoutAdvancedFlowResponse> {
+    private makeAdditionalDetailsCall(state: AdditionalDetailsData): Promise<CheckoutSessionDetailsResponse | CheckoutAdvancedFlowResponse> {
         if (this.props.onAdditionalDetails) {
             return new Promise<CheckoutAdvancedFlowResponse>((resolve, reject) => {
                 this.props.onAdditionalDetails(state, this.elementRef, { resolve, reject });
@@ -328,7 +329,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         const updateCorePromise = this.core.session ? this.core.update({ order }) : this.handleAdvanceFlowPaymentMethodsUpdate(order);
 
-        updateCorePromise.then(() => {
+        void updateCorePromise.then(() => {
             this.props.onOrderUpdated?.({ order });
         });
     };
@@ -384,9 +385,30 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.handleSuccessResult(response);
     }
 
+    protected handleKeyPress(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement> | KeyboardEvent) {
+        if (e.key === 'Enter' || e.code === 'Enter') {
+            e.preventDefault(); // Prevent <form> submission if Component is placed inside a form
+
+            this.onEnterKeyPressed(document?.activeElement, this);
+        }
+    }
+
+    /**
+     * Handle Enter key pressed from a UIElement (called via handleKeyPress)
+     * @param obj
+     */
+    protected onEnterKeyPressed(activeElement: Element, component: UIElement) {
+        if (this.props.onEnterKeyPressed) {
+            this.props.onEnterKeyPressed(activeElement, component);
+        } else {
+            (activeElement as HTMLElement).blur();
+            this.submit();
+        }
+    }
+
     /**
      * Call update on parent instance
-     * This function exist to make safe access to the protect _parentInstance
+     * This function exist to make safe access to the protected _parentInstance
      * @param options - CoreOptions
      */
     public updateParent(options: CoreConfiguration = {}): Promise<ICore> {
@@ -456,9 +478,9 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * @private
      */
     protected async handleAdvanceFlowPaymentMethodsUpdate(order: Order | null, amount?: PaymentAmount) {
-        return new Promise<PaymentMethodsResponse>((resolve, reject) => {
+        return new Promise<void | PaymentMethodsResponse>((resolve, reject) => {
             if (!this.props.onPaymentMethodsRequest) {
-                return reject(new Error('onPaymentMethodsRequest is not implemented'));
+                return resolve();
             }
 
             this.props.onPaymentMethodsRequest(

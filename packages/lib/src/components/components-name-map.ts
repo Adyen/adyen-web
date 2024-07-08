@@ -120,6 +120,7 @@ const ComponentsNameMap = {
     [TxVariants.klarna]: 'Klarna',
     [TxVariants.klarna_account]: 'Klarna',
     [TxVariants.klarna_paynow]: 'Klarna',
+    [TxVariants.klarna_b2b]: 'Klarna',
     /** Klarna */
 
     /** QRLoader */
@@ -137,6 +138,7 @@ const ComponentsNameMap = {
     /** Await */
     [TxVariants.blik]: 'Blik',
     [TxVariants.mbway]: 'MBWay',
+    [TxVariants.ancv]: 'ANCV',
     [TxVariants.upi]: 'UPI', // also QR
     [TxVariants.upi_qr]: 'UPI', // also QR
     [TxVariants.upi_collect]: 'UPI', // also QR

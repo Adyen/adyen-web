@@ -177,11 +177,28 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
      * @param response - PaymentResponse
      */
     protected handleOrder = ({ order }: PaymentResponseData): void => {
-        this.updateParent({ order });
+        void this.updateParent({ order });
     };
 
     closeActivePaymentMethod() {
         this.dropinRef.closeActivePaymentMethod();
+    }
+
+    protected handleKeyPress(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement> | KeyboardEvent) {
+        if (e.key === 'Enter' || e.code === 'Enter') {
+            // If the active element has role="radio", we're on a header in the PMList, in which case we don't want to validate the form, or, prevent the default behaviour
+            const isPMHeader = document?.activeElement?.getAttribute('role') === 'radio';
+            if (isPMHeader) {
+                return;
+            }
+            super.handleKeyPress(e);
+        }
+    }
+
+    protected onEnterKeyPressed(activeElement: Element, component: UIElement) {
+        // We want to have a ref to the activePM, if we can; not a ref to the Dropin
+        const pmComponent = this.activePaymentMethod ?? component;
+        this.activePaymentMethod?.onEnterKeyPressed(activeElement, pmComponent);
     }
 
     render() {
@@ -191,7 +208,6 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
                     <DropinComponent
                         {...this.props}
                         core={this.core}
-                        onChange={this.setState}
                         elementRef={this.elementRef}
                         onCreateElements={this.handleCreate}
                         ref={dropinRef => {

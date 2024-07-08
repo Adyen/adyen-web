@@ -27,6 +27,7 @@ export const GENERIC_OPTIONS = [
     'onActionHandled',
     'onAdditionalDetails',
     'onChange',
+    'onEnterKeyPressed',
     'onError',
     'onBalanceCheck',
     'onOrderRequest',

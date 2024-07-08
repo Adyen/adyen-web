@@ -1,13 +1,13 @@
 import Core from './core';
+import { UIElement } from '../types';
 import type { CoreConfiguration, ICore } from './types';
-import type { IUIElement } from '../components/internal/UIElement/types';
 
 async function AdyenCheckout(props: CoreConfiguration): Promise<Core> {
     const checkout = new Core(props);
     return await checkout.initialize();
 }
 
-AdyenCheckout.register = (...items: (new (checkout: ICore, props) => IUIElement)[]) => {
+AdyenCheckout.register = (...items: (new (checkout: ICore, props) => UIElement)[]) => {
     Core.register(...items);
 };
 

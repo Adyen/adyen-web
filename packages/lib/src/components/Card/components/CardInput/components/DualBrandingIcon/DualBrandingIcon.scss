@@ -1,3 +1,5 @@
+@import 'styles/variable-generator';
+
 .adyen-checkout__card__dual-branding__buttons {
     display: flex;
     opacity: 0.4;
@@ -13,7 +15,7 @@
         opacity: 1;
 
         &:nth-child(1) {
-            right: var(--adyen-checkout-spacer-110);
+            right: token(spacer-110);
         }
 
         &--not-selected {

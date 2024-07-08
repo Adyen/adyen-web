@@ -16,6 +16,7 @@ import { SecuredFieldSetupObject } from '../../types';
 import SecuredField from '../../securedField/SecuredField';
 import { CardObject, CbObjOnBrand, SFFeedbackObj, CbObjOnLoad, CVCPolicyType, DatePolicyType } from '../../types';
 import AdyenCheckoutError from '../../../../../../core/Errors/AdyenCheckoutError';
+import type { SFKeyPressObj } from '../../types';
 
 /**
  * Bound to the instance of CSF
@@ -113,8 +114,8 @@ export async function createCardSecuredFields(
             this.state.type = 'unrecognised-single-brand'; // Will let CVC field accept 4 digits in the input
         } else {
             // Assess whether cvc field is required based on the card type & whether the cvc field should even be visible
-            cvcPolicy = (card.cvcPolicy as CVCPolicyType) || CVC_POLICY_REQUIRED;
-            expiryDatePolicy = (card.expiryDatePolicy as DatePolicyType) || DATE_POLICY_REQUIRED;
+            cvcPolicy = card.cvcPolicy || CVC_POLICY_REQUIRED;
+            expiryDatePolicy = card.expiryDatePolicy || DATE_POLICY_REQUIRED;
 
             this.securityCode = card.securityCode;
         }
@@ -302,6 +303,10 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
             })
             .onAutoComplete((pFeedbackObj: SFFeedbackObj): void => {
                 this.processAutoComplete(pFeedbackObj);
+            })
+            .onKeyPressed((pFeedbackObj: SFFeedbackObj): void => {
+                const { numKey, ...rest } = pFeedbackObj;
+                this.callbacks.onKeyPressed(rest as SFKeyPressObj);
             });
 
         // Store reference to securedField in this.state (under fieldType)

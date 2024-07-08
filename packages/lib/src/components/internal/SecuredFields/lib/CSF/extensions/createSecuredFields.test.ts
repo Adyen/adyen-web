@@ -20,7 +20,8 @@ const myCSF = {
     props: { rootNode: null, i18n: global.i18n, shouldDisableIOSArrowKeys: null },
     callbacks: {
         onLoad: jest.fn(() => {}),
-        onTouchstartIOS: jest.fn(() => {})
+        onTouchstartIOS: jest.fn(() => {}),
+        onKeyPressed: jest.fn(() => {})
     },
     createSecuredFields,
     setupSecuredField,
@@ -49,6 +50,7 @@ const makeDiv = encName => {
 };
 
 const dummyObj = { foo: 'bar' };
+const dummyObjWithNumKey = { foo: 'bar', numKey: 1234 };
 
 describe('Testing CSFs setupSecuredField functionality', () => {
     beforeEach(() => {
@@ -66,6 +68,7 @@ describe('Testing CSFs setupSecuredField functionality', () => {
             onEncryptionCallback: null,
             onValidationCallback: null,
             onAutoCompleteCallback: null,
+            onKeyPressedCallback: null,
             onIframeLoaded: cbFn => {
                 MySecuredField.onIframeLoadedCallback = cbFn;
                 return MySecuredField;
@@ -101,6 +104,10 @@ describe('Testing CSFs setupSecuredField functionality', () => {
             onAutoComplete: cbFn => {
                 MySecuredField.onAutoCompleteCallback = cbFn;
                 return MySecuredField;
+            },
+            onKeyPressed: cbFn => {
+                MySecuredField.onKeyPressedCallback = cbFn;
+                return MySecuredField;
             }
         };
         const SecuredFieldMock = jest.fn(() => MySecuredField);
@@ -128,13 +135,13 @@ describe('Testing CSFs setupSecuredField functionality', () => {
     });
 
     test('Calling setupSecuredField to see that an "encryptedCardNumber" SF is created and stored in state', () => {
-        myCSF.setupSecuredField(makeDiv(ENCRYPTED_CARD_NUMBER));
+        void myCSF.setupSecuredField(makeDiv(ENCRYPTED_CARD_NUMBER));
 
         expect(myCSF.state.securedFields.encryptedCardNumber).not.toEqual(null);
     });
 
     test('Calling to see that an "encryptedExpiryYear" SF is created and stored in state and that we register the fact that we have separate date fields', () => {
-        myCSF.setupSecuredField(makeDiv('encryptedExpiryYear'));
+        void myCSF.setupSecuredField(makeDiv('encryptedExpiryYear'));
 
         expect(myCSF.state.hasSeparateDateFields).toEqual(true);
         expect(myCSF.state.securedFields.encryptedExpiryYear).not.toEqual(null);
@@ -167,7 +174,7 @@ describe('Testing CSFs setupSecuredField functionality', () => {
         'Calling setupSecuredField to see that the expected onIframeLoadedCallback is set.' +
             'Running the onIframeLoadedCallback callback sees the iframeCount increases, and because all expected iframes have been loaded, the onLoad callback is called',
         () => {
-            myCSF.setupSecuredField(makeDiv(ENCRYPTED_CARD_NUMBER));
+            void myCSF.setupSecuredField(makeDiv(ENCRYPTED_CARD_NUMBER));
 
             expect(MySecuredField.onIframeLoadedCallback).not.toEqual(null);
             MySecuredField.onIframeLoadedCallback();
@@ -182,7 +189,7 @@ describe('Testing CSFs setupSecuredField functionality', () => {
             'Running the onIframeLoadedCallback callback again sees the iframeCount increases, and because we now exceed the expected number of iframes have been loaded, ' +
             'the destroySecuredFields function is called and we throw an error',
         () => {
-            myCSF.setupSecuredField(makeDiv(ENCRYPTED_CARD_NUMBER));
+            void myCSF.setupSecuredField(makeDiv(ENCRYPTED_CARD_NUMBER));
 
             expect(MySecuredField.onIframeLoadedCallback).not.toEqual(null);
 
@@ -218,7 +225,7 @@ describe('Testing CSFs setupSecuredField functionality', () => {
             myCSF.props.shouldDisableIOSArrowKeys = true;
             myCSF.hasGenuineTouchEvents = false;
 
-            myCSF.setupSecuredField(makeDiv(ENCRYPTED_CARD_NUMBER));
+            void myCSF.setupSecuredField(makeDiv(ENCRYPTED_CARD_NUMBER));
 
             expect(MySecuredField.onTouchstartCallback).not.toEqual(null);
 
@@ -236,7 +243,7 @@ describe('Testing CSFs setupSecuredField functionality', () => {
         () => {
             myCSF.hasGenuineTouchEvents = true;
 
-            myCSF.setupSecuredField(makeDiv(ENCRYPTED_CARD_NUMBER));
+            void myCSF.setupSecuredField(makeDiv(ENCRYPTED_CARD_NUMBER));
 
             expect(MySecuredField.onTouchstartCallback).not.toEqual(null);
 
@@ -254,7 +261,7 @@ describe('Testing CSFs setupSecuredField functionality', () => {
         () => {
             myCSF.hasGenuineTouchEvents = false;
 
-            myCSF.setupSecuredField(makeDiv(ENCRYPTED_EXPIRY_DATE));
+            void myCSF.setupSecuredField(makeDiv(ENCRYPTED_EXPIRY_DATE));
 
             expect(MySecuredField.onTouchstartCallback).not.toEqual(null);
 
@@ -267,7 +274,7 @@ describe('Testing CSFs setupSecuredField functionality', () => {
     );
 
     test('Calling setupSecuredField to see that the remaining, expected callbacks are set. Running them sees that an object is passed through to the relevant callback function', () => {
-        myCSF.setupSecuredField(makeDiv(ENCRYPTED_CARD_NUMBER));
+        void myCSF.setupSecuredField(makeDiv(ENCRYPTED_CARD_NUMBER));
 
         // onFocusCallback;
         expect(MySecuredField.onFocusCallback).not.toEqual(null);
@@ -304,5 +311,11 @@ describe('Testing CSFs setupSecuredField functionality', () => {
 
         MySecuredField.onAutoCompleteCallback(dummyObj);
         expect(myCSF.processAutoComplete).toHaveBeenCalledWith(dummyObj);
+
+        // onKeyPressedCallback
+        expect(MySecuredField.onKeyPressedCallback).not.toEqual(null);
+
+        MySecuredField.onKeyPressedCallback(dummyObjWithNumKey);
+        expect(myCSF.callbacks.onKeyPressed).toHaveBeenCalledWith(dummyObj); // checking that numKey prop gets removed
     });
 });

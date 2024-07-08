@@ -31,7 +31,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         const [storedElementsPromises, elementsPromises, instantPaymentsPromises] = this.props.onCreateElements();
         const orderStatusPromise = order ? getOrderStatus({ clientKey, loadingContext }, order) : null;
 
-        Promise.all([storedElementsPromises, elementsPromises, instantPaymentsPromises, orderStatusPromise]).then(
+        void Promise.all([storedElementsPromises, elementsPromises, instantPaymentsPromises, orderStatusPromise]).then(
             ([storedPaymentElements, elements, instantPaymentElements, orderStatus]) => {
                 this.setState({ instantPaymentElements, elements, storedPaymentElements, orderStatus });
                 this.setStatus('ready');
@@ -82,7 +82,9 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
 
         new Promise((resolve, reject) => this.props.onDisableStoredPaymentMethod(storedPaymentMethod.props.storedPaymentMethodId, resolve, reject))
             .then(() => {
-                this.setState(prevState => ({ elements: prevState.elements.filter(pm => pm._id !== storedPaymentMethod._id) }));
+                this.setState(prevState => ({
+                    storedPaymentElements: prevState.storedPaymentElements.filter(pm => pm._id !== storedPaymentMethod._id)
+                }));
                 this.setState({ isDisabling: false });
             })
             .catch(() => {
@@ -158,6 +160,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                                 orderStatus={this.state.orderStatus}
                                 onOrderCancel={this.onOrderCancel}
                                 onSelect={this.handleOnSelectPaymentMethod}
+                                openPaymentMethod={this.props.openPaymentMethod}
                                 openFirstPaymentMethod={this.props.openFirstPaymentMethod}
                                 openFirstStoredPaymentMethod={this.props.openFirstStoredPaymentMethod}
                                 onDisableStoredPaymentMethod={this.handleDisableStoredPaymentMethod}

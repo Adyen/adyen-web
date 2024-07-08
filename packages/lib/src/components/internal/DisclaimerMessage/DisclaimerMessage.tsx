@@ -18,6 +18,7 @@ function render(message: string, urls: Array<string>) {
         <span className="adyen-checkout-disclaimer__label">
             {interpolateElement(
                 message,
+                // eslint-disable-next-line react/display-name
                 urls.map(url => translation => (
                     <a className="adyen-checkout-link" href={url} target="_blank" rel="noopener noreferrer">
                         {translation}
@@ -27,7 +28,7 @@ function render(message: string, urls: Array<string>) {
         </span>
     );
 }
-/* eslint-disable */
+
 /**
  *  props: {
  *    message: 'By continuing you agree with the %#terms and conditions%#',
@@ -35,7 +36,7 @@ function render(message: string, urls: Array<string>) {
  *  }
  *  String inside the '%#' token pair will be rendered as an anchor element.
  */
-/* eslint-enable */
+
 export default function DisclaimerMessage({ message, urls }: InternalDisclaimerMsgObject) {
     const messageIsStr = typeof message === 'string';
     const validUrls = urls.every(url => typeof url === 'string' && isValidHttpUrl(url));

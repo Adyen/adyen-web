@@ -23,7 +23,8 @@ import { destroySecuredFields } from './utils/destroySecuredFields';
 import postMessageToIframe from './utils/iframes/postMessageToIframe';
 import getIframeContentWin from './utils/iframes/getIframeContentWin';
 import * as logger from '../utilities/logger';
-import { on, selectOne } from '../utilities/dom';
+import { selectOne } from '../utilities/dom';
+import { on } from '../../../../../utils/listenerUtils';
 import { partial } from '../utilities/commonUtils';
 import { hasOwnProperty } from '../../../../../utils/hasOwnProperty';
 import ua from './utils/userAgent';
@@ -93,6 +94,7 @@ class CSF extends AbstractCSF {
         this.createSecuredFields = createSecuredFields;
         this.createNonCardSecuredFields = createNonCardSecuredFields;
         this.createCardSecuredFields = createCardSecuredFields;
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         this.setupSecuredField = setupSecuredField;
 
         this.postMessageToAllIframes = partial(postMessageToAllIframes, thisObj);

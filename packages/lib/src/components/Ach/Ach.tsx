@@ -78,6 +78,7 @@ export class AchElement extends UIElement<AchConfiguration> {
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 {this.props.storedPaymentMethodId ? (
                     <RedirectButton
+                        showPayButton={this.props.showPayButton}
                         name={this.displayName}
                         amount={this.props.amount}
                         payButton={this.payButton}
@@ -89,6 +90,7 @@ export class AchElement extends UIElement<AchConfiguration> {
                 ) : (
                     <AchInput
                         setComponentRef={this.setComponentRef}
+                        handleKeyPress={this.handleKeyPress}
                         {...this.props}
                         onChange={this.setState}
                         onSubmit={this.submit}

@@ -22,12 +22,14 @@ describe('Giftcard', () => {
         loadingContext: 'mock'
     };
 
-    describe('onBalanceCheck', () => {
+    // these test have been changed to trigger on submit instead of balance check
+    describe('onBalanceCheck func in submit', () => {
         test('If onBalanceCheck is not provided, step is skipped ayarnnd calls onSubmit', async () => {
             const onSubmitMock = jest.fn();
             const giftcard = new Giftcard(global.core, { ...baseProps, onSubmit: onSubmitMock });
             giftcard.setState({ isValid: true });
-            giftcard.onBalanceCheck();
+
+            giftcard.submit();
             await flushPromises();
 
             expect(onSubmitMock).toHaveBeenCalled();
@@ -37,26 +39,26 @@ describe('Giftcard', () => {
             const onBalanceCheck = jest.fn();
             const giftcard = new Giftcard(global.core, { ...baseProps, onBalanceCheck });
             giftcard.setState({ isValid: false });
-            giftcard.onBalanceCheck();
+            giftcard.submit();
 
             expect(onBalanceCheck).not.toHaveBeenCalled();
         });
     });
 
     describe('icon getters', () => {
-        test('should default to loading from resources', async () => {
+        test('should default to loading from resources', () => {
             const giftcard = new Giftcard(global.core, { ...baseProps });
 
             expect(giftcard.icon).toBe('MOCK');
         });
 
-        test('should use the prop .icon as 2. priority', async () => {
+        test('should use the prop .icon as 2. priority', () => {
             const giftcard = new Giftcard(global.core, { ...baseProps, icon: 'PROP_ICON_MOCK' });
 
             expect(giftcard.icon).toBe('PROP_ICON_MOCK');
         });
 
-        test('should use brandsConfiguration as 1. priority', async () => {
+        test('should use brandsConfiguration as 1. priority', () => {
             const giftcard = new Giftcard(global.core, {
                 ...baseProps,
                 icon: 'PROP_ICON_MOCK',
@@ -72,13 +74,13 @@ describe('Giftcard', () => {
     });
 
     describe('displayName getters', () => {
-        test('should default to props.name', async () => {
+        test('should default to props.name', () => {
             const giftcard = new Giftcard(global.core, { ...baseProps });
 
             expect(giftcard.displayName).toBe('My Test Gift Card');
         });
 
-        test('should use brandsConfiguration as 1. priority', async () => {
+        test('should use brandsConfiguration as 1. priority', () => {
             const giftcard = new Giftcard(global.core, {
                 ...baseProps,
                 brandsConfiguration: {

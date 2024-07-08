@@ -89,7 +89,7 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
     const handleOnKeyUp = useCallback(
         (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
             if (event.key === 'Enter') {
-                props.onPressEnter();
+                void props.onPressEnter();
             }
         },
         [props.onPressEnter]

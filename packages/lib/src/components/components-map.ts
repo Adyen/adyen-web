@@ -2,6 +2,7 @@
 import AfterPay from './AfterPay';
 import AfterPayB2B from './AfterPay/AfterPayB2B';
 import AmazonPay from './AmazonPay';
+import ANCV from './ANCV';
 import ApplePay from './ApplePay';
 import Atome from './Atome';
 import { BillDeskOnline, BillDeskWallet } from './BillDesk';
@@ -181,6 +182,7 @@ export const ComponentsMap = {
     [TxVariants.klarna]: Klarna,
     [TxVariants.klarna_account]: Klarna,
     [TxVariants.klarna_paynow]: Klarna,
+    [TxVariants.klarna_b2b]: Klarna,
     /** Klarna */
 
     /** QRLoader */
@@ -198,6 +200,7 @@ export const ComponentsMap = {
     /** Await */
     [TxVariants.blik]: Blik,
     [TxVariants.mbway]: MBWay,
+    [TxVariants.ancv]: ANCV,
     [TxVariants.upi]: UPI, // also QR
     [TxVariants.upi_qr]: UPI, // also QR
     [TxVariants.upi_collect]: UPI, // also QR

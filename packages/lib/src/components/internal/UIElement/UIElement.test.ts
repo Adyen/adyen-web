@@ -3,13 +3,10 @@ import { ICore } from '../../../core/types';
 import { any, mock, mockDeep } from 'jest-mock-extended';
 import { AdyenCheckout, ThreeDS2Challenge, ThreeDS2DeviceFingerprint } from '../../../index';
 import { UIElementProps } from './types';
-import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { Resources } from '../../../core/Context/Resources';
+import { PaymentActionsType } from '../../../types/global-types';
 
-// import getTranslations from '../../../core/Services/get-translations';
 jest.mock('../../../core/Services/get-translations');
-// const mockedGetTranslations = getTranslations as jest.Mock;
-// mockedGetTranslations.mockResolvedValue({});
 
 interface MyElementProps extends UIElementProps {
     challengeWindowSize?: string;
@@ -147,7 +144,7 @@ describe('UIElement', () => {
                 paymentMethodType: 'scheme',
                 subtype: 'fingerprint',
                 token: 'eyJ0aHJlZURTTWV0aG9kTm90aWZpY2F0aW9uVVJMIjoiaHR0cHM6XC9cL2NoZWNrb3V0c2hvcHBlci10ZXN0LmFkeWVuLmNvbVwvY2hlY2tvdXRzaG9wcGVyXC90aHJlZURTTWV0aG9kTm90aWZpY2F0aW9uLnNodG1sP29yaWdpbktleT1wdWIudjIuODExNTY1ODcwNTcxMzk0MC5hSFIwY0hNNkx5OXdhSEF0TnpFdGMybHRiMjR1YzJWaGJXeGxjM010WTJobFkydHZkWFF1WTI5dC50VnJIV3B4UktWVTVPMENiNUg5TVFlUnJKdmZRQ1lnbXR6VTY1WFhzZ2NvIiwidGhyZWVEU01ldGhvZFVybCI6Imh0dHBzOlwvXC9wYWwtdGVzdC5hZHllbi5jb21cL3RocmVlZHMyc2ltdWxhdG9yXC9hY3NcL3N0YXJ0TWV0aG9kLnNodG1sIiwidGhyZWVEU1NlcnZlclRyYW5zSUQiOiI5MzI2ZjNiOS00MTc3LTQ4ZTktYmM2Mi1kOTliYzVkZDA2Y2IifQ==',
-                type: 'threeDS2'
+                type: 'threeDS2' as PaymentActionsType
             };
 
             const checkout = await AdyenCheckout({
@@ -175,7 +172,7 @@ describe('UIElement', () => {
                 subtype: 'challenge',
                 token: 'eyJhY3NSZWZlcmVuY2VOdW1iZXIiOiJBRFlFTi1BQ1MtU0lNVUxBVE9SIiwiYWNzVHJhbnNJRCI6Ijg0MzZjYThkLThkN2EtNGFjYy05NmYyLTE0ZjU0MjgyNzczZiIsImFjc1VSTCI6Imh0dHBzOlwvXC9wYWwtdGVzdC5hZHllbi5jb21cL3RocmVlZHMyc2ltdWxhdG9yXC9hY3NcL2NoYWxsZW5nZS5zaHRtbCIsIm1lc3NhZ2VWZXJzaW9uIjoiMi4xLjAiLCJ0aHJlZURTTm90aWZpY2F0aW9uVVJMIjoiaHR0cHM6XC9cL2NoZWNrb3V0c2hvcHBlci10ZXN0LmFkeWVuLmNvbVwvY2hlY2tvdXRzaG9wcGVyXC8zZG5vdGlmLnNodG1sP29yaWdpbktleT1wdWIudjIuODExNTY1ODcwNTcxMzk0MC5hSFIwY0hNNkx5OWphR1ZqYTI5MWRITm9iM0J3WlhJdGRHVnpkQzVoWkhsbGJpNWpiMjAuVGFKalVLN3VrUFdTUzJEX3l2ZDY4TFRLN2dRN2ozRXFOM05nS1JWQW84OCIsInRocmVlRFNTZXJ2ZXJUcmFuc0lEIjoiZTU0NDNjZTYtNTE3Mi00MmM1LThjY2MtYmRjMGE1MmNkZjViIn0=',
                 paymentMethodType: 'scheme',
-                type: 'threeDS2'
+                type: 'threeDS2' as PaymentActionsType
             };
 
             const checkout = await AdyenCheckout({
@@ -195,7 +192,7 @@ describe('UIElement', () => {
             expect((actionComponent as unknown as ThreeDS2Challenge).props.challengeWindowSize).toEqual('02');
         });
 
-        test('should throw Error if merchant passes the whole response object', async () => {
+        test('should throw Error if merchant passes the whole response object', () => {
             const paymentResponse = {
                 action: {
                     paymentData: 'Ab02b4c0!BQABAgCUeRP+3La4...',
@@ -203,7 +200,7 @@ describe('UIElement', () => {
                     subtype: 'challenge',
                     token: 'eyJhY3NSZWZlcmVuY2VOdW1iZXIiOiJBRFlFTi1BQ1MtU0lNVUxBVE9SIiwiYWNzVHJhbnNJRCI6Ijg0MzZjYThkLThkN2EtNGFjYy05NmYyLTE0ZjU0MjgyNzczZiIsImFjc1VSTCI6Imh0dHBzOlwvXC9wYWwtdGVzdC5hZHllbi5jb21cL3RocmVlZHMyc2ltdWxhdG9yXC9hY3NcL2NoYWxsZW5nZS5zaHRtbCIsIm1lc3NhZ2VWZXJzaW9uIjoiMi4xLjAiLCJ0aHJlZURTTm90aWZpY2F0aW9uVVJMIjoiaHR0cHM6XC9cL2NoZWNrb3V0c2hvcHBlci10ZXN0LmFkeWVuLmNvbVwvY2hlY2tvdXRzaG9wcGVyXC8zZG5vdGlmLnNodG1sP29yaWdpbktleT1wdWIudjIuODExNTY1ODcwNTcxMzk0MC5hSFIwY0hNNkx5OWphR1ZqYTI5MWRITm9iM0J3WlhJdGRHVnpkQzVoWkhsbGJpNWpiMjAuVGFKalVLN3VrUFdTUzJEX3l2ZDY4TFRLN2dRN2ozRXFOM05nS1JWQW84OCIsInRocmVlRFNTZXJ2ZXJUcmFuc0lEIjoiZTU0NDNjZTYtNTE3Mi00MmM1LThjY2MtYmRjMGE1MmNkZjViIn0=',
                     paymentMethodType: 'scheme',
-                    type: 'threeDS2'
+                    type: 'threeDS2' as PaymentActionsType
                 },
                 resultCode: 'IdentifyShopper'
             };
@@ -216,7 +213,7 @@ describe('UIElement', () => {
             }).toThrow('have you passed in the whole response object by mistake?');
         });
 
-        test('should throw Error if merchant passes an invalid action', async () => {
+        test('should throw Error if merchant passes an invalid action', () => {
             const action = {
                 paymentMethodType: 'scheme'
             };
@@ -504,7 +501,7 @@ describe('UIElement', () => {
             expect(onOrderUpdatedMock).toHaveBeenCalledWith({ order });
         });
 
-        test('should throw an error if onPaymentMethodsRequest is not implemented, although the flow will continue', async () => {
+        test('should NOT throw an error if onPaymentMethodsRequest is not implemented, and the flow should continue', async () => {
             const order = {
                 amount: {
                     currency: 'EUR',
@@ -543,8 +540,7 @@ describe('UIElement', () => {
 
             await new Promise(process.nextTick);
 
-            expect(onErrorMock).toHaveBeenCalledTimes(1);
-            expect(onErrorMock.mock.calls[0][0]).toBeInstanceOf(AdyenCheckoutError);
+            expect(onErrorMock).toHaveBeenCalledTimes(0);
 
             expect(core.update).toHaveBeenCalledTimes(1);
             expect(core.update).toHaveBeenCalledWith({

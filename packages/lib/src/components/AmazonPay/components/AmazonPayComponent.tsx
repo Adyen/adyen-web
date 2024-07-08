@@ -29,7 +29,7 @@ export default function AmazonPayComponent(props: AmazonPayComponentProps) {
         if (window.amazon) {
             handleLoad();
         } else {
-            script.load().then(handleLoad);
+            void script.load().then(handleLoad);
         }
 
         return () => {

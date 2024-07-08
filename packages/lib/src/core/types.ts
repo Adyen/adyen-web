@@ -13,7 +13,6 @@ import type {
     PaymentMethodsRequestData,
     SessionsResponse,
     ResultCode,
-    AdditionalDetailsStateData,
     PaymentData,
     AddressData
 } from '../types/global-types';
@@ -29,7 +28,7 @@ export interface ICore {
     register(...items: NewableComponent[]): void;
     update(options: CoreConfiguration): Promise<ICore>;
     remove(component): ICore;
-    submitDetails(details: AdditionalDetailsStateData['data']): void;
+    submitDetails(details: AdditionalDetailsData['data']): void;
     getCorePropsForComponent(): any;
     getComponent(txVariant: string): NewableComponent | undefined;
     createFromAction(action: PaymentAction, options: any): UIElement;
@@ -39,11 +38,60 @@ export interface ICore {
     session?: Session;
 }
 
-export type AdyenEnvironment = 'test' | 'live' | 'live-us' | 'live-au' | 'live-apse' | 'live-in' | string;
-
 export type PaymentCompletedData = SessionsResponse | { resultCode: ResultCode; donationToken?: string };
 
 export type PaymentFailedData = SessionsResponse | { resultCode: ResultCode };
+
+export type SubmitData = {
+    data: PaymentData;
+    isValid: boolean;
+};
+
+export type SubmitActions = {
+    resolve: (response: CheckoutAdvancedFlowResponse) => void;
+    reject: (error?: Pick<CheckoutAdvancedFlowResponse, 'error'>) => void;
+};
+
+export type AdditionalDetailsData = {
+    data: {
+        details: {
+            redirectResult?: string;
+            threeDSResult?: string;
+            [key: string]: any;
+        };
+        paymentData?: string;
+        sessionData?: string;
+    };
+};
+
+export type AdditionalDetailsActions = {
+    resolve: (response: CheckoutAdvancedFlowResponse) => void;
+    reject: () => void;
+};
+
+export type BeforeSubmitActions = {
+    resolve: (
+        data: PaymentData & { billingAddress?: AddressData; deliveryAddress?: AddressData; shopperEmail?: string; shopperName?: string }
+    ) => void;
+    reject: () => void;
+};
+
+export type OnChangeData = {
+    data: PaymentData;
+    isValid: boolean;
+    valid?: {
+        [fieldKey: string]: boolean;
+    };
+    errors?: {
+        [fieldKey: string]: {
+            isValid: boolean;
+            errorMessage: string;
+            errorI18n: string;
+            error: string;
+            rootNode: HTMLElement;
+        };
+    };
+};
 
 export interface CoreConfiguration {
     /**
@@ -51,14 +99,14 @@ export interface CoreConfiguration {
      */
     session?: {
         id: string;
-        sessionData: string;
+        sessionData?: string;
         shopperEmail?: string;
         telephoneNumber?: string;
     };
     /**
      * Use 'test'. When you're ready to accept live payments, change the value to one of our {@link https://docs.adyen.com/checkout/drop-in-web#testing-your-integration | live environments}.
      */
-    environment?: AdyenEnvironment;
+    environment?: 'test' | 'live' | 'live-us' | 'live-au' | 'live-apse' | 'live-in';
 
     /**
      * Show or hides a Pay Button for each payment method
@@ -161,16 +209,7 @@ export interface CoreConfiguration {
      * @param component
      * @param actions
      */
-    beforeSubmit?(
-        state: PaymentData,
-        component: UIElement,
-        actions: {
-            resolve: (
-                data: PaymentData & { billingAddress?: AddressData; deliveryAddress?: AddressData; shopperEmail?: string; shopperName?: string }
-            ) => void;
-            reject: () => void;
-        }
-    ): void;
+    beforeSubmit?(state: PaymentData, component: UIElement, actions: BeforeSubmitActions): void;
 
     /**
      * Called when the payment succeeds.
@@ -203,17 +242,7 @@ export interface CoreConfiguration {
      * @param component
      * @param actions
      */
-    onSubmit?(
-        state: {
-            data: PaymentData;
-            isValid: boolean;
-        },
-        component: UIElement,
-        actions: {
-            resolve: (response: CheckoutAdvancedFlowResponse) => void;
-            reject: (error?: Pick<CheckoutAdvancedFlowResponse, 'error'>) => void;
-        }
-    ): void;
+    onSubmit?(state: SubmitData, component: UIElement, actions: SubmitActions): void;
 
     /**
      * Callback used in the Advanced flow to perform the /payments/details API call.
@@ -225,14 +254,7 @@ export interface CoreConfiguration {
      * @param component - Component submitting details. It is undefined when using checkout.submitDetails()
      * @param actions
      */
-    onAdditionalDetails?(
-        state: AdditionalDetailsStateData,
-        component: UIElement,
-        actions: {
-            resolve: (response: CheckoutAdvancedFlowResponse) => void;
-            reject: () => void;
-        }
-    ): void;
+    onAdditionalDetails?(state: AdditionalDetailsData, component: UIElement, actions: AdditionalDetailsActions): void;
 
     /**
      * Callback called when an action (for example a QR code or 3D Secure 2 authentication screen) is shown to the shopper.
@@ -241,25 +263,7 @@ export interface CoreConfiguration {
      */
     onActionHandled?(actionHandled: ActionHandledReturnObject): void;
 
-    onChange?(
-        state: {
-            data: PaymentData;
-            isValid: boolean;
-            valid?: {
-                [fieldKey: string]: boolean;
-            };
-            errors?: {
-                [fieldKey: string]: {
-                    isValid: boolean;
-                    errorMessage: string;
-                    errorI18n: string;
-                    error: string;
-                    rootNode: HTMLElement;
-                };
-            };
-        },
-        component: UIElement
-    ): void;
+    onChange?(state: OnChangeData, component: UIElement): void;
 
     /**
      * Callback called in two different scenarios:
@@ -274,6 +278,12 @@ export interface CoreConfiguration {
     onBalanceCheck?: onBalanceCheckCallbackType;
 
     onOrderRequest?: onOrderRequestCallbackType;
+
+    /**
+     * Called when a Component detects, or is told by a SecuredField, that the Enter key has been pressed.
+     * - merchant set config option
+     */
+    onEnterKeyPressed?(activeElement: Element, component: UIElement): void;
 
     /**
      * Callback called when it is required to fetch/update the payment methods list.

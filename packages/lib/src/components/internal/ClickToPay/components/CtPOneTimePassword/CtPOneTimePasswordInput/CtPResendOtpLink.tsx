@@ -7,7 +7,6 @@ import Icon from '../../../../Icon';
 import { isSrciError } from '../../../services/utils';
 import { PREFIX } from '../../../../Icon/constants';
 
-
 const CONFIRMATION_SHOWING_TIME = 2000;
 
 interface CtPResendOtpLinkProps {
@@ -84,6 +83,7 @@ const CtPResendOtpLink = ({ onError, onResendCode, disabled }: CtPResendOtpLinkP
     }
 
     return (
+        // eslint-disable-next-line jsx-a11y/click-events-have-key-events
         <div
             role="link"
             tabIndex={0}

@@ -13,7 +13,7 @@ export interface PaymentAction {
     /**
      * General type of action that needs to be taken by the client
      */
-    type: PaymentActionsType | string;
+    type: PaymentActionsType;
 
     /**
      * Refinement of type of action that needs to be taken by the client (currently only applies to the new 'threeDS2' type)
@@ -356,18 +356,6 @@ export interface ActionHandledReturnObject {
     componentType: string;
     actionDescription: ActionDescriptionType;
 }
-
-export type AdditionalDetailsStateData = {
-    data: {
-        details: {
-            redirectResult?: string;
-            threeDSResult?: string;
-            [key: string]: any;
-        };
-        paymentData?: string;
-        sessionData?: string;
-    };
-};
 
 export interface AnalyticsModule {
     setUp: (a: AnalyticsInitialEvent) => Promise<any>;

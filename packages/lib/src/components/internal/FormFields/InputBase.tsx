@@ -25,11 +25,12 @@ export interface InputBaseProps extends h.JSX.HTMLAttributes {
     onFocusHandler?: h.JSX.GenericEventHandler<HTMLInputElement>;
     maxlength?: number | null;
     addContextualElement?: boolean;
+    type?: string;
 }
 
 export default function InputBase({ setRef, ...props }: InputBaseProps) {
     const { autoCorrect, classNameModifiers, isInvalid, isValid, readonly = null, spellCheck, type, uniqueId, disabled } = props;
-    const className = props.className as string;
+    const className = props.className;
 
     /**
      * To avoid confusion with misplaced/misdirected onChange handlers - InputBase only accepts onInput, onBlur & onFocus handlers.

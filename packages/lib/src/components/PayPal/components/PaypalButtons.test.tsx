@@ -30,7 +30,7 @@ describe('PaypalButtons', () => {
         jest.clearAllMocks();
     });
 
-    test('should call paypalRef.Buttons for each funding source', async () => {
+    test('should call paypalRef.Buttons for each funding source', () => {
         jest.clearAllMocks();
         const buttonPropsMock = mock<PayPalButtonsProps>({
             paypalRef: paypalRefMock
@@ -39,7 +39,7 @@ describe('PaypalButtons', () => {
         expect(paypalRefMock.Buttons).toHaveBeenCalledTimes(4);
     });
 
-    test('should call paypalRef.Buttons().render for each funding source', async () => {
+    test('should call paypalRef.Buttons().render for each funding source', () => {
         jest.clearAllMocks();
         const buttonPropsMock = mock<PayPalButtonsProps>({
             paypalRef: paypalRefMock

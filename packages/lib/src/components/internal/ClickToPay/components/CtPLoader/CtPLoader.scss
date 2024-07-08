@@ -1,3 +1,5 @@
+@import 'styles/variable-generator';
+
 @keyframes card-bounce {
     0% {
         -webkit-translate: 0 -60%;
@@ -165,8 +167,8 @@
 }
 
 .adyen-checkout-ctp__loading-subtitle {
-    font-size: var(--adyen-checkout-spacer-070);
-    line-height: var(--adyen-checkout-text-caption-line-height);
+    font-size: token(spacer-070);
+    line-height: token(text-caption-line-height);
     max-width: 280px;
     text-align: center;
     margin: 0 auto 58px;

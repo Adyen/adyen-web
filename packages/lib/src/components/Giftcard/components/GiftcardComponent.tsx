@@ -23,6 +23,7 @@ interface GiftcardComponentProps {
     expiryDateRequired?: boolean;
     fieldsLayoutComponent: FunctionComponent<GiftcardFieldsProps>;
     placeholders?: Placeholders;
+    handleKeyPress?: (o: KeyboardEvent) => void;
 }
 
 class Giftcard extends Component<GiftcardComponentProps> {
@@ -129,7 +130,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
                 {this.props.showPayButton &&
                     this.props.payButton({
                         status: this.state.status,
-                        onClick: this.props.onBalanceCheck,
+                        onClick: this.props.onSubmit,
                         label: i18n.get('applyGiftcard')
                     })}
             </div>

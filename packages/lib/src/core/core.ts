@@ -20,15 +20,21 @@ import { defaultProps } from './core.defaultProps';
 import { formatCustomTranslations, formatLocale } from '../language/utils';
 import { resolveEnvironments } from './Environment';
 
-import type { AdditionalDetailsStateData, PaymentAction, PaymentResponseData } from '../types/global-types';
-import type { CoreConfiguration, ICore } from './types';
+import type { AnalyticsModule, PaymentAction, PaymentResponseData } from '../types/global-types';
+import type { CoreConfiguration, ICore, AdditionalDetailsData } from './types';
 import type { Translations } from '../language/types';
 import type { UIElementProps } from '../components/internal/UIElement/types';
 
 class Core implements ICore {
     public session?: Session;
     public paymentMethodsResponse: PaymentMethods;
-    public modules: any;
+    public modules: Readonly<{
+        risk: RiskModule;
+        analytics: AnalyticsModule;
+        resources: Resources;
+        i18n: Language;
+        srPanel: SRPanel;
+    }>;
     public options: CoreConfiguration;
 
     public analyticsContext: string;
@@ -84,11 +90,17 @@ class Core implements ICore {
 
         this.session = this.options.session && new Session(this.options.session, this.options.clientKey, this.loadingContext);
 
-        const clientKeyType = this.options.clientKey?.substr(0, 4);
+        const clientKeyType = this.options.clientKey?.substring(0, 4);
         if ((clientKeyType === 'test' || clientKeyType === 'live') && !this.loadingContext.includes(clientKeyType)) {
             throw new AdyenCheckoutError(
                 'IMPLEMENTATION_ERROR',
                 `Error: you are using a ${clientKeyType} clientKey against the ${this.options._environmentUrls?.api || this.options.environment} environment`
+            );
+        }
+        if (clientKeyType === 'pub.') {
+            throw new AdyenCheckoutError(
+                'IMPLEMENTATION_ERROR',
+                `Error: the value you are passing as your "clientKey" looks like an originKey (${this.options.clientKey?.substring(0, 12)}..). To generate a clientKey, see the documentation (https://docs.adyen.com/development-resources/client-side-authentication/migrate-from-origin-key-to-client-key/) for more details.`
             );
         }
 
@@ -167,7 +179,7 @@ class Core implements ICore {
      * @see {https://docs.adyen.com/online-payments/build-your-integration/?platform=Web&integration=Components&version=5.55.1#handle-the-redirect}
      * @param details - Details object containing the redirectResult
      */
-    public submitDetails(details: AdditionalDetailsStateData['data']): void {
+    public submitDetails(details: AdditionalDetailsData['data']): void {
         let promise = null;
 
         if (this.options.onAdditionalDetails) {

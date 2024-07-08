@@ -1,23 +1,26 @@
-@use "../../../../style/index";
+@import 'styles/variable-generator';
 
-$color-alert: #e22d2d;
+$color-alert: token(color-background-critical-strong,false);
 
 .adyen-checkout__payment-method__disable-confirmation {
-    background: $color-alert;
-    font-size: var(--adyen-checkout-font-size-small);
-    color: var(--adyen-checkout-color-white);
+    background: token(color-background-critical-strong);
+    font-size: token(text-body-font-size);
+    color: token(color-label-on-color);
     border-right: 1px solid darken($color-alert, 2%);
     border-left: 1px solid darken($color-alert, 2%);
     overflow: hidden;
     opacity: 0;
     margin: 0 -17px;
     max-height: 0;
-    transition: opacity 0.15s ease-out, max-height 0.15s linear, margin-bottom 0.1s linear;
+    transition:
+        opacity 0.15s ease-out,
+        max-height 0.15s linear,
+        margin-bottom 0.1s linear;
 
     &.adyen-checkout__payment-method__disable-confirmation--open {
         max-height: 62px;
         opacity: 1;
-        margin-bottom: var(--adyen-checkout-spacer-070);
+        margin-bottom: token(spacer-070);
     }
 }
 
@@ -25,7 +28,7 @@ $color-alert: #e22d2d;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--adyen-checkout-spacer-040) var(--adyen-checkout-spacer-070);
+    padding: token(spacer-040) token(spacer-070);
 }
 
 .adyen-checkout__payment-method__disable-confirmation__buttons {
@@ -33,16 +36,15 @@ $color-alert: #e22d2d;
 }
 
 .adyen-checkout__payment-method__disable-confirmation__button {
-    background: var(--adyen-checkout-color-label-critical);
-    border: var(--adyen-checkout-border-width-s) solid transparent;
-    border-radius: var(--adyen-checkout-border-radius-m);
-    color: var(--adyen-checkout-color-white);
+    background: token(color-background-critical-strong);
+    border: token(border-width-s) solid transparent;
+    border-radius: token(border-radius-m);
+    color: token(color-label-on-color);
     cursor: pointer;
     display: block;
     height: auto;
-    line-height: 14px;
-    margin: 0 0 0 var(--adyen-checkout-spacer-040);
-    padding: var(--adyen-checkout-spacer-040);
+    margin: 0 0 0 token(spacer-040);
+    padding: token(spacer-040);
     width: auto;
 
     &:hover,
@@ -60,7 +62,7 @@ $color-alert: #e22d2d;
 
 .adyen-checkout__payment-method__disable-confirmation__button--remove,
 .adyen-checkout__payment-method__disable-confirmation__button--remove:disabled {
-    border-color: var(--adyen-checkout-color-white);
+    border-color: token(color-label-on-color);
 }
 
 .adyen-checkout__payment-method__disable-confirmation__button--cancel,

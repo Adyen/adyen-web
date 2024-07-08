@@ -74,7 +74,6 @@ export async function handleResponse(response, component, checkout?, paymentData
     return handleFinalState(response, component);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function handleChange(state: any, _component: UIElement) {
     console.groupCollapsed(`onChange - ${state.data.paymentMethod.type}`);
     console.log('isValid', state.isValid);

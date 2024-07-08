@@ -1,8 +1,8 @@
+import UIElement from '../../internal/UIElement';
 import createElements from './createElements';
 import type { PaymentMethod } from '../../../types/global-types';
 import type { ICore } from '../../../core/types';
 import type { PaymentMethodsConfiguration } from '../types';
-import type { IUIElement } from '../../internal/UIElement/types';
 
 /**
  *  Returns a filtered (available) list of InstantPaymentMethods Elements
@@ -17,7 +17,7 @@ const createInstantPaymentElements = (
     paymentMethodsConfiguration: PaymentMethodsConfiguration,
     commonProps,
     core: ICore
-): Promise<IUIElement[]> => {
+): Promise<UIElement[]> => {
     if (instantPaymentMethods.length) {
         return createElements(
             instantPaymentMethods,

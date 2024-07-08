@@ -30,7 +30,7 @@ export function isArray(prop) {
  */
 export function generateRandomNumber() {
     if (!window.crypto) {
-        // eslint-disable-next-line
+         
         return (Math.random() * 0x100000000) | 0;
     }
 

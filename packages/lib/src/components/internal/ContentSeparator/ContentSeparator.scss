@@ -1,26 +1,28 @@
+@import 'styles/variable-generator';
+
 .adyen-checkout__content-separator {
-    margin-top: var(--adyen-checkout-spacer-070);
-    margin-bottom: var(--adyen-checkout-spacer-070);
+    margin-top: token(spacer-070);
+    margin-bottom: token(spacer-070);
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--adyen-checkout-color-label-secondary);
+    color: token(color-label-secondary);
     white-space: nowrap;
     font-size: 13px;
-    line-height: var(--adyen-checkout-text-caption-line-height);
+    line-height: token(text-caption-line-height);
 
     &::after,
     &::before {
         content: '';
         flex: 1;
-        border-bottom: 1px solid var(--adyen-checkout-color-outline-tertiary);
+        border-bottom: 1px solid token(color-outline-tertiary);
     }
 
     &::after {
-        margin-left: var(--adyen-checkout-spacer-080);
+        margin-left: token(spacer-080);
     }
 
     &::before {
-        margin-right: var(--adyen-checkout-spacer-080);
+        margin-right: token(spacer-080);
     }
 }
