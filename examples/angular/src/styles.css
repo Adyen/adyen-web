@@ -1,0 +1,31 @@
+@import "@adyen/adyen-web/styles/adyen.css";
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  padding: 20px;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background-color: #ecfcec;
+  font-family: system-ui;
+}
+
+#dropin {
+  max-width: 800px;
+  margin: auto;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+#redirect-result-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+  gap: 20px;
+}
