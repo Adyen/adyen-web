@@ -1,7 +1,16 @@
 import { Component, ElementRef, ViewChild, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
-import { AdyenCheckout, CoreConfiguration, Dropin, Card } from '@adyen/adyen-web';
+import {
+    AdyenCheckout,
+    CoreConfiguration,
+    Dropin,
+    Card,
+    PaymentCompletedData,
+    UIElement,
+    AdyenCheckoutError,
+    PaymentFailedData
+} from '@adyen/adyen-web/auto';
 
 import { environment } from '../../environments/environment';
 import { ApiService } from '../../services/api.service';
@@ -9,11 +18,11 @@ import { parseAmount } from '../../utils/amount-utils';
 import { DEFAULT_AMOUNT, DEFAULT_COUNTRY, DEFAULT_LOCALE } from '../../utils/constants';
 
 @Component({
-    selector: 'checkout',
+    selector: 'adyen-sessions',
     standalone: true,
-    templateUrl: './checkout.component.html'
+    templateUrl: './sessions.component.html'
 })
-export class Checkout implements OnInit {
+export class SessionsFlow implements OnInit {
     @ViewChild('hook', { static: true })
     hook: ElementRef;
 
@@ -50,7 +59,17 @@ export class Checkout implements OnInit {
                 countryCode,
                 locale,
                 environment: 'test',
-                clientKey: environment.clientKey
+                clientKey: environment.clientKey,
+
+                onError(error: AdyenCheckoutError) {
+                    console.error('Something went wrong', error);
+                },
+                onPaymentCompleted(data: PaymentCompletedData, element: UIElement) {
+                    console.log('onPaymentCompleted', data, element);
+                },
+                onPaymentFailed(data: PaymentFailedData, element: UIElement) {
+                    console.log('onPaymentFailed', data, element);
+                }
             };
 
             const checkout = await AdyenCheckout(options);

@@ -31,4 +31,6 @@ export class ApiService {
 
         return this.http.post('/api/sessions', payload, httpOptions);
     }
+
+    fetchPaymentMethods(countryCode: string, shopperLocale: string, amount: { value: number; currency: string }) {}
 }

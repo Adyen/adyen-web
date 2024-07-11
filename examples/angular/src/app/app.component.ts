@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
-import { Checkout } from '../components/checkout/checkout.component';
+import { SessionsFlow } from '../components/sessions-flow/sessions.component';
 
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [Checkout],
+    imports: [SessionsFlow, RouterOutlet],
     templateUrl: './app.component.html',
     styleUrl: './app.component.css'
 })
