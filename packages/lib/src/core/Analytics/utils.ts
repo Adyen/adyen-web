@@ -49,7 +49,7 @@ export const createAnalyticsObject = (aObj: CreateAnalyticsObject): AnalyticsObj
                 validationErrorCode: mapErrorCodesForAnalytics(aObj.validationErrorCode, aObj.target),
                 validationErrorMessage: aObj.validationErrorMessage
             }),
-        // ...(aObj.configData && { configData: aObj.configData }),
+        ...(aObj.configData && { configData: aObj.configData }),
         /** All */
         ...(aObj.metadata && { metadata: aObj.metadata })
     };
@@ -95,9 +95,9 @@ export const getCardConfigData = (cardProps: CardElementProps): CardConfigData =
         hideCVC = CardDefaultProps.hideCVC,
         holderNameRequired = CardDefaultProps.holderNameRequired,
         installmentOptions,
-        keypadFix = CardDefaultProps.keypadFix,
-        legacyInputMode = CardDefaultProps.legacyInputMode,
-        maskSecurityCode = CardDefaultProps.maskSecurityCode,
+        // keypadFix = CardDefaultProps.keypadFix,
+        // legacyInputMode = CardDefaultProps.legacyInputMode,
+        // maskSecurityCode = CardDefaultProps.maskSecurityCode,
         minimumExpiryDate = CardDefaultProps.minimumExpiryDate,
         name = 'none',
         placeholders,
@@ -106,17 +106,23 @@ export const getCardConfigData = (cardProps: CardElementProps): CardConfigData =
         showBrandsUnderCardNumber = CardDefaultProps.showBrandsUnderCardNumber,
         showInstallmentAmounts = CardDefaultProps.showInstallmentAmounts,
         showPayButton = false, // hard coded default
-        styles,
-        onAllValid = false,
-        onBinLookup = false,
-        onBinValue = false,
-        onBlur = false,
-        onBrand = false,
-        onConfigSuccess = false,
-        onFieldValid = false,
-        onFocus = false,
-        onLoad = false
+        styles
+        // TODO - commented out until endpoint can accept more entries in the configData object (current limit: 32)
+        // onAllValid = false,
+        // onBinLookup = false,
+        // onBinValue = false,
+        // onBlur = false,
+        // onBrand = false,
+        // onConfigSuccess = false,
+        // onFieldValid = false,
+        // onFocus = false,
+        // onLoad = false
     } = cardProps;
+
+    const srPanelEnabled = cardProps.modules?.srPanel?.enabled;
+    const srPanelMoveFocus = cardProps.modules?.srPanel?.moveFocus;
+
+    const riskEnabled = cardProps.modules?.risk?.enabled;
 
     const billingAddressModeValue = cardProps.onAddressLookup ? 'lookup' : billingAddressMode;
 
@@ -125,13 +131,20 @@ export const getCardConfigData = (cardProps: CardElementProps): CardConfigData =
         showKCPType = countryCode?.toLowerCase() === 'kr' ? 'atStart' : 'auto';
     }
 
+    // Probably just for development - in real life we wouldn't expect the number of supported brands to push the endpoint limit on 128 chars
+    let brandsStr = JSON.stringify(brands);
+    if (brandsStr.length > 128) {
+        brandsStr = brandsStr.substring(0, 124) + '...]';
+    }
+
+    // @ts-ignore commenting out props until endpoint is ready
     const configData: CardConfigData = {
         autoFocus,
         billingAddressAllowedCountries: JSON.stringify(billingAddressAllowedCountries),
         billingAddressMode: billingAddressModeValue,
         billingAddressRequired,
         billingAddressRequiredFields: JSON.stringify(billingAddressRequiredFields),
-        brands: JSON.stringify(brands),
+        brands: brandsStr,
         challengeWindowSize,
         disableIOSArrowKeys,
         doBinLookup,
@@ -147,28 +160,33 @@ export const getCardConfigData = (cardProps: CardElementProps): CardConfigData =
         hasStylesConfigured: !!styles,
         hideCVC,
         holderNameRequired,
-        keypadFix,
-        legacyInputMode,
-        maskSecurityCode,
+        // TODO - commented out until endpoint can accept more entries in the configData object (current limit: 32)
+        // keypadFix,
+        // legacyInputMode,
+        // maskSecurityCode,
         minimumExpiryDate: !!minimumExpiryDate, // Potentially, in the future, we can send the actual string value
         name,
         positionHolderNameOnTop,
+        riskEnabled,
         showBrandIcon,
         showBrandsUnderCardNumber,
         showInstallmentAmounts: !!showInstallmentAmounts,
         showKCPType,
         showPayButton,
-        socialSecurityNumberMode: configuration.socialSecurityNumberMode,
-        // callbacks
-        onAllValid: !!onAllValid,
-        onBinLookup: !!onBinLookup,
-        onBinValue: !!onBinValue,
-        onBlur: !!onBlur,
-        onBrand: !!onBrand,
-        onConfigSuccess: !!onConfigSuccess,
-        onFieldValid: !!onFieldValid,
-        onFocus: !!onFocus,
-        onLoad: !!onLoad
+        // TODO - commented out until endpoint can accept more entries in the configData object (current limit: 32)
+        // socialSecurityNumberMode: configuration.socialSecurityNumberMode
+        srPanelEnabled,
+        srPanelMoveFocus
+        /** callbacks */
+        // onAllValid: !!onAllValid,
+        // onBinLookup: !!onBinLookup,
+        // onBinValue: !!onBinValue,
+        // onBlur: !!onBlur,
+        // onBrand: !!onBrand,
+        // onConfigSuccess: !!onConfigSuccess,
+        // onFieldValid: !!onFieldValid,
+        // onFocus: !!onFocus,
+        // onLoad: !!onLoad
     };
 
     return configData;

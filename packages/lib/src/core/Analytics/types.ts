@@ -153,12 +153,15 @@ export type CardConfigData = {
     minimumExpiryDate: boolean;
     name: string;
     positionHolderNameOnTop: boolean;
+    riskEnabled: boolean;
     showBrandIcon: boolean;
     showBrandsUnderCardNumber: boolean; // (v5 only)
     showInstallmentAmounts: boolean;
     showKCPType: 'none' | 'auto' | 'atStart';
     showPayButton: boolean;
     socialSecurityNumberMode: SocialSecurityMode;
+    srPanelEnabled: boolean;
+    srPanelMoveFocus: boolean;
     // callbacks
     onAllValid: boolean;
     onBinLookup: boolean;
