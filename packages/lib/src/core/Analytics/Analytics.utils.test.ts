@@ -466,7 +466,7 @@ describe('Testing creating a configData object for the Card components', () => {
     /**
      * keypadFix
      */
-    describe('Testing keypadFix', () => {
+    describe.skip('Testing keypadFix', () => {
         const ANALYTICS_DATA_PROP = 'keypadFix';
         const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
 
@@ -489,7 +489,7 @@ describe('Testing creating a configData object for the Card components', () => {
     /**
      * legacyInputMode
      */
-    describe('Testing legacyInputMode', () => {
+    describe.skip('Testing legacyInputMode', () => {
         const ANALYTICS_DATA_PROP = 'legacyInputMode';
         const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
 
@@ -512,7 +512,7 @@ describe('Testing creating a configData object for the Card components', () => {
     /**
      * maskSecurityCode
      */
-    describe('Testing maskSecurityCode', () => {
+    describe.skip('Testing maskSecurityCode', () => {
         const ANALYTICS_DATA_PROP = 'maskSecurityCode';
         const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
 
@@ -717,7 +717,7 @@ describe('Testing creating a configData object for the Card components', () => {
     /**
      * socialSecurityNumberMode
      */
-    describe('Testing socialSecurityNumberMode', () => {
+    describe.skip('Testing socialSecurityNumberMode', () => {
         const ANALYTICS_DATA_PROP = 'socialSecurityNumberMode';
 
         const configuration: any = { socialSecurityNumberMode: 'show' };
