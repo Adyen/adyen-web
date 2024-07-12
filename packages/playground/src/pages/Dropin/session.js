@@ -34,8 +34,9 @@ export async function initSession() {
         //     console.log('onChange', state);
         // },
         paymentMethodsConfiguration: {
-            paywithgoogle: {
-                buttonType: 'plain'
+            googlepay: {
+                buttonType: 'plain',
+                buttonRadius: 20
             },
             card: {
                 hasHolderName: true,

@@ -197,8 +197,10 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         shippingAddressParameters: {}, // https://developers.google.com/pay/api/web/reference/object#ShippingAddressParameters
 
         // Button config (optional)
+        buttonSizeMode: 'fill',
         buttonType: 'long', // https://developers.google.com/pay/api/web/reference/object#ButtonOptions
-        buttonColor: 'default' // https://developers.google.com/pay/api/web/reference/object#ButtonOptions
+        buttonColor: 'default', // https://developers.google.com/pay/api/web/reference/object#ButtonOptions
+        buttonRadius: 20
     });
 
     // First, check availability. If environment is TEST, Google Pay will always be considered available.
