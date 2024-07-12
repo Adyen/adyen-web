@@ -64,6 +64,7 @@ import Trustly from './Trustly';
 import PayMe from './PayMe';
 import OnlineBankingFI from './OnlineBankingFI';
 import Riverty from './Riverty';
+import Monizze from './Monizze';
 
 /**
  * Maps each component with a Component element.
@@ -231,6 +232,10 @@ const componentsMap = {
     mealVoucher_FR_natixis: MealVoucherFR,
     mealVoucher_FR_sodexo: MealVoucherFR,
     mealVoucher_FR_groupeup: MealVoucherFR,
+
+    /** Giftcard-ish */
+    monizze_mealvoucher: Monizze,
+
     /** Giftcard */
 
     default: null

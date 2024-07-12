@@ -56,7 +56,9 @@ export const getOriginKey = (originKeyOrigin = document.location.origin) =>
     httpPost('originKeys', { originDomains: [originKeyOrigin] }).then(response => response.originKeys[originKeyOrigin]);
 
 export const checkBalance = data => {
-    return httpPost('paymentMethods/balance', data)
+    const paymentRequest = { amount: paymentsConfig.amount, ...data };
+
+    return httpPost('paymentMethods/balance', paymentRequest)
         .then(response => {
             if (response.error) throw 'Balance call failed';
             return response;

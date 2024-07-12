@@ -20,9 +20,9 @@ import '../../style.scss';
     });
 
     window.giftcard = checkout
-        .create('giftcard', {
-            type: 'giftcard',
-            brand: 'valuelink',
+        .create('monizze_mealvoucher', {
+            type: 'monizze_mealvoucher',
+            //brand: 'monizze_mealvoucher',
             onBalanceCheck: async (resolve, reject, data) => {
                 resolve(await checkBalance(data));
             },
