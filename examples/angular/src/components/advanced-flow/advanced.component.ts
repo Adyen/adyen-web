@@ -1,10 +1,21 @@
 import { Component, ElementRef, ViewChild, OnInit, Inject, PLATFORM_ID } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
-import { AdyenCheckout, CoreConfiguration, Dropin, Card } from '@adyen/adyen-web/auto';
+import {
+    AdyenCheckout,
+    CoreConfiguration,
+    Dropin,
+    Card,
+    AdyenCheckoutError,
+    PaymentCompletedData,
+    UIElement,
+    PaymentFailedData,
+    AdditionalDetailsData,
+    AdditionalDetailsActions,
+    SubmitActions,
+    SubmitData
+} from '@adyen/adyen-web/auto';
 
 import { environment } from '../../environments/environment';
-import { ApiService } from '../../services/api.service';
 import { parseAmount } from '../../utils/amount-utils';
 import { DEFAULT_AMOUNT, DEFAULT_COUNTRY, DEFAULT_LOCALE } from '../../utils/constants';
 import { AdvancedFlowApiService } from '../../services/AdvancedFlowApi.service';
@@ -22,7 +33,6 @@ export class AdvancedFlow implements OnInit {
 
     constructor(
         private apiService: AdvancedFlowApiService,
-        private route: ActivatedRoute,
         @Inject(PLATFORM_ID) private platformId: Object
     ) {
         this.hook = new ElementRef('');
@@ -43,22 +53,70 @@ export class AdvancedFlow implements OnInit {
         const amount = parseAmount(urlParams.get('amount') || DEFAULT_AMOUNT, countryCode);
 
         this.apiService.fetchPaymentMethods(countryCode, locale, amount).subscribe(async paymentMethodsResponse => {
-            console.log(paymentMethodsResponse);
-
             const options: CoreConfiguration = {
-                paymentMethodsResponse,
+                amount,
                 countryCode,
                 locale,
                 environment: 'test',
                 clientKey: environment.clientKey,
+                paymentMethodsResponse,
 
-                onSubmit(state, component, actions) {
-                    console.log('onSubmit', state, component, actions);
+                onSubmit: async (state: SubmitData, component: UIElement, actions: SubmitActions) => {
+                    this.apiService.makePaymentsCall(state.data, countryCode, locale, amount).subscribe(result => {
+                        if (!result.resultCode) {
+                            actions.reject();
+                            return;
+                        }
+
+                        const { resultCode, action, order, donationToken } = result;
+
+                        actions.resolve({
+                            resultCode,
+                            action,
+                            order,
+                            donationToken
+                        });
+                    });
+                },
+
+                onAdditionalDetails: async (state: AdditionalDetailsData, component: UIElement, actions: AdditionalDetailsActions) => {
+                    this.apiService.makeDetailsCall(state.data).subscribe(result => {
+                        if (!result.resultCode) {
+                            actions.reject();
+                            return;
+                        }
+
+                        const { resultCode, action, order, donationToken } = result;
+
+                        actions.resolve({
+                            resultCode,
+                            action,
+                            order,
+                            donationToken
+                        });
+                    });
+                },
+
+                onError(error: AdyenCheckoutError) {
+                    console.error('Something went wrong', error);
+                },
+
+                onPaymentCompleted(data: PaymentCompletedData, element: UIElement) {
+                    console.log(data, element);
+                },
+
+                onPaymentFailed(data: PaymentFailedData, element: UIElement) {
+                    console.log(data, element);
                 }
             };
 
             const checkout = await AdyenCheckout(options);
             this.dropin = new Dropin(checkout, {
+                paymentMethodsConfiguration: {
+                    card: {
+                        _disableClickToPay: true
+                    }
+                }
                 //@ts-ignore
                 // paymentMethodComponents: [Card]
             }).mount(this.hook.nativeElement);

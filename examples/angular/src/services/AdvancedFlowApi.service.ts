@@ -1,6 +1,15 @@
+import { AdditionalDetailsData, ResultCode } from '@adyen/adyen-web';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { DEFAULT_SHOPPER_REFERENCE } from '../utils/constants';
+import paymentsConfig from '../utils/paymentsConfig';
+
+type PaymentsResponse = {
+    resultCode: ResultCode;
+    action?: any;
+    order?: any;
+    donationToken?: string;
+};
 
 const httpOptions = {
     headers: new HttpHeaders({
@@ -32,5 +41,23 @@ export class AdvancedFlowApiService {
         };
 
         return this.http.post('/api/paymentMethods', payload, httpOptions);
+    }
+
+    makePaymentsCall(data: any, countryCode: string, shopperLocale: string, amount: { currency: string; value: number }) {
+        const payload = {
+            ...paymentsConfig,
+            ...data,
+            countryCode,
+            shopperLocale,
+            amount,
+            shopperReference: DEFAULT_SHOPPER_REFERENCE,
+            channel: 'Web'
+        };
+
+        return this.http.post<PaymentsResponse>('/api/payments', payload, httpOptions);
+    }
+
+    makeDetailsCall(data: AdditionalDetailsData['data']) {
+        return this.http.post<PaymentsResponse>('/api/paymentDetails', data, httpOptions);
     }
 }

@@ -74,6 +74,11 @@ export class SessionsFlow implements OnInit {
 
             const checkout = await AdyenCheckout(options);
             this.dropin = new Dropin(checkout, {
+                paymentMethodsConfiguration: {
+                    card: {
+                        _disableClickToPay: true
+                    }
+                },
                 //@ts-ignore
                 paymentMethodComponents: [Card]
             }).mount(this.hook.nativeElement);
