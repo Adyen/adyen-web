@@ -28,6 +28,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         onError(error) {
             console.log(error);
         },
+        showPayButton: true,
         analytics: {
             analyticsData: {
                 applicationInfo: {
@@ -181,12 +182,14 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         shippingAddressRequired: true,
 
         // Button config (optional)
+        buttonSizeMode: 'fill',
         buttonType: 'long', // https://developers.google.com/pay/api/web/reference/object#ButtonOptions
         buttonColor: 'default', // https://developers.google.com/pay/api/web/reference/object#ButtonOptions
 
         // Analytics info
         isExpress: true,
-        expressPage: 'pdp'
+        expressPage: 'pdp',
+        buttonRadius: 20
     });
 
     // First, check availability. If environment is TEST, Google Pay will always be considered available.
