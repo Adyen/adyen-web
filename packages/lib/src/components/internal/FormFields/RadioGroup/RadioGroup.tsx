@@ -12,7 +12,7 @@ export default function RadioGroup(props: RadioGroupProps) {
     const uniqueIdBase = uniqueId?.replace(/[0-9]/g, '').substring(0, uniqueId.lastIndexOf('-'));
 
     return (
-        <div className="adyen-checkout__radio_group">
+        <div className="adyen-checkout__radio_group" role={'radiogroup'} {...(props.uniqueId && { id: props.uniqueId })}>
             {items.map(item => {
                 const uniqueId = getUniqueId(uniqueIdBase);
                 return (
