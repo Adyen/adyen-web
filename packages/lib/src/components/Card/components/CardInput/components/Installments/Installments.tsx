@@ -80,12 +80,7 @@ function Installments(props: InstallmentsProps) {
     if (hasRadioButtonUI) {
         return (
             <div className="adyen-checkout__installments">
-                <Field
-                    label={i18n.get('installments')}
-                    classNameModifiers={['installments']}
-                    name={'installmentsPseudoLabel'}
-                    addContextualElement={false}
-                >
+                <Field label={i18n.get('installments')} classNameModifiers={['installments']} name={'installments'} addContextualElement={false}>
                     <Fieldset classNameModifiers={['revolving-plan']} label={''}>
                         <RadioGroup
                             items={[
