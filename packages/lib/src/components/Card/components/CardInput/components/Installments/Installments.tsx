@@ -133,6 +133,7 @@ function Installments(props: InstallmentsProps) {
                     onChange={onSelectInstallment}
                     name={'installments'}
                     readonly={installmentOptions?.values?.length === 1}
+                    allowIdOnButton={true}
                 />
             </Field>
         </div>

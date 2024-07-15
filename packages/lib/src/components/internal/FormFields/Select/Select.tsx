@@ -29,7 +29,8 @@ function Select({
     disableTextFilter,
     clearOnSelect,
     blurOnClose,
-    onListToggle
+    onListToggle,
+    allowIdOnButton = false
 }: SelectProps) {
     const filterInputRef = useRef(null);
     const selectContainerRef = useRef(null);
@@ -289,6 +290,7 @@ function Select({
                 toggleList={toggleList}
                 disabled={disabled}
                 ariaDescribedBy={uniqueId ? `${uniqueId}${ARIA_ERROR_SUFFIX}` : null}
+                allowIdOnButton={allowIdOnButton}
             />
             <SelectList
                 active={activeOption}
