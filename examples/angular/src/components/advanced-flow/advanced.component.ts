@@ -52,7 +52,7 @@ export class AdvancedFlow implements OnInit {
         const urlParams = new URLSearchParams(window.location.search);
 
         const countryCode = urlParams.get('countryCode') || DEFAULT_COUNTRY;
-        const locale = urlParams.get('locale') || DEFAULT_LOCALE;
+        const locale = urlParams.get('shopperLocale') || DEFAULT_LOCALE;
         const amount = parseAmount(urlParams.get('amount') || DEFAULT_AMOUNT, countryCode);
 
         this.apiService.fetchPaymentMethods(countryCode, locale, amount).subscribe(async paymentMethodsResponse => {
@@ -105,11 +105,11 @@ export class AdvancedFlow implements OnInit {
                 },
 
                 onPaymentCompleted(data: PaymentCompletedData, element: UIElement) {
-                    console.log(data, element);
+                    console.log('onPaymentCompleted', data, element);
                 },
 
                 onPaymentFailed(data: PaymentFailedData, element: UIElement) {
-                    console.log(data, element);
+                    console.log('onPaymentCompleted', data, element);
                 }
             };
 
