@@ -12,9 +12,10 @@ import {
     AdditionalDetailsData,
     AdditionalDetailsActions,
     SubmitActions,
-    SubmitData
-} from '@adyen/adyen-web/auto';
-
+    SubmitData,
+    PayPal,
+    GooglePay
+} from '@adyen/adyen-web';
 import { environment } from '../../environments/environment';
 import { parseAmount } from '../../utils/amount-utils';
 import { DEFAULT_AMOUNT, DEFAULT_COUNTRY, DEFAULT_LOCALE } from '../../utils/constants';
@@ -22,7 +23,7 @@ import { AdvancedFlowApiService } from '../../services/AdvancedFlowApi.service';
 import { ModeSwitcher } from '../mode-switcher/mode-switcher';
 
 @Component({
-    selector: 'adyen-sessions',
+    selector: 'adyen-advanced-flow',
     standalone: true,
     templateUrl: './advanced.component.html',
     imports: [ModeSwitcher]
@@ -118,9 +119,9 @@ export class AdvancedFlow implements OnInit {
                     card: {
                         _disableClickToPay: true
                     }
-                }
+                },
                 //@ts-ignore
-                // paymentMethodComponents: [Card]
+                paymentMethodComponents: [Card, PayPal, GooglePay]
             }).mount(this.hook.nativeElement);
         });
     }

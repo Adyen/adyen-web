@@ -1,5 +1,4 @@
 import { Component, ElementRef, ViewChild, OnInit, Inject, PLATFORM_ID } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import {
     AdyenCheckout,
@@ -9,9 +8,10 @@ import {
     PaymentCompletedData,
     UIElement,
     AdyenCheckoutError,
-    PaymentFailedData
-} from '@adyen/adyen-web/auto';
-
+    PaymentFailedData,
+    PayPal,
+    GooglePay
+} from '@adyen/adyen-web';
 import { environment } from '../../environments/environment';
 import { parseAmount } from '../../utils/amount-utils';
 import { DEFAULT_AMOUNT, DEFAULT_COUNTRY, DEFAULT_LOCALE } from '../../utils/constants';
@@ -19,7 +19,7 @@ import { ModeSwitcher } from '../mode-switcher/mode-switcher';
 import { SessionsFlowApi } from '../../services/SessionsFlowApi.service';
 
 @Component({
-    selector: 'adyen-sessions',
+    selector: 'adyen-sessions-flow',
     standalone: true,
     templateUrl: './sessions.component.html',
     imports: [ModeSwitcher]
@@ -32,7 +32,6 @@ export class SessionsFlow implements OnInit {
 
     constructor(
         private apiService: SessionsFlowApi,
-        private route: ActivatedRoute,
         @Inject(PLATFORM_ID) private platformId: Object
     ) {
         this.hook = new ElementRef('');
@@ -82,7 +81,7 @@ export class SessionsFlow implements OnInit {
                     }
                 },
                 //@ts-ignore
-                paymentMethodComponents: [Card]
+                paymentMethodComponents: [Card, PayPal, GooglePay]
             }).mount(this.hook.nativeElement);
         });
     }

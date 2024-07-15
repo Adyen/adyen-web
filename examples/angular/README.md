@@ -1,27 +1,28 @@
-# Angular
+# @adyen/adyen-web v6 + Angular 18 with Server Side Rendering
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.7.
+### Steps to run the project:
 
-## Development server
+1. Install the project dependencies: `npm install`
+2. Edit the `src/environments/environment.development.ts` file and add there your variables.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Example:
 
-## Code scaffolding
+```js
+export const environment = {
+    production: false,
+    clientKey: 'test_L6HTEOAXQBCZ...',
+    merchantAccount: 'TestMerchant...',
+    apiVersion: 'v71',
+    apiKey: 'AQEthmfxKo7MbhFLw0m/n3Q...'
+};
+```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+3. In order to run not only client-side code but also server-side code for local development, run `npm run watch` in one terminal, and `npm run serve:ssr:angular-ssr-prefetch` in another terminal. After doing that, you should be able to see the application running on `http://localhost:4000`
 
-## Build
+> [!TIP]
+> You can change the countryCode, locale and amount by updating the values in the URL parameters:
+>
+> `http://localhost:4000/?amount=2000&countryCode=US&shopperLocale=nl-NL`
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+> [!NOTE]
+> This demo is not using the 'auto' package by default. Therefore, you might need to import your specific payment methods in order to see them in the UI.
