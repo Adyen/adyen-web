@@ -158,6 +158,7 @@ export interface GooglePayProps extends UIElementProps {
     buttonSizeMode?: google.payments.api.ButtonSizeMode;
     buttonRootNode?: HTMLDocument | ShadowRoot;
     buttonLocale?: string;
+    buttonRadius?: number;
 
     // Events
     onClick?: (resolve, reject) => void;
