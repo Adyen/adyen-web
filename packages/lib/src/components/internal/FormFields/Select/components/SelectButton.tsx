@@ -58,6 +58,7 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
             onClick={onClickHandler}
             onKeyDown={!readonly ? props.onButtonKeyDown : null}
             toggleButtonRef={props.toggleButtonRef}
+            {...(props.id && { id: props.id })}
         >
             {!props.filterable ? (
                 <Fragment>
