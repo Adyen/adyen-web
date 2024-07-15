@@ -13,14 +13,16 @@ import {
 } from '@adyen/adyen-web/auto';
 
 import { environment } from '../../environments/environment';
-import { ApiService } from '../../services/api.service';
 import { parseAmount } from '../../utils/amount-utils';
 import { DEFAULT_AMOUNT, DEFAULT_COUNTRY, DEFAULT_LOCALE } from '../../utils/constants';
+import { ModeSwitcher } from '../mode-switcher/mode-switcher';
+import { SessionsFlowApi } from '../../services/SessionsFlowApi.service';
 
 @Component({
     selector: 'adyen-sessions',
     standalone: true,
-    templateUrl: './sessions.component.html'
+    templateUrl: './sessions.component.html',
+    imports: [ModeSwitcher]
 })
 export class SessionsFlow implements OnInit {
     @ViewChild('hook', { static: true })
@@ -29,7 +31,7 @@ export class SessionsFlow implements OnInit {
     dropin: Dropin | undefined;
 
     constructor(
-        private apiService: ApiService,
+        private apiService: SessionsFlowApi,
         private route: ActivatedRoute,
         @Inject(PLATFORM_ID) private platformId: Object
     ) {

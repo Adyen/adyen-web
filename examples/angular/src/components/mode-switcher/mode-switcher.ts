@@ -1,7 +1,6 @@
-import { NgClass, Location } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
-import { filter } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector: 'mode-switcher',
@@ -13,20 +12,20 @@ import { filter } from 'rxjs';
 export class ModeSwitcher implements OnInit {
     isAdvancedFlowPageActive = false;
 
-    constructor(private router: Router) {}
+    constructor(
+        private router: Router,
+        private route: ActivatedRoute
+    ) {}
 
     ngOnInit() {
-        this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(event => {
-            // @ts-ignore
-            this.isAdvancedFlowPageActive = event.url === '/advanced-flow';
-        });
+        this.isAdvancedFlowPageActive = this.router.url.includes('/advanced-flow');
     }
 
     onAdvancedFlowClick() {
-        this.router.navigate(['advanced-flow']);
+        this.router.navigate(['advanced-flow'], { queryParams: this.route.snapshot.queryParams });
     }
 
     onSessionsFlowClick() {
-        this.router.navigate(['sessions-flow']);
+        this.router.navigate(['sessions-flow'], { queryParams: this.route.snapshot.queryParams });
     }
 }

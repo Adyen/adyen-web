@@ -19,11 +19,13 @@ import { environment } from '../../environments/environment';
 import { parseAmount } from '../../utils/amount-utils';
 import { DEFAULT_AMOUNT, DEFAULT_COUNTRY, DEFAULT_LOCALE } from '../../utils/constants';
 import { AdvancedFlowApiService } from '../../services/AdvancedFlowApi.service';
+import { ModeSwitcher } from '../mode-switcher/mode-switcher';
 
 @Component({
     selector: 'adyen-sessions',
     standalone: true,
-    templateUrl: './advanced.component.html'
+    templateUrl: './advanced.component.html',
+    imports: [ModeSwitcher]
 })
 export class AdvancedFlow implements OnInit {
     @ViewChild('hook', { static: true })

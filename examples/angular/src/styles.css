@@ -25,7 +25,6 @@ body {
 #redirect-result-page {
   display: flex;
   flex-direction: column;
-  align-items: center;
   padding: 24px;
   gap: 20px;
 }

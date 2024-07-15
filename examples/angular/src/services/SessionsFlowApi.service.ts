@@ -13,7 +13,7 @@ const httpOptions = {
 @Injectable({
     providedIn: 'root'
 })
-export class ApiService {
+export class SessionsFlowApi {
     constructor(private http: HttpClient) {}
 
     createSession(countryCode: string, shopperLocale: string, amount: { value: number; currency: string }): Observable<any> {
@@ -31,6 +31,4 @@ export class ApiService {
 
         return this.http.post('/api/sessions', payload, httpOptions);
     }
-
-    fetchPaymentMethods(countryCode: string, shopperLocale: string, amount: { value: number; currency: string }) {}
 }

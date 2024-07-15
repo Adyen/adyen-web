@@ -1,8 +1,8 @@
 const identifier = new Date().getMilliseconds();
 
 const paymentsConfig = {
-    origin: 'http://localhost:3020',
-    returnUrl: 'http://localhost:3020/redirect',
+    origin: 'http://localhost:4000',
+    returnUrl: 'http://localhost:4000/redirect',
     reference: `${identifier}-checkout-components-ref`,
     authenticationData: {
         attemptAuthentication: 'always',
