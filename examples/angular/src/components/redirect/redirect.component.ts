@@ -8,7 +8,7 @@ import {
     PaymentFailedData,
     AdditionalDetailsData,
     AdditionalDetailsActions
-} from '@adyen/adyen-web/auto';
+} from '@adyen/adyen-web';
 import { environment } from '../../environments/environment';
 import { AdvancedFlowApiService } from '../../services/AdvancedFlowApi.service';
 

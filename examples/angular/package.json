@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "serve:ssr:angular": "node dist/angular/server/server.mjs",
-    "serve:ssr:angular-ssr-prefetch": "nodemon dist/angular/server/server.mjs"
+    "serve:ssr:angular-ssr-prefetch": "nodemon dist/angular/server/server.mjs",
+    "analyze-bundle": "ng build --configuration=analyze-bundle && source-map-explorer dist/**/*.js --no-border-checks --html result.html"
   },
   "private": true,
   "dependencies": {
@@ -35,6 +36,7 @@
     "@types/jasmine": "~5.1.0",
     "@types/node": "^18.18.0",
     "nodemon": "^3.1.4",
+    "source-map-explorer": "^2.5.3",
     "typescript": "~5.4.2"
   }
 }

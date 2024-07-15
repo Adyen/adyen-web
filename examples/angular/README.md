@@ -19,6 +19,8 @@ export const environment = {
 
 3. In order to run not only client-side code but also server-side code for local development, run `npm run watch` in one terminal, and `npm run serve:ssr:angular-ssr-prefetch` in another terminal. After doing that, you should be able to see the application running on `http://localhost:4000`
 
+4. [OPTIONAL] Run `npm run analyze-bundle` to get a report of the bundle size. You can find the report in the `<root>/result.html` file.
+
 > [!TIP]
 > You can change the countryCode, locale and amount by updating the values in the URL parameters:
 >
