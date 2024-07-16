@@ -7,6 +7,7 @@ import Fieldset from '../../../../../internal/FormFields/Fieldset/Fieldset';
 import RadioGroup from '../../../../../internal/FormFields/RadioGroup';
 import styles from '../../CardInput.module.scss';
 import Select from '../../../../../internal/FormFields/Select';
+import { alternativeLabelContent } from '../IframeLabelAlternative';
 
 export interface InstallmentsObj {
     value: number;
@@ -80,7 +81,14 @@ function Installments(props: InstallmentsProps) {
     if (hasRadioButtonUI) {
         return (
             <div className="adyen-checkout__installments">
-                <Field label={i18n.get('installments')} classNameModifiers={['installments']} name={'installments'} addContextualElement={false}>
+                <Field
+                    label={i18n.get('installments')}
+                    classNameModifiers={['installments']}
+                    name={'installmentsPseudoLabel'}
+                    useLabelElement={false}
+                    addContextualElement={false}
+                    renderAlternativeToLabel={alternativeLabelContent}
+                >
                     <Fieldset classNameModifiers={['revolving-plan']} label={''}>
                         <RadioGroup
                             items={[
@@ -90,6 +98,7 @@ function Installments(props: InstallmentsProps) {
                             ]}
                             onChange={onRadioSelect}
                             value={radioBtnValue}
+                            ariaLabel={i18n.get('installments')}
                         />
 
                         <Field

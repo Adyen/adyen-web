@@ -6,13 +6,13 @@ import { getUniqueId } from '../../../../utils/idGenerator';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 
 export default function RadioGroup(props: RadioGroupProps) {
-    const { items, name, onChange, value, isInvalid, uniqueId } = props;
+    const { items, name, onChange, value, isInvalid, uniqueId, ariaLabel } = props;
 
     const { i18n } = useCoreContext();
     const uniqueIdBase = uniqueId?.replace(/[0-9]/g, '').substring(0, uniqueId.lastIndexOf('-'));
 
     return (
-        <div className="adyen-checkout__radio_group" role={'radiogroup'} {...(props.uniqueId && { id: props.uniqueId })}>
+        <div className="adyen-checkout__radio_group" role={'radiogroup'} {...(ariaLabel && { ['aria-label']: ariaLabel })}>
             {items.map(item => {
                 const uniqueId = getUniqueId(uniqueIdBase);
                 return (
