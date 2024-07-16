@@ -13,7 +13,7 @@ import ClickToPayWrapper from './components/ClickToPayWrapper';
 import { ComponentFocusObject } from '../../types/global-types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { TxVariants } from '../tx-variants';
-import { type PayButtonFunctionProps, UIElementStatus } from '../internal/UIElement/types';
+import type { PayButtonFunctionProps, UIElementStatus } from '../internal/UIElement/types';
 import UIElement from '../internal/UIElement';
 import PayButton from '../internal/PayButton';
 import type { ICore } from '../../core/types';
