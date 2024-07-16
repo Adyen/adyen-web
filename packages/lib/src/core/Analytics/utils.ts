@@ -95,9 +95,9 @@ export const getCardConfigData = (cardProps: CardElementProps): CardConfigData =
         hideCVC = CardDefaultProps.hideCVC,
         holderNameRequired = CardDefaultProps.holderNameRequired,
         installmentOptions,
-        // keypadFix = CardDefaultProps.keypadFix,
-        // legacyInputMode = CardDefaultProps.legacyInputMode,
-        // maskSecurityCode = CardDefaultProps.maskSecurityCode,
+        keypadFix = CardDefaultProps.keypadFix,
+        legacyInputMode = CardDefaultProps.legacyInputMode,
+        maskSecurityCode = CardDefaultProps.maskSecurityCode,
         minimumExpiryDate = CardDefaultProps.minimumExpiryDate,
         name = 'none',
         placeholders,
@@ -106,17 +106,16 @@ export const getCardConfigData = (cardProps: CardElementProps): CardConfigData =
         showBrandsUnderCardNumber = CardDefaultProps.showBrandsUnderCardNumber,
         showInstallmentAmounts = CardDefaultProps.showInstallmentAmounts,
         showPayButton = false, // hard coded default
-        styles
-        // TODO - commented out until endpoint can accept more entries in the configData object (current limit: 32)
-        // onAllValid = false,
-        // onBinLookup = false,
-        // onBinValue = false,
-        // onBlur = false,
-        // onBrand = false,
-        // onConfigSuccess = false,
-        // onFieldValid = false,
-        // onFocus = false,
-        // onLoad = false
+        styles,
+        onAllValid = false,
+        onBinLookup = false,
+        onBinValue = false,
+        onBlur = false,
+        onBrand = false,
+        onConfigSuccess = false,
+        onFieldValid = false,
+        onFocus = false,
+        onLoad = false
     } = cardProps;
 
     const srPanelEnabled = cardProps.modules?.srPanel?.enabled;
@@ -160,10 +159,9 @@ export const getCardConfigData = (cardProps: CardElementProps): CardConfigData =
         hasStylesConfigured: !!styles,
         hideCVC,
         holderNameRequired,
-        // TODO - commented out until endpoint can accept more entries in the configData object (current limit: 32)
-        // keypadFix,
-        // legacyInputMode,
-        // maskSecurityCode,
+        keypadFix,
+        legacyInputMode,
+        maskSecurityCode,
         minimumExpiryDate: !!minimumExpiryDate, // Potentially, in the future, we can send the actual string value
         name,
         positionHolderNameOnTop,
@@ -173,21 +171,32 @@ export const getCardConfigData = (cardProps: CardElementProps): CardConfigData =
         showInstallmentAmounts: !!showInstallmentAmounts,
         showKCPType,
         showPayButton,
-        // TODO - commented out until endpoint can accept more entries in the configData object (current limit: 32)
-        // socialSecurityNumberMode: configuration.socialSecurityNumberMode
+        socialSecurityNumberMode: configuration.socialSecurityNumberMode,
         srPanelEnabled,
-        srPanelMoveFocus
+        srPanelMoveFocus,
         /** callbacks */
-        // onAllValid: !!onAllValid,
-        // onBinLookup: !!onBinLookup,
-        // onBinValue: !!onBinValue,
-        // onBlur: !!onBlur,
-        // onBrand: !!onBrand,
-        // onConfigSuccess: !!onConfigSuccess,
-        // onFieldValid: !!onFieldValid,
-        // onFocus: !!onFocus,
-        // onLoad: !!onLoad
+        onAllValid: !!onAllValid,
+        onBinLookup: !!onBinLookup,
+        onBinValue: !!onBinValue,
+        onBlur: !!onBlur,
+        onBrand: !!onBrand,
+        onConfigSuccess: !!onConfigSuccess,
+        onFieldValid: !!onFieldValid,
+        onFocus: !!onFocus,
+        onLoad: !!onLoad
     };
+
+    // TODO - keep until endpoint can accept more entries in the configData object (current limit: 32);
+    if (Object.keys(configData).length > 32) {
+        const strippedConfigData = Object.entries(configData).reduce((acc, [key, value], index) => {
+            if (index < 32) {
+                acc[key] = value;
+            }
+            return acc;
+        }, {});
+
+        return strippedConfigData as CardConfigData;
+    }
 
     return configData;
 };

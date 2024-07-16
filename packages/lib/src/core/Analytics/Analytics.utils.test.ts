@@ -466,7 +466,7 @@ describe('Testing creating a configData object for the Card components', () => {
     /**
      * keypadFix
      */
-    describe.skip('Testing keypadFix', () => {
+    describe('Testing keypadFix', () => {
         const ANALYTICS_DATA_PROP = 'keypadFix';
         const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
 
@@ -489,7 +489,7 @@ describe('Testing creating a configData object for the Card components', () => {
     /**
      * legacyInputMode
      */
-    describe.skip('Testing legacyInputMode', () => {
+    describe('Testing legacyInputMode', () => {
         const ANALYTICS_DATA_PROP = 'legacyInputMode';
         const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
 
@@ -512,7 +512,7 @@ describe('Testing creating a configData object for the Card components', () => {
     /**
      * maskSecurityCode
      */
-    describe.skip('Testing maskSecurityCode', () => {
+    describe('Testing maskSecurityCode', () => {
         const ANALYTICS_DATA_PROP = 'maskSecurityCode';
         const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
 
@@ -694,7 +694,8 @@ describe('Testing creating a configData object for the Card components', () => {
     /**
      * showPayButton
      */
-    describe('Testing showPayButton', () => {
+    // TODO - skip until endpoint can accept more entries in the configData object (current limit: 32);
+    describe.skip('Testing showPayButton', () => {
         const ANALYTICS_DATA_PROP = 'showPayButton';
         const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
 
@@ -717,6 +718,7 @@ describe('Testing creating a configData object for the Card components', () => {
     /**
      * socialSecurityNumberMode
      */
+    // TODO - skip until endpoint can accept more entries in the configData object (current limit: 32);
     describe.skip('Testing socialSecurityNumberMode', () => {
         const ANALYTICS_DATA_PROP = 'socialSecurityNumberMode';
 
