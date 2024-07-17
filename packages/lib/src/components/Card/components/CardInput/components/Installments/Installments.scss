@@ -1,0 +1,7 @@
+@use 'styles/index';
+
+.adyen-checkout__installments {
+  .adyen-checkout__input-wrapper {
+    @include index.adyen-checkout-input-wrapper-reset;
+  }
+}
