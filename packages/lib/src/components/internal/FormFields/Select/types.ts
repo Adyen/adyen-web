@@ -39,6 +39,7 @@ export interface SelectProps {
     clearOnSelect?: boolean;
     blurOnClose?: boolean;
     onListToggle?: (isOpen: boolean) => void;
+    allowIdOnButton?: boolean;
 }
 
 export interface SelectButtonProps {
@@ -61,6 +62,7 @@ export interface SelectButtonProps {
     id?: string;
     ariaDescribedBy: string;
     disabled: boolean;
+    allowIdOnButton?: boolean;
 }
 
 export interface SelectListProps {
