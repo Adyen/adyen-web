@@ -6,7 +6,7 @@ import { InstallmentsItem, InstallmentsProps } from '../types';
 import Fieldset from '../../../../../internal/FormFields/Fieldset/Fieldset';
 import RadioGroup from '../../../../../internal/FormFields/RadioGroup';
 import Select from '../../../../../internal/FormFields/Select';
-import { alternativeLabelContent } from '../IframeLabelAlternative';
+import { alternativeLabelContent } from '../FieldLabelAlternative';
 import './Installments.scss';
 
 export interface InstallmentsObj {
