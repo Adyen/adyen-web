@@ -169,6 +169,11 @@ const Field: FunctionalComponent<FieldProps> = props => {
         );
     }, [children, errorMessage, contextualText, isLoading, isValid, onFocusHandler, onBlurHandler]);
 
+    /**
+     * Use cases:
+     * - Not all form controls want/need a label e.g. many checkboxes describe what they are in their own markup and don't need the wrapping Field to also generate a labelling element
+     * - securedFields *can't* have a label (screen-reader's can make the association, over different browser contexts, between the label and the input)
+     */
     const LabelOrAlternative = useCallback(
         ({ onFocusField, focused, filled, disabled, name, uniqueId, useLabelElement, isSecuredField, children, renderAlternativeToLabel }) => {
             const defaultWrapperProps = {
@@ -182,8 +187,8 @@ const Field: FunctionalComponent<FieldProps> = props => {
             };
 
             return useLabelElement ? (
-                // if contextVisibleToSR is true then we are NOT dealing with the label for a securedField... so give it a `for` attribute
-                <label {...defaultWrapperProps} {...(!isSecuredField && { htmlFor: name && uniqueId })}>
+                // if we are NOT dealing with the label for a securedField... we can give it a `for` attribute
+                <label {...defaultWrapperProps} {...(!isSecuredField && name && { htmlFor: uniqueId })}>
                     {children}
                 </label>
             ) : (
