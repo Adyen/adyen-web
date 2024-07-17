@@ -14,7 +14,7 @@ export default async function getTranslations(cdnTranslationsUrl: string, adyenW
             loadingContext: cdnTranslationsUrl,
             errorLevel: 'fatal',
             errorMessage: `Translations: Couldn't fetch translation for locale "${locale}" nor the fallback translation "en-US"`,
-            path: `sdDk/${adyenWebVersion}/translations/en-US.json`
+            path: `sdk/${adyenWebVersion}/translations/en-US.json`
         });
     }
 }
