@@ -146,8 +146,7 @@ class Core implements ICore {
 
     private async fetchLocaleTranslations(): Promise<Translations> {
         try {
-            const translation = await getTranslations(this.cdnTranslationsUrl, Core.metadata.version, this.options.locale, this.options.translations);
-            return translation;
+            return await getTranslations(this.cdnTranslationsUrl, Core.metadata.version, this.options.locale);
         } catch (error: unknown) {
             if (error instanceof AdyenCheckoutError) this.options.onError?.(error);
             else this.options.onError?.(new AdyenCheckoutError('ERROR', 'Failed to fetch translation', { cause: error }));

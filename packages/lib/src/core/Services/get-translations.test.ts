@@ -12,62 +12,51 @@ beforeEach(() => {
 });
 
 describe('Service: getTranslations', () => {
-    test('should request translations if we support the given locale', async () => {
-        const mockedEnUS = {
-            storeDetails: 'Save for my next payment'
+    test('should request translations', async () => {
+        const mockedPtBR = {
+            storeDetails: 'Salvar pagamento'
         };
-        mockedHttpGet.mockResolvedValue(mockedEnUS);
+        mockedHttpGet.mockResolvedValue(mockedPtBR);
 
-        const translation = await getTranslations(LOADING_CONTEXT, ADYEN_WEB_VERSION, 'en-US');
+        const translation = await getTranslations(LOADING_CONTEXT, ADYEN_WEB_VERSION, 'pt-BR');
 
         expect(mockedHttpGet).toHaveBeenCalledTimes(1);
         expect(mockedHttpGet).toHaveBeenCalledWith({
             errorLevel: 'fatal',
-            errorMessage: 'Translations: Couldn\'t fetch translation for the locale "en-US".',
+            errorMessage: 'Translations: Failed to fetch translations for locale "pt-BR"',
             loadingContext: 'https://checkoutshopper-test.adyen.com/checkoutshopper/',
-            path: 'sdk/6.0.0/translations/en-US.json'
+            path: 'sdk/6.0.0/translations/pt-BR.json'
         });
-        expect(translation).toStrictEqual(mockedEnUS);
+        expect(translation).toStrictEqual(mockedPtBR);
     });
 
-    test('should request translations if we support the given locale, even though there are custom translations for it', async () => {
+    test('should fallback to en-US locale if merchant tries to load unsupported locale (en-SA)', async () => {
         const mockedEnUS = {
             storeDetails: 'Save for my next payment'
         };
-        mockedHttpGet.mockResolvedValue(mockedEnUS);
 
-        const customTranslation = {
-            'en-US': {
-                storeDetails: 'Store the details for next payments'
-            }
-        };
+        mockedHttpGet.mockRejectedValueOnce({
+            type: 'NETWORK_ERROR',
+            message: 'Translations: Failed to fetch translations for locale "en-SA"'
+        });
+        mockedHttpGet.mockResolvedValueOnce(mockedEnUS);
 
-        const translation = await getTranslations(LOADING_CONTEXT, ADYEN_WEB_VERSION, 'en-US', customTranslation);
+        const translation = await getTranslations(LOADING_CONTEXT, ADYEN_WEB_VERSION, 'en-SA');
 
-        expect(mockedHttpGet).toHaveBeenCalledTimes(1);
-        expect(mockedHttpGet).toHaveBeenCalledWith({
+        expect(mockedHttpGet).toHaveBeenCalledTimes(2);
+        expect(mockedHttpGet).toHaveBeenNthCalledWith(1, {
             errorLevel: 'fatal',
-            errorMessage: 'Translations: Couldn\'t fetch translation for the locale "en-US".',
+            errorMessage: 'Translations: Failed to fetch translations for locale "en-SA"',
+            loadingContext: 'https://checkoutshopper-test.adyen.com/checkoutshopper/',
+            path: 'sdk/6.0.0/translations/en-SA.json'
+        });
+        expect(mockedHttpGet).toHaveBeenNthCalledWith(2, {
+            errorLevel: 'fatal',
+            errorMessage: `Translations: Couldn't fetch translation for locale "en-SA" nor the fallback translation "en-US"`,
             loadingContext: 'https://checkoutshopper-test.adyen.com/checkoutshopper/',
             path: 'sdk/6.0.0/translations/en-US.json'
         });
+
         expect(translation).toStrictEqual(mockedEnUS);
-    });
-
-    test('should not request translation if an unsupported locale with translations is provided', async () => {
-        const customTranslation = {
-            'en-CA': {
-                pay: 'Pay amount'
-            }
-        };
-
-        const translation = await getTranslations(LOADING_CONTEXT, ADYEN_WEB_VERSION, 'en-CA', customTranslation);
-
-        expect(translation).toStrictEqual({});
-        expect(mockedHttpGet).toHaveBeenCalledTimes(0);
-    });
-
-    test('should throw an error and not make http request if locale is not supported', () => {
-        expect(() => getTranslations(LOADING_CONTEXT, ADYEN_WEB_VERSION, 'en-CA')).toThrowError("Translations: Locale 'en-CA' is not supported");
     });
 });
