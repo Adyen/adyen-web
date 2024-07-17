@@ -105,6 +105,8 @@
     "creditCard.storedCard.description.ariaLabel": "存储的卡片以 ％@ 结尾",
     "voucher.entity": "实体",
     "donateButton": "捐赠",
+    "donationTermsCondition": "通过捐款，即表示您同意%#条款和细则%#",
+    "donationRoundUpDescription": "%{donationAmount} 是原始支付 (%{originalPaymentAmount}) 的四舍五入",
     "notNowButton": "暂不",
     "thanksForYourSupport": "感谢您的支持！",
     "resultMessages.preauthorized": "详情已保存",

@@ -38,9 +38,14 @@ function render(message: string, urls: Array<string>) {
  */
 
 export default function DisclaimerMessage({ message, urls }: InternalDisclaimerMsgObject) {
-    const messageIsStr = typeof message === 'string';
-    const validUrls = urls.every(url => typeof url === 'string' && isValidHttpUrl(url));
-    if (!messageIsStr || !validUrls) return null;
+    try {
+        const messageIsStr = typeof message === 'string';
+        const validUrls = urls.every(url => typeof url === 'string' && isValidHttpUrl(url));
+        if (!messageIsStr || !validUrls) return null;
 
-    return render(message, urls);
+        return render(message, urls);
+    } catch (e) {
+        console.warn('Errors rendering disclaimer message');
+        return null;
+    }
 }

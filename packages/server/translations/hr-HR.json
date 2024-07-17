@@ -105,6 +105,8 @@
     "creditCard.storedCard.description.ariaLabel": "Pohranjena kartica završava na %@",
     "voucher.entity": "Entitet",
     "donateButton": "Doniraj",
+    "donationTermsCondition": "Donacijom prihvaćate %#uvjete i odredbe%#",
+    "donationRoundUpDescription": "%{donationAmount} je iznos zaokružen naviše u odnosu na vašu izvornu uplatu (%{originalPaymentAmount})",
     "notNowButton": "Ne sada",
     "thanksForYourSupport": "Hvala na podršci!",
     "resultMessages.preauthorized": "Spremljeni podatci",

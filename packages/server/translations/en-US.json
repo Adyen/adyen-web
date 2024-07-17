@@ -106,6 +106,8 @@
     "creditCard.storedCard.description.ariaLabel": "Stored card ends in %@",
     "voucher.entity": "Entity",
     "donateButton": "Donate",
+    "donationTermsCondition": "By donating you agree to the %#terms and conditions%#",
+    "donationRoundUpDescription": "%{donationAmount} is a round up from your original payment (%{originalPaymentAmount})",
     "notNowButton": "Not now",
     "thanksForYourSupport": "Thanks for your support!",
     "resultMessages.preauthorized": "Details saved",

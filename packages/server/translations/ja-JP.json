@@ -105,6 +105,8 @@
     "creditCard.storedCard.description.ariaLabel": "保存されたカードは％@に終了します",
     "voucher.entity": "エンティティ",
     "donateButton": "寄付する",
+    "donationTermsCondition": "寄付することにより、%#利用規約%#に同意したことになります",
+    "donationRoundUpDescription": "%{donationAmount}は、元の支払額 (%{originalPaymentAmount}) を切り上げたものです。",
     "notNowButton": "今はしない",
     "thanksForYourSupport": "ご支援いただきありがとうございます。",
     "resultMessages.preauthorized": "詳細が保存されました",

@@ -105,6 +105,8 @@
     "creditCard.storedCard.description.ariaLabel": "Сохраненная карта заканчивается на %@",
     "voucher.entity": "Объект",
     "donateButton": "Пожертвовать",
+    "donationTermsCondition": "Совершая пожертвование, вы тем самым соглашаетесь с %#условиями%#",
+    "donationRoundUpDescription": "%{donationAmount} – округление в большую сторону от суммы первоначального платежа (%{originalPaymentAmount})",
     "notNowButton": "Позже",
     "thanksForYourSupport": "Благодарим за поддержку!",
     "resultMessages.preauthorized": "Данные сохранены",

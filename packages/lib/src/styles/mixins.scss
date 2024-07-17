@@ -99,6 +99,18 @@ $adyen-checkout-media-query-l-min: 1024px;
     line-height: token(text-subtitle-line-height);
 }
 
+@mixin adyen-checkout-text-title {
+    font-size: token(text-title-font-size);
+    font-weight: token(text-title-font-weight);
+    line-height: token(text-title-line-height);
+}
+
+@mixin adyen-checkout-text-caption {
+    font-size: token(text-caption-font-size);
+    font-weight: token(text-caption-font-weight);
+    line-height: token(text-caption-line-height);
+}
+
 @mixin set-spinner-color($background-color: token(color-background-inverse-primary), $color: token(color-outline-primary-active)) {
     &::before {
         border-color: $background-color;
