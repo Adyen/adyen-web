@@ -1,5 +1,5 @@
 import promiseTimeout from '../../../utils/promiseTimeout';
-import { PaymentMethod, type StoredPaymentMethod, UIElement } from '../../../types';
+import type { PaymentMethod, StoredPaymentMethod, UIElement } from '../../../types';
 
 export const UNSUPPORTED_PAYMENT_METHODS = ['androidpay', 'samsungpay', 'clicktopay'];
 
