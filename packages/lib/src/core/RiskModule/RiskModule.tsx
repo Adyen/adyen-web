@@ -89,6 +89,10 @@ export default class RiskElement extends BaseElement<RiskModuleProps> {
         return false;
     }
 
+    public get enabled() {
+        return this.props.risk.enabled;
+    }
+
     public cleanUp = () => {
         if (this.nodeRiskContainer && this.nodeRiskContainer.parentNode) this.nodeRiskContainer.parentNode.removeChild(this.nodeRiskContainer);
     };
