@@ -163,14 +163,13 @@ export type CardConfigData = {
     srPanelEnabled: boolean;
     srPanelMoveFocus: boolean;
     // callbacks
-    onAllValid: boolean;
-    onBinLookup: boolean;
-    onBinValue: boolean;
-    onBlur: boolean;
-    onBrand: boolean;
-    onConfigSuccess: boolean;
-    onFieldValid: boolean;
-    onFocus: boolean;
-    onLoad: boolean;
-    // TODO - add onEnterKeyPressed for v6
+    hasOnAllValid: boolean;
+    hasOnBinLookup: boolean;
+    hasOnBinValue: boolean;
+    hasOnBlur: boolean;
+    hasOnBrand: boolean;
+    hasOnConfigSuccess: boolean;
+    hasOnFieldValid: boolean;
+    hasOnFocus: boolean;
+    hasOnLoad: boolean;
 };

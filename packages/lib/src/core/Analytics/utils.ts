@@ -175,15 +175,15 @@ export const getCardConfigData = (cardProps: CardElementProps): CardConfigData =
         srPanelEnabled,
         srPanelMoveFocus,
         /** callbacks */
-        onAllValid: !!onAllValid,
-        onBinLookup: !!onBinLookup,
-        onBinValue: !!onBinValue,
-        onBlur: !!onBlur,
-        onBrand: !!onBrand,
-        onConfigSuccess: !!onConfigSuccess,
-        onFieldValid: !!onFieldValid,
-        onFocus: !!onFocus,
-        onLoad: !!onLoad
+        hasOnAllValid: !!onAllValid,
+        hasOnBinLookup: !!onBinLookup,
+        hasOnBinValue: !!onBinValue,
+        hasOnBlur: !!onBlur,
+        hasOnBrand: !!onBrand,
+        hasOnConfigSuccess: !!onConfigSuccess,
+        hasOnFieldValid: !!onFieldValid,
+        hasOnFocus: !!onFocus,
+        hasOnLoad: !!onLoad
     };
 
     // TODO - keep until endpoint can accept more entries in the configData object (current limit: 32);
