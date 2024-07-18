@@ -6,6 +6,7 @@ import { DEFAULT_CHALLENGE_WINDOW_SIZE, THREEDS2_FULL } from '../../components/T
 import { CardElementProps } from '../../components/Card/types';
 import CardDefaultProps from '../../components/Card/components/CardInput/defaultProps';
 import { DEFAULT_CARD_GROUP_TYPES } from '../../components/internal/SecuredFields/lib/configuration/constants';
+import { notFalsy } from '../../components/internal/SecuredFields/lib/utilities/commonUtils';
 
 export const getUTCTimestamp = () => Date.now();
 
@@ -72,39 +73,39 @@ export const processAnalyticsData = (analyticsData: AnalyticsData): AnalyticsDat
 };
 
 export const getCardConfigData = (cardProps: CardElementProps): CardConfigData => {
-    // Extract props from cardProps - mostly setting a default value, if prop not found
+    // Extract props from cardProps
     const {
-        autoFocus = CardDefaultProps.autoFocus,
-        billingAddressAllowedCountries = CardDefaultProps.billingAddressAllowedCountries,
-        billingAddressMode = CardDefaultProps.billingAddressMode,
-        billingAddressRequired = CardDefaultProps.billingAddressRequired,
-        billingAddressRequiredFields = CardDefaultProps.billingAddressRequiredFields,
+        autoFocus,
+        billingAddressAllowedCountries,
+        billingAddressMode,
+        billingAddressRequired,
+        billingAddressRequiredFields,
         brands = DEFAULT_CARD_GROUP_TYPES,
         brandsConfiguration,
         challengeWindowSize = DEFAULT_CHALLENGE_WINDOW_SIZE,
-        configuration = CardDefaultProps.configuration,
+        configuration,
         countryCode,
         data,
         disclaimerMessage,
-        disableIOSArrowKeys = CardDefaultProps.disableIOSArrowKeys,
+        disableIOSArrowKeys,
         doBinLookup = true, // from Card.defaultProps
-        enableStoreDetails = CardDefaultProps.enableStoreDetails,
-        exposeExpiryDate = CardDefaultProps.exposeExpiryDate,
-        forceCompat = CardDefaultProps.forceCompat,
-        hasHolderName = CardDefaultProps.hasHolderName,
-        hideCVC = CardDefaultProps.hideCVC,
-        holderNameRequired = CardDefaultProps.holderNameRequired,
+        enableStoreDetails,
+        exposeExpiryDate,
+        forceCompat,
+        hasHolderName,
+        hideCVC,
+        holderNameRequired,
         installmentOptions,
-        keypadFix = CardDefaultProps.keypadFix,
-        legacyInputMode = CardDefaultProps.legacyInputMode,
-        maskSecurityCode = CardDefaultProps.maskSecurityCode,
-        minimumExpiryDate = CardDefaultProps.minimumExpiryDate,
-        name = 'none',
+        keypadFix,
+        legacyInputMode,
+        maskSecurityCode,
+        minimumExpiryDate,
+        name, // = 'none',
         placeholders,
-        positionHolderNameOnTop = CardDefaultProps.positionHolderNameOnTop,
-        showBrandIcon = CardDefaultProps.showBrandIcon,
-        showBrandsUnderCardNumber = CardDefaultProps.showBrandsUnderCardNumber,
-        showInstallmentAmounts = CardDefaultProps.showInstallmentAmounts,
+        positionHolderNameOnTop,
+        showBrandIcon,
+        showBrandsUnderCardNumber,
+        showInstallmentAmounts,
         showPayButton = false, // hard coded default
         styles,
         onAllValid = false,
@@ -117,6 +118,9 @@ export const getCardConfigData = (cardProps: CardElementProps): CardConfigData =
         onFocus = false,
         onLoad = false
     } = cardProps;
+
+    const onBinLookupString = 'function onBinLookup() {}';
+    const dataString = JSON.stringify(CardDefaultProps.data);
 
     const srPanelEnabled = cardProps.modules?.srPanel?.enabled;
     const srPanelMoveFocus = cardProps.modules?.srPanel?.moveFocus;
@@ -150,13 +154,13 @@ export const getCardConfigData = (cardProps: CardElementProps): CardConfigData =
         enableStoreDetails,
         exposeExpiryDate,
         forceCompat,
-        hasBrandsConfiguration: !!brandsConfiguration,
-        hasData: !!data,
+        hasBrandsConfiguration: notFalsy(brandsConfiguration),
+        hasData: data && JSON.stringify(cardProps.data) !== dataString,
         hasDisclaimerMessage: !!disclaimerMessage,
         hasHolderName,
-        hasInstallmentOptions: !!installmentOptions,
-        hasPlaceholders: !!placeholders, // has merchant defined placeholders
-        hasStylesConfigured: !!styles,
+        hasInstallmentOptions: notFalsy(installmentOptions),
+        hasPlaceholders: notFalsy(placeholders), // has merchant defined placeholders
+        hasStylesConfigured: notFalsy(styles),
         hideCVC,
         holderNameRequired,
         keypadFix,
@@ -171,12 +175,12 @@ export const getCardConfigData = (cardProps: CardElementProps): CardConfigData =
         showInstallmentAmounts: !!showInstallmentAmounts,
         showKCPType,
         showPayButton,
-        socialSecurityNumberMode: configuration.socialSecurityNumberMode,
+        socialSecurityNumberMode: configuration?.socialSecurityNumberMode,
         srPanelEnabled,
         srPanelMoveFocus,
         /** callbacks */
         hasOnAllValid: !!onAllValid,
-        hasOnBinLookup: !!onBinLookup,
+        hasOnBinLookup: onBinLookup && cardProps.onBinLookup?.toString() !== onBinLookupString,
         hasOnBinValue: !!onBinValue,
         hasOnBlur: !!onBlur,
         hasOnBrand: !!onBrand,

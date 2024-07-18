@@ -121,6 +121,9 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
                 onError: obj => {
                     console.log('### Cards::onError:: obj=', obj);
                 },
+                onConfigSuccess: obj => {
+                    console.log('### Cards::onConfigSuccess:: obj=', obj);
+                },
                 onBinLookup: obj => {
                     console.log('### Cards::onBinLookup:: obj=', obj);
                 }

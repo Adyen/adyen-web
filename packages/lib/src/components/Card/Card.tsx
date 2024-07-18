@@ -47,12 +47,18 @@ export class CardElement extends UIElement<CardElementProps> {
         }
     }
 
-    protected static defaultProps = {
+    public static defaultProps = {
         onBinLookup: () => {},
         showBrandsUnderCardNumber: true,
         showFormInstruction: true,
         _disableClickToPay: false,
-        doBinLookup: true
+        doBinLookup: true,
+        // Merge CardInput's defaultProps
+        // - but for the sake of analytics we need to remove the defaults that we set for callback functions, because we need to detect if the
+        // merchant themselves has defined anything for these
+        ...reject(['onLoad', 'onConfigSuccess', 'onAllValid', 'onFieldValid', 'onBrand', 'onError', 'onBinValue', 'onBlur', 'onFocus']).from(
+            CardInputDefaultProps
+        )
     };
 
     public setStatus(status: UIElementStatus, props?): this {

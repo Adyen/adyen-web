@@ -30,7 +30,7 @@ export default {
     legacyInputMode: false,
     maskSecurityCode: false,
     minimumExpiryDate: null,
-    name: null,
+    name: null, // Affects Dropin only
     showInstallmentAmounts: null,
 
     // Events
