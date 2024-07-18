@@ -4,6 +4,7 @@ import Analytics from '../../core/Analytics';
 const analyticsModule = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', bundleType: 'umd' });
 
 let card;
+let analyticsEventObject;
 
 import {
     ANALYTICS_CONFIGURED_STR,
@@ -27,7 +28,12 @@ describe('Card: calls that generate "info" analytics should produce objects with
             }
         });
 
-        analyticsModule.createAnalyticsEvent = jest.fn(() => null);
+        analyticsEventObject = null;
+
+        // @ts-ignore it's a test
+        analyticsModule.createAnalyticsEvent = jest.fn(aObj => {
+            analyticsEventObject = aObj;
+        });
     });
 
     test('Analytics should produce an "info" event, of type "rendered", for a card PM', () => {
@@ -35,7 +41,12 @@ describe('Card: calls that generate "info" analytics should produce objects with
             type: ANALYTICS_RENDERED_STR
         });
 
-        expect(analyticsModule.createAnalyticsEvent).toHaveBeenCalledWith({
+        // configData is too complex an object to fully inspect - but expect it to be there
+        expect(analyticsEventObject.data.configData).toBeDefined();
+        delete analyticsEventObject.data.configData;
+
+        // With configData removed inspect what's left
+        expect(analyticsEventObject).toEqual({
             event: ANALYTICS_EVENT_INFO,
             data: { component: card.constructor['type'], type: ANALYTICS_RENDERED_STR }
         });
@@ -48,7 +59,12 @@ describe('Card: calls that generate "info" analytics should produce objects with
             brand: 'mc'
         });
 
-        expect(analyticsModule.createAnalyticsEvent).toHaveBeenCalledWith({
+        // configData is too complex an object to fully inspect - but expect it to be there
+        expect(analyticsEventObject.data.configData).toBeDefined();
+        delete analyticsEventObject.data.configData;
+
+        // With configData removed inspect what's left
+        expect(analyticsEventObject).toEqual({
             event: ANALYTICS_EVENT_INFO,
             data: { component: card.constructor['type'], type: ANALYTICS_RENDERED_STR, isStoredPaymentMethod: true, brand: 'mc' }
         });

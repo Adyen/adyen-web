@@ -1,5 +1,5 @@
 import { AnalyticsModule } from '../../types/global-types';
-import { ConfigData, CardConfigData, CreateAnalyticsEventObject, SendAnalyticsObject } from './types';
+import { ConfigData, CreateAnalyticsEventObject, SendAnalyticsObject } from './types';
 import {
     ANALYTICS_ACTION_STR,
     ANALYTICS_CONFIGURED_STR,
@@ -47,11 +47,9 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
                 const { type: componentType } = uiElementProps;
                 let configData: ConfigData = null;
 
-                console.log('### analyticsPreProcessor::componentType:: ', componentType);
-
                 if (componentType === 'scheme') {
                     // Expected from Cards
-                    configData = getCardConfigData(uiElementProps) as CardConfigData;
+                    configData = getCardConfigData(uiElementProps);
                 }
 
                 const data = {

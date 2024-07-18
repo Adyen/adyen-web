@@ -616,31 +616,6 @@ describe('Testing creating a configData object for the Card components', () => {
     });
 
     /**
-     * showBrandsUnderCardNumber
-     */
-    describe('Testing showBrandsUnderCardNumber', () => {
-        const ANALYTICS_DATA_PROP = 'showBrandsUnderCardNumber';
-        const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
-
-        test('Expect the prop, when not passed, to equal the default', () => {
-            const configData = getCardConfigData({});
-            expect(configData[ANALYTICS_DATA_PROP]).toEqual(CardDefaultProps[CARD_CONFIG_PROP]);
-        });
-
-        test('Expect the prop, passed as false, to equal false', () => {
-            // @ts-ignore - ignore type it's only a test
-            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: false });
-            expect(configData[ANALYTICS_DATA_PROP]).toEqual(false);
-        });
-
-        test('Expect the prop, passed as true, to equal true', () => {
-            // @ts-ignore - ignore type it's only a test
-            const configData = getCardConfigData({ [CARD_CONFIG_PROP]: true });
-            expect(configData[ANALYTICS_DATA_PROP]).toEqual(true);
-        });
-    });
-
-    /**
      * showInstallmentAmounts
      */
     describe('Testing showInstallmentAmounts', () => {
@@ -697,8 +672,7 @@ describe('Testing creating a configData object for the Card components', () => {
     /**
      * showPayButton
      */
-    // TODO - skip until endpoint can accept more entries in the configData object (current limit: 32);
-    describe.skip('Testing showPayButton', () => {
+    describe('Testing showPayButton', () => {
         const ANALYTICS_DATA_PROP = 'showPayButton';
         const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
 

@@ -192,8 +192,6 @@ export const getCardConfigData = (cardProps: CardConfiguration): CardConfigData 
         onLoad: !!onLoad
     };
 
-    console.log('### utils::getCardConfigData::configData ', configData);
-
     // TODO - keep until endpoint can accept more entries in the configData object (current limit: 32);
     if (Object.keys(configData).length > 32) {
         const strippedConfigData = Object.entries(configData).reduce((acc, [key, value], index) => {
