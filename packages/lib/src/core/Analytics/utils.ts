@@ -4,7 +4,7 @@ import uuid from '../../utils/uuid';
 import { ERROR_CODES, ERROR_MSG_INCOMPLETE_FIELD } from '../Errors/constants';
 import { DEFAULT_CHALLENGE_WINDOW_SIZE, THREEDS2_FULL } from '../../components/ThreeDS2/config';
 import { CardElementProps } from '../../components/Card/types';
-import CardDefaultProps from '../../components/Card/components/CardInput/defaultProps';
+import CardInputDefaultProps from '../../components/Card/components/CardInput/defaultProps';
 import { DEFAULT_CARD_GROUP_TYPES } from '../../components/internal/SecuredFields/lib/configuration/constants';
 import { notFalsy } from '../../components/internal/SecuredFields/lib/utilities/commonUtils';
 
@@ -88,7 +88,7 @@ export const getCardConfigData = (cardProps: CardElementProps): CardConfigData =
         data,
         disclaimerMessage,
         disableIOSArrowKeys,
-        doBinLookup = true, // from Card.defaultProps
+        doBinLookup,
         enableStoreDetails,
         exposeExpiryDate,
         forceCompat,
@@ -108,19 +108,18 @@ export const getCardConfigData = (cardProps: CardElementProps): CardConfigData =
         showInstallmentAmounts,
         showPayButton = false, // hard coded default
         styles,
-        onAllValid = false,
-        onBinLookup = false,
-        onBinValue = false,
-        onBlur = false,
-        onBrand = false,
-        onConfigSuccess = false,
-        onFieldValid = false,
-        onFocus = false,
-        onLoad = false
+        onAllValid,
+        onBinLookup,
+        onBinValue,
+        onBlur,
+        onBrand,
+        onConfigSuccess,
+        onFieldValid,
+        onFocus,
+        onLoad
     } = cardProps;
 
-    const onBinLookupString = 'function onBinLookup() {}';
-    const dataString = JSON.stringify(CardDefaultProps.data);
+    const dataString = JSON.stringify(CardInputDefaultProps.data);
 
     const srPanelEnabled = cardProps.modules?.srPanel?.enabled;
     const srPanelMoveFocus = cardProps.modules?.srPanel?.moveFocus;
@@ -179,15 +178,16 @@ export const getCardConfigData = (cardProps: CardElementProps): CardConfigData =
         srPanelEnabled,
         srPanelMoveFocus,
         /** callbacks */
-        hasOnAllValid: !!onAllValid,
-        hasOnBinLookup: onBinLookup && cardProps.onBinLookup?.toString() !== onBinLookupString,
-        hasOnBinValue: !!onBinValue,
-        hasOnBlur: !!onBlur,
-        hasOnBrand: !!onBrand,
-        hasOnConfigSuccess: !!onConfigSuccess,
-        hasOnFieldValid: !!onFieldValid,
-        hasOnFocus: !!onFocus,
-        hasOnLoad: !!onLoad
+        // We need to detect if the merchant themselves has defined these, not if we've set them as a default
+        hasOnAllValid: onAllValid !== CardInputDefaultProps.onAllValid,
+        hasOnBinLookup: onBinLookup !== CardInputDefaultProps.onBinLookup,
+        hasOnBinValue: onBinValue !== CardInputDefaultProps.onBinValue,
+        hasOnBlur: onBlur !== CardInputDefaultProps.onBlur,
+        hasOnBrand: onBrand !== CardInputDefaultProps.onBrand,
+        hasOnConfigSuccess: onConfigSuccess !== CardInputDefaultProps.onConfigSuccess,
+        hasOnFieldValid: onFieldValid !== CardInputDefaultProps.onFieldValid,
+        hasOnFocus: onFocus !== CardInputDefaultProps.onFocus,
+        hasOnLoad: onLoad !== CardInputDefaultProps.onLoad
     };
 
     // TODO - keep until endpoint can accept more entries in the configData object (current limit: 32);

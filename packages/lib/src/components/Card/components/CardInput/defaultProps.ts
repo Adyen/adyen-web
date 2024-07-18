@@ -45,6 +45,8 @@ export default {
     onFocus: (): any => {},
     onChange: (): any => {},
 
+    onBinLookup: () => {},
+
     // Values
     data: {
         billingAddress: {}
