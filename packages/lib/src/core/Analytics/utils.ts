@@ -180,17 +180,19 @@ export const getCardConfigData = (cardProps: CardConfiguration): CardConfigData 
         srPanelEnabled,
         srPanelMoveFocus,
         /** callbacks */
-        onAllValid: !!onAllValid,
-        onBinLookup: !!onBinLookup,
-        onBinValue: !!onBinValue,
-        onBlur: !!onBlur,
-        onBrand: !!onBrand,
-        onConfigSuccess: !!onConfigSuccess,
-        onEnterKeyPressed: !!onEnterKeyPressed,
-        onFieldValid: !!onFieldValid,
-        onFocus: !!onFocus,
-        onLoad: !!onLoad
+        hasOnAllValid: !!onAllValid,
+        hasOnBinLookup: !!onBinLookup,
+        hasOnBinValue: !!onBinValue,
+        hasOnBlur: !!onBlur,
+        hasOnBrand: !!onBrand,
+        hasOnConfigSuccess: !!onConfigSuccess,
+        hasOnEnterKeyPressed: !!onEnterKeyPressed,
+        hasOnFieldValid: !!onFieldValid,
+        hasOnFocus: !!onFocus,
+        hasOnLoad: !!onLoad
     };
+
+    console.log('### utils::getCardConfigData:: configData', configData);
 
     // TODO - keep until endpoint can accept more entries in the configData object (current limit: 32);
     if (Object.keys(configData).length > 32) {
