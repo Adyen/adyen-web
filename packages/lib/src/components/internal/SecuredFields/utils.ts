@@ -1,6 +1,5 @@
 import { Resources } from '../../../core/Context/Resources';
 import { camelCaseToSnakeCase } from '../../../utils/textUtils';
-import { isArray } from '../../../utils/commonUtils';
 import { ALL_SECURED_FIELDS, ENCRYPTED } from './lib/constants';
 
 /**
