@@ -9,12 +9,13 @@ import {
     CbObjOnBinLookup,
     StylesObject
 } from '../internal/SecuredFields/lib/types';
-import { CVCPolicyType, DatePolicyType } from '../internal/SecuredFields/lib/types';
+import { CVCPolicyType, DatePolicyType, CbObjOnAllValid } from '../internal/SecuredFields/lib/types';
 import { ClickToPayProps } from '../internal/ClickToPay/types';
 import { InstallmentOptions } from './components/CardInput/components/types';
 import { DisclaimerMsgObject } from '../internal/DisclaimerMessage/DisclaimerMessage';
 import { Placeholders } from './components/CardInput/types';
 import { UIElementProps } from '../internal/UIElement/types';
+import type { OnAddressLookupType } from '../internal/Address/components/AddressSearch';
 
 export interface CardConfiguration extends UIElementProps {
     /**
@@ -258,6 +259,12 @@ export interface CardConfiguration extends UIElementProps {
     name?: string;
 
     /**
+     * Function used to perform 3rd party Address lookup
+     * - merchant set config option
+     */
+    onAddressLookup?: OnAddressLookupType;
+
+    /**
      * After binLookup call - provides the brand(s) we detect the user is entering, and if we support the brand(s)
      * - merchant set config option
      */
@@ -286,6 +293,12 @@ export interface CardConfiguration extends UIElementProps {
      * - merchant set config option
      */
     onConfigSuccess?: (event: CbObjOnConfigSuccess) => void;
+
+    /**
+     * Called when *all* the securedFields becomes valid
+     *  Also called again if one of the fields moves out of validity.
+     */
+    onAllValid?: (event: CbObjOnAllValid) => void;
 
     /**
      * Called when a field becomes valid and also if a valid field changes and becomes invalid.

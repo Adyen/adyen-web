@@ -1,5 +1,5 @@
 import { AnalyticsModule } from '../../types/global-types';
-import { CreateAnalyticsEventObject, SendAnalyticsObject } from './types';
+import { ConfigData, CreateAnalyticsEventObject, SendAnalyticsObject } from './types';
 import {
     ANALYTICS_ACTION_STR,
     ANALYTICS_CONFIGURED_STR,
@@ -19,6 +19,7 @@ import {
 } from './constants';
 import { THREEDS2_ERROR, THREEDS2_FULL } from '../../components/ThreeDS2/constants';
 import AdyenCheckoutError, { SDK_ERROR } from '../Errors/AdyenCheckoutError';
+import { getCardConfigData } from './utils';
 
 export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
     // return function with an analyticsModule reference
@@ -43,13 +44,22 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
 
                 const hasExpressPage = expressPage && ANALYTICS_EXPRESS_PAGES_ARRAY.includes(expressPage);
 
+                const { type: componentType } = uiElementProps;
+                let configData: ConfigData = null;
+
+                if (componentType === 'scheme' || componentType === 'bcmc' || componentType === 'customcard') {
+                    // Expected from Card related PMs
+                    configData = getCardConfigData(uiElementProps);
+                }
+
                 const data = {
                     component,
                     type,
                     ...(typeof isStoredPaymentMethod === 'boolean' && { isStoredPaymentMethod }), // if defined and a boolean...
                     ...(brand && { brand }),
                     ...(typeof isExpress === 'boolean' && { isExpress }),
-                    ...(isExpress === true && hasExpressPage && { expressPage }) // We only care about the expressPage value if isExpress is true
+                    ...(isExpress === true && hasExpressPage && { expressPage }), // We only care about the expressPage value if isExpress is true
+                    ...(configData && { configData })
                 };
 
                 analyticsModule.createAnalyticsEvent({

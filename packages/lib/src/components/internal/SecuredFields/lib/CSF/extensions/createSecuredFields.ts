@@ -10,7 +10,7 @@ import {
     ALL_SECURED_FIELDS,
     ENCRYPTED_EXPIRY_MONTH
 } from '../../constants';
-import { existy } from '../../utilities/commonUtils';
+import { existy } from '../../../../../../utils/commonUtils';
 import cardType from '../utils/cardType';
 import { SecuredFieldSetupObject } from '../../types';
 import SecuredField from '../../securedField/SecuredField';

@@ -2,7 +2,7 @@ import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import PrepareFingerprint from './components/DeviceFingerprint';
 import callSubmit3DS2Fingerprint from './callSubmit3DS2Fingerprint';
-import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
+import { existy } from '../../utils/commonUtils';
 import { TxVariants } from '../tx-variants';
 import { ThreeDS2DeviceFingerprintConfiguration } from './types';
 import AdyenCheckoutError, { API_ERROR } from '../../core/Errors/AdyenCheckoutError';
