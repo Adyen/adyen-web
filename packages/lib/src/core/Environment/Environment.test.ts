@@ -6,8 +6,8 @@ describe('Environments', () => {
 
         expect(apiUrl).toBe('https://checkoutshopper-test.adyen.com/checkoutshopper/');
         expect(analyticsUrl).toBe('https://checkoutanalytics-test.adyen.com/checkoutanalytics/');
-        expect(cdnImagesUrl).toBe('https://cdf6519016.cdn.adyen.com/checkoutshopper/');
-        expect(cdnTranslationsUrl).toBe('https://cdf6519016.cdn.adyen.com/checkoutshopper/');
+        expect(cdnImagesUrl).toBe('https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/');
+        expect(cdnTranslationsUrl).toBe('https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/');
     });
 
     test('should return proper URLs for the "test" environment even passing upper case string', () => {
@@ -16,8 +16,8 @@ describe('Environments', () => {
 
         expect(apiUrl).toBe('https://checkoutshopper-test.adyen.com/checkoutshopper/');
         expect(analyticsUrl).toBe('https://checkoutanalytics-test.adyen.com/checkoutanalytics/');
-        expect(cdnImagesUrl).toBe('https://cdf6519016.cdn.adyen.com/checkoutshopper/');
-        expect(cdnTranslationsUrl).toBe('https://cdf6519016.cdn.adyen.com/checkoutshopper/');
+        expect(cdnImagesUrl).toBe('https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/');
+        expect(cdnTranslationsUrl).toBe('https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/');
     });
 
     test('should customize the URLs in case they are provided', () => {
@@ -43,8 +43,8 @@ describe('Environments', () => {
 
         expect(apiUrl).toBe('https://checkoutshopper-live.adyen.com/checkoutshopper/');
         expect(analyticsUrl).toBe('https://checkoutanalytics-live.adyen.com/checkoutanalytics/');
-        expect(cdnImagesUrl).toBe('https://bae81f955b.cdn.adyen.com/checkoutshopper/');
-        expect(cdnTranslationsUrl).toBe('https://bae81f955b.cdn.adyen.com/checkoutshopper/');
+        expect(cdnImagesUrl).toBe('https://checkoutshopper-live.cdn.adyen.com/checkoutshopper/');
+        expect(cdnTranslationsUrl).toBe('https://checkoutshopper-live.cdn.adyen.com/checkoutshopper/');
     });
 
     test('should return the live environment URL if environment type is not provided', () => {
@@ -53,7 +53,7 @@ describe('Environments', () => {
 
         expect(apiUrl).toBe('https://checkoutshopper-live.adyen.com/checkoutshopper/');
         expect(analyticsUrl).toBe('https://checkoutanalytics-live.adyen.com/checkoutanalytics/');
-        expect(cdnImagesUrl).toBe('https://bae81f955b.cdn.adyen.com/checkoutshopper/');
-        expect(cdnTranslationsUrl).toBe('https://bae81f955b.cdn.adyen.com/checkoutshopper/');
+        expect(cdnImagesUrl).toBe('https://checkoutshopper-live.cdn.adyen.com/checkoutshopper/');
+        expect(cdnTranslationsUrl).toBe('https://checkoutshopper-live.cdn.adyen.com/checkoutshopper/');
     });
 });
