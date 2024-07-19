@@ -106,7 +106,7 @@
     "voucher.entity": "Pozycja",
     "donateButton": "Przekaż darowiznę",
     "donationTermsCondition": "Dokonując darowizny, akceptujesz %#Warunki świadczenia usług%#",
-    "donationRoundUpDescription": "% {donationAmount} to zaokrąglenie w górę z pierwotnej płatności (% {originalPaymentAmount})",
+    "donationRoundUpDescription": "%{donationAmount} to zaokrąglenie w górę z pierwotnej płatności (%{originalPaymentAmount})",
     "notNowButton": "Nie teraz",
     "thanksForYourSupport": "Dziękujemy za wsparcie!",
     "resultMessages.preauthorized": "Zapisano dane",

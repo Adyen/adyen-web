@@ -106,7 +106,7 @@
     "voucher.entity": "Entità",
     "donateButton": "Dona",
     "donationTermsCondition": "Donando accetti i %#termini e le condizioni%#",
-    "donationRoundUpDescription": "% {DonationAmount} è un arrotondamento del pagamento originale (% {originalPaymentAmount})",
+    "donationRoundUpDescription": "%{donationAmount} è un arrotondamento del pagamento originale (%{originalPaymentAmount})",
     "notNowButton": "Non ora",
     "thanksForYourSupport": "Grazie per il tuo sostegno!",
     "resultMessages.preauthorized": "Dettagli salvati",
