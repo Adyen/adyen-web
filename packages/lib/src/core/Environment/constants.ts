@@ -9,7 +9,7 @@ const API_ENVIRONMENTS = {
 };
 
 const CDN_ENVIRONMENTS = {
-    test: 'https://cdf6519016.cdn.adyen.com/checkoutshopper/',
+    test: 'https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/',
     live: 'https://checkoutshopper-live.cdn.adyen.com/checkoutshopper/',
     'live-us': 'https://checkoutshopper-live-us.cdn.adyen.com/checkoutshopper/',
     'live-au': 'https://checkoutshopper-live-au.cdn.adyen.com/checkoutshopper/',
