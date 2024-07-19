@@ -105,6 +105,8 @@
     "creditCard.storedCard.description.ariaLabel": "Platnosť uloženej karty končí o %@",
     "voucher.entity": "Subjekt",
     "donateButton": "Prispieť",
+    "donationTermsCondition": "Darovaním súhlasíte so %#zmluvnými podmienkami#%",
+    "donationRoundUpDescription": "Čiastka %{donationAmount} predstavuje zaokrúhlenie z vašej pôvodnej platby (%{originalPaymentAmount}) nahor",
     "notNowButton": "Teraz nie",
     "thanksForYourSupport": "Ďakujeme za podporu!",
     "resultMessages.preauthorized": "Údaje boli uložené",

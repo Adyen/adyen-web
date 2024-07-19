@@ -105,6 +105,8 @@
     "creditCard.storedCard.description.ariaLabel": "Gespeicherte Karte endet auf %@",
     "voucher.entity": "Entität",
     "donateButton": "Spenden",
+    "donationTermsCondition": "Durch Ihre Spende stimmen Sie den %#Allgemeinen Geschäftsbedingungen%# zu",
+    "donationRoundUpDescription": "%{donationAmount} ist eine Aufrundung von Ihrer ursprünglichen Zahlung (%{originalPaymentAmount})",
     "notNowButton": "Nicht jetzt",
     "thanksForYourSupport": "Danke für Ihre Unterstützung!",
     "resultMessages.preauthorized": "Angaben gespeichert",

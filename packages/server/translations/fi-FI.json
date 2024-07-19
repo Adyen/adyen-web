@@ -105,6 +105,8 @@
     "creditCard.storedCard.description.ariaLabel": "Tallennetun kortin viimeiset luvut ovat %@",
     "voucher.entity": "Kokonaisuus",
     "donateButton": "Lahjoita",
+    "donationTermsCondition": "Kun lahjoitat, hyväksyt %#käyttöehdot%#",
+    "donationRoundUpDescription": "%{donationAmount} on pyöristys ylöspäin alkuperäisestä maksustasi, jonka summa oli (%{originalPaymentAmount})",
     "notNowButton": "Ei nyt",
     "thanksForYourSupport": "Kiitos tuestasi!",
     "resultMessages.preauthorized": "Tiedot tallennettu",

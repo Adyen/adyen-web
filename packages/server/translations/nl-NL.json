@@ -105,6 +105,8 @@
     "creditCard.storedCard.description.ariaLabel": "Opgeslagen kaart eindigt op %@",
     "voucher.entity": "Entiteit",
     "donateButton": "Doneren",
+    "donationTermsCondition": "Door te doneren gaat u akkoord met de %#algemene voorwaarden%#",
+    "donationRoundUpDescription": "%{donationAmount} is een afronding ten opzichte van uw oorspronkelijke betaling (%{originalPaymentAmount})",
     "notNowButton": "Niet nu",
     "thanksForYourSupport": "Bedankt voor uw donatie!",
     "resultMessages.preauthorized": "Gegevens opgeslagen",

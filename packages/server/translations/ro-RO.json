@@ -105,6 +105,8 @@
     "creditCard.storedCard.description.ariaLabel": "Cardul memorat se termină în %@",
     "voucher.entity": "Entitate",
     "donateButton": "Donați",
+    "donationTermsCondition": "Donând, sunteți de acord cu %#termenele și condițiile%#",
+    "donationRoundUpDescription": "%{donationAmount} este o rotunjire în sens ascendent față de plata dvs. inițială (%{originalPaymentAmount})",
     "notNowButton": "Nu acum",
     "thanksForYourSupport": "Vă mulțumim pentru sprijin!",
     "resultMessages.preauthorized": "Detalii salvate",
