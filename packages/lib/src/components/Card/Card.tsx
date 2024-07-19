@@ -47,12 +47,13 @@ export class CardElement extends UIElement<CardElementProps> {
         }
     }
 
-    public static defaultProps = {
+    protected static defaultProps = {
         showBrandsUnderCardNumber: true,
         showFormInstruction: true,
         _disableClickToPay: false,
         doBinLookup: true,
-        ...CardInputDefaultProps
+        // Merge most of CardInput's defaultProps
+        ...reject(['type', 'setComponentRef']).from(CardInputDefaultProps)
     };
 
     public setStatus(status: UIElementStatus, props?): this {

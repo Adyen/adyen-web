@@ -2,10 +2,17 @@ import { getCardConfigData } from './utils';
 import CardDefaultProps from '../../components/Card/components/CardInput/defaultProps';
 import { DEFAULT_CHALLENGE_WINDOW_SIZE } from '../../components/ThreeDS2/config';
 import { DEFAULT_CARD_GROUP_TYPES } from '../../components/internal/SecuredFields/lib/configuration/constants';
-import Card from '../../components/Card';
+import { reject } from '../../components/internal/SecuredFields/utils';
+import CardInputDefaultProps from '../../components/Card/components/CardInput/defaultProps';
 
 describe('Testing creating a configData object for the Card components', () => {
-    const defaultCardProps = Card.defaultProps;
+    const defaultCardProps = {
+        showBrandsUnderCardNumber: true,
+        showFormInstruction: true,
+        _disableClickToPay: false,
+        doBinLookup: true,
+        ...reject(['type', 'setComponentRef']).from(CardInputDefaultProps)
+    };
 
     /**
      * 1. autoFocus

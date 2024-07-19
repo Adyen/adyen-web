@@ -9,7 +9,7 @@ class BancontactElement extends CardElement {
         super(props);
     }
 
-    public static defaultProps = {
+    protected static defaultProps = {
         ...CardElement.defaultProps,
         brands: ['bcmc', 'maestro', 'visa']
     };
