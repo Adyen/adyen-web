@@ -1,5 +1,17 @@
 # @adyen/adyen-web
 
+## 5.67.0
+
+### Minor Changes
+
+-   Card component adds configData for analytics (added to "rendered" Info Event) ([#2724](https://github.com/Adyen/adyen-web/pull/2724))
+
+-   GooglePay - Adding support for borderRadius property ([#2736](https://github.com/Adyen/adyen-web/pull/2736))
+
+### Patch Changes
+
+-   Installments component shows a translatable label above its fields ([#2737](https://github.com/Adyen/adyen-web/pull/2737))
+
 ## 5.66.1
 
 ### Patch Changes
