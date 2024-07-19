@@ -14,10 +14,9 @@ import ClickToPayWrapper from './components/ClickToPayWrapper';
 import { ComponentFocusObject } from '../../types/global-types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { TxVariants } from '../tx-variants';
-import { UIElementStatus } from '../internal/UIElement/types';
+import type { PayButtonFunctionProps, UIElementStatus } from '../internal/UIElement/types';
 import UIElement from '../internal/UIElement';
 import PayButton from '../internal/PayButton';
-import { PayButtonProps } from '../internal/PayButton/PayButton';
 import type { ICore } from '../../core/types';
 import {
     ANALYTICS_FOCUS_STR,
@@ -75,7 +74,7 @@ export class CardElement extends UIElement<CardConfiguration> {
         this.clickToPayRef = ref;
     };
 
-    formatProps(props: CardConfiguration) {
+    formatProps(props: CardConfiguration): CardConfiguration {
         // The value from a session should be used, before falling back to the merchant configuration
         const enableStoreDetails = props.session?.configuration?.enableStoreDetails ?? props.enableStoreDetails;
 
@@ -330,8 +329,7 @@ export class CardElement extends UIElement<CardConfiguration> {
         return collectBrowserInfo();
     }
 
-    // Override
-    protected payButton = (props: PayButtonProps) => {
+    protected override payButton = (props: PayButtonFunctionProps) => {
         const isZeroAuth = this.props.amount?.value === 0;
         const isStoredCard = this.props.storedPaymentMethodId?.length > 0;
         return (
