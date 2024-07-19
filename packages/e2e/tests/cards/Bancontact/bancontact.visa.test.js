@@ -22,14 +22,16 @@ test('#1 Check Bancontact comp is correctly presented at startup', async t => {
     const brandsInsidePaymentMethod = Selector('.adyen-checkout__card__brands');
     const images = brandsInsidePaymentMethod.find('img');
 
-    // Expect 3 card brand logos to be displayed (not concerned about order)
-    await t.expect(images.count).eql(3);
+    // Expect 4 card brand logos to be displayed (not concerned about order)
+    await t.expect(images.count).eql(4);
     await t
         .expect(images.nth(0).getAttribute('src'))
         .contains('bcmc.svg')
         .expect(images.nth(1).getAttribute('src'))
-        .contains('visa.svg')
+        .contains('mc.svg')
         .expect(images.nth(2).getAttribute('src'))
+        .contains('visa.svg')
+        .expect(images.nth(3).getAttribute('src'))
         .contains('maestro.svg');
 
     // Hidden cvc field

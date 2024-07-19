@@ -13,7 +13,6 @@ const htmlPages = [
     { name: 'Cards', id: 'Cards' },
     { name: 'CustomCards', id: 'CustomCards' },
     { name: 'Gift Cards', id: 'GiftCards' },
-    { name: 'Issuer Lists', id: 'IssuerLists' },
     { name: 'Open Invoices', id: 'OpenInvoices' },
     { name: 'Drop-in Sessions', id: 'DropinSessions' },
     { name: 'Gift Cards Sessions', id: 'GiftCardsSessions' },
