@@ -5,7 +5,8 @@ import collectBrowserInfo from '../../utils/browserInfo';
 import { BinLookupResponse, CardElementData, CardConfiguration } from './types';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
 import { CbObjOnBinLookup, CbObjOnConfigSuccess, CbObjOnFocus } from '../internal/SecuredFields/lib/types';
-import { fieldTypeToSnakeCase, reject } from '../internal/SecuredFields/utils';
+import { fieldTypeToSnakeCase } from '../internal/SecuredFields/utils';
+import { reject } from '../../utils/commonUtils';
 import { hasValidInstallmentsObject } from './components/CardInput/utils';
 import createClickToPayService from '../internal/ClickToPay/services/create-clicktopay-service';
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';
@@ -53,10 +54,11 @@ export class CardElement extends UIElement<CardConfiguration> {
     }
 
     protected static defaultProps = {
-        onBinLookup: () => {},
         showFormInstruction: true,
         _disableClickToPay: false,
-        doBinLookup: true
+        doBinLookup: true,
+        // Merge most of CardInput's defaultProps
+        ...reject(['type', 'setComponentRef']).from(CardInputDefaultProps)
     };
 
     public setStatus(status: UIElementStatus, props?): this {

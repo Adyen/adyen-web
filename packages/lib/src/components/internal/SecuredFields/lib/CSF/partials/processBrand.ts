@@ -2,7 +2,7 @@ import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_SECURITY_CODE } from '../../constants'
 import postMessageToIframe from '../utils/iframes/postMessageToIframe';
 import { objectsDeepEqual } from '../../utilities/commonUtils';
 import { BrandStorageObject, CbObjOnBrand, SFFeedbackObj, SFFieldType } from '../../types';
-import { pick } from '../../../utils';
+import { pick } from '../../../../../../utils/commonUtils';
 import { hasOwnProperty } from '../../../../../../utils/hasOwnProperty';
 import getIframeContentWin from '../utils/iframes/getIframeContentWin';
 import { CSFThisObject } from '../types';

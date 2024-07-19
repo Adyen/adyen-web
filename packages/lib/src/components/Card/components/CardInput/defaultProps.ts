@@ -7,31 +7,38 @@ export default {
     setComponentRef: () => {},
 
     // Settings
-    hasHolderName: false,
-    holderNameRequired: false,
-    enableStoreDetails: false,
-    hasCVC: true,
-    hideCVC: false,
-    showBrandIcon: true,
-    positionHolderNameOnTop: false,
-    billingAddressAllowedCountries: [],
-    billingAddressRequired: false,
-    billingAddressMode: AddressModeOptions.full,
-    billingAddressRequiredFields: ['street', 'houseNumberOrName', 'postalCode', 'city', 'stateOrProvince', 'country'],
-    installmentOptions: {},
-    configuration: { koreanAuthenticationRequired: false, socialSecurityNumberMode: 'auto' as SocialSecurityMode },
     autoFocus: true,
-    isPayButtonPrimaryVariant: true,
+    billingAddressAllowedCountries: [],
+    billingAddressMode: AddressModeOptions.full,
+    billingAddressRequired: false,
+    billingAddressRequiredFields: ['street', 'houseNumberOrName', 'postalCode', 'city', 'stateOrProvince', 'country'],
+
+    configuration: { koreanAuthenticationRequired: false, socialSecurityNumberMode: 'auto' as SocialSecurityMode },
+    data: {
+        billingAddress: {}
+    },
     disableIOSArrowKeys: false,
-    showContextualElement: true,
+    enableStoreDetails: false,
     exposeExpiryDate: false,
     forceCompat: false,
+    hasHolderName: false,
+    holderNameRequired: false,
+    hasCVC: true,
+    hideCVC: false,
+    installmentOptions: {},
     keypadFix: true,
     legacyInputMode: false,
     maskSecurityCode: false,
     minimumExpiryDate: null,
-    name: null,
+    name: null, // Affects Dropin only, the name displayed in the PMList item
+    placeholders: {},
+    positionHolderNameOnTop: false,
+    showBrandIcon: true,
     showInstallmentAmounts: null,
+    styles: {},
+
+    isPayButtonPrimaryVariant: true,
+    showContextualElement: true,
 
     // Events
     onLoad: (): any => {},
@@ -45,12 +52,7 @@ export default {
     onFocus: (): any => {},
     onChange: (): any => {},
 
-    // Values
-    data: {
-        billingAddress: {}
-    },
-
-    // Customization
-    styles: {},
-    placeholders: {}
+    // Strictly speaking a Card level props, but needed here for analytics.configData
+    onBinLookup: () => {},
+    onEnterKeyPressed: () => {}
 };

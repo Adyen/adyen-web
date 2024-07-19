@@ -2,7 +2,7 @@ import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import PrepareChallenge from './components/Challenge';
 import { DEFAULT_CHALLENGE_WINDOW_SIZE, THREEDS2_CHALLENGE, THREEDS2_CHALLENGE_ERROR, THREEDS2_ERROR } from './constants';
-import { existy } from '../internal/SecuredFields/lib/utilities/commonUtils';
+import { existy } from '../../utils/commonUtils';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import { TxVariants } from '../tx-variants';
 import { ThreeDS2ChallengeConfiguration } from './types';

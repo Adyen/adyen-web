@@ -5,8 +5,9 @@ import { digitsOnlyFormatter } from '../../utils/Formatters/formatters';
 import { ERROR_FIELD_REQUIRED, ERROR_INVALID_FORMAT_EXPECTS } from '../Errors/constants';
 import { DEFAULT_CHALLENGE_WINDOW_SIZE, THREEDS2_FULL } from '../../components/ThreeDS2/constants';
 import { CardConfiguration } from '../../components/Card/types';
-import CardDefaultProps from '../../components/Card/components/CardInput/defaultProps';
+import CardInputDefaultProps from '../../components/Card/components/CardInput/defaultProps';
 import { DEFAULT_CARD_GROUP_TYPES } from '../../components/internal/SecuredFields/lib/constants';
+import { notFalsy } from '../../utils/commonUtils';
 
 export const getUTCTimestamp = () => Date.now();
 
@@ -80,49 +81,51 @@ export const processAnalyticsData = (analyticsData: AnalyticsData): AnalyticsDat
 export const getCardConfigData = (cardProps: CardConfiguration): CardConfigData => {
     // Extract props from cardProps - mostly setting a default value, if prop not found
     const {
-        autoFocus = CardDefaultProps.autoFocus,
-        billingAddressAllowedCountries = CardDefaultProps.billingAddressAllowedCountries,
-        billingAddressMode = CardDefaultProps.billingAddressMode,
-        billingAddressRequired = CardDefaultProps.billingAddressRequired,
-        billingAddressRequiredFields = CardDefaultProps.billingAddressRequiredFields,
+        autoFocus,
+        billingAddressAllowedCountries,
+        billingAddressMode,
+        billingAddressRequired,
+        billingAddressRequiredFields,
         brands = DEFAULT_CARD_GROUP_TYPES,
         brandsConfiguration,
         challengeWindowSize = DEFAULT_CHALLENGE_WINDOW_SIZE,
-        configuration = CardDefaultProps.configuration,
+        configuration,
         countryCode,
         data,
         disclaimerMessage,
-        disableIOSArrowKeys = CardDefaultProps.disableIOSArrowKeys,
-        doBinLookup = true, // from Card.defaultProps
-        enableStoreDetails = CardDefaultProps.enableStoreDetails,
-        exposeExpiryDate = CardDefaultProps.exposeExpiryDate,
-        forceCompat = CardDefaultProps.forceCompat,
-        hasHolderName = CardDefaultProps.hasHolderName,
-        hideCVC = CardDefaultProps.hideCVC,
-        holderNameRequired = CardDefaultProps.holderNameRequired,
+        disableIOSArrowKeys,
+        doBinLookup,
+        enableStoreDetails,
+        exposeExpiryDate,
+        forceCompat,
+        hasHolderName,
+        hideCVC,
+        holderNameRequired,
         installmentOptions,
-        keypadFix = CardDefaultProps.keypadFix,
-        legacyInputMode = CardDefaultProps.legacyInputMode,
-        maskSecurityCode = CardDefaultProps.maskSecurityCode,
-        minimumExpiryDate = CardDefaultProps.minimumExpiryDate,
-        name = 'none',
+        keypadFix,
+        legacyInputMode,
+        maskSecurityCode,
+        minimumExpiryDate,
+        name, // = 'none',
         placeholders,
-        positionHolderNameOnTop = CardDefaultProps.positionHolderNameOnTop,
-        showBrandIcon = CardDefaultProps.showBrandIcon,
-        showInstallmentAmounts = CardDefaultProps.showInstallmentAmounts,
+        positionHolderNameOnTop,
+        showBrandIcon,
+        showInstallmentAmounts,
         showPayButton = false, // hard coded default
         styles,
-        onAllValid = false,
-        onBinLookup = false,
-        onBinValue = false,
-        onBlur = false,
-        onBrand = false,
-        onConfigSuccess = false,
-        onEnterKeyPressed = false,
-        onFieldValid = false,
-        onFocus = false,
-        onLoad = false
+        onAllValid,
+        onBinLookup,
+        onBinValue,
+        onBlur,
+        onBrand,
+        onConfigSuccess,
+        onEnterKeyPressed,
+        onFieldValid,
+        onFocus,
+        onLoad
     } = cardProps;
+
+    const dataString = JSON.stringify(CardInputDefaultProps.data);
 
     const srPanelEnabled = cardProps.modules?.srPanel?.enabled;
     const srPanelMoveFocus = cardProps.modules?.srPanel?.moveFocus;
@@ -156,13 +159,13 @@ export const getCardConfigData = (cardProps: CardConfiguration): CardConfigData 
         enableStoreDetails,
         exposeExpiryDate,
         forceCompat,
-        hasBrandsConfiguration: !!brandsConfiguration,
-        hasData: !!data,
+        hasBrandsConfiguration: notFalsy(brandsConfiguration),
+        hasData: data && JSON.stringify(cardProps.data) !== dataString,
         hasDisclaimerMessage: !!disclaimerMessage,
         hasHolderName,
-        hasInstallmentOptions: !!installmentOptions,
-        hasPlaceholders: !!placeholders, // has merchant defined placeholders
-        hasStylesConfigured: !!styles,
+        hasInstallmentOptions: notFalsy(installmentOptions),
+        hasPlaceholders: notFalsy(placeholders), // has merchant defined placeholders
+        hasStylesConfigured: notFalsy(styles),
         hideCVC,
         holderNameRequired,
         keypadFix,
@@ -176,23 +179,22 @@ export const getCardConfigData = (cardProps: CardConfiguration): CardConfigData 
         showInstallmentAmounts: !!showInstallmentAmounts,
         showKCPType,
         showPayButton,
-        socialSecurityNumberMode: configuration.socialSecurityNumberMode,
+        socialSecurityNumberMode: configuration?.socialSecurityNumberMode,
         srPanelEnabled,
         srPanelMoveFocus,
         /** callbacks */
-        hasOnAllValid: !!onAllValid,
-        hasOnBinLookup: !!onBinLookup,
-        hasOnBinValue: !!onBinValue,
-        hasOnBlur: !!onBlur,
-        hasOnBrand: !!onBrand,
-        hasOnConfigSuccess: !!onConfigSuccess,
-        hasOnEnterKeyPressed: !!onEnterKeyPressed,
-        hasOnFieldValid: !!onFieldValid,
-        hasOnFocus: !!onFocus,
-        hasOnLoad: !!onLoad
+        // We need to detect if the merchant themselves has defined these, not if we've set them as a default
+        hasOnAllValid: onAllValid !== CardInputDefaultProps.onAllValid,
+        hasOnBinLookup: onBinLookup !== CardInputDefaultProps.onBinLookup,
+        hasOnBinValue: onBinValue !== CardInputDefaultProps.onBinValue,
+        hasOnBlur: onBlur !== CardInputDefaultProps.onBlur,
+        hasOnBrand: onBrand !== CardInputDefaultProps.onBrand,
+        hasOnConfigSuccess: onConfigSuccess !== CardInputDefaultProps.onConfigSuccess,
+        hasOnEnterKeyPressed: onEnterKeyPressed !== CardInputDefaultProps.onEnterKeyPressed,
+        hasOnFieldValid: onFieldValid !== CardInputDefaultProps.onFieldValid,
+        hasOnFocus: onFocus !== CardInputDefaultProps.onFocus,
+        hasOnLoad: onLoad !== CardInputDefaultProps.onLoad
     };
-
-    console.log('### utils::getCardConfigData:: configData', configData);
 
     // TODO - keep until endpoint can accept more entries in the configData object (current limit: 32);
     if (Object.keys(configData).length > 32) {

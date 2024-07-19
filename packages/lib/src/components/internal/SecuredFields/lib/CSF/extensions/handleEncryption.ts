@@ -7,7 +7,7 @@ import {
     ENCRYPTED_EXPIRY_DATE
 } from '../../constants';
 import { processErrors } from '../utils/processErrors';
-import { truthy } from '../../utilities/commonUtils';
+import { truthy } from '../../../../../../utils/commonUtils';
 import { SFFeedbackObj, CbObjOnFieldValid, EncryptionObj } from '../../types';
 import postMessageToIframe from '../utils/iframes/postMessageToIframe';
 import { hasOwnProperty } from '../../../../../../utils/hasOwnProperty';
