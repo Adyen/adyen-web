@@ -140,6 +140,7 @@ export interface GooglePayConfiguration extends UIElementProps {
 
     buttonRootNode?: HTMLDocument | ShadowRoot;
     buttonLocale?: string;
+    buttonRadius?: number;
 
     // Events
     onClick?: (resolve, reject) => void;

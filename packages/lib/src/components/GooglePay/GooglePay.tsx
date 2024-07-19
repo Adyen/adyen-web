@@ -252,6 +252,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
                     buttonSizeMode={this.props.buttonSizeMode}
                     buttonLocale={this.props.buttonLocale}
                     buttonRootNode={this.props.buttonRootNode}
+                    buttonRadius={this.props.buttonRadius}
                     paymentsClient={this.googlePay.paymentsClient}
                     onClick={this.submit}
                 />
