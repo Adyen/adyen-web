@@ -43,8 +43,8 @@ describe('Environments', () => {
 
         expect(apiUrl).toBe('https://checkoutshopper-live.adyen.com/checkoutshopper/');
         expect(analyticsUrl).toBe('https://checkoutanalytics-live.adyen.com/checkoutanalytics/');
-        expect(cdnImagesUrl).toBe('https://bae81f955b.cdn.adyen.com/checkoutshopper/');
-        expect(cdnTranslationsUrl).toBe('https://bae81f955b.cdn.adyen.com/checkoutshopper/');
+        expect(cdnImagesUrl).toBe('https://checkoutshopper-live.cdn.adyen.com/checkoutshopper/');
+        expect(cdnTranslationsUrl).toBe('https://checkoutshopper-live.cdn.adyen.com/checkoutshopper/');
     });
 
     test('should return the live environment URL if environment type is not provided', () => {
@@ -53,7 +53,7 @@ describe('Environments', () => {
 
         expect(apiUrl).toBe('https://checkoutshopper-live.adyen.com/checkoutshopper/');
         expect(analyticsUrl).toBe('https://checkoutanalytics-live.adyen.com/checkoutanalytics/');
-        expect(cdnImagesUrl).toBe('https://bae81f955b.cdn.adyen.com/checkoutshopper/');
-        expect(cdnTranslationsUrl).toBe('https://bae81f955b.cdn.adyen.com/checkoutshopper/');
+        expect(cdnImagesUrl).toBe('https://checkoutshopper-live.cdn.adyen.com/checkoutshopper/');
+        expect(cdnTranslationsUrl).toBe('https://checkoutshopper-live.cdn.adyen.com/checkoutshopper/');
     });
 });
