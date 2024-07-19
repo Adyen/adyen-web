@@ -10,7 +10,8 @@ import {
     CbObjOnLoad,
     CbObjOnBinLookup,
     CVCPolicyType,
-    DatePolicyType
+    DatePolicyType,
+    CbObjOnAllValid
 } from '../internal/SecuredFields/lib/types';
 import { ClickToPayConfiguration } from '../internal/ClickToPay/types';
 
@@ -108,6 +109,12 @@ export interface CardElementProps extends UIElementProps {
      * Called once the card input fields are ready to use.
      */
     onConfigSuccess?: (event: CbObjOnConfigSuccess) => void;
+
+    /**
+     * Called when *all* the securedFields becomes valid
+     *  Also called again if one of the fields moves out of validity.
+     */
+    onAllValid?: (event: CbObjOnAllValid) => void;
 
     /**
      * Called when a field becomes valid and also if a valid field changes and becomes invalid.

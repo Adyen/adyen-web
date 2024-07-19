@@ -1,5 +1,6 @@
 import { PaymentAmount } from '../../types';
 import { CoreOptions } from '../types';
+import { SocialSecurityMode } from '../../components/Card/types';
 
 export interface Experiment {
     controlGroup: boolean;
@@ -83,6 +84,7 @@ export interface AnalyticsObject {
     isExpress?: boolean;
     expressPage?: string;
     result?: string;
+    configData?: any;
 }
 
 export type ANALYTICS_EVENT = 'log' | 'error' | 'info';
@@ -119,4 +121,55 @@ export type SendAnalyticsObject = Omit<AnalyticsObject, 'timestamp' | 'component
 export type FieldErrorAnalyticsObject = {
     fieldType: string;
     errorCode: string;
+};
+
+export type ConfigData = CardConfigData; // TODO extend in future as we get Dropin & Checkout related config data
+
+export type CardConfigData = {
+    autoFocus: boolean;
+    billingAddressAllowedCountries: string;
+    billingAddressMode: 'full' | 'partial' | 'lookup' | 'none';
+    billingAddressRequired: boolean;
+    billingAddressRequiredFields: string;
+    brands: string;
+    challengeWindowSize: string;
+    disableIOSArrowKeys: boolean;
+    doBinLookup: boolean;
+    enableStoreDetails: boolean;
+    exposeExpiryDate: boolean;
+    forceCompat: boolean;
+    hasBrandsConfiguration: boolean;
+    hasData: boolean;
+    hasDisclaimerMessage: boolean;
+    hasHolderName: boolean;
+    hasPlaceholders: boolean;
+    hasInstallmentOptions: boolean;
+    hideCVC: boolean;
+    holderNameRequired: boolean;
+    hasStylesConfigured: boolean;
+    keypadFix: boolean;
+    legacyInputMode: boolean;
+    maskSecurityCode: boolean;
+    minimumExpiryDate: boolean;
+    name: string;
+    positionHolderNameOnTop: boolean;
+    riskEnabled: boolean;
+    showBrandIcon: boolean;
+    showBrandsUnderCardNumber: boolean; // (v5 only)
+    showInstallmentAmounts: boolean;
+    showKCPType: 'none' | 'auto' | 'atStart';
+    showPayButton: boolean;
+    socialSecurityNumberMode: SocialSecurityMode;
+    srPanelEnabled: boolean;
+    srPanelMoveFocus: boolean;
+    // callbacks
+    hasOnAllValid: boolean;
+    hasOnBinLookup: boolean;
+    hasOnBinValue: boolean;
+    hasOnBlur: boolean;
+    hasOnBrand: boolean;
+    hasOnConfigSuccess: boolean;
+    hasOnFieldValid: boolean;
+    hasOnFocus: boolean;
+    hasOnLoad: boolean;
 };

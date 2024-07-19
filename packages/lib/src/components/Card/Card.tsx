@@ -26,6 +26,7 @@ import { FieldErrorAnalyticsObject, SendAnalyticsObject } from '../../core/Analy
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import { ERROR_CODES } from '../../core/Errors/constants';
 import { getErrorMessageFromCode } from '../../core/Errors/utils';
+import CardInputDefaultProps from './components/CardInput/defaultProps';
 
 export class CardElement extends UIElement<CardElementProps> {
     public static type = 'scheme';
@@ -47,10 +48,11 @@ export class CardElement extends UIElement<CardElementProps> {
     }
 
     protected static defaultProps = {
-        onBinLookup: () => {},
-        showBrandsUnderCardNumber: true,
         showFormInstruction: true,
-        _disableClickToPay: false
+        _disableClickToPay: false,
+        doBinLookup: true,
+        // Merge most of CardInput's defaultProps
+        ...reject(['type', 'setComponentRef']).from(CardInputDefaultProps)
     };
 
     public setStatus(status: UIElementStatus, props?): this {
@@ -82,6 +84,8 @@ export class CardElement extends UIElement<CardElementProps> {
             hasCVC: !((props.brand && props.brand === 'bcmc') || props.hideCVC),
             // billingAddressRequired only available for non-stored cards
             billingAddressRequired: props.storedPaymentMethodId ? false : props.billingAddressRequired,
+            // edge case where merchant has defined both an onAddressLookup callback AND set billingAddressMode: 'partial' - which leads to some strange behaviour in the address UI
+            billingAddressMode: props.onAddressLookup ? CardInputDefaultProps.billingAddressMode : props.billingAddressMode,
             // ...(props.brands && !props.groupTypes && { groupTypes: props.brands }),
             type: props.type === 'scheme' ? 'card' : props.type,
             countryCode: props.countryCode ? props.countryCode.toLowerCase() : null,
@@ -190,7 +194,7 @@ export class CardElement extends UIElement<CardElementProps> {
             }
         }
 
-        super.submitAnalytics(analyticsObj);
+        super.submitAnalytics(analyticsObj, this.props);
     }
 
     private onConfigSuccess = (obj: CbObjOnConfigSuccess) => {
