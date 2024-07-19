@@ -18,10 +18,7 @@ export const Default: UpiStory = {
         return <Container element={upi} />;
     },
     args: {
-        countryCode: 'IN',
-        componentConfiguration: {
-            defaultMode: 'vpa'
-        }
+        countryCode: 'IN'
     }
 };
 

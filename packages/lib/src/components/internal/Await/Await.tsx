@@ -113,6 +113,12 @@ function Await(props: AwaitComponentProps) {
     };
 
     useEffect(() => {
+        if (props.shouldRedirectAutomatically && props.url) {
+            redirectToApp(props.url);
+        }
+    }, [props.shouldRedirectAutomatically, props.url]);
+
+    useEffect(() => {
         checkStatus();
         return (): void => {
             clearTimeout(storedTimeout);
@@ -208,7 +214,7 @@ function Await(props: AwaitComponentProps) {
                 </div>
             )}
 
-            {props.url && (
+            {props.url && !props.shouldRedirectAutomatically && (
                 <div className="adyen-checkout__await__app-link">
                     <ContentSeparator />
                     <Button classNameModifiers={['await']} onClick={() => redirectToApp(props.url)} label={i18n.get('openApp')} />

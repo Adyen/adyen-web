@@ -4,47 +4,91 @@ import UPIComponent from './components/UPIComponent';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import Await from '../internal/Await';
 import QRLoader from '../internal/QRLoader';
-import { UPIConfiguration, UpiMode, UpiPaymentData } from './types';
+import { UPIConfiguration, UpiMode, UpiPaymentData, UpiType } from './types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { TxVariants } from '../tx-variants';
+import isMobile from '../../utils/isMobile';
+import type { ICore } from '../../core/types';
+
+/**
+ * For mobile:
+ * We should show upi_collect or upi_intent depending on if `apps` are returned in /paymentMethods response
+ * The upi_qr should always be on the second tab
+ *
+ * For non-mobile:
+ * We should never show the upi_intent (ignore `apps` in /paymentMethods response)
+ * The upi_qr should be on the first tab and the upi_collect should be on second tab
+ */
 
 class UPI extends UIElement<UPIConfiguration> {
     public static type = TxVariants.upi;
-    public static txVariants = [TxVariants.upi, TxVariants.upi_qr, TxVariants.upi_collect];
+    public static txVariants = [TxVariants.upi, TxVariants.upi_qr, TxVariants.upi_collect, TxVariants.upi_intent];
 
-    private useQrCodeVariant: boolean;
+    private selectedMode: UpiMode;
 
-    protected static defaultProps = {
-        defaultMode: 'vpa'
-    };
+    constructor(checkout: ICore, props: UPIConfiguration) {
+        super(checkout, props);
+        this.selectedMode = this.props.defaultMode;
+    }
+
+    // @ts-ignore fix later
+    formatProps(props: UPIConfiguration) {
+        if (!isMobile()) {
+            return {
+                ...super.formatProps(props),
+                defaultMode: props?.defaultMode ?? 'qrCode',
+                // For large screen, ignore the apps
+                apps: []
+            };
+        }
+
+        const hasIntentApps = props.apps?.length > 0;
+        const fallbackDefaultMode = hasIntentApps ? 'intent' : 'vpa';
+        const allowedModes = [fallbackDefaultMode, 'qrCode'];
+        const upiCollectApp = {
+            id: 'vpa',
+            name: props.i18n.get('upi.collect.dropdown.label'),
+            type: TxVariants.upi_collect
+        };
+        const apps = hasIntentApps ? [...props.apps.map(app => ({ ...app, type: TxVariants.upi_intent })), upiCollectApp] : [];
+        return {
+            ...super.formatProps(props),
+            defaultMode: allowedModes.includes(props?.defaultMode) ? props.defaultMode : fallbackDefaultMode,
+            apps
+        };
+    }
 
     public get isValid(): boolean {
-        return this.useQrCodeVariant || !!this.state.isValid;
+        return this.state.isValid;
     }
 
     public formatData(): UpiPaymentData {
-        const { virtualPaymentAddress } = this.state.data;
+        const { virtualPaymentAddress, app } = this.state.data || {};
+
         return {
             paymentMethod: {
-                type: this.useQrCodeVariant ? TxVariants.upi_qr : TxVariants.upi_collect,
-                ...(virtualPaymentAddress && !this.useQrCodeVariant && { virtualPaymentAddress })
+                ...(this.paymentType && { type: this.paymentType }),
+                ...(this.paymentType === TxVariants.upi_collect && virtualPaymentAddress && { virtualPaymentAddress }),
+                ...(this.paymentType === TxVariants.upi_intent && app?.id && { appId: app.id })
             }
         };
     }
 
-    private onUpdateMode = (mode: UpiMode): void => {
-        if (mode === 'qrCode') {
-            this.useQrCodeVariant = true;
-            /**
-             * When selecting QR code mode, we need to clear the state data and trigger the 'onChange'.
-             */
-            this.setState({ data: {}, valid: {}, errors: {}, isValid: true });
-        } else {
-            this.useQrCodeVariant = false;
+    get paymentType(): UpiType {
+        if (this.selectedMode === 'qrCode') {
+            return TxVariants.upi_qr;
         }
+        if (this.selectedMode === 'vpa') {
+            return TxVariants.upi_collect;
+        }
+        return this.state.data?.app?.type;
+    }
+
+    private onUpdateMode = (mode: UpiMode): void => {
+        this.selectedMode = mode;
     };
 
-    private renderContent(type: string): h.JSX.Element {
+    private renderContent(type: string, url: string, paymentMethodType: string): h.JSX.Element {
         switch (type) {
             case 'qrCode':
                 return (
@@ -68,17 +112,19 @@ class UPI extends UIElement<UPIConfiguration> {
                         ref={ref => {
                             this.componentRef = ref;
                         }}
-                        onError={this.props.onError}
+                        url={url}
+                        type={paymentMethodType}
+                        showCountdownTimer
+                        shouldRedirectAutomatically
+                        countdownTime={5}
                         clientKey={this.props.clientKey}
                         paymentData={this.props.paymentData}
-                        onComplete={this.onComplete}
-                        brandLogo={this.icon}
-                        type={TxVariants.upi_collect}
+                        onActionHandled={this.props.onActionHandled}
+                        onError={this.props.onError}
                         messageText={this.props.i18n.get('upi.vpaWaitingMessage')}
                         awaitText={this.props.i18n.get('await.waitForConfirmation')}
-                        showCountdownTimer
-                        countdownTime={5}
-                        onActionHandled={this.props.onActionHandled}
+                        onComplete={this.onComplete}
+                        brandLogo={this.icon}
                     />
                 );
             default:
@@ -90,6 +136,7 @@ class UPI extends UIElement<UPIConfiguration> {
                         payButton={this.payButton}
                         onChange={this.setState}
                         onUpdateMode={this.onUpdateMode}
+                        apps={this.props.apps}
                         defaultMode={this.props.defaultMode}
                         showPayButton={this.props.showPayButton}
                     />
@@ -98,10 +145,10 @@ class UPI extends UIElement<UPIConfiguration> {
     }
 
     public render(): h.JSX.Element {
-        const { type } = this.props;
+        const { type, url, paymentMethodType } = this.props;
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                <SRPanelProvider srPanel={this.props.modules.srPanel}>{this.renderContent(type)}</SRPanelProvider>
+                <SRPanelProvider srPanel={this.props.modules.srPanel}>{this.renderContent(type, url, paymentMethodType)}</SRPanelProvider>
             </CoreProvider>
         );
     }

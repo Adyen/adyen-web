@@ -143,6 +143,7 @@ export enum TxVariants {
     upi = 'upi', // also QR
     upi_qr = 'upi_qr', // also QR
     upi_collect = 'upi_collect', // also QR
+    upi_intent = 'upi_intent', // also QR
     /** Await */
 
     /** Giftcard */

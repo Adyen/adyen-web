@@ -1,0 +1,51 @@
+@import 'styles/variable-generator';
+
+$expand-btn: '.adyen-checkout-expand-button--upi-app-item';
+
+.adyen-checkout-upi-app-item {
+    background: token(color-background-primary);
+    display: flex;
+    gap: token(spacer-070);
+    flex-direction: column;
+    padding: token(spacer-050) token(spacer-070);
+    border: token(border-width-s) solid token(color-outline-primary);
+    border-radius: token(border-radius-m);
+    cursor: pointer;
+    width: 100%;
+    transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease,
+        box-shadow 0.15s ease,
+        border-radius 0.15s ease;
+
+    &__label {
+        cursor: pointer;
+    }
+
+    &:hover:not(&--selected) {
+        border-color: token(color-outline-primary-hover);
+    }
+
+    &--selected:not(&:last-child) {
+        border-color: token(color-outline-primary-active);
+        box-shadow: 0 0 0 0.5px token(color-outline-primary-active);
+    }
+
+    &--selected {
+        cursor: default;
+        border-color: token(color-outline-secondary);
+
+        #{$expand-btn} {
+            cursor: default;
+
+            > label {
+                cursor: default;
+            }
+        }
+    }
+
+    #{$expand-btn} {
+        margin-right: 0;
+    }
+}

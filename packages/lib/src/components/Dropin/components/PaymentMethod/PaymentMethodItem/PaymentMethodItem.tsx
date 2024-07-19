@@ -8,8 +8,8 @@ import UIElement from '../../../../internal/UIElement/UIElement';
 import PaymentMethodBrands from '../PaymentMethodBrands/PaymentMethodBrands';
 import { BRAND_ICON_UI_EXCLUSION_LIST } from '../../../../internal/SecuredFields/lib/constants';
 import PaymentMethodName from '../PaymentMethodName';
-import { ExpandButton } from './ExpandButton';
 import { useCoreContext } from '../../../../../core/Context/CoreProvider';
+import ExpandButton from '../../../../internal/ExpandButton';
 
 export interface PaymentMethodItemProps {
     paymentMethod: UIElement;
