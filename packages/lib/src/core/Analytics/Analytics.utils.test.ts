@@ -7,7 +7,6 @@ import CardInputDefaultProps from '../../components/Card/components/CardInput/de
 
 describe('Testing creating a configData object for the Card components', () => {
     const defaultCardProps = {
-        showBrandsUnderCardNumber: true,
         showFormInstruction: true,
         _disableClickToPay: false,
         doBinLookup: true,

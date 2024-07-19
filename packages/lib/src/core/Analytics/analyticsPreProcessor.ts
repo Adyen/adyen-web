@@ -40,7 +40,7 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
                 const { type: componentType } = uiElementProps;
                 let configData: ConfigData = null;
 
-                if (componentType === 'card') {
+                if (componentType === 'card' || componentType === 'bcmc') {
                     // Expected from Cards
                     configData = getCardConfigData(uiElementProps) as CardConfigData;
                 }
