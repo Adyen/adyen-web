@@ -7,7 +7,7 @@ import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import { CardNumberProps } from './types';
 import DataSfSpan from './DataSfSpan';
 import { ENCRYPTED_CARD_NUMBER } from '../../../../internal/SecuredFields/lib/constants';
-import { alternativeLabelContent } from './IframeLabelAlternative';
+import { alternativeLabelContent } from './FieldLabelAlternative';
 
 export default function CardNumber(props: CardNumberProps) {
     const { i18n } = useCoreContext();

@@ -6,6 +6,8 @@ import { InstallmentsItem, InstallmentsProps } from '../types';
 import Fieldset from '../../../../../internal/FormFields/Fieldset/Fieldset';
 import RadioGroup from '../../../../../internal/FormFields/RadioGroup';
 import Select from '../../../../../internal/FormFields/Select';
+import { alternativeLabelContent } from '../FieldLabelAlternative';
+import './Installments.scss';
 
 export interface InstallmentsObj {
     value: number;
@@ -80,48 +82,51 @@ function Installments(props: InstallmentsProps) {
     if (hasRadioButtonUI) {
         return (
             <div className="adyen-checkout__installments">
-                <Fieldset classNameModifiers={['revolving-plan']} label={''}>
-                    <RadioGroup
-                        items={[
-                            { id: 'onetime', name: 'installments.oneTime' },
-                            { id: 'installments', name: 'installments.installments' },
-                            { id: 'revolving', name: 'installments.revolving' }
-                        ]}
-                        onChange={onRadioSelect}
-                        value={radioBtnValue}
-                    />
-
-                    <Field
-                        className={radioBtnValue !== 'installments' ? 'revolving-plan-installments__disabled' : 'revolving-plan-installments'}
-                        classNameModifiers={['revolving-plan-installments']}
-                        name={''}
-                        useLabelElement={false}
-                        showErrorElement={false}
-                    >
-                        <Select
-                            filterable={false}
-                            items={installmentOptions.values.map(installmentItemsMapper)}
-                            selectedValue={installmentAmount}
-                            onChange={onSelectInstallment}
-                            name={'installments'}
-                            disabled={radioBtnValue !== 'installments'}
+                <Field
+                    label={i18n.get('installments')}
+                    classNameModifiers={['installments']}
+                    name={'installmentsPseudoLabel'}
+                    useLabelElement={false}
+                    showContextualElement={false}
+                    renderAlternativeToLabel={alternativeLabelContent}
+                >
+                    <Fieldset classNameModifiers={['revolving-plan']} label={''}>
+                        <RadioGroup
+                            items={[
+                                { id: 'onetime', name: 'installments.oneTime' },
+                                { id: 'installments', name: 'installments.installments' },
+                                { id: 'revolving', name: 'installments.revolving' }
+                            ]}
+                            onChange={onRadioSelect}
+                            value={radioBtnValue}
+                            ariaLabel={i18n.get('installments')}
                         />
-                    </Field>
-                </Fieldset>
+
+                        <Field
+                            className={radioBtnValue !== 'installments' ? 'revolving-plan-installments__disabled' : 'revolving-plan-installments'}
+                            classNameModifiers={['revolving-plan-installments']}
+                            name={''}
+                            useLabelElement={false}
+                            showContextualElement={false}
+                        >
+                            <Select
+                                filterable={false}
+                                items={installmentOptions.values.map(installmentItemsMapper)}
+                                selectedValue={installmentAmount}
+                                onChange={onSelectInstallment}
+                                name={'installments'}
+                                disabled={radioBtnValue !== 'installments'}
+                            />
+                        </Field>
+                    </Fieldset>
+                </Field>
             </div>
         );
     }
 
     return (
         <div className="adyen-checkout__installments">
-            <Field
-                label={i18n.get('installments')}
-                classNameModifiers={['installments']}
-                name={''}
-                useLabelElement={false}
-                showErrorElement={false}
-                readOnly={readOnly}
-            >
+            <Field label={i18n.get('installments')} classNameModifiers={['installments']} name={'installments'} showContextualElement={false}>
                 <Select
                     filterable={false}
                     items={installmentOptions.values.map(installmentItemsMapper)}
@@ -129,6 +134,7 @@ function Installments(props: InstallmentsProps) {
                     onChange={onSelectInstallment}
                     name={'installments'}
                     readonly={readOnly}
+                    allowIdOnButton={true}
                 />
             </Field>
         </div>

@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import Field from '../../internal/FormFields/Field';
 import { h } from 'preact';
 import { GiftcardFieldProps } from './types';
-import { alternativeLabelContent } from '../../Card/components/CardInput/components/IframeLabelAlternative';
+import { alternativeLabelContent } from '../../Card/components/CardInput/components/FieldLabelAlternative';
 
 export const GiftcardPinField = ({
     i18n,

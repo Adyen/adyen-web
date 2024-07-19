@@ -19,14 +19,16 @@ const ReadOnlyAddress = ({ data, label }: ReadOnlyAddressProps) => {
 
     return (
         <Fieldset classNameModifiers={[label]} label={label} readonly>
-            {hasName && <FullName firstName={firstName} lastName={lastName}></FullName>}
-            {!!street && street}
-            {houseNumberOrName && `, ${houseNumberOrName},`}
-            <br />
-            {postalCode && `${postalCode}`}
-            {city && `, ${city}`}
-            {stateOrProvince && stateOrProvince !== FALLBACK_VALUE && `, ${stateOrProvince}`}
-            {country && `, ${country} `}
+            <Fragment>
+                {hasName && <FullName firstName={firstName} lastName={lastName}></FullName>}
+                {!!street && street}
+                {houseNumberOrName && `, ${houseNumberOrName},`}
+                <br />
+                {postalCode && `${postalCode}`}
+                {city && `, ${city}`}
+                {stateOrProvince && stateOrProvince !== FALLBACK_VALUE && `, ${stateOrProvince}`}
+                {country && `, ${country} `}
+            </Fragment>
         </Fieldset>
     );
 };

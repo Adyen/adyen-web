@@ -68,6 +68,7 @@ describe('Installments', () => {
             </CoreProvider>
         );
         expect(await screen.findByRole('button')).toHaveTextContent('1x $300.00');
+        expect(await screen.findByText('Number of installments')).toBeTruthy();
     });
 
     describe('On brand change', () => {
