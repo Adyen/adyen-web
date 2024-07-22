@@ -5,14 +5,15 @@
   "repository": "github:Adyen/adyen-web",
   "license": "MIT",
   "scripts": {
-    "test:start-playground": "cross-env NODE_ENV=test webpack-dev-server --config app/config/webpack.config.js",
+    "test:start-playground": "npm --prefix ../playground run start",
+    "test:start-storybook": "npm --prefix ../lib run story",
     "test:headless": "npx playwright test",
     "test:headed": "npx playwright test --headed",
     "test:ui-mode": "npx playwright test --ui"
   },
   "devDependencies": {
     "@adyen/adyen-web-server": "1.0.0",
-    "@playwright/test": "1.39.0",
+    "@playwright/test": "1.45.3",
     "cross-env": "^7.0.3",
     "css-loader": "^6.0.0",
     "dotenv": "16.4.4",

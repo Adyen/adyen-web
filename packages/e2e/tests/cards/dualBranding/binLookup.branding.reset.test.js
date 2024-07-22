@@ -22,7 +22,7 @@ const cardUtils = cu(iframeSelector);
 fixture`Testing Card component, in Dropin, resetting brand after failed binLookup`
     .page(BASE_URL)
     .clientScripts('binLookup.branding.reset.clientScripts.js');
-
+// todo: some can be moved to unit / ui tests
 /**
  * SINGLE BRANDING RESETS
  */

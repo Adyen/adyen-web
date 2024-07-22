@@ -28,7 +28,7 @@ const TEST_SPEED = 1;
 const iframeSelector = getIframeSelector('.card-field iframe');
 
 const cardUtils = cu(iframeSelector);
-
+// todo: internal implementation should be in unit test
 fixture`Testing binLookup v2 response`.page(CARDS_URL).clientScripts('binLookup.clientScripts.js').requestHooks(logger);
 
 test('#1 Enter number of known dual branded card, ' + 'then inspect response body for expected properties ', async t => {
