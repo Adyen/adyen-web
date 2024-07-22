@@ -22,7 +22,8 @@ const cardUtils = cu(iframeSelector);
 fixture`Testing Bancontact, with dual branded cards, in Dropin, resetting after failed binLookup`
     .page(BASE_URL + '?countryCode=BE')
     .clientScripts('bancontact.clientScripts.js');
-
+// todo: ui test where possible
+// DONE
 test(
     '#1 Fill in dual branded card then ' +
         'check that brands have been sorted to place Bcmc first then ' +

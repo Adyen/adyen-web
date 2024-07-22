@@ -6,7 +6,7 @@ const PAN_ERROR = LANG['cc.num.900'];
 const DATE_INVALID_ERROR = LANG['cc.dat.912'];
 const DATE_EMPTY_ERROR = LANG['cc.dat.910'];
 const CVC_ERROR = LANG['cc.cvc.920'];
-
+// todo: UI test
 test.describe('Test how Card Component handles hidden expiryDate policy', () => {
     test('#1 how UI & state respond', async ({ cardExpiryDatePoliciesPage }) => {
         const { card, page } = cardExpiryDatePoliciesPage;

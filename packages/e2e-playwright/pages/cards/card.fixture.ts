@@ -5,6 +5,7 @@ import { CardAvsPage } from './card.avs.page';
 type Fixture = {
     cardPage: CardPage;
     cardAvsPage: CardAvsPage;
+    cardPartialAvsPage: CardAvsPage;
     cardNoContextualElementPage: CardPage;
     cardLegacyInputModePage: CardPage;
     cardBrandingPage: CardPage;
@@ -23,6 +24,15 @@ const test = base.extend<Fixture>({
         await page.addInitScript({
             content:
                 "window.cardConfig = { billingAddressRequired: true, billingAddressRequiredFields: ['street', 'houseNumberOrName', 'postalCode', 'city']};"
+        });
+
+        // @ts-ignore
+        await useCardPage(page, use, CardAvsPage);
+    },
+
+    cardPartialAvsPage: async ({ page }, use) => {
+        await page.addInitScript({
+            content: "window.cardConfig = { billingAddressRequired: true, billingAddressMode: 'partial'};"
         });
 
         // @ts-ignore

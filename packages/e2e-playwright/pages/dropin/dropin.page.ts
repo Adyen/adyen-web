@@ -13,13 +13,13 @@ class DropinPage {
     }
 
     async goto(url?: string) {
-        await this.page.goto('http://localhost:3024');
-        const response = await this.page.waitForResponse(response => response.url().includes('paymentMethods') && response.status() === 200);
-        this._paymentMethods = (await response.json()).paymentMethods.map(({ name, type }: { name: string; type: string }) => ({ name, type }));
+        await this.page.goto('https://localhost:3020/iframe.html?args=&id=dropin-default--auto&viewMode=story');
+        //  const response = await this.page.waitForResponse(response => response.url().includes('paymentMethods') && response.status() === 200);
+        /// this._paymentMethods = (await response.json()).paymentMethods.map(({ name, type }: { name: string; type: string }) => ({ name, type }));
     }
 
     get paymentMethods() {
-        return this._paymentMethods;
+        return this._paymentMethods || [];
     }
 }
 

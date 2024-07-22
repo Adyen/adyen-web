@@ -19,7 +19,7 @@ const mockAddress = {
 };
 
 fixture`Testing Card with AVS`.page(CARDS_URL).clientScripts('avs.clientScripts.js');
-
+// DONE
 test('Fill in card with AVS', async t => {
     // Start, allow time for iframes to load
     await start(t, 2000, TEST_SPEED);

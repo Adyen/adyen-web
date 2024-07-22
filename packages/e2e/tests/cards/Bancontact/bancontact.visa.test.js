@@ -14,7 +14,8 @@ fixture`Testing Bancontact in Dropin`
         await t.navigateTo(`${dropinPage.pageUrl}?countryCode=BE`);
     })
     .clientScripts('./bancontact.clientScripts.js');
-
+// DONE
+// todo: ui or unit
 test('#1 Check Bancontact comp is correctly presented at startup', async t => {
     // Wait for field to appear in DOM
     await t.wait(1000);

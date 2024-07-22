@@ -8,11 +8,12 @@ const TEST_SPEED = 1;
 const INVALID_POSTALCODE = 'aaaaaaaaaa';
 
 let cardPage = null;
-
+// DONE
 fixture`Card with Partial AVS`.page(CARDS_URL).beforeEach(() => {
     cardPage = new CardComponentPage();
 });
 
+// todo: ui or unit tests
 test('should validate Postal Code if property data.billingAddress.country is provided', async t => {
     await start(t, 2000, TEST_SPEED);
 

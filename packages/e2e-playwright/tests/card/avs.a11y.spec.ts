@@ -13,10 +13,10 @@ test.describe('Card - AVS', () => {
 
         const firstDigits = REGULAR_TEST_CARD.substring(0, 15);
         const lastDigits = REGULAR_TEST_CARD.substring(15, 16);
-
+        // todo: why? what's the purpose?
         await cardWithAvs.typeCardNumber(firstDigits);
         await cardWithAvs.typeCardNumber(lastDigits);
 
-        await expect(cardWithAvs.billingAddress.addressInput).toBeFocused();
+        await expect(cardWithAvs.billingAddress.streetInput).toBeFocused();
     });
 });
