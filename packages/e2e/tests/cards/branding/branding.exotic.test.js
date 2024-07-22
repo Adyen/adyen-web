@@ -21,6 +21,7 @@ fixture`Testing card component dedicated to a single, "exotic", txVariant that w
 /**
  * Relies on sf v3.3.1
  */
+// DONE
 test('Input details for "exotic" brand - card should still become valid, with no errors', async t => {
     // Start, allow time for iframes to load
     await start(t, 2000, TEST_SPEED);

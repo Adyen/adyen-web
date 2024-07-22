@@ -8,7 +8,7 @@ fixture`Cards - Available brands on Card Component`.page(CARDS_URL).beforeEach(a
     cardComponent = new CardComponent('.card-field');
 });
 
-/**
+/** todo: move them to ui tests
  * NOTE: this test ALWAYS fails if other test files are run i.e. only if this fixture is run in isolation does this test pass
  * So it is a false negative from TestCafe.
  */

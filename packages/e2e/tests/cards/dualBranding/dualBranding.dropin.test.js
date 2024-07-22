@@ -20,7 +20,7 @@ const iframeSelector = getIframeSelector('.adyen-checkout__payment-method--schem
 const cardUtils = cu(iframeSelector);
 
 fixture`Testing dual branding in dropin`.page(BASE_URL).clientScripts('dualBranding.clientScripts.js');
-
+// todo: unit or ui tests
 test(
     '#1 Fill in card number that will get dual branding result from binLookup, ' + 'then check that the expected icons/buttons are shown',
     async t => {

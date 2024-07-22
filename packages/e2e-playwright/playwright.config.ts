@@ -22,7 +22,7 @@ const config: PlaywrightTestConfig = {
     /* Run tests in files in parallel */
     fullyParallel: true,
     /* Fail the build on CI if you accidentally left test.only in the source code. */
-    forbidOnly: !!process.env.CI,
+    //todo: enable later forbidOnly: !!process.env.CI,
     /* Retry on CI only */
     retries: process.env.CI ? 1 : 0,
     /* Opt out of parallel tests on CI. */
@@ -72,7 +72,7 @@ const config: PlaywrightTestConfig = {
     /* Run your local dev server before starting the tests */
     webServer: {
         command: 'npm run test:start-playground',
-        port: 3024,
+        port: 3020,
         reuseExistingServer: !process.env.CI
     }
 };

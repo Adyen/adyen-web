@@ -20,7 +20,7 @@ const cardUtils = cu(iframeSelector);
  * card component to not support maestro - therefore we need a separate clientScript
  */
 fixture`Testing branding, as detected by /binLookup, for bcmc (hidden cvc field)`.page(CARDS_URL).clientScripts('branding.bcmc.clientScripts.js');
-
+// done
 test('Test card is valid with bcmc details (no cvc) ' + 'then test it is invalid (& brand reset) when number deleted', async t => {
     // Start, allow time for iframes to load
     await start(t, 2000, TEST_SPEED);
