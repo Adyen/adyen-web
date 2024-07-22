@@ -116,11 +116,10 @@
     }
 
     .adyen-checkout__input-wrapper {
-        @include index.adyen-checkout-input-wrapper-reset;
-
         flex: 1;
         justify-content: space-between;
 
+        @include index.adyen-checkout-input-wrapper-reset;
     }
 
     &.adyen-checkout__field--error {

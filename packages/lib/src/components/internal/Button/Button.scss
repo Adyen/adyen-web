@@ -60,13 +60,12 @@
 
     &.adyen-checkout__button--pay {
         margin-top: token(spacer-090);
+        display: flex;
+        justify-content: center;
 
         &:disabled {
             opacity: 0.4;
         }
-
-        display: flex;
-        justify-content: center;
     }
 
     &.adyen-checkout__button--standalone {

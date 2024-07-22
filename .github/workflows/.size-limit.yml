@@ -10,10 +10,10 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 18.18
+      - name: Setup Node.js 20.12.2
         uses: actions/setup-node@v4
         with:
-          node-version: 18.18
+          node-version: 20.12.2
 
       - uses: andresz1/size-limit-action@master
         with:
