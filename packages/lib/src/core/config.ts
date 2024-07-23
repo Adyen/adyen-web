@@ -30,6 +30,7 @@ export const GENERIC_OPTIONS = [
     'onEnterKeyPressed',
     'onError',
     'onBalanceCheck',
+    'onOrderCancel',
     'onOrderRequest',
     'onOrderUpdated',
     'onPaymentMethodsRequest'
