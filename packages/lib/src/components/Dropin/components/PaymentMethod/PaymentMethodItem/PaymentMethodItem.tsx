@@ -84,8 +84,8 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
         const showBrands = !paymentMethod.props.oneClick && paymentMethod.brands && paymentMethod.brands.length > 0;
 
         return (
-            // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions
-            <li key={paymentMethod._id} className={paymentMethodClassnames} onClick={this.handleOnListItemClick}>
+            // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
+            <div key={paymentMethod._id} className={paymentMethodClassnames} onClick={this.handleOnListItemClick}>
                 <div className="adyen-checkout__payment-method__header">
                     <ExpandButton buttonId={buttonId} showRadioButton={showRadioButton} isSelected={isSelected} expandContentId={containerId}>
                         <PaymentMethodIcon
@@ -137,7 +137,7 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
                         <PaymentMethodDetails paymentMethodComponent={paymentMethod.render()} isLoaded={isLoaded} />
                     </div>
                 </div>
-            </li>
+            </div>
         );
     }
 }
