@@ -69,12 +69,13 @@ test('should render payButton', async () => {
     render(dropinElement.render());
 
     // get all possible payment method selector buttons
-    const paymentMethodListItemArray = await screen.findAllByRole('listitem');
+    const paymentMethodListItemArray = await screen.findAllByRole('radio');
 
     // go trough and select each element in the dropin, check if it has payButton
     for (const paymentMethodListItem of paymentMethodListItemArray) {
         paymentMethodListItem.click();
-        expect(await within(paymentMethodListItem).findAllByRole('button')).toHaveLength(1);
+        // eslint-disable-next-line testing-library/no-node-access
+        expect(await within(paymentMethodListItem.parentElement.parentElement).findAllByRole('button')).toHaveLength(1);
     }
 });
 
@@ -83,12 +84,13 @@ test('should NOT render payButton', async () => {
     render(dropinElement.render());
 
     // get all possible payment method selector buttons
-    const paymentMethodListItemArray = await screen.findAllByRole('listitem');
+    const paymentMethodListItemArray = await screen.findAllByRole('radio');
 
     // go trough and select each element in the dropin, check if it has payButton
     for (const paymentMethodListItem of paymentMethodListItemArray) {
         paymentMethodListItem.click();
-        const element = within(paymentMethodListItem).queryByRole('button');
+        // eslint-disable-next-line testing-library/no-node-access
+        const element = within(paymentMethodListItem.parentElement.parentElement).queryByRole('button');
         // @ts-ignore toBeInDocument
         expect(element).not.toBeInTheDocument();
     }
