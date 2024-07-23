@@ -56,7 +56,12 @@ export const getOriginKey = (originKeyOrigin = document.location.origin) =>
     httpPost('originKeys', { originDomains: [originKeyOrigin] }).then(response => response.originKeys[originKeyOrigin]);
 
 export const checkBalance = data => {
-    return httpPost('paymentMethods/balance', data)
+    // amount needs to be sent as of V70, this trick is just to demo
+    // !! DO NOT DO THIS IN PRODUCTION !!
+    // this should be done on the backend side of an application
+    const balanceRequest = { amount: paymentsConfig.amount, ...data };
+
+    return httpPost('paymentMethods/balance', balanceRequest)
         .then(response => {
             if (response.error) throw 'Balance call failed';
             return response;
