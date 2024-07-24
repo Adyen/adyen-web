@@ -51,8 +51,7 @@ function PaymentMethodsContainer({
                     {label}
                 </label>
             )}
-            {/* eslint-disable jsx-a11y/no-noninteractive-element-to-interactive-role */}
-            <ul
+            <div
                 id={selectListId}
                 className={paymentMethodListClassnames}
                 role="radiogroup"
@@ -84,7 +83,7 @@ function PaymentMethodsContainer({
                         />
                     );
                 })}
-            </ul>
+            </div>
         </div>
     );
 }
