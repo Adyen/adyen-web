@@ -1,6 +1,6 @@
 name: E2E for Checkout Components
 
-on: 
+on:
   pull_request:
   workflow_dispatch:
 
@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [18.15]
+        node-version: [20.12.2]
         api-version: ["v68", "v69", "v70", "v71"]
         # node-version: [16.x, 18.x, 19.x]
         # Currently 18 and 19 are not supported, still keeping it
