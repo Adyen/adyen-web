@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     branches:
-      - main
+      - v5
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -17,10 +17,10 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 18
+      - name: Setup Node.js 20.12.2
         uses: actions/setup-node@v4
         with:
-          node-version: 18.15
+          node-version: 20.12.2
 
       - name: Install Dependencies
         run: yarn
