@@ -3,8 +3,6 @@ import { GooglePayConfiguration } from './types';
 const defaultProps: GooglePayConfiguration = {
     isExpress: false,
 
-    isExpress: false,
-
     // isReadyToPayRequest
     existingPaymentMethodRequired: false,
 
