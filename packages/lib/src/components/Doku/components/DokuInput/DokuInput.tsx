@@ -1,9 +1,9 @@
 import { h } from 'preact';
 import { useRef, useState } from 'preact/hooks';
 import PersonalDetails from '../../../internal/PersonalDetails/PersonalDetails';
-import useCoreContext from '../../../../core/Context/useCoreContext';
-import { ComponentMethodsRef } from '../../../types';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import FormInstruction from '../../../internal/FormInstruction';
+import { ComponentMethodsRef } from '../../../internal/UIElement/types';
 
 export default function DokuInput(props) {
     const personalDetailsRef = useRef(null);
@@ -30,7 +30,8 @@ export default function DokuInput(props) {
 
     return (
         <div className="adyen-checkout__doku-input__field">
-            {props.showFormInstruction && <FormInstruction />}
+            <FormInstruction />
+
             <PersonalDetails
                 data={props.data}
                 requiredFields={['firstName', 'lastName', 'shopperEmail']}

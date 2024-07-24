@@ -11,11 +11,13 @@ import CtPSection from '../CtPSection';
 import { CTP_IFRAME_NAME } from '../../services/utils';
 import Iframe from '../../../../internal/IFrame';
 import useImage from '../../../../../core/Context/useImage';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import isMobile from '../../../../../utils/isMobile';
 import Language from '../../../../../language';
-import { PaymentAmount } from '../../../../../types';
+import { PaymentAmount } from '../../../../../types/global-types';
 import './CtPCards.scss';
+import AdyenCheckoutError from '../../../../../core/Errors/AdyenCheckoutError';
+import { PREFIX } from '../../../Icon/constants';
 
 type CtPCardsProps = {
     onDisplayCardComponent?(): void;
@@ -62,13 +64,15 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
             onSetStatus('loading');
             const payload = await checkout(checkoutCard);
             onSubmit(payload);
-        } catch (error) {
+        } catch (error: unknown) {
             if (error instanceof SrciError) {
                 setErrorCode(error?.reason);
                 console.warn(`CtP - Checkout: Reason: ${error?.reason} / Source: ${error?.source} / Scheme: ${error?.scheme}`);
             }
             setIsShopperCheckingOutWithCtp(false);
-            onError(error);
+
+            if (error instanceof AdyenCheckoutError) onError(error);
+            else onError(new AdyenCheckoutError('ERROR', 'Error during ClickToPay checkout', { cause: error }));
         }
     }, [checkout, checkoutCard]);
 
@@ -112,7 +116,10 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
                         label={getPayButtonLabel(i18n, amount, checkoutCard)}
                         status={status}
                         variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'}
-                        icon={cards.length !== 0 && getImage({ imageFolder: 'components/' })(isCtpPrimaryPaymentMethod ? 'lock' : 'lock_black')}
+                        icon={
+                            cards.length !== 0 &&
+                            getImage({ imageFolder: 'components/' })(isCtpPrimaryPaymentMethod ? `${PREFIX}lock` : `${PREFIX}lock_black`)
+                        }
                         onClick={doCheckout}
                     />
                 </Fragment>

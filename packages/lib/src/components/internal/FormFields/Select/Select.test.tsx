@@ -2,14 +2,15 @@ import { h } from 'preact';
 import { render, screen } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import Select from './Select';
+import { CoreProvider } from '../../../../core/Context/CoreProvider';
 
 describe('Select', () => {
     const user = userEvent.setup();
     const getWrapper = (props: any) =>
         render(
-            <div>
+            <CoreProvider loadingContext={'test'} i18n={global.i18n} resources={global.resources}>
                 <Select {...props} name={'mockSelect'} />
-            </div>
+            </CoreProvider>
         );
 
     test('Options list should select with correct inputs', async () => {
@@ -42,7 +43,7 @@ describe('Select', () => {
         expect(onChangeCb.mock.calls[0][0]).toStrictEqual(callbackData);
 
         // Test new option is displayed
-        await screen.getByRole('button').focus();
+        screen.getByRole('button').focus();
 
         // Test keyboard interaction
         await user.keyboard('[ArrowDown][Enter]');
@@ -84,7 +85,7 @@ describe('Select', () => {
         expect(onChangeCb.mock.calls[0][0]).toStrictEqual(callbackData);
 
         // Test new option is displayed
-        await screen.getByRole('combobox').focus();
+        screen.getByRole('combobox').focus();
 
         // Test keyboard interaction
         await user.keyboard('[ArrowDown][Enter]');

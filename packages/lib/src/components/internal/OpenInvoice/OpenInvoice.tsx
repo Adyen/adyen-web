@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import CompanyDetails from '../CompanyDetails';
 import PersonalDetails from '../PersonalDetails';
 import Address from '../Address';
@@ -17,10 +17,10 @@ import {
 } from './types';
 import './OpenInvoice.scss';
 import IbanInput from '../IbanInput';
-import { ComponentMethodsRef } from '../../types';
 import { GenericError } from '../../../core/Errors/types';
 import Field from '../FormFields/Field';
 import FormInstruction from '../FormInstruction';
+import { ComponentMethodsRef } from '../UIElement/types';
 import useSRPanelForOpenInvoiceErrors from './useSRPanelForOpenInvoiceErrors';
 
 const consentCBErrorObj: GenericError = {
@@ -112,7 +112,8 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
     };
     return (
         <div className="adyen-checkout__open-invoice">
-            {props.showFormInstruction && <FormInstruction />}
+            <FormInstruction />
+
             {activeFieldsets.companyDetails && (
                 <CompanyDetails
                     data={props.data.companyDetails}
@@ -137,7 +138,7 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
             {activeFieldsets.bankAccount && (
                 <IbanInput
                     holderName={true}
-                    label="bankAccount"
+                    label="ach.bankAccount"
                     data={data.bankAccount}
                     onChange={handleFieldset('bankAccount')}
                     ref={fieldsetsRefs.bankAccount}
@@ -159,7 +160,12 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
             )}
 
             {showSeparateDeliveryAddressCheckbox && (
-                <Field name={'separateDeliveryAddress'} useLabelElement={false} addContextualElement={false}>
+                <Field
+                    classNameModifiers={['separateDeliveryAddress', 'consentCheckbox']}
+                    name={'separateDeliveryAddress'}
+                    useLabelElement={false}
+                    showErrorElement={false}
+                >
                     <Checkbox
                         label={i18n.get('separateDeliveryAddress')}
                         checked={activeFieldsets.deliveryAddress}

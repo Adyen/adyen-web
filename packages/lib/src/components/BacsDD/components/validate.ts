@@ -1,6 +1,6 @@
 import { ValidatorRules } from '../../../utils/Validator/types';
 import { digitsOnlyFormatter } from '../../../utils/Formatters/formatters';
-import { personalDetailsValidationRules } from '../../internal/PersonalDetails/validate';
+import { validationRules } from '../../../utils/Validator/defaultRules';
 
 const bankAccountNumberRegEx = /^(\d){1,8}$/;
 const bankLocationIdRegEx = /^(\d){6}$/;
@@ -28,7 +28,7 @@ export const bacsValidationRules: ValidatorRules = {
         modes: ['blur'],
         validate: value => !!value
     },
-    shopperEmail: personalDetailsValidationRules.shopperEmail,
+    shopperEmail: validationRules.emailRule,
     default: {
         modes: ['blur'],
         validate: value => !!value && value.length > 0

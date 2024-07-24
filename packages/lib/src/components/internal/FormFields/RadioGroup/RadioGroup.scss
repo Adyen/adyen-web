@@ -1,4 +1,4 @@
-@import "../../../../style/index";
+@import 'styles/variable-generator';
 
 .adyen-checkout__radio_group + .adyen-checkout-input__inline-validation {
     display: none;
@@ -10,14 +10,15 @@
 }
 
 .adyen-checkout__radio_group__label {
+    margin:0;
     padding-bottom: 0;
-    padding-left: 24px;
+    padding-left: token(spacer-090);
     position: relative;
     display: block;
     color: inherit;
-    font-size: $font-size-small;
+    font-size: token(text-body-font-size);
     font-weight: normal;
-    line-height: 16px;
+    line-height: token(text-body-line-height);
     overflow: visible;
 }
 
@@ -28,19 +29,18 @@
 .adyen-checkout__radio_group__label::before {
     content: "";
     position: absolute;
-    background-color: $color-white;
-    border: 1px solid $color-gray-dark;
+    background-color: token(color-background-primary);
+    border: token(border-width-s) solid token(color-outline-tertiary);
     border-radius: 50%;
-    height: 16px;
-    width: 16px;
+    height: token(spacer-070);
+    width: token(spacer-070);
     left: 0;
-    top: 0;
+    top: token(spacer-010);
     transition: border-color 0.2s ease-out, box-shadow 0.2s ease-out;
 }
 
 .adyen-checkout__radio_group__label:hover::before {
-    border-color: #99a3ad;
-    box-shadow: 0 0 0 2px $color-gray;
+    box-shadow: 0 0 0 token(spacer-010) token(color-outline-primary-hover);
     cursor: pointer;
 }
 
@@ -50,10 +50,10 @@
     position: absolute;
     margin: 0 auto;
     left: 5px;
-    top: 5px;
-    height: 6px;
-    width: 6px;
-    background-color: $color-white;
+    top: 7px;
+    height: token(spacer-030);
+    width: token(spacer-030);
+    background-color: token(color-background-primary);
     border-radius: 50%;
     transform: scale(0);
     transition: transform 0.2s ease-out;
@@ -61,13 +61,13 @@
 }
 
 .adyen-checkout__radio_group__label:hover {
-    border-color: $color-primary;
+    border-color: token(color-label-primary);
     cursor: pointer;
 }
 
 .adyen-checkout__radio_group__input:checked + .adyen-checkout__radio_group__label::before,
 .adyen-checkout__radio_group__label--selected {
-    background-color: $color-primary;
+    background-color: token(color-label-primary);
     border: 0;
     transition: all 0.2s ease-out;
 }
@@ -77,16 +77,16 @@
 }
 
 .adyen-checkout__radio_group__input:focus + .adyen-checkout__radio_group__label::before {
-    border-color: $color-primary;
-    box-shadow: 0 0 0 2px rgb(0 102 255 / 40%);
+    border-color: token(color-label-primary);
+    box-shadow: 0 0 0 token(spacer-010) token(color-outline-tertiary);
 }
 
 .adyen-checkout__radio_group__input:checked + .adyen-checkout__radio_group__label:hover::before,
 .adyen-checkout__radio_group__input:checked:focus + .adyen-checkout__radio_group__label::before,
 .adyen-checkout__radio_group__input:checked:active + .adyen-checkout__radio_group__label::before {
-    box-shadow: 0 0 0 2px rgb(0 102 255 / 40%);
+    box-shadow: 0 0 0 token(spacer-010) token(color-outline-tertiary);
 }
 
 .adyen-checkout__radio_group__label.adyen-checkout__radio_group__label--invalid::before {
-    border: 1px solid $color-alert;
+    border: token(border-width-s) solid token(color-outline-critical);
 }

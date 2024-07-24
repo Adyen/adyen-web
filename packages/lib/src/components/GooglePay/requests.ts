@@ -1,6 +1,6 @@
 import { getDecimalAmount } from '../../utils/amount-util';
 import config from './config';
-import { GooglePaymentDataRequest, GooglePayProps } from './types';
+import { GooglePaymentDataRequest, GooglePayConfiguration } from './types';
 
 /**
  * Configure your site's support for payment methods supported by the Google Pay API.
@@ -12,7 +12,10 @@ export function isReadyToPayRequest({
     allowedAuthMethods,
     allowedCardNetworks,
     existingPaymentMethodRequired = false
-}): google.payments.api.IsReadyToPayRequest {
+}: Pick<
+    GooglePayConfiguration,
+    'allowedAuthMethods' | 'allowedCardNetworks' | 'existingPaymentMethodRequired'
+>): google.payments.api.IsReadyToPayRequest {
     return {
         apiVersion: config.API_VERSION,
         apiVersionMinor: config.API_VERSION_MINOR,
@@ -44,23 +47,23 @@ export function getTransactionInfo({
     countryCode = 'US',
     totalPriceStatus = 'FINAL',
     ...props
-}: GooglePayProps): google.payments.api.TransactionInfo {
+}: GooglePayConfiguration): google.payments.api.TransactionInfo {
     const formattedPrice = String(getDecimalAmount(amount.value, amount.currency));
 
     return {
         countryCode,
         currencyCode: amount.currency,
         totalPrice: formattedPrice,
-        totalPriceStatus: totalPriceStatus as google.payments.api.TotalPriceStatus,
+        totalPriceStatus: totalPriceStatus,
         ...props.transactionInfo
     };
 }
 
-export function initiatePaymentRequest({ configuration, ...props }: GooglePayProps): GooglePaymentDataRequest {
+export function initiatePaymentRequest({ configuration, ...props }: GooglePayConfiguration, countryCode: string): GooglePaymentDataRequest {
     return {
         apiVersion: config.API_VERSION,
         apiVersionMinor: config.API_VERSION_MINOR,
-        transactionInfo: getTransactionInfo(props),
+        transactionInfo: getTransactionInfo({ countryCode, ...props }),
         merchantInfo: {
             merchantId: configuration.merchantId,
             merchantName: configuration.merchantName,

@@ -1,4 +1,35 @@
-import { ANALYTICS_EVENT, AnalyticsObject } from '../../core/Analytics/types';
+import UIElement from '../internal/UIElement';
+import { ActionHandledReturnObject, AnalyticsModule } from '../../types/global-types';
+import Language from '../../language';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import { Analytics3DS2Errors } from '../../core/Analytics/constants';
+import { UIElementProps } from '../internal/UIElement/types';
+
+interface ThreeDS2Configuration extends UIElementProps {
+    dataKey?: string;
+    environment?: string;
+    isMDFlow?: boolean;
+    loadingContext?: string;
+    modules?: { analytics: AnalyticsModule };
+    notificationURL?: string;
+    onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
+    onError?: (error: AdyenCheckoutError, element?: UIElement) => void;
+    paymentData?: string;
+    token?: string;
+    type?: string;
+    challengeWindowSize?: '01' | '02' | '03' | '04' | '05';
+}
+
+export interface ThreeDS2DeviceFingerprintConfiguration extends ThreeDS2Configuration {
+    clientKey?: string;
+    elementRef?: UIElement;
+    showSpinner: boolean;
+}
+
+export interface ThreeDS2ChallengeConfiguration extends ThreeDS2Configuration {
+    i18n?: Language;
+    size?: string;
+}
 
 /**
  * See
@@ -82,6 +113,22 @@ type CheckoutThreeDS2Action = {
     authorisationToken: string;
 };
 
-export type ThreeDS2AnalyticsObject = Pick<AnalyticsObject, 'code' | 'errorType' | 'message' | 'type' | 'metadata'> & {
-    event: ANALYTICS_EVENT;
-};
+export interface FingerprintResolveData {
+    data: {
+        [key: string]: string;
+        paymentData: string;
+    };
+}
+
+export interface ChallengeResolveData {
+    data: {
+        details: {
+            [key: string]: string;
+        };
+    };
+}
+
+export interface ErrorCodeObject {
+    errorCode: string | Analytics3DS2Errors;
+    message: string;
+}

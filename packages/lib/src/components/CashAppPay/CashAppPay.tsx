@@ -1,24 +1,27 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
-import CoreProvider from '../../core/Context/CoreProvider';
+import UIElement from '../internal/UIElement/UIElement';
+import { CoreProvider } from '../../core/Context/CoreProvider';
 import { CashAppComponent } from './components/CashAppComponent';
 import CashAppService from './services/CashAppService';
 import { CashAppSdkLoader } from './services/CashAppSdkLoader';
-import { CashAppPayElementData, CashAppPayElementProps, CashAppPayEventData } from './types';
+import { CashAppPayElementData, CashAppPayConfiguration, CashAppPayEventData } from './types';
 import { ICashAppService } from './services/types';
 import defaultProps from './defaultProps';
 import RedirectButton from '../internal/RedirectButton';
 import { payAmountLabel } from '../internal/PayButton';
+import { TxVariants } from '../tx-variants';
+import type { ICore } from '../../core/types';
+import { PREFIX } from '../internal/Icon/constants';
 
-export class CashAppPay extends UIElement<CashAppPayElementProps> {
-    public static type = 'cashapp';
+export class CashAppPay extends UIElement<CashAppPayConfiguration> {
+    public static type = TxVariants.cashapp;
 
     private readonly cashAppService: ICashAppService | undefined;
 
     protected static defaultProps = defaultProps;
 
-    constructor(props) {
-        super(props);
+    constructor(checkout: ICore, props?: CashAppPayConfiguration) {
+        super(checkout, props);
 
         if (this.props.enableStoreDetails && this.props.storePaymentMethod) {
             console.warn(
@@ -43,7 +46,7 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
         });
     }
 
-    public formatProps(props: CashAppPayElementProps) {
+    public formatProps(props: CashAppPayConfiguration) {
         return {
             ...props,
             enableStoreDetails: props.session?.configuration?.enableStoreDetails || props.enableStoreDetails
@@ -144,7 +147,7 @@ export class CashAppPay extends UIElement<CashAppPayElementProps> {
                     <RedirectButton
                         showPayButton={this.props.showPayButton}
                         label={payAmountLabel(this.props.i18n, this.props.amount)}
-                        icon={this.resources?.getImage({ imageFolder: 'components/' })('lock')}
+                        icon={this.resources?.getImage({ imageFolder: 'components/' })(`${PREFIX}lock`)}
                         name={this.displayName}
                         amount={this.props.amount}
                         payButton={this.payButton}

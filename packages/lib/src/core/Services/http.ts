@@ -1,4 +1,3 @@
-import fetch from './fetch';
 import { DEFAULT_HTTP_TIMEOUT, FALLBACK_CONTEXT } from '../config';
 import AdyenCheckoutError from '../Errors/AdyenCheckoutError';
 
@@ -80,6 +79,7 @@ export function http<T>(options: HttpOptions, data?: any): Promise<T> {
                     throw error;
                 }
 
+                // eslint-disable-next-line @typescript-eslint/no-base-to-string,@typescript-eslint/restrict-template-expressions
                 const errorMessage = options.errorMessage || `Call to ${url} failed. Error= ${error}`;
                 handleFetchError(errorMessage, errorLevel, error);
             })

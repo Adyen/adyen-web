@@ -1,15 +1,14 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import OxxoVoucherResult from './components/OxxoVoucherResult';
-import CoreProvider from '../../core/Context/CoreProvider';
-import { OxxoElementData } from './types';
-import { UIElementProps } from '../types';
+import { CoreProvider } from '../../core/Context/CoreProvider';
+import { TxVariants } from '../tx-variants';
+import { VoucherConfiguration } from '../internal/Voucher/types';
 
-export class OxxoElement extends UIElement {
-    public static type = 'oxxo';
+export class OxxoElement extends UIElement<VoucherConfiguration> {
+    public static type = TxVariants.oxxo;
 
-    protected static defaultProps: UIElementProps = {
-        showPayButton: false,
+    protected static defaultProps = {
         name: 'Oxxo'
     };
 
@@ -17,7 +16,7 @@ export class OxxoElement extends UIElement {
         return true;
     }
 
-    formatData(): OxxoElementData {
+    formatData() {
         return {
             paymentMethod: {
                 type: this.props.type || OxxoElement.type

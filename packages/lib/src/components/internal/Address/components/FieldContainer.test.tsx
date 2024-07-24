@@ -1,9 +1,10 @@
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { h } from 'preact';
 import FieldContainer from './FieldContainer';
 import Specifications from '../Specifications';
 import { mock } from 'jest-mock-extended';
 import { FieldContainerProps } from '../types';
+import { CoreProvider } from '../../../../core/Context/CoreProvider';
 
 const propsMock = {
     errors: {},
@@ -12,10 +13,16 @@ const propsMock = {
     specifications: new Specifications()
 };
 
-describe('FieldContainer', () => {
-    const mockedProps = mock<FieldContainerProps>();
-    const getWrapper = (props = {}) => shallow(<FieldContainer {...propsMock} {...props} {...mockedProps} />);
+const mockedProps = mock<FieldContainerProps>();
+const getWrapper = (props = {}) => {
+    return mount(
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            <FieldContainer {...propsMock} {...props} {...mockedProps} />
+        </CoreProvider>
+    );
+};
 
+describe('FieldContainer', () => {
     test('renders the StateField', () => {
         const wrapper = getWrapper({ fieldName: 'stateOrProvince' });
         expect(wrapper.find('StateField')).toHaveLength(1);

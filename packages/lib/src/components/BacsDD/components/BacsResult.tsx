@@ -1,6 +1,6 @@
 import { h } from 'preact';
 
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import Voucher from '../../internal/Voucher';
 import '../../internal/Voucher/Voucher.scss';
 import './BacsResult.scss';

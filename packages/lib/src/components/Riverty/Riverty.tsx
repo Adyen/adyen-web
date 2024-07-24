@@ -9,10 +9,11 @@ import {
 } from './config';
 import ConsentCheckboxLabel from '../internal/ConsentCheckboxLabel';
 import { getConsentUrl } from '../../utils/getConsentUrl';
-import { OpenInvoiceContainerProps } from '../helpers/OpenInvoiceContainer/OpenInvoiceContainer';
+import type { OpenInvoiceConfiguration } from '../helpers/OpenInvoiceContainer/types';
+import { TxVariants } from '../tx-variants';
 
 export default class Riverty extends OpenInvoiceContainer {
-    public static readonly type = 'riverty';
+    public static readonly type = TxVariants.riverty;
 
     protected static defaultProps = {
         personalDetailsRequiredFields,
@@ -20,7 +21,7 @@ export default class Riverty extends OpenInvoiceContainer {
         ...OpenInvoiceContainer.defaultProps
     };
 
-    formatProps(props: OpenInvoiceContainerProps) {
+    formatProps(props: OpenInvoiceConfiguration) {
         return {
             ...super.formatProps(props),
             billingAddressSpecification: {

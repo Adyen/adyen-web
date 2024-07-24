@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { otpValidationRules } from './validate';
 import CtPResendOtpLink from './CtPResendOtpLink';
 import useClickToPayContext from '../../../context/useClickToPayContext';
-import useCoreContext from '../../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../../core/Context/CoreProvider';
 import useForm from '../../../../../../utils/useForm';
 import Field from '../../../../FormFields/Field';
 import './CtPOneTimePasswordInput.scss';
@@ -89,7 +89,7 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
     const handleOnKeyUp = useCallback(
         (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
             if (event.key === 'Enter') {
-                props.onPressEnter();
+                void props.onPressEnter();
             }
         },
         [props.onPressEnter]

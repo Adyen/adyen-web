@@ -1,62 +1,427 @@
 import GooglePay from './GooglePay';
+import GooglePayService from './GooglePayService';
+
 import Analytics from '../../core/Analytics';
 import { ANALYTICS_EVENT_INFO, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
 
-const analyticsModule = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '' });
+const analyticsModule = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', bundleType: 'umd' });
+
+jest.mock('./GooglePayService');
+
+beforeEach(() => {
+    // @ts-ignore 'mockClear' is provided by jest.mock
+    GooglePayService.mockClear();
+    jest.resetModules();
+    jest.resetAllMocks();
+});
+
+let googlePaymentData: Partial<google.payments.api.PaymentData> = {};
+
+beforeEach(() => {
+    googlePaymentData = {
+        apiVersionMinor: 0,
+        apiVersion: 2,
+        paymentMethodData: {
+            description: 'Visa •••• 1111',
+            tokenizationData: {
+                type: 'PAYMENT_GATEWAY',
+                token: 'google-pay-token'
+            },
+            type: 'CARD',
+            info: {
+                cardNetwork: 'VISA',
+                cardDetails: '1111',
+                // @ts-ignore Complaining about missing fields, although Google returned only these
+                billingAddress: {
+                    countryCode: 'US',
+                    postalCode: '94043',
+                    name: 'Card Holder Name'
+                }
+            }
+        },
+        shippingAddress: {
+            address3: '',
+            sortingCode: '',
+            address2: '',
+            countryCode: 'US',
+            address1: '1600 Amphitheatre Parkway1',
+            postalCode: '94043',
+            name: 'US User',
+            locality: 'Mountain View',
+            administrativeArea: 'CA'
+        },
+        email: 'shopper@gmail.com'
+    };
+});
 
 describe('GooglePay', () => {
-    describe('get data', () => {
-        test('always returns a type', () => {
-            const gpay = new GooglePay({});
-            expect(gpay.data.paymentMethod.type).toBe('paywithgoogle');
+    describe('isExpress flag', () => {
+        test('should add subtype: express when isExpress is configured', () => {
+            const googlepay = new GooglePay(global.core, { isExpress: true });
+            expect(googlepay.data.paymentMethod).toHaveProperty('subtype', 'express');
+        });
+        test('should not add subtype: express when isExpress is omitted', () => {
+            const googlepay = new GooglePay(global.core);
+            expect(googlepay.data.paymentMethod).not.toHaveProperty('subtype', 'express');
+        });
+
+        test('should throw error when express callbacks are passed but isExpress flag is not set', () => {
+            expect(() => new GooglePay(global.core, { paymentDataCallbacks: { onPaymentDataChanged: jest.fn() } })).toThrow();
         });
     });
 
-    describe('isAvailable', () => {
-        test('resolves if is available', () => {
-            const gpay = new GooglePay({});
+    describe('submit()', () => {
+        test('should make the payments call passing deliveryAddress and billingAddress', async () => {
+            const onSubmitMock = jest.fn().mockImplementation((data, component, actions) => {
+                actions.resolve({
+                    resultCode: 'Authorized'
+                });
+            });
+            const onPaymentCompletedMock = jest.fn();
+
+            const gpay = new GooglePay(global.core, {
+                onSubmit: onSubmitMock,
+                onPaymentCompleted: onPaymentCompletedMock
+            });
+
+            // @ts-ignore GooglePayService is mocked
+            const onPaymentAuthorized = GooglePayService.mock.calls[0][1].onPaymentAuthorized;
+            const promise = onPaymentAuthorized(googlePaymentData);
+
+            await new Promise(process.nextTick);
+            expect(onSubmitMock).toHaveBeenCalledTimes(1);
+
+            const state = onSubmitMock.mock.calls[0][0];
+
+            expect(state.data.origin).toBe('http://localhost');
+            expect(state.data.paymentMethod).toStrictEqual({
+                checkoutAttemptId: 'do-not-track',
+                googlePayCardNetwork: 'VISA',
+                googlePayToken: 'google-pay-token',
+                type: 'googlepay'
+            });
+            expect(state.data.deliveryAddress).toStrictEqual({
+                city: 'Mountain View',
+                country: 'US',
+                firstName: 'US User',
+                houseNumberOrName: 'ZZ',
+                postalCode: '94043',
+                stateOrProvince: 'CA',
+                street: '1600 Amphitheatre Parkway1'
+            });
+            expect(state.data.billingAddress).toStrictEqual({
+                city: '',
+                country: 'US',
+                houseNumberOrName: 'ZZ',
+                postalCode: '94043',
+                street: ''
+            });
+
+            const browserInfo = state.data.browserInfo;
+
+            expect(browserInfo.colorDepth).toEqual(expect.any(Number));
+            expect(browserInfo.javaEnabled).toEqual(expect.any(Boolean));
+            expect(browserInfo.language).toEqual(expect.any(String));
+            expect(browserInfo.screenHeight).toEqual('');
+            expect(browserInfo.screenWidth).toEqual('');
+            expect(browserInfo.timeZoneOffset).toEqual(expect.any(Number));
+            expect(browserInfo.userAgent).toEqual(expect.any(String));
+
+            await new Promise(process.nextTick);
+
+            await expect(promise).resolves.toEqual({
+                transactionState: 'SUCCESS'
+            });
+
+            expect(onPaymentCompletedMock).toHaveBeenCalledWith({ resultCode: 'Authorized' }, gpay);
+        });
+
+        test('should not add deliveryAddress and billingAddress if they are not available', async () => {
+            const onSubmitMock = jest.fn().mockImplementation((data, component, actions) => {
+                actions.resolve({
+                    resultCode: 'Authorized'
+                });
+            });
+
+            new GooglePay(global.core, {
+                onSubmit: onSubmitMock
+            });
+
+            // @ts-ignore GooglePayService is mocked
+            const onPaymentAuthorized = GooglePayService.mock.calls[0][1].onPaymentAuthorized;
+            const googlePaymentDataWithoutAddresses = { ...googlePaymentData };
+            delete googlePaymentDataWithoutAddresses.shippingAddress;
+            delete googlePaymentDataWithoutAddresses.paymentMethodData.info.billingAddress;
+            onPaymentAuthorized(googlePaymentDataWithoutAddresses);
+
+            await new Promise(process.nextTick);
+            expect(onSubmitMock).toHaveBeenCalledTimes(1);
+
+            const state = onSubmitMock.mock.calls[0][0];
+
+            expect(state.data.origin).toBe('http://localhost');
+            expect(state.data.paymentMethod).toStrictEqual({
+                checkoutAttemptId: 'do-not-track',
+                googlePayCardNetwork: 'VISA',
+                googlePayToken: 'google-pay-token',
+                type: 'googlepay'
+            });
+            expect(state.data.deliveryAddress).toBeUndefined();
+            expect(state.data.billingAddress).toBeUndefined();
+        });
+
+        test('should pass error to GooglePay if payment failed', async () => {
+            const onSubmitMock = jest.fn().mockImplementation((data, component, actions) => {
+                actions.resolve({
+                    resultCode: 'Refused',
+                    error: {
+                        googlePayError: 'Insufficient funds'
+                    }
+                });
+            });
+            const onPaymentFailedMock = jest.fn();
+
+            const gpay = new GooglePay(global.core, {
+                i18n: global.i18n,
+                onSubmit: onSubmitMock,
+                onPaymentFailed: onPaymentFailedMock
+            });
+
+            // @ts-ignore GooglePayService is mocked
+            const onPaymentAuthorized = GooglePayService.mock.calls[0][1].onPaymentAuthorized;
+            const promise = onPaymentAuthorized(googlePaymentData);
+
+            await new Promise(process.nextTick);
+
+            await expect(promise).resolves.toEqual({
+                error: {
+                    intent: 'PAYMENT_AUTHORIZATION',
+                    message: 'Insufficient funds',
+                    reason: 'OTHER_ERROR'
+                },
+                transactionState: 'ERROR'
+            });
+
+            expect(onPaymentFailedMock).toHaveBeenCalledWith(
+                {
+                    resultCode: 'Refused',
+                    error: {
+                        googlePayError: {
+                            intent: 'PAYMENT_AUTHORIZATION',
+                            message: 'Insufficient funds',
+                            reason: 'OTHER_ERROR'
+                        }
+                    }
+                },
+                gpay
+            );
+        });
+
+        test('should pass error to GooglePay when action.reject is called without parameters', async () => {
+            const onSubmitMock = jest.fn().mockImplementation((data, component, actions) => {
+                actions.reject();
+            });
+            const onPaymentFailedMock = jest.fn();
+
+            const gpay = new GooglePay(global.core, {
+                i18n: global.i18n,
+                onSubmit: onSubmitMock,
+                onPaymentFailed: onPaymentFailedMock
+            });
+
+            // @ts-ignore GooglePayService is mocked
+            const onPaymentAuthorized = GooglePayService.mock.calls[0][1].onPaymentAuthorized;
+            const promise = onPaymentAuthorized(googlePaymentData);
+
+            await new Promise(process.nextTick);
+
+            await expect(promise).resolves.toEqual({
+                error: {
+                    intent: 'PAYMENT_AUTHORIZATION',
+                    message: 'Payment failed',
+                    reason: 'OTHER_ERROR'
+                },
+                transactionState: 'ERROR'
+            });
+
+            expect(onPaymentFailedMock).toHaveBeenCalledWith(
+                { error: { googlePayError: { intent: 'PAYMENT_AUTHORIZATION', message: 'Payment failed', reason: 'OTHER_ERROR' } } },
+                gpay
+            );
+        });
+    });
+
+    describe('onAuthorized()', () => {
+        const event = {
+            authorizedEvent: {
+                apiVersionMinor: 0,
+                apiVersion: 2,
+                paymentMethodData: {
+                    description: 'Visa •••• 1111',
+                    tokenizationData: {
+                        type: 'PAYMENT_GATEWAY',
+                        token: 'google-pay-token'
+                    },
+                    type: 'CARD',
+                    info: {
+                        cardNetwork: 'VISA',
+                        cardDetails: '1111',
+                        billingAddress: {
+                            countryCode: 'US',
+                            postalCode: '94043',
+                            name: 'Card Holder Name'
+                        }
+                    }
+                },
+                shippingAddress: {
+                    address3: '',
+                    sortingCode: '',
+                    address2: '',
+                    countryCode: 'US',
+                    address1: '1600 Amphitheatre Parkway1',
+                    postalCode: '94043',
+                    name: 'US User',
+                    locality: 'Mountain View',
+                    administrativeArea: 'CA'
+                },
+                email: 'shopper@gmail.com'
+            },
+            billingAddress: {
+                postalCode: '94043',
+                country: 'US',
+                street: '',
+                houseNumberOrName: 'ZZ',
+                city: ''
+            },
+            deliveryAddress: {
+                postalCode: '94043',
+                country: 'US',
+                street: '1600 Amphitheatre Parkway1',
+                houseNumberOrName: 'ZZ',
+                city: 'Mountain View',
+                stateOrProvince: 'CA',
+                firstName: 'US User'
+            }
+        };
+
+        test('should provide GooglePay auth event and formatted data', () => {
+            const onAuthorizedMock = jest.fn();
+            new GooglePay(global.core, { onAuthorized: onAuthorizedMock });
+
+            // @ts-ignore GooglePayService is mocked
+            const onPaymentAuthorized = GooglePayService.mock.calls[0][1].onPaymentAuthorized;
+            onPaymentAuthorized(googlePaymentData);
+
+            expect(onAuthorizedMock.mock.calls[0][0]).toStrictEqual(event);
+        });
+
+        test('should pass error to GooglePay if the action.reject happens on onAuthorized', async () => {
+            const onAuthorizedMock = jest.fn().mockImplementation((_data, actions) => {
+                actions.reject('Not supported network scheme');
+            });
+            const onPaymentFailedMock = jest.fn();
+
+            new GooglePay(global.core, {
+                i18n: global.i18n,
+                onAuthorized: onAuthorizedMock,
+                onPaymentFailed: onPaymentFailedMock
+            });
+
+            // @ts-ignore GooglePayService is mocked
+            const onPaymentAuthorized = GooglePayService.mock.calls[0][1].onPaymentAuthorized;
+            const promise = onPaymentAuthorized(googlePaymentData);
+
+            await expect(promise).resolves.toEqual({
+                error: {
+                    intent: 'PAYMENT_AUTHORIZATION',
+                    message: 'Not supported network scheme',
+                    reason: 'OTHER_ERROR'
+                },
+                transactionState: 'ERROR'
+            });
+
+            await new Promise(process.nextTick);
+            expect(onPaymentFailedMock).toHaveBeenCalledTimes(1);
+        });
+
+        test('should continue the payment flow if action.resolve happens on onAuthorized', async () => {
+            const onAuthorizedMock = jest.fn().mockImplementation((_data, actions) => {
+                actions.resolve();
+            });
+            const onPaymentCompletedMock = jest.fn();
+
+            const gpay = new GooglePay(global.core, {
+                i18n: global.i18n,
+                onAuthorized: onAuthorizedMock,
+                onPaymentCompleted: onPaymentCompletedMock
+            });
+
+            const paymentCall = jest.spyOn(gpay as any, 'makePaymentsCall');
+
+            // @ts-ignore GooglePayService is mocked
+            const onPaymentAuthorized = GooglePayService.mock.calls[0][1].onPaymentAuthorized;
+            onPaymentAuthorized(googlePaymentData);
+
+            await new Promise(process.nextTick);
+            expect(paymentCall).toHaveBeenCalledTimes(1);
+        });
+
+        test('should make the payments call if onAuthorized is not provided', async () => {
+            const gpay = new GooglePay(global.core, { i18n: global.i18n });
+
+            const paymentCall = jest.spyOn(gpay as any, 'makePaymentsCall');
+
+            // @ts-ignore GooglePayService is mocked
+            const onPaymentAuthorized = GooglePayService.mock.calls[0][1].onPaymentAuthorized;
+            onPaymentAuthorized(googlePaymentData);
+
+            await new Promise(process.nextTick);
+            expect(paymentCall).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe('isAvailable()', () => {
+        test('should resolve if GooglePay is available', async () => {
+            const gpay = new GooglePay(global.core);
             gpay.isReadyToPay = jest.fn(() => {
                 return Promise.resolve({ result: true });
             });
-            gpay.isAvailable().then(result => {
-                expect(result).toBe(true);
-            });
+
+            await expect(gpay.isAvailable()).resolves.not.toThrow();
         });
 
-        test('rejects if is not available', () => {
-            const gpay = new GooglePay({});
+        test('should reject if is not available', async () => {
+            const gpay = new GooglePay(global.core);
             gpay.isReadyToPay = jest.fn(() => {
                 return Promise.resolve({ result: false });
             });
-            gpay.isAvailable().then(result => {
-                expect(result).toBe(false);
-            });
+
+            await expect(gpay.isAvailable()).rejects.toThrow();
         });
 
-        test('checks paymentMethodPresent if present', () => {
-            const gpay = new GooglePay({});
+        test('should reject if "paymentMethodPresent" is false', async () => {
+            const gpay = new GooglePay(global.core);
             gpay.isReadyToPay = jest.fn(() => {
                 return Promise.resolve({ result: true, paymentMethodPresent: false });
             });
-            gpay.isAvailable().then(result => {
-                expect(result).toBe(false);
-            });
+
+            await expect(gpay.isAvailable()).rejects.toThrow();
         });
     });
 
     describe('Process CA based configuration data', () => {
         test('Retrieves default merchantId', () => {
-            const gpay = new GooglePay({});
+            const gpay = new GooglePay(global.core);
             expect(gpay.props.configuration.merchantId).toEqual('');
         });
 
         test('Retrieves merchantId from configuration', () => {
-            const gpay = new GooglePay({ configuration: { merchantId: 'abcdef', gatewayMerchantId: 'TestMerchant' } });
+            const gpay = new GooglePay(global.core, { configuration: { merchantId: 'abcdef', gatewayMerchantId: 'TestMerchant' } });
             expect(gpay.props.configuration.merchantId).toEqual('abcdef');
         });
 
         test('Retrieves merchantId from configuration', () => {
-            const gpay = new GooglePay({
+            const gpay = new GooglePay(global.core, {
                 configuration: {
                     gatewayMerchantId: 'TestMerchant',
                     merchantOrigin: 'example.com'
@@ -66,7 +431,9 @@ describe('GooglePay', () => {
         });
 
         test('Retrieves authJwt from configuration', () => {
-            const gpay = new GooglePay({ configuration: { merchantId: 'abcdef', gatewayMerchantId: 'TestMerchant', authJwt: 'jwt.code' } });
+            const gpay = new GooglePay(global.core, {
+                configuration: { merchantId: 'abcdef', gatewayMerchantId: 'TestMerchant', authJwt: 'jwt.code' }
+            });
             expect(gpay.props.configuration.authJwt).toEqual('jwt.code');
         });
     });
@@ -76,7 +443,7 @@ describe('GooglePay', () => {
         beforeEach(() => {
             console.log = jest.fn(() => {});
 
-            gpay = new GooglePay({
+            gpay = new GooglePay(global.core, {
                 type: 'googlepay',
                 isInstantPayment: true,
                 modules: {
@@ -84,9 +451,7 @@ describe('GooglePay', () => {
                 }
             });
 
-            analyticsModule.createAnalyticsEvent = jest.fn(obj => {
-                console.log('### analyticsPreProcessor.test:::: obj=', obj);
-            });
+            analyticsModule.createAnalyticsEvent = jest.fn(() => null);
         });
 
         test('Analytics should produce an "info" event, of type "selected", for GooglePay as an instant PM', () => {

@@ -1,11 +1,14 @@
 import actionTypes from './actionTypes';
-import { PaymentAction } from '../../../types';
+import type { PaymentAction } from '../../../types/global-types';
+import type { IRegistry } from '../../core.registry';
+import type { ICore } from '../../types';
+import UIElement from '../../../components/internal/UIElement';
 
-export function getComponentForAction(action: PaymentAction, props = {}) {
+export function getComponentForAction(core: ICore, registry: IRegistry, action: PaymentAction, props = {}): UIElement {
     const nextAction = actionTypes[action.type];
 
     if (nextAction && typeof nextAction === 'function') {
-        return nextAction(action, props);
+        return nextAction(core, registry, action, props);
     }
 
     throw new Error('Invalid Action');

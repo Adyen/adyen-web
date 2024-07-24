@@ -1,4 +1,6 @@
+@import 'styles/variable-generator';
+
 .adyen-checkout__cashapp > .adyen-checkout__store-details {
   margin-top: 0;
-  margin-bottom: 16px;
+  margin-bottom: token(spacer-070);
 }

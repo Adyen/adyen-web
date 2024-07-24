@@ -15,8 +15,9 @@ import { AddressSpecifications, StringObject } from '../../../internal/Address/t
 import { PARTIAL_ADDRESS_SCHEMA } from '../../../internal/Address/constants';
 import { InstallmentsObj } from './components/Installments/Installments';
 import { SFPProps } from '../../../internal/SecuredFields/SFP/types';
-import { BRAND_READABLE_NAME_MAP } from '../../../internal/SecuredFields/lib/configuration/constants';
+import { BRAND_READABLE_NAME_MAP } from '../../../internal/SecuredFields/lib/constants';
 import { UseImageHookType } from '../../../../core/Context/useImage';
+import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 
 export const getCardImageUrl = (brand: string, getImage: UseImageHookType): string => {
     const imageOptions = {
@@ -125,7 +126,7 @@ export const extractPropsForCardFields = (props: CardInputProps) => {
         positionHolderNameOnTop: props.positionHolderNameOnTop,
         // Extract props for CardFields > CardNumber
         showBrandIcon: props.showBrandIcon,
-        showBrandsUnderCardNumber: props.showBrandsUnderCardNumber,
+        showContextualElement: props.showContextualElement,
         // Extract props for StoredCardFields
         lastFour: props.lastFour,
         expiryMonth: props.expiryMonth,
@@ -136,7 +137,6 @@ export const extractPropsForCardFields = (props: CardInputProps) => {
 
 export const extractPropsForSFP = (props: CardInputProps) => {
     return {
-        allowedDOMAccess: props.allowedDOMAccess,
         autoFocus: props.autoFocus,
         brands: props.brands,
         brandsConfiguration: props.brandsConfiguration,
@@ -148,6 +148,8 @@ export const extractPropsForSFP = (props: CardInputProps) => {
         keypadFix: props.keypadFix,
         legacyInputMode: props.legacyInputMode,
         loadingContext: props.loadingContext,
+        maskSecurityCode: props.maskSecurityCode,
+        exposeExpiryDate: props.exposeExpiryDate,
         minimumExpiryDate: props.minimumExpiryDate,
         onAdditionalSFConfig: props.onAdditionalSFConfig,
         onAdditionalSFRemoved: props.onAdditionalSFRemoved,
@@ -155,14 +157,15 @@ export const extractPropsForSFP = (props: CardInputProps) => {
         onAutoComplete: props.onAutoComplete,
         onBinValue: props.onBinValue,
         onConfigSuccess: props.onConfigSuccess,
+        handleKeyPress: props.handleKeyPress,
         onError: props.onError,
         onFieldValid: props.onFieldValid,
         onLoad: props.onLoad,
+        placeholders: props.placeholders,
+        resources: props.resources,
+        showContextualElement: props.showContextualElement,
         showWarnings: props.showWarnings,
-        trimTrailingSeparator: props.trimTrailingSeparator,
-        maskSecurityCode: props.maskSecurityCode,
-        exposeExpiryDate: props.exposeExpiryDate,
-        resources: props.resources
+        trimTrailingSeparator: props.trimTrailingSeparator
     } as SFPProps; // Can't set as return type on fn or it will complain about missing, mandatory, props
 };
 
@@ -172,7 +175,12 @@ export const handlePartialAddressMode = (addressMode: AddressModeOptions): Addre
 
 // Almost all errors are blur based, but some SF ones are not i.e. when an unsupported card is entered or the expiry date is out of range
 export function lookupBlurBasedErrors(errorCode) {
-    return !['error.va.sf-cc-num.03', 'error.va.sf-cc-dat.01', 'error.va.sf-cc-dat.02', 'error.va.sf-cc-dat.03'].includes(errorCode);
+    return ![
+        SF_ErrorCodes.ERROR_MSG_UNSUPPORTED_CARD_ENTERED,
+        SF_ErrorCodes.ERROR_MSG_CARD_TOO_OLD,
+        SF_ErrorCodes.ERROR_MSG_CARD_TOO_FAR_IN_FUTURE,
+        SF_ErrorCodes.ERROR_MSG_CARD_EXPIRES_TOO_SOON
+    ].includes(errorCode);
 }
 
 export function getFullBrandName(brand) {

@@ -1,12 +1,12 @@
-@import "../../../style/index";
+@import 'styles/variable-generator';
 
 .adyen-checkout-disclaimer__label {
-    margin-top: $spacing-medium;
+    margin-top: token(spacer-070);
     padding-left: 0;
     display: inline-block;
-    line-height: 19px;
-    color: $color-gray-darker;
-    font-size: $font-size-small;
+    line-height: token(text-caption-line-height);
+    color: token(color-label-secondary);
+    font-size: token(text-caption-font-size);
     font-weight: normal;
 
 

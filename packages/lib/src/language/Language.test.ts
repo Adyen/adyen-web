@@ -1,84 +1,48 @@
 import { Language } from './Language';
 
 describe('Language', () => {
-    describe('constructor', () => {
-        test('sets up locale and customTranslations', () => {
-            const customTranslations = {
-                'es-ES': {
-                    'creditCard.numberField.title': 'es'
-                }
-            };
-
-            const lang = new Language('es-ES', customTranslations);
-
-            expect(lang.locale).toBe('es-ES');
-            expect(lang.customTranslations['es-ES']).toBeDefined();
-        });
-
-        test('sets up locale without country code and customTranslations without countryCode', () => {
-            const customTranslations = {
-                es: {
-                    'creditCard.numberField.title': 'es'
-                }
-            };
-
-            const lang = new Language('es', customTranslations);
-
-            expect(lang.locale).toBe('es-ES');
-            expect(lang.customTranslations['es-ES']).toBeDefined();
-        });
-
-        test('sets up a custom locale and customTranslations', () => {
-            const customTranslations = {
-                'ca-CA': {
-                    'creditCard.numberField.title': 'ca'
-                }
-            };
-
-            const lang = new Language('ca-CA', customTranslations);
-
-            expect(lang.locale).toBe('ca-CA');
-            expect(lang.customTranslations['ca-CA']).toBeDefined();
-        });
-
-        test('sets up a custom locale without countryCode and customTranslations', () => {
-            const customTranslations = {
-                'ca-CA': {
-                    'creditCard.numberField.title': 'ca'
-                }
-            };
-
-            const lang = new Language('ca', customTranslations);
-
-            expect(lang.locale).toBe('ca-CA');
-            expect(lang.customTranslations['ca-CA']).toBeDefined();
-        });
-
-        test('falls back to FALLBACK_LOCALE and removes customTranslations that do not match a language/language_country code', () => {
-            const customTranslations = {
-                FAKE: {
-                    'creditCard.numberField.title': 'ca'
-                }
-            };
-
-            const lang = new Language('FAKE', customTranslations);
-
-            expect(lang.locale).toBe('en-US');
-            expect(lang.customTranslations).toEqual({});
-        });
+    test('should thrown an error if locale is not set', () => {
+        expect(() => new Language({ locale: null, translations: {} })).toThrowError('Language: "locale" property is not defined');
     });
 
-    describe('get', () => {
-        test('gets a string even if it is empty', () => {
-            const i18n = new Language('en-US', {
+    test('should set up custom translation for a supported locale', () => {
+        const language = new Language({
+            locale: 'en-US',
+            translations: {
+                pay: 'Pay',
+                redirect: 'Redirect'
+            },
+            customTranslations: {
                 'en-US': {
-                    test: ''
+                    pay: 'Pay Now'
                 }
-            });
-
-            i18n.loaded.then(() => {
-                expect(i18n.get('test')).toBe('');
-            });
+            }
         });
+
+        expect(language.get('pay')).toBe('Pay Now');
+        expect(language.get('redirect')).toBe('Redirect');
+    });
+
+    test('should set up a custom locale with custom translation', () => {
+        const customTranslations = {
+            'ca-CA': {
+                'creditCard.numberField.title': 'Card Title'
+            }
+        };
+
+        const language = new Language({ locale: 'ca-CA', customTranslations, translations: {} });
+
+        expect(language.languageCode).toBe('ca');
+        expect(language.get('creditCard.numberField.title')).toBe('Card Title');
+    });
+
+    test('should return empty string if the locale translation is empty', () => {
+        const language = new Language({ locale: 'en-US', translations: { pay: '' } });
+        expect(language.get('pay')).toBe('');
+    });
+
+    test('should return translation key if value is not defined', () => {
+        const language = new Language({ locale: 'en-US', translations: {} });
+        expect(language.get('my-undefined-key')).toBe('my-undefined-key');
     });
 });

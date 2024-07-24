@@ -1,6 +1,6 @@
 import { start, getAriaErrorField, checkIframeElHasExactText } from '../../utils/commonUtils';
 import { REGULAR_TEST_CARD, MAESTRO_CARD, JWE_ALG, JWE_CONTENT_ALG, JWE_VERSION } from '../../cards/utils/constants';
-import LANG from '../../../../lib/src/language/locales/en-US.json';
+import LANG from '../../../../server/translations/en-US.json';
 
 import CustomCardComponentPage from '../../_models/CustomCardComponent.page';
 import { turnOffSDKMocking } from '../../_common/cardMocks';
@@ -9,7 +9,7 @@ const cardPage = new CustomCardComponentPage();
 
 const BASE_REF = 'securedFields';
 
-const UNSUPPORTED_CARD = LANG['error.va.sf-cc-num.03'];
+const UNSUPPORTED_CARD = LANG['cc.num.903'];
 
 const TEST_SPEED = 1;
 
@@ -41,11 +41,7 @@ test(
         await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD.substr(0, 11));
 
         // Components level error field visible & text set
-        await t
-            .expect(cardPage.numErrorText.filterVisible().exists)
-            .ok()
-            .expect(cardPage.numErrorText.withExactText(UNSUPPORTED_CARD).exists)
-            .ok();
+        await t.expect(cardPage.numErrorText.filterVisible().exists).ok().expect(cardPage.numErrorText.withExactText(UNSUPPORTED_CARD).exists).ok();
 
         /**
          * Error received & processed at SF level
@@ -124,13 +120,7 @@ test(
         // Look for expected properties
         await t.expect(JWETokenArr.length).eql(5); // Expected number of components in the JWE token
 
-        await t
-            .expect(headerObj.alg)
-            .eql(JWE_ALG)
-            .expect(headerObj.enc)
-            .eql(JWE_CONTENT_ALG)
-            .expect(headerObj.version)
-            .eql(JWE_VERSION);
+        await t.expect(headerObj.alg).eql(JWE_ALG).expect(headerObj.enc).eql(JWE_CONTENT_ALG).expect(headerObj.version).eql(JWE_VERSION);
 
         // await t.expect(cardPage.getFromState(BASE_REF, 'data.encryptedCardNumber')).contains('adyenjs_0_1_');
 
@@ -158,11 +148,7 @@ test(
         await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
 
         // Components level error field visible & text set
-        await t
-            .expect(cardPage.numErrorText.filterVisible().exists)
-            .ok()
-            .expect(cardPage.numErrorText.withExactText(UNSUPPORTED_CARD).exists)
-            .ok();
+        await t.expect(cardPage.numErrorText.filterVisible().exists).ok().expect(cardPage.numErrorText.withExactText(UNSUPPORTED_CARD).exists).ok();
 
         /**
          * Error received & processed at SF level
@@ -199,13 +185,7 @@ test(
         // Look for expected properties
         await t.expect(JWETokenArr.length).eql(5); // Expected number of components in the JWE token
 
-        await t
-            .expect(headerObj.alg)
-            .eql(JWE_ALG)
-            .expect(headerObj.enc)
-            .eql(JWE_CONTENT_ALG)
-            .expect(headerObj.version)
-            .eql(JWE_VERSION);
+        await t.expect(headerObj.alg).eql(JWE_ALG).expect(headerObj.enc).eql(JWE_CONTENT_ALG).expect(headerObj.version).eql(JWE_VERSION);
 
         // await t.expect(cardPage.getFromState(BASE_REF, 'data.encryptedCardNumber')).contains('adyenjs_0_1_');
 

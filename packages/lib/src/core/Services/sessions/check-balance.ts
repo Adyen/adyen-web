@@ -1,6 +1,6 @@
 import { httpPost } from '../http';
 import Session from '../../CheckoutSession';
-import { CheckoutSessionBalanceResponse } from '../../../types';
+import { CheckoutSessionBalanceResponse } from '../../CheckoutSession/types';
 import { API_VERSION } from './constants';
 
 /**

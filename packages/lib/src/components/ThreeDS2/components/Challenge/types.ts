@@ -1,8 +1,7 @@
-import { ChallengeData, ThreeDS2FlowObject } from '../../types';
-import { ChallengeResolveData } from '../utils';
-import { ThreeDS2ChallengeProps } from '../../ThreeDS2Challenge';
-import { ActionHandledReturnObject } from '../../../types';
+import { ChallengeData, ThreeDS2ChallengeConfiguration, ThreeDS2FlowObject, ChallengeResolveData } from '../../types';
+import { ActionHandledReturnObject } from '../../../../types/global-types';
 import { SendAnalyticsObject } from '../../../../core/Analytics/types';
+import { ErrorObject } from '../../../../core/Errors/types';
 
 export interface DoChallenge3DS2Props extends ChallengeData {
     onCompleteChallenge: (resolveObject: ThreeDS2FlowObject) => void;
@@ -13,16 +12,30 @@ export interface DoChallenge3DS2Props extends ChallengeData {
 
 export interface DoChallenge3DS2State {
     base64URLencodedData?: string;
-    status?: string;
+    status?: 'init' | 'iframeLoaded';
 }
 
-export interface PrepareChallenge3DS2Props extends ThreeDS2ChallengeProps {
+export interface PrepareChallenge3DS2Props extends ThreeDS2ChallengeConfiguration {
     onComplete?: (data: ChallengeResolveData) => void;
     onSubmitAnalytics: (aObj: SendAnalyticsObject) => void;
+    environment?: string;
+    _environmentUrls?: {
+        api?: string;
+        analytics?: string;
+        cdn?: {
+            images?: string;
+            translations?: string;
+        };
+    };
 }
 
 export interface PrepareChallenge3DS2State {
-    challengeData?: ChallengeData;
-    status?: string;
+    challengeData?: ChallengeData | ErrorObject;
+    status?: 'init' | 'performingChallenge' | 'error' | 'complete';
     errorInfo?: string;
+}
+
+export interface StatusErrorInfoObject {
+    errorInfo: string;
+    errorObj?: ChallengeData | ErrorObject;
 }

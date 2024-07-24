@@ -1,8 +1,7 @@
 import { httpPost } from '../../../../core/Services/http';
 import { CbObjOnBinLookup, CbObjOnBinValue, CbObjOnError } from '../lib/types';
-import { DEFAULT_CARD_GROUP_TYPES } from '../lib/configuration/constants';
-import { getError } from '../../../../core/Errors/utils';
-import { ERROR_MSG_UNSUPPORTED_CARD_ENTERED } from '../../../../core/Errors/constants';
+import { DEFAULT_CARD_GROUP_TYPES } from '../lib/constants';
+import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 import { BinLookupResponse, BinLookupResponseRaw } from '../../../Card/types';
 
 if (process.env.NODE_ENV === 'development') {
@@ -24,13 +23,13 @@ export default parent => {
             // Store id of request we're about to make
             currentRequestId = callbackObj.uuid;
 
-            httpPost(
+            void httpPost(
                 {
                     loadingContext: parent.props.loadingContext,
                     path: `v3/bin/binLookup?token=${parent.props.clientKey}`
                 },
                 {
-                    type: parent.props.type,
+                    type: parent.props.brand,
                     supportedBrands: parent.props.brands || DEFAULT_CARD_GROUP_TYPES,
                     encryptedBin: callbackObj.encryptedBin,
                     requestId: callbackObj.uuid // Pass id of request
@@ -134,7 +133,7 @@ export default parent => {
                             const errObj: CbObjOnError = {
                                 type: 'card',
                                 fieldType: 'encryptedCardNumber',
-                                error: getError(ERROR_MSG_UNSUPPORTED_CARD_ENTERED),
+                                error: SF_ErrorCodes.ERROR_MSG_UNSUPPORTED_CARD_ENTERED,
                                 detectedBrands: mappedResponse.detectedBrands
                             };
                             parent.handleUnsupportedCard(errObj);

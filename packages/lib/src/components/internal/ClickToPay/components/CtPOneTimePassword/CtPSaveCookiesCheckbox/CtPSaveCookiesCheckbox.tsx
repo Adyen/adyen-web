@@ -2,7 +2,7 @@ import { h, Fragment } from 'preact';
 import classnames from 'classnames';
 import Field from '../../../../FormFields/Field';
 import Checkbox from '../../../../FormFields/Checkbox';
-import useCoreContext from '../../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../../core/Context/CoreProvider';
 import { useState, useCallback } from 'preact/hooks';
 import useClickToPayContext from '../../../context/useClickToPayContext';
 import isScreenSmall from '../../../../../../utils/isScreenSmall';
@@ -26,7 +26,13 @@ function CtPSaveCookiesCheckbox() {
                 'adyen-checkout-ctp__otp-checkbox-container--checked': checked
             })}
         >
-            <Field name={'clickToPayCookiesCheckbox'} addContextualElement={false} useLabelElement={false} i18n={i18n}>
+            <Field
+                classNameModifiers={['consentCheckbox']}
+                name={'clickToPayCookiesCheckbox'}
+                showContextualElement={false}
+                useLabelElement={false}
+                i18n={i18n}
+            >
                 <Checkbox
                     name={'clickToPayCookiesCheckbox'}
                     onInput={handleOnChange}

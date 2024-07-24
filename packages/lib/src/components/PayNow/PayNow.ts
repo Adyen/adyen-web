@@ -1,8 +1,9 @@
-import QRLoaderContainer from '../helpers/QRLoaderContainer';
+import QRLoaderContainer from '../helpers/QRLoaderContainer/QRLoaderContainer';
 import { delay, countdownTime } from './config';
+import { TxVariants } from '../tx-variants';
 
 class PayNowElement extends QRLoaderContainer {
-    public static type = 'paynow';
+    public static type = TxVariants.paynow;
 
     formatProps(props) {
         return {

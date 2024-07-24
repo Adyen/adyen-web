@@ -1,50 +1,51 @@
-@import "../../../../style/index";
+@import 'styles/variable-generator';
 
 .adyen-checkout__issuer-button {
-    background-color: $color-white;
-    box-shadow: inset 0 0 0 1px $color-border-dark;
+    background-color: token(color-background-primary);
+    box-shadow: inset 0 0 0 1px token(color-outline-primary);
     border: none;
-    border-radius: $border-radius-medium;
-    padding: $spacing-none $spacing-medium-small;
+    border-radius: token(border-radius-m);
+    padding: token(spacer-000) token(spacer-060);
     cursor: pointer;
     flex-basis: 47%;
     flex-grow: 2;
-    height: 40px;
-    font-size: $font-size-small;
+    height: token(spacer-110);
+    font-size: token(text-body-font-size);
     display: flex;
     align-items: center;
+    justify-content: space-between;
     transition: background 0.3s ease-out, box-shadow 0.3s ease-out;
 
     &:active {
-        color: black;
+        color: token(color-label-primary);
     }
 
     &:not(&--selected):focus {
         outline: none;
-        box-shadow: inset 0 0 0 2px #99a3ad;
+        box-shadow: inset 0 0 0 1px token(color-outline-tertiary);
     }
 
     &:not(&--selected):focus-visible {
         outline: none;
-        box-shadow: inset 0 0 0 2px #99a3ad;
+        box-shadow: inset 0 0 0 1px token(color-outline-tertiary);
     }
 
     &:not(&--selected):hover {
         outline: none;
-        box-shadow: inset 0 0 0 2px #99a3ad;
+        box-shadow: inset 0 0 0 1px token(color-outline-tertiary);
     }
 
     &--selected {
-        background: $color-white;
-        box-shadow: inset 0 0 0 2px $color-blue;
-        color: $color-blue;
-        font-weight: 500;
-        height: 40px;
+        background: token(color-background-primary);
+        box-shadow: inset 0 0 0 1.5px token(color-outline-primary-active);
+        color: token(color-label-primary);
+        font-weight: token(text-body-stronger-font-weight);
+        height: token(spacer-110);
         transition: none;
     }
 }
 
 .adyen-checkout__issuer-button-img {
     max-height: 26px;
-    margin-right: 8px;
+    margin-right: token(spacer-040);
 }

@@ -1,9 +1,9 @@
 import { h } from 'preact';
 import Button from '../Button';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { ButtonProps } from '../Button/types';
 import { payAmountLabel, secondaryAmountLabel } from './utils';
-import { PaymentAmountExtended } from '../../../types';
+import { PaymentAmountExtended } from '../../../types/global-types';
 import SecondaryButtonLabel from './components/SecondaryButtonLabel';
 
 export interface PayButtonProps extends ButtonProps {

@@ -1,4 +1,4 @@
-import { PaymentAmount } from '../../types';
+import { PaymentAmount } from '../../types/global-types';
 
 export interface OxxoVoucherResultProps {
     alternativeReference?: string;
@@ -10,9 +10,3 @@ export interface OxxoVoucherResultProps {
     downloadUrl?: string;
     ref?: any;
 }
-
-export type OxxoElementData = {
-    paymentMethod: {
-        type: 'oxxo' | string;
-    };
-};

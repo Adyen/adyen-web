@@ -30,12 +30,13 @@ class RedirectShopper extends Component<RedirectShopperProps> {
             }
         };
 
-        const dispatchEvent = new Promise((resolve, reject) =>
-            this.props.beforeRedirect(resolve, reject, {
-                url: this.props.url,
-                method: this.props.method,
-                ...(this.props.data ? { data: this.props.data } : {})
-            })
+        const dispatchEvent = new Promise(
+            (resolve, reject) =>
+                void this.props.beforeRedirect(resolve, reject, {
+                    url: this.props.url,
+                    method: this.props.method,
+                    ...(this.props.data ? { data: this.props.data } : {})
+                })
         );
 
         dispatchEvent.then(doRedirect).catch(() => {});

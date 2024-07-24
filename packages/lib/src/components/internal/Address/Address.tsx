@@ -5,20 +5,20 @@ import ReadOnlyAddress from './components/ReadOnlyAddress';
 import { getAddressValidationRules } from './validate';
 import { addressFormatters, countrySpecificFormatters } from './validate.formats';
 import { AddressProps } from './types';
-import { AddressData } from '../../../types';
+import { AddressData } from '../../../types/global-types';
 import FieldContainer from './components/FieldContainer';
 import useForm from '../../../utils/useForm';
 import Specifications from './Specifications';
 import { ADDRESS_SCHEMA, FALLBACK_VALUE } from './constants';
 import { getMaxLengthByFieldAndCountry } from '../../../utils/validator-utils';
-import useCoreContext from '../../../core/Context/useCoreContext';
-import { ComponentMethodsRef } from '../../types';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import AddressSearch from './components/AddressSearch';
+import { ComponentMethodsRef } from '../UIElement/types';
 
 export default function Address(props: AddressProps) {
     const { i18n } = useCoreContext();
 
-    const { label = '', requiredFields, visibility, iOSFocusedField = null } = props;
+    const { label = '', requiredFields, visibility, iOSFocusedField = null, showContextualElement } = props;
 
     /** An object by which to expose 'public' members to the parent UIElement */
     const addressRef = useRef<ComponentMethodsRef>({});
@@ -182,6 +182,8 @@ export default function Address(props: AddressProps) {
                         onManualAddress={onManualAddress}
                         externalErrorMessage={searchErrorMessage}
                         hideManualButton={showAddressFields}
+                        showContextualElement={showContextualElement}
+                        contextualText={i18n.get('address.search.contextualText')}
                         addressSearchDebounceMs={props.addressSearchDebounceMs}
                     />
                 )}
@@ -189,8 +191,6 @@ export default function Address(props: AddressProps) {
                     <Fragment>{addressSchema.map(field => (field instanceof Array ? getWrapper(field) : getComponent(field, {})))}</Fragment>
                 )}
             </Fieldset>
-            {/* Needed to easily test when showValidation is called */}
-            {process.env.NODE_ENV !== 'production' && props.showPayButton && props.payButton({ label: i18n.get('continue') })}
         </Fragment>
     );
 }

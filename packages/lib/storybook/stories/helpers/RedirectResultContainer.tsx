@@ -1,21 +1,38 @@
 import { useEffect, useState } from 'preact/hooks';
-import AdyenCheckout from '../../../src';
+import { AdyenCheckout } from '../../../src';
 import { handleError, handleFinalState } from '../../helpers/checkout-handlers';
+import { makeDetailsCall } from '../../helpers/checkout-api-calls';
+import { AdditionalDetailsData } from '../../../src/core/types';
 
-export const RedirectResultContainer = ({ redirectResult, sessionId }) => {
+export const RedirectResultContainer = ({ redirectResult, sessionId, countryCode }) => {
     const [isRedirecting, setIsRedirecting] = useState<boolean>(true);
     let message = isRedirecting ? 'Submitting details...' : '';
 
     useEffect(() => {
-        if (!redirectResult || !sessionId) {
+        if (!redirectResult && !sessionId) {
             message = 'There is no redirectResult / sessionId provided';
             return;
         }
 
-        AdyenCheckout({
+        void AdyenCheckout({
             clientKey: process.env.CLIENT_KEY,
+            // @ts-ignore CLIENT_ENV has valid value
             environment: process.env.CLIENT_ENV,
-            session: { id: sessionId },
+            countryCode,
+            ...(sessionId && { session: { id: sessionId, countryCode } }),
+            // Advanced flow
+            ...(!sessionId && {
+                onAdditionalDetails: (state: AdditionalDetailsData, _, actions) => {
+                    makeDetailsCall(state.data)
+                        .then(res => {
+                            actions.resolve(res);
+                        })
+                        .catch(e => {
+                            console.error({ e });
+                            actions.reject();
+                        });
+                }
+            }),
             onPaymentCompleted: (result, component) => {
                 setIsRedirecting(false);
                 handleFinalState(result, component);
@@ -28,7 +45,7 @@ export const RedirectResultContainer = ({ redirectResult, sessionId }) => {
             setIsRedirecting(true);
             checkout.submitDetails({ details: { redirectResult } });
         });
-    }, [sessionId]);
+    }, [sessionId, redirectResult]);
 
     return (
         <div id="component-root" className="component-wrapper">

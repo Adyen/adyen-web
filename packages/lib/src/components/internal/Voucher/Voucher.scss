@@ -1,70 +1,39 @@
-@import "../../../style/index";
+@import 'styles/variable-generator';
 
 .adyen-checkout__voucher-result {
-    box-sizing: border-box;
-    border-radius: 12px;
+    border-radius: token(border-radius-m);
     text-align: center;
     position: relative;
 }
 
 .adyen-checkout__voucher-result__top,
 .adyen-checkout__voucher-result__bottom {
-    background: $color-white;
-    border: 1px solid $color-gray;
+    background: token(color-background-primary);
+    border: token(border-width-s) solid token(color-separator-primary);
 }
 
 .adyen-checkout__voucher-result__top {
-    padding: 40px 0 24px;
-    border-radius: 12px 12px 0 0;
+    padding: token(spacer-110) 0 token(spacer-090);
+    border-radius: token(border-radius-m) token(border-radius-m) 0 0;
     border-bottom: 0;
 }
 
 .adyen-checkout__voucher-result__bottom {
     border-top: 0;
-    border-radius: 0 0 12px 12px;
+    border-radius: 0 0 token(border-radius-m) token(border-radius-m);
 }
 
 .adyen-checkout__voucher-result__separator {
-    background: $color-white;
+    background: token(color-background-primary);
     position: relative;
-    width: calc(100% - 14px);
-    height: 13px;
     margin: 0 auto;
     display: flex;
     align-items: center;
 }
 
-.adyen-checkout__voucher-result__separator::before,
-.adyen-checkout__voucher-result__separator::after {
-    background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNyIgaGVpZ2h0PSIxMyIgdmlld0JveD0iMCAwIDcgMTMiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxnIGNsaXAtcGF0aD0idXJsKCNjbGlwMCkiPgo8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTAgMEw1IDJMNi41IDZIN1YwSDBaTTAgMTNMNSAxMUw2LjUgN0g3VjEzSDBaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNNi40MjMwOCA2LjVDNi40MjMwOCAzLjMxMjMyIDMuNzgzOSAwLjc1NTUyNyAwLjUgMC41MTgwMjFWMC41MTczODVDMy44ODYxOCAwLjc1Mzg4IDYuNSAzLjM3MjgzIDYuNSA2LjVDNi41IDkuNjI3MTcgMy44ODYxOCAxMi4yNDYxIDAuNSAxMi40ODI2VjEyLjQ4MkMzLjc4MzkgMTIuMjQ0NSA2LjQyMzA4IDkuNjg3NjcgNi40MjMwOCA2LjVaIiBzdHJva2U9IiNENEQ5REIiLz4KPHJlY3Qgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI0Q0RDlEQiIvPgo8cmVjdCB5PSIxMiIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iI0Q0RDlEQiIvPgo8L2c+CjxkZWZzPgo8Y2xpcFBhdGggaWQ9ImNsaXAwIj4KPHJlY3Qgd2lkdGg9IjciIGhlaWdodD0iMTMiIGZpbGw9IndoaXRlIi8+CjwvY2xpcFBhdGg+CjwvZGVmcz4KPC9zdmc+Cg==");
-}
-
-.adyen-checkout__voucher-result__separator::before {
-    background-position: 100%;
-    background-repeat: no-repeat;
-    content: "";
-    left: -7px;
-    top: 0;
-    position: absolute;
-    width: 7px;
-    height: 13px;
-}
-
-.adyen-checkout__voucher-result__separator::after {
-    background-position: 100%;
-    background-repeat: no-repeat;
-    content: "";
-    right: -7px;
-    top: 0;
-    position: absolute;
-    width: 7px;
-    height: 13px;
-    transform: rotate(-180deg);
-}
-
 .adyen-checkout__voucher-result__separator__inner {
     width: 100%;
-    border-top: 1px solid $color-gray-light;
+    border-top: 1px solid token(color-separator-primary);
 }
 
 .adyen-checkout__voucher-result__image {
@@ -72,24 +41,24 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    margin-bottom: 40px;
+    margin-bottom: token(spacer-110);
 }
 
-.adyen-checkout__link--voucher-result-instructions {
+.adyen-checkout-link--voucher-result-instructions {
     display: inline-block;
 }
 
 .adyen-checkout__voucher-result__image__wrapper {
     display: block;
     position: relative;
-    height: 48px;
-    margin: 0 24px;
+    height: token(spacer-120);
+    margin: 0 token(spacer-090);
 }
 
 .adyen-checkout__voucher-result__image__wrapper::after {
-    border: 1px solid rgb(0 27 43 / 17%);
-    border-radius: 3px;
-    content: "";
+    border-radius: token(border-radius-m);
+    box-shadow: token(shadow-low);
+    content: '';
     height: 100%;
     left: 0;
     position: absolute;
@@ -97,44 +66,38 @@
     width: 100%;
 }
 
-.adyen-checkout__voucher-result__image__wrapper:nth-child(2)::before {
-    border-left: 1px solid $color-gray;
-    content: "";
-    height: 64px;
-    left: -24.5px;
-    position: absolute;
-    top: -8px;
-    width: 1px;
+.adyen-checkout__voucher-result__image__wrapper:nth-child(2) {
+    margin-left: 0;
 }
 
 .adyen-checkout__voucher-result__image__brand,
 .adyen-checkout__voucher-result__image__issuer {
-    height: 48px;
-    border-radius: 3px;
+    height: token(spacer-120);
+    border-radius: token(border-radius-m);
 }
 
 .adyen-checkout__voucher-result__introduction {
-    line-height: 19px;
-    font-size: $font-size-small;
+    line-height: token(text-caption-line-height);
+    font-size: token(text-body-font-size);
     text-align: center;
-    color: $color-black;
+    color: token(color-label-primary);
     max-width: 400px;
     margin: 0 auto;
 }
 
 .adyen-checkout__voucher-result__amount {
-    margin: 24px auto 0;
-    font-size: $font-size-medium;
-    color: $color-black;
+    margin: token(spacer-090) auto 0;
+    font-size: token(text-subtitle-font-size);
+    color: token(color-label-primary);
     text-align: center;
     font-weight: bold;
 }
 
 .adyen-checkout__voucher-result__surcharge {
-    font-size: $font-size-small;
-    line-height: 19px;
+    font-size: token(text-body-font-size);
+    line-height: token(text-caption-line-height);
     text-align: center;
-    color: $color-gray-darker;
+    color: token(color-label-secondary);
     display: block;
     font-weight: normal;
 }
@@ -146,43 +109,41 @@
     right: 0;
     left: 0;
     width: auto;
-    line-height: 19px;
-    top: -2px;
+    line-height: token(text-caption-line-height);
     margin: 0 auto;
     user-select: none;
 }
 
 .adyen-checkout__voucher-result__code__label::before {
-    content: "";
+    content: '';
     position: absolute;
 }
 
 .adyen-checkout__voucher-result__code__label__text {
     font-size: 13px;
-    color: $color-black;
-    background: $color-white;
-    padding: 0 8px;
+    color: token(color-label-primary);
+    background: token(color-background-primary);
+    padding: 0 token(spacer-040);
     letter-spacing: normal;
     line-height: 1;
 }
 
 .adyen-checkout__voucher-result__code__barcode {
     display: block;
-    margin: 0 auto;
-    margin-bottom: 8px;
+    margin: 0 auto token(spacer-040);
     max-width: 100%;
-    height: 56px;
+    height: token(spacer-130);
     user-select: none;
 }
 
 .adyen-checkout__voucher-result__code {
     position: relative;
-    font-size: $font-size-large;
+    font-size: token(text-title-l-font-size);
     text-align: center;
     letter-spacing: 1px;
-    color: $color-black;
+    color: token(color-label-primary);
     border-width: 1px 0;
-    padding: 16px 48px;
+    padding: token(spacer-070) token(spacer-120);
     display: inline-block;
     margin: 0 auto;
     width: 100%;
@@ -201,10 +162,10 @@
 .adyen-checkout__voucher-result__details__item {
     display: flex;
     justify-content: space-between;
-    font-size: $font-size-small;
-    color: $color-black;
-    padding: 16px 24px;
-    border-top: 1px solid $color-gray-light;
+    font-size: token(text-body-font-size);
+    color: token(color-label-primary);
+    padding: token(spacer-070) token(spacer-090);
+    border-top: 1px solid token(color-separator-primary);
     word-break: break-word;
 }
 
@@ -224,7 +185,7 @@
 }
 
 .adyen-checkout__voucher-result__actions {
-    margin: 0 auto 32px;
+    margin: 0 auto token(spacer-100);
     max-width: 100%;
     min-width: 200px;
     width: 300px;
@@ -236,5 +197,5 @@
 }
 
 .adyen-checkout__voucher-result__actions__item {
-    margin: 0 4px;
+    margin: 0 token(spacer-020);
 }

@@ -2,6 +2,11 @@ import { ValidatorRules } from '../../../../utils/Validator/types';
 import { formatCPFCNPJ } from '../../../internal/SocialSecurityNumberBrazil/utils';
 import validateSSN from '../../../internal/SocialSecurityNumberBrazil/validate';
 import { isEmpty } from '../../../../utils/validator-utils';
+import {
+    BOLETO_SOCIAL_SECURITY_NUMBER_INVALID,
+    CREDITCARD_HOLDER_NAME_INVALID,
+    CREDITCARD_TAX_NUMBER_INVALID
+} from '../../../../core/Errors/constants';
 
 export const cardInputFormatters = {
     socialSecurityNumber: formatCPFCNPJ
@@ -15,14 +20,14 @@ export const cardInputValidationRules: ValidatorRules = {
                 if (isEmpty(value)) return null;
                 return validateSSN(value);
             },
-            errorMessage: 'boleto.socialSecurityNumber.invalid'
+            errorMessage: BOLETO_SOCIAL_SECURITY_NUMBER_INVALID
         }
     ],
     taxNumber: [
         {
             modes: ['blur'],
             validate: value => (isEmpty(value) ? null : value?.length === 6 || value?.length === 10),
-            errorMessage: 'creditCard.taxNumber.invalid'
+            errorMessage: CREDITCARD_TAX_NUMBER_INVALID
         }
     ],
     holderName: [
@@ -30,7 +35,7 @@ export const cardInputValidationRules: ValidatorRules = {
             // Will fire at startup and when triggerValidation is called and also applies as text is input
             modes: ['blur'],
             validate: value => (isEmpty(value) ? null : true), // true, if there are chars other than spaces
-            errorMessage: 'creditCard.holderName.invalid'
+            errorMessage: CREDITCARD_HOLDER_NAME_INVALID
         }
     ],
     default: [

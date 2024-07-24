@@ -1,5 +1,5 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
+import { AdyenCheckout, Giftcard } from '@adyen/adyen-web';
+import '@adyen/adyen-web/styles/adyen.css';
 import { createSession } from '../../services';
 import { amount, shopperLocale, countryCode, returnUrl, shopperReference } from '../../services/commonConfig';
 import '../../style.scss';
@@ -11,14 +11,19 @@ const initCheckout = async () => {
         returnUrl,
         shopperLocale,
         shopperReference,
-        countryCode,
+        countryCode
     });
 
-    const sessionCheckout = await AdyenCheckout({
+    window.sessionCheckout = await AdyenCheckout({
         environment: 'test',
         clientKey: process.env.__CLIENT_KEY__,
         showPayButton: true,
         session,
+        _environmentUrls: {
+            cdn: {
+                translations: '/'
+            }
+        },
 
         // Events
         beforeSubmit: (data, component, actions) => {
@@ -30,21 +35,25 @@ const initCheckout = async () => {
         onError: (error, component) => {
             console.log('arg', error);
             console.error(error.message, component);
-        },
+        }
     });
 
-    window.card = sessionCheckout
-        .create('giftcard', {
-            type: 'giftcard',
-            brand: 'valuelink',
-            onOrderCreated: (data) => {
-                window.onOrderCreatedTestData = data;
-            },
-            onRequiringConfirmation: () => {
-                window.onRequiringConfirmationTestData = true;
+    window.giftcard = new Giftcard(window.sessionCheckout, {
+        type: 'giftcard',
+        brand: 'valuelink',
+        onOrderUpdated: data => {
+            window.onOrderUpdatedTestData = data;
+        },
+        onRequiringConfirmation: () => {
+            window.onRequiringConfirmationTestData = true;
+        },
+        brandsConfiguration: {
+            genericgiftcard: {
+                icon: 'https://checkoutshopper-test.adyen.com/checkoutshopper/images/logos/mc.svg',
+                name: 'Gifty mcGiftface'
             }
-        })
-        .mount('.card-field');
+        }
+    }).mount('.card-field');
 };
 
 initCheckout();

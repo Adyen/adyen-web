@@ -1,3 +1,5 @@
+import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
+
 interface IScript {
     load(): Promise<any>;
     remove(): HTMLScriptElement;
@@ -44,9 +46,13 @@ class Script implements IScript {
                 resolve();
             };
 
-            const handleOnError = () => {
+            const handleOnError = (errorEvent: ErrorEvent) => {
                 this.remove();
-                reject(new Error(`Unable to load script ${this.src}`));
+                reject(
+                    new AdyenCheckoutError('SCRIPT_ERROR', `Unable to load script ${this.src}. Message: ${errorEvent.message}`, {
+                        cause: errorEvent.error
+                    })
+                );
             };
 
             this.isScriptLoadCalled = true;

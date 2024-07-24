@@ -1,5 +1,6 @@
 import AdyenCheckout from './core';
 import { render, screen, within } from '@testing-library/preact';
+import { Ach, Card, Dropin } from '../components';
 
 // TODO copy
 const paymentMethodsResponse = {
@@ -50,14 +51,16 @@ const checkoutConfig = {
     shopperLocale: 'en-US',
     environment: 'test',
     clientKey: 'test_F7_FEKJHF',
-    paymentMethodsResponse
-    //storedPaymentMethods: [paymentMethodsResponse.storedPaymentMethods]
+    paymentMethodsResponse,
+    countryCode: 'en-US'
 };
 
 const createDropinComponent = async mergeConfig => {
     const checkout = new AdyenCheckout({ ...checkoutConfig, ...mergeConfig });
     await checkout.initialize();
-    const component = checkout.create('dropin', {});
+    const component = new Dropin(checkout, {
+        paymentMethodComponents: [Ach, Card]
+    });
     return component;
 };
 
@@ -66,12 +69,13 @@ test('should render payButton', async () => {
     render(dropinElement.render());
 
     // get all possible payment method selector buttons
-    const paymentMethodListItemArray = await screen.findAllByRole('listitem');
+    const paymentMethodListItemArray = await screen.findAllByRole('radio');
 
     // go trough and select each element in the dropin, check if it has payButton
     for (const paymentMethodListItem of paymentMethodListItemArray) {
         paymentMethodListItem.click();
-        expect(await within(paymentMethodListItem).findAllByRole('button')).toHaveLength(1);
+        // eslint-disable-next-line testing-library/no-node-access
+        expect(await within(paymentMethodListItem.parentElement.parentElement).findAllByRole('button')).toHaveLength(1);
     }
 });
 
@@ -80,12 +84,13 @@ test('should NOT render payButton', async () => {
     render(dropinElement.render());
 
     // get all possible payment method selector buttons
-    const paymentMethodListItemArray = await screen.findAllByRole('listitem');
+    const paymentMethodListItemArray = await screen.findAllByRole('radio');
 
     // go trough and select each element in the dropin, check if it has payButton
     for (const paymentMethodListItem of paymentMethodListItemArray) {
         paymentMethodListItem.click();
-        const element = within(paymentMethodListItem).queryByRole('button');
+        // eslint-disable-next-line testing-library/no-node-access
+        const element = within(paymentMethodListItem.parentElement.parentElement).queryByRole('button');
         // @ts-ignore toBeInDocument
         expect(element).not.toBeInTheDocument();
     }

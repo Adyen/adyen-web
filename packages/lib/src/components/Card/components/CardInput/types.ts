@@ -1,6 +1,5 @@
 import Language from '../../../../language/Language';
-import { BinLookupResponse, BrandConfiguration, CardBrandsConfiguration, CardConfiguration, DualBrandSelectElement } from '../../types';
-import { AddressData, PaymentAmount } from '../../../../types';
+import { BinLookupResponse, BrandConfiguration, CardBrandsConfiguration, CardBackendConfiguration, DualBrandSelectElement } from '../../types';
 import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
 import { CVCPolicyType, DatePolicyType, CbObjOnError, StylesObject } from '../../../internal/SecuredFields/lib/types';
@@ -9,9 +8,11 @@ import { AddressSchema } from '../../../internal/Address/types';
 import { Resources } from '../../../../core/Context/Resources';
 import { SRPanel } from '../../../../core/Errors/SRPanel';
 import RiskElement from '../../../../core/RiskModule';
-import { AnalyticsModule, ComponentMethodsRef } from '../../../types';
 import { DisclaimerMsgObject } from '../../../internal/DisclaimerMessage/DisclaimerMessage';
 import { OnAddressLookupType, OnAddressSelectedType } from '../../../internal/Address/components/AddressSearch';
+import { ComponentMethodsRef } from '../../../internal/UIElement/types';
+import { AddressData, PaymentAmount } from '../../../../types/global-types';
+import { AnalyticsModule } from '../../../../types/global-types';
 import { FieldErrorAnalyticsObject } from '../../../../core/Analytics/types';
 
 export interface CardInputValidState {
@@ -44,9 +45,16 @@ export interface CardInputDataState {
     taxNumber?: string;
 }
 
-type Placeholders = {
-    holderName?: string;
-};
+type PlaceholderKeys =
+    | 'holderName'
+    | 'cardNumber'
+    | 'expiryDate'
+    | 'expiryMonth'
+    | 'expiryYear'
+    | 'securityCodeThreeDigits'
+    | 'securityCodeFourDigits'
+    | 'password';
+export type Placeholders = Partial<Record<PlaceholderKeys, string>>;
 
 /**
  * Should be the subset of the props sent to CardInput that are *actually* used by CardInput
@@ -55,7 +63,6 @@ type Placeholders = {
 export interface CardInputProps {
     amount?: PaymentAmount;
     isPayButtonPrimaryVariant?: boolean;
-    allowedDOMAccess?: boolean;
     autoFocus?: boolean;
     billingAddressAllowedCountries?: string[];
     billingAddressRequired?: boolean;
@@ -66,7 +73,7 @@ export interface CardInputProps {
     brandsConfiguration?: CardBrandsConfiguration;
     brandsIcons: Array<BrandConfiguration>;
     clientKey: string;
-    configuration?: CardConfiguration;
+    configuration?: CardBackendConfiguration;
     countryCode?: string;
     cvcPolicy?: CVCPolicyType;
     data?: CardInputDataState;
@@ -106,6 +113,7 @@ export interface CardInputProps {
     onFieldValid?: () => {};
     onFocus?: (e) => {};
     onLoad?: () => {};
+    handleKeyPress?: (obj: KeyboardEvent) => void;
     onAddressLookup?: OnAddressLookupType;
     onAddressSelected?: OnAddressSelectedType;
     addressSearchDebounceMs?: number;
@@ -114,13 +122,12 @@ export interface CardInputProps {
     positionHolderNameOnTop?: boolean;
     resources: Resources;
     setComponentRef?: (ref) => void;
-    showBrandsUnderCardNumber: boolean;
     showBrandIcon?: boolean;
-    showFormInstruction?: boolean;
     showInstallmentAmounts?: boolean;
-    showPayButton?: boolean;
+    showPayButton: boolean;
     showStoreDetailsCheckbox?: boolean;
     showWarnings?: boolean;
+    showContextualElement?: boolean;
     specifications?: Specifications;
     storedPaymentMethodId?: string;
     styles?: StylesObject;
@@ -129,7 +136,7 @@ export interface CardInputProps {
     maskSecurityCode?: boolean;
     exposeExpiryDate?: boolean;
     disclaimerMessage?: DisclaimerMsgObject;
-    onErrorAnalytics?: (obj: FieldErrorAnalyticsObject) => {};
+    onValidationErrorAnalytics?: (obj: FieldErrorAnalyticsObject) => {};
 }
 
 export interface CardInputState {
@@ -164,9 +171,9 @@ export interface FieldError {
 }
 
 export interface SFError {
-    isValid: boolean;
-    errorMessage: string;
-    errorI18n: string;
+    isValid?: boolean;
+    errorMessage?: string;
+    errorI18n?: string;
     error: string;
     rootNode: HTMLElement;
     detectedBrands?: string[];

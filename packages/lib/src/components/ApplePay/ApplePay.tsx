@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import ApplePayButton from './components/ApplePayButton';
 import ApplePayService from './ApplePayService';
 import base64 from '../../utils/base64';
@@ -7,35 +7,47 @@ import defaultProps from './defaultProps';
 import { httpPost } from '../../core/Services/http';
 import { APPLEPAY_SESSION_ENDPOINT } from './config';
 import { preparePaymentRequest } from './payment-request';
-import { resolveSupportedVersion, mapBrands } from './utils';
-import { ApplePayElementProps, ApplePayElementData, ApplePaySessionRequest, OnAuthorizedCallback } from './types';
+import { resolveSupportedVersion, mapBrands, formatApplePayContactToAdyenAddressFormat } from './utils';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import { DecodeObject } from '../../types/global-types';
+import { TxVariants } from '../tx-variants';
+import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
-import { DecodeObject } from '../types';
+
+import type { ApplePayConfiguration, ApplePayElementData, ApplePayPaymentOrderDetails, ApplePaySessionRequest } from './types';
+import type { ICore } from '../../core/types';
+import type { PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
 import { SendAnalyticsObject } from '../../core/Analytics/types';
 
 const latestSupportedVersion = 14;
 
-class ApplePayElement extends UIElement<ApplePayElementProps> {
-    protected static type = 'applepay';
+class ApplePayElement extends UIElement<ApplePayConfiguration> {
+    public static type = TxVariants.applepay;
     protected static defaultProps = defaultProps;
 
-    constructor(props) {
-        super(props);
+    constructor(checkout: ICore, props?: ApplePayConfiguration) {
+        super(checkout, props);
+
+        const { isExpress, onShippingContactSelected, onShippingMethodSelected } = this.props;
+
+        if (isExpress === false && (onShippingContactSelected || onShippingMethodSelected)) {
+            throw new AdyenCheckoutError(
+                'IMPLEMENTATION_ERROR',
+                'ApplePay - You must set "isExpress" flag to "true" in order to use "onShippingContactSelected" and/or "onShippingMethodSelected" callbacks'
+            );
+        }
+
         this.startSession = this.startSession.bind(this);
         this.submit = this.submit.bind(this);
         this.validateMerchant = this.validateMerchant.bind(this);
-    }
-
-    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
-        // Analytics will need to know about this.props.isExpress & this.props.expressPage
-        super.submitAnalytics({ ...analyticsObj }, this.props);
+        this.collectOrderTrackingDetailsIfNeeded = this.collectOrderTrackingDetailsIfNeeded.bind(this);
+        this.handleAuthorization = this.handleAuthorization.bind(this);
     }
 
     /**
      * Formats the component props
      */
-    protected formatProps(props) {
+    protected override formatProps(props) {
         const version = props.version || resolveSupportedVersion(latestSupportedVersion);
         const supportedNetworks = props.brands?.length ? mapBrands(props.brands) : props.supportedNetworks;
 
@@ -51,36 +63,51 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
     /**
      * Formats the component data output
      */
-    protected formatData(): ApplePayElementData {
+    protected override formatData(): ApplePayElementData {
+        const { applePayToken, billingAddress, deliveryAddress } = this.state;
+        const { isExpress } = this.props;
+
         return {
             paymentMethod: {
                 type: ApplePayElement.type,
-                ...this.state
-            }
+                applePayToken,
+                ...(isExpress && { subtype: 'express' })
+            },
+            ...(billingAddress && { billingAddress }),
+            ...(deliveryAddress && { deliveryAddress })
         };
     }
 
-    submit() {
+    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
+        // Analytics will need to know about this.props.isExpress & this.props.expressPage
+        super.submitAnalytics({ ...analyticsObj }, this.props);
+    }
+
+    public override submit = (): void => {
         // Analytics
         if (this.props.isInstantPayment) {
             this.submitAnalytics({ type: ANALYTICS_SELECTED_STR, target: ANALYTICS_INSTANT_PAYMENT_BUTTON });
         }
+        void this.startSession();
+    };
 
-        return this.startSession(this.props.onAuthorized);
-    }
-
-    private startSession(onPaymentAuthorized: OnAuthorizedCallback) {
+    private startSession() {
         const { version, onValidateMerchant, onPaymentMethodSelected, onShippingMethodSelected, onShippingContactSelected } = this.props;
 
         const paymentRequest = preparePaymentRequest({
             companyName: this.props.configuration.merchantName,
+            countryCode: this.core.options.countryCode,
             ...this.props
         });
 
         const session = new ApplePayService(paymentRequest, {
             version,
             onError: (error: unknown) => {
-                this.handleError(new AdyenCheckoutError('ERROR', 'ApplePay - Something went wrong on ApplePayService', { cause: error }));
+                this.handleError(
+                    new AdyenCheckoutError('ERROR', 'ApplePay - Something went wrong on ApplePayService', {
+                        cause: error
+                    })
+                );
             },
             onCancel: event => {
                 this.handleError(new AdyenCheckoutError('CANCEL', 'ApplePay UI dismissed', { cause: event }));
@@ -90,11 +117,48 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
             onShippingContactSelected,
             onValidateMerchant: onValidateMerchant || this.validateMerchant,
             onPaymentAuthorized: (resolve, reject, event) => {
-                if (event?.payment?.token?.paymentData) {
-                    this.setState({ applePayToken: btoa(JSON.stringify(event.payment.token.paymentData)) });
-                }
-                super.submit();
-                onPaymentAuthorized(resolve, reject, event);
+                const billingAddress = formatApplePayContactToAdyenAddressFormat(event.payment.billingContact);
+                const deliveryAddress = formatApplePayContactToAdyenAddressFormat(event.payment.shippingContact, true);
+
+                this.setState({
+                    applePayToken: btoa(JSON.stringify(event.payment.token.paymentData)),
+                    authorizedEvent: event,
+                    ...(billingAddress && { billingAddress }),
+                    ...(deliveryAddress && { deliveryAddress })
+                });
+
+                this.handleAuthorization()
+                    .then(this.makePaymentsCall)
+                    .then(sanitizeResponse)
+                    .then(verifyPaymentDidNotFail)
+                    .then(this.collectOrderTrackingDetailsIfNeeded)
+                    .then(({ paymentResponse, orderDetails }) => {
+                        resolve({
+                            status: ApplePaySession.STATUS_SUCCESS,
+                            ...(orderDetails && { orderDetails })
+                        });
+                        return paymentResponse;
+                    })
+                    .then(paymentResponse => {
+                        this.handleResponse(paymentResponse);
+                    })
+                    .catch((paymentResponse?: RawPaymentResponse) => {
+                        const errors = paymentResponse?.error?.applePayError;
+
+                        reject({
+                            status: ApplePaySession.STATUS_FAILURE,
+                            errors: errors ? (Array.isArray(errors) ? errors : [errors]) : undefined
+                        });
+
+                        const responseWithError: RawPaymentResponse = {
+                            ...paymentResponse,
+                            error: {
+                                applePayError: errors
+                            }
+                        };
+
+                        this.handleFailedResult(responseWithError);
+                    });
             }
         });
 
@@ -107,13 +171,74 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
             }));
     }
 
+    /**
+     * Call the 'onAuthorized' callback if available.
+     * Must be resolved/reject for the payment flow to continue
+     *
+     * @private
+     */
+    private async handleAuthorization(): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            if (!this.props.onAuthorized) {
+                resolve();
+            }
+
+            const { authorizedEvent, billingAddress, deliveryAddress } = this.state;
+
+            this.props.onAuthorized(
+                {
+                    authorizedEvent,
+                    ...(billingAddress && { billingAddress }),
+                    ...(deliveryAddress && { deliveryAddress })
+                },
+                { resolve, reject }
+            );
+        }).catch((error?: ApplePayJS.ApplePayError) => {
+            // Format error in a way that the 'catch' of the 'onPaymentAuthorize' block accepts it
+            const data = { error: { applePayError: error } };
+            return Promise.reject(data);
+        });
+    }
+
+    /**
+     * Verify if the 'onOrderTrackingRequest' is provided. If so, triggers the callback expecting an
+     * Apple Pay order details back
+     *
+     * @private
+     */
+    private async collectOrderTrackingDetailsIfNeeded(
+        paymentResponse: PaymentResponseData
+    ): Promise<{ orderDetails?: ApplePayPaymentOrderDetails; paymentResponse: PaymentResponseData }> {
+        return new Promise<ApplePayPaymentOrderDetails | void>((resolve, reject) => {
+            if (!this.props.onOrderTrackingRequest) {
+                return resolve();
+            }
+
+            this.props.onOrderTrackingRequest(resolve, reject);
+        })
+            .then(orderDetails => {
+                return {
+                    paymentResponse,
+                    ...(orderDetails && { orderDetails })
+                };
+            })
+            .catch(() => {
+                return { paymentResponse };
+            });
+    }
+
     private async validateMerchant(resolve, reject) {
         const { hostname: domainName } = window.location;
         const { clientKey, configuration, loadingContext, initiative } = this.props;
         const { merchantName, merchantId } = configuration;
         const path = `${APPLEPAY_SESSION_ENDPOINT}?clientKey=${clientKey}`;
         const options = { loadingContext, path };
-        const request: ApplePaySessionRequest = { displayName: merchantName, domainName, initiative, merchantIdentifier: merchantId };
+        const request: ApplePaySessionRequest = {
+            displayName: merchantName,
+            domainName,
+            initiative,
+            merchantIdentifier: merchantId
+        };
 
         try {
             const response = await httpPost(options, request);
@@ -143,7 +268,7 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
      * Determine a shopper's ability to return a form of payment from Apple Pay.
      * @returns Promise Resolve/Reject whether the shopper can use Apple Pay
      */
-    isAvailable(): Promise<boolean> {
+    public override async isAvailable(): Promise<void> {
         if (document.location.protocol !== 'https:') {
             return Promise.reject(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to start an Apple Pay session from an insecure document'));
         }
@@ -154,7 +279,7 @@ class ApplePayElement extends UIElement<ApplePayElementProps> {
 
         try {
             if (window.ApplePaySession && ApplePaySession.canMakePayments() && ApplePaySession.supportsVersion(this.props.version)) {
-                return Promise.resolve(true);
+                return Promise.resolve();
             }
         } catch (error) {
             console.warn(error);

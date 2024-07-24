@@ -1,19 +1,22 @@
 import { SRPanel } from './SRPanel';
 import { screen, waitFor } from '@testing-library/preact';
+import { mock } from 'jest-mock-extended';
+import { ICore } from '../types';
+
+const core = mock<ICore>();
 
 describe('SRPanel disabled', () => {
-    new SRPanel({ enabled: false });
+    new SRPanel(core, { enabled: false });
 
-    test('Does not render the SRPanel in the DOM', async () => {
+    test('Does not render the SRPanel in the DOM', () => {
         // Expect panel to not be present
-        /* eslint-disable-next-line testing-library/prefer-presence-queries */ // linter is wrong: queryBy statements are designed to be used to test non-existence
         expect(screen.queryByTestId('ariaLiveSRPanel')).toBeNull();
     });
 });
 
 describe('SRPanel in use', () => {
     test('Renders the SRPanel in the DOM, adds & clears messages in the panel', async () => {
-        const srPanel = new SRPanel({});
+        const srPanel = new SRPanel(core);
 
         // Expect panel present - but empty
         expect(screen.getByTestId('ariaLiveSRPanel')).toBeTruthy();
@@ -27,15 +30,12 @@ describe('SRPanel in use', () => {
 
         // expect(await screen.findByTestId('message3')).toBeTruthy(); // KEEP: example of assertion that should fail (triggering log of available DOM)
 
-        /* eslint-disable-next-line */ // linter is wrong:this is valid because we are waiting to test for existence
-        await waitFor(() => expect(screen.queryByTestId('message1')).toBeTruthy()); // existence
-        /* eslint-disable-next-line */ // linter is wrong:this is valid because we are waiting to test for non-existence
+        await screen.findByTestId('message1'); // existence
         await waitFor(() => expect(screen.queryByTestId('message3')).toBeNull()); // non-existence
 
         // Clear messages
         srPanel.setMessages(null);
 
-        /* eslint-disable-next-line testing-library/prefer-find-by*/
         await waitFor(() => expect(screen.queryByTestId('message1')).toBeNull());
     });
 });

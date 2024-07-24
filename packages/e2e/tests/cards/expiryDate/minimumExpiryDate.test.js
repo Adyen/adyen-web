@@ -2,14 +2,14 @@ import { Selector } from 'testcafe';
 import { start, getIframeSelector } from '../../utils/commonUtils';
 import cu from '../utils/cardUtils';
 import { CARDS_URL } from '../../pages';
-import LANG from '../../../../lib/src/language/locales/en-US.json';
+import LANG from '../../../../server/translations/en-US.json';
 
 const errorHolder = Selector('.card-field .adyen-checkout__field--error');
-const errorLabel = Selector('.card-field .adyen-checkout__error-text');
+const errorLabel = Selector('.card-field .adyen-checkout-contextual-text--error');
 
-const CARD_TOO_OLD = LANG['error.va.sf-cc-dat.01'];
-const CARD_TOO_FAR = LANG['error.va.sf-cc-dat.02'];
-const CARD_EXPIRES_BEFORE = LANG['error.va.sf-cc-dat.03'];
+const CARD_TOO_OLD = LANG['cc.dat.912'];
+const CARD_TOO_FAR = LANG['cc.dat.913'];
+const CARD_EXPIRES_BEFORE = LANG['cc.dat.914'];
 
 const TEST_SPEED = 1;
 
@@ -139,7 +139,7 @@ test(
 );
 
 test(
-    'General "date edit" bug: input a valid expiry date & expect no error ' +
+    '#7 General "date edit" bug: input a valid expiry date & expect no error ' +
         'then edit the date to be before invalid and expect that to immediately register as an error',
     async t => {
         // Start, allow time for iframes to load

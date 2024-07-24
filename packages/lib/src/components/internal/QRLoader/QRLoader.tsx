@@ -9,13 +9,14 @@ import './QRLoader.scss';
 import { QRLoaderProps, QRLoaderState } from './types';
 import copyToClipboard from '../../../utils/clipboard';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import ContentSeparator from '../ContentSeparator';
 import { StatusObject } from '../Await/types';
 import useImage from '../../../core/Context/useImage';
 import { useA11yReporter } from '../../../core/Errors/useA11yReporter';
 import useAutoFocus from '../../../utils/useAutoFocus';
 import { ANALYTICS_DOWNLOAD_STR, ANALYTICS_QR_CODE_DOWNLOAD } from '../../../core/Analytics/constants';
+import { PREFIX } from '../Icon/constants';
 
 const QRCODE_URL = 'barcode.shtml?barcodeType=qrCode&fileType=png&data=';
 
@@ -74,6 +75,8 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
 
     private pollStatus(delay: number) {
         clearTimeout(this.timeoutId);
+
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         this.timeoutId = setTimeout(async () => {
             // Wait for previous status call to finish.
             // Also taking the server response time into the consideration to calculate timePassed.
@@ -186,15 +189,10 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
         const timeToPayString = i18n.get(this.props.timeToPay).split('%@');
 
         const qrSubtitleRef = useAutoFocus();
+        const classnames = this.props.classNameModifiers.map(m => `adyen-checkout__qr-loader--${m}`);
 
         return (
-            <div
-                className={`
-                    adyen-checkout__qr-loader
-                    adyen-checkout__qr-loader--${type}
-                    ${this.props.classNameModifiers.map(m => `adyen-checkout__qr-loader--${m}`)}
-                `}
-            >
+            <div className={`adyen-checkout__qr-loader adyen-checkout__qr-loader--${type} ${classnames.join(' ')}`}>
                 {brandLogo && <img src={brandLogo} alt={brandName} className="adyen-checkout__qr-loader__brand-logo" />}
 
                 {amount && amount.value && amount.currency && (
@@ -253,7 +251,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                                 });
                                 complete();
                             }}
-                            icon={getImage({ imageFolder: 'components/' })('copy')}
+                            icon={getImage({ imageFolder: 'components/' })(`${PREFIX}copy`)}
                             label={i18n.get('button.copy')}
                         />
                     </div>

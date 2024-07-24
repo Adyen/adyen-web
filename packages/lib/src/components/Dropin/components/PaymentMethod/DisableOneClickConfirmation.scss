@@ -1,21 +1,26 @@
-@import "../../../../style/index";
+@import 'styles/variable-generator';
+
+$color-alert: token(color-background-critical-strong,false);
 
 .adyen-checkout__payment-method__disable-confirmation {
-    background: $color-alert;
-    font-size: $font-size-small;
-    color: $color-white;
+    background: token(color-background-critical-strong);
+    font-size: token(text-body-font-size);
+    color: token(color-label-on-color);
     border-right: 1px solid darken($color-alert, 2%);
     border-left: 1px solid darken($color-alert, 2%);
     overflow: hidden;
     opacity: 0;
     margin: 0 -17px;
     max-height: 0;
-    transition: opacity 0.15s ease-out, max-height 0.15s linear, margin-bottom 0.1s linear;
+    transition:
+        opacity 0.15s ease-out,
+        max-height 0.15s linear,
+        margin-bottom 0.1s linear;
 
     &.adyen-checkout__payment-method__disable-confirmation--open {
         max-height: 62px;
         opacity: 1;
-        margin-bottom: 16px;
+        margin-bottom: token(spacer-070);
     }
 }
 
@@ -23,7 +28,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 16px;
+    padding: token(spacer-040) token(spacer-070);
 }
 
 .adyen-checkout__payment-method__disable-confirmation__buttons {
@@ -31,16 +36,15 @@
 }
 
 .adyen-checkout__payment-method__disable-confirmation__button {
-    background: $color-alert;
-    border: 1px solid transparent;
-    border-radius: $border-radius-medium;
-    color: $color-white;
+    background: token(color-background-critical-strong);
+    border: token(border-width-s) solid transparent;
+    border-radius: token(border-radius-m);
+    color: token(color-label-on-color);
     cursor: pointer;
     display: block;
     height: auto;
-    line-height: 14px;
-    margin: 0 0 0 8px;
-    padding: 8px;
+    margin: 0 0 0 token(spacer-040);
+    padding: token(spacer-040);
     width: auto;
 
     &:hover,
@@ -58,7 +62,7 @@
 
 .adyen-checkout__payment-method__disable-confirmation__button--remove,
 .adyen-checkout__payment-method__disable-confirmation__button--remove:disabled {
-    border-color: $color-white;
+    border-color: token(color-label-on-color);
 }
 
 .adyen-checkout__payment-method__disable-confirmation__button--cancel,

@@ -1,5 +1,5 @@
 import { httpPost } from './http';
-import { OrderStatus } from '../../types';
+import { OrderStatus } from '../../types/global-types';
 
 /**
  */

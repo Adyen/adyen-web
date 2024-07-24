@@ -1,14 +1,12 @@
-import { UpiMode } from '../../types';
-
 export const A11Y = {
     ButtonId: {
-        VPA: `upi-button-${UpiMode.Vpa}`,
-        QR: `upi-button-${UpiMode.QrCode}`,
-        INTENT: `upi-button-${UpiMode.Intent}`
+        VPA: 'upi-button-vpa',
+        QR: 'upi-button-qrCode',
+        INTENT: 'upi-button-intent'
     },
     AreaId: {
-        VPA: `upi-area-${UpiMode.Vpa}`,
-        QR: `upi-area-${UpiMode.QrCode}`,
-        INTENT: `upi-area-${UpiMode.Intent}`
+        VPA: 'upi-area-vpa',
+        QR: 'upi-area-qrCode',
+        INTENT: 'upi-area-intent'
     }
 };

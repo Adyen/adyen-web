@@ -1,4 +1,16 @@
-@import "../../../style/index";
+@use 'styles/index';
+@import 'styles/variable-generator';
+
+$loading-indicator-large-width: token(spacer-120);
+$loading-indicator-large-height: token(spacer-120);
+$loading-indicator-large-border-width: token(spacer-020);
+$loading-indicator-medium-width: 28px;
+$loading-indicator-medium-height: 28px;
+$loading-indicator-small-width: token(spacer-070);
+$loading-indicator-small-height: token(spacer-070);
+$loading-indicator-small-border-width: token(spacer-010);
+$loading-indicator-width: token(spacer-090);
+$loading-indicator-height: token(spacer-090);
 
 .adyen-checkout__spinner__wrapper {
     height: 100%;
@@ -10,40 +22,64 @@
 .adyen-checkout__spinner__wrapper--inline {
     height: auto;
     display: inline-block;
-    margin-right: 8px;
+    margin-right: token(spacer-040);
 
-    [dir="rtl"] & {
+    [dir='rtl'] & {
         margin-right: 0;
-        margin-left: 8px;
+        margin-left: token(spacer-040);
     }
 }
 
 .adyen-checkout__spinner {
-    border: 3px solid $color-primary;
-    border-radius: 50%;
-    height: 43px;
-    width: 43px;
-    border-top-color: transparent;
-    animation: rotate-spinner 1.5s infinite linear;
+    height: $loading-indicator-height;
+    width: $loading-indicator-width;
+    position: relative;
+
+    &::before,
+    &::after {
+        animation: rotate 1s cubic-bezier(0.785, 0.135, 0.15, 0.86) infinite;
+        border: token(border-width-l) solid transparent;
+        border-radius: 50%;
+        box-sizing: border-box;
+        content: '';
+        display: block;
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+    }
+
+    // Need to place here, the order matters
+    @include index.set-spinner-color;
+
+    &--small {
+        height: $loading-indicator-small-height;
+        width: $loading-indicator-small-width;
+
+        &::before,
+        &::after {
+            border-width: $loading-indicator-small-border-width;
+        }
+    }
+
+    &--medium {
+        height: $loading-indicator-medium-height;
+        width: $loading-indicator-medium-width;
+    }
+
+    &--large {
+        height: $loading-indicator-large-height;
+        width: $loading-indicator-large-width;
+
+        &::before,
+        &::after {
+            border-width: $loading-indicator-large-border-width;
+        }
+    }
 }
 
-.adyen-checkout__spinner--large {
-    height: 43px;
-    width: 43px;
-}
-
-.adyen-checkout__spinner--small {
-    height: 16px;
-    width: 16px;
-    border-width: 2px;
-}
-
-.adyen-checkout__spinner--medium {
-    height: 28px;
-    width: 28px;
-}
-
-@keyframes rotate-spinner {
+@keyframes rotate {
     0% {
         transform: rotate(0deg);
     }

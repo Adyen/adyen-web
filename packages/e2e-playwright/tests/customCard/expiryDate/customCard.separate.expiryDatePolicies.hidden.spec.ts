@@ -8,13 +8,13 @@ import {
 } from '../../utils/constants';
 import { binLookupMock } from '../../../mocks/binLookup/binLookup.mock';
 import { hiddenDateAndCvcMock } from '../../../mocks/binLookup/binLookup.data';
-import LANG from '../../../../lib/src/language/locales/en-US.json';
+import LANG from '../../../../server/translations/en-US.json';
 
-const PAN_ERROR = LANG['error.va.sf-cc-num.02'];
-const MONTH_EMPTY_ERROR = LANG['error.va.sf-cc-mth.01'];
-const YEAR_EMPTY_ERROR = LANG['error.va.sf-cc-yr.01'];
-const DATE_INVALID_ERROR = LANG['error.va.sf-cc-dat.02'];
-const CVC_ERROR = LANG['error.va.sf-cc-cvc.01'];
+const PAN_ERROR = LANG['cc.num.900'];
+const MONTH_EMPTY_ERROR = LANG['cc.mth.915'];
+const YEAR_EMPTY_ERROR = LANG['cc.yr.917'];
+const DATE_INVALID_ERROR = LANG['cc.dat.913'];
+const CVC_ERROR = LANG['cc.cvc.920'];
 
 test.describe('Test how Custom Card Component with separate date field handles hidden expiryDate policy', () => {
     test('#1 how UI & state respond', async ({ customCardPageSeparate }) => {

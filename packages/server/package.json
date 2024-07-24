@@ -17,9 +17,12 @@
     "bugs": {
         "url": "https://support.adyen.com/"
     },
+    "scripts": {
+        "start": "node start.js"
+    },
     "devDependencies": {
         "cross-env": "^7.0.3",
-        "dotenv": "^16.0.3",
+        "dotenv": "16.4.4",
         "express": "^4.18.2",
         "request": "^2.81.0"
     },

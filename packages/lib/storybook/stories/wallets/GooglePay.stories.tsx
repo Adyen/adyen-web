@@ -1,21 +1,24 @@
-import { Meta, StoryObj } from '@storybook/preact';
-import { PaymentMethodStoryProps } from '../types';
+import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 import { Container } from '../Container';
-import { GooglePayProps } from '../../../src/components/GooglePay/types';
+import { GooglePayConfiguration } from '../../../src/components/GooglePay/types';
+import { GooglePay } from '../../../src';
 
-type Story = StoryObj<PaymentMethodStoryProps<GooglePayProps>>;
+type GooglePayStory = StoryConfiguration<GooglePayConfiguration>;
 
-const meta: Meta = {
+const meta: MetaConfiguration<GooglePayConfiguration> = {
     title: 'Wallets/GooglePay'
 };
-export default meta;
 
-const createComponent = (args, context) => {
+const createComponent = (args: PaymentMethodStoryProps<GooglePayConfiguration>, context) => {
+    const { componentConfiguration } = args;
     const checkout = getStoryContextCheckout(context);
-    return <Container type={'googlepay'} componentConfiguration={args.componentConfiguration} checkout={checkout} />;
+    const googlepay = new GooglePay(checkout, componentConfiguration);
+    return <Container element={googlepay} />;
 };
 
-export const Default: Story = {
+export const Default: GooglePayStory = {
     render: createComponent
 };
+
+export default meta;

@@ -1,0 +1,125 @@
+@import 'variable-generator';
+
+@mixin box-sizing-setter($include-children: false, $value: border-box) {
+    &,
+    &::before,
+    &::after {
+        box-sizing: $value;
+    }
+
+    @if $include-children {
+        *,
+        *::before,
+        *::after {
+            box-sizing: $value;
+        }
+    }
+}
+
+@mixin b-outer-ring-generator($color) {
+    $transition-duration: 0.1s;
+    $timing-function-ease-in-out: cubic-bezier(0.785, 0.135, 0.15, 0.86);
+    $box-shadow-initial-width: 1px;
+    $box-shadow-width: 3px;
+
+    box-shadow:
+        0 0 0 $box-shadow-initial-width #fff,
+        0 0 0 $box-shadow-width $color;
+    transition: $transition-duration $timing-function-ease-in-out;
+}
+
+@mixin b-link-reset() {
+    &:focus-visible {
+        outline: none;
+    }
+}
+
+@mixin b-focus-ring {
+    @include b-outer-ring-generator(token(focus-ring-color));
+}
+
+$adyen-checkout-media-query-s-min: 480px;
+$adyen-checkout-media-query-m-min: 768px;
+$adyen-checkout-media-query-l-min: 1024px;
+
+@mixin screen-s-and-up {
+    @media (min-width: #{$adyen-checkout-media-query-s-min}) {
+        @content;
+    }
+}
+
+@mixin screen-m-and-up {
+    @media (min-width: #{$adyen-checkout-media-query-m-min}) {
+        @content;
+    }
+}
+
+@mixin screen-l-and-up {
+    @media (min-width: #{$adyen-checkout-media-query-l-min}) {
+        @content;
+    }
+}
+
+@mixin adyen-checkout-link {
+    --text-decoration: none;
+
+    color: token(color-label-highlight);
+    text-decoration: var(--text-decoration);
+
+    @include b-link-reset;
+
+    &:hover,
+    &:active {
+        --text-decoration: underline;
+    }
+
+    &:focus-visible {
+        @include b-focus-ring;
+
+        border-radius: token(border-radius-xs);
+    }
+}
+
+@mixin adyen-checkout-input-wrapper-reset {
+    border: none;
+    background-color: transparent;
+    box-shadow: none;
+
+    &:active,
+    &:active:hover,
+    &:focus-within,
+    &:focus-within:hover {
+        box-shadow: none;
+    }
+}
+
+@mixin adyen-checkout-text-subtitle {
+    font-size: token(text-subtitle-font-size);
+    font-weight: token(text-subtitle-stronger-font-weight);
+    line-height: token(text-subtitle-line-height);
+}
+
+@mixin adyen-checkout-text-title {
+    font-size: token(text-title-font-size);
+    font-weight: token(text-title-font-weight);
+    line-height: token(text-title-line-height);
+}
+
+@mixin adyen-checkout-text-caption {
+    font-size: token(text-caption-font-size);
+    font-weight: token(text-caption-font-weight);
+    line-height: token(text-caption-line-height);
+}
+
+@mixin set-spinner-color($background-color: token(color-background-inverse-primary), $color: token(color-outline-primary-active)) {
+    &::before {
+        border-color: $background-color;
+        border-top-color: transparent;
+        opacity: 0.1;
+    }
+
+    &::after {
+        border-color: transparent;
+        border-top-color: $color;
+    }
+}

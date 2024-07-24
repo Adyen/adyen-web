@@ -1,4 +1,5 @@
-import { DropinElementProps } from '../../src/components/Dropin/types';
+import { Meta, StoryObj } from '@storybook/preact';
+import UIElement from '../../src/components/internal/UIElement';
 
 type GlobalStoryProps = {
     useSessions: boolean;
@@ -12,14 +13,14 @@ export interface PaymentMethodStoryProps<T> extends GlobalStoryProps {
     componentConfiguration: T;
 }
 
-export interface DropinStoryProps extends PaymentMethodStoryProps<DropinElementProps> {
-    paymentMethodsConfiguration: any;
-}
+export type StoryConfiguration<T> = StoryObj<PaymentMethodStoryProps<T>>;
+
+export type MetaConfiguration<T> = Meta<PaymentMethodStoryProps<T>>;
 
 export type AdyenCheckoutProps = {
     showPayButton: boolean;
-    paymentMethodsConfiguration?: Record<string, object>;
     countryCode: string;
     shopperLocale: string;
     amount: number;
+    onPaymentCompleted?: (data: any, element?: UIElement) => void;
 };

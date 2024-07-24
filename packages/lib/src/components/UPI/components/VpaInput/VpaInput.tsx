@@ -1,11 +1,11 @@
 import { h } from 'preact';
 import { useCallback, useEffect, useRef } from 'preact/hooks';
-import Field from '../../../internal/FormFields/Field';
-import useForm from '../../../../utils/useForm';
 import { vpaValidationRules } from './validate';
 import './VpaInput.scss';
 import InputText from '../../../internal/FormFields/InputText';
-import useCoreContext from '../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
+import useForm from '../../../../utils/useForm';
+import Field from '../../../internal/FormFields/Field';
 
 export type OnChangeProps = { data: VpaInputDataState; valid; errors; isValid: boolean };
 

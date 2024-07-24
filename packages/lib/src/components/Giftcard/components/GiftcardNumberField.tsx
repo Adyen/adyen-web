@@ -3,18 +3,21 @@ import classNames from 'classnames';
 import Field from '../../internal/FormFields/Field';
 import { h } from 'preact';
 import { GiftcardFieldProps } from './types';
+import { alternativeLabelContent } from '../../Card/components/CardInput/components/FieldLabelAlternative';
 
 export const GiftcardNumberField = ({ i18n, classNameModifiers, sfpState, getCardErrorMessage, focusedElement, setFocusOn }: GiftcardFieldProps) => {
     return (
         <Field
-            label={i18n.get('creditCard.numberField.title')}
+            label={i18n.get('giftcard.cardNumber.label')}
             classNameModifiers={['number', ...classNameModifiers]}
             errorMessage={getCardErrorMessage(sfpState)}
             focused={focusedElement === 'encryptedCardNumber'}
             onFocusField={() => setFocusOn('encryptedCardNumber')}
             dir={'ltr'}
             name={'encryptedCardNumber'}
-            errorVisibleToScreenReader={false}
+            contextVisibleToScreenReader={false}
+            useLabelElement={false}
+            renderAlternativeToLabel={alternativeLabelContent}
         >
             <DataSfSpan
                 encryptedFieldType="encryptedCardNumber"

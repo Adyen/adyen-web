@@ -1,15 +1,16 @@
 import { h } from 'preact';
-import BaseElement from '../../components/BaseElement';
-import { BaseElementProps } from '../../components/types';
+import BaseElement from '../../components/internal/BaseElement/BaseElement';
 import DeviceFingerprint from './components/DeviceFingerprint';
 import base64 from '../../utils/base64';
 import { RISK_DATA_VERSION, DEVICE_FINGERPRINT } from './constants';
+import { BaseElementProps } from '../../components/internal/BaseElement/types';
+import type { ICore } from '../types';
 
 export interface RiskModuleOptions {
     enabled: boolean;
-    onComplete: (data) => void;
-    onError: (error) => void;
-    node: string;
+    onComplete?: (data) => void;
+    onError?: (error) => void;
+    node?: string;
 }
 
 interface RiskModuleProps extends BaseElementProps {
@@ -32,8 +33,8 @@ export default class RiskElement extends BaseElement<RiskModuleProps> {
 
     private nodeRiskContainer = null;
 
-    constructor(props) {
-        super(props);
+    constructor(checkout: ICore, props?) {
+        super(checkout, props);
 
         // Populate state with null values
         const riskElements = {
@@ -79,7 +80,7 @@ export default class RiskElement extends BaseElement<RiskModuleProps> {
         return this.state.isValid;
     }
 
-    get data(): RiskData {
+    get data(): any {
         if (this.isValid) {
             const dataObj = { version: RISK_DATA_VERSION, ...this.state.data };
             return base64.encode(JSON.stringify(dataObj));

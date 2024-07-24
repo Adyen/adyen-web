@@ -1,12 +1,12 @@
 import { h, RefObject } from 'preact';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
-import { UIElementStatus } from '../../types';
 import Spinner from '../../internal/Spinner';
 import { CashAppPayEvents, ICashAppService } from '../services/types';
 import { CashAppPayEventData } from '../types';
 import StoreDetails from '../../internal/StoreDetails';
 import './CashAppComponent.scss';
+import { UIElementStatus } from '../../internal/UIElement/types';
 
 interface CashAppComponentProps {
     enableStoreDetails?: boolean;
@@ -66,7 +66,8 @@ export function CashAppComponent({
 
             setStatus('ready');
         } catch (error) {
-            onError(error);
+            if (error instanceof AdyenCheckoutError) onError(error);
+            else onError(new AdyenCheckoutError('ERROR', 'Error when initializing CashAppPay', { cause: error }));
         }
     }, [cashAppService, onError, onAuthorize]);
 
@@ -78,19 +79,19 @@ export function CashAppComponent({
     }, [enableStoreDetails, storePaymentMethod]);
 
     useEffect(() => {
-        initializeCashAppSdk();
+        void initializeCashAppSdk();
         return () => {
-            cashAppService.restart();
+            void cashAppService.restart();
             subscriptions.current.forEach(unsubscribeFn => unsubscribeFn());
         };
     }, [cashAppService, initializeCashAppSdk]);
 
     return (
-        <div className="adyen-checkout__cashapp">
+        <div className="adyen-checkout__cashapp" aria-live="polite" aria-busy={status === 'loading'}>
             {status === 'loading' && <Spinner />}
             {status !== 'loading' && enableStoreDetails && <StoreDetails storeDetails={storePaymentMethod} onChange={setStorePaymentMethod} />}
 
-            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+            {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions,jsx-a11y/click-events-have-key-events */}
             <div onClick={onClick} className={'adyen-checkout__cashapp-button'} ref={cashAppRef}></div>
         </div>
     );

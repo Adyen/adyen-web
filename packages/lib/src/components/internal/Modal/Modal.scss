@@ -1,4 +1,4 @@
-@import "../../../style/index";
+@import 'styles/variable-generator';
 
 .adyen-checkout__modal-wrapper {
     align-items: center;
@@ -7,7 +7,7 @@
     left: 0;
     overflow-y: auto;
     overscroll-behavior-y: contain;
-    padding: 24px;
+    padding: token(spacer-090);
     position: fixed;
     top: 0;
     visibility: hidden;
@@ -41,11 +41,11 @@
 }
 
 .adyen-checkout__modal {
-    box-shadow: 0 8px 24px rgb(0 17 44 / 15%);
-    border-radius: $border-radius-large;
-    background-color: $color-white;
+    box-shadow: 0 token(spacer-040) token(spacer-090) rgb(0 17 44 / 15%);
+    border-radius: token(border-radius-m);
+    background-color: token(color-background-primary);
     margin: auto;
-    padding: 16px;
+    padding: token(spacer-070);
     transition: opacity 0.2s ease, visibility 0.2s ease;
     opacity: 0;
     position: relative;

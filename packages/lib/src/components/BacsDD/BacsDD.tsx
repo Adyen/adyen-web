@@ -1,26 +1,15 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import BacsInput from './components/BacsInput';
-import CoreProvider from '../../core/Context/CoreProvider';
+import { CoreProvider } from '../../core/Context/CoreProvider';
 import BacsResult from './components/BacsResult';
 import PayButton from '../internal/PayButton';
+import { TxVariants } from '../tx-variants';
+import { VoucherConfiguration } from '../internal/Voucher/types';
+import { BacsElementData } from './types';
 
-interface BacsElementData {
-    paymentMethod: {
-        type: string;
-        holderName: string;
-        bankAccountNumber: string;
-        bankLocationId: string;
-    };
-    shopperEmail: string;
-}
-
-class BacsElement extends UIElement {
-    public static type = 'directdebit_GB';
-
-    protected static defaultProps = {
-        showFormInstruction: true
-    };
+class BacsElement extends UIElement<VoucherConfiguration> {
+    public static type = TxVariants.directdebit_GB;
 
     formatData(): BacsElementData {
         return {
@@ -56,6 +45,7 @@ class BacsElement extends UIElement {
                     />
                 ) : (
                     <BacsInput
+                        // @ts-ignore ref is internal from the Component
                         ref={ref => {
                             this.componentRef = ref;
                         }}

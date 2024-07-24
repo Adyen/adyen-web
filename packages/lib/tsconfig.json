@@ -1,26 +1,45 @@
 {
     "compilerOptions": {
+        /* Library declaration */
         "declaration": true,
-        "declarationDir": "./dist/types",
+        "outDir": "./dist/temp-types",
 
-        "moduleResolution": "node",
-        "module": "esnext",
-        "target": "es2021",
-        "jsx": "react",
-        "jsxFactory": "h",
-        "resolveJsonModule": true,
+        /* Using bundler as we are transpiling with SWC */
+        "moduleResolution": "Bundler",
+        "module": "ESNext",
+
+        /* Base Options: */
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
+        "skipLibCheck": true,
+        "target": "es2022",
+        "allowJs": true,
+        "resolveJsonModule": true,
+        "moduleDetection": "force",
 
+        /* Strictness */
+        "strict": true,
         "noImplicitAny": false,
+        "noImplicitThis": false,
+        "alwaysStrict": false,
+        "strictBindCallApply": false,
+        "strictNullChecks": false,
+        "strictFunctionTypes": false,
         "strictPropertyInitialization": false,
-        "suppressImplicitAnyIndexErrors": true,
+        "useDefineForClassFields": false,
 
-        "importHelpers": true,
+        /** Preact */
+        "jsx": "react",
+        "jsxFactory": "h",
 
-        "sourceMap": true,
-        "baseUrl": "./"
+        /* Include types for the browser: window, document, etc */
+        "lib": ["es2022","dom", "dom.iterable"],
+
+        "types": ["@testing-library/jest-dom", "applepayjs", "googlepay", "node"],
     },
-    "include": ["src/"],
-    "exclude": ["node_modules", "**/*.spec.*", "**/*.test.*", "**/*_*/**"]
+    "include": [
+        "./src/**/*",
+        "./src/types/custom.d.ts",
+    ],
+    "exclude": ["node_modules", "./dist/**", "**/*.scss", "**/*_*/**"],
 }

@@ -1,18 +1,18 @@
 import { h } from 'preact';
 import cx from 'classnames';
 import { SelectItemProps } from '../types';
-import styles from '../Select.module.scss';
 import Img from '../../../Img';
 import Icon from '../../../Icon';
+import { PREFIX } from '../../../Icon/constants';
 
 const SelectListItem = ({ item, active, selected, ...props }: SelectItemProps) => {
     return (
+        /* eslint-disable jsx-a11y/click-events-have-key-events  */
         <li
             aria-disabled={!!item.disabled}
             aria-selected={selected}
             className={cx([
                 'adyen-checkout__dropdown__element',
-                styles['adyen-checkout__dropdown__element'],
                 {
                     'adyen-checkout__dropdown__element--active': active,
                     'adyen-checkout__dropdown__element--disabled': !!item.disabled
@@ -25,6 +25,7 @@ const SelectListItem = ({ item, active, selected, ...props }: SelectItemProps) =
             data-value={item.id}
             onClick={props.onSelect}
             onMouseEnter={props.onHover}
+            /* eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role */
             role="option"
             //tabIndex={-1}
             id={`listItem-${item.id}`}
@@ -32,7 +33,7 @@ const SelectListItem = ({ item, active, selected, ...props }: SelectItemProps) =
             {item.icon && <Img className="adyen-checkout__dropdown__element__icon" alt={item.name} src={item.icon} />}
             <span className="adyen-checkout__dropdown__element__text">{item.name}</span>
             {item.secondaryText && <span className="adyen-checkout__dropdown__element__secondary-text">{item.secondaryText}</span>}
-            {selected && <Icon type="checkmark" height={14} width={14} />}
+            {selected && <Icon type={`${PREFIX}checkmark`} height={14} width={14} />}
         </li>
     );
 };

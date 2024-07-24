@@ -1,6 +1,9 @@
 import { h } from 'preact';
-import { render } from '@testing-library/preact';
 import PaypalButtons from './PaypalButtons';
+import { render } from '@testing-library/preact';
+import { CoreProvider } from '../../../core/Context/CoreProvider';
+import { mock } from 'jest-mock-extended';
+import { PayPalButtonsProps } from './types';
 
 const paypalIsEligibleMock = jest.fn(() => true);
 const paypalRenderMock = jest.fn(() => Promise.resolve());
@@ -14,21 +17,35 @@ const paypalRefMock = {
     Buttons: jest.fn(() => ({ isEligible: paypalIsEligibleMock, render: paypalRenderMock }))
 };
 
-const renderComponent = () => render(<PaypalButtons isProcessingPayment={false} onApprove={jest.fn()} paypalRef={paypalRefMock} />);
+const renderWithCoreProvider = ui => {
+    return render(
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            {ui}
+        </CoreProvider>
+    );
+};
 
 describe('PaypalButtons', () => {
     afterEach(() => {
         jest.clearAllMocks();
     });
 
-    test('should call paypalRef.Buttons for each funding source', async () => {
-        renderComponent();
+    test('should call paypalRef.Buttons for each funding source', () => {
+        jest.clearAllMocks();
+        const buttonPropsMock = mock<PayPalButtonsProps>({
+            paypalRef: paypalRefMock
+        });
+        renderWithCoreProvider(<PaypalButtons {...buttonPropsMock} />);
         expect(paypalRefMock.Buttons).toHaveBeenCalledTimes(4);
     });
 
-    test('should call paypalRef.Buttons().render for each funding source', async () => {
-        renderComponent();
-        expect(paypalRenderMock).toHaveBeenCalledTimes(4);
+    test('should call paypalRef.Buttons().render for each funding source', () => {
+        jest.clearAllMocks();
+        const buttonPropsMock = mock<PayPalButtonsProps>({
+            paypalRef: paypalRefMock
+        });
+        renderWithCoreProvider(<PaypalButtons {...buttonPropsMock} />);
+        expect(paypalRefMock.Buttons().render).toHaveBeenCalledTimes(4);
     });
 
     test('should pass onShippingAddressChange and onShippingOptionsChange callbacks to PayPal button', () => {
@@ -39,9 +56,11 @@ describe('PaypalButtons', () => {
         const onClick = jest.fn();
         const onError = jest.fn();
         const onInit = jest.fn();
+        const onChange = jest.fn();
+        const onCancel = jest.fn();
         const style = {};
 
-        render(
+        renderWithCoreProvider(
             <PaypalButtons
                 configuration={{ intent: 'authorize', merchantId: 'xxxx' }}
                 paypalRef={paypalRefMock}
@@ -53,6 +72,8 @@ describe('PaypalButtons', () => {
                 onClick={onClick}
                 onError={onError}
                 onInit={onInit}
+                onChange={onChange}
+                onCancel={onCancel}
                 blockPayPalCreditButton
                 blockPayPalPayLaterButton
                 blockPayPalVenmoButton
@@ -66,6 +87,7 @@ describe('PaypalButtons', () => {
             onApprove,
             createOrder,
             onClick,
+            onCancel,
             onError,
             onInit,
             style,

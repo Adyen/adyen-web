@@ -1,22 +1,21 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
-import CoreProvider from '../../core/Context/CoreProvider';
+import UIElement from '../internal/UIElement/UIElement';
+import { CoreProvider } from '../../core/Context/CoreProvider';
 import collectBrowserInfo from '../../utils/browserInfo';
 import AmazonPayComponent from './components/AmazonPayComponent';
-import { AmazonPayElementData, AmazonPayElementProps, CheckoutDetailsRequest } from './types';
+import { AmazonPayElementData, AmazonPayConfiguration, CheckoutDetailsRequest } from './types';
 import defaultProps from './defaultProps';
 import { getCheckoutDetails } from './services';
 import './AmazonPay.scss';
+import { TxVariants } from '../tx-variants';
+import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 import { SendAnalyticsObject } from '../../core/Analytics/types';
 
-export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
-    public static type = 'amazonpay';
+export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
+    public static type = TxVariants.amazonpay;
+
     protected static defaultProps = defaultProps;
 
-    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
-        // Analytics will need to know about this.props.isExpress & this.props.expressPage
-        super.submitAnalytics({ ...analyticsObj }, this.props);
-    }
     formatProps(props) {
         return {
             ...props,
@@ -41,6 +40,11 @@ export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
         };
     }
 
+    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
+        // Analytics will need to know about this.props.isExpress & this.props.expressPage
+        super.submitAnalytics({ ...analyticsObj }, this.props);
+    }
+
     getShopperDetails() {
         const { amazonCheckoutSessionId, configuration = {}, loadingContext, clientKey } = this.props;
         if (!amazonCheckoutSessionId) return console.error('Could not shopper details. Missing checkoutSessionId.');
@@ -55,7 +59,7 @@ export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
         return getCheckoutDetails(loadingContext, clientKey, request);
     }
 
-    handleDeclineFlow() {
+    public handleDeclineFlow() {
         const { amazonCheckoutSessionId, configuration = {}, loadingContext, clientKey } = this.props;
         if (!amazonCheckoutSessionId) return console.error('Could handle the decline flow. Missing checkoutSessionId.');
 
@@ -84,12 +88,12 @@ export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
         return collectBrowserInfo();
     }
 
-    submit() {
-        const { data, isValid } = this;
-        const { onSubmit = () => {} } = this.props;
-
-        if (this.componentRef && this.componentRef.submit) return this.componentRef.submit();
-        return onSubmit({ data, isValid }, this);
+    public submit(): void {
+        const amazonComponentSubmit = this.componentRef && this.componentRef.getSubmitFunction();
+        if (amazonComponentSubmit) {
+            return amazonComponentSubmit();
+        }
+        this.makePaymentsCall().then(sanitizeResponse).then(verifyPaymentDidNotFail).then(this.handleResponse).catch(this.handleFailedResult);
     }
 
     render() {
@@ -99,6 +103,10 @@ export class AmazonPayElement extends UIElement<AmazonPayElementProps> {
                     ref={ref => {
                         this.componentRef = ref;
                     }}
+                    showPayButton={this.props.showPayButton}
+                    onClick={this.props.onClick}
+                    onError={this.props.onError}
+                    onSignOut={this.props.onSignOut}
                     {...this.props}
                 />
             </CoreProvider>

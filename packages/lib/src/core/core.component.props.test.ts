@@ -1,8 +1,12 @@
 import { mount } from 'enzyme';
 import AdyenCheckout from './core';
-import { PaymentMethodsConfiguration } from './types';
+import { PaymentMethodsResponse } from '../types';
+import { PayPal, Card, Dropin, Redirect } from '../components';
+import { CoreConfiguration } from './types';
 
-const paymentMethodsResponse = {
+jest.mock('./Services/get-translations');
+
+const paymentMethodsResponse: PaymentMethodsResponse = {
     paymentMethods: [
         {
             brands: ['visa', 'mc', 'amex', 'maestro', 'bcmc', 'cartebancaire'],
@@ -10,11 +14,11 @@ const paymentMethodsResponse = {
             type: 'scheme'
         },
         {
-            name: 'Google Pay',
-            type: 'paywithgoogle',
+            name: 'PayPal',
+            type: 'paypal',
             configuration: {
                 merchantId: '1000',
-                gatewayMerchantId: 'TestMerchantCheckout'
+                intent: 'authorize'
             }
         },
         { name: 'UnionPay', type: 'unionpay' }
@@ -36,215 +40,125 @@ const paymentMethodsResponse = {
     ]
 };
 
-const amazonPayPMObj = {
-    name: 'Amazon Pay',
-    type: 'amazonpay',
-    configuration: {
-        merchantId: '1000',
-        publicKeyId: 'AG77',
-        region: 'eu',
-        storeId: 'amzn1.aaaaa'
-    }
-};
-
-const paymentMethodsConfiguration = {
-    card: {
-        hasHolderName: true,
-        holderNameRequired: true,
-        positionHolderNameOnTop: true
-    },
-    storedCard: {
-        hideCVC: true
-    },
-    unionpay: {
-        foo: 'bar'
-    },
-    paywithgoogle: {
-        foo: 'bar'
-    },
-    amazonpay: {
-        foo: 'bar'
-    }
-};
-
-const checkoutConfig = {
+const coreOptions: CoreConfiguration = {
+    countryCode: 'US',
     amount: {
         currency: 'USD',
         value: 19000
     },
-    shopperLocale: 'en-US',
+    locale: 'en-US',
     environment: 'test',
     clientKey: 'test_F7_FEKJHF',
     paymentMethodsResponse,
-    paymentMethodsConfiguration: paymentMethodsConfiguration as PaymentMethodsConfiguration
+    analytics: {
+        enabled: false
+    }
 };
 
 const brandsArray = paymentMethodsResponse.paymentMethods[0].brands;
 
-beforeEach(() => {
-    console.error = jest.fn(error => {
-        throw new Error(error);
-    });
-    console.log = jest.fn(() => {});
-    console.warn = jest.fn(() => {});
-});
-
 describe('Core - tests ensuring props reach components', () => {
-    /**
-     * COMPONENTS
-     */
-    describe('Tests for standalone components', () => {
+    describe('Standalone components', () => {
         test('Test that expected props are propagated to a standalone storedCard ', async () => {
-            const checkout = new AdyenCheckout(checkoutConfig);
+            const checkout = new AdyenCheckout(coreOptions);
             await checkout.initialize();
-            const component = checkout.create('card', paymentMethodsResponse.storedPaymentMethods[0]);
 
-            // expect props from core.getPropsForComps()
-            expect(component.props._parentInstance).not.toEqual(null);
-            expect(component.props.storedPaymentMethods).toEqual(paymentMethodsResponse.storedPaymentMethods);
+            const component = new Card(checkout, {
+                ...paymentMethodsResponse.storedPaymentMethods[0],
+                hideCVC: true
+            });
 
-            // expect props from core.processGlobalOptions
+            // @ts-ignore Testing that property is available on component
+            expect(component.core).toEqual(checkout);
+
+            // Props from core.getCorePropsForComponent()
+            expect(component.props.loadingContext).toEqual('https://checkoutshopper-test.adyen.com/checkoutshopper/');
             expect(component.props.clientKey).toEqual('test_F7_FEKJHF');
             expect(component.props.amount.value).toEqual(19000);
 
-            // expect props from relevant pmResponse paymentMethod
+            // Props passed to Component
             expect(component.props.expiryMonth).toEqual('03');
             expect(component.props.lastFour).toEqual('1111');
-
-            // expect props from relevant paymentMethodsConfiguration object
             expect(component.props.hideCVC).toEqual(true);
-
-            // expect mapped prop from Card.formatProps() ('scheme' -> 'card')
-            expect(component.props.type).toEqual('card');
         });
 
         test('Test that expected props are propagated to a standalone Card ', async () => {
-            const checkout = new AdyenCheckout(checkoutConfig);
+            const checkout = new AdyenCheckout(coreOptions);
             await checkout.initialize();
-            const component = checkout.create('card', { legacyInputMode: true });
+            const component = new Card(checkout, { showInstallmentAmounts: true });
 
-            // expect props from core.getPropsForComps()
-            expect(component.props._parentInstance).not.toEqual(null);
-            expect(component.props.storedPaymentMethods).toEqual(paymentMethodsResponse.storedPaymentMethods); // will still have refs from full pmResponse object
-            expect(component.props.paymentMethods).toEqual(paymentMethodsResponse.paymentMethods);
+            // @ts-ignore Testing that property is available on component
+            expect(component.core).toEqual(checkout);
 
-            // expect props from core.processGlobalOptions
+            // Props from core.getCorePropsForComponent()
+            expect(component.props.loadingContext).toEqual('https://checkoutshopper-test.adyen.com/checkoutshopper/');
             expect(component.props.clientKey).toEqual('test_F7_FEKJHF');
             expect(component.props.amount.value).toEqual(19000);
 
-            // expect props from relevant pmResponse paymentMethod
+            // Props from relevant pmResponse paymentMethod
             expect(component.props.brands).toEqual(brandsArray);
 
-            // expect props from relevant paymentMethodsConfiguration object
-            expect(component.props.hasHolderName).toEqual(true);
-            expect(component.props.positionHolderNameOnTop).toEqual(true);
-
-            // expect props from config object passed when card is created
-            expect(component.props.legacyInputMode).toEqual(true);
-
-            // expect prop from Card.formatProps()
-            expect(component.props.type).toEqual('card');
+            // Props from config object passed when card is created
+            expect(component.props.showInstallmentAmounts).toEqual(true);
         });
 
         test('Test that expected props are propagated to a standalone redirect comp created as "redirect" ', async () => {
             const pmObj = paymentMethodsResponse.paymentMethods.find(el => el.type === 'unionpay');
 
-            const checkout = new AdyenCheckout(checkoutConfig);
+            const checkout = new AdyenCheckout(coreOptions);
             await checkout.initialize();
-            const component = checkout.create('redirect', pmObj);
+            const component = new Redirect(checkout, { type: 'unionpay', ...pmObj });
 
-            // expect props from core.getPropsForComps()
-            expect(component.props._parentInstance).not.toEqual(null);
-            expect(component.props.paymentMethods).toEqual(paymentMethodsResponse.paymentMethods);
+            // @ts-ignore Testing that property is available on component
+            expect(component.core).toEqual(checkout);
 
-            // expect props from core.processGlobalOptions
+            // Props from core.getCorePropsForComponent()
             expect(component.props.clientKey).toEqual('test_F7_FEKJHF');
             expect(component.props.amount.value).toEqual(19000);
 
-            // expect props from relevant pmResponse paymentMethod
+            // Props from relevant pmResponse paymentMethod
             expect(component.props.name).toEqual('UnionPay');
-
-            // expect props from relevant paymentMethodsConfiguration object
-            expect(component.props.foo).toEqual('bar');
-
-            // expect prop from Card.formatProps()
-            expect(component.props.type).toEqual('unionpay');
         });
 
-        test('Test that expected props are propagated to a standalone redirect comp created as "unionpay" ', async () => {
-            const checkout = new AdyenCheckout(checkoutConfig);
+        test('Test that expected props are propagated to a standalone PayPal', async () => {
+            const checkout = new AdyenCheckout(coreOptions);
             await checkout.initialize();
-            const component = checkout.create('unionpay');
+            const component = new PayPal(checkout, { enableMessages: true });
 
-            // expect props from core.getPropsForComps()
-            expect(component.props._parentInstance).not.toEqual(null);
-            expect(component.props.paymentMethods).toEqual(paymentMethodsResponse.paymentMethods);
+            // @ts-ignore Testing that property is available on component
+            expect(component.core).toEqual(checkout);
 
-            // expect props from core.processGlobalOptions
+            // Props from core.getCorePropsForComponent()
             expect(component.props.clientKey).toEqual('test_F7_FEKJHF');
             expect(component.props.amount.value).toEqual(19000);
 
-            // expect props from relevant pmResponse paymentMethod
-            expect(component.props.name).toEqual('UnionPay');
+            // Props from relevant pmResponse paymentMethod
+            expect(component.props.configuration.merchantId).toEqual('1000');
+            expect(component.props.configuration.intent).toEqual('authorize');
 
-            // expect props from relevant paymentMethodsConfiguration object
-            expect(component.props.foo).toEqual('bar');
-
-            // expect prop from Redirect.formatProps()
-            expect(component.props.type).toEqual('unionpay');
-        });
-
-        test('Test that expected props are propagated to a standalone google pay com', async () => {
-            const checkout = new AdyenCheckout(checkoutConfig);
-            await checkout.initialize();
-            const component = checkout.create('paywithgoogle');
-
-            // expect props from core.getPropsForComps()
-            expect(component.props._parentInstance).not.toEqual(null);
-            expect(component.props['paymentMethods']).toEqual(paymentMethodsResponse.paymentMethods);
-
-            // expect props from core.processGlobalOptions
-            expect(component.props.clientKey).toEqual('test_F7_FEKJHF');
-            expect(component.props.amount.value).toEqual(19000);
-
-            // expect props from relevant pmResponse paymentMethod
-            expect(component.props.configuration.gatewayMerchantId).toEqual('TestMerchantCheckout');
-
-            // expect props from relevant paymentMethodsConfiguration object
-            expect(component.props['foo']).toEqual('bar');
-
-            // expect props from GooglePay.formatProps()
-            expect(component.props.type).toEqual('paywithgoogle');
-            expect(component.props.buttonSizeMode).toEqual('static');
+            // Props from config passed when creating it
+            expect(component.props.enableMessages).toEqual(true);
         });
     });
 
-    /**
-     * DROPIN
-     */
-    describe('Test for dropin component', () => {
+    describe('Dropin', () => {
         test('Dropin component receives correct props ', async () => {
-            const checkout = new AdyenCheckout(checkoutConfig);
+            const checkout = new AdyenCheckout(coreOptions);
             await checkout.initialize();
-            const dropin = checkout.create('dropin', {
+            const dropin = new Dropin(checkout, {
                 showStoredPaymentMethods: false,
                 openFirstPaymentMethod: false
             });
 
-            // expect props from core.getPropsForComps()
-            expect(dropin.props._parentInstance).not.toEqual(null);
-            expect(dropin.props.paymentMethods).toEqual(paymentMethodsResponse.paymentMethods);
-
-            // expect props from core.processGlobalOptions
+            // Props from core.getCorePropsForComponent()
+            // @ts-ignore Testing that property is available on component
+            expect(dropin.core).toEqual(checkout);
             expect(dropin.props.clientKey).toEqual('test_F7_FEKJHF');
             expect(dropin.props.amount.value).toEqual(19000);
 
-            // expect props from config object passed when dropin is created
-            // expect(dropin.props.showStoredPaymentMethods).toEqual(false);
+            // Props from config object passed when dropin is created
+            expect(dropin.props.showStoredPaymentMethods).toEqual(false);
             expect(dropin.props.openFirstPaymentMethod).toEqual(false);
-
-            //
-            expect(dropin.props.type).toEqual('dropin');
         });
     });
 
@@ -253,17 +167,29 @@ describe('Core - tests ensuring props reach components', () => {
      */
     describe('Tests for dropin created components', () => {
         let dropin;
-        let newPmResponsePaymentMethods;
+        let checkout;
 
         beforeEach(async () => {
-            // @ts-ignore Need to swap out googlepay since it does some other async process at startup that the flushPromises won't resolve
-            checkoutConfig['paymentMethodsResponse'].paymentMethods[1] = amazonPayPMObj;
-
-            newPmResponsePaymentMethods = checkoutConfig['paymentMethodsResponse'].paymentMethods;
-
-            const checkout = new AdyenCheckout(checkoutConfig);
+            checkout = new AdyenCheckout(coreOptions);
             await checkout.initialize();
-            dropin = checkout.create('dropin');
+            dropin = new Dropin(checkout, {
+                paymentMethodsConfiguration: {
+                    card: {
+                        hasHolderName: true,
+                        holderNameRequired: true,
+                        positionHolderNameOnTop: true
+                    },
+                    storedCard: {
+                        hideCVC: true
+                    },
+                    unionpay: {
+                        foo: 'bar'
+                    },
+                    paypal: {
+                        enableMessages: true
+                    }
+                }
+            });
         });
 
         test('StoredCard in Dropin receives correct props ', async () => {
@@ -271,29 +197,27 @@ describe('Core - tests ensuring props reach components', () => {
             const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
-            const storedCard = dropin.dropinRef.state.elements[0];
+            const storedCard = dropin.dropinRef.state.storedPaymentElements[0];
 
-            // expect props from core.getPropsForComps()
-            expect(storedCard.props._parentInstance).not.toEqual(null);
-            expect(storedCard.props.paymentMethods).toEqual(newPmResponsePaymentMethods);
+            expect(storedCard.core).toEqual(checkout);
+
+            // Props from core.getCorePropsForComponent()
             expect(storedCard.props.i18n).not.toEqual(null);
-
-            // expect props from core.processGlobalOptions
             expect(storedCard.props.clientKey).toEqual('test_F7_FEKJHF');
             expect(storedCard.props.amount.value).toEqual(19000);
 
-            // expect props from Dropin.getCommonProps()
+            // Props from Dropin commonProps()
             expect(storedCard.props.showPayButton).toEqual(true);
             expect(storedCard.props.isDropin).toEqual(true);
             expect(storedCard.props.oneClick).toEqual(true);
             expect(storedCard.props.elementRef).not.toEqual(null);
 
-            // expect props from storedCard object in paymentMethodsResponse.storedPaymentMethods
+            // Props from storedCard object in paymentMethodsResponse.storedPaymentMethods
             expect(storedCard.props.brand).toEqual('visa');
             expect(storedCard.props.storedPaymentMethodId).toEqual('8415');
             expect(storedCard.props.expiryYear).toEqual('2030');
 
-            // expect props from relevant paymentMethodsConfiguration object
+            // Props from relevant paymentMethodsConfiguration object
             expect(storedCard.props.hideCVC).toEqual(true);
         });
 
@@ -302,65 +226,54 @@ describe('Core - tests ensuring props reach components', () => {
             const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
-            const card = dropin.dropinRef.state.elements[1];
+            const card = dropin.dropinRef.state.elements[0];
 
-            // expect props from core.getPropsForComps()
-            expect(card.props._parentInstance).not.toEqual(null);
-            expect(card.props.paymentMethods).toEqual(newPmResponsePaymentMethods);
+            expect(card.core).toEqual(checkout);
 
-            // expect props from core.processGlobalOptions
+            // Props from core.getCorePropsForComponent()
             expect(card.props.clientKey).toEqual('test_F7_FEKJHF');
             expect(card.props.amount.value).toEqual(19000);
 
-            // expect props from Dropin.getCommonProps()
+            // Props from Dropin commonProps()
             expect(card.props.showPayButton).toEqual(true);
             expect(card.props.isDropin).toEqual(true);
             expect(card.props.oneClick).not.toBeDefined();
             expect(card.props.elementRef).not.toEqual(null);
 
-            // expect props from card object in paymentMethodsResponse.paymentMethods
+            // Props from card object in paymentMethodsResponse.paymentMethods
             expect(card.props.brands).toEqual(brandsArray);
             expect(card.props.name).toEqual('Credit Card');
 
-            // expect props from relevant paymentMethodsConfiguration object
+            // Props from relevant paymentMethodsConfiguration object
             expect(card.props.hasHolderName).toEqual(true);
             expect(card.props.holderNameRequired).toEqual(true);
             expect(card.props.positionHolderNameOnTop).toEqual(true);
-
-            // expect prop from Card.formatProps()
-            expect(card.props.type).toEqual('card');
         });
 
-        test('AmazonPay in Dropin receives correct props ', async () => {
+        test('PayPal in Dropin receives correct props ', async () => {
             mount(dropin.render());
             const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
-            const aPay = dropin.dropinRef.state.elements[2];
+            const paypal = dropin.dropinRef.state.elements[1];
 
-            // expect props from core.getPropsForComps()
-            expect(aPay.props._parentInstance).not.toEqual(null);
-            expect(aPay.props.paymentMethods).toEqual(newPmResponsePaymentMethods);
+            expect(paypal.core).toEqual(checkout);
 
-            // expect props from core.processGlobalOptions
-            expect(aPay.props.clientKey).toEqual('test_F7_FEKJHF');
-            expect(aPay.props.amount.value).toEqual(19000);
+            // Props from core.getCorePropsForComponent()
+            expect(paypal.props.clientKey).toEqual('test_F7_FEKJHF');
+            expect(paypal.props.amount.value).toEqual(19000);
 
-            // expect props from Dropin.getCommonProps()
-            expect(aPay.props.showPayButton).toEqual(true);
-            expect(aPay.props.isDropin).toEqual(true);
-            expect(aPay.props.elementRef).not.toEqual(null);
+            // Props from Dropin commonProps()
+            expect(paypal.props.showPayButton).toEqual(true);
+            expect(paypal.props.isDropin).toEqual(true);
+            expect(paypal.props.elementRef).not.toEqual(null);
 
-            // expect props from card object in paymentMethodsResponse.paymentMethods
-            expect(aPay.props.configuration.merchantId).toEqual('1000');
-            expect(aPay.props.configuration.publicKeyId).toEqual('AG77');
+            // Props from paypal object in paymentMethodsResponse.paymentMethods
+            expect(paypal.props.configuration.merchantId).toEqual('1000');
+            expect(paypal.props.configuration.intent).toEqual('authorize');
 
-            // expect props from relevant paymentMethodsConfiguration object
-            expect(aPay.props.foo).toEqual('bar');
-
-            // expect props from AmazonPay.formatProps()
-            expect(aPay.props.type).toEqual('amazonpay');
-            expect(aPay.props.productType).toEqual('PayOnly');
+            // Props from relevant paymentMethodsConfiguration object
+            expect(paypal.props.enableMessages).toEqual(true);
         });
 
         test('Redirect PM in Dropin receives correct props ', async () => {
@@ -368,60 +281,27 @@ describe('Core - tests ensuring props reach components', () => {
             const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
-            const redirect = dropin.dropinRef.state.elements[3];
+            const redirect = dropin.dropinRef.state.elements[2];
 
-            // expect props from core.getPropsForComps()
-            expect(redirect.props._parentInstance).not.toEqual(null);
-            expect(redirect.props.paymentMethods).toEqual(newPmResponsePaymentMethods);
+            expect(redirect.core).toEqual(checkout);
 
-            // expect props from core.processGlobalOptions
+            // Props from core.getCorePropsForComponent()
             expect(redirect.props.clientKey).toEqual('test_F7_FEKJHF');
             expect(redirect.props.amount.value).toEqual(19000);
 
-            // expect props from Dropin.getCommonProps()
+            // Props from Dropin commonProps()
             expect(redirect.props.showPayButton).toEqual(true);
             expect(redirect.props.isDropin).toEqual(true);
             expect(redirect.props.elementRef).not.toEqual(null);
 
-            // expect props from object in paymentMethodsResponse.paymentMethods
+            // Props from object in paymentMethodsResponse.paymentMethods
             expect(redirect.props.name).toEqual('UnionPay');
 
-            // expect props from relevant paymentMethodsConfiguration object
+            // Props from relevant paymentMethodsConfiguration object
             expect(redirect.props.foo).toEqual('bar');
 
-            // expect props from Redirect.formatProps()
+            // Props from Redirect.formatProps()
             expect(redirect.props.type).toEqual('unionpay');
         });
-    });
-});
-
-describe('Props reach standalone card component regardless of how the component is created', () => {
-    test('Card component created as "scheme" receives correct props ', async () => {
-        const checkout = new AdyenCheckout(checkoutConfig);
-        await checkout.initialize();
-        const component = checkout.create('scheme', { legacyInputMode: true });
-
-        expect(component.props._parentInstance).not.toEqual(null); // core.getPropsForComps
-        expect(component.props.amount.value).toEqual(19000); // core.processGlobalOptions
-        expect(component.props.brands).toEqual(brandsArray); // pmResp
-        expect(component.props.hasHolderName).toEqual(true); // pmConfig
-        expect(component.props.legacyInputMode).toEqual(true); // card.config
-
-        // expect prop from Card.formatProps()
-        expect(component.props.type).toEqual('card');
-    });
-});
-
-describe('Trying to add a "scheme" property to the paymentMethodsConfiguration throws an error', () => {
-    const paymentMethodsConfiguration = {
-        scheme: {
-            hasHolderName: true
-        }
-    };
-
-    test('Trying to create a card component with a paymentMethodsConfiguration with a "scheme" property shows a warning in the console ', () => {
-        new AdyenCheckout({ environment: 'test', clientKey: 'test_123456', paymentMethodsConfiguration });
-        // expect warning in console
-        expect(console.warn).toHaveBeenCalled();
     });
 });

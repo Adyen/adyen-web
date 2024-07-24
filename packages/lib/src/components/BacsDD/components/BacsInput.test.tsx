@@ -4,16 +4,21 @@ import { mount } from 'enzyme';
 import BacsInput from './BacsInput';
 import { BacsInputProps } from './types';
 import { mock } from 'jest-mock-extended';
+import { CoreProvider } from '../../../core/Context/CoreProvider';
 
 const defaultProps = {
     onChange: () => {},
     onSubmit: () => {}
 };
+const bacsPropsMock = mock<BacsInputProps>();
+const getWrapper = (props = {}) =>
+    mount(
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            <BacsInput {...defaultProps} {...props} {...bacsPropsMock} />{' '}
+        </CoreProvider>
+    );
 
 describe('BacsInput', () => {
-    const bacsPropsMock = mock<BacsInputProps>();
-    const getWrapper = (props = {}) => mount(<BacsInput {...defaultProps} {...props} {...bacsPropsMock} />);
-
     test('Should display expected fields for opening (enter-data) state', () => {
         const wrapper = getWrapper({});
 
@@ -39,7 +44,7 @@ describe('BacsInput', () => {
     test('Should display expected fields for second (confirm-data) state', () => {
         const wrapper = getWrapper({});
 
-        wrapper.instance().setStatus('confirm-data');
+        wrapper.find('BacsInput').instance().setStatus('confirm-data');
         wrapper.update();
 
         // Main holder (with additional 'confim' class)
@@ -61,10 +66,5 @@ describe('BacsInput', () => {
 
         // No consent checkboxes
         expect(wrapper.find('ConsentCheckbox')).toHaveLength(0);
-    });
-
-    test('Should display FormInstruction', () => {
-        const wrapper = getWrapper({ showFormInstruction: true });
-        expect(wrapper.find('FormInstruction')).toHaveLength(1);
     });
 });

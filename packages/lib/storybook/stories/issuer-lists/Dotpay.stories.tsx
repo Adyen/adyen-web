@@ -1,22 +1,25 @@
-import { Meta, StoryObj } from '@storybook/preact';
-import { PaymentMethodStoryProps } from '../types';
+import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
-import { UIElementProps } from '../../../src/components/types';
 import { Container } from '../Container';
+import { IssuerListConfiguration } from '../../../src/components/helpers/IssuerListContainer/types';
+import { Dotpay } from '../../../src';
 
-type DotpayStory = StoryObj<PaymentMethodStoryProps<UIElementProps>>;
+type DotpayStory = StoryConfiguration<IssuerListConfiguration>;
 
-const meta: Meta<PaymentMethodStoryProps<UIElementProps>> = {
+const meta: MetaConfiguration<IssuerListConfiguration> = {
     title: 'IssuerList/Dotpay'
 };
-export default meta;
 
-export const Dotpay: DotpayStory = {
-    render: (args, context) => {
+export const Default: DotpayStory = {
+    render: (args: PaymentMethodStoryProps<IssuerListConfiguration>, context) => {
+        const { componentConfiguration } = args;
         const checkout = getStoryContextCheckout(context);
-        return <Container type={'dotpay'} componentConfiguration={args.componentConfiguration} checkout={checkout} />;
+        const dotpay = new Dotpay(checkout, componentConfiguration);
+        return <Container element={dotpay} />;
     },
     args: {
         countryCode: 'PL'
     }
 };
+
+export default meta;

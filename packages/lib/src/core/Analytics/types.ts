@@ -1,5 +1,5 @@
 import { PaymentAmount } from '../../types';
-import { CoreOptions } from '../types';
+import { CoreConfiguration } from '../types';
 import { SocialSecurityMode } from '../../components/Card/types';
 
 export interface Experiment {
@@ -43,11 +43,6 @@ export interface AnalyticsOptions {
     enabled?: boolean;
 
     /**
-     * Enable/Disable telemetry data
-     */
-    telemetry?: boolean;
-
-    /**
      * Data to be sent along with the event data
      */
     payload?: any;
@@ -63,7 +58,10 @@ export interface AnalyticsOptions {
     analyticsData?: AnalyticsData;
 }
 
-export type AnalyticsProps = Pick<CoreOptions, 'loadingContext' | 'locale' | 'clientKey' | 'analytics' | 'amount'> & { analyticsContext?: string };
+export type AnalyticsProps = Pick<CoreConfiguration, 'loadingContext' | 'locale' | 'clientKey' | 'analytics' | 'amount'> & {
+    bundleType: string;
+    analyticsContext?: string;
+};
 
 export interface AnalyticsObject {
     timestamp: string;
@@ -84,7 +82,7 @@ export interface AnalyticsObject {
     isExpress?: boolean;
     expressPage?: string;
     result?: string;
-    configData?: any;
+    configData?: Record<string, string | boolean>;
 }
 
 export type ANALYTICS_EVENT = 'log' | 'error' | 'info';
@@ -155,7 +153,6 @@ export type CardConfigData = {
     positionHolderNameOnTop: boolean;
     riskEnabled: boolean;
     showBrandIcon: boolean;
-    showBrandsUnderCardNumber: boolean; // (v5 only)
     showInstallmentAmounts: boolean;
     showKCPType: 'none' | 'auto' | 'atStart';
     showPayButton: boolean;
@@ -172,4 +169,5 @@ export type CardConfigData = {
     hasOnFieldValid: boolean;
     hasOnFocus: boolean;
     hasOnLoad: boolean;
+    hasOnEnterKeyPressed: boolean;
 };

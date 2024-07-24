@@ -1,7 +1,9 @@
-import QRLoaderContainer from '../helpers/QRLoaderContainer';
+import QRLoaderContainer from '../helpers/QRLoaderContainer/QRLoaderContainer';
+import { TxVariants } from '../tx-variants';
 
 class SwishElement extends QRLoaderContainer {
-    public static type = 'swish';
+    public static type = TxVariants.swish;
+
     formatProps(props) {
         return {
             delay: 2000, // ms

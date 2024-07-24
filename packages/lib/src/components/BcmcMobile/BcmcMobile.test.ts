@@ -5,22 +5,22 @@ describe('BcmcMobile', () => {
 
     describe('isValid', () => {
         test('should be always true', () => {
-            const bcmcMobile = new BcmcMobile({});
+            const bcmcMobile = new BcmcMobile(global.core);
             expect(bcmcMobile.isValid).toBe(true);
         });
     });
 
     describe('get data', () => {
         test('always returns a type', () => {
-            const bcmcMobile = new BcmcMobile({});
+            const bcmcMobile = new BcmcMobile(global.core);
             expect(bcmcMobile.data.paymentMethod.type).toBe('bcmc_mobile');
         });
     });
 
     describe('render', () => {
-        test('does not render anything by default', () => {
-            const bcmcMobile = new BcmcMobile({});
-            expect(bcmcMobile.render()).toBe(null);
+        test('does render something by default', () => {
+            const bcmcMobile = new BcmcMobile(global.core);
+            expect(bcmcMobile.render()).not.toBe(null);
         });
     });
 });

@@ -1,4 +1,4 @@
-@import "../../../style/index";
+@import 'styles/variable-generator';
 
 .adyen-checkout__bacs {
     &--confirm {
@@ -17,10 +17,9 @@
 
     .adyen-checkout__bacs--edit {
         position: absolute;
-        top: -25px;
+        top: 0;
         right: 0;
         cursor: pointer;
-        width: 20%;
 
         &-dropin {
             top: -50px;
@@ -29,10 +28,11 @@
         .adyen-checkout__bacs--edit-button {
             border: none;
             background: none;
-            color: $color-blue;
+            color: token(color-label-primary);
             text-decoration: underline;
             text-align: end;
             cursor: pointer;
+            padding: 0;
         }
     }
 }

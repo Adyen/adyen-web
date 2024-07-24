@@ -1,11 +1,17 @@
 import { h } from 'preact';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import PersonalDetails from './PersonalDetails';
+import { CoreProvider } from '../../../core/Context/CoreProvider';
+
+const getWrapper = (props = {}) => {
+    return mount(
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            <PersonalDetails {...props} />
+        </CoreProvider>
+    );
+};
 
 describe('PersonalDetails', () => {
-    const i18n = { get: key => key };
-    const getWrapper = props => shallow(<PersonalDetails i18n={i18n} {...props} />);
-
     test('has the required fields', () => {
         const requiredFields = ['firstName', 'lastName', 'telephoneNumber'];
         const wrapper = getWrapper({ requiredFields });

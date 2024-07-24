@@ -1,16 +1,16 @@
 import { test as base, expect, Page } from '@playwright/test';
 import { CardPage } from './card.page';
 import { CardAvsPage } from './card.avs.page';
-import { binLookupMock } from '../../mocks/binLookup/binLookup.mock';
-import { optionalDateAndCvcMock } from '../../mocks/binLookup/binLookup.data';
 
 type Fixture = {
     cardPage: CardPage;
     cardAvsPage: CardAvsPage;
+    cardNoContextualElementPage: CardPage;
     cardLegacyInputModePage: CardPage;
     cardBrandingPage: CardPage;
     cardExpiryDatePoliciesPage: CardPage;
     cardInstallmentsPage: CardPage;
+    cardInstallmentsFullWidthPage: CardPage;
 };
 
 const test = base.extend<Fixture>({
@@ -27,6 +27,14 @@ const test = base.extend<Fixture>({
 
         // @ts-ignore
         await useCardPage(page, use, CardAvsPage);
+    },
+
+    cardNoContextualElementPage: async ({ page }, use) => {
+        await page.addInitScript({
+            content: 'window.cardConfig = { showContextualElement: false }'
+        });
+
+        await useCardPage(page, use);
     },
 
     cardLegacyInputModePage: async ({ page }, use) => {
@@ -70,6 +78,21 @@ const test = base.extend<Fixture>({
                 mc: {
                     values: [1, 2, 3],
                     plans: ['regular', 'revolving']
+                }
+            }
+        });
+        await page.addInitScript({
+            content: `window.cardConfig = ${installmentsConfig}`
+        });
+
+        await useCardPage(page, use);
+    },
+
+    cardInstallmentsFullWidthPage: async ({ page }, use) => {
+        const installmentsConfig = JSON.stringify({
+            installmentOptions: {
+                mc: {
+                    values: [1, 2, 3]
                 }
             }
         });

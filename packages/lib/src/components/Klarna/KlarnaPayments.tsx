@@ -1,19 +1,23 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
-import CoreProvider from '../../core/Context/CoreProvider';
-import { KlarnaPaymentsProps } from './types';
+import UIElement from '../internal/UIElement/UIElement';
+import { CoreProvider } from '../../core/Context/CoreProvider';
+import { KlarnConfiguration } from './types';
 import PayButton from '../internal/PayButton';
 import { KlarnaContainer } from './components/KlarnaContainer/KlarnaContainer';
-import { PaymentAction } from '../../types';
+import { PaymentAction } from '../../types/global-types';
+import { TxVariants } from '../tx-variants';
+import type { ICore } from '../../core/types';
 
-class KlarnaPayments extends UIElement<KlarnaPaymentsProps> {
-    public static type = 'klarna';
+class KlarnaPayments extends UIElement<KlarnConfiguration> {
+    public static type = TxVariants.klarna;
+    public static txVariants = [TxVariants.klarna, TxVariants.klarna_account, TxVariants.klarna_paynow, TxVariants.klarna_b2b];
+
     protected static defaultProps = {
         useKlarnaWidget: false
     };
 
-    constructor(props: KlarnaPaymentsProps) {
-        super(props);
+    constructor(checkout: ICore, props?: KlarnConfiguration) {
+        super(checkout, props);
 
         this.onComplete = this.onComplete.bind(this);
         this.updateWithAction = this.updateWithAction.bind(this);

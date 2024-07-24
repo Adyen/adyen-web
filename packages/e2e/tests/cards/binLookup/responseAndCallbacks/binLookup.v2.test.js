@@ -7,7 +7,7 @@ import cu from '../../utils/cardUtils';
 import { CARDS_URL } from '../../../pages';
 import { BIN_LOOKUP_VERSION, DUAL_BRANDED_CARD, REGULAR_TEST_CARD, MAESTRO_CARD, UNKNOWN_BIN_CARD } from '../../utils/constants';
 
-import LANG from '../../../../../lib/src/language/locales/en-US.json';
+import LANG from '../../../../../server/translations/en-US.json';
 
 const url = `https://checkoutshopper-test.adyen.com/checkoutshopper/${BIN_LOOKUP_VERSION}/bin/binLookup?token=${process.env.CLIENT_KEY}`;
 
@@ -19,9 +19,9 @@ const logger = RequestLogger(
     }
 );
 
-const errorLabel = Selector('.card-field .adyen-checkout__error-text');
+const errorLabel = Selector('.card-field .adyen-checkout-contextual-text--error');
 
-const UNSUPPORTED_CARD = LANG['error.va.sf-cc-num.03'];
+const UNSUPPORTED_CARD = LANG['cc.num.903'];
 
 const TEST_SPEED = 1;
 
@@ -29,10 +29,7 @@ const iframeSelector = getIframeSelector('.card-field iframe');
 
 const cardUtils = cu(iframeSelector);
 
-fixture`Testing binLookup v2 response`
-    .page(CARDS_URL)
-    .clientScripts('binLookup.clientScripts.js')
-    .requestHooks(logger);
+fixture`Testing binLookup v2 response`.page(CARDS_URL).clientScripts('binLookup.clientScripts.js').requestHooks(logger);
 
 test('#1 Enter number of known dual branded card, ' + 'then inspect response body for expected properties ', async t => {
     // Start, allow time for iframes to load
@@ -228,7 +225,7 @@ test('#7 Enter number of unsupported card, ' + 'then inspect callbacks for expec
         .eql(['mc', 'visa', 'amex', 'cartebancaire']);
 
     const cardError = await getFromWindow('errorObj', 'encryptedCardNumber');
-    await t.expect(cardError.errorMessage).eql('Unsupported card entered');
+    await t.expect(cardError.errorMessage).eql('error-msg-unsupported-card-entered'); // This is generated from the relevant key (ERROR_MSG_UNSUPPORTED_CARD_ENTERED) in SF_ErrorCodes
 });
 
 test('#8 Enter number of card that is not in the test Dbs, ' + 'then inspect callbacks for expected properties ', async t => {

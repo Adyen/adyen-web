@@ -1,6 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { USER_TYPE_DELAY } from '../tests/utils/constants';
-import LANG from '../../lib/src/language/locales/en-US.json';
+import LANG from '../../server/translations/en-US.json';
 
 const CARD_IFRAME_TITLE = LANG['creditCard.encryptedCardNumber.aria.iframeTitle'];
 const EXPIRY_DATE_IFRAME_TITLE = LANG['creditCard.encryptedExpiryDate.aria.iframeTitle'];
@@ -8,11 +8,11 @@ const EXPIRY_MONTH_IFRAME_TITLE = LANG['creditCard.encryptedExpiryMonth.aria.ifr
 const EXPIRY_YEAR_IFRAME_TITLE = LANG['creditCard.encryptedExpiryYear.aria.iframeTitle'];
 const CVC_IFRAME_TITLE = LANG['creditCard.encryptedSecurityCode.aria.iframeTitle'];
 
-const CARD_IFRAME_LABEL = LANG['creditCard.numberField.title'];
-const EXPIRY_DATE_IFRAME_LABEL = LANG['creditCard.expiryDateField.title'];
-const EXPIRY_MONTH_IFRAME_LABEL = LANG['creditCard.encryptedExpiryMonth.aria.label'];
-const EXPIRY_YEAR_IFRAME_LABEL = LANG['creditCard.encryptedExpiryYear.aria.label'];
-const CVC_IFRAME_LABEL = LANG['creditCard.cvcField.title'];
+const CARD_IFRAME_LABEL = LANG['creditCard.cardNumber.label'];
+const EXPIRY_DATE_IFRAME_LABEL = LANG['creditCard.expiryDate.label'];
+const EXPIRY_MONTH_IFRAME_LABEL = LANG['creditCard.expiryMonth.label'] ?? 'creditCard.expiryMonth.label'; // TODO add translation key
+const EXPIRY_YEAR_IFRAME_LABEL = LANG['creditCard.expiryYear.label'] ?? 'creditCard.expiryYear.label'; // TODO add translation key
+const CVC_IFRAME_LABEL = LANG['creditCard.securityCode.label'];
 
 class CustomCard {
     readonly page: Page;

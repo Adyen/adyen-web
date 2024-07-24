@@ -1,14 +1,14 @@
 import { Locator, Page } from '@playwright/test';
 import { USER_TYPE_DELAY } from '../tests/utils/constants';
-import LANG from '../../lib/src/language/locales/en-US.json';
+import LANG from '../../server/translations/en-US.json';
 
 const CARD_IFRAME_TITLE = LANG['creditCard.encryptedCardNumber.aria.iframeTitle'];
 const EXPIRY_DATE_IFRAME_TITLE = LANG['creditCard.encryptedExpiryDate.aria.iframeTitle'];
 const CVC_IFRAME_TITLE = LANG['creditCard.encryptedSecurityCode.aria.iframeTitle'];
 
-const CARD_IFRAME_LABEL = LANG['creditCard.encryptedCardNumber.aria.label'];
-const EXPIRY_DATE_IFRAME_LABEL = LANG['creditCard.encryptedExpiryDate.aria.label'];
-const CVC_IFRAME_LABEL = LANG['creditCard.encryptedSecurityCode.aria.label'];
+const CARD_IFRAME_LABEL = LANG['creditCard.cardNumber.label'];
+const EXPIRY_DATE_IFRAME_LABEL = LANG['creditCard.expiryDate.label'];
+const CVC_IFRAME_LABEL = LANG['creditCard.securityCode.label'];
 
 const INSTALLMENTS_PAYMENTS = LANG['installments.installments'];
 const REVOLVING_PAYMENT = LANG['installments.revolving'];
@@ -27,13 +27,17 @@ class Card {
 
     readonly expiryDateField: Locator;
     readonly expiryDateLabelText: Locator;
+    readonly expiryDateContextualElement: Locator;
     readonly expiryDateInput: Locator;
+    readonly expiryDateIframeContextualElement: Locator;
     readonly expiryDateErrorElement: Locator;
 
     readonly cvcField: Locator;
     readonly cvcLabelText: Locator;
     readonly cvcErrorElement: Locator;
+    readonly cvcContextualElement: Locator;
     readonly cvcInput: Locator;
+    readonly cvcIframeContextualElement: Locator;
 
     readonly installmentsPaymentLabel: Locator;
     readonly revolvingPaymentLabel: Locator;
@@ -51,7 +55,9 @@ class Card {
          */
         this.cardNumberField = this.rootElement.locator('.adyen-checkout__field--cardNumber'); // Holder
         this.cardNumberLabelElement = this.cardNumberField.locator('.adyen-checkout__label');
-        this.cardNumberErrorElement = this.cardNumberField.locator('.adyen-checkout__error-text');
+        this.cardNumberErrorElement = this.cardNumberField.locator('.adyen-checkout-contextual-text--error');
+
+        this.brandingIcon = this.rootElement.locator('.adyen-checkout__card__cardNumber__brandIcon');
 
         this.brandingIcon = this.rootElement.locator('.adyen-checkout__card__cardNumber__brandIcon');
 
@@ -66,27 +72,30 @@ class Card {
          */
         this.expiryDateField = this.rootElement.locator('.adyen-checkout__field--expiryDate'); // Holder
         this.expiryDateLabelText = this.expiryDateField.locator('.adyen-checkout__label__text');
-        this.expiryDateErrorElement = this.expiryDateField.locator('.adyen-checkout__error-text'); // Related error element
-        // Related error element
+        this.expiryDateContextualElement = this.expiryDateField.locator('.adyen-checkout-contextual-text'); // Related contextual element
+        this.expiryDateErrorElement = this.expiryDateField.locator('.adyen-checkout-contextual-text--error'); // Related error element
 
         /**
          * Expiry Date elements, in iframe
          */
         const expiryDateIframe = this.rootElement.frameLocator(`[title="${EXPIRY_DATE_IFRAME_TITLE}"]`);
         this.expiryDateInput = expiryDateIframe.locator(`input[aria-label="${EXPIRY_DATE_IFRAME_LABEL}"]`);
+        this.expiryDateIframeContextualElement = expiryDateIframe.locator('.aria-context');
 
         /**
          * Security code elements, in Checkout
          */
         this.cvcField = this.rootElement.locator('.adyen-checkout__field--securityCode'); // Holder
         this.cvcLabelText = this.cvcField.locator('.adyen-checkout__label__text');
-        this.cvcErrorElement = this.cvcField.locator('.adyen-checkout__error-text'); // Related error element
+        this.cvcContextualElement = this.cvcField.locator('.adyen-checkout-contextual-text'); // Related contextual element
+        this.cvcErrorElement = this.cvcField.locator('.adyen-checkout-contextual-text--error'); // Related error element
 
         /**
          * Security code elements, in iframe
          */
         const cvcIframe = this.rootElement.frameLocator(`[title="${CVC_IFRAME_TITLE}"]`);
         this.cvcInput = cvcIframe.locator(`input[aria-label="${CVC_IFRAME_LABEL}"]`);
+        this.cvcIframeContextualElement = cvcIframe.locator('.aria-context');
 
         /**
          * Installments related elements

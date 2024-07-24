@@ -25,7 +25,7 @@ test(
         'then complete the form & check component becomes valid',
     async t => {
         // For some reason, at full speed, testcafe can fail to fill in the taxNumber correctly
-        await t.setTestSpeed(0.9);
+        await t.setTestSpeed(0.5);
 
         // Wait for field to appear in DOM
         await cardPage.numHolder();
@@ -63,7 +63,7 @@ test(
         'then delete card number and check taxNumber and password state are cleared',
     async t => {
         // For some reason, at full speed, testcafe can fail to fill in the taxNumber correctly
-        await t.setTestSpeed(0.9);
+        await t.setTestSpeed(0.5);
 
         await cardPage.numHolder();
 
@@ -89,13 +89,7 @@ test(
         // Look for expected properties
         await t.expect(JWETokenArr.length).eql(5); // Expected number of components in the JWE token
 
-        await t
-            .expect(headerObj.alg)
-            .eql(JWE_ALG)
-            .expect(headerObj.enc)
-            .eql(JWE_CONTENT_ALG)
-            .expect(headerObj.version)
-            .eql(JWE_VERSION);
+        await t.expect(headerObj.alg).eql(JWE_ALG).expect(headerObj.enc).eql(JWE_CONTENT_ALG).expect(headerObj.version).eql(JWE_VERSION);
 
         // await t.expect(cardPage.getFromState('data.encryptedPassword')).contains('adyenjs_0_1_');
 
@@ -123,7 +117,7 @@ test(
         'then replace card number with non-korean card and expect component to be valid & to be able to pay',
     async t => {
         // For some reason, at full speed, testcafe can fail to fill in the taxNumber correctly
-        await t.setTestSpeed(0.9);
+        await t.setTestSpeed(0.5);
 
         await cardPage.numHolder();
 
@@ -168,7 +162,7 @@ test(
         'expect component not to be valid and for password field to show error',
     async t => {
         // For some reason, at full speed, testcafe can fail to fill in the taxNumber correctly
-        await t.setTestSpeed(0.9);
+        await t.setTestSpeed(0.5);
 
         await cardPage.numHolder();
 

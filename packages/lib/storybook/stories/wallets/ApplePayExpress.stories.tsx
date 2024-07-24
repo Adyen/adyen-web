@@ -1,21 +1,20 @@
-import { Meta, StoryObj } from '@storybook/preact';
-import { PaymentMethodStoryProps } from '../types';
+import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 import { Container } from '../Container';
-import { ApplePayElementProps } from '../../../src/components/ApplePay/types';
-import { handleSubmit } from '../../helpers/checkout-handlers';
+import { ApplePayConfiguration } from '../../../src/components/ApplePay/types';
 import getCurrency from '../../utils/get-currency';
+import { ApplePay } from '../../../src';
+import { makePayment } from '../../helpers/checkout-api-calls';
 
-type Story = StoryObj<PaymentMethodStoryProps<ApplePayElementProps>>;
+type ApplePayStory = StoryConfiguration<ApplePayConfiguration>;
 
 const COUNTRY_CODE = 'US';
 const SHOPPER_LOCALE = 'en-US';
 const INITIAL_AMOUNT = 10000;
 
-const meta: Meta = {
+const meta: MetaConfiguration<ApplePayConfiguration> = {
     title: 'Wallets/ApplePay'
 };
-export default meta;
 
 /**
  * Method that fetches the shipping options according to the country.
@@ -121,12 +120,14 @@ const createApplePayAmountHelper = () => {
 };
 const ApplePayAmountHelper = createApplePayAmountHelper();
 
-const createComponent = (args, context) => {
+const createComponent = (args: PaymentMethodStoryProps<ApplePayConfiguration>, context) => {
+    const { componentConfiguration } = args;
     const checkout = getStoryContextCheckout(context);
-    return <Container type={'applepay'} componentConfiguration={args.componentConfiguration} checkout={checkout} />;
+    const applepay = new ApplePay(checkout, componentConfiguration);
+    return <Container element={applepay} />;
 };
 
-export const Express: Story = {
+export const Express: ApplePayStory = {
     render: createComponent,
     argTypes: {
         useSessions: {
@@ -151,22 +152,38 @@ export const Express: Story = {
         amount: INITIAL_AMOUNT,
         shopperLocale: SHOPPER_LOCALE,
         componentConfiguration: {
-            countryCode: COUNTRY_CODE,
+            isExpress: true,
 
-            onSubmit: (state, component) => {
-                const paymentData = {
-                    amount: {
-                        currency: getCurrency(COUNTRY_CODE),
-                        value: ApplePayAmountHelper.getFinalAdyenAmount()
-                    },
-                    countryCode: COUNTRY_CODE,
-                    shopperLocale: SHOPPER_LOCALE
-                };
-                handleSubmit(state, component, null, paymentData);
+            onSubmit: async (state, component, actions) => {
+                try {
+                    const paymentData = {
+                        amount: {
+                            currency: getCurrency(COUNTRY_CODE),
+                            value: ApplePayAmountHelper.getFinalAdyenAmount()
+                        },
+                        countryCode: COUNTRY_CODE,
+                        shopperLocale: SHOPPER_LOCALE
+                    };
+
+                    const { action, order, resultCode, donationToken } = await makePayment(state.data, paymentData);
+
+                    if (!resultCode) actions.reject();
+
+                    actions.resolve({
+                        resultCode,
+                        action,
+                        order,
+                        donationToken
+                    });
+                } catch (error) {
+                    console.error('## onSubmit - critical error', error);
+                    actions.reject();
+                }
             },
 
-            onAuthorized: paymentData => {
-                console.log('Shopper details', paymentData);
+            onAuthorized: (data, actions) => {
+                console.log('Authorized event', data);
+                actions.resolve();
             },
 
             onShippingContactSelected: async (resolve, reject, event) => {
@@ -218,3 +235,5 @@ export const Express: Story = {
         }
     }
 };
+
+export default meta;

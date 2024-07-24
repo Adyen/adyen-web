@@ -1,13 +1,13 @@
-@import "../../../../style/index";
+@import 'styles/variable-generator';
 
 .adyen-checkout__bankTransfer__introduction {
-    font-size: $font-size-small;
-    color: $color-black;
-    font-weight: 400;
-    margin: 0 0 $spacing-medium;
+    font-size: token(text-body-font-size);
+    color: token(color-label-primary);
+    font-weight: token(text-body-font-weight);
+    margin: 0 0 token(spacer-070);
     padding: 0;
 }
 
 .adyen-checkout__bankTransfer__emailField {
-    margin: 0 0 $spacing-medium;
+    margin: 0 0 token(spacer-070);
 }

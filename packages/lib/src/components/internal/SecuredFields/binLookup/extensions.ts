@@ -1,7 +1,7 @@
 import { SingleBrandResetObject } from '../SFP/types';
 import { BrandObject } from '../../../Card/types';
 import createCardVariantSwitcher from './createCardVariantSwitcher';
-import { BRAND_ICON_UI_EXCLUSION_LIST } from '../lib/configuration/constants';
+import { BRAND_ICON_UI_EXCLUSION_LIST } from '../lib/constants';
 
 // Externally testable utils
 export const containsExcludedBrand = (brandsArr: BrandObject[], excludedBrands: string[]): boolean => {

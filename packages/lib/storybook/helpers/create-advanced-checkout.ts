@@ -1,55 +1,96 @@
-import AdyenCheckout from '../../src/index';
-import { cancelOrder, checkBalance, createOrder, getPaymentMethods } from './checkout-api-calls';
-import { handleAdditionalDetails, handleChange, handleError, handleSubmit } from './checkout-handlers';
+import { AdyenCheckout } from '../../src';
+import { cancelOrder, checkBalance, createOrder, getPaymentMethods, makeDetailsCall, makePayment } from './checkout-api-calls';
+import { handleChange, handleError, handleFinalState } from './checkout-handlers';
 import getCurrency from '../utils/get-currency';
 import { AdyenCheckoutProps } from '../stories/types';
-import { PaymentMethodsResponse } from '../../src/core/ProcessResponse/PaymentMethodsResponse/types';
 import Checkout from '../../src/core/core';
+import { PaymentMethodsResponse } from '../../src/types';
 
-async function createAdvancedFlowCheckout({
-    showPayButton,
-    paymentMethodsConfiguration,
-    countryCode,
-    shopperLocale,
-    amount
-}: AdyenCheckoutProps): Promise<Checkout> {
+async function createAdvancedFlowCheckout({ showPayButton, countryCode, shopperLocale, amount, ...rest }: AdyenCheckoutProps): Promise<Checkout> {
     const paymentAmount = {
         currency: getCurrency(countryCode),
         value: Number(amount)
     };
 
-    const paymentMethodsResponse: PaymentMethodsResponse = await getPaymentMethods({ amount: paymentAmount, shopperLocale, countryCode });
+    const paymentMethodsResponse: PaymentMethodsResponse = await getPaymentMethods({
+        amount: paymentAmount,
+        shopperLocale,
+        countryCode
+    });
 
     const checkout = await AdyenCheckout({
         clientKey: process.env.CLIENT_KEY,
+        // @ts-ignore CLIENT_ENV has valid value
         environment: process.env.CLIENT_ENV,
         amount: paymentAmount,
         countryCode,
         paymentMethodsResponse,
         locale: shopperLocale,
         showPayButton,
-        paymentMethodsConfiguration,
 
-        onSubmit: (state, component) => {
-            const paymentData = {
-                amount: paymentAmount,
-                countryCode,
-                shopperLocale
-            };
-            handleSubmit(state, component, checkout, paymentData);
+        onSubmit: async (state, component, actions) => {
+            try {
+                const paymentData = {
+                    amount: paymentAmount,
+                    countryCode,
+                    shopperLocale
+                };
+
+                const { action, order, resultCode, donationToken } = await makePayment(state.data, paymentData);
+
+                if (!resultCode) actions.reject();
+
+                actions.resolve({
+                    resultCode,
+                    action,
+                    order,
+                    donationToken
+                });
+            } catch (error) {
+                console.error('## onSubmit - critical error', error);
+                actions.reject();
+            }
+        },
+
+        onAdditionalDetails: async (state, component, actions) => {
+            try {
+                const { resultCode, action, order, donationToken } = await makeDetailsCall(state.data);
+
+                if (!resultCode) actions.reject();
+
+                actions.resolve({
+                    resultCode,
+                    action,
+                    order,
+                    donationToken
+                });
+            } catch (error) {
+                console.error('## onAdditionalDetails - critical error', error);
+                actions.reject();
+            }
+        },
+
+        onPaymentCompleted(result, element) {
+            console.log('onPaymentCompleted', result, element);
+            handleFinalState(result, element);
+        },
+
+        onPaymentFailed(result, element) {
+            console.log('onPaymentFailed', result, element);
+            handleFinalState(result, element);
         },
 
         onChange: (state, component) => {
             handleChange(state, component);
         },
 
-        onAdditionalDetails: async (state, component) => {
-            await handleAdditionalDetails(state, component, checkout);
-        },
-
         onBalanceCheck: async (resolve, reject, data) => {
+            const payload = {
+                amount: paymentAmount,
+                ...data
+            };
             try {
-                const res = await checkBalance(data);
+                const res = await checkBalance(payload);
                 resolve(res);
             } catch (e) {
                 reject(e);
@@ -66,7 +107,7 @@ async function createAdvancedFlowCheckout({
         },
 
         onOrderCancel: async order => {
-            await cancelOrder(order);
+            await cancelOrder(order.order);
             await checkout.update({
                 paymentMethodsResponse: await getPaymentMethods({ amount: paymentAmount, shopperLocale, countryCode }),
                 order: null,
@@ -76,7 +117,9 @@ async function createAdvancedFlowCheckout({
 
         onError: (error, component) => {
             handleError(error, component);
-        }
+        },
+
+        ...rest
     });
 
     return checkout;

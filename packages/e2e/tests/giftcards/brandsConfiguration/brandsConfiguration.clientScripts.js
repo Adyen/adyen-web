@@ -1,5 +1,7 @@
 window.mainConfiguration = {
-    allowPaymentMethods: ['giftcard'],
+    allowPaymentMethods: ['giftcard']
+};
+window.dropinConfig = {
     paymentMethodsConfiguration: {
         giftcard: {
             brandsConfiguration: {

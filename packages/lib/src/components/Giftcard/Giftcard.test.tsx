@@ -10,22 +10,26 @@ describe('Giftcard', () => {
     const user = userEvent.setup();
 
     const baseProps = {
-        modules: { resources, analytics: { sendAnalytics: () => {} } },
+        modules: {
+            resources,
+            analytics: global.analytics
+        },
         amount: { value: 1000, currency: 'EUR' },
         name: 'My Test Gift Card',
         type: 'giftcard',
         brand: 'genericgiftcard',
-        showPayButton: true,
         i18n,
         loadingContext: 'mock'
     };
 
-    describe('onBalanceCheck', () => {
-        test('If onBalanceCheck is not provided, step is skipped and calls onSubmit', async () => {
+    // these test have been changed to trigger on submit instead of balance check
+    describe('onBalanceCheck func in submit', () => {
+        test('If onBalanceCheck is not provided, step is skipped ayarnnd calls onSubmit', async () => {
             const onSubmitMock = jest.fn();
-            const giftcard = new Giftcard({ ...baseProps, onSubmit: onSubmitMock });
+            const giftcard = new Giftcard(global.core, { ...baseProps, onSubmit: onSubmitMock });
             giftcard.setState({ isValid: true });
-            giftcard.onBalanceCheck();
+
+            giftcard.submit();
             await flushPromises();
 
             expect(onSubmitMock).toHaveBeenCalled();
@@ -33,29 +37,29 @@ describe('Giftcard', () => {
 
         test('onBalanceCheck will be skipped if the component is not valid', () => {
             const onBalanceCheck = jest.fn();
-            const giftcard = new Giftcard({ ...baseProps, onBalanceCheck });
+            const giftcard = new Giftcard(global.core, { ...baseProps, onBalanceCheck });
             giftcard.setState({ isValid: false });
-            giftcard.onBalanceCheck();
+            giftcard.submit();
 
             expect(onBalanceCheck).not.toHaveBeenCalled();
         });
     });
 
     describe('icon getters', () => {
-        test('should default to loading from resources', async () => {
-            const giftcard = new Giftcard({ ...baseProps });
+        test('should default to loading from resources', () => {
+            const giftcard = new Giftcard(global.core, { ...baseProps });
 
             expect(giftcard.icon).toBe('MOCK');
         });
 
-        test('should use the prop .icon as 2. priority', async () => {
-            const giftcard = new Giftcard({ ...baseProps, icon: 'PROP_ICON_MOCK' });
+        test('should use the prop .icon as 2. priority', () => {
+            const giftcard = new Giftcard(global.core, { ...baseProps, icon: 'PROP_ICON_MOCK' });
 
             expect(giftcard.icon).toBe('PROP_ICON_MOCK');
         });
 
-        test('should use brandsConfiguration as 1. priority', async () => {
-            const giftcard = new Giftcard({
+        test('should use brandsConfiguration as 1. priority', () => {
+            const giftcard = new Giftcard(global.core, {
                 ...baseProps,
                 icon: 'PROP_ICON_MOCK',
                 brandsConfiguration: {
@@ -70,14 +74,14 @@ describe('Giftcard', () => {
     });
 
     describe('displayName getters', () => {
-        test('should default to props.name', async () => {
-            const giftcard = new Giftcard({ ...baseProps });
+        test('should default to props.name', () => {
+            const giftcard = new Giftcard(global.core, { ...baseProps });
 
             expect(giftcard.displayName).toBe('My Test Gift Card');
         });
 
-        test('should use brandsConfiguration as 1. priority', async () => {
-            const giftcard = new Giftcard({
+        test('should use brandsConfiguration as 1. priority', () => {
+            const giftcard = new Giftcard(global.core, {
                 ...baseProps,
                 brandsConfiguration: {
                     genericgiftcard: { name: 'genericgiftcard brand name' },
@@ -95,7 +99,7 @@ describe('Giftcard', () => {
             const onBalanceCheck = jest.fn();
 
             // mounting and clicking pay button
-            const giftcard = new Giftcard({
+            const giftcard = new Giftcard(global.core, {
                 ...baseProps,
                 onBalanceCheck
             });
@@ -117,7 +121,7 @@ describe('Giftcard', () => {
             const onOrderRequest = jest.fn();
 
             // mounting and clicking pay button
-            const giftcard = new Giftcard({
+            const giftcard = new Giftcard(global.core, {
                 ...baseProps,
                 onBalanceCheck,
                 onOrderRequest
@@ -140,7 +144,7 @@ describe('Giftcard', () => {
             const onRequiringConfirmation = jest.fn();
 
             // mounting and clicking pay button
-            const giftcard = new Giftcard({
+            const giftcard = new Giftcard(global.core, {
                 ...baseProps,
                 onBalanceCheck,
                 onRequiringConfirmation
@@ -164,7 +168,7 @@ describe('Giftcard', () => {
 
             // mounting and clicking pay button
             const onError = jest.fn();
-            const giftcard = new Giftcard({
+            const giftcard = new Giftcard(global.core, {
                 ...baseProps,
                 onBalanceCheck,
                 onError
@@ -195,7 +199,7 @@ describe('Giftcard', () => {
             const onSubmit = jest.fn();
 
             // mounting and clicking pay button
-            const giftcard = new Giftcard({
+            const giftcard = new Giftcard(global.core, {
                 ...baseProps,
                 onBalanceCheck,
                 onOrderRequest,
@@ -224,10 +228,11 @@ describe('Giftcard', () => {
             const onSubmit = jest.fn();
 
             // mounting and clicking pay button
-            const giftcard = new Giftcard({
+            const giftcard = new Giftcard(global.core, {
                 ...baseProps,
                 order: {
-                    orderData: 'mock'
+                    orderData: 'mock',
+                    pspReference: 'xxxx'
                 },
                 onBalanceCheck,
                 onOrderRequest,

@@ -1,37 +1,116 @@
-import { CustomTranslations, Locales } from '../language/types';
-import { PaymentMethods, PaymentMethodOptions, PaymentActionsType, PaymentAmountExtended, Order } from '../types';
-import { AnalyticsOptions } from './Analytics/types';
-import { PaymentMethodsResponse } from './ProcessResponse/PaymentMethodsResponse/types';
-import { RiskModuleOptions } from './RiskModule/RiskModule';
-import { ActionHandledReturnObject, OnPaymentCompletedData, PaymentData, UIElementProps } from '../components/types';
-import UIElement from '../components/UIElement';
+import Session from './CheckoutSession';
+import PaymentMethods from './ProcessResponse/PaymentMethods';
 import AdyenCheckoutError from './Errors/AdyenCheckoutError';
-import { GiftCardElementData } from '../components/Giftcard/types';
-import { SRPanelProps } from './Errors/types';
+import UIElement from '../components/internal/UIElement';
+import type { CustomTranslations } from '../language/types';
+import type {
+    PaymentAmountExtended,
+    Order,
+    PaymentAction,
+    PaymentMethodsResponse,
+    ActionHandledReturnObject,
+    CheckoutAdvancedFlowResponse,
+    PaymentMethodsRequestData,
+    SessionsResponse,
+    ResultCode,
+    PaymentData,
+    AddressData
+} from '../types/global-types';
+import type { AnalyticsOptions } from './Analytics/types';
+import type { RiskModuleOptions } from './RiskModule/RiskModule';
+import type { onBalanceCheckCallbackType, onOrderRequestCallbackType } from '../components/Giftcard/types';
+import type { SRPanelConfig } from './Errors/types';
+import type { NewableComponent } from './core.registry';
+import type { onOrderCancelType } from '../components/Dropin/types';
 
-type PromiseResolve = typeof Promise.resolve;
+export interface ICore {
+    initialize(): Promise<ICore>;
+    register(...items: NewableComponent[]): void;
+    update(options: CoreConfiguration): Promise<ICore>;
+    remove(component): ICore;
+    submitDetails(details: AdditionalDetailsData['data']): void;
+    getCorePropsForComponent(): any;
+    getComponent(txVariant: string): NewableComponent | undefined;
+    createFromAction(action: PaymentAction, options: any): UIElement;
+    storeElementReference(element: UIElement): void;
+    options: CoreConfiguration;
+    paymentMethodsResponse: PaymentMethods;
+    session?: Session;
+}
 
-type PromiseReject = typeof Promise.reject;
+export type PaymentCompletedData = SessionsResponse | { resultCode: ResultCode; donationToken?: string };
 
-export interface CoreOptions {
-    session?: any;
-    /**
-     * Use test. When you're ready to accept live payments, change the value to one of our {@link https://docs.adyen.com/checkout/drop-in-web#testing-your-integration | live environments}.
-     */
-    environment?: 'test' | 'live' | 'live-us' | 'live-au' | 'live-apse' | 'live-in' | string;
+export type PaymentFailedData = SessionsResponse | { resultCode: ResultCode };
 
-    /**
-     * Used internally by Pay By Link in order to set its own URL's instead of using the ones mapped in our codebase.
-     *
-     * @internal
-     */
-    environmentUrls?: {
-        api?: string;
-        analytics?: string;
+export type SubmitData = {
+    data: PaymentData;
+    isValid: boolean;
+};
+
+export type SubmitActions = {
+    resolve: (response: CheckoutAdvancedFlowResponse) => void;
+    reject: (error?: Pick<CheckoutAdvancedFlowResponse, 'error'>) => void;
+};
+
+export type AdditionalDetailsData = {
+    data: {
+        details: {
+            redirectResult?: string;
+            threeDSResult?: string;
+            [key: string]: any;
+        };
+        paymentData?: string;
+        sessionData?: string;
     };
+};
+
+export type AdditionalDetailsActions = {
+    resolve: (response: CheckoutAdvancedFlowResponse) => void;
+    reject: () => void;
+};
+
+export type BeforeSubmitActions = {
+    resolve: (
+        data: PaymentData & { billingAddress?: AddressData; deliveryAddress?: AddressData; shopperEmail?: string; shopperName?: string }
+    ) => void;
+    reject: () => void;
+};
+
+export type OnChangeData = {
+    data: PaymentData;
+    isValid: boolean;
+    valid?: {
+        [fieldKey: string]: boolean;
+    };
+    errors?: {
+        [fieldKey: string]: {
+            isValid: boolean;
+            errorMessage: string;
+            errorI18n: string;
+            error: string;
+            rootNode: HTMLElement;
+        };
+    };
+};
+
+export interface CoreConfiguration {
+    /**
+     * The payment session object from your call to /sessions.
+     */
+    session?: {
+        id: string;
+        sessionData?: string;
+        shopperEmail?: string;
+        telephoneNumber?: string;
+    };
+    /**
+     * Use 'test'. When you're ready to accept live payments, change the value to one of our {@link https://docs.adyen.com/checkout/drop-in-web#testing-your-integration | live environments}.
+     */
+    environment?: 'test' | 'live' | 'live-us' | 'live-au' | 'live-apse' | 'live-in';
 
     /**
      * Show or hides a Pay Button for each payment method
+     * @default true
      */
     showPayButton?: boolean;
 
@@ -43,10 +122,9 @@ export interface CoreOptions {
     /**
      * The shopper's locale. This is used to set the language rendered in the UI.
      * For a list of supported locales, see {@link https://docs.adyen.com/checkout/components-web/localization-components | Localization}.
-     * For adding a custom locale, see {@link https://docs.adyen.com/checkout/components-web/localization-components#create-localization | Create localization}.
-     * @defaultValue 'en-US'
+     * For adding a custom locale, see {@link https://docs.adyen.com/checkout/components-web/localization-components#create-localization | Create localization}.*
      */
-    locale?: Locales | string;
+    locale?: string;
 
     /**
      * Custom translations and localizations
@@ -75,11 +153,6 @@ export interface CoreOptions {
     countryCode?: string;
 
     /**
-     * Optional per payment method configuration
-     */
-    paymentMethodsConfiguration?: PaymentMethodsConfiguration;
-
-    /**
      * Display only these payment methods
      */
     allowPaymentMethods?: string[];
@@ -92,15 +165,7 @@ export interface CoreOptions {
     /**
      * Screen Reader configuration
      */
-    srConfig?: SRPanelProps;
-
-    /**
-     * @internal
-     */
-    //TODO: maybe type this?
-    cdnContext?: string;
-
-    resourceEnvironment?: string;
+    srConfig?: SRPanelConfig;
 
     analytics?: AnalyticsOptions;
 
@@ -108,77 +173,157 @@ export interface CoreOptions {
 
     order?: Order;
 
-    setStatusAutomatically?: boolean;
+    /**
+     * Add @adyen/web metadata to the window object.
+     * It helps to identify version number and bundle type in the merchant environment
+     *
+     * @default true
+     */
+    exposeLibraryMetadata?: boolean;
 
+    /**
+     * Called before the page redirect happens.
+     * Allows you to perform any sort of action before redirecting the shopper to another page.
+     *
+     * @param resolve
+     * @param reject
+     * @param redirectData
+     */
     beforeRedirect?(
-        resolve: PromiseResolve,
-        reject: PromiseReject,
+        resolve: () => void,
+        reject: () => void,
         redirectData: {
             url: string;
             method: string;
             data?: any;
         }
-    ): Promise<void>;
-
-    beforeSubmit?(
-        state: any,
-        element: UIElement,
-        actions: {
-            resolve: PromiseResolve;
-            reject: PromiseReject;
-        }
-    ): Promise<void>;
-
-    onPaymentCompleted?(data: OnPaymentCompletedData, element?: UIElement): void;
-
-    onSubmit?(state: any, element: UIElement): void;
-
-    onAdditionalDetails?(state: any, element?: UIElement): void;
-
-    onActionHandled?(data: ActionHandledReturnObject): void;
-
-    onChange?(state: any, element: UIElement): void;
-
-    onError?(error: AdyenCheckoutError, element?: UIElement): void;
-
-    onBalanceCheck?(resolve: PromiseResolve, reject: PromiseReject, data: GiftCardElementData): Promise<void>;
-
-    onOrderRequest?(resolve: PromiseResolve, reject: PromiseReject, data: PaymentData): Promise<void>;
-
-    onOrderCancel?(order: Order): void;
+    ): void;
 
     /**
-     * Only used in Components combined with Sessions flow
-     * Callback used to inform when the order is created.
+     * Called when the shopper selects the Pay button (it only works on Sessions flow)
+     *
+     * Allows you to add details which will be sent in the payment request to Adyen's servers.
+     * For example, you can add shopper details like 'billingAddress', 'deliveryAddress', 'shopperEmail' or 'shopperName'
+     *
+     * @param state
+     * @param component
+     * @param actions
+     */
+    beforeSubmit?(state: PaymentData, component: UIElement, actions: BeforeSubmitActions): void;
+
+    /**
+     * Called when the payment succeeds.
+     *
+     * The first parameter is the sessions response (when using sessions flow), or the result code.
+     *
+     * @param data
+     * @param component
+     */
+    onPaymentCompleted?(data: PaymentCompletedData, component?: UIElement): void;
+
+    /**
+     * Called when the payment fails.
+     *
+     * The first parameter is populated when merchant is using sessions, or when the payment was rejected
+     * with an object. (Ex: 'action.reject(obj)' ). Otherwise, it will be empty.
+     *
+     * @param data - session response or resultCode. It can also be undefined if payment was rejected without argument ('action.reject()')
+     * @param component
+     */
+    onPaymentFailed?(data?: PaymentFailedData, component?: UIElement): void;
+
+    /**
+     * Callback used in the Advanced flow to perform the /payments API call
+     *
+     * The payment response must be passed to the 'resolve' function, even if the payment wasn't authorized (Ex: resultCode = Refused).
+     * The 'reject' should be used only if a critical error occurred.
+     *
+     * @param state
+     * @param component
+     * @param actions
+     */
+    onSubmit?(state: SubmitData, component: UIElement, actions: SubmitActions): void;
+
+    /**
+     * Callback used in the Advanced flow to perform the /payments/details API call.
+     *
+     * The payment response must be passed to the 'resolve' function, even if the payment wasn't authorized (Ex: resultCode = Refused).
+     * The 'reject' should be used only if a critical error occurred.
+     *
+     * @param state
+     * @param component - Component submitting details. It is undefined when using checkout.submitDetails()
+     * @param actions
+     */
+    onAdditionalDetails?(state: AdditionalDetailsData, component: UIElement, actions: AdditionalDetailsActions): void;
+
+    /**
+     * Callback called when an action (for example a QR code or 3D Secure 2 authentication screen) is shown to the shopper.
+     *
+     * @param actionHandled
+     */
+    onActionHandled?(actionHandled: ActionHandledReturnObject): void;
+
+    onChange?(state: OnChangeData, component: UIElement): void;
+
+    /**
+     * Callback called in two different scenarios:
+     * - when a critical error happened (network error; implementation error; script failed to load)
+     * - when the shopper cancels the payment flow in payment methods that have an overlay (GooglePay, PayPal, ApplePay)
+     *
+     * @param error
+     * @param component
+     */
+    onError?(error: AdyenCheckoutError, component?: UIElement): void;
+
+    onBalanceCheck?: onBalanceCheckCallbackType;
+
+    onOrderRequest?: onOrderRequestCallbackType;
+
+    /**
+     * Called when a Component detects, or is told by a SecuredField, that the Enter key has been pressed.
+     * - merchant set config option
+     */
+    onEnterKeyPressed?(activeElement: Element, component: UIElement): void;
+
+    /**
+     * Callback called when it is required to fetch/update the payment methods list.
+     * It is currently used mainly on Giftcard flow (Partial orders), since the payment method list might change depending on the amount left to be paid
+     *
+     * The /paymentMethods response must be passed to the 'resolve' function
+     *
+     * @param data
+     * @param actions
+     */
+    onPaymentMethodsRequest?(
+        data: PaymentMethodsRequestData,
+        actions: { resolve: (response: PaymentMethodsResponse) => void; reject: () => void }
+    ): void;
+
+    onOrderCancel?: onOrderCancelType;
+
+    /**
+     * Called when the gift card balance is less than the transaction amount.
+     * Returns an Order object that includes the remaining amount to be paid.
      * https://docs.adyen.com/payment-methods/gift-cards/web-component?tab=config-sessions_1
      */
-    onOrderCreated?(data: { order: Order }): void;
-
-    /**
-     * Used only in the Donation Component when shopper declines to donate
-     * https://docs.adyen.com/online-payments/donations/web-component
-     */
-    onCancel?(): void;
+    onOrderUpdated?(data: { order: Order }): void;
 
     /**
      * @internal
      */
     loadingContext?: string;
+
+    /**
+     * Used internally in order to set different URL's instead of using the ones mapped in our codebase.
+     *
+     * @internal
+     */
+    _environmentUrls?: {
+        api?: string;
+        analytics?: string;
+        cdn?: {
+            images?: string;
+            translations?: string;
+        };
+    };
 }
-
-type PaymentMethodsConfigurationMap = {
-    [key in keyof PaymentMethods]?: Partial<PaymentMethodOptions<key>>;
-};
-
-type PaymentActionTypesMap = {
-    [key in PaymentActionsType]?: Partial<UIElementProps> & { challengeWindowSize?: string };
-};
-
-/**
- * Type must be loose, otherwise it will take priority over the rest
- */
-type NonMappedPaymentMethodsMap = {
-    [key: string]: any;
-};
-
-export type PaymentMethodsConfiguration = PaymentMethodsConfigurationMap & PaymentActionTypesMap & NonMappedPaymentMethodsMap;

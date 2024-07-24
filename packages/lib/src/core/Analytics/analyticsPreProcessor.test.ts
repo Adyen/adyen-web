@@ -10,7 +10,7 @@ const amount: PaymentAmount = { value: 50000, currency: 'USD' };
 
 describe('Testing AnalyticsPreProcessor: process and output', () => {
     beforeEach(() => {
-        analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount });
+        analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount, bundleType: '' });
         analytics.createAnalyticsEvent = jest.fn(() => {});
         sendAnalytics = analyticsPreProcessor(analytics);
     });

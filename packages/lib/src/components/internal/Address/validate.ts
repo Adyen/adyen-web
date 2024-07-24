@@ -1,6 +1,6 @@
 import { ValidatorRules, ValidatorRule } from '../../../utils/Validator/types';
 import { countrySpecificFormatters } from './validate.formats';
-import { ERROR_CODES, ERROR_MSG_INCOMPLETE_FIELD } from '../../../core/Errors/constants';
+import { ERROR_FIELD_REQUIRED, ERROR_INVALID_FORMAT_EXPECTS } from '../../../core/Errors/constants';
 import { isEmpty } from '../../../utils/validator-utils';
 
 const createPatternByDigits = (digits: number) => {
@@ -11,17 +11,18 @@ const createPatternByDigits = (digits: number) => {
 
 const validatePostalCode = (val: string, countryCode: string, validatorRules: ValidatorRules) => {
     if (countryCode) {
+        // If there is no value, we display the 'required' error message
+        if (isEmpty(val)) return null;
+
         // Dynamically create errorMessage
         (validatorRules.postalCode as ValidatorRule).errorMessage = {
-            translationKey: 'invalidFormatExpects',
+            translationKey: ERROR_INVALID_FORMAT_EXPECTS,
             translationObject: {
                 values: {
                     format: countrySpecificFormatters[countryCode]?.postalCode.format || null
                 }
             }
         };
-
-        if (isEmpty(val)) return null;
 
         const pattern = postalCodePatterns[countryCode]?.pattern;
         return pattern ? pattern.test(val) : !!val; // No pattern? Accept any, filled, value.
@@ -86,7 +87,7 @@ export const getPartialAddressValidationRules = (country: string): ValidatorRule
             validate: val => {
                 return validatePostalCode(val, country, validationRules);
             },
-            errorMessage: ERROR_CODES[ERROR_MSG_INCOMPLETE_FIELD]
+            errorMessage: ERROR_FIELD_REQUIRED
         }
     };
     return validationRules;
@@ -100,7 +101,7 @@ export const getAddressValidationRules = (specifications): ValidatorRules => {
                 const country = context.state.data.country;
                 return validatePostalCode(val, country, addressValidationRules);
             },
-            errorMessage: ERROR_CODES[ERROR_MSG_INCOMPLETE_FIELD]
+            errorMessage: ERROR_FIELD_REQUIRED
         },
         houseNumberOrName: {
             validate: (value, context) => {
@@ -109,12 +110,12 @@ export const getAddressValidationRules = (specifications): ValidatorRules => {
                 return isOptional || (isEmpty(value) ? null : true);
             },
             modes: ['blur'],
-            errorMessage: ERROR_CODES[ERROR_MSG_INCOMPLETE_FIELD]
+            errorMessage: ERROR_FIELD_REQUIRED
         },
         default: {
             validate: value => (isEmpty(value) ? null : true), // true, if there are chars other than spaces
             modes: ['blur'],
-            errorMessage: ERROR_CODES[ERROR_MSG_INCOMPLETE_FIELD]
+            errorMessage: ERROR_FIELD_REQUIRED
         }
     };
     return addressValidationRules;

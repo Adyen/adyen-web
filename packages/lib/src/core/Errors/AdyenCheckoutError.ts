@@ -1,20 +1,37 @@
 interface CheckoutErrorOptions {
-    cause: any;
+    cause?: any;
 }
+
+export const NETWORK_ERROR = 'NETWORK_ERROR';
+export const CANCEL = 'CANCEL';
+export const IMPLEMENTATION_ERROR = 'IMPLEMENTATION_ERROR';
+export const API_ERROR = 'API_ERROR';
+export const ERROR = 'ERROR';
+export const SCRIPT_ERROR = 'SCRIPT_ERROR';
+export const SDK_ERROR = 'SDK_ERROR';
 
 class AdyenCheckoutError extends Error {
     protected static errorTypes = {
         /** Network error. */
-        NETWORK_ERROR: 'NETWORK_ERROR',
+        NETWORK_ERROR,
 
         /** Shopper canceled the current transaction. */
-        CANCEL: 'CANCEL',
+        CANCEL,
 
         /** Implementation error. The method or parameter are incorrect or are not supported. */
-        IMPLEMENTATION_ERROR: 'IMPLEMENTATION_ERROR',
+        IMPLEMENTATION_ERROR,
+
+        /** API error. The API has not returned the expected data  */
+        API_ERROR,
 
         /** Generic error. */
-        ERROR: 'ERROR'
+        ERROR,
+
+        /** Script error. The browser failed to load 3rd party script */
+        SCRIPT_ERROR,
+
+        /** Something has gone wrong internally */
+        SDK_ERROR
     };
 
     public cause: unknown;

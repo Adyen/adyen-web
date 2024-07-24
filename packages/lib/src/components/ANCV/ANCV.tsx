@@ -1,27 +1,17 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import ANCVInput from './components/ANCVInput';
-import CoreProvider from '../../core/Context/CoreProvider';
+import { CoreProvider } from '../../core/Context/CoreProvider';
 import config from './components/ANCVAwait/config';
 import Await from '../../components/internal/Await';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
-import { PaymentResponse, UIElementProps } from '../types';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import PayButton from '../internal/PayButton';
+import { ANCVConfiguration } from './types';
+import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 
-export interface ANCVProps extends UIElementProps {
-    paymentData?: any;
-    data: ANCVDataState;
-    onOrderRequest?: any;
-    onOrderCreated?: any;
-}
-
-export interface ANCVDataState {
-    beneficiaryId: string;
-}
-
-export class ANCVElement extends UIElement<ANCVProps> {
-    private static type = 'ancv';
+export class ANCVElement extends UIElement<ANCVConfiguration> {
+    public static type = 'ancv';
 
     /**
      * Formats the component data output
@@ -47,39 +37,27 @@ export class ANCVElement extends UIElement<ANCVProps> {
     };
 
     /**
-     * Called when the /paymentDetails endpoint returns PartiallyAuthorised. The /paymentDetails happens once the /status
-     * returns PartiallyAuthorised
-     *
-     * @param order -
+     * Check if order exists, if it does Resolve.
+     * Otherwise createOrder and then Resolve.
      */
-    protected handleOrder = ({ order }: PaymentResponse) => {
-        this.updateParent({ order });
-
-        if (this.props.session && this.props.onOrderCreated) {
-            return this.props.onOrderCreated(order);
-        }
-    };
-
-    public createOrder = () => {
+    public createOrder = (): Promise<void> => {
         this.setStatus('loading');
 
         // allow for multiple ANCV payments, follow giftcard logic and just use order if it exists
         if (this.props.order) {
-            this.onSubmit();
-            return;
+            return Promise.resolve();
         }
 
-        this.onOrderRequest(this.data)
+        return this.onOrderRequest(this.data)
             .then((order: { orderData: string; pspReference: string }) => {
-                this.setState({ order: { orderData: order.orderData, pspReference: order.pspReference } });
-                // we should probably return here, breaks the promise chain for no reason
-                return this.onSubmit();
+                const stateOrder = { order: { orderData: order.orderData, pspReference: order.pspReference } };
+                this.setState(stateOrder);
+                return Promise.resolve();
             })
             .catch(error => {
                 this.setStatus(error?.message || 'error');
                 if (this.props.onError) this.handleError(new AdyenCheckoutError('ERROR', error));
             });
-        return;
     };
 
     public submit() {
@@ -88,7 +66,12 @@ export class ANCVElement extends UIElement<ANCVProps> {
             return false;
         }
 
-        this.createOrder();
+        this.createOrder()
+            .then(this.makePaymentsCall)
+            .then(sanitizeResponse)
+            .then(verifyPaymentDidNotFail)
+            .then(this.handleResponse)
+            .catch(this.handleFailedResult);
     }
 
     // Reimplement payButton similar to GiftCard to allow to set onClick

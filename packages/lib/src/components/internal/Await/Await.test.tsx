@@ -2,8 +2,7 @@ import { h } from 'preact';
 import checkPaymentStatus from '../../../core/Services/payment-status';
 import Await from './Await';
 import { fireEvent, render, screen, waitFor } from '@testing-library/preact';
-import CoreProvider from '../../../core/Context/CoreProvider';
-import { Resources } from '../../../core/Context/Resources';
+import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { AwaitComponentProps } from './types';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
@@ -29,11 +28,11 @@ describe('Await', () => {
         type: 'mbway',
         awaitText: 'test'
     };
-    const srPanel = new SRPanel({});
+    const srPanel = new SRPanel(global.core);
     const renderAwait = (props: AwaitComponentProps) => {
         return render(
             // @ts-ignore ignore
-            <CoreProvider i18n={global.i18n} loadingContext="test" resources={new Resources()}>
+            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
                 <SRPanelProvider srPanel={srPanel}>
                     <Await {...props} />
                 </SRPanelProvider>
@@ -65,6 +64,7 @@ describe('Await', () => {
         test('should show brand logo', async () => {
             renderAwait(defaultProps);
             const image = await screen.findByAltText(defaultProps.type);
+            // @ts-ignore src is part of img
             expect(image.src).toContain(defaultProps.brandLogo);
         });
 
@@ -173,6 +173,7 @@ describe('Await', () => {
         test('should show brand logo', async () => {
             renderAwait(defaultProps);
             const image = await screen.findByAltText(defaultProps.type);
+            // @ts-ignore src is part of img
             expect(image.src).toContain(defaultProps.brandLogo);
         });
     });

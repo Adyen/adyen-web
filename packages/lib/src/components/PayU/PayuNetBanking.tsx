@@ -1,7 +1,8 @@
-import IssuerListContainer from '../helpers/IssuerListContainer';
+import IssuerListContainer from '../helpers/IssuerListContainer/IssuerListContainer';
+import { TxVariants } from '../tx-variants';
 
 class PayuNetBankingElement extends IssuerListContainer {
-    public static type = 'payu_IN_nb';
+    public static type = TxVariants.payu_IN_nb;
 
     formatProps(props) {
         return {

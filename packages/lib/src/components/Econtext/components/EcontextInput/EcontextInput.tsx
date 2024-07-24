@@ -1,18 +1,17 @@
-import { h, VNode } from 'preact';
+import { Fragment, h, VNode } from 'preact';
 import { useRef, useState } from 'preact/hooks';
 import PersonalDetails from '../../../internal/PersonalDetails/PersonalDetails';
-import useCoreContext from '../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { econtextValidationRules } from '../../validate';
-import { PersonalDetailsSchema } from '../../../../types';
+import { PersonalDetailsSchema } from '../../../../types/global-types';
 import './EcontextInput.scss';
-import { ComponentMethodsRef } from '../../../types';
 import FormInstruction from '../../../internal/FormInstruction';
+import { ComponentMethodsRef } from '../../../internal/UIElement/types';
 
 interface EcontextInputProps {
     personalDetailsRequired?: boolean;
-    showFormInstruction?: boolean;
     data?: PersonalDetailsSchema;
-    showPayButton?: boolean;
+    showPayButton: boolean;
     payButton(config: any): VNode;
     onChange?(data: any): void;
     onSubmit?(state: any, component: any): void;
@@ -41,20 +40,20 @@ export default function EcontextInput({ personalDetailsRequired = true, data, on
 
     econtextRef.current.setStatus = setStatus;
 
-    const showFormInstruction = personalDetailsRequired && props.showFormInstruction;
-
     return (
         <div className="adyen-checkout__econtext-input__field">
-            {showFormInstruction && <FormInstruction />}
             {personalDetailsRequired && (
-                <PersonalDetails
-                    data={data}
-                    requiredFields={['firstName', 'lastName', 'telephoneNumber', 'shopperEmail']}
-                    onChange={onChange}
-                    namePrefix="econtext"
-                    setComponentRef={setPersonalDetailsRef}
-                    validationRules={econtextValidationRules}
-                />
+                <Fragment>
+                    <FormInstruction />
+                    <PersonalDetails
+                        data={data}
+                        requiredFields={['firstName', 'lastName', 'telephoneNumber', 'shopperEmail']}
+                        onChange={onChange}
+                        namePrefix="econtext"
+                        setComponentRef={setPersonalDetailsRef}
+                        validationRules={econtextValidationRules}
+                    />
+                </Fragment>
             )}
             {showPayButton && payButton({ status, label: i18n.get('confirmPurchase') })}
         </div>

@@ -1,24 +1,26 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
-import CoreProvider from '../../core/Context/CoreProvider';
-import { ClickToPayElementProps, ClickToPayPaymentData } from './types';
+import UIElement from '../internal/UIElement/UIElement';
+import { CoreProvider } from '../../core/Context/CoreProvider';
+import { ClickToPayConfiguration, ClickToPayPaymentData } from './types';
 import collectBrowserInfo from '../../utils/browserInfo';
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';
-import { ClickToPayConfiguration } from '../internal/ClickToPay/types';
+import { ClickToPayProps } from '../internal/ClickToPay/types';
 import createClickToPayService from '../internal/ClickToPay/services/create-clicktopay-service';
 import { CtpState } from '../internal/ClickToPay/services/ClickToPayService';
 import ClickToPayProvider from '../internal/ClickToPay/context/ClickToPayProvider';
 import ClickToPayComponent from '../internal/ClickToPay';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import { TxVariants } from '../tx-variants';
+import type { ICore } from '../../core/types';
 
-export class ClickToPayElement extends UIElement<ClickToPayElementProps> {
-    public static type = 'clicktopay';
+export class ClickToPayElement extends UIElement<ClickToPayConfiguration> {
+    public static type = TxVariants.clicktopay;
 
     private readonly clickToPayService: IClickToPayService | null;
-    private readonly ctpConfiguration: ClickToPayConfiguration;
+    private readonly ctpConfiguration: ClickToPayProps;
 
-    constructor(props) {
-        super(props);
+    constructor(checkout: ICore, props?: ClickToPayConfiguration) {
+        super(checkout, props);
 
         this.ctpConfiguration = {
             shopperEmail: this.props.shopperEmail,
@@ -63,12 +65,12 @@ export class ClickToPayElement extends UIElement<ClickToPayElementProps> {
         };
     }
 
-    protected formatProps(props: ClickToPayElementProps) {
+    protected formatProps(props: ClickToPayConfiguration) {
         return {
             ...props,
             disableOtpAutoFocus: props.disableOtpAutoFocus || false,
-            shopperEmail: props.shopperEmail || props?._parentInstance?.options?.session?.shopperEmail,
-            telephoneNumber: props.telephoneNumber || props?._parentInstance?.options?.session?.telephoneNumber,
+            shopperEmail: props.shopperEmail || this.core.options?.session?.shopperEmail,
+            telephoneNumber: props.telephoneNumber || this.core.options?.session?.telephoneNumber,
             locale: props.locale || props.i18n?.locale?.replace('-', '_')
         };
     }
@@ -79,7 +81,7 @@ export class ClickToPayElement extends UIElement<ClickToPayElementProps> {
      * Resolves Promise if the Shopper has cookies OR has valid CtP account
      * Rejects Promise if account isn't found or if Login screen is triggered
      */
-    public async isAvailable(): Promise<void> {
+    public override async isAvailable(): Promise<void> {
         if (!this.clickToPayService) {
             return Promise.reject();
         }

@@ -1,22 +1,5 @@
+@import 'styles/variable-generator';
+
 .adyen-checkout__paywithgoogle {
-    height: 48px;
-}
-
-.adyen-checkout__paywithgoogle > div > button {
-    &,
-    &.long,
-    &.short {
-        height: 48px;
-        transition: background-color 0.3s ease-out, box-shadow 0.3s ease-out;
-
-        &:focus {
-            box-shadow: 0 0 0 2px #99c2ff;
-            outline: 0;
-        }
-    }
-
-    // Default button
-    &.gpay-button {
-        padding: 15px 24px 13px;
-    }
+    height: token(spacer-120);
 }

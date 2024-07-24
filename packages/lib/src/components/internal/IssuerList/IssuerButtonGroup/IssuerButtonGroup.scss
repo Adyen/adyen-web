@@ -1,5 +1,7 @@
+@import 'styles/variable-generator';
+
 .adyen-checkout__issuer-button-group {
     display: flex;
     flex-wrap: wrap;
-    gap: 16px 16px;
+    gap: token(spacer-070);
 }

@@ -1,84 +1,197 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import GooglePayService from './GooglePayService';
 import GooglePayButton from './components/GooglePayButton';
 import defaultProps from './defaultProps';
-import { GooglePayProps } from './types';
-import { mapBrands, getGooglePayLocale } from './utils';
+import { formatGooglePayContactToAdyenAddressFormat, getGooglePayLocale } from './utils';
 import collectBrowserInfo from '../../utils/browserInfo';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import { TxVariants } from '../tx-variants';
+import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
 import { SendAnalyticsObject } from '../../core/Analytics/types';
 
-class GooglePay extends UIElement<GooglePayProps> {
-    public static type = 'paywithgoogle';
-    public static defaultProps = defaultProps;
-    protected googlePay = new GooglePayService(this.props);
+import type { AddressData, BrowserInfo, PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
+import type { GooglePayConfiguration } from './types';
+import type { ICore } from '../../core/types';
 
-    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
-        // Analytics will need to know about this.props.isExpress & this.props.expressPage
-        super.submitAnalytics({ ...analyticsObj }, this.props);
+class GooglePay extends UIElement<GooglePayConfiguration> {
+    public static type = TxVariants.googlepay;
+    public static txVariants = [TxVariants.googlepay, TxVariants.paywithgoogle];
+    public static defaultProps = defaultProps;
+
+    protected readonly googlePay;
+
+    constructor(checkout: ICore, props?: GooglePayConfiguration) {
+        super(checkout, props);
+        this.handleAuthorization = this.handleAuthorization.bind(this);
+
+        const { isExpress, paymentDataCallbacks } = this.props;
+
+        if (isExpress === false && paymentDataCallbacks?.onPaymentDataChanged) {
+            throw new AdyenCheckoutError(
+                'IMPLEMENTATION_ERROR',
+                'GooglePay - You must set "isExpress" flag to "true" in order to use "onPaymentDataChanged" callback'
+            );
+        }
+
+        this.googlePay = new GooglePayService(this.props.environment, {
+            ...(isExpress && paymentDataCallbacks?.onPaymentDataChanged && { onPaymentDataChanged: paymentDataCallbacks.onPaymentDataChanged }),
+            onPaymentAuthorized: this.onPaymentAuthorized
+        });
     }
 
-    /**
-     * Formats the component data input
-     * For legacy support - maps configuration.merchantIdentifier to configuration.merchantId
-     */
-    formatProps(props): GooglePayProps {
-        const allowedCardNetworks = props.brands?.length ? mapBrands(props.brands) : props.allowedCardNetworks;
+    protected override formatProps(props): GooglePayConfiguration {
         const buttonSizeMode = props.buttonSizeMode ?? (props.isDropin ? 'fill' : 'static');
         const buttonLocale = getGooglePayLocale(props.buttonLocale ?? props.i18n?.locale);
+
+        const callbackIntents: google.payments.api.CallbackIntent[] = [...props.callbackIntents, 'PAYMENT_AUTHORIZATION'];
+
         return {
             ...props,
-            showButton: props.showPayButton === true,
             configuration: props.configuration,
-            allowedCardNetworks,
             buttonSizeMode,
-            buttonLocale
+            buttonLocale,
+            callbackIntents
         };
     }
 
     /**
      * Formats the component data output
      */
-    formatData() {
+    protected override formatData() {
+        const { googlePayCardNetwork, googlePayToken, billingAddress, deliveryAddress } = this.state;
+        const { isExpress } = this.props;
+
         return {
             paymentMethod: {
-                type: this.props.type ?? GooglePay.type,
-                ...this.state
+                type: this.type,
+                googlePayCardNetwork,
+                googlePayToken,
+                ...(isExpress && { subtype: 'express' })
             },
             browserInfo: this.browserInfo,
-            origin: !!window && window.location.origin
+            origin: !!window && window.location.origin,
+            ...(billingAddress && { billingAddress }),
+            ...(deliveryAddress && { deliveryAddress })
         };
     }
 
-    public submit = () => {
+    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
+        // Analytics will need to know about this.props.isExpress & this.props.expressPage
+        super.submitAnalytics({ ...analyticsObj }, this.props);
+    }
+
+    public override submit = () => {
         // Analytics
         if (this.props.isInstantPayment) {
             this.submitAnalytics({ type: ANALYTICS_SELECTED_STR, target: ANALYTICS_INSTANT_PAYMENT_BUTTON });
         }
 
-        const { onAuthorized = () => {} } = this.props;
-
-        return new Promise((resolve, reject) => this.props.onClick(resolve, reject))
-            .then(() => this.googlePay.initiatePayment(this.props))
-            .then(paymentData => {
-                this.setState({
-                    googlePayToken: paymentData.paymentMethodData.tokenizationData.token,
-                    googlePayCardNetwork: paymentData.paymentMethodData.info.cardNetwork
-                });
-                super.submit();
-
-                return onAuthorized(paymentData);
-            })
+        new Promise((resolve, reject) => this.props.onClick(resolve, reject))
+            .then(() => this.googlePay.initiatePayment(this.props, this.core.options.countryCode))
             .catch((error: google.payments.api.PaymentsError) => {
                 if (error.statusCode === 'CANCELED') {
+                    // eslint-disable-next-line @typescript-eslint/no-base-to-string
                     this.handleError(new AdyenCheckoutError('CANCEL', error.toString(), { cause: error }));
                 } else {
+                    // eslint-disable-next-line @typescript-eslint/no-base-to-string
                     this.handleError(new AdyenCheckoutError('ERROR', error.toString(), { cause: error }));
                 }
             });
     };
+
+    /**
+     * Method called when the payment is authorized in the payment sheet
+     *
+     * @see https://developers.google.com/pay/api/web/reference/client#onPaymentAuthorized
+     **/
+    private onPaymentAuthorized = async (paymentData: google.payments.api.PaymentData): Promise<google.payments.api.PaymentAuthorizationResult> => {
+        const billingAddress: AddressData = formatGooglePayContactToAdyenAddressFormat(paymentData.paymentMethodData.info.billingAddress);
+        const deliveryAddress: AddressData = formatGooglePayContactToAdyenAddressFormat(paymentData.shippingAddress, true);
+
+        this.setState({
+            authorizedEvent: paymentData,
+            googlePayToken: paymentData.paymentMethodData.tokenizationData.token,
+            googlePayCardNetwork: paymentData.paymentMethodData.info.cardNetwork,
+            ...(billingAddress && { billingAddress }),
+            ...(deliveryAddress && { deliveryAddress })
+        });
+
+        return new Promise<google.payments.api.PaymentAuthorizationResult>(resolve => {
+            this.handleAuthorization()
+                .then(this.makePaymentsCall)
+                .then(sanitizeResponse)
+                .then(verifyPaymentDidNotFail)
+                .then((paymentResponse: PaymentResponseData) => {
+                    resolve({ transactionState: 'SUCCESS' });
+                    return paymentResponse;
+                })
+                .then(paymentResponse => {
+                    this.handleResponse(paymentResponse);
+                })
+                .catch((paymentResponse?: RawPaymentResponse) => {
+                    this.setElementStatus('ready');
+
+                    const googlePayError = paymentResponse?.error?.googlePayError;
+                    const fallbackMessage = this.props.i18n.get('error.subtitle.payment');
+
+                    const error: google.payments.api.PaymentDataError =
+                        typeof googlePayError === 'string' || undefined
+                            ? {
+                                  intent: 'PAYMENT_AUTHORIZATION',
+                                  reason: 'OTHER_ERROR',
+                                  message: (googlePayError as string) || fallbackMessage
+                              }
+                            : {
+                                  intent: googlePayError?.intent || 'PAYMENT_AUTHORIZATION',
+                                  reason: googlePayError?.reason || 'OTHER_ERROR',
+                                  message: googlePayError?.message || fallbackMessage
+                              };
+
+                    resolve({
+                        transactionState: 'ERROR',
+                        error
+                    });
+
+                    const responseWithError = {
+                        ...paymentResponse,
+                        error: {
+                            googlePayError: error
+                        }
+                    };
+
+                    this.handleFailedResult(responseWithError);
+                });
+        });
+    };
+
+    /**
+     * Call the 'onAuthorized' callback if available.
+     * Must be resolved/reject for the payment flow to continue
+     */
+    private async handleAuthorization(): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            if (!this.props.onAuthorized) {
+                resolve();
+            }
+
+            const { authorizedEvent, billingAddress, deliveryAddress } = this.state;
+
+            this.props.onAuthorized(
+                {
+                    authorizedEvent,
+                    ...(billingAddress && { billingAddress }),
+                    ...(deliveryAddress && { deliveryAddress })
+                },
+                { resolve, reject }
+            );
+        }).catch((error?: google.payments.api.PaymentDataError | string) => {
+            // Format error in a way that the 'catch' of the 'onPaymentAuthorize' block accepts it
+            const data = { error: { googlePayError: error } };
+            return Promise.reject(data);
+        });
+    }
 
     /**
      * Validation
@@ -90,23 +203,23 @@ class GooglePay extends UIElement<GooglePayProps> {
     /**
      * Determine a shopper's ability to return a form of payment from the Google Pay API.
      */
-    public isAvailable = (): Promise<boolean> => {
+    public override async isAvailable(): Promise<void> {
         return this.isReadyToPay()
             .then(response => {
                 if (!response.result) {
-                    throw new Error('Google Pay is not available');
+                    throw new AdyenCheckoutError('ERROR', 'GooglePay is not available');
                 }
 
                 if (response.paymentMethodPresent === false) {
-                    throw new Error('Google Pay - No paymentMethodPresent');
+                    throw new AdyenCheckoutError('ERROR', 'GooglePay - No paymentMethodPresent');
                 }
 
-                return true;
+                return Promise.resolve();
             })
-            .catch(() => {
-                return false;
+            .catch(error => {
+                return Promise.reject(error);
             });
-    };
+    }
 
     /**
      * Determine a shopper's ability to return a form of payment from the Google Pay API.
@@ -119,10 +232,10 @@ class GooglePay extends UIElement<GooglePayProps> {
      * Use this method to prefetch a PaymentDataRequest configuration to improve loadPaymentData execution time on later user interaction. No value is returned.
      */
     public prefetch = (): void => {
-        return this.googlePay.prefetchPaymentData(this.props);
+        return this.googlePay.prefetchPaymentData(this.props, this.core.options.countryCode);
     };
 
-    get browserInfo() {
+    get browserInfo(): BrowserInfo {
         return collectBrowserInfo();
     }
 

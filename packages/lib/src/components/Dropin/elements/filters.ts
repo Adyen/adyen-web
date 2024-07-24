@@ -1,4 +1,5 @@
-import { PaymentMethod } from '../../../types';
+import promiseTimeout from '../../../utils/promiseTimeout';
+import type { PaymentMethod, StoredPaymentMethod, UIElement } from '../../../types';
 
 export const UNSUPPORTED_PAYMENT_METHODS = ['androidpay', 'samsungpay', 'clicktopay'];
 
@@ -9,16 +10,18 @@ export const filterUnsupported = paymentMethod => !UNSUPPORTED_PAYMENT_METHODS.i
 export const filterPresent = paymentMethod => !!paymentMethod;
 
 // filter payment methods that are available to the user
-export const filterAvailable = paymentMethod => {
-    if (paymentMethod.isAvailable) {
-        const timeout = new Promise((resolve, reject) => setTimeout(reject, 5000));
-        return Promise.race([paymentMethod.isAvailable(), timeout]);
-    }
+export const filterAvailable = (elements: UIElement[]) => {
+    const elementIsAvailablePromises = elements.map(element => {
+        const { promise } = promiseTimeout(5000, element.isAvailable(), {});
+        return promise;
+    });
 
-    return Promise.resolve(!!paymentMethod);
+    return Promise.allSettled(elementIsAvailablePromises).then(promiseResults => {
+        return elements.filter((element, i) => promiseResults[i].status === 'fulfilled');
+    });
 };
 
-export const optionallyFilterUpiSubTxVariants = (paymentMethods: Array<PaymentMethod>) => {
+export const optionallyFilterUpiSubTxVariants = (paymentMethods: Array<PaymentMethod | StoredPaymentMethod>) => {
     const hasUpiParent = paymentMethods.some(pm => pm?.type === 'upi');
     // If we don't get the 'upi' parent, we render multiple upi components
     if (!hasUpiParent) return paymentMethods;

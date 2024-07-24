@@ -8,10 +8,12 @@ describe('MealVoucherFR', () => {
     const user = userEvent.setup();
 
     const baseProps = {
-        modules: { resources, analytics: { sendAnalytics: () => {} } },
+        modules: {
+            resources,
+            analytics: global.analytics
+        },
         amount: { value: 1000, currency: 'EUR' },
         name: 'MealVoucher',
-        showPayButton: true,
         i18n,
         loadingContext: 'mock'
     };
@@ -22,7 +24,7 @@ describe('MealVoucherFR', () => {
             const onBalanceCheck = jest.fn();
 
             // mounting and clicking pay button
-            const mealVoucherFR = new MealVoucherFR({
+            const mealVoucherFR = new MealVoucherFR(global.core, {
                 ...baseProps,
                 onBalanceCheck
             });
@@ -30,9 +32,10 @@ describe('MealVoucherFR', () => {
             // skip feeling in fields
             mealVoucherFR.setState({ isValid: true });
             const payButton = await screen.findByRole('button');
+
             await user.click(payButton);
 
-            const card = await screen.findByText('Card number');
+            const card = await screen.findByText('Card Number');
             const expiryDate = await screen.findByText('Expiry date');
             const cvc = await screen.findByText('Security code');
 
@@ -49,7 +52,7 @@ describe('MealVoucherFR', () => {
             const onBalanceCheck = jest.fn();
 
             // mounting and clicking pay button
-            const mealVoucherFR = new MealVoucherFR({
+            const mealVoucherFR = new MealVoucherFR(global.core, {
                 ...baseProps,
                 onBalanceCheck
             });
@@ -77,12 +80,14 @@ describe('MealVoucherFR', () => {
             const onSubmit = jest.fn();
 
             // mounting and clicking pay button
-            const mealVoucherFR = new MealVoucherFR({
+            const mealVoucherFR = new MealVoucherFR(global.core, {
                 ...baseProps,
                 onBalanceCheck,
                 onOrderRequest,
-                onSubmit
+                onSubmit,
+                clientKey: 'xxx'
             });
+
             render(mealVoucherFR.render());
             mealVoucherFR.setState({ isValid: true });
             const payButton = await screen.findByRole('button');

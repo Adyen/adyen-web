@@ -4,7 +4,7 @@ import useForm from '../../../utils/useForm';
 import Field from '../FormFields/Field';
 import IssuerButtonGroup from './IssuerButtonGroup';
 import ContentSeparator from '../ContentSeparator';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { ValidatorRules } from '../../../utils/Validator/types';
 import { IssuerListProps } from './types';
 import './IssuerList.scss';
@@ -37,7 +37,7 @@ const schema = ['issuer'];
 const validationRules: ValidatorRules = {
     issuer: {
         validate: issuer => !!issuer && issuer.length > 0,
-        errorMessage: 'idealIssuer.selectField.placeholder',
+        errorMessage: 'issuerList.selectField.contextualText',
         modes: ['blur']
     }
 };
@@ -47,7 +47,7 @@ enum IssuerListInputTypes {
     Dropdown
 }
 
-function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder', issuer, highlightedIds = [], ...props }: IssuerListProps) {
+function IssuerList({ items, placeholder, issuer, highlightedIds = [], showContextualElement, contextualText, ...props }: IssuerListProps) {
     const { i18n } = useCoreContext();
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm({
         schema,
@@ -125,11 +125,18 @@ function IssuerList({ items, placeholder = 'idealIssuer.selectField.placeholder'
                 </Fragment>
             )}
 
-            <Field errorMessage={getErrorMessage(errors.issuer)} classNameModifiers={['issuer-list']} name={'issuer'}>
+            <Field
+                label={i18n.get('issuerList.selectField.label')}
+                errorMessage={getErrorMessage(errors.issuer)}
+                classNameModifiers={['issuer-list']}
+                name={'issuer'}
+                showContextualElement={showContextualElement}
+                contextualText={contextualText}
+            >
                 <Select
                     items={items}
                     selectedValue={inputType === IssuerListInputTypes.Dropdown ? data['issuer'] : null}
-                    placeholder={i18n.get(placeholder)}
+                    placeholder={placeholder}
                     name={'issuer'}
                     className={'adyen-checkout__issuer-list__dropdown'}
                     onChange={handleInputChange(IssuerListInputTypes.Dropdown)}

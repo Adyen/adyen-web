@@ -2,19 +2,17 @@ import { isReadyToPayRequest, initiatePaymentRequest } from './requests';
 import { resolveEnvironment } from './utils';
 import Script from '../../utils/Script';
 import config from './config';
+import type { GooglePayConfiguration } from './types';
 
 class GooglePayService {
     public readonly paymentsClient: Promise<google.payments.api.PaymentsClient>;
 
-    constructor(props) {
-        const environment = resolveEnvironment(props.environment);
-        if (environment === 'TEST' && process.env.NODE_ENV === 'development') {
-            console.warn('Google Pay initiated in TEST mode. Request non-chargeable payment methods suitable for testing.');
-        }
+    constructor(environment: string, paymentDataCallbacks: google.payments.api.PaymentDataCallbacks) {
+        const googlePayEnvironment = resolveEnvironment(environment);
 
         this.paymentsClient = this.getGooglePaymentsClient({
-            environment,
-            paymentDataCallbacks: props.paymentDataCallbacks
+            environment: googlePayEnvironment,
+            paymentDataCallbacks
         });
     }
 
@@ -38,16 +36,18 @@ class GooglePayService {
      * @see {@link https://developers.google.com/pay/api/web/reference/client#isReadyToPay|isReadyToPay}
      */
     isReadyToPay(props): Promise<google.payments.api.IsReadyToPayResponse> {
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         if (!this.paymentsClient) return Promise.reject(new Error('Google Pay is not available'));
 
         return this.paymentsClient.then(client => client.isReadyToPay(isReadyToPayRequest(props)));
     }
 
-    prefetchPaymentData(props): void {
+    prefetchPaymentData(props: GooglePayConfiguration, countryCode: string): void {
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         if (!this.paymentsClient) throw new Error('Google Pay is not available');
 
-        const paymentDataRequest = initiatePaymentRequest(props);
-        this.paymentsClient.then(client => client.prefetchPaymentData(paymentDataRequest));
+        const paymentDataRequest = initiatePaymentRequest(props, countryCode);
+        void this.paymentsClient.then(client => client.prefetchPaymentData(paymentDataRequest));
     }
 
     /**
@@ -55,10 +55,11 @@ class GooglePayService {
      * @returns paymentData response from Google Pay API after user approves payment
      * @see {@link https://developers.google.com/pay/api/web/reference/object#PaymentData|PaymentData object reference}
      */
-    initiatePayment(props): Promise<google.payments.api.PaymentData> {
+    initiatePayment(props: GooglePayConfiguration, countryCode: string): Promise<google.payments.api.PaymentData> {
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         if (!this.paymentsClient) throw new Error('Google Pay is not available');
 
-        const paymentDataRequest = initiatePaymentRequest(props);
+        const paymentDataRequest = initiatePaymentRequest(props, countryCode);
         return this.paymentsClient.then(client => client.loadPaymentData(paymentDataRequest));
     }
 }

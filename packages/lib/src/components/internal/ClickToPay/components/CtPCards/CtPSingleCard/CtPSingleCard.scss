@@ -1,31 +1,31 @@
-@import "../../../../../../style/index";
+@import 'styles/variable-generator';
 
 .adyen-checkout-ctp__card-list-single-card {
-    border-radius: 6px;
-    background-color: $color-gray-lighter;
-    height: 40px;
-    padding: 12px;
+    border-radius: token(spacer-030);
+    background-color: token(color-background-secondary);
+    height: token(spacer-110);
+    padding: token(spacer-060);
     display: flex;
     align-items: center;
     font-size: 13px;
-    font-weight: 400;
-    line-height: 19px;
+    font-weight: token(text-body-font-weight);
+    line-height: token(text-caption-line-height);
 
     &-expired {
         text-decoration: line-through;
-        color: $color-gray-darker;
+        color: token(color-label-tertiary);
     }
 }
 
 .adyen-checkout-ctp__expired-label {
-    color: $color-gray-darker;
-    font-weight: 500;
+    color: token(color-label-tertiary);
+    font-weight: token(text-body-stronger-font-weight);
     line-height: 17px;
     margin-left: auto;
 }
 
 .adyen-checkout-ctp__card-image {
     border-radius: 3px;
-    margin-right: 8px;
+    margin-right: token(spacer-040);
     height: 24px;
 }

@@ -2,16 +2,17 @@ import { test, expect } from '../../../pages/cards/card.fixture';
 import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_EXPIRY_DATE, ENCRYPTED_SECURITY_CODE, REGULAR_TEST_CARD } from '../../utils/constants';
 import { binLookupMock } from '../../../mocks/binLookup/binLookup.mock';
 import { optionalDateAndCvcMock } from '../../../mocks/binLookup/binLookup.data';
-import LANG from '../../../../lib/src/language/locales/en-US.json';
+import LANG from '../../../../server/translations/en-US.json';
 
-const DATE_LABEL = LANG['creditCard.expiryDateField.title'];
-const CVC_LABEL = LANG['creditCard.cvcField.title'];
-const CVC_LABEL_OPTIONAL = LANG['creditCard.cvcField.title.optional'];
+const DATE_LABEL = LANG['creditCard.expiryDate.label'];
+const CVC_LABEL = LANG['creditCard.securityCode.label'];
+const CVC_LABEL_OPTIONAL = LANG['creditCard.securityCode.label.optional'];
+
 const OPTIONAL = LANG['field.title.optional'];
-const PAN_ERROR = LANG['error.va.sf-cc-num.02'];
-const DATE_INVALID_ERROR = LANG['error.va.sf-cc-dat.01'];
-const DATE_EMPTY_ERROR = LANG['error.va.sf-cc-dat.04'];
-const CVC_ERROR = LANG['error.va.sf-cc-cvc.01'];
+const PAN_ERROR = LANG['cc.num.900'];
+const DATE_INVALID_ERROR = LANG['cc.dat.912'];
+const DATE_EMPTY_ERROR = LANG['cc.dat.910'];
+const CVC_ERROR = LANG['cc.cvc.920'];
 
 test.describe('Test how Card Component handles optional expiryDate policy', () => {
     test('#1 how UI & state respond', async ({ cardExpiryDatePoliciesPage }) => {

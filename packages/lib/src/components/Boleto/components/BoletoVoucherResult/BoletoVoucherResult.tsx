@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import Voucher from '../../../internal/Voucher';
 
-import useCoreContext from '../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import './BoletoVoucherResult.scss';
 import { VoucherDetail } from '../../../internal/Voucher/types';
 import useImage from '../../../../core/Context/useImage';

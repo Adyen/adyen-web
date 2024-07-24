@@ -1,12 +1,21 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import DragonpayInput from './components/DragonpayInput';
 import DragonpayVoucherResult from './components/DragonpayVoucherResult';
-import CoreProvider from '../../core/Context/CoreProvider';
-import { DragonpayElementProps } from './types';
+import { CoreProvider } from '../../core/Context/CoreProvider';
+import { DragonpayConfiguraton } from './types';
+import { TxVariants } from '../tx-variants';
 
-export class DragonpayElement extends UIElement<DragonpayElementProps> {
-    public static type = 'dragonpay';
+export class DragonpayElement extends UIElement<DragonpayConfiguraton> {
+    public static type = TxVariants.dragonpay;
+
+    public static txVariants = [
+        TxVariants.dragonpay,
+        TxVariants.dragonpay_ebanking,
+        TxVariants.dragonpay_otc_banking,
+        TxVariants.dragonpay_otc_non_banking,
+        TxVariants.dragonpay_otc_philippines
+    ];
 
     get isValid() {
         return !!this.state.isValid;
@@ -22,12 +31,12 @@ export class DragonpayElement extends UIElement<DragonpayElementProps> {
             ...(shopperEmail && { shopperEmail }),
             paymentMethod: {
                 ...(issuer && { issuer }),
-                type: this.props.type || DragonpayElement.type
+                type: this.type
             }
         };
     }
 
-    protected formatProps(props: DragonpayElementProps) {
+    protected formatProps(props: DragonpayConfiguraton) {
         return {
             ...props,
             issuers: props.details?.find(detail => detail.key === 'issuer')?.items ?? props.issuers
@@ -52,6 +61,7 @@ export class DragonpayElement extends UIElement<DragonpayElementProps> {
                         }}
                         items={this.props.issuers}
                         {...this.props}
+                        showPayButton={this.props.showPayButton}
                         onChange={this.setState}
                         onSubmit={this.submit}
                         payButton={this.payButton}

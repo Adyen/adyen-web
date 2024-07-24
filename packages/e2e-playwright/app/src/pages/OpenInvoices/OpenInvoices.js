@@ -1,5 +1,5 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
+import { AdyenCheckout, Riverty } from '@adyen/adyen-web';
+import '@adyen/adyen-web/styles/adyen.css';
 import { getPaymentMethods } from '../../services';
 import { amount, shopperLocale, countryCode } from '../../services/commonConfig';
 import { handleSubmit, handleAdditionalDetails, handleError } from '../../handlers';
@@ -14,6 +14,11 @@ const initCheckout = async () => {
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
         locale: shopperLocale,
+        _environmentUrls: {
+            cdn: {
+                translations: '/'
+            }
+        },
         environment: 'test',
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
@@ -22,7 +27,7 @@ const initCheckout = async () => {
         ...window.mainConfiguration
     });
 
-    window.riverty = checkout.create('riverty', window.rivertyConfig).mount('#rivertyContainer');
+    window.riverty = new Riverty(checkout, window.rivertyConfig).mount('#rivertyContainer');
 };
 
 initCheckout();

@@ -6,11 +6,10 @@ import { ClickToPayContext, IClickToPayContext } from '../../context/ClickToPayC
 import CtPLogoutLink from './CtPLogoutLink';
 import { CtpState } from '../../services/ClickToPayService';
 import ShopperCard from '../../models/ShopperCard';
-import CoreProvider from '../../../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../../../core/Context/CoreProvider';
 
 const customRender = (children: ComponentChildren, providerProps: IClickToPayContext) => {
     return render(
-        // @ts-ignore TODO: Fix this weird complain
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
             {/* eslint-disable-next-line react/no-children-prop */}
             <ClickToPayContext.Provider value={{ ...providerProps }} children={children} />
@@ -18,7 +17,7 @@ const customRender = (children: ComponentChildren, providerProps: IClickToPayCon
     );
 };
 
-test('should not render if shopper is not recognized', async () => {
+test('should not render if shopper is not recognized', () => {
     const contextProps = mock<IClickToPayContext>();
     contextProps.ctpState = CtpState.Login;
 

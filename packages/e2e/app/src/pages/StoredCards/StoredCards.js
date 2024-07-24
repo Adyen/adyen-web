@@ -1,6 +1,6 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
-import { handleSubmit, handleAdditionalDetails, handleError } from '../../handlers';
+import { AdyenCheckout, Card } from '@adyen/adyen-web';
+import '@adyen/adyen-web/styles/adyen.css';
+import { handleSubmit, handleAdditionalDetails, handleError, handlePaymentCompleted } from '../../handlers';
 import { amount, shopperLocale, countryCode } from '../../services/commonConfig';
 import '../../style.scss';
 
@@ -8,12 +8,18 @@ const initCheckout = async () => {
     window.checkout = await AdyenCheckout({
         amount,
         clientKey: process.env.__CLIENT_KEY__,
+        _environmentUrls: {
+            cdn: {
+                translations: '/'
+            }
+        },
         locale: shopperLocale,
         countryCode,
         environment: 'test',
         showPayButton: true,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
+        onPaymentCompleted: handlePaymentCompleted,
         onError: handleError,
         ...window.mainConfiguration
     });
@@ -33,8 +39,8 @@ const initCheckout = async () => {
         ...window.cardConfig
     };
 
-    // Credit card with installments
-    window.storedCard = checkout.create('card', storedCardData).mount('.stored-card-field');
+    // Stored Credit card
+    window.storedCard = new Card(checkout, { ...storedCardData }).mount('.stored-card-field');
 };
 
 initCheckout();

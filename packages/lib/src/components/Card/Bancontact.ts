@@ -1,12 +1,14 @@
 import { CardElement } from './Card';
-import { CardElementData, CardElementProps } from './types';
-import { CVC_POLICY_HIDDEN } from '../internal/SecuredFields/lib/configuration/constants';
+import { CardElementData, CardConfiguration } from './types';
+import { CVC_POLICY_HIDDEN } from '../internal/SecuredFields/lib/constants';
+import { TxVariants } from '../tx-variants';
+import type { ICore } from '../../core/types';
 
 class BancontactElement extends CardElement {
-    public static type = 'bcmc';
+    public static type = TxVariants.bcmc;
 
-    constructor(props: CardElementProps) {
-        super(props);
+    constructor(checkout: ICore, props?: CardConfiguration) {
+        super(checkout, props);
     }
 
     protected static defaultProps = {
@@ -26,10 +28,15 @@ class BancontactElement extends CardElement {
      * At the same time we can't treat it as a regular 'card' component - because it needs to hide the CVC field at at startup,
      * as well as show the BCMC logo in the number field and ignore any of the internal, regEx driven, brand detection.
      */
-    formatProps(props: CardElementProps) {
+    formatProps(props: CardConfiguration) {
         return {
             ...super.formatProps(props),
-            type: 'bcmc', // Force type (only for the Dropin is type automatically set to 'bcmc') - this will bypass the regEx brand detection
+            /**
+             * Force type (only for the Dropin is type automatically set to 'bcmc')
+             * - this will bypass the regEx brand detection that SF normally tries to carry out when the first few digits are entered in the PAN
+             */
+            type: TxVariants.bcmc,
+            brand: TxVariants.bcmc,
             cvcPolicy: CVC_POLICY_HIDDEN
         };
     }

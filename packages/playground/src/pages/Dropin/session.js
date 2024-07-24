@@ -1,7 +1,8 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
-import { createSession, patchPaypalOrder } from '../../services';
+import { AdyenCheckout, Dropin, Card, WeChat, Giftcard, PayPal, Ach, GooglePay, Riverty, Bancontact, Klarna } from '@adyen/adyen-web';
+import '@adyen/adyen-web/styles/adyen.css';
+import { createSession } from '../../services';
 import { amount, shopperLocale, shopperReference, countryCode, returnUrl } from '../../config/commonConfig';
+import { handleOnPaymentCompleted, handleOnPaymentFailed } from '../../handlers';
 
 export async function initSession() {
     const session = await createSession({
@@ -11,50 +12,51 @@ export async function initSession() {
         shopperLocale,
         shopperReference,
         telephoneNumber: '+611223344',
-        shopperEmail: 'shopper.ctp1@adyen.com',
+        shopperEmail: 'shopper.email@adyen.com',
         countryCode
     });
 
     const checkout = await AdyenCheckout({
         environment: process.env.__CLIENT_ENV__,
         clientKey: process.env.__CLIENT_KEY__,
+
         session,
 
         // Events
         beforeSubmit: (data, component, actions) => {
             actions.resolve(data);
         },
-        onPaymentCompleted: (result, component) => {
-            console.info(result, component);
-        },
         onError: (error, component) => {
             console.log(error.name, error.message, error.cause);
         },
-        // onChange: (state, component) => {
-        //     console.log('onChange', state);
-        // },
+        onPaymentCompleted: handleOnPaymentCompleted,
+        onPaymentFailed: handleOnPaymentFailed
+    });
+
+    const dropin = new Dropin(checkout, {
+        instantPaymentTypes: ['googlepay'],
+        paymentMethodComponents: [Card, WeChat, Giftcard, PayPal, Ach, GooglePay, Riverty, Bancontact, Klarna],
         paymentMethodsConfiguration: {
             googlepay: {
                 buttonType: 'plain',
-                buttonRadius: 20
+                buttonRadius: 20,
+                onAuthorized(data, actions) {
+                    console.log(data, actions);
+                    actions.resolve();
+                }
             },
             card: {
                 hasHolderName: true,
                 holderNameRequired: true,
-                holderName: 'J. Smith',
-                positionHolderNameOnTop: true,
-
-                // billingAddress config:
-                billingAddressRequired: true,
-                billingAddressMode: 'partial',
-                _disableClickToPay: true
+                data: {
+                    holderName: 'J. Smith'
+                },
+                _disableClickToPay: false
+            },
+            klarna: {
+                useKlarnaWidget: true
             }
         }
-    });
-    const dropin = checkout
-        .create('dropin', {
-            instantPaymentTypes: ['googlepay']
-        })
-        .mount('#dropin-container');
+    }).mount('#dropin-container');
     return [checkout, dropin];
 }

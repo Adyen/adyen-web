@@ -15,17 +15,17 @@
     "@playwright/test": "1.39.0",
     "cross-env": "^7.0.3",
     "css-loader": "^6.0.0",
-    "dotenv": "^16.0.2",
+    "dotenv": "16.4.4",
     "html-webpack-plugin": "5.5.1",
     "sass-loader": "^10.2.0",
     "style-loader": "^2.0.0",
-    "ts-loader": "^8.1.0",
-    "typescript": "^4.4.4",
+    "ts-loader": "9.4.4",
+    "typescript": "5.2.2",
     "webpack": "5.89.0",
     "webpack-cli": "5.1.4",
     "webpack-dev-server": "4.15.1"
   },
   "dependencies": {
-    "@adyen/adyen-web": "5.66.1"
+    "@adyen/adyen-web": "6.0.0-beta.1"
   }
 }

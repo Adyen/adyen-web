@@ -1,26 +1,25 @@
-import { Meta, StoryObj } from '@storybook/preact';
-import { PaymentMethodStoryProps } from '../types';
+import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 import { Container } from '../Container';
-import { ApplePayElementProps } from '../../../src/components/ApplePay/types';
+import { ApplePayConfiguration } from '../../../src/components/ApplePay/types';
+import { ApplePay } from '../../../src';
 
-type Story = StoryObj<PaymentMethodStoryProps<ApplePayElementProps>>;
+type ApplePayStory = StoryConfiguration<ApplePayConfiguration>;
 
-const meta: Meta = {
+const meta: MetaConfiguration<ApplePayConfiguration> = {
     title: 'Wallets/ApplePay'
 };
-export default meta;
 
-const createComponent = (args, context) => {
+const createComponent = (args: PaymentMethodStoryProps<ApplePayConfiguration>, context) => {
+    const { componentConfiguration } = args;
     const checkout = getStoryContextCheckout(context);
-    return <Container type={'applepay'} componentConfiguration={args.componentConfiguration} checkout={checkout} />;
+    const applepay = new ApplePay(checkout, componentConfiguration);
+    return <Container element={applepay} />;
 };
 
-export const Default: Story = {
+export const Default: ApplePayStory = {
     render: createComponent,
-    args: {
-        componentConfiguration: {
-            countryCode: 'US'
-        }
-    }
+    args: {}
 };
+
+export default meta;

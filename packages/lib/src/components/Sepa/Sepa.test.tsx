@@ -1,9 +1,5 @@
-/** @tsx h */
-import { h } from 'preact';
 import Sepa from './Sepa';
 import { render, screen } from '@testing-library/preact';
-import { Resources } from '../../core/Context/Resources';
-import Language from '../../language';
 
 describe('Sepa', () => {
     const mockStateChange = sepa => {
@@ -30,24 +26,24 @@ describe('Sepa', () => {
 
     describe('isValid', () => {
         test('Returns true if the state isValid', () => {
-            const sepa = mockStateChange(new Sepa({}));
+            const sepa = mockStateChange(new Sepa(global.core, { loadingContext: 'test', modules: { resources: global.resources } }));
             expect(sepa.isValid).toBe(true);
         });
 
         test('Returns false if the state is not valid ', () => {
-            const sepa = mockInvalidStateChange(new Sepa({}));
+            const sepa = mockInvalidStateChange(new Sepa(global.core, { loadingContext: 'test', modules: { resources: global.resources } }));
             expect(sepa.isValid).toBe(false);
         });
     });
 
     describe('get data', () => {
         test('always returns a type', () => {
-            const sepa = mockStateChange(new Sepa({}));
+            const sepa = mockStateChange(new Sepa(global.core, { loadingContext: 'test', modules: { resources: global.resources } }));
             expect(sepa.data.paymentMethod.type).toBe('sepadirectdebit');
         });
 
         test('returns necessary data from state', () => {
-            const sepa = mockStateChange(new Sepa({}));
+            const sepa = mockStateChange(new Sepa(global.core, { loadingContext: 'test', modules: { resources: global.resources } }));
             expect(sepa.data.paymentMethod.iban).toBe('NL13TEST0123456789');
             expect(sepa.data.paymentMethod.ownerName).toBe('A. Klaassen');
         });
@@ -56,18 +52,15 @@ describe('Sepa', () => {
 
 describe('SepaElement render', () => {
     test('should render IbanInput by default', async () => {
-        render(<Sepa i18n={new Language()} loadingContext="test" resources={new Resources()} />);
+        const sepa = new Sepa(global.core, { i18n: global.i18n, loadingContext: 'test', modules: { resources: global.resources } });
+        render(sepa.render());
         expect(await screen.findByText('Holder Name')).toBeTruthy();
         expect(await screen.findByText('Account Number (IBAN)')).toBeTruthy();
     });
 
     test('should render FormInstruction by default', async () => {
-        render(<Sepa i18n={new Language()} loadingContext="test" resources={new Resources()} />);
+        const sepa = new Sepa(global.core, { i18n: global.i18n, loadingContext: 'test', modules: { resources: global.resources } });
+        render(sepa.render());
         expect(await screen.findByText(/All fields are required unless marked otherwise./i)).toBeTruthy();
-    });
-
-    test('should not render FormInstruction if showFormInstruction sets to false', () => {
-        render(<Sepa FormInstruction={false} i18n={new Language()} loadingContext="test" resources={new Resources()} />);
-        expect(screen.queryByText(/All fields are required unless marked otherwise./i)).toBeNull();
     });
 });

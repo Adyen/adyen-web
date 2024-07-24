@@ -1,3 +1,5 @@
+import { UIElementProps } from '../internal/UIElement/types';
+
 export interface SepaElementData {
     paymentMethod: {
         type: string;
@@ -5,3 +7,5 @@ export interface SepaElementData {
         ownerName: string;
     };
 }
+
+export interface SepaConfiguration extends UIElementProps {}

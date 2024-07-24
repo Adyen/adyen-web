@@ -1,7 +1,7 @@
 import { CardElement } from './Card';
 import Analytics from '../../core/Analytics';
 
-const analyticsModule = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '' });
+const analyticsModule = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', bundleType: 'umd' });
 
 let card;
 let analyticsEventObject;
@@ -16,12 +16,13 @@ import {
     ANALYTICS_UNFOCUS_STR,
     ANALYTICS_VALIDATION_ERROR_STR
 } from '../../core/Analytics/constants';
+import { SF_ErrorCodes } from '../../core/Errors/constants';
 
 describe('Card: calls that generate "info" analytics should produce objects with the expected shapes ', () => {
     beforeEach(() => {
         console.log = jest.fn(() => {});
 
-        card = new CardElement({
+        card = new CardElement(global.core, {
             modules: {
                 analytics: analyticsModule
             },
@@ -135,9 +136,9 @@ describe('Card: calls that generate "info" analytics should produce objects with
     });
 
     test('Analytics should produce an "info" event, of type "validationError", with the expected properties', () => {
-        card.onErrorAnalytics({
+        card.onValidationErrorAnalytics({
             fieldType: 'encryptedCardNumber',
-            errorCode: 'error.va.sf-cc-num.04'
+            errorCode: SF_ErrorCodes.ERROR_MSG_INCORRECTLY_FILLED_PAN
         });
 
         expect(analyticsModule.createAnalyticsEvent).toHaveBeenCalledWith({
@@ -146,8 +147,8 @@ describe('Card: calls that generate "info" analytics should produce objects with
                 component: card.constructor['type'],
                 type: ANALYTICS_VALIDATION_ERROR_STR,
                 target: 'card_number',
-                validationErrorCode: 'error.va.sf-cc-num.04',
-                validationErrorMessage: 'card-number-not-filled-correctly'
+                validationErrorCode: SF_ErrorCodes.ERROR_MSG_INCORRECTLY_FILLED_PAN,
+                validationErrorMessage: 'error-msg-incorrectly-filled-pan'
             }
         });
     });
@@ -157,11 +158,13 @@ describe('Card: calls that generate "log" analytics should produce objects with 
     beforeEach(() => {
         console.log = jest.fn(() => {});
 
-        card = new CardElement({
+        card = new CardElement(global.core, {
             modules: {
                 analytics: analyticsModule
             }
         });
+
+        analyticsModule.createAnalyticsEvent = jest.fn(() => null);
     });
 
     test('Analytics should produce an "log" event, of type "submit", for a card PM', () => {

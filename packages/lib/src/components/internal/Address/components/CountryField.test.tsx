@@ -4,6 +4,7 @@ import CountryField from './CountryField';
 import getDataset from '../../../../core/Services/get-dataset';
 import { mock } from 'jest-mock-extended';
 import { CountryFieldProps } from '../types';
+import { CoreProvider } from '../../../../core/Context/CoreProvider';
 
 jest.mock('../../../../core/Services/get-dataset');
 const countriesMock = [
@@ -22,11 +23,17 @@ const countriesMock = [
 ];
 
 (getDataset as jest.Mock).mockImplementation(jest.fn(() => Promise.resolve(countriesMock)));
+const countryFieldPropsMock = mock<CountryFieldProps>();
+
+const getWrapper = (props = {}) => {
+    return mount(
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            <CountryField {...props} {...countryFieldPropsMock} />
+        </CoreProvider>
+    );
+};
 
 describe('CountryField', () => {
-    const countryFieldPropsMock = mock<CountryFieldProps>();
-    const getWrapper = (props = {}) => mount(<CountryField {...props} {...countryFieldPropsMock} />);
-
     test('calls getDataset', () => {
         getWrapper();
         expect(getDataset).toHaveBeenCalled();

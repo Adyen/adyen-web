@@ -1,0 +1,176 @@
+@import 'styles/variable-generator';
+
+.adyen-checkout__payment-method {
+    position: relative;
+    background: token(color-background-primary);
+    border: token(border-width-s) solid token(color-outline-primary);
+    cursor: pointer;
+    border-radius: token(border-radius-m);
+    width: 100%;
+    transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease,
+        box-shadow 0.15s ease,
+        border-radius 0.15s ease;
+
+    &:focus {
+        outline: 0;
+    }
+
+    &:hover:not(&--selected) {
+        border-color: token(color-outline-primary-hover);
+    }
+}
+
+.adyen-checkout__payment-method--loading {
+    opacity: 0.2;
+}
+
+.adyen-checkout__payment-method--selected.adyen-checkout__payment-method--loading {
+    opacity: 0.9;
+}
+
+.adyen-checkout__payment-method--confirming .adyen-checkout__payment-method__details__content {
+    pointer-events: none;
+    user-select: none;
+}
+
+.adyen-checkout__payment-method--disabling {
+    opacity: 0.3;
+    pointer-events: none;
+    user-select: none;
+}
+
+.adyen-checkout__payment-method--standalone {
+    .adyen-checkout__payment-method__radio {
+        display: none;
+    }
+}
+
+.adyen-checkout__payment-method__header {
+    align-items: center;
+    color: token(color-label-primary);
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    font-weight: token(text-body-font-weight);
+    font-size: token(text-title-font-size);
+    padding: token(spacer-070);
+    position: relative;
+    transition: background 0.1s ease-out;
+    width: 100%;
+
+    [dir='rtl'] & {
+        $pm-h-spacer-70: token(spacer-070);
+        $pm-h-spacer-20: token(spacer-020);
+        $pm-h-spacer-120: token(spacer-120);
+
+        padding: calc($pm-h-spacer-70 - $pm-h-spacer-20);
+        padding-right: calc($pm-h-spacer-120 - $pm-h-spacer-20);
+    }
+
+    .adyen-checkout__payment-method--standalone & {
+        padding: token(spacer-070);
+    }
+}
+
+.adyen-checkout__payment-method__surcharge {
+    color: token(color-outline-tertiary);
+    margin-left: token(spacer-020);
+}
+
+.adyen-checkout__payment-method--selected {
+    transition: opacity 0.3s ease-out;
+    background: token(color-background-secondary);
+    border: token(border-width-s) solid token(color-outline-secondary);
+    cursor: default;
+}
+
+.adyen-checkout__payment-method--selected .adyen-checkout__payment-method__header {
+    flex-wrap: wrap;
+}
+
+.adyen-checkout__payment-method__details {
+    padding: token(spacer-000) token(spacer-070);
+    position: relative;
+}
+
+.adyen-checkout__payment-method__details__content > *:last-child {
+    margin-bottom: token(spacer-070);
+}
+
+.adyen-checkout__payment-method__image__wrapper {
+    position: relative;
+    display: flex;
+    width: token(spacer-110);
+    height: 26px;
+    justify-content: center;
+    align-items: center;
+    border-radius: token(border-radius-s);
+    overflow: hidden;
+    box-shadow: token(shadow-low);
+}
+
+.adyen-checkout__payment-method__image {
+    display: block;
+    border-radius: var(--adyen-checkout-border-radius-s);
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.adyen-checkout__payment-method__brands {
+    display: flex;
+    gap: token(spacer-020);
+    flex-wrap: wrap;
+    margin: token(spacer-020) token(spacer-000);
+    height: token(spacer-070);
+    flex-basis: auto;
+    flex-shrink: 1;
+    text-align: right;
+    overflow: hidden;
+
+    & .adyen-checkout__payment-method__brand-number {
+        color: token(color-outline-tertiary);
+        font-size: token(text-body-font-size);
+    }
+}
+
+.adyen-checkout__payment-method--selected .adyen-checkout__payment-method__brands {
+    text-align: left;
+    overflow: visible;
+    height: auto;
+}
+
+.adyen-checkout__payment-method__brands .adyen-checkout__payment-method__image__wrapper {
+    display: inline-block;
+    height: token(spacer-070);
+    width: token(spacer-090);
+    transition: opacity 0.2s ease-out;
+}
+
+.adyen-checkout__payment-method__brands .adyen-checkout__payment-method__image__wrapper:last-child {
+    margin: token(spacer-000);
+}
+
+.adyen-checkout__payment-method--selected .adyen-checkout__payment-method__brands .adyen-checkout__payment-method__image__wrapper {
+    margin-bottom: token(spacer-020);
+}
+
+/* todo: not working */
+.adyen-checkout__payment-method__brands img {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.adyen-checkout__payment-method__image__wrapper--disabled {
+    opacity: 0.25;
+}
+
+.adyen-checkout__payment-method:hover:not(.adyen-checkout__payment-method--selected) .adyen-checkout__payment-method__radio {
+    box-shadow: 0 0 0 token(spacer-010) token(color-outline-primary-hover);
+    cursor: pointer;
+}

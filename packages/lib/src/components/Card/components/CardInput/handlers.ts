@@ -1,4 +1,4 @@
-import { ENCRYPTED_CARD_NUMBER, CREDIT_CARD_SF_FIELDS } from '../../../internal/SecuredFields/lib/configuration/constants';
+import { ENCRYPTED_CARD_NUMBER, CREDIT_CARD_SF_FIELDS } from '../../../internal/SecuredFields/lib/constants';
 import { selectOne } from '../../../internal/SecuredFields/lib/utilities/dom';
 import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
 
@@ -42,7 +42,7 @@ export const getAutoJumpHandler = (isAutoJumping, sfp, layout) => {
             // CardInput can call this more than once in quick succession
             // e.g. if field was in error (error + fieldValid) or other SFs are optional (fieldValid + allValid) etc
             // - so make async to avoid double setFocus call
-            Promise.resolve().then(() => {
+            void Promise.resolve().then(() => {
                 const panIndex = layout.findIndex(elem => elem === ENCRYPTED_CARD_NUMBER);
                 const subsequentFields = layout.slice(panIndex + 1);
 

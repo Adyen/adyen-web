@@ -1,4 +1,4 @@
-import { ENCRYPTED_BANK_ACCNT_NUMBER_FIELD, ENCRYPTED_BANK_LOCATION_FIELD } from '../../../configuration/constants';
+import { ENCRYPTED_BANK_ACCNT_NUMBER_FIELD, ENCRYPTED_BANK_LOCATION_FIELD } from '../../../constants';
 import { SFFieldType, ShiftTabObject } from '../../../types';
 
 // ACH scenario: bankAccountNumber SF followed by a bankLocationId SF

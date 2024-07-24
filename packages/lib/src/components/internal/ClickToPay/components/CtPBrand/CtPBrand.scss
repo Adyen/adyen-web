@@ -1,3 +1,5 @@
+@import 'styles/variable-generator';
+
 .adyen_checkout-ctp__brand {
     &-wrapper {
         display: flex;
@@ -6,18 +8,18 @@
     }
 
     &-logo {
-        width: 24px;
-        margin-right: 6px;
+        width: token(spacer-090);
+        margin-right: token(spacer-030);
     }
 
     &-pipe {
         height: 15px;
-        margin-right: 6px;
+        margin-right: token(spacer-030);
     }
 
     &-scheme {
         object-fit: none;
-        margin-right: 6px;
+        margin-right: token(spacer-030);
 
         &-mc {
             width: 27px;

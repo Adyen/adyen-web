@@ -1,18 +1,22 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import PaypalComponent from './components/PaypalComponent';
 import defaultProps from './defaultProps';
-import { PaymentAction } from '../../types';
-import { Intent, PayPalElementProps } from './types';
-import './Paypal.scss';
-import CoreProvider from '../../core/Context/CoreProvider';
+import { CoreProvider } from '../../core/Context/CoreProvider';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { ERRORS } from './constants';
-import { createShopperDetails } from './utils/create-shopper-details';
+import { TxVariants } from '../tx-variants';
+import { formatPaypalOrderContactToAdyenFormat } from './utils/format-paypal-order-contact-to-adyen-format';
+
+import type { ICore } from '../../core/types';
+import type { PaymentAction } from '../../types/global-types';
+import type { Intent, PayPalConfiguration } from './types';
+
+import './Paypal.scss';
 import { SendAnalyticsObject } from '../../core/Analytics/types';
 
-class PaypalElement extends UIElement<PayPalElementProps> {
-    public static type = 'paypal';
+class PaypalElement extends UIElement<PayPalConfiguration> {
+    public static type = TxVariants.paypal;
     public static subtype = 'sdk';
 
     public paymentData: string = null;
@@ -22,20 +26,16 @@ class PaypalElement extends UIElement<PayPalElementProps> {
 
     protected static defaultProps = defaultProps;
 
-    constructor(props) {
-        super(props);
+    constructor(checkout: ICore, props?: PayPalConfiguration) {
+        super(checkout, props);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleOnShippingAddressChange = this.handleOnShippingAddressChange.bind(this);
         this.handleOnShippingOptionsChange = this.handleOnShippingOptionsChange.bind(this);
     }
 
-    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
-        // Analytics will need to know about this.props.isExpress & this.props.expressPage
-        super.submitAnalytics({ ...analyticsObj }, this.props);
-    }
-
-    formatProps(props: PayPalElementProps): PayPalElementProps {
-        const { merchantId, intent: intentFromConfig } = props.configuration;
+    formatProps(props: PayPalConfiguration): PayPalConfiguration {
+        const merchantId = props.configuration?.merchantId;
+        const intentFromConfig = props.configuration?.intent;
         const isZeroAuth = props.amount?.value === 0;
         const intent: Intent = isZeroAuth ? 'tokenize' : props.intent || intentFromConfig;
         const vault = intent === 'tokenize' || props.vault;
@@ -51,6 +51,11 @@ class PaypalElement extends UIElement<PayPalElementProps> {
                 merchantId
             }
         };
+    }
+
+    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
+        // Analytics will need to know about this.props.isExpress & this.props.expressPage
+        super.submitAnalytics({ ...analyticsObj }, this.props);
     }
 
     public submit = () => {
@@ -111,24 +116,37 @@ class PaypalElement extends UIElement<PayPalElementProps> {
         return true;
     }
 
-    private handleCancel = () => {
-        this.handleError(new AdyenCheckoutError('CANCEL'));
-    };
-
     private handleOnApprove = (data: any, actions: any): Promise<void> | void => {
-        const { onShopperDetails } = this.props;
+        const { onAuthorized } = this.props;
         const state = { data: { details: data, paymentData: this.paymentData } };
 
-        if (!onShopperDetails) {
+        if (!onAuthorized) {
             this.handleAdditionalDetails(state);
             return;
         }
 
         return actions.order
             .get()
-            .then(paypalOrder => {
-                const shopperDetails = createShopperDetails(paypalOrder);
-                return new Promise<void>((resolve, reject) => onShopperDetails(shopperDetails, paypalOrder, { resolve, reject }));
+            .then((paypalOrder: any) => {
+                const billingAddress = formatPaypalOrderContactToAdyenFormat(paypalOrder?.payer);
+                const deliveryAddress = formatPaypalOrderContactToAdyenFormat(paypalOrder?.purchase_units?.[0].shipping, true);
+
+                this.setState({
+                    authorizedEvent: paypalOrder,
+                    ...(billingAddress && { billingAddress }),
+                    ...(deliveryAddress && { deliveryAddress })
+                });
+
+                return new Promise<void>((resolve, reject) =>
+                    onAuthorized(
+                        {
+                            authorizedEvent: paypalOrder,
+                            ...(billingAddress && { billingAddress }),
+                            ...(deliveryAddress && { deliveryAddress })
+                        },
+                        { resolve, reject }
+                    )
+                );
             })
             .then(() => this.handleAdditionalDetails(state))
             .catch(error => this.handleError(new AdyenCheckoutError('ERROR', 'Something went wrong while parsing PayPal Order', { cause: error })));
@@ -161,7 +179,7 @@ class PaypalElement extends UIElement<PayPalElementProps> {
      * @param data - PayPal data
      * @param actions - PayPal actions.
      */
-    private handleOnShippingAddressChange(data, actions): Promise<void> {
+    private handleOnShippingAddressChange(data: any, actions: any): Promise<void> {
         return this.props.onShippingAddressChange(data, actions, this);
     }
 
@@ -173,7 +191,7 @@ class PaypalElement extends UIElement<PayPalElementProps> {
      * @param data - PayPal data
      * @param actions - PayPal actions.
      */
-    private handleOnShippingOptionsChange(data, actions): Promise<void> {
+    private handleOnShippingOptionsChange(data: any, actions: any): Promise<void> {
         return this.props.onShippingOptionsChange(data, actions, this);
     }
 
@@ -191,12 +209,13 @@ class PaypalElement extends UIElement<PayPalElementProps> {
                     {...rest}
                     {...(onShippingAddressChange && { onShippingAddressChange: this.handleOnShippingAddressChange })}
                     {...(onShippingOptionsChange && { onShippingOptionsChange: this.handleOnShippingOptionsChange })}
-                    onCancel={this.handleCancel}
+                    onCancel={() => this.handleError(new AdyenCheckoutError('CANCEL'))}
                     onChange={this.setState}
-                    onApprove={this.handleOnApprove}
+                    onApprove={void this.handleOnApprove}
                     onError={error => {
                         this.handleError(new AdyenCheckoutError('ERROR', error.toString(), { cause: error }));
                     }}
+                    onScriptLoadFailure={error => this.handleError(error)}
                     onSubmit={this.handleSubmit}
                 />
             </CoreProvider>

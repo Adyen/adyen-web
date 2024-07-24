@@ -1,14 +1,13 @@
 import { makeCallbackObjectsEncryption } from '../utils/callbackUtils';
-import { addEncryptedElements } from '../utils/encryptedElements';
 import {
     ENCRYPTED_EXPIRY_MONTH,
     ENCRYPTED_EXPIRY_YEAR,
     ENCRYPTED_SECURITY_CODE,
     ENCRYPTED_CARD_NUMBER,
     ENCRYPTED_EXPIRY_DATE
-} from '../../configuration/constants';
+} from '../../constants';
 import { processErrors } from '../utils/processErrors';
-import { truthy } from '../../utilities/commonUtils';
+import { truthy } from '../../../../../../utils/commonUtils';
 import { SFFeedbackObj, CbObjOnFieldValid, EncryptionObj } from '../../types';
 import postMessageToIframe from '../utils/iframes/postMessageToIframe';
 import { hasOwnProperty } from '../../../../../../utils/hasOwnProperty';
@@ -37,11 +36,6 @@ export function handleEncryption(pFeedbackObj: SFFeedbackObj): void {
 
     // Set boolean saying this securedField is in an encryptedState
     this.state.securedFields[fieldType].isEncrypted = true;
-
-    // ADD HIDDEN INPUT TO PARENT FORM ELEMENT, if allowed
-    if (this.config.allowedDOMAccess) {
-        addEncryptedElements(encryptedObjArr, this.state.type, this.props.rootNode);
-    }
 
     // REMOVE ANY ERRORS ON FIELD e.g. was a full number that failed the luhnCheck, then we corrected the number and now it passes
     processErrors(

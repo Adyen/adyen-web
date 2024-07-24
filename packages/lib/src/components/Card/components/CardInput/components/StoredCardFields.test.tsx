@@ -1,8 +1,9 @@
 import { h } from 'preact';
 import { render, screen } from '@testing-library/preact';
 
-import { CVC_POLICY_REQUIRED } from '../../../../internal/SecuredFields/lib/configuration/constants';
+import { CVC_POLICY_REQUIRED } from '../../../../internal/SecuredFields/lib/constants';
 import StoredCardFields from './StoredCardFields';
+import { CoreProvider } from '../../../../../core/Context/CoreProvider';
 
 const storedCardProps = {
     brand: 'visa',
@@ -17,16 +18,21 @@ const storedCardProps = {
     focusedElement: ''
 };
 
+const renderWithCoreProvider = ui => {
+    return render(
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            {ui}
+        </CoreProvider>
+    );
+};
+
 describe('StoredCard', () => {
     test('Renders a StoredCard field, with readonly expiryDate and cvc field', () => {
-        render(<StoredCardFields {...storedCardProps} />);
+        renderWithCoreProvider(<StoredCardFields {...storedCardProps} />);
 
         // Look for expiryDate elements
-        /* eslint-disable-next-line */
-        expect(screen.queryByText('Expiry date', { exact: false })).toBeTruthy(); // presence
-
+        expect(screen.getByText('Expiry date', { exact: false })).toBeTruthy(); // presence
         expect(screen.getByLabelText('Expiry date', { exact: true })).toBeTruthy(); // presence
-        expect(screen.getByLabelText('Expiry date', { exact: true })).toHaveAttribute('readonly', '');
 
         // Look for cvc field elements
         expect(screen.getAllByText('Security code', { exact: true })).toBeTruthy();
@@ -38,9 +44,8 @@ describe('StoredCard', () => {
         newStoredCardProps.expiryMonth = null;
         newStoredCardProps.expiryYear = null;
 
-        render(<StoredCardFields {...newStoredCardProps} />);
+        renderWithCoreProvider(<StoredCardFields {...newStoredCardProps} />);
 
-        /* eslint-disable-next-line */
         expect(screen.queryByText('Expiry date', { exact: false })).toBeNull(); // non-presence
 
         expect(screen.getAllByText('Security code', { exact: true })).toBeTruthy();
@@ -52,9 +57,8 @@ describe('StoredCard', () => {
         newStoredCardProps.expiryMonth = '';
         newStoredCardProps.expiryYear = '';
 
-        render(<StoredCardFields {...newStoredCardProps} />);
+        renderWithCoreProvider(<StoredCardFields {...newStoredCardProps} />);
 
-        /* eslint-disable-next-line */
         expect(screen.queryByText('Expiry date', { exact: false })).toBeNull(); // non-presence
 
         expect(screen.getAllByText('Security code', { exact: true })).toBeTruthy();
@@ -66,9 +70,8 @@ describe('StoredCard', () => {
         delete newStoredCardProps.expiryMonth;
         delete newStoredCardProps.expiryYear;
 
-        render(<StoredCardFields {...newStoredCardProps} />);
+        renderWithCoreProvider(<StoredCardFields {...newStoredCardProps} />);
 
-        /* eslint-disable-next-line */
         expect(screen.queryByText('Expiry date', { exact: false })).toBeNull(); // non-presence
 
         expect(screen.getAllByText('Security code', { exact: true })).toBeTruthy();

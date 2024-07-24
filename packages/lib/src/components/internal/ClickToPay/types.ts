@@ -1,6 +1,6 @@
 import TimeoutError from './errors/TimeoutError';
 
-export type ClickToPayConfiguration = {
+export type ClickToPayProps = {
     /**
      * Shopper email used to be recognized with the Network schemes
      */

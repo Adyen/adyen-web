@@ -1,54 +1,69 @@
-@import "../../../style/index";
+@import 'styles/variable-generator';
+
+@mixin set-checkmark-color($color: token(color-label-primary)) {
+    border-bottom: 1.5px solid $color;
+    border-right: 1.5px solid $color;
+}
+
+.adyen-checkout-checkmark {
+    @include set-checkmark-color;
+
+    transform: rotate(45deg);
+    height: token(spacer-060);
+    width: token(spacer-030);
+}
 
 .adyen-checkout__segmented-control {
     display: flex;
     justify-content: space-between;
-    gap: 4px;
-    padding: 4px 5px;
-    background: $color-white;
-    border: 1px solid $color-gray-dark;
-    border-radius: 6px;
+    gap: token(spacer-020);
+    padding: token(spacer-030);
+    background: token(color-background-tertiary);
+    border-radius: token(border-radius-l);
 
     &--disabled {
         pointer-events: none;
 
         > .adyen-checkout__segmented-control-segment {
-            color: #8390a3;
+            color: token(color-label-disabled);
         }
 
         > .adyen-checkout__segmented-control-segment--selected {
-            background: #f3f6f9;
-            border: 1.5px solid #8390a3;
+            .adyen-checkout-checkmark {
+                @include set-checkmark-color(token(color-label-disabled));
+            }
         }
     }
 }
 
 .adyen-checkout__segmented-control-segment {
-    font-weight: 500;
-    color: #0075ff;
-    width: 100%;
-    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: token(spacer-050);
     flex-grow: 1;
     cursor: pointer;
-    background: $color-white;
-    border-radius: 6px;
-    border: 0;
+    width: 100%;
+    height: token(spacer-110);
+    color: token(color-label-primary);
     text-align: center;
+    font-weight: token(text-body-stronger-font-weight);
+    border-radius: token(border-radius-m);
+    border: 0;
+    background: transparent;
     transition: background 0.3s ease-out;
 
     &:not(&--selected):hover {
-        background-color: $color-gray-lighter;
+        background-color: token(color-background-secondary);
     }
 
     &:active {
-        background-color: $color-gray-lighter;
-        border: 1.5px solid $color-gray-darker;
+        background-color: token(color-background-secondary);
     }
 
     &--selected {
-        background: #e5f1ff;
-        border: 1.5px solid #0075ff;
-        color: #0075ff;
-        font-weight: 700;
+        background: token(color-background-primary);
+        color: token(color-label-primary);
+        box-shadow: token(shadow-low);
     }
 }

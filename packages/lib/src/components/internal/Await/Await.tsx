@@ -7,7 +7,7 @@ import processResponse from '../../../core/ProcessResponse';
 import Spinner from '../../internal/Spinner';
 import Countdown from '../Countdown';
 import Button from '../Button';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { AwaitComponentProps, StatusObject } from './types';
 import './Await.scss';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
@@ -83,7 +83,7 @@ function Await(props: AwaitComponentProps) {
             setHasCalledActionHandled(true);
         }
 
-        checkPaymentStatus(paymentData, clientKey, loadingContext, throttleInterval)
+        void checkPaymentStatus(paymentData, clientKey, loadingContext, throttleInterval)
             .then(processResponse)
             .catch(({ message, ...response }) => ({
                 type: 'network-error',

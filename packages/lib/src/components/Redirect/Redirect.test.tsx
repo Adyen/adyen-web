@@ -13,7 +13,7 @@ jest.mock('../../utils/detectInIframeInSameOrigin', () => {
 describe('Redirect', () => {
     describe('isValid', () => {
         test('Is always valid', () => {
-            const redirect = new Redirect({});
+            const redirect = new Redirect(global.core, { type: 'redirect' });
             expect(redirect.isValid).toBe(true);
         });
     });
@@ -52,7 +52,7 @@ describe('Redirect', () => {
 
     describe('Redirect formatData', () => {
         test('should send browserInfo in the data', () => {
-            const redirectElement = new RedirectElement({});
+            const redirectElement = new RedirectElement(global.core);
             expect(redirectElement.formatData().browserInfo).not.toBeNull();
         });
     });

@@ -1,19 +1,23 @@
 import { h } from 'preact';
-import { UIElement } from '../UIElement';
 import CardInput from './components/CardInput';
-import CoreProvider from '../../core/Context/CoreProvider';
+import { CoreProvider } from '../../core/Context/CoreProvider';
 import collectBrowserInfo from '../../utils/browserInfo';
-import { BinLookupResponse, CardElementData, CardElementProps } from './types';
+import { BinLookupResponse, CardElementData, CardConfiguration } from './types';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
 import { CbObjOnBinLookup, CbObjOnConfigSuccess, CbObjOnFocus } from '../internal/SecuredFields/lib/types';
-import { fieldTypeToSnakeCase, reject } from '../internal/SecuredFields/utils';
+import { fieldTypeToSnakeCase } from '../internal/SecuredFields/utils';
+import { reject } from '../../utils/commonUtils';
 import { hasValidInstallmentsObject } from './components/CardInput/utils';
 import createClickToPayService from '../internal/ClickToPay/services/create-clicktopay-service';
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';
 import ClickToPayWrapper from './components/ClickToPayWrapper';
-import { ComponentFocusObject, PayButtonFunctionProps, UIElementStatus } from '../types';
+import { ComponentFocusObject } from '../../types/global-types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
+import { TxVariants } from '../tx-variants';
+import type { PayButtonFunctionProps, UIElementStatus } from '../internal/UIElement/types';
+import UIElement from '../internal/UIElement';
 import PayButton from '../internal/PayButton';
+import type { ICore } from '../../core/types';
 import {
     ANALYTICS_FOCUS_STR,
     ANALYTICS_CONFIGURED_STR,
@@ -21,15 +25,16 @@ import {
     ANALYTICS_VALIDATION_ERROR_STR,
     ANALYTICS_RENDERED_STR
 } from '../../core/Analytics/constants';
-import { ALL_SECURED_FIELDS } from '../internal/SecuredFields/lib/configuration/constants';
+import { ALL_SECURED_FIELDS } from '../internal/SecuredFields/lib/constants';
 import { FieldErrorAnalyticsObject, SendAnalyticsObject } from '../../core/Analytics/types';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
-import { ERROR_CODES } from '../../core/Errors/constants';
+import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from '../../core/Errors/AdyenCheckoutError';
 import { getErrorMessageFromCode } from '../../core/Errors/utils';
+import { SF_ErrorCodes } from '../../core/Errors/constants';
 import CardInputDefaultProps from './components/CardInput/defaultProps';
 
-export class CardElement extends UIElement<CardElementProps> {
-    public static type = 'scheme';
+export class CardElement extends UIElement<CardConfiguration> {
+    public static type = TxVariants.scheme;
 
     private readonly clickToPayService: IClickToPayService | null;
 
@@ -38,12 +43,12 @@ export class CardElement extends UIElement<CardElementProps> {
      */
     private clickToPayRef = null;
 
-    constructor(props) {
-        super(props);
+    constructor(checkout: ICore, props?: CardConfiguration) {
+        super(checkout, props);
 
-        if (!props._disableClickToPay) {
+        if (props && !props._disableClickToPay) {
             this.clickToPayService = createClickToPayService(this.props.configuration, this.props.clickToPayConfiguration, this.props.environment);
-            this.clickToPayService?.initialize();
+            void this.clickToPayService?.initialize();
         }
     }
 
@@ -69,12 +74,24 @@ export class CardElement extends UIElement<CardElementProps> {
         this.clickToPayRef = ref;
     };
 
-    formatProps(props: CardElementProps) {
+    formatProps(props: CardConfiguration): CardConfiguration {
         // The value from a session should be used, before falling back to the merchant configuration
         const enableStoreDetails = props.session?.configuration?.enableStoreDetails ?? props.enableStoreDetails;
 
         const isZeroAuth = props.amount?.value === 0;
         const showStoreDetailsCheckbox = isZeroAuth ? false : enableStoreDetails;
+
+        const storedCardID = props.storedPaymentMethodId || props.id; // check if we've been passed a (checkout) processed storedCard or one that merchant has pulled from the PMs response
+        const isEcommerceStoredCard = storedCardID && props?.supportedShopperInteractions?.includes('Ecommerce'); // If we have a storedCard does it support Ecommerce (it might not if the merchant has pulled it from the PMs response)
+
+        // If we have a storedPM but it doesn't support Ecommerce - we can't make a storedCard component from it
+        if (storedCardID && !isEcommerceStoredCard) {
+            // TODO - Decide if an error is too severe? Would a console.warning suffice?
+            throw new AdyenCheckoutError(
+                IMPLEMENTATION_ERROR,
+                'You are trying to create a storedCard from a stored PM that does not support Ecommerce interactions'
+            );
+        }
 
         return {
             ...props,
@@ -86,8 +103,8 @@ export class CardElement extends UIElement<CardElementProps> {
             billingAddressRequired: props.storedPaymentMethodId ? false : props.billingAddressRequired,
             // edge case where merchant has defined both an onAddressLookup callback AND set billingAddressMode: 'partial' - which leads to some strange behaviour in the address UI
             billingAddressMode: props.onAddressLookup ? CardInputDefaultProps.billingAddressMode : props.billingAddressMode,
-            // ...(props.brands && !props.groupTypes && { groupTypes: props.brands }),
-            type: props.type === 'scheme' ? 'card' : props.type,
+            /** props.brand will be specified in the case of a StoredCard or a Bancontact component, for a regular Card we default it to 'card' */
+            brand: props.brand ?? TxVariants.card,
             countryCode: props.countryCode ? props.countryCode.toLowerCase() : null,
             // Required for transition period (until configuration object becomes the norm)
             // - if merchant has defined value directly in props, use this instead
@@ -108,10 +125,11 @@ export class CardElement extends UIElement<CardElementProps> {
             clickToPayConfiguration: {
                 ...props.clickToPayConfiguration,
                 disableOtpAutoFocus: props.clickToPayConfiguration?.disableOtpAutoFocus || false,
-                shopperEmail: props.clickToPayConfiguration?.shopperEmail || props?._parentInstance?.options?.session?.shopperEmail,
-                telephoneNumber: props.clickToPayConfiguration?.telephoneNumber || props?._parentInstance?.options?.session?.telephoneNumber,
+                shopperEmail: props.clickToPayConfiguration?.shopperEmail || this.core.options?.session?.shopperEmail,
+                telephoneNumber: props.clickToPayConfiguration?.telephoneNumber || this.core.options?.session?.telephoneNumber,
                 locale: props.clickToPayConfiguration?.locale || props.i18n?.locale?.replace('-', '_')
-            }
+            },
+            ...(storedCardID && { storedPaymentMethodId: storedCardID })
         };
     }
 
@@ -120,11 +138,12 @@ export class CardElement extends UIElement<CardElementProps> {
      */
     formatData(): CardElementData {
         /**
-         * this.props.brand is never set for the generic card only for a 'dedicated' single-branded card e.g. bcmc
-         * this.state.selectedBrandValue will be set when /binLookup detects a single brand &/or when /binLookup detects a dual-branded card and
-         *  the shopper makes a brand selection
+         *  this.state.selectedBrandValue will be set when:
+         *  - /binLookup detects a single brand,
+         *  - when /binLookup detects a dual-branded card and the shopper makes a brand selection
+         *  - or, in the case of a storedCard
          */
-        const cardBrand = this.state.selectedBrandValue || this.props.brand;
+        const cardBrand = this.state.selectedBrandValue;
 
         return {
             paymentMethod: {
@@ -154,8 +173,7 @@ export class CardElement extends UIElement<CardElementProps> {
     }
 
     public onBrand = event => {
-        this.eventEmitter.emit('brand', { ...event, brand: event.brand === 'card' ? null : event.brand });
-        if (this.props.onBrand) this.props.onBrand(event);
+        this.props.onBrand?.(event);
     };
 
     processBinLookupResponse(binLookupResponse: BinLookupResponse, isReset = false) {
@@ -233,12 +251,12 @@ export class CardElement extends UIElement<CardElementProps> {
         }
     };
 
-    private onErrorAnalytics = (obj: FieldErrorAnalyticsObject) => {
+    private onValidationErrorAnalytics = (obj: FieldErrorAnalyticsObject) => {
         this.submitAnalytics({
             type: ANALYTICS_VALIDATION_ERROR_STR,
             target: fieldTypeToSnakeCase(obj.fieldType),
             validationErrorCode: obj.errorCode,
-            validationErrorMessage: getErrorMessageFromCode(obj.errorCode, ERROR_CODES)
+            validationErrorMessage: getErrorMessageFromCode(obj.errorCode, SF_ErrorCodes)
         });
     };
 
@@ -274,7 +292,7 @@ export class CardElement extends UIElement<CardElementProps> {
     }
 
     get icon() {
-        return this.props.icon ?? this.resources.getImage()(this.brand);
+        return this.props.icon ?? this.resources.getImage()(this.props.brand);
     }
 
     get brands(): { icon: any; name: string }[] {
@@ -287,10 +305,6 @@ export class CardElement extends UIElement<CardElementProps> {
         }
 
         return [];
-    }
-
-    get brand(): string {
-        return this.props.brand || this.props.type;
     }
 
     get displayName(): string {
@@ -314,8 +328,8 @@ export class CardElement extends UIElement<CardElementProps> {
     get browserInfo() {
         return collectBrowserInfo();
     }
-    // Override
-    protected payButton = (props: PayButtonFunctionProps) => {
+
+    protected override payButton = (props: PayButtonFunctionProps) => {
         const isZeroAuth = this.props.amount?.value === 0;
         const isStoredCard = this.props.storedPaymentMethodId?.length > 0;
         return (
@@ -337,16 +351,17 @@ export class CardElement extends UIElement<CardElementProps> {
                 {...this.state}
                 onChange={this.setState}
                 onSubmit={this.submit}
+                handleKeyPress={this.handleKeyPress}
                 payButton={this.payButton}
                 onBrand={this.onBrand}
                 onBinValue={this.onBinValue}
-                brand={this.brand}
+                brand={this.props.brand}
                 brandsIcons={this.brands}
                 isPayButtonPrimaryVariant={isCardPrimaryInput}
                 resources={this.resources}
                 onFocus={this.onFocus}
                 onBlur={this.onBlur}
-                onErrorAnalytics={this.onErrorAnalytics}
+                onValidationErrorAnalytics={this.onValidationErrorAnalytics}
                 onConfigSuccess={this.onConfigSuccess}
             />
         );

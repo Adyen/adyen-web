@@ -1,59 +1,52 @@
-import { Component, h, toChildArray } from 'preact';
-import { CoreContext } from './CoreContext';
+import { h, toChildArray, createContext } from 'preact';
+import { useContext, useEffect } from 'preact/hooks';
 import { Resources } from './Resources';
+import Language from '../../language';
+import type { ComponentChildren } from 'preact';
 
 interface CoreProviderProps {
     loadingContext: string;
-    i18n: any;
+    i18n: Language;
     resources: Resources;
-    children?: any;
-    commonProps?: CommonPropsTypes;
+    children: ComponentChildren;
 }
 
-export interface CommonPropsTypes {
-    [key: string]: any;
-}
+type ContextValue = {
+    i18n: Language;
+    loadingContext: string;
+    resources: Resources;
+};
 
-/**
- * CoreProvider Component
- * Wraps a component delaying the render until after the i18n module is fully loaded
- */
-class CoreProvider extends Component<CoreProviderProps> {
-    public state = {
-        loaded: false
-    };
+const CoreContext = createContext<ContextValue | undefined>(undefined);
 
-    componentDidMount() {
-        if (this.props.i18n) {
-            this.props.i18n.loaded.then(() => {
-                this.setState({ loaded: true });
-            });
-        } else {
-            this.setState({ loaded: true });
-        }
-        if (!this.props.i18n || !this.props.loadingContext || !this.props.resources) {
+const CoreProvider = ({ i18n, loadingContext, resources, children }: CoreProviderProps) => {
+    useEffect(() => {
+        if (!i18n || !loadingContext || !resources) {
             console.error('CoreProvider - WARNING core provider is missing one of the following: i18n, loadingContext or resources');
         }
+    }, [i18n, loadingContext, resources]);
+
+    return (
+        <CoreContext.Provider
+            value={{
+                i18n,
+                loadingContext,
+                resources
+            }}
+        >
+            {toChildArray(children)}
+        </CoreContext.Provider>
+    );
+};
+
+const useCoreContext = (): ContextValue => {
+    const context = useContext(CoreContext);
+
+    if (context === undefined) {
+        throw new Error('"useCoreContext" must be used within a CoreProvider');
     }
 
-    render({ children }: CoreProviderProps) {
-        if (this.state.loaded) {
-            return (
-                <CoreContext.Provider
-                    value={{
-                        i18n: this.props.i18n,
-                        loadingContext: this.props.loadingContext,
-                        commonProps: this.props.commonProps || {},
-                        resources: this.props.resources
-                    }}
-                >
-                    {toChildArray(children)}
-                </CoreContext.Provider>
-            );
-        }
+    return context;
+};
 
-        return null;
-    }
-}
-
-export default CoreProvider;
+export { CoreProvider, useCoreContext };

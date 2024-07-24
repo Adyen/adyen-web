@@ -1,25 +1,23 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import EcontextInput from './components/EcontextInput';
 import EcontextVoucherResult from './components/EcontextVoucherResult';
-import CoreProvider from '../../core/Context/CoreProvider';
+import { CoreProvider } from '../../core/Context/CoreProvider';
+import { TxVariants } from '../tx-variants';
+import { EcontextConfiguration } from './types';
 
-import { UIElementProps } from '../types';
-import { PersonalDetailsSchema } from '../../types';
-
-interface EcontextElementProps extends UIElementProps {
-    reference?: string;
-    personalDetailsRequired?: boolean;
-    data?: PersonalDetailsSchema;
-    showFormInstruction?: boolean;
-}
-
-export class EcontextElement extends UIElement<EcontextElementProps> {
-    public static type = 'econtext';
+export class EcontextElement extends UIElement<EcontextConfiguration> {
+    public static type = TxVariants.econtext;
+    public static txVariants = [
+        TxVariants.econtext,
+        TxVariants.econtext_atm,
+        TxVariants.econtext_online,
+        TxVariants.econtext_seven_eleven,
+        TxVariants.econtext_stores
+    ];
 
     protected static defaultProps = {
-        personalDetailsRequired: true,
-        showFormInstruction: true
+        personalDetailsRequired: true
     };
 
     get isValid() {
@@ -36,7 +34,7 @@ export class EcontextElement extends UIElement<EcontextElementProps> {
         return {
             ...this.state.data,
             paymentMethod: {
-                type: this.props.type || EcontextElement.type
+                type: this.type
             }
         };
     }
@@ -55,6 +53,7 @@ export class EcontextElement extends UIElement<EcontextElementProps> {
                     <EcontextInput
                         setComponentRef={this.setComponentRef}
                         {...this.props}
+                        showPayButton={this.props.showPayButton}
                         onChange={this.setState}
                         onSubmit={this.submit}
                         payButton={this.payButton}

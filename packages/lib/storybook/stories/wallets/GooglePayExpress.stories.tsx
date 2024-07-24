@@ -1,12 +1,12 @@
-import { Meta, StoryObj } from '@storybook/preact';
-import { PaymentMethodStoryProps } from '../types';
+import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 import { Container } from '../Container';
-import { GooglePayProps } from '../../../src/components/GooglePay/types';
-import { handleSubmit } from '../../helpers/checkout-handlers';
+import { GooglePayConfiguration } from '../../../src/components/GooglePay/types';
 import getCurrency from '../../utils/get-currency';
+import { GooglePay } from '../../../src';
+import { makePayment } from '../../helpers/checkout-api-calls';
 
-type Story = StoryObj<PaymentMethodStoryProps<GooglePayProps>>;
+type GooglePayStory = StoryConfiguration<GooglePayConfiguration>;
 
 const COUNTRY_CODE = 'US';
 const SHOPPER_LOCALE = 'en-US';
@@ -14,10 +14,9 @@ const INITIAL_AMOUNT = 10000;
 
 let finalAmount = INITIAL_AMOUNT;
 
-const meta: Meta = {
+const meta: MetaConfiguration<GooglePayConfiguration> = {
     title: 'Wallets/GooglePay'
 };
-export default meta;
 
 /**
  * Method that calculate the shipping costs based on the country/shipping options
@@ -140,12 +139,14 @@ function calculateNewTransactionInfo(countryCode: string, selectedShippingOption
     return newTransactionInfo;
 }
 
-const createComponent = (args, context) => {
+const createComponent = (args: PaymentMethodStoryProps<GooglePayConfiguration>, context) => {
+    const { componentConfiguration } = args;
     const checkout = getStoryContextCheckout(context);
-    return <Container type={'googlepay'} componentConfiguration={args.componentConfiguration} checkout={checkout} />;
+    const googlepay = new GooglePay(checkout, componentConfiguration);
+    return <Container element={googlepay} />;
 };
 
-export const Express: Story = {
+export const Express: GooglePayStory = {
     render: createComponent,
     argTypes: {
         useSessions: {
@@ -170,26 +171,47 @@ export const Express: Story = {
         amount: INITIAL_AMOUNT,
         shopperLocale: SHOPPER_LOCALE,
         componentConfiguration: {
-            onSubmit: (state, component) => {
-                const paymentData = {
-                    amount: {
-                        currency: getCurrency(COUNTRY_CODE),
-                        value: finalAmount
-                    },
-                    countryCode: COUNTRY_CODE,
-                    shopperLocale: SHOPPER_LOCALE
-                };
-                handleSubmit(state, component, null, paymentData);
+            isExpress: true,
+
+            onSubmit: async (state, component, actions) => {
+                try {
+                    const paymentData = {
+                        amount: {
+                            currency: getCurrency(COUNTRY_CODE),
+                            value: finalAmount
+                        },
+                        countryCode: COUNTRY_CODE,
+                        shopperLocale: SHOPPER_LOCALE
+                    };
+
+                    const { action, order, resultCode, donationToken } = await makePayment(state.data, paymentData);
+
+                    if (!resultCode) actions.reject();
+
+                    actions.resolve({
+                        resultCode,
+                        action,
+                        order,
+                        donationToken
+                    });
+                } catch (error) {
+                    console.error('## onSubmit - critical error', error);
+                    actions.reject();
+                }
             },
-            onAuthorized: paymentData => {
-                console.log('Shopper details', paymentData);
+
+            onAuthorized: (data, actions) => {
+                console.log('Authorized data', data);
+                actions.resolve();
             },
+
             transactionInfo: getTransactionInfo(),
 
             callbackIntents: ['SHIPPING_ADDRESS', 'SHIPPING_OPTION'],
 
             paymentDataCallbacks: {
                 onPaymentDataChanged(intermediatePaymentData) {
+                    // eslint-disable-next-line no-async-promise-executor
                     return new Promise(async resolve => {
                         const { callbackTrigger, shippingAddress, shippingOptionData } = intermediatePaymentData;
                         const paymentDataRequestUpdate: google.payments.api.PaymentDataRequestUpdate = {};
@@ -236,3 +258,5 @@ export const Express: Story = {
         }
     }
 };
+
+export default meta;

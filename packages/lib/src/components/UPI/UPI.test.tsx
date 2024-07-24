@@ -1,15 +1,16 @@
 import { render, screen } from '@testing-library/preact';
 import UPI from './UPI';
 import isMobile from '../../utils/isMobile';
-import { TX_VARIANT, UpiMode } from './types';
 import { SRPanel } from '../../core/Errors/SRPanel';
+import { TxVariants } from '../tx-variants';
+import { Resources } from '../../core/Context/Resources';
 
 jest.mock('../../utils/isMobile');
 const isMobileMock = isMobile as jest.Mock;
 
 describe('UPI', () => {
     // @ts-ignore ignore
-    const props = { i18n: global.i18n, loadingContext: 'test', modules: { srPanel: new SRPanel({}), resources: global.resources } };
+    const props = { i18n: global.i18n, loadingContext: 'test', modules: { srPanel: new SRPanel(global.core), resources: new Resources('test') } };
     afterEach(() => {
         isMobileMock.mockReset();
     });
@@ -19,21 +20,21 @@ describe('UPI', () => {
             let upi: UPI;
             beforeEach(() => {
                 isMobileMock.mockReturnValue(true);
-                upi = new UPI(props);
+                upi = new UPI(global.core, props);
             });
 
             test('should return an app list from the given props.apps and a collect app', () => {
                 expect(upi.formatProps({ ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] })).toMatchObject({
                     apps: [
-                        { id: 'gpay', name: 'Google Pay', type: TX_VARIANT.UpiIntent },
-                        { id: UpiMode.Vpa, name: 'Enter UPI ID', type: TX_VARIANT.UpiCollect }
+                        { id: 'gpay', name: 'Google Pay', type: TxVariants.upi_intent },
+                        { id: 'vpa', name: 'Enter UPI ID', type: TxVariants.upi_collect }
                     ],
-                    defaultMode: UpiMode.Intent
+                    defaultMode: 'intent'
                 });
             });
 
             test('should return an empty app list if there is no app list from the props', () => {
-                expect(upi.formatProps(props)).toMatchObject({ apps: [], defaultMode: UpiMode.Vpa });
+                expect(upi.formatProps(props)).toMatchObject({ apps: [], defaultMode: 'vpa' });
             });
         });
 
@@ -41,11 +42,11 @@ describe('UPI', () => {
             let upi: UPI;
             beforeEach(() => {
                 isMobileMock.mockReturnValue(false);
-                upi = new UPI(props);
+                upi = new UPI(global.core, props);
             });
 
             test('should return an empty app list, and set the default mode to QR code', () => {
-                expect(upi.formatProps({})).toEqual({ apps: [], defaultMode: UpiMode.QrCode });
+                expect(upi.formatProps({})).toEqual({ apps: [], defaultMode: 'qrCode' });
             });
         });
     });
@@ -54,17 +55,17 @@ describe('UPI', () => {
         describe('select the QR code mode', () => {
             test('should return the payment type upi_qr', () => {
                 isMobileMock.mockReturnValue(false);
-                const upi = new UPI({ ...props, defaultMode: UpiMode.QrCode });
-                expect(upi.formatData()).toEqual({ paymentMethod: { type: TX_VARIANT.UpiQr } });
+                const upi = new UPI(global.core, { ...props, defaultMode: 'qrCode' });
+                expect(upi.formatData()).toEqual({ paymentMethod: { type: TxVariants.upi_qr } });
             });
         });
 
         describe('select the vpa mode', () => {
             test('should return the payment type upi_collect and virtualPaymentAddress', () => {
                 isMobileMock.mockReturnValue(false);
-                const upi = new UPI({ ...props, defaultMode: UpiMode.Vpa });
+                const upi = new UPI(global.core, { ...props, defaultMode: 'vpa' });
                 upi.setState({ data: { virtualPaymentAddress: 'test' }, valid: {}, errors: {}, isValid: true });
-                expect(upi.formatData()).toEqual({ paymentMethod: { type: TX_VARIANT.UpiCollect, virtualPaymentAddress: 'test' } });
+                expect(upi.formatData()).toEqual({ paymentMethod: { type: TxVariants.upi_collect, virtualPaymentAddress: 'test' } });
             });
         });
 
@@ -75,27 +76,27 @@ describe('UPI', () => {
 
             describe('pay with the UPI ID / VPA', () => {
                 test('should return the payment type upi_collect and virtualPaymentAddress', () => {
-                    const upi = new UPI({ ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
+                    const upi = new UPI(global.core, { ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
                     upi.setState({
-                        data: { virtualPaymentAddress: 'test', app: { id: 'vpa', type: TX_VARIANT.UpiCollect } },
+                        data: { virtualPaymentAddress: 'test', app: { id: 'vpa', type: TxVariants.upi_collect } },
                         valid: {},
                         errors: {},
                         isValid: true
                     });
-                    expect(upi.formatData()).toEqual({ paymentMethod: { type: TX_VARIANT.UpiCollect, virtualPaymentAddress: 'test' } });
+                    expect(upi.formatData()).toEqual({ paymentMethod: { type: TxVariants.upi_collect, virtualPaymentAddress: 'test' } });
                 });
             });
 
             describe('pay with other apps', () => {
                 test('should return the payment type upi_intent and the chosen appId', () => {
-                    const upi = new UPI({ ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
+                    const upi = new UPI(global.core, { ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
                     upi.setState({
-                        data: { app: { id: 'gpay', type: TX_VARIANT.UpiIntent } },
+                        data: { app: { id: 'gpay', type: TxVariants.upi_intent } },
                         valid: {},
                         errors: {},
                         isValid: true
                     });
-                    expect(upi.formatData()).toEqual({ paymentMethod: { type: TX_VARIANT.UpiIntent, appId: 'gpay' } });
+                    expect(upi.formatData()).toEqual({ paymentMethod: { type: TxVariants.upi_intent, appId: 'gpay' } });
                 });
             });
         });
@@ -103,7 +104,7 @@ describe('UPI', () => {
 
     describe('render', () => {
         test('should render the UPI component by default', async () => {
-            const upi = new UPI(props);
+            const upi = new UPI(global.core, props);
             render(upi.render());
             expect(await screen.findByRole('group')).toBeInTheDocument;
         });

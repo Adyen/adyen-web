@@ -1,37 +1,38 @@
 import { h } from 'preact';
-import { useCallback, useEffect, useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import CampaignContainer from './CampaignContainer';
-import ButtonGroup from '../../internal/ButtonGroup';
 import Button from '../../internal/Button';
 import Img from '../../internal/Img';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import '../Donation.scss';
 import DisclaimerMessage from '../../internal/DisclaimerMessage';
-import { DonationComponentProps } from './types';
+import { DonationAmount, DonationComponentProps, Status } from './types';
 import useImage from '../../../core/Context/useImage';
+import FixedAmounts from './FixedAmounts';
+import Roundup from './Roundup';
+import { getAmountLabel, getRoundupAmount, getRoundupAmountLabel } from './utils';
 
 export default function DonationComponent(props: DonationComponentProps) {
-    const { amounts, onCancel, onDonate, showCancelButton = true, disclaimerMessage } = props;
+    const { donation, commercialTxAmount, onCancel, onDonate, showCancelButton = true, termsAndConditionsUrl } = props;
     const { i18n } = useCoreContext();
     const getImage = useImage();
-    const { currency } = amounts;
-    const [status, setStatus] = useState('ready');
-    const [isValid, setIsValid] = useState(false);
-    const [amount, setAmount] = useState({
+    const { currency, type } = donation;
+    const isRoundupDonation = type === 'roundup';
+    const [status, setStatus] = useState<Status>('ready');
+    const [isValid, setIsValid] = useState<boolean>(isRoundupDonation);
+    const [amount, setAmount] = useState<DonationAmount>({
         currency,
-        value: null
+        value: isRoundupDonation ? getRoundupAmount(donation.maxRoundupAmount, commercialTxAmount) : null
     });
 
-    this.setStatus = status => {
+    this.setStatus = (status: Status) => {
         setStatus(status);
     };
-
-    const getAmount = useCallback((value: number, currency: string) => i18n.amount(value, currency), [i18n]);
 
     const handleAmountSelected = ({ target }) => {
         const value = parseInt(target.value, 10);
         setIsValid(true);
-        setAmount(amount => ({ ...amount, value }));
+        setAmount((amount: DonationAmount) => ({ ...amount, value }));
     };
 
     const handleDonate = () => {
@@ -40,7 +41,7 @@ export default function DonationComponent(props: DonationComponentProps) {
     };
 
     const handleDecline = () => {
-        setStatus('loading');
+        setStatus('ready');
         onCancel({ data: { amount }, isValid });
     };
 
@@ -80,32 +81,24 @@ export default function DonationComponent(props: DonationComponentProps) {
             <CampaignContainer {...props} />
 
             <div className="adyen-checkout__adyen-giving-actions">
-                <div className="adyen-checkout__amounts">
-                    <ButtonGroup
-                        options={amounts.values.map(value => ({
-                            value,
-                            label: getAmount(value, currency),
-                            disabled: status === 'loading',
-                            selected: value === amount.value
-                        }))}
-                        name="amount"
-                        onChange={handleAmountSelected}
-                    />
-                </div>
-                {disclaimerMessage && (
-                    <DisclaimerMessage
-                        message={disclaimerMessage.message.replace('%{linkText}', `%#${disclaimerMessage.linkText}%#`)}
-                        urls={[disclaimerMessage.link]}
-                    />
+                {termsAndConditionsUrl && <DisclaimerMessage message={i18n.get('donationTermsCondition')} urls={[termsAndConditionsUrl]} />}
+                {isRoundupDonation ? (
+                    <Roundup
+                        donationAmount={getRoundupAmountLabel(i18n, { maxRoundupAmount: donation.maxRoundupAmount, commercialTxAmount, currency })}
+                        originalPaymentAmount={getAmountLabel(i18n, { value: commercialTxAmount, currency })}
+                        status={status}
+                        onDonateButtonClicked={handleDonate}
+                    ></Roundup>
+                ) : (
+                    <FixedAmounts
+                        selectedAmount={amount.value}
+                        values={donation.values}
+                        currency={currency}
+                        status={status}
+                        onAmountSelected={handleAmountSelected}
+                        onDonateButtonClicked={handleDonate}
+                    ></FixedAmounts>
                 )}
-                <Button
-                    classNameModifiers={['donate']}
-                    onClick={handleDonate}
-                    label={i18n.get('donateButton')}
-                    disabled={!amount.value}
-                    status={status}
-                />
-
                 {showCancelButton && (
                     <Button
                         classNameModifiers={['decline']}
@@ -124,6 +117,6 @@ DonationComponent.defaultProps = {
     onCancel: () => {},
     onChange: () => {},
     onDonate: () => {},
-    amounts: {},
+    donation: {},
     showCancelButton: true
 };

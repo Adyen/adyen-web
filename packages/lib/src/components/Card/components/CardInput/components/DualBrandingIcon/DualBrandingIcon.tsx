@@ -1,5 +1,4 @@
 import { h } from 'preact';
-import styles from '../../CardInput.module.scss';
 import { getCardImageUrl, getFullBrandName } from '../../utils';
 import { DualBrandingIconProps } from '../types';
 import './DualBrandingIcon.scss';
@@ -14,8 +13,9 @@ const DualBrandingIcon = ({ brand, onClick, dataValue, notSelected, brandsConfig
     };
 
     return (
+        // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions
         <img
-            className={`${styles['card-input__icon']} ${
+            className={`adyen-checkout-card-input__icon ${
                 notSelected ? 'adyen-checkout__card__cardNumber__brandIcon--not-selected' : ''
             } adyen-checkout__card__cardNumber__brandIcon`}
             onError={handleError}

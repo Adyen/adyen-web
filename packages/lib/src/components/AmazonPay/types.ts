@@ -1,8 +1,7 @@
-import Language from '../../language/Language';
 import { SUPPORTED_LOCALES_EU, SUPPORTED_LOCALES_US } from './config';
-import { BrowserInfo, PaymentAmount } from '../../types';
-import UIElement from '../UIElement';
-import { UIElementProps } from '../types';
+import { UIElementProps } from '../internal/UIElement/types';
+import { BrowserInfo, CheckoutAdvancedFlowResponse, PaymentAmount } from '../../types/global-types';
+import { AmazonPayElement } from './AmazonPay';
 
 declare global {
     interface Window {
@@ -30,14 +29,14 @@ export interface RecurringMetadata {
     };
 }
 
-export interface AmazonPayConfiguration {
+export interface AmazonPayBackendConfiguration {
     merchantId?: string;
     publicKeyId?: string;
     region?: Region;
     storeId?: string;
 }
 
-export interface AmazonPayElementProps extends UIElementProps {
+export interface AmazonPayConfiguration extends UIElementProps {
     addressDetails?: AddressDetails;
     amazonPayToken?: string;
     amazonCheckoutSessionId?: string;
@@ -46,28 +45,33 @@ export interface AmazonPayElementProps extends UIElementProps {
     cancelUrl?: string;
     chargePermissionType?: ChargePermissionType;
     clientKey?: string;
-    configuration?: AmazonPayConfiguration;
+    configuration?: AmazonPayBackendConfiguration;
     currency?: Currency;
     deliverySpecifications?: DeliverySpecifications;
     environment?: string;
-    i18n: Language;
     loadingContext?: string;
     locale?: string;
     merchantMetadata?: MerchantMetadata;
-    onSubmit?: (state: any, element: UIElement) => void;
+    onSubmit?(
+        state: any,
+        element: AmazonPayElement,
+        actions: {
+            resolve: (response: CheckoutAdvancedFlowResponse) => void;
+            reject: () => void;
+        }
+    ): void;
     payButton?: any;
     placement?: Placement;
     productType?: ProductType;
     recurringMetadata?: RecurringMetadata;
     returnUrl?: string;
-    showChangePaymentDetailsButton: boolean;
-    showOrderButton: boolean;
-    showPayButton: boolean;
-    showSignOutButton: boolean;
+    showChangePaymentDetailsButton?: boolean;
+    showOrderButton?: boolean;
+    showSignOutButton?: boolean;
     signature?: string;
-    onClick: (resolve, reject) => Promise<void>;
-    onError: (error, component) => void;
-    onSignOut: (resolve, reject) => Promise<void>;
+    onClick?: (resolve, reject) => Promise<void>;
+    onError?: (error, component) => void;
+    onSignOut?: (resolve, reject) => Promise<void>;
 
     /**
      * Used for analytics
@@ -81,7 +85,14 @@ export interface AmazonPayElementProps extends UIElementProps {
     isExpress?: boolean;
 }
 
-export interface AmazonPayComponentProps extends AmazonPayElementProps {
+export interface AmazonPayComponentProps extends AmazonPayConfiguration {
+    showSignOutButton?: boolean;
+    amazonCheckoutSessionId?: string;
+    showOrderButton?: boolean;
+    showChangePaymentDetailsButton?: boolean;
+    onClick: (resolve, reject) => Promise<void>;
+    onError: (error, component) => void;
+    onSignOut: (resolve, reject) => Promise<void>;
     ref: any;
 }
 
@@ -92,7 +103,7 @@ export interface AmazonPayButtonProps {
     cancelUrl?: string;
     chargePermissionType?: ChargePermissionType;
     clientKey?: string;
-    configuration?: AmazonPayConfiguration;
+    configuration?: AmazonPayBackendConfiguration;
     currency?: Currency;
     deliverySpecifications?: DeliverySpecifications;
     design?: string;

@@ -1,12 +1,14 @@
 import { h, RefObject } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import UPIComponent from './components/UPIComponent';
-import CoreProvider from '../../core/Context/CoreProvider';
+import { CoreProvider } from '../../core/Context/CoreProvider';
 import Await from '../internal/Await';
 import QRLoader from '../internal/QRLoader';
-import { TX_VARIANT, UPIElementProps, UpiMode, UpiPaymentData } from './types';
+import { UPIConfiguration, UpiMode, UpiPaymentData, UpiType } from './types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
+import { TxVariants } from '../tx-variants';
 import isMobile from '../../utils/isMobile';
+import type { ICore } from '../../core/types';
 
 /**
  * For mobile:
@@ -18,35 +20,37 @@ import isMobile from '../../utils/isMobile';
  * The upi_qr should be on the first tab and the upi_collect should be on second tab
  */
 
-class UPI extends UIElement<UPIElementProps> {
-    public static type = 'upi';
+class UPI extends UIElement<UPIConfiguration> {
+    public static type = TxVariants.upi;
+    public static txVariants = [TxVariants.upi, TxVariants.upi_qr, TxVariants.upi_collect, TxVariants.upi_intent];
 
     private selectedMode: UpiMode;
 
-    constructor(props: UPIElementProps) {
-        super(props);
+    constructor(checkout: ICore, props: UPIConfiguration) {
+        super(checkout, props);
         this.selectedMode = this.props.defaultMode;
     }
 
-    formatProps(props: UPIElementProps) {
+    // @ts-ignore fix later
+    formatProps(props: UPIConfiguration) {
         if (!isMobile()) {
             return {
                 ...super.formatProps(props),
-                defaultMode: props?.defaultMode ?? UpiMode.QrCode,
+                defaultMode: props?.defaultMode ?? 'qrCode',
                 // For large screen, ignore the apps
                 apps: []
             };
         }
 
         const hasIntentApps = props.apps?.length > 0;
-        const fallbackDefaultMode = hasIntentApps ? UpiMode.Intent : UpiMode.Vpa;
-        const allowedModes = [fallbackDefaultMode, UpiMode.QrCode];
+        const fallbackDefaultMode = hasIntentApps ? 'intent' : 'vpa';
+        const allowedModes = [fallbackDefaultMode, 'qrCode'];
         const upiCollectApp = {
-            id: UpiMode.Vpa,
+            id: 'vpa',
             name: props.i18n.get('upi.collect.dropdown.label'),
-            type: TX_VARIANT.UpiCollect
+            type: TxVariants.upi_collect
         };
-        const apps = hasIntentApps ? [...props.apps.map(app => ({ ...app, type: TX_VARIANT.UpiIntent })), upiCollectApp] : [];
+        const apps = hasIntentApps ? [...props.apps.map(app => ({ ...app, type: TxVariants.upi_intent })), upiCollectApp] : [];
         return {
             ...super.formatProps(props),
             defaultMode: allowedModes.includes(props?.defaultMode) ? props.defaultMode : fallbackDefaultMode,
@@ -64,18 +68,18 @@ class UPI extends UIElement<UPIElementProps> {
         return {
             paymentMethod: {
                 ...(this.paymentType && { type: this.paymentType }),
-                ...(this.paymentType === TX_VARIANT.UpiCollect && virtualPaymentAddress && { virtualPaymentAddress }),
-                ...(this.paymentType === TX_VARIANT.UpiIntent && app?.id && { appId: app.id })
+                ...(this.paymentType === TxVariants.upi_collect && virtualPaymentAddress && { virtualPaymentAddress }),
+                ...(this.paymentType === TxVariants.upi_intent && app?.id && { appId: app.id })
             }
         };
     }
 
-    get paymentType(): TX_VARIANT {
-        if (this.selectedMode === UpiMode.QrCode) {
-            return TX_VARIANT.UpiQr;
+    get paymentType(): UpiType {
+        if (this.selectedMode === 'qrCode') {
+            return TxVariants.upi_qr;
         }
-        if (this.selectedMode === UpiMode.Vpa) {
-            return TX_VARIANT.UpiCollect;
+        if (this.selectedMode === 'vpa') {
+            return TxVariants.upi_collect;
         }
         return this.state.data?.app?.type;
     }
@@ -94,7 +98,7 @@ class UPI extends UIElement<UPIElementProps> {
                         }}
                         {...this.props}
                         qrCodeData={this.props.qrCodeData ? encodeURIComponent(this.props.qrCodeData) : null}
-                        type={TX_VARIANT.UpiQr}
+                        type={TxVariants.upi_qr}
                         brandLogo={this.props.brandLogo || this.icon}
                         onComplete={this.onComplete}
                         introduction={this.props.i18n.get('upi.qrCodeWaitingMessage')}

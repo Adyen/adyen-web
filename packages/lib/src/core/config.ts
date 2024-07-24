@@ -8,6 +8,7 @@ export const GENERIC_OPTIONS = [
     'secondaryAmount',
     'countryCode',
     'environment',
+    '_environmentUrls',
     'loadingContext',
     'i18n',
     'modules',
@@ -16,22 +17,23 @@ export const GENERIC_OPTIONS = [
     'clientKey',
     'showPayButton',
     'redirectFromTopWhenInIframe',
-    'installmentOptions',
 
     // Events
     'onPaymentCompleted',
+    'onPaymentFailed',
     'beforeRedirect',
     'beforeSubmit',
     'onSubmit',
     'onActionHandled',
     'onAdditionalDetails',
-    'onCancel',
     'onChange',
+    'onEnterKeyPressed',
     'onError',
     'onBalanceCheck',
+    'onOrderCancel',
     'onOrderRequest',
-    'onOrderCreated',
-    'setStatusAutomatically'
+    'onOrderUpdated',
+    'onPaymentMethodsRequest'
 ];
 
 export const DEFAULT_HTTP_TIMEOUT = 60000;

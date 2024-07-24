@@ -1,6 +1,6 @@
-import { AmazonPayElementProps } from './types';
+import { AmazonPayConfiguration } from './types';
 
-const defautProps: Partial<AmazonPayElementProps> = {
+const defaultProps: Partial<AmazonPayConfiguration> = {
     cancelUrl: typeof window !== 'undefined' ? window.location.href : '',
     configuration: {},
     environment: 'TEST',
@@ -11,10 +11,9 @@ const defautProps: Partial<AmazonPayElementProps> = {
     showOrderButton: true,
     showChangePaymentDetailsButton: false,
     showSignOutButton: false,
-    showPayButton: true,
     onClick: resolve => resolve(),
     onSignOut: resolve => resolve(),
     isExpress: false
 };
 
-export default defautProps;
+export default defaultProps;

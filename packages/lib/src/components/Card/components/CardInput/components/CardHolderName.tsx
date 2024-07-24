@@ -1,9 +1,9 @@
 import { h } from 'preact';
 import Field from '../../../../internal/FormFields/Field';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import { CardHolderNameProps } from './types';
-import styles from '../CardInput.module.scss';
 import InputText from '../../../../internal/FormFields/InputText';
+import { CREDITCARD_HOLDER_NAME_INVALID } from '../../../../../core/Errors/constants';
 
 export default function CardHolderName({
     onBlur,
@@ -23,7 +23,7 @@ export default function CardHolderName({
         <Field
             label={i18n.get('creditCard.holderName')}
             className={'adyen-checkout__card__holderName'}
-            errorMessage={error && i18n.get('creditCard.holderName.invalid')}
+            errorMessage={error && i18n.get(CREDITCARD_HOLDER_NAME_INVALID)}
             isValid={!!isValid}
             name={'holderName'}
             i18n={i18n}
@@ -32,8 +32,8 @@ export default function CardHolderName({
         >
             <InputText
                 name={'holderName'}
-                className={`adyen-checkout__card__holderName__input ${styles['adyen-checkout__input']}`}
-                placeholder={placeholder || i18n.get('creditCard.holderName.placeholder')}
+                className="adyen-checkout__card__holderName__input adyen-checkout__input"
+                placeholder={placeholder}
                 autocomplete={'cc-name'}
                 {...{ value, required, onBlur, onInput, disabled }}
             />

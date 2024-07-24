@@ -4,14 +4,20 @@ import Address from '../../../internal/Address';
 import { boletoValidationRules } from './validate';
 import { boletoFormatters } from './utils';
 import SendCopyToEmail from '../../../internal/SendCopyToEmail/SendCopyToEmail';
-import useCoreContext from '../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { BoletoInputDataState } from '../../types';
 import useForm from '../../../../utils/useForm';
 import { BrazilPersonalDetail } from '../../../internal/SocialSecurityNumberBrazil/BrazilPersonalDetail';
-import { ComponentMethodsRef } from '../../../types';
 import FormInstruction from '../../../internal/FormInstruction';
+import { ComponentMethodsRef } from '../../../internal/UIElement/types';
 
-function BoletoInput(props) {
+interface BoletoInputProps {
+    onChange(data: any): void;
+    // TODO
+    [key: string]: any;
+}
+
+function BoletoInput(props: BoletoInputProps) {
     const { i18n } = useCoreContext();
     const addressRef = useRef(null);
     const setAddressRef = ref => {
@@ -70,7 +76,7 @@ function BoletoInput(props) {
 
     const buttonModifiers = [...(!props.personalDetailsRequired && !props.billingAddressRequired && !props.showEmailAddress ? ['standalone'] : [])];
 
-    const showFormInstruction = props.showFormInstruction && (props.personalDetailsRequired || props.billingAddressRequired);
+    const showFormInstruction = props.personalDetailsRequired || props.billingAddressRequired;
 
     return (
         <div className="adyen-checkout__boleto-input__field">
@@ -115,8 +121,7 @@ BoletoInput.defaultProps = {
     data: {},
     showEmailAddress: true,
     personalDetailsRequired: true,
-    billingAddressRequired: true,
-    showFormInstruction: true
+    billingAddressRequired: true
 };
 
 export default BoletoInput;

@@ -1,11 +1,11 @@
-@import "../../../../../style/index";
+@import 'styles/variable-generator';
 
 .adyen-checkout-ctp__section {
     position: relative;
     background-color: white;
     box-shadow: 0 6px 12px rgb(0 17 44 / 8%), 0 2px 4px rgb(0 17 44 / 4%);
-    border-radius: 12px;
-    padding: 16px;
+    border-radius: token(spacer-060);
+    padding: token(spacer-070);
 
     &-brand {
         display: flex;
@@ -19,7 +19,7 @@
     }
 
     .adyen-checkout__fieldset {
-        margin-bottom: 24px;
+        margin-bottom: token(spacer-090);
     }
 }
 
@@ -29,7 +29,7 @@
 
     &-title {
         font-size: 17px;
-        font-weight: 600;
+        font-weight: token(text-title-font-weight);
         line-height: 22px;
         padding: 0;
         margin: 0;
@@ -47,14 +47,14 @@
 
 .adyen-checkout-ctp__section-text {
     font-size: 13px;
-    font-weight: 400;
-    line-height: 19px;
-    color: $color-new-gray-darker;
-    margin: 0 0 16px;
+    font-weight: token(text-body-font-weight);
+    line-height: token(text-caption-line-height);
+    color: token(color-label-tertiary);
+    margin: 0 0 token(spacer-070);
 }
 
 .adyen-checkout-ctp__separator {
-    color: $color-black;
+    color: token(color-label-primary);
     font-size: 13px;
-    font-weight: 400;
+    font-weight: token(text-body-font-weight);
 }

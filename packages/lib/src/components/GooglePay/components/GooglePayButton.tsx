@@ -1,4 +1,5 @@
-import { Component, h } from 'preact';
+import { h } from 'preact';
+import { useEffect, useRef } from 'preact/hooks';
 import './GooglePayButton.scss';
 
 interface GooglePayButtonProps {
@@ -12,37 +13,16 @@ interface GooglePayButtonProps {
     onClick: (e: Event) => void;
 }
 
-class GooglePayButton extends Component<GooglePayButtonProps> {
-    public paywithgoogleWrapper;
+const GooglePayButton = (props: GooglePayButtonProps) => {
+    const googlePayWrapperRef = useRef<HTMLDivElement | undefined>(undefined);
 
-    public static defaultProps = {
-        buttonColor: 'default', // default (black), black, white
-        buttonType: 'long', // long, short
-        buttonSizeMode: 'static' // long, short
-    };
-    private clicked = false;
+    useEffect(() => {
+        const { onClick, buttonRadius, buttonColor, buttonType, buttonLocale, buttonSizeMode, buttonRootNode, paymentsClient } = props;
 
-    private handleClick = e => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        if (!this.clicked) {
-            this.props.onClick(e);
-            this.clicked = true;
-
-            setTimeout(() => {
-                this.clicked = false;
-            }, 300);
-        }
-    };
-
-    componentDidMount() {
-        const { buttonRadius, buttonColor, buttonType, buttonLocale, buttonSizeMode, buttonRootNode, paymentsClient } = this.props;
-
-        paymentsClient
+        void paymentsClient
             .then(client =>
                 client.createButton({
-                    onClick: this.handleClick,
+                    onClick,
                     buttonType,
                     buttonColor,
                     buttonLocale,
@@ -52,20 +32,13 @@ class GooglePayButton extends Component<GooglePayButtonProps> {
                 })
             )
             .then(googlePayButton => {
-                this.paywithgoogleWrapper.appendChild(googlePayButton);
+                if (googlePayWrapperRef.current) {
+                    googlePayWrapperRef.current.appendChild(googlePayButton);
+                }
             });
-    }
+    }, [props.buttonColor, props.buttonType, props.buttonLocale, props.buttonSizeMode, props.buttonRootNode, props.paymentsClient]);
 
-    render() {
-        return (
-            <span
-                className={'adyen-checkout__paywithgoogle'}
-                ref={ref => {
-                    this.paywithgoogleWrapper = ref;
-                }}
-            />
-        );
-    }
-}
+    return <div data-testid="googlepay-button-container" className={'adyen-checkout__paywithgoogle'} ref={googlePayWrapperRef} />;
+};
 
 export default GooglePayButton;

@@ -1,0 +1,7 @@
+@import 'styles/variable-generator';
+
+.adyen-checkout__dropin--loading .adyen-checkout__instant-payment-methods-list {
+  pointer-events: none;
+  user-select: none;
+  opacity: .2;
+}

@@ -1,138 +1,224 @@
 import Language from '../language';
-import UIElement from '../components/UIElement';
+import UIElement from '../components/internal/UIElement/UIElement';
 import RiskModule from './RiskModule';
-import paymentMethods, { getComponentConfiguration } from '../components';
-import PaymentMethodsResponse from './ProcessResponse/PaymentMethodsResponse';
+import PaymentMethods from './ProcessResponse/PaymentMethods';
 import getComponentForAction from './ProcessResponse/PaymentAction';
-import { resolveEnvironment, resolveCDNEnvironment, resolveAnalyticsEnvironment } from './Environment';
 import Analytics from './Analytics';
-import { PaymentAction } from '../types';
-import { CoreOptions } from './types';
-import { PaymentMethods, PaymentMethodOptions } from '../types';
-import { processGlobalOptions } from './utils';
+import { assertConfigurationPropertiesAreValid, processGlobalOptions } from './utils';
 import Session from './CheckoutSession';
 import { hasOwnProperty } from '../utils/hasOwnProperty';
 import { Resources } from './Context/Resources';
 import { SRPanel } from './Errors/SRPanel';
-import { getRegulatoryDefaults } from '../components/utils';
+import registry, { NewableComponent } from './core.registry';
+import { cleanupFinalResult, sanitizeResponse, verifyPaymentDidNotFail } from '../components/internal/UIElement/utils';
+import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from './Errors/AdyenCheckoutError';
 import { ANALYTICS_ACTION_STR } from './Analytics/constants';
-import { THREEDS2_FULL } from '../components/ThreeDS2/config';
+import { THREEDS2_FULL } from '../components/ThreeDS2/constants';
+import { DEFAULT_LOCALE } from '../language/constants';
+import getTranslations from './Services/get-translations';
+import { defaultProps } from './core.defaultProps';
+import { formatCustomTranslations, formatLocale } from '../language/utils';
+import { resolveEnvironments } from './Environment';
 
-class Core {
-    public session: Session;
-    public paymentMethodsResponse: PaymentMethodsResponse;
-    public modules: any;
-    public options: CoreOptions;
-    public components = [];
+import type { AnalyticsModule, PaymentAction, PaymentResponseData } from '../types/global-types';
+import type { CoreConfiguration, ICore, AdditionalDetailsData } from './types';
+import type { Translations } from '../language/types';
+import type { UIElementProps } from '../components/internal/UIElement/types';
 
-    public loadingContext?: string;
+class Core implements ICore {
+    public session?: Session;
+    public paymentMethodsResponse: PaymentMethods;
+    public modules: Readonly<{
+        risk: RiskModule;
+        analytics: AnalyticsModule;
+        resources: Resources;
+        i18n: Language;
+        srPanel: SRPanel;
+    }>;
+    public options: CoreConfiguration;
 
-    public cdnContext?: string;
-    public analyticsContext?: string;
+    public analyticsContext: string;
+    public loadingContext: string;
+    public cdnImagesUrl: string;
+    public cdnTranslationsUrl: string;
 
-    public static readonly version = {
+    private components: UIElement[] = [];
+
+    public static readonly metadata = {
         version: process.env.VERSION,
-        revision: process.env.COMMIT_HASH,
-        branch: process.env.COMMIT_BRANCH,
-        buildId: process.env.ADYEN_BUILD_ID
+        bundleType: process.env.BUNDLE_TYPE
     };
 
-    constructor(props: CoreOptions) {
-        this.create = this.create.bind(this);
-        this.createFromAction = this.createFromAction.bind(this);
+    public static registry = registry;
 
-        this.setOptions(props);
-
-        this.loadingContext = resolveEnvironment(this.options.environment, this.options.environmentUrls?.api);
-        this.cdnContext = resolveCDNEnvironment(this.options.resourceEnvironment || this.options.environment, this.options.environmentUrls?.api);
-        this.analyticsContext = resolveAnalyticsEnvironment(this.options.environment);
-
-        const clientKeyType = this.options.clientKey?.substr(0, 4);
-        if ((clientKeyType === 'test' || clientKeyType === 'live') && !this.loadingContext.includes(clientKeyType)) {
-            throw new Error(`Error: you are using a '${clientKeyType}' clientKey against the '${this.options.environment}' environment`);
-        }
-
-        // Expose version number for npm builds
-        window['adyenWebVersion'] = Core.version.version;
+    public static setBundleType(type: string): void {
+        Core.metadata.bundleType = type;
     }
 
-    initialize(): Promise<this> {
-        if (this.options.session) {
-            this.session = new Session(this.options.session, this.options.clientKey, this.loadingContext);
+    public static register(...items: NewableComponent[]) {
+        registry.add(...items);
+    }
 
+    /**
+     * Used internally by the PaymentMethod components to auto-register themselves
+     * @internal
+     */
+    public register(...items: NewableComponent[]) {
+        registry.add(...items);
+    }
+
+    public getComponent(txVariant: string) {
+        return registry.getComponent(txVariant);
+    }
+
+    constructor(props: CoreConfiguration) {
+        assertConfigurationPropertiesAreValid(props);
+
+        this.createFromAction = this.createFromAction.bind(this);
+
+        this.setOptions({ ...defaultProps, ...props });
+
+        const { apiUrl, analyticsUrl, cdnImagesUrl, cdnTranslationsUrl } = resolveEnvironments(
+            this.options.environment,
+            this.options._environmentUrls
+        );
+
+        this.loadingContext = apiUrl;
+        this.analyticsContext = analyticsUrl;
+        this.cdnImagesUrl = cdnImagesUrl;
+        this.cdnTranslationsUrl = cdnTranslationsUrl;
+
+        this.session = this.options.session && new Session(this.options.session, this.options.clientKey, this.loadingContext);
+
+        const clientKeyType = this.options.clientKey?.substring(0, 4);
+        if ((clientKeyType === 'test' || clientKeyType === 'live') && !this.loadingContext.includes(clientKeyType)) {
+            throw new AdyenCheckoutError(
+                'IMPLEMENTATION_ERROR',
+                `Error: you are using a ${clientKeyType} clientKey against the ${this.options._environmentUrls?.api || this.options.environment} environment`
+            );
+        }
+        if (clientKeyType === 'pub.') {
+            console.debug(
+                `The value you are passing as your "clientKey" looks like an originKey (${this.options.clientKey?.substring(0, 12)}..). Although this is supported it is not the recommended way to integrate. To generate a clientKey, see the documentation (https://docs.adyen.com/development-resources/client-side-authentication/migrate-from-origin-key-to-client-key/) for more details.`
+            );
+        }
+
+        if (this.options.exposeLibraryMetadata) {
+            window['AdyenWebMetadata'] = Core.metadata;
+        }
+    }
+
+    public async initialize(): Promise<this> {
+        await this.initializeCore();
+        this.validateCoreConfiguration();
+        await this.createCoreModules();
+        return this;
+    }
+
+    private async initializeCore(): Promise<this> {
+        if (this.session) {
             return this.session
                 .setupSession(this.options)
                 .then(sessionResponse => {
-                    const { amount, shopperLocale, paymentMethods, ...rest } = sessionResponse;
+                    const { amount, shopperLocale, countryCode, paymentMethods, ...rest } = sessionResponse;
 
                     this.setOptions({
                         ...rest,
                         amount: this.options.order ? this.options.order.remainingAmount : amount,
-                        locale: this.options.locale || shopperLocale
+                        locale: this.options.locale || shopperLocale,
+                        countryCode: this.options.countryCode || countryCode
                     });
 
                     this.createPaymentMethodsList(paymentMethods);
-                    this.createCoreModules();
 
                     return this;
                 })
                 .catch(error => {
                     if (this.options.onError) this.options.onError(error);
-                    return this;
+                    return Promise.reject(error);
                 });
         }
 
-        this.createCoreModules();
-
         this.createPaymentMethodsList();
-
         return Promise.resolve(this);
     }
 
-    /**
-     * Submits details using onAdditionalDetails or the session flow if available
-     * @param details -
-     */
-    public submitDetails(details): void {
-        if (this.options.onAdditionalDetails) {
-            return this.options.onAdditionalDetails(details);
-        }
-
-        if (this.session) {
-            this.session
-                .submitDetails(details)
-                .then(response => {
-                    this.options.onPaymentCompleted?.(response);
-                })
-                .catch(error => {
-                    this.options.onError?.(error);
-                });
+    private async fetchLocaleTranslations(): Promise<Translations> {
+        try {
+            return await getTranslations(this.cdnTranslationsUrl, Core.metadata.version, this.options.locale);
+        } catch (error: unknown) {
+            if (error instanceof AdyenCheckoutError) this.options.onError?.(error);
+            else this.options.onError?.(new AdyenCheckoutError('ERROR', 'Failed to fetch translation', { cause: error }));
         }
     }
 
+    private validateCoreConfiguration(): void {
+        // @ts-ignore This property does not exist, although merchants might be using when migrating from v5 to v6
+        if (this.options.paymentMethodsConfiguration) {
+            console.warn('WARNING:  "paymentMethodsConfiguration" is supported only by Drop-in.');
+        }
+
+        if (!this.options.countryCode) {
+            throw new AdyenCheckoutError(IMPLEMENTATION_ERROR, 'You must specify a countryCode when initializing checkout.');
+        }
+
+        if (!this.options.locale) {
+            this.setOptions({ locale: DEFAULT_LOCALE });
+        }
+
+        this.options.locale = formatLocale(this.options.locale);
+        this.options.translations = formatCustomTranslations(this.options.translations);
+    }
+
     /**
-     * Instantiates a new UIElement component ready to be mounted
+     * Method used when handling redirects. It submits details using 'onAdditionalDetails' or the Sessions flow if available.
      *
-     * @param paymentMethod - either name of the paymentMethod (in theory this can also be a class, but we don't use it this way)
-     *  or object extracted from the paymentMethods response .paymentMethods or .storedPaymentMethods (scenario: Dropin creating components for its PM list)
-     *
-     * @param options - an object whose form varies, can be:
-     *  - the merchant defined config object passed when a component is created via checkout.create
-     *  - the Dropin created object from Dropin/components/utils.getCommonProps()
-     *  - an object extracted from the paymentMethods response .storedPaymentMethods (scenario: standalone storedCard comp)
-     *
-     * @returns new UIElement
+     * @public
+     * @see {https://docs.adyen.com/online-payments/build-your-integration/?platform=Web&integration=Components&version=5.55.1#handle-the-redirect}
+     * @param details - Details object containing the redirectResult
      */
-    public create<T extends keyof PaymentMethods>(paymentMethod: T, options?: PaymentMethodOptions<T>): InstanceType<PaymentMethods[T]>;
-    public create<T extends new (...args: any) => T, P extends ConstructorParameters<T>>(paymentMethod: T, options?: P[0]): T;
-    public create(paymentMethod: string, options?: PaymentMethodOptions<'redirect'>): InstanceType<PaymentMethods['redirect']>;
-    public create(paymentMethod: any, options?: any): any {
-        const props = this.getPropsForComponent(options);
-        return paymentMethod ? this.handleCreate(paymentMethod, props) : this.handleCreateError();
+    public submitDetails(details: AdditionalDetailsData['data']): void {
+        let promise = null;
+
+        if (this.options.onAdditionalDetails) {
+            promise = new Promise((resolve, reject) => {
+                this.options.onAdditionalDetails({ data: details }, undefined, { resolve, reject });
+            });
+        }
+
+        if (this.session) {
+            promise = this.session.submitDetails(details).catch(error => {
+                this.options.onError?.(error);
+                return Promise.reject(error);
+            });
+        }
+
+        if (!promise) {
+            this.options.onError?.(
+                new AdyenCheckoutError(
+                    'IMPLEMENTATION_ERROR',
+                    'It can not submit the details. The callback "onAdditionalDetails" or the Session is not setup correctly.'
+                )
+            );
+            return;
+        }
+
+        promise
+            .then(sanitizeResponse)
+            .then(verifyPaymentDidNotFail)
+            .then((response: PaymentResponseData) => {
+                cleanupFinalResult(response);
+                this.options.onPaymentCompleted?.(response);
+            })
+            .catch((response: PaymentResponseData) => {
+                cleanupFinalResult(response);
+                this.options.onPaymentFailed?.(response);
+            });
     }
 
     /**
      * Instantiates a new element component ready to be mounted from an action object
+     *
      * @param action - action defining the component with the component data
      * @param options - options that will be merged to the global Checkout props
      * @returns new UIElement
@@ -158,32 +244,35 @@ class Core {
                 message: `${component} action was handled by the SDK`
             });
 
-            // Create a component based on the action
-            const actionTypeConfiguration = getComponentConfiguration(action.type, this.options.paymentMethodsConfiguration);
-
             const props = {
-                ...processGlobalOptions(this.options),
-                ...actionTypeConfiguration,
-                ...this.getPropsForComponent(options)
+                ...this.getCorePropsForComponent(),
+                ...options
             };
 
-            return getComponentForAction(action, props);
+            return getComponentForAction(this, registry, action, props);
         }
+
         return this.handleCreateError();
     }
 
     /**
      * Updates global configurations, resets the internal state and remounts each element.
+     *
      * @param options - props to update
      * @returns this - the element instance
      */
-    public update = (options: CoreOptions = {}): Promise<this> => {
+    public update = (options: Partial<CoreConfiguration> = {}): Promise<this> => {
         this.setOptions(options);
 
         return this.initialize().then(() => {
-            // Update each component under this instance
-            this.components.forEach(c => c.update(this.getPropsForComponent(this.options)));
-
+            this.components.forEach(component => {
+                // We update only with the new options that have been received
+                const newProps: Partial<UIElementProps> = {
+                    ...options,
+                    ...(this.session && { session: this.session })
+                };
+                component.update(newProps);
+            });
             return this;
         });
     };
@@ -192,6 +281,7 @@ class Core {
      * Remove the reference of a component
      * @param component - reference to the component to be removed
      * @returns this - the element instance
+     * // TODO: Do we need this?
      */
     public remove = (component): this => {
         this.components = this.components.filter(c => c._id !== component._id);
@@ -204,160 +294,44 @@ class Core {
      * @internal
      * Create or update the config object passed when AdyenCheckout is initialised (environment, clientKey, etc...)
      */
-    private setOptions = (options: CoreOptions): void => {
-        if (hasOwnProperty(options?.paymentMethodsConfiguration, 'scheme')) {
-            console.warn(
-                'WARNING: You cannot define a property "scheme" on the paymentMethodsConfiguration object - it should be defined as "card" otherwise it will be ignored'
-            );
-        }
-
-        if (hasOwnProperty(options, 'installmentOptions')) {
-            console.warn(
-                "WARNING: you are setting installmentOptions directly in the top level configuration object. They should be set via the 'paymentMethodsConfiguration' object or directly on the 'card' component."
-            );
-        }
-
+    private setOptions = (options: CoreConfiguration): void => {
         this.options = {
             ...this.options,
-            ...options
+            ...options,
+            locale: options?.locale || this.options?.locale
         };
     };
 
     /**
      * @internal
-     * @param options - options that will be merged to the global Checkout props
      * @returns props for a new UIElement
      */
-    private getPropsForComponent(options) {
+    public getCorePropsForComponent(): any {
+        const globalOptions = processGlobalOptions(this.options);
+
         return {
-            paymentMethods: this.paymentMethodsResponse.paymentMethods,
-            storedPaymentMethods: this.paymentMethodsResponse.storedPaymentMethods,
-            ...getRegulatoryDefaults(this.options.countryCode),
-            ...options,
+            ...globalOptions,
+            core: this,
             i18n: this.modules.i18n,
             modules: this.modules,
             session: this.session,
             loadingContext: this.loadingContext,
-            cdnContext: this.cdnContext,
-            createFromAction: this.createFromAction,
-            _parentInstance: this
+            cdnContext: this.cdnImagesUrl,
+            createFromAction: this.createFromAction
         };
     }
 
-    /**
-     * @internal
-     * A recursive creation function that finalises by calling itself with a reference to a valid component class which it then initialises
-     *
-     * @param PaymentMethod - type varies:
-     *  - usually a string
-     *  - but for Dropin, when it starts creating payment methods, will be a fully formed object from the paymentMethods response .paymentMethods or .storedPaymentMethods
-     *  - always finishes up as a reference to a valid component class
-     *
-     * @param options - an object whose form varies, it is *always* enhanced with props from this.getPropsForComponent(), and can also be:
-     *  - the config object passed when a Component is created via checkout.create('card'|'dropin'|'ideal'|etc..) (scenario: usual first point of entry to this function)
-     *  - the internally created props object from Dropin/components/utils.getCommonProps() (scenario: Dropin creating components for its PM list)
-     *  - an object extracted from the paymentMethods response .paymentMethods or .storedPaymentMethods (scenarios: Dropin creating components for its PM list *or* standalone storedCard comp)
-     *  - a combination of the previous 2 + the relevant object from the paymentMethodsConfiguration (scenario: Dropin creating components for its PM list)
-     *
-     *
-     * @returns new UIElement
-     */
-    private handleCreate(PaymentMethod, options: any = {}): UIElement {
-        const isValidClass = PaymentMethod.prototype instanceof UIElement;
-
-        /**
-         * Final entry point (PaymentMethod is a Class):
-         * Once we receive a valid class for a Component - create a new instance of it
-         */
-        if (isValidClass) {
-            /**
-             * Find which creation scenario we are in - we need to know when we're creating a Dropin, a PM within the Dropin, or a standalone stored card.
-             */
-            const needsConfigData = options.type !== 'dropin' && !options.isDropin;
-            const needsPMData = needsConfigData && !options.supportedShopperInteractions;
-
-            /**
-             * We only need to populate the objects under certain circumstances.
-             * (If we're creating a Dropin or a PM within the Dropin - then the relevant paymentMethods response & paymentMethodsConfiguration props
-             * are already merged into the passed options object; whilst a standalone stored card just needs the paymentMethodsConfiguration props)
-             */
-            const paymentMethodsDetails = needsPMData ? this.paymentMethodsResponse.find(options.type) : {};
-            const paymentMethodsConfiguration = needsConfigData
-                ? getComponentConfiguration(options.type, this.options.paymentMethodsConfiguration, !!options.storedPaymentMethodId)
-                : {};
-
-            // Filtered global options
-            const globalOptions = processGlobalOptions(this.options);
-
-            /**
-             * Merge:
-             * 1. global options (a subset of the original config object sent when AdyenCheckout is initialised)
-             * 2. props defined on the relevant object in the paymentMethods response (will not have a value for the 'dropin' component)
-             * 3. a paymentMethodsConfiguration object, if defined at top level (will not have a value for the 'dropin' component)
-             * 4. the options that have been passed to the final call of this function (see comment on \@param, above)
-             */
-            const component = new PaymentMethod({ ...globalOptions, ...paymentMethodsDetails, ...paymentMethodsConfiguration, ...options });
-
-            if (!options.isDropin) {
-                this.components.push(component);
-            }
-
-            return component;
+    public storeElementReference(element: UIElement) {
+        if (element) {
+            this.components.push(element);
         }
-
-        /**
-         * Usual initial point of entry to this function (PaymentMethod is a String).
-         * When PaymentMethod is defined as a string - retrieve a component from the componentsMap and recall this function passing in a valid class
-         */
-        if (typeof PaymentMethod === 'string' && paymentMethods[PaymentMethod]) {
-            if (PaymentMethod === 'dropin' && hasOwnProperty(options, 'paymentMethodsConfiguration')) {
-                console.warn(
-                    "WARNING: You are setting a 'paymentMethodsConfiguration' object in the Dropin configuration options. This object will be ignored."
-                );
-            }
-
-            return this.handleCreate(paymentMethods[PaymentMethod], { type: PaymentMethod, ...options });
-        }
-
-        /**
-         * Entry point for Redirect PMs (PaymentMethod is a String).
-         * If we are trying to create a payment method that is in the paymentMethods response & does not explicitly
-         * implement a component (i.e no matching entry in the 'paymentMethods' components map), it will default to a Redirect component
-         */
-        if (typeof PaymentMethod === 'string' && this.paymentMethodsResponse.has(PaymentMethod)) {
-            /**
-             * NOTE: Only need the type prop for standalone redirect comps created by checkout.create('\{redirect-pm-txVariant\}'); (a likely scenario?)
-             * - in all other scenarios it is already present.
-             * (Further details: from the paymentMethods response and paymentMethodsConfiguration are added in the next step,
-             *  or, in the Dropin case, are already present)
-             */
-            return this.handleCreate(paymentMethods.redirect, { type: PaymentMethod, ...options });
-        }
-
-        /**
-         * Entry point for Dropin (PaymentMethod is an Object)
-         * Happens internally on Drop-in when relevant object from paymentMethods response (.paymentMethods or .storedPaymentMethods) has been isolated
-         * and is then use to create an element in the paymentMethods list
-         */
-        if (typeof PaymentMethod === 'object' && typeof PaymentMethod.type === 'string') {
-            // paymentMethodsConfiguration object will take precedence here
-            const paymentMethodsConfiguration = getComponentConfiguration(
-                PaymentMethod.type,
-                this.options.paymentMethodsConfiguration,
-                !!PaymentMethod.storedPaymentMethodId
-            );
-            // Restart the flow in the "usual" way (PaymentMethod is a String)
-            return this.handleCreate(PaymentMethod.type, { ...PaymentMethod, ...options, ...paymentMethodsConfiguration });
-        }
-
-        return this.handleCreateError(PaymentMethod);
     }
 
     /**
      * @internal
      */
     private handleCreateError(paymentMethod?): never {
-        const paymentMethodName = paymentMethod && paymentMethod.name ? paymentMethod.name : 'The passed payment method';
+        const paymentMethodName = paymentMethod?.name ?? 'The passed payment method';
         const errorMessage = paymentMethod
             ? `${paymentMethodName} is not a valid Checkout Component. What was passed as a txVariant was: ${JSON.stringify(
                   paymentMethod
@@ -367,11 +341,11 @@ class Core {
         throw new Error(errorMessage);
     }
 
-    private createPaymentMethodsList(paymentMethodsResponse?: PaymentMethodsResponse): void {
-        this.paymentMethodsResponse = new PaymentMethodsResponse(this.options.paymentMethodsResponse || paymentMethodsResponse, this.options);
+    private createPaymentMethodsList(paymentMethodsResponse?: PaymentMethods): void {
+        this.paymentMethodsResponse = new PaymentMethods(this.options.paymentMethodsResponse || paymentMethodsResponse, this.options);
     }
 
-    private createCoreModules(): void {
+    private async createCoreModules(): Promise<void> {
         if (this.modules) {
             if (process.env.NODE_ENV === 'development') {
                 console.warn('Core: Core modules are already created.');
@@ -379,19 +353,26 @@ class Core {
             return;
         }
 
+        const translations = await this.fetchLocaleTranslations();
+
         this.modules = Object.freeze({
-            risk: new RiskModule({ ...this.options, loadingContext: this.loadingContext }),
+            risk: new RiskModule(this, { ...this.options, loadingContext: this.loadingContext }),
             analytics: Analytics({
                 loadingContext: this.loadingContext,
                 analyticsContext: this.analyticsContext,
                 clientKey: this.options.clientKey,
                 locale: this.options.locale,
                 analytics: this.options.analytics,
-                amount: this.options.amount
+                amount: this.options.amount,
+                bundleType: Core.metadata.bundleType
             }),
-            resources: new Resources(this.cdnContext),
-            i18n: new Language(this.options.locale, this.options.translations),
-            srPanel: new SRPanel(this.options.srConfig)
+            resources: new Resources(this.cdnImagesUrl),
+            i18n: new Language({
+                locale: this.options.locale,
+                translations,
+                customTranslations: this.options.translations
+            }),
+            srPanel: new SRPanel(this, { ...this.options.srConfig })
         });
     }
 }

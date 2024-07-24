@@ -2,7 +2,7 @@ import { SocialSecurityMode } from '../../types';
 import { AddressModeOptions } from './types';
 
 export default {
-    type: 'card',
+    type: 'scheme',
 
     setComponentRef: () => {},
 
@@ -17,7 +17,7 @@ export default {
     data: {
         billingAddress: {}
     },
-    disableIOSArrowKeys: true,
+    disableIOSArrowKeys: false,
     enableStoreDetails: false,
     exposeExpiryDate: false,
     forceCompat: false,
@@ -34,11 +34,11 @@ export default {
     placeholders: {},
     positionHolderNameOnTop: false,
     showBrandIcon: true,
-    showBrandsUnderCardNumber: true,
     showInstallmentAmounts: null,
     styles: {},
 
     isPayButtonPrimaryVariant: true,
+    showContextualElement: true,
 
     // Events
     onLoad: (): any => {},
@@ -52,5 +52,7 @@ export default {
     onFocus: (): any => {},
     onChange: (): any => {},
 
-    onBinLookup: () => {} // Strictly speaking a Card level prop, but needed here for analytics.configData
+    // Strictly speaking a Card level props, but needed here for analytics.configData
+    onBinLookup: () => {},
+    onEnterKeyPressed: () => {}
 };

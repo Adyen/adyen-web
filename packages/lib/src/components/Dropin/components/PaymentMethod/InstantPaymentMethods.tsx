@@ -1,16 +1,12 @@
 import { Fragment, h } from 'preact';
-import ContentSeparator from '../../../internal/ContentSeparator';
-import useCoreContext from '../../../../core/Context/useCoreContext';
-import UIElement from '../../../UIElement';
+import UIElement from '../../../internal/UIElement/UIElement';
+import './InstantPaymentMethods.scss';
 
 interface InstantPaymentMethodsProps {
     paymentMethods: UIElement[];
-    showContentSeparator: boolean;
 }
 
-function InstantPaymentMethods({ paymentMethods, showContentSeparator }: InstantPaymentMethodsProps) {
-    const { i18n } = useCoreContext();
-
+function InstantPaymentMethods({ paymentMethods }: InstantPaymentMethodsProps) {
     return (
         <Fragment>
             <ul className="adyen-checkout__instant-payment-methods-list">
@@ -18,7 +14,6 @@ function InstantPaymentMethods({ paymentMethods, showContentSeparator }: Instant
                     <li key={pm.type}>{pm.render()}</li>
                 ))}
             </ul>
-            {showContentSeparator && <ContentSeparator label={i18n.get('orPayWith')} />}
         </Fragment>
     );
 }

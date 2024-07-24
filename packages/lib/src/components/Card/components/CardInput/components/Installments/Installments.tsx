@@ -1,13 +1,13 @@
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import Field from '../../../../../internal/FormFields/Field';
-import useCoreContext from '../../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../../core/Context/CoreProvider';
 import { InstallmentsItem, InstallmentsProps } from '../types';
 import Fieldset from '../../../../../internal/FormFields/Fieldset/Fieldset';
 import RadioGroup from '../../../../../internal/FormFields/RadioGroup';
-import styles from '../../CardInput.module.scss';
 import Select from '../../../../../internal/FormFields/Select';
-import { alternativeLabelContent } from '../IframeLabelAlternative';
+import { alternativeLabelContent } from '../FieldLabelAlternative';
+import './Installments.scss';
 
 export interface InstallmentsObj {
     value: number;
@@ -21,6 +21,7 @@ function Installments(props: InstallmentsProps) {
     const { i18n } = useCoreContext();
     const { amount, brand, onChange, type } = props;
     const installmentOptions = props.installmentOptions[brand] || props.installmentOptions.card;
+    const readOnly = installmentOptions?.values?.length === 1;
     const [installmentAmount, setInstallmentAmount] = useState(installmentOptions?.preselectedValue || installmentOptions?.values[0]);
     const [radioBtnValue, setRadioBtnValue] = useState('onetime');
 
@@ -86,7 +87,7 @@ function Installments(props: InstallmentsProps) {
                     classNameModifiers={['installments']}
                     name={'installmentsPseudoLabel'}
                     useLabelElement={false}
-                    addContextualElement={false}
+                    showContextualElement={false}
                     renderAlternativeToLabel={alternativeLabelContent}
                 >
                     <Fieldset classNameModifiers={['revolving-plan']} label={''}>
@@ -102,15 +103,11 @@ function Installments(props: InstallmentsProps) {
                         />
 
                         <Field
-                            className={
-                                radioBtnValue !== 'installments'
-                                    ? `${styles['revolving-plan-installments__disabled']}`
-                                    : `${styles['revolving-plan-installments']}`
-                            }
+                            className={radioBtnValue !== 'installments' ? 'revolving-plan-installments__disabled' : 'revolving-plan-installments'}
                             classNameModifiers={['revolving-plan-installments']}
                             name={''}
                             useLabelElement={false}
-                            addContextualElement={false}
+                            showContextualElement={false}
                         >
                             <Select
                                 filterable={false}
@@ -129,14 +126,14 @@ function Installments(props: InstallmentsProps) {
 
     return (
         <div className="adyen-checkout__installments">
-            <Field label={i18n.get('installments')} classNameModifiers={['installments']} name={'installments'} addContextualElement={false}>
+            <Field label={i18n.get('installments')} classNameModifiers={['installments']} name={'installments'} showContextualElement={false}>
                 <Select
                     filterable={false}
                     items={installmentOptions.values.map(installmentItemsMapper)}
                     selectedValue={installmentAmount}
                     onChange={onSelectInstallment}
                     name={'installments'}
-                    readonly={installmentOptions?.values?.length === 1}
+                    readonly={readOnly}
                     allowIdOnButton={true}
                 />
             </Field>

@@ -1,4 +1,4 @@
-import { OnAuthorizedCallback } from './types';
+import { ApplePayPaymentAuthorizationResult } from './types';
 
 interface ApplePayServiceOptions {
     version: number;
@@ -8,7 +8,11 @@ interface ApplePayServiceOptions {
     onPaymentMethodSelected?: (resolve, reject, event: ApplePayJS.ApplePayPaymentMethodSelectedEvent) => void;
     onShippingMethodSelected?: (resolve, reject, event: ApplePayJS.ApplePayShippingMethodSelectedEvent) => void;
     onShippingContactSelected?: (resolve, reject, event: ApplePayJS.ApplePayShippingContactSelectedEvent) => void;
-    onPaymentAuthorized?: OnAuthorizedCallback;
+    onPaymentAuthorized: (
+        resolve: (result: ApplePayPaymentAuthorizationResult) => void,
+        reject: (result: ApplePayPaymentAuthorizationResult) => void,
+        event: ApplePayJS.ApplePayPaymentAuthorizedEvent
+    ) => void;
 }
 
 class ApplePayService {
@@ -19,6 +23,7 @@ class ApplePayService {
         this.options = options;
 
         this.session = new ApplePaySession(options.version, paymentRequest);
+        /* eslint-disable @typescript-eslint/no-misused-promises */
         this.session.onvalidatemerchant = event => this.onvalidatemerchant(event, options.onValidateMerchant);
         this.session.onpaymentauthorized = event => this.onpaymentauthorized(event, options.onPaymentAuthorized);
         this.session.oncancel = event => this.oncancel(event, options.onCancel);
@@ -34,6 +39,7 @@ class ApplePayService {
         if (typeof options.onShippingMethodSelected === 'function') {
             this.session.onshippingmethodselected = event => this.onshippingmethodselected(event, options.onShippingMethodSelected);
         }
+        /* eslint-enable @typescript-eslint/no-misused-promises */
     }
 
     /**
@@ -72,19 +78,16 @@ class ApplePayService {
      * @param onPaymentAuthorized - A promise that will complete the payment when resolved. Use this promise to process the payment.
      * @see {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/1778020-onpaymentauthorized}
      */
-    onpaymentauthorized(event: ApplePayJS.ApplePayPaymentAuthorizedEvent, onPaymentAuthorized: OnAuthorizedCallback): Promise<void> {
+    onpaymentauthorized(
+        event: ApplePayJS.ApplePayPaymentAuthorizedEvent,
+        onPaymentAuthorized: ApplePayServiceOptions['onPaymentAuthorized']
+    ): Promise<void> {
         return new Promise((resolve, reject) => onPaymentAuthorized(resolve, reject, event))
-            .then((result: ApplePayJS.ApplePayPaymentAuthorizationResult) => {
-                this.session.completePayment({
-                    ...result,
-                    status: result?.status ?? ApplePaySession.STATUS_SUCCESS
-                });
+            .then((result: ApplePayPaymentAuthorizationResult) => {
+                this.session.completePayment(result);
             })
-            .catch((result?: ApplePayJS.ApplePayPaymentAuthorizationResult) => {
-                this.session.completePayment({
-                    ...result,
-                    status: result?.status ?? ApplePaySession.STATUS_FAILURE
-                });
+            .catch((result: ApplePayPaymentAuthorizationResult) => {
+                this.session.completePayment(result);
             });
     }
 
@@ -99,7 +102,6 @@ class ApplePayService {
     onpaymentmethodselected(event: ApplePayJS.ApplePayPaymentMethodSelectedEvent, onPaymentMethodSelected) {
         return new Promise((resolve, reject) => onPaymentMethodSelected(resolve, reject, event))
             .then((paymentMethodUpdate: ApplePayJS.ApplePayPaymentMethodUpdate) => {
-                console.log('onpaymentmethodselected', paymentMethodUpdate);
                 this.session.completePaymentMethodSelection(paymentMethodUpdate);
             })
             .catch((paymentMethodUpdate: ApplePayJS.ApplePayPaymentMethodUpdate) => {

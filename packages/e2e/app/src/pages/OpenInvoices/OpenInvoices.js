@@ -1,6 +1,6 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
-import { handleSubmit, handleAdditionalDetails, handleError } from '../../handlers';
+import { AdyenCheckout, AfterPay } from '@adyen/adyen-web';
+import '@adyen/adyen-web/styles/adyen.css';
+import { handleSubmit, handleAdditionalDetails, handleError, handlePaymentCompleted } from '../../handlers';
 import { amount, shopperLocale, countryCode } from '../../services/commonConfig';
 import '../../style.scss';
 import { getPaymentMethods } from '../../services';
@@ -16,16 +16,22 @@ const initCheckout = async () => {
         paymentMethodsResponse,
         clientKey: process.env.__CLIENT_KEY__,
         locale: shopperLocale,
+        _environmentUrls: {
+            cdn: {
+                translations: '/'
+            }
+        },
         countryCode,
         environment: 'test',
         showPayButton: true,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
+        onPaymentCompleted: handlePaymentCompleted,
         onError: handleError
         // ...window.mainConfiguration
     });
 
-    window.afterpay = checkout.create('afterpay').mount('.afterpay-field');
+    window.afterpay = new AfterPay(checkout).mount('.afterpay-field');
 };
 
 initCheckout();

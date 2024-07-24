@@ -1,9 +1,9 @@
-import { AddressData, FieldsetVisibility, PersonalDetailsSchema } from '../../../types';
+import { AddressData, FieldsetVisibility, PersonalDetailsSchema } from '../../../types/global-types';
 import { CompanyDetailsSchema } from '../CompanyDetails/types';
 import { AddressSpecifications } from '../Address/types';
-import { UIElementProps } from '../../types';
-import UIElement from '../../UIElement';
+import UIElement from '../UIElement/UIElement';
 import { GenericError, ValidationRuleErrorObj } from '../../../core/Errors/types';
+import { UIElementProps } from '../UIElement/types';
 
 type OpenInvoiceAddressSpecification = AddressSpecifications & { allowedCountries?: string[] };
 
@@ -34,7 +34,6 @@ export interface OpenInvoiceProps extends UIElementProps {
     };
     onChange: (state: any, element?: UIElement) => void;
     payButton: any;
-    showPayButton?: boolean;
     visibility?: OpenInvoiceVisibility;
     personalDetailsRequiredFields?: string[];
     billingAddressRequiredFields?: string[];
@@ -42,7 +41,6 @@ export interface OpenInvoiceProps extends UIElementProps {
     deliveryAddressRequiredFields?: string[];
     deliveryAddressSpecification?: OpenInvoiceAddressSpecification;
     setComponentRef?: (ref) => void;
-    showFormInstruction?: boolean;
 }
 
 export interface OpenInvoiceStateData {

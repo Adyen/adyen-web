@@ -13,9 +13,10 @@ import {
     CheckoutSessionPaymentResponse,
     CheckoutSessionSetupResponse,
     SessionConfiguration
-} from '../../types';
+} from './types';
 import cancelOrder from '../Services/sessions/cancel-order';
 import { onOrderCancelData } from '../../components/Dropin/types';
+import type { AdditionalDetailsData } from '../types';
 
 class Session {
     private readonly session: CheckoutSession;
@@ -24,7 +25,7 @@ class Session {
     public readonly loadingContext: string;
     public configuration: SessionConfiguration;
 
-    constructor(rawSession: CheckoutSession, clientKey: string, loadingContext: string) {
+    constructor(rawSession: Partial<CheckoutSession>, clientKey: string, loadingContext: string) {
         const session = sanitizeSession(rawSession) as CheckoutSession;
 
         if (!clientKey) throw new Error('No clientKey available');
@@ -40,6 +41,10 @@ class Session {
         } else {
             this.storeSession();
         }
+    }
+
+    get shopperLocale() {
+        return this.session.shopperLocale;
     }
 
     get id() {
@@ -91,7 +96,7 @@ class Session {
     /**
      * Submits session payment additional details
      */
-    submitDetails(data): Promise<CheckoutSessionDetailsResponse> {
+    submitDetails(data: AdditionalDetailsData['data']): Promise<CheckoutSessionDetailsResponse> {
         return submitDetails(data, this).then(response => {
             if (response.sessionData) {
                 this.updateSessionData(response.sessionData);

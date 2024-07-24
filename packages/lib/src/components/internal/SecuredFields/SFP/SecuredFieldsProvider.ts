@@ -13,20 +13,16 @@ import {
     CbObjOnFieldValid,
     CbObjOnAutoComplete,
     CbObjOnConfigSuccess,
-    CbObjOnLoad
+    CbObjOnLoad,
+    SFKeyPressObj
 } from '../lib/types';
 import { CSFReturnObject, CSFSetupObject } from '../lib/CSF/types';
-import {
-    CVC_POLICY_REQUIRED,
-    DATE_POLICY_REQUIRED,
-    DEDICATED_CARD_COMPONENTS,
-    ENCRYPTED_CARD_NUMBER,
-    ENCRYPTED_PWD_FIELD
-} from '../lib/configuration/constants';
+import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, DEDICATED_CARD_COMPONENTS, ENCRYPTED_CARD_NUMBER, ENCRYPTED_PWD_FIELD } from '../lib/constants';
 import { BinLookupResponse } from '../../../Card/types';
-import { getError } from '../../../../core/Errors/utils';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
 import { SFStateErrorObj } from '../../../Card/components/CardInput/types';
+import { getErrorMessageFromCode } from '../../../../core/Errors/utils';
+import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 
 /**
  * SecuredFieldsProvider:
@@ -51,6 +47,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     private handleOnAutoComplete: (obj: CbObjOnAutoComplete) => void;
     private handleOnNoDataRequired: () => void;
     private handleOnTouchstartIOS: (obj) => void;
+    private handleKeyPressed: (obj: SFKeyPressObj) => void;
     public state: SFPState;
     public props;
     private issuingCountryCode;
@@ -90,6 +87,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         this.handleOnNoDataRequired = handlers.handleOnNoDataRequired.bind(this);
         this.handleOnAutoComplete = handlers.handleOnAutoComplete.bind(this);
         this.handleOnTouchstartIOS = handlers.handleOnTouchstartIOS.bind(this); // Only called when iOS detected
+        this.handleKeyPressed = handlers.handleKeyPressed.bind(this);
 
         this.processBinLookupResponse = this.processBinLookupResponse.bind(this);
 
@@ -149,12 +147,16 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             loadingContext = process.env.__SF_ENV__;
         }
 
+        // TODO
+        // if(!this.props.keypadFix){
+        // send analytics action because to know if anyone *ever* sets this config prop
+        // }
+
         const csfSetupObj: CSFSetupObject = {
             rootNode: root,
             type: this.props.type,
             clientKey: this.props.clientKey,
             cardGroupTypes: this.props.brands,
-            allowedDOMAccess: this.props.allowedDOMAccess,
             autoFocus: this.props.autoFocus,
             trimTrailingSeparator: this.props.trimTrailingSeparator,
             loadingContext,
@@ -176,7 +178,8 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
                 onAutoComplete: this.handleOnAutoComplete,
                 onAdditionalSFConfig: this.props.onAdditionalSFConfig,
                 onAdditionalSFRemoved: this.props.onAdditionalSFRemoved,
-                onTouchstartIOS: this.handleOnTouchstartIOS
+                onTouchstartIOS: this.handleOnTouchstartIOS,
+                onKeyPressed: this.handleKeyPressed
             },
             isKCP: this.state.hasKoreanFields,
             legacyInputMode: this.props.legacyInputMode,
@@ -185,7 +188,9 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             forceCompat: this.props.forceCompat,
             maskSecurityCode: this.props.maskSecurityCode,
             exposeExpiryDate: this.props.exposeExpiryDate,
-            shouldDisableIOSArrowKeys: !!this.props.disableIOSArrowKeys // convert whether function has been defined into a boolean
+            shouldDisableIOSArrowKeys: !!this.props.disableIOSArrowKeys, // convert whether function has been defined into a boolean
+            placeholders: this.props.placeholders ?? {},
+            showContextualElement: this.props.showContextualElement
         };
 
         this.csf = initCSF(csfSetupObj);
@@ -304,21 +309,23 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
      * Map SF errors to ValidationRuleResult-like objects, for CardInput component
      */
     public mapErrorsToValidationRuleResult(): SFStateErrorObj {
-        const errorKeys: string[] = Object.keys(this.state.errors);
-        const sfStateErrorsObj = errorKeys.reduce((acc, key) => {
-            if (this.state.errors[key]) {
-                acc[key] = {
+        const fieldNames: string[] = Object.keys(this.state.errors);
+
+        const sfStateErrorsObj = fieldNames.reduce((acc, fieldName) => {
+            const errorCode = this.state.errors[fieldName];
+            if (errorCode) {
+                acc[fieldName] = {
                     isValid: false,
-                    errorMessage: getError(this.state.errors[key]), // this is the human-readable, untranslated, explanation of the error that will exist on the error object in card.state.errors
+                    errorMessage: getErrorMessageFromCode(errorCode, SF_ErrorCodes), // this is the human-readable, untranslated, explanation of the error that will exist on the error object in card.state.errors
                     // For v5 the object found in state.errors should also contain the additional properties that used to be sent to the onError callback
                     // namely: translation, errorCode, a ref to rootNode &, in the case of failed binLookup, an array of the detectedBrands
-                    errorI18n: this.props.i18n.get(this.state.errors[key]),
-                    error: this.state.errors[key],
+                    errorI18n: this.props.i18n.get(errorCode),
+                    error: errorCode,
                     rootNode: this.rootNode,
                     ...(this.state.detectedUnsupportedBrands && { detectedBrands: this.state.detectedUnsupportedBrands })
                 };
             } else {
-                acc[key] = null;
+                acc[fieldName] = null;
             }
             return acc;
         }, {});

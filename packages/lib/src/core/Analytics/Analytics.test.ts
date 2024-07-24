@@ -1,6 +1,5 @@
 import Analytics from './Analytics';
 import collectId from '../Services/analytics/collect-id';
-import logEvent from '../Services/analytics/log-event';
 import { PaymentAmount } from '../../types';
 import wait from '../../utils/wait';
 import { DEFAULT_DEBOUNCE_TIME_MS } from '../../utils/debounce';
@@ -8,10 +7,8 @@ import { ANALYTICS_EVENT, AnalyticsObject, CreateAnalyticsObject } from './types
 import { ANALYTICS_VALIDATION_ERROR_STR } from './constants';
 
 jest.mock('../Services/analytics/collect-id');
-jest.mock('../Services/analytics/log-event');
 
 const mockedCollectId = collectId as jest.Mock;
-const mockedLogEvent = logEvent as jest.Mock;
 
 const amount: PaymentAmount = { value: 50000, currency: 'USD' };
 
@@ -34,18 +31,13 @@ let analytics;
 
 describe('Analytics initialisation and event queue', () => {
     const collectIdPromiseMock = jest.fn(() => Promise.resolve(mockCheckoutAttemptId));
-    const logEventPromiseMock = jest.fn(() => Promise.resolve(null));
 
     beforeEach(() => {
         mockedCollectId.mockReset();
         mockedCollectId.mockImplementation(() => collectIdPromiseMock);
         collectIdPromiseMock.mockClear();
 
-        mockedLogEvent.mockReset();
-        mockedLogEvent.mockImplementation(() => logEventPromiseMock);
-        logEventPromiseMock.mockClear();
-
-        analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount });
+        analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount, bundleType: '' });
     });
 
     test('Creates an Analytics module with defaultProps', () => {
@@ -59,20 +51,10 @@ describe('Analytics initialisation and event queue', () => {
     });
 
     test('Should not fire any calls if analytics is disabled', () => {
-        const analytics = Analytics({ analytics: { enabled: false }, loadingContext: '', locale: '', clientKey: '', amount });
+        const analytics = Analytics({ analytics: { enabled: false }, loadingContext: '', locale: '', clientKey: '', amount, bundleType: '' });
 
-        analytics.setUp(setUpEvent);
+        void analytics.setUp(setUpEvent);
         expect(collectIdPromiseMock).not.toHaveBeenCalled();
-        expect(logEventPromiseMock).not.toHaveBeenCalled();
-    });
-
-    test('Will not call the collectId endpoint if telemetry is disabled, but will call the logEvent (analytics pixel)', () => {
-        const analytics = Analytics({ analytics: { telemetry: false }, loadingContext: '', locale: '', clientKey: '', amount });
-        expect(collectIdPromiseMock).not.toHaveBeenCalled();
-        analytics.setUp(setUpEvent);
-        expect(collectIdPromiseMock).not.toHaveBeenCalled();
-
-        expect(logEventPromiseMock).toHaveBeenCalledWith({ ...setUpEvent });
     });
 
     test('Calls the collectId endpoint by default, adding expected fields, including sanitising the passed analyticsData object', async () => {
@@ -119,18 +101,18 @@ describe('Analytics initialisation and event queue', () => {
         expect(analytics.getCheckoutAttemptId()).toEqual(mockCheckoutAttemptId);
     });
 
-    test('A second attempt to call "send" should fail (since we already have a checkoutAttemptId)', async () => {
+    test('A second attempt to call "send" should fail (since we already have a checkoutAttemptId)', () => {
         const payload = {
             payloadData: 'test'
         };
-        const analytics = Analytics({ analytics: { payload }, loadingContext: '', locale: '', clientKey: '', amount });
+        const analytics = Analytics({ analytics: { payload }, loadingContext: '', locale: '', clientKey: '', amount, bundleType: '' });
 
-        analytics.setUp(setUpEvent);
+        void analytics.setUp(setUpEvent);
 
         expect(collectIdPromiseMock).toHaveLength(0);
     });
 
-    test('Create info event and see that it is held in a queue', async () => {
+    test('Create info event and see that it is held in a queue', () => {
         const aObj: AnalyticsObject = analytics.createAnalyticsEvent({ event: 'info', data: analyticsEventObj });
 
         expect(aObj.timestamp).not.toBe(undefined);
@@ -194,14 +176,14 @@ describe('Analytics initialisation and event queue', () => {
         expect(analytics.getEventsQueue().getQueue().logs.length).toBe(0);
     });
 
-    test('Creating a validation error info event object with the expected properties', async () => {
+    test('Creating a validation error info event object with the expected properties', () => {
         const aObj = analytics.createAnalyticsEvent({
             event: 'info',
             data: {
                 component: 'scheme',
                 type: ANALYTICS_VALIDATION_ERROR_STR,
                 target: 'card_number',
-                validationErrorCode: 'error.va.sf-cc-num.04',
+                validationErrorCode: 'cc.num.901',
                 validationErrorMessage: 'error-msg-incorrectly-filled-pan'
             }
         });

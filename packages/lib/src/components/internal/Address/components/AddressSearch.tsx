@@ -3,7 +3,7 @@ import { h } from 'preact';
 import { AddressLookupItem } from '../types';
 import { useCallback, useEffect, useState, useMemo } from 'preact/hooks';
 import './AddressSearch.scss';
-import useCoreContext from '../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { debounce } from '../../../../utils/debounce';
 import Select from '../../FormFields/Select';
 import { AddressData } from '../../../../types';
@@ -31,6 +31,9 @@ interface AddressSearchProps {
     onManualAddress: any;
     externalErrorMessage: string;
     hideManualButton: boolean;
+    showContextualElement?: boolean;
+    contextualText?: string;
+    placeholder?: string;
     addressSearchDebounceMs?: number;
 }
 
@@ -45,6 +48,9 @@ export default function AddressSearch({
     onManualAddress,
     externalErrorMessage,
     hideManualButton,
+    showContextualElement,
+    contextualText,
+    placeholder,
     addressSearchDebounceMs
 }: Readonly<AddressSearchProps>) {
     const [formattedData, setFormattedData] = useState([]);
@@ -62,9 +68,9 @@ export default function AddressSearch({
     }, []);
 
     const onTextInput = useCallback(
-        async (inputValue: string) => {
+        (inputValue: string) => {
             new Promise<Array<AddressLookupItem>>((resolve, reject) => {
-                onAddressLookup(inputValue, { resolve, reject });
+                void onAddressLookup(inputValue, { resolve, reject });
             })
                 .then(searchArray => {
                     setOriginalData(searchArray);
@@ -81,7 +87,7 @@ export default function AddressSearch({
         setErrorMessage(externalErrorMessage);
     }, [externalErrorMessage]);
 
-    const onSelectItem = async event => {
+    const onSelectItem = event => {
         if (!event.target.value) {
             setErrorMessage(i18n.get('address.errors.incomplete'));
             return;
@@ -97,7 +103,7 @@ export default function AddressSearch({
 
         // 2. in case callback is provided, create and call onAddressSelected
         new Promise<AddressLookupItem>((resolve, reject) => {
-            onAddressSelected(value, { resolve, reject });
+            void onAddressSelected(value, { resolve, reject });
         })
             .then(fullData => {
                 onSelect(fullData);
@@ -110,10 +116,18 @@ export default function AddressSearch({
 
     return (
         <div className={'adyen-checkout__address-search adyen-checkout__field-group'}>
-            <Field label={i18n.get('address')} classNameModifiers={['address-search']} errorMessage={errorMessage} name={'address-search'}>
+            <Field
+                label={i18n.get('address')}
+                classNameModifiers={['address-search']}
+                errorMessage={errorMessage}
+                name={'address-search'}
+                showContextualElement={showContextualElement}
+                contextualText={contextualText}
+            >
                 <Select
                     name={'address-search'}
                     className={'adyen-checkout__address-search__dropdown'}
+                    placeholder={placeholder}
                     onInput={debounceInputHandler}
                     items={formattedData}
                     onChange={onSelectItem}

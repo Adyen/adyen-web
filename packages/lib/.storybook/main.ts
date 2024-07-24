@@ -1,12 +1,14 @@
 import type { StorybookConfig } from '@storybook/preact-vite';
-import { mergeConfig, loadEnv } from 'vite';
+import { mergeConfig } from 'vite';
 import * as path from 'path';
-import version = require('../config/version');
-import eslint from '@rollup/plugin-eslint';
+// import eslint from '@rollup/plugin-eslint';
 import stylelint from 'vite-plugin-stylelint';
-const currentVersion = version();
+import generateEnvironmentVariables from '../config/environment-variables';
+import { resolve } from 'node:path';
+
 const config: StorybookConfig = {
-    stories: ['../storybook/**/*.stories.mdx', '../storybook/**/*.stories.@(js|jsx|ts|tsx)'],
+    stories: ['../storybook/**/*.stories.@(js|jsx|ts|tsx)'],
+
     addons: [
         {
             name: '@storybook/addon-essentials',
@@ -18,21 +20,26 @@ const config: StorybookConfig = {
             name: '@storybook/addon-a11y'
         }
     ],
+
     framework: {
         name: getAbsolutePath('@storybook/preact-vite'),
         options: {}
     },
-    async viteFinal(config, options) {
-        const env = loadEnv(options.configType, path.resolve('../../', '.env'), '');
+
+    staticDirs: ['../storybook/assets'],
+
+    viteFinal(config) {
         return mergeConfig(config, {
-            define: {
-                'process.env': env,
-                'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-                'process.env.VERSION': JSON.stringify(currentVersion.ADYEN_WEB_VERSION),
-                'process.env.COMMIT_HASH': JSON.stringify(currentVersion.COMMIT_HASH),
-                'process.env.COMMIT_BRANCH': JSON.stringify(currentVersion.COMMIT_BRANCH),
-                'process.env.ADYEN_BUILD_ID': JSON.stringify(currentVersion.ADYEN_BUILD_ID),
-                'process.env.__SF_ENV__': JSON.stringify(env.SF_ENV || 'build')
+            define: generateEnvironmentVariables(),
+            resolve: {
+                alias: [
+                    {
+                        // this is required for the SCSS modules
+                        find: /^~(.*)$/,
+                        replacement: '$1'
+                    },
+                    { find: /^styles(.*)$/, replacement: resolve(__dirname, '../src/styles') }
+                ]
             },
             server: {
                 watch: {
@@ -40,20 +47,22 @@ const config: StorybookConfig = {
                 }
             },
             plugins: [
-                stylelint(),
-                {
-                    ...eslint({
-                        include: ['./src/**'],
-                        exclude: ['./src/**/*.json', './src/**/*.scss']
-                    }),
-                    enforce: 'pre',
-                    apply: 'serve'
-                }
+                stylelint()
+                // TODO: Enable this once @rollup/plugin-eslint supports ESLINT 9
+                // {
+                //     ...eslint({
+                //         include: ['./src/**'],
+                //         exclude: ['./src/**/*.json', './src/**/*.scss']
+                //     }),
+                //     enforce: 'pre',
+                //     apply: 'serve'
+                // }
             ]
         });
     }
 };
 export default config;
+
 /**
  * This function is used to resolve the absolute path of a package.
  * It is needed in projects that use Yarn PnP or are set up within a monorepo.

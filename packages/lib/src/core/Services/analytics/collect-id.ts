@@ -23,7 +23,7 @@ function confirmSessionDurationIsMaxFifteenMinutes(checkoutAttemptIdSession: Che
  * @returns a function returning a promise containing the response of the call (an object containing a checkoutAttemptId property)
  */
 // const collectId = ({ analyticsContext, clientKey, locale, amount }: CollectIdProps) => { // TODO - amount will be supported in the future
-const collectId = ({ analyticsContext, clientKey, locale, analyticsPath }: CollectIdProps) => {
+const collectId = ({ analyticsContext, clientKey, locale, analyticsPath, bundleType }: CollectIdProps) => {
     let promise;
 
     const options = {
@@ -39,7 +39,7 @@ const collectId = ({ analyticsContext, clientKey, locale, analyticsPath }: Colle
             // The data team want both platform & channel properties:
             channel: 'Web',
             platform: 'Web',
-            buildType: window['AdyenCheckout'] ? 'umd' : 'compiled',
+            buildType: bundleType,
             locale,
             referrer: window.location.href,
             screenWidth: window.screen.width,

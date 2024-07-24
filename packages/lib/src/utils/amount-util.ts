@@ -58,7 +58,7 @@ export const getLocalisedAmount = (amount: number, locale: string, currencyCode:
  */
 export const getLocalisedPercentage = (percent = 0, locale: string): string => {
     const decimalPercent = percent / 100 / 100;
-    const localeOptions = {
+    const localeOptions: Intl.NumberFormatOptions = {
         style: 'percent',
         maximumFractionDigits: 2
     };

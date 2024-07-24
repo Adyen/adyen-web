@@ -1,12 +1,13 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import MultibancoVoucherResult from './components/MultibancoVoucherResult';
-import CoreProvider from '../../core/Context/CoreProvider';
+import { CoreProvider } from '../../core/Context/CoreProvider';
 import RedirectButton from '../internal/RedirectButton';
+import { TxVariants } from '../tx-variants';
+import { VoucherConfiguration } from '../internal/Voucher/types';
 
-export class MultibancoElement extends UIElement {
-    public static type = 'multibanco';
-    public static defaultProps = { showPayButton: true };
+export class MultibancoElement extends UIElement<VoucherConfiguration> {
+    public static type = TxVariants.multibanco;
 
     get isValid() {
         return true;

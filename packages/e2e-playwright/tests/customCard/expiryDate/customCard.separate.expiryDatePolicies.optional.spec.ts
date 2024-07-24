@@ -8,18 +8,18 @@ import {
 } from '../../utils/constants';
 import { binLookupMock } from '../../../mocks/binLookup/binLookup.mock';
 import { optionalDateAndCvcMock } from '../../../mocks/binLookup/binLookup.data';
-import LANG from '../../../../lib/src/language/locales/en-US.json';
+import LANG from '../../../../server/translations/en-US.json';
 
 const MONTH_LABEL = 'Expiry month';
 const YEAR_LABEL = 'Expiry year';
 const CVC_LABEL = 'Security code';
 const OPTIONAL = LANG['field.title.optional'];
 
-const PAN_ERROR = LANG['error.va.sf-cc-num.02'];
-const MONTH_EMPTY_ERROR = LANG['error.va.sf-cc-mth.01'];
-const YEAR_EMPTY_ERROR = LANG['error.va.sf-cc-yr.01'];
-const CVC_ERROR = LANG['error.va.sf-cc-cvc.01'];
-const DATE_INVALID_ERROR = LANG['error.va.sf-cc-dat.02'];
+const PAN_ERROR = LANG['cc.num.900'];
+const MONTH_EMPTY_ERROR = LANG['cc.mth.915'];
+const YEAR_EMPTY_ERROR = LANG['cc.yr.917'];
+const CVC_ERROR = LANG['cc.cvc.920'];
+const DATE_INVALID_ERROR = LANG['cc.dat.913'];
 
 test.describe('Test how Custom Card Component with separate date fields handles hidden expiryDate policy', () => {
     test('#1 how UI & state respond', async ({ customCardPageSeparate }) => {
@@ -128,7 +128,7 @@ test.describe('Test how Custom Card Component with separate date fields handles 
         await expect(card.cvcErrorElement).toBeVisible();
         await expect(card.cvcErrorElement).toHaveText(CVC_ERROR);
 
-        // await page.waitForTimeout(3000);
+        await page.waitForTimeout(500); // wait for UI to show errors
 
         // Expect errors in state
         let cardErrors: any = await page.evaluate('window.customCardSeparate.state.errors');

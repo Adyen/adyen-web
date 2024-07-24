@@ -11,6 +11,8 @@ export interface IssuerListProps {
     placeholder?: string;
     issuer?: string;
     termsAndConditions?: TermsAndConditions;
+    showContextualElement?: boolean;
+    contextualText?: string;
     onSubmitAnalytics: (aObj: SendAnalyticsObject) => void;
 }
 

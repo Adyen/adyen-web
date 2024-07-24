@@ -2,6 +2,7 @@ import { h } from 'preact';
 import userEvent from '@testing-library/user-event';
 import { render, screen, waitFor } from '@testing-library/preact';
 import AddressSearch from './AddressSearch';
+import { CoreProvider } from '../../../../core/Context/CoreProvider';
 
 const ADDRESS_LOOKUP_RESULT = [
     {
@@ -21,6 +22,14 @@ const ADDRESS_LOOKUP_RESULT = [
     }
 ];
 
+const customRender = (ui: h.JSX.Element) => {
+    return render(
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            {ui}
+        </CoreProvider>
+    );
+};
+
 const ADDRESS_SELECT_RESULT = {
     id: 1,
     name: 'Road 1, 2000, UK',
@@ -34,15 +43,18 @@ const ADDRESS_SELECT_RESULT = {
         raw: 'RAW_DATA_MOCK'
     }
 };
+// eslint-disable-next-line @typescript-eslint/require-await
 const onAddressLookupMockFn = async (value, { resolve }) => {
     resolve(ADDRESS_LOOKUP_RESULT);
 };
+// eslint-disable-next-line @typescript-eslint/require-await
 const onAddressSelectMockFn = async (value, { resolve }) => {
     resolve(ADDRESS_SELECT_RESULT);
 };
 
 const onAddressSelectMockFnReject =
     rejectReason =>
+    // eslint-disable-next-line @typescript-eslint/require-await
     async (value, { reject }) => {
         reject(rejectReason);
     };
@@ -52,7 +64,7 @@ test('onAddressLookupMock should be triggered when typing', async () => {
 
     const onAddressLookupMock = jest.fn(onAddressLookupMockFn);
 
-    render(
+    customRender(
         <AddressSearch
             onSelect={() => {}}
             onManualAddress={() => {}}
@@ -90,7 +102,7 @@ test('onSelect is triggered with correct data', async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const internalSetDataMock = jest.fn(data => {});
 
-    render(
+    customRender(
         <AddressSearch
             onSelect={internalSetDataMock}
             onManualAddress={() => {}}
@@ -126,7 +138,7 @@ test('rejecting onAddressLookupMock should not trigger error', async () => {
 
     const onAddressLookupMock = jest.fn(onAddressSelectMockFnReject({}));
 
-    render(
+    customRender(
         <AddressSearch
             onSelect={() => {}}
             onManualAddress={() => {}}
@@ -163,7 +175,7 @@ test('rejecting onAddressLookupMock with errorMessage displays error and message
 
     const onAddressLookupMock = jest.fn(onAddressSelectMockFnReject({ errorMessage: 'Refused Mock' }));
 
-    render(
+    customRender(
         <AddressSearch
             onSelect={() => {}}
             onManualAddress={() => {}}

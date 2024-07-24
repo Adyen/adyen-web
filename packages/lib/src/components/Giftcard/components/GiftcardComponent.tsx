@@ -2,11 +2,11 @@ import { Component, FunctionComponent, h } from 'preact';
 import SecuredFieldsProvider from '../../internal/SecuredFields/SFP/SecuredFieldsProvider';
 import Alert from '../../internal/Alert';
 import GiftcardResult from './GiftcardResult';
-import useCoreContext from '../../../core/Context/useCoreContext';
-import { PaymentAmount } from '../../../types';
-import { GIFT_CARD } from '../../internal/SecuredFields/lib/configuration/constants';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
+import { PaymentAmount } from '../../../types/global-types';
+import { GIFT_CARD } from '../../internal/SecuredFields/lib/constants';
 import { GiftCardFields } from './GiftcardFields';
-import { GiftcardFieldsProps } from './types';
+import { GiftcardFieldsProps, Placeholders } from './types';
 
 interface GiftcardComponentProps {
     onChange: (state) => void;
@@ -15,13 +15,15 @@ interface GiftcardComponentProps {
     onSubmit: (event) => void;
     onBalanceCheck: (event) => void;
 
-    amount: PaymentAmount;
-    showPayButton?: boolean;
+    amount?: PaymentAmount;
+    showPayButton: boolean;
     payButton: (config) => any;
 
     pinRequired: boolean;
     expiryDateRequired?: boolean;
     fieldsLayoutComponent: FunctionComponent<GiftcardFieldsProps>;
+    placeholders?: Placeholders;
+    handleKeyPress?: (o: KeyboardEvent) => void;
 }
 
 class Giftcard extends Component<GiftcardComponentProps> {
@@ -128,7 +130,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
                 {this.props.showPayButton &&
                     this.props.payButton({
                         status: this.state.status,
-                        onClick: this.props.onBalanceCheck,
+                        onClick: this.props.onSubmit,
                         label: i18n.get('applyGiftcard')
                     })}
             </div>

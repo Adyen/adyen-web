@@ -1,17 +1,15 @@
 import { h } from 'preact';
 import { render, screen } from '@testing-library/preact';
-import CoreProvider from '../../../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../../../core/Context/CoreProvider';
 import ClickToPayProvider from '../../context/ClickToPayProvider';
 import { IClickToPayService } from '../../services/types';
 import { mock } from 'jest-mock-extended';
-import { Resources } from '../../../../../core/Context/Resources';
-import Language from '../../../../../language';
 import userEvent from '@testing-library/user-event';
 import CtPOneTimePassword from './CtPOneTimePassword';
 
 const customRender = (ui, { clickToPayService = mock<IClickToPayService>(), configuration = {} } = {}) => {
     return render(
-        <CoreProvider i18n={new Language()} loadingContext="test" resources={new Resources()}>
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
             <ClickToPayProvider
                 clickToPayService={clickToPayService}
                 isStandaloneComponent={true}
@@ -38,6 +36,7 @@ describe('Click to Pay - CtPOneTimePassword', () => {
         customRender(<CtPOneTimePassword />, { clickToPayService: ctpServiceMock });
 
         // Default false
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
         const checkbox = (await screen.findByLabelText('Skip verification next time')) as HTMLInputElement;
         expect(checkbox.checked).toBe(false);
 

@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import classNames from 'classnames';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import Field from '../../internal/FormFields/Field';
 import ConsentCheckbox from '../../internal/FormFields/ConsentCheckbox';
 import { bacsValidationRules, bacsFormatters } from './validate';
@@ -13,6 +13,8 @@ import useImage from '../../../core/Context/useImage';
 import InputText from '../../internal/FormFields/InputText';
 import InputEmail from '../../internal/FormFields/InputEmail';
 import FormInstruction from '../../internal/FormInstruction';
+import { getErrorMessage } from '../../../utils/getErrorMessage';
+import { PREFIX } from '../../internal/Icon/constants';
 
 const ENTER_STATE = 'enter-data';
 const CONFIRM_STATE = 'confirm-data';
@@ -57,7 +59,8 @@ function BacsInput(props: BacsInputProps) {
                 'adyen-checkout__bacs--confirm': status === CONFIRM_STATE || status === 'loading'
             })}
         >
-            {props.showFormInstruction && <FormInstruction />}
+            <FormInstruction />
+
             {status == CONFIRM_STATE && (
                 <div
                     className={classNames({
@@ -160,7 +163,7 @@ function BacsInput(props: BacsInputProps) {
             </div>
 
             <Field
-                errorMessage={!!errors.shopperEmail && i18n.get('shopperEmail.invalid')}
+                errorMessage={getErrorMessage(i18n, errors.shopperEmail, i18n.get('shopperEmail'))}
                 label={i18n.get('shopperEmail')}
                 className={classNames({
                     'adyen-checkout__bacs--shopper-email': true,
@@ -219,7 +222,7 @@ function BacsInput(props: BacsInputProps) {
                             : `${i18n.get('bacs.confirm')} ${
                                   !!props.amount?.value && !!props.amount?.currency ? i18n.amount(props.amount.value, props.amount.currency) : ''
                               }`,
-                    icon: getImage({ imageFolder: 'components/' })('lock'),
+                    icon: getImage({ imageFolder: 'components/' })(`${PREFIX}lock`),
                     onClick: handlePayButton
                 })}
         </div>

@@ -35,6 +35,8 @@ test('should not validate Postal Code if property data.billingAddress.country is
     await t.typeText(cardPage.postalCodeInput, INVALID_POSTALCODE);
     await t.click(cardPage.payButton);
 
+    await t.wait(3000);
+
     // Check the value of the alert text
     const history = await t.getNativeDialogHistory();
     await t.expect(history[0].text).eql('Authorised');

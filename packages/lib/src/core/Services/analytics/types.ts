@@ -6,9 +6,10 @@ export type CheckoutAttemptIdSession = {
     timestamp: number;
 };
 
-export type CollectIdProps = Pick<AnalyticsConfig, 'clientKey' | 'analyticsContext' | 'locale' | 'amount'> & { analyticsPath: string };
-
-export type LogEventProps = Pick<AnalyticsConfig, 'loadingContext' | 'locale'>;
+export type CollectIdProps = Pick<AnalyticsConfig, 'clientKey' | 'analyticsContext' | 'locale' | 'amount'> & {
+    analyticsPath: string;
+    bundleType: string;
+};
 
 export type TelemetryEvent = {
     version: string;

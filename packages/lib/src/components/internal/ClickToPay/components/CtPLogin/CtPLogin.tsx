@@ -6,9 +6,10 @@ import CtPLoginInput, { CtPLoginInputHandlers } from './CtPLoginInput';
 import { CtPInfo } from '../CtPInfo';
 import CtPSection from '../CtPSection';
 import SrciError from '../../services/sdks/SrciError';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import './CtPLogin.scss';
 import TimeoutError from '../../errors/TimeoutError';
+import { isSrciError } from '../../services/utils';
 
 const CtPLogin = (): h.JSX.Element => {
     const { i18n } = useCoreContext();
@@ -51,10 +52,12 @@ const CtPLogin = (): h.JSX.Element => {
                 setErrorCode('NOT_FOUND');
                 setIsLoggingIn(false);
             }
-        } catch (error) {
+        } catch (error: unknown) {
             if (error instanceof SrciError) console.warn(`CtP - Login error: ${error.toString()}`);
             if (error instanceof TimeoutError) console.warn(error.toString());
-            setErrorCode(error?.reason);
+            if (isSrciError(error)) setErrorCode(error?.reason);
+            else console.error(error);
+
             setIsLoggingIn(false);
         }
     }, [verifyIfShopperIsEnrolled, startIdentityValidation, shopperLogin, isValid, loginInputHandlers]);

@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import AchSFInput from './AchSFInput';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 
 const AchSecuredFields = ({ focusedElement, onFocusField, errors, valid }) => {
     const { i18n } = useCoreContext();
@@ -11,7 +11,7 @@ const AchSecuredFields = ({ focusedElement, onFocusField, errors, valid }) => {
                 id="bankAccountNumber"
                 focused={focusedElement === 'encryptedBankAccountNumber'}
                 isValid={!!valid.encryptedBankAccountNumber}
-                label={i18n.get('ach.accountNumberField.title')}
+                label={i18n.get('ach.bankAccountNumber.label')}
                 onFocusField={onFocusField}
                 filled={!!errors.encryptedBankAccountNumber || !!valid.encryptedBankAccountNumber}
                 errorMessage={!!errors.encryptedBankAccountNumber && i18n.get(errors.encryptedBankAccountNumber)}
@@ -23,7 +23,7 @@ const AchSecuredFields = ({ focusedElement, onFocusField, errors, valid }) => {
                 id="bankLocationId"
                 focused={focusedElement === 'encryptedBankLocationId'}
                 isValid={!!valid.encryptedBankLocationId}
-                label={i18n.get('ach.accountLocationField.title')}
+                label={i18n.get('ach.bankLocationId.label')}
                 onFocusField={onFocusField}
                 filled={!!errors.encryptedBankLocationId || !!valid.encryptedBankLocationId}
                 errorMessage={!!errors.encryptedBankLocationId && i18n.get(errors.encryptedBankLocationId)}

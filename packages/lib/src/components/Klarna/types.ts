@@ -1,6 +1,6 @@
-import { UIElementProps } from '../types';
+ 
+import { UIElementProps } from '../internal/UIElement/types';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare global {
     interface Window {
         Klarna: any;
@@ -25,9 +25,9 @@ export type KlarnaSdkData = {
 };
 
 interface KlarnaPaymentsShared {
-    sdkData: KlarnaSdkData;
-    paymentData: string;
-    paymentMethodType: string;
+    sdkData?: KlarnaSdkData;
+    paymentData?: string;
+    paymentMethodType?: string;
 }
 
 export interface KlarnaWidgetProps extends KlarnaPaymentsShared {
@@ -40,9 +40,9 @@ export interface KlarnaWidgetProps extends KlarnaPaymentsShared {
     onError: (error) => void;
 }
 
-export type KlarnaPaymentsProps = UIElementProps &
+export type KlarnConfiguration = UIElementProps &
     KlarnaPaymentsShared & {
-        useKlarnaWidget: boolean;
+        useKlarnaWidget?: boolean;
     };
 
 export interface KlarnaWidgetAuthorizeResponse {

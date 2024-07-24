@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { useCallback } from 'preact/hooks';
 import IssuerButton from './IssuerButton';
-import useCoreContext from '../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import './IssuerButtonGroup.scss';
 import { IssuerItem } from '../types';
 
@@ -24,7 +24,7 @@ const IssuerButtonGroup = ({ items = [], selectedIssuerId, onChange }: IssuerBut
     );
 
     return (
-        <div className="adyen-checkout__issuer-button-group" role="group" aria-label={i18n.get('idealIssuer.selectField.placeholder')}>
+        <div className="adyen-checkout__issuer-button-group" role="group" aria-label={i18n.get('issuerList.selectField.contextualText')}>
             {items.map(issuer => (
                 <IssuerButton key={issuer.id} {...issuer} selected={selectedIssuerId === issuer.id} onClick={handleClick} />
             ))}

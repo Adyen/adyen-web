@@ -1,5 +1,5 @@
-import { AnalyticsModule } from '../../components/types';
-import { ConfigData, CardConfigData, CreateAnalyticsEventObject, SendAnalyticsObject } from './types';
+import { AnalyticsModule } from '../../types/global-types';
+import { ConfigData, CreateAnalyticsEventObject, SendAnalyticsObject } from './types';
 import {
     ANALYTICS_ACTION_STR,
     ANALYTICS_CONFIGURED_STR,
@@ -8,22 +8,27 @@ import {
     ANALYTICS_EVENT_ERROR,
     ANALYTICS_EVENT_INFO,
     ANALYTICS_EVENT_LOG,
-    ANALYTICS_EXPRESS_PAGES_ARRAY,
     ANALYTICS_FOCUS_STR,
     ANALYTICS_INPUT_STR,
     ANALYTICS_RENDERED_STR,
     ANALYTICS_SELECTED_STR,
     ANALYTICS_SUBMIT_STR,
     ANALYTICS_UNFOCUS_STR,
-    ANALYTICS_VALIDATION_ERROR_STR
+    ANALYTICS_VALIDATION_ERROR_STR,
+    ANALYTICS_EXPRESS_PAGES_ARRAY
 } from './constants';
-import { THREEDS2_ERROR, THREEDS2_FULL } from '../../components/ThreeDS2/config';
+import { THREEDS2_ERROR, THREEDS2_FULL } from '../../components/ThreeDS2/constants';
+import AdyenCheckoutError, { SDK_ERROR } from '../Errors/AdyenCheckoutError';
 import { getCardConfigData } from './utils';
 
 export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
     // return function with an analyticsModule reference
     return (component: string, analyticsObj: SendAnalyticsObject, uiElementProps = {} as any) => {
         const { type, target } = analyticsObj;
+
+        if (!type) {
+            throw new AdyenCheckoutError(SDK_ERROR, 'You are trying to create an analytics event without a type');
+        }
 
         switch (type) {
             /**
@@ -37,15 +42,15 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
                 // Expected from Wallet PMs
                 const { isExpress, expressPage } = uiElementProps;
 
+                const hasExpressPage = expressPage && ANALYTICS_EXPRESS_PAGES_ARRAY.includes(expressPage);
+
                 const { type: componentType } = uiElementProps;
                 let configData: ConfigData = null;
 
-                if (componentType === 'card' || componentType === 'bcmc') {
-                    // Expected from Cards
-                    configData = getCardConfigData(uiElementProps) as CardConfigData;
+                if (componentType === 'scheme' || componentType === 'bcmc' || componentType === 'customcard') {
+                    // Expected from Card related PMs
+                    configData = getCardConfigData(uiElementProps);
                 }
-
-                const hasExpressPage = expressPage && ANALYTICS_EXPRESS_PAGES_ARRAY.includes(expressPage);
 
                 const data = {
                     component,
@@ -61,8 +66,10 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
                     event: ANALYTICS_EVENT_INFO,
                     data
                 });
+
                 break;
             }
+
             case ANALYTICS_CONFIGURED_STR: {
                 const { isStoredPaymentMethod, brand } = analyticsObj;
                 const data = { component, type, isStoredPaymentMethod, brand };
@@ -127,6 +134,7 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
             // General 3DS2 log events: "action handled" (i.e. iframe loaded), data sent, process completed
             case THREEDS2_FULL: {
                 const { message, metadata, subtype, result } = analyticsObj;
+
                 analyticsModule.createAnalyticsEvent({
                     event: ANALYTICS_EVENT_LOG,
                     data: { component, type, message, metadata, subtype, result }

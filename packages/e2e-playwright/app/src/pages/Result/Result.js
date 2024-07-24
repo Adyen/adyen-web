@@ -1,29 +1,32 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
+import { AdyenCheckout } from '@adyen/adyen-web';
+import '@adyen/adyen-web/styles/adyen.css';
 import '../../style.scss';
 
-import { showResult } from '../../handlers';
+import { countryCode } from '../../services/commonConfig';
+import { handleAdditionalDetails, showResult } from '../../handlers';
 
 import { getSearchParameters } from '../../../../../playground/src/utils';
 
-async function handleRedirectResult(redirectResult, sessionId) {
+async function handleRedirectResult(redirectResult) {
     window.checkout = await AdyenCheckout({
-        session: { id: sessionId },
+        countryCode,
         clientKey: process.env.__CLIENT_KEY__,
         environment: process.env.__CLIENT_ENV__,
+        onAdditionalDetails: handleAdditionalDetails,
 
         // Called for: Authorised (Success), Received (Expired)
         onPaymentCompleted: result => {
             document.querySelector('#result-container ').innerHTML = '';
 
-            let isError = false;
-            if (result.resultCode === 'Refused' || result.resultCode === 'Cancelled') {
-                isError = true;
-            }
-
-            showResult(result.resultCode, isError);
+            showResult(result.resultCode, false);
         },
 
+        // Called for: Refused (Failed), Cancelled (Cancelled)
+        onPaymentFailed: result => {
+            document.querySelector('#result-container ').innerHTML = '';
+
+            showResult(result.resultCode, true);
+        },
         onError: result => {
             document.querySelector('#result-container ').innerHTML = JSON.stringify(result, null, '\t');
         }
@@ -32,10 +35,10 @@ async function handleRedirectResult(redirectResult, sessionId) {
     checkout.submitDetails({ details: { redirectResult } });
 }
 
-const { redirectResult, sessionId } = getSearchParameters(window.location.search);
+const { redirectResult } = getSearchParameters(window.location.search);
 
 if (!redirectResult) {
     window.location.href = '/';
 } else {
-    await handleRedirectResult(redirectResult, sessionId);
+    await handleRedirectResult(redirectResult);
 }

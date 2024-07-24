@@ -1,11 +1,12 @@
 import { h } from 'preact';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { SignOutButtonProps } from '../types';
 
 export default function SignOutButton(props: SignOutButtonProps) {
     const { i18n } = useCoreContext();
 
     const handleClick = () => {
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         new Promise(props.onSignOut)
             .then(() => {
                 props.amazonRef.Pay.signout();

@@ -1,28 +1,21 @@
-import { UIElementProps } from '../types';
+import { UIElementProps } from '../internal/UIElement/types';
+import { TxVariants } from '../tx-variants';
+
+export type UpiType = TxVariants.upi_qr | TxVariants.upi_intent | TxVariants.upi_collect;
+
+export type UpiMode = 'vpa' | 'qrCode' | 'intent';
+
+export type App = { id: string; name: string; type?: UpiType };
 
 export type UpiPaymentData = {
     paymentMethod: {
-        type: TX_VARIANT;
+        type: UpiType;
         virtualPaymentAddress?: string;
         appId?: string;
     };
 };
 
-export enum UpiMode {
-    Vpa = 'vpa',
-    QrCode = 'qrCode',
-    Intent = 'intent'
-}
-
-export enum TX_VARIANT {
-    UpiCollect = 'upi_collect',
-    UpiQr = 'upi_qr',
-    UpiIntent = 'upi_intent'
-}
-
-export type App = { id: string; name: string; type?: TX_VARIANT };
-
-export interface UPIElementProps extends UIElementProps {
+export interface UPIConfiguration extends UIElementProps {
     defaultMode?: UpiMode;
     // upi_intent
     apps?: Array<App>;

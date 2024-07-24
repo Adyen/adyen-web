@@ -4,6 +4,7 @@ import { handleSubmit } from '../../../helpers/checkout-handlers';
 import { patchPaypalOrder } from '../../../helpers/checkout-api-calls';
 import { createAdvancedFlowCheckout } from '../../../helpers/create-advanced-checkout';
 import { getDeliveryMethods, getSelectedDeliveryMethodAmount } from './paypal-stories-utils';
+import { PayPal } from '../../../../src';
 
 const meta: Meta = {
     title: 'Wallets/Paypal'
@@ -69,15 +70,14 @@ const Component = () => {
                 showPayButton: true,
                 amount: AMOUNT.value,
                 countryCode: COUNTRY_CODE,
-                shopperLocale: SHOPPER_LOCALE,
-                paymentMethodsConfiguration: {}
+                shopperLocale: SHOPPER_LOCALE
             });
 
             if (!checkout) {
                 return;
             }
 
-            const paypal = checkout.create('paypal', {
+            const paypal = new PayPal(checkout, {
                 isExpress: true,
 
                 blockPayPalVenmoButton: true,
@@ -149,8 +149,8 @@ const Component = () => {
                     component.updatePaymentData(paymentData);
                 },
 
-                onShopperDetails(shopperDetails, paypalOrder, actions) {
-                    console.log('onShopperDetails', shopperDetails, paypalOrder);
+                onAuthorized(data, actions) {
+                    console.log('onAuthorized', data);
                     actions.resolve();
                 }
             });

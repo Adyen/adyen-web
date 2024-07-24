@@ -1,4 +1,4 @@
-import AdyenCheckout from '../../src/index';
+import { AdyenCheckout } from '../../src/index';
 import { createSession } from './checkout-api-calls';
 import { RETURN_URL, SHOPPER_REFERENCE } from '../config/commonConfig';
 import { handleChange, handleError, handleFinalState } from './checkout-handlers';
@@ -6,13 +6,7 @@ import getCurrency from '../utils/get-currency';
 import { AdyenCheckoutProps } from '../stories/types';
 import Checkout from '../../src/core/core';
 
-async function createSessionsCheckout({
-    showPayButton,
-    paymentMethodsConfiguration,
-    countryCode,
-    shopperLocale,
-    amount
-}: AdyenCheckoutProps): Promise<Checkout> {
+async function createSessionsCheckout({ showPayButton, countryCode, shopperLocale, amount }: AdyenCheckoutProps): Promise<Checkout> {
     const session = await createSession({
         amount: {
             currency: getCurrency(countryCode),
@@ -31,14 +25,19 @@ async function createSessionsCheckout({
         environment: process.env.CLIENT_ENV,
         session,
         showPayButton,
-        paymentMethodsConfiguration,
-        // @ts-ignore TODO: Fix beforeSubmit type
+
         beforeSubmit: (data, component, actions) => {
             actions.resolve(data);
         },
 
-        onPaymentCompleted: (result, component) => {
-            handleFinalState(result, component);
+        onPaymentCompleted(result, element) {
+            console.log('onPaymentCompleted', result, element);
+            handleFinalState(result, element);
+        },
+
+        onPaymentFailed(result, element) {
+            console.log('onPaymentFailed', result, element);
+            handleFinalState(result, element);
         },
 
         onError: (error, component) => {

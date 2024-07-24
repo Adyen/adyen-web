@@ -6,7 +6,7 @@ import {
     ENCRYPTED_EXPIRY_DATE,
     ENCRYPTED_EXPIRY_MONTH,
     ENCRYPTED_EXPIRY_YEAR
-} from '../../configuration/constants';
+} from '../../constants';
 import postMessageToIframe from '../utils/iframes/postMessageToIframe';
 import { SFFeedbackObj, SendBrandObject, SendExpiryDateObject } from '../../types';
 import { BinLookupResponse, BrandObject } from '../../../../../Card/types';

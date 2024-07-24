@@ -7,7 +7,11 @@ export interface FieldProps {
     classNameModifiers?: string[];
     children?: ComponentChildren;
     disabled?: boolean;
+    readOnly?: boolean;
+    showErrorElement?: boolean;
     errorMessage?: string | boolean;
+    showContextualElement?: boolean;
+    contextualText?: string;
     filled?: boolean;
     focused?: boolean;
     helper?: string;
@@ -23,9 +27,8 @@ export interface FieldProps {
     dir?;
     showValidIcon?: boolean;
     useLabelElement?: boolean;
-    addContextualElement?: boolean;
     i18n?: Language;
-    errorVisibleToScreenReader?: boolean;
+    contextVisibleToScreenReader?: boolean;
     renderAlternativeToLabel?: (defaultWrapperProps, children, uniqueId) => any;
 }
 

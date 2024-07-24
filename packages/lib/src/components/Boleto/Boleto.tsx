@@ -1,12 +1,21 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import BoletoInput from './components/BoletoInput';
 import { cleanCPFCNPJ } from '../internal/SocialSecurityNumberBrazil/utils';
 import BoletoVoucherResult from './components/BoletoVoucherResult';
-import CoreProvider from '../../core/Context/CoreProvider';
+import { CoreProvider } from '../../core/Context/CoreProvider';
+import { TxVariants } from '../tx-variants';
+import { VoucherConfiguration } from '../internal/Voucher/types';
 
-export class BoletoElement extends UIElement {
-    public static type = 'boletobancario';
+export class BoletoElement extends UIElement<VoucherConfiguration> {
+    public static type = TxVariants.boletobancario;
+
+    public static txVariants = [
+        TxVariants.boletobancario,
+        TxVariants.boletobancario_itau,
+        TxVariants.boletobancario_santander,
+        TxVariants.primeiropay_boleto
+    ];
 
     get isValid() {
         return !!this.state.isValid;
@@ -21,7 +30,7 @@ export class BoletoElement extends UIElement {
 
         return {
             paymentMethod: {
-                type: this.props.type || BoletoElement.type
+                type: this.type
             },
             ...(billingAddress && { billingAddress }),
             ...(shopperEmail && { shopperEmail }),

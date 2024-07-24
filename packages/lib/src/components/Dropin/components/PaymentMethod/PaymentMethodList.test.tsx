@@ -1,33 +1,31 @@
-import { h } from 'preact';
+import { ComponentChildren, h } from 'preact';
 import PaymentMethodList from './PaymentMethodList';
 import { render, screen, within } from '@testing-library/preact';
 import { mock } from 'jest-mock-extended';
-import UIElement from '../../../UIElement';
-import EventEmitter from '../../../EventEmitter';
+import UIElement from '../../../internal/UIElement/UIElement';
 import userEvent from '@testing-library/user-event';
 import Giftcard from '../../../Giftcard';
 import { Order, OrderStatus } from '../../../../types';
+import { CoreProvider } from '../../../../core/Context/CoreProvider';
 
 function createInstantPaymentMethods() {
     return [
         mock<UIElement>({
             props: {
-                id: '1',
+                // id: '1',
                 type: 'googlepay'
             },
             _id: 'scheme-123456',
             displayName: 'Google Pay',
-            eventEmitter: mock<EventEmitter>(),
             render: () => <button data-testid="instant-googlepay">Pay with Google Pay</button>
         }),
         mock<UIElement>({
             props: {
-                id: '1',
+                // id: '1',
                 type: 'applepay'
             },
             _id: 'scheme-123456',
             displayName: 'Apple Pay',
-            eventEmitter: mock<EventEmitter>(),
             render: () => <button data-testid="instant-applepay">Pay with Apple Pay</button>
         })
     ];
@@ -37,40 +35,45 @@ function createPaymentMethodsMock() {
     return [
         mock<UIElement>({
             props: {
-                id: '1',
+                // id: '1',
                 type: 'scheme'
             },
             _id: 'scheme-123456',
-            displayName: 'Card',
-            eventEmitter: mock<EventEmitter>()
+            displayName: 'Card'
         }),
         mock<UIElement>({
             props: {
-                id: '2',
+                // id: '2',
                 type: 'wechat'
             },
             _id: 'google-pay-123456',
-            displayName: 'WeChat',
-            eventEmitter: mock<EventEmitter>()
+            displayName: 'WeChat'
         }),
         mock<UIElement>({
             props: {
-                id: '2',
+                // id: '2',
                 type: 'pix'
             },
             _id: 'apple-pay-123456',
-            displayName: 'Pix',
-            eventEmitter: mock<EventEmitter>()
+            displayName: 'Pix'
         })
     ];
 }
+
+const customRender = (children: ComponentChildren) => {
+    return render(
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            {children}
+        </CoreProvider>
+    );
+};
 
 test('onSelect should be triggered only once', async () => {
     const user = userEvent.setup();
     const paymentMethods = createPaymentMethodsMock();
     const onSelectMock = jest.fn();
 
-    render(<PaymentMethodList paymentMethods={paymentMethods} cachedPaymentMethods={{}} isLoading={false} onSelect={onSelectMock} />);
+    customRender(<PaymentMethodList paymentMethods={paymentMethods} cachedPaymentMethods={{}} isLoading={false} onSelect={onSelectMock} />);
 
     await user.click(await screen.findByRole('radio', { name: /Card/ }));
     await user.click(await screen.findByRole('radio', { name: /WeChat/ }));
@@ -82,7 +85,7 @@ test('onSelect should be triggered only once', async () => {
 test('should not call onSelect if there is no payment method', () => {
     const onSelectMock = jest.fn();
 
-    render(
+    customRender(
         <PaymentMethodList paymentMethods={[]} cachedPaymentMethods={{}} isLoading={false} onSelect={onSelectMock} openFirstPaymentMethod={true} />
     );
 
@@ -93,7 +96,7 @@ test('should call onSelect when mounting the Component if openFirstPaymentMethod
     const onSelectMock = jest.fn();
     const paymentMethods = createPaymentMethodsMock();
 
-    render(
+    customRender(
         <PaymentMethodList
             paymentMethods={paymentMethods}
             cachedPaymentMethods={{}}
@@ -103,7 +106,7 @@ test('should call onSelect when mounting the Component if openFirstPaymentMethod
         />
     );
 
-    expect(onSelectMock).toHaveBeenCalledTimes(1);
+    expect(onSelectMock).toHaveBeenCalledTimes(2);
     expect(onSelectMock).toHaveBeenCalledWith(paymentMethods[0]);
 });
 
@@ -111,7 +114,7 @@ test('should not call onSelect if openFirstStoredPaymentMethod is set but there 
     const onSelectMock = jest.fn();
     const paymentMethods = createPaymentMethodsMock();
 
-    render(
+    customRender(
         <PaymentMethodList
             paymentMethods={paymentMethods}
             cachedPaymentMethods={{}}
@@ -129,13 +132,14 @@ test('should call onSelect if openFirstStoredPaymentMethod is set and there is n
     const paymentMethods = createPaymentMethodsMock();
     paymentMethods[0].props.oneClick = true;
 
-    render(
+    customRender(
         <PaymentMethodList
-            paymentMethods={paymentMethods}
+            storedPaymentMethods={paymentMethods}
             cachedPaymentMethods={{}}
             isLoading={false}
             onSelect={onSelectMock}
             openFirstStoredPaymentMethod={true}
+            paymentMethods={[]}
         />
     );
 
@@ -146,7 +150,7 @@ test('should display instant payment methods', () => {
     const instantPaymentMethods = createInstantPaymentMethods();
     const paymentMethods = createPaymentMethodsMock();
 
-    render(
+    customRender(
         <PaymentMethodList
             paymentMethods={paymentMethods}
             instantPaymentMethods={instantPaymentMethods}
@@ -173,11 +177,11 @@ describe('Gift card', () => {
                 givex: { icon: 'https://example.com' }
             }
         };
-        giftCardPayment = new Giftcard(props);
+        giftCardPayment = new Giftcard(global.core, props);
     });
 
     test('should display the gift card custom icon in the payment method list', async () => {
-        render(
+        customRender(
             <PaymentMethodList paymentMethods={[giftCardPayment]} cachedPaymentMethods={{}} isLoading={false} openFirstStoredPaymentMethod={true} />
         );
         const img = await screen.findByRole('img');
@@ -194,7 +198,7 @@ describe('Gift card', () => {
             paymentMethods: [{ lastFour: '0000', type: 'givex', amount: { currency: 'USD', value: 5000 } }],
             remainingAmount: { currency: 'USD', value: 20940 }
         };
-        render(
+        customRender(
             <PaymentMethodList
                 order={order}
                 orderStatus={orderStatus}

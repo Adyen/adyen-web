@@ -4,10 +4,10 @@ import { ClickToPayContext } from './ClickToPayContext';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { ClickToPayCheckoutPayload, IClickToPayService, IdentityLookupParams } from '../services/types';
 import ShopperCard from '../models/ShopperCard';
-import { ClickToPayConfiguration } from '../types';
+import { ClickToPayProps } from '../types';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
-import { UIElementStatus } from '../../../types';
-import { PaymentAmount } from '../../../../types';
+import { PaymentAmount } from '../../../../types/global-types';
+import { UIElementStatus } from '../../UIElement/types';
 
 type ClickToPayProviderRef = {
     setStatus?(status: UIElementStatus): void;
@@ -16,7 +16,7 @@ type ClickToPayProviderRef = {
 export type ClickToPayProviderProps = {
     isStandaloneComponent: boolean;
     clickToPayService: IClickToPayService | null;
-    configuration: ClickToPayConfiguration;
+    configuration: ClickToPayProps;
     amount: PaymentAmount;
     children: any;
     setClickToPayRef(ref): void;
@@ -58,7 +58,7 @@ const ClickToPayProvider = ({
         }
         configuration.onReady?.();
         isOnReadyInvoked.current = true;
-    }, [configuration.onReady]);
+    }, [configuration?.onReady]);
 
     const finishIdentityValidation = useCallback(
         async (otpValue: string) => {

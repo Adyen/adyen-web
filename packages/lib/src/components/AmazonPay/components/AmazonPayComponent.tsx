@@ -18,9 +18,9 @@ export default function AmazonPayComponent(props: AmazonPayComponentProps) {
         setStatus('ready');
     };
 
-    this.submit = () => {
-        if (amazonPayButtonRef.current && amazonPayButtonRef.current.initCheckout) return amazonPayButtonRef.current.initCheckout();
-        if (orderButtonRef.current && orderButtonRef.current.createOrder) return orderButtonRef.current.createOrder();
+    this.getSubmitFunction = () => {
+        if (amazonPayButtonRef.current && amazonPayButtonRef.current.initCheckout) return () => amazonPayButtonRef.current.initCheckout();
+        if (orderButtonRef.current && orderButtonRef.current.createOrder) return () => orderButtonRef.current.createOrder();
     };
 
     useEffect(() => {
@@ -29,7 +29,7 @@ export default function AmazonPayComponent(props: AmazonPayComponentProps) {
         if (window.amazon) {
             handleLoad();
         } else {
-            script.load().then(handleLoad);
+            void script.load().then(handleLoad);
         }
 
         return () => {
@@ -82,7 +82,7 @@ export default function AmazonPayComponent(props: AmazonPayComponentProps) {
 
     return (
         <div className="adyen-checkout__amazonpay">
-            <AmazonPayButton {...props} amazonRef={window.amazon} ref={amazonPayButtonRef} />
+            <AmazonPayButton {...props} showPayButton={this.props.showPayButton} amazonRef={window.amazon} ref={amazonPayButtonRef} />
         </div>
     );
 }

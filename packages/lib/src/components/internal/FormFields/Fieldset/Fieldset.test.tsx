@@ -1,10 +1,16 @@
 import { h } from 'preact';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import Fieldset from './Fieldset';
+import { CoreProvider } from '../../../../core/Context/CoreProvider';
 
 describe('Fieldset', () => {
     const i18n = { get: key => key };
-    const getWrapper = props => shallow(<Fieldset i18n={i18n} {...props} />);
+    const getWrapper = props =>
+        mount(
+            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                <Fieldset i18n={i18n} {...props} />{' '}
+            </CoreProvider>
+        );
 
     test('shows a label', () => {
         const label = 'Test ABC';

@@ -1,11 +1,11 @@
 import { h } from 'preact';
 import { useState, useRef } from 'preact/hooks';
-import useCoreContext from '../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { MBWayInputProps } from './types';
 import './MBWayInput.scss';
-import PhoneInput from '../../../internal/PhoneInputNew';
+import PhoneInput from '../../../internal/PhoneInput';
 import LoadingWrapper from '../../../internal/LoadingWrapper';
-import usePhonePrefixes from '../../../internal/PhoneInputNew/usePhonePrefixes';
+import usePhonePrefixes from '../../../internal/PhoneInput/usePhonePrefixes';
 
 function MBWayInput(props: MBWayInputProps) {
     const { i18n, loadingContext } = useCoreContext();

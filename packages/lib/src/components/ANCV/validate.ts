@@ -1,5 +1,11 @@
 import { ValidatorRules } from '../../utils/Validator/types';
-import { isEmailValid } from '../internal/PersonalDetails/validate';
+import { isEmpty } from '../../utils/validator-utils';
+import { email } from '../../utils/regex';
+
+export const isEmailValid = value => {
+    if (isEmpty(value)) return null;
+    return value.length >= 6 && value.length <= 320 && email.test(value);
+};
 
 export const isANCVNumber = text => /^\d{11}$/.test(text);
 

@@ -1,9 +1,13 @@
-import locales from './locales';
-
-export type Locales = keyof typeof locales;
-
 export type CustomTranslations = {
-    [key: string]: {
-        [message: string]: string;
-    };
+    [locale: string]: Translations;
 };
+
+export type Translations = {
+    [translationKey: string]: string;
+};
+
+export interface LanguageOptions {
+    locale: string;
+    translations: Translations;
+    customTranslations?: CustomTranslations;
+}

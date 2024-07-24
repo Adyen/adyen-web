@@ -1,22 +1,17 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import IbanInput from '../internal/IbanInput';
-import CoreProvider from '../../core/Context/CoreProvider';
-import { SepaElementData } from './types';
+import { CoreProvider } from '../../core/Context/CoreProvider';
+import { SepaElementData, SepaConfiguration } from './types';
+import { TxVariants } from '../tx-variants';
 import FormInstruction from '../internal/FormInstruction';
+import type { ICore } from '../../core/types';
 
-/**
- * SepaElement
- */
-class SepaElement extends UIElement {
-    public static type = 'sepadirectdebit';
+class SepaElement extends UIElement<SepaConfiguration> {
+    public static type = TxVariants.sepadirectdebit;
 
-    protected static defaultProps = {
-        showFormInstruction: true
-    };
-
-    constructor(props) {
-        super(props);
+    constructor(checkout: ICore, props?: SepaConfiguration) {
+        super(checkout, props);
         this.state = { ...this.state, ...{ data: { ibanNumber: '', ownerName: '' } } };
     }
 
@@ -53,14 +48,16 @@ class SepaElement extends UIElement {
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                {this.props.showFormInstruction && <FormInstruction />}
+                <FormInstruction />
+
+                {/* @ts-ignore TODO: add props */}
                 <IbanInput
                     ref={ref => {
                         this.componentRef = ref;
                     }}
                     {...this.props}
                     onChange={this.setState}
-                    onSubmit={this.submit}
+                    // onSubmit={this.submit}
                     payButton={this.payButton}
                 />
             </CoreProvider>

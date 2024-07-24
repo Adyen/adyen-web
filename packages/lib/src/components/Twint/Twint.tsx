@@ -1,29 +1,26 @@
 import RedirectElement from '../Redirect';
 import PayButton, { payAmountLabel } from '../internal/PayButton';
 import { h } from 'preact';
-
-/**
- * TwintElement
- */
+import { TxVariants } from '../tx-variants';
 
 class TwintElement extends RedirectElement {
-    public static type = 'twint';
+    public static type = TxVariants.twint;
 
     public static defaultProps = {
         type: TwintElement.type,
-        showPayButton: true
+        name: 'Twint'
     };
     /**
      * Get the element displayable name
      */
     get displayName(): string {
-        const { i18n, name, storedPaymentMethodId } = this.props;
-        return storedPaymentMethodId ? `${name} ${i18n.get('twint.saved')}` : name || this.constructor['type'];
+        const { i18n, name, isStoredPaymentMethod } = this.props;
+        return isStoredPaymentMethod ? `${name} ${i18n.get('twint.saved')}` : name || this.constructor['type'];
     }
 
     public payButtonLabel() {
-        const { i18n, amount, storedPaymentMethodId, name } = this.props;
-        if (storedPaymentMethodId) return payAmountLabel(i18n, amount);
+        const { i18n, amount, isStoredPaymentMethod, name } = this.props;
+        if (isStoredPaymentMethod) return payAmountLabel(i18n, amount);
         return `${i18n.get('continueTo')} ${name}`;
     }
 

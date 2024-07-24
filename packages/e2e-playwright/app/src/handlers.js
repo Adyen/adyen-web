@@ -1,9 +1,5 @@
 import { makePayment, makeDetailsCall, createOrder } from './services';
 
-function removeComponent(component) {
-    component.remove();
-}
-
 export function showAuthorised(message = 'Authorised') {
     const resultElement = document.getElementById('result-message');
     resultElement.classList.remove('hide');
@@ -19,16 +15,12 @@ export function showResult(message, isError) {
     resultElement.innerText = message;
 }
 
-export function handleResponse(response, component) {
-    if (response.action) {
-        component.handleAction(response.action, window.actionConfigObject || {});
-    } else if (response.resultCode) {
-        component.remove();
-        showAuthorised();
-    }
-}
-
 export function handleError(obj) {
+    const resultElement = document.getElementById('result-message');
+    resultElement.classList.remove('hide');
+    resultElement.classList.add('error');
+    resultElement.innerText = obj;
+
     // SecuredField related errors should not go straight to console.error
     if (obj.type === 'card') {
         console.log('### Card::onError:: obj=', obj);
@@ -37,29 +29,40 @@ export function handleError(obj) {
     }
 }
 
-export function handleSubmit(state, component) {
-    component.setStatus('loading');
+export async function handleSubmit(state, component, actions) {
+    try {
+        const { action, order, resultCode, donationToken } = await makePayment(state.data);
 
-    return makePayment(state.data)
-        .then(response => {
-            component.setStatus('ready');
-            handleResponse(response, component);
-        })
-        .catch(error => {
-            throw Error(error);
+        if (!resultCode) actions.reject();
+
+        actions.resolve({
+            resultCode,
+            action,
+            order,
+            donationToken
         });
+    } catch (error) {
+        console.error('## onSubmit - critical error', error);
+        actions.reject();
+    }
 }
 
-export function handleAdditionalDetails(details, component) {
-    return makeDetailsCall(details.data)
-        .then(response => {
-            console.log('### handlers::handleAdditionalDetails:: response', response);
-            component?.setStatus('ready');
-            handleResponse(response, component);
-        })
-        .catch(error => {
-            throw Error(error);
+export async function handleAdditionalDetails(state, component, actions) {
+    try {
+        const { resultCode, action, order, donationToken } = await makeDetailsCall(state.data);
+
+        if (!resultCode) actions.reject();
+
+        actions.resolve({
+            resultCode,
+            action,
+            order,
+            donationToken
         });
+    } catch (error) {
+        console.error('## onAdditionalDetails - critical error', error);
+        actions.reject();
+    }
 }
 
 export function handlePaymentCompleted(data, component) {

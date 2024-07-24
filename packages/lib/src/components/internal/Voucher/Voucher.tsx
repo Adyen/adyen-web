@@ -3,10 +3,11 @@ import classNames from 'classnames';
 import Button from '../Button';
 import { copyToClipboard } from '../../../utils/clipboard';
 
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import './Voucher.scss';
 import { VoucherProps } from './types';
 import useImage from '../../../core/Context/useImage';
+import { PREFIX } from '../Icon/constants';
 
 export default function Voucher({ voucherDetails = [], className = '', ...props }: VoucherProps) {
     const { i18n } = useCoreContext();
@@ -33,7 +34,7 @@ export default function Voucher({ voucherDetails = [], className = '', ...props 
                     {props.introduction}{' '}
                     {props.instructionsUrl && (
                         <a
-                            className="adyen-checkout__link adyen-checkout__link--voucher-result-instructions"
+                            className="adyen-checkout-link adyen-checkout-link--voucher-result-instructions"
                             href={props.instructionsUrl}
                             target="_blank"
                             rel="noopener noreferrer"
@@ -90,7 +91,7 @@ export default function Voucher({ voucherDetails = [], className = '', ...props 
                                         copyToClipboard(props.reference);
                                         complete();
                                     }}
-                                    icon={getImage({ imageFolder: 'components/' })('copy')}
+                                    icon={getImage({ imageFolder: 'components/' })(`${PREFIX}copy`)}
                                     label={i18n.get('button.copy')}
                                 />
                             </li>
@@ -102,7 +103,7 @@ export default function Voucher({ voucherDetails = [], className = '', ...props 
                                     inline
                                     variant="action"
                                     href={props.downloadUrl}
-                                    icon={getImage({ imageFolder: 'components/' })('download')}
+                                    icon={getImage({ imageFolder: 'components/' })(`${PREFIX}download`)}
                                     label={props.downloadButtonText || i18n.get('button.download')}
                                     target="_blank"
                                     rel="noopener noreferrer"

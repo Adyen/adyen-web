@@ -1,5 +1,5 @@
 import { getCardGroupTypes } from '../utils/getCardGroupTypes';
-import { NON_CREDIT_CARD_TYPE_SECURED_FIELDS, SF_VERSION } from '../../configuration/constants';
+import { NON_CREDIT_CARD_TYPE_SECURED_FIELDS, SF_VERSION } from '../../constants';
 import * as logger from '../../utilities/logger';
 import { CSFSetupObject } from '../types';
 
@@ -7,7 +7,7 @@ import { CSFSetupObject } from '../types';
  * Parses this.props to set 'config' type vars on this (CSFComp)
  * - properties that just need to be set once, at startup, and then don't change
  *
- * See interface ConfigObject in types.ts
+ * See interface CSFConfigObject in types.ts
  */
 export function handleConfig(props: CSFSetupObject): void {
     // --
@@ -32,11 +32,7 @@ export function handleConfig(props: CSFSetupObject): void {
     this.config.isCreditCardType = NON_CREDIT_CARD_TYPE_SECURED_FIELDS.includes(props.type) === false;
 
     // Configuration object for individual txVariants - contains styling object values for securedFields inputs
-    this.config.iframeUIConfig = props.iframeUIConfig;
-
-    // By default CSF is allowed to add the encrypted element to the DOM - user of CSF must explicitly 'opt-out' to prevent this happening
-    // (If either condition is true - then set allowedDOMAccess to false)
-    this.config.allowedDOMAccess = !(props.allowedDOMAccess === false || props.allowedDOMAccess === 'false');
+    this.config.iframeUIConfig = props.iframeUIConfig ?? {};
 
     // By default CSF is allowed to automatically shift focus from the date to CVC fields - user of CSF must explicitly 'opt-out' to prevent this happening
     this.config.autoFocus = !(props.autoFocus === false || props.autoFocus === 'false');
@@ -55,9 +51,6 @@ export function handleConfig(props: CSFSetupObject): void {
 
     // To configure the minimum expiry date to a merchant defined value - this means the card has to be valid until at least this date
     this.config.minimumExpiryDate = props.minimumExpiryDate || null;
-
-    // To distinguish between regular 'components' initiated securedField or 'custom' card component
-    this.config.implementationType = props.implementationType;
 
     this.config.sfLogAtStart = window._b$dl === true;
 
@@ -82,7 +75,4 @@ export function handleConfig(props: CSFSetupObject): void {
         this.config.iframeSrc = `${process.env.__SF_ENV__}securedFields.${SF_VERSION}.html?type=${sfBundleType}`;
     }
     // TODO######
-
-    this.config.maskSecurityCode = props.maskSecurityCode;
-    this.config.shouldDisableIOSArrowKeys = props.shouldDisableIOSArrowKeys;
 }

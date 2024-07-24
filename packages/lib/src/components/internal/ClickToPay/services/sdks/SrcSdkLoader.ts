@@ -39,7 +39,7 @@ class SrcSdkLoader implements ISrcSdkLoader {
             const sdks: ISrcInitiator[] = this.schemes.map(scheme => getSchemeSdk(scheme, environment, this.customSdkConfiguration));
             const loadScriptPromises = sdks.map(sdk => sdk.loadSdkScript());
 
-            Promise.allSettled(loadScriptPromises).then(loadScriptResponses => {
+            void Promise.allSettled(loadScriptPromises).then(loadScriptResponses => {
                 if (loadScriptResponses.every(isRejected)) {
                     reject(
                         new AdyenCheckoutError('ERROR', `ClickToPay -> SrcSdkLoader # Unable to load network schemes: ${this.schemes.toString()}`)

@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { useState, useLayoutEffect } from 'preact/hooks';
 import Field from '../../FormFields/Field';
-import useCoreContext from '../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import getDataset from '../../../../core/Services/get-dataset';
 import { StateFieldItem, StateFieldProps } from '../types';
 import Select from '../../FormFields/Select';
@@ -11,7 +11,6 @@ export default function StateField(props: StateFieldProps) {
     const { i18n, loadingContext } = useCoreContext();
     const [states, setStates] = useState<StateFieldItem[]>([]);
     const [loaded, setLoaded] = useState<boolean>(false);
-    const placeholderKey: string = specifications.getPlaceholderKeyForField('stateOrProvince', selectedCountry);
 
     useLayoutEffect(() => {
         if (!selectedCountry || !specifications.countryHasDataset(selectedCountry)) {
@@ -43,15 +42,9 @@ export default function StateField(props: StateFieldProps) {
             showValidIcon={false}
             name={'stateOrProvince'}
             i18n={i18n}
+            readOnly={readOnly && !!value}
         >
-            <Select
-                name={'stateOrProvince'}
-                onChange={onDropdownChange}
-                selectedValue={value}
-                placeholder={i18n.get(placeholderKey)}
-                items={states}
-                readonly={readOnly && !!value}
-            />
+            <Select name={'stateOrProvince'} onChange={onDropdownChange} selectedValue={value} items={states} readonly={readOnly && !!value} />
         </Field>
     );
 }

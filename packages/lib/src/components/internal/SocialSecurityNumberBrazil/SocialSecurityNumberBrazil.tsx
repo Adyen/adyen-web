@@ -1,9 +1,9 @@
 import { h } from 'preact';
 import Field from '../../internal/FormFields/Field';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import InputText from '../FormFields/InputText';
 
-export default function ({
+const SocialSecurityNumberBrazil = ({
     onBlur,
     onInput,
     valid = false,
@@ -13,7 +13,7 @@ export default function ({
     disabled = false,
     onFieldFocusAnalytics = null,
     onFieldBlurAnalytics = null
-}) {
+}) => {
     const { i18n } = useCoreContext();
 
     return (
@@ -39,4 +39,6 @@ export default function ({
             />
         </Field>
     );
-}
+};
+
+export default SocialSecurityNumberBrazil;

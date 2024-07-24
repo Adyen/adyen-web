@@ -110,7 +110,6 @@ describe('KlarnaWidget', () => {
                 data: {
                     paymentData,
                     details: {
-                        token: authRes.authorization_token,
                         authorization_token: authRes.authorization_token
                     }
                 }

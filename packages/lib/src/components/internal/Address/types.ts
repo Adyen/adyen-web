@@ -1,4 +1,4 @@
-import { AddressField, AddressData } from '../../../types';
+import { AddressField, AddressData } from '../../../types/global-types';
 import Specifications from './Specifications';
 import { ValidatorRules } from '../../../utils/Validator/types';
 import { ValidationRuleResult } from '../../../utils/Validator/ValidationRuleResult';
@@ -27,8 +27,8 @@ export interface AddressProps {
     overrideSchema?: AddressSpecifications;
     iOSFocusedField?: string;
     payButton?: (obj) => {};
-    showPayButton?: boolean;
     setComponentRef?: (ref) => void;
+    showContextualElement?: boolean;
     onFieldFocusAnalytics?: (who: string, event: Event) => void;
     onFieldBlurAnalytics?: (who: string, event: Event) => void;
 }

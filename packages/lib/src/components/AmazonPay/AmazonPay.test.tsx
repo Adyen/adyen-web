@@ -2,7 +2,7 @@ import AmazonPay from './AmazonPay';
 import defaultProps from './defaultProps';
 import { httpPost } from '../../core/Services/http';
 import { mock } from 'jest-mock-extended';
-import { AmazonPayElementProps } from './types';
+import { AmazonPayConfiguration } from './types';
 
 jest.mock('../../core/Services/http');
 
@@ -13,9 +13,9 @@ const declineFlowMock = {
 const spyFetch = (httpPost as jest.Mock).mockImplementation(jest.fn(() => Promise.resolve(declineFlowMock)));
 
 describe('AmazonPay', () => {
-    const amazonProps = mock<AmazonPayElementProps>();
+    const amazonProps = mock<AmazonPayConfiguration>();
     const getElement = (props = {}) =>
-        new AmazonPay({
+        new AmazonPay(global.core, {
             ...defaultProps,
             ...props,
             ...amazonProps
@@ -49,7 +49,7 @@ describe('AmazonPay', () => {
         test('calls console.error if no checkoutSessionId is passed', () => {
             console.error = jest.fn();
             const amazonPay = getElement();
-            amazonPay.getShopperDetails();
+            void amazonPay.getShopperDetails();
             expect(console.error).toHaveBeenCalledTimes(1);
         });
 
@@ -75,7 +75,8 @@ describe('AmazonPay', () => {
                 value: { assign: jest.fn() }
             });
             const amazonPay = getElement({ amazonCheckoutSessionId: 'ABC123' });
-            await amazonPay.handleDeclineFlow();
+            /* eslint-disable @typescript-eslint/await-thenable */
+            void (await amazonPay.handleDeclineFlow());
             expect(window.location.assign).toHaveBeenCalledTimes(1);
         });
     });

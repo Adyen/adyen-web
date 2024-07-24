@@ -3,12 +3,13 @@ import { useEffect, useState } from 'preact/hooks';
 import useForm from '../../../../utils/useForm';
 import Field from '../../../internal/FormFields/Field';
 import getIssuerImageUrl from '../../../../utils/get-issuer-image';
-import useCoreContext from '../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { DragonpayInputData, DragonpayInputIssuerItem, DragonpayInputProps } from '../../types';
-import { personalDetailsValidationRules } from '../../../internal/PersonalDetails/validate';
 import InputEmail from '../../../internal/FormFields/InputEmail';
 import Select from '../../../internal/FormFields/Select';
 import useImage from '../../../../core/Context/useImage';
+import { validationRules } from '../../../../utils/Validator/defaultRules';
+import { getErrorMessage } from '../../../../utils/getErrorMessage';
 
 export default function DragonpayInput(props: DragonpayInputProps) {
     const { i18n } = useCoreContext();
@@ -25,7 +26,7 @@ export default function DragonpayInput(props: DragonpayInputProps) {
                 validate: issuer => isIssuerRequired() && !!issuer,
                 modes: ['input', 'blur']
             },
-            shopperEmail: personalDetailsValidationRules.shopperEmail
+            shopperEmail: validationRules.emailRule
         }
     });
 
@@ -39,9 +40,9 @@ export default function DragonpayInput(props: DragonpayInputProps) {
 
     const getIssuerSelectFieldKey = type => {
         if (type === 'dragonpay_otc_non_banking') {
-            return 'dragonpay.voucher.non.bank.selectField.placeholder';
+            return 'dragonpayVoucher.selectField.contextualText.nonBank';
         }
-        return 'dragonpay.voucher.bank.selectField.placeholder';
+        return 'dragonpayVoucher.selectField.contextualText.bank';
     };
 
     useEffect(() => {
@@ -54,7 +55,11 @@ export default function DragonpayInput(props: DragonpayInputProps) {
 
     return (
         <div className="adyen-checkout__dragonpay-input__field">
-            <Field label={i18n.get('shopperEmail')} errorMessage={!!errors.shopperEmail} name={'dragonpay-shopperEmail'}>
+            <Field
+                label={i18n.get('shopperEmail')}
+                errorMessage={getErrorMessage(i18n, errors.shopperEmail, i18n.get('shopperEmail'))}
+                name={'dragonpay-shopperEmail'}
+            >
                 <InputEmail
                     name={'dragonpay-shopperEmail'}
                     autoCorrect={'off'}
@@ -71,7 +76,6 @@ export default function DragonpayInput(props: DragonpayInputProps) {
                     <Select
                         items={items}
                         selectedValue={data.issuer}
-                        placeholder={i18n.get(getIssuerSelectFieldKey(props.type))}
                         name={'issuer'}
                         className={'adyen-checkout__dropdown--large adyen-checkout__issuer-list__dropdown'}
                         onChange={handleChangeFor('issuer')}

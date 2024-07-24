@@ -1,132 +1,84 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
+import { AdyenCheckout, WeChat, BcmcMobile, Swish, PromptPay, PayNow, DuitNow } from '@adyen/adyen-web';
+import '@adyen/adyen-web/styles/adyen.css';
 import { makePayment } from '../../services';
-import { shopperLocale } from '../../config/commonConfig';
+import { shopperLocale, countryCode } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../utils';
 import '../../style.scss';
 import './QRCodes.scss';
+import getCurrency from '../../config/getCurrency';
+import { handleOnPaymentCompleted, handleOnPaymentFailed } from '../../handlers';
+
+const handleQRCodePayment = async (state, component, actions, countryCode) => {
+    const currency = getCurrency(countryCode);
+    const config = { countryCode, amount: { currency, value: 25940 } };
+
+    component.setStatus('loading');
+
+    try {
+        const { action, order, resultCode, donationToken } = await makePayment(state.data, config);
+
+        if (!resultCode) actions.reject();
+
+        actions.resolve({
+            resultCode,
+            action,
+            order,
+            donationToken
+        });
+    } catch (error) {
+        console.error('## onSubmit - critical error', error);
+        actions.reject();
+    }
+};
+
 (async () => {
     window.checkout = await AdyenCheckout({
         clientKey: process.env.__CLIENT_KEY__,
+        countryCode,
         locale: shopperLocale,
         environment: process.env.__CLIENT_ENV__,
-        risk: { node: 'body', onError: console.error }
+        risk: { node: 'body', onError: console.error },
+        onPaymentCompleted: handleOnPaymentCompleted,
+        onPaymentFailed: handleOnPaymentFailed
     });
 
     // WechatPay QR
-    makePayment({
-        paymentMethod: {
-            type: 'wechatpayQR'
-        },
-        countryCode: 'CN',
-        amount: {
-            currency: 'CNY',
-            value: 1000
+    new WeChat(checkout, {
+        type: 'wechatpayQR',
+        onSubmit: (state, component, actions) => {
+            handleQRCodePayment(state, component, actions, 'CN');
         }
-    })
-        .then(result => {
-            if (result.action) {
-                window.wechatpayqr = checkout.createFromAction(result.action).mount('#wechatpayqr-container');
-            }
-        })
-        .catch(error => {
-            throw Error(error);
-        });
+    }).mount('#wechatpayqr-container');
 
     // BCMC Mobile
-    makePayment({
-        paymentMethod: {
-            type: 'bcmc_mobile_QR'
-        },
-        countryCode: 'BE',
-        amount: {
-            currency: 'EUR',
-            value: 1000
+    new BcmcMobile(checkout, {
+        onSubmit: (state, component, actions) => {
+            handleQRCodePayment(state, component, actions, 'BE');
         }
-    })
-        .then(result => {
-            if (result.action) {
-                window.bcmcmobileqr = checkout.createFromAction(result.action).mount('#bcmcqr-container');
-            }
-        })
-        .catch(error => {
-            throw Error(error);
-        });
+    }).mount('#bcmcqr-container');
 
-    makePayment({
-        paymentMethod: {
-            type: 'swish'
-        },
-        countryCode: 'SE',
-        amount: {
-            currency: 'SEK',
-            value: 1000
+    new Swish(checkout, {
+        onSubmit: (state, component, actions) => {
+            handleQRCodePayment(state, component, actions, 'SE');
         }
-    })
-        .then(result => {
-            if (result.action) {
-                window.swish = checkout.createFromAction(result.action).mount('#swish-container');
-            }
-        })
-        .catch(error => {
-            throw Error(error);
-        });
+    }).mount('#swish-container');
 
-    makePayment({
-        paymentMethod: {
-            type: 'promptpay'
-        },
-        countryCode: 'TH',
-        amount: {
-            currency: 'THB',
-            value: 101
+    new PromptPay(checkout, {
+        onSubmit: (state, component, actions) => {
+            handleQRCodePayment(state, component, actions, 'TH');
         }
-    })
-        .then(result => {
-            if (result.action) {
-                window.promptpay = checkout.createFromAction(result.action).mount('#promptpay-container');
-            }
-        })
-        .catch(error => {
-            throw Error(error);
-        });
+    }).mount('#promptpay-container');
 
-    makePayment({
-        paymentMethod: {
-            type: 'paynow'
-        },
-        countryCode: 'SG',
-        amount: {
-            currency: 'SGD',
-            value: 200
+    new PayNow(checkout, {
+        onSubmit: (state, component, actions) => {
+            handleQRCodePayment(state, component, actions, 'SG');
         }
-    })
-        .then(result => {
-            if (result.action) {
-                window.paynow = checkout.createFromAction(result.action).mount('#paynow-container');
-            }
-        })
-        .catch(error => {
-            throw Error(error);
-        });
+    }).mount('#paynow-container');
 
-    makePayment({
-        paymentMethod: {
-            type: 'duitnow'
-        },
-        countryCode: 'MY',
-        amount: {
-            currency: 'MYR',
-            value: 101
+    new DuitNow(checkout, {
+        onSubmit: (state, component, actions) => {
+            handleQRCodePayment(state, component, actions, 'MY');
         }
-    })
-        .then(result => {
-            if (result.action) {
-                window.paynow = checkout.createFromAction(result.action).mount('#duitnow-container');
-            }
-        })
-        .catch(error => {
-            throw Error(error);
-        });
+    }).mount('#duitnow-container');
 })();

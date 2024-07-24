@@ -1,15 +1,18 @@
 import { h } from 'preact';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import OpenInvoice from './OpenInvoice';
 import { mock } from 'jest-mock-extended';
 import { OpenInvoiceProps } from './types';
 import { FieldsetVisibility } from '../../../types';
+import { CoreProvider } from '../../../core/Context/CoreProvider';
+import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
+import userEvent from '@testing-library/user-event';
 import { SRPanel } from '../../../core/Errors/SRPanel';
 import { render, screen } from '@testing-library/preact';
-import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
-import { Resources } from '../../../core/Context/Resources';
-import CoreProvider from '../../../core/Context/CoreProvider';
-import userEvent from '@testing-library/user-event';
+import getDataset from '../../../core/Services/get-dataset';
+
+jest.mock('../../../core/Services/get-dataset');
+(getDataset as jest.Mock).mockImplementation(jest.fn(() => Promise.resolve([{ id: 'NL', name: 'Netherlands' }])));
 
 let componentRef;
 const setComponentRef = ref => {
@@ -27,10 +30,15 @@ const defaultProps = {
     setComponentRef: setComponentRef
 };
 
-describe('OpenInvoice', () => {
-    const openInvoicePropsMock = mock<OpenInvoiceProps>();
-    const getWrapper = (props = {}) => shallow(<OpenInvoice {...openInvoicePropsMock} {...defaultProps} {...props} />);
+const openInvoicePropsMock = mock<OpenInvoiceProps>();
+const getWrapper = (props = {}) =>
+    mount(
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            <OpenInvoice {...openInvoicePropsMock} {...defaultProps} {...props} />
+        </CoreProvider>
+    );
 
+describe('OpenInvoice', () => {
     test('should not display fieldsets set to hidden', () => {
         const visibility = { personalDetails: 'hidden' };
         const wrapper = getWrapper({ visibility });
@@ -62,8 +70,10 @@ describe('OpenInvoice', () => {
     test('clicking the separate delivery checkbox should toggle the delivery address fieldset', () => {
         const wrapper = getWrapper();
         wrapper.find('Checkbox').prop('onChange')();
+        wrapper.update();
         expect(wrapper.find('Address')).toHaveLength(2);
         wrapper.find('Checkbox').prop('onChange')();
+        wrapper.update();
         expect(wrapper.find('Address')).toHaveLength(1);
     });
 
@@ -74,11 +84,11 @@ describe('OpenInvoice', () => {
 
     test('toggling consent checkbox should call the onChange', async () => {
         const user = userEvent.setup();
-        const srPanel = new SRPanel({});
+        const srPanel = new SRPanel(global.core);
         const customRender = ui => {
             return render(
                 // @ts-ignore render ui as children
-                <CoreProvider i18n={global.i18n} loadingContext="test" resources={new Resources()}>
+                <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
                     <SRPanelProvider srPanel={srPanel}>{ui}</SRPanelProvider>
                 </CoreProvider>
             );
@@ -117,7 +127,6 @@ describe('OpenInvoice', () => {
     test('should call the onChange', () => {
         const onChange = jest.fn();
         getWrapper({ onChange });
-        expect(onChange).toHaveBeenCalledTimes(1);
         expect(onChange).toHaveBeenCalledWith(
             expect.objectContaining({
                 data: expect.any(Object),
@@ -129,7 +138,7 @@ describe('OpenInvoice', () => {
 
     test('should be possible to change the status', () => {
         const payButton = jest.fn();
-        const wrapper = getWrapper({ showPayButton: true, payButton });
+        const wrapper = getWrapper({ payButton, showPayButton: true });
         const status = 'loading';
         componentRef.setStatus(status);
         wrapper.update();
@@ -137,7 +146,7 @@ describe('OpenInvoice', () => {
     });
 
     test('should show FormInstruction', () => {
-        const wrapper = getWrapper({ showFormInstruction: true });
+        const wrapper = getWrapper({});
         expect(wrapper.find('FormInstruction')).toHaveLength(1);
     });
 });

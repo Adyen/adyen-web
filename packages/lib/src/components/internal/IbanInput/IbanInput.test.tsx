@@ -3,11 +3,14 @@ import { h } from 'preact';
 import { render, screen } from '@testing-library/preact';
 import IbanInput from './IbanInput';
 import { GenericError } from '../../../core/Errors/types';
+import { CoreProvider } from '../../../core/Context/CoreProvider';
 
-const i18n = { get: key => key };
-
-// @ts-ignore is valid tsx
-const createWrapper = (props = {}) => mount(<IbanInput i18n={i18n} {...props} />);
+const createWrapper = (props = {}) =>
+    mount(
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            <IbanInput data={{}} {...props} />
+        </CoreProvider>
+    );
 
 const ibanErrorObj: GenericError = {
     isValid: false,
@@ -31,12 +34,12 @@ describe('IbanInput', () => {
     describe('Validation Errors', () => {
         test('Set iban errors', () => {
             const wrapper = createWrapper();
-            wrapper.instance().setError('iban', ibanErrorObj);
+            wrapper.find('IbanInput').instance().setError('iban', ibanErrorObj);
             wrapper.update();
             expect(wrapper.find('.adyen-checkout__field--error')).toHaveLength(1);
             expect(wrapper.find('input[name="ibanNumber"]').prop('aria-invalid')).toBe(true);
 
-            wrapper.instance().setError('iban', false);
+            wrapper.find('IbanInput').instance().setError('iban', false);
             wrapper.update();
             expect(wrapper.find('.adyen-checkout__field--error')).toHaveLength(0);
             expect(wrapper.find('input[name="ibanNumber"]').prop('aria-invalid')).toBe(false);
@@ -44,11 +47,11 @@ describe('IbanInput', () => {
 
         test('Set holderName errors', () => {
             const wrapper = createWrapper();
-            wrapper.instance().setError('holder', ibanHolderNameErrorObj);
+            wrapper.find('IbanInput').instance().setError('holder', ibanHolderNameErrorObj);
             wrapper.update();
             expect(wrapper.find('.adyen-checkout__field--error')).toHaveLength(1);
 
-            wrapper.instance().setError('holder', false);
+            wrapper.find('IbanInput').instance().setError('holder', false);
             wrapper.update();
             expect(wrapper.find('.adyen-checkout__field--error')).toHaveLength(0);
         });
@@ -57,11 +60,11 @@ describe('IbanInput', () => {
     describe('Validation Success', () => {
         test('Set iban validation success', () => {
             const wrapper = createWrapper();
-            wrapper.instance().setValid('iban', true);
+            wrapper.find('IbanInput').instance().setValid('iban', true);
             wrapper.update();
             expect(wrapper.find('.adyen-checkout__input--valid')).toHaveLength(1);
 
-            wrapper.instance().setValid('iban', false);
+            wrapper.find('IbanInput').instance().setValid('iban', false);
             wrapper.update();
             expect(wrapper.find('.adyen-checkout__field--valid')).toHaveLength(0);
         });
@@ -82,8 +85,9 @@ describe('IbanInput', () => {
     describe('Send values from outside', () => {
         const createElement = (props = {}) => {
             return (
-                // @ts-ignore is valid tsx
-                <IbanInput data={{}} {...props} />
+                <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                    <IbanInput data={{}} {...props} />
+                </CoreProvider>
             );
         };
 
@@ -93,7 +97,6 @@ describe('IbanInput', () => {
 
             const inputEl = await screen.findByLabelText('Account Number (IBAN)');
 
-            // @ts-ignore method does exist
             expect(inputEl).toHaveValue('NL13 TEST 0123 4567 89');
         });
 
@@ -103,7 +106,6 @@ describe('IbanInput', () => {
 
             const inputEl = await screen.findByLabelText('Account Number (IBAN)');
 
-            // @ts-ignore method does exist
             expect(inputEl).toHaveValue('NL13 TEST 0123 4567 89');
         });
 
@@ -113,7 +115,6 @@ describe('IbanInput', () => {
 
             const inputEl = await screen.findByLabelText('Holder Name');
 
-            // @ts-ignore method does exist
             expect(inputEl).toHaveValue('Hello World');
         });
     });

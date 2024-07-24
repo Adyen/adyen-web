@@ -1,13 +1,13 @@
 import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import LoadingWrapper from '../../internal/LoadingWrapper';
 import InputText from '../../internal/FormFields/InputText';
 import Field from '../../internal/FormFields/Field';
 import useForm from '../../../utils/useForm';
-import { UIElementProps } from '../../types';
 import { ancvValidationRules } from '../validate';
-import { ANCVDataState } from '../ANCV';
+import { ANCVDataState } from '../types';
+import { UIElementProps } from '../../internal/UIElement/types';
 
 export interface ANCVInputProps extends UIElementProps {
     ref?: any;
@@ -26,6 +26,7 @@ function ANCVInput({ showPayButton, payButton, onChange, onSubmit }: ANCVInputPr
     });
 
     useEffect(() => {
+        // @ts-ignore TODO: Fix this. Preact component types should not inherit from UIElementProps.
         onChange({ data, errors, valid, isValid }, this);
     }, [data, valid, errors, isValid]);
 

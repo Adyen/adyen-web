@@ -1,21 +1,16 @@
 import { ThreeDS2DeviceFingerprint } from './index';
 import Analytics from '../../core/Analytics';
-import {
-    ANALYTICS_API_ERROR,
-    ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_PAYMENT_DATA,
-    ANALYTICS_EVENT_ERROR,
-    ANALYTICS_RENDERED_STR
-} from '../../core/Analytics/constants';
-import { THREEDS2_ERROR, THREEDS2_FINGERPRINT_ERROR } from './config';
+import { ANALYTICS_API_ERROR, Analytics3DS2Errors, ANALYTICS_EVENT_ERROR, ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
+import { THREEDS2_ERROR, THREEDS2_FINGERPRINT_ERROR } from './constants';
 
-const analyticsModule = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '' });
+const analyticsModule = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', bundleType: 'umd' });
 
 describe('ThreeDS2DeviceFingerprint: calls that generate analytics should produce objects with the expected shapes ', () => {
     let fingerprint;
     beforeEach(() => {
         console.log = jest.fn(() => {});
 
-        fingerprint = new ThreeDS2DeviceFingerprint({
+        fingerprint = new ThreeDS2DeviceFingerprint(global.core, {
             onActionHandled: () => {},
             modules: {
                 analytics: analyticsModule
@@ -24,9 +19,7 @@ describe('ThreeDS2DeviceFingerprint: calls that generate analytics should produc
             showSpinner: null
         });
 
-        analyticsModule.createAnalyticsEvent = jest.fn(obj => {
-            console.log('### analyticsPreProcessor.test:::: obj=', obj);
-        });
+        analyticsModule.createAnalyticsEvent = jest.fn(() => null);
     });
 
     test('A call to ThreeDS2DeviceFingerprint.submitAnalytics with an object with type "rendered" should not lead to an analytics event', () => {
@@ -45,7 +38,7 @@ describe('ThreeDS2DeviceFingerprint: calls that generate analytics should produc
                 type: THREEDS2_ERROR,
                 errorType: ANALYTICS_API_ERROR,
                 message: `${THREEDS2_FINGERPRINT_ERROR}: Missing 'paymentData' property from threeDS2 action`,
-                code: ANALYTICS_ERROR_CODE_ACTION_IS_MISSING_PAYMENT_DATA
+                code: Analytics3DS2Errors.ACTION_IS_MISSING_PAYMENT_DATA
             }
         });
 

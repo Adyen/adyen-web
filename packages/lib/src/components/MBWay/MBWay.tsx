@@ -1,13 +1,15 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import MBWayInput from './components/MBWayInput';
-import CoreProvider from '../../core/Context/CoreProvider';
+import { CoreProvider } from '../../core/Context/CoreProvider';
 import config from './components/MBWayAwait/config';
 import Await from '../../components/internal/Await';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
+import { TxVariants } from '../tx-variants';
+import { AwaitConfiguration } from '../internal/Await/types';
 
-export class MBWayElement extends UIElement {
-    private static type = 'mbway';
+export class MBWayElement extends UIElement<AwaitConfiguration> {
+    public static type = TxVariants.mbway;
 
     formatProps(props) {
         const { data = {}, placeholders = {} } = props;
@@ -19,7 +21,7 @@ export class MBWayElement extends UIElement {
                 phonePrefix: data.phonePrefix || '+351' // if not specified default to Portuguese country code
             },
             placeholders: {
-                phoneNumber: placeholders.telephoneNumber || placeholders.phoneNumber || '932123456'
+                phoneNumber: placeholders.telephoneNumber || placeholders.phoneNumber
             }
         };
     }
@@ -76,6 +78,7 @@ export class MBWayElement extends UIElement {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <MBWayInput
+                    /* @ts-ignore ref handled internally by Component */
                     ref={ref => {
                         this.componentRef = ref;
                     }}

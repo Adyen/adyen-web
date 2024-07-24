@@ -1,7 +1,7 @@
 import EventsQueue from './EventsQueue';
 import { ANALYTICS_PATH } from './constants';
 
-const task1 = { foo: 'bar', timestamp: '1234', component: 'scheme' };
+const task1 = { foo: 'bar', timestamp: '1234', component: 'scheme', id: '678' };
 
 describe('CAEventsQueue', () => {
     const queue = EventsQueue({ analyticsContext: 'https://mydomain.com', clientKey: 'fsdjkh', analyticsPath: ANALYTICS_PATH });
@@ -22,7 +22,7 @@ describe('CAEventsQueue', () => {
     });
 
     test('run flushes the queue', () => {
-        queue.run('checkoutAttemptId');
+        void queue.run('checkoutAttemptId');
 
         expect(queue.getQueue().logs.length).toBe(0);
         expect(queue.getQueue().info.length).toBe(0);

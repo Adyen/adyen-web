@@ -1,10 +1,12 @@
 import OpenInvoiceContainer from '../helpers/OpenInvoiceContainer';
+import { TxVariants } from '../tx-variants';
+import { OpenInvoiceConfiguration } from '../helpers/OpenInvoiceContainer/types';
 import { ALLOWED_COUNTRIES } from './config';
-import { OpenInvoiceContainerProps } from '../helpers/OpenInvoiceContainer/OpenInvoiceContainer';
 
 export default class AfterPayB2B extends OpenInvoiceContainer {
-    public static type = 'afterpay_b2b';
-    protected static defaultProps: OpenInvoiceContainerProps = {
+    public static type = TxVariants.afterpay_b2b;
+
+    protected static defaultProps: Partial<OpenInvoiceConfiguration> = {
         onChange: () => {},
         data: { companyDetails: {}, personalDetails: {}, billingAddress: {}, deliveryAddress: {} },
         visibility: {
@@ -12,8 +14,7 @@ export default class AfterPayB2B extends OpenInvoiceContainer {
             personalDetails: 'editable',
             billingAddress: 'editable',
             deliveryAddress: 'editable'
-        },
-        showFormInstruction: true
+        }
     };
 
     formatProps(props) {

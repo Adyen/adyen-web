@@ -1,34 +1,85 @@
-@import "../../../style/index";
+@use 'styles/index';
+@import 'styles/variable-generator';
 
-.adyen-checkout__dropin,
-.adyen-checkout__dropin *,
-.adyen-checkout__dropin *::after,
-.adyen-checkout__dropin *::before {
-    box-sizing: border-box;
+.adyen-checkout__dropin {
+    display: flex;
+    flex-direction: column;
+    gap: token(spacer-100);
 }
 
-.adyen-checkout__payment-methods-list--loading {
-    user-select: none;
-    pointer-events: none;
+.adyen-checkout-payment-methods-container {
+    display: flex;
+    flex-direction: column;
+    gap: token(spacer-070);
 }
 
-.adyen-checkout__instant-payment-methods-list {
+.adyen-checkout-payment-methods-list-label {
+    @include index.adyen-checkout-text-subtitle;
+
+    color: token(color-label-primary);
+}
+
+.adyen-checkout__payment-methods-list {
     list-style: none;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: token(spacer-070);
 
-    li:not(:last-child) {
-        margin-bottom: 8px;
+    &--loading {
+        user-select: none;
+        pointer-events: none;
     }
 }
 
-/* Forms */
+.adyen-checkout__instant-payment-methods-list {
+    $instant-pm-gap: token(spacer-070);
 
-.adyen-checkout__link {
-    color: $color-primary;
-    text-decoration: none;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: $instant-pm-gap;
+
+    li {
+        flex: 1 0 calc(50% - $instant-pm-gap / 2);
+    }
 }
 
-.adyen-checkout__link:hover {
-    text-decoration: underline;
+.adyen-checkout__payment-method {
+    display: block;
+
+    &__details {
+        overflow: hidden;
+    }
+
+    &__image {
+        width: token(spacer-110);
+        height: 26px;
+
+        &__wrapper {
+            [dir='rtl'] & {
+                margin-right: 0;
+                margin-left: token(spacer-040);
+            }
+        }
+    }
+}
+
+.adyen-checkout-pm-details-wrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 250ms ease;
+    visibility: hidden;
+}
+
+.adyen-checkout-pm-details-wrapper[aria-hidden='false'] {
+    grid-template-rows: 1fr;
+    visibility: visible;
+
+    .adyen-checkout__payment-method__details{
+        overflow: visible;
+    }
 }

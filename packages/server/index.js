@@ -10,7 +10,10 @@ const createOrder = require('./api/orders');
 const cancelOrder = require('./api/ordersCancel');
 const createSession = require('./api/sessions');
 const mockAddressSearch = require('./api/mock/addressSearch');
+const getDonationCampaigns = require('./api/donationCampaign');
+const createDonation = require('./api/donation');
 const paypalUpdateOrder = require('./api/paypalUpdateOrder');
+const getTranslation = require('./api/translations');
 
 module.exports = (app = express(), options = {}) => {
     app.use(express.json());
@@ -41,6 +44,12 @@ module.exports = (app = express(), options = {}) => {
     app.all('/sessions', (req, res) => createSession(res, req.body));
 
     app.all('/mock/addressSearch', (req, res) => mockAddressSearch(res, req));
+
+    app.all('/donationCampaigns', (req, res) => getDonationCampaigns(res, req.body));
+
+    app.all('/donations', (req, res) => createDonation(res, req.body));
+
+    app.all('/sdk/:adyenWebVersion/translations/:locale.json', (req, res) => getTranslation(res, req));
 
     if (options.listen) {
         const port = process.env.PORT || 3020;

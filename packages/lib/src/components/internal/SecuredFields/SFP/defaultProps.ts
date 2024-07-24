@@ -6,7 +6,6 @@ export default {
     rootNode: null,
     loadingContext: null,
     brands: [],
-    allowedDOMAccess: false,
     showWarnings: false,
     autoFocus: true,
     trimTrailingSeparator: true,
@@ -22,6 +21,7 @@ export default {
     onBinValue: () => {},
     onFocus: () => {},
     onAutoComplete: () => {},
+    handleKeyPress: () => {},
 
     // Customization
     styles: {}

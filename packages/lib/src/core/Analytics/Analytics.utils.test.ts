@@ -1,8 +1,8 @@
 import { getCardConfigData } from './utils';
 import CardDefaultProps from '../../components/Card/components/CardInput/defaultProps';
-import { DEFAULT_CHALLENGE_WINDOW_SIZE } from '../../components/ThreeDS2/config';
-import { DEFAULT_CARD_GROUP_TYPES } from '../../components/internal/SecuredFields/lib/configuration/constants';
-import { reject } from '../../components/internal/SecuredFields/utils';
+import { DEFAULT_CHALLENGE_WINDOW_SIZE } from '../../components/ThreeDS2/constants';
+import { DEFAULT_CARD_GROUP_TYPES } from '../../components/internal/SecuredFields/lib/constants';
+import { reject } from '../../utils/commonUtils';
 import CardInputDefaultProps from '../../components/Card/components/CardInput/defaultProps';
 
 describe('Testing creating a configData object for the Card components', () => {
@@ -629,30 +629,7 @@ describe('Testing creating a configData object for the Card components', () => {
     });
 
     /**
-     * 29. showBrandsUnderCardNumber
-     */
-    describe('Testing showBrandsUnderCardNumber', () => {
-        const ANALYTICS_DATA_PROP = 'showBrandsUnderCardNumber';
-        const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
-
-        test('Expect the prop, when not specifically set, to equal the default', () => {
-            const configData = getCardConfigData(defaultCardProps);
-            expect(configData[ANALYTICS_DATA_PROP]).toEqual(CardDefaultProps[CARD_CONFIG_PROP]);
-        });
-
-        test('Expect the prop, passed as false, to equal false', () => {
-            const configData = getCardConfigData({ ...defaultCardProps, [CARD_CONFIG_PROP]: false });
-            expect(configData[ANALYTICS_DATA_PROP]).toEqual(false);
-        });
-
-        test('Expect the prop, passed as true, to equal true', () => {
-            const configData = getCardConfigData({ ...defaultCardProps, [CARD_CONFIG_PROP]: true });
-            expect(configData[ANALYTICS_DATA_PROP]).toEqual(true);
-        });
-    });
-
-    /**
-     * 30. showInstallmentAmounts
+     * 29. showInstallmentAmounts
      */
     describe('Testing showInstallmentAmounts', () => {
         const ANALYTICS_DATA_PROP = 'showInstallmentAmounts';
@@ -675,7 +652,7 @@ describe('Testing creating a configData object for the Card components', () => {
     });
 
     /**
-     * 31. showKCPType
+     * 30. showKCPType
      */
     describe('Testing showKCPType', () => {
         const ANALYTICS_DATA_PROP = 'showKCPType';
@@ -706,7 +683,7 @@ describe('Testing creating a configData object for the Card components', () => {
     });
 
     /**
-     * 32. showPayButton
+     * 31. showPayButton
      */
     // TODO - skip until endpoint can accept more entries in the configData object (current limit: 32);
     describe.skip('Testing showPayButton', () => {
@@ -730,7 +707,7 @@ describe('Testing creating a configData object for the Card components', () => {
     });
 
     /**
-     * 33. socialSecurityNumberMode
+     * 32. socialSecurityNumberMode
      */
     // TODO - skip until endpoint can accept more entries in the configData object (current limit: 32);
     describe.skip('Testing socialSecurityNumberMode', () => {

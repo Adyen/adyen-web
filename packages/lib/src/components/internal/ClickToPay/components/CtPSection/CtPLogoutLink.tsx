@@ -3,7 +3,7 @@ import useClickToPayContext from '../../context/useClickToPayContext';
 import { CtpState } from '../../services/ClickToPayService';
 import classnames from 'classnames';
 import { useMemo } from 'preact/hooks';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import './CtPLogoutLink.scss';
 
 const CtPLogoutLink = () => {
@@ -22,6 +22,7 @@ const CtPLogoutLink = () => {
     }, [i18n, ctpState]);
 
     return (
+        // eslint-disable-next-line jsx-a11y/click-events-have-key-events
         <span
             role="button"
             tabIndex={0}

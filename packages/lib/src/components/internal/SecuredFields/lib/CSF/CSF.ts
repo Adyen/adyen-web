@@ -23,7 +23,8 @@ import { destroySecuredFields } from './utils/destroySecuredFields';
 import postMessageToIframe from './utils/iframes/postMessageToIframe';
 import getIframeContentWin from './utils/iframes/getIframeContentWin';
 import * as logger from '../utilities/logger';
-import { on, selectOne } from '../utilities/dom';
+import { selectOne } from '../utilities/dom';
+import { on } from '../../../../../utils/listenerUtils';
 import { partial } from '../utilities/commonUtils';
 import { hasOwnProperty } from '../../../../../utils/hasOwnProperty';
 import ua from './utils/userAgent';
@@ -72,6 +73,7 @@ class CSF extends AbstractCSF {
             isKCP: false
         } as CSFStateObject;
 
+        // Create object of references to properties on 'this', that can be used to set up the partials
         const thisObj: CSFThisObject = { csfState: this.state, csfConfig: this.config, csfProps: this.props, csfCallbacks: this.callbacks };
 
         // Setup 'this' references
@@ -92,6 +94,7 @@ class CSF extends AbstractCSF {
         this.createSecuredFields = createSecuredFields;
         this.createNonCardSecuredFields = createNonCardSecuredFields;
         this.createCardSecuredFields = createCardSecuredFields;
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         this.setupSecuredField = setupSecuredField;
 
         this.postMessageToAllIframes = partial(postMessageToAllIframes, thisObj);
@@ -139,7 +142,7 @@ class CSF extends AbstractCSF {
          * Add touchstart listener
          * re. Disabling arrow keys in iOS
          */
-        if (ua.__IS_IOS && this.config.shouldDisableIOSArrowKeys) {
+        if (ua.__IS_IOS && this.props.shouldDisableIOSArrowKeys) {
             this.hasGenuineTouchEvents = false;
             on(document, 'touchstart', this.touchstartListener);
         }

@@ -1,12 +1,12 @@
 import { h, ComponentChildren } from 'preact';
 import cx from 'classnames';
-import useCoreContext from '../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import './Fieldset.scss';
 
 interface FieldsetProps {
     children: ComponentChildren;
     classNameModifiers: string[];
-    label: string;
+    label?: string;
     readonly?: boolean;
 }
 

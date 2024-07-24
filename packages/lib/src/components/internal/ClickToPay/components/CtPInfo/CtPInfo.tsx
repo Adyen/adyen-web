@@ -2,7 +2,7 @@ import { Fragment, h } from 'preact';
 import { useCallback, useRef, useState } from 'preact/hooks';
 import { CtPInfoModal } from './CtPInfoModal';
 import useImage from '../../../../../core/Context/useImage';
-import useCoreContext from '../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import Img from '../../../Img';
 import './CtPInfo.scss';
 

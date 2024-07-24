@@ -1,13 +1,15 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import PersonalDetails from '../internal/PersonalDetails';
-import CoreProvider from '../../core/Context/CoreProvider';
+import { CoreProvider } from '../../core/Context/CoreProvider';
+import { TxVariants } from '../tx-variants';
 import FormInstruction from '../internal/FormInstruction';
+import { UIElementProps } from '../internal/UIElement/types';
 
-export class PersonalDetailsElement extends UIElement {
-    protected static defaultProps = {
-        showFormInstruction: true
-    };
+interface PersonalDetailsConfiguration extends UIElementProps {}
+
+export class PersonalDetailsElement extends UIElement<PersonalDetailsConfiguration> {
+    public static type = TxVariants.personal_details;
 
     get data() {
         return this.state.data;
@@ -20,7 +22,7 @@ export class PersonalDetailsElement extends UIElement {
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                {this.props.showFormInstruction && <FormInstruction />}
+                <FormInstruction />
                 <PersonalDetails
                     setComponentRef={this.setComponentRef}
                     {...this.props}

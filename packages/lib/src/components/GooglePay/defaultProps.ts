@@ -1,5 +1,7 @@
-export default {
-    environment: 'TEST',
+import { GooglePayConfiguration } from './types';
+
+const defaultProps: GooglePayConfiguration = {
+    isExpress: false,
 
     isExpress: false,
 
@@ -8,10 +10,9 @@ export default {
 
     // ButtonOptions
     // https://developers.google.com/pay/api/web/reference/object#ButtonOptions
-    buttonColor: 'default' as google.payments.api.ButtonColor, // default/black/white
-    buttonType: 'long' as google.payments.api.ButtonType, // long/short
-    buttonSizeMode: undefined,
-    showPayButton: true, // show or hide the Google Pay button
+    buttonColor: 'default',
+    buttonType: 'buy',
+    buttonSizeMode: 'fill',
 
     // PaymentDataRequest
     configuration: {
@@ -29,11 +30,9 @@ export default {
         currency: 'USD'
     },
 
-    countryCode: 'US',
-    totalPriceStatus: 'FINAL' as google.payments.api.TotalPriceStatus,
+    totalPriceStatus: 'FINAL',
 
     // Callbacks
-    onAuthorized: params => params,
     onClick: resolve => resolve(),
 
     // CardParameters
@@ -51,5 +50,7 @@ export default {
     shippingAddressParameters: undefined, // https://developers.google.com/pay/api/web/reference/object#ShippingAddressParameters
     shippingOptionRequired: false,
     shippingOptionParameters: undefined,
-    paymentMethods: []
+    callbackIntents: []
 };
+
+export default defaultProps;

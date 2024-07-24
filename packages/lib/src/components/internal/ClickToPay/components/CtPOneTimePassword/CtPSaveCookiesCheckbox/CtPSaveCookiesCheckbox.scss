@@ -1,10 +1,10 @@
-@import "../../../../../../style/index";
+@import 'styles/variable-generator';
 
 .adyen-checkout-ctp__otp-checkbox-container {
-  padding: 12px;
-  background-color: $color-gray-lighter;
-  border-radius: $border-radius-medium;
-  margin-bottom: 16px;
+  padding: token(spacer-060);
+  margin-bottom: token(spacer-070);
+  border-radius: token(border-radius-s);
+  background-color: #f7f8f9;
 }
 
 .adyen-checkout-ctp__otp-checkbox-container--checked {
@@ -16,20 +16,21 @@
 }
 
 .adyen-checkout-ctp__section .adyen-checkout__field.adyen-checkout-ctp__otp-checkbox-container {
-  margin-bottom: 4px;
+  margin-bottom: token(spacer-020);
+
 }
 
 .adyen-checkout-ctp__otp-checkbox-info {
-  color: $color-new-gray-darker;
-  font-size: 13px;
-  line-height: 19px;
-  font-weight: 400;
-  margin: 4px 0 0;
+  color: #707070;
+  font-size: token(text-body-font-size);
+  font-weight: token(text-body-font-weight);
+  line-height: token(text-body-line-height);
+  margin: token(spacer-020) 0 0;
 }
 
 .adyen-checkout-ctp__otp-readmore-button {
   all: unset;
   text-transform: lowercase;
   cursor: pointer;
-  color: $color-blue;
+  color: #0075ff;
 }

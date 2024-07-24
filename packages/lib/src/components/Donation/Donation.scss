@@ -1,21 +1,27 @@
-@import '../../style/index';
+@use 'styles/index';
+@import 'styles/variable-generator';
 
 .adyen-checkout__adyen-giving {
     .adyen-checkout__status__icon {
         display: block;
-        margin: $spacing-xxxlarge auto $spacing-xlarge;
+        margin: token(spacer-130) auto token(spacer-100);
     }
 
     .adyen-checkout__status__text {
-        color: $color-black;
-        margin-bottom: $spacing-xxxlarge;
+        color: token(color-label-primary);
+        margin-bottom: token(spacer-130);
         text-align: center;
+    }
+
+    .adyen-checkout-disclaimer__label {
+        margin-top: 0;
+        color: token(color-label-primary);
     }
 }
 
 .adyen-checkout__campaign {
-    border-radius: $border-radius-medium;
-    background: $color-black;
+    border-radius: token(border-radius-m);
+    background: token(color-label-primary);
     height: 227px;
     overflow: hidden;
     position: relative;
@@ -30,17 +36,17 @@
 }
 
 .adyen-checkout__campaign-logo {
-    border: 2px solid rgb(255 255 255 / 40%);
-    border-radius: $border-radius-small;
+    border: token(spacer-010) solid rgb(255 255 255 / 40%);
+    border-radius: token(border-radius-s);
     display: block;
-    height: 48px;
-    margin-bottom: $spacing-medium;
+    height: token(spacer-120);
+    margin-bottom: token(spacer-070);
     overflow: hidden;
-    width: 48px;
+    width: token(spacer-120);
 }
 
 .adyen-checkout__campaign-background-image {
-    background-color: $color-black;
+    background-color: token(color-label-primary);
     background-position: center;
     background-size: cover;
     height: 100%;
@@ -69,41 +75,58 @@
 
 .adyen-checkout__campaign-content {
     bottom: 0;
-    padding: $spacing-medium;
+    padding: token(spacer-070);
     position: absolute;
     z-index: 2;
 }
 
 .adyen-checkout__campaign-title,
 .adyen-checkout__campaign-description {
-    color: $color-white;
+    color: token(color-label-on-color);
     font-weight: normal;
     margin: 0;
 }
 
 .adyen-checkout__campaign-title {
-    font-size: $font-size-medium;
-    margin-bottom: $spacing-small;
+    @include index.adyen-checkout-text-title;
+
+    margin-bottom: token(spacer-040);
+}
+
+.adyen-checkout__campaign-cause {
+    @include index.adyen-checkout-text-caption;
+
+    color: token(color-label-on-color);
+    font-weight: token(text-caption-stronger-font-weight);
 }
 
 .adyen-checkout__campaign-description {
-    font-size: $font-size-small;
-    line-height: 19px;
+    @include index.adyen-checkout-text-caption;
+}
+
+.adyen-checkout-roundup-description {
+    @include index.adyen-checkout-text-caption;
+
+    display: inline-block;
+    color: token(color-label-secondary);
+    padding-left: 0;
 }
 
 .adyen-checkout__adyen-giving-actions {
-    margin-top: $spacing-medium;
+    margin-top: token(spacer-070);
+    display: flex;
+    flex-direction: column;
+    gap: token(spacer-070);
     text-align: center;
 }
 
 .adyen-checkout__button {
     &.adyen-checkout__button--donate {
-        margin: $spacing-medium auto $spacing-small;
+        margin: token(spacer-000);
     }
 
     &.adyen-checkout__button--decline {
         display: block;
         margin: auto;
-        width: initial;
     }
 }

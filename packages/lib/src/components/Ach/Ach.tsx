@@ -1,14 +1,15 @@
 import { h } from 'preact';
-import UIElement from '../UIElement';
+import UIElement from '../internal/UIElement/UIElement';
 import AchInput from './components/AchInput';
-import CoreProvider from '../../core/Context/CoreProvider';
+import { CoreProvider } from '../../core/Context/CoreProvider';
 import RedirectButton from '../internal/RedirectButton';
-import { AchElementProps } from './types';
+import { AchConfiguration } from './types';
+import { TxVariants } from '../tx-variants';
 
-export class AchElement extends UIElement<AchElementProps> {
-    public static type = 'ach';
+export class AchElement extends UIElement<AchConfiguration> {
+    public static type = TxVariants.ach;
 
-    formatProps(props: AchElementProps) {
+    formatProps(props: AchConfiguration) {
         return {
             ...props,
             // Fix mismatch between passed hasHolderName & holderNameRequired props
@@ -89,6 +90,7 @@ export class AchElement extends UIElement<AchElementProps> {
                 ) : (
                     <AchInput
                         setComponentRef={this.setComponentRef}
+                        handleKeyPress={this.handleKeyPress}
                         {...this.props}
                         onChange={this.setState}
                         onSubmit={this.submit}

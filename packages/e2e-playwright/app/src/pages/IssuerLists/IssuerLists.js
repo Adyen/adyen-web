@@ -1,6 +1,6 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
-import { handleSubmit, handleAdditionalDetails, handleError } from '../../handlers';
+import { AdyenCheckout, Dotpay } from '@adyen/adyen-web';
+import '@adyen/adyen-web/styles/adyen.css';
+import { handleSubmit, handleAdditionalDetails, handleError, handlePaymentCompleted } from '../../handlers';
 import { amount, shopperLocale, countryCode } from '../../services/commonConfig';
 import '../../style.scss';
 
@@ -16,43 +16,50 @@ const initCheckout = async () => {
                 {
                     issuers: [
                         {
-                            id: '231',
-                            name: 'POP Pankki'
+                            id: '73',
+                            name: 'BLIK'
+                        },
+
+                        {
+                            id: '81',
+                            name: 'Idea Cloud'
+                        },
+
+                        {
+                            id: '68',
+                            name: 'mRaty'
                         },
                         {
-                            id: '232',
-                            name: 'Aktia'
+                            id: '1',
+                            name: 'mTransfer'
                         },
                         {
-                            id: '1656',
-                            name: 'AGBA'
-                        },
-                        {
-                            id: '552',
-                            name: 'Raiffeisen'
-                        },
-                        {
-                            id: '751',
-                            name: 'SEB'
+                            id: '91',
+                            name: 'Nest Bank'
                         }
                     ],
-                    name: 'Bank Payment',
-                    type: 'entercash'
+                    name: 'Local Polish Payment Methods',
+                    type: 'dotpay'
                 }
             ]
         },
         clientKey: process.env.__CLIENT_KEY__,
         locale: shopperLocale,
+        _environmentUrls: {
+            cdn: {
+                translations: '/'
+            }
+        },
         countryCode,
         environment: 'test',
         showPayButton: true,
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
+        onPaymentCompleted: handlePaymentCompleted,
         onError: handleError
-        // ...window.mainConfiguration
     });
 
-    window.entercash = checkout.create('entercash', { highlightedIssuers: ['231', '551', '232'] }).mount('.issuer-field');
+    window.dotpay = new Dotpay(checkout, { highlightedIssuers: ['73', '81', '68'] }).mount('.issuer-field');
 };
 
 initCheckout();

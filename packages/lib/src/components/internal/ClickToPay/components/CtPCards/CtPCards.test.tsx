@@ -2,29 +2,30 @@ import { ComponentChildren, h } from 'preact';
 import { mock } from 'jest-mock-extended';
 import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
-import { ClickToPayContext, IClickToPayContext } from '../../context/ClickToPayContext';
 import CtPCards from './CtPCards';
 import ShopperCard from '../../models/ShopperCard';
-import { MastercardCheckout, VisaCheckout } from '../../services/types';
+import { IClickToPayService, MastercardCheckout, VisaCheckout } from '../../services/types';
+import { CoreProvider } from '../../../../../core/Context/CoreProvider';
+import ClickToPayProvider, { ClickToPayProviderProps } from '../../context/ClickToPayProvider';
 
-const customRender = (children: ComponentChildren, providerProps: IClickToPayContext) => {
+const customRender = (children: ComponentChildren, providerProps?: ClickToPayProviderProps) => {
     return render(
-        // eslint-disable-next-line react/no-children-prop
-        <ClickToPayContext.Provider value={{ ...providerProps }} children={children} />
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            <ClickToPayProvider {...providerProps}>{children}</ClickToPayProvider>
+        </CoreProvider>
     );
 };
 
 test('should pre selected available card', async () => {
     const user = userEvent.setup();
-    const contextProps = mock<IClickToPayContext>();
-    contextProps.onSetStatus.mockReturnValue();
-    contextProps.amount = { value: 2000, currency: 'EUR' };
 
-    contextProps.cards = [
+    const ctpService = mock<IClickToPayService>();
+    ctpService.shopperCards = [
         new ShopperCard(
             {
                 srcDigitalCardId: '654321',
                 panLastFour: '8902',
+                dateOfCardCreated: '2015-10-10T09:15:00.312Z',
                 dateOfCardLastUsed: '2020-05-28T08:10:02.312Z',
                 paymentCardDescriptor: 'visa',
                 panExpirationMonth: '08',
@@ -43,6 +44,7 @@ test('should pre selected available card', async () => {
             {
                 srcDigitalCardId: '123456',
                 panLastFour: '3456',
+                dateOfCardCreated: '2015-10-10T09:15:00.312Z',
                 dateOfCardLastUsed: '2022-02-16T08:10:02.312Z',
                 paymentCardDescriptor: 'mc',
                 panExpirationMonth: '12',
@@ -58,6 +60,12 @@ test('should pre selected available card', async () => {
             '1234566'
         )
     ];
+
+    const contextProps = mock<ClickToPayProviderProps>();
+    contextProps.onSetStatus.mockReturnValue();
+    contextProps.setClickToPayRef.mockImplementation();
+    contextProps.amount = { value: 2000, currency: 'EUR' };
+    contextProps.clickToPayService = ctpService;
 
     customRender(<CtPCards onDisplayCardComponent={jest.fn()} />, contextProps);
 
@@ -77,14 +85,14 @@ test('should pre selected available card', async () => {
 
 test('should not be able to checkout with expired card (single card)', async () => {
     const user = userEvent.setup();
-    const contextProps = mock<IClickToPayContext>();
-    contextProps.onSetStatus.mockReturnValue();
-    contextProps.amount = { value: 2000, currency: 'EUR' };
-    contextProps.cards = [
+
+    const ctpService = mock<IClickToPayService>();
+    ctpService.shopperCards = [
         new ShopperCard(
             {
                 srcDigitalCardId: 'xxxx-yyyy',
                 panLastFour: '2024',
+                dateOfCardCreated: '2015-10-10T09:15:00.312Z',
                 dateOfCardLastUsed: '2022-09-16T08:10:02.312Z',
                 paymentCardDescriptor: 'visa',
                 panExpirationMonth: '12',
@@ -101,6 +109,12 @@ test('should not be able to checkout with expired card (single card)', async () 
         )
     ];
 
+    const contextProps = mock<ClickToPayProviderProps>();
+    contextProps.onSetStatus.mockReturnValue();
+    contextProps.setClickToPayRef.mockImplementation();
+    contextProps.amount = { value: 2000, currency: 'EUR' };
+    contextProps.clickToPayService = ctpService;
+
     customRender(<CtPCards onDisplayCardComponent={jest.fn()} />, contextProps);
 
     await user.click(screen.getByRole('button', { name: 'Pay €20.00 with •••• 2024' }));
@@ -111,14 +125,14 @@ test('should not be able to checkout with expired card (single card)', async () 
 
 test('should not be able to checkout with expired card (card list)', async () => {
     const user = userEvent.setup();
-    const contextProps = mock<IClickToPayContext>();
-    contextProps.onSetStatus.mockReturnValue();
-    contextProps.amount = { value: 2000, currency: 'EUR' };
-    contextProps.cards = [
+
+    const ctpService = mock<IClickToPayService>();
+    ctpService.shopperCards = [
         new ShopperCard(
             {
                 srcDigitalCardId: '123456',
                 panLastFour: '3456',
+                dateOfCardCreated: '2015-10-10T09:15:00.312Z',
                 dateOfCardLastUsed: '2021-02-16T08:10:02.312Z',
                 paymentCardDescriptor: 'mc',
                 panExpirationMonth: '05',
@@ -137,6 +151,7 @@ test('should not be able to checkout with expired card (card list)', async () =>
             {
                 srcDigitalCardId: '654321',
                 panLastFour: '8902',
+                dateOfCardCreated: '2015-10-10T09:15:00.312Z',
                 dateOfCardLastUsed: '2020-05-28T08:10:02.312Z',
                 paymentCardDescriptor: 'visa',
                 panExpirationMonth: '08',
@@ -152,6 +167,12 @@ test('should not be able to checkout with expired card (card list)', async () =>
             '1234566'
         )
     ];
+
+    const contextProps = mock<ClickToPayProviderProps>();
+    contextProps.onSetStatus.mockReturnValue();
+    contextProps.setClickToPayRef.mockImplementation();
+    contextProps.amount = { value: 2000, currency: 'EUR' };
+    contextProps.clickToPayService = ctpService;
 
     customRender(<CtPCards onDisplayCardComponent={jest.fn()} />, contextProps);
 
@@ -174,18 +195,17 @@ test('should not be able to checkout with expired card (card list)', async () =>
 
 test('should be able to checkout (card list)', async () => {
     const user = userEvent.setup();
-    const contextProps = mock<IClickToPayContext>();
     const mcPayload = mock<MastercardCheckout>();
+    const contextProps = mock<ClickToPayProviderProps>();
 
-    contextProps.onSetStatus.mockReturnValue();
-    contextProps.checkout.mockResolvedValue(mcPayload);
-    contextProps.onSubmit.mockImplementation();
-    contextProps.amount = { value: 2000, currency: 'EUR' };
-    contextProps.cards = [
+    const ctpService = mock<IClickToPayService>();
+    ctpService.checkout.mockResolvedValue(mcPayload);
+    ctpService.shopperCards = [
         new ShopperCard(
             {
                 srcDigitalCardId: '654321',
                 panLastFour: '8902',
+                dateOfCardCreated: '2015-10-10T09:15:00.312Z',
                 dateOfCardLastUsed: '2022-09-28T08:10:02.312Z',
                 paymentCardDescriptor: 'visa',
                 panExpirationMonth: '12',
@@ -204,6 +224,7 @@ test('should be able to checkout (card list)', async () => {
             {
                 srcDigitalCardId: '123456',
                 panLastFour: '3456',
+                dateOfCardCreated: '2015-10-10T09:15:00.312Z',
                 dateOfCardLastUsed: '2022-09-16T08:10:02.312Z',
                 paymentCardDescriptor: 'mc',
                 panExpirationMonth: '08',
@@ -220,6 +241,12 @@ test('should be able to checkout (card list)', async () => {
         )
     ];
 
+    contextProps.onSetStatus.mockReturnValue();
+    contextProps.onSubmit.mockImplementation();
+    contextProps.setClickToPayRef.mockImplementation();
+    contextProps.amount = { value: 2000, currency: 'EUR' };
+    contextProps.clickToPayService = ctpService;
+
     customRender(<CtPCards onDisplayCardComponent={jest.fn()} />, contextProps);
 
     expect(screen.getByRole('button', { name: 'Pay €20.00 with •••• 8902' })).toBeTruthy();
@@ -234,23 +261,21 @@ test('should be able to checkout (card list)', async () => {
 
     // Shopper checkout with Mastercard card
     await user.click(screen.getByRole('button', { name: 'Pay €20.00 with •••• 3456' }));
-    expect(contextProps.checkout).toHaveBeenCalledWith(contextProps.cards[1]);
+    expect(ctpService.checkout).toHaveBeenCalledWith(ctpService.shopperCards[1]);
 });
 
 test('should be able to checkout (single card)', async () => {
     const user = userEvent.setup();
-    const contextProps = mock<IClickToPayContext>();
     const visaPayload = mock<VisaCheckout>();
 
-    contextProps.onSetStatus.mockReturnValue();
-    contextProps.checkout.mockResolvedValue(visaPayload);
-    contextProps.onSubmit.mockImplementation();
-    contextProps.amount = { value: 2000, currency: 'EUR' };
-    contextProps.cards = [
+    const ctpService = mock<IClickToPayService>();
+    ctpService.checkout.mockResolvedValue(visaPayload);
+    ctpService.shopperCards = [
         new ShopperCard(
             {
                 srcDigitalCardId: 'xxxx-yyyy',
                 panLastFour: '2024',
+                dateOfCardCreated: '2015-10-10T09:15:00.312Z',
                 dateOfCardLastUsed: '2022-09-16T08:10:02.312Z',
                 paymentCardDescriptor: 'visa',
                 panExpirationMonth: '12',
@@ -267,6 +292,13 @@ test('should be able to checkout (single card)', async () => {
         )
     ];
 
+    const contextProps = mock<ClickToPayProviderProps>();
+    contextProps.onSetStatus.mockReturnValue();
+    contextProps.onSubmit.mockImplementation();
+    contextProps.amount = { value: 2000, currency: 'EUR' };
+    contextProps.setClickToPayRef.mockImplementation();
+    contextProps.clickToPayService = ctpService;
+
     customRender(<CtPCards onDisplayCardComponent={jest.fn()} />, contextProps);
 
     expect(screen.getByText('Visa •••• 2024')).toBeTruthy();
@@ -275,11 +307,18 @@ test('should be able to checkout (single card)', async () => {
     await user.click(screen.getByRole('button', { name: 'Pay €20.00 with •••• 2024' }));
 
     expect(contextProps.onSetStatus).toHaveBeenCalledWith('loading');
-    expect(contextProps.checkout).toHaveBeenCalledWith(contextProps.cards[0]);
+    expect(ctpService.checkout).toHaveBeenCalledWith(ctpService.shopperCards[0]);
 
     await waitFor(() => expect(contextProps.onSubmit).toHaveBeenCalledWith(visaPayload));
 });
 
 test('should display empty card list UI if there is no card available', () => {
-    render(<CtPCards onDisplayCardComponent={jest.fn()} />);
+    const ctpService = mock<IClickToPayService>();
+    ctpService.shopperCards = [];
+
+    const contextProps = mock<ClickToPayProviderProps>();
+    contextProps.clickToPayService = ctpService;
+    contextProps.setClickToPayRef.mockImplementation();
+
+    customRender(<CtPCards onDisplayCardComponent={jest.fn()} />, contextProps);
 });

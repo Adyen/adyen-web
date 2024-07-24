@@ -1,9 +1,9 @@
-@import "../../../style/index";
+@import 'styles/variable-generator';
 
 .adyen-checkout__blik__helper {
-    font-size: $font-size-medium;
+    font-size: token(text-subtitle-font-size);
     font-weight: normal;
-    color: $color-black;
-    margin: 0 0 $spacing-medium;
+    color: token(color-label-primary);
+    margin: 0 0 token(spacer-070);
     padding: 0;
 }

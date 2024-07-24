@@ -1,17 +1,17 @@
 import { Component, h } from 'preact';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import Field from '../FormFields/Field';
 import { checkIbanStatus, isValidHolder } from './validate';
-import { electronicFormat, formatIban, getCountryCode, getIbanPlaceHolder, getNextCursorPosition } from './utils';
+import { electronicFormat, formatIban, getCountryCode, getNextCursorPosition } from './utils';
 import Fieldset from '../FormFields/Fieldset';
 import { GenericError } from '../../../core/Errors/types';
 import InputText from '../FormFields/InputText';
 
 interface IbanInputProps {
     holderName?: boolean;
-    placeholders?: any;
+    placeholders?: Omit<IbanData, 'countryCode'>;
     countryCode?: string;
-    showPayButton?: any;
+    showPayButton?: boolean;
     payButton?: any;
     onChange: (data) => void;
     label: string;
@@ -180,7 +180,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
         this.setError('holder', holderErr, this.onChange); // add callback param to force propagation of state to parent comp
     }
 
-    render({ placeholders, countryCode }: IbanInputProps, { data, errors, valid }) {
+    render({ placeholders }: IbanInputProps, { data, errors, valid }) {
         const { i18n } = useCoreContext();
         return (
             <Fieldset classNameModifiers={['iban-input']} label={this.props.label}>
@@ -197,7 +197,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
                         <InputText
                             name={'ownerName'}
                             className={'adyen-checkout__iban-input__owner-name'}
-                            placeholder={'ownerName' in placeholders ? placeholders.ownerName : i18n.get('sepaDirectDebit.nameField.placeholder')}
+                            placeholder={placeholders?.ownerName}
                             value={data['ownerName']}
                             aria-invalid={!!this.state.errors.holder}
                             aria-label={i18n.get('sepa.ownerName')}
@@ -225,7 +225,7 @@ class IbanInput extends Component<IbanInputProps, IbanInputState> {
                         name={'ibanNumber'}
                         className={'adyen-checkout__iban-input__iban-number'}
                         classNameModifiers={['large']}
-                        placeholder={'ibanNumber' in placeholders ? placeholders.ibanNumber : getIbanPlaceHolder(countryCode)}
+                        placeholder={placeholders?.ibanNumber}
                         value={data['ibanNumber']}
                         onInput={this.handleIbanInput}
                         aria-invalid={!!this.state.errors.iban}

@@ -1,7 +1,7 @@
 import { h, RefCallback } from 'preact';
 import { useCallback } from 'preact/hooks';
 import classNames from 'classnames';
-import { ARIA_ERROR_SUFFIX } from '../../../core/Errors/constants';
+import { ARIA_CONTEXT_SUFFIX, ARIA_ERROR_SUFFIX } from '../../../core/Errors/constants';
 import Language from '../../../language';
 import './FormFields.scss';
 
@@ -25,11 +25,12 @@ export interface InputBaseProps extends h.JSX.HTMLAttributes {
     onFocusHandler?: h.JSX.GenericEventHandler<HTMLInputElement>;
     maxlength?: number | null;
     addContextualElement?: boolean;
+    type?: string;
 }
 
 export default function InputBase({ setRef, ...props }: InputBaseProps) {
     const { autoCorrect, classNameModifiers, isInvalid, isValid, readonly = null, spellCheck, type, uniqueId, disabled } = props;
-    const className = props.className as string;
+    const className = props.className;
 
     /**
      * To avoid confusion with misplaced/misdirected onChange handlers - InputBase only accepts onInput, onBlur & onFocus handlers.
@@ -40,7 +41,7 @@ export default function InputBase({ setRef, ...props }: InputBaseProps) {
     }
 
     const handleInput = useCallback(
-        (event: h.JSX.TargetedEvent<HTMLInputElement>) => {
+        (event: h.JSX.TargetedInputEvent<HTMLInputElement>) => {
             props.onInput(event);
         },
         [props.onInput]
@@ -104,7 +105,7 @@ export default function InputBase({ setRef, ...props }: InputBaseProps) {
             readOnly={readonly}
             spellCheck={spellCheck}
             autoCorrect={autoCorrect}
-            aria-describedby={`${uniqueId}${ARIA_ERROR_SUFFIX}`}
+            aria-describedby={`${uniqueId}${isInvalid ? ARIA_ERROR_SUFFIX : ARIA_CONTEXT_SUFFIX}`}
             aria-invalid={isInvalid}
             onInput={handleInput}
             onBlur={handleBlur}

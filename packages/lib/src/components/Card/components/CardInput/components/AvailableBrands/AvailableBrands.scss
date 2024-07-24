@@ -1,44 +1,38 @@
-@import "../../../../../../style/index";
+@import 'styles/variable-generator';
 
 .adyen-checkout__card__brands {
     display: flex;
     flex-basis: auto;
     flex-shrink: 1;
     flex-wrap: wrap;
-    gap: 4px;
-    height: 16px;
-    overflow: hidden;
-    margin-top: -8px;
-    margin-bottom: 16px;
-    transition: all 0.2s ease-out;
+    min-height: token(spacer-090);
+    margin-top: -12px;
+    margin-bottom: token(spacer-060);
+    transition: all 0.3s ease-out;
+
+    &__brand-wrapper {
+        box-shadow: token(shadow-low);
+        overflow: hidden;
+        display: inline-block;
+        height: token(spacer-070);
+        width: token(spacer-090);
+        position: relative;
+        border-radius: token(border-radius-s);
+        margin: token(spacer-020) token(spacer-010);
+    }
 }
 
 .adyen-checkout__card__brands--hidden {
     opacity: 0;
-    height: 0;
+    max-height: 0;
+    min-height: 0;
     margin: -8px 0 8px;
 }
 
 .adyen-checkout__card__brands img {
-    border-radius: 3px;
-    height: 16px;
-    width: 24px;
-}
-
-.adyen-checkout__card__brands__brand-wrapper {
-    display: inline-block;
-    height: 16px;
-    width: 24px;
-    position: relative;
-}
-
-.adyen-checkout__card__brands__brand-wrapper::after {
-    content: "";
-    position: absolute;
-    top: 0;
+    margin: 0;
+    padding: 0;
+    display: block;
     width: 100%;
-    height: 100%;
-    left: 0;
-    border-radius: $border-radius-small;
-    border: 1px solid rgb(0 27 43 / 17%);
+    height: auto;
 }

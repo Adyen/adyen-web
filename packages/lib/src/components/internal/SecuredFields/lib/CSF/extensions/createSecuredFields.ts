@@ -9,13 +9,14 @@ import {
     SF_CONFIG_TIMEOUT,
     ALL_SECURED_FIELDS,
     ENCRYPTED_EXPIRY_MONTH
-} from '../../configuration/constants';
-import { existy } from '../../utilities/commonUtils';
+} from '../../constants';
+import { existy } from '../../../../../../utils/commonUtils';
 import cardType from '../utils/cardType';
-import { SecuredFieldInitObj } from '../../securedField/AbstractSecuredField';
+import { SecuredFieldSetupObject } from '../../types';
 import SecuredField from '../../securedField/SecuredField';
 import { CardObject, CbObjOnBrand, SFFeedbackObj, CbObjOnLoad, CVCPolicyType, DatePolicyType } from '../../types';
 import AdyenCheckoutError from '../../../../../../core/Errors/AdyenCheckoutError';
+import type { SFKeyPressObj } from '../../types';
 
 /**
  * Bound to the instance of CSF
@@ -113,8 +114,8 @@ export async function createCardSecuredFields(
             this.state.type = 'unrecognised-single-brand'; // Will let CVC field accept 4 digits in the input
         } else {
             // Assess whether cvc field is required based on the card type & whether the cvc field should even be visible
-            cvcPolicy = (card.cvcPolicy as CVCPolicyType) || CVC_POLICY_REQUIRED;
-            expiryDatePolicy = (card.expiryDatePolicy as DatePolicyType) || DATE_POLICY_REQUIRED;
+            cvcPolicy = card.cvcPolicy || CVC_POLICY_REQUIRED;
+            expiryDatePolicy = card.expiryDatePolicy || DATE_POLICY_REQUIRED;
 
             this.securityCode = card.securityCode;
         }
@@ -192,8 +193,8 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
         const extraFieldData: string = getAttribute(pItem, DATA_INFO);
         const uid = getAttribute(pItem, DATA_UID);
 
-        // ////// CREATE SecuredField passing in configObject of props that will be set on the SecuredField instance
-        const sfInitObj: SecuredFieldInitObj = {
+        // CREATE SecuredField passing config object
+        const sfInitObj: SecuredFieldSetupObject = {
             fieldType,
             extraFieldData,
             uid,
@@ -201,8 +202,9 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
             holderEl: pItem,
             expiryDatePolicy,
             txVariant: this.state.type,
+            // from this.config (calculated)
             cardGroupTypes: this.config.cardGroupTypes,
-            iframeUIConfig: this.config.iframeUIConfig ? this.config.iframeUIConfig : {},
+            iframeUIConfig: this.config.iframeUIConfig,
             sfLogAtStart: this.config.sfLogAtStart,
             trimTrailingSeparator: this.config.trimTrailingSeparator,
             isCreditCardType: this.config.isCreditCardType,
@@ -211,10 +213,13 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
             showWarnings: this.config.showWarnings,
             legacyInputMode: this.config.legacyInputMode,
             minimumExpiryDate: this.config.minimumExpiryDate,
-            implementationType: this.config.implementationType,
-            maskSecurityCode: this.config.maskSecurityCode,
+            // from this.props (passed straight thru)
+            maskSecurityCode: this.props.maskSecurityCode,
             exposeExpiryDate: this.props.exposeExpiryDate,
-            disableIOSArrowKeys: this.config.shouldDisableIOSArrowKeys
+            disableIOSArrowKeys: this.props.shouldDisableIOSArrowKeys,
+            implementationType: this.props.implementationType,
+            showContextualElement: this.props.showContextualElement,
+            placeholders: this.props.placeholders
         };
 
         const sf: SecuredField = new SecuredField(sfInitObj, this.props.i18n)
@@ -238,7 +243,7 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
                 /** Create timeout within which time we expect the securedField to configure */
                 // @ts-ignore - timeout 'type' *is* a number
                 sf.loadToConfigTimeout = setTimeout(() => {
-                    reject({ type: sf.fieldType, failReason: 'sf took too long to config' });
+                    reject({ type: sfInitObj.fieldType, failReason: 'sf took too long to config' });
                 }, SF_CONFIG_TIMEOUT);
 
                 // If all iframes are loaded - call onLoad callback
@@ -264,7 +269,7 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
             })
             .onTouchstart((pFeedbackObj: SFFeedbackObj): void => {
                 // re. Disabling arrow keys in iOS - need to disable all other fields in the form
-                if (this.config.shouldDisableIOSArrowKeys) {
+                if (this.props.shouldDisableIOSArrowKeys) {
                     /**
                      * re. this.hasGenuineTouchEvents...
                      *  There seems to be an issue with Responsive Design mode in Safari that means it allows setting focus on cross-origin iframes,
@@ -298,6 +303,10 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
             })
             .onAutoComplete((pFeedbackObj: SFFeedbackObj): void => {
                 this.processAutoComplete(pFeedbackObj);
+            })
+            .onKeyPressed((pFeedbackObj: SFFeedbackObj): void => {
+                const { numKey, ...rest } = pFeedbackObj;
+                this.callbacks.onKeyPressed(rest as SFKeyPressObj);
             });
 
         // Store reference to securedField in this.state (under fieldType)

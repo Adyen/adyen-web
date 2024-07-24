@@ -10,3 +10,12 @@
     border: 1px solid $color-gray;
     margin-bottom: 16px;
 }
+
+.url-hint-text {
+    color: $color-gray-darker;
+    font-size: $font-size-small;
+}
+
+.qrcode-demo .merchant-checkout__payment-method__details{
+    padding-top: 0;
+}

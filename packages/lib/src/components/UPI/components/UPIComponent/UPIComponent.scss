@@ -1,25 +1,25 @@
-@import '../../../../style/index';
+@import 'styles/variable-generator';
 
 .adyen-checkout_upi-mode-selection-text {
-    font-weight: 400;
-    font-size: 13px;
-    line-height: 19px;
-    margin-top: 0;
-    margin-bottom: 7px;
+    font-weight: token(text-caption-font-weight);
+    font-size: token(text-caption-font-size);
+    line-height: token(text-caption-line-height);
+    margin-top: token(spacer-000);
+    margin-bottom: token(spacer-040);
 }
 
 .adyen-checkout__segmented-control--upi-margin-bottom {
-    margin-bottom: 16px;
+    margin-bottom: token(spacer-070);
 }
 
 .adyen-checkout-upi-area-intent {
     .adyen-checkout__button--pay {
-        margin-top: 16px;
+        margin-top: token(spacer-070);
     }
 }
 
 .adyen-checkout-upi-area-qr-code {
     .adyen-checkout__button--pay {
-        margin-top: 0;
+        margin-top: token(spacer-000);
     }
 }

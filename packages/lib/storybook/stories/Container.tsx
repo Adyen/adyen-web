@@ -1,24 +1,16 @@
-import { Fragment } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import Core from '../../src/core';
-import { PaymentMethodOptions, PaymentMethods } from '../../src/types';
+import { IUIElement } from '../../src/components/internal/UIElement/types';
 
-interface IContainer<T extends keyof PaymentMethods> {
-    type: T;
-    componentConfiguration: PaymentMethodOptions<T>;
-    checkout: Core;
+interface IContainer {
+    element: IUIElement;
 }
 
-export const Container = <T extends keyof PaymentMethods>({ type, componentConfiguration, checkout }: IContainer<T>) => {
+export const Container = ({ element }: IContainer) => {
     const container = useRef(null);
     const [errorMessage, setErrorMessage] = useState(null);
 
     useEffect(() => {
-        if (!checkout) {
-            return;
-        }
-
-        const element = checkout.create(type, { ...componentConfiguration });
+        if (!element) return;
 
         if (element.isAvailable) {
             element
@@ -32,9 +24,7 @@ export const Container = <T extends keyof PaymentMethods>({ type, componentConfi
         } else {
             element.mount(container.current);
         }
-    }, []);
+    }, [element]);
 
-    return (
-        <Fragment>{errorMessage ? <div>{errorMessage}</div> : <div ref={container} id="component-root" className="component-wrapper" />}</Fragment>
-    );
+    return <div>{errorMessage ? <div>{errorMessage}</div> : <div ref={container} id="component-root" className="component-wrapper" />}</div>;
 };

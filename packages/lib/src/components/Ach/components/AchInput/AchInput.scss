@@ -1,9 +1,15 @@
+@import 'styles/variable-generator';
+
 .adyen-checkout__loading-input__form {
     transition: opacity 0.25s ease-out;
 }
 
 .adyen-checkout__pm__holderName {
     margin-bottom: 0;
+
+    .adyen-checkout__input {
+        max-height: 100px;
+    }
 }
 
 .adyen-checkout__fieldset__title + .adyen-checkout__ach-sf__form {
@@ -11,11 +17,17 @@
 }
 
 .adyen-checkout__ach-sf__form {
-    margin-top: 16px;
+    margin-top: token(spacer-070);
 }
 
 .adyen-checkout__ach-input {
     .adyen-checkout__fieldset--address {
-        margin-top: 16px;
+        margin-top: token(spacer-070);
+    }
+}
+
+.sf-input {
+    &__wrapper {
+        position: relative;
     }
 }

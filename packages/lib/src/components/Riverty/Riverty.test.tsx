@@ -1,12 +1,10 @@
-import { h } from 'preact';
 import Riverty from './Riverty';
 import { render, screen } from '@testing-library/preact';
 import { Resources } from '../../core/Context/Resources';
 import { SRPanel } from '../../core/Errors/SRPanel';
-import Language from '../../language';
 import getDataset from '../../core/Services/get-dataset';
 import { termsAndConditionsUrlMap } from './config';
-import { OpenInvoiceContainerProps } from '../helpers/OpenInvoiceContainer/OpenInvoiceContainer';
+import type { OpenInvoiceConfiguration } from '../helpers/OpenInvoiceContainer/types';
 
 jest.mock('../../core/Services/get-dataset');
 const countriesMock = [
@@ -19,20 +17,21 @@ const countriesMock = [
 (getDataset as jest.Mock).mockImplementation(jest.fn(() => Promise.resolve(countriesMock)));
 
 describe('Riverty', () => {
-    const props: OpenInvoiceContainerProps = {
-        i18n: new Language(),
+    const props: OpenInvoiceConfiguration = {
+        i18n: global.i18n,
         loadingContext: 'test',
         countryCode: 'DE',
         modules: {
             resources: new Resources('test'),
-            srPanel: new SRPanel({})
+            srPanel: new SRPanel(global.core)
         }
     };
 
     describe('personal details', () => {
         test('should show required fields', async () => {
-            // @ts-ignore ignore
-            render(<Riverty {...props} />);
+            const riverty = new Riverty(global.core, props);
+            render(riverty.render());
+
             const firstName = await screen.findByLabelText('First name', { selector: 'input' });
             const lastName = await screen.findByLabelText('Last name', { selector: 'input' });
             const dateOfBirth = await screen.findByLabelText('Date of birth', { selector: 'input' });
@@ -62,8 +61,10 @@ describe('Riverty', () => {
                     }
                 }
             };
-            // @ts-ignore ignore
-            render(<Riverty {...withDeliveryAddressData} />);
+
+            const riverty = new Riverty(global.core, withDeliveryAddressData);
+            render(riverty.render());
+
             const firstName = await screen.findByLabelText('Recipient first name', { selector: 'input' });
             const lastName = await screen.findByLabelText('Recipient last name', { selector: 'input' });
             const country = await screen.findAllByLabelText('Country/Region');
@@ -81,7 +82,7 @@ describe('Riverty', () => {
         });
 
         test('should show the correct read-only fields', async () => {
-            const withReadOnlyDeliveryAddressData: OpenInvoiceContainerProps = {
+            const withReadOnlyDeliveryAddressData: OpenInvoiceConfiguration = {
                 ...props,
                 visibility: {
                     deliveryAddress: 'readOnly'
@@ -97,7 +98,7 @@ describe('Riverty', () => {
                 }
             };
 
-            render(new Riverty(withReadOnlyDeliveryAddressData).render());
+            render(new Riverty(global.core, withReadOnlyDeliveryAddressData).render());
             for (const value of Object.values(withReadOnlyDeliveryAddressData.data.deliveryAddress)) {
                 const element = await screen.findByText(new RegExp(value), { exact: false });
                 expect(element).toBeInTheDocument();
@@ -107,7 +108,7 @@ describe('Riverty', () => {
 
     describe('terms and conditions', () => {
         test('should show the correct t&c urls', async () => {
-            render(new Riverty(props).render());
+            render(new Riverty(global.core, props).render());
             const tcLink = await screen.findByRole('link', { name: 'payment conditions' });
             expect(tcLink).toHaveAttribute('href', termsAndConditionsUrlMap[props.countryCode.toLowerCase()].en);
         });

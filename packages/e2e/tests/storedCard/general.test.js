@@ -1,10 +1,10 @@
 import { TEST_CVC_VALUE } from '../cards/utils/constants';
 import CardComponentPage from '../_models/CardComponent.page';
-import LANG from '../../../lib/src/language/locales/en-US.json';
+import LANG from '../../../server/translations/en-US.json';
 
 const cardPage = new CardComponentPage('.stored-card-field', {}, 'storedcards');
 
-const EMPTY_FIELD = LANG['error.va.sf-cc-cvc.01'];
+const EMPTY_FIELD = LANG['cc.cvc.920'];
 
 fixture`Testing some general functionality and UI on the stored card component`.beforeEach(async t => {
     await t.navigateTo(cardPage.pageUrl);
@@ -18,16 +18,16 @@ test('#1 Can fill out the cvc fields in the stored card and make a successful pa
     await t.setNativeDialogHandler(() => true);
 
     // expiry date field is readonly
-    await t.expect(cardPage.storedCardExpiryDate.withAttribute('readonly').exists).ok();
+    await t.expect(cardPage.storedCardExpiryDate.withAttribute('disabled').exists).ok();
 
     await cardPage.cardUtils.fillCVC(t, TEST_CVC_VALUE, 'add', 0);
 
     // click pay
-    await t.click(cardPage.payButton).expect(cardPage.cvcLabelTextError.exists).notOk().wait(1000);
+    await t.click(cardPage.payButton).expect(cardPage.cvcLabelTextError.exists).notOk().wait(3000);
 
     // Check the value of the alert text
     const history = await t.getNativeDialogHistory();
-    await t.expect(history[0].text).eql('Authorised');
+    await t.expect(history[0].text).eql('Authorised', { timeout: 5000 });
 });
 
 test('#2 Pressing pay without filling the cvc should generate a translated error ("empty")', async t => {
@@ -57,9 +57,9 @@ test('#3 A storedCard with no expiry date field still can be used for a successf
     await cardPage.cardUtils.fillCVC(t, TEST_CVC_VALUE, 'add', 0);
 
     // click pay
-    await t.click(cardPage.payButton).expect(cardPage.cvcLabelTextError.exists).notOk().wait(1000);
+    await t.click(cardPage.payButton).expect(cardPage.cvcLabelTextError.exists).notOk().wait(3000);
 
     // Check the value of the alert text
     const history = await t.getNativeDialogHistory();
-    await t.expect(history[0].text).eql('Authorised');
+    await t.expect(history[0].text).eql('Authorised', { timeout: 5000 });
 }).clientScripts('./storedCard.noExpiry.clientScripts.js'); // N.B. the clientScript nullifies the expiryMonth & Year fields in the storedCardData

@@ -1,7 +1,7 @@
 import { makePayment, makeDetailsCall, getPaymentMethods } from './checkout-api-calls';
-import UIElement from '../../src/components/UIElement';
+import UIElement from '../../src/components/internal/UIElement/UIElement';
 import Core from '../../src/core';
-
+// todo: we can make it a preact component in the storybook, so that we don't need to manipulate the DOM
 function displayResultMessage(isAuthorized: boolean, resultCode: string): void {
     const image = document.createElement('img');
     image.setAttribute(
@@ -74,11 +74,12 @@ export async function handleResponse(response, component, checkout?, paymentData
     return handleFinalState(response, component);
 }
 
-export function handleChange(state: any, component: UIElement) {
+export function handleChange(state: any, _component: UIElement) {
     console.groupCollapsed(`onChange - ${state.data.paymentMethod.type}`);
     console.log('isValid', state.isValid);
     console.log('data', state.data);
-    console.log('node', component._node);
+    // @ts-ignore Logging internal prop
+    console.log('node', _component._node);
     console.log('state', state);
     console.groupEnd();
 }

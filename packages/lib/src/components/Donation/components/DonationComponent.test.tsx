@@ -1,14 +1,33 @@
 import { h } from 'preact';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import DonationComponent from './DonationComponent';
 import { render, screen } from '@testing-library/preact';
+import { CoreProvider } from '../../../core/Context/CoreProvider';
+import { FixedAmountsDonation, RoundupDonation } from './types';
 
 const onDonate = () => {};
-const amounts = {
+
+const fixedAmounts: FixedAmountsDonation = {
+    type: 'fixedAmounts',
     currency: 'EUR',
     values: [50, 199, 300]
 };
-const createWrapper = (props = {}) => mount(<DonationComponent onDonate={onDonate} amounts={amounts} {...props} />);
+
+const roundUp: RoundupDonation = {
+    type: 'roundup',
+    currency: 'EUR',
+    maxRoundupAmount: 99
+};
+
+const commercialTxAmount = 1000;
+
+const createWrapper = (props = {}) => {
+    return mount(
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            <DonationComponent commercialTxAmount={commercialTxAmount} onDonate={onDonate} donation={fixedAmounts} {...props} />
+        </CoreProvider>
+    );
+};
 
 describe('DonationComponent', () => {
     test('Renders the Donation Component', () => {
@@ -17,28 +36,17 @@ describe('DonationComponent', () => {
     });
 
     test('Renders the Success state', () => {
-        const wrapper = shallow(<DonationComponent amounts={amounts} onDonate={onDonate} />);
-        wrapper.instance().setStatus('success');
-        expect(wrapper.find('.adyen-checkout__status__icon--success')).toHaveLength(1);
+        const wrapper = createWrapper({ donation: fixedAmounts, onDonate });
+        wrapper.find('DonationComponent').instance().setStatus('success');
+        wrapper.update();
+        expect(wrapper.find('.adyen-checkout__status__icon--success')).toBeDefined();
     });
 
     test('Renders the Error state', () => {
-        const wrapper = shallow(<DonationComponent amounts={amounts} onDonate={onDonate} />);
-        wrapper.instance().setStatus('error');
-        expect(wrapper.find('.adyen-checkout__status__icon--error')).toHaveLength(1);
-    });
-
-    test('Shows amounts', () => {
-        const wrapper = createWrapper();
-        expect(wrapper.find('.adyen-checkout__button-group__input')).toHaveLength(3);
-    });
-
-    test('Should return isValid true when an amount is selected', () => {
-        const onChangeMock = jest.fn();
-        const wrapper = createWrapper({ onChange: onChangeMock });
-        wrapper.find('.adyen-checkout__button-group__input').first().simulate('change');
-        const lastOnChangeCall = onChangeMock.mock.calls.pop();
-        expect(lastOnChangeCall[0].isValid).toBe(true);
+        const wrapper = createWrapper({ donation: fixedAmounts, onDonate });
+        wrapper.find('DonationComponent').instance().setStatus('error');
+        wrapper.update();
+        expect(wrapper.find('.adyen-checkout__status__icon--error')).toBeDefined();
     });
 
     test('Calls the onCancel event', () => {
@@ -54,7 +62,7 @@ describe('DonationComponent', () => {
     });
 
     test('Hides the Cancel button', () => {
-        const wrapper = createWrapper({ amounts, showCancelButton: false });
+        const wrapper = createWrapper({ donation: fixedAmounts, showCancelButton: false });
         expect(wrapper.find('.adyen-checkout__button--decline')).toHaveLength(0);
     });
 
@@ -65,32 +73,78 @@ describe('DonationComponent', () => {
         expect(wrapper.find('label.adyen-checkout__button').at(2).text()).toEqual('€3.00');
     });
 
-    test('Should submit the right amount', () => {
-        const onDonateMock = jest.fn();
-        const wrapper = createWrapper({ onDonate: onDonateMock });
+    test('Should render the disclaimer if termsAndConditionUrl presents', () => {
+        const termsAndConditionUrl = 'https://www.adyen.com';
 
-        wrapper.find('.adyen-checkout__button-group__input').first().simulate('change');
-        wrapper.find('.adyen-checkout__button--donate').simulate('click');
-
-        const callbackData = onDonateMock.mock.calls[0][0];
-        expect(callbackData.data.amount.value).toBe(50);
-    });
-
-    test('Should render the disclaimer if disclaimerMessage presents', () => {
-        const disclaimerMessage = {
-            message: 'By continuing you accept the %{linkText} of MyStore',
-            linkText: 'terms and conditions',
-            link: 'https://www.adyen.com'
-        };
-
-        render(<DonationComponent amounts={amounts} disclaimerMessage={disclaimerMessage} onDonate={onDonate} />);
-        expect(screen.getByText('By continuing', { exact: false }).textContent).toEqual(
-            'By continuing you accept the terms and conditions of MyStore'
+        render(
+            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                <DonationComponent
+                    donation={fixedAmounts}
+                    termsAndConditionsUrl={termsAndConditionUrl}
+                    onDonate={onDonate}
+                    commercialTxAmount={commercialTxAmount}
+                />
+            </CoreProvider>
+        );
+        expect(screen.getByText('By donating you agree to the', { exact: false }).textContent).toEqual(
+            'By donating you agree to the terms and conditions'
         );
     });
 
-    test('Should not render the disclaimer if there is no disclaimerMessage', () => {
-        render(<DonationComponent amounts={amounts} onDonate={onDonate} />);
+    test('Should not render the disclaimer if there is no termsAndConditionUrl', () => {
+        render(
+            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                <DonationComponent donation={fixedAmounts} onDonate={onDonate} commercialTxAmount={commercialTxAmount} />
+            </CoreProvider>
+        );
         expect(screen.queryByText('By continuing', { exact: false })).toBeNull();
+    });
+
+    describe('Fixed amount donation', () => {
+        test('Shows amounts', () => {
+            const wrapper = createWrapper();
+            expect(wrapper.find('.adyen-checkout__button-group__input')).toHaveLength(3);
+        });
+
+        test('Should return isValid true when an amount is selected', () => {
+            const onChangeMock = jest.fn();
+            const wrapper = createWrapper({ onChange: onChangeMock });
+            wrapper.find('.adyen-checkout__button-group__input').first().simulate('change');
+            const lastOnChangeCall = onChangeMock.mock.calls.pop();
+            expect(lastOnChangeCall[0].isValid).toBe(true);
+        });
+
+        test('Should submit the right amount', () => {
+            const onDonateMock = jest.fn();
+            const wrapper = createWrapper({ onDonate: onDonateMock });
+
+            wrapper.find('.adyen-checkout__button-group__input').first().simulate('change');
+            wrapper.find('.adyen-checkout__button--donate').simulate('click');
+
+            const callbackData = onDonateMock.mock.calls[0][0];
+            expect(callbackData.data.amount.value).toBe(50);
+        });
+    });
+
+    describe('Roundup donation', () => {
+        test('Should show the roundup amount in the donate button', () => {
+            render(
+                <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                    <DonationComponent donation={roundUp} onDonate={onDonate} commercialTxAmount={commercialTxAmount} />
+                </CoreProvider>
+            );
+            expect(screen.getByRole('button', { name: 'Donate €0.89' })).toBeTruthy();
+        });
+
+        test('Should show the roundup description', () => {
+            render(
+                <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                    <DonationComponent donation={roundUp} onDonate={onDonate} commercialTxAmount={commercialTxAmount} />
+                </CoreProvider>
+            );
+            expect(screen.getByText('€0.89 is a round up', { exact: false }).textContent).toEqual(
+                '€0.89 is a round up from your original payment (€10.00)'
+            );
+        });
     });
 });

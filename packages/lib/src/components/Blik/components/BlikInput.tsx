@@ -1,17 +1,18 @@
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
-import useCoreContext from '../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 import Field from '../../internal/FormFields/Field';
-
-import { UIElementProps } from '../../types';
 import './BlikInput.scss';
 import useForm from '../../../utils/useForm';
 import { digitsOnlyFormatter } from '../../../utils/Formatters/formatters';
 import useImage from '../../../core/Context/useImage';
 import InputText from '../../internal/FormFields/InputText';
+import { UIElementProps } from '../../internal/UIElement/types';
+import { PREFIX } from '../../internal/Icon/constants';
 
 interface BlikInputProps extends UIElementProps {
     data?: BlikInputDataState;
+    placeholders?: BlikInputDataState;
 }
 
 interface BlikInputDataState {
@@ -36,6 +37,7 @@ function BlikInput(props: BlikInputProps) {
     });
 
     useEffect(() => {
+        // @ts-ignore TODO: Fix this. Preact component types should not inherit from UIElementProps.
         props.onChange({ data, errors, valid, isValid }, this);
     }, [data, valid, errors, isValid]);
 
@@ -63,7 +65,7 @@ function BlikInput(props: BlikInputProps) {
                     autocomplete={'off'}
                     onInput={handleChangeFor('blikCode', 'input')}
                     onBlur={handleChangeFor('blikCode', 'blur')}
-                    placeholder={'123456'}
+                    placeholder={props?.placeholders?.blikCode}
                     inputMode={'numeric'}
                     maxLength={6}
                 />
@@ -72,7 +74,7 @@ function BlikInput(props: BlikInputProps) {
             {props.showPayButton &&
                 props.payButton({
                     status,
-                    icon: getImage({ imageFolder: 'components/' })('lock')
+                    icon: getImage({ imageFolder: 'components/' })(`${PREFIX}lock`)
                 })}
         </div>
     );

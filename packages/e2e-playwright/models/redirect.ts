@@ -1,5 +1,5 @@
 import { Locator, Page } from '@playwright/test';
-import { capitalizeFirstLetter } from '../../lib/src/utils/Formatters/formatters';
+import { capitalizeFirstLetter } from '../../lib/src/utils/textUtils';
 
 const SELECT_YOUR_BANK = 'Select your Bank';
 const TEST_BANK_NAME = 'TESTNL2A';
@@ -19,7 +19,6 @@ class Redirect {
     readonly simulateFailureButton: Locator;
     readonly simulateExpirationButton: Locator;
     readonly simulateCancellationButton: Locator;
-    readonly resultMessage: Locator;
 
     readonly page: Page;
 
@@ -36,8 +35,6 @@ class Redirect {
         this.simulateFailureButton = page.getByRole('button', { name: SIMULATION_TYPE_FAILURE });
         this.simulateExpirationButton = page.getByRole('button', { name: SIMULATION_TYPE_EXPIRATION });
         this.simulateCancellationButton = page.getByRole('button', { name: SIMULATION_TYPE_CANCELLATION, exact: true });
-
-        this.resultMessage = page.locator('#result-message');
     }
 
     async isComponentVisible() {
@@ -68,10 +65,6 @@ class Redirect {
         let simType = sim.toLowerCase();
         simType = capitalizeFirstLetter(simType);
         await this[`simulate${simType}Button`].click();
-    }
-
-    async isMessageVisible() {
-        await this.resultMessage.waitFor({ state: 'visible' });
     }
 }
 

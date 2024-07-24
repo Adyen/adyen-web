@@ -1,5 +1,6 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
+import { AdyenCheckout } from '@adyen/adyen-web';
+import '@adyen/adyen-web/styles/adyen.css';
+
 import { getSearchParameters } from '../../utils';
 import '../../../config/polyfills';
 import '../../style.scss';
@@ -9,8 +10,12 @@ async function handleRedirectResult(redirectResult, sessionId) {
         session: { id: sessionId },
         clientKey: process.env.__CLIENT_KEY__,
         environment: process.env.__CLIENT_ENV__,
-        onPaymentCompleted: result => {
-            console.log('onPaymentCompleted', result);
+        onPaymentCompleted: (result, element) => {
+            console.log('onPaymentCompleted', result, element);
+            document.querySelector('#result-container > pre').innerHTML = JSON.stringify(result, null, '\t');
+        },
+        onPaymentFailed: (result, element) => {
+            console.log('onPaymentFailed', result, element);
             document.querySelector('#result-container > pre').innerHTML = JSON.stringify(result, null, '\t');
         },
         onError: obj => {

@@ -1,6 +1,6 @@
 import Language from '../../../../language/Language';
 import { StylesObject } from '../../../internal/SecuredFields/lib/types';
-import UIElement from '../../../UIElement';
+import UIElement from '../../../internal/UIElement/UIElement';
 import { Resources } from '../../../../core/Context/Resources';
 
 export interface ACHInputStateValid {
@@ -22,12 +22,11 @@ export interface ACHInputDataState {
     billingAddress?: object;
 }
 
-type Placeholders = {
-    holderName?: string;
-};
+type PlaceholderKeys = 'holderName' | 'bankAccountNumber' | 'bankLocationId';
+
+export type Placeholders = Partial<Record<PlaceholderKeys, string>>;
 
 export interface ACHInputProps {
-    allowedDOMAccess?: boolean;
     autoFocus?: boolean;
     billingAddressAllowedCountries?: string[];
     billingAddressRequired?: boolean;
@@ -53,6 +52,7 @@ export interface ACHInputProps {
     onLoad?: () => {};
     payButton?: (obj) => {};
     placeholders?: Placeholders;
+    showContextualElement?: boolean;
     ref?: any;
     resources: Resources;
     showPayButton?: boolean;
@@ -61,5 +61,5 @@ export interface ACHInputProps {
     type?: string;
     forceCompat?: boolean;
     setComponentRef?: (ref) => void;
-    showFormInstruction?: boolean;
+    handleKeyPress?: (obj: KeyboardEvent) => void;
 }

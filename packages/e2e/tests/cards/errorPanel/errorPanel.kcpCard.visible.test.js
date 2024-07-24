@@ -1,11 +1,11 @@
 import CardComponentPage from '../../_models/CardComponent.page';
 import { KOREAN_TEST_CARD, SR_INDICATOR_PREFIX } from '../utils/constants';
-import LANG from '../../../../lib/src/language/locales/en-US.json';
+import LANG from '../../../../server/translations/en-US.json';
 
-const CARD_NUMBER_EMPTY = LANG['error.va.sf-cc-num.02'] + SR_INDICATOR_PREFIX;
-const EXPIRY_DATE_EMPTY = LANG['error.va.sf-cc-dat.04'] + SR_INDICATOR_PREFIX;
-const CVC_EMPTY = LANG['error.va.sf-cc-cvc.01'] + SR_INDICATOR_PREFIX;
-const PWD_EMPTY = LANG['error.va.sf-kcp-pwd.01'] + SR_INDICATOR_PREFIX;
+const CARD_NUMBER_EMPTY = LANG['cc.num.900'] + SR_INDICATOR_PREFIX;
+const EXPIRY_DATE_EMPTY = LANG['cc.dat.910'] + SR_INDICATOR_PREFIX;
+const CVC_EMPTY = LANG['cc.cvc.920'] + SR_INDICATOR_PREFIX;
+const PWD_EMPTY = LANG['kcp.pwd.940'] + SR_INDICATOR_PREFIX;
 
 const INVALID_NAME = LANG['creditCard.holderName.invalid'] + SR_INDICATOR_PREFIX;
 const INVALID_TAX_NUMBER = LANG['creditCard.taxNumber.invalid'] + SR_INDICATOR_PREFIX;

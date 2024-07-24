@@ -1,7 +1,7 @@
 import { ComponentChildren, h } from 'preact';
 import { ClickToPayContext, IClickToPayContext } from '../../context/ClickToPayContext';
 import { render, screen } from '@testing-library/preact';
-import CoreProvider from '../../../../../core/Context/CoreProvider';
+import { CoreProvider } from '../../../../../core/Context/CoreProvider';
 import { mock } from 'jest-mock-extended';
 import CtPLogin from './CtPLogin';
 import userEvent from '@testing-library/user-event';
@@ -9,7 +9,6 @@ import SrciError from '../../services/sdks/SrciError';
 
 const customRender = (children: ComponentChildren, providerProps: IClickToPayContext) => {
     return render(
-        // @ts-ignore TODO: Fix this weird complain
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
             {/* eslint-disable-next-line react/no-children-prop */}
             <ClickToPayContext.Provider value={{ ...providerProps }} children={children} />

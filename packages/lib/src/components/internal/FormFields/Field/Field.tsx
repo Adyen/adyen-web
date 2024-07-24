@@ -2,11 +2,12 @@ import classNames from 'classnames';
 import { cloneElement, ComponentChild, Fragment, FunctionalComponent, h, toChildArray, VNode } from 'preact';
 import Spinner from '../../Spinner';
 import Icon from '../../Icon';
-import { ARIA_ERROR_SUFFIX } from '../../../../core/Errors/constants';
+import { ARIA_CONTEXT_SUFFIX, ARIA_ERROR_SUFFIX } from '../../../../core/Errors/constants';
 import { useCallback, useRef, useState } from 'preact/hooks';
 import { getUniqueId } from '../../../../utils/idGenerator';
 import { FieldProps } from './types';
 import './Field.scss';
+import { PREFIX } from '../../Icon/constants';
 
 const Field: FunctionalComponent<FieldProps> = props => {
     //
@@ -16,6 +17,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
         classNameModifiers,
         dir,
         disabled,
+        readOnly,
         errorMessage,
         helper,
         inputWrapperModifiers,
@@ -32,21 +34,24 @@ const Field: FunctionalComponent<FieldProps> = props => {
         onFocusField,
         showValidIcon,
         useLabelElement,
-        addContextualElement,
+        showErrorElement,
+        showContextualElement,
+        contextualText,
         // Redeclare prop names to avoid internal clashes
         filled: propsFilled,
         focused: propsFocused,
         i18n,
-        errorVisibleToScreenReader,
+        contextVisibleToScreenReader,
         renderAlternativeToLabel
     } = props;
 
     // Controls whether any error element has an aria-hidden="true" attr (which means it is the error for a securedField)
     // or whether it has an id attr that can be pointed to by an aria-describedby attr on an input element
-    const errorVisibleToSR = errorVisibleToScreenReader ?? true;
+    const contextVisibleToSR = contextVisibleToScreenReader ?? true;
+    const showError = showErrorElement && typeof errorMessage === 'string' && errorMessage.length > 0;
+    const showContext = showContextualElement && !showError && contextualText?.length > 0;
 
     const uniqueId = useRef(getUniqueId(`adyen-checkout-${name}`));
-
     const [focused, setFocused] = useState(false);
     const [filled, setFilled] = useState(false);
 
@@ -100,6 +105,25 @@ const Field: FunctionalComponent<FieldProps> = props => {
     }, [label, errorMessage, labelEndAdornment, helper]);
 
     const renderInputRelatedElements = useCallback(() => {
+        const errorElem = (
+            <span
+                className={classNames({ 'adyen-checkout-contextual-text--error': true, 'adyen-checkout-contextual-text--hidden': !showError })}
+                {...(contextVisibleToSR && { id: `${uniqueId.current}${ARIA_ERROR_SUFFIX}` })}
+                aria-hidden={contextVisibleToSR ? null : 'true'}
+            >
+                {errorMessage}
+            </span>
+        );
+        const contextualElem = (
+            <span
+                className={classNames({ 'adyen-checkout-contextual-text': true, 'adyen-checkout-contextual-text--hidden': !showContext })}
+                {...(contextVisibleToSR && { id: `${uniqueId.current}${ARIA_CONTEXT_SUFFIX}` })}
+                aria-hidden={contextVisibleToSR ? null : 'true'}
+            >
+                {contextualText}
+            </span>
+        );
+
         return (
             <Fragment>
                 <div
@@ -116,7 +140,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
                             onBlurHandler,
                             isInvalid: !!errorMessage,
                             ...(name && { uniqueId: uniqueId.current }),
-                            addContextualElement
+                            showErrorElement: showErrorElement
                         };
                         return cloneElement(child as VNode, childProps);
                     })}
@@ -129,28 +153,21 @@ const Field: FunctionalComponent<FieldProps> = props => {
 
                     {isValid && showValidIcon !== false && (
                         <span className="adyen-checkout-input__inline-validation adyen-checkout-input__inline-validation--valid">
-                            <Icon type="checkmark" alt={i18n?.get('field.valid')} />
+                            <Icon type={`${PREFIX}checkmark`} alt={i18n?.get('field.valid')} />
                         </span>
                     )}
 
                     {errorMessage && (
                         <span className="adyen-checkout-input__inline-validation adyen-checkout-input__inline-validation--invalid">
-                            <Icon type="field_error" alt={i18n?.get('error.title')} />
+                            <Icon type={`${PREFIX}field_error`} alt={i18n?.get('error.title')} />
                         </span>
                     )}
                 </div>
-                {addContextualElement && (
-                    <span
-                        className={'adyen-checkout__error-text'}
-                        {...(errorVisibleToSR && { id: `${uniqueId.current}${ARIA_ERROR_SUFFIX}` })}
-                        aria-hidden={errorVisibleToSR ? null : 'true'}
-                    >
-                        {errorMessage && typeof errorMessage === 'string' && errorMessage.length ? errorMessage : null}
-                    </span>
-                )}
+                {errorElem}
+                {contextualElem}
             </Fragment>
         );
-    }, [children, errorMessage, isLoading, isValid, onFocusHandler, onBlurHandler]);
+    }, [children, errorMessage, contextualText, isLoading, isValid, onFocusHandler, onBlurHandler]);
 
     /**
      * Use cases:
@@ -185,7 +202,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
                 //         </div>
                 //     );
                 // };
-                // <Field name={'myField'} renderAlternativeToLabel={alternativeLabelContent}>
+                // <Field name={'myField'} useLabelElement={false} renderAlternativeToLabel={alternativeLabelContent}>
             );
         },
         []
@@ -202,7 +219,8 @@ const Field: FunctionalComponent<FieldProps> = props => {
                 classNameModifiers.map(m => `adyen-checkout__field--${m}`),
                 {
                     'adyen-checkout__field--error': errorMessage,
-                    'adyen-checkout__field--valid': isValid
+                    'adyen-checkout__field--valid': isValid,
+                    'adyen-checkout__field--inactive': readOnly || disabled
                 }
             )}
         >
@@ -214,7 +232,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
                 focused={focused}
                 useLabelElement={useLabelElement}
                 uniqueId={uniqueId.current}
-                isSecuredField={!errorVisibleToSR}
+                isSecuredField={!contextVisibleToSR}
                 renderAlternativeToLabel={renderAlternativeToLabel}
             >
                 {renderLabelOrAlternativeContents()}
@@ -229,7 +247,8 @@ Field.defaultProps = {
     classNameModifiers: [],
     inputWrapperModifiers: [],
     useLabelElement: true,
-    addContextualElement: true,
+    showErrorElement: true,
+    showContextualElement: true,
     renderAlternativeToLabel: () => null
 };
 

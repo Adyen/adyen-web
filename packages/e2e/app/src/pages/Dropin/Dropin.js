@@ -1,8 +1,8 @@
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/es/adyen.css';
+import { AdyenCheckout, Dropin } from '@adyen/adyen-web/auto';
+import '@adyen/adyen-web/styles/adyen.css';
 import { getPaymentMethods } from '../../services';
 import { amount, shopperLocale, countryCode } from '../../services/commonConfig';
-import { handleSubmit, handleAdditionalDetails, handleError } from '../../handlers';
+import { handleSubmit, handleAdditionalDetails, handleError, handlePaymentCompleted } from '../../handlers';
 import '../../style.scss';
 
 const initCheckout = async () => {
@@ -14,14 +14,20 @@ const initCheckout = async () => {
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
         locale: shopperLocale,
+        _environmentUrls: {
+            cdn: {
+                translations: '/'
+            }
+        },
         environment: 'test',
         onSubmit: handleSubmit,
         onAdditionalDetails: handleAdditionalDetails,
+        onPaymentCompleted: handlePaymentCompleted,
         onError: handleError,
         ...window.mainConfiguration
     });
 
-    window.dropin = checkout.create('dropin', window.dropinConfig).mount('#dropin-container');
+    window.dropin = new Dropin(checkout, { ...window.dropinConfig }).mount('#dropin-container');
 };
 
 initCheckout();

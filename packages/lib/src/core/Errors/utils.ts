@@ -1,51 +1,51 @@
-import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD, ERROR_CODES } from './constants';
+import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD, ErrorCodePrefixes, SF_ErrorCodes } from './constants';
 import { SFError } from '../../components/Card/components/CardInput/types';
 import { SortErrorsObj, SortedErrorObject, GenericError, SetSRMessagesReturnObject } from './types';
 import { ValidationRuleResult } from '../../utils/Validator/ValidationRuleResult';
+import { ErrorMessageObject } from '../../utils/Validator/types';
+import {
+    ENCRYPTED_BANK_ACCNT_NUMBER_FIELD,
+    ENCRYPTED_BANK_LOCATION_FIELD,
+    ENCRYPTED_CARD_NUMBER,
+    ENCRYPTED_EXPIRY_DATE,
+    ENCRYPTED_EXPIRY_MONTH,
+    ENCRYPTED_EXPIRY_YEAR,
+    ENCRYPTED_PWD_FIELD,
+    ENCRYPTED_SECURITY_CODE
+} from '../../components/internal/SecuredFields/lib/constants';
+import { AriaConfigObject } from '../../components/internal/SecuredFields/lib/types';
+import type Language from '../../language';
 
 /**
- * Access items stored in the ERROR_CODES object by either sending in the key - in which case you get the value
- * or by sending in the value - in which case you get the key
- * @param keyOrValue - key (or value) by which to retrieve the corresponding value (or key)
+ * Extract and translate all the errorCodes related to a specific securedField
+ * @param i18n
+ * @param errorCodeIdentifier - the identifier for which type of errorCodes we need to collect e.g. 'cc-num'
  */
-export const getError = (keyOrValue: string): string => {
-    // Retrieve value
-    let rtnVal = ERROR_CODES[keyOrValue];
-    if (rtnVal) return rtnVal;
-
-    // Retrieve key
-    rtnVal = Object.keys(ERROR_CODES).find(key => ERROR_CODES[key] === keyOrValue);
-    if (rtnVal) return rtnVal;
-
-    // Neither exist
-    return keyOrValue;
-};
-
-export const addAriaErrorTranslationsObject = i18n => {
-    const errorKeys = Object.keys(ERROR_CODES);
-
-    const transObj = errorKeys.reduce((acc, item) => {
-        const value = ERROR_CODES[item];
-        // Limit to sf related errors
-        if (value.indexOf('sf-') > -1 || value.indexOf('gen.01') > -1) {
+export const getTranslatedErrors = (i18n: Language, errorCodeIdentifier: string): Record<SF_ErrorCodes, string> => {
+    const transObj = Object.values(SF_ErrorCodes).reduce((acc, value) => {
+        // Limit to errors related to specific sf
+        if (value.includes(errorCodeIdentifier)) {
             acc[value] = i18n.get(value);
         }
         return acc;
-    }, {});
+    }, {}) as Record<SF_ErrorCodes, string>;
 
     return transObj;
 };
 
 /**
- * Adds a new error property to an object, unless it already exists.
+ * Adds a new error property to an object.
  * This error property is an object containing the translated errors, stored by code, that relate to the securedFields
  * @param originalObject - object we want to duplicate and enhance
  * @param i18n - an i18n object to use to get translations
  * @returns a duplicate of the original object with a new property: "error" whose value is a object containing the translated errors
  */
-export const addErrorTranslationsToObject = (originalObj, i18n) => {
-    const nuObj = { ...originalObj };
-    nuObj.error = !nuObj.error ? addAriaErrorTranslationsObject(i18n) : nuObj.error;
+export const addErrorTranslationsToObject = (originalObj: AriaConfigObject, i18n: Language, fieldType: string): AriaConfigObject => {
+    const nuObj: AriaConfigObject = { ...originalObj };
+
+    const errorCodeIdentifier = fieldTypeToErrorCodeIdentifier(fieldType);
+    nuObj.error = getTranslatedErrors(i18n, errorCodeIdentifier);
+
     return nuObj;
 };
 
@@ -58,6 +58,42 @@ export const getErrorMessageFromCode = (errorCode: string, codeMap: Record<strin
         }
     }
     return errMsg?.toLowerCase().replace(/[_.\s]/g, '-');
+};
+
+/**
+ * errorCodeIdentifiers must match the prefixes to the numbers in ERROR_CODES (Errors/constants.ts)
+ * (Which in turn must match the keys in the translations files)
+ */
+const fieldTypeToErrorCodeIdentifier = (fieldType: string): string => {
+    let errorCodeIdentifier;
+    switch (fieldType) {
+        case ENCRYPTED_CARD_NUMBER:
+            errorCodeIdentifier = ErrorCodePrefixes.CC_NUM;
+            break;
+        case ENCRYPTED_EXPIRY_DATE:
+            errorCodeIdentifier = ErrorCodePrefixes.CC_DAT;
+            break;
+        case ENCRYPTED_EXPIRY_MONTH:
+            errorCodeIdentifier = ErrorCodePrefixes.CC_MTH;
+            break;
+        case ENCRYPTED_EXPIRY_YEAR:
+            errorCodeIdentifier = ErrorCodePrefixes.CC_YR;
+            break;
+        case ENCRYPTED_SECURITY_CODE:
+            errorCodeIdentifier = ErrorCodePrefixes.CC_CVC;
+            break;
+        case ENCRYPTED_PWD_FIELD:
+            errorCodeIdentifier = ErrorCodePrefixes.KCP_PWD;
+            break;
+        case ENCRYPTED_BANK_ACCNT_NUMBER_FIELD:
+            errorCodeIdentifier = ErrorCodePrefixes.ACH_NUM;
+            break;
+        case ENCRYPTED_BANK_LOCATION_FIELD:
+            errorCodeIdentifier = ErrorCodePrefixes.ACH_LOC;
+            break;
+        default:
+    }
+    return errorCodeIdentifier;
 };
 
 /**
@@ -76,54 +112,64 @@ export const sortErrorsByLayout = ({ errors, i18n, layout, countrySpecificLabels
     const sortedErrors: SortedErrorObject[] = Object.entries(errors).reduce((acc, [key, value]) => {
         if (value) {
             const errObj: ValidationRuleResult | SFError | GenericError = errors[key];
-            // console.log('### utils::sortErrorsByLayout:: key', key, 'errObj', errObj);
+
+            const TREAT_AS_SF_ERROR = 'errorI18n' in errObj && `rootNode` in errObj; // look for expected props, unique to an SFError
+
+            // Some ValidationRuleResults can be passed an object in the 'errorMessage' prop (to give country specific errors)
+            const ERROR_MSG_IS_OBJECT = typeof errObj.errorMessage === 'object';
+
             /**
              * Get error codes - these are used if we need to distinguish between showValidation & onBlur errors
              * - For a ValidationRuleResult or GenericError the error "code" is contained in the errorMessage prop.
              * - For an SFError the error "code" is contained in the error prop.
              */
             let errorCode: string;
-            if (!(errObj instanceof ValidationRuleResult)) {
-                errorCode = errObj.error; // is SFError
+            if (TREAT_AS_SF_ERROR) {
+                errorCode = errObj.error;
             } else {
-                /** Special handling for Address~postalCode which can have be passed an object in the 'errorMessage' prop containing a country specific error */
-                if (typeof errObj.errorMessage === 'object') {
-                    errorCode = errObj.errorMessage.translationKey; // is ValidationRuleResult w. country specific error
+                /** Special handling for Address~postalCode (where the errorMessage is an object) */
+                if (ERROR_MSG_IS_OBJECT) {
+                    /** is ValidationRuleResult w. country specific error */
+                    errorCode = (errObj.errorMessage as ErrorMessageObject).translationKey;
                 } else {
-                    errorCode = errObj.errorMessage; // is ValidationRuleResult || GenericError || an as yet incorrectly formed error
+                    /** is ValidationRuleResult || GenericError || an as yet incorrectly formed error */
+                    errorCode = errObj.errorMessage as string;
                 }
             }
 
             /**
              * Get corresponding error msg - a translated string we can place into the SRPanel
              * NOTE: the error object for a secured field already contains the error in a translated form (errorI18n).
-             * For other fields we still need to translate it, so we use the errorMessage prop as a translation key
+             * For other fields we still need to translate it, so we use the errObj.errorMessage prop as a translation key
              */
             let errorMsg: string;
-            if (!(errObj instanceof ValidationRuleResult) && 'errorI18n' in errObj) {
-                errorMsg = errObj.errorI18n + SR_INDICATOR_PREFIX; // is SFError
+            if (TREAT_AS_SF_ERROR && 'errorI18n' in errObj) {
+                errorMsg = errObj.errorI18n + SR_INDICATOR_PREFIX;
             } else {
-                /** Special handling for Address~postalCode (see above) */
-                if (typeof errObj.errorMessage === 'object') {
-                    /* prettier-ignore */
-                    errorMsg = `${i18n.get(errObj.errorMessage.translationKey)} ${errObj.errorMessage.translationObject.values.format}${SR_INDICATOR_PREFIX}`; // is ValidationRuleResult  w. country specific error
+                /**
+                 * For some fields, for a11y reasons (when the translated error msg doesn't contain a reference to the field it refers to), we need to
+                 * add the field type into the translated error message.
+                 *
+                 * This happens with generic errors
+                 *  e.g. "field.error.required": "Enter the %{label}"
+                 *   or "invalid.format.expects": "%{label} Invalid format. Expected format: %{format}"
+                 */
+                const mappedLabel = fieldTypeMappingFn ? fieldTypeMappingFn(key, i18n, countrySpecificLabels) : ''; // Retrieve the translated field name, if required
+
+                /** Special handling for Address~postalCode where the errorMessage object contains the details of the country specific format that should have been used for the postcode */
+                if (ERROR_MSG_IS_OBJECT) {
+                    /**  is ValidationRuleResult  w. country specific error */
+                    const translationKey = (errObj.errorMessage as ErrorMessageObject).translationKey;
+                    const countrySpecificFormat = (errObj.errorMessage as ErrorMessageObject).translationObject.values.format;
+
+                    errorMsg = `${i18n.get(translationKey, { values: { label: mappedLabel, format: countrySpecificFormat } })}${SR_INDICATOR_PREFIX}`;
                 } else {
-                    errorMsg = i18n.get(errObj.errorMessage) + SR_INDICATOR_PREFIX; // is ValidationRuleResult || GenericError || an as yet incorrectly formed error
+                    /** is ValidationRuleResult || GenericError || an as yet incorrectly formed error */
+                    errorMsg = i18n.get(errObj.errorMessage as string, { values: { label: mappedLabel } }) + SR_INDICATOR_PREFIX;
                 }
             }
 
-            let errorMessage = errorMsg;
-            /**
-             * For some fields we might need to append the field type to the start of the error message (varies on a component by component basis)
-             * - necessary for a11y, when we know the translated error msg doesn't contain a reference to the field it refers to
-             * TODO - in the future this should be something we can get rid of once we align all our error texts and translations
-             */
-            if (fieldTypeMappingFn) {
-                const fieldType: string = fieldTypeMappingFn(key, i18n, countrySpecificLabels); // Get translation for field type
-                if (fieldType) errorMessage = `${fieldType}: ${errorMsg}`;
-            }
-
-            acc.push({ field: key, errorMessage, errorCode });
+            acc.push({ field: key, errorMessage: errorMsg, errorCode });
 
             if (layout) acc.sort((a, b) => layout.indexOf(a.field) - layout.indexOf(b.field));
         }

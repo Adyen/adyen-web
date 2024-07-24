@@ -1,19 +1,9 @@
-import { DonationAmounts, DonationComponentProps, DonationPayload } from './components/types';
-import { UIElementProps } from '../types';
+import { UIElementProps } from '../internal/UIElement/types';
+import DonationElement from './Donation';
+import { DonationComponentProps, DonationPayload } from './components/types';
 
-export interface NewDonationComponentProps {
-    amounts: DonationAmounts;
-    bannerUrl: string;
-    logoUrl: string;
-    nonprofitDescription: string;
-    nonprofitName: string;
-    nonprofitUrl: string;
-    termsAndConditionsUrl: string;
-    causeName?: string;
-    showCancelButton?: boolean;
-    onDonate: (payload: DonationPayload) => void;
-    onCancel?: (payload: DonationPayload) => void;
-    onChange?: (payload: DonationPayload) => void;
-}
-
-export type DonationElementProps = UIElementProps & (NewDonationComponentProps | DonationComponentProps);
+export type DonationConfiguration = UIElementProps &
+    Omit<DonationComponentProps, 'onDonate' | 'onCancel'> & {
+        onDonate(data: DonationPayload, component: DonationElement): void;
+        onCancel(data: DonationPayload): void;
+    };

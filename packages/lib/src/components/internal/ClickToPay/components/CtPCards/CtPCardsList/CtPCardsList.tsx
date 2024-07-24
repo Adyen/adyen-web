@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { useEffect, useMemo } from 'preact/hooks';
 import ShopperCard from '../../../models/ShopperCard';
 import useClickToPayContext from '../../../context/useClickToPayContext';
-import useCoreContext from '../../../../../../core/Context/useCoreContext';
+import { useCoreContext } from '../../../../../../core/Context/CoreProvider';
 import useImage from '../../../../../../core/Context/useImage';
 import useForm from '../../../../../../utils/useForm';
 import isMobile from '../../../../../../utils/isMobile';
@@ -49,7 +49,7 @@ const CtPCardsList = ({ cardSelected, cards, errorMessage, onChangeCard }: CtPCa
     }, [data, onChangeCard]);
 
     return (
-        <Field name="clickToPayCards" errorMessage={errorMessage}>
+        <Field name="clickToPayCards" errorMessage={errorMessage} readOnly={status === 'loading'}>
             <Select
                 items={items}
                 selectedValue={data['srcDigitalCardId']}
