@@ -1,5 +1,48 @@
 # @adyen/adyen-web
 
+## 6.0.0
+
+### Major Changes
+
+-   Initialise the Custom Card component through `checkout.create('customcard')` rather than `checkout.create('securedfields')` ([#2200](https://github.com/Adyen/adyen-web/pull/2200))
+
+-   Redesign with Bento design tokens.\ ([#2295](https://github.com/Adyen/adyen-web/pull/2295))
+
+    Remove default placeholders, merchants can configure placeholders via the configuration object.\
+    Add `showContextualElement` and `contextualText` for the form field, merchants can configure them via configuration object.\
+    New spinner.\
+    Phone prefix drop down contains flag icons.\
+    Ideal issuer names align to the right.\
+    Fix the stored card icon overlapping with the error icon.\
+    Scss code refactoring.\
+    Use the same syntax for 'required' error message in the Personal details and Address components.
+
+### Minor Changes
+
+-   Remove the country flag in the Phone select, change the label to `Country/Region` for the country/region field. ([#2635](https://github.com/Adyen/adyen-web/pull/2635))
+
+-   Starting using /checkoutanalytics endpoint to retrieve "checkoutAttemptId" log "submit" and "action-handled" events ([#2538](https://github.com/Adyen/adyen-web/pull/2538))
+
+-   Update `showPayButton` property to default to `true` for both Components and Drop-in. ([#2207](https://github.com/Adyen/adyen-web/pull/2207))
+
+    Previously it defaulted to `true` for Drop-in and `false` for Components (for legacy reasons, when we didn't have a separate PayButton component).
+
+### Patch Changes
+
+-   fix: vouchers (econtext and dragonpay) can now show expiration date with time ([#2644](https://github.com/Adyen/adyen-web/pull/2644))
+
+-   fix: ANCV ignoring exesting order & payButton not working as intended ([#2675](https://github.com/Adyen/adyen-web/pull/2675))
+
+-   Fix: ACH not respecting showPayButton ([#2714](https://github.com/Adyen/adyen-web/pull/2714))
+
+-   Fix(a11y): select/combobox aria-activedescendant is now empty when active item is null ([#2709](https://github.com/Adyen/adyen-web/pull/2709))
+
+-   New design for the drop-in component. ([#2348](https://github.com/Adyen/adyen-web/pull/2348))
+
+    There is a clear separation between the stored payment methods and the regular payment methods. The express payment methods sit side by side.
+
+-   Click to Pay - Fixed bug where newly created card was taking priority of used cards in the Card list view, and improved CSS specificity for the Card image size when displaying single Card ([#2699](https://github.com/Adyen/adyen-web/pull/2699))
+
 ## 5.60.0
 
 ### Minor Changes
