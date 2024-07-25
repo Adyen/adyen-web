@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import Field from '../../internal/FormFields/Field';
 import { h } from 'preact';
 import { GiftcardFieldProps } from '../../Giftcard/components/types';
-import { alternativeLabelContent } from '../../Card/components/CardInput/components/IframeLabelAlternative';
+import { alternativeLabelContent } from '../../Card/components/CardInput/components/FieldLabelAlternative';
 
 export const MealVoucherExpiryField = ({ i18n, sfpState, focusedElement, setFocusOn }: GiftcardFieldProps) => {
     return (

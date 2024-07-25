@@ -12,7 +12,7 @@ import {
     ENCRYPTED_EXPIRY_DATE
 } from '../../../../internal/SecuredFields/lib/constants';
 import useImage from '../../../../../core/Context/useImage';
-import { alternativeLabelContent } from './IframeLabelAlternative';
+import { alternativeLabelContent } from './FieldLabelAlternative';
 
 export default function ExpirationDate(props: ExpirationDateProps) {
     const {

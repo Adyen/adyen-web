@@ -24,52 +24,44 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         showPayButton: true
     });
 
-    // Adyen Giving
-    window.donation = new Donation(window.checkout, {
-        onDonate: (state, component) => {
-            console.log({ state, component });
-            setTimeout(() => component.setStatus('ready'), 1000);
-        },
-        url: 'https://example.org',
-        amounts: {
-            currency: 'EUR',
-            values: [50, 199, 300]
-        },
-        disclaimerMessage: {
-            message: 'By donating you agree to the %{linkText} ',
-            linkText: 'terms and conditions',
-            link: 'https://www.adyen.com'
-        },
-        backgroundUrl:
-            'https://www.patagonia.com/static/on/demandware.static/-/Library-Sites-PatagoniaShared/default/dwb396273f/content-banners/100-planet-hero-desktop.jpg',
-        description: 'Lorem ipsum...',
-        logoUrl: 'https://i.ebayimg.com/images/g/aTwAAOSwfu9dfX4u/s-l300.jpg',
-        name: 'Test Charity',
-        onCancel(data) {
-            console.log(data);
-        }
-    }).mount('.donation-field');
-
     // Adyen New Giving
-    window.new_donation = new Donation(window.checkout, {
+    window.new_donation_fixed = new Donation(window.checkout, {
         onDonate: (state, component) => {
             console.log({ state, component });
-            setTimeout(() => component.setStatus('ready'), 1000);
+            setTimeout(() => component.setStatus('success'), 1000);
         },
-        amounts: {
-            currency: 'EUR',
-            values: [50, 199, 300]
-        },
+        donation: { type: 'fixedAmounts', currency: 'EUR', values: [50, 199, 300, 500, 1000] },
+        commercialTxAmount: 1000,
         termsAndConditionsUrl: 'https://www.adyen.com',
         bannerUrl: '/banner.png',
         logoUrl: '/logo.png',
         nonprofitDescription: 'Lorem ipsum...',
         nonprofitName: 'Test Charity',
+        causeName: 'Earthquake Turkey & Syria',
         nonprofitUrl: 'https://example.org',
         onCancel(data) {
             console.log(data);
         }
-    }).mount('.new-donation-field');
+    }).mount('.new-donation-fixed-amounts-field');
+
+    window.new_donation_roundup = new Donation(window.checkout, {
+        onDonate: (state, component) => {
+            console.log({ state, component });
+            setTimeout(() => component.setStatus('success'), 1000);
+        },
+        donation: { type: 'roundup', currency: 'EUR', maxRoundupAmount: 100 },
+        commercialTxAmount: 1000,
+        termsAndConditionsUrl: 'https://www.adyen.com',
+        bannerUrl: '/banner.png',
+        logoUrl: '/logo.png',
+        nonprofitDescription: 'Lorem ipsum...',
+        nonprofitName: 'Test Charity',
+        causeName: 'Earthquake Turkey & Syria',
+        nonprofitUrl: 'https://example.org',
+        onCancel(data) {
+            console.log(data);
+        }
+    }).mount('.new-donation-roundup-field');
 
     // Personal details
     window.personalDetails = new PersonalDetails(window.checkout, {

@@ -105,6 +105,8 @@
     "creditCard.storedCard.description.ariaLabel": "A tárolt kártya számának végződése: %@",
     "voucher.entity": "Entitás",
     "donateButton": "Adományozás",
+    "donationTermsCondition": "Az adományozással elfogadja az %#általános szerződési feltételeket%#",
+    "donationRoundUpDescription": "Az adományozott %{donationAmount} összeg felfelé kerekítése az eredeti befizetésnek (%{originalPaymentAmount})",
     "notNowButton": "Most nem",
     "thanksForYourSupport": "Köszönjük a támogatását!",
     "resultMessages.preauthorized": "Részletek mentve",

@@ -11,7 +11,7 @@ import {
     ENCRYPTED_SECURITY_CODE
 } from '../../../../internal/SecuredFields/lib/constants';
 import DataSfSpan from './DataSfSpan';
-import { alternativeLabelContent } from './IframeLabelAlternative';
+import { alternativeLabelContent } from './FieldLabelAlternative';
 
 export default function CVC(props: CVCProps) {
     const {

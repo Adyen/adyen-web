@@ -1,3 +1,4 @@
+@use 'styles/index';
 @import 'styles/variable-generator';
 
 .adyen-checkout__adyen-giving {
@@ -10,6 +11,11 @@
         color: token(color-label-primary);
         margin-bottom: token(spacer-130);
         text-align: center;
+    }
+
+    .adyen-checkout-disclaimer__label {
+        margin-top: 0;
+        color: token(color-label-primary);
     }
 }
 
@@ -82,28 +88,45 @@
 }
 
 .adyen-checkout__campaign-title {
-    font-size: token(text-title-font-size);
+    @include index.adyen-checkout-text-title;
+
     margin-bottom: token(spacer-040);
 }
 
+.adyen-checkout__campaign-cause {
+    @include index.adyen-checkout-text-caption;
+
+    color: token(color-label-on-color);
+    font-weight: token(text-caption-stronger-font-weight);
+}
+
 .adyen-checkout__campaign-description {
-    font-size: token(text-body-font-size);
-    line-height: token(text-caption-line-height);
+    @include index.adyen-checkout-text-caption;
+}
+
+.adyen-checkout-roundup-description {
+    @include index.adyen-checkout-text-caption;
+
+    display: inline-block;
+    color: token(color-label-secondary);
+    padding-left: 0;
 }
 
 .adyen-checkout__adyen-giving-actions {
     margin-top: token(spacer-070);
+    display: flex;
+    flex-direction: column;
+    gap: token(spacer-070);
     text-align: center;
 }
 
 .adyen-checkout__button {
     &.adyen-checkout__button--donate {
-        margin: token(spacer-070) auto token(spacer-040);
+        margin: token(spacer-000);
     }
 
     &.adyen-checkout__button--decline {
         display: block;
         margin: auto;
-        width: initial;
     }
 }

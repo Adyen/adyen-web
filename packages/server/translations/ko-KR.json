@@ -105,6 +105,8 @@
     "creditCard.storedCard.description.ariaLabel": "저장된 카드는 %@ 후 종료됩니다.",
     "voucher.entity": "발급사",
     "donateButton": "기부하기",
+    "donationTermsCondition": "기부를 진행하는 경우 %#이용 약관%#에 동의하게 됩니다.",
+    "donationRoundUpDescription": "%{donationAmount}는 원래 결제 금액(%{originalPaymentAmount})에서 올림한 금액입니다",
     "notNowButton": "다음에 하기",
     "thanksForYourSupport": "도와주셔서 감사합니다!",
     "resultMessages.preauthorized": "세부 정보 저장됨",

@@ -17,7 +17,7 @@ jobs:
       # Setup .npmrc file to publish to npm
       - uses: actions/setup-node@v4
         with:
-          node-version: 18.18
+          node-version: 20.12.2
           registry-url: https://registry.npmjs.org/
 
       - run: yarn install --frozen-lockfile
@@ -28,21 +28,9 @@ jobs:
       # Copy LICENSE to adyen-web package
       - run: cp LICENSE packages/lib/
 
-      # Build and publish to npm with beta tag
-      - name: Build and prerelease
-        if: "github.event.release.prerelease"
-        run: |
-          echo "Pre-release beta:"
-          cd packages/lib && npm publish --tag beta --access public
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-          CI: true
-
       # Build and publish to npm
       - name: Build and release
-        if: "!github.event.release.prerelease"
-        run: |
-          echo "Release:"
+        run: cd packages/lib && npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
           CI: true

@@ -1,20 +1,25 @@
 import classNames from 'classnames';
 import { ComponentChildren, h } from 'preact';
+import './ExpandButton.scss';
 
 interface ExpandButton {
     buttonId: string;
     isSelected: boolean;
     expandContentId: string;
-    children: ComponentChildren;
+    children?: ComponentChildren;
     showRadioButton?: boolean;
+    classNameModifiers?: string[];
 }
 
-export function ExpandButton({ buttonId, showRadioButton, isSelected, expandContentId, children }: Readonly<ExpandButton>) {
+function ExpandButton({ buttonId, showRadioButton, isSelected, expandContentId, children, classNameModifiers = [] }: Readonly<ExpandButton>) {
     return (
         // See discussion: https://github.com/w3c/aria/issues/1404
         // eslint-disable-next-line jsx-a11y/role-supports-aria-props
         <button
-            className="adyen-checkout__payment-method__header__title"
+            className={classNames(
+                'adyen-checkout__payment-method__header__title',
+                ...classNameModifiers.map(modifier => `adyen-checkout-expand-button--${modifier}`)
+            )}
             id={buttonId}
             role={'radio'}
             aria-checked={isSelected}
@@ -35,3 +40,5 @@ export function ExpandButton({ buttonId, showRadioButton, isSelected, expandCont
         </button>
     );
 }
+
+export default ExpandButton;

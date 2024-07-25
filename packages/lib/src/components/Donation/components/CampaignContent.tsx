@@ -5,6 +5,7 @@ export interface CampaignContentProps {
     logoUrl?: string;
     nonprofitDescription?: string;
     nonprofitName?: string;
+    causeName?: string;
     nonprofitUrl?: string;
     bannerUrl?: string;
 }
@@ -13,6 +14,7 @@ export default function CampaignContent({
     logoUrl = '',
     nonprofitDescription = '',
     nonprofitName = '',
+    causeName = '',
     nonprofitUrl = '',
     bannerUrl = ''
 }: CampaignContentProps) {
@@ -25,6 +27,7 @@ export default function CampaignContent({
             <div className="adyen-checkout__campaign-content">
                 {logoUrl && <img src={logoUrl} className="adyen-checkout__campaign-logo" alt={nonprofitName} />}
                 {nonprofitName && <div className="adyen-checkout__campaign-title">{nonprofitName}</div>}
+                {causeName && <div className="adyen-checkout__campaign-cause">{causeName}</div>}
                 {nonprofitDescription && (
                     <div className="adyen-checkout__campaign-description">
                         {nonprofitDescription}

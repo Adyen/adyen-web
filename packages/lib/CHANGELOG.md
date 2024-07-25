@@ -1,319 +1,84 @@
 # @adyen/adyen-web
 
-## 5.60.0
+## 6.0.0
 
-### Minor Changes
+## Breaking Changes
 
--   Add support for new Donation properties. ([#2572](https://github.com/Adyen/adyen-web/pull/2572))
+### General
 
--   Starting using /checkoutanalytics endpoint to retrieve "checkoutAttemptId" log "submit" and "action-handled" events ([#2234](https://github.com/Adyen/adyen-web/pull/2234))
+- Drop-in/Components is no longer supported on Internet Explorer 11.
+- If you integrate with npm, we've changed how you import Drop-in/Components to reduce the bundle size.
+- If you integrate with embedded scripts, we changed how we expose the AdyenCheckout and Drop-in/Components on the window object.
+- We've changed how you create an instance of Drop-in or Component.
+- For the `onSubmit()` event handler, you now need to resolve/reject an actions object to continue or halt the payment flow.
+- For the `onAdditionalDetails()` event handler, you now need to resolve/reject an actions object to continue or halt the payment flow.
+- The `onPaymentCompleted()` event is no longer triggered for failed payments, instead the `onPaymentFailed()` event is triggered.
+- The `showPayButton` parameter now defaults to true.
+- The `onValid()` event is removed. 
+- The `setStatusAutomatically` prop is no longer supported. If a payment is successful or if it fails, the component is kept in loading state and merchant must handle it accordingly.
+- We've changed how you style Drop-in/Components to give you more fine-grained control by using custom CSS properties. Update your CSS styles accordingly.
+- The `countryCode` property is now mandatory. It must be set directly in the `AdyenCheckout` configuration object, or in the /sessions request.
+- The `showFormInstruction` property is no longer supported.
+- When instantiating `AdyenCheckout`, you can no longer set the configuration property `installmentOptions`. It must be set in the Card Component configuration instead.
+- You can no longer set the configuration property `paymentMethodsConfiguration` when initializing `AdyenCheckout. Instead, set it in the Drop-in configuration.
+- TypeScript types are now imported directly from the root of the package, for example: ```import type { CardConfiguration } from '@adyen/adyen-web';```
 
-### Patch Changes
+### Payment method specific
 
--   Sanitize `billingAddress` when making a `/payments` call. Remove `firstName` and `lastName` in the `billingAddress` for non Riverty payments. ([#2591](https://github.com/Adyen/adyen-web/pull/2591))
+#### Express payment methods
 
--   For regular card, zero auth payments, we store the payment method only if the configuration says we should ([#2589](https://github.com/Adyen/adyen-web/pull/2589))
+- For Google Pay express, the event handler `onPaymentDataChanged()` now works only when the Component configuration property `isExpress` is set to true.
+- For Apple Pay express, the event handlers `onShippingContactSelected()` and `onShippingMethodSelected()` now work only when the Component configuration property `isExpress` is set to true.
+- For Paypal Express, the `onShippingChange()` event handler is no longer supported. Migrate to the `onShippingAddressChange()` and `onShippingOptionsChange()` event handlers.
+- The `onShopperDetails()` event for PayPal is renamed to `onAuthorized()` and it must be resolved or rejected to finalize the payment.
+- For Google Pay, the `isAvailable()` method does not return a boolean flag anymore. Instead, the promise is resolved when the payment is available and rejected otherwise.
 
--   Updating applepay typescript types and fixing challengeWindowSize prop ([#2584](https://github.com/Adyen/adyen-web/pull/2584))
+#### Card payment methods
 
-## 5.59.0
+- The Card Component configuration property `showBrandsUnderCardNumber` is no longer supported.
+- The `challengeWindowSize` configuration parameter can no longer be set inside a `threeDS2` object within `paymentMethodsConfiguration`.
+- The Custom Card Component is renamed from `securedfields` to `CustomCard` and created as: `new CustomCard()`
 
-### Minor Changes
+#### Other payment methods
 
--   Adding support for PayPal Express Flow ([#2551](https://github.com/Adyen/adyen-web/pull/2551))
+- For PayPal, the `onCancel()` event handler is no longer supported. To detect when the PayPal lightbox is closed, listen to the `onError()` event with error type `CANCEL`.
+- For Klarna, the `token` property is replaced with the `authorization_token` from the `/payments/details` request.
+- For Adyen Giving, you now need to integrate with the Giving Campaign Manager Component.
+- We no longer support the payment method QiwiWallet.
 
-### Patch Changes
+#### Partial payments
 
--   For zero auth payments, we always send the `storePaymentMethod` to save the payment details. ([#2571](https://github.com/Adyen/adyen-web/pull/2571))
+- The `onOrderCreated()` event is renamed to `onOrderUpdated()`.
 
-## 5.58.0
+## New
 
-### Minor Changes
+- `onPaymentMethodsRequest()` is a new event, which is triggered when a partial payment is made and the associated order isn't fully paid. Use the even handler to request payment methods for a new payment.
+- `onPaymentFailed()` is a new event, which is triggered when a payment fails. Previously, this event was part of `onPaymentCompleted()`.
+- You can now disable the final animation after a successful or failed payment in Drop-in, by setting `disableFinalAnimation` to true.
+- Shoppers can now confirm the payment by pressing the Enter key. If the payment has a validation issue, an error is displayed in the Drop-in/Components interface.
+- You can customize, or prevent, the Enter keypress behavior by implementing an `onEnterKeyPressed()` event handler on AdyenCheckout.
+- We have added support for 6 more locales: Catalan (ca-ES), Icelandic (is-IS), Bulgarian (bg-BG), Estonian (et-EE), Latvian (lv-LV) and Lithuanian (lt-lT).
+- We have added support for Apple Pay Order tracking.
+- We have added support for tree shaking when integrating through npm.
 
--   Add the support for new Riverty component. It will replace the old AfterPay component in the future, currently only supports AT, CH and DE countries. ([#2532](https://github.com/Adyen/adyen-web/pull/2532))
+## Changed
+- `onPaymentCompleted()` now works for both Sessions and Advanced flow.
+- We have replaced input field placeholder texts with permanently visible contextual elements to enhance the accessibility and UX. You can still apply and customize placeholders.
+- For Google Pay and Apple Pay, the `onAuthorized()` event is now triggered before the `onSubmit()` event. The `onAuthorized()` event must be resolved in order to proceed with the payment flow.
+- We have improved AVS checks for GooglePay and ApplePay by adding the billing address to `state.data` if available during payment method authorization.
+- Drop-in no longer uses radio buttons by default.
+- The WeChatPay timer now defaults to 30 minutes.
 
--   Adds new Paytrail component (EBanking_FI) ([#2528](https://github.com/Adyen/adyen-web/pull/2528))
+## Updating to this version
 
-### Patch Changes
+This release requires Checkout API v69 or later. We recommend using the latest Checkout API version.
 
--   Fix missing bindings for 'this' that had started causing errors in iOS ([#2557](https://github.com/Adyen/adyen-web/pull/2557))
+To update from Drop-in/Components v5.x.x, follow the migration guide.
 
-## 5.57.0
+---
 
-### Minor Changes
+## Previous Changelogs
 
--   Use the label provided by the backend in stored blik payments ([#2522](https://github.com/Adyen/adyen-web/pull/2522))
+### 5.x.x 
 
-## 5.56.1
-
-### Patch Changes
-
--   For the regular card payment, in case of a zero-auth transaction, the pay button label is changed to `Save details`, and the `Save for my next payment` checkbox is removed. ([#2514](https://github.com/Adyen/adyen-web/pull/2514))
-
-    The drop-in component shows `Details saved` as the success message for such transaction.
-
-## 5.56.0
-
-### Minor Changes
-
--   Add support for the PayMe payment method. ([#2476](https://github.com/Adyen/adyen-web/pull/2476))
-
-### Patch Changes
-
--   Improve the payment status check call for QR payments. ([#2506](https://github.com/Adyen/adyen-web/pull/2506))
-
--   Fix incorrect grammar German pay button ([#2505](https://github.com/Adyen/adyen-web/pull/2505))
-
--   update sessionData after /setup call ([#2504](https://github.com/Adyen/adyen-web/pull/2504))
-
--   Detect when the value of a data-cse attribute is not supported, and don't create a SF for it ([#2495](https://github.com/Adyen/adyen-web/pull/2495))
-
-## 5.55.1
-
-### Patch Changes
-
--   Loading the logo images properly when handling qrCode/await actions ([#2490](https://github.com/Adyen/adyen-web/pull/2490))
-
-## 5.55.0
-
-### Minor Changes
-
--   Bumping sf version to 4.8.0 which includes a more comprehensive startup log (to help with debugging) ([#2488](https://github.com/Adyen/adyen-web/pull/2488))
-
-### Patch Changes
-
--   Renaming detectInIframe to the more accurate, but lengthy, detectInIframeInSameOrigin. ([#2475](https://github.com/Adyen/adyen-web/pull/2475))
-
-    Now the functionality only considers itself to be running in an iframe _if_ it is possible to access the parent domain and thus be able to redirect the top, parent, window
-
-## 5.54.0
-
-### Minor Changes
-
--   feature: adds new onAddressSelected to fill data when an item is selected in AddressSearch ([#2406](https://github.com/Adyen/adyen-web/pull/2406))
-
--   Click to Pay - Enabling MC/Visa to drop cookies if the shopper gives consent ([#2409](https://github.com/Adyen/adyen-web/pull/2409))
-
--   Click to Pay - Replacing loading gif by animated SVGs ([#2435](https://github.com/Adyen/adyen-web/pull/2435))
-
-### Patch Changes
-
--   For all PaymentMethodItems we were adding a class `adyen-checkout__payment-method--{fundingSource}` (where fundingSource was either "credit" or "debit") ([#2465](https://github.com/Adyen/adyen-web/pull/2465))
-
-    This is meant to be a Card PM specific class to indicate, in the paymentMethods list, whether the card is a credit or debit card.
-
--   Fixed Klarna B2B logo for Drop-in ([#2458](https://github.com/Adyen/adyen-web/pull/2458))
-
--   Pass the `browserInfo` in the `state.data` for the Redirect payments, in order to fix the mobile web integration for some redirect payments. ([#2469](https://github.com/Adyen/adyen-web/pull/2469))
-
-## 5.53.3
-
-### Patch Changes
-
--   Correct the T&C links for Riverty, remove the B2B T&C link, and change the text from 'AfterPay' to 'Riverty'. ([#2422](https://github.com/Adyen/adyen-web/pull/2422))
-
-## 5.53.2
-
-### Patch Changes
-
--   chore: fix ts config ([#2313](https://github.com/Adyen/adyen-web/pull/2313))
-
--   UX improvement for the `QRLoader` component - the QR loader shows amount and redirect button before the QR code image. ([#2359](https://github.com/Adyen/adyen-web/pull/2359))
-
-## 5.53.1
-
-### Patch Changes
-
--   Typescript: Fixed types for paymentMethodsConfiguration object ([#2363](https://github.com/Adyen/adyen-web/pull/2363))
-
-## 5.53.0
-
-### Minor Changes
-
--   Add `klarna_b2b` tx variant so that Billie (klarna_b2b) is supported. ([#2355](https://github.com/Adyen/adyen-web/pull/2355))
-
-### Patch Changes
-
--   Fixes an issue with CtPOneTimePassword getting updates to the input element reference it relies upon ([#2353](https://github.com/Adyen/adyen-web/pull/2353))
-
--   Improvements: add `authorization_token` in the Klarna widget AdditionalDetails state data, so that we are aligned with the API specs. ([#2358](https://github.com/Adyen/adyen-web/pull/2358))
-
--   Fix Typescript definition for paymentMethodsConfiguration, allowing usage of Tx variants that are not defined in the codebase ([#2349](https://github.com/Adyen/adyen-web/pull/2349))
-
--   Populate data with initial values (empty strings) for 'ibanNumber' and 'ownerName' ([#2354](https://github.com/Adyen/adyen-web/pull/2354))
-
-## 5.52.0
-
-### Minor Changes
-
--   adds support for ANCV payment method ([#2293](https://github.com/Adyen/adyen-web/pull/2293))
-
-### Patch Changes
-
--   fix: remove inline style applied to iframe ([#2343](https://github.com/Adyen/adyen-web/pull/2343))
-
--   fix: Clear timeouts on SecuredFieldsProvider when unmounting the component ([#2334](https://github.com/Adyen/adyen-web/pull/2334))
-
--   fix(personalDetails): classNameModifiers for dateOfBirth ([#2344](https://github.com/Adyen/adyen-web/pull/2344))
-
-## 5.51.0
-
-### Minor Changes
-
--   Add 'redirectFromTopWhenInIframe' config prop to allow top level redirect when Checkout loaded in an iframe ([#2325](https://github.com/Adyen/adyen-web/pull/2325))
-
-## 5.50.1
-
-### Patch Changes
-
--   Perform extra checks that a valid value has been passed when a dual branding selection is made ([#2321](https://github.com/Adyen/adyen-web/pull/2321))
-
-## 5.50.0
-
-### Minor Changes
-
--   Bancontact now returns paymentMethod.type 'bcmc' instead of 'scheme' ([#2286](https://github.com/Adyen/adyen-web/pull/2286))
-
--   Added environmentUrls parameter to Core, which allows PBL to use custom URLs for the API and assets ([#2262](https://github.com/Adyen/adyen-web/pull/2262))
-
-### Patch Changes
-
--   For some storedCards it is not allowed to store the expiryDate, so when this info is not present in the storedCardData, we hide the readonly expiryDate field ([#2315](https://github.com/Adyen/adyen-web/pull/2315))
-
-## 5.49.6
-
-### Patch Changes
-
--   fixes bug where storedetails had state value of true by default without visually showing it ([#2307](https://github.com/Adyen/adyen-web/pull/2307))
-
-## 5.49.5
-
-### Patch Changes
-
--   Fixes postalCode having maxlength 0 ([#2305](https://github.com/Adyen/adyen-web/pull/2305))
-
-## 5.49.4
-
-### Patch Changes
-
--   Fixed e2e tests that were failing due to recent changes in how alt attributes are assigned ([#2289](https://github.com/Adyen/adyen-web/pull/2289))
-
--   Handling Safari's Responsive Design Mode to prevent undesired behaviour revolving around our "disable arrow keys on the iOS soft keyboard" feature ([#2299](https://github.com/Adyen/adyen-web/pull/2299))
-
--   Send 'do-not-track' as value for checkoutAttemptId when analytics is disabled ([#2290](https://github.com/Adyen/adyen-web/pull/2290))
-
--   Removes internal function renderFormField, improving typescript for all form fields ([#2298](https://github.com/Adyen/adyen-web/pull/2298))
-
--   Fixed bug where initial value for cvcPolicy &/or expiryDatePolicy could be overwritten if multiple card components on the same page ([#2297](https://github.com/Adyen/adyen-web/pull/2297))
-
-## 5.49.3
-
-### Patch Changes
-
--   fixes missing ResultCode typings ([#2287](https://github.com/Adyen/adyen-web/pull/2287))
-
--   fix issuer list logos not loading from resources url ([#2278](https://github.com/Adyen/adyen-web/pull/2278))
-
-## 5.49.2
-
-### Patch Changes
-
--   Add description for Trustly. ([#2276](https://github.com/Adyen/adyen-web/pull/2276))
-
-## 5.49.1
-
-### Patch Changes
-
--   fixes invalid HTML in payment method item and card labels ([#2270](https://github.com/Adyen/adyen-web/pull/2270))
-
-## 5.49.0
-
-### Minor Changes
-
--   Adding timeout mechanism for Click to Pay to display Card component in case it does not initialize within 5 seconds ([#2265](https://github.com/Adyen/adyen-web/pull/2265))
-
-### Patch Changes
-
--   Fix Core `update` should also update payment methods list. ([#2266](https://github.com/Adyen/adyen-web/pull/2266))
-
--   fixes aria-labelledby in paymentMethodItem ([#2261](https://github.com/Adyen/adyen-web/pull/2261))
-
--   Fix Klarna widget blocks drop-in to be clickable on loaded. ([#2258](https://github.com/Adyen/adyen-web/pull/2258))
-
-## 5.48.0
-
-### Minor Changes
-
--   Securefields label now is decorative div element ([#2256](https://github.com/Adyen/adyen-web/pull/2256))
-
--   Stop implicitly associating labels with the elements they label ([#2243](https://github.com/Adyen/adyen-web/pull/2243))
-
-### Patch Changes
-
--   Refactor the SRPanel type definition ([#2217](https://github.com/Adyen/adyen-web/pull/2217))
-
--   Alt tags for card brands now use readable values ([#2256](https://github.com/Adyen/adyen-web/pull/2256))
-
--   Autofocus on the QR code subtitle on mounted. ([#2246](https://github.com/Adyen/adyen-web/pull/2246))
-
-## 5.47.0
-
-### Minor Changes
-
--   A11y improvements: add form instruction to better assist cognitively impaired shoppers. ([#2241](https://github.com/Adyen/adyen-web/pull/2241))
-
-    By default, we always show the instruction on top of the payment form, this can be turned off by setting `showFormInstruction=false`.
-
-## 5.46.1
-
-### Patch Changes
-
--   Reverted `threeDSServerTransID` check on challenge completion ([#2231](https://github.com/Adyen/adyen-web/pull/2231)) ([#2238](https://github.com/Adyen/adyen-web/pull/2238))
-
--   Adjusted amount and currency values in the telemetry event ([#2219](https://github.com/Adyen/adyen-web/pull/2219))
-
--   Adds new translations strings ([#2239](https://github.com/Adyen/adyen-web/pull/2239))
-
--   Report to sr panel on payment status for the drop-in and QR code ([#2236](https://github.com/Adyen/adyen-web/pull/2236))
-
-    -   Remove the duplicated sr panel which has the same id
-
-## 5.46.0
-
-### Minor Changes
-
--   Added isExpress configuration to PayPal component ([#2220](https://github.com/Adyen/adyen-web/pull/2220))
-
-## 5.45.0
-
-### Minor Changes
-
--   feature: adds address lookup functionality ([#2151](https://github.com/Adyen/adyen-web/pull/2151))
-
-### Patch Changes
-
--   Change meal voucher label _Pin_ to _Security code_ ([#2210](https://github.com/Adyen/adyen-web/pull/2210))
-
--   Better regex & error message for validation/formatting of Brazilian post codes. ([#2211](https://github.com/Adyen/adyen-web/pull/2211))
-
-    We now allow a hyphen between the 5th & 6th digits
-
--   Fix inconsistency displaying custom brand logo for the gift card payment ([#2215](https://github.com/Adyen/adyen-web/pull/2215))
-
--   Fixes issue which ApplePay crashes Drop-in when initialized within iframe ([#2212](https://github.com/Adyen/adyen-web/pull/2212))
-
--   Removing tsconfig stripInternals from lib package ([#2213](https://github.com/Adyen/adyen-web/pull/2213))
-
-## 5.44.0
-
-### Minor Changes
-
--   Feeds the count-down information to the SR panel and refactor the Countdown to a functional component with A11y reporter custom hook. ([#2182](https://github.com/Adyen/adyen-web/pull/2182))
-
--   Adding support for the payment method Cash App Pay ([#2105](https://github.com/Adyen/adyen-web/pull/2105))
-
-### Patch Changes
-
--   Prevent double readout of PM names, by a screenreader, in Dropin. ([#2206](https://github.com/Adyen/adyen-web/pull/2206))
-
--   Fixes for/id in the label of the select field pointing to the outer div instead of the correct combobox input ([#2205](https://github.com/Adyen/adyen-web/pull/2205))
+See [5.x.x changelog](https://github.com/Adyen/adyen-web/blob/v5/packages/lib/CHANGELOG.md)

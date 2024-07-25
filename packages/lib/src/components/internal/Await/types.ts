@@ -18,6 +18,7 @@ export interface AwaitComponentProps {
     countdownTime: number;
     throttleTime: number;
     showCountdownTimer: boolean;
+    shouldRedirectAutomatically?: boolean;
     throttleInterval: number;
     paymentData: string;
     url?: string;

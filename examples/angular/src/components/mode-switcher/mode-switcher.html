@@ -1,0 +1,19 @@
+<div class="mode-switcher">
+    <button
+        class="mode-switcher__button"
+        [ngClass]="{ 'mode-switcher__button--selected': isAdvancedFlowPageActive }"
+        type="button"
+        (click)="onAdvancedFlowClick()"
+    >
+        Advanced flow
+    </button>
+
+    <button
+        class="mode-switcher__button"
+        [ngClass]="{ 'mode-switcher__button--selected': !isAdvancedFlowPageActive }"
+        type="button"
+        (click)="onSessionsFlowClick()"
+    >
+        Sessions flow
+    </button>
+</div>

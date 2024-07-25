@@ -11,6 +11,7 @@ import { TxVariants } from '../tx-variants';
 import { CustomCardConfiguration } from './types';
 import { fieldTypeToSnakeCase } from '../internal/SecuredFields/utils';
 import { ANALYTICS_FOCUS_STR, ANALYTICS_UNFOCUS_STR } from '../../core/Analytics/constants';
+import { SendAnalyticsObject } from '../../core/Analytics/types';
 
 // TODO questions about
 // brand - does a merchant ever make a custom stored card?
@@ -48,6 +49,10 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
             },
             browserInfo: this.browserInfo
         };
+    }
+
+    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
+        super.submitAnalytics(analyticsObj, this.props);
     }
 
     updateStyles(stylesObj) {

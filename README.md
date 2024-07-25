@@ -32,8 +32,8 @@ npm install @adyen/adyen-web --save
 2. Import Adyen Web into your application:
 
 ```js
-import AdyenCheckout from '@adyen/adyen-web';
-import '@adyen/adyen-web/dist/adyen.css';
+import { AdyenCheckout } from '@adyen/adyen-web';
+import '@adyen/adyen-web/styles/adyen.css';
 ```
 
 ### Using a <script> tag
@@ -44,7 +44,7 @@ You can also import Adyen Web using a `<script>` tag, as shown in the [Web Compo
 
 Requirements:
 
--   Node v18.18.0
+-   Node v20.12.2
 -   Yarn
 
 To run the development environment:

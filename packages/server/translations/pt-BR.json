@@ -105,6 +105,8 @@
     "creditCard.storedCard.description.ariaLabel": "O cartão armazenado termina em %@",
     "voucher.entity": "Entidade",
     "donateButton": "Doar",
+    "donationTermsCondition": "Ao doar, você concorda com os %#termos e as condições%#",
+    "donationRoundUpDescription": "%{donationAmount} é um arredondamento para cima do seu pagamento original (%{originalPaymentAmount})",
     "notNowButton": "Agora não",
     "thanksForYourSupport": "Obrigado pelo apoio!",
     "resultMessages.preauthorized": "Informações salvas",

@@ -105,6 +105,8 @@
     "creditCard.storedCard.description.ariaLabel": "تنتهي البطاقة المخزنة في %@",
     "voucher.entity": "الكيان",
     "donateButton": "التبرع",
+    "donationTermsCondition": "تبرعك يعني أنك توافق على %#الشروط والأحكام%#",
+    "donationRoundUpDescription": "%{donationAmount} هي القيمة الصحيحة المقربة لدفعتك الأصلية وقدرها (%{originalPaymentAmount})",
     "notNowButton": "ليس الآن",
     "thanksForYourSupport": "شكرًا على دعمك!",
     "resultMessages.preauthorized": "تم حفظ التفاصيل",

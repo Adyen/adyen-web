@@ -7,22 +7,38 @@ export default {
     setComponentRef: () => {},
 
     // Settings
+    autoFocus: true,
+    billingAddressAllowedCountries: [],
+    billingAddressMode: AddressModeOptions.full,
+    billingAddressRequired: false,
+    billingAddressRequiredFields: ['street', 'houseNumberOrName', 'postalCode', 'city', 'stateOrProvince', 'country'],
+
+    configuration: { koreanAuthenticationRequired: false, socialSecurityNumberMode: 'auto' as SocialSecurityMode },
+    data: {
+        billingAddress: {}
+    },
+    disableIOSArrowKeys: false,
+    enableStoreDetails: false,
+    exposeExpiryDate: false,
+    forceCompat: false,
     hasHolderName: false,
     holderNameRequired: false,
-    enableStoreDetails: false,
     hasCVC: true,
-    showBrandIcon: true,
-    positionHolderNameOnTop: false,
-    billingAddressRequired: false,
-    billingAddressMode: AddressModeOptions.full,
-    billingAddressRequiredFields: ['street', 'houseNumberOrName', 'postalCode', 'city', 'stateOrProvince', 'country'],
+    hideCVC: false,
     installmentOptions: {},
-    configuration: { koreanAuthenticationRequired: false, socialSecurityNumberMode: 'auto' as SocialSecurityMode },
-    autoFocus: true,
+    keypadFix: true,
+    legacyInputMode: false,
+    maskSecurityCode: false,
+    minimumExpiryDate: null,
+    name: null, // Affects Dropin only, the name displayed in the PMList item
+    placeholders: {},
+    positionHolderNameOnTop: false,
+    showBrandIcon: true,
+    showInstallmentAmounts: null,
+    styles: {},
+
     isPayButtonPrimaryVariant: true,
-    disableIOSArrowKeys: false,
     showContextualElement: true,
-    exposeExpiryDate: false,
 
     // Events
     onLoad: (): any => {},
@@ -36,12 +52,7 @@ export default {
     onFocus: (): any => {},
     onChange: (): any => {},
 
-    // Values
-    data: {
-        billingAddress: {}
-    },
-
-    // Customization
-    styles: {},
-    placeholders: {}
+    // Strictly speaking a Card level props, but needed here for analytics.configData
+    onBinLookup: () => {},
+    onEnterKeyPressed: () => {}
 };

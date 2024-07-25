@@ -5,7 +5,8 @@ import collectBrowserInfo from '../../utils/browserInfo';
 import { BinLookupResponse, CardElementData, CardConfiguration } from './types';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
 import { CbObjOnBinLookup, CbObjOnConfigSuccess, CbObjOnFocus } from '../internal/SecuredFields/lib/types';
-import { fieldTypeToSnakeCase, reject } from '../internal/SecuredFields/utils';
+import { fieldTypeToSnakeCase } from '../internal/SecuredFields/utils';
+import { reject } from '../../utils/commonUtils';
 import { hasValidInstallmentsObject } from './components/CardInput/utils';
 import createClickToPayService from '../internal/ClickToPay/services/create-clicktopay-service';
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';
@@ -13,10 +14,9 @@ import ClickToPayWrapper from './components/ClickToPayWrapper';
 import { ComponentFocusObject } from '../../types/global-types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { TxVariants } from '../tx-variants';
-import { UIElementStatus } from '../internal/UIElement/types';
+import type { PayButtonFunctionProps, UIElementStatus } from '../internal/UIElement/types';
 import UIElement from '../internal/UIElement';
 import PayButton from '../internal/PayButton';
-import { PayButtonProps } from '../internal/PayButton/PayButton';
 import type { ICore } from '../../core/types';
 import {
     ANALYTICS_FOCUS_STR,
@@ -31,6 +31,7 @@ import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from '../../core/Errors/AdyenCheckoutError';
 import { getErrorMessageFromCode } from '../../core/Errors/utils';
 import { SF_ErrorCodes } from '../../core/Errors/constants';
+import CardInputDefaultProps from './components/CardInput/defaultProps';
 
 export class CardElement extends UIElement<CardConfiguration> {
     public static type = TxVariants.scheme;
@@ -52,8 +53,11 @@ export class CardElement extends UIElement<CardConfiguration> {
     }
 
     protected static defaultProps = {
-        onBinLookup: () => {},
-        _disableClickToPay: false
+        showFormInstruction: true,
+        _disableClickToPay: false,
+        doBinLookup: true,
+        // Merge most of CardInput's defaultProps
+        ...reject(['type', 'setComponentRef']).from(CardInputDefaultProps)
     };
 
     public setStatus(status: UIElementStatus, props?): this {
@@ -70,7 +74,7 @@ export class CardElement extends UIElement<CardConfiguration> {
         this.clickToPayRef = ref;
     };
 
-    formatProps(props: CardConfiguration) {
+    formatProps(props: CardConfiguration): CardConfiguration {
         // The value from a session should be used, before falling back to the merchant configuration
         const enableStoreDetails = props.session?.configuration?.enableStoreDetails ?? props.enableStoreDetails;
 
@@ -97,7 +101,8 @@ export class CardElement extends UIElement<CardConfiguration> {
             hasCVC: !((props.brand && props.brand === 'bcmc') || props.hideCVC),
             // billingAddressRequired only available for non-stored cards
             billingAddressRequired: props.storedPaymentMethodId ? false : props.billingAddressRequired,
-            // ...(props.brands && !props.groupTypes && { groupTypes: props.brands }),
+            // edge case where merchant has defined both an onAddressLookup callback AND set billingAddressMode: 'partial' - which leads to some strange behaviour in the address UI
+            billingAddressMode: props.onAddressLookup ? CardInputDefaultProps.billingAddressMode : props.billingAddressMode,
             /** props.brand will be specified in the case of a StoredCard or a Bancontact component, for a regular Card we default it to 'card' */
             brand: props.brand ?? TxVariants.card,
             countryCode: props.countryCode ? props.countryCode.toLowerCase() : null,
@@ -207,7 +212,7 @@ export class CardElement extends UIElement<CardConfiguration> {
             }
         }
 
-        super.submitAnalytics(analyticsObj);
+        super.submitAnalytics(analyticsObj, this.props);
     }
 
     private onConfigSuccess = (obj: CbObjOnConfigSuccess) => {
@@ -324,8 +329,7 @@ export class CardElement extends UIElement<CardConfiguration> {
         return collectBrowserInfo();
     }
 
-    // Override
-    protected payButton = (props: PayButtonProps) => {
+    protected override payButton = (props: PayButtonFunctionProps) => {
         const isZeroAuth = this.props.amount?.value === 0;
         const isStoredCard = this.props.storedPaymentMethodId?.length > 0;
         return (
