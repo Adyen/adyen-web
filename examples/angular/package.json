@@ -12,7 +12,7 @@
   },
   "private": true,
   "dependencies": {
-    "@adyen/adyen-web": "^6.0.0-beta.0",
+    "@adyen/adyen-web": "^6.0.0",
     "@angular/animations": "^18.0.0",
     "@angular/common": "^18.0.0",
     "@angular/compiler": "^18.0.0",
