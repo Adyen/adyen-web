@@ -1,12 +1,13 @@
 import { h } from 'preact';
 import { useCallback, useEffect, useRef } from 'preact/hooks';
-import Field from '../../../internal/FormFields/Field';
-import useForm from '../../../../utils/useForm';
 import { vpaValidationRules } from './validate';
 import './VpaInput.scss';
 import InputText from '../../../internal/FormFields/InputText';
+import { useCoreContext } from '../../../../core/Context/CoreProvider';
+import useForm from '../../../../utils/useForm';
+import Field from '../../../internal/FormFields/Field';
 
-type OnChangeProps = { data: VpaInputDataState; valid; errors; isValid: boolean };
+export type OnChangeProps = { data: VpaInputDataState; valid; errors; isValid: boolean };
 
 interface VpaInputProps {
     data?: {};
@@ -24,6 +25,7 @@ export type VpaInputHandlers = {
 };
 
 const VpaInput = (props: VpaInputProps): h.JSX.Element => {
+    const { i18n } = useCoreContext();
     const formSchema = ['virtualPaymentAddress'];
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm<VpaInputDataState>({
         schema: formSchema,
@@ -47,7 +49,7 @@ const VpaInput = (props: VpaInputProps): h.JSX.Element => {
 
     return (
         <Field
-            label="Virtual Payment Address"
+            label={i18n.get('upi.collect.field.label')}
             errorMessage={!!errors.virtualPaymentAddress}
             classNameModifiers={['vpa']}
             name="virtualPaymentAddress"

@@ -80,12 +80,60 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
 
     if (onlyShowCard || showComps.card) {
         window.card = new Card(checkout, {
-            challengeWindowSize: '01',
             _disableClickToPay: true,
-            hasHolderName: true,
-            holderNameRequired: true,
+            // autoFocus: false,
+            // billingAddressAllowedCountries: ['US', 'PR'],
+            // billingAddressMode: 'partial',
+            // billingAddressRequired: true,
+            // billingAddressRequiredFields: ['postalCode', 'country'],
+            // brands: ['mc'],
+            // brandsConfiguration: { visa: { icon: 'http://localhost:3000/nocard.svg', name: 'altVisa' } },
+            // challengeWindowSize: '01',
+            // configuration: {koreanAuthenticationRequired: true, socialSecurityNumberMode: 'auto'}
+            // data: {
+            //     holderName: 'J. Smith'
+            // },
+            // disableIOSArrowKeys: false
+            // disclaimerMessage,
+            // doBinLookup: false,
+            // enableStoreDetails: true,
+            // exposeExpiryDate: true,
+            // forceCompat: true,
+            // hasHolderName: true,
+            // holderNameRequired: true,
+            // hideCVC: true,
+            // installmentOptions: {
+            //     mc: {
+            //         values: [1, 2]
+            //     }
+            // },
+            // keypadFix: false,
+            // legacyInputMode: false,
             // maskSecurityCode: true,
-            // enableStoreDetails: true
+            // minimumExpiryDate: '05/24',
+            // name: '', // Affects Dropin only
+            // placeholders: { holderName: 'B Bob' },
+            // positionHolderNameOnTop: true,
+            // showBrandIcon: false,
+            // showBrandsUnderCardNumber: false,
+            // showContextualElement: true, // v6 only
+            // showInstallmentAmounts: false,
+            // showPayButton: false,
+            // styles: { base: { fontWeight: 300 } },
+            // onAddressLookup: searchFunctionExample,
+            // onAllValid: () => {},
+            // onBinLookup: () => {},
+            // onBinValue: () => {},
+            // onBlur: () => {},
+            // onBrand: () => {},
+            // onConfigSuccess: () => {},
+            // onFieldValid: () => {},
+            // onFocus: () => {},
+            // onLoad: () => {},
+            /** SINCE v5 onError IS NO LONGER SPECIFIC TO CARD, although if set here this callback will be called over the top level Checkout one */
+            // onError: obj => {
+            //     console.log('### Cards::onError:: obj=', obj);
+            // },
             onBinLookup: obj => {
                 console.log('### Cards::onBinLookup:: obj=', obj);
             }

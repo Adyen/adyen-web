@@ -2,7 +2,7 @@ import { CHALLENGE_WINDOW_SIZES, DEFAULT_CHALLENGE_WINDOW_SIZE } from '../consta
 import { getOrigin } from '../../../utils/getOrigin';
 import base64 from '../../../utils/base64';
 import { ChallengeData, ThreeDS2Token, FingerPrintData, ResultObject, FingerprintResolveData, ChallengeResolveData } from '../types';
-import { pick } from '../../internal/SecuredFields/utils';
+import { pick } from '../../../utils/commonUtils';
 import { DecodeObject } from '../../../types/global-types';
 import { ErrorObject } from '../../../core/Errors/types';
 

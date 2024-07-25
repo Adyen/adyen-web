@@ -18,7 +18,7 @@ import { generateRandomNumber } from '../utilities/commonUtils';
 import { CVCPolicyType, DatePolicyType, RtnType_callbackFn, RtnType_noParamVoidFn, RtnType_postMessageListener, SFFeedbackObj } from '../types';
 import AbstractSecuredField from './AbstractSecuredField';
 import { AriaConfig, IframeConfigObject, SecuredFieldSetupObject, SecuredFieldCommonProps } from '../types';
-import { reject } from '../../utils';
+import { reject } from '../../../../../utils/commonUtils';
 import { processAriaConfig } from './utils/processAriaConfig';
 import { processPlaceholders } from './utils/processPlaceholders';
 import Language from '../../../../../language/Language';

@@ -106,6 +106,8 @@
     "creditCard.storedCard.description.ariaLabel": "Gemt kort ender på %@",
     "voucher.entity": "Enhed",
     "donateButton": "Giv et bidrag",
+    "donationTermsCondition": "Ved at donere accepterer du %#vilkår og betingelser%#",
+    "donationRoundUpDescription": "%{donationAmount} er en afrunding fra din oprindelige betaling (%{originalPaymentAmount})",
     "notNowButton": "Ikke nu",
     "thanksForYourSupport": "Tak for din støtte!",
     "resultMessages.preauthorized": "Oplysningerne er gemt",

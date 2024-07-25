@@ -105,6 +105,8 @@
     "creditCard.storedCard.description.ariaLabel": "Zapisana karta kończy się na % @",
     "voucher.entity": "Pozycja",
     "donateButton": "Przekaż darowiznę",
+    "donationTermsCondition": "Dokonując darowizny, akceptujesz %#Warunki świadczenia usług%#",
+    "donationRoundUpDescription": "%{donationAmount} to zaokrąglenie w górę z pierwotnej płatności (%{originalPaymentAmount})",
     "notNowButton": "Nie teraz",
     "thanksForYourSupport": "Dziękujemy za wsparcie!",
     "resultMessages.preauthorized": "Zapisano dane",

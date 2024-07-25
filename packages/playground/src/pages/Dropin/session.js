@@ -29,9 +29,6 @@ export async function initSession() {
         onError: (error, component) => {
             console.log(error.name, error.message, error.cause);
         },
-        // onChange: (state, component) => {
-        //     console.log('onChange', state);
-        // },
         onPaymentCompleted: handleOnPaymentCompleted,
         onPaymentFailed: handleOnPaymentFailed
     });
@@ -42,10 +39,10 @@ export async function initSession() {
         paymentMethodsConfiguration: {
             googlepay: {
                 buttonType: 'plain',
-
+                buttonRadius: 20,
                 onAuthorized(data, actions) {
                     console.log(data, actions);
-                    actions.reject();
+                    actions.resolve();
                 }
             },
             card: {

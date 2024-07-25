@@ -13,4 +13,5 @@ export interface RadioGroupProps extends InputBaseProps {
     onChange: (e) => void;
     value?: string;
     uniqueId?: string;
+    ariaLabel?: string;
 }

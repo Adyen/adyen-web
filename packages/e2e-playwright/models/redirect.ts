@@ -29,7 +29,7 @@ class Redirect {
 
         this.selectYourBankButton = page.getByRole('button', { name: SELECT_YOUR_BANK });
 
-        this.selectTestBankButton = page.getByRole('button', { name: TEST_BANK_NAME });
+        this.selectTestBankButton = page.getByText(TEST_BANK_NAME);
 
         this.simulateSuccessButton = page.getByRole('button', { name: SIMULATION_TYPE_SUCCESS });
         this.simulateFailureButton = page.getByRole('button', { name: SIMULATION_TYPE_FAILURE });

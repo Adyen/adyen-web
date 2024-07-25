@@ -4,7 +4,7 @@ import GiftcardComponent from './components/GiftcardComponent';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import PayButton from '../internal/PayButton';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
-import { PaymentAmount } from '../../types//global-types';
+import { PaymentAmount } from '../../types/global-types';
 import { GiftCardElementData, GiftCardConfiguration, balanceCheckResponseType } from './types';
 import { TxVariants } from '../tx-variants';
 

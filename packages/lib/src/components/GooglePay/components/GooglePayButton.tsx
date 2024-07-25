@@ -7,6 +7,7 @@ interface GooglePayButtonProps {
     buttonType: google.payments.api.ButtonType;
     buttonSizeMode: google.payments.api.ButtonSizeMode;
     buttonLocale: string;
+    buttonRadius?: number;
     buttonRootNode?: HTMLDocument | ShadowRoot;
     paymentsClient: Promise<google.payments.api.PaymentsClient>;
     onClick: (e: Event) => void;
@@ -16,7 +17,7 @@ const GooglePayButton = (props: GooglePayButtonProps) => {
     const googlePayWrapperRef = useRef<HTMLDivElement | undefined>(undefined);
 
     useEffect(() => {
-        const { onClick, buttonColor, buttonType, buttonLocale, buttonSizeMode, buttonRootNode, paymentsClient } = props;
+        const { onClick, buttonRadius, buttonColor, buttonType, buttonLocale, buttonSizeMode, buttonRootNode, paymentsClient } = props;
 
         void paymentsClient
             .then(client =>
@@ -26,7 +27,8 @@ const GooglePayButton = (props: GooglePayButtonProps) => {
                     buttonColor,
                     buttonLocale,
                     buttonSizeMode,
-                    buttonRootNode
+                    buttonRootNode,
+                    ...(buttonRadius && { buttonRadius })
                 })
             )
             .then(googlePayButton => {

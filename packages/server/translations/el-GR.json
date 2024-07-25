@@ -105,6 +105,8 @@
     "creditCard.storedCard.description.ariaLabel": "Η αποθηκευμένη κάρτα τελειώνει σε %@",
     "voucher.entity": "Οντότητα",
     "donateButton": "Δωρεά",
+    "donationTermsCondition": "Αν πραγματοποιήσετε δωρεά, συνεπάγεται ότι αποδέχεστε τους %#Όρους και προϋποθέσεις%#",
+    "donationRoundUpDescription": "Το ποσό %{donationAmount} αποτελεί στρογγυλοποίηση από την αρχική πληρωμή σας ύψους (%{originalPaymentAmount})",
     "notNowButton": "Όχι τώρα",
     "thanksForYourSupport": "Σας ευχαριστούμε για την υποστήριξη!",
     "resultMessages.preauthorized": "Τα στοιχεία αποθηκεύτηκαν",

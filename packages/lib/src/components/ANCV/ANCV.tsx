@@ -50,7 +50,7 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
 
         return this.onOrderRequest(this.data)
             .then((order: { orderData: string; pspReference: string }) => {
-                const stateOrder = { orderData: order.orderData, pspReference: order.pspReference };
+                const stateOrder = { order: { orderData: order.orderData, pspReference: order.pspReference } };
                 this.setState(stateOrder);
                 return Promise.resolve();
             })

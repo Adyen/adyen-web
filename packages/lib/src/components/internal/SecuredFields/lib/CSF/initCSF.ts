@@ -1,7 +1,7 @@
 import CSF from './CSF';
 import cardType from './utils/cardType';
 import * as logger from '../utilities/logger';
-import { falsy } from '../utilities/commonUtils';
+import { falsy } from '../../../../../utils/commonUtils';
 import { CSFReturnObject, CSFSetupObject } from './types';
 import { hasOwnProperty } from '../../../../../utils/hasOwnProperty';
 import { selectOne } from '../utilities/dom';

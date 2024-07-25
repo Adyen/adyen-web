@@ -21,7 +21,7 @@ import {
     CbObjOnLoad,
     SFKeyPressObj
 } from '../lib/types';
-import { existy } from '../lib/utilities/commonUtils';
+import { existy } from '../../../../utils/commonUtils';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
 
 /**

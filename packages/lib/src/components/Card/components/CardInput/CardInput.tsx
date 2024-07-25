@@ -341,6 +341,19 @@ const CardInput = (props: CardInputProps) => {
         sfp
     });
 
+    // Analytics: ValidationErrors
+    if (currentErrorsSortedByLayout) {
+        const newErrors = getArrayDifferences<SortedErrorObject, string>(currentErrorsSortedByLayout, previousSortedErrors, 'field');
+        newErrors?.forEach(errorItem => {
+            const aObj: FieldErrorAnalyticsObject = {
+                fieldType: errorItem.field,
+                errorCode: errorItem.errorCode
+            };
+
+            props.onValidationErrorAnalytics(aObj);
+        });
+    }
+
     /**
      * Main 'componentDidUpdate' handler
      */
@@ -358,19 +371,6 @@ const CardInput = (props: CardInputProps) => {
 
         const sfStateErrorsObj = sfp.current.mapErrorsToValidationRuleResult();
         const mergedErrors = { ...errors, ...sfStateErrorsObj }; // maps sfErrors AND solves race condition problems for sfp from showValidation
-
-        // Analytics
-        if (currentErrorsSortedByLayout) {
-            const newErrors = getArrayDifferences<SortedErrorObject, string>(currentErrorsSortedByLayout, previousSortedErrors, 'field');
-            newErrors?.forEach(errorItem => {
-                const aObj: FieldErrorAnalyticsObject = {
-                    fieldType: errorItem.field,
-                    errorCode: errorItem.errorCode
-                };
-
-                props.onValidationErrorAnalytics(aObj);
-            });
-        }
 
         props.onChange({
             data,

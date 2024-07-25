@@ -6,7 +6,7 @@ import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import { KCPProps } from './types';
 import DataSfSpan from './DataSfSpan';
 import InputTelephone from '../../../../internal/FormFields/InputTelephone';
-import { alternativeLabelContent } from './IframeLabelAlternative';
+import { alternativeLabelContent } from './FieldLabelAlternative';
 import { CREDITCARD_TAX_NUMBER_INVALID } from '../../../../../core/Errors/constants';
 
 export default function KCPAuthentication(props: KCPProps) {
