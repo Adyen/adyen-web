@@ -16,7 +16,7 @@ jobs:
 
       - name: Getting SF_VERSION in the codebase
         run: |
-          echo "SF_VERSION=$(grep -e 'SF_VERSION' packages/lib/src/components/internal/SecuredFields/lib/configuration/constants.ts | cut -d "'" -f2)" >> $GITHUB_ENV
+          echo "SF_VERSION=$(grep -e 'SF_VERSION' packages/lib/src/components/internal/SecuredFields/lib/constants.ts | cut -d "'" -f2)" >> $GITHUB_ENV
 
       - name: Encoding test origin URL to base64
         run: |
