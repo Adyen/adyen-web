@@ -120,7 +120,11 @@ export default function Address(props: AddressProps) {
 
     useEffect((): void => {
         const optionalFields = specifications.getOptionalFieldsForCountry(data.country);
+        // Country specific / default schema fields, include both required and optional fields.
+        const validSchemaFields = specifications.getAddressSchemaForCountryFlat(data.country);
         const processedData = ADDRESS_SCHEMA.reduce((acc, cur) => {
+            if (!validSchemaFields?.includes(cur)) return acc;
+
             const isOptional = optionalFields.includes(cur);
             const isRequired = requiredFields.includes(cur);
             const newValue = data[cur];
