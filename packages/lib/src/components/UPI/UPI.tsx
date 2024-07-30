@@ -4,7 +4,7 @@ import UPIComponent from './components/UPIComponent';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import Await from '../internal/Await';
 import QRLoader from '../internal/QRLoader';
-import { UPIConfiguration, UpiMode, UpiPaymentData, UpiType } from './types';
+import { App, UPIConfiguration, UpiMode, UpiPaymentData, UpiType } from './types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { TxVariants } from '../tx-variants';
 import isMobile from '../../utils/isMobile';
@@ -31,7 +31,6 @@ class UPI extends UIElement<UPIConfiguration> {
         this.selectedMode = this.props.defaultMode;
     }
 
-    // @ts-ignore fix later
     formatProps(props: UPIConfiguration) {
         if (!isMobile()) {
             return {
@@ -45,12 +44,12 @@ class UPI extends UIElement<UPIConfiguration> {
         const hasIntentApps = props.apps?.length > 0;
         const fallbackDefaultMode = hasIntentApps ? 'intent' : 'vpa';
         const allowedModes = [fallbackDefaultMode, 'qrCode'];
-        const upiCollectApp = {
+        const upiCollectApp: App = {
             id: 'vpa',
             name: props.i18n.get('upi.collect.dropdown.label'),
-            type: TxVariants.upi_collect
+            type: TxVariants.upi_collect as UpiType
         };
-        const apps = hasIntentApps ? [...props.apps.map(app => ({ ...app, type: TxVariants.upi_intent })), upiCollectApp] : [];
+        const apps = hasIntentApps ? [...props.apps.map(app => ({ ...app, type: TxVariants.upi_intent as UpiType })), upiCollectApp] : [];
         return {
             ...super.formatProps(props),
             defaultMode: allowedModes.includes(props?.defaultMode) ? props.defaultMode : fallbackDefaultMode,
