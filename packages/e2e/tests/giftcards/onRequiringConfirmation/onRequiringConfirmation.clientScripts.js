@@ -1,3 +1,0 @@
-window.mainConfiguration = {
-    allowPaymentMethods: ['giftcard']
-};

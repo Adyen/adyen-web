@@ -1,6 +1,7 @@
 import Giftcard from './Giftcard';
 import { render, screen } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
+import { reject } from '../../utils/commonUtils';
 
 const flushPromises = () => new Promise(process.nextTick);
 
@@ -245,6 +246,64 @@ describe('Giftcard', () => {
 
             expect(onOrderRequest).not.toHaveBeenCalled();
             expect(onSubmit).toHaveBeenCalled();
+        });
+    });
+
+    describe('onRequiringConfirmation handling', () => {
+        test('should require confirmation and resolve payment', async () => {
+            const onBalanceCheck = jest.fn(resolve =>
+                resolve({
+                    balance: { value: 2000, currency: 'EUR' }
+                })
+            );
+            const onOrderRequest = jest.fn(resolve => resolve({}));
+            const onSubmit = jest.fn();
+            const onRequiringConfirmation = jest.fn(resolve => resolve());
+
+            // mounting and clicking pay button
+            const giftcard = new Giftcard(global.core, {
+                ...baseProps,
+                onBalanceCheck,
+                onOrderRequest,
+                onRequiringConfirmation,
+                onSubmit
+            });
+            render(giftcard.render());
+            giftcard.setState({ isValid: true });
+            const payButton = await screen.findByRole('button');
+            await user.click(payButton);
+
+            expect(onOrderRequest).not.toHaveBeenCalled();
+            expect(onRequiringConfirmation).toHaveBeenCalled();
+            expect(onSubmit).toHaveBeenCalled();
+        });
+
+        test('should require confirmation and cancel payment', async () => {
+            const onBalanceCheck = jest.fn(resolve =>
+                resolve({
+                    balance: { value: 2000, currency: 'EUR' }
+                })
+            );
+            const onOrderRequest = jest.fn(resolve => resolve({}));
+            const onSubmit = jest.fn();
+            const onRequiringConfirmation = jest.fn(({ reject }) => reject());
+
+            // mounting and clicking pay button
+            const giftcard = new Giftcard(global.core, {
+                ...baseProps,
+                onBalanceCheck,
+                onOrderRequest,
+                onRequiringConfirmation,
+                onSubmit
+            });
+            render(giftcard.render());
+            giftcard.setState({ isValid: true });
+            const payButton = await screen.findByRole('button');
+            await user.click(payButton);
+
+            expect(onOrderRequest).not.toHaveBeenCalled();
+            expect(onRequiringConfirmation).toHaveBeenCalled();
+            expect(onSubmit).not.toHaveBeenCalled();
         });
     });
 });
