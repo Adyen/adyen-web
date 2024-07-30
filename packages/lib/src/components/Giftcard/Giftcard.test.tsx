@@ -1,7 +1,6 @@
 import Giftcard from './Giftcard';
 import { render, screen } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
-import { reject } from '../../utils/commonUtils';
 
 const flushPromises = () => new Promise(process.nextTick);
 
