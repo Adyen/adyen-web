@@ -29,7 +29,10 @@ import { FieldErrorAnalyticsObject } from '../../../../core/Analytics/types';
 import { PREFIX } from '../../../internal/Icon/constants';
 import useSRPanelForCardInputErrors from './useSRPanelForCardInputErrors';
 
+import { useTranslation } from 'react-i18next';
+
 const CardInput = (props: CardInputProps) => {
+    const { t } = useTranslation();
     const sfp = useRef(null);
     const isValidating = useRef(false);
     const getImage = useImage();
@@ -466,6 +469,9 @@ const CardInput = (props: CardInputProps) => {
                     </div>
                 )}
             />
+
+            {t('translation')}
+
             {props.showPayButton &&
                 props.payButton({
                     status,

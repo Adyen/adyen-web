@@ -142,7 +142,9 @@
     "@types/applepayjs": "14.0.8",
     "@types/googlepay": "0.7.6",
     "classnames": "2.5.1",
-    "preact": "10.22.1"
+    "i18next": "^23.12.2",
+    "preact": "10.22.1",
+    "react-i18next": "^15.0.0"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint",
