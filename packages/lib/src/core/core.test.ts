@@ -60,7 +60,7 @@ describe('Core', () => {
         test('should create the modules when initializing on Advanced Flow', async () => {
             const checkout = new AdyenCheckout({ countryCode: 'US', environment: 'test', clientKey: 'test_123456' });
             await checkout.initialize();
-            expect(Object.keys(checkout.modules).length).toBe(5);
+            expect(Object.keys(checkout.modules).length).toBe(6);
         });
 
         test('should create the modules when initializing on Sessions flow', async () => {
