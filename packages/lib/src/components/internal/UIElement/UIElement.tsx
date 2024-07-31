@@ -7,6 +7,8 @@ import { hasOwnProperty } from '../../../utils/hasOwnProperty';
 import { Resources } from '../../../core/Context/Resources';
 import { ANALYTICS_SUBMIT_STR } from '../../../core/Analytics/constants';
 
+import i18n from '../../../language/i18n';
+
 import type { AnalyticsInitialEvent, SendAnalyticsObject } from '../../../core/Analytics/types';
 import type { CoreConfiguration, ICore, AdditionalDetailsData } from '../../../core/types';
 import type { ComponentMethodsRef, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
@@ -64,6 +66,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.storeElementRefOnCore(this.props);
 
         this.onEnterKeyPressed = this.onEnterKeyPressed.bind(this);
+
+        console.log(i18n.t('translation'));
     }
 
     protected override buildElementProps(componentProps?: P) {

@@ -466,6 +466,7 @@ const CardInput = (props: CardInputProps) => {
                     </div>
                 )}
             />
+
             {props.showPayButton &&
                 props.payButton({
                     status,

@@ -25,6 +25,8 @@ import type { CoreConfiguration, ICore, AdditionalDetailsData } from './types';
 import type { Translations } from '../language/types';
 import type { UIElementProps } from '../components/internal/UIElement/types';
 
+import i18n from '../language/i18n';
+
 class Core implements ICore {
     public session?: Session;
     public paymentMethodsResponse: PaymentMethods;
@@ -34,6 +36,7 @@ class Core implements ICore {
         resources: Resources;
         i18n: Language;
         srPanel: SRPanel;
+        newI18n: any;
     }>;
     public options: CoreConfiguration;
 
@@ -353,6 +356,9 @@ class Core implements ICore {
             return;
         }
 
+        // // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        // const { t } = useTranslation();
+
         const translations = await this.fetchLocaleTranslations();
 
         this.modules = Object.freeze({
@@ -372,6 +378,7 @@ class Core implements ICore {
                 translations,
                 customTranslations: this.options.translations
             }),
+            newI18n: i18n,
             srPanel: new SRPanel(this, { ...this.options.srConfig })
         });
     }
