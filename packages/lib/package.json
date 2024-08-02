@@ -64,6 +64,7 @@
     "build": "rm -rf dist/ && npm run lint && npm run lint-styles && npm run type-check && npm run types:generate && rollup --config config/rollup.prod.js && rm -rf dist/temp-types",
     "docs:generate": "typedoc --out docs src --exclude \"**/*+(index|.test).ts\"",
     "start:storybook": "node .storybook/run.cjs",
+    "serve:storybook": "npx http-server storybook-static -p 8080",
     "build:storybook": "storybook build --disable-telemetry",
     "test": "jest --config config/jest.config.cjs",
     "test:watch": "npm run test -- --watchAll",
@@ -138,6 +139,7 @@
     "typescript-eslint": "7.16.1",
     "vite": "5.3.6",
     "vite-plugin-stylelint": "5.3.1",
+    "vite-plugin-static-copy": "1.0.6",
     "whatwg-fetch": "3.6.20"
   },
   "dependencies": {

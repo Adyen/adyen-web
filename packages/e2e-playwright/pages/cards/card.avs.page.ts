@@ -13,12 +13,12 @@ class CardAvsPage {
     constructor(page: Page) {
         this.page = page;
         this.cardWithAvs = new CardWithAvs(page, CardAvsPage.avsContainerSelector);
-        this.payButton = page.locator(CardAvsPage.avsContainerSelector).getByRole('button', { name: /Pay/i });
+        this.payButton = page.getByRole('button',{name: /Pay/i});
         //this.paymentResult = new Result(page).paymentResult;
     }
 
     async goto(url?: string) {
-        await this.page.goto('http://localhost:3020/cards', { timeout: 60000 });
+        await this.page.goto('/iframe.html?args=countryCode=US&id=cards-card--with-partial-avs&viewMode=story', { timeout: 60000 });
     }
 }
 

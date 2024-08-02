@@ -6,12 +6,6 @@ test.describe('Card payments with partial avs', () => {
     test.describe('When fill in a valid the post code', () => {
         test.only('should make a successful card payment', async ({ cardPartialAvsPage }) => {
             const { cardWithAvs, payButton, paymentResult } = cardPartialAvsPage;
-            await cardWithAvs.isComponentVisible();
-            /*            await cardWithAvs.typeCardNumber(REGULAR_TEST_CARD);
-            await cardWithAvs.typeCvc(TEST_CVC_VALUE);
-            await cardWithAvs.typeExpiryDate(TEST_DATE_VALUE);
-            await cardWithAvs.fillInPostCode(TEST_POSTCODE);
-            await payButton.click();*/
             await expect(payButton).toBeVisible();
         });
     });

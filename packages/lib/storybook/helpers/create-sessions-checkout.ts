@@ -29,6 +29,7 @@ async function createSessionsCheckout({
     return AdyenCheckout({
         clientKey: process.env.CLIENT_KEY,
         environment: process.env.CLIENT_ENV as any,
+        countryCode,
         session,
         showPayButton,
 

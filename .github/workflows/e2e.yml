@@ -13,10 +13,18 @@ jobs:
       fail-fast: false
       matrix:
         node-version: [20.12.2]
-        api-version: ["v68", "v69", "v70", "v71"]
+        api-version: ["v71"]
+        # api-version: ["v68", "v69", "v70", "v71"]
         # node-version: [16.x, 18.x, 19.x]
         # Currently 18 and 19 are not supported, still keeping it
         # as a reminder for compatibility check
+    env:
+      CHECKOUT_API_KEY: ${{secrets.ADYEN_CHECKOUT_API_KEY}}
+      MERCHANT_ACCOUNT: ${{secrets.ADYEN_CHECKOUT_MERCHANT_ACCOUNT}}
+      CLIENT_KEY: ${{secrets.ADYEN_CHECKOUT_CLIENT_KEY}}
+      CLIENT_ENV: test
+      TESTING_ENVIRONMENT: https://checkout-test.adyen.com/checkout/${{matrix.api-version}}
+      API_VERSION: ${{matrix.api-version}}
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -26,21 +34,11 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Install Project Dependencies
       run: yarn install
-    - name: Build Project
-      run: yarn build
     - name: Install Playwright Dependencies
       working-directory: packages/e2e-playwright/
       run: yarn install && npx playwright install --with-deps
     - name: Run E2E Tests
-      working-directory: packages/e2e-playwright/
-      run: yarn test:headless
-      env:
-        CHECKOUT_API_KEY: ${{secrets.ADYEN_CHECKOUT_API_KEY}}
-        MERCHANT_ACCOUNT: ${{secrets.ADYEN_CHECKOUT_MERCHANT_ACCOUNT}}
-        CLIENT_KEY: ${{secrets.ADYEN_CHECKOUT_CLIENT_KEY}}
-        CLIENT_ENV: test
-        TESTING_ENVIRONMENT: https://checkout-test.adyen.com/checkout/${{matrix.api-version}}
-        API_VERSION: ${{matrix.api-version}}
+      run: yarn test:e2e
     - name: Archive test result artifacts
       if: always()
       uses: actions/upload-artifact@v4

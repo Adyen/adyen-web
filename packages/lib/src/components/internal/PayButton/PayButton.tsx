@@ -23,7 +23,7 @@ export interface PayButtonProps extends ButtonProps {
 const PayButton = ({ amount, secondaryAmount, classNameModifiers = [], label, ...props }: PayButtonProps) => {
     const { i18n } = useCoreContext();
     const isZeroAuth = amount && {}.hasOwnProperty.call(amount, 'value') && amount.value === 0;
-    //const defaultLabel = isZeroAuth ? i18n.get('confirmPreauthorization') : payAmountLabel(i18n, amount);
+    const defaultLabel = isZeroAuth ? i18n.get('confirmPreauthorization') : payAmountLabel(i18n, amount);
 
     /**
      * Show the secondaryLabel if:
@@ -42,7 +42,7 @@ const PayButton = ({ amount, secondaryAmount, classNameModifiers = [], label, ..
             {...props}
             disabled={props.disabled || props.status === 'loading'}
             classNameModifiers={[...classNameModifiers, 'pay']}
-            label={'dsdfhwiueh'}
+            label={label || defaultLabel}
         >
             {secondaryLabel && <SecondaryButtonLabel label={secondaryLabel} />}
         </Button>

@@ -4,7 +4,8 @@ import * as dotenv from 'dotenv';
 import * as path from 'path';
 
 dotenv.config({ path: path.resolve('../../', '.env') });
-
+const rootDir = path.resolve('../../');
+const playgroundBaseUrl = 'http://localhost:8080';
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
@@ -36,10 +37,12 @@ const config: PlaywrightTestConfig = {
         /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
         actionTimeout: 15000,
         /* Base URL to use in actions like `await page.goto('/')`. */
-        // baseURL: 'http://localhost:3000',
+        baseURL: playgroundBaseUrl,
 
         /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-        trace: 'on-first-retry'
+        trace: 'on-first-retry',
+        ignoreHTTPSErrors: true,
+        screenshot: 'only-on-failure'
     },
 
     /* Configure projects for major browsers */
@@ -70,11 +73,15 @@ const config: PlaywrightTestConfig = {
     // outputDir: 'test-results/',
 
     /* Run your local dev server before starting the tests */
-    webServer: {
-        command: 'npm run test:start-playground',
-        port: 3020,
-        reuseExistingServer: !process.env.CI
-    }
+    webServer: [
+        {
+            command: 'npm run start:prod-storybook',
+            cwd: '../..',
+            port: 8080,
+            reuseExistingServer: !process.env.CI,
+            timeout: 120 * 1000
+        }
+    ]
 };
 
 export default config;
