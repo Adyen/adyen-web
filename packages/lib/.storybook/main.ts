@@ -5,6 +5,8 @@ import * as path from 'path';
 import stylelint from 'vite-plugin-stylelint';
 import generateEnvironmentVariables from '../config/environment-variables';
 import { resolve } from 'node:path';
+import packageJson from '../package.json' assert { type: 'json' };
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 const config: StorybookConfig = {
     stories: ['../storybook/**/*.stories.@(js|jsx|ts|tsx)'],
@@ -29,6 +31,9 @@ const config: StorybookConfig = {
     staticDirs: ['../storybook/assets'],
 
     viteFinal(config) {
+        const translationsSrc = resolve(__dirname, '../../server/translations', '*.json');
+        const translationsDest = resolve(__dirname, `../storybook-static/sdk/${packageJson.version}/translations`);
+
         return mergeConfig(config, {
             define: generateEnvironmentVariables(),
             resolve: {
@@ -47,7 +52,7 @@ const config: StorybookConfig = {
                 }
             },
             plugins: [
-                stylelint()
+                stylelint(),
                 // TODO: Enable this once @rollup/plugin-eslint supports ESLINT 9
                 // {
                 //     ...eslint({
@@ -57,6 +62,14 @@ const config: StorybookConfig = {
                 //     enforce: 'pre',
                 //     apply: 'serve'
                 // }
+                viteStaticCopy({
+                    targets: [
+                        {
+                            src: translationsSrc,
+                            dest: translationsDest
+                        }
+                    ]
+                })
             ]
         });
     }
