@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 6.0.2
+
+### Patch Changes
+
+-   Fix TS error for UPI `formatProps` ([#2775](https://github.com/Adyen/adyen-web/pull/2775))
+
 ## 6.0.1
 
 ### Patch Changes
