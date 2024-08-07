@@ -94,6 +94,7 @@
     "issuerList.wallet.placeholder": "Выберите кошелек",
     "privacyPolicy": "Политика конфиденциальности",
     "afterPay.agreement": "Я принимаю %@ Riverty",
+    "riverty.termsAndConditions": "Я выражаю согласие с общими %#Условиями%# использования платежного средства Riverty. С политикой конфиденциальности Riverty можно ознакомиться %#здесь%#.",
     "paymentConditions": "условия оплаты",
     "openApp": "Открыть приложение",
     "voucher.readInstructions": "Прочитайте инструкции",

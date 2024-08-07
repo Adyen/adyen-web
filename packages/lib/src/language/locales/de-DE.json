@@ -94,6 +94,7 @@
     "issuerList.wallet.placeholder": "Virtuelle Brieftasche auswählen",
     "privacyPolicy": "Datenschutz",
     "afterPay.agreement": "Ich stimme den %@ von Riverty zu",
+    "riverty.termsAndConditions": "Ich bin mit den allgemeinen %#Geschäftsbedingungen%# für die Zahlungsmethode Riverty einverstanden. Die Datenschutzerklärung von Riverty finden Sie %#hier%#.",
     "paymentConditions": "Zahlungsbedingungen",
     "openApp": "App öffnen",
     "voucher.readInstructions": "Anweisungen lesen",

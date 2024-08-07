@@ -94,6 +94,7 @@
     "issuerList.wallet.placeholder": "Väj din plånbok",
     "privacyPolicy": "Sekretesspolicy",
     "afterPay.agreement": "Jag godkänner Rivertys %@",
+    "riverty.termsAndConditions": "Jag godkänner de allmänna %#villkoren%# för betalningssättet Riverty. Rivertys sekretesspolicy finns %#här%#.",
     "paymentConditions": "betalvillkor",
     "openApp": "Öppna appen",
     "voucher.readInstructions": "Läs instruktionerna",

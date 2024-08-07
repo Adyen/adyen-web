@@ -94,6 +94,7 @@
     "issuerList.wallet.placeholder": "Odaberite svoju novčanik",
     "privacyPolicy": "Politika privatnosti",
     "afterPay.agreement": "Slažem se s %@ Rivertyja",
+    "riverty.termsAndConditions": "Slažem se s općim %#Uvjetima i odredbama%# za način plaćanja Riverty. Pravila privatnosti tvrtke Riverty nalaze se %#ovdje%#.",
     "paymentConditions": "uvjetima plaćanja",
     "openApp": "Otvorite aplikaciju",
     "voucher.readInstructions": "Pročitajte upute",

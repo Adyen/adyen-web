@@ -94,6 +94,7 @@
     "issuerList.wallet.placeholder": "Valitse lompakkosi",
     "privacyPolicy": "Tietosuojamenettely",
     "afterPay.agreement": "Hyväksyn Rivertyn %@",
+    "riverty.termsAndConditions": "Hyväksyn Riverty-maksutavan yleiset %#ehdot%#. Rivertyn tietosuojakäytäntö löytyy %#täältä%#.",
     "paymentConditions": "maksuehdot",
     "openApp": "Avaa sovellus",
     "voucher.readInstructions": "Lue ohjeet",
