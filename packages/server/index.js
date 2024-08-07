@@ -20,12 +20,15 @@ module.exports = (app = express(), options = {}) => {
     app.use(express.urlencoded({ extended: true }));
 
     app.use((req, res, next) => {
-        console.log('server', req.url);
-        console.log('server', req.body);
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
         next();
     });
+
+    if (options.shouldHostStorybook) {
+        // Serve the storybook production build
+        app.use('/storybook', express.static(path.join(__dirname, '../lib/storybook-static')));
+    }
 
     app.all('/originKeys', (req, res) => getOriginKeys(res, req));
 

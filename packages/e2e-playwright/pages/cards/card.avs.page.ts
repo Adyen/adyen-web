@@ -3,6 +3,7 @@ import { CardWithAvs } from '../../models/card-avs';
 import { Result } from '../../models/result';
 
 class CardAvsPage {
+    static readonly URL = 'storybook/iframe.html?args=countryCode=US&id=cards-card--with-partial-avs&viewMode=story';
     static readonly avsContainerSelector = '.card-avs-partial-field';
     readonly page: Page;
 
@@ -18,7 +19,7 @@ class CardAvsPage {
     }
 
     async goto(url?: string) {
-        await this.page.goto('/iframe.html?args=countryCode=US&id=cards-card--with-partial-avs&viewMode=story', { timeout: 60000 });
+        await this.page.goto(CardAvsPage.URL, { timeout: 60000 });
     }
 }
 
