@@ -108,7 +108,7 @@ describe('Riverty', () => {
     describe('terms and conditions', () => {
         test('should show the correct t&c urls', async () => {
             render(new Riverty(props).render());
-            const tcLink = await screen.findByRole('link', { name: 'Terms and Conditions' });
+            const tcLink = await screen.findByRole('link', { name: 'Terms & Conditions' });
             expect(tcLink).toHaveAttribute('href', termsAndConditionsUrlMap[props.countryCode.toLowerCase()].en);
         });
 
