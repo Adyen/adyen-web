@@ -6,6 +6,7 @@ import { AddressData } from '../../../types';
 import { FALLBACK_VALUE } from './constants';
 import { render, screen } from '@testing-library/preact';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
+import { countrySpecificFormatters } from './validate.formats';
 
 jest.mock('../../../core/Services/get-dataset');
 (getDataset as jest.Mock).mockImplementation(jest.fn(() => Promise.resolve([{ id: 'NL', name: 'Netherlands' }])));
@@ -28,8 +29,6 @@ describe('Address', () => {
             </CoreProvider>
         );
     };
-
-    // const getWrapper = props => shallow(<Address specifications={addressSpecificationsMock} {...props} />);
 
     test('should have the required fields', async () => {
         const requiredFields = ['street', 'houseNumberOrName', 'postalCode', 'country'];
@@ -203,4 +202,18 @@ describe('Address', () => {
         const receivedData = lastOnChangeCall[0].data;
         expect(receivedData.stateOrProvince).toBe(undefined);
     });
+    test('should show error when switching from country that has valid postal code to one that has invalid postal code', () => {
+        const allowedCountries = Object.keys(countrySpecificFormatters);
+        const countryCode = 'US'
+        const data = {country:'US',postalCode:'80302'}
+        const onChangeMock = jest.fn();
+        customRender(<Address countryCode={countryCode} data={data} specifications={addressSpecificationsMock} allowedCountries={allowedCountries} onChange={onChangeMock}/>);
+
+    test('should format postal code when switching countries (if format fn is provided)', async t => {});
+
+    test('should show error when remove focus from postal code with invalid value', async t => {});
+
+    test('should format input according to the country pattern', async t => {});
+
+    test("should show proper 'Zip Code' label for US", async t => {});
 });

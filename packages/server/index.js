@@ -3,6 +3,7 @@ const express = require('express');
 require('dotenv').config({ path: path.resolve('../../', '.env') });
 const getPaymentMethods = require('./api/paymentMethods');
 const getPaymentMethodsBalance = require('./api/paymentMethodsBalance');
+const getOriginKeys = require('./api/originKeys');
 const makePayment = require('./api/payments');
 const postDetails = require('./api/details');
 const createOrder = require('./api/orders');
@@ -19,12 +20,17 @@ module.exports = (app = express(), options = {}) => {
     app.use(express.urlencoded({ extended: true }));
 
     app.use((req, res, next) => {
-        console.log('server', req.url);
-        console.log('server', req.body);
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
         next();
     });
+
+    if (options.shouldHostStorybook) {
+        // Serve the storybook production build
+        app.use(express.static(path.join(__dirname, '../lib/storybook-static')));
+    }
+
+    app.all('/originKeys', (req, res) => getOriginKeys(res, req));
 
     app.all('/paypal/updateOrder', (req, res) => paypalUpdateOrder(res, req.body));
 

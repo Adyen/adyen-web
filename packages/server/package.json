@@ -18,7 +18,8 @@
         "url": "https://support.adyen.com/"
     },
     "scripts": {
-        "start": "node start.js"
+        "start": "node start.js",
+        "start:storybook": "node start.js storybook"
     },
     "devDependencies": {
         "cross-env": "^7.0.3",

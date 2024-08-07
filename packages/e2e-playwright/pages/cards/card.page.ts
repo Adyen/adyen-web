@@ -1,7 +1,9 @@
 import { Locator, Page } from '@playwright/test';
 import { Card } from '../../models/card';
+import { URL_MAP } from './URL_MAP';
 
 class CardPage {
+    static readonly URL = URL_MAP.card;
     readonly card: Card;
     readonly payButton: Locator;
 
@@ -10,8 +12,8 @@ class CardPage {
         this.payButton = this.page.getByRole('button', { name: /Pay/i });
     }
 
-    async goto(url?: string) {
-        await this.page.goto('http://localhost:3024/cards');
+    async goto(url: string = CardPage.URL) {
+        await this.page.goto(url);
     }
 
     async pay() {

@@ -18,7 +18,7 @@ const voucherButton = Selector('.adyen-checkout__voucher-result--directdebit_GB 
 const TEST_SPEED = 0.8;
 
 fixture`Testing BacsDD in dropin`.page(BASE_URL + '?countryCode=GB').clientScripts('bacs.clientScripts.js');
-
+// todo: migrate to playwright
 test('Fill in Bacs details, check "Edit" phase and then complete payment', async t => {
     // Start, allow time to load
     await start(t, 2000, TEST_SPEED);

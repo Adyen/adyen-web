@@ -4,8 +4,7 @@ import * as dotenv from 'dotenv';
 import * as path from 'path';
 
 dotenv.config({ path: path.resolve('../../', '.env') });
-const rootDir = path.resolve('../../');
-const playgroundBaseUrl = 'http://localhost:8080';
+const playgroundBaseUrl = 'http://localhost:3020';
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
@@ -77,7 +76,7 @@ const config: PlaywrightTestConfig = {
         {
             command: 'npm run start:prod-storybook',
             cwd: '../..',
-            port: 8080,
+            port: 3020,
             reuseExistingServer: !process.env.CI,
             timeout: 120 * 1000
         }
