@@ -12,7 +12,7 @@ fixture`Analytics - checkoutAttemptId on sessionStorage`
     .beforeEach(() => {
         cardPage = new CardComponentPage();
     });
-
+// todo: move it to unit/ui test
 test('#1 - should save the checkoutAttemptId session in the sessionStorage and keep it there if page refreshes', async t => {
     await t.setNativeDialogHandler(() => true);
 

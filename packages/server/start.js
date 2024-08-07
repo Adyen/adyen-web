@@ -1,6 +1,8 @@
 const express = require('express');
 const adyenWebServer = require('./index');
 
-console.log('Starting @adyen/adyen-web-server');
+const shouldHostStorybook = process.argv.at(-1) === 'storybook';
 
-adyenWebServer(express(), { listen: true });
+console.log(`Starting @adyen/adyen-web-server ${shouldHostStorybook ? 'with storybook' : ''}`);
+
+adyenWebServer(express(), { listen: true, shouldHostStorybook });

@@ -21,7 +21,7 @@ const iframeSelector = getIframeSelector('.adyen-checkout__payment-method--bcmc 
 const cardUtils = cu(iframeSelector);
 
 fixture`Testing Bancontact in Dropin`.page(BASE_URL + '?countryCode=BE').clientScripts('bancontact.clientScripts.js');
-// todo: ui test where possible
+// todo: ui test to mock the binlookup response
 // DONE
 test(
     '#1 Enter card number, that we mock to co-branded bcmc/visa ' +

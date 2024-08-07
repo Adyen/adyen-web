@@ -11,7 +11,7 @@ fixture`Address (PostalCode)`
     .beforeEach(() => {
         addressComponent = new AddressComponent();
     });
-
+// todo: ui test?
 test('should show error when switching from country that has valid postal code to one that has invalid postal code', async t => {
     await addressComponent.selectCountry('United States');
     await addressComponent.fillPostalCode('12345');
