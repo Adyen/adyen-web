@@ -22,10 +22,6 @@ export default class Riverty extends OpenInvoiceContainer {
         ...OpenInvoiceContainer.defaultProps
     };
 
-    constructor(props) {
-        super(props);
-    }
-
     formatProps(props: OpenInvoiceContainerProps) {
         const tocURL = getConsentUrl(props.countryCode, props.i18n?.locale, termsAndConditionsUrlMap);
         const privacyURL = getConsentUrl(props.countryCode, props.i18n?.locale, privacyPolicyUrlMap);
