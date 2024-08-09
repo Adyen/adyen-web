@@ -1,6 +1,3 @@
-#!/bin/sh
-#. "$(dirname "$0")/_/husky.sh"
-
 # helper if you are running repo inside a container
 if which vagrant; then
   vagrant ssh -- -t <<HEREDOC
