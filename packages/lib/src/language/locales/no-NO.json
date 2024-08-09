@@ -94,6 +94,7 @@
     "issuerList.wallet.placeholder": "Velg lommebok",
     "privacyPolicy": "Retningslinjer for personvern",
     "afterPay.agreement": "Jeg godtar Rivertys %@",
+    "riverty.termsAndConditions": "Jeg godtar de generelle %#vilkårene%# for Riverty-betalingsmetoden. Personvernerklæringen til Riverty finner du %#her%#.",
     "paymentConditions": "betalingsbetingelser",
     "openApp": "Åpne appen",
     "voucher.readInstructions": "Les instruksjoner",

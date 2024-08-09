@@ -92,6 +92,7 @@
     "issuerList.wallet.placeholder": "Selecione uma carteira",
     "privacyPolicy": "Política de Privacidade",
     "afterPay.agreement": "Concordo com o %@ da Riverty",
+    "riverty.termsAndConditions": "Concordo com os %#Termos e Condições%# gerais do método de pagamento Riverty. A política de privacidade da Riverty de encontra %#aqui%#.",
     "paymentConditions": "condições de pagamento",
     "openApp": "Abrir o aplicativo",
     "voucher.readInstructions": "Leia as instruções",

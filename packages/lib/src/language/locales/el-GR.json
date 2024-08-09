@@ -94,6 +94,7 @@
     "issuerList.wallet.placeholder": "Επιλέξτε το πορτοφόλι σας",
     "privacyPolicy": "Πολιτική απορρήτου",
     "afterPay.agreement": "Αποδέχομαι τους %@ του Riverty",
+    "riverty.termsAndConditions": "Συμφωνώ με τους γενικούς %#Όρους και προϋποθέσεις%# για τη μέθοδο πληρωμής Riverty. Μπορείτε να βρείτε την πολιτική απορρήτου της Riverty %#εδώ%#.",
     "paymentConditions": "όρους πληρωμής",
     "openApp": "Άνοιγμα της εφαρμογής",
     "voucher.readInstructions": "Διαβάστε τις οδηγίες",

@@ -94,6 +94,7 @@
     "issuerList.wallet.placeholder": "Selectați-vă portofelul",
     "privacyPolicy": "Politica de confidențialitate",
     "afterPay.agreement": "Sunt de acord cu %@ aparținând Riverty",
+    "riverty.termsAndConditions": "Sunt de acord cu %#Termenii și condițiile%# generale pentru metoda de plată Riverty. Politica de confidențialitate Riverty este disponibilă %#aici%#.",
     "paymentConditions": "condiții de plată",
     "openApp": "Deschideți aplicația",
     "voucher.readInstructions": "Citiți instrucțiunile",
