@@ -74,7 +74,7 @@
     "lint:fix": "npm run lint -- --fix",
     "prettier:fix": "prettier \"src/**/*.{js,ts,tsx}\" \"package.json\" --write --loglevel silent",
     "prepublishOnly": "npm run build",
-    "prepare": "cd ../.. && husky install packages/lib/.husky",
+    "prepare": "cd ../.. && husky packages/lib/.husky",
     "size": "npm run build && size-limit"
   },
   "devDependencies": {
