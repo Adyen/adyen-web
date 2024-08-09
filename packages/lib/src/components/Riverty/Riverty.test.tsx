@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/preact';
 import { Resources } from '../../core/Context/Resources';
 import { SRPanel } from '../../core/Errors/SRPanel';
 import getDataset from '../../core/Services/get-dataset';
-import { termsAndConditionsUrlMap } from './config';
+import { privacyPolicyUrlMap, termsAndConditionsUrlMap } from './config';
 import type { OpenInvoiceConfiguration } from '../helpers/OpenInvoiceContainer/types';
 
 jest.mock('../../core/Services/get-dataset');
@@ -109,8 +109,14 @@ describe('Riverty', () => {
     describe('terms and conditions', () => {
         test('should show the correct t&c urls', async () => {
             render(new Riverty(global.core, props).render());
-            const tcLink = await screen.findByRole('link', { name: 'payment conditions' });
+            const tcLink = await screen.findByRole('link', { name: 'Terms & Conditions' });
             expect(tcLink).toHaveAttribute('href', termsAndConditionsUrlMap[props.countryCode.toLowerCase()].en);
+        });
+
+        test('should show the correct privacy urls', async () => {
+            render(new Riverty(global.core, props).render());
+            const tcLink = await screen.findByRole('link', { name: 'here' });
+            expect(tcLink).toHaveAttribute('href', privacyPolicyUrlMap[props.countryCode.toLowerCase()].en);
         });
     });
 });

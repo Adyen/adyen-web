@@ -81,6 +81,7 @@
     "issuerList.selectField.label": "Bankselectie",
     "privacyPolicy": "Privacybeleid",
     "afterPay.agreement": "Ik ga akkoord met de %@ van Riverty",
+    "riverty.termsAndConditions": "Ik ga akkoord met de %#algemene voorwaarden%# voor de betalingsmethode Riverty. Het privacybeleid van Riverty vindt u %#hier%#.",
     "paymentConditions": "betalingsvoorwaarden",
     "openApp": "Open de app",
     "voucher.readInstructions": "Instructies lezen",

@@ -81,6 +81,7 @@
     "issuerList.selectField.label": "Choix de la banque",
     "privacyPolicy": "Politique de confidentialité",
     "afterPay.agreement": "J'accepte les %@ de Riverty",
+    "riverty.termsAndConditions": "J'accepte les %#Conditions générales%# du mode de paiement Riverty. La Politique de confidentialité de Riverty peut être consultée %#ici%#.",
     "paymentConditions": "conditions de paiement",
     "openApp": "Ouvrir l'application",
     "voucher.readInstructions": "Lire les instructions",

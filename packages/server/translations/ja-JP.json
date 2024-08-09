@@ -81,6 +81,7 @@
     "issuerList.selectField.label": "銀行選択",
     "privacyPolicy": "プライバシーポリシー",
     "afterPay.agreement": "Rivertyの%@で同意",
+    "riverty.termsAndConditions": "Rivertyの支払方法の一般的な%#利用規約%#に同意します。Rivertyのプライバシーポリシーについては、%#こちら%#をご覧ください。",
     "paymentConditions": "支払条件",
     "openApp": "アプリを開く",
     "voucher.readInstructions": "手順を参照してください",

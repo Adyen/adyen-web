@@ -81,6 +81,7 @@
     "issuerList.selectField.label": "Izbira banke",
     "privacyPolicy": "Pravilnik o zasebnosti",
     "afterPay.agreement": "Strinjam se s %@ ponudnika Riverty",
+    "riverty.termsAndConditions": "Strinjam se s splošnimi %#pogoji in določili%# za način plačila Riverty. Pravilnik o zasebnosti storitve Riverty je na voljo %#tukaj%#.",
     "paymentConditions": "plačilnimi pogoji",
     "openApp": "Odprite aplikacijo",
     "voucher.readInstructions": "Preberite navodila",
