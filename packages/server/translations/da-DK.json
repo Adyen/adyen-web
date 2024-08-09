@@ -81,6 +81,7 @@
     "issuerList.selectField.label": "Bankvalg",
     "privacyPolicy": "Politik om privatlivets fred",
     "afterPay.agreement": "Jeg accepterer %@ fra Riverty",
+    "riverty.termsAndConditions": "Jeg accepterer de generelle %#vilkår og betingelser%# for Riverty-betalingsmåden. Rivertys privatlivspolitik kan findes %#her%#.",
     "paymentConditions": "betalingsbetingelser",
     "openApp": "Åbn appen",
     "voucher.readInstructions": "Læs anvisningerne",
