@@ -14,7 +14,6 @@ interface InternalDisclaimerMsgObject {
     urls: Array<string>;
 }
 
-/* eslint-disable */
 /**
  *  props: {
  *    message: 'By continuing you agree with the %#terms and conditions%#',
@@ -22,7 +21,7 @@ interface InternalDisclaimerMsgObject {
  *  }
  *  String inside the '%#' token pair will be rendered as an anchor element.
  */
-/* eslint-enable */
+
 export default function DisclaimerMessage({ message, urls }: InternalDisclaimerMsgObject) {
     return (
         <span className="adyen-checkout-disclaimer__label">
@@ -40,11 +39,17 @@ export function LabelOnlyDisclaimerMessage({ message, urls }: InternalDisclaimer
         <Fragment>
             {interpolateElement(
                 message,
-                urls.map(url => translation => (
-                    <a className="adyen-checkout__link" href={url} target="_blank" rel="noopener noreferrer">
-                        {translation}
-                    </a>
-                ))
+                urls.map(
+                    // for each URL in the URLs array, return a createLink function
+                    url =>
+                        function createLink(translation) {
+                            return (
+                                <a className="adyen-checkout__link" href={url} target="_blank" rel="noopener noreferrer">
+                                    {translation}
+                                </a>
+                            );
+                        }
+                )
             )}
         </Fragment>
     );
