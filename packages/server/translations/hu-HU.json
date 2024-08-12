@@ -81,6 +81,7 @@
     "issuerList.selectField.label": "Bankválasztás",
     "privacyPolicy": "Adatvédelmi szabályzat",
     "afterPay.agreement": "Elfogadom a következőt: Riverty %@",
+    "riverty.termsAndConditions": "Elfogadom a Riverty fizetési módra vonatkozó %#általános szerződési feltételeket%#. A Riverty adatvédelmi szabályzata %#itt%# található.",
     "paymentConditions": "fizetési feltételeit",
     "openApp": "Alkalmazás megnyitása",
     "voucher.readInstructions": "Olvassa el az utasításokat",
