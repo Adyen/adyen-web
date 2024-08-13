@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 6.0.3
+
+### Patch Changes
+
+-   adds privacy link to Riverty ([#2785](https://github.com/Adyen/adyen-web/pull/2785))
+
 ## 6.0.2
 
 ### Patch Changes
