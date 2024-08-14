@@ -30,13 +30,15 @@ beforeEach(() => {
     httpPromiseSuccessMock.mockClear();
 });
 
+afterEach(() => {
+    window.sessionStorage.clear();
+});
+
 test('Should lead to a rejected promise since no clientKey is provided', () => {
     const log = collectId(BASE_CONFIGURATION);
-    log({} as CollectIdEvent)
-        .then()
-        .catch(e => {
-            expect(e).toEqual('no-client-key');
-        });
+    log({} as CollectIdEvent).catch(e => {
+        expect(e).toEqual('no-client-key');
+    });
 });
 
 test('Should fail since path is incorrect', () => {
@@ -107,4 +109,36 @@ test('Should send expected data to http service', () => {
         expect(val).toEqual('mockCheckoutAttemptId');
     });
     expect(httpPost).toHaveBeenCalledTimes(1);
+});
+
+test('Should save the checkout-attempt-id in the session storage', async () => {
+    const configuration = {
+        ...BASE_CONFIGURATION,
+        clientKey: 'xxxx-yyyy'
+    };
+    const customEvent = {
+        flavor: 'components',
+        containerWidth: 600,
+        component: 'scheme'
+    };
+    expect(window.sessionStorage.getItem('adyen-checkout__checkout-attempt-id')).toBeNull();
+    await collectId(configuration)(customEvent);
+    expect(JSON.parse(window.sessionStorage.getItem('adyen-checkout__checkout-attempt-id'))).toMatchObject({ id: 'mockCheckoutAttemptId' });
+});
+
+test('Should reuse the same the checkout-attempt-id in the session storage', async () => {
+    const configuration = {
+        ...BASE_CONFIGURATION,
+        clientKey: 'xxxx-yyyy'
+    };
+    const customEvent = {
+        flavor: 'components',
+        containerWidth: 600,
+        component: 'scheme'
+    };
+    const log = collectId(configuration);
+    await log(customEvent);
+    expect(JSON.parse(window.sessionStorage.getItem('adyen-checkout__checkout-attempt-id'))).toMatchObject({ id: 'mockCheckoutAttemptId' });
+    await log(customEvent);
+    expect(JSON.parse(window.sessionStorage.getItem('adyen-checkout__checkout-attempt-id'))).toMatchObject({ id: 'mockCheckoutAttemptId' });
 });

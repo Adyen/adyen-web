@@ -29,7 +29,7 @@ const sessionSetupResponseMock: CheckoutSessionSetupResponse = {
     countryCode: 'US'
 };
 
-jest.spyOn(Session.prototype, 'setupSession').mockImplementation(() => {
+const setupSessionSpy = jest.spyOn(Session.prototype, 'setupSession').mockImplementation(() => {
     return Promise.resolve(sessionSetupResponseMock);
 });
 
@@ -53,6 +53,20 @@ describe('Core', () => {
 
             expect(checkout.options.locale).toBe('es-ES');
             expect(checkout.modules.i18n.locale).toBe('es-ES');
+        });
+    });
+
+    describe('initialize', () => {
+        test('should do the setup call with the correct session data for the session flow', async () => {
+            const checkout = new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456',
+                session: { id: 'session-id', sessionData: 'session-data' }
+            });
+
+            await checkout.initialize();
+            expect(setupSessionSpy).toHaveBeenCalledWith(expect.objectContaining({ session: { id: 'session-id', sessionData: 'session-data' } }));
         });
     });
 
