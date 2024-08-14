@@ -81,6 +81,7 @@
     "issuerList.selectField.label": "Výběr banky",
     "privacyPolicy": "Zásady ochrany osobních údajů",
     "afterPay.agreement": "Souhlasím s %@ of Riverty",
+    "riverty.termsAndConditions": "Souhlasím s obecnými %#Smluvními podmínkami%# platební metody Riverty. Zásady ochrany osobních údajů společnosti Riverty najdete %#tady%#.",
     "paymentConditions": "platebními podmínkami",
     "openApp": "Otevřete aplikaci",
     "voucher.readInstructions": "Přečtěte si pokyny",

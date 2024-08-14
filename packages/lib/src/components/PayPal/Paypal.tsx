@@ -211,7 +211,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
                     {...(onShippingOptionsChange && { onShippingOptionsChange: this.handleOnShippingOptionsChange })}
                     onCancel={() => this.handleError(new AdyenCheckoutError('CANCEL'))}
                     onChange={this.setState}
-                    onApprove={void this.handleOnApprove}
+                    onApprove={this.handleOnApprove}
                     onError={error => {
                         this.handleError(new AdyenCheckoutError('ERROR', error.toString(), { cause: error }));
                     }}

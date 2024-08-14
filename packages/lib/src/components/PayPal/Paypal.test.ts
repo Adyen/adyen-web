@@ -1,4 +1,5 @@
 import Paypal from './Paypal';
+import { render, screen } from '@testing-library/preact';
 
 describe('Paypal', () => {
     test('Returns a data object', () => {
@@ -43,6 +44,26 @@ describe('Paypal', () => {
         const paypal = new Paypal(global.core, { onError: onErrorMock });
         paypal.submit();
         expect(onErrorMock).toHaveBeenCalled();
+    });
+
+    test('should pass the required callbacks to the Component', async () => {
+        const paypal = new Paypal(global.core);
+        render(paypal.render());
+
+        await screen.findByTestId('paypal-loader');
+
+        // TODO: Implement full integration test mocking the Script loading and PayPal SDK, so we can avoid accessing proceted prop
+        // @ts-ignore Accessing protected prop to check that the callbacks are being passed down
+        const props = paypal.componentRef.props;
+
+        expect(props.onApprove).toBeDefined();
+        expect(props.onCancel).toBeDefined();
+        expect(props.onChange).toBeDefined();
+        expect(props.onError).toBeDefined();
+        expect(props.onScriptLoadFailure).toBeDefined();
+        expect(props.onSubmit).toBeDefined();
+        expect(props.isExpress).toBeFalsy();
+        expect(props.userAction).toBe('pay');
     });
 });
 

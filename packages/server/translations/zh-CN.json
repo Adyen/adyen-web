@@ -81,6 +81,7 @@
     "issuerList.selectField.label": "银行选择",
     "privacyPolicy": "隐私政策",
     "afterPay.agreement": "我同意 Riverty 的 %@",
+    "riverty.termsAndConditions": "我同意 Riverty 支付方式的一般%#条款和细则%#。可在%#此处%#查阅 Riverty 的隐私政策。",
     "paymentConditions": "支付条件",
     "openApp": "打开应用",
     "voucher.readInstructions": "阅读说明",

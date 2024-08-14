@@ -81,6 +81,7 @@
     "issuerList.selectField.label": "은행 선택",
     "privacyPolicy": "개인정보 보호정책",
     "afterPay.agreement": "Riverty의 %@에 동의합니다.",
+    "riverty.termsAndConditions": "Riverty 결제 수단에 대한 일반 %#이용 약관%#에 동의합니다. Riverty의 개인정보 보호정책은 %#여기%#에서 확인할 수 있습니다.",
     "paymentConditions": "결제 조건",
     "openApp": "앱 열기",
     "voucher.readInstructions": "안내 읽기",
