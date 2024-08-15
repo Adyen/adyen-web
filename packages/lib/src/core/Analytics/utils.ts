@@ -140,18 +140,18 @@ export const getCardConfigData = (cardProps: CardConfiguration): CardConfigData 
     }
 
     // Probably just for development - in real life we wouldn't expect the number of supported brands to push the endpoint limit on 128 chars
-    let brandsStr = JSON.stringify(brands);
+    let brandsStr = brands.toString();
     if (brandsStr.length > 128) {
-        brandsStr = brandsStr.substring(0, 124) + '...]';
+        brandsStr = brandsStr.substring(0, 124);
     }
 
     // @ts-ignore commenting out props until endpoint is ready
     const configData: CardConfigData = {
         autoFocus,
-        billingAddressAllowedCountries: JSON.stringify(billingAddressAllowedCountries),
+        billingAddressAllowedCountries: billingAddressAllowedCountries.toString(),
         billingAddressMode: billingAddressModeValue,
         billingAddressRequired,
-        billingAddressRequiredFields: JSON.stringify(billingAddressRequiredFields),
+        billingAddressRequiredFields: billingAddressRequiredFields.toString(),
         brands: brandsStr,
         challengeWindowSize,
         disableIOSArrowKeys,
