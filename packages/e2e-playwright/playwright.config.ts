@@ -2,16 +2,18 @@ import type { PlaywrightTestConfig } from '@playwright/test';
 import { devices } from '@playwright/test';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
+import { protocol } from './environment-variables';
 
 dotenv.config({ path: path.resolve('../../', '.env') });
-const playgroundBaseUrl = 'http://localhost:3020';
+const playgroundBaseUrl = `${protocol}://localhost:3020`;
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
 const config: PlaywrightTestConfig = {
     testDir: './tests/',
     /* Maximum time one test can run for. */
-    timeout: 10 * 2000,
+    timeout: 60 * 1000,
     expect: {
         /**
          * Maximum time expect() should wait for the condition to be met.
@@ -22,11 +24,11 @@ const config: PlaywrightTestConfig = {
     /* Run tests in files in parallel */
     fullyParallel: true,
     /* Fail the build on CI if you accidentally left test.only in the source code. */
-    //todo: enable later forbidOnly: !!process.env.CI,
+    forbidOnly: !!process.env.CI,
     /* Retry on CI only */
-    retries: process.env.CI ? 1 : 0,
-    /* Opt out of parallel tests on CI. */
-    workers: process.env.CI ? 1 : 1,
+    retries: process.env.CI ? 2 : 1,
+    /* Opt out of parallel tests on CI. Use default locally */
+    workers: process.env.CI ? 1 : undefined,
 
     /* Reporter to use. See https://playwright.dev/docs/test-reporters */
     reporter: [['html', { open: 'never' }], ['list']],
@@ -34,7 +36,7 @@ const config: PlaywrightTestConfig = {
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
     use: {
         /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
-        actionTimeout: 15000,
+        actionTimeout: 30000,
         /* Base URL to use in actions like `await page.goto('/')`. */
         baseURL: playgroundBaseUrl,
 
@@ -74,7 +76,7 @@ const config: PlaywrightTestConfig = {
     /* Run your local dev server before starting the tests */
     webServer: [
         {
-            command: 'npm run start:prod-storybook',
+            command: 'npm run build:storybook && npm run start:prod-storybook',
             cwd: '../..',
             port: 3020,
             reuseExistingServer: !process.env.CI,

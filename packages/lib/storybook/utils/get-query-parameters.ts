@@ -1,4 +1,4 @@
-export const getSearchParameter = (parameter: string, queryString = window.location.search): string => {
+export const getSearchParameter = (parameter: string, queryString = window.location.search): string | null => {
     const urlParams = new URLSearchParams(queryString);
     return urlParams.get(parameter);
 };

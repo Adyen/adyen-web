@@ -18,7 +18,6 @@ import {
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 import { Placeholders } from '../SFP/types';
 
- 
 declare global {
     interface Window {
         _b$dl: boolean;

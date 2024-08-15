@@ -1,6 +1,7 @@
 import { Page } from '@playwright/test';
+import { protocol } from '../../environment-variables';
 
-const SESSION_URL = 'http://localhost:3024/sessions';
+const SESSION_URL = `${protocol}://localhost:3020/sessions`;
 
 const sessionsMock = async (page: Page, mockedResponse: any): Promise<void> => {
     await page.route(SESSION_URL, (route, request) => {

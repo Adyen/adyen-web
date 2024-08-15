@@ -1,9 +1,10 @@
 const path = require('path');
 const express = require('express');
+const https = require('https');
+const fs = require('fs');
 require('dotenv').config({ path: path.resolve('../../', '.env') });
 const getPaymentMethods = require('./api/paymentMethods');
 const getPaymentMethodsBalance = require('./api/paymentMethodsBalance');
-const getOriginKeys = require('./api/originKeys');
 const makePayment = require('./api/payments');
 const postDetails = require('./api/details');
 const createOrder = require('./api/orders');
@@ -14,6 +15,15 @@ const getDonationCampaigns = require('./api/donationCampaign');
 const createDonation = require('./api/donation');
 const paypalUpdateOrder = require('./api/paypalUpdateOrder');
 const getTranslation = require('./api/translations');
+
+// Load environment variables
+const isHttps = process.env.IS_HTTPS === 'true';
+const sslKeyPath = process.env.CERT_KEY_PATH;
+const sslCertPath = process.env.CERT_PATH;
+
+// Read the SSL certificate and key
+const key = sslKeyPath && fs.readFileSync(sslKeyPath, 'utf8');
+const cert = sslCertPath && fs.readFileSync(sslCertPath, 'utf8');
 
 module.exports = (app = express(), options = {}) => {
     app.use(express.json());
@@ -29,8 +39,6 @@ module.exports = (app = express(), options = {}) => {
         // Serve the storybook production build
         app.use(express.static(path.join(__dirname, '../lib/storybook-static')));
     }
-
-    app.all('/originKeys', (req, res) => getOriginKeys(res, req));
 
     app.all('/paypal/updateOrder', (req, res) => paypalUpdateOrder(res, req.body));
 
@@ -58,7 +66,12 @@ module.exports = (app = express(), options = {}) => {
 
     if (options.listen) {
         const port = process.env.PORT || 3020;
-        app.listen(port, () => console.log(`Listening on localhost:${port}`));
+
+        isHttps
+            ? https.createServer({ key, cert }, app).listen(port, () => {
+                  console.log(`HTTPS server running on port ${port}`);
+              })
+            : app.listen(port, () => console.log(`Listening on localhost:${port}`));
     }
 
     return app;

@@ -13,16 +13,9 @@
     "@adyen/adyen-web-server": "1.0.0",
     "@playwright/test": "1.48.0",
     "cross-env": "^7.0.3",
-    "css-loader": "^6.0.0",
     "dotenv": "16.4.4",
-    "html-webpack-plugin": "5.5.1",
-    "sass-loader": "^10.2.0",
-    "style-loader": "^2.0.0",
     "ts-loader": "9.4.4",
-    "typescript": "5.2.2",
-    "webpack": "5.94.0",
-    "webpack-cli": "5.1.4",
-    "webpack-dev-server": "4.15.1"
+    "typescript": "5.2.2"
   },
   "dependencies": {
     "@adyen/adyen-web": "6.5.0"

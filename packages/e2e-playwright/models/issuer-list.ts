@@ -1,28 +1,34 @@
 import { Locator, Page } from '@playwright/test';
 import { USER_TYPE_DELAY } from '../tests/utils/constants';
+import { Base } from './base';
 
 const SELECTOR_DELAY = 300;
 
-class IssuerList {
+class IssuerList extends Base {
     readonly rootElement: Locator;
     readonly rootElementSelector: string;
 
     readonly selectorList: Locator;
     readonly selectorCombobox: Locator;
-    readonly submitButton: Locator;
+    readonly payButton: Locator;
     readonly highlightedIssuerButtonGroup: Locator;
 
-    readonly page: Page;
-
-    constructor(page: Page, rootElementSelector: string = '.adyen-checkout__issuer-list') {
-        this.page = page;
-        this.rootElement = page.locator(rootElementSelector);
+    constructor(
+        public readonly page: Page,
+        rootElementSelector: string = '.adyen-checkout__issuer-list'
+    ) {
+        super(page);
+        this.rootElement = this.page.locator(rootElementSelector);
         this.rootElementSelector = rootElementSelector;
 
         this.selectorList = this.rootElement.getByRole('listbox');
         this.selectorCombobox = this.rootElement.getByRole('combobox');
-        this.submitButton = this.rootElement.getByRole('button', { name: /Continue/i });
+        this.payButton = this.rootElement.getByRole('button', { name: /Continue/i });
         this.highlightedIssuerButtonGroup = this.rootElement.getByRole('group');
+    }
+
+    get issuers() {
+        return this.rootElement.getByRole('option').allTextContents();
     }
 
     async clickOnSelector() {

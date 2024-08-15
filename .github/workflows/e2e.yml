@@ -13,8 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         node-version: [20.12.2]
-        api-version: ["v71"]
-        # api-version: ["v68", "v69", "v70", "v71"]
+        api-version: ["v69", "v70", "v71"]
         # node-version: [16.x, 18.x, 19.x]
         # Currently 18 and 19 are not supported, still keeping it
         # as a reminder for compatibility check

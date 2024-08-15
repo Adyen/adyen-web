@@ -24,7 +24,6 @@
         "test:watch": "yarn workspace @adyen/adyen-web test:watch",
         "test:coverage": "yarn workspace @adyen/adyen-web test:coverage",
         "test:e2e": "yarn workspace @adyen/adyen-web-playwright test:headless",
-        "test:e2e-testcafe": "yarn build && yarn workspace @adyen/adyen-web-e2e test:e2e",
         "type-check": "yarn workspace @adyen/adyen-web type-check",
         "prepare": "yarn workspace @adyen/adyen-web prepare",
         "changeset": "changeset",
