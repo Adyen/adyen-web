@@ -27,6 +27,18 @@ const analyticsEventObj = {
     target: 'PAN input'
 } as CreateAnalyticsObject;
 
+const applicationInfo = {
+    merchantApplication: {
+        name: 'merchant_application_name',
+        version: 'version'
+    },
+    externalPlatform: {
+        name: 'external_platform_name',
+        version: 'external_platform_version',
+        integrator: 'getSystemIntegratorName'
+    }
+};
+
 let analytics;
 
 describe('Analytics initialisation and event queue', () => {
@@ -37,7 +49,14 @@ describe('Analytics initialisation and event queue', () => {
         mockedCollectId.mockImplementation(() => collectIdPromiseMock);
         collectIdPromiseMock.mockClear();
 
-        analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', amount, bundleType: '' });
+        analytics = Analytics({
+            analytics: { payload: { payloadData: 'test' } },
+            loadingContext: '',
+            locale: '',
+            clientKey: '',
+            amount,
+            bundleType: ''
+        });
     });
 
     test('Creates an Analytics module with defaultProps', () => {
@@ -50,33 +69,15 @@ describe('Analytics initialisation and event queue', () => {
         expect(collectIdPromiseMock).toHaveLength(0);
     });
 
-    test('Should not fire any calls if analytics is disabled', () => {
-        const analytics = Analytics({ analytics: { enabled: false }, loadingContext: '', locale: '', clientKey: '', amount, bundleType: '' });
-
-        void analytics.setUp(setUpEvent);
-        expect(collectIdPromiseMock).not.toHaveBeenCalled();
-    });
-
-    test('Calls the collectId endpoint by default, adding expected fields, including sanitising the passed analyticsData object', async () => {
-        const applicationInfo = {
-            merchantApplication: {
-                name: 'merchant_application_name',
-                version: 'version'
-            },
-            externalPlatform: {
-                name: 'external_platform_name',
-                version: 'external_platform_version',
-                integrator: 'getSystemIntegratorName'
-            }
-        };
-
+    test('Should still make the setup call even when analytics is disabled, adding expected fields, including sanitising the passed analyticsData object', async () => {
         const checkoutAttemptId = 'my.attempt.id';
 
         analytics = Analytics({
             analytics: {
+                enabled: false,
                 analyticsData: {
                     applicationInfo,
-                    checkoutAttemptId,
+                    checkoutAttemptId, // checking that we can also pass in a checkoutAttemptId
                     // @ts-ignore - this is one of the things we're testing (that this object gets stripped out)
                     foo: {
                         bar: 'val'
@@ -86,6 +87,7 @@ describe('Analytics initialisation and event queue', () => {
             loadingContext: '',
             locale: '',
             clientKey: '',
+            bundleType: '',
             amount
         });
 
@@ -101,18 +103,28 @@ describe('Analytics initialisation and event queue', () => {
         expect(analytics.getCheckoutAttemptId()).toEqual(mockCheckoutAttemptId);
     });
 
-    test('A second attempt to call "send" should fail (since we already have a checkoutAttemptId)', () => {
-        const payload = {
-            payloadData: 'test'
-        };
-        const analytics = Analytics({ analytics: { payload }, loadingContext: '', locale: '', clientKey: '', amount, bundleType: '' });
-
+    test('A second attempt to call "send" should fail (since we have retrieved a checkoutAttemptId)', () => {
         void analytics.setUp(setUpEvent);
 
         expect(collectIdPromiseMock).toHaveLength(0);
     });
 
-    test('Create info event and see that it is held in a queue', () => {
+    test('Try to create info event but see that it fails because analytics.enabled is false', () => {
+        const analytics = Analytics({
+            analytics: { enabled: false },
+            loadingContext: '',
+            locale: '',
+            clientKey: '',
+            amount,
+            bundleType: ''
+        });
+
+        const aObj: AnalyticsObject = analytics.createAnalyticsEvent({ event: 'info', data: analyticsEventObj });
+
+        expect(aObj).toBe(undefined);
+    });
+
+    test('With Analytics being enabled by default, create info event and see that it is held in a queue', () => {
         const aObj: AnalyticsObject = analytics.createAnalyticsEvent({ event: 'info', data: analyticsEventObj });
 
         expect(aObj.timestamp).not.toBe(undefined);
