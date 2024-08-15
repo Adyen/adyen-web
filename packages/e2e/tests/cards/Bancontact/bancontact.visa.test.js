@@ -16,31 +16,6 @@ fixture`Testing Bancontact in Dropin`
     .clientScripts('./bancontact.clientScripts.js');
 // DONE
 // todo: ui or unit
-test('#1 Check Bancontact comp is correctly presented at startup', async t => {
-    // Wait for field to appear in DOM
-    await t.wait(1000);
-
-    const brandsInsidePaymentMethod = Selector('.adyen-checkout__card__brands');
-    const images = brandsInsidePaymentMethod.find('img');
-
-    // Expect 4 card brand logos to be displayed (not concerned about order)
-    await t.expect(images.count).eql(4);
-    await t
-        .expect(images.nth(0).getAttribute('src'))
-        .contains('bcmc.svg')
-        .expect(images.nth(1).getAttribute('src'))
-        .contains('mc.svg')
-        .expect(images.nth(2).getAttribute('src'))
-        .contains('visa.svg')
-        .expect(images.nth(3).getAttribute('src'))
-        .contains('maestro.svg');
-
-    // Hidden cvc field
-    await t.expect(dropinPage.cc.cvcHolder.filterHidden().exists).ok();
-
-    // BCMC logo in number field
-    await t.expect(dropinPage.cc.numSpan.exists).ok().expect(dropinPage.cc.brandingIcon.withAttribute('alt', 'Bancontact card').exists).ok();
-});
 
 test('#2 Entering digits that our local regEx will recognise as Visa does not affect the UI', async t => {
     await dropinPage.cc.numSpan();
