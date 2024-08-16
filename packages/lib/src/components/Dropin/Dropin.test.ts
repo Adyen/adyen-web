@@ -4,6 +4,9 @@ import ThreeDS2DeviceFingerprint from '../ThreeDS2/ThreeDS2DeviceFingerprint';
 import ThreeDS2Challenge from '../ThreeDS2/ThreeDS2Challenge';
 import DropinElement from './Dropin';
 import { screen, render } from '@testing-library/preact';
+import {ANALYTICS_RENDERED_STR} from "../../core/Analytics/constants";
+import {SRPanel} from "../../core/Errors/SRPanel";
+import {mock} from "jest-mock-extended";
 
 const submitMock = jest.fn();
 (global as any).HTMLFormElement.prototype.submit = () => submitMock;
@@ -286,6 +289,37 @@ describe('Dropin', () => {
 
             expect(dropin.props.openFirstPaymentMethod).toBe(true);
             expect(dropin.props.openFirstStoredPaymentMethod).toBe(true);
+        });
+    });
+
+    describe('Analytics', () => {
+        test('should send the analytic config data after the payment method data is ready', async () => {
+            const srPanel = mock<SRPanel>();
+            srPanel.props.moveFocus = false;
+            const mockSendAnalytics = jest.fn();
+            global.analytics.sendAnalytics = mockSendAnalytics;
+            const mockOnCreateElements = jest.fn().mockImplementation(() => {
+                return [[Promise.resolve('Stored Element 1')], [Promise.resolve('Element 1')], [Promise.resolve('Instant Payment 1')]];
+            });
+
+            const checkout = await AdyenCheckout({
+                environment: 'test',
+                clientKey: 'test_123456',
+            });
+            const dropin = checkout.create('dropin', {
+                // @ts-ignore test only
+                onCreateElements: mockOnCreateElements,
+                modules: { srPanel, analytics: global.analytics, resources: global.resources }
+            });
+
+            render(dropin.render());
+            await new Promise(process.nextTick);
+            expect(mockSendAnalytics).toHaveBeenCalledWith('dropin', {
+                type: ANALYTICS_RENDERED_STR,
+                configData: dropin.dropinRef.analyticConfigData
+            });
+
+            jest.restoreAllMocks();
         });
     });
 });
