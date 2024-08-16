@@ -2,12 +2,15 @@ import { AdyenCheckout } from '../../index';
 import ThreeDS2DeviceFingerprint from '../ThreeDS2/ThreeDS2DeviceFingerprint';
 import ThreeDS2Challenge from '../ThreeDS2/ThreeDS2Challenge';
 import { screen, render, fireEvent, waitFor } from '@testing-library/preact';
+import { mock } from 'jest-mock-extended';
 import Dropin from './Dropin';
 import { ICore } from '../../core/types';
 
 import enUS from '../../../../server/translations/en-US.json';
 import getTranslations from '../../core/Services/get-translations';
 import { PaymentActionsType } from '../../types/global-types';
+import { SRPanel } from '../../core/Errors/SRPanel';
+import { ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
 jest.mock('../../core/Services/get-translations');
 const mockedGetTranslations = getTranslations as jest.Mock;
 mockedGetTranslations.mockResolvedValue(enUS);
@@ -274,6 +277,32 @@ describe('Dropin', () => {
                     done();
                 }, 300);
             }, 0);
+        });
+    });
+
+    describe('Analytics', () => {
+        test('should send the analytic config data after the payment method data is ready', async () => {
+            const srPanel = mock<SRPanel>();
+            srPanel.props.moveFocus = false;
+            const mockSendAnalytics = jest.fn();
+            global.analytics.sendAnalytics = mockSendAnalytics;
+            const mockOnCreateElements = jest.fn().mockImplementation(() => {
+                return [[Promise.resolve('Stored Element 1')], [Promise.resolve('Element 1')], [Promise.resolve('Instant Payment 1')]];
+            });
+
+            const dropin = new Dropin(checkout, {
+                // @ts-ignore test only
+                onCreateElements: mockOnCreateElements,
+                modules: { srPanel, analytics: global.analytics, resources: global.resources }
+            });
+            render(dropin.render());
+            await new Promise(process.nextTick);
+            expect(mockSendAnalytics).toHaveBeenCalledWith('dropin', {
+                type: ANALYTICS_RENDERED_STR,
+                configData: dropin.dropinRef.analyticConfigData
+            });
+
+            jest.restoreAllMocks();
         });
     });
 });

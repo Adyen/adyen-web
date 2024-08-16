@@ -144,11 +144,10 @@ export const getCardConfigData = (cardProps: CardConfiguration): CardConfigData 
     if (brandsStr.length > 128) {
         brandsStr = brandsStr.substring(0, 124);
     }
-
     // @ts-ignore commenting out props until endpoint is ready
     const configData: CardConfigData = {
         autoFocus,
-        billingAddressAllowedCountries: billingAddressAllowedCountries.toString(),
+        ...(billingAddressAllowedCountries?.length > 0 && { billingAddressAllowedCountries: billingAddressAllowedCountries.toString() }),
         billingAddressMode: billingAddressModeValue,
         billingAddressRequired,
         billingAddressRequiredFields: billingAddressRequiredFields.toString(),
