@@ -81,6 +81,7 @@
     "issuerList.selectField.label": "Banko pasirinkimas",
     "privacyPolicy": "Privatumo politika",
     "afterPay.agreement": "Aš sutinku su „Riverty“ %@",
+    "riverty.termsAndConditions": "Sutinku su bendrosiomis %#taisyklėmis ir sąlygomis%#, taikomomis „Riverty“ mokėjimo būdui. „Riverty“ privatumo politiką rasite %#čia%#.",
     "paymentConditions": "mokėjimo sąlygos",
     "openApp": "Atidarykite programą",
     "voucher.readInstructions": "Perskaitykite instrukcijas",

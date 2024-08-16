@@ -81,6 +81,7 @@
     "issuerList.selectField.label": "Избор на банка",
     "privacyPolicy": "Политика за поверителност",
     "afterPay.agreement": "Съгласен съм с %@ на Riverty",
+    "riverty.termsAndConditions": "Приемам с общите %#Правила и условия%# за начина на плащане Riverty. Политиката за поверителност на Riverty може да бъде намерена %#тук%#.",
     "paymentConditions": "условия за плащане",
     "openApp": "Отворете приложението",
     "voucher.readInstructions": "Прочетете инструкциите",
