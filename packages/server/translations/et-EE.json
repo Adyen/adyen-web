@@ -81,6 +81,7 @@
     "issuerList.selectField.label": "Panga valimine",
     "privacyPolicy": "Privaatsuspoliitika",
     "afterPay.agreement": "Ma olen Riverty %@ nõus",
+    "riverty.termsAndConditions": "Nõustun Riverty makseviisi üldiste %#Tingimustega%#. Riverty privaatsuspoliitika leiate %#siit%#.",
     "paymentConditions": "maksetingimustega",
     "openApp": "Avage rakendus",
     "voucher.readInstructions": "Lugege juhiseid",

@@ -81,6 +81,7 @@
     "issuerList.selectField.label": "Bankas atlase",
     "privacyPolicy": "Konfidencialitātes politika",
     "afterPay.agreement": "Es piekrītu Riverty %@",
+    "riverty.termsAndConditions": "Es piekrītu vispārīgajiem Riverty maksājuma veida %#Noteikumiem un nosacījumiem%#. Ar Riverty privātuma politiku varat iepazīties %#šeit%#.",
     "paymentConditions": "samaksas nosacījumi",
     "openApp": "Atveriet lietojumprogrammu",
     "voucher.readInstructions": "Lūdzu, izlasiet instrukcijas.",

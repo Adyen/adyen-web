@@ -81,6 +81,7 @@
     "issuerList.selectField.label": "Bankaval",
     "privacyPolicy": "Persónuverndarstefna",
     "afterPay.agreement": "Ég samþykki %@ Riverty",
+    "riverty.termsAndConditions": "Ég samþykki almennu %#skilmálana%# fyrir Riverty-greiðslumátann. Persónuverndarstefnu Riverty má finna %#hér%#.",
     "paymentConditions": "greiðsluskilmálar",
     "openApp": "Opna forritið",
     "voucher.readInstructions": "Lesa leiðbeiningar",
