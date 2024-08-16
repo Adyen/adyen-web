@@ -36,12 +36,22 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                 this.setState({ instantPaymentElements, elements, storedPaymentElements, orderStatus });
                 this.setStatus('ready');
 
-                this.props.modules?.analytics.sendAnalytics('dropin', { type: ANALYTICS_RENDERED_STR });
+                this.props.modules?.analytics.sendAnalytics('dropin', {
+                    type: ANALYTICS_RENDERED_STR,
+                    configData: this.analyticConfigData
+                });
             }
         );
 
         this.onOrderCancel = this.getOnOrderCancel();
     };
+
+    get analyticConfigData() {
+        return {
+            openFirstStoredPaymentMethod: this.props.openFirstStoredPaymentMethod,
+            showStoredPaymentMethods: this.props.showStoredPaymentMethods
+        };
+    }
 
     public setStatus = (status: UIElementStatus, props: DropinStatusProps = {}) => {
         this.setState({ status: { type: status, props } });
