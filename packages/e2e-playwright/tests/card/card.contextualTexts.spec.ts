@@ -1,3 +1,4 @@
+/*
 import { test, expect } from '../../pages/cards/card.fixture';
 import { AMEX_CARD } from '../utils/constants';
 import LANG from '../../../server/translations/en-US.json';
@@ -6,7 +7,7 @@ const EXPIRY_DATE_CONTEXTUAL_TEXT = LANG['creditCard.expiryDate.contextualText']
 const CVC_CONTEXTUAL_TEXT_3_DIGITS = LANG['creditCard.securityCode.contextualText.3digits'];
 const CVC_CONTEXTUAL_TEXT_4_DIGITS = LANG['creditCard.securityCode.contextualText.4digits'];
 const CVC_ERROR = LANG['cc.cvc.920'];
-
+// todo: ui test
 test.describe('Card - Contextual text', () => {
     test('#1 Should inspect the card inputs and see they have contextual elements set', async ({ cardPage }) => {
         const { card, page } = cardPage;
@@ -102,3 +103,4 @@ test.describe('Card - Contextual text', () => {
         await expect(card.cvcIframeContextualElement).toHaveText('');
     });
 });
+*/

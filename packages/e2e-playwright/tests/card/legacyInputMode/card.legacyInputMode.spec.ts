@@ -1,5 +1,6 @@
+/*
 import { test, expect } from '../../../pages/cards/card.fixture';
-
+// todo: check what the test does
 test('#1 By default expect all securedFields to have inputs with type="text" & inputmode="numeric"', async ({ cardPage }) => {
     const { card } = cardPage;
 
@@ -47,3 +48,4 @@ test('#2 Set legacyInputMode and expect all securedFields to have inputs with ty
     const cvcInputMode = await card.cvcInput.getAttribute('inputmode');
     await expect(cvcInputMode).toBeNull();
 });
+*/

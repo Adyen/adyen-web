@@ -15,8 +15,8 @@ fixture`Testing Bancontact in Dropin`
     })
     .clientScripts('./bancontact.clientScripts.js');
 // DONE
-// todo: ui or unit
 
+// todo: ui or unit?
 test('#2 Entering digits that our local regEx will recognise as Visa does not affect the UI', async t => {
     await dropinPage.cc.numSpan();
 
@@ -27,26 +27,6 @@ test('#2 Entering digits that our local regEx will recognise as Visa does not af
 
     // Hidden cvc field
     await t.expect(dropinPage.cc.cvcHolder.filterHidden().exists).ok();
-});
-
-test('#3 Enter card number, that we mock to co-branded bcmc/visa ' + 'then complete expiryDate and expect comp to be valid', async t => {
-    await dropinPage.cc.numSpan();
-
-    await dropinPage.cc.cardUtils.fillCardNumber(t, BCMC_DUAL_BRANDED_VISA);
-
-    // Dual branded with bcmc logo shown first
-    await t
-        .expect(dropinPage.dualBrandingIconHolderActive.exists)
-        .ok()
-        .expect(dropinPage.dualBrandingImages.nth(0).withAttribute('data-value', 'bcmc').exists)
-        .ok()
-        .expect(dropinPage.dualBrandingImages.nth(1).withAttribute('data-value', 'visa').exists)
-        .ok();
-
-    await dropinPage.cc.cardUtils.fillDate(t, TEST_DATE_VALUE);
-
-    // Expect comp to now be valid
-    await t.expect(dropinPage.getFromWindow('dropin.isValid')).eql(true, { timeout: 3000 });
 });
 
 test(

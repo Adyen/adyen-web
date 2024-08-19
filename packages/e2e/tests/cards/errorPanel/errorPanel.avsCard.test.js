@@ -15,7 +15,7 @@ fixture`Testing avsCard's error panel`
         await t.navigateTo(cardPage.pageUrl);
     })
     .clientScripts('./errorPanel.avsCard.clientScripts.js');
-
+// todo: ui test
 test('#1 avsCard error fields and inputs should have correct aria attributes', async t => {
     // Wait for field to appear in DOM
     await cardPage.numHolder();

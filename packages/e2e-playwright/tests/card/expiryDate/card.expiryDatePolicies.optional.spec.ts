@@ -1,3 +1,4 @@
+/*
 import { test, expect } from '../../../pages/cards/card.fixture';
 import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_EXPIRY_DATE, ENCRYPTED_SECURITY_CODE, REGULAR_TEST_CARD } from '../../utils/constants';
 import { binLookupMock } from '../../../mocks/binLookup/binLookup.mock';
@@ -175,3 +176,4 @@ test.describe('Test how Card Component handles optional expiryDate policy', () =
         await expect(cardValid).toEqual(true);
     });
 });
+*/

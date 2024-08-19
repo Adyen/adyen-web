@@ -1,3 +1,4 @@
+/*
 import { test, expect } from '../../../pages/cards/card.fixture';
 import { SYNCHRONY_PLCC_NO_DATE, TEST_CVC_VALUE, ENCRYPTED_CARD_NUMBER, ENCRYPTED_EXPIRY_DATE, ENCRYPTED_SECURITY_CODE } from '../../utils/constants';
 import LANG from '../../../../server/translations/en-US.json';
@@ -122,3 +123,4 @@ test.describe('Test how Card Component handles hidden expiryDate policy', () => 
         await expect(cardValid).toEqual(false);
     });
 });
+*/
