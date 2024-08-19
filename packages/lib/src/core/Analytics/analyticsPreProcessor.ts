@@ -31,8 +31,9 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
              */
             // Called from BaseElement (when component mounted) or, from DropinComponent (after mounting, when it has finished resolving all the PM promises)
             // &/or, from DropinComponent when a PM is selected
+            // Only Drop-in sends the configData directly, if it happens the configData from the component(drop-in atm) will take over the internal configData below.
             case ANALYTICS_RENDERED_STR: {
-                const { isStoredPaymentMethod, brand } = analyticsObj;
+                const { isStoredPaymentMethod, brand, configData: originalConfigData } = analyticsObj;
 
                 // Expected from Wallet PMs
                 const { isExpress, expressPage } = uiElementProps;
@@ -54,7 +55,8 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
                     ...(brand && { brand }),
                     ...(typeof isExpress === 'boolean' && { isExpress }),
                     ...(isExpress === true && hasExpressPage && { expressPage }), // We only care about the expressPage value if isExpress is true
-                    ...(configData && { configData })
+                    ...(configData && { configData }),
+                    ...(originalConfigData && { configData: originalConfigData })
                 };
 
                 analyticsModule.createAnalyticsEvent({
