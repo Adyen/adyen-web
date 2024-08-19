@@ -22,6 +22,7 @@ export default function createClickToPayService(
     const shopperIdentity = createShopperIdentityObject(clickToPayConfiguration?.shopperEmail, clickToPayConfiguration?.telephoneNumber);
 
     const schemeNames = Object.keys(schemesConfig);
+
     const srcSdkLoader = new SrcSdkLoader(schemeNames, {
         dpaLocale: clickToPayConfiguration?.locale,
         dpaPresentationName: clickToPayConfiguration?.merchantDisplayName
