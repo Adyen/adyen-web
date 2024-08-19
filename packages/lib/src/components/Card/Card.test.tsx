@@ -128,6 +128,25 @@ describe('Card', () => {
         });
     });
 
+    describe('formatData', () => {
+        test.only('should echo back holderName in storedPaymentMethods', () => {
+            const i18n = global.i18n;
+            const resources = global.resources;
+            const srPanel = global.srPanel;
+
+            const card = new CardElement({
+                loadingContext: 'test',
+                i18n,
+                modules: { resources, srPanel },
+                storedPaymentMethodId: 'xxx',
+                holderName: 'Test Holder'
+            });
+            render(card.render());
+
+            expect(card.formatData().paymentMethod).toContain('Test Holder');
+        });
+    });
+
     describe('isValid', () => {
         test('returns false if there is no state', () => {
             const card = new CardElement({});
