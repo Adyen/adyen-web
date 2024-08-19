@@ -9,6 +9,7 @@ import CardInputDefaultProps from '../../components/Card/components/CardInput/de
 import { DEFAULT_CARD_GROUP_TYPES } from '../../components/internal/SecuredFields/lib/constants';
 import { notFalsy } from '../../utils/commonUtils';
 
+const MAX_LENGTH = 128;
 export const getUTCTimestamp = () => Date.now();
 
 /**
@@ -139,19 +140,17 @@ export const getCardConfigData = (cardProps: CardConfiguration): CardConfigData 
         showKCPType = countryCode?.toLowerCase() === 'kr' ? 'atStart' : 'auto';
     }
 
-    // Probably just for development - in real life we wouldn't expect the number of supported brands to push the endpoint limit on 128 chars
-    let brandsStr = brands.toString();
-    if (brandsStr.length > 128) {
-        brandsStr = brandsStr.substring(0, 124);
-    }
     // @ts-ignore commenting out props until endpoint is ready
     const configData: CardConfigData = {
         autoFocus,
-        ...(billingAddressAllowedCountries?.length > 0 && { billingAddressAllowedCountries: billingAddressAllowedCountries.toString() }),
+        ...(billingAddressAllowedCountries?.length > 0 && {
+            billingAddressAllowedCountries: billingAddressAllowedCountries.toString().substring(0, MAX_LENGTH)
+        }),
         billingAddressMode: billingAddressModeValue,
         billingAddressRequired,
-        billingAddressRequiredFields: billingAddressRequiredFields.toString(),
-        brands: brandsStr,
+        billingAddressRequiredFields: billingAddressRequiredFields?.toString()?.substring(0, MAX_LENGTH),
+        // Probably just for development - in real life we wouldn't expect the number of supported brands to push the endpoint limit on 128 chars
+        brands: brands?.toString()?.substring(0, MAX_LENGTH),
         challengeWindowSize,
         disableIOSArrowKeys,
         doBinLookup,
