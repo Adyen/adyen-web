@@ -87,7 +87,6 @@ class ClickToPayService implements IClickToPayService {
 
         try {
             this.sdks = await this.sdkLoader.load(this.environment);
-
             await this.initiateSdks();
 
             const { recognized = false, idTokens = null } = await this.verifyIfShopperIsRecognized();
@@ -130,9 +129,8 @@ class ClickToPayService implements IClickToPayService {
                 : error;
 
         if (timeoutError.scheme === 'visa') {
-            timeoutError.setCorrelationId(window.VISA_SDK.correlationId);
-            // window.VISA_SDK?.buildClientProfile?.();
-            console.log('built profile');
+            timeoutError.setCorrelationId(window.VISA_SDK?.correlationId);
+            window.VISA_SDK?.buildClientProfile?.();
         }
 
         this.onTimeout?.(timeoutError);
@@ -340,7 +338,7 @@ class ClickToPayService implements IClickToPayService {
 
             return executeWithTimeout<void>(
                 () => sdk.init(cfg, this.srciTransactionId),
-                300,
+                5000,
                 new TimeoutError({
                     source: 'init',
                     scheme: sdk.schemeName,
