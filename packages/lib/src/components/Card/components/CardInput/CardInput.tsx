@@ -76,16 +76,10 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         ...(props.holderNameRequired && { holderName: false })
     });
 
-    console.log('props.holderName:', props.holderName);
-    console.log('props.data.holderName:', props.data.holderName);
-    console.log('hasHolderName:', props.hasHolderName);
-
     const defaultHolderName = props.data.holderName ?? props.holderName ?? '';
     const [data, setData] = useState<CardInputDataState>({
         ...(props.hasHolderName && { holderName: defaultHolderName })
     });
-
-    console.log('data', data);
 
     const [sortedErrorList, setSortedErrorList] = useState<SortedErrorObject[]>(null);
 
