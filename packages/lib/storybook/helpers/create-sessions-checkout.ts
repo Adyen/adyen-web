@@ -22,7 +22,7 @@ async function createSessionsCheckout({ showPayButton, countryCode, shopperLocal
 
     const checkout = await AdyenCheckout({
         clientKey: process.env.CLIENT_KEY,
-        environment: process.env.CLIENT_ENV,
+        environment: process.env.CLIENT_ENV as any,
         session,
         showPayButton,
 
