@@ -1,18 +1,18 @@
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
-import { CardConfiguration } from '../../../src/components/Card/types';
+import { CustomCardConfiguration } from '../../../src/components/CustomCard/types';
 import { CustomCard } from '../../../src';
 import { Container } from '../CustomCardContainer';
 import './customCardAdditions/customCards.style.scss';
 import { styles, setFocus, onBrand, onConfigSuccess, onBinLookup, onChange, setCCErrors } from './customCardAdditions/customCards.config';
 
-type customCardStory = StoryConfiguration<CardConfiguration>;
+type customCardStory = StoryConfiguration<CustomCardConfiguration>;
 
-const meta: MetaConfiguration<CardConfiguration> = {
+const meta: MetaConfiguration<CustomCardConfiguration> = {
     title: 'Cards/Custom Card'
 };
 
-const createComponent = (args: PaymentMethodStoryProps<CardConfiguration>, context) => {
+const createComponent = (args: PaymentMethodStoryProps<CustomCardConfiguration>, context) => {
     const { componentConfiguration } = args;
     const checkout = getStoryContextCheckout(context);
     const customCard = new CustomCard(checkout, componentConfiguration);
@@ -26,7 +26,6 @@ export const Default: customCardStory = {
     render: createComponent,
     args: {
         componentConfiguration: {
-            _disableClickToPay: true,
             styles,
             onConfigSuccess,
             onBrand,
@@ -37,10 +36,10 @@ export const Default: customCardStory = {
             },
             onFocus: setFocus,
             onBinLookup,
-            onChange
-            // onValidationError: errors => {
-            //     errors.forEach(setCCErrors);
-            // }
+            onChange,
+            onValidationError: errors => {
+                errors.forEach(setCCErrors);
+            }
         }
     }
 };
