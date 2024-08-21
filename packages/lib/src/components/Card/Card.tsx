@@ -80,8 +80,6 @@ export class CardElement extends UIElement<CardElementProps> {
             ...props,
             // Mismatch between hasHolderName & holderNameRequired which can mean card can never be valid
             holderNameRequired: !props.hasHolderName ? false : props.holderNameRequired,
-            // Force hasHolderName if it's a storedPayment method, and has holderName
-            hasHolderName: props.storedPaymentMethodId ? true : props.hasHolderName,
             // False for *stored* BCMC cards & if merchant explicitly wants to hide the CVC field
             hasCVC: !((props.brand && props.brand === 'bcmc') || props.hideCVC),
             // billingAddressRequired only available for non-stored cards
@@ -127,12 +125,14 @@ export class CardElement extends UIElement<CardElementProps> {
          *  the shopper makes a brand selection
          */
         const cardBrand = this.state.selectedBrandValue || this.props.brand;
-
         return {
             paymentMethod: {
                 type: CardElement.type,
                 ...this.state.data,
-                ...(this.props.storedPaymentMethodId && { storedPaymentMethodId: this.props.storedPaymentMethodId }),
+                ...(this.props.storedPaymentMethodId && {
+                    storedPaymentMethodId: this.props.storedPaymentMethodId,
+                    holderName: this.props.holderName ?? ''
+                }),
                 ...(cardBrand && { brand: cardBrand }),
                 ...(this.props.fundingSource && { fundingSource: this.props.fundingSource })
             },

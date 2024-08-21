@@ -150,14 +150,6 @@ describe('CardInput > holderName', () => {
         expect(data.holderName).toBe('J Smith');
     });
 
-    // test('holderName ', () => {
-    //     const dataObj = { holderName: 'J Smith' };
-    //     mount(<CardInput hasHolderName={true} data={dataObj} onChange={onChange} i18n={i18n} />);
-
-    //     expect(valid.holderName).toBe(true);
-    //     expect(data.holderName).toBe('J Smith');
-    // });
-
     test('does not show the holder name first by default', () => {
         render(<CardInput hasHolderName={true} i18n={i18n} />);
 

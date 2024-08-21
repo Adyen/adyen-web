@@ -128,18 +128,46 @@ describe('Card', () => {
         });
     });
 
-    // describe('formatData', () => {
-    //     test.only('should echo back holderName in storedPaymentMethods', () => {
-    //         const i18n = global.i18n;
-    //         const resources = global.resources;
-    //         const srPanel = global.srPanel;
+    describe('formatData', () => {
+        const i18n = global.i18n;
+        const resources = global.resources;
+        const srPanel = global.srPanel;
 
-    //         const card = new CardElement({ loadingContext: 'test', i18n, modules: {resources, srPanel}, storedPaymentMethodId: 'xxx', holderName: 'Test Holder' });
-    //         render(card.render());
+        const coreProps = { loadingContext: 'test', i18n, modules: { resources, srPanel } };
 
-    //         expect(card.formatData().paymentMethod).toContain('Test Holder');
-    //     });
-    // })
+        test('should echo back holderName if is a stored card', () => {
+            const card = new CardElement({ ...coreProps, storedPaymentMethodId: 'xxx', holderName: 'Test Holder' });
+            render(card.render());
+
+            expect(card.formatData().paymentMethod.holderName).toContain('Test Holder');
+        });
+
+        test('should NOT echo back holderName from data if is a stored card', () => {
+            const card = new CardElement({ ...coreProps, storedPaymentMethodId: 'xxx', data: { holderName: 'Test Holder' } });
+            render(card.render());
+
+            expect(card.formatData().paymentMethod.holderName).toContain('');
+        });
+
+        test('if no holderName specificed and is stored card, holder name should be empty string', () => {
+            const card = new CardElement({ ...coreProps, storedPaymentMethodId: 'xxx' });
+
+            expect(card.formatData().paymentMethod.holderName).toContain('');
+        });
+
+        test('if no holderName specificed and is not stored card, holder name should be empty string', () => {
+            const card = new CardElement({ ...coreProps, storedPaymentMethodId: 'xxx' });
+
+            expect(card.formatData().paymentMethod.holderName).toContain('');
+        });
+
+        test('should NOT echo back holderName if is not a stored card', () => {
+            const card = new CardElement({ ...coreProps, holderName: 'Test Holder' });
+            render(card.render());
+
+            expect(card.formatData().paymentMethod.holderName).toBeUndefined();
+        });
+    });
 
     describe('isValid', () => {
         test('returns false if there is no state', () => {

@@ -75,10 +75,8 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
     const [valid, setValid] = useState<CardInputValidState>({
         ...(props.holderNameRequired && { holderName: false })
     });
-
-    const defaultHolderName = props.data.holderName ?? props.holderName ?? '';
     const [data, setData] = useState<CardInputDataState>({
-        ...(props.hasHolderName && { holderName: defaultHolderName })
+        ...(props.hasHolderName && { holderName: props.data.holderName ?? '' })
     });
 
     const [sortedErrorList, setSortedErrorList] = useState<SortedErrorObject[]>(null);
@@ -124,7 +122,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
         setErrors: setFormErrors
     } = useForm<CardInputDataState>({
         schema: [],
-        defaultData: { ...props.data, holderName: defaultHolderName },
+        defaultData: props.data,
         formatters: cardInputFormatters,
         rules: cardInputValidationRules
     });
