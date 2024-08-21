@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import { makePayment } from '../helpers/checkout-api-calls';
 import paymentsConfig from '../config/paymentsConfig';
 import getCurrency from '../utils/get-currency';
+import { handleFinalState } from '../helpers/checkout-handlers';
 
 export const CustomCardContainer = ({ element, context }) => {
     const container = useRef(null);
@@ -52,13 +53,12 @@ export const CustomCardContainer = ({ element, context }) => {
         if (result.action) {
             threeDS2(result, component);
         } else {
-            // @ts-ignore
-            document.querySelector('.secured-fields').style.display = 'none';
+            clearSFMarkup();
 
             switch (result.resultCode) {
                 case 'Authorised':
                 case 'Refused':
-                    document.getElementById('topLevelHolder').innerText = result.resultCode;
+                    handleFinalState(result, component);
                     break;
                 default:
             }
@@ -66,15 +66,19 @@ export const CustomCardContainer = ({ element, context }) => {
     };
 
     const threeDS2 = (result, component) => {
-        if (window['customCard']) {
-            const sfNode = document.querySelector('.secured-fields');
+        clearSFMarkup();
+
+        component.handleAction(result.action);
+    };
+
+    const clearSFMarkup = () => {
+        if (globalThis.customCard) {
+            const sfNode = container.current; // equivalent to: document.querySelector('.secured-fields');
             // Clear the contents of the .secured-fields div
             while (sfNode.firstChild) {
                 sfNode.removeChild(sfNode.firstChild);
             }
         }
-
-        component.handleAction(result.action);
     };
 
     useEffect(() => {
@@ -82,7 +86,7 @@ export const CustomCardContainer = ({ element, context }) => {
 
         element.mount(container.current);
 
-        window['payBtn'] = createPayButton('.secured-fields', window['customCard'], 'customcard');
+        globalThis.payBtn = createPayButton('.secured-fields', globalThis.customCard, 'customcard');
     }, [element]);
 
     return (
