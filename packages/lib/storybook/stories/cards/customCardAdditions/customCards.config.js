@@ -50,7 +50,6 @@ export const styles = {
 };
 
 export function onConfigSuccess(pCallbackObj) {
-    console.log('### customCards.config::onConfigSuccess:: LOADED!!');
     /**
      * Set the UI to it's starting state
      */
