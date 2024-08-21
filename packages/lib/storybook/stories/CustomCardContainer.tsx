@@ -1,11 +1,9 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { IUIElement } from '../../src/components/internal/UIElement/types';
+import { makePayment } from '../helpers/checkout-api-calls';
+import paymentsConfig from '../config/paymentsConfig';
+import getCurrency from '../utils/get-currency';
 
-interface IContainer {
-    element: IUIElement;
-}
-
-export const Container = ({ element }: IContainer) => {
+export const CustomCardContainer = ({ element, context }) => {
     const container = useRef(null);
 
     const createPayButton = (parent, component, attribute) => {
@@ -26,31 +24,26 @@ export const Container = ({ element }: IContainer) => {
     };
 
     const startPayment = component => {
-        console.log('### CustomCardContainer::startPayment::component ', component);
         if (!component.isValid) return component.showValidation();
 
-        // const allow3DS2 = paymentsConfig.authenticationData.attemptAuthentication || 'never';
-        //
-        // // const riskdata = checkout.modules.risk.data;
-        //
-        // console.log('### CustomCards::startPayment:: component.data', component.data);
-        //
-        // makePayment(component.data, {
-        //     // additionalData: { riskdata },
-        //     authenticationData: {
-        //         attemptAuthentication: allow3DS2,
-        //         // comment out below if you want to force MDFlow
-        //         threeDSRequestData: {
-        //             nativeThreeDS: 'preferred'
-        //         }
-        //     }
-        // })
-        //     .then(result => {
-        //         handlePaymentResult(result, component);
-        //     })
-        //     .catch(error => {
-        //         throw Error(error);
-        //     });
+        const allow3DS2 = paymentsConfig.authenticationData.attemptAuthentication || 'never';
+
+        makePayment(component.data, {
+            amount: { value: context.args.amount, currency: getCurrency(context.args.countryCode) },
+            authenticationData: {
+                attemptAuthentication: allow3DS2,
+                // comment out below if you want to force MDFlow
+                threeDSRequestData: {
+                    nativeThreeDS: 'preferred'
+                }
+            }
+        })
+            .then(result => {
+                // handlePaymentResult(result, component);
+            })
+            .catch(error => {
+                throw Error(error);
+            });
     };
 
     useEffect(() => {

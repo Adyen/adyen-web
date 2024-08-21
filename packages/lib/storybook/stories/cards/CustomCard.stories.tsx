@@ -2,7 +2,7 @@ import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 import { CustomCardConfiguration } from '../../../src/components/CustomCard/types';
 import { CustomCard } from '../../../src';
-import { Container } from '../CustomCardContainer';
+import { CustomCardContainer } from '../CustomCardContainer';
 import './customCardAdditions/customCards.style.scss';
 import { styles, setFocus, onBrand, onConfigSuccess, onBinLookup, onChange, setCCErrors } from './customCardAdditions/customCards.config';
 
@@ -19,7 +19,7 @@ const createComponent = (args: PaymentMethodStoryProps<CustomCardConfiguration>,
 
     window['customCard'] = customCard;
 
-    return <Container element={customCard} />;
+    return <CustomCardContainer element={customCard} context={context} />;
 };
 
 export const Default: customCardStory = {
@@ -29,18 +29,19 @@ export const Default: customCardStory = {
             styles,
             onConfigSuccess,
             onBrand,
-            onBinValue: cbObj => {
-                if (cbObj.encryptedBin) {
-                    console.log('onBinValue', cbObj);
-                }
-            },
+            // onBinValue: cbObj => {
+            //     if (cbObj.encryptedBin) {
+            //         console.log('onBinValue', cbObj);
+            //     }
+            // },
             onFocus: setFocus,
             onBinLookup,
             onChange,
             onValidationError: errors => {
                 errors.forEach(setCCErrors);
             }
-        }
+        },
+        useSessions: false
     }
 };
 
