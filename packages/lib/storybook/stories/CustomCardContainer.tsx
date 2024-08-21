@@ -39,11 +39,42 @@ export const CustomCardContainer = ({ element, context }) => {
             }
         })
             .then(result => {
-                // handlePaymentResult(result, component);
+                handlePaymentResult(result, component);
             })
             .catch(error => {
                 throw Error(error);
             });
+    };
+
+    const handlePaymentResult = (result, component) => {
+        console.log('Result: ', result);
+
+        if (result.action) {
+            threeDS2(result, component);
+        } else {
+            // @ts-ignore
+            document.querySelector('.secured-fields').style.display = 'none';
+
+            switch (result.resultCode) {
+                case 'Authorised':
+                case 'Refused':
+                    document.getElementById('topLevelHolder').innerText = result.resultCode;
+                    break;
+                default:
+            }
+        }
+    };
+
+    const threeDS2 = (result, component) => {
+        if (window['customCard']) {
+            const sfNode = document.querySelector('.secured-fields');
+            // Clear the contents of the .secured-fields div
+            while (sfNode.firstChild) {
+                sfNode.removeChild(sfNode.firstChild);
+            }
+        }
+
+        component.handleAction(result.action);
     };
 
     useEffect(() => {
@@ -55,7 +86,7 @@ export const CustomCardContainer = ({ element, context }) => {
     }, [element]);
 
     return (
-        <div>
+        <div id={'topLevelHolder'}>
             <div
                 ref={container}
                 id="component-root"
