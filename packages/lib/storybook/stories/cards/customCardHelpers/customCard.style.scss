@@ -1,0 +1,110 @@
+.secured-fields {
+  position: relative;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  padding: 24px;
+}
+.pm-image, .pm-image-dual {
+  background-color: #ffffff;
+  border-radius: 4px;
+  -moz-boder-radius: 4px;
+  -webkit-border-radius: 4px;
+  float: right;
+  line-height: 0;
+  position: relative;
+  overflow: hidden;
+}
+.pm-form-label {
+  float: left;
+  padding-bottom: 1em;
+  position: relative;
+  width: 100%;
+}
+.pm-form-label--exp-date {
+  width: 40%;
+}
+.pm-form-label--cvc {
+  float: right;
+  width: 40%;
+}
+.pm-form-label__text {
+  color: #00112c;
+  float: left;
+  font-size: 0.93333em;
+  padding-bottom: 6px;
+  position: relative;
+}
+.pm-input-field {
+  background: white;
+  border: 1px solid #d8d8d8;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  box-sizing: border-box;
+  clear: left;
+  font-size: 0.93333333333em;
+  float: left;
+  padding: 8px;
+  position: relative;
+  width: 100%;
+  height: 35px;
+}
+
+.pm-form-label__error-text {
+  color: #ff7d00;
+  display: none;
+  float: left;
+  font-size: 13px;
+  padding-top: 0.4em;
+  position: relative;
+  width: 100%;
+}
+
+/* Set dynamically */
+.pm-input-field--error,
+.secured-fields-si.pm-input-field--error {
+  border: 1px solid #ff7d00;
+}
+
+.pm-input-field--focus {
+  border: 1px solid #969696;
+  outline: none;
+}
+.pm-input-field--error.pm-input-field--focus {
+  border: 1px solid #ff7d00;
+}
+
+.card-input__spinner__holder {
+  position: relative;
+  top: 40px;
+}
+
+.card-input__spinner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  display: none;
+}
+
+.card-input__spinner--active {
+  display: block;
+}
+
+/*.valid-icon,
+.error-icon {
+    display: none;
+    position: absolute;
+    top: 30px;
+    right: 16px;
+}
+
+.valid-icon {
+    fill: #089A43;
+}
+
+.error-icon {
+    fill: #C12424;
+}*/

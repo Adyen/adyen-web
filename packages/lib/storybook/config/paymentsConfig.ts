@@ -14,6 +14,14 @@ const paymentsConfig = {
         // RequestedTestAcquirerResponseCode: 2,
         allow3DS2: true
     },
+    // Ready for v69+ - lose any additionalData 3DS2 related lines e.g. allow3DS2: true
+    authenticationData: {
+        attemptAuthentication: 'always',
+        // To force MDFlow: comment out below, and just keep line above
+        threeDSRequestData: {
+            nativeThreeDS: 'preferred'
+        }
+    },
     shopperEmail: 'test-shopper@storytel.com',
     shopperIP: '172.30.0.1',
     // threeDS2RequestData: {
