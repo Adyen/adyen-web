@@ -17,7 +17,7 @@ const createComponent = (args: PaymentMethodStoryProps<CustomCardConfiguration>,
     const checkout = getStoryContextCheckout(context);
     const customCard = new CustomCard(checkout, componentConfiguration);
 
-    window['customCard'] = customCard;
+    globalThis.customCard = customCard;
 
     return <CustomCardContainer element={customCard} context={context} />;
 };
