@@ -2,7 +2,7 @@ import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 import { CustomCardConfiguration } from '../../../src/components/CustomCard/types';
 import { CustomCard } from '../../../src';
-import { CustomCardContainer } from './customCardHelpers/CustomCardContainer';
+import { CustomCardContainer } from '../CustomCardContainer';
 import './customCardHelpers/customCard.style.scss';
 import { styles, setFocus, onBrand, onConfigSuccess, onBinLookup, onChange, setCCErrors } from './customCardHelpers/customCard.config';
 

@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { makePayment } from '../../../helpers/checkout-api-calls';
-import paymentsConfig from '../../../config/paymentsConfig';
-import getCurrency from '../../../utils/get-currency';
-import { handleFinalState } from '../../../helpers/checkout-handlers';
+import { makePayment } from '../helpers/checkout-api-calls';
+import paymentsConfig from '../config/paymentsConfig';
+import getCurrency from '../utils/get-currency';
+import { handleFinalState } from '../helpers/checkout-handlers';
 
 export const CustomCardContainer = ({ element, context }) => {
     const container = useRef(null);
