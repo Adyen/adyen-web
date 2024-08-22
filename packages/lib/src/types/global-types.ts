@@ -246,8 +246,10 @@ export interface OrderStatus {
     expiresAt: string;
     paymentMethods: {
         amount?: PaymentAmount;
-        lastFour: string;
+        lastFour?: string;
         type: string;
+        name?: string;
+        label?: string;
     }[];
     pspReference: string;
     reference: string;
