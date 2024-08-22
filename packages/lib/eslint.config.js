@@ -14,7 +14,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const config = tseslint.config(
     {
         name: 'Global ignore',
-        ignores: ['coverage/*', 'dist/*', 'config/*', 'auto/*', 'postcss.config.cjs', 'eslint.config.js', '**/*_*.*', 'customCard.style.scss']
+        ignores: ['coverage/*', 'dist/*', 'config/*', 'auto/*', 'postcss.config.cjs', 'eslint.config.js', '**/*_*.*']
     },
     eslint.configs.recommended,
     jsxA11y.flatConfigs.strict,
