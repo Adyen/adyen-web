@@ -5,6 +5,8 @@ import * as path from 'path';
 import stylelint from 'vite-plugin-stylelint';
 import generateEnvironmentVariables from '../config/environment-variables';
 import { resolve } from 'node:path';
+import * as dotenv from 'dotenv';
+dotenv.config({ path: resolve('../../', '.env') });
 
 const config: StorybookConfig = {
     stories: ['../storybook/**/*.stories.@(js|jsx|ts|tsx)'],
@@ -29,6 +31,10 @@ const config: StorybookConfig = {
     staticDirs: ['../storybook/assets'],
 
     viteFinal(config) {
+        const isHttps = process.env.IS_HTTPS === 'true';
+        const cert = process.env.CERT_PATH ?? resolve(__dirname, 'localhost.pem');
+        const key = process.env.CERT_KEY_PATH ?? resolve(__dirname, 'localhost-key.pem');
+
         return mergeConfig(config, {
             define: generateEnvironmentVariables(),
             resolve: {
@@ -42,7 +48,15 @@ const config: StorybookConfig = {
                 ]
             },
             server: {
-                hmr: true,
+                ...(isHttps && {
+                    https: {
+                        key,
+                        cert
+                    }
+                }),
+                hmr: {
+                    protocol: isHttps ? 'wss' : 'ws'
+                },
                 watch: {
                     usePolling: true
                 }
