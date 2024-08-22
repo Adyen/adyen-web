@@ -1,4 +1,4 @@
-// @ts-nocheck
+/* stylelint-disable */
 .secured-fields {
   position: relative;
   font-family: 'Open Sans', sans-serif;
@@ -94,18 +94,4 @@
   display: block;
 }
 
-/*.valid-icon,
-.error-icon {
-    display: none;
-    position: absolute;
-    top: 30px;
-    right: 16px;
-}
-
-.valid-icon {
-    fill: #089A43;
-}
-
-.error-icon {
-    fill: #C12424;
-}*/
+/* stylelint-enable */
