@@ -257,7 +257,7 @@ export function onBinLookup(pCallbackObj) {
     resetDualBranding(pCallbackObj.rootNode);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars (keep component param to demo the function signature)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function onChange(state, component) {
     /**
      * If we're in a dual branding scenario & the number field becomes valid or is valid and become invalid
