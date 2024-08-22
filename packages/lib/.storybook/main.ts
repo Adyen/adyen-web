@@ -42,6 +42,7 @@ const config: StorybookConfig = {
                 ]
             },
             server: {
+                hmr: true,
                 watch: {
                     usePolling: true
                 }
