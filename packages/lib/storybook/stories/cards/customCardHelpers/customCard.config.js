@@ -194,7 +194,7 @@ export function onBrand(pCallbackObj) {
 }
 
 function dualBrandListener(e) {
-    customCard.dualBrandingChangeHandler(e);
+    window.customCard.dualBrandingChangeHandler(e);
 }
 
 function resetDualBranding(rootNode) {
@@ -257,6 +257,7 @@ export function onBinLookup(pCallbackObj) {
     resetDualBranding(pCallbackObj.rootNode);
 }
 
+// ts-ignore keep component param to demo the function signature
 export function onChange(state, component) {
     /**
      * If we're in a dual branding scenario & the number field becomes valid or is valid and become invalid

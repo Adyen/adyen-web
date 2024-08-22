@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'preact/hooks';
+import { useEffect, useRef } from 'preact/hooks';
 
 import { setUpUtils, createPayButton } from './cards/customCardHelpers/customCard.utils';
 
@@ -21,7 +21,7 @@ export const CustomCardContainer = ({ element, context }) => {
                 ref={container}
                 id="component-root"
                 className="component-wrapper secured-fields"
-                // @ts-ignore
+                // @ts-ignore just hiding for better UX experience
                 style={'display:none;'}
             >
                 <span className="pm-image">
@@ -36,26 +36,26 @@ export const CustomCardContainer = ({ element, context }) => {
                     <img className="pm-image-dual-1" width="40" alt="" />
                     <img className="pm-image-dual-2" width="40" alt="" />
                 </span>
-                <label className="pm-form-label">
+                <div className="pm-form-label">
                     <span className="pm-form-label__text">Card number:</span>
                     <span className="pm-input-field" data-cse="encryptedCardNumber" data-uid="adyen-checkout-encryptedCardNumber-1"></span>
                     <span className="pm-form-label__error-text">Please enter a valid credit card number</span>
-                </label>
-                <label className="pm-form-label pm-form-label--exp-month">
+                </div>
+                <div className="pm-form-label pm-form-label--exp-month">
                     <span className="pm-form-label__text">Expiry month:</span>
                     <span className="pm-input-field" data-cse="encryptedExpiryMonth" data-uid="adyen-checkout-encryptedExpiryMonth-2"></span>
                     <span className="pm-form-label__error-text">Date error text</span>
-                </label>
-                <label className="pm-form-label pm-form-label--exp-year">
+                </div>
+                <div className="pm-form-label pm-form-label--exp-year">
                     <span className="pm-form-label__text">Expiry year:</span>
                     <span className="pm-input-field" data-cse="encryptedExpiryYear" data-uid="adyen-checkout-encryptedExpiryYear-3"></span>
                     <span className="pm-form-label__error-text">Date error text</span>
-                </label>
-                <label className="pm-form-label pm-form-label--cvc">
+                </div>
+                <div className="pm-form-label pm-form-label--cvc">
                     <span className="pm-form-label__text">CVV/CVC:</span>
                     <span className="pm-input-field" data-cse="encryptedSecurityCode"></span>
                     <span className="pm-form-label__error-text">CVC Error text</span>
-                </label>
+                </div>
             </div>
             <div className="card-input__spinner__holder">
                 <div className="card-input__spinner card-input__spinner--active">
