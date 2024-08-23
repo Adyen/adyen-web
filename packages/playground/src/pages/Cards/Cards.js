@@ -112,7 +112,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
             // maskSecurityCode: true,
             // minimumExpiryDate: '05/24',
             // name: '', // Affects Dropin only
-            // placeholders: { holderName: 'B Bob' },
+            // placeholders: { holderName: 'B Bob', cardNumber: 'add card number', expiryDate: 'mm/yy', securityCodeThreeDigits: '123' },
             // positionHolderNameOnTop: true,
             // showBrandIcon: false,
             // showBrandsUnderCardNumber: false,
