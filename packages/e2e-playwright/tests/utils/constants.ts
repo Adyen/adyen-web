@@ -4,6 +4,8 @@ export const REGULAR_TEST_CARD = '5500000000000004';
 export const AMEX_CARD = '370000000000002';
 
 export const MAESTRO_CARD = '5000550000000029';
+export const UNKNOWN_BIN_CARD = '135410014004955'; // card that is not in the test DBs (uatp)
+export const UNKNOWN_VISA_CARD = '41111111'; // card is now in the test DBs (visa) - so keep it short to stop it firing binLookup
 
 export const SYNCHRONY_PLCC_NO_LUHN = '6044100018023838'; // also, no date
 export const SYNCHRONY_PLCC_WITH_LUHN = '6044141000018769'; // also, no date

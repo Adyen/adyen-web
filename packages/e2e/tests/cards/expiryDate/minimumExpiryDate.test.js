@@ -20,7 +20,7 @@ const cardUtils = cu(iframeSelector);
 fixture`Testing setting minimumExpiryDate - that it is recognised but doesn't override the other checks on date for a card being too old or too far in the future`
     .page(CARDS_URL)
     .clientScripts('expiryDate.clientScripts.js');
-
+// todo: ui testing
 test('#1 With minimumExpiryDate set - input an expiry date that is too old & expect the correct error ', async t => {
     // Start, allow time for iframes to load
     await start(t, 2000, TEST_SPEED);

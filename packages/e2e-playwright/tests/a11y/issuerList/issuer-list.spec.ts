@@ -1,0 +1,58 @@
+import { test, expect } from '../../../pages/issuerList/issuer-list.fixture';
+import { pressKeyboardToNextItem, pressKeyboardToSelectItem } from '../../utils/keyboard';
+
+test.describe('Issuer List keyboard navigation', () => {
+    test('it should be able to filter and select using the keyboard', async ({ issuerListPage }) => {
+        const { issuerList, page } = issuerListPage;
+
+        await expect(issuerList.submitButton).toHaveText('Continue');
+
+        await issuerList.clickOnSelector();
+        await expect(issuerList.selectorList).toContainText('mTransfer'); // full list
+
+        await issuerList.typeOnSelectorField('Idea'); // filtered content
+        await expect(issuerList.selectorList).not.toContainText('mTransfer');
+
+        // select one of the filtered option
+        await pressKeyboardToNextItem(page); // Arrow down
+        await pressKeyboardToSelectItem(page); // Enter key
+
+        await expect(issuerList.submitButton).toHaveText('Continue to Idea Cloud');
+
+        // 1st press opens the dropdown
+        await pressKeyboardToNextItem(page);
+        // 2nd selects next item
+        await pressKeyboardToNextItem(page);
+        await pressKeyboardToSelectItem(page);
+
+        await expect(issuerList.submitButton).toHaveText('Continue to mRaty');
+    });
+
+    test('it should load a default, from the filtered items, when pressing enter', async ({ issuerListPage }) => {
+        const { issuerList, page } = issuerListPage;
+
+        await issuerList.clickOnSelector();
+        await issuerList.typeOnSelectorField('Nest');
+        await pressKeyboardToSelectItem(page);
+
+        await expect(issuerList.submitButton).toHaveText('Continue to Nest Bank');
+    });
+
+    test('it should have the expected data in state, ready for the /payments call', async ({ issuerListPage }) => {
+        const { issuerList, page } = issuerListPage;
+
+        // Open the drop down and select an item
+        await issuerList.clickOnSelector();
+        await pressKeyboardToNextItem(page); // Arrow down
+        await pressKeyboardToSelectItem(page); // Enter key
+
+        let issuerListData = await page.evaluate('window.dotpay.data');
+
+        // @ts-ignore
+        expect(issuerListData.paymentMethod).toEqual({
+            type: 'dotpay',
+            issuer: '73',
+            checkoutAttemptId: 'do-not-track'
+        });
+    });
+});
