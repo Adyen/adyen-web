@@ -62,11 +62,11 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
          * @param initialEvent -
          */
         setUp: async (initialEvent: AnalyticsInitialEvent) => {
-            const { payload } = props; // TODO what is payload, is it ever used?
+            const { enabled, payload } = props; // TODO what is payload, is it ever used?
 
             const analyticsData = processAnalyticsData(props.analyticsData);
 
-            if (!capturedCheckoutAttemptId) {
+            if (enabled === true && !capturedCheckoutAttemptId) {
                 try {
                     const checkoutAttemptId = await collectId({
                         ...initialEvent,
@@ -86,8 +86,6 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
         getEventsQueue: () => eventsQueue,
 
         createAnalyticsEvent: ({ event, data }: CreateAnalyticsEventObject): AnalyticsObject => {
-            if (!props.enabled) return;
-
             const aObj: AnalyticsObject = createAnalyticsObject({
                 event,
                 ...data
@@ -104,7 +102,7 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
         sendAnalytics: null
     };
 
-    anlModule.sendAnalytics = props.enabled === true ? analyticsPreProcessor(anlModule) : () => {};
+    anlModule.sendAnalytics = analyticsPreProcessor(anlModule);
 
     return anlModule;
 };
