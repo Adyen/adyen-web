@@ -27,6 +27,7 @@ export const Default: customCardStory = {
     render: createComponent,
     args: {
         componentConfiguration: {
+            brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire', 'synchrony_plcc'],
             styles,
             onConfigSuccess,
             onBrand,
