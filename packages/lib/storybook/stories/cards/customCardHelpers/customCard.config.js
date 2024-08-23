@@ -66,7 +66,7 @@ export function onConfigSuccess(pCallbackObj) {
      */
     setTimeout(() => {
         // Allow time for screen to redraw after spinner is hidden
-        window.customCard.setFocusOn('encryptedCardNumber');
+        globalThis.customCard.setFocusOn('encryptedCardNumber');
     }, 100);
 
     //    window.customCard.updateStyles({
