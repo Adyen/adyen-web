@@ -249,7 +249,7 @@ export interface CardConfiguration extends UIElementProps {
      *
      * - merchant set config option
      */
-    minimumExpiryDate?: string[];
+    minimumExpiryDate?: string;
 
     /**
      * When in Dropin this is the name shown in the paymentMethods list

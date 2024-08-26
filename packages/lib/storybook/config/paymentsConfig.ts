@@ -12,7 +12,21 @@ const paymentsConfig = {
     additionalData: {
         // Force response code. See https://docs.adyen.com/development-resources/test-cards/result-code-testing/adyen-response-codes
         // RequestedTestAcquirerResponseCode: 2,
-        allow3DS2: true
+        // allow3DS2: true,
+        /**
+         * To force threeds2InMDFlow:
+         *  comment out "allow3DS2" & comment in the following 2 lines:
+         */
+        // threeDS2InMDFlow: true,
+        // executeThreeD: true
+    },
+    // Ready for v69+ - lose any additionalData 3DS2 related lines e.g. allow3DS2: true
+    authenticationData: {
+        attemptAuthentication: 'always',
+        // To force MDFlow: comment out below, and just keep line above
+        threeDSRequestData: {
+            nativeThreeDS: 'preferred'
+        }
     },
     shopperEmail: 'test-shopper@storytel.com',
     shopperIP: '172.30.0.1',

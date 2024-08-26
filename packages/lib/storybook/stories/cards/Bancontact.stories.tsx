@@ -23,7 +23,8 @@ export const Default: BancontactStory = {
     args: {
         componentConfiguration: {
             _disableClickToPay: true
-        }
+        },
+        countryCode: 'BE'
     }
 };
 
