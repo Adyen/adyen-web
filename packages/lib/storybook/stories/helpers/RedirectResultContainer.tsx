@@ -37,6 +37,10 @@ export const RedirectResultContainer = ({ redirectResult, sessionId, countryCode
                 setIsRedirecting(false);
                 handleFinalState(result, component);
             },
+            onPaymentFailed: (result, component) => {
+                setIsRedirecting(false);
+                handleFinalState(result, component);
+            },
             onError: (error, component) => {
                 setIsRedirecting(false);
                 handleError(error, component);
