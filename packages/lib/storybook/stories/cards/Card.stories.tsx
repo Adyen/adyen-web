@@ -4,7 +4,7 @@ import { CardConfiguration } from '../../../src/components/Card/types';
 import { Card } from '../../../src';
 import { Container } from '../Container';
 import { searchFunctionExample } from '../../../../playground/src/utils';
-import { makePayment } from '../../helpers/checkout-api-calls';
+import { CardWithRedirect } from './cardStoryHelpers/CardWithRedirect';
 
 type CardStory = StoryConfiguration<CardConfiguration>;
 
@@ -149,36 +149,12 @@ export const WithClickToPay: CardStory = {
 };
 
 export const CardWith_3DS2_Redirect: CardStory = {
-    render: createComponent,
+    render: args => {
+        return <CardWithRedirect contextArgs={args} />;
+    },
     args: {
         componentConfiguration: {
-            _disableClickToPay: true,
-            onSubmit: async (state, component, actions) => {
-                try {
-                    const paymentData = {
-                        amount: { currency: 'USD', value: 25900 },
-                        countryCode: 'US',
-                        shopperLocale: 'en-US',
-                        authenticationData: {
-                            attemptAuthentication: 'always'
-                        }
-                    };
-
-                    const { action, order, resultCode, donationToken } = await makePayment(state.data, paymentData);
-
-                    if (!resultCode) actions.reject();
-
-                    actions.resolve({
-                        resultCode,
-                        action,
-                        order,
-                        donationToken
-                    });
-                } catch (error) {
-                    console.error('## onSubmit - critical error', error);
-                    actions.reject();
-                }
-            }
+            _disableClickToPay: true
         },
         useSessions: false
     }
