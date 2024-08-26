@@ -3,12 +3,12 @@ import { makePayment } from '../../../helpers/checkout-api-calls';
 import getCurrency from '../../../utils/get-currency';
 import { handleFinalState } from '../../../helpers/checkout-handlers';
 
-let context;
+let contextArgs;
 let container;
 
 // So the util functions can access the story's context and container
-export const setUpUtils = (pContext, pContainer) => {
-    context = pContext;
+export const setUpUtils = (pContextArgs, pContainer) => {
+    contextArgs = pContextArgs;
     container = pContainer;
 };
 
@@ -35,7 +35,7 @@ const startPayment = component => {
     const allow3DS2 = paymentsConfig.authenticationData.attemptAuthentication || 'never';
 
     makePayment(component.data, {
-        amount: { value: context.args.amount, currency: getCurrency(context.args.countryCode) },
+        amount: { value: contextArgs.amount, currency: getCurrency(contextArgs.countryCode) },
         authenticationData: {
             attemptAuthentication: allow3DS2,
             // comment out below if you want to force MDFlow

@@ -20,7 +20,7 @@ const createComponent = (args: PaymentMethodStoryProps<CustomCardConfiguration>,
     globalThis.customCard = customCard;
     globalThis.parent.window['customCard'] = customCard; // expose to top level window, so a user can access window.customCard
 
-    return <CustomCardContainer element={customCard} context={context} />;
+    return <CustomCardContainer element={customCard} contextArgs={args} />;
 };
 
 export const Default: customCardStory = {

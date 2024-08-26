@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'preact/hooks';
 
 import { setUpUtils, createPayButton } from './cards/customCardHelpers/customCard.utils';
 
-export const CustomCardContainer = ({ element, context }) => {
+export const CustomCardContainer = ({ element, contextArgs }) => {
     const container = useRef(null);
 
     useEffect(() => {
@@ -10,7 +10,7 @@ export const CustomCardContainer = ({ element, context }) => {
 
         element.mount(container.current);
 
-        setUpUtils(context, container);
+        setUpUtils(contextArgs, container);
 
         globalThis.payBtn = createPayButton('.secured-fields', globalThis.customCard, 'customcard');
     }, [element]);
