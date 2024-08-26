@@ -19,6 +19,7 @@ export const Container = <T extends keyof PaymentMethods>({ type, componentConfi
         }
 
         const element = checkout.create(type, { ...componentConfiguration });
+        window[type] = element;
 
         if (element.isAvailable) {
             element
