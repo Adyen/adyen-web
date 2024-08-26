@@ -149,7 +149,10 @@ export class CardElement extends UIElement<CardConfiguration> {
             paymentMethod: {
                 type: CardElement.type,
                 ...this.state.data,
-                ...(this.props.storedPaymentMethodId && { storedPaymentMethodId: this.props.storedPaymentMethodId }),
+                ...(this.props.storedPaymentMethodId && {
+                    storedPaymentMethodId: this.props.storedPaymentMethodId,
+                    holderName: this.props.holderName ?? ''
+                }),
                 ...(cardBrand && { brand: cardBrand }),
                 ...(this.props.fundingSource && { fundingSource: this.props.fundingSource })
             },
