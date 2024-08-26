@@ -16,7 +16,7 @@ const meta: Meta<RedirectResultProps> = {
 export default meta;
 
 export const RedirectResult: RedirectStory = {
-    render: args => <RedirectResultContainer {...args} />,
+    render: args => <RedirectResultContainer countryCode={'US'} {...args} />,
     args: {
         redirectResult: getSearchParameter('redirectResult'),
         sessionId: getSearchParameter('sessionId')

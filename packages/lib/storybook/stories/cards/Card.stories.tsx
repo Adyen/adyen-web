@@ -4,6 +4,7 @@ import { CardConfiguration } from '../../../src/components/Card/types';
 import { Card } from '../../../src';
 import { Container } from '../Container';
 import { searchFunctionExample } from '../../../../playground/src/utils';
+import { makePayment } from '../../helpers/checkout-api-calls';
 
 type CardStory = StoryConfiguration<CardConfiguration>;
 
@@ -142,6 +143,44 @@ export const WithClickToPay: CardStory = {
             clickToPayConfiguration: {
                 shopperEmail: 'gui.ctp@adyen.com',
                 merchantDisplayName: 'Adyen Merchant Name'
+            }
+        }
+    }
+};
+
+export const CardWith_3DS2_Redirect: CardStory = {
+    render: createComponent,
+    args: {
+        componentConfiguration: {
+            _disableClickToPay: true
+        },
+        useSessions: false,
+        // @ts-ignore This is Checkout config, not CardConfiguration
+        onSubmit: async (state, component, actions) => {
+            try {
+                const paymentData = {
+                    amount: { currency: 'USD', value: 25900 },
+                    countryCode: 'US',
+                    shopperLocale: 'en-US',
+                    authenticationData: {
+                        attemptAuthentication: 'always'
+                    }
+                };
+                console.log('### Card.stories::onSubmit::paymentData ', paymentData);
+
+                const { action, order, resultCode, donationToken } = await makePayment(state.data, paymentData);
+
+                if (!resultCode) actions.reject();
+
+                actions.resolve({
+                    resultCode,
+                    action,
+                    order,
+                    donationToken
+                });
+            } catch (error) {
+                console.error('## onSubmit - critical error', error);
+                actions.reject();
             }
         }
     }
