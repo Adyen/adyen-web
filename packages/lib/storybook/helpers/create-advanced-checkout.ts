@@ -6,14 +6,7 @@ import { AdyenCheckoutProps } from '../stories/types';
 import Checkout from '../../src/core/core';
 import { PaymentMethodsResponse } from '../../src/types';
 
-async function createAdvancedFlowCheckout({
-    showPayButton,
-    countryCode,
-    shopperLocale,
-    amount,
-    onSubmit,
-    ...rest
-}: AdyenCheckoutProps): Promise<Checkout> {
+async function createAdvancedFlowCheckout({ showPayButton, countryCode, shopperLocale, amount, ...rest }: AdyenCheckoutProps): Promise<Checkout> {
     const paymentAmount = {
         currency: getCurrency(countryCode),
         value: Number(amount)
@@ -35,31 +28,29 @@ async function createAdvancedFlowCheckout({
         locale: shopperLocale,
         showPayButton,
 
-        onSubmit: onSubmit
-            ? onSubmit
-            : async (state, component, actions) => {
-                  try {
-                      const paymentData = {
-                          amount: paymentAmount,
-                          countryCode,
-                          shopperLocale
-                      };
+        onSubmit: async (state, component, actions) => {
+            try {
+                const paymentData = {
+                    amount: paymentAmount,
+                    countryCode,
+                    shopperLocale
+                };
 
-                      const { action, order, resultCode, donationToken } = await makePayment(state.data, paymentData);
+                const { action, order, resultCode, donationToken } = await makePayment(state.data, paymentData);
 
-                      if (!resultCode) actions.reject();
+                if (!resultCode) actions.reject();
 
-                      actions.resolve({
-                          resultCode,
-                          action,
-                          order,
-                          donationToken
-                      });
-                  } catch (error) {
-                      console.error('## onSubmit - critical error', error);
-                      actions.reject();
-                  }
-              },
+                actions.resolve({
+                    resultCode,
+                    action,
+                    order,
+                    donationToken
+                });
+            } catch (error) {
+                console.error('## onSubmit - critical error', error);
+                actions.reject();
+            }
+        },
 
         onAdditionalDetails: async (state, component, actions) => {
             try {

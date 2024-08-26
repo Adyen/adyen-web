@@ -152,37 +152,35 @@ export const CardWith_3DS2_Redirect: CardStory = {
     render: createComponent,
     args: {
         componentConfiguration: {
-            _disableClickToPay: true
-        },
-        useSessions: false,
-        // @ts-ignore This is Checkout config, not CardConfiguration
-        onSubmit: async (state, component, actions) => {
-            try {
-                const paymentData = {
-                    amount: { currency: 'USD', value: 25900 },
-                    countryCode: 'US',
-                    shopperLocale: 'en-US',
-                    authenticationData: {
-                        attemptAuthentication: 'always'
-                    }
-                };
-                console.log('### Card.stories::onSubmit::paymentData ', paymentData);
+            _disableClickToPay: true,
+            onSubmit: async (state, component, actions) => {
+                try {
+                    const paymentData = {
+                        amount: { currency: 'USD', value: 25900 },
+                        countryCode: 'US',
+                        shopperLocale: 'en-US',
+                        authenticationData: {
+                            attemptAuthentication: 'always'
+                        }
+                    };
 
-                const { action, order, resultCode, donationToken } = await makePayment(state.data, paymentData);
+                    const { action, order, resultCode, donationToken } = await makePayment(state.data, paymentData);
 
-                if (!resultCode) actions.reject();
+                    if (!resultCode) actions.reject();
 
-                actions.resolve({
-                    resultCode,
-                    action,
-                    order,
-                    donationToken
-                });
-            } catch (error) {
-                console.error('## onSubmit - critical error', error);
-                actions.reject();
+                    actions.resolve({
+                        resultCode,
+                        action,
+                        order,
+                        donationToken
+                    });
+                } catch (error) {
+                    console.error('## onSubmit - critical error', error);
+                    actions.reject();
+                }
             }
-        }
+        },
+        useSessions: false
     }
 };
 

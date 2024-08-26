@@ -1,6 +1,5 @@
 import { Meta, StoryObj } from '@storybook/preact';
 import UIElement from '../../src/components/internal/UIElement';
-import { SubmitActions } from '../../src/core/types';
 
 type GlobalStoryProps = {
     useSessions: boolean;
@@ -23,6 +22,5 @@ export type AdyenCheckoutProps = {
     countryCode: string;
     shopperLocale: string;
     amount: number;
-    onSubmit?: (data: any, element?: UIElement, actions?: SubmitActions) => void;
     onPaymentCompleted?: (data: any, element?: UIElement) => void;
 };
