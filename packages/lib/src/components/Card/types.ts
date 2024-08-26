@@ -191,6 +191,12 @@ export interface CardConfiguration extends UIElementProps {
     hasHolderName?: boolean;
 
     /**
+     * holderName coming from a stored card in /paymentMethods response
+     * @internal
+     */
+    holderName?: string;
+
+    /**
      * Show/hide the Security Code field
      * - merchant set config option
      */

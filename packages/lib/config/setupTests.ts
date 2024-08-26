@@ -9,5 +9,6 @@ import './testMocks/core.mock';
 import './testMocks/analyticsMock';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import 'whatwg-fetch';
+import './testMocks/srPanelMock';
 
 configure({ adapter: new Adapter() });

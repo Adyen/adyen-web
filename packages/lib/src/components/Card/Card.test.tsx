@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { CardElement } from './Card';
-import { render, screen } from '@testing-library/preact';
+import { render, screen, waitFor } from '@testing-library/preact';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 
 describe('Card', () => {
@@ -154,6 +154,61 @@ describe('Card', () => {
                     enableStoreDetails: false
                 }).data.storePaymentMethod
             ).not.toBeDefined();
+        });
+    });
+
+    describe('formatData', () => {
+        const i18n = global.i18n;
+        const resources = global.resources;
+        const srPanel = global.srPanel;
+
+        const props = { loadingContext: 'test', i18n, modules: { resources, srPanel } };
+        const storedCardProps = { supportedShopperInteractions: ['Ecommerce'], storedPaymentMethodId: 'xxx' };
+
+        test('should echo back holderName if is a stored card', () => {
+            const card = new CardElement(global.core, { ...props, ...storedCardProps, holderName: 'Test Holder' });
+            render(card.render());
+
+            expect(card.formatData().paymentMethod.holderName).toContain('Test Holder');
+        });
+
+        test('should NOT echo back holderName from data if is a stored card', () => {
+            const card = new CardElement(global.core, { ...props, ...storedCardProps, data: { holderName: 'Test Holder' } });
+            render(card.render());
+
+            expect(card.formatData().paymentMethod.holderName).toContain('');
+        });
+
+        test('if no holderName specificed and is stored card, holder name should be empty string', () => {
+            const card = new CardElement(global.core, { ...props, ...storedCardProps });
+
+            expect(card.formatData().paymentMethod.holderName).toContain('');
+        });
+
+        test('if no holderName specificed and is not stored card, holder name should be empty string', () => {
+            const card = new CardElement(global.core, { ...props, ...storedCardProps });
+
+            expect(card.formatData().paymentMethod.holderName).toContain('');
+        });
+
+        test('should NOT echo back holderName if is not a stored card', () => {
+            const card = new CardElement(global.core, { ...props, holderName: 'Test Holder' });
+            render(card.render());
+            expect(card.formatData().paymentMethod.holderName).toContain('');
+        });
+
+        test('should set holderName if passed via data', async () => {
+            const card = new CardElement(global.core, { ...props, hasHolderName: true, data: { holderName: 'Test Holder' } });
+            render(card.render());
+            // we need to wait here for the screen to render / hook to trigger
+            await waitFor(() => expect(card.formatData().paymentMethod.holderName).toContain('Test Holder'));
+        });
+
+        test('should have empty holderName by default', async () => {
+            const card = new CardElement(global.core, { ...props });
+            render(card.render());
+            // we need to wait here for the screen to render / hook to trigger
+            await waitFor(() => expect(card.formatData().paymentMethod.holderName).toContain(''));
         });
     });
 
