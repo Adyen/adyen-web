@@ -1,14 +1,13 @@
 # This workflow will run tests using node and then publish a package when a release is created
 # For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
 
-name: Publish Package
+name: Build UMD and Translations
 
 on:
-  release:
-    types: [created]
+  workflow_dispatch:
 
 jobs:
-  publish-npm:
+  build-umd-and-translations:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,15 +20,19 @@ jobs:
 
       - run: yarn install --frozen-lockfile
 
-      # Copy README to adyen-web package
-      - run: cp README.md packages/lib/
-
-      # Copy LICENSE to adyen-web package
-      - run: cp LICENSE packages/lib/
-
-      # Build and publish to npm
-      - name: Build and release
-        run: cd packages/lib && npm publish --access public
+      # Build
+      - name: Build
+        run: cd packages/lib && npm run build
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
           CI: true
+
+      # Upload UMD and translations
+      - run: cp packages/server/translations/ packages/lib/dist/umd -r
+      - uses: actions/upload-artifact@v4
+        with:
+          name: umd-and-translations
+          path: packages/lib/dist/umd
+
+
+      
+
