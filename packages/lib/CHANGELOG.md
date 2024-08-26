@@ -1,5 +1,17 @@
 # @adyen/adyen-web
 
+## 5.68.0
+
+### Minor Changes
+
+-   Display ANCV ID while displaying used payment methods on Dropin ([#2809](https://github.com/Adyen/adyen-web/pull/2809))
+
+### Patch Changes
+
+-   Send certain analytic config data for the `Dropin`. Modify some analytic config data for the `Card`. ([#2796](https://github.com/Adyen/adyen-web/pull/2796))
+
+-   Fixes `props.holderName` not being used in stored cards as `paymetMethod.holderName`. ([#2800](https://github.com/Adyen/adyen-web/pull/2800))
+
 ## 5.67.1
 
 ### Patch Changes
