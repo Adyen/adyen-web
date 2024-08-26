@@ -4,7 +4,7 @@ import { Card } from '../../../../src';
 import getCurrency from '../../../utils/get-currency';
 import { makePayment } from '../../../helpers/checkout-api-calls';
 
-export const CardWithRedirect = ({ contextArgs }) => {
+export const CardWith3DS2Redirect = ({ contextArgs }) => {
     const container = useRef(null);
     const checkout = useRef(null);
     const [element, setElement] = useState(null);
