@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { CardElement } from './Card';
-import { render, screen } from '@testing-library/preact';
+import { render, screen, waitFor } from '@testing-library/preact';
 import CoreProvider from '../../core/Context/CoreProvider';
 import Language from '../../language';
 import { Resources } from '../../core/Context/Resources';
@@ -166,6 +166,20 @@ describe('Card', () => {
             render(card.render());
 
             expect(card.formatData().paymentMethod.holderName).toBeUndefined();
+        });
+
+        test('should set holderName if passed via data', async () => {
+            const card = new CardElement({ ...coreProps, hasHolderName: true, data: { holderName: 'Test Holder' } });
+            render(card.render());
+            // we need to wait here for the screen to render / hook to trigger
+            await waitFor(() => expect(card.formatData().paymentMethod.holderName).toContain('Test Holder'));
+        });
+
+        test('should have empty holderName by default', async () => {
+            const card = new CardElement({ ...coreProps });
+            render(card.render());
+            // we need to wait here for the screen to render / hook to trigger
+            await waitFor(() => expect(card.formatData().paymentMethod.holderName).toContain(''));
         });
     });
 
