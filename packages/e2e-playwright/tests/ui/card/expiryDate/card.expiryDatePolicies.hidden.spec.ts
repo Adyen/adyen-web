@@ -1,13 +1,18 @@
-/*
-import { test, expect } from '../../../pages/cards/card.fixture';
-import { SYNCHRONY_PLCC_NO_DATE, TEST_CVC_VALUE, ENCRYPTED_CARD_NUMBER, ENCRYPTED_EXPIRY_DATE, ENCRYPTED_SECURITY_CODE } from '../../utils/constants';
-import LANG from '../../../../server/translations/en-US.json';
+import { test, expect } from '../../../../pages/cards/card.fixture';
+import LANG from '../../../../../server/translations/en-US.json';
+import {
+    ENCRYPTED_CARD_NUMBER,
+    ENCRYPTED_EXPIRY_DATE,
+    ENCRYPTED_SECURITY_CODE,
+    SYNCHRONY_PLCC_NO_DATE,
+    TEST_CVC_VALUE
+} from '../../../utils/constants';
 
 const PAN_ERROR = LANG['cc.num.900'];
 const DATE_INVALID_ERROR = LANG['cc.dat.912'];
 const DATE_EMPTY_ERROR = LANG['cc.dat.910'];
 const CVC_ERROR = LANG['cc.cvc.920'];
-// todo: UI test
+
 test.describe('Test how Card Component handles hidden expiryDate policy', () => {
     test('#1 how UI & state respond', async ({ cardExpiryDatePoliciesPage }) => {
         const { card, page } = cardExpiryDatePoliciesPage;
@@ -123,4 +128,3 @@ test.describe('Test how Card Component handles hidden expiryDate policy', () => 
         await expect(cardValid).toEqual(false);
     });
 });
-*/

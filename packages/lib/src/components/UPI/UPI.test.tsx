@@ -106,7 +106,7 @@ describe('UPI', () => {
         test('should render the UPI component by default', async () => {
             const upi = new UPI(global.core, props);
             render(upi.render());
-            expect(await screen.findByRole('group')).toBeInTheDocument;
+            expect(await screen.findByRole('group')).toBeInTheDocument();
         });
     });
 });

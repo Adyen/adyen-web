@@ -1,7 +1,6 @@
-/*
-import { test, expect } from '../../../pages/cards/card.fixture';
-import { MAESTRO_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE } from '../../utils/constants';
-import LANG from '../../../../server/translations/en-US.json';
+import { test, expect } from '../../../../pages/cards/card.fixture';
+import { MAESTRO_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE } from '../../../utils/constants';
+import LANG from '../../../../../server/translations/en-US.json';
 
 const CVC_LABEL = LANG['creditCard.securityCode.label'];
 const CVC_LABEL_OPTIONAL = LANG['creditCard.securityCode.label.optional'];
@@ -42,7 +41,7 @@ test.describe('Testing branding - especially regarding optional and hidden cvc f
             await expect(card.cvcField).toHaveClass(/adyen-checkout__field__cvc--optional/);
 
             // Add digit so card is recognised as bcmc
-            await card.cardNumberInput.press('End'); /!** NOTE: how to add text at end *!/
+            await card.cardNumberInput.press('End'); /** NOTE: how to add text at end */
             await card.typeCardNumber('3');
 
             // bcmc card icon
@@ -147,7 +146,7 @@ test.describe('Testing branding - especially regarding optional and hidden cvc f
             await expect(cardValid).toEqual(false);
 
             // Complete cvc
-            await card.cvcInput.press('End'); /!** NOTE: how to add text at end *!/
+            await card.cvcInput.press('End'); /** NOTE: how to add text at end */
             await card.typeCvc('7');
 
             // Is valid
@@ -162,4 +161,3 @@ test.describe('Testing branding - especially regarding optional and hidden cvc f
         }
     );
 });
-*/

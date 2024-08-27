@@ -1,5 +1,5 @@
 import { RequestMock, RequestLogger } from 'testcafe';
-import { BASE_URL } from '../../pages';
+import { BASE_URL } from '@adyen/adyen-web-e2e/tests/pages';
 
 const path = require('path');
 require('dotenv').config({ path: path.resolve('../../', '.env') });

@@ -1,8 +1,7 @@
-/*
-import { test, expect } from '../../../pages/cards/card.fixture';
-import { pressKeyboardToNextItem } from '../../utils/keyboard';
-import { REGULAR_TEST_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE } from '../../utils/constants';
-// todo: move it to unit / ui test
+import { test, expect } from '../../../../pages/cards/card.fixture';
+import { pressKeyboardToNextItem } from '../../../utils/keyboard';
+import { REGULAR_TEST_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE } from '../../../utils/constants';
+
 test.describe('Cards (Installments)', () => {
     test('#1 should not add installments property to payload if one-time payment is selected (default selection)', async ({
         cardInstallmentsPage
@@ -112,4 +111,3 @@ test.describe('Cards (Installments)', () => {
         await expect(paymentDataInstallments.value).toEqual(2);
     });
 });
-*/
