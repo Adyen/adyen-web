@@ -47,7 +47,12 @@ class Button extends Component<ButtonProps, ButtonState> {
         const buttonClasses = classNames(['adyen-checkout__button', ...modifiers.map(m => `adyen-checkout__button--${m}`)]);
 
         const buttonStates = {
-            loading: <Spinner size="medium" />,
+            loading: (
+                <span className="adyen-checkout__button__content">
+                    <Spinner size="medium" inline />
+                    {i18n.get('loading')}
+                </span>
+            ),
             redirect: (
                 <span className="adyen-checkout__button__content">
                     <Spinner size="medium" inline />
@@ -73,7 +78,7 @@ class Button extends Component<ButtonProps, ButtonState> {
         }
 
         return (
-            <button className={buttonClasses} type="button" disabled={disabled} onClick={this.onClick}>
+            <button className={buttonClasses} type="button" aria-disabled={disabled} onClick={this.onClick}>
                 {buttonText}
                 {status !== 'loading' && status !== 'redirect' && this.props.children}
             </button>
