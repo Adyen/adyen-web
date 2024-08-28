@@ -30,4 +30,4 @@ jobs:
   trigger-release-build:
     needs: check-commit-message
     if: needs.check-commit-message.outputs.trigger_release == 'true'
-    uses: ./release-build-test.yml
+    uses: ./.github/workflows/release-build-test.yml
