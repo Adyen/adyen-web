@@ -9,7 +9,7 @@ import { styles, setFocus, onBrand, onConfigSuccess, onBinLookup, onChange, setC
 type customCardStory = StoryConfiguration<CustomCardConfiguration>;
 
 const meta: MetaConfiguration<CustomCardConfiguration> = {
-    title: 'Cards/Custom Card'
+    title: 'Cards/Custom Card (with native 3DS2)'
 };
 
 const createComponent = (args: PaymentMethodStoryProps<CustomCardConfiguration>, context) => {
