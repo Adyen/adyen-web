@@ -1,0 +1,32 @@
+name: Check Commit Message
+
+on:
+  push:
+    branches:
+      - trigger-release-build-automatically
+
+jobs:
+  check-commit-message:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Get commit message
+        id: get_commit_message
+        run: echo "::set-output name=message::$(git log -1 --pretty=%B)"
+
+      - name: Check commit message
+        run: |
+          if [[ "${{ steps.get_commit_message.outputs.message }}" == *"[ci] release main"* ]]; then
+            echo "Commit message contains '[ci] release main', triggering release build..."
+            echo "::set-output name=trigger_release::true"
+          else
+            echo "Error: Commit message must contain '[ci] release main'"
+            exit 1
+        id: check_commit_message
+
+  trigger-release-build:
+    needs: check-commit-message
+    if: needs.check-commit-message.outputs.trigger_release == 'true'
+    uses: ./release-build-test.yml

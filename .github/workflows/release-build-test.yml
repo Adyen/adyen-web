@@ -1,0 +1,19 @@
+name: Release Build Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Add your build steps here
+      - name: Build
+        run: echo "Building the project..."
+
+      - name: Release
+        run: echo "Releasing the project..."
