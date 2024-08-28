@@ -9,8 +9,8 @@ export const RedirectResultContainer = ({ redirectResult, sessionId, countryCode
     let message = isRedirecting ? 'Submitting details...' : '';
 
     useEffect(() => {
-        if (!redirectResult && !sessionId) {
-            message = 'There is no redirectResult / sessionId provided';
+        if (!redirectResult) {
+            message = 'There is no redirectResult provided';
             return;
         }
 
@@ -34,6 +34,10 @@ export const RedirectResultContainer = ({ redirectResult, sessionId, countryCode
                 }
             }),
             onPaymentCompleted: (result, component) => {
+                setIsRedirecting(false);
+                handleFinalState(result, component);
+            },
+            onPaymentFailed: (result, component) => {
                 setIsRedirecting(false);
                 handleFinalState(result, component);
             },

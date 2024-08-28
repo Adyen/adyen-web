@@ -1,9 +1,9 @@
 import { RETURN_URL } from './commonConfig';
 
 const identifier = new Date().getMilliseconds();
-const protocol = process.env.IS_HTTPS === 'true' ? 'https' : 'http';
+const protocol = window.location.protocol; // gives 'http:' or 'https:' i.e. adds the colon
 
-const { origin = `${protocol}://localhost:3020` } = window.location;
+const { origin = `${protocol}//localhost:3020` } = window.location;
 
 const paymentsConfig = {
     origin,

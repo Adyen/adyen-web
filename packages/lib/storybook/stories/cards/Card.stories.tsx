@@ -4,6 +4,7 @@ import { CardConfiguration } from '../../../src/components/Card/types';
 import { Card } from '../../../src';
 import { Container } from '../Container';
 import { searchFunctionExample } from '../../../../playground/src/utils';
+import { CardWith3DS2Redirect } from './cardStoryHelpers/CardWith3DS2Redirect';
 
 type CardStory = StoryConfiguration<CardConfiguration>;
 
@@ -144,6 +145,18 @@ export const WithClickToPay: CardStory = {
                 merchantDisplayName: 'Adyen Merchant Name'
             }
         }
+    }
+};
+
+export const CardWith_3DS2_Redirect: CardStory = {
+    render: args => {
+        return <CardWith3DS2Redirect contextArgs={args} />;
+    },
+    args: {
+        componentConfiguration: {
+            _disableClickToPay: true
+        },
+        useSessions: false
     }
 };
 
