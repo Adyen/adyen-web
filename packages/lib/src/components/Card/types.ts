@@ -191,6 +191,12 @@ export interface CardConfiguration extends UIElementProps {
     hasHolderName?: boolean;
 
     /**
+     * holderName coming from a stored card in /paymentMethods response
+     * @internal
+     */
+    holderName?: string;
+
+    /**
      * Show/hide the Security Code field
      * - merchant set config option
      */
@@ -249,7 +255,7 @@ export interface CardConfiguration extends UIElementProps {
      *
      * - merchant set config option
      */
-    minimumExpiryDate?: string[];
+    minimumExpiryDate?: string;
 
     /**
      * When in Dropin this is the name shown in the paymentMethods list

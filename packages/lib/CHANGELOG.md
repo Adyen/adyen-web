@@ -1,5 +1,19 @@
 # @adyen/adyen-web
 
+## 6.1.0
+
+### Minor Changes
+
+-   Display ANCV ID while displaying used payment methods on Dropin ([#2808](https://github.com/Adyen/adyen-web/pull/2808))
+
+### Patch Changes
+
+-   Adding missing currency information for Iceland and Bulgaria ([#2811](https://github.com/Adyen/adyen-web/pull/2811))
+
+-   Send certain analytic config data for the `Dropin`. Modify some analytic config data for the `Card`. ([#2794](https://github.com/Adyen/adyen-web/pull/2794))
+
+-   Fixes `props.holderName` not being used in stored cards as `paymetMethod.holderName`. ([#2813](https://github.com/Adyen/adyen-web/pull/2813))
+
 ## 6.0.3
 
 ### Patch Changes

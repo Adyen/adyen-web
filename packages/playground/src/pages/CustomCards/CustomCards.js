@@ -125,7 +125,8 @@ const initCheckout = async () => {
             onFieldValid: onFieldValid_si,
             onBrand: onBrand_si,
             onError: onError_si,
-            onFocus: onFocus_si
+            onFocus: onFocus_si,
+            placeholders: { cardNumber: 'add card number', expiryDate: 'mm/yy', securityCodeThreeDigits: '123', securityCodeFourDigits: '1234' }
         }).mount('.secured-fields-si');
 
     window.fancyCustomCard =

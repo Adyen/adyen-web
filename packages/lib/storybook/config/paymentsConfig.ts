@@ -1,9 +1,9 @@
 import { RETURN_URL } from './commonConfig';
 
 const identifier = new Date().getMilliseconds();
-const protocol = process.env.IS_HTTPS === 'true' ? 'https' : 'http';
+const protocol = window.location.protocol; // gives 'http:' or 'https:' i.e. adds the colon
 
-const { origin = `${protocol}://localhost:3020` } = window.location;
+const { origin = `${protocol}//localhost:3020` } = window.location;
 
 const paymentsConfig = {
     origin,
@@ -12,7 +12,21 @@ const paymentsConfig = {
     additionalData: {
         // Force response code. See https://docs.adyen.com/development-resources/test-cards/result-code-testing/adyen-response-codes
         // RequestedTestAcquirerResponseCode: 2,
-        allow3DS2: true
+        // allow3DS2: true,
+        /**
+         * To force threeds2InMDFlow:
+         *  comment out "allow3DS2" & comment in the following 2 lines:
+         */
+        // threeDS2InMDFlow: true,
+        // executeThreeD: true
+    },
+    // Ready for v69+ - lose any additionalData 3DS2 related lines e.g. allow3DS2: true
+    authenticationData: {
+        attemptAuthentication: 'always',
+        // To force MDFlow: comment out below, and just keep line above
+        threeDSRequestData: {
+            nativeThreeDS: 'preferred'
+        }
     },
     // Ready for v69+ - lose any additionalData 3DS2 related lines e.g. allow3DS2: true
     authenticationData: {

@@ -1,6 +1,7 @@
 const currencies: Record<string, string> = {
     AR: 'ARS',
     AU: 'AUD',
+    BG: 'BGN',
     BR: 'BRL',
     CA: 'CAD',
     CH: 'CHF',
@@ -13,6 +14,7 @@ const currencies: Record<string, string> = {
     HU: 'HUN',
     ID: 'IDR',
     IN: 'INR',
+    IS: 'ISK',
     JP: 'JPY',
     KR: 'KRW',
     MG: 'MGA',
