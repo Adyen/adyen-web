@@ -69,23 +69,23 @@ export function onConfigSuccess(pCallbackObj) {
         globalThis.customCard.setFocusOn('encryptedCardNumber');
     }, 100);
 
-    //    window.customCard.updateStyles({
-    //        base: {
-    //            color: '#000',
-    ////            fontSize: '18px',
-    ////            lineHeight: '18px'
-    //        },
-    //        error: {
-    //            color: 'orange'
-    //        },
-    //        validated: {
-    //            color: 'blue',
-    //            fontWeight: 'bold'
-    //        },
-    //        placeholder: {
-    //            color: 'green'
-    //        }
-    //    });
+    // globalThis.customCard.updateStyles({
+    //     base: {
+    //         color: '#000'
+    //         //            fontSize: '18px',
+    //         //            lineHeight: '18px'
+    //     },
+    //     error: {
+    //         color: 'orange'
+    //     },
+    //     validated: {
+    //         color: 'blue',
+    //         fontWeight: 'bold'
+    //     },
+    //     placeholder: {
+    //         color: 'green'
+    //     }
+    // });
 }
 
 export function setCCErrors(pCallbackObj) {
@@ -194,7 +194,7 @@ export function onBrand(pCallbackObj) {
 }
 
 function dualBrandListener(e) {
-    window.customCard.dualBrandingChangeHandler(e);
+    globalThis.customCard.dualBrandingChangeHandler(e);
 }
 
 function resetDualBranding(rootNode) {

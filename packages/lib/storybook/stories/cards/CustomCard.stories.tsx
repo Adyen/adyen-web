@@ -1,10 +1,8 @@
-import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
-import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
+import { MetaConfiguration, StoryConfiguration } from '../types';
 import { CustomCardConfiguration } from '../../../src/components/CustomCard/types';
-import { CustomCard } from '../../../src';
-import { CustomCardContainer } from '../CustomCardContainer';
 import './customCardHelpers/customCard.style.scss';
 import { styles, setFocus, onBrand, onConfigSuccess, onBinLookup, onChange, setCCErrors } from './customCardHelpers/customCard.config';
+import { CustomCardHelper } from './customCardHelpers/CustomCardHelper';
 
 type customCardStory = StoryConfiguration<CustomCardConfiguration>;
 
@@ -12,19 +10,10 @@ const meta: MetaConfiguration<CustomCardConfiguration> = {
     title: 'Cards/Custom Card'
 };
 
-const createComponent = (args: PaymentMethodStoryProps<CustomCardConfiguration>, context) => {
-    const { componentConfiguration } = args;
-    const checkout = getStoryContextCheckout(context);
-    const customCard = new CustomCard(checkout, componentConfiguration);
-
-    globalThis.customCard = customCard;
-    globalThis.parent.window['customCard'] = customCard; // expose to top level window, so a user can access window.customCard
-
-    return <CustomCardContainer element={customCard} contextArgs={args} />;
-};
-
 export const Default: customCardStory = {
-    render: createComponent,
+    render: args => {
+        return <CustomCardHelper contextArgs={args} />;
+    },
     args: {
         componentConfiguration: {
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire', 'synchrony_plcc'],
