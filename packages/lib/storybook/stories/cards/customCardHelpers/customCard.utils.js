@@ -21,7 +21,14 @@ export const createPayButton = (parent, component, attribute) => {
 
     payBtn.addEventListener('click', e => {
         e.preventDefault();
-        startPayment(component);
+
+        if (!contextArgs.useSessions) {
+            // If not using sessions, explicitly make a payment that will have the data necessary to force a native flow
+            startPayment(component);
+        } else {
+            // If using sessions, you can just use the regular submit flow, although, currently, this will always redirect
+            window.customCard.submit();
+        }
     });
 
     document.querySelector(parent).appendChild(payBtn);
@@ -36,9 +43,10 @@ const startPayment = component => {
 
     makePayment(component.data, {
         amount: { value: contextArgs.amount, currency: getCurrency(contextArgs.countryCode) },
+        // Force a native flow, if possible
         authenticationData: {
             attemptAuthentication: allow3DS2,
-            // comment out below if you want to force MDFlow
+            // Comment out below if you want to force the redirect/MDFlow
             threeDSRequestData: {
                 nativeThreeDS: 'preferred'
             }
