@@ -1,10 +1,10 @@
-import { MetaConfiguration, StoryConfiguration } from '../types';
+import { CustomCardStoryConfiguration, MetaConfiguration } from '../types';
 import { CustomCardConfiguration } from '../../../src/components/CustomCard/types';
 import './customCardHelpers/customCard.style.scss';
 import { styles, setFocus, onBrand, onConfigSuccess, onBinLookup, onChange, setCCErrors } from './customCardHelpers/customCard.config';
 import { CustomCardHelper } from './customCardHelpers/CustomCardHelper';
 
-type customCardStory = StoryConfiguration<CustomCardConfiguration>;
+type customCardStory = CustomCardStoryConfiguration<CustomCardConfiguration>;
 
 const meta: MetaConfiguration<CustomCardConfiguration> = {
     title: 'Cards/Custom Card'
@@ -33,7 +33,6 @@ export const Default: customCardStory = {
             }
         },
         useSessions: false,
-        // @ts-ignore allow prop specific to CustomCard story
         force3DS2Redirect: false
     }
 };
