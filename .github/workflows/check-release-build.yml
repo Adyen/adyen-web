@@ -1,33 +1,36 @@
-## test
+## If the latest commit message contains '[ci] release main', trigger release-build.yml
 name: Check Commit Message
 
 on:
   push:
     branches:
-      - trigger-release-build-automatically
+      - main
 
 jobs:
   check-commit-message:
     runs-on: ubuntu-latest
+    outputs:
+      trigger_release: ${{ steps.check_commit_message.outputs.trigger_release }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Get commit message
         id: get_commit_message
-        run: echo "::set-output name=message::$(git log -1 --pretty=%B)"
+        run: echo "message=$(git log -1 --pretty=%B)" >> $GITHUB_OUTPUT
 
       - name: Check commit message
+        id: check_commit_message
         run: |
           if [[ "${{ steps.get_commit_message.outputs.message }}" == *"[ci] release main"* ]]; then
             echo "Commit message contains '[ci] release main', triggering release build..."
-            echo "::set-output name=trigger_release::true"
+            echo "trigger_release=true" >> $GITHUB_OUTPUT
           else
-            echo "Error: Commit message must contain '[ci] release main'"
+            echo "Commit message does not contain '[ci] release main', skipping release build..."
             exit 1
-        id: check_commit_message
+          fi
 
   trigger-release-build:
     needs: check-commit-message
     if: needs.check-commit-message.outputs.trigger_release == 'true'
-    uses: ./.github/workflows/release-build-test.yml
+    uses: ./.github/workflows/release-build.yml
