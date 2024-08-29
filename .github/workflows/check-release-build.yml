@@ -17,7 +17,7 @@ jobs:
 
       - name: Get commit message
         id: get_commit_message
-        run: echo "message=$(git log -1 --pretty=%B)" >> $GITHUB_OUTPUT
+        run: echo "message=$(git log -1 --format=%s)" >> $GITHUB_OUTPUT
 
       - name: Check commit message
         id: check_commit_message
