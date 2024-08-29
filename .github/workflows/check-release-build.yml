@@ -4,20 +4,18 @@ name: Check Commit Message
 on:
   push:
     branches:
-      - main
+      - test-trigger-release-build-automatically
 
 jobs:
   check-commit-message:
     runs-on: ubuntu-latest
-    outputs:
-      trigger_release: ${{ steps.check_commit_message.outputs.trigger_release }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Get commit message
         id: get_commit_message
-        run: echo "message=$(git log -1 --pretty=%B)" >> $GITHUB_OUTPUT
+        run: echo "message=$(git log -1 --format=%s)" >> $GITHUB_OUTPUT
 
       - name: Check commit message
         id: check_commit_message
@@ -27,10 +25,5 @@ jobs:
             echo "trigger_release=true" >> $GITHUB_OUTPUT
           else
             echo "Commit message does not contain '[ci] release main', skipping release build..."
-            exit 1
+            exit 0
           fi
-
-  trigger-release-build:
-    needs: check-commit-message
-    if: needs.check-commit-message.outputs.trigger_release == 'true'
-    uses: ./.github/workflows/release-build.yml
