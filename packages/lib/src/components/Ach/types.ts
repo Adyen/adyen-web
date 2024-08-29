@@ -7,7 +7,7 @@ export interface AchConfiguration extends UIElementProps {
     holderNameRequired?: boolean;
     hasHolderName?: boolean;
     enableStoreDetails: boolean;
-    bankAccountNumber?: string; // Applies when a storedComp
+    bankAccountNumber?: string; // Applies when a storedPM
     placeholders?: Placeholders;
     /**
      * Object that contains placeholder information that you can use to prefill fields.
