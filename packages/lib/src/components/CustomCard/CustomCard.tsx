@@ -47,7 +47,8 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
                 ...this.state.data,
                 ...(sfBrand && { brand: sfBrand })
             },
-            browserInfo: this.browserInfo
+            browserInfo: this.browserInfo,
+            origin: !!window && window.location.origin
         };
     }
 
