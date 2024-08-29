@@ -32,7 +32,8 @@ export const Default: customCardStory = {
                 errors.forEach(setCCErrors);
             }
         },
-        useSessions: false
+        useSessions: false,
+        force3DS2Redirect: false
     }
 };
 

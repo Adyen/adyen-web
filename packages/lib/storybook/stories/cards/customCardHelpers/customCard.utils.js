@@ -22,12 +22,14 @@ export const createPayButton = (parent, component, attribute) => {
     payBtn.addEventListener('click', e => {
         e.preventDefault();
 
-        if (!contextArgs.useSessions) {
-            // If not using sessions, explicitly make a payment that will have the data necessary to force a native flow
-            startPayment(component);
+        if (!component.isValid) return component.showValidation();
+
+        clearSFMarkup();
+
+        if (contextArgs.force3DS2Redirect && !contextArgs.useSessions) {
+            startPayment(component); // If we're not using sessions AND we want to force a 3DS2 redirect
         } else {
-            // If using sessions, you can just use the regular submit flow, although, currently, this will always redirect
-            window.customCard.submit();
+            window.customCard.submit(); // for all other cases use the regular submit flow
         }
     });
 
@@ -37,8 +39,6 @@ export const createPayButton = (parent, component, attribute) => {
 };
 
 const startPayment = component => {
-    if (!component.isValid) return component.showValidation();
-
     const allow3DS2 = paymentsConfig.authenticationData.attemptAuthentication || 'never';
 
     makePayment(component.data, {
@@ -50,7 +50,8 @@ const startPayment = component => {
             threeDSRequestData: {
                 nativeThreeDS: 'preferred'
             }
-        }
+        },
+        origin: null // overwrite origin to force 3DS2 redirect
     })
         .then(result => {
             handlePaymentResult(result, component);
@@ -64,10 +65,8 @@ const handlePaymentResult = (result, component) => {
     console.log('Result: ', result);
 
     if (result.action) {
-        threeDS2(result, component);
+        component.handleAction(result.action);
     } else {
-        clearSFMarkup();
-
         switch (result.resultCode) {
             case 'Authorised':
             case 'Refused':
@@ -76,12 +75,6 @@ const handlePaymentResult = (result, component) => {
             default:
         }
     }
-};
-
-const threeDS2 = (result, component) => {
-    clearSFMarkup();
-
-    component.handleAction(result.action);
 };
 
 const clearSFMarkup = () => {
