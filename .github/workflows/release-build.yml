@@ -5,6 +5,7 @@ name: Build UMD and Translations
 
 on:
   workflow_dispatch:
+  workflow_call:
 
 jobs:
   build-umd-and-translations:
@@ -32,7 +33,3 @@ jobs:
         with:
           name: umd-and-translations
           path: packages/lib/dist/umd
-
-
-      
-
