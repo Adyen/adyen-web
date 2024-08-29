@@ -33,6 +33,7 @@ export const Default: customCardStory = {
             }
         },
         useSessions: false,
+        // @ts-ignore allow prop specific to CustomCard story
         force3DS2Redirect: false
     }
 };
