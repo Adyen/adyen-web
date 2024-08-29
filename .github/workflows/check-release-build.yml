@@ -27,7 +27,7 @@ jobs:
             echo "trigger_release=true" >> $GITHUB_OUTPUT
           else
             echo "Commit message does not contain '[ci] release main', skipping release build..."
-            exit 1
+            exit 0
           fi
 
   trigger-release-build:
