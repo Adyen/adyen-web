@@ -75,7 +75,7 @@ export async function handleResponse(response, component, checkout?, paymentData
 }
 
 export function handleChange(state: any, _component: UIElement) {
-    console.groupCollapsed(`onChange - ${state.data.paymentMethod.type}`);
+    console.groupCollapsed(`onChange - ${state.data.paymentMethod?.type}`);
     console.log('isValid', state.isValid);
     console.log('data', state.data);
     // @ts-ignore Logging internal prop
