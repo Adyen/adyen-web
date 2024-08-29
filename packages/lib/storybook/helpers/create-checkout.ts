@@ -1,19 +1,12 @@
 import { createSessionsCheckout } from './create-sessions-checkout';
 import { createAdvancedFlowCheckout } from './create-advanced-checkout';
-import { reject } from '../../src/utils/commonUtils';
+import { GlobalStoryProps } from '../stories/types';
+import Core from '../../src/core';
 
-async function createCheckout(context: any): Promise<any> {
-    const { useSessions, showPayButton, countryCode, shopperLocale, amount, ...rest } = context.args;
+async function createCheckout(checkoutConfig: GlobalStoryProps): Promise<Core> {
+    const { useSessions, ...rest } = checkoutConfig;
 
-    return useSessions
-        ? await createSessionsCheckout({ showPayButton, countryCode, shopperLocale, amount })
-        : await createAdvancedFlowCheckout({
-              showPayButton,
-              countryCode,
-              shopperLocale,
-              amount,
-              ...reject(['componentConfiguration']).from(rest) // pass the "rest" of the specified config (excluding componentConfiguration, which is passed directly to the component)
-          });
+    return useSessions ? await createSessionsCheckout(rest) : await createAdvancedFlowCheckout(rest);
 }
 
 export { createCheckout };

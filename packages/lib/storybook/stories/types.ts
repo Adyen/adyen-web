@@ -1,12 +1,8 @@
 import { Meta, StoryObj } from '@storybook/preact';
 import UIElement from '../../src/components/internal/UIElement';
 
-type GlobalStoryProps = {
+export type GlobalStoryProps = AdyenCheckoutProps & {
     useSessions: boolean;
-    countryCode: string;
-    shopperLocale: string;
-    amount: number;
-    showPayButton: boolean;
 };
 
 export interface PaymentMethodStoryProps<T> extends GlobalStoryProps {

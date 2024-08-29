@@ -1,24 +1,23 @@
-import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
-import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
+import { MetaConfiguration, StoryConfiguration } from '../types';
 import { DonationConfiguration } from '../../../src/components/Donation/types';
-import Donation from '../../../src/components/Donation';
 import { Container } from '../Container';
-import { DonationCardIntegrationExample } from './DonationCardIntegrationExample';
-import { getSearchParameter } from '../../utils/get-query-parameters';
+import Donation from '../../../src/components/Donation';
 
-const componentConfiguration = {
+const componentConfiguration: DonationConfiguration = {
     onDonate: (_, component) => setTimeout(() => component.setStatus('success'), 1000),
     onCancel: () => alert('Donation canceled'),
     nonprofitName: 'Test Charity',
     nonprofitUrl: 'https://example.org',
     nonprofitDescription: 'Lorem ipsum...',
-    amounts: {
+    donation: {
+        type: 'fixedAmounts',
         currency: 'EUR',
         values: [50, 199, 300]
     },
     termsAndConditionsUrl: 'https://www.adyen.com',
     bannerUrl: '/banner.png',
-    logoUrl: '/logo.png'
+    logoUrl: '/logo.png',
+    commercialTxAmount: 1000
 };
 
 type DonationStory = StoryConfiguration<DonationConfiguration>;
@@ -27,24 +26,21 @@ const meta: MetaConfiguration<DonationConfiguration> = {
     title: 'Components/Donation'
 };
 
-const createComponent = (args: PaymentMethodStoryProps<DonationConfiguration>, context) => {
-    const { componentConfiguration } = args;
-    const checkout = getStoryContextCheckout(context);
-    return <Container element={new Donation(checkout, componentConfiguration)} />;
-};
-
 export const Default: DonationStory = {
-    render: createComponent,
+    render: ({ componentConfiguration, ...checkoutConfig }) => (
+        // @ts-ignore fix later
+        <Container Element={Donation} checkoutConfig={checkoutConfig} componentConfig={componentConfiguration} />
+    ),
     args: {
         componentConfiguration
     }
 };
 
-export const IntegrateWithCard = {
+/*export const IntegrateWithCard = {
     render: args => <DonationCardIntegrationExample contextArgs={args} />,
     args: {
         redirectResult: getSearchParameter('redirectResult')
     }
-};
+};*/
 
 export default meta;

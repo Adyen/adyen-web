@@ -1,16 +1,7 @@
 import paymentMethodsConfig from '../config/paymentMethodsConfig';
 import paymentsConfig from '../config/paymentsConfig';
 import { httpPost } from '../utils/http-post';
-import type {
-    Order,
-    OrderStatus,
-    PaymentAction,
-    PaymentAmount,
-    PaymentMethodsResponse,
-    RawPaymentResponse,
-    AdditionalDetailsStateData,
-    ResultCode
-} from '../../src/types';
+import type { Order, OrderStatus, PaymentAction, PaymentAmount, PaymentMethodsResponse, RawPaymentResponse, ResultCode } from '../../src/types';
 import type { CheckoutSessionSetupResponse } from '../../src/core/CheckoutSession/types';
 import { DonationAmount, DonationComponentProps } from '../../src/components/Donation/components/types';
 
@@ -42,7 +33,7 @@ export const makePayment = async (stateData: any, paymentData: any): Promise<Raw
 };
 
 export const makeDetailsCall = async (
-    detailsData: AdditionalDetailsStateData['data']
+    detailsData: any
 ): Promise<{
     resultCode: ResultCode;
     action?: PaymentAction;

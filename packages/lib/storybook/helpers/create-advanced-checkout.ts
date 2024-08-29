@@ -1,4 +1,4 @@
-import { AdyenCheckout } from '../../src';
+import { AdyenCheckout } from '../../src/core/AdyenCheckout';
 import { cancelOrder, checkBalance, createOrder, getPaymentMethods, makeDetailsCall, makePayment } from './checkout-api-calls';
 import { handleChange, handleError, handleFinalState } from './checkout-handlers';
 import getCurrency from '../utils/get-currency';
