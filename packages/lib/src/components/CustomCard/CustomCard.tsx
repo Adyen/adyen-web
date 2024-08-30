@@ -6,10 +6,9 @@ import collectBrowserInfo from '../../utils/browserInfo';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
 import { CbObjOnBinLookup, CbObjOnFocus } from '../internal/SecuredFields/lib/types';
 import { BrandObject } from '../Card/types';
-import { getCardImageUrl } from '../internal/SecuredFields/utils';
+import { getCardImageUrl, fieldTypeToSnakeCase } from '../internal/SecuredFields/utils';
 import { TxVariants } from '../tx-variants';
 import { CustomCardConfiguration } from './types';
-import { fieldTypeToSnakeCase } from '../internal/SecuredFields/utils';
 import { ANALYTICS_FOCUS_STR, ANALYTICS_UNFOCUS_STR } from '../../core/Analytics/constants';
 import { SendAnalyticsObject } from '../../core/Analytics/types';
 
