@@ -20,6 +20,42 @@ const createComponent = (args: PaymentMethodStoryProps<CardConfiguration>, conte
     return <Container element={card} />;
 };
 
+const createStoredCardComponent = (args: PaymentMethodStoryProps<CardConfiguration>, context) => {
+    const { componentConfiguration } = args;
+    const checkout = getStoryContextCheckout(context);
+
+    if (checkout.paymentMethodsResponse.storedPaymentMethods && checkout.paymentMethodsResponse.storedPaymentMethods.length > 0) {
+        // We are only interested in card based storedPaymentMethods that support Ecommerce  - a quick way to distinguish these is if they have a brand property
+        let storedCardData;
+        let storedPM;
+        for (let i = 0; i < checkout.paymentMethodsResponse.storedPaymentMethods.length; i++) {
+            storedPM = checkout.paymentMethodsResponse.storedPaymentMethods[i];
+            if (storedPM.brand && storedPM.supportedShopperInteractions.includes('Ecommerce')) {
+                storedCardData = checkout.paymentMethodsResponse.storedPaymentMethods[i];
+                break; // exit, now we've found the first storedCard
+            }
+        }
+
+        if (storedCardData) {
+            const card = new Card(checkout, { ...storedCardData, ...componentConfiguration });
+
+            return (
+                <div>
+                    <div>
+                        <img src={card.icon} alt={'stored-card-brand-icon'} />
+                        <p>{storedPM.lastFour}</p>
+                    </div>
+                    <Container element={card} />
+                </div>
+            );
+        } else {
+            return <div>No stored cards found</div>;
+        }
+    } else {
+        return <div>No stored payment methods found</div>;
+    }
+};
+
 export const Default: CardStory = {
     render: createComponent,
     args: {
@@ -157,6 +193,16 @@ export const CardWith_3DS2_Redirect: CardStory = {
             _disableClickToPay: true
         },
         useSessions: false
+    }
+};
+
+export const StoredCard: CardStory = {
+    render: createStoredCardComponent,
+    args: {
+        componentConfiguration: {
+            _disableClickToPay: true,
+            hideCVC: false
+        }
     }
 };
 
