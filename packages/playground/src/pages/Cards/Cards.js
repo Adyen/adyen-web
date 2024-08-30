@@ -55,12 +55,12 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
     // Stored Card
     if (!onlyShowCard && showComps.storedCard) {
         if (checkout.paymentMethodsResponse.storedPaymentMethods && checkout.paymentMethodsResponse.storedPaymentMethods.length > 0) {
-            // We are only interested in card based storedPaymentMethods
+            // We are only interested in card based storedPaymentMethods that support Ecommerce - a quick way to distinguish these is if they have a brand property
             let storedCardData;
             for (let i = 0; i < checkout.paymentMethodsResponse.storedPaymentMethods.length; i++) {
                 if (checkout.paymentMethodsResponse.storedPaymentMethods[i].brand) {
                     storedCardData = checkout.paymentMethodsResponse.storedPaymentMethods[i];
-                    break;
+                    break; // exit, now we've found the first storedCard
                 }
             }
 
