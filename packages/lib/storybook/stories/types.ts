@@ -13,7 +13,13 @@ export interface PaymentMethodStoryProps<T> extends GlobalStoryProps {
     componentConfiguration: T;
 }
 
+export interface CardPaymentMethodStoryProps<Q> extends PaymentMethodStoryProps<Q> {
+    force3DS2Redirect: boolean;
+}
+
 export type StoryConfiguration<T> = StoryObj<PaymentMethodStoryProps<T>>;
+
+export type CustomCardStoryConfiguration<Q> = StoryObj<CardPaymentMethodStoryProps<Q>>;
 
 export type MetaConfiguration<T> = Meta<PaymentMethodStoryProps<T>>;
 
