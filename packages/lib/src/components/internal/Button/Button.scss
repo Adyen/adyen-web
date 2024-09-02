@@ -211,6 +211,10 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+
+        &--sr-only {
+            @include a11y-visually-hidden;
+        }
     }
 
     .adyen-checkout__spinner {

@@ -50,7 +50,7 @@ class Button extends Component<ButtonProps, ButtonState> {
             loading: (
                 <span className="adyen-checkout__button__content">
                     <Spinner size="medium" inline />
-                    {i18n.get('loading')}
+                    <span className={'adyen-checkout__button__text--sr-only'}>{i18n.get('loading')}</span>
                 </span>
             ),
             redirect: (
