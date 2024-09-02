@@ -1,5 +1,13 @@
 # @adyen/adyen-web
 
+## 5.68.1
+
+### Patch Changes
+
+-   Fixes Lithuanian postal code to support 4-5 digits and LT prefix ([#2827](https://github.com/Adyen/adyen-web/pull/2827))
+
+-   Improves acessibility removing region on payment method item and button loading state ([#2827](https://github.com/Adyen/adyen-web/pull/2827))
+
 ## 5.68.0
 
 ### Minor Changes
