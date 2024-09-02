@@ -9,7 +9,7 @@ const createPatternByDigits = (digits: number) => {
     };
 };
 
-const validatePostalCode = (val: string, countryCode: string, validatorRules: ValidatorRules) => {
+export const validatePostalCode = (val: string, countryCode: string, validatorRules: ValidatorRules) => {
     if (countryCode) {
         // Dynamically create errorMessage
         (validatorRules.postalCode as ValidatorRule).errorMessage = {
@@ -55,7 +55,7 @@ const postalCodePatterns = {
     IS: createPatternByDigits(3),
     IT: createPatternByDigits(5),
     LI: createPatternByDigits(4),
-    LT: { pattern: /^(LT-\d{5})$/ },
+    LT: { pattern: /^(LT-\d{5}|\d{4,5})$/ },
     LU: createPatternByDigits(4),
     LV: { pattern: /^(LV-)[0-9]{4}$/ },
     MC: { pattern: /^980\d{2}$/ },
