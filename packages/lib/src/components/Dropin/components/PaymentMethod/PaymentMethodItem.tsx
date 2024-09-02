@@ -151,11 +151,7 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
                     )}
                 </div>
 
-                <div
-                    className={`adyen-checkout__payment-method__details ${styles['adyen-checkout__payment-method__details']}`}
-                    id={containerId}
-                    role="region"
-                >
+                <div className={`adyen-checkout__payment-method__details ${styles['adyen-checkout__payment-method__details']}`} id={containerId}>
                     {showRemovePaymentMethodButton && (
                         <DisableOneClickConfirmation
                             id={disableConfirmationId}
