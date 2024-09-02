@@ -1,3 +1,4 @@
+@use 'styles/index';
 @import 'styles/variable-generator';
 
 .adyen-checkout-sr-panel {
@@ -6,5 +7,5 @@
 }
 
 .adyen-checkout-sr-panel--sr-only {
-    @include a11y-visually-hidden;
+    @include index.a11y-visually-hidden;
 }
