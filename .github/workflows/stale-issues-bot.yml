@@ -2,7 +2,7 @@ name: Close Stale Issues
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Run every day at midnight
+    - cron: '0/30 * * * *'  # Run every day at midnight
 
 jobs:
   close_stale_prs:
@@ -11,7 +11,7 @@ jobs:
       - name: Close stale issues
         uses: actions/stale@v9
         with:
-          any-of-labels: 'testing-bot'
+          any-of-labels: 'testing bot'
           stale-issue-message: 'This issue is stale because it has been open 1 days with no activity. Remove stale label or comment or this will be closed in 2 days.'
           close-issue-message: 'This issue was closed because it has been stalled for 2 days with no activity.'
           days-before-issue-stale: 1
