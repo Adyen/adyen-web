@@ -5,6 +5,7 @@ import { Card } from '../../../src';
 import { Container } from '../Container';
 import { searchFunctionExample } from '../../../../playground/src/utils';
 import { CardWith3DS2Redirect } from './cardStoryHelpers/CardWith3DS2Redirect';
+import './cardStoryHelpers/storedCard.style.scss';
 
 type CardStory = StoryConfiguration<CardConfiguration>;
 
@@ -42,8 +43,19 @@ const createStoredCardComponent = (args: PaymentMethodStoryProps<CardConfigurati
             return (
                 <div>
                     <div>
-                        <img src={card.icon} alt={'stored-card-brand-icon'} />
-                        <p>{storedPM.lastFour}</p>
+                        <p>
+                            <i>Stored card info:</i>
+                        </p>
+                        <div className={'info-container'}>
+                            <div>
+                                <div>Brand:</div>
+                                <img src={card.icon} alt={'stored-card-brand-icon'} />
+                            </div>
+                            <div className={'info-extra-item'}>
+                                <div>Last four digits:</div>
+                                <div className={'info-last-four-digits'}>{storedPM.lastFour}</div>
+                            </div>
+                        </div>
                     </div>
                     <Container element={card} />
                 </div>
