@@ -42,7 +42,7 @@ const createStoredCardComponent = (args: PaymentMethodStoryProps<CardConfigurati
 
             return (
                 <div>
-                    <div>
+                    <div className={'stored-card-info'}>
                         <p>
                             <i>Stored card info:</i>
                         </p>
