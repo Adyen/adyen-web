@@ -53,7 +53,11 @@ const createStoredCardComponent = (args: PaymentMethodStoryProps<CardConfigurati
                             </div>
                             <div className={'info-extra-item'}>
                                 <div>Last four digits:</div>
-                                <div className={'info-last-four-digits'}>{storedPM.lastFour}</div>
+                                <div className={'info-item-with-top-margin'}>{storedPM.lastFour}</div>
+                            </div>
+                            <div className={'info-extra-item'}>
+                                <div>Holder name:</div>
+                                <div className={'info-item-with-top-margin'}>{storedPM.holderName}</div>
                             </div>
                         </div>
                     </div>
