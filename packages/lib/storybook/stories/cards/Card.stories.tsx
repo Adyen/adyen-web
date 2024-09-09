@@ -5,6 +5,7 @@ import { Card } from '../../../src';
 import { Container } from '../Container';
 import { searchFunctionExample } from '../../../../playground/src/utils';
 import { CardWith3DS2Redirect } from './cardStoryHelpers/CardWith3DS2Redirect';
+import './cardStoryHelpers/storedCard.style.scss';
 
 type CardStory = StoryConfiguration<CardConfiguration>;
 
@@ -18,6 +19,53 @@ const createComponent = (args: PaymentMethodStoryProps<CardConfiguration>, conte
     const card = new Card(checkout, componentConfiguration);
 
     return <Container element={card} />;
+};
+
+const createStoredCardComponent = (args: PaymentMethodStoryProps<CardConfiguration>, context) => {
+    const { componentConfiguration } = args;
+    const checkout = getStoryContextCheckout(context);
+
+    if (checkout.paymentMethodsResponse.storedPaymentMethods && checkout.paymentMethodsResponse.storedPaymentMethods.length > 0) {
+        // We are only interested in card based storedPaymentMethods that support Ecommerce  - a quick way to distinguish these is if they have a brand property
+        let storedCardData;
+        let storedPM;
+        for (let i = 0; i < checkout.paymentMethodsResponse.storedPaymentMethods.length; i++) {
+            storedPM = checkout.paymentMethodsResponse.storedPaymentMethods[i];
+            if (storedPM.brand && storedPM.supportedShopperInteractions.includes('Ecommerce')) {
+                storedCardData = checkout.paymentMethodsResponse.storedPaymentMethods[i];
+                break; // exit, now we've found the first storedCard
+            }
+        }
+
+        if (storedCardData) {
+            const card = new Card(checkout, { ...storedCardData, ...componentConfiguration });
+
+            return (
+                <div>
+                    <div className={'stored-card-info'}>
+                        <p>
+                            <i>Stored card info:</i>
+                        </p>
+                        <div className={'info-container'}>
+                            <div>
+                                <div>Brand:</div>
+                                <img src={card.icon} alt={'stored-card-brand-icon'} />
+                            </div>
+                            <div className={'info-extra-item'}>
+                                <div>Last four digits:</div>
+                                <div className={'info-last-four-digits'}>{storedPM.lastFour}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <Container element={card} />
+                </div>
+            );
+        } else {
+            return <div>No stored cards found</div>;
+        }
+    } else {
+        return <div>No stored payment methods found</div>;
+    }
 };
 
 export const Default: CardStory = {
@@ -157,6 +205,16 @@ export const CardWith_3DS2_Redirect: CardStory = {
             _disableClickToPay: true
         },
         useSessions: false
+    }
+};
+
+export const StoredCard: CardStory = {
+    render: createStoredCardComponent,
+    args: {
+        componentConfiguration: {
+            _disableClickToPay: true,
+            hideCVC: false
+        }
     }
 };
 
