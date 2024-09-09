@@ -188,7 +188,7 @@ export const getCardConfigData = (cardProps: CardConfiguration): CardConfigData 
         hasOnBlur: onBlur !== CardInputDefaultProps.onBlur,
         hasOnBrand: onBrand !== CardInputDefaultProps.onBrand,
         hasOnConfigSuccess: onConfigSuccess !== CardInputDefaultProps.onConfigSuccess,
-        hasOnEnterKeyPressed: onEnterKeyPressed !== CardInputDefaultProps.onEnterKeyPressed,
+        hasOnEnterKeyPressed: !!onEnterKeyPressed,
         hasOnFieldValid: onFieldValid !== CardInputDefaultProps.onFieldValid,
         hasOnFocus: onFocus !== CardInputDefaultProps.onFocus,
         hasOnLoad: onLoad !== CardInputDefaultProps.onLoad

@@ -1,6 +1,7 @@
 import { test, expect } from '../../pages/cards/card.fixture';
 import { REGULAR_TEST_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE } from '../utils/constants';
 import LANG from '../../../server/translations/en-US.json';
+import { pressEnter } from '../utils/keyboard';
 
 const PAN_ERROR_NOT_VALID = LANG['cc.num.902'];
 const PAN_ERROR_EMPTY = LANG['cc.num.900'];
@@ -45,6 +46,18 @@ test.describe('Card - Standard flow', () => {
         await card.typeCardNumber('4');
 
         await cardPage.pay();
+
+        await expect(card.cardNumberErrorElement).toBeVisible();
+        await expect(card.cardNumberErrorElement).toHaveText(PAN_ERROR_NOT_COMPLETE);
+    });
+
+    test('#5 Filling PAN then pressing Enter will trigger validation ', async ({ cardPage }) => {
+        const { card, page } = cardPage;
+
+        await card.isComponentVisible();
+        await card.typeCardNumber('4'); // get focus into card comp
+
+        await pressEnter(page);
 
         await expect(card.cardNumberErrorElement).toBeVisible();
         await expect(card.cardNumberErrorElement).toHaveText(PAN_ERROR_NOT_COMPLETE);

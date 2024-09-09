@@ -72,7 +72,7 @@ test.describe('Cards (Installments)', () => {
         await card.installmentsDropdown.click();
         await pressKeyboardToNextItem(page);
         await pressKeyboardToNextItem(page);
-        // await pressKeyboardToSelectItem(page);
+        // await pressEnter(page);
 
         const listItem = await card.selectListItem('2');
         await listItem.click();
