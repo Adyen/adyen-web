@@ -5,7 +5,7 @@ declare module '*.module.scss' {
 
 interface Window {
     VISA_SDK?: {
-        buildClientProfile?(): any;
+        buildClientProfile?(srciDpaId?: string): any;
         correlationId?: string;
     };
 }

@@ -123,6 +123,8 @@ class ClickToPayService implements IClickToPayService {
     }
 
     private handleTimeout(error: SrciError | TimeoutError) {
+        // If the timeout error was thrown directly by the scheme SDK, we convert it to TimeoutError
+        // If the timeout error was thrown by our internal timeout mechanism, we don't do anything
         const timeoutError =
             error instanceof SrciError
                 ? new TimeoutError({ source: error.source, scheme: error.scheme, isTimeoutTriggeredBySchemeSdk: true })
@@ -130,7 +132,10 @@ class ClickToPayService implements IClickToPayService {
 
         if (timeoutError.scheme === 'visa') {
             timeoutError.setCorrelationId(window.VISA_SDK?.correlationId);
-            window.VISA_SDK?.buildClientProfile?.();
+
+            // Visa srciDpaId must be passed when there is no correlation ID available
+            if (window.VISA_SDK?.correlationId) window.VISA_SDK?.buildClientProfile?.();
+            else window.VISA_SDK?.buildClientProfile?.(this.schemesConfig.visa.srciDpaId);
         }
 
         this.onTimeout?.(timeoutError);
