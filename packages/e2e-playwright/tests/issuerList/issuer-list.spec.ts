@@ -38,42 +38,44 @@ test.describe('Issuer List', () => {
         await expect(issuerList.submitButton).toHaveText('Continue to Nest Bank');
     });
 
-    // test('it should have the expected data in state, ready for the /payments call', async ({ issuerListPage }) => {
-    //     const { issuerList, page } = issuerListPage;
+    test('it should have the expected data in state, ready for the /payments call', async ({ issuerListPage }) => {
+        const { issuerList, page } = issuerListPage;
 
-    //     // Open the drop down and select an item
-    //     await issuerList.clickOnSelector();
-    //     await pressKeyboardToNextItem(page); // Arrow down
-    //     await pressKeyboardToSelectItem(page); // Enter key
+        // Open the drop down and select an item
+        await issuerList.clickOnSelector();
+        await pressKeyboardToNextItem(page); // Arrow down
+        await pressKeyboardToSelectItem(page); // Enter key
 
-    //     let issuerListData = await page.evaluate('window.dotpay.data');
+        let issuerListData = await page.evaluate('window.dotpay.data');
 
-    //     // @ts-ignore
-    //     expect(issuerListData.paymentMethod).toEqual({
-    //         type: 'dotpay',
-    //         issuer: '73',
-    //         checkoutAttemptId: 'do-not-track'
-    //     });
-    // });
+        // @ts-ignore
+        const { checkoutAttemptId, ...rest } = issuerListData.paymentMethod; // strip checkoutAttemptId since we can't know its value
 
-    // test('should select highlighted issuer, update pay button label, and see the expected data in state', async ({ issuerListPage }) => {
-    //     const { issuerList, page } = issuerListPage;
+        expect(rest).toEqual({
+            type: 'dotpay',
+            issuer: '73'
+        });
+    });
 
-    //     await issuerList.selectHighlightedIssuer('BLIK');
-    //     await expect(issuerList.submitButton).toHaveText('Continue to BLIK');
+    test('should select highlighted issuer, update pay button label, and see the expected data in state', async ({ issuerListPage }) => {
+        const { issuerList, page } = issuerListPage;
 
-    //     await issuerList.selectHighlightedIssuer('Idea Cloud');
-    //     await expect(issuerList.submitButton).toHaveText('Continue to Idea Cloud');
+        await issuerList.selectHighlightedIssuer('BLIK');
+        await expect(issuerList.submitButton).toHaveText('Continue to BLIK');
 
-    //     await expect(issuerList.highlightedIssuerButtonGroup.getByRole('button', { pressed: true })).toHaveText('Idea Cloud');
+        await issuerList.selectHighlightedIssuer('Idea Cloud');
+        await expect(issuerList.submitButton).toHaveText('Continue to Idea Cloud');
 
-    //     let issuerListData = await page.evaluate('window.dotpay.data');
+        await expect(issuerList.highlightedIssuerButtonGroup.getByRole('button', { pressed: true })).toHaveText('Idea Cloud');
 
-    //     // @ts-ignore
-    //     expect(issuerListData.paymentMethod).toEqual({
-    //         type: 'dotpay',
-    //         issuer: '81',
-    //         checkoutAttemptId: 'do-not-track'
-    //     });
-    // });
+        let issuerListData = await page.evaluate('window.dotpay.data');
+
+        // @ts-ignore
+        const { checkoutAttemptId, ...rest } = issuerListData.paymentMethod; // strip checkoutAttemptId since we can't know its value
+
+        expect(rest).toEqual({
+            type: 'dotpay',
+            issuer: '81'
+        });
+    });
 });
