@@ -66,28 +66,27 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
          * @param initialEvent -
          */
         setUp: async (initialEvent: AnalyticsInitialEvent) => {
-            const { enabled, payload, telemetry } = props; // TODO what is payload, is it ever used?
+            const { enabled, payload } = props; // TODO what is payload, is it ever used?
 
             const analyticsData = processAnalyticsData(props.analyticsData);
 
-            if (enabled === true) {
-                if (telemetry === true && !capturedCheckoutAttemptId) {
-                    try {
-                        const checkoutAttemptId = await collectId({
-                            ...initialEvent,
-                            ...(payload && { ...payload }),
-                            ...(Object.keys(analyticsData).length && { ...analyticsData })
-                        });
-                        capturedCheckoutAttemptId = checkoutAttemptId;
-                    } catch (e) {
-                        console.warn(`Fetching checkoutAttemptId failed.${e ? ` Error=${e}` : ''}`);
-                    }
+            if (!capturedCheckoutAttemptId) {
+                try {
+                    const checkoutAttemptId = await collectId({
+                        ...initialEvent,
+                        ...(payload && { ...payload }),
+                        ...(Object.keys(analyticsData).length && { ...analyticsData })
+                    });
+                    capturedCheckoutAttemptId = checkoutAttemptId;
+                } catch (e) {
+                    console.warn(`Fetching checkoutAttemptId failed.${e ? ` Error=${e}` : ''}`);
                 }
+            }
 
+            if (enabled === true) {
                 if (!hasLoggedPixel) {
                     // Log pixel
                     // TODO once we stop using the pixel we can stop requiring both "enabled" & "telemetry" config options.
-                    //  And v6 will have a "level: 'none" | "all" | "minimal" config prop
                     logEvent(initialEvent);
                     hasLoggedPixel = true;
                 }
@@ -100,6 +99,8 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
         getEventsQueue: () => eventsQueue,
 
         createAnalyticsEvent: ({ event, data }: CreateAnalyticsEventObject): AnalyticsObject => {
+            if (!props.enabled || !props.telemetry) return;
+
             const aObj: AnalyticsObject = createAnalyticsObject({
                 event,
                 ...data
@@ -117,7 +118,7 @@ const Analytics = ({ loadingContext, locale, clientKey, analytics, amount, analy
         sendAnalytics: null
     };
 
-    anlModule.sendAnalytics = analyticsPreProcessor(anlModule);
+    anlModule.sendAnalytics = props.enabled === true && props.telemetry === true ? analyticsPreProcessor(anlModule) : () => {};
 
     return anlModule;
 };
