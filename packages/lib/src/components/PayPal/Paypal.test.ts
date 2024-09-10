@@ -1,12 +1,13 @@
 import Paypal from './Paypal';
 import { render, screen } from '@testing-library/preact';
+import { NO_CHECKOUT_ATTEMPT_ID } from '../../core/Analytics/constants';
 
 describe('Paypal', () => {
     test('Returns a data object', () => {
         const paypal = new Paypal(global.core);
         expect(paypal.data).toEqual({
             clientStateDataIndicator: true,
-            paymentMethod: { subtype: 'sdk', type: 'paypal', userAction: 'pay', checkoutAttemptId: 'do-not-track' }
+            paymentMethod: { subtype: 'sdk', type: 'paypal', userAction: 'pay', checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID }
         });
     });
 
@@ -14,7 +15,7 @@ describe('Paypal', () => {
         const paypal = new Paypal(global.core, { isExpress: true });
         expect(paypal.data).toEqual({
             clientStateDataIndicator: true,
-            paymentMethod: { subtype: 'express', type: 'paypal', userAction: 'pay', checkoutAttemptId: 'do-not-track' }
+            paymentMethod: { subtype: 'express', type: 'paypal', userAction: 'pay', checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID }
         });
     });
 
@@ -22,7 +23,7 @@ describe('Paypal', () => {
         const paypal = new Paypal(global.core);
         expect(paypal.data).toEqual({
             clientStateDataIndicator: true,
-            paymentMethod: { subtype: 'sdk', type: 'paypal', userAction: 'pay', checkoutAttemptId: 'do-not-track' }
+            paymentMethod: { subtype: 'sdk', type: 'paypal', userAction: 'pay', checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID }
         });
     });
 
@@ -30,7 +31,7 @@ describe('Paypal', () => {
         const paypal = new Paypal(global.core, { isExpress: true, userAction: 'continue' });
         expect(paypal.data).toEqual({
             clientStateDataIndicator: true,
-            paymentMethod: { subtype: 'express', type: 'paypal', userAction: 'continue', checkoutAttemptId: 'do-not-track' }
+            paymentMethod: { subtype: 'express', type: 'paypal', userAction: 'continue', checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID }
         });
     });
 

@@ -2,7 +2,7 @@ import { ComponentChild, h, render } from 'preact';
 import getProp from '../../../utils/getProp';
 import uuid from '../../../utils/uuid';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
-import { ANALYTICS_RENDERED_STR } from '../../../core/Analytics/constants';
+import { ANALYTICS_RENDERED_STR, NO_CHECKOUT_ATTEMPT_ID } from '../../../core/Analytics/constants';
 
 import type { ICore } from '../../../core/types';
 import type { BaseElementProps, IBaseElement } from './types';
@@ -94,8 +94,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
      */
     public get data(): PaymentData {
         const clientData = getProp(this.props, 'modules.risk.data');
-        const useAnalytics = !!getProp(this.props, 'modules.analytics.getEnabled')?.();
-        const checkoutAttemptId = useAnalytics ? getProp(this.props, 'modules.analytics.getCheckoutAttemptId')?.() : 'do-not-track';
+        const checkoutAttemptId = getProp(this.props, 'modules.analytics.getCheckoutAttemptId')?.() ?? NO_CHECKOUT_ATTEMPT_ID; // NOTE: we never expect to see this "failed" value, but, just in case...
         const order = this.state.order || this.props.order;
         const componentData = this.formatData();
 
@@ -156,7 +155,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
             if (this.props.modules && this.props.modules.analytics) {
                 this.setUpAnalytics({
                     containerWidth: node && node.offsetWidth,
-                    component: !this.props.isDropin ? this.constructor['analyticsType'] ?? this.constructor['type'] : 'dropin',
+                    component: !this.props.isDropin ? (this.constructor['analyticsType'] ?? this.constructor['type']) : 'dropin',
                     flavor: !this.props.isDropin ? 'components' : 'dropin'
                 }).then(() => {
                     // Once the initial analytics set up call has been made...
