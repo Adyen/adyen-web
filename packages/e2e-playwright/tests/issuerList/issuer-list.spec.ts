@@ -51,10 +51,11 @@ test.describe('Issuer List', () => {
         let issuerListData = await page.evaluate('window.entercash.data');
 
         // @ts-ignore
-        expect(issuerListData.paymentMethod).toEqual({
+        const { checkoutAttemptId, ...rest } = issuerListData.paymentMethod; // strip checkoutAttemptId since we can't know its value
+
+        expect(rest).toEqual({
             type: 'entercash',
-            issuer: '231',
-            checkoutAttemptId: 'do-not-track'
+            issuer: '231'
         });
     });
 
@@ -72,10 +73,11 @@ test.describe('Issuer List', () => {
         let issuerListData = await page.evaluate('window.entercash.data');
 
         // @ts-ignore
-        expect(issuerListData.paymentMethod).toEqual({
+        const { checkoutAttemptId, ...rest } = issuerListData.paymentMethod; // strip checkoutAttemptId since we can't know its value
+
+        expect(rest).toEqual({
             type: 'entercash',
-            issuer: '232',
-            checkoutAttemptId: 'do-not-track'
+            issuer: '232'
         });
     });
 });
