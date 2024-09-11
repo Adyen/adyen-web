@@ -1,10 +1,8 @@
-const { post } = require('request');
-const getPostParameters = require('../utils/getPostParameters');
+const makePostRequest = require('../utils/makePostRequest');
 const handleCallback = require('../utils/handleCallback');
 
-module.exports = (res, request) => {
+module.exports = async (res, request) => {
     const originDomains = [`${request.protocol}://${request.headers.host}`];
-    const params = getPostParameters('originKeys', { originDomains });
-
-    post(params, (err, response, body) => handleCallback({ err, response, body }, res));
+    const response = await makePostRequest('originKeys', { originDomains });
+    handleCallback(response, res);
 };

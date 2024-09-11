@@ -1,9 +1,8 @@
-const { post } = require('request');
-const getPostParameters = require('../utils/getPostParameters');
+const makePostRequest = require('../utils/makePostRequest');
 const handleCallback = require('../utils/handleCallback');
 const { MERCHANT_ACCOUNT: merchantAccount } = require('../utils/config');
 
-module.exports = (res, request) => {
-    const params = getPostParameters('paymentMethods', { merchantAccount, ...request });
-    post(params, (error, response, body) => handleCallback({ error, response, body }, res));
+module.exports = async (res, request) => {
+    const response = await makePostRequest('paymentMethods', { merchantAccount, ...request });
+    handleCallback(response, res);
 };
