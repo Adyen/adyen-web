@@ -1,7 +1,3 @@
-const { post } = require('request');
-const handleCallback = require('../../utils/handleCallback');
-const { MERCHANT_ACCOUNT: merchantAccount } = require('../../utils/config');
-
 module.exports = (res, request) => {
     const MOCK_ADDRESS_ARRAY = [
         {
