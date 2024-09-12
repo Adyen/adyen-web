@@ -1,6 +1,7 @@
 import ApplePay from './ApplePay';
 import ApplePayService from './ApplePayService';
 import { mock } from 'jest-mock-extended';
+import { NO_CHECKOUT_ATTEMPT_ID } from '../../core/Analytics/constants';
 
 jest.mock('./ApplePayService');
 
@@ -366,7 +367,7 @@ describe('ApplePay', () => {
                 },
                 paymentMethod: {
                     applePayToken: 'InBheW1lbnQtZGF0YSI=',
-                    checkoutAttemptId: 'do-not-track',
+                    checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID,
                     type: 'applepay'
                 }
             });
