@@ -57,7 +57,7 @@ export class CardElement extends UIElement<CardConfiguration> {
         _disableClickToPay: false,
         doBinLookup: true,
         // Merge most of CardInput's defaultProps
-        ...reject(['type', 'setComponentRef', 'onEnterKeyPressed']).from(CardInputDefaultProps)
+        ...reject(['type', 'setComponentRef']).from(CardInputDefaultProps)
     };
 
     public setStatus(status: UIElementStatus, props?): this {
