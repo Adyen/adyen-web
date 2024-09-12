@@ -198,7 +198,7 @@ export class CardElement extends UIElement<CardConfiguration> {
         // Handler for regular card comp doesn't need this 'raw' data or to know about 'resets'
         if (!obj.isReset) {
             const nuObj = reject('supportedBrandsRaw').from(obj);
-            this.props.onBinLookup(nuObj);
+            this.props.onBinLookup?.(nuObj);
         }
     }
 

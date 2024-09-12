@@ -183,15 +183,16 @@ export const getCardConfigData = (cardProps: CardConfiguration): CardConfigData 
         /** callbacks */
         // We need to detect if the merchant themselves has defined these, not if we've set them as a default
         hasOnAllValid: onAllValid !== CardInputDefaultProps.onAllValid,
-        hasOnBinLookup: onBinLookup !== CardInputDefaultProps.onBinLookup,
         hasOnBinValue: onBinValue !== CardInputDefaultProps.onBinValue,
         hasOnBlur: onBlur !== CardInputDefaultProps.onBlur,
         hasOnBrand: onBrand !== CardInputDefaultProps.onBrand,
         hasOnConfigSuccess: onConfigSuccess !== CardInputDefaultProps.onConfigSuccess,
-        hasOnEnterKeyPressed: onEnterKeyPressed !== CardInputDefaultProps.onEnterKeyPressed,
         hasOnFieldValid: onFieldValid !== CardInputDefaultProps.onFieldValid,
         hasOnFocus: onFocus !== CardInputDefaultProps.onFocus,
-        hasOnLoad: onLoad !== CardInputDefaultProps.onLoad
+        hasOnLoad: onLoad !== CardInputDefaultProps.onLoad,
+        // Card level props
+        hasOnBinLookup: !!onBinLookup,
+        hasOnEnterKeyPressed: !!onEnterKeyPressed
     };
 
     return configData;

@@ -1,5 +1,5 @@
 import { test, expect } from '../../pages/issuerList/issuer-list.fixture';
-import { pressKeyboardToNextItem, pressKeyboardToSelectItem } from '../utils/keyboard';
+import { pressKeyboardToNextItem, pressEnter } from '../utils/keyboard';
 
 test.describe('Issuer List', () => {
     test('it should be able to filter and select using the keyboard', async ({ issuerListPage }) => {
@@ -15,7 +15,7 @@ test.describe('Issuer List', () => {
 
         // select one of the filtered option
         await pressKeyboardToNextItem(page); // Arrow down
-        await pressKeyboardToSelectItem(page); // Enter key
+        await pressEnter(page); // Enter key
 
         await expect(issuerList.submitButton).toHaveText('Continue to Idea Cloud');
 
@@ -23,7 +23,7 @@ test.describe('Issuer List', () => {
         await pressKeyboardToNextItem(page);
         // 2nd selects next item
         await pressKeyboardToNextItem(page);
-        await pressKeyboardToSelectItem(page);
+        await pressEnter(page);
 
         await expect(issuerList.submitButton).toHaveText('Continue to mRaty');
     });
@@ -33,7 +33,7 @@ test.describe('Issuer List', () => {
 
         await issuerList.clickOnSelector();
         await issuerList.typeOnSelectorField('Nest');
-        await pressKeyboardToSelectItem(page);
+        await pressEnter(page);
 
         await expect(issuerList.submitButton).toHaveText('Continue to Nest Bank');
     });
@@ -44,7 +44,7 @@ test.describe('Issuer List', () => {
         // Open the drop down and select an item
         await issuerList.clickOnSelector();
         await pressKeyboardToNextItem(page); // Arrow down
-        await pressKeyboardToSelectItem(page); // Enter key
+        await pressEnter(page); // Enter key
 
         let issuerListData = await page.evaluate('window.dotpay.data');
 
