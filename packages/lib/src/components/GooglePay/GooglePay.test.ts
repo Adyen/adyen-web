@@ -2,7 +2,7 @@ import GooglePay from './GooglePay';
 import GooglePayService from './GooglePayService';
 
 import Analytics from '../../core/Analytics';
-import { ANALYTICS_EVENT_INFO, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
+import { ANALYTICS_EVENT_INFO, ANALYTICS_SELECTED_STR, NO_CHECKOUT_ATTEMPT_ID } from '../../core/Analytics/constants';
 
 const analyticsModule = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', bundleType: 'umd' });
 
@@ -95,7 +95,7 @@ describe('GooglePay', () => {
 
             expect(state.data.origin).toBe('http://localhost');
             expect(state.data.paymentMethod).toStrictEqual({
-                checkoutAttemptId: 'do-not-track',
+                checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID,
                 googlePayCardNetwork: 'VISA',
                 googlePayToken: 'google-pay-token',
                 type: 'googlepay'
@@ -161,7 +161,7 @@ describe('GooglePay', () => {
 
             expect(state.data.origin).toBe('http://localhost');
             expect(state.data.paymentMethod).toStrictEqual({
-                checkoutAttemptId: 'do-not-track',
+                checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID,
                 googlePayCardNetwork: 'VISA',
                 googlePayToken: 'google-pay-token',
                 type: 'googlepay'

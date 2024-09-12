@@ -14,5 +14,5 @@ window.dropinConfig = {
 };
 
 window.mainConfiguration = {
-    removePaymentMethods: ['paywithgoogle', 'applepay']
+    removePaymentMethods: ['paywithgoogle', 'applepay', 'clicktopay']
 };

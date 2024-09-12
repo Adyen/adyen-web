@@ -195,17 +195,5 @@ export const getCardConfigData = (cardProps: CardConfiguration): CardConfigData 
         hasOnEnterKeyPressed: !!onEnterKeyPressed
     };
 
-    // TODO - keep until endpoint can accept more entries in the configData object (current limit: 32);
-    if (Object.keys(configData).length > 32) {
-        const strippedConfigData = Object.entries(configData).reduce((acc, [key, value], index) => {
-            if (index < 32) {
-                acc[key] = value;
-            }
-            return acc;
-        }, {});
-
-        return strippedConfigData as CardConfigData;
-    }
-
     return configData;
 };
