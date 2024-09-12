@@ -1,4 +1,4 @@
-const makePostRequest = require('../utils/getPostParameters');
+const makePostRequest = require('../utils/makePostRequest');
 const handleCallback = require('../utils/handleCallback');
 const { MERCHANT_ACCOUNT: merchantAccount } = require('../utils/config');
 
