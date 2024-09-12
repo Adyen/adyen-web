@@ -3,7 +3,7 @@ import { AddressData } from '../../types/global-types';
 
 declare global {
     interface Window {
-        ApplePaySession: ApplePaySession;
+        ApplePaySession?: ApplePaySession;
     }
 }
 
