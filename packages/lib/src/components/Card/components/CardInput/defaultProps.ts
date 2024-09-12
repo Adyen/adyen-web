@@ -50,9 +50,5 @@ export default {
     onBinValue: (): any => {},
     onBlur: (): any => {},
     onFocus: (): any => {},
-    onChange: (): any => {},
-
-    // Strictly speaking a Card level props, but needed here for analytics.configData
-    onBinLookup: () => {},
-    onEnterKeyPressed: () => {}
+    onChange: (): any => {}
 };
