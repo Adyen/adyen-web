@@ -1,4 +1,4 @@
-import { filterUnsupported, filterPresent, filterAvailable, optionallyFilterUpiSubTxVariants } from './filters';
+import { filterUnsupportedPaymentMethod, filterPresent, filterAvailable, optionallyFilterUpiSubTxVariants } from './filters';
 import { getComponentConfiguration } from './getComponentConfiguration';
 import getComponentNameOfPaymentType from '../../components-name-map';
 import UIElement from '../../internal/UIElement';
@@ -21,6 +21,7 @@ const createElements = (
     core: ICore
 ): Promise<UIElement[]> => {
     const elements = optionallyFilterUpiSubTxVariants(paymentMethods)
+        .filter(filterUnsupportedPaymentMethod)
         .map(paymentMethod => {
             const isStoredPaymentMethod = 'isStoredPaymentMethod' in paymentMethod && paymentMethod.isStoredPaymentMethod;
             const paymentMethodConfigurationProps = getComponentConfiguration(paymentMethod.type, paymentMethodsConfiguration, isStoredPaymentMethod);
@@ -41,8 +42,7 @@ const createElements = (
 
             return new PaymentMethodElement(core, elementProps);
         })
-        .filter(filterPresent)
-        .filter(filterUnsupported);
+        .filter(filterPresent);
 
     return filterAvailable(elements);
 };
