@@ -106,3 +106,5 @@ export enum Analytics3DS2Events {
     CHALLENGE_IFRAME_LOADED = 'challengeIframeLoaded',
     CHALLENGE_COMPLETED = 'challengeCompleted'
 }
+
+export const NO_CHECKOUT_ATTEMPT_ID = 'fetch-checkoutAttemptId-failed';

@@ -7,7 +7,7 @@ import { BaseElementProps, PaymentData } from './types';
 import { RiskData } from '../core/RiskModule/RiskModule';
 import { Resources } from '../core/Context/Resources';
 import { AnalyticsInitialEvent, SendAnalyticsObject } from '../core/Analytics/types';
-import { ANALYTICS_RENDERED_STR } from '../core/Analytics/constants';
+import { ANALYTICS_RENDERED_STR, NO_CHECKOUT_ATTEMPT_ID } from '../core/Analytics/constants';
 
 class BaseElement<P extends BaseElementProps> {
     public readonly _id = `${this.constructor['type']}-${uuid()}`;
@@ -68,8 +68,7 @@ class BaseElement<P extends BaseElementProps> {
      */
     get data(): PaymentData | RiskData {
         const clientData = getProp(this.props, 'modules.risk.data');
-        const useAnalytics = !!getProp(this.props, 'modules.analytics.getEnabled')?.();
-        const checkoutAttemptId = useAnalytics ? getProp(this.props, 'modules.analytics.getCheckoutAttemptId')?.() : 'do-not-track';
+        const checkoutAttemptId = getProp(this.props, 'modules.analytics.getCheckoutAttemptId')?.() ?? NO_CHECKOUT_ATTEMPT_ID; // NOTE: we never expect to see this "failed" value, but, just in case...
         const order = this.state.order || this.props.order;
 
         const componentData = this.formatData();
