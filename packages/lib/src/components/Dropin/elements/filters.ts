@@ -2,8 +2,11 @@ import { PaymentMethod } from '../../../types';
 
 export const UNSUPPORTED_PAYMENT_METHODS = ['androidpay', 'samsungpay', 'clicktopay'];
 
-// filter payment methods that we don't support in the Drop-in
-export const filterUnsupported = paymentMethod => !UNSUPPORTED_PAYMENT_METHODS.includes(paymentMethod.constructor['type']);
+/**
+ * Filter out payment methods that are not supported by Drop-in
+ * @param paymentMethod - Payment method object from /paymentMethods response
+ */
+export const filterUnsupportedPaymentMethod = (paymentMethod: PaymentMethod) => !UNSUPPORTED_PAYMENT_METHODS.includes(paymentMethod.type);
 
 // filter payment methods that we support (that are in the paymentMethods/index dictionary)
 export const filterPresent = paymentMethod => !!paymentMethod;

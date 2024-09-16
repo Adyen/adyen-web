@@ -1,4 +1,4 @@
-import { filterUnsupported, filterPresent, filterAvailable, optionallyFilterUpiSubTxVariants } from './filters';
+import { filterUnsupportedPaymentMethod, filterPresent, filterAvailable, optionallyFilterUpiSubTxVariants } from './filters';
 import { PaymentMethod } from '../../../types';
 
 /**
@@ -9,9 +9,9 @@ import { PaymentMethod } from '../../../types';
  */
 const createElements = (components: PaymentMethod[] = [], props, create) => {
     const elements = optionallyFilterUpiSubTxVariants(components)
+        .filter(filterUnsupportedPaymentMethod)
         .map(c => create(c, props))
-        .filter(filterPresent)
-        .filter(filterUnsupported);
+        .filter(filterPresent);
 
     // filter available elements
     const elementPromises = elements.map(filterAvailable).map(p => p.catch(e => e));
