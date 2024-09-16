@@ -338,3 +338,8 @@ export type CheckoutSessionOrdersResponse = {
     orderData: string;
     pspReference: string;
 };
+
+export type SetupSessionOptions = {
+    browserInfo?: BrowserInfo;
+    order?: Order;
+};
