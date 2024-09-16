@@ -51,6 +51,7 @@
     "dist/cjs/**",
     "dist/es/**",
     "dist/es-legacy/**",
+    "styles/**",
     "LICENSE",
     "README"
   ],
@@ -73,7 +74,7 @@
     "styles:fix": "npm run lint-styles -- --fix",
     "lint:fix": "npm run lint -- --fix",
     "prettier:fix": "prettier \"src/**/*.{js,ts,tsx}\" \"package.json\" --write --loglevel silent",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "npm run build && rm -rf ./styles && mkdir ./styles && cp ./dist/es/adyen.css ./styles/adyen.css",
     "prepare": "cd ../.. && husky packages/lib/.husky",
     "size": "npm run build && size-limit"
   },

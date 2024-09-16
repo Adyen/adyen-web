@@ -1,6 +1,8 @@
-dist
+# Misc
 /*.tgz
 .stylelintcache
-lib-test
-translations
-/package
+/storybook-static
+
+# Build
+/dist
+/styles
