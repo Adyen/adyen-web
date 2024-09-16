@@ -1,5 +1,17 @@
 # @adyen/adyen-web
 
+## 5.69.0
+
+### Minor Changes
+
+-   v5 cherrypick - Always make call to analytics setup endpoint ([#2839](https://github.com/Adyen/adyen-web/pull/2839))
+
+### Patch Changes
+
+-   Dropin: Filtering out payment method type before creating the payment method element ([#2853](https://github.com/Adyen/adyen-web/pull/2853))
+
+-   send browserInfo in setup call ([#2857](https://github.com/Adyen/adyen-web/pull/2857))
+
 ## 5.68.1
 
 ### Patch Changes
