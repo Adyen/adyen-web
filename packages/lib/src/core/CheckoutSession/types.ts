@@ -1,5 +1,5 @@
 import { InstallmentOptions } from '../../components/Card/components/CardInput/components/types';
-import { PaymentAction, PaymentAmount, ResultCode } from '../../types/global-types';
+import { BrowserInfo, Order, PaymentAction, PaymentAmount, ResultCode } from '../../types/global-types';
 
 export type CheckoutSession = {
     id: string;
@@ -57,3 +57,8 @@ export type CheckoutSessionOrdersResponse = {
     orderData: string;
     pspReference: string;
 };
+
+export type SetupSessionOptions = {
+    browserInfo?: BrowserInfo,
+    order?: Order
+}

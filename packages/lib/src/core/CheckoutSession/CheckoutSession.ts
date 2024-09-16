@@ -12,11 +12,13 @@ import {
     CheckoutSessionOrdersResponse,
     CheckoutSessionPaymentResponse,
     CheckoutSessionSetupResponse,
-    SessionConfiguration
+    SessionConfiguration,
+    SetupSessionOptions
 } from './types';
 import cancelOrder from '../Services/sessions/cancel-order';
 import { onOrderCancelData } from '../../components/Dropin/types';
 import type { AdditionalDetailsData } from '../types';
+import collectBrowserInfo from '../../utils/browserInfo';
 
 class Session {
     private readonly session: CheckoutSession;
@@ -66,8 +68,9 @@ class Session {
     /**
      * Fetches data from a session
      */
-    setupSession(options): Promise<CheckoutSessionSetupResponse> {
-        return setupSession(this, options).then(response => {
+    setupSession(options: SetupSessionOptions): Promise<CheckoutSessionSetupResponse> {
+        const mergedOptions = { ...options, browserInfo: collectBrowserInfo() }
+        return setupSession(this, mergedOptions).then(response => {
             if (response.configuration) {
                 this.configuration = { ...response.configuration };
             }
