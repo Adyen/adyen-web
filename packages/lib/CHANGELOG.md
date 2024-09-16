@@ -1,5 +1,25 @@
 # @adyen/adyen-web
 
+## 6.2.0
+
+### Minor Changes
+
+-   Always make call to analytics setup endpoint ([#2838](https://github.com/Adyen/adyen-web/pull/2838))
+
+### Patch Changes
+
+-   Fixes regression and allows Enter key to validate/submit ([#2837](https://github.com/Adyen/adyen-web/pull/2837))
+
+-   send browserInfo in setup call ([#2847](https://github.com/Adyen/adyen-web/pull/2847))
+
+-   Dropin: Filtering out payment method type before creating the payment method element ([#2852](https://github.com/Adyen/adyen-web/pull/2852))
+
+-   Fixing adyen.css file exposure for Webpack 4 projects ([#2855](https://github.com/Adyen/adyen-web/pull/2855))
+
+-   Change ApplePaySession type to optional in window interface ([#2836](https://github.com/Adyen/adyen-web/pull/2836))
+
+-   Fixing reliability Sonarcloud issues related to ApplePayService ([#2846](https://github.com/Adyen/adyen-web/pull/2846))
+
 ## 6.1.1
 
 ### Patch Changes
