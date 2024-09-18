@@ -285,7 +285,6 @@ export class CardElement extends UIElement<CardConfiguration> {
         }
 
         // For regular card, non-zero auth payments, we store the payment method based on the checkbox value.
-        // const includeStorePaymentMethod = this.props.enableStoreDetails && typeof this.state.storePaymentMethod !== 'undefined';
         const includeStorePaymentMethod = this.props.showStoreDetailsCheckbox && typeof this.state.storePaymentMethod !== 'undefined';
         return includeStorePaymentMethod ? { storePaymentMethod: Boolean(this.state.storePaymentMethod) } : {};
     }

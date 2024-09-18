@@ -132,7 +132,7 @@ const ComponentsNameMap = {
     [TxVariants.wechatpayQR]: 'WeChat',
     [TxVariants.promptpay]: 'PromptPay',
     [TxVariants.paynow]: 'PayNow',
-    [TxVariants.duitnow]: 'Duitnow',
+    [TxVariants.duitnow]: 'DuitNow',
     /** QRLoader */
 
     /** Await */
