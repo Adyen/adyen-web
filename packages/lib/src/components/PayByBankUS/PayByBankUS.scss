@@ -1,19 +1,20 @@
 @import 'styles/variable-generator';
 
-.adyen-checkout-trustly {
+.adyen-checkout-paybybank_AIS_DD {
     margin-bottom: token(spacer-070);
 
-    &__descriptor {
+    &__description-header {
         margin: token(spacer-000) token(spacer-000) token(spacer-020);
         font-size: token(text-subtitle-font-size);
         font-weight: token(text-body-stronger-font-weight);
+        color: token(color-label-primary);
     }
 
-    &__description-list {
+    &__description-body {
         list-style-type: disc;
+        color: token(color-label-secondary);
         margin: 0;
         font-size: token(text-body-font-size);
         line-height: 1.5;
-        padding-left: token(spacer-080);
     }
 }
