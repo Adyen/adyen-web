@@ -8,6 +8,7 @@ import CardInputDefaultProps from '../../components/Card/components/CardInput/de
 import { DEFAULT_CARD_GROUP_TYPES } from '../../components/internal/SecuredFields/lib/configuration/constants';
 import { notFalsy } from '../../components/internal/SecuredFields/lib/utilities/commonUtils';
 
+const MAX_LENGTH = 128;
 export const getUTCTimestamp = () => Date.now();
 
 /**
@@ -133,20 +134,17 @@ export const getCardConfigData = (cardProps: CardElementProps): CardConfigData =
         showKCPType = countryCode?.toLowerCase() === 'kr' ? 'atStart' : 'auto';
     }
 
-    // Probably just for development - in real life we wouldn't expect the number of supported brands to push the endpoint limit on 128 chars
-    let brandsStr = JSON.stringify(brands);
-    if (brandsStr.length > 128) {
-        brandsStr = brandsStr.substring(0, 124) + '...]';
-    }
-
     // @ts-ignore commenting out props until endpoint is ready
     const configData: CardConfigData = {
         autoFocus,
-        billingAddressAllowedCountries: JSON.stringify(billingAddressAllowedCountries),
+        ...(billingAddressAllowedCountries?.length > 0 && {
+            billingAddressAllowedCountries: billingAddressAllowedCountries.toString().substring(0, MAX_LENGTH)
+        }),
         billingAddressMode: billingAddressModeValue,
         billingAddressRequired,
-        billingAddressRequiredFields: JSON.stringify(billingAddressRequiredFields),
-        brands: brandsStr,
+        billingAddressRequiredFields: billingAddressRequiredFields?.toString()?.substring(0, MAX_LENGTH),
+        // Probably just for development - in real life we wouldn't expect the number of supported brands to push the endpoint limit on 128 chars
+        brands: brands?.toString()?.substring(0, MAX_LENGTH),
         challengeWindowSize,
         disableIOSArrowKeys,
         doBinLookup,
@@ -189,18 +187,6 @@ export const getCardConfigData = (cardProps: CardElementProps): CardConfigData =
         hasOnFocus: onFocus !== CardInputDefaultProps.onFocus,
         hasOnLoad: onLoad !== CardInputDefaultProps.onLoad
     };
-
-    // TODO - keep until endpoint can accept more entries in the configData object (current limit: 32);
-    if (Object.keys(configData).length > 32) {
-        const strippedConfigData = Object.entries(configData).reduce((acc, [key, value], index) => {
-            if (index < 32) {
-                acc[key] = value;
-            }
-            return acc;
-        }, {});
-
-        return strippedConfigData as CardConfigData;
-    }
 
     return configData;
 };

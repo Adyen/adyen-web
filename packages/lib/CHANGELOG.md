@@ -1,5 +1,37 @@
 # @adyen/adyen-web
 
+## 5.69.0
+
+### Minor Changes
+
+-   v5 cherrypick - Always make call to analytics setup endpoint ([#2839](https://github.com/Adyen/adyen-web/pull/2839))
+
+### Patch Changes
+
+-   Dropin: Filtering out payment method type before creating the payment method element ([#2853](https://github.com/Adyen/adyen-web/pull/2853))
+
+-   send browserInfo in setup call ([#2857](https://github.com/Adyen/adyen-web/pull/2857))
+
+## 5.68.1
+
+### Patch Changes
+
+-   Fixes Lithuanian postal code to support 4-5 digits and LT prefix ([#2827](https://github.com/Adyen/adyen-web/pull/2827))
+
+-   Improves acessibility removing region on payment method item and button loading state ([#2827](https://github.com/Adyen/adyen-web/pull/2827))
+
+## 5.68.0
+
+### Minor Changes
+
+-   Display ANCV ID while displaying used payment methods on Dropin ([#2809](https://github.com/Adyen/adyen-web/pull/2809))
+
+### Patch Changes
+
+-   Send certain analytic config data for the `Dropin`. Modify some analytic config data for the `Card`. ([#2796](https://github.com/Adyen/adyen-web/pull/2796))
+
+-   Fixes `props.holderName` not being used in stored cards as `paymetMethod.holderName`. ([#2800](https://github.com/Adyen/adyen-web/pull/2800))
+
 ## 5.67.1
 
 ### Patch Changes

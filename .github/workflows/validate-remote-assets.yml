@@ -3,7 +3,7 @@ name: Validate remote assets
 on:
   pull_request:
     branches:
-      - main
+      - v5
 
 jobs:
   check-secured-fields-assets:

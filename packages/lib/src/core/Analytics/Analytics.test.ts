@@ -30,6 +30,18 @@ const analyticsEventObj = {
     target: 'PAN input'
 } as CreateAnalyticsObject;
 
+const applicationInfo = {
+    merchantApplication: {
+        name: 'merchant_application_name',
+        version: 'version'
+    },
+    externalPlatform: {
+        name: 'external_platform_name',
+        version: 'external_platform_version',
+        integrator: 'getSystemIntegratorName'
+    }
+};
+
 let analytics;
 
 describe('Analytics initialisation and event queue', () => {
@@ -58,40 +70,13 @@ describe('Analytics initialisation and event queue', () => {
         expect(collectIdPromiseMock).toHaveLength(0);
     });
 
-    test('Should not fire any calls if analytics is disabled', () => {
-        const analytics = Analytics({ analytics: { enabled: false }, loadingContext: '', locale: '', clientKey: '', amount });
-
-        analytics.setUp(setUpEvent);
-        expect(collectIdPromiseMock).not.toHaveBeenCalled();
-        expect(logEventPromiseMock).not.toHaveBeenCalled();
-    });
-
-    test('Will not call the collectId endpoint if telemetry is disabled, but will call the logEvent (analytics pixel)', () => {
-        const analytics = Analytics({ analytics: { telemetry: false }, loadingContext: '', locale: '', clientKey: '', amount });
-        expect(collectIdPromiseMock).not.toHaveBeenCalled();
-        analytics.setUp(setUpEvent);
-        expect(collectIdPromiseMock).not.toHaveBeenCalled();
-
-        expect(logEventPromiseMock).toHaveBeenCalledWith({ ...setUpEvent });
-    });
-
-    test('Calls the collectId endpoint by default, adding expected fields, including sanitising the passed analyticsData object', async () => {
-        const applicationInfo = {
-            merchantApplication: {
-                name: 'merchant_application_name',
-                version: 'version'
-            },
-            externalPlatform: {
-                name: 'external_platform_name',
-                version: 'external_platform_version',
-                integrator: 'getSystemIntegratorName'
-            }
-        };
-
+    test('Should still make the setup call even when analytics is disabled, adding expected fields, including sanitising the passed analyticsData object', async () => {
         const checkoutAttemptId = 'my.attempt.id';
 
         analytics = Analytics({
             analytics: {
+                enabled: false,
+                telemetry: false,
                 analyticsData: {
                     applicationInfo,
                     checkoutAttemptId,
@@ -117,9 +102,12 @@ describe('Analytics initialisation and event queue', () => {
         expect(collectIdPromiseMock).toHaveBeenCalledWith({ ...enhancedSetupEvent });
 
         expect(analytics.getCheckoutAttemptId()).toEqual(mockCheckoutAttemptId);
+
+        // enabled: false - so we should not see the logging pixel loaded
+        expect(logEventPromiseMock).not.toHaveBeenCalled();
     });
 
-    test('A second attempt to call "send" should fail (since we already have a checkoutAttemptId)', async () => {
+    test('A second attempt to call "send" should fail (since we already have a checkoutAttemptId), but the logEvent (analytics pixel) will be called because enabled is not set to false', async () => {
         const payload = {
             payloadData: 'test'
         };
@@ -128,9 +116,40 @@ describe('Analytics initialisation and event queue', () => {
         analytics.setUp(setUpEvent);
 
         expect(collectIdPromiseMock).toHaveLength(0);
+
+        // see the logging pixel loaded
+        expect(logEventPromiseMock).toHaveBeenCalledWith({ ...setUpEvent });
     });
 
-    test('Create info event and see that it is held in a queue', async () => {
+    test('Try to create info event but see that it fails because analytics.enabled is set to false', () => {
+        const analytics = Analytics({
+            analytics: { enabled: false },
+            loadingContext: '',
+            locale: '',
+            clientKey: '',
+            amount
+        });
+
+        const aObj: AnalyticsObject = analytics.createAnalyticsEvent({ event: 'info', data: analyticsEventObj });
+
+        expect(aObj).toBe(undefined);
+    });
+
+    test('Try to create info event but see that it fails because analytics.telemetry is set to false', () => {
+        const analytics = Analytics({
+            analytics: { telemetry: false },
+            loadingContext: '',
+            locale: '',
+            clientKey: '',
+            amount
+        });
+
+        const aObj: AnalyticsObject = analytics.createAnalyticsEvent({ event: 'info', data: analyticsEventObj });
+
+        expect(aObj).toBe(undefined);
+    });
+
+    test('With Analytics being enabled by default, create info event and see that it is held in a queue', async () => {
         const aObj: AnalyticsObject = analytics.createAnalyticsEvent({ event: 'info', data: analyticsEventObj });
 
         expect(aObj.timestamp).not.toBe(undefined);

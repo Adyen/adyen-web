@@ -193,6 +193,17 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+
+        &--sr-only {
+            border: 0;
+            clip: rect(0 0 0 0);
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            margin: -1px;
+            padding: 0;
+            position: absolute;
+        }
     }
 
     .adyen-checkout__spinner {

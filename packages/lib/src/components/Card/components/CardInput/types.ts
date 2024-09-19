@@ -78,6 +78,7 @@ export interface CardInputProps {
     fundingSource?: 'debit' | 'credit';
     hasCVC?: boolean;
     hasHolderName?: boolean;
+    holderName?: string;
     holderNameRequired?: boolean;
     i18n?: Language;
     implementationType?: string;

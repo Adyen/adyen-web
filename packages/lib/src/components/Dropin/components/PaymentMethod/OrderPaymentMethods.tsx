@@ -3,8 +3,17 @@ import PaymentMethodIcon from './PaymentMethodIcon';
 import useCoreContext from '../../../../core/Context/useCoreContext';
 import './OrderPaymentMethods.scss';
 import useImage from '../../../../core/Context/useImage';
+import './OrderPaymentMethods.scss';
+import { Order, OrderStatus } from '../../../../types';
 
-export const OrderPaymentMethods = ({ order, orderStatus, onOrderCancel, brandLogoConfiguration }) => {
+type OrderPaymentMethodsProps = {
+    order: Order;
+    orderStatus: OrderStatus;
+    onOrderCancel: (order) => void;
+    brandLogoConfiguration: any;
+};
+
+export const OrderPaymentMethods = ({ order, orderStatus, onOrderCancel, brandLogoConfiguration }: OrderPaymentMethodsProps) => {
     const { i18n } = useCoreContext();
     const getImage = useImage();
 
@@ -20,7 +29,7 @@ export const OrderPaymentMethods = ({ order, orderStatus, onOrderCancel, brandLo
                                     type={orderPaymentMethod.type}
                                     src={brandLogoConfiguration[orderPaymentMethod.type] || getImage()(orderPaymentMethod.type)}
                                 />
-                                •••• {orderPaymentMethod.lastFour}
+                                {orderPaymentMethod.label ? `${orderPaymentMethod.label}` : `•••• ${orderPaymentMethod.lastFour}`}
                             </div>
 
                             {onOrderCancel && (

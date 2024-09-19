@@ -1,10 +1,11 @@
 import Pix from './Pix';
 import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
+import { NO_CHECKOUT_ATTEMPT_ID } from '../../core/Analytics/constants';
 
 test('should return only payment type if personalDetails is not required', async () => {
     const pixElement = new Pix({});
-    expect(pixElement.data).toEqual({ clientStateDataIndicator: true, paymentMethod: { type: 'pix', checkoutAttemptId: 'do-not-track' } });
+    expect(pixElement.data).toEqual({ clientStateDataIndicator: true, paymentMethod: { type: 'pix', checkoutAttemptId: NO_CHECKOUT_ATTEMPT_ID } });
 });
 
 test('should show personal details form if enabled', async () => {
