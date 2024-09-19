@@ -22,7 +22,8 @@ const getActionHandler = statusType => {
             ...action,
             onComplete: props.onAdditionalDetails,
             onError: props.onError,
-            statusType
+            statusType,
+            originalAction: action
         };
 
         return createComponent(core, registry, action.paymentMethodType, config);
@@ -34,7 +35,8 @@ const actionTypes = {
         const config = {
             ...props,
             ...action,
-            statusType: 'redirect'
+            statusType: 'redirect',
+            originalAction: action
         };
 
         return createComponent(core, registry, 'redirect', config);

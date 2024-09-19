@@ -218,7 +218,11 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                     src={qrCodeImage}
                     alt={i18n.get('wechatpay.scanqrcode')}
                     onLoad={() => {
-                        onActionHandled?.({ componentType: this.props.type, actionDescription: 'qr-code-loaded' });
+                        onActionHandled?.({
+                            componentType: this.props.type,
+                            actionDescription: 'qr-code-loaded',
+                            originalAction: this.props.originalAction
+                        });
                     }}
                 />
 

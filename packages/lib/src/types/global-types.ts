@@ -352,11 +352,25 @@ export type RawPaymentResponse = PaymentResponseData &
         [key: string]: any;
     };
 
-export type ActionDescriptionType = 'qr-code-loaded' | 'polling-started' | '3DS2 fingerprint iframe loaded' | '3DS2 challenge iframe loaded';
+/**
+ * onActionHandled is called for:
+ *  - QRLoader
+ *  - Await
+ *  - 3DS2
+ *  - Redirect
+ *  actions
+ */
+export type ActionDescriptionType =
+    | 'qr-code-loaded'
+    | 'polling-started'
+    | '3DS2 fingerprint iframe loaded'
+    | '3DS2 challenge iframe loaded'
+    | 'performing-redirect';
 
 export interface ActionHandledReturnObject {
     componentType: string;
     actionDescription: ActionDescriptionType;
+    originalAction?: PaymentAction;
 }
 
 export interface AnalyticsModule {

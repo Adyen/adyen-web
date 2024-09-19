@@ -1,4 +1,4 @@
-import { ActionHandledReturnObject, PaymentAmount } from '../../../types/global-types';
+import { ActionHandledReturnObject, type PaymentAction, PaymentAmount } from '../../../types/global-types';
 import Language from '../../../language/Language';
 import { h } from 'preact';
 import { SendAnalyticsObject } from '../../../core/Analytics/types';
@@ -29,6 +29,7 @@ export interface QRLoaderProps {
     instructions?: string | (() => h.JSX.Element);
     copyBtn?: boolean;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
+    originalAction?: PaymentAction;
     onSubmitAnalytics?: (aObj: SendAnalyticsObject) => void;
 }
 

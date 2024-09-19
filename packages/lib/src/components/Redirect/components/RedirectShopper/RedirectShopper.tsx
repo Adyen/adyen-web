@@ -1,5 +1,6 @@
 import { Component, h } from 'preact';
 import detectInIframeInSameOrigin from '../../../../utils/detectInIframeInSameOrigin';
+import { ActionHandledReturnObject, PaymentAction } from '../../../../types/global-types';
 
 interface RedirectShopperProps {
     beforeRedirect: (resolve, reject, url) => Promise<void>;
@@ -7,6 +8,9 @@ interface RedirectShopperProps {
     method: 'GET' | 'POST';
     data?: any;
     redirectFromTopWhenInIframe?: boolean;
+    paymentMethodType?: string;
+    onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
+    originalAction?: PaymentAction;
 }
 
 class RedirectShopper extends Component<RedirectShopperProps> {
@@ -18,6 +22,14 @@ class RedirectShopper extends Component<RedirectShopperProps> {
 
     componentDidMount() {
         const doRedirect = () => {
+            // call callback
+            this.props.onActionHandled({
+                componentType: this.props.paymentMethodType,
+                actionDescription: 'performing-redirect',
+                originalAction: this.props.originalAction
+            });
+
+            // perform redirect
             if (this.postForm) {
                 this.postForm.submit();
             } else {

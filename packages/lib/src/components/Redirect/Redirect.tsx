@@ -11,7 +11,8 @@ class RedirectElement extends UIElement<RedirectConfiguration> {
     public static type = TxVariants.redirect;
 
     public static defaultProps = {
-        type: RedirectElement.type
+        type: RedirectElement.type,
+        onActionHandled: () => {}
     };
 
     formatData() {
