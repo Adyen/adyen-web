@@ -11,7 +11,7 @@ export default defineNuxtConfig({
         merchantAccount: '',
 
         public: {
-            clientKey: ' '
+            clientKey: ''
         }
     }
 });

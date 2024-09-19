@@ -1,4 +1,4 @@
-export default async function createSession(countryCode: string, shopperLocale: string, amount: { value: number; currency: string }) {
+export default async function fetchPaymentMethods(countryCode: string, shopperLocale: string, amount: { value: number; currency: string }) {
     const payload = {
         amount,
         countryCode,
@@ -7,11 +7,10 @@ export default async function createSession(countryCode: string, shopperLocale: 
         shopperReference: paymentsConfig.reference,
         lineItems: paymentsConfig.lineItems,
         reference: paymentsConfig.reference,
-        returnUrl: paymentsConfig.returnUrl,
         shopperEmail: paymentsConfig.shopperEmail
     };
 
-    return await $fetch('/api/session', {
+    return await $fetch('/api/paymentMethods', {
         method: 'post',
         body: payload
     });

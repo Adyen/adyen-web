@@ -1,7 +1,6 @@
 <script lang="ts">
 import { AdyenCheckout, Dropin } from '@adyen/adyen-web/auto';
 import '@adyen/adyen-web/styles/adyen.css';
-import fetchPaymentMethods from '~/utils/fetch-payment-methods';
 
 export default {
     data() {
@@ -26,60 +25,19 @@ export default {
             const amount = parseAmount(urlParams.get('amount') || 2000, countryCode);
 
             const runtimeConfig = useRuntimeConfig();
-            const paymentMethodsResponse = await fetchPaymentMethods(countryCode, locale, amount);
+
+            const { id, sessionData } = await createSession(countryCode, locale, amount);
 
             const options = {
-                paymentMethodsResponse,
+                session: {
+                    id,
+                    sessionData
+                },
                 amount,
                 countryCode,
                 locale,
                 environment: 'test',
                 clientKey: runtimeConfig.public.clientKey,
-
-                onSubmit: async (state, component, actions) => {
-                    try {
-                        const result = await makePaymentsCall(state.data, countryCode, locale, amount);
-
-                        if (!result.resultCode) {
-                            actions.reject();
-                            return;
-                        }
-
-                        const { resultCode, action, order, donationToken } = result;
-
-                        actions.resolve({
-                            resultCode,
-                            action,
-                            order,
-                            donationToken
-                        });
-                    } catch (error) {
-                        console.error('onSubmit', error);
-                        actions.reject();
-                    }
-                },
-                onAdditionalDetails: async (state, component, actions) => {
-                    try {
-                        const result = await makeDetailsCall(state.data);
-
-                        if (!result.resultCode) {
-                            actions.reject();
-                            return;
-                        }
-
-                        const { resultCode, action, order, donationToken } = result;
-
-                        actions.resolve({
-                            resultCode,
-                            action,
-                            order,
-                            donationToken
-                        });
-                    } catch (error) {
-                        console.error('onSubmit', error);
-                        actions.reject();
-                    }
-                },
                 onError(error) {
                     console.error('Something went wrong', error);
                 },
