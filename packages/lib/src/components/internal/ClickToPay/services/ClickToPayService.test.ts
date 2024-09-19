@@ -29,7 +29,7 @@ describe('Timeout handling', () => {
         const sdkLoader = mock<ISrcSdkLoader>();
         sdkLoader.load.mockResolvedValue([visa]);
 
-        // Mock window.VISA_SDK with the buildClientProfile method
+        // @ts-ignore  Mock window.VISA_SDK with the buildClientProfile method
         window.VISA_SDK = {
             buildClientProfile: jest.fn()
         };
@@ -37,6 +37,7 @@ describe('Timeout handling', () => {
         const service = new ClickToPayService(schemesConfig, sdkLoader, 'test', undefined, onTimeoutMock);
         await service.initialize();
 
+        // @ts-ignore  Mock window.VISA_SDK with the buildClientProfile method
         expect(window.VISA_SDK.buildClientProfile).toHaveBeenNthCalledWith(1, 'visa-srciDpaId');
         expect(onTimeoutMock).toHaveBeenNthCalledWith(1, timeoutError);
     });
@@ -60,7 +61,7 @@ describe('Timeout handling', () => {
         const sdkLoader = mock<ISrcSdkLoader>();
         sdkLoader.load.mockResolvedValue([visa]);
 
-        // Mock window.VISA_SDK with the buildClientProfile method
+        // @ts-ignore  Mock window.VISA_SDK with the buildClientProfile method
         window.VISA_SDK = {
             buildClientProfile: jest.fn(),
             correlationId: 'xxx-yyy'
@@ -69,7 +70,9 @@ describe('Timeout handling', () => {
         const service = new ClickToPayService(schemesConfig, sdkLoader, 'test', undefined, onTimeoutMock);
         await service.initialize();
 
+        // @ts-ignore  Mock window.VISA_SDK with the buildClientProfile method
         expect(window.VISA_SDK.buildClientProfile).toHaveBeenCalledTimes(1);
+        // @ts-ignore  Mock window.VISA_SDK with the buildClientProfile method
         expect(window.VISA_SDK.buildClientProfile).toHaveBeenCalledWith();
 
         expect(onTimeoutMock).toHaveBeenNthCalledWith(1, timeoutError);
@@ -94,7 +97,7 @@ describe('Timeout handling', () => {
         const sdkLoader = mock<ISrcSdkLoader>();
         sdkLoader.load.mockResolvedValue([mc]);
 
-        // Mock window.VISA_SDK with the buildClientProfile method
+        // @ts-ignore  Mock window.VISA_SDK with the buildClientProfile method
         window.VISA_SDK = {
             buildClientProfile: jest.fn()
         };
@@ -102,6 +105,7 @@ describe('Timeout handling', () => {
         const service = new ClickToPayService(schemesConfig, sdkLoader, 'test', undefined, onTimeoutMock);
         await service.initialize();
 
+        // @ts-ignore  Mock window.VISA_SDK with the buildClientProfile method
         expect(window.VISA_SDK.buildClientProfile).toHaveBeenCalledTimes(0);
 
         expect(onTimeoutMock).toHaveBeenNthCalledWith(1, timeoutError);
