@@ -26,6 +26,7 @@
 
 <script>
 export default {
+    emits: ['click'],
     props: {
         selectedValue: {
             type: String,
