@@ -9,7 +9,7 @@ class TimeoutError extends Error {
     public source: string;
     public isTimeoutTriggeredBySchemeSdk: boolean;
 
-    public clientId?: string;
+    /** Currently populated only by Visa SDK if available */
     public correlationId?: string;
 
     constructor(options: TimeoutErrorProps) {
