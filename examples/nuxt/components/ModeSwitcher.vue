@@ -1,30 +1,4 @@
-<template>
-    <div class="mode-switcher">
-        <button
-            @click.once="onClick(CheckoutMode.Advanced)"
-            :class="{
-                'mode-switcher__button': true,
-                'mode-switcher__button--selected': selectedValue === CheckoutMode.Advanced
-            }"
-            type="button"
-        >
-            Advanced flow
-        </button>
-
-        <button
-            @click.once="onClick(CheckoutMode.Sessions)"
-            :class="{
-                'mode-switcher__button': true,
-                'mode-switcher__button--selected': selectedValue === CheckoutMode.Sessions
-            }"
-            type="button"
-        >
-            Sessions flow
-        </button>
-    </div>
-</template>
-
-<script>
+<script lang="ts">
 export default {
     emits: ['click'],
     props: {
@@ -42,19 +16,36 @@ export default {
         };
     },
     methods: {
-        onClick(value, event) {
-            this.$emit('click', value); // Emits event to parent component
+        onClick(value: string) {
+            this.$emit('click', value);
         }
     }
 };
 </script>
 
+<template>
+    <div class="mode-switcher">
+        <button @click="onClick(CheckoutMode.Advanced)" :class="{
+            'mode-switcher__button': true,
+            'mode-switcher__button--selected': selectedValue === CheckoutMode.Advanced
+        }" type="button">
+            Advanced flow
+        </button>
+
+        <button @click="onClick(CheckoutMode.Sessions)" :class="{
+            'mode-switcher__button': true,
+            'mode-switcher__button--selected': selectedValue === CheckoutMode.Sessions
+        }" type="button">
+            Sessions flow
+        </button>
+    </div>
+</template>
+
 <style scoped>
 .mode-switcher {
     max-width: 800px;
-    margin-top: 50px;
-    margin-bottom: 50px;
     margin: auto;
+    margin-bottom: 50px;
     display: flex;
     justify-content: space-between;
     gap: 4px;

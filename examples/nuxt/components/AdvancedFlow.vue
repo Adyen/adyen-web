@@ -1,20 +1,17 @@
 <script lang="ts">
+import { DEFAULT_AMOUNT } from '~/constants';
 import { AdyenCheckout, Dropin } from '@adyen/adyen-web/auto';
+import type { AdyenCheckoutError, UIElement, AdditionalDetailsActions, AdditionalDetailsData, CoreConfiguration, PaymentCompletedData, PaymentFailedData } from '@adyen/adyen-web/auto';
 import '@adyen/adyen-web/styles/adyen.css';
-import fetchPaymentMethods from '~/utils/fetch-payment-methods';
 
 export default {
     data() {
         return {
-            dropin: null
+            dropin: null as Dropin | null,
         };
     },
 
     async mounted() {
-        const urlParams = new URLSearchParams(window.location.search);
-        this.sessionId = urlParams.get('sessionId');
-        this.redirectResult = urlParams.get('redirectResult');
-
         this.createCheckout();
     },
 
@@ -23,19 +20,18 @@ export default {
             const urlParams = new URLSearchParams(window.location.search);
             const countryCode = urlParams.get('countryCode') || 'US';
             const locale = urlParams.get('shopperLocale') || 'en-US';
-            const amount = parseAmount(urlParams.get('amount') || 2000, countryCode);
+            const amount = parseAmount(urlParams.get('amount') || DEFAULT_AMOUNT, countryCode);
 
             const runtimeConfig = useRuntimeConfig();
             const paymentMethodsResponse = await fetchPaymentMethods(countryCode, locale, amount);
 
-            const options = {
+            const options: CoreConfiguration = {
                 paymentMethodsResponse,
                 amount,
                 countryCode,
                 locale,
                 environment: 'test',
                 clientKey: runtimeConfig.public.clientKey,
-
                 onSubmit: async (state, component, actions) => {
                     try {
                         const result = await makePaymentsCall(state.data, countryCode, locale, amount);
@@ -58,7 +54,7 @@ export default {
                         actions.reject();
                     }
                 },
-                onAdditionalDetails: async (state, component, actions) => {
+                onAdditionalDetails: async (state: AdditionalDetailsData, component: UIElement, actions: AdditionalDetailsActions) => {
                     try {
                         const result = await makeDetailsCall(state.data);
 
@@ -80,18 +76,19 @@ export default {
                         actions.reject();
                     }
                 },
-                onError(error) {
-                    console.error('Something went wrong', error);
-                },
-                onPaymentCompleted(data, element) {
+                onPaymentCompleted(data: PaymentCompletedData, element?: UIElement) {
                     console.log('onPaymentCompleted', data, element);
                 },
-                onPaymentFailed(data, element) {
+                onPaymentFailed(data: PaymentFailedData, element?: UIElement) {
                     console.log('onPaymentFailed', data, element);
-                }
+                },
+                onError(error: AdyenCheckoutError) {
+                    console.error('Something went wrong', error);
+                },
             };
 
             const checkout = await AdyenCheckout(options);
+
             this.dropin = new Dropin(checkout, {
                 paymentMethodsConfiguration: {
                     card: {
@@ -99,7 +96,7 @@ export default {
                     }
                 }
             });
-            this.dropin.mount(this.$refs[this.type]);
+            this.dropin.mount(this.$refs.dropinRef as HTMLElement);
         }
     }
 };
@@ -107,6 +104,13 @@ export default {
 
 <template>
     <div>
-        <div class="payment" :ref="`${type}`"></div>
+        <div class="payment" ref="dropinRef"></div>
     </div>
 </template>
+
+<style scoped>
+.payment {
+    margin: auto;
+    max-width: 800px;
+}
+</style>

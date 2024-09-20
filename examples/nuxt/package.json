@@ -10,8 +10,8 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@adyen/adyen-web": "^6.0.1",
-    "nuxt": "^3.12.4",
+    "@adyen/adyen-web": "^6.2.0",
+    "nuxt": "^3.13.2",
     "vue": "latest"
   },
   "devDependencies": {
