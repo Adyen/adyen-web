@@ -3,20 +3,17 @@
 ### Steps to run the project:
 
 1. Install the project dependencies: `npm install`
-2. Edit the `nuxt.config.ts` file and add there your account details:
+2. Create the `.env` file and add there your account details:
 
 Example:
-
 ```
-runtimeConfig: {
-    apiKey: 'AQEthmfxKo7Mb...',
-    apiVersion: 'v71',
-    merchantAccount: 'TestMerchant...',
+# SERVER 
+NUXT_CHECKOUT_API_KEY=AQEthmff3VfI5eG...
+NUXT_API_VERSION=v71
+NUXT_MERCHANT_ACCOUNT=TestMerchant...
 
-    public: {
-        clientKey: 'test_L6HTEOAXQBCZ...'
-    }
-}
+# CLIENT
+NUXT_PUBLIC_CLIENT_KEY=test_L6HTEOAXQB...
 ```
 
 3. Run `npm run dev`. The web app will be running on `http://localhost:3000`

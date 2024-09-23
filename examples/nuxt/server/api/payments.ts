@@ -12,7 +12,7 @@ export default defineEventHandler(async event => {
         headers: {
             'Access-Control-Allow-Origin': '*',
             'Content-Type': 'application/json',
-            'X-Api-Key': config.apiKey
+            'X-Api-Key': config.checkoutApiKey
         }
     });
 
