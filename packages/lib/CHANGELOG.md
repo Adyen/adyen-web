@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 5.69.1
+
+### Patch Changes
+
+-   Reporting custom Click to Pay Visa timeouts to Visa SDK ([#2797](https://github.com/Adyen/adyen-web/pull/2797))
+
 ## 5.69.0
 
 ### Minor Changes
