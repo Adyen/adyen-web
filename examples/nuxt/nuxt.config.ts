@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     css: ['~/assets/main.css'],
 
     runtimeConfig: {
-        apiKey: '',
+        checkoutApiKey: '',
         apiVersion: '',
         merchantAccount: '',
 
