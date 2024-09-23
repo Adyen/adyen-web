@@ -24,6 +24,10 @@ class TimeoutError extends Error {
     public setCorrelationId(correlationId: string): void {
         this.correlationId = correlationId;
     }
+
+    public toString() {
+        return this.message;
+    }
 }
 
 export default TimeoutError;
