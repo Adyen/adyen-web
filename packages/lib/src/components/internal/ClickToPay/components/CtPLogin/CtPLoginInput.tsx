@@ -48,19 +48,32 @@ const CtPLoginInput = (props: CtPLoginInputProps): h.JSX.Element => {
         props.onSetInputHandlers(loginInputHandlersRef.current);
     }, [validateInput, props.onSetInputHandlers]);
 
-    const handleOnKeyUp = useCallback(
+    // const handleOnKeyUp = useCallback(
+    //     (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
+    //         console.log('ctp login - handleOnKeyUp');
+    //
+    //         if (event.key === 'Enter') {
+    //             debugger;
+    //             void props.onPressEnter();
+    //         }
+    //     },
+    //     [props.onPressEnter]
+    // );
+
+    const handleOnKeyPress = useCallback(
         (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
+            console.log('handleOnKeyPress - ctp one time password');
+
             if (event.key === 'Enter') {
+                // Prevent <form> submission if Component is placed inside an form
+                event.preventDefault();
+                // Prevent global BaseElement keypress event to be triggered
+                event.stopPropagation();
                 void props.onPressEnter();
             }
         },
         [props.onPressEnter]
     );
-
-    const handleOnKeyPress = useCallback((event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
-        // Prevent <form> submission if Component is placed inside an form
-        if (event.key === 'Enter') event.preventDefault();
-    }, []);
 
     useEffect(() => {
         props.onChange({ data, valid, errors, isValid });
@@ -82,7 +95,6 @@ const CtPLoginInput = (props: CtPLoginInputProps): h.JSX.Element => {
                 onInput={handleChangeFor('shopperLogin', 'input')}
                 onBlur={handleChangeFor('shopperLogin', 'blur')}
                 onKeyPress={handleOnKeyPress}
-                onKeyUp={handleOnKeyUp}
             />
         </Field>
     );

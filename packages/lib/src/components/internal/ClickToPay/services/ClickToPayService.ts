@@ -232,7 +232,13 @@ class ClickToPayService implements IClickToPayService {
         return new Promise((resolve, reject) => {
             const lookupPromises = this.sdks.map(sdk => {
                 const identityLookupPromise = executeWithTimeout<SrciIdentityLookupResponse>(
-                    () => sdk.identityLookup({ identityValue: shopperEmail, type: 'email' }),
+                    async () => {
+                        console.time(`identityLookup ${sdk.schemeName}`);
+                        const resp = await sdk.identityLookup({ identityValue: shopperEmail, type: 'email' });
+                        console.timeEnd(`identityLookup ${sdk.schemeName}`);
+
+                        return resp;
+                    },
                     5000,
                     new TimeoutError(`ClickToPayService - Timeout during identityLookup() of the scheme '${sdk.schemeName}'`)
                 );
@@ -317,7 +323,11 @@ class ClickToPayService implements IClickToPayService {
             const cfg = this.schemesConfig[sdk.schemeName];
 
             return executeWithTimeout<void>(
-                () => sdk.init(cfg, this.srciTransactionId),
+                async () => {
+                    console.time(`init ${sdk.schemeName}`);
+                    await sdk.init(cfg, this.srciTransactionId);
+                    console.timeEnd(`init ${sdk.schemeName}`);
+                },
                 5000,
                 new TimeoutError(`ClickToPayService - Timeout during init() of the scheme '${sdk.schemeName}'`)
             );
