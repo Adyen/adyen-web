@@ -18,6 +18,7 @@ class Button extends Component<ButtonProps, ButtonState> {
 
     public onClick = e => {
         e.preventDefault();
+        console.log(' on click button');
 
         if (!this.props.disabled) {
             this.props.onClick(e, { complete: this.complete });

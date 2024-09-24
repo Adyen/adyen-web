@@ -86,16 +86,6 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
         [i18n]
     );
 
-    const handleOnKeyUp = useCallback(
-        (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
-            console.log('handleOnKeyUp - ctp one time password');
-            if (event.key === 'Enter') {
-                void props.onPressEnter();
-            }
-        },
-        [props.onPressEnter]
-    );
-
     const handleOnKeyPress = useCallback(
         (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
             console.log('handleOnKeyPress - ctp one time password');
@@ -105,7 +95,7 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
                 event.preventDefault();
                 // Prevent global BaseElement keypress event to be triggered
                 event.stopPropagation();
-                // void props.onPressEnter();
+                void props.onPressEnter();
             }
         },
         [props.onPressEnter]
@@ -135,7 +125,6 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
                 disabled={props.disabled}
                 onInput={handleChangeFor('otp', 'input')}
                 onBlur={handleChangeFor('otp', 'blur')}
-                onKeyUp={handleOnKeyUp}
                 onKeyPress={handleOnKeyPress}
                 setRef={(ref: HTMLInputElement) => {
                     inputRef.current = ref;

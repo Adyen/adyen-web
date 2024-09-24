@@ -387,7 +387,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     protected handleKeyPress(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement> | KeyboardEvent) {
         if (e.key === 'Enter' || e.code === 'Enter') {
-            debugger;
             e.preventDefault(); // Prevent <form> submission if Component is placed inside a form
 
             this.onEnterKeyPressed(document?.activeElement, this);

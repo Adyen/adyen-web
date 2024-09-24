@@ -48,21 +48,9 @@ const CtPLoginInput = (props: CtPLoginInputProps): h.JSX.Element => {
         props.onSetInputHandlers(loginInputHandlersRef.current);
     }, [validateInput, props.onSetInputHandlers]);
 
-    // const handleOnKeyUp = useCallback(
-    //     (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
-    //         console.log('ctp login - handleOnKeyUp');
-    //
-    //         if (event.key === 'Enter') {
-    //             debugger;
-    //             void props.onPressEnter();
-    //         }
-    //     },
-    //     [props.onPressEnter]
-    // );
-
     const handleOnKeyPress = useCallback(
         (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
-            console.log('handleOnKeyPress - ctp one time password');
+            console.log('handleOnKeyPress - ctp login input');
 
             if (event.key === 'Enter') {
                 // Prevent <form> submission if Component is placed inside an form
