@@ -18,6 +18,9 @@ const createComponent = (args: PaymentMethodStoryProps<CardConfiguration>, conte
     const checkout = getStoryContextCheckout(context);
     const card = new Card(checkout, componentConfiguration);
 
+    globalThis.card = card;
+    globalThis.parent.window['card'] = card;
+
     return <Container element={card} />;
 };
 
