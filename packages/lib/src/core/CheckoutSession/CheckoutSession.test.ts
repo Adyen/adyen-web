@@ -41,10 +41,10 @@ describe('CheckoutSession', () => {
     describe('setupSession', () => {
         test('should call the http post with the correct parameters', async () => {
             const session = new CheckoutSession(rawSessionMock, clientKeyMock, 'test');
-            await session.setupSession({ clientKey: clientKeyMock, session: rawSessionMock });
+            await session.setupSession({});
             expect(httpPostMock).toHaveBeenCalledWith(
                 { loadingContext: 'test', path: `v1/sessions/${rawSessionMock.id}/setup?clientKey=${clientKeyMock}`, errorLevel: 'fatal' },
-                { sessionData: rawSessionMock.sessionData }
+                { sessionData: rawSessionMock.sessionData, browserInfo: expect.anything() }
             );
         });
 
@@ -52,7 +52,7 @@ describe('CheckoutSession', () => {
             const session = new CheckoutSession(rawSessionMock, clientKeyMock, 'test');
             expect(session.data).toBe(rawSessionMock.sessionData);
 
-            await session.setupSession({ clientKey: clientKeyMock, session: rawSessionMock });
+            await session.setupSession({});
             expect(session.data).toBe(successResponseMock.sessionData);
         });
     });
