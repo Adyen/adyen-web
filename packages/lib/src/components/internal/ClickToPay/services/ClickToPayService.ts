@@ -18,6 +18,7 @@ import uuidv4 from '../../../../utils/uuid';
 import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
 import { isFulfilled, isRejected } from '../../../../utils/promise-util';
 import TimeoutError from '../errors/TimeoutError';
+import { executeWithTimeout } from './execute-with-timeout';
 
 export enum CtpState {
     Idle = 'Idle',
@@ -27,11 +28,6 @@ export enum CtpState {
     Ready = 'Ready',
     Login = 'Login',
     NotAvailable = 'NotAvailable'
-}
-
-function executeWithTimeout<T>(fn: () => Promise<T>, timer: number, error: Error): Promise<T> {
-    const timeout = new Promise<T>((resolve, reject) => setTimeout(() => reject(error), timer));
-    return Promise.race<T>([fn(), timeout]);
 }
 
 class ClickToPayService implements IClickToPayService {
@@ -114,12 +110,8 @@ class ClickToPayService implements IClickToPayService {
 
             this.setState(CtpState.NotAvailable);
         } catch (error) {
-            if (error instanceof SrciError && error?.reason === 'REQUEST_TIMEOUT') {
-                const timeoutError = new TimeoutError(`ClickToPayService - Timeout during ${error.source}() of the scheme '${error.scheme}'`);
-                this.onTimeout?.(timeoutError);
-            } else if (error instanceof TimeoutError) {
-                console.warn(error.toString());
-                this.onTimeout?.(error);
+            if ((error instanceof SrciError && error?.reason === 'REQUEST_TIMEOUT') || error instanceof TimeoutError) {
+                this.handleTimeout(error);
             } else if (error instanceof SrciError) {
                 console.warn(`Error at ClickToPayService # init: ${error.toString()}`);
             } else {
@@ -226,7 +218,7 @@ class ClickToPayService implements IClickToPayService {
      * Based on the responses from the Click to Pay Systems, we should do the validation process using the SDK that
      * that responds faster with 'consumerPresent=true'
      */
-    public async verifyIfShopperIsEnrolled(shopperIdentity: IdentityLookupParams): Promise<{ isEnrolled: boolean }> {
+    public verifyIfShopperIsEnrolled(shopperIdentity: IdentityLookupParams): Promise<{ isEnrolled: boolean }> {
         const { shopperEmail } = shopperIdentity;
 
         return new Promise((resolve, reject) => {
@@ -234,10 +226,14 @@ class ClickToPayService implements IClickToPayService {
                 const identityLookupPromise = executeWithTimeout<SrciIdentityLookupResponse>(
                     () => sdk.identityLookup({ identityValue: shopperEmail, type: 'email' }),
                     5000,
-                    new TimeoutError(`ClickToPayService - Timeout during identityLookup() of the scheme '${sdk.schemeName}'`)
+                    new TimeoutError({
+                        source: 'identityLookup',
+                        scheme: sdk.schemeName,
+                        isTimeoutTriggeredBySchemeSdk: false
+                    })
                 );
 
-                identityLookupPromise
+                return identityLookupPromise
                     .then(response => {
                         if (response.consumerPresent && !this.validationSchemeSdk) {
                             this.setSdkForPerformingShopperIdentityValidation(sdk);
@@ -247,8 +243,6 @@ class ClickToPayService implements IClickToPayService {
                     .catch(error => {
                         reject(error);
                     });
-
-                return identityLookupPromise;
             });
 
             void Promise.allSettled(lookupPromises).then(() => {
@@ -264,6 +258,24 @@ class ClickToPayService implements IClickToPayService {
 
     private setSdkForPerformingShopperIdentityValidation(sdk: ISrcInitiator) {
         this.validationSchemeSdk = sdk;
+    }
+
+    private handleTimeout(error: SrciError | TimeoutError) {
+        // If the timeout error was thrown directly by the scheme SDK, we convert it to TimeoutError
+        // If the timeout error was thrown by our internal timeout mechanism, we don't do anything
+        const timeoutError =
+            error instanceof SrciError
+                ? new TimeoutError({ source: error.source, scheme: error.scheme, isTimeoutTriggeredBySchemeSdk: true })
+                : error;
+
+        if (timeoutError.scheme === 'visa') {
+            timeoutError.setCorrelationId(window.VISA_SDK?.correlationId);
+
+            // Visa srciDpaId must be passed when there is no correlation ID available
+            if (window.VISA_SDK?.correlationId) window.VISA_SDK?.buildClientProfile?.();
+            else window.VISA_SDK?.buildClientProfile?.(this.schemesConfig.visa.srciDpaId);
+        }
+        this.onTimeout?.(timeoutError);
     }
 
     /**
@@ -295,35 +307,51 @@ class ClickToPayService implements IClickToPayService {
      * recognized on the device. The shopper is recognized if he/she has the Cookies stored
      * on their browser
      */
-    private async verifyIfShopperIsRecognized(): Promise<SrciIsRecognizedResponse> {
+    private verifyIfShopperIsRecognized(): Promise<SrciIsRecognizedResponse> {
         return new Promise((resolve, reject) => {
             const promises = this.sdks.map(sdk => {
                 const isRecognizedPromise = executeWithTimeout<SrciIsRecognizedResponse>(
                     () => sdk.isRecognized(),
                     5000,
-                    new TimeoutError(`ClickToPayService - Timeout during isRecognized() of the scheme '${sdk.schemeName}'`)
+                    new TimeoutError({
+                        source: 'isRecognized',
+                        scheme: sdk.schemeName,
+                        isTimeoutTriggeredBySchemeSdk: false
+                    })
                 );
-                isRecognizedPromise.then(response => response.recognized && resolve(response)).catch(error => reject(error));
-                return isRecognizedPromise;
+
+                return isRecognizedPromise
+                    .then(response => {
+                        if (response.recognized) resolve(response);
+                    })
+                    .catch(error => {
+                        reject(error);
+                    });
             });
 
             // If the 'resolve' didn't happen until this point, then shopper is not recognized
-            void Promise.allSettled(promises).then(() => resolve({ recognized: false }));
+            void Promise.allSettled(promises).then(() => {
+                resolve({ recognized: false });
+            });
         });
     }
 
-    private async initiateSdks(): Promise<void> {
+    private initiateSdks(): Promise<void[]> {
         const initPromises = this.sdks.map(sdk => {
             const cfg = this.schemesConfig[sdk.schemeName];
 
             return executeWithTimeout<void>(
                 () => sdk.init(cfg, this.srciTransactionId),
                 5000,
-                new TimeoutError(`ClickToPayService - Timeout during init() of the scheme '${sdk.schemeName}'`)
+                new TimeoutError({
+                    source: 'init',
+                    scheme: sdk.schemeName,
+                    isTimeoutTriggeredBySchemeSdk: false
+                })
             );
         });
 
-        await Promise.all(initPromises);
+        return Promise.all(initPromises);
     }
 }
 
