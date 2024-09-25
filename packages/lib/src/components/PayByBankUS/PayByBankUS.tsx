@@ -1,23 +1,14 @@
-import { h } from 'preact';
+import { Fragment, h } from 'preact';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import RedirectElement from '../Redirect';
 import RedirectButton from '../internal/RedirectButton';
 import { TxVariants } from '../tx-variants';
 import './PayByBankUS.scss';
 import getIssuerImageUrl from '../../utils/get-issuer-image';
+import PayButton, { payAmountLabel } from '../internal/PayButton';
 
 export default class PayByBankUS extends RedirectElement {
     public static type = TxVariants.paybybank_AIS_DD;
-
-    /* TODO
-    DONE render component over PbB US
-    DONE - show correct disclaimer messages
-    TODO - upload translations  
-    TODO - fix logo
-    DONE - display brands
-    DONE - deduplicate css classes
-    TODO - check if needs clean/refactor
-    */
 
     protected formatProps(props) {
         return {
@@ -29,7 +20,14 @@ export default class PayByBankUS extends RedirectElement {
     }
 
     get displayName() {
-        return this.props.name || this.constructor['type'];
+        if (this.props.storedPaymentMethodId && this.props.label) {
+            return this.props.label;
+        }
+        return this.props.name;
+    }
+
+    get additionalInfo() {
+        return this.props.storedPaymentMethodId ? this.props.name : '';
     }
 
     /*
@@ -52,22 +50,40 @@ export default class PayByBankUS extends RedirectElement {
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                <div className="adyen-checkout-paybybank_AIS_DD">
-                    <p className="adyen-checkout-paybybank_AIS_DD__description-header">{this.props.i18n.get('payByBankAISDD.disclaimer.header')}</p>
-                    <p className="adyen-checkout-paybybank_AIS_DD__description-body">{this.props.i18n.get('payByBankAISDD.disclaimer.body')}</p>
-                </div>
+                {this.props.storedPaymentMethodId ? (
+                    this.props.showPayButton && (
+                        <PayButton
+                            {...this.props}
+                            classNameModifiers={['standalone']}
+                            amount={this.props.amount}
+                            label={payAmountLabel(this.props.i18n, this.props.amount)}
+                            onClick={this.submit}
+                        />
+                    )
+                ) : (
+                    <Fragment>
+                        <div className="adyen-checkout-paybybank_AIS_DD">
+                            <p className="adyen-checkout-paybybank_AIS_DD__description-header">
+                                {this.props.i18n.get('payByBankAISDD.disclaimer.header')}
+                            </p>
+                            <p className="adyen-checkout-paybybank_AIS_DD__description-body">
+                                {this.props.i18n.get('payByBankAISDD.disclaimer.body')}
+                            </p>
+                        </div>
 
-                {this.props.showPayButton && (
-                    <RedirectButton
-                        {...this.props}
-                        showPayButton={this.props.showPayButton}
-                        name={this.displayName}
-                        onSubmit={this.submit}
-                        payButton={this.payButton}
-                        ref={ref => {
-                            this.componentRef = ref;
-                        }}
-                    />
+                        {this.props.showPayButton && (
+                            <RedirectButton
+                                {...this.props}
+                                showPayButton={this.props.showPayButton}
+                                name={this.displayName}
+                                onSubmit={this.submit}
+                                payButton={this.payButton}
+                                ref={ref => {
+                                    this.componentRef = ref;
+                                }}
+                            />
+                        )}
+                    </Fragment>
                 )}
             </CoreProvider>
         );

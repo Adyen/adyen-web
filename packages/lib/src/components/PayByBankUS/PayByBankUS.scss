@@ -11,6 +11,7 @@
     }
 
     &__description-body {
+        font-weight: token(text-body-font-weight);
         list-style-type: disc;
         color: token(color-label-secondary);
         margin: 0;
