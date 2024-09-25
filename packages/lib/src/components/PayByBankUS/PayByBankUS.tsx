@@ -33,7 +33,7 @@ export default class PayByBankUS extends RedirectElement {
     /*
     Hardcode US brands 
     */
-    get brands(): { icon: any; name: string }[] {
+    get brands(): { icon: string; name: string }[] {
         const getImage = props => this.resources.getImage(props);
         // paybybank_AIS_DD / tx_variant not used here since images are kept in paybybank subfolder
         const getIssuerIcon = getIssuerImageUrl({}, 'paybybank', getImage);
