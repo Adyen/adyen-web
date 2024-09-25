@@ -93,7 +93,7 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
             if (event.key === 'Enter') {
                 // Prevent <form> submission if Component is placed inside an form
                 event.preventDefault();
-                // Prevent global BaseElement keypress event to be triggered
+                // // Prevent global BaseElement keypress event to be triggered
                 event.stopPropagation();
                 void props.onPressEnter();
             }

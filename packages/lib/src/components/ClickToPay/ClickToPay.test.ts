@@ -1,9 +1,13 @@
 import { mock } from 'jest-mock-extended';
+import { render, screen } from '@testing-library/preact';
+import userEvent from '@testing-library/user-event';
+
 import { ClickToPayElement } from './ClickToPay';
 import { ClickToPayProps } from '../internal/ClickToPay/types';
 import createClickToPayService from '../internal/ClickToPay/services/create-clicktopay-service';
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';
 import { CtpState } from '../internal/ClickToPay/services/ClickToPayService';
+import { Resources } from '../../core/Context/Resources';
 
 jest.mock('../internal/ClickToPay/services/create-clicktopay-service');
 
@@ -11,7 +15,7 @@ test('should initialize ClickToPayService when creating the element', () => {
     const mockCtpService = mock<IClickToPayService>();
     mockCtpService.initialize.mockImplementation(() => Promise.resolve());
     // @ts-ignore mockImplementation not inferred
-    createClickToPayService.mockImplementation(() => mockCtpService);
+    createClickToPayService.mockImplementationOnce(() => mockCtpService);
 
     const configuration = {
         visaSrcInitiatorId: '$123456$',
@@ -70,7 +74,7 @@ test('should resolve isAvailable if shopper account is found', async () => {
     const mockCtpService = mock<IClickToPayService>();
     mockCtpService.initialize.mockImplementation(() => Promise.resolve());
     // @ts-ignore mockImplementation not inferred
-    createClickToPayService.mockImplementation(() => mockCtpService);
+    createClickToPayService.mockImplementationOnce(() => mockCtpService);
 
     Object.defineProperty(mockCtpService, 'shopperAccountFound', {
         get: jest.fn(() => true)
@@ -85,7 +89,7 @@ test('should reject isAvailable if shopper account is not found', async () => {
     const mockCtpService = mock<IClickToPayService>();
     mockCtpService.initialize.mockImplementation(() => Promise.resolve());
     // @ts-ignore mockImplementation not inferred
-    createClickToPayService.mockImplementation(() => mockCtpService);
+    createClickToPayService.mockImplementationOnce(() => mockCtpService);
 
     mockCtpService.subscribeOnStateChange.mockImplementation(callback => {
         callback(CtpState.NotAvailable);
@@ -98,4 +102,87 @@ test('should reject isAvailable if shopper account is not found', async () => {
     const element = new ClickToPayElement(global.core);
 
     await expect(element.isAvailable()).rejects.toBeFalsy();
+});
+
+describe('Click to Pay: ENTER keypress should perform an action only within the Component and not submit the payment', () => {
+    // beforeEach(() => {
+    //     jest.resetModules();
+    //     jest.resetAllMocks();
+    // });
+
+    test('[Login form] should trigger shopper email lookup when ENTER key is pressed', async () => {
+        const user = userEvent.setup();
+
+        const mockCtpService = mock<IClickToPayService>();
+        mockCtpService.initialize.mockImplementation(() => Promise.resolve());
+        mockCtpService.schemes = ['visa', 'mc'];
+        mockCtpService.verifyIfShopperIsEnrolled.mockResolvedValue({ isEnrolled: false });
+        mockCtpService.initialize.mockImplementation(() => Promise.resolve());
+        mockCtpService.subscribeOnStateChange.mockImplementation(callback => {
+            callback(CtpState.Login);
+        });
+
+        // @ts-ignore mockImplementation not inferred
+        createClickToPayService.mockImplementationOnce(() => mockCtpService);
+
+        const resources = mock<Resources>();
+        resources.getImage.mockReturnValue((icon: string) => `https://checkout-adyen.com/${icon}`);
+
+        const onSubmitMock = jest.fn();
+
+        const element = new ClickToPayElement(global.core, {
+            onSubmit: onSubmitMock,
+            loadingContext: 'checkoutshopper.com/',
+            modules: { resources, analytics: global.analytics },
+            i18n: global.i18n
+        });
+        render(element.mount('body'));
+
+        const emailInput = await screen.findByLabelText('Email');
+        await user.type(emailInput, 'shopper@example.com');
+        await user.keyboard('[Enter]');
+
+        expect(mockCtpService.verifyIfShopperIsEnrolled).toHaveBeenCalledTimes(1);
+        expect(mockCtpService.verifyIfShopperIsEnrolled).toHaveBeenCalledWith({ shopperEmail: 'shopper@example.com' });
+
+        expect(onSubmitMock).not.toHaveBeenCalled();
+    });
+
+    test('[OTP form] should trigger OTP validation when ENTER key is pressed', async () => {
+        const user = userEvent.setup();
+
+        const mockCtpService = mock<IClickToPayService>();
+        mockCtpService.initialize.mockImplementation(() => Promise.resolve());
+        mockCtpService.schemes = ['visa', 'mc'];
+        mockCtpService.finishIdentityValidation.mockResolvedValue();
+        mockCtpService.initialize.mockImplementation(() => Promise.resolve());
+        mockCtpService.subscribeOnStateChange.mockImplementation(callback => {
+            callback(CtpState.OneTimePassword);
+        });
+
+        // @ts-ignore mockImplementation not inferred
+        createClickToPayService.mockImplementationOnce(() => mockCtpService);
+
+        const resources = mock<Resources>();
+        resources.getImage.mockReturnValue((icon: string) => `https://checkout-adyen.com/${icon}`);
+
+        const onSubmitMock = jest.fn();
+
+        const element = new ClickToPayElement(global.core, {
+            onSubmit: onSubmitMock,
+            loadingContext: 'checkoutshopper.com/',
+            modules: { resources, analytics: global.analytics },
+            i18n: global.i18n
+        });
+        render(element.mount('body'));
+
+        const emailInput = await screen.findByLabelText('One time code', { exact: false });
+        await user.type(emailInput, '654321');
+        await user.keyboard('[Enter]');
+
+        expect(mockCtpService.finishIdentityValidation).toHaveBeenCalledTimes(1);
+        expect(mockCtpService.finishIdentityValidation).toHaveBeenCalledWith('654321');
+
+        expect(onSubmitMock).not.toHaveBeenCalled();
+    });
 });

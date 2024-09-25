@@ -50,8 +50,6 @@ const CtPLoginInput = (props: CtPLoginInputProps): h.JSX.Element => {
 
     const handleOnKeyPress = useCallback(
         (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
-            console.log('handleOnKeyPress - ctp login input');
-
             if (event.key === 'Enter') {
                 // Prevent <form> submission if Component is placed inside an form
                 event.preventDefault();
