@@ -8,6 +8,7 @@ import createClickToPayService from '../internal/ClickToPay/services/create-clic
 import { ClickToPayCheckoutPayload, IClickToPayService } from '../internal/ClickToPay/services/types';
 import { CtpState } from '../internal/ClickToPay/services/ClickToPayService';
 import { Resources } from '../../core/Context/Resources';
+import ShopperCard from '../internal/ClickToPay/models/ShopperCard';
 
 jest.mock('../internal/ClickToPay/services/create-clicktopay-service');
 
@@ -104,12 +105,7 @@ test('should reject isAvailable if shopper account is not found', async () => {
     await expect(element.isAvailable()).rejects.toBeFalsy();
 });
 
-describe('Click to Pay: ENTER keypress should perform an action only within the Component and not submit the payment', () => {
-    // beforeEach(() => {
-    //     jest.resetModules();
-    //     jest.resetAllMocks();
-    // });
-
+describe('Click to Pay: ENTER keypress should perform an action only within the CtP Component and should not propagate the event up to UIElement', () => {
     test('[Login form] should trigger shopper email lookup when ENTER key is pressed', async () => {
         const user = userEvent.setup();
 
@@ -123,7 +119,7 @@ describe('Click to Pay: ENTER keypress should perform an action only within the 
         });
 
         // @ts-ignore mockImplementation not inferred
-        createClickToPayService.mockImplementationOnce(() => mockCtpService);
+        createClickToPayService.mockImplementation(() => mockCtpService);
 
         const resources = mock<Resources>();
         resources.getImage.mockReturnValue((icon: string) => `https://checkout-adyen.com/${icon}`);
@@ -144,8 +140,9 @@ describe('Click to Pay: ENTER keypress should perform an action only within the 
 
         expect(mockCtpService.verifyIfShopperIsEnrolled).toHaveBeenCalledTimes(1);
         expect(mockCtpService.verifyIfShopperIsEnrolled).toHaveBeenCalledWith({ shopperEmail: 'shopper@example.com' });
-
         expect(onSubmitMock).not.toHaveBeenCalled();
+
+        element.unmount();
     });
 
     test('[OTP form] should trigger OTP validation when ENTER key is pressed', async () => {
@@ -161,7 +158,7 @@ describe('Click to Pay: ENTER keypress should perform an action only within the 
         });
 
         // @ts-ignore mockImplementation not inferred
-        createClickToPayService.mockImplementationOnce(() => mockCtpService);
+        createClickToPayService.mockImplementation(() => mockCtpService);
 
         const resources = mock<Resources>();
         resources.getImage.mockReturnValue((icon: string) => `https://checkout-adyen.com/${icon}`);
@@ -182,7 +179,72 @@ describe('Click to Pay: ENTER keypress should perform an action only within the 
 
         expect(mockCtpService.finishIdentityValidation).toHaveBeenCalledTimes(1);
         expect(mockCtpService.finishIdentityValidation).toHaveBeenCalledWith('654321');
-
         expect(onSubmitMock).not.toHaveBeenCalled();
+
+        element.unmount();
+    });
+
+    test('[Card view] should trigger Click to Pay checkout when ENTER key is pressed', async () => {
+        const user = userEvent.setup();
+
+        const mockCtpService = mock<IClickToPayService>();
+        mockCtpService.initialize.mockImplementation(() => Promise.resolve());
+        mockCtpService.schemes = ['visa', 'mc'];
+        mockCtpService.subscribeOnStateChange.mockImplementation(callback => {
+            callback(CtpState.Ready);
+        });
+        mockCtpService.shopperCards = [
+            new ShopperCard(
+                {
+                    srcDigitalCardId: '654321',
+                    panLastFour: '8902',
+                    dateOfCardCreated: '2015-10-10T09:15:00.312Z',
+                    dateOfCardLastUsed: '2020-05-28T08:10:02.312Z',
+                    paymentCardDescriptor: 'visa',
+                    panExpirationMonth: '08',
+                    panExpirationYear: '2040',
+                    digitalCardData: {
+                        descriptorName: 'Visa',
+                        artUri: 'http://image.com/visa',
+                        status: 'ACTIVE'
+                    },
+                    tokenId: 'xxxx-wwww'
+                },
+                'visa',
+                '1234566'
+            )
+        ];
+        mockCtpService.checkout.mockRejectedValue({});
+
+        // @ts-ignore mockImplementation not inferred by Typescript
+        createClickToPayService.mockImplementation(() => mockCtpService);
+
+        const resources = mock<Resources>();
+        resources.getImage.mockReturnValue((icon: string) => `https://checkout-adyen.com/${icon}`);
+
+        const onSubmitMock = jest.fn();
+
+        const element = new ClickToPayElement(global.core, {
+            onSubmit: onSubmitMock,
+            loadingContext: 'checkoutshopper.com/',
+            modules: { resources, analytics: global.analytics },
+            i18n: global.i18n
+        });
+        render(element.mount('body'));
+
+        const button = await screen.findByRole('button', { name: /Pay/ });
+
+        // Focus on the Pay button
+        await user.tab();
+        await user.tab();
+        expect(button).toHaveFocus();
+
+        await user.keyboard('[Enter]');
+
+        expect(mockCtpService.checkout).toHaveBeenCalledTimes(1);
+        expect(mockCtpService.checkout).toHaveBeenCalledWith(mockCtpService.shopperCards[0]);
+        expect(onSubmitMock).not.toHaveBeenCalled();
+
+        element.unmount();
     });
 });
