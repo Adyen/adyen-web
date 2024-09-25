@@ -8,4 +8,5 @@ export interface RedirectConfiguration extends UIElementProps {
     };
     method?: 'GET' | 'POST';
     beforeRedirect?: (resolve, reject, url) => Promise<void>;
+    handleError?: () => void;
 }

@@ -14,6 +14,10 @@ class RedirectElement extends UIElement<RedirectConfiguration> {
         type: RedirectElement.type
     };
 
+    protected handleError = () => {
+        //todo: send to analytics Redirect Failed 600 component=this.props.paymentMethodType
+    };
+
     formatData() {
         return {
             paymentMethod: {
@@ -33,7 +37,8 @@ class RedirectElement extends UIElement<RedirectConfiguration> {
 
     render() {
         if (this.props.url && this.props.method) {
-            return <RedirectShopper url={this.props.url} {...this.props} />;
+            console.log('redirect shopper component:', this.props.paymentMethodType);
+            return <RedirectShopper url={this.props.url} onError={this.handleError} {...this.props} />;
         }
 
         if (this.props.showPayButton) {

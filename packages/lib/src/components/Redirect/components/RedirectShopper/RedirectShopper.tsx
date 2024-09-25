@@ -7,6 +7,7 @@ interface RedirectShopperProps {
     method: 'GET' | 'POST';
     data?: any;
     redirectFromTopWhenInIframe?: boolean;
+    onError?: () => void;
 }
 
 class RedirectShopper extends Component<RedirectShopperProps> {
@@ -39,7 +40,9 @@ class RedirectShopper extends Component<RedirectShopperProps> {
                 })
         );
 
-        dispatchEvent.then(doRedirect).catch(() => {});
+        dispatchEvent.then(doRedirect).catch(() => {
+            this.props.onError();
+        });
     }
 
     render({ url, method, data = {} }) {

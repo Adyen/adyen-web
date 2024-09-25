@@ -228,6 +228,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         try {
             return await this.core.session.submitPayment(data);
         } catch (error: unknown) {
+            // todo: console.log('submitUsingSessionsFlow failed: send it to analytics');
             if (error instanceof AdyenCheckoutError) this.handleError(error);
             else this.handleError(new AdyenCheckoutError('ERROR', 'Error when making /payments call', { cause: error }));
 
