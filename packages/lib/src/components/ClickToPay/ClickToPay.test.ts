@@ -16,7 +16,7 @@ test('should initialize ClickToPayService when creating the element', () => {
     const mockCtpService = mock<IClickToPayService>();
     mockCtpService.initialize.mockImplementation(() => Promise.resolve());
     // @ts-ignore mockImplementation not inferred
-    createClickToPayService.mockImplementationOnce(() => mockCtpService);
+    createClickToPayService.mockImplementation(() => mockCtpService);
 
     const configuration = {
         visaSrcInitiatorId: '$123456$',
@@ -75,7 +75,7 @@ test('should resolve isAvailable if shopper account is found', async () => {
     const mockCtpService = mock<IClickToPayService>();
     mockCtpService.initialize.mockImplementation(() => Promise.resolve());
     // @ts-ignore mockImplementation not inferred
-    createClickToPayService.mockImplementationOnce(() => mockCtpService);
+    createClickToPayService.mockImplementation(() => mockCtpService);
 
     Object.defineProperty(mockCtpService, 'shopperAccountFound', {
         get: jest.fn(() => true)
@@ -90,7 +90,7 @@ test('should reject isAvailable if shopper account is not found', async () => {
     const mockCtpService = mock<IClickToPayService>();
     mockCtpService.initialize.mockImplementation(() => Promise.resolve());
     // @ts-ignore mockImplementation not inferred
-    createClickToPayService.mockImplementationOnce(() => mockCtpService);
+    createClickToPayService.mockImplementation(() => mockCtpService);
 
     mockCtpService.subscribeOnStateChange.mockImplementation(callback => {
         callback(CtpState.NotAvailable);
