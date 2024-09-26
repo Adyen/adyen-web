@@ -136,6 +136,7 @@ const initCheckout = async () => {
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro'],
             styles: fancyStyles,
             autoFocus: false,
+            placeholders: { cardNumber: 'add card number', expiryDate: 'mm/yy', securityCodeThreeDigits: '123', securityCodeFourDigits: '1234' },
             onFieldValid: fancyFieldValid,
             onBrand: fancyChangeBrand,
             onError: fancyErrors,
