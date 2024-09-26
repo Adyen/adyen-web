@@ -89,8 +89,6 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
     const handleOnKeyPress = useCallback(
         (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
             if (event.key === 'Enter') {
-                event.preventDefault(); // Prevent <form> submission if Component is placed inside a form
-                event.stopPropagation(); // Prevent global BaseElement keypress event to be triggered
                 void props.onPressEnter();
             }
         },

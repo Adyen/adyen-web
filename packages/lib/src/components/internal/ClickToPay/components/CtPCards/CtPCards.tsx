@@ -90,13 +90,9 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
     const displayNetworkDcf = isShopperCheckingOutWithCtp && status === 'loading' && checkoutCard?.isDcfPopupEmbedded;
     const displayCardCheckoutView = status !== 'loading' || !displayNetworkDcf;
 
-    const handleKeyPress = useCallback(
-        (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
+    const handlePayButtonKeyDown = useCallback(
+        (event: KeyboardEvent) => {
             if (event.key === 'Enter') {
-                // Prevent <form> submission if Component is placed inside an form
-                event.preventDefault();
-                // Prevent global BaseElement keypress event to be triggered
-                event.stopPropagation();
                 void doCheckout();
             }
         },
@@ -111,33 +107,30 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
                 <Fragment>
                     <CtPSection.Title>{i18n.get('ctp.cards.title')}</CtPSection.Title>
                     <CtPSection.Text>{i18n.get('ctp.cards.subtitle')}</CtPSection.Text>
-
-                    {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-                    <div onKeyPress={handleKeyPress}>
-                        {cards.length === 0 && <div className="adyen-checkout-ctp__empty-cards">{i18n.get('ctp.emptyProfile.message')}</div>}
-                        {cards.length === 1 && <CtPSingleCard card={cards[0]} errorMessage={getErrorLabel(errorCode, i18n)} />}
-                        {cards.length > 1 && (
-                            <CtPCardsList
-                                cardSelected={checkoutCard}
-                                cards={cards}
-                                onChangeCard={handleOnChangeCard}
-                                errorMessage={getErrorLabel(errorCode, i18n)}
-                            />
-                        )}
-
-                        <PayButton
-                            disabled={isEveryCardExpired}
-                            amount={amount}
-                            label={getPayButtonLabel(i18n, amount, checkoutCard)}
-                            status={status}
-                            variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'}
-                            icon={
-                                cards.length !== 0 &&
-                                getImage({ imageFolder: 'components/' })(isCtpPrimaryPaymentMethod ? `${PREFIX}lock` : `${PREFIX}lock_black`)
-                            }
-                            onClick={doCheckout}
+                    {cards.length === 0 && <div className="adyen-checkout-ctp__empty-cards">{i18n.get('ctp.emptyProfile.message')}</div>}
+                    {cards.length === 1 && <CtPSingleCard card={cards[0]} errorMessage={getErrorLabel(errorCode, i18n)} />}
+                    {cards.length > 1 && (
+                        <CtPCardsList
+                            cardSelected={checkoutCard}
+                            cards={cards}
+                            onChangeCard={handleOnChangeCard}
+                            errorMessage={getErrorLabel(errorCode, i18n)}
                         />
-                    </div>
+                    )}
+
+                    <PayButton
+                        disabled={isEveryCardExpired}
+                        amount={amount}
+                        label={getPayButtonLabel(i18n, amount, checkoutCard)}
+                        status={status}
+                        variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'}
+                        icon={
+                            cards.length !== 0 &&
+                            getImage({ imageFolder: 'components/' })(isCtpPrimaryPaymentMethod ? `${PREFIX}lock` : `${PREFIX}lock_black`)
+                        }
+                        onClick={doCheckout}
+                        onKeyDown={handlePayButtonKeyDown}
+                    />
                 </Fragment>
             )}
         </Fragment>

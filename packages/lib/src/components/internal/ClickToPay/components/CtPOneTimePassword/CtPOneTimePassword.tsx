@@ -65,6 +65,15 @@ const CtPOneTimePassword = ({ onDisplayCardComponent }: CtPOneTimePasswordProps)
         }
     }, [otp, isValid, otpInputHandlers, onDisplayCardComponent]);
 
+    const handleButtonKeyDown = useCallback(
+        (event: KeyboardEvent) => {
+            if (event.key === 'Enter') {
+                void onSubmitPassword();
+            }
+        },
+        [onSubmitPassword]
+    );
+
     const subtitleParts = i18n.get('ctp.otp.subtitle').split('%@');
 
     return (
@@ -96,6 +105,7 @@ const CtPOneTimePassword = ({ onDisplayCardComponent }: CtPOneTimePasswordProps)
                 variant={isCtpPrimaryPaymentMethod ? 'primary' : 'secondary'}
                 onClick={onSubmitPassword}
                 status={isValidatingOtp && 'loading'}
+                onKeyDown={handleButtonKeyDown}
             />
         </Fragment>
     );

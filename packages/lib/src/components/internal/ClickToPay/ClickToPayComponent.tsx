@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useEffect } from 'preact/hooks';
+import { useCallback, useEffect } from 'preact/hooks';
 import { CtpState } from './services/ClickToPayService';
 import useClickToPayContext from './context/useClickToPayContext';
 import CtPOneTimePassword from './components/CtPOneTimePassword';
@@ -36,12 +36,19 @@ const ClickToPayComponent = ({ onDisplayCardComponent }: ClickToPayComponentProp
         }
     }, [ctpState]);
 
+    const handleEnterKeyPress = useCallback((event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent <form> submission if Component is placed inside a form
+            event.stopPropagation(); // Prevent global BaseElement keypress event to be triggered
+        }
+    }, []);
+
     if (ctpState === CtpState.NotAvailable) {
         return null;
     }
 
     return (
-        <CtPSection>
+        <CtPSection onEnterKeyPress={handleEnterKeyPress}>
             {[CtpState.Loading, CtpState.ShopperIdentified].includes(ctpState) && <CtPLoader />}
             {ctpState === CtpState.OneTimePassword && <CtPOneTimePassword onDisplayCardComponent={onDisplayCardComponent} />}
             {ctpState === CtpState.Ready && <CtPCards onDisplayCardComponent={onDisplayCardComponent} />}
