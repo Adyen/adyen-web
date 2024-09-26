@@ -50,8 +50,6 @@ export class ClickToPayElement extends UIElement<ClickToPayConfiguration> {
     }
 
     public formatData(): ClickToPayPaymentData {
-        if (!this.state.data) return undefined;
-
         const { srcScheme, srcCorrelationId, srcTokenReference, srcCheckoutPayload, srcDigitalCardId } = this.state.data;
         return {
             paymentMethod: {

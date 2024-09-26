@@ -37,6 +37,15 @@ const ClickToPayHolder = ({ children }: ClickToPayWrapperProps) => {
         setIsCtpPrimaryPaymentMethod(false);
     }, []);
 
+    const handleButtonKeyDown = useCallback(
+        (event: KeyboardEvent) => {
+            if (event.key === 'Enter') {
+                void handleOnShowCardButtonClick();
+            }
+        },
+        [handleOnShowCardButtonClick]
+    );
+
     if (ctpState === CtpState.NotAvailable) {
         return children();
     }
@@ -59,6 +68,7 @@ const ClickToPayHolder = ({ children }: ClickToPayWrapperProps) => {
                     disabled={status === 'loading'}
                     label={i18n.get('ctp.manualCardEntry')}
                     onClick={handleOnShowCardButtonClick}
+                    onKeyDown={handleButtonKeyDown}
                 />
             )}
         </Fragment>

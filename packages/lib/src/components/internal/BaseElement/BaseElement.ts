@@ -98,14 +98,14 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
         const order = this.state.order || this.props.order;
         const componentData = this.formatData();
 
-        if (componentData?.paymentMethod && checkoutAttemptId) {
+        if (componentData.paymentMethod && checkoutAttemptId) {
             componentData.paymentMethod.checkoutAttemptId = checkoutAttemptId;
         }
 
         // Workaround, to be fixed properly
         // Remove the firstName & lastName in the billingAddress for non Riverty components
         // @ts-ignore type exists
-        if (this.props.type !== 'riverty' && componentData?.billingAddress) {
+        if (this.props.type !== 'riverty' && componentData.billingAddress) {
             const { firstName, lastName, ...rest } = componentData.billingAddress;
             componentData.billingAddress = { ...rest };
         }

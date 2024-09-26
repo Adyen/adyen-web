@@ -113,7 +113,6 @@ describe('Click to Pay: ENTER keypress should perform an action only within the 
         mockCtpService.initialize.mockImplementation(() => Promise.resolve());
         mockCtpService.schemes = ['visa', 'mc'];
         mockCtpService.verifyIfShopperIsEnrolled.mockResolvedValue({ isEnrolled: false });
-        mockCtpService.initialize.mockImplementation(() => Promise.resolve());
         mockCtpService.subscribeOnStateChange.mockImplementation(callback => {
             callback(CtpState.Login);
         });
@@ -152,7 +151,6 @@ describe('Click to Pay: ENTER keypress should perform an action only within the 
         mockCtpService.initialize.mockImplementation(() => Promise.resolve());
         mockCtpService.schemes = ['visa', 'mc'];
         mockCtpService.finishIdentityValidation.mockResolvedValue();
-        mockCtpService.initialize.mockImplementation(() => Promise.resolve());
         mockCtpService.subscribeOnStateChange.mockImplementation(callback => {
             callback(CtpState.OneTimePassword);
         });
@@ -214,7 +212,11 @@ describe('Click to Pay: ENTER keypress should perform an action only within the 
                 '1234566'
             )
         ];
-        mockCtpService.checkout.mockRejectedValue({});
+        mockCtpService.checkout.mockResolvedValue({
+            srcDigitalCardId: 'xxxx',
+            srcCorrelationId: 'yyyy',
+            srcScheme: 'visa'
+        });
 
         // @ts-ignore mockImplementation not inferred by Typescript
         createClickToPayService.mockImplementation(() => mockCtpService);
@@ -243,7 +245,7 @@ describe('Click to Pay: ENTER keypress should perform an action only within the 
 
         expect(mockCtpService.checkout).toHaveBeenCalledTimes(1);
         expect(mockCtpService.checkout).toHaveBeenCalledWith(mockCtpService.shopperCards[0]);
-        expect(onSubmitMock).not.toHaveBeenCalled();
+        expect(onSubmitMock).toHaveBeenCalled();
 
         element.unmount();
     });
