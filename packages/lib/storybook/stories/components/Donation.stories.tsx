@@ -1,7 +1,8 @@
 import { MetaConfiguration, StoryConfiguration } from '../types';
 import { DonationConfiguration } from '../../../src/components/Donation/types';
-import { Container } from '../Container';
-import Donation from '../../../src/components/Donation';
+import { ComponentContainer } from '../ComponentContainer';
+import Donation from '../../../src/components/Donation/Donation';
+import { Checkout } from '../Checkout';
 
 const componentConfiguration: DonationConfiguration = {
     onDonate: (_, component) => setTimeout(() => component.setStatus('success'), 1000),
@@ -28,8 +29,9 @@ const meta: MetaConfiguration<DonationConfiguration> = {
 
 export const Default: DonationStory = {
     render: ({ componentConfiguration, ...checkoutConfig }) => (
-        // @ts-ignore fix later
-        <Container Element={Donation} checkoutConfig={checkoutConfig} componentConfig={componentConfiguration} />
+        <Checkout checkoutConfig={checkoutConfig}>
+            {checkout => <ComponentContainer element={new Donation(checkout, componentConfiguration)} />}
+        </Checkout>
     ),
     args: {
         componentConfiguration

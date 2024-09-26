@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { AdyenCheckout, Card } from '../../../src';
 import { PaymentMethodStoryProps } from '../types';
-import { Container } from '../Container';
+import { ComponentContainer } from '../ComponentContainer';
 import Donation from '../../../src/components/Donation/Donation';
 import { createDonation, getDonationCampaigns, makeDetailsCall, makePayment } from '../../helpers/checkout-api-calls';
 import { DonationConfiguration } from '../../../src/components/Donation/types';
@@ -184,5 +184,5 @@ export const DonationCardIntegrationExample = ({ contextArgs: { countryCode, amo
         setElement(donationElement);
     };
 
-    return <Container element={element} />;
+    return <ComponentContainer element={element} />;
 };

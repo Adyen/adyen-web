@@ -1,7 +1,7 @@
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 import { VoucherConfiguration } from '../../../src/components/types';
-import { Container } from '../Container';
+import { ComponentContainer } from '../ComponentContainer';
 import { Oxxo } from '../../../src';
 
 type OxxoStory = StoryConfiguration<VoucherConfiguration>;
@@ -15,7 +15,7 @@ export const Default: OxxoStory = {
         const { componentConfiguration } = args;
         const checkout = getStoryContextCheckout(context);
         const oxxo = new Oxxo(checkout, componentConfiguration);
-        return <Container element={oxxo} />;
+        return <ComponentContainer element={oxxo} />;
     },
     args: {
         countryCode: 'MX'

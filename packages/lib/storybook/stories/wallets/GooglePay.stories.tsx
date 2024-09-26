@@ -1,6 +1,6 @@
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
-import { Container } from '../Container';
+import { ComponentContainer } from '../ComponentContainer';
 import { GooglePayConfiguration } from '../../../src/components/GooglePay/types';
 import { GooglePay } from '../../../src';
 
@@ -14,7 +14,7 @@ const createComponent = (args: PaymentMethodStoryProps<GooglePayConfiguration>, 
     const { componentConfiguration } = args;
     const checkout = getStoryContextCheckout(context);
     const googlepay = new GooglePay(checkout, componentConfiguration);
-    return <Container element={googlepay} />;
+    return <ComponentContainer element={googlepay} />;
 };
 
 export const Default: GooglePayStory = {

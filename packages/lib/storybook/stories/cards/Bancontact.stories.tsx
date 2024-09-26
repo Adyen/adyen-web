@@ -1,7 +1,8 @@
 import { MetaConfiguration, StoryConfiguration } from '../types';
 import { CardConfiguration } from '../../../src/components/Card/types';
 import Bancontact from '../../../src/components/Card/Bancontact';
-import { Container } from '../Container';
+import { ComponentContainer } from '../ComponentContainer';
+import { Checkout } from '../Checkout';
 
 type BancontactStory = StoryConfiguration<CardConfiguration>;
 
@@ -11,7 +12,9 @@ const meta: MetaConfiguration<CardConfiguration> = {
 
 export const Default: BancontactStory = {
     render: ({ componentConfiguration, ...checkoutConfig }) => (
-        <Container Element={Bancontact} checkoutConfig={checkoutConfig} componentConfig={componentConfiguration} />
+        <Checkout checkoutConfig={checkoutConfig}>
+            {checkout => <ComponentContainer element={new Bancontact(checkout, componentConfiguration)} />}
+        </Checkout>
     ),
     args: {
         componentConfiguration: {

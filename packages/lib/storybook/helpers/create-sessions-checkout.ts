@@ -6,7 +6,13 @@ import { AdyenCheckoutProps } from '../stories/types';
 import Checkout from '../../src/core/core';
 import { AdyenCheckout } from '../../src/core/AdyenCheckout';
 
-async function createSessionsCheckout({ showPayButton, countryCode, shopperLocale, amount }: AdyenCheckoutProps): Promise<Checkout> {
+async function createSessionsCheckout({
+    showPayButton,
+    countryCode,
+    shopperLocale,
+    amount,
+    ...restCheckoutProps
+}: AdyenCheckoutProps): Promise<Checkout> {
     const session = await createSession({
         amount: {
             currency: getCurrency(countryCode),
@@ -46,7 +52,9 @@ async function createSessionsCheckout({ showPayButton, countryCode, shopperLocal
 
         onChange: (state, component) => {
             handleChange(state, component);
-        }
+        },
+
+        ...restCheckoutProps
     });
 }
 

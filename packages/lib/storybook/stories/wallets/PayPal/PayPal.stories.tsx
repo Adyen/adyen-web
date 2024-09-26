@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from '@storybook/preact';
 import { PaymentMethodStoryProps } from '../../types';
 import { getStoryContextCheckout } from '../../../utils/get-story-context-checkout';
-import { Container } from '../../Container';
+import { ComponentContainer } from '../../ComponentContainer';
 import Paypal from '../../../../src/components/PayPal';
 import type { PayPalConfiguration } from '../../../../src/components/PayPal/types';
 
@@ -17,6 +17,6 @@ export const Default: Story = {
         const { componentConfiguration } = args;
         const checkout = getStoryContextCheckout(context);
         const paypal = new Paypal(checkout, componentConfiguration);
-        return <Container element={paypal} />;
+        return <ComponentContainer element={paypal} />;
     }
 };

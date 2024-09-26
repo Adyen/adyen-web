@@ -6,7 +6,13 @@ import { AdyenCheckoutProps } from '../stories/types';
 import Checkout from '../../src/core/core';
 import { PaymentMethodsResponse } from '../../src/types';
 
-async function createAdvancedFlowCheckout({ showPayButton, countryCode, shopperLocale, amount, ...rest }: AdyenCheckoutProps): Promise<Checkout> {
+async function createAdvancedFlowCheckout({
+    showPayButton,
+    countryCode,
+    shopperLocale,
+    amount,
+    ...restCheckoutProps
+}: AdyenCheckoutProps): Promise<Checkout> {
     const paymentAmount = {
         currency: getCurrency(countryCode),
         value: Number(amount)
@@ -119,7 +125,7 @@ async function createAdvancedFlowCheckout({ showPayButton, countryCode, shopperL
             handleError(error, component);
         },
 
-        ...rest
+        ...restCheckoutProps
     });
 
     return checkout;

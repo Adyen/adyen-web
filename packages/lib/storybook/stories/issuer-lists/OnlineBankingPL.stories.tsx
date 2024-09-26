@@ -1,6 +1,6 @@
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
-import { Container } from '../Container';
+import { ComponentContainer } from '../ComponentContainer';
 import { IssuerListConfiguration } from '../../../src/components/helpers/IssuerListContainer/types';
 import { OnlineBankingPL } from '../../../src';
 
@@ -15,7 +15,7 @@ export const Default: OnlineBankingPLStory = {
         const { componentConfiguration } = args;
         const checkout = getStoryContextCheckout(context);
         const onlineBankingPL = new OnlineBankingPL(checkout, componentConfiguration);
-        return <Container element={onlineBankingPL} />;
+        return <ComponentContainer element={onlineBankingPL} />;
     },
     args: {
         countryCode: 'PL'

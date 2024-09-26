@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/preact';
 import Address from '../../../src/components/internal/Address';
 import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
-import { Container } from '../Container';
+import { ComponentContainer } from '../ComponentContainer';
 import AddressElement from '../../../src/components/Address/Address';
 
 const meta: Meta = {
@@ -23,7 +23,7 @@ export const Default = {
         const { componentConfiguration } = args;
         const checkout = getStoryContextCheckout(context);
         const address = new AddressElement(checkout, componentConfiguration);
-        return <Container element={address} />;
+        return <ComponentContainer element={address} />;
     },
     args: {
         countryCode: 'NL',

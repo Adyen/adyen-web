@@ -3,7 +3,8 @@ import getCurrency from '../../../utils/get-currency';
 import { makePayment } from '../../../helpers/checkout-api-calls';
 import { PaymentMethodStoryProps } from '../../types';
 import { CardConfiguration } from '../../../../src/components/Card/types';
-import { Container } from '../../Container';
+import { ComponentContainer } from '../../ComponentContainer';
+import { Checkout } from '../../Checkout';
 
 export const CardWith3DS2Redirect = ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<CardConfiguration>) => {
     const { countryCode, amount, shopperLocale } = checkoutConfig;
@@ -38,5 +39,12 @@ export const CardWith3DS2Redirect = ({ componentConfiguration, ...checkoutConfig
         }
     };
 
-    return <Container Element={Card} checkoutConfig={checkoutConfig} componentConfig={cardConfig} />;
+    return (
+        <Checkout checkoutConfig={checkoutConfig}>
+            {checkout => {
+                const card = new Card(checkout, cardConfig);
+                return <ComponentContainer element={card}></ComponentContainer>;
+            }}
+        </Checkout>
+    );
 };
