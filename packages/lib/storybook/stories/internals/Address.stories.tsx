@@ -1,8 +1,10 @@
 import { Meta } from '@storybook/preact';
 import Address from '../../../src/components/internal/Address';
-import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 import { ComponentContainer } from '../ComponentContainer';
 import AddressElement from '../../../src/components/Address/Address';
+import { Checkout } from '../Checkout';
+import { StoryConfiguration } from '../types';
+import type { UIElementProps } from '../../../src/components/internal/UIElement/types';
 
 const meta: Meta = {
     title: 'Internals/Address',
@@ -18,13 +20,12 @@ const meta: Meta = {
     }
 };
 
-export const Default = {
-    render: (args, context) => {
-        const { componentConfiguration } = args;
-        const checkout = getStoryContextCheckout(context);
-        const address = new AddressElement(checkout, componentConfiguration);
-        return <ComponentContainer element={address} />;
-    },
+export const Default: StoryConfiguration<UIElementProps> = {
+    render: ({ componentConfiguration, ...checkoutConfig }) => (
+        <Checkout checkoutConfig={checkoutConfig}>
+            {checkout => <ComponentContainer element={new AddressElement(checkout, componentConfiguration)} />}
+        </Checkout>
+    ),
     args: {
         countryCode: 'NL',
         amount: 2000,
