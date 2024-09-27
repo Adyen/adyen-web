@@ -1,4 +1,4 @@
-import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
+import { MetaConfiguration, StoryConfiguration } from '../types';
 import { ComponentContainer } from '../ComponentContainer';
 import { GooglePayConfiguration } from '../../../src/components/GooglePay/types';
 import getCurrency from '../../utils/get-currency';
