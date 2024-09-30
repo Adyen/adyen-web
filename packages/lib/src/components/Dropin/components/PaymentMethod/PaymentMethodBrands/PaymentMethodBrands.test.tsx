@@ -1,4 +1,5 @@
 import { h } from 'preact';
+import { render, screen } from '@testing-library/preact';
 import { mount } from 'enzyme';
 import PaymentMethodBrands from './PaymentMethodBrands';
 import CompactView from './CompactView';
