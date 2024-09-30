@@ -137,14 +137,20 @@ class ClickToPayService implements IClickToPayService {
         if (!this.validationSchemeSdk) {
             throw Error('startIdentityValidation: No ValidationSDK set for the validation process');
         }
-        const { maskedValidationChannel } = await this.validationSchemeSdk.initiateIdentityValidation();
+        try {
+            const { maskedValidationChannel } = await this.validationSchemeSdk.initiateIdentityValidation();
 
-        this.identityValidationData = {
-            maskedShopperContact: maskedValidationChannel.replace(/\*/g, '•'),
-            selectedNetwork: SchemeNames[this.validationSchemeSdk.schemeName]
-        };
+            this.identityValidationData = {
+                maskedShopperContact: maskedValidationChannel.replace(/\*/g, '•'),
+                selectedNetwork: SchemeNames[this.validationSchemeSdk.schemeName]
+            };
 
-        this.setState(CtpState.OneTimePassword);
+            this.setState(CtpState.OneTimePassword);
+        } catch (error: unknown) {
+            // If there is an error when 'startIdentityValidation' (Ex: account is blocked), we reset the scheme chosen to perform this step
+            this.validationSchemeSdk = null;
+            throw error;
+        }
     }
 
     /**
@@ -154,10 +160,10 @@ class ClickToPayService implements IClickToPayService {
         if (!this.validationSchemeSdk) {
             throw Error('finishIdentityValidation: No ValidationSDK set for the validation process');
         }
+
         const validationToken = await this.validationSchemeSdk.completeIdentityValidation(otpCode);
         await this.getShopperProfile([validationToken.idToken]);
         this.setState(CtpState.Ready);
-
         this.validationSchemeSdk = null;
     }
 

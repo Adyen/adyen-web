@@ -22,7 +22,9 @@ const CoreContext = createContext<ContextValue | undefined>(undefined);
 const CoreProvider = ({ i18n, loadingContext, resources, children }: CoreProviderProps) => {
     useEffect(() => {
         if (!i18n || !loadingContext || !resources) {
-            console.error('CoreProvider - WARNING core provider is missing one of the following: i18n, loadingContext or resources');
+            console.warn(
+                `CoreProvider - WARNING core provider is missing:${i18n ? '' : 'i18n'} ${loadingContext ? '' : 'loadingContext'} ${resources ? '' : 'resources'}`
+            );
         }
     }, [i18n, loadingContext, resources]);
 
