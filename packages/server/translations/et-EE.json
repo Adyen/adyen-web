@@ -313,5 +313,8 @@
     "payme.scanQrCode": "Vormistage oma makse QR-koodi abil",
     "payme.timeToPay": "See QR kehtib %@",
     "payme.instructions.steps": "Avage PayMe rakendus.%@Skannige makse kinnitamiseks QR-kood.%@Viige makse rakenduses lõpule ja oodake kinnitust.",
-    "payme.instructions.footnote": "Ärge sulgege seda lehte enne makse lõpuleviimist"
+    "payme.instructions.footnote": "Ärge sulgege seda lehte enne makse lõpuleviimist",
+    "payByBankAISDD.disclaimer.header": "Kasutage pangamakset, et maksta koheselt mis tahes pangakontoga.",
+    "payByBankAISDD.disclaimer.body": "Pangakonto sidumisega annate loa debiteerida oma kontolt meie teenuste kasutamise ja/või meie toodete ostmise eest mis tahes võlgnetavad summad kuni selle loa tühistamiseni.",
+    "paymentMethodBrand.other": "muu"
 }

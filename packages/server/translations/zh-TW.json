@@ -311,5 +311,8 @@
     "payme.scanQrCode": "使用 QR 代碼完成付款",
     "payme.timeToPay": "此 QR 代碼對 %@ 有效",
     "payme.instructions.steps": "開啟 PayMe 應用程式。%@掃描 QR 代碼授權付款。%@在應用程式中完成付款並等待確認。",
-    "payme.instructions.footnote": "完成付款前，請勿關閉此頁面"
+    "payme.instructions.footnote": "完成付款前，請勿關閉此頁面",
+    "payByBankAISDD.disclaimer.header": "運用銀行支付方式透過任何銀行帳戶立即付款。",
+    "payByBankAISDD.disclaimer.body": "連結您的銀行帳戶即表示您授權我們可以在您享有我們的服務和/或購買我們的產品時，向您的帳戶扣款對應的費用，直到授權被撤銷為止。",
+    "paymentMethodBrand.other": "其他"
 }

@@ -311,5 +311,8 @@
     "payme.scanQrCode": "Izvedite plačilo s kodo QR",
     "payme.timeToPay": "Ta koda QR velja za %@",
     "payme.instructions.steps": "Odprite aplikacijo PayMe.%@Skenirajte kodo QR, da odobrite plačilo.%@Zaključite plačilo v aplikaciji in počakajte na potrditev.",
-    "payme.instructions.footnote": "Ne zapirajte te strani, preden je plačilo zaključeno."
+    "payme.instructions.footnote": "Ne zapirajte te strani, preden je plačilo zaključeno.",
+    "payByBankAISDD.disclaimer.header": "Uporabite Pay by Bank za takojšnje plačilo s katerega koli bančnega računa.",
+    "payByBankAISDD.disclaimer.body": "S povezavo svojega bančnega računa dovoljujete bremenitev računa za vse zneske, ki jih dolgujete za uporabo naših storitev in/ali nakup naših izdelkov, dokler tega dovoljenja ne prekličete.",
+    "paymentMethodBrand.other": "Drugo"
 }
