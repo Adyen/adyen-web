@@ -1,23 +1,21 @@
 import { Fragment, h } from 'preact';
-import { CoreProvider } from '../../core/Context/CoreProvider';
+import CoreProvider from '../../core/Context/CoreProvider';
 import RedirectElement from '../Redirect';
 import RedirectButton from '../internal/RedirectButton';
-import { TxVariants } from '../tx-variants';
 import './PayByBankUS.scss';
 import getIssuerImageUrl from '../../utils/get-issuer-image';
 import PayButton, { payAmountLabel } from '../internal/PayButton';
 
 export default class PayByBankUS extends RedirectElement {
-    public static type = TxVariants.paybybank_AIS_DD;
+    public static type = 'paybybank_AIS_DD';
 
-    protected formatProps(props) {
-        return {
-            // paymentMethodBrands configuration
-            keepBrandsVisible: true,
-            showOtherInsteafOfNumber: true,
-            ...props
-        };
-    }
+    public static defaultProps = {
+        type: PayByBankUS.type,
+        showPayButton: true,
+        // paymentMethodBrands configuration
+        keepBrandsVisible: true,
+        showOtherInsteafOfNumber: true
+    };
 
     get displayName() {
         if (this.props.storedPaymentMethodId && this.props.label) {

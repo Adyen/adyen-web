@@ -1,21 +1,21 @@
-@import 'styles/variable-generator';
+@import '../../style/index';
 
 .adyen-checkout-paybybank_AIS_DD {
-    margin-bottom: token(spacer-070);
+    margin-bottom: 16px;
 
     &__description-header {
-        margin: token(spacer-000) token(spacer-000) token(spacer-020);
-        font-size: token(text-subtitle-font-size);
-        font-weight: token(text-body-stronger-font-weight);
-        color: token(color-label-primary);
+        margin: 0 0 4px;
+        font-size: 16px;
+        font-weight: 500;
+        color: $color-black;
     }
 
     &__description-body {
-        font-weight: token(text-body-font-weight);
+        font-weight: 400;
         list-style-type: disc;
-        color: token(color-label-secondary);
+        color: $color-gray-darker;
         margin: 0;
-        font-size: token(text-body-font-size);
+        font-size: 14px;
         line-height: 1.5;
     }
 }
