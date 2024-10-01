@@ -25,8 +25,6 @@ const PayButton = ({ amount, secondaryAmount, classNameModifiers = [], label, ..
     const isZeroAuth = amount && {}.hasOwnProperty.call(amount, 'value') && amount.value === 0;
     const defaultLabel = isZeroAuth ? i18n.get('confirmPreauthorization') : payAmountLabel(i18n, amount);
 
-    console.log(props);
-
     /**
      * Show the secondaryLabel if:
      *  - it's not zero auth, and
