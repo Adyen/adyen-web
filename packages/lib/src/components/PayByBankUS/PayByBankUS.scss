@@ -25,18 +25,22 @@
     .adyen-checkout__payment-method__brands {
         // a bit hacky but makes constum breakpoints to hide each set of images
         @media (max-width: 330px) {
+            display: none;
+        }
+
+        @media (max-width: 360px) {
             .adyen-checkout__payment-method__image__wrapper:nth-child(2) {
                 display: none;
             }
         }
 
-        @media (max-width: 360px) {
+        @media (max-width: 390px) {
             .adyen-checkout__payment-method__image__wrapper:nth-child(3) {
                 display: none;
             }
         }
 
-        @media (max-width: 390px) {
+        @media (max-width: 420px) {
             .adyen-checkout__payment-method__image__wrapper:nth-child(4) {
                 display: none;
             }
