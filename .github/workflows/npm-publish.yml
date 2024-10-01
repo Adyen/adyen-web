@@ -24,7 +24,7 @@ jobs:
       # Copy LICENSE to adyen-web package
       - run: cp LICENSE packages/lib/
       # Build and publish to npm
-      - run: cd packages/lib && npm publish --access public --tag v5
+      - run: cd packages/lib && npm publish --access public --tag inactive
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
           CI: true
