@@ -317,5 +317,8 @@
     "payme.scanQrCode": "Finalizați plata folosind codul QR",
     "payme.timeToPay": "Acest cod QR este valabil pentru %@",
     "payme.instructions.steps": "Deschideți aplicația PayMe.%@Scanați codul QR pentru a autoriza plata.%@Finalizați plata în aplicație și așteptați confirmarea.",
-    "payme.instructions.footnote": "Nu închideți această pagină înainte de finalizarea plății."
+    "payme.instructions.footnote": "Nu închideți această pagină înainte de finalizarea plății.",
+    "payByBankAISDD.disclaimer.header": "Utilizați Plată prin bancă pentru a plăti instantaneu din orice cont bancar.",
+    "payByBankAISDD.disclaimer.body": "Prin conectarea contului dvs. bancar, autorizați debitarea din contul dvs. a oricărei sume datorate cu privire la utilizarea serviciilor noastre și/sau achiziționarea produselor noastre, până la revocarea acestei autorizații.",
+    "paymentMethodBrand.other": "Altele"
 }
