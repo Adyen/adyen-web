@@ -19,3 +19,32 @@
         line-height: 1.5;
     }
 }
+
+// apply the rule to the main dropin intem
+.adyen-checkout__payment-method--paybybank_AIS_DD {
+    .adyen-checkout__payment-method__brands {
+        // a bit hacky but makes constum breakpoints to hide each set of images
+        @media (max-width: 330px) {
+            .adyen-checkout__payment-method__image__wrapper:nth-child(2) {
+                display: none;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .adyen-checkout__payment-method__image__wrapper:nth-child(3) {
+                display: none;
+            }
+        }
+
+        @media (max-width: 390px) {
+            .adyen-checkout__payment-method__image__wrapper:nth-child(4) {
+                display: none;
+            }
+        }
+    }
+
+    .adyen-checkout__payment-method__brand-number {
+        text-overflow: clip;
+        white-space: nowrap;
+    }
+}
