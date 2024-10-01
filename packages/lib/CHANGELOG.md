@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 5.70.0
+
+### Minor Changes
+
+-   Pay by Bank US now shows whitelabel branding ([#2879](https://github.com/Adyen/adyen-web/pull/2879))
+
 ## 5.69.1
 
 ### Patch Changes
