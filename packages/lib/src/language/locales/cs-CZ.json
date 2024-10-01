@@ -314,5 +314,8 @@
     "payme.scanQrCode": "Dokončete platbu pomocí QR kódu",
     "payme.timeToPay": "Tento QR kód je platný pro %@",
     "payme.instructions.steps": "Otevřete aplikaci PayMe.%@Autorizujte platbu naskenováním QR kódu.%@Dokončete platbu v aplikaci a počkejte na potvrzení.",
-    "payme.instructions.footnote": "Nezavírejte prosím tuto stránku před dokončením platby."
+    "payme.instructions.footnote": "Nezavírejte prosím tuto stránku před dokončením platby.",
+    "payByBankAISDD.disclaimer.header": "Použijte Pay by Bank k okamžité platbě z jakéhokoli bankovního účtu.",
+    "payByBankAISDD.disclaimer.body": "Připojením svého bankovního účtu vyjadřujete souhlas s tím, aby z účtu byly strženy všechny dlužné částky za využívání našich služeb a nákup našich produktů, a to až do odvolání tohoto souhlasu.",
+    "paymentMethodBrand.other": "Ostatní"
 }

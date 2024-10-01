@@ -93,7 +93,7 @@
     "creditCard.cvcField.title.optional": "رمز الأمان (اختياري)",
     "issuerList.wallet.placeholder": "حدد محفظتك",
     "privacyPolicy": "سياسة الخصوصية",
-    "afterPay.agreement": "أوافق على ٪ @ لشركة Riverty",
+    "afterPay.agreement": "أوافق على %@ لشركة Riverty",
     "riverty.termsAndConditions": "أوافق على %#الشروط والأحكام%# العامة لوسيلة دفع Riverty. يمكن العثور على سياسة الخصوصية لـ Riverty %#هنا%#.",
     "paymentConditions": "شروط الدفع",
     "openApp": "فتح التطبيق",
@@ -318,5 +318,8 @@
     "payme.scanQrCode": "أكمل الدفع باستخدام رمز الاستجابة السريعة",
     "payme.timeToPay": "رمز الاستجابة السريعة هذا صالح لـ %@",
     "payme.instructions.steps": "افتح تطبيق PayMe. %@امسح رمز الاستجابة السريعة ضوئيًا للإذن بالدفع. %@أكمل عملية الدفع في التطبيق وانتظر التأكيد.",
-    "payme.instructions.footnote": "يرجى عدم إغلاق هذه الصفحة قبل إتمام الدفع"
+    "payme.instructions.footnote": "يرجى عدم إغلاق هذه الصفحة قبل إتمام الدفع",
+    "payByBankAISDD.disclaimer.header": "استخدم خدمة Pay by Bank للدفع الفوري من خلال أي حساب مصرفي.",
+    "payByBankAISDD.disclaimer.body": "من خلال ربط حسابك البنكي، أنت بذلك تمنحنا تفويضًا بخصم مدفوعات المبالغ المستحقة من حسابك البنكي، وذلك مقابل استخدام خدماتنا و/أو شراء منتجاتنا. ويستمر العمل بهذا التفويض إلى أن يتم إلغاؤه.",
+    "paymentMethodBrand.other": "أخرى"
 }

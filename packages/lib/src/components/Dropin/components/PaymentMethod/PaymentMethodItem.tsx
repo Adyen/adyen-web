@@ -147,6 +147,8 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
                             excludedUIBrands={BRAND_ICON_UI_EXCLUSION_LIST}
                             isPaymentMethodSelected={isSelected}
                             isCompactView={paymentMethod.props.showBrandsUnderCardNumber}
+                            keepBrandsVisible={paymentMethod.props.keepBrandsVisible}
+                            showOtherInsteafOfNumber={paymentMethod.props.showOtherInsteafOfNumber}
                         />
                     )}
                 </div>

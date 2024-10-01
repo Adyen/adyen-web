@@ -317,5 +317,8 @@
     "payme.scanQrCode": "Effectuez votre paiement avec un code QR",
     "payme.timeToPay": "Ce code QR est valide pendant %@",
     "payme.instructions.steps": "Ouvrez l'application PayMe.%@Scannez le code QR pour autoriser le paiement.%@Effectuez le paiement dans l'application et attendez la confirmation.",
-    "payme.instructions.footnote": "Veuillez ne pas fermer cette page avant que le paiement ne soit terminé."
+    "payme.instructions.footnote": "Veuillez ne pas fermer cette page avant que le paiement ne soit terminé.",
+    "payByBankAISDD.disclaimer.header": "Utilisez Pay by Bank pour payer instantanément depuis n'importe quel compte bancaire.",
+    "payByBankAISDD.disclaimer.body": "En connectant votre compte bancaire, vous autorisez le débit de tous les montants dus pour l'utilisation de nos services et l'achat de nos produits, jusqu'à révocation de votre autorisation.",
+    "paymentMethodBrand.other": "autre"
 }

@@ -10,14 +10,30 @@ interface PaymentMethodBrandsProps {
     isPaymentMethodSelected: boolean;
     activeBrand?: string;
     isCompactView?: boolean;
+    keepBrandsVisible?: boolean;
+    showOtherInsteafOfNumber?: boolean;
 }
 
-const PaymentMethodBrands = ({ activeBrand, brands, excludedUIBrands, isPaymentMethodSelected, isCompactView = true }: PaymentMethodBrandsProps) => {
-    // A set of brands filtered to exclude those that can never appear in the UI
+const PaymentMethodBrands = ({
+    brands,
+    excludedUIBrands,
+    isPaymentMethodSelected,
+    activeBrand,
+    isCompactView = true,
+    keepBrandsVisible = false,
+    showOtherInsteafOfNumber = false
+}: PaymentMethodBrandsProps) => {
     const allowedBrands = brands.filter(brand => !excludedUIBrands?.includes(brand.name));
 
     if (isCompactView) {
-        return <CompactView allowedBrands={allowedBrands} isPaymentMethodSelected={isPaymentMethodSelected} />;
+        return (
+            <CompactView
+                allowedBrands={allowedBrands}
+                isPaymentMethodSelected={isPaymentMethodSelected}
+                showOtherInsteafOfNumber={showOtherInsteafOfNumber}
+                keepBrandsVisible={keepBrandsVisible}
+            />
+        );
     }
     return (
         <span className="adyen-checkout__payment-method__brands">

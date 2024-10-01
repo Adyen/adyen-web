@@ -314,5 +314,8 @@
     "payme.scanQrCode": "Schließen Sie Ihre Zahlung per QR-Code ab",
     "payme.timeToPay": "Dieser QR-Code gilt für %@",
     "payme.instructions.steps": "Öffnen Sie die PayMe-App.%@Scannen Sie den QR-Code, um die Zahlung zu autorisieren.%@Schließen Sie die Zahlung in der App ab und warten Sie auf eine Bestätigung.",
-    "payme.instructions.footnote": "Bitte schließen Sie diese Seite nicht, bevor die Zahlung abgeschlossen ist"
+    "payme.instructions.footnote": "Bitte schließen Sie diese Seite nicht, bevor die Zahlung abgeschlossen ist",
+    "payByBankAISDD.disclaimer.header": "Verwenden Sie Pay by Bank, um sofort von jedem Bankkonto zu bezahlen.",
+    "payByBankAISDD.disclaimer.body": "Durch die Verbindung Ihres Bankkontos autorisieren Sie bis auf Widerruf Abbuchungen von Ihrem Konto für alle Beträge, die für die Nutzung unserer Dienste und/oder den Kauf unserer Produkte geschuldet werden.",
+    "paymentMethodBrand.other": "andere"
 }

@@ -64,6 +64,7 @@ import Trustly from './Trustly';
 import PayMe from './PayMe';
 import OnlineBankingFI from './OnlineBankingFI';
 import Riverty from './Riverty';
+import PayByBankUS from './PayByBankUS';
 
 /**
  * Maps each component with a Component element.
@@ -194,6 +195,8 @@ const componentsMap = {
     twint: Twint,
     vipps: Vipps,
     trustly: Trustly,
+    paybybank_AIS_DD: PayByBankUS,
+
     /** Redirect */
 
     /** Klarna */

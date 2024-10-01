@@ -317,5 +317,8 @@
     "payme.scanQrCode": "QR 코드로 결제 완료",
     "payme.timeToPay": "이 QR 코드는 %@ 동안 유효합니다",
     "payme.instructions.steps": "PayMe 앱을 엽니다.%@QR 코드를 스캔하여 결제를 승인합니다.%@앱에서 결제를 완료하고 확인을 기다립니다.",
-    "payme.instructions.footnote": "결제가 완료되기 전에 이 페이지를 닫지 마세요."
+    "payme.instructions.footnote": "결제가 완료되기 전에 이 페이지를 닫지 마세요.",
+    "payByBankAISDD.disclaimer.header": "Pay by Bank를 사용하면 어떤 은행 계좌에서든 즉시 결제할 수 있습니다.",
+    "payByBankAISDD.disclaimer.body": "은행 계좌를 연결함으로써, 이 승인이 취소될 때까지 당사의 서비스 이용 및/또는 제품 구매에 대해 지불해야 할 모든 금액이 귀하의 계좌에서 인출되는 것을 승인하게 됩니다.",
+    "paymentMethodBrand.other": "기타"
 }
