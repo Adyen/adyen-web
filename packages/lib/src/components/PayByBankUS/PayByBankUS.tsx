@@ -19,6 +19,18 @@ export default class PayByBankUS extends RedirectElement {
         };
     }
 
+    public formatData() {
+        return {
+            paymentMethod: {
+                type: this.type,
+                ...(this.props.storedPaymentMethodId && {
+                    storedPaymentMethodId: this.props.storedPaymentMethodId
+                })
+            },
+            browserInfo: this.browserInfo
+        };
+    }
+
     get displayName() {
         if (this.props.storedPaymentMethodId && this.props.label) {
             return this.props.label;
