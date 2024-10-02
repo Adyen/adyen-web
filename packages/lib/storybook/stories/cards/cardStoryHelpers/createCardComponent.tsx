@@ -10,8 +10,6 @@ export const createCardComponent = (args: PaymentMethodStoryProps<CardConfigurat
         <Checkout checkoutConfig={checkoutConfig}>
             {checkout => {
                 const card = new Card(checkout, componentConfiguration);
-                globalThis.card = card;
-                globalThis.parent.window['card'] = card;
                 return <ComponentContainer element={card} />;
             }}
         </Checkout>
