@@ -313,5 +313,8 @@
     "payme.scanQrCode": "Completeu el vostre pagament amb codi QR",
     "payme.timeToPay": "Aquest codi QR és vàlid per a %@",
     "payme.instructions.steps": "Obriu l'aplicació PayMe.%@Escanegeu el codi QR per autoritzar el pagament.%@Completeu el pagament a l'aplicació i espereu la confirmació.",
-    "payme.instructions.footnote": "No tanqueu aquesta pàgina abans de completar el pagament"
+    "payme.instructions.footnote": "No tanqueu aquesta pàgina abans de completar el pagament",
+    "payByBankAISDD.disclaimer.header": "Utilitzeu el pagament per banc per pagar a l'instant des de qualsevol compte bancari.",
+    "payByBankAISDD.disclaimer.body": "En connectar el vostre compte bancari, esteu autoritzant càrrecs a aquest compte per qualsevol import degut per l'ús dels nostres serveis o la compra dels nostres productes, fins que es revoqui aquesta autorització.",
+    "paymentMethodBrand.other": "altre"
 }

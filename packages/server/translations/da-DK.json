@@ -309,5 +309,8 @@
     "payme.scanQrCode": "Gennemfør din betaling med QR-kode",
     "payme.timeToPay": "Denne QR-kode er gyldig i %@",
     "payme.instructions.steps": "Åbn PayMe-appen.%@Scan QR-koden for at godkende betalingen.%@Gennemfør betalingen i appen, og afvent bekræftelse.",
-    "payme.instructions.footnote": "Luk ikke denne side, før betalingen er gennemført"
+    "payme.instructions.footnote": "Luk ikke denne side, før betalingen er gennemført",
+    "payByBankAISDD.disclaimer.header": "Brug Pay by Bank til at betale med det samme fra enhver bankkonto.",
+    "payByBankAISDD.disclaimer.body": "Ved at tilknytte din bankkonto tillader du debiteringer på din konto for ethvert skyldigt beløb for brug af vores tjenester og/eller køb af vores produkter, indtil denne tilladelse tilbagekaldes.",
+    "paymentMethodBrand.other": "andet"
 }
