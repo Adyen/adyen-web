@@ -17,6 +17,6 @@ jobs:
           node-version: 20.12.2
 
       - name: Deprecate NPM package
-        run: npm deprecate @adyen/adyen-web@3.x "Version 3.x of @adyen/adyen-web will no longer be supported after October 1, 2025. Please migrate to the latest version by following the migration guide at https://docs.adyen.com/online-payments/upgrade-your-integration/migrate-to-web-v6/from-v3/"
+        run: npm deprecate @adyen\/adyen-web@3.x "Version 3.x of @adyen/adyen-web will no longer be supported after October 1, 2025. Please migrate to the latest version by following the migration guide at https://docs.adyen.com/online-payments/upgrade-your-integration/migrate-to-web-v6/from-v3/"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
