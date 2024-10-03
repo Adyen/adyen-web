@@ -62,6 +62,15 @@ const CtPLogin = (): h.JSX.Element => {
         }
     }, [verifyIfShopperIsEnrolled, startIdentityValidation, shopperLogin, isValid, loginInputHandlers]);
 
+    const handleButtonKeyDown = useCallback(
+        (event: KeyboardEvent) => {
+            if (event.key === 'Enter') {
+                void handleOnLoginButtonClick();
+            }
+        },
+        [handleOnLoginButtonClick]
+    );
+
     return (
         <Fragment>
             <CtPSection.Title endAdornment={<CtPInfo />}>{i18n.get('ctp.login.title')}</CtPSection.Title>
@@ -83,6 +92,7 @@ const CtPLogin = (): h.JSX.Element => {
                 onClick={() => {
                     void handleOnLoginButtonClick();
                 }}
+                onKeyDown={handleButtonKeyDown}
             />
         </Fragment>
     );

@@ -7,6 +7,110 @@ import { IdentityLookupParams, SchemesConfiguration } from './types';
 import { SrciCheckoutResponse, SrciIdentityLookupResponse, SrcProfile } from './sdks/types';
 import SrciError from './sdks/SrciError';
 import ShopperCard from '../models/ShopperCard';
+import TimeoutError from '../errors/TimeoutError';
+
+describe('Timeout handling', () => {
+    test('should report timeout to Visa SDK passing srciDpaId since correlationId is unavailable', async () => {
+        const timeoutError = new TimeoutError({
+            source: 'init',
+            scheme: 'visa',
+            isTimeoutTriggeredBySchemeSdk: false
+        });
+
+        const onTimeoutMock = jest.fn();
+
+        const visa = mock<VisaSdk>();
+        // @ts-ignore Mocking readonly property
+        visa.schemeName = 'visa';
+        visa.init.mockRejectedValue(timeoutError);
+
+        const schemesConfig = mock<SchemesConfiguration>();
+        schemesConfig.visa.srciDpaId = 'visa-srciDpaId';
+        const sdkLoader = mock<ISrcSdkLoader>();
+        sdkLoader.load.mockResolvedValue([visa]);
+
+        // @ts-ignore  Mock window.VISA_SDK with the buildClientProfile method
+        window.VISA_SDK = {
+            buildClientProfile: jest.fn()
+        };
+
+        const service = new ClickToPayService(schemesConfig, sdkLoader, 'test', undefined, onTimeoutMock);
+        await service.initialize();
+
+        // @ts-ignore  Mock window.VISA_SDK with the buildClientProfile method
+        expect(window.VISA_SDK.buildClientProfile).toHaveBeenNthCalledWith(1, 'visa-srciDpaId');
+        expect(onTimeoutMock).toHaveBeenNthCalledWith(1, timeoutError);
+    });
+
+    test('should report timeout to Visa SDK without passing srciDpaId because correlationId is available', async () => {
+        const timeoutError = new TimeoutError({
+            source: 'init',
+            scheme: 'visa',
+            isTimeoutTriggeredBySchemeSdk: false
+        });
+
+        const onTimeoutMock = jest.fn();
+
+        const visa = mock<VisaSdk>();
+        // @ts-ignore Mocking readonly property
+        visa.schemeName = 'visa';
+        visa.init.mockRejectedValue(timeoutError);
+
+        const schemesConfig = mock<SchemesConfiguration>();
+        schemesConfig.visa.srciDpaId = 'visa-srciDpaId';
+        const sdkLoader = mock<ISrcSdkLoader>();
+        sdkLoader.load.mockResolvedValue([visa]);
+
+        // @ts-ignore  Mock window.VISA_SDK with the buildClientProfile method
+        window.VISA_SDK = {
+            buildClientProfile: jest.fn(),
+            correlationId: 'xxx-yyy'
+        };
+
+        const service = new ClickToPayService(schemesConfig, sdkLoader, 'test', undefined, onTimeoutMock);
+        await service.initialize();
+
+        // @ts-ignore  Mock window.VISA_SDK with the buildClientProfile method
+        expect(window.VISA_SDK.buildClientProfile).toHaveBeenCalledTimes(1);
+        // @ts-ignore  Mock window.VISA_SDK with the buildClientProfile method
+        expect(window.VISA_SDK.buildClientProfile).toHaveBeenCalledWith();
+
+        expect(onTimeoutMock).toHaveBeenNthCalledWith(1, timeoutError);
+    });
+
+    test('should not call Visa buildClientProfile() because it is Mastercard timeout', async () => {
+        const timeoutError = new TimeoutError({
+            source: 'init',
+            scheme: 'mc',
+            isTimeoutTriggeredBySchemeSdk: false
+        });
+
+        const onTimeoutMock = jest.fn();
+
+        const mc = mock<MastercardSdk>();
+        // @ts-ignore Mocking readonly property
+        mc.schemeName = 'mc';
+        mc.init.mockRejectedValue(timeoutError);
+
+        const schemesConfig = mock<SchemesConfiguration>();
+        schemesConfig.mc.srciDpaId = 'mc-srciDpaId';
+        const sdkLoader = mock<ISrcSdkLoader>();
+        sdkLoader.load.mockResolvedValue([mc]);
+
+        // @ts-ignore  Mock window.VISA_SDK with the buildClientProfile method
+        window.VISA_SDK = {
+            buildClientProfile: jest.fn()
+        };
+
+        const service = new ClickToPayService(schemesConfig, sdkLoader, 'test', undefined, onTimeoutMock);
+        await service.initialize();
+
+        // @ts-ignore  Mock window.VISA_SDK with the buildClientProfile method
+        expect(window.VISA_SDK.buildClientProfile).toHaveBeenCalledTimes(0);
+
+        expect(onTimeoutMock).toHaveBeenNthCalledWith(1, timeoutError);
+    });
+});
 
 test('should be able to tweak the configuration to store the cookie', () => {
     const visa = mock<VisaSdk>();

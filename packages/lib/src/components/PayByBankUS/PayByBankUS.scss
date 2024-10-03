@@ -1,0 +1,50 @@
+@import 'styles/variable-generator';
+
+.adyen-checkout-paybybank_AIS_DD {
+    margin-bottom: token(spacer-070);
+
+    &__description-header {
+        margin: token(spacer-000) token(spacer-000) token(spacer-020);
+        font-size: token(text-subtitle-font-size);
+        font-weight: token(text-body-stronger-font-weight);
+        color: token(color-label-primary);
+    }
+
+    &__description-body {
+        font-weight: token(text-body-font-weight);
+        list-style-type: disc;
+        color: token(color-label-secondary);
+        margin: 0;
+        font-size: token(text-body-font-size);
+        line-height: 1.5;
+    }
+}
+
+// apply the rule to the main dropin intem
+.adyen-checkout__payment-method--paybybank_AIS_DD {
+    .adyen-checkout__payment-method__brands {
+        // a bit hacky but makes constum breakpoints to hide each set of images
+        @media (max-width: 330px) {
+            .adyen-checkout__payment-method__image__wrapper:nth-child(2) {
+                display: none;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .adyen-checkout__payment-method__image__wrapper:nth-child(3) {
+                display: none;
+            }
+        }
+
+        @media (max-width: 390px) {
+            .adyen-checkout__payment-method__image__wrapper:nth-child(4) {
+                display: none;
+            }
+        }
+    }
+
+    .adyen-checkout__payment-method__brand-number {
+        text-overflow: clip;
+        white-space: nowrap;
+    }
+}

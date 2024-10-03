@@ -59,6 +59,7 @@ import PromptPay from './PromptPay';
 import Duitnow from './DuitNow';
 import Trustly from './Trustly';
 import Riverty from './Riverty';
+import PayByBankUS from './PayByBankUS';
 import { TxVariants } from './tx-variants';
 
 /**
@@ -176,6 +177,7 @@ export const ComponentsMap = {
     [TxVariants.twint]: Twint,
     [TxVariants.vipps]: Vipps,
     [TxVariants.trustly]: Trustly,
+    [TxVariants.paybybank_AIS_DD]: PayByBankUS,
     /** Redirect */
 
     /** Klarna */

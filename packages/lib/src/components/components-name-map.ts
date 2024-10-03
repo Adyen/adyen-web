@@ -25,7 +25,7 @@ const ComponentsNameMap = {
     /** Direct debit */
     [TxVariants.ach]: 'Ach',
     [TxVariants.directdebit_GB]: 'BacsDirectDebit',
-    [TxVariants.sepadirectdebit]: 'Sepa',
+    [TxVariants.sepadirectdebit]: 'SepaDirectDebit',
     /** Direct debit */
 
     /** Open Invoice */
@@ -114,6 +114,7 @@ const ComponentsNameMap = {
     [TxVariants.twint]: 'Twint',
     [TxVariants.vipps]: 'Vipps',
     [TxVariants.trustly]: 'Trustly',
+    [TxVariants.paybybank_AIS_DD]: 'PayByBankUS',
     /** Redirect */
 
     /** Klarna */

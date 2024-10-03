@@ -1,5 +1,17 @@
 # @adyen/adyen-web
 
+## 6.3.0
+
+### Minor Changes
+
+-   Pay by Bank US now shows whitelabel branding ([#2861](https://github.com/Adyen/adyen-web/pull/2861))
+
+### Patch Changes
+
+-   Reporting custom Click to Pay Visa timeouts to Visa SDK ([#2869](https://github.com/Adyen/adyen-web/pull/2869))
+
+-   Click to Pay - Fixed ENTER keypress behavior ([#2874](https://github.com/Adyen/adyen-web/pull/2874))
+
 ## 6.2.0
 
 ### Minor Changes

@@ -116,6 +116,8 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
 
                     {showBrands && (
                         <PaymentMethodBrands
+                            showOtherInsteafOfNumber={paymentMethod.props.showOtherInsteafOfNumber}
+                            keepBrandsVisible={paymentMethod.props.keepBrandsVisible}
                             brands={paymentMethod.brands}
                             excludedUIBrands={BRAND_ICON_UI_EXCLUSION_LIST}
                             isPaymentMethodSelected={isSelected}
