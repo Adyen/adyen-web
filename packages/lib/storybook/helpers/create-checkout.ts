@@ -6,7 +6,16 @@ import Core from '../../src/core';
 async function createCheckout(checkoutConfig: GlobalStoryProps): Promise<Core> {
     const { useSessions, ...rest } = checkoutConfig;
 
-    return useSessions ? await createSessionsCheckout(rest) : await createAdvancedFlowCheckout(rest);
+    const overidenPaymentMethodsAmount =
+        (rest.paymentMethodsOverride?.paymentMethods?.length || 0) + (rest.paymentMethodsOverride?.storedPaymentMethods?.length || 0);
+    const hasPaymentOveride = overidenPaymentMethodsAmount > 0;
+
+    if (useSessions && !hasPaymentOveride) {
+        return await createSessionsCheckout(rest);
+    } else if (useSessions && hasPaymentOveride) {
+        console.warn('🟢 Checkout Storybook: paymentMethodsOverride is defined while using Sessions, forcing advance flow.');
+    }
+    return await createAdvancedFlowCheckout(rest);
 }
 
 export { createCheckout };

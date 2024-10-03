@@ -12,6 +12,9 @@ const meta: MetaConfiguration<DropinConfiguration> = {
     argTypes: {
         componentConfiguration: {
             control: 'object'
+        },
+        paymentMethodsOverride: {
+            control: 'object'
         }
     },
     args: {
