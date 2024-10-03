@@ -1,0 +1,16 @@
+.adyen-checkout-paynow__introduction {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  text-align: center;
+}
+
+.adyen-checkout-paynow__introduction--mobile-only {
+  display: none;
+}
+
+@media only screen and (max-width: 768px) {
+  .adyen-checkout-paynow__introduction--mobile-only {
+    display: block;
+  }
+}

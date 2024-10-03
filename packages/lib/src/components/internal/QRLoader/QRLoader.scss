@@ -101,7 +101,7 @@
     margin-top: token(spacer-100);
 }
 
-@media only screen and (max-device-width: 1200px) {
+@media only screen and (max-width: 1200px) {
     .adyen-checkout__qr-loader__app-link {
         display: block;
     }
