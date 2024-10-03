@@ -82,7 +82,7 @@ function touchendListener(e: Event): void {
     }
 
     // Remove listener - it gets reset by next call to handleAdditionalFields from handleFocus
-    this.destroyTouchendListener();  
+    this.destroyTouchendListener();
 
     // Store the fact we have unset the listener
     this.state.registerFieldForIos = false;

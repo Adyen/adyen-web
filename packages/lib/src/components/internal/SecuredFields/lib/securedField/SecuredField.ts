@@ -243,14 +243,6 @@ class SecuredField extends AbstractSecuredField {
 
             case 'focus':
                 this.onFocusCallback(feedbackObj);
-
-                // HORRIBLE HORRIBLE HACK to get round bug in TestCafe - see comment on 3rd test in packages/e2e/tests/cards/branding/branding.test.js
-                if (process.env.NODE_ENV === 'development' && window.location.origin.indexOf('3024') > -1) {
-                    if (window['testCafeForceClick'] === true) {
-                        window['testCafeForceClick'] = false;
-                        this.onTouchstartCallback(feedbackObj);
-                    }
-                }
                 break;
 
             case 'binValue':

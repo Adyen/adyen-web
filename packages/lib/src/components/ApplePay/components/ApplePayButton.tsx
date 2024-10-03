@@ -36,7 +36,6 @@ class ApplePayButton extends Component<ApplePayButtonProps> {
                 onClick={this.props.onClick}
             />
         );
-         
     }
 }
 

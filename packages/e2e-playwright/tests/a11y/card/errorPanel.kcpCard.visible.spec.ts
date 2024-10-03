@@ -1,6 +1,6 @@
 import { test } from '../../../pages/cards/card.fixture';
 
-test.describe('#1 Click pay with empty fields and error panel is populated', async () => {
+test('#1 Click pay with empty fields and error panel is populated', async () => {
     // error panel exists at startup (in its hidden state)
     // Wait for field to appear in DOM
     // click pay, to validate & generate errors
@@ -15,7 +15,7 @@ test.describe('#1 Click pay with empty fields and error panel is populated', asy
     // Expect focus to be place on Card number field - since SRConfig for this card comp says it should be
 });
 
-test.describe('#2 Fill out PAN & name and see that first error in error panel is tax number related', async () => {
+test('#2 Fill out PAN & name and see that first error in error panel is tax number related', async () => {
     // Wait for field to appear in DOM
     // await cardPage.cardUtils.fillCardNumber(t, KOREAN_TEST_CARD, 'paste'); // TODO - shouldn't have to 'paste' here... but Testcafe is being flaky, again!
     // await cardPage.cardUtils.fillDateAndCVC(t);

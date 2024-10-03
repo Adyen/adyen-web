@@ -43,7 +43,6 @@ class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2Sta
              */
             this.processMessageHandler = getProcessMessageHandler(this.props.postMessageDomain, resolve, reject, 'challengeResult');
 
-             
             window.addEventListener('message', this.processMessageHandler);
         });
     }

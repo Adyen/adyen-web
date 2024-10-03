@@ -1,6 +1,6 @@
 import { test } from '../../../pages/cards/card.fixture';
 
-test.describe('#1 avsCard error fields and inputs should have correct aria attributes', async () => {
+test('#1 avsCard error fields and inputs should have correct aria attributes', async () => {
     // error panel does not exist at startup
     // Wait for field to appear in DOM
     // click pay, to validate & generate errors

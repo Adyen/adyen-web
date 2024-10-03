@@ -24,7 +24,6 @@ test.describe('Card payments with partial avs', () => {
 });
 
 test.describe('Card payments with full avs', () => {
-    // todo: add tests with some optional fields
     test.describe('When fill in the valid address data', () => {
         test('should make a successful card payment', async ({ cardAvsPage }) => {
             // fill in card number

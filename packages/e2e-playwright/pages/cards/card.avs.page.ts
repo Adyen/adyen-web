@@ -15,8 +15,8 @@ class CardAvsPage {
     constructor(page: Page) {
         this.page = page;
         this.cardWithAvs = new CardWithAvs(page, CardAvsPage.avsContainerSelector);
-        this.payButton = page.getByRole('button', { name: /Pay/i });
-        //this.paymentResult = new Result(page).paymentResult;
+        /*this.payButton = page.getByRole('button', { name: /Pay/i });
+        //this.paymentResult = new Result(page).paymentResult;*/
     }
 
     async goto(url: string = CardAvsPage.URL) {

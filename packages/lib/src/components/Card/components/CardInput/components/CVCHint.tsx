@@ -9,7 +9,6 @@ export default function CVCHint({ frontCVC = false, fieldLabel }: CVCHintProps) 
         'adyen-checkout__field__cvc--back-hint': !frontCVC
     });
 
-     
     return (
         <span className={hintClassnames}>
             <svg
@@ -62,5 +61,4 @@ export default function CVCHint({ frontCVC = false, fieldLabel }: CVCHintProps) 
             </svg>
         </span>
     );
-     
 }

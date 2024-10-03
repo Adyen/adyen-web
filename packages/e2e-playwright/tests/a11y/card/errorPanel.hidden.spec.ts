@@ -1,6 +1,6 @@
 import { test } from '../../../pages/cards/card.fixture';
 
-test.describe('#1 Click pay with empty fields and hidden error panel is populated', async () => {
+test('#1 Click pay with empty fields and hidden error panel is populated', async () => {
     // error panel exists at startup but is not visible
     // Wait for field to appear in DOM
     // click pay, to validate & generate errors

@@ -1,6 +1,6 @@
 import { test } from '../../../pages/cards/card.fixture';
 
-test.describe('BCMC logo should have correct alt text', async () => {
+test('BCMC logo should have correct alt text', async () => {
     // wait for card number field shown
     // await fillCardNumber(t, '41');
     // BCMC logo still in number field
@@ -8,9 +8,9 @@ test.describe('BCMC logo should have correct alt text', async () => {
     // Hidden cvc field - check aria hidden?
 });
 
-test.describe('Visa logo should have correct alt text', async () => {});
+test('Visa logo should have correct alt text', async () => {});
 
-test.describe(
+test(
     '#4 Enter card number (co-branded bcmc/visa) ' +
         'then complete expiryDate and expect comp to be valid' +
         'then click Visa logo and expect comp to not be valid' +
@@ -32,7 +32,7 @@ test.describe(
     }
 );
 
-test.describe(
+test(
     '#5 Enter card number, that we mock to co-branded bcmc/visa ' +
         'then complete expiryDate and expect comp to be valid' +
         'then click Visa logo and expect comp to not be valid' +
@@ -49,7 +49,7 @@ test.describe(
     }
 );
 
-test.describe(
+test(
     '#6 Enter Visa card number ' +
         'then delete it' +
         'then re-add it' +

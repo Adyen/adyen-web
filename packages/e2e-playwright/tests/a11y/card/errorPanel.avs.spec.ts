@@ -1,6 +1,6 @@
 import { test } from '../../../pages/cards/card.fixture';
 
-test.describe('#1 avsCard error fields and inputs should have correct aria attributes', async () => {
+test('#1 avsCard error fields and inputs should have correct aria attributes', async () => {
     // Wait for field to appear in DOM
     // click pay, to validate & generate errors
     // Card number's error field should have correct aria attrs (-hidden="true", -live not set)
@@ -9,7 +9,7 @@ test.describe('#1 avsCard error fields and inputs should have correct aria attri
     // Address input should have aria-describedby attr
 });
 
-test.describe('#2 Click pay with empty fields and error panel in avsCard is populated', async () => {
+test('#2 Click pay with empty fields and error panel in avsCard is populated', async () => {
     // error panel exists at startup
     // Wait for field to appear in DOM
     // click pay, to validate & generate errors
@@ -26,7 +26,7 @@ test.describe('#2 Click pay with empty fields and error panel in avsCard is popu
     // Expect focus to be place on Card number field - since SRConfig for this card comp says we should move focus
 });
 
-test.describe('#3 fill out credit card fields & see that first error in error panel is country related', async () => {
+test('#3 fill out credit card fields & see that first error in error panel is country related', async () => {
     // Wait for field to appear in DOM
     //await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
     //await cardPage.cardUtils.fillDateAndCVC(t);
@@ -43,7 +43,7 @@ test.describe('#3 fill out credit card fields & see that first error in error pa
     //    await t.expect(cardPage.countrySelectBtnActive.exists).ok();
 });
 
-test.describe('#4 Switch country to US, click pay with empty fields and error panel in avsCard is populated US style', async () => {
+test('#4 Switch country to US, click pay with empty fields and error panel in avsCard is populated US style', async () => {
     // Wait for field to appear in DOM
     // Opens dropdown
     // Click US
@@ -59,7 +59,7 @@ test.describe('#4 Switch country to US, click pay with empty fields and error pa
     // no 8th element
 });
 
-test.describe('#5 Switch country to US, fill out credit card fields & see that first error in error panel is address related', async () => {
+test('#5 Switch country to US, fill out credit card fields & see that first error in error panel is address related', async () => {
     // Wait for field to appear in DOM
     // Opens dropdown
     // Click US
@@ -75,7 +75,7 @@ test.describe('#5 Switch country to US, fill out credit card fields & see that f
     // Expect focus to be place on Address field
 });
 
-test.describe('#6 Switch country to UK, click pay with empty fields and error panel in avsCard is populated UK style', async () => {
+test('#6 Switch country to UK, click pay with empty fields and error panel in avsCard is populated UK style', async () => {
     // Wait for field to appear in DOM
     // Opens country dropdown
     // Click UK
@@ -92,7 +92,7 @@ test.describe('#6 Switch country to UK, click pay with empty fields and error pa
     // Expect focus to be place on Card number field
 });
 
-test.describe('#7 Switch country to UK, fill out credit card fields & see that first error in error panel is address related', async () => {
+test('#7 Switch country to UK, fill out credit card fields & see that first error in error panel is address related', async () => {
     // Wait for field to appear in DOM
     // Opens dropdown
     // Click UK

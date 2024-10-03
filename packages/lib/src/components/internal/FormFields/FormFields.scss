@@ -23,7 +23,7 @@
 // Additional workaround for Chrome mobile to remove autofill background and text color
 .adyen-checkout__input,
 .adyen-checkout__filter-input {
-    color: token(color-label-primary) !important;
+    color: token(color§-label-primary) !important;
     background-clip: text !important;
 }
 
