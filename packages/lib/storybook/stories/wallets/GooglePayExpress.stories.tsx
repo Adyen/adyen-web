@@ -1,10 +1,10 @@
-import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
-import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
-import { Container } from '../Container';
+import { MetaConfiguration, StoryConfiguration } from '../types';
+import { ComponentContainer } from '../ComponentContainer';
 import { GooglePayConfiguration } from '../../../src/components/GooglePay/types';
 import getCurrency from '../../utils/get-currency';
-import { GooglePay } from '../../../src';
+import GooglePay from '../../../src/components/GooglePay';
 import { makePayment } from '../../helpers/checkout-api-calls';
+import { Checkout } from '../Checkout';
 
 type GooglePayStory = StoryConfiguration<GooglePayConfiguration>;
 
@@ -139,15 +139,12 @@ function calculateNewTransactionInfo(countryCode: string, selectedShippingOption
     return newTransactionInfo;
 }
 
-const createComponent = (args: PaymentMethodStoryProps<GooglePayConfiguration>, context) => {
-    const { componentConfiguration } = args;
-    const checkout = getStoryContextCheckout(context);
-    const googlepay = new GooglePay(checkout, componentConfiguration);
-    return <Container element={googlepay} />;
-};
-
 export const Express: GooglePayStory = {
-    render: createComponent,
+    render: ({ componentConfiguration, ...checkoutConfig }) => (
+        <Checkout checkoutConfig={checkoutConfig}>
+            {checkout => <ComponentContainer element={new GooglePay(checkout, componentConfiguration)} />}
+        </Checkout>
+    ),
     argTypes: {
         useSessions: {
             control: false

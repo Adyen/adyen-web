@@ -1,8 +1,8 @@
-import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
-import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
-import { Container } from '../Container';
+import { MetaConfiguration, StoryConfiguration } from '../types';
+import { ComponentContainer } from '../ComponentContainer';
 import { ApplePayConfiguration } from '../../../src/components/ApplePay/types';
-import { ApplePay } from '../../../src';
+import ApplePay from '../../../src/components/ApplePay';
+import { Checkout } from '../Checkout';
 
 type ApplePayStory = StoryConfiguration<ApplePayConfiguration>;
 
@@ -10,15 +10,12 @@ const meta: MetaConfiguration<ApplePayConfiguration> = {
     title: 'Wallets/ApplePay'
 };
 
-const createComponent = (args: PaymentMethodStoryProps<ApplePayConfiguration>, context) => {
-    const { componentConfiguration } = args;
-    const checkout = getStoryContextCheckout(context);
-    const applepay = new ApplePay(checkout, componentConfiguration);
-    return <Container element={applepay} />;
-};
-
 export const Default: ApplePayStory = {
-    render: createComponent,
+    render: ({ componentConfiguration, ...checkoutConfig }) => (
+        <Checkout checkoutConfig={checkoutConfig}>
+            {checkout => <ComponentContainer element={new ApplePay(checkout, componentConfiguration)} />}
+        </Checkout>
+    ),
     args: {}
 };
 

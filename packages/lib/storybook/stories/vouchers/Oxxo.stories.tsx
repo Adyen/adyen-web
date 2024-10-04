@@ -1,8 +1,8 @@
-import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
-import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
+import { MetaConfiguration, StoryConfiguration } from '../types';
 import { VoucherConfiguration } from '../../../src/components/types';
-import { Container } from '../Container';
-import { Oxxo } from '../../../src';
+import { ComponentContainer } from '../ComponentContainer';
+import Oxxo from '../../../src/components/Oxxo';
+import { Checkout } from '../Checkout';
 
 type OxxoStory = StoryConfiguration<VoucherConfiguration>;
 
@@ -11,12 +11,10 @@ const meta: MetaConfiguration<VoucherConfiguration> = {
 };
 
 export const Default: OxxoStory = {
-    render: (args: PaymentMethodStoryProps<VoucherConfiguration>, context) => {
-        const { componentConfiguration } = args;
-        const checkout = getStoryContextCheckout(context);
-        const oxxo = new Oxxo(checkout, componentConfiguration);
-        return <Container element={oxxo} />;
-    },
+    render: ({ componentConfiguration, ...checkoutConfig }) => (
+        <Checkout checkoutConfig={checkoutConfig}>{checkout => <ComponentContainer element={new Oxxo(checkout, componentConfiguration)} />}</Checkout>
+    ),
+
     args: {
         countryCode: 'MX'
     }

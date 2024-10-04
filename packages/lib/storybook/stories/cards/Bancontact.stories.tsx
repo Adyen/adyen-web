@@ -1,8 +1,8 @@
-import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
-import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
+import { MetaConfiguration, StoryConfiguration } from '../types';
 import { CardConfiguration } from '../../../src/components/Card/types';
-import { Bancontact } from '../../../src';
-import { Container } from '../Container';
+import Bancontact from '../../../src/components/Card/Bancontact';
+import { ComponentContainer } from '../ComponentContainer';
+import { Checkout } from '../Checkout';
 
 type BancontactStory = StoryConfiguration<CardConfiguration>;
 
@@ -10,16 +10,12 @@ const meta: MetaConfiguration<CardConfiguration> = {
     title: 'Cards/Bancontact'
 };
 
-const createComponent = (args: PaymentMethodStoryProps<CardConfiguration>, context) => {
-    const { componentConfiguration } = args;
-    const checkout = getStoryContextCheckout(context);
-    const bancontact = new Bancontact(checkout, componentConfiguration);
-
-    return <Container element={bancontact} />;
-};
-
 export const Default: BancontactStory = {
-    render: createComponent,
+    render: ({ componentConfiguration, ...checkoutConfig }) => (
+        <Checkout checkoutConfig={checkoutConfig}>
+            {checkout => <ComponentContainer element={new Bancontact(checkout, componentConfiguration)} />}
+        </Checkout>
+    ),
     args: {
         componentConfiguration: {
             _disableClickToPay: true

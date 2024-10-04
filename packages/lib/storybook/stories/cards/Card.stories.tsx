@@ -1,11 +1,9 @@
-import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
-import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
+import { MetaConfiguration, StoryConfiguration } from '../types';
 import { CardConfiguration } from '../../../src/components/Card/types';
-import { Card } from '../../../src';
-import { Container } from '../Container';
 import { searchFunctionExample } from '../../../../playground/src/utils';
 import { CardWith3DS2Redirect } from './cardStoryHelpers/CardWith3DS2Redirect';
-import './cardStoryHelpers/storedCard.style.scss';
+import { createStoredCardComponent } from './cardStoryHelpers/createStoredCardComponent';
+import { createCardComponent } from './cardStoryHelpers/createCardComponent';
 
 type CardStory = StoryConfiguration<CardConfiguration>;
 
@@ -13,74 +11,12 @@ const meta: MetaConfiguration<CardConfiguration> = {
     title: 'Cards/Card'
 };
 
-const createComponent = (args: PaymentMethodStoryProps<CardConfiguration>, context) => {
-    const { componentConfiguration } = args;
-    const checkout = getStoryContextCheckout(context);
-    const card = new Card(checkout, componentConfiguration);
-
-    globalThis.card = card;
-    globalThis.parent.window['card'] = card;
-
-    return <Container element={card} />;
-};
-
-const createStoredCardComponent = (args: PaymentMethodStoryProps<CardConfiguration>, context) => {
-    const { componentConfiguration } = args;
-    const checkout = getStoryContextCheckout(context);
-
-    if (checkout.paymentMethodsResponse.storedPaymentMethods && checkout.paymentMethodsResponse.storedPaymentMethods.length > 0) {
-        // We are only interested in card based storedPaymentMethods that support Ecommerce  - a quick way to distinguish these is if they have a brand property
-        let storedCardData;
-        let storedPM;
-        for (let i = 0; i < checkout.paymentMethodsResponse.storedPaymentMethods.length; i++) {
-            storedPM = checkout.paymentMethodsResponse.storedPaymentMethods[i];
-            if (storedPM.brand && storedPM.supportedShopperInteractions.includes('Ecommerce')) {
-                storedCardData = checkout.paymentMethodsResponse.storedPaymentMethods[i];
-                break; // exit, now we've found the first storedCard
-            }
-        }
-
-        if (storedCardData) {
-            const card = new Card(checkout, { ...storedCardData, ...componentConfiguration });
-
-            return (
-                <div>
-                    <div className={'stored-card-info'}>
-                        <p>
-                            <i>Stored card info:</i>
-                        </p>
-                        <div className={'info-container'}>
-                            <div>
-                                <div>Brand:</div>
-                                <img src={card.icon} alt={'stored-card-brand-icon'} />
-                            </div>
-                            <div className={'info-extra-item'}>
-                                <div>Last four digits:</div>
-                                <div className={'info-item-with-top-margin'}>{storedPM.lastFour}</div>
-                            </div>
-                            <div className={'info-extra-item'}>
-                                <div>Holder name:</div>
-                                <div className={'info-item-with-top-margin'}>{storedPM.holderName}</div>
-                            </div>
-                        </div>
-                    </div>
-                    <Container element={card} />
-                </div>
-            );
-        } else {
-            return <div>No stored cards found</div>;
-        }
-    } else {
-        return <div>No stored payment methods found</div>;
-    }
-};
-
 export const Default: CardStory = {
-    render: createComponent,
+    render: createCardComponent,
     args: {
         componentConfiguration: {
             _disableClickToPay: true,
-            autoFocus: true,
+            autoFocus: false,
             // brands: ['mc'],
             // brandsConfiguration: { visa: { icon: 'http://localhost:3000/nocard.svg', name: 'altVisa' } },
             challengeWindowSize: '02',
@@ -113,7 +49,7 @@ export const Default: CardStory = {
 };
 
 export const WithAVS: CardStory = {
-    render: createComponent,
+    render: createCardComponent,
     args: {
         componentConfiguration: {
             _disableClickToPay: true,
@@ -135,7 +71,7 @@ export const WithAVS: CardStory = {
 };
 
 export const WithPartialAVS: CardStory = {
-    render: createComponent,
+    render: createCardComponent,
     args: {
         componentConfiguration: {
             _disableClickToPay: true,
@@ -146,7 +82,7 @@ export const WithPartialAVS: CardStory = {
 };
 
 export const WithAVSAddressLookup: CardStory = {
-    render: createComponent,
+    render: createCardComponent,
     args: {
         componentConfiguration: {
             _disableClickToPay: true,
@@ -157,7 +93,7 @@ export const WithAVSAddressLookup: CardStory = {
 };
 
 export const WithInstallments: CardStory = {
-    render: createComponent,
+    render: createCardComponent,
     args: {
         componentConfiguration: {
             _disableClickToPay: true,
@@ -176,7 +112,7 @@ export const WithInstallments: CardStory = {
 };
 
 export const KCP: CardStory = {
-    render: createComponent,
+    render: createCardComponent,
     args: {
         componentConfiguration: {
             ...{ brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'korean_local_card'] },
@@ -192,7 +128,7 @@ export const KCP: CardStory = {
 };
 
 export const WithClickToPay: CardStory = {
-    render: createComponent,
+    render: createCardComponent,
     args: {
         componentConfiguration: {
             clickToPayConfiguration: {
@@ -204,9 +140,8 @@ export const WithClickToPay: CardStory = {
 };
 
 export const CardWith_3DS2_Redirect: CardStory = {
-    render: args => {
-        return <CardWith3DS2Redirect contextArgs={args} />;
-    },
+    render: args => <CardWith3DS2Redirect {...args} />,
+
     args: {
         componentConfiguration: {
             _disableClickToPay: true

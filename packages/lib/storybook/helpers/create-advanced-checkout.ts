@@ -1,4 +1,4 @@
-import { AdyenCheckout } from '../../src';
+import { AdyenCheckout } from '../../src/core/AdyenCheckout';
 import { cancelOrder, checkBalance, createOrder, getPaymentMethods, makeDetailsCall, makePayment } from './checkout-api-calls';
 import { handleChange, handleError, handleFinalState } from './checkout-handlers';
 import getCurrency from '../utils/get-currency';
@@ -6,17 +6,37 @@ import { AdyenCheckoutProps } from '../stories/types';
 import Checkout from '../../src/core/core';
 import { PaymentMethodsResponse } from '../../src/types';
 
-async function createAdvancedFlowCheckout({ showPayButton, countryCode, shopperLocale, amount, ...rest }: AdyenCheckoutProps): Promise<Checkout> {
+async function createAdvancedFlowCheckout({
+    showPayButton,
+    countryCode,
+    shopperLocale,
+    amount,
+    paymentMethodsOverride,
+    ...restCheckoutProps
+}: AdyenCheckoutProps): Promise<Checkout> {
     const paymentAmount = {
         currency: getCurrency(countryCode),
         value: Number(amount)
     };
 
-    const paymentMethodsResponse: PaymentMethodsResponse = await getPaymentMethods({
+    const _paymentMethodsResponse: PaymentMethodsResponse = await getPaymentMethods({
         amount: paymentAmount,
         shopperLocale,
         countryCode
     });
+
+    const paymentMethodsResponse = !paymentMethodsOverride
+        ? _paymentMethodsResponse
+        : {
+              storedPaymentMethods: [
+                  ...(_paymentMethodsResponse.storedPaymentMethods ? _paymentMethodsResponse.storedPaymentMethods : []),
+                  ...(paymentMethodsOverride.storedPaymentMethods ? paymentMethodsOverride.storedPaymentMethods : [])
+              ],
+              paymentMethods: [
+                  ...(_paymentMethodsResponse.paymentMethods ? _paymentMethodsResponse.paymentMethods : []),
+                  ...(paymentMethodsOverride.paymentMethods ? paymentMethodsOverride.paymentMethods : [])
+              ]
+          };
 
     const checkout = await AdyenCheckout({
         clientKey: process.env.CLIENT_KEY,
@@ -119,7 +139,7 @@ async function createAdvancedFlowCheckout({ showPayButton, countryCode, shopperL
             handleError(error, component);
         },
 
-        ...rest
+        ...restCheckoutProps
     });
 
     return checkout;
