@@ -48,6 +48,6 @@ export interface DragonpayVoucherResultProps {
     icon?: string;
     issuer?: string;
     ref?: any;
-    onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
+    onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
     originalAction?: PaymentAction;
 }

@@ -12,12 +12,8 @@ export default function BankTransferResult(props) {
 
     return (
         <Voucher
-            {...extractCommonPropsForVoucher({
-                props: { ...props, reference: '' }, // Don't display the passed reference separately (it will be part of the voucherDetails)
-                i18n,
-                introKey: 'bankTransfer.instructions',
-                getImage: getImage()
-            })}
+            {...extractCommonPropsForVoucher({ props, i18n, introKey: 'bankTransfer.instructions', getImage: getImage() })}
+            reference={''} // Overwrite the passed reference, so it is not displayed in its own section (since it is already part of the voucherDetails)
             voucherDetails={[
                 { label: i18n.get('bankTransfer.beneficiary'), value: props.beneficiary },
                 { label: i18n.get('bankTransfer.iban'), value: props.iban },
