@@ -6,21 +6,12 @@ import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { OxxoVoucherResultProps } from '../../types';
 import './OxxoVoucherResult.scss';
 import useImage from '../../../../core/Context/useImage';
+import { extractCommonPropsForVoucher } from '../../../internal/Voucher/utils';
 
 const OxxoVoucherResult = (props: OxxoVoucherResultProps) => {
     const { i18n, loadingContext } = useCoreContext();
     const getImage = useImage();
-    const {
-        alternativeReference,
-        reference,
-        expiresAt,
-        merchantReference,
-        totalAmount,
-        paymentMethodType,
-        downloadUrl,
-        onActionHandled,
-        originalAction
-    } = props;
+    const { alternativeReference, reference, expiresAt, merchantReference, downloadUrl } = props;
 
     const barcodeUrl = `${loadingContext}barcode.shtml?data=${reference}&barcodeType=BT_Code128C&fileType=png`;
     const voucherDetails: VoucherDetail[] = [
@@ -52,17 +43,11 @@ const OxxoVoucherResult = (props: OxxoVoucherResultProps) => {
 
     return (
         <Voucher
-            amount={totalAmount && i18n.amount(totalAmount.value, totalAmount.currency)}
+            {...extractCommonPropsForVoucher({ props, i18n, introKey: 'voucher.introduction', getImage: getImage() })}
             barcode={barcodeUrl}
             copyBtn
             downloadUrl={downloadUrl}
-            imageUrl={getImage()(paymentMethodType)}
-            introduction={i18n.get('voucher.introduction')}
-            paymentMethodType={'oxxo'}
-            reference={reference}
             voucherDetails={voucherDetails}
-            onActionHandled={onActionHandled}
-            originalAction={originalAction}
         />
     );
 };

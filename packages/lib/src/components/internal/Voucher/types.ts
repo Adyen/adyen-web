@@ -61,3 +61,13 @@ export interface VoucherConfiguration extends UIElementProps {
     paymentMethodType?: string;
     originalAction?: PaymentAction;
 }
+
+export interface CommonVoucherProps {
+    paymentMethodType: string;
+    introduction: string;
+    imageUrl: string;
+    onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
+    originalAction?: PaymentAction;
+    amount?: string;
+    reference?: string;
+}
