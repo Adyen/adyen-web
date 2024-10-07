@@ -9,7 +9,7 @@ import useImage from '../../../../core/Context/useImage';
 const MultibancoVoucherResult = (props: MultibancoVoucherResultProps) => {
     const { i18n } = useCoreContext();
     const getImage = useImage();
-    const { entity, reference, expiresAt, merchantReference, totalAmount, paymentMethodType, downloadUrl } = props;
+    const { entity, reference, expiresAt, merchantReference, totalAmount, paymentMethodType, downloadUrl, onActionHandled, originalAction } = props;
 
     const voucherDetails: VoucherDetail[] = [
         ...(entity ? [{ label: i18n.get('voucher.entity'), value: entity }] : []),
@@ -28,6 +28,8 @@ const MultibancoVoucherResult = (props: MultibancoVoucherResultProps) => {
             paymentMethodType={'multibanco'}
             reference={reference}
             voucherDetails={voucherDetails}
+            onActionHandled={onActionHandled}
+            originalAction={originalAction}
         />
     );
 };

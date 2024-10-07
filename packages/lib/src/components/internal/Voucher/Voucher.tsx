@@ -13,6 +13,8 @@ export default function Voucher({ voucherDetails = [], className = '', ...props 
     const { i18n } = useCoreContext();
     const getImage = useImage();
 
+    props.onActionHandled({ componentType: props.paymentMethodType, actionDescription: 'voucher-presented', originalAction: props.originalAction });
+
     return (
         <div className={classNames('adyen-checkout__voucher-result', `adyen-checkout__voucher-result--${props.paymentMethodType}`, className)}>
             <div className="adyen-checkout__voucher-result__top">

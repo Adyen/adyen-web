@@ -10,7 +10,17 @@ import useImage from '../../../../core/Context/useImage';
 const OxxoVoucherResult = (props: OxxoVoucherResultProps) => {
     const { i18n, loadingContext } = useCoreContext();
     const getImage = useImage();
-    const { alternativeReference, reference, expiresAt, merchantReference, totalAmount, paymentMethodType, downloadUrl } = props;
+    const {
+        alternativeReference,
+        reference,
+        expiresAt,
+        merchantReference,
+        totalAmount,
+        paymentMethodType,
+        downloadUrl,
+        onActionHandled,
+        originalAction
+    } = props;
 
     const barcodeUrl = `${loadingContext}barcode.shtml?data=${reference}&barcodeType=BT_Code128C&fileType=png`;
     const voucherDetails: VoucherDetail[] = [
@@ -51,6 +61,8 @@ const OxxoVoucherResult = (props: OxxoVoucherResultProps) => {
             paymentMethodType={'oxxo'}
             reference={reference}
             voucherDetails={voucherDetails}
+            onActionHandled={onActionHandled}
+            originalAction={originalAction}
         />
     );
 };

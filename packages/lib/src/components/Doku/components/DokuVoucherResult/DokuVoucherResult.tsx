@@ -6,7 +6,8 @@ import { DokuVoucherResultProps } from '../../types';
 import useImage from '../../../../core/Context/useImage';
 
 const DokuVoucherResult = (props: DokuVoucherResultProps) => {
-    const { reference, expiresAt, instructionsUrl, shopperName, merchantName, totalAmount, paymentMethodType } = props;
+    const { reference, expiresAt, instructionsUrl, shopperName, merchantName, totalAmount, paymentMethodType, onActionHandled, originalAction } =
+        props;
     const { i18n } = useCoreContext();
     const getImage = useImage();
 
@@ -24,6 +25,8 @@ const DokuVoucherResult = (props: DokuVoucherResultProps) => {
                 { label: i18n.get('voucher.merchantName'), value: merchantName }
             ]}
             copyBtn
+            onActionHandled={onActionHandled}
+            originalAction={originalAction}
         />
     );
 };

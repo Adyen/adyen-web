@@ -9,7 +9,7 @@ import useImage from '../../../core/Context/useImage';
 const BacsResult = props => {
     const { i18n } = useCoreContext();
     const getImage = useImage();
-    const { url, paymentMethodType } = props;
+    const { url, paymentMethodType, onActionHandled, originalAction } = props;
 
     return (
         <Voucher
@@ -18,6 +18,8 @@ const BacsResult = props => {
             imageUrl={getImage()(paymentMethodType)}
             downloadUrl={url}
             downloadButtonText={i18n.get('download.pdf')}
+            onActionHandled={onActionHandled}
+            originalAction={originalAction}
         />
     );
 };

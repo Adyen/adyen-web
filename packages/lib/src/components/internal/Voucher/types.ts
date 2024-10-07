@@ -1,4 +1,5 @@
 import { UIElementProps } from '../UIElement/types';
+import { ActionHandledReturnObject, PaymentAction } from '../../../types/global-types';
 
 export interface VoucherDetail {
     label: string;
@@ -47,10 +48,16 @@ export interface VoucherProps {
 
     /** Show/Hide a button to copy the payment reference. It will only show if a reference is available. */
     copyBtn?: boolean;
+
+    // callback, at Checkout level
+    onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
+    // ref to original action, passed to onActionHandled callback
+    originalAction?: PaymentAction;
 }
 
 export interface VoucherConfiguration extends UIElementProps {
     reference?: string;
     url?: string;
     paymentMethodType?: string;
+    originalAction?: PaymentAction;
 }

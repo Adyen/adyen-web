@@ -7,7 +7,19 @@ import { VoucherDetail } from '../../../internal/Voucher/types';
 import useImage from '../../../../core/Context/useImage';
 
 export default function DragonpayVoucherResult(props: DragonpayVoucherResultProps) {
-    const { reference, totalAmount, surcharge, expiresAt, alternativeReference, instructionsUrl, icon, issuer, paymentMethodType } = props;
+    const {
+        reference,
+        totalAmount,
+        surcharge,
+        expiresAt,
+        alternativeReference,
+        instructionsUrl,
+        icon,
+        issuer,
+        paymentMethodType,
+        onActionHandled,
+        originalAction
+    } = props;
     const { i18n } = useCoreContext();
     const getImage = useImage();
     const issuerImageUrl =
@@ -30,6 +42,8 @@ export default function DragonpayVoucherResult(props: DragonpayVoucherResultProp
                 ] as VoucherDetail[]
             }
             copyBtn
+            onActionHandled={onActionHandled}
+            originalAction={originalAction}
         />
     );
 }

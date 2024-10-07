@@ -6,7 +6,17 @@ import { EcontextVoucherResultProps } from '../../types';
 import useImage from '../../../../core/Context/useImage';
 
 const EcontextVoucherResult = (props: EcontextVoucherResultProps) => {
-    const { reference, totalAmount, expiresAt, paymentMethodType, maskedTelephoneNumber, instructionsUrl, collectionInstitutionNumber } = props;
+    const {
+        reference,
+        totalAmount,
+        expiresAt,
+        paymentMethodType,
+        maskedTelephoneNumber,
+        instructionsUrl,
+        collectionInstitutionNumber,
+        onActionHandled,
+        originalAction
+    } = props;
     const { i18n } = useCoreContext();
     const getImage = useImage();
 
@@ -24,6 +34,8 @@ const EcontextVoucherResult = (props: EcontextVoucherResultProps) => {
                 { label: i18n.get('voucher.telephoneNumber'), value: maskedTelephoneNumber }
             ]}
             copyBtn
+            onActionHandled={onActionHandled}
+            originalAction={originalAction}
         />
     );
 };

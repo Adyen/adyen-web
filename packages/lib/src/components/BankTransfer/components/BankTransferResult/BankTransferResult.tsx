@@ -5,7 +5,7 @@ import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import useImage from '../../../../core/Context/useImage';
 
 export default function BankTransferResult(props) {
-    const { reference, totalAmount, paymentMethodType } = props;
+    const { reference, totalAmount, paymentMethodType, onActionHandled, originalAction } = props;
     const { i18n } = useCoreContext();
     const getImage = useImage();
 
@@ -21,6 +21,8 @@ export default function BankTransferResult(props) {
                 { label: i18n.get('bankTransfer.bic'), value: props.bic },
                 { label: i18n.get('bankTransfer.reference'), value: reference }
             ]}
+            onActionHandled={onActionHandled}
+            originalAction={originalAction}
         />
     );
 }

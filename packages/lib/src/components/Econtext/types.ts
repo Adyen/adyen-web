@@ -1,4 +1,4 @@
-import { PaymentAmount, PersonalDetailsSchema } from '../../types/global-types';
+import { ActionHandledReturnObject, PaymentAction, PaymentAmount, PersonalDetailsSchema } from '../../types/global-types';
 import { UIElementProps } from '../internal/UIElement/types';
 
 export interface EcontextVoucherResultProps {
@@ -10,6 +10,8 @@ export interface EcontextVoucherResultProps {
     instructionsUrl?: string;
     ref?: any;
     collectionInstitutionNumber?: string;
+    onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
+    originalAction?: PaymentAction;
 }
 
 export interface EcontextInputSchema {
