@@ -211,7 +211,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
 
                 {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
                 <div ref={qrSubtitleRef} tabIndex={0} className="adyen-checkout__qr-loader__subtitle">
-                    {i18n.get(this.props.introduction)}
+                    {typeof this.props.introduction === 'string' ? i18n.get(this.props.introduction) : this.props.introduction?.()}
                 </div>
 
                 <img
