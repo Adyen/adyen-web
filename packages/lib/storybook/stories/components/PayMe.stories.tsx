@@ -1,8 +1,8 @@
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
-import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
-import { Container } from '../Container';
 import { QRLoaderConfiguration } from '../../../src/types';
-import PayMe from '../../../src/components/PayMe';
+import { ComponentContainer } from '../ComponentContainer';
+import { Checkout } from '../Checkout';
+import PayMe from '../../../src/components/PayMe/PayMe';
 
 type PayMeStory = StoryConfiguration<QRLoaderConfiguration>;
 
@@ -10,15 +10,12 @@ const meta: MetaConfiguration<QRLoaderConfiguration> = {
     title: 'Components/PayMe'
 };
 
-const createComponent = (args: PaymentMethodStoryProps<QRLoaderConfiguration>, context) => {
-    const { componentConfiguration } = args;
-    const checkout = getStoryContextCheckout(context);
-    const payme = new PayMe(checkout, componentConfiguration);
-    return <Container element={payme} />;
-};
+const render = ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<QRLoaderConfiguration>) => (
+    <Checkout checkoutConfig={checkoutConfig}>{checkout => <ComponentContainer element={new PayMe(checkout, componentConfiguration)} />}</Checkout>
+);
 
 export const Default: PayMeStory = {
-    render: createComponent,
+    render,
     args: {
         countryCode: 'HK'
     }
