@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { createAdvancedFlowCheckout } from '../../../helpers/create-advanced-checkout';
 import { createSessionsCheckout } from '../../../helpers/create-sessions-checkout';
-import { CustomCard } from '../../../../src';
+import CustomCard from '../../../../src/components/CustomCard/CustomCard';
 import { setUpUtils, createPayButton } from './customCard.utils';
+import './customCard.style.scss';
 
 export const CustomCardHelper = ({ contextArgs }) => {
     const container = useRef(null);
@@ -54,7 +55,7 @@ export const CustomCardHelper = ({ contextArgs }) => {
     }, [element]);
 
     return (
-        <div>
+        <>
             {errorMessage ? (
                 <div>{errorMessage}</div>
             ) : (
@@ -108,6 +109,6 @@ export const CustomCardHelper = ({ contextArgs }) => {
                     </div>
                 </div>
             )}
-        </div>
+        </>
     );
 };

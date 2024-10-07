@@ -1,7 +1,6 @@
 import './main.css';
 import { Preview } from '@storybook/preact';
-import { DEFAULT_COUNTRY_CODE, DEFAULT_SHOPPER_LOCALE, DEFAULT_AMOUNT_VALUE } from '../storybook/config/commonConfig';
-import { createCheckout } from '../storybook/helpers/create-checkout';
+import { DEFAULT_COUNTRY_CODE, DEFAULT_SHOPPER_LOCALE, DEFAULT_AMOUNT_VALUE, SHOPPER_LOCALES } from '../storybook/config/commonConfig';
 
 const preview: Preview = {
     argTypes: {
@@ -12,7 +11,8 @@ const preview: Preview = {
             control: 'text'
         },
         shopperLocale: {
-            control: 'text'
+            control: 'select',
+            options: SHOPPER_LOCALES
         },
         amount: {
             control: 'number'
@@ -27,16 +27,7 @@ const preview: Preview = {
         shopperLocale: DEFAULT_SHOPPER_LOCALE,
         amount: DEFAULT_AMOUNT_VALUE,
         showPayButton: true
-    },
-    loaders: [
-        async context => {
-            if (context.componentId.includes('redirectresult')) {
-                return {};
-            }
-            const checkout = await createCheckout(context);
-            return { checkout };
-        }
-    ]
+    }
 };
 
 export default preview;

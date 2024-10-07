@@ -49,15 +49,15 @@ const ReviewPage = ({ paymentDetails, deliveryAddress, paypalOrder }) => {
             <div>
                 <h2>Shipping to</h2>
                 <div>
-                    {deliveryAddress.shopperName.firstName} {deliveryAddress.shopperName.lastName}
+                    {deliveryAddress.shopperName?.firstName} {deliveryAddress.shopperName?.lastName}
                 </div>
                 <div>
-                    {deliveryAddress.shippingAddress.street}, {deliveryAddress.shippingAddress.stateOrProvince}
+                    {deliveryAddress.shippingAddress?.street}, {deliveryAddress.shippingAddress?.stateOrProvince}
                 </div>
                 <div>
                     {deliveryAddress.postalCode}, {deliveryAddress.city}
                 </div>
-                <div>{deliveryAddress.shippingAddress.country}</div>
+                <div>{deliveryAddress.shippingAddress?.country}</div>
                 <div>{deliveryAddress.telephoneNumber}</div>
             </div>
 

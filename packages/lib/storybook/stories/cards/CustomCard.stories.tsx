@@ -1,6 +1,5 @@
 import { CustomCardStoryConfiguration, MetaConfiguration } from '../types';
 import { CustomCardConfiguration } from '../../../src/components/CustomCard/types';
-import './customCardHelpers/customCard.style.scss';
 import { styles, setFocus, onBrand, onConfigSuccess, onBinLookup, onChange, setCCErrors } from './customCardHelpers/customCard.config';
 import { CustomCardHelper } from './customCardHelpers/CustomCardHelper';
 
@@ -11,9 +10,7 @@ const meta: MetaConfiguration<CustomCardConfiguration> = {
 };
 
 export const Default: customCardStory = {
-    render: args => {
-        return <CustomCardHelper contextArgs={args} />;
-    },
+    render: args => <CustomCardHelper contextArgs={args} />,
     args: {
         componentConfiguration: {
             brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'cartebancaire', 'synchrony_plcc'],

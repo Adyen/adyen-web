@@ -1,8 +1,8 @@
-import { IUIElement } from '../../src/components/types';
+import { UIElement } from '../../src/types';
 
-const addToWindow = (component: IUIElement) => {
-    // @ts-ignore ignore
-    window.component = component;
+const addToWindow = (component: UIElement) => {
+    globalThis.component = component;
+    globalThis.parent.window['component'] = component;
 };
 
 export { addToWindow };
