@@ -366,7 +366,8 @@ export type ActionDescriptionType =
     | '3DS2 fingerprint iframe loaded'
     | '3DS2 challenge iframe loaded'
     | 'performing-redirect'
-    | 'voucher-presented';
+    | 'voucher-presented'
+    | 'sdk-loaded';
 
 export interface ActionHandledReturnObject {
     componentType: string;

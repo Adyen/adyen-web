@@ -98,6 +98,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         }
 
         if (action.sdkData && action.sdkData.token) {
+            this.props.onActionHandled?.({ componentType: this.type, actionDescription: 'sdk-loaded', originalAction: action });
             this.handleResolve(action.sdkData.token);
         } else {
             this.handleReject(ERRORS.NO_TOKEN_PROVIDED);
