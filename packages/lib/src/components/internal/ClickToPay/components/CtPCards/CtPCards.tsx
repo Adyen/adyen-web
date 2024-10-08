@@ -90,6 +90,15 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
     const displayNetworkDcf = isShopperCheckingOutWithCtp && status === 'loading' && checkoutCard?.isDcfPopupEmbedded;
     const displayCardCheckoutView = status !== 'loading' || !displayNetworkDcf;
 
+    const handlePayButtonKeyDown = useCallback(
+        (event: KeyboardEvent) => {
+            if (event.key === 'Enter') {
+                void doCheckout();
+            }
+        },
+        [doCheckout]
+    );
+
     return (
         <Fragment>
             <Iframe name={CTP_IFRAME_NAME} height="380" width="100%" classNameModifiers={[displayNetworkDcf ? '' : 'hidden']} />
@@ -98,7 +107,6 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
                 <Fragment>
                     <CtPSection.Title>{i18n.get('ctp.cards.title')}</CtPSection.Title>
                     <CtPSection.Text>{i18n.get('ctp.cards.subtitle')}</CtPSection.Text>
-
                     {cards.length === 0 && <div className="adyen-checkout-ctp__empty-cards">{i18n.get('ctp.emptyProfile.message')}</div>}
                     {cards.length === 1 && <CtPSingleCard card={cards[0]} errorMessage={getErrorLabel(errorCode, i18n)} />}
                     {cards.length > 1 && (
@@ -121,6 +129,7 @@ const CtPCards = ({ onDisplayCardComponent }: CtPCardsProps) => {
                             getImage({ imageFolder: 'components/' })(isCtpPrimaryPaymentMethod ? `${PREFIX}lock` : `${PREFIX}lock_black`)
                         }
                         onClick={doCheckout}
+                        onKeyDown={handlePayButtonKeyDown}
                     />
                 </Fragment>
             )}

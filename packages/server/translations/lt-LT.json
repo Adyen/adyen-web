@@ -313,5 +313,8 @@
     "payme.scanQrCode": "Atlikite mokėjimą naudodami QR kodą",
     "payme.timeToPay": "Šis QR kodas galioja %@",
     "payme.instructions.steps": "Atidarykite „PayMe“ programą.%@Skenuokite QR kodą, kad autorizuotumėte mokėjimą.%@Atlikite mokėjimą programoje ir palaukite patvirtinimo.",
-    "payme.instructions.footnote": "Prašome neuždaryti šio puslapio prieš atlikdami mokėjimą"
+    "payme.instructions.footnote": "Prašome neuždaryti šio puslapio prieš atlikdami mokėjimą",
+    "payByBankAISDD.disclaimer.header": "Naudokitės „Pay by Bank“ ir akimirksniu atsiskaitykite iš bet kurios banko sąskaitos.",
+    "payByBankAISDD.disclaimer.body": "Prijungdami savo banko sąskaitą sutinkate, kad iš jos būtų nurašomos visos mokėtinos sumos už naudojimąsi mūsų paslaugomis ir (arba) už mūsų produktų pirkimą, kol šis leidimas bus atšauktas.",
+    "paymentMethodBrand.other": "kitas"
 }

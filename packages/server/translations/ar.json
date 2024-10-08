@@ -80,7 +80,7 @@
     "issuerList.selectField.contextualText": "حدد البنك الذي تتعامل معه للمتابعة",
     "issuerList.selectField.label": "اختيار البنك",
     "privacyPolicy": "سياسة الخصوصية",
-    "afterPay.agreement": "أوافق على ٪ @ لشركة Riverty",
+    "afterPay.agreement": "أوافق على %@ لشركة Riverty",
     "riverty.termsAndConditions": "أوافق على %#الشروط والأحكام%# العامة لوسيلة دفع Riverty. يمكن العثور على سياسة الخصوصية لـ Riverty %#هنا%#.",
     "paymentConditions": "شروط الدفع",
     "openApp": "فتح التطبيق",
@@ -153,7 +153,7 @@
     "swish.pendingMessage": "بعد قيامك بمسح رمز الاستجابة السريعة ضوئيًا، يمكن أن تظل الحالة معلقة لمدة تصل إلى 10 دقائق. قد تؤدي محاولة الدفع مرة أخرى خلال هذا الوقت إلى فرض رسوم متعددة.",
     "field.valid": "حقل صحيح",
     "field.invalid": "حقل غير صحيح",
-    "field.error.required": "أدخل ٪{label}",
+    "field.error.required": "أدخل %{label}",
     "field.error.invalid": "أدخل علامة صحيحة %{label}",
     "error.giftcard.no-balance": "لا يوجد رصيد ببطاقة الهدايا هذه",
     "error.giftcard.card-error": "لا توجد بسجلاتنا بطاقة هدايا تحمل هذا الرقم",
@@ -312,5 +312,8 @@
     "payme.scanQrCode": "أكمل الدفع باستخدام رمز الاستجابة السريعة",
     "payme.timeToPay": "رمز الاستجابة السريعة هذا صالح لـ %@",
     "payme.instructions.steps": "افتح تطبيق PayMe. %@امسح رمز الاستجابة السريعة ضوئيًا للإذن بالدفع. %@أكمل عملية الدفع في التطبيق وانتظر التأكيد.",
-    "payme.instructions.footnote": "يرجى عدم إغلاق هذه الصفحة قبل إتمام الدفع"
+    "payme.instructions.footnote": "يرجى عدم إغلاق هذه الصفحة قبل إتمام الدفع",
+    "payByBankAISDD.disclaimer.header": "استخدم خدمة Pay by Bank للدفع الفوري من خلال أي حساب مصرفي.",
+    "payByBankAISDD.disclaimer.body": "من خلال ربط حسابك البنكي، أنت بذلك تمنحنا تفويضًا بخصم مدفوعات المبالغ المستحقة من حسابك البنكي، وذلك مقابل استخدام خدماتنا و/أو شراء منتجاتنا. ويستمر العمل بهذا التفويض إلى أن يتم إلغاؤه.",
+    "paymentMethodBrand.other": "أخرى"
 }

@@ -1,16 +1,19 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { IUIElement } from '../../src/components/internal/UIElement/types';
+import UIElement from '../../src/components/internal/UIElement';
+import { addToWindow } from '../utils/add-to-window';
 
 interface IContainer {
-    element: IUIElement;
+    element: UIElement;
 }
 
-export const Container = ({ element }: IContainer) => {
+export const ComponentContainer = ({ element }: IContainer) => {
     const container = useRef(null);
     const [errorMessage, setErrorMessage] = useState(null);
 
     useEffect(() => {
         if (!element) return;
+
+        addToWindow(element);
 
         if (element.isAvailable) {
             element
@@ -24,7 +27,11 @@ export const Container = ({ element }: IContainer) => {
         } else {
             element.mount(container.current);
         }
+
+        return () => {
+            element.unmount();
+        };
     }, [element]);
 
-    return <div>{errorMessage ? <div>{errorMessage}</div> : <div ref={container} id="component-root" className="component-wrapper" />}</div>;
+    return <>{errorMessage ? <div>{errorMessage}</div> : <div ref={container} id="component-root" className="component-wrapper" />}</>;
 };

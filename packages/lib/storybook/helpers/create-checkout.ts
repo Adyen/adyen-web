@@ -1,19 +1,21 @@
 import { createSessionsCheckout } from './create-sessions-checkout';
 import { createAdvancedFlowCheckout } from './create-advanced-checkout';
-import { reject } from '../../src/utils/commonUtils';
+import { GlobalStoryProps } from '../stories/types';
+import Core from '../../src/core';
 
-async function createCheckout(context: any): Promise<any> {
-    const { useSessions, showPayButton, countryCode, shopperLocale, amount, ...rest } = context.args;
+async function createCheckout(checkoutConfig: GlobalStoryProps): Promise<Core> {
+    const { useSessions, ...rest } = checkoutConfig;
 
-    return useSessions
-        ? await createSessionsCheckout({ showPayButton, countryCode, shopperLocale, amount })
-        : await createAdvancedFlowCheckout({
-              showPayButton,
-              countryCode,
-              shopperLocale,
-              amount,
-              ...reject(['componentConfiguration']).from(rest) // pass the "rest" of the specified config (excluding componentConfiguration, which is passed directly to the component)
-          });
+    const overidenPaymentMethodsAmount =
+        (rest.paymentMethodsOverride?.paymentMethods?.length || 0) + (rest.paymentMethodsOverride?.storedPaymentMethods?.length || 0);
+    const hasPaymentOveride = overidenPaymentMethodsAmount > 0;
+
+    if (useSessions && !hasPaymentOveride) {
+        return await createSessionsCheckout(rest);
+    } else if (useSessions && hasPaymentOveride) {
+        console.warn('🟢 Checkout Storybook: paymentMethodsOverride is defined while using Sessions, forcing advance flow.');
+    }
+    return await createAdvancedFlowCheckout(rest);
 }
 
 export { createCheckout };

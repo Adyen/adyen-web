@@ -308,5 +308,8 @@
     "payme.scanQrCode": "Voltooi uw betaling met een QR-code",
     "payme.timeToPay": "Deze QR-code is %@ geldig",
     "payme.instructions.steps": "Open de PayMe-app.%@Scan de QR-code om de betaling te autoriseren.%@Voltooi de betaling in de app en wacht de bevestiging af.",
-    "payme.instructions.footnote": "Sluit deze pagina niet voordat de betaling is voltooid"
+    "payme.instructions.footnote": "Sluit deze pagina niet voordat de betaling is voltooid",
+    "payByBankAISDD.disclaimer.header": "Gebruik Pay by Bank om direct vanaf elke bankrekening te betalen.",
+    "payByBankAISDD.disclaimer.body": "Door uw bankrekening te koppelen, machtigt u afschrijvingen van uw rekening voor elk bedrag dat u verschuldigd bent voor het gebruik van onze diensten en/of de aankoop van onze producten, totdat deze machtiging wordt ingetrokken.",
+    "paymentMethodBrand.other": "overige"
 }

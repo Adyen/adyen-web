@@ -1,8 +1,8 @@
-import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
-import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
-import { AchConfiguration } from '../../../src/components/Ach/types';
-import { Container } from '../Container';
-import { Ach } from '../../../src';
+import { MetaConfiguration, StoryConfiguration } from '../types';
+import { AchConfiguration } from '../../../src/components/Ach';
+import { ComponentContainer } from '../ComponentContainer';
+import Ach from '../../../src/components/Ach/Ach';
+import { Checkout } from '../Checkout';
 
 type ACHStory = StoryConfiguration<AchConfiguration>;
 
@@ -11,12 +11,9 @@ const meta: MetaConfiguration<AchConfiguration> = {
 };
 
 export const Default: ACHStory = {
-    render: (args: PaymentMethodStoryProps<AchConfiguration>, context) => {
-        const { componentConfiguration } = args;
-        const checkout = getStoryContextCheckout(context);
-        const ach = new Ach(checkout, componentConfiguration);
-        return <Container element={ach} />;
-    },
+    render: ({ componentConfiguration, ...checkoutConfig }) => (
+        <Checkout checkoutConfig={checkoutConfig}>{checkout => <ComponentContainer element={new Ach(checkout, componentConfiguration)} />}</Checkout>
+    ),
     args: {
         countryCode: 'US',
         componentConfiguration: {

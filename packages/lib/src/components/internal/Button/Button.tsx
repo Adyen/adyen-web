@@ -31,6 +31,10 @@ class Button extends Component<ButtonProps, ButtonState> {
         }, delay);
     };
 
+    public onKeyDown = (event: KeyboardEvent) => {
+        this.props.onKeyDown?.(event);
+    };
+
     render({ classNameModifiers = [], disabled, href, icon, inline, label, status, variant }, { completed }) {
         const { i18n } = useCoreContext();
 
@@ -78,7 +82,7 @@ class Button extends Component<ButtonProps, ButtonState> {
         }
 
         return (
-            <button className={buttonClasses} type="button" disabled={disabled} onClick={this.onClick}>
+            <button className={buttonClasses} type="button" disabled={disabled} onClick={this.onClick} onKeyDown={this.onKeyDown}>
                 {buttonText}
                 {status !== 'loading' && status !== 'redirect' && this.props.children}
             </button>

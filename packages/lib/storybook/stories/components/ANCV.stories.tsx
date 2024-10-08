@@ -1,9 +1,9 @@
 import { Meta, StoryObj } from '@storybook/preact';
 import { PaymentMethodStoryProps } from '../types';
-import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
-import { Container } from '../Container';
+import { ComponentContainer } from '../ComponentContainer';
 import { ANCVConfiguration } from '../../../src/components/ANCV/types';
-import { ANCV } from '../../../src';
+import ANCV from '../../../src/components/ANCV/ANCV';
+import { Checkout } from '../Checkout';
 
 type ANCVStory = StoryObj<PaymentMethodStoryProps<ANCVConfiguration>>;
 
@@ -12,12 +12,9 @@ const meta: Meta<PaymentMethodStoryProps<ANCVConfiguration>> = {
 };
 
 export const Default: ANCVStory = {
-    render: (args, context) => {
-        const { componentConfiguration } = args;
-        const checkout = getStoryContextCheckout(context);
-        const ancv = new ANCV(checkout, componentConfiguration);
-        return <Container element={ancv} />;
-    },
+    render: ({ componentConfiguration, ...checkoutConfig }) => (
+        <Checkout checkoutConfig={checkoutConfig}>{checkout => <ComponentContainer element={new ANCV(checkout, componentConfiguration)} />}</Checkout>
+    ),
     args: {
         countryCode: 'NL',
         amount: 2000,

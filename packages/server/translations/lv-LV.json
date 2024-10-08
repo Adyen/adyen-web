@@ -313,5 +313,8 @@
     "payme.scanQrCode": "Pabeidziet maksājumu, izmantojot QR kodu",
     "payme.timeToPay": "Šis QR kods ir derīgs %@",
     "payme.instructions.steps": "Atveriet lietotni PayMe.%@Skenējiet QR kodu, lai autorizētu maksājumu.%@Pabeidziet maksājumu lietotnē un gaidiet apstiprinājumu.",
-    "payme.instructions.footnote": "Lūdzu, neaizveriet šo lapu pirms maksājuma pabeigšanas"
+    "payme.instructions.footnote": "Lūdzu, neaizveriet šo lapu pirms maksājuma pabeigšanas",
+    "payByBankAISDD.disclaimer.header": "Izmantojiet Pay by Bank pakalpojumu, lai nekavējoties norēķinātos no jebkura bankas konta.",
+    "payByBankAISDD.disclaimer.body": "Pievienojot bankas kontu, jūs atļaujat debetēt no sava konta jebkuru summu, kas maksājama par mūsu pakalpojumu izmantošanu un/vai mūsu produktu iegādi, līdz brīdim, kad šī atļauja tiek atsaukta.",
+    "paymentMethodBrand.other": "cits"
 }

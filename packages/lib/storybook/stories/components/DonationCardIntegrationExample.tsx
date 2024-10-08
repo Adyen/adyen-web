@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { AdyenCheckout, Card } from '../../../src';
+import { AdyenCheckout } from '../../../src/core/AdyenCheckout';
+import Card from '../../../src/components/Card/Card';
 import { PaymentMethodStoryProps } from '../types';
-import { Container } from '../Container';
+import { ComponentContainer } from '../ComponentContainer';
 import Donation from '../../../src/components/Donation/Donation';
 import { createDonation, getDonationCampaigns, makeDetailsCall, makePayment } from '../../helpers/checkout-api-calls';
 import { DonationConfiguration } from '../../../src/components/Donation/types';
@@ -12,7 +13,7 @@ export interface DonationIntegrationExampleProps {
     contextArgs: PaymentMethodStoryProps<DonationConfiguration> & { redirectResult: string };
 }
 
-export const DonationCardIntegrationExample = ({ contextArgs: { countryCode, amount, redirectResult } }: DonationIntegrationExampleProps) => {
+export const DonationCardIntegrationExample = ({ countryCode, amount, redirectResult }) => {
     const checkout = useRef(null);
     const [element, setElement] = useState(null);
 
@@ -160,6 +161,7 @@ export const DonationCardIntegrationExample = ({ contextArgs: { countryCode, amo
 
         const firstCampaign = donationCampaigns[0];
         const donationSession = JSON.parse(sessionStorage.getItem('donation'));
+        // @ts-ignore ignore
         const donationElement = new Donation(checkout.current, {
             ...firstCampaign,
             onDonate: ({ data: { amount } }, component) => {
@@ -184,5 +186,5 @@ export const DonationCardIntegrationExample = ({ contextArgs: { countryCode, amo
         setElement(donationElement);
     };
 
-    return <Container element={element} />;
+    return <ComponentContainer element={element} />;
 };

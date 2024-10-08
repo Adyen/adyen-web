@@ -47,6 +47,13 @@ export default function InputBase({ setRef, ...props }: InputBaseProps) {
         [props.onInput]
     );
 
+    /**
+     *  Event is fired when a key that produces a character value is pressed down.
+     *  ENTER keypress also triggers this event.
+     *
+     *  TODO: 'keypress' event is deprecated
+     *  https://developer.mozilla.org/en-US/docs/Web/API/Element/keypress_event
+     */
     const handleKeyPress = useCallback(
         (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
             if (props?.onKeyPress) props.onKeyPress(event);
@@ -54,6 +61,12 @@ export default function InputBase({ setRef, ...props }: InputBaseProps) {
         [props?.onKeyPress]
     );
 
+    /**
+     * Event is fired when certain keys are pressed (keys that do not output characters):
+     * Backspace, Arrow keys, Shift, Ctrl, Command, Option, Esc
+     *
+     * Exception: ENTER keypress triggers 'onKeyPress' AND 'onKeyUp'
+     */
     const handleKeyUp = useCallback(
         (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
             if (props?.onKeyUp) props.onKeyUp(event);

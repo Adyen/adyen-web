@@ -311,5 +311,8 @@
     "payme.scanQrCode": "通过二维码完成付款",
     "payme.timeToPay": "此二维码有效期为 %@",
     "payme.instructions.steps": "打开 PayMe 应用。%@扫描二维码即可授权付款。%@在应用中完成支付并等待确认。",
-    "payme.instructions.footnote": "付款完成前，请勿关闭此页面"
+    "payme.instructions.footnote": "付款完成前，请勿关闭此页面",
+    "payByBankAISDD.disclaimer.header": "使用 Pay by Bank 从任何银行账户即时付款。",
+    "payByBankAISDD.disclaimer.body": "关联您的银行账户，即表示您授权从您的账户中扣除因使用我们的服务和/或购买我们的产品而需支付的任何金额，直至该授权被撤销。",
+    "paymentMethodBrand.other": "其他"
 }

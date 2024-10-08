@@ -311,5 +311,8 @@
     "payme.scanQrCode": "QRコードで支払いを完了する",
     "payme.timeToPay": "このQRコードは%@有効です",
     "payme.instructions.steps": "PayMeアプリを開きます。%@QRコードをスキャンして支払いを承認します。%@アプリで支払いを完了し、確認を待ちます。",
-    "payme.instructions.footnote": "支払いが完了するまでこのページを閉じないでください。"
+    "payme.instructions.footnote": "支払いが完了するまでこのページを閉じないでください。",
+    "payByBankAISDD.disclaimer.header": "Pay by Bankを使用すると、どの銀行口座からでも即座に支払いができます。",
+    "payByBankAISDD.disclaimer.body": "銀行口座を接続することで、お客様は、この承認が取り消されるまで、当社のサービスの利用および/または当社製品の購入のために支払うべき金額をお客様の口座から引き落とすことを承認したことになります。",
+    "paymentMethodBrand.other": "その他"
 }

@@ -311,5 +311,8 @@
     "payme.scanQrCode": "Fizetés végrehajtása QR-kóddal",
     "payme.timeToPay": "A QR-kód ennyi ideig érvényes: %@",
     "payme.instructions.steps": "Nyissa meg a PayMe alkalmazást.%@A fizetés engedélyezéséhez olvassa be a QR-kódot.%@Hajtsa végre a fizetést az alkalmazásban, és várja meg a visszaigazolást.",
-    "payme.instructions.footnote": "A fizetés befejezése előtt ne zárja be ezt az oldalt"
+    "payme.instructions.footnote": "A fizetés befejezése előtt ne zárja be ezt az oldalt",
+    "payByBankAISDD.disclaimer.header": "Ha bankszámláról szeretne azonnal fizetni, használja a Fizetés bankkal lehetőséget.",
+    "payByBankAISDD.disclaimer.body": "Bankszámlája csatlakoztatásával engedélyezi, hogy a szolgáltatásaink használatáért és/vagy termékeink megvásárlásáért levonandó összeget a számlájára terheljük egészen addig, amíg ezt az engedélyt vissza nem vonja.",
+    "paymentMethodBrand.other": "Egyéb"
 }

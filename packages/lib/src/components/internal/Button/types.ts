@@ -1,3 +1,5 @@
+import { h } from 'preact';
+
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'action';
 
 export interface ButtonProps {
@@ -16,6 +18,7 @@ export interface ButtonProps {
     target?: string;
     rel?: string;
     onClick?: (e, callbacks) => void;
+    onKeyDown?: (event: KeyboardEvent) => void;
 }
 
 export interface ButtonState {

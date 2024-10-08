@@ -1,8 +1,8 @@
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
-import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 import { PixConfiguration } from '../../../src/components/Pix/types';
-import { Container } from '../Container';
-import { Pix } from '../../../src';
+import { ComponentContainer } from '../ComponentContainer';
+import { Checkout } from '../Checkout';
+import Pix from '../../../src/components/Pix/Pix';
 
 type PixStory = StoryConfiguration<PixConfiguration>;
 
@@ -10,24 +10,21 @@ const meta: MetaConfiguration<PixConfiguration> = {
     title: 'Components/Pix'
 };
 
-const createComponent = (args: PaymentMethodStoryProps<PixConfiguration>, context) => {
-    const { componentConfiguration } = args;
-    const checkout = getStoryContextCheckout(context);
-    const pix = new Pix(checkout, componentConfiguration);
-    return <Container element={pix} />;
-};
+const render = ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<PixConfiguration>) => (
+    <Checkout checkoutConfig={checkoutConfig}>{checkout => <ComponentContainer element={new Pix(checkout, componentConfiguration)} />}</Checkout>
+);
 
 export const Default: PixStory = {
-    render: createComponent,
+    render,
     args: {
         countryCode: 'BR'
     }
 };
 
 export const WithPersonalDetails: PixStory = {
-    render: createComponent,
+    render,
     args: {
-        ...Default.args,
+        countryCode: 'BR',
         componentConfiguration: {
             personalDetailsRequired: true
         }
