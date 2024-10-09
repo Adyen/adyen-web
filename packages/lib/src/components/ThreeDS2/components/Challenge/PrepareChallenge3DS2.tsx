@@ -59,7 +59,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             subtype: Analytics3DS2Events.CHALLENGE_IFRAME_LOADED
         });
 
-        this.props.onActionHandled(rtnObj);
+        this.props.onActionHandled?.(rtnObj);
     };
 
     public onFormSubmit = (msg: string) => {

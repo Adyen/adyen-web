@@ -56,7 +56,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             message: rtnObj.actionDescription,
             subtype: Analytics3DS2Events.FINGERPRINT_IFRAME_LOADED
         });
-        this.props.onActionHandled(rtnObj);
+        this.props.onActionHandled?.(rtnObj);
     };
 
     public onFormSubmit = (msg: string) => {

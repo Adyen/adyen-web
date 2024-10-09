@@ -23,7 +23,7 @@ class RedirectShopper extends Component<RedirectShopperProps> {
     componentDidMount() {
         const doRedirect = () => {
             // call callback
-            this.props.onActionHandled({
+            this.props.onActionHandled?.({
                 componentType: this.props.paymentMethodType,
                 actionDescription: 'performing-redirect',
                 originalAction: this.props.originalAction

@@ -9,6 +9,6 @@ export interface MultibancoVoucherResultProps {
     paymentMethodType?: string;
     downloadUrl?: string;
     ref?: any;
-    onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
+    onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
     originalAction?: PaymentAction;
 }

@@ -32,7 +32,7 @@ class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2Sta
         // On Test - actually calls-back 3 times: once for challenge screen, once again as challenge.html reloads after the challenge is submitted, and once for redirect to threeDSNotificationURL.
         // But for the purposes of calling the merchant defined onActionHandled callback - we only want to do it once
         if (this.state.status === 'init') {
-            this.props.onActionHandled({ componentType: '3DS2Challenge', actionDescription: `${THREEDS2_NUM} challenge iframe loaded` });
+            this.props.onActionHandled?.({ componentType: '3DS2Challenge', actionDescription: `${THREEDS2_NUM} challenge iframe loaded` });
         }
     };
 
@@ -43,7 +43,6 @@ class DoChallenge3DS2 extends Component<DoChallenge3DS2Props, DoChallenge3DS2Sta
              */
             this.processMessageHandler = getProcessMessageHandler(this.props.postMessageDomain, resolve, reject, 'challengeResult');
 
-             
             window.addEventListener('message', this.processMessageHandler);
         });
     }

@@ -50,7 +50,7 @@ export interface VoucherProps {
     copyBtn?: boolean;
 
     // callback, at Checkout level
-    onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
+    onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
     // ref to original action, passed to onActionHandled callback
     originalAction?: PaymentAction;
 }
@@ -66,7 +66,7 @@ export interface CommonVoucherProps {
     paymentMethodType: string;
     introduction: string;
     imageUrl: string;
-    onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
+    onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
     originalAction?: PaymentAction;
     amount?: string;
     reference?: string;

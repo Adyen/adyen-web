@@ -11,6 +11,6 @@ export interface DokuVoucherResultProps {
     merchantName?: string;
     outputDetails?: any;
     ref?: any;
-    onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
+    onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
     originalAction?: PaymentAction;
 }

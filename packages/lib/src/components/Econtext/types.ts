@@ -10,7 +10,7 @@ export interface EcontextVoucherResultProps {
     instructionsUrl?: string;
     ref?: any;
     collectionInstitutionNumber?: string;
-    onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
+    onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
     originalAction?: PaymentAction;
 }
 
