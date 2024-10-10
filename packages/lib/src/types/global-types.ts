@@ -353,12 +353,14 @@ export type RawPaymentResponse = PaymentResponseData &
     };
 
 /**
- * onActionHandled is called for:
- *  - QRLoader
- *  - Await
- *  - 3DS2
- *  - Redirect
- *  actions
+ * onActionHandled is called for all actions:
+ *  - qrcode
+ *  - await
+ *  - threeds2
+ *  - redirect
+ *  - sdk
+ *  - voucher
+ *  - bankTransfer
  */
 export type ActionDescriptionType =
     | 'qr-code-loaded'
