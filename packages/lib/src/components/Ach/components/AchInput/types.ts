@@ -18,6 +18,7 @@ export interface ACHInputStateError {
 }
 
 export interface ACHInputDataState {
+    bankAccountType?: 'savings' | 'checking';
     holderName?: string;
     billingAddress?: object;
 }

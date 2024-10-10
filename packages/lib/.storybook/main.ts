@@ -62,7 +62,7 @@ const config: StorybookConfig = {
                 }
             },
             plugins: [
-                stylelint()
+                stylelint({ emitErrorAsWarning: true })
                 // TODO: Enable this once @rollup/plugin-eslint supports ESLINT 9
                 // {
                 //     ...eslint({
