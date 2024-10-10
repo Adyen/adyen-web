@@ -14,4 +14,5 @@ export interface RadioGroupProps extends InputBaseProps {
     value?: string;
     uniqueId?: string;
     ariaLabel?: string;
+    style?: 'classic' | 'button';
 }
