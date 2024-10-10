@@ -103,6 +103,7 @@ class UPI extends UIElement<UPIConfiguration> {
                         introduction={this.props.i18n.get('upi.qrCodeWaitingMessage')}
                         countdownTime={5}
                         onActionHandled={this.props.onActionHandled}
+                        originalAction={this.props.originalAction}
                     />
                 );
             case 'await':
@@ -119,6 +120,7 @@ class UPI extends UIElement<UPIConfiguration> {
                         clientKey={this.props.clientKey}
                         paymentData={this.props.paymentData}
                         onActionHandled={this.props.onActionHandled}
+                        originalAction={this.props.originalAction}
                         onError={this.props.onError}
                         messageText={this.props.i18n.get('upi.vpaWaitingMessage')}
                         awaitText={this.props.i18n.get('await.waitForConfirmation')}

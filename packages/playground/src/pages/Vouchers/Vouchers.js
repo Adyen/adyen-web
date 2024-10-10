@@ -1,7 +1,6 @@
 import { AdyenCheckout, BacsDirectDebit, Multibanco, Oxxo, Dragonpay, Boleto, Doku, Econtext } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { shopperLocale, countryCode } from '../../config/commonConfig';
-import { handleChange } from '../../handlers';
 import '../../../config/polyfills';
 import '../../style.scss';
 import '../../utils';
@@ -12,7 +11,9 @@ import './Vouchers.scss';
         countryCode,
         locale: shopperLocale,
         environment: process.env.__CLIENT_ENV__,
-        onChange: handleChange
+        onActionHandled: obj => {
+            console.log('### Vouchers::onActionHandled:: obj', obj);
+        }
     });
 
     window.bacsdd = new BacsDirectDebit(window.checkout, {
@@ -67,7 +68,7 @@ import './Vouchers.scss';
                 street: 'Fake street',
                 houseNumberOrName: '123',
                 city: 'Sao Paulo',
-                postalCode: '123456',
+                postalCode: '12345678',
                 stateOrProvince: 'SP'
             },
             shopperEmail: 'paolo@adyen.nl'

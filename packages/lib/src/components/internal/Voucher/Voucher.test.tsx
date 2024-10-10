@@ -2,13 +2,16 @@ import { mount } from 'enzyme';
 import { h } from 'preact';
 import Voucher from './Voucher';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
+import { PaymentAction } from '../../../types/global-types';
 
 const outputDetails = {
     paymentMethodType: 'type',
     introduction: 'Introduction Text',
     amount: '100',
     instructionsUrl: 'http://...',
-    reference: '123456'
+    reference: '123456',
+    onActionHandled: jest.fn(() => {}),
+    originalAction: { type: 'voucher' } as PaymentAction
 };
 
 describe('Voucher', () => {
@@ -22,6 +25,12 @@ describe('Voucher', () => {
         expect(wrapper.find('.adyen-checkout__voucher-result__amount').text()).toBe('100');
         expect(wrapper.find('.adyen-checkout-link--voucher-result-instructions').length).toBe(1);
         expect(wrapper.find('.adyen-checkout__voucher-result__code > span').text()).toBe('123456');
+
+        expect(outputDetails.onActionHandled).toBeCalledWith({
+            componentType: 'type',
+            actionDescription: 'voucher-presented',
+            originalAction: { type: 'voucher' }
+        });
     });
 
     test('Render VoucherDetails', () => {

@@ -49,7 +49,6 @@ class DoFingerprint3DS2 extends Component<DoFingerprint3DS2Props, DoFingerprint3
              */
             this.processMessageHandler = getProcessMessageHandler(this.props.postMessageDomain, resolve, reject, 'fingerPrintResult');
 
-             
             window.addEventListener('message', this.processMessageHandler);
         });
     }
@@ -81,7 +80,7 @@ class DoFingerprint3DS2 extends Component<DoFingerprint3DS2Props, DoFingerprint3
                     <Iframe
                         name={iframeName}
                         callback={() => {
-                            onActionHandled({ componentType: '3DS2Fingerprint', actionDescription: `${THREEDS2_NUM} fingerprint iframe loaded` });
+                            onActionHandled?.({ componentType: '3DS2Fingerprint', actionDescription: `${THREEDS2_NUM} fingerprint iframe loaded` });
                         }}
                     />
                     <ThreeDS2Form

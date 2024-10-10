@@ -1,5 +1,5 @@
 import { UIElementProps } from '../UIElement/types';
-import { ActionHandledReturnObject } from '../../../types/global-types';
+import { ActionHandledReturnObject, type PaymentAction } from '../../../types/global-types';
 
 interface StatusObjectProps {
     payload: string;
@@ -30,7 +30,8 @@ export interface AwaitComponentProps {
     messageText: string;
     awaitText: string;
     ref: any;
-    onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
+    onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
+    originalAction?: PaymentAction;
 }
 
 export interface AwaitConfiguration extends UIElementProps {
@@ -38,4 +39,5 @@ export interface AwaitConfiguration extends UIElementProps {
     paymentMethoType?: string;
     type?: string;
     url?: string;
+    originalAction?: PaymentAction;
 }

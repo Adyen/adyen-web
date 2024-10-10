@@ -13,8 +13,7 @@ class QRLoaderContainer<T extends QRLoaderConfiguration = QRLoaderConfiguration>
         amount: null,
         paymentData: null,
         onError: () => {},
-        onComplete: () => {},
-        onActionHandled: () => {}
+        onComplete: () => {}
     };
 
     formatData() {

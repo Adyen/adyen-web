@@ -22,7 +22,10 @@ export function KlarnaContainer(props) {
                 payButton={props.payButton}
                 onComplete={props.onComplete}
                 onError={props.onError}
-                onLoaded={props.onLoaded}
+                onLoaded={() => {
+                    props.onActionHandled?.({ componentType: props.type, actionDescription: 'sdk-loaded', originalAction: action });
+                    props.onLoaded();
+                }}
             />
         );
     }

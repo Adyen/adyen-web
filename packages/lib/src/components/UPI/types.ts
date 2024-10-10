@@ -1,5 +1,6 @@
 import { UIElementProps } from '../internal/UIElement/types';
 import { TxVariants } from '../tx-variants';
+import type { PaymentAction } from '../../types/global-types';
 
 export type UpiType = TxVariants.upi_qr | TxVariants.upi_intent | TxVariants.upi_collect;
 
@@ -29,4 +30,6 @@ export interface UPIConfiguration extends UIElementProps {
     // QR code
     qrCodeData?: string;
     brandLogo?: string;
+    // Await & QR code
+    originalAction?: PaymentAction;
 }
