@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 5.70.1
+
+### Patch Changes
+
+-   Added optional chaining operator to postMessage handler function. Fixes issue where 'get-process-message.handler.js' caused exceptions due to stray postMessages without properly formed events ([#2896](https://github.com/Adyen/adyen-web/pull/2896))
+
 ## 5.70.0
 
 ### Minor Changes
