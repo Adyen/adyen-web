@@ -220,8 +220,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                     onLoad={() => {
                         onActionHandled?.({
                             componentType: this.props.type,
-                            actionDescription: 'qr-code-loaded',
-                            originalAction: this.props.originalAction
+                            actionDescription: 'qr-code-loaded'
                         });
                     }}
                 />

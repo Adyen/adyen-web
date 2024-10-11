@@ -80,8 +80,7 @@ class BlikElement extends UIElement<AwaitConfiguration> {
                             countdownTime={config.COUNTDOWN_MINUTES}
                             throttleTime={config.THROTTLE_TIME}
                             throttleInterval={config.THROTTLE_INTERVAL}
-                            onActionHandled={this.props.onActionHandled}
-                            originalAction={this.props.originalAction}
+                            onActionHandled={this.onActionHandled}
                         />
                     </SRPanelProvider>
                 </CoreProvider>

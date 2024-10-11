@@ -107,8 +107,7 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
                             showCountdownTimer={config.showCountdownTimer}
                             throttleTime={config.THROTTLE_TIME}
                             throttleInterval={config.THROTTLE_INTERVAL}
-                            onActionHandled={this.props.onActionHandled}
-                            originalAction={this.props.originalAction}
+                            onActionHandled={this.onActionHandled}
                         />
                     </SRPanelProvider>
                 </CoreProvider>

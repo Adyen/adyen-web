@@ -45,7 +45,7 @@ class QRLoaderContainer<T extends QRLoaderConfiguration = QRLoaderConfiguration>
                         onComplete={this.onComplete}
                         countdownTime={this.props.countdownTime}
                         instructions={this.props.instructions}
-                        onActionHandled={this.props.onActionHandled}
+                        onActionHandled={this.onActionHandled}
                         brandName={this.displayName}
                         onSubmitAnalytics={this.submitAnalytics}
                     />

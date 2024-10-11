@@ -20,7 +20,8 @@ import {
     CashAppPay,
     Twint,
     BcmcMobile,
-    Blik
+    Blik,
+    UPI
 } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { getPaymentMethods, makePayment, checkBalance, createOrder, cancelOrder, makeDetailsCall } from '../../services';
@@ -162,7 +163,8 @@ export async function initManual() {
             CashAppPay,
             Twint,
             BcmcMobile,
-            Blik
+            Blik,
+            UPI
         ],
         instantPaymentTypes: ['googlepay', 'applepay'],
         paymentMethodsConfiguration: {
