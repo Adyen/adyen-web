@@ -28,8 +28,7 @@ describe('Voucher', () => {
 
         expect(outputDetails.onActionHandled).toBeCalledWith({
             componentType: 'type',
-            actionDescription: 'voucher-presented',
-            originalAction: { type: 'voucher' }
+            actionDescription: 'voucher-presented'
         });
     });
 
