@@ -10,7 +10,7 @@ const getPropFromPMData = prop => {
 const iframe = '.secured-fields iframe';
 
 test.describe('Testing single branding resets in custom card', () => {
-    beforeEach(async () => {
+    test.beforeEach(async () => {
         // await t.navigateTo(CUSTOMCARDS_URL);
         // use customcard.dualBranding.clientScripts.js
     });

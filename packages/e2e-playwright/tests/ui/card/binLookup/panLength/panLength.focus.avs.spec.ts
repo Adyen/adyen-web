@@ -17,14 +17,14 @@ const getMock = val => {
 test.describe('Test how Card Component handles binLookup returning a panLength property for a card with address fields', () => {
     // use config from panLength.avs.clientScripts.js
 
-    beforeEach(async t => {
+    test.beforeEach(async () => {
         // todo: go to the card page
         // For individual test suites (that rely on binLookup & perhaps are being run in isolation)
         // - provide a way to ensure SDK bin mocking is turned off
         await turnOffSDKMocking();
     });
 
-    test('#1 Fill out PAN (binLookup w. panLength) see that focus moves to an address field since expiryDate & cvc are optional', async t => {
+    test('#1 Fill out PAN (binLookup w. panLength) see that focus moves to an address field since expiryDate & cvc are optional', async () => {
         // use mock await t.addRequestHooks(getMock('optionalDateAndCVC'));
         // Wait for field to appear in DOM
         // await cardPage.numHolder();

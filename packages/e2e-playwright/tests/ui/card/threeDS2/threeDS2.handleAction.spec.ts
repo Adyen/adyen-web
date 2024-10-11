@@ -19,7 +19,7 @@ const submitThreeDS2FingerprintURL = `https://checkoutshopper-test.adyen.com/che
 const apiVersion = Number(process.env.API_VERSION.substring(1));
 
 test.describe('Testing new (v67) 3DS2 Flow (custom challengeWindowSize config)', () => {
-    beforeEach(async () => {
+    test.beforeEach(async () => {
         // await t.navigateTo(dropinPage.pageUrl);
         // await turnOffSDKMocking();
         // use threeDS2.handleAction.clientScripts.js

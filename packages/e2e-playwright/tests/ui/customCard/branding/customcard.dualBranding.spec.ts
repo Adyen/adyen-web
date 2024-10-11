@@ -8,7 +8,7 @@ const getPropFromPMData = prop => {
 };
 
 test.describe('Testing dual branding in custom card', () => {
-    beforeEach(async () => {
+    test.beforeEach(async () => {
         // await t.navigateTo(CUSTOMCARDS_URL);
         // use 'customcard.dualBranding.clientScripts.js';
     });

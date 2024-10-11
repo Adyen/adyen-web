@@ -12,7 +12,7 @@ const iframe = '.adyen-checkout__payment-method--bcmc iframe';
 
 test.describe('Testing Bancontact, with dual branded cards, in Dropin, resetting after failed binLookup', () => {
     // todo: create fixture
-    beforeEach(async () => {
+    test.beforeEach(async () => {
         // use config bancontact.clientScripts.js to construct the url & countryCode=BE
         // await t.navigateTo(url);
         // preselect the Bancontact payment method item from the dropin -  .adyen-checkout__payment-method--bcmc

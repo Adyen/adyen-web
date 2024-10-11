@@ -26,7 +26,7 @@ const mockedResponse = {
 };
 
 test.describe('Starting with SSN (auto) field', () => {
-    beforeEach(async () => {
+    test.beforeEach(async () => {
         // use mock: mockedResponse for requestURL
         // await t.navigateTo(cardPage.pageUrl);
         //use autoMode.clientScripts.js

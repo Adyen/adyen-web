@@ -7,7 +7,7 @@ const iframe = '.adyen-checkout__payment-method--bcmc iframe';
 
 test.describe('Testing Bancontact in Dropin', () => {
     // todo: create fixture
-    beforeEach(async () => {
+    test.beforeEach(async () => {
         // Navigate to drop in page, with correct dropin config from bancontact.clientScripts.js to construct the URL
         // await t.navigateTo(`${dropinPage.pageUrl}?countryCode=BE`);
         // preselect the Bancontact payment method item from the dropin - selector .adyen-checkout__payment-method--bcmc

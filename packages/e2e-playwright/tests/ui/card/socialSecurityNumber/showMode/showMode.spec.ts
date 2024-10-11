@@ -14,7 +14,7 @@ const fillSSN = async (t, ssnValue = TEST_CPF_VALUE) => {
 };
 
 test.describe('Starting with SSN (show) field', () => {
-    beforeEach(async () => {
+    test.beforeEach(async () => {
         // use mock: mockedResponse for requestURL
         // await t.navigateTo(cardPage.pageUrl);
         //use showMode.clientScripts.js

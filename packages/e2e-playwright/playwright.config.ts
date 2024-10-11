@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv';
 import * as path from 'path';
 
 dotenv.config({ path: path.resolve('../../', '.env') });
-const playgroundBaseUrl = 'http://localhost:3020';
+const playgroundBaseUrl = 'https://localhost:3020'; // todo: refine this
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
@@ -22,7 +22,7 @@ const config: PlaywrightTestConfig = {
     /* Run tests in files in parallel */
     fullyParallel: true,
     /* Fail the build on CI if you accidentally left test.only in the source code. */
-    //todo: enable later forbidOnly: !!process.env.CI,
+    forbidOnly: !!process.env.CI,
     /* Retry on CI only */
     retries: process.env.CI ? 1 : 0,
     /* Opt out of parallel tests on CI. */

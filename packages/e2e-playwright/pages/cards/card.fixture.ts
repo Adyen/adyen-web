@@ -7,15 +7,14 @@ type Fixture = {
     cardPage: CardPage;
     cardAvsPage: CardAvsPage;
     cardPartialAvsPage: CardAvsPage;
-    /* todo: UI test
     cardNoContextualElementPage: CardPage;
     cardLegacyInputModePage: CardPage;
     cardBrandingPage: CardPage;
-    cardExpiryDatePoliciesPage: CardPage;*/
+    cardExpiryDatePoliciesPage: CardPage;
     cardInstallmentsPage: CardPage;
     cardKcpPage: CardPage;
     cardClickToPayPage: CardPage;
-    //cardInstallmentsFullWidthPage: CardPage; -> to be checked
+    cardInstallmentsFullWidthPage: CardPage;
 };
 
 const test = base.extend<Fixture>({

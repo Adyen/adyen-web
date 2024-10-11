@@ -19,7 +19,7 @@ const url = `https://checkoutshopper-test.adyen.com/checkoutshopper/v1/submitThr
 const apiVersion = Number(process.env.API_VERSION.substring(1));
 
 test.describe('Testing new (v67) 3DS2 Flow (redirect)', () => {
-    beforeEach(async () => {
+    test.beforeEach(async () => {
         // await t.navigateTo(`${dropinPage.pageUrl}?amount=12003`);
         // await turnOffSDKMocking();
         // use 'threeDS2.clientScripts.js';

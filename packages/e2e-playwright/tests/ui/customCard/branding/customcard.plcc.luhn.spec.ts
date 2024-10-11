@@ -8,7 +8,7 @@ const getPropFromStateValid = prop => {
 const iframeSelectorRegular = '.secured-fields iframe';
 
 test.describe('Testing PLCCs, in the custom card component)', () => {
-    beforeEach(async () => {
+    test.beforeEach(async () => {
         // await t.navigateTo(CUSTOMCARDS_URL);
         // use customcard.plcc.clientScripts.js
     });

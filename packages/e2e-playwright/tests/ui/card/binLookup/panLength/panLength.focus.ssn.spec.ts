@@ -15,7 +15,7 @@ const getMock = val => {
 };
 
 test.describe('Test how Card Component handles binLookup returning a panLength property for a card with a social security number', () => {
-    beforeEach(async () => {
+    test.beforeEach(async () => {
         // use config from panLength.ssn.clientScripts.js
         //await t.navigateTo(cardPage);
         // For individual test suites (that rely on binLookup & perhaps are being run in isolation)

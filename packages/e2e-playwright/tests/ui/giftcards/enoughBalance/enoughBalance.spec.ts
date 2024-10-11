@@ -1,3 +1,4 @@
+import { test } from '@playwright/test';
 /* Mock used:
 const mock = RequestMock()
     .onRequestTo('http://localhost:3024/paymentMethods/balance')

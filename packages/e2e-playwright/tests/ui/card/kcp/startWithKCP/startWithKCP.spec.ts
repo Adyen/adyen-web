@@ -2,7 +2,7 @@ import { test } from '@playwright/test';
 import { turnOffSDKMocking } from '../../cardMocks';
 
 test.describe('Starting with KCP fields', () => {
-    beforeEach(async () => {
+    test.beforeEach(async () => {
         // await t.navigateTo(cardPage.pageUrl);
         await turnOffSDKMocking();
         //use startWithKCP.clientScripts.js

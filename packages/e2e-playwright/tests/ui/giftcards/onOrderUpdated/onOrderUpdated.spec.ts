@@ -1,3 +1,4 @@
+import { test } from '@playwright/test';
 // todo: need to configure the mock
 // use mock
 test('Test if orderStatus is retrieved on success', async () => {

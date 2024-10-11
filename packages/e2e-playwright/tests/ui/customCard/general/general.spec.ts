@@ -6,7 +6,7 @@ const iframeSelectorRegular = '.secured-fields iframe';
 const iframeSelectorSeparate = '.secured-fields-2 iframe';
 
 test.describe('Testing Custom Cards completion and payment', () => {
-    beforeEach(async () => {
+    test.beforeEach(async () => {
         //await t.navigateTo(CUSTOMCARDS_URL);
     });
     test('Can fill out the fields in the regular custom card and make a successful payment', async t => {

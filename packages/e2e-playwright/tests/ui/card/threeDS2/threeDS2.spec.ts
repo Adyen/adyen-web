@@ -17,7 +17,7 @@ const submitThreeDS2FingerprintURL = `https://checkoutshopper-test.adyen.com/che
 // );
 
 test.describe('Testing new (v67) 3DS2 Flow', () => {
-    beforeEach(async () => {
+    test.beforeEach(async () => {
         // await t.navigateTo(dropinPage.pageUrl);
         // await turnOffSDKMocking();
         // use 'threeDS2.clientScripts.js';

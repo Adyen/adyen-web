@@ -3,7 +3,7 @@ import { test } from '@playwright/test';
 const INVALID_POSTALCODE = 'aaaaaaaaaa';
 
 test.describe('Card with Partial AVS', () => {
-    beforeEach(async () => {
+    test.beforeEach(async () => {
         // await t.navigateTo(CARDS_URL);
     });
 

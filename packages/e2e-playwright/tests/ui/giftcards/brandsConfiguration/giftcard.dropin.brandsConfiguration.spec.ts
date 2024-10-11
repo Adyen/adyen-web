@@ -1,3 +1,4 @@
+import { test } from '@playwright/test';
 // todo: need to set up a fixture
 /* Config used:
 window.mainConfiguration = {

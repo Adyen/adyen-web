@@ -10,7 +10,7 @@ const CARD_EXPIRES_BEFORE = LANG['cc.dat.914'];
 const iframeSeparate = '.secured-fields-2 iframe';
 
 test.describe("Testing setting minimumExpiryDate (on regular Custom card component) - that it is recognised but doesn't override the other checks on date for a card being too old or too far in the future", () => {
-    beforeEach(async () => {
+    test.beforeEach(async () => {
         //await t.navigateTo(CUSTOMCARDS_URL);
         // use expiryDate.clientScripts.js
     });

@@ -1,3 +1,4 @@
+import { test } from '@playwright/test';
 import LANG from '../../../../../server/translations/en-US.json';
 
 const CARD_TOO_OLD = LANG['cc.dat.912'];

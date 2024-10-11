@@ -21,7 +21,7 @@ const removeRequestHook = async () => {
 };
 
 test.describe('Test how Card Component handles binLookup returning a panLength property (or not)', () => {
-    beforeEach(async () => {
+    test.beforeEach(async () => {
         // to config panLength.regular.clientScripts.js
         //await t.navigateTo(cardPage);
         // For individual test suites (that rely on binLookup & perhaps are being run in isolation)

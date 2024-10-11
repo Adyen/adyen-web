@@ -5,7 +5,7 @@ const BASE_REF = 'securedFields';
 const UNSUPPORTED_CARD = LANG['cc.num.903'];
 
 test.describe('Testing persistence of "Unsupported card" error and state at both component & securedField level', () => {
-    beforeEach(async () => {
+    test.beforeEach(async () => {
         //await t.navigateTo(CustomCardComponentPage);
         // For individual test suites (that rely on binLookup & perhaps are being run in isolation)
         // - provide a way to ensure SDK bin mocking is turned off

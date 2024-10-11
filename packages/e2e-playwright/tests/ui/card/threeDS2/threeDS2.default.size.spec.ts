@@ -21,7 +21,7 @@ const submitThreeDS2FingerprintURL = `https://checkoutshopper-test.adyen.com/che
 // );
 
 test.describe('Testing default size of the 3DS2 challenge window, & the challenge flows, on the Card component, since all other tests are for Dropin', () => {
-    beforeEach(async () => {
+    test.beforeEach(async () => {
         // check if playwright supports logResponseHeaders and logResponseBody or the equivalents: requestHooks([loggerDetails, loggerSubmitThreeDS2])
         // await t.navigateTo(cardPage.pageUrl);
         // use threeDS2.default.size.clientScripts.js

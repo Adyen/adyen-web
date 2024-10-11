@@ -12,7 +12,7 @@ const mockAddress = {
 };
 
 test.describe('Card with AVS', () => {
-    beforeEach(async () => {
+    test.beforeEach(async () => {
         // await t.navigateTo(CARDS_URL);
         // use avs.clientScripts.js
     });
