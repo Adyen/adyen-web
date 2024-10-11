@@ -1,5 +1,5 @@
 import { UIElementProps } from '../UIElement/types';
-import { ActionHandledReturnObject, PaymentAction } from '../../../types/global-types';
+import { ActionHandledReturnObject } from '../../../types/global-types';
 
 export interface VoucherDetail {
     label: string;
@@ -51,23 +51,12 @@ export interface VoucherProps {
 
     // callback, at Checkout level
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
-    // ref to original action, passed to onActionHandled callback
-    originalAction?: PaymentAction;
 }
 
 export interface VoucherConfiguration extends UIElementProps {
     reference?: string;
     url?: string;
     paymentMethodType?: string;
-    originalAction?: PaymentAction;
 }
 
-export interface CommonVoucherProps {
-    paymentMethodType: string;
-    introduction: string;
-    imageUrl: string;
-    onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
-    originalAction?: PaymentAction;
-    amount?: string;
-    reference?: string;
-}
+export type CommonVoucherProps = Pick<VoucherProps, 'paymentMethodType' | 'introduction' | 'imageUrl' | 'amount' | 'reference' | 'onActionHandled'>;
