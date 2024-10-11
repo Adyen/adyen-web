@@ -4,7 +4,6 @@ import { createFingerprintResolveData, createOldFingerprintResolveData, isErrorO
 import { PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State } from './types';
 import { FingerPrintData, ResultObject, ErrorCodeObject } from '../../types';
 import { ErrorObject } from '../../../../core/Errors/types';
-import { ActionHandledReturnObject } from '../../../../types/global-types';
 import { SendAnalyticsObject } from '../../../../core/Analytics/types';
 import { isValidHttpUrl } from '../../../../utils/isValidURL';
 import {
@@ -26,7 +25,6 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
         onError: () => {},
         paymentData: '',
         showSpinner: true,
-        onActionHandled: () => {},
         isMDFlow: false
     };
 
@@ -49,15 +47,6 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             console.debug(`${THREEDS2_FINGERPRINT_ERROR}: ${MISSING_TOKEN_IN_ACTION_MSG}`);
         }
     }
-
-    public onActionHandled = (rtnObj: ActionHandledReturnObject) => {
-        this.props.onSubmitAnalytics({
-            type: THREEDS2_FULL,
-            message: rtnObj.actionDescription,
-            subtype: Analytics3DS2Events.FINGERPRINT_IFRAME_LOADED
-        });
-        this.props.onActionHandled?.(rtnObj);
-    };
 
     public onFormSubmit = (msg: string) => {
         this.props.onSubmitAnalytics({
@@ -262,7 +251,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                     }}
                     showSpinner={showSpinner}
                     {...fingerPrintData}
-                    onActionHandled={this.onActionHandled}
+                    onActionHandled={this.props.onActionHandled}
                     onFormSubmit={this.onFormSubmit}
                 />
             );

@@ -12,6 +12,7 @@ import type { CoreConfiguration, ICore, AdditionalDetailsData } from '../../../c
 import type { ComponentMethodsRef, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
 import type { CheckoutSessionDetailsResponse, CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
 import type {
+    ActionHandledReturnObject,
     CheckoutAdvancedFlowResponse,
     Order,
     PaymentAction,
@@ -64,6 +65,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.storeElementRefOnCore(this.props);
 
         this.onEnterKeyPressed = this.onEnterKeyPressed.bind(this);
+        this.onActionHandled = this.onActionHandled.bind(this);
     }
 
     protected override buildElementProps(componentProps?: P) {
@@ -322,6 +324,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         }
 
         return null;
+    }
+
+    protected onActionHandled(actionHandledObj: ActionHandledReturnObject) {
+        console.log('### UIElement::onActionHandled:: actionHandledObj', actionHandledObj);
+        this.props?.onActionHandled({ ...actionHandledObj }); // originalAction: this.props.originalAction
     }
 
     protected handleOrder = (response: PaymentResponseData): void => {
