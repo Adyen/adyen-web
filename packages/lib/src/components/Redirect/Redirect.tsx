@@ -33,7 +33,7 @@ class RedirectElement extends UIElement<RedirectConfiguration> {
 
     render() {
         if (this.props.url && this.props.method) {
-            return <RedirectShopper url={this.props.url} {...this.props} />;
+            return <RedirectShopper url={this.props.url} {...this.props} onActionHandled={this.onActionHandled} />;
         }
 
         if (this.props.showPayButton) {
