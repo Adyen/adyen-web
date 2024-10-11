@@ -56,7 +56,7 @@ export class AchElement extends UIElement<AchConfiguration> {
         if (this.props.storedPaymentMethodId) {
             return true;
         }
-        console.log('e', this.state.isValid);
+
         return !!this.state.isValid;
     }
 

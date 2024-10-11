@@ -122,6 +122,7 @@
         width: 100%;
         border: token(border-width-s) solid token(color-outline-primary);
         border-radius: token(border-radius-m);
+        background-color: token(color-background-primary);
     }
 
     .adyen-checkout__radio_group__input:checked + .adyen-checkout__radio_group__label {
