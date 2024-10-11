@@ -9,7 +9,7 @@ const playgroundBaseUrl = 'https://localhost:3020'; // todo: refine this
  * See https://playwright.dev/docs/test-configuration.
  */
 const config: PlaywrightTestConfig = {
-    testDir: './tests/',
+    testDir: './tests/e2e/card/',
     /* Maximum time one test can run for. */
     timeout: 10 * 2000,
     expect: {
@@ -74,7 +74,7 @@ const config: PlaywrightTestConfig = {
     /* Run your local dev server before starting the tests */
     webServer: [
         {
-            command: 'npm run start:prod-storybook',
+            command: 'npm run build:storybook && npm run start:prod-storybook', // todo: on local, we need to find a way to start the production SB on https..
             cwd: '../..',
             port: 3020,
             reuseExistingServer: !process.env.CI,

@@ -1,6 +1,7 @@
-import { Locator, Page } from '@playwright/test';
+import type { Page, Locator } from '@playwright/test';
 import { USER_TYPE_DELAY } from '../tests/utils/constants';
 import LANG from '../../server/translations/en-US.json';
+import { URL_MAP } from '../pages/cards/URL_MAP';
 
 const CARD_IFRAME_TITLE = LANG['creditCard.encryptedCardNumber.aria.iframeTitle'];
 const EXPIRY_DATE_IFRAME_TITLE = LANG['creditCard.encryptedExpiryDate.aria.iframeTitle'];
@@ -14,8 +15,6 @@ const INSTALLMENTS_PAYMENTS = LANG['installments.installments'];
 const REVOLVING_PAYMENT = LANG['installments.revolving'];
 
 class Card {
-    readonly page: Page;
-
     readonly rootElement: Locator;
     readonly rootElementSelector: string;
 
@@ -44,10 +43,11 @@ class Card {
     readonly installmentsDropdown: Locator;
     readonly selectorList: Locator;
 
-    constructor(page: Page, rootElementSelector = '.adyen-checkout__card-input') {
-        this.page = page;
-
-        this.rootElement = page.locator(rootElementSelector);
+    constructor(
+        public readonly page: Page,
+        rootElementSelector = '.adyen-checkout__card-input'
+    ) {
+        this.rootElement = this.page.locator(rootElementSelector);
         this.rootElementSelector = rootElementSelector;
 
         /**
@@ -106,6 +106,10 @@ class Card {
         this.selectorList = this.rootElement.getByRole('listbox');
     }
 
+    async goto(url: string = URL_MAP.card) {
+        await this.page.goto(url);
+    }
+
     async isComponentVisible() {
         await this.cardNumberInput.waitFor({ state: 'visible' });
         await this.expiryDateInput.waitFor({ state: 'visible' });
@@ -113,7 +117,7 @@ class Card {
     }
 
     async typeCardNumber(cardNumber: string) {
-        await this.cardNumberInput.type(cardNumber, { delay: USER_TYPE_DELAY });
+        await this.cardNumberInput.fill(cardNumber, { timeout: USER_TYPE_DELAY });
     }
 
     async deleteCardNumber() {
@@ -129,16 +133,19 @@ class Card {
     }
 
     async typeExpiryDate(expiryDate: string) {
-        await this.expiryDateInput.type(expiryDate, { delay: USER_TYPE_DELAY });
+        await this.expiryDateInput.fill(expiryDate, { timeout: USER_TYPE_DELAY });
     }
 
     async typeCvc(cvc: string) {
-        await this.cvcInput.type(cvc, { delay: USER_TYPE_DELAY });
+        await this.cvcInput.fill(cvc, { timeout: USER_TYPE_DELAY });
     }
 
     async selectListItem(who: string) {
-        const listItem = this.selectorList.locator(`#listItem-${who}`);
-        return listItem;
+        return this.selectorList.locator(`#listItem-${who}`);
+    }
+
+    async pay() {
+        await this.page.getByRole('button', { name: /Pay/i }).click();
     }
 }
 
