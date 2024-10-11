@@ -42,8 +42,8 @@ class BacsElement extends UIElement<VoucherConfiguration> {
                         icon={this.icon}
                         url={this.props.url}
                         paymentMethodType={this.props.paymentMethodType}
-                        onActionHandled={this.props.onActionHandled}
-                        originalAction={this.props.originalAction}
+                        onActionHandled={this.onActionHandled}
+                        // originalAction={this.props.originalAction}
                     />
                 ) : (
                     <BacsInput

@@ -1,4 +1,4 @@
-import { ActionHandledReturnObject, PaymentAction, PaymentAmount } from '../../types/global-types';
+import { ActionHandledReturnObject, PaymentAmount } from '../../types/global-types';
 import Language from '../../language/Language';
 import { UIElementProps } from '../internal/UIElement/types';
 
@@ -49,5 +49,4 @@ export interface DragonpayVoucherResultProps {
     issuer?: string;
     ref?: any;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
-    originalAction?: PaymentAction;
 }
