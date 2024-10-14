@@ -5,13 +5,11 @@ class WeChatPayElement extends QRLoaderContainer {
     public static type = 'wechatpayQR';
     public static analyticsType = 'wechatpayQR'; // Needed for use-case where merchant makes a payment themselves and then calls checkout.createFromAction(action)
 
-    formatProps(props) {
-        return {
-            delay,
-            countdownTime,
-            ...super.formatProps(props)
-        };
-    }
+    protected static defaultProps = {
+        countdownTime,
+        delay,
+        ...QRLoaderContainer.defaultProps
+    };
 }
 
 export default WeChatPayElement;
