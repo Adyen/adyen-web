@@ -327,7 +327,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     protected onActionHandled(actionHandledObj: ActionHandledReturnObject) {
-        this.props?.onActionHandled({ originalAction: this.props.originalAction, ...actionHandledObj });
+        this.props?.onActionHandled?.({ originalAction: this.props.originalAction, ...actionHandledObj });
     }
 
     protected handleOrder = (response: PaymentResponseData): void => {
