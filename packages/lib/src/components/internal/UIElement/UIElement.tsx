@@ -354,13 +354,13 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      *
      * @param result
      */
-    protected handleFailedResult = (result?: PaymentResponseData | string): void => {
+    protected handleFailedResult = (result?: PaymentResponseData): void => {
         if (assertIsDropin(this.elementRef)) {
             this.elementRef.displayFinalAnimation('error');
         }
 
-        cleanupFinalResult(result as PaymentResponseData);
-        this.props.onPaymentFailed?.(result as PaymentResponseData, this.elementRef);
+        cleanupFinalResult(result);
+        this.props.onPaymentFailed?.(result, this.elementRef);
     };
 
     protected handleSuccessResult = (result: PaymentResponseData): void => {
