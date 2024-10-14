@@ -58,7 +58,7 @@ describe('PayNow', () => {
         // Triggers the execution of the setTimeout that makes the /status API request
         jest.runAllTimers();
 
-        await screen.findByText(/Scan the QR code using the PayNow app to complete the payment/);
+        await screen.findAllByText(/Scan the QR code using the PayNow app to complete the payment/);
         const div = within(screen.queryByTestId('paynow-mobile-instructions'));
         div.getByText(/Take a screenshot of the QR code./);
         div.getByText(/Open the PayNow bank or payment app./);
