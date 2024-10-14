@@ -190,7 +190,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
                 ? new Promise((resolve, reject) =>
                       this.props.beforeSubmit(this.data, this.elementRef, {
                           resolve,
-                          reject
+                          reject: () => reject('beforeSubmitRejected')
                       })
                   )
                 : Promise.resolve(this.data);
@@ -343,13 +343,15 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      *
      * @param result
      */
-    protected handleFailedResult = (result?: PaymentResponseData): void => {
+    protected handleFailedResult = (result?: PaymentResponseData | string): void => {
+        if (result === 'beforeSubmitRejected') return;
+
         if (assertIsDropin(this.elementRef)) {
             this.elementRef.displayFinalAnimation('error');
         }
 
-        cleanupFinalResult(result);
-        this.props.onPaymentFailed?.(result, this.elementRef);
+        cleanupFinalResult(result as PaymentResponseData);
+        this.props.onPaymentFailed?.(result as PaymentResponseData, this.elementRef);
     };
 
     protected handleSuccessResult = (result: PaymentResponseData): void => {
