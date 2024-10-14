@@ -1,4 +1,4 @@
-import { PaymentAmount } from '../../types/global-types';
+import { ActionHandledReturnObject, PaymentAmount } from '../../types/global-types';
 
 export interface MultibancoVoucherResultProps {
     entity?: string;
@@ -9,4 +9,5 @@ export interface MultibancoVoucherResultProps {
     paymentMethodType?: string;
     downloadUrl?: string;
     ref?: any;
+    onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
 }

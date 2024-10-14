@@ -39,7 +39,7 @@ export class MultibancoElement extends UIElement<VoucherConfiguration> {
         if (this.props.reference) {
             return (
                 <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                    <MultibancoVoucherResult ref={this.handleRef} {...this.props} />
+                    <MultibancoVoucherResult ref={this.handleRef} {...this.props} onActionHandled={this.onActionHandled} />
                 </CoreProvider>
             );
         }

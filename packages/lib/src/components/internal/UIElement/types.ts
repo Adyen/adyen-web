@@ -101,6 +101,11 @@ export type UIElementProps = BaseElementProps &
          * @internal
          */
         paymentMethodType?: string;
+
+        /**
+         * Reference to the action object found in a /payments response. This, in most cases, is passed on to the onActionHandled callback
+         */
+        originalAction?: PaymentAction;
     };
 
 export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';

@@ -3,18 +3,17 @@ import Voucher from '../../../internal/Voucher';
 
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import useImage from '../../../../core/Context/useImage';
+import { extractCommonPropsForVoucher } from '../../../internal/Voucher/utils';
 
 export default function BankTransferResult(props) {
-    const { reference, totalAmount, paymentMethodType } = props;
+    const { reference } = props;
     const { i18n } = useCoreContext();
     const getImage = useImage();
 
     return (
         <Voucher
-            paymentMethodType={paymentMethodType}
-            introduction={i18n.get('bankTransfer.instructions')}
-            imageUrl={getImage()(paymentMethodType)}
-            amount={totalAmount && i18n.amount(totalAmount.value, totalAmount.currency)}
+            {...extractCommonPropsForVoucher({ props, i18n, introKey: 'bankTransfer.instructions', getImage: getImage() })}
+            reference={''} // Overwrite the passed reference, so it is not displayed in its own section (since it is already part of the voucherDetails)
             voucherDetails={[
                 { label: i18n.get('bankTransfer.beneficiary'), value: props.beneficiary },
                 { label: i18n.get('bankTransfer.iban'), value: props.iban },

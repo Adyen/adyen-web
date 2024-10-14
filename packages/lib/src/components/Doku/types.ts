@@ -1,4 +1,4 @@
-import { PaymentAmount } from '../../types/global-types';
+import { ActionHandledReturnObject, PaymentAmount } from '../../types/global-types';
 
 export interface DokuVoucherResultProps {
     reference?: string;
@@ -11,4 +11,5 @@ export interface DokuVoucherResultProps {
     merchantName?: string;
     outputDetails?: any;
     ref?: any;
+    onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
 }

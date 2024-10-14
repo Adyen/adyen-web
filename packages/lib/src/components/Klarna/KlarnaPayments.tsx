@@ -64,6 +64,7 @@ class KlarnaPayments extends UIElement<KlarnConfiguration> {
                     onError={this.props.onError}
                     payButton={this.payButton}
                     onLoaded={this.onLoaded}
+                    onActionHandled={this.onActionHandled}
                 />
             </CoreProvider>
         );

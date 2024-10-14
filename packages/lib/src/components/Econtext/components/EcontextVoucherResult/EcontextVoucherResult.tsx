@@ -4,20 +4,17 @@ import Voucher from '../../../internal/Voucher';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { EcontextVoucherResultProps } from '../../types';
 import useImage from '../../../../core/Context/useImage';
+import { extractCommonPropsForVoucher } from '../../../internal/Voucher/utils';
 
 const EcontextVoucherResult = (props: EcontextVoucherResultProps) => {
-    const { reference, totalAmount, expiresAt, paymentMethodType, maskedTelephoneNumber, instructionsUrl, collectionInstitutionNumber } = props;
+    const { expiresAt, maskedTelephoneNumber, instructionsUrl, collectionInstitutionNumber } = props;
     const { i18n } = useCoreContext();
     const getImage = useImage();
 
     return (
         <Voucher
-            paymentMethodType={paymentMethodType}
-            reference={reference}
-            introduction={i18n.get('voucher.introduction.econtext')}
-            imageUrl={getImage()(paymentMethodType)}
+            {...extractCommonPropsForVoucher({ props, i18n, introKey: 'voucher.introduction.econtext', getImage: getImage() })}
             instructionsUrl={instructionsUrl}
-            amount={totalAmount && i18n.amount(totalAmount.value, totalAmount.currency)}
             voucherDetails={[
                 { label: i18n.get('voucher.collectionInstitutionNumber'), value: collectionInstitutionNumber },
                 { label: i18n.get('voucher.expirationDate'), value: i18n.dateTime(expiresAt) },

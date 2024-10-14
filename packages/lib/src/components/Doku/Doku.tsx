@@ -49,6 +49,7 @@ export class DokuElement extends UIElement<VoucherConfiguration> {
                             this.componentRef = ref;
                         }}
                         {...this.props}
+                        onActionHandled={this.onActionHandled}
                     />
                 ) : (
                     <DokuInput

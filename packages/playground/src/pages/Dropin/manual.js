@@ -12,7 +12,16 @@ import {
     AmazonPay,
     Pix,
     Klarna,
-    Bancontact
+    Bancontact,
+    SepaDirectDebit,
+    OnlineBankingCZ,
+    BacsDirectDebit,
+    BankTransfer,
+    CashAppPay,
+    Twint,
+    BcmcMobile,
+    Blik,
+    UPI
 } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { getPaymentMethods, makePayment, checkBalance, createOrder, cancelOrder, makeDetailsCall } from '../../services';
@@ -86,7 +95,7 @@ export async function initManual() {
             console.info(error.name, error.message, error.stack, component);
         },
         onActionHandled: rtnObj => {
-            console.log('onActionHandled', rtnObj);
+            console.log('manual::onActionHandled', rtnObj);
         },
         onPaymentMethodsRequest: async (data, { resolve, reject }) => {
             console.log('onPaymentMethodsRequest', data);
@@ -134,7 +143,29 @@ export async function initManual() {
     }
 
     const dropin = new Dropin(checkout, {
-        paymentMethodComponents: [Card, ApplePay, GooglePay, PayPal, Ach, Affirm, WeChat, Giftcard, AmazonPay, Pix, Bancontact, Klarna],
+        paymentMethodComponents: [
+            Card,
+            ApplePay,
+            GooglePay,
+            PayPal,
+            Ach,
+            Affirm,
+            WeChat,
+            Giftcard,
+            AmazonPay,
+            Pix,
+            Bancontact,
+            Klarna,
+            SepaDirectDebit,
+            OnlineBankingCZ,
+            BacsDirectDebit,
+            BankTransfer,
+            CashAppPay,
+            Twint,
+            BcmcMobile,
+            Blik,
+            UPI
+        ],
         instantPaymentTypes: ['googlepay', 'applepay'],
         paymentMethodsConfiguration: {
             card: {
