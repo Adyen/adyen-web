@@ -175,7 +175,16 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             return;
         }
 
-        this.makePaymentsCall().then(sanitizeResponse).then(verifyPaymentDidNotFail).then(this.handleResponse).catch(this.handleFailedResult);
+        this.makePaymentsCall()
+            .then(sanitizeResponse)
+            .then(verifyPaymentDidNotFail)
+            .then(this.handleResponse)
+            .catch((e: PaymentResponseData | Error) => {
+                if (e instanceof Error && e.message === 'beforeSubmitRejected') {
+                    return;
+                }
+                this.handleFailedResult(e as PaymentResponseData);
+            });
     }
 
     protected makePaymentsCall(): Promise<CheckoutAdvancedFlowResponse | CheckoutSessionPaymentResponse> {
@@ -195,7 +204,9 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
                   )
                 : Promise.resolve(this.data);
 
-            return beforeSubmitEvent.then(this.submitUsingSessionsFlow);
+            return beforeSubmitEvent.then(this.submitUsingSessionsFlow).catch(e => {
+                throw new Error(e);
+            });
         }
 
         this.handleError(
@@ -344,8 +355,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * @param result
      */
     protected handleFailedResult = (result?: PaymentResponseData | string): void => {
-        if (result === 'beforeSubmitRejected') return;
-
         if (assertIsDropin(this.elementRef)) {
             this.elementRef.displayFinalAnimation('error');
         }
