@@ -36,6 +36,7 @@ export class SRPanel extends BaseElement<SRPanelProps> {
 
     constructor(checkout: ICore, props?: SRPanelProps) {
         super(checkout, props);
+
         this.id = this.props.id;
         this.showPanel = process.env.NODE_ENV !== 'production' ? this.props.showPanel : false;
         this._enabled = false;
@@ -43,17 +44,21 @@ export class SRPanel extends BaseElement<SRPanelProps> {
 
         if (this.props.enabled) {
             this._enabled = true;
-            if (document.querySelector(this.props.node)) {
+
+            const panelParent = document.querySelector(this.props.node);
+
+            if (panelParent) {
                 const preExistingSRPanel = document.getElementById(this.id);
                 if (preExistingSRPanel) {
-                    document.querySelector(this.props.node).removeChild(preExistingSRPanel);
+                    panelParent.removeChild(preExistingSRPanel);
                 }
 
                 this.srPanelContainer = document.createElement('div');
                 this.srPanelContainer.className = 'sr-panel-holder';
                 this.srPanelContainer.id = this.id;
 
-                document.querySelector(this.props.node).appendChild(this.srPanelContainer);
+                panelParent.appendChild(this.srPanelContainer);
+
                 this.mount(this.srPanelContainer);
             } else {
                 throw new Error('Component could not mount. Root node was not found.');
