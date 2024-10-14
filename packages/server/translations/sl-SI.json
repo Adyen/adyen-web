@@ -314,5 +314,11 @@
     "payme.instructions.footnote": "Ne zapirajte te strani, preden je plačilo zaključeno.",
     "payByBankAISDD.disclaimer.header": "Uporabite Pay by Bank za takojšnje plačilo s katerega koli bančnega računa.",
     "payByBankAISDD.disclaimer.body": "S povezavo svojega bančnega računa dovoljujete bremenitev računa za vse zneske, ki jih dolgujete za uporabo naših storitev in/ali nakup naših izdelkov, dokler tega dovoljenja ne prekličete.",
-    "paymentMethodBrand.other": "Drugo"
+    "paymentMethodBrand.other": "Drugo",
+    "paynow.scanQrCode": "Za dokončanje plačila optično preberite kodo QR z aplikacijo PayNow.",
+    "paynow.mobileViewInstruction.step1": "Naredite posnetek zaslona s kodo QR.",
+    "paynow.mobileViewInstruction.step2": "Odprite banko PayNow ali aplikacijo za plačevanje.",
+    "paynow.mobileViewInstruction.step3": "Izberite možnost za skeniranje kode QR.",
+    "paynow.mobileViewInstruction.step4": "Izberite možnost za nalaganje QR in izberite posnetek zaslona.",
+    "paynow.mobileViewInstruction.step5": "Zaključite transakcijo."
 }

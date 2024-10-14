@@ -314,5 +314,11 @@
     "payme.instructions.footnote": "支払いが完了するまでこのページを閉じないでください。",
     "payByBankAISDD.disclaimer.header": "Pay by Bankを使用すると、どの銀行口座からでも即座に支払いができます。",
     "payByBankAISDD.disclaimer.body": "銀行口座を接続することで、お客様は、この承認が取り消されるまで、当社のサービスの利用および/または当社製品の購入のために支払うべき金額をお客様の口座から引き落とすことを承認したことになります。",
-    "paymentMethodBrand.other": "その他"
+    "paymentMethodBrand.other": "その他",
+    "paynow.scanQrCode": "PayNowアプリを使用してQRコードをスキャンし、支払を完了してください",
+    "paynow.mobileViewInstruction.step1": "QRコードのスクリーンショットを撮ります。",
+    "paynow.mobileViewInstruction.step2": "PayNow銀行または支払アプリを開きます。",
+    "paynow.mobileViewInstruction.step3": "QRコードをスキャンするオプションを選択します。",
+    "paynow.mobileViewInstruction.step4": "QRをアップロードするオプションを選択し、スクリーンショットを選択します。",
+    "paynow.mobileViewInstruction.step5": "取引を完了します。"
 }

@@ -164,7 +164,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                         src={getImage({ imageFolder: 'components/' })(image)}
                         alt={status}
                     />
-                    <div className="adyen-checkout__qr-loader__subtitle adyen-checkout__qr-loader__subtitle--result">{status}</div>
+                    <div className="adyen-checkout__qr-loader__subtitle">{status}</div>
                 </div>
             );
         };
@@ -180,7 +180,11 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
         if (loading) {
             return (
                 <div className="adyen-checkout__qr-loader">
-                    {brandLogo && <img alt={brandName} src={brandLogo} className="adyen-checkout__qr-loader__brand-logo" />}
+                    {brandLogo && (
+                        <div className="adyen-checkout__qr-loader__brand-logo-wrapper">
+                            <img alt={brandName} src={brandLogo} className="adyen-checkout__qr-loader__brand-logo" />
+                        </div>
+                    )}
                     <Spinner />
                 </div>
             );
@@ -193,7 +197,11 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
 
         return (
             <div className={`adyen-checkout__qr-loader adyen-checkout__qr-loader--${type} ${classnames.join(' ')}`}>
-                {brandLogo && <img src={brandLogo} alt={brandName} className="adyen-checkout__qr-loader__brand-logo" />}
+                {brandLogo && (
+                    <div className="adyen-checkout__qr-loader__brand-logo-wrapper">
+                        <img src={brandLogo} alt={brandName} className="adyen-checkout__qr-loader__brand-logo" />
+                    </div>
+                )}
 
                 {amount && amount.value && amount.currency && (
                     <div className="adyen-checkout__qr-loader__payment_amount">{i18n.amount(amount.value, amount.currency)}</div>

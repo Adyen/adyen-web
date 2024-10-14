@@ -1,44 +1,25 @@
 import { h } from 'preact';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
-import ContentSeparator from '../../internal/ContentSeparator';
+import Timeline from '../../internal/Timeline';
 import './PayNowIntroduction.scss';
 
 const PayNowIntroduction = () => {
     const { i18n } = useCoreContext();
 
+    const instructions = [
+        i18n.get('paynow.mobileViewInstruction.step1'),
+        i18n.get('paynow.mobileViewInstruction.step2'),
+        i18n.get('paynow.mobileViewInstruction.step3'),
+        i18n.get('paynow.mobileViewInstruction.step4'),
+        i18n.get('paynow.mobileViewInstruction.step5')
+    ];
+
     return (
         <div className="adyen-checkout-paynow__introduction">
-            {i18n.get('paynow.scanQrCode')}
+            <div className="adyen-checkout-paynow__introduction--desktop">{i18n.get('paynow.scanQrCode')}</div>
 
-            <div className="adyen-checkout-paynow__introduction--mobile-only" data-testid="paynow-mobile-instructions">
-                <ContentSeparator />
-                <ol className="c-timeline">
-                    <li className="c-timeline__item">
-                        <div className="c-timeline__content">
-                            <p className="c-timeline__desc">Take a screenshot of the QR code.</p>
-                        </div>
-                    </li>
-                    <li className="c-timeline__item">
-                        <div className="c-timeline__content">
-                            <p className="c-timeline__desc">Open the PayNow bank or payment app.</p>
-                        </div>
-                    </li>
-                    <li className="c-timeline__item">
-                        <div className="c-timeline__content">
-                            <p className="c-timeline__desc">Select the option to scan a QR code.</p>
-                        </div>
-                    </li>
-                    <li className="c-timeline__item">
-                        <div className="c-timeline__content">
-                            <p className="c-timeline__desc">Choose the option to upload a QR and select the screenshot.</p>
-                        </div>
-                    </li>
-                    <li className="c-timeline__item">
-                        <div className="c-timeline__content">
-                            <p className="c-timeline__desc">Complete the transaction.</p>
-                        </div>
-                    </li>
-                </ol>
+            <div className="adyen-checkout-paynow__introduction--mobile" data-testid="paynow-mobile-instructions">
+                <Timeline instructions={instructions} />
             </div>
         </div>
     );

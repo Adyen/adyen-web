@@ -6,7 +6,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    color: token(color-label-secondary);
+    color: token(color-label-primary);
     white-space: nowrap;
     font-size: 13px;
     line-height: token(text-caption-line-height);
@@ -15,7 +15,7 @@
     &::before {
         content: '';
         flex: 1;
-        border-bottom: 1px solid token(color-outline-tertiary);
+        border-bottom: 1px solid token(color-separator-primary);
     }
 
     &::after {

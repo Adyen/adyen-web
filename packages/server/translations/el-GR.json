@@ -314,5 +314,11 @@
     "payme.instructions.footnote": "Μην κλείσετε αυτήν τη σελίδα προτού ολοκληρωθεί η πληρωμή.",
     "payByBankAISDD.disclaimer.header": "Χρησιμοποιήστε το Pay by Bank για άμεση πληρωμή από οποιονδήποτε τραπεζικό λογαριασμό.",
     "payByBankAISDD.disclaimer.body": "Συνδέοντας τον τραπεζικό λογαριασμό σας, εξουσιοδοτείτε χρεώσεις στον λογαριασμό σας για οποιοδήποτε ποσό οφείλεται για τη χρήση των υπηρεσιών μας ή/και την αγορά των προϊόντων μας, έως ότου ανακληθεί αυτή η εξουσιοδότηση.",
-    "paymentMethodBrand.other": "άλλο"
+    "paymentMethodBrand.other": "άλλο",
+    "paynow.scanQrCode": "Σαρώστε τον κωδικό QR χρησιμοποιώντας την εφαρμογή PayNow για να ολοκληρώσετε την πληρωμή",
+    "paynow.mobileViewInstruction.step1": "Τραβήξτε ένα στιγμιότυπο οθόνης του κωδικού QR.",
+    "paynow.mobileViewInstruction.step2": "Ανοίξτε την τράπεζα PayNow ή την εφαρμογή πληρωμών.",
+    "paynow.mobileViewInstruction.step3": "Επιλέξτε τη δυνατότητα σάρωσης ενός κωδικού QR.",
+    "paynow.mobileViewInstruction.step4": "Επιλέξτε τη δυνατότητα μεταφόρτωσης ενός QR και επιλέξτε το στιγμιότυπο οθόνης.",
+    "paynow.mobileViewInstruction.step5": "Ολοκληρώστε τη συναλλαγή."
 }

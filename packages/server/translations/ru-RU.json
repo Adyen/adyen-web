@@ -312,5 +312,11 @@
     "payme.instructions.footnote": "Не закрывайте эту страницу до завершения платежа",
     "payByBankAISDD.disclaimer.header": "Для моментальной оплаты с любого банковского счета воспользуйтесь приложением Pay by Bank.",
     "payByBankAISDD.disclaimer.body": "Привязывая банковский счет, вы тем самым даете разрешение на списание с него средств за пользование нашими услугами и/или покупку нашей продукции. Данное разрешение продействует до тех пор, пока оно не будет отозвано.",
-    "paymentMethodBrand.other": "другой способ"
+    "paymentMethodBrand.other": "другой способ",
+    "paynow.scanQrCode": "Для завершения платежа отсканируйте QR-код с помощью приложения PayNow",
+    "paynow.mobileViewInstruction.step1": "Сделайте снимок QR-кода на экране.",
+    "paynow.mobileViewInstruction.step2": "Откройте банковское или платежное приложение PayNow.",
+    "paynow.mobileViewInstruction.step3": "Выберите опцию сканирования QR-кода.",
+    "paynow.mobileViewInstruction.step4": "Выберите опцию загрузки QR-кода и скриншот.",
+    "paynow.mobileViewInstruction.step5": "Завершите транзакцию."
 }

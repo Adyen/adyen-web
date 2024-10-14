@@ -1,6 +1,6 @@
 @import 'styles/variable-generator';
 
-.adyen-checkout-paynow__introduction {
+.adyen-checkout-paynow__instructions {
   font-size: token(text-body-font-size);
   font-weight: token(text-body-font-weight);
   line-height: token(text-body-line-height);
@@ -8,17 +8,14 @@
   text-align: center;
 }
 
-.adyen-checkout-paynow__introduction--desktop {
-  display: none;
+.adyen-checkout-paynow__instructions > p {
+  margin-top: 24px;
+  margin-bottom: 0;
 }
 
-@media (min-width: 768px) {
-  .adyen-checkout-paynow__introduction--desktop {
-    display: block;
-  }
 
-  .adyen-checkout-paynow__introduction--mobile {
+@media (min-width: 768px) {
+  .adyen-checkout-paynow__instructions {
     display: none;
   }
 }
-

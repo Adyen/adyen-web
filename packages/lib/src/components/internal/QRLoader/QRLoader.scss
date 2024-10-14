@@ -5,11 +5,14 @@
     padding: token(spacer-110);
     border: token(border-width-s) solid token(color-outline-secondary);
     border-radius: token(border-radius-m);
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .adyen-checkout__qr-loader--result {
     padding: 100px;
+    gap: token(spacer-090);
 }
 
 .adyen-checkout__qr-loader--app {
@@ -18,22 +21,20 @@
     padding: 0;
 }
 
+.adyen-checkout__qr-loader__brand-logo-wrapper {
+    border-radius: token(border-radius-s);
+    box-shadow: token(shadow-low);
+    margin-bottom: token(spacer-090);
+    overflow: hidden;
+}
+
 .adyen-checkout__qr-loader__brand-logo {
-    width: 74px;
-    border-radius: 3px;
+    width: 80px;
+    display: block;
 }
 
 .adyen-checkout__qr-loader__subtitle {
     max-width: 400px;
-    margin: token(spacer-100) auto 0;
-}
-
-.adyen-checkout__qr-loader__subtitle--result {
-    margin-bottom: token(spacer-100);
-}
-
-.adyen-checkout__qr-loader__subtitle,
-.adyen-checkout__qr-loader__payment_amount {
     color: token(color-label-primary);
     font-size: token(text-subtitle-font-size);
     line-height: token(text-caption-line-height);
@@ -45,16 +46,20 @@
 }
 
 .adyen-checkout__qr-loader__payment_amount {
-    font-weight: bold;
+    color: token(color-label-primary);
+    font-weight: token(text-title-l-font-weight);
+    font-size: token(text-title-l-font-size);
+    line-height: token(text-body-wide-line-height);
+    margin-bottom: token(spacer-090);
 }
 
 .adyen-checkout__qr-loader__progress {
     height: token(spacer-020);
     background: token(color-outline-secondary);
     border-radius: token(border-radius-l);
-    margin: token(spacer-100) auto token(spacer-060);
     width: 152px;
     padding-right: 3%;
+    margin-bottom: token(spacer-060);
 
     [dir="rtl"] & {
         padding-right: 0;
@@ -70,8 +75,8 @@
 }
 
 .adyen-checkout__qr-loader__countdown {
-    color: token(color-label-secondary);
     font-size: token(text-body-font-size);
+    text-align: center;
 }
 
 .adyen-checkout__qr-loader > .adyen-checkout__spinner__wrapper {

@@ -314,5 +314,11 @@
     "payme.instructions.footnote": "Nezatvárajte túto stránku pred dokončením platby",
     "payByBankAISDD.disclaimer.header": "Používajte Pay by Bank na okamžitú platbu z akéhokoľvek bankového účtu.",
     "payByBankAISDD.disclaimer.body": "Pripojením svojho bankového účtu dávate súhlas na odpísanie akejkoľvek dlžnej sumy z vášho účtu za používanie našich služieb a/alebo nákup našich produktov, a to až do odvolania tohto súhlasu.",
-    "paymentMethodBrand.other": "Iné"
+    "paymentMethodBrand.other": "Iné",
+    "paynow.scanQrCode": "Nasnímajte QR kód pomocou aplikácie PayNow a dokončite platbu",
+    "paynow.mobileViewInstruction.step1": "Urobte snímku obrazovky s QR kódom.",
+    "paynow.mobileViewInstruction.step2": "Otvorte banku alebo platobnú aplikáciu PayNow.",
+    "paynow.mobileViewInstruction.step3": "Vyberte možnosť na nasnímanie QR kódu.",
+    "paynow.mobileViewInstruction.step4": "Vyberte možnosť nahrať QR kód a vyberte snímku obrazovky.",
+    "paynow.mobileViewInstruction.step5": "Dokončite transakciu."
 }
