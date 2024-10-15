@@ -95,6 +95,7 @@
 .adyen-checkout__radio_group--button {
     display: flex;
     align-items: flex-start;
+    flex-wrap: wrap;
     gap: token(spacer-070);
     align-self: stretch;
     width: 100%;
