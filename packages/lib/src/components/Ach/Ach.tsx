@@ -38,7 +38,6 @@ export class AchElement extends UIElement<AchConfiguration> {
 
         return {
             paymentMethod,
-            ...(this.state.billingAddress && { billingAddress: this.state.billingAddress }),
             ...(this.state.storePaymentMethod && { storePaymentMethod: this.state.storePaymentMethod })
         };
     }
