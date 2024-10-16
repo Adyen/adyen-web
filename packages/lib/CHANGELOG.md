@@ -1,5 +1,13 @@
 # @adyen/adyen-web
 
+## 6.3.1
+
+### Patch Changes
+
+-   Small optimisation to only call document.querySelector once, rather than three times ([#2895](https://github.com/Adyen/adyen-web/pull/2895))
+
+-   Added optional chaining operator to postMessage handler function. Fixes issue where 'get-process-message.handler.js' caused exceptions due to stray postMessages without properly formed events ([#2894](https://github.com/Adyen/adyen-web/pull/2894))
+
 ## 6.3.0
 
 ### Minor Changes
