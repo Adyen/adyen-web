@@ -18,4 +18,8 @@
     .adyen-checkout__fieldset--address {
         margin-top: 16px;
     }
+
+    .adyen-checkout__radio_group__input-wrapper:not(:last-child) {
+        margin-bottom: 12px;
+    }
 }
