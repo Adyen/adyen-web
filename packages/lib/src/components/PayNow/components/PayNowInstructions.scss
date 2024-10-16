@@ -9,13 +9,5 @@
 }
 
 .adyen-checkout-paynow__instructions > p {
-  margin-top: 24px;
   margin-bottom: 0;
-}
-
-
-@media (min-width: 768px) {
-  .adyen-checkout-paynow__instructions {
-    display: none;
-  }
 }

@@ -8,7 +8,8 @@
     align-items: center;
     color: token(color-label-primary);
     white-space: nowrap;
-    font-size: 13px;
+    text-transform: capitalize;
+    font-size: token(text-body-font-size);
     line-height: token(text-caption-line-height);
 
     &::after,

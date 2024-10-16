@@ -240,10 +240,10 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                     &nbsp;{timeToPayString[1]}
                 </div>
 
-                {typeof this.props.instructions === 'string' ? (
-                    <div className="adyen-checkout__qr-loader__instructions">{i18n.get(this.props.instructions)}</div>
-                ) : (
-                    this.props.instructions?.()
+                {this.props.instructions && (
+                    <div className="adyen-checkout__qr-loader__instructions">
+                        {typeof this.props.instructions === 'string' ? i18n.get(this.props.instructions) : this.props.instructions?.()}
+                    </div>
                 )}
 
                 {this.props.copyBtn && (

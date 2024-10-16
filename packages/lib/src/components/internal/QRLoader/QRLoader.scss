@@ -3,6 +3,7 @@
 .adyen-checkout__qr-loader {
     background: token(color-background-primary);
     padding: token(spacer-110);
+    padding-bottom: token(spacer-090);
     border: token(border-width-s) solid token(color-outline-secondary);
     border-radius: token(border-radius-m);
     display: flex;
@@ -75,7 +76,7 @@
 }
 
 .adyen-checkout__qr-loader__countdown {
-    font-size: token(text-body-font-size);
+    font-size: token(text-caption-font-size);
     text-align: center;
 }
 
@@ -93,10 +94,11 @@
 }
 
 .adyen-checkout__qr-loader__instructions {
+    max-width: 300px;
     color: token(color-label-tertiary);
     font-size: token(text-subtitle-font-size);
     line-height: 1.5;
-    margin-top: token(spacer-100);
+    margin-top: token(spacer-040);
 }
 
 .adyen-checkout__qr-loader__actions {

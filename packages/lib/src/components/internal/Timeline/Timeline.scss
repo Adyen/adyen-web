@@ -1,56 +1,73 @@
 @import 'styles/variable-generator';
 
 .adyen-checkout-timeline {
-  text-align: left;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  vertical-align: baseline;
+  scrollbar-color: #c0c5cc transparent;
 }
 
-.adyen-checkout-timeline__item-description {
-  margin: 0;
-  padding: 0;
-  border: 0;
+.adyen-checkout-timeline__items {
+  all: unset;
 }
 
-.adyen-checkout-timeline__item {
+.adyen-checkout-timeline-item {
+  scrollbar-color: var(--b-color-background-quaternary) transparent;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  list-style-type: none;
+  max-width: 500px;
+
   &:last-child {
-    .adyen-checkout-timeline__item-content {
-      &::before {
-        display: none;
-      }
+    .adyen-checkout-timeline-item__separator {
+      display: none;
+    }
+
+    .adyen-checkout-timeline-item__content {
+      padding-bottom: 0;
     }
   }
 }
 
-.adyen-checkout-timeline__item-content {
+.adyen-checkout-timeline-item__row {
+  display: flex;
+  gap: token(spacer-070);
+}
+
+.adyen-checkout-timeline-item__marker {
+  display: flex;
+  flex-flow: column;
+  width: 100%;
+  max-width: token(spacer-070);
+  margin-top: token(spacer-010);
+}
+
+.adyen-checkout-timeline-item__separator {
+  flex-grow: 1;
   position: relative;
-  padding-left: token(spacer-090);
-  padding-bottom: token(spacer-090);
-  font-size: token(text-body-font-size);
 
   &::before {
+    background-color: #c9cdd3;
     content: "";
-    position: absolute;
-    right: 100%;
-    top: 0;
     height: 100%;
-    width: 1px;
-    background-color: token(color-separator-primary);
-  }
-
-  &::after {
-    content: "";
+    left: 50%;
     position: absolute;
-    left: -9px;
-    top: 0;
-    width: 17px;
-    height: 17px;
-    z-index: 1;
-    background-color: token(color-background-primary);
-    border: 1px solid token(color-separator-primary);
-    border-radius: 50%;
+    transform: translate(-50%);
+    width: 1px;
   }
+}
+
+.adyen-checkout-timeline-item__content {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  padding-bottom: token(spacer-060);
+}
+
+.adyen-checkout-timeline-item__title {
+  font-size: token(text-caption-font-size);
+  font-weight: token(text-body-font-weight);
+  line-height: token(text-body-line-height);
+  letter-spacing: 0;
+  text-align: left;
+  color: token(color-label-primary);
+  margin-bottom: token(spacer-010);
 }

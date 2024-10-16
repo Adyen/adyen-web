@@ -7,18 +7,3 @@
   color: token(color-label-primary);
   text-align: center;
 }
-
-.adyen-checkout-paynow__introduction--desktop {
-  display: none;
-}
-
-@media (min-width: 768px) {
-  .adyen-checkout-paynow__introduction--desktop {
-    display: block;
-  }
-
-  .adyen-checkout-paynow__introduction--mobile {
-    display: none;
-  }
-}
-
