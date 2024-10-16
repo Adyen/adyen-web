@@ -147,8 +147,8 @@ function AchInput(props: ACHInputProps) {
                                         name={'bankAccountType'}
                                         value={data.bankAccountType}
                                         items={[
-                                            { id: 'checking', name: i18n.get('ach.checking') },
-                                            { id: 'savings', name: i18n.get('ach.savings') }
+                                            { id: 'checking', name: 'ach.checking' },
+                                            { id: 'savings', name: 'ach.savings' }
                                         ]}
                                         onChange={handleBankAccountType}
                                         required={true}
