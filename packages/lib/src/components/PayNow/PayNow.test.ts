@@ -30,6 +30,14 @@ describe('PayNow', () => {
     });
 
     test('should render mobile instructions', async () => {
+        // Mocks matchMedia to return 'matches: true' when checking (max-width: 1024px)
+        Object.defineProperty(window, 'matchMedia', {
+            writable: true,
+            value: jest.fn().mockImplementation(() => ({
+                matches: true
+            }))
+        });
+
         jest.useFakeTimers();
 
         const srPanel = mock<SRPanel>();
@@ -59,11 +67,14 @@ describe('PayNow', () => {
         jest.runAllTimers();
 
         await screen.findAllByText(/Scan the QR code using the PayNow app to complete the payment/);
-        const div = within(screen.queryByTestId('paynow-mobile-instructions'));
+
+        const div = within(screen.queryByTestId('paynow-introduction'));
         div.getByText(/Take a screenshot of the QR code./);
         div.getByText(/Open the PayNow bank or payment app./);
         div.getByText(/Select the option to scan a QR code./);
         div.getByText(/Choose the option to upload a QR and select the screenshot./);
         div.getByText(/Complete the transaction./);
+
+        jest.resetAllMocks();
     });
 });
