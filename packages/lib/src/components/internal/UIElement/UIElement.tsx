@@ -373,7 +373,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     };
 
     /**
-     * Handles a session /payments or /payments/details response.
+     * Handles a /payments or /payments/details response.
      * The component will handle automatically actions, orders, and final results.
      *
      * @param rawResponse -
