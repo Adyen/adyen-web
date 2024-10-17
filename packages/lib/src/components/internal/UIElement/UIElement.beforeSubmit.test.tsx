@@ -1,42 +1,48 @@
 import { h } from 'preact';
-import CardElement from '../../Card';
+import UIElement from './UIElement';
 
-const elementRef = {
-    state: {
-        status: null
-    },
-    setStatus: status => {
-        elementRef.state.status = status;
+class MyElement extends UIElement {
+    public static type = 'myComp';
+
+    // @ts-ignore it's a test
+    public elementRef = {
+        state: {
+            status: null
+        },
+        setStatus: status => {
+            this.elementRef.state.status = status;
+        }
+    };
+
+    get isValid() {
+        return !!this.state.isValid;
     }
-};
+
+    render() {
+        return '';
+    }
+}
 
 let onPaymentCompleted;
 let onPaymentFailed;
 
 beforeEach(() => {
-    onPaymentCompleted = jest.fn(res => {
-        console.log('### UIElement.test:::: onPaymentCompleted callback called res=', res);
-    });
-    onPaymentFailed = jest.fn(res => {
-        console.log('### UIElement.test:::: onPaymentFailed callback called res=', res);
-    });
+    onPaymentCompleted = jest.fn();
+    onPaymentFailed = jest.fn();
 });
 
 describe('Testing beforeSubmit', () => {
-    test('Because beforeSubmit resolves...', done => {
+    test('Because beforeSubmit resolves onPaymentCompleted is called', done => {
         const beforeSubmit = jest.fn((data, component, actions) => {
-            console.log('### UIElement.test:::: beforeSubmit callback called');
-
             actions.resolve(data);
         });
 
-        const cardElement = new CardElement(global.core, {
+        const myElement = new MyElement(global.core, {
             amount: { value: 0, currency: 'USD' },
             // @ts-ignore it's just a test
             session: { configuration: {} },
             beforeSubmit,
-            onPaymentCompleted,
-            elementRef
+            onPaymentCompleted
         });
 
         const paymentResponse = {
@@ -46,66 +52,54 @@ describe('Testing beforeSubmit', () => {
         };
 
         // @ts-ignore it's a test
-        cardElement.submitUsingSessionsFlow = () => {
-            console.log('### UIElement.beforeSubmit.test::submitUsingSessionsFlow:: MOCK');
+        myElement.submitUsingSessionsFlow = () => {
             return Promise.resolve(paymentResponse);
         };
 
-        cardElement.setState({ isValid: true });
+        myElement.setState({ isValid: true });
 
-        cardElement.submit();
-
-        console.log('### Card.test:::: cardElement.elementRef.state', cardElement.elementRef.state);
+        myElement.submit();
 
         // initially submit should lead to UIElement.makePaymentsCall() which sets status to 'loading'
-        expect(cardElement.elementRef.state.status).toEqual('loading');
+        expect(myElement.elementRef.state.status).toEqual('loading');
 
         setTimeout(() => {
             expect(beforeSubmit).toHaveBeenCalled();
 
-            console.log('### Card.test::2222:: cardElement.elementRef.state', cardElement.elementRef.state);
-
             // state.status doesn't get reset
-            expect(cardElement.elementRef.state.status).toEqual('loading');
+            expect(myElement.elementRef.state.status).toEqual('loading');
 
-            expect(onPaymentCompleted).toHaveBeenCalledWith(paymentResponse, elementRef);
+            expect(onPaymentCompleted).toHaveBeenCalledWith(paymentResponse, myElement.elementRef);
 
             done();
         }, 0);
     });
 
-    test('Because beforeSubmit rejects the status gets set back to "ready"', done => {
+    test('Because beforeSubmit rejects the status gets set back to "ready" but onPaymentFailed does not get called', done => {
         const beforeSubmit = jest.fn((data, component, actions) => {
-            console.log('### Card.test:::: beforeSubmit callback called');
-
             actions.reject();
         });
 
-        const cardElement = new CardElement(global.core, {
+        const myElement = new MyElement(global.core, {
             amount: { value: 0, currency: 'USD' },
             // @ts-ignore it's just a test
             session: { configuration: {} },
             beforeSubmit,
             onPaymentCompleted,
-            onPaymentFailed,
-            elementRef
+            onPaymentFailed
         });
 
-        cardElement.setState({ isValid: true });
+        myElement.setState({ isValid: true });
 
-        cardElement.submit();
-
-        console.log('### Card.test:::: cardElement.elementRef.state', cardElement.elementRef.state);
+        myElement.submit();
 
         // initially submit should lead to UIElement.makePaymentsCall() which sets status to 'loading'
-        expect(cardElement.elementRef.state.status).toEqual('loading');
+        expect(myElement.elementRef.state.status).toEqual('loading');
 
         setTimeout(() => {
             expect(beforeSubmit).toHaveBeenCalled();
 
-            console.log('### Card.test:::: cardElement.elementRef.state', cardElement.elementRef.state);
-
-            expect(cardElement.elementRef.state.status).toEqual('ready');
+            expect(myElement.elementRef.state.status).toEqual('ready');
 
             expect(onPaymentCompleted).not.toHaveBeenCalled();
             expect(onPaymentFailed).not.toHaveBeenCalled();
