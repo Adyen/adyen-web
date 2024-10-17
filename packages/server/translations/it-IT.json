@@ -314,5 +314,11 @@
     "payme.instructions.footnote": "Rimani su questa pagina fino a quando il pagamento sarà completato",
     "payByBankAISDD.disclaimer.header": "Utilizza Pay by Bank per pagare istantaneamente da qualsiasi conto bancario.",
     "payByBankAISDD.disclaimer.body": "Collegando il tuo conto bancario, autorizzi l'addebito su di esso di qualsiasi importo dovuto per l'utilizzo dei nostri servizi e/o l'acquisto dei nostri prodotti, fino alla revoca di tale autorizzazione.",
-    "paymentMethodBrand.other": "altro"
+    "paymentMethodBrand.other": "altro",
+    "paynow.scanQrCode": "Per completare il pagamento, scansiona il codice QR utilizzando l'app PayNow",
+    "paynow.mobileViewInstruction.step1": "Fai uno screenshot del codice QR.",
+    "paynow.mobileViewInstruction.step2": "Apri PayNow o l'app di pagamento.",
+    "paynow.mobileViewInstruction.step3": "Seleziona l'opzione per scansionare un codice QR.",
+    "paynow.mobileViewInstruction.step4": "Scegli l'opzione per caricare un QR e seleziona lo screenshot.",
+    "paynow.mobileViewInstruction.step5": "Completa la transazione."
 }

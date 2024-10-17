@@ -1,0 +1,8 @@
+@import 'styles/variable-generator';
+
+.adyen-checkout-timeline-wrapper {
+  padding: 16px;
+  border-radius: 8px;
+  max-width: 300px;
+  background-color: token(color-background-secondary);
+}

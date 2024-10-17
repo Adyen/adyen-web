@@ -315,5 +315,11 @@
     "payme.instructions.footnote": "Não feche esta página antes de concluir o pagamento",
     "payByBankAISDD.disclaimer.header": "Use o Pay by Bank para pagar instantaneamente de qualquer conta bancária.",
     "payByBankAISDD.disclaimer.body": "Ao conectar sua conta bancária, você autoriza débitos dessa conta de qualquer valor devido pelo uso de nossos serviços e/ou compra de nossos produtos até que esta autorização seja revogada.",
-    "paymentMethodBrand.other": "outro"
+    "paymentMethodBrand.other": "outro",
+    "paynow.scanQrCode": "Use o aplicativo PayNow para escanear o código QR e concluir o pagamento",
+    "paynow.mobileViewInstruction.step1": "Faça uma captura de tela do código QR.",
+    "paynow.mobileViewInstruction.step2": "Abra o banco PayNow ou o aplicativo de pagamento.",
+    "paynow.mobileViewInstruction.step3": "Selecione a opção para escanear um código QR.",
+    "paynow.mobileViewInstruction.step4": "Escolha a opção para carregar um QR e selecione a captura de tela.",
+    "paynow.mobileViewInstruction.step5": "Conclua a transação."
 }

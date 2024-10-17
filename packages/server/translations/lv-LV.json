@@ -316,5 +316,11 @@
     "payme.instructions.footnote": "Lūdzu, neaizveriet šo lapu pirms maksājuma pabeigšanas",
     "payByBankAISDD.disclaimer.header": "Izmantojiet Pay by Bank pakalpojumu, lai nekavējoties norēķinātos no jebkura bankas konta.",
     "payByBankAISDD.disclaimer.body": "Pievienojot bankas kontu, jūs atļaujat debetēt no sava konta jebkuru summu, kas maksājama par mūsu pakalpojumu izmantošanu un/vai mūsu produktu iegādi, līdz brīdim, kad šī atļauja tiek atsaukta.",
-    "paymentMethodBrand.other": "cits"
+    "paymentMethodBrand.other": "cits",
+    "paynow.scanQrCode": "Skenējiet QR kodu, izmantojot lietotni PayNow, lai pabeigtu maksājumu",
+    "paynow.mobileViewInstruction.step1": "Uzņemiet QR koda ekrānuzņēmumu.",
+    "paynow.mobileViewInstruction.step2": "Atveriet PayNow banku vai maksājumu lietotni.",
+    "paynow.mobileViewInstruction.step3": "Atlasiet opciju skenēt QR kodu.",
+    "paynow.mobileViewInstruction.step4": "Izvēlieties opciju augšupielādēt QR kodu un veiciet ekrānuzņēmumu.",
+    "paynow.mobileViewInstruction.step5": "Pabeidziet darījumu."
 }
