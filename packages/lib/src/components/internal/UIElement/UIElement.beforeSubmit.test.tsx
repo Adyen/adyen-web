@@ -1,6 +1,15 @@
 import { h } from 'preact';
 import CardElement from '../../Card';
 
+const elementRef = {
+    state: {
+        status: null
+    },
+    setStatus: status => {
+        elementRef.state.status = status;
+    }
+};
+
 let onPaymentCompleted;
 let onPaymentFailed;
 
@@ -21,16 +30,6 @@ describe('Testing beforeSubmit', () => {
             actions.resolve(data);
         });
 
-        const elementRef = {
-            state: {
-                status: null
-            },
-            setStatus: status => {
-                elementRef.state.status = status;
-            }
-        };
-
-        // Session flow - session configuration should override merchant configuration
         const cardElement = new CardElement(global.core, {
             amount: { value: 0, currency: 'USD' },
             // @ts-ignore it's just a test
@@ -46,7 +45,7 @@ describe('Testing beforeSubmit', () => {
             sessionResult: 'X3XtfGC9...'
         };
 
-        // @ts-ignore
+        // @ts-ignore it's a test
         cardElement.submitUsingSessionsFlow = () => {
             console.log('### UIElement.beforeSubmit.test::submitUsingSessionsFlow:: MOCK');
             return Promise.resolve(paymentResponse);
@@ -82,16 +81,6 @@ describe('Testing beforeSubmit', () => {
             actions.reject();
         });
 
-        const elementRef = {
-            state: {
-                status: null
-            },
-            setStatus: status => {
-                elementRef.state.status = status;
-            }
-        };
-
-        // Session flow - session configuration should override merchant configuration
         const cardElement = new CardElement(global.core, {
             amount: { value: 0, currency: 'USD' },
             // @ts-ignore it's just a test
