@@ -68,7 +68,7 @@ export class MBWayElement extends UIElement<AwaitConfiguration> {
                             countdownTime={config.COUNTDOWN_MINUTES}
                             throttleTime={config.THROTTLE_TIME}
                             throttleInterval={config.THROTTLE_INTERVAL}
-                            onActionHandled={this.props.onActionHandled}
+                            onActionHandled={this.onActionHandled}
                         />
                     </SRPanelProvider>
                 </CoreProvider>

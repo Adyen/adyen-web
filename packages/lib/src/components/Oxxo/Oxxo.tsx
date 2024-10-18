@@ -32,7 +32,7 @@ export class OxxoElement extends UIElement<VoucherConfiguration> {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 {this.props.reference ? (
-                    <OxxoVoucherResult ref={this.handleRef} {...this.props} />
+                    <OxxoVoucherResult ref={this.handleRef} {...this.props} onActionHandled={this.onActionHandled} />
                 ) : (
                     this.props.showPayButton &&
                     this.payButton({

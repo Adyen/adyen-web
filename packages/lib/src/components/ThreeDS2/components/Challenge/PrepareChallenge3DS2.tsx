@@ -9,7 +9,6 @@ import './challenge.scss';
 import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
 import useImage from '../../../../core/Context/useImage';
 import AdyenCheckoutError, { ERROR } from '../../../../core/Errors/AdyenCheckoutError';
-import { ActionHandledReturnObject } from '../../../../types/global-types';
 import { SendAnalyticsObject } from '../../../../core/Analytics/types';
 import {
     THREEDS2_CHALLENGE,
@@ -27,7 +26,6 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
     public static defaultProps = {
         onComplete: () => {},
         onError: () => {},
-        onActionHandled: () => {},
         isMDFlow: false
     };
 
@@ -51,16 +49,6 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             console.debug(`${THREEDS2_CHALLENGE_ERROR}: ${MISSING_TOKEN_IN_ACTION_MSG}`);
         }
     }
-
-    public onActionHandled = (rtnObj: ActionHandledReturnObject) => {
-        this.props.onSubmitAnalytics({
-            type: THREEDS2_FULL,
-            message: rtnObj.actionDescription,
-            subtype: Analytics3DS2Events.CHALLENGE_IFRAME_LOADED
-        });
-
-        this.props.onActionHandled(rtnObj);
-    };
 
     public onFormSubmit = (msg: string) => {
         this.props.onSubmitAnalytics({
@@ -356,7 +344,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                         }
                     }}
                     {...challengeData}
-                    onActionHandled={this.onActionHandled}
+                    onActionHandled={this.props.onActionHandled}
                     onFormSubmit={this.onFormSubmit}
                 />
             );

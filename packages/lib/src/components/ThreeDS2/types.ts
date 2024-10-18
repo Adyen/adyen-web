@@ -12,7 +12,7 @@ interface ThreeDS2Configuration extends UIElementProps {
     loadingContext?: string;
     modules?: { analytics: AnalyticsModule };
     notificationURL?: string;
-    onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
+    onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
     onError?: (error: AdyenCheckoutError, element?: UIElement) => void;
     paymentData?: string;
     token?: string;
