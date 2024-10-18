@@ -1,7 +1,7 @@
 @import 'styles/variable-generator';
 
 .adyen-checkout-timeline {
-  scrollbar-color: #c0c5cc transparent;
+  scrollbar-color: token(color-background-quaternary) transparent;
 }
 
 .adyen-checkout-timeline__items {
@@ -9,7 +9,7 @@
 }
 
 .adyen-checkout-timeline-item {
-  scrollbar-color: var(--b-color-background-quaternary) transparent;
+  scrollbar-color: var(color-background-quaternary) transparent;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   list-style-type: none;
@@ -44,7 +44,7 @@
   position: relative;
 
   &::before {
-    background-color: #c9cdd3;
+    background-color: token(color-separator-secondary);
     content: "";
     height: 100%;
     left: 50%;

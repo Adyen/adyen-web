@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/preact';
-import Timeline from '../../../src/components/internal/Timeline';
+import { Timeline } from '../../../src/components/internal/Timeline';
 
 const meta: Meta = {
     title: 'Internals/Timeline',
