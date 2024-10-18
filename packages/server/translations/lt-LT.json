@@ -316,5 +316,11 @@
     "payme.instructions.footnote": "Prašome neuždaryti šio puslapio prieš atlikdami mokėjimą",
     "payByBankAISDD.disclaimer.header": "Naudokitės „Pay by Bank“ ir akimirksniu atsiskaitykite iš bet kurios banko sąskaitos.",
     "payByBankAISDD.disclaimer.body": "Prijungdami savo banko sąskaitą sutinkate, kad iš jos būtų nurašomos visos mokėtinos sumos už naudojimąsi mūsų paslaugomis ir (arba) už mūsų produktų pirkimą, kol šis leidimas bus atšauktas.",
-    "paymentMethodBrand.other": "kitas"
+    "paymentMethodBrand.other": "kitas",
+    "paynow.scanQrCode": "Nuskaitykite QR kodą naudodami „PayNow“ programėlę, kad užbaigtumėte mokėjimą",
+    "paynow.mobileViewInstruction.step1": "Padarykite QR kodo ekrano kopiją.",
+    "paynow.mobileViewInstruction.step2": "Atidarykite „PayNow“ banko arba mokėjimo programėlę.",
+    "paynow.mobileViewInstruction.step3": "Pasirinkite QR kodo nuskaitymo parinktį.",
+    "paynow.mobileViewInstruction.step4": "Pasirinkite parinktį įkelti QR kodą ir pasirinkite ekrano nuotrauką.",
+    "paynow.mobileViewInstruction.step5": "Užbaikite operaciją."
 }

@@ -311,5 +311,11 @@
     "payme.instructions.footnote": "Älä sulje tätä sivua ennen kuin maksu on suoritettu",
     "payByBankAISDD.disclaimer.header": "Pankkimaksutoiminnolla voit maksaa heti miltä tahansa pankkitililtä.",
     "payByBankAISDD.disclaimer.body": "Kun yhdistät pankkitilisi, annat luvan veloittaa tililtäsi kaikki palveluidemme käytöstä ja/tai tuotteidemme ostamisesta aiheutuvat kulut. Tämä valtuutus on voimassa siihen saakka, kunnes peruutat sen.",
-    "paymentMethodBrand.other": "muu"
+    "paymentMethodBrand.other": "muu",
+    "paynow.scanQrCode": "Suorita maksu skannaamalla QR-koodi PayNow-sovelluksella",
+    "paynow.mobileViewInstruction.step1": "Ota näyttökuva QR-koodista.",
+    "paynow.mobileViewInstruction.step2": "Avaa PayNow-pankkisovellus tai -maksusovellus.",
+    "paynow.mobileViewInstruction.step3": "Valitse QR-koodin skannaustoiminto.",
+    "paynow.mobileViewInstruction.step4": "Valitse QR-koodin lataustoiminto ja valitse ottamasi näyttökuva.",
+    "paynow.mobileViewInstruction.step5": "Suorita maksutapahtuma loppuun."
 }

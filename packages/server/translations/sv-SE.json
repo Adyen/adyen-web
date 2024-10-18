@@ -312,5 +312,11 @@
     "payme.instructions.footnote": "Stäng inte denna sida innan betalningen är slutförd",
     "payByBankAISDD.disclaimer.header": "Använd Pay by Bank och betala direkt från vilket bankkonto som helst.",
     "payByBankAISDD.disclaimer.body": "Genom att ansluta ditt bankkonto godkänner du att ditt konto debiteras eventuella belopp som du är skyldig för användning av våra tjänster och/eller köp av våra produkter, tills detta godkännande återkallas.",
-    "paymentMethodBrand.other": "andra"
+    "paymentMethodBrand.other": "andra",
+    "paynow.scanQrCode": "Skanna QR-koden med PayNow-appen för att slutföra betalningen",
+    "paynow.mobileViewInstruction.step1": "Ta en skärmdump av QR-koden.",
+    "paynow.mobileViewInstruction.step2": "Öppna PayNow-banken eller betalningsappen.",
+    "paynow.mobileViewInstruction.step3": "Välj alternativet för att skanna en QR-kod.",
+    "paynow.mobileViewInstruction.step4": "Välj alternativet att ladda upp en QR och välj skärmdumpen.",
+    "paynow.mobileViewInstruction.step5": "Slutför transaktionen."
 }

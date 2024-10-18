@@ -16,10 +16,11 @@ export interface QRLoaderConfiguration extends UIElementProps {
     brandLogo?: string;
     buttonLabel?: string;
     qrCodeImage?: string;
+    qrCodeData?: string;
     paymentData?: string;
-    introduction?: string;
     redirectIntroduction?: string;
     timeToPay?: string;
-    instructions?: string | (() => h.JSX.Element);
     copyBtn?: boolean;
+    introduction?: string | (() => h.JSX.Element);
+    instructions?: string | (() => h.JSX.Element);
 }

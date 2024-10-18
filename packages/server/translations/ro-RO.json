@@ -314,5 +314,11 @@
     "payme.instructions.footnote": "Nu închideți această pagină înainte de finalizarea plății.",
     "payByBankAISDD.disclaimer.header": "Utilizați Plată prin bancă pentru a plăti instantaneu din orice cont bancar.",
     "payByBankAISDD.disclaimer.body": "Prin conectarea contului dvs. bancar, autorizați debitarea din contul dvs. a oricărei sume datorate cu privire la utilizarea serviciilor noastre și/sau achiziționarea produselor noastre, până la revocarea acestei autorizații.",
-    "paymentMethodBrand.other": "Altele"
+    "paymentMethodBrand.other": "Altele",
+    "paynow.scanQrCode": "Scanați codul QR utilizând aplicația PayNow pentru a finaliza plata",
+    "paynow.mobileViewInstruction.step1": "Faceți o captură de ecran a codului QR.",
+    "paynow.mobileViewInstruction.step2": "Deschideți aplicația bancară sau de plată PayNow.",
+    "paynow.mobileViewInstruction.step3": "Selectați opțiunea pentru a scana un cod QR.",
+    "paynow.mobileViewInstruction.step4": "Alegeți opțiunea de a încărca un QR și selectați captura de ecran.",
+    "paynow.mobileViewInstruction.step5": "Finalizați tranzacția."
 }

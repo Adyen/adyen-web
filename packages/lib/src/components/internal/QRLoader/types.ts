@@ -23,9 +23,9 @@ export interface QRLoaderProps {
     brandLogo?: string;
     brandName?: string;
     buttonLabel?: string;
-    introduction?: string;
     redirectIntroduction?: string;
     timeToPay?: string;
+    introduction?: string | (() => h.JSX.Element);
     instructions?: string | (() => h.JSX.Element);
     copyBtn?: boolean;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
