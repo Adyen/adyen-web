@@ -23,6 +23,7 @@ import type {
 } from '../../../types/global-types';
 import type { IDropin } from '../../Dropin/types';
 import type { NewableComponent } from '../../../core/core.registry';
+import CancelError from '../../../core/Errors/CancelError';
 
 import './UIElement.scss';
 
@@ -175,7 +176,17 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             return;
         }
 
-        this.makePaymentsCall().then(sanitizeResponse).then(verifyPaymentDidNotFail).then(this.handleResponse).catch(this.handleFailedResult);
+        this.makePaymentsCall()
+            .then(sanitizeResponse)
+            .then(verifyPaymentDidNotFail)
+            .then(this.handleResponse)
+            .catch((e: PaymentResponseData | Error) => {
+                if (e instanceof CancelError) {
+                    this.setElementStatus('ready');
+                    return;
+                }
+                this.handleFailedResult(e as PaymentResponseData);
+            });
     }
 
     protected makePaymentsCall(): Promise<CheckoutAdvancedFlowResponse | CheckoutSessionPaymentResponse> {
@@ -190,7 +201,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
                 ? new Promise((resolve, reject) =>
                       this.props.beforeSubmit(this.data, this.elementRef, {
                           resolve,
-                          reject
+                          reject: () => reject(new CancelError('beforeSubmitRejected'))
                       })
                   )
                 : Promise.resolve(this.data);
@@ -362,7 +373,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     };
 
     /**
-     * Handles a session /payments or /payments/details response.
+     * Handles a /payments or /payments/details response.
      * The component will handle automatically actions, orders, and final results.
      *
      * @param rawResponse -
