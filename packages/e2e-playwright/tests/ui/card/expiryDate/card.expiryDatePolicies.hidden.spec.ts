@@ -1,4 +1,4 @@
-import { test, expect } from '../../../../pages/cards/card.fixture';
+import { test, expect } from '../../../../fixtures/cards/card.fixture';
 import LANG from '../../../../../server/translations/en-US.json';
 import {
     ENCRYPTED_CARD_NUMBER,

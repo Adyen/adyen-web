@@ -1,4 +1,4 @@
-import { test, expect } from '../../../pages/issuerList/issuer-list.fixture';
+import { test, expect } from '../../../fixtures/issuerList/issuer-list.fixture';
 
 test.describe('Issuer List', () => {
     test('should select highlighted issuer, update pay button label, and see the expected data in state', async ({ issuerListPage }) => {

@@ -1,7 +1,8 @@
 import type { Page, Locator } from '@playwright/test';
 import { USER_TYPE_DELAY } from '../tests/utils/constants';
 import LANG from '../../server/translations/en-US.json';
-import { URL_MAP } from '../pages/cards/URL_MAP';
+import { Base } from './base';
+import { URL_MAP } from '../fixtures/URL_MAP';
 
 const CARD_IFRAME_TITLE = LANG['creditCard.encryptedCardNumber.aria.iframeTitle'];
 const EXPIRY_DATE_IFRAME_TITLE = LANG['creditCard.encryptedExpiryDate.aria.iframeTitle'];
@@ -14,7 +15,7 @@ const CVC_IFRAME_LABEL = LANG['creditCard.securityCode.label'];
 const INSTALLMENTS_PAYMENTS = LANG['installments.installments'];
 const REVOLVING_PAYMENT = LANG['installments.revolving'];
 
-class Card {
+class Card extends Base {
     readonly rootElement: Locator;
     readonly rootElementSelector: string;
 
@@ -47,6 +48,7 @@ class Card {
         public readonly page: Page,
         rootElementSelector = '.adyen-checkout__card-input'
     ) {
+        super(page);
         this.rootElement = this.page.locator(rootElementSelector);
         this.rootElementSelector = rootElementSelector;
 
@@ -117,7 +119,7 @@ class Card {
     }
 
     async typeCardNumber(cardNumber: string) {
-        await this.cardNumberInput.fill(cardNumber, { timeout: USER_TYPE_DELAY });
+        await this.cardNumberInput.type(cardNumber, { delay: USER_TYPE_DELAY });
     }
 
     async deleteCardNumber() {
@@ -133,19 +135,15 @@ class Card {
     }
 
     async typeExpiryDate(expiryDate: string) {
-        await this.expiryDateInput.fill(expiryDate, { timeout: USER_TYPE_DELAY });
+        await this.expiryDateInput.type(expiryDate, { delay: USER_TYPE_DELAY });
     }
 
     async typeCvc(cvc: string) {
-        await this.cvcInput.fill(cvc, { timeout: USER_TYPE_DELAY });
+        await this.cvcInput.type(cvc, { delay: USER_TYPE_DELAY });
     }
 
     async selectListItem(who: string) {
         return this.selectorList.locator(`#listItem-${who}`);
-    }
-
-    async pay() {
-        await this.page.getByRole('button', { name: /Pay/i }).click();
     }
 }
 

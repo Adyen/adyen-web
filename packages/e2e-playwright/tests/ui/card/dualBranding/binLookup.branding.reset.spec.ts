@@ -1,5 +1,6 @@
 import { test } from '@playwright/test';
 
+// @ts-ignore
 const getPropFromPMData = prop => window.dropin.dropinRef.state.activePaymentMethod.formatData().paymentMethod[prop];
 
 test.describe('Testing Card component, in Dropin, resetting brand after failed binLookup', () => {
@@ -26,7 +27,7 @@ test.describe('Testing Card component, in Dropin, resetting brand after failed b
             'paste in a card unrecognised by binLookup, ' +
             'check that the brand has been reset on paymentMethod data and ' +
             'that the internal regex have recognised the unrecognised card as Visa',
-        async t => {
+        async () => {
             // Start, allow time to load
             // await cardUtils.fillCardNumber(t, REGULAR_TEST_CARD); // mc
             // await t.expect(getPropFromPMData('brand')).eql('mc');
@@ -41,7 +42,7 @@ test.describe('Testing Card component, in Dropin, resetting brand after failed b
             'check that a brand has been set on PM data, then' +
             'delete digits and , ' +
             'check that the brand has been reset on paymentMethod data ',
-        async t => {
+        async () => {
             // Start, allow time to load
             // card.fillCardNumber(t, REGULAR_TEST_CARD); // mc
             // Expect mc brand property in the PM data: expect(getPropFromPMData('brand')).eql('mc')
@@ -58,7 +59,7 @@ test.describe('Testing Card component, in Dropin, resetting brand after failed b
         '#3 Fill in dual branded card then ' +
             'check no sorting has occurred to place bcmc first, then' +
             'ensure only generic card logo shows after deleting digits',
-        async t => {
+        async () => {
             // Start, allow time to load
             // cardUtils.fillCardNumber(t, BCMC_CARD); // dual branded with maestro
             // Expect Maestro first, Bcmc second
@@ -77,7 +78,7 @@ test.describe('Testing Card component, in Dropin, resetting brand after failed b
             'ensure only generic card logo shows after deleting digits and ' +
             'that the brand has been reset on paymentMethod data ' +
             ' and the cvc field is visble again',
-        async t => {
+        async () => {
             // Start, allow time to load
             // cardUtils.fillCardNumber(t, BCMC_CARD); // dual branded with maestro
             //expect(dualBrandingIconHolderActive.exists)
@@ -97,7 +98,7 @@ test.describe('Testing Card component, in Dropin, resetting brand after failed b
         '#5 Fill in dual branded card then ' +
             'paste in number not recognised by binLookup (but that internally is recognised as Visa) ' +
             'ensure that Visa logo shows',
-        async t => {
+        async () => {
             // Start, allow time to load
             // cardUtils.fillCardNumber(t, BCMC_CARD); // dual branded with maestro
             // Expect the logo, with the correct order
@@ -114,7 +115,7 @@ test.describe('Testing Card component, in Dropin, resetting brand after failed b
             'select maestro then ' +
             'paste in number not recognised by binLookup (but that internally is recognised as Visa)' +
             'ensure that visa logo shows',
-        async t => {
+        async () => {
             // Start, allow time to load
             // cardUtils.fillCardNumber(t, BCMC_CARD); // dual branded with maestro
             // Expect the logo, with the correct order

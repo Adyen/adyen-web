@@ -1,4 +1,4 @@
-import { test } from '../../../pages/cards/card.fixture';
+import { test } from '@playwright/test';
 
 test('#1 Error panel is present at start, when there are no errors, but is empty', async () => {
     // Wait for field to appear in DOM

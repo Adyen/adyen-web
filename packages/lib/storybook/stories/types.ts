@@ -1,10 +1,11 @@
 import { Meta, StoryObj } from '@storybook/preact';
 import UIElement from '../../src/components/internal/UIElement';
-import { PaymentMethodsResponse } from '../../src/types';
+import { CoreConfiguration, PaymentMethodsResponse } from '../../src/types';
 
-export type GlobalStoryProps = AdyenCheckoutProps & {
-    useSessions: boolean;
-};
+export type GlobalStoryProps = AdyenCheckoutProps &
+    CoreConfiguration & {
+        useSessions: boolean;
+    };
 
 export interface PaymentMethodStoryProps<T> extends GlobalStoryProps {
     componentConfiguration: T;

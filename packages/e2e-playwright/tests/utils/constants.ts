@@ -54,3 +54,5 @@ export const JWE_CONTENT_ALG = 'A256CBC-HS512';
 export const JWE_ALG = 'RSA-OAEP';
 
 export const SR_INDICATOR_PREFIX = '-sr';
+
+export const PAYMENT_RESULT = { authorised: 'Authorised', refused: 'Refused' };

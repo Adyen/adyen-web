@@ -9,7 +9,7 @@ const playgroundBaseUrl = 'https://localhost:3020'; // todo: refine this
  * See https://playwright.dev/docs/test-configuration.
  */
 const config: PlaywrightTestConfig = {
-    testDir: './tests/e2e/card/',
+    testDir: './tests/',
     /* Maximum time one test can run for. */
     timeout: 10 * 2000,
     expect: {
@@ -25,8 +25,8 @@ const config: PlaywrightTestConfig = {
     forbidOnly: !!process.env.CI,
     /* Retry on CI only */
     retries: process.env.CI ? 1 : 0,
-    /* Opt out of parallel tests on CI. */
-    workers: process.env.CI ? 1 : 1,
+    /* Opt out of parallel tests on CI. Use default locally */
+    workers: process.env.CI ? 1 : undefined,
 
     /* Reporter to use. See https://playwright.dev/docs/test-reporters */
     reporter: [['html', { open: 'never' }], ['list']],

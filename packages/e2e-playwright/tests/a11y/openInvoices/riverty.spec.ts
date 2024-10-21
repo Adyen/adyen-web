@@ -1,4 +1,4 @@
-import { test } from '../../../pages/openInvoices/openInvoices.fixture';
+import { test } from '../../../fixtures/openInvoices/openInvoices.fixture';
 import LANG from '../../../../server/translations/en-US.json';
 import { USER_TYPE_DELAY } from '../../utils/constants';
 

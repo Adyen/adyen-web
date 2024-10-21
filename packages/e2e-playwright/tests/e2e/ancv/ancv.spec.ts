@@ -1,4 +1,4 @@
-import { test, expect } from '../../../pages/ancv/ancv.fixture';
+import { test, expect } from '../../../fixtures/ancv/ancv.fixture';
 import { paymentDetailsMock } from '../../../mocks/paymentDetails/paymentDetails.mock';
 import { paymentDetailsPartiallyAuthorisedAncvMockData } from '../../../mocks/paymentDetails/paymentDetails.data';
 import { createOrderMock } from '../../../mocks/createOrder/createOrder.mock';

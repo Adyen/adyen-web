@@ -3,6 +3,7 @@ import { ComponentContainer } from '../ComponentContainer';
 import { IssuerListConfiguration } from '../../../src/components/helpers/IssuerListContainer/types';
 import OnlineBankingPL from '../../../src/components/OnlineBankingPL';
 import { Checkout } from '../Checkout';
+import { getComponentConfigFromUrl } from '../../utils/get-configuration-from-url';
 
 type OnlineBankingPLStory = StoryConfiguration<IssuerListConfiguration>;
 
@@ -17,7 +18,8 @@ export const Default: OnlineBankingPLStory = {
         </Checkout>
     ),
     args: {
-        countryCode: 'PL'
+        countryCode: 'PL',
+        componentConfiguration: getComponentConfigFromUrl() ?? {}
     }
 };
 

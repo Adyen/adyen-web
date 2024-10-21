@@ -1,4 +1,4 @@
-import { test } from '../../../pages/cards/card.fixture';
+import { test } from '@playwright/test';
 
 test('#1 Click pay with empty fields and error panel is populated', async () => {
     // error panel exists at startup (in its hidden state)

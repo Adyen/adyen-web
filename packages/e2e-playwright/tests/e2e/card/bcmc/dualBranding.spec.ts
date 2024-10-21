@@ -1,4 +1,4 @@
-import { test } from '../../../../pages/cards/card.fixture';
+import { test } from '@playwright/test';
 
 test.describe('Bcmc payments with dual branding', () => {
     test.describe('Selecting the Bancontact brand', () => {

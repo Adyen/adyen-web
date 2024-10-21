@@ -5,7 +5,7 @@ import CustomCard from '../../../../src/components/CustomCard/CustomCard';
 import { setUpUtils, createPayButton } from './customCard.utils';
 import './customCard.style.scss';
 
-export const CustomCardHelper = ({ contextArgs }) => {
+export const CustomCardSeparateExpiryDate = ({ contextArgs }) => {
     const container = useRef(null);
     const checkout = useRef(null);
     const [element, setElement] = useState(null);
@@ -15,7 +15,7 @@ export const CustomCardHelper = ({ contextArgs }) => {
         const { useSessions, showPayButton, countryCode, shopperLocale, amount } = contextArgs;
 
         checkout.current = useSessions
-            ? await createSessionsCheckout({ showPayButton, countryCode, shopperLocale, amount })
+            ? await createSessionsCheckout({ countryCode, shopperLocale, amount })
             : await createAdvancedFlowCheckout({
                   showPayButton,
                   countryCode,
@@ -29,10 +29,10 @@ export const CustomCardHelper = ({ contextArgs }) => {
 
         // Custom card specific
         globalThis.customCard = customCard; // customCard..config & customCard.utils access the component through Storybook's globalThis
-        globalThis.parent.window['customCard'] = customCard; // expose to top level window, so a user can access window.customCard
+        globalThis.parent.window['customCardSeparate'] = customCard; // expose to top level window, so a user can access window.customCard
 
         setUpUtils(contextArgs, container);
-        globalThis.payBtn = createPayButton('.secured-fields', customCard, 'customcard');
+        globalThis.payBtn = createPayButton('.secured-fields-1', customCard, 'customcard');
     };
 
     useEffect(() => {
@@ -63,7 +63,7 @@ export const CustomCardHelper = ({ contextArgs }) => {
                     <div
                         ref={container}
                         id="component-root"
-                        className="component-wrapper secured-fields"
+                        className="component-wrapper secured-fields-1"
                         // @ts-ignore just hiding for better UX experience
                         style={'display:none;'}
                     >
@@ -79,7 +79,7 @@ export const CustomCardHelper = ({ contextArgs }) => {
                             <img className="pm-image-dual-1" width="40" alt="" />
                             <img className="pm-image-dual-2" width="40" alt="" />
                         </span>
-                        <div className="pm-form-label">
+                        <div className="pm-form-label pm-form-label-pan">
                             <span className="pm-form-label__text">Card number:</span>
                             <span className="pm-input-field" data-cse="encryptedCardNumber" data-uid="adyen-checkout-encryptedCardNumber-1"></span>
                             <span className="pm-form-label__error-text">Please enter a valid credit card number</span>

@@ -1,4 +1,4 @@
-import { test, expect } from '../../../../pages/customCard/customCard.fixture';
+import { test, expect } from '../../../../fixtures/customCard/customCard.fixture';
 import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_EXPIRY_DATE, ENCRYPTED_SECURITY_CODE, REGULAR_TEST_CARD } from '../../../utils/constants';
 import { binLookupMock } from '../../../../mocks/binLookup/binLookup.mock';
 import { hiddenDateAndCvcMock } from '../../../../mocks/binLookup/binLookup.data';
@@ -10,47 +10,39 @@ const DATE_EMPTY_ERROR = LANG['cc.dat.910'];
 const CVC_ERROR = LANG['cc.cvc.920'];
 
 test.describe('Test how Custom Card Component with regular date field handles hidden expiryDate policy', () => {
-    test('#1 how UI & state respond', async ({ customCardPage }) => {
-        const { card, page } = customCardPage;
-
+    test('#1 how UI & state respond', async ({ page, customCardPage }) => {
         await binLookupMock(page, hiddenDateAndCvcMock);
 
-        await card.isComponentVisible();
-
         // Fill number to provoke (mock) binLookup response
-        await card.typeCardNumber(REGULAR_TEST_CARD);
+        await customCardPage.typeCardNumber(REGULAR_TEST_CARD);
 
         // UI reflects that binLookup says expiryDate & cvc are hidden
-        await expect(card.expiryDateField).not.toBeVisible();
-        await expect(card.cvcField).not.toBeVisible();
+        await expect(customCardPage.expiryDateField).not.toBeVisible();
+        await expect(customCardPage.cvcField).not.toBeVisible();
 
         // Card seen as valid
         let cardValid = await page.evaluate('window.customCard.isValid');
         await expect(cardValid).toEqual(true);
 
         // Clear number and see UI & state reset
-        await card.deleteCardNumber();
-        await expect(card.expiryDateField).toBeVisible();
-        await expect(card.cvcField).toBeVisible();
+        await customCardPage.deleteCardNumber();
+        await expect(customCardPage.expiryDateField).toBeVisible();
+        await expect(customCardPage.cvcField).toBeVisible();
     });
 
-    test('#2 validating fields first and then entering PAN should see errors cleared from state', async ({ customCardPage }) => {
-        const { card, page } = customCardPage;
-
+    test('#2 validating fields first and then entering PAN should see errors cleared from state', async ({ page, customCardPage }) => {
         await binLookupMock(page, hiddenDateAndCvcMock);
-
-        await card.isComponentVisible();
 
         // Click pay
         await customCardPage.pay();
 
         // Expect errors in UI
-        await expect(card.cardNumberErrorElement).toBeVisible();
-        await expect(card.cardNumberErrorElement).toHaveText(PAN_ERROR);
-        await expect(card.expiryDateErrorElement).toBeVisible();
-        await expect(card.expiryDateErrorElement).toHaveText(DATE_EMPTY_ERROR);
-        await expect(card.cvcErrorElement).toBeVisible();
-        await expect(card.cvcErrorElement).toHaveText(CVC_ERROR);
+        await expect(customCardPage.cardNumberErrorElement).toBeVisible();
+        await expect(customCardPage.cardNumberErrorElement).toHaveText(PAN_ERROR);
+        await expect(customCardPage.expiryDateErrorElement).toBeVisible();
+        await expect(customCardPage.expiryDateErrorElement).toHaveText(DATE_EMPTY_ERROR);
+        await expect(customCardPage.cvcErrorElement).toBeVisible();
+        await expect(customCardPage.cvcErrorElement).toHaveText(CVC_ERROR);
 
         await page.waitForTimeout(500); // wait for UI to show errors
 
@@ -61,7 +53,7 @@ test.describe('Test how Custom Card Component with regular date field handles hi
         await expect(cardErrors[ENCRYPTED_SECURITY_CODE]).not.toBe(undefined);
 
         // Fill number to provoke (mock) binLookup response
-        await card.typeCardNumber(REGULAR_TEST_CARD);
+        await customCardPage.typeCardNumber(REGULAR_TEST_CARD);
 
         // Expect errors to be cleared - since the fields were in error because they were empty
         // but now the PAN field is filled and the other fields are hidden, so the fields have re-rendered and updated state
@@ -75,30 +67,26 @@ test.describe('Test how Custom Card Component with regular date field handles hi
         await expect(cardValid).toEqual(true);
     });
 
-    test('#3 date field in error does not stop card becoming valid', async ({ customCardPage }) => {
-        const { card, page } = customCardPage;
-
+    test('#3 date field in error does not stop card becoming valid', async ({ page, customCardPage }) => {
         await binLookupMock(page, hiddenDateAndCvcMock);
 
-        await card.isComponentVisible();
-
         // Card out of date
-        await card.typeExpiryDate('12/90');
+        await customCardPage.typeExpiryDate('12/90');
 
         // Expect error in UI
-        await expect(card.expiryDateField).toBeVisible();
-        await expect(card.expiryDateErrorElement).toBeVisible();
-        await expect(card.expiryDateErrorElement).toHaveText(DATE_INVALID_ERROR);
+        await expect(customCardPage.expiryDateField).toBeVisible();
+        await expect(customCardPage.expiryDateErrorElement).toBeVisible();
+        await expect(customCardPage.expiryDateErrorElement).toHaveText(DATE_INVALID_ERROR);
 
         // Force blur event to fire on date field
-        await card.cardNumberLabelElement.click();
+        await customCardPage.cardNumberLabelElement.click();
 
         // Fill number to provoke (mock) binLookup response
-        await card.typeCardNumber(REGULAR_TEST_CARD);
+        await customCardPage.typeCardNumber(REGULAR_TEST_CARD);
 
         // UI reflects that binLookup says expiryDate & cvc are hidden
-        await expect(card.expiryDateField).not.toBeVisible();
-        await expect(card.cvcField).not.toBeVisible();
+        await expect(customCardPage.expiryDateField).not.toBeVisible();
+        await expect(customCardPage.cvcField).not.toBeVisible();
 
         // Card seen as valid (despite date field technically being in error)
         let cardValid = await page.evaluate('window.customCard.isValid');
@@ -108,15 +96,15 @@ test.describe('Test how Custom Card Component with regular date field handles hi
         let cardErrors: any = await page.evaluate('window.customCard.state.errors');
         await expect(cardErrors[ENCRYPTED_EXPIRY_DATE]).not.toBe(undefined);
 
-        await card.deleteCardNumber();
+        await customCardPage.deleteCardNumber();
 
         // Errors in UI visible again
-        await expect(card.expiryDateField).toBeVisible();
-        await expect(card.expiryDateErrorElement).toBeVisible();
-        await expect(card.expiryDateErrorElement).toHaveText(DATE_INVALID_ERROR);
+        await expect(customCardPage.expiryDateField).toBeVisible();
+        await expect(customCardPage.expiryDateErrorElement).toBeVisible();
+        await expect(customCardPage.expiryDateErrorElement).toHaveText(DATE_INVALID_ERROR);
 
         // CVC visible again
-        await expect(card.cvcField).toBeVisible();
+        await expect(customCardPage.cvcField).toBeVisible();
 
         // Headless test seems to need time for UI change to register on state
         await page.waitForTimeout(500);

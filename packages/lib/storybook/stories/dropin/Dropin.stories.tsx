@@ -4,6 +4,7 @@ import { ComponentContainer } from '../ComponentContainer';
 import { DropinConfiguration } from '../../../src/components/Dropin/types';
 import './customization.scss';
 import { Checkout } from '../Checkout';
+import { getComponentConfigFromUrl } from '../../utils/get-configuration-from-url';
 
 type DropinStory = StoryConfiguration<DropinConfiguration>;
 
@@ -18,7 +19,7 @@ const meta: MetaConfiguration<DropinConfiguration> = {
         }
     },
     args: {
-        componentConfiguration: {
+        componentConfiguration: getComponentConfigFromUrl() ?? {
             showRadioButton: false,
             instantPaymentTypes: ['googlepay'],
             showRemovePaymentMethodButton: false,

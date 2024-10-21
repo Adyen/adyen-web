@@ -5,6 +5,7 @@ const dualBrandingIconHolder = '.card-field .adyen-checkout__card__dual-branding
 const dualBrandingIconHolderActive = '.card-field .adyen-checkout__card__dual-branding__buttons--active';
 const NOT_SELECTED_CLASS = 'adyen-checkout__card__cardNumber__brandIcon--not-selected';
 
+// @ts-ignore
 const getPropFromPMData = prop => window.card.formatData().paymentMethod[prop];
 
 test.describe('Testing dual branding', () => {
@@ -27,7 +28,7 @@ test.describe('Testing dual branding', () => {
 
     test(
         '#1 Fill in card number that will get dual branding result from binLookup, ' + 'then check that the expected icons/buttons are shown',
-        async t => {
+        async () => {
             // Start, allow time for iframes to load
             // Fill card field with dual branded card (visa/cb): cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD)
             // Expect the logo, with the correct order
@@ -42,7 +43,7 @@ test.describe('Testing dual branding', () => {
             'then complete card without selecting dual brand,' +
             'then check it is valid,' +
             'then check PM data does not have a brand property',
-        async t => {
+        async () => {
             // Start, allow time for iframes to load
             // Fill card field with dual branded card (visa/cb): cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD);
             // Fill date and cvc: cardUtils.fillDateAndCVC(t);
@@ -57,7 +58,7 @@ test.describe('Testing dual branding', () => {
             'then check it is valid,' +
             'then select the dual brands,' +
             'then check PM data does have a corresponding brand property',
-        async t => {
+        async () => {
             // Start, allow time for iframes to load
             // Fill card field with dual branded card (visa/cb): cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD);
             // Fill date and cvc cardUtils.fillDateAndCVC(t);
@@ -73,7 +74,7 @@ test.describe('Testing dual branding', () => {
         '#4 Fill in partial card number that will get dual branding result from binLookup, ' +
             'then check that the expected icons/buttons are shown but inactive,' +
             'then complete the number & check that the icons/buttons are active',
-        async t => {
+        async () => {
             // Start, allow time for iframes to load
             // const firstDigits = DUAL_BRANDED_CARD.substring(0, 11);
             // const lastDigits = DUAL_BRANDED_CARD.substring(11, 16);
@@ -90,7 +91,7 @@ test.describe('Testing dual branding', () => {
             'then check that the icons/buttons are active,' +
             'then delete the number,' +
             'then check that the icons/buttons have gone',
-        async t => {
+        async () => {
             // Start, allow time for iframes to load
             // Fill card field with dual branded card (visa/cb): cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD);
             // Expect dualBrandingIconHolder exists
@@ -106,7 +107,7 @@ test.describe('Testing dual branding', () => {
             'then select one of the dual brands,' +
             'then check the other brand icon is at reduced alpha,' +
             'then repeat with the other icon',
-        async t => {
+        async () => {
             // Start, allow time for iframes to load
             // Fill card field with dual branded card (visa/cb): cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD);
             // click first icon: click(dualBrandingIconHolderActive.find('img').nth(0))
@@ -123,7 +124,7 @@ test.describe('Testing dual branding', () => {
             'then enter a dual branded card number,' +
             'check both brand icons are at full alpha,' +
             'then click icons and make sure they go to the expected alpha',
-        async t => {
+        async () => {
             // Start, allow time for iframes to load
             // cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
             // Paste dual branded card (visa/cb) into card field: cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD, 'paste');
@@ -146,7 +147,7 @@ test.describe('Testing dual branding', () => {
             'complete card number,' +
             'check both brand icons are at full alpha,' +
             'then click icons and make sure they go to the expected alpha',
-        async t => {
+        async () => {
             // Start, allow time for iframes to load
             // cardUtils.fillCardNumber(t, REGULAR_TEST_CARD);
             // firstDigits = DUAL_BRANDED_CARD.substring(0, 11);
@@ -175,7 +176,7 @@ test.describe('Testing dual branding', () => {
             'then check it is valid,' +
             'then check PM data does not have a brand property,' +
             'and check there are no dual branding icons/buttons',
-        async t => {
+        async () => {
             // Start, allow time for iframes to load
             // Fill card field with dual branded card (visa/cb): cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD_EXCLUDED);
             // Fill in data and cvc: cardUtils.fillDateAndCVC(t);

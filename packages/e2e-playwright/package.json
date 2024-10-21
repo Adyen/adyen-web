@@ -16,5 +16,8 @@
     "dotenv": "16.4.4",
     "ts-loader": "9.4.4",
     "typescript": "5.2.2"
+  },
+  "dependencies": {
+    "@adyen/adyen-web": "6.3.0"
   }
 }

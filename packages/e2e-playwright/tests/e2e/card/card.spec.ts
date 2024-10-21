@@ -1,16 +1,13 @@
-import { test, expect } from '../../../pages/cards/card.fixture';
-import { REGULAR_TEST_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE } from '../../utils/constants';
+import { test, expect } from '../../../fixtures/cards/card.fixture';
+import { PAYMENT_RESULT, REGULAR_TEST_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE } from '../../utils/constants';
 
 test.describe('Card - Standard flow', () => {
     test('#1 Should fill in card fields and complete the payment', async ({ cardPage }) => {
-        const { card, page } = cardPage;
-
-        await card.typeCardNumber(REGULAR_TEST_CARD);
-        await card.typeCvc(TEST_CVC_VALUE);
-        await card.typeExpiryDate(TEST_DATE_VALUE);
-
+        await cardPage.typeCardNumber(REGULAR_TEST_CARD);
+        await cardPage.typeCvc(TEST_CVC_VALUE);
+        await cardPage.typeExpiryDate(TEST_DATE_VALUE);
         await cardPage.pay();
 
-        await expect(page.locator('#result-message')).toHaveText('Authorised');
+        expect(cardPage.paymentResult).toBe(PAYMENT_RESULT.authorised);
     });
 });

@@ -1,23 +1,21 @@
 import { test as base, expect } from '@playwright/test';
-import { AncvPage } from './ancv.page';
 import { sessionsMock } from '../../mocks/sessions/sessions.mock';
 import { sessionsMockData } from '../../mocks/sessions/sessions.data';
 import { setupMock } from '../../mocks/setup/setup.mock';
 import { setupMockData } from '../../mocks/setup/setup.data';
-import { Card } from '../../models/card';
+import { ANCV } from '../../models/ancv';
+import { URL_MAP } from '../URL_MAP';
 
 type Fixture = {
-    ancvPage: AncvPage;
-    card: Card;
+    ancvPage: ANCV;
 };
 
 const test = base.extend<Fixture>({
     ancvPage: async ({ page }, use) => {
-        const ancvPage = new AncvPage(page);
-
+        const ancvPage = new ANCV(page);
         await sessionsMock(page, sessionsMockData);
         await setupMock(page, setupMockData);
-        await ancvPage.goto();
+        await ancvPage.goto(URL_MAP.ancv);
         await use(ancvPage);
     }
 });

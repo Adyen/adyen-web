@@ -1,4 +1,4 @@
-import { test } from '../../../pages/cards/card.fixture';
+import { test } from '@playwright/test';
 
 test('BCMC logo should have correct alt text', async () => {
     // wait for card number field shown

@@ -1,4 +1,4 @@
-import { test, expect } from '../../../../pages/customCard/customCard.fixture';
+import { test, expect } from '../../../../fixtures/customCard/customCard.fixture';
 import {
     ENCRYPTED_CARD_NUMBER,
     ENCRYPTED_EXPIRY_MONTH,
@@ -22,68 +22,63 @@ const CVC_ERROR = LANG['cc.cvc.920'];
 const DATE_INVALID_ERROR = LANG['cc.dat.913'];
 
 test.describe('Test how Custom Card Component with separate date fields handles hidden expiryDate policy', () => {
-    test('#1 how UI & state respond', async ({ customCardPageSeparate }) => {
-        const { card, page } = customCardPageSeparate;
-
+    test('#1 how UI & state respond', async ({ page, customCardPageSeparate }) => {
         await binLookupMock(page, optionalDateAndCvcMock);
 
-        await card.isSeparateComponentVisible();
-
         // Regular date labels
-        await expect(card.expiryMonthLabelText).toHaveText(MONTH_LABEL);
-        await expect(card.expiryYearLabelText).toHaveText(YEAR_LABEL);
+        await expect(customCardPageSeparate.expiryMonthLabelText).toContainText(MONTH_LABEL);
+        await expect(customCardPageSeparate.expiryYearLabelText).toContainText(YEAR_LABEL);
 
         // Fill number to provoke (mock) binLookup response
-        await card.typeCardNumber(REGULAR_TEST_CARD);
+        await customCardPageSeparate.typeCardNumber(REGULAR_TEST_CARD);
 
         // await page.waitForTimeout(5000);
 
         // UI reflects that binLookup says date fields are optional
-        await expect(card.expiryMonthLabelText).toHaveText(`${MONTH_LABEL} ${OPTIONAL}`);
-        await expect(card.expiryYearLabelText).toHaveText(`${YEAR_LABEL} ${OPTIONAL}`);
+        await expect(customCardPageSeparate.expiryMonthLabelText).toContainText(`${MONTH_LABEL} ${OPTIONAL}`);
+        await expect(customCardPageSeparate.expiryYearLabelText).toContainText(`${YEAR_LABEL} ${OPTIONAL}`);
 
         // ...and cvc is optional too
-        await expect(card.cvcLabelText).toHaveText(`${CVC_LABEL} ${OPTIONAL}`);
+        await expect(customCardPageSeparate.cvcLabelText).toContainText(`${CVC_LABEL} ${OPTIONAL}`);
 
         // Card seen as valid
         let cardValid = await page.evaluate('window.customCardSeparate.isValid');
         await expect(cardValid).toEqual(true);
 
         // Clear number and see UI & state reset
-        await card.deleteCardNumber();
+        await customCardPageSeparate.deleteCardNumber();
 
         // Headless test seems to need time for UI change to register on state
         await page.waitForTimeout(500);
 
         // date and cvc labels don't contain 'optional'
-        await expect(card.expiryMonthLabelText).toHaveText(MONTH_LABEL);
-        await expect(card.expiryYearLabelText).toHaveText(YEAR_LABEL);
-        await expect(card.cvcLabelText).toHaveText(CVC_LABEL);
+        await expect(customCardPageSeparate.expiryMonthLabelText).toContainText(MONTH_LABEL);
+        await expect(customCardPageSeparate.expiryYearLabelText).toContainText(YEAR_LABEL);
+        await expect(customCardPageSeparate.cvcLabelText).toContainText(CVC_LABEL);
 
         // Card seen as invalid
-        cardValid = await page.evaluate('window.customCard.isValid');
+        cardValid = await page.evaluate('window.customCardSeparate.isValid');
         await expect(cardValid).toEqual(false);
     });
 
-    test('#3 validating fields first and then entering PAN should see errors cleared from both UI & state', async ({ customCardPageSeparate }) => {
-        const { card, page } = customCardPageSeparate;
-
+    test('#3 validating fields first and then entering PAN should see errors cleared from both UI & state', async ({
+        page,
+        customCardPageSeparate
+    }) => {
         await binLookupMock(page, optionalDateAndCvcMock);
 
-        await card.isSeparateComponentVisible();
-
         // press pay to generate errors
-        await customCardPageSeparate.pay('Separate');
+        await customCardPageSeparate.pay();
 
         // Expect errors in UI
-        await expect(card.cardNumberErrorElement).toBeVisible();
-        await expect(card.cardNumberErrorElement).toHaveText(PAN_ERROR);
-        await expect(card.expiryMonthErrorElement).toBeVisible();
-        await expect(card.expiryMonthErrorElement).toHaveText(MONTH_EMPTY_ERROR);
-        await expect(card.expiryYearErrorElement).toBeVisible();
-        await expect(card.expiryYearErrorElement).toHaveText(YEAR_EMPTY_ERROR);
-        await expect(card.cvcErrorElement).toBeVisible();
-        await expect(card.cvcErrorElement).toHaveText(CVC_ERROR);
+        await expect(customCardPageSeparate.cardNumberErrorElement).toBeVisible();
+        await expect(customCardPageSeparate.cardNumberErrorElement).toContainText(PAN_ERROR);
+        await expect(customCardPageSeparate.expiryMonthErrorElement).toBeVisible();
+        await expect(customCardPageSeparate.expiryMonthErrorElement).toContainText(MONTH_EMPTY_ERROR);
+        await expect(customCardPageSeparate.expiryYearErrorElement).toBeVisible();
+        await expect(customCardPageSeparate.expiryYearErrorElement).toContainText(YEAR_EMPTY_ERROR);
+        await expect(customCardPageSeparate.cvcErrorElement).toBeVisible();
+        await expect(customCardPageSeparate.cvcErrorElement).toContainText(CVC_ERROR);
 
         await page.waitForTimeout(500); // wait for UI to show errors
 
@@ -95,16 +90,16 @@ test.describe('Test how Custom Card Component with separate date fields handles 
         await expect(cardErrors[ENCRYPTED_SECURITY_CODE]).not.toBe(undefined);
 
         // Fill number to provoke (mock) binLookup response
-        await card.typeCardNumber(REGULAR_TEST_CARD);
+        await customCardPageSeparate.typeCardNumber(REGULAR_TEST_CARD);
 
         // Expect errors to be cleared - since the fields were in error because they were empty
         // but now the PAN field is filled and the date & cvc field are optional & the fields have re-rendered and updated state
 
         // No errors in UI
-        await expect(card.cardNumberErrorElement).not.toBeVisible();
-        await expect(card.expiryMonthErrorElement).not.toBeVisible();
-        await expect(card.expiryYearErrorElement).not.toBeVisible();
-        await expect(card.cvcErrorElement).not.toBeVisible();
+        await expect(customCardPageSeparate.cardNumberErrorElement).not.toBeVisible();
+        await expect(customCardPageSeparate.expiryMonthErrorElement).not.toBeVisible();
+        await expect(customCardPageSeparate.expiryYearErrorElement).not.toBeVisible();
+        await expect(customCardPageSeparate.cvcErrorElement).not.toBeVisible();
 
         // No errors in state
         cardErrors = await page.evaluate('window.customCardSeparate.state.errors');
@@ -118,42 +113,38 @@ test.describe('Test how Custom Card Component with separate date fields handles 
         await expect(cardValid).toEqual(true);
     });
 
-    test('#4 date field in error DOES stop card becoming valid', async ({ customCardPageSeparate }) => {
-        const { card, page } = customCardPageSeparate;
-
+    test('#4 date field in error DOES stop card becoming valid', async ({ page, customCardPageSeparate }) => {
         await binLookupMock(page, optionalDateAndCvcMock);
 
-        await card.isSeparateComponentVisible();
-
         // Card out of date
-        await card.typeExpiryMonth('12');
-        await card.typeExpiryYear('90');
+        await customCardPageSeparate.typeExpiryMonth('12');
+        await customCardPageSeparate.typeExpiryYear('90');
 
         // Expect error in UI
-        await expect(card.expiryYearErrorElement).toBeVisible();
-        await expect(card.expiryYearErrorElement).toHaveText(DATE_INVALID_ERROR);
+        await expect(customCardPageSeparate.expiryYearErrorElement).toBeVisible();
+        await expect(customCardPageSeparate.expiryYearErrorElement).toContainText(DATE_INVALID_ERROR);
 
         // Force blur event to fire on date field
-        await card.cardNumberLabelElement.click();
+        await customCardPageSeparate.cardNumberLabelElement.click();
 
         // Fill number to provoke (mock) binLookup response
-        await card.typeCardNumber(REGULAR_TEST_CARD);
+        await customCardPageSeparate.typeCardNumber(REGULAR_TEST_CARD);
 
         // UI reflects that binLookup says expiryDate is optional
-        await expect(card.expiryMonthLabelText).toHaveText(`${MONTH_LABEL} ${OPTIONAL}`);
-        await expect(card.expiryYearLabelText).toHaveText(`${YEAR_LABEL} ${OPTIONAL}`);
+        await expect(customCardPageSeparate.expiryMonthLabelText).toContainText(`${MONTH_LABEL} ${OPTIONAL}`);
+        await expect(customCardPageSeparate.expiryYearLabelText).toContainText(`${YEAR_LABEL} ${OPTIONAL}`);
 
         // Visual errors persist in UI
-        await expect(card.expiryYearErrorElement).toBeVisible();
-        await expect(card.expiryYearErrorElement).toHaveText(DATE_INVALID_ERROR);
+        await expect(customCardPageSeparate.expiryYearErrorElement).toBeVisible();
+        await expect(customCardPageSeparate.expiryYearErrorElement).toContainText(DATE_INVALID_ERROR);
 
         // Card seen as invalid
         let cardValid = await page.evaluate('window.customCardSeparate.isValid');
         await expect(cardValid).toEqual(false);
 
         // Delete erroneous date
-        await card.deleteExpiryMonth();
-        await card.deleteExpiryYear();
+        await customCardPageSeparate.deleteExpiryMonth();
+        await customCardPageSeparate.deleteExpiryYear();
 
         // Headless test seems to need time for UI reset to register on state
         await page.waitForTimeout(500);

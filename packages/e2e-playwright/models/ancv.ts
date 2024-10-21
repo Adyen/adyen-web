@@ -1,9 +1,10 @@
 import { Locator, Page } from '@playwright/test';
 import { USER_TYPE_DELAY } from '../tests/utils/constants';
+import { Base } from './base';
 
 const SELECTOR_DELAY = 300;
 
-class ANCV {
+class ANCV extends Base {
     readonly rootElement: Locator;
     readonly rootElementSelector: string;
 
@@ -12,10 +13,11 @@ class ANCV {
 
     readonly awaitText: Locator;
 
-    readonly page: Page;
-
-    constructor(page: Page, rootElementSelector = '.ancv-field') {
-        this.page = page;
+    constructor(
+        public readonly page: Page,
+        rootElementSelector = '.ancv-field'
+    ) {
+        super(page);
         this.rootElement = page.locator(rootElementSelector);
         this.rootElementSelector = rootElementSelector;
 

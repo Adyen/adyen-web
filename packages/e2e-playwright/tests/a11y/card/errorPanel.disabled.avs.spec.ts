@@ -1,4 +1,4 @@
-import { test } from '../../../pages/cards/card.fixture';
+import { test } from '@playwright/test';
 
 test('#1 avsCard error fields and inputs should have correct aria attributes', async () => {
     // error panel does not exist at startup
