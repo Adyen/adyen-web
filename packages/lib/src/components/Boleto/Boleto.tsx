@@ -47,7 +47,7 @@ export class BoletoElement extends UIElement<VoucherConfiguration> {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 {this.props.reference ? (
-                    <BoletoVoucherResult ref={this.handleRef} icon={this.icon} {...this.props} />
+                    <BoletoVoucherResult ref={this.handleRef} icon={this.icon} {...this.props} onActionHandled={this.onActionHandled} />
                 ) : (
                     <BoletoInput
                         setComponentRef={this.handleRef}

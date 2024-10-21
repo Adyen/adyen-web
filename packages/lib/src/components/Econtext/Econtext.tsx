@@ -48,6 +48,7 @@ export class EcontextElement extends UIElement<EcontextConfiguration> {
                             this.componentRef = ref;
                         }}
                         {...this.props}
+                        onActionHandled={this.onActionHandled}
                     />
                 ) : (
                     <EcontextInput

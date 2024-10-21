@@ -53,6 +53,7 @@ export class DragonpayElement extends UIElement<DragonpayConfiguraton> {
                         }}
                         icon={this.icon}
                         {...this.props}
+                        onActionHandled={this.onActionHandled}
                     />
                 ) : (
                     <DragonpayInput

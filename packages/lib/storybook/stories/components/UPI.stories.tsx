@@ -1,8 +1,8 @@
 import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
-import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
 import { UPIConfiguration } from '../../../src/components/UPI/types';
-import { Container } from '../Container';
-import { UPI } from '../../../src';
+import { ComponentContainer } from '../ComponentContainer';
+import { Checkout } from '../Checkout';
+import UPI from '../../../src/components/UPI/UPI';
 
 type UpiStory = StoryConfiguration<UPIConfiguration>;
 
@@ -11,12 +11,9 @@ const meta: MetaConfiguration<UPIConfiguration> = {
 };
 
 export const Default: UpiStory = {
-    render: (args: PaymentMethodStoryProps<UPIConfiguration>, context) => {
-        const { componentConfiguration } = args;
-        const checkout = getStoryContextCheckout(context);
-        const upi = new UPI(checkout, componentConfiguration);
-        return <Container element={upi} />;
-    },
+    render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<UPIConfiguration>) => (
+        <Checkout checkoutConfig={checkoutConfig}>{checkout => <ComponentContainer element={new UPI(checkout, componentConfiguration)} />}</Checkout>
+    ),
     args: {
         countryCode: 'IN'
     }

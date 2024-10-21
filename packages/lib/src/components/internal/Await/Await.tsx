@@ -79,7 +79,7 @@ function Await(props: AwaitComponentProps) {
         const { paymentData, clientKey, throttleInterval } = props;
 
         if (!hasCalledActionHandled) {
-            props.onActionHandled({ componentType: props.type, actionDescription: 'polling-started' });
+            props.onActionHandled?.({ componentType: props.type, actionDescription: 'polling-started' });
             setHasCalledActionHandled(true);
         }
 
@@ -228,7 +228,6 @@ Await.defaultProps = {
     countdownTime: 15,
     onError: () => {},
     onComplete: () => {},
-    onActionHandled: () => {},
     delay: 2000,
     throttleTime: 60000,
     throttleInterval: 10000,

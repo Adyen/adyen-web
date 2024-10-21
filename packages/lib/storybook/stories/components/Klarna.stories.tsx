@@ -1,8 +1,8 @@
-import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '../types';
-import { getStoryContextCheckout } from '../../utils/get-story-context-checkout';
-import { Container } from '../Container';
+import { MetaConfiguration, StoryConfiguration } from '../types';
+import { ComponentContainer } from '../ComponentContainer';
 import { KlarnConfiguration } from '../../../src/components/Klarna/types';
-import { Klarna } from '../../../src';
+import Klarna from '../../../src/components/Klarna/KlarnaPayments';
+import { Checkout } from '../Checkout';
 
 type KlarnaStory = StoryConfiguration<KlarnConfiguration>;
 
@@ -10,15 +10,13 @@ const meta: MetaConfiguration<KlarnConfiguration> = {
     title: 'Components/Klarna'
 };
 
-const createComponent = (args: PaymentMethodStoryProps<KlarnConfiguration>, context) => {
-    const { componentConfiguration } = args;
-    const checkout = getStoryContextCheckout(context);
-    const klarna = new Klarna(checkout, componentConfiguration);
-    return <Container element={klarna} />;
-};
-
 export const Widget: KlarnaStory = {
-    render: createComponent,
+    render: ({ componentConfiguration, ...checkoutConfig }) => (
+        <Checkout checkoutConfig={checkoutConfig}>
+            {checkout => <ComponentContainer element={new Klarna(checkout, componentConfiguration)} />}
+        </Checkout>
+    ),
+
     args: {
         countryCode: 'NL',
         componentConfiguration: { useKlarnaWidget: true }

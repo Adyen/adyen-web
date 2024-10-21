@@ -46,7 +46,7 @@ export class BankTransferElement extends UIElement<BankTransferConfiguration> {
         if (this.props.reference) {
             return (
                 <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                    <BankTransferResult ref={this.handleRef} {...this.props} />
+                    <BankTransferResult ref={this.handleRef} {...this.props} onActionHandled={this.onActionHandled} />
                 </CoreProvider>
             );
         }

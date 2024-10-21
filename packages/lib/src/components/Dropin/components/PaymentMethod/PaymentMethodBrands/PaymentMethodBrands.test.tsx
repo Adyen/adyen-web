@@ -58,7 +58,7 @@ describe('PaymentMethodBrands', () => {
             { name: 'visa', icon: 'visa.png' },
             { name: 'mc', icon: 'mc.png' },
             { name: 'amex', icon: 'amex.png' },
-            { name: 'maestro', icon: 'maestro.png' },
+            { name: 'maestro', icon: 'maestro.png' }
         ];
 
         renderWrapper(<PaymentMethodBrands brands={brands} isPaymentMethodSelected={false} showOtherInsteafOfNumber={true} />);
@@ -76,7 +76,7 @@ describe('PaymentMethodBrands', () => {
             { name: 'visa', icon: 'visa.png' },
             { name: 'mc', icon: 'mc.png' },
             { name: 'amex', icon: 'amex.png' },
-            { name: 'maestro', icon: 'maestro.png' },
+            { name: 'maestro', icon: 'maestro.png' }
         ];
 
         renderWrapper(<PaymentMethodBrands brands={brands} isPaymentMethodSelected={true} />);
@@ -92,7 +92,7 @@ describe('PaymentMethodBrands', () => {
             { name: 'visa', icon: 'visa.png' },
             { name: 'mc', icon: 'mc.png' },
             { name: 'amex', icon: 'amex.png' },
-            { name: 'maestro', icon: 'maestro.png' },
+            { name: 'maestro', icon: 'maestro.png' }
         ];
 
         renderWrapper(<PaymentMethodBrands brands={brands} isPaymentMethodSelected={true} keepBrandsVisible={true} />);

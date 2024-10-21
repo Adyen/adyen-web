@@ -5,11 +5,12 @@ import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { MultibancoVoucherResultProps } from '../../types';
 import { VoucherDetail } from '../../../internal/Voucher/types';
 import useImage from '../../../../core/Context/useImage';
+import { extractCommonPropsForVoucher } from '../../../internal/Voucher/utils';
 
 const MultibancoVoucherResult = (props: MultibancoVoucherResultProps) => {
     const { i18n } = useCoreContext();
     const getImage = useImage();
-    const { entity, reference, expiresAt, merchantReference, totalAmount, paymentMethodType, downloadUrl } = props;
+    const { entity, expiresAt, merchantReference, downloadUrl } = props;
 
     const voucherDetails: VoucherDetail[] = [
         ...(entity ? [{ label: i18n.get('voucher.entity'), value: entity }] : []),
@@ -19,14 +20,10 @@ const MultibancoVoucherResult = (props: MultibancoVoucherResultProps) => {
 
     return (
         <Voucher
-            amount={totalAmount && i18n.amount(totalAmount.value, totalAmount.currency)}
+            {...extractCommonPropsForVoucher({ props, i18n, introKey: 'voucher.introduction', getImage: getImage() })}
             barcode={null}
             copyBtn
             downloadUrl={downloadUrl}
-            imageUrl={getImage()(paymentMethodType)}
-            introduction={i18n.get('voucher.introduction')}
-            paymentMethodType={'multibanco'}
-            reference={reference}
             voucherDetails={voucherDetails}
         />
     );

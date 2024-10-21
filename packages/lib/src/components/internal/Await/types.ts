@@ -30,7 +30,7 @@ export interface AwaitComponentProps {
     messageText: string;
     awaitText: string;
     ref: any;
-    onActionHandled: (rtnObj: ActionHandledReturnObject) => void;
+    onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
 }
 
 export interface AwaitConfiguration extends UIElementProps {

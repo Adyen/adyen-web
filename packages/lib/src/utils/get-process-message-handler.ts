@@ -16,7 +16,7 @@ const getProcessMessageHandler =
     (domain: string, resolve: Function, reject: Function, expectedType: string): Function =>
     event => {
         const parseErrorObj: PostMsgParseErrorObject = {};
-        const origin = event.origin || event.originalEvent.origin;
+        const origin = event.origin || event.originalEvent?.origin;
 
         if (origin !== domain) {
             return 'Message was not sent from the expected domain';
