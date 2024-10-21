@@ -132,6 +132,8 @@
     "ach.accountNumberField.invalid": "Neplatné číslo účtu",
     "ach.accountLocationField.invalid": "Neplatné směrovací tranzitní číslo ABA",
     "ach.savedBankAccount": "Uložený bankovní účet",
+    "ach.savings": "Spořicí účet",
+    "ach.checking": "Běžný účet",
     "select.state": "Vyberte stát",
     "select.stateOrProvince": "Vyberte kraj nebo okres",
     "select.provinceOrTerritory": "Vyberte provincii nebo teritorium",
@@ -311,5 +313,11 @@
     "payme.instructions.footnote": "Nezavírejte prosím tuto stránku před dokončením platby.",
     "payByBankAISDD.disclaimer.header": "Použijte Pay by Bank k okamžité platbě z jakéhokoli bankovního účtu.",
     "payByBankAISDD.disclaimer.body": "Připojením svého bankovního účtu vyjadřujete souhlas s tím, aby z účtu byly strženy všechny dlužné částky za využívání našich služeb a nákup našich produktů, a to až do odvolání tohoto souhlasu.",
-    "paymentMethodBrand.other": "Ostatní"
+    "paymentMethodBrand.other": "Ostatní",
+    "paynow.scanQrCode": "Platbu dokončete naskenováním QR kódu v PayNow",
+    "paynow.mobileViewInstruction.step1": "Pořiďte screenshot QR kódu.",
+    "paynow.mobileViewInstruction.step2": "Otevřete PayNow nebo platební aplikaci.",
+    "paynow.mobileViewInstruction.step3": "Zvolte možnost naskenovat QR kód.",
+    "paynow.mobileViewInstruction.step4": "Klikněte na možnost QR kód a vyberte snímek obrazovky.",
+    "paynow.mobileViewInstruction.step5": "Dokončete transakci."
 }

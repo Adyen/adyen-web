@@ -132,6 +132,8 @@
     "ach.accountNumberField.invalid": "Numéro du compte incorrect",
     "ach.accountLocationField.invalid": "Code ABA incorrect",
     "ach.savedBankAccount": "Compte bancaire enregistré",
+    "ach.savings": "Compte d’épargne",
+    "ach.checking": "Compte courant",
     "select.state": "Sélectionnez l'État",
     "select.stateOrProvince": "Sélectionnez l'État ou la province",
     "select.provinceOrTerritory": "Sélectionnez la province ou le territoire",
@@ -314,5 +316,11 @@
     "payme.instructions.footnote": "Veuillez ne pas fermer cette page avant que le paiement ne soit terminé.",
     "payByBankAISDD.disclaimer.header": "Utilisez Pay by Bank pour payer instantanément depuis n'importe quel compte bancaire.",
     "payByBankAISDD.disclaimer.body": "En connectant votre compte bancaire, vous autorisez le débit de tous les montants dus pour l'utilisation de nos services et l'achat de nos produits, jusqu'à révocation de votre autorisation.",
-    "paymentMethodBrand.other": "autre"
+    "paymentMethodBrand.other": "autre",
+    "paynow.scanQrCode": "Scannez le code QR à l'aide de l'application PayNow pour effectuer le paiement",
+    "paynow.mobileViewInstruction.step1": "Faites une capture d'écran du code QR.",
+    "paynow.mobileViewInstruction.step2": "Ouvrez l'application bancaire ou de paiement PayNow.",
+    "paynow.mobileViewInstruction.step3": "Sélectionnez l'option permettant de scanner un code QR.",
+    "paynow.mobileViewInstruction.step4": "Choisissez l'option pour télécharger un code QR et sélectionnez la capture d'écran.",
+    "paynow.mobileViewInstruction.step5": "Complétez la transaction."
 }

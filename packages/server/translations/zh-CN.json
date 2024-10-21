@@ -132,6 +132,8 @@
     "ach.accountNumberField.invalid": "无效的账号",
     "ach.accountLocationField.invalid": "无效的 ABA 路由电汇编码",
     "ach.savedBankAccount": "已保存的银行账户",
+    "ach.savings": "储蓄账户",
+    "ach.checking": "支票账户",
     "select.state": "选择州",
     "select.stateOrProvince": "选择州或省",
     "select.provinceOrTerritory": "选择省或地区",
@@ -314,5 +316,11 @@
     "payme.instructions.footnote": "付款完成前，请勿关闭此页面",
     "payByBankAISDD.disclaimer.header": "使用 Pay by Bank 从任何银行账户即时付款。",
     "payByBankAISDD.disclaimer.body": "关联您的银行账户，即表示您授权从您的账户中扣除因使用我们的服务和/或购买我们的产品而需支付的任何金额，直至该授权被撤销。",
-    "paymentMethodBrand.other": "其他"
+    "paymentMethodBrand.other": "其他",
+    "paynow.scanQrCode": "使用 PayNow 应用程序扫描二维码完成付款",
+    "paynow.mobileViewInstruction.step1": "截屏二维码。",
+    "paynow.mobileViewInstruction.step2": "打开 PayNow 银行或支付应用程序。",
+    "paynow.mobileViewInstruction.step3": "选择扫描二维码的选项。",
+    "paynow.mobileViewInstruction.step4": "选择上传二维码选项并选择截图。",
+    "paynow.mobileViewInstruction.step5": "完成交易。"
 }

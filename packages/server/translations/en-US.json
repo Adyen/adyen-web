@@ -133,6 +133,8 @@
     "ach.accountNumberField.invalid": "Invalid account number",
     "ach.accountLocationField.invalid": "Invalid ABA routing number",
     "ach.savedBankAccount": "Saved bank account",
+    "ach.savings": "Savings account",
+    "ach.checking": "Checking account",
     "select.state": "Select state",
     "select.stateOrProvince": "Select state or province",
     "select.provinceOrTerritory": "Select province or territory",
@@ -316,5 +318,11 @@
     "payme.instructions.footnote": "Please do not close this page before the payment is completed",
     "payByBankAISDD.disclaimer.header": "Use Pay by Bank to pay instantly from any bank account.",
     "payByBankAISDD.disclaimer.body": "By connecting your bank account you are authorizing debits to your account for any amount owed for use of our services and/or purchase of our products, until this authorization is revoked.",
-    "paymentMethodBrand.other": "other"
+    "paymentMethodBrand.other": "other",
+    "paynow.scanQrCode": "Scan the QR code using the PayNow app to complete the payment",
+    "paynow.mobileViewInstruction.step1": "Take a screenshot of the QR code.",
+    "paynow.mobileViewInstruction.step2": "Open the PayNow bank or payment app.",
+    "paynow.mobileViewInstruction.step3": "Select the option to scan a QR code.",
+    "paynow.mobileViewInstruction.step4": "Choose the option to upload a QR and select the screenshot.",
+    "paynow.mobileViewInstruction.step5": "Complete the transaction."
 }

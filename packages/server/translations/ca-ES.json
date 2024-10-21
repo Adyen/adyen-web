@@ -133,6 +133,8 @@
     "ach.accountNumberField.invalid": "El número de compte no és vàlid",
     "ach.accountLocationField.invalid": "El número d'encaminament ABA no és vàlid",
     "ach.savedBankAccount": "S'ha desat el compte bancari",
+    "ach.savings": "Compte d'estalvi",
+    "ach.checking": "Compte corrent",
     "select.state": "Seleccioneu l'estat",
     "select.stateOrProvince": "Seleccioneu l'estat o la província",
     "select.provinceOrTerritory": "Seleccioneu la província o el territori",
@@ -316,5 +318,11 @@
     "payme.instructions.footnote": "No tanqueu aquesta pàgina abans de completar el pagament",
     "payByBankAISDD.disclaimer.header": "Utilitzeu el pagament per banc per pagar a l'instant des de qualsevol compte bancari.",
     "payByBankAISDD.disclaimer.body": "En connectar el vostre compte bancari, esteu autoritzant càrrecs a aquest compte per qualsevol import degut per l'ús dels nostres serveis o la compra dels nostres productes, fins que es revoqui aquesta autorització.",
-    "paymentMethodBrand.other": "altre"
+    "paymentMethodBrand.other": "altre",
+    "paynow.scanQrCode": "Escanegeu el codi QR amb l'aplicació PayNow per completar el pagament.",
+    "paynow.mobileViewInstruction.step1": "Feu una captura de pantalla del codi QR.",
+    "paynow.mobileViewInstruction.step2": "Obriu PayNow o l'aplicació de pagament.",
+    "paynow.mobileViewInstruction.step3": "Seleccioneu l'opció d'escanejar un codi QR.",
+    "paynow.mobileViewInstruction.step4": "Trieu l'opció per carregar un QR i seleccioneu la captura de pantalla.",
+    "paynow.mobileViewInstruction.step5": "Completeu la transacció."
 }

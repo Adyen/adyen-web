@@ -132,6 +132,8 @@
     "ach.accountNumberField.invalid": "Número de cuenta no válido",
     "ach.accountLocationField.invalid": "El número de ruta ABA no es válido",
     "ach.savedBankAccount": "Se ha guardado la cuenta bancaria",
+    "ach.savings": "Cuenta de ahorros",
+    "ach.checking": "Cuenta corriente",
     "select.state": "Seleccione el estado",
     "select.stateOrProvince": "Seleccione el estado o provincia",
     "select.provinceOrTerritory": "Seleccione la provincia o territorio",
@@ -309,5 +311,11 @@
     "payme.instructions.footnote": "No cierres esta página antes de que se complete el pago",
     "payByBankAISDD.disclaimer.header": "Utilice la opción de pago bancario para pagar al instante desde cualquier cuenta bancaria.",
     "payByBankAISDD.disclaimer.body": "Al conectar su cuenta bancaria, autoriza los cargos en su cuenta de cualquier importe que deba pagar por el uso de nuestros servicios o la compra de nuestros productos hasta que se revoque esta autorización.",
-    "paymentMethodBrand.other": "otro"
+    "paymentMethodBrand.other": "otro",
+    "paynow.scanQrCode": "Escanee el código QR con la aplicación PayNow para completar el pago",
+    "paynow.mobileViewInstruction.step1": "Haga una captura de pantalla del código QR.",
+    "paynow.mobileViewInstruction.step2": "Abra la aplicación bancaria o de pago PayNow.",
+    "paynow.mobileViewInstruction.step3": "Seleccione la opción de escanear un código QR.",
+    "paynow.mobileViewInstruction.step4": "Elija la opción de subir un QR y seleccione la captura de pantalla.",
+    "paynow.mobileViewInstruction.step5": "Complete la transacción."
 }

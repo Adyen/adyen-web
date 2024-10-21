@@ -133,6 +133,8 @@
     "ach.accountNumberField.invalid": "Невалиден номер на сметка",
     "ach.accountLocationField.invalid": "Невалиден маршрутизиращ номер на ABA",
     "ach.savedBankAccount": "Запазена банкова сметка",
+    "ach.savings": "Спестовна сметка",
+    "ach.checking": "Разплащателна сметка",
     "select.state": "Изберете щат",
     "select.stateOrProvince": "Изберете държава или провинция",
     "select.provinceOrTerritory": "Изберете провинция или територия",
@@ -316,5 +318,11 @@
     "payme.instructions.footnote": "Моля, не затваряйте тази страница преди плащането да приключи",
     "payByBankAISDD.disclaimer.header": "Използвайте Pay by Bank, за да платите незабавно от всяка банкова сметка.",
     "payByBankAISDD.disclaimer.body": "Като свържете банковата си сметка, Вие разрешавате дебитиране на сметката Ви за всяка сума, дължима за употреба на нашите услуги и/или закупуване на нашите продукти, докато това разрешение не бъде оттеглено.",
-    "paymentMethodBrand.other": "други"
+    "paymentMethodBrand.other": "други",
+    "paynow.scanQrCode": "Сканирайте QR кода с приложението PayNow, за да извършите плащането",
+    "paynow.mobileViewInstruction.step1": "Направете екранна снимка на QR кода.",
+    "paynow.mobileViewInstruction.step2": "Отворете банката или приложението за плащане PayNow.",
+    "paynow.mobileViewInstruction.step3": "Изберете опцията за сканиране на QR код.",
+    "paynow.mobileViewInstruction.step4": "Изберете опцията за качване на QR код и след това изберете екранната снимка.",
+    "paynow.mobileViewInstruction.step5": "Извършете транзакцията."
 }

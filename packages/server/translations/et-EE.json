@@ -133,6 +133,8 @@
     "ach.accountNumberField.invalid": "Vale kontonumber",
     "ach.accountLocationField.invalid": "Vale ABA pangakood",
     "ach.savedBankAccount": "Salvestatud pangakonto",
+    "ach.savings": "Säästukonto",
+    "ach.checking": "Arvelduskonto",
     "select.state": "Valige osariik",
     "select.stateOrProvince": "Valige osariik või maakond",
     "select.provinceOrTerritory": "Valige maakond või territoorium",
@@ -316,5 +318,11 @@
     "payme.instructions.footnote": "Ärge sulgege seda lehte enne makse lõpuleviimist",
     "payByBankAISDD.disclaimer.header": "Kasutage pangamakset, et maksta koheselt mis tahes pangakontoga.",
     "payByBankAISDD.disclaimer.body": "Pangakonto sidumisega annate loa debiteerida oma kontolt meie teenuste kasutamise ja/või meie toodete ostmise eest mis tahes võlgnetavad summad kuni selle loa tühistamiseni.",
-    "paymentMethodBrand.other": "muu"
+    "paymentMethodBrand.other": "muu",
+    "paynow.scanQrCode": "Makse lõpuleviimiseks skannige QR-kood rakenduse PayNow abil",
+    "paynow.mobileViewInstruction.step1": "Tehke QR-koodist kuvatõmmis.",
+    "paynow.mobileViewInstruction.step2": "Avage pank või makserakendus PayNow.",
+    "paynow.mobileViewInstruction.step3": "Valige QR-koodi skannimise valik.",
+    "paynow.mobileViewInstruction.step4": "Valige QR-koodi üleslaadimise valik ja valige kuvatõmmis.",
+    "paynow.mobileViewInstruction.step5": "Viige kanne lõpule."
 }
