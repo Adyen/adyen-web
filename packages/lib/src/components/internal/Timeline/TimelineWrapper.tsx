@@ -1,8 +1,13 @@
-import { h } from 'preact';
+import { ComponentChildren, h } from 'preact';
 import './TimelineWrapper.scss';
 
-const TimelineWrapper = ({ children }) => {
-    return <div className="adyen-checkout-timeline-wrapper">{children}</div>;
+interface TimelineWrapperProps {
+    children: ComponentChildren;
+    className?: string;
+}
+
+const TimelineWrapper = ({ children, className }: TimelineWrapperProps) => {
+    return <div className={`adyen-checkout-timeline-wrapper ${className}`}>{children}</div>;
 };
 
 export { TimelineWrapper };

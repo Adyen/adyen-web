@@ -1,5 +1,6 @@
 import QRLoaderContainer from '../helpers/QRLoaderContainer';
-import Instructions from './Instructions';
+import { PayMeInstructions } from './components/PayMeInstructions';
+import { PayMeIntroduction } from './components/PayMeIntroduction';
 
 class PayMeElement extends QRLoaderContainer {
     public static type = 'payme';
@@ -11,10 +12,10 @@ class PayMeElement extends QRLoaderContainer {
             delay: PayMeElement.defaultDelay,
             countdownTime: PayMeElement.defaultCountdown,
             redirectIntroduction: 'payme.openPayMeApp',
-            introduction: 'payme.scanQrCode',
             timeToPay: 'payme.timeToPay',
             buttonLabel: 'payme.redirectButtonLabel',
-            instructions: Instructions,
+            introduction: PayMeIntroduction,
+            instructions: PayMeInstructions,
             ...super.formatProps(props)
         };
     }

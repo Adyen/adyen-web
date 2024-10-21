@@ -37,8 +37,9 @@
 .adyen-checkout__qr-loader__subtitle {
     max-width: 400px;
     color: token(color-label-primary);
-    font-size: token(text-subtitle-font-size);
-    line-height: token(text-caption-line-height);
+    font-size: token(text-body-font-size);
+    line-height: token(text-body-line-height);
+    text-align: center;
 }
 
 .adyen-checkout__qr-loader__icon {
@@ -80,6 +81,7 @@
     text-align: center;
 }
 
+
 .adyen-checkout__qr-loader > .adyen-checkout__spinner__wrapper {
     margin: 60px 0;
 }
@@ -98,7 +100,7 @@
     color: token(color-label-tertiary);
     font-size: token(text-subtitle-font-size);
     line-height: 1.5;
-    margin-top: token(spacer-040);
+    margin-top: token(spacer-090);
 }
 
 .adyen-checkout__qr-loader__actions {
@@ -108,8 +110,9 @@
     margin-top: token(spacer-100);
 }
 
-@media only screen and (max-width: 1200px) {
+@media (max-width: 1024px) {
     .adyen-checkout__qr-loader__app-link {
         display: block;
+        min-width: 220px;
     }
 }
