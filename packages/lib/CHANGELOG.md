@@ -1,5 +1,15 @@
 # @adyen/adyen-web
 
+## 5.71.0
+
+### Minor Changes
+
+-   Adds selector for savings and checking accounts on ACH component ([#2904](https://github.com/Adyen/adyen-web/pull/2904))
+
+### Patch Changes
+
+-   Added optional chaining operator to postMessage handler function. Fixes issue where 'get-process-message.handler.js' caused exceptions due to stray postMessages without properly formed events ([#2896](https://github.com/Adyen/adyen-web/pull/2896))
+
 ## 5.70.0
 
 ### Minor Changes
