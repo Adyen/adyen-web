@@ -152,6 +152,8 @@
     "ach.accountLocationField.title": "ABA routing number",
     "ach.accountLocationField.invalid": "Invalid ABA routing number",
     "ach.savedBankAccount": "Saved bank account",
+    "ach.savings": "Savings account",
+    "ach.checking": "Checking account",
     "select.state": "Select state",
     "select.stateOrProvince": "Select state or province",
     "select.provinceOrTerritory": "Select province or territory",

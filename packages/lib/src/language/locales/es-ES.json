@@ -148,6 +148,8 @@
     "ach.accountLocationField.title": "Número de ruta ABA",
     "ach.accountLocationField.invalid": "El número de ruta ABA no es válido",
     "ach.savedBankAccount": "Se ha guardado la cuenta bancaria",
+    "ach.savings": "Cuenta de ahorros",
+    "ach.checking": "Cuenta corriente",
     "select.state": "Seleccione el estado",
     "select.stateOrProvince": "Seleccione el estado o provincia",
     "select.provinceOrTerritory": "Seleccione la provincia o territorio",

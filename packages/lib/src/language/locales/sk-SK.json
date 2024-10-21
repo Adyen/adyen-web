@@ -151,6 +151,8 @@
     "ach.accountLocationField.title": "Smerovacie číslo ABA",
     "ach.accountLocationField.invalid": "Neplatné smerovacie číslo ABA",
     "ach.savedBankAccount": "Uložený bankový účet",
+    "ach.savings": "Sporiaci účet",
+    "ach.checking": "Kontrolný účet",
     "select.state": "Vyberte kraj",
     "select.stateOrProvince": "Vyberte kraj alebo okres",
     "select.provinceOrTerritory": "Vyberte okres alebo územie",

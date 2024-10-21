@@ -5,21 +5,19 @@ import { Resources } from '../../../../core/Context/Resources';
 
 export interface ACHInputStateValid {
     holderName?: boolean;
-    billingAddress?: boolean;
     encryptedBankAccountNumber?: boolean;
     encryptedBankLocationId?: boolean;
 }
 
 export interface ACHInputStateError {
     holderName?: boolean;
-    billingAddress?: boolean;
     encryptedBankAccountNumber?: boolean;
     encryptedBankLocationId?: boolean;
 }
 
 export interface ACHInputDataState {
+    bankAccountType?: 'savings' | 'checking';
     holderName?: string;
-    billingAddress?: object;
 }
 
 type Placeholders = {
@@ -29,9 +27,6 @@ type Placeholders = {
 export interface ACHInputProps {
     allowedDOMAccess?: boolean;
     autoFocus?: boolean;
-    billingAddressAllowedCountries?: string[];
-    billingAddressRequired?: boolean;
-    billingAddressRequiredFields?: string[];
     clientKey?: string;
     data?: ACHInputDataState;
     enableStoreDetails: boolean;

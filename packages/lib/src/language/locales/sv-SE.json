@@ -151,6 +151,8 @@
     "ach.accountLocationField.title": "ABA-nummer",
     "ach.accountLocationField.invalid": "Ogiltigt ABA-nummer",
     "ach.savedBankAccount": "Sparat bankkonto",
+    "ach.savings": "Sparkonto",
+    "ach.checking": "Checkkonto",
     "select.state": "Välj delstat",
     "select.stateOrProvince": "Välj delstat eller provins",
     "select.provinceOrTerritory": "Välj provins eller territorium",

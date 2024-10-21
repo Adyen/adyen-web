@@ -151,6 +151,8 @@
     "ach.accountLocationField.title": "ABA-dirigeringsnummer",
     "ach.accountLocationField.invalid": "Ugyldig ABA-dirigeringsnummer",
     "ach.savedBankAccount": "Lagret bankkonto",
+    "ach.savings": "Sparekonto",
+    "ach.checking": "Sjekkkonto",
     "select.state": "Velg delstat",
     "select.stateOrProvince": "Velg delstat eller provins",
     "select.provinceOrTerritory": "Velg provins eller territorium",

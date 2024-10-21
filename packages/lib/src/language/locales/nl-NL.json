@@ -151,6 +151,8 @@
     "ach.accountLocationField.title": "Routingnummer (ABA)",
     "ach.accountLocationField.invalid": "Ongeldig routingnummer (ABA)",
     "ach.savedBankAccount": "Opgeslagen bankrekening",
+    "ach.savings": "Spaarrekening",
+    "ach.checking": "Betaalrekening",
     "select.state": "Selecteer staat",
     "select.stateOrProvince": "Selecteer staat of provincie",
     "select.provinceOrTerritory": "Selecteer provincie of territorium",

@@ -151,6 +151,8 @@
     "ach.accountLocationField.title": "ABA-reititysnumero",
     "ach.accountLocationField.invalid": "Ei-kelvollinen ABA-reititysnumero",
     "ach.savedBankAccount": "Tallennettu pankkitili",
+    "ach.savings": "Säästötili",
+    "ach.checking": "Käyttötili",
     "select.state": "Valitse osavaltio",
     "select.stateOrProvince": "Valitse osavaltio tai lääni",
     "select.provinceOrTerritory": "Valitse maakunta tai alue",
