@@ -150,6 +150,8 @@
     "ach.accountLocationField.title": "Маршрутный номер ABA",
     "ach.accountLocationField.invalid": "Недействительный маршрутный номер ABA",
     "ach.savedBankAccount": "Сохраненный банковский счет",
+    "ach.savings": "Сберегательный счет",
+    "ach.checking": "Текущий счет",
     "select.state": "Выберите штат",
     "select.stateOrProvince": "Выберите штат или область",
     "select.provinceOrTerritory": "Выберите провинцию или территорию",

@@ -151,6 +151,8 @@
     "ach.accountLocationField.title": "Koda banke ABA",
     "ach.accountLocationField.invalid": "Neveljavna koda banke ABA",
     "ach.savedBankAccount": "Shranjen bančni račun",
+    "ach.savings": "Varčevalni račun",
+    "ach.checking": "Tekoči račun",
     "select.state": "Izberite državo",
     "select.stateOrProvince": "Izberite državo ali provinco",
     "select.provinceOrTerritory": "Izberite območje ali ozemlje",

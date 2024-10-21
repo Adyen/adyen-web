@@ -151,6 +151,8 @@
     "ach.accountLocationField.title": "ABA-irányítószám",
     "ach.accountLocationField.invalid": "Érvénytelen ABA-irányítószám",
     "ach.savedBankAccount": "Mentett bankszámla",
+    "ach.savings": "Betétszámla",
+    "ach.checking": "Folyószámla",
     "select.state": "Állam kiválasztása",
     "select.stateOrProvince": "Állam vagy tartomány kiválasztása",
     "select.provinceOrTerritory": "Tartomány vagy terület kiválasztása",

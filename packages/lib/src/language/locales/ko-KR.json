@@ -151,6 +151,8 @@
     "ach.accountLocationField.title": "ABA 라우팅 번호",
     "ach.accountLocationField.invalid": "유효하지 않은 ABA 라우팅 번호",
     "ach.savedBankAccount": "저장된 은행 계좌",
+    "ach.savings": "저축 계좌",
+    "ach.checking": "당좌 예금 계좌",
     "select.state": "주 선택",
     "select.stateOrProvince": "주/도 선택",
     "select.provinceOrTerritory": "도 선택",

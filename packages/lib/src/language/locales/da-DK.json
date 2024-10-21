@@ -152,6 +152,8 @@
     "ach.accountLocationField.title": "ABA-registreringsnummer",
     "ach.accountLocationField.invalid": "Ugyldigt ABA-registreringsnummer",
     "ach.savedBankAccount": "Gemt bankkonto",
+    "ach.savings": "Opsparingskonto",
+    "ach.checking": "Lønkonto",
     "select.state": "Vælg stat",
     "select.stateOrProvince": "Vælg region eller kommune",
     "select.provinceOrTerritory": "Vælg provins eller territorium",
