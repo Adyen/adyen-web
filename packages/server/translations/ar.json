@@ -132,6 +132,8 @@
     "ach.accountNumberField.invalid": "رقم حساب غير صحيح",
     "ach.accountLocationField.invalid": "رقم توجيه ABA غير صحيح",
     "ach.savedBankAccount": "الحساب البنكي المحفوظ",
+    "ach.savings": "حساب التوفير",
+    "ach.checking": "الحساب الجاري",
     "select.state": "حدد الولاية",
     "select.stateOrProvince": "حدد الولاية أو المقاطعة",
     "select.provinceOrTerritory": "حدد المقاطعة أو الإقليم",
@@ -315,5 +317,11 @@
     "payme.instructions.footnote": "يرجى عدم إغلاق هذه الصفحة قبل إتمام الدفع",
     "payByBankAISDD.disclaimer.header": "استخدم خدمة Pay by Bank للدفع الفوري من خلال أي حساب مصرفي.",
     "payByBankAISDD.disclaimer.body": "من خلال ربط حسابك البنكي، أنت بذلك تمنحنا تفويضًا بخصم مدفوعات المبالغ المستحقة من حسابك البنكي، وذلك مقابل استخدام خدماتنا و/أو شراء منتجاتنا. ويستمر العمل بهذا التفويض إلى أن يتم إلغاؤه.",
-    "paymentMethodBrand.other": "أخرى"
+    "paymentMethodBrand.other": "أخرى",
+    "paynow.scanQrCode": "اقرأ رمز الاستجابة السريعة ضوئيًا باستخدام تطبيق PayNow؛ لإتمام عملية الدفع",
+    "paynow.mobileViewInstruction.step1": "سجل لقطة شاشة لرمز الاستجابة السريعة QR.",
+    "paynow.mobileViewInstruction.step2": "افتح تطبيق بنك PayNow أو تطبيق الدفع.",
+    "paynow.mobileViewInstruction.step3": "ابحث عن أداة قراءة رمز الاستجابة السريعة وشغلها.",
+    "paynow.mobileViewInstruction.step4": "خدد خيار تحميل QR، ثم حدد لقطة الشاشة.",
+    "paynow.mobileViewInstruction.step5": "أكمل المعاملة."
 }

@@ -152,7 +152,6 @@ function AchInput(props: ACHInputProps) {
                                             { id: 'checking', name: i18n.get('ach.checking') },
                                             { id: 'savings', name: i18n.get('ach.savings') }
                                         ]}
-                                        classNameModifiers={['gender']}
                                         onChange={handleBankAccountType}
                                         required={true}
                                         style={'button'}

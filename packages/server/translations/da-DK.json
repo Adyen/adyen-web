@@ -133,6 +133,8 @@
     "ach.accountNumberField.invalid": "Ugyldigt kontonummer",
     "ach.accountLocationField.invalid": "Ugyldigt ABA-registreringsnummer",
     "ach.savedBankAccount": "Gemt bankkonto",
+    "ach.savings": "Opsparingskonto",
+    "ach.checking": "Lønkonto",
     "select.state": "Vælg stat",
     "select.stateOrProvince": "Vælg region eller kommune",
     "select.provinceOrTerritory": "Vælg provins eller territorium",
@@ -312,5 +314,11 @@
     "payme.instructions.footnote": "Luk ikke denne side, før betalingen er gennemført",
     "payByBankAISDD.disclaimer.header": "Brug Pay by Bank til at betale med det samme fra enhver bankkonto.",
     "payByBankAISDD.disclaimer.body": "Ved at tilknytte din bankkonto tillader du debiteringer på din konto for ethvert skyldigt beløb for brug af vores tjenester og/eller køb af vores produkter, indtil denne tilladelse tilbagekaldes.",
-    "paymentMethodBrand.other": "andet"
+    "paymentMethodBrand.other": "andet",
+    "paynow.scanQrCode": "Scan QR-koden med PayNow-appen for at gennemføre betalingen",
+    "paynow.mobileViewInstruction.step1": "Tag et skærmbillede af QR-koden.",
+    "paynow.mobileViewInstruction.step2": "Åbn PayNow-banken eller betalingsappen.",
+    "paynow.mobileViewInstruction.step3": "Vælg muligheden for at scanne en QR-kode.",
+    "paynow.mobileViewInstruction.step4": "Vælg muligheden for at uploade en QR-kode og vælg skærmbilledet.",
+    "paynow.mobileViewInstruction.step5": "Gennemfør transaktionen."
 }

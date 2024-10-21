@@ -5,14 +5,12 @@ import { Resources } from '../../../../core/Context/Resources';
 
 export interface ACHInputStateValid {
     holderName?: boolean;
-    billingAddress?: boolean;
     encryptedBankAccountNumber?: boolean;
     encryptedBankLocationId?: boolean;
 }
 
 export interface ACHInputStateError {
     holderName?: boolean;
-    billingAddress?: boolean;
     encryptedBankAccountNumber?: boolean;
     encryptedBankLocationId?: boolean;
 }
@@ -20,7 +18,6 @@ export interface ACHInputStateError {
 export interface ACHInputDataState {
     bankAccountType?: 'savings' | 'checking';
     holderName?: string;
-    billingAddress?: object;
 }
 
 type PlaceholderKeys = 'holderName' | 'bankAccountNumber' | 'bankLocationId';
@@ -29,9 +26,6 @@ export type Placeholders = Partial<Record<PlaceholderKeys, string>>;
 
 export interface ACHInputProps {
     autoFocus?: boolean;
-    billingAddressAllowedCountries?: string[];
-    billingAddressRequired?: boolean;
-    billingAddressRequiredFields?: string[];
     clientKey?: string;
     data?: ACHInputDataState;
     enableStoreDetails: boolean;

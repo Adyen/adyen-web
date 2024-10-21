@@ -132,6 +132,8 @@
     "ach.accountNumberField.invalid": "Ongeldig rekeningnummer",
     "ach.accountLocationField.invalid": "Ongeldig routingnummer (ABA)",
     "ach.savedBankAccount": "Opgeslagen bankrekening",
+    "ach.savings": "Spaarrekening",
+    "ach.checking": "Betaalrekening",
     "select.state": "Selecteer staat",
     "select.stateOrProvince": "Selecteer staat of provincie",
     "select.provinceOrTerritory": "Selecteer provincie of territorium",
@@ -311,5 +313,11 @@
     "payme.instructions.footnote": "Sluit deze pagina niet voordat de betaling is voltooid",
     "payByBankAISDD.disclaimer.header": "Gebruik Pay by Bank om direct vanaf elke bankrekening te betalen.",
     "payByBankAISDD.disclaimer.body": "Door uw bankrekening te koppelen, machtigt u afschrijvingen van uw rekening voor elk bedrag dat u verschuldigd bent voor het gebruik van onze diensten en/of de aankoop van onze producten, totdat deze machtiging wordt ingetrokken.",
-    "paymentMethodBrand.other": "overige"
+    "paymentMethodBrand.other": "overige",
+    "paynow.scanQrCode": "Scan de QR-code met de PayNow-app om de betaling te voltooien",
+    "paynow.mobileViewInstruction.step1": "Maak een screenshot van de QR-code.",
+    "paynow.mobileViewInstruction.step2": "Open de bank- of betaalapp van PayNow.",
+    "paynow.mobileViewInstruction.step3": "Selecteer de optie om een QR-code te scannen.",
+    "paynow.mobileViewInstruction.step4": "Kies de optie om een QR-code te uploaden en selecteer de schermafbeelding.",
+    "paynow.mobileViewInstruction.step5": "Voltooi de transactie."
 }

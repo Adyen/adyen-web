@@ -132,6 +132,8 @@
     "ach.accountNumberField.invalid": "Nevažeći broj računa",
     "ach.accountLocationField.invalid": "Nevažeći ABA identifikacijski broj",
     "ach.savedBankAccount": "Spremljeni bankovni račun",
+    "ach.savings": "Štedni račun",
+    "ach.checking": "Tekući račun",
     "select.state": "Odaberite saveznu državu",
     "select.stateOrProvince": "Odaberite državu ili provinciju",
     "select.provinceOrTerritory": "Odaberite provinciju ili teritorij",
@@ -314,5 +316,11 @@
     "payme.instructions.footnote": "Ne zatvarajte ovu stranicu prije nego što se plaćanje završi",
     "payByBankAISDD.disclaimer.header": "Koristite Pay by Bank za trenutačno plaćanje s bilo kojeg bankovnog računa.",
     "payByBankAISDD.disclaimer.body": "Povezivanjem svog bankovnog računa autorizirate zaduženja na svoj račun za bilo koji iznos koji se duguje za upotrebu naših usluga i/ili kupnju naših proizvoda, sve dok se autorizacija ne opozove.",
-    "paymentMethodBrand.other": "Drugo"
+    "paymentMethodBrand.other": "Drugo",
+    "paynow.scanQrCode": "Skenirajte QR kod pomoću aplikacije PayNow kako biste dovršili plaćanje",
+    "paynow.mobileViewInstruction.step1": "Napravite snimku zaslona QR kôda.",
+    "paynow.mobileViewInstruction.step2": "Otvorite PayNow banku ili aplikaciju za plaćanje.",
+    "paynow.mobileViewInstruction.step3": "Odaberite opciju skeniranja QR kôda.",
+    "paynow.mobileViewInstruction.step4": "Odaberite opciju za prijenos QR-a i odaberite snimku zaslona.",
+    "paynow.mobileViewInstruction.step5": "Dovršite transakciju."
 }

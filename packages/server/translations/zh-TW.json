@@ -132,6 +132,8 @@
     "ach.accountNumberField.invalid": "帳戶號碼無效",
     "ach.accountLocationField.invalid": "ABA 匯款路徑編號無效",
     "ach.savedBankAccount": "儲存的銀行帳戶",
+    "ach.savings": "儲蓄帳戶",
+    "ach.checking": "支票帳戶",
     "select.state": "選取州",
     "select.stateOrProvince": "選擇州或省",
     "select.provinceOrTerritory": "選取省或地區",
@@ -314,5 +316,11 @@
     "payme.instructions.footnote": "完成付款前，請勿關閉此頁面",
     "payByBankAISDD.disclaimer.header": "運用銀行支付方式透過任何銀行帳戶立即付款。",
     "payByBankAISDD.disclaimer.body": "連結您的銀行帳戶即表示您授權我們可以在您享有我們的服務和/或購買我們的產品時，向您的帳戶扣款對應的費用，直到授權被撤銷為止。",
-    "paymentMethodBrand.other": "其他"
+    "paymentMethodBrand.other": "其他",
+    "paynow.scanQrCode": "使用 PayNow 應用程式掃描 QR 代碼以完成付款",
+    "paynow.mobileViewInstruction.step1": "擷取QR 代碼螢幕畫面。",
+    "paynow.mobileViewInstruction.step2": "開啟 PayNow 銀行或支付應用程式。",
+    "paynow.mobileViewInstruction.step3": "選取掃描 QR 代碼的選項。",
+    "paynow.mobileViewInstruction.step4": "選擇上傳 QR 代碼的選項並選取此螢幕擷取畫面。",
+    "paynow.mobileViewInstruction.step5": "完成此交易。"
 }

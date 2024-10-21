@@ -132,6 +132,8 @@
     "ach.accountNumberField.invalid": "Nieprawidłowy numer rachunku",
     "ach.accountLocationField.invalid": "Nieprawidłowy kod bankowy ABA Routing Number",
     "ach.savedBankAccount": "Zapisane konto bankowe",
+    "ach.savings": "Konto oszczędnościowe",
+    "ach.checking": "Rachunek bieżący",
     "select.state": "Wybierz stan",
     "select.stateOrProvince": "Wybierz stan/województwo",
     "select.provinceOrTerritory": "Wybierz region/terytorium",
@@ -314,5 +316,11 @@
     "payme.instructions.footnote": "Nie zamykaj tej strony, dopóki płatność nie zostanie zakończona",
     "payByBankAISDD.disclaimer.header": "Użyj Pay by Bank, aby zapłacić natychmiast z dowolnego konta bankowego.",
     "payByBankAISDD.disclaimer.body": "Podłączając swoje konto bankowe, zezwalasz na obciążanie swojego konta wszelkimi kwotami należnymi za korzystanie z naszych usług i/lub zakup naszych produktów, do czasu odwołania tego upoważnienia.",
-    "paymentMethodBrand.other": "inne"
+    "paymentMethodBrand.other": "inne",
+    "paynow.scanQrCode": "Zeskanuj kod QR za pomocą aplikacji PayNow, aby dokończyć płatność",
+    "paynow.mobileViewInstruction.step1": "Zrób zrzut ekranu kodu QR.",
+    "paynow.mobileViewInstruction.step2": "Otwórz aplikację bankową lub płatniczą PayNow.",
+    "paynow.mobileViewInstruction.step3": "Wybierz opcję zeskanowania kodu QR.",
+    "paynow.mobileViewInstruction.step4": "Wybierz opcję przesłania kodu QR i wybierz zrzut ekranu.",
+    "paynow.mobileViewInstruction.step5": "Sfinalizuj transakcję."
 }
