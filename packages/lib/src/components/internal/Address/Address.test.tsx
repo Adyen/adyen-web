@@ -40,7 +40,7 @@ describe('Address', () => {
             postalCode: '95014',
             city: 'Cupertino',
             houseNumberOrName: '1',
-            country: 'US',
+            country: 'NL',
             stateOrProvince: 'CA'
         };
 
@@ -170,5 +170,27 @@ describe('Address', () => {
         const receivedData = lastOnChangeCall[0].data;
         wrapper.update(null);
         expect(receivedData.stateOrProvince).toBe(undefined);
+    });
+
+    test('does not include fields if they are not part of valid schema fields', () => {
+        const data = {
+            street: '1 Infinite Loop',
+            postalCode: '95014',
+            country: 'NL',
+            stateOrProvince: 'CA',
+            firstName: 'dummy',
+            invalidField: 'dummy'
+        };
+
+        const onChangeMock = jest.fn();
+        getWrapper({ data, onChange: onChangeMock });
+        const lastOnChangeCall = onChangeMock.mock.calls.pop();
+        const receivedData = lastOnChangeCall[0].data;
+        expect(receivedData.street).toBe(data.street);
+        expect(receivedData.postalCode).toBe(data.postalCode);
+        expect(receivedData.country).toBe(data.country);
+        expect(receivedData.stateOrProvince).toBe(data.stateOrProvince);
+        expect(receivedData.firstName).toBe(undefined);
+        expect(receivedData.invalidField).toBe(undefined);
     });
 });
