@@ -17,6 +17,17 @@ You can integrate with Adyen Web in two ways:
 -   [API key](https://docs.adyen.com/development-resources/how-to-get-the-api-key)
 -   [Client key](https://docs.adyen.com/development-resources/client-side-authentication#get-your-client-key)
 
+## Versioning Strategy
+| Major version | State      | Deprecated   | End-of-life  |
+|---------------|------------|--------------|--------------|
+| 6.x.x         | Active     | TBA          | TBA          |
+| 5.x.x         | Inactive   | TBA          | TBA          |
+| 4.x.x         | Inactive   | TBA          | TBA          |
+| 3.x.x         | Deprecated | October 2024 | October 2025 |
+
+More information about our Versioning Strategy can be found [here](https://docs.adyen.com/online-payments/upgrade-your-integration/)
+
+
 ## Installation
 
 We only provide full support when you use one of these methods of installation.
