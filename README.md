@@ -36,18 +36,18 @@ import { AdyenCheckout } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 ```
 
-### Using a <script> tag
+### Using a `<script>` tag
 
 You can also import Adyen Web using a `<script>` tag, as shown in the [Web Components integration guide](https://docs.adyen.com/checkout/components-web#step-2-add-components).
 
-## Development
+## Running the Development Environment
 
-Requirements:
+**Requirements:**
 
 -   Node v20.12.2
 -   Yarn
 
-To run the development environment:
+**To run the environment:**
 
 1. Clone [this repository](https://github.com/Adyen/adyen-web).
 2. Create a `.env` file on your project's root folder following the example in [`env.default`](env.default) and fill in the environment variables.
@@ -184,11 +184,11 @@ Have a look at our [contributing guidelines](https://github.com/Adyen/.github/bl
 
 ## See also
 
--   [Why we open sourced Adyen Web](https://www.adyen.com/blog/why-we-opened-sourced-our-web-framework)
 -   [Complete documentation for Adyen Web](https://docs.adyen.com/checkout/)
 -   [API Explorer](https://docs.adyen.com/api-explorer/)
 -   [Example integrations](https://github.com/adyen-examples)
 -   [Adyen Components JS Sample Code](https://github.com/Adyen/adyen-components-js-sample-code)
+-   [Why we open sourced Adyen Web](https://www.adyen.com/blog/why-we-opened-sourced-our-web-framework)
 
 ## Support
 
