@@ -1,0 +1,73 @@
+@import 'styles/variable-generator';
+
+.adyen-checkout-timeline {
+  scrollbar-color: token(color-background-quaternary) transparent;
+}
+
+.adyen-checkout-timeline__items {
+  all: unset;
+}
+
+.adyen-checkout-timeline-item {
+  scrollbar-color: var(color-background-quaternary) transparent;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  list-style-type: none;
+  max-width: 500px;
+
+  &:last-child {
+    .adyen-checkout-timeline-item__separator {
+      display: none;
+    }
+
+    .adyen-checkout-timeline-item__content {
+      padding-bottom: 0;
+    }
+  }
+}
+
+.adyen-checkout-timeline-item__row {
+  display: flex;
+  gap: token(spacer-070);
+}
+
+.adyen-checkout-timeline-item__marker {
+  display: flex;
+  flex-flow: column;
+  width: 100%;
+  max-width: token(spacer-070);
+  margin-top: token(spacer-010);
+}
+
+.adyen-checkout-timeline-item__separator {
+  flex-grow: 1;
+  position: relative;
+
+  &::before {
+    background-color: token(color-separator-secondary);
+    content: "";
+    height: 100%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%);
+    width: 1px;
+  }
+}
+
+.adyen-checkout-timeline-item__content {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  padding-bottom: token(spacer-060);
+}
+
+.adyen-checkout-timeline-item__title {
+  font-size: token(text-caption-font-size);
+  font-weight: token(text-body-font-weight);
+  line-height: token(text-body-line-height);
+  letter-spacing: 0;
+  text-align: left;
+  color: token(color-label-primary);
+  margin-bottom: token(spacer-010);
+}
