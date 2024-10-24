@@ -1,11 +1,11 @@
 import { test } from '@playwright/test';
 /* Mock used:
 const mock = RequestMock()
-    .onRequestTo('http://localhost:3024/paymentMethods/balance')
+    .onRequestTo('http://localhost:3020/paymentMethods/balance')
     .respond({
         balance: { currency: 'USD', value: 999999 }
     })
-    .onRequestTo('http://localhost:3024/payments')
+    .onRequestTo('http://localhost:3020/payments')
     .respond({
         resultCode: 'Authorised'
     });

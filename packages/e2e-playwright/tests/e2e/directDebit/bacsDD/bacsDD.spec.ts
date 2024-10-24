@@ -1,4 +1,4 @@
-/*
+/* todo: add tests
 test('should make a bacs direct debit payment', async () => {
     // fill in the info
     // no further edit

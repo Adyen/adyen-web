@@ -1,4 +1,4 @@
-import { test } from '../../../pages/cards/card.fixture';
+import { test } from '../../../fixtures/cards/card.fixture';
 
 test.describe('Card payments with KCP enabled feature', () => {
     test('should submit the korea issue card payment', async () => {

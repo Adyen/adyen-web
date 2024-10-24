@@ -2,9 +2,11 @@ import type { PlaywrightTestConfig } from '@playwright/test';
 import { devices } from '@playwright/test';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
+import { protocol } from './environment-variables';
 
 dotenv.config({ path: path.resolve('../../', '.env') });
-const playgroundBaseUrl = 'https://localhost:3020'; // todo: refine this
+const playgroundBaseUrl = `${protocol}://localhost:3020`; // todo: refine this
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */

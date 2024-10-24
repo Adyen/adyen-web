@@ -1,4 +1,4 @@
-import { test } from '../../../fixtures/openInvoices/openInvoices.fixture';
+import { test, expect } from '../../../fixtures/openInvoices/openInvoices.fixture';
 import LANG from '../../../../server/translations/en-US.json';
 import { USER_TYPE_DELAY } from '../../utils/constants';
 
@@ -30,53 +30,40 @@ const expectedSRPanelTexts = [
     `${LANG['consent.checkbox.invalid']}`
 ];
 
-test.describe('Test Riverty Component', () => {
-    test('#1 Test how Riverty component handles SRPanel messages', async ({ openInvoicesPage_riverty }) => {
-        const { openInvoices, page } = openInvoicesPage_riverty;
-
-        await openInvoices.isComponentVisible();
-
-        await openInvoices.rivertyDeliveryAddressCheckbox.click();
+test.describe.only('Test Riverty Component', () => {
+    test('#1 Test how Riverty component handles SRPanel messages', async ({ page, openInvoicesPage_riverty }) => {
+        await openInvoicesPage_riverty.rivertyDeliveryAddressCheckbox.click();
 
         await openInvoicesPage_riverty.pay();
 
-        // Need to wait so that the expected elements can be found by locator.allInnerTexts
-        await page.waitForTimeout(100);
+        await page.waitForFunction(() => [...document.querySelectorAll('.adyen-checkout-sr-panel__msg')].map(el => el.textContent).length > 0);
+
+        const srErrorMessages = await page.locator('.adyen-checkout-sr-panel__msg').allInnerTexts();
+        expect(srErrorMessages.length).toBeGreaterThan(0);
 
         // Inspect SRPanel errors: all expected errors, in the expected order
-        await page
-            .locator('.adyen-checkout-sr-panel__msg')
-            .allInnerTexts()
-            .then(retrievedSRPanelTexts => {
-                // check we have srPanel errors
-                expect(retrievedSRPanelTexts.length).toBeGreaterThan(0);
+        // check individual messages
+        srErrorMessages.forEach((retrievedText, index) => {
+            // KEEP - handy for debugging test
+            // console.log('\n### riverty.spec:::: retrievedText', retrievedText);
+            // console.log('### riverty.spec:::: expectedTexts', expectedSRPanelTexts[index]);
 
-                // check individual messages
-                retrievedSRPanelTexts.forEach((retrievedText, index) => {
-                    // KEEP - handy for debugging test
-                    // console.log('\n### riverty.spec:::: retrievedText', retrievedText);
-                    // console.log('### riverty.spec:::: expectedTexts', expectedSRPanelTexts[index]);
-
-                    expect(retrievedText).toContain(expectedSRPanelTexts[index]);
-                });
-            });
+            expect(retrievedText).toContain(expectedSRPanelTexts[index]);
+        });
 
         // KEEP - handy for debugging test
         // await expect(page.getByText('Enter your first name-sr', { exact: true })).toBeVisible();
     });
 
     test('#2 Test how Riverty component handles SRPanel messages, specifically a postal code with an invalid format', async ({
+        page,
         openInvoicesPage_riverty
     }) => {
-        const { openInvoices, page } = openInvoicesPage_riverty;
-
-        await openInvoices.isComponentVisible();
-
-        await openInvoices.rivertyDeliveryAddressCheckbox.click();
+        await openInvoicesPage_riverty.rivertyDeliveryAddressCheckbox.click();
 
         expectedSRPanelTexts.splice(7, 1, INVALID_POST_CODE);
 
-        await openInvoices.riverty
+        await openInvoicesPage_riverty.riverty
             .getByRole('group', { name: 'Billing address' })
             .getByLabel('Postal code')
             // .locator('.adyen-checkout__field--postalCode .adyen-checkout__input--postalCode')
@@ -86,25 +73,19 @@ test.describe('Test Riverty Component', () => {
         await openInvoicesPage_riverty.pay(); // second click to trigger validation
 
         // Need to wait so that the expected elements can be found by locator.allInnerTexts
-        await page.waitForTimeout(100);
+        await page.waitForFunction(() => [...document.querySelectorAll('.adyen-checkout-sr-panel__msg')].map(el => el.textContent).length > 0);
+
+        const srErrorMessages = await page.locator('.adyen-checkout-sr-panel__msg').allInnerTexts();
+        expect(srErrorMessages.length).toBeGreaterThan(0);
 
         // Inspect SRPanel errors: all expected errors, in the expected order
-        await page
-            .locator('.adyen-checkout-sr-panel__msg')
-            .allInnerTexts()
-            .then(retrievedSRPanelTexts => {
-                // check we have srPanel errors
-                expect(retrievedSRPanelTexts.length).toBeGreaterThan(0);
+        srErrorMessages.forEach((retrievedText, index) => {
+            // KEEP - handy for debugging test
+            // console.log('\n### riverty.spec:::: retrievedText', retrievedText);
+            // console.log('### riverty.spec:::: expectedTexts', expectedSRPanelTexts[index]);
 
-                // check individual messages
-                retrievedSRPanelTexts.forEach((retrievedText, index) => {
-                    // KEEP - handy for debugging test
-                    // console.log('\n### riverty.spec:::: retrievedText', retrievedText);
-                    // console.log('### riverty.spec:::: expectedTexts', expectedSRPanelTexts[index]);
-
-                    expect(retrievedText).toContain(expectedSRPanelTexts[index]);
-                });
-            });
+            expect(retrievedText).toContain(expectedSRPanelTexts[index]);
+        });
 
         // Restore array to start state
         expectedSRPanelTexts.splice(7, 1, EMPTY_POST_CODE);

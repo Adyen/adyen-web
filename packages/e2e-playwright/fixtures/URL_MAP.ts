@@ -1,4 +1,7 @@
 export const URL_MAP = {
+    /* Drop-in */
+    dropinWithSession: '/iframe.html?args=&globals=&id=dropin-default--auto&viewMode=story',
+    dropinWithAdvanced: '/iframe.html?globals=&args=useSessions:!false&id=dropin-default--auto&viewMode=story',
     /* Card */
     card: '/iframe.html?args=&id=cards-card--default&viewMode=story',
     cardWithAvs: '/iframe.html?args=&globals=&id=cards-card--with-avs&viewMode=story',
@@ -10,7 +13,7 @@ export const URL_MAP = {
     customCard: '/iframe.html?globals=&args=&id=cards-custom-card--default&viewMode=story',
     customCardSeparateExpiryDate: '/iframe.html?globals=&args=&id=cards-custom-card--variant&viewMode=story',
     /* Await */
-    ancv: '/iframe.html?globals=&args=&id=components-ancv--default&viewMode=story',
+    ancv: '/iframe.html?args=useSessions:!true&globals=&id=components-ancv--default&viewMode=story',
     /* Issuer list */
     onlineBankingPL: '/iframe.html?args=&globals=&id=issuerlist-onlinebankingpl--default&viewMode=story',
     /* Open invoice */

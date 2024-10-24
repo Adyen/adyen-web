@@ -26,6 +26,10 @@ class OpenInvoices extends Base {
     async isComponentVisible() {
         await this.riverty.waitFor({ state: 'visible' });
     }
+
+    async pay(options: { name?: RegExp } = { name: /confirm purchase/i }): Promise<void> {
+        await this.page.getByRole('button', options).click();
+    }
 }
 
 export { OpenInvoices };

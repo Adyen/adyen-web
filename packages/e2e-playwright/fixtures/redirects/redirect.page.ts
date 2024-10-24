@@ -15,7 +15,7 @@ class RedirectPage {
     }
 
     async goto(url?: string) {
-        await this.page.goto('http://localhost:3024/redirects?countryCode=NL');
+        await this.page.goto('http://localhost:3020/redirects?countryCode=NL');
     }
 
     async redirect() {

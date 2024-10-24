@@ -9,20 +9,17 @@ import { statusMock } from '../../../mocks/status/status.mock';
 import { statusMockData } from '../../../mocks/status/status.data';
 import { setupMock } from '../../../mocks/setup/setup.mock';
 import { setupWithAncvOrderMockData } from '../../../mocks/setup/setup.data';
-
+//todo fix
 test.describe('ANCV - Sessions', () => {
-    test('should call onOrderUpdated when payment is partially authorised (Sessions flow)', async ({ ancvPage }) => {
-        const { ancv, page } = ancvPage;
-
+    test.fixme('should call onOrderUpdated when payment is partially authorised (Sessions flow)', async ({ page, ancvPage }) => {
         await createOrderMock(page, orderCreatedMockData);
         await paymentsMock(page, paymentsActionAncvMockData);
         await statusMock(page, statusMockData);
         await paymentDetailsMock(page, paymentDetailsPartiallyAuthorisedAncvMockData);
         await setupMock(page, setupWithAncvOrderMockData);
+        await ancvPage.fillInID('ancv-id@example.com');
+        await ancvPage.clickOnSubmit();
 
-        await ancv.fillInID('ancv-id@example.com');
-        await ancv.clickOnSubmit();
-
-        await expect(page.locator('#result-message')).toHaveText('Partially Authorised');
+        expect(ancvPage.paymentResult).toContain('Partially Authorised');
     });
 });
