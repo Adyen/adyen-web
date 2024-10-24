@@ -25,7 +25,7 @@ You can integrate with Adyen Web in two ways:
 | 4.x.x         | Inactive   | TBA          | TBA          |
 | 3.x.x         | Deprecated | October 2024 | October 2025 |
 
-More information about our Versioning Strategy can be found [here](https://docs.adyen.com/online-payments/upgrade-your-integration/)
+More information about our versioning and the Drop-in/Components lifecycle can be found [here](https://docs.adyen.com/online-payments/upgrade-your-integration/)
 
 
 ## Installation
