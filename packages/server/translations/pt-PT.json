@@ -133,6 +133,8 @@
     "ach.accountNumberField.invalid": "Número de conta inválido",
     "ach.accountLocationField.invalid": "Número de encaminhamento ABA inválido",
     "ach.savedBankAccount": "Conta bancária guardada",
+    "ach.savings": "Conta poupança",
+    "ach.checking": "Conta corrente",
     "select.state": "Selecione estado",
     "select.stateOrProvince": "Selecione estado ou província",
     "select.provinceOrTerritory": "Selecionar província ou território",

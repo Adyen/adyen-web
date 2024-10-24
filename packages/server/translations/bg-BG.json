@@ -133,6 +133,8 @@
     "ach.accountNumberField.invalid": "Невалиден номер на сметка",
     "ach.accountLocationField.invalid": "Невалиден маршрутизиращ номер на ABA",
     "ach.savedBankAccount": "Запазена банкова сметка",
+    "ach.savings": "Спестовна сметка",
+    "ach.checking": "Разплащателна сметка",
     "select.state": "Изберете щат",
     "select.stateOrProvince": "Изберете държава или провинция",
     "select.provinceOrTerritory": "Изберете провинция или територия",

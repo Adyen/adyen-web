@@ -1,5 +1,23 @@
 # @adyen/adyen-web
 
+## 6.4.0
+
+### Minor Changes
+
+-   All actions lead to a call to the onActionHandled callback. With the exception of 3DS2 actions this callback is always passed the original action object. ([#2892](https://github.com/Adyen/adyen-web/pull/2892))
+
+-   Adds selector for savings and checking accounts on ACH component ([#2898](https://github.com/Adyen/adyen-web/pull/2898))
+
+-   Export CustomTranslations type ([#2905](https://github.com/Adyen/adyen-web/pull/2905))
+
+### Patch Changes
+
+-   Calling actions.reject() in the beforeSubmit callback should leave the UI in the current state. Fixes situation where it leads to a call to handleFailedResult which ultimately leads to a call to the onPaymentFailed callback and sets the UI to an error state ([#2901](https://github.com/Adyen/adyen-web/pull/2901))
+
+-   Small optimisation to only call document.querySelector once, rather than three times ([#2895](https://github.com/Adyen/adyen-web/pull/2895))
+
+-   Added optional chaining operator to postMessage handler function. Fixes issue where 'get-process-message.handler.js' caused exceptions due to stray postMessages without properly formed events ([#2894](https://github.com/Adyen/adyen-web/pull/2894))
+
 ## 6.3.0
 
 ### Minor Changes

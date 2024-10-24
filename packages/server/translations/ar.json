@@ -132,6 +132,8 @@
     "ach.accountNumberField.invalid": "رقم حساب غير صحيح",
     "ach.accountLocationField.invalid": "رقم توجيه ABA غير صحيح",
     "ach.savedBankAccount": "الحساب البنكي المحفوظ",
+    "ach.savings": "حساب التوفير",
+    "ach.checking": "الحساب الجاري",
     "select.state": "حدد الولاية",
     "select.stateOrProvince": "حدد الولاية أو المقاطعة",
     "select.provinceOrTerritory": "حدد المقاطعة أو الإقليم",

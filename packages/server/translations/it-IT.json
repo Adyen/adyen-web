@@ -132,6 +132,8 @@
     "ach.accountNumberField.invalid": "Numero di conto non valido",
     "ach.accountLocationField.invalid": "Codice ABA non valido",
     "ach.savedBankAccount": "Conto corrente salvato",
+    "ach.savings": "Conto di risparmio",
+    "ach.checking": "Conto corrente",
     "select.state": "Seleziona stato",
     "select.stateOrProvince": "Seleziona stato o provincia",
     "select.provinceOrTerritory": "Seleziona provincia o territorio",

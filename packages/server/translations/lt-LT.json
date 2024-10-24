@@ -133,6 +133,8 @@
     "ach.accountNumberField.invalid": "Netinkamas sąskaitos numeris",
     "ach.accountLocationField.invalid": "Neteisingas ABA maršruto numeris",
     "ach.savedBankAccount": "Išsaugota banko sąskaita",
+    "ach.savings": "Taupomoji sąskaita",
+    "ach.checking": "Atsiskaitomoji sąskaita",
     "select.state": "Pasirinkite valstiją",
     "select.stateOrProvince": "Pasirinkite valstiją arba provinciją",
     "select.provinceOrTerritory": "Pasirinkite provinciją arba teritoriją",

@@ -132,6 +132,8 @@
     "ach.accountNumberField.invalid": "口座番号の入力間違い",
     "ach.accountLocationField.invalid": "無効なABAナンバー",
     "ach.savedBankAccount": "保存済みの銀行口座",
+    "ach.savings": "普通預金口座",
+    "ach.checking": "当座預金口座",
     "select.state": "都道府県を選択してください",
     "select.stateOrProvince": "都道府県を選択してください",
     "select.provinceOrTerritory": "州または準州を選択してください",

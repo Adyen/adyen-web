@@ -12,6 +12,7 @@ import type { CoreConfiguration, ICore, AdditionalDetailsData } from '../../../c
 import type { ComponentMethodsRef, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
 import type { CheckoutSessionDetailsResponse, CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
 import type {
+    ActionHandledReturnObject,
     CheckoutAdvancedFlowResponse,
     Order,
     PaymentAction,
@@ -23,6 +24,7 @@ import type {
 } from '../../../types/global-types';
 import type { IDropin } from '../../Dropin/types';
 import type { NewableComponent } from '../../../core/core.registry';
+import CancelError from '../../../core/Errors/CancelError';
 
 import './UIElement.scss';
 
@@ -64,6 +66,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.storeElementRefOnCore(this.props);
 
         this.onEnterKeyPressed = this.onEnterKeyPressed.bind(this);
+        this.onActionHandled = this.onActionHandled.bind(this);
     }
 
     protected override buildElementProps(componentProps?: P) {
@@ -175,7 +178,17 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             return;
         }
 
-        this.makePaymentsCall().then(sanitizeResponse).then(verifyPaymentDidNotFail).then(this.handleResponse).catch(this.handleFailedResult);
+        this.makePaymentsCall()
+            .then(sanitizeResponse)
+            .then(verifyPaymentDidNotFail)
+            .then(this.handleResponse)
+            .catch((e: PaymentResponseData | Error) => {
+                if (e instanceof CancelError) {
+                    this.setElementStatus('ready');
+                    return;
+                }
+                this.handleFailedResult(e as PaymentResponseData);
+            });
     }
 
     protected makePaymentsCall(): Promise<CheckoutAdvancedFlowResponse | CheckoutSessionPaymentResponse> {
@@ -190,7 +203,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
                 ? new Promise((resolve, reject) =>
                       this.props.beforeSubmit(this.data, this.elementRef, {
                           resolve,
-                          reject
+                          reject: () => reject(new CancelError('beforeSubmitRejected'))
                       })
                   )
                 : Promise.resolve(this.data);
@@ -324,6 +337,10 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         return null;
     }
 
+    protected onActionHandled(actionHandledObj: ActionHandledReturnObject) {
+        this.props?.onActionHandled?.({ originalAction: this.props.originalAction, ...actionHandledObj });
+    }
+
     protected handleOrder = (response: PaymentResponseData): void => {
         const { order } = response;
 
@@ -362,7 +379,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     };
 
     /**
-     * Handles a session /payments or /payments/details response.
+     * Handles a /payments or /payments/details response.
      * The component will handle automatically actions, orders, and final results.
      *
      * @param rawResponse -

@@ -133,6 +133,8 @@
     "ach.accountNumberField.invalid": "El número de compte no és vàlid",
     "ach.accountLocationField.invalid": "El número d'encaminament ABA no és vàlid",
     "ach.savedBankAccount": "S'ha desat el compte bancari",
+    "ach.savings": "Compte d'estalvi",
+    "ach.checking": "Compte corrent",
     "select.state": "Seleccioneu l'estat",
     "select.stateOrProvince": "Seleccioneu l'estat o la província",
     "select.provinceOrTerritory": "Seleccioneu la província o el territori",

@@ -133,6 +133,8 @@
     "ach.accountNumberField.invalid": "Nederīgs konta numurs",
     "ach.accountLocationField.invalid": "Nederīgs ABA maršrutēšanas numurs",
     "ach.savedBankAccount": "Saglabātais bankas konts",
+    "ach.savings": "Krājkonts",
+    "ach.checking": "Norēķinu konts",
     "select.state": "Atlasiet valsti",
     "select.stateOrProvince": "Atlasiet valsti vai apgabaltu",
     "select.provinceOrTerritory": "Atlasiet apgabalu vai teritoriju",

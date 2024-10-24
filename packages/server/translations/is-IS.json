@@ -133,6 +133,8 @@
     "ach.accountNumberField.invalid": "Ógilt reikningsnúmer",
     "ach.accountLocationField.invalid": "Ógilt ABA-bankanúmer",
     "ach.savedBankAccount": "Vistaður bankareikningur",
+    "ach.savings": "Sparireikningur",
+    "ach.checking": "Tékkareikningur",
     "select.state": "Veldu fylki",
     "select.stateOrProvince": "Veldu fylki eða hérað",
     "select.provinceOrTerritory": "Veldu hérað eða landsvæði",

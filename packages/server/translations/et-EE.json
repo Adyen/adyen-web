@@ -133,6 +133,8 @@
     "ach.accountNumberField.invalid": "Vale kontonumber",
     "ach.accountLocationField.invalid": "Vale ABA pangakood",
     "ach.savedBankAccount": "Salvestatud pangakonto",
+    "ach.savings": "Säästukonto",
+    "ach.checking": "Arvelduskonto",
     "select.state": "Valige osariik",
     "select.stateOrProvince": "Valige osariik või maakond",
     "select.provinceOrTerritory": "Valige maakond või territoorium",

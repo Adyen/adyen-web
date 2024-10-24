@@ -1,15 +1,16 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import PrepareChallenge from './components/Challenge';
-import { DEFAULT_CHALLENGE_WINDOW_SIZE, THREEDS2_CHALLENGE, THREEDS2_CHALLENGE_ERROR, THREEDS2_ERROR } from './constants';
+import { DEFAULT_CHALLENGE_WINDOW_SIZE, THREEDS2_CHALLENGE, THREEDS2_CHALLENGE_ERROR, THREEDS2_ERROR, THREEDS2_FULL } from './constants';
 import { existy } from '../../utils/commonUtils';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import { TxVariants } from '../tx-variants';
 import { ThreeDS2ChallengeConfiguration } from './types';
 import AdyenCheckoutError, { API_ERROR } from '../../core/Errors/AdyenCheckoutError';
-import { ANALYTICS_API_ERROR, Analytics3DS2Errors, ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
+import { ANALYTICS_API_ERROR, Analytics3DS2Errors, ANALYTICS_RENDERED_STR, Analytics3DS2Events } from '../../core/Analytics/constants';
 import { SendAnalyticsObject } from '../../core/Analytics/types';
 import { CoreProvider } from '../../core/Context/CoreProvider';
+import { ActionHandledReturnObject } from '../../types/global-types';
 
 class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
     public static type = TxVariants.threeDS2Challenge;
@@ -24,6 +25,16 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
         if (aObj.type === ANALYTICS_RENDERED_STR) return; // suppress the rendered event (it will have the same timestamp as the "creq sent" event)
 
         super.submitAnalytics(aObj);
+    };
+
+    protected onActionHandled = (rtnObj: ActionHandledReturnObject) => {
+        this.submitAnalytics({
+            type: THREEDS2_FULL,
+            message: rtnObj.actionDescription,
+            subtype: Analytics3DS2Events.CHALLENGE_IFRAME_LOADED
+        });
+
+        super.onActionHandled(rtnObj);
     };
 
     onComplete(state) {
@@ -64,6 +75,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
                     onComplete={this.onComplete}
                     onSubmitAnalytics={this.submitAnalytics}
                     isMDFlow={this.props.paymentData.length < 15}
+                    onActionHandled={this.onActionHandled}
                 />
             </CoreProvider>
         );

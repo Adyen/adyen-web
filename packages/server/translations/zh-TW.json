@@ -132,6 +132,8 @@
     "ach.accountNumberField.invalid": "帳戶號碼無效",
     "ach.accountLocationField.invalid": "ABA 匯款路徑編號無效",
     "ach.savedBankAccount": "儲存的銀行帳戶",
+    "ach.savings": "儲蓄帳戶",
+    "ach.checking": "支票帳戶",
     "select.state": "選取州",
     "select.stateOrProvince": "選擇州或省",
     "select.provinceOrTerritory": "選取省或地區",

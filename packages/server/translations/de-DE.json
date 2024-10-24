@@ -132,6 +132,8 @@
     "ach.accountNumberField.invalid": "Ungültige Kontonummer",
     "ach.accountLocationField.invalid": "Ungültige ABA-Nummer",
     "ach.savedBankAccount": "Gespeichertes Bankkonto",
+    "ach.savings": "Sparkonto",
+    "ach.checking": "Girokonto",
     "select.state": "Bundesstaat auswählen",
     "select.stateOrProvince": "Bundesland oder Provinz/Region auswählen",
     "select.provinceOrTerritory": "Provinz oder Territorium auswählen",

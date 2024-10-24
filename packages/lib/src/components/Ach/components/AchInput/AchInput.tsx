@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from 'preact/hooks';
 import classNames from 'classnames';
 import AchSecuredFields from './components/AchSecuredFields';
 import SecuredFieldsProvider from '../../../internal/SecuredFields/SFP/SecuredFieldsProvider';
-import Address from '../../../internal/Address';
 import Field from '../../../internal/FormFields/Field';
 import LoadingWrapper from '../../../internal/LoadingWrapper/LoadingWrapper';
 import defaultProps from './defaultProps';
@@ -15,6 +14,7 @@ import StoreDetails from '../../../internal/StoreDetails';
 import InputText from '../../../internal/FormFields/InputText';
 import FormInstruction from '../../../internal/FormInstruction';
 import { ComponentMethodsRef } from '../../../internal/UIElement/types';
+import RadioGroup from '../../../internal/FormFields/RadioGroup';
 
 function validateHolderName(holderName, holderNameRequired = false) {
     if (holderNameRequired) {
@@ -32,11 +32,12 @@ function AchInput(props: ACHInputProps) {
     const [valid, setValid] = useState<ACHInputStateValid>({
         ...(props.holderNameRequired && { holderName: holderNameIsValid })
     });
+
     const [data, setData] = useState<ACHInputDataState>({
+        bankAccountType: 'checking',
         ...(props.hasHolderName && { holderName: props.holderName || props.data.holderName })
     });
 
-    const [billingAddress, setBillingAddress] = useState(props.billingAddressRequired ? props.data.billingAddress : null);
     const [isSfpValid, setIsSfpValid] = useState(false);
     const [focusedElement, setFocusedElement] = useState('');
     const [storePaymentMethod, setStorePaymentMethod] = useState(false);
@@ -53,17 +54,18 @@ function AchInput(props: ACHInputProps) {
         }
     };
 
-    const handleAddress = address => {
-        setBillingAddress({ ...billingAddress, ...address.data });
-        setValid({ ...valid, billingAddress: address.isValid });
-    };
-
     const handleHolderName = e => {
         const holderName = e.target.value;
 
         setData({ ...data, holderName });
         setErrors({ ...errors, holderName: props.holderNameRequired ? !validateHolderName(holderName) : false });
         setValid({ ...valid, holderName: props.holderNameRequired ? validateHolderName(holderName, props.holderNameRequired) : true });
+    };
+
+    const handleBankAccountType = e => {
+        const bankAccountType = e.target.value;
+
+        setData({ ...data, bankAccountType });
     };
 
     const handleSecuredFieldsChange = newState => {
@@ -84,10 +86,6 @@ function AchInput(props: ACHInputProps) {
 
     // Refs
     const sfp = useRef(null);
-    const billingAddressRef = useRef(null);
-    const setAddressRef = ref => {
-        billingAddressRef.current = ref;
-    };
 
     const [status, setStatus] = useState('ready');
 
@@ -106,9 +104,6 @@ function AchInput(props: ACHInputProps) {
         if (props.holderNameRequired && !valid.holderName) {
             setErrors({ ...errors, holderName: true });
         }
-
-        // Validate Address
-        if (billingAddressRef.current) billingAddressRef.current.showValidation();
     };
 
     achRef.current.setStatus = setStatus;
@@ -124,14 +119,13 @@ function AchInput(props: ACHInputProps) {
 
     // Run when state.data, -errors or -valid change
     useEffect(() => {
-        // Validate whole component i.e holderName + securedFields + address
+        // Validate whole component i.e holderName + securedFields
         const holderNameValid = validateHolderName(data.holderName, props.holderNameRequired);
         const sfpValid = isSfpValid;
-        const billingAddressValid = props.billingAddressRequired ? Boolean(valid.billingAddress) : true;
 
-        const isValid = sfpValid && holderNameValid && billingAddressValid;
+        const isValid = sfpValid && holderNameValid;
 
-        props.onChange({ data, isValid, billingAddress, storePaymentMethod });
+        props.onChange({ data, isValid, storePaymentMethod });
     }, [data, valid, errors, storePaymentMethod]);
 
     return (
@@ -149,6 +143,20 @@ function AchInput(props: ACHInputProps) {
                         <LoadingWrapper status={sfpState.status}>
                             <div className={classNames(['adyen-checkout__fieldset', 'adyen-checkout__fieldset--ach'])}>
                                 {<div className="adyen-checkout__fieldset__title">{i18n.get('ach.bankAccount')}</div>}
+
+                                <Field classNameModifiers={['bankAccountType', 'no-borders']} name={'bankAccountType'} useLabelElement={false}>
+                                    <RadioGroup
+                                        name={'bankAccountType'}
+                                        value={data.bankAccountType}
+                                        items={[
+                                            { id: 'checking', name: i18n.get('ach.checking') },
+                                            { id: 'savings', name: i18n.get('ach.savings') }
+                                        ]}
+                                        onChange={handleBankAccountType}
+                                        required={true}
+                                        style={'button'}
+                                    />
+                                </Field>
 
                                 {props.hasHolderName && (
                                     <Field
@@ -177,17 +185,6 @@ function AchInput(props: ACHInputProps) {
                                     valid={sfpState.valid}
                                 />
                             </div>
-
-                            {props.billingAddressRequired && (
-                                <Address
-                                    label="billingAddress"
-                                    data={billingAddress}
-                                    onChange={handleAddress}
-                                    allowedCountries={props.billingAddressAllowedCountries}
-                                    requiredFields={props.billingAddressRequiredFields}
-                                    setComponentRef={setAddressRef}
-                                />
-                            )}
 
                             {props.enableStoreDetails && <StoreDetails onChange={setStorePaymentMethod} />}
                         </LoadingWrapper>

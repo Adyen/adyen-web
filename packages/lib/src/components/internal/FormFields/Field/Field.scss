@@ -9,6 +9,27 @@
     display: block;
     margin-bottom: token(spacer-070);
     width: 100%;
+
+    &--no-borders {
+        .adyen-checkout__input-wrapper {
+            box-shadow: none;
+            border: none;
+            background-color: transparent;
+
+            &:active,
+            &:active:hover,
+            &:focus-within,
+            &:focus-within:hover {
+                box-shadow: none;
+                border: none;
+            }
+
+            &:hover {
+                box-shadow: none;
+                border: none;
+            }
+        }
+    }
 }
 
 .adyen-checkout__input-wrapper {
@@ -85,7 +106,7 @@
     top: 0;
 }
 
-.adyen-checkout__label__text{
+.adyen-checkout__label__text {
     display: block;
     font-size: token(text-body-font-size);
     margin-bottom: token(spacer-020);
