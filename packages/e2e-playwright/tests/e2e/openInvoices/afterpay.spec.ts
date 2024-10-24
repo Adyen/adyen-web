@@ -1,4 +1,4 @@
-import { test } from '../../../pages/openInvoices/openInvoices.fixture';
+import { test } from '../../../fixtures/openInvoices/openInvoices.fixture';
 
 test('should make an AfterPay payment', async () => {
     // Fill in the form data

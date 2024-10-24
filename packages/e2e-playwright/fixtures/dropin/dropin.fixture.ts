@@ -1,4 +1,5 @@
-import { test as base, expect, Page } from '@playwright/test';
+import { test as base, expect, mergeTests } from '@playwright/test';
+import { test as card } from '../cards/card.fixture';
 import { DropinWithSession } from '../../models/dropinWithSession';
 import { Dropin } from '../../models/dropin';
 
@@ -18,4 +19,6 @@ const test = base.extend<Fixture>({
     }
 });
 
-export { test, expect };
+const testCardInDropin = mergeTests(card, test);
+
+export { test, expect, testCardInDropin };

@@ -1,4 +1,4 @@
-import { test } from '../../../../pages/dropin/dropin.fixture';
+import { test } from '../../../../fixtures/dropin/dropin.fixture';
 
 const cvcSpan = '.adyen-checkout__dropin .adyen-checkout__field__cvc';
 const brandingIcon = '.adyen-checkout__dropin .adyen-checkout__card__cardNumber__brandIcon';

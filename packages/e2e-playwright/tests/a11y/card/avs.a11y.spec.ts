@@ -13,8 +13,8 @@ type Fixture = {
 const test = base.extend<Fixture>({
     cardAvsPage: async ({ page }, use) => {
         const cardPage = new CardWithAvs(page);
-        const config = { billingAddressRequired: true, billingAddressRequiredFields: ['street', 'houseNumberOrName', 'postalCode', 'city'] };
-        await cardPage.goto(getStoryUrl(URL_MAP.card, config));
+        const componentConfig = { billingAddressRequired: true, billingAddressRequiredFields: ['street', 'houseNumberOrName', 'postalCode', 'city'] };
+        await cardPage.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
         await use(cardPage);
     }
 });

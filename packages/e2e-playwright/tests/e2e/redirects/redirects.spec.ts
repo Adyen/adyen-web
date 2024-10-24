@@ -1,4 +1,4 @@
-import { test, expect } from '../../../pages/redirects/redirect.fixture';
+import { test, expect } from '../../../fixtures/redirects/redirect.fixture';
 import { SIMULATION_TYPE_CANCELLATION, SIMULATION_TYPE_EXPIRATION, SIMULATION_TYPE_FAILURE, SIMULATION_TYPE_SUCCESS } from '../../../models/redirect';
 
 // const WAIT_FOR_SIMULATOR_MS = 2000;

@@ -26,6 +26,7 @@ export type AdyenCheckoutProps = {
     countryCode: string;
     shopperLocale: string;
     amount: number;
+    sessionData?: PaymentMethodsResponse;
     paymentMethodsOverride?: PaymentMethodsResponse;
     onPaymentCompleted?: (data: any, element?: UIElement) => void;
 };

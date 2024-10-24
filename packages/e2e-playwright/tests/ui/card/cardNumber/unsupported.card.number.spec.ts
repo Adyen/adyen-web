@@ -1,4 +1,4 @@
-import { test } from '../../../../pages/cards/card.fixture';
+import { test } from '../../../../fixtures/cards/card.fixture';
 
 test(
     '#1 Enter number of unsupported card, ' + 'then check UI shows an error ' + 'then PASTE supported card & check UI error is cleared',

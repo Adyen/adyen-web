@@ -1,6 +1,8 @@
-import type { Page } from '@playwright/test';
+import type { Page, Locator } from '@playwright/test';
 
 export abstract class Base {
+    readonly payButton: Locator;
+
     protected constructor(public readonly page: Page) {}
 
     get paymentResult() {
@@ -13,7 +15,11 @@ export abstract class Base {
     }
 
     async pay(options: { name?: RegExp } = { name: /Pay/i }): Promise<void> {
-        await this.page.getByRole('button', options).click();
+        if (this.payButton) {
+            await this.payButton.click();
+        } else {
+            await this.page.getByRole('button', options).click();
+        }
     }
 
     async isComponentVisible() {

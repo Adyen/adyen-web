@@ -2,6 +2,10 @@ export const URL_MAP = {
     /* Drop-in */
     dropinWithSession: '/iframe.html?args=&globals=&id=dropin-default--auto&viewMode=story',
     dropinWithAdvanced: '/iframe.html?globals=&args=useSessions:!false&id=dropin-default--auto&viewMode=story',
+    dropinSessions_zeroAuthCard_success:
+        '/iframe.html?globals=&args=amount:0;sessionData.recurringProcessingModel:CardOnFile;sessionData.storePaymentMethodMode:askForConsent&id=dropin-default--auto&viewMode=story',
+    dropinSessions_zeroAuthCard_fail:
+        '/iframe.html?globals=&args=amount:0;sessionData.recurringProcessingModel:CardOnFile;sessionData.storePaymentMethodMode:askForConsent;sessionData.enableOneClick:!true&id=dropin-default--auto&viewMode=story',
     /* Card */
     card: '/iframe.html?args=&id=cards-card--default&viewMode=story',
     cardWithAvs: '/iframe.html?args=&globals=&id=cards-card--with-avs&viewMode=story',

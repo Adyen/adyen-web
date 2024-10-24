@@ -1,83 +1,73 @@
 import dotenv from 'dotenv';
-import { test, expect } from '../../../../fixtures/dropin/dropin.fixture';
+import { test, testCardInDropin, expect } from '../../../../fixtures/dropin/dropin.fixture';
 import { PAYMENT_RESULT, REGULAR_TEST_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE } from '../../../utils/constants';
-import LANG from '../../../../../server/translations/en-US.json';
-import { typeIntoSecuredField } from '../../../../models/utils';
 import { URL_MAP } from '../../../../fixtures/URL_MAP';
-
-const CARD_IFRAME_TITLE = LANG['creditCard.encryptedCardNumber.aria.iframeTitle'];
-const EXPIRY_DATE_IFRAME_TITLE = LANG['creditCard.encryptedExpiryDate.aria.iframeTitle'];
-const CVC_IFRAME_TITLE = LANG['creditCard.encryptedSecurityCode.aria.iframeTitle'];
-
-const CARD_IFRAME_LABEL = LANG['creditCard.cardNumber.label'];
-const EXPIRY_DATE_IFRAME_LABEL = LANG['creditCard.expiryDate.label'];
-const CVC_IFRAME_LABEL = LANG['creditCard.securityCode.label'];
+import { getStoryUrl } from '../../../utils/getStoryUrl';
 dotenv.config();
-
 const apiVersion = Number(process.env.API_VERSION.substring(1));
 
-test.describe('Dropin Sessions flow', () => {
-    test('#1 Should succeed in making a payment', async ({ page, dropinPageWithSession }) => {
-        await dropinPageWithSession.goto(URL_MAP.dropinWithSession);
+testCardInDropin('#1 Should succeed in making a payment', async ({ dropinPageWithSession, cardPage }) => {
+    await dropinPageWithSession.goto(URL_MAP.dropinWithSession);
+    await dropinPageWithSession.selectPaymentMethod('scheme');
+    await cardPage.isComponentVisible();
+    await cardPage.typeCardNumber(REGULAR_TEST_CARD);
+    await cardPage.typeExpiryDate(TEST_DATE_VALUE);
+    await cardPage.typeCvc(TEST_CVC_VALUE);
+    await dropinPageWithSession.pay();
 
-        const creditCard = dropinPageWithSession.getPaymentMethodItemByType('scheme');
-        await creditCard.scrollIntoViewIfNeeded();
-
-        await page.waitForTimeout(500); // needs this else card number isn't guaranteed to fill correctly !?
-
-        await typeIntoSecuredField(creditCard, CARD_IFRAME_TITLE, CARD_IFRAME_LABEL, REGULAR_TEST_CARD);
-        await typeIntoSecuredField(creditCard, CVC_IFRAME_TITLE, CVC_IFRAME_LABEL, TEST_CVC_VALUE);
-        await typeIntoSecuredField(creditCard, EXPIRY_DATE_IFRAME_TITLE, EXPIRY_DATE_IFRAME_LABEL, TEST_DATE_VALUE);
-
-        await dropinPageWithSession.pay();
-
-        expect(await dropinPageWithSession.paymentResult).toContain(PAYMENT_RESULT.authorised);
-    });
-
-    // if (apiVersion >= 70) {
-    //     test('#2 Should succeed in making a zeroAuth payment since there is no conflicting configuration on the session', async ({
-    //         dropinSessions_zeroAuthCard_success
-    //     }) => {
-    //         const { dropin, page } = dropinSessions_zeroAuthCard_success;
-    //         await dropin.isComponentVisible();
-    //
-    //         const creditCard = dropin.getPaymentMethodItemByType('scheme');
-    //         await creditCard.scrollIntoViewIfNeeded();
-    //
-    //         await page.waitForTimeout(500);
-    //
-    //         await typeIntoSecuredField(creditCard, CARD_IFRAME_TITLE, CARD_IFRAME_LABEL, REGULAR_TEST_CARD);
-    //         await typeIntoSecuredField(creditCard, CVC_IFRAME_TITLE, CVC_IFRAME_LABEL, TEST_CVC_VALUE);
-    //         await typeIntoSecuredField(creditCard, EXPIRY_DATE_IFRAME_TITLE, EXPIRY_DATE_IFRAME_LABEL, TEST_DATE_VALUE);
-    //
-    //         // A payment successfully registered as a zero-auth payment should have a "save details" button instead of "pay"
-    //         await dropinSessions_zeroAuthCard_success.saveDetails();
-    //
-    //         await expect(page.locator('#result-message')).toHaveText('Authorised');
-    //     });
-    //
-    //     test('#3 Should fail in making a zeroAuth payment since there is conflicting configuration on the session', async ({
-    //         dropinSessions_zeroAuthCard_fail
-    //     }) => {
-    //         const { dropin, page } = dropinSessions_zeroAuthCard_fail;
-    //         await dropin.isComponentVisible();
-    //
-    //         const creditCard = dropin.getPaymentMethodItemByType('scheme');
-    //         await creditCard.scrollIntoViewIfNeeded();
-    //
-    //         await page.waitForTimeout(500);
-    //
-    //         await typeIntoSecuredField(creditCard, CARD_IFRAME_TITLE, CARD_IFRAME_LABEL, REGULAR_TEST_CARD);
-    //         await typeIntoSecuredField(creditCard, CVC_IFRAME_TITLE, CVC_IFRAME_LABEL, TEST_CVC_VALUE);
-    //         await typeIntoSecuredField(creditCard, EXPIRY_DATE_IFRAME_TITLE, EXPIRY_DATE_IFRAME_LABEL, TEST_DATE_VALUE);
-    //
-    //         await dropinSessions_zeroAuthCard_fail.saveDetails();
-    //
-    //         await expect(page.locator('#result-message')).toHaveText(
-    //             /NETWORK_ERROR: Field 'storePaymentMethod' overrides 'enableRecurring' and 'enableOneClick'. Please provide either one./
-    //         );
-    //     });
-    // } else {
-    //     test(`Skipping tests #2 & #3 for Dropin Sessions flow since api version is too low (v${apiVersion})`, async t => {});
-    // }
+    expect(await dropinPageWithSession.paymentResult).toContain(PAYMENT_RESULT.success);
 });
+
+if (apiVersion >= 70) {
+    testCardInDropin(
+        '#2 Should succeed in making a zeroAuth payment since there is no conflicting configuration on the session',
+        async ({ dropinPageWithSession, cardPage }) => {
+            const componentConfig = {
+                paymentMethodsConfiguration: {
+                    card: {
+                        _disableClickToPay: true
+                    }
+                }
+            };
+
+            await dropinPageWithSession.goto(getStoryUrl({ baseUrl: URL_MAP.dropinSessions_zeroAuthCard_success, componentConfig }));
+            await dropinPageWithSession.selectPaymentMethod('scheme');
+
+            await cardPage.isComponentVisible();
+            await cardPage.typeCardNumber(REGULAR_TEST_CARD);
+            await cardPage.typeExpiryDate(TEST_DATE_VALUE);
+            await cardPage.typeCvc(TEST_CVC_VALUE);
+
+            // A payment successfully registered as a zero-auth payment should have a "save details" button instead of "pay"
+            await dropinPageWithSession.saveDetails();
+
+            expect(await dropinPageWithSession.paymentResult).toContain(PAYMENT_RESULT.detailsSaved);
+        }
+    );
+
+    testCardInDropin(
+        '#3 Should fail in making a zeroAuth payment since there is conflicting configuration on the session',
+        async ({ dropinPageWithSession, cardPage }) => {
+            const componentConfig = {
+                paymentMethodsConfiguration: {
+                    card: {
+                        _disableClickToPay: true
+                    }
+                }
+            };
+            await dropinPageWithSession.goto(getStoryUrl({ baseUrl: URL_MAP.dropinSessions_zeroAuthCard_fail, componentConfig }));
+            await dropinPageWithSession.selectPaymentMethod('scheme');
+            await cardPage.isComponentVisible();
+            await cardPage.typeCardNumber(REGULAR_TEST_CARD);
+            await cardPage.typeExpiryDate(TEST_DATE_VALUE);
+            await cardPage.typeCvc(TEST_CVC_VALUE);
+
+            // A payment successfully registered as a zero-auth payment should have a "save details" button instead of "pay"
+            await dropinPageWithSession.saveDetails();
+
+            expect(await dropinPageWithSession.paymentResult).toContain(PAYMENT_RESULT.fail);
+        }
+    );
+} else {
+    test(`Skipping tests #2 & #3 for Dropin Sessions flow since api version is too low (v${apiVersion})`, async t => {});
+}

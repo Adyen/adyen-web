@@ -24,7 +24,14 @@ test('#1 By default expect all securedFields to have inputs with type="text" & i
 });
 
 test('#2 Set legacyInputMode and expect all securedFields to have inputs with type="tel"', async ({ page, cardPage }) => {
-    await cardPage.goto(getStoryUrl(URL_MAP.card, { legacyInputMode: true }));
+    await cardPage.goto(
+        getStoryUrl({
+            baseUrl: URL_MAP.card,
+            componentConfig: {
+                legacyInputMode: true
+            }
+        })
+    );
 
     const panInputType = await cardPage.cardNumberInput.getAttribute('type');
     await expect(panInputType).toEqual('tel');

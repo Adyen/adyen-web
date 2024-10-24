@@ -89,7 +89,14 @@ test.describe('Card - Contextual text', () => {
     });
 
     test('#3 Should find no contextualElements because the config says to not show them', async ({ cardPage }) => {
-        await cardPage.goto(getStoryUrl(URL_MAP.card, { showContextualElement: false }));
+        await cardPage.goto(
+            getStoryUrl({
+                baseUrl: URL_MAP.card,
+                componentConfig: {
+                    showContextualElement: false
+                }
+            })
+        );
 
         // checkout contextual elements not present
         await expect(cardPage.expiryDateContextualElement).not.toBeVisible();

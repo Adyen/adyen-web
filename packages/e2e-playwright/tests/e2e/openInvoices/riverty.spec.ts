@@ -1,4 +1,4 @@
-import { test } from '../../../pages/openInvoices/openInvoices.fixture';
+import { test } from '../../../fixtures/openInvoices/openInvoices.fixture';
 
 test.describe('Test Riverty Component', () => {
     test('should make a Riverty payment', async () => {

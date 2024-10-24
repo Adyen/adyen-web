@@ -12,29 +12,23 @@ const test = base.extend<Fixture>({
         const issuerListPage = new IssuerList(page);
         const issuers = [
             {
-                id: '73',
+                id: '154',
                 name: 'BLIK'
             },
 
             {
-                id: '81',
-                name: 'Idea Cloud'
-            },
-
-            {
-                id: '68',
-                name: 'mRaty'
-            },
-            {
-                id: '1',
-                name: 'mTransfer'
-            },
-            {
-                id: '91',
-                name: 'Nest Bank'
+                id: '141',
+                name: 'e-transfer Pocztowy24'
             }
         ];
-        await issuerListPage.goto(getStoryUrl(URL_MAP.onlineBankingPL, { issuers }));
+        await issuerListPage.goto(
+            getStoryUrl({
+                baseUrl: URL_MAP.onlineBankingPL,
+                componentConfig: {
+                    highlightedIssuers: issuers.map(issuer => issuer.id)
+                }
+            })
+        );
         await use(issuerListPage);
     }
 });

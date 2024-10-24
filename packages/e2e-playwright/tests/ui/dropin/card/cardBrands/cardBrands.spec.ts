@@ -1,4 +1,4 @@
-import { test, expect } from '../../../../../pages/dropin/dropin.fixture';
+import { test, expect } from '../../../../../fixtures/dropin/dropin.fixture';
 import { getCreditCardPM_withBrandsInfo } from '../../../../../models/utils';
 
 test.describe('Dropin - Card brands displayed in the Payment Method List and underneath the PAN field', () => {

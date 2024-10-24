@@ -5,4 +5,9 @@ function getComponentConfigFromUrl() {
     if (config) return JSON.parse(config);
 }
 
-export { getComponentConfigFromUrl };
+function getCheckoutConfigFromUrl() {
+    const config = getSearchParameter('checkoutConfiguration');
+    if (config) return JSON.parse(config);
+}
+
+export { getComponentConfigFromUrl, getCheckoutConfigFromUrl };

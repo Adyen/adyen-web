@@ -21,7 +21,7 @@ class Dropin extends Base {
         this.rootElementSelector = rootElementSelector;
 
         this.pmList = this.rootElement.locator('.adyen-checkout__payment-methods-list').last();
-        this.payButton = this.page.getByRole('button', { name: /Pay/i });
+        this.payButton = this.pmList.getByRole('button', { name: /Pay/i });
         this.saveDetailsButton = this.page.getByRole('button', { name: /Save details/i });
     }
 
@@ -31,22 +31,33 @@ class Dropin extends Base {
 
     async goto(url?: string) {
         await this.page.goto(url);
-        const response = await this.page.waitForResponse(response => response.url().includes('paymentMethods') && response.status() === 200);
+        // Wait for payment methods from the payments call
+        const responsePromise = this.page.waitForResponse(response => response.url().includes('paymentMethods') && response.status() === 200);
+        const response = await responsePromise;
         this._paymentMethods = (await response.json()).paymentMethods.map(({ name, type }: { name: string; type: string }) => ({ name, type }));
         await this.isComponentVisible();
     }
 
-    getPaymentMethodItemByType(pmType: string) {
+    getPaymentMethodLabelByType(pmType: string) {
         const pmLabel = this.paymentMethods.find((pm: { type: string }) => pm.type === pmType).name;
         return this.pmList.locator(`.adyen-checkout__payment-method:has-text("${pmLabel}")`);
+    }
+
+    async selectPaymentMethod(pmType: string) {
+        const pmLabel = this.paymentMethods.find((pm: { type: string }) => pm.type === pmType).name;
+        this.page.getByRole('radio', { name: pmLabel }).check();
+    }
+
+    async saveDetails() {
+        await this.saveDetailsButton.click();
     }
 
     get paymentMethods() {
         return this._paymentMethods;
     }
 
-    async saveDetails() {
-        await this.saveDetailsButton.click();
+    get paymentResult() {
+        return this.page.locator('.adyen-checkout__status').textContent();
     }
 }
 

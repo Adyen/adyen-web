@@ -55,4 +55,10 @@ export const JWE_ALG = 'RSA-OAEP';
 
 export const SR_INDICATOR_PREFIX = '-sr';
 
-export const PAYMENT_RESULT = { authorised: 'Authorised', refused: 'Refused' };
+export const PAYMENT_RESULT = {
+    authorised: 'Authorised',
+    refused: 'Refused',
+    detailsSaved: 'Details saved',
+    success: 'Payment Successful',
+    fail: 'An unknown error occurred'
+};

@@ -48,7 +48,7 @@ class Card extends Base {
         public readonly page: Page,
         rootElementSelector = '.adyen-checkout__card-input'
     ) {
-        super(page);
+        super(page, rootElementSelector);
         this.rootElement = this.page.locator(rootElementSelector);
         this.rootElementSelector = rootElementSelector;
 

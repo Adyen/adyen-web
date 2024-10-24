@@ -1,4 +1,4 @@
-import { test } from '../../../../pages/dropin/dropin.fixture';
+import { test } from '../../../../fixtures/dropin/dropin.fixture';
 
 test.describe('Testing Bancontact in Dropin', () => {
     // todo: create fixture

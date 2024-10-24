@@ -15,10 +15,10 @@ type Fixture = {
 const test = base.extend<Fixture>({
     cardBrandingPage: async ({ page }, use) => {
         const cardPage = new Card(page);
-        const config = {
+        const componentConfig = {
             brands: ['mc', 'visa', 'amex', 'maestro', 'bcmc']
         };
-        await cardPage.goto(getStoryUrl(URL_MAP.card, config));
+        await cardPage.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
         await use(cardPage);
     }
 });

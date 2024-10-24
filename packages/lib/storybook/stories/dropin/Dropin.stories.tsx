@@ -15,7 +15,12 @@ const meta: MetaConfiguration<DropinConfiguration> = {
             control: 'object'
         },
         paymentMethodsOverride: {
-            control: 'object'
+            control: 'object',
+            if: { arg: 'useSessions', truthy: false }
+        },
+        sessionData: {
+            control: 'object',
+            if: { arg: 'useSessions', truthy: true }
         }
     },
     args: {
