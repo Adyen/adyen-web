@@ -5,7 +5,9 @@
   "homepage": "https://docs.adyen.com/checkout",
   "type": "module",
   "sideEffects": [
-    "*.css"
+    "*.css",
+    "./auto/auto.js",
+    "./auto/auto.cjs"
   ],
   "main": "dist/cjs/index.cjs",
   "module": "dist/es-legacy/index.js",
