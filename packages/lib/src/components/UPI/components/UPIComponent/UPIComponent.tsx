@@ -34,7 +34,7 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
     const { i18n } = useCoreContext();
     const getImage = useImage();
     const [status, setStatus] = useState<UIElementStatus>('ready');
-    const [isValid, setIsValid] = useState<boolean>(defaultMode === UpiMode.QrCode);
+    const [isValid, setIsValid] = useState<boolean>(defaultMode === 'qrCode');
     const [mode, setMode] = useState<UpiMode>(defaultMode);
     const [vpa, setVpa] = useState<string>('');
     const [vpaInputHandlers, setVpaInputHandlers] = useState<VpaInputHandlers>(null);

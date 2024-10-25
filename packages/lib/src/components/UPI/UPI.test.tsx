@@ -107,7 +107,7 @@ describe('UPI', () => {
         describe('select the QR code mode', () => {
             test('should be valid', async () => {
                 isMobileMock.mockReturnValue(false);
-                const upi = new UPI({ ...props, defaultMode: UpiMode.QrCode });
+                const upi = new UPI(global.core, { ...props, defaultMode: 'qrCode' });
                 render(upi.render());
                 await waitFor(() => {
                     expect(upi.isValid).toBe(true);
@@ -118,7 +118,7 @@ describe('UPI', () => {
         describe('select the vpa mode', () => {
             test('should not be valid on init', async () => {
                 isMobileMock.mockReturnValue(false);
-                const upi = new UPI({ ...props, defaultMode: UpiMode.Vpa });
+                const upi = new UPI(global.core, { ...props, defaultMode: 'vpa' });
                 render(upi.render());
                 await waitFor(() => {
                     expect(upi.isValid).toBe(false);
@@ -127,7 +127,7 @@ describe('UPI', () => {
 
             test('should be valid when filling in the vpa', async () => {
                 isMobileMock.mockReturnValue(false);
-                const upi = new UPI({ ...props, defaultMode: UpiMode.Vpa });
+                const upi = new UPI(global.core, { ...props, defaultMode: 'vpa' });
                 render(upi.render());
                 const user = userEvent.setup();
                 const vpaInput = await screen.findByLabelText(/Enter UPI ID \/ VPA/i);
@@ -142,7 +142,7 @@ describe('UPI', () => {
             });
 
             test('should not be valid on init', async () => {
-                const upi = new UPI({ ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
+                const upi = new UPI(global.core, { ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
                 render(upi.render());
                 await waitFor(() => {
                     expect(upi.isValid).toBe(false);
@@ -150,7 +150,7 @@ describe('UPI', () => {
             });
 
             test('should be valid when selecting other apps', async () => {
-                const upi = new UPI({ ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
+                const upi = new UPI(global.core, { ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
                 render(upi.render());
                 const user = userEvent.setup();
                 const radioButton = await screen.findByRole('radio', { name: /google pay/i });
@@ -159,7 +159,7 @@ describe('UPI', () => {
             });
 
             test('should not be valid when selecting upi collect', async () => {
-                const upi = new UPI({ ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
+                const upi = new UPI(global.core, { ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
                 render(upi.render());
                 const user = userEvent.setup();
                 const radioButton = await screen.findByRole('radio', { name: /Enter UPI ID/i });
@@ -168,7 +168,7 @@ describe('UPI', () => {
             });
 
             test('should be valid when filling the vpa', async () => {
-                const upi = new UPI({ ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
+                const upi = new UPI(global.core, { ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
                 render(upi.render());
                 const user = userEvent.setup();
                 const radioButton = await screen.findByRole('radio', { name: /Enter UPI ID/i });
