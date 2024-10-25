@@ -9,7 +9,7 @@
 }
 
 .adyen-checkout-timeline-item {
-  scrollbar-color: var(color-background-quaternary) transparent;
+  scrollbar-color: token(color-background-quaternary) transparent;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   list-style-type: none;
