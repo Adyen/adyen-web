@@ -34,7 +34,7 @@ export default () => {
                 replaceValues({ bundleType: BUNDLE_TYPES.esm, buildType: 'production' }),
                 convertJsonToESM(),
                 compileCSS(),
-                compileJavascript({ target: 'es2022', sourceMaps: true }),
+                compileJavascript({ target: 'es2020', sourceMaps: true }),
                 minify()
             ],
             output: [
@@ -99,7 +99,7 @@ export default () => {
                 replaceValues({ bundleType: BUNDLE_TYPES.umd, buildType: 'production' }),
                 convertJsonToESM(),
                 compileCSS(),
-                compileJavascript({ sourceMaps: true }),
+                compileJavascript({ target: 'es2020', sourceMaps: true }),
                 minify({ isESM: false })
             ],
             output: {

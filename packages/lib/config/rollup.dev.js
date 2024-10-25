@@ -18,7 +18,7 @@ export default () => {
                 replaceValues({ bundleType: BUNDLE_TYPES.esm, buildType: 'development' }),
                 convertJsonToESM(),
                 compileCSS({}),
-                compileJavascript({ target: 'es2022' })
+                compileJavascript({ target: 'es2020' })
             ],
             output: [
                 {
