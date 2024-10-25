@@ -164,7 +164,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                         src={getImage({ imageFolder: 'components/' })(image)}
                         alt={status}
                     />
-                    <div className="adyen-checkout__qr-loader__subtitle adyen-checkout__qr-loader__subtitle--result">{status}</div>
+                    <div className="adyen-checkout__qr-loader__subtitle">{status}</div>
                 </div>
             );
         };
@@ -180,7 +180,11 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
         if (loading) {
             return (
                 <div className="adyen-checkout__qr-loader">
-                    {brandLogo && <img alt={brandName} src={brandLogo} className="adyen-checkout__qr-loader__brand-logo" />}
+                    {brandLogo && (
+                        <div className="adyen-checkout__qr-loader__brand-logo-wrapper">
+                            <img alt={brandName} src={brandLogo} className="adyen-checkout__qr-loader__brand-logo" />
+                        </div>
+                    )}
                     <Spinner />
                 </div>
             );
@@ -193,7 +197,11 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
 
         return (
             <div className={`adyen-checkout__qr-loader adyen-checkout__qr-loader--${type} ${classnames.join(' ')}`}>
-                {brandLogo && <img src={brandLogo} alt={brandName} className="adyen-checkout__qr-loader__brand-logo" />}
+                {brandLogo && (
+                    <div className="adyen-checkout__qr-loader__brand-logo-wrapper">
+                        <img src={brandLogo} alt={brandName} className="adyen-checkout__qr-loader__brand-logo" />
+                    </div>
+                )}
 
                 {amount && amount.value && amount.currency && (
                     <div className="adyen-checkout__qr-loader__payment_amount">{i18n.amount(amount.value, amount.currency)}</div>
@@ -211,7 +219,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
 
                 {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
                 <div ref={qrSubtitleRef} tabIndex={0} className="adyen-checkout__qr-loader__subtitle">
-                    {i18n.get(this.props.introduction)}
+                    {typeof this.props.introduction === 'string' ? i18n.get(this.props.introduction) : this.props.introduction?.()}
                 </div>
 
                 <img
@@ -235,10 +243,10 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                     &nbsp;{timeToPayString[1]}
                 </div>
 
-                {typeof this.props.instructions === 'string' ? (
-                    <div className="adyen-checkout__qr-loader__instructions">{i18n.get(this.props.instructions)}</div>
-                ) : (
-                    this.props.instructions?.()
+                {this.props.instructions && (
+                    <div className="adyen-checkout__qr-loader__instructions">
+                        {typeof this.props.instructions === 'string' ? i18n.get(this.props.instructions) : this.props.instructions?.()}
+                    </div>
                 )}
 
                 {this.props.copyBtn && (
