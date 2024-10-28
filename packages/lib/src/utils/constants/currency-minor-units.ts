@@ -1,5 +1,6 @@
 /** Work around solution until chromium bug is fixed https://bugs.chromium.org/p/chromium/issues/detail?id=1381996
- * We need to hardcode minimumFractionDigits for the following currencies
+ * We need to hardcode minimumFractionDigits for the following currencies in order to force them to have 2 decimal places and
+ * not be rounded up to a major unit
  */
 export const currencyMinorUnitsConfig = {
     RSD: { minimumFractionDigits: 2 },
