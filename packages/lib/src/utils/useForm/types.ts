@@ -35,6 +35,7 @@ export interface Form<FormSchema> extends FormState<FormSchema> {
     triggerValidation: (schema?: any) => void;
     setSchema: (schema: any) => void;
     setData: (key: string, value: any) => void;
+    mergeData: (data: FormSchema) => void;
     setValid: (key: string, value: any) => void;
     setErrors: (key: string, value: any) => void;
     mergeForm: (formValue: any) => void;

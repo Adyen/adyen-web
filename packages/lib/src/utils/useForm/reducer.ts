@@ -54,12 +54,15 @@ export function init({ schema, defaultData, processField, fieldProblems }) {
 }
 
 export function getReducer(processField) {
-    return function reducer(state, { type, key, value, mode, schema, defaultData, formValue, selectedSchema, fieldProblems }: any) {
+    return function reducer(state, { type, key, value, mode, schema, defaultData, formValue, selectedSchema, fieldProblems, data }) {
         const validationSchema: string[] = selectedSchema || state.schema;
 
         switch (type) {
             case 'setData': {
                 return { ...state, data: { ...state['data'], [key]: value } };
+            }
+            case 'mergeData': {
+                return { ...state, data: { ...state['data'], ...data } };
             }
             case 'setValid': {
                 return { ...state, valid: { ...state['valid'], [key]: value } };
