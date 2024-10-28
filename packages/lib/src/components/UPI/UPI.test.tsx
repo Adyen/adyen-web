@@ -1,4 +1,5 @@
-import { render, screen } from '@testing-library/preact';
+import { render, screen, waitFor } from '@testing-library/preact';
+import userEvent from '@testing-library/user-event';
 import UPI from './UPI';
 import isMobile from '../../utils/isMobile';
 import { TX_VARIANT, UpiMode } from './types';
@@ -101,11 +102,90 @@ describe('UPI', () => {
         });
     });
 
+    describe('isValid', () => {
+        describe('select the QR code mode', () => {
+            test('should be valid', async () => {
+                isMobileMock.mockReturnValue(false);
+                const upi = new UPI({ ...props, defaultMode: UpiMode.QrCode });
+                render(upi.render());
+                await waitFor(() => {
+                    expect(upi.isValid).toBe(true);
+                });
+            });
+        });
+
+        describe('select the vpa mode', () => {
+            test('should not be valid on init', async () => {
+                isMobileMock.mockReturnValue(false);
+                const upi = new UPI({ ...props, defaultMode: UpiMode.Vpa });
+                render(upi.render());
+                await waitFor(() => {
+                    expect(upi.isValid).toBe(false);
+                });
+            });
+
+            test('should be valid when filling in the vpa', async () => {
+                isMobileMock.mockReturnValue(false);
+                const upi = new UPI({ ...props, defaultMode: UpiMode.Vpa });
+                render(upi.render());
+                const user = userEvent.setup();
+                const vpaInput = await screen.findByLabelText(/Enter UPI ID \/ VPA/i);
+                await user.type(vpaInput, 'test@test');
+                expect(upi.isValid).toBe(true);
+            });
+        });
+
+        describe('select the intent mode', () => {
+            beforeEach(() => {
+                isMobileMock.mockReturnValue(true);
+            });
+
+            test('should not be valid on init', async () => {
+                const upi = new UPI({ ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
+                render(upi.render());
+                await waitFor(() => {
+                    expect(upi.isValid).toBe(false);
+                });
+            });
+
+            test('should be valid when selecting other apps', async () => {
+                const upi = new UPI({ ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
+                render(upi.render());
+                const user = userEvent.setup();
+                const radioButton = await screen.findByRole('radio', { name: /google pay/i });
+                await user.click(radioButton);
+                expect(upi.isValid).toBe(true);
+            });
+
+            test('should not be valid when selecting upi collect', async () => {
+                const upi = new UPI({ ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
+                render(upi.render());
+                const user = userEvent.setup();
+                const radioButton = await screen.findByRole('radio', { name: /Enter UPI ID/i });
+                await user.click(radioButton);
+                expect(upi.isValid).toBe(false);
+            });
+
+            test('should be valid when filling the vpa', async () => {
+                const upi = new UPI({ ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
+                render(upi.render());
+                const user = userEvent.setup();
+                const radioButton = await screen.findByRole('radio', { name: /Enter UPI ID/i });
+                await user.click(radioButton);
+                expect(upi.isValid).toBe(false);
+
+                const vpaInput = await screen.findByLabelText(/Enter UPI ID \/ VPA/i);
+                await user.type(vpaInput, 'test@test');
+                expect(upi.isValid).toBe(true);
+            });
+        });
+    });
+
     describe('render', () => {
         test('should render the UPI component by default', async () => {
             const upi = new UPI(props);
             render(upi.render());
-            expect(await screen.findByRole('group')).toBeInTheDocument;
+            expect(await screen.findByRole('group')).toBeInTheDocument();
         });
     });
 });
