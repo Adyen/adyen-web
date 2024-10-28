@@ -1,5 +1,13 @@
 # @adyen/adyen-web
 
+## 5.71.1
+
+### Patch Changes
+
+-   Fix address lookup reseting state field after country change ([#2926](https://github.com/Adyen/adyen-web/pull/2926))
+
+-   Fix `UPIComponent` initial value for `isValid`. It should only be default to `true` for UPI QR. ([#2920](https://github.com/Adyen/adyen-web/pull/2920))
+
 ## 5.71.0
 
 ### Minor Changes
