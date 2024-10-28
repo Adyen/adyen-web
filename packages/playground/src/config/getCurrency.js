@@ -13,6 +13,7 @@ const currencies = {
     HU: 'HUN',
     ID: 'IDR',
     IN: 'INR',
+    IS: 'ISK',
     JP: 'JPY',
     KR: 'KRW',
     MG: 'MGA',

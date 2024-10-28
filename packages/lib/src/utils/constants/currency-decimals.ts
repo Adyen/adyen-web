@@ -10,7 +10,6 @@ const CURRENCY_DECIMALS = {
     GHC: 1,
     GNF: 1,
     KMF: 1,
-    ISK: 1,
     PYG: 1,
     RWF: 1,
     UGX: 1,
