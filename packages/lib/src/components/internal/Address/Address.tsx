@@ -39,9 +39,11 @@ export default function Address(props: AddressProps) {
 
     const showAddressSearch = !!props.onAddressLookup;
 
+    const [ignoreCountryChange, setIgnoreCountryChange] = useState(false);
+
     const showAddressFields = props.onAddressLookup ? hasSelectedAddress || useManualAddress : true;
 
-    const { data, errors, valid, isValid, handleChangeFor, triggerValidation, setData } = useForm<AddressData>({
+    const { data, errors, valid, isValid, handleChangeFor, triggerValidation, setData, mergeData } = useForm<AddressData>({
         schema: requiredFieldsSchema,
         defaultData: props.data,
         // Ensure any passed validation rules are merged with the default ones
@@ -52,13 +54,17 @@ export default function Address(props: AddressProps) {
     const setSearchData = useCallback(
         (selectedAddress: AddressData) => {
             const propsKeysToProcess = ADDRESS_SCHEMA;
-            propsKeysToProcess.forEach(propKey => {
+            const newStateData = propsKeysToProcess.reduce((acc: AddressData, propKey) => {
                 // Make sure the data provided by the merchant is always strings
                 const providedValue = selectedAddress[propKey];
-                if (providedValue === null || providedValue === undefined) return;
-                // Cast everything to string
-                setData(propKey, String(providedValue));
-            });
+                if (providedValue !== null && providedValue !== undefined) {
+                    // Cast everything to string
+                    acc[propKey] = String(providedValue);
+                }
+                return acc;
+            }, {});
+            mergeData(newStateData);
+            setIgnoreCountryChange(true);
             triggerValidation();
             setHasSelectedAddress(true);
         },
@@ -93,6 +99,12 @@ export default function Address(props: AddressProps) {
      * - Applies validation on postalCode field in case it has any value
      */
     useEffect((): void => {
+        // if the country was set via setSearchData we don't want to trigger this
+        if (ignoreCountryChange) {
+            setIgnoreCountryChange(false);
+            return;
+        }
+
         const stateOrProvince = specifications.countryHasDataset(data.country) ? '' : FALLBACK_VALUE;
         const newData = { ...data, stateOrProvince };
 
