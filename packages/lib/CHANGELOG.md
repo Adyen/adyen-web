@@ -1,5 +1,27 @@
 # @adyen/adyen-web
 
+## 6.5.0
+
+### Minor Changes
+
+-   PayMe - Improved instructions UI ([#2910](https://github.com/Adyen/adyen-web/pull/2910))
+
+-   PayNow - Adding instructions to scan QR code on mobile view ([#2910](https://github.com/Adyen/adyen-web/pull/2910))
+
+### Patch Changes
+
+-   Fix issue where 'auto' bundle was tree-shaken by bundlers in prod builds ([#2914](https://github.com/Adyen/adyen-web/pull/2914))
+
+-   Fix address lookup reseting state field after country change ([#2927](https://github.com/Adyen/adyen-web/pull/2927))
+
+-   Revert Icelandic Krona to be treated as a currency with minor units, in order to align with our documentation ([#2924](https://github.com/Adyen/adyen-web/pull/2924))
+
+-   Fix `UPIComponent` initial value for `isValid`. It should only be default to `true` for UPI QR. ([#2921](https://github.com/Adyen/adyen-web/pull/2921))
+
+-   Lowered ECMAScript version to 2020 in order to support older iOS versions ([#2917](https://github.com/Adyen/adyen-web/pull/2917))
+
+-   Payconic - Adjusted QR code message and removed unused button label. ([#2910](https://github.com/Adyen/adyen-web/pull/2910))
+
 ## 6.4.0
 
 ### Minor Changes
