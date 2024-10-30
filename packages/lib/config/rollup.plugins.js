@@ -47,8 +47,12 @@ export const compileCSS = ({ extract = 'adyen.css' } = {}) =>
         extract: extract
     });
 
-export const compileJavascript = ({ target = 'es2022', sourceMaps = false } = {}) =>
-    swc(
+export const compileJavascript = ({ target, sourceMaps = false } = {}) => {
+    if (!target) {
+        throw Error('Rollup plugins: compileJavascript task - "target" is missing');
+    }
+
+    return swc(
         defineRollupSwcOption({
             tsconfig: '../tsconfig.json',
             jsc: {
@@ -70,6 +74,7 @@ export const compileJavascript = ({ target = 'es2022', sourceMaps = false } = {}
             inlineSourcesContent: false
         })
     );
+};
 
 export const minify = ({ isESM } = { isESM: true }) => terser({ module: isESM });
 
