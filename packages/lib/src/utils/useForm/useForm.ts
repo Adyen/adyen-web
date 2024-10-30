@@ -55,6 +55,7 @@ function useForm<FormSchema>(props: FormProps): Form<FormSchema> {
     const setErrors = useCallback((key, value) => dispatch({ type: 'setErrors', key, value }), []);
     const setValid = useCallback((key, value) => dispatch({ type: 'setValid', key, value }), []);
     const setData = useCallback((key, value) => dispatch({ type: 'setData', key, value }), []);
+    const mergeData = useCallback(data => dispatch({ type: 'mergeData', data }), []);
     const setSchema = useCallback(schema => dispatch({ type: 'setSchema', schema, defaultData }), [state.schema]);
     const mergeForm = useCallback(formValue => dispatch({ type: 'mergeForm', formValue }), []);
     const setFieldProblems = useCallback(fieldProblems => dispatch({ type: 'setFieldProblems', fieldProblems }), [state.schema]);
@@ -69,6 +70,7 @@ function useForm<FormSchema>(props: FormProps): Form<FormSchema> {
         triggerValidation,
         setSchema,
         setData,
+        mergeData,
         setValid,
         setErrors,
         isValid,
