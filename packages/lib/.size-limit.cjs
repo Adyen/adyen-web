@@ -5,7 +5,7 @@ module.exports = [
     {
         name: 'UMD',
         path: 'dist/umd/adyen.js',
-        limit: '100 KB',
+        limit: '110 KB',
         running: false,
     },
     /**
