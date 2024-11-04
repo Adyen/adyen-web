@@ -1,34 +1,38 @@
-import { test } from '@playwright/test';
+import { test, expect } from '../../../fixtures/card.fixture';
+import { BCMC_DUAL_BRANDED_VISA, TEST_CVC_VALUE, TEST_DATE_VALUE, VISA_CARD } from '../../utils/constants';
 
-test('BCMC logo should have correct alt text', async () => {
-    // wait for card number field shown
-    // await fillCardNumber(t, '41');
-    // BCMC logo still in number field
-    // await t.expect(cc.brandingIcon.withAttribute('alt', 'Bancontact card').exists).ok();
-    // Hidden cvc field - check aria hidden?
+test('BCMC logo should have correct alt text', async ({ bcmc }) => {
+    await bcmc.typeCardNumber('41');
+    expect(bcmc.rootElement.getByAltText(/bancontact card/i)).toBeTruthy();
 });
 
-test('Visa logo should have correct alt text', async () => {});
+test('Visa logo should have correct alt text', async ({ bcmc }) => {
+    await bcmc.typeCardNumber(VISA_CARD);
+    expect(bcmc.rootElement.getByAltText(/visa/i)).toBeTruthy();
+});
 
 test(
     '#4 Enter card number (co-branded bcmc/visa) ' +
         'then complete expiryDate and expect comp to be valid' +
         'then click Visa logo and expect comp to not be valid' +
         'then click BCMC logo and expect comp to be valid again',
-    async () => {
-        // Wait for field to appear in DOM
-        // fillCardNumber(t, BCMC_DUAL_BRANDED_VISA);
-        // fillDate(t, TEST_DATE_VALUE);
-        // Expect drop in to be valid? - todo move this test to dropin?
-        // Click Visa brand icon
-        // Expect visible CVC field
-        // Expect iframe to exist in CVC field and with aria-required set to true
-        // await checkIframeForAttrVal(t, 2, 'encryptedSecurityCode', 'aria-required', 'true');
-        // Expect dropin not to be valid
-        // Click BCMC brand icon
-        // Eppect hidden CVC field
-        // Expect dropin to be valid (also check that it is set on state for this PM)
-        // Expect the active payment to be valid (also check that it is set on state for this PM)
+    async ({ page, bcmc }) => {
+        await bcmc.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
+        await bcmc.typeExpiryDate(TEST_DATE_VALUE);
+        expect(bcmc.cvcField).toBeHidden();
+        await page.waitForFunction(() => globalThis.component.isValid === true);
+
+        await bcmc.rootElement.getByAltText(/visa/i).first().click();
+        await bcmc.cvcInput.waitFor({ state: 'visible' });
+        expect(bcmc.cvcInput).toHaveAttribute('aria-required', 'true');
+        await page.waitForFunction(() => globalThis.component.isValid === false);
+
+        await bcmc.rootElement
+            .getByAltText(/bancontact card/i)
+            .first()
+            .click();
+        await bcmc.cvcField.waitFor({ state: 'hidden' });
+        await page.waitForFunction(() => globalThis.component.isValid === true);
     }
 );
 
@@ -37,15 +41,16 @@ test(
         'then complete expiryDate and expect comp to be valid' +
         'then click Visa logo and expect comp to not be valid' +
         'then enter CVC and expect comp to be valid',
-    async () => {
-        // Wait for field to appear in DOM
-        // fillCardNumber(t, BCMC_DUAL_BRANDED_VISA);
-        // fillDate(t, TEST_DATE_VALUE);
-        // Expect dropin.isValid
-        // Click Visa brand icon
-        // Expect dropin.isValid not to be valid
-        // fill CVC
-        // Expect dropin.isValid to now be valid
+    async ({ bcmc, page }) => {
+        await bcmc.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
+        await bcmc.typeExpiryDate(TEST_DATE_VALUE);
+        await page.waitForFunction(() => globalThis.component.isValid === true);
+
+        await bcmc.rootElement.getByAltText(/visa/i).first().click();
+        await page.waitForFunction(() => globalThis.component.isValid === false);
+
+        await bcmc.typeCvc(TEST_CVC_VALUE);
+        await page.waitForFunction(() => globalThis.component.isValid === true);
     }
 );
 

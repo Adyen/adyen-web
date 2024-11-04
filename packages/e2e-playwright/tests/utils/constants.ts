@@ -1,6 +1,7 @@
 export const BIN_LOOKUP_VERSION = 'v3';
 
 export const REGULAR_TEST_CARD = '5500000000000004';
+export const VISA_CARD = '4111111111111111';
 export const AMEX_CARD = '370000000000002';
 export const KOREAN_TEST_CARD = '9490220006611406'; // 9490220006611406 works against Test. For localhost:8080 use: 5067589608564358 + hack in triggerBinLookup
 export const BCMC_CARD = '6703444444444449'; // actually dual branded bcmc & maestro

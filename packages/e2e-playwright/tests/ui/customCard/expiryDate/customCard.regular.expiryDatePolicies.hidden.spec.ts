@@ -73,7 +73,9 @@ test.describe('Test how Custom Card Component with regular date field handles hi
         await expect(cardValid).toEqual(true);
     });
     // flaky
-    test.fixme('#3 date field in error does not stop card becoming valid', async ({ page, customCard }) => {
+    test('#3 date field in error does not stop card becoming valid', async ({ browserName, page, customCard }) => {
+        test.skip(browserName === 'webkit', 'Skipping tests for WebKit');
+
         await binLookupMock(page, hiddenDateAndCvcMock);
 
         // Card out of date

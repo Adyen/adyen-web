@@ -13,6 +13,7 @@ export const URL_MAP = {
     cardWithInstallments: '/iframe.html?args=&id=cards-card--with-installments&viewMode=story',
     cardWithKcp: '/iframe.html?args=&id=cards-card--kcp&viewMode=story',
     cardWithClickToPay: '/iframe.html?args=&id=cards-card--with-click-to-pay&viewMode=story',
+    bcmc: '/iframe.html?args=&globals=&id=cards-bancontact--default&viewMode=story',
     /* Custom card */
     customCard: '/iframe.html?globals=&args=&id=cards-custom-card--default&viewMode=story',
     customCardSeparateExpiryDate: '/iframe.html?globals=&args=&id=cards-custom-card--variant&viewMode=story',
