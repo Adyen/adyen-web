@@ -96,7 +96,7 @@ describe('Analytics initialisation and event queue', () => {
         expect(collectIdPromiseMock).toHaveBeenCalled();
         await Promise.resolve(); // wait for the next tick
 
-        const enhancedSetupEvent = { ...setUpEvent, applicationInfo, checkoutAttemptId };
+        const enhancedSetupEvent = { ...setUpEvent, applicationInfo, checkoutAttemptId, level: 'initial' };
 
         expect(collectIdPromiseMock).toHaveBeenCalledWith({ ...enhancedSetupEvent });
 

@@ -1,7 +1,14 @@
 import CollectId from '../Services/analytics/collect-id';
 import EventsQueue, { EventsQueueModule } from './EventsQueue';
 import { ANALYTICS_EVENT, AnalyticsInitialEvent, AnalyticsObject, AnalyticsProps, CreateAnalyticsEventObject } from './types';
-import { ANALYTICS_EVENT_ERROR, ANALYTICS_EVENT_INFO, ANALYTICS_EVENT_LOG, ANALYTICS_INFO_TIMER_INTERVAL, ANALYTICS_PATH } from './constants';
+import {
+    ANALYTIC_LEVEL,
+    ANALYTICS_EVENT_ERROR,
+    ANALYTICS_EVENT_INFO,
+    ANALYTICS_EVENT_LOG,
+    ANALYTICS_INFO_TIMER_INTERVAL,
+    ANALYTICS_PATH
+} from './constants';
 import { debounce } from '../../utils/debounce';
 import { AnalyticsModule } from '../../types/global-types';
 import { createAnalyticsObject, processAnalyticsData } from './utils';
@@ -62,18 +69,17 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
          * @param initialEvent -
          */
         setUp: async (initialEvent: AnalyticsInitialEvent) => {
-            const { payload } = props; // TODO what is payload, is it ever used?
-
+            const { payload, enabled } = props; // TODO what is payload, is it ever used?
+            const level = enabled ? ANALYTIC_LEVEL.all : ANALYTIC_LEVEL.initial;
             const analyticsData = processAnalyticsData(props.analyticsData);
-
             if (!capturedCheckoutAttemptId) {
                 try {
-                    const checkoutAttemptId = await collectId({
+                    capturedCheckoutAttemptId = await collectId({
                         ...initialEvent,
                         ...(payload && { ...payload }),
-                        ...(Object.keys(analyticsData).length && { ...analyticsData })
+                        ...(Object.keys(analyticsData).length && { ...analyticsData }),
+                        ...{ level }
                     });
-                    capturedCheckoutAttemptId = checkoutAttemptId;
                 } catch (e: any) {
                     console.warn(`Fetching checkoutAttemptId failed.${e ? ` Error=${e}` : ''}`);
                 }
