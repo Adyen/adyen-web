@@ -17,6 +17,10 @@ class Address {
         return this.rootElement.getByRole('textbox', { name: /street/i });
     }
 
+    get streetInputError() {
+        return this.rootElement.locator('.adyen-checkout__field--street').locator('.adyen-checkout-contextual-text--error');
+    }
+
     get houseNumberInput() {
         return this.rootElement.getByRole('textbox', { name: /house number/i });
     }

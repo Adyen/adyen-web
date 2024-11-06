@@ -1,12 +1,19 @@
-import { test } from '@playwright/test';
+import { mergeTests, expect } from '@playwright/test';
+import { test as cardWithAvs } from '../../../fixtures/card.fixture';
+import { test as srPanel } from '../../../fixtures/srPanel.fixture';
 
-test('#1 avsCard error fields and inputs should have correct aria attributes', async () => {
-    // Wait for field to appear in DOM
-    // click pay, to validate & generate errors
-    // Card number's error field should have correct aria attrs (-hidden="true", -live not set)
-    // Card number input should have aria-describedby attr
-    // Address input's error field should have correct aria attrs
-    // Address input should have aria-describedby attr
+const test = mergeTests(cardWithAvs, srPanel);
+// Card with AVS, show srPanel, no prefilled data
+const url = '/iframe.html?args=srConfig.showPanel:!true;componentConfiguration.data:!undefined&globals=&id=cards-card--with-avs&viewMode=story';
+
+test('#1 avsCard error fields and inputs should have correct aria attributes', async ({ cardWithAvs }) => {
+    await cardWithAvs.goto(url);
+    await cardWithAvs.pay();
+    await expect(cardWithAvs.cvcErrorElement).toHaveAttribute('aria-hidden', 'true');
+    await expect(cardWithAvs.cvcErrorElement).not.toHaveAttribute('aria-live');
+    await expect(cardWithAvs.cardNumberInput).toHaveAttribute('aria-describedby', /^adyen-checkout-encryptedCardNumber.*ariaContext$/);
+    await expect(cardWithAvs.billingAddress.streetInput).toHaveAttribute('aria-describedby', /^adyen-checkout-street.*ariaError$/);
+    await expect(cardWithAvs.billingAddress.streetInputError).not.toHaveAttribute('aria-describedby', /^adyen-checkout-street.*ariaError$/);
 });
 
 test('#2 Click pay with empty fields and error panel in avsCard is populated', async () => {

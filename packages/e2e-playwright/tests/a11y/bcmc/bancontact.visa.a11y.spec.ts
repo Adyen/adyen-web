@@ -1,5 +1,5 @@
 import { test, expect } from '../../../fixtures/card.fixture';
-import { BCMC_DUAL_BRANDED_VISA, TEST_CVC_VALUE, TEST_DATE_VALUE, VISA_CARD } from '../../utils/constants';
+import { BCMC_DUAL_BRANDED_VISA, DUAL_BRANDED_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE, VISA_CARD } from '../../utils/constants';
 
 test('BCMC logo should have correct alt text', async ({ bcmc }) => {
     await bcmc.typeCardNumber('41');
@@ -59,18 +59,12 @@ test(
         'then delete it' +
         'then re-add it' +
         'and expect Visa logo to be shown a second time (showing CSF has reset state)',
-    async () => {
-        // Wait for field to appear in DOM
-        // Add Visa num (dual branded, but with Carte Bancaire, so only recognised as Visa)
-        // fillCardNumber(t, DUAL_BRANDED_CARD);
-        // Expect Visa logo in number field
-        // expect(cc.brandingIcon.withAttribute('alt', 'VISA').exists).ok();
-        // await deleteCardNumber(t);
-        // Expect BCMC logo in number field
-        // await t.expect(dropinPage.cc.brandingIcon.withAttribute('alt', 'Bancontact card').exists).ok();
-        // Re-add Visa num
-        // await dropinPage.cc.cardUtils.fillCardNumber(t, DUAL_BRANDED_CARD);
-        // Expect Visa logo in number field again
-        // await t.expect(dropinPage.cc.brandingIcon.withAttribute('alt', 'VISA').exists).ok();
+    async ({ bcmc }) => {
+        await bcmc.typeCardNumber(DUAL_BRANDED_CARD);
+        expect(bcmc.rootElement.getByAltText(/visa/i)).toBeTruthy();
+        await bcmc.deleteCardNumber();
+        expect(bcmc.rootElement.getByAltText(/bancontact card/i)).toBeTruthy();
+        await bcmc.typeCardNumber(DUAL_BRANDED_CARD);
+        expect(bcmc.rootElement.getByAltText(/visa/i)).toBeTruthy();
     }
 );
