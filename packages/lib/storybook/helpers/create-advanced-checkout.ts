@@ -11,6 +11,7 @@ async function createAdvancedFlowCheckout({
     countryCode,
     shopperLocale,
     amount,
+    allowedPaymentTypes = [],
     paymentMethodsOverride,
     ...restCheckoutProps
 }: AdyenCheckoutProps): Promise<Checkout> {
@@ -28,15 +29,11 @@ async function createAdvancedFlowCheckout({
     const paymentMethodsResponse = !paymentMethodsOverride
         ? _paymentMethodsResponse
         : {
-              storedPaymentMethods: [
-                  ...(_paymentMethodsResponse.storedPaymentMethods ? _paymentMethodsResponse.storedPaymentMethods : []),
-                  ...(paymentMethodsOverride.storedPaymentMethods ? paymentMethodsOverride.storedPaymentMethods : [])
-              ],
-              paymentMethods: [
-                  ...(_paymentMethodsResponse.paymentMethods ? _paymentMethodsResponse.paymentMethods : []),
-                  ...(paymentMethodsOverride.paymentMethods ? paymentMethodsOverride.paymentMethods : [])
-              ]
+              storedPaymentMethods: paymentMethodsOverride.storedPaymentMethods ? paymentMethodsOverride.storedPaymentMethods : [],
+              paymentMethods: paymentMethodsOverride.paymentMethods ? paymentMethodsOverride.paymentMethods : []
           };
+
+    paymentMethodsResponse.paymentMethods = paymentMethodsResponse.paymentMethods.filter(pm => allowedPaymentTypes.includes(pm.type));
 
     const checkout = await AdyenCheckout({
         clientKey: process.env.CLIENT_KEY,
