@@ -18,7 +18,7 @@ export const Default: CardStory = {
         srConfig: { moveFocus: true },
         componentConfiguration: getComponentConfigFromUrl() ?? {
             _disableClickToPay: true,
-            autoFocus: false,
+            autoFocus: true,
             // brands: ['mc'],
             // brandsConfiguration: { visa: { icon: 'http://localhost:3000/nocard.svg', name: 'altVisa' } },
             challengeWindowSize: '02',
