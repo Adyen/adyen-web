@@ -4,7 +4,10 @@ class Address {
     readonly rootElement: Locator;
     readonly rootElementSelector: string;
 
-    constructor(page: Page, rootElementSelector: string = '.adyen-checkout__fieldset--billingAddress') {
+    constructor(
+        public readonly page: Page,
+        rootElementSelector: string = '.adyen-checkout__fieldset--billingAddress'
+    ) {
         this.rootElement = page.locator(rootElementSelector);
         this.rootElementSelector = rootElementSelector;
     }
@@ -35,6 +38,11 @@ class Address {
 
     async fillInPostCode(postCode: string) {
         await this.postalCodeInput.fill(postCode);
+    }
+
+    async selectCountry(options: { name?: RegExp | string }) {
+        await this.countrySelector.click();
+        await this.rootElement.getByRole('option', options).click();
     }
 }
 
