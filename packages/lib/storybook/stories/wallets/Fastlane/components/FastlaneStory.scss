@@ -11,7 +11,7 @@
   align-self: end;
 }
 
-.email-input {
+.input-field {
   background-color: white;
   border: #aab2bc 1px solid;
   border-radius: 4px;
@@ -22,6 +22,17 @@
   width: 300px;
   margin-right: 12px;
 }
+
+.shipping-section {
+  .input-field {
+    margin-bottom: 12px;
+  }
+
+  .shipping-checkbox {
+    margin-bottom: 20px;
+  }
+}
+
 
 .form-container {
   background-color: white;
@@ -39,6 +50,7 @@
   border: 1px solid #2d7fec;
   background-color: #0551b5;
   color: white;
+  margin-bottom: 12px;
 }
 
 .button:hover {

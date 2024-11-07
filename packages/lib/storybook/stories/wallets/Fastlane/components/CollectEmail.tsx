@@ -2,11 +2,11 @@ import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
 import FastlaneSDK from '../../../../../src/components/PayPalFastlane/FastlaneSDK';
-import type { AuthenticatedCustomerResult } from '../../../../../src/components/PayPalFastlane/types';
+import type { FastlaneAuthenticatedCustomerResult } from '../../../../../src/components/PayPalFastlane/types';
 
 interface CollectEmailProps {
     fastlaneSdk: FastlaneSDK;
-    onFastlaneLookup: (authResult: AuthenticatedCustomerResult) => void;
+    onFastlaneLookup: (authResult: FastlaneAuthenticatedCustomerResult) => void;
     onEditEmail: () => void;
 }
 
@@ -15,9 +15,7 @@ export const CollectEmail = ({ fastlaneSdk, onFastlaneLookup, onEditEmail }: Col
     const [viewOnly, setViewOnly] = useState<boolean>(false);
 
     const renderWatermark = async () => {
-        await fastlaneSdk.mountWatermark('#watermark-container', {
-            includeAdditionalInfo: true
-        });
+        await fastlaneSdk.mountWatermark('#watermark-container');
     };
 
     const handleEmailInput = event => {
@@ -40,7 +38,7 @@ export const CollectEmail = ({ fastlaneSdk, onFastlaneLookup, onEditEmail }: Col
     }, []);
 
     return (
-        <>
+        <section>
             <div className="section_header">
                 <h3>Customer</h3>
                 {viewOnly && (
@@ -53,7 +51,7 @@ export const CollectEmail = ({ fastlaneSdk, onFastlaneLookup, onEditEmail }: Col
                 <div className="email-input-wrapper">
                     <input
                         disabled={viewOnly}
-                        className="email-input"
+                        className="input-field"
                         value={email}
                         name="email"
                         type="email"
@@ -71,6 +69,6 @@ export const CollectEmail = ({ fastlaneSdk, onFastlaneLookup, onEditEmail }: Col
                 )}
             </div>
             {!viewOnly && <button onClick={() => setEmail('test1@awesome.com')}>Fill in valid email</button>}
-        </>
+        </section>
     );
 };

@@ -1,22 +1,22 @@
 import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import './FastlaneStory.scss';
-
-import initializeFastlane from '../../../../../src/components/PayPalFastlane/initializeFastlane';
-import FastlaneSDK from '../../../../../src/components/PayPalFastlane/FastlaneSDK';
-import type { AuthenticatedCustomerResult } from '../../../../../src/components/PayPalFastlane/types';
 
 import { CollectEmail } from './CollectEmail';
 import { Shipping } from './Shipping';
 import { ShippingWithFastlane } from './ShippingWithFastlane';
+import './FastlaneStory.scss';
+
+import initializeFastlane from '../../../../../src/components/PayPalFastlane/initializeFastlane';
+import FastlaneSDK from '../../../../../src/components/PayPalFastlane/FastlaneSDK';
+import type { FastlaneAuthenticatedCustomerResult } from '../../../../../src/components/PayPalFastlane/types';
 
 interface GuestShopperFormProps {
-    onCheckoutStep(fastlane: FastlaneSDK, data: any): void;
+    onCheckoutStep(fastlane: FastlaneSDK, fastlaneData: any, shippingAddress: any): void;
 }
 
 export const GuestShopperForm = ({ onCheckoutStep }: GuestShopperFormProps) => {
     const [fastlane, setFastlane] = useState<FastlaneSDK>(null);
-    const [fastlaneLookupData, setFastlaneLookupData] = useState<AuthenticatedCustomerResult>(null);
+    const [fastlaneLookupData, setFastlaneLookupData] = useState<FastlaneAuthenticatedCustomerResult>(null);
 
     const loadFastlane = async () => {
         const sdk = await initializeFastlane({
@@ -31,12 +31,11 @@ export const GuestShopperForm = ({ onCheckoutStep }: GuestShopperFormProps) => {
     };
 
     const handleFastlaneLookup = data => {
-        console.log(data);
         setFastlaneLookupData(data);
     };
 
-    const handleOnCheckoutClick = shippingAddress => {
-        onCheckoutStep(fastlane, fastlaneLookupData);
+    const handleOnCheckoutClick = (shippingAddress?: any) => {
+        onCheckoutStep(fastlane, fastlaneLookupData, shippingAddress);
     };
 
     useEffect(() => {
@@ -51,6 +50,7 @@ export const GuestShopperForm = ({ onCheckoutStep }: GuestShopperFormProps) => {
 
     return (
         <div className="form-container">
+            <h2>Merchant Checkout Page</h2>
             <CollectEmail fastlaneSdk={fastlane} onFastlaneLookup={handleFastlaneLookup} onEditEmail={handleOnEditEmail} />
             <hr />
 

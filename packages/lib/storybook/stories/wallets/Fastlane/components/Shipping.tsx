@@ -44,16 +44,18 @@ export const Shipping = ({ onCheckoutClick }: ShippingProps) => {
         });
     };
 
-    const handleOnCheckoutClick = () => {
+    const handleOnSubmit = e => {
+        e.preventDefault();
         onCheckoutClick(formData);
     };
 
     return (
-        <div>
+        <section className="shipping-section">
             <h3>Shipping Details</h3>
 
             <div>
                 <input
+                    className="shipping-checkbox"
                     id="shipping-required-checkbox"
                     name="shipping-required"
                     type="checkbox"
@@ -63,81 +65,118 @@ export const Shipping = ({ onCheckoutClick }: ShippingProps) => {
                 <label htmlFor="shipping-required-checkbox">This purchase requires shipping</label>
             </div>
 
-            {isShippingRequired && (
-                <>
+            {isShippingRequired ? (
+                <form onSubmit={handleOnSubmit}>
                     <div>
-                        <input className="email-input" name="givenName" placeholder="First name" onChange={handleChange} value={formData.givenName} />
                         <input
-                            className="email-input"
+                            className="input-field"
+                            name="givenName"
+                            placeholder="First name"
+                            onChange={handleChange}
+                            value={formData.givenName}
+                            required
+                        />
+                        <input
+                            className="input-field"
                             name="familyName"
                             placeholder="Last name"
                             onChange={handleChange}
                             value={formData.familyName}
+                            required
                         />
                     </div>
 
                     <div>
                         <input
-                            className="email-input"
+                            className="input-field"
                             name="addressLine1"
                             placeholder="Street address"
                             onChange={handleChange}
                             value={formData.addressLine1}
+                            required
                         />
                         <input
-                            className="email-input"
+                            className="input-field"
                             name="addressLine2"
                             placeholder="Apt., ste., bldg. (optional)"
                             onChange={handleChange}
                             value={formData.addressLine2}
+                            required
                         />
                     </div>
 
                     <div>
                         <input
-                            className="email-input"
+                            className="input-field"
                             name="addressLevel2"
                             placeholder="City"
                             onChange={handleChange}
                             value={formData.addressLevel2}
+                            required
                         />
                         <input
-                            className="email-input"
+                            className="input-field"
                             name="addressLevel1"
                             placeholder="State"
                             onChange={handleChange}
                             value={formData.addressLevel1}
+                            required
                         />
                     </div>
 
                     <div>
-                        <input className="email-input" name="postalCode" placeholder="ZIP code" onChange={handleChange} value={formData.postalCode} />
-                        <input className="email-input" name="country" placeholder="Country" onChange={handleChange} value={formData.country} />
+                        <input
+                            className="input-field"
+                            name="postalCode"
+                            placeholder="ZIP code"
+                            onChange={handleChange}
+                            value={formData.postalCode}
+                            required
+                        />
+                        <input
+                            className="input-field"
+                            name="country"
+                            placeholder="Country"
+                            onChange={handleChange}
+                            value={formData.country}
+                            required
+                        />
                     </div>
 
                     <div>
                         <input
-                            className="email-input"
+                            className="input-field"
                             name="telCountryCode"
                             placeholder="Country calling code"
                             onChange={handleChange}
                             value={formData.telCountryCode}
+                            required
                         />
                         <input
-                            className="email-input"
+                            className="input-field"
                             name="telNational"
                             type="tel"
                             placeholder="Phone number"
                             onChange={handleChange}
                             value={formData.telNational}
+                            required
                         />
                     </div>
-                </>
+
+                    <button type="submit" className="button">
+                        Checkout
+                    </button>
+                    <div>
+                        <button type="button" onClick={fillInMockData}>
+                            Fill in mocked data
+                        </button>
+                    </div>
+                </form>
+            ) : (
+                <button onClick={() => onCheckoutClick()} className="button">
+                    Checkout
+                </button>
             )}
-
-            <button onClick={fillInMockData}>Fill in mocked data</button>
-
-            <button className="button">Checkout</button>
-        </div>
+        </section>
     );
 };

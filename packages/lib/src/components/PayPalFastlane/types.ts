@@ -12,19 +12,16 @@ export interface FastlaneOptions {}
 export interface Fastlane {
     identity: {
         lookupCustomerByEmail: (email: string) => Promise<{ customerContextId: string }>;
-        triggerAuthenticationFlow: (customerContextId: string, options?: AuthenticationFlowOptions) => Promise<AuthenticatedCustomerResult>;
+        triggerAuthenticationFlow: (customerContextId: string, options?: AuthenticationFlowOptions) => Promise<FastlaneAuthenticatedCustomerResult>;
     };
     profile: {
-        showShippingAddressSelector: () => Promise<ShowShippingAddressSelectorResult>;
+        showShippingAddressSelector: () => Promise<FastlaneShippingAddressSelectorResult>;
         showCardSelector: () => ShowCardSelectorResult;
     };
     setLocale: (locale: string) => void;
-    FastlaneWatermarkComponent: (options: FastlaneWatermarkOptions) => Promise<FastlaneWatermarkComponent>;
+    FastlaneWatermarkComponent: (options: { includeAdditionalInfo: boolean }) => Promise<FastlaneWatermarkComponent>;
 }
 
-interface FastlaneWatermarkOptions {
-    includeAdditionalInfo: boolean;
-}
 interface FastlaneWatermarkComponent {
     render: (container) => null;
 }
@@ -36,10 +33,6 @@ interface AuthenticationFlowOptions {}
 /**
  * The AuthenticatedCustomerResult object type is returned from the identity.triggerAuthenticationFlow() call.
  */
-export interface AuthenticatedCustomerResult {
-    authenticationState: 'succeeded' | 'failed' | 'canceled' | 'not_found';
-    profileData: FastlaneProfile;
-}
 interface FastlaneProfile {
     name: Name;
     shippingAddress: FastlaneShipping;
@@ -89,15 +82,19 @@ interface CardPaymentSource {
     billingAddress: FastlaneAddress;
 }
 
-/**
- * Profile method reference types
- */
-export interface ShowShippingAddressSelectorResult {
-    selectionChanged: boolean;
-    selectedAddress: FastlaneShipping;
-}
-
 interface ShowCardSelectorResult {
     selectionChanged: boolean;
     selectedCard: PaymentToken;
+}
+
+/**
+ * External types
+ */
+export interface FastlaneShippingAddressSelectorResult {
+    selectionChanged: boolean;
+    selectedAddress: FastlaneShipping;
+}
+export interface FastlaneAuthenticatedCustomerResult {
+    authenticationState: 'succeeded' | 'failed' | 'canceled' | 'not_found';
+    profileData: FastlaneProfile;
 }

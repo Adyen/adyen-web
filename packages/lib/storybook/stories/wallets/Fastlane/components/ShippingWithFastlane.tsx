@@ -1,39 +1,36 @@
 import { h } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 import getAddressSummary from './utils/get-fastlane-address-summary';
 
 import FastlaneSDK from '../../../../../src/components/PayPalFastlane/FastlaneSDK';
+import type { FastlaneShipping } from '../../../../../src/components/PayPalFastlane/types';
 
 interface ShippingWithFastlaneProps {
     fastlaneSdk: FastlaneSDK;
-    address: any;
-    onCheckoutClick: () => void;
+    address: FastlaneShipping;
+    onCheckoutClick: (shippingAddress?: any) => void;
 }
 
 export const ShippingWithFastlane = ({ fastlaneSdk, address, onCheckoutClick }: ShippingWithFastlaneProps) => {
-    const [addressSummary, setAddressSummary] = useState<string>(null);
-
-    useEffect(() => {
-        const summary = getAddressSummary(address);
-        setAddressSummary(summary);
-    }, [address]);
+    const [addressSummary, setAddressSummary] = useState<string>(getAddressSummary(address));
+    const [shippingAddress, setShippingAddress] = useState<FastlaneShipping>(address);
 
     const handleShippingClick = async () => {
         const data = await fastlaneSdk.showShippingAddressSelector();
-        console.log(data);
 
         if (data.selectionChanged) {
             const summary = getAddressSummary(data.selectedAddress);
             setAddressSummary(summary);
+            setShippingAddress(data.selectedAddress);
         }
     };
 
     const handleCheckoutClick = () => {
-        onCheckoutClick();
+        onCheckoutClick(shippingAddress);
     };
 
     return (
-        <div>
+        <section className="shipping-section">
             <div className="section_header">
                 <h3>Shipping Details</h3>
 
@@ -52,6 +49,6 @@ export const ShippingWithFastlane = ({ fastlaneSdk, address, onCheckoutClick }: 
                     </button>
                 </div>
             )}
-        </div>
+        </section>
     );
 };

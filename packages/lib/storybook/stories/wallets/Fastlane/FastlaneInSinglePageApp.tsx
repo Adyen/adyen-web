@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
+import { GlobalStoryProps } from '../../types';
 
 import Dropin from '../../../../src/components/Dropin';
 import Card from '../../../../src/components/Card';
@@ -8,9 +9,6 @@ import PayPal from '../../../../src/components/PayPal';
 import { Checkout } from '../../Checkout';
 import { ComponentContainer } from '../../ComponentContainer';
 import { GuestShopperForm } from './components/GuestShopperForm';
-import './components/FastlaneStory.scss';
-
-import { GlobalStoryProps } from '../../types';
 
 interface Props {
     checkoutConfig: GlobalStoryProps;
@@ -19,7 +17,8 @@ interface Props {
 export const FastlaneInSinglePageApp = ({ checkoutConfig }: Props) => {
     const [fastlaneData, setFastlaneData] = useState<any>(null);
 
-    const handleOnCheckoutStep = (fastlaneSdk, fastlaneData) => {
+    const handleOnCheckoutStep = (fastlaneSdk, fastlaneData, shippingAddress) => {
+        console.log('FastlaneInSinglePageApp', fastlaneSdk, fastlaneData, shippingAddress);
         setFastlaneData(fastlaneData);
     };
 
