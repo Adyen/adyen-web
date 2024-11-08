@@ -5,10 +5,42 @@ import { AddressSpecifications } from './types';
 import { AddressData } from '../../../types';
 import { FALLBACK_VALUE } from './constants';
 import { render, screen } from '@testing-library/preact';
+import userEvent from '@testing-library/user-event';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
+import { countrySpecificFormatters } from './validate.formats';
 
 jest.mock('../../../core/Services/get-dataset');
-(getDataset as jest.Mock).mockImplementation(jest.fn(() => Promise.resolve([{ id: 'NL', name: 'Netherlands' }])));
+(getDataset as jest.Mock).mockImplementation(
+    jest.fn(() =>
+        Promise.resolve([
+            { id: 'NL', name: 'Netherlands' },
+            {
+                id: 'US',
+                name: 'United States'
+            },
+            {
+                id: 'CA',
+                name: 'Canada'
+            },
+            {
+                id: 'GB',
+                name: 'United Kingdom'
+            },
+            {
+                id: 'BR',
+                name: 'Brazil'
+            },
+            {
+                id: 'PL',
+                name: 'Poland'
+            },
+            {
+                id: 'PT',
+                name: 'Portugal'
+            }
+        ])
+    )
+);
 
 describe('Address', () => {
     const addressSpecificationsMock: AddressSpecifications = {
@@ -29,7 +61,9 @@ describe('Address', () => {
         );
     };
 
-    // const getWrapper = props => shallow(<Address specifications={addressSpecificationsMock} {...props} />);
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
 
     test('should have the required fields', async () => {
         const requiredFields = ['street', 'houseNumberOrName', 'postalCode', 'country'];
@@ -202,5 +236,86 @@ describe('Address', () => {
         const lastOnChangeCall = onChangeMock.mock.calls.pop();
         const receivedData = lastOnChangeCall[0].data;
         expect(receivedData.stateOrProvince).toBe(undefined);
+    });
+
+    describe('With predefined country specific rules', () => {
+        test('should show error when switching from country that has valid postal code to one that has invalid postal code', async () => {
+            const user = userEvent.setup();
+            const allowedCountries = Object.keys(countrySpecificFormatters);
+            const countryCode = 'US';
+            const data: AddressData = {
+                postalCode: '95014',
+                country: 'US'
+            };
+            const onChangeMock = jest.fn();
+            customRender(
+                <Address
+                    countryCode={countryCode}
+                    data={data}
+                    specifications={addressSpecificationsMock}
+                    allowedCountries={allowedCountries}
+                    onChange={onChangeMock}
+                />
+            );
+            const countryDropdown = await screen.findByRole('combobox', { name: /country/i });
+            // Valid on init
+            const lastOnChangeCall = onChangeMock.mock.calls.pop();
+            expect(lastOnChangeCall[0].isValid).toBe(true);
+
+            await user.click(countryDropdown);
+            const newCountry = 'Canada';
+            await user.type(countryDropdown, `${newCountry}[Enter]`);
+            const errorMsg = await screen.findByText(/Invalid format. Expected format: A9A 9A9 or A9A9A9/);
+            expect(errorMsg).toBeInTheDocument();
+        });
+
+        test('should show error when remove focus from postal code with invalid value', async () => {
+            const user = userEvent.setup();
+            const allowedCountries = Object.keys(countrySpecificFormatters);
+            const countryCode = 'US';
+            const data: AddressData = {
+                country: 'US'
+            };
+            const onChangeMock = jest.fn();
+            customRender(<Address countryCode={countryCode} data={data} allowedCountries={allowedCountries} onChange={onChangeMock} />);
+            const postCode = await screen.findByRole('textbox', { name: /Zip code/ });
+            await user.type(postCode, '1');
+            await user.tab();
+            const errorMsg = await screen.findByText(/Invalid format. Expected format: 99999 or 99999-9999/);
+            expect(errorMsg).toBeInTheDocument();
+        });
+
+        describe.each`
+            countryCode | raw                | expected
+            ${'US'}     | ${'1234599999999'} | ${'12345'}
+            ${'BR'}     | ${'12345678999'}   | ${'12345678'}
+            ${'GB'}     | ${'AA99&9AA'}      | ${'AA999AA'}
+            ${'PL'}     | ${'99-99999999'}   | ${'99-999'}
+            ${'PT'}     | ${'1234AAAA567'}   | ${'1234567'}
+        `('Format post code for specific countries', ({ countryCode, raw, expected }) => {
+            it(`should format post code for ${countryCode}`, async () => {
+                const allowedCountries = Object.keys(countrySpecificFormatters);
+                const data: AddressData = {
+                    postalCode: raw,
+                    country: countryCode
+                };
+                const onChangeMock = jest.fn();
+                customRender(<Address countryCode={countryCode} data={data} allowedCountries={allowedCountries} onChange={onChangeMock} />);
+                const postCode = await screen.findByRole('textbox', { name: /code/ });
+                expect(postCode).toHaveValue(expected);
+            });
+        });
+
+        test("should show proper 'Zip Code' label for US", async () => {
+            const allowedCountries = Object.keys(countrySpecificFormatters);
+            const countryCode = 'US';
+            const data: AddressData = {
+                postalCode: '95014',
+                country: 'US'
+            };
+            const onChangeMock = jest.fn();
+            customRender(<Address countryCode={countryCode} data={data} allowedCountries={allowedCountries} onChange={onChangeMock} />);
+            expect(await screen.findByRole('textbox', { name: /Zip code/ })).toBeInTheDocument();
+        });
     });
 });

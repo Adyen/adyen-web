@@ -1,5 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { capitalizeFirstLetter } from '../../lib/src/utils/textUtils';
+import { Base } from './base';
 
 const SELECT_YOUR_BANK = 'Select your Bank';
 const TEST_BANK_NAME = 'TESTNL2A';
@@ -9,7 +10,8 @@ export const SIMULATION_TYPE_FAILURE = 'Failure';
 export const SIMULATION_TYPE_EXPIRATION = 'Expiration';
 export const SIMULATION_TYPE_CANCELLATION = 'Cancellation';
 
-class Redirect {
+// todo: maybe consider changing the name to ideal, as it's iDeal specific
+class Redirect extends Base {
     readonly rootElement: Locator;
     readonly rootElementSelector: string;
 
@@ -20,21 +22,22 @@ class Redirect {
     readonly simulateExpirationButton: Locator;
     readonly simulateCancellationButton: Locator;
 
-    readonly page: Page;
-
-    constructor(page: Page, rootElementSelector: string = '.redirect-field') {
-        this.page = page;
-        this.rootElement = page.locator(rootElementSelector);
+    constructor(
+        public readonly page: Page,
+        rootElementSelector: string = '.component-wrapper'
+    ) {
+        super(page);
+        this.rootElement = this.page.locator(rootElementSelector);
         this.rootElementSelector = rootElementSelector;
 
-        this.selectYourBankButton = page.getByRole('button', { name: SELECT_YOUR_BANK });
+        this.selectYourBankButton = this.page.getByRole('button', { name: SELECT_YOUR_BANK });
 
-        this.selectTestBankButton = page.getByText(TEST_BANK_NAME);
+        this.selectTestBankButton = this.page.getByText(TEST_BANK_NAME);
 
-        this.simulateSuccessButton = page.getByRole('button', { name: SIMULATION_TYPE_SUCCESS });
-        this.simulateFailureButton = page.getByRole('button', { name: SIMULATION_TYPE_FAILURE });
-        this.simulateExpirationButton = page.getByRole('button', { name: SIMULATION_TYPE_EXPIRATION });
-        this.simulateCancellationButton = page.getByRole('button', { name: SIMULATION_TYPE_CANCELLATION, exact: true });
+        this.simulateSuccessButton = this.page.getByRole('button', { name: SIMULATION_TYPE_SUCCESS });
+        this.simulateFailureButton = this.page.getByRole('button', { name: SIMULATION_TYPE_FAILURE });
+        this.simulateExpirationButton = this.page.getByRole('button', { name: SIMULATION_TYPE_EXPIRATION });
+        this.simulateCancellationButton = this.page.getByRole('button', { name: SIMULATION_TYPE_CANCELLATION, exact: true });
     }
 
     async isComponentVisible() {
@@ -65,6 +68,10 @@ class Redirect {
         let simType = sim.toLowerCase();
         simType = capitalizeFirstLetter(simType);
         await this[`simulate${simType}Button`].click();
+    }
+
+    async redirect(options: { name?: RegExp | string } = { name: /Continue to iDEAL/i }) {
+        await super.pay(options);
     }
 }
 

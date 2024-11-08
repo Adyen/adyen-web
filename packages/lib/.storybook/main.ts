@@ -5,8 +5,6 @@ import * as path from 'path';
 import stylelint from 'vite-plugin-stylelint';
 import generateEnvironmentVariables from '../config/environment-variables';
 import { resolve } from 'node:path';
-import * as dotenv from 'dotenv';
-dotenv.config({ path: resolve('../../', '.env') });
 
 const config: StorybookConfig = {
     stories: ['../storybook/**/*.stories.@(js|jsx|ts|tsx)'],

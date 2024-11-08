@@ -148,12 +148,12 @@ export function onBrand(pCallbackObj) {
     // Optional cvc fields
     if (pCallbackObj.cvcPolicy === 'optional' && !optionalCVC) {
         optionalCVC = true;
-        if (cvcNode) cvcNode.querySelector('.pm-form-label__text').innerText = 'CVV/CVC (optional):';
+        if (cvcNode) cvcNode.querySelector('.pm-form-label__text').innerText = 'Security code (optional):';
     }
 
     if (optionalCVC && pCallbackObj.cvcPolicy !== 'optional') {
         optionalCVC = false;
-        if (cvcNode) cvcNode.querySelector('.pm-form-label__text').innerText = 'CVV/CVC';
+        if (cvcNode) cvcNode.querySelector('.pm-form-label__text').innerText = 'Security code';
     }
 
     /**

@@ -1,4 +1,3 @@
- 
 import { UIElementProps } from '../internal/UIElement/types';
 
 declare global {

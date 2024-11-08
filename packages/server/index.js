@@ -1,5 +1,7 @@
 const path = require('path');
 const express = require('express');
+const https = require('https');
+const fs = require('fs');
 require('dotenv').config({ path: path.resolve('../../', '.env') });
 const getPaymentMethods = require('./api/paymentMethods');
 const getPaymentMethodsBalance = require('./api/paymentMethodsBalance');
@@ -14,6 +16,15 @@ const createDonation = require('./api/donation');
 const paypalUpdateOrder = require('./api/paypalUpdateOrder');
 const getTranslation = require('./api/translations');
 
+// Load environment variables
+const isHttps = process.env.IS_HTTPS === 'true';
+const sslKeyPath = process.env.CERT_KEY_PATH;
+const sslCertPath = process.env.CERT_PATH;
+
+// Read the SSL certificate and key
+const key = sslKeyPath && fs.readFileSync(sslKeyPath, 'utf8');
+const cert = sslCertPath && fs.readFileSync(sslCertPath, 'utf8');
+
 module.exports = (app = express(), options = {}) => {
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
@@ -23,6 +34,11 @@ module.exports = (app = express(), options = {}) => {
         res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
         next();
     });
+
+    if (options.shouldHostStorybook) {
+        // Serve the storybook production build
+        app.use(express.static(path.join(__dirname, '../lib/storybook-static')));
+    }
 
     app.all('/paypal/updateOrder', (req, res) => paypalUpdateOrder(res, req.body));
 
@@ -50,7 +66,12 @@ module.exports = (app = express(), options = {}) => {
 
     if (options.listen) {
         const port = process.env.PORT || 3020;
-        app.listen(port, () => console.log(`Listening on localhost:${port}`));
+
+        isHttps
+            ? https.createServer({ key, cert }, app).listen(port, () => {
+                  console.log(`HTTPS server running on port ${port}`);
+              })
+            : app.listen(port, () => console.log(`Listening on localhost:${port}`));
     }
 
     return app;

@@ -11,6 +11,7 @@ async function createSessionsCheckout({
     countryCode,
     shopperLocale,
     amount,
+    sessionData,
     ...restCheckoutProps
 }: AdyenCheckoutProps): Promise<Checkout> {
     const session = await createSession({
@@ -23,12 +24,14 @@ async function createSessionsCheckout({
         reference: 'ABC123',
         returnUrl: RETURN_URL,
         shopperReference: SHOPPER_REFERENCE,
-        shopperEmail: 'shopper.ctp1@adyen.com'
+        shopperEmail: 'shopper.ctp1@adyen.com',
+        ...sessionData
     });
 
     return AdyenCheckout({
         clientKey: process.env.CLIENT_KEY,
         environment: process.env.CLIENT_ENV as any,
+        countryCode,
         session,
         showPayButton,
 

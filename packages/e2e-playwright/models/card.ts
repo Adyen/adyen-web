@@ -1,6 +1,8 @@
-import { Locator, Page } from '@playwright/test';
+import type { Page, Locator } from '@playwright/test';
 import { USER_TYPE_DELAY } from '../tests/utils/constants';
 import LANG from '../../server/translations/en-US.json';
+import { Base } from './base';
+import { URL_MAP } from '../fixtures/URL_MAP';
 
 const CARD_IFRAME_TITLE = LANG['creditCard.encryptedCardNumber.aria.iframeTitle'];
 const EXPIRY_DATE_IFRAME_TITLE = LANG['creditCard.encryptedExpiryDate.aria.iframeTitle'];
@@ -13,9 +15,7 @@ const CVC_IFRAME_LABEL = LANG['creditCard.securityCode.label'];
 const INSTALLMENTS_PAYMENTS = LANG['installments.installments'];
 const REVOLVING_PAYMENT = LANG['installments.revolving'];
 
-class Card {
-    readonly page: Page;
-
+class Card extends Base {
     readonly rootElement: Locator;
     readonly rootElementSelector: string;
 
@@ -44,10 +44,12 @@ class Card {
     readonly installmentsDropdown: Locator;
     readonly selectorList: Locator;
 
-    constructor(page: Page, rootElementSelector = '.adyen-checkout__card-input') {
-        this.page = page;
-
-        this.rootElement = page.locator(rootElementSelector);
+    constructor(
+        public readonly page: Page,
+        rootElementSelector = '.adyen-checkout__card-input'
+    ) {
+        super(page);
+        this.rootElement = this.page.locator(rootElementSelector);
         this.rootElementSelector = rootElementSelector;
 
         /**
@@ -58,9 +60,6 @@ class Card {
         this.cardNumberErrorElement = this.cardNumberField.locator('.adyen-checkout-contextual-text--error');
 
         this.brandingIcon = this.rootElement.locator('.adyen-checkout__card__cardNumber__brandIcon');
-
-        this.brandingIcon = this.rootElement.locator('.adyen-checkout__card__cardNumber__brandIcon');
-
         /**
          * Card Number elements, in iframe
          */
@@ -106,10 +105,25 @@ class Card {
         this.selectorList = this.rootElement.getByRole('listbox');
     }
 
+    get availableBrands() {
+        return this.rootElement.locator('.adyen-checkout__card__brands').getByRole('img').all();
+    }
+
+    async goto(url: string = URL_MAP.card) {
+        await this.page.goto(url);
+        await this.isComponentVisible();
+    }
+
     async isComponentVisible() {
         await this.cardNumberInput.waitFor({ state: 'visible' });
         await this.expiryDateInput.waitFor({ state: 'visible' });
         await this.cvcInput.waitFor({ state: 'visible' });
+    }
+
+    async fillCardNumber(cardNumber: string) {
+        // reason: https://playwright.dev/docs/api/class-locator#locator-type
+        // use-case when we don't need to inspect keyboard events
+        await this.cardNumberInput.fill(cardNumber);
     }
 
     async typeCardNumber(cardNumber: string) {
@@ -128,8 +142,20 @@ class Card {
         await this.cvcInput.clear();
     }
 
+    async fillExpiryDate(expiryDate: string) {
+        // reason: https://playwright.dev/docs/api/class-locator#locator-type
+        // use-case when we don't need to inspect keyboard events
+        await this.expiryDateInput.fill(expiryDate);
+    }
+
     async typeExpiryDate(expiryDate: string) {
         await this.expiryDateInput.type(expiryDate, { delay: USER_TYPE_DELAY });
+    }
+
+    async fillCvc(cvc: string) {
+        // reason: https://playwright.dev/docs/api/class-locator#locator-type
+        // use-case when we don't need to inspect keyboard events
+        await this.cvcInput.fill(cvc);
     }
 
     async typeCvc(cvc: string) {
@@ -137,8 +163,7 @@ class Card {
     }
 
     async selectListItem(who: string) {
-        const listItem = this.selectorList.locator(`#listItem-${who}`);
-        return listItem;
+        return this.selectorList.locator(`#listItem-${who}`);
     }
 }
 

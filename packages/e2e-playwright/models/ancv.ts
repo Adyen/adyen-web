@@ -1,9 +1,10 @@
 import { Locator, Page } from '@playwright/test';
 import { USER_TYPE_DELAY } from '../tests/utils/constants';
+import { Base } from './base';
 
 const SELECTOR_DELAY = 300;
 
-class ANCV {
+class ANCV extends Base {
     readonly rootElement: Locator;
     readonly rootElementSelector: string;
 
@@ -12,10 +13,11 @@ class ANCV {
 
     readonly awaitText: Locator;
 
-    readonly page: Page;
-
-    constructor(page: Page, rootElementSelector = '.ancv-field') {
-        this.page = page;
+    constructor(
+        public readonly page: Page,
+        rootElementSelector = '.adyen-checkout__ancv'
+    ) {
+        super(page);
         this.rootElement = page.locator(rootElementSelector);
         this.rootElementSelector = rootElementSelector;
 
@@ -36,6 +38,10 @@ class ANCV {
 
     async clickOnSubmit() {
         await this.submitButton.click({ delay: SELECTOR_DELAY });
+    }
+
+    get paymentResult() {
+        return this.page.locator('.adyen-checkout__await__subtitle--result');
     }
 }
 

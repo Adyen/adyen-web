@@ -69,7 +69,7 @@ class Session {
      * Fetches data from a session
      */
     setupSession(options: SetupSessionOptions): Promise<CheckoutSessionSetupResponse> {
-        const mergedOptions = { ...options, browserInfo: collectBrowserInfo() }
+        const mergedOptions = { ...options, browserInfo: collectBrowserInfo() };
         return setupSession(this, mergedOptions).then(response => {
             if (response.configuration) {
                 this.configuration = { ...response.configuration };

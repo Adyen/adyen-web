@@ -59,6 +59,6 @@ export type CheckoutSessionOrdersResponse = {
 };
 
 export type SetupSessionOptions = {
-    browserInfo?: BrowserInfo,
-    order?: Order
-}
+    browserInfo?: BrowserInfo;
+    order?: Order;
+};

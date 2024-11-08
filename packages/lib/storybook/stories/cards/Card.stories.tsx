@@ -4,6 +4,7 @@ import { searchFunctionExample } from '../../../../playground/src/utils';
 import { CardWith3DS2Redirect } from './cardStoryHelpers/CardWith3DS2Redirect';
 import { createStoredCardComponent } from './cardStoryHelpers/createStoredCardComponent';
 import { createCardComponent } from './cardStoryHelpers/createCardComponent';
+import { getComponentConfigFromUrl } from '../../utils/get-configuration-from-url';
 
 type CardStory = StoryConfiguration<CardConfiguration>;
 
@@ -14,7 +15,8 @@ const meta: MetaConfiguration<CardConfiguration> = {
 export const Default: CardStory = {
     render: createCardComponent,
     args: {
-        componentConfiguration: {
+        srConfig: { moveFocus: true },
+        componentConfiguration: getComponentConfigFromUrl() ?? {
             _disableClickToPay: true,
             autoFocus: true,
             // brands: ['mc'],
@@ -51,6 +53,7 @@ export const Default: CardStory = {
 export const WithAVS: CardStory = {
     render: createCardComponent,
     args: {
+        srConfig: { showPanel: false },
         componentConfiguration: {
             _disableClickToPay: true,
             billingAddressRequired: true,
