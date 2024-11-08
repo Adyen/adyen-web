@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import Img from '../../internal/Img';
+import CampaignInfo from './CampaignInfo';
 
 export interface CampaignContentProps {
     logoUrl?: string;
@@ -18,23 +18,17 @@ export default function CampaignContent({
     nonprofitUrl = '',
     bannerUrl = ''
 }: CampaignContentProps) {
-    const backgroundImage = `linear-gradient(0, #000, #0003), url(${bannerUrl})`;
-
     return (
-        <div className="adyen-checkout__campaign-container">
-            <Img className="adyen-checkout__campaign-background-image" style={{ backgroundImage }} backgroundUrl={bannerUrl} />
+        <div className="adyen-checkout__campaign">
+            {nonprofitUrl ? (
+                <a href={nonprofitUrl} className="adyen-checkout__campaign-link" target="_blank" rel="noopener noreferrer">
+                    <CampaignInfo logoUrl={logoUrl} nonprofitName={nonprofitName} causeName={causeName} bannerUrl={bannerUrl} />
+                </a>
+            ) : (
+                <CampaignInfo logoUrl={logoUrl} nonprofitName={nonprofitName} causeName={causeName} bannerUrl={bannerUrl} />
+            )}
 
-            <div className="adyen-checkout__campaign-content">
-                {logoUrl && <img src={logoUrl} className="adyen-checkout__campaign-logo" alt={nonprofitName} />}
-                {nonprofitName && <div className="adyen-checkout__campaign-title">{nonprofitName}</div>}
-                {causeName && <div className="adyen-checkout__campaign-cause">{causeName}</div>}
-                {nonprofitDescription && (
-                    <div className="adyen-checkout__campaign-description">
-                        {nonprofitDescription}
-                        {nonprofitUrl && ' ›'}
-                    </div>
-                )}
-            </div>
+            {nonprofitDescription && <div className="adyen-checkout__campaign-description">{nonprofitDescription}</div>}
         </div>
     );
 }
