@@ -27,7 +27,6 @@ const currencies = {
     RU: 'RUB',
     SE: 'SEK',
     SG: 'SGD',
-    SK: 'SKK',
     TH: 'THB',
     TW: 'TWD',
     US: 'USD',
