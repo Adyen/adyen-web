@@ -79,6 +79,7 @@ export interface CountryFieldProps {
     errorMessage: boolean | string;
     onDropdownChange: (e: { target: SelectTargetObject }) => void;
     readOnly?: boolean;
+    required?: boolean;
     value: string;
 }
 
@@ -93,6 +94,7 @@ export interface StateFieldProps {
     errorMessage: boolean | string;
     onDropdownChange: (e: { target: SelectTargetObject }) => void;
     readOnly?: boolean;
+    required?: boolean;
     selectedCountry: string;
     specifications: Specifications;
     value: string;
