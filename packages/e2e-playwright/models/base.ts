@@ -14,7 +14,7 @@ export abstract class Base {
         await this.isComponentVisible();
     }
 
-    async pay(options: { name?: RegExp | string } = { name: /Pay/i }): Promise<void> {
+    async pay(options: { name?: RegExp | string } = { name: /^Pay/i }): Promise<void> {
         if (this.payButton) {
             await this.payButton.click();
         } else {

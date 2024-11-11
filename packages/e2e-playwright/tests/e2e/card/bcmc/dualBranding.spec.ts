@@ -1,92 +1,252 @@
-import { test } from '@playwright/test';
+import { test, expect } from '../../../../fixtures/card.fixture';
+import {
+    BCMC_CARD,
+    BCMC_DUAL_BRANDED_MC,
+    BCMC_DUAL_BRANDED_VISA,
+    PAYMENT_RESULT,
+    TEST_CVC_VALUE,
+    TEST_DATE_VALUE,
+    THREEDS2_CHALLENGE_PASSWORD
+} from '../../../utils/constants';
 
 test.describe('Bcmc payments with dual branding', () => {
-    test.describe('Selecting the Bancontact brand', () => {
-        test('should submit the bcmc payment', async () => {
-            // should see the bcmc logo on init
-            // fill in dual brand card maestro
-            // expect to see 2 logos with correct order
-            // select bcmc logo
-            // expect to see the bcmc logo highlighted
-            // click pay btn
-            // expect to see success msg
+    test.describe('Bancontact (BCMC) / Maestro brands', () => {
+        test.describe('Selecting the Bancontact brand', () => {
+            test('should submit the bcmc payment', async ({ bcmc }) => {
+                await bcmc.isComponentVisible();
+
+                await bcmc.fillCardNumber(BCMC_CARD);
+                await bcmc.fillExpiryDate(TEST_DATE_VALUE);
+                await bcmc.waitForVisibleDualBrands();
+
+                const [firstBrand, secondBrand] = await bcmc.brands;
+                expect(firstBrand).toHaveAttribute('data-value', 'bcmc');
+                expect(secondBrand).toHaveAttribute('data-value', 'maestro');
+
+                await bcmc.selectBrand('Bancontact card');
+                await bcmc.pay();
+                await bcmc.threeDs2Challenge.fillInPassword(THREEDS2_CHALLENGE_PASSWORD);
+                await bcmc.threeDs2Challenge.submit();
+                await expect(bcmc.paymentResult).toContainText(PAYMENT_RESULT.authorised);
+            });
+
+            test('should not submit the bcmc payment with incomplete form data', async ({ bcmc }) => {
+                await bcmc.isComponentVisible();
+                await bcmc.fillCardNumber(BCMC_CARD);
+                await bcmc.waitForVisibleDualBrands();
+                await bcmc.selectBrand('Bancontact card');
+                await bcmc.pay();
+
+                await expect(bcmc.expiryDateErrorElement).toHaveText('Enter the expiry date');
+            });
+
+            test('should not submit the bcmc payment with invalid bcmc card number', async ({ bcmc }) => {
+                await bcmc.isComponentVisible();
+                await bcmc.fillCardNumber(`${BCMC_CARD}111`);
+                await bcmc.pay();
+
+                await expect(bcmc.cardNumberErrorElement).toHaveText('Enter a valid card number');
+            });
         });
 
-        test('should not submit the bcmc payment with incomplete form data', async () => {
-            // should see the bcmc logo on init
-            // do not fill the expiry date
-            // should see error msg
-        });
+        test.describe('Selecting the maestro brand', () => {
+            test('should submit the maestro payment', async ({ bcmc }) => {
+                await bcmc.isComponentVisible();
 
-        test('should not submit the bcmc payment with invalid bcmc card number', async () => {
-            // should see the bcmc logo on init
-            // do not fill the expiry date
-            // should see error msg
+                await bcmc.fillCardNumber(BCMC_CARD);
+                await bcmc.fillExpiryDate(TEST_DATE_VALUE);
+                await bcmc.waitForVisibleDualBrands();
+
+                const [firstBrand, secondBrand] = await bcmc.brands;
+                expect(firstBrand).toHaveAttribute('data-value', 'bcmc');
+                expect(secondBrand).toHaveAttribute('data-value', 'maestro');
+
+                await bcmc.selectBrand('Maestro');
+                await bcmc.pay();
+
+                await expect(bcmc.paymentResult).toContainText(PAYMENT_RESULT.authorised);
+            });
+
+            test('should not submit the maestro payment with incomplete form data', async ({ bcmc }) => {
+                await bcmc.isComponentVisible();
+                await bcmc.fillCardNumber(BCMC_CARD);
+                await bcmc.waitForVisibleDualBrands();
+                await bcmc.selectBrand('Maestro');
+                await bcmc.pay();
+
+                await expect(bcmc.expiryDateErrorElement).toHaveText('Enter the expiry date');
+            });
+
+            test('should not submit the maestro payment with invalid maestro card number', async ({ bcmc }) => {
+                await bcmc.isComponentVisible();
+                await bcmc.fillCardNumber(`${BCMC_CARD}111`);
+                await bcmc.pay();
+
+                await expect(bcmc.expiryDateErrorElement).toHaveText('Enter the expiry date');
+            });
         });
     });
 
-    test.describe('Selecting the maestro brand', () => {
-        test('should submit the maestro payment', async () => {
-            // should see the bcmc logo on init
-            // fill in dual brand card maestro
-            // expect to see 2 logos with correct order
-            // select maestro logo
-            // expect to see the maestro logo highlighted
-            // click pay btn
-            // expect to see success msg
-        });
-        test('should not submit the maestro payment with incomplete form data', async () => {
-            // should see the bcmc logo on init
-            // do not fill the expiry date
-            // should see error msg
+    test.describe('Bancontact (BCMC) / Visa Debit brands', () => {
+        test.describe('Selecting the Bancontact brand', () => {
+            test('should submit the bcmc payment', async ({ bcmc }) => {
+                await bcmc.isComponentVisible();
+
+                await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_VISA);
+                await bcmc.fillExpiryDate(TEST_DATE_VALUE);
+                await bcmc.waitForVisibleDualBrands();
+
+                const [firstBrand, secondBrand] = await bcmc.brands;
+                expect(firstBrand).toHaveAttribute('data-value', 'bcmc');
+                expect(secondBrand).toHaveAttribute('data-value', 'visa');
+
+                await bcmc.selectBrand('Bancontact card');
+                await bcmc.pay();
+                await bcmc.threeDs2Challenge.fillInPassword(THREEDS2_CHALLENGE_PASSWORD);
+                await bcmc.threeDs2Challenge.submit();
+                await expect(bcmc.paymentResult).toContainText(PAYMENT_RESULT.authorised);
+            });
+
+            test('should not submit the bcmc payment with incomplete form data', async ({ bcmc }) => {
+                await bcmc.isComponentVisible();
+                await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_VISA);
+                await bcmc.waitForVisibleDualBrands();
+                await bcmc.selectBrand('Bancontact card');
+                await bcmc.pay();
+
+                await expect(bcmc.expiryDateErrorElement).toHaveText('Enter the expiry date');
+            });
+
+            test('should not submit the bcmc payment with invalid bcmc card number', async ({ bcmc }) => {
+                await bcmc.isComponentVisible();
+                await bcmc.fillCardNumber(`${BCMC_DUAL_BRANDED_VISA}111`);
+                await bcmc.pay();
+
+                await expect(bcmc.cardNumberErrorElement).toHaveText('Enter a valid card number');
+            });
         });
 
-        test('should not submit the maestro payment with invalid maestro card number', async () => {
-            // should see the bcmc logo on init
-            // wrong maestro card number
-            // should see error msg
+        test.describe('Selecting the visa brand', () => {
+            test('should submit the visa payment', async ({ bcmc }) => {
+                await bcmc.isComponentVisible();
+
+                await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_VISA);
+                await bcmc.fillExpiryDate(TEST_DATE_VALUE);
+                await bcmc.waitForVisibleDualBrands();
+
+                const [firstBrand, secondBrand] = await bcmc.brands;
+                expect(firstBrand).toHaveAttribute('data-value', 'bcmc');
+                expect(secondBrand).toHaveAttribute('data-value', 'visa');
+
+                await bcmc.selectBrand(/visa/i);
+                await bcmc.fillCvc(TEST_CVC_VALUE);
+                await bcmc.pay();
+
+                await bcmc.threeDs2Challenge.fillInPassword(THREEDS2_CHALLENGE_PASSWORD);
+                await bcmc.threeDs2Challenge.submit();
+                await expect(bcmc.paymentResult).toContainText(PAYMENT_RESULT.authorised);
+            });
+
+            test('should not submit the visa payment with incomplete form data', async ({ bcmc }) => {
+                await bcmc.isComponentVisible();
+
+                await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_VISA);
+                await bcmc.fillExpiryDate(TEST_DATE_VALUE);
+                await bcmc.waitForVisibleDualBrands();
+
+                await bcmc.selectBrand(/visa/i);
+                await bcmc.pay();
+
+                await expect(bcmc.cvcErrorElement).toHaveText('Enter the security code');
+            });
+
+            test('should not submit the visa payment with invalid visa card number', async ({ bcmc }) => {
+                await bcmc.isComponentVisible();
+                await bcmc.fillCardNumber(`${BCMC_DUAL_BRANDED_VISA}111`);
+                await bcmc.pay();
+
+                await expect(bcmc.cardNumberErrorElement).toHaveText('Enter a valid card number');
+            });
         });
     });
 
-    test.describe('Selecting the visa brand', () => {
-        test('should submit the visa payment', async () => {
-            // should see the bcmc logo on init
-            // fill in dual brand card visa
-            // expect to see 2 logos with correct order
-            // select visa logo
-            // expect to see the visa logo highlighted
-            // fill in the rest required fields
-            // click pay btn
-            // expect to see success msg
+    test.describe('Bancontact (BCMC) / MC brands', () => {
+        test.describe('Selecting the Bancontact brand', () => {
+            test('should submit the bcmc payment', async ({ bcmc }) => {
+                await bcmc.isComponentVisible();
+
+                await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_MC);
+                await bcmc.fillExpiryDate(TEST_DATE_VALUE);
+                await bcmc.waitForVisibleDualBrands();
+
+                const [firstBrand, secondBrand] = await bcmc.brands;
+                expect(firstBrand).toHaveAttribute('data-value', 'bcmc');
+                expect(secondBrand).toHaveAttribute('data-value', 'mc');
+
+                await bcmc.selectBrand('Bancontact card');
+                await bcmc.pay();
+
+                await expect(bcmc.paymentResult).toContainText(PAYMENT_RESULT.authorised);
+            });
+
+            test('should not submit the bcmc payment with incomplete form data', async ({ bcmc }) => {
+                await bcmc.isComponentVisible();
+                await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_MC);
+                await bcmc.waitForVisibleDualBrands();
+                await bcmc.selectBrand('Bancontact card');
+                await bcmc.pay();
+
+                await expect(bcmc.expiryDateErrorElement).toHaveText('Enter the expiry date');
+            });
+
+            test('should not submit the bcmc payment with invalid bcmc card number', async ({ bcmc }) => {
+                await bcmc.isComponentVisible();
+                await bcmc.fillCardNumber(`${BCMC_DUAL_BRANDED_MC}111`);
+                await bcmc.pay();
+
+                await expect(bcmc.cardNumberErrorElement).toHaveText('Enter a valid card number');
+            });
         });
 
-        test('should not submit the visa payment with incomplete form data', async () => {
-            // should see the bcmc logo on init
-            // do not fill the expiry date
-            // should see error msg
+        test.describe('Selecting the mc brand', () => {
+            test('should submit the mc payment', async ({ bcmc }) => {
+                await bcmc.isComponentVisible();
+
+                await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_MC);
+                await bcmc.fillExpiryDate(TEST_DATE_VALUE);
+                await bcmc.waitForVisibleDualBrands();
+
+                const [firstBrand, secondBrand] = await bcmc.brands;
+                expect(firstBrand).toHaveAttribute('data-value', 'bcmc');
+                expect(secondBrand).toHaveAttribute('data-value', 'mc');
+
+                await bcmc.selectBrand('MasterCard');
+                await bcmc.fillCvc(TEST_CVC_VALUE);
+                await bcmc.pay();
+
+                await expect(bcmc.paymentResult).toContainText(PAYMENT_RESULT.authorised);
+            });
+
+            test('should not submit the mc payment with incomplete form data', async ({ bcmc }) => {
+                await bcmc.isComponentVisible();
+
+                await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_MC);
+                await bcmc.fillExpiryDate(TEST_DATE_VALUE);
+                await bcmc.waitForVisibleDualBrands();
+
+                await bcmc.selectBrand('MasterCard');
+                await bcmc.pay();
+
+                await expect(bcmc.cvcErrorElement).toHaveText('Enter the security code');
+            });
+
+            test('should not submit the mc payment with invalid mc card number', async ({ bcmc }) => {
+                await bcmc.isComponentVisible();
+                await bcmc.fillCardNumber(`${BCMC_DUAL_BRANDED_MC}111`);
+                await bcmc.pay();
+
+                await expect(bcmc.cardNumberErrorElement).toHaveText('Enter a valid card number');
+            });
         });
-
-        test('should not submit the visa payment with invalid visa card number', async () => {
-            // should see the bcmc logo on init
-            // wrong maestro card number
-            // should see error msg
-        });
-    });
-
-    test.describe('Selecting the mc brand', () => {
-        test('should submit the mc payment', async () => {
-            // should see the bcmc logo on init
-            // fill in dual brand card mc
-            // expect to see 2 logos with correct order
-            // select mc logo
-            // expect to see the mc logo highlighted
-            // fill in the rest required fields
-            // click pay btn
-            // expect to see success msg
-        });
-
-        test('should not submit the mc payment with incomplete form data', async () => {});
-
-        test('should not submit the mc payment with invalid mc card number', async () => {});
     });
 });

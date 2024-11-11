@@ -42,9 +42,10 @@ class Dropin extends Base {
         return this.pmList.locator(`.adyen-checkout__payment-method:has-text("${pmLabel}")`);
     }
 
+    // Non stored payment methods
     async selectPaymentMethod(pmType: string) {
         const pmLabel = this.paymentMethods.find((pm: { type: string }) => pm.type === pmType).name;
-        this.page.getByRole('radio', { name: pmLabel }).check();
+        this.page.locator('.adyen-checkout__payment-methods-list--otherPayments').getByRole('radio', { name: pmLabel }).check();
     }
 
     async saveDetails() {

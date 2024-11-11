@@ -30,9 +30,14 @@ test.describe('Card payments with partial avs', () => {
         });
     });
 
-    test.describe('When fill in an invalid post code ', () => {
-        // in the fixture, do not provide country code
-        test('should not submit the payment', async ({ page }) => {
+    test.describe('When not fill in a post code ', () => {
+        test('should not submit the payment', async ({ cardAvsPage }) => {
+            await cardAvsPage.fillCardNumber(REGULAR_TEST_CARD);
+            await cardAvsPage.fillExpiryDate(TEST_DATE_VALUE);
+            await cardAvsPage.fillCvc(TEST_CVC_VALUE);
+            await cardAvsPage.pay();
+
+            //await expect(cardAvsPage.paymentResult).toContainText(PAYMENT_RESULT.authorised);
             // fill in card number
             // fill in expiry date
             // fill in cvc
@@ -81,3 +86,4 @@ test.describe('Card payments with full avs', () => {
         });
     });
 });
+//packages/e2e-playwright/tests/e2e/card/avs.spec.ts
