@@ -4,10 +4,9 @@
     "config:base",
     ":disableDependencyDashboard"
   ],
-  "internalChecksFilter": "strict",
-  "updateNotScheduled": false,
+  "labels": ["dependencies"],
   "minimumReleaseAge": "21 days",
-  "pre-commit": {
-    "enabled": true
-  }
+  "prConcurrentLimit": 5,
+  "internalChecksFilter": "strict",
+  "updateNotScheduled": false
 }
