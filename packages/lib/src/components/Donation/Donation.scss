@@ -20,6 +20,10 @@
 }
 
 .adyen-checkout__campaign {
+    border-radius: token(border-radius-m);
+    background: token(color-label-primary);
+    height: 227px;
+    overflow: hidden;
     position: relative;
 }
 
@@ -27,67 +31,77 @@
     text-decoration: underline;
 }
 
+.adyen-checkout__campaign-container {
+    height: 100%;
+}
+
 .adyen-checkout__campaign-logo {
+    border: token(spacer-010) solid rgb(255 255 255 / 40%);
     border-radius: token(border-radius-s);
-    border: token(border-width-s) solid token(color-outline-primary);
     display: block;
-    flex-shrink: 0;
     height: token(spacer-120);
-    object-fit: cover;
-    object-position: center;
+    margin-bottom: token(spacer-070);
     overflow: hidden;
     width: token(spacer-120);
 }
 
 .adyen-checkout__campaign-background-image {
-    aspect-ratio: 5 / 2;
     background-color: token(color-label-primary);
     background-position: center;
-    background-size: 100%;
-    border-radius: token(border-radius-m);
-    margin-bottom: token(spacer-060);
-    overflow: hidden;
-    transition: background-size 0.6s ease-out;
-
-    &:hover {
-        background-size: 110%;
-    }
+    background-size: cover;
+    height: 100%;
 }
 
 .adyen-checkout__campaign-link {
-    text-decoration: none;
+    .adyen-checkout__campaign-background-image {
+        &::before {
+            background: inherit;
+            content: '';
+            height: 100%;
+            position: absolute;
+            transition: transform 0.6s ease-out;
+            width: 100%;
+        }
 
-    &:hover {
-        text-decoration: underline;
+        &:hover::before {
+            transform: scale(1.1);
+        }
+    }
+
+    .adyen-checkout__campaign-content {
+        pointer-events: none;
     }
 }
 
 .adyen-checkout__campaign-content {
-    align-items: flex-start;
-    display: flex;
-    gap: token(spacer-060);
+    bottom: 0;
+    padding: token(spacer-070);
+    position: absolute;
+    z-index: 2;
 }
 
 .adyen-checkout__campaign-title,
 .adyen-checkout__campaign-description {
-    color: token(color-label-primary);
+    color: token(color-label-on-color);
+    font-weight: normal;
     margin: 0;
 }
 
 .adyen-checkout__campaign-title {
     @include index.adyen-checkout-text-title;
+
+    margin-bottom: token(spacer-040);
 }
 
 .adyen-checkout__campaign-cause {
     @include index.adyen-checkout-text-caption;
 
+    color: token(color-label-on-color);
     font-weight: token(text-caption-stronger-font-weight);
 }
 
 .adyen-checkout__campaign-description {
     @include index.adyen-checkout-text-caption;
-
-    margin-top: token(spacer-060);
 }
 
 .adyen-checkout-roundup-description {

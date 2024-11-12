@@ -35,8 +35,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         termsAndConditionsUrl: 'https://www.adyen.com',
         bannerUrl: '/banner.png',
         logoUrl: '/logo.png',
-        nonprofitDescription:
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        nonprofitDescription: 'Lorem ipsum...',
         nonprofitName: 'Test Charity',
         causeName: 'Earthquake Turkey & Syria',
         nonprofitUrl: 'https://example.org',
