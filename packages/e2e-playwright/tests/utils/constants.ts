@@ -19,9 +19,9 @@ export const MULTI_LUHN_MAESTRO = '6771830999991239343'; // maestro that passes 
 export const UNKNOWN_BIN_CARD = '135410014004955'; // card that is not in the test DBs (uatp)
 export const UNKNOWN_VISA_CARD = '41111111'; // card is now in the test DBs (visa) - so keep it short to stop it firing binLookup
 
-export const SYNCHRONY_PLCC_NO_LUHN = '6044100018023838'; // also, no date
-export const SYNCHRONY_PLCC_WITH_LUHN = '6044141000018769'; // also, no date
-export const SYNCHRONY_PLCC_NO_DATE = SYNCHRONY_PLCC_NO_LUHN; // no date
+export const SYNCHRONY_PLCC_NO_LUHN_NO_DATE = '6044100018023838'; // binLookup gives luhn check and date not required
+export const SYNCHRONY_PLCC_WITH_LUHN = '6044141000018769'; // binLookup gives luhn check required but date not required
+export const SYNCHRONY_PLCC_NO_LUHN_BUT_FAILS_LUHN = '6044100033327222'; // A PAN that identifies as a plcc that doesn't require a luhn check BUT that would fail the luhn check if it was required_
 
 // intersolve (plastix)
 export const GIFTCARD_NUMBER = '4010100000000000000';
