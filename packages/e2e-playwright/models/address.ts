@@ -13,8 +13,12 @@ class Address {
         return this.rootElement.getByRole('combobox', { name: /country\/region/i });
     }
 
+    get stateError() {
+        return this.rootElement.locator('.adyen-checkout__field--stateOrProvince').locator('.adyen-checkout-contextual-text--error');
+    }
+
     get streetInput() {
-        return this.rootElement.getByRole('textbox', { name: /street/i });
+        return this.rootElement.locator('.adyen-checkout__input--street');
     }
 
     get streetInputError() {
@@ -27,6 +31,10 @@ class Address {
 
     get cityInput() {
         return this.rootElement.getByRole('textbox', { name: /city/i });
+    }
+
+    get cityError() {
+        return this.rootElement.locator('.adyen-checkout__field--city').locator('.adyen-checkout-contextual-text--error');
     }
 
     get postalCodeInput() {
@@ -49,6 +57,19 @@ class Address {
     async selectCountry(options: { name?: RegExp | string }) {
         await this.countrySelector.click();
         await this.rootElement.getByRole('option', options).click();
+    }
+
+    async fillInStreet(street: string) {
+        await this.streetInput.waitFor({ state: 'visible' });
+        await this.streetInput.fill(street);
+    }
+
+    async fillInHouseNumber(houseNumber: string) {
+        await this.houseNumberInput.fill(houseNumber);
+    }
+
+    async fillInCity(city: string) {
+        await this.cityInput.fill(city);
     }
 }
 
