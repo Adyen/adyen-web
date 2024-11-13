@@ -25,5 +25,10 @@ export const URL_MAP = {
     riverty: '/iframe.html?globals=&args=&id=components-riverty--default&viewMode=story',
     rivertyWithVisibleSrPanel: '/iframe.html?args=srConfig.showPanel:!true&globals=&id=components-riverty--default&viewMode=story',
     /* Redirect */
-    ideal: '/iframe.html?globals=&id=components-ideal--default&viewMode=story'
+    ideal: '/iframe.html?globals=&id=components-ideal--default&viewMode=story',
+
+    /**
+     * Vouchers
+     */
+    boleto: '/iframe.html?globals=&id=vouchers-boleto--default&viewMode=story'
 };
