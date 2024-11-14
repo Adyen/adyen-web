@@ -19,7 +19,8 @@ test.describe('Testing binLookup endpoint for a response that should indicate a 
         let brandingIconSrc = await card.brandingIcon.getAttribute('src');
         expect(brandingIconSrc).toContain('synchrony_plcc.svg');
 
-        // TODO Confirm date is hidden
+        // Confirm date is hidden
+        await expect(card.expiryDateField).not.toBeVisible();
 
         // Fill cvc
         await card.typeCvc(TEST_CVC_VALUE);
@@ -30,6 +31,9 @@ test.describe('Testing binLookup endpoint for a response that should indicate a 
 
         // Delete number
         await card.deleteCardNumber();
+
+        // Allow time for icon to load
+        await page.waitForTimeout(500);
 
         // UI reset
         brandingIconSrc = await card.brandingIcon.getAttribute('src');
