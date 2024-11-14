@@ -71,10 +71,42 @@ const hiddenDateWithPanLengthMock = {
     requestedId: null
 };
 
+const multiLengthMaestroWithPanLengthMock = {
+    brands: [
+        {
+            enableLuhnCheck: true,
+            supported: true,
+            brand: 'maestro',
+            cvcPolicy: 'required',
+            expiryDatePolicy: 'required',
+            panLength: 18
+        }
+    ],
+    issuingCountryCode: 'US',
+    requestedId: null
+};
+
+const amexWithPanLengthMock = {
+    brands: [
+        {
+            enableLuhnCheck: true,
+            supported: true,
+            brand: 'amex',
+            cvcPolicy: 'required',
+            expiryDatePolicy: 'required',
+            panLength: 15
+        }
+    ],
+    issuingCountryCode: 'US',
+    requestedId: null
+};
+
 export {
     optionalDateAndCvcMock,
     hiddenDateAndCvcMock,
     optionalDateWithPanLengthMock,
     hiddenDateWithPanLengthMock,
-    optionalDateAndCvcWithPanLengthMock
+    optionalDateAndCvcWithPanLengthMock,
+    multiLengthMaestroWithPanLengthMock,
+    amexWithPanLengthMock
 };

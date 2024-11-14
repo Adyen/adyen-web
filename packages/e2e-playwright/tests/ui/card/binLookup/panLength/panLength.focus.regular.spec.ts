@@ -1,34 +1,15 @@
 import { test, expect } from '../../../../../fixtures/card.fixture';
 import { getStoryUrl } from '../../../../utils/getStoryUrl';
 import { URL_MAP } from '../../../../../fixtures/URL_MAP';
-import { CARD_WITH_PAN_LENGTH, REGULAR_TEST_CARD } from '../../../../utils/constants';
-
-import { mocks } from './mocks';
-import { binLookupUrl, getBinLookupMock, turnOffSDKMocking } from '../../cardMocks';
+import { AMEX_CARD, CARD_WITH_PAN_LENGTH, MULTI_LUHN_MAESTRO, REGULAR_TEST_CARD } from '../../../../utils/constants';
 import { binLookupMock } from '../../../../../mocks/binLookup/binLookup.mock';
 import {
     hiddenDateWithPanLengthMock,
+    multiLengthMaestroWithPanLengthMock,
+    amexWithPanLengthMock,
     optionalDateAndCvcWithPanLengthMock,
     optionalDateWithPanLengthMock
 } from '../../../../../mocks/binLookup/binLookup.data';
-
-/**
- * NOTE - we are mocking the response until such time as we have a genuine card that returns the properties we want to test
- */
-
-let currentMock = null;
-
-const getMock = val => {
-    const mock = mocks[val];
-    currentMock = getBinLookupMock(binLookupUrl, mock);
-    return currentMock;
-};
-
-const removeRequestHook = async () => {
-    if (currentMock) {
-        // await t.removeRequestHooks(currentMock); // don't know if this is strictly necessary}
-    }
-};
 
 test.describe('Test how Card Component handles binLookup returning a panLength property (or not)', () => {
     test("#1 Fill out PAN & see that focus stays on number field since binLookup doesn't return a panLength", async ({ card, page }) => {
@@ -135,10 +116,9 @@ test.describe('Test how Card Component handles binLookup returning a panLength p
         await expect(card.expiryDateLabelWithFocus).toBeVisible();
     });
 
-    test.only('#7 Fill out PAN by **pasting** number (binLookup w. panLength) & see that maxLength is set on number SF and that focus moves to expiryDate', async ({
+    test('#7 Fill out PAN by **pasting** number (binLookup w. panLength) & see that maxLength is set on number SF and that focus moves to expiryDate', async ({
         card,
-        page,
-        context
+        page
     }) => {
         await card.goto(URL_MAP.card);
 
@@ -147,14 +127,8 @@ test.describe('Test how Card Component handles binLookup returning a panLength p
         // Place focus on the input
         await card.cardNumberLabelElement.click();
 
-        // await context.grantPermissions(['clipboard-read', 'clipboard-write']); // KEEP: useful
-
         // Copy text to clipboard
         await page.evaluate(() => navigator.clipboard.writeText('4000620000000007')); // Can't use the constant for some reason
-
-        // Get clipboard content
-        const handle = await page.evaluateHandle(() => navigator.clipboard.readText());
-        // const clipboardContent = await handle.jsonValue(); // KEEP: useful
 
         // Paste text from clipboard
         await page.keyboard.press('Meta+V');
@@ -162,57 +136,54 @@ test.describe('Test how Card Component handles binLookup returning a panLength p
         // Expect UI change - expiryDate field has focus
         await expect(card.cardNumberLabelWithFocus).not.toBeVisible();
         await expect(card.expiryDateLabelWithFocus).toBeVisible();
-
-        // await page.waitForTimeout(5000);
     });
-
-    // return;
 
     test(
         "#8 Fill out PAN with binLookup panLength of 18 and see that when you fill in the 16th digit the focus doesn't jump " +
             ' then complete the number to 18 digits and see the focus jump' +
             ' then delete the number and add an amex one and see the focus now jumps after 15 digits',
         async ({ card, page }) => {
-            // await removeRequestHook(t);
-            // await t.addRequestHooks(getMock('multiLengthMaestro'));
-            //
-            // // Wait for field to appear in DOM
-            // await cardPage.numHolder();
-            //
-            // let firstDigits = MULTI_LUHN_MAESTRO.substring(0, 15);
-            // const middleDigits = MULTI_LUHN_MAESTRO.substring(15, 16);
-            // let lastDigits = MULTI_LUHN_MAESTRO.substring(16, 18);
-            //
-            // await cardPage.cardUtils.fillCardNumber(t, firstDigits);
-            //
-            // await t.wait(INPUT_DELAY);
-            //
-            // await cardPage.cardUtils.fillCardNumber(t, middleDigits);
-            //
-            // // Expect focus to be still be on number field
-            // await t.expect(cardPage.numLabelWithFocus.exists).ok();
-            // await t.expect(cardPage.dateLabelWithFocus.exists).notOk();
-            // await t.wait(INPUT_DELAY);
-            // await cardPage.cardUtils.fillCardNumber(t, lastDigits);
-            //
-            // // Expect focus to be placed on Expiry date field
-            // await t.expect(cardPage.dateLabelWithFocus.exists).ok();
-            //
-            // // Then delete number & enter new number with a different binLookup response to see that focus now jumps after 15 digits
-            // await cardPage.cardUtils.deleteCardNumber(t);
-            //
-            // await removeRequestHook(t);
-            // await t.addRequestHooks(getMock('amexMock'));
-            //
-            // firstDigits = AMEX_CARD.substring(0, 14);
-            // let endDigits = AMEX_CARD.substring(14, 15);
-            //
-            // await cardPage.cardUtils.fillCardNumber(t, firstDigits);
-            // await t.wait(INPUT_DELAY);
-            // await cardPage.cardUtils.fillCardNumber(t, endDigits);
-            //
-            // // Expect focus to be place on Expiry date field
-            // await t.expect(cardPage.dateLabelWithFocus.exists).ok();
+            await binLookupMock(page, multiLengthMaestroWithPanLengthMock);
+
+            await card.goto(URL_MAP.card);
+
+            await card.isComponentVisible();
+
+            const firstDigits = MULTI_LUHN_MAESTRO.substring(0, 16);
+            const lastDigits = MULTI_LUHN_MAESTRO.substring(16, 18);
+
+            // Type first part of PAN
+            await card.typeCardNumber(firstDigits);
+
+            // Expect focus to be still be on number field
+            await expect(card.cardNumberLabelWithFocus).toBeVisible();
+            await expect(card.expiryDateLabelWithFocus).not.toBeVisible();
+
+            // Type remaining digits
+            await card.typeCardNumber(lastDigits);
+
+            // Expect UI change - expiryDate field has focus
+            await expect(card.cardNumberLabelWithFocus).not.toBeVisible();
+            await expect(card.expiryDateLabelWithFocus).toBeVisible();
+
+            // Delete number
+            await card.deleteCardNumber();
+
+            // Expect focus back on number field
+            await expect(card.cardNumberLabelWithFocus).toBeVisible();
+            await expect(card.expiryDateLabelWithFocus).not.toBeVisible();
+
+            // Reset mock
+            await binLookupMock(page, amexWithPanLengthMock);
+
+            // Type new PAN that will give different /binLookup response
+            await card.typeCardNumber(AMEX_CARD);
+
+            // Expect UI change - expiryDate field has focus again
+            await expect(card.cardNumberLabelWithFocus).not.toBeVisible();
+            await expect(card.expiryDateLabelWithFocus).toBeVisible();
+
+            // await page.waitForTimeout(5000);
         }
     );
 
