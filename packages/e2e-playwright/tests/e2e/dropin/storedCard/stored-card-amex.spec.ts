@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test, expect } from '../../../../fixtures/dropin.fixture';
 
 test.describe('Stored Amex card - cvc required', () => {
     test('#1 Can fill out the cvc fields in the stored card and make a successful payment', async () => {

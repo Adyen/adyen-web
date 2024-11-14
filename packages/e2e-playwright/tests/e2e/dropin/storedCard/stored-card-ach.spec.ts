@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test, expect } from '../../../../fixtures/dropin.fixture';
 
 test.describe('Stored ach card', () => {
     test('should make a successful payment', async () => {
