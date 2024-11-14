@@ -120,6 +120,10 @@
     display: none;
 }
 
+.adyen-checkout__field--cardNumber .adyen-checkout-card-input__icon--hidden {
+    display: none;
+}
+
 .adyen-checkout__field--securityCode.adyen-checkout__field--error .adyen-checkout__card__cvc__hint,
 .adyen-checkout__field--securityCode.adyen-checkout__field--valid .adyen-checkout__card__cvc__hint {
     opacity: 0;
