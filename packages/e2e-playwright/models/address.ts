@@ -52,11 +52,17 @@ class Address {
         return this.rootElement.getByRole('combobox', { name: /state/i });
     }
 
+    get addressSearchInput() {
+        return this.rootElement.getByRole('combobox', { name: /address/i });
+    }
+
     async fillInPostCode(postCode: string) {
+        await this.postalCodeInput.waitFor({ state: 'visible' });
         await this.postalCodeInput.fill(postCode);
     }
 
     async selectState(options: { name?: RegExp | string }) {
+        await this.stateInput.waitFor({ state: 'visible' });
         await this.stateInput.click();
         await this.rootElement.getByRole('option', options).click();
     }
@@ -76,7 +82,17 @@ class Address {
     }
 
     async fillInCity(city: string) {
+        await this.cityInput.waitFor({ state: 'visible' });
         await this.cityInput.fill(city);
+    }
+
+    async searchAddressAndChooseTheFirst(query: string) {
+        await this.addressSearchInput.click();
+        await this.addressSearchInput.fill(query);
+        await this.rootElement
+            .getByRole('option', { name: new RegExp(query, 'i') })
+            .first()
+            .click();
     }
 }
 
