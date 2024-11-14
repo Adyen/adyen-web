@@ -1,10 +1,10 @@
 import { test, expect } from '../../../../../fixtures/card.fixture';
 import { getStoryUrl } from '../../../../utils/getStoryUrl';
-import { SYNCHRONY_PLCC_NO_LUHN_BUT_FAILS_LUHN, TEST_CVC_VALUE } from '../../../../utils/constants';
+import { PLCC_NO_LUHN_NO_DATE_WOULD_FAIL_LUHN, TEST_CVC_VALUE } from '../../../../utils/constants';
 import { URL_MAP } from '../../../../../fixtures/URL_MAP';
 
-test.describe('Testing a PLCC, for a response that should indicate luhn check is not required)', () => {
-    test('Test plcc card becomes valid with number that fails luhn check ', async ({ card, page }) => {
+test.describe('Testing binLookup endpoint for a response that should indicate a luhn check is not required)', () => {
+    test('Test a PLCC card, that does not require a date, becomes valid with a number that fails the luhn check', async ({ card, page }) => {
         //
         const componentConfig = { brands: ['mc', 'visa', 'amex', 'bcmc', 'synchrony_plcc'] };
 
@@ -12,14 +12,16 @@ test.describe('Testing a PLCC, for a response that should indicate luhn check is
 
         await card.isComponentVisible();
 
-        // number that identifies as plcc but fails luhn
-        await card.typeCardNumber(SYNCHRONY_PLCC_NO_LUHN_BUT_FAILS_LUHN);
+        // Number that identifies as plcc but fails luhn
+        await card.typeCardNumber(PLCC_NO_LUHN_NO_DATE_WOULD_FAIL_LUHN);
 
-        // confirm plcc brand
+        // Confirm plcc brand
         let brandingIconSrc = await card.brandingIcon.getAttribute('src');
         expect(brandingIconSrc).toContain('synchrony_plcc.svg');
 
-        // fill cvc
+        // TODO Confirm date is hidden
+
+        // Fill cvc
         await card.typeCvc(TEST_CVC_VALUE);
 
         // PM is valid
