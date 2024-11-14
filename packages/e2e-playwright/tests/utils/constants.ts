@@ -20,7 +20,7 @@ export const UNKNOWN_BIN_CARD = '135410014004955'; // card that is not in the te
 export const UNKNOWN_VISA_CARD = '41111111'; // card is now in the test DBs (visa) - so keep it short to stop it firing binLookup
 
 export const PLCC_NO_LUHN_NO_DATE = '6044100018023838'; // binLookup gives luhn check and date not required
-export const PLCC_WITH_LUHN = '6044141000018769'; // binLookup gives luhn check required but date not required
+export const PLCC_WITH_LUHN_NO_DATE = '6044141000018769'; // binLookup gives luhn check required but date not required
 export const PLCC_NO_LUHN_NO_DATE_WOULD_FAIL_LUHN = '6044100033327222'; // A PAN that identifies as a plcc that doesn't require a luhn check BUT that would fail the luhn check if it was required_
 
 // intersolve (plastix)
