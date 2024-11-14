@@ -4,7 +4,10 @@ class Address {
     readonly rootElement: Locator;
     readonly rootElementSelector: string;
 
-    constructor(public readonly page: Page, rootElementSelector: string = '.adyen-checkout__fieldset--billingAddress') {
+    constructor(
+        public readonly page: Page,
+        rootElementSelector: string = '.adyen-checkout__fieldset--billingAddress'
+    ) {
         this.rootElement = page.locator(rootElementSelector);
         this.rootElementSelector = rootElementSelector;
     }
@@ -39,6 +42,10 @@ class Address {
 
     get postalCodeInput() {
         return this.rootElement.getByRole('textbox', { exact: false, name: /code/i }); // US uses 'Zip Code', the rest uses 'Postal Code';
+    }
+
+    get postalCodeError() {
+        return this.rootElement.locator('.adyen-checkout__field--postalCode').locator('.adyen-checkout-contextual-text--error');
     }
 
     get stateInput() {
