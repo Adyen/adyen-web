@@ -1,5 +1,5 @@
 module.exports = {
-    testEnvironment: 'jsdom',
+    testEnvironment: 'jest-fixed-jsdom',
     verbose: true,
     rootDir: '../',
     setupFilesAfterEnv: ['<rootDir>/config/setupTests.ts'],
@@ -10,10 +10,6 @@ module.exports = {
     moduleNameMapper: {
         '\\.scss$': '<rootDir>/config/testMocks/styleMock.js'
     },
-    collectCoverageFrom: [
-        'src/**/*.{ts,tsx}',
-        '!src/**/types.ts',
-        '!src/language/locales/**'
-    ],
+    collectCoverageFrom: ['src/**/*.{ts,tsx}', '!src/**/types.ts', '!src/language/locales/**'],
     coveragePathIgnorePatterns: ['node_modules/', 'config/', 'scripts/', 'storybook/', '.storybook/', 'auto/', '_']
 };
