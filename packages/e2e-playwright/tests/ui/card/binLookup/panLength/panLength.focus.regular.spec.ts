@@ -1,7 +1,7 @@
 import { test, expect } from '../../../../../fixtures/card.fixture';
 import { getStoryUrl } from '../../../../utils/getStoryUrl';
 import { URL_MAP } from '../../../../../fixtures/URL_MAP';
-import { AMEX_CARD, CARD_WITH_PAN_LENGTH, MAESTRO_CARD, MULTI_LUHN_MAESTRO, REGULAR_TEST_CARD } from '../../../../utils/constants';
+import { AMEX_CARD, CARD_WITH_PAN_LENGTH, MULTI_LUHN_MAESTRO, REGULAR_TEST_CARD } from '../../../../utils/constants';
 import { binLookupMock } from '../../../../../mocks/binLookup/binLookup.mock';
 import {
     hiddenDateWithPanLengthMock,
@@ -12,7 +12,7 @@ import {
 } from '../../../../../mocks/binLookup/binLookup.data';
 
 test.describe('Test how Card Component handles binLookup returning a panLength property (or not)', () => {
-    test("#1 Fill out PAN & see that focus stays on number field since binLookup doesn't return a panLength", async ({ card, page }) => {
+    test("#1 Fill out PAN & see that focus stays on number field since binLookup doesn't return a panLength", async ({ card }) => {
         await card.goto(URL_MAP.card);
 
         await card.isComponentVisible();
@@ -27,7 +27,7 @@ test.describe('Test how Card Component handles binLookup returning a panLength p
         await expect(card.expiryDateLabelWithFocus).not.toBeVisible();
     });
 
-    test('#2 Fill out PAN(binLookup w. panLength), maxLength is set on cardNumber SF, and that focus moves to expiryDate', async ({ card, page }) => {
+    test('#2 Fill out PAN(binLookup w. panLength), maxLength is set on cardNumber SF, and that focus moves to expiryDate', async ({ card }) => {
         await card.goto(URL_MAP.card);
 
         await card.isComponentVisible();
@@ -186,8 +186,7 @@ test.describe('Test how Card Component handles binLookup returning a panLength p
     );
 
     test('#9 Fill out PAN with Visa num that binLookup says has a panLength of 16 - you should not then be able to type more digits in the card number field', async ({
-        card,
-        page
+        card
     }) => {
         await card.goto(URL_MAP.card);
 
