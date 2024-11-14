@@ -1,7 +1,7 @@
 import { test, expect } from '../../../../../fixtures/card.fixture';
 import { getStoryUrl } from '../../../../utils/getStoryUrl';
 import { URL_MAP } from '../../../../../fixtures/URL_MAP';
-import { AMEX_CARD, CARD_WITH_PAN_LENGTH, MULTI_LUHN_MAESTRO, REGULAR_TEST_CARD } from '../../../../utils/constants';
+import { AMEX_CARD, CARD_WITH_PAN_LENGTH, MAESTRO_CARD, MULTI_LUHN_MAESTRO, REGULAR_TEST_CARD } from '../../../../utils/constants';
 import { binLookupMock } from '../../../../../mocks/binLookup/binLookup.mock';
 import {
     hiddenDateWithPanLengthMock,
@@ -182,32 +182,25 @@ test.describe('Test how Card Component handles binLookup returning a panLength p
             // Expect UI change - expiryDate field has focus again
             await expect(card.cardNumberLabelWithFocus).not.toBeVisible();
             await expect(card.expiryDateLabelWithFocus).toBeVisible();
-
-            // await page.waitForTimeout(5000);
         }
     );
 
-    test('#9 Fill out PAN with Visa num that binLookup says has a panLength of 16 - you should not then be able to type more digits in the card number field', async () => {
-        // await removeRequestHook(t);
-        // await t.addRequestHooks(getMock('visaMock'));
-        //
-        // // Wait for field to appear in DOM
-        // await cardPage.numHolder();
-        //
-        // const firstDigits = REGULAR_TEST_CARD.substring(0, 15);
-        // const lastDigits = REGULAR_TEST_CARD.substring(15, 16);
-        //
-        // await cardPage.cardUtils.fillCardNumber(t, firstDigits);
-        //
-        // await t.wait(INPUT_DELAY);
-        //
-        // await cardPage.cardUtils.fillCardNumber(t, lastDigits);
-        //
-        // // Expect focus to be place on date field
-        // await t.expect(cardPage.dateLabelWithFocus.exists).ok();
-        //
-        // // Should not be able to add more digits to the PAN
-        // await cardPage.cardUtils.fillCardNumber(t, '6');
-        // await checkIframeInputContainsValue(t, cardPage.iframeSelector, 0, '.js-iframe-input', '5500 0000 0000 0004');
+    test('#9 Fill out PAN with Visa num that binLookup says has a panLength of 16 - you should not then be able to type more digits in the card number field', async ({
+        card,
+        page
+    }) => {
+        await card.goto(URL_MAP.card);
+
+        await card.isComponentVisible();
+
+        await card.typeCardNumber(CARD_WITH_PAN_LENGTH);
+
+        // Should not be able to add more digits to the PAN
+        await card.cardNumberInput.press('End'); /** NOTE: how to add text at end */
+        await card.typeCardNumber('6');
+
+        // Confirm PAN value has not had chars added
+        let val = await card.cardNumberInput.inputValue();
+        expect(val).toEqual('4000 6200 0000 0007');
     });
 });
