@@ -115,7 +115,7 @@ test.describe('Test how Card Component handles binLookup returning a panLength p
         await expect(card.holderNameLabelWithFocus).toBeVisible();
     });
 
-    test.only('#6 Fill out invalid date on an optional date field, then fill PAN (binLookup w. panLength) see that focus moves to (optional) expiryDate since expiryDate is in error', async ({
+    test('#6 Fill out invalid date on an optional date field, then fill PAN (binLookup w. panLength) see that focus moves to (optional) expiryDate since expiryDate is in error', async ({
         card,
         page
     }) => {
@@ -133,36 +133,46 @@ test.describe('Test how Card Component handles binLookup returning a panLength p
         // Expect UI change - expiryDate field has focus
         await expect(card.cardNumberLabelWithFocus).not.toBeVisible();
         await expect(card.expiryDateLabelWithFocus).toBeVisible();
-
-        await page.waitForTimeout(5000);
     });
-    return;
 
-    test('#7 Fill out PAN by **pasting** number (binLookup w. panLength) & see that maxLength is set on number SF and that focus moves to expiryDate', async () => {
-        // await removeRequestHook(t);
-        // await t.addRequestHooks(getMock('panLength'));
-        //
-        // // Wait for field to appear in DOM
-        // await cardPage.numHolder();
-        //
-        // await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD, 'paste');
-        //
-        // // Expect iframe to exist in number field with maxlength attr set to 19
-        // await t
-        //   .switchToIframe(cardPage.iframeSelector.nth(0))
-        //   .expect(Selector('[data-fieldtype="encryptedCardNumber"]').getAttribute('maxlength'))
-        //   .eql('19') // 4 blocks of 4 numbers with 3 spaces in between
-        //   .switchToMainWindow();
-        //
-        // // Expect focus to be place on Expiry date field
-        // await t.expect(cardPage.dateLabelWithFocus.exists).ok();
+    test.only('#7 Fill out PAN by **pasting** number (binLookup w. panLength) & see that maxLength is set on number SF and that focus moves to expiryDate', async ({
+        card,
+        page,
+        context
+    }) => {
+        await card.goto(URL_MAP.card);
+
+        await card.isComponentVisible();
+
+        // Place focus on the input
+        await card.cardNumberLabelElement.click();
+
+        // await context.grantPermissions(['clipboard-read', 'clipboard-write']); // KEEP: useful
+
+        // Copy text to clipboard
+        await page.evaluate(() => navigator.clipboard.writeText('4000620000000007')); // Can't use the constant for some reason
+
+        // Get clipboard content
+        const handle = await page.evaluateHandle(() => navigator.clipboard.readText());
+        // const clipboardContent = await handle.jsonValue(); // KEEP: useful
+
+        // Paste text from clipboard
+        await page.keyboard.press('Meta+V');
+
+        // Expect UI change - expiryDate field has focus
+        await expect(card.cardNumberLabelWithFocus).not.toBeVisible();
+        await expect(card.expiryDateLabelWithFocus).toBeVisible();
+
+        // await page.waitForTimeout(5000);
     });
+
+    // return;
 
     test(
         "#8 Fill out PAN with binLookup panLength of 18 and see that when you fill in the 16th digit the focus doesn't jump " +
             ' then complete the number to 18 digits and see the focus jump' +
             ' then delete the number and add an amex one and see the focus now jumps after 15 digits',
-        async () => {
+        async ({ card, page }) => {
             // await removeRequestHook(t);
             // await t.addRequestHooks(getMock('multiLengthMaestro'));
             //
