@@ -10,6 +10,7 @@ export const DUAL_BRANDED_CARD = '4035501000000008'; // dual branded visa & cart
 export const BCMC_DUAL_BRANDED_VISA = '4871049999999910'; // dual branded visa & bcmc
 export const DUAL_BRANDED_CARD_EXCLUDED = '4001230000000004'; // dual branded visa/star
 export const FAILS_LUHN_CARD = '4111111111111112';
+export const CARD_WITH_PAN_LENGTH = '4000620000000007';
 
 export const THREEDS2_FRICTIONLESS_CARD = '5201281505129736';
 export const THREEDS2_FULL_FLOW_CARD = '5000550000000029';

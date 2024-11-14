@@ -1,6 +1,16 @@
-import { test } from '@playwright/test';
+import { test, expect } from '../../../../../fixtures/card.fixture';
+import { getStoryUrl } from '../../../../utils/getStoryUrl';
+import { URL_MAP } from '../../../../../fixtures/URL_MAP';
+import { CARD_WITH_PAN_LENGTH, REGULAR_TEST_CARD } from '../../../../utils/constants';
+
 import { mocks } from './mocks';
 import { binLookupUrl, getBinLookupMock, turnOffSDKMocking } from '../../cardMocks';
+import { binLookupMock } from '../../../../../mocks/binLookup/binLookup.mock';
+import {
+    hiddenDateWithPanLengthMock,
+    optionalDateAndCvcWithPanLengthMock,
+    optionalDateWithPanLengthMock
+} from '../../../../../mocks/binLookup/binLookup.data';
 
 /**
  * NOTE - we are mocking the response until such time as we have a genuine card that returns the properties we want to test
@@ -21,152 +31,114 @@ const removeRequestHook = async () => {
 };
 
 test.describe('Test how Card Component handles binLookup returning a panLength property (or not)', () => {
-    test.beforeEach(async () => {
-        // to config panLength.regular.clientScripts.js
-        //await t.navigateTo(cardPage);
-        // For individual test suites (that rely on binLookup & perhaps are being run in isolation)
-        // - provide a way to ensure SDK bin mocking is turned off
-        await turnOffSDKMocking();
-    });
-    test("#1 Fill out PAN & see that focus stays on number field since binLookup doesn't return a panLength", async () => {
-        // await t.addRequestHooks(getMock('noPanLength'));
-        //
-        // // Wait for field to appear in DOM
-        // await cardPage.numHolder();
-        //
-        // const firstDigits = REGULAR_TEST_CARD.substring(0, 15);
-        // const lastDigits = REGULAR_TEST_CARD.substring(15, 16);
-        //
-        // await cardPage.cardUtils.fillCardNumber(t, firstDigits);
-        //
-        // await t.wait(INPUT_DELAY);
-        //
-        // await cardPage.cardUtils.fillCardNumber(t, lastDigits);
-        //
-        // // Expect focus to be still be on number field
-        // await t.expect(cardPage.numLabelWithFocus.exists).ok();
-        // await t.expect(cardPage.dateLabelWithFocus.exists).notOk();
+    test("#1 Fill out PAN & see that focus stays on number field since binLookup doesn't return a panLength", async ({ card, page }) => {
+        await card.goto(URL_MAP.card);
+
+        await card.isComponentVisible();
+
+        // Check start state
+        await expect(card.cardNumberLabelWithFocus).not.toBeVisible();
+
+        await card.typeCardNumber(REGULAR_TEST_CARD);
+
+        // Expect focus to be still be on number field
+        await expect(card.cardNumberLabelWithFocus).toBeVisible();
+        await expect(card.expiryDateLabelWithFocus).not.toBeVisible();
     });
 
-    test('#2 Fill out PAN & see that since binLookup does return a panLength maxLength is set on number SF and that focus moves to expiryDate', async () => {
-        // await removeRequestHook(t);
-        // await t.addRequestHooks(getMock('panLength'));
-        //
-        // // Wait for field to appear in DOM
-        // await cardPage.numHolder();
-        //
-        // const firstDigits = REGULAR_TEST_CARD.substring(0, 15);
-        // const lastDigits = REGULAR_TEST_CARD.substring(15, 16);
-        //
-        // await cardPage.cardUtils.fillCardNumber(t, firstDigits);
-        //
-        // await t.wait(INPUT_DELAY);
-        //
-        // await cardPage.cardUtils.fillCardNumber(t, lastDigits);
-        //
-        // // Expect iframe to exist in number field with maxlength attr set to 19
-        // await t
-        //   .switchToIframe(cardPage.iframeSelector.nth(0))
-        //   .expect(Selector('[data-fieldtype="encryptedCardNumber"]').getAttribute('maxlength'))
-        //   .eql('19') // 4 blocks of 4 numbers with 3 spaces in between
-        //   .switchToMainWindow();
-        //
-        // // Expect focus to be place on Expiry date field
-        // await t.expect(cardPage.dateLabelWithFocus.exists).ok();
-        //
-        // // Then delete card number and see that the maxlength is rest on the iframe
-        // await cardPage.cardUtils.deleteCardNumber(t);
-        // await t
-        //   .switchToIframe(cardPage.iframeSelector.nth(0))
-        //   .expect(Selector('[data-fieldtype="encryptedCardNumber"]').getAttribute('maxlength'))
-        //   .eql('24')
-        //   .switchToMainWindow();
+    test('#2 Fill out PAN(binLookup w. panLength), maxLength is set on cardNumber SF, and that focus moves to expiryDate', async ({ card, page }) => {
+        await card.goto(URL_MAP.card);
+
+        await card.isComponentVisible();
+
+        await card.typeCardNumber(CARD_WITH_PAN_LENGTH);
+
+        // Expect UI change - expiryDate field has focus
+        await expect(card.cardNumberLabelWithFocus).not.toBeVisible();
+        await expect(card.expiryDateLabelWithFocus).toBeVisible();
+
+        // Expect iframe to exist in number field with maxlength attr set to 19
+        let panInputMaxLength = await card.cardNumberInput.getAttribute('maxlength');
+        expect(panInputMaxLength).toEqual('19');
+
+        // Delete number and see that the maxlength is reset on the iframe
+        await card.deleteCardNumber();
+        panInputMaxLength = await card.cardNumberInput.getAttribute('maxlength');
+
+        expect(panInputMaxLength).toEqual('24');
     });
 
-    test('#3 Fill out PAN (binLookup w. panLength) see that focus moves to CVC since expiryDate is optional', async () => {
-        //   await removeRequestHook(t);
-        //   await t.addRequestHooks(getMock('optionalDate'));
-        //
-        //   // Wait for field to appear in DOM
-        //   await cardPage.numHolder();
-        //
-        //   const firstDigits = REGULAR_TEST_CARD.substring(0, 15);
-        //   const lastDigits = REGULAR_TEST_CARD.substring(15, 16);
-        //
-        //   await cardPage.cardUtils.fillCardNumber(t, firstDigits);
-        //
-        //   await t.wait(INPUT_DELAY);
-        //
-        //   await cardPage.cardUtils.fillCardNumber(t, lastDigits);
-        //
-        //   // Expect focus to be place on cvc field
-        //   await t.expect(cardPage.cvcLabelWithFocus.exists).ok();
-        // });
-        //
-        // test('#4 Fill out PAN (binLookup w. panLength) see that focus moves to CVC since expiryDate is hidden', async () => {
-        //   await removeRequestHook(t);
-        //   await t.addRequestHooks(getMock('hiddenDate'));
-        //
-        //   // Wait for field to appear in DOM
-        //   await cardPage.numHolder();
-        //
-        //   const firstDigits = REGULAR_TEST_CARD.substring(0, 15);
-        //   const lastDigits = REGULAR_TEST_CARD.substring(15, 16);
-        //
-        //   await cardPage.cardUtils.fillCardNumber(t, firstDigits);
-        //
-        //   await t.wait(INPUT_DELAY);
-        //
-        //   await cardPage.cardUtils.fillCardNumber(t, lastDigits);
-        //
-        //   // Expect focus to be place on cvc field
-        //   await t.expect(cardPage.cvcLabelWithFocus.exists).ok();
+    test('#3 Fill out PAN (binLookup w. panLength) see that focus moves to CVC since expiryDate is optional', async ({ card, page }) => {
+        await binLookupMock(page, optionalDateWithPanLengthMock);
+
+        await card.goto(URL_MAP.card);
+
+        await card.isComponentVisible();
+
+        await card.typeCardNumber(REGULAR_TEST_CARD);
+
+        // Expect UI change - cvc field has focus
+        await expect(card.cardNumberLabelWithFocus).not.toBeVisible();
+        await expect(card.cvcLabelWithFocus).toBeVisible();
     });
 
-    test('#5 Fill out PAN (binLookup w. panLength) see that focus moves to holderName since expiryDate & cvc are optional', async () => {
-        // await removeRequestHook(t);
-        // await t.addRequestHooks(getMock('optionalDateAndCVC'));
-        //
-        // // Wait for field to appear in DOM
-        // await cardPage.numHolder();
-        //
-        // const firstDigits = REGULAR_TEST_CARD.substring(0, 15);
-        // const lastDigits = REGULAR_TEST_CARD.substring(15, 16);
-        //
-        // await cardPage.cardUtils.fillCardNumber(t, firstDigits);
-        //
-        // await t.wait(INPUT_DELAY);
-        //
-        // await cardPage.cardUtils.fillCardNumber(t, lastDigits);
-        //
-        // // Expect focus to be place on name field
-        // await t.expect(cardPage.holderNameLabelWithFocus.exists).ok();
+    test('#4 Fill out PAN (binLookup w. panLength) see that focus moves to CVC since expiryDate is hidden', async ({ card, page }) => {
+        await binLookupMock(page, hiddenDateWithPanLengthMock);
+
+        await card.goto(URL_MAP.card);
+
+        await card.isComponentVisible();
+
+        await card.typeCardNumber(REGULAR_TEST_CARD);
+
+        // Expect UI change - cvc field has focus
+        await expect(card.cardNumberLabelWithFocus).not.toBeVisible();
+        await expect(card.cvcLabelWithFocus).toBeVisible();
     });
 
-    test('#6 Fill out invalid date, then fill PAN (binLookup w. panLength) see that focus moves to expiryDate since expiryDate is in error', async () => {
-        // await removeRequestHook(t);
-        // await t.addRequestHooks(getMock('optionalDate'));
-        //
-        // // Wait for field to appear in DOM
-        // await cardPage.numHolder();
-        //
-        // // Card out of date
-        // await cardPage.cardUtils.fillDate(t, '12/90');
-        //
-        // const firstDigits = REGULAR_TEST_CARD.substring(0, 15);
-        // const lastDigits = REGULAR_TEST_CARD.substring(15, 16);
-        //
-        // await cardPage.cardUtils.fillCardNumber(t, firstDigits);
-        //
-        // await t.wait(INPUT_DELAY);
-        //
-        // await cardPage.cardUtils.fillCardNumber(t, lastDigits);
-        //
-        // // Expect focus to be place on Expiry date field
-        // await t.expect(cardPage.dateLabelWithFocus.exists).ok();
+    test('#5 Fill out PAN (binLookup w. panLength) see that focus moves to holderName since expiryDate & cvc are optional', async ({
+        card,
+        page
+    }) => {
+        await binLookupMock(page, optionalDateAndCvcWithPanLengthMock);
+
+        const componentConfig = { hasHolderName: true, holderNameRequired: true };
+
+        await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
+
+        await card.isComponentVisible();
+
+        await card.typeCardNumber(REGULAR_TEST_CARD);
+
+        // Expect UI change - holderName field has focus
+        await expect(card.cardNumberLabelWithFocus).not.toBeVisible();
+        await expect(card.holderNameLabelWithFocus).toBeVisible();
     });
 
-    test('#7 Fill out PAN by pasting number (binLookup w. panLength) & see that maxLength is set on number SF and that focus moves to expiryDate', async () => {
+    test.only('#6 Fill out invalid date on an optional date field, then fill PAN (binLookup w. panLength) see that focus moves to (optional) expiryDate since expiryDate is in error', async ({
+        card,
+        page
+    }) => {
+        await binLookupMock(page, optionalDateWithPanLengthMock);
+
+        await card.goto(URL_MAP.card);
+
+        await card.isComponentVisible();
+
+        // Card out of date
+        await card.fillExpiryDate('12/90');
+
+        await card.typeCardNumber(REGULAR_TEST_CARD);
+
+        // Expect UI change - expiryDate field has focus
+        await expect(card.cardNumberLabelWithFocus).not.toBeVisible();
+        await expect(card.expiryDateLabelWithFocus).toBeVisible();
+
+        await page.waitForTimeout(5000);
+    });
+    return;
+
+    test('#7 Fill out PAN by **pasting** number (binLookup w. panLength) & see that maxLength is set on number SF and that focus moves to expiryDate', async () => {
         // await removeRequestHook(t);
         // await t.addRequestHooks(getMock('panLength'));
         //

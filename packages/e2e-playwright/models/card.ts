@@ -21,6 +21,7 @@ class Card extends Base {
 
     readonly cardNumberField: Locator;
     readonly cardNumberLabelElement: Locator;
+    readonly cardNumberLabelWithFocus: Locator;
     readonly cardNumberErrorElement: Locator;
     readonly cardNumberInput: Locator;
     readonly brandingIcon: Locator;
@@ -28,16 +29,21 @@ class Card extends Base {
     readonly expiryDateField: Locator;
     readonly expiryDateLabelText: Locator;
     readonly expiryDateContextualElement: Locator;
+    readonly expiryDateLabelWithFocus: Locator;
     readonly expiryDateInput: Locator;
     readonly expiryDateIframeContextualElement: Locator;
     readonly expiryDateErrorElement: Locator;
 
     readonly cvcField: Locator;
     readonly cvcLabelText: Locator;
+    readonly cvcLabelWithFocus: Locator;
     readonly cvcErrorElement: Locator;
     readonly cvcContextualElement: Locator;
     readonly cvcInput: Locator;
     readonly cvcIframeContextualElement: Locator;
+
+    readonly holderNameField: Locator;
+    readonly holderNameLabelWithFocus: Locator;
 
     readonly installmentsPaymentLabel: Locator;
     readonly revolvingPaymentLabel: Locator;
@@ -58,6 +64,7 @@ class Card extends Base {
         this.cardNumberField = this.rootElement.locator('.adyen-checkout__field--cardNumber'); // Holder
         this.cardNumberLabelElement = this.cardNumberField.locator('.adyen-checkout__label');
         this.cardNumberErrorElement = this.cardNumberField.locator('.adyen-checkout-contextual-text--error');
+        this.cardNumberLabelWithFocus = this.cardNumberField.locator('.adyen-checkout__label--focused');
 
         this.brandingIcon = this.rootElement.locator('.adyen-checkout__card__cardNumber__brandIcon');
         /**
@@ -73,6 +80,7 @@ class Card extends Base {
         this.expiryDateLabelText = this.expiryDateField.locator('.adyen-checkout__label__text');
         this.expiryDateContextualElement = this.expiryDateField.locator('.adyen-checkout-contextual-text'); // Related contextual element
         this.expiryDateErrorElement = this.expiryDateField.locator('.adyen-checkout-contextual-text--error'); // Related error element
+        this.expiryDateLabelWithFocus = this.expiryDateField.locator('.adyen-checkout__label--focused');
 
         /**
          * Expiry Date elements, in iframe
@@ -88,6 +96,7 @@ class Card extends Base {
         this.cvcLabelText = this.cvcField.locator('.adyen-checkout__label__text');
         this.cvcContextualElement = this.cvcField.locator('.adyen-checkout-contextual-text'); // Related contextual element
         this.cvcErrorElement = this.cvcField.locator('.adyen-checkout-contextual-text--error'); // Related error element
+        this.cvcLabelWithFocus = this.cvcField.locator('.adyen-checkout__label--focused');
 
         /**
          * Security code elements, in iframe
@@ -95,6 +104,12 @@ class Card extends Base {
         const cvcIframe = this.rootElement.frameLocator(`[title="${CVC_IFRAME_TITLE}"]`);
         this.cvcInput = cvcIframe.locator(`input[aria-label="${CVC_IFRAME_LABEL}"]`);
         this.cvcIframeContextualElement = cvcIframe.locator('.aria-context');
+
+        /**
+         * HolderName elements, in Checkout
+         */
+        this.holderNameField = this.rootElement.locator('.adyen-checkout__card__holderName'); // Holder
+        this.holderNameLabelWithFocus = this.holderNameField.locator('.adyen-checkout__label--focused');
 
         /**
          * Installments related elements
