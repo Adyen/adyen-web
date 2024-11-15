@@ -5,11 +5,8 @@ import { binLookupMock } from '../../../../../mocks/binLookup/binLookup.mock';
 import { optionalDateAndCvcWithPanLengthMock } from '../../../../../mocks/binLookup/binLookup.data';
 import { REGULAR_TEST_CARD } from '../../../../utils/constants';
 
-test.describe('Test how Card Component handles binLookup returning a panLength property for a card with a social security number', () => {
-    test('#1 Fill out PAN (binLookup w. panLength) see that focus moves to social security number since expiryDate & cvc are optional', async ({
-        card,
-        page
-    }) => {
+test.describe('Test Card, binLookup w. panLength property & social security number', () => {
+    test('#1 Fill out PAN see that focus moves to social security number since expiryDate & cvc are optional', async ({ card, page }) => {
         await binLookupMock(page, optionalDateAndCvcWithPanLengthMock);
 
         const componentConfig = { configuration: { socialSecurityNumberMode: 'show' } };
