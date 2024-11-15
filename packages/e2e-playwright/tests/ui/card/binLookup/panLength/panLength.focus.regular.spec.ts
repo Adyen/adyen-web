@@ -163,12 +163,16 @@ test.describe('Test how Card Component handles binLookup returning a panLength p
             await expect(card.cardNumberLabelWithFocus).toBeVisible();
             await expect(card.expiryDateLabelWithFocus).not.toBeVisible();
 
+            await page.waitForTimeout(100);
+
             // Type remaining digits
             await card.typeCardNumber(lastDigits);
 
             // Expect UI change - expiryDate field has focus
             await expect(card.cardNumberLabelWithFocus).not.toBeVisible();
             await expect(card.expiryDateLabelWithFocus).toBeVisible();
+
+            await page.waitForTimeout(100);
 
             // Delete number
             await card.deleteCardNumber();
