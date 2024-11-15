@@ -52,6 +52,9 @@ class Card extends Base {
     readonly installmentsDropdown: Locator;
     readonly selectorList: Locator;
 
+    readonly ssnField: Locator;
+    readonly ssnLabelWithFocus: Locator;
+
     constructor(
         public readonly page: Page,
         rootElementSelector = '.adyen-checkout__card-input'
@@ -122,6 +125,12 @@ class Card extends Base {
         this.revolvingPaymentLabel = this.rootElement.getByText(REVOLVING_PAYMENT);
         this.installmentsDropdown = this.rootElement.locator('.adyen-checkout__dropdown__button');
         this.selectorList = this.rootElement.getByRole('listbox');
+
+        /**
+         * Social Security Number related elements
+         */
+        this.ssnField = this.rootElement.locator('.adyen-checkout__field--socialSecurityNumber'); // Holder
+        this.ssnLabelWithFocus = this.ssnField.locator('.adyen-checkout__label--focused');
     }
 
     get availableBrands() {
