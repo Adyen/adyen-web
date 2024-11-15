@@ -101,6 +101,21 @@ const amexWithPanLengthMock = {
     requestedId: null
 };
 
+const kcpMockOptionalDateAndCvcWithPanLengthMock = {
+    brands: [
+        {
+            enableLuhnCheck: true,
+            supported: true,
+            brand: 'korean_local_card',
+            cvcPolicy: 'optional',
+            expiryDatePolicy: 'optional',
+            panLength: 16
+        }
+    ],
+    requestedId: null,
+    issuingCountryCode: 'KR'
+};
+
 export {
     optionalDateAndCvcMock,
     hiddenDateAndCvcMock,
@@ -108,5 +123,6 @@ export {
     hiddenDateWithPanLengthMock,
     optionalDateAndCvcWithPanLengthMock,
     multiLengthMaestroWithPanLengthMock,
-    amexWithPanLengthMock
+    amexWithPanLengthMock,
+    kcpMockOptionalDateAndCvcWithPanLengthMock
 };

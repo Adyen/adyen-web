@@ -117,10 +117,7 @@ test.describe('Test Card, & binLookup w. panLength property', () => {
         await expect(card.expiryDateLabelWithFocus).toBeVisible();
     });
 
-    test('#6 Fill out PAN by **pasting** number & see that maxLength is set on number SF and that focus moves to expiryDate', async ({
-        card,
-        page
-    }) => {
+    test('#6 Fill out PAN by **pasting** number & see that that focus moves to expiryDate', async ({ card, page }) => {
         await card.goto(URL_MAP.card);
 
         await card.isComponentVisible();
@@ -130,6 +127,8 @@ test.describe('Test Card, & binLookup w. panLength property', () => {
 
         // Copy text to clipboard
         await page.evaluate(() => navigator.clipboard.writeText('4000620000000007')); // Can't use the constant for some reason
+
+        await page.waitForTimeout(1000);
 
         // Paste text from clipboard
         await page.keyboard.press('ControlOrMeta+V');

@@ -58,6 +58,9 @@ class Card extends Base {
     readonly addressField: Locator;
     readonly addressLabelWithFocus: Locator;
 
+    readonly kcpTaxNumberField: Locator;
+    readonly kcpTaxNumberLabelWithFocus: Locator;
+
     constructor(
         public readonly page: Page,
         rootElementSelector = '.adyen-checkout__card-input'
@@ -140,6 +143,12 @@ class Card extends Base {
          */
         this.addressField = this.rootElement.locator('.adyen-checkout__field--street'); // Holder
         this.addressLabelWithFocus = this.addressField.locator('.adyen-checkout__label--focused');
+
+        /**
+         * KCP related elements
+         */
+        this.kcpTaxNumberField = this.rootElement.locator('.adyen-checkout__field--kcp-taxNumber'); // Holder
+        this.kcpTaxNumberLabelWithFocus = this.kcpTaxNumberField.locator('.adyen-checkout__label--focused');
     }
 
     get availableBrands() {
