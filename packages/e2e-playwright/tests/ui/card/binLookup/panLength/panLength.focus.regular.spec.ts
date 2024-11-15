@@ -116,10 +116,14 @@ test.describe('Test how Card Component handles binLookup returning a panLength p
         await expect(card.expiryDateLabelWithFocus).toBeVisible();
     });
 
-    test('#7 Fill out PAN by **pasting** number (binLookup w. panLength) & see that maxLength is set on number SF and that focus moves to expiryDate', async ({
+    // TODO - work out how to make clipboard-paste work in Firefox and Webkit (Safari)
+    test.skip('#7 Fill out PAN by **pasting** number (binLookup w. panLength) & see that maxLength is set on number SF and that focus moves to expiryDate', async ({
         card,
-        page
+        page,
+        context
     }) => {
+        await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+
         await card.goto(URL_MAP.card);
 
         await card.isComponentVisible();
@@ -132,6 +136,8 @@ test.describe('Test how Card Component handles binLookup returning a panLength p
 
         // Paste text from clipboard
         await page.keyboard.press('Meta+V');
+
+        await page.waitForTimeout(500);
 
         // Expect UI change - expiryDate field has focus
         await expect(card.cardNumberLabelWithFocus).not.toBeVisible();
