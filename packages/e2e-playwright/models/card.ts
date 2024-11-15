@@ -55,6 +55,9 @@ class Card extends Base {
     readonly ssnField: Locator;
     readonly ssnLabelWithFocus: Locator;
 
+    readonly addressField: Locator;
+    readonly addressLabelWithFocus: Locator;
+
     constructor(
         public readonly page: Page,
         rootElementSelector = '.adyen-checkout__card-input'
@@ -131,6 +134,12 @@ class Card extends Base {
          */
         this.ssnField = this.rootElement.locator('.adyen-checkout__field--socialSecurityNumber'); // Holder
         this.ssnLabelWithFocus = this.ssnField.locator('.adyen-checkout__label--focused');
+
+        /**
+         * AVS related elements
+         */
+        this.addressField = this.rootElement.locator('.adyen-checkout__field--street'); // Holder
+        this.addressLabelWithFocus = this.addressField.locator('.adyen-checkout__label--focused');
     }
 
     get availableBrands() {

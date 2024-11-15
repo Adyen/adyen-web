@@ -1,44 +1,24 @@
-import { test } from '@playwright/test';
-import { mocks } from './mocks';
-import { binLookupUrl, getBinLookupMock, turnOffSDKMocking } from '../../cardMocks';
+import { test, expect } from '../../../../../fixtures/card.fixture';
+import { getStoryUrl } from '../../../../utils/getStoryUrl';
+import { URL_MAP } from '../../../../../fixtures/URL_MAP';
+import { binLookupMock } from '../../../../../mocks/binLookup/binLookup.mock';
+import { optionalDateAndCvcWithPanLengthMock } from '../../../../../mocks/binLookup/binLookup.data';
+import { REGULAR_TEST_CARD } from '../../../../utils/constants';
 
-/**
- * NOTE - we are mocking the response until such time as we have a genuine card that returns the properties we want to test
- */
+test.describe('Test Card, binLookup w. panLength property & address fields', () => {
+    test('#1 Fill out PAN & see that focus moves to an address field since expiryDate & cvc are optional', async ({ card, page }) => {
+        await binLookupMock(page, optionalDateAndCvcWithPanLengthMock);
 
-let currentMock = null;
+        const componentConfig = { billingAddressRequired: true, billingAddressRequiredFields: ['street', 'houseNumberOrName', 'postalCode', 'city'] };
 
-const getMock = val => {
-    const mock = mocks[val];
-    currentMock = getBinLookupMock(binLookupUrl, mock);
-    return currentMock;
-};
+        await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
 
-test.describe('Test how Card Component handles binLookup returning a panLength property for a card with address fields', () => {
-    // use config from panLength.avs.clientScripts.js
+        await card.isComponentVisible();
 
-    test.beforeEach(async () => {
-        // todo: go to the card page
-        // For individual test suites (that rely on binLookup & perhaps are being run in isolation)
-        // - provide a way to ensure SDK bin mocking is turned off
-        await turnOffSDKMocking();
-    });
+        await card.typeCardNumber(REGULAR_TEST_CARD);
 
-    test('#1 Fill out PAN (binLookup w. panLength) see that focus moves to an address field since expiryDate & cvc are optional', async () => {
-        // use mock await t.addRequestHooks(getMock('optionalDateAndCVC'));
-        // Wait for field to appear in DOM
-        // await cardPage.numHolder();
-        //
-        // const firstDigits = REGULAR_TEST_CARD.substring(0, 15);
-        // const lastDigits = REGULAR_TEST_CARD.substring(15, 16);
-        //
-        // await cardPage.cardUtils.fillCardNumber(t, firstDigits);
-        //
-        // await t.wait(INPUT_DELAY);
-        //
-        // await cardPage.cardUtils.fillCardNumber(t, lastDigits);
-        //
-        // // Expect focus to be place on address (street) field
-        // await t.expect(cardPage.addressLabelWithFocus.exists).ok();
+        // Expect focus to be place on address (street) field
+        await expect(card.cardNumberLabelWithFocus).not.toBeVisible();
+        await expect(card.addressLabelWithFocus).toBeVisible();
     });
 });

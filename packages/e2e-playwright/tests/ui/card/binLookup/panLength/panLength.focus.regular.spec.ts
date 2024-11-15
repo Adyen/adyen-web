@@ -12,7 +12,7 @@ import {
 } from '../../../../../mocks/binLookup/binLookup.data';
 
 test.describe('Test Card, & binLookup w/o panLength property', () => {
-    test('#1 Fill out PAN & see that focus stays on number field', async ({ card }) => {
+    test('#0 Fill out PAN & see that focus stays on number field', async ({ card }) => {
         await card.goto(URL_MAP.card);
 
         await card.isComponentVisible();
@@ -132,9 +132,9 @@ test.describe('Test Card, & binLookup w. panLength property', () => {
         await page.evaluate(() => navigator.clipboard.writeText('4000620000000007')); // Can't use the constant for some reason
 
         // Paste text from clipboard
-        await page.keyboard.press('Meta+V');
+        await page.keyboard.press('ControlOrMeta+V');
 
-        await page.waitForTimeout(500);
+        await page.waitForTimeout(1000);
 
         // Expect UI change - expiryDate field has focus
         await expect(card.cardNumberLabelWithFocus).not.toBeVisible();
