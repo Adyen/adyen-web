@@ -3,7 +3,7 @@ import collectId from '../Services/analytics/collect-id';
 import { PaymentAmount } from '../../types';
 import wait from '../../utils/wait';
 import { DEFAULT_DEBOUNCE_TIME_MS } from '../../utils/debounce';
-import { ANALYTICS_EVENT, AnalyticsObject, CreateAnalyticsObject } from './types';
+import { AnalyticsEvent, AnalyticsObject, CreateAnalyticsObject } from './types';
 import { ANALYTICS_VALIDATION_ERROR_STR } from './constants';
 
 jest.mock('../Services/analytics/collect-id');
@@ -21,7 +21,7 @@ const setUpEvent = {
 };
 
 const analyticsEventObj = {
-    event: 'info' as ANALYTICS_EVENT,
+    event: 'info' as AnalyticsEvent,
     component: 'cardComponent',
     type: 'Focus',
     target: 'PAN input'

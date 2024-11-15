@@ -12,9 +12,23 @@ export const ANALYTICS_INFO_TIMER_INTERVAL = process.env.NODE_ENV === 'developme
 
 export const ANALYTICS_SEARCH_DEBOUNCE_TIME = 3000;
 
-export const ANALYTICS_EVENT_LOG = 'log';
-export const ANALYTICS_EVENT_ERROR = 'error';
-export const ANALYTICS_EVENT_INFO = 'info';
+export const ANALYTICS_EVENT = {
+    log: 'log',
+    error: 'error',
+    info: 'info'
+};
+
+export const ANALYTICS_ERROR_TYPE = {
+    network: 'Network',
+    implementation: 'Implementation',
+    internal: 'Internal',
+    apiError: 'ApiError',
+    sdkError: 'SdkError',
+    thirdParty: 'ThirdParty',
+    generic: 'Generic',
+    redirect: 'Redirect',
+    threeDS2: 'ThreeDS2'
+};
 
 export const ANALYTICS_ACTION_STR = 'action';
 export const ANALYTICS_SUBMIT_STR = 'submit';
@@ -38,11 +52,6 @@ export const ANALYTICS_INSTANT_PAYMENT_BUTTON = 'instant_payment_button';
 export const ANALYTICS_FEATURED_ISSUER = 'featured_issuer';
 export const ANALYTICS_LIST = 'list';
 export const ANALYTICS_LIST_SEARCH = 'list_search';
-
-export const ANALYTICS_IMPLEMENTATION_ERROR = 'ImplementationError';
-export const ANALYTICS_API_ERROR = 'ApiError';
-export const ANALYTICS_SDK_ERROR = 'SdkError';
-export const ANALYTICS_NETWORK_ERROR = 'Network';
 
 export enum Analytics3DS2Errors {
     ACTION_IS_MISSING_PAYMENT_DATA = '700', // Missing 'paymentData' property from threeDS2 action

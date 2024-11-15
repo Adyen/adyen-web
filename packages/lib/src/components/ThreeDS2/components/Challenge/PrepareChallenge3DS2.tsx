@@ -19,7 +19,7 @@ import {
     THREEDS2_ERROR
 } from '../../constants';
 import { isValidHttpUrl } from '../../../../utils/isValidURL';
-import { ANALYTICS_API_ERROR, ANALYTICS_NETWORK_ERROR, Analytics3DS2Errors, Analytics3DS2Events } from '../../../../core/Analytics/constants';
+import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, Analytics3DS2Events } from '../../../../core/Analytics/constants';
 import { ErrorObject } from '../../../../core/Errors/types';
 
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
@@ -91,7 +91,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 const errorCodeObject: SendAnalyticsObject = {
                     type: THREEDS2_ERROR,
                     code: Analytics3DS2Errors.TOKEN_IS_MISSING_ACSURL,
-                    errorType: ANALYTICS_API_ERROR,
+                    errorType: ANALYTICS_ERROR_TYPE.apiError,
                     message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing a valid acsURL property`
                     // metadata: { acsURL } // NEW TODO - check acsURL isn't secret
                 };
@@ -118,7 +118,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 this.props.onSubmitAnalytics({
                     type: THREEDS2_ERROR,
                     code: Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS,
-                    errorType: ANALYTICS_API_ERROR,
+                    errorType: ANALYTICS_ERROR_TYPE.apiError,
                     message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)`
                 } as SendAnalyticsObject);
 
@@ -155,7 +155,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             this.props.onSubmitAnalytics({
                 type: THREEDS2_ERROR,
                 code: errorCode,
-                errorType: ANALYTICS_API_ERROR,
+                errorType: ANALYTICS_ERROR_TYPE.apiError,
                 message: `${THREEDS2_CHALLENGE_ERROR}: ${errorMsg}` // can be: 'Missing "token" property from threeDS2 action', 'not base64', 'malformed URI sequence' or 'Could not JSON parse token'
             });
 
@@ -183,7 +183,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             if (finalResObject.errorCode) {
                 const errorTypeAndCode = {
                     code: finalResObject.errorCode === 'timeout' ? Analytics3DS2Errors.THREEDS2_TIMEOUT : Analytics3DS2Errors.NO_TRANSSTATUS,
-                    errorType: finalResObject.errorCode === 'timeout' ? ANALYTICS_NETWORK_ERROR : ANALYTICS_API_ERROR
+                    errorType: finalResObject.errorCode === 'timeout' ? ANALYTICS_ERROR_TYPE.network : ANALYTICS_ERROR_TYPE.apiError
                 };
 
                 // Challenge process has timed out,
@@ -308,7 +308,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                             this.props.onSubmitAnalytics({
                                 type: THREEDS2_ERROR,
                                 code: Analytics3DS2Errors.CHALLENGE_RESOLVED_WITHOUT_RESULT_PROP,
-                                errorType: ANALYTICS_API_ERROR,
+                                errorType: ANALYTICS_ERROR_TYPE.apiError,
                                 message: `${THREEDS2_CHALLENGE_ERROR}: challenge resolved without a "result" object`
                             });
 

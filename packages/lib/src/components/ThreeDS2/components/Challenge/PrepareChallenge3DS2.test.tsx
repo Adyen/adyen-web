@@ -3,7 +3,7 @@ import { h } from 'preact';
 import PrepareChallenge3DS2 from './PrepareChallenge3DS2';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { THREEDS2_ERROR, THREEDS2_FULL, TIMEOUT } from '../../constants';
-import { Analytics3DS2Errors, Analytics3DS2Events, ANALYTICS_API_ERROR, ANALYTICS_NETWORK_ERROR } from '../../../../core/Analytics/constants';
+import { Analytics3DS2Errors, Analytics3DS2Events, ANALYTICS_ERROR_TYPE } from '../../../../core/Analytics/constants';
 
 const challengeToken = {
     acsReferenceNumber: 'ADYEN-ACS-SIMULATOR',
@@ -33,7 +33,7 @@ let errorMessage: string;
 
 const baseAnalyticsError = {
     type: THREEDS2_ERROR,
-    errorType: ANALYTICS_API_ERROR
+    errorType: ANALYTICS_ERROR_TYPE.apiError
 };
 
 let onSubmitAnalytics: any;
@@ -155,7 +155,7 @@ describe('PrepareChallenge3DS2 - flow completes with errors that are considered 
                 type: THREEDS2_ERROR,
                 message: 'threeDS2Challenge: timeout',
                 code: Analytics3DS2Errors.THREEDS2_TIMEOUT,
-                errorType: ANALYTICS_NETWORK_ERROR
+                errorType: ANALYTICS_ERROR_TYPE.network
             });
 
             // analytics to say process is complete
@@ -196,7 +196,7 @@ describe('PrepareChallenge3DS2 - flow completes with errors that are considered 
                 type: THREEDS2_ERROR,
                 message: 'threeDS2Challenge: no transStatus could be retrieved',
                 code: Analytics3DS2Errors.NO_TRANSSTATUS,
-                errorType: ANALYTICS_API_ERROR
+                errorType: ANALYTICS_ERROR_TYPE.apiError
             });
 
             // analytics to say process is complete

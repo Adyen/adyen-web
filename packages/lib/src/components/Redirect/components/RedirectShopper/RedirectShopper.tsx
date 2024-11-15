@@ -10,12 +10,14 @@ interface RedirectShopperProps {
     redirectFromTopWhenInIframe?: boolean;
     paymentMethodType?: string;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
+    onRedirectError?: () => void;
 }
 
 class RedirectShopper extends Component<RedirectShopperProps> {
     private postForm;
     public static defaultProps = {
         beforeRedirect: resolve => resolve(),
+        onRedirectError: () => {},
         method: 'GET'
     };
 
@@ -49,7 +51,9 @@ class RedirectShopper extends Component<RedirectShopperProps> {
                 })
         );
 
-        dispatchEvent.then(doRedirect).catch(() => {});
+        dispatchEvent.then(doRedirect).catch(() => {
+            this.props.onRedirectError();
+        });
     }
 
     render({ url, method, data = {} }) {

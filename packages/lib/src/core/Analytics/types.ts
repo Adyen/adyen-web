@@ -1,6 +1,7 @@
 import { PaymentAmount } from '../../types';
 import { CoreConfiguration } from '../types';
 import { SocialSecurityMode } from '../../components/Card/types';
+import { ANALYTICS_EVENT } from './constants';
 
 export interface Experiment {
     controlGroup: boolean;
@@ -85,9 +86,9 @@ export interface AnalyticsObject {
     configData?: Record<string, string | boolean>;
 }
 
-export type ANALYTICS_EVENT = 'log' | 'error' | 'info';
+export type AnalyticsEvent = (typeof ANALYTICS_EVENT)[keyof typeof ANALYTICS_EVENT];
 
-export type CreateAnalyticsObject = Omit<AnalyticsObject, 'timestamp' | 'id'> & { event: ANALYTICS_EVENT };
+export type CreateAnalyticsObject = Omit<AnalyticsObject, 'timestamp' | 'id'> & { event: AnalyticsEvent };
 
 export type AnalyticsInitialEvent = {
     containerWidth: number;
@@ -108,7 +109,7 @@ export type AnalyticsConfig = {
 export type CreateAnalyticsEventData = Omit<AnalyticsObject, 'timestamp' | 'id'>;
 
 export type CreateAnalyticsEventObject = {
-    event: ANALYTICS_EVENT;
+    event: AnalyticsEvent;
     data: CreateAnalyticsEventData;
 };
 

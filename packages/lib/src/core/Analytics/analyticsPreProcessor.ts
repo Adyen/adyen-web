@@ -5,9 +5,6 @@ import {
     ANALYTICS_CONFIGURED_STR,
     ANALYTICS_DISPLAYED_STR,
     ANALYTICS_DOWNLOAD_STR,
-    ANALYTICS_EVENT_ERROR,
-    ANALYTICS_EVENT_INFO,
-    ANALYTICS_EVENT_LOG,
     ANALYTICS_FOCUS_STR,
     ANALYTICS_INPUT_STR,
     ANALYTICS_RENDERED_STR,
@@ -15,7 +12,8 @@ import {
     ANALYTICS_SUBMIT_STR,
     ANALYTICS_UNFOCUS_STR,
     ANALYTICS_VALIDATION_ERROR_STR,
-    ANALYTICS_EXPRESS_PAGES_ARRAY
+    ANALYTICS_EXPRESS_PAGES_ARRAY,
+    ANALYTICS_EVENT
 } from './constants';
 import { THREEDS2_ERROR, THREEDS2_FULL } from '../../components/ThreeDS2/constants';
 import AdyenCheckoutError, { SDK_ERROR } from '../Errors/AdyenCheckoutError';
@@ -65,7 +63,7 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
                 };
 
                 analyticsModule.createAnalyticsEvent({
-                    event: ANALYTICS_EVENT_INFO,
+                    event: ANALYTICS_EVENT.info,
                     data
                 });
 
@@ -77,7 +75,7 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
                 const data = { component, type, isStoredPaymentMethod, brand };
 
                 analyticsModule.createAnalyticsEvent({
-                    event: ANALYTICS_EVENT_INFO,
+                    event: ANALYTICS_EVENT.info,
                     data
                 });
                 break;
@@ -89,7 +87,7 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
             case ANALYTICS_INPUT_STR: // issuerList
             case ANALYTICS_DOWNLOAD_STR: // QR codes
                 analyticsModule.createAnalyticsEvent({
-                    event: ANALYTICS_EVENT_INFO,
+                    event: ANALYTICS_EVENT.info,
                     data: { component, type, target }
                 });
                 break;
@@ -99,7 +97,7 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
             case ANALYTICS_SELECTED_STR: {
                 const { issuer } = analyticsObj;
                 analyticsModule.createAnalyticsEvent({
-                    event: ANALYTICS_EVENT_INFO,
+                    event: ANALYTICS_EVENT.info,
                     data: { component, type, target, issuer }
                 });
                 break;
@@ -108,7 +106,7 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
             case ANALYTICS_VALIDATION_ERROR_STR: {
                 const { validationErrorCode, validationErrorMessage } = analyticsObj;
                 analyticsModule.createAnalyticsEvent({
-                    event: ANALYTICS_EVENT_INFO,
+                    event: ANALYTICS_EVENT.info,
                     data: { component, type, target, validationErrorCode, validationErrorMessage }
                 });
                 break;
@@ -119,7 +117,7 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
              */
             case ANALYTICS_SUBMIT_STR:
                 analyticsModule.createAnalyticsEvent({
-                    event: ANALYTICS_EVENT_LOG,
+                    event: ANALYTICS_EVENT.log,
                     data: { component, type, message: 'Shopper clicked pay' }
                 });
                 break;
@@ -127,7 +125,7 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
             case ANALYTICS_ACTION_STR: {
                 const { subtype, message } = analyticsObj;
                 analyticsModule.createAnalyticsEvent({
-                    event: ANALYTICS_EVENT_LOG,
+                    event: ANALYTICS_EVENT.log,
                     data: { component, type, subtype, message }
                 });
                 break;
@@ -138,7 +136,7 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
                 const { message, metadata, subtype, result } = analyticsObj;
 
                 analyticsModule.createAnalyticsEvent({
-                    event: ANALYTICS_EVENT_LOG,
+                    event: ANALYTICS_EVENT.log,
                     data: { component, type, message, metadata, subtype, result }
                 });
                 break;
@@ -150,7 +148,7 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
             case THREEDS2_ERROR: {
                 const { message, code, errorType } = analyticsObj;
                 analyticsModule.createAnalyticsEvent({
-                    event: ANALYTICS_EVENT_ERROR,
+                    event: ANALYTICS_EVENT.error,
                     data: { component, type, message, code, errorType }
                 });
                 break;
