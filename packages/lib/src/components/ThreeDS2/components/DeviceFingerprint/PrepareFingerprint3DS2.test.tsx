@@ -2,7 +2,7 @@ import { mount } from 'enzyme';
 import { h } from 'preact';
 import PrepareFingerprint3DS2 from './PrepareFingerprint3DS2';
 import { THREEDS2_ERROR, THREEDS2_FINGERPRINT_ERROR, THREEDS2_FULL, TIMEOUT } from '../../constants';
-import { Analytics3DS2Errors, Analytics3DS2Events, ANALYTICS_API_ERROR, ANALYTICS_NETWORK_ERROR } from '../../../../core/Analytics/constants';
+import { Analytics3DS2Errors, Analytics3DS2Events, ANALYTICS_ERROR_TYPE } from '../../../../core/Analytics/constants';
 
 const fingerPrintToken = {
     threeDSMessageVersion: '2.1.0',
@@ -32,7 +32,7 @@ const onError: any = () => {};
 
 const baseAnalyticsError = {
     type: THREEDS2_ERROR,
-    errorType: ANALYTICS_API_ERROR
+    errorType: ANALYTICS_ERROR_TYPE.apiError
 };
 
 let completeFunction: any;
@@ -147,7 +147,7 @@ describe('ThreeDS2DeviceFingerprint - flow completes with errors that are consid
                 type: THREEDS2_ERROR,
                 message: 'threeDS2Fingerprint: timeout',
                 code: Analytics3DS2Errors.THREEDS2_TIMEOUT,
-                errorType: ANALYTICS_NETWORK_ERROR
+                errorType: ANALYTICS_ERROR_TYPE.network
             });
 
             // analytics to say process is complete

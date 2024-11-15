@@ -8,8 +8,7 @@ let analyticsEventObject;
 
 import {
     ANALYTICS_CONFIGURED_STR,
-    ANALYTICS_EVENT_INFO,
-    ANALYTICS_EVENT_LOG,
+    ANALYTICS_EVENT,
     ANALYTICS_FOCUS_STR,
     ANALYTICS_RENDERED_STR,
     ANALYTICS_SUBMIT_STR,
@@ -47,7 +46,7 @@ describe('Card: calls that generate "info" analytics should produce objects with
 
         // With configData removed inspect what's left
         expect(analyticsEventObject).toEqual({
-            event: ANALYTICS_EVENT_INFO,
+            event: ANALYTICS_EVENT.info,
             data: { component: card.constructor['type'], type: ANALYTICS_RENDERED_STR }
         });
     });
@@ -65,7 +64,7 @@ describe('Card: calls that generate "info" analytics should produce objects with
 
         // With configData removed inspect what's left
         expect(analyticsEventObject).toEqual({
-            event: ANALYTICS_EVENT_INFO,
+            event: ANALYTICS_EVENT.info,
             data: { component: card.constructor['type'], type: ANALYTICS_RENDERED_STR, isStoredPaymentMethod: true, brand: 'mc' }
         });
     });
@@ -76,7 +75,7 @@ describe('Card: calls that generate "info" analytics should produce objects with
         });
 
         expect(analyticsModule.createAnalyticsEvent).toHaveBeenCalledWith({
-            event: ANALYTICS_EVENT_INFO,
+            event: ANALYTICS_EVENT.info,
             data: { component: card.constructor['type'], type: ANALYTICS_CONFIGURED_STR }
         });
     });
@@ -89,7 +88,7 @@ describe('Card: calls that generate "info" analytics should produce objects with
         });
 
         expect(analyticsModule.createAnalyticsEvent).toHaveBeenCalledWith({
-            event: ANALYTICS_EVENT_INFO,
+            event: ANALYTICS_EVENT.info,
             data: { component: card.constructor['type'], type: ANALYTICS_CONFIGURED_STR, isStoredPaymentMethod: true, brand: 'mc' }
         });
     });
@@ -109,7 +108,7 @@ describe('Card: calls that generate "info" analytics should produce objects with
         });
 
         expect(analyticsModule.createAnalyticsEvent).toHaveBeenCalledWith({
-            event: ANALYTICS_EVENT_INFO,
+            event: ANALYTICS_EVENT.info,
             data: { component: card.constructor['type'], type: ANALYTICS_FOCUS_STR, target: 'card_number' }
         });
     });
@@ -129,7 +128,7 @@ describe('Card: calls that generate "info" analytics should produce objects with
         });
 
         expect(analyticsModule.createAnalyticsEvent).toHaveBeenCalledWith({
-            event: ANALYTICS_EVENT_INFO,
+            event: ANALYTICS_EVENT.info,
             data: { component: card.constructor['type'], type: ANALYTICS_UNFOCUS_STR, target: 'card_number' }
         });
     });
@@ -141,7 +140,7 @@ describe('Card: calls that generate "info" analytics should produce objects with
         });
 
         expect(analyticsModule.createAnalyticsEvent).toHaveBeenCalledWith({
-            event: ANALYTICS_EVENT_INFO,
+            event: ANALYTICS_EVENT.info,
             data: {
                 component: card.constructor['type'],
                 type: ANALYTICS_VALIDATION_ERROR_STR,
@@ -170,7 +169,7 @@ describe('Card: calls that generate "log" analytics should produce objects with 
         card.submitAnalytics({ type: ANALYTICS_SUBMIT_STR });
 
         expect(analyticsModule.createAnalyticsEvent).toHaveBeenCalledWith({
-            event: ANALYTICS_EVENT_LOG,
+            event: ANALYTICS_EVENT.log,
             data: {
                 component: card.constructor['type'],
                 type: ANALYTICS_SUBMIT_STR,

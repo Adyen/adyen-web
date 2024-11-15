@@ -1,6 +1,6 @@
 import { ThreeDS2Challenge } from './index';
 import Analytics from '../../core/Analytics';
-import { ANALYTICS_API_ERROR, Analytics3DS2Errors, ANALYTICS_EVENT_ERROR, ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
+import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, ANALYTICS_RENDERED_STR, ANALYTICS_EVENT } from '../../core/Analytics/constants';
 import { THREEDS2_CHALLENGE_ERROR, THREEDS2_ERROR } from './constants';
 
 const analyticsModule = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', bundleType: 'umd' });
@@ -31,11 +31,11 @@ describe('ThreeDS2Challenge: calls that generate analytics should produce object
         const view = challenge.render();
 
         expect(analyticsModule.createAnalyticsEvent).toHaveBeenCalledWith({
-            event: ANALYTICS_EVENT_ERROR,
+            event: ANALYTICS_EVENT.error,
             data: {
                 component: challenge.constructor['type'],
                 type: THREEDS2_ERROR,
-                errorType: ANALYTICS_API_ERROR,
+                errorType: ANALYTICS_ERROR_TYPE.apiError,
                 message: `${THREEDS2_CHALLENGE_ERROR}: Missing 'paymentData' property from threeDS2 action`,
                 code: Analytics3DS2Errors.ACTION_IS_MISSING_PAYMENT_DATA
             }
