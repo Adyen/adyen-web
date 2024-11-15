@@ -28,17 +28,12 @@ class BacsDirectDebit extends Base {
 
     get consentCheckbox() {
         return this.rootElement.locator('.adyen-checkout__field--consentCheckbox').filter({ hasText: /i agree that the above amount/i });
-        // return this.rootElement.getByRole('checkbox', { name: /i agree that the above amount/i, exact: false });
     }
 
     get accountConsentCheckbox() {
         return this.rootElement
             .locator('.adyen-checkout__field--consentCheckbox')
             .filter({ hasText: /i confirm the account is in my name and i am the only signatory/i });
-        //
-        // return this.rootElement.getByRole('checkbox', {
-        //     name: /i confirm the account is in my name and i am the only signatory required to authorise the direct debit on this account/i
-        // });
     }
 
     get continueButton() {
