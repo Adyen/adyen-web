@@ -108,7 +108,7 @@ test.describe('Test Card, & binLookup w. panLength property', () => {
         // Card out of date
         await card.fillExpiryDate('12/90');
 
-        await card.typeCardNumber(REGULAR_TEST_CARD);
+        await card.typeCardNumber(CARD_WITH_PAN_LENGTH);
 
         await page.waitForTimeout(500);
 
