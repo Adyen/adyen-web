@@ -145,7 +145,8 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
             /**
              * ERRORS
              */
-            case THREEDS2_ERROR: {
+            case THREEDS2_ERROR:
+            case ANALYTICS_EVENT.error: {
                 const { message, code, errorType } = analyticsObj;
                 analyticsModule.createAnalyticsEvent({
                     event: ANALYTICS_EVENT.error,

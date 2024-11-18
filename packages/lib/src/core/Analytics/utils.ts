@@ -30,30 +30,33 @@ export const getUTCTimestamp = () => Date.now();
  *
  *  All objects can also have a "metadata" object of key-value pairs
  */
-export const createAnalyticsObject = (aObj: CreateAnalyticsObject): AnalyticsObject => ({
-    timestamp: String(getUTCTimestamp()),
-    component: aObj.component,
-    id: uuid(),
-    /** ERROR */
-    ...(aObj.event === 'error' && { code: aObj.code, errorType: aObj.errorType, message: aObj.message }), // error event
-    /** LOG */
-    ...(aObj.event === 'log' && { type: aObj.type, message: aObj.message }), // log event
-    ...(aObj.event === 'log' && (aObj.type === ANALYTICS_ACTION_STR || aObj.type === THREEDS2_FULL) && { subType: aObj.subtype }), // only added if we have a log event of Action type or ThreeDS2
-    ...(aObj.event === 'log' && aObj.type === THREEDS2_FULL && { result: aObj.result }), // only added if we have a log event of ThreeDS2 type
-    /** INFO */
-    ...(aObj.event === 'info' && { type: aObj.type, target: aObj.target }), // info event
-    ...(aObj.event === 'info' && aObj.issuer && { issuer: aObj.issuer }), // relates to issuerLists
-    ...(aObj.event === 'info' && { isExpress: aObj.isExpress, expressPage: aObj.expressPage }), // relates to Plugins & detecting Express PMs
-    ...(aObj.event === 'info' && aObj.isStoredPaymentMethod && { isStoredPaymentMethod: aObj.isStoredPaymentMethod, brand: aObj.brand }), // only added if we have an info event about a storedPM
-    ...(aObj.event === 'info' &&
-        aObj.type === ANALYTICS_VALIDATION_ERROR_STR && {
-            validationErrorCode: mapErrorCodesForAnalytics(aObj.validationErrorCode, aObj.target),
-            validationErrorMessage: aObj.validationErrorMessage
-        }), // only added if we have an info event describing a validation error
-    ...(aObj.configData && { configData: aObj.configData }),
-    /** All */
-    ...(aObj.metadata && { metadata: aObj.metadata })
-});
+
+export const createAnalyticsObject = (aObj: CreateAnalyticsObject): AnalyticsObject => {
+    return {
+        timestamp: String(getUTCTimestamp()),
+        component: aObj.component,
+        id: uuid(),
+        /** ERROR */
+        ...(aObj.event === 'error' && { code: aObj.code, errorType: aObj.errorType, message: aObj.message }), // error event
+        /** LOG */
+        ...(aObj.event === 'log' && { type: aObj.type, message: aObj.message }), // log event
+        ...(aObj.event === 'log' && (aObj.type === ANALYTICS_ACTION_STR || aObj.type === THREEDS2_FULL) && { subType: aObj.subtype }), // only added if we have a log event of Action type or ThreeDS2
+        ...(aObj.event === 'log' && aObj.type === THREEDS2_FULL && { result: aObj.result }), // only added if we have a log event of ThreeDS2 type
+        /** INFO */
+        ...(aObj.event === 'info' && { type: aObj.type, target: aObj.target }), // info event
+        ...(aObj.event === 'info' && aObj.issuer && { issuer: aObj.issuer }), // relates to issuerLists
+        ...(aObj.event === 'info' && { isExpress: aObj.isExpress, expressPage: aObj.expressPage }), // relates to Plugins & detecting Express PMs
+        ...(aObj.event === 'info' && aObj.isStoredPaymentMethod && { isStoredPaymentMethod: aObj.isStoredPaymentMethod, brand: aObj.brand }), // only added if we have an info event about a storedPM
+        ...(aObj.event === 'info' &&
+            aObj.type === ANALYTICS_VALIDATION_ERROR_STR && {
+                validationErrorCode: mapErrorCodesForAnalytics(aObj.validationErrorCode, aObj.target),
+                validationErrorMessage: aObj.validationErrorMessage
+            }), // only added if we have an info event describing a validation error
+        ...(aObj.configData && { configData: aObj.configData }),
+        /** All */
+        ...(aObj.metadata && { metadata: aObj.metadata })
+    };
+};
 
 const mapErrorCodesForAnalytics = (errorCode: string, target: string) => {
     // Some of the more generic error codes required combination with target to retrieve a specific code

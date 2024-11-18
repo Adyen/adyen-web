@@ -6,6 +6,7 @@ import RedirectButton from '../internal/RedirectButton';
 import { TxVariants } from '../tx-variants';
 import { RedirectConfiguration } from './types';
 import collectBrowserInfo from '../../utils/browserInfo';
+import { ANALYTICS_ERROR_CODE, ANALYTICS_ERROR_TYPE, ANALYTICS_EVENT } from '../../core/Analytics/constants';
 
 class RedirectElement extends UIElement<RedirectConfiguration> {
     public static type = TxVariants.redirect;
@@ -23,6 +24,15 @@ class RedirectElement extends UIElement<RedirectConfiguration> {
         };
     }
 
+    private handleRedirectError = () => {
+        super.submitAnalytics({
+            component: this.props.paymentMethodType,
+            type: ANALYTICS_EVENT.error,
+            errorType: ANALYTICS_ERROR_TYPE.redirect,
+            code: ANALYTICS_ERROR_CODE.redirect
+        });
+    };
+
     get isValid() {
         return true;
     }
@@ -33,7 +43,14 @@ class RedirectElement extends UIElement<RedirectConfiguration> {
 
     render() {
         if (this.props.url && this.props.method) {
-            return <RedirectShopper url={this.props.url} {...this.props} onActionHandled={this.onActionHandled} />;
+            return (
+                <RedirectShopper
+                    url={this.props.url}
+                    {...this.props}
+                    onActionHandled={this.onActionHandled}
+                    onRedirectError={this.handleRedirectError}
+                />
+            );
         }
 
         if (this.props.showPayButton) {
