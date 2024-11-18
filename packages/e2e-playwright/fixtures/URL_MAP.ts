@@ -33,5 +33,6 @@ export const URL_MAP = {
     /**
      * Vouchers
      */
-    boleto: '/iframe.html?globals=&id=vouchers-boleto--default&viewMode=story'
+    boleto: '/iframe.html?globals=&id=vouchers-boleto--default&viewMode=story',
+    bacsDirectDebit: '/iframe.html?globals=&args=&id=vouchers-bacsdirectdebit--default&viewMode=story'
 };

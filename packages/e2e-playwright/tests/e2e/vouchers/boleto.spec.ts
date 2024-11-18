@@ -1,6 +1,6 @@
 import { test as base, expect } from '@playwright/test';
-import Boleto from '../../../../models/boleto';
-import { URL_MAP } from '../../../../fixtures/URL_MAP';
+import Boleto from '../../../models/boleto';
+import { URL_MAP } from '../../../fixtures/URL_MAP';
 
 type Fixture = {
     boleto: Boleto;
