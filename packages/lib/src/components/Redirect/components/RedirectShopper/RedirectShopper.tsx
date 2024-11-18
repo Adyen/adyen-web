@@ -24,6 +24,7 @@ class RedirectShopper extends Component<RedirectShopperProps> {
     componentDidMount() {
         const doRedirect = () => {
             // call callback
+            throw new Error();
             this.props.onActionHandled?.({
                 componentType: this.props.paymentMethodType,
                 actionDescription: 'performing-redirect'

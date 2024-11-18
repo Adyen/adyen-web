@@ -30,6 +30,10 @@ export const ANALYTICS_ERROR_TYPE = {
     threeDS2: 'ThreeDS2'
 };
 
+export const ANALYTICS_ERROR_CODE = {
+    redirect: '600'
+};
+
 export const ANALYTICS_ACTION_STR = 'action';
 export const ANALYTICS_SUBMIT_STR = 'submit';
 export const ANALYTICS_SELECTED_STR = 'selected';
