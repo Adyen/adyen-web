@@ -1,58 +1,57 @@
-import { test } from '@playwright/test';
-import { mocks } from './mocks';
-import { binLookupUrl, getBinLookupMock, turnOffSDKMocking } from '../../cardMocks';
+import { mergeTests, expect } from '@playwright/test';
+import { test as cardWithKCP } from '../../../../../fixtures/card.fixture';
+import { getStoryUrl } from '../../../../utils/getStoryUrl';
+import { URL_MAP } from '../../../../../fixtures/URL_MAP';
+import { binLookupMock } from '../../../../../mocks/binLookup/binLookup.mock';
+import { kcpMockOptionalDateAndCvcWithPanLengthMock } from '../../../../../mocks/binLookup/binLookup.data';
+import { REGULAR_TEST_CARD } from '../../../../utils/constants';
 
-/**
- * NOTE - we are mocking the response until such time as we have a genuine card that returns the properties we want to test
- */
+const test = mergeTests(cardWithKCP);
 
-let currentMock = null;
-
-const getMock = val => {
-    const mock = mocks[val];
-    currentMock = getBinLookupMock(binLookupUrl, mock);
-    return currentMock;
+const componentConfig = {
+    brands: ['mc', 'visa', 'amex', 'korean_local_card'],
+    configuration: { koreanAuthenticationRequired: true },
+    countryCode: 'KR'
 };
 
 test.describe('Test how Card Component handles binLookup returning a panLength property for a card with a KCP fields', () => {
-    test.beforeEach(async () => {
-        // use config from panLength.kcp.clientScripts.js
-        // await t.navigateTo(cardPage);
-        // For individual test suites (that rely on binLookup & perhaps are being run in isolation)
-        // - provide a way to ensure SDK bin mocking is turned off
-        await turnOffSDKMocking();
+    test('#1 Fill out PAN (binLookup w. panLength) see that focus moves to tax number since expiryDate & cvc are optional', async ({
+        cardWithKCP,
+        page
+    }) => {
+        await binLookupMock(page, kcpMockOptionalDateAndCvcWithPanLengthMock);
+
+        await cardWithKCP.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
+
+        await cardWithKCP.isComponentVisible();
+
+        await cardWithKCP.typeCardNumber(REGULAR_TEST_CARD);
+
+        // Expect UI change - tax number field has focus
+        await expect(cardWithKCP.cardNumberInput).not.toBeFocused();
+        await expect(cardWithKCP.taxNumberInput).toBeFocused();
     });
 
-    test('#1 Fill out PAN (binLookup w. panLength) see that focus moves to tax number since expiryDate & cvc are optional', async () => {
-        // await t.addRequestHooks(getMock('kcpMock'));
-        //
-        // // Wait for field to appear in DOM
-        // await cardPage.numHolder();
-        //
-        // const firstDigits = REGULAR_TEST_CARD.substring(0, 15);
-        // const lastDigits = REGULAR_TEST_CARD.substring(15, 16);
-        //
-        // await cardPage.cardUtils.fillCardNumber(t, firstDigits);
-        //
-        // await t.wait(INPUT_DELAY);
-        //
-        // await cardPage.cardUtils.fillCardNumber(t, lastDigits);
-        //
-        // // Expect focus to be place on tax number field
-        // await t.expect(cardPage.kcpTaxNumberLabelWithFocus.exists).ok();
-    });
+    test('#2 Paste non KCP PAN and see focus move to date field', async ({ cardWithKCP, page }) => {
+        await cardWithKCP.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
 
-    test('#2 Paste non KCP PAN and see focus move to date field', async () => {
-        // await t.addRequestHooks(getMock('visaMock'));
-        //
-        // // Wait for field to appear in DOM
-        // await cardPage.numHolder();
-        //
-        // await t.wait(1000);
-        //
-        // await cardPage.cardUtils.fillCardNumber(t, REGULAR_TEST_CARD, 'paste');
-        //
-        // // Expect focus to be place on date field
-        // await t.expect(cardPage.dateLabelWithFocus.exists).ok();
+        await cardWithKCP.isComponentVisible();
+
+        // Place focus on the input
+        await cardWithKCP.cardNumberLabelElement.click();
+
+        // Copy text to clipboard
+        await page.evaluate(() => navigator.clipboard.writeText('4000620000000007')); // Can't use the constant for some reason
+
+        await page.waitForTimeout(1000);
+
+        // Paste text from clipboard
+        await page.keyboard.press('ControlOrMeta+V');
+
+        await page.waitForTimeout(1000);
+
+        // Expect UI change - expiryDate field has focus
+        await expect(cardWithKCP.cardNumberInput).not.toBeFocused();
+        await expect(cardWithKCP.expiryDateInput).toBeFocused();
     });
 });

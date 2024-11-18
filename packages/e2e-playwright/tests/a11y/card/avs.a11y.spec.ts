@@ -1,6 +1,6 @@
 import { test as base, expect } from '@playwright/test';
 import { binLookupMock } from '../../../mocks/binLookup/binLookup.mock';
-import { optionalDateAndCvcMock } from '../../../mocks/binLookup/binLookup.data';
+import { optionalDateAndCvcWithPanLengthMock } from '../../../mocks/binLookup/binLookup.data';
 import { REGULAR_TEST_CARD } from '../../utils/constants';
 import { CardWithAvs } from '../../../models/card-avs';
 import { getStoryUrl } from '../../utils/getStoryUrl';
@@ -15,7 +15,7 @@ const test = base.extend<Fixture>({
         const cardPage = new CardWithAvs(page);
         const componentConfig = { billingAddressRequired: true, billingAddressRequiredFields: ['street', 'houseNumberOrName', 'postalCode', 'city'] };
         await cardPage.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
-        await binLookupMock(page, optionalDateAndCvcMock);
+        await binLookupMock(page, optionalDateAndCvcWithPanLengthMock);
         await use(cardPage);
     }
 });

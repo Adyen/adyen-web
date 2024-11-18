@@ -27,6 +27,7 @@ class Card extends Base {
     readonly brandingIcon: Locator;
 
     readonly expiryDateField: Locator;
+    readonly expiryDateLabelElement: Locator;
     readonly expiryDateLabelText: Locator;
     readonly expiryDateContextualElement: Locator;
     readonly expiryDateInput: Locator;
@@ -34,11 +35,15 @@ class Card extends Base {
     readonly expiryDateErrorElement: Locator;
 
     readonly cvcField: Locator;
+    readonly cvcLabelElement: Locator;
     readonly cvcLabelText: Locator;
     readonly cvcErrorElement: Locator;
     readonly cvcContextualElement: Locator;
     readonly cvcInput: Locator;
     readonly cvcIframeContextualElement: Locator;
+
+    readonly holderNameField: Locator;
+    readonly holderNameInput: Locator;
 
     readonly installmentsPaymentLabel: Locator;
     readonly revolvingPaymentLabel: Locator;
@@ -72,6 +77,7 @@ class Card extends Base {
          * Expiry Date elements, in Checkout
          */
         this.expiryDateField = this.rootElement.locator('.adyen-checkout__field--expiryDate'); // Holder
+        this.expiryDateLabelElement = this.expiryDateField.locator('.adyen-checkout__label');
         this.expiryDateLabelText = this.expiryDateField.locator('.adyen-checkout__label__text');
         this.expiryDateContextualElement = this.expiryDateField.locator('.adyen-checkout-contextual-text'); // Related contextual element
         this.expiryDateErrorElement = this.expiryDateField.locator('.adyen-checkout-contextual-text--error'); // Related error element
@@ -87,6 +93,7 @@ class Card extends Base {
          * Security code elements, in Checkout
          */
         this.cvcField = this.rootElement.locator('.adyen-checkout__field--securityCode'); // Holder
+        this.cvcLabelElement = this.cvcField.locator('.adyen-checkout__label');
         this.cvcLabelText = this.cvcField.locator('.adyen-checkout__label__text');
         this.cvcContextualElement = this.cvcField.locator('.adyen-checkout-contextual-text'); // Related contextual element
         this.cvcErrorElement = this.cvcField.locator('.adyen-checkout-contextual-text--error'); // Related error element
@@ -97,6 +104,12 @@ class Card extends Base {
         const cvcIframe = this.rootElement.frameLocator(`[title="${CVC_IFRAME_TITLE}"]`);
         this.cvcInput = cvcIframe.locator(`input[aria-label="${CVC_IFRAME_LABEL}"]`);
         this.cvcIframeContextualElement = cvcIframe.locator('.aria-context');
+
+        /**
+         * HolderName elements, in Checkout
+         */
+        this.holderNameField = this.rootElement.locator('.adyen-checkout__card__holderName'); // Holder
+        this.holderNameInput = this.holderNameField.getByRole('textbox', { name: /name on card/i });
 
         /**
          * Installments related elements
