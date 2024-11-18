@@ -1,25 +1,10 @@
-import { test as base, expect } from '@playwright/test';
+import { test, expect } from '../../../fixtures/card.fixture';
 import { PAYMENT_RESULT, REGULAR_TEST_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE, TEST_POSTCODE } from '../../utils/constants';
-import { CardWithAvs } from '../../../models/card-avs';
 import { URL_MAP } from '../../../fixtures/URL_MAP';
-
-const fullAvsWithoutPrefilledDataUrl = '/iframe.html?args=componentConfiguration.data:!undefined&globals=&id=cards-card--with-avs&viewMode=story';
-const fullAvsWithPrefilledDataUrl = '/iframe.html?globals=&args=&id=cards-card--with-avs&viewMode=story';
-const addressLookupUrl = '/iframe.html?id=cards-card--with-avs-address-lookup&viewMode=story';
-
-type Fixture = {
-    cardWithAvs: CardWithAvs;
-};
-
-const test = base.extend<Fixture>({
-    cardWithAvs: async ({ page }, use) => {
-        await use(new CardWithAvs(page));
-    }
-});
 
 test.describe('Card payments with address lookup', () => {
     test('should make a successful card payment', async ({ cardWithAvs }) => {
-        await cardWithAvs.goto(addressLookupUrl);
+        await cardWithAvs.goto(URL_MAP.addressLookupUrl);
         await cardWithAvs.fillCardNumber(REGULAR_TEST_CARD);
         await cardWithAvs.fillExpiryDate(TEST_DATE_VALUE);
         await cardWithAvs.fillCvc(TEST_CVC_VALUE);
@@ -60,7 +45,7 @@ test.describe('Card payments with partial avs', () => {
 test.describe('Card payments with full avs', () => {
     test.describe('When fill in the valid address data', () => {
         test('should make a successful card payment', async ({ cardWithAvs }) => {
-            await cardWithAvs.goto(fullAvsWithoutPrefilledDataUrl);
+            await cardWithAvs.goto(URL_MAP.fullAvsWithoutPrefilledDataUrl);
             await cardWithAvs.fillCardNumber(REGULAR_TEST_CARD);
             await cardWithAvs.fillExpiryDate(TEST_DATE_VALUE);
             await cardWithAvs.fillCvc(TEST_CVC_VALUE);
@@ -78,7 +63,7 @@ test.describe('Card payments with full avs', () => {
 
     test.describe('When fill in the invalid address data', () => {
         test('should not submit the payment', async ({ cardWithAvs }) => {
-            await cardWithAvs.goto(fullAvsWithoutPrefilledDataUrl);
+            await cardWithAvs.goto(URL_MAP.fullAvsWithoutPrefilledDataUrl);
             await cardWithAvs.fillCardNumber(REGULAR_TEST_CARD);
             await cardWithAvs.fillExpiryDate(TEST_DATE_VALUE);
             await cardWithAvs.fillCvc(TEST_CVC_VALUE);
@@ -108,7 +93,7 @@ test.describe('Card payments with full avs', () => {
         });
 
         test('should not submit the payment', async ({ cardWithAvs }) => {
-            await cardWithAvs.goto(fullAvsWithPrefilledDataUrl);
+            await cardWithAvs.goto(URL_MAP.fullAvsWithPrefilledDataUrl);
             await cardWithAvs.billingAddress.selectCountry({ name: 'Canada' });
             await expect(cardWithAvs.billingAddress.postalCodeError).toContainText('Invalid format. Expected format');
         });
