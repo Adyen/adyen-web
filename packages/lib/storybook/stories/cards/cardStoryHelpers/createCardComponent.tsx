@@ -10,6 +10,9 @@ export const createCardComponent = (args: PaymentMethodStoryProps<CardConfigurat
         <Checkout checkoutConfig={checkoutConfig}>
             {checkout => {
                 const card = new Card(checkout, componentConfiguration);
+
+                globalThis.parent.window['card'] = card; // expose to top level window, so a user can access window.card
+
                 return <ComponentContainer element={card} />;
             }}
         </Checkout>
