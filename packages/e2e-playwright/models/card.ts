@@ -21,7 +21,6 @@ class Card extends Base {
 
     readonly cardNumberField: Locator;
     readonly cardNumberLabelElement: Locator;
-    readonly cardNumberLabelWithFocus: Locator;
     readonly cardNumberErrorElement: Locator;
     readonly cardNumberInput: Locator;
     readonly brandingIcon: Locator;
@@ -49,10 +48,6 @@ class Card extends Base {
     readonly revolvingPaymentLabel: Locator;
     readonly installmentsDropdown: Locator;
     readonly selectorList: Locator;
-
-    // TODO move to other model
-    readonly ssnField: Locator;
-    readonly ssnInput: Locator;
 
     constructor(
         public readonly page: Page,
@@ -121,12 +116,6 @@ class Card extends Base {
         this.revolvingPaymentLabel = this.rootElement.getByText(REVOLVING_PAYMENT);
         this.installmentsDropdown = this.rootElement.locator('.adyen-checkout__dropdown__button');
         this.selectorList = this.rootElement.getByRole('listbox');
-
-        /**
-         * Social Security Number related elements
-         */
-        this.ssnField = this.rootElement.locator('.adyen-checkout__field--socialSecurityNumber'); // Holder
-        this.ssnInput = this.ssnField.getByRole('textbox', { name: /CPF\/CNPJ/i });
     }
 
     get availableBrands() {
