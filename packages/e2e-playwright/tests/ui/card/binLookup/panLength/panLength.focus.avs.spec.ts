@@ -21,7 +21,7 @@ test.describe('Test Card, binLookup w. panLength property & address fields', () 
         await cardWithAvs.typeCardNumber(REGULAR_TEST_CARD);
 
         // Expect focus to be place on address (street) field
-        await expect(cardWithAvs.cardNumberInput).toBeFocused();
+        await expect(cardWithAvs.cardNumberInput).not.toBeFocused();
         await expect(cardWithAvs.billingAddress.streetInput).toBeFocused();
     });
 });
