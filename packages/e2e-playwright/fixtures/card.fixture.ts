@@ -3,10 +3,12 @@ import { Card } from '../models/card';
 import { BCMC } from '../models/bcmc';
 import { URL_MAP } from './URL_MAP';
 import { CardWithAvs } from '../models/card-avs';
+import { CardWithKCP } from '../models/card-kcp';
 
 type Fixture = {
     card: Card;
     cardWithAvs: CardWithAvs;
+    cardWithKCP: CardWithKCP;
     bcmc: BCMC;
 };
 
@@ -17,6 +19,10 @@ const test = base.extend<Fixture>({
     },
     cardWithAvs: async ({ page }, use) => {
         const cardPage = new CardWithAvs(page);
+        await use(cardPage);
+    },
+    cardWithKCP: async ({ page }, use) => {
+        const cardPage = new CardWithKCP(page);
         await use(cardPage);
     },
     bcmc: async ({ page }, use) => {

@@ -50,11 +50,9 @@ class Card extends Base {
     readonly installmentsDropdown: Locator;
     readonly selectorList: Locator;
 
-    // TODO move to other models
+    // TODO move to other model
     readonly ssnField: Locator;
     readonly ssnInput: Locator;
-    readonly kcpTaxNumberField: Locator;
-    readonly kcpTaxNumberInput: Locator;
 
     constructor(
         public readonly page: Page,
@@ -129,12 +127,6 @@ class Card extends Base {
          */
         this.ssnField = this.rootElement.locator('.adyen-checkout__field--socialSecurityNumber'); // Holder
         this.ssnInput = this.ssnField.getByRole('textbox', { name: /CPF\/CNPJ/i });
-
-        /**
-         * KCP related elements
-         */
-        this.kcpTaxNumberField = this.rootElement.locator('.adyen-checkout__field--kcp-taxNumber'); // Holder
-        this.kcpTaxNumberInput = this.kcpTaxNumberField.getByRole('textbox', { name: /tax number/i });
     }
 
     get availableBrands() {
