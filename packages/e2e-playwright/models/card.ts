@@ -3,6 +3,7 @@ import { USER_TYPE_DELAY } from '../tests/utils/constants';
 import LANG from '../../server/translations/en-US.json';
 import { Base } from './base';
 import { URL_MAP } from '../fixtures/URL_MAP';
+import { ThreeDs2Challenge } from './threeds2Challenge';
 
 const CARD_IFRAME_TITLE = LANG['creditCard.encryptedCardNumber.aria.iframeTitle'];
 const EXPIRY_DATE_IFRAME_TITLE = LANG['creditCard.encryptedExpiryDate.aria.iframeTitle'];
@@ -48,6 +49,7 @@ class Card extends Base {
     readonly revolvingPaymentLabel: Locator;
     readonly installmentsDropdown: Locator;
     readonly selectorList: Locator;
+    readonly threeDs2Challenge: ThreeDs2Challenge;
 
     constructor(
         public readonly page: Page,
@@ -116,6 +118,8 @@ class Card extends Base {
         this.revolvingPaymentLabel = this.rootElement.getByText(REVOLVING_PAYMENT);
         this.installmentsDropdown = this.rootElement.locator('.adyen-checkout__dropdown__button');
         this.selectorList = this.rootElement.getByRole('listbox');
+
+        this.threeDs2Challenge = new ThreeDs2Challenge(page);
     }
 
     get availableBrands() {
