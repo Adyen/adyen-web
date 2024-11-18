@@ -30,7 +30,6 @@ class Card extends Base {
     readonly expiryDateLabelElement: Locator;
     readonly expiryDateLabelText: Locator;
     readonly expiryDateContextualElement: Locator;
-    readonly expiryDateLabelWithFocus: Locator;
     readonly expiryDateInput: Locator;
     readonly expiryDateIframeContextualElement: Locator;
     readonly expiryDateErrorElement: Locator;
@@ -38,28 +37,24 @@ class Card extends Base {
     readonly cvcField: Locator;
     readonly cvcLabelElement: Locator;
     readonly cvcLabelText: Locator;
-    readonly cvcLabelWithFocus: Locator;
     readonly cvcErrorElement: Locator;
     readonly cvcContextualElement: Locator;
     readonly cvcInput: Locator;
     readonly cvcIframeContextualElement: Locator;
 
     readonly holderNameField: Locator;
-    readonly holderNameLabelWithFocus: Locator;
+    readonly holderNameInput: Locator;
 
     readonly installmentsPaymentLabel: Locator;
     readonly revolvingPaymentLabel: Locator;
     readonly installmentsDropdown: Locator;
     readonly selectorList: Locator;
 
+    // TODO move to other models
     readonly ssnField: Locator;
-    readonly ssnLabelWithFocus: Locator;
-
-    readonly addressField: Locator;
-    readonly addressLabelWithFocus: Locator;
-
+    readonly ssnInput: Locator;
     readonly kcpTaxNumberField: Locator;
-    readonly kcpTaxNumberLabelWithFocus: Locator;
+    readonly kcpTaxNumberInput: Locator;
 
     constructor(
         public readonly page: Page,
@@ -75,7 +70,6 @@ class Card extends Base {
         this.cardNumberField = this.rootElement.locator('.adyen-checkout__field--cardNumber'); // Holder
         this.cardNumberLabelElement = this.cardNumberField.locator('.adyen-checkout__label');
         this.cardNumberErrorElement = this.cardNumberField.locator('.adyen-checkout-contextual-text--error');
-        this.cardNumberLabelWithFocus = this.cardNumberField.locator('.adyen-checkout__label--focused');
 
         this.brandingIcon = this.rootElement.locator('.adyen-checkout__card__cardNumber__brandIcon');
         /**
@@ -92,7 +86,6 @@ class Card extends Base {
         this.expiryDateLabelText = this.expiryDateField.locator('.adyen-checkout__label__text');
         this.expiryDateContextualElement = this.expiryDateField.locator('.adyen-checkout-contextual-text'); // Related contextual element
         this.expiryDateErrorElement = this.expiryDateField.locator('.adyen-checkout-contextual-text--error'); // Related error element
-        this.expiryDateLabelWithFocus = this.expiryDateField.locator('.adyen-checkout__label--focused');
 
         /**
          * Expiry Date elements, in iframe
@@ -109,7 +102,6 @@ class Card extends Base {
         this.cvcLabelText = this.cvcField.locator('.adyen-checkout__label__text');
         this.cvcContextualElement = this.cvcField.locator('.adyen-checkout-contextual-text'); // Related contextual element
         this.cvcErrorElement = this.cvcField.locator('.adyen-checkout-contextual-text--error'); // Related error element
-        this.cvcLabelWithFocus = this.cvcField.locator('.adyen-checkout__label--focused');
 
         /**
          * Security code elements, in iframe
@@ -122,7 +114,7 @@ class Card extends Base {
          * HolderName elements, in Checkout
          */
         this.holderNameField = this.rootElement.locator('.adyen-checkout__card__holderName'); // Holder
-        this.holderNameLabelWithFocus = this.holderNameField.locator('.adyen-checkout__label--focused');
+        this.holderNameInput = this.holderNameField.getByRole('textbox', { name: /name on card/i });
 
         /**
          * Installments related elements
@@ -136,19 +128,13 @@ class Card extends Base {
          * Social Security Number related elements
          */
         this.ssnField = this.rootElement.locator('.adyen-checkout__field--socialSecurityNumber'); // Holder
-        this.ssnLabelWithFocus = this.ssnField.locator('.adyen-checkout__label--focused');
-
-        /**
-         * AVS related elements
-         */
-        this.addressField = this.rootElement.locator('.adyen-checkout__field--street'); // Holder
-        this.addressLabelWithFocus = this.addressField.locator('.adyen-checkout__label--focused');
+        this.ssnInput = this.ssnField.getByRole('textbox', { name: /CPF\/CNPJ/i });
 
         /**
          * KCP related elements
          */
         this.kcpTaxNumberField = this.rootElement.locator('.adyen-checkout__field--kcp-taxNumber'); // Holder
-        this.kcpTaxNumberLabelWithFocus = this.kcpTaxNumberField.locator('.adyen-checkout__label--focused');
+        this.kcpTaxNumberInput = this.kcpTaxNumberField.getByRole('textbox', { name: /tax number/i });
     }
 
     get availableBrands() {

@@ -18,13 +18,13 @@ test.describe('Test Card, & binLookup w/o panLength property', () => {
         await card.isComponentVisible();
 
         // Check start state
-        await expect(card.cardNumberLabelWithFocus).not.toBeVisible();
+        await expect(card.cardNumberInput).not.toBeFocused();
 
         await card.typeCardNumber(REGULAR_TEST_CARD);
 
         // Expect focus to be still be on number field
-        await expect(card.cardNumberLabelWithFocus).toBeVisible();
-        await expect(card.expiryDateLabelWithFocus).not.toBeVisible();
+        await expect(card.cardNumberInput).toBeFocused();
+        await expect(card.expiryDateInput).not.toBeFocused();
     });
 });
 
@@ -37,8 +37,8 @@ test.describe('Test Card, & binLookup w. panLength property', () => {
         await card.typeCardNumber(CARD_WITH_PAN_LENGTH);
 
         // Expect UI change - expiryDate field has focus
-        await expect(card.cardNumberLabelWithFocus).not.toBeVisible();
-        await expect(card.expiryDateLabelWithFocus).toBeVisible();
+        await expect(card.cardNumberInput).not.toBeFocused();
+        await expect(card.expiryDateInput).toBeFocused();
 
         // Expect iframe to exist in number field with maxlength attr set to 19
         let panInputMaxLength = await card.cardNumberInput.getAttribute('maxlength');
@@ -61,8 +61,8 @@ test.describe('Test Card, & binLookup w. panLength property', () => {
         await card.typeCardNumber(REGULAR_TEST_CARD);
 
         // Expect UI change - cvc field has focus
-        await expect(card.cardNumberLabelWithFocus).not.toBeVisible();
-        await expect(card.cvcLabelWithFocus).toBeVisible();
+        await expect(card.cardNumberInput).not.toBeFocused();
+        await expect(card.cvcInput).toBeFocused();
     });
 
     test('#3 Fill out PAN & see that focus moves to CVC since expiryDate is hidden', async ({ card, page }) => {
@@ -75,8 +75,8 @@ test.describe('Test Card, & binLookup w. panLength property', () => {
         await card.typeCardNumber(REGULAR_TEST_CARD);
 
         // Expect UI change - cvc field has focus
-        await expect(card.cardNumberLabelWithFocus).not.toBeVisible();
-        await expect(card.cvcLabelWithFocus).toBeVisible();
+        await expect(card.cardNumberInput).not.toBeFocused();
+        await expect(card.cvcInput).toBeFocused();
     });
 
     test('#4 Fill out PAN & see that focus moves to holderName since expiryDate & cvc are optional', async ({ card, page }) => {
@@ -91,8 +91,8 @@ test.describe('Test Card, & binLookup w. panLength property', () => {
         await card.typeCardNumber(REGULAR_TEST_CARD);
 
         // Expect UI change - holderName field has focus
-        await expect(card.cardNumberLabelWithFocus).not.toBeVisible();
-        await expect(card.holderNameLabelWithFocus).toBeVisible();
+        await expect(card.cardNumberInput).not.toBeFocused();
+        await expect(card.holderNameInput).toBeFocused();
     });
 
     test('#5 Fill out invalid date on an optional date field, then fill & see that focus moves to (optional) expiryDate since expiryDate is in error', async ({
@@ -113,8 +113,8 @@ test.describe('Test Card, & binLookup w. panLength property', () => {
         await page.waitForTimeout(500);
 
         // Expect UI change - expiryDate field has focus
-        await expect(card.cardNumberLabelWithFocus).not.toBeVisible();
-        await expect(card.expiryDateLabelWithFocus).toBeVisible();
+        await expect(card.cardNumberInput).not.toBeFocused();
+        await expect(card.expiryDateInput).toBeFocused();
     });
 
     test('#6 Fill out PAN by **pasting** number & see that that focus moves to expiryDate', async ({ card, page }) => {
@@ -136,8 +136,8 @@ test.describe('Test Card, & binLookup w. panLength property', () => {
         await page.waitForTimeout(1000);
 
         // Expect UI change - expiryDate field has focus
-        await expect(card.cardNumberLabelWithFocus).not.toBeVisible();
-        await expect(card.expiryDateLabelWithFocus).toBeVisible();
+        await expect(card.cardNumberInput).not.toBeFocused();
+        await expect(card.expiryDateInput).toBeFocused();
     });
 
     test(
@@ -158,8 +158,8 @@ test.describe('Test Card, & binLookup w. panLength property', () => {
             await card.typeCardNumber(firstDigits);
 
             // Expect focus to be still be on number field
-            await expect(card.cardNumberLabelWithFocus).toBeVisible();
-            await expect(card.expiryDateLabelWithFocus).not.toBeVisible();
+            await expect(card.cardNumberInput).toBeFocused();
+            await expect(card.expiryDateInput).not.toBeFocused();
 
             await page.waitForTimeout(100);
 
@@ -167,8 +167,8 @@ test.describe('Test Card, & binLookup w. panLength property', () => {
             await card.typeCardNumber(lastDigits);
 
             // Expect UI change - expiryDate field has focus
-            await expect(card.cardNumberLabelWithFocus).not.toBeVisible();
-            await expect(card.expiryDateLabelWithFocus).toBeVisible();
+            await expect(card.cardNumberInput).not.toBeFocused();
+            await expect(card.expiryDateInput).toBeFocused();
 
             await page.waitForTimeout(100);
 
@@ -176,8 +176,8 @@ test.describe('Test Card, & binLookup w. panLength property', () => {
             await card.deleteCardNumber();
 
             // Expect focus back on number field
-            await expect(card.cardNumberLabelWithFocus).toBeVisible();
-            await expect(card.expiryDateLabelWithFocus).not.toBeVisible();
+            await expect(card.cardNumberInput).toBeFocused();
+            await expect(card.expiryDateInput).not.toBeFocused();
 
             // Reset mock
             await binLookupMock(page, amexWithPanLengthMock);
@@ -186,8 +186,8 @@ test.describe('Test Card, & binLookup w. panLength property', () => {
             await card.typeCardNumber(AMEX_CARD);
 
             // Expect UI change - expiryDate field has focus again
-            await expect(card.cardNumberLabelWithFocus).not.toBeVisible();
-            await expect(card.expiryDateLabelWithFocus).toBeVisible();
+            await expect(card.cardNumberInput).not.toBeFocused();
+            await expect(card.expiryDateInput).toBeFocused();
         }
     );
 
