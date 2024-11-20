@@ -61,6 +61,7 @@ class RedirectShopper extends Component<RedirectShopperProps> {
             return (
                 <form
                     method="post"
+                    data-testid="redirect-shopper-form"
                     action={url}
                     style={{ display: 'none' }}
                     ref={ref => {

@@ -20,7 +20,7 @@ export const ANALYTICS_EVENT = {
 
 export const ANALYTICS_ERROR_TYPE = {
     network: 'Network',
-    implementation: 'Implementation',
+    implementation: 'ImplementationError',
     internal: 'Internal',
     apiError: 'ApiError',
     sdkError: 'SdkError',

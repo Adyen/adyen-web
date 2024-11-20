@@ -115,9 +115,7 @@ export type CreateAnalyticsEventObject = {
 
 export type EventQueueProps = Pick<AnalyticsConfig, 'analyticsContext' | 'clientKey'> & { analyticsPath: string };
 
-export interface SendAnalyticsObject extends Omit<AnalyticsObject, 'timestamp' | 'id' | 'component'> {
-    component?: string;
-}
+export type SendAnalyticsObject = Omit<AnalyticsObject, 'timestamp' | 'id' | 'component'> & { component?: string };
 
 export type FieldErrorAnalyticsObject = {
     fieldType: string;
