@@ -116,6 +116,21 @@ const kcpMockOptionalDateAndCvcWithPanLengthMock = {
     issuingCountryCode: 'KR'
 };
 
+const socialSecurityNumberRequiredMock = {
+    brands: [
+        {
+            brand: 'visa',
+            cvcPolicy: 'required',
+            enableLuhnCheck: true,
+            showExpiryDate: true,
+            supported: true,
+            showSocialSecurityNumber: true
+        }
+    ],
+    issuingCountryCode: 'BR',
+    requestId: null
+};
+
 export {
     optionalDateAndCvcMock,
     hiddenDateAndCvcMock,
@@ -124,5 +139,6 @@ export {
     optionalDateAndCvcWithPanLengthMock,
     multiLengthMaestroWithPanLengthMock,
     amexWithPanLengthMock,
-    kcpMockOptionalDateAndCvcWithPanLengthMock
+    kcpMockOptionalDateAndCvcWithPanLengthMock,
+    socialSecurityNumberRequiredMock
 };

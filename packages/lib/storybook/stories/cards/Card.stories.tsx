@@ -50,6 +50,19 @@ export const Default: CardStory = {
     }
 };
 
+export const WithSSN: CardStory = {
+    render: createCardComponent,
+    args: {
+        countryCode: 'BR',
+        componentConfiguration: {
+            _disableClickToPay: true,
+            configuration: {
+                socialSecurityNumberMode: 'show'
+            }
+        }
+    }
+};
+
 export const WithAVS: CardStory = {
     render: createCardComponent,
     args: {
