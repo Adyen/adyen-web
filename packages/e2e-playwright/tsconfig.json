@@ -26,6 +26,6 @@
         /* Include types for the browser: window, document, etc */
         "lib": ["es2022", "dom", "dom.iterable"]
     },
-    "include": ["app/", "tests/", "mocks/", "models/", "pages/"],
+    "include": ["tests/", "mocks/", "models/"],
     "exclude": ["node_modules"]
 }

@@ -4,7 +4,7 @@ import {
     ENCRYPTED_CARD_NUMBER,
     ENCRYPTED_EXPIRY_DATE,
     ENCRYPTED_SECURITY_CODE,
-    SYNCHRONY_PLCC_NO_DATE,
+    PLCC_NO_LUHN_NO_DATE,
     TEST_CVC_VALUE
 } from '../../../utils/constants';
 import { getStoryUrl } from '../../../utils/getStoryUrl';
@@ -22,7 +22,7 @@ test.describe('Test how Card Component handles hidden expiryDate policy', () => 
         await card.goto(url);
 
         // Fill number to provoke binLookup response
-        await card.typeCardNumber(SYNCHRONY_PLCC_NO_DATE);
+        await card.typeCardNumber(PLCC_NO_LUHN_NO_DATE);
 
         // UI reflects that binLookup says expiryDate is hidden
         await expect(card.expiryDateField).not.toBeVisible();
@@ -66,7 +66,7 @@ test.describe('Test how Card Component handles hidden expiryDate policy', () => 
         await expect(cardErrors[ENCRYPTED_SECURITY_CODE]).not.toBe(undefined);
 
         // Fill number to provoke binLookup response
-        await card.typeCardNumber(SYNCHRONY_PLCC_NO_DATE);
+        await card.typeCardNumber(PLCC_NO_LUHN_NO_DATE);
 
         // Headless test seems to need time for UI reset to register on state
         await page.waitForTimeout(500);
@@ -95,7 +95,7 @@ test.describe('Test how Card Component handles hidden expiryDate policy', () => 
         await card.cardNumberLabelElement.click();
 
         // Fill number to provoke binLookup response
-        await card.typeCardNumber(SYNCHRONY_PLCC_NO_DATE);
+        await card.typeCardNumber(PLCC_NO_LUHN_NO_DATE);
 
         // UI reflects that binLookup says expiryDate is hidden
         await expect(card.expiryDateField).not.toBeVisible();

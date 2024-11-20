@@ -51,9 +51,9 @@ test('#3 fill out credit card fields & see that first error in error panel is co
         'Enter the City-sr'
     ];
     await cardWithAvs.goto(url);
-    await cardWithAvs.fillCardNumber(REGULAR_TEST_CARD);
-    await cardWithAvs.fillExpiryDate(TEST_DATE_VALUE);
-    await cardWithAvs.fillCvc(TEST_CVC_VALUE);
+    await cardWithAvs.typeCardNumber(REGULAR_TEST_CARD);
+    await cardWithAvs.typeExpiryDate(TEST_DATE_VALUE);
+    await cardWithAvs.typeCvc(TEST_CVC_VALUE);
 
     await cardWithAvs.pay();
     // Wait for all sr panel messages
@@ -105,9 +105,9 @@ test('#5 Switch country to US, fill out credit card fields & see that first erro
     const expectedSRPanelTexts = ['Enter the Address-sr', 'Enter the City-sr', 'Enter the State-sr', 'Enter the Zip code-sr'];
 
     await cardWithAvs.goto(url);
-    await cardWithAvs.fillCardNumber(REGULAR_TEST_CARD);
-    await cardWithAvs.fillExpiryDate(TEST_DATE_VALUE);
-    await cardWithAvs.fillCvc(TEST_CVC_VALUE);
+    await cardWithAvs.typeCardNumber(REGULAR_TEST_CARD);
+    await cardWithAvs.typeExpiryDate(TEST_DATE_VALUE);
+    await cardWithAvs.typeCvc(TEST_CVC_VALUE);
     await cardWithAvs.billingAddress.selectCountry({ name: 'United States' });
     await cardWithAvs.pay();
     // Wait for all sr panel messages
@@ -158,9 +158,9 @@ test('#7 Switch country to UK, fill out credit card fields & see that first erro
     const expectedSRPanelTexts = ['Enter the House number-sr', 'Enter the Street-sr', 'Enter the City / Town-sr', 'Enter the Postal code-sr'];
 
     await cardWithAvs.goto(url);
-    await cardWithAvs.fillCardNumber(REGULAR_TEST_CARD);
-    await cardWithAvs.fillExpiryDate(TEST_DATE_VALUE);
-    await cardWithAvs.fillCvc(TEST_CVC_VALUE);
+    await cardWithAvs.typeCardNumber(REGULAR_TEST_CARD);
+    await cardWithAvs.typeExpiryDate(TEST_DATE_VALUE);
+    await cardWithAvs.typeCvc(TEST_CVC_VALUE);
     await cardWithAvs.billingAddress.selectCountry({ name: 'United Kingdom' });
     await cardWithAvs.pay();
     // Wait for all sr panel messages
