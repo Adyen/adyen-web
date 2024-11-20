@@ -26,7 +26,7 @@ test.describe('Testing PLCCs, in the custom card component)', () => {
             // await t.expect(getPropFromStateValid('encryptedCardNumber')).eql(true);
             //
             // // Enter bin that needs luhn check but replace last digit to one that will mean number fails luhn check
-            // const partialNum = SYNCHRONY_PLCC_WITH_LUHN.substr(0, 15);
+            // const partialNum = PLCC_WITH_LUHN_NO_DATE.substr(0, 15);
             // await cardUtilsRegular.fillCardNumber(t, partialNum + '8', 'replace');
             //
             // // num is not valid
@@ -36,7 +36,7 @@ test.describe('Testing PLCCs, in the custom card component)', () => {
             // cardUtilsRegular.deleteDigitsFromCardNumber(t, 18, 19);
             //
             // // now enter correct last digit
-            // const endNum = SYNCHRONY_PLCC_WITH_LUHN.substr(15, 16);
+            // const endNum = PLCC_WITH_LUHN_NO_DATE.substr(15, 16);
             // await cardUtilsRegular.fillCardNumber(t, endNum);
             //
             // // num is valid w. luhn check
@@ -54,7 +54,7 @@ test.describe('Testing PLCCs, in the custom card component)', () => {
             // await start(t, 2000, TEST_SPEED);
             //
             // // Enter num
-            // await cardUtilsRegular.fillCardNumber(t, SYNCHRONY_PLCC_WITH_LUHN);
+            // await cardUtilsRegular.fillCardNumber(t, PLCC_WITH_LUHN_NO_DATE);
             // // num is valid
             // await t.expect(getPropFromStateValid('encryptedCardNumber')).eql(true);
             //
@@ -64,7 +64,7 @@ test.describe('Testing PLCCs, in the custom card component)', () => {
             // await t.expect(getPropFromStateValid('encryptedCardNumber')).eql(true);
             //
             // // Enter bin that needs luhn check but replace last digit to one that will mean number fails luhn check
-            // const partialNum = SYNCHRONY_PLCC_WITH_LUHN.substr(0, 15);
+            // const partialNum = PLCC_WITH_LUHN_NO_DATE.substr(0, 15);
             // await cardUtilsRegular.fillCardNumber(t, partialNum + '8', 'paste');
             // // num is not valid
             // await t.expect(getPropFromStateValid('encryptedCardNumber')).eql(false);
@@ -73,7 +73,7 @@ test.describe('Testing PLCCs, in the custom card component)', () => {
             // cardUtilsRegular.deleteDigitsFromCardNumber(t, 18, 19);
             //
             // // now enter correct last digit
-            // const endNum = SYNCHRONY_PLCC_WITH_LUHN.substr(15, 16);
+            // const endNum = PLCC_WITH_LUHN_NO_DATE.substr(15, 16);
             // await cardUtilsRegular.fillCardNumber(t, endNum);
             //
             // // num is valid w. luhn check
