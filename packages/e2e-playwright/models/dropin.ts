@@ -48,6 +48,13 @@ class Dropin extends Base {
         this.page.locator('.adyen-checkout__payment-methods-list--otherPayments').getByRole('radio', { name: pmLabel }).check();
     }
 
+    // Stored payment methods
+    async selectStoredPaymentMethod(pmType: string, lastFour?: string) {
+        // todo
+        const pmLabel = this.paymentMethods.find((pm: { type: string }) => pm.type === pmType).name;
+        this.page.locator('.adyen-checkout__payment-methods-list--storedPayments').getByRole('radio', { name: pmLabel }).check();
+    }
+
     async saveDetails() {
         await this.saveDetailsButton.click();
     }
