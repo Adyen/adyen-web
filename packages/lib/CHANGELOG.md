@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 6.5.1
+
+### Patch Changes
+
+-   Fixed issue where onBlur validation didn't fire if year in expiryDate was just one digit ([#2945](https://github.com/Adyen/adyen-web/pull/2945))
+
 ## 6.5.0
 
 ### Minor Changes
