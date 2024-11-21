@@ -9,6 +9,15 @@ class Ach extends Base {
         super(page);
         this.rootElement = page.locator(this.rootElementSelector);
     }
+
+    get paymentResult() {
+        return this.page.locator('.adyen-checkout__status');
+    }
+
+    async payWithStoredCard(lastFour: string): Promise<void> {
+        const regex = new RegExp(`^continue to.*${lastFour}$`, 'i');
+        await super.pay({ name: regex });
+    }
 }
 
 export default Ach;
