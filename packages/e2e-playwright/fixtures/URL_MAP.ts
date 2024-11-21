@@ -6,8 +6,12 @@ export const URL_MAP = {
         '/iframe.html?globals=&args=amount:0;sessionData.recurringProcessingModel:CardOnFile;sessionData.storePaymentMethodMode:askForConsent&id=dropin-default--auto&viewMode=story',
     dropinSessions_zeroAuthCard_fail:
         '/iframe.html?globals=&args=amount:0;sessionData.recurringProcessingModel:CardOnFile;sessionData.storePaymentMethodMode:askForConsent;sessionData.enableOneClick:!true&id=dropin-default--auto&viewMode=story',
-    /* Card */
+
+    /**
+     * Card
+     */
     card: '/iframe.html?args=&id=cards-card--default&viewMode=story',
+    cardWithSsn: '/iframe.html?globals=&id=cards-card--with-ssn&viewMode=story',
     cardWithAvs: '/iframe.html?args=&globals=&id=cards-card--with-avs&viewMode=story',
     cardWithPartialAvs: '/iframe.html?args=&globals=&id=cards-card--with-partial-avs&viewMode=story',
     cardWithInstallments: '/iframe.html?args=&id=cards-card--with-installments&viewMode=story',
