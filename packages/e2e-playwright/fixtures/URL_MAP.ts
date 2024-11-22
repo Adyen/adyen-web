@@ -12,6 +12,7 @@ export const URL_MAP = {
      */
     card: '/iframe.html?args=&id=cards-card--default&viewMode=story',
     cardWithSsn: '/iframe.html?globals=&id=cards-card--with-ssn&viewMode=story',
+    cardWithAdvancedFlow: '/iframe.html?args=useSessions:!false&globals=&id=cards-card--default&viewMode=story',
     cardWithAvs: '/iframe.html?args=&globals=&id=cards-card--with-avs&viewMode=story',
     cardWithPartialAvs: '/iframe.html?args=&globals=&id=cards-card--with-partial-avs&viewMode=story',
     cardWithInstallments: '/iframe.html?args=&id=cards-card--with-installments&viewMode=story',

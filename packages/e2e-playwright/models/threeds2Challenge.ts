@@ -3,10 +3,7 @@ import { Locator, Page } from '@playwright/test';
 class ThreeDs2Challenge {
     readonly rootElement: Locator;
 
-    constructor(
-        public readonly page: Page,
-        rootElementSelector: string = '.adyen-checkout__threeds2__challenge'
-    ) {
+    constructor(public readonly page: Page, rootElementSelector: string = '.adyen-checkout__threeds2__challenge') {
         this.rootElement = page.locator(rootElementSelector);
     }
 
@@ -20,6 +17,12 @@ class ThreeDs2Challenge {
 
     get submitButton() {
         return this.threeDSIframe.locator('#buttonSubmit');
+    }
+
+    async getIframeSize() {
+        const iframe = this.page.locator('iframe[name="threeDSIframe"]');
+        const boundingBox = await iframe.boundingBox();
+        return { width: boundingBox.width, height: boundingBox.height };
     }
 
     async fillInPassword(password: string) {
