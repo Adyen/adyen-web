@@ -117,7 +117,9 @@ test.describe('Test Card, & binLookup w. panLength property', () => {
         await expect(card.expiryDateInput).toBeFocused();
     });
 
-    test('#6 Fill out PAN by **pasting** number & see that that focus moves to expiryDate', async ({ card, page }) => {
+    test('#6 Fill out PAN by **pasting** number & see that that focus moves to expiryDate', async ({ card, page, browserName }) => {
+        test.skip(browserName === 'webkit', 'This test is not run for Safari because it always fails on the CI due to the "pasting"');
+
         await card.goto(URL_MAP.card);
 
         await card.isComponentVisible();
