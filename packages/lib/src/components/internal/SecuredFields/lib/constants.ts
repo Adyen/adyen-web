@@ -17,7 +17,7 @@ export const ENCRYPTED_SECURITY_CODE_4_DIGITS = 'encryptedSecurityCode4digits';
 
 export const GIFT_CARD = 'giftcard';
 
-export const SF_VERSION = '5.3.2';
+export const SF_VERSION = '5.3.1';
 
 export const DEFAULT_CARD_GROUP_TYPES = ['amex', 'mc', 'visa'];
 
