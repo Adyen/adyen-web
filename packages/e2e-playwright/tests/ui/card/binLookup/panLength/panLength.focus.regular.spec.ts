@@ -122,19 +122,6 @@ test.describe('Test Card, & binLookup w. panLength property', () => {
 
         await card.isComponentVisible();
 
-        // Place focus on the input
-        // await card.cardNumberLabelElement.click();
-        //
-        // // Copy text to clipboard
-        // await page.evaluate(() => navigator.clipboard.writeText('4000620000000007')); // Can't use the constant for some reason
-        //
-        // await page.waitForTimeout(1000);
-        //
-        // // Paste text from clipboard
-        // await page.keyboard.press('ControlOrMeta+V');
-        //
-        // await page.waitForTimeout(1000);
-
         // "Paste" number
         await card.fillCardNumber(CARD_WITH_PAN_LENGTH);
         await page.waitForTimeout(100);

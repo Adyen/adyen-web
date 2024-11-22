@@ -30,16 +30,7 @@ test.describe('Testing binLookup/plcc/pasting fny: test what happens when cards 
         await expect(card.cardNumberErrorElement).toBeVisible();
         await expect(card.cardNumberErrorElement).toHaveText(PAN_ERROR_NOT_VALID);
 
-        /**
-         * Paste number that identifies as plcc, luhn required
-         */
-        // await card.cardNumberInput.focus();
-        // await page.keyboard.press('ControlOrMeta+A');
-        // await page.evaluate(() => navigator.clipboard.writeText('6044100018023838')); // PLCC_NO_LUHN_NO_DATE
-        // await page.waitForTimeout(100);
-        // await page.keyboard.press('ControlOrMeta+V');
-        // await page.waitForTimeout(100);
-
+        // "Paste" number that identifies as plcc, luhn required
         await card.fillCardNumber(PLCC_NO_LUHN_NO_DATE);
         await page.waitForTimeout(100);
 

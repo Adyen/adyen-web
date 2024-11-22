@@ -50,10 +50,7 @@ test('#4 Enter number of unsupported card, ' + 'then check UI shows an error ' +
     // Test UI shows "Unsupported card" error has gone
 });
 
-test.only('#2 Test that after an unsupported card has been entered PASTING in full supported card makes it possible to pay', async ({
-    card,
-    page
-}) => {
+test('#2 Test that after an unsupported card has been entered PASTING in full supported card makes it possible to pay', async ({ card, page }) => {
     //
     const componentConfig = { brands: ['mc'] };
 
@@ -71,16 +68,7 @@ test.only('#2 Test that after an unsupported card has been entered PASTING in fu
     await expect(card.cardNumberErrorElement).toBeVisible();
     await expect(card.cardNumberErrorElement).toHaveText(PAN_ERROR_NOT_SUPPORTED);
 
-    /**
-     * Paste number that is supported
-     */
-    // await card.cardNumberInput.focus();
-    // await page.keyboard.press('ControlOrMeta+A');
-    // await page.evaluate(() => navigator.clipboard.writeText('5500000000000004'));
-    // await page.waitForTimeout(100);
-    // await page.keyboard.press('ControlOrMeta+V');
-    // await page.waitForTimeout(100);
-
+    // "Paste" number that is supported
     await card.fillCardNumber(REGULAR_TEST_CARD);
     await page.waitForTimeout(100);
 
