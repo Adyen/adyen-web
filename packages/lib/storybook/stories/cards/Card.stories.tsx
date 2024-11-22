@@ -19,7 +19,7 @@ export const Default: CardStory = {
         componentConfiguration: getComponentConfigFromUrl() ?? {
             _disableClickToPay: true,
             autoFocus: true,
-            // brands: ['mc'],
+            // brands: ['mc', 'synchrony_plcc'],
             // brandsConfiguration: { visa: { icon: 'http://localhost:3000/nocard.svg', name: 'altVisa' } },
             challengeWindowSize: '02',
             // configuration: {socialSecurityNumberMode: 'auto'}

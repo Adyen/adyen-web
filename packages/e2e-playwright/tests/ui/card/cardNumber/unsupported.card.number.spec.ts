@@ -1,4 +1,10 @@
-import { test } from '../../../../fixtures/card.fixture';
+import { expect, test } from '../../../../fixtures/card.fixture';
+import { getStoryUrl } from '../../../utils/getStoryUrl';
+import { URL_MAP } from '../../../../fixtures/URL_MAP';
+import { PAYMENT_RESULT, REGULAR_TEST_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE, VISA_CARD } from '../../../utils/constants';
+import LANG from '../../../../../server/translations/en-US.json';
+
+const PAN_ERROR_NOT_SUPPORTED = LANG['cc.num.903'];
 
 test(
     '#1 Enter number of unsupported card, ' + 'then check UI shows an error ' + 'then PASTE supported card & check UI error is cleared',
@@ -42,4 +48,43 @@ test('#4 Enter number of unsupported card, ' + 'then check UI shows an error ' +
     // Test UI shows "Unsupported card" error
     // delete card number
     // Test UI shows "Unsupported card" error has gone
+});
+
+test.only('#2 Test that after an unsupported card has been entered PASTING in full supported card makes it possible to pay', async ({
+    card,
+    page
+}) => {
+    //
+    const componentConfig = { brands: ['mc'] };
+
+    await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
+
+    await card.isComponentVisible();
+
+    // Fill unsupported card
+    await card.fillCardNumber(VISA_CARD);
+    await page.waitForTimeout(100);
+
+    await card.typeExpiryDate(TEST_DATE_VALUE);
+    await card.typeCvc(TEST_CVC_VALUE);
+
+    await expect(card.cardNumberErrorElement).toBeVisible();
+    await expect(card.cardNumberErrorElement).toHaveText(PAN_ERROR_NOT_SUPPORTED);
+
+    /**
+     * Paste number that is supported
+     */
+    // await card.cardNumberInput.focus();
+    // await page.keyboard.press('ControlOrMeta+A');
+    // await page.evaluate(() => navigator.clipboard.writeText('5500000000000004'));
+    // await page.waitForTimeout(100);
+    // await page.keyboard.press('ControlOrMeta+V');
+    // await page.waitForTimeout(100);
+
+    await card.fillCardNumber(REGULAR_TEST_CARD);
+    await page.waitForTimeout(100);
+
+    // If correct events have fired expect the card to be valid
+    await card.pay();
+    await expect(card.paymentResult).toHaveText(PAYMENT_RESULT.authorised);
 });
