@@ -685,8 +685,7 @@ describe('Testing creating a configData object for the Card components', () => {
     /**
      * 31. showPayButton
      */
-    // TODO - skip until endpoint can accept more entries in the configData object (current limit: 32);
-    describe.skip('Testing showPayButton', () => {
+    describe('Testing showPayButton', () => {
         const ANALYTICS_DATA_PROP = 'showPayButton';
         const CARD_CONFIG_PROP = ANALYTICS_DATA_PROP;
 
@@ -709,8 +708,7 @@ describe('Testing creating a configData object for the Card components', () => {
     /**
      * 32. socialSecurityNumberMode
      */
-    // TODO - skip until endpoint can accept more entries in the configData object (current limit: 32);
-    describe.skip('Testing socialSecurityNumberMode', () => {
+    describe('Testing socialSecurityNumberMode', () => {
         const ANALYTICS_DATA_PROP = 'socialSecurityNumberMode';
 
         const configuration: any = { socialSecurityNumberMode: 'show' };

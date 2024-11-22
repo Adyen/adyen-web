@@ -13,7 +13,8 @@ const OxxoVoucherResult = (props: OxxoVoucherResultProps) => {
     const getImage = useImage();
     const { alternativeReference, reference, expiresAt, merchantReference, downloadUrl } = props;
 
-    const barcodeUrl = `${loadingContext}barcode.shtml?data=${reference}&barcodeType=BT_Code128C&fileType=png`;
+    const barcodeUrl = `${loadingContext}utility/v1/barcode.png?data=${reference}&type=code128c&clientKey=${props.clientKey}`;
+
     const voucherDetails: VoucherDetail[] = [
         ...(expiresAt
             ? [

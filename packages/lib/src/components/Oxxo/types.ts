@@ -10,4 +10,5 @@ export interface OxxoVoucherResultProps {
     downloadUrl?: string;
     ref?: any;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
+    clientKey?: string;
 }

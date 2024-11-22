@@ -12,7 +12,7 @@ const BoletoVoucherResult = props => {
     const getImage = useImage();
     const { reference, expiresAt, downloadUrl } = props;
     const barcodeReference = reference.replace(/[^\d]/g, '').replace(/^(\d{4})(\d{5})\d{1}(\d{10})\d{1}(\d{10})\d{1}(\d{15})$/, '$1$5$2$3$4');
-    const barcodeUrl = `${loadingContext}barcode.shtml?data=${barcodeReference}&barcodeType=BT_Int2of5A&fileType=png`;
+    const barcodeUrl = `${loadingContext}utility/v1/barcode.png?data=${barcodeReference}&type=itf&clientKey=${props.clientKey}`;
 
     const paymentMethodType = 'boletobancario'; // overwrite the bank specific type of boleto, e.g. 'boletobancario_santander', to a more generic form
 

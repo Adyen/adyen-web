@@ -18,7 +18,7 @@ import useAutoFocus from '../../../utils/useAutoFocus';
 import { ANALYTICS_DOWNLOAD_STR, ANALYTICS_QR_CODE_DOWNLOAD } from '../../../core/Analytics/constants';
 import { PREFIX } from '../Icon/constants';
 
-const QRCODE_URL = 'barcode.shtml?barcodeType=qrCode&fileType=png&data=';
+const QRCODE_URL = 'utility/v1/barcode.png?type=qrCode&data=';
 
 class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
     private timeoutId;
@@ -153,7 +153,11 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
     render({ amount, url, brandLogo, brandName, countdownTime, type, onActionHandled }: QRLoaderProps, { expired, completed, loading }) {
         const { i18n, loadingContext } = useCoreContext();
         const getImage = useImage();
-        const qrCodeImage = this.props.qrCodeData ? `${loadingContext}${QRCODE_URL}${this.props.qrCodeData}` : this.props.qrCodeImage;
+
+        const qrCodeImage = this.props.qrCodeData
+            ? `${loadingContext}${QRCODE_URL}${this.props.qrCodeData}&clientKey=${this.props.clientKey}`
+            : this.props.qrCodeImage;
+
         const finalState = (image, message) => {
             const status = i18n.get(message);
             useA11yReporter(status);
