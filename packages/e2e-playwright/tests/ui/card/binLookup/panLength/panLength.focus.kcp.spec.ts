@@ -32,7 +32,9 @@ test.describe('Test how Card Component handles binLookup returning a panLength p
         await expect(cardWithKCP.taxNumberInput).toBeFocused();
     });
 
-    test('#2 Paste non KCP PAN and see focus move to date field', async ({ cardWithKCP, page }) => {
+    test('#2 Paste non KCP PAN and see focus move to date field', async ({ cardWithKCP, page, browserName }) => {
+        test.skip(browserName === 'webkit', 'This test is not run for Safari because it always fails on the CI due to the "pasting"');
+
         await cardWithKCP.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
 
         await cardWithKCP.isComponentVisible();
