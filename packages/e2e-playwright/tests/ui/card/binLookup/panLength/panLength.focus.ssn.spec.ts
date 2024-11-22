@@ -1,12 +1,9 @@
-import { mergeTests, expect } from '@playwright/test';
-import { test as cardWithSSN } from '../../../../../fixtures/card.fixture';
+import { test, expect } from '../../../../../fixtures/card.fixture';
 import { getStoryUrl } from '../../../../utils/getStoryUrl';
 import { URL_MAP } from '../../../../../fixtures/URL_MAP';
 import { binLookupMock } from '../../../../../mocks/binLookup/binLookup.mock';
 import { optionalDateAndCvcWithPanLengthMock } from '../../../../../mocks/binLookup/binLookup.data';
 import { REGULAR_TEST_CARD } from '../../../../utils/constants';
-
-const test = mergeTests(cardWithSSN);
 
 test.describe('Test Card, binLookup w. panLength property & social security number', () => {
     test('#1 Fill out PAN see that focus moves to social security number since expiryDate & cvc are optional', async ({ cardWithSSN, page }) => {

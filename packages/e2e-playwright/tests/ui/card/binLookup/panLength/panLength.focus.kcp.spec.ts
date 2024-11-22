@@ -1,12 +1,9 @@
-import { mergeTests, expect } from '@playwright/test';
-import { test as cardWithKCP } from '../../../../../fixtures/card.fixture';
+import { test, expect } from '../../../../../fixtures/card.fixture';
 import { getStoryUrl } from '../../../../utils/getStoryUrl';
 import { URL_MAP } from '../../../../../fixtures/URL_MAP';
 import { binLookupMock } from '../../../../../mocks/binLookup/binLookup.mock';
 import { kcpMockOptionalDateAndCvcWithPanLengthMock } from '../../../../../mocks/binLookup/binLookup.data';
 import { REGULAR_TEST_CARD } from '../../../../utils/constants';
-
-const test = mergeTests(cardWithKCP);
 
 const componentConfig = {
     brands: ['mc', 'visa', 'amex', 'korean_local_card'],
