@@ -1,14 +1,11 @@
-export type FastlaneConstructor = (options: FastlaneOptions) => Promise<Fastlane>;
-
 /**
  * PayPal Fastlane Reference:
  * https://developer.paypal.com/docs/checkout/fastlane/reference/#link-customizeyourintegration
  */
 
-// TODO: Verify if we pass options here
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface FastlaneOptions {}
-
+/**
+ * Fastlane object available in the window
+ */
 export interface Fastlane {
     identity: {
         lookupCustomerByEmail: (email: string) => Promise<{ customerContextId: string }>;
@@ -16,63 +13,18 @@ export interface Fastlane {
     };
     profile: {
         showShippingAddressSelector: () => Promise<FastlaneShippingAddressSelectorResult>;
-        showCardSelector: () => ShowCardSelectorResult;
     };
     setLocale: (locale: string) => void;
-    FastlaneWatermarkComponent: (options: { includeAdditionalInfo: boolean }) => Promise<FastlaneWatermarkComponent>;
+    FastlaneWatermarkComponent: (options: { includeAdditionalInfo: boolean }) => Promise<{
+        render: (container) => null;
+    }>;
 }
 
-interface FastlaneWatermarkComponent {
-    render: (container) => null;
-}
+// TODO: TBD if this is needed
+export interface FastlaneOptions {}
 
-// TODO: fill this in after workshop
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+// TODO: TBD if this is needed
 interface AuthenticationFlowOptions {}
-
-/**
- * The AuthenticatedCustomerResult object type is returned from the identity.triggerAuthenticationFlow() call.
- */
-interface FastlaneProfile {
-    name: Name;
-    shippingAddress: FastlaneShipping;
-    card: PaymentToken;
-}
-
-interface Name {
-    firstName: string;
-    lastName: string;
-    fullName: string;
-}
-
-interface Phone {
-    nationalNumber: string;
-    countryCode: string;
-}
-
-export interface FastlaneAddress {
-    addressLine1: string;
-    addressLine2: string;
-    adminArea1: string;
-    adminArea2: string;
-    postalCode: string;
-    countryCode: string;
-    phone: Phone;
-}
-
-export interface FastlaneShipping {
-    name: Name;
-    address: FastlaneAddress;
-    phoneNumber: Phone;
-}
-
-interface PaymentToken {
-    id: string;
-    paymentSource: PaymentSource;
-}
-interface PaymentSource {
-    card: CardPaymentSource;
-}
 
 interface CardPaymentSource {
     brand: string;
@@ -80,11 +32,6 @@ interface CardPaymentSource {
     lastDigits: string;
     name: string;
     billingAddress: FastlaneAddress;
-}
-
-interface ShowCardSelectorResult {
-    selectionChanged: boolean;
-    selectedCard: PaymentToken;
 }
 
 /**
@@ -97,4 +44,45 @@ export interface FastlaneShippingAddressSelectorResult {
 export interface FastlaneAuthenticatedCustomerResult {
     authenticationState: 'succeeded' | 'failed' | 'canceled' | 'not_found';
     profileData: FastlaneProfile;
+}
+
+export interface FastlaneAddress {
+    addressLine1: string;
+    addressLine2: string;
+    adminArea1: string;
+    adminArea2: string;
+    postalCode: string;
+    countryCode: string;
+    phone: {
+        nationalNumber: string;
+        countryCode: string;
+    };
+}
+
+export interface FastlaneShipping {
+    name: {
+        firstName: string;
+        lastName: string;
+        fullName: string;
+    };
+    address: FastlaneAddress;
+    phoneNumber: {
+        nationalNumber: string;
+        countryCode: string;
+    };
+}
+
+export interface FastlaneProfile {
+    name: {
+        firstName: string;
+        lastName: string;
+        fullName: string;
+    };
+    shippingAddress: FastlaneShipping;
+    card: {
+        id: string;
+        paymentSource: {
+            card: CardPaymentSource;
+        };
+    };
 }

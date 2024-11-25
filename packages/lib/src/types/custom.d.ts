@@ -1,4 +1,4 @@
-import type { FastlaneConstructor } from '../components/PayPalFastlane/types';
+import { Fastlane, FastlaneOptions } from '../components/PayPalFastlane/types';
 
 declare module '*.scss' {
     const content: { [className: string]: string };
@@ -9,7 +9,7 @@ declare global {
     interface Window {
         ApplePaySession?: ApplePaySession;
         paypal?: {
-            Fastlane?: FastlaneConstructor;
+            Fastlane?: (options?: FastlaneOptions) => Promise<Fastlane>;
         };
     }
 }

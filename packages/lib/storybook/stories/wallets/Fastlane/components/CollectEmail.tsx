@@ -28,9 +28,14 @@ export const CollectEmail = ({ fastlaneSdk, onFastlaneLookup, onEditEmail }: Col
     };
 
     const handleButtonClick = async () => {
-        const authResult = await fastlaneSdk.authenticate(email);
-        onFastlaneLookup(authResult);
-        setViewOnly(true);
+        try {
+            const authResult = await fastlaneSdk.authenticate(email);
+            console.log('triggerAuthenticationFlow result:', authResult);
+            onFastlaneLookup(authResult);
+            setViewOnly(true);
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     useEffect(() => {

@@ -1,6 +1,6 @@
 import { resolveEnvironments } from '../../core/Environment';
 import requestFastlaneToken from './services/request-fastlane-token';
-import { convertAdyenLocaleToFastlaneLocale } from './utils';
+import { convertAdyenLocaleToFastlaneLocale } from './utils/convert-locale';
 import Script from '../../utils/Script';
 
 import type { Fastlane, FastlaneAuthenticatedCustomerResult, FastlaneShippingAddressSelectorResult } from './types';
