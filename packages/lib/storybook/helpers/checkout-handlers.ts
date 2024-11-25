@@ -16,6 +16,7 @@ function displayResultMessage(isAuthorized: boolean, resultCode: string): void {
 
     const resultText = document.createElement('div');
     resultText.setAttribute('data-testid', 'result-message');
+    resultText.classList.add('adyen-checkout__status');
     resultText.style.textAlign = 'center';
     resultText.textContent = resultCode;
 
