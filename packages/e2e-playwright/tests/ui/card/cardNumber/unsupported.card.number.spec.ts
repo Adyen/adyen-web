@@ -50,7 +50,7 @@ test('#4 Enter number of unsupported card, ' + 'then check UI shows an error ' +
     // Test UI shows "Unsupported card" error has gone
 });
 
-test('#2 Test that after an unsupported card has been entered PASTING in full supported card makes it possible to pay', async ({ card, page }) => {
+test('#5 Test that after an unsupported card has been entered PASTING in full supported card makes it possible to pay', async ({ card, page }) => {
     //
     const componentConfig = { brands: ['mc'] };
 
@@ -73,6 +73,7 @@ test('#2 Test that after an unsupported card has been entered PASTING in full su
     await page.waitForTimeout(100);
 
     // If correct events have fired expect the card to be valid
+    await expect(card.cardNumberErrorElement).not.toBeVisible();
     await card.pay();
     await expect(card.paymentResult).toHaveText(PAYMENT_RESULT.authorised);
 });
