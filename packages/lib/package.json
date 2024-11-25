@@ -90,7 +90,7 @@
     "@rollup/plugin-node-resolve": "15.2.3",
     "@rollup/plugin-replace": "5.0.7",
     "@rollup/plugin-terser": "0.4.4",
-    "@size-limit/preset-big-lib": "11.1.4",
+    "@size-limit/preset-big-lib": "11.1.6",
     "@storybook/addon-a11y": "^8.3.4",
     "@storybook/addon-essentials": "^8.3.4",
     "@storybook/manager-api": "^8.3.4",
