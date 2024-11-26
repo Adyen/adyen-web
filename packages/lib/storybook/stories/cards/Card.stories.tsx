@@ -127,9 +127,10 @@ export const WithInstallments: CardStory = {
     }
 };
 
-export const KCP: CardStory = {
+export const WithKCP: CardStory = {
     render: createCardComponent,
     args: {
+        countryCode: 'KR',
         componentConfiguration: {
             ...{ brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro', 'korean_local_card'] },
             _disableClickToPay: true,
@@ -137,8 +138,7 @@ export const KCP: CardStory = {
             // Just set koreanAuthenticationRequired if KCP fields should only show if korean_local_card entered
             configuration: {
                 koreanAuthenticationRequired: true
-            },
-            countryCode: 'KR'
+            }
         }
     }
 };

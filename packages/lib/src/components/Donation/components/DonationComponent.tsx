@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import CampaignContainer from './CampaignContainer';
+import CampaignContent from './CampaignContent';
 import Button from '../../internal/Button';
 import Img from '../../internal/Img';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
@@ -78,7 +78,7 @@ export default function DonationComponent(props: DonationComponentProps) {
 
     return (
         <div className="adyen-checkout__adyen-giving">
-            <CampaignContainer {...props} />
+            <CampaignContent {...props} />
 
             <div className="adyen-checkout__adyen-giving-actions">
                 {termsAndConditionsUrl && <DisclaimerMessage message={i18n.get('donationTermsCondition')} urls={[termsAndConditionsUrl]} />}
