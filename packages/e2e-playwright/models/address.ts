@@ -21,7 +21,7 @@ class Address {
     }
 
     get streetInput() {
-        return this.rootElement.locator('.adyen-checkout__input--street');
+        return this.rootElement.getByRole('textbox', { name: /\b(address|street)\b/i });
     }
 
     get streetInputError() {
