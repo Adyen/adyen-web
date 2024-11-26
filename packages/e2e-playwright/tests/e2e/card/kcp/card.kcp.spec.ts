@@ -14,7 +14,7 @@ import { paymentSuccessfulMock } from '../../../../mocks/payments/payments.mock'
 
 test.describe('Card with KCP fields', () => {
     test.describe('Displaying KCP fields by default', () => {
-        test('should hide KCP fields if Card is not korean and make the payment', async ({ cardWithKCP }) => {
+        test('#1 should hide KCP fields if Card is not korean and make the payment', async ({ cardWithKCP }) => {
             await cardWithKCP.goto(URL_MAP.cardWithKcp);
             await cardWithKCP.typeCardNumber(REGULAR_TEST_CARD);
 
@@ -28,7 +28,7 @@ test.describe('Card with KCP fields', () => {
             await expect(cardWithKCP.paymentResult).toContainText(PAYMENT_RESULT.authorised);
         });
 
-        test('should hide KCP fields if Card is not korean, then show them again once the Card is replaced by korean card and make the payment', async ({
+        test('#2 should hide KCP fields if Card is not korean, then show them again once the Card is replaced by korean card and make the payment', async ({
             cardWithKCP,
             page
         }) => {
@@ -58,7 +58,7 @@ test.describe('Card with KCP fields', () => {
 
             await expect(cardWithKCP.paymentResult).toContainText(PAYMENT_RESULT.authorised);
         });
-        test('should fill in KCP fields, then replace with non-korean Card and make a payment (seeing that kcp info has been cleared from card state)', async ({
+        test('#3 should fill in KCP fields, then replace with non-korean Card and make a payment (seeing that kcp info has been cleared from card state)', async ({
             cardWithKCP,
             page
         }) => {
@@ -102,7 +102,7 @@ test.describe('Card with KCP fields', () => {
             }
         });
 
-        test('should display KCP fields once korean card is entered and make the payment', async ({ cardWithKCP, page }) => {
+        test('#4 should display KCP fields once korean card is entered and make the payment', async ({ cardWithKCP, page }) => {
             await paymentSuccessfulMock(page);
 
             await cardWithKCP.goto(url);
@@ -124,13 +124,22 @@ test.describe('Card with KCP fields', () => {
             await expect(cardWithKCP.paymentResult).toContainText(PAYMENT_RESULT.authorised);
         });
 
-        test('should display KCP fields once korean card is entered, then replace by regular Card and make the payment', async ({ cardWithKCP }) => {
+        test('#5 should display KCP fields once korean card is entered, fill in kcp specific fields, then replace by regular Card and make the payment (seeing that kcp info has been cleared from card state)', async ({
+            cardWithKCP,
+            page
+        }) => {
+            await paymentSuccessfulMock(page);
+            const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
+
             await cardWithKCP.goto(url);
 
             await cardWithKCP.typeCardNumber(KOREAN_TEST_CARD);
 
             await expect(cardWithKCP.passwordInput).toBeVisible();
             await expect(cardWithKCP.taxNumberInput).toBeVisible();
+
+            await cardWithKCP.typeTaxNumber(TEST_TAX_NUMBER_VALUE);
+            await cardWithKCP.typePassword(TEST_PWD_VALUE); // this confirms that dynamically added iframe is really there
 
             await cardWithKCP.deleteCardNumber();
 
@@ -143,10 +152,16 @@ test.describe('Card with KCP fields', () => {
 
             await cardWithKCP.pay();
 
+            // Check that KCP fields are NOT passed in
+            const request = await paymentsRequestPromise;
+            const paymentMethod = await request.postDataJSON().paymentMethod;
+            expect(paymentMethod.encryptedPassword).toBeUndefined();
+            expect(paymentMethod.taxNumber).toBeUndefined();
+
             await expect(cardWithKCP.paymentResult).toContainText(PAYMENT_RESULT.authorised);
         });
 
-        test('should apply validation to KCP fields', async ({ cardWithKCP }) => {
+        test('#6 should apply validation to KCP fields', async ({ cardWithKCP }) => {
             await cardWithKCP.goto(url);
 
             await cardWithKCP.typeCardNumber(KOREAN_TEST_CARD);
