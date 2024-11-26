@@ -6,11 +6,12 @@ import Script from '../../utils/Script';
 import type { Fastlane, FastlaneAuthenticatedCustomerResult, FastlaneShippingAddressSelectorResult } from './types';
 import type { FastlaneTokenData } from './services/request-fastlane-token';
 import type { CoreConfiguration } from '../../core/types';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 
 export interface FastlaneSDKConfiguration {
     clientKey: string;
+    environment: CoreConfiguration['environment'];
     locale?: 'en-US' | 'es-US' | 'fr-RS' | 'zh-US';
-    environment?: CoreConfiguration['environment'];
 }
 
 class FastlaneSDK {
@@ -21,6 +22,9 @@ class FastlaneSDK {
     private fastlaneSdk: Fastlane;
 
     constructor(configuration: FastlaneSDKConfiguration) {
+        if (!configuration.environment) throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', "FastlaneSDK: 'environment' property is required");
+        if (!configuration.clientKey) throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', "FastlaneSDK: 'clientKey' property is required");
+
         const { apiUrl } = resolveEnvironments(configuration.environment);
 
         this.checkoutShopperURL = apiUrl;
@@ -36,6 +40,10 @@ class FastlaneSDK {
     }
 
     public async authenticate(email: string): Promise<FastlaneAuthenticatedCustomerResult> {
+        if (!this.fastlaneSdk) {
+            throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'FastlaneSDK is not initialized');
+        }
+
         const { customerContextId } = await this.fastlaneSdk.identity.lookupCustomerByEmail(email);
 
         if (customerContextId) {
@@ -49,11 +57,17 @@ class FastlaneSDK {
     }
 
     public showShippingAddressSelector(): Promise<FastlaneShippingAddressSelectorResult> {
-        if (!this.fastlaneSdk.profile) return null;
+        if (!this.fastlaneSdk) {
+            throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'FastlaneSDK is not initialized');
+        }
         return this.fastlaneSdk.profile.showShippingAddressSelector();
     }
 
     public async mountWatermark(container: HTMLElement | string, options = { includeAdditionalInfo: false }): Promise<void> {
+        if (!this.fastlaneSdk) {
+            throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'FastlaneSDK is not initialized');
+        }
+
         const component = await this.fastlaneSdk.FastlaneWatermarkComponent(options);
         component.render(container);
     }
