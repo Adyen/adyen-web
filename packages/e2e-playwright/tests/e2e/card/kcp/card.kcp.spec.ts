@@ -58,7 +58,13 @@ test.describe('Card with KCP fields', () => {
 
             await expect(cardWithKCP.paymentResult).toContainText(PAYMENT_RESULT.authorised);
         });
-        test('should fill in KCP fields, then replace with non-korean Card and make a payment', async ({ cardWithKCP }) => {
+        test('should fill in KCP fields, then replace with non-korean Card and make a payment (seeing that kcp info has been cleared from card state)', async ({
+            cardWithKCP,
+            page
+        }) => {
+            await paymentSuccessfulMock(page);
+            const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
+
             await cardWithKCP.goto(URL_MAP.cardWithKcp);
 
             await cardWithKCP.typeCardNumber(KOREAN_TEST_CARD);
@@ -74,6 +80,12 @@ test.describe('Card with KCP fields', () => {
             await expect(cardWithKCP.taxNumberInput).not.toBeVisible();
 
             await cardWithKCP.pay();
+
+            // Check that KCP fields are NOT passed in
+            const request = await paymentsRequestPromise;
+            const paymentMethod = await request.postDataJSON().paymentMethod;
+            expect(paymentMethod.encryptedPassword).toBeUndefined();
+            expect(paymentMethod.taxNumber).toBeUndefined();
 
             await expect(cardWithKCP.paymentResult).toContainText(PAYMENT_RESULT.authorised);
         });
