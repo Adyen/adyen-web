@@ -1,4 +1,4 @@
-import { Component, h } from 'preact';
+import { Component, Fragment, h } from 'preact';
 import PaymentMethodList from './PaymentMethod/PaymentMethodList';
 import Status from './status';
 import getOrderStatus from '../../../core/Services/order-status';
@@ -9,17 +9,20 @@ import { sanitizeOrder } from '../../internal/UIElement/utils';
 import { PaymentAmount } from '../../../types/global-types';
 import { ANALYTICS_RENDERED_STR } from '../../../core/Analytics/constants';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
+import Button from '../../internal/Button';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
         elements: [],
+        fastlanePaymentElement: null,
         instantPaymentElements: [],
         storedPaymentElements: [],
         orderStatus: null,
         isDisabling: false,
         status: { type: 'loading', props: undefined },
         activePaymentMethod: null,
-        cachedPaymentMethods: {}
+        cachedPaymentMethods: {},
+        showPaymentMethodList: true
     };
 
     componentDidMount() {
@@ -28,12 +31,20 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
 
     public prepareDropinData = () => {
         const { order, clientKey, loadingContext } = this.props;
-        const [storedElementsPromises, elementsPromises, instantPaymentsPromises] = this.props.onCreateElements();
+        const [storedElementsPromises, elementsPromises, instantPaymentsPromises, fastlanePaymentElementPromise] = this.props.onCreateElements();
         const orderStatusPromise = order ? getOrderStatus({ clientKey, loadingContext }, order) : null;
 
-        void Promise.all([storedElementsPromises, elementsPromises, instantPaymentsPromises, orderStatusPromise]).then(
-            ([storedPaymentElements, elements, instantPaymentElements, orderStatus]) => {
-                this.setState({ instantPaymentElements, elements, storedPaymentElements, orderStatus });
+        void Promise.all([storedElementsPromises, elementsPromises, instantPaymentsPromises, fastlanePaymentElementPromise, orderStatusPromise]).then(
+            ([storedPaymentElements, elements, instantPaymentElements, fastlanePaymentElement, orderStatus]) => {
+                this.setState({
+                    orderStatus,
+                    elements,
+                    instantPaymentElements,
+                    storedPaymentElements,
+                    fastlanePaymentElement: fastlanePaymentElement[0],
+                    showPaymentMethodList: fastlanePaymentElement.length === 0
+                });
+
                 this.setStatus('ready');
 
                 this.props.modules?.analytics.sendAnalytics('dropin', {
@@ -102,6 +113,12 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
             });
     };
 
+    private onShowPaymentMethodListClick = () => {
+        this.setState({
+            showPaymentMethodList: true
+        });
+    };
+
     closeActivePaymentMethod() {
         this.setState({ activePaymentMethod: null });
     }
@@ -137,7 +154,20 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
 
     private onOrderCancel: (data: onOrderCancelData) => void;
 
-    render(props, { elements, instantPaymentElements, storedPaymentElements, status, activePaymentMethod, cachedPaymentMethods }) {
+    render(
+        props,
+        {
+            elements,
+            // fastlaneElement,
+            fastlanePaymentElement,
+            instantPaymentElements,
+            storedPaymentElements,
+            status,
+            activePaymentMethod,
+            cachedPaymentMethods,
+            showPaymentMethodList
+        }
+    ) {
         const isLoading = status.type === 'loading';
         const isRedirecting = status.type === 'redirect';
         const hasPaymentMethodsToBeDisplayed = elements?.length || instantPaymentElements?.length || storedPaymentElements?.length;
@@ -157,7 +187,34 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                     <div className={`adyen-checkout__dropin adyen-checkout__dropin--${status.type}`}>
                         {isRedirecting && status.props.component && status.props.component.render()}
                         {isLoading && status.props && status.props.component && status.props.component.render()}
-                        {!!hasPaymentMethodsToBeDisplayed && (
+
+                        {/* CLEAN UP THIS */}
+                        {!!fastlanePaymentElement && !showPaymentMethodList && (
+                            <Fragment>
+                                <PaymentMethodList
+                                    isLoading={isLoading || isRedirecting}
+                                    isDisablingPaymentMethod={this.state.isDisabling}
+                                    paymentMethods={[fastlanePaymentElement]}
+                                    // instantPaymentMethods={instantPaymentElements}
+                                    // storedPaymentMethods={storedPaymentElements}
+                                    activePaymentMethod={activePaymentMethod}
+                                    cachedPaymentMethods={cachedPaymentMethods}
+                                    // order={this.props.order}
+                                    // orderStatus={this.state.orderStatus}
+                                    // onOrderCancel={this.onOrderCancel}
+                                    onSelect={this.handleOnSelectPaymentMethod}
+                                    openPaymentMethod={this.props.openPaymentMethod}
+                                    openFirstPaymentMethod={this.props.openFirstPaymentMethod}
+                                    // openFirstStoredPaymentMethod={this.props.openFirstStoredPaymentMethod}
+                                    // onDisableStoredPaymentMethod={this.handleDisableStoredPaymentMethod}
+                                    // showRemovePaymentMethodButton={this.props.showRemovePaymentMethodButton}
+                                    showRadioButton={this.props.showRadioButton}
+                                />
+                                <Button variant="primary" label="Other payment methods" onClick={this.onShowPaymentMethodListClick} />
+                            </Fragment>
+                        )}
+
+                        {!!hasPaymentMethodsToBeDisplayed && showPaymentMethodList && (
                             <PaymentMethodList
                                 isLoading={isLoading || isRedirecting}
                                 isDisablingPaymentMethod={this.state.isDisabling}

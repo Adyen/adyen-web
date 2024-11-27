@@ -161,11 +161,14 @@ export interface DropinStatusProps {
 
 export interface DropinComponentState {
     elements: any[];
+    fastlanePaymentElement: UIElement | null;
+    // fastlaneElement: UIElement | null;
     instantPaymentElements: UIElement[];
     storedPaymentElements: UIElement[];
     status: DropinStatus;
     activePaymentMethod: UIElement;
     cachedPaymentMethods: object;
+    showPaymentMethodList: boolean;
     isDisabling: boolean;
     orderStatus: OrderStatus;
 }
