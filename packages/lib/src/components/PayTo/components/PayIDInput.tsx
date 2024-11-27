@@ -1,4 +1,6 @@
 import { h } from 'preact';
+//import { useCoreContext } from '../../../core/Context/CoreProvider';
+import Fieldset from '../../internal/FormFields/Fieldset';
 
 export default function PayIDInput() {
     // const { i18n } = useCoreContext();
@@ -13,5 +15,9 @@ export default function PayIDInput() {
     // this.setStatus = setStatus;
     // this.showValidation = triggerValidation;
 
-    return <p>PayIDInput.tsx</p>;
+    return (
+        <Fieldset classNameModifiers={['adyen-checkout-payto__payid_input']} label={'payto.payid.header'} description={'payto.payid.description'}>
+            <p></p>
+        </Fieldset>
+    );
 }

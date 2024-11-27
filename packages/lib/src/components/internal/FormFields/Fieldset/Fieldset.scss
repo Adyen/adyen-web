@@ -13,6 +13,15 @@
     padding-block-end: 0;
     padding-inline-start: 0;
     padding-inline-end: 0;
+
+    &__description {
+        font-weight: token(text-body-font-weight);
+        list-style-type: disc;
+        color: token(color-label-secondary);
+        margin: 0;
+        font-size: token(text-body-font-size);
+        line-height: 1.5;
+    }
 }
 
 .adyen-checkout__fieldset:last-of-type {
@@ -31,6 +40,10 @@
     display: block;
     margin: 0;
     padding: 0 0 token(spacer-060);
+
+    &:has(+ .adyen-checkout__fieldset__description) {
+        padding: 0;
+    }
 }
 
 .adyen-checkout__fieldset__fields,
