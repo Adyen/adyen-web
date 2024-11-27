@@ -84,9 +84,9 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
         const showBrands = !paymentMethod.props.oneClick && paymentMethod.brands && paymentMethod.brands.length > 0;
 
         return (
-            // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
-            <div key={paymentMethod._id} className={paymentMethodClassnames} onClick={this.handleOnListItemClick}>
-                <div className="adyen-checkout__payment-method__header">
+            <div key={paymentMethod._id} className={paymentMethodClassnames}>
+                {/*eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions*/}
+                <div className="adyen-checkout__payment-method__header" onClick={this.handleOnListItemClick}>
                     <ExpandButton buttonId={buttonId} showRadioButton={showRadioButton} isSelected={isSelected} expandContentId={containerId}>
                         <PaymentMethodIcon
                             // Only add alt attribute to storedPaymentMethods (to avoid SR reading the PM name twice)

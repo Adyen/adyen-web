@@ -58,10 +58,19 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
     };
 
     private setActivePaymentMethod = paymentMethod => {
+        // console.log('\n### DropinComponent::setActivePaymentMethod:: cachedPaymentMethods', this.state.cachedPaymentMethods);
         this.setState(prevState => ({
             activePaymentMethod: paymentMethod,
             cachedPaymentMethods: { ...prevState.cachedPaymentMethods, [paymentMethod._id]: true }
         }));
+
+        for (const [key] of Object.entries(this.state.cachedPaymentMethods)) {
+            if (key === paymentMethod._id) {
+                // console.log('### DropinComponent::setActivePaymentMethod:: payment method is cached=', key);
+                paymentMethod.onPaymentMethodActive();
+                break;
+            }
+        }
     };
 
     componentDidUpdate(prevProps, prevState) {

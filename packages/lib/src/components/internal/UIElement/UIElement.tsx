@@ -124,6 +124,10 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         return this;
     }
 
+    protected onPaymentMethodActive() {
+        return null;
+    }
+
     protected onChange(): void {
         this.props.onChange?.(
             {
