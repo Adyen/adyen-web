@@ -1,7 +1,7 @@
 import Script from '../../../../utils/Script';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { h } from 'preact';
-import { KlarnaWidgetAuthorizeResponse, KlarnaWidgetProps } from '../../types';
+import { KlarnaContainerRef, KlarnaWidgetAuthorizeResponse, KlarnaWidgetProps } from '../../types';
 import { KLARNA_WIDGET_URL } from '../../constants';
 import './KlarnaWidget.scss';
 
@@ -43,6 +43,8 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
             }
         );
     };
+
+    (props.containerRef as KlarnaContainerRef).initWidget = initializeKlarnaWidget;
 
     const authorizeKlarna = () => {
         setStatus('loading');

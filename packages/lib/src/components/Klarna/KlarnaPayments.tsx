@@ -52,8 +52,8 @@ class KlarnaPayments extends UIElement<KlarnConfiguration> {
     }
 
     protected onPaymentMethodActive() {
-        // TODO do something to reinit the PM
-        console.log('\n### KlarnaPayments::onPaymentMethodActive:: do something to reinit the PM');
+        // Reinit the KlarnaSDK widget
+        this.componentRef.initWidget();
     }
 
     render() {
@@ -61,9 +61,7 @@ class KlarnaPayments extends UIElement<KlarnConfiguration> {
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <KlarnaContainer
                     {...this.props}
-                    ref={ref => {
-                        this.componentRef = ref;
-                    }}
+                    setComponentRef={this.setComponentRef}
                     displayName={this.displayName}
                     onComplete={state => this.handleAdditionalDetails(state)}
                     onError={this.props.onError}

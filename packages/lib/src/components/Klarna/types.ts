@@ -1,4 +1,4 @@
-import { UIElementProps } from '../internal/UIElement/types';
+import { ComponentMethodsRef, UIElementProps } from '../internal/UIElement/types';
 
 declare global {
     interface Window {
@@ -37,6 +37,7 @@ export interface KlarnaWidgetProps extends KlarnaPaymentsShared {
 
     onComplete: (detailsData) => void;
     onError: (error) => void;
+    containerRef: any;
 }
 
 export type KlarnConfiguration = UIElementProps &
@@ -49,4 +50,18 @@ export interface KlarnaWidgetAuthorizeResponse {
     show_form: boolean;
     authorization_token: string;
     error?: any;
+}
+
+export interface KlarnaAction {
+    sdkData: {
+        client_token: string;
+        payment_method_category: string;
+    };
+    paymentMethodType: string;
+    paymentData: string;
+}
+
+export interface KlarnaContainerRef extends ComponentMethodsRef {
+    initWidget?: () => void;
+    setAction?(action: KlarnaAction): void;
 }
