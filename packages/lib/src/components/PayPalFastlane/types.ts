@@ -1,3 +1,5 @@
+import type { CoreConfiguration } from '../../core/types';
+
 /**
  * PayPal Fastlane Reference:
  * https://developer.paypal.com/docs/checkout/fastlane/reference/#link-customizeyourintegration
@@ -85,4 +87,37 @@ export interface FastlaneProfile {
             card: CardPaymentSource;
         };
     };
+}
+
+type FastlaneComponentConfiguration = {
+    paymentType: 'fastlane';
+    configuration: {
+        sessionId: string;
+        customerId: string;
+        email: string;
+        tokenId: string;
+        lastFour: string;
+        brand: string;
+    };
+};
+
+type CardComponentConfiguration = {
+    paymentType: 'card';
+    configuration: {
+        fastlaneConfiguration: {
+            showConsent: boolean;
+            defaultToggleState: boolean;
+            termsAndConditionsLink: string;
+            privacyPolicyLink: string;
+            termsAndConditionsVersion: string;
+        };
+    };
+};
+
+export type ComponentConfiguration = FastlaneComponentConfiguration | CardComponentConfiguration;
+
+export interface FastlaneSDKConfiguration {
+    clientKey: string;
+    environment: CoreConfiguration['environment'];
+    locale?: 'en-US' | 'es-US' | 'fr-RS' | 'zh-US';
 }

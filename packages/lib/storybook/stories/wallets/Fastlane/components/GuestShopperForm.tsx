@@ -11,12 +11,12 @@ import FastlaneSDK from '../../../../../src/components/PayPalFastlane/FastlaneSD
 import type { FastlaneAuthenticatedCustomerResult } from '../../../../../src/components/PayPalFastlane/types';
 
 interface GuestShopperFormProps {
-    onCheckoutStep(fastlane: FastlaneSDK, fastlaneData: any, shippingAddress: any): void;
+    onCheckoutStep(componentConfig): void;
 }
 
 export const GuestShopperForm = ({ onCheckoutStep }: GuestShopperFormProps) => {
     const [fastlane, setFastlane] = useState<FastlaneSDK>(null);
-    const [fastlaneLookupData, setFastlaneLookupData] = useState<FastlaneAuthenticatedCustomerResult>(null);
+    const [fastlaneAuthResult, setFastlaneAuthResult] = useState<FastlaneAuthenticatedCustomerResult>(null);
 
     const loadFastlane = async () => {
         const sdk = await initializeFastlane({
@@ -27,15 +27,18 @@ export const GuestShopperForm = ({ onCheckoutStep }: GuestShopperFormProps) => {
     };
 
     const handleOnEditEmail = () => {
-        setFastlaneLookupData(null);
+        setFastlaneAuthResult(null);
     };
 
     const handleFastlaneLookup = data => {
-        setFastlaneLookupData(data);
+        setFastlaneAuthResult(data);
     };
 
     const handleOnCheckoutClick = (shippingAddress?: any) => {
-        onCheckoutStep(fastlane, fastlaneLookupData, shippingAddress);
+        console.log('Shipping address', shippingAddress);
+
+        const componentConfig = fastlane.getComponentConfiguration(fastlaneAuthResult);
+        onCheckoutStep(componentConfig);
     };
 
     useEffect(() => {
@@ -54,15 +57,15 @@ export const GuestShopperForm = ({ onCheckoutStep }: GuestShopperFormProps) => {
             <CollectEmail fastlaneSdk={fastlane} onFastlaneLookup={handleFastlaneLookup} onEditEmail={handleOnEditEmail} />
             <hr />
 
-            {fastlaneLookupData?.authenticationState === 'succeeded' && (
+            {fastlaneAuthResult?.authenticationState === 'succeeded' && (
                 <ShippingWithFastlane
                     fastlaneSdk={fastlane}
-                    address={fastlaneLookupData?.profileData?.shippingAddress}
+                    address={fastlaneAuthResult?.profileData?.shippingAddress}
                     onCheckoutClick={handleOnCheckoutClick}
                 />
             )}
 
-            {fastlaneLookupData?.authenticationState === 'not_found' && <Shipping onCheckoutClick={handleOnCheckoutClick} />}
+            {fastlaneAuthResult?.authenticationState === 'not_found' && <Shipping onCheckoutClick={handleOnCheckoutClick} />}
         </div>
     );
 };

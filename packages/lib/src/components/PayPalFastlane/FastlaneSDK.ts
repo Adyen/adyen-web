@@ -2,17 +2,15 @@ import { resolveEnvironments } from '../../core/Environment';
 import requestFastlaneToken from './services/request-fastlane-token';
 import { convertAdyenLocaleToFastlaneLocale } from './utils/convert-locale';
 import Script from '../../utils/Script';
-
-import type { Fastlane, FastlaneAuthenticatedCustomerResult, FastlaneShippingAddressSelectorResult } from './types';
-import type { FastlaneTokenData } from './services/request-fastlane-token';
-import type { CoreConfiguration } from '../../core/types';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
-
-export interface FastlaneSDKConfiguration {
-    clientKey: string;
-    environment: CoreConfiguration['environment'];
-    locale?: 'en-US' | 'es-US' | 'fr-RS' | 'zh-US';
-}
+import {
+    ComponentConfiguration,
+    Fastlane,
+    FastlaneAuthenticatedCustomerResult,
+    FastlaneShippingAddressSelectorResult,
+    FastlaneSDKConfiguration
+} from './types';
+import type { FastlaneTokenData } from './services/request-fastlane-token';
 
 class FastlaneSDK {
     private readonly clientKey: string;
@@ -20,6 +18,7 @@ class FastlaneSDK {
     private readonly locale: string;
 
     private fastlaneSdk: Fastlane;
+    private authenticatedShopper: { email: string; customerId: string };
 
     constructor(configuration: FastlaneSDKConfiguration) {
         if (!configuration.environment) throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', "FastlaneSDK: 'environment' property is required");
@@ -47,11 +46,51 @@ class FastlaneSDK {
         const { customerContextId } = await this.fastlaneSdk.identity.lookupCustomerByEmail(email);
 
         if (customerContextId) {
+            this.authenticatedShopper = { email, customerId: customerContextId };
             return this.fastlaneSdk.identity.triggerAuthenticationFlow(customerContextId);
         } else {
             return {
                 authenticationState: 'not_found',
                 profileData: undefined
+            };
+        }
+    }
+
+    /**
+     * TODO: Waiting for PayPal to provide the specific methods to fetch sessionId and Consent UI details
+     */
+    public getComponentConfiguration(authResult: FastlaneAuthenticatedCustomerResult): ComponentConfiguration {
+        if (!authResult) {
+            throw new AdyenCheckoutError(
+                'IMPLEMENTATION_ERROR',
+                'FastlaneSDK: you must pass the authentication result to get the component configuration'
+            );
+        }
+
+        if (authResult.authenticationState === 'succeeded') {
+            return {
+                paymentType: 'fastlane',
+                configuration: {
+                    sessionId: 'xxxx-yyyy',
+                    customerId: this.authenticatedShopper.customerId,
+                    email: this.authenticatedShopper.email,
+                    tokenId: authResult.profileData.card.id,
+                    lastFour: authResult.profileData.card.paymentSource.card.lastDigits,
+                    brand: authResult.profileData.card.paymentSource.card.brand
+                }
+            };
+        } else {
+            return {
+                paymentType: 'card',
+                configuration: {
+                    fastlaneConfiguration: {
+                        showConsent: true,
+                        defaultToggleState: true,
+                        termsAndConditionsLink: 'https://...',
+                        privacyPolicyLink: 'https://...',
+                        termsAndConditionsVersion: 'v1'
+                    }
+                }
             };
         }
     }

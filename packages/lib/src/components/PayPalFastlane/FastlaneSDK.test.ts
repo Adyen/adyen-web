@@ -145,4 +145,85 @@ describe('FastlaneSDK', () => {
         expect(componentMock.render).toHaveBeenCalledTimes(1);
         expect(componentMock.render).toHaveBeenCalledWith('.my-div');
     });
+
+    test('should return fastlane component configuration if shopper has profile', async () => {
+        const customerContextId = 'customer-context-id';
+        fastlaneMock.identity.lookupCustomerByEmail.mockResolvedValue({
+            customerContextId
+        });
+        fastlaneMock.identity.triggerAuthenticationFlow.mockResolvedValue({
+            authenticationState: 'succeeded',
+            profileData: mock<FastlaneProfile>({
+                card: {
+                    id: 'xxxx',
+                    paymentSource: {
+                        card: {
+                            brand: 'visa',
+                            lastDigits: '1111'
+                        }
+                    }
+                }
+            })
+        });
+
+        const fastlane = await initializeFastlane({
+            clientKey: 'test_xxx',
+            environment: 'test'
+        });
+        const authResult = await fastlane.authenticate('test@adyen.com');
+        const config = fastlane.getComponentConfiguration(authResult);
+
+        expect(config).toStrictEqual({
+            paymentType: 'fastlane',
+            configuration: {
+                brand: 'visa',
+                customerId: 'customer-context-id',
+                email: 'test@adyen.com',
+                lastFour: '1111',
+                sessionId: 'xxxx-yyyy',
+                tokenId: 'xxxx'
+            }
+        });
+    });
+
+    test('should return card component configuration if shopper does not have profile', async () => {
+        const customerContextId = 'customer-context-id';
+        fastlaneMock.identity.lookupCustomerByEmail.mockResolvedValue({
+            customerContextId
+        });
+        fastlaneMock.identity.triggerAuthenticationFlow.mockResolvedValue({
+            authenticationState: 'not_found',
+            profileData: undefined
+        });
+
+        const fastlane = await initializeFastlane({
+            clientKey: 'test_xxx',
+            environment: 'test'
+        });
+        const authResult = await fastlane.authenticate('test@adyen.com');
+        const config = fastlane.getComponentConfiguration(authResult);
+
+        expect(config).toStrictEqual({
+            paymentType: 'card',
+            configuration: {
+                fastlaneConfiguration: {
+                    defaultToggleState: true,
+                    privacyPolicyLink: 'https://...',
+                    showConsent: true,
+                    termsAndConditionsLink: 'https://...',
+                    termsAndConditionsVersion: 'v1'
+                }
+            }
+        });
+    });
+
+    test('should thrown an error if there is no auth result to create the component configuration', async () => {
+        const fastlane = await initializeFastlane({
+            clientKey: 'test_xxx',
+            environment: 'test'
+        });
+
+        // @ts-ignore It is expected to omit the parameter here
+        expect(() => fastlane.getComponentConfiguration()).toThrowError();
+    });
 });

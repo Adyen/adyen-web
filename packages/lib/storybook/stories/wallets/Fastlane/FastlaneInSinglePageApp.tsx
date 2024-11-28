@@ -15,14 +15,14 @@ interface Props {
 }
 
 export const FastlaneInSinglePageApp = ({ checkoutConfig }: Props) => {
-    const [fastlaneData, setFastlaneData] = useState<any>(null);
+    const [componentConfig, setComponentConfig] = useState<any>(null);
 
-    const handleOnCheckoutStep = (fastlaneSdk, fastlaneData, shippingAddress) => {
-        console.log('FastlaneInSinglePageApp', fastlaneSdk, fastlaneData, shippingAddress);
-        setFastlaneData(fastlaneData);
+    const handleOnCheckoutStep = config => {
+        console.log('Component config:', config);
+        setComponentConfig(config);
     };
 
-    if (!fastlaneData) {
+    if (!componentConfig) {
         return <GuestShopperForm onCheckoutStep={handleOnCheckoutStep} />;
     }
 
