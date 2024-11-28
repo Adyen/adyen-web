@@ -53,6 +53,7 @@ class KlarnaPayments extends UIElement<KlarnConfiguration> {
 
     protected onPaymentMethodActive() {
         // TODO do something to reinit the PM
+        console.log('\n### KlarnaPayments::onPaymentMethodActive:: do something to reinit the PM');
     }
 
     render() {
