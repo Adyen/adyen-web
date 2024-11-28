@@ -19,6 +19,7 @@ export function KlarnaContainer(props) {
 
     klarnaContainerRef.current.setAction = setAction;
     klarnaContainerRef.current.setStatus = setStatus;
+    klarnaContainerRef.current.props = props; // Needed for unit tests
 
     if (action.sdkData) {
         return (

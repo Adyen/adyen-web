@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/preact';
 import { KlarnaWidget } from './KlarnaWidget';
 import Script from '../../../../utils/Script';
 import { KLARNA_WIDGET_URL } from '../../constants';
-import { KlarnaWidgetAuthorizeResponse } from '../../types';
+import { KlarnaWidgetAuthorizeResponse, KlarnaWidgetProps } from '../../types';
 
 jest.mock('../../../../utils/Script', () => {
     return jest.fn().mockImplementation(() => {
@@ -34,14 +34,15 @@ describe('KlarnaWidget', () => {
             Pay with Klarna
         </button>
     );
-    const props = {
+    const props: KlarnaWidgetProps = {
         onLoaded,
         onComplete,
         onError,
         paymentData,
         paymentMethodType,
         sdkData,
-        payButton
+        payButton,
+        containerRef: null
     };
 
     beforeAll(() => {

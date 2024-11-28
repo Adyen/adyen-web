@@ -44,7 +44,9 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
         );
     };
 
-    (props.containerRef as KlarnaContainerRef).initWidget = initializeKlarnaWidget;
+    if (props.containerRef) {
+        (props.containerRef as KlarnaContainerRef).initWidget = initializeKlarnaWidget;
+    }
 
     const authorizeKlarna = () => {
         setStatus('loading');
@@ -101,7 +103,7 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
         console.log('\n### KlarnaWidget:::: useEffect sdkData.payment_method_category=', sdkData.payment_method_category);
 
         const script = new Script(KLARNA_WIDGET_URL);
-        void script.load().then(() => {
+        void script.load()?.then(() => {
             console.log('### KlarnaWidget:::: useEffect script: LOADED ');
             if (initOnLoad) {
                 console.log('### KlarnaWidget:::: manually init widget');

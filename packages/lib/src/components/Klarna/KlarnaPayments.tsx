@@ -53,7 +53,7 @@ class KlarnaPayments extends UIElement<KlarnConfiguration> {
 
     protected onPaymentMethodActive() {
         // Reinit the KlarnaSDK widget
-        this.componentRef.initWidget();
+        this.componentRef?.initWidget();
     }
 
     render() {
