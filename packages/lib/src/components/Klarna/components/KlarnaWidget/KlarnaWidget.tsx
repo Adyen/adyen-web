@@ -89,10 +89,7 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
          * Alternatively, we *never* define the callback function; and *always* initialise the widget ourselves once the script is loaded
          * (Checking with Klarna on whether defining this callback is advised/mandatory)
          */
-        let initOnLoad = false;
-        if (window.klarnaAsyncCallback) {
-            initOnLoad = true;
-        }
+        const initOnLoad = !!window.klarnaAsyncCallback;
 
         window.klarnaAsyncCallback = function () {
             console.log('### KlarnaWidget::klarnaWidget:: klarna async function called');
