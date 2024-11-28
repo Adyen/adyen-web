@@ -14,7 +14,7 @@ function SelectButtonElement({ filterable, toggleButtonRef, ...props }) {
 }
 
 function SelectButton(props: Readonly<SelectButtonProps>) {
-    const { active, selected, inputText, readonly, showList } = props;
+    const { active, selected, inputText, readonly, showList, required } = props;
 
     // display fallback order
     const displayText = selected.selectedOptionName || selected.name || props.placeholder || '';
@@ -88,6 +88,7 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
                         readOnly={props.readonly}
                         id={props.id}
                         aria-describedby={props.ariaDescribedBy}
+                        required={required}
                     />
                     {!showList && selected.secondaryText && (
                         <span className="adyen-checkout__dropdown__button__secondary-text">{selected.secondaryText}</span>

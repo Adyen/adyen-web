@@ -29,7 +29,8 @@ function Select({
     clearOnSelect,
     blurOnClose,
     onListToggle,
-    allowIdOnButton = false
+    allowIdOnButton = false,
+    required
 }: SelectProps) {
     const filterInputRef = useRef(null);
     const selectContainerRef = useRef(null);
@@ -288,6 +289,7 @@ function Select({
                 disabled={disabled}
                 ariaDescribedBy={ariaDescribedBy}
                 allowIdOnButton={allowIdOnButton}
+                required={required}
             />
             <SelectList
                 active={activeOption}

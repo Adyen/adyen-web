@@ -32,6 +32,7 @@ export interface SelectProps {
     onInput?: (value: string) => void;
     placeholder?: string;
     readonly: boolean;
+    required?: boolean;
     selectedValue?: string | number;
     uniqueId?: string;
     disabled?: boolean;
@@ -55,6 +56,7 @@ export interface SelectButtonProps {
     onInput: (e: Event) => void;
     placeholder: string;
     readonly: boolean;
+    required: boolean;
     selectListId: string;
     showList: boolean;
     toggleButtonRef;

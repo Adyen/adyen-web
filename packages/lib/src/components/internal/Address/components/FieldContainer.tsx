@@ -45,6 +45,7 @@ function FieldContainer(props: FieldContainerProps) {
                     errorMessage={errorMessage}
                     onDropdownChange={props.onDropdownChange}
                     value={value}
+                    required={!isOptional}
                 />
             );
         case 'stateOrProvince':
@@ -57,6 +58,7 @@ function FieldContainer(props: FieldContainerProps) {
                     selectedCountry={selectedCountry}
                     specifications={props.specifications}
                     value={value}
+                    required={!isOptional}
                 />
             );
         default:
