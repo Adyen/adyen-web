@@ -64,5 +64,5 @@ export interface KlarnaAction {
 export interface KlarnaContainerRef extends ComponentMethodsRef {
     initWidget?: () => void;
     setAction?(action: KlarnaAction): void;
-    props?: any;
+    onComplete?: (state: any) => void;
 }

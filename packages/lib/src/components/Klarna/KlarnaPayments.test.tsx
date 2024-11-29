@@ -22,7 +22,7 @@ describe('KlarnaPayments', () => {
         expect(screen.queryByRole('button', { name: 'Continue to Pay By Bank' })).toBeFalsy();
     });
 
-    test('should call setStatus if elementRef is a drop-in', async () => {
+    test('should call setStatus if elementRef is a drop-in', () => {
         const KlarnaPaymentsEle = new KlarnaPayments(global.core, {
             ...coreProps,
             ...{ paymentData: '', paymentMethodType: '', sdkData: undefined, useKlarnaWidget: false, showPayButton: false }
@@ -30,10 +30,7 @@ describe('KlarnaPayments', () => {
         KlarnaPaymentsEle.elementRef = new Dropin(global.core);
         render(KlarnaPaymentsEle.render());
         const spy = jest.spyOn(KlarnaPaymentsEle.elementRef, 'setStatus');
-        // @ts-ignore to test
-        await waitFor(() => KlarnaPaymentsEle.componentRef);
-        // @ts-ignore to test
-        KlarnaPaymentsEle.componentRef.props.onLoaded();
+        KlarnaPaymentsEle.onLoaded();
         expect(spy).toHaveBeenCalled();
     });
 
@@ -55,7 +52,7 @@ describe('KlarnaPayments', () => {
         // @ts-ignore to test
         await waitFor(() => KlarnaPaymentsEle.componentRef);
         // @ts-ignore to test
-        KlarnaPaymentsEle.componentRef.props.onComplete();
+        KlarnaPaymentsEle.componentRef.onComplete();
         expect(onAdditionalDetailsMock).toHaveBeenCalled();
     });
 });
