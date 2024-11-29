@@ -10,6 +10,11 @@ import { PhoneInputProps, PhoneInputSchema } from './types';
 import InputText from '../FormFields/InputText';
 import Fieldset from '../FormFields/Fieldset';
 
+/**
+ *
+ * @param PhoneInputProps
+ * @constructor
+ */
 function PhoneInput(props: PhoneInputProps) {
     const { i18n } = useCoreContext();
 

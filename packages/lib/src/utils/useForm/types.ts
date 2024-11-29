@@ -30,8 +30,10 @@ export type FormProps = {
     [key: string]: any;
 };
 
+export type HandleChangeForModeType = 'input' | 'blur';
+
 export interface Form<FormSchema> extends FormState<FormSchema> {
-    handleChangeFor: (key: string, mode?: string) => (e: any) => void;
+    handleChangeFor: (key: string, mode?: HandleChangeForModeType) => (e: any) => void;
     triggerValidation: (schema?: any) => void;
     setSchema: (schema: any) => void;
     setData: (key: string, value: any) => void;
