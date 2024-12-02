@@ -39,6 +39,7 @@ export const PAYID_IDENTIFIER_OPTIONS: PayIdOptionsType = [
 ];
 
 interface IdentifierSelectorProps {
+    classNameModifiers?: string[];
     selectedIdentifier: PayToPayIDInputIdentifierValues;
     onSelectedIdentifier: (value: PayToPayIDInputIdentifierValues) => void;
 }
@@ -49,7 +50,7 @@ const loadI18nForOptions = (i18n: Language, options: PayIdOptionsType) =>
         name: i18n.get(option.nameKey)
     }));
 
-export default function IdentifierSelector({ selectedIdentifier, onSelectedIdentifier }: IdentifierSelectorProps) {
+export default function IdentifierSelector({ selectedIdentifier, onSelectedIdentifier, classNameModifiers }: IdentifierSelectorProps) {
     const { i18n } = useCoreContext();
 
     const hydratedOptions = loadI18nForOptions(i18n, PAYID_IDENTIFIER_OPTIONS);
@@ -72,6 +73,7 @@ export default function IdentifierSelector({ selectedIdentifier, onSelectedIdent
             useLabelElement={true}
             label={i18n.get('payto.payid.label.identifier')}
             showContextualElement={false}
+            classNameModifiers={classNameModifiers}
         >
             <Select filterable={false} items={hydratedOptions} selectedValue={selectedIdentifier} onChange={onChange} name={'payid-identifier'} />
         </Field>
