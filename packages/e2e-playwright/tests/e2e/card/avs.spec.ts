@@ -18,12 +18,14 @@ test.describe('Card payments with address lookup', () => {
 
 test.describe('Card payments with partial avs', () => {
     test.describe('When fill in a valid the post code', () => {
-        test('should make a successful card payment', async ({ cardWithAvs }) => {
+        test('should make a successful card payment', async ({ cardWithAvs, page }) => {
             await cardWithAvs.goto(URL_MAP.cardWithPartialAvs);
             await cardWithAvs.typeCardNumber(REGULAR_TEST_CARD);
             await cardWithAvs.typeExpiryDate(TEST_DATE_VALUE);
             await cardWithAvs.typeCvc(TEST_CVC_VALUE);
             await cardWithAvs.billingAddress.fillInPostCode(TEST_POSTCODE);
+            // wait for the form is valid
+            await page.waitForFunction(() => globalThis.component.isValid === true);
             await cardWithAvs.pay();
             await cardWithAvs.paymentResult.waitFor({ state: 'visible' });
             await expect(cardWithAvs.paymentResult).toContainText(PAYMENT_RESULT.authorised);
@@ -44,7 +46,7 @@ test.describe('Card payments with partial avs', () => {
 
 test.describe('Card payments with full avs', () => {
     test.describe('When fill in the valid address data', () => {
-        test('should make a successful card payment', async ({ cardWithAvs }) => {
+        test('should make a successful card payment', async ({ cardWithAvs, page }) => {
             await cardWithAvs.goto(URL_MAP.fullAvsWithoutPrefilledDataUrl);
             await cardWithAvs.typeCardNumber(REGULAR_TEST_CARD);
             await cardWithAvs.typeExpiryDate(TEST_DATE_VALUE);
@@ -55,8 +57,9 @@ test.describe('Card payments with full avs', () => {
             await cardWithAvs.billingAddress.fillInCity('Test city');
             await cardWithAvs.billingAddress.selectState({ name: 'Florida' });
             await cardWithAvs.billingAddress.fillInPostCode('12345');
+            // wait for the form is valid
+            await page.waitForFunction(() => globalThis.component.isValid === true);
             await cardWithAvs.pay();
-            await cardWithAvs.paymentResult.waitFor({ state: 'visible' });
             await expect(cardWithAvs.paymentResult).toContainText(PAYMENT_RESULT.authorised);
         });
     });
