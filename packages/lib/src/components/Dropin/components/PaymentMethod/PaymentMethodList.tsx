@@ -23,9 +23,9 @@ interface PaymentMethodListProps extends Omit<PaymentMethodsContainerProps, 'lab
 }
 
 const PaymentMethodList = ({
-    paymentMethods = [], // Non-stored payments
-    instantPaymentMethods = [],
-    storedPaymentMethods = [],
+    paymentMethods,
+    instantPaymentMethods,
+    storedPaymentMethods,
     openFirstStoredPaymentMethod,
     openFirstPaymentMethod,
     openPaymentMethod,
@@ -37,13 +37,13 @@ const PaymentMethodList = ({
 }: PaymentMethodListProps) => {
     const { i18n } = useCoreContext();
     const brandLogoConfiguration = useBrandLogoConfiguration(paymentMethods);
-    const hasInstantPaymentMethods = instantPaymentMethods.length > 0;
-    const hasStoredPaymentMethods = storedPaymentMethods.length > 0;
+    const hasInstantPaymentMethods = instantPaymentMethods?.length > 0;
+    const hasStoredPaymentMethods = storedPaymentMethods?.length > 0;
     const pmListLabel = hasInstantPaymentMethods || hasStoredPaymentMethods ? i18n.get('paymentMethodsList.otherPayments.label') : '';
 
     useEffect(() => {
         if (openPaymentMethod?.type) {
-            const paymentMethod = paymentMethods.find(paymentMethod => paymentMethod.type === openPaymentMethod?.type);
+            const paymentMethod = paymentMethods?.find(paymentMethod => paymentMethod.type === openPaymentMethod?.type);
             if (!paymentMethod) {
                 console.warn(`Drop-in: payment method type "${openPaymentMethod?.type}" not found`);
             } else {
@@ -53,8 +53,8 @@ const PaymentMethodList = ({
         }
 
         // Open first PaymentMethodItem
-        const firstStoredPayment = storedPaymentMethods[0];
-        const firstNonStoredPayment = paymentMethods[0];
+        const firstStoredPayment = storedPaymentMethods?.[0];
+        const firstNonStoredPayment = paymentMethods?.[0];
 
         if (firstStoredPayment || firstNonStoredPayment) {
             const shouldOpenFirstStored = openFirstStoredPaymentMethod && getProp(firstStoredPayment, 'props.oneClick') === true;
@@ -68,6 +68,8 @@ const PaymentMethodList = ({
             }
         }
     }, [storedPaymentMethods, paymentMethods, openFirstStoredPaymentMethod, openFirstPaymentMethod, openPaymentMethod]);
+
+    console.log('PaymentMethodList');
 
     return (
         <Fragment>

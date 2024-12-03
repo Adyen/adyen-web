@@ -192,6 +192,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     protected makePaymentsCall(): Promise<CheckoutAdvancedFlowResponse | CheckoutSessionPaymentResponse> {
+        console.log('makePaymentsCall');
+
         this.setElementStatus('loading');
 
         if (this.props.onSubmit) {
@@ -446,7 +448,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     /**
      * Get the element icon URL for the current environment
      */
-
     public get icon(): string {
         const type = this.props.paymentMethodType || this.type;
         return this.props.icon ?? this.resources.getImage()(type);

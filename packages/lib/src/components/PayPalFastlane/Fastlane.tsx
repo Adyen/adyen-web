@@ -3,6 +3,7 @@ import UIElement from '../internal/UIElement';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import { TxVariants } from '../tx-variants';
 import { UIElementProps } from '../internal/UIElement/types';
+import FastlaneComponent from './components/FastlaneComponent';
 
 interface FastlaneConfiguration extends UIElementProps {
     tokenId: string;
@@ -10,6 +11,11 @@ interface FastlaneConfiguration extends UIElementProps {
     lastFour: string;
     brand: string;
     email: string;
+    /**
+     * List of brands accepted by the component
+     * @internal
+     */
+    brands?: string[];
     /**
      * Configuration returned by the backend
      * @internal
@@ -21,6 +27,10 @@ interface FastlaneConfiguration extends UIElementProps {
 
 class Fastlane extends UIElement<FastlaneConfiguration> {
     public static type = TxVariants.fastlane;
+
+    protected static defaultProps = {
+        keepBrandsVisible: true
+    };
 
     protected override formatData() {
         return {
@@ -49,13 +59,25 @@ class Fastlane extends UIElement<FastlaneConfiguration> {
         return true;
     }
 
-    render() {
-        console.log('FASTLANE RENDER');
+    public override get icon(): string {
+        return this.props.icon ?? this.resources.getImage()('card');
+    }
 
+    public get brands(): { icon: string; name: string }[] {
+        const { brands } = this.props;
+        return brands.map(brand => ({ icon: this.props.modules.resources.getImage()(brand), name: brand }));
+    }
+
+    render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                <div> **** {this.props.lastFour} </div>
-                <button>pay</button>
+                <FastlaneComponent
+                    lastFour={this.props.lastFour}
+                    brand={this.props.brand}
+                    payButton={this.payButton}
+                    setComponentRef={this.setComponentRef}
+                    showPayButton={this.props.showPayButton}
+                />
             </CoreProvider>
         );
     }

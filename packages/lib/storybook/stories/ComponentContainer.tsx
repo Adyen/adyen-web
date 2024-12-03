@@ -16,14 +16,9 @@ export const ComponentContainer = ({ element }: IContainer) => {
         addToWindow(element);
 
         if (element.isAvailable) {
-            element
-                .isAvailable()
-                .then(() => {
-                    element.mount(container.current);
-                })
-                .catch(error => {
-                    setErrorMessage(error.toString());
-                });
+            element.isAvailable().then(() => {
+                element.mount(container.current);
+            });
         } else {
             element.mount(container.current);
         }

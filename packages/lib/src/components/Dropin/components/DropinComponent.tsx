@@ -14,7 +14,7 @@ import Button from '../../internal/Button';
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
         elements: [],
-        fastlanePaymentElement: null,
+        fastlanePaymentElement: [],
         instantPaymentElements: [],
         storedPaymentElements: [],
         orderStatus: null,
@@ -41,7 +41,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                     elements,
                     instantPaymentElements,
                     storedPaymentElements,
-                    fastlanePaymentElement: fastlanePaymentElement[0],
+                    fastlanePaymentElement,
                     showPaymentMethodList: fastlanePaymentElement.length === 0
                 });
 
@@ -65,6 +65,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
     }
 
     public setStatus = (status: UIElementStatus, props: DropinStatusProps = {}) => {
+        console.log(' dropin - setstatus');
         this.setState({ status: { type: status, props } });
     };
 
@@ -158,7 +159,6 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         props,
         {
             elements,
-            // fastlaneElement,
             fastlanePaymentElement,
             instantPaymentElements,
             storedPaymentElements,
@@ -171,6 +171,8 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         const isLoading = status.type === 'loading';
         const isRedirecting = status.type === 'redirect';
         const hasPaymentMethodsToBeDisplayed = elements?.length || instantPaymentElements?.length || storedPaymentElements?.length;
+
+        console.log(' Dropin component');
 
         switch (status.type) {
             case 'success':
@@ -193,8 +195,8 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                             <Fragment>
                                 <PaymentMethodList
                                     isLoading={isLoading || isRedirecting}
-                                    isDisablingPaymentMethod={this.state.isDisabling}
-                                    paymentMethods={[fastlanePaymentElement]}
+                                    // isDisablingPaymentMethod={this.state.isDisabling}
+                                    paymentMethods={fastlanePaymentElement}
                                     // instantPaymentMethods={instantPaymentElements}
                                     // storedPaymentMethods={storedPaymentElements}
                                     activePaymentMethod={activePaymentMethod}
@@ -203,8 +205,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                                     // orderStatus={this.state.orderStatus}
                                     // onOrderCancel={this.onOrderCancel}
                                     onSelect={this.handleOnSelectPaymentMethod}
-                                    openPaymentMethod={this.props.openPaymentMethod}
-                                    openFirstPaymentMethod={this.props.openFirstPaymentMethod}
+                                    openFirstPaymentMethod
                                     // openFirstStoredPaymentMethod={this.props.openFirstStoredPaymentMethod}
                                     // onDisableStoredPaymentMethod={this.handleDisableStoredPaymentMethod}
                                     // showRemovePaymentMethodButton={this.props.showRemovePaymentMethodButton}
