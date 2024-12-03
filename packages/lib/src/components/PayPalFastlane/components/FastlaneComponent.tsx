@@ -27,7 +27,7 @@ const FastlaneComponent = ({ lastFour, brand, payButton, setComponentRef, showPa
     }, []);
 
     return (
-        <div className="adyen-checkout-fastlane">
+        <div className="adyen-checkout-fastlane" data-testid="payment-method-fastlane">
             <div className="adyen-checkout-fastlane__card-section">
                 <FastlaneBrandIcon brand={brand} />
                 <span className="adyen-checkout-fastlane__card-number">•••• {lastFour}</span>

@@ -69,8 +69,6 @@ const PaymentMethodList = ({
         }
     }, [storedPaymentMethods, paymentMethods, openFirstStoredPaymentMethod, openFirstPaymentMethod, openPaymentMethod]);
 
-    console.log('PaymentMethodList');
-
     return (
         <Fragment>
             {orderStatus && (

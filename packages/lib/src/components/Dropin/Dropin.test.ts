@@ -1,42 +1,57 @@
+import { screen, render, fireEvent, waitFor } from '@testing-library/preact';
+import userEvent from '@testing-library/user-event';
+import { mock } from 'jest-mock-extended';
+
 import { AdyenCheckout } from '../../index';
 import ThreeDS2DeviceFingerprint from '../ThreeDS2/ThreeDS2DeviceFingerprint';
 import ThreeDS2Challenge from '../ThreeDS2/ThreeDS2Challenge';
-import { screen, render, fireEvent, waitFor } from '@testing-library/preact';
-import { mock } from 'jest-mock-extended';
 import Dropin from './Dropin';
-import { ICore } from '../../core/types';
+import { CoreConfiguration, ICore } from '../../core/types';
 
 import enUS from '../../../../server/translations/en-US.json';
 import getTranslations from '../../core/Services/get-translations';
 import { PaymentActionsType } from '../../types/global-types';
 import { SRPanel } from '../../core/Errors/SRPanel';
 import { ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
+import Fastlane from '../PayPalFastlane';
 jest.mock('../../core/Services/get-translations');
 const mockedGetTranslations = getTranslations as jest.Mock;
 mockedGetTranslations.mockResolvedValue(enUS);
+
+async function createAdyenCheckout(configuration) {
+    return await AdyenCheckout(configuration);
+}
+
+function getAdyenCheckoutConfiguration(config?): CoreConfiguration {
+    return {
+        amount: {
+            value: 2999,
+            currency: 'USD'
+        },
+        countryCode: 'US',
+        environment: 'test',
+        clientKey: 'test_123456',
+        analytics: { enabled: false },
+        paymentMethodsResponse: {
+            paymentMethods: [
+                { name: 'AliPay', type: 'alipay' },
+                { name: 'KakaoPay', type: 'kakaopay' },
+                { name: 'Paytm', type: 'paytm' }
+            ]
+        },
+        risk: {
+            enabled: false
+        },
+        ...config
+    };
+}
 
 describe('Dropin', () => {
     let checkout: ICore;
     let configObj: any;
 
     beforeEach(async () => {
-        configObj = {
-            countryCode: 'US',
-            environment: 'test',
-            clientKey: 'test_123456',
-            analytics: { enabled: false },
-            paymentMethodsResponse: {
-                paymentMethods: [
-                    { name: 'AliPay', type: 'alipay' },
-                    { name: 'KakaoPay', type: 'kakaopay' },
-                    { name: 'Paytm', type: 'paytm' }
-                ]
-            },
-            risk: {
-                enabled: false
-            },
-            onEnterKeyPressed: jest.fn(() => {})
-        };
+        configObj = getAdyenCheckoutConfiguration();
         checkout = await AdyenCheckout(configObj);
     });
 
@@ -260,26 +275,6 @@ describe('Dropin', () => {
         });
     });
 
-    describe('Detecting Enter key presses', () => {
-        test('should see merchant defined onEnterKeyPressed callback fired', done => {
-            new Dropin(checkout).mount('body');
-
-            // Set timeout to allow Dropin's Promises to resolve
-            // - can't use the usual method of "flushPromises" because the async it requires clashes with the "done" we need to avoid the debounce timer
-            setTimeout(() => {
-                const el = screen.getByText('AliPay');
-
-                fireEvent.keyPress(el, { key: 'Enter', code: 'Enter', charCode: 13 });
-
-                // Bypass the debounce in UIElement.handleKeyPress
-                setTimeout(() => {
-                    expect(configObj.onEnterKeyPressed).toHaveBeenCalled();
-                    done();
-                }, 300);
-            }, 0);
-        });
-    });
-
     describe('Analytics', () => {
         test('should send the analytic config data after the payment method data is ready', async () => {
             const srPanel = mock<SRPanel>();
@@ -303,6 +298,137 @@ describe('Dropin', () => {
             });
 
             jest.restoreAllMocks();
+        });
+    });
+
+    describe('Dropin with Fastlane', () => {
+        test('should render Fastlane if available and configured and should hide other payment methods', async () => {
+            const config = getAdyenCheckoutConfiguration({
+                paymentMethodsResponse: {
+                    paymentMethods: [
+                        { name: 'AliPay', type: 'alipay' },
+                        { name: 'KakaoPay', type: 'kakaopay' },
+                        { name: 'Fastlane', type: 'fastlane', brands: ['visa'] }
+                    ]
+                }
+            });
+            const checkout = await createAdyenCheckout(config);
+
+            const dropin = new Dropin(checkout, {
+                paymentMethodComponents: [Fastlane],
+                paymentMethodsConfiguration: {
+                    fastlane: {
+                        tokenId: 'xxx',
+                        customerId: 'sss',
+                        lastFour: '1111',
+                        brand: 'visa',
+                        email: 'email@adyen.com'
+                    }
+                }
+            });
+            render(dropin.render());
+
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+
+            await waitFor(() => expect(screen.getByRole('button', { name: /Pay \$29.99/i })).toBeVisible());
+
+            expect(screen.queryByText('AliPay')).not.toBeInTheDocument();
+            expect(screen.queryByText('KakaoPay')).not.toBeInTheDocument();
+            expect(screen.queryByTestId('payment-method-fastlane')).toBeVisible();
+            expect(screen.queryByRole('button', { name: /Other payment methods/i })).toBeVisible();
+        });
+
+        test('should not return Fastlane if available and but not configured', async () => {
+            const config = getAdyenCheckoutConfiguration({
+                paymentMethodsResponse: {
+                    paymentMethods: [
+                        { name: 'AliPay', type: 'alipay' },
+                        { name: 'KakaoPay', type: 'kakaopay' },
+                        { name: 'Fastlane', type: 'fastlane', brands: ['visa'] }
+                    ]
+                }
+            });
+            const checkout = await createAdyenCheckout(config);
+
+            const dropin = new Dropin(checkout, {
+                paymentMethodComponents: [Fastlane]
+            });
+            render(dropin.render());
+
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+
+            await waitFor(() => expect(screen.getByRole('button', { name: /Continue to AliPay/i })).toBeVisible());
+
+            expect(screen.getByText('KakaoPay')).toBeVisible();
+            expect(screen.queryByTestId('payment-method-fastlane')).toBeNull();
+            expect(screen.queryByRole('button', { name: /Other payment methods/i })).toBeNull();
+        });
+
+        test('should remove Fastlane and display remaining payment methods once "Other payment methods" button is clicked', async () => {
+            const config = getAdyenCheckoutConfiguration({
+                paymentMethodsResponse: {
+                    paymentMethods: [
+                        { name: 'AliPay', type: 'alipay' },
+                        { name: 'KakaoPay', type: 'kakaopay' },
+                        { name: 'Fastlane', type: 'fastlane', brands: ['visa'] }
+                    ]
+                }
+            });
+            const checkout = await createAdyenCheckout(config);
+            const user = userEvent.setup();
+
+            const dropin = new Dropin(checkout, {
+                paymentMethodComponents: [Fastlane],
+                paymentMethodsConfiguration: {
+                    fastlane: {
+                        tokenId: 'xxx',
+                        customerId: 'sss',
+                        lastFour: '1111',
+                        brand: 'visa',
+                        email: 'email@adyen.com'
+                    }
+                }
+            });
+            render(dropin.render());
+
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+
+            await waitFor(() => expect(screen.getByRole('button', { name: /Pay \$29.99/i })).toBeVisible());
+            expect(screen.queryByTestId('payment-method-fastlane')).toBeVisible();
+            expect(screen.queryByText('AliPay')).not.toBeInTheDocument();
+            expect(screen.queryByText('KakaoPay')).not.toBeInTheDocument();
+
+            await user.click(screen.getByRole('button', { name: /Other payment methods/i }));
+
+            expect(screen.queryByText('AliPay')).toBeVisible();
+            expect(screen.queryByText('KakaoPay')).toBeVisible();
+            expect(screen.queryByTestId('payment-method-fastlane')).toBeNull();
+            expect(screen.queryByRole('button', { name: /Other payment methods/i })).toBeNull();
+        });
+    });
+
+    describe('Detecting Enter key presses', () => {
+        test('should see merchant defined onEnterKeyPressed callback fired', async () => {
+            const onEnterKeyPressedMock = jest.fn();
+            const config = getAdyenCheckoutConfiguration({
+                onEnterKeyPressed: onEnterKeyPressedMock
+            });
+            const checkout = await createAdyenCheckout(config);
+
+            render(new Dropin(checkout).mount('body'));
+
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+
+            await waitFor(() => expect(screen.getByRole('button', { name: 'Continue to AliPay' })).toBeVisible());
+
+            const alipayHeader = screen.getByText('AliPay');
+            fireEvent.keyPress(alipayHeader, { key: 'Enter', code: 'Enter', charCode: 13 });
+
+            expect(onEnterKeyPressedMock).toHaveBeenCalledTimes(1);
         });
     });
 });
