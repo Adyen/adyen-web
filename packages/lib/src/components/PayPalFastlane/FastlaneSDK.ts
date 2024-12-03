@@ -71,7 +71,7 @@ class FastlaneSDK {
             return {
                 paymentType: 'fastlane',
                 configuration: {
-                    sessionId: 'xxxx-yyyy',
+                    fastlaneSessionId: 'xxxx-yyyy',
                     customerId: this.authenticatedShopper.customerId,
                     email: this.authenticatedShopper.email,
                     tokenId: authResult.profileData.card.id,

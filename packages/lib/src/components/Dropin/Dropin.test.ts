@@ -6,14 +6,15 @@ import { AdyenCheckout } from '../../index';
 import ThreeDS2DeviceFingerprint from '../ThreeDS2/ThreeDS2DeviceFingerprint';
 import ThreeDS2Challenge from '../ThreeDS2/ThreeDS2Challenge';
 import Dropin from './Dropin';
-import { CoreConfiguration, ICore } from '../../core/types';
-
+import Fastlane from '../PayPalFastlane';
 import enUS from '../../../../server/translations/en-US.json';
 import getTranslations from '../../core/Services/get-translations';
-import { PaymentActionsType } from '../../types/global-types';
 import { SRPanel } from '../../core/Errors/SRPanel';
 import { ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
-import Fastlane from '../PayPalFastlane';
+
+import type { CoreConfiguration, ICore } from '../../core/types';
+import type { PaymentActionsType } from '../../types/global-types';
+
 jest.mock('../../core/Services/get-translations');
 const mockedGetTranslations = getTranslations as jest.Mock;
 mockedGetTranslations.mockResolvedValue(enUS);

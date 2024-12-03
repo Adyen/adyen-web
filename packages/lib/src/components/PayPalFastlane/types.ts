@@ -92,7 +92,7 @@ export interface FastlaneProfile {
 type FastlaneComponentConfiguration = {
     paymentType: 'fastlane';
     configuration: {
-        sessionId: string;
+        fastlaneSessionId: string;
         customerId: string;
         email: string;
         tokenId: string;

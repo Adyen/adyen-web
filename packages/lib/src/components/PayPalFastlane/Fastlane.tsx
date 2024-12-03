@@ -11,7 +11,12 @@ interface FastlaneConfiguration extends UIElementProps {
     lastFour: string;
     brand: string;
     email: string;
-    sessionId: string;
+    fastlaneSessionId: string;
+    /**
+     * Display the brand images inside the Drop-in payment method header
+     * @internal
+     */
+    keepBrandsVisible?: boolean;
     /**
      * List of brands accepted by the component
      * @internal
@@ -39,7 +44,7 @@ class Fastlane extends UIElement<FastlaneConfiguration> {
                 type: Fastlane.type,
                 fastlaneData: btoa(
                     JSON.stringify({
-                        sessionId: this.props.sessionId,
+                        sessionId: this.props.fastlaneSessionId,
                         tokenId: this.props.tokenId,
                         customerId: this.props.customerId
                     })
@@ -49,11 +54,12 @@ class Fastlane extends UIElement<FastlaneConfiguration> {
     }
 
     public override async isAvailable(): Promise<void> {
-        const { tokenId, customerId, lastFour, brand, email } = this.props;
+        const { tokenId, customerId, lastFour, brand, email, fastlaneSessionId } = this.props;
 
-        if (tokenId && customerId && lastFour && brand && email) {
+        if (tokenId && customerId && lastFour && brand && email && fastlaneSessionId) {
             return Promise.resolve();
         }
+
         return Promise.reject();
     }
 
