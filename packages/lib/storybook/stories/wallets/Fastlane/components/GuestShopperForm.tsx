@@ -35,12 +35,14 @@ export const GuestShopperForm = ({ onCheckoutStep }: GuestShopperFormProps) => {
     };
 
     const handleOnCheckoutClick = (shippingAddress?: any) => {
+        console.log('Shipping address', shippingAddress);
+
         const componentConfig = fastlane.getComponentConfiguration(fastlaneAuthResult);
         onCheckoutStep(componentConfig);
     };
 
     useEffect(() => {
-        void loadFastlane().catch(error => {
+        void loadFastlane().catch(() => {
             alert('Failed to initialize: Fetch the token using Postman');
         });
     }, []);
