@@ -90,6 +90,10 @@ export { default as ANCV } from './ANCV';
 export { default as Giftcard } from './Giftcard';
 export { default as MealVoucherFR } from './MealVoucherFR';
 
+/** Utilities */
+export { default as initializeFastlane } from './PayPalFastlane/initializeFastlane';
+export { default as FastlaneSDK } from './PayPalFastlane/FastlaneSDK';
+
 /** Internal */
 export { default as Address } from './Address';
 export { default as BankTransfer } from './BankTransfer';

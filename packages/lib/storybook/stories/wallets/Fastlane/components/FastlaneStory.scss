@@ -1,0 +1,64 @@
+.email-container {
+  display: flex;
+}
+
+.email-input-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+#watermark-container {
+  align-self: end;
+}
+
+.input-field {
+  background-color: white;
+  border: #aab2bc 1px solid;
+  border-radius: 4px;
+  outline: none;
+  padding: 10px;
+  position: relative;
+  text-overflow: ellipsis;
+  width: 300px;
+  margin-right: 12px;
+}
+
+.shipping-section {
+  .input-field {
+    margin-bottom: 12px;
+  }
+
+  .shipping-checkbox {
+    margin-bottom: 20px;
+  }
+}
+
+
+.form-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  border: #0d419d 1px solid;
+  max-width: 800px;
+}
+
+.button {
+  cursor: pointer;
+  width: 145px;
+  height: 37px;
+  border-radius: 4px;
+  border: 1px solid #2d7fec;
+  background-color: #0551b5;
+  color: white;
+  margin-bottom: 12px;
+}
+
+.button:hover {
+  background-color: #2d7fec;
+}
+
+.section_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

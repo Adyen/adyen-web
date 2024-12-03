@@ -27,6 +27,7 @@ export type AdyenCheckoutProps = {
     shopperLocale: string;
     amount: number;
     sessionData?: PaymentMethodsResponse;
+    allowedPaymentTypes?: string[];
     paymentMethodsOverride?: PaymentMethodsResponse;
     onPaymentCompleted?: (data: any, element?: UIElement) => void;
 };
