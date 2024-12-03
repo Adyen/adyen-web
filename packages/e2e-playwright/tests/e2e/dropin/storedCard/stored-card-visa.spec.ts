@@ -1,61 +1,40 @@
-import { test } from '@playwright/test';
+import { cardInDropin as test, expect } from '../../../../fixtures/dropin.fixture';
+import { URL_MAP } from '../../../../fixtures/URL_MAP';
+import { PAYMENT_RESULT, TEST_CVC_VALUE } from '../../../utils/constants';
+import { getStoryUrl } from '../../../utils/getStoryUrl';
 
 test.describe('Stored visa card - cvc required', () => {
-    test('#1 Can fill out the cvc fields in the stored card and make a successful payment', async () => {
-        // Wait for field to appear in DOM
-        // await cardPage.cvcHolder();
-        //
-        // // handler for alert that's triggered on successful payment
-        // await t.setNativeDialogHandler(() => true);
-        //
-        // // expiry date field is readonly
-        // await t.expect(cardPage.storedCardExpiryDate.withAttribute('disabled').exists).ok();
-        //
-        // await cardPage.cardUtils.fillCVC(t, TEST_CVC_VALUE, 'add', 0);
-        //
-        // // click pay
-        // await t.click(cardPage.payButton).expect(cardPage.cvcLabelTextError.exists).notOk().wait(3000);
-        //
-        // // Check the value of the alert text
-        // const history = await t.getNativeDialogHistory();
-        // await t.expect(history[0].text).eql('Authorised', { timeout: 5000 });
+    test('#1 Can fill out the cvc fields in the stored card and make a successful payment', async ({ dropinWithSession, card }) => {
+        await dropinWithSession.goto(URL_MAP.dropinWithSession);
+        await dropinWithSession.selectFirstStoredPaymentMethod('Visa', '1111');
+        await card.cvcInput.waitFor({ state: 'visible' });
+        await card.fillCvc(TEST_CVC_VALUE);
+        await card.pay({ name: /pay \$259\.00/i });
+        await expect(card.paymentResult).toContainText(PAYMENT_RESULT.success);
     });
 
-    test('#2 Pressing pay without filling the cvc should generate a translated error ("empty")', async () => {
-        // Wait for field to appear in DOM
-        // await cardPage.cvcHolder();
-        //
-        // // click pay
-        // await t
-        //   .click(cardPage.payButton)
-        //   .expect(cardPage.cvcLabelTextError.exists)
-        //   .ok()
-        //   // with text
-        //   .expect(cardPage.cvcErrorText.withExactText(EMPTY_FIELD).exists)
-        //   .ok();
+    test('#2 Pressing pay without filling the cvc should generate a translated error ("empty")', async ({ dropinWithSession, card }) => {
+        await dropinWithSession.goto(URL_MAP.dropinWithSession);
+        await dropinWithSession.selectFirstStoredPaymentMethod('Visa', '1111');
+        await card.cvcInput.waitFor({ state: 'visible' });
+        await card.pay({ name: /pay \$259\.00/i });
+        await expect(card.cvcErrorElement).toContainText('Enter the security code');
     });
 
-    test('#3 A storedCard with no expiry date field still can be used for a successful payment', async () => {
-        // use window.cardConfig = {
-        //     expiryMonth: null,
-        //     expiryYear: null
-        // };
-        // Wait for field to appear in DOM
-        // await cardPage.cvcHolder();
-        //
-        // // handler for alert that's triggered on successful payment
-        // await t.setNativeDialogHandler(() => true);
-        //
-        // // expiry date field is not visible
-        // await t.expect(cardPage.storedCardExpiryDate.exists).notOk();
-        //
-        // await cardPage.cardUtils.fillCVC(t, TEST_CVC_VALUE, 'add', 0);
-        //
-        // // click pay
-        // await t.click(cardPage.payButton).expect(cardPage.cvcLabelTextError.exists).notOk().wait(3000);
-        //
-        // // Check the value of the alert text
-        // const history = await t.getNativeDialogHistory();
-        // await t.expect(history[0].text).eql('Authorised', { timeout: 5000 });
+    test('#3 A storedCard with no expiry date field still can be used for a successful payment', async ({ dropinWithSession, card }) => {
+        const url = getStoryUrl({
+            baseUrl: URL_MAP.dropinWithSession,
+            componentConfig: {
+                paymentMethodsConfiguration: {
+                    storedCard: { expiryMonth: null, expiryYear: null }
+                }
+            }
+        });
+        await dropinWithSession.goto(url);
+        await dropinWithSession.selectFirstStoredPaymentMethod('Visa', '1111');
+        await card.cvcInput.waitFor({ state: 'visible' });
+        await card.fillCvc(TEST_CVC_VALUE);
+        await card.pay({ name: /pay \$259\.00/i });
+        await expect(card.paymentResult).toContainText(PAYMENT_RESULT.success);
     });
 });
