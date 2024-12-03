@@ -16,16 +16,16 @@ interface Props {
 }
 
 export const FastlaneInSinglePageApp = ({ checkoutConfig }: Props) => {
-    // const [componentConfig, setComponentConfig] = useState<any>(null);
-    //
-    // const handleOnCheckoutStep = config => {
-    //     console.log('Component config:', config);
-    //     setComponentConfig(config);
-    // };
-    //
-    // if (!componentConfig) {
-    //     return <GuestShopperForm onCheckoutStep={handleOnCheckoutStep} />;
-    // }
+    const [componentConfig, setComponentConfig] = useState<any>(null);
+
+    const handleOnCheckoutStep = config => {
+        console.log('Component config:', config);
+        setComponentConfig(config);
+    };
+
+    if (!componentConfig) {
+        return <GuestShopperForm onCheckoutStep={handleOnCheckoutStep} />;
+    }
 
     return (
         <Checkout checkoutConfig={checkoutConfig}>

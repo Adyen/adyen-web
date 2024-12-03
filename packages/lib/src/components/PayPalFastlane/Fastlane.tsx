@@ -11,6 +11,7 @@ interface FastlaneConfiguration extends UIElementProps {
     lastFour: string;
     brand: string;
     email: string;
+    sessionId: string;
     /**
      * List of brands accepted by the component
      * @internal
@@ -38,6 +39,7 @@ class Fastlane extends UIElement<FastlaneConfiguration> {
                 type: Fastlane.type,
                 fastlaneData: btoa(
                     JSON.stringify({
+                        sessionId: this.props.sessionId,
                         tokenId: this.props.tokenId,
                         customerId: this.props.customerId
                     })

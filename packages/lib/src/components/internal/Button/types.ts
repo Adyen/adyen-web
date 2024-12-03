@@ -1,6 +1,4 @@
-import { h } from 'preact';
-
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'action';
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'action' | 'link';
 
 export interface ButtonProps {
     status?: string;

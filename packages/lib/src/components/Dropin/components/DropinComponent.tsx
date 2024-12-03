@@ -211,7 +211,14 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                                     // showRemovePaymentMethodButton={this.props.showRemovePaymentMethodButton}
                                     showRadioButton={this.props.showRadioButton}
                                 />
-                                <Button variant="primary" label="Other payment methods" onClick={this.onShowPaymentMethodListClick} />
+
+                                <Button
+                                    classNameModifiers={['dropin-show-paymentmethods']}
+                                    variant="link"
+                                    inline
+                                    label="Other payment methods"
+                                    onClick={this.onShowPaymentMethodListClick}
+                                />
                             </Fragment>
                         )}
 
