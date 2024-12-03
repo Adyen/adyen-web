@@ -180,7 +180,7 @@ describe('FastlaneSDK', () => {
                 customerId: 'customer-context-id',
                 email: 'test@adyen.com',
                 lastFour: '1111',
-                sessionId: 'xxxx-yyyy',
+                fastlaneSessionId: 'xxxx-yyyy',
                 tokenId: 'xxxx'
             }
         });

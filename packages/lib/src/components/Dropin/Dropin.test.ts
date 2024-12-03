@@ -323,7 +323,8 @@ describe('Dropin', () => {
                         customerId: 'sss',
                         lastFour: '1111',
                         brand: 'visa',
-                        email: 'email@adyen.com'
+                        email: 'email@adyen.com',
+                        fastlaneSessionId: 'session-id'
                     }
                 }
             });
@@ -388,7 +389,8 @@ describe('Dropin', () => {
                         customerId: 'sss',
                         lastFour: '1111',
                         brand: 'visa',
-                        email: 'email@adyen.com'
+                        email: 'email@adyen.com',
+                        fastlaneSessionId: 'session-id'
                     }
                 }
             });
