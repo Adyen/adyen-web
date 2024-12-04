@@ -15,7 +15,7 @@ class OnlineBankingSKElement extends IssuerListContainer {
     formatProps(props) {
         return {
             ...super.formatProps(props),
-            showImage: false,
+            showImage: true,
             termsAndConditions: OnlineBankingSKElement.termsAndConditions
         };
     }
