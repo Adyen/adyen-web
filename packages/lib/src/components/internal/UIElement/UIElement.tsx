@@ -192,8 +192,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     protected makePaymentsCall(): Promise<CheckoutAdvancedFlowResponse | CheckoutSessionPaymentResponse> {
-        console.log('makePaymentsCall');
-
         this.setElementStatus('loading');
 
         if (this.props.onSubmit) {

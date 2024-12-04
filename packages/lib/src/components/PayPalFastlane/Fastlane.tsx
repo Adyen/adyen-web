@@ -2,37 +2,11 @@ import { h } from 'preact';
 import UIElement from '../internal/UIElement';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import { TxVariants } from '../tx-variants';
-import { UIElementProps } from '../internal/UIElement/types';
 import FastlaneComponent from './components/FastlaneComponent';
-
-interface FastlaneConfiguration extends UIElementProps {
-    tokenId: string;
-    customerId: string;
-    lastFour: string;
-    brand: string;
-    email: string;
-    fastlaneSessionId: string;
-    /**
-     * Display the brand images inside the Drop-in payment method header
-     * @internal
-     */
-    keepBrandsVisible?: boolean;
-    /**
-     * List of brands accepted by the component
-     * @internal
-     */
-    brands?: string[];
-    /**
-     * Configuration returned by the backend
-     * @internal
-     */
-    configuration?: {
-        brands: string[];
-    };
-}
+import type { FastlaneConfiguration } from './types';
 
 class Fastlane extends UIElement<FastlaneConfiguration> {
-    public static type = TxVariants.fastlane;
+    public static readonly type = TxVariants.fastlane;
 
     protected static defaultProps = {
         keepBrandsVisible: true
@@ -55,11 +29,9 @@ class Fastlane extends UIElement<FastlaneConfiguration> {
 
     public override async isAvailable(): Promise<void> {
         const { tokenId, customerId, lastFour, brand, email, fastlaneSessionId } = this.props;
-
         if (tokenId && customerId && lastFour && brand && email && fastlaneSessionId) {
             return Promise.resolve();
         }
-
         return Promise.reject();
     }
 

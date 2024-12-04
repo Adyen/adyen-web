@@ -1,10 +1,11 @@
 import { h } from 'preact';
-import { ComponentMethodsRef, PayButtonFunctionProps, UIElementStatus } from '../../internal/UIElement/types';
 import { useEffect, useRef, useState } from 'preact/hooks';
+import { ComponentMethodsRef, PayButtonFunctionProps, UIElementStatus } from '../../internal/UIElement/types';
 import FastlaneBrandIcon from './FaslaneBrandIcon';
 import { PREFIX } from '../../internal/Icon/constants';
 import useImage from '../../../core/Context/useImage';
 import Img from '../../internal/Img';
+
 import './Fastlane.scss';
 
 interface FastlaneComponentProps {

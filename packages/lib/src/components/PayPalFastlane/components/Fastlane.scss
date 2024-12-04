@@ -10,7 +10,7 @@
   border-radius: token(border-radius-s);
   overflow: hidden;
   box-shadow: token(shadow-low);
-  margin-right: 12px;
+  margin-right: token(spacer-060);
 }
 
 
@@ -20,13 +20,13 @@
 }
 
 .adyen-checkout-fastlane__card-number {
-  line-height: 20px;
-  font-size: 14px;
-  font-weight: 500;
+  line-height: token(text-body-line-height);
+  font-size: token(text-body-font-size);
+  font-weight: token(text-body-stronger-font-weight);
 }
 
 .adyen-checkout-fastlane__brand {
   display: flex;
   justify-content: center;
-  margin-top: 16px;
+  margin-top: token(spacer-070);
 }

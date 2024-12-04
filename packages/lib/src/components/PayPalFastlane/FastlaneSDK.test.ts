@@ -2,9 +2,9 @@ import { mockDeep, mock, mockReset } from 'jest-mock-extended';
 import initializeFastlane from './initializeFastlane';
 import { httpPost } from '../../core/Services/http';
 import Script from '../../utils/Script';
-import type { Fastlane, FastlaneProfile, FastlaneShipping } from './types';
+import type { FastlaneWindowInstance, FastlaneProfile, FastlaneShipping } from './types';
 
-const fastlaneMock = mockDeep<Fastlane>();
+const fastlaneMock = mockDeep<FastlaneWindowInstance>();
 const fastlaneConstructorMock = jest.fn().mockResolvedValue(fastlaneMock);
 
 const mockScriptLoaded = jest.fn().mockImplementation(() => {

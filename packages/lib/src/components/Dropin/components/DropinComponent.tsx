@@ -22,7 +22,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         status: { type: 'loading', props: undefined },
         activePaymentMethod: null,
         cachedPaymentMethods: {},
-        showPaymentMethodList: true
+        showDefaultPaymentMethodList: true
     };
 
     componentDidMount() {
@@ -42,7 +42,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                     instantPaymentElements,
                     storedPaymentElements,
                     fastlanePaymentElement,
-                    showPaymentMethodList: fastlanePaymentElement.length === 0
+                    showDefaultPaymentMethodList: fastlanePaymentElement.length === 0
                 });
 
                 this.setStatus('ready');
@@ -65,7 +65,6 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
     }
 
     public setStatus = (status: UIElementStatus, props: DropinStatusProps = {}) => {
-        console.log(' dropin - setstatus');
         this.setState({ status: { type: status, props } });
     };
 
@@ -114,9 +113,9 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
             });
     };
 
-    private onShowPaymentMethodListClick = () => {
+    private readonly onShowDefaultPaymentMethodListClick = () => {
         this.setState({
-            showPaymentMethodList: true
+            showDefaultPaymentMethodList: true
         });
     };
 
@@ -165,14 +164,14 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
             status,
             activePaymentMethod,
             cachedPaymentMethods,
-            showPaymentMethodList
+            showDefaultPaymentMethodList
         }
     ) {
         const isLoading = status.type === 'loading';
         const isRedirecting = status.type === 'redirect';
         const hasPaymentMethodsToBeDisplayed = elements?.length || instantPaymentElements?.length || storedPaymentElements?.length;
 
-        console.log(' Dropin component');
+        const showFastlane = !!fastlanePaymentElement && !showDefaultPaymentMethodList;
 
         switch (status.type) {
             case 'success':
@@ -190,39 +189,28 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                         {isRedirecting && status.props.component && status.props.component.render()}
                         {isLoading && status.props && status.props.component && status.props.component.render()}
 
-                        {/* CLEAN UP THIS */}
-                        {!!fastlanePaymentElement && !showPaymentMethodList && (
+                        {showFastlane && (
                             <Fragment>
                                 <PaymentMethodList
-                                    isLoading={isLoading || isRedirecting}
-                                    // isDisablingPaymentMethod={this.state.isDisabling}
+                                    isLoading={isLoading}
                                     paymentMethods={fastlanePaymentElement}
-                                    // instantPaymentMethods={instantPaymentElements}
-                                    // storedPaymentMethods={storedPaymentElements}
                                     activePaymentMethod={activePaymentMethod}
                                     cachedPaymentMethods={cachedPaymentMethods}
-                                    // order={this.props.order}
-                                    // orderStatus={this.state.orderStatus}
-                                    // onOrderCancel={this.onOrderCancel}
                                     onSelect={this.handleOnSelectPaymentMethod}
                                     openFirstPaymentMethod
-                                    // openFirstStoredPaymentMethod={this.props.openFirstStoredPaymentMethod}
-                                    // onDisableStoredPaymentMethod={this.handleDisableStoredPaymentMethod}
-                                    // showRemovePaymentMethodButton={this.props.showRemovePaymentMethodButton}
                                     showRadioButton={this.props.showRadioButton}
                                 />
-
                                 <Button
                                     classNameModifiers={['dropin-show-paymentmethods']}
                                     variant="link"
                                     inline
                                     label="Other payment methods"
-                                    onClick={this.onShowPaymentMethodListClick}
+                                    onClick={this.onShowDefaultPaymentMethodListClick}
                                 />
                             </Fragment>
                         )}
 
-                        {!!hasPaymentMethodsToBeDisplayed && showPaymentMethodList && (
+                        {!!hasPaymentMethodsToBeDisplayed && !showFastlane && (
                             <PaymentMethodList
                                 isLoading={isLoading || isRedirecting}
                                 isDisablingPaymentMethod={this.state.isDisabling}

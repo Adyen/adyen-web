@@ -167,7 +167,7 @@ export interface DropinComponentState {
     status: DropinStatus;
     activePaymentMethod: UIElement;
     cachedPaymentMethods: object;
-    showPaymentMethodList: boolean;
+    showDefaultPaymentMethodList: boolean;
     isDisabling: boolean;
     orderStatus: OrderStatus;
 }

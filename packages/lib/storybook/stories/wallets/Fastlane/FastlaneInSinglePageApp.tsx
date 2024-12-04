@@ -36,7 +36,14 @@ export const FastlaneInSinglePageApp = ({ checkoutConfig }: Props) => {
                             showStoredPaymentMethods: false,
                             paymentMethodComponents: [Card, PayPal, Fastlane],
                             paymentMethodsConfiguration: {
-                                fastlane: { tokenId: 'xxx', customerId: 'sss', lastFour: '1111', brand: 'visa', email: 'email@adyen.com' }
+                                fastlane: {
+                                    tokenId: 'xxx',
+                                    customerId: 'sss',
+                                    lastFour: '1111',
+                                    brand: 'visa',
+                                    email: 'email@adyen.com',
+                                    fastlaneSessionId: 'zzz'
+                                }
                             }
                         })
                     }

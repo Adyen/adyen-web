@@ -5,7 +5,7 @@ import Script from '../../utils/Script';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import {
     ComponentConfiguration,
-    Fastlane,
+    FastlaneWindowInstance,
     FastlaneAuthenticatedCustomerResult,
     FastlaneShippingAddressSelectorResult,
     FastlaneSDKConfiguration
@@ -17,7 +17,7 @@ class FastlaneSDK {
     private readonly checkoutShopperURL: string;
     private readonly locale: string;
 
-    private fastlaneSdk: Fastlane;
+    private fastlaneSdk: FastlaneWindowInstance;
     private authenticatedShopper: { email: string; customerId: string };
 
     constructor(configuration: FastlaneSDKConfiguration) {

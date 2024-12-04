@@ -1,3 +1,7 @@
+/**
+ * Exposing UI Components derived by UIElement
+ */
+
 /** Card */
 export { default as Card } from './Card';
 export { default as Bancontact } from './Card/Bancontact';
@@ -90,10 +94,6 @@ export { default as ANCV } from './ANCV';
 /** Giftcard */
 export { default as Giftcard } from './Giftcard';
 export { default as MealVoucherFR } from './MealVoucherFR';
-
-/** Utilities */
-export { default as initializeFastlane } from './PayPalFastlane/initializeFastlane';
-export { default as FastlaneSDK } from './PayPalFastlane/FastlaneSDK';
 
 /** Internal */
 export { default as Address } from './Address';
