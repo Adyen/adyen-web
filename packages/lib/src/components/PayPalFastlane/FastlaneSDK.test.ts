@@ -208,6 +208,7 @@ describe('FastlaneSDK', () => {
             configuration: {
                 fastlaneConfiguration: {
                     defaultToggleState: true,
+                    fastlaneSessionId: 'xxxx-yyyy',
                     privacyPolicyLink: 'https://...',
                     showConsent: true,
                     termsAndConditionsLink: 'https://...',

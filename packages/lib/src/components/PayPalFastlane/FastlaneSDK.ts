@@ -3,7 +3,7 @@ import requestFastlaneToken from './services/request-fastlane-token';
 import { convertAdyenLocaleToFastlaneLocale } from './utils/convert-locale';
 import Script from '../../utils/Script';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
-import {
+import type {
     ComponentConfiguration,
     FastlaneWindowInstance,
     FastlaneAuthenticatedCustomerResult,
@@ -84,6 +84,7 @@ class FastlaneSDK {
                 paymentType: 'card',
                 configuration: {
                     fastlaneConfiguration: {
+                        fastlaneSessionId: 'xxxx-yyyy',
                         showConsent: true,
                         defaultToggleState: true,
                         termsAndConditionsLink: 'https://...',
