@@ -86,29 +86,12 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
 
     // Add Klarna Payments Widget SDK
     useEffect(() => {
-        /**
-         * If the callback has already been defined by another instance of the widget, then it will not be called again by any second instance.
-         * So we set a boolean telling us to initialise the widget ourselves once the script is loaded
-         *
-         * Alternatively, we *never* define the callback function; and *always* initialise the widget ourselves once the script is loaded
-         * (Checking with Klarna on whether defining this callback is advised/mandatory)
-         */
-        const initOnLoad = !!window.klarnaAsyncCallback;
-
-        window.klarnaAsyncCallback = function () {
-            console.log('### KlarnaWidget::klarnaWidget:: klarna async function called');
-            initializeKlarnaWidget();
-        };
-
         console.log('\n### KlarnaWidget:::: useEffect sdkData.payment_method_category=', sdkData.payment_method_category);
 
         const script = new Script(KLARNA_WIDGET_URL);
         void script.load()?.then(() => {
             console.log('### KlarnaWidget:::: useEffect script: LOADED ');
-            if (initOnLoad) {
-                console.log('### KlarnaWidget:::: manually init widget');
-                initializeKlarnaWidget();
-            }
+            initializeKlarnaWidget();
         });
 
         return () => {
