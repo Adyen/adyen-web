@@ -9,6 +9,7 @@ import { sanitizeOrder } from '../../internal/UIElement/utils';
 import { PaymentAmount } from '../../../types/global-types';
 import { ANALYTICS_RENDERED_STR } from '../../../core/Analytics/constants';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
+import UIElement from '../../internal/UIElement';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
@@ -57,11 +58,15 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         this.setState({ status: { type: status, props } });
     };
 
-    private setActivePaymentMethod = paymentMethod => {
+    private setActivePaymentMethod = (paymentMethod: UIElement) => {
         this.setState(prevState => ({
             activePaymentMethod: paymentMethod,
             cachedPaymentMethods: { ...prevState.cachedPaymentMethods, [paymentMethod._id]: true }
         }));
+
+        if (this.state.cachedPaymentMethods[paymentMethod._id]) {
+            paymentMethod.activate();
+        }
     };
 
     componentDidUpdate(prevProps, prevState) {

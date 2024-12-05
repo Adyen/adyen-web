@@ -1,21 +1,45 @@
 import { h } from 'preact';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import { KlarnaWidget } from '../KlarnaWidget/KlarnaWidget';
-import { useState } from 'preact/hooks';
+import type { ComponentMethodsRef, PayButtonFunctionProps, UIElementStatus } from '../../../internal/UIElement/types';
+import type { ActionHandledReturnObject } from '../../../../types/global-types';
+import type { AdyenCheckoutError, KlarnaAction, KlarnaComponentRef } from '../../../../types';
 
-export function KlarnaContainer(props) {
-    const [action, setAction] = useState({
-        sdkData: props.sdkData,
-        paymentMethodType: props.paymentMethodType,
-        paymentData: props.paymentData
-    });
+interface KlarnaContainerProps {
+    setComponentRef: (ref: ComponentMethodsRef) => void;
+    displayName: string;
+    showPayButton: boolean;
+    type: string;
+    onComplete(state: any): void;
+    onError(error: AdyenCheckoutError): void;
+    payButton(props?: PayButtonFunctionProps): h.JSX.Element;
+    onLoaded(): void;
+    onActionHandled(actionHandled: ActionHandledReturnObject): void;
+}
+
+export function KlarnaContainer({ setComponentRef, ...props }: KlarnaContainerProps) {
+    const [widgetInitializationTime, setWidgetInitializationTime] = useState<number>(null);
+    const [action, setAction] = useState<KlarnaAction>();
     const [status, setStatus] = useState('ready');
+    const klarnaRef = useRef<KlarnaComponentRef>({
+        setAction: (action: KlarnaAction) => {
+            setAction(action);
+            setWidgetInitializationTime(new Date().getTime());
+        },
+        setStatus: (status: UIElementStatus) => setStatus(status),
+        reinitializeWidget: () => {
+            setWidgetInitializationTime(new Date().getTime());
+        }
+    });
 
-    this.setAction = setAction;
-    this.setStatus = setStatus;
+    useEffect(() => {
+        setComponentRef(klarnaRef.current);
+    }, [setComponentRef]);
 
-    if (action.sdkData) {
+    if (action?.sdkData) {
         return (
             <KlarnaWidget
+                widgetInitializationTime={widgetInitializationTime}
                 sdkData={action.sdkData}
                 paymentMethodType={action.paymentMethodType}
                 paymentData={action.paymentData}
