@@ -24,7 +24,7 @@ const EventsQueue = ({ analyticsContext, clientKey, analyticsPath }: EventQueueP
         logs: []
     };
 
-    const runQueue = async (checkoutAttemptId: string): Promise<any> => {
+    const runQueue = (checkoutAttemptId: string): Promise<any> => {
         if (!caActions.info.length && !caActions.logs.length && !caActions.errors.length) {
             return Promise.resolve(null);
         }
