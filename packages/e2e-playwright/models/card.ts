@@ -143,8 +143,8 @@ class Card extends Base {
         await this.cardNumberInput.fill(cardNumber);
     }
 
-    async typeCardNumber(cardNumber: string) {
-        await this.cardNumberInput.pressSequentially(cardNumber, { delay: USER_TYPE_DELAY });
+    async typeCardNumber(cardNumber: string, delay = USER_TYPE_DELAY) {
+        await this.cardNumberInput.pressSequentially(cardNumber, { delay });
     }
 
     async deleteCardNumber() {
