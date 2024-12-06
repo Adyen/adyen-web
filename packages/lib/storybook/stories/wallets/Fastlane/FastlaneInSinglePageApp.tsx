@@ -10,13 +10,14 @@ import Fastlane from '../../../../src/components/PayPalFastlane';
 import { Checkout } from '../../Checkout';
 import { ComponentContainer } from '../../ComponentContainer';
 import { GuestShopperForm } from './components/GuestShopperForm';
+import type { FastlanePaymentMethodConfiguration } from '../../../../src/components/PayPalFastlane/types';
 
 interface Props {
     checkoutConfig: GlobalStoryProps;
 }
 
 export const FastlaneInSinglePageApp = ({ checkoutConfig }: Props) => {
-    const [componentConfig, setComponentConfig] = useState<any>(null);
+    const [componentConfig, setComponentConfig] = useState<FastlanePaymentMethodConfiguration>(null);
 
     const handleOnCheckoutStep = config => {
         console.log('Component config:', config);
@@ -36,14 +37,7 @@ export const FastlaneInSinglePageApp = ({ checkoutConfig }: Props) => {
                             showStoredPaymentMethods: false,
                             paymentMethodComponents: [Card, PayPal, Fastlane],
                             paymentMethodsConfiguration: {
-                                fastlane: {
-                                    tokenId: 'xxx',
-                                    customerId: 'sss',
-                                    lastFour: '1111',
-                                    brand: 'visa',
-                                    email: 'email@adyen.com',
-                                    fastlaneSessionId: 'zzz'
-                                }
+                                [componentConfig.paymentType]: componentConfig.configuration
                             }
                         })
                     }

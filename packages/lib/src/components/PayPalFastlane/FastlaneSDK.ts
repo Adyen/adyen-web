@@ -4,7 +4,7 @@ import { convertAdyenLocaleToFastlaneLocale } from './utils/convert-locale';
 import Script from '../../utils/Script';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import type {
-    ComponentConfiguration,
+    FastlanePaymentMethodConfiguration,
     FastlaneWindowInstance,
     FastlaneAuthenticatedCustomerResult,
     FastlaneShippingAddressSelectorResult,
@@ -59,7 +59,7 @@ class FastlaneSDK {
     /**
      * TODO: Waiting for PayPal to provide the specific methods to fetch sessionId and Consent UI details
      */
-    public getComponentConfiguration(authResult: FastlaneAuthenticatedCustomerResult): ComponentConfiguration {
+    public getComponentConfiguration(authResult: FastlaneAuthenticatedCustomerResult): FastlanePaymentMethodConfiguration {
         if (!authResult) {
             throw new AdyenCheckoutError(
                 'IMPLEMENTATION_ERROR',
@@ -76,7 +76,7 @@ class FastlaneSDK {
                     email: this.authenticatedShopper.email,
                     tokenId: authResult.profileData.card.id,
                     lastFour: authResult.profileData.card.paymentSource.card.lastDigits,
-                    brand: authResult.profileData.card.paymentSource.card.brand
+                    brand: authResult.profileData.card.paymentSource.card.brand.toLowerCase()
                 }
             };
         } else {

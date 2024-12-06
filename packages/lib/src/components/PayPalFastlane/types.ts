@@ -103,7 +103,7 @@ type FastlaneComponentConfiguration = {
     };
 };
 
-type CardComponentConfiguration = {
+type FastlaneCardComponentConfiguration = {
     paymentType: 'card';
     configuration: {
         fastlaneConfiguration: {
@@ -117,7 +117,7 @@ type CardComponentConfiguration = {
     };
 };
 
-export type ComponentConfiguration = FastlaneComponentConfiguration | CardComponentConfiguration;
+export type FastlanePaymentMethodConfiguration = FastlaneComponentConfiguration | FastlaneCardComponentConfiguration;
 
 export interface FastlaneSDKConfiguration {
     clientKey: string;

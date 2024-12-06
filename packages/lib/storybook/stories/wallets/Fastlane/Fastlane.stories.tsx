@@ -21,7 +21,7 @@ export const Default: FastlaneStory = {
             paymentMethods: [
                 {
                     type: 'scheme',
-                    name: 'Card',
+                    name: 'Cards',
                     brands: ['mc', 'visa']
                 },
                 {
@@ -30,7 +30,7 @@ export const Default: FastlaneStory = {
                     type: 'paypal'
                 },
                 {
-                    name: 'Fastlane',
+                    name: 'Cards',
                     type: 'fastlane',
                     brands: ['mc', 'visa']
                 }
@@ -47,7 +47,7 @@ export const WithMockedRecognizedFlow: FastlaneStory = {
             paymentMethods: [
                 {
                     type: 'scheme',
-                    name: 'Card',
+                    name: 'Cards',
                     brands: ['mc', 'visa']
                 },
                 {
@@ -56,7 +56,7 @@ export const WithMockedRecognizedFlow: FastlaneStory = {
                     type: 'paypal'
                 },
                 {
-                    name: 'Fastlane',
+                    name: 'Cards',
                     type: 'fastlane',
                     brands: ['mc', 'visa']
                 }
