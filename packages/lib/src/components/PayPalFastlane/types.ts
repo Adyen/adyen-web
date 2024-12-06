@@ -1,4 +1,5 @@
 import type { CoreConfiguration } from '../../core/types';
+import type { UIElementProps } from '../internal/UIElement/types';
 
 /**
  * PayPal Fastlane Reference:
@@ -8,7 +9,7 @@ import type { CoreConfiguration } from '../../core/types';
 /**
  * Fastlane object available in the window
  */
-export interface Fastlane {
+export interface FastlaneWindowInstance {
     identity: {
         lookupCustomerByEmail: (email: string) => Promise<{ customerContextId: string }>;
         triggerAuthenticationFlow: (customerContextId: string, options?: AuthenticationFlowOptions) => Promise<FastlaneAuthenticatedCustomerResult>;
@@ -43,6 +44,7 @@ export interface FastlaneShippingAddressSelectorResult {
     selectionChanged: boolean;
     selectedAddress: FastlaneShipping;
 }
+
 export interface FastlaneAuthenticatedCustomerResult {
     authenticationState: 'succeeded' | 'failed' | 'canceled' | 'not_found';
     profileData: FastlaneProfile;
@@ -92,7 +94,7 @@ export interface FastlaneProfile {
 type FastlaneComponentConfiguration = {
     paymentType: 'fastlane';
     configuration: {
-        sessionId: string;
+        fastlaneSessionId: string;
         customerId: string;
         email: string;
         tokenId: string;
@@ -101,7 +103,7 @@ type FastlaneComponentConfiguration = {
     };
 };
 
-type CardComponentConfiguration = {
+type FastlaneCardComponentConfiguration = {
     paymentType: 'card';
     configuration: {
         fastlaneConfiguration: {
@@ -110,14 +112,41 @@ type CardComponentConfiguration = {
             termsAndConditionsLink: string;
             privacyPolicyLink: string;
             termsAndConditionsVersion: string;
+            fastlaneSessionId: string;
         };
     };
 };
 
-export type ComponentConfiguration = FastlaneComponentConfiguration | CardComponentConfiguration;
+export type FastlanePaymentMethodConfiguration = FastlaneComponentConfiguration | FastlaneCardComponentConfiguration;
 
 export interface FastlaneSDKConfiguration {
     clientKey: string;
     environment: CoreConfiguration['environment'];
     locale?: 'en-US' | 'es-US' | 'fr-RS' | 'zh-US';
+}
+
+export interface FastlaneConfiguration extends UIElementProps {
+    tokenId: string;
+    customerId: string;
+    lastFour: string;
+    brand: string;
+    email: string;
+    fastlaneSessionId: string;
+    /**
+     * Display the brand images inside the Drop-in payment method header
+     * @internal
+     */
+    keepBrandsVisible?: boolean;
+    /**
+     * List of brands accepted by the component
+     * @internal
+     */
+    brands?: string[];
+    /**
+     * Configuration returned by the backend
+     * @internal
+     */
+    configuration?: {
+        brands: string[];
+    };
 }

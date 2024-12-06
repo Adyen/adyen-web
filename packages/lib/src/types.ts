@@ -6,3 +6,4 @@ export { CustomTranslations } from './language/types';
 
 export { default as AdyenCheckoutError } from './core/Errors/AdyenCheckoutError';
 export { default as UIElement } from './components/internal/UIElement';
+export { default as FastlaneSDK } from './components/PayPalFastlane/FastlaneSDK';

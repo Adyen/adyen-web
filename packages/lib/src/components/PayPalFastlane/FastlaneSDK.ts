@@ -3,9 +3,9 @@ import requestFastlaneToken from './services/request-fastlane-token';
 import { convertAdyenLocaleToFastlaneLocale } from './utils/convert-locale';
 import Script from '../../utils/Script';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
-import {
-    ComponentConfiguration,
-    Fastlane,
+import type {
+    FastlanePaymentMethodConfiguration,
+    FastlaneWindowInstance,
     FastlaneAuthenticatedCustomerResult,
     FastlaneShippingAddressSelectorResult,
     FastlaneSDKConfiguration
@@ -17,7 +17,7 @@ class FastlaneSDK {
     private readonly checkoutShopperURL: string;
     private readonly locale: string;
 
-    private fastlaneSdk: Fastlane;
+    private fastlaneSdk: FastlaneWindowInstance;
     private authenticatedShopper: { email: string; customerId: string };
 
     constructor(configuration: FastlaneSDKConfiguration) {
@@ -59,7 +59,7 @@ class FastlaneSDK {
     /**
      * TODO: Waiting for PayPal to provide the specific methods to fetch sessionId and Consent UI details
      */
-    public getComponentConfiguration(authResult: FastlaneAuthenticatedCustomerResult): ComponentConfiguration {
+    public getComponentConfiguration(authResult: FastlaneAuthenticatedCustomerResult): FastlanePaymentMethodConfiguration {
         if (!authResult) {
             throw new AdyenCheckoutError(
                 'IMPLEMENTATION_ERROR',
@@ -71,12 +71,12 @@ class FastlaneSDK {
             return {
                 paymentType: 'fastlane',
                 configuration: {
-                    sessionId: 'xxxx-yyyy',
+                    fastlaneSessionId: 'xxxx-yyyy',
                     customerId: this.authenticatedShopper.customerId,
                     email: this.authenticatedShopper.email,
                     tokenId: authResult.profileData.card.id,
                     lastFour: authResult.profileData.card.paymentSource.card.lastDigits,
-                    brand: authResult.profileData.card.paymentSource.card.brand
+                    brand: authResult.profileData.card.paymentSource.card.brand.toLowerCase()
                 }
             };
         } else {
@@ -84,6 +84,7 @@ class FastlaneSDK {
                 paymentType: 'card',
                 configuration: {
                     fastlaneConfiguration: {
+                        fastlaneSessionId: 'xxxx-yyyy',
                         showConsent: true,
                         defaultToggleState: true,
                         termsAndConditionsLink: 'https://...',

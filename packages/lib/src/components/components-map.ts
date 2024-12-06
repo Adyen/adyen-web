@@ -60,6 +60,7 @@ import Duitnow from './DuitNow';
 import Trustly from './Trustly';
 import Riverty from './Riverty';
 import PayByBankUS from './PayByBankUS';
+import Fastlane from './PayPalFastlane/Fastlane';
 import { TxVariants } from './tx-variants';
 
 /**
@@ -114,6 +115,7 @@ export const ComponentsMap = {
     [TxVariants.clicktopay]: ClickToPay,
     [TxVariants.googlepay]: GooglePay,
     [TxVariants.paypal]: PayPal,
+    [TxVariants.fastlane]: Fastlane,
     [TxVariants.paywithgoogle]: GooglePay,
     /** Wallets */
 

@@ -1,4 +1,4 @@
-import { Fastlane, FastlaneOptions } from '../components/PayPalFastlane/types';
+import { FastlaneWindowInstance, FastlaneOptions } from '../components/PayPalFastlane/types';
 
 declare module '*.scss' {
     const content: { [className: string]: string };
@@ -9,7 +9,7 @@ declare global {
     interface Window {
         ApplePaySession?: ApplePaySession;
         paypal?: {
-            Fastlane?: (options?: FastlaneOptions) => Promise<Fastlane>;
+            Fastlane?: (options?: FastlaneOptions) => Promise<FastlaneWindowInstance>;
         };
         AdyenWeb: any;
         VISA_SDK?: {
