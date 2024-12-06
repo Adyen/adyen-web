@@ -118,6 +118,14 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
         };
     }
 
+    /**
+     * Method used to make the payment method active
+     * (Useful when there are different payment methods available and activating one PM must trigger a specific task)
+     */
+    public activate(): void {
+        return;
+    }
+
     public render(): ComponentChild | Error {
         // render() not implemented in the element
         throw new Error('Payment method cannot be rendered.');
