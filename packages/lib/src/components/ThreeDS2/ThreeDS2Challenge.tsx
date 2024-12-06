@@ -7,7 +7,7 @@ import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import { TxVariants } from '../tx-variants';
 import { ThreeDS2ChallengeConfiguration } from './types';
 import AdyenCheckoutError, { API_ERROR } from '../../core/Errors/AdyenCheckoutError';
-import { ANALYTICS_API_ERROR, Analytics3DS2Errors, ANALYTICS_RENDERED_STR, Analytics3DS2Events } from '../../core/Analytics/constants';
+import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, ANALYTICS_RENDERED_STR, Analytics3DS2Events } from '../../core/Analytics/constants';
 import { SendAnalyticsObject } from '../../core/Analytics/types';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import { ActionHandledReturnObject } from '../../types/global-types';
@@ -61,7 +61,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
             this.submitAnalytics({
                 type: THREEDS2_ERROR,
                 code: Analytics3DS2Errors.ACTION_IS_MISSING_PAYMENT_DATA,
-                errorType: ANALYTICS_API_ERROR,
+                errorType: ANALYTICS_ERROR_TYPE.apiError,
                 message: `${THREEDS2_CHALLENGE_ERROR}: Missing 'paymentData' property from threeDS2 action`
             });
 

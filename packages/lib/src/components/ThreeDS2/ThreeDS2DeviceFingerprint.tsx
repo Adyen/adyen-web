@@ -6,7 +6,7 @@ import { existy } from '../../utils/commonUtils';
 import { TxVariants } from '../tx-variants';
 import { ThreeDS2DeviceFingerprintConfiguration } from './types';
 import AdyenCheckoutError, { API_ERROR } from '../../core/Errors/AdyenCheckoutError';
-import { ANALYTICS_API_ERROR, Analytics3DS2Errors, ANALYTICS_RENDERED_STR, Analytics3DS2Events } from '../../core/Analytics/constants';
+import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, ANALYTICS_RENDERED_STR, Analytics3DS2Events } from '../../core/Analytics/constants';
 import { SendAnalyticsObject } from '../../core/Analytics/types';
 import { THREEDS2_ERROR, THREEDS2_FINGERPRINT, THREEDS2_FINGERPRINT_ERROR, THREEDS2_FULL } from './constants';
 import { ActionHandledReturnObject } from '../../types/global-types';
@@ -53,7 +53,7 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
             this.submitAnalytics({
                 type: THREEDS2_ERROR,
                 code: Analytics3DS2Errors.ACTION_IS_MISSING_PAYMENT_DATA,
-                errorType: ANALYTICS_API_ERROR,
+                errorType: ANALYTICS_ERROR_TYPE.apiError,
                 message: `${THREEDS2_FINGERPRINT_ERROR}: Missing 'paymentData' property from threeDS2 action`
             });
 

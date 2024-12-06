@@ -2,7 +2,7 @@ import GooglePay from './GooglePay';
 import GooglePayService from './GooglePayService';
 
 import Analytics from '../../core/Analytics';
-import { ANALYTICS_EVENT_INFO, ANALYTICS_SELECTED_STR, NO_CHECKOUT_ATTEMPT_ID } from '../../core/Analytics/constants';
+import { ANALYTICS_EVENT, ANALYTICS_SELECTED_STR, NO_CHECKOUT_ATTEMPT_ID } from '../../core/Analytics/constants';
 
 const analyticsModule = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', bundleType: 'umd' });
 
@@ -458,7 +458,7 @@ describe('GooglePay', () => {
             gpay.submit();
 
             expect(analyticsModule.createAnalyticsEvent).toHaveBeenCalledWith({
-                event: ANALYTICS_EVENT_INFO,
+                event: ANALYTICS_EVENT.info,
                 data: {
                     component: gpay.props.type,
                     type: ANALYTICS_SELECTED_STR,
