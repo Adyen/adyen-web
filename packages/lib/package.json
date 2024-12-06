@@ -134,7 +134,7 @@
     "storybook": "^8.3.4",
     "stylelint": "16.7.0",
     "stylelint-config-standard-scss": "13.1.0",
-    "ts-jest": "29.2.3",
+    "ts-jest": "29.2.5",
     "tslib": "2.6.3",
     "typescript": "5.5.3",
     "typescript-eslint": "7.16.1",
