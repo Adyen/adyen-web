@@ -46,23 +46,7 @@ export const Auto: DropinStory = {
 
         return (
             <Checkout checkoutConfig={checkoutConfig}>
-                {checkout => (
-                    <ComponentContainer
-                        element={
-                            new DropinComponent(checkout, {
-                                ...componentConfiguration,
-                                paymentMethodsConfiguration: {
-                                    klarna: {
-                                        useKlarnaWidget: true
-                                    },
-                                    klarna_account: {
-                                        useKlarnaWidget: true
-                                    }
-                                }
-                            })
-                        }
-                    />
-                )}
+                {checkout => <ComponentContainer element={new DropinComponent(checkout, componentConfiguration)} />}
             </Checkout>
         );
     }

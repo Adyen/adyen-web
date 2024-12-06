@@ -4,7 +4,7 @@ import { CoreProvider } from '../../core/Context/CoreProvider';
 import PayButton from '../internal/PayButton';
 import { KlarnaContainer } from './components/KlarnaContainer/KlarnaContainer';
 import { TxVariants } from '../tx-variants';
-import type { KlarnaAction, KlarnaComponentRef, KlarnaConfiguration } from './types';
+import type { KlarnaAction, KlarnaAdditionalDetailsData, KlarnaComponentRef, KlarnaConfiguration } from './types';
 import type { ICore } from '../../core/types';
 
 class KlarnaPayments extends UIElement<KlarnaConfiguration> {
@@ -47,13 +47,17 @@ class KlarnaPayments extends UIElement<KlarnaConfiguration> {
         this.componentRef.setAction(action);
     }
 
-    onLoaded() {
+    private onLoaded() {
         // When action/widget is loaded, set the 'drop-in' back to ready
         this.setElementStatus('ready');
     }
 
     public override activate() {
         this.componentRef.reinitializeWidget();
+    }
+
+    protected onComplete(details: KlarnaAdditionalDetailsData): void {
+        this.handleAdditionalDetails(details);
     }
 
     render() {
@@ -63,7 +67,7 @@ class KlarnaPayments extends UIElement<KlarnaConfiguration> {
                     {...this.props}
                     setComponentRef={this.setComponentRef}
                     displayName={this.displayName}
-                    onComplete={state => this.handleAdditionalDetails(state)}
+                    onComplete={this.onComplete}
                     onError={this.props.onError}
                     payButton={this.payButton}
                     onLoaded={this.onLoaded}

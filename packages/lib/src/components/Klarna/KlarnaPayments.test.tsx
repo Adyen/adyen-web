@@ -22,40 +22,35 @@ describe('KlarnaPayments', () => {
         expect(screen.queryByRole('button', { name: 'Continue to Pay By Bank' })).toBeFalsy();
     });
 
-    test.skip('should call setStatus if elementRef is a drop-in', async () => {
-        const KlarnaPaymentsEle = new KlarnaPayments(global.core, {
-            ...coreProps,
-            ...{ paymentData: '', paymentMethodType: '', sdkData: undefined, useKlarnaWidget: false, showPayButton: false }
+    test('should call setStatus if elementRef is a drop-in', async () => {
+        const klarna = new KlarnaPayments(global.core, {
+            ...coreProps
         });
-        KlarnaPaymentsEle.elementRef = new Dropin(global.core);
-        render(KlarnaPaymentsEle.render());
-        const spy = jest.spyOn(KlarnaPaymentsEle.elementRef, 'setStatus');
+        klarna.elementRef = new Dropin(global.core);
+        render(klarna.render());
+
+        const spy = jest.spyOn(klarna.elementRef, 'setStatus');
+        await waitFor(() => klarna.componentRef);
+
         // @ts-ignore to test
-        await waitFor(() => KlarnaPaymentsEle.componentRef);
-        // @ts-ignore to test
-        KlarnaPaymentsEle.componentRef.props.onLoaded();
+        klarna.onLoaded();
+
         expect(spy).toHaveBeenCalled();
     });
 
-    test.skip('should call handleAdditionalDetails onComplete', async () => {
+    test('should call handleAdditionalDetails onComplete', async () => {
         const onAdditionalDetailsMock = jest.fn(() => {});
-
-        const KlarnaPaymentsEle = new KlarnaPayments(global.core, {
+        const klarna = new KlarnaPayments(global.core, {
             ...coreProps,
-            ...{
-                paymentData: '',
-                paymentMethodType: '',
-                sdkData: undefined,
-                useKlarnaWidget: false,
-                showPayButton: false,
-                onAdditionalDetails: onAdditionalDetailsMock
-            }
+            onAdditionalDetails: onAdditionalDetailsMock
         });
-        render(KlarnaPaymentsEle.render());
+
+        render(klarna.render());
+        await waitFor(() => klarna.componentRef);
+
         // @ts-ignore to test
-        await waitFor(() => KlarnaPaymentsEle.componentRef);
-        // @ts-ignore to test
-        KlarnaPaymentsEle.componentRef.props.onComplete();
+        klarna.onComplete();
+
         expect(onAdditionalDetailsMock).toHaveBeenCalled();
     });
 });
