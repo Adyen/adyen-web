@@ -31,7 +31,7 @@
     "loading": "正在加载...",
     "continue": "继续",
     "continueTo": "继续至",
-    "wechatpay.timetopay": "您需要支付 %@",
+    "wechatpay.timetopay": "您有 %@ 可以支付",
     "sr.wechatpay.timetopay": "您有 %#分%# %#秒%# 可以支付",
     "wechatpay.scanqrcode": "扫描二维码",
     "personalDetails": "个人详细信息",

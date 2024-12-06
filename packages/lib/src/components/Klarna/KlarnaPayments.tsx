@@ -1,22 +1,23 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import { CoreProvider } from '../../core/Context/CoreProvider';
-import { KlarnConfiguration } from './types';
 import PayButton from '../internal/PayButton';
 import { KlarnaContainer } from './components/KlarnaContainer/KlarnaContainer';
-import { PaymentAction } from '../../types/global-types';
 import { TxVariants } from '../tx-variants';
+import type { KlarnaAction, KlarnaAdditionalDetailsData, KlarnaComponentRef, KlarnaConfiguration } from './types';
 import type { ICore } from '../../core/types';
 
-class KlarnaPayments extends UIElement<KlarnConfiguration> {
+class KlarnaPayments extends UIElement<KlarnaConfiguration> {
     public static type = TxVariants.klarna;
     public static txVariants = [TxVariants.klarna, TxVariants.klarna_account, TxVariants.klarna_paynow, TxVariants.klarna_b2b];
+
+    public componentRef: KlarnaComponentRef;
 
     protected static defaultProps = {
         useKlarnaWidget: false
     };
 
-    constructor(checkout: ICore, props?: KlarnConfiguration) {
+    constructor(checkout: ICore, props?: KlarnaConfiguration) {
         super(checkout, props);
 
         this.onComplete = this.onComplete.bind(this);
@@ -41,14 +42,22 @@ class KlarnaPayments extends UIElement<KlarnConfiguration> {
         return <PayButton amount={this.props.amount} onClick={this.submit} {...props} />;
     };
 
-    updateWithAction(action: PaymentAction): void {
+    updateWithAction(action: KlarnaAction): void {
         if (action.paymentMethodType !== this.type) throw new Error('Invalid Action');
         this.componentRef.setAction(action);
     }
 
-    onLoaded() {
+    private onLoaded() {
         // When action/widget is loaded, set the 'drop-in' back to ready
         this.setElementStatus('ready');
+    }
+
+    public override activate() {
+        this.componentRef.reinitializeWidget();
+    }
+
+    protected onComplete(details: KlarnaAdditionalDetailsData): void {
+        this.handleAdditionalDetails(details);
     }
 
     render() {
@@ -56,15 +65,15 @@ class KlarnaPayments extends UIElement<KlarnConfiguration> {
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <KlarnaContainer
                     {...this.props}
-                    ref={ref => {
-                        this.componentRef = ref;
-                    }}
+                    setComponentRef={this.setComponentRef}
                     displayName={this.displayName}
-                    onComplete={state => this.handleAdditionalDetails(state)}
+                    onComplete={this.onComplete}
                     onError={this.props.onError}
                     payButton={this.payButton}
                     onLoaded={this.onLoaded}
+                    showPayButton={this.props.showPayButton}
                     onActionHandled={this.onActionHandled}
+                    type={this.props.type}
                 />
             </CoreProvider>
         );

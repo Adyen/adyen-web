@@ -35,7 +35,7 @@ const EventsQueue = ({ analyticsContext, clientKey, analyticsPath }: EventQueueP
             path: `${analyticsPath}/${checkoutAttemptId}?clientKey=${clientKey}`
         };
 
-        const promise = httpPost(options, caActions)
+        return httpPost(options, caActions)
             .then(() => {
                 // Succeed, silently
                 return undefined;
@@ -44,11 +44,9 @@ const EventsQueue = ({ analyticsContext, clientKey, analyticsPath }: EventQueueP
                 // Caught, silently, at http level. We do not expect this catch block to ever fire, but... just in case...
                 console.debug('### EventsQueue:::: send has failed');
             });
-
-        return promise;
     };
 
-    const eqModule: EventsQueueModule = {
+    return {
         add: (type, actionObj) => {
             caActions[type].push(actionObj);
         },
@@ -66,8 +64,6 @@ const EventsQueue = ({ analyticsContext, clientKey, analyticsPath }: EventQueueP
         // Expose getter for testing purposes
         getQueue: () => caActions
     };
-
-    return eqModule;
 };
 
 export default EventsQueue;

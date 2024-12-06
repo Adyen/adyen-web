@@ -6,7 +6,7 @@ export abstract class Base {
     protected constructor(public readonly page: Page) {}
 
     get paymentResult() {
-        return this.page.getByTestId('result-message');
+        return this.page.locator('.adyen-checkout__status');
     }
 
     async goto(url: string) {
