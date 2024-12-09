@@ -1,6 +1,6 @@
 import { AdyenCheckout } from '../../src/core/AdyenCheckout';
 import { cancelOrder, checkBalance, createOrder, getPaymentMethods, makeDetailsCall, makePayment } from './checkout-api-calls';
-import { handleChange, handleError, handleFinalState } from './checkout-handlers';
+import { handleError, handleFinalState } from './checkout-handlers';
 import getCurrency from '../utils/get-currency';
 import { AdyenCheckoutProps } from '../stories/types';
 import Checkout from '../../src/core/core';
@@ -98,10 +98,6 @@ async function createAdvancedFlowCheckout({
         onPaymentFailed(result, element) {
             console.log('onPaymentFailed', result, element);
             handleFinalState(result, element);
-        },
-
-        onChange: (state, component) => {
-            handleChange(state, component);
         },
 
         onBalanceCheck: async (resolve, reject, data) => {
