@@ -1,5 +1,31 @@
 # @adyen/adyen-web
 
+## 6.6.0
+
+### Minor Changes
+
+-   Updated DonationComponent UI ([#2980](https://github.com/Adyen/adyen-web/pull/2980))
+
+-   Feat: enable logos for SK and CZ online banking ([#2939](https://github.com/Adyen/adyen-web/pull/2939))
+
+### Patch Changes
+
+-   A new barcode endpoint has been created on the backend. This PR generates barCode URLs against that endpoint. ([#2936](https://github.com/Adyen/adyen-web/pull/2936))
+
+-   Fix bug where Country field and State field where not showing the correct required attribute. ([#2944](https://github.com/Adyen/adyen-web/pull/2944))
+
+-   Send redirection error events to analytics. ([#2973](https://github.com/Adyen/adyen-web/pull/2973))
+
+-   Add fix to reshow card icon if previously it had failed to load ([#2955](https://github.com/Adyen/adyen-web/pull/2955))
+
+-   Send `level` field to the analytic `setup` call. If analytics is `enabled`, we send `level` value `all`, otherwise we send `initial`. ([#2933](https://github.com/Adyen/adyen-web/pull/2933))
+
+-   Klarna - Fixed issue where PayLater/PayOverTime payments were not authorized accordingly depending on how the shopper interacted with the Drop-in/Component ([#3007](https://github.com/Adyen/adyen-web/pull/3007))
+
+-   Change WeChat Pay QR countdown translation. ([#3006](https://github.com/Adyen/adyen-web/pull/3006))
+
+-   Hide the default ACH holder name contextual text. ([#3008](https://github.com/Adyen/adyen-web/pull/3008))
+
 ## 6.5.1
 
 ### Patch Changes
