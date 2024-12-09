@@ -1,6 +1,6 @@
 {
   "name": "@adyen/adyen-web",
-  "version": "6.5.1",
+  "version": "6.6.0",
   "license": "MIT",
   "homepage": "https://docs.adyen.com/checkout",
   "type": "module",
