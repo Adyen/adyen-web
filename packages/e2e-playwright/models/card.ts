@@ -137,14 +137,26 @@ class Card extends Base {
         await this.cvcInput.waitFor({ state: 'visible' });
     }
 
+    /**
+     * Locator.fill:
+     * - checks field is visible, enabled & editable
+     * - focuses a field
+     * - writes to the field's value prop
+     * - fires an input event
+     *
+     * For most of our test cases .fill can be seen to mimic a paste event
+     */
     async fillCardNumber(cardNumber: string) {
-        // reason: https://playwright.dev/docs/api/class-locator#locator-type
-        // use-case when we don't need to inspect keyboard events
         await this.cardNumberInput.fill(cardNumber);
     }
 
-    async typeCardNumber(cardNumber: string, delay = USER_TYPE_DELAY) {
-        await this.cardNumberInput.pressSequentially(cardNumber, { delay });
+    /**
+     * Locator.pressSequentially:
+     * - Focuses the element
+     * - then sends a keydown, keypress/input, and keyup event for each character in the text.
+     */
+    async typeCardNumber(cardNumber: string) {
+        await this.cardNumberInput.pressSequentially(cardNumber, { delay: USER_TYPE_DELAY });
     }
 
     async deleteCardNumber() {
@@ -160,8 +172,6 @@ class Card extends Base {
     }
 
     async fillExpiryDate(expiryDate: string) {
-        // reason: https://playwright.dev/docs/api/class-locator#locator-type
-        // use-case when we don't need to inspect keyboard events
         await this.expiryDateInput.fill(expiryDate);
     }
 
@@ -170,8 +180,6 @@ class Card extends Base {
     }
 
     async fillCvc(cvc: string) {
-        // reason: https://playwright.dev/docs/api/class-locator#locator-type
-        // use-case when we don't need to inspect keyboard events
         await this.cvcInput.fill(cvc);
     }
 
