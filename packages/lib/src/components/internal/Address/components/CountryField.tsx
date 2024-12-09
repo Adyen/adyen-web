@@ -19,7 +19,7 @@ const formatCountries = (countries: Array<CountryFieldItem>, allowedCountries: s
 };
 
 export default function CountryField(props: CountryFieldProps) {
-    const { allowedCountries = [], classNameModifiers = [], errorMessage, onDropdownChange, value } = props;
+    const { allowedCountries = [], classNameModifiers = [], errorMessage, onDropdownChange, value, required } = props;
     const { i18n, loadingContext } = useCoreContext();
     const [countries, setCountries] = useState<CountryFieldItem[]>([]);
     const [loaded, setLoaded] = useState<boolean>(false);
@@ -53,7 +53,14 @@ export default function CountryField(props: CountryFieldProps) {
             i18n={i18n}
             readOnly={readOnly && !!value}
         >
-            <Select onChange={onDropdownChange} name={'country'} selectedValue={value} items={countries} readonly={readOnly && !!value} />
+            <Select
+                onChange={onDropdownChange}
+                name={'country'}
+                selectedValue={value}
+                items={countries}
+                readonly={readOnly && !!value}
+                required={required}
+            />
         </Field>
     );
 }

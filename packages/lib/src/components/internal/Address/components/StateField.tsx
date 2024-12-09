@@ -7,7 +7,7 @@ import { StateFieldItem, StateFieldProps } from '../types';
 import Select from '../../FormFields/Select';
 
 export default function StateField(props: StateFieldProps) {
-    const { classNameModifiers, label, onDropdownChange, readOnly, selectedCountry, specifications, value } = props;
+    const { classNameModifiers, label, onDropdownChange, readOnly, selectedCountry, specifications, value, required } = props;
     const { i18n, loadingContext } = useCoreContext();
     const [states, setStates] = useState<StateFieldItem[]>([]);
     const [loaded, setLoaded] = useState<boolean>(false);
@@ -44,7 +44,14 @@ export default function StateField(props: StateFieldProps) {
             i18n={i18n}
             readOnly={readOnly && !!value}
         >
-            <Select name={'stateOrProvince'} onChange={onDropdownChange} selectedValue={value} items={states} readonly={readOnly && !!value} />
+            <Select
+                name={'stateOrProvince'}
+                onChange={onDropdownChange}
+                selectedValue={value}
+                items={states}
+                required={required}
+                readonly={readOnly && !!value}
+            />
         </Field>
     );
 }
