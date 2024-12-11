@@ -8,6 +8,9 @@ import Address from '../../../../internal/Address';
 import CardHolderName from './CardHolderName';
 import Installments from './Installments';
 import DisclaimerMessage from '../../../../internal/DisclaimerMessage';
+import RadioGroupExtended from '../../../../internal/FormFields/RadioGroupExtended';
+import Field from '../../../../internal/FormFields/Field';
+import { getCardImageUrl, getFullBrandName } from '../utils';
 
 export const CardFieldsWrapper = ({
     // vars created in CardInput:
@@ -109,6 +112,31 @@ export const CardFieldsWrapper = ({
             />
 
             {hasHolderName && !positionHolderNameOnTop && cardHolderField}
+
+            {dualBrandSelectElements.length > 0 && dualBrandSelectElements && (
+                <Field classNameModifiers={['bankAccountType', 'no-borders']} name={'bankAccountType'} useLabelElement={false}>
+                    <RadioGroupExtended
+                        name={'dualBrandSwitcher'}
+                        value={data.bankAccountType}
+                        // items={dualBrandSelectElements}
+                        items={
+                            dualBrandSelectElements.map(item => {
+                                return { id: item.id, name: item.brandObject.localeBrand };
+                            })
+                            //     [
+                            //     { id: 'checking', name: i18n.get('ach.checking') },
+                            //     { id: 'savings', name: i18n.get('ach.savings') }
+                            // ]
+                        }
+                        onChange={extensions.handleDualBrandSelection}
+                        required={true}
+                        style={'button'}
+                        brandsConfiguration={brandsConfiguration}
+                        getFullBrandName={getFullBrandName}
+                        getImageURL={getCardImageUrl}
+                    />
+                </Field>
+            )}
 
             {showKCP && (
                 <KCPAuthentication

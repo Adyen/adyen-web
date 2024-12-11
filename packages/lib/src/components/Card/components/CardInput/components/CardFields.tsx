@@ -37,6 +37,8 @@ export default function CardFields({
         return errors[fieldType] ? i18n.get(errors[fieldType]) : null;
     };
 
+    console.log('### CardFields::CardFields:: dualBrandingElements', dualBrandingElements);
+
     // A set of brands filtered to exclude those that can never appear in the UI
     const allowedBrands = brandsIcons?.filter(brandsIcons => !BRAND_ICON_UI_EXCLUSION_LIST?.includes(brandsIcons.name));
     const isAmex = brand === 'amex';
