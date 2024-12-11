@@ -115,7 +115,7 @@ export const CardFieldsWrapper = ({
             {hasHolderName && !positionHolderNameOnTop && cardHolderField}
 
             {dualBrandSelectElements.length > 0 && dualBrandSelectElements && (
-                <Field classNameModifiers={['bankAccountType', 'no-borders']} name={'bankAccountType'} useLabelElement={false}>
+                <Field classNameModifiers={['dualBrandSwitcher', 'no-borders']} name={'dualBrandSwitcher'} useLabelElement={false}>
                     <RadioGroupExtended
                         name={'dualBrandSwitcher'}
                         value={selectedBrandValue} // Set which button is in a selected (checked) state

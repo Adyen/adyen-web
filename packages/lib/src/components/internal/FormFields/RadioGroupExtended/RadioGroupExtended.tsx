@@ -36,7 +36,7 @@ export default function RadioGroupExtended(props: RadioGroupProps) {
                     <div key={item.id} className="adyen-checkout__radio_group__input-wrapper">
                         <input
                             id={uniqueId}
-                            type="radio"
+                            {...(showRadioIcon ? { type: 'radio' } : { role: 'radio' })}
                             checked={value === item.id}
                             className="adyen-checkout__radio_group__input"
                             name={name}
