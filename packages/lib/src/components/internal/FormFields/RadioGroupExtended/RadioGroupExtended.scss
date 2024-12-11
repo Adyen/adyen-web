@@ -108,6 +108,11 @@
     border: token(border-width-s) solid token(color-outline-critical);
 }
 
+/* new class */
+.adyen-checkout__radio_group__label--no-radio.adyen-checkout__radio_group__label--no-radio--invalid {
+   color: token(color-outline-critical);
+}
+
 
 .adyen-checkout__radio_group--button {
     display: flex;

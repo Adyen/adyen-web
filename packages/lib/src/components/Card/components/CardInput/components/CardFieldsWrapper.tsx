@@ -133,7 +133,6 @@ export const CardFieldsWrapper = ({
                         required={true}
                         style={'button'}
                         showRadioIcon={false}
-                        // isInvalid={true}
                     />
                 </Field>
             )}
