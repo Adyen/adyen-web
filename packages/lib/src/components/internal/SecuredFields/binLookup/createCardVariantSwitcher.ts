@@ -12,7 +12,7 @@ export default function createCardVariantSwitcher(brandObjArr: BrandObject[]) {
             { id: leadBrand.brand, brandObject: leadBrand },
             { id: subBrand.brand, brandObject: subBrand }
         ] as DualBrandSelectElement[],
-        selectedBrandValue: '', // set to leadBrand.brand if an initial selection is to be made
+        selectedBrandValue: leadBrand.brand, // set to leadBrand.brand if an initial selection is to be made
         leadBrand
     };
 }

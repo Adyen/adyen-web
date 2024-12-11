@@ -7,7 +7,6 @@ import RadioButtonIcon from './RadioButtonIcon';
 import cx from 'classnames';
 
 export default function RadioGroupExtended(props: RadioGroupProps) {
-    console.log('### RadioGroupExtended::RadioGroupExtended:: props', props);
     const { items, name, onChange, value, isInvalid, uniqueId, ariaLabel, showRadioIcon = true, style = 'classic' } = props;
 
     const { i18n } = useCoreContext();
@@ -42,18 +41,14 @@ export default function RadioGroupExtended(props: RadioGroupProps) {
                             className="adyen-checkout__radio_group__input"
                             name={name}
                             onChange={onChange}
-                            onClick={onChange}
                             value={item.id}
                         />
                         <label className={fieldClassnames} htmlFor={uniqueId}>
                             <RadioButtonIcon
                                 key={item.id}
-                                // brand={item.id}
                                 imageURL={item.imageURL}
                                 altName={item.altName}
-                                // onClick={dualBrandingChangeHandler}
                                 dataValue={item.id}
-                                // notSelected={dualBrandingSelected !== '' && dualBrandingSelected !== item.id}
                                 hasRadioIcon={showRadioIcon}
                             />
                             {i18n.get(item.name)}

@@ -113,10 +113,9 @@ export default function extensions(props, refs, states, hasPanLengthRef: Partial
          */
         handleDualBrandSelection: (e: Event | string): void => {
             let value: Event | string = e;
-
             if (e instanceof Event) {
                 const target = e.target as HTMLLIElement;
-                value = target.getAttribute('data-value') || target.getAttribute('alt');
+                value = target.getAttribute('data-value') || target.getAttribute('value');
             }
 
             // Check if we have a value and whether that value corresponds to a brandObject we can propagate

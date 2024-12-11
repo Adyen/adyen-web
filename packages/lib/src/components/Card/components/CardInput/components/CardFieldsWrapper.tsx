@@ -118,7 +118,7 @@ export const CardFieldsWrapper = ({
                 <Field classNameModifiers={['bankAccountType', 'no-borders']} name={'bankAccountType'} useLabelElement={false}>
                     <RadioGroupExtended
                         name={'dualBrandSwitcher'}
-                        value={data.bankAccountType} // TODO - what does this do? A: set which one is in a selected (checked) state
+                        value={selectedBrandValue} // Set which button is in a selected (checked) state
                         items={dualBrandSelectElements.map(item => {
                             const brand = item.id;
                             const getImage = useImage();
