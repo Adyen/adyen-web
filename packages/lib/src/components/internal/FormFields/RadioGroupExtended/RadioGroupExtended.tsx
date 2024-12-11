@@ -1,18 +1,19 @@
 import { h } from 'preact';
 import cx from 'classnames';
-import './RadioGroup.scss';
+import './RadioGroupExtended.scss';
 import { RadioGroupProps } from './types';
 import { getUniqueId } from '../../../../utils/idGenerator';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
-import DualBrandingIcon from '../../../Card/components/CardInput/components/DualBrandingIcon/DualBrandingIcon';
 import RadioButtonIcon from './RadioButtonIcon';
-import { getCardImageUrl } from '../../../Card/components/CardInput/utils';
 
 export default function RadioGroupExtended(props: RadioGroupProps) {
-    const { items, name, onChange, value, isInvalid, uniqueId, ariaLabel, style = 'classic' } = props;
+    const { items, name, onChange, value, isInvalid, uniqueId, ariaLabel, showRadioIcon = true, style = 'classic' } = props;
 
     const { i18n } = useCoreContext();
     const uniqueIdBase = uniqueId?.replace(/[0-9]/g, '').substring(0, uniqueId.lastIndexOf('-'));
+
+    console.log('### RadioGroupExtended::RadioGroupExtended:: isInvalid', isInvalid);
+    console.log('### RadioGroupExtended::RadioGroupExtended:: showRadioIcon', showRadioIcon);
 
     return (
         <div
@@ -37,7 +38,7 @@ export default function RadioGroupExtended(props: RadioGroupProps) {
                         <label
                             className={cx([
                                 'adyen-checkout__label__text',
-                                'adyen-checkout__radio_group__label',
+                                showRadioIcon ? 'adyen-checkout__radio_group__label' : 'adyen-checkout__radio_group__label--no-radio',
                                 props.className,
                                 { 'adyen-checkout__radio_group__label--invalid': isInvalid }
                             ])}
@@ -51,6 +52,7 @@ export default function RadioGroupExtended(props: RadioGroupProps) {
                                 // onClick={dualBrandingChangeHandler}
                                 dataValue={item.id}
                                 // notSelected={dualBrandingSelected !== '' && dualBrandingSelected !== item.id}
+                                hasRadioIcon={showRadioIcon}
                             />
                             {i18n.get(item.name)}
                         </label>

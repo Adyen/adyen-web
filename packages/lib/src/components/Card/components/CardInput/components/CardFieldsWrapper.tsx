@@ -132,6 +132,8 @@ export const CardFieldsWrapper = ({
                         onChange={extensions.handleDualBrandSelection}
                         required={true}
                         style={'button'}
+                        showRadioIcon={false}
+                        // isInvalid={true}
                     />
                 </Field>
             )}

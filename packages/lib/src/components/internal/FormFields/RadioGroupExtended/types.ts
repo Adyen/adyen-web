@@ -18,6 +18,7 @@ export interface RadioGroupProps extends InputBaseProps {
     uniqueId?: string;
     ariaLabel?: string;
     style?: 'classic' | 'button';
+    showRadioIcon?: boolean;
 }
 
 export interface RadioButtonIconProps {
@@ -29,4 +30,5 @@ export interface RadioButtonIconProps {
     // onFocusField?: any;
     imageURL?: string;
     altName?: string;
+    hasRadioIcon?: boolean;
 }
