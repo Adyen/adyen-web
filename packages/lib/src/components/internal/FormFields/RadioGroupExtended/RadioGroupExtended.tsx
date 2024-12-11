@@ -17,6 +17,8 @@ export default function RadioGroupExtended(props: RadioGroupProps) {
         invalidClassName = showRadioIcon ? 'adyen-checkout__radio_group__label--invalid' : 'adyen-checkout__radio_group__label--no-radio--invalid';
     }
 
+    // {...(showRadioIcon ? { type: 'radio' } : { role: 'radio' })}
+
     const fieldClassnames = cx([
         'adyen-checkout__label__text',
         showRadioIcon ? 'adyen-checkout__radio_group__label' : 'adyen-checkout__radio_group__label--no-radio',
@@ -36,7 +38,7 @@ export default function RadioGroupExtended(props: RadioGroupProps) {
                     <div key={item.id} className="adyen-checkout__radio_group__input-wrapper">
                         <input
                             id={uniqueId}
-                            {...(showRadioIcon ? { type: 'radio' } : { role: 'radio' })}
+                            type={'radio'}
                             checked={value === item.id}
                             className="adyen-checkout__radio_group__input"
                             name={name}
@@ -44,14 +46,16 @@ export default function RadioGroupExtended(props: RadioGroupProps) {
                             value={item.id}
                         />
                         <label className={fieldClassnames} htmlFor={uniqueId}>
-                            <RadioButtonIcon
-                                key={item.id}
-                                imageURL={item.imageURL}
-                                altName={item.altName}
-                                dataValue={item.id}
-                                hasRadioIcon={showRadioIcon}
-                            />
-                            {i18n.get(item.name)}
+                            <div className={'adyen-checkout__radio_group-extended__label-wrapper'}>
+                                <RadioButtonIcon
+                                    key={item.id}
+                                    imageURL={item.imageURL}
+                                    altName={item.altName}
+                                    dataValue={item.id}
+                                    hasRadioIcon={showRadioIcon}
+                                />
+                                <span>{i18n.get(item.name)}</span>
+                            </div>
                         </label>
                     </div>
                 );

@@ -50,4 +50,8 @@
         box-shadow: 0 0 0 0.5px token(color-outline-primary-active);
         border-color: token(color-outline-primary-active);
     }
+
+    .adyen-checkout__radio_group-extended__label-wrapper{
+        display: flex;
+    }
 }
