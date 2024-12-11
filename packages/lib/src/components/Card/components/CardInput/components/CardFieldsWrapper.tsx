@@ -11,6 +11,7 @@ import DisclaimerMessage from '../../../../internal/DisclaimerMessage';
 import RadioGroupExtended from '../../../../internal/FormFields/RadioGroupExtended';
 import Field from '../../../../internal/FormFields/Field';
 import { getCardImageUrl, getFullBrandName } from '../utils';
+import useImage from '../../../../../core/Context/useImage';
 
 export const CardFieldsWrapper = ({
     // vars created in CardInput:
@@ -117,23 +118,20 @@ export const CardFieldsWrapper = ({
                 <Field classNameModifiers={['bankAccountType', 'no-borders']} name={'bankAccountType'} useLabelElement={false}>
                     <RadioGroupExtended
                         name={'dualBrandSwitcher'}
-                        value={data.bankAccountType}
-                        // items={dualBrandSelectElements}
-                        items={
-                            dualBrandSelectElements.map(item => {
-                                return { id: item.id, name: item.brandObject.localeBrand };
-                            })
-                            //     [
-                            //     { id: 'checking', name: i18n.get('ach.checking') },
-                            //     { id: 'savings', name: i18n.get('ach.savings') }
-                            // ]
-                        }
+                        value={data.bankAccountType} // TODO - what does this do? A: set which one is in a selected (checked) state
+                        items={dualBrandSelectElements.map(item => {
+                            const brand = item.id;
+                            const getImage = useImage();
+                            const imageName = brand === 'card' ? 'nocard' : brand;
+                            const imageURL = brandsConfiguration[brand]?.icon ?? getCardImageUrl(imageName, getImage);
+
+                            // TODO - check below if we have to still generate altName through the mapping function or whether it just
+                            //  corresponds to item.brandObject.localeBrand
+                            return { id: item.id, name: item.brandObject.localeBrand, imageURL, altName: getFullBrandName(brand) };
+                        })}
                         onChange={extensions.handleDualBrandSelection}
                         required={true}
                         style={'button'}
-                        brandsConfiguration={brandsConfiguration}
-                        getFullBrandName={getFullBrandName}
-                        getImageURL={getCardImageUrl}
                     />
                 </Field>
             )}

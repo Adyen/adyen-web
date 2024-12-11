@@ -45,12 +45,11 @@ export default function RadioGroupExtended(props: RadioGroupProps) {
                         >
                             <RadioButtonIcon
                                 key={item.id}
-                                brand={item.id}
-                                brandsConfiguration={props.brandsConfiguration}
-                                getImageURL={props.getImageURL}
-                                getFullBrandName={props.getFullBrandName}
+                                // brand={item.id}
+                                imageURL={item.imageURL}
+                                altName={item.altName}
                                 // onClick={dualBrandingChangeHandler}
-                                // dataValue={item.id}
+                                dataValue={item.id}
                                 // notSelected={dualBrandingSelected !== '' && dualBrandingSelected !== item.id}
                             />
                             {i18n.get(item.name)}

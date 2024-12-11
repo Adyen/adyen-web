@@ -1,21 +1,8 @@
 import { h } from 'preact';
-// import { getFullBrandName } from '../../utils';
 import { RadioButtonIconProps } from './types';
 import './RadioButtonIcon.scss';
-import useImage from '../../../../core/Context/useImage';
 
-const RadioButtonIcon = ({
-    brand,
-    onClick,
-    dataValue,
-    notSelected,
-    getImageURL,
-    getFullBrandName,
-    brandsConfiguration = {}
-}: RadioButtonIconProps) => {
-    const getImage = useImage();
-    const imageName = brand === 'card' ? 'nocard' : brand;
-    const imageUrl = brandsConfiguration[brand]?.icon ?? getImageURL(imageName, getImage);
+const RadioButtonIcon = ({ onClick, dataValue, notSelected, imageURL, altName }: RadioButtonIconProps) => {
     // TODO needs replaced with the mechanism for the card regular icon
     const handleError = e => {
         e.target.style.cssText = 'display: none';
@@ -28,9 +15,9 @@ const RadioButtonIcon = ({
                 notSelected ? 'adyen-checkout__card__cardNumber__brandIcon--not-selected' : ''
             } adyen-checkout__card__cardNumber__brandIcon`}
             onError={handleError}
-            alt={getFullBrandName(brand)}
-            src={imageUrl}
-            onClick={onClick}
+            alt={altName}
+            src={imageURL}
+            // onClick={onClick}
             data-value={dataValue}
         />
     );

@@ -4,6 +4,8 @@ import { CardBrandsConfiguration } from '../../../Card/types';
 interface RadioGroupItem {
     name: string;
     id: string;
+    imageURL: string;
+    altName: string;
 }
 
 export interface RadioGroupProps extends InputBaseProps {
@@ -19,10 +21,12 @@ export interface RadioGroupProps extends InputBaseProps {
 }
 
 export interface RadioButtonIconProps {
-    brand: string;
-    brandsConfiguration: CardBrandsConfiguration;
+    // brand: string;
+    // brandsConfiguration: CardBrandsConfiguration;
     onClick?: any;
     dataValue?: string;
-    notSelected?: boolean;
-    onFocusField?: any;
+    notSelected?: boolean; // TODO - ??
+    // onFocusField?: any;
+    imageURL?: string;
+    altName?: string;
 }
