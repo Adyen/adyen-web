@@ -98,6 +98,7 @@ function handleFetchError(message: string, level: ErrorLevel, error: unknown): v
             break;
         }
         default:
+            // fatal errors
             throw new AdyenCheckoutError('NETWORK_ERROR', message, { cause: error });
     }
 }

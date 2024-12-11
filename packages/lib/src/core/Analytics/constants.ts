@@ -31,7 +31,11 @@ export const ANALYTICS_ERROR_TYPE = {
 };
 
 export const ANALYTICS_ERROR_CODE = {
-    redirect: '600'
+    redirect: '600',
+    apiErrorPayments: '620',
+    apiErrorDetails: '621',
+    apiError3ds: '622',
+    apiErrorOrder: '623'
 };
 
 export const ANALYTICS_ACTION_STR = 'action';
