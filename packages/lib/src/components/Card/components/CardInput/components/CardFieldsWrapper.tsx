@@ -12,6 +12,7 @@ import RadioGroupExtended from '../../../../internal/FormFields/RadioGroupExtend
 import Field from '../../../../internal/FormFields/Field';
 import { getCardImageUrl, getFullBrandName } from '../utils';
 import useImage from '../../../../../core/Context/useImage';
+// import SegmentedControl from '../../../../internal/SegmentedControl';
 
 export const CardFieldsWrapper = ({
     // vars created in CardInput:
@@ -134,6 +135,25 @@ export const CardFieldsWrapper = ({
                         style={'button'}
                         showRadioIcon={false}
                     />
+
+                    {/* <SegmentedControl
+                        name={'dualBrandSwitcher'}
+                        selectedValue={selectedBrandValue} // Set which button is in a selected (checked) state
+                        options={dualBrandSelectElements.map(item => {
+                            const brand = item.id;
+                            const getImage = useImage();
+                            const imageName = brand === 'card' ? 'nocard' : brand;
+                            const imageURL = brandsConfiguration[brand]?.icon ?? getCardImageUrl(imageName, getImage);
+
+                            // TODO - check below if we have to still generate altName through the mapping function or whether it just
+                            //  corresponds to item.brandObject.localeBrand
+                            return { value: item.id, label: item.brandObject.localeBrand, imageURL, altName: getFullBrandName(brand) };
+                        })}
+                        onChange={extensions.handleDualBrandSelection}
+                        required={true}
+                        style={'button'}
+                        showRadioIcon={false}
+                    />*/}
                 </Field>
             )}
 
