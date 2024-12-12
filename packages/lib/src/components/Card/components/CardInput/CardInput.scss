@@ -56,6 +56,7 @@
     }
 }
 
+/* TODO: When is this class is this ever set? */
 .adyen-checkout__card-input__form {
     transition: opacity 0.25s ease-out;
 }
@@ -229,4 +230,16 @@
         width: 30%;
         margin-left: token(spacer-070);
     }
+}
+
+.adyen-checkout__card-input .adyen-checkout__fieldset--dual-brand-switcher {
+    margin-top: token(spacer-050);
+
+    .adyen-checkout__radio_group{
+        margin-top: token(spacer-050);
+    }
+}
+
+.adyen-checkout__fieldset--dual-brand-switcher .adyen-checkout__fieldset__title {
+    padding-bottom: 0;
 }

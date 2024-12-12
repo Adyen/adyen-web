@@ -12,6 +12,7 @@ import RadioGroupExtended from '../../../../internal/FormFields/RadioGroupExtend
 import Field from '../../../../internal/FormFields/Field';
 import { getCardImageUrl, getFullBrandName } from '../utils';
 import useImage from '../../../../../core/Context/useImage';
+import Fieldset from '../../../../internal/FormFields/Fieldset';
 // import SegmentedControl from '../../../../internal/SegmentedControl';
 
 export const CardFieldsWrapper = ({
@@ -116,27 +117,32 @@ export const CardFieldsWrapper = ({
             {hasHolderName && !positionHolderNameOnTop && cardHolderField}
 
             {dualBrandSelectElements.length > 0 && dualBrandSelectElements && (
-                <Field classNameModifiers={['dualBrandSwitcher', 'no-borders']} name={'dualBrandSwitcher'} useLabelElement={false}>
-                    <RadioGroupExtended
+                <Fieldset classNameModifiers={['dual-brand-switcher']} label={'Card brand selection (Optional)'}>
+                    <Field
+                        classNameModifiers={['dualBrandSwitcher', 'no-borders']}
                         name={'dualBrandSwitcher'}
-                        value={selectedBrandValue} // Set which button is in a selected (checked) state
-                        items={dualBrandSelectElements.map(item => {
-                            const brand = item.id;
-                            const getImage = useImage();
-                            const imageName = brand === 'card' ? 'nocard' : brand;
-                            const imageURL = brandsConfiguration[brand]?.icon ?? getCardImageUrl(imageName, getImage);
+                        label={'Select your preferred card brand'}
+                    >
+                        <RadioGroupExtended
+                            name={'dualBrandSwitcher'}
+                            value={selectedBrandValue} // Set which button is in a selected (checked) state
+                            items={dualBrandSelectElements.map(item => {
+                                const brand = item.id;
+                                const getImage = useImage();
+                                const imageName = brand === 'card' ? 'nocard' : brand;
+                                const imageURL = brandsConfiguration[brand]?.icon ?? getCardImageUrl(imageName, getImage);
 
-                            // TODO - check below if we have to still generate altName through the mapping function or whether it just
-                            //  corresponds to item.brandObject.localeBrand
-                            return { id: item.id, name: item.brandObject.localeBrand, imageURL, altName: getFullBrandName(brand) };
-                        })}
-                        onChange={extensions.handleDualBrandSelection}
-                        required={true}
-                        style={'button'}
-                        showRadioIcon={false}
-                    />
+                                // TODO - check below if we have to still generate altName through the mapping function or whether it just
+                                //  corresponds to item.brandObject.localeBrand
+                                return { id: item.id, name: item.brandObject.localeBrand, imageURL, altName: getFullBrandName(brand) };
+                            })}
+                            onChange={extensions.handleDualBrandSelection}
+                            required={true}
+                            style={'button'}
+                            showRadioIcon={false}
+                        />
 
-                    {/* <SegmentedControl
+                        {/* <SegmentedControl
                         name={'dualBrandSwitcher'}
                         selectedValue={selectedBrandValue} // Set which button is in a selected (checked) state
                         options={dualBrandSelectElements.map(item => {
@@ -154,7 +160,8 @@ export const CardFieldsWrapper = ({
                         style={'button'}
                         showRadioIcon={false}
                     />*/}
-                </Field>
+                    </Field>
+                </Fieldset>
             )}
 
             {showKCP && (
