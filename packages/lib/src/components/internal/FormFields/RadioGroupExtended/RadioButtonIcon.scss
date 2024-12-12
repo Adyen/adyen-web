@@ -36,7 +36,7 @@
 }
 
 .adyen-checkout__input-icon--no-radio-icon{
-    margin-left: -25px;
+    margin-left: calc(token(spacer-090) * -1);
 }
 
 /* Needed? */
