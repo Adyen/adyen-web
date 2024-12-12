@@ -14,6 +14,10 @@ export abstract class Base {
         await this.isComponentVisible();
     }
 
+    async isPayable() {
+        await this.page.waitForFunction(() => globalThis.component.isValid === true);
+    }
+
     async pay(options: { name?: RegExp | string } = { name: /pay/i }): Promise<void> {
         if (this.payButton) {
             await this.payButton.click();
