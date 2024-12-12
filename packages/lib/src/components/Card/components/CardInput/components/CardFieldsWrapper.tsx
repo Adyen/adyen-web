@@ -13,6 +13,7 @@ import Field from '../../../../internal/FormFields/Field';
 import { getCardImageUrl, getFullBrandName } from '../utils';
 import useImage from '../../../../../core/Context/useImage';
 import Fieldset from '../../../../internal/FormFields/Fieldset';
+import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 // import SegmentedControl from '../../../../internal/SegmentedControl';
 
 export const CardFieldsWrapper = ({
@@ -77,6 +78,8 @@ export const CardFieldsWrapper = ({
     onFieldFocusAnalytics,
     onFieldBlurAnalytics
 }) => {
+    const { i18n } = useCoreContext();
+
     const cardHolderField = (
         <CardHolderName
             required={holderNameRequired}
@@ -117,11 +120,11 @@ export const CardFieldsWrapper = ({
             {hasHolderName && !positionHolderNameOnTop && cardHolderField}
 
             {dualBrandSelectElements.length > 0 && dualBrandSelectElements && (
-                <Fieldset classNameModifiers={['dual-brand-switcher']} label={'Card brand selection (Optional)'}>
+                <Fieldset classNameModifiers={['dual-brand-switcher']} label={i18n.get('brand.selector.title')}>
                     <Field
                         classNameModifiers={['dualBrandSwitcher', 'no-borders']}
                         name={'dualBrandSwitcher'}
-                        label={'Select your preferred card brand'}
+                        label={i18n.get('brand.selector.message')}
                     >
                         <RadioGroupExtended
                             name={'dualBrandSwitcher'}
