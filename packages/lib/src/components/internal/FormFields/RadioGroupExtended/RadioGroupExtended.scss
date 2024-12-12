@@ -38,6 +38,7 @@
     }
 
     .adyen-checkout__radio_group__input:checked + .adyen-checkout__radio_group__label--no-radio {
+        box-shadow: 0 0 0 0.5px token(color-outline-primary-active);
         border-color: token(color-outline-primary-active);
     }
 
