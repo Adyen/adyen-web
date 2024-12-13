@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { RadioButtonIconProps } from './types';
 import './RadioButtonIcon.scss';
 
-const RadioButtonIcon = ({ onClick, dataValue, notSelected, imageURL, altName, hasRadioIcon }: RadioButtonIconProps) => {
+const RadioButtonIcon = ({ dataValue, imageURL, altName, hasRadioIcon }: RadioButtonIconProps) => {
     const [hasLoaded, setHasLoaded] = useState(false);
 
     const handleError = () => {
@@ -21,18 +21,7 @@ const RadioButtonIcon = ({ onClick, dataValue, notSelected, imageURL, altName, h
         'adyen-checkout__input-icon--no-radio-icon': !hasRadioIcon
     });
 
-    return (
-        // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions
-        <img
-            className={fieldClassnames}
-            onError={handleError}
-            onLoad={handleLoad}
-            alt={altName}
-            src={imageURL}
-            // onClick={onClick}
-            data-value={dataValue}
-        />
-    );
+    return <img className={fieldClassnames} onError={handleError} onLoad={handleLoad} alt={altName} src={imageURL} data-value={dataValue} />;
 };
 
 export default RadioButtonIcon;

@@ -45,6 +45,7 @@ export default function RadioGroupExtended(props: RadioGroupProps) {
                             onChange={onChange}
                             value={item.id}
                         />
+                        {/*eslint-disable-next-line jsx-a11y/label-has-associated-control*/}
                         <label className={fieldClassnames} htmlFor={uniqueId}>
                             <div className={'adyen-checkout__radio_group-extended__label-wrapper'}>
                                 <RadioButtonIcon

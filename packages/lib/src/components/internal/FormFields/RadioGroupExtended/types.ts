@@ -1,5 +1,4 @@
 import { InputBaseProps } from '../InputBase';
-import { CardBrandsConfiguration } from '../../../Card/types';
 
 interface RadioGroupItem {
     name: string;
@@ -22,12 +21,9 @@ export interface RadioGroupProps extends InputBaseProps {
 }
 
 export interface RadioButtonIconProps {
-    // brand: string;
-    // brandsConfiguration: CardBrandsConfiguration;
     onClick?: any;
     dataValue?: string;
-    notSelected?: boolean; // TODO - ??
-    // onFocusField?: any;
+    notSelected?: boolean; // TODO - needed??
     imageURL?: string;
     altName?: string;
     hasRadioIcon?: boolean;
