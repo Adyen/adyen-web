@@ -5,7 +5,7 @@ import './Fieldset.scss';
 
 interface FieldsetProps {
     children: ComponentChildren;
-    classNameModifiers: string[];
+    classNameModifiers?: string[];
     label?: string;
     readonly?: boolean;
 }
