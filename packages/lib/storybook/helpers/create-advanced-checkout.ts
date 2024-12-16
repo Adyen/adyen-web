@@ -33,7 +33,9 @@ async function createAdvancedFlowCheckout({
               paymentMethods: paymentMethodsOverride.paymentMethods ? paymentMethodsOverride.paymentMethods : []
           };
 
-    paymentMethodsResponse.paymentMethods = paymentMethodsResponse.paymentMethods.filter(pm => allowedPaymentTypes.includes(pm.type));
+    if (allowedPaymentTypes.length > 0) {
+        paymentMethodsResponse.paymentMethods = paymentMethodsResponse.paymentMethods.filter(pm => allowedPaymentTypes.includes(pm.type));
+    }
 
     const checkout = await AdyenCheckout({
         clientKey: process.env.CLIENT_KEY,

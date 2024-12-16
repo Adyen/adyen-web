@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import UIElement from '../../../internal/UIElement';
 
 export interface PaymentMethodsContainerProps {
-    label: string;
+    label?: string;
     classNameModifiers?: string[];
     paymentMethods: UIElement[];
     activePaymentMethod?: UIElement;
@@ -46,7 +46,7 @@ function PaymentMethodsContainer({
 
     return (
         <div className="adyen-checkout-payment-methods-container">
-            {!!label.length && (
+            {!!label && (
                 <label htmlFor={selectListId} className="adyen-checkout-payment-methods-list-label">
                     {label}
                 </label>
