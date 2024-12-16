@@ -11,6 +11,14 @@ export interface HttpOptions {
     timeout?: number;
     errorLevel?: ErrorLevel;
     errorMessage?: string;
+    errorCode?: string;
+}
+
+interface FetchErrorOptions {
+    message?: string;
+    level?: ErrorLevel;
+    cause?: unknown;
+    code?: string;
 }
 
 type ErrorLevel = 'silent' | 'info' | 'warn' | 'error' | 'fatal';
@@ -27,7 +35,15 @@ function isAdyenApiErrorResponse(data: any): data is AdyenApiErrorResponse {
 }
 
 export function http<T>(options: HttpOptions, data?: any): Promise<T> {
-    const { headers = [], errorLevel = 'warn', loadingContext = FALLBACK_CONTEXT, method = 'GET', path, timeout = DEFAULT_HTTP_TIMEOUT } = options;
+    const {
+        headers = [],
+        errorLevel = 'warn',
+        errorCode,
+        loadingContext = FALLBACK_CONTEXT,
+        method = 'GET',
+        path,
+        timeout = DEFAULT_HTTP_TIMEOUT
+    } = options;
 
     const request: RequestInit = {
         method,
@@ -57,12 +73,12 @@ export function http<T>(options: HttpOptions, data?: any): Promise<T> {
                 }
 
                 if (isAdyenApiErrorResponse(data)) {
-                    handleFetchError(data.message, errorLevel, data);
+                    handleFetchError({ message: data.message, level: errorLevel, cause: data, code: errorCode });
                     return;
                 }
 
                 const errorMessage = options.errorMessage || `Service at ${url} is not available`;
-                handleFetchError(errorMessage, errorLevel, data);
+                handleFetchError({ message: errorMessage, level: errorLevel, cause: data, code: errorCode });
                 return;
             })
             /**
@@ -81,12 +97,12 @@ export function http<T>(options: HttpOptions, data?: any): Promise<T> {
 
                 // eslint-disable-next-line @typescript-eslint/no-base-to-string,@typescript-eslint/restrict-template-expressions
                 const errorMessage = options.errorMessage || `Call to ${url} failed. Error= ${error}`;
-                handleFetchError(errorMessage, errorLevel, error);
+                handleFetchError({ message: errorMessage, level: errorLevel, cause: error, code: errorCode });
             })
     );
 }
 
-function handleFetchError(message: string, level: ErrorLevel, error: unknown): void {
+function handleFetchError({ message, level, cause, code }: FetchErrorOptions): void {
     switch (level) {
         case 'silent': {
             break;
@@ -98,7 +114,7 @@ function handleFetchError(message: string, level: ErrorLevel, error: unknown): v
             break;
         }
         default:
-            throw new AdyenCheckoutError('NETWORK_ERROR', message, { cause: error });
+            throw new AdyenCheckoutError('NETWORK_ERROR', message, { cause, code });
     }
 }
 
