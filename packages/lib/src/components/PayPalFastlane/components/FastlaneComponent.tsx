@@ -37,7 +37,7 @@ const FastlaneComponent = ({ lastFour, brand, payButton, setComponentRef, showPa
             {showPayButton && payButton({ status, icon: getImage({ imageFolder: 'components/' })(`${PREFIX}lock`) })}
 
             <div className="adyen-checkout-fastlane__brand">
-                <Img width="95px" src={getImage({ imageFolder: 'components/' })(`paypal_fastlane_gray`)} alt="Fastlane logo" />
+                <Img src={getImage({ imageFolder: 'components/' })(`paypal_fastlane_gray`)} alt="Fastlane logo" />
             </div>
         </div>
     );

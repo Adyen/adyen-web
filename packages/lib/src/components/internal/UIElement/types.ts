@@ -25,6 +25,8 @@ type CoreCallbacks = Pick<
     | 'onEnterKeyPressed'
 >;
 
+export type StatusFromAction = 'redirect' | 'loading' | 'custom';
+
 export type UIElementProps = BaseElementProps &
     CoreCallbacks & {
         environment?: string;
@@ -57,7 +59,7 @@ export type UIElementProps = BaseElementProps &
          * Status set when creating the Component from action
          * @internal
          */
-        statusType?: 'redirect' | 'loading' | 'custom';
+        statusType?: StatusFromAction;
 
         type?: string;
         name?: string;

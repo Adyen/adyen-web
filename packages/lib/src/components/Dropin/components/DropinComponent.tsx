@@ -2,14 +2,13 @@ import { Component, Fragment, h } from 'preact';
 import PaymentMethodList from './PaymentMethod/PaymentMethodList';
 import Status from './status';
 import getOrderStatus from '../../../core/Services/order-status';
-import { DropinComponentProps, DropinComponentState, DropinStatusProps, onOrderCancelData } from '../types';
 import './DropinComponent.scss';
-import { UIElementStatus } from '../../internal/UIElement/types';
 import { sanitizeOrder } from '../../internal/UIElement/utils';
 import { PaymentAmount } from '../../../types/global-types';
 import { ANALYTICS_RENDERED_STR } from '../../../core/Analytics/constants';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import Button from '../../internal/Button';
+import type { DropinComponentProps, DropinComponentState, DropinStatus, DropinStatusProps, onOrderCancelData } from '../types';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
@@ -64,7 +63,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         };
     }
 
-    public setStatus = (status: UIElementStatus, props: DropinStatusProps = {}) => {
+    public setStatus = (status: DropinStatus['type'], props: DropinStatusProps = {}) => {
         this.setState({ status: { type: status, props } });
     };
 
@@ -77,6 +76,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.status.type !== this.state.status.type && this.state.activePaymentMethod) {
+            // @ts-ignore TODO: Drop-in has its own 'status' values ('custom' for ex) which differs from regular UIElementStatus. Need to investigate best way to define/use this status variable
             this.state.activePaymentMethod.setStatus(this.state.status.type);
         }
 
@@ -154,9 +154,8 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
 
     private onOrderCancel: (data: onOrderCancelData) => void;
 
-    render(
-        props,
-        {
+    render() {
+        const {
             elements,
             fastlanePaymentElement,
             instantPaymentElements,
@@ -165,17 +164,15 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
             activePaymentMethod,
             cachedPaymentMethods,
             showDefaultPaymentMethodList
-        }
-    ) {
+        } = this.state;
+
         const isLoading = status.type === 'loading';
         const isRedirecting = status.type === 'redirect';
-        const hasPaymentMethodsToBeDisplayed = elements?.length || instantPaymentElements?.length || storedPaymentElements?.length;
-
-        const showFastlane = !!fastlanePaymentElement && !showDefaultPaymentMethodList;
+        const hasPaymentMethodsToBeDisplayed = !!(elements?.length || instantPaymentElements?.length || storedPaymentElements?.length);
 
         switch (status.type) {
             case 'success':
-                return <Status.Success message={props?.amount?.value === 0 ? 'resultMessages.preauthorized' : status.props?.message} />;
+                return <Status.Success message={this.props?.amount?.value === 0 ? 'resultMessages.preauthorized' : status.props?.message} />;
 
             case 'error':
                 return <Status.Error message={status.props?.message} />;
@@ -189,7 +186,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                         {isRedirecting && status.props.component && status.props.component.render()}
                         {isLoading && status.props && status.props.component && status.props.component.render()}
 
-                        {showFastlane && (
+                        {!showDefaultPaymentMethodList && (
                             <Fragment>
                                 <PaymentMethodList
                                     isLoading={isLoading}
@@ -200,17 +197,20 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                                     openFirstPaymentMethod
                                     showRadioButton={this.props.showRadioButton}
                                 />
-                                <Button
-                                    classNameModifiers={['dropin-show-paymentmethods']}
-                                    variant="link"
-                                    inline
-                                    label="Other payment methods"
-                                    onClick={this.onShowDefaultPaymentMethodListClick}
-                                />
+
+                                {hasPaymentMethodsToBeDisplayed && (
+                                    <Button
+                                        classNameModifiers={['dropin-show-paymentmethods']}
+                                        variant="link"
+                                        inline
+                                        label="Other payment methods"
+                                        onClick={this.onShowDefaultPaymentMethodListClick}
+                                    />
+                                )}
                             </Fragment>
                         )}
 
-                        {!!hasPaymentMethodsToBeDisplayed && !showFastlane && (
+                        {hasPaymentMethodsToBeDisplayed && showDefaultPaymentMethodList && (
                             <PaymentMethodList
                                 isLoading={isLoading || isRedirecting}
                                 isDisablingPaymentMethod={this.state.isDisabling}
