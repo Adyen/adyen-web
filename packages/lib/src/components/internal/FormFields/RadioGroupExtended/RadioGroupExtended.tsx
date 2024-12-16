@@ -1,10 +1,10 @@
 import { h } from 'preact';
+import cx from 'classnames';
 import './RadioGroupExtended.scss';
 import { RadioGroupProps } from './types';
 import { getUniqueId } from '../../../../utils/idGenerator';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import RadioButtonIcon from './RadioButtonIcon';
-import cx from 'classnames';
 
 export default function RadioGroupExtended(props: RadioGroupProps) {
     const { items, name, onChange, value, isInvalid, uniqueId, ariaLabel, showRadioIcon = true, style = 'classic' } = props;

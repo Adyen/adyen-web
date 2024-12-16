@@ -238,8 +238,8 @@
     .adyen-checkout__radio_group{
         margin-top: token(spacer-050);
     }
-}
 
-.adyen-checkout__fieldset--dual-brand-switcher .adyen-checkout__fieldset__title {
-    padding-bottom: 0;
+    .adyen-checkout__fieldset__title {
+        padding-bottom: 0;
+    }
 }
