@@ -1,5 +1,6 @@
 interface CheckoutErrorOptions {
     cause?: any;
+    code?: string;
 }
 
 export const NETWORK_ERROR = 'NETWORK_ERROR';
@@ -35,13 +36,14 @@ class AdyenCheckoutError extends Error {
     };
 
     public cause: unknown;
+    public options: CheckoutErrorOptions;
 
     constructor(type: keyof typeof AdyenCheckoutError.errorTypes, message?: string, options?: CheckoutErrorOptions) {
         super(message);
 
         this.name = AdyenCheckoutError.errorTypes[type];
-
-        this.cause = options?.cause;
+        this.options = options || {};
+        this.cause = this.options.cause;
     }
 }
 
