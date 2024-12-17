@@ -56,7 +56,13 @@ export class ANCVElement extends UIElement<ANCVConfiguration> {
             })
             .catch(error => {
                 this.setStatus(error?.message || 'error');
-                if (this.props.onError) this.handleError(new AdyenCheckoutError('ERROR', error));
+                if (this.props.onError) {
+                    if (error instanceof AdyenCheckoutError) {
+                        this.handleError(error);
+                    } else {
+                        this.handleError(new AdyenCheckoutError('ERROR', error));
+                    }
+                }
             });
     };
 

@@ -177,7 +177,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         if (this.constructor['type'] === 'scheme' || this.constructor['type'] === 'bcmc') {
             return this.constructor['type'];
         }
-        return this.props.type;
+        return this.type;
     }
 
     public submit(): void {

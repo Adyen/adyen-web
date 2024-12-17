@@ -62,7 +62,6 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
             return new Promise((resolve, reject) => {
                 void this.props.onOrderRequest(resolve, reject, data);
             });
-
         if (this.props.session) {
             return this.props.session.createOrder();
         }
