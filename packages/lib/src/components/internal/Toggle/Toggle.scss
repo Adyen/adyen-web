@@ -1,0 +1,64 @@
+.adyen-checkout-toggle {
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  user-select: none;
+  width: auto;
+}
+
+.adyen-checkout-toggle--label-first {
+  align-items: flex-start;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+
+.adyen-checkout-toggle__input {
+  cursor: inherit;
+  opacity: 0;
+  position: absolute;
+}
+
+.adyen-checkout-toggle__input:checked+.adyen-checkout-toggle__track {
+  background-color: #00112c;
+  border: 0;
+  padding: 2px;
+}
+
+.adyen-checkout-toggle__track {
+  align-items: center;
+  background-color: #fff;
+  border: 1px solid #8d95a3;
+  border-radius: 12px;
+  display: flex;
+  height: 20px;
+  min-width: 36px;
+  padding: 2px 4px;
+  position: relative;
+}
+
+.adyen-checkout-toggle__handle {
+  align-content: center;
+  background-color: #00112c;
+  border-radius: 12px;
+  color: #00112c;
+  display: inline-flex;
+  height: 12px;
+  justify-content: center;
+  transition: transform .15s cubic-bezier(.2, 0, .4, .9);
+  width: 12px;
+}
+
+.adyen-checkout-toggle__input:checked+* .adyen-checkout-toggle__handle {
+  background-color: #fff;
+  height: 16px;
+  transform: translate(100%);
+  width: 16px;
+}
+
+.adyen-checkout-toggle__label-text {
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 20px;
+
+}
