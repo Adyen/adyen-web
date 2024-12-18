@@ -3,11 +3,13 @@ import { BCMC_DUAL_BRANDED_VISA, DUAL_BRANDED_CARD, TEST_CVC_VALUE, TEST_DATE_VA
 import { URL_MAP } from '../../../fixtures/URL_MAP';
 
 test('BCMC logo should have correct alt text', async ({ bcmc }) => {
+    await bcmc.goto(URL_MAP.bcmc);
     await bcmc.typeCardNumber('41');
     expect(bcmc.rootElement.getByAltText(/bancontact card/i)).toBeTruthy();
 });
 
 test('Visa logo should have correct alt text', async ({ bcmc }) => {
+    await bcmc.goto(URL_MAP.bcmc);
     await bcmc.typeCardNumber(VISA_CARD);
     expect(bcmc.rootElement.getByAltText(/visa/i)).toBeTruthy();
 });
