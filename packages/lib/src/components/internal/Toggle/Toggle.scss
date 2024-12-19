@@ -1,0 +1,158 @@
+@use 'styles/mixins';
+@import 'styles/variable-generator';
+
+.adyen-checkout-toggle {
+  $component-root: &;
+  $label-padding: token(toggle-label-padding);
+
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  width: auto;
+
+  @include mixins.box-sizing-setter(true);
+
+  &--disabled {
+    cursor: not-allowed;
+    display: flex;
+  }
+
+  &--readonly {
+    pointer-events: none;
+  }
+
+  &--label-first {
+    align-items: flex-start;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+  }
+
+  &__input {
+    cursor: inherit;
+    opacity: 0;
+    position: absolute;
+  }
+
+  &__track {
+    align-items: center;
+    background-color: token(toggle-track-background-color);
+    border: token(toggle-track-border);
+    border-radius: token(toggle-track-border-radius);
+    display: flex;
+    height: token(toggle-track-height);
+    min-width: token(toggle-track-width);
+    padding: token(toggle-track-padding);
+    position: relative;
+
+    #{$component-root}__input:focus-visible + & {
+      @include mixins.b-focus-ring;
+    }
+
+    #{$component-root}__input:hover:enabled + & {
+      background-color: token(toggle-track-hover-background-color);
+      border-color: token(toggle-track-hover-border-color);
+    }
+
+    #{$component-root}__input:active:enabled + & {
+      background-color: token(toggle-track-active-background-color);
+      border-color: token(toggle-track-active-border-color);
+    }
+
+    #{$component-root}__input:disabled + & {
+      background-color: token(toggle-track-disabled-background-color);
+      border-color: token(toggle-track-disabled-border-color);
+      cursor: not-allowed;
+
+      path {
+        fill: #8d95a3
+      }
+    }
+
+    #{$component-root}--readonly #{$component-root}__input + & {
+      background-color: token(toggle-track-readonly-background-color);
+      border-color: token(toggle-track-readonly-border-color);
+    }
+
+    #{$component-root}__input:checked + & {
+      background-color: token(toggle-track-toggled-background-color);
+      border: token(toggle-track-toggled-border);
+      padding: token(toggle-track-toggled-padding);
+    }
+
+    #{$component-root}__input:checked:hover:enabled + & {
+      background-color: token(toggle-track-toggled-hover-background-color);
+    }
+
+    #{$component-root}__input:checked:active:enabled + & {
+      background-color: token(toggle-track-toggled-active-background-color);
+    }
+
+    #{$component-root}__input:checked:disabled + & {
+      background-color: token(toggle-track-toggled-disabled-background-color);
+    }
+
+    #{$component-root}--readonly #{$component-root}__input:checked + & {
+      background-color: token(toggle-track-toggled-readonly-background-color);
+    }
+  }
+
+  &__handle {
+    align-content: center;
+    background-color: token(toggle-handle-background-color);
+    border-radius: token(toggle-handle-border-radius);
+    color: token(toggle-handle-toggled-color);
+    display: inline-flex;
+    height: token(toggle-handle-height);
+    justify-content: center;
+    transition: token(toggle-handle-transition);
+    width: token(toggle-handle-width);
+
+    #{$component-root}__input:disabled + * & {
+      background-color: token(toggle-handle-disabled-background-color);
+      cursor: not-allowed;
+    }
+
+    #{$component-root}__input:checked + * & {
+      background-color: token(toggle-handle-toggled-background-color);
+      height: token(toggle-handle-toggled-height);
+      transform: translateX(100%);
+      width: token(toggle-handle-toggled-width);
+    }
+
+    #{$component-root}__input:checked:disabled + * & {
+      background-color: token(toggle-handle-toggled-disabled-background-color);
+      color: token(toggle-handle-toggled-disabled-color);
+      cursor: not-allowed;
+    }
+
+    #{$component-root}--readonly #{$component-root}__input:checked + * & {
+      background-color: token(toggle-handle-toggled-readonly-background-color);
+    }
+  }
+
+  &__label-container {
+    display: flex;
+    flex-direction: column;
+    padding-left: $label-padding;
+
+    @include mixins.adyen-checkout-text-body;
+
+    #{$component-root}--label-first > & {
+      padding-left: 0;
+      padding-right: $label-padding;
+    }
+  }
+
+  &__label {
+    vertical-align: baseline;
+
+    @include mixins.adyen-checkout-text-body;
+  }
+
+  &__description {
+    color: token(toggle-description-color);
+    padding-top: token(toggle-description-padding);
+
+    @include mixins.adyen-checkout-text-body;
+  }
+}
