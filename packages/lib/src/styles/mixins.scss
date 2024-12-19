@@ -105,6 +105,12 @@ $adyen-checkout-media-query-l-min: 1024px;
     line-height: token(text-title-line-height);
 }
 
+@mixin adyen-checkout-text-body {
+    font-size: token(text-body-font-size);
+    font-weight: token(text-body-font-weight);
+    line-height: token(text-body-line-height);
+}
+
 @mixin adyen-checkout-text-caption {
     font-size: token(text-caption-font-size);
     font-weight: token(text-caption-font-weight);
