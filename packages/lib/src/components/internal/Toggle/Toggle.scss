@@ -8,7 +8,6 @@
   color: inherit;
   cursor: pointer;
   display: flex;
-  user-select: none;
   width: auto;
 
   @include mixins.box-sizing-setter(true);
