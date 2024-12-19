@@ -31,7 +31,7 @@ test.describe('Card with 3DS2', () => {
         });
 
         test('should handle full flow (fingerprint & challenge)', async ({ page, card }) => {
-            const submitFingerprintResponsePromise = page.waitForResponse(response => response.url().includes('/submitThreeDS2Fingerprint'));
+            const makeDetailsCallResponsePromise = page.waitForResponse(response => response.url().includes('/paymentDetails')); // Check for sessions' /paymentDetails call
 
             await card.goto(URL_MAP.card);
 
@@ -43,10 +43,10 @@ test.describe('Card with 3DS2', () => {
             await card.threeDs2Challenge.fillInPassword(THREEDS2_CHALLENGE_PASSWORD);
             await card.threeDs2Challenge.submit();
 
-            const fingerPrintResponse = await submitFingerprintResponsePromise;
+            const detailsCallResponse = await makeDetailsCallResponsePromise;
 
             await expect(card.paymentResult).toContainText(PAYMENT_RESULT.authorised);
-            expect(fingerPrintResponse.status()).toBe(200);
+            expect(detailsCallResponse.status()).toBe(200);
         });
 
         test('should handle challenge-only flow', async ({ page, card }) => {
