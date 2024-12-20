@@ -62,7 +62,6 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
             return new Promise((resolve, reject) => {
                 void this.props.onOrderRequest(resolve, reject, data);
             });
-
         if (this.props.session) {
             return this.props.session.createOrder();
         }
@@ -102,7 +101,13 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
             })
             .catch(error => {
                 this.setStatus(error?.message || 'error');
-                if (this.props.onError) this.handleError(new AdyenCheckoutError('ERROR', error));
+                if (this.props.onError) {
+                    if (error instanceof AdyenCheckoutError) {
+                        this.handleError(error);
+                    } else {
+                        this.handleError(new AdyenCheckoutError('ERROR', error));
+                    }
+                }
             });
     };
 

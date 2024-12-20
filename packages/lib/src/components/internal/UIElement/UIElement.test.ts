@@ -4,7 +4,9 @@ import { any, mock, mockDeep } from 'jest-mock-extended';
 import { AdyenCheckout, ThreeDS2Challenge, ThreeDS2DeviceFingerprint } from '../../../index';
 import { UIElementProps } from './types';
 import { Resources } from '../../../core/Context/Resources';
-import { PaymentActionsType } from '../../../types/global-types';
+import { AnalyticsModule, PaymentActionsType } from '../../../types/global-types';
+import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
+import { ANALYTICS_ERROR_TYPE, ANALYTICS_EVENT } from '../../../core/Analytics/constants';
 
 jest.mock('../../../core/Services/get-translations');
 
@@ -23,6 +25,9 @@ class MyElement extends UIElement<MyElementProps> {
     public callOnChange() {
         super.onChange();
     }
+    public handleAdditionalDetails(data) {
+        super.handleAdditionalDetails(data);
+    }
     render() {
         return '';
     }
@@ -32,8 +37,15 @@ const submitMock = jest.fn();
 (global as any).HTMLFormElement.prototype.submit = () => submitMock;
 
 let core;
+let analytics;
 beforeEach(() => {
     core = mockDeep<ICore>();
+    analytics = mockDeep<AnalyticsModule>();
+});
+
+afterEach(() => {
+    jest.clearAllMocks();
+    jest.resetAllMocks();
 });
 
 describe('UIElement', () => {
@@ -231,7 +243,7 @@ describe('UIElement', () => {
         test('should trigger showValidation() and not call makePaymentsCall() if component is not valid', () => {
             const showValidation = jest.fn();
 
-            const element = new MyElement(core);
+            const element = new MyElement(core, { modules: { analytics } });
 
             // @ts-ignore Checking that internal method is not reached
             const makePaymentsCallSpy = jest.spyOn(element, 'makePaymentsCall');
@@ -263,6 +275,7 @@ describe('UIElement', () => {
             });
 
             const element = new MyElement(core, {
+                modules: { analytics },
                 onSubmit: onSubmitMock,
                 onPaymentCompleted: onPaymentCompletedMock
             });
@@ -275,7 +288,7 @@ describe('UIElement', () => {
             expect(onPaymentCompletedMock).toHaveBeenCalledWith({ resultCode: 'Authorized' }, element);
         });
 
-        test('should make successfull payment using sessions flow', async () => {
+        test('should make successful payment using sessions flow', async () => {
             const onPaymentCompletedMock = jest.fn();
 
             core.session.submitPayment.calledWith(any()).mockResolvedValue({
@@ -293,6 +306,7 @@ describe('UIElement', () => {
             });
 
             const element = new MyElement(core, {
+                modules: { analytics },
                 onPaymentCompleted: onPaymentCompletedMock
             });
 
@@ -327,6 +341,7 @@ describe('UIElement', () => {
             });
 
             const element = new MyElement(core, {
+                modules: { analytics },
                 onSubmit: onSubmitMock,
                 onPaymentFailed: onPaymentFailedMock
             });
@@ -347,6 +362,7 @@ describe('UIElement', () => {
             jest.spyOn(MyElement.prototype, 'isValid', 'get').mockReturnValue(true);
 
             const element = new MyElement(core, {
+                modules: { analytics },
                 onSubmit: onSubmitMock,
                 onPaymentFailed: onPaymentFailedMock
             });
@@ -374,6 +390,7 @@ describe('UIElement', () => {
             jest.spyOn(MyElement.prototype, 'isValid', 'get').mockReturnValue(true);
 
             const element = new MyElement(core, {
+                modules: { analytics },
                 onSubmit: onSubmitMock
             });
 
@@ -420,6 +437,7 @@ describe('UIElement', () => {
             });
 
             const element = new MyElement(core, {
+                modules: { analytics },
                 onOrderUpdated: onOrderUpdatedMock
             });
 
@@ -469,6 +487,7 @@ describe('UIElement', () => {
             core.session = null;
 
             const element = new MyElement(core, {
+                modules: { analytics },
                 onSubmit: onSubmitMock,
                 onPaymentMethodsRequest: onPaymentMethodsRequestMock,
                 onOrderUpdated: onOrderUpdatedMock
@@ -531,6 +550,7 @@ describe('UIElement', () => {
             core.session = null;
 
             const element = new MyElement(core, {
+                modules: { analytics },
                 onSubmit: onSubmitMock,
                 onOrderUpdated: onOrderUpdatedMock,
                 onError: onErrorMock
@@ -550,6 +570,26 @@ describe('UIElement', () => {
 
             expect(onOrderUpdatedMock).toHaveBeenCalledTimes(1);
             expect(onOrderUpdatedMock).toHaveBeenCalledWith({ order });
+        });
+
+        test('should send an error event to analytic module with correct errorType and error code, if makePayment call fails', async () => {
+            const errorCode = 'mockedErrorCode';
+            const txVariant = 'scheme';
+
+            core.session.submitPayment.mockImplementation(() => Promise.reject(new AdyenCheckoutError('NETWORK_ERROR', '', { code: errorCode })));
+            const analytics = mock<AnalyticsModule>();
+            const mockedSendAnalytics = analytics.sendAnalytics as jest.Mock;
+            jest.spyOn(MyElement.prototype, 'isValid', 'get').mockReturnValue(true);
+
+            const element = new MyElement(core, { type: txVariant, modules: { analytics } });
+            element.submit();
+            await new Promise(process.nextTick);
+
+            expect(mockedSendAnalytics).toHaveBeenCalledWith(
+                txVariant,
+                { code: errorCode, errorType: ANALYTICS_ERROR_TYPE.apiError, type: ANALYTICS_EVENT.error },
+                undefined
+            );
         });
     });
 
@@ -683,6 +723,25 @@ describe('UIElement', () => {
 
             expect(onPaymentFailedMock).toHaveBeenCalledTimes(1);
             expect(onPaymentFailedMock).toHaveBeenCalledWith(undefined, element);
+        });
+
+        test('should send an error event to analytic module with correct errorType and error code, if payment/details call fails', async () => {
+            const errorCode = 'mockedErrorCode';
+            const txVariant = 'scheme';
+
+            core.session.submitDetails.mockImplementation(() => Promise.reject(new AdyenCheckoutError('NETWORK_ERROR', '', { code: errorCode })));
+
+            const mockedSendAnalytics = analytics.sendAnalytics as jest.Mock;
+
+            const element = new MyElement(core, { type: txVariant, modules: { analytics } });
+            element.handleAdditionalDetails({});
+            await new Promise(process.nextTick);
+
+            expect(mockedSendAnalytics).toHaveBeenCalledWith(
+                txVariant,
+                { code: errorCode, errorType: ANALYTICS_ERROR_TYPE.apiError, type: ANALYTICS_EVENT.error },
+                undefined
+            );
         });
     });
 });
