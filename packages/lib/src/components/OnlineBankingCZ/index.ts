@@ -15,7 +15,7 @@ class OnlineBankingCZElement extends IssuerListContainer {
     formatProps(props) {
         return {
             ...super.formatProps(props),
-            showImage: false,
+            showImage: true,
             termsAndConditions: OnlineBankingCZElement.termsAndConditions
         };
     }

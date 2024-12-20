@@ -27,4 +27,5 @@ export interface IBaseElement {
     update(props): IBaseElement;
     unmount(): IBaseElement;
     remove(): void;
+    activate(): void;
 }

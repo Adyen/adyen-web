@@ -9,6 +9,7 @@ import { ANALYTICS_RENDERED_STR } from '../../../core/Analytics/constants';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import Button from '../../internal/Button';
 import type { DropinComponentProps, DropinComponentState, DropinStatus, DropinStatusProps, onOrderCancelData } from '../types';
+import UIElement from '../../internal/UIElement';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
@@ -67,11 +68,19 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         this.setState({ status: { type: status, props } });
     };
 
-    private setActivePaymentMethod = paymentMethod => {
+    private setActivePaymentMethod = (paymentMethod: UIElement): void => {
+        if (paymentMethod === this.state.activePaymentMethod) {
+            return;
+        }
+
         this.setState(prevState => ({
             activePaymentMethod: paymentMethod,
             cachedPaymentMethods: { ...prevState.cachedPaymentMethods, [paymentMethod._id]: true }
         }));
+
+        if (this.state.cachedPaymentMethods[paymentMethod._id]) {
+            paymentMethod.activate();
+        }
     };
 
     componentDidUpdate(prevProps, prevState) {

@@ -41,7 +41,8 @@ describe('KlarnaWidget', () => {
         paymentData,
         paymentMethodType,
         sdkData,
-        payButton
+        payButton,
+        widgetInitializationTime: new Date().getTime()
     };
 
     beforeAll(() => {

@@ -161,15 +161,23 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
          * - otherwise, distinguish cards from non-cards: cards will use their static type property, everything else will use props.type
          */
         try {
-            let component = this.constructor['analyticsType'];
-            if (!component) {
-                component = this.constructor['type'] === 'scheme' || this.constructor['type'] === 'bcmc' ? this.constructor['type'] : this.props.type;
-            }
-
-            this.props.modules.analytics.sendAnalytics(component, analyticsObj, uiElementProps);
+            this.props.modules.analytics.sendAnalytics(this.getComponent(analyticsObj), analyticsObj, uiElementProps);
         } catch (error) {
             console.warn('Failed to submit the analytics event. Error:', error);
         }
+    }
+
+    private getComponent({ component }: SendAnalyticsObject): string {
+        if (component) {
+            return component;
+        }
+        if (this.constructor['analyticsType']) {
+            return this.constructor['analyticsType'];
+        }
+        if (this.constructor['type'] === 'scheme' || this.constructor['type'] === 'bcmc') {
+            return this.constructor['type'];
+        }
+        return this.props.type;
     }
 
     public submit(): void {

@@ -1,15 +1,16 @@
-import Script from '../../../../utils/Script';
-import { useEffect, useRef, useState } from 'preact/hooks';
 import { h } from 'preact';
-import { KlarnaWidgetAuthorizeResponse, KlarnaWidgetProps } from '../../types';
+import { useEffect, useRef, useState, useCallback } from 'preact/hooks';
+import Script from '../../../../utils/Script';
 import { KLARNA_WIDGET_URL } from '../../constants';
+import type { KlarnaWidgetAuthorizeResponse, KlarnaWidgetProps } from '../../types';
+
 import './KlarnaWidget.scss';
 
-export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }: KlarnaWidgetProps) {
+export function KlarnaWidget({ sdkData, paymentMethodType, widgetInitializationTime, payButton, ...props }: KlarnaWidgetProps) {
     const klarnaWidgetRef = useRef(null);
     const [status, setStatus] = useState('ready');
 
-    const handleError = () => {
+    const handleError = useCallback(() => {
         setStatus('error');
         props.onComplete({
             data: {
@@ -17,9 +18,9 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
                 details: {}
             }
         });
-    };
+    }, [props.paymentData, props.onComplete]);
 
-    const initializeKlarnaWidget = () => {
+    const initializeKlarnaWidget = useCallback(() => {
         window.Klarna.Payments.init({
             client_token: sdkData.client_token
         });
@@ -41,9 +42,9 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
                 }
             }
         );
-    };
+    }, [sdkData.client_token, sdkData.payment_method_category]);
 
-    const authorizeKlarna = () => {
+    const authorizeKlarna = useCallback(() => {
         setStatus('loading');
         try {
             window.Klarna.Payments.authorize(
@@ -76,21 +77,30 @@ export function KlarnaWidget({ sdkData, paymentMethodType, payButton, ...props }
         } catch (e) {
             handleError();
         }
-    };
+    }, [sdkData.payment_method_category, props.onComplete, props.onError]);
 
-    // Add Klarna Payments Widget SDK
+    /**
+     * Initializes Klarna SDK if it is already available and reinitialize
+     * it when the init time refreshes
+     */
+    useEffect(() => {
+        const isKlarnaAvailable = window.Klarna?.Payments?.init;
+        if (isKlarnaAvailable) {
+            initializeKlarnaWidget();
+        }
+    }, [widgetInitializationTime]);
+
     useEffect(() => {
         window.klarnaAsyncCallback = function () {
             initializeKlarnaWidget();
         };
-
         const script = new Script(KLARNA_WIDGET_URL);
         void script.load();
 
         return () => {
             script.remove();
         };
-    }, []);
+    }, [initializeKlarnaWidget]);
 
     if (status !== 'error' && status !== 'success') {
         return (

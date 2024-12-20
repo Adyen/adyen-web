@@ -2,7 +2,17 @@ import Language from '../../../../language/Language';
 import { BinLookupResponse, BrandConfiguration, CardBrandsConfiguration, CardBackendConfiguration, DualBrandSelectElement } from '../../types';
 import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
-import { CVCPolicyType, DatePolicyType } from '../../../internal/SecuredFields/lib/types';
+import {
+    CbObjOnAllValid,
+    CbObjOnAutoComplete,
+    CbObjOnBinValue,
+    CbObjOnBrand,
+    CbObjOnConfigSuccess,
+    CbObjOnFieldValid,
+    CbObjOnLoad,
+    CVCPolicyType,
+    DatePolicyType
+} from '../../../internal/SecuredFields/lib/types';
 import Specifications from '../../../internal/Address/Specifications';
 import { AddressSchema } from '../../../internal/Address/types';
 import { CbObjOnError, StylesObject } from '../../../internal/SecuredFields/lib/types';
@@ -104,17 +114,17 @@ export interface CardInputProps {
     };
     onAdditionalSFConfig?: () => {};
     onAdditionalSFRemoved?: () => {};
-    onAllValid?: () => {};
-    onAutoComplete?: () => {};
-    onBinValue?: () => {};
+    onAllValid?: (o: CbObjOnAllValid) => {};
+    onAutoComplete?: (o: CbObjOnAutoComplete) => {};
+    onBinValue?: (o: CbObjOnBinValue) => {};
     onBlur?: (e) => {};
-    onBrand?: () => {};
-    onConfigSuccess?: () => {};
+    onBrand?: (o: CbObjOnBrand) => {};
+    onConfigSuccess?: (O: CbObjOnConfigSuccess) => {};
     onChange?: (state) => {};
     onError?: () => {};
-    onFieldValid?: () => {};
+    onFieldValid?: (o: CbObjOnFieldValid) => {};
     onFocus?: (e) => {};
-    onLoad?: () => {};
+    onLoad?: (o: CbObjOnLoad) => {};
     handleKeyPress?: (obj: KeyboardEvent) => void;
     onAddressLookup?: OnAddressLookupType;
     onAddressSelected?: OnAddressSelectedType;

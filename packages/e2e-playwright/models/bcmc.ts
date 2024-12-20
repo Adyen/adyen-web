@@ -5,10 +5,10 @@ class BCMC extends Card {
         return this.cardNumberField.locator('.adyen-checkout__card__cardNumber__brandIcon').all();
     }
 
-    async waitForVisibleDualBrands() {
+    async waitForVisibleBrands(expectedNumber = 2) {
         return await this.page.waitForFunction(
             expectedLength => [...document.querySelectorAll('.adyen-checkout__card__cardNumber__brandIcon')].length === expectedLength,
-            2
+            expectedNumber
         );
     }
 

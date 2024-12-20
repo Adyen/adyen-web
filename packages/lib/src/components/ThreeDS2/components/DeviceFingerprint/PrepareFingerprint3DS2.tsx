@@ -15,7 +15,7 @@ import {
     THREEDS2_ERROR,
     TIMEOUT
 } from '../../constants';
-import { ANALYTICS_API_ERROR, ANALYTICS_NETWORK_ERROR, Analytics3DS2Errors, Analytics3DS2Events } from '../../../../core/Analytics/constants';
+import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, Analytics3DS2Events } from '../../../../core/Analytics/constants';
 
 class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State> {
     public static type = 'scheme';
@@ -163,7 +163,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             if (finalResObject.errorCode) {
                 const errorTypeAndCode = {
                     code: finalResObject.errorCode === TIMEOUT ? Analytics3DS2Errors.THREEDS2_TIMEOUT : finalResObject.errorCode,
-                    errorType: finalResObject.errorCode === TIMEOUT ? ANALYTICS_NETWORK_ERROR : ANALYTICS_API_ERROR
+                    errorType: finalResObject.errorCode === TIMEOUT ? ANALYTICS_ERROR_TYPE.network : ANALYTICS_ERROR_TYPE.apiError
                 };
 
                 /**

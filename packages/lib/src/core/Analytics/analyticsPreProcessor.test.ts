@@ -1,7 +1,7 @@
 import Analytics from './Analytics';
 import { PaymentAmount } from '../../types';
 import { analyticsPreProcessor } from './analyticsPreProcessor';
-import { ANALYTICS_EVENT_INFO, ANALYTICS_RENDERED_STR } from './constants';
+import { ANALYTICS_EVENT, ANALYTICS_RENDERED_STR } from './constants';
 
 let analytics;
 let sendAnalytics;
@@ -20,7 +20,7 @@ describe('Testing AnalyticsPreProcessor: process and output', () => {
             sendAnalytics('paywithgoogle', { type: ANALYTICS_RENDERED_STR }, { isExpress: true, expressPage: 'cart' });
 
             expect(analytics.createAnalyticsEvent).toBeCalledWith({
-                event: ANALYTICS_EVENT_INFO,
+                event: ANALYTICS_EVENT.info,
                 data: {
                     component: 'paywithgoogle',
                     type: 'rendered',
@@ -34,7 +34,7 @@ describe('Testing AnalyticsPreProcessor: process and output', () => {
             sendAnalytics('paywithgoogle', { type: ANALYTICS_RENDERED_STR }, { isExpress: null, expressPage: 'cart' });
 
             expect(analytics.createAnalyticsEvent).toBeCalledWith({
-                event: ANALYTICS_EVENT_INFO,
+                event: ANALYTICS_EVENT.info,
                 data: {
                     component: 'paywithgoogle',
                     type: 'rendered'
@@ -46,7 +46,7 @@ describe('Testing AnalyticsPreProcessor: process and output', () => {
             sendAnalytics('paywithgoogle', { type: ANALYTICS_RENDERED_STR }, { isExpress: undefined, expressPage: 'cart' });
 
             expect(analytics.createAnalyticsEvent).toBeCalledWith({
-                event: ANALYTICS_EVENT_INFO,
+                event: ANALYTICS_EVENT.info,
                 data: {
                     component: 'paywithgoogle',
                     type: 'rendered'
@@ -58,7 +58,7 @@ describe('Testing AnalyticsPreProcessor: process and output', () => {
             sendAnalytics('paywithgoogle', { type: ANALYTICS_RENDERED_STR }, { isExpress: 'true', expressPage: 'cart' });
 
             expect(analytics.createAnalyticsEvent).toBeCalledWith({
-                event: ANALYTICS_EVENT_INFO,
+                event: ANALYTICS_EVENT.info,
                 data: {
                     component: 'paywithgoogle',
                     type: 'rendered'
@@ -70,7 +70,7 @@ describe('Testing AnalyticsPreProcessor: process and output', () => {
             sendAnalytics('paywithgoogle', { type: ANALYTICS_RENDERED_STR }, { isExpress: false, expressPage: 'cart' });
 
             expect(analytics.createAnalyticsEvent).toBeCalledWith({
-                event: ANALYTICS_EVENT_INFO,
+                event: ANALYTICS_EVENT.info,
                 data: {
                     component: 'paywithgoogle',
                     type: 'rendered',
@@ -83,7 +83,7 @@ describe('Testing AnalyticsPreProcessor: process and output', () => {
             sendAnalytics('paywithgoogle', { type: ANALYTICS_RENDERED_STR }, { isExpress: true, expressPage: 'foobar' });
 
             expect(analytics.createAnalyticsEvent).toBeCalledWith({
-                event: ANALYTICS_EVENT_INFO,
+                event: ANALYTICS_EVENT.info,
                 data: {
                     component: 'paywithgoogle',
                     type: 'rendered',
