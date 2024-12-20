@@ -100,31 +100,31 @@ const CtPOneTimePasswordInput = (props: CtPOneTimePasswordInputProps): h.JSX.Ele
     }, [data, valid, errors]);
 
     return (
-        <Field
-            name="oneTimePassword"
-            label={i18n.get('ctp.otp.fieldLabel')}
-            labelEndAdornment={
-                !props.hideResendOtpButton && (
-                    <CtPResendOtpLink disabled={props.isValidatingOtp} onError={handleOnResendOtpError} onResendCode={handleOnResendOtp} />
-                )
-            }
-            errorMessage={isOtpFielDirty ? resendOtpError || props.errorMessage || !!errors.otp : null}
-            classNameModifiers={['otp']}
-        >
-            <InputText
-                name={'otp'}
-                autocorrect={'off'}
-                spellcheck={false}
-                value={data.otp}
-                disabled={props.disabled}
-                onInput={handleChangeFor('otp', 'input')}
-                onBlur={handleChangeFor('otp', 'blur')}
-                onKeyPress={handleOnKeyPress}
-                setRef={(ref: HTMLInputElement) => {
-                    inputRef.current = ref;
-                }}
-            />
-        </Field>
+        <div className={'adyen-checkout-ctp__otp-field-wrapper'}>
+            <Field
+                name="oneTimePassword"
+                label={i18n.get('ctp.otp.fieldLabel')}
+                errorMessage={isOtpFielDirty ? resendOtpError || props.errorMessage || !!errors.otp : null}
+                classNameModifiers={['otp']}
+            >
+                <InputText
+                    name={'otp'}
+                    autocorrect={'off'}
+                    spellcheck={false}
+                    value={data.otp}
+                    disabled={props.disabled}
+                    onInput={handleChangeFor('otp', 'input')}
+                    onBlur={handleChangeFor('otp', 'blur')}
+                    onKeyPress={handleOnKeyPress}
+                    setRef={(ref: HTMLInputElement) => {
+                        inputRef.current = ref;
+                    }}
+                />
+            </Field>
+            <div className={'adyen-checkout-ctp__otp-resend-code-wrapper'}>
+                <CtPResendOtpLink disabled={props.isValidatingOtp} onError={handleOnResendOtpError} onResendCode={handleOnResendOtp} />
+            </div>
+        </div>
     );
 };
 
