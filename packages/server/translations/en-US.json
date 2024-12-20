@@ -328,6 +328,8 @@
     "payto.payid.header": "PayID",
     "payto.payid.description": "Enter the PayID and account details that are connected to your Payto account.",
     "payto.payid.label.identifier": "Identifier",
+    "payto.payid.label.abn": "ABN",
+    "payto.payid.label.orgid": "Organization ID",
     "payto.payid.option.phone": "Mobile",
     "payto.payid.option.email": "Email",
     "payto.payid.option.abn": "ABN",

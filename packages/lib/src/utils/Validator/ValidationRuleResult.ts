@@ -1,4 +1,4 @@
-import { ErrorMessageObject } from './types';
+import { ErrorMessageObject, ValidatorRule, ValidatorMode } from './types';
 
 /**
  * Holds the result of a validation
@@ -8,7 +8,7 @@ export class ValidationRuleResult {
     public isValid: boolean;
     public errorMessage: string | ErrorMessageObject;
 
-    constructor(rule, value, mode, context) {
+    constructor(rule: ValidatorRule, value: string, mode: ValidatorMode, context) {
         this.shouldValidate = rule.modes.includes(mode);
         this.isValid = rule.validate(value, context);
         this.errorMessage = rule.errorMessage;
