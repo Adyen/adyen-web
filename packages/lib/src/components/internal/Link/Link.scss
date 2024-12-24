@@ -1,0 +1,18 @@
+@import 'styles/variable-generator';
+
+.adyen-checkout-link {
+  color: token(color-decorative-blue);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.adyen-checkout-link:hover {
+  color: token(color-label-on-background-highlight-weak);
+  text-decoration: none;
+}
+
+.adyen-checkout-link:hover:active {
+  color: #005AC4;
+}
+
+

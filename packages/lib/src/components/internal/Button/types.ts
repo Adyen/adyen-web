@@ -1,3 +1,5 @@
+import type { Ref } from 'preact';
+
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'action' | 'link';
 
 export interface ButtonProps {
@@ -9,6 +11,7 @@ export interface ButtonProps {
     variant?: ButtonVariant;
     disabled?: boolean;
     label?: string;
+    ariaLabel?: string;
     secondaryLabel?: string;
     icon?: string;
     inline?: boolean;
@@ -17,6 +20,7 @@ export interface ButtonProps {
     rel?: string;
     onClick?: (e, callbacks) => void;
     onKeyDown?: (event: KeyboardEvent) => void;
+    buttonRef?: Ref<HTMLButtonElement>;
 }
 
 export interface ButtonState {

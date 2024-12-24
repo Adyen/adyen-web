@@ -324,5 +324,14 @@
     "paynow.mobileViewInstruction.step2": "Open the PayNow bank or payment app.",
     "paynow.mobileViewInstruction.step3": "Select the option to scan a QR code.",
     "paynow.mobileViewInstruction.step4": "Choose the option to upload a QR and select the screenshot.",
-    "paynow.mobileViewInstruction.step5": "Complete the transaction."
+    "paynow.mobileViewInstruction.step5": "Complete the transaction.",
+
+    "card.fastlane.consentToggle": "Save your info with Fastlane for faster checkouts",
+    "card.fastlane.consentText": "By saving your info, you agree to get codes by text to use Fastlane everywhere it's available. You also agree to the %#terms%# and %#privacy statement%#.",
+    "card.fastlane.modal.benefit1.header": "Autofill your checkouts",
+    "card.fastlane.modal.benefit1.text": "Get one-time codes to use card and addresses you’ve saved.",
+    "card.fastlane.modal.benefit2.header": "Protect your info",
+    "card.fastlane.modal.benefit2.text": "Your payment info is encrypted when it’s stored and sent to places you shop.",
+    "card.fastlane.modal.benefit3.header": "Use across stores",
+    "card.fastlane.modal.benefit3.text": "Speed through checkout everywhere Fastlane is available."
 }

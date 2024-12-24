@@ -28,6 +28,7 @@ import { CbObjOnBrand, CbObjOnFocus } from '../../../internal/SecuredFields/lib/
 import { FieldErrorAnalyticsObject } from '../../../../core/Analytics/types';
 import { PREFIX } from '../../../internal/Icon/constants';
 import useSRPanelForCardInputErrors from './useSRPanelForCardInputErrors';
+import FastlaneSignup from '../Fastlane/FastlaneSignup';
 
 const CardInput = (props: CardInputProps) => {
     const sfp = useRef(null);
@@ -480,6 +481,9 @@ const CardInput = (props: CardInputProps) => {
                     </div>
                 )}
             />
+
+            <FastlaneSignup termsAndConditionsLink="https://adyen.com" privacyPolicyLink="https://adyen.com" defaultToggleState={true} />
+
             {props.showPayButton &&
                 props.payButton({
                     status,

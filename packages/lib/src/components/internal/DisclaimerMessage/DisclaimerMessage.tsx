@@ -2,6 +2,7 @@ import { Fragment, h } from 'preact';
 import { isValidHttpUrl } from '../../../utils/isValidURL';
 import './DisclaimerMessage.scss';
 import { interpolateElement } from '../../../language/utils';
+import Link from '../Link';
 
 export interface DisclaimerMsgObject {
     message: string;
@@ -43,11 +44,7 @@ export function LabelOnlyDisclaimerMessage({ message, urls }: InternalDisclaimer
                     // for each URL in the URLs array, return a createLink function
                     url =>
                         function createLink(translation) {
-                            return (
-                                <a className="adyen-checkout__link" href={url} target="_blank" rel="noopener noreferrer">
-                                    {translation}
-                                </a>
-                            );
+                            return <Link to={url}>{translation}</Link>;
                         }
                 )
             )}
