@@ -5,50 +5,49 @@ import { Modal } from '../../../internal/Modal';
 import Img from '../../../internal/Img';
 import Button from '../../../internal/Button';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
-
+import uuid from '../../../../utils/uuid';
 import './FastlaneModal.scss';
 
-let idGenerator = Date.now();
-
-function getUniqueId() {
-    idGenerator += 1;
-    return `adyen-${idGenerator}`;
-}
-
-type CtPInfoModalProps = {
+interface InfoModalProps {
     isOpen: boolean;
-    onClose(): void;
     focusAfterClose: HTMLElement;
-};
+    onClose(): void;
+}
 
 const FASTLANE_BENEFITS = [
     {
         headerKey: 'card.fastlane.modal.benefit1.header',
-        textKey: 'card.fastlane.modal.benefit1.text',
+        labelById: `adyen-fastlane-modal-label-${uuid()}`,
+        descriptionTextKey: 'card.fastlane.modal.benefit1.text',
+        describedById: `adyen-fastlane-modal-describedBy-${uuid()}`,
         image: 'cross',
         altImage: ''
     },
     {
         headerKey: 'card.fastlane.modal.benefit2.header',
-        textKey: 'card.fastlane.modal.benefit2.text',
+        labelById: `adyen-fastlane-modal-label-${uuid()}`,
+        descriptionTextKey: 'card.fastlane.modal.benefit2.text',
+        describedById: `adyen-fastlane-modal-describedBy-${uuid()}`,
         image: 'cross',
         altImage: ''
     },
     {
         headerKey: 'card.fastlane.modal.benefit3.header',
-        textKey: 'card.fastlane.modal.benefit3.text',
+        labelById: `adyen-fastlane-modal-label-${uuid()}`,
+        descriptionTextKey: 'card.fastlane.modal.benefit3.text',
+        describedById: `adyen-fastlane-modal-describedBy-${uuid()}`,
         image: 'cross',
         altImage: ''
     }
 ];
 
-const FastlaneModal = ({ isOpen, onClose, focusAfterClose }: CtPInfoModalProps) => {
+const InfoModal = ({ isOpen, onClose, focusAfterClose }: InfoModalProps) => {
     const { i18n } = useCoreContext();
     const focusFirstElement = useRef<HTMLParagraphElement>();
     const getImage = useImage();
 
-    const labelledBy = getUniqueId();
-    const describedBy = getUniqueId();
+    const labelledBy = FASTLANE_BENEFITS.map(benefit => benefit.labelById).join(' ');
+    const describedBy = FASTLANE_BENEFITS.map(benefit => benefit.describedById).join(' ');
 
     return (
         <Modal
@@ -78,8 +77,12 @@ const FastlaneModal = ({ isOpen, onClose, focusAfterClose }: CtPInfoModalProps) 
                                 src={getImage({ imageFolder: 'components/' })(benefit.image)}
                                 alt={benefit.altImage}
                             />
-                            <h1 className="adyen-checkout-card-fastlane__modal-header">{i18n.get(benefit.headerKey)}</h1>
-                            <div className="adyen-checkout-card-fastlane__modal-text">{i18n.get(benefit.textKey)}</div>
+                            <h1 id={benefit.labelById} className="adyen-checkout-card-fastlane__modal-header">
+                                {i18n.get(benefit.headerKey)}
+                            </h1>
+                            <div id={benefit.describedById} className="adyen-checkout-card-fastlane__modal-text">
+                                {i18n.get(benefit.descriptionTextKey)}
+                            </div>
                         </div>
                     ))}
 
@@ -94,4 +97,4 @@ const FastlaneModal = ({ isOpen, onClose, focusAfterClose }: CtPInfoModalProps) 
     );
 };
 
-export { FastlaneModal };
+export { InfoModal };

@@ -2,18 +2,15 @@ import { Fragment, h } from 'preact';
 import { useCallback, useRef, useState } from 'preact/hooks';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import useImage from '../../../../core/Context/useImage';
-import { FastlaneModal } from './FastlaneModal';
+import { InfoModal } from './InfoModal';
 import Img from '../../../internal/Img';
 import Button from '../../../internal/Button';
 
-// import './CtPInfo.scss';
-
-const FastlaneInfo = () => {
+const InfoButton = () => {
     const [isInfoModalOpen, setIsInfoModalOpen] = useState<boolean>(false);
-    const buttonRef = useRef();
     const { i18n } = useCoreContext();
     const getImage = useImage();
-    const url = getImage({ imageFolder: 'components/' })('info');
+    const buttonRef = useRef();
 
     const handleOnClose = useCallback(() => {
         setIsInfoModalOpen(false);
@@ -32,12 +29,12 @@ const FastlaneInfo = () => {
                 inline
                 variant="link"
                 ariaLabel={i18n.get('card.fastlane.a11y.openModal')}
-                label={<Img height="16" width="16" src={url} alt="" ariaHidden={true} />}
+                label={<Img height="16" width="16" src={getImage({ imageFolder: 'components/' })('info')} alt="" ariaHidden={true} />}
             />
 
-            <FastlaneModal isOpen={isInfoModalOpen} onClose={handleOnClose} focusAfterClose={buttonRef.current} />
+            <InfoModal isOpen={isInfoModalOpen} onClose={handleOnClose} focusAfterClose={buttonRef.current} />
         </Fragment>
     );
 };
 
-export { FastlaneInfo };
+export { InfoButton };

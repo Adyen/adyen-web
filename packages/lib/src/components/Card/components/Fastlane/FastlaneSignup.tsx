@@ -4,7 +4,7 @@ import './FastlaneSignup.scss';
 import Img from '../../../internal/Img';
 import useImage from '../../../../core/Context/useImage';
 import MobileInput from './MobileInput';
-import { FastlaneInfo } from './FastlaneInfo';
+import { InfoButton } from './InfoButton';
 import { useState } from 'preact/hooks';
 import cx from 'classnames';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
@@ -29,7 +29,7 @@ const FastlaneSignup = ({ termsAndConditionsLink, privacyPolicyLink, defaultTogg
                 })}
             >
                 <Toggle checked={isChecked} onChange={setIsChecked} label={i18n.get('card.fastlane.consentToggle')} />
-                <FastlaneInfo />
+                <InfoButton />
             </div>
 
             {isChecked && (
