@@ -26,19 +26,19 @@ const FASTLANE_BENEFITS = [
         headerKey: 'card.fastlane.modal.benefit1.header',
         textKey: 'card.fastlane.modal.benefit1.text',
         image: 'cross',
-        altImage: 'cross'
+        altImage: ''
     },
     {
         headerKey: 'card.fastlane.modal.benefit2.header',
         textKey: 'card.fastlane.modal.benefit2.text',
         image: 'cross',
-        altImage: 'cross'
+        altImage: ''
     },
     {
         headerKey: 'card.fastlane.modal.benefit3.header',
         textKey: 'card.fastlane.modal.benefit3.text',
         image: 'cross',
-        altImage: 'cross'
+        altImage: ''
     }
 ];
 
@@ -67,7 +67,7 @@ const FastlaneModal = ({ isOpen, onClose, focusAfterClose }: CtPInfoModalProps) 
                             inline
                             variant="link"
                             ariaLabel="Close dialog"
-                            label={<Img height="16" width="16" src={getImage({ imageFolder: 'components/' })('cross')} alt="Close" />}
+                            label={<Img height="16" width="16" src={getImage({ imageFolder: 'components/' })('cross')} ariaHidden={true} alt="" />}
                         />
                     </div>
 
@@ -86,7 +86,7 @@ const FastlaneModal = ({ isOpen, onClose, focusAfterClose }: CtPInfoModalProps) 
                     <Img
                         className="adyen-checkout-card-fastlane__modal-brand"
                         src={getImage({ imageFolder: 'components/' })(`paypal_fastlane_black`)}
-                        alt="Fastlane logo"
+                        alt={i18n.get('card.fastlane.a11y.logo')}
                     />
                 </div>
             )}

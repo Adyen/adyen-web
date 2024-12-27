@@ -3,7 +3,6 @@ import Toggle from '../../../internal/Toggle';
 import './FastlaneSignup.scss';
 import Img from '../../../internal/Img';
 import useImage from '../../../../core/Context/useImage';
-import Link from '../../../internal/Link';
 import MobileInput from './MobileInput';
 import { FastlaneInfo } from './FastlaneInfo';
 import { useState } from 'preact/hooks';
@@ -47,7 +46,7 @@ const FastlaneSignup = ({ termsAndConditionsLink, privacyPolicyLink, defaultTogg
                     <Img
                         className="adyen-checkout-card__fastlane-brand"
                         src={getImage({ imageFolder: 'components/' })(`paypal_fastlane_black`)}
-                        alt="Fastlane logo"
+                        alt={i18n.get('card.fastlane.a11y.logo')}
                     />
                 </Fragment>
             )}

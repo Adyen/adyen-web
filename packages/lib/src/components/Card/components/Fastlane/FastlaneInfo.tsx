@@ -31,8 +31,8 @@ const FastlaneInfo = () => {
                 classNameModifiers={['fastlane-modal']}
                 inline
                 variant="link"
-                ariaLabel="Close dialog"
-                label={<Img height="16" width="16" src={url} ariaHidden={true} />}
+                ariaLabel={i18n.get('card.fastlane.a11y.openModal')}
+                label={<Img height="16" width="16" src={url} alt="" ariaHidden={true} />}
             />
 
             <FastlaneModal isOpen={isInfoModalOpen} onClose={handleOnClose} focusAfterClose={buttonRef.current} />
