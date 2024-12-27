@@ -1,14 +1,15 @@
 import { Fragment, h } from 'preact';
-import Toggle from '../../../internal/Toggle';
-import './FastlaneSignup.scss';
-import Img from '../../../internal/Img';
-import useImage from '../../../../core/Context/useImage';
-import MobileInput from './MobileInput';
-import { InfoButton } from './InfoButton';
 import { useState } from 'preact/hooks';
 import cx from 'classnames';
+import Toggle from '../../../internal/Toggle';
+import Img from '../../../internal/Img';
+import useImage from '../../../../core/Context/useImage';
+import USOnlyPhoneInput from './USOnlyPhoneInput';
+import { InfoButton } from './InfoButton';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { LabelOnlyDisclaimerMessage } from '../../../internal/DisclaimerMessage/DisclaimerMessage';
+
+import './FastlaneSignup.scss';
 
 interface FastlaneSignupProps {
     termsAndConditionsLink: string;
@@ -34,15 +35,13 @@ const FastlaneSignup = ({ termsAndConditionsLink, privacyPolicyLink, defaultTogg
 
             {isChecked && (
                 <Fragment>
-                    <MobileInput onChange={value => console.log(value)} />
-
+                    <USOnlyPhoneInput onChange={value => console.log(value)} />
                     <div className="adyen-checkout-card__fastlane-consent-text">
                         <LabelOnlyDisclaimerMessage
                             message={i18n.get('card.fastlane.consentText')}
                             urls={[termsAndConditionsLink, privacyPolicyLink]}
                         />
                     </div>
-
                     <Img
                         className="adyen-checkout-card__fastlane-brand"
                         src={getImage({ imageFolder: 'components/' })(`paypal_fastlane_black`)}

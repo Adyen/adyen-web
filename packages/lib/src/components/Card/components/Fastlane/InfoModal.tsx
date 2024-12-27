@@ -6,7 +6,8 @@ import Img from '../../../internal/Img';
 import Button from '../../../internal/Button';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import uuid from '../../../../utils/uuid';
-import './FastlaneModal.scss';
+
+import './InfoModal.scss';
 
 interface InfoModalProps {
     isOpen: boolean;
@@ -73,14 +74,14 @@ const InfoModal = ({ isOpen, onClose, focusAfterClose }: InfoModalProps) => {
                     {FASTLANE_BENEFITS.map((benefit, index) => (
                         <div key={index} className="adyen-checkout-card-fastlane__modal-section">
                             <Img
-                                className="adyen-checkout-card-fastlane__modal-image"
+                                className="adyen-checkout-card-fastlane__modal-section-image"
                                 src={getImage({ imageFolder: 'components/' })(benefit.image)}
                                 alt={benefit.altImage}
                             />
-                            <h1 id={benefit.labelById} className="adyen-checkout-card-fastlane__modal-header">
+                            <h1 id={benefit.labelById} className="adyen-checkout-card-fastlane__modal-section-header">
                                 {i18n.get(benefit.headerKey)}
                             </h1>
-                            <div id={benefit.describedById} className="adyen-checkout-card-fastlane__modal-text">
+                            <div id={benefit.describedById} className="adyen-checkout-card-fastlane__modal-section-text">
                                 {i18n.get(benefit.descriptionTextKey)}
                             </div>
                         </div>

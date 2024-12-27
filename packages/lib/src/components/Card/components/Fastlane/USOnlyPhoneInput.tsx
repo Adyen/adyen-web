@@ -4,17 +4,17 @@ import InputText from '../../../internal/FormFields/InputText';
 import Field from '../../../internal/FormFields/Field';
 import useForm from '../../../../utils/useForm';
 
-interface MobileInputStateData {
+interface USOnlyPhoneInputStateData {
     mobileNumber?: string;
 }
 
-interface MobileInputProps {
+interface USOnlyPhoneInputProps {
     onChange(mobileNumber: string): void;
 }
 
-const MobileInput = ({ onChange }: MobileInputProps) => {
+const USOnlyPhoneInput = ({ onChange }: USOnlyPhoneInputProps) => {
     const formSchema = ['mobileNumber'];
-    const { handleChangeFor, data } = useForm<MobileInputStateData>({
+    const { handleChangeFor, data } = useForm<USOnlyPhoneInputStateData>({
         schema: formSchema
     });
 
@@ -40,4 +40,4 @@ const MobileInput = ({ onChange }: MobileInputProps) => {
     );
 };
 
-export default MobileInput;
+export default USOnlyPhoneInput;

@@ -25,7 +25,7 @@ const InfoButton = () => {
             <Button
                 buttonRef={buttonRef}
                 onClick={handleOnIconClick}
-                classNameModifiers={['fastlane-modal']}
+                classNameModifiers={['fastlane-info-modal']}
                 inline
                 variant="link"
                 ariaLabel={i18n.get('card.fastlane.a11y.openModal')}
