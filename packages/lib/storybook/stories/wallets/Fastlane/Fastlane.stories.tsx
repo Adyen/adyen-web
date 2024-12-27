@@ -41,6 +41,44 @@ export const Default: FastlaneStory = {
     }
 };
 
+export const WithMockedUnrecognizedFlow: FastlaneStory = {
+    render: checkoutConfig => {
+        const paymentMethodsOverride = {
+            paymentMethods: [
+                {
+                    type: 'scheme',
+                    name: 'Cards',
+                    brands: ['mc', 'visa']
+                }
+            ]
+        };
+
+        return (
+            <Checkout checkoutConfig={{ ...checkoutConfig, paymentMethodsOverride }}>
+                {checkout => (
+                    <ComponentContainer
+                        element={
+                            new Card(checkout, {
+                                onChange(state) {
+                                    console.log('onChange', state);
+                                },
+                                fastlaneConfiguration: {
+                                    showConsent: true,
+                                    defaultToggleState: true,
+                                    termsAndConditionsLink: 'https://adyen.com',
+                                    privacyPolicyLink: 'https://adyen.com',
+                                    termsAndConditionsVersion: 'v1',
+                                    fastlaneSessionId: 'ABC-123'
+                                }
+                            })
+                        }
+                    />
+                )}
+            </Checkout>
+        );
+    }
+};
+
 export const WithMockedRecognizedFlow: FastlaneStory = {
     render: checkoutConfig => {
         const paymentMethodsOverride = {

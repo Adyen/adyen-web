@@ -25,6 +25,7 @@ import { ComponentMethodsRef } from '../../../internal/UIElement/types';
 import { AddressData, PaymentAmount } from '../../../../types/global-types';
 import { AnalyticsModule } from '../../../../types/global-types';
 import { FieldErrorAnalyticsObject } from '../../../../core/Analytics/types';
+import type { FastlaneSignupConfiguration } from '../../../PayPalFastlane/types';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -92,6 +93,7 @@ export interface CardInputProps {
     enableStoreDetails?: boolean;
     expiryMonth?: string;
     expiryYear?: string;
+    fastlaneConfiguration?: FastlaneSignupConfiguration;
     forceCompat?: boolean;
     fundingSource?: 'debit' | 'credit';
     hasCVC?: boolean;
