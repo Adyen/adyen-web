@@ -12,13 +12,13 @@
     width: 100%;
 
     &-static-value {
-        background-color: #f7f7f8;
-        border-radius: 4px;
-        color: #00112c;
+        background-color: token(color-background-primary-hover);
+        border-radius: token(border-radius-s);
+        color: token(color-background-inverse-primary);
         display: flex;
         height: 28px;
-        padding: 4px 6px;
-        margin-left: 4px;
+        padding: token(spacer-020) token(spacer-030);
+        margin-left: token(spacer-020);
 
         @include mixins.adyen-checkout-text-body;
     }

@@ -38,7 +38,7 @@ const USOnlyPhoneInput = ({ onChange }: USOnlyPhoneInputProps) => {
     });
 
     useEffect(() => {
-        onChange(data.mobileNumber.replaceAll(' ', ''));
+        onChange(data.mobileNumber?.replaceAll(' ', ''));
     }, [data.mobileNumber, onChange]);
 
     return (
