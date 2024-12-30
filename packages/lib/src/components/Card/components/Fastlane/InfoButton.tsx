@@ -28,7 +28,7 @@ const InfoButton = () => {
                 classNameModifiers={['fastlane-info-modal']}
                 inline
                 variant="link"
-                ariaLabel={i18n.get('card.fastlane.a11y.openModal')}
+                ariaLabel={i18n.get('card.fastlane.a11y.openDialog')}
                 label={<Img height="16" width="16" src={getImage({ imageFolder: 'components/' })('info')} alt="" ariaHidden={true} />}
             />
 

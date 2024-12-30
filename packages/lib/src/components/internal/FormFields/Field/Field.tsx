@@ -3,11 +3,12 @@ import { cloneElement, ComponentChild, Fragment, FunctionalComponent, h, toChild
 import Spinner from '../../Spinner';
 import Icon from '../../Icon';
 import { ARIA_CONTEXT_SUFFIX, ARIA_ERROR_SUFFIX } from '../../../../core/Errors/constants';
-import { useCallback, useRef, useState } from 'preact/hooks';
+import { useCallback, useMemo, useRef, useState } from 'preact/hooks';
 import { getUniqueId } from '../../../../utils/idGenerator';
 import { FieldProps } from './types';
 import './Field.scss';
 import { PREFIX } from '../../Icon/constants';
+import uuid from '../../../../utils/uuid';
 
 const Field: FunctionalComponent<FieldProps> = props => {
     //
@@ -36,6 +37,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
         useLabelElement,
         showErrorElement,
         showContextualElement,
+        staticValue,
         contextualText,
         // Redeclare prop names to avoid internal clashes
         filled: propsFilled,
@@ -52,12 +54,20 @@ const Field: FunctionalComponent<FieldProps> = props => {
     const showContext = showContextualElement && !showError && contextualText?.length > 0;
 
     const uniqueId = useRef(getUniqueId(`adyen-checkout-${name}`));
+    const staticValueId = useMemo(() => (staticValue ? `input-static-value-${uuid()}` : null), [staticValue]);
+
+    const inputRef = useRef(null);
+
     const [focused, setFocused] = useState(false);
     const [filled, setFilled] = useState(false);
 
     // The means by which focussed/filled is set for securedFields
     if (propsFocused != null) setFocused(!!propsFocused);
     if (propsFilled != null) setFilled(!!propsFilled);
+
+    const focusInput = useCallback(() => {
+        inputRef.current?.focus();
+    }, [inputRef.current]);
 
     // The means by which focussed/filled is set for other fields - this function is passed down to them and triggered
     const onFocusHandler = useCallback(
@@ -126,19 +136,29 @@ const Field: FunctionalComponent<FieldProps> = props => {
 
         return (
             <Fragment>
+                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
                 <div
                     className={classNames([
                         'adyen-checkout__input-wrapper',
                         ...inputWrapperModifiers.map(m => `adyen-checkout__input-wrapper--${m}`)
                     ])}
                     dir={dir}
+                    onClick={focusInput}
                 >
+                    {staticValue && (
+                        <span id={staticValueId} className="adyen-checkout__field-static-value">
+                            {staticValue}
+                        </span>
+                    )}
+
                     {toChildArray(children).map((child: ComponentChild): ComponentChild => {
                         const childProps = {
                             isValid,
                             onFocusHandler,
                             onBlurHandler,
+                            setRef: inputRef,
                             isInvalid: !!errorMessage,
+                            'aria-owns': staticValueId,
                             ...(name && { uniqueId: uniqueId.current }),
                             showErrorElement: showErrorElement
                         };

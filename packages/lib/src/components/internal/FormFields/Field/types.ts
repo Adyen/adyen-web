@@ -26,6 +26,7 @@ export interface FieldProps {
     onFieldBlur?;
     dir?;
     showValidIcon?: boolean;
+    staticValue?: string | ComponentChildren;
     useLabelElement?: boolean;
     i18n?: Language;
     contextVisibleToScreenReader?: boolean;

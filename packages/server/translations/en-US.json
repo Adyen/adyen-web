@@ -327,7 +327,9 @@
     "paynow.mobileViewInstruction.step5": "Complete the transaction.",
 
     "card.fastlane.a11y.logo": "Fastlane by Paypal logo",
-    "card.fastlane.a11y.openModal": "Read more about Fastlane",
+    "card.fastlane.a11y.openDialog": "Read more about Fastlane",
+    "card.fastlane.a11y.closeDialog": "Close dialog",
+    "card.fastlane.mobileInputLabel": "Mobile number",
     "card.fastlane.consentToggle": "Save your info with Fastlane for faster checkouts",
     "card.fastlane.consentText": "By saving your info, you agree to get codes by text to use Fastlane everywhere it's available. You also agree to the %#terms%# and %#privacy statement%#.",
     "card.fastlane.modal.benefit1.header": "Autofill your checkouts",

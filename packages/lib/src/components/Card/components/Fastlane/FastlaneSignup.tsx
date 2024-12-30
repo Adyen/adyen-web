@@ -36,6 +36,7 @@ const FastlaneSignup = ({
     const [telephoneNumber, setTelephoneNumber] = useState<string>('');
     const { i18n } = useCoreContext();
 
+    // Blocked by paypal
     // TODO: Validate that parameters are valid. If showConsent is false, do we get privacyLink, t&c link, version, etc?
 
     useEffect(() => {
@@ -71,7 +72,7 @@ const FastlaneSignup = ({
 
             {isChecked && (
                 <Fragment>
-                    <USOnlyPhoneInput onChange={() => {}} />
+                    <USOnlyPhoneInput onChange={setTelephoneNumber} />
                     <div className="adyen-checkout-card__fastlane-consent-text">
                         <LabelOnlyDisclaimerMessage
                             message={i18n.get('card.fastlane.consentText')}
