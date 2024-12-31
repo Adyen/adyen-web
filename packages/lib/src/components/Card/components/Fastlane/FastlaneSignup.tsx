@@ -9,6 +9,7 @@ import { InfoButton } from './InfoButton';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { LabelOnlyDisclaimerMessage } from '../../../internal/DisclaimerMessage/DisclaimerMessage';
 import type { FastlaneSignupConfiguration } from '../../../PayPalFastlane/types';
+import { isConfigurationValid } from './utils/validate-configuration';
 
 import './FastlaneSignup.scss';
 
@@ -36,10 +37,23 @@ const FastlaneSignup = ({
     const [telephoneNumber, setTelephoneNumber] = useState<string>('');
     const { i18n } = useCoreContext();
 
-    // Blocked by paypal
-    // TODO: Validate that parameters are valid. If showConsent is false, do we get privacyLink, t&c link, version, etc?
+    const isFastlaneConfigurationValid = useMemo(() => {
+        // TODO: Check with PayPal. If showConsent is false, do we get privacyLink, t&c link, version, etc?
+        return isConfigurationValid({
+            showConsent,
+            defaultToggleState,
+            termsAndConditionsLink,
+            privacyPolicyLink,
+            termsAndConditionsVersion,
+            fastlaneSessionId
+        });
+    }, [showConsent, defaultToggleState, termsAndConditionsLink, privacyPolicyLink, termsAndConditionsVersion, fastlaneSessionId]);
 
     useEffect(() => {
+        if (!isFastlaneConfigurationValid) {
+            return;
+        }
+
         onChange({
             fastlaneData: {
                 consentShown,
@@ -49,13 +63,13 @@ const FastlaneSignup = ({
                 ...(telephoneNumber && { telephoneNumber })
             }
         });
-    }, [consentShown, termsAndConditionsVersion, isChecked, fastlaneSessionId, telephoneNumber, onChange]);
+    }, [consentShown, termsAndConditionsVersion, isChecked, fastlaneSessionId, telephoneNumber, onChange, isFastlaneConfigurationValid]);
 
     useEffect(() => {
         if (displaySignup) setConsentShown(true);
     }, [displaySignup]);
 
-    if (!displaySignup) {
+    if (!displaySignup || !isFastlaneConfigurationValid) {
         return null;
     }
 
