@@ -11,7 +11,6 @@ import { PREFIX } from '../../Icon/constants';
 import uuid from '../../../../utils/uuid';
 
 const Field: FunctionalComponent<FieldProps> = props => {
-    //
     const {
         children,
         className,
@@ -44,7 +43,8 @@ const Field: FunctionalComponent<FieldProps> = props => {
         focused: propsFocused,
         i18n,
         contextVisibleToScreenReader,
-        renderAlternativeToLabel
+        renderAlternativeToLabel,
+        onInputContainerClick
     } = props;
 
     // Controls whether any error element has an aria-hidden="true" attr (which means it is the error for a securedField)
@@ -56,18 +56,12 @@ const Field: FunctionalComponent<FieldProps> = props => {
     const uniqueId = useRef(getUniqueId(`adyen-checkout-${name}`));
     const staticValueId = useMemo(() => (staticValue ? `input-static-value-${uuid()}` : null), [staticValue]);
 
-    const inputRef = useRef(null);
-
     const [focused, setFocused] = useState(false);
     const [filled, setFilled] = useState(false);
 
     // The means by which focussed/filled is set for securedFields
     if (propsFocused != null) setFocused(!!propsFocused);
     if (propsFilled != null) setFilled(!!propsFilled);
-
-    const focusInput = useCallback(() => {
-        inputRef.current?.focus();
-    }, [inputRef.current]);
 
     // The means by which focussed/filled is set for other fields - this function is passed down to them and triggered
     const onFocusHandler = useCallback(
@@ -143,7 +137,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
                         ...inputWrapperModifiers.map(m => `adyen-checkout__input-wrapper--${m}`)
                     ])}
                     dir={dir}
-                    onClick={focusInput}
+                    onClick={onInputContainerClick}
                 >
                     {staticValue && (
                         <span id={staticValueId} className="adyen-checkout__field-static-value">
@@ -152,17 +146,17 @@ const Field: FunctionalComponent<FieldProps> = props => {
                     )}
 
                     {toChildArray(children).map((child: ComponentChild): ComponentChild => {
-                        const childProps = {
+                        const propsFromFieldComponent = {
                             isValid,
                             onFocusHandler,
                             onBlurHandler,
-                            setRef: inputRef,
                             isInvalid: !!errorMessage,
                             'aria-owns': staticValueId,
                             ...(name && { uniqueId: uniqueId.current }),
                             showErrorElement: showErrorElement
                         };
-                        return cloneElement(child as VNode, childProps);
+
+                        return cloneElement(child as VNode, propsFromFieldComponent);
                     })}
 
                     {isLoading && (

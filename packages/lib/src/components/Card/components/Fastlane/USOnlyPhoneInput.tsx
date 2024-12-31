@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useEffect } from 'preact/hooks';
+import { useCallback, useEffect, useRef } from 'preact/hooks';
 import Field from '../../../internal/FormFields/Field';
 import useForm from '../../../../utils/useForm';
 import InputTelephone from '../../../internal/FormFields/InputTelephone';
@@ -36,13 +36,18 @@ const USOnlyPhoneInput = ({ onChange }: USOnlyPhoneInputProps) => {
             mobileNumber: mobileNumberFormatter
         }
     });
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    const focusInput = useCallback(() => {
+        inputRef.current?.focus();
+    }, [inputRef.current]);
 
     useEffect(() => {
         onChange(data.mobileNumber?.replaceAll(' ', ''));
     }, [data.mobileNumber, onChange]);
 
     return (
-        <Field name="mobile-number" label={i18n.get('card.fastlane.mobileInputLabel')} staticValue="+1">
+        <Field name="mobile-number" label={i18n.get('card.fastlane.mobileInputLabel')} staticValue="+1" onInputContainerClick={focusInput}>
             <InputTelephone
                 name={'mobile-number'}
                 autocorrect={'off'}
@@ -51,6 +56,7 @@ const USOnlyPhoneInput = ({ onChange }: USOnlyPhoneInputProps) => {
                 value={data.mobileNumber}
                 onInput={handleChangeFor('mobileNumber', 'input')}
                 onBlur={handleChangeFor('mobileNumber', 'blur')}
+                setRef={inputRef}
             />
         </Field>
     );

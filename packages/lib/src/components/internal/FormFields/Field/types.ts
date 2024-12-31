@@ -31,6 +31,10 @@ export interface FieldProps {
     i18n?: Language;
     contextVisibleToScreenReader?: boolean;
     renderAlternativeToLabel?: (defaultWrapperProps, children, uniqueId) => any;
+    /**
+     * Callback that reports when there is a click on the input field parent container
+     */
+    onInputContainerClick?(): void;
 }
 
 export interface FieldState {
