@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'preact/hooks';
+import { createRef } from 'preact';
+import { useEffect, useState } from 'preact/hooks';
 import UIElement from '../../src/components/internal/UIElement';
 import { addToWindow } from '../utils/add-to-window';
 
@@ -7,7 +8,7 @@ interface IContainer {
 }
 
 export const ComponentContainer = ({ element }: IContainer) => {
-    const container = useRef(null);
+    const container = createRef();
     const [errorMessage, setErrorMessage] = useState(null);
 
     useEffect(() => {
