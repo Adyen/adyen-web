@@ -48,6 +48,7 @@ $color-alert: token(color-background-critical-strong, false);
 }
 
 .adyen-checkout__payment-method__disable-confirmation__button {
+    font-size: token(text-body-font-size);
     background: token(color-background-critical-strong);
     border: token(border-width-s) solid transparent;
     border-radius: token(border-radius-m);
