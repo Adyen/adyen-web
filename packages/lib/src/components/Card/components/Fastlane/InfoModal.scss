@@ -1,0 +1,56 @@
+@use 'styles/mixins';
+@import 'styles/variable-generator';
+
+.adyen-checkout-card-fastlane__modal {
+    max-width: 372px;
+    margin-bottom: token(spacer-070);
+
+    &-section {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-template-rows: auto;
+        grid-template-areas:
+            'image header'
+            '. text';
+        place-items: start;
+        column-gap: token(spacer-070);
+        margin-bottom: token(spacer-060);
+
+        &-image {
+            grid-area: image;
+            place-self: center;
+        }
+
+        &-header {
+            grid-area: header;
+            margin: 0;
+            line-height: token('text-title-m-line-height');
+            font-size: token('text-title-m-font-size');
+            font-weight: token('text-title-m-font-weight');
+            color: token('color-background-inverse-primary');
+        }
+
+        &-text {
+            grid-area: text;
+            color: token('color-background-inverse-primary');
+
+            @include mixins.adyen-checkout-text-body;
+        }
+    }
+
+    &-brand {
+        width: 168px;
+        height: 23px;
+        margin-top: token(spacer-040);
+    }
+
+    &-button-container {
+        display: flex;
+        flex-direction: row-reverse;
+        margin-bottom: token(spacer-060);
+
+        > button {
+            line-height: 0;
+        }
+    }
+}

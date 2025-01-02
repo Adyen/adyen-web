@@ -106,15 +106,17 @@ type FastlaneComponentConfiguration = {
 type FastlaneCardComponentConfiguration = {
     paymentType: 'card';
     configuration: {
-        fastlaneConfiguration: {
-            showConsent: boolean;
-            defaultToggleState: boolean;
-            termsAndConditionsLink: string;
-            privacyPolicyLink: string;
-            termsAndConditionsVersion: string;
-            fastlaneSessionId: string;
-        };
+        fastlaneConfiguration: FastlaneSignupConfiguration;
     };
+};
+
+export type FastlaneSignupConfiguration = {
+    showConsent: boolean;
+    defaultToggleState: boolean;
+    termsAndConditionsLink: string;
+    privacyPolicyLink: string;
+    termsAndConditionsVersion: string;
+    fastlaneSessionId: string;
 };
 
 export type FastlanePaymentMethodConfiguration = FastlaneComponentConfiguration | FastlaneCardComponentConfiguration;

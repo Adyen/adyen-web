@@ -1,0 +1,42 @@
+@use 'styles/mixins';
+@import 'styles/variable-generator';
+
+.adyen-checkout-card__fastlane {
+    background: token(color-background-primary);
+    border: token(border-width-s) solid token(color-outline-primary);
+    border-radius: token(border-radius-m);
+    padding: token(spacer-060) token(spacer-070);
+    margin-top: token(spacer-070);
+    align-items: center;
+
+    [dir='rtl'] & {
+        padding: token(spacer-060) token(spacer-070);
+    }
+
+    &-consent-toggle {
+        display: flex;
+        gap: token(spacer-040);
+
+        &--active {
+            margin-bottom: token(spacer-070);
+        }
+    }
+
+    &-consent-text {
+        margin-bottom: token(spacer-070);
+
+        @include mixins.adyen-checkout-text-caption;
+    }
+
+    &-brand {
+        width: 168px;
+        height: 23px;
+    }
+}
+
+.adyen-checkout__button.adyen-checkout__button--fastlane-info-modal {
+    width: 20px;
+    height: 20px;
+    line-height: 0;
+    padding: 0;
+}

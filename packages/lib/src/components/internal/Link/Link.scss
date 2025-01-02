@@ -1,5 +1,7 @@
-@use 'mixins';
+@use 'styles/mixins';
+@import 'styles/variable-generator';
 
 .adyen-checkout-link {
   @include mixins.adyen-checkout-link;
 }
+
