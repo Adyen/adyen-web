@@ -6,6 +6,7 @@ export const URL_MAP = {
         '/iframe.html?globals=&args=amount:0;sessionData.recurringProcessingModel:CardOnFile;sessionData.storePaymentMethodMode:askForConsent&id=dropin-default--auto&viewMode=story',
     dropinSessions_zeroAuthCard_fail:
         '/iframe.html?globals=&args=amount:0;sessionData.recurringProcessingModel:CardOnFile;sessionData.storePaymentMethodMode:askForConsent;sessionData.enableOneClick:!true&id=dropin-default--auto&viewMode=story',
+    dropinWithSession_BCMC_noStoredPms: '/iframe.html?args=countryCode:BE&globals=&id=dropin-default--auto&viewMode=story',
 
     /**
      * Card

@@ -28,7 +28,7 @@ const GooglePayButton = (props: GooglePayButtonProps) => {
                     buttonLocale,
                     buttonSizeMode,
                     buttonRootNode,
-                    ...(buttonRadius && { buttonRadius })
+                    ...(buttonRadius !== undefined && { buttonRadius })
                 })
             )
             .then(googlePayButton => {

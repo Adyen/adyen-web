@@ -251,7 +251,13 @@ export const Express: GooglePayStory = {
             },
 
             // Shipping Options config
-            shippingOptionRequired: true
+            shippingOptionRequired: true,
+
+            // Button UI config
+            buttonColor: 'black',
+            buttonType: 'buy',
+            buttonSizeMode: 'fill',
+            buttonRadius: 0
         }
     }
 };

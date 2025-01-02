@@ -24,8 +24,7 @@ test.describe('Card payments with partial avs', () => {
             await cardWithAvs.typeExpiryDate(TEST_DATE_VALUE);
             await cardWithAvs.typeCvc(TEST_CVC_VALUE);
             await cardWithAvs.billingAddress.fillInPostCode(TEST_POSTCODE);
-            // wait for the form is valid
-            await page.waitForFunction(() => globalThis.component.isValid === true);
+            await cardWithAvs.isPayable();
             await cardWithAvs.pay();
             await cardWithAvs.paymentResult.waitFor({ state: 'visible' });
             await expect(cardWithAvs.paymentResult).toContainText(PAYMENT_RESULT.authorised);
