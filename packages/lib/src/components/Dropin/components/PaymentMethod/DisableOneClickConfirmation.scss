@@ -1,8 +1,16 @@
 @import 'styles/variable-generator';
 
-$color-alert: token(color-background-critical-strong,false);
+$color-alert: token(color-background-critical-strong, false);
 
 .adyen-checkout__payment-method__disable-confirmation {
+    $component-root: &;
+
+    display: grid;
+    grid-template-rows: 0fr;
+    transition:
+        grid-template-rows token(animation-duration-moderate) token(animation-easing-linear),
+        opacity token(animation-duration-moderate) token(animation-easing-standard),
+        margin-bottom token(animation-duration-fast) token(animation-easing-linear);
     background: token(color-background-critical-strong);
     font-size: token(text-body-font-size);
     color: token(color-label-on-color);
@@ -11,24 +19,28 @@ $color-alert: token(color-background-critical-strong,false);
     overflow: hidden;
     opacity: 0;
     margin: 0 -17px;
-    max-height: 0;
-    transition:
-        opacity 0.15s ease-out,
-        max-height 0.15s linear,
-        margin-bottom 0.1s linear;
 
-    &.adyen-checkout__payment-method__disable-confirmation--open {
-        max-height: 62px;
+    &__content {
+        min-height: 0;
+        transition:
+            visibility token(animation-duration-moderate) token(animation-easing-linear),
+            padding token(animation-duration-fast) token(animation-easing-linear);
+        visibility: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    &--open {
+        grid-template-rows: 1fr;
         opacity: 1;
         margin-bottom: token(spacer-070);
-    }
-}
 
-.adyen-checkout__payment-method__disable-confirmation__content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: token(spacer-040) token(spacer-070);
+        #{$component-root}__content {
+            visibility: visible;
+            padding: token(spacer-040) token(spacer-070);
+        }
+    }
 }
 
 .adyen-checkout__payment-method__disable-confirmation__buttons {
@@ -36,6 +48,7 @@ $color-alert: token(color-background-critical-strong,false);
 }
 
 .adyen-checkout__payment-method__disable-confirmation__button {
+    font-size: token(text-body-font-size);
     background: token(color-background-critical-strong);
     border: token(border-width-s) solid transparent;
     border-radius: token(border-radius-m);
