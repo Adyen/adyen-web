@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import type { ComponentChildren } from 'preact';
+
 import './Link.scss';
 
 /**
@@ -12,7 +13,6 @@ interface LinkProps {
 }
 
 const Link = ({ to, children }: LinkProps) => {
-    // TODO: check classname adyen-checkout-link vs adyen-checkout__link
     return (
         <a className="adyen-checkout-link" href={to} target="_blank" rel="noopener noreferrer">
             {children}

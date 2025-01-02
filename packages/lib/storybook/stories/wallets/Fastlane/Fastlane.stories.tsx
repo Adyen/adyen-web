@@ -65,7 +65,7 @@ export const WithMockedUnrecognizedFlow: FastlaneStory = {
                                 fastlaneConfiguration: {
                                     showConsent: true,
                                     defaultToggleState: true,
-                                    termsAndConditionsLink: 'http://adyen.com',
+                                    termsAndConditionsLink: 'https://adyen.com',
                                     privacyPolicyLink: 'https://adyen.com',
                                     termsAndConditionsVersion: 'v1',
                                     fastlaneSessionId: 'ABC-123'
