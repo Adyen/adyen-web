@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 5.71.2
+
+### Patch Changes
+
+-   Adding missing Trustly translations ([#3056](https://github.com/Adyen/adyen-web/pull/3056))
+
 ## 5.71.1
 
 ### Patch Changes
