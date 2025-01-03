@@ -19,8 +19,7 @@ import type {
     PaymentAmount,
     PaymentData,
     PaymentMethodsResponse,
-    PaymentResponseData,
-    RawPaymentResponse
+    PaymentResponseData
 } from '../../../types/global-types';
 import type { IDropin } from '../../Dropin/types';
 import type { NewableComponent } from '../../../core/core.registry';
@@ -397,11 +396,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * Handles a /payments or /payments/details response.
      * The component will handle automatically actions, orders, and final results.
      *
-     * @param rawResponse -
+     * Expected to be called after sanitizeResponse has been run on the raw payment response
+     *
+     * @param response -
      */
-    protected handleResponse(rawResponse: RawPaymentResponse): void {
-        const response = sanitizeResponse(rawResponse);
-
+    protected handleResponse(response: PaymentResponseData): void {
         if (response.action) {
             this.elementRef.handleAction(response.action);
             return;
