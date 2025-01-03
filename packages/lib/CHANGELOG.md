@@ -1,5 +1,24 @@
 # @adyen/adyen-web
 
+## 6.7.0
+
+### Minor Changes
+
+-   Start tracking API errors for the following endpoints for analytics purposes: ([#3035](https://github.com/Adyen/adyen-web/pull/3035))
+
+    -   `/sessions/${session.id}/payments`
+    -   `/sessions/${session.id}/orders`
+    -   `/sessions/${session.id}/paymentDetails`
+    -   `v1/submitThreeDS2Fingerprint`
+
+### Patch Changes
+
+-   Resolve the issue where `GooglePayButton` fails to pass `buttonRadius` to the `createButton` function when the value is 0. ([#3039](https://github.com/Adyen/adyen-web/pull/3039))
+
+-   Fix the styles for the remove stored card confirmation to ensure responsiveness on smaller devices. ([#3037](https://github.com/Adyen/adyen-web/pull/3037))
+
+-   Adding missing Trustly translations ([#3055](https://github.com/Adyen/adyen-web/pull/3055))
+
 ## 6.6.0
 
 ### Minor Changes
