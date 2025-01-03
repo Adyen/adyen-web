@@ -93,7 +93,7 @@ class CustomCard extends Base {
     }
 
     async typeCardNumber(cardNumber: string) {
-        await this.cardNumberInput.type(cardNumber, { delay: USER_TYPE_DELAY });
+        await this.cardNumberInput.pressSequentially(cardNumber, { delay: USER_TYPE_DELAY });
     }
 
     async deleteCardNumber() {
@@ -105,11 +105,11 @@ class CustomCard extends Base {
     }
 
     async typeExpiryDate(expiryDate: string) {
-        await this.expiryDateInput.type(expiryDate, { delay: USER_TYPE_DELAY });
+        await this.expiryDateInput.pressSequentially(expiryDate, { delay: USER_TYPE_DELAY });
     }
 
     async typeCvc(cvc: string) {
-        await this.cvcInput.type(cvc, { delay: USER_TYPE_DELAY });
+        await this.cvcInput.pressSequentially(cvc, { delay: USER_TYPE_DELAY });
     }
 }
 

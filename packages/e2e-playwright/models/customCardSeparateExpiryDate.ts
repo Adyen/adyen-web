@@ -72,10 +72,10 @@ class CustomCardSeparateExpiryDate extends CustomCard {
     }
 
     async typeExpiryMonth(expiryMonth: string) {
-        await this.expiryMonthInput.type(expiryMonth, { delay: USER_TYPE_DELAY });
+        await this.expiryMonthInput.pressSequentially(expiryMonth, { delay: USER_TYPE_DELAY });
     }
     async typeExpiryYear(expiryYear: string) {
-        await this.expiryYearInput.type(expiryYear, { delay: USER_TYPE_DELAY });
+        await this.expiryYearInput.pressSequentially(expiryYear, { delay: USER_TYPE_DELAY });
     }
 }
 
