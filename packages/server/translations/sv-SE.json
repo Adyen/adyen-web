@@ -284,6 +284,8 @@
     "consent.checkbox.invalid": "Du måste godkänna villkoren",
     "form.instruction": "Alla fält är obligatoriska om inte något annat anges.",
     "trustly.descriptor": "Omedelbar bankbetalning",
+    "trustly.description1": "Betala direkt från något av dina bankkonton med säkerhet på banknivå",
+    "trustly.description2": "Inga kort, ingen nerladdning av app, ingen registrering",
     "ancv.input.label": "Din ANCV-identifiering",
     "ancv.confirmPayment": "Bekräfta betalningen i din ANCV-app.",
     "ancv.form.instruction": "Appen Cheque-Vacances krävs för att validera denna betalning.",
