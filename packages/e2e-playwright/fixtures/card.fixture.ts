@@ -1,22 +1,28 @@
 import { test as base, expect } from '@playwright/test';
+import { URL_MAP } from './URL_MAP';
 import { Card } from '../models/card';
 import { BCMC } from '../models/bcmc';
-import { URL_MAP } from './URL_MAP';
 import { CardWithAvs } from '../models/card-avs';
 import { CardWithKCP } from '../models/card-kcp';
 import { CardWithSSN } from '../models/card-ssn';
+import { CardWithFastlane } from '../models/card-fastlane';
 
 type Fixture = {
     card: Card;
     cardWithAvs: CardWithAvs;
     cardWithKCP: CardWithKCP;
     cardWithSSN: CardWithSSN;
+    cardWithFastlane: CardWithFastlane;
     bcmc: BCMC;
 };
 
 const test = base.extend<Fixture>({
     card: async ({ page }, use) => {
         const cardPage = new Card(page);
+        await use(cardPage);
+    },
+    cardWithFastlane: async ({ page }, use) => {
+        const cardPage = new CardWithFastlane(page);
         await use(cardPage);
     },
     cardWithAvs: async ({ page }, use) => {

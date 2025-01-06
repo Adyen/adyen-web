@@ -57,13 +57,22 @@ const FastlaneSignup = ({
         onChange({
             fastlaneData: {
                 consentShown,
+                consentGiven: displaySignup ? isChecked : false,
                 consentVersion: termsAndConditionsVersion,
-                consentGiven: isChecked,
                 fastlaneSessionId: fastlaneSessionId,
                 ...(telephoneNumber && { telephoneNumber })
             }
         });
-    }, [consentShown, termsAndConditionsVersion, isChecked, fastlaneSessionId, telephoneNumber, onChange, isFastlaneConfigurationValid]);
+    }, [
+        displaySignup,
+        consentShown,
+        termsAndConditionsVersion,
+        isChecked,
+        fastlaneSessionId,
+        telephoneNumber,
+        onChange,
+        isFastlaneConfigurationValid
+    ]);
 
     useEffect(() => {
         if (displaySignup) setConsentShown(true);
@@ -74,7 +83,7 @@ const FastlaneSignup = ({
     }
 
     return (
-        <div className="adyen-checkout-card__fastlane">
+        <div className="adyen-checkout-card__fastlane" data-testid="fastlane-signup-component">
             <div
                 className={cx('adyen-checkout-card__fastlane-consent-toggle', {
                     'adyen-checkout-card__fastlane-consent-toggle--active': isChecked

@@ -19,6 +19,7 @@ export const URL_MAP = {
     cardWithInstallments: '/iframe.html?args=&id=cards-card--with-installments&viewMode=story',
     cardWithKcp: '/iframe.html?args=&globals=&id=cards-card--with-kcp&viewMode=story',
     cardWithClickToPay: '/iframe.html?args=&id=cards-card--with-click-to-pay&viewMode=story',
+    cardWithFastlane: '/iframe.html?args=&globals=&id=cards-card--with-mocked-fastlane&viewMode=story',
     fullAvsWithoutPrefilledDataUrl: '/iframe.html?args=componentConfiguration.data:!undefined&globals=&id=cards-card--with-avs&viewMode=story',
     fullAvsWithPrefilledDataUrl: '/iframe.html?globals=&args=&id=cards-card--with-avs&viewMode=story',
     addressLookupUrl: '/iframe.html?id=cards-card--with-avs-address-lookup&viewMode=story',
