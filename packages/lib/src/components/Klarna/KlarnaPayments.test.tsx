@@ -82,7 +82,7 @@ describe('KlarnaPayments', () => {
                     });
                 }
             });
-            const spy = jest.spyOn(klarna, 'handleAction');
+            const spy = jest.spyOn(klarna, 'updateWithAction');
 
             render(klarna.render());
             klarna.submit();
@@ -90,7 +90,7 @@ describe('KlarnaPayments', () => {
             await waitFor(() => expect(spy).toHaveBeenCalledWith(widgetAction), { interval: 100 });
         });
 
-        test('should NOT use updateWithAction when action type is NOT "sdk"', async () => {
+        test('should NOT use updateWithAction when action type is NOT "sdk"', done => {
             const action: PaymentAction = {
                 paymentMethodType: 'klarna_paynow',
                 type: 'redirect',
@@ -108,12 +108,15 @@ describe('KlarnaPayments', () => {
                     });
                 }
             });
-            const spy = jest.spyOn(klarna, 'handleAction');
+            const spy = jest.spyOn(klarna, 'updateWithAction');
 
             render(klarna.render());
             klarna.submit();
 
-            await waitFor(() => expect(spy).not.toHaveBeenCalled(), { interval: 100 });
+            setTimeout(() => {
+                expect(spy).not.toHaveBeenCalled();
+                done();
+            }, 500);
         });
     });
 });
