@@ -45,7 +45,7 @@ describe('Click to Pay - CtPOneTimePasswordInput', () => {
             { clickToPayService: ctpServiceMock }
         );
 
-        const resendOtpLink = await screen.findByRole('link', { name: 'Resend code' });
+        const resendOtpLink = await screen.findByRole('button', { name: 'Resend code' });
         const otpInput = screen.getByLabelText('One time code', { exact: false });
 
         await user.click(resendOtpLink);
@@ -78,7 +78,7 @@ describe('Click to Pay - CtPOneTimePasswordInput', () => {
             { clickToPayService: ctpServiceMock, configuration }
         );
 
-        const resendOtpLink = await screen.findByRole('link', { name: 'Resend code' });
+        const resendOtpLink = await screen.findByRole('button', { name: 'Resend code' });
         const otpInput = screen.getByLabelText('One time code', { exact: false });
 
         await user.click(resendOtpLink);
