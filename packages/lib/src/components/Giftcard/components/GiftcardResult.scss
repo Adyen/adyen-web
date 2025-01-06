@@ -4,7 +4,7 @@
     align-items: center;
     display: flex;
     flex-wrap: nowrap;
-    font-size: 1em;
+    font-size: token(text-title-font-size);
     font-weight: token(text-body-font-weight);
     justify-content: space-between;
     position: relative;
@@ -47,7 +47,7 @@
 }
 
 .adyen-checkout__giftcard-result__remaining-balance {
-    font-size: 13px;
+    font-size: token(text-body-font-size);
     line-height: token(text-caption-line-height);
     text-align: center;
     color: token(color-label-secondary);
