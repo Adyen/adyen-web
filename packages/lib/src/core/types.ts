@@ -86,9 +86,11 @@ export type OnChangeData = {
         [fieldKey: string]: {
             isValid: boolean;
             errorMessage: string;
-            errorI18n: string;
-            error: string;
-            rootNode: HTMLElement;
+            error?: string;
+            // These are only ever populated for the Card component
+            errorI18n?: string;
+            rootNode?: HTMLElement;
+            detectedBrands?: string[];
         };
     };
 };
