@@ -1,8 +1,15 @@
-// Override the Bento font sizes
+// Override the Bento font sizes. Calculation is based on a root font-size of 16 pixel.
 $text-overrides: (
+    // 12px
     'text-caption-font-size': 0.75rem,
+    // 14px
     'text-body-font-size': 0.875rem,
+    // 16px
     'text-subtitle-font-size': 1rem,
+    // 16px
     'text-title-font-size': 1rem,
-    'text-title-l-font-size': 1.5rem
+    // 24px
+    'text-title-l-font-size': 1.5rem,
+    // 20px
+    'text-title-l-mobile-font-size': 1.25rem
 );

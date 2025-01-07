@@ -23,7 +23,7 @@
         &--processing {
             align-items: center;
             display: flex;
-            font-size: 13px;
+            font-size: token(text-body-font-size);
             justify-content: center;
             padding: token(spacer-090) 0;
         }
