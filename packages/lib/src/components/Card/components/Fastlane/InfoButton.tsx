@@ -29,7 +29,7 @@ const InfoButton = () => {
                 inline
                 variant="link"
                 ariaLabel={i18n.get('card.fastlane.a11y.openDialog')}
-                label={<Img height="16" width="16" src={getImage({ imageFolder: 'components/' })('info')} alt="" ariaHidden={true} />}
+                label={<Img height="16" width="16" src={getImage({ imageFolder: 'components/' })('fastlane_info')} alt="" ariaHidden={true} />}
             />
 
             <InfoModal isOpen={isInfoModalOpen} onClose={handleOnClose} focusAfterClose={buttonRef.current} />

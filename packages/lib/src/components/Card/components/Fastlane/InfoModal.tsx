@@ -21,7 +21,7 @@ const FASTLANE_BENEFITS = [
         labelById: `adyen-fastlane-modal-label-${uuid()}`,
         descriptionTextKey: 'card.fastlane.modal.benefit1.text',
         describedById: `adyen-fastlane-modal-describedBy-${uuid()}`,
-        image: 'cross',
+        image: 'fastlane_autofill',
         altImage: ''
     },
     {
@@ -29,7 +29,7 @@ const FASTLANE_BENEFITS = [
         labelById: `adyen-fastlane-modal-label-${uuid()}`,
         descriptionTextKey: 'card.fastlane.modal.benefit2.text',
         describedById: `adyen-fastlane-modal-describedBy-${uuid()}`,
-        image: 'cross',
+        image: 'fastlane_protection',
         altImage: ''
     },
     {
@@ -37,7 +37,7 @@ const FASTLANE_BENEFITS = [
         labelById: `adyen-fastlane-modal-label-${uuid()}`,
         descriptionTextKey: 'card.fastlane.modal.benefit3.text',
         describedById: `adyen-fastlane-modal-describedBy-${uuid()}`,
-        image: 'cross',
+        image: 'fastlane_ubiquity',
         altImage: ''
     }
 ];
@@ -67,7 +67,9 @@ const InfoModal = ({ isOpen, onClose, focusAfterClose }: InfoModalProps) => {
                             inline
                             variant="link"
                             ariaLabel={i18n.get('card.fastlane.a11y.closeDialog')}
-                            label={<Img height="16" width="16" src={getImage({ imageFolder: 'components/' })('cross')} ariaHidden={true} alt="" />}
+                            label={
+                                <Img height="10" width="10" src={getImage({ imageFolder: 'components/' })('cross_black')} ariaHidden={true} alt="" />
+                            }
                         />
                     </div>
 
