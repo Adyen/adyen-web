@@ -6,7 +6,7 @@ import { ComponentContainer } from '../../ComponentContainer';
 import Dropin from '../../../../src/components/Dropin/Dropin';
 import Card from '../../../../src/components/Card/Card';
 import PayPal from '../../../../src/components/PayPal/Paypal';
-import Fastlane from '../../../../src/components/PayPalFastlane';
+import Fastlane from '../../../../src/components/PayPalFastlane/Fastlane';
 import { Checkout } from '../../Checkout';
 
 type FastlaneStory = StoryConfiguration<{}>;
@@ -15,7 +15,7 @@ const meta: MetaConfiguration<FastlaneStory> = {
     title: 'Wallets/Fastlane'
 };
 
-export const Default: FastlaneStory = {
+export const Lookup: FastlaneStory = {
     render: checkoutConfig => {
         const paymentMethodsOverride = {
             paymentMethods: [
@@ -41,7 +41,7 @@ export const Default: FastlaneStory = {
     }
 };
 
-export const WithMockedUnrecognizedFlow: FastlaneStory = {
+export const MockedUnrecognizedFlowDropin: FastlaneStory = {
     render: checkoutConfig => {
         const paymentMethodsOverride = {
             paymentMethods: [
@@ -58,17 +58,24 @@ export const WithMockedUnrecognizedFlow: FastlaneStory = {
                 {checkout => (
                     <ComponentContainer
                         element={
-                            new Card(checkout, {
-                                onChange(state) {
-                                    console.log('onChange', state);
+                            new Dropin(checkout, {
+                                onSubmit(state, component, actions) {
+                                    actions.resolve({
+                                        resultCode: 'Authorised'
+                                    });
                                 },
-                                fastlaneConfiguration: {
-                                    showConsent: true,
-                                    defaultToggleState: true,
-                                    termsAndConditionsLink: 'https://adyen.com',
-                                    privacyPolicyLink: 'https://adyen.com',
-                                    termsAndConditionsVersion: 'v1',
-                                    fastlaneSessionId: 'ABC-123'
+                                paymentMethodComponents: [Card],
+                                paymentMethodsConfiguration: {
+                                    card: {
+                                        fastlaneConfiguration: {
+                                            showConsent: true,
+                                            defaultToggleState: true,
+                                            termsAndConditionsLink: 'https://adyen.com',
+                                            privacyPolicyLink: 'https://adyen.com',
+                                            termsAndConditionsVersion: 'v1',
+                                            fastlaneSessionId: 'ABC-123'
+                                        }
+                                    }
                                 }
                             })
                         }
@@ -79,7 +86,7 @@ export const WithMockedUnrecognizedFlow: FastlaneStory = {
     }
 };
 
-export const WithMockedRecognizedFlow: FastlaneStory = {
+export const MockedRecognizedFlowDropin: FastlaneStory = {
     render: checkoutConfig => {
         const paymentMethodsOverride = {
             paymentMethods: [
@@ -107,6 +114,11 @@ export const WithMockedRecognizedFlow: FastlaneStory = {
                     <ComponentContainer
                         element={
                             new Dropin(checkout, {
+                                onSubmit(state, component, actions) {
+                                    actions.resolve({
+                                        resultCode: 'Authorised'
+                                    });
+                                },
                                 showStoredPaymentMethods: false,
                                 paymentMethodComponents: [Card, PayPal, Fastlane],
                                 paymentMethodsConfiguration: {
@@ -119,6 +131,49 @@ export const WithMockedRecognizedFlow: FastlaneStory = {
                                         fastlaneSessionId: 'xxx'
                                     }
                                 }
+                            })
+                        }
+                    />
+                )}
+            </Checkout>
+        );
+    }
+};
+
+export const MockedRecognizedFlowStandalone: FastlaneStory = {
+    render: checkoutConfig => {
+        const paymentMethodsOverride = {
+            paymentMethods: [
+                {
+                    type: 'scheme',
+                    name: 'Cards',
+                    brands: ['mc', 'visa']
+                },
+                {
+                    name: 'Cards',
+                    type: 'fastlane',
+                    brands: ['mc', 'visa']
+                }
+            ]
+        };
+
+        return (
+            <Checkout checkoutConfig={{ ...checkoutConfig, paymentMethodsOverride }}>
+                {checkout => (
+                    <ComponentContainer
+                        element={
+                            new Fastlane(checkout, {
+                                onSubmit(state, component, actions) {
+                                    actions.resolve({
+                                        resultCode: 'Authorised'
+                                    });
+                                },
+                                tokenId: 'xxx',
+                                customerId: 'sss',
+                                lastFour: '1111',
+                                brand: 'visa',
+                                email: 'email@adyen.com',
+                                fastlaneSessionId: 'xxx'
                             })
                         }
                     />
