@@ -128,6 +128,8 @@ function AchInput(props: ACHInputProps) {
         props.onChange({ data, isValid, storePaymentMethod });
     }, [data, valid, errors, storePaymentMethod]);
 
+    console.log('ach props 2', props);
+
     return (
         <div className="adyen-checkout__ach">
             <FormInstruction />

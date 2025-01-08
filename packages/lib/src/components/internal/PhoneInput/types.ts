@@ -5,7 +5,7 @@ export interface PhoneInputSchema {
     phonePrefix?: string;
 }
 
-export interface PhoneInputProps {
+export interface PhoneInputFormProps {
     items: DataSet;
     requiredFields?: string[];
     data: PhoneInputSchema;

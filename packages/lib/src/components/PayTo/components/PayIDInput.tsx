@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import Fieldset from '../../internal/FormFields/Fieldset';
-import IdentifierSelector, { PayToIdentifierEnum, PayToPayIDInputIdentifierValues } from './IdentifierSelector';
-import { useEffect, useState } from 'preact/hooks';
+import IdentifierSelector, { PayToIdentifierEnum } from './IdentifierSelector';
+import { useEffect, useRef } from 'preact/hooks';
 import useForm from '../../../utils/useForm';
 import PayToPhone from './PayToPhone';
 import InputEmail from '../../internal/FormFields/InputEmail';
@@ -10,6 +10,9 @@ import Field from '../../internal/FormFields/Field';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import InputText from '../../internal/FormFields/InputText';
 import { payIdValidationRules } from './validate';
+import './PayIDInput.scss';
+import { phoneFormatters } from '../../internal/PhoneInput/validate';
+import { ComponentMethodsRef } from '../../internal/UIElement/types';
 
 export interface PayIdFormData {
     email: string;
@@ -18,43 +21,78 @@ export interface PayIdFormData {
     orgid: string;
     firstName: string;
     lastName: string;
+    phoneNumber?: string;
+    phonePrefix?: string;
+    selectedIdentifier: PayToIdentifierEnum;
 }
 
-export default function PayIDInput(props) {
+export interface PayIDInputProps {
+    defaultData: PayIdFormData;
+    placeholders: any; //TODO
+    onError: () => {};
+    onChange: (e) => void;
+    setComponentRef: (ref: ComponentMethodsRef) => void;
+}
+
+const BASE_SCHEMA = ['selectedIdentifier', 'firstName', 'lastName'];
+
+const IDENTIFIER_SCHEMA = {
+    [PayToIdentifierEnum.email]: ['email'],
+    [PayToIdentifierEnum.phone]: ['phoneNumber', 'phonePrefix'],
+    [PayToIdentifierEnum.abn]: ['abn'],
+    [PayToIdentifierEnum.orgid]: ['orgid']
+};
+
+export interface KlarnaComponentRef extends ComponentMethodsRef {}
+
+export default function PayIDInput({ setComponentRef, defaultData, placeholders, onError, onChange }: PayIDInputProps) {
     const { i18n } = useCoreContext();
 
-    const { handleChangeFor, triggerValidation, data, errors } = useForm<PayIdFormData>({
-        schema: ['email', 'abn', 'phone', 'orgid'],
-        rules: payIdValidationRules
+    const form = useForm<PayIdFormData>({
+        schema: BASE_SCHEMA,
+        defaultData: { selectedIdentifier: PayToIdentifierEnum.phone, ...defaultData },
+        rules: payIdValidationRules,
+        formatters: phoneFormatters
     });
+    const { handleChangeFor, triggerValidation, data, errors, valid, isValid, setSchema } = form;
 
     //this.setStatus = setStatus;
-    this.showValidation = triggerValidation;
+    this.triggerValidation = triggerValidation;
 
-    // TODO fix all these letters - as in this is quite a long class
-    // TODO double check if what should be default value
-    const [selectedIdentifier, setSelectedIdentifier] = useState<PayToPayIDInputIdentifierValues>(PayToIdentifierEnum.email);
-    console.log(selectedIdentifier);
+    // handle the changes of identifier, each identifier gets its own schema
+    useEffect(() => {
+        // get the correct schema for each identifier and merge it with the base
+        setSchema([...IDENTIFIER_SCHEMA[data.selectedIdentifier], ...BASE_SCHEMA]);
+    }, [data.selectedIdentifier]);
+
+    // standard onChange propagate to parent state
+    useEffect(() => {
+        onChange({ data, valid, errors, isValid });
+    }, [data, valid, errors, isValid]);
+
+    const payToRef = useRef<ComponentMethodsRef>({
+        showValidation: triggerValidation
+    });
 
     useEffect(() => {
-        console.log(data);
-    }, [data]);
+        setComponentRef(payToRef.current);
+    }, [setComponentRef]);
 
     return (
-        <Fieldset classNameModifiers={['adyen-checkout-payto__payid_input']} label={'payto.payid.header'} description={'payto.payid.description'}>
+        <Fieldset classNameModifiers={['payto__payid_input']} label={'payto.payid.header'} description={'payto.payid.description'}>
             <IdentifierSelector
-                classNameModifiers={['col-40']}
-                onSelectedIdentifier={setSelectedIdentifier}
-                selectedIdentifier={selectedIdentifier}
+                classNameModifiers={['col-30']}
+                onSelectedIdentifier={handleChangeFor('email')}
+                selectedIdentifier={data.selectedIdentifier}
             />
-            {selectedIdentifier === PayToIdentifierEnum.phone && (
-                <PayToPhone onChange={handleChangeFor('phone')} onError={props.onError} data={data} />
+            {data.selectedIdentifier === PayToIdentifierEnum.phone && (
+                <PayToPhone onChange={handleChangeFor('phone', 'blur')} onError={onError} data={data} form={form} />
             )}
 
-            {selectedIdentifier === PayToIdentifierEnum.email && (
+            {data.selectedIdentifier === PayToIdentifierEnum.email && (
                 <Field
                     label={i18n.get('shopperEmail')}
-                    classNameModifiers={['col-60', 'email']}
+                    classNameModifiers={['col-70', 'email']}
                     errorMessage={getErrorMessage(i18n, errors.email, i18n.get('shopperEmail'))}
                     dir={'ltr'}
                     name={'email'}
@@ -65,16 +103,16 @@ export default function PayIDInput(props) {
                         value={data.email}
                         onInput={handleChangeFor('email', 'input')}
                         onBlur={handleChangeFor('email', 'blur')}
-                        //TODO placeholder={placeholders.shopperEmail}
+                        placeholder={placeholders?.shopperEmail}
                         required={true}
                     />
                 </Field>
             )}
 
-            {selectedIdentifier === PayToIdentifierEnum.abn && (
+            {data.selectedIdentifier === PayToIdentifierEnum.abn && (
                 <Field
                     label={i18n.get('payto.payid.label.abn')}
-                    classNameModifiers={['col-60', 'abn']}
+                    classNameModifiers={['col-70', 'abn']}
                     errorMessage={getErrorMessage(i18n, errors.abn, i18n.get('abn'))}
                     name={'ABN'}
                     i18n={i18n}
@@ -84,16 +122,16 @@ export default function PayIDInput(props) {
                         value={data.abn}
                         onInput={handleChangeFor('abn', 'input')}
                         onBlur={handleChangeFor('abn', 'blur')}
-                        //TODO placeholder={placeholders.shopperEmail}
+                        placeholder={placeholders?.shopperEmail}
                         required={true}
                     />
                 </Field>
             )}
 
-            {selectedIdentifier === PayToIdentifierEnum.orgid && (
+            {data.selectedIdentifier === PayToIdentifierEnum.orgid && (
                 <Field
                     label={i18n.get('payto.payid.label.orgid')}
-                    classNameModifiers={['col-60', 'orgid']}
+                    classNameModifiers={['col-70', 'orgid']}
                     errorMessage={getErrorMessage(i18n, errors.orgid, i18n.get('abn'))}
                     name={'orgid'}
                     i18n={i18n}
@@ -103,7 +141,7 @@ export default function PayIDInput(props) {
                         value={data.abn}
                         onInput={handleChangeFor('abn', 'input')}
                         onBlur={handleChangeFor('abn', 'blur')}
-                        //TODO placeholder={placeholders.shopperEmail}
+                        placeholder={placeholders?.shopperEmail}
                         required={true}
                     />
                 </Field>
@@ -122,7 +160,7 @@ export default function PayIDInput(props) {
                     classNameModifiers={['firstName']}
                     onInput={handleChangeFor('firstName', 'input')}
                     onBlur={handleChangeFor('firstName', 'input')}
-                    //placeholder={placeholders.firstName}
+                    placeholder={placeholders?.firstName}
                     spellCheck={false}
                     required={true}
                 />
@@ -141,7 +179,7 @@ export default function PayIDInput(props) {
                     classNameModifiers={['lastName']}
                     onInput={handleChangeFor('lastName', 'input')}
                     onBlur={handleChangeFor('onBlue', 'blur')}
-                    //placeholder={placeholders.lastName}
+                    placeholder={placeholders?.lastName}
                     spellCheck={false}
                     required={true}
                 />

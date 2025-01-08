@@ -5,6 +5,7 @@ import { useState } from 'preact/hooks';
 import { SegmentedControlOptions } from '../../internal/SegmentedControl/SegmentedControl';
 import PayIDInput from './PayIDInput';
 import BSBInput from './BSBInput';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 
 const inputOptions: SegmentedControlOptions<any> = [
     {
@@ -27,27 +28,35 @@ const inputOptions: SegmentedControlOptions<any> = [
     }
 ];
 
-export default function PayToInput() {
-    // const { i18n } = useCoreContext();
+export default function PayToInput(props) {
+    const { i18n } = useCoreContext();
 
-    // TODO type this
-    // const { handleChangeFor, triggerValidation, data, valid, errors } = useForm<any>({
-    //     schema: ['beneficiaryId']
-    // });
-    //
-    // const [status, setStatus] = useState<string>('ready');
+    const [status, setStatus] = useState<string>('ready');
 
-    // this.setStatus = setStatus;
-    // this.showValidation = triggerValidation;
+    this.setStatus = setStatus;
 
     const defaultOption = inputOptions[0].value;
     const [selectedInput, setSelectedInput] = useState<string>(defaultOption);
 
+    const onChange = ({ data, valid, errors, isValid }) => {
+        props.onChange({ data, valid, errors, isValid });
+    };
+
     return (
         <LoadingWrapper>
             <SegmentedControl selectedValue={selectedInput} options={inputOptions} onChange={setSelectedInput} />
-            {selectedInput === 'payid-option' && <PayIDInput />}
+            {selectedInput === 'payid-option' && (
+                <PayIDInput
+                    setComponentRef={props.setComponentRef}
+                    onChange={onChange}
+                    defaultData={props.data}
+                    onError={props.onError}
+                    placeholders={props.placeholders}
+                />
+            )}
             {selectedInput === 'bsb-option' && <BSBInput />}
+
+            {props.showPayButton && props.payButton({ status, label: i18n.get('confirmPurchase') })}
         </LoadingWrapper>
     );
 }
