@@ -145,8 +145,6 @@ export class CardElement extends UIElement<CardConfiguration> {
          */
         const cardBrand = this.state.selectedBrandValue;
 
-        console.log('fastlane data', this.state.fastlaneData);
-
         return {
             paymentMethod: {
                 type: CardElement.type,
