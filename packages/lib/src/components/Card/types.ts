@@ -16,6 +16,7 @@ import { DisclaimerMsgObject } from '../internal/DisclaimerMessage/DisclaimerMes
 import { Placeholders } from './components/CardInput/types';
 import { UIElementProps } from '../internal/UIElement/types';
 import type { OnAddressLookupType } from '../internal/Address/components/AddressSearch';
+import type { FastlaneSignupConfiguration } from '../PayPalFastlane/types';
 
 export interface CardConfiguration extends UIElementProps {
     /**
@@ -95,6 +96,11 @@ export interface CardConfiguration extends UIElementProps {
      * - merchant set config option
      */
     clickToPayConfiguration?: ClickToPayProps;
+
+    /**
+     * Configuration for displaying the Fastlane consent UI.
+     */
+    fastlaneConfiguration?: FastlaneSignupConfiguration;
 
     /**
      * An object sent in the /paymentMethods response

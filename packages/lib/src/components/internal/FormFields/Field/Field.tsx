@@ -3,14 +3,14 @@ import { cloneElement, ComponentChild, Fragment, FunctionalComponent, h, toChild
 import Spinner from '../../Spinner';
 import Icon from '../../Icon';
 import { ARIA_CONTEXT_SUFFIX, ARIA_ERROR_SUFFIX } from '../../../../core/Errors/constants';
-import { useCallback, useRef, useState } from 'preact/hooks';
+import { useCallback, useMemo, useRef, useState } from 'preact/hooks';
 import { getUniqueId } from '../../../../utils/idGenerator';
 import { FieldProps } from './types';
 import './Field.scss';
 import { PREFIX } from '../../Icon/constants';
+import uuid from '../../../../utils/uuid';
 
 const Field: FunctionalComponent<FieldProps> = props => {
-    //
     const {
         children,
         className,
@@ -36,13 +36,15 @@ const Field: FunctionalComponent<FieldProps> = props => {
         useLabelElement,
         showErrorElement,
         showContextualElement,
+        staticValue,
         contextualText,
         // Redeclare prop names to avoid internal clashes
         filled: propsFilled,
         focused: propsFocused,
         i18n,
         contextVisibleToScreenReader,
-        renderAlternativeToLabel
+        renderAlternativeToLabel,
+        onInputContainerClick
     } = props;
 
     // Controls whether any error element has an aria-hidden="true" attr (which means it is the error for a securedField)
@@ -52,6 +54,8 @@ const Field: FunctionalComponent<FieldProps> = props => {
     const showContext = showContextualElement && !showError && contextualText?.length > 0;
 
     const uniqueId = useRef(getUniqueId(`adyen-checkout-${name}`));
+    const staticValueId = useMemo(() => (staticValue ? `input-static-value-${uuid()}` : null), [staticValue]);
+
     const [focused, setFocused] = useState(false);
     const [filled, setFilled] = useState(false);
 
@@ -126,23 +130,34 @@ const Field: FunctionalComponent<FieldProps> = props => {
 
         return (
             <Fragment>
+                {/* The <div> element has a child <input> element that allows keyboard interaction */}
+                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
                 <div
                     className={classNames([
                         'adyen-checkout__input-wrapper',
                         ...inputWrapperModifiers.map(m => `adyen-checkout__input-wrapper--${m}`)
                     ])}
                     dir={dir}
+                    onClick={onInputContainerClick}
                 >
+                    {staticValue && (
+                        <span id={staticValueId} className="adyen-checkout__field-static-value">
+                            {staticValue}
+                        </span>
+                    )}
+
                     {toChildArray(children).map((child: ComponentChild): ComponentChild => {
-                        const childProps = {
+                        const propsFromFieldComponent = {
                             isValid,
                             onFocusHandler,
                             onBlurHandler,
                             isInvalid: !!errorMessage,
+                            'aria-owns': staticValueId,
                             ...(name && { uniqueId: uniqueId.current }),
                             showErrorElement: showErrorElement
                         };
-                        return cloneElement(child as VNode, childProps);
+
+                        return cloneElement(child as VNode, propsFromFieldComponent);
                     })}
 
                     {isLoading && (

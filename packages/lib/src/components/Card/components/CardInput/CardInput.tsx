@@ -28,6 +28,7 @@ import { CbObjOnBrand, CbObjOnFocus } from '../../../internal/SecuredFields/lib/
 import { FieldErrorAnalyticsObject } from '../../../../core/Analytics/types';
 import { PREFIX } from '../../../internal/Icon/constants';
 import useSRPanelForCardInputErrors from './useSRPanelForCardInputErrors';
+import FastlaneSignup from '../Fastlane/FastlaneSignup';
 
 const CardInput = (props: CardInputProps) => {
     const sfp = useRef(null);
@@ -98,7 +99,6 @@ const CardInput = (props: CardInputProps) => {
      * if the PAN length drops below the /binLookup digit threshold.
      * Default value, 'card', indicates no brand detected
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [internallyDetectedBrand, setInternallyDetectedBrand] = useState('card');
 
     /**
@@ -480,6 +480,11 @@ const CardInput = (props: CardInputProps) => {
                     </div>
                 )}
             />
+
+            {props.fastlaneConfiguration && (
+                <FastlaneSignup {...props.fastlaneConfiguration} currentDetectedBrand={internallyDetectedBrand} onChange={props.onChange} />
+            )}
+
             {props.showPayButton &&
                 props.payButton({
                     status,
