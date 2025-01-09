@@ -105,6 +105,45 @@ export interface CardObject {
     expiryDatePolicy?: DatePolicyType;
 }
 
+export interface CardAdditionalSFData {
+    additionalIframeConfigured?: boolean;
+    additionalIframeRemoved?: boolean;
+    fieldType: string;
+    type: string;
+}
+
+export interface CardAllValidData {
+    type: string;
+    allValid: boolean;
+    rootNode: HTMLElement;
+}
+
+export interface CardAutoCompleteData {
+    fieldType: string;
+    name: string;
+    value: string;
+    action: string;
+}
+
+export interface CardBinLookupData {
+    type?: string;
+    detectedBrands?: string[];
+    supportedBrands?: string[];
+    brands?: string[];
+    issuingCountryCode?: string;
+    // New for CustomCard
+    supportedBrandsRaw?: BrandObject[];
+    rootNode?: HTMLElement;
+    isReset?: boolean; // Used internally - not propagated to merchant callback
+}
+
+export interface CardBinValueData {
+    type: string;
+    binValue: string;
+    uuid?: string;
+    encryptedBin?: string;
+}
+
 export interface CardBrandData {
     type: string;
     rootNode: HTMLElement;
@@ -117,10 +156,20 @@ export interface CardBrandData {
     // maxLength: number;
 }
 
-export interface CardAllValidData {
+export interface CardConfigSuccessData {
+    iframesConfigured: boolean;
     type: string;
-    allValid: boolean;
     rootNode: HTMLElement;
+}
+
+export interface CardErrorData {
+    fieldType: string;
+    error: string;
+    type: string;
+    rootNode?: HTMLElement;
+    detectedBrands?: string[];
+    errorI18n?: string;
+    errorText?: string;
 }
 
 export interface CardFieldValidData {
@@ -136,42 +185,6 @@ export interface CardFieldValidData {
     issuerBin?: number;
 }
 
-export interface CardAutoCompleteData {
-    fieldType: string;
-    name: string;
-    value: string;
-    action: string;
-}
-
-export interface CardBinValueData {
-    type: string;
-    binValue: string;
-    uuid?: string;
-    encryptedBin?: string;
-}
-
-export interface CardBinLookupData {
-    type?: string;
-    detectedBrands?: string[];
-    supportedBrands?: string[];
-    brands?: string[];
-    issuingCountryCode?: string;
-    // New for CustomCard
-    supportedBrandsRaw?: BrandObject[];
-    rootNode?: HTMLElement;
-    isReset?: boolean; // Used internally - not propagated to merchant callback
-}
-
-export interface CardErrorData {
-    fieldType: string;
-    error: string;
-    type: string;
-    rootNode?: HTMLElement;
-    detectedBrands?: string[];
-    errorI18n?: string;
-    errorText?: string;
-}
-
 export interface CardFocusData {
     action: string;
     focus: boolean;
@@ -184,19 +197,6 @@ export interface CardFocusData {
 
 export interface CardLoadData {
     iframesLoaded: boolean;
-}
-
-export interface CardConfigSuccessData {
-    iframesConfigured: boolean;
-    type: string;
-    rootNode: HTMLElement;
-}
-
-export interface CardAdditionalSFData {
-    additionalIframeConfigured?: boolean;
-    additionalIframeRemoved?: boolean;
-    fieldType: string;
-    type: string;
 }
 
 export interface SFFeedbackObj {
