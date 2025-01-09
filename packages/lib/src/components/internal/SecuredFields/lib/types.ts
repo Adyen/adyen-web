@@ -105,7 +105,7 @@ export interface CardObject {
     expiryDatePolicy?: DatePolicyType;
 }
 
-export interface CbObjOnBrand {
+export interface CardBrandData {
     type: string;
     rootNode: HTMLElement;
     brand: string;
@@ -117,13 +117,13 @@ export interface CbObjOnBrand {
     // maxLength: number;
 }
 
-export interface CbObjOnAllValid {
+export interface CardAllValidData {
     type: string;
     allValid: boolean;
     rootNode: HTMLElement;
 }
 
-export interface CbObjOnFieldValid {
+export interface CardFieldValidData {
     fieldType: string;
     encryptedFieldName: string;
     uid: string;
@@ -136,21 +136,21 @@ export interface CbObjOnFieldValid {
     issuerBin?: number;
 }
 
-export interface CbObjOnAutoComplete {
+export interface CardAutoCompleteData {
     fieldType: string;
     name: string;
     value: string;
     action: string;
 }
 
-export interface CbObjOnBinValue {
+export interface CardBinValueData {
     type: string;
     binValue: string;
     uuid?: string;
     encryptedBin?: string;
 }
 
-export interface CbObjOnBinLookup {
+export interface CardBinLookupData {
     type?: string;
     detectedBrands?: string[];
     supportedBrands?: string[];
@@ -162,7 +162,7 @@ export interface CbObjOnBinLookup {
     isReset?: boolean; // Used internally - not propagated to merchant callback
 }
 
-export interface CbObjOnError {
+export interface CardErrorData {
     fieldType: string;
     error: string;
     type: string;
@@ -172,7 +172,7 @@ export interface CbObjOnError {
     errorText?: string;
 }
 
-export interface CbObjOnFocus {
+export interface CardFocusData {
     action: string;
     focus: boolean;
     numChars: number;
@@ -182,17 +182,17 @@ export interface CbObjOnFocus {
     currentFocusObject: string;
 }
 
-export interface CbObjOnLoad {
+export interface CardLoadData {
     iframesLoaded: boolean;
 }
 
-export interface CbObjOnConfigSuccess {
+export interface CardConfigSuccessData {
     iframesConfigured: boolean;
     type: string;
     rootNode: HTMLElement;
 }
 
-export interface CbObjOnAdditionalSF {
+export interface CardAdditionalSFData {
     additionalIframeConfigured?: boolean;
     additionalIframeRemoved?: boolean;
     fieldType: string;

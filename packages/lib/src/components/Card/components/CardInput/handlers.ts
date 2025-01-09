@@ -1,6 +1,6 @@
 import { ENCRYPTED_CARD_NUMBER, CREDIT_CARD_SF_FIELDS } from '../../../internal/SecuredFields/lib/constants';
 import { selectOne } from '../../../internal/SecuredFields/lib/utilities/dom';
-import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
+import { CardFocusData } from '../../../internal/SecuredFields/lib/types';
 
 /**
  * Helper for CardInput - gets a field name and sets focus on it
@@ -28,7 +28,7 @@ export const getAddressHandler = (setFormData, setFormValid, setFormErrors) => {
 
 export const getFocusHandler = (setFocusedElement, onFocus, onBlur) => {
     // Return Handler fn:
-    return (e: CbObjOnFocus) => {
+    return (e: CardFocusData) => {
         setFocusedElement(e.currentFocusObject);
         e.focus === true ? onFocus(e.fieldType, e) : onBlur(e.fieldType, e);
     };

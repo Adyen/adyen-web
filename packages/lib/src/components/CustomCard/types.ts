@@ -2,14 +2,14 @@ import { CardBrandsConfiguration } from '../Card/types';
 import { Placeholders, SFError } from '../Card/components/CardInput/types';
 import UIElement from '../internal/UIElement';
 import {
-    CbObjOnAllValid,
-    CbObjOnBinLookup,
-    CbObjOnBinValue,
-    CbObjOnBrand,
-    CbObjOnConfigSuccess,
-    CbObjOnFieldValid,
-    CbObjOnFocus,
-    CbObjOnLoad,
+    CardAllValidData,
+    CardBinLookupData,
+    CardBinValueData,
+    CardBrandData,
+    CardConfigSuccessData,
+    CardFieldValidData,
+    CardFocusData,
+    CardLoadData,
     StylesObject
 } from '../internal/SecuredFields/lib/types';
 import Language from '../../language';
@@ -101,50 +101,50 @@ export type CustomCardConfiguration = {
      * After binLookup call - provides the brand(s) we detect the user is entering, and if we support the brand(s)
      * - merchant set config option
      */
-    onBinLookup?: (event: CbObjOnBinLookup) => void;
+    onBinLookup?: (event: CardBinLookupData) => void;
 
     /**
      * Provides the BIN Number of the card (up to 6 digits), called as the user types in the PAN.
      * - merchant set config option
      */
-    onBinValue?: (event: CbObjOnBinValue) => void;
+    onBinValue?: (event: CardBinValueData) => void;
 
     /**
      * Called once we detect the card brand.
      * - merchant set config option
      */
-    onBrand?: (event: CbObjOnBrand) => void;
+    onBrand?: (event: CardBrandData) => void;
 
     /**
      * Called once the card input fields are ready to use.
      * - merchant set config option
      */
-    onConfigSuccess?: (event: CbObjOnConfigSuccess) => void;
+    onConfigSuccess?: (event: CardConfigSuccessData) => void;
 
     /**
      * Called when *all* the securedFields becomes valid
      *  Also called again if one of the fields moves out of validity.
      */
-    onAllValid?: (event: CbObjOnAllValid) => void;
+    onAllValid?: (event: CardAllValidData) => void;
 
     /**
      * Called when a field becomes valid and also if a valid field changes and becomes invalid.
      * For the card number field, it returns the last 4 digits of the card number.
      * - merchant set config option
      */
-    onFieldValid?: (event: CbObjOnFieldValid) => void;
+    onFieldValid?: (event: CardFieldValidData) => void;
 
     /**
      * Called when a field gains focus.
      * - merchant set config option
      */
-    onFocus?: (event: CbObjOnFocus) => void;
+    onFocus?: (event: CardFocusData) => void;
 
     /**
      * Called once all the card input fields have been created but are not yet ready to use.
      * - merchant set config option
      */
-    onLoad?: (event: CbObjOnLoad) => void;
+    onLoad?: (event: CardLoadData) => void;
 
     /**
      * Called when a Component is told by a SecuredField that the Enter key has been pressed.
