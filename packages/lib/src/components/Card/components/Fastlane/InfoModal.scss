@@ -24,15 +24,15 @@
         &-header {
             grid-area: header;
             margin: 0;
-            line-height: token('text-title-m-line-height');
-            font-size: token('text-title-m-font-size');
-            font-weight: token('text-title-m-font-weight');
-            color: token('color-background-inverse-primary');
+            line-height: token(text-title-m-line-height);
+            font-size: token(text-title-m-font-size);
+            font-weight: token(text-title-m-font-weight);
+            color: token(color-background-inverse-primary);
         }
 
         &-text {
             grid-area: text;
-            color: token('color-background-inverse-primary');
+            color: token(color-background-inverse-primary);
 
             @include mixins.adyen-checkout-text-body;
         }
