@@ -1,16 +1,10 @@
 @import 'styles/variable-generator';
 
-.adyen-checkout-ctp__section-logout-button {
-    font-size: 13px;
-    line-height: token(text-caption-line-height);
-    font-weight: token(text-body-font-weight);
-    color: token(color-label-primary);
+.adyen-checkout__button--section-logout-button {
     margin-left: auto;
-    cursor: pointer;
-    text-decoration: underline;
 }
 
-.adyen-checkout-ctp__section-logout-button--disabled {
+.adyen-checkout__button--section-logout-button--disabled {
     pointer-events: none;
     color: token(color-label-disabled);
 }

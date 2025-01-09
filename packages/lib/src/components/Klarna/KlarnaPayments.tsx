@@ -42,6 +42,14 @@ class KlarnaPayments extends UIElement<KlarnaConfiguration> {
         return <PayButton amount={this.props.amount} onClick={this.submit} {...props} />;
     };
 
+    public override handleAction(action: KlarnaAction, props = {}): UIElement | null {
+        if (action.type === 'sdk') {
+            this.updateWithAction(action);
+            return;
+        }
+        return super.handleAction(action, props);
+    }
+
     updateWithAction(action: KlarnaAction): void {
         if (action.paymentMethodType !== this.type) throw new Error('Invalid Action');
         this.componentRef.setAction(action);

@@ -13,7 +13,7 @@
     "@adyen/adyen-web-server": "1.0.0",
     "@playwright/test": "1.48.2",
     "cross-env": "^7.0.3",
-    "dotenv": "16.4.5",
+    "dotenv": "16.4.7",
     "ts-loader": "9.4.4",
     "typescript": "5.2.2"
   }

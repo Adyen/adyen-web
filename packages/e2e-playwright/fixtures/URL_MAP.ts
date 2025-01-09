@@ -12,6 +12,7 @@ export const URL_MAP = {
      * Card
      */
     card: '/iframe.html?args=&id=cards-card--default&viewMode=story',
+    cardWithVisibleSrPanel: '/iframe.html?args=srConfig.showPanel:!true&globals=&id=cards-card--default&viewMode=story',
     cardWithSsn: '/iframe.html?globals=&id=cards-card--with-ssn&viewMode=story',
     cardWithAdvancedFlow: '/iframe.html?args=useSessions:!false&globals=&id=cards-card--default&viewMode=story',
     cardWithAvs: '/iframe.html?args=&globals=&id=cards-card--with-avs&viewMode=story',

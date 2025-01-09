@@ -1,6 +1,10 @@
 import Giftcard from './Giftcard';
 import { render, screen } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import { AnalyticsModule } from '../../types/global-types';
+import { mockDeep } from 'jest-mock-extended';
+import { ANALYTICS_ERROR_TYPE, ANALYTICS_EVENT } from '../../core/Analytics/constants';
 
 const flushPromises = () => new Promise(process.nextTick);
 
@@ -133,6 +137,41 @@ describe('Giftcard', () => {
 
             // since the balance is not enough for a full we should create an order
             expect(onOrderRequest).toHaveBeenCalled();
+        });
+
+        test('should send an error event to the analytics if the createOrder call fails for the session flow', async () => {
+            const code = 'mockErrorCode';
+            const analytics = mockDeep<AnalyticsModule>();
+            const mockedSendAnalytics = analytics.sendAnalytics as jest.Mock;
+            const onBalanceCheck = jest.fn(resolve =>
+                resolve({
+                    balance: { value: 500, currency: 'EUR' }
+                })
+            );
+            const giftcard = new Giftcard(global.core, {
+                ...baseProps,
+                modules: {
+                    resources,
+                    analytics
+                },
+                onError: () => {},
+                onBalanceCheck,
+                // @ts-ignore test only
+                session: {
+                    createOrder: () => {
+                        return Promise.reject(new AdyenCheckoutError('NETWORK_ERROR', '', { code }));
+                    }
+                }
+            });
+            render(giftcard.render());
+            giftcard.setState({ isValid: true });
+            giftcard.balanceCheck();
+            await flushPromises();
+            expect(mockedSendAnalytics).toHaveBeenCalledWith(
+                'giftcard',
+                { code, errorType: ANALYTICS_ERROR_TYPE.apiError, type: ANALYTICS_EVENT.error },
+                undefined
+            );
         });
 
         test('if there is enough balance for checkout we should require confirmation', async () => {

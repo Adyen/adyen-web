@@ -5,6 +5,7 @@ import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { THREEDS2_ERROR, THREEDS2_FINGERPRINT_SUBMIT } from './constants';
 import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors } from '../../core/Analytics/constants';
 import { SendAnalyticsObject } from '../../core/Analytics/types';
+import { API_ERROR_CODE } from '../../core/Services/sessions/constants';
 
 /**
  * ThreeDS2DeviceFingerprint, onComplete, calls a new, internal, endpoint which
@@ -15,7 +16,8 @@ export default function callSubmit3DS2Fingerprint({ data }): void {
         {
             path: `v1/submitThreeDS2Fingerprint?token=${this.props.clientKey}`,
             loadingContext: this.props.loadingContext,
-            errorLevel: 'fatal'
+            errorLevel: 'fatal',
+            errorCode: API_ERROR_CODE.submitThreeDS2Fingerprint
         },
         {
             ...data
