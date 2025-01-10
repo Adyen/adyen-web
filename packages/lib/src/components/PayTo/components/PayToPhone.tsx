@@ -27,6 +27,15 @@ export default function PayToPhone({ form, onChange, onError, data }: PayToPhone
     const getError = useCallback((field: string) => getErrorMessage(i18n, form.errors[field]), [i18n, form]);
 
     return (
-        <PhoneInputFields getError={getError} items={phonePrefixes} data={data} onChange={onChange} showNumber={true} showPrefix={true} form={form} />
+        <PhoneInputFields
+            phoneNumberKey={'mobileNumber'}
+            getError={getError}
+            items={phonePrefixes}
+            data={data}
+            onChange={onChange}
+            showNumber={true}
+            showPrefix={true}
+            form={form}
+        />
     );
 }

@@ -15,8 +15,8 @@ import { PayToIdentifierEnum } from './components/IdentifierSelector';
 
 export interface PayToConfiguration extends UIElementProps {
     paymentData?: any;
-    data: PayToData;
-    placeholders: any; //TODO
+    data?: PayToData;
+    placeholders?: any; //TODO
 }
 
 export interface PayToData extends PayIdFormData {

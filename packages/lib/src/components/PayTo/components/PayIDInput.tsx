@@ -82,13 +82,14 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
         <Fieldset classNameModifiers={['payto__payid_input']} label={'payto.payid.header'} description={'payto.payid.description'}>
             <IdentifierSelector
                 classNameModifiers={['col-30']}
-                onSelectedIdentifier={handleChangeFor('email')}
+                onSelectedIdentifier={handleChangeFor('selectedIdentifier')}
                 selectedIdentifier={data.selectedIdentifier}
             />
             {data.selectedIdentifier === PayToIdentifierEnum.phone && (
                 <PayToPhone onChange={handleChangeFor('phone', 'blur')} onError={onError} data={data} form={form} />
             )}
 
+            {/* TODO probably worth refactoring this into  either re-usable components or builder */}
             {data.selectedIdentifier === PayToIdentifierEnum.email && (
                 <Field
                     label={i18n.get('shopperEmail')}
@@ -113,16 +114,16 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
                 <Field
                     label={i18n.get('payto.payid.label.abn')}
                     classNameModifiers={['col-70', 'abn']}
-                    errorMessage={getErrorMessage(i18n, errors.abn, i18n.get('abn'))}
+                    errorMessage={getErrorMessage(i18n, errors.abn, i18n.get('payto.payid.label.abn'))}
                     name={'ABN'}
                     i18n={i18n}
                 >
-                    <InputEmail
-                        name={'ABN'}
+                    <InputText
+                        name={'abn'}
                         value={data.abn}
                         onInput={handleChangeFor('abn', 'input')}
                         onBlur={handleChangeFor('abn', 'blur')}
-                        placeholder={placeholders?.shopperEmail}
+                        placeholder={placeholders?.abn}
                         required={true}
                     />
                 </Field>
@@ -132,16 +133,16 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
                 <Field
                     label={i18n.get('payto.payid.label.orgid')}
                     classNameModifiers={['col-70', 'orgid']}
-                    errorMessage={getErrorMessage(i18n, errors.orgid, i18n.get('abn'))}
+                    errorMessage={getErrorMessage(i18n, errors.orgid, i18n.get('payto.payid.label.orgid'))}
                     name={'orgid'}
                     i18n={i18n}
                 >
-                    <InputEmail
-                        name={'abn'}
-                        value={data.abn}
-                        onInput={handleChangeFor('abn', 'input')}
-                        onBlur={handleChangeFor('abn', 'blur')}
-                        placeholder={placeholders?.shopperEmail}
+                    <InputText
+                        name={'orgid'}
+                        value={data.orgid}
+                        onInput={handleChangeFor('orgid', 'input')}
+                        onBlur={handleChangeFor('orgid', 'blur')}
+                        placeholder={placeholders?.orgid}
                         required={true}
                     />
                 </Field>
@@ -178,7 +179,7 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
                     value={data.lastName}
                     classNameModifiers={['lastName']}
                     onInput={handleChangeFor('lastName', 'input')}
-                    onBlur={handleChangeFor('onBlue', 'blur')}
+                    onBlur={handleChangeFor('lastName', 'blur')}
                     placeholder={placeholders?.lastName}
                     spellCheck={false}
                     required={true}
