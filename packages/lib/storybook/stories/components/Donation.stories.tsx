@@ -11,7 +11,8 @@ const componentConfiguration: DonationConfiguration = {
     onCancel: () => alert('Donation canceled'),
     nonprofitName: 'Test Charity',
     nonprofitUrl: 'https://example.org',
-    nonprofitDescription: 'Lorem ipsum...',
+    nonprofitDescription:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     donation: {
         type: 'fixedAmounts',
         currency: 'EUR',
@@ -20,7 +21,8 @@ const componentConfiguration: DonationConfiguration = {
     termsAndConditionsUrl: 'https://www.adyen.com',
     bannerUrl: '/banner.png',
     logoUrl: '/logo.png',
-    commercialTxAmount: 1000
+    commercialTxAmount: 1000,
+    causeName: 'Earthquake Turkey & Syria'
 };
 
 type DonationStory = StoryConfiguration<DonationConfiguration>;

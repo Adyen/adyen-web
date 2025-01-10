@@ -95,8 +95,8 @@ test.describe('Test how Custom Card Component with regular date field handles hi
         await expect(cardErrors[ENCRYPTED_EXPIRY_DATE]).toBe(null);
         await expect(cardErrors[ENCRYPTED_SECURITY_CODE]).toBe(null);
     });
-    // todo: flaky
-    test.fixme('#4 date field in error DOES stop card becoming valid', async ({ page, customCard }) => {
+
+    test('#4 date field in error DOES stop card becoming valid', async ({ page, customCard }) => {
         await binLookupMock(page, optionalDateAndCvcMock);
 
         // Card out of date

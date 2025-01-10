@@ -33,7 +33,6 @@ const test = base.extend<Fixture>({
     },
     bcmc: async ({ page }, use) => {
         const bcmc = new BCMC(page);
-        await bcmc.goto(URL_MAP.bcmc);
         await use(bcmc);
     }
 });

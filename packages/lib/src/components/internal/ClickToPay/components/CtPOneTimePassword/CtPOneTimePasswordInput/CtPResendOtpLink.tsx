@@ -6,6 +6,7 @@ import { useCoreContext } from '../../../../../../core/Context/CoreProvider';
 import Icon from '../../../../Icon';
 import { isSrciError } from '../../../services/utils';
 import { PREFIX } from '../../../../Icon/constants';
+import Button from '../../../../Button';
 
 const CONFIRMATION_SHOWING_TIME = 2000;
 
@@ -83,15 +84,15 @@ const CtPResendOtpLink = ({ onError, onResendCode, disabled }: CtPResendOtpLinkP
     }
 
     return (
-        // eslint-disable-next-line jsx-a11y/click-events-have-key-events
-        <div
-            role="link"
-            tabIndex={0}
-            className={classnames('adyen-checkout-ctp__otp-resend-code', { 'adyen-checkout-ctp__otp-resend-code--disabled': disabled })}
+        <Button
+            classNameModifiers={[classnames('otp-resend-code', { 'otp-resend-code--disabled': disabled })]}
             onClick={handleResendCodeClick}
+            variant="link"
+            inline={true}
+            disabled={disabled}
         >
             {i18n.get('ctp.otp.resendCode')}
-        </div>
+        </Button>
     );
 };
 

@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import { useMemo } from 'preact/hooks';
 import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import './CtPLogoutLink.scss';
+import Button from '../../../Button';
 
 const CtPLogoutLink = () => {
     const { ctpState, logoutShopper, status, cards } = useClickToPayContext();
@@ -22,17 +23,19 @@ const CtPLogoutLink = () => {
     }, [i18n, ctpState]);
 
     return (
-        // eslint-disable-next-line jsx-a11y/click-events-have-key-events
-        <span
-            role="button"
-            tabIndex={0}
-            className={classnames('adyen-checkout-ctp__section-logout-button', {
-                'adyen-checkout-ctp__section-logout-button--disabled': status === 'loading'
-            })}
+        <Button
+            classNameModifiers={[
+                classnames('section-logout-button', {
+                    'section-logout-button--disabled': status === 'loading'
+                })
+            ]}
+            disabled={status === 'loading'}
             onClick={logoutShopper}
+            variant="link"
+            inline={true}
         >
             {label}
-        </span>
+        </Button>
     );
 };
 

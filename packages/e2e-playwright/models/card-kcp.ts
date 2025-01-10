@@ -7,6 +7,10 @@ class CardWithKCP extends Card {
         super(page);
     }
 
+    get cardNumberKoreanBrand() {
+        return this.rootElement.getByAltText('korean_local_card');
+    }
+
     get taxNumberInput() {
         return this.rootElement.getByRole('textbox', { name: /Cardholder birthdate/i });
     }

@@ -23,7 +23,7 @@
     },
     "devDependencies": {
         "cross-env": "^7.0.3",
-        "dotenv": "16.4.5",
+        "dotenv": "16.4.7",
         "express": "^4.20.0"
     },
     "dependencies": {}

@@ -108,7 +108,7 @@ test.describe('Test Card, & binLookup w. panLength property', () => {
         // Card out of date
         await card.fillExpiryDate('12/90');
 
-        await card.typeCardNumber(CARD_WITH_PAN_LENGTH, 300);
+        await card.typeCardNumber(CARD_WITH_PAN_LENGTH);
 
         // Expect UI change - expiryDate field has focus
         await expect(card.cardNumberInput).not.toBeFocused();
