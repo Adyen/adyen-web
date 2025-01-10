@@ -29,7 +29,7 @@ describe('PayTo', () => {
         render(payTo.render());
         expect(await screen.findByText(/Enter the PayID and account details that are connected to your Payto account./i)).toBeTruthy();
         expect(await screen.findByLabelText(/Prefix/i)).toBeTruthy();
-        expect(await screen.findByLabelText(/Telephone number/i)).toBeTruthy(); // TODO this should be mobile number
+        expect(await screen.findByLabelText(/Mobile number/i)).toBeTruthy();
         expect(await screen.findByLabelText(/First name/i)).toBeTruthy();
         expect(await screen.findByLabelText(/Last name/i)).toBeTruthy();
     });
@@ -66,7 +66,7 @@ describe('PayTo', () => {
         await user.click(screen.queryByRole('button', { name: 'Mobile' }));
         await user.click(screen.queryByRole('option', { name: /Email/i }));
 
-        expect(await screen.findByLabelText(/Prefix/i)).toBeFalsy();
-        expect(await screen.findByLabelText(/Email/i)).toBeTruthy();
+        expect(screen.queryByLabelText(/Prefix/i)).toBeFalsy();
+        expect(screen.getByLabelText(/Email/i)).toBeTruthy();
     });
 });
