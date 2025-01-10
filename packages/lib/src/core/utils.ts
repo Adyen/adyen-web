@@ -76,3 +76,14 @@ export function assertConfigurationPropertiesAreValid(propsSetByMerchant: CoreCo
         }
     });
 }
+
+/**
+ * TODO: Check if this is correct place
+ * Type guard for enums, helpful to make sure strings keep enum value
+ * Comes from this: https://github.com/microsoft/TypeScript/issues/30611#issuecomment-570773496
+ * @param enumVariable
+ */
+export function createEnumChecker<T extends string, TEnumValue extends string>(enumVariable: { [key in T]: TEnumValue }) {
+    const enumValues = Object.values(enumVariable);
+    return (value: string): value is TEnumValue => enumValues.includes(value);
+}

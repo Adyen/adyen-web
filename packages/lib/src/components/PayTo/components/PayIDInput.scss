@@ -1,0 +1,10 @@
+@import 'styles/variable-generator';
+
+.adyen-checkout__fieldset--payto__payid_input {
+  margin-top: token(spacer-070);
+
+  .adyen-checkout__fieldset__fields {
+    margin-top: token(spacer-070);
+    gap: 0 token(spacer-060);
+  }
+}

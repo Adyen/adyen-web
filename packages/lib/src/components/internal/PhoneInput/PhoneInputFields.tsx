@@ -1,34 +1,38 @@
-import { h } from 'preact';
-import { useCallback, useEffect } from 'preact/hooks';
+import { Fragment, h } from 'preact';
+import { useEffect } from 'preact/hooks';
 import Field from '../FormFields/Field';
-import useForm from '../../../utils/useForm';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import './PhoneInput.scss';
 import Select from '../FormFields/Select';
-import { phoneFormatters, phoneValidationRules } from './validate';
-import { PhoneInputProps, PhoneInputSchema } from './types';
+import { PhoneInputSchema } from './types';
 import InputText from '../FormFields/InputText';
-import Fieldset from '../FormFields/Fieldset';
+import { DataSet } from '../../../core/Services/data-set';
+import { Form } from '../../../utils/useForm/types';
 
-function PhoneInput(props: PhoneInputProps) {
+export interface PhoneInputFieldProps {
+    items: DataSet;
+    requiredFields?: string[];
+    data: PhoneInputSchema;
+    onChange: (obj) => void;
+    form: Form<PhoneInputSchema>;
+    getError: (string) => string | boolean;
+    phoneNumberKey?: string;
+    phonePrefixErrorKey?: string;
+    phoneNumberErrorKey?: string;
+    placeholders?: PhoneInputSchema;
+    ref?;
+    showPrefix?: boolean;
+    showNumber?: boolean;
+}
+/**
+ *
+ * @param PhoneInputFormProps
+ * @constructor
+ */
+export default function PhoneInputFields({ getError, showNumber, showPrefix, form, ...props }: PhoneInputFieldProps) {
     const { i18n } = useCoreContext();
 
-    const schema = props.requiredFields || [...(props?.items?.length ? ['phonePrefix'] : []), 'phoneNumber'];
-    const showPrefix = schema.includes('phonePrefix') && !!props?.items?.length;
-    const showNumber = schema.includes('phoneNumber');
-
-    const { handleChangeFor, data, valid, errors, isValid, triggerValidation, setSchema } = useForm<PhoneInputSchema>({
-        i18n,
-        ...props,
-        schema,
-        defaultData: props.data,
-        rules: phoneValidationRules,
-        formatters: phoneFormatters
-    });
-
-    useEffect(() => {
-        setSchema(schema);
-    }, [schema.toString()]);
+    const { handleChangeFor, data, valid, triggerValidation } = form;
 
     // Force re-validation of the phoneNumber when data.phonePrefix changes (since the validation rules will also change)
     useEffect((): void => {
@@ -37,31 +41,16 @@ function PhoneInput(props: PhoneInputProps) {
         }
     }, [data.phonePrefix]);
 
-    useEffect(() => {
-        props.onChange({ data, valid, errors, isValid });
-    }, [data, valid, errors, isValid]);
-
+    // TODO why do we need this?
     this.triggerValidation = triggerValidation;
 
-    const getPhoneFieldError = useCallback(
-        (field: string) => {
-            if (errors[field]) {
-                const propsField = field === 'phoneNumber' ? 'phoneNumberErrorKey' : 'phonePrefixErrorKey';
-                const key = props[propsField] ? props[propsField] : errors[field].errorMessage;
-                return i18n.get(key) ?? null;
-            }
-            return null;
-        },
-        [errors]
-    );
-
     return (
-        <Fieldset classNameModifiers={['phone-input']}>
+        <Fragment>
             {showPrefix && (
                 <Field
                     className={'adyen-checkout-field--phone-prefix'}
                     label={i18n.get('telephonePrefix')}
-                    errorMessage={getPhoneFieldError('phonePrefix')}
+                    errorMessage={getError('phonePrefix')}
                     showValidIcon={false}
                     isValid={valid.phonePrefix}
                     dir={'ltr'}
@@ -83,7 +72,7 @@ function PhoneInput(props: PhoneInputProps) {
                 <Field
                     className={'adyen-checkout-field--phone-number'}
                     label={props.phoneNumberKey ? i18n.get(props.phoneNumberKey) : i18n.get('telephoneNumber')}
-                    errorMessage={getPhoneFieldError('phoneNumber')}
+                    errorMessage={getError('phoneNumber')}
                     isValid={valid.phoneNumber}
                     filled={data?.phoneNumber?.length > 0}
                     dir={'ltr'}
@@ -103,12 +92,6 @@ function PhoneInput(props: PhoneInputProps) {
                     />
                 </Field>
             )}
-        </Fieldset>
+        </Fragment>
     );
 }
-
-PhoneInput.defaultProps = {
-    phoneLabel: 'telephoneNumber'
-};
-
-export default PhoneInput;
