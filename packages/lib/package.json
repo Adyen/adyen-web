@@ -124,7 +124,7 @@
     "lint-staged": "15.2.11",
     "msw": "^2.6.4",
     "postcss": "8.4.49",
-    "rollup": "4.22.4",
+    "rollup": "4.29.1",
     "rollup-plugin-dts": "6.1.1",
     "rollup-plugin-postcss": "4.0.2",
     "rollup-plugin-stylelint": "1.0.0",
