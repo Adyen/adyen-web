@@ -1,5 +1,5 @@
 import { httpPost } from '../../../../core/Services/http';
-import { CbObjOnBinLookup, CbObjOnBinValue, CbObjOnError } from '../lib/types';
+import { CardBinLookupData, CardBinValueData, CardErrorData } from '../lib/types';
 import { DEFAULT_CARD_GROUP_TYPES } from '../lib/constants';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 import { BinLookupResponse, BinLookupResponseRaw } from '../../../Card/types';
@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'development') {
 export default parent => {
     let currentRequestId = null;
 
-    return (callbackObj: CbObjOnBinValue) => {
+    return (callbackObj: CardBinValueData) => {
         // Allow way for merchant to disallow binLookup by specifically setting the prop to false
         if (parent.props.doBinLookup === false) {
             if (parent.props.onBinValue) parent.props.onBinValue(callbackObj);
@@ -120,7 +120,7 @@ export default parent => {
                                 supportedBrandsRaw: mappedResponse.supportedBrands, // full supportedBrands data (for customCard comp)
                                 brands: parent.props.brands || DEFAULT_CARD_GROUP_TYPES,
                                 issuingCountryCode: data.issuingCountryCode
-                            } as CbObjOnBinLookup);
+                            } as CardBinLookupData);
 
                             return;
                         }
@@ -130,7 +130,7 @@ export default parent => {
                          * error!
                          */
                         if (mappedResponse.detectedBrands.length) {
-                            const errObj: CbObjOnError = {
+                            const errObj: CardErrorData = {
                                 type: 'card',
                                 fieldType: 'encryptedCardNumber',
                                 error: SF_ErrorCodes.ERROR_MSG_UNSUPPORTED_CARD_ENTERED,
@@ -145,7 +145,7 @@ export default parent => {
                                 supportedBrands: null,
                                 paymentMethodVariants: mappedResponse.paymentMethodVariants,
                                 brands: parent.props.brands || DEFAULT_CARD_GROUP_TYPES
-                            } as CbObjOnBinLookup);
+                            } as CardBinLookupData);
 
                             return;
                         }
@@ -159,7 +159,7 @@ export default parent => {
                             supportedBrands: null,
                             paymentMethodVariants: null,
                             brands: parent.props.brands || DEFAULT_CARD_GROUP_TYPES
-                        } as CbObjOnBinLookup);
+                        } as CardBinLookupData);
 
                         // Reset the UI and let the native, regex branding happen (for the generic card)
                         // For a single-branded card we need to pass a boolean to prompt resetting the brand logo to the 'base' type
@@ -183,7 +183,7 @@ export default parent => {
             currentRequestId = null; // Ignore any pending responses
 
             // Reset any errors
-            const errObj: CbObjOnError = {
+            const errObj: CardErrorData = {
                 type: 'card',
                 fieldType: 'encryptedCardNumber',
                 error: ''
@@ -193,7 +193,7 @@ export default parent => {
             // CustomCard needs this to reset the UI
             parent.onBinLookup({
                 isReset: true
-            } as CbObjOnBinLookup);
+            } as CardBinLookupData);
         }
 
         if (parent.props.onBinValue) parent.props.onBinValue(callbackObj);

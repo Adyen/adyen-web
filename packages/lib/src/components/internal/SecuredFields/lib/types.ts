@@ -105,7 +105,46 @@ export interface CardObject {
     expiryDatePolicy?: DatePolicyType;
 }
 
-export interface CbObjOnBrand {
+export interface CardAdditionalSFData {
+    additionalIframeConfigured?: boolean;
+    additionalIframeRemoved?: boolean;
+    fieldType: string;
+    type: string;
+}
+
+export interface CardAllValidData {
+    type: string;
+    allValid: boolean;
+    rootNode: HTMLElement;
+}
+
+export interface CardAutoCompleteData {
+    fieldType: string;
+    name: string;
+    value: string;
+    action: string;
+}
+
+export interface CardBinLookupData {
+    type?: string;
+    detectedBrands?: string[];
+    supportedBrands?: string[];
+    brands?: string[];
+    issuingCountryCode?: string;
+    // New for CustomCard
+    supportedBrandsRaw?: BrandObject[];
+    rootNode?: HTMLElement;
+    isReset?: boolean; // Used internally - not propagated to merchant callback
+}
+
+export interface CardBinValueData {
+    type: string;
+    binValue: string;
+    uuid?: string;
+    encryptedBin?: string;
+}
+
+export interface CardBrandData {
     type: string;
     rootNode: HTMLElement;
     brand: string;
@@ -117,13 +156,23 @@ export interface CbObjOnBrand {
     // maxLength: number;
 }
 
-export interface CbObjOnAllValid {
+export interface CardConfigSuccessData {
+    iframesConfigured: boolean;
     type: string;
-    allValid: boolean;
     rootNode: HTMLElement;
 }
 
-export interface CbObjOnFieldValid {
+export interface CardErrorData {
+    fieldType: string;
+    error: string;
+    type: string;
+    rootNode?: HTMLElement;
+    detectedBrands?: string[];
+    errorI18n?: string;
+    errorText?: string;
+}
+
+export interface CardFieldValidData {
     fieldType: string;
     encryptedFieldName: string;
     uid: string;
@@ -136,43 +185,7 @@ export interface CbObjOnFieldValid {
     issuerBin?: number;
 }
 
-export interface CbObjOnAutoComplete {
-    fieldType: string;
-    name: string;
-    value: string;
-    action: string;
-}
-
-export interface CbObjOnBinValue {
-    type: string;
-    binValue: string;
-    uuid?: string;
-    encryptedBin?: string;
-}
-
-export interface CbObjOnBinLookup {
-    type?: string;
-    detectedBrands?: string[];
-    supportedBrands?: string[];
-    brands?: string[];
-    issuingCountryCode?: string;
-    // New for CustomCard
-    supportedBrandsRaw?: BrandObject[];
-    rootNode?: HTMLElement;
-    isReset?: boolean; // Used internally - not propagated to merchant callback
-}
-
-export interface CbObjOnError {
-    fieldType: string;
-    error: string;
-    type: string;
-    rootNode?: HTMLElement;
-    detectedBrands?: string[];
-    errorI18n?: string;
-    errorText?: string;
-}
-
-export interface CbObjOnFocus {
+export interface CardFocusData {
     action: string;
     focus: boolean;
     numChars: number;
@@ -182,21 +195,8 @@ export interface CbObjOnFocus {
     currentFocusObject: string;
 }
 
-export interface CbObjOnLoad {
+export interface CardLoadData {
     iframesLoaded: boolean;
-}
-
-export interface CbObjOnConfigSuccess {
-    iframesConfigured: boolean;
-    type: string;
-    rootNode: HTMLElement;
-}
-
-export interface CbObjOnAdditionalSF {
-    additionalIframeConfigured?: boolean;
-    additionalIframeRemoved?: boolean;
-    fieldType: string;
-    type: string;
 }
 
 export interface SFFeedbackObj {

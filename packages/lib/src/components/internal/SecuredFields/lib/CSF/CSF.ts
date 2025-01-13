@@ -1,6 +1,6 @@
 import AbstractCSF from './AbstractCSF';
 import { CSFReturnObject, CSFSetupObject, CSFStateObject, CSFThisObject } from './types';
-import { StylesObject, CbObjOnAdditionalSF, SFFieldType } from '../types';
+import { StylesObject, CardAdditionalSFData, SFFieldType } from '../types';
 import { BinLookupResponse } from '../../../../Card/types';
 import { handleConfig } from './extensions/handleConfig';
 import { configureCallbacks } from './extensions/configureCallbacks';
@@ -251,7 +251,7 @@ class CSF extends AbstractCSF {
                     this.state.numIframes -= 1;
                     this.state.iframeCount -= 1;
 
-                    const callbackObj: CbObjOnAdditionalSF = { additionalIframeRemoved: true, fieldType: pFieldType, type: this.state.type };
+                    const callbackObj: CardAdditionalSFData = { additionalIframeRemoved: true, fieldType: pFieldType, type: this.state.type };
                     this.callbacks.onAdditionalSFRemoved(callbackObj);
                 }
             },

@@ -8,7 +8,7 @@ import {
 } from '../../constants';
 import { processErrors } from '../utils/processErrors';
 import { truthy } from '../../../../../../utils/commonUtils';
-import { SFFeedbackObj, CbObjOnFieldValid, EncryptionObj } from '../../types';
+import { SFFeedbackObj, CardFieldValidData, EncryptionObj } from '../../types';
 import postMessageToIframe from '../utils/iframes/postMessageToIframe';
 import { hasOwnProperty } from '../../../../../../utils/hasOwnProperty';
 import getIframeContentWin from '../utils/iframes/getIframeContentWin';
@@ -49,7 +49,7 @@ export function handleEncryption(pFeedbackObj: SFFeedbackObj): void {
     // MAKE ENCRYPTION OBJECTS FOR EACH OF THE INDIVIDUAL INPUTS
     // N.B. when considering "individual inputs" we are concerned with the 4 fields that the checkoutAPI expects to receive for a credit card payment:
     // encryptedCardNumber, encryptedSecurityCode, encryptedExpiryMonth, encryptedExpiryYear
-    const callbackObjectsArr: CbObjOnFieldValid[] = makeCallbackObjectsEncryption({
+    const callbackObjectsArr: CardFieldValidData[] = makeCallbackObjectsEncryption({
         fieldType,
         txVariant: this.state.type,
         rootNode: this.props.rootNode,

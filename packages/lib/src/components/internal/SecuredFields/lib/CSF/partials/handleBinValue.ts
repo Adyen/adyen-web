@@ -1,4 +1,4 @@
-import { SFFeedbackObj, CbObjOnBinValue } from '../../types';
+import { SFFeedbackObj, CardBinValueData } from '../../types';
 import { CSFThisObject } from '../types';
 
 interface DestructuredFeedbackObj {
@@ -16,7 +16,7 @@ interface DestructuredFeedbackObj {
 export function handleBinValue({ csfState, csfCallbacks }: CSFThisObject, pFeedbackObj: SFFeedbackObj): void {
     const { binValue, encryptedBin, uuid }: DestructuredFeedbackObj = pFeedbackObj;
 
-    const callbacksObj: CbObjOnBinValue = { binValue, type: csfState.type };
+    const callbacksObj: CardBinValueData = { binValue, type: csfState.type };
 
     if (encryptedBin) {
         callbacksObj.encryptedBin = encryptedBin;
