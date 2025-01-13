@@ -905,10 +905,10 @@
   resolved "https://registry.yarnpkg.com/@eslint/object-schema/-/object-schema-2.1.4.tgz#9e69f8bb4031e11df79e03db09f9dbbae1740843"
   integrity sha512-BsWiH1yFGjXXS2yvrf5LyuoSIIbPrGUWob917o+BTKuZ7qJdxX8aJLRxs1fS9n6r7vESrq1OUqb68dANcFXuQQ==
 
-"@fastify/deepmerge@^1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@fastify/deepmerge/-/deepmerge-1.3.0.tgz#8116858108f0c7d9fd460d05a7d637a13fe3239a"
-  integrity sha512-J8TOSBq3SoZbDhM9+R/u77hP93gz/rajSA+K2kGyijPpORPWUXHUpTaleoj+92As0S9uPRP7Oi8IqMf0u+ro6A==
+"@fastify/deepmerge@^2.0.0":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@fastify/deepmerge/-/deepmerge-2.0.1.tgz#68150cd7ab709b63a718aac8335561779b910032"
+  integrity sha512-hx+wJQr9Ph1hY/dyzY0SxqjumMyqZDlIF6oe71dpRKDHUg7dFQfjG94qqwQ274XRjmUrwKiYadex8XplNHx3CA==
 
 "@humanwhocodes/config-array@^0.11.14":
   version "0.11.14"
@@ -1476,6 +1476,15 @@
     "@types/estree" "^1.0.0"
     estree-walker "^2.0.2"
     picomatch "^2.3.1"
+
+"@rollup/pluginutils@^5.1.2":
+  version "5.1.4"
+  resolved "https://registry.yarnpkg.com/@rollup/pluginutils/-/pluginutils-5.1.4.tgz#bb94f1f9eaaac944da237767cdfee6c5b2262d4a"
+  integrity sha512-USm05zrsFxYLPdWWq+K3STlWiT/3ELn3RcV5hJMghpeAIhxfsUIg6mt12CBJBInWMV4VneoV7SfGv8xIwo2qNQ==
+  dependencies:
+    "@types/estree" "^1.0.0"
+    estree-walker "^2.0.2"
+    picomatch "^4.0.2"
 
 "@rollup/rollup-android-arm-eabi@4.22.4":
   version "4.22.4"
@@ -5879,10 +5888,10 @@ get-symbol-description@^1.1.0:
     es-errors "^1.3.0"
     get-intrinsic "^1.2.6"
 
-get-tsconfig@^4.7.3:
-  version "4.7.6"
-  resolved "https://registry.yarnpkg.com/get-tsconfig/-/get-tsconfig-4.7.6.tgz#118fd5b7b9bae234cc7705a00cd771d7eb65d62a"
-  integrity sha512-ZAqrLlu18NbDdRaHq+AKXzAmqIUPswPWKUchfytdAjiRFnCe5ojG2bstg6mRiZabkKfCoL/e98pbBELIV/YCeA==
+get-tsconfig@^4.8.1:
+  version "4.8.1"
+  resolved "https://registry.yarnpkg.com/get-tsconfig/-/get-tsconfig-4.8.1.tgz#8995eb391ae6e1638d251118c7b56de7eb425471"
+  integrity sha512-k9PN+cFBmaLWtVz29SkUoqU5O0slLuHJXt/2P+tMVFT+phsSGXGkp9t3rQIqdz0e+06EHNGs3oM6ZX1s2zHxRg==
   dependencies:
     resolve-pkg-maps "^1.0.0"
 
@@ -9669,15 +9678,16 @@ rollup-plugin-stylelint@1.0.0:
   dependencies:
     "@rollup/pluginutils" "^3.0.0"
 
-rollup-plugin-swc3@0.11.2:
-  version "0.11.2"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-swc3/-/rollup-plugin-swc3-0.11.2.tgz#91af9af9896524787fe927dfa4ffa7a8745a1042"
-  integrity sha512-o1ih9B806fV2wBSNk46T0cYfTF2eiiKmYXRpWw3K4j/Cp3tCAt10UCVsTqvUhGP58pcB3/GZcAVl5e7TCSKN6Q==
+rollup-plugin-swc3@0.12.1:
+  version "0.12.1"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-swc3/-/rollup-plugin-swc3-0.12.1.tgz#2b363c201c31f5923478a75048889ff7d067e0af"
+  integrity sha512-iNV1T432XvyejZ19/41C2gLbXxEOiiJynPPAFF0WzwwFT5FHx7SstAp0yjJRLyrbZjfIhoWJVl3hX3c3Stv/GQ==
   dependencies:
-    "@fastify/deepmerge" "^1.3.0"
-    "@rollup/pluginutils" "^5.1.0"
-    get-tsconfig "^4.7.3"
-    rollup-preserve-directives "^1.1.1"
+    "@dual-bundle/import-meta-resolve" "^4.1.0"
+    "@fastify/deepmerge" "^2.0.0"
+    "@rollup/pluginutils" "^5.1.2"
+    get-tsconfig "^4.8.1"
+    rollup-preserve-directives "^1.1.2"
 
 rollup-pluginutils@^2.8.2:
   version "2.8.2"
@@ -9686,10 +9696,10 @@ rollup-pluginutils@^2.8.2:
   dependencies:
     estree-walker "^0.6.1"
 
-rollup-preserve-directives@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/rollup-preserve-directives/-/rollup-preserve-directives-1.1.1.tgz#40d58b412ff791278ef06e0fa0944cbca3d6bd6d"
-  integrity sha512-+eQafbuEfDPfxQ9hQPlwaROfin4yiVRxap8hnrvvvcSGoukv1tTiYpAW9mvm3uR8J+fe4xd8FdVd5rz9q7jZ+Q==
+rollup-preserve-directives@^1.1.2:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/rollup-preserve-directives/-/rollup-preserve-directives-1.1.3.tgz#a217dac6809a1c06d3c075d97fceabbb0fdfc242"
+  integrity sha512-oXqxd6ZzkoQej8Qt0k+S/yvO2+S4CEVEVv2g85oL15o0cjAKTKEuo2MzyA8FcsBBXbtytBzBMFAbhvQg4YyPUQ==
   dependencies:
     magic-string "^0.30.5"
 
