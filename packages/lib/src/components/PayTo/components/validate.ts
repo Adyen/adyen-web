@@ -74,3 +74,34 @@ export const payIdValidationRules: ValidatorRules = {
         errorMessage: 'mobileNumber.invalid'
     }
 };
+
+//original regex /^\d{6}-[ -~]{1,28}$/
+const bsbRegex = /^\d{6}$/;
+const bankAccountNumberRegex = /^[ -~]{1,28}$/;
+
+const bsbValidatorRule: ValidatorRule = {
+    validate: value => validationFromRegex(value, bsbRegex, bsbValidatorRule),
+    errorMessage: 'bsb.invalid',
+    modes: ['blur']
+};
+
+const bankAccountNumberValidatorRule: ValidatorRule = {
+    validate: value => validationFromRegex(value, bankAccountNumberRegex, bankAccountNumberValidatorRule),
+    errorMessage: 'bankAccountNumber.invalid',
+    modes: ['blur']
+};
+
+export const bsbValidationRules: ValidatorRules = {
+    bsb: bsbValidatorRule,
+    bankAccountNumber: bankAccountNumberValidatorRule,
+    firstName: {
+        validate: value => (isEmpty(value) ? null : true), // valid, if there are chars other than spaces,
+        errorMessage: 'firstName.invalid',
+        modes: ['blur']
+    },
+    lastName: {
+        validate: value => (isEmpty(value) ? null : true),
+        errorMessage: 'lastName.invalid',
+        modes: ['blur']
+    }
+};
