@@ -129,7 +129,7 @@
     "rollup-plugin-postcss": "4.0.2",
     "rollup-plugin-stylelint": "1.0.0",
     "rollup-plugin-swc3": "0.12.1",
-    "sass": "1.83.0",
+    "sass": "1.77.8",
     "size-limit": "11.1.6",
     "storybook": "^8.3.4",
     "stylelint": "16.12.0",
