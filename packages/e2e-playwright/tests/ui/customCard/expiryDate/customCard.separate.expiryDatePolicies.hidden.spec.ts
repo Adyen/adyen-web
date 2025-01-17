@@ -77,8 +77,8 @@ test.describe('Test how Custom Card Component with separate date field handles h
         let cardValid = await page.evaluate('window.customCardSeparate.isValid');
         await expect(cardValid).toEqual(true);
     });
-    // todo: flaky
-    test.fixme('#3 date field in error does not stop card becoming valid', async ({ page, customCardSeparateExpiryDate }) => {
+
+    test('#3 date field in error does not stop card becoming valid', async ({ page, customCardSeparateExpiryDate }) => {
         await binLookupMock(page, hiddenDateAndCvcMock);
 
         // Card out of date

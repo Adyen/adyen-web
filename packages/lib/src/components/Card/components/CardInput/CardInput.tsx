@@ -24,7 +24,7 @@ import useImage from '../../../../core/Context/useImage';
 import { getArrayDifferences } from '../../../../utils/arrayUtils';
 import FormInstruction from '../../../internal/FormInstruction';
 import { AddressData } from '../../../../types/global-types';
-import { CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
+import { CardBrandData, CardFocusData } from '../../../internal/SecuredFields/lib/types';
 import { FieldErrorAnalyticsObject } from '../../../../core/Analytics/types';
 import { PREFIX } from '../../../internal/Icon/constants';
 import useSRPanelForCardInputErrors from './useSRPanelForCardInputErrors';
@@ -93,6 +93,15 @@ const CardInput = (props: CardInputProps) => {
     const [iOSFocusedField, setIOSFocusedField] = useState(null);
 
     /**
+     * This stores the brand as detected by the internal regEx.
+     * It eventually gets overwritten by the brand as detected by the /binLookup, but will revert back to the regEx detection
+     * if the PAN length drops below the /binLookup digit threshold.
+     * Default value, 'card', indicates no brand detected
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [internallyDetectedBrand, setInternallyDetectedBrand] = useState('card');
+
+    /**
      * LOCAL VARS
      */
     const {
@@ -127,12 +136,17 @@ const CardInput = (props: CardInputProps) => {
      * HANDLERS
      */
     // Handlers for focus & blur on all fields. Can be renamed to onFieldFocus once the onFocusField is renamed in Field.tsx
-    const onFieldFocusAnalytics = (who: string, e: Event | CbObjOnFocus) => {
+    const onFieldFocusAnalytics = (who: string, e: Event | CardFocusData) => {
         props.onFocus({ fieldType: who, event: e });
     };
-    const onFieldBlurAnalytics = (who: string, e: Event | CbObjOnFocus) => {
+    const onFieldBlurAnalytics = (who: string, e: Event | CardFocusData) => {
         props.onBlur({ fieldType: who, event: e });
     };
+
+    const onBrand = useCallback((obj: CardBrandData) => {
+        setInternallyDetectedBrand(obj.brand);
+        props.onBrand(obj);
+    }, []);
 
     // Make SecuredFields aware of the focus & blur handlers
     const handleFocus = getFocusHandler(setFocusedElement, onFieldFocusAnalytics, onFieldBlurAnalytics);
@@ -399,7 +413,7 @@ const CardInput = (props: CardInputProps) => {
                 koreanAuthenticationRequired={props.configuration.koreanAuthenticationRequired}
                 hasKoreanFields={!!(props.configuration.koreanAuthenticationRequired && props.countryCode === 'kr')}
                 onChange={handleSecuredFieldsChange}
-                onBrand={props.onBrand}
+                onBrand={onBrand}
                 onFocus={handleFocus}
                 type={props.brand}
                 disableIOSArrowKeys={props.disableIOSArrowKeys ? handleTouchstartIOS : null}

@@ -6,11 +6,13 @@ export const URL_MAP = {
         '/iframe.html?globals=&args=amount:0;sessionData.recurringProcessingModel:CardOnFile;sessionData.storePaymentMethodMode:askForConsent&id=dropin-default--auto&viewMode=story',
     dropinSessions_zeroAuthCard_fail:
         '/iframe.html?globals=&args=amount:0;sessionData.recurringProcessingModel:CardOnFile;sessionData.storePaymentMethodMode:askForConsent;sessionData.enableOneClick:!true&id=dropin-default--auto&viewMode=story',
+    dropinWithSession_BCMC_noStoredPms: '/iframe.html?args=countryCode:BE&globals=&id=dropin-default--auto&viewMode=story',
 
     /**
      * Card
      */
     card: '/iframe.html?args=&id=cards-card--default&viewMode=story',
+    cardWithVisibleSrPanel: '/iframe.html?args=srConfig.showPanel:!true&globals=&id=cards-card--default&viewMode=story',
     cardWithSsn: '/iframe.html?globals=&id=cards-card--with-ssn&viewMode=story',
     cardWithAdvancedFlow: '/iframe.html?args=useSessions:!false&globals=&id=cards-card--default&viewMode=story',
     cardWithAvs: '/iframe.html?args=&globals=&id=cards-card--with-avs&viewMode=story',

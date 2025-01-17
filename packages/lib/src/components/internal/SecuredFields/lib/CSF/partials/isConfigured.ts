@@ -1,5 +1,5 @@
 import cardType from '../utils/cardType';
-import { CardObject, CbObjOnConfigSuccess } from '../../types';
+import { CardObject, CardConfigSuccessData } from '../../types';
 import * as logger from '../../utilities/logger';
 import { CVC_POLICY_REQUIRED } from '../../constants';
 import { CSFThisObject } from '../types';
@@ -14,7 +14,7 @@ import { CSFThisObject } from '../types';
 export function isConfigured({ csfState, csfConfig, csfProps, csfCallbacks }: CSFThisObject, validateForm): boolean {
     csfState.isConfigured = true;
 
-    const callbackObj: CbObjOnConfigSuccess = { iframesConfigured: true, type: csfState.type, rootNode: csfProps.rootNode as HTMLElement };
+    const callbackObj: CardConfigSuccessData = { iframesConfigured: true, type: csfState.type, rootNode: csfProps.rootNode as HTMLElement };
 
     csfCallbacks.onConfigSuccess(callbackObj);
 

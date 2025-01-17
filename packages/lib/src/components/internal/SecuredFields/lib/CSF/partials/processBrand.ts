@@ -1,7 +1,7 @@
 import { ENCRYPTED_CARD_NUMBER, ENCRYPTED_SECURITY_CODE } from '../../constants';
 import postMessageToIframe from '../utils/iframes/postMessageToIframe';
 import { objectsDeepEqual } from '../../utilities/commonUtils';
-import { BrandStorageObject, CbObjOnBrand, SFFeedbackObj, SFFieldType } from '../../types';
+import { BrandStorageObject, CardBrandData, SFFeedbackObj, SFFieldType } from '../../types';
 import { pick } from '../../../../../../utils/commonUtils';
 import { hasOwnProperty } from '../../../../../../utils/hasOwnProperty';
 import getIframeContentWin from '../utils/iframes/getIframeContentWin';
@@ -70,7 +70,7 @@ export default function processBrand({ csfState, csfConfig, csfProps, csfCallbac
             : null;
 
         if (brandInfoObj && brandInfoObj.brand) {
-            const callbackObj: CbObjOnBrand = brandInfoObj as CbObjOnBrand;
+            const callbackObj: CardBrandData = brandInfoObj as CardBrandData;
             callbackObj.type = csfState.type;
             callbackObj.rootNode = csfProps.rootNode as HTMLElement;
 

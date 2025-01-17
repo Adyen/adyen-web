@@ -1,11 +1,11 @@
 import { h } from 'preact';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'action';
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'action' | 'link';
 
 export interface ButtonProps {
     status?: string;
     /**
-     * Class name modifiers will be used as: `adyen-checkout__image--${modifier}`
+     * Class name modifiers will be used as: `adyen-checkout__button--${modifier}`
      */
     classNameModifiers?: string[];
     variant?: ButtonVariant;

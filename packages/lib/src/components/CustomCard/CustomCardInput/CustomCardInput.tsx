@@ -17,6 +17,7 @@ interface SecuredFieldsProps {
     brandsConfiguration?: CardBrandsConfiguration;
     clientKey?: string;
     countryCode?: string;
+    forceCompat?: boolean;
     i18n: Language;
     implementationType?: string;
     keypadFix?: boolean;
@@ -164,6 +165,7 @@ const extractPropsForSFP = (props: SecuredFieldsProps) => {
         brands: props.brands,
         brandsConfiguration: props.brandsConfiguration,
         clientKey: props.clientKey,
+        forceCompat: props.forceCompat,
         // countryCode: props.countryCode, // only used for korean cards when koreanAuthenticationRequired is true
         i18n: props.i18n,
         implementationType: props.implementationType,

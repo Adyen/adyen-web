@@ -2,10 +2,10 @@ import { h } from 'preact';
 import BaseElement from '../BaseElement/BaseElement';
 import PayButton from '../PayButton';
 import { assertIsDropin, cleanupFinalResult, getRegulatoryDefaults, sanitizeResponse, verifyPaymentDidNotFail } from './utils';
-import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
+import AdyenCheckoutError, { NETWORK_ERROR } from '../../../core/Errors/AdyenCheckoutError';
 import { hasOwnProperty } from '../../../utils/hasOwnProperty';
 import { Resources } from '../../../core/Context/Resources';
-import { ANALYTICS_SUBMIT_STR } from '../../../core/Analytics/constants';
+import { ANALYTICS_ERROR_TYPE, ANALYTICS_EVENT, ANALYTICS_SUBMIT_STR } from '../../../core/Analytics/constants';
 
 import type { AnalyticsInitialEvent, SendAnalyticsObject } from '../../../core/Analytics/types';
 import type { CoreConfiguration, ICore, AdditionalDetailsData } from '../../../core/types';
@@ -19,8 +19,7 @@ import type {
     PaymentAmount,
     PaymentData,
     PaymentMethodsResponse,
-    PaymentResponseData,
-    RawPaymentResponse
+    PaymentResponseData
 } from '../../../types/global-types';
 import type { IDropin } from '../../Dropin/types';
 import type { NewableComponent } from '../../../core/core.registry';
@@ -177,7 +176,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         if (this.constructor['type'] === 'scheme' || this.constructor['type'] === 'bcmc') {
             return this.constructor['type'];
         }
-        return this.props.type;
+        return this.type;
     }
 
     public submit(): void {
@@ -249,8 +248,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         try {
             return await this.core.session.submitPayment(data);
         } catch (error: unknown) {
-            if (error instanceof AdyenCheckoutError) this.handleError(error);
-            else this.handleError(new AdyenCheckoutError('ERROR', 'Error when making /payments call', { cause: error }));
+            if (error instanceof AdyenCheckoutError) {
+                this.handleError(error);
+            } else {
+                this.handleError(new AdyenCheckoutError('ERROR', 'Error when making /payments call', { cause: error }));
+            }
 
             return Promise.reject(error);
         }
@@ -276,6 +278,10 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
          * - If Component, it will set its own status
          */
         this.setElementStatus('ready');
+
+        if (error.name === NETWORK_ERROR && error.options.code) {
+            this.submitAnalytics({ type: ANALYTICS_EVENT.error, errorType: ANALYTICS_ERROR_TYPE.apiError, code: error.options.code });
+        }
 
         if (this.props.onError) {
             this.props.onError(error, this.elementRef);
@@ -390,11 +396,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * Handles a /payments or /payments/details response.
      * The component will handle automatically actions, orders, and final results.
      *
-     * @param rawResponse -
+     * Expected to be called after sanitizeResponse has been run on the raw payment response
+     *
+     * @param response -
      */
-    protected handleResponse(rawResponse: RawPaymentResponse): void {
-        const response = sanitizeResponse(rawResponse);
-
+    protected handleResponse(response: PaymentResponseData): void {
         if (response.action) {
             this.elementRef.handleAction(response.action);
             return;
