@@ -1,5 +1,17 @@
 # @adyen/adyen-web
 
+## 6.8.0
+
+### Minor Changes
+
+- Use `rem` for the font size unit, and fixed some style issues due to the font scaling. ([#3067](https://github.com/Adyen/adyen-web/pull/3067))
+
+### Patch Changes
+
+- Set `options` in ICore:createFromAction to be optional ([#3053](https://github.com/Adyen/adyen-web/pull/3053))
+
+- Update securedFields version to 5.5.0 (supports font size set in rem) ([#3091](https://github.com/Adyen/adyen-web/pull/3091))
+
 ## 6.7.0
 
 ### Minor Changes
