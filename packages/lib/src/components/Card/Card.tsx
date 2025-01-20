@@ -77,10 +77,8 @@ export class CardElement extends UIElement<CardConfiguration> {
     formatProps(props: CardConfiguration): CardConfiguration {
         // The value from a session should be used, before falling back to the merchant configuration
         const enableStoreDetails = props.session?.configuration?.enableStoreDetails ?? props.enableStoreDetails;
-
         const isZeroAuth = props.amount?.value === 0;
         const showStoreDetailsCheckbox = isZeroAuth ? false : enableStoreDetails;
-
         const storedCardID = props.storedPaymentMethodId || props.id; // check if we've been passed a (checkout) processed storedCard or one that merchant has pulled from the PMs response
         const isEcommerceStoredCard = storedCardID && props?.supportedShopperInteractions?.includes('Ecommerce'); // If we have a storedCard does it support Ecommerce (it might not if the merchant has pulled it from the PMs response)
 

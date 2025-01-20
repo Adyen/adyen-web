@@ -129,6 +129,7 @@ export enum TxVariants {
     bcmc_mobile = 'bcmc_mobile',
     bcmc_mobile_QR = 'bcmc_mobile_QR',
     pix = 'pix',
+    paybybank_pix = 'paybybank_pix',
     swish = 'swish',
     wechatpay = 'wechatpay',
     wechatpayQR = 'wechatpayQR',

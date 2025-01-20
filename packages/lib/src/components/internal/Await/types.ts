@@ -29,7 +29,7 @@ export interface AwaitComponentProps {
     brandLogo: string;
     messageText: string;
     awaitText: string;
-    ref: any;
+    ref?: any;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
 }
 
