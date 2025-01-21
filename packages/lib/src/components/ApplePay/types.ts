@@ -37,6 +37,8 @@ export type ApplePayButtonType =
     | 'tip'
     | 'top-up';
 
+export type ApplePayButtonStyle = 'black' | 'white' | 'white-outline';
+
 export interface ApplePayConfiguration extends UIElementProps {
     /**
      * Enables the ApplePay Express Flow & also used for analytics
@@ -204,9 +206,9 @@ export interface ApplePayConfiguration extends UIElementProps {
      */
     onShippingMethodSelected?: (resolve, reject, event: ApplePayJS.ApplePayShippingMethodSelectedEvent) => void;
 
-    // ButtonOptions
-    buttonColor?: 'black' | 'white' | 'white-with-line';
+    buttonColor?: ApplePayButtonStyle;
     buttonType?: ApplePayButtonType;
+    buttonLocale?: string;
 }
 
 export interface ApplePayElementData {

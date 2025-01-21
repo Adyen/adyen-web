@@ -16,7 +16,32 @@ export const Default: ApplePayStory = {
             {checkout => <ComponentContainer element={new ApplePay(checkout, componentConfiguration)} />}
         </Checkout>
     ),
-    args: {}
+    args: {
+        componentConfiguration: {
+            buttonLocale: 'pt-BR'
+        }
+    }
+};
+
+export const WithCustomPayButton: ApplePayStory = {
+    render: ({ componentConfiguration, ...checkoutConfig }) => (
+        <Checkout checkoutConfig={checkoutConfig}>
+            {checkout => {
+                const applepay = new ApplePay(checkout, componentConfiguration);
+                return (
+                    <div id="component-root" className="component-wrapper">
+                        <button onClick={() => applepay.submit()}>Pay with ApplePay</button>
+                    </div>
+                );
+            }}
+        </Checkout>
+    ),
+    args: {
+        componentConfiguration: {
+            showPayButton: false,
+            buttonLocale: 'pt-BR'
+        }
+    }
 };
 
 export default meta;

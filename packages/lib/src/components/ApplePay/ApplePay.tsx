@@ -18,12 +18,15 @@ import type { ApplePayConfiguration, ApplePayElementData, ApplePayPaymentOrderDe
 import type { ICore } from '../../core/types';
 import type { PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
 import { SendAnalyticsObject } from '../../core/Analytics/types';
+import { ApplePaySdkLoader } from './ApplePaySdkLoader';
 
 const latestSupportedVersion = 14;
 
 class ApplePayElement extends UIElement<ApplePayConfiguration> {
     public static type = TxVariants.applepay;
     protected static defaultProps = defaultProps;
+
+    private sdkLoader: ApplePaySdkLoader;
 
     constructor(checkout: ICore, props?: ApplePayConfiguration) {
         super(checkout, props);
@@ -42,12 +45,15 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         this.validateMerchant = this.validateMerchant.bind(this);
         this.collectOrderTrackingDetailsIfNeeded = this.collectOrderTrackingDetailsIfNeeded.bind(this);
         this.handleAuthorization = this.handleAuthorization.bind(this);
+
+        this.sdkLoader = new ApplePaySdkLoader();
+        void this.sdkLoader.load();
     }
 
     /**
      * Formats the component props
      */
-    protected override formatProps(props) {
+    protected override formatProps(props): ApplePayConfiguration {
         const version = props.version || resolveSupportedVersion(latestSupportedVersion);
         const supportedNetworks = props.brands?.length ? mapBrands(props.brands) : props.supportedNetworks;
 
@@ -56,6 +62,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             configuration: props.configuration,
             supportedNetworks,
             version,
+            buttonLocale: props.buttonLocale ?? props.i18n?.locale,
             totalPriceLabel: props.totalPriceLabel || props.configuration?.merchantName
         };
     }
@@ -254,12 +261,6 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         }
     }
 
-    /**
-     * Validation
-     *
-     * @remarks
-     * Apple Pay does not require any specific validation
-     */
     get isValid(): boolean {
         return true;
     }
@@ -269,44 +270,42 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
      * @returns Promise Resolve/Reject whether the shopper can use Apple Pay
      */
     public override async isAvailable(): Promise<void> {
-        if (document.location.protocol !== 'https:') {
-            return Promise.reject(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to start an Apple Pay session from an insecure document'));
-        }
+        // if (document.location.protocol !== 'https:') {
+        //     return Promise.reject(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to start an Apple Pay session from an insecure document'));
+        // }
 
-        if (!this.props.onValidateMerchant && !this.props.clientKey) {
-            return Promise.reject(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'clientKey was not provided'));
-        }
+        return this.sdkLoader.isSdkLoaded().catch(error => {
+            return Promise.reject(new AdyenCheckoutError('ERROR', 'ApplePaySDK failed to load', { cause: error }));
+        });
 
-        try {
-            if (window.ApplePaySession && ApplePaySession.canMakePayments() && ApplePaySession.supportsVersion(this.props.version)) {
-                return Promise.resolve();
-            }
-        } catch (error) {
-            console.warn(error);
-        }
-
-        return Promise.reject(new AdyenCheckoutError('ERROR', 'Apple Pay is not available on this device'));
+        // if (!this.props.onValidateMerchant && !this.props.clientKey) {
+        //     return Promise.reject(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'clientKey was not provided'));
+        // }
+        //
+        // try {
+        //     if (window.ApplePaySession && ApplePaySession.canMakePayments() && ApplePaySession.supportsVersion(this.props.version)) {
+        //         return Promise.resolve();
+        //     }
+        // } catch (error) {
+        //     console.warn(error);
+        // }
+        //
+        // return Promise.reject(new AdyenCheckoutError('ERROR', 'Apple Pay is not available on this device'));
     }
 
-    /**
-     * Renders the Apple Pay button or nothing in the Dropin
-     */
     render() {
-        if (this.props.showPayButton) {
-            return (
-                <ApplePayButton
-                    i18n={this.props.i18n}
-                    buttonColor={this.props.buttonColor}
-                    buttonType={this.props.buttonType}
-                    onClick={e => {
-                        e.preventDefault();
-                        this.submit();
-                    }}
-                />
-            );
+        if (!this.props.showPayButton) {
+            return null;
         }
 
-        return null;
+        return (
+            <ApplePayButton
+                buttonStyle={this.props.buttonColor}
+                buttonType={this.props.buttonType}
+                buttonLocale={this.props.buttonLocale}
+                onClick={this.submit}
+            />
+        );
     }
 }
 

@@ -2107,10 +2107,10 @@
   resolved "https://registry.yarnpkg.com/@trysound/sax/-/sax-0.2.0.tgz#cccaab758af56761eb7bf37af6f03f326dd798ad"
   integrity sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==
 
-"@types/applepayjs@14.0.8":
-  version "14.0.8"
-  resolved "https://registry.yarnpkg.com/@types/applepayjs/-/applepayjs-14.0.8.tgz#803276dc623908390594697bb2d5b7bc89f28eef"
-  integrity sha512-Yzf5OSitdS+/G8cjaAkPJ0+pBOEf9Vik1XUCdw6ul7Qh6Xb18wTlG/sWA5jKIme3x4fbyTGlSd4mfkvdtP9mRw==
+"@types/applepayjs@14.0.9":
+  version "14.0.9"
+  resolved "https://registry.yarnpkg.com/@types/applepayjs/-/applepayjs-14.0.9.tgz#66b760691f146a17009c4be808d0a341b776f429"
+  integrity sha512-xEprYbb0TEP/XIiDPbVnTYpDai8fTFpsQfVSfTd81Is2GOMUy7ie019eyX6Mz2ECxfjoUVKaiGSL577roIeHCg==
 
 "@types/aria-query@^5.0.1":
   version "5.0.4"
