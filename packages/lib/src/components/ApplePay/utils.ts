@@ -1,17 +1,16 @@
 import { AddressData } from '../../types/global-types';
 
 export function resolveSupportedVersion(latestVersion: number): number | null {
-    const versions = [];
-    for (let i = latestVersion; i > 0; i--) {
-        versions.push(i);
-    }
-
     try {
-        return versions.find(v => v && window.ApplePaySession && ApplePaySession.supportsVersion(v));
+        for (let v = latestVersion; v > 0; v--) {
+            if (ApplePaySession?.supportsVersion(v)) {
+                return v;
+            }
+        }
     } catch (error) {
         console.warn(error);
-        return null;
     }
+    return null;
 }
 
 export function mapBrands(brands) {

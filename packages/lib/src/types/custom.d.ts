@@ -20,6 +20,11 @@ declare module '*.scss' {
 
 declare global {
     interface Window {
+        /**
+         * ApplePaySession added by ApplePaySDK
+         */
+        ApplePaySession?: ApplePaySession;
+
         AdyenWeb: any;
         VISA_SDK?: {
             buildClientProfile?(srciDpaId?: string): any;

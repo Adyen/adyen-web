@@ -18,7 +18,7 @@ export const Default: ApplePayStory = {
     ),
     args: {
         componentConfiguration: {
-            buttonLocale: 'pt-BR'
+            buttonColor: 'white-outline'
         }
     }
 };

@@ -1,12 +1,6 @@
 import { UIElementProps } from '../internal/UIElement/types';
 import { AddressData } from '../../types/global-types';
 
-declare global {
-    interface Window {
-        ApplePaySession?: ApplePaySession;
-    }
-}
-
 type Initiative = 'web' | 'messaging';
 
 export type ApplePayPaymentOrderDetails = {
