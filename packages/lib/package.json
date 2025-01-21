@@ -148,7 +148,7 @@
     "@types/applepayjs": "14.0.8",
     "@types/googlepay": "0.7.6",
     "classnames": "2.5.1",
-    "preact": "10.22.1"
+    "preact": "10.25.4"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint",
