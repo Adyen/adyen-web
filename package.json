@@ -34,6 +34,6 @@
         "@changesets/cli": "2.27.11",
         "@changesets/get-github-info": "0.6.0",
         "concurrently": "8.2.2",
-        "prettier": "3.4.2"
+        "prettier": "3.3.3"
     }
 }
