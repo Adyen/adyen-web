@@ -333,9 +333,5 @@
     "payto.payid.option.phone": "Mobile",
     "payto.payid.option.email": "Email",
     "payto.payid.option.abn": "ABN",
-    "payto.payid.option.orgid": "Organization ID",
-    "payto.bsb.header": "BSB",
-    "payto.bsb.description" : "Enter the bank account number and the Bank State Branch that is connected to your account to continue",
-    "payto.bsb.label.bankAccountNumber": "Bank account number",
-    "payto.bsb.label.bsb": "Bank State Branch"
+    "payto.payid.option.orgid": "Organization ID"
 }
