@@ -202,6 +202,9 @@ export interface ApplePayConfiguration extends UIElementProps {
 
     buttonColor?: ApplePayButtonStyle;
     buttonType?: ApplePayButtonType;
+    /**
+     * Used to tweak the text of the button types that contain text ('Continue with', 'Book with', etc)
+     */
     buttonLocale?: string;
 }
 
