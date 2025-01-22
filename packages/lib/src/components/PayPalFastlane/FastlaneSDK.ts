@@ -8,7 +8,8 @@ import type {
     FastlaneWindowInstance,
     FastlaneAuthenticatedCustomerResult,
     FastlaneShippingAddressSelectorResult,
-    FastlaneSDKConfiguration
+    FastlaneSDKConfiguration,
+    FastlaneConsentRenderState
 } from './types';
 import type { FastlaneTokenData } from './services/request-fastlane-token';
 
@@ -19,6 +20,8 @@ class FastlaneSDK {
 
     private fastlaneSdk: FastlaneWindowInstance;
     private authenticatedShopper: { email: string; customerId: string };
+    private fastlaneSessionId: string | undefined;
+    private consentComponentDetails: FastlaneConsentRenderState | undefined;
 
     constructor(configuration: FastlaneSDKConfiguration) {
         if (!configuration.environment) throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', "FastlaneSDK: 'environment' property is required");
@@ -31,13 +34,22 @@ class FastlaneSDK {
         this.locale = convertAdyenLocaleToFastlaneLocale(configuration.locale || 'en-US');
     }
 
+    /**
+     * Initializes the Fastlane SDK
+     */
     public async initialize(): Promise<FastlaneSDK> {
         const tokenData = await this.requestClientToken();
         await this.fetchSdk(tokenData.value, tokenData.clientId);
-        await this.initializeFastlane();
+        await this.initializeFastlaneInstance();
         return this;
     }
 
+    /**
+     * Triggers the authentication for Fastlane using shopper's email.
+     * If shopper is recognized, the OTP flow is initialized.
+     *
+     * @param email
+     */
     public async authenticate(email: string): Promise<FastlaneAuthenticatedCustomerResult> {
         if (!this.fastlaneSdk) {
             throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'FastlaneSDK is not initialized');
@@ -57,7 +69,12 @@ class FastlaneSDK {
     }
 
     /**
-     * TODO: Waiting for PayPal to provide the specific methods to fetch sessionId and Consent UI details
+     * Creates the Adyen Component configuration based on the Fastlane authentication result.
+     *
+     * In case the shopper authenticated successfully, it returns config to be used in the Fastlane component
+     * Otherwise, it returns the configuration to be used in the Card component
+     *
+     * @param authResult
      */
     public getComponentConfiguration(authResult: FastlaneAuthenticatedCustomerResult): FastlanePaymentMethodConfiguration {
         if (!authResult) {
@@ -71,7 +88,7 @@ class FastlaneSDK {
             return {
                 paymentType: 'fastlane',
                 configuration: {
-                    fastlaneSessionId: 'xxxx-yyyy',
+                    fastlaneSessionId: this.fastlaneSessionId,
                     customerId: this.authenticatedShopper.customerId,
                     email: this.authenticatedShopper.email,
                     tokenId: authResult.profileData.card.id,
@@ -83,19 +100,20 @@ class FastlaneSDK {
             return {
                 paymentType: 'card',
                 configuration: {
-                    fastlaneConfiguration: {
-                        fastlaneSessionId: 'xxxx-yyyy',
-                        showConsent: true,
-                        defaultToggleState: true,
-                        termsAndConditionsLink: 'https://...',
-                        privacyPolicyLink: 'https://...',
-                        termsAndConditionsVersion: 'v1'
-                    }
+                    ...(this.consentComponentDetails && {
+                        fastlaneConfiguration: {
+                            fastlaneSessionId: this.fastlaneSessionId,
+                            ...this.consentComponentDetails
+                        }
+                    })
                 }
             };
         }
     }
 
+    /**
+     * Displays the Fastlane Shipping Address selector UI
+     */
     public showShippingAddressSelector(): Promise<FastlaneShippingAddressSelectorResult> {
         if (!this.fastlaneSdk) {
             throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'FastlaneSDK is not initialized');
@@ -103,11 +121,13 @@ class FastlaneSDK {
         return this.fastlaneSdk.profile.showShippingAddressSelector();
     }
 
+    /**
+     * Render the "Fastlane by PayPal" logo in the specified HTML container
+     */
     public async mountWatermark(container: HTMLElement | string, options = { includeAdditionalInfo: false }): Promise<void> {
         if (!this.fastlaneSdk) {
             throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'FastlaneSDK is not initialized');
         }
-
         const component = await this.fastlaneSdk.FastlaneWatermarkComponent(options);
         component.render(container);
     }
@@ -123,13 +143,53 @@ class FastlaneSDK {
         try {
             await script.load();
         } catch (error) {
-            console.error(error);
+            throw new AdyenCheckoutError('SCRIPT_ERROR', 'FastlaneSDK failed to load', { cause: error });
         }
     }
 
-    private async initializeFastlane(): Promise<void> {
-        this.fastlaneSdk = await window.paypal.Fastlane({});
-        this.fastlaneSdk.setLocale(this.locale);
+    /**
+     * Fetch the fastlane session ID used internally by PayPal for Network Token Usage event
+     * @private
+     */
+    private async fetchSessionIdAsync(): Promise<void> {
+        try {
+            const { sessionId } = await this.fastlaneSdk.identity.getSession();
+            this.fastlaneSessionId = sessionId;
+            console.log('Fastlane session id:', this.fastlaneSessionId);
+        } catch (error) {
+            console.warn('Fastlane SDK: Failed to fetch session ID', error);
+        }
+    }
+
+    /**
+     * Fetch object containing that details that will be used to display the sign-up UI
+     * inside the card component
+     * @private
+     */
+    private async fetchConsentDetailsAsync(): Promise<void> {
+        try {
+            const consentComponent = await this.fastlaneSdk.ConsentComponent();
+            this.consentComponentDetails = await consentComponent.getRenderState();
+            console.log('Consent details:', this.consentComponentDetails);
+        } catch (error) {
+            console.warn('Fastlane SDK: Failed to fetch consent details', error);
+        }
+    }
+
+    private async initializeFastlaneInstance(): Promise<void> {
+        try {
+            this.fastlaneSdk = await window.paypal.Fastlane({
+                intendedExperience: 'externalProcessorCustomConsent'
+            });
+            this.fastlaneSdk.setLocale(this.locale);
+
+            void this.fetchSessionIdAsync();
+            void this.fetchConsentDetailsAsync();
+        } catch (error) {
+            throw new AdyenCheckoutError('ERROR', 'Fastlane SDK: Failed to initialize fastlane using the window.paypal.Fastlane constructor', {
+                cause: error
+            });
+        }
     }
 }
 

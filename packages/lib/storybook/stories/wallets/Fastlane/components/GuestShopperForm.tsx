@@ -20,7 +20,7 @@ export const GuestShopperForm = ({ onCheckoutStep }: GuestShopperFormProps) => {
 
     const loadFastlane = async () => {
         const sdk = await initializeFastlane({
-            clientKey: 'test_JC3ZFTA6WFCCRN454MVDEYOWEI5D3LT2', // Joost clientkey
+            clientKey: 'test_L6HTEOAXQBCZJHKNU4NLN6EI7IE6VRRW', // Joost clientkey
             environment: 'test'
         });
         setFastlane(sdk);
@@ -41,9 +41,7 @@ export const GuestShopperForm = ({ onCheckoutStep }: GuestShopperFormProps) => {
     };
 
     useEffect(() => {
-        void loadFastlane().catch(() => {
-            alert('Failed to initialize: Fetch the token using Postman');
-        });
+        void loadFastlane();
     }, []);
 
     if (!fastlane) {

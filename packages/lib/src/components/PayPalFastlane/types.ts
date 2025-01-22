@@ -13,18 +13,31 @@ export interface FastlaneWindowInstance {
     identity: {
         lookupCustomerByEmail: (email: string) => Promise<{ customerContextId: string }>;
         triggerAuthenticationFlow: (customerContextId: string, options?: AuthenticationFlowOptions) => Promise<FastlaneAuthenticatedCustomerResult>;
+        getSession: () => Promise<{ sessionId: string }>;
     };
     profile: {
         showShippingAddressSelector: () => Promise<FastlaneShippingAddressSelectorResult>;
     };
     setLocale: (locale: string) => void;
+    ConsentComponent: () => Promise<{
+        getRenderState: () => Promise<FastlaneConsentRenderState>;
+    }>;
     FastlaneWatermarkComponent: (options: { includeAdditionalInfo: boolean }) => Promise<{
         render: (container) => null;
     }>;
 }
 
-// TODO: TBD if this is needed
-export interface FastlaneOptions {}
+export interface FastlaneConsentRenderState {
+    showConsent: boolean;
+    defaultToggleState: boolean | undefined;
+    termsAndConditionsLink: string | undefined;
+    termsAndConditionsVersion: string | undefined;
+    privacyPolicyLink: string | undefined;
+}
+
+export interface FastlaneOptions {
+    intendedExperience: 'externalProcessorCustomConsent';
+}
 
 // TODO: TBD if this is needed
 interface AuthenticationFlowOptions {}
@@ -110,12 +123,7 @@ type FastlaneCardComponentConfiguration = {
     };
 };
 
-export type FastlaneSignupConfiguration = {
-    showConsent: boolean;
-    defaultToggleState: boolean;
-    termsAndConditionsLink: string;
-    privacyPolicyLink: string;
-    termsAndConditionsVersion: string;
+export type FastlaneSignupConfiguration = FastlaneConsentRenderState & {
     fastlaneSessionId: string;
 };
 
