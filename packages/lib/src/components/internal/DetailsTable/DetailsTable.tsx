@@ -16,18 +16,18 @@ export default function DetailsTable({ tableFields }: DetailsTableProps) {
     // This was originally part of the voucher component and ported out
     // We can remove the voucher class names at point
     return (
-        <ul className="adyen-checkout__voucher-result__details adyen-checkout__details-table">
+        <dl className="adyen-checkout__voucher-result__details adyen-checkout__details-table">
             {tableFields
                 // first remove empty values
                 .filter(item => !!item)
                 // or objects without label and value
                 .filter(({ label, value }) => !!label && !!value)
                 .map(({ label, value }, index) => (
-                    <li key={index} className="adyen-checkout__voucher-result__details__item adyen-checkout__details-table__item">
-                        <span className="adyen-checkout__voucher-result__details__label adyen-checkout__details-table__label">{label}</span>
-                        <span className="adyen-checkout__voucher-result__details__value adyen-checkout__details-table__value">{value}</span>
-                    </li>
+                    <div key={index} className="adyen-checkout__voucher-result__details__item adyen-checkout__details-table__item">
+                        <dt className="adyen-checkout__voucher-result__details__label adyen-checkout__details-table__label">{label}</dt>
+                        <dd className="adyen-checkout__voucher-result__details__value adyen-checkout__details-table__value">{value}</dd>
+                    </div>
                 ))}
-        </ul>
+        </dl>
     );
 }
