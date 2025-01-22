@@ -9,9 +9,10 @@ Types (previously in their own file)
  */
 import { UIElementProps } from '../internal/UIElement/types';
 import { TxVariants } from '../tx-variants';
-import PayToInput from './components/PayToInput';
 import { PayIdFormData } from './components/PayIDInput';
 import { PayToIdentifierEnum } from './components/IdentifierSelector';
+import PayToComponent, { PayToComponentData } from './components/PayToComponent';
+import { BSBFormData } from './components/BSBInput';
 
 export interface PayToConfiguration extends UIElementProps {
     paymentData?: any;
@@ -19,7 +20,7 @@ export interface PayToConfiguration extends UIElementProps {
     placeholders?: any; //TODO
 }
 
-export interface PayToData extends PayIdFormData {
+export interface PayToData extends PayIdFormData, BSBFormData, PayToComponentData {
     shopperAccountIdentifier: string;
 }
 
@@ -38,15 +39,22 @@ const config = {
 };
 
 const getAccountIdentifier = (state: PayToData) => {
-    switch (state.selectedIdentifier) {
-        case PayToIdentifierEnum.email:
-            return state.email;
-        case PayToIdentifierEnum.abn:
-            return state.abn;
-        case PayToIdentifierEnum.orgid:
-            return state.orgid;
-        case PayToIdentifierEnum.phone:
-            return `${state.phonePrefix}-${state.phoneNumber}`;
+    // if it's BSB Input type merge bankAccount with BSB
+    if (state.selectedInput === 'bsb-option') {
+        return `${state.bsb}-${state.bankAccountNumber}`;
+    } else if (state.selectedInput === 'payid-option') {
+        // otherwise use the option in the dropdown
+        switch (state.selectedIdentifier) {
+            case PayToIdentifierEnum.email:
+                return state.email;
+            case PayToIdentifierEnum.abn:
+                return state.abn;
+            case PayToIdentifierEnum.orgid:
+                return state.orgid;
+            case PayToIdentifierEnum.phone:
+                // merge the phone prefix and number - see comment in ticket
+                return `${state.phonePrefix}-${state.phoneNumber}`;
+        }
     }
 };
 /**
@@ -118,7 +126,7 @@ export class PayToElement extends UIElement<PayToConfiguration> {
 
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                <PayToInput
+                <PayToComponent
                     data={this.props.data}
                     placeholders={this.props.placeholders}
                     setComponentRef={this.setComponentRef}
