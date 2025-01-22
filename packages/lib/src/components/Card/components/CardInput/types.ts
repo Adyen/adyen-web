@@ -3,19 +3,19 @@ import { BinLookupResponse, BrandConfiguration, CardBrandsConfiguration, CardBac
 import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
 import {
-    CbObjOnAllValid,
-    CbObjOnAutoComplete,
-    CbObjOnBinValue,
-    CbObjOnBrand,
-    CbObjOnConfigSuccess,
-    CbObjOnFieldValid,
-    CbObjOnLoad,
+    CardAllValidData,
+    CardAutoCompleteData,
+    CardBinValueData,
+    CardBrandData,
+    CardConfigSuccessData,
+    CardFieldValidData,
+    CardLoadData,
     CVCPolicyType,
     DatePolicyType
 } from '../../../internal/SecuredFields/lib/types';
 import Specifications from '../../../internal/Address/Specifications';
 import { AddressSchema } from '../../../internal/Address/types';
-import { CbObjOnError, StylesObject } from '../../../internal/SecuredFields/lib/types';
+import { CardErrorData, StylesObject } from '../../../internal/SecuredFields/lib/types';
 import { Resources } from '../../../../core/Context/Resources';
 import { SRPanel } from '../../../../core/Errors/SRPanel';
 import RiskElement from '../../../../core/RiskModule';
@@ -116,17 +116,17 @@ export interface CardInputProps {
     };
     onAdditionalSFConfig?: () => {};
     onAdditionalSFRemoved?: () => {};
-    onAllValid?: (o: CbObjOnAllValid) => {};
-    onAutoComplete?: (o: CbObjOnAutoComplete) => {};
-    onBinValue?: (o: CbObjOnBinValue) => {};
+    onAllValid?: (o: CardAllValidData) => {};
+    onAutoComplete?: (o: CardAutoCompleteData) => {};
+    onBinValue?: (o: CardBinValueData) => {};
     onBlur?: (e) => {};
-    onBrand?: (o: CbObjOnBrand) => {};
-    onConfigSuccess?: (O: CbObjOnConfigSuccess) => {};
+    onBrand?: (o: CardBrandData) => {};
+    onConfigSuccess?: (O: CardConfigSuccessData) => {};
     onChange?: (state) => {};
     onError?: () => {};
-    onFieldValid?: (o: CbObjOnFieldValid) => {};
+    onFieldValid?: (o: CardFieldValidData) => {};
     onFocus?: (e) => {};
-    onLoad?: (o: CbObjOnLoad) => {};
+    onLoad?: (o: CardLoadData) => {};
     handleKeyPress?: (obj: KeyboardEvent) => void;
     onAddressLookup?: OnAddressLookupType;
     onAddressSelected?: OnAddressSelectedType;
@@ -176,7 +176,7 @@ export interface CardInputRef extends ComponentMethodsRef {
     setFocusOn?: (who) => void;
     processBinLookupResponse?: (binLookupResponse: BinLookupResponse, isReset: boolean) => void;
     updateStyles?: (stylesObj: StylesObject) => void;
-    handleUnsupportedCard?: (errObj: CbObjOnError) => boolean;
+    handleUnsupportedCard?: (errObj: CardErrorData) => boolean;
 }
 
 export interface FieldError {

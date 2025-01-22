@@ -4,18 +4,13 @@ import CustomCardInput from './CustomCardInput';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import collectBrowserInfo from '../../utils/browserInfo';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
-import { CbObjOnBinLookup, CbObjOnFocus } from '../internal/SecuredFields/lib/types';
+import { CardBinLookupData, CardFocusData } from '../internal/SecuredFields/lib/types';
 import { BrandObject } from '../Card/types';
 import { getCardImageUrl, fieldTypeToSnakeCase } from '../internal/SecuredFields/utils';
 import { TxVariants } from '../tx-variants';
 import { CustomCardConfiguration } from './types';
 import { ANALYTICS_FOCUS_STR, ANALYTICS_UNFOCUS_STR } from '../../core/Analytics/constants';
 import { SendAnalyticsObject } from '../../core/Analytics/types';
-
-// TODO questions about
-// brand - does a merchant ever make a custom stored card?
-// type
-// countryCode
 
 export class CustomCard extends UIElement<CustomCardConfiguration> {
     public static type = TxVariants.customCard;
@@ -27,11 +22,12 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
         brandsConfiguration: {}
     };
 
+    private brand = TxVariants.card;
+
     formatProps(props: CustomCardConfiguration) {
         return {
             ...props,
-            type: TxVariants.customCard,
-            brand: TxVariants.card
+            type: TxVariants.customCard
         };
     }
 
@@ -80,7 +76,7 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
         return this;
     }
 
-    onBinLookup(obj: CbObjOnBinLookup) {
+    onBinLookup(obj: CardBinLookupData) {
         const nuObj = { ...obj };
         nuObj.rootNode = this._node;
 
@@ -105,7 +101,7 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
         return collectBrowserInfo();
     }
 
-    private onFocus = (obj: CbObjOnFocus) => {
+    private onFocus = (obj: CardFocusData) => {
         this.submitAnalytics({
             type: obj.focus === true ? ANALYTICS_FOCUS_STR : ANALYTICS_UNFOCUS_STR,
             target: fieldTypeToSnakeCase(obj.fieldType)
@@ -134,7 +130,7 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
                     onBinValue={this.onBinValue}
                     implementationType={'custom'}
                     resources={this.resources}
-                    brand={this.props.brand}
+                    brand={this.brand}
                     onFocus={this.onFocus}
                 />
             </CoreProvider>

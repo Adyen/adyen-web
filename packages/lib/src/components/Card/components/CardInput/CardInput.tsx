@@ -24,7 +24,7 @@ import useImage from '../../../../core/Context/useImage';
 import { getArrayDifferences } from '../../../../utils/arrayUtils';
 import FormInstruction from '../../../internal/FormInstruction';
 import { AddressData } from '../../../../types/global-types';
-import { CbObjOnBrand, CbObjOnFocus } from '../../../internal/SecuredFields/lib/types';
+import { CardBrandData, CardFocusData } from '../../../internal/SecuredFields/lib/types';
 import { FieldErrorAnalyticsObject } from '../../../../core/Analytics/types';
 import { PREFIX } from '../../../internal/Icon/constants';
 import useSRPanelForCardInputErrors from './useSRPanelForCardInputErrors';
@@ -136,14 +136,14 @@ const CardInput = (props: CardInputProps) => {
      * HANDLERS
      */
     // Handlers for focus & blur on all fields. Can be renamed to onFieldFocus once the onFocusField is renamed in Field.tsx
-    const onFieldFocusAnalytics = (who: string, e: Event | CbObjOnFocus) => {
+    const onFieldFocusAnalytics = (who: string, e: Event | CardFocusData) => {
         props.onFocus({ fieldType: who, event: e });
     };
-    const onFieldBlurAnalytics = (who: string, e: Event | CbObjOnFocus) => {
+    const onFieldBlurAnalytics = (who: string, e: Event | CardFocusData) => {
         props.onBlur({ fieldType: who, event: e });
     };
 
-    const onBrand = useCallback((obj: CbObjOnBrand) => {
+    const onBrand = useCallback((obj: CardBrandData) => {
         setInternallyDetectedBrand(obj.brand);
         props.onBrand(obj);
     }, []);

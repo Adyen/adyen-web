@@ -1,4 +1,4 @@
-import { SFFeedbackObj, CbObjOnFocus } from '../../types';
+import { SFFeedbackObj, CardFocusData } from '../../types';
 import ua from '../utils/userAgent';
 import { CSFThisObject } from '../types';
 
@@ -41,7 +41,7 @@ export function handleFocus({ csfState, csfProps, csfCallbacks }: CSFThisObject,
     }
 
     // Call callback (SecuredFieldsProviderHandlers > onFocus)
-    const callbackObj: CbObjOnFocus = feedbackObj as CbObjOnFocus;
+    const callbackObj: CardFocusData = feedbackObj as CardFocusData;
     callbackObj.currentFocusObject = csfState.currentFocusObject;
     csfCallbacks.onFocus(callbackObj);
 }
