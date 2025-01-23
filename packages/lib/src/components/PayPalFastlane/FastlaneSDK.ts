@@ -76,7 +76,7 @@ class FastlaneSDK {
      *
      * @param authResult
      */
-    public getComponentConfiguration(authResult: FastlaneAuthenticatedCustomerResult): FastlanePaymentMethodConfiguration {
+    public async getComponentConfiguration(authResult: FastlaneAuthenticatedCustomerResult): Promise<FastlanePaymentMethodConfiguration> {
         if (!authResult) {
             throw new AdyenCheckoutError(
                 'IMPLEMENTATION_ERROR',
@@ -97,13 +97,14 @@ class FastlaneSDK {
                 }
             };
         } else {
+            const consentDetails = await this.fetchConsentDetails();
             return {
                 paymentType: 'card',
                 configuration: {
-                    ...(this.consentComponentDetails && {
+                    ...(consentDetails && {
                         fastlaneConfiguration: {
                             fastlaneSessionId: this.fastlaneSessionId,
-                            ...this.consentComponentDetails
+                            ...consentDetails
                         }
                     })
                 }
@@ -155,7 +156,6 @@ class FastlaneSDK {
         try {
             const { sessionId } = await this.fastlaneSdk.identity.getSession();
             this.fastlaneSessionId = sessionId;
-            console.log('Fastlane session id:', this.fastlaneSessionId);
         } catch (error) {
             console.warn('Fastlane SDK: Failed to fetch session ID', error);
         }
@@ -166,11 +166,11 @@ class FastlaneSDK {
      * inside the card component
      * @private
      */
-    private async fetchConsentDetailsAsync(): Promise<void> {
+    private async fetchConsentDetails(): Promise<FastlaneConsentRenderState> {
         try {
             const consentComponent = await this.fastlaneSdk.ConsentComponent();
-            this.consentComponentDetails = await consentComponent.getRenderState();
-            console.log('Consent details:', this.consentComponentDetails);
+            const consentDetails = await consentComponent.getRenderState();
+            return consentDetails;
         } catch (error) {
             console.warn('Fastlane SDK: Failed to fetch consent details', error);
         }
@@ -184,7 +184,6 @@ class FastlaneSDK {
             this.fastlaneSdk.setLocale(this.locale);
 
             void this.fetchSessionIdAsync();
-            void this.fetchConsentDetailsAsync();
         } catch (error) {
             throw new AdyenCheckoutError('ERROR', 'Fastlane SDK: Failed to initialize fastlane using the window.paypal.Fastlane constructor', {
                 cause: error

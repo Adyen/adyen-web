@@ -31,6 +31,10 @@ const httpPostMock = (httpPost as jest.Mock).mockResolvedValue({
 describe('FastlaneSDK', () => {
     beforeEach(() => {
         mockReset(fastlaneMock);
+
+        fastlaneMock.identity.getSession.mockResolvedValue({
+            sessionId: 'fastlane-session-id'
+        });
     });
 
     test('should initialize the Fastlane SDK', async () => {
@@ -40,8 +44,11 @@ describe('FastlaneSDK', () => {
         });
 
         expect(fastlaneConstructorMock).toHaveBeenCalledTimes(1);
-        expect(fastlaneConstructorMock).toHaveBeenCalledWith({});
+        expect(fastlaneConstructorMock).toHaveBeenCalledWith({
+            intendedExperience: 'externalProcessorCustomConsent'
+        });
         expect(fastlaneMock.setLocale).toHaveBeenCalledWith('en_us');
+        expect(fastlaneMock.identity.getSession).toHaveBeenCalledTimes(1);
         expect(httpPostMock).toHaveBeenCalledWith({
             loadingContext: 'https://checkoutshopper-test.adyen.com/checkoutshopper/',
             path: 'utility/v1/payPalFastlane/tokens?clientKey=test_xxx',
@@ -165,13 +172,16 @@ describe('FastlaneSDK', () => {
                 }
             })
         });
+        fastlaneMock.identity.getSession.mockResolvedValue({
+            sessionId: 'fastlane-session-id'
+        });
 
         const fastlane = await initializeFastlane({
             clientKey: 'test_xxx',
             environment: 'test'
         });
         const authResult = await fastlane.authenticate('test@adyen.com');
-        const config = fastlane.getComponentConfiguration(authResult);
+        const config = await fastlane.getComponentConfiguration(authResult);
 
         expect(config).toStrictEqual({
             paymentType: 'fastlane',
@@ -180,7 +190,7 @@ describe('FastlaneSDK', () => {
                 customerId: 'customer-context-id',
                 email: 'test@adyen.com',
                 lastFour: '1111',
-                fastlaneSessionId: 'xxxx-yyyy',
+                fastlaneSessionId: 'fastlane-session-id',
                 tokenId: 'xxxx'
             }
         });
@@ -195,24 +205,84 @@ describe('FastlaneSDK', () => {
             authenticationState: 'not_found',
             profileData: undefined
         });
+        fastlaneMock.identity.getSession.mockResolvedValue({
+            sessionId: 'fastlane-session-id'
+        });
+        fastlaneMock.ConsentComponent.mockResolvedValue({
+            getRenderState: jest.fn().mockResolvedValue({
+                showConsent: true,
+                defaultToggleState: true,
+                termsAndConditionsLink: 'https://fastlane.com/terms',
+                termsAndConditionsVersion: 'v1',
+                privacyPolicyLink: 'https://fastlane.com/privacy'
+            })
+        });
 
         const fastlane = await initializeFastlane({
             clientKey: 'test_xxx',
             environment: 'test'
         });
-        const authResult = await fastlane.authenticate('test@adyen.com');
-        const config = fastlane.getComponentConfiguration(authResult);
 
+        const authResult = await fastlane.authenticate('test@adyen.com');
+        const config = await fastlane.getComponentConfiguration(authResult);
+
+        expect(fastlaneMock.ConsentComponent).toHaveBeenCalledTimes(1);
         expect(config).toStrictEqual({
             paymentType: 'card',
             configuration: {
                 fastlaneConfiguration: {
                     defaultToggleState: true,
-                    fastlaneSessionId: 'xxxx-yyyy',
-                    privacyPolicyLink: 'https://...',
                     showConsent: true,
-                    termsAndConditionsLink: 'https://...',
+                    fastlaneSessionId: 'fastlane-session-id',
+                    privacyPolicyLink: 'https://fastlane.com/privacy',
+                    termsAndConditionsLink: 'https://fastlane.com/terms',
                     termsAndConditionsVersion: 'v1'
+                }
+            }
+        });
+    });
+
+    test('should return card component configuration with undefined consent values if showConsent is false', async () => {
+        const customerContextId = 'customer-context-id';
+        fastlaneMock.identity.lookupCustomerByEmail.mockResolvedValue({
+            customerContextId
+        });
+        fastlaneMock.identity.triggerAuthenticationFlow.mockResolvedValue({
+            authenticationState: 'not_found',
+            profileData: undefined
+        });
+        fastlaneMock.identity.getSession.mockResolvedValue({
+            sessionId: 'fastlane-session-id'
+        });
+        fastlaneMock.ConsentComponent.mockResolvedValue({
+            getRenderState: jest.fn().mockResolvedValue({
+                showConsent: false,
+                defaultToggleState: undefined,
+                termsAndConditionsLink: undefined,
+                termsAndConditionsVersion: undefined,
+                privacyPolicyLink: undefined
+            })
+        });
+
+        const fastlane = await initializeFastlane({
+            clientKey: 'test_xxx',
+            environment: 'test'
+        });
+
+        const authResult = await fastlane.authenticate('test@adyen.com');
+        const config = await fastlane.getComponentConfiguration(authResult);
+
+        expect(fastlaneMock.ConsentComponent).toHaveBeenCalledTimes(1);
+        expect(config).toStrictEqual({
+            paymentType: 'card',
+            configuration: {
+                fastlaneConfiguration: {
+                    showConsent: false,
+                    fastlaneSessionId: 'fastlane-session-id',
+                    defaultToggleState: undefined,
+                    privacyPolicyLink: undefined,
+                    termsAndConditionsLink: undefined,
+                    termsAndConditionsVersion: undefined
                 }
             }
         });
@@ -225,6 +295,6 @@ describe('FastlaneSDK', () => {
         });
 
         // @ts-ignore It is expected to omit the parameter here
-        expect(() => fastlane.getComponentConfiguration()).toThrowError();
+        await expect(fastlane.getComponentConfiguration()).rejects.toThrowError();
     });
 });
