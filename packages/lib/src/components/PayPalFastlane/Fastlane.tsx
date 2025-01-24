@@ -45,7 +45,10 @@ class Fastlane extends UIElement<FastlaneConfiguration> {
         return this.props.icon ?? this.resources.getImage()('card');
     }
 
-    public get(): { icon: string; name: string }[] {
+    /**
+     * Used to display the payment method supported brands within Drop-in
+     */
+    public get brands(): { icon: string; name: string }[] {
         const { brands } = this.props;
         return brands.map(brand => ({ icon: this.props.modules.resources.getImage()(brand), name: brand }));
     }
