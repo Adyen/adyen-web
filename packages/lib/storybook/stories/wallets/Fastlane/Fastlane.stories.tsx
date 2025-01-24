@@ -124,7 +124,6 @@ export const MockedRecognizedFlowDropin: FastlaneStory = {
                                 paymentMethodsConfiguration: {
                                     fastlane: {
                                         tokenId: 'xxx',
-                                        customerId: 'sss',
                                         lastFour: '1111',
                                         brand: 'visa',
                                         email: 'email@adyen.com',
@@ -169,7 +168,6 @@ export const MockedRecognizedFlowStandalone: FastlaneStory = {
                                     });
                                 },
                                 tokenId: 'xxx',
-                                customerId: 'sss',
                                 lastFour: '1111',
                                 brand: 'visa',
                                 email: 'email@adyen.com',

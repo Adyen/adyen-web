@@ -22,14 +22,6 @@ describe('Fastlane', () => {
         // @ts-ignore Testing with incomplete config properties
         fastlane = new Fastlane(global.core, {
             tokenId: 'xxx',
-            customerId: 'zzz'
-        });
-        await expect(fastlane.isAvailable()).rejects.toBeUndefined();
-
-        // @ts-ignore Testing with incomplete config properties
-        fastlane = new Fastlane(global.core, {
-            tokenId: 'xxx',
-            customerId: 'zzz',
             lastFour: '1111'
         });
         await expect(fastlane.isAvailable()).rejects.toBeUndefined();
@@ -37,7 +29,6 @@ describe('Fastlane', () => {
         // @ts-ignore Testing with incomplete config properties
         fastlane = new Fastlane(global.core, {
             tokenId: 'xxx',
-            customerId: 'zzz',
             lastFour: '1111',
             brand: 'visa'
         });
@@ -46,7 +37,6 @@ describe('Fastlane', () => {
         // @ts-ignore Testing with incomplete config properties
         fastlane = new Fastlane(global.core, {
             tokenId: 'xxx',
-            customerId: 'zzz',
             lastFour: '1111',
             brand: 'visa',
             email: 'shopper@adyen.com'
@@ -55,7 +45,6 @@ describe('Fastlane', () => {
 
         fastlane = new Fastlane(global.core, {
             tokenId: 'xxx',
-            customerId: 'zzz',
             lastFour: '1111',
             brand: 'visa',
             email: 'shopper@adyen.com',
@@ -72,7 +61,6 @@ describe('Fastlane', () => {
     test('should return encoded blob to process the payment', () => {
         const fastlane = new Fastlane(global.core, {
             tokenId: 'token-id',
-            customerId: 'customer-id',
             lastFour: '1111',
             brand: 'visa',
             email: 'shopper@adyen.com',
@@ -81,9 +69,8 @@ describe('Fastlane', () => {
 
         const encodedBlob = btoa(
             JSON.stringify({
-                sessionId: 'session-id',
-                tokenId: 'token-id',
-                customerId: 'customer-id'
+                fastlaneSessionId: 'session-id',
+                tokenId: 'token-id'
             })
         );
 
@@ -101,7 +88,6 @@ describe('Fastlane', () => {
             modules: { resources },
             i18n: global.i18n,
             tokenId: 'token-id',
-            customerId: 'customer-id',
             lastFour: '1111',
             brand: 'visa',
             email: 'shopper@adyen.com',

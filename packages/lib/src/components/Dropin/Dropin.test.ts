@@ -320,7 +320,6 @@ describe('Dropin', () => {
                 paymentMethodsConfiguration: {
                     fastlane: {
                         tokenId: 'xxx',
-                        customerId: 'sss',
                         lastFour: '1111',
                         brand: 'visa',
                         email: 'email@adyen.com',
@@ -386,7 +385,6 @@ describe('Dropin', () => {
                 paymentMethodsConfiguration: {
                     fastlane: {
                         tokenId: 'xxx',
-                        customerId: 'sss',
                         lastFour: '1111',
                         brand: 'visa',
                         email: 'email@adyen.com',

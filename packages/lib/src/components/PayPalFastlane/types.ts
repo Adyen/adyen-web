@@ -29,10 +29,10 @@ export interface FastlaneWindowInstance {
 
 export interface FastlaneConsentRenderState {
     showConsent: boolean;
-    defaultToggleState: boolean | undefined;
-    termsAndConditionsLink: string | undefined;
-    termsAndConditionsVersion: string | undefined;
-    privacyPolicyLink: string | undefined;
+    defaultToggleState?: boolean;
+    termsAndConditionsLink?: string;
+    termsAndConditionsVersion?: string;
+    privacyPolicyLink?: string;
 }
 
 export interface FastlaneOptions {
@@ -108,7 +108,6 @@ type FastlaneComponentConfiguration = {
     paymentType: 'fastlane';
     configuration: {
         fastlaneSessionId: string;
-        customerId: string;
         email: string;
         tokenId: string;
         lastFour: string;
@@ -136,27 +135,34 @@ export interface FastlaneSDKConfiguration {
 }
 
 export interface FastlaneConfiguration extends UIElementProps {
+    /**
+     * Card token ID, used to process the payment
+     */
     tokenId: string;
-    customerId: string;
-    lastFour: string;
-    brand: string;
-    email: string;
+    /**
+     * Fastlane session ID, used to process the payment
+     */
     fastlaneSessionId: string;
     /**
-     * Display the brand images inside the Drop-in payment method header
+     * Initial last four digits displayed once the Component is rendered
+     */
+    lastFour: string;
+    /**
+     * Initial brand displayed once the Component is rendered
+     */
+    brand: string;
+    /**
+     * Shopper's email (it will be used in the future to re-authenticate using Fastlane SDK within the Component)
+     */
+    email: string;
+    /**
+     * Used internally by Drop-in. Displays the brand images inside the Drop-in payment method header
      * @internal
      */
     keepBrandsVisible?: boolean;
     /**
-     * List of brands accepted by the component
+     * Property returned by the backend. Contains the list of brands supported by Fastlane component
      * @internal
      */
     brands?: string[];
-    /**
-     * Configuration returned by the backend
-     * @internal
-     */
-    configuration?: {
-        brands: string[];
-    };
 }

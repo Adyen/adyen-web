@@ -38,7 +38,6 @@ const FastlaneSignup = ({
     const { i18n } = useCoreContext();
 
     const isFastlaneConfigurationValid = useMemo(() => {
-        // TODO: Check with PayPal. If showConsent is false, do we get privacyLink, t&c link, version, etc?
         return isConfigurationValid({
             showConsent,
             defaultToggleState,
@@ -49,6 +48,9 @@ const FastlaneSignup = ({
         });
     }, [showConsent, defaultToggleState, termsAndConditionsLink, privacyPolicyLink, termsAndConditionsVersion, fastlaneSessionId]);
 
+    /**
+     * If the configuration is valid, the Component propagates fastlaneData to the Card component state
+     */
     useEffect(() => {
         if (!isFastlaneConfigurationValid) {
             return;
@@ -57,9 +59,9 @@ const FastlaneSignup = ({
         onChange({
             fastlaneData: {
                 consentShown,
-                consentGiven: displaySignup ? isChecked : false,
-                consentVersion: termsAndConditionsVersion,
                 fastlaneSessionId: fastlaneSessionId,
+                consentGiven: displaySignup ? isChecked : false,
+                ...(termsAndConditionsVersion && { consentVersion: termsAndConditionsVersion }),
                 ...(telephoneNumber && { telephoneNumber })
             }
         });
@@ -74,6 +76,9 @@ const FastlaneSignup = ({
         isFastlaneConfigurationValid
     ]);
 
+    /**
+     * If the sign-up has been displayed at least once, we set consentShown: true
+     */
     useEffect(() => {
         if (displaySignup) setConsentShown(true);
     }, [displaySignup]);

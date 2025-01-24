@@ -13,14 +13,14 @@ const customRender = ui => {
     );
 };
 
-test('should trigger onChange even if the consent UI is not allowed to be shown', () => {
+test('should trigger onChange event if the consent UI is not allowed to be shown (showConsent: false)', () => {
     const fastlaneConfiguration: FastlaneSignupConfiguration = {
         showConsent: false,
-        defaultToggleState: false,
-        termsAndConditionsLink: 'https://adyen.com',
-        termsAndConditionsVersion: 'v1',
-        privacyPolicyLink: 'https://adyen.com',
-        fastlaneSessionId: 'xxx-bbb'
+        fastlaneSessionId: 'fastlane-session-id',
+        defaultToggleState: undefined,
+        termsAndConditionsLink: undefined,
+        termsAndConditionsVersion: undefined,
+        privacyPolicyLink: undefined
     };
 
     const onChangeMock = jest.fn();
@@ -32,8 +32,7 @@ test('should trigger onChange even if the consent UI is not allowed to be shown'
         fastlaneData: {
             consentGiven: false,
             consentShown: false,
-            consentVersion: 'v1',
-            fastlaneSessionId: 'xxx-bbb'
+            fastlaneSessionId: 'fastlane-session-id'
         }
     });
 });
