@@ -5,7 +5,7 @@ import Script from '../../utils/Script';
 import type { FastlaneWindowInstance, FastlaneProfile, FastlaneShipping } from './types';
 
 const fastlaneMock = mockDeep<FastlaneWindowInstance>();
-const fastlaneConstructorMock = jest.fn().mockResolvedValue(fastlaneMock);
+let fastlaneConstructorMock = null;
 
 const mockScriptLoaded = jest.fn().mockImplementation(() => {
     window.paypal = {};
@@ -32,8 +32,25 @@ describe('FastlaneSDK', () => {
     beforeEach(() => {
         mockReset(fastlaneMock);
 
+        fastlaneConstructorMock = jest.fn().mockResolvedValue(fastlaneMock);
         fastlaneMock.identity.getSession.mockResolvedValue({
             sessionId: 'fastlane-session-id'
+        });
+    });
+
+    test('should force consent details to be returned if "forceConsentDetails" is used', async () => {
+        await initializeFastlane({
+            clientKey: 'test_xxx',
+            environment: 'test',
+            forceConsentDetails: true
+        });
+
+        expect(fastlaneConstructorMock).toHaveBeenCalledTimes(1);
+        expect(fastlaneConstructorMock).toHaveBeenCalledWith({
+            intendedExperience: 'externalProcessorCustomConsent',
+            metadata: {
+                geoLocOverride: 'US'
+            }
         });
     });
 

@@ -37,6 +37,9 @@ export interface FastlaneConsentRenderState {
 
 export interface FastlaneOptions {
     intendedExperience: 'externalProcessorCustomConsent';
+    metadata?: {
+        geoLocOverride?: string;
+    };
 }
 
 // TODO: TBD if this is needed
@@ -132,6 +135,13 @@ export interface FastlaneSDKConfiguration {
     clientKey: string;
     environment: CoreConfiguration['environment'];
     locale?: 'en-US' | 'es-US' | 'fr-RS' | 'zh-US';
+    /**
+     * Used to force the Fastlane SDK to return the consent details in case the shopper is not recognized.
+     * Use-case: Developer is testing the flow in another country outside US, which would not get consent details.
+     *
+     * This configuration should not be used for 'live' environment
+     */
+    forceConsentDetails?: boolean;
 }
 
 export interface FastlaneConfiguration extends UIElementProps {

@@ -17,6 +17,7 @@ class FastlaneSDK {
     private readonly clientKey: string;
     private readonly checkoutShopperURL: string;
     private readonly locale: string;
+    private readonly forceConsentDetails: boolean;
 
     private fastlaneSdk: FastlaneWindowInstance;
     private authenticatedShopper: { email: string; customerContextId: string };
@@ -26,10 +27,14 @@ class FastlaneSDK {
         if (!configuration.environment) throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', "FastlaneSDK: 'environment' property is required");
         if (!configuration.clientKey) throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', "FastlaneSDK: 'clientKey' property is required");
 
+        if (configuration.forceConsentDetails && configuration.environment.includes('live'))
+            console.warn("Fastlane SDK: 'forceConsentDetails' should not be used on 'live' environment");
+
         const { apiUrl } = resolveEnvironments(configuration.environment);
 
         this.checkoutShopperURL = apiUrl;
         this.clientKey = configuration.clientKey;
+        this.forceConsentDetails = configuration.forceConsentDetails || false;
         this.locale = convertAdyenLocaleToFastlaneLocale(configuration.locale || 'en-US');
     }
 
@@ -177,7 +182,12 @@ class FastlaneSDK {
     private async initializeFastlaneInstance(): Promise<void> {
         try {
             this.fastlaneSdk = await window.paypal.Fastlane({
-                intendedExperience: 'externalProcessorCustomConsent'
+                intendedExperience: 'externalProcessorCustomConsent',
+                ...(this.forceConsentDetails && {
+                    metadata: {
+                        geoLocOverride: 'US'
+                    }
+                })
             });
             this.fastlaneSdk.setLocale(this.locale);
 
