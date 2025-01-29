@@ -2,9 +2,24 @@ import { Meta, StoryObj } from '@storybook/preact';
 import { PaymentMethodStoryProps } from '../types';
 import { ComponentContainer } from '../ComponentContainer';
 import { Checkout } from '../Checkout';
-import PayTo, { PayToConfiguration } from '../../../src/components/PayTo/PayTo';
+import PayTo, { MandateType, PayToConfiguration } from '../../../src/components/PayTo/PayTo';
+import { http, HttpResponse } from 'msw';
 
-type PayToStory = StoryObj<PaymentMethodStoryProps<PayToConfiguration>>;
+// extend the default story args so we can change mandate top level
+interface ExtendedStoryArgs extends PaymentMethodStoryProps<PayToConfiguration> {
+    mandate: MandateType;
+}
+type PayToStory = StoryObj<ExtendedStoryArgs>;
+
+const MANDATE_EXAMPLE = {
+    amount: '25900', // [Mandatory] for PayTo - Mandate Amount field
+    amountRule: 'exact', // [Mandatory] for PayTo - Needs to be Localised
+    endsAt: '2025-12-31', // [Mandatory] for PayTo - Date format
+    frequency: 'adhoc', // [Mandatory] for PayTo - Needs to be Localised
+    remarks: 'testThroughFlow1', // [Mandatory] for PayTo - Needs to be Localised as "Description"
+    count: '3' // [Optional] will be returned only if the merchant sends it
+    //startsAt: '2025-02-01' // [Optional] will be returned only if the merchant sends it
+};
 
 const meta: Meta<PaymentMethodStoryProps<PayToStory>> = {
     title: 'Components/PayTo'
@@ -39,27 +54,14 @@ const meta: Meta<PaymentMethodStoryProps<PayToStory>> = {
 //     shopperReference: 'YOUR_SHOPPER_REFERENCE' // [Mandatory]
 // };
 
-const payToConfigurationObject = {
-    mandate: {
-        amount: '25900', // [Mandatory] { int: 1 to 1000000000 }
-        amountRule: 'exact', // [Mandatory]
-        frequency: 'monthly', // [Mandatory] need to update docs to add "adhoc"
-        //startsAt: '2024-10-01', // [Optional]
-        endsAt: '2027-10-01', // [Mandatory]
-        remarks: 'Remark on mandate', // [Mandatory]
-        count: '1' // [Conditional] new field
-    },
-    shopperEmail: 's.hopper@example.com' // [Mandatory]
-};
-
 export const Default: PayToStory = {
-    render: ({ componentConfiguration, ...checkoutConfig }) => (
+    render: ({ componentConfiguration, mandate, ...checkoutConfig }) => (
         <Checkout checkoutConfig={checkoutConfig}>
             {checkout => (
                 <ComponentContainer
                     element={
                         new PayTo(checkout, {
-                            ...payToConfigurationObject,
+                            mandate,
                             ...componentConfiguration
                         })
                     }
@@ -69,7 +71,8 @@ export const Default: PayToStory = {
     ),
     args: {
         countryCode: 'AU',
-        useSessions: false
+        useSessions: false,
+        mandate: MANDATE_EXAMPLE
     }
 };
 export default meta;
@@ -99,24 +102,30 @@ export default meta;
 export const PayToAwaitScreen: PayToStory = {
     args: {
         countryCode: 'AU',
-        shopperLocale: 'en-US'
+        shopperLocale: 'en-US',
+        mandate: MANDATE_EXAMPLE
     },
-    render: ({ componentConfiguration, ...checkoutConfig }) => (
+    parameters: {
+        msw: {
+            handlers: [
+                http.post('https://checkoutshopper-test.adyen.com/checkoutshopper/services/PaymentInitiation/v1/status', () => {
+                    return HttpResponse.json({
+                        payload: '',
+                        resultCode: 'pending',
+                        type: 'pending'
+                    });
+                })
+            ]
+        }
+    },
+    render: ({ componentConfiguration, mandate, ...checkoutConfig }) => (
         <Checkout checkoutConfig={checkoutConfig}>
             {checkout => (
                 <ComponentContainer
                     element={
                         new PayTo(checkout, {
                             paymentData: 'Ab02b4c0....J86s=',
-                            mandate: {
-                                amount: '25900', // [Mandatory] for PayTo - Mandate Amount field
-                                amountRule: 'exact', // [Mandatory] for PayTo - Needs to be Localised
-                                endsAt: '2024-12-31', // [Mandatory] for PayTo - Date format
-                                frequency: 'adhoc', // [Mandatory] for PayTo - Needs to be Localised
-                                remarks: 'testThroughFlow1', // [Mandatory] for PayTo - Needs to be Localised as "Description"
-                                count: '3', // [Optional] will be returned only if the merchant sends it
-                                startsAt: '2024-11-13' // [Optional] will be returned only if the merchant sends it
-                            },
+                            mandate,
                             ...componentConfiguration
                         })
                     }
