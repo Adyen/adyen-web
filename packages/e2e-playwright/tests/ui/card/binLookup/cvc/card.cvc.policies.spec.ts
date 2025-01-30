@@ -18,8 +18,8 @@ test.describe('Card - testing /binLookup as it affects the cvc field', () => {
 
         // Visible & required cvc field
         await expect(card.cvcField).toBeVisible();
-        await expect(card.cvcField).toHaveClass(/adyen-checkout__field__cvc/); // Note: "relaxed" regular expression to detect one class amongst several that are set on the element
-        await expect(card.cvcField).not.toHaveClass(/adyen-checkout__field__cvc--optional/);
+        await expect(card.cvcLabelText).toHaveText(CVC_LABEL);
+        await expect(card.cvcLabelText).not.toHaveText(CVC_LABEL_OPTIONAL);
 
         // PAN that will trigger /binLookup with cvcPolicy:"hidden"
         await card.typeCardNumber(BCMC_CARD);
@@ -32,8 +32,8 @@ test.describe('Card - testing /binLookup as it affects the cvc field', () => {
 
         // Visible, required cvc field
         await expect(card.cvcField).toBeVisible();
-        await expect(card.cvcField).toHaveClass(/adyen-checkout__field__cvc/);
-        await expect(card.cvcField).not.toHaveClass(/adyen-checkout__field__cvc--optional/);
+        await expect(card.cvcLabelText).toHaveText(CVC_LABEL);
+        await expect(card.cvcLabelText).not.toHaveText(CVC_LABEL_OPTIONAL);
     });
 
     test('#2 Should fill in a PAN that will lead to cvc being optional', async ({ card, page }) => {
@@ -46,16 +46,14 @@ test.describe('Card - testing /binLookup as it affects the cvc field', () => {
         // Optional cvc field
         await expect(card.cvcField).toBeVisible();
         await expect(card.cvcLabelText).toHaveText(CVC_LABEL_OPTIONAL);
-        await expect(card.cvcField).toHaveClass(/adyen-checkout__field__cvc--optional/);
+        await expect(card.cvcLabelText).not.toHaveText(CVC_LABEL);
 
         // Reset UI by deleting number
         await card.deleteCardNumber();
 
         // Visible, required cvc field
         await expect(card.cvcField).toBeVisible();
-        await expect(card.cvcField).toHaveClass(/adyen-checkout__field__cvc/);
-        await expect(card.cvcField).not.toHaveClass(/adyen-checkout__field__cvc--optional/);
-        // with regular text
         await expect(card.cvcLabelText).toHaveText(CVC_LABEL);
+        await expect(card.cvcLabelText).not.toHaveText(CVC_LABEL_OPTIONAL);
     });
 });
