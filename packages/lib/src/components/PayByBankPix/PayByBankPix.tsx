@@ -14,22 +14,24 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
     private passkeyService: PasskeyService;
 
     public static type = TxVariants.paybybank_pix;
+    private static TIMEOUT_MINUTES = 1;
 
     public static defaultProps: PayByBankPixConfiguration = {
-        issuers: [{ id: '123', name: 'issuer 123' }],
-        _isNativeFlow: window.location.hostname.endsWith('.adyen.com') || window.location.hostname.endsWith('localhost')
+        issuers: [{ id: 'issuerId_123', name: 'issuer 123' }],
+        _isNativeFlow: window.location.hostname.endsWith('.adyen.com') || window.location.hostname.endsWith('localhost'),
+        timeoutMinutes: PayByBankPixElement.TIMEOUT_MINUTES
     };
 
     constructor(checkout: ICore, props: PayByBankPixConfiguration) {
         super(checkout, props);
-        if (this.props._isNativeFlow) {
-            // todo: Load passkey sdk only for adyen hosted page or localhost
-            //this.passkeyService = new PasskeyService({ environment: 'test', clientId: this.props.clientKey });
-        }
+
+        // todo: Load passkey sdk, check if we should only load the sdk in a hosted environment
+        //this.passkeyService = new PasskeyService({ environment: 'test', clientId: this.props.clientKey });
     }
 
     get isValid(): boolean {
-        return true; //todo
+        // Always true for redirect (non-native flow)
+        return this.props._isNativeFlow ? !!this.state?.isValid : true;
     }
 
     formatProps(props): PayByBankPixConfiguration {
@@ -39,17 +41,20 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
     }
 
     /**
-     * Method used to let the merchant know if the shopper's device supports WebAuthn APIs
+     * Method used to let the merchant know if the shopper's device supports WebAuthn APIs: https://featuredetect.passkeys.dev/
      */
     public override async isAvailable(): Promise<void> {
         const unsupportedReason = await PasskeyService.getWebAuthnUnsupportedReason();
         if (unsupportedReason) {
+            // todo: send to analytics
             return Promise.reject(new AdyenCheckoutError('ERROR', unsupportedReason));
         }
         return Promise.resolve();
     }
 
     formatData(): PayByBankPixData {
+        // on the merchant page, we need to send both device id and enrich riskSignals
+        // on the hosted checkout page, we reuse the same id and riskSignals. We get them from the query params, and pass them through to the second /payments call
         const issuer = this.state.data?.issuer ? { issuer: this.state.data?.issuer } : {};
         const subType = this.props._isNativeFlow ? 'embedded' : 'redirect';
         return { paymentMethod: { type: TxVariants.paybybank_pix, subType, ...issuer } };
@@ -60,13 +65,14 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <SRPanelProvider srPanel={this.props.modules.srPanel}>
                     {this.props._isNativeFlow ? (
-                        // @ts-ignore bla
                         <PayByBankPix
                             {...this.props}
+                            txVariant={PayByBankPixElement.type}
                             payButton={this.payButton}
                             onSubmit={this.submit}
                             onChange={this.setState}
                             setComponentRef={this.setComponentRef}
+                            onSubmitAnalytics={this.submitAnalytics}
                         />
                     ) : (
                         <RedirectButton

@@ -5,6 +5,12 @@ import PayByBankPix from '../../../../src/components/PayByBankPix';
 import { PayByBankPixConfiguration } from '../../../../src/components/PayByBankPix/types';
 import { http, HttpResponse } from 'msw';
 import SimulatedIssuer from './SimulatedIssuer';
+import {
+    mockPaymentsResponseMerchantPage,
+    mockPaymentsResponseSimulateHostedPage,
+    mockStatusResponseSimulateHostedPage,
+    mockSubmitDetailsResponseSimulateHostedPage
+} from './mocks';
 
 type PixBiometricStory = StoryConfiguration<PayByBankPixConfiguration>;
 
@@ -23,21 +29,16 @@ export const MerchantPage: PixBiometricStory = {
     args: {
         useSessions: false,
         countryCode: 'BR',
-        componentConfiguration: { _isNativeFlow: false }
+        componentConfiguration: { _isNativeFlow: false, deviceId: 'xxx', riskSignals: { isRootedDevice: true } }
     },
     parameters: {
         msw: {
             handlers: [
                 http.post('https://localhost:3020/payments', () => {
-                    return HttpResponse.json({
-                        action: {
-                            paymentMethodType: 'paybybank_pix',
-                            type: 'redirect', // “await” when on mobile device
-                            url: 'https://localhost:3020/iframe.html?globals=&args=&id=components-paybybankpix--simulate-hosted-page&viewMode=story', // issuer’s app/page url
-                            method: 'GET'
-                        },
-                        resultCode: 'RedirectShopper'
-                    });
+                    return HttpResponse.json(mockPaymentsResponseMerchantPage);
+                }),
+                http.post('/details', () => {
+                    return HttpResponse.json();
                 })
             ]
         }
@@ -49,28 +50,25 @@ export const SimulateHostedPage: PixBiometricStory = {
     args: {
         useSessions: false,
         countryCode: 'BR',
-        componentConfiguration: { _isNativeFlow: true }
+        amount: 0,
+        componentConfiguration: {
+            _isNativeFlow: true,
+            onChange: data => {
+                console.log({ data });
+            }
+        }
     },
     parameters: {
         msw: {
             handlers: [
                 http.post('https://localhost:3020/payments', () => {
-                    return HttpResponse.json({
-                        action: {
-                            paymentMethodType: 'paybybank_pix',
-                            type: 'redirect', // “await” when on mobile device
-                            url: 'https://localhost:3020/iframe.html?args=&globals=&id=components-paybybankpix--simulate-issuer-page&viewMode=story',
-                            method: 'GET'
-                        },
-                        resultCode: 'RedirectShopper'
-                    });
+                    return HttpResponse.json(mockPaymentsResponseSimulateHostedPage);
                 }),
                 http.post('https://checkoutshopper-test.adyen.com/checkoutshopper/services/PaymentInitiation/v1/status', () => {
-                    return HttpResponse.json({
-                        payload: '',
-                        resultCode: 'pending',
-                        type: 'pending'
-                    });
+                    return HttpResponse.json(mockStatusResponseSimulateHostedPage);
+                }),
+                http.post('/details', () => {
+                    return HttpResponse.json(mockSubmitDetailsResponseSimulateHostedPage);
                 })
             ]
         }

@@ -1,24 +1,39 @@
 import { h } from 'preact';
-import { useState, useEffect, useRef, useCallback } from 'preact/hooks';
-import IssuerList from '../../../internal/IssuerList';
+import { useRef } from 'preact/hooks';
 import { EnrollmentProps } from './types';
-import type { UIElementStatus } from '../../../internal/UIElement/types';
 import Await from '../../../internal/Await';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
+import { IIssuerList } from '../../../internal/IssuerList/types';
+import IssuerList from '../../../internal/IssuerList';
+import { useIssuerWithLogo } from './useIssuerWithLogo';
 
-function Enrollment({ issuers, type, url, paymentMethodType, showPayButton, payButton, onChange }: EnrollmentProps) {
+function Enrollment({
+    issuers,
+    type,
+    txVariant,
+    url,
+    clientKey,
+    timeoutMinutes,
+    paymentMethodType,
+    showPayButton,
+    payButton,
+    onChange
+}: EnrollmentProps) {
     const { i18n } = useCoreContext();
-
-    const [status, setStatus] = useState('ready');
-    const buttonModifiers = ['standalone'];
+    const issuersWithLogo = useIssuerWithLogo({ issuers, txVariant });
+    const issuerListRef = useRef<IIssuerList>();
 
     const onComplete = (state): void => {
-        console.log({ state });
         // todo: collect biometrics and call internal endpoint
         // /details call with response of the internal endpoint
     };
 
+    this.showValidation = () => {
+        issuerListRef.current?.showValidation();
+    };
+
     return (
+        //todo
         <div className={'adyen-checkout-pix-biometric'}>
             {type === 'await' ? (
                 <Await
@@ -26,8 +41,8 @@ function Enrollment({ issuers, type, url, paymentMethodType, showPayButton, payB
                     type={paymentMethodType}
                     showCountdownTimer
                     shouldRedirectAutomatically
-                    countdownTime={5}
-                    clientKey={''}
+                    countdownTime={timeoutMinutes}
+                    clientKey={clientKey}
                     paymentData={''}
                     onActionHandled={() => {}}
                     onError={() => {}}
@@ -38,11 +53,12 @@ function Enrollment({ issuers, type, url, paymentMethodType, showPayButton, payB
                 ></Await>
             ) : (
                 <IssuerList
-                    items={issuers}
+                    items={issuersWithLogo}
                     onSubmitAnalytics={() => {}}
                     onChange={onChange}
                     payButton={payButton}
                     showPayButton={showPayButton}
+                    ref={issuerListRef}
                 ></IssuerList>
             )}
         </div>

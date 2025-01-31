@@ -3,7 +3,7 @@ import { useState } from 'preact/hooks';
 
 const SimulatedIssuer = () => {
     const [url, setUrl] = useState(
-        'https://localhost:3020/iframe.html?globals=&args=&id=components-paybybankpix--simulate-hosted-page&viewMode=story'
+        'https://localhost:3020/iframe.html?args=&id=helpers-redirectresult--redirect-result&viewMode=story' //'https://localhost:3020/iframe.html?globals=&args=&id=components-paybybankpix--simulate-hosted-page&viewMode=story'
     );
     const handleRedirect = () => {
         window.location.href = url;

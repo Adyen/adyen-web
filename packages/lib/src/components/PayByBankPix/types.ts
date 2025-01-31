@@ -1,9 +1,9 @@
 import { TxVariants } from '../tx-variants';
 import { UIElementProps } from '../internal/UIElement/types';
 import { IssuerItem } from '../internal/IssuerList/types';
+import { SendAnalyticsObject } from '../../core/Analytics/types';
 
 export type RiskSignals = {
-    deviceId?: string;
     isRootedDevice?: boolean;
     screenBrightness?: number;
     elapsedTimeSinceBoot?: number;
@@ -15,10 +15,11 @@ export type RiskSignals = {
 
 export interface PayByBankPixConfiguration extends UIElementProps {
     /**
-     * Risk related information, merchant can optionally pass those to use in order to increase the conversion rate
+     * Risk related information, optionally pass may increase the conversion rate
      * todo: check with sarah for the complete list
      */
     riskSignals?: RiskSignals;
+    deviceId?: string;
     /**
      * Redirect url to issuer's app to confirm the mandate
      * @internal
@@ -26,11 +27,12 @@ export interface PayByBankPixConfiguration extends UIElementProps {
     type?: 'await' | 'redirect';
     url?: string;
     /**
-     * await component
+     * Await component
      * @internal
      */
     paymentData?: string;
-    /**
+    timeoutMinutes?: number;
+    /** Issuer component
      * @internal
      */
     issuers?: IssuerItem[];
@@ -38,6 +40,10 @@ export interface PayByBankPixConfiguration extends UIElementProps {
      * @internal
      */
     _isNativeFlow?: boolean;
+    /**
+     * @internal
+     */
+    onSubmitAnalytics: (aObj: SendAnalyticsObject) => void;
 }
 
 export interface PayByBankPixData {

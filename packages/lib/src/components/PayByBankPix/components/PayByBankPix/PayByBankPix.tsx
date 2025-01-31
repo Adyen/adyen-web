@@ -1,9 +1,9 @@
 import { h } from 'preact';
-import { useState, useEffect, useRef } from 'preact/hooks';
+import { useEffect, useRef } from 'preact/hooks';
 import Enrollment from '../Enrollment';
 import Payment from '../Payment';
 import { PayByBankPixProps } from './types';
-import type { UIElementStatus } from '../../../internal/UIElement/types';
+import { IEnrollment } from '../Enrollment/types';
 
 function PayByBankPix({
     type,
@@ -11,20 +11,21 @@ function PayByBankPix({
     showPayButton,
     paymentMethodType,
     url,
+    timeoutMinutes,
     storedPaymentMethodId,
     onChange,
     setComponentRef,
-    payButton
+    payButton,
+    onSubmitAnalytics,
+    txVariant
 }: PayByBankPixProps) {
-    const [status, setStatus] = useState('ready');
-    const enrollmentRef = useRef<typeof Enrollment>();
+    const enrollmentRef = useRef<IEnrollment>();
+    const shouldEnroll = storedPaymentMethodId == null;
     const self = useRef({
-        setStatus: (status: UIElementStatus) => setStatus(status),
-        validate: () => {
-            enrollmentRef?.validate();
+        showValidation: () => {
+            enrollmentRef?.current?.showValidation();
         }
     });
-    const shouldEnroll = storedPaymentMethodId == null;
 
     useEffect(() => {
         setComponentRef(self.current);
@@ -32,13 +33,15 @@ function PayByBankPix({
 
     return shouldEnroll ? (
         <Enrollment
+            txVariant={txVariant}
+            timeoutMinutes={timeoutMinutes}
             type={type}
             showPayButton={showPayButton}
             issuers={issuers}
             url={url}
             paymentMethodType={paymentMethodType}
             // @ts-ignore fix later
-            onSubmitAnalytics={() => {}}
+            onSubmitAnalytics={onSubmitAnalytics}
             onChange={onChange}
             payButton={payButton}
             ref={enrollmentRef}
