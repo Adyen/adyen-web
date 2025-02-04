@@ -1,13 +1,12 @@
 import DetailsTable from '../../internal/DetailsTable';
 import { h } from 'preact';
-import { MandateType } from '../PayTo';
+import { MandateType } from '../types';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { DetailsTableData } from '../../internal/DetailsTable/DetailsTable';
 import './MandateSummary.scss';
 
 export default function MandateSummary({ mandate, currencyCode }: { mandate: MandateType; currencyCode: string }) {
     const { i18n } = useCoreContext();
-    console.log(mandate);
     const tableFields: DetailsTableData = Object.keys(mandate).map((key: keyof MandateType) => {
         // get the label for the key, like payto.mandate.amount.label, payto.mandate.frequency.label
         const labelText = i18n.get(`payto.mandate.${key}.label`);

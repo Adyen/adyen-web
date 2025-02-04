@@ -7,38 +7,12 @@ import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 /*
 Types (previously in their own file)
  */
-import { UIElementProps } from '../internal/UIElement/types';
 import { TxVariants } from '../tx-variants';
-import { PayIdFormData } from './components/PayIDInput';
 import { PayToIdentifierEnum } from './components/IdentifierSelector';
-import PayToComponent, { PayToComponentData } from './components/PayToComponent';
-import { BSBFormData } from './components/BSBInput';
+import PayToComponent from './components/PayToComponent';
 import { PayToInstructions } from './components/PayToInstructions';
 import MandateSummary from './components/MandateSummary';
-
-//TODO export type MandateFrequencyType = 'adhoc' | 'daily' | 'weekly' | 'biWeekly' | 'monthly' | 'quarterly' | 'halfYearly' | 'yearly';
-
-export interface MandateType {
-    amount: string;
-    amountRule: string;
-    frequency: string;
-    startsAt?: string;
-    endsAt: string;
-    remarks: string;
-    count?: string;
-}
-
-export interface PayToConfiguration extends UIElementProps {
-    paymentData?: any;
-    data?: PayToData;
-    placeholders?: any; //TODO
-    mandate: MandateType;
-    instructions?: any; //TODO this probably should not be here
-}
-
-export interface PayToData extends PayIdFormData, BSBFormData, PayToComponentData {
-    shopperAccountIdentifier: string;
-}
+import { PayToConfiguration, PayToData } from './types';
 
 /*
 Await Config (previously in its own file)

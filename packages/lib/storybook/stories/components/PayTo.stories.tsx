@@ -2,8 +2,9 @@ import { Meta, StoryObj } from '@storybook/preact';
 import { PaymentMethodStoryProps } from '../types';
 import { ComponentContainer } from '../ComponentContainer';
 import { Checkout } from '../Checkout';
-import PayTo, { MandateType, PayToConfiguration } from '../../../src/components/PayTo/PayTo';
+import PayTo from '../../../src/components/PayTo/PayTo';
 import { http, HttpResponse } from 'msw';
+import { MandateType, PayToConfiguration } from '../../../src/components/PayTo/types';
 
 // extend the default story args so we can change mandate top level
 interface ExtendedStoryArgs extends PaymentMethodStoryProps<PayToConfiguration> {
@@ -11,11 +12,11 @@ interface ExtendedStoryArgs extends PaymentMethodStoryProps<PayToConfiguration> 
 }
 type PayToStory = StoryObj<ExtendedStoryArgs>;
 
-const MANDATE_EXAMPLE = {
+const MANDATE_EXAMPLE: MandateType = {
     amount: '25900', // [Mandatory] for PayTo - Mandate Amount field
     amountRule: 'exact', // [Mandatory] for PayTo - Needs to be Localised
     endsAt: '2025-12-31', // [Mandatory] for PayTo - Date format
-    frequency: 'adhoc', // [Mandatory] for PayTo - Needs to be Localised
+    frequency: 'monthly', // [Mandatory] for PayTo - Needs to be Localised
     remarks: 'testThroughFlow1', // [Mandatory] for PayTo - Needs to be Localised as "Description"
     count: '3' // [Optional] will be returned only if the merchant sends it
     //startsAt: '2025-02-01' // [Optional] will be returned only if the merchant sends it

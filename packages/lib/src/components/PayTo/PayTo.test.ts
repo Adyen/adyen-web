@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/preact';
 import PayTo from './PayTo';
 import userEvent from '@testing-library/user-event';
 import getDataset from '../../core/Services/get-dataset';
+import { MandateType } from './types';
 
 jest.mock('../../core/Services/get-dataset');
 (getDataset as jest.Mock).mockImplementation(
@@ -10,7 +11,7 @@ jest.mock('../../core/Services/get-dataset');
     })
 );
 
-const MOCK_MANDATE = {
+const MOCK_MANDATE: MandateType = {
     amount: '4001', // [Mandatory] for PayTo - Mandate Amount field
     amountRule: 'exact', // [Mandatory] for PayTo - Needs to be Localised
     endsAt: '2024-12-31', // [Mandatory] for PayTo - Date format

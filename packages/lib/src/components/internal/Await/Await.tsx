@@ -26,6 +26,7 @@ function Await(props: AwaitComponentProps) {
     const [timePassed, setTimePassed] = useState(0);
     const [hasAdjustedTime, setHasAdjustedTime] = useState(false);
     const [storedTimeout, setStoredTimeout] = useState(null);
+    const { amount } = props;
 
     const onTimeUp = (): void => {
         setExpired(true);
@@ -191,7 +192,9 @@ function Await(props: AwaitComponentProps) {
         >
             {props.brandLogo && <img src={props.brandLogo} alt={props.type} className="adyen-checkout__await__brand-logo" />}
 
-            {props.showAmount && <div className="adyen-checkout__await__amount">{i18n.amount(props.amount.value, props.amount.currency)}</div>}
+            {props.showAmount && amount && amount.value && amount.currency && (
+                <div className="adyen-checkout__await__amount">{i18n.amount(amount.value, amount.currency)}</div>
+            )}
 
             <div className="adyen-checkout__await__subtitle">{props.messageText}</div>
 
