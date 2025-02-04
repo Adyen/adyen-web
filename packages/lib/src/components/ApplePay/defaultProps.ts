@@ -9,6 +9,7 @@ const defaultProps: ApplePayConfiguration = {
     supportedNetworks: ['amex', 'discover', 'masterCard', 'visa'],
     buttonType: 'plain',
     buttonColor: 'black',
+    renderApplePayCodeAs: 'modal',
     onClick: resolve => resolve()
 };
 

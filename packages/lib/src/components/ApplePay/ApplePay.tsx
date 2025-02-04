@@ -13,12 +13,12 @@ import { DecodeObject } from '../../types/global-types';
 import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
+import { ApplePaySdkLoader } from './ApplePaySdkLoader';
+import { SendAnalyticsObject } from '../../core/Analytics/types';
 
 import type { ApplePayConfiguration, ApplePayElementData, ApplePayPaymentOrderDetails, ApplePaySessionRequest } from './types';
 import type { ICore } from '../../core/types';
 import type { PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
-import { SendAnalyticsObject } from '../../core/Analytics/types';
-import { ApplePaySdkLoader } from './ApplePaySdkLoader';
 
 const LATEST_APPLE_PAY_VERSION = 14;
 
@@ -47,11 +47,14 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         this.collectOrderTrackingDetailsIfNeeded = this.collectOrderTrackingDetailsIfNeeded.bind(this);
         this.handleAuthorization = this.handleAuthorization.bind(this);
         this.defineApplePayVersionNumber = this.defineApplePayVersionNumber.bind(this);
+        this.configureApplePayWebOptions = this.configureApplePayWebOptions.bind(this);
 
         this.sdkLoader = new ApplePaySdkLoader();
+
         void this.sdkLoader
             .load()
             .then(this.defineApplePayVersionNumber)
+            .then(this.configureApplePayWebOptions)
             .catch(error => {
                 this.handleError(error);
             });
@@ -103,6 +106,50 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         void this.startSession();
     };
 
+    public get isValid(): boolean {
+        return true;
+    }
+
+    /**
+     * This API is only intended for upstreaming or defaulting to Apple Pay, all other scenarios should continue to
+     * use canMakePayments(). For Safari browsers, this API will indicate whether there is a card available to make
+     * payments. For third-party browsers a new status of paymentCredentialStatusUnknown will be returned. This does
+     * not mean there are no cards available, it means the status cannot be determined and as such defaulting
+     * and upstreaming should still be considered.
+     *
+     * {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/4440085-applepaycapabilities}
+     * @param merchantIdentifier
+     */
+    public async applePayCapabilities(merchantIdentifier?: string): Promise<ApplePayJS.PaymentCredentialStatusResponse> {
+        const identifier = merchantIdentifier || this.props.configuration.merchantId;
+
+        try {
+            await this.sdkLoader.isSdkLoaded();
+            return await ApplePaySession?.applePayCapabilities(identifier);
+        } catch (error) {
+            throw new AdyenCheckoutError('ERROR', 'Apple Pay: Error when requesting applePayCapabilities()', { cause: error });
+        }
+    }
+
+    /**
+     * Determines if Apple Pay component can be displayed or not
+     */
+    public override async isAvailable(): Promise<void> {
+        if (document.location.protocol !== 'https:') {
+            return Promise.reject(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to start an Apple Pay session from an insecure document'));
+        }
+
+        try {
+            await this.sdkLoader.isSdkLoaded();
+            if (ApplePaySession?.canMakePayments()) {
+                return Promise.resolve();
+            }
+            return Promise.reject(new AdyenCheckoutError('ERROR', 'Apple Pay is not available on this device'));
+        } catch (error) {
+            return Promise.reject(new AdyenCheckoutError('ERROR', 'Apple Pay SDK failed to load', { cause: error }));
+        }
+    }
+
     /**
      * Sets the Apple Pay version available for the shopper.
      * This code needs to be executed once the  Apple Pay SDK is fully loaded
@@ -110,6 +157,21 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
      */
     private defineApplePayVersionNumber() {
         this.applePayVersionNumber = this.props.version || resolveSupportedVersion(LATEST_APPLE_PAY_VERSION);
+    }
+
+    /**
+     * Sets the configuration/callbacks that pertain to the Apple Pay code overlay/modal.
+     * @private
+     */
+    private configureApplePayWebOptions() {
+        if (window.ApplePayWebOptions) {
+            const { renderApplePayCodeAs, onApplePayCodeClose } = this.props;
+
+            window.ApplePayWebOptions.set({
+                renderApplePayCodeAs,
+                ...(onApplePayCodeClose && { onApplePayCodeClose })
+            });
+        }
     }
 
     private startSession() {
@@ -273,46 +335,6 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         } catch (e) {
             reject('Could not get Apple Pay session');
         }
-    }
-
-    get isValid(): boolean {
-        return true;
-    }
-
-    /**
-     * Determine a shopper's ability to return a form of payment from Apple Pay.
-     * @returns Promise Resolve/Reject whether the shopper can use Apple Pay
-     */
-    public override async isAvailable(): Promise<void> {
-        // if (document.location.protocol !== 'https:') {
-        //     return Promise.reject(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to start an Apple Pay session from an insecure document'));
-        // }
-
-        return this.sdkLoader
-            .isSdkLoaded()
-            .then(() => {
-                if (ApplePaySession?.canMakePayments()) {
-                    return Promise.resolve();
-                }
-                return Promise.reject(new AdyenCheckoutError('ERROR', 'Apple Pay is not available on this device'));
-            })
-            .catch(error => {
-                return Promise.reject(new AdyenCheckoutError('ERROR', 'ApplePaySDK failed to load', { cause: error }));
-            });
-
-        // if (!this.props.onValidateMerchant && !this.props.clientKey) {
-        //     return Promise.reject(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'clientKey was not provided'));
-        // }
-        //
-        // try {
-        //     if (window.ApplePaySession && ApplePaySession.canMakePayments() && ApplePaySession.supportsVersion(this.props.version)) {
-        //         return Promise.resolve();
-        //     }
-        // } catch (error) {
-        //     console.warn(error);
-        // }
-        //
-        // return Promise.reject(new AdyenCheckoutError('ERROR', 'Apple Pay is not available on this device'));
     }
 
     render() {

@@ -1,4 +1,4 @@
-import { ApplePayButtonStyle, ApplePayButtonType } from '../components/ApplePay/types';
+import { ApplePayButtonStyle, ApplePayButtonType, ApplePayWebConfiguration } from '../components/ApplePay/types';
 
 declare module 'preact' {
     namespace JSX {
@@ -24,6 +24,12 @@ declare global {
          * ApplePaySession added by ApplePaySDK
          */
         ApplePaySession?: ApplePaySession;
+
+        ApplePayWebOptions?: {
+            set(config: ApplePayWebConfiguration): void;
+            focusApplePayCodeWindow(): void;
+            closeApplePayCodeWindow(): void;
+        };
 
         AdyenWeb: any;
         VISA_SDK?: {
