@@ -192,7 +192,9 @@ function Await(props: AwaitComponentProps) {
         >
             {props.brandLogo && <img src={props.brandLogo} alt={props.type} className="adyen-checkout__await__brand-logo" />}
 
-            {props.showAmount && amount && amount.value && amount.currency && (
+            {/* Everything is wrapped in !! so we evaluate the result as boolean,
+             otherwise we might just print the value or object as mistake */}
+            {!!(props.showAmount && amount && amount.value && amount.currency) && (
                 <div className="adyen-checkout__await__amount">{i18n.amount(amount.value, amount.currency)}</div>
             )}
 
