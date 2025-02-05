@@ -3,6 +3,8 @@ import PayTo from './PayTo';
 import userEvent from '@testing-library/user-event';
 import getDataset from '../../core/Services/get-dataset';
 import { MandateType } from './types';
+import { setupServer } from 'msw/node';
+import { http, HttpResponse } from 'msw';
 
 jest.mock('../../core/Services/get-dataset');
 (getDataset as jest.Mock).mockImplementation(
@@ -61,8 +63,6 @@ describe('PayTo', () => {
         // check if button actually triggers submit
         await user.click(button);
         expect(onSubmitMock).toHaveBeenCalledTimes(0);
-
-        //TODO check validation fails
     });
 
     test('should change to different identifier when selected', async () => {
@@ -82,5 +82,185 @@ describe('PayTo', () => {
 
         expect(screen.queryByLabelText(/Prefix/i)).toBeFalsy();
         expect(screen.getByLabelText(/Email/i)).toBeTruthy();
+    });
+
+    describe('PayTo await screen', () => {
+        const server = setupServer(
+            http.post('https://checkoutshopper-test.adyen.com/checkoutshopper/services/PaymentInitiation/v1/status', () => {
+                return HttpResponse.json({
+                    payload: 'mockPaymentData',
+                    resultCode: 'pending',
+                    type: 'pending'
+                });
+            })
+        );
+
+        beforeAll(() => server.listen());
+        afterEach(() => server.resetHandlers());
+        afterAll(() => server.close());
+
+        test('should render await screen and transaction and mandate amount should be different', async () => {
+            const payTo = new PayTo(global.core, {
+                ...global.communCoreComponentProps,
+                amount: {
+                    value: '2000',
+                    currency: 'AUD'
+                },
+                mandate: MOCK_MANDATE,
+                paymentData: 'mockblob',
+                payee: 'Mock Payee'
+            });
+
+            render(payTo.render());
+
+            // amount from transaction
+            expect(await screen.findByText('A$20.00')).toBeTruthy();
+
+            // for context why we are not using roles here:
+            // https://github.com/testing-library/dom-testing-library/issues/140
+
+            // eslint-disable-next-line testing-library/no-node-access
+            const mandateAmount = screen.getByText('Amount').nextSibling;
+            expect(mandateAmount).toHaveTextContent('A$40.01');
+        });
+
+        test('should render await screen and amount should say up to if amountRule is max', async () => {
+            const payTo = new PayTo(global.core, {
+                ...global.communCoreComponentProps,
+                amount: {
+                    value: '2000',
+                    currency: 'AUD'
+                },
+                mandate: {
+                    ...MOCK_MANDATE,
+                    amountRule: 'max'
+                },
+                paymentData: 'mockblob',
+                payee: 'Mock Payee'
+            });
+
+            render(payTo.render());
+
+            // amount from transaction
+            expect(await screen.findByText('A$20.00')).toBeTruthy();
+
+            // for context why we are not using roles here:
+            // https://github.com/testing-library/dom-testing-library/issues/140
+
+            // eslint-disable-next-line testing-library/no-node-access
+            const mandateAmount = screen.getByText('Amount').nextSibling;
+            expect(mandateAmount).toHaveTextContent('Up to A$40.01 per transaction');
+        });
+
+        test('should render await screen and show correct frequency (Fortnightly)', async () => {
+            const payTo = new PayTo(global.core, {
+                ...global.communCoreComponentProps,
+                amount: {
+                    value: '2000',
+                    currency: 'AUD'
+                },
+                mandate: { ...MOCK_MANDATE, frequency: 'biWeekly' },
+                paymentData: 'mockblob',
+                payee: 'Mock Payee'
+            });
+
+            render(payTo.render());
+
+            // for context why we are not using roles here:
+            // https://github.com/testing-library/dom-testing-library/issues/140
+
+            const mandateFrequency = await screen.findByText('Frequency');
+            // eslint-disable-next-line testing-library/no-node-access
+            expect(mandateFrequency.nextSibling).toHaveTextContent('3 payment(s) Fortnightly');
+        });
+
+        test('should render await screen and show correct frequency (Yearly)', async () => {
+            const payTo = new PayTo(global.core, {
+                ...global.communCoreComponentProps,
+                amount: {
+                    value: '2000',
+                    currency: 'AUD'
+                },
+                mandate: { ...MOCK_MANDATE, frequency: 'yearly' },
+                paymentData: 'mockblob',
+                payee: 'Mock Payee'
+            });
+
+            render(payTo.render());
+
+            // for context why we are not using roles here:
+            // https://github.com/testing-library/dom-testing-library/issues/140
+
+            const mandateFrequency = await screen.findByText('Frequency');
+            // eslint-disable-next-line testing-library/no-node-access
+            expect(mandateFrequency.nextSibling).toHaveTextContent('3 payment(s) Yearly');
+        });
+
+        test('should render await screen and show correct frequency adhoc with count', async () => {
+            const payTo = new PayTo(global.core, {
+                ...global.communCoreComponentProps,
+                amount: {
+                    value: '2000',
+                    currency: 'AUD'
+                },
+                mandate: { ...MOCK_MANDATE, frequency: 'adhoc' },
+                paymentData: 'mockblob',
+                payee: 'Mock Payee'
+            });
+
+            render(payTo.render());
+
+            // for context why we are not using roles here:
+            // https://github.com/testing-library/dom-testing-library/issues/140
+
+            const mandateFrequency = await screen.findByText('Frequency');
+            // eslint-disable-next-line testing-library/no-node-access
+            expect(mandateFrequency.nextSibling).toHaveTextContent('3 time(s)');
+        });
+
+        test('should render await screen and show correct frequency adhoc without count', async () => {
+            const payTo = new PayTo(global.core, {
+                ...global.communCoreComponentProps,
+                amount: {
+                    value: '2000',
+                    currency: 'AUD'
+                },
+                mandate: { ...MOCK_MANDATE, count: null, frequency: 'adhoc' },
+                paymentData: 'mockblob',
+                payee: 'Mock Payee'
+            });
+
+            render(payTo.render());
+
+            // for context why we are not using roles here:
+            // https://github.com/testing-library/dom-testing-library/issues/140
+
+            const mandateFrequency = await screen.findByText('Frequency');
+            // eslint-disable-next-line testing-library/no-node-access
+            expect(mandateFrequency.nextSibling).toHaveTextContent('Ad Hoc');
+        });
+
+        // TODO waiting for feedback for what should be the result of this test case
+        test.skip('should render await screen and show correct frequency daily without count', async () => {
+            const payTo = new PayTo(global.core, {
+                ...global.communCoreComponentProps,
+                amount: {
+                    value: '2000',
+                    currency: 'AUD'
+                },
+                mandate: { ...MOCK_MANDATE, count: null, frequency: 'daily' },
+                paymentData: 'mockblob',
+                payee: 'Mock Payee'
+            });
+
+            render(payTo.render());
+
+            // for context why we are not using roles here:
+            // https://github.com/testing-library/dom-testing-library/issues/140
+
+            const mandateFrequency = await screen.findByText('Frequency');
+            // eslint-disable-next-line testing-library/no-node-access
+            expect(mandateFrequency.nextSibling).toHaveTextContent('Ad Hoc');
+        });
     });
 });
