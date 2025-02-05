@@ -26,6 +26,7 @@ function Await(props: AwaitComponentProps) {
     const [timePassed, setTimePassed] = useState(0);
     const [hasAdjustedTime, setHasAdjustedTime] = useState(false);
     const [storedTimeout, setStoredTimeout] = useState(null);
+    const { amount } = props;
 
     const onTimeUp = (): void => {
         setExpired(true);
@@ -191,6 +192,12 @@ function Await(props: AwaitComponentProps) {
         >
             {props.brandLogo && <img src={props.brandLogo} alt={props.type} className="adyen-checkout__await__brand-logo" />}
 
+            {/* Everything is wrapped in !! so we evaluate the result as boolean,
+             otherwise we might just print the value or object as mistake */}
+            {!!(props.showAmount && amount && amount.value && amount.currency) && (
+                <div className="adyen-checkout__await__amount">{i18n.amount(amount.value, amount.currency)}</div>
+            )}
+
             <div className="adyen-checkout__await__subtitle">{props.messageText}</div>
 
             <div className="adyen-checkout__await__indicator-holder">
@@ -220,6 +227,14 @@ function Await(props: AwaitComponentProps) {
                     <Button classNameModifiers={['await']} onClick={() => redirectToApp(props.url)} label={i18n.get('openApp')} />
                 </div>
             )}
+
+            {props.instructions && (
+                <div className="adyen-checkout__await__instructions">
+                    {typeof props.instructions === 'string' ? i18n.get(props.instructions) : props.instructions?.()}
+                </div>
+            )}
+
+            {props.endSlot && <div className="adyen-checkout__await__end-slot">{props.endSlot()}</div>}
         </div>
     );
 }

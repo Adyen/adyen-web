@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/preact';
 import PayTo from './PayTo';
 import userEvent from '@testing-library/user-event';
 import getDataset from '../../core/Services/get-dataset';
+import { MandateType } from './types';
 
 jest.mock('../../core/Services/get-dataset');
 (getDataset as jest.Mock).mockImplementation(
@@ -9,6 +10,16 @@ jest.mock('../../core/Services/get-dataset');
         return Promise.resolve([{ id: 'AUS', prefix: '+61' }]);
     })
 );
+
+const MOCK_MANDATE: MandateType = {
+    amount: '4001', // [Mandatory] for PayTo - Mandate Amount field
+    amountRule: 'exact', // [Mandatory] for PayTo - Needs to be Localised
+    endsAt: '2024-12-31', // [Mandatory] for PayTo - Date format
+    frequency: 'adhoc', // [Mandatory] for PayTo - Needs to be Localised
+    remarks: 'testThroughFlow1', // [Mandatory] for PayTo - Needs to be Localised as "Description"
+    count: '3', // [Optional] will be returned only if the merchant sends it
+    startsAt: '2024-11-13' // [Optional] will be returned only if the merchant sends it
+};
 
 describe('PayTo', () => {
     let onSubmitMock;
@@ -22,6 +33,7 @@ describe('PayTo', () => {
     test('should render payment and show PayID page', async () => {
         const payTo = new PayTo(global.core, {
             i18n: global.i18n,
+            mandate: MOCK_MANDATE,
             loadingContext: 'test',
             modules: { resources: global.resources }
         });
@@ -37,6 +49,7 @@ describe('PayTo', () => {
     test('should render continue button', async () => {
         const payTo = new PayTo(global.core, {
             onSubmit: onSubmitMock,
+            mandate: MOCK_MANDATE,
             i18n: global.i18n,
             loadingContext: 'test',
             modules: { resources: global.resources }
@@ -55,6 +68,7 @@ describe('PayTo', () => {
     test('should change to different identifier when selected', async () => {
         const payTo = new PayTo(global.core, {
             onSubmit: onSubmitMock,
+            mandate: MOCK_MANDATE,
             i18n: global.i18n,
             loadingContext: 'test',
             modules: { resources: global.resources },

@@ -7,22 +7,12 @@ import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 /*
 Types (previously in their own file)
  */
-import { UIElementProps } from '../internal/UIElement/types';
 import { TxVariants } from '../tx-variants';
-import { PayIdFormData } from './components/PayIDInput';
 import { PayToIdentifierEnum } from './components/IdentifierSelector';
-import PayToComponent, { PayToComponentData } from './components/PayToComponent';
-import { BSBFormData } from './components/BSBInput';
-
-export interface PayToConfiguration extends UIElementProps {
-    paymentData?: any;
-    data?: PayToData;
-    placeholders?: any; //TODO
-}
-
-export interface PayToData extends PayIdFormData, BSBFormData, PayToComponentData {
-    shopperAccountIdentifier: string;
-}
+import PayToComponent from './components/PayToComponent';
+import { PayToInstructions } from './components/PayToInstructions';
+import MandateSummary from './components/MandateSummary';
+import { PayToConfiguration, PayToData } from './types';
 
 /*
 Await Config (previously in its own file)
@@ -85,7 +75,12 @@ export class PayToElement extends UIElement<PayToConfiguration> {
             paymentMethod: {
                 type: PayToElement.type,
                 shopperAccountIdentifier: getAccountIdentifier(this.state.data)
-            }
+            },
+            shopperName: {
+                firstName: this.state.data.firstName,
+                lastName: this.state.data.lastName
+            },
+            mandate: this.props.mandate
         };
     }
 
@@ -106,18 +101,22 @@ export class PayToElement extends UIElement<PayToConfiguration> {
                             ref={ref => {
                                 this.componentRef = ref;
                             }}
+                            amount={this.props.amount}
+                            showAmount={true}
+                            instructions={PayToInstructions}
                             clientKey={this.props.clientKey}
                             paymentData={this.props.paymentData}
                             onError={this.props.onError}
                             onComplete={this.onComplete}
                             brandLogo={this.icon}
                             type={this.constructor['type']}
-                            messageText={this.props.i18n.get('ancv.confirmPayment')}
+                            messageText={this.props.i18n.get('payto.confirmPayment')}
                             awaitText={this.props.i18n.get('await.waitForConfirmation')}
                             showCountdownTimer={config.showCountdownTimer}
                             throttleTime={config.THROTTLE_TIME}
                             throttleInterval={config.THROTTLE_INTERVAL}
                             onActionHandled={this.onActionHandled}
+                            endSlot={() => <MandateSummary mandate={this.props.mandate} currencyCode={this.props.amount.currency} />}
                         />
                     </SRPanelProvider>
                 </CoreProvider>
