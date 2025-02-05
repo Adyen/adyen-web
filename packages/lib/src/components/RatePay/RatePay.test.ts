@@ -14,6 +14,10 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
+server.events.on('request:start', ({ request }) => {
+    console.log('MSW intercepted:', request.method, request.url);
+});
+
 describe('RatePay Direct Debit', () => {
     test('should make a payment', async () => {
         const user = userEvent.setup();

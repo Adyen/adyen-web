@@ -348,11 +348,11 @@
     "payto.mandate.amount.max": "Up to %{amount} per transaction",
     "payto.mandate.frequency.adhoc-no-count": "Ad Hoc",
     "payto.mandate.frequency.adhoc": "%{count} time(s)",
-    "payto.mandate.frquency.daily": "%{count} payment(s) Daily",
-    "payto.mandate.frquency.weekly": "%{count} payment(s) Weekly",
-    "payto.mandate.frquency.biWeekly": "%{count} payment(s) Fortnightly",
-    "payto.mandate.frquency.monthly": "%{count} payment(s) Monthly",
-    "payto.mandate.frquency.quarterly": "%{count} payment(s) Quarterly",
-    "payto.mandate.frquency.halfYearly": "%{count} payment(s) Bi-Annual",
-    "payto.mandate.frquency.yearly": "%{count} payment(s) Yearly"
+    "payto.mandate.frequency.daily": "%{count} payment(s) Daily",
+    "payto.mandate.frequency.weekly": "%{count} payment(s) Weekly",
+    "payto.mandate.frequency.biWeekly": "%{count} payment(s) Fortnightly",
+    "payto.mandate.frequency.monthly": "%{count} payment(s) Monthly",
+    "payto.mandate.frequency.quarterly": "%{count} payment(s) Quarterly",
+    "payto.mandate.frequency.halfYearly": "%{count} payment(s) Bi-Annual",
+    "payto.mandate.frequency.yearly": "%{count} payment(s) Yearly"
 }

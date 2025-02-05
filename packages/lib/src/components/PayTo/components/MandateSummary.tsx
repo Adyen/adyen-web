@@ -10,7 +10,7 @@ export default function MandateSummary({ mandate, currencyCode }: { mandate: Man
     const tableFields: DetailsTableData = Object.keys(mandate).map((key: keyof MandateType) => {
         // get the label for the key, like payto.mandate.amount.label, payto.mandate.frequency.label
         const labelText = i18n.get(`payto.mandate.${key}.label`);
-        const amountValue = Number(mandate['amount']);
+        const amountValue = Number(mandate.amount);
         switch (key) {
             case 'amount': {
                 // it can be either show "amount" OR "amount up to (max amount)"
