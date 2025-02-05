@@ -1,5 +1,4 @@
 import { h } from 'preact';
-import usePhonePrefixes from '../../internal/PhoneInput/usePhonePrefixes';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import PhoneInputFields from '../../internal/PhoneInput/PhoneInputFields';
 import { Form } from '../../../utils/useForm/types';
@@ -14,15 +13,21 @@ interface PayToPhoneProps {
     data: any; // Data
 }
 
-export default function PayToPhone({ form, onChange, onError, data }: PayToPhoneProps) {
-    const { loadingContext, i18n } = useCoreContext();
+// we have decided to hardcode phone prefix as it's going to be always +61 for now
+const HARDCODED_USE_PHONE_PREFIXES = {
+    phonePrefixes: [
+        {
+            id: '+61',
+            name: '+61 (AU)',
+            selectedOptionName: '+61'
+        }
+    ]
+};
 
-    const allowedCountries = [];
+export default function PayToPhone({ form, onChange, data }: PayToPhoneProps) {
+    const { i18n } = useCoreContext();
 
-    const { loadingStatus: prefixLoadingStatus, phonePrefixes } = usePhonePrefixes({ allowedCountries, loadingContext, handleError: onError });
-
-    // TODO handle the loading status
-    console.log('TODO', prefixLoadingStatus);
+    const { phonePrefixes } = HARDCODED_USE_PHONE_PREFIXES;
 
     const getError = useCallback((field: string) => getErrorMessage(i18n, form.errors[field]), [i18n, form]);
 
@@ -33,6 +38,7 @@ export default function PayToPhone({ form, onChange, onError, data }: PayToPhone
             items={phonePrefixes}
             data={data}
             onChange={onChange}
+            canSelectPrefix={false}
             showNumber={true}
             showPrefix={true}
             form={form}

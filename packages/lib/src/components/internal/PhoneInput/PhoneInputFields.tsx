@@ -23,13 +23,14 @@ export interface PhoneInputFieldProps {
     ref?;
     showPrefix?: boolean;
     showNumber?: boolean;
+    canSelectPrefix?: boolean;
 }
 /**
  *
  * @param PhoneInputFormProps
  * @constructor
  */
-export default function PhoneInputFields({ getError, showNumber, showPrefix, form, ...props }: PhoneInputFieldProps) {
+export default function PhoneInputFields({ getError, showNumber, showPrefix, form, canSelectPrefix = true, ...props }: PhoneInputFieldProps) {
     const { i18n } = useCoreContext();
 
     const { handleChangeFor, data, valid, triggerValidation } = form;
@@ -41,7 +42,6 @@ export default function PhoneInputFields({ getError, showNumber, showPrefix, for
         }
     }, [data.phonePrefix]);
 
-    // TODO why do we need this?
     this.triggerValidation = triggerValidation;
 
     return (
@@ -58,6 +58,7 @@ export default function PhoneInputFields({ getError, showNumber, showPrefix, for
                     name={'phonePrefix'}
                 >
                     <Select
+                        readonly={!canSelectPrefix}
                         className={'adyen-checkout-dropdown adyen-checkout-dropdown--countrycode-selector'}
                         name={'phonePrefix'}
                         items={props.items}
