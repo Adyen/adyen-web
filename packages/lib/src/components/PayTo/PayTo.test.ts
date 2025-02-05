@@ -101,7 +101,7 @@ describe('PayTo', () => {
 
         test('should render await screen and transaction and mandate amount should be different', async () => {
             const payTo = new PayTo(global.core, {
-                ...global.communCoreComponentProps,
+                ...global.commonCoreProps,
                 amount: {
                     value: '2000',
                     currency: 'AUD'
@@ -126,7 +126,7 @@ describe('PayTo', () => {
 
         test('should render await screen and amount should say up to if amountRule is max', async () => {
             const payTo = new PayTo(global.core, {
-                ...global.communCoreComponentProps,
+                ...global.commonCoreProps,
                 amount: {
                     value: '2000',
                     currency: 'AUD'
@@ -144,9 +144,6 @@ describe('PayTo', () => {
             // amount from transaction
             expect(await screen.findByText('A$20.00')).toBeTruthy();
 
-            // for context why we are not using roles here:
-            // https://github.com/testing-library/dom-testing-library/issues/140
-
             // eslint-disable-next-line testing-library/no-node-access
             const mandateAmount = screen.getByText('Amount').nextSibling;
             expect(mandateAmount).toHaveTextContent('Up to A$40.01 per transaction');
@@ -154,7 +151,7 @@ describe('PayTo', () => {
 
         test('should render await screen and show correct frequency (Fortnightly)', async () => {
             const payTo = new PayTo(global.core, {
-                ...global.communCoreComponentProps,
+                ...global.commonCoreProps,
                 amount: {
                     value: '2000',
                     currency: 'AUD'
@@ -166,9 +163,6 @@ describe('PayTo', () => {
 
             render(payTo.render());
 
-            // for context why we are not using roles here:
-            // https://github.com/testing-library/dom-testing-library/issues/140
-
             const mandateFrequency = await screen.findByText('Frequency');
             // eslint-disable-next-line testing-library/no-node-access
             expect(mandateFrequency.nextSibling).toHaveTextContent('3 payment(s) Fortnightly');
@@ -176,7 +170,7 @@ describe('PayTo', () => {
 
         test('should render await screen and show correct frequency (Yearly)', async () => {
             const payTo = new PayTo(global.core, {
-                ...global.communCoreComponentProps,
+                ...global.commonCoreProps,
                 amount: {
                     value: '2000',
                     currency: 'AUD'
@@ -188,9 +182,6 @@ describe('PayTo', () => {
 
             render(payTo.render());
 
-            // for context why we are not using roles here:
-            // https://github.com/testing-library/dom-testing-library/issues/140
-
             const mandateFrequency = await screen.findByText('Frequency');
             // eslint-disable-next-line testing-library/no-node-access
             expect(mandateFrequency.nextSibling).toHaveTextContent('3 payment(s) Yearly');
@@ -198,7 +189,7 @@ describe('PayTo', () => {
 
         test('should render await screen and show correct frequency adhoc with count', async () => {
             const payTo = new PayTo(global.core, {
-                ...global.communCoreComponentProps,
+                ...global.commonCoreProps,
                 amount: {
                     value: '2000',
                     currency: 'AUD'
@@ -210,9 +201,6 @@ describe('PayTo', () => {
 
             render(payTo.render());
 
-            // for context why we are not using roles here:
-            // https://github.com/testing-library/dom-testing-library/issues/140
-
             const mandateFrequency = await screen.findByText('Frequency');
             // eslint-disable-next-line testing-library/no-node-access
             expect(mandateFrequency.nextSibling).toHaveTextContent('3 time(s)');
@@ -220,7 +208,7 @@ describe('PayTo', () => {
 
         test('should render await screen and show correct frequency adhoc without count', async () => {
             const payTo = new PayTo(global.core, {
-                ...global.communCoreComponentProps,
+                ...global.commonCoreProps,
                 amount: {
                     value: '2000',
                     currency: 'AUD'
@@ -232,9 +220,6 @@ describe('PayTo', () => {
 
             render(payTo.render());
 
-            // for context why we are not using roles here:
-            // https://github.com/testing-library/dom-testing-library/issues/140
-
             const mandateFrequency = await screen.findByText('Frequency');
             // eslint-disable-next-line testing-library/no-node-access
             expect(mandateFrequency.nextSibling).toHaveTextContent('Ad Hoc');
@@ -243,7 +228,7 @@ describe('PayTo', () => {
         // TODO waiting for feedback for what should be the result of this test case
         test.skip('should render await screen and show correct frequency daily without count', async () => {
             const payTo = new PayTo(global.core, {
-                ...global.communCoreComponentProps,
+                ...global.commonCoreProps,
                 amount: {
                     value: '2000',
                     currency: 'AUD'
@@ -254,9 +239,6 @@ describe('PayTo', () => {
             });
 
             render(payTo.render());
-
-            // for context why we are not using roles here:
-            // https://github.com/testing-library/dom-testing-library/issues/140
 
             const mandateFrequency = await screen.findByText('Frequency');
             // eslint-disable-next-line testing-library/no-node-access
