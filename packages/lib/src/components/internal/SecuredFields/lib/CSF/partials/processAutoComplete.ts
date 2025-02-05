@@ -1,6 +1,6 @@
 import postMessageToIframe from '../utils/iframes/postMessageToIframe';
 import { ENCRYPTED_EXPIRY_DATE, ENCRYPTED_EXPIRY_MONTH, ENCRYPTED_EXPIRY_YEAR } from '../../constants';
-import { SFFeedbackObj, CbObjOnAutoComplete } from '../../types';
+import { SFFeedbackObj, CardAutoCompleteData } from '../../types';
 import { hasOwnProperty } from '../../../../../../utils/hasOwnProperty';
 import getIframeContentWin from '../utils/iframes/getIframeContentWin';
 import { CSFThisObject } from '../types';
@@ -23,7 +23,7 @@ export function processAutoComplete({ csfState, csfConfig, csfCallbacks }: CSFTh
     if (pFeedbackObj.name === 'cc-name') {
         const feedbackObj: SFFeedbackObj = { ...pFeedbackObj };
         delete feedbackObj.numKey;
-        const ACFeedbackObj: CbObjOnAutoComplete = feedbackObj as CbObjOnAutoComplete;
+        const ACFeedbackObj: CardAutoCompleteData = feedbackObj as CardAutoCompleteData;
         csfCallbacks.onAutoComplete(ACFeedbackObj);
         return true;
     }

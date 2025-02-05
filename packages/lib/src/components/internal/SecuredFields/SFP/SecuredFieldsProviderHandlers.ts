@@ -11,14 +11,14 @@ import {
     ENCRYPTED_EXPIRY_YEAR
 } from '../lib/constants';
 import {
-    CbObjOnError,
-    CbObjOnFocus,
-    CbObjOnBrand,
-    CbObjOnAllValid,
-    CbObjOnFieldValid,
-    CbObjOnAutoComplete,
-    CbObjOnConfigSuccess,
-    CbObjOnLoad,
+    CardErrorData,
+    CardFocusData,
+    CardBrandData,
+    CardAllValidData,
+    CardFieldValidData,
+    CardAutoCompleteData,
+    CardConfigSuccessData,
+    CardLoadData,
     SFKeyPressObj
 } from '../lib/types';
 import { existy } from '../../../../utils/commonUtils';
@@ -28,7 +28,7 @@ import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
  * Emits the onLoad event
  * Here we can assume all securedFields iframes have fired their 'load' event
  */
-function handleOnLoad(cbObj: CbObjOnLoad): void {
+function handleOnLoad(cbObj: CardLoadData): void {
     // Clear 'loading' timeout
     clearTimeout(this.csfLoadFailTimeout);
     this.csfLoadFailTimeout = null;
@@ -57,7 +57,7 @@ function handleOnLoad(cbObj: CbObjOnLoad): void {
  * Emits the onConfigSuccess (ready) event
  * Here we can assume CSF is loaded, configured and ready to be used
  */
-function handleOnConfigSuccess(cbObj: CbObjOnConfigSuccess): void {
+function handleOnConfigSuccess(cbObj: CardConfigSuccessData): void {
     // Clear 'config' timeout
     clearTimeout(this.csfConfigFailTimeout);
     this.csfConfigFailTimeout = null;
@@ -71,7 +71,7 @@ function handleOnConfigSuccess(cbObj: CbObjOnConfigSuccess): void {
 /**
  * Emits the onAllValid event
  */
-function handleOnAllValid(status: CbObjOnAllValid): boolean {
+function handleOnAllValid(status: CardAllValidData): boolean {
     // Form cannot be valid whilst there is an unsupported card
     if (this.state.detectedUnsupportedBrands) {
         return false;
@@ -91,7 +91,7 @@ function handleOnAllValid(status: CbObjOnAllValid): boolean {
  * Saves a field value from CSF in the CardInput state
  * Emits the onFieldValid event
  */
-function handleOnFieldValid(fieldObj: CbObjOnFieldValid): boolean {
+function handleOnFieldValid(fieldObj: CardFieldValidData): boolean {
     // A card number field cannot be valid whilst there is an unsupported card
     if (this.state.detectedUnsupportedBrands && fieldObj.fieldType === ENCRYPTED_CARD_NUMBER) {
         return false;
@@ -128,7 +128,7 @@ function fieldIsInError(fieldType: string, policy: string, numCharsObj: object, 
  * Saves the card brand in state
  * Emits the onBrand event
  */
-function handleOnBrand(cardInfo: CbObjOnBrand): void {
+function handleOnBrand(cardInfo: CardBrandData): void {
     this.setState(
         prevState => {
             /**
@@ -183,7 +183,7 @@ function handleOnBrand(cardInfo: CbObjOnBrand): void {
 /**
  * Handles validation errors
  */
-function handleOnError(cbObj: CbObjOnError, hasUnsupportedCard: boolean = null): boolean {
+function handleOnError(cbObj: CardErrorData, hasUnsupportedCard: boolean = null): boolean {
     const errorCode = cbObj.error;
 
     this.setState(
@@ -202,7 +202,7 @@ function handleOnError(cbObj: CbObjOnError, hasUnsupportedCard: boolean = null):
     return true;
 }
 
-function handleFocus(cbObj: CbObjOnFocus): void {
+function handleFocus(cbObj: CardFocusData): void {
     this.numCharsInField[cbObj.fieldType] = cbObj.numChars;
 
     this.props.onFocus(cbObj);
@@ -214,7 +214,7 @@ function handleOnTouchstartIOS(cbObj): void {
 }
 
 // Only called for holder name (from CSF>partials>processAutoComplete)
-function handleOnAutoComplete(cbObj: CbObjOnAutoComplete): void {
+function handleOnAutoComplete(cbObj: CardAutoCompleteData): void {
     this.setState({ autoCompleteName: cbObj.value }, () => {
         this.props.onChange(this.state, { event: 'handleOnAutoComplete', fieldType: cbObj.fieldType });
         this.setState({ autoCompleteName: null }); // Nullify ref after sending it (lets shopper edit holder name)

@@ -178,6 +178,10 @@ span.adyen-checkout__input {
     [dir='rtl'] & {
         margin-left: token(spacer-060);
     }
+
+    > .adyen-checkout__icon {
+        display: block;
+    }
 }
 
 .adyen-checkout-input__inline-validation--valid {

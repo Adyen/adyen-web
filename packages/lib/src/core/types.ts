@@ -31,7 +31,7 @@ export interface ICore {
     submitDetails(details: AdditionalDetailsData['data']): void;
     getCorePropsForComponent(): any;
     getComponent(txVariant: string): NewableComponent | undefined;
-    createFromAction(action: PaymentAction, options: any): UIElement;
+    createFromAction(action: PaymentAction, options?: any): UIElement;
     storeElementReference(element: UIElement): void;
     options: CoreConfiguration;
     paymentMethodsResponse: PaymentMethods;

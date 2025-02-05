@@ -120,7 +120,7 @@
 }
 
 .adyen-checkout__voucher-result__code__label__text {
-    font-size: 13px;
+    font-size: token(text-body-font-size);
     color: token(color-label-primary);
     background: token(color-background-primary);
     padding: 0 token(spacer-040);

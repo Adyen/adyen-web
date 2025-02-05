@@ -1,8 +1,8 @@
-import { CbObjOnError, SFFeedbackObj } from '../../types';
+import { CardErrorData, SFFeedbackObj } from '../../types';
 import SecuredField from '../../securedField/SecuredField';
 import { hasOwnProperty } from '../../../../../../utils/hasOwnProperty';
 
-type RtnType_callbackFn = (obj: CbObjOnError) => void;
+type RtnType_callbackFn = (obj: CardErrorData) => void;
 
 export const processErrors = (
     pFeedbackObj: SFFeedbackObj,
@@ -10,7 +10,7 @@ export const processErrors = (
     type: string,
     rootNode: HTMLElement,
     callbackFn: RtnType_callbackFn
-): CbObjOnError => {
+): CardErrorData => {
     if (!hasOwnProperty(pFeedbackObj, 'error')) return null;
 
     const fieldType: string = pFeedbackObj.fieldType;
@@ -18,7 +18,7 @@ export const processErrors = (
     const field: SecuredField = securedField;
 
     // Initialise error callback object
-    const dataObj: CbObjOnError = { rootNode, fieldType, error: null, type: null };
+    const dataObj: CardErrorData = { rootNode, fieldType, error: null, type: null };
 
     const isError: boolean = pFeedbackObj.error !== '';
 

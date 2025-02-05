@@ -6,14 +6,14 @@ import defaultProps from './defaultProps';
 import { SFPProps, SFPState, SingleBrandResetObject } from './types';
 import {
     StylesObject,
-    CbObjOnError,
-    CbObjOnFocus,
-    CbObjOnBrand,
-    CbObjOnAllValid,
-    CbObjOnFieldValid,
-    CbObjOnAutoComplete,
-    CbObjOnConfigSuccess,
-    CbObjOnLoad,
+    CardErrorData,
+    CardFocusData,
+    CardBrandData,
+    CardAllValidData,
+    CardFieldValidData,
+    CardAutoCompleteData,
+    CardConfigSuccessData,
+    CardLoadData,
     SFKeyPressObj
 } from '../lib/types';
 import { CSFReturnObject, CSFSetupObject } from '../lib/CSF/types';
@@ -37,14 +37,14 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
     private rootNode;
     private numDateFields: number;
     private csf: CSFReturnObject;
-    private handleOnLoad: (obj: CbObjOnLoad) => void;
-    private handleOnConfigSuccess: (obj: CbObjOnConfigSuccess) => void;
-    private handleOnFieldValid: (obj: CbObjOnFieldValid) => void;
-    private handleOnAllValid: (obj: CbObjOnAllValid) => void;
-    private handleOnBrand: (obj: CbObjOnBrand) => void;
-    private handleFocus: (obj: CbObjOnFocus) => void;
-    private handleOnError: (obj: CbObjOnError, hasUnsupportedCard?: boolean) => void;
-    private handleOnAutoComplete: (obj: CbObjOnAutoComplete) => void;
+    private handleOnLoad: (obj: CardLoadData) => void;
+    private handleOnConfigSuccess: (obj: CardConfigSuccessData) => void;
+    private handleOnFieldValid: (obj: CardFieldValidData) => void;
+    private handleOnAllValid: (obj: CardAllValidData) => void;
+    private handleOnBrand: (obj: CardBrandData) => void;
+    private handleFocus: (obj: CardFocusData) => void;
+    private handleOnError: (obj: CardErrorData, hasUnsupportedCard?: boolean) => void;
+    private handleOnAutoComplete: (obj: CardAutoCompleteData) => void;
     private handleOnNoDataRequired: () => void;
     private handleOnTouchstartIOS: (obj) => void;
     private handleKeyPressed: (obj: SFKeyPressObj) => void;
@@ -256,7 +256,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         return { i18n: this.props.i18n };
     }
 
-    public handleUnsupportedCard(errObj: CbObjOnError): boolean {
+    public handleUnsupportedCard(errObj: CardErrorData): boolean {
         const hasUnsupportedCard = !!errObj.error;
 
         // Store the brand(s) we detected and which we don't support
@@ -296,7 +296,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             .reduce(getErrorReducer(numDateFields, state), [])
             .forEach(field => {
                 // For each detected error pass an error object to the handler (calls error callback & sets state)
-                const errorObj: CbObjOnError = getErrorObject(field, this.rootNode, state);
+                const errorObj: CardErrorData = getErrorObject(field, this.rootNode, state);
                 this.handleOnError(errorObj, !!state.detectedUnsupportedBrands);
                 // Inform the secured-fields instance of which fields have been found to have errors
                 if (this.csf && this.csf.isValidated) {
@@ -345,7 +345,7 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             // If we have some sort of binLookupResponse object then this isn't the reset caused by digits dropping below a threshold
             // - so call handleUnsupportedCard to clear the error
             if (this.csf && binLookupResponse) {
-                const errObj: CbObjOnError = {
+                const errObj: CardErrorData = {
                     type: 'card',
                     fieldType: 'encryptedCardNumber',
                     error: ''

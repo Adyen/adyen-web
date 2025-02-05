@@ -14,7 +14,7 @@ import { existy } from '../../../../../../utils/commonUtils';
 import cardType from '../utils/cardType';
 import { SecuredFieldSetupObject } from '../../types';
 import SecuredField from '../../securedField/SecuredField';
-import { CardObject, CbObjOnBrand, SFFeedbackObj, CbObjOnLoad, CVCPolicyType, DatePolicyType } from '../../types';
+import { CardObject, CardBrandData, SFFeedbackObj, CardLoadData, CVCPolicyType, DatePolicyType } from '../../types';
 import AdyenCheckoutError from '../../../../../../core/Errors/AdyenCheckoutError';
 import type { SFKeyPressObj } from '../../types';
 
@@ -152,7 +152,7 @@ export async function createCardSecuredFields(
      * and we also pass the cvcPolicy & expiryDatePolicy so the UI can hide the iframe holders if necessary
      */
     if (this.isSingleBrandedCard) {
-        const callbackObj: CbObjOnBrand = {
+        const callbackObj: CardBrandData = {
             type: this.state.type,
             rootNode: this.props.rootNode,
             brand: type,
@@ -248,7 +248,7 @@ export function setupSecuredField(pItem: HTMLElement, cvcPolicy?: CVCPolicyType,
 
                 // If all iframes are loaded - call onLoad callback
                 if (this.state.iframeCount === this.state.originalNumIframes) {
-                    const callbackObj: CbObjOnLoad = { iframesLoaded: true };
+                    const callbackObj: CardLoadData = { iframesLoaded: true };
                     this.callbacks.onLoad(callbackObj);
                 }
             })

@@ -2,7 +2,7 @@ import { ADDRESS_SCHEMA } from '../components/internal/Address/constants';
 import actionTypes from '../core/ProcessResponse/PaymentAction/actionTypes';
 import { AnalyticsInitialEvent, AnalyticsObject, CreateAnalyticsEventObject, SendAnalyticsObject } from '../core/Analytics/types';
 import { EventsQueueModule } from '../core/Analytics/EventsQueue';
-import { CbObjOnFocus } from '../components/internal/SecuredFields/lib/types';
+import { CardFocusData } from '../components/internal/SecuredFields/lib/types';
 
 export type PaymentActionsType = keyof typeof actionTypes;
 
@@ -388,7 +388,7 @@ export interface AnalyticsModule {
 
 export type ComponentFocusObject = {
     fieldType: string;
-    event: Event | CbObjOnFocus;
+    event: Event | CardFocusData;
 };
 
 export type DecodeObject = {
