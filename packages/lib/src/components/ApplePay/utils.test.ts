@@ -1,4 +1,4 @@
-import { formatApplePayContactToAdyenAddressFormat } from './utils';
+import { formatApplePayContactToAdyenAddressFormat, mapBrands, resolveSupportedVersion } from './utils';
 
 describe('formatApplePayContactToAdyenAddressFormat()', () => {
     test('should build the street by merging the address lines and set houseNumberOrName to ZZ', () => {
@@ -84,5 +84,52 @@ describe('formatApplePayContactToAdyenAddressFormat()', () => {
             firstName: 'Jonny',
             lastName: 'Smithson'
         });
+    });
+
+    test('should return undefined if no contact details is passed', () => {
+        // @ts-ignore Testing passing no parameter
+        expect(formatApplePayContactToAdyenAddressFormat()).toBeUndefined();
+    });
+});
+
+describe('mapBrands()', () => {
+    test('should rename certain brands based on the Apple Pay SDK brands support', () => {
+        const backofficeBrands = ['mc', 'elodebit', 'eftpos_australia', 'cartebancaire'];
+        const applePayBrands = mapBrands(backofficeBrands);
+        expect(applePayBrands).toStrictEqual(['masterCard', 'elo', 'eftpos', 'cartesBancaires']);
+    });
+
+    test('should not add unsupported brand to the Apple Pay brands array', () => {
+        const backofficeBrands = ['visa', 'amex', 'new_brand'];
+        const applePayBrands = mapBrands(backofficeBrands);
+        expect(applePayBrands).toStrictEqual(['visa', 'amex']);
+    });
+});
+
+describe('resolveSupportedVersion', () => {
+    beforeAll(() => {
+        Object.defineProperty(window, 'ApplePaySession', {
+            value: {
+                supportsVersion: null
+            }
+        });
+    });
+
+    test('should return supported version if ApplePaySession is available', () => {
+        // @ts-ignore bbbb
+        window.ApplePaySession.supportsVersion = jest.fn().mockImplementation((version: number) => {
+            return version === 10;
+        });
+
+        const version = resolveSupportedVersion(14);
+        expect(version).toBe(10);
+    });
+
+    test('should return null if ApplePaySession is not available', () => {
+        // @ts-ignore bbb
+        window.ApplePaySession.supportsVersion = null;
+
+        const version = resolveSupportedVersion(14);
+        expect(version).toBeNull();
     });
 });
