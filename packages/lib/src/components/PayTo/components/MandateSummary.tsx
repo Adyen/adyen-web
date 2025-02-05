@@ -5,9 +5,18 @@ import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { DetailsTableData } from '../../internal/DetailsTable/DetailsTable';
 import './MandateSummary.scss';
 
-export default function MandateSummary({ mandate, currencyCode }: { mandate: MandateType; currencyCode: string }) {
+export interface MandateSummaryProps {
+    mandate: MandateType;
+    currencyCode: string;
+    payee?: string;
+}
+
+// this is the order the fields are going to be displayed in the UI
+const orderedMandateTableFields = ['payee', 'remarks', 'amount', 'frequency', 'startsAt', 'endsAt'];
+
+export default function MandateSummary({ mandate, currencyCode, payee }: MandateSummaryProps) {
     const { i18n } = useCoreContext();
-    const tableFields: DetailsTableData = Object.keys(mandate).map((key: keyof MandateType) => {
+    const tableFields: DetailsTableData = orderedMandateTableFields.map((key: keyof MandateType | 'payee') => {
         // get the label for the key, like payto.mandate.amount.label, payto.mandate.frequency.label
         const labelText = i18n.get(`payto.mandate.${key}.label`);
         const amountValue = Number(mandate.amount);
@@ -58,6 +67,12 @@ export default function MandateSummary({ mandate, currencyCode }: { mandate: Man
                 return {
                     label: labelText,
                     value: i18n.date(mandate.endsAt)
+                };
+
+            case 'payee':
+                return {
+                    label: labelText,
+                    value: payee
                 };
         }
     });

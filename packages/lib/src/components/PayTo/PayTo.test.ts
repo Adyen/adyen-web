@@ -244,5 +244,24 @@ describe('PayTo', () => {
             // eslint-disable-next-line testing-library/no-node-access
             expect(mandateFrequency.nextSibling).toHaveTextContent('Ad Hoc');
         });
+
+        test('should render await screen and show the correct payee', async () => {
+            const payTo = new PayTo(global.core, {
+                ...global.commonCoreProps,
+                amount: {
+                    value: '2000',
+                    currency: 'AUD'
+                },
+                mandate: { ...MOCK_MANDATE, count: null, frequency: 'daily' },
+                paymentData: 'mockblob',
+                payee: 'Mock Payee'
+            });
+
+            render(payTo.render());
+
+            const mandateFrequency = await screen.findByText('Frequency');
+            // eslint-disable-next-line testing-library/no-node-access
+            expect(mandateFrequency.nextSibling).toHaveTextContent('Ad Hoc');
+        });
     });
 });

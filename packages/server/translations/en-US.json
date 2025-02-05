@@ -345,6 +345,7 @@
     "payto.mandate.remarks.label": "Description",
     "payto.mandate.startsAt.label": "Start Date",
     "payto.mandate.endsAt.label": "Ends Date",
+    "payto.mandate.payee.label": "Payee",
     "payto.mandate.amount.max": "Up to %{amount} per transaction",
     "payto.mandate.frequency.adhoc-no-count": "Ad Hoc",
     "payto.mandate.frequency.adhoc": "%{count} time(s)",
@@ -355,4 +356,5 @@
     "payto.mandate.frequency.quarterly": "%{count} payment(s) Quarterly",
     "payto.mandate.frequency.halfYearly": "%{count} payment(s) Bi-Annual",
     "payto.mandate.frequency.yearly": "%{count} payment(s) Yearly"
+
 }

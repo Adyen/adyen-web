@@ -9,11 +9,12 @@ import { MandateType, PayToConfiguration } from '../../../src/components/PayTo/t
 // extend the default story args so we can change mandate top level
 interface ExtendedStoryArgs extends PaymentMethodStoryProps<PayToConfiguration> {
     mandate: MandateType;
+    payee: string;
 }
 type PayToStory = StoryObj<ExtendedStoryArgs>;
 
 const MANDATE_EXAMPLE: MandateType = {
-    amount: '25900', // [Mandatory] for PayTo - Mandate Amount field
+    amount: '100000', // [Mandatory] for PayTo - Mandate Amount field
     amountRule: 'exact', // [Mandatory] for PayTo - Needs to be Localised
     endsAt: '2025-12-31', // [Mandatory] for PayTo - Date format
     frequency: 'monthly', // [Mandatory] for PayTo - Needs to be Localised
@@ -104,7 +105,8 @@ export const PayToAwaitScreen: PayToStory = {
     args: {
         countryCode: 'AU',
         shopperLocale: 'en-US',
-        mandate: MANDATE_EXAMPLE
+        mandate: MANDATE_EXAMPLE,
+        payee: 'Cool Merchant Ltd'
     },
     parameters: {
         msw: {
@@ -119,7 +121,7 @@ export const PayToAwaitScreen: PayToStory = {
             ]
         }
     },
-    render: ({ componentConfiguration, mandate, ...checkoutConfig }) => (
+    render: ({ componentConfiguration, mandate, payee, ...checkoutConfig }) => (
         <Checkout checkoutConfig={checkoutConfig}>
             {checkout => (
                 <ComponentContainer
@@ -127,6 +129,7 @@ export const PayToAwaitScreen: PayToStory = {
                         new PayTo(checkout, {
                             paymentData: 'Ab02b4c0....J86s=',
                             mandate,
+                            payee,
                             ...componentConfiguration
                         })
                     }

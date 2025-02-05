@@ -116,7 +116,9 @@ export class PayToElement extends UIElement<PayToConfiguration> {
                             throttleTime={config.THROTTLE_TIME}
                             throttleInterval={config.THROTTLE_INTERVAL}
                             onActionHandled={this.onActionHandled}
-                            endSlot={() => <MandateSummary mandate={this.props.mandate} currencyCode={this.props.amount.currency} />}
+                            endSlot={() => (
+                                <MandateSummary mandate={this.props.mandate} payee={this.props.payee} currencyCode={this.props.amount.currency} />
+                            )}
                         />
                     </SRPanelProvider>
                 </CoreProvider>

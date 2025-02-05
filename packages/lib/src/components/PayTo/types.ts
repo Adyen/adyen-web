@@ -20,6 +20,7 @@ export interface PayToConfiguration extends UIElementProps {
     data?: PayToData;
     placeholders?: any; //TODO
     mandate: MandateType;
+    payee?: string;
 }
 
 export interface PayToData extends PayIdFormData, BSBFormData, PayToComponentData {
