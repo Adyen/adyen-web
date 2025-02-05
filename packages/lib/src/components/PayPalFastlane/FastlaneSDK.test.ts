@@ -204,6 +204,7 @@ describe('FastlaneSDK', () => {
             paymentType: 'fastlane',
             configuration: {
                 brand: 'visa',
+                customerId: customerContextId,
                 email: 'test@adyen.com',
                 lastFour: '1111',
                 fastlaneSessionId: 'fastlane-session-id',

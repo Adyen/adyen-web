@@ -20,7 +20,7 @@ class FastlaneSDK {
     private readonly forceConsentDetails: boolean;
 
     private fastlaneSdk: FastlaneWindowInstance;
-    private authenticatedShopper: { email: string; customerContextId: string };
+    private authenticatedShopper: { email: string; customerId: string };
     private fastlaneSessionId?: string;
 
     constructor(configuration: FastlaneSDKConfiguration) {
@@ -62,7 +62,7 @@ class FastlaneSDK {
         const { customerContextId } = await this.fastlaneSdk.identity.lookupCustomerByEmail(email);
 
         if (customerContextId) {
-            this.authenticatedShopper = { email, customerContextId };
+            this.authenticatedShopper = { email, customerId: customerContextId };
             return this.fastlaneSdk.identity.triggerAuthenticationFlow(customerContextId);
         } else {
             return {
@@ -93,6 +93,7 @@ class FastlaneSDK {
                 paymentType: 'fastlane',
                 configuration: {
                     fastlaneSessionId: this.fastlaneSessionId,
+                    customerId: this.authenticatedShopper.customerId,
                     email: this.authenticatedShopper.email,
                     tokenId: authResult.profileData.card.id,
                     lastFour: authResult.profileData.card.paymentSource.card.lastDigits,

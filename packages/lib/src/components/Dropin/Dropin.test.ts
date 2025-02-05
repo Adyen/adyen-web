@@ -321,6 +321,7 @@ describe('Dropin', () => {
                     fastlane: {
                         tokenId: 'xxx',
                         lastFour: '1111',
+                        customerId: 'customer-id',
                         brand: 'visa',
                         email: 'email@adyen.com',
                         fastlaneSessionId: 'session-id'
@@ -386,6 +387,7 @@ describe('Dropin', () => {
                     fastlane: {
                         tokenId: 'xxx',
                         lastFour: '1111',
+                        customerId: 'customer-id',
                         brand: 'visa',
                         email: 'email@adyen.com',
                         fastlaneSessionId: 'session-id'

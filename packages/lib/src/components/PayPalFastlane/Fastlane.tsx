@@ -19,7 +19,8 @@ class Fastlane extends UIElement<FastlaneConfiguration> {
                 fastlaneData: btoa(
                     JSON.stringify({
                         fastlaneSessionId: this.props.fastlaneSessionId,
-                        tokenId: this.props.tokenId
+                        tokenId: this.props.tokenId,
+                        customerId: this.props.customerId
                     })
                 )
             }
@@ -27,8 +28,8 @@ class Fastlane extends UIElement<FastlaneConfiguration> {
     }
 
     public override async isAvailable(): Promise<void> {
-        const { tokenId, lastFour, brand, email, fastlaneSessionId } = this.props;
-        if (tokenId && lastFour && brand && email && fastlaneSessionId) {
+        const { tokenId, customerId, lastFour, brand, email, fastlaneSessionId } = this.props;
+        if (tokenId && customerId && lastFour && brand && email && fastlaneSessionId) {
             return Promise.resolve();
         }
         return Promise.reject();
