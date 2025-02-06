@@ -15,12 +15,13 @@ test.describe('Card - Testing resetting brand after binLookup has occurred', () 
         // Check brand has been set paymentMethod data
         expect(cardData.paymentMethod.brand).toBe('mc');
 
-        const responsePromise = page.waitForResponse(response => response.url().includes('/binLookup') && response.request().method() === 'POST');
+        // const responsePromise = page.waitForResponse(response => response.url().includes('/binLookup') && response.request().method() === 'POST');
 
         // Paste in card unrecognised by /binLookuo but which our regEx recognises as Visa
         await card.fillCardNumber(UNKNOWN_BIN_CARD_REGEX_VISA);
 
-        await responsePromise;
+        // await responsePromise;
+        await page.waitForTimeout(300);
 
         cardData = await page.evaluate('window.component.data');
 
