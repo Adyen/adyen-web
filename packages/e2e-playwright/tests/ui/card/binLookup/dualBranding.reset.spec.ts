@@ -21,7 +21,7 @@ test.describe('Card - Testing resetting after binLookup has given a dual brand r
 
             let [firstBrand, secondBrand] = await card.brands;
 
-            // Correct order
+            //2 brand icons, in correct order
             expect(firstBrand).toHaveAttribute('data-value', 'bcmc');
             expect(secondBrand).toHaveAttribute('data-value', 'maestro');
 
@@ -43,7 +43,7 @@ test.describe('Card - Testing resetting after binLookup has given a dual brand r
         '#2 Fill in dual branded card, do not make selection and see that brand is not set, ' +
             ' then replace it with an unrecognised one, but see our regEx detects the brand & sets it in the UI',
         async ({ card, page }) => {
-            await card.goto(URL_MAP.card);
+            await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
             await card.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
 
             let cardData: any = await page.evaluate('window.component.data');
@@ -73,15 +73,24 @@ test.describe('Card - Testing resetting after binLookup has given a dual brand r
         card,
         page
     }) => {
-        await card.goto(URL_MAP.card);
+        await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
         await card.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
 
+        // Select brand
         await card.selectBrand(/visa/i);
 
         let cardData: any = await page.evaluate('window.component.data');
 
         // Check brand has been set in paymentMethod data
         expect(cardData.paymentMethod.brand).toBe('visa');
+
+        // Click second brand
+        await card.selectBrand('Bancontact card');
+
+        cardData = await page.evaluate('window.component.data');
+
+        // Check brand has been set in paymentMethod data
+        expect(cardData.paymentMethod.brand).toBe('bcmc');
 
         // Delete number
         await card.deleteCardNumber();
