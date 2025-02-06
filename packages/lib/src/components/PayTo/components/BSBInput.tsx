@@ -52,7 +52,7 @@ export default function BSBInput({ setComponentRef, defaultData, placeholders, o
     }, [setComponentRef]);
 
     return (
-        <Fieldset classNameModifiers={['payto__bsb_input']} label={'payto.bsb.header'} description={'payto.bsb.description'}>
+        <Fieldset classNameModifiers={['payto__bsb_input']} label={'BSB'} description={'payto.bsb.description'}>
             <Field
                 label={i18n.get('payto.bsb.label.bankAccountNumber')}
                 classNameModifiers={['col-60', 'bankAccountNumber']}
@@ -71,9 +71,9 @@ export default function BSBInput({ setComponentRef, defaultData, placeholders, o
             </Field>
 
             <Field
-                label={i18n.get('payto.bsb.label.bsb')}
+                label={i18n.get('Bank State Branch')}
                 classNameModifiers={['col-40', 'bsb']}
-                errorMessage={getErrorMessage(i18n, errors.bsb, i18n.get('payto.bsb.label.bsb'))}
+                errorMessage={getErrorMessage(i18n, errors.bsb, i18n.get('Bank State Branch'))}
                 name={'bsb'}
                 i18n={i18n}
             >

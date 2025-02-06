@@ -30,7 +30,7 @@ export const PAYID_IDENTIFIER_OPTIONS: PayIdOptionsType = [
     },
     {
         id: PayToIdentifierEnum.abn,
-        nameKey: 'payto.payid.option.abn'
+        nameKey: 'ABN'
     },
     {
         id: PayToIdentifierEnum.orgid,

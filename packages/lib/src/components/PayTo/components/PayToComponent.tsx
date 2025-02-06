@@ -69,7 +69,7 @@ export default function PayToComponent(props) {
                     />
                 )}
 
-                {props.showPayButton && props.payButton({ status, label: i18n.get('confirmPurchase') })}
+                {props.showPayButton && props.payButton({ status, label: i18n.get('continue') })}
             </div>
         </LoadingWrapper>
     );

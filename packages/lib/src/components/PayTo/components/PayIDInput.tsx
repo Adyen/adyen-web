@@ -79,9 +79,9 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
     }, [setComponentRef]);
 
     return (
-        <Fieldset classNameModifiers={['payto__payid_input']} label={'payto.payid.header'} description={'payto.payid.description'}>
+        <Fieldset classNameModifiers={['payto__payid_input']} label={'PayID'} description={'payto.payid.description'}>
             <IdentifierSelector
-                classNameModifiers={['col-30']}
+                classNameModifiers={['col-40']}
                 onSelectedIdentifier={handleChangeFor('selectedIdentifier')}
                 selectedIdentifier={data.selectedIdentifier}
             />
@@ -93,7 +93,7 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
             {data.selectedIdentifier === PayToIdentifierEnum.email && (
                 <Field
                     label={i18n.get('shopperEmail')}
-                    classNameModifiers={['col-70', 'email']}
+                    classNameModifiers={['col-60', 'email']}
                     errorMessage={getErrorMessage(i18n, errors.email, i18n.get('shopperEmail'))}
                     dir={'ltr'}
                     name={'email'}
@@ -112,8 +112,8 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
 
             {data.selectedIdentifier === PayToIdentifierEnum.abn && (
                 <Field
-                    label={i18n.get('payto.payid.label.abn')}
-                    classNameModifiers={['col-70', 'abn']}
+                    label={i18n.get('ABN')}
+                    classNameModifiers={['col-60', 'abn']}
                     errorMessage={getErrorMessage(i18n, errors.abn, i18n.get('payto.payid.label.abn'))}
                     name={'ABN'}
                     i18n={i18n}
@@ -132,7 +132,7 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
             {data.selectedIdentifier === PayToIdentifierEnum.orgid && (
                 <Field
                     label={i18n.get('payto.payid.label.orgid')}
-                    classNameModifiers={['col-70', 'orgid']}
+                    classNameModifiers={['col-60', 'orgid']}
                     errorMessage={getErrorMessage(i18n, errors.orgid, i18n.get('payto.payid.label.orgid'))}
                     name={'orgid'}
                     i18n={i18n}
@@ -149,7 +149,7 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
             )}
 
             <Field
-                label={i18n.get('firstName')}
+                label={i18n.get('payto.label.firstName')}
                 classNameModifiers={['col-50', 'firstName']}
                 errorMessage={getErrorMessage(i18n, errors.firstName, i18n.get('firstName'))}
                 name={'firstName'}
@@ -168,7 +168,7 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
             </Field>
 
             <Field
-                label={i18n.get('lastName')}
+                label={i18n.get('payto.label.lastName')}
                 classNameModifiers={['col-50', 'lastName']}
                 errorMessage={getErrorMessage(i18n, errors.lastName, i18n.get('lastName'))}
                 name={'lastName'}

@@ -111,7 +111,7 @@ export class PayToElement extends UIElement<PayToConfiguration> {
                             brandLogo={this.icon}
                             type={this.constructor['type']}
                             messageText={this.props.i18n.get('payto.confirmPayment')}
-                            awaitText={this.props.i18n.get('await.waitForConfirmation')}
+                            awaitText={this.props.i18n.get('payto.await.waitForConfirmation')}
                             showCountdownTimer={config.showCountdownTimer}
                             throttleTime={config.THROTTLE_TIME}
                             throttleInterval={config.THROTTLE_INTERVAL}
