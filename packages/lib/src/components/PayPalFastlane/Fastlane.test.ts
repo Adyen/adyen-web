@@ -22,41 +22,35 @@ describe('Fastlane', () => {
         // @ts-ignore Testing with incomplete config properties
         fastlane = new Fastlane(global.core, {
             tokenId: 'xxx',
-            customerId: 'zzz'
-        });
-        await expect(fastlane.isAvailable()).rejects.toBeUndefined();
-
-        // @ts-ignore Testing with incomplete config properties
-        fastlane = new Fastlane(global.core, {
-            tokenId: 'xxx',
-            customerId: 'zzz',
-            lastFour: '1111'
-        });
-        await expect(fastlane.isAvailable()).rejects.toBeUndefined();
-
-        // @ts-ignore Testing with incomplete config properties
-        fastlane = new Fastlane(global.core, {
-            tokenId: 'xxx',
-            customerId: 'zzz',
             lastFour: '1111',
+            customerId: 'customer-id'
+        });
+        await expect(fastlane.isAvailable()).rejects.toBeUndefined();
+
+        // @ts-ignore Testing with incomplete config properties
+        fastlane = new Fastlane(global.core, {
+            tokenId: 'xxx',
+            lastFour: '1111',
+            customerId: 'customer-id',
             brand: 'visa'
         });
         await expect(fastlane.isAvailable()).rejects.toBeUndefined();
 
+        // fastlaneSessionId is mandatory, although it can be that SDK fails to return it. It must not block the payment in this case
         // @ts-ignore Testing with incomplete config properties
         fastlane = new Fastlane(global.core, {
             tokenId: 'xxx',
-            customerId: 'zzz',
             lastFour: '1111',
+            customerId: 'customer-id',
             brand: 'visa',
             email: 'shopper@adyen.com'
         });
-        await expect(fastlane.isAvailable()).rejects.toBeUndefined();
+        await expect(fastlane.isAvailable()).resolves.toBeUndefined();
 
         fastlane = new Fastlane(global.core, {
             tokenId: 'xxx',
-            customerId: 'zzz',
             lastFour: '1111',
+            customerId: 'customer-id',
             brand: 'visa',
             email: 'shopper@adyen.com',
             fastlaneSessionId: '1111'
@@ -72,16 +66,16 @@ describe('Fastlane', () => {
     test('should return encoded blob to process the payment', () => {
         const fastlane = new Fastlane(global.core, {
             tokenId: 'token-id',
-            customerId: 'customer-id',
             lastFour: '1111',
             brand: 'visa',
+            customerId: 'customer-id',
             email: 'shopper@adyen.com',
             fastlaneSessionId: 'session-id'
         });
 
         const encodedBlob = btoa(
             JSON.stringify({
-                sessionId: 'session-id',
+                fastlaneSessionId: 'session-id',
                 tokenId: 'token-id',
                 customerId: 'customer-id'
             })
@@ -101,8 +95,8 @@ describe('Fastlane', () => {
             modules: { resources },
             i18n: global.i18n,
             tokenId: 'token-id',
-            customerId: 'customer-id',
             lastFour: '1111',
+            customerId: 'customer-id',
             brand: 'visa',
             email: 'shopper@adyen.com',
             fastlaneSessionId: 'session-id'

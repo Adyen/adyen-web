@@ -3,9 +3,10 @@ import initializeFastlane from './initializeFastlane';
 import { httpPost } from '../../core/Services/http';
 import Script from '../../utils/Script';
 import type { FastlaneWindowInstance, FastlaneProfile, FastlaneShipping } from './types';
+import FastlaneSDK from './FastlaneSDK';
 
 const fastlaneMock = mockDeep<FastlaneWindowInstance>();
-const fastlaneConstructorMock = jest.fn().mockResolvedValue(fastlaneMock);
+let fastlaneConstructorMock = null;
 
 const mockScriptLoaded = jest.fn().mockImplementation(() => {
     window.paypal = {};
@@ -31,6 +32,27 @@ const httpPostMock = (httpPost as jest.Mock).mockResolvedValue({
 describe('FastlaneSDK', () => {
     beforeEach(() => {
         mockReset(fastlaneMock);
+
+        fastlaneConstructorMock = jest.fn().mockResolvedValue(fastlaneMock);
+        fastlaneMock.identity.getSession.mockResolvedValue({
+            sessionId: 'fastlane-session-id'
+        });
+    });
+
+    test('should force consent details to be returned if "forceConsentDetails" is used', async () => {
+        await initializeFastlane({
+            clientKey: 'test_xxx',
+            environment: 'test',
+            forceConsentDetails: true
+        });
+
+        expect(fastlaneConstructorMock).toHaveBeenCalledTimes(1);
+        expect(fastlaneConstructorMock).toHaveBeenCalledWith({
+            intendedExperience: 'externalProcessorCustomConsent',
+            metadata: {
+                geoLocOverride: 'US'
+            }
+        });
     });
 
     test('should initialize the Fastlane SDK', async () => {
@@ -40,8 +62,11 @@ describe('FastlaneSDK', () => {
         });
 
         expect(fastlaneConstructorMock).toHaveBeenCalledTimes(1);
-        expect(fastlaneConstructorMock).toHaveBeenCalledWith({});
+        expect(fastlaneConstructorMock).toHaveBeenCalledWith({
+            intendedExperience: 'externalProcessorCustomConsent'
+        });
         expect(fastlaneMock.setLocale).toHaveBeenCalledWith('en_us');
+        expect(fastlaneMock.identity.getSession).toHaveBeenCalledTimes(1);
         expect(httpPostMock).toHaveBeenCalledWith({
             loadingContext: 'https://checkoutshopper-test.adyen.com/checkoutshopper/',
             path: 'utility/v1/payPalFastlane/tokens?clientKey=test_xxx',
@@ -165,25 +190,54 @@ describe('FastlaneSDK', () => {
                 }
             })
         });
+        fastlaneMock.identity.getSession.mockResolvedValue({
+            sessionId: 'fastlane-session-id'
+        });
 
         const fastlane = await initializeFastlane({
             clientKey: 'test_xxx',
             environment: 'test'
         });
         const authResult = await fastlane.authenticate('test@adyen.com');
-        const config = fastlane.getComponentConfiguration(authResult);
+        const config = await fastlane.getComponentConfiguration(authResult);
 
         expect(config).toStrictEqual({
             paymentType: 'fastlane',
             configuration: {
                 brand: 'visa',
-                customerId: 'customer-context-id',
+                customerId: customerContextId,
                 email: 'test@adyen.com',
                 lastFour: '1111',
-                fastlaneSessionId: 'xxxx-yyyy',
+                fastlaneSessionId: 'fastlane-session-id',
                 tokenId: 'xxxx'
             }
         });
+    });
+
+    test('should throw an error if fastlane profile does not have a card assigned to it', async () => {
+        const customerContextId = 'customer-context-id';
+        fastlaneMock.identity.lookupCustomerByEmail.mockResolvedValue({
+            customerContextId
+        });
+        fastlaneMock.identity.triggerAuthenticationFlow.mockResolvedValue({
+            authenticationState: 'succeeded',
+            profileData: mock<FastlaneProfile>({
+                card: undefined
+            })
+        });
+        fastlaneMock.identity.getSession.mockResolvedValue({
+            sessionId: 'fastlane-session-id'
+        });
+
+        const fastlane = await initializeFastlane({
+            clientKey: 'test_xxx',
+            environment: 'test'
+        });
+        const authResult = await fastlane.authenticate('test@adyen.com');
+
+        await expect(fastlane.getComponentConfiguration(authResult)).rejects.toThrow(
+            'getComponentConfiguration(): There is no card associated with the authenticated profile'
+        );
     });
 
     test('should return card component configuration if shopper does not have profile', async () => {
@@ -195,27 +249,113 @@ describe('FastlaneSDK', () => {
             authenticationState: 'not_found',
             profileData: undefined
         });
+        fastlaneMock.identity.getSession.mockResolvedValue({
+            sessionId: 'fastlane-session-id'
+        });
+        fastlaneMock.ConsentComponent.mockResolvedValue({
+            getRenderState: jest.fn().mockResolvedValue({
+                showConsent: true,
+                defaultToggleState: true,
+                termsAndConditionsLink: 'https://fastlane.com/terms',
+                termsAndConditionsVersion: 'v1',
+                privacyPolicyLink: 'https://fastlane.com/privacy'
+            })
+        });
 
         const fastlane = await initializeFastlane({
             clientKey: 'test_xxx',
             environment: 'test'
         });
-        const authResult = await fastlane.authenticate('test@adyen.com');
-        const config = fastlane.getComponentConfiguration(authResult);
 
+        const authResult = await fastlane.authenticate('test@adyen.com');
+        const config = await fastlane.getComponentConfiguration(authResult);
+
+        expect(fastlaneMock.ConsentComponent).toHaveBeenCalledTimes(1);
         expect(config).toStrictEqual({
             paymentType: 'card',
             configuration: {
                 fastlaneConfiguration: {
                     defaultToggleState: true,
-                    fastlaneSessionId: 'xxxx-yyyy',
-                    privacyPolicyLink: 'https://...',
                     showConsent: true,
-                    termsAndConditionsLink: 'https://...',
+                    fastlaneSessionId: 'fastlane-session-id',
+                    privacyPolicyLink: 'https://fastlane.com/privacy',
+                    termsAndConditionsLink: 'https://fastlane.com/terms',
                     termsAndConditionsVersion: 'v1'
                 }
             }
         });
+    });
+
+    test('should return card component configuration with undefined consent values if showConsent is false', async () => {
+        const customerContextId = 'customer-context-id';
+        fastlaneMock.identity.lookupCustomerByEmail.mockResolvedValue({
+            customerContextId
+        });
+        fastlaneMock.identity.triggerAuthenticationFlow.mockResolvedValue({
+            authenticationState: 'not_found',
+            profileData: undefined
+        });
+        fastlaneMock.identity.getSession.mockResolvedValue({
+            sessionId: 'fastlane-session-id'
+        });
+        fastlaneMock.ConsentComponent.mockResolvedValue({
+            getRenderState: jest.fn().mockResolvedValue({
+                showConsent: false,
+                defaultToggleState: undefined,
+                termsAndConditionsLink: undefined,
+                termsAndConditionsVersion: undefined,
+                privacyPolicyLink: undefined
+            })
+        });
+
+        const fastlane = await initializeFastlane({
+            clientKey: 'test_xxx',
+            environment: 'test'
+        });
+
+        const authResult = await fastlane.authenticate('test@adyen.com');
+        const config = await fastlane.getComponentConfiguration(authResult);
+
+        expect(fastlaneMock.ConsentComponent).toHaveBeenCalledTimes(1);
+        expect(config).toStrictEqual({
+            paymentType: 'card',
+            configuration: {
+                fastlaneConfiguration: {
+                    showConsent: false,
+                    fastlaneSessionId: 'fastlane-session-id',
+                    defaultToggleState: undefined,
+                    privacyPolicyLink: undefined,
+                    termsAndConditionsLink: undefined,
+                    termsAndConditionsVersion: undefined
+                }
+            }
+        });
+    });
+
+    test('should throw an error if it fails to get the consent details for the unrecognized shopper', async () => {
+        const customerContextId = 'customer-context-id';
+        fastlaneMock.identity.lookupCustomerByEmail.mockResolvedValue({
+            customerContextId
+        });
+        fastlaneMock.identity.triggerAuthenticationFlow.mockResolvedValue({
+            authenticationState: 'not_found',
+            profileData: undefined
+        });
+        fastlaneMock.identity.getSession.mockResolvedValue({
+            sessionId: 'fastlane-session-id'
+        });
+        fastlaneMock.ConsentComponent.mockResolvedValue({
+            getRenderState: jest.fn().mockRejectedValue({})
+        });
+
+        const fastlane = await initializeFastlane({
+            clientKey: 'test_xxx',
+            environment: 'test'
+        });
+
+        const authResult = await fastlane.authenticate('test@adyen.com');
+
+        await expect(fastlane.getComponentConfiguration(authResult)).rejects.toThrow('fetchConsentDetails(): failed to fetch consent details');
     });
 
     test('should thrown an error if there is no auth result to create the component configuration', async () => {
@@ -225,6 +365,49 @@ describe('FastlaneSDK', () => {
         });
 
         // @ts-ignore It is expected to omit the parameter here
-        expect(() => fastlane.getComponentConfiguration()).toThrowError();
+        await expect(fastlane.getComponentConfiguration()).rejects.toThrowError();
+    });
+
+    test('should throw error if environment and clientKey are not passed when initializing it', async () => {
+        // @ts-ignore Testing not passing the parameters
+        await expect(initializeFastlane()).rejects.toThrowError("FastlaneSDK: 'environment' property is required");
+
+        // @ts-ignore Testing not passing the parameters
+        await expect(initializeFastlane({ environment: 'test' })).rejects.toThrowError("FastlaneSDK: 'clientKey' property is required");
+    });
+
+    test('should warn if "forceConsentDetails" is set in a "live" environment', async () => {
+        const mock = jest.spyOn(console, 'warn').mockImplementation();
+        await initializeFastlane({
+            clientKey: 'test_xxx',
+            environment: 'live',
+            forceConsentDetails: true
+        });
+
+        expect(mock).toHaveBeenLastCalledWith("Fastlane SDK: 'forceConsentDetails' should not be used on 'live' environment");
+    });
+
+    test('should warn if fetching the Fastlane session ID fails', async () => {
+        const mock = jest.spyOn(console, 'warn').mockImplementation();
+        fastlaneMock.identity.getSession.mockRejectedValue({});
+
+        await initializeFastlane({
+            clientKey: 'test_xxx',
+            environment: 'test'
+        });
+
+        expect(mock).toHaveBeenLastCalledWith('Fastlane SDK: Failed to fetch session ID', {});
+    });
+
+    test('should throw error if Fastlane does not get created', async () => {
+        fastlaneConstructorMock = jest.fn().mockRejectedValue({});
+        await expect(initializeFastlane({ clientKey: 'test_xxx', environment: 'test' })).rejects.toThrowError(
+            'Fastlane SDK: Failed to initialize fastlane using the window.paypal.Fastlane constructor'
+        );
+    });
+
+    test('should throw error if authentication is triggered without Fastlane being available', async () => {
+        const fastlaneSdk = new FastlaneSDK({ environment: 'test', clientKey: 'test' });
+        await expect(fastlaneSdk.authenticate('test@adyen.com')).rejects.toThrowError('authenticate(): Fastlane SDK is not initialized');
     });
 });

@@ -18,7 +18,7 @@ class Fastlane extends UIElement<FastlaneConfiguration> {
                 type: Fastlane.type,
                 fastlaneData: btoa(
                     JSON.stringify({
-                        sessionId: this.props.fastlaneSessionId,
+                        fastlaneSessionId: this.props.fastlaneSessionId,
                         tokenId: this.props.tokenId,
                         customerId: this.props.customerId
                     })
@@ -28,8 +28,8 @@ class Fastlane extends UIElement<FastlaneConfiguration> {
     }
 
     public override async isAvailable(): Promise<void> {
-        const { tokenId, customerId, lastFour, brand, email, fastlaneSessionId } = this.props;
-        if (tokenId && customerId && lastFour && brand && email && fastlaneSessionId) {
+        const { tokenId, customerId, lastFour, brand, email } = this.props;
+        if (tokenId && customerId && lastFour && brand && email) {
             return Promise.resolve();
         }
         return Promise.reject();
@@ -39,10 +39,16 @@ class Fastlane extends UIElement<FastlaneConfiguration> {
         return true;
     }
 
+    /**
+     * Used to display payment method logo within Drop-in
+     */
     public override get icon(): string {
         return this.props.icon ?? this.resources.getImage()('card');
     }
 
+    /**
+     * Used to display the payment method supported brands within Drop-in
+     */
     public get brands(): { icon: string; name: string }[] {
         const { brands } = this.props;
         return brands.map(brand => ({ icon: this.props.modules.resources.getImage()(brand), name: brand }));

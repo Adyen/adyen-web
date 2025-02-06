@@ -31,7 +31,10 @@ export const CollectEmail = ({ fastlaneSdk, onFastlaneLookup, onEditEmail }: Col
         try {
             const authResult = await fastlaneSdk.authenticate(email);
             onFastlaneLookup(authResult);
-            setViewOnly(true);
+
+            if (authResult.authenticationState === 'succeeded') {
+                setViewOnly(true);
+            }
         } catch (error) {
             console.log(error);
         }

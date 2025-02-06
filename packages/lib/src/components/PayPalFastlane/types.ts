@@ -13,18 +13,34 @@ export interface FastlaneWindowInstance {
     identity: {
         lookupCustomerByEmail: (email: string) => Promise<{ customerContextId: string }>;
         triggerAuthenticationFlow: (customerContextId: string, options?: AuthenticationFlowOptions) => Promise<FastlaneAuthenticatedCustomerResult>;
+        getSession: () => Promise<{ sessionId: string }>;
     };
     profile: {
         showShippingAddressSelector: () => Promise<FastlaneShippingAddressSelectorResult>;
     };
     setLocale: (locale: string) => void;
+    ConsentComponent: () => Promise<{
+        getRenderState: () => Promise<FastlaneConsentRenderState>;
+    }>;
     FastlaneWatermarkComponent: (options: { includeAdditionalInfo: boolean }) => Promise<{
         render: (container) => null;
     }>;
 }
 
-// TODO: TBD if this is needed
-export interface FastlaneOptions {}
+export interface FastlaneConsentRenderState {
+    showConsent: boolean;
+    defaultToggleState?: boolean;
+    termsAndConditionsLink?: string;
+    termsAndConditionsVersion?: string;
+    privacyPolicyLink?: string;
+}
+
+export interface FastlaneOptions {
+    intendedExperience: 'externalProcessorCustomConsent';
+    metadata?: {
+        geoLocOverride?: string;
+    };
+}
 
 // TODO: TBD if this is needed
 interface AuthenticationFlowOptions {}
@@ -45,10 +61,17 @@ export interface FastlaneShippingAddressSelectorResult {
     selectedAddress: FastlaneShipping;
 }
 
-export interface FastlaneAuthenticatedCustomerResult {
-    authenticationState: 'succeeded' | 'failed' | 'canceled' | 'not_found';
+interface FastlaneAuthenticatedCustomerSucceeded {
+    authenticationState: 'succeeded';
     profileData: FastlaneProfile;
 }
+
+interface FastlaneAuthenticatedCustomerFailed {
+    authenticationState: 'failed' | 'canceled' | 'not_found';
+    profileData?: undefined;
+}
+
+export type FastlaneAuthenticatedCustomerResult = FastlaneAuthenticatedCustomerSucceeded | FastlaneAuthenticatedCustomerFailed;
 
 export interface FastlaneAddress {
     addressLine1: string;
@@ -83,7 +106,7 @@ export interface FastlaneProfile {
         fullName: string;
     };
     shippingAddress: FastlaneShipping;
-    card: {
+    card?: {
         id: string;
         paymentSource: {
             card: CardPaymentSource;
@@ -110,12 +133,7 @@ type FastlaneCardComponentConfiguration = {
     };
 };
 
-export type FastlaneSignupConfiguration = {
-    showConsent: boolean;
-    defaultToggleState: boolean;
-    termsAndConditionsLink: string;
-    privacyPolicyLink: string;
-    termsAndConditionsVersion: string;
+export type FastlaneSignupConfiguration = FastlaneConsentRenderState & {
     fastlaneSessionId: string;
 };
 
@@ -125,30 +143,48 @@ export interface FastlaneSDKConfiguration {
     clientKey: string;
     environment: CoreConfiguration['environment'];
     locale?: 'en-US' | 'es-US' | 'fr-RS' | 'zh-US';
+    /**
+     * Used to force the Fastlane SDK to return the consent details in case the shopper is not recognized.
+     * Use-case: Developer is testing the flow in another country outside US, which would not get consent details.
+     *
+     * This configuration should not be used for 'live' environment
+     */
+    forceConsentDetails?: boolean;
 }
 
 export interface FastlaneConfiguration extends UIElementProps {
+    /**
+     * Card token ID, used to process the payment
+     */
     tokenId: string;
-    customerId: string;
-    lastFour: string;
-    brand: string;
-    email: string;
+    /**
+     * Fastlane session ID
+     */
     fastlaneSessionId: string;
     /**
-     * Display the brand images inside the Drop-in payment method header
+     * Customer ID used to process the payment
+     */
+    customerId: string;
+    /**
+     * Initial last four digits displayed once the Component is rendered
+     */
+    lastFour: string;
+    /**
+     * Initial brand displayed once the Component is rendered
+     */
+    brand: string;
+    /**
+     * Shopper's email (it will be used in the future to re-authenticate using Fastlane SDK within the Component)
+     */
+    email: string;
+    /**
+     * Used internally by Drop-in. Displays the brand images inside the Drop-in payment method header
      * @internal
      */
     keepBrandsVisible?: boolean;
     /**
-     * List of brands accepted by the component
+     * Property returned by the backend. Contains the list of brands supported by Fastlane component
      * @internal
      */
     brands?: string[];
-    /**
-     * Configuration returned by the backend
-     * @internal
-     */
-    configuration?: {
-        brands: string[];
-    };
 }

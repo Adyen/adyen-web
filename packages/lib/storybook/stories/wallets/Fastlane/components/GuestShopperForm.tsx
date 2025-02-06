@@ -20,8 +20,10 @@ export const GuestShopperForm = ({ onCheckoutStep }: GuestShopperFormProps) => {
 
     const loadFastlane = async () => {
         const sdk = await initializeFastlane({
-            clientKey: 'test_JC3ZFTA6WFCCRN454MVDEYOWEI5D3LT2', // Joost clientkey
-            environment: 'test'
+            // clientKey: 'test_JC3ZFTA6WFCCRN454MVDEYOWEI5D3LT2', // Joost clientkey
+            clientKey: process.env.CLIENT_KEY,
+            environment: 'test',
+            forceConsentDetails: true
         });
         setFastlane(sdk);
     };
@@ -34,16 +36,19 @@ export const GuestShopperForm = ({ onCheckoutStep }: GuestShopperFormProps) => {
         setFastlaneAuthResult(data);
     };
 
-    const handleOnCheckoutClick = (shippingAddress?: any) => {
+    const handleOnCheckoutClick = async (shippingAddress?: any) => {
         console.log('Shipping address', shippingAddress);
-        const componentConfig = fastlane.getComponentConfiguration(fastlaneAuthResult);
-        onCheckoutStep(componentConfig);
+        try {
+            const componentConfig = await fastlane.getComponentConfiguration(fastlaneAuthResult);
+            onCheckoutStep(componentConfig);
+        } catch (error) {
+            console.warn(error);
+            onCheckoutStep({});
+        }
     };
 
     useEffect(() => {
-        void loadFastlane().catch(() => {
-            alert('Failed to initialize: Fetch the token using Postman');
-        });
+        void loadFastlane();
     }, []);
 
     if (!fastlane) {

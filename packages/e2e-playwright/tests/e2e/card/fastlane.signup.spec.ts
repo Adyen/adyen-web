@@ -142,11 +142,11 @@ test.describe('Card - Fastlane Sign up', () => {
                     componentConfig: {
                         fastlaneConfiguration: {
                             showConsent: false,
-                            defaultToggleState: false,
-                            termsAndConditionsLink: 'https://adyen.com',
-                            privacyPolicyLink: 'https://adyen.com',
-                            termsAndConditionsVersion: 'v1',
-                            fastlaneSessionId: 'ABC-123'
+                            fastlaneSessionId: 'ABC-123',
+                            defaultToggleState: undefined,
+                            termsAndConditionsLink: undefined,
+                            privacyPolicyLink: undefined,
+                            termsAndConditionsVersion: undefined
                         }
                     }
                 })
@@ -167,7 +167,6 @@ test.describe('Card - Fastlane Sign up', () => {
             expect(JSON.parse(atob(paymentMethod.fastlaneData))).toEqual({
                 consentShown: false,
                 consentGiven: false,
-                consentVersion: 'v1',
                 fastlaneSessionId: 'ABC-123'
             });
 
