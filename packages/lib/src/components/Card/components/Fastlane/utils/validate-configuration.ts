@@ -15,7 +15,7 @@ const VALID_KEYS: ConfigurationKey[] = [
 /**
  * Verifies that Fastlane configuration for Card component is valid
  * - If the consent can be shown, then validate that all required fields are valid
- * - If the consent should not be shown, then validate that the fastlaneSessionId is valid
+ * - If the consent should not be shown, then validate the showConsent is valid boolean
  *
  * @param config
  */
@@ -25,7 +25,7 @@ const isConfigurationValid = (config: FastlaneSignupConfiguration): boolean => {
             !VALID_KEYS.includes(key) && console.warn(`Fastlane: '${key}' is not valid Fastlane config property`)
     );
 
-    const { showConsent, defaultToggleState, termsAndConditionsLink, privacyPolicyLink, termsAndConditionsVersion, fastlaneSessionId } = config;
+    const { showConsent, defaultToggleState, termsAndConditionsLink, privacyPolicyLink, termsAndConditionsVersion } = config;
 
     let isValid: boolean = false;
 
@@ -35,15 +35,15 @@ const isConfigurationValid = (config: FastlaneSignupConfiguration): boolean => {
             isValidHttpUrl(termsAndConditionsLink) &&
             typeof showConsent === 'boolean' &&
             typeof defaultToggleState === 'boolean' &&
-            !!termsAndConditionsVersion &&
-            !!fastlaneSessionId;
+            !!termsAndConditionsVersion;
     } else {
-        isValid = !!fastlaneSessionId && typeof showConsent === 'boolean';
+        isValid = typeof showConsent === 'boolean';
     }
 
     if (!isValid) {
         console.warn('Fastlane: Component configuration is not valid. Fastlane will not be displayed');
     }
+
     return isValid;
 };
 

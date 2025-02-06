@@ -61,10 +61,17 @@ export interface FastlaneShippingAddressSelectorResult {
     selectedAddress: FastlaneShipping;
 }
 
-export interface FastlaneAuthenticatedCustomerResult {
-    authenticationState: 'succeeded' | 'failed' | 'canceled' | 'not_found';
+interface FastlaneAuthenticatedCustomerSucceeded {
+    authenticationState: 'succeeded';
     profileData: FastlaneProfile;
 }
+
+interface FastlaneAuthenticatedCustomerFailed {
+    authenticationState: 'failed' | 'canceled' | 'not_found';
+    profileData?: undefined;
+}
+
+export type FastlaneAuthenticatedCustomerResult = FastlaneAuthenticatedCustomerSucceeded | FastlaneAuthenticatedCustomerFailed;
 
 export interface FastlaneAddress {
     addressLine1: string;
@@ -99,7 +106,7 @@ export interface FastlaneProfile {
         fullName: string;
     };
     shippingAddress: FastlaneShipping;
-    card: {
+    card?: {
         id: string;
         paymentSource: {
             card: CardPaymentSource;
@@ -151,7 +158,7 @@ export interface FastlaneConfiguration extends UIElementProps {
      */
     tokenId: string;
     /**
-     * Fastlane session ID, used to process the payment
+     * Fastlane session ID
      */
     fastlaneSessionId: string;
     /**

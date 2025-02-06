@@ -50,6 +50,9 @@ const FastlaneSignup = ({
 
     /**
      * If the configuration is valid, the Component propagates fastlaneData to the Card component state
+     *
+     * 'telephoneNumber' is optional since the shopper can check out without passing it
+     * 'termsAndConditionsVersion' is optional since the signup flow may not be available for the shopper, although we still add fastlaneData to the /payments request for analytics purposes
      */
     useEffect(() => {
         if (!isFastlaneConfigurationValid) {

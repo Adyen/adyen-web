@@ -36,6 +36,7 @@ describe('Fastlane', () => {
         });
         await expect(fastlane.isAvailable()).rejects.toBeUndefined();
 
+        // fastlaneSessionId is mandatory, although it can be that SDK fails to return it. It must not block the payment in this case
         // @ts-ignore Testing with incomplete config properties
         fastlane = new Fastlane(global.core, {
             tokenId: 'xxx',
@@ -44,7 +45,7 @@ describe('Fastlane', () => {
             brand: 'visa',
             email: 'shopper@adyen.com'
         });
-        await expect(fastlane.isAvailable()).rejects.toBeUndefined();
+        await expect(fastlane.isAvailable()).resolves.toBeUndefined();
 
         fastlane = new Fastlane(global.core, {
             tokenId: 'xxx',

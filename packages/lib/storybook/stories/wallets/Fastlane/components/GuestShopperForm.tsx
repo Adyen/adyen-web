@@ -38,8 +38,13 @@ export const GuestShopperForm = ({ onCheckoutStep }: GuestShopperFormProps) => {
 
     const handleOnCheckoutClick = async (shippingAddress?: any) => {
         console.log('Shipping address', shippingAddress);
-        const componentConfig = await fastlane.getComponentConfiguration(fastlaneAuthResult);
-        onCheckoutStep(componentConfig);
+        try {
+            const componentConfig = await fastlane.getComponentConfiguration(fastlaneAuthResult);
+            onCheckoutStep(componentConfig);
+        } catch (error) {
+            console.warn(error);
+            onCheckoutStep({});
+        }
     };
 
     useEffect(() => {

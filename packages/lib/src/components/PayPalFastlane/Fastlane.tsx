@@ -28,8 +28,8 @@ class Fastlane extends UIElement<FastlaneConfiguration> {
     }
 
     public override async isAvailable(): Promise<void> {
-        const { tokenId, customerId, lastFour, brand, email, fastlaneSessionId } = this.props;
-        if (tokenId && customerId && lastFour && brand && email && fastlaneSessionId) {
+        const { tokenId, customerId, lastFour, brand, email } = this.props;
+        if (tokenId && customerId && lastFour && brand && email) {
             return Promise.resolve();
         }
         return Promise.reject();
