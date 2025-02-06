@@ -20,6 +20,7 @@ export const THREEDS2_CHALLENGE_PASSWORD = 'password';
 export const MULTI_LUHN_MAESTRO = '6771830999991239343'; // maestro that passes luhn check at 16, 18 & 19 digits
 
 export const UNKNOWN_BIN_CARD = '135410014004955'; // card that is not in the test DBs (uatp)
+export const UNKNOWN_BIN_CARD_REGEX_VISA = '435410014004955'; // card that is not in the test DBs but which our regEx will recognise as Visa
 export const UNKNOWN_VISA_CARD = '41111111'; // card is now in the test DBs (visa) - so keep it short to stop it firing binLookup
 
 export const PLCC_NO_LUHN_NO_DATE = '6044100018023838'; // binLookup gives luhn check and date not required
