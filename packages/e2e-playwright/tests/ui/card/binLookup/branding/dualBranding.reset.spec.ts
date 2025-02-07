@@ -24,7 +24,7 @@ test.describe('Card - Testing resetting after binLookup has given a dual brand r
 
             let [firstBrand, secondBrand] = await card.brands;
 
-            //2 brand icons, in correct order
+            // 2 brand icons, in correct order
             expect(firstBrand).toHaveAttribute('data-value', 'bcmc');
             expect(secondBrand).toHaveAttribute('data-value', 'maestro');
 
@@ -34,7 +34,7 @@ test.describe('Card - Testing resetting after binLookup has given a dual brand r
 
             [firstBrand, secondBrand] = await card.brands;
 
-            // Now only a single brand
+            // Now only a single, generic, brand
             let brandingIconSrc = await firstBrand.getAttribute('src');
             expect(brandingIconSrc).toContain('nocard.svg');
 
