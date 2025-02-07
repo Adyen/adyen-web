@@ -207,6 +207,12 @@ class Core implements ICore {
             .then(sanitizeResponse)
             .then(verifyPaymentDidNotFail)
             .then((response: PaymentResponseData) => {
+                // We don't handle action except for paybybank_pix (currently only used by PBL).
+                // onAction callback needs to be added by PBL so that the action element can be mounted.
+                if (this.options.onAction && response?.action) {
+                    const actionEle = this.createFromAction(response.action);
+                    return this.options.onAction(actionEle);
+                }
                 cleanupFinalResult(response);
                 this.options.onPaymentCompleted?.(response);
             })

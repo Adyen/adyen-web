@@ -26,12 +26,12 @@ export interface PayByBankPixConfiguration extends UIElementProps {
      */
     type?: 'await' | 'redirect';
     url?: string;
+    statusCheckUrl?: string;
     /**
      * Await component
      * @internal
      */
     paymentData?: string;
-    timeoutMinutes?: number;
     /** Issuer component
      * @internal
      */

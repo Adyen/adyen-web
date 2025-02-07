@@ -76,14 +76,18 @@ function Await(props: AwaitComponentProps) {
     };
 
     const checkStatus = (): void => {
-        const { paymentData, clientKey, throttleInterval } = props;
+        const { paymentData, clientKey, throttleInterval, pollStatus } = props;
+
+        // If there's a custom pollStatus function, call it.
+        // Otherwise, call the default one.
+        const pollStatusFunction = pollStatus ?? (() => checkPaymentStatus(paymentData, clientKey, loadingContext, throttleInterval));
 
         if (!hasCalledActionHandled) {
             props.onActionHandled?.({ componentType: props.type, actionDescription: 'polling-started' });
             setHasCalledActionHandled(true);
         }
 
-        void checkPaymentStatus(paymentData, clientKey, loadingContext, throttleInterval)
+        void pollStatusFunction()
             .then(processResponse)
             .catch(({ message, ...response }) => ({
                 type: 'network-error',

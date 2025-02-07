@@ -4,6 +4,7 @@ import ThreeDS2DeviceFingerprint from '../components/ThreeDS2/ThreeDS2DeviceFing
 import Redirect from '../components/Redirect';
 import { TxVariants } from '../components/tx-variants';
 import type { ICore } from './types';
+import PayByBankPixElement from '../components/PayByBankPix';
 
 function assertClassHasType(Class: any): Class is typeof UIElement {
     const hasValidType = typeof Class.type === 'string' && !!Class.type;
@@ -20,7 +21,8 @@ export interface IRegistry {
 const defaultComponents = {
     [TxVariants.redirect]: Redirect,
     [TxVariants.threeDS2Challenge]: ThreeDS2Challenge,
-    [TxVariants.threeDS2DeviceFingerprint]: ThreeDS2DeviceFingerprint
+    [TxVariants.threeDS2DeviceFingerprint]: ThreeDS2DeviceFingerprint,
+    [TxVariants.paybybank_pix]: PayByBankPixElement
 };
 
 class Registry implements IRegistry {

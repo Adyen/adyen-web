@@ -11,13 +11,14 @@ function PayByBankPix({
     showPayButton,
     paymentMethodType,
     url,
-    timeoutMinutes,
+    countdownTime,
     storedPaymentMethodId,
     onChange,
     setComponentRef,
     payButton,
     onSubmitAnalytics,
-    txVariant
+    txVariant,
+    ...rest
 }: PayByBankPixProps) {
     const enrollmentRef = useRef<IEnrollment>();
     const shouldEnroll = storedPaymentMethodId == null;
@@ -34,7 +35,7 @@ function PayByBankPix({
     return shouldEnroll ? (
         <Enrollment
             txVariant={txVariant}
-            timeoutMinutes={timeoutMinutes}
+            countdownTime={countdownTime}
             type={type}
             showPayButton={showPayButton}
             issuers={issuers}
@@ -45,6 +46,7 @@ function PayByBankPix({
             onChange={onChange}
             payButton={payButton}
             ref={enrollmentRef}
+            {...rest}
         ></Enrollment>
     ) : (
         // @ts-ignore  // todo: filter out non matching device id stored pm

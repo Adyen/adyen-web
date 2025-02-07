@@ -256,6 +256,9 @@ export interface CoreConfiguration {
      */
     onAdditionalDetails?(state: AdditionalDetailsData, component: UIElement, actions: AdditionalDetailsActions): void;
 
+    // todo: better typing handle the action paybybank_pix on hosted component
+    onAction?(actionElement: UIElement): void;
+
     /**
      * Callback called when an action (for example a QR code or 3D Secure 2 authentication screen) is shown to the shopper.
      *

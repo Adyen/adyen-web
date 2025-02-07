@@ -1,28 +1,30 @@
-import { h, RefObject } from 'preact';
+import { h } from 'preact';
 import { PayButtonFunctionProps } from '../../../internal/UIElement/types';
 import { IssuerItem } from '../../../internal/IssuerList/types';
-import Enrollment from './Enrollment';
 import { OnChangeData } from '../../../../core/types';
 
-export interface EnrollmentProps {
-    txVariant: string;
-    type?: 'await' | 'redirect';
-    /**
-     * For await component
-     */
-    url?: string;
-    paymentMethodType?: string;
-    timeoutMinutes?: number;
-    /**
-     * For Issuer list
-     */
-    issuers: IssuerItem[];
-    clientKey?: string;
+interface BaseEnrollmentProps {
     showPayButton: boolean;
     payButton(props: PayButtonFunctionProps): h.JSX.Element;
     onSubmitAnalytics: () => {};
     onChange?(payload: OnChangeData): void;
 }
+
+export interface AwaitProps extends BaseEnrollmentProps {
+    type: 'await';
+    clientKey: string;
+    enrollmentId: string;
+    paymentMethodType?: string;
+    countdownTime?: number;
+}
+
+export interface IssuerListProps extends BaseEnrollmentProps {
+    type: Exclude<string, 'await'>;
+    txVariant: string;
+    issuers: IssuerItem[];
+}
+
+export type EnrollmentProps = AwaitProps | IssuerListProps;
 
 export interface IEnrollment {
     showValidation: () => {};

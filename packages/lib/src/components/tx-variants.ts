@@ -116,6 +116,7 @@ export enum TxVariants {
     vipps = 'vipps',
     trustly = 'trustly',
     paybybank_AIS_DD = 'paybybank_AIS_DD',
+    paybybank_pix = 'paybybank_pix',
     /** Redirect */
 
     /** Klarna */
@@ -129,7 +130,6 @@ export enum TxVariants {
     bcmc_mobile = 'bcmc_mobile',
     bcmc_mobile_QR = 'bcmc_mobile_QR',
     pix = 'pix',
-    paybybank_pix = 'paybybank_pix',
     swish = 'swish',
     wechatpay = 'wechatpay',
     wechatpayQR = 'wechatpayQR',

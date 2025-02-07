@@ -1,5 +1,5 @@
 import { UIElementProps } from '../UIElement/types';
-import { ActionHandledReturnObject } from '../../../types/global-types';
+import { ActionHandledReturnObject, PaymentResponseData } from '../../../types/global-types';
 
 interface StatusObjectProps {
     payload: string;
@@ -20,7 +20,7 @@ export interface AwaitComponentProps {
     showCountdownTimer: boolean;
     shouldRedirectAutomatically?: boolean;
     throttleInterval: number;
-    paymentData: string;
+    paymentData?: string;
     url?: string;
     classNameModifiers?: string[];
     clientKey: string;
@@ -31,6 +31,7 @@ export interface AwaitComponentProps {
     awaitText: string;
     ref?: any;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
+    pollStatus?: () => Promise<PaymentResponseData>;
 }
 
 export interface AwaitConfiguration extends UIElementProps {

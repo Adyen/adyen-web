@@ -9,6 +9,7 @@ import PasskeyService from './services/PasskeyService';
 import RedirectButton from '../internal/RedirectButton';
 import PayByBankPix from './components/PayByBankPix';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import { SendAnalyticsObject } from '../../core/Analytics/types';
 
 class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
     private passkeyService: PasskeyService;
@@ -17,9 +18,22 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
     private static TIMEOUT_MINUTES = 1;
 
     public static defaultProps: PayByBankPixConfiguration = {
+        beforeRedirect: undefined,
+        beforeSubmit: undefined,
+        onActionHandled: undefined,
+        onAdditionalDetails: undefined,
+        onChange: undefined,
+        onEnterKeyPressed: undefined,
+        onError: undefined,
+        onOrderUpdated: undefined,
+        onPaymentCompleted: undefined,
+        onPaymentFailed: undefined,
+        onPaymentMethodsRequest: undefined,
+        onSubmit: undefined,
+        onSubmitAnalytics(aObj: SendAnalyticsObject): void {},
         issuers: [{ id: 'issuerId_123', name: 'issuer 123' }],
         _isNativeFlow: window.location.hostname.endsWith('.adyen.com') || window.location.hostname.endsWith('localhost'),
-        timeoutMinutes: PayByBankPixElement.TIMEOUT_MINUTES
+        countdownTime: PayByBankPixElement.TIMEOUT_MINUTES
     };
 
     constructor(checkout: ICore, props: PayByBankPixConfiguration) {
@@ -57,7 +71,13 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         // on the hosted checkout page, we reuse the same id and riskSignals. We get them from the query params, and pass them through to the second /payments call
         const issuer = this.state.data?.issuer ? { issuer: this.state.data?.issuer } : {};
         const subType = this.props._isNativeFlow ? 'embedded' : 'redirect';
-        return { paymentMethod: { type: TxVariants.paybybank_pix, subType, ...issuer } };
+        return {
+            paymentMethod: { type: TxVariants.paybybank_pix, subType, ...issuer },
+            // todo: remove this and put it in the payments call
+            returnUrl: this.props._isNativeFlow
+                ? 'https://localhost:3020/iframe.html?globals=&args=&id=components-paybybankpix--simulate-hosted-page&viewMode=story'
+                : 'https://localhost:3020/iframe.html?args=&globals=&id=components-paybybankpix--merchant-page&viewMode=story'
+        };
     }
 
     render() {

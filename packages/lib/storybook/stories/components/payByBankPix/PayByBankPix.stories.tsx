@@ -8,9 +8,11 @@ import SimulatedIssuer from './SimulatedIssuer';
 import {
     mockPaymentsResponseMerchantPage,
     mockPaymentsResponseSimulateHostedPage,
-    mockStatusResponseSimulateHostedPage,
+    mockPendingStatusSimulateHostedPage,
     mockSubmitDetailsResponseSimulateHostedPage
 } from './mocks';
+import { SimulatedHostedPage } from './SimulatedHostedPage';
+import { getSearchParameter } from '../../../utils/get-query-parameters';
 
 type PixBiometricStory = StoryConfiguration<PayByBankPixConfiguration>;
 
@@ -19,9 +21,12 @@ const meta: MetaConfiguration<PayByBankPixConfiguration> = {
 };
 
 const render = ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<PayByBankPixConfiguration>) => (
-    <Checkout checkoutConfig={checkoutConfig}>
-        {checkout => <ComponentContainer element={new PayByBankPix(checkout, componentConfiguration)} />}
-    </Checkout>
+    <>
+        <h1>Merchant page</h1>
+        <Checkout checkoutConfig={checkoutConfig}>
+            {checkout => <ComponentContainer element={new PayByBankPix(checkout, componentConfiguration)} />}
+        </Checkout>
+    </>
 );
 
 export const MerchantPage: PixBiometricStory = {
@@ -29,6 +34,7 @@ export const MerchantPage: PixBiometricStory = {
     args: {
         useSessions: false,
         countryCode: 'BR',
+        amount: 0,
         componentConfiguration: { _isNativeFlow: false, deviceId: 'xxx', riskSignals: { isRootedDevice: true } }
     },
     parameters: {
@@ -46,11 +52,12 @@ export const MerchantPage: PixBiometricStory = {
 };
 
 export const SimulateHostedPage: PixBiometricStory = {
-    render,
+    render: props => <SimulatedHostedPage {...props} />,
     args: {
         useSessions: false,
         countryCode: 'BR',
         amount: 0,
+        redirectResult: getSearchParameter('redirectResult'),
         componentConfiguration: {
             _isNativeFlow: true,
             onChange: data => {
@@ -64,9 +71,12 @@ export const SimulateHostedPage: PixBiometricStory = {
                 http.post('https://localhost:3020/payments', () => {
                     return HttpResponse.json(mockPaymentsResponseSimulateHostedPage);
                 }),
-                http.post('https://checkoutshopper-test.adyen.com/checkoutshopper/services/PaymentInitiation/v1/status', () => {
-                    return HttpResponse.json(mockStatusResponseSimulateHostedPage);
-                }),
+                http.get(
+                    'https://checkoutshopper-test.adyen.com/checkoutshopper/services/registration-option/enrollment123?clientKey=test_L6HTEOAXQBCZJHKNU4NLN6EI7IE6VRRW',
+                    () => {
+                        return HttpResponse.json(mockPendingStatusSimulateHostedPage);
+                    }
+                ),
                 http.post('/details', () => {
                     return HttpResponse.json(mockSubmitDetailsResponseSimulateHostedPage);
                 })

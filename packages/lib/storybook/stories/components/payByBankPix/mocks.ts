@@ -18,14 +18,12 @@ export const mockPaymentsResponseSimulateHostedPage = {
     resultCode: 'RedirectShopper'
 };
 // todo: add non pending status
-export const mockStatusResponseSimulateHostedPage = {
-    payload: '',
-    resultCode: 'pending',
-    type: 'pending'
+export const mockPendingStatusSimulateHostedPage = {
+    resultCode: 'pending'
 };
 
 export const mockSubmitDetailsResponseSimulateHostedPage = {
-    action: { paymentMethodType: 'paybybank_pix', type: 'await', enrollmentId: 'xxxxxx' }
+    action: { paymentMethodType: 'paybybank_pix', type: 'await', enrollmentId: 'enrollment123', paymentData: 'mockPaymentData' }
 };
 
 export const mockSubmitDetailsResponseMerchantPage = {};

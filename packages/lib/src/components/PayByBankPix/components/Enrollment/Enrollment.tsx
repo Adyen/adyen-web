@@ -1,63 +1,58 @@
 import { h } from 'preact';
 import { useRef } from 'preact/hooks';
-import { EnrollmentProps } from './types';
+import { AwaitProps, EnrollmentProps } from './types';
 import Await from '../../../internal/Await';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { IIssuerList } from '../../../internal/IssuerList/types';
 import IssuerList from '../../../internal/IssuerList';
 import { useIssuerWithLogo } from './useIssuerWithLogo';
+import getEnrollmentStatus from './getEnrollmentStatus';
 
-function Enrollment({
-    issuers,
-    type,
-    txVariant,
-    url,
-    clientKey,
-    timeoutMinutes,
-    paymentMethodType,
-    showPayButton,
-    payButton,
-    onChange
-}: EnrollmentProps) {
-    const { i18n } = useCoreContext();
-    const issuersWithLogo = useIssuerWithLogo({ issuers, txVariant });
+function Enrollment(props: EnrollmentProps) {
+    const { i18n, loadingContext } = useCoreContext();
     const issuerListRef = useRef<IIssuerList>();
 
-    const onComplete = (state): void => {
+    const onComplete = (): void => {
         // todo: collect biometrics and call internal endpoint
         // /details call with response of the internal endpoint
+    };
+    const pollStatus = () => {
+        const { enrollmentId, clientKey } = props as AwaitProps;
+        return getEnrollmentStatus({ enrollmentId, clientKey, loadingContext });
     };
 
     this.showValidation = () => {
         issuerListRef.current?.showValidation();
     };
 
+    const isAwait = (props: EnrollmentProps): props is AwaitProps => props.type === 'await';
+
+    // polling endpoint example
     return (
         //todo
         <div className={'adyen-checkout-pix-biometric'}>
-            {type === 'await' ? (
+            {isAwait(props) ? (
                 <Await
-                    url={url}
-                    type={paymentMethodType}
                     showCountdownTimer
-                    shouldRedirectAutomatically
-                    countdownTime={timeoutMinutes}
-                    clientKey={clientKey}
-                    paymentData={''}
+                    type={props.paymentMethodType}
+                    countdownTime={props.countdownTime}
+                    clientKey={props.clientKey}
+                    paymentData={'dummy'}
                     onActionHandled={() => {}}
                     onError={() => {}}
-                    messageText={i18n.get('upi.vpaWaitingMessage')}
+                    messageText={'Instruction message example'}
                     awaitText={i18n.get('await.waitForConfirmation')}
                     onComplete={onComplete}
-                    brandLogo={''}
+                    pollStatus={pollStatus}
+                    brandLogo={'https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/images/logos/pix.svg'}
                 ></Await>
             ) : (
                 <IssuerList
-                    items={issuersWithLogo}
+                    items={useIssuerWithLogo({ issuers: props.issuers, txVariant: props.txVariant })}
                     onSubmitAnalytics={() => {}}
-                    onChange={onChange}
-                    payButton={payButton}
-                    showPayButton={showPayButton}
+                    onChange={props.onChange}
+                    payButton={props.payButton}
+                    showPayButton={props.showPayButton}
                     ref={issuerListRef}
                 ></IssuerList>
             )}
