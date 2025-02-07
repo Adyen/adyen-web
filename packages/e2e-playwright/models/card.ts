@@ -127,6 +127,11 @@ class Card extends Base {
         return this.rootElement.locator('.adyen-checkout__card__brands').getByRole('img').all();
     }
 
+    // The holder for the icons in the CardNumber field (when dual branding occurs)
+    get dualBrandingIconsHolder() {
+        return this.rootElement.locator('.adyen-checkout__card__dual-branding__buttons');
+    }
+
     // The brands as displayed directly in the CardNumber field (when dual branding occurs)
     async waitForVisibleBrands(expectedNumber = 2) {
         return await this.page.waitForFunction(
@@ -145,9 +150,10 @@ class Card extends Base {
         text: string | RegExp,
         options?: {
             exact?: boolean;
-        }
+        },
+        force = false
     ) {
-        await this.cardNumberField.getByAltText(text, options).click();
+        await this.cardNumberField.getByAltText(text, options).click({ force });
     }
     // --
 

@@ -1,6 +1,6 @@
-import { test, expect } from '../../../../fixtures/card.fixture';
-import { REGULAR_TEST_CARD, UNKNOWN_BIN_CARD_REGEX_VISA } from '../../../utils/constants';
-import { URL_MAP } from '../../../../fixtures/URL_MAP';
+import { test, expect } from '../../../../../fixtures/card.fixture';
+import { REGULAR_TEST_CARD, UNKNOWN_BIN_CARD_REGEX_VISA } from '../../../../utils/constants';
+import { URL_MAP } from '../../../../../fixtures/URL_MAP';
 
 test.describe('Card - Testing resetting brand after binLookup has occurred', () => {
     test('#1 Fill in regular MC card, then replace it with an unrecognised one, but see our regEx detects the brand & sets it in the UI', async ({

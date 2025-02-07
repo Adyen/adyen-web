@@ -1,7 +1,7 @@
-import { expect, test } from '../../../../fixtures/card.fixture';
-import { getStoryUrl } from '../../../utils/getStoryUrl';
-import { URL_MAP } from '../../../../fixtures/URL_MAP';
-import { BCMC_CARD, BCMC_DUAL_BRANDED_VISA, REGULAR_TEST_CARD, UNKNOWN_BIN_CARD_REGEX_VISA } from '../../../utils/constants';
+import { expect, test } from '../../../../../fixtures/card.fixture';
+import { getStoryUrl } from '../../../../utils/getStoryUrl';
+import { URL_MAP } from '../../../../../fixtures/URL_MAP';
+import { BCMC_CARD, BCMC_DUAL_BRANDED_VISA, REGULAR_TEST_CARD, UNKNOWN_BIN_CARD_REGEX_VISA } from '../../../../utils/constants';
 
 const componentConfig = {
     brands: ['mc', 'visa', 'amex', 'maestro', 'bcmc']
@@ -18,6 +18,9 @@ test.describe('Card - Testing resetting after binLookup has given a dual brand r
             await card.fillCardNumber(BCMC_CARD);
 
             await card.waitForVisibleBrands();
+
+            // Dual brand holder visible
+            await expect(card.dualBrandingIconsHolder).toBeVisible();
 
             let [firstBrand, secondBrand] = await card.brands;
 
@@ -36,6 +39,9 @@ test.describe('Card - Testing resetting after binLookup has given a dual brand r
             expect(brandingIconSrc).toContain('nocard.svg');
 
             expect(secondBrand).toBeUndefined();
+
+            // Dual brand holder hidden
+            await expect(card.dualBrandingIconsHolder).not.toBeVisible();
         }
     );
 
