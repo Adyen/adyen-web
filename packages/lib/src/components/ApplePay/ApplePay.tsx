@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import ApplePayButton from './components/ApplePayButton';
-import ApplePayService from './ApplePayService';
+import ApplePayService from './services/ApplePayService';
 import base64 from '../../utils/base64';
 import defaultProps from './defaultProps';
 import { httpPost } from '../../core/Services/http';

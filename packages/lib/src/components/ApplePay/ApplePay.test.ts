@@ -1,9 +1,9 @@
 import ApplePay from './ApplePay';
-import ApplePayService from './ApplePayService';
+import ApplePayService from './services/ApplePayService';
 import { mock } from 'jest-mock-extended';
 import { NO_CHECKOUT_ATTEMPT_ID } from '../../core/Analytics/constants';
 
-jest.mock('./ApplePayService');
+jest.mock('./services/ApplePayService');
 
 beforeEach(() => {
     // @ts-ignore 'mockClear' is provided by jest.mock
