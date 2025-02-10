@@ -33,9 +33,16 @@ test.describe('Card - Testing resetting brand after binLookup has occurred', () 
         expect(brandingIconSrc).toContain('visa.svg');
     });
 
-    test('#2 Fill in regular MC card, then delete it, and see the brand is reset in the UI', async ({ card, page }) => {
+    test('#2 Fill in regular MC card, see UI reflects it, then delete it, and see the brand is reset in the UI', async ({ card, page }) => {
         await card.goto(URL_MAP.card);
+
+        let brandingIconSrc = await card.brandingIcon.getAttribute('src');
+        expect(brandingIconSrc).toContain('nocard.svg');
+
         await card.typeCardNumber(REGULAR_TEST_CARD);
+
+        brandingIconSrc = await card.brandingIcon.getAttribute('src');
+        expect(brandingIconSrc).toContain('mc.svg');
 
         await card.deleteCardNumber();
 
@@ -45,7 +52,7 @@ test.describe('Card - Testing resetting brand after binLookup has occurred', () 
         expect(cardData.paymentMethod.brand).toBe(undefined);
 
         // Check brand is reset in the UI
-        let brandingIconSrc = await card.brandingIcon.getAttribute('src');
+        brandingIconSrc = await card.brandingIcon.getAttribute('src');
         expect(brandingIconSrc).toContain('nocard.svg');
     });
 });
