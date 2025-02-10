@@ -14,6 +14,7 @@ describe('Giftcard', () => {
     const user = userEvent.setup();
 
     const baseProps = {
+        clientKey: 'mock',
         modules: {
             resources,
             analytics: global.analytics
@@ -379,7 +380,6 @@ describe('Giftcard', () => {
                 },
                 onBalanceCheck,
                 onOrderRequest,
-                onRequiringConfirmation,
                 onSubmit,
                 showPayButton: true
             });
