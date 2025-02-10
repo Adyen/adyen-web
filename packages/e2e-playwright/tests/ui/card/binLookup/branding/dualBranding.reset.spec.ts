@@ -22,7 +22,10 @@ test.describe('Card - Testing resetting after binLookup has given a dual brand r
             // Dual brand holder visible
             await expect(card.dualBrandingIconsHolder).toBeVisible();
 
-            let [firstBrand, secondBrand] = await card.brands;
+            let [firstBrand, secondBrand, thirdBrand] = await card.brands;
+
+            // Expect original icon to be hidden, leaving only 2 brands
+            expect(thirdBrand).toBeUndefined();
 
             // 2 brand icons, in correct order
             expect(firstBrand).toHaveAttribute('data-value', 'bcmc');
@@ -35,7 +38,7 @@ test.describe('Card - Testing resetting after binLookup has given a dual brand r
             [firstBrand, secondBrand] = await card.brands;
 
             // Now only a single, generic, brand
-            let brandingIconSrc = await firstBrand.getAttribute('src');
+            const brandingIconSrc = await firstBrand.getAttribute('src');
             expect(brandingIconSrc).toContain('nocard.svg');
 
             expect(secondBrand).toBeUndefined();
