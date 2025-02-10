@@ -21,6 +21,7 @@ test.describe('Card - Testing resetting brand after binLookup has occurred', () 
         await card.fillCardNumber(UNKNOWN_BIN_CARD_REGEX_VISA);
 
         await responsePromise;
+        await page.waitForTimeout(100); // Sadly needed to avoid flakiness on the CI
 
         cardData = await page.evaluate('window.component.data');
 
