@@ -9,7 +9,6 @@ import PasskeyService from './services/PasskeyService';
 import RedirectButton from '../internal/RedirectButton';
 import PayByBankPix from './components/PayByBankPix';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
-import { SendAnalyticsObject } from '../../core/Analytics/types';
 
 class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
     private passkeyService: PasskeyService;
@@ -18,19 +17,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
     private static TIMEOUT_MINUTES = 1;
 
     public static defaultProps: PayByBankPixConfiguration = {
-        beforeRedirect: undefined,
-        beforeSubmit: undefined,
-        onActionHandled: undefined,
-        onAdditionalDetails: undefined,
-        onChange: undefined,
-        onEnterKeyPressed: undefined,
-        onError: undefined,
-        onOrderUpdated: undefined,
-        onPaymentCompleted: undefined,
-        onPaymentFailed: undefined,
-        onPaymentMethodsRequest: undefined,
-        onSubmit: undefined,
-        onSubmitAnalytics(aObj: SendAnalyticsObject): void {},
+        showPayButton: true,
         issuers: [{ id: 'issuerId_123', name: 'issuer 123' }],
         _isNativeFlow: window.location.hostname.endsWith('.adyen.com') || window.location.hostname.endsWith('localhost'),
         countdownTime: PayByBankPixElement.TIMEOUT_MINUTES
@@ -67,8 +54,9 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
     }
 
     formatData(): PayByBankPixData {
-        // on the merchant page, we need to send both device id and enrich riskSignals
-        // on the hosted checkout page, we reuse the same id and riskSignals. We get them from the query params, and pass them through to the second /payments call
+        // on the merchant page, we need to send both device id and riskSignals
+        // enrich risk signals only on hosted page
+        // on the hosted checkout page, we reuse the same id and riskSignals. We get them from the query params / pbl logic, and pass them through to the second /payments call
         const issuer = this.state.data?.issuer ? { issuer: this.state.data?.issuer } : {};
         const subType = this.props._isNativeFlow ? 'embedded' : 'redirect';
         return {
@@ -89,7 +77,6 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
                             {...this.props}
                             txVariant={PayByBankPixElement.type}
                             payButton={this.payButton}
-                            onSubmit={this.submit}
                             onChange={this.setState}
                             setComponentRef={this.setComponentRef}
                             onSubmitAnalytics={this.submitAnalytics}

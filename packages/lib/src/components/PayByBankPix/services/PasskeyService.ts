@@ -12,12 +12,30 @@ export default class PasskeyService implements IPasskeyService {
     constructor(configuration: PasskeyServiceConfig) {
         try {
             this._deviceId = configuration?.deviceId ?? this.restoreOrGenerateDeviceId();
-            void new PasskeySdkLoader().load(configuration.environment).then(passkey => {
+            void new PasskeySdkLoader().load().then(passkey => {
                 this.passkey = passkey;
             });
         } catch (e) {
             throw new AdyenCheckoutError(SCRIPT_ERROR, 'Passkey sdk fails to load.');
         }
+    }
+
+    public static async getWebAuthnUnsupportedReason(): Promise<string> {
+        if (!window.PublicKeyCredential) {
+            return 'Browser does not support webauthn';
+        }
+
+        try {
+            const platformAuthenticatorAvailable = await window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+
+            if (!platformAuthenticatorAvailable) {
+                return 'Device does not have platform authenticator';
+            }
+        } catch (e) {
+            return 'Unknown error';
+        }
+
+        return '';
     }
 
     get biometrics() {
@@ -39,23 +57,5 @@ export default class PasskeyService implements IPasskeyService {
             this.storage.set(deviceId);
         }
         return deviceId;
-    }
-
-    public static async getWebAuthnUnsupportedReason(): Promise<string> {
-        if (!window.PublicKeyCredential) {
-            return 'Browser does not support webauthn';
-        }
-
-        try {
-            const platformAuthenticatorAvailable = await window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
-
-            if (!platformAuthenticatorAvailable) {
-                return 'Device does not have platform authenticator';
-            }
-        } catch (e) {
-            return 'Unknown error';
-        }
-
-        return '';
     }
 }

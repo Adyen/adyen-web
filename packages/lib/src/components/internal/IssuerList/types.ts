@@ -10,8 +10,11 @@ export interface IIssuerList {
 export interface IssuerListProps {
     items: IssuerItem[];
     showPayButton: boolean;
+
     payButton(props: Partial<PayButtonProps>): ComponentChildren;
+
     onChange(payload: any): void;
+
     highlightedIds?: string[];
     placeholder?: string;
     issuer?: string;
@@ -19,6 +22,7 @@ export interface IssuerListProps {
     showContextualElement?: boolean;
     contextualText?: string;
     onSubmitAnalytics: (aObj: SendAnalyticsObject) => void;
+    ref?: any;
 }
 
 export interface IssuerItem {
@@ -26,6 +30,7 @@ export interface IssuerItem {
     name: string;
     icon?: string;
 }
+
 export interface TermsAndConditions {
     translationKey: string;
     urls: string[];

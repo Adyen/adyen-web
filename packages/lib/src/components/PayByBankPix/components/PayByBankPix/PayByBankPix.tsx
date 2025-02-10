@@ -7,20 +7,21 @@ import { IEnrollment } from '../Enrollment/types';
 
 function PayByBankPix({
     type,
-    issuers,
-    showPayButton,
+    clientKey,
     paymentMethodType,
-    url,
+    enrollmentId,
+    txVariant,
     countdownTime,
+    issuers,
     storedPaymentMethodId,
     onChange,
-    setComponentRef,
-    payButton,
+    onError,
     onSubmitAnalytics,
-    txVariant,
-    ...rest
+    showPayButton,
+    payButton,
+    setComponentRef
 }: PayByBankPixProps) {
-    const enrollmentRef = useRef<IEnrollment>();
+    const enrollmentRef = useRef<IEnrollment | null>();
     const shouldEnroll = storedPaymentMethodId == null;
     const self = useRef({
         showValidation: () => {
@@ -34,23 +35,25 @@ function PayByBankPix({
 
     return shouldEnroll ? (
         <Enrollment
-            txVariant={txVariant}
-            countdownTime={countdownTime}
+            onError={onError}
+            // Await
             type={type}
-            showPayButton={showPayButton}
-            issuers={issuers}
-            url={url}
+            clientKey={clientKey}
+            enrollmentId={enrollmentId}
             paymentMethodType={paymentMethodType}
-            // @ts-ignore fix later
-            onSubmitAnalytics={onSubmitAnalytics}
-            onChange={onChange}
+            countdownTime={countdownTime}
+            // Issuer List
+            txVariant={txVariant}
+            issuers={issuers}
+            showPayButton={showPayButton}
             payButton={payButton}
+            onChange={onChange}
+            onSubmitAnalytics={onSubmitAnalytics}
             ref={enrollmentRef}
-            {...rest}
-        ></Enrollment>
+        />
     ) : (
         // @ts-ignore  // todo: filter out non matching device id stored pm
-        <Payment showPayButton={showPayButton} storedPaymentMethodId={storedPaymentMethodId}></Payment>
+        <Payment payButton={payButton} showPayButton={showPayButton} storedPaymentMethodId={storedPaymentMethodId} />
     );
 }
 

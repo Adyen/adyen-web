@@ -13,7 +13,7 @@ class PasskeySdkLoader implements IPasskeySdkLoader {
         return globalThis.math != null;
     }
 
-    public async load(environment: string): Promise<IPasskeyWindowObject> {
+    public async load(): Promise<IPasskeyWindowObject> {
         if (this.isAvailable()) return;
 
         try {

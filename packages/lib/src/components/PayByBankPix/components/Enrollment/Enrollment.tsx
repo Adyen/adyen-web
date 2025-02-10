@@ -10,11 +10,12 @@ import getEnrollmentStatus from './getEnrollmentStatus';
 
 function Enrollment(props: EnrollmentProps) {
     const { i18n, loadingContext } = useCoreContext();
-    const issuerListRef = useRef<IIssuerList>();
+    const issuerListRef = useRef<IIssuerList>(null);
 
     const onComplete = (): void => {
         // todo: collect biometrics and call internal endpoint
         // /details call with response of the internal endpoint
+        // onError if fails
     };
     const pollStatus = () => {
         const { enrollmentId, clientKey } = props as AwaitProps;
@@ -27,9 +28,7 @@ function Enrollment(props: EnrollmentProps) {
 
     const isAwait = (props: EnrollmentProps): props is AwaitProps => props.type === 'await';
 
-    // polling endpoint example
     return (
-        //todo
         <div className={'adyen-checkout-pix-biometric'}>
             {isAwait(props) ? (
                 <Await
@@ -37,9 +36,7 @@ function Enrollment(props: EnrollmentProps) {
                     type={props.paymentMethodType}
                     countdownTime={props.countdownTime}
                     clientKey={props.clientKey}
-                    paymentData={'dummy'}
-                    onActionHandled={() => {}}
-                    onError={() => {}}
+                    onError={props.onError}
                     messageText={'Instruction message example'}
                     awaitText={i18n.get('await.waitForConfirmation')}
                     onComplete={onComplete}
@@ -49,7 +46,7 @@ function Enrollment(props: EnrollmentProps) {
             ) : (
                 <IssuerList
                     items={useIssuerWithLogo({ issuers: props.issuers, txVariant: props.txVariant })}
-                    onSubmitAnalytics={() => {}}
+                    onSubmitAnalytics={props.onSubmitAnalytics}
                     onChange={props.onChange}
                     payButton={props.payButton}
                     showPayButton={props.showPayButton}

@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
 
-function Payment({ showPayButton, payButton, storedPaymentMethodId }) {
+function Payment({ showPayButton, payButton }) {
     const [status, setStatus] = useState('ready');
     this.setStatus = setStatus;
 

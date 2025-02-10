@@ -208,7 +208,7 @@ class Core implements ICore {
             .then(verifyPaymentDidNotFail)
             .then((response: PaymentResponseData) => {
                 // We don't handle action except for paybybank_pix (currently only used by PBL).
-                // onAction callback needs to be added by PBL so that the action element can be mounted.
+                // This happens when shopper is redirected back from the issuer, onAction callback is required because we don't know where to place the action element.
                 if (this.options.onAction && response?.action) {
                     const actionEle = this.createFromAction(response.action);
                     return this.options.onAction(actionEle);
