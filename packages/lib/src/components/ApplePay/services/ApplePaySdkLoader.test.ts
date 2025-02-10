@@ -1,4 +1,4 @@
-import { APPLE_PAY_SDK_URL, ApplePaySdkLoader } from './ApplePaySdkLoader';
+import ApplePaySdkLoader, { APPLE_PAY_SDK_URL } from './ApplePaySdkLoader';
 import Script from '../../../utils/Script';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { mock } from 'jest-mock-extended';

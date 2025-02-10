@@ -26,4 +26,4 @@ class ApplePaySdkLoader {
     }
 }
 
-export { ApplePaySdkLoader };
+export default ApplePaySdkLoader;

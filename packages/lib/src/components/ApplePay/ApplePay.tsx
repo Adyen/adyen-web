@@ -13,7 +13,7 @@ import { DecodeObject } from '../../types/global-types';
 import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
-import { ApplePaySdkLoader } from './services/ApplePaySdkLoader';
+import ApplePaySdkLoader from './services/ApplePaySdkLoader';
 import { SendAnalyticsObject } from '../../core/Analytics/types';
 
 import type { ApplePayConfiguration, ApplePayElementData, ApplePayPaymentOrderDetails, ApplePaySessionRequest } from './types';
@@ -135,15 +135,17 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
      * Determines if Apple Pay component can be displayed or not
      */
     public override async isAvailable(): Promise<void> {
-        if (document.location.protocol !== 'https:') {
+        if (window.location.protocol !== 'https:') {
             return Promise.reject(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to start an Apple Pay session from an insecure document'));
         }
 
         try {
             await this.sdkLoader.isSdkLoaded();
+
             if (ApplePaySession?.canMakePayments()) {
                 return Promise.resolve();
             }
+
             return Promise.reject(new AdyenCheckoutError('ERROR', 'Apple Pay is not available on this device'));
         } catch (error) {
             return Promise.reject(new AdyenCheckoutError('ERROR', 'Apple Pay SDK failed to load', { cause: error }));
