@@ -190,12 +190,17 @@ describe('Giftcard', () => {
             });
             render(giftcard.render());
             giftcard.setState({ isValid: true });
+
             const payButton = await screen.findByRole('button');
             await user.click(payButton);
 
             // since there is enough balance we should inform merchant
             // to confirm using the giftcard funds
-            expect(onRequiringConfirmation).toHaveBeenCalled();
+            expect(await screen.findByText('Gift card balance')).toBeTruthy();
+            expect(await screen.findByText('€20.00')).toBeTruthy();
+
+            // onRequiringConfirmation should only be called when there's no pay button
+            expect(onRequiringConfirmation).not.toHaveBeenCalled();
         });
 
         test('if theres 0 balance we should trigger and error', async () => {
@@ -296,7 +301,9 @@ describe('Giftcard', () => {
             );
             const onOrderRequest = jest.fn(resolve => resolve({}));
             const onSubmit = jest.fn();
-            const onRequiringConfirmation = jest.fn(resolve => resolve());
+            const onRequiringConfirmation = jest.fn(async resolve => {
+                await resolve();
+            });
 
             // mounting and clicking pay button
             const giftcard = new Giftcard(global.core, {
@@ -304,15 +311,19 @@ describe('Giftcard', () => {
                 onBalanceCheck,
                 onOrderRequest,
                 onRequiringConfirmation,
-                onSubmit
+                onSubmit,
+                showPayButton: false
             });
             render(giftcard.render());
+            // we do this because we can't get SF fields to work
             giftcard.setState({ isValid: true });
-            const payButton = await screen.findByRole('button');
-            await user.click(payButton);
+            giftcard.submit();
 
-            expect(onOrderRequest).not.toHaveBeenCalled();
+            expect(await screen.findByText('Gift card balance')).toBeTruthy();
+            expect(await screen.findByText('€20.00')).toBeTruthy();
+
             expect(onRequiringConfirmation).toHaveBeenCalled();
+            expect(onOrderRequest).not.toHaveBeenCalled();
             expect(onSubmit).toHaveBeenCalled();
         });
 
@@ -324,7 +335,7 @@ describe('Giftcard', () => {
             );
             const onOrderRequest = jest.fn(resolve => resolve({}));
             const onSubmit = jest.fn();
-            const onRequiringConfirmation = jest.fn(({ reject }) => reject());
+            const onRequiringConfirmation = jest.fn((resolve, reject) => reject());
 
             // mounting and clicking pay button
             const giftcard = new Giftcard(global.core, {
@@ -332,16 +343,102 @@ describe('Giftcard', () => {
                 onBalanceCheck,
                 onOrderRequest,
                 onRequiringConfirmation,
-                onSubmit
+                onSubmit,
+                showPayButton: false
             });
             render(giftcard.render());
+            // we do this because we can't get SF fields to work
+            giftcard.setState({ isValid: true });
+            giftcard.submit();
+
+            expect(await screen.findByText('Gift card balance')).toBeTruthy();
+            expect(await screen.findByText('€20.00')).toBeTruthy();
+
+            expect(onRequiringConfirmation).toHaveBeenCalled();
+            expect(onOrderRequest).not.toHaveBeenCalled();
+            expect(onSubmit).not.toHaveBeenCalled();
+        });
+
+        test('should finalize the payment and not trigger onRequireConfirmation if payButton is visible and has balance', async () => {
+            const onBalanceCheck = jest.fn(resolve =>
+                resolve({
+                    balance: { value: 2000, currency: 'EUR' }
+                })
+            );
+            const onOrderRequest = jest.fn(resolve => resolve({}));
+            const onSubmit = jest.fn();
+            const onRequiringConfirmation = jest.fn(resolve => resolve());
+
+            // mounting and clicking pay button
+            const giftcard = new Giftcard(global.core, {
+                ...baseProps,
+                order: {
+                    orderData: 'mockOrderData',
+                    remainingAmount: { value: 1000, currency: 'EUR' },
+                    pspReference: 'mock'
+                },
+                onBalanceCheck,
+                onOrderRequest,
+                onRequiringConfirmation,
+                onSubmit,
+                showPayButton: true
+            });
+            render(giftcard.render());
+            // we do this because we can't get SF fields to work
             giftcard.setState({ isValid: true });
             const payButton = await screen.findByRole('button');
             await user.click(payButton);
 
+            expect(await screen.findByText('Gift card balance')).toBeTruthy();
+            expect(await screen.findByText('€20.00')).toBeTruthy();
+
+            const confirmButton = await screen.findByRole('button');
+            await user.click(confirmButton);
+
+            expect(onRequiringConfirmation).not.toHaveBeenCalled();
+            // expect payment to be made
+            expect(onSubmit).toHaveBeenCalled();
+            // order already create, don't call again
             expect(onOrderRequest).not.toHaveBeenCalled();
+        });
+
+        test('should finalize the payment and trigger onRequireConfirmation if payButton is NOT visible and has balance', async () => {
+            const onBalanceCheck = jest.fn(resolve =>
+                resolve({
+                    balance: { value: 2000, currency: 'EUR' }
+                })
+            );
+            const onOrderRequest = jest.fn(resolve => resolve({}));
+            const onSubmit = jest.fn();
+            const onRequiringConfirmation = jest.fn(resolve => resolve());
+
+            // mounting and clicking pay button
+            const giftcard = new Giftcard(global.core, {
+                ...baseProps,
+                order: {
+                    orderData: 'mockOrderData',
+                    remainingAmount: { value: 1000, currency: 'EUR' },
+                    pspReference: 'mock'
+                },
+                onBalanceCheck,
+                onOrderRequest,
+                onRequiringConfirmation,
+                onSubmit,
+                showPayButton: false
+            });
+            render(giftcard.render());
+            // we do this because we can't get SF fields to work
+            giftcard.setState({ isValid: true });
+            giftcard.submit();
+
+            expect(await screen.findByText('Gift card balance')).toBeTruthy();
+            expect(await screen.findByText('€20.00')).toBeTruthy();
+
             expect(onRequiringConfirmation).toHaveBeenCalled();
-            expect(onSubmit).not.toHaveBeenCalled();
+            // expect payment to be made
+            expect(onSubmit).toHaveBeenCalled();
+            // order already create, don't call again
+            expect(onOrderRequest).not.toHaveBeenCalled();
         });
     });
 });

@@ -12,8 +12,9 @@ interface GiftcardComponentProps {
     onChange: (state) => void;
     onFocus: (event) => void;
     onBlur: (event) => void;
-    onSubmit: (event) => void;
-    onBalanceCheck: (event) => void;
+
+    makeBalanceCheck: (event) => void;
+    makePayment: (event) => void;
 
     amount?: PaymentAmount;
     showPayButton: boolean;
@@ -84,7 +85,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
         const hasEnoughBalance = transactionAmount?.value >= this.props.amount?.value;
 
         if (transactionAmount && hasEnoughBalance) {
-            return <GiftcardResult balance={balance} transactionLimit={transactionLimit} onSubmit={props.onSubmit} {...props} />;
+            return <GiftcardResult balance={balance} transactionLimit={transactionLimit} onSubmit={props.makePayment} {...props} />;
         }
 
         const getCardErrorMessage = sfpState => {
@@ -130,7 +131,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
                 {this.props.showPayButton &&
                     this.props.payButton({
                         status: this.state.status,
-                        onClick: this.props.onSubmit,
+                        onClick: this.props.makeBalanceCheck,
                         label: i18n.get('applyGiftcard')
                     })}
             </div>

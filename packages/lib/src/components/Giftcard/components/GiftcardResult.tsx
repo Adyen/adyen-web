@@ -2,7 +2,7 @@ import { h } from 'preact';
 import './GiftcardResult.scss';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 
-function GiftcardResult({ brand, amount, balance, transactionLimit, ...props }) {
+function GiftcardResult({ amount, balance, transactionLimit, status, makePayment }) {
     const { i18n } = useCoreContext();
     const transactionAmount = amount.value > transactionLimit?.value ? transactionLimit : amount;
     const remainingBalance = balance?.value - transactionAmount?.value;
@@ -30,8 +30,8 @@ function GiftcardResult({ brand, amount, balance, transactionLimit, ...props }) 
             {this.props.showPayButton &&
                 this.props.payButton({
                     amount: transactionAmount,
-                    status: props.status,
-                    onClick: props.onSubmit
+                    status: status,
+                    onClick: makePayment
                 })}
 
             <p className="adyen-checkout__giftcard-result__remaining-balance">

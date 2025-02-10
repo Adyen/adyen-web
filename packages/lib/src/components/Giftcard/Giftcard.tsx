@@ -88,15 +88,15 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
 
                 if (this.props.amount.value > balance.value || this.props.amount.value > transactionLimit.value) {
                     if (this.props.order) {
-                        return super.submit();
+                        return this.makeSubmitCall();
                     }
 
                     return this.onOrderRequest(this.data).then((order: { orderData: string; pspReference: string }) => {
                         this.setState({ order: { orderData: order.orderData, pspReference: order.pspReference } });
-                        return super.submit();
+                        return this.makeSubmitCall();
                     });
                 } else {
-                    return this.handleOnRequiringConfirmation().then(() => super.submit());
+                    return this.handleOnRequiringConfirmation();
                 }
             })
             .catch(error => {
@@ -111,21 +111,44 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
             });
     };
 
+    /**
+     * Check if it should call onRequiringConfirmation
+     */
     private handleOnRequiringConfirmation = (): Promise<any> => {
-        if (this.props.onRequiringConfirmation) {
-            return new Promise<void>((resolve, reject) => {
-                void this.props.onRequiringConfirmation(resolve, reject);
-            });
+        // 1. if we show pay button we don't need to ask for confirmation
+        if (this.props.showPayButton) {
+            return;
         }
+        // 2. there's no callback, we throw error
+        if (!this.props.onRequiringConfirmation) {
+            throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'onRequiringConfirmation must be provided');
+        }
+        // 3. success case if in case of custom pay button
+        return (
+            new Promise<void>((resolve, reject) => {
+                void this.props.onRequiringConfirmation(resolve, reject);
+            })
+                //when this resolve passed to onRequiringConfirmation gets resolved make payments call
+                .then(() => this.makeSubmitCall())
+                //when it gets rejected handle cancellation
+                .catch(() => {})
+        );
     };
 
     public submit() {
+        // for simplicity of the merchant we always only expose .submit()
+        // however to make the actual payment call we call makeSubmitCall
         if (!this.isValid) {
             this.showValidation();
             return false;
         }
 
         this.balanceCheck();
+    }
+
+    // this makes the payment, as .submit is used by the merchant to trigger the payButton action
+    private makeSubmitCall() {
+        super.submit();
     }
 
     // Giftcards override the regular payButton flow
@@ -144,8 +167,8 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
                     handleKeyPress={this.handleKeyPress}
                     showPayButton={this.props.showPayButton}
                     onChange={this.setState}
-                    onBalanceCheck={this.onBalanceCheck}
-                    onSubmit={this.submit}
+                    makeBalanceCheck={() => this.onBalanceCheck()}
+                    makePayment={() => this.makeSubmitCall()}
                     payButton={this.payButton}
                 />
             </CoreProvider>
