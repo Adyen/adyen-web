@@ -125,7 +125,6 @@ export const MockedRecognizedFlowDropin: FastlaneStory = {
                                     fastlane: {
                                         tokenId: 'xxx',
                                         lastFour: '1111',
-                                        customerId: 'customer-id',
                                         brand: 'visa',
                                         email: 'email@adyen.com',
                                         fastlaneSessionId: 'xxx'
@@ -168,7 +167,6 @@ export const MockedRecognizedFlowStandalone: FastlaneStory = {
                                         resultCode: 'Authorised'
                                     });
                                 },
-                                customerId: 'customer-id',
                                 tokenId: 'xxx',
                                 lastFour: '1111',
                                 brand: 'visa',

@@ -118,7 +118,6 @@ type FastlaneComponentConfiguration = {
     paymentType: 'fastlane';
     configuration: {
         fastlaneSessionId: string;
-        customerId: string;
         email: string;
         tokenId: string;
         lastFour: string;
@@ -161,10 +160,6 @@ export interface FastlaneConfiguration extends UIElementProps {
      * Fastlane session ID
      */
     fastlaneSessionId: string;
-    /**
-     * Customer ID used to process the payment
-     */
-    customerId: string;
     /**
      * Initial last four digits displayed once the Component is rendered
      */
