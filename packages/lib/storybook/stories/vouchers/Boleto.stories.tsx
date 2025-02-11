@@ -13,7 +13,29 @@ const meta: MetaConfiguration<VoucherConfiguration> = {
 export const Default: BoletoStory = {
     render: ({ componentConfiguration, ...checkoutConfig }) => (
         <Checkout checkoutConfig={checkoutConfig}>
-            {checkout => <ComponentContainer element={new Boleto(checkout, componentConfiguration)} />}
+            {checkout => (
+                <ComponentContainer
+                    element={
+                        new Boleto(checkout, {
+                            ...componentConfiguration,
+                            data: {
+                                firstName: 'José',
+                                lastName: 'Silva',
+                                billingAddress: {
+                                    city: 'São Paulo',
+                                    country: 'BR',
+                                    houseNumberOrName: '952',
+                                    postalCode: '04386040',
+                                    stateOrProvince: 'SP',
+                                    street: 'Rua Funcionarios'
+                                },
+                                socialSecurityNumber: '56861752509',
+                                shopperEmail: 'joses@test.com'
+                            }
+                        })
+                    }
+                />
+            )}
         </Checkout>
     ),
 
