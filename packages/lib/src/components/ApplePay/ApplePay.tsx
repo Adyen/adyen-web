@@ -14,8 +14,8 @@ import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
 import ApplePaySdkLoader from './services/ApplePaySdkLoader';
-import { SendAnalyticsObject } from '../../core/Analytics/types';
 
+import type { SendAnalyticsObject } from '../../core/Analytics/types';
 import type { ApplePayConfiguration, ApplePayElementData, ApplePayPaymentOrderDetails, ApplePaySessionRequest } from './types';
 import type { ICore } from '../../core/types';
 import type { PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
