@@ -2,6 +2,22 @@ import { preparePaymentRequest } from './payment-request';
 import defaultProps from './defaultProps';
 
 describe('preparePaymentRequest', () => {
+    test('should warn if country code is missing', () => {
+        console.warn = jest.fn();
+
+        preparePaymentRequest({
+            countryCode: '',
+            companyName: 'Company Name',
+            amount: { value: 115800, currency: 'EUR' },
+            supportedNetworks: ['amex', 'discover', 'masterCard', 'visa'],
+            totalPriceLabel: 'Amount'
+        });
+
+        expect(console.warn).toHaveBeenCalledWith(
+            'Apple Pay - Make sure to set the countryCode in the AdyenCheckout configuration or in the Checkout Session creation'
+        );
+    });
+
     test('formats the payment object', () => {
         const paymentRequest = preparePaymentRequest({
             countryCode: 'NL',

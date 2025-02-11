@@ -10,7 +10,7 @@ interface ApplePayButtonProps {
 }
 
 const ApplePayButton = ({ buttonStyle, buttonType, buttonLocale, onClick }: ApplePayButtonProps) => {
-    return <apple-pay-button buttonstyle={buttonStyle} type={buttonType} locale={buttonLocale} onclick={onClick} />;
+    return <apple-pay-button data-testid="apple-pay-button" buttonstyle={buttonStyle} type={buttonType} locale={buttonLocale} onclick={onClick} />;
 };
 
 export default ApplePayButton;

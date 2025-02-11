@@ -7,6 +7,7 @@ function setupCoreMock() {
     core.paymentMethodsResponse = new PaymentMethods({
         paymentMethods: [{ name: 'Card', type: 'scheme' }]
     });
+    core.options.countryCode = 'NL';
     return core;
 }
 
