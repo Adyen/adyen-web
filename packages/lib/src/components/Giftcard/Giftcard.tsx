@@ -84,8 +84,6 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
                 if (balance?.currency !== this.props.amount?.currency) throw new Error('currency-error');
                 if (balance?.value <= 0) throw new Error('no-balance');
 
-                this.componentRef.setBalance({ balance, transactionLimit });
-
                 if (this.props.amount.value > balance.value || this.props.amount.value > transactionLimit.value) {
                     if (this.props.order) {
                         return this.makeSubmitCall();
@@ -96,7 +94,7 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
                         return this.makeSubmitCall();
                     });
                 } else {
-                    return this.handleOnRequiringConfirmation();
+                    return this.handleOnRequiringConfirmation(balance, transactionLimit);
                 }
             })
             .catch(error => {
@@ -114,7 +112,10 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
     /**
      * Check if it should call onRequiringConfirmation
      */
-    private handleOnRequiringConfirmation = (): Promise<any> => {
+    private handleOnRequiringConfirmation = (balance, transactionLimit): Promise<any> => {
+        this.componentRef.setBalance({ balance, transactionLimit });
+        this.setStatus('ready');
+
         // 1. if we show pay button we don't need to ask for confirmation
         if (this.props.showPayButton) {
             return;

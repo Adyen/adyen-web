@@ -85,7 +85,17 @@ class Giftcard extends Component<GiftcardComponentProps> {
         const hasEnoughBalance = transactionAmount?.value >= this.props.amount?.value;
 
         if (transactionAmount && hasEnoughBalance) {
-            return <GiftcardResult balance={balance} transactionLimit={transactionLimit} onSubmit={props.makePayment} {...props} />;
+            return (
+                <GiftcardResult
+                    amount={this.props.amount}
+                    balance={balance}
+                    transactionLimit={transactionLimit}
+                    makePayment={props.makePayment}
+                    status={this.state.status}
+                    showPayButton={this.props.showPayButton}
+                    payButton={this.props.payButton}
+                />
+            );
         }
 
         const getCardErrorMessage = sfpState => {
