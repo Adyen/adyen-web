@@ -9,6 +9,7 @@ import {
     mockPaymentsResponseMerchantPage,
     mockPaymentsResponseSimulateHostedPage,
     mockPendingStatusSimulateHostedPage,
+    mockReceivedStatusSimulateHostedPage,
     mockSubmitDetailsResponseSimulateHostedPage
 } from './mocks';
 import { SimulatedHostedPage } from './SimulatedHostedPage';
@@ -35,7 +36,7 @@ export const MerchantPage: PixBiometricStory = {
         useSessions: false,
         countryCode: 'BR',
         amount: 0,
-        componentConfiguration: { _isNativeFlow: false, deviceId: 'xxx', riskSignals: { isRootedDevice: true } }
+        componentConfiguration: { _isNativeFlow: false }
     },
     parameters: {
         msw: {
@@ -74,7 +75,7 @@ export const SimulateHostedPage: PixBiometricStory = {
                 http.get(
                     'https://checkoutshopper-test.adyen.com/checkoutshopper/services/registration-option/enrollment123?clientKey=test_L6HTEOAXQBCZJHKNU4NLN6EI7IE6VRRW',
                     () => {
-                        return HttpResponse.json(mockPendingStatusSimulateHostedPage);
+                        return HttpResponse.json(mockReceivedStatusSimulateHostedPage);
                     }
                 ),
                 http.post('/details', () => {

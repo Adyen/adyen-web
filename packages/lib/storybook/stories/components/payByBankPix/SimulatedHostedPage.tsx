@@ -27,6 +27,7 @@ export const SimulatedHostedPage = ({ redirectResult, sessionId, componentConfig
             return;
         }
 
+        AdyenCheckout.register(PayByBankPix);
         void AdyenCheckout({
             clientKey: process.env.CLIENT_KEY,
             // @ts-ignore CLIENT_ENV has valid value
@@ -46,16 +47,16 @@ export const SimulatedHostedPage = ({ redirectResult, sessionId, componentConfig
                         });
                 }
             }),
-
-            onPaymentCompleted: (result, component) => {
-                console.log('payment completed');
-                handleFinalState(result, component);
-            },
-            onAction: (actionElement: UIElement) => {
+            afterAdditionalDetails: (actionElement: UIElement) => {
                 if (actionElement) {
                     setUiElement(actionElement);
                 }
             },
+            onPaymentCompleted: (result, component) => {
+                console.log('payment completed');
+                handleFinalState(result, component);
+            },
+
             onPaymentFailed: (result, component) => {
                 handleFinalState(result, component);
             },

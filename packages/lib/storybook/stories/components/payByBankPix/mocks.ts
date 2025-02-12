@@ -22,6 +22,11 @@ export const mockPendingStatusSimulateHostedPage = {
     resultCode: 'pending'
 };
 
+export const mockReceivedStatusSimulateHostedPage = {
+    resultCode: 'received',
+    registrationOptions: 'ewoiImVucm9sbG1lbnRJZCI6IjIzMTI0MzI1NCIsCiIiY2hhbGxlbmdlIjoiZGFkYXNkYSIKfQ=='
+};
+
 export const mockSubmitDetailsResponseSimulateHostedPage = {
     action: { paymentMethodType: 'paybybank_pix', type: 'await', enrollmentId: 'enrollment123', paymentData: 'mockPaymentData' }
 };

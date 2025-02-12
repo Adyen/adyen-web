@@ -1,5 +1,5 @@
 import { httpGet } from '../../../../core/Services/http';
-import { PaymentResponseData } from '../../../../types/global-types';
+import { PaymentResponseData, RawPaymentResponse } from '../../../../types/global-types';
 
 interface EnrollmentStatus {
     enrollmentId: string;
@@ -8,12 +8,7 @@ interface EnrollmentStatus {
     timeout?: number; // in milliseconds
 }
 
-export default function getEnrollmentStatus({
-    enrollmentId,
-    clientKey,
-    loadingContext,
-    timeout = 10000
-}: EnrollmentStatus): Promise<PaymentResponseData> {
+function fetchEnrollmentStatus({ enrollmentId, clientKey, loadingContext, timeout = 10000 }: EnrollmentStatus): Promise<RawPaymentResponse> {
     if (!enrollmentId || !clientKey) {
         throw new Error('Could not check the enrollment status');
     }
@@ -25,4 +20,8 @@ export default function getEnrollmentStatus({
     };
 
     return httpGet(options);
+}
+
+export default async function getEnrollmentStatus(props: EnrollmentStatus): Promise<PaymentResponseData> {
+    return fetchEnrollmentStatus(props);
 }
