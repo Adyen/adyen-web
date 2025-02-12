@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useEffect, useCallback } from 'preact/hooks';
+import { useEffect, useCallback, useRef } from 'preact/hooks';
 import useForm from '../../../utils/useForm';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import './PhoneInput.scss';
@@ -7,6 +7,7 @@ import { phoneFormatters, phoneValidationRules } from './validate';
 import { PhoneInputFormProps, PhoneInputSchema } from './types';
 import Fieldset from '../FormFields/Fieldset';
 import PhoneInputFields from './PhoneInputFields';
+import { ComponentMethodsRef } from '../UIElement/types';
 
 /**
  *
@@ -39,7 +40,13 @@ function PhoneInputForm(props: PhoneInputFormProps) {
         props.onChange({ data, valid, errors, isValid });
     }, [data, valid, errors, isValid]);
 
-    this.showValidation = triggerValidation;
+    const componentRef = useRef<ComponentMethodsRef>({
+        showValidation: triggerValidation
+    });
+
+    useEffect(() => {
+        props.setComponentRef(componentRef.current);
+    }, [props.setComponentRef]);
 
     // This is here for MBWay, prob should be moved up
     // MBWay has a weird way of loading its error messages

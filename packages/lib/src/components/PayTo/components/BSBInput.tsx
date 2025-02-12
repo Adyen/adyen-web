@@ -10,6 +10,7 @@ import { bsbValidationRules } from './validate';
 import './PayIDInput.scss';
 import { phoneFormatters } from '../../internal/PhoneInput/validate';
 import { ComponentMethodsRef } from '../../internal/UIElement/types';
+import PayToNameFields from './PayToNameFields';
 
 export interface BSBFormData {
     bsb: string;
@@ -87,43 +88,7 @@ export default function BSBInput({ setComponentRef, defaultData, placeholders, o
                 />
             </Field>
 
-            <Field
-                label={i18n.get('firstName')}
-                classNameModifiers={['col-50', 'firstName']}
-                errorMessage={getErrorMessage(i18n, errors.firstName, i18n.get('firstName'))}
-                name={'firstName'}
-                i18n={i18n}
-            >
-                <InputText
-                    name={'firstName'}
-                    value={data.firstName}
-                    classNameModifiers={['firstName']}
-                    onInput={handleChangeFor('firstName', 'input')}
-                    onBlur={handleChangeFor('firstName', 'input')}
-                    placeholder={placeholders?.firstName}
-                    spellCheck={false}
-                    required={true}
-                />
-            </Field>
-
-            <Field
-                label={i18n.get('lastName')}
-                classNameModifiers={['col-50', 'lastName']}
-                errorMessage={getErrorMessage(i18n, errors.lastName, i18n.get('lastName'))}
-                name={'lastName'}
-                i18n={i18n}
-            >
-                <InputText
-                    name={'lastName'}
-                    value={data.lastName}
-                    classNameModifiers={['lastName']}
-                    onInput={handleChangeFor('lastName', 'input')}
-                    onBlur={handleChangeFor('lastName', 'blur')}
-                    placeholder={placeholders?.lastName}
-                    spellCheck={false}
-                    required={true}
-                />
-            </Field>
+            <PayToNameFields i18n={i18n} data={data} handleChangeFor={handleChangeFor} errors={errors} placeholders={placeholders} />
         </Fieldset>
     );
 }

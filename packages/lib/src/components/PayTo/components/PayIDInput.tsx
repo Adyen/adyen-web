@@ -13,6 +13,7 @@ import { payIdValidationRules } from './validate';
 import './PayIDInput.scss';
 import { phoneFormatters } from '../../internal/PhoneInput/validate';
 import { ComponentMethodsRef } from '../../internal/UIElement/types';
+import PayToNameFields from './PayToNameFields';
 
 export interface PayIdFormData {
     email: string;
@@ -55,9 +56,6 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
         formatters: phoneFormatters
     });
     const { handleChangeFor, triggerValidation, data, errors, valid, isValid, setSchema } = form;
-
-    //this.setStatus = setStatus;
-    this.triggerValidation = triggerValidation;
 
     // handle the changes of identifier, each identifier gets its own schema
     useEffect(() => {
@@ -114,7 +112,7 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
                 <Field
                     label={i18n.get('ABN')}
                     classNameModifiers={['col-60', 'abn']}
-                    errorMessage={getErrorMessage(i18n, errors.abn, i18n.get('payto.payid.label.abn'))}
+                    errorMessage={getErrorMessage(i18n, errors.abn, i18n.get('ABN'))}
                     name={'ABN'}
                     i18n={i18n}
                 >
@@ -148,43 +146,7 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
                 </Field>
             )}
 
-            <Field
-                label={i18n.get('payto.label.firstName')}
-                classNameModifiers={['col-50', 'firstName']}
-                errorMessage={getErrorMessage(i18n, errors.firstName, i18n.get('firstName'))}
-                name={'firstName'}
-                i18n={i18n}
-            >
-                <InputText
-                    name={'firstName'}
-                    value={data.firstName}
-                    classNameModifiers={['firstName']}
-                    onInput={handleChangeFor('firstName', 'input')}
-                    onBlur={handleChangeFor('firstName', 'input')}
-                    placeholder={placeholders?.firstName}
-                    spellCheck={false}
-                    required={true}
-                />
-            </Field>
-
-            <Field
-                label={i18n.get('payto.label.lastName')}
-                classNameModifiers={['col-50', 'lastName']}
-                errorMessage={getErrorMessage(i18n, errors.lastName, i18n.get('lastName'))}
-                name={'lastName'}
-                i18n={i18n}
-            >
-                <InputText
-                    name={'lastName'}
-                    value={data.lastName}
-                    classNameModifiers={['lastName']}
-                    onInput={handleChangeFor('lastName', 'input')}
-                    onBlur={handleChangeFor('lastName', 'blur')}
-                    placeholder={placeholders?.lastName}
-                    spellCheck={false}
-                    required={true}
-                />
-            </Field>
+            <PayToNameFields i18n={i18n} data={data} handleChangeFor={handleChangeFor} errors={errors} placeholders={placeholders} />
         </Fieldset>
     );
 }

@@ -1,4 +1,4 @@
-import { UIElementProps } from '../../../internal/UIElement/types';
+import { ComponentMethodsRef, UIElementProps } from '../../../internal/UIElement/types';
 
 export interface MBWayInputData {
     telephoneNumber?: string;
@@ -13,6 +13,7 @@ export interface MBWayInputProps extends UIElementProps {
     allowedCountries?: string[];
     requiredFields?: string[];
     phoneNumberKey?: string;
+    setComponentRef: (ref: ComponentMethodsRef) => void;
 }
 
 export interface MBWayDataState {
