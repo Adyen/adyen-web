@@ -256,8 +256,15 @@ export interface CoreConfiguration {
      */
     onAdditionalDetails?(state: AdditionalDetailsData, component: UIElement, actions: AdditionalDetailsActions): void;
 
-    // todo: better typing handle the action paybybank_pix on hosted component
-    onAction?(actionElement: UIElement): void;
+    /**
+     * Callback invoked when the user is redirected back, and an `action` is included in the response (either `/details` or `/paymentDetails`).
+     *
+     * The `action` from the response will be converted into a UIElement and passed to the callback.
+     * For the tree-shakable integration, register the components beforehand.
+     *
+     * @param component - The UIElement representing the action, which must be mounted on the page for the user to interact with.
+     */
+    afterAdditionalDetails?(component: UIElement): void;
 
     /**
      * Callback called when an action (for example a QR code or 3D Secure 2 authentication screen) is shown to the shopper.
