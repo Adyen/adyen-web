@@ -11,6 +11,7 @@ import './PayIDInput.scss';
 import { phoneFormatters } from '../../internal/PhoneInput/validate';
 import { ComponentMethodsRef } from '../../internal/UIElement/types';
 import PayToNameFields from './PayToNameFields';
+import { PayToPlaceholdersType } from '../types';
 
 export interface BSBFormData {
     bsb: string;
@@ -21,7 +22,7 @@ export interface BSBFormData {
 
 export interface BSBInputProps {
     defaultData: BSBFormData;
-    placeholders: any; //TODO
+    placeholders: PayToPlaceholdersType;
     onChange: (e) => void;
     setComponentRef: (ref: ComponentMethodsRef) => void;
 }

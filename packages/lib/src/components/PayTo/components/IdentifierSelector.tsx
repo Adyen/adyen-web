@@ -55,10 +55,7 @@ export default function IdentifierSelector({ selectedIdentifier, onSelectedIdent
 
     const hydratedOptions = loadI18nForOptions(i18n, PAYID_IDENTIFIER_OPTIONS);
 
-    // TODO this probably can by a bit tidier, clean up some of these types
-    //   maybe make Select type generic
     const onChange = (e: { target: SelectTargetObject }) => {
-        // TODO clean this
         const valueStr = e.target.value + '';
 
         if (payToIdentifierEnumCheck(valueStr)) {

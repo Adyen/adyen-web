@@ -15,10 +15,12 @@ export interface MandateType {
     count?: string;
 }
 
+export type PayToPlaceholdersType = { [K in keyof PayToData]: string };
+
 export interface PayToConfiguration extends UIElementProps {
     paymentData?: any;
     data?: PayToData;
-    placeholders?: any; //TODO
+    placeholders?: PayToPlaceholdersType;
     mandate: MandateType;
     payee?: string;
 }

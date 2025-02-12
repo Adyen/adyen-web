@@ -51,7 +51,6 @@ export default function MandateSummary({ mandate, currencyCode, payee }: Mandate
                     };
                 }
             }
-            // TODO test this for XSS
             case 'remarks':
                 return {
                     label: labelText,

@@ -58,11 +58,15 @@ describe('PayTo', () => {
         });
 
         render(payTo.render());
-        const button = await screen.findByRole('button', { name: 'Confirm purchase' });
+        const button = await screen.findByRole('button', { name: 'Continue' });
 
-        // check if button actually triggers submit
+        // should not trigger the submit and render validation
         await user.click(button);
         expect(onSubmitMock).toHaveBeenCalledTimes(0);
+
+        expect(await screen.findByText('Invalid mobile number')).toBeTruthy();
+        expect(await screen.findByText('Enter your first name')).toBeTruthy();
+        expect(await screen.findByText('Enter your last name')).toBeTruthy();
     });
 
     test('should change to different identifier when selected', async () => {

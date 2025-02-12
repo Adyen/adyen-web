@@ -14,6 +14,7 @@ import './PayIDInput.scss';
 import { phoneFormatters } from '../../internal/PhoneInput/validate';
 import { ComponentMethodsRef } from '../../internal/UIElement/types';
 import PayToNameFields from './PayToNameFields';
+import { PayToPlaceholdersType } from '../types';
 
 export interface PayIdFormData {
     email: string;
@@ -29,7 +30,7 @@ export interface PayIdFormData {
 
 export interface PayIDInputProps {
     defaultData: PayIdFormData;
-    placeholders: any; //TODO
+    placeholders: PayToPlaceholdersType;
     onError: () => {};
     onChange: (e) => void;
     setComponentRef: (ref: ComponentMethodsRef) => void;
@@ -43,8 +44,6 @@ const IDENTIFIER_SCHEMA = {
     [PayToIdentifierEnum.abn]: ['abn'],
     [PayToIdentifierEnum.orgid]: ['orgid']
 };
-
-export interface KlarnaComponentRef extends ComponentMethodsRef {}
 
 export default function PayIDInput({ setComponentRef, defaultData, placeholders, onError, onChange }: PayIDInputProps) {
     const { i18n } = useCoreContext();
@@ -102,7 +101,7 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
                         value={data.email}
                         onInput={handleChangeFor('email', 'input')}
                         onBlur={handleChangeFor('email', 'blur')}
-                        placeholder={placeholders?.shopperEmail}
+                        placeholder={placeholders?.email}
                         required={true}
                     />
                 </Field>

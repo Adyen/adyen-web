@@ -9,6 +9,7 @@ const items = [{ id: '+44', name: 'United Kingdom', code: 'GB', selectedOptionNa
 
 describe('PhoneInput', () => {
     const defaultProps: PhoneInputFormProps = {
+        setComponentRef: () => {},
         items,
         data: { phonePrefix: items[0].id },
         onChange: jest.fn(),

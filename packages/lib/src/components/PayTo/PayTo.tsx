@@ -3,10 +3,6 @@ import UIElement from '../internal/UIElement/UIElement';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import Await from '../../components/internal/Await';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
-
-/*
-Types (previously in their own file)
- */
 import { TxVariants } from '../tx-variants';
 import { PayToIdentifierEnum } from './components/IdentifierSelector';
 import PayToComponent from './components/PayToComponent';
@@ -62,7 +58,7 @@ export class PayToElement extends UIElement<PayToConfiguration> {
             ...props,
             data: {
                 ...props.data,
-                phonePrefix: props.data?.phonePrefix || '+61' // use AUS as default value
+                phonePrefix: '+61' // hardcode +61
             }
         };
     }
@@ -86,10 +82,6 @@ export class PayToElement extends UIElement<PayToConfiguration> {
 
     get isValid(): boolean {
         return !!this.state.isValid;
-    }
-
-    get displayName(): string {
-        return this.props.name;
     }
 
     render() {
