@@ -7,7 +7,8 @@ import { CheckoutSessionSetupResponse } from './CheckoutSession/types';
 import ThreeDS2DeviceFingerprint from '../components/ThreeDS2/ThreeDS2DeviceFingerprint';
 import ThreeDS2Challenge from '../components/ThreeDS2/ThreeDS2Challenge';
 import Redirect from '../components/Redirect';
-import { PaymentActionsType } from '../types/global-types';
+import { PaymentActionsType, ResultCode } from '../types/global-types';
+import UIElement from '../components/internal/UIElement';
 
 jest.mock('./Services/get-translations');
 
@@ -337,6 +338,58 @@ describe('Core', () => {
             });
 
             void expect(async () => await checkout.initialize()).rejects.toThrow('You must specify a countryCode');
+        });
+    });
+
+    describe('submitDetails', () => {
+        test('should trigger afterAdditionalDetails callback when submitDetails response contains action', async () => {
+            const mockAfterAdditionalDetails = jest.fn();
+            const checkout = await new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456',
+                analytics: { enabled: false },
+                afterAdditionalDetails: mockAfterAdditionalDetails,
+                onAdditionalDetails: (_, __, actions) => {
+                    actions.resolve({
+                        resultCode: 'RedirectShopper',
+                        action: {
+                            paymentMethodType: 'redirect',
+                            type: 'redirect'
+                        }
+                    });
+                }
+            }).initialize();
+
+            checkout.submitDetails({ details: { redirectResult: 'xxxxxx' } });
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+            expect(mockAfterAdditionalDetails).toHaveBeenCalledWith(expect.any(UIElement));
+        });
+
+        test('should trigger onPaymentCompleted when submitDetails response does not contain action', async () => {
+            const mockResponse = {
+                resultCode: 'Authorised' as ResultCode
+            };
+            const mockAfterAdditionalDetails = jest.fn();
+            const mockOnPaymentCompleted = jest.fn();
+            const checkout = await new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456',
+                analytics: { enabled: false },
+                afterAdditionalDetails: mockAfterAdditionalDetails,
+                onPaymentCompleted: mockOnPaymentCompleted,
+                onAdditionalDetails: (_, __, actions) => {
+                    actions.resolve(mockResponse);
+                }
+            }).initialize();
+
+            checkout.submitDetails({ details: { redirectResult: 'xxxxxx' } });
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+            expect(mockAfterAdditionalDetails).not.toHaveBeenCalled();
+            expect(mockOnPaymentCompleted).toHaveBeenCalledWith(mockResponse);
         });
     });
 });
