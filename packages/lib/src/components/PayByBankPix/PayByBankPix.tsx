@@ -58,9 +58,8 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         // enrich risk signals only on hosted page
         // on the hosted checkout page, we reuse the same id and riskSignals. We get them from the query params / pbl logic, and pass them through to the second /payments call
         const issuer = this.state.data?.issuer ? { issuer: this.state.data?.issuer } : {};
-        const subType = this.props._isNativeFlow ? 'embedded' : 'redirect';
         return {
-            paymentMethod: { type: TxVariants.paybybank_pix, subType, ...issuer },
+            paymentMethod: { type: TxVariants.paybybank_pix, ...issuer },
             // todo: remove this and put it in the payments call
             returnUrl: this.props._isNativeFlow
                 ? 'https://localhost:3020/iframe.html?globals=&args=&id=components-paybybankpix--simulate-hosted-page&viewMode=story'
