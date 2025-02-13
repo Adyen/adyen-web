@@ -9,7 +9,7 @@ import InputText from '../../internal/FormFields/InputText';
 import { bsbValidationRules } from './validate';
 import './PayIDInput.scss';
 import { phoneFormatters } from '../../internal/PhoneInput/validate';
-import { ComponentMethodsRef } from '../../internal/UIElement/types';
+import { ComponentMethodsRef, UIElementStatus } from '../../internal/UIElement/types';
 import PayToNameFields from './PayToNameFields';
 import { PayToPlaceholdersType } from '../types';
 
@@ -21,6 +21,8 @@ export interface BSBFormData {
 }
 
 export interface BSBInputProps {
+    status: UIElementStatus;
+    setStatus: (status: UIElementStatus) => void;
     defaultData: BSBFormData;
     placeholders: PayToPlaceholdersType;
     onChange: (e) => void;
@@ -29,7 +31,7 @@ export interface BSBInputProps {
 
 const BASE_SCHEMA = ['bankAccountNumber', 'bsb', 'firstName', 'lastName'];
 
-export default function BSBInput({ setComponentRef, defaultData, placeholders, onChange }: BSBInputProps) {
+export default function BSBInput({ setComponentRef, defaultData, placeholders, onChange, setStatus }: BSBInputProps) {
     const { i18n } = useCoreContext();
 
     const form = useForm<BSBFormData>({
@@ -46,6 +48,7 @@ export default function BSBInput({ setComponentRef, defaultData, placeholders, o
     }, [data, valid, errors, isValid]);
 
     const payToRef = useRef<ComponentMethodsRef>({
+        setStatus: setStatus,
         showValidation: triggerValidation
     });
 

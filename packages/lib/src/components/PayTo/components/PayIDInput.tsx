@@ -12,7 +12,7 @@ import InputText from '../../internal/FormFields/InputText';
 import { payIdValidationRules } from './validate';
 import './PayIDInput.scss';
 import { phoneFormatters } from '../../internal/PhoneInput/validate';
-import { ComponentMethodsRef } from '../../internal/UIElement/types';
+import { ComponentMethodsRef, UIElementStatus } from '../../internal/UIElement/types';
 import PayToNameFields from './PayToNameFields';
 import { PayToPlaceholdersType } from '../types';
 
@@ -29,6 +29,8 @@ export interface PayIdFormData {
 }
 
 export interface PayIDInputProps {
+    status: UIElementStatus;
+    setStatus: (status: UIElementStatus) => void;
     defaultData: PayIdFormData;
     placeholders: PayToPlaceholdersType;
     onError: () => {};
@@ -45,7 +47,7 @@ const IDENTIFIER_SCHEMA = {
     [PayToIdentifierEnum.orgid]: ['orgid']
 };
 
-export default function PayIDInput({ setComponentRef, defaultData, placeholders, onError, onChange }: PayIDInputProps) {
+export default function PayIDInput({ setComponentRef, defaultData, placeholders, onError, onChange, setStatus }: PayIDInputProps) {
     const { i18n } = useCoreContext();
 
     const form = useForm<PayIdFormData>({
@@ -68,6 +70,7 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
     }, [data, valid, errors, isValid]);
 
     const payToRef = useRef<ComponentMethodsRef>({
+        setStatus: setStatus,
         showValidation: triggerValidation
     });
 

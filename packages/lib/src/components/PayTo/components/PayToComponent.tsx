@@ -6,6 +6,7 @@ import { SegmentedControlOptions } from '../../internal/SegmentedControl/Segment
 import PayIDInput from './PayIDInput';
 import BSBInput from './BSBInput';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
+import { UIElementStatus } from '../../internal/UIElement/types';
 
 export type PayToInputOption = 'payid-option' | 'bsb-option';
 
@@ -35,9 +36,7 @@ const inputOptions: SegmentedControlOptions<PayToInputOption> = [
 export default function PayToComponent(props) {
     const { i18n } = useCoreContext();
 
-    const [status, setStatus] = useState<string>('ready');
-
-    this.setStatus = setStatus;
+    const [status, setStatus] = useState<UIElementStatus>('ready');
 
     const defaultOption = inputOptions[0].value;
     const [selectedInput, setSelectedInput] = useState<PayToInputOption>(defaultOption);
@@ -53,6 +52,8 @@ export default function PayToComponent(props) {
                 <SegmentedControl selectedValue={selectedInput} options={inputOptions} onChange={setSelectedInput} />
                 {selectedInput === 'payid-option' && (
                     <PayIDInput
+                        status={status}
+                        setStatus={setStatus}
                         setComponentRef={props.setComponentRef}
                         onChange={onChange}
                         defaultData={props.data}
@@ -62,6 +63,8 @@ export default function PayToComponent(props) {
                 )}
                 {selectedInput === 'bsb-option' && (
                     <BSBInput
+                        status={status}
+                        setStatus={setStatus}
                         setComponentRef={props.setComponentRef}
                         onChange={onChange}
                         defaultData={props.data}
