@@ -8,13 +8,16 @@ import { PaymentMethodStoryProps } from '../types';
 
 interface GiftcardExampleProps {
     contextArgs: PaymentMethodStoryProps<GiftCardConfiguration>;
+    renderCard?: boolean; // Add a new prop to control which component to render
 }
 
-export const GiftcardExample = ({ contextArgs }: GiftcardExampleProps) => {
+export const GiftcardExample = ({ contextArgs, renderCard = true }: GiftcardExampleProps) => {
     const container = useRef(null);
     const checkout = useRef(null);
     const [element, setElement] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
+
+    const [remainingAmount, setRemainingAmount] = useState('');
 
     const createCheckout = async () => {
         const { useSessions, showPayButton, countryCode, shopperLocale, amount } = contextArgs;
@@ -28,11 +31,20 @@ export const GiftcardExample = ({ contextArgs }: GiftcardExampleProps) => {
                   amount
               });
 
-        const onOrderUpdated = () => {
-            const card = new Card(checkout.current, {
-                _disableClickToPay: true
-            });
-            setElement(card);
+        const onOrderUpdated = data => {
+            setRemainingAmount(data.order?.remainingAmount?.value);
+            if (renderCard) {
+                const card = new Card(checkout.current, {
+                    _disableClickToPay: true
+                });
+                setElement(card);
+            } else {
+                const giftcardElement = new Giftcard(checkout.current, {
+                    ...contextArgs.componentConfiguration,
+                    onOrderUpdated: onOrderUpdated
+                });
+                setElement(giftcardElement);
+            }
         };
 
         const giftcardElement = new Giftcard(checkout.current, {
@@ -44,7 +56,7 @@ export const GiftcardExample = ({ contextArgs }: GiftcardExampleProps) => {
 
     useEffect(() => {
         void createCheckout();
-    }, [contextArgs]);
+    }, [contextArgs, renderCard]);
 
     useEffect(() => {
         if (element?.isAvailable) {
@@ -61,5 +73,16 @@ export const GiftcardExample = ({ contextArgs }: GiftcardExampleProps) => {
         }
     }, [element]);
 
-    return <div>{errorMessage ? <div>{errorMessage}</div> : <div ref={container} id="component-root" className="component-wrapper" />}</div>;
+    return (
+        <div>
+            {errorMessage ? (
+                <div>{errorMessage}</div>
+            ) : (
+                <div>
+                    <div>Remaining amount: {remainingAmount}</div>
+                    <div ref={container} id="component-root" className="component-wrapper" />
+                </div>
+            )}
+        </div>
+    );
 };
