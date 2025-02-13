@@ -12,13 +12,17 @@ interface USOnlyPhoneInputStateData {
 
 interface USOnlyPhoneInputProps {
     onChange(mobileNumber: string): void;
+    initialValue?: string;
 }
 
-const USOnlyPhoneInput = ({ onChange }: USOnlyPhoneInputProps) => {
+const USOnlyPhoneInput = ({ initialValue, onChange }: USOnlyPhoneInputProps) => {
     const { i18n } = useCoreContext();
     const formSchema = ['mobileNumber'];
     const { handleChangeFor, data } = useForm<USOnlyPhoneInputStateData>({
         schema: formSchema,
+        defaultData: {
+            mobileNumber: initialValue
+        },
         formatters: {
             mobileNumber: mobileNumberFormatter
         }
