@@ -7,10 +7,10 @@
   resolved "https://registry.yarnpkg.com/@adobe/css-tools/-/css-tools-4.4.0.tgz#728c484f4e10df03d5a3acd0d8adcbbebff8ad63"
   integrity sha512-Ff9+ksdQQB3rMncgqDK78uLznstjyfIf2Arnh22pW8kBpLs6rpKDwgnZT46hin5Hl1WzazzK64DOrhSwYpS7bQ==
 
-"@adyen/bento-design-tokens@1.10.0":
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/@adyen/bento-design-tokens/-/bento-design-tokens-1.10.0.tgz#6e93631410db39c916665ddc3ea4a3361c95a6d5"
-  integrity sha512-ZaWLGTLLW0bh69mu9ibGMaZ2DXkrB07XU3gc5Mt1fTZgNDAnCsdfJ/Wq7BxW3zYhtQLU69oz0QayZ3RDKTlHEA==
+"@adyen/bento-design-tokens@1.31.1":
+  version "1.31.1"
+  resolved "https://registry.yarnpkg.com/@adyen/bento-design-tokens/-/bento-design-tokens-1.31.1.tgz#15df3dd1517a336ba831bcf0b41e3a39d55bd485"
+  integrity sha512-t242unHfU8/0ojiEwpiwP2OZBnhtd2t97ZfexPjiHzh/FZSkSAm+nj/kOfrD0j3cd/c5Y/GSwaq1fzzW0x5NAQ==
 
 "@ampproject/remapping@^2.2.0":
   version "2.3.0"
