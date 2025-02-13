@@ -33,7 +33,6 @@ export interface PayIDInputProps {
     setStatus: (status: UIElementStatus) => void;
     defaultData: PayIdFormData;
     placeholders: PayToPlaceholdersType;
-    onError: () => {};
     onChange: (e) => void;
     setComponentRef: (ref: ComponentMethodsRef) => void;
 }
@@ -47,7 +46,7 @@ const IDENTIFIER_SCHEMA = {
     [PayToIdentifierEnum.orgid]: ['orgid']
 };
 
-export default function PayIDInput({ setComponentRef, defaultData, placeholders, onError, onChange, setStatus }: PayIDInputProps) {
+export default function PayIDInput({ setComponentRef, defaultData, placeholders, onChange, setStatus }: PayIDInputProps) {
     const { i18n } = useCoreContext();
 
     const form = useForm<PayIdFormData>({
@@ -86,7 +85,7 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
                 selectedIdentifier={data.selectedIdentifier}
             />
             {data.selectedIdentifier === PayToIdentifierEnum.phone && (
-                <PayToPhone onChange={handleChangeFor('phone', 'blur')} onError={onError} data={data} form={form} />
+                <PayToPhone onChange={handleChangeFor('phone', 'blur')} data={data} form={form} />
             )}
 
             {/* TODO probably worth refactoring this into  either re-usable components or builder */}

@@ -123,7 +123,6 @@ export class PayToElement extends UIElement<PayToConfiguration> {
                     data={this.props.data}
                     placeholders={this.props.placeholders}
                     setComponentRef={this.setComponentRef}
-                    onSubmit={this.submit}
                     onChange={this.setState}
                     payButton={this.payButton}
                     showPayButton={this.props.showPayButton}

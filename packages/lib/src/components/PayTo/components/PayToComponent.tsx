@@ -6,7 +6,9 @@ import { SegmentedControlOptions } from '../../internal/SegmentedControl/Segment
 import PayIDInput from './PayIDInput';
 import BSBInput from './BSBInput';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
-import { UIElementStatus } from '../../internal/UIElement/types';
+import { ComponentMethodsRef, UIElementStatus } from '../../internal/UIElement/types';
+import { PayToData, PayToPlaceholdersType } from '../types';
+import { PayButtonProps } from '../../internal/PayButton/PayButton';
 
 export type PayToInputOption = 'payid-option' | 'bsb-option';
 
@@ -33,7 +35,16 @@ const inputOptions: SegmentedControlOptions<PayToInputOption> = [
     }
 ];
 
-export default function PayToComponent(props) {
+export interface PayToComponentProps {
+    showPayButton: boolean;
+    onChange: (e) => void;
+    setComponentRef: (ref: ComponentMethodsRef) => void;
+    data: PayToData;
+    placeholders: PayToPlaceholdersType;
+    payButton: (props: Partial<PayButtonProps>) => h.JSX.Element;
+}
+
+export default function PayToComponent(props: PayToComponentProps) {
     const { i18n } = useCoreContext();
 
     const [status, setStatus] = useState<UIElementStatus>('ready');
@@ -57,7 +68,6 @@ export default function PayToComponent(props) {
                         setComponentRef={props.setComponentRef}
                         onChange={onChange}
                         defaultData={props.data}
-                        onError={props.onError}
                         placeholders={props.placeholders}
                     />
                 )}
