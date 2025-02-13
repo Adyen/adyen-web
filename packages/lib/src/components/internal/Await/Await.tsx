@@ -194,7 +194,7 @@ function Await(props: AwaitComponentProps) {
 
             {/* Everything is wrapped in !! so we evaluate the result as boolean,
              otherwise we might just print the value or object as mistake */}
-            {!!(props.showAmount && amount && amount.value && amount.currency) && (
+            {!!(props.showAmount && amount?.value && amount?.currency) && (
                 <div className="adyen-checkout__await__amount">{i18n.amount(amount.value, amount.currency)}</div>
             )}
 

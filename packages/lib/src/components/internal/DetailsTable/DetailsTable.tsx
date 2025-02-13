@@ -22,8 +22,8 @@ export default function DetailsTable({ tableFields }: DetailsTableProps) {
                 .filter(item => !!item)
                 // or objects without label and value
                 .filter(({ label, value }) => !!label && !!value)
-                .map(({ label, value }, index) => (
-                    <div key={index} className="adyen-checkout__voucher-result__details__item adyen-checkout__details-table__item">
+                .map(({ label, value }) => (
+                    <div key={`${label + value}`} className="adyen-checkout__voucher-result__details__item adyen-checkout__details-table__item">
                         <dt className="adyen-checkout__voucher-result__details__label adyen-checkout__details-table__label">{label}</dt>
                         <dd className="adyen-checkout__voucher-result__details__value adyen-checkout__details-table__value">{value}</dd>
                     </div>

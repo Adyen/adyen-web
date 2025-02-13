@@ -47,7 +47,7 @@ const getAccountIdentifier = (state: PayToData) => {
  *
  */
 export class PayToElement extends UIElement<PayToConfiguration> {
-    public static type = TxVariants.payto;
+    public static readonly type = TxVariants.payto;
 
     protected static defaultProps = {
         placeholders: {}

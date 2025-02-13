@@ -9,7 +9,6 @@ import { useCallback } from 'preact/hooks';
 interface PayToPhoneProps {
     form: Form<PayIdFormData>;
     onChange: (value: string) => void;
-    onError: (error: Error) => void;
     data: any; // Data
 }
 

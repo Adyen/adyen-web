@@ -13,7 +13,8 @@ const emailRegex =
 const phoneNumberRegex = /^[1-9]{1,1}[0-9]{1,29}$/;
 
 export const validationFromRegex = (value: string, regex: RegExp, validationRule: ValidatorRule): boolean | null => {
-    // TODO investigate why null is the return value for 'empty' validation
+    // null is returned here for legacy reasons
+    // check comment on hasError() ValidatorRulesResult.ts:17
     if (isEmpty(value)) {
         validationRule.errorMessage = ERROR_FIELD_REQUIRED;
         return null;
