@@ -99,7 +99,6 @@ class FastlaneSDK {
                 paymentType: 'fastlane',
                 configuration: {
                     fastlaneSessionId: this.fastlaneSessionId,
-                    customerId: this.latestShopperDetails.customerId,
                     email: this.latestShopperDetails.email,
                     tokenId: authResult.profileData.card.id,
                     lastFour: authResult.profileData.card.paymentSource.card.lastDigits,

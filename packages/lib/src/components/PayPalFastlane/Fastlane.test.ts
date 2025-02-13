@@ -22,8 +22,7 @@ describe('Fastlane', () => {
         // @ts-ignore Testing with incomplete config properties
         fastlane = new Fastlane(global.core, {
             tokenId: 'xxx',
-            lastFour: '1111',
-            customerId: 'customer-id'
+            lastFour: '1111'
         });
         await expect(fastlane.isAvailable()).rejects.toBeUndefined();
 
@@ -31,7 +30,6 @@ describe('Fastlane', () => {
         fastlane = new Fastlane(global.core, {
             tokenId: 'xxx',
             lastFour: '1111',
-            customerId: 'customer-id',
             brand: 'visa'
         });
         await expect(fastlane.isAvailable()).rejects.toBeUndefined();
@@ -41,7 +39,6 @@ describe('Fastlane', () => {
         fastlane = new Fastlane(global.core, {
             tokenId: 'xxx',
             lastFour: '1111',
-            customerId: 'customer-id',
             brand: 'visa',
             email: 'shopper@adyen.com'
         });
@@ -50,7 +47,6 @@ describe('Fastlane', () => {
         fastlane = new Fastlane(global.core, {
             tokenId: 'xxx',
             lastFour: '1111',
-            customerId: 'customer-id',
             brand: 'visa',
             email: 'shopper@adyen.com',
             fastlaneSessionId: '1111'
@@ -68,7 +64,6 @@ describe('Fastlane', () => {
             tokenId: 'token-id',
             lastFour: '1111',
             brand: 'visa',
-            customerId: 'customer-id',
             email: 'shopper@adyen.com',
             fastlaneSessionId: 'session-id'
         });
@@ -76,8 +71,7 @@ describe('Fastlane', () => {
         const encodedBlob = btoa(
             JSON.stringify({
                 fastlaneSessionId: 'session-id',
-                tokenId: 'token-id',
-                customerId: 'customer-id'
+                tokenId: 'token-id'
             })
         );
 
@@ -96,7 +90,6 @@ describe('Fastlane', () => {
             i18n: global.i18n,
             tokenId: 'token-id',
             lastFour: '1111',
-            customerId: 'customer-id',
             brand: 'visa',
             email: 'shopper@adyen.com',
             fastlaneSessionId: 'session-id'
