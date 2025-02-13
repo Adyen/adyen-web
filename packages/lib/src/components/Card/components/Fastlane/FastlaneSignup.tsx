@@ -12,6 +12,7 @@ import type { FastlaneSignupConfiguration } from '../../../PayPalFastlane/types'
 import { isConfigurationValid } from './utils/validate-configuration';
 
 import './FastlaneSignup.scss';
+import mobileNumberFormatter from './utils/mobile-number-formatter';
 
 type FastlaneSignupProps = FastlaneSignupConfiguration & {
     currentDetectedBrand: string;
@@ -28,6 +29,7 @@ const FastlaneSignup = ({
     termsAndConditionsVersion,
     fastlaneSessionId,
     currentDetectedBrand,
+    telephoneNumber: telephoneNumberFromProps,
     onChange
 }: FastlaneSignupProps) => {
     const displaySignup = useMemo(() => showConsent && SUPPORTED_BRANDS.includes(currentDetectedBrand), [showConsent, currentDetectedBrand]);
@@ -97,13 +99,22 @@ const FastlaneSignup = ({
                     'adyen-checkout-card__fastlane-consent-toggle--active': isChecked
                 })}
             >
-                <Toggle checked={isChecked} onChange={setIsChecked} label={i18n.get('card.fastlane.consentToggle')} />
-                <InfoButton />
+                <Toggle
+                    checked={isChecked}
+                    onChange={setIsChecked}
+                    ariaLabel={i18n.get('card.fastlane.consentToggle')}
+                    label={
+                        <Fragment>
+                            <span>{i18n.get('card.fastlane.consentToggle')}</span>
+                            <InfoButton />
+                        </Fragment>
+                    }
+                />
             </div>
 
             {isChecked && (
                 <Fragment>
-                    <USOnlyPhoneInput onChange={setTelephoneNumber} />
+                    <USOnlyPhoneInput initialValue={mobileNumberFormatter(telephoneNumberFromProps)} onChange={setTelephoneNumber} />
                     <div className="adyen-checkout-card__fastlane-consent-text">
                         <LabelOnlyDisclaimerMessage
                             message={i18n.get('card.fastlane.consentText')}

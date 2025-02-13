@@ -131,7 +131,7 @@ class FastlaneSDK {
     /**
      * Render the "Fastlane by PayPal" logo in the specified HTML container
      */
-    public async mountWatermark(container: HTMLElement | string, options = { includeAdditionalInfo: false }): Promise<void> {
+    public async mountWatermark(container: HTMLElement | string, options = { includeAdditionalInfo: true }): Promise<void> {
         const component = await this.fastlaneSdk.FastlaneWatermarkComponent(options);
         component.render(container);
     }

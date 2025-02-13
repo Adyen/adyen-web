@@ -73,7 +73,8 @@ export const MockedUnrecognizedFlowDropin: FastlaneStory = {
                                             termsAndConditionsLink: 'https://adyen.com',
                                             privacyPolicyLink: 'https://adyen.com',
                                             termsAndConditionsVersion: 'v1',
-                                            fastlaneSessionId: 'ABC-123'
+                                            fastlaneSessionId: 'ABC-123',
+                                            telephoneNumber: '1234567890'
                                         }
                                     }
                                 }

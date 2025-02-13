@@ -133,7 +133,8 @@ type FastlaneCardComponentConfiguration = {
 };
 
 export type FastlaneSignupConfiguration = FastlaneConsentRenderState & {
-    fastlaneSessionId: string;
+    fastlaneSessionId?: string;
+    telephoneNumber?: string;
 };
 
 export type FastlanePaymentMethodConfiguration = FastlaneComponentConfiguration | FastlaneCardComponentConfiguration;
