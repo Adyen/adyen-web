@@ -3,7 +3,7 @@ import { PaymentMethodStoryProps } from '../types';
 import { ComponentContainer } from '../ComponentContainer';
 import { Checkout } from '../Checkout';
 import PayTo from '../../../src/components/PayTo/PayTo';
-import { http, HttpResponse } from 'msw';
+// import { http, HttpResponse } from 'msw';
 import { MandateType, PayToConfiguration } from '../../../src/components/PayTo/types';
 
 // extend the default story args so we can change mandate top level
@@ -57,17 +57,17 @@ export const PayToAwaitScreen: PayToStory = {
         payee: 'Cool Merchant Ltd'
     },
     parameters: {
-        msw: {
-            handlers: [
-                http.post('https://checkoutshopper-test.adyen.com/checkoutshopper/services/PaymentInitiation/v1/status', () => {
-                    return HttpResponse.json({
-                        payload: '',
-                        resultCode: 'pending',
-                        type: 'pending'
-                    });
-                })
-            ]
-        }
+        // msw: {
+        //     handlers: [
+        //         http.post('https://checkoutshopper-test.adyen.com/checkoutshopper/services/PaymentInitiation/v1/status', () => {
+        //             return HttpResponse.json({
+        //                 payload: '',
+        //                 resultCode: 'pending',
+        //                 type: 'pending'
+        //             });
+        //         })
+        //     ]
+        // }
     },
     render: ({ componentConfiguration, mandate, payee, ...checkoutConfig }) => (
         <Checkout checkoutConfig={checkoutConfig}>
