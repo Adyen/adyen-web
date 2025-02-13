@@ -1,4 +1,8 @@
 function mobileNumberFormatter(value: string): string {
+    if (!value) {
+        return '';
+    }
+
     let input = value;
     // Allow only numbers
     input = input.replace(/\D/g, '');
