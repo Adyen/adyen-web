@@ -33,7 +33,7 @@ export interface PhoneInputFieldProps {
 export default function PhoneInputFields({ getError, showNumber, showPrefix, form, canSelectPrefix = true, ...props }: PhoneInputFieldProps) {
     const { i18n } = useCoreContext();
 
-    const { handleChangeFor, data, valid, triggerValidation } = form;
+    const { handleChangeFor, data, valid } = form;
 
     // Force re-validation of the phoneNumber when data.phonePrefix changes (since the validation rules will also change)
     useEffect((): void => {
@@ -41,8 +41,6 @@ export default function PhoneInputFields({ getError, showNumber, showPrefix, for
             handleChangeFor('phoneNumber', 'blur')(data.phoneNumber);
         }
     }, [data.phonePrefix]);
-
-    this.triggerValidation = triggerValidation;
 
     return (
         <Fragment>
