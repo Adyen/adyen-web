@@ -12,7 +12,7 @@ test.describe('Testing binLookup endpoint for a response that should indicate a 
 
         await card.isComponentVisible();
 
-        // Number that identifies as plcc but fails luhn
+        // Number that identifies as plcc, with no luhn required, but that also fails luhn
         await card.typeCardNumber(PLCC_NO_LUHN_NO_DATE_WOULD_FAIL_LUHN);
 
         // Confirm plcc brand
@@ -38,6 +38,9 @@ test.describe('Testing binLookup endpoint for a response that should indicate a 
         // UI reset
         brandingIconSrc = await card.brandingIcon.getAttribute('src');
         expect(brandingIconSrc).toContain('nocard.svg');
+
+        // Confirm date is visible again
+        await expect(card.expiryDateField).toBeVisible();
 
         // PM is not valid
         cardValid = await page.evaluate('window.component.isValid');
