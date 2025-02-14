@@ -123,7 +123,7 @@
     "jest-fixed-jsdom": "^0.0.9",
     "jest-mock-extended": "3.0.7",
     "lint-staged": "15.3.0",
-    "msw": "^2.6.4",
+    "msw": "^2.7.0",
     "msw-storybook-addon": "^2.0.4",
     "postcss": "8.4.49",
     "rollup": "4.29.1",
