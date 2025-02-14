@@ -26,11 +26,11 @@ const config: StorybookConfig = {
         options: {}
     },
 
-    staticDirs: ['../storybook/assets'],
+    staticDirs: ['../storybook/assets', '../storybook/public'],
 
     viteFinal(config) {
         return mergeConfig(config, {
-            define: generateEnvironmentVariables(),
+            define: generateEnvironmentVariables(process.env.NODE_ENV),
             resolve: {
                 alias: [
                     {
