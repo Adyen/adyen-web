@@ -55,11 +55,10 @@ test.describe('Card - Testing resetting after binLookup has given a dual brand r
             await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
             await card.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
 
-            let cardData: any = await page.evaluate('window.component.data');
-
             // Check brand has not been set in paymentMethod data
-            expect(cardData.paymentMethod.brand).toBe(undefined);
+            await page.waitForFunction(() => window['component'].data.paymentMethod.brand === undefined);
 
+            // Need this - it allows time for the UI to update when the icon changes
             const responsePromise = page.waitForResponse(response => response.url().includes('/binLookup') && response.request().method() === 'POST');
 
             // Paste in card unrecognised by /binLookuo but which our regEx recognises as Visa
@@ -67,10 +66,8 @@ test.describe('Card - Testing resetting after binLookup has given a dual brand r
 
             await responsePromise;
 
-            cardData = await page.evaluate('window.component.data');
-
             // Check brand has been reset in paymentMethod data
-            expect(cardData.paymentMethod.brand).toBe(undefined);
+            await page.waitForFunction(() => window['component'].data.paymentMethod.brand === undefined);
 
             // Check regEx recognises brand
             let brandingIconSrc = await card.brandingIcon.getAttribute('src');
@@ -88,25 +85,19 @@ test.describe('Card - Testing resetting after binLookup has given a dual brand r
         // Select brand
         await card.selectBrand(/visa/i);
 
-        let cardData: any = await page.evaluate('window.component.data');
-
         // Check brand has been set in paymentMethod data
-        expect(cardData.paymentMethod.brand).toBe('visa');
+        await page.waitForFunction(() => window['component'].data.paymentMethod.brand === 'visa');
 
         // Click second brand
         await card.selectBrand('Bancontact card');
 
-        cardData = await page.evaluate('window.component.data');
-
         // Check brand has been set in paymentMethod data
-        expect(cardData.paymentMethod.brand).toBe('bcmc');
+        await page.waitForFunction(() => window['component'].data.paymentMethod.brand === 'bcmc');
 
         // Delete number
         await card.deleteCardNumber();
 
-        cardData = await page.evaluate('window.component.data');
-
         // Check brand has been reset in paymentMethod data
-        expect(cardData.paymentMethod.brand).toBe(undefined);
+        await page.waitForFunction(() => window['component'].data.paymentMethod.brand === undefined);
     });
 });
