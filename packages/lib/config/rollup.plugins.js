@@ -38,13 +38,7 @@ export const convertJsonToESM = () => json({ namedExports: false, compact: true,
 
 export const compileCSS = ({ extract = 'adyen.css' } = {}) =>
     postcss({
-        use: {
-            sass: {
-                includePaths: [pathResolve(__dirname, '../src')],
-                verbose: false,
-                quietDeps: true
-            }
-        },
+        use: { sass: { includePaths: [pathResolve(__dirname, '../src')] } },
         config: {
             path: 'postcss.config.cjs'
         },

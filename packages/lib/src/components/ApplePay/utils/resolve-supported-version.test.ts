@@ -10,7 +10,7 @@ describe('resolveSupportedVersion', () => {
     });
 
     test('should return supported version if ApplePaySession is available', () => {
-        // @ts-ignore bbbb
+        // @ts-ignore Mocking 'supportsVersion'
         window.ApplePaySession.supportsVersion = jest.fn().mockImplementation((version: number) => {
             return version === 10;
         });
@@ -20,7 +20,7 @@ describe('resolveSupportedVersion', () => {
     });
 
     test('should return null if ApplePaySession is not available', () => {
-        // @ts-ignore bbb
+        // @ts-ignore Mocking 'supportsVersion'
         window.ApplePaySession.supportsVersion = null;
 
         const version = resolveSupportedVersion(14);
