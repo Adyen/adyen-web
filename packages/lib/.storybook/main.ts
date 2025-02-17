@@ -30,7 +30,7 @@ const config: StorybookConfig = {
 
     viteFinal(config) {
         return mergeConfig(config, {
-            define: generateEnvironmentVariables(),
+            define: generateEnvironmentVariables(process.env.NODE_ENV),
             resolve: {
                 alias: [
                     {

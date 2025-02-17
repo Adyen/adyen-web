@@ -3,7 +3,11 @@ import { Preview } from '@storybook/preact';
 import { DEFAULT_COUNTRY_CODE, DEFAULT_SHOPPER_LOCALE, DEFAULT_AMOUNT_VALUE, SHOPPER_LOCALES } from '../storybook/config/commonConfig';
 import { initialize, mswLoader } from 'msw-storybook-addon';
 
-initialize({ onUnhandledRequest: 'bypass' });
+const isDev = process.env.NODE_ENV === 'development';
+if (isDev) {
+    initialize({ onUnhandledRequest: 'bypass' });
+}
+const loaders = isDev ? { loaders: [mswLoader] } : {};
 
 const preview: Preview = {
     argTypes: {
@@ -31,8 +35,7 @@ const preview: Preview = {
         amount: DEFAULT_AMOUNT_VALUE,
         showPayButton: true
     },
-    // Provide the MSW addon loader globally
-    loaders: [mswLoader]
+    ...loaders
 };
 
 export default preview;
