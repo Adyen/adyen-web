@@ -1,5 +1,5 @@
 import { preparePaymentRequest } from './payment-request';
-import defaultProps from './defaultProps';
+import defaultProps from '../defaultProps';
 
 describe('preparePaymentRequest', () => {
     test('should warn if country code is missing', () => {

@@ -5,14 +5,15 @@ import ApplePayService from './services/ApplePayService';
 import base64 from '../../utils/base64';
 import defaultProps from './defaultProps';
 import { httpPost } from '../../core/Services/http';
-import { APPLEPAY_SESSION_ENDPOINT } from './config';
-import { preparePaymentRequest } from './payment-request';
-import { resolveSupportedVersion, mapBrands, formatApplePayContactToAdyenAddressFormat } from './utils';
+import { preparePaymentRequest } from './utils/payment-request';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { DecodeObject } from '../../types/global-types';
 import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
+import { resolveSupportedVersion } from './utils/resolve-supported-version';
+import { formatApplePayContactToAdyenAddressFormat } from './utils/format-applepay-contact-to-adyen-format';
+import { mapBrands } from './utils/map-adyen-brands-to-applepay-brands';
 import ApplePaySdkLoader from './services/ApplePaySdkLoader';
 
 import type { SendAnalyticsObject } from '../../core/Analytics/types';
@@ -24,6 +25,7 @@ const LATEST_APPLE_PAY_VERSION = 14;
 
 class ApplePayElement extends UIElement<ApplePayConfiguration> {
     public static type = TxVariants.applepay;
+
     protected static defaultProps = defaultProps;
 
     private sdkLoader: ApplePaySdkLoader;
@@ -316,7 +318,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         const { hostname: domainName } = window.location;
         const { clientKey, configuration, loadingContext, initiative } = this.props;
         const { merchantName, merchantId } = configuration;
-        const path = `${APPLEPAY_SESSION_ENDPOINT}?clientKey=${clientKey}`;
+        const path = `v1/applePay/sessions?clientKey=${clientKey}`;
         const options = { loadingContext, path };
         const request: ApplePaySessionRequest = {
             displayName: merchantName,
