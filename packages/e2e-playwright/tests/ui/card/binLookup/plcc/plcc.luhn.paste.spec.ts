@@ -16,12 +16,11 @@ test.describe('Testing binLookup/plcc/pasting fny: test what happens when cards 
         await card.isComponentVisible();
 
         /**
-         * Type number that identifies as plcc, no luhn required, but that fails luhn
+         * Type number that identifies as plcc, no date, with luhn required, but that fails luhn
          */
         await card.fillCardNumber(PLCC_WITH_LUHN_NO_DATE_WOULD_FAIL_LUHN);
         await page.waitForTimeout(100);
 
-        await card.typeExpiryDate(TEST_DATE_VALUE);
         await card.typeCvc(TEST_CVC_VALUE);
 
         // Expect the card not to be valid
@@ -30,7 +29,7 @@ test.describe('Testing binLookup/plcc/pasting fny: test what happens when cards 
         await expect(card.cardNumberErrorElement).toBeVisible();
         await expect(card.cardNumberErrorElement).toHaveText(PAN_ERROR_NOT_VALID);
 
-        // "Paste" number that identifies as plcc, luhn required
+        // "Paste" number that identifies as plcc, no luhn required
         await card.fillCardNumber(PLCC_NO_LUHN_NO_DATE);
         await page.waitForTimeout(100);
 

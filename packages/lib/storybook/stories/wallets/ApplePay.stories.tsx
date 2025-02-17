@@ -18,7 +18,9 @@ export const Default: ApplePayStory = {
     ),
     args: {
         componentConfiguration: {
-            buttonColor: 'white-outline'
+            buttonColor: 'white-outline',
+            // Setting to Modal here because Storybook will run the Component within an iframe, which means the ApplePay code would be displayed as a new window by default
+            renderApplePayCodeAs: 'modal'
         }
     }
 };
@@ -39,7 +41,8 @@ export const WithCustomPayButton: ApplePayStory = {
     args: {
         componentConfiguration: {
             showPayButton: false,
-            buttonLocale: 'pt-BR'
+            // Setting to Modal here because Storybook will run the Component within an iframe, which means the ApplePay code would be displayed as a new window by default
+            renderApplePayCodeAs: 'modal'
         }
     }
 };
