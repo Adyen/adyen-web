@@ -85,7 +85,7 @@
     "@eslint/compat": "1.2.5",
     "@eslint/js": "9.17.0",
     "@preact/preset-vite": "2.9.3",
-    "@rollup/plugin-commonjs": "26.0.3",
+    "@rollup/plugin-commonjs": "28.0.2",
     "@rollup/plugin-eslint": "9.0.5",
     "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "15.3.1",
