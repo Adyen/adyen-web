@@ -9,6 +9,8 @@ import { useCoreContext } from '../../../core/Context/CoreProvider';
 import { ComponentMethodsRef, UIElementStatus } from '../../internal/UIElement/types';
 import { PayToData, PayToPlaceholdersType } from '../types';
 import { PayButtonProps } from '../../internal/PayButton/PayButton';
+import classNames from 'classnames';
+import './PayToComponent.scss';
 
 export type PayToInputOption = 'payid-option' | 'bsb-option';
 
@@ -59,7 +61,12 @@ export default function PayToComponent(props: PayToComponentProps) {
 
     return (
         <LoadingWrapper>
-            <div className="adyen-checkout__payto-component">
+            <div
+                className={classNames({
+                    'adyen-checkout__payto-component': true,
+                    'adyen-checkout__payto-component--loading': status === 'loading'
+                })}
+            >
                 <SegmentedControl selectedValue={selectedInput} options={inputOptions} onChange={setSelectedInput} />
                 {selectedInput === 'payid-option' && (
                     <PayIDInput
