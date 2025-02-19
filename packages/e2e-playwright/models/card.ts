@@ -122,9 +122,40 @@ class Card extends Base {
         this.threeDs2Challenge = new ThreeDs2Challenge(page);
     }
 
+    // The brands as displayed under the CardNumber field
     get availableBrands() {
         return this.rootElement.locator('.adyen-checkout__card__brands').getByRole('img').all();
     }
+
+    // The holder for the icons in the CardNumber field (when dual branding occurs)
+    get dualBrandingIconsHolder() {
+        return this.rootElement.locator('.adyen-checkout__card__dual-branding__buttons');
+    }
+
+    // The brands as displayed directly in the CardNumber field (when dual branding occurs)
+    async waitForVisibleBrands(expectedNumber = 2) {
+        return await this.page.waitForFunction(
+            expectedLength => [...document.querySelectorAll('.adyen-checkout__card__cardNumber__brandIcon')].length === expectedLength,
+            expectedNumber
+        );
+    }
+
+    // Retrieve dual brands
+    get brands() {
+        return this.cardNumberField.locator('.adyen-checkout__card__cardNumber__brandIcon').all();
+    }
+
+    // Select one of the dual brands
+    async selectBrand(
+        text: string | RegExp,
+        options?: {
+            exact?: boolean;
+        },
+        force = false
+    ) {
+        await this.cardNumberField.getByAltText(text, options).click({ force });
+    }
+    // --
 
     async goto(url: string = URL_MAP.card) {
         await this.page.goto(url);
