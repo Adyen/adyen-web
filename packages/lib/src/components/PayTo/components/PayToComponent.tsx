@@ -1,5 +1,4 @@
 import { h } from 'preact';
-import LoadingWrapper from '../../internal/LoadingWrapper';
 import SegmentedControl from '../../internal/SegmentedControl';
 import { useState } from 'preact/hooks';
 import { SegmentedControlOptions } from '../../internal/SegmentedControl/SegmentedControl';
@@ -60,37 +59,35 @@ export default function PayToComponent(props: PayToComponentProps) {
     };
 
     return (
-        <LoadingWrapper>
-            <div
-                className={classNames({
-                    'adyen-checkout__payto-component': true,
-                    'adyen-checkout__payto-component--loading': status === 'loading'
-                })}
-            >
-                <SegmentedControl selectedValue={selectedInput} options={inputOptions} onChange={setSelectedInput} />
-                {selectedInput === 'payid-option' && (
-                    <PayIDInput
-                        status={status}
-                        setStatus={setStatus}
-                        setComponentRef={props.setComponentRef}
-                        onChange={onChange}
-                        defaultData={props.data}
-                        placeholders={props.placeholders}
-                    />
-                )}
-                {selectedInput === 'bsb-option' && (
-                    <BSBInput
-                        status={status}
-                        setStatus={setStatus}
-                        setComponentRef={props.setComponentRef}
-                        onChange={onChange}
-                        defaultData={props.data}
-                        placeholders={props.placeholders}
-                    />
-                )}
+        <div
+            className={classNames({
+                'adyen-checkout__payto-component': true,
+                'adyen-checkout__payto-component--loading': status === 'loading'
+            })}
+        >
+            <SegmentedControl selectedValue={selectedInput} options={inputOptions} onChange={setSelectedInput} />
+            {selectedInput === 'payid-option' && (
+                <PayIDInput
+                    status={status}
+                    setStatus={setStatus}
+                    setComponentRef={props.setComponentRef}
+                    onChange={onChange}
+                    defaultData={props.data}
+                    placeholders={props.placeholders}
+                />
+            )}
+            {selectedInput === 'bsb-option' && (
+                <BSBInput
+                    status={status}
+                    setStatus={setStatus}
+                    setComponentRef={props.setComponentRef}
+                    onChange={onChange}
+                    defaultData={props.data}
+                    placeholders={props.placeholders}
+                />
+            )}
 
-                {props.showPayButton && props.payButton({ status, label: i18n.get('continue') })}
-            </div>
-        </LoadingWrapper>
+            {props.showPayButton && props.payButton({ status, label: i18n.get('continue') })}
+        </div>
     );
 }
