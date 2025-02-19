@@ -1,7 +1,7 @@
 const { host, protocol } = window.location;
 
 export const httpPost = (endpoint, data) =>
-    fetch(`${protocol}//${host}/${endpoint}`, {
+    fetch(`${protocol}//${host}/api/${endpoint}`, {
         method: 'POST',
         headers: {
             Accept: 'application/json, text/plain, */*',
