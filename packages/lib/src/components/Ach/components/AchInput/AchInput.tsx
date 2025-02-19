@@ -129,7 +129,12 @@ function AchInput(props: ACHInputProps) {
     }, [data, valid, errors, storePaymentMethod]);
 
     return (
-        <div className="adyen-checkout__ach">
+        <div
+            className={classNames({
+                'adyen-checkout__ach': true,
+                'adyen-checkout__ach--loading': status === 'loading'
+            })}
+        >
             <FormInstruction />
 
             <SecuredFieldsProvider
