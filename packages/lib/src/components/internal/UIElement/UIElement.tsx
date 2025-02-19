@@ -111,11 +111,17 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         return this;
     }
 
+    /**
+     * elementRef is a ref to the subclass that extends UIElement e.g. Card.tsx
+     */
     public setElementStatus(status: UIElementStatus, props?: any): this {
         this.elementRef?.setStatus(status, props);
         return this;
     }
 
+    /**
+     * componentRef is a ref to the primary component inside that subclass e.g. CardInput.tsx
+     */
     public setStatus(status: UIElementStatus, props?): this {
         if (this.componentRef?.setStatus) {
             this.componentRef.setStatus(status, props);
