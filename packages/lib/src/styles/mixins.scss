@@ -140,3 +140,7 @@ $adyen-checkout-media-query-l-min: 1024px;
     padding: 0;
     position: absolute;
 }
+
+@mixin adyen-checkout__component--loading {
+    pointer-events: none;
+}

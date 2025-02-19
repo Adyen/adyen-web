@@ -27,3 +27,10 @@
 .adyen-checkout__open-invoice .adyen-checkout__field--consentCheckbox {
     margin-top: token(spacer-070);
 }
+
+.adyen-checkout__open-invoice{
+    &--loading{
+        @include index.adyen-checkout__component--loading;
+    }
+}
+
