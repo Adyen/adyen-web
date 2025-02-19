@@ -141,6 +141,6 @@ $adyen-checkout-media-query-l-min: 1024px;
     position: absolute;
 }
 
-@mixin adyen-checkout__component--loading {
+@mixin adyen-checkout-component-loading {
     pointer-events: none;
 }

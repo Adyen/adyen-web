@@ -30,7 +30,7 @@
 
 .adyen-checkout__open-invoice{
     &--loading{
-        @include index.adyen-checkout__component--loading;
+        @include index.adyen-checkout-component-loading;
     }
 }
 
