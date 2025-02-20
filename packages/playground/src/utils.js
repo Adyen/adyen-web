@@ -69,7 +69,7 @@ const insertHeader = pages => {
 };
 
 export const searchFunctionExample = async (value, actions) => {
-    const url = `/mock/addressSearch?search=${encodeURIComponent(value)}`;
+    const url = `/api/mock/addressSearch?search=${encodeURIComponent(value)}`;
 
     const formattedData = await fetch(url)
         .then(res => res.json())
