@@ -76,9 +76,9 @@
 
 $deduct-width: token(spacer-040);
 
-.adyen-checkout__field--col-70 {
+.adyen-checkout__field--col-20 {
     @include index.screen-s-and-up {
-        width: calc(70% - $deduct-width);
+        width: calc(20% - $deduct-width);
     }
 }
 
@@ -88,11 +88,36 @@ $deduct-width: token(spacer-040);
     }
 }
 
+.adyen-checkout__field--col-40 {
+    @include index.screen-s-and-up {
+        width: calc(40% - $deduct-width);
+    }
+}
+
 .adyen-checkout__field--col-50 {
     @include index.screen-s-and-up {
         width: calc(50% - $deduct-width);
     }
 }
+
+.adyen-checkout__field--col-60 {
+    @include index.screen-s-and-up {
+        width: calc(60% - $deduct-width);
+    }
+}
+
+.adyen-checkout__field--col-70 {
+    @include index.screen-s-and-up {
+        width: calc(70% - $deduct-width);
+    }
+}
+
+.adyen-checkout__field--col-80 {
+    @include index.screen-s-and-up {
+        width: calc(80% - $deduct-width);
+    }
+}
+
 
 .adyen-checkout__field-wrapper > .adyen-checkout__field:first-child {
     margin-right: token(spacer-040);

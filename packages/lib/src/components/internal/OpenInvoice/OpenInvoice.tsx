@@ -22,6 +22,7 @@ import Field from '../FormFields/Field';
 import FormInstruction from '../FormInstruction';
 import { ComponentMethodsRef } from '../UIElement/types';
 import useSRPanelForOpenInvoiceErrors from './useSRPanelForOpenInvoiceErrors';
+import classNames from 'classnames';
 
 const consentCBErrorObj: GenericError = {
     isValid: false,
@@ -111,7 +112,12 @@ export default function OpenInvoice(props: OpenInvoiceProps) {
         setErrors(prevErrors => ({ ...prevErrors, ...{ consentCheckbox: !checked ? consentCBErrorObj : null } }));
     };
     return (
-        <div className="adyen-checkout__open-invoice">
+        <div
+            className={classNames({
+                'adyen-checkout__open-invoice': true,
+                'adyen-checkout__open-invoice--loading': status === 'loading'
+            })}
+        >
             <FormInstruction />
 
             {activeFieldsets.companyDetails && (

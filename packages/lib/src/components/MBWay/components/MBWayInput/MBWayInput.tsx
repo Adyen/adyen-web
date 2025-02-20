@@ -3,7 +3,7 @@ import { useState, useRef } from 'preact/hooks';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { MBWayInputProps } from './types';
 import './MBWayInput.scss';
-import PhoneInput from '../../../internal/PhoneInput';
+import PhoneInputForm from '../../../internal/PhoneInput';
 import LoadingWrapper from '../../../internal/LoadingWrapper';
 import usePhonePrefixes from '../../../internal/PhoneInput/usePhonePrefixes';
 
@@ -17,7 +17,6 @@ function MBWayInput(props: MBWayInputProps) {
     const [status, setStatus] = useState<string>('ready');
 
     this.setStatus = setStatus;
-    this.showValidation = phoneInputRef?.current?.triggerValidation;
 
     const { loadingStatus: prefixLoadingStatus, phonePrefixes } = usePhonePrefixes({ allowedCountries, loadingContext, handleError: props.onError });
 
@@ -28,7 +27,14 @@ function MBWayInput(props: MBWayInputProps) {
     return (
         <LoadingWrapper status={prefixLoadingStatus}>
             <div className="adyen-checkout__mb-way">
-                <PhoneInput {...props} items={phonePrefixes} ref={phoneInputRef} onChange={onChange} data={props.data} />
+                <PhoneInputForm
+                    setComponentRef={props.setComponentRef}
+                    {...props}
+                    items={phonePrefixes}
+                    ref={phoneInputRef}
+                    onChange={onChange}
+                    data={props.data}
+                />
 
                 {props.showPayButton && props.payButton({ status, label: i18n.get('confirmPurchase') })}
             </div>

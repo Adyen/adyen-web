@@ -142,6 +142,7 @@ export enum TxVariants {
     blik = 'blik',
     mbway = 'mbway',
     ancv = 'ancv',
+    payto = 'payto',
     upi = 'upi', // also QR
     upi_qr = 'upi_qr', // also QR
     upi_collect = 'upi_collect', // also QR

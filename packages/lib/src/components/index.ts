@@ -86,6 +86,7 @@ export { default as Blik } from './Blik';
 export { default as MBWay } from './MBWay';
 export { default as UPI } from './UPI';
 export { default as ANCV } from './ANCV';
+export { default as PayTo } from './PayTo';
 
 /** Giftcard */
 export { default as Giftcard } from './Giftcard';

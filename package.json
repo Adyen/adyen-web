@@ -1,39 +1,39 @@
 {
-  "name": "@adyen/adyen-web-main",
-  "private": true,
-  "keywords": [
-    "adyen",
-    "adyen-web",
-    "checkout",
-    "payment",
-    "payments",
-    "components"
-  ],
-  "workspaces": [
-    "packages/*"
-  ],
-  "scripts": {
-    "start": "concurrently --kill-others-on-fail \"yarn workspace @adyen/adyen-web start\"  \"yarn workspace @adyen/adyen-web-playground start\" --names \"lib,playground\"",
-    "start:storybook": "yarn workspace @adyen/adyen-web start:storybook",
-    "start:prod-storybook": "yarn workspace @adyen/adyen-web-server start:storybook",
-    "build": "yarn workspace @adyen/adyen-web build",
-    "build:storybook": "yarn workspace @adyen/adyen-web build:storybook",
-    "format": "yarn workspace @adyen/adyen-web format",
-    "lint": "yarn workspace @adyen/adyen-web lint",
-    "test": "yarn workspace @adyen/adyen-web test",
-    "test:watch": "yarn workspace @adyen/adyen-web test:watch",
-    "test:coverage": "yarn workspace @adyen/adyen-web test:coverage",
-    "test:e2e": "yarn workspace @adyen/adyen-web-playwright test:headless",
-    "type-check": "yarn workspace @adyen/adyen-web type-check",
-    "prepare": "yarn workspace @adyen/adyen-web prepare",
-    "changeset": "changeset",
-    "version": "changeset version"
-  },
-  "devDependencies": {
-    "@adyen/adyen-web-server": "1.0.0",
-    "@changesets/cli": "2.27.11",
-    "@changesets/get-github-info": "0.6.0",
-    "concurrently": "8.2.2",
-    "prettier": "3.4.2"
-  }
+    "name": "@adyen/adyen-web-main",
+    "private": true,
+    "keywords": [
+        "adyen",
+        "adyen-web",
+        "checkout",
+        "payment",
+        "payments",
+        "components"
+    ],
+    "workspaces": [
+        "packages/*"
+    ],
+    "scripts": {
+        "start": "concurrently --kill-others-on-fail \"yarn workspace @adyen/adyen-web start\"  \"yarn workspace @adyen/adyen-web-playground start\" --names \"lib,playground\"",
+        "start:storybook": "yarn workspace @adyen/adyen-web start:storybook",
+        "start:prod-storybook": "yarn workspace @adyen/adyen-web-server start:storybook",
+        "build": "yarn workspace @adyen/adyen-web build",
+        "build:storybook": "yarn workspace @adyen/adyen-web build:storybook",
+        "format": "yarn workspace @adyen/adyen-web format",
+        "lint": "yarn workspace @adyen/adyen-web lint",
+        "test": "yarn workspace @adyen/adyen-web test",
+        "test:watch": "yarn workspace @adyen/adyen-web test:watch",
+        "test:coverage": "yarn workspace @adyen/adyen-web test:coverage",
+        "test:e2e": "yarn workspace @adyen/adyen-web-playwright test:headless",
+        "type-check": "yarn workspace @adyen/adyen-web type-check",
+        "prepare": "yarn workspace @adyen/adyen-web prepare",
+        "changeset": "changeset",
+        "version": "changeset version"
+    },
+    "devDependencies": {
+        "@adyen/adyen-web-server": "1.0.0",
+        "@changesets/cli": "2.27.12",
+        "@changesets/get-github-info": "0.6.0",
+        "concurrently": "8.2.2",
+        "prettier": "3.4.2"
+    }
 }
