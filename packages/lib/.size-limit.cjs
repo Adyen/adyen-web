@@ -5,7 +5,7 @@ module.exports = [
     {
         name: 'UMD',
         path: 'dist/umd/adyen.js',
-        limit: '110 KB',
+        limit: '120 KB',
         running: false
     },
     /**
@@ -15,7 +15,7 @@ module.exports = [
         name: 'Auto',
         path: 'auto/auto.js',
         import: '{ AdyenCheckout, Dropin }',
-        limit: '115 KB',
+        limit: '120 KB',
         running: false
     },
     /**

@@ -28,6 +28,7 @@ export * from './Redirect/types';
 export * from './Sepa/types';
 export * from './ThreeDS2/types';
 export * from './UPI/types';
+export * from './PayTo/types';
 
 /**
  * Helpers

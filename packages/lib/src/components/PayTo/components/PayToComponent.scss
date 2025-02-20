@@ -1,0 +1,7 @@
+@use 'styles/index';
+
+.adyen-checkout__payto-component {
+  &--loading{
+    @include index.adyen-checkout-component-loading;
+  }
+}

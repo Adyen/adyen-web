@@ -5,9 +5,10 @@ import { cleanCPFCNPJ } from '../internal/SocialSecurityNumberBrazil/utils';
 import BoletoVoucherResult from './components/BoletoVoucherResult';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import { TxVariants } from '../tx-variants';
-import { VoucherConfiguration } from '../internal/Voucher/types';
 
-export class BoletoElement extends UIElement<VoucherConfiguration> {
+import type { BoletoConfiguration } from './types';
+
+export class BoletoElement extends UIElement<BoletoConfiguration> {
     public static type = TxVariants.boletobancario;
 
     public static txVariants = [

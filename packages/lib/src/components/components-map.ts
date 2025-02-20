@@ -62,6 +62,7 @@ import Riverty from './Riverty';
 import PayByBankUS from './PayByBankUS';
 import Fastlane from './PayPalFastlane/Fastlane';
 import { TxVariants } from './tx-variants';
+import PayTo from './PayTo/PayTo';
 
 /**
  * Maps each tx variant to a Component element.
@@ -205,6 +206,7 @@ export const ComponentsMap = {
     [TxVariants.blik]: Blik,
     [TxVariants.mbway]: MBWay,
     [TxVariants.ancv]: ANCV,
+    [TxVariants.payto]: PayTo,
     [TxVariants.upi]: UPI, // also QR
     [TxVariants.upi_qr]: UPI, // also QR
     [TxVariants.upi_collect]: UPI, // also QR

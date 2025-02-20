@@ -8,6 +8,7 @@ import './Voucher.scss';
 import { VoucherProps } from './types';
 import useImage from '../../../core/Context/useImage';
 import { PREFIX } from '../Icon/constants';
+import DetailsTable from '../DetailsTable';
 
 export default function Voucher({ voucherDetails = [], className = '', ...props }: VoucherProps) {
     const { i18n } = useCoreContext();
@@ -115,16 +116,7 @@ export default function Voucher({ voucherDetails = [], className = '', ...props 
                     </ul>
                 )}
 
-                <ul className="adyen-checkout__voucher-result__details">
-                    {voucherDetails
-                        .filter(({ label, value }) => !!label && !!value)
-                        .map(({ label, value }, index) => (
-                            <li key={index} className="adyen-checkout__voucher-result__details__item">
-                                <span className="adyen-checkout__voucher-result__details__label">{label}</span>
-                                <span className="adyen-checkout__voucher-result__details__value">{value}</span>
-                            </li>
-                        ))}
-                </ul>
+                <DetailsTable tableFields={voucherDetails} />
             </div>
         </div>
     );

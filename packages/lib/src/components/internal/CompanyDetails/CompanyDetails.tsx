@@ -10,6 +10,7 @@ import { CompanyDetailsSchema, CompanyDetailsProps } from './types';
 import useForm from '../../../utils/useForm';
 import InputText from '../FormFields/InputText';
 import { ComponentMethodsRef } from '../UIElement/types';
+import { HandleChangeForModeType } from '../../../utils/useForm/types';
 
 export const COMPANY_DETAILS_SCHEMA = ['name', 'registrationNumber'];
 
@@ -37,7 +38,7 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
     const generateFieldName = (name: string): string => `${namePrefix ? `${namePrefix}.` : ''}${name}`;
 
     const eventHandler =
-        (mode: string): h.JSX.FocusEventHandler<HTMLInputElement> =>
+        (mode: HandleChangeForModeType): h.JSX.FocusEventHandler<HTMLInputElement> =>
         (e): void => {
             const { name } = e.target as HTMLInputElement;
             const key = name.split(`${namePrefix}.`).pop();
@@ -46,7 +47,7 @@ export default function CompanyDetails(props: CompanyDetailsProps) {
         };
 
     const inputEventHandler =
-        (mode: string): h.JSX.InputEventHandler<HTMLInputElement> =>
+        (mode: HandleChangeForModeType): h.JSX.InputEventHandler<HTMLInputElement> =>
         (e): void => {
             const { name } = e.target as HTMLInputElement;
             const key = name.split(`${namePrefix}.`).pop();
