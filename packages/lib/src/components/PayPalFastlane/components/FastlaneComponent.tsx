@@ -1,10 +1,10 @@
 import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { ComponentMethodsRef, PayButtonFunctionProps, UIElementStatus } from '../../internal/UIElement/types';
-import FastlaneBrandIcon from './FaslaneBrandIcon';
+import FastlaneCardBrandIcon from './FaslaneCardBrandIcon';
 import { PREFIX } from '../../internal/Icon/constants';
 import useImage from '../../../core/Context/useImage';
 import Img from '../../internal/Img';
+import type { ComponentMethodsRef, PayButtonFunctionProps, UIElementStatus } from '../../internal/UIElement/types';
 
 import './Fastlane.scss';
 
@@ -12,7 +12,7 @@ interface FastlaneComponentProps {
     lastFour: string;
     brand: string;
     showPayButton: boolean;
-    setComponentRef: (ref: ComponentMethodsRef) => void;
+    setComponentRef(ref: ComponentMethodsRef): void;
     payButton(props?: PayButtonFunctionProps): h.JSX.Element;
 }
 
@@ -30,7 +30,7 @@ const FastlaneComponent = ({ lastFour, brand, payButton, setComponentRef, showPa
     return (
         <div className="adyen-checkout-fastlane" data-testid="payment-method-fastlane">
             <div className="adyen-checkout-fastlane__card-section">
-                <FastlaneBrandIcon brand={brand} />
+                <FastlaneCardBrandIcon brand={brand} />
                 <span className="adyen-checkout-fastlane__card-number">•••• {lastFour}</span>
             </div>
 
