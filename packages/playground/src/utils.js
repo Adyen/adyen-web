@@ -1,7 +1,7 @@
 const { host, protocol } = window.location;
 
 export const httpPost = (endpoint, data) =>
-    fetch(`${protocol}//${host}/${endpoint}`, {
+    fetch(`${protocol}//${host}/api/${endpoint}`, {
         method: 'POST',
         headers: {
             Accept: 'application/json, text/plain, */*',
@@ -69,7 +69,7 @@ const insertHeader = pages => {
 };
 
 export const searchFunctionExample = async (value, actions) => {
-    const url = `/mock/addressSearch?search=${encodeURIComponent(value)}`;
+    const url = `/api/mock/addressSearch?search=${encodeURIComponent(value)}`;
 
     const formattedData = await fetch(url)
         .then(res => res.json())

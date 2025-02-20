@@ -40,32 +40,32 @@ module.exports = (app = express(), options = {}) => {
         app.use(express.static(path.join(__dirname, '../lib/storybook-static')));
     }
 
-    app.all('/paypal/updateOrder', (req, res) => paypalUpdateOrder(res, req.body));
+    app.all('/api/paypal/updateOrder', (req, res) => paypalUpdateOrder(res, req.body));
 
-    app.all('/paymentMethods', (req, res) => getPaymentMethods(res, req.body));
+    app.all('/api/paymentMethods', (req, res) => getPaymentMethods(res, req.body));
 
-    app.all('/paymentMethods/balance', (req, res) => getPaymentMethodsBalance(res, req.body));
+    app.all('/api/paymentMethods/balance', (req, res) => getPaymentMethodsBalance(res, req.body));
 
-    app.all('/payments', (req, res) => makePayment(res, req.body));
+    app.all('/api/payments', (req, res) => makePayment(res, req.body));
 
-    app.all('/details', (req, res) => postDetails(res, req.body));
+    app.all('/api/details', (req, res) => postDetails(res, req.body));
 
-    app.all('/orders', (req, res) => createOrder(res, req.body));
+    app.all('/api/orders', (req, res) => createOrder(res, req.body));
 
-    app.all('/orders/cancel', (req, res) => cancelOrder(res, req.body));
+    app.all('/api/orders/cancel', (req, res) => cancelOrder(res, req.body));
 
-    app.all('/sessions', (req, res) => createSession(res, req.body));
+    app.all('/api/sessions', (req, res) => createSession(res, req.body));
 
-    app.all('/mock/addressSearch', (req, res) => mockAddressSearch(res, req));
+    app.all('/api/mock/addressSearch', (req, res) => mockAddressSearch(res, req));
 
-    app.all('/donationCampaigns', (req, res) => getDonationCampaigns(res, req.body));
+    app.all('/api/donationCampaigns', (req, res) => getDonationCampaigns(res, req.body));
 
-    app.all('/donations', (req, res) => createDonation(res, req.body));
+    app.all('/api/donations', (req, res) => createDonation(res, req.body));
 
     app.all('/sdk/:adyenWebVersion/translations/:locale.json', (req, res) => getTranslation(res, req));
 
     if (options.listen) {
-        const port = process.env.PORT || 3020;
+        const port = process.env.PORT || 3030;
 
         isHttps
             ? https.createServer({ key, cert }, app).listen(port, () => {
