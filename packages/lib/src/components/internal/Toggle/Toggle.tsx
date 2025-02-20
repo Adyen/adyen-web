@@ -5,7 +5,7 @@ import uuid from '../../../utils/uuid';
 import './Toggle.scss';
 
 interface ToggleProps {
-    label?: string;
+    label?: string | h.JSX.Element;
     labelPosition?: 'before' | 'after';
     ariaLabel?: string;
     description?: string;
@@ -17,7 +17,11 @@ interface ToggleProps {
 
 const Toggle = ({ label, labelPosition = 'after', ariaLabel, description, checked, disabled = false, readonly = false, onChange }: ToggleProps) => {
     const descriptionId = useMemo(() => (description ? `toggle-description-${uuid()}` : null), [description]);
-    const computedAriaLabel = useMemo(() => ariaLabel ?? label, [ariaLabel, label]);
+    const computedAriaLabel = useMemo(() => {
+        if (ariaLabel) return ariaLabel;
+        if (typeof label === 'string') return label;
+        return null;
+    }, [ariaLabel, label]);
 
     const conditionalClasses = cx({
         'adyen-checkout-toggle--label-first': labelPosition === 'before',
