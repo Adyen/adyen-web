@@ -26,6 +26,8 @@ const config: StorybookConfig = {
         options: {}
     },
 
+    // public added for msw: https://github.com/mswjs/msw-storybook-addon?tab=readme-ov-file#start-storybook
+    // '../storybook/public'
     staticDirs: ['../storybook/assets'],
 
     viteFinal(config) {

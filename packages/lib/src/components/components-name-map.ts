@@ -140,6 +140,7 @@ const ComponentsNameMap = {
     [TxVariants.blik]: 'Blik',
     [TxVariants.mbway]: 'MBWay',
     [TxVariants.ancv]: 'ANCV',
+    [TxVariants.payto]: 'PayTo',
     [TxVariants.upi]: 'UPI', // also QR
     [TxVariants.upi_qr]: 'UPI', // also QR
     [TxVariants.upi_collect]: 'UPI', // also QR

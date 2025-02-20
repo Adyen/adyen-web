@@ -2,13 +2,14 @@ import { h } from 'preact';
 import { fireEvent, render, screen } from '@testing-library/preact';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import userEvent from '@testing-library/user-event';
-import PhoneInput from './PhoneInput';
-import { PhoneInputProps } from './types';
+import PhoneInputForm from './PhoneInputForm';
+import { PhoneInputFormProps } from './types';
 
 const items = [{ id: '+44', name: 'United Kingdom', code: 'GB', selectedOptionName: 'United Kingdom' }];
 
 describe('PhoneInput', () => {
-    const defaultProps: PhoneInputProps = {
+    const defaultProps: PhoneInputFormProps = {
+        setComponentRef: () => {},
         items,
         data: { phonePrefix: items[0].id },
         onChange: jest.fn(),
@@ -16,11 +17,11 @@ describe('PhoneInput', () => {
         placeholders: {}
     };
 
-    const renderPhoneInput = (props: PhoneInputProps = defaultProps) => {
+    const renderPhoneInput = (props: PhoneInputFormProps = defaultProps) => {
         return render(
             // @ts-ignore ignore
             <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-                <PhoneInput {...props} />
+                <PhoneInputForm {...props} />
             </CoreProvider>
         );
     };
