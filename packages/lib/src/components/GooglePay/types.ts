@@ -142,8 +142,14 @@ export interface GooglePayConfiguration extends UIElementProps {
     buttonLocale?: string;
     buttonRadius?: number;
 
-    // Events
-    onClick?: (resolve, reject) => void;
+    /**
+     * Called when the shopper clicks the Google Pay button. Call resolve() or reject() to continue or stop the payment flow.
+     *
+     * @param resolve - Display the Google payment sheet
+     * @param reject - Don't display the Google payment sheet
+     * @returns
+     */
+    onClick?: (resolve: () => void, reject: () => void) => void;
 
     /**
      * Callback called when GooglePay authorizes the payment.
