@@ -2,32 +2,18 @@ import { PasskeySdkLoader } from './PasskeySdkLoader';
 import { PasskeyServiceConfig, IPasskeyService, IPasskeyWindowObject } from './types';
 import AdyenCheckoutError, { SCRIPT_ERROR } from '../../../core/Errors/AdyenCheckoutError';
 import Storage from '../../../utils/Storage';
-import uuidv4 from '../../../utils/uuid';
 
 export default class PasskeyService implements IPasskeyService {
     private readonly storage: Storage<string> = new Storage('deviceId', 'localStorage');
     private passkey: IPasskeyWindowObject;
-    private readonly _deviceId: string;
-
-    constructor(configuration: PasskeyServiceConfig) {
-        try {
-            this._deviceId = configuration?.deviceId ?? this.restoreOrGenerateDeviceId();
-            void new PasskeySdkLoader().load().then(passkey => {
-                this.passkey = passkey;
-            });
-        } catch (e) {
-            throw new AdyenCheckoutError(SCRIPT_ERROR, 'Passkey sdk fails to load.');
-        }
-    }
+    private readonly passkeyServiceConfig: PasskeyServiceConfig;
 
     public static async getWebAuthnUnsupportedReason(): Promise<string> {
         if (!window.PublicKeyCredential) {
             return 'Browser does not support webauthn';
         }
-
         try {
             const platformAuthenticatorAvailable = await window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
-
             if (!platformAuthenticatorAvailable) {
                 return 'Device does not have platform authenticator';
             }
@@ -38,24 +24,61 @@ export default class PasskeyService implements IPasskeyService {
         return '';
     }
 
-    get biometrics() {
-        return this.passkey.biometrics;
+    constructor(configuration: PasskeyServiceConfig) {
+        this.passkeyServiceConfig = configuration;
     }
 
-    get riskSignals() {
-        return this.passkey.riskSignals;
+    public initialize() {
+        return new Promise<PasskeyService>((resolve, reject) => {
+            void new PasskeySdkLoader()
+                .load(this.passkeyServiceConfig.environment)
+                .then(passkey => {
+                    this.passkey = passkey;
+                    resolve(this);
+                })
+                .catch(error => {
+                    reject(new AdyenCheckoutError(SCRIPT_ERROR, error.message ?? 'Failed to load passkey'));
+                });
+        });
+    }
+
+    getRiskSignalsEnrollment() {
+        return this.passkey.captureRiskSignalsEnrollment(this.deviceId);
+    }
+
+    getRiskSignalsAuthentication() {
+        return this.passkey.captureRiskSignalsAuthentication(this.deviceId);
     }
 
     get deviceId() {
-        return this._deviceId;
+        return this.passkeyServiceConfig.deviceId;
     }
 
-    private restoreOrGenerateDeviceId(): string {
+    public async createEnrollment(enrollment) {
+        const enrollmentCredential = await this.createCredentialForEnrollment(enrollment);
+        console.log({ enrollmentCredential });
+        // todo: call backend to post the enrollment
+        return { action: {} };
+    }
+
+    public async makeStoredPayment() {
+        //todo: to add
+    }
+
+    private createCredentialForEnrollment(credentialCreationOptions: PublicKeyCredentialCreationOptions) {
+        return this.passkey.createCredentialForEnrollment(credentialCreationOptions);
+    }
+
+    private authenticateWithCredential(credentialRequestOptions: PublicKeyCredentialRequestOptions) {
+        return this.passkey.authenticateWithCredential(credentialRequestOptions);
+    }
+
+    /*    private restoreOrGenerateDeviceId(): string {
         let deviceId = this.storage.get();
         if (!deviceId) {
             deviceId = uuidv4();
             this.storage.set(deviceId);
         }
         return deviceId;
-    }
+    }*/
 }

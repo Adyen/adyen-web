@@ -1,5 +1,5 @@
 import { UIElementProps } from '../UIElement/types';
-import { ActionHandledReturnObject, PaymentResponseData, RawPaymentResponse } from '../../../types/global-types';
+import { ActionHandledReturnObject, RawPaymentResponse } from '../../../types/global-types';
 
 interface StatusObjectProps {
     payload: string;

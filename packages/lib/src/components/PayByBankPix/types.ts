@@ -29,7 +29,6 @@ export type PayByBankPixConfiguration = Omit<Partial<PayByBankPixProps>, 'txVari
 export interface PayByBankPixData {
     paymentMethod: {
         type: TxVariants.paybybank_pix;
-        subType: 'redirect' | 'embedded';
         riskSignals?: RiskSignals;
     };
     returnUrl?: string; // todo:remove it testing purpose

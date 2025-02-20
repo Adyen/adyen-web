@@ -4,6 +4,9 @@ import Enrollment from '../Enrollment';
 import Payment from '../Payment';
 import { PayByBankPixProps } from './types';
 import { IEnrollment } from '../Enrollment/types';
+import { DecodeObject } from '../../../../types/global-types';
+import base64 from '../../../../utils/base64';
+import AdyenCheckoutError, { ERROR, SDK_ERROR } from '../../../../core/Errors/AdyenCheckoutError';
 
 function PayByBankPix({
     type,
@@ -17,9 +20,9 @@ function PayByBankPix({
     onChange,
     onError,
     onSubmitAnalytics,
-    showPayButton,
     payButton,
-    setComponentRef
+    setComponentRef,
+    onEnrollment
 }: PayByBankPixProps) {
     const enrollmentRef = useRef<IEnrollment | null>();
     const shouldEnroll = storedPaymentMethodId == null;
@@ -28,10 +31,33 @@ function PayByBankPix({
             enrollmentRef?.current?.showValidation();
         }
     });
+    const onComplete = (): void => {
+        // todo: collect biometrics and call internal endpoint
+        // /details call with response of the internal endpoint
+        // onError if fails
+        try {
+            const bla =
+                'ewogICAgImFjdGlvbiI6IHsKICAgICAgICAicGF5bWVudE1ldGhvZFR5cGUiOiAicGF5YnliYW5rX3BpeCIsCiAgICAgICAgInR5cGUiOiAiYXdhaXQiLAogICAgICAgICJlbnJvbGxtZW50SWQiOiAiZW5yb2xsbWVudDEyMyIsCiAgICAgICAgInBheW1lbnREYXRhIjogIm1vY2tQYXltZW50RGF0YSIKICAgIH0KfQ==';
+            const decodedResult: DecodeObject = base64.decode(bla);
+            if (!decodedResult.success) {
+                onError(new AdyenCheckoutError(SDK_ERROR, 'Failed to decode enrollment'));
+            } else {
+                const enrollment = JSON.parse(decodedResult.data);
+                onEnrollment({ enrollment });
+            }
+        } catch (e) {
+            onError(new AdyenCheckoutError(ERROR, 'Failed to complete enrollment'));
+        }
+    };
 
     useEffect(() => {
         setComponentRef(self.current);
     }, [setComponentRef]);
+
+    // todo: uncomment it!
+    /*    if (!passkeyService) {
+        return null;
+    }*/
 
     return shouldEnroll ? (
         <Enrollment
@@ -42,18 +68,18 @@ function PayByBankPix({
             enrollmentId={enrollmentId}
             paymentMethodType={paymentMethodType}
             countdownTime={countdownTime}
+            onComplete={onComplete}
             // Issuer List
             txVariant={txVariant}
             issuers={issuers}
-            showPayButton={showPayButton}
             payButton={payButton}
             onChange={onChange}
             onSubmitAnalytics={onSubmitAnalytics}
             ref={enrollmentRef}
         />
     ) : (
-        // @ts-ignore  // todo: filter out non matching device id stored pm
-        <Payment payButton={payButton} showPayButton={showPayButton} storedPaymentMethodId={storedPaymentMethodId} />
+        // @ts-ignore  // todo: filter out non matching device id stored pm, show the rest props
+        <Payment payButton={payButton} storedPaymentMethodId={storedPaymentMethodId} />
     );
 }
 

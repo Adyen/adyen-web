@@ -12,18 +12,17 @@ export interface IPasskeyWindowObject {
     // todo better typing the response
     createCredentialForEnrollment: (credentialCreationOptions: PublicKeyCredentialCreationOptions) => Promise<any>;
     authenticateWithCredential: (credentialRequestOptions: PublicKeyCredentialRequestOptions) => Promise<any>;
-
-    get biometrics(): Promise<object>;
-    get riskSignals(): Promise<object>;
 }
 
 export interface IPasskeyService {
-    get biometrics(): Promise<object>;
-    get riskSignals(): Promise<object>;
+    getRiskSignalsEnrollment(deviceId?: string): Promise<RiskSignals>;
+    createCredentialForEnrollment: (credentialCreationOptions: PublicKeyCredentialCreationOptions) => Promise<any>;
+    getRiskSignalsAuthentication(deviceId: string): Promise<RiskSignals>;
+    authenticateWithCredential: (credentialRequestOptions: PublicKeyCredentialRequestOptions) => Promise<any>;
 }
 
 export type PasskeyServiceConfig = {
-    clientId: string;
+    clientId?: string;
     deviceId?: string; // from merchant
     environment: string;
 };

@@ -8,7 +8,6 @@ import SimulatedIssuer from './SimulatedIssuer';
 import {
     mockPaymentsResponseMerchantPage,
     mockPaymentsResponseSimulateHostedPage,
-    mockPendingStatusSimulateHostedPage,
     mockReceivedStatusSimulateHostedPage,
     mockSubmitDetailsResponseSimulateHostedPage
 } from './mocks';
