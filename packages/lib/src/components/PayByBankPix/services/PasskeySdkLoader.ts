@@ -9,7 +9,7 @@ export interface IPasskeySdkLoader {
 }
 
 class PasskeySdkLoader implements IPasskeySdkLoader {
-    private static PASSKEY_SDK_URL = '';
+    private static PASSKEY_SDK_URL = ''; //todo: get the correct url
 
     private isAvailable(): boolean {
         return globalThis.AdyenPasskey != null;
@@ -19,7 +19,7 @@ class PasskeySdkLoader implements IPasskeySdkLoader {
         if (this.isAvailable()) return;
 
         const cdnScriptUrl = getUrlFromMap(environment as CoreConfiguration['environment'], CDN_ENVIRONMENTS);
-        const scriptElement = new Script(`${cdnScriptUrl}${PasskeySdkLoader.PASSKEY_SDK_URL}`); //todo: get the correct url
+        const scriptElement = new Script(`${cdnScriptUrl}${PasskeySdkLoader.PASSKEY_SDK_URL}`);
         await scriptElement.load();
         return globalThis.AdyenPasskey;
     }

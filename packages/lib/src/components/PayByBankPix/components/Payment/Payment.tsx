@@ -4,9 +4,6 @@ import { useState } from 'preact/hooks';
 function Payment({ payButton }) {
     const [status, setStatus] = useState('ready');
     this.setStatus = setStatus;
-
-    this.showValidation = () => {};
-
     const buttonModifiers = ['standalone'];
 
     return (

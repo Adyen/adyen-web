@@ -62,6 +62,7 @@ export const SimulatedHostedPage = ({ redirectResult, sessionId, componentConfig
             },
             onError: (error, component) => {
                 handleError(error, component);
+                handleFinalState({ resultCode: error.message ?? 'Error' }, component);
             }
         }).then(checkout => {
             checkout.submitDetails({ details: { redirectResult } });

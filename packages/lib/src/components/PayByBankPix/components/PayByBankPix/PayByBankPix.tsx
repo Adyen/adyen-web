@@ -28,7 +28,7 @@ function PayByBankPix({
 }: PayByBankPixProps) {
     const enrollmentRef = useRef<IEnrollment | null>();
     const shouldEnroll = storedPaymentMethodId == null;
-    const { passkeyService, loading, error } = usePasskeyService({ environment, clientKey });
+    const { passkeyService } = usePasskeyService({ environment, clientKey });
 
     const self = useRef({
         showValidation: () => {
@@ -42,19 +42,14 @@ function PayByBankPix({
         onChange({ ...payload, data: { ...data, riskSignals } });
     };
 
-    const onComplete = async (): Promise<void> => {
-        // todo: collect biometrics and call internal endpoint
-        // /details call with response of the internal endpoint
-        // onError if fails
+    const onEnroll = async (registrationOptions: string): Promise<void> => {
         try {
-            const bla =
-                'ewogICAgImFjdGlvbiI6IHsKICAgICAgICAicGF5bWVudE1ldGhvZFR5cGUiOiAicGF5YnliYW5rX3BpeCIsCiAgICAgICAgInR5cGUiOiAiYXdhaXQiLAogICAgICAgICJlbnJvbGxtZW50SWQiOiAiZW5yb2xsbWVudDEyMyIsCiAgICAgICAgInBheW1lbnREYXRhIjogIm1vY2tQYXltZW50RGF0YSIKICAgIH0KfQ==';
-            const decodedResult: DecodeObject = base64.decode(bla);
+            const decodedResult: DecodeObject = base64.decode(registrationOptions);
             if (!decodedResult.success) {
                 onError(new AdyenCheckoutError(SDK_ERROR, 'Failed to decode enrollment'));
             } else {
                 const enrollment = JSON.parse(decodedResult.data);
-                onEnrollment({ enrollment });
+                onEnrollment(await passkeyService.createCredentialForEnrollment(enrollment)); // Create passkey and trigger biometrics
             }
         } catch (e) {
             onError(new AdyenCheckoutError(ERROR, 'Failed to complete enrollment'));
@@ -79,7 +74,7 @@ function PayByBankPix({
             enrollmentId={enrollmentId}
             paymentMethodType={paymentMethodType}
             countdownTime={countdownTime}
-            onComplete={onComplete}
+            onEnroll={onEnroll}
             // Issuer List
             txVariant={txVariant}
             issuers={issuers}

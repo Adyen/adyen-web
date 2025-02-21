@@ -6,13 +6,14 @@ import { SendAnalyticsObject } from '../../../../core/Analytics/types';
 
 interface BaseEnrollmentProps {
     type?: string;
+    registrationOptions?: string;
     payButton(props: PayButtonFunctionProps): h.JSX.Element;
     ref: any;
     /**
      * Trigger when the await times out, receives error state or the biometrics verification fails.
      */
     onError?: (error) => void;
-    onComplete?: (payload: any) => void;
+    onEnroll?: (registrationOptions: string) => void;
 }
 
 export interface AwaitProps extends BaseEnrollmentProps {

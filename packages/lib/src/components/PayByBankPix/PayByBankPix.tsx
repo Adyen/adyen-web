@@ -8,6 +8,7 @@ import RedirectButton from '../internal/RedirectButton';
 import PayByBankPix from './components/PayByBankPix';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { PasskeyService } from './services/PasskeyService';
+import { postEnrollment } from './services/postEnrollment';
 
 //todo: remove
 const hasRedirectResult = (): boolean => {
@@ -16,8 +17,6 @@ const hasRedirectResult = (): boolean => {
 };
 
 class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
-    private passkeyService: PasskeyService;
-
     public static type = TxVariants.paybybank_pix;
     private static TIMEOUT_MINUTES = 1;
 
@@ -28,14 +27,8 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
     };
 
     get isValid(): boolean {
-        // Always true for redirect (non-native flow)
+        // Always true for redirect
         return this.props._isAdyenHosted ? !!this.state?.isValid : true;
-    }
-
-    formatProps(props): PayByBankPixConfiguration {
-        return {
-            ...super.formatProps(props)
-        };
     }
 
     /**
@@ -51,9 +44,6 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
     }
 
     formatData(): PayByBankPixData {
-        // on the merchant page, we need to send both device id and riskSignals
-        // enrich risk signals only on hosted page
-        // on the hosted checkout page, we reuse the same id and riskSignals. We get them from the query params / pbl logic, and pass them through to the second /payments call
         if (!this.props._isAdyenHosted) {
             return {
                 paymentMethod: { type: TxVariants.paybybank_pix }
@@ -68,7 +58,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
     }
 
     async createEnrollment({ enrollment }) {
-        const { action = {} } = await this.passkeyService.createEnrollment(enrollment);
+        const { action = {} } = await postEnrollment(enrollment);
         // The action should redirect shopper back to the merchant's page
         this.handleAction(action);
     }
@@ -80,13 +70,13 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
                     {this.props._isAdyenHosted ? (
                         <PayByBankPix
                             {...this.props}
-                            passkeyService={this.passkeyService}
                             txVariant={PayByBankPixElement.type}
                             payButton={this.payButton}
                             onChange={this.setState}
                             setComponentRef={this.setComponentRef}
                             onSubmitAnalytics={this.submitAnalytics}
                             onEnrollment={this.createEnrollment}
+                            onError={this.handleError}
                         />
                     ) : (
                         <RedirectButton

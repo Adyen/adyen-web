@@ -24,7 +24,8 @@ export const mockPendingStatusSimulateHostedPage = {
 
 export const mockReceivedStatusSimulateHostedPage = {
     resultCode: 'received',
-    registrationOptions: 'ewoiImVucm9sbG1lbnRJZCI6IjIzMTI0MzI1NCIsCiIiY2hhbGxlbmdlIjoiZGFkYXNkYSIKfQ=='
+    registrationOptions:
+        'ewogICAgImFjdGlvbiI6IHsKICAgICAgICAicGF5bWVudE1ldGhvZFR5cGUiOiAicGF5YnliYW5rX3BpeCIsCiAgICAgICAgInR5cGUiOiAiYXdhaXQiLAogICAgICAgICJlbnJvbGxtZW50SWQiOiAiZW5yb2xsbWVudDEyMyIsCiAgICAgICAgInBheW1lbnREYXRhIjogIm1vY2tQYXltZW50RGF0YSIKICAgIH0KfQ=='
 };
 
 export const mockSubmitDetailsResponseSimulateHostedPage = {

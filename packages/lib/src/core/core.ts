@@ -203,7 +203,7 @@ class Core implements ICore {
             );
             return;
         }
-        debugger;
+
         promise
             .then(sanitizeResponse)
             .then(verifyPaymentDidNotFail)
