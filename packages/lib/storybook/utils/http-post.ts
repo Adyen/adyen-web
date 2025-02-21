@@ -1,7 +1,7 @@
 const { host, protocol } = window.location;
 
 export async function httpPost<T>(endpoint: string, data: any): Promise<T> {
-    const response = await fetch(`${protocol}//${host}/${endpoint}`, {
+    const response = await fetch(`${protocol}//${host}/api/${endpoint}`, {
         method: 'POST',
         headers: {
             Accept: 'application/json, text/plain, */*',
