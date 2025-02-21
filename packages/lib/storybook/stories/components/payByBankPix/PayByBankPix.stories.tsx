@@ -35,7 +35,7 @@ export const MerchantPage: PixBiometricStory = {
         useSessions: false,
         countryCode: 'BR',
         amount: 0,
-        componentConfiguration: { _isNativeFlow: false }
+        componentConfiguration: { _isAdyenHosted: false }
     },
     parameters: {
         msw: {
@@ -59,7 +59,8 @@ export const SimulateHostedPage: PixBiometricStory = {
         amount: 0,
         redirectResult: getSearchParameter('redirectResult'),
         componentConfiguration: {
-            _isNativeFlow: true,
+            _isAdyenHosted: true,
+            issuers: [{ id: 'issuerId_123', name: 'issuer 123' }],
             onChange: data => {
                 console.log({ data });
             }

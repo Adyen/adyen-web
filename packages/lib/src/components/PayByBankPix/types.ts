@@ -23,7 +23,7 @@ export type PayByBankPixConfiguration = Omit<Partial<PayByBankPixProps>, 'txVari
     /**
      * @internal
      */
-    _isNativeFlow?: boolean;
+    _isAdyenHosted?: boolean;
 };
 
 export interface PayByBankPixData {

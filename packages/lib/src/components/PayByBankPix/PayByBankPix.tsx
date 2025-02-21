@@ -4,11 +4,16 @@ import { PayByBankPixData, PayByBankPixConfiguration } from './types';
 import { TxVariants } from '../tx-variants';
 import UIElement from '../internal/UIElement';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
-import type { ICore } from '../../core/types';
-import PasskeyService from './services/PasskeyService';
 import RedirectButton from '../internal/RedirectButton';
 import PayByBankPix from './components/PayByBankPix';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
+import { PasskeyService } from './services/PasskeyService';
+
+//todo: remove
+const hasRedirectResult = (): boolean => {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('redirectResult') != null;
+};
 
 class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
     private passkeyService: PasskeyService;
@@ -18,32 +23,13 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
 
     public static defaultProps: PayByBankPixConfiguration = {
         showPayButton: true,
-        issuers: [{ id: 'issuerId_123', name: 'issuer 123' }],
-        _isNativeFlow: window.location.hostname.endsWith('.adyen.com'),
+        _isAdyenHosted: window.location.hostname.endsWith('adyen.link') || hasRedirectResult(), // todo: remove hasRedirectResult
         countdownTime: PayByBankPixElement.TIMEOUT_MINUTES
     };
 
-    constructor(checkout: ICore, props: PayByBankPixConfiguration) {
-        super(checkout, props);
-
-        // todo: Load passkey sdk, check if we should only load the sdk in a hosted environment
-        if (this.props._isNativeFlow) {
-            void new PasskeyService({ environment: this.props.environment, clientId: this.props.clientKey })
-                .initialize()
-                .then(passkeyService => {
-                    this.passkeyService = passkeyService;
-                })
-                .catch((err: Error) => {
-                    if (err instanceof AdyenCheckoutError) {
-                        this.props.onError?.(err);
-                    }
-                });
-        }
-    }
-
     get isValid(): boolean {
         // Always true for redirect (non-native flow)
-        return this.props._isNativeFlow ? !!this.state?.isValid : true;
+        return this.props._isAdyenHosted ? !!this.state?.isValid : true;
     }
 
     formatProps(props): PayByBankPixConfiguration {
@@ -68,23 +54,16 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         // on the merchant page, we need to send both device id and riskSignals
         // enrich risk signals only on hosted page
         // on the hosted checkout page, we reuse the same id and riskSignals. We get them from the query params / pbl logic, and pass them through to the second /payments call
-        if (this.props._isNativeFlow) {
+        if (!this.props._isAdyenHosted) {
             return {
-                paymentMethod: { type: TxVariants.paybybank_pix },
-                // todo: remove this and put it in the payments call
-                returnUrl: this.props._isNativeFlow
-                    ? 'https://localhost:3020/iframe.html?globals=&args=&id=components-paybybankpix--simulate-hosted-page&viewMode=story'
-                    : 'https://localhost:3020/iframe.html?args=&globals=&id=components-paybybankpix--merchant-page&viewMode=story'
+                paymentMethod: { type: TxVariants.paybybank_pix }
             };
         }
 
         const issuer = this.state.data?.issuer ? { issuer: this.state.data?.issuer } : {};
+        const riskSignals = this.state.data?.riskSignals ? { riskSignals: this.state.data.riskSignals } : {};
         return {
-            paymentMethod: { type: TxVariants.paybybank_pix, ...issuer },
-            // todo: remove this and put it in the payments call
-            returnUrl: this.props._isNativeFlow
-                ? 'https://localhost:3020/iframe.html?globals=&args=&id=components-paybybankpix--simulate-hosted-page&viewMode=story'
-                : 'https://localhost:3020/iframe.html?args=&globals=&id=components-paybybankpix--merchant-page&viewMode=story'
+            paymentMethod: { type: TxVariants.paybybank_pix, ...issuer, ...riskSignals }
         };
     }
 
@@ -98,7 +77,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <SRPanelProvider srPanel={this.props.modules.srPanel}>
-                    {this.props._isNativeFlow ? (
+                    {this.props._isAdyenHosted ? (
                         <PayByBankPix
                             {...this.props}
                             passkeyService={this.passkeyService}

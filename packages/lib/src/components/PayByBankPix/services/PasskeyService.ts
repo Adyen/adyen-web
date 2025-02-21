@@ -3,7 +3,7 @@ import { PasskeyServiceConfig, IPasskeyService, IPasskeyWindowObject } from './t
 import AdyenCheckoutError, { SCRIPT_ERROR } from '../../../core/Errors/AdyenCheckoutError';
 import Storage from '../../../utils/Storage';
 
-export default class PasskeyService implements IPasskeyService {
+export class PasskeyService implements IPasskeyService {
     private readonly storage: Storage<string> = new Storage('deviceId', 'localStorage');
     private passkey: IPasskeyWindowObject;
     private readonly passkeyServiceConfig: PasskeyServiceConfig;
@@ -37,13 +37,15 @@ export default class PasskeyService implements IPasskeyService {
                     resolve(this);
                 })
                 .catch(error => {
-                    reject(new AdyenCheckoutError(SCRIPT_ERROR, error.message ?? 'Failed to load passkey'));
+                    resolve(this);
+                    // todo: uncomment this! reject(new AdyenCheckoutError(SCRIPT_ERROR, error.message ?? 'Failed to load passkey'));
                 });
         });
     }
 
     getRiskSignalsEnrollment() {
-        return this.passkey.captureRiskSignalsEnrollment(this.deviceId);
+        return Promise.resolve({ deviceId: 1111 });
+        //return this.passkey.captureRiskSignalsEnrollment(this.deviceId);
     }
 
     getRiskSignalsAuthentication() {

@@ -7,10 +7,12 @@ import { IEnrollment } from '../Enrollment/types';
 import { DecodeObject } from '../../../../types/global-types';
 import base64 from '../../../../utils/base64';
 import AdyenCheckoutError, { ERROR, SDK_ERROR } from '../../../../core/Errors/AdyenCheckoutError';
+import { usePasskeyService } from '../../hooks/usePasskeyService';
 
 function PayByBankPix({
     type,
     clientKey,
+    environment,
     paymentMethodType,
     enrollmentId,
     txVariant,
@@ -26,12 +28,21 @@ function PayByBankPix({
 }: PayByBankPixProps) {
     const enrollmentRef = useRef<IEnrollment | null>();
     const shouldEnroll = storedPaymentMethodId == null;
+    const { passkeyService, loading, error } = usePasskeyService({ environment, clientKey });
+
     const self = useRef({
         showValidation: () => {
             enrollmentRef?.current?.showValidation();
         }
     });
-    const onComplete = (): void => {
+
+    const onIssuerSelected = async payload => {
+        const { data = {} } = payload;
+        const riskSignals = await passkeyService?.getRiskSignalsEnrollment();
+        onChange({ ...payload, data: { ...data, riskSignals } });
+    };
+
+    const onComplete = async (): Promise<void> => {
         // todo: collect biometrics and call internal endpoint
         // /details call with response of the internal endpoint
         // onError if fails
@@ -55,7 +66,7 @@ function PayByBankPix({
     }, [setComponentRef]);
 
     // todo: uncomment it!
-    /*    if (!passkeyService) {
+    /*    if (!passkeyService)
         return null;
     }*/
 
@@ -73,7 +84,7 @@ function PayByBankPix({
             txVariant={txVariant}
             issuers={issuers}
             payButton={payButton}
-            onChange={onChange}
+            onChange={onIssuerSelected}
             onSubmitAnalytics={onSubmitAnalytics}
             ref={enrollmentRef}
         />

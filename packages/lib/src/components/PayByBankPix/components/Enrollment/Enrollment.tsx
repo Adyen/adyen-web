@@ -7,6 +7,7 @@ import { IIssuerList } from '../../../internal/IssuerList/types';
 import IssuerList from '../../../internal/IssuerList';
 import { useIssuerWithLogo } from './useIssuerWithLogo';
 import getEnrollmentStatus from './getEnrollmentStatus';
+import { RiskSignals } from '../../types';
 
 function Enrollment(props: EnrollmentProps) {
     const { i18n, loadingContext } = useCoreContext();

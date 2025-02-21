@@ -22,7 +22,7 @@ export interface IPasskeyService {
 }
 
 export type PasskeyServiceConfig = {
-    clientId?: string;
+    clientKey?: string;
     deviceId?: string; // from merchant
     environment: string;
 };
