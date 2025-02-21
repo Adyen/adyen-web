@@ -21,7 +21,7 @@ export interface PayToConfiguration extends UIElementProps {
     paymentData?: any;
     data?: PayToData;
     placeholders?: PayToPlaceholdersType;
-    mandate: MandateType;
+    mandate?: MandateType;
     payee?: string;
 }
 

@@ -19,20 +19,14 @@ const inputOptions: SegmentedControlOptions<PayToInputOption> = [
     {
         value: 'payid-option',
         label: 'PayID',
-        htmlProps: {
-            id: 'payid-option', // TODO move this to i18n
-            'aria-controls': 'payid-input',
-            'aria-expanded': true // TODO move this logic to segmented controller
-        }
+        id: 'payid-option',
+        controls: 'payid-input'
     },
     {
         value: 'bsb-option',
-        label: 'BSB and account number', // TODO move this to i18n
-        htmlProps: {
-            id: 'bsb-option',
-            'aria-controls': 'bsb-input',
-            'aria-expanded': false // TODO move this logic to segmented controller
-        }
+        label: 'payto.bsbOption.label',
+        id: 'bsb-option',
+        controls: 'bsb-input'
     }
 ];
 

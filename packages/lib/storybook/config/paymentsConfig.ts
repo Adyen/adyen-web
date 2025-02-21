@@ -1,4 +1,4 @@
-import { RETURN_URL } from './commonConfig';
+import { RETURN_URL, SHOPPER_REFERENCE } from './commonConfig';
 
 const identifier = new Date().getMilliseconds();
 const protocol = window.location.protocol; // gives 'http:' or 'https:' i.e. adds the colon
@@ -8,6 +8,7 @@ const { origin = `${protocol}//localhost:3020` } = window.location;
 const paymentsConfig = {
     origin,
     returnUrl: RETURN_URL,
+    shopperReference: SHOPPER_REFERENCE,
     reference: `${identifier}-checkout-components-ref`,
     additionalData: {
         // Force response code. See https://docs.adyen.com/development-resources/test-cards/result-code-testing/adyen-response-codes

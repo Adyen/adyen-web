@@ -9,6 +9,7 @@ import PayToComponent from './components/PayToComponent';
 import { PayToInstructions } from './components/PayToInstructions';
 import MandateSummary from './components/MandateSummary';
 import { PayToConfiguration, PayToData } from './types';
+import PayButton, { payAmountLabel } from '../internal/PayButton';
 
 /*
 Await Config (previously in its own file)
@@ -75,8 +76,7 @@ export class PayToElement extends UIElement<PayToConfiguration> {
             shopperName: {
                 firstName: this.state.data.firstName,
                 lastName: this.state.data.lastName
-            },
-            mandate: this.props.mandate
+            }
         };
     }
 
@@ -84,7 +84,35 @@ export class PayToElement extends UIElement<PayToConfiguration> {
         return !!this.state.isValid;
     }
 
+    get displayName() {
+        if (this.props.storedPaymentMethodId && this.props.label) {
+            return this.props.label;
+        }
+        return this.props.name;
+    }
+
+    get additionalInfo() {
+        return this.props.storedPaymentMethodId ? this.props.name : '';
+    }
+
     render() {
+        // Stored
+        if (this.props.storedPaymentMethodId) {
+            return (
+                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
+                    {this.props.showPayButton && (
+                        <PayButton
+                            {...this.props}
+                            classNameModifiers={['standalone']}
+                            amount={this.props.amount}
+                            label={payAmountLabel(this.props.i18n, this.props.amount)}
+                            onClick={this.submit}
+                        />
+                    )}
+                </CoreProvider>
+            );
+        }
+        // Await
         if (this.props.paymentData) {
             return (
                 <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
@@ -116,7 +144,7 @@ export class PayToElement extends UIElement<PayToConfiguration> {
                 </CoreProvider>
             );
         }
-
+        // Input
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <PayToComponent

@@ -3,16 +3,9 @@ import { App, UpiMode } from '../../types';
 import { A11Y } from './constants';
 import isMobile from '../../../../utils/isMobile';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
+import { OldSegmentedControlOption } from '../../../internal/SegmentedControl/SegmentedControl';
 
-interface SegmentedControlOption {
-    label: string;
-    value: UpiMode;
-    htmlProps: {
-        id: string;
-        'aria-expanded': boolean;
-        'aria-controls': string;
-    };
-}
+interface SegmentedControlOption extends OldSegmentedControlOption<UpiMode> {}
 
 function useUpiSegmentedControlOptions(apps: Array<App>, mode: UpiMode): Array<SegmentedControlOption> {
     const { i18n } = useCoreContext();
