@@ -1,3 +1,4 @@
+@use 'styles/mixins';
 @import 'styles/variable-generator';
 
 @mixin input-wrapper-inactive {
@@ -9,6 +10,18 @@
     display: block;
     margin-bottom: token(spacer-070);
     width: 100%;
+
+    &-static-value {
+        background-color: token(color-background-primary-hover);
+        border-radius: token(border-radius-s);
+        color: token(color-background-inverse-primary);
+        display: flex;
+        height: 28px;
+        padding: token(spacer-020) token(spacer-030);
+        margin-left: token(spacer-020);
+
+        @include mixins.adyen-checkout-text-body;
+    }
 
     &--no-borders {
         .adyen-checkout__input-wrapper {

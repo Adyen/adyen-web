@@ -1,0 +1,36 @@
+@import 'styles/variable-generator';
+
+.adyen-checkout-fastlane__card-brand--wrapper {
+  position: relative;
+  display: flex;
+  width: token(spacer-110);
+  height: 26px;
+  justify-content: center;
+  align-items: center;
+  border-radius: token(border-radius-s);
+  overflow: hidden;
+  box-shadow: token(shadow-low);
+  margin-right: token(spacer-060);
+}
+
+
+.adyen-checkout-fastlane__card-section {
+  display: flex;
+  align-items: center;
+}
+
+.adyen-checkout-fastlane__card-number {
+  line-height: token(text-body-line-height);
+  font-size: token(text-body-font-size);
+  font-weight: token(text-body-stronger-font-weight);
+}
+
+.adyen-checkout-fastlane__brand {
+  display: flex;
+  justify-content: center;
+  margin-top: token(spacer-070);
+}
+
+.adyen-checkout-fastlane__brand img {
+  width: 95px;
+}
