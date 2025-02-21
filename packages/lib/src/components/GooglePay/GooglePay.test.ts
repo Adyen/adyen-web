@@ -55,6 +55,38 @@ beforeEach(() => {
 });
 
 describe('GooglePay', () => {
+    describe('onClick()', () => {
+        test('should not call "initiatePayment" if the onClick reject() is called', async () => {
+            const googlepay = new GooglePay(global.core, {
+                onClick(resolve, reject) {
+                    reject();
+                }
+            });
+            googlepay.submit();
+
+            await new Promise(process.nextTick);
+
+            // @ts-ignore GooglePayService is mocked
+            const googlePayServiceInstance = GooglePayService.mock.instances[0];
+            expect(googlePayServiceInstance.initiatePayment).not.toHaveBeenCalled();
+        });
+
+        test('should call "initiatePayment" if the onClick resolve() is called', async () => {
+            const googlepay = new GooglePay(global.core, {
+                onClick(resolve) {
+                    resolve();
+                }
+            });
+            googlepay.submit();
+
+            await new Promise(process.nextTick);
+
+            // @ts-ignore GooglePayService is mocked
+            const googlePayServiceInstance = GooglePayService.mock.instances[0];
+            expect(googlePayServiceInstance.initiatePayment).toHaveBeenCalled();
+        });
+    });
+
     describe('isExpress flag', () => {
         test('should add subtype: express when isExpress is configured', () => {
             const googlepay = new GooglePay(global.core, { isExpress: true });
