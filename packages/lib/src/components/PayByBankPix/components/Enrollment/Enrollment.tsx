@@ -7,6 +7,9 @@ import { IIssuerList } from '../../../internal/IssuerList/types';
 import IssuerList from '../../../internal/IssuerList';
 import { useIssuerWithLogo } from './useIssuerWithLogo';
 import getEnrollmentStatus from './getEnrollmentStatus';
+import DisclaimerMessage from '../../../internal/DisclaimerMessage';
+import EnrollmentIntroduction from './EnrollmentIntroduction';
+import './Enrollment.scss';
 
 function Enrollment(props: EnrollmentProps) {
     const { i18n, loadingContext } = useCoreContext();
@@ -35,7 +38,7 @@ function Enrollment(props: EnrollmentProps) {
     }, [registrationOptions]);
 
     return (
-        <div className={'adyen-checkout-pix-biometric'}>
+        <div className={'adyen-checkout-pix-enrollment'}>
             {isAwait(props) ? (
                 <Await
                     showCountdownTimer
@@ -51,14 +54,18 @@ function Enrollment(props: EnrollmentProps) {
                     brandLogo={'https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/images/logos/pix.svg'}
                 ></Await>
             ) : (
-                <IssuerList
-                    items={useIssuerWithLogo({ issuers: props.issuers, txVariant: props.txVariant })}
-                    onSubmitAnalytics={props.onSubmitAnalytics}
-                    onChange={props.onChange}
-                    payButton={props.payButton}
-                    showPayButton={true}
-                    ref={issuerListRef}
-                ></IssuerList>
+                <div className="adyen-checkout-pix-enrollment-issuer-list">
+                    <EnrollmentIntroduction />
+                    <IssuerList
+                        items={useIssuerWithLogo({ issuers: props.issuers, txVariant: props.txVariant })}
+                        onSubmitAnalytics={props.onSubmitAnalytics}
+                        onChange={props.onChange}
+                        payButton={props.payButton}
+                        showPayButton={true}
+                        ref={issuerListRef}
+                    ></IssuerList>
+                    <DisclaimerMessage message={i18n.get('paybybankpix.issuerList.disclaimer')} />
+                </div>
             )}
         </div>
     );

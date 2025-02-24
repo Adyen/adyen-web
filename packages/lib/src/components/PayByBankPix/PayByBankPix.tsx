@@ -83,6 +83,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
                         <RedirectButton
                             showPayButton={this.props.showPayButton}
                             name={this.displayName}
+                            label={this.props.i18n.get('paybybankpix.redirectBtn.label')}
                             amount={this.props.amount}
                             payButton={this.payButton}
                             onSubmit={this.submit}

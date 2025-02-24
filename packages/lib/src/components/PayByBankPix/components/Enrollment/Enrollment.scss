@@ -1,0 +1,42 @@
+@use 'styles/index';
+@import 'styles/variable-generator';
+
+.adyen-checkout-pix-enrollment-issuer-list {
+    display: flex;
+    flex-direction: column;
+
+    .adyen-checkout-disclaimer__label {
+        align-self: center;
+    }
+}
+
+.adyen-checkout-enrollment-introduction-logo-container {
+    text-align: center;
+
+    &__title {
+        @include index.adyen-checkout-text-subtitle;
+
+        margin: 0 0 token(spacer-020);
+    }
+
+    &__content {
+        @include index.adyen-checkout-text-caption;
+
+        margin: 0 0 token(spacer-070);
+    }
+}
+
+.adyen-checkout-enrollment-introduction-text-container {
+    @include index.adyen-checkout-text-caption;
+
+    &__title {
+        @include index.adyen-checkout-text-caption;
+
+        font-weight: token(text-caption-stronger-font-weight);
+        margin: 0 0 token(spacer-020);
+    }
+
+    &__content {
+        margin: 0 0 token(spacer-070);
+    }
+}

@@ -11,7 +11,7 @@ export interface DisclaimerMsgObject {
 
 interface InternalDisclaimerMsgObject {
     message: string;
-    urls: Array<string>;
+    urls?: Array<string>;
 }
 
 /**
@@ -22,7 +22,7 @@ interface InternalDisclaimerMsgObject {
  *  String inside the '%#' token pair will be rendered as an anchor element.
  */
 
-export default function DisclaimerMessage({ message, urls }: InternalDisclaimerMsgObject) {
+export default function DisclaimerMessage({ message, urls = [] }: InternalDisclaimerMsgObject) {
     return (
         <span className="adyen-checkout-disclaimer__label">
             <LabelOnlyDisclaimerMessage message={message} urls={urls} />
