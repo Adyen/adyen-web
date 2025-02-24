@@ -33,7 +33,7 @@ CardType.cards.push({
 
 CardType.cards.push({ cardType: 'amex', startingRules: [34, 37], permittedLengths: [15], pattern: /^3[47][0-9]{0,13}$/, securityCode: 'CID' });
 
-CardType.cards.push({ cardType: 'diners', startingRules: [36], permittedLengths: [14, 16], pattern: /^(36)[0-9]{0,12}$/ });
+CardType.cards.push({ cardType: 'diners', startingRules: [36], permittedLengths: [14, 15, 16, 17, 18, 19], pattern: /^(36)[0-9]{0,12}$/ });
 
 CardType.cards.push({ cardType: 'maestrouk', startingRules: [6759], permittedLengths: [16, 18, 19], pattern: /^(6759)[0-9]{0,15}$/ });
 
