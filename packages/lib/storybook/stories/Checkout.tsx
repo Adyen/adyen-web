@@ -19,7 +19,8 @@ export const Checkout = ({ children, checkoutConfig }: ICheckout) => {
             .then(checkout => {
                 setAdyenCheckout(checkout);
             })
-            .catch(() => {
+            .catch(e => {
+                console.error(e);
                 setErrorMessage('Initialize checkout failed.');
             });
     }, [checkoutConfig]);
