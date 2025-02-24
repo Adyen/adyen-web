@@ -9,7 +9,7 @@ function Payment({ payButton }) {
     return (
         <div>
             {
-                // todo: if there is a storedPaymentId id show stored pm (click pay should just trigger biometrics)
+                // todo: add screen
             }
             {payButton({
                 status,

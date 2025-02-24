@@ -32,6 +32,7 @@ export async function initSession() {
         onPaymentCompleted: handleOnPaymentCompleted,
         onPaymentFailed: handleOnPaymentFailed
     });
+
     const dropin = new Dropin(checkout, {
         instantPaymentTypes: ['googlepay'],
         paymentMethodComponents: [Card, WeChat, Giftcard, PayPal, Ach, GooglePay, Riverty, Bancontact, Klarna],

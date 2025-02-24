@@ -33,3 +33,6 @@ export const mockSubmitDetailsResponseSimulateHostedPage = {
 };
 
 export const mockSubmitDetailsResponseMerchantPage = {};
+
+export const mockRedirectUrlIssuerPage =
+    'https://localhost:3020/iframe.html?globals=&args=&id=components-paybybankpix--simulate-hosted-page&viewMode=story&redirectResult=xxxxxxx&pollStatus=pending';

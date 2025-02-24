@@ -8,6 +8,7 @@ import SimulatedIssuer from './SimulatedIssuer';
 import {
     mockPaymentsResponseMerchantPage,
     mockPaymentsResponseSimulateHostedPage,
+    mockPendingStatusSimulateHostedPage,
     mockReceivedStatusSimulateHostedPage,
     mockSubmitDetailsResponseSimulateHostedPage
 } from './mocks';
@@ -75,7 +76,11 @@ export const SimulateHostedPage: PixBiometricStory = {
                 http.get(
                     'https://checkoutshopper-test.adyen.com/checkoutshopper/services/registration-option/enrollment123?clientKey=test_L6HTEOAXQBCZJHKNU4NLN6EI7IE6VRRW',
                     () => {
-                        return HttpResponse.json(mockReceivedStatusSimulateHostedPage);
+                        return HttpResponse.json(
+                            getSearchParameter('pollStatus') === 'pending'
+                                ? mockPendingStatusSimulateHostedPage
+                                : mockReceivedStatusSimulateHostedPage
+                        );
                     }
                 ),
                 http.post('/details', () => {

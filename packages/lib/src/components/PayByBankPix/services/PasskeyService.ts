@@ -41,6 +41,7 @@ export class PasskeyService implements IPasskeyService {
         });
     }
 
+    // @ts-ignore todo remove the mock resolution
     public getRiskSignalsEnrollment() {
         return Promise.resolve({ deviceId: 1111 });
         //return this.passkey.captureRiskSignalsEnrollment(this.deviceId);

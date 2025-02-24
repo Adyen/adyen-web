@@ -1,10 +1,9 @@
 import { h } from 'preact';
 import { useState } from 'preact/hooks';
+import { mockRedirectUrlIssuerPage } from './mocks';
 
 const SimulatedIssuer = () => {
-    const [url, setUrl] = useState(
-        'https://localhost:3020/iframe.html?globals=&args=&id=components-paybybankpix--simulate-hosted-page&viewMode=story&redirectResult=xxxxxxx'
-    );
+    const [url, setUrl] = useState(mockRedirectUrlIssuerPage);
     const handleRedirect = () => {
         window.location.href = url;
     };

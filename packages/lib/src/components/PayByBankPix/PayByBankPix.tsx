@@ -60,6 +60,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
     async createEnrollment({ enrollment }) {
         const { action = {} } = await postEnrollment(enrollment);
         // The action should redirect shopper back to the merchant's page
+        // @ts-ignore todo: fix types later
         this.handleAction(action);
     }
 

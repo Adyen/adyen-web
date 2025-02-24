@@ -14,7 +14,7 @@ async function postEnrollment({ enrollmentId, clientKey, loadingContext, timeout
     }
     const options = {
         loadingContext,
-        path: ``,
+        path: ``, //todo add it when BE is ready
         timeout
     };
 
