@@ -57,10 +57,17 @@ export const SimulateHostedPage: PixBiometricStory = {
     args: {
         useSessions: false,
         countryCode: 'BR',
-        amount: 0,
         redirectResult: getSearchParameter('redirectResult'),
         componentConfiguration: {
             _isAdyenHosted: true,
+            // stored pm
+            amount: { value: 20000, currency: 'BRL' },
+            storedPaymentMethodId: 'xxxxx',
+            issuer: 'pix',
+            receiver: 'Sue Lar Comercia LTDA',
+            paymentDate: '31/08/2023 as 11;49',
+            paymentMethod: 'Pix Open Finance',
+            // enrollment
             issuers: [{ id: 'issuerId_123', name: 'issuer 123' }],
             onChange: data => {
                 console.log({ data });

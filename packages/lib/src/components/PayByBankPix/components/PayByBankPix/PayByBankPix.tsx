@@ -15,16 +15,22 @@ function PayByBankPix({
     environment,
     paymentMethodType,
     enrollmentId,
+    amount,
+    issuer,
     txVariant,
     countdownTime,
     issuers,
     storedPaymentMethodId,
+    receiver,
+    paymentDate,
+    paymentMethod,
     onChange,
     onError,
     onSubmitAnalytics,
     payButton,
     setComponentRef,
-    onEnrollment
+    onEnrollment,
+    onPayment
 }: PayByBankPixProps) {
     const enrollmentRef = useRef<IEnrollment | null>();
     const shouldEnroll = storedPaymentMethodId == null;
@@ -53,6 +59,18 @@ function PayByBankPix({
             }
         } catch (e) {
             onError(new AdyenCheckoutError(ERROR, 'Failed to complete enrollment'));
+        }
+    };
+
+    const onPay = async (): Promise<void> => {
+        try {
+            const riskSignals = await passkeyService?.getRiskSignalsAuthentication();
+            const authenticatedCredential = await passkeyService?.authenticateWithCredential({
+                challenge: undefined
+            });
+            onPayment({ riskSignals, authenticatedCredential });
+        } catch (e) {
+            onError(new AdyenCheckoutError(ERROR, 'Failed to complete payment'));
         }
     };
 
@@ -85,7 +103,15 @@ function PayByBankPix({
         />
     ) : (
         // @ts-ignore  // todo: filter out non matching device id stored pm, show the rest props
-        <Payment payButton={payButton} storedPaymentMethodId={storedPaymentMethodId} />
+        <Payment
+            txVariant={txVariant}
+            amount={amount}
+            issuer={issuer}
+            receiver={receiver}
+            paymentMethod={paymentMethod}
+            paymentDate={paymentDate}
+            onPay={onPay}
+        />
     );
 }
 

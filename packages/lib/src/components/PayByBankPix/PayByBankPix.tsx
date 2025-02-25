@@ -64,6 +64,10 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         this.handleAction(action);
     }
 
+    async payWithStoredPayment() {
+        // todo: pay and handle redirect action
+    }
+
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
@@ -77,6 +81,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
                             setComponentRef={this.setComponentRef}
                             onSubmitAnalytics={this.submitAnalytics}
                             onEnrollment={this.createEnrollment}
+                            onPayment={this.payWithStoredPayment}
                             onError={this.handleError}
                         />
                     ) : (
