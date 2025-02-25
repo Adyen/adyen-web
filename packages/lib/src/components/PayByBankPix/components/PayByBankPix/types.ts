@@ -1,6 +1,6 @@
 import { AwaitProps, IssuerListProps } from '../Enrollment/types';
 import { UIElementProps } from '../../../internal/UIElement/types';
-import PasskeyService from '../../services/PasskeyService';
+import { PasskeyService } from '../../services/PasskeyService';
 
 export type PayByBankPixProps = UIElementProps &
     Partial<AwaitProps> &

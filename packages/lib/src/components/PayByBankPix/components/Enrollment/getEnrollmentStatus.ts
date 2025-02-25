@@ -17,7 +17,6 @@ export default async function getEnrollmentStatus({
     if (!enrollmentId || !clientKey) {
         throw new Error('Could not check the enrollment status');
     }
-    //https://checkoutshopper-test.adyen.com/checkoutshopper/services/registration-option/{enrollmentId}?clientKey=xxxxxxx
     const options = {
         loadingContext,
         path: `services/registration-option/${enrollmentId}?clientKey=${clientKey}`,
