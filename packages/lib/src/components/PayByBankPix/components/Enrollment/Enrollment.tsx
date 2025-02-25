@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, Fragment } from 'preact';
 import { useRef, useState, useEffect } from 'preact/hooks';
 import { AwaitProps, EnrollmentProps } from './types';
 import Await from '../../../internal/Await';
@@ -8,7 +8,8 @@ import IssuerList from '../../../internal/IssuerList';
 import { useIssuerWithLogo } from './useIssuerWithLogo';
 import getEnrollmentStatus from './getEnrollmentStatus';
 import DisclaimerMessage from '../../../internal/DisclaimerMessage';
-import EnrollmentIntroduction from './EnrollmentIntroduction';
+import IssuerListIntroduction from './components/IssuerListIntroduction';
+import AwaitLogoContainer from './components/AwaitLogoContainer';
 import './Enrollment.scss';
 
 function Enrollment(props: EnrollmentProps) {
@@ -28,8 +29,8 @@ function Enrollment(props: EnrollmentProps) {
         }
         return response;
     };
-
     const isAwait = (props: EnrollmentProps): props is AwaitProps => props.type === 'await';
+    const awaitEndSlot = () => <span>{i18n.get('paybybankpix.await.withOpenFinance')}</span>;
 
     useEffect(() => {
         if (registrationOptions) {
@@ -40,22 +41,26 @@ function Enrollment(props: EnrollmentProps) {
     return (
         <div className={'adyen-checkout-pix-enrollment'}>
             {isAwait(props) ? (
-                <Await
-                    showCountdownTimer
-                    type={props.paymentMethodType}
-                    countdownTime={props.countdownTime}
-                    clientKey={props.clientKey}
-                    onError={props.onError}
-                    // todo: change the instruction message
-                    messageText={'Instruction message example'}
-                    awaitText={i18n.get('await.waitForConfirmation')}
-                    pollStatus={pollStatus}
-                    // todo: change the logo per issuer
-                    brandLogo={'https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/images/logos/pix.svg'}
-                ></Await>
+                <Fragment>
+                    <AwaitLogoContainer />
+                    <Await
+                        // We want the countdown capability but the adyen-checkout__await__countdown-holder is visually hidden.
+                        showCountdownTimer={true}
+                        type={props.paymentMethodType}
+                        countdownTime={props.countdownTime}
+                        clientKey={props.clientKey}
+                        onError={props.onError}
+                        awaitText={i18n.get('paybybankpix.await.createPasskeys')}
+                        instructions={i18n.get('paybybankpix.await.timeToPay', {
+                            values: { numberOfMin: props.countdownTime }
+                        })}
+                        pollStatus={pollStatus}
+                        endSlot={awaitEndSlot}
+                    ></Await>
+                </Fragment>
             ) : (
                 <div className="adyen-checkout-pix-enrollment-issuer-list">
-                    <EnrollmentIntroduction />
+                    <IssuerListIntroduction />
                     <IssuerList
                         items={useIssuerWithLogo({ issuers: props.issuers, txVariant: props.txVariant })}
                         onSubmitAnalytics={props.onSubmitAnalytics}

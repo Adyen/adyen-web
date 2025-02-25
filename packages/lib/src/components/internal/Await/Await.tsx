@@ -202,7 +202,7 @@ function Await(props: AwaitComponentProps) {
                 <div className="adyen-checkout__await__amount">{i18n.amount(amount.value, amount.currency)}</div>
             )}
 
-            <div className="adyen-checkout__await__subtitle">{props.messageText}</div>
+            {props.messageText != null && <div className="adyen-checkout__await__subtitle">{props.messageText}</div>}
 
             <div className="adyen-checkout__await__indicator-holder">
                 <div className="adyen-checkout__await__indicator-spinner">

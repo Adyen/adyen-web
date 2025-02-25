@@ -1,42 +1,42 @@
 @use 'styles/index';
 @import 'styles/variable-generator';
 
+.adyen-checkout-pix-enrollment {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .adyen-checkout__await__subtitle,
+    .adyen-checkout__await__countdown-holder {
+        display: none;
+    }
+
+    .adyen-checkout__await--paybybank_pix {
+        padding: 0;
+        border: none;
+    }
+
+    .adyen-checkout__await__indicator-holder {
+        margin-top: token(spacer-090);
+    }
+
+    .adyen-checkout__await__countdown {
+        color: token(color-label-primary);
+    }
+
+    .adyen-checkout__await__end-slot {
+        @include index.adyen-checkout-text-caption;
+
+        margin-top: token(spacer-090);
+        color: token(color-label-tertiary);
+    }
+}
+
 .adyen-checkout-pix-enrollment-issuer-list {
     display: flex;
     flex-direction: column;
 
     .adyen-checkout-disclaimer__label {
         align-self: center;
-    }
-}
-
-.adyen-checkout-enrollment-introduction-logo-container {
-    text-align: center;
-
-    &__title {
-        @include index.adyen-checkout-text-subtitle;
-
-        margin: 0 0 token(spacer-020);
-    }
-
-    &__content {
-        @include index.adyen-checkout-text-caption;
-
-        margin: 0 0 token(spacer-070);
-    }
-}
-
-.adyen-checkout-enrollment-introduction-text-container {
-    @include index.adyen-checkout-text-caption;
-
-    &__title {
-        @include index.adyen-checkout-text-caption;
-
-        font-weight: token(text-caption-stronger-font-weight);
-        margin: 0 0 token(spacer-020);
-    }
-
-    &__content {
-        margin: 0 0 token(spacer-070);
     }
 }

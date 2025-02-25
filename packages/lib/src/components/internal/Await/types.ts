@@ -27,8 +27,8 @@ export interface AwaitComponentProps {
     clientKey: string;
     onError: (error) => void;
     onComplete: (status, component) => void;
-    brandLogo: string;
-    messageText: string;
+    brandLogo?: string;
+    messageText?: string;
     awaitText: string;
     ref?: any;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
