@@ -1,0 +1,24 @@
+@use 'styles/index';
+@import 'styles/variable-generator';
+
+.adyen-checkout__voucher-result--paybybank_pix {
+    .adyen-checkout__voucher-result__top {
+        border: none;
+        padding: token(spacer-000);
+        margin: token(spacer-070) token(spacer-000);
+    }
+
+    .adyen-checkout__voucher-result__bottom {
+        border: none;
+    }
+
+    .adyen-checkout__voucher-result__image {
+        margin-bottom: token(spacer-070);
+    }
+
+    .adyen-checkout__voucher-result__amount {
+        @include index.adyen-checkout-text-title-l;
+
+        margin-top: token(spacer-000);
+    }
+}

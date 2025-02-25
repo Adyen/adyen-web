@@ -1,16 +1,17 @@
 import { AwaitProps, IssuerListProps } from '../Enrollment/types';
 import { UIElementProps } from '../../../internal/UIElement/types';
-import { PasskeyService } from '../../services/PasskeyService';
+import { PaymentProps } from '../Payment/types';
+import { RiskSignalsAuthentication } from '../../services/types';
 
 export type Enrollment = { enrollmentId: string; fidoAssertion: string };
+export type Payment = { riskSignals: RiskSignalsAuthentication; authenticatedCredential: string };
 
 export type PayByBankPixProps = UIElementProps &
     Partial<AwaitProps> &
-    Partial<IssuerListProps> & {
-        setComponentRef?: (ref) => void;
+    Partial<IssuerListProps> &
+    Partial<PaymentProps> & {
         txVariant: string;
-        ref?: (ref) => void;
-        passkeyService?: PasskeyService;
+        deviceId?: string;
         onEnrollment?: (enrollment: Enrollment) => void;
-        onPayment?: (payment: any) => void; // //todo: typing
+        onPayment?: (payment: Payment) => void;
     };

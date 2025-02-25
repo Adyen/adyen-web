@@ -59,10 +59,20 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
     }
 
     async createEnrollment(enrollment: Enrollment) {
-        const { action = {} } = await postEnrollment({ enrollment, clientKey: this.props.clientKey, loadingContext: this.props.loadingContext });
-        // The action should redirect shopper back to the merchant's page
-        // @ts-ignore todo: fix types later
-        this.handleAction(action);
+        try {
+            const { action = {} } = await postEnrollment({ enrollment, clientKey: this.props.clientKey, loadingContext: this.props.loadingContext });
+            // The action should redirect shopper back to the merchant's page
+            // @ts-ignore todo: fix types later
+            this.handleAction(action);
+        } catch (error: unknown) {
+            this.handleError(
+                error instanceof AdyenCheckoutError ? error : new AdyenCheckoutError('ERROR', 'Error in the postEnrollment call', { cause: error })
+            );
+        }
+    }
+
+    async payWithStoredPayment() {
+        // todo: pay and handle redirect action
     }
 
     render() {
@@ -78,6 +88,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
                             setComponentRef={this.setComponentRef}
                             onSubmitAnalytics={this.submitAnalytics}
                             onEnrollment={this.createEnrollment}
+                            onPayment={this.payWithStoredPayment}
                             onError={this.handleError}
                         />
                     ) : (

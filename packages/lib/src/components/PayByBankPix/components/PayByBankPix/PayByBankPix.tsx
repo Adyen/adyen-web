@@ -3,9 +3,7 @@ import { useEffect } from 'preact/hooks';
 import Enrollment from '../Enrollment';
 import Payment from '../Payment';
 import { PayByBankPixProps } from './types';
-import { DecodeObject } from '../../../../types/global-types';
-import base64 from '../../../../utils/base64';
-import AdyenCheckoutError, { ERROR, SDK_ERROR } from '../../../../core/Errors/AdyenCheckoutError';
+import AdyenCheckoutError, { ERROR } from '../../../../core/Errors/AdyenCheckoutError';
 import { usePasskeyService } from '../../hooks/usePasskeyService';
 
 function PayByBankPix({
@@ -14,38 +12,56 @@ function PayByBankPix({
     environment,
     paymentMethodType,
     enrollmentId,
+    amount,
+    issuer,
     txVariant,
+    deviceId,
     countdownTime,
     issuers,
     storedPaymentMethodId,
+    receiver,
+    paymentDate,
+    paymentMethod,
     onChange,
     onError,
     onSubmitAnalytics,
     payButton,
     setComponentRef,
-    onEnrollment
+    onEnrollment,
+    onPayment
 }: PayByBankPixProps) {
     const shouldEnroll = storedPaymentMethodId == null;
-    const { passkeyService, error: passKeyInitError } = usePasskeyService({ environment, clientKey });
+    const { passkeyService, error: passKeyInitError } = usePasskeyService({ environment, clientKey, deviceId });
 
     const onIssuerSelected = async payload => {
-        const { data = {} } = payload;
-        const riskSignals = await passkeyService?.getRiskSignalsEnrollment();
-        onChange({ ...payload, data: { ...data, riskSignals } });
+        try {
+            const { data = {} } = payload;
+            const riskSignals = await passkeyService.captureRiskSignalsEnrollment();
+            onChange({ ...payload, data: { ...data, riskSignals } });
+        } catch (error) {
+            const errorMsg = error instanceof Error ? error.message : 'Unknown error in the onIssuerSelected';
+            onError(error instanceof AdyenCheckoutError ? error : new AdyenCheckoutError(ERROR, errorMsg));
+        }
     };
 
     const onEnroll = async (registrationOptions: string): Promise<void> => {
         try {
-            const decodedResult: DecodeObject = base64.decode(registrationOptions);
-            if (!decodedResult.success) {
-                onError(new AdyenCheckoutError(SDK_ERROR, 'Failed to decode enrollment'));
-            } else {
-                const enrollment = JSON.parse(decodedResult.data);
-                const fidoAssertion = await passkeyService.createCredentialForEnrollment(enrollment);
-                onEnrollment({ enrollmentId, fidoAssertion }); // Create passkey and trigger biometrics
-            }
-        } catch (e) {
-            onError(new AdyenCheckoutError(ERROR, 'Failed to complete enrollment'));
+            const fidoAssertion = await passkeyService.createCredentialForEnrollment(registrationOptions); // Create passkey and trigger biometrics
+            onEnrollment({ enrollmentId, fidoAssertion });
+        } catch (error) {
+            const errorMsg = error instanceof Error ? error.message : 'Unknown error in the onEnroll';
+            onError(error instanceof AdyenCheckoutError ? error : new AdyenCheckoutError(ERROR, errorMsg));
+        }
+    };
+
+    const onPay = async (): Promise<void> => {
+        try {
+            const riskSignals = await passkeyService.captureRiskSignalsAuthentication();
+            const authenticatedCredential = await passkeyService.authenticateWithCredential('xxxxxx'); //todo: replace with BE
+            onPayment({ riskSignals, authenticatedCredential });
+        } catch (error) {
+            const errorMsg = error instanceof Error ? error.message : 'Unknown error in the onPay';
+            onError(error instanceof AdyenCheckoutError ? error : new AdyenCheckoutError(ERROR, errorMsg));
         }
     };
 
@@ -80,7 +96,15 @@ function PayByBankPix({
         />
     ) : (
         // @ts-ignore  // todo: filter out non matching device id stored pm, show the rest props
-        <Payment payButton={payButton} storedPaymentMethodId={storedPaymentMethodId} />
+        <Payment
+            txVariant={txVariant}
+            amount={amount}
+            issuer={issuer}
+            receiver={receiver}
+            paymentMethod={paymentMethod}
+            paymentDate={paymentDate}
+            onPay={onPay}
+        />
     );
 }
 
