@@ -1,6 +1,6 @@
-import { ApplePayPaymentAuthorizationResult } from './types';
+import { ApplePayPaymentAuthorizationResult } from '../types';
 
-interface ApplePayServiceOptions {
+export interface ApplePayServiceOptions {
     version: number;
     onValidateMerchant: (resolve, reject, url) => void;
     onError: (error?: unknown) => void;
