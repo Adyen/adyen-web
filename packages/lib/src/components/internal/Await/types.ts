@@ -1,5 +1,5 @@
 import { UIElementProps } from '../UIElement/types';
-import { ActionHandledReturnObject, PaymentAmount } from '../../../types/global-types';
+import { ActionHandledReturnObject, PaymentAmount, RawPaymentResponse } from '../../../types/global-types';
 import { h } from 'preact';
 
 interface StatusObjectProps {
@@ -21,17 +21,18 @@ export interface AwaitComponentProps {
     showCountdownTimer: boolean;
     shouldRedirectAutomatically?: boolean;
     throttleInterval: number;
-    paymentData: string;
+    paymentData?: string;
     url?: string;
     classNameModifiers?: string[];
     clientKey: string;
     onError: (error) => void;
     onComplete: (status, component) => void;
-    brandLogo: string;
-    messageText: string;
+    brandLogo?: string;
+    messageText?: string;
     awaitText: string;
-    ref: any;
+    ref?: any;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
+    pollStatus?: () => Promise<RawPaymentResponse>;
     instructions?: string | (() => h.JSX.Element);
     endSlot?: () => h.JSX.Element;
     amount?: PaymentAmount;

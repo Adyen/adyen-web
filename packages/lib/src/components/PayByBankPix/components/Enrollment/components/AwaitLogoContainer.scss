@@ -1,0 +1,11 @@
+@import 'styles/variable-generator';
+
+.adyen-checkout-await-logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: fit-content;
+    padding: token(spacer-070) token(spacer-090);
+    border-radius: token(border-radius-m);
+    background: token(color-background-secondary);
+}

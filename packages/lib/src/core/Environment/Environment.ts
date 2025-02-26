@@ -1,7 +1,7 @@
 import { ANALYTICS_ENVIRONMENTS, API_ENVIRONMENTS, CDN_ENVIRONMENTS } from './constants';
 import type { CoreConfiguration } from '../types';
 
-const getUrlFromMap = (env: CoreConfiguration['environment'], environmentMap: Record<string, string>, environmentUrl?: string): string => {
+export const getUrlFromMap = (env: CoreConfiguration['environment'], environmentMap: Record<string, string>, environmentUrl?: string): string => {
     if (environmentUrl) {
         return environmentUrl;
     }

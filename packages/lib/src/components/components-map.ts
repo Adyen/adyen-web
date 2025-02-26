@@ -62,6 +62,7 @@ import Riverty from './Riverty';
 import PayByBankUS from './PayByBankUS';
 import { TxVariants } from './tx-variants';
 import PayTo from './PayTo/PayTo';
+import PayByBankPix from './PayByBankPix';
 
 /**
  * Maps each tx variant to a Component element.
@@ -179,6 +180,7 @@ export const ComponentsMap = {
     [TxVariants.vipps]: Vipps,
     [TxVariants.trustly]: Trustly,
     [TxVariants.paybybank_AIS_DD]: PayByBankUS,
+    [TxVariants.paybybank_pix]: PayByBankPix,
     /** Redirect */
 
     /** Klarna */
