@@ -14,8 +14,7 @@ export function usePasskeyService({ environment, clientKey }: UsePasskeyServiceP
     useEffect(() => {
         const initializePasskeyService = async () => {
             try {
-                const service = new PasskeyService({ environment, clientKey });
-                await service.initialize();
+                const service = await new PasskeyService({ environment, clientKey }).initialize();
                 setPasskeyService(service);
                 setLoading(false);
             } catch (err) {

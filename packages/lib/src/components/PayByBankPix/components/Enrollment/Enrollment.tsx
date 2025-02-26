@@ -22,6 +22,8 @@ function Enrollment(props: EnrollmentProps) {
     };
 
     const pollStatus = async () => {
+        if (registrationOptions) return;
+
         const { enrollmentId, clientKey } = props as AwaitProps;
         const response = await getEnrollmentStatus({ enrollmentId, clientKey, loadingContext });
         if (response.registrationOptions) {

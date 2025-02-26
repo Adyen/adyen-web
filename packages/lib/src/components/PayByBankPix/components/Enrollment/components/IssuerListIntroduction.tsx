@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import './IssuerListIntroduction.scss';
+import useImage from '../../../../../core/Context/useImage';
 
 // todo: add logos after uploaded to cdn
 const LOGO = {
@@ -8,12 +9,13 @@ const LOGO = {
     alt: ''
 };
 function IssuerListIntroduction() {
-    const { i18n, resources } = useCoreContext();
+    const { i18n } = useCoreContext();
+    const getImage = useImage();
 
     return (
         <div className={'adyen-checkout-issuer-list-introduction'}>
             <div className="adyen-checkout-issuer-list-introduction-logo-container">
-                <img src={resources.getImage()(LOGO.name)} alt={LOGO.alt} className="adyen-checkout__await__brand-logo" />
+                <img src={getImage()(LOGO.name)} alt={LOGO.alt} className="adyen-checkout__await__brand-logo" />
                 <p className="adyen-checkout-issuer-list-introduction-logo-container__title">
                     {i18n.get('paybybankpix.issuerList.introduction.logo.title')}
                 </p>

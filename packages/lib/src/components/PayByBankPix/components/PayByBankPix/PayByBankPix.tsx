@@ -28,7 +28,7 @@ function PayByBankPix({
 }: PayByBankPixProps) {
     const enrollmentRef = useRef<IEnrollment | null>();
     const shouldEnroll = storedPaymentMethodId == null;
-    const { passkeyService } = usePasskeyService({ environment, clientKey });
+    const { passkeyService, error: passKeyInitError } = usePasskeyService({ environment, clientKey });
 
     const self = useRef({
         showValidation: () => {
@@ -59,6 +59,12 @@ function PayByBankPix({
     useEffect(() => {
         setComponentRef(self.current);
     }, [setComponentRef]);
+
+    useEffect(() => {
+        if (passKeyInitError) {
+            onError(passKeyInitError);
+        }
+    }, [passKeyInitError]);
 
     // todo: uncomment it!
     /*    if (!passkeyService)

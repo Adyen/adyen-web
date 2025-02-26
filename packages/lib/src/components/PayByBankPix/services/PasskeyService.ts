@@ -36,7 +36,7 @@ export class PasskeyService implements IPasskeyService {
                 .catch(() => {
                     resolve(this);
                     // todo: uncomment this!
-                    // reject(new AdyenCheckoutError(SCRIPT_ERROR, error.message ?? 'Failed to load passkey'));
+                    //reject(new AdyenCheckoutError(SCRIPT_ERROR, error.message ?? 'Failed to load passkey'));
                 });
         });
     }

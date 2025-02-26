@@ -1,6 +1,6 @@
 import { h } from 'preact';
-import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import './AwaitLogoContainer.scss';
+import useImage from '../../../../../core/Context/useImage';
 
 // todo: add logos after uploaded to cdn
 const LOGO_MAPPING = {
@@ -9,15 +9,11 @@ const LOGO_MAPPING = {
     bank: { name: '', alt: '' }
 };
 function AwaitLogoContainer() {
-    const { resources } = useCoreContext();
+    const getImage = useImage();
 
     return (
         <div className={'adyen-checkout-await-logo-container'}>
-            <img
-                src={resources.getImage()(LOGO_MAPPING.openFinance.name)}
-                alt={LOGO_MAPPING.openFinance.alt}
-                className="adyen-checkout__await__brand-logo"
-            />
+            <img src={getImage()(LOGO_MAPPING.openFinance.name)} alt={LOGO_MAPPING.openFinance.alt} className="adyen-checkout__await__brand-logo" />
         </div>
     );
 }
