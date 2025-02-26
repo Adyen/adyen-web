@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import SegmentedControl from '../../internal/SegmentedControl';
-import { useState } from 'preact/hooks';
+import { useMemo, useState } from 'preact/hooks';
 import { SegmentedControlOptions } from '../../internal/SegmentedControl/SegmentedControl';
 import PayIDInput from './PayIDInput';
 import BSBInput from './BSBInput';
@@ -15,21 +15,6 @@ export type PayToInputOption = 'payid-option' | 'bsb-option';
 
 export type PayToComponentData = { selectedInput: PayToInputOption };
 
-const inputOptions: SegmentedControlOptions<PayToInputOption> = [
-    {
-        value: 'payid-option',
-        label: 'PayID',
-        id: 'payid-option',
-        controls: 'payid-input'
-    },
-    {
-        value: 'bsb-option',
-        label: 'payto.bsbOption.label',
-        id: 'bsb-option',
-        controls: 'bsb-input'
-    }
-];
-
 export interface PayToComponentProps {
     showPayButton: boolean;
     onChange: (e) => void;
@@ -43,6 +28,24 @@ export default function PayToComponent(props: PayToComponentProps) {
     const { i18n } = useCoreContext();
 
     const [status, setStatus] = useState<UIElementStatus>('ready');
+
+    const inputOptions: SegmentedControlOptions<PayToInputOption> = useMemo(
+        () => [
+            {
+                value: 'payid-option',
+                label: 'PayID',
+                id: 'payid-option',
+                controls: 'payid-input'
+            },
+            {
+                value: 'bsb-option',
+                label: i18n.get('payto.bsb.option.label'),
+                id: 'bsb-option',
+                controls: 'bsb-input'
+            }
+        ],
+        [i18n]
+    );
 
     const defaultOption = inputOptions[0].value;
     const [selectedInput, setSelectedInput] = useState<PayToInputOption>(defaultOption);

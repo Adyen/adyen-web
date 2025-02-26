@@ -68,6 +68,15 @@ export class PayToElement extends UIElement<PayToConfiguration> {
      * Formats the component data output
      */
     formatData() {
+        if (this.props.storedPaymentMethodId) {
+            return {
+                paymentMethod: {
+                    type: PayToElement.type,
+                    storedPaymentMethodId: this.props.storedPaymentMethodId
+                }
+            };
+        }
+
         return {
             paymentMethod: {
                 type: PayToElement.type,
@@ -81,6 +90,10 @@ export class PayToElement extends UIElement<PayToConfiguration> {
     }
 
     get isValid(): boolean {
+        if (this.props.storedPaymentMethodId) {
+            return true;
+        }
+
         return !!this.state.isValid;
     }
 
@@ -136,9 +149,11 @@ export class PayToElement extends UIElement<PayToConfiguration> {
                             throttleTime={config.THROTTLE_TIME}
                             throttleInterval={config.THROTTLE_INTERVAL}
                             onActionHandled={this.onActionHandled}
-                            endSlot={() => (
-                                <MandateSummary mandate={this.props.mandate} payee={this.props.payee} currencyCode={this.props.amount.currency} />
-                            )}
+                            endSlot={() =>
+                                !!this.props.mandate && (
+                                    <MandateSummary mandate={this.props.mandate} payee={this.props.payee} currencyCode={this.props.amount.currency} />
+                                )
+                            }
                         />
                     </SRPanelProvider>
                 </CoreProvider>
