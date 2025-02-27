@@ -28,11 +28,11 @@ const config: StorybookConfig = {
 
     // public added for msw: https://github.com/mswjs/msw-storybook-addon?tab=readme-ov-file#start-storybook
     // '../storybook/public'
-    staticDirs: ['../storybook/assets'],
+    staticDirs: ['../storybook/assets', '../storybook/public'],
 
     viteFinal(config) {
         return mergeConfig(config, {
-            define: generateEnvironmentVariables(),
+            define: generateEnvironmentVariables(process.env.NODE_ENV),
             resolve: {
                 alias: [
                     {
