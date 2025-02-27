@@ -9,6 +9,7 @@ import PayByBankPix from './components/PayByBankPix';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { PasskeyService } from './services/PasskeyService';
 import { postEnrollment } from './services/postEnrollment';
+import { Enrollment } from './components/PayByBankPix/types';
 
 //todo: remove
 const hasRedirectResult = (): boolean => {
@@ -57,8 +58,8 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         };
     }
 
-    async createEnrollment({ enrollment }) {
-        const { action = {} } = await postEnrollment(enrollment);
+    async createEnrollment(enrollment: Enrollment) {
+        const { action = {} } = await postEnrollment({ enrollment, clientKey: this.props.clientKey, loadingContext: this.props.loadingContext });
         // The action should redirect shopper back to the merchant's page
         // @ts-ignore todo: fix types later
         this.handleAction(action);

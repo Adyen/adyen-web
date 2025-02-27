@@ -3,7 +3,7 @@ import { PayByBankPixProps } from './components/PayByBankPix/types';
 
 export type RiskSignals = {
     osVersion?: string;
-    userTimeZoneOffset?: number;
+    userTimeZoneOffset?: string;
     language?: string;
     screenDimensions?: { width: number; height: number };
     /**
@@ -16,11 +16,6 @@ export type RiskSignals = {
 
 export type PayByBankPixConfiguration = Omit<Partial<PayByBankPixProps>, 'txVariant'> & {
     /**
-     * Risk related information, optionally pass may increase the conversion rate
-     */
-    riskSignals?: RiskSignals;
-    deviceId?: string;
-    /**
      * @internal
      */
     _isAdyenHosted?: boolean;
@@ -29,7 +24,7 @@ export type PayByBankPixConfiguration = Omit<Partial<PayByBankPixProps>, 'txVari
 export interface PayByBankPixData {
     paymentMethod: {
         type: TxVariants.paybybank_pix;
+        issuer?: string;
         riskSignals?: RiskSignals;
     };
-    returnUrl?: string; // todo:remove it testing purpose
 }

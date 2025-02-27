@@ -19,7 +19,7 @@ export default async function getEnrollmentStatus({
     }
     const options = {
         loadingContext,
-        path: `services/registration-option/${enrollmentId}?clientKey=${clientKey}`,
+        path: `utility/v1/pixpaybybank/registration-options/${enrollmentId}?clientKey=${clientKey}`,
         timeout
     };
 

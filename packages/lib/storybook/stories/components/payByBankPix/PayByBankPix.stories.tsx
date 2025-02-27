@@ -61,7 +61,12 @@ export const SimulateHostedPage: PixBiometricStory = {
         redirectResult: getSearchParameter('redirectResult'),
         componentConfiguration: {
             _isAdyenHosted: true,
-            issuers: [{ id: 'issuerId_123', name: 'issuer 123' }],
+            issuers: [
+                {
+                    id: '0b919e9b-bee0-4549-baa3-bb6d003575ce',
+                    name: 'Iniciador Mock Bank'
+                }
+            ],
             onChange: data => {
                 console.log({ data });
             }
@@ -74,7 +79,7 @@ export const SimulateHostedPage: PixBiometricStory = {
                     return HttpResponse.json(mockPaymentsResponseSimulateHostedPage);
                 }),
                 http.get(
-                    'https://checkoutshopper-test.adyen.com/checkoutshopper/services/registration-option/enrollment123?clientKey=test_L6HTEOAXQBCZJHKNU4NLN6EI7IE6VRRW',
+                    'https://checkoutshopper-test.adyen.com/checkoutshopper/utility/v1/pixpaybybank/registration-options/enrollment123?clientKey=test_L6HTEOAXQBCZJHKNU4NLN6EI7IE6VRRW',
                     () => {
                         return HttpResponse.json(
                             getSearchParameter('pollStatus') === 'pending'

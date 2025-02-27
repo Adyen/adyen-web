@@ -9,13 +9,13 @@ export const mockPaymentsResponseMerchantPage = {
 };
 
 export const mockPaymentsResponseSimulateHostedPage = {
+    resultCode: 'RedirectShopper',
     action: {
         paymentMethodType: 'paybybank_pix',
-        type: 'redirect', // “await” when on mobile device
         url: 'https://localhost:3020/iframe.html?args=&globals=&id=components-paybybankpix--simulate-issuer-page&viewMode=story',
-        method: 'GET'
-    },
-    resultCode: 'RedirectShopper'
+        method: 'GET',
+        type: 'redirect'
+    }
 };
 // todo: add non pending status
 export const mockPendingStatusSimulateHostedPage = {
@@ -29,7 +29,13 @@ export const mockReceivedStatusSimulateHostedPage = {
 };
 
 export const mockSubmitDetailsResponseSimulateHostedPage = {
-    action: { paymentMethodType: 'paybybank_pix', type: 'await', enrollmentId: 'enrollment123', paymentData: 'mockPaymentData' }
+    resultCode: 'Pending',
+    action: {
+        paymentData: 'mockPaymentData',
+        paymentMethodType: 'paybybank_pix',
+        enrollmentId: 'enrollment123',
+        type: 'await'
+    }
 };
 
 export const mockSubmitDetailsResponseMerchantPage = {};

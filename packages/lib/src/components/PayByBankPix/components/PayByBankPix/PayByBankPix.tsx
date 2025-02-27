@@ -49,7 +49,8 @@ function PayByBankPix({
                 onError(new AdyenCheckoutError(SDK_ERROR, 'Failed to decode enrollment'));
             } else {
                 const enrollment = JSON.parse(decodedResult.data);
-                onEnrollment(await passkeyService.createCredentialForEnrollment(enrollment)); // Create passkey and trigger biometrics
+                const fidoAssertion = await passkeyService.createCredentialForEnrollment(enrollment);
+                onEnrollment({ enrollmentId, fidoAssertion }); // Create passkey and trigger biometrics
             }
         } catch (e) {
             onError(new AdyenCheckoutError(ERROR, 'Failed to complete enrollment'));
