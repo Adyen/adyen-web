@@ -2,4 +2,4 @@
 '@adyen/adyen-web': patch
 ---
 
-adds stored component logic to PayTo
+Adds stored component logic to PayTo
