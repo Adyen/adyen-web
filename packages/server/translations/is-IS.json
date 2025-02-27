@@ -353,5 +353,6 @@
     "payto.mandate.frequency.yearly": "%{count} greiðsla/greiðslur árlega",
     "payto.label.firstName": "Fornafn reikningshafa",
     "payto.label.lastName": "Eftirnafn reikningshafa",
-    "payto.await.waitForConfirmation": "Bíður samþykkis"
+    "payto.await.waitForConfirmation": "Bíður samþykkis",
+    "payto.bsb.option.label": "Bankanúmer banka og reikningsnúmer"
 }

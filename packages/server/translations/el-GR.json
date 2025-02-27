@@ -351,5 +351,6 @@
     "payto.mandate.frequency.yearly": "%{count} πληρωμή(-ές) ετησίως",
     "payto.label.firstName": "Όνομα κατόχου λογαριασμού",
     "payto.label.lastName": "Επώνυμο κατόχου λογαριασμού",
-    "payto.await.waitForConfirmation": "Αναμονή για την έγκρισή σας"
+    "payto.await.waitForConfirmation": "Αναμονή για την έγκρισή σας",
+    "payto.bsb.option.label": "BSB και αριθμός λογαριασμού"
 }

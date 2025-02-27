@@ -353,5 +353,6 @@
     "payto.mandate.frequency.yearly": "%{count} плащания годишно",
     "payto.label.firstName": "Име на титуляра на сметката",
     "payto.label.lastName": "Фамилия на титуляра на сметката",
-    "payto.await.waitForConfirmation": "Очакваме Вашето одобрение"
+    "payto.await.waitForConfirmation": "Очакваме Вашето одобрение",
+    "payto.bsb.option.label": "BSB и номер на сметка"
 }

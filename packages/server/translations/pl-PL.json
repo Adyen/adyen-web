@@ -351,5 +351,6 @@
     "payto.mandate.frequency.yearly": "%{count} płatności rocznie",
     "payto.label.firstName": "Imię posiadacza rachunku",
     "payto.label.lastName": "Nazwisko posiadacza rachunku",
-    "payto.await.waitForConfirmation": "Oczekiwanie na Twoją zgodę"
+    "payto.await.waitForConfirmation": "Oczekiwanie na Twoją zgodę",
+    "payto.bsb.option.label": "BSB i numer rachunku"
 }

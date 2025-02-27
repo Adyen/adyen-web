@@ -351,5 +351,6 @@
     "payto.mandate.frequency.yearly": "每年 %{count} 筆付款",
     "payto.label.firstName": "帳戶持有人名字",
     "payto.label.lastName": "帳戶持有人的姓氏",
-    "payto.await.waitForConfirmation": "正在等待您的核准"
+    "payto.await.waitForConfirmation": "正在等待您的核准",
+    "payto.bsb.option.label": "BSB 和帳戶號碼"
 }

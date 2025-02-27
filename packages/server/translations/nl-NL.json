@@ -351,5 +351,6 @@
     "payto.mandate.frequency.yearly": "%{count} betaling(en) per jaar",
     "payto.label.firstName": "Voornaam rekeninghouder",
     "payto.label.lastName": "Achternaam rekeninghouder",
-    "payto.await.waitForConfirmation": "In afwachting van uw goedkeuring"
+    "payto.await.waitForConfirmation": "In afwachting van uw goedkeuring",
+    "payto.bsb.option.label": "BSB- en rekeningnummer"
 }

@@ -353,5 +353,6 @@
     "payto.mandate.frequency.yearly": "%{count} makse(t) aastas",
     "payto.label.firstName": "Konto omaniku eesnimi",
     "payto.label.lastName": "Konto omaniku perekonnanimi",
-    "payto.await.waitForConfirmation": "Teie heakskiidu ootel"
+    "payto.await.waitForConfirmation": "Teie heakskiidu ootel",
+    "payto.bsb.option.label": "BSB ja kontonumber"
 }

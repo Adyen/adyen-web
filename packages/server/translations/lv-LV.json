@@ -353,5 +353,6 @@
     "payto.mandate.frequency.yearly": "%{count} maksājums(-i) gadā",
     "payto.label.firstName": "Konta īpašnieka vārds",
     "payto.label.lastName": "Konta īpašnieka uzvārds",
-    "payto.await.waitForConfirmation": "Gaida jūsu apstiprinājumu"
+    "payto.await.waitForConfirmation": "Gaida jūsu apstiprinājumu",
+    "payto.bsb.option.label": "BSB un konta numurs"
 }

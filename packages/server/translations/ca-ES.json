@@ -353,5 +353,6 @@
     "payto.mandate.frequency.yearly": "%{count} pagament(s) anual(s)",
     "payto.label.firstName": "Nom del titular del compte",
     "payto.label.lastName": "Cognom del titular del compte",
-    "payto.await.waitForConfirmation": "Esperant la vostra aprovació"
+    "payto.await.waitForConfirmation": "Esperant la vostra aprovació",
+    "payto.bsb.option.label": "BSB i número de compte"
 }
