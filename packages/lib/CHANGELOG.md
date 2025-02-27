@@ -1,5 +1,29 @@
 # @adyen/adyen-web
 
+## 6.9.0
+
+### Minor Changes
+
+- Feature: New PayTo payment method ([#3114](https://github.com/Adyen/adyen-web/pull/3114))
+
+### Patch Changes
+
+- GooglePay - Fixed issue where calling reject on onClick event was triggering an unhandled exception ([#3151](https://github.com/Adyen/adyen-web/pull/3151))
+
+- Move `@adyen/bento-design-tokens` into devDependencies. ([#3124](https://github.com/Adyen/adyen-web/pull/3124))
+
+- GooglePay - Added 'challengeWindowSize' typescript type to its interface ([#3120](https://github.com/Adyen/adyen-web/pull/3120))
+
+- Fixes giftcard component unresponsive when requiring confirmation ([#3119](https://github.com/Adyen/adyen-web/pull/3119))
+
+- Use built-in mechanism to disable OpenInvoice (and ACH) components when Pay pressed ([#3142](https://github.com/Adyen/adyen-web/pull/3142))
+
+- Boleto - Added missing properties to its typescript interface ([#3121](https://github.com/Adyen/adyen-web/pull/3121))
+
+- Added missing type (onAutoComplete) in CustomCardConfiguration ([#3144](https://github.com/Adyen/adyen-web/pull/3144))
+
+- Adds stored component logic to PayTo ([#3156](https://github.com/Adyen/adyen-web/pull/3156))
+
 ## 6.8.0
 
 ### Minor Changes
