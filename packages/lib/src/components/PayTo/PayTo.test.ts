@@ -437,5 +437,33 @@ describe('PayTo', () => {
             expect(screen.queryByLabelText(/First name/i)).toBeFalsy();
             expect(screen.queryByLabelText(/Last name/i)).toBeFalsy();
         });
+
+        test('should send storedPaymentMethodId button when stored', async () => {
+            const payTo = new PayTo(global.core, {
+                onSubmit: onSubmitMock,
+                i18n: global.i18n,
+                loadingContext: 'test',
+                modules: { resources: global.resources },
+                storedPaymentMethodId: 'mock'
+            });
+
+            render(payTo.render());
+
+            await user.click(screen.queryByRole('button', { name: /Pay/i }));
+
+            expect(onSubmitMock).toHaveBeenCalledTimes(1);
+            expect(onSubmitMock).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    data: expect.objectContaining({
+                        paymentMethod: expect.objectContaining({
+                            storedPaymentMethodId: 'mock',
+                            type: 'payto'
+                        })
+                    })
+                }),
+                expect.anything(),
+                expect.anything()
+            );
+        });
     });
 });
