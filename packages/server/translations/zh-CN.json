@@ -102,6 +102,7 @@
     "boleto.sendCopyToEmail": "将副本发送到我的电子邮箱",
     "button.copy": "复制",
     "button.download": "下载",
+    "boleto.socialSecurityNumber": "CPF/CNPJ",
     "boleto.socialSecurityNumber.invalid": "输入有效的 CPF/CNPJ 号码",
     "creditCard.storedCard.description.ariaLabel": "存储的卡片以 ％@ 结尾",
     "voucher.entity": "实体",
@@ -351,5 +352,6 @@
     "payto.mandate.frequency.yearly": "每年 %{count} 笔付款",
     "payto.label.firstName": "账户持有人名字",
     "payto.label.lastName": "账户持有人姓氏",
-    "payto.await.waitForConfirmation": "等待您的批准…"
+    "payto.await.waitForConfirmation": "等待您的批准…",
+    "payto.bsb.option.label": "BSB 和账号"
 }

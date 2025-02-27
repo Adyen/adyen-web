@@ -102,6 +102,7 @@
     "boleto.sendCopyToEmail": "إرسال نسخة إلى بريدي الإلكتروني",
     "button.copy": "نسخ",
     "button.download": "تنزيل",
+    "boleto.socialSecurityNumber": "CPF / CNPJ",
     "boleto.socialSecurityNumber.invalid": "أدخل رقم CPF/CNPJ صالحًا",
     "creditCard.storedCard.description.ariaLabel": "تنتهي البطاقة المخزنة في %@",
     "voucher.entity": "الكيان",
@@ -352,5 +353,6 @@
     "payto.mandate.frequency.yearly": "%{count} عملية (عمليات) دفع سنويًا",
     "payto.label.firstName": "الاسم الأول لصاحب الحساب",
     "payto.label.lastName": "اسم العائلة لصاحب الحساب",
-    "payto.await.waitForConfirmation": "في انتظار موافقتكم"
+    "payto.await.waitForConfirmation": "في انتظار موافقتكم",
+    "payto.bsb.option.label": "رمز فرع البنك ورقم الحساب"
 }

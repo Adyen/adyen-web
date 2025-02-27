@@ -88,6 +88,157 @@ describe('PayTo', () => {
         expect(screen.getByLabelText(/Email/i)).toBeTruthy();
     });
 
+    describe('PayTo shopperIdentifier', () => {
+        test('should send phoneNumber in shopperIdentifier', async () => {
+            const payTo = new PayTo(global.core, {
+                onSubmit: onSubmitMock,
+                i18n: global.i18n,
+                loadingContext: 'test',
+                modules: { resources: global.resources }
+            });
+
+            render(payTo.render());
+
+            await user.type(screen.queryByLabelText(/Mobile number/i), '411111111');
+            await user.type(screen.queryByLabelText(/First name/i), 'John');
+            await user.type(screen.queryByLabelText(/Last name/i), 'Doe');
+
+            await user.click(screen.queryByRole('button', { name: 'Continue' }));
+
+            expect(onSubmitMock).toHaveBeenCalledTimes(1);
+            expect(onSubmitMock).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    data: expect.objectContaining({
+                        paymentMethod: expect.objectContaining({
+                            shopperAccountIdentifier: '+61-411111111',
+                            type: 'payto'
+                        }),
+                        shopperName: {
+                            firstName: 'John',
+                            lastName: 'Doe'
+                        }
+                    })
+                }),
+                expect.anything(),
+                expect.anything()
+            );
+        });
+
+        test('should send email in shopperIdentifier', async () => {
+            const payTo = new PayTo(global.core, {
+                onSubmit: onSubmitMock,
+                i18n: global.i18n,
+                loadingContext: 'test',
+                modules: { resources: global.resources }
+            });
+
+            render(payTo.render());
+
+            await user.click(screen.queryByRole('button', { name: 'Mobile' }));
+            await user.click(screen.queryByRole('option', { name: /Email/i }));
+
+            await user.type(screen.queryByLabelText(/Email/i), 'example@example.com');
+            await user.type(screen.queryByLabelText(/First name/i), 'John');
+            await user.type(screen.queryByLabelText(/Last name/i), 'Doe');
+
+            await user.click(screen.queryByRole('button', { name: 'Continue' }));
+
+            expect(onSubmitMock).toHaveBeenCalledTimes(1);
+            expect(onSubmitMock).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    data: expect.objectContaining({
+                        paymentMethod: expect.objectContaining({
+                            shopperAccountIdentifier: 'example@example.com',
+                            type: 'payto'
+                        }),
+                        shopperName: {
+                            firstName: 'John',
+                            lastName: 'Doe'
+                        }
+                    })
+                }),
+                expect.anything(),
+                expect.anything()
+            );
+        });
+
+        test('should send ABN in shopperIdentifier', async () => {
+            const payTo = new PayTo(global.core, {
+                onSubmit: onSubmitMock,
+                i18n: global.i18n,
+                loadingContext: 'test',
+                modules: { resources: global.resources }
+            });
+
+            render(payTo.render());
+
+            await user.click(screen.queryByRole('button', { name: 'Mobile' }));
+            await user.click(screen.queryByRole('option', { name: /ABN/i }));
+
+            await user.type(screen.queryByLabelText(/ABN/i), '123123123');
+            await user.type(screen.queryByLabelText(/First name/i), 'John');
+            await user.type(screen.queryByLabelText(/Last name/i), 'Doe');
+
+            await user.click(screen.queryByRole('button', { name: 'Continue' }));
+
+            expect(onSubmitMock).toHaveBeenCalledTimes(1);
+            expect(onSubmitMock).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    data: expect.objectContaining({
+                        paymentMethod: expect.objectContaining({
+                            shopperAccountIdentifier: '123123123',
+                            type: 'payto'
+                        }),
+                        shopperName: {
+                            firstName: 'John',
+                            lastName: 'Doe'
+                        }
+                    })
+                }),
+                expect.anything(),
+                expect.anything()
+            );
+        });
+
+        test('should send BSB in shopperIdentifier', async () => {
+            const payTo = new PayTo(global.core, {
+                onSubmit: onSubmitMock,
+                i18n: global.i18n,
+                loadingContext: 'test',
+                modules: { resources: global.resources }
+            });
+
+            render(payTo.render());
+
+            await user.click(screen.queryByRole('button', { name: /BSB and account number/i }));
+
+            await user.type(screen.queryByLabelText(/Bank account number/i), '12300123');
+            await user.type(screen.queryByLabelText(/Bank State Branch/i), '123456');
+            await user.type(screen.queryByLabelText(/First name/i), 'John');
+            await user.type(screen.queryByLabelText(/Last name/i), 'Doe');
+
+            await user.click(screen.queryByRole('button', { name: 'Continue' }));
+
+            expect(onSubmitMock).toHaveBeenCalledTimes(1);
+            expect(onSubmitMock).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    data: expect.objectContaining({
+                        paymentMethod: expect.objectContaining({
+                            shopperAccountIdentifier: '123456-12300123',
+                            type: 'payto'
+                        }),
+                        shopperName: {
+                            firstName: 'John',
+                            lastName: 'Doe'
+                        }
+                    })
+                }),
+                expect.anything(),
+                expect.anything()
+            );
+        });
+    });
+
     describe('PayTo await screen', () => {
         const server = setupServer(
             http.post('https://checkoutshopper-test.adyen.com/checkoutshopper/services/PaymentInitiation/v1/status', () => {
@@ -266,6 +417,25 @@ describe('PayTo', () => {
             const mandateFrequency = await screen.findByText('Frequency');
             // eslint-disable-next-line testing-library/no-node-access
             expect(mandateFrequency.nextSibling).toHaveTextContent('Ad Hoc');
+        });
+    });
+
+    describe('PayTo stored', () => {
+        test('should render pay button when stored', async () => {
+            const payTo = new PayTo(global.core, {
+                i18n: global.i18n,
+                loadingContext: 'test',
+                modules: { resources: global.resources },
+                storedPaymentMethodId: 'mock'
+            });
+
+            render(payTo.render());
+            expect(await screen.findByRole('button', { name: /Pay/i })).toBeTruthy();
+            expect(screen.queryByLabelText(/Prefix/i)).toBeFalsy();
+            expect(screen.queryByLabelText(/Prefix/i)).toBeFalsy();
+            expect(screen.queryByLabelText(/Mobile number/i)).toBeFalsy();
+            expect(screen.queryByLabelText(/First name/i)).toBeFalsy();
+            expect(screen.queryByLabelText(/Last name/i)).toBeFalsy();
         });
     });
 });

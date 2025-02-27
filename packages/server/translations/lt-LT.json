@@ -353,5 +353,6 @@
     "payto.mandate.frequency.yearly": "%{count} mokėjimas (-ai; -ų) kas metus",
     "payto.label.firstName": "Sąskaitos turėtojo vardas",
     "payto.label.lastName": "Sąskaitos turėtojo pavardė",
-    "payto.await.waitForConfirmation": "Laukiama jūsų patvirtinimo"
+    "payto.await.waitForConfirmation": "Laukiama jūsų patvirtinimo",
+    "payto.bsb.option.label": "BSB ir sąskaitos numeris"
 }

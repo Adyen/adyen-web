@@ -102,6 +102,7 @@
     "boleto.sendCopyToEmail": "Zaslať kópiu na môj e-mail",
     "button.copy": "Kopírovať",
     "button.download": "Stiahnuť",
+    "boleto.socialSecurityNumber": "CPF / CNPJ",
     "boleto.socialSecurityNumber.invalid": "Zadajte platné číslo CPF/CNPJ",
     "creditCard.storedCard.description.ariaLabel": "Platnosť uloženej karty končí o %@",
     "voucher.entity": "Subjekt",
@@ -351,5 +352,6 @@
     "payto.mandate.frequency.yearly": "%{count} platba(y/ieb) ročne",
     "payto.label.firstName": "Krstné meno majiteľa účtu",
     "payto.label.lastName": "Priezvisko majiteľa účtu",
-    "payto.await.waitForConfirmation": "Čakáme na váš súhlas"
+    "payto.await.waitForConfirmation": "Čakáme na váš súhlas",
+    "payto.bsb.option.label": "BSB a číslo účtu"
 }

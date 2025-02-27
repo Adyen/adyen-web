@@ -351,5 +351,6 @@
     "payto.mandate.frequency.yearly": "%{count} fizetés évente",
     "payto.label.firstName": "Számlatulajdonos utóneve",
     "payto.label.lastName": "Számlatulajdonos vezetékneve",
-    "payto.await.waitForConfirmation": "Várakozás az Ön jóváhagyására"
+    "payto.await.waitForConfirmation": "Várakozás az Ön jóváhagyására",
+    "payto.bsb.option.label": "BSB és számlaszám"
 }

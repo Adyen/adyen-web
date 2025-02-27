@@ -102,6 +102,7 @@
     "boleto.sendCopyToEmail": "Отправить мне копию на эл. почту",
     "button.copy": "Копия",
     "button.download": "Загрузить",
+    "boleto.socialSecurityNumber": "CPF/CNPJ",
     "boleto.socialSecurityNumber.invalid": "Введите действительный номер CPF/CNPJ",
     "creditCard.storedCard.description.ariaLabel": "Сохраненная карта заканчивается на %@",
     "voucher.entity": "Объект",
@@ -349,5 +350,6 @@
     "payto.mandate.frequency.yearly": "Платежей за год: %{count}",
     "payto.label.firstName": "Имя владельца счета",
     "payto.label.lastName": "Фамилия владельца счета",
-    "payto.await.waitForConfirmation": "В ожидании вашего одобрения"
+    "payto.await.waitForConfirmation": "В ожидании вашего одобрения",
+    "payto.bsb.option.label": "Номер BSB и номер счета"
 }

@@ -351,5 +351,6 @@
     "payto.mandate.frequency.yearly": "%{count} maksua vuosittain",
     "payto.label.firstName": "Tilinhaltijan etunimi",
     "payto.label.lastName": "Tilinhaltijan sukunimi",
-    "payto.await.waitForConfirmation": "Odottaa hyväksyntääsi"
+    "payto.await.waitForConfirmation": "Odottaa hyväksyntääsi",
+    "payto.bsb.option.label": "BSB- ja tilinumero"
 }

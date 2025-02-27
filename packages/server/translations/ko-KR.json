@@ -102,6 +102,7 @@
     "boleto.sendCopyToEmail": "내 이메일로 사본 보내기",
     "button.copy": "복사",
     "button.download": "다운로드",
+    "boleto.socialSecurityNumber": "CPF/CNPJ",
     "boleto.socialSecurityNumber.invalid": "올바른 CPF/CNPJ 번호를 입력하세요.",
     "creditCard.storedCard.description.ariaLabel": "저장된 카드는 %@ 후 종료됩니다.",
     "voucher.entity": "발급사",
@@ -351,5 +352,6 @@
     "payto.mandate.frequency.yearly": "연간 결제 %{count}건",
     "payto.label.firstName": "계좌 소유자 이름(이름)",
     "payto.label.lastName": "계좌 소유자 성",
-    "payto.await.waitForConfirmation": "승인 대기 중"
+    "payto.await.waitForConfirmation": "승인 대기 중",
+    "payto.bsb.option.label": "BSB 및 계좌 번호"
 }

@@ -351,5 +351,6 @@
     "payto.mandate.frequency.yearly": "%{count} paiement(s) par an",
     "payto.label.firstName": "Prénom du titulaire du compte",
     "payto.label.lastName": "Nom de famille du titulaire du compte",
-    "payto.await.waitForConfirmation": "En attente de votre approbation"
+    "payto.await.waitForConfirmation": "En attente de votre approbation",
+    "payto.bsb.option.label": "Numéro BSB et numéro de compte"
 }

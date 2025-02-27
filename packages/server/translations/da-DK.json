@@ -352,5 +352,6 @@
     "payto.mandate.frequency.yearly": "%{count} betaling(er) årligt",
     "payto.label.firstName": "Kontohavers fornavn",
     "payto.label.lastName": "Kontohavers efternavn",
-    "payto.await.waitForConfirmation": "Afventer din godkendelse"
+    "payto.await.waitForConfirmation": "Afventer din godkendelse",
+    "payto.bsb.option.label": "BSB- og kontonummer"
 }

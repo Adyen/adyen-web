@@ -351,5 +351,6 @@
     "payto.mandate.frequency.yearly": "%{count} plată/plăți anuale",
     "payto.label.firstName": "Prenumele titularului de cont",
     "payto.label.lastName": "Numele de familie al titularului de cont",
-    "payto.await.waitForConfirmation": "Se așteaptă aprobarea dvs."
+    "payto.await.waitForConfirmation": "Se așteaptă aprobarea dvs.",
+    "payto.bsb.option.label": "BSB și numărul de cont"
 }

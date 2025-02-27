@@ -102,6 +102,7 @@
     "boleto.sendCopyToEmail": "Enviar copia a mi correo electrónico",
     "button.copy": "Copiar",
     "button.download": "Descargar",
+    "boleto.socialSecurityNumber": "CPF/CNPJ",
     "boleto.socialSecurityNumber.invalid": "Introduzca un número CPF/CNPJ válido",
     "creditCard.storedCard.description.ariaLabel": "La tarjeta almacenada termina en %@",
     "voucher.entity": "Entidad",
@@ -349,5 +350,6 @@
     "payto.mandate.frequency.yearly": "%{count} pago(s) anualmente",
     "payto.label.firstName": "Nombre del titular de la cuenta",
     "payto.label.lastName": "Apellidos del titular de la cuenta",
-    "payto.await.waitForConfirmation": "Esperando su aprobación"
+    "payto.await.waitForConfirmation": "Esperando su aprobación",
+    "payto.bsb.option.label": "BSB y número de cuenta"
 }
