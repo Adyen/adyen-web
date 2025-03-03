@@ -1,3 +1,11 @@
 .adyen-checkout__field--issuer-list {
     margin-bottom: 0;
+
+    .adyen-checkout__dropdown {
+        position: static;
+    }
+
+    .adyen-checkout__dropdown__button {
+        position: relative;
+    }
 }
