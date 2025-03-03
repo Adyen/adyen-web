@@ -18,6 +18,7 @@ jobs:
         # node-version: [16.x, 18.x, 19.x]
         # Currently 18 and 19 are not supported, still keeping it
         # as a reminder for compatibility check
+        runner-browser: ["chromium", "firefox", "webkit"]
     env:
       CHECKOUT_API_KEY: ${{secrets.ADYEN_CHECKOUT_API_KEY}}
       MERCHANT_ACCOUNT: ${{secrets.ADYEN_CHECKOUT_MERCHANT_ACCOUNT}}
@@ -38,7 +39,7 @@ jobs:
       working-directory: packages/e2e-playwright/
       run: yarn install && npx playwright install --with-deps
     - name: Run E2E Tests
-      run: yarn test:e2e
+      run: yarn test:e2e -- --project=${{ matrix.runner-browser }}
     - name: Archive test result artifacts
       if: always()
       uses: actions/upload-artifact@v4
