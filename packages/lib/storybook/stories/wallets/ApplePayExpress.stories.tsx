@@ -151,6 +151,8 @@ export const Express: ApplePayStory = {
         componentConfiguration: {
             isExpress: true,
 
+            renderApplePayCodeAs: 'modal',
+
             onSubmit: async (state, component, actions) => {
                 try {
                     const paymentData = {
