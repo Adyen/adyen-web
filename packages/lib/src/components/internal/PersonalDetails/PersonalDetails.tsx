@@ -18,6 +18,7 @@ import InputEmail from '../FormFields/InputEmail';
 import InputTelephone from '../FormFields/InputTelephone';
 import { getErrorMessage } from '../../../utils/getErrorMessage';
 import { ComponentMethodsRef } from '../UIElement/types';
+import { HandleChangeForModeType } from '../../../utils/useForm/types';
 
 export const PERSONAL_DETAILS_SCHEMA = ['firstName', 'lastName', 'gender', 'dateOfBirth', 'shopperEmail', 'telephoneNumber'];
 
@@ -47,7 +48,7 @@ export default function PersonalDetails(props: PersonalDetailsProps) {
     };
 
     const eventHandler =
-        (mode: string): h.JSX.GenericEventHandler<EventTarget> =>
+        (mode: HandleChangeForModeType): h.JSX.GenericEventHandler<EventTarget> =>
         (e: Event): void => {
             const { name } = e.target as HTMLInputElement;
             const key = name.split(`${namePrefix}.`).pop();

@@ -81,6 +81,13 @@
     display: none;
 }
 
+.adyen-checkout__await__amount {
+    margin-top: token(spacer-070);
+    font-size: token(text-title-l-font-size);
+    font-weight: token(text-title-font-weight);
+    text-align: center;
+}
+
 @media only screen and (max-device-width: 1200px) {
     .adyen-checkout__await__app-link {
         display: block;

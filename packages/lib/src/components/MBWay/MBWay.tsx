@@ -83,6 +83,7 @@ export class MBWayElement extends UIElement<AwaitConfiguration> {
                         this.componentRef = ref;
                     }}
                     {...this.props}
+                    setComponentRef={this.setComponentRef}
                     onChange={this.setState}
                     onSubmit={this.submit}
                     payButton={this.payButton}

@@ -1,6 +1,6 @@
 {
   "name": "@adyen/adyen-web",
-  "version": "6.8.0",
+  "version": "6.9.0",
   "license": "MIT",
   "homepage": "https://docs.adyen.com/checkout",
   "type": "module",
@@ -82,9 +82,9 @@
   },
   "devDependencies": {
     "@adyen/bento-design-tokens": "1.10.0",
-    "@eslint/compat": "1.2.5",
+    "@eslint/compat": "1.2.6",
     "@eslint/js": "9.17.0",
-    "@preact/preset-vite": "2.9.3",
+    "@preact/preset-vite": "2.10.1",
     "@rollup/plugin-commonjs": "28.0.2",
     "@rollup/plugin-eslint": "9.0.5",
     "@rollup/plugin-json": "6.1.0",
@@ -101,7 +101,7 @@
     "@testing-library/jest-dom": "6.6.3",
     "@testing-library/preact": "3.2.4",
     "@testing-library/preact-hooks": "1.1.0",
-    "@testing-library/user-event": "14.5.2",
+    "@testing-library/user-event": "14.6.1",
     "@types/eslint__js": "8.42.3",
     "@types/jest": "29.5.14",
     "autoprefixer": "10.4.20",
@@ -122,9 +122,10 @@
     "jest-environment-jsdom": "29.7.0",
     "jest-fixed-jsdom": "^0.0.9",
     "jest-mock-extended": "3.0.7",
-    "lint-staged": "15.3.0",
-    "msw": "^2.6.4",
-    "postcss": "8.4.49",
+    "lint-staged": "15.4.3",
+    "msw": "2.7.1",
+    "msw-storybook-addon": "2.0.4",
+    "postcss": "8.5.1",
     "rollup": "4.29.1",
     "rollup-plugin-dts": "6.1.1",
     "rollup-plugin-postcss": "4.0.2",
@@ -154,5 +155,10 @@
     "*.{js,jsx,ts,tsx}": "eslint",
     "*.{scss,css}": "stylelint",
     "*.{js,jsx,ts,tsx,html,md}": "prettier --write"
+  },
+  "msw": {
+    "workerDirectory": [
+      "storybook/public"
+    ]
   }
 }

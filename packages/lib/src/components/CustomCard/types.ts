@@ -3,6 +3,7 @@ import { Placeholders, SFError } from '../Card/components/CardInput/types';
 import UIElement from '../internal/UIElement';
 import {
     CardAllValidData,
+    CardAutoCompleteData,
     CardBinLookupData,
     CardBinValueData,
     CardBrandData,
@@ -96,6 +97,11 @@ export type CustomCardConfiguration = {
      * - merchant set config option
      */
     minimumExpiryDate?: string;
+
+    /**
+     * Called when the holderName field is autofilled
+     */
+    onAutoComplete?: (event: CardAutoCompleteData) => void;
 
     /**
      * After binLookup call - provides the brand(s) we detect the user is entering, and if we support the brand(s)
