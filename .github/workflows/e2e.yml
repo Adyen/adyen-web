@@ -8,7 +8,8 @@ jobs:
   build-then-e2e:
     if: ${{ github.actor != 'renovate[bot]' && github.actor != 'lgtm-com[bot]' }}
     timeout-minutes: 120
-    runs-on: ubuntu-latest
+    runs-on: 
+      labels: ubuntu-latest-8-cores
     strategy:
       fail-fast: false
       matrix:
