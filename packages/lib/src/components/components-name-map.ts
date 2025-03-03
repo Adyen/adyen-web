@@ -115,6 +115,7 @@ const ComponentsNameMap = {
     [TxVariants.vipps]: 'Vipps',
     [TxVariants.trustly]: 'Trustly',
     [TxVariants.paybybank_AIS_DD]: 'PayByBankUS',
+    [TxVariants.paybybank_pix]: 'PayByBankPix',
     /** Redirect */
 
     /** Klarna */
