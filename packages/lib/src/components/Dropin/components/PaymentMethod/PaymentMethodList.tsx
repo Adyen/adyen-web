@@ -80,7 +80,7 @@ const PaymentMethodList = ({
                 />
             )}
 
-            {hasInstantPaymentMethods && <InstantPaymentMethods paymentMethods={instantPaymentMethods} />}
+            {hasInstantPaymentMethods && <InstantPaymentMethods paymentMethods={instantPaymentMethods} onSelect={onSelect} />}
 
             {hasStoredPaymentMethods && (
                 <PaymentMethodsContainer
