@@ -1,10 +1,15 @@
 import type { StorybookConfig } from '@storybook/preact-vite';
 import { mergeConfig } from 'vite';
 import * as path from 'path';
-// import eslint from '@rollup/plugin-eslint';
 import stylelint from 'vite-plugin-stylelint';
 import generateEnvironmentVariables from '../config/environment-variables';
 import { resolve } from 'node:path';
+import preact from '@preact/preset-vite';
+
+const certPath = process.env.CERT_PATH ?? path.resolve(__dirname, 'localhost.pem');
+const certKeyPath = process.env.CERT_KEY_PATH ?? path.resolve(__dirname, 'localhost-key.pem');
+
+const isHttps = process.env.IS_HTTPS === 'true';
 
 const config: StorybookConfig = {
     stories: ['../storybook/**/*.stories.@(js|jsx|ts|tsx)'],
@@ -31,8 +36,9 @@ const config: StorybookConfig = {
     staticDirs: ['../storybook/assets', '../storybook/public'],
 
     viteFinal(config) {
-        return mergeConfig(config, {
+        const finalConfig = mergeConfig(config, {
             define: generateEnvironmentVariables(process.env.NODE_ENV),
+
             resolve: {
                 alias: [
                     {
@@ -43,24 +49,35 @@ const config: StorybookConfig = {
                     { find: /^styles(.*)$/, replacement: resolve(__dirname, '../src/styles') }
                 ]
             },
+
+            plugins: [preact(), stylelint({ emitErrorAsWarning: true })],
+
             server: {
+                ...(isHttps && {
+                    https: {
+                        key: certKeyPath,
+                        cert: certPath
+                    }
+                }),
+
                 watch: {
                     usePolling: true
+                },
+
+                proxy: {
+                    '/api': {
+                        target: `${isHttps ? 'https' : 'http'}://localhost:3030`,
+                        secure: false
+                    },
+                    '/sdk': {
+                        target: `${isHttps ? 'https' : 'http'}://localhost:3030`,
+                        secure: false
+                    }
                 }
-            },
-            plugins: [
-                stylelint({ emitErrorAsWarning: true })
-                // TODO: Enable this once @rollup/plugin-eslint supports ESLINT 9
-                // {
-                //     ...eslint({
-                //         include: ['./src/**'],
-                //         exclude: ['./src/**/*.json', './src/**/*.scss']
-                //     }),
-                //     enforce: 'pre',
-                //     apply: 'serve'
-                // }
-            ]
+            }
         });
+
+        return finalConfig;
     }
 };
 export default config;
