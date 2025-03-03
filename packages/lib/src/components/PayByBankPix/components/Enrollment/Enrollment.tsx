@@ -17,9 +17,11 @@ function Enrollment(props: EnrollmentProps) {
     const issuerListRef = useRef<IIssuerList>(null);
     const [registrationOptions, setRegistrationOptions] = useState<string>(null);
 
-    this.showValidation = () => {
-        issuerListRef.current?.showValidation();
-    };
+    const self = useRef({
+        showValidation: () => {
+            issuerListRef?.current?.showValidation();
+        }
+    });
 
     const pollStatus = async () => {
         if (registrationOptions) return;
@@ -31,8 +33,13 @@ function Enrollment(props: EnrollmentProps) {
         }
         return response;
     };
+    //  Assist typescript to narrow down the type.
     const isAwait = (props: EnrollmentProps): props is AwaitProps => props.type === 'await';
     const awaitEndSlot = () => <span>{i18n.get('paybybankpix.await.withOpenFinance')}</span>;
+
+    useEffect(() => {
+        props.setComponentRef(self.current);
+    }, [props.setComponentRef]);
 
     useEffect(() => {
         if (registrationOptions) {

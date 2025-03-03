@@ -6,7 +6,7 @@ import useImage from '../../../../../core/Context/useImage';
 // todo: add logos after uploaded to cdn
 const LOGO = {
     name: 'pix',
-    alt: ''
+    altI18nKey: ''
 };
 function IssuerListIntroduction() {
     const { i18n } = useCoreContext();
@@ -15,7 +15,7 @@ function IssuerListIntroduction() {
     return (
         <div className={'adyen-checkout-issuer-list-introduction'}>
             <div className="adyen-checkout-issuer-list-introduction-logo-container">
-                <img src={getImage()(LOGO.name)} alt={LOGO.alt} className="adyen-checkout__await__brand-logo" />
+                <img src={getImage()(LOGO.name)} alt={i18n.get(LOGO.altI18nKey)} className="adyen-checkout__await__brand-logo" />
                 <p className="adyen-checkout-issuer-list-introduction-logo-container__title">
                     {i18n.get('paybybankpix.issuerList.introduction.logo.title')}
                 </p>

@@ -8,7 +8,7 @@ interface BaseEnrollmentProps {
     type?: string;
     registrationOptions?: string;
     payButton(props: PayButtonFunctionProps): h.JSX.Element;
-    ref: any;
+    setComponentRef?: (ref) => void;
     /**
      * Trigger when the await times out, receives error state or the biometrics verification fails.
      */
@@ -35,7 +35,3 @@ export interface IssuerListProps extends BaseEnrollmentProps {
 }
 
 export type EnrollmentProps = AwaitProps | IssuerListProps;
-
-export interface IEnrollment {
-    showValidation: () => {};
-}

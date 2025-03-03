@@ -1,9 +1,8 @@
 import { h } from 'preact';
-import { useEffect, useRef } from 'preact/hooks';
+import { useEffect } from 'preact/hooks';
 import Enrollment from '../Enrollment';
 import Payment from '../Payment';
 import { PayByBankPixProps } from './types';
-import { IEnrollment } from '../Enrollment/types';
 import { DecodeObject } from '../../../../types/global-types';
 import base64 from '../../../../utils/base64';
 import AdyenCheckoutError, { ERROR, SDK_ERROR } from '../../../../core/Errors/AdyenCheckoutError';
@@ -26,15 +25,8 @@ function PayByBankPix({
     setComponentRef,
     onEnrollment
 }: PayByBankPixProps) {
-    const enrollmentRef = useRef<IEnrollment | null>();
     const shouldEnroll = storedPaymentMethodId == null;
     const { passkeyService, error: passKeyInitError } = usePasskeyService({ environment, clientKey });
-
-    const self = useRef({
-        showValidation: () => {
-            enrollmentRef?.current?.showValidation();
-        }
-    });
 
     const onIssuerSelected = async payload => {
         const { data = {} } = payload;
@@ -56,10 +48,6 @@ function PayByBankPix({
             onError(new AdyenCheckoutError(ERROR, 'Failed to complete enrollment'));
         }
     };
-
-    useEffect(() => {
-        setComponentRef(self.current);
-    }, [setComponentRef]);
 
     useEffect(() => {
         if (passKeyInitError) {
@@ -88,7 +76,7 @@ function PayByBankPix({
             payButton={payButton}
             onChange={onIssuerSelected}
             onSubmitAnalytics={onSubmitAnalytics}
-            ref={enrollmentRef}
+            setComponentRef={setComponentRef}
         />
     ) : (
         // @ts-ignore  // todo: filter out non matching device id stored pm, show the rest props
