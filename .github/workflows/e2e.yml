@@ -43,6 +43,6 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: playwright-report-${{matrix.api-version}}-${{ github.sha }}
+        name: playwright-report-${{matrix.api-version}}-${{matrix.runner-browser}}-${{ github.sha }}
         path: packages/e2e-playwright/playwright-report
         retention-days: 5
