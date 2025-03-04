@@ -3,11 +3,10 @@ import { PasskeyService } from '../services/PasskeyService';
 
 interface UsePasskeyServiceParams {
     environment: string;
-    clientKey: string;
     deviceId?: string;
 }
 
-export function usePasskeyService({ environment, clientKey, deviceId }: UsePasskeyServiceParams) {
+export function usePasskeyService({ environment, deviceId }: UsePasskeyServiceParams) {
     const [passkeyService, setPasskeyService] = useState<PasskeyService | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -15,7 +14,7 @@ export function usePasskeyService({ environment, clientKey, deviceId }: UsePassk
     useEffect(() => {
         const initializePasskeyService = async () => {
             try {
-                const service = await new PasskeyService({ environment, clientKey, deviceId }).initialize();
+                const service = await new PasskeyService({ environment, deviceId }).initialize();
                 setPasskeyService(service);
                 setLoading(false);
             } catch (err) {
@@ -25,7 +24,7 @@ export function usePasskeyService({ environment, clientKey, deviceId }: UsePassk
         };
 
         void initializePasskeyService();
-    }, [environment, clientKey]);
+    }, [environment, deviceId]);
 
     return { passkeyService, loading, error };
 }

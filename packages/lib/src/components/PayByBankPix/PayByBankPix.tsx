@@ -10,6 +10,7 @@ import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { PasskeyService } from './services/PasskeyService';
 import { postEnrollment } from './services/postEnrollment';
 import { Enrollment } from './components/PayByBankPix/types';
+import { authenticatePayment } from './services/authenticatePayment';
 
 //todo: remove
 const hasRedirectResult = (): boolean => {
@@ -23,13 +24,16 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
 
     public static defaultProps: PayByBankPixConfiguration = {
         showPayButton: true,
-        _isAdyenHosted: window.location.hostname.endsWith('adyen.link') || hasRedirectResult(), // todo: remove hasRedirectResult
+        _isAdyenHosted: window.location.hostname.endsWith('adyen.com') || hasRedirectResult(), // todo: remove hasRedirectResult
         countdownTime: PayByBankPixElement.TIMEOUT_MINUTES
     };
 
     get isValid(): boolean {
-        // Always true for redirect
-        return this.props._isAdyenHosted ? !!this.state?.isValid : true;
+        // Always true for non-hosted page or stored payment
+        if (!this.props._isAdyenHosted || this.props.storedPaymentMethodId) {
+            return true;
+        }
+        return !!this.state?.isValid;
     }
 
     /**
@@ -51,14 +55,12 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
             };
         }
 
-        const issuer = this.state.data?.issuer ? { issuer: this.state.data?.issuer } : {};
-        const riskSignals = this.state.data?.riskSignals ? { riskSignals: this.state.data.riskSignals } : {};
         return {
-            paymentMethod: { type: TxVariants.paybybank_pix, ...issuer, ...riskSignals }
+            paymentMethod: { type: TxVariants.paybybank_pix, ...this.state.data }
         };
     }
 
-    async createEnrollment(enrollment: Enrollment) {
+    private createEnrollment = async (enrollment: Enrollment) => {
         try {
             const { action = {} } = await postEnrollment({ enrollment, clientKey: this.props.clientKey, loadingContext: this.props.loadingContext });
             // The action should redirect shopper back to the merchant's page
@@ -69,11 +71,31 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
                 error instanceof AdyenCheckoutError ? error : new AdyenCheckoutError('ERROR', 'Error in the postEnrollment call', { cause: error })
             );
         }
-    }
+    };
 
-    async payWithStoredPayment() {
-        // todo: pay and handle redirect action
-    }
+    private payWithStoredPayment = ({ riskSignals }) => {
+        this.state = { ...this.state, data: { riskSignals, storedPaymentMethodId: this.props.storedPaymentMethodId } };
+        super.submit();
+    };
+
+    private authenticateStoredPayment = async (authOptions: string) => {
+        try {
+            const { action = {} } = await authenticatePayment({
+                authOptions,
+                clientKey: this.props.clientKey,
+                loadingContext: this.props.loadingContext
+            });
+            // The action should redirect shopper back to the merchant's page
+            // @ts-ignore todo: fix types later
+            this.handleAction(action);
+        } catch (error: unknown) {
+            this.handleError(
+                error instanceof AdyenCheckoutError
+                    ? error
+                    : new AdyenCheckoutError('ERROR', 'Error in the authenticatePayment call', { cause: error })
+            );
+        }
+    };
 
     render() {
         return (
@@ -89,6 +111,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
                             onSubmitAnalytics={this.submitAnalytics}
                             onEnrollment={this.createEnrollment}
                             onPayment={this.payWithStoredPayment}
+                            onAuthenticated={this.authenticateStoredPayment}
                             onError={this.handleError}
                         />
                     ) : (

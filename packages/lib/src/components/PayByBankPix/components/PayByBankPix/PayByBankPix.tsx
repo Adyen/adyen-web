@@ -28,14 +28,18 @@ function PayByBankPix({
     payButton,
     setComponentRef,
     onEnrollment,
-    onPayment
+    onPayment,
+    onAuthenticated
 }: PayByBankPixProps) {
     const shouldEnroll = storedPaymentMethodId == null;
-    const { passkeyService, error: passKeyInitError } = usePasskeyService({ environment, clientKey, deviceId });
+    const { passkeyService, error: passKeyInitError } = usePasskeyService({ environment, deviceId });
 
     const onIssuerSelected = async payload => {
         try {
             const { data = {} } = payload;
+            if (data.issuer == null) {
+                return;
+            }
             const riskSignals = await passkeyService.captureRiskSignalsEnrollment();
             onChange({ ...payload, data: { ...data, riskSignals } });
         } catch (error) {
@@ -65,16 +69,25 @@ function PayByBankPix({
         }
     };
 
+    const onAuthenticate = async (authenticationOptions: string): Promise<void> => {
+        try {
+            const authenticatedCredential = await passkeyService.authenticateWithCredential(authenticationOptions);
+            onAuthenticated(authenticatedCredential);
+        } catch (error) {
+            const errorMsg = error instanceof Error ? error.message : 'Unknown error in the onAuthenticate';
+            onError(error instanceof AdyenCheckoutError ? error : new AdyenCheckoutError(ERROR, errorMsg));
+        }
+    };
+
     useEffect(() => {
         if (passKeyInitError) {
             onError(passKeyInitError);
         }
     }, [passKeyInitError]);
 
-    // todo: uncomment it!
-    /*    if (!passkeyService)
+    if (!passkeyService) {
         return null;
-    }*/
+    }
 
     return shouldEnroll ? (
         <Enrollment
@@ -98,12 +111,14 @@ function PayByBankPix({
         // @ts-ignore  // todo: filter out non matching device id stored pm, show the rest props
         <Payment
             txVariant={txVariant}
+            clientKey={clientKey}
             amount={amount}
             issuer={issuer}
             receiver={receiver}
             paymentMethod={paymentMethod}
             paymentDate={paymentDate}
             onPay={onPay}
+            onAuthenticate={onAuthenticate}
         />
     );
 }

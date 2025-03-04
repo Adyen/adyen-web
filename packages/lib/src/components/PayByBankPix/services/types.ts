@@ -119,6 +119,5 @@ export interface IPasskeyService {
 
 export type PasskeyServiceConfig = {
     deviceId?: string; // Merchant optionally pass
-    clientKey?: string;
     environment: string;
 };

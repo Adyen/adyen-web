@@ -1,3 +1,43 @@
+const mockRegistractionOptions = {
+    enrollmentId: 'urn:Iniciador:d71e9826-37f0-4585-a6ff-0e273bbd1ab2',
+    challenge: 'ZC-rnlucudt1dczpMvyrq82gZEAfg4Hkyb9DDgAYIU0',
+    rp: {
+        id: window.location.hostname,
+        name: 'Adyen'
+    },
+    user: {
+        id: '8793f81a-822c-4abb-b22a-b2ab99aa14aa',
+        name: 'Adyen Passkey Test',
+        displayName: 'Adyen Passkey Test'
+    },
+    pubKeyCredParams: [
+        {
+            alg: -8,
+            type: 'public-key'
+        },
+        {
+            alg: -7,
+            type: 'public-key'
+        },
+        {
+            alg: -257,
+            type: 'public-key'
+        }
+    ],
+    timeout: 60000,
+    attestation: 'direct',
+    excludeCredentials: [],
+    authenticatorSelection: {
+        authenticatorAttachment: 'platform',
+        residentKey: 'preferred',
+        requireResidentKey: false,
+        userVerification: 'required'
+    },
+    extensions: {
+        credProps: true
+    }
+};
+
 export const mockPaymentsResponseMerchantPage = {
     action: {
         paymentMethodType: 'paybybank_pix',
@@ -6,6 +46,16 @@ export const mockPaymentsResponseMerchantPage = {
         method: 'GET'
     },
     resultCode: 'RedirectShopper'
+};
+
+export const mockPostEnrollmentResponse = {
+    resultCode: 'RedirectShopper',
+    action: {
+        paymentMethodType: 'paybybank_pix',
+        url: 'https://localhost:3020/iframe.html?globals=&args=&id=components-paybybankpix--merchant-page&viewMode=story',
+        method: 'GET',
+        type: 'redirect'
+    }
 };
 
 export const mockPaymentsResponseSimulateHostedPage = {
@@ -24,8 +74,7 @@ export const mockPendingStatusSimulateHostedPage = {
 
 export const mockReceivedStatusSimulateHostedPage = {
     resultCode: 'received',
-    registrationOptions:
-        'ewogICAgImFjdGlvbiI6IHsKICAgICAgICAicGF5bWVudE1ldGhvZFR5cGUiOiAicGF5YnliYW5rX3BpeCIsCiAgICAgICAgInR5cGUiOiAiYXdhaXQiLAogICAgICAgICJlbnJvbGxtZW50SWQiOiAiZW5yb2xsbWVudDEyMyIsCiAgICAgICAgInBheW1lbnREYXRhIjogIm1vY2tQYXltZW50RGF0YSIKICAgIH0KfQ=='
+    registrationOptions: btoa(JSON.stringify(mockRegistractionOptions))
 };
 
 export const mockSubmitDetailsResponseSimulateHostedPage = {

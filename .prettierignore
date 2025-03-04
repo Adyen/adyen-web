@@ -1,7 +1,6 @@
 node_modules
 dist
 coverage
-packages/lib/storybook/public/
 
 *.log*
 .env

@@ -9,6 +9,7 @@ import {
     mockPaymentsResponseMerchantPage,
     mockPaymentsResponseSimulateHostedPage,
     mockPendingStatusSimulateHostedPage,
+    mockPostEnrollmentResponse,
     mockReceivedStatusSimulateHostedPage,
     mockSubmitDetailsResponseSimulateHostedPage
 } from './mocks';
@@ -75,6 +76,12 @@ export const SimulateHostedPage: PixBiometricStory = {
     parameters: {
         msw: {
             handlers: [
+                http.post(
+                    'https://checkoutshopper-test.adyen.com/checkoutshopper/utility/v1/pixpaybybank/redirect-result?clientKey=test_L6HTEOAXQBCZJHKNU4NLN6EI7IE6VRRW',
+                    () => {
+                        return HttpResponse.json(mockPostEnrollmentResponse);
+                    }
+                ),
                 http.post('https://localhost:3020/payments', () => {
                     return HttpResponse.json(mockPaymentsResponseSimulateHostedPage);
                 }),

@@ -6,11 +6,26 @@ import PaymentDetails from '../../../internal/Voucher';
 import useImage from '../../../../core/Context/useImage';
 import PayButton from '../../../internal/PayButton';
 import './Payment.scss';
+import getAuthOptions from './getAuthOptions';
 
-function Payment({ onPay, receiver, paymentDate, paymentMethod, amount, txVariant, issuer, setComponentRef }: PaymentProps) {
-    const { i18n } = useCoreContext();
+function Payment({
+    onPay,
+    receiver,
+    paymentDate,
+    paymentMethod,
+    amount,
+    txVariant,
+    issuer,
+    setComponentRef,
+    enrollmentId,
+    initiationId,
+    clientKey,
+    onAuthenticate
+}: PaymentProps) {
+    const { i18n, loadingContext } = useCoreContext();
     const getImage = useImage();
     const [status, setStatus] = useState('ready');
+    const [authenticationOptions, setAuthenticationOptions] = useState<string>(null);
     const buttonModifiers = ['standalone'];
     const details = [
         { label: i18n.get('paybybankpix.payment.receiver.label'), value: receiver },
@@ -21,9 +36,26 @@ function Payment({ onPay, receiver, paymentDate, paymentMethod, amount, txVarian
         setStatus
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const pollStatus = async () => {
+        if (authenticationOptions) return;
+
+        const response = await getAuthOptions({ enrollmentId, initiationId, clientKey, loadingContext });
+        if (response.authenticationOptions) {
+            setAuthenticationOptions(response.authenticationOptions);
+        }
+        return response;
+    };
+
     useEffect(() => {
         setComponentRef(self.current);
     }, [setComponentRef]);
+
+    useEffect(() => {
+        if (authenticationOptions) {
+            onAuthenticate(authenticationOptions);
+        }
+    }, [authenticationOptions]);
 
     return (
         <Fragment>

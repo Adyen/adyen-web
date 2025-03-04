@@ -9,12 +9,12 @@ import {
     NavigatorCredentialCreationsError,
     NavigatorCredentialRetrievalError
 } from './types';
-import AdyenCheckoutError, { SCRIPT_ERROR, SDK_ERROR } from '../../../core/Errors/AdyenCheckoutError';
+import AdyenCheckoutError, { SDK_ERROR } from '../../../core/Errors/AdyenCheckoutError';
 import { DecodeObject } from '../../../types/global-types';
 import base64 from '../../../utils/base64';
 
 export class PasskeyService implements IPasskeyService {
-    private passkey: IAdyenPasskey;
+    private passkeySdk: IAdyenPasskey;
     private readonly passkeyServiceConfig: PasskeyServiceConfig;
 
     get deviceId() {
@@ -46,17 +46,17 @@ export class PasskeyService implements IPasskeyService {
             void new PasskeySdkLoader()
                 .load(this.passkeyServiceConfig.environment)
                 .then(passkey => {
-                    this.passkey = passkey;
+                    this.passkeySdk = passkey;
                     resolve(this);
                 })
-                .catch(error => {
-                    reject(new AdyenCheckoutError(SCRIPT_ERROR, error.message ?? 'Failed to load passkey'));
+                .catch((error: AdyenCheckoutError) => {
+                    reject(error);
                 });
         });
     }
 
     public async captureRiskSignalsEnrollment(): Promise<RiskSignalsEnrollment> {
-        const result = await this.passkey.captureRiskSignalsEnrollment(this.deviceId);
+        const result = await this.passkeySdk.captureRiskSignalsEnrollment(this.deviceId);
         if (result && 'type' in result && result.type === PasskeyErrorTypes.RISK_SIGNALS_ERROR) {
             throw new AdyenCheckoutError(SDK_ERROR, result.message);
         }
@@ -64,7 +64,7 @@ export class PasskeyService implements IPasskeyService {
     }
 
     public async captureRiskSignalsAuthentication(): Promise<RiskSignalsAuthentication> {
-        const result = await this.passkey.captureRiskSignalsAuthentication(this.deviceId);
+        const result = await this.passkeySdk.captureRiskSignalsAuthentication(this.deviceId);
         if (result && 'type' in result && result.type === PasskeyErrorTypes.RISK_SIGNALS_ERROR) {
             throw new AdyenCheckoutError(SDK_ERROR, result.message);
         }
@@ -77,11 +77,11 @@ export class PasskeyService implements IPasskeyService {
             throw new AdyenCheckoutError(SDK_ERROR, 'Failed to decode enrollment');
         }
 
-        const result = await this.passkey.createCredentialForEnrollment(JSON.parse(decodedResult.data));
+        const result = await this.passkeySdk.createCredentialForEnrollment(JSON.parse(decodedResult.data));
         if (result && 'type' in result && result.type === PasskeyErrorTypes.CREDENTIAL_CREATION_ERROR) {
             throw new AdyenCheckoutError(SDK_ERROR, (result as NavigatorCredentialCreationsError).message);
         }
-        return base64.encode(result);
+        return base64.encode(JSON.stringify(result));
     }
 
     public async authenticateWithCredential(authenticationOptions: string): Promise<string> {
@@ -90,10 +90,10 @@ export class PasskeyService implements IPasskeyService {
             throw new AdyenCheckoutError(SDK_ERROR, 'Failed to decode authenticationOptions');
         }
 
-        const result = await this.passkey.authenticateWithCredential(JSON.parse(decodedResult.data));
+        const result = await this.passkeySdk.authenticateWithCredential(JSON.parse(decodedResult.data));
         if (result && 'type' in result && result.type === PasskeyErrorTypes.CREDENTIAL_RETRIEVAL_ERROR) {
             throw new AdyenCheckoutError(SDK_ERROR, (result as NavigatorCredentialRetrievalError).message);
         }
-        return base64.encode(result);
+        return base64.encode(JSON.stringify(result));
     }
 }

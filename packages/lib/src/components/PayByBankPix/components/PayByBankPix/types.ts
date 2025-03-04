@@ -14,4 +14,5 @@ export type PayByBankPixProps = UIElementProps &
         deviceId?: string;
         onEnrollment?: (enrollment: Enrollment) => void;
         onPayment?: (payment: Payment) => void;
+        onAuthenticated?: (authOptions: string) => void;
     };

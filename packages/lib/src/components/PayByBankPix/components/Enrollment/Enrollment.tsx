@@ -59,7 +59,7 @@ function Enrollment(props: EnrollmentProps) {
                         countdownTime={props.countdownTime}
                         clientKey={props.clientKey}
                         onError={props.onError}
-                        awaitText={i18n.get('paybybankpix.await.createPasskeys')}
+                        awaitText={i18n.get('paybybankpix.await.waitForConfirmation')}
                         instructions={i18n.get('paybybankpix.await.timeToPay', {
                             values: { numberOfMin: props.countdownTime }
                         })}
