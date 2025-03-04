@@ -81,7 +81,7 @@ export class PasskeyService implements IPasskeyService {
         if (result && 'type' in result && result.type === PasskeyErrorTypes.CREDENTIAL_CREATION_ERROR) {
             throw new AdyenCheckoutError(SDK_ERROR, (result as NavigatorCredentialCreationsError).message);
         }
-        return base64.encode(result);
+        return base64.encode(JSON.stringify(result));
     }
 
     public async authenticateWithCredential(authenticationOptions: string): Promise<string> {
@@ -94,6 +94,6 @@ export class PasskeyService implements IPasskeyService {
         if (result && 'type' in result && result.type === PasskeyErrorTypes.CREDENTIAL_RETRIEVAL_ERROR) {
             throw new AdyenCheckoutError(SDK_ERROR, (result as NavigatorCredentialRetrievalError).message);
         }
-        return base64.encode(result);
+        return base64.encode(JSON.stringify(result));
     }
 }

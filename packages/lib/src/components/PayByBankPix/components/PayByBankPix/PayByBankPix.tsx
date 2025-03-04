@@ -36,6 +36,9 @@ function PayByBankPix({
     const onIssuerSelected = async payload => {
         try {
             const { data = {} } = payload;
+            if (data.issuer == null) {
+                return;
+            }
             const riskSignals = await passkeyService.captureRiskSignalsEnrollment();
             onChange({ ...payload, data: { ...data, riskSignals } });
         } catch (error) {
@@ -71,10 +74,9 @@ function PayByBankPix({
         }
     }, [passKeyInitError]);
 
-    // todo: uncomment it!
-    /*    if (!passkeyService)
+    if (!passkeyService) {
         return null;
-    }*/
+    }
 
     return shouldEnroll ? (
         <Enrollment

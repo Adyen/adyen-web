@@ -58,7 +58,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         };
     }
 
-    async createEnrollment(enrollment: Enrollment) {
+    private createEnrollment = async (enrollment: Enrollment) => {
         try {
             const { action = {} } = await postEnrollment({ enrollment, clientKey: this.props.clientKey, loadingContext: this.props.loadingContext });
             // The action should redirect shopper back to the merchant's page
@@ -69,11 +69,11 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
                 error instanceof AdyenCheckoutError ? error : new AdyenCheckoutError('ERROR', 'Error in the postEnrollment call', { cause: error })
             );
         }
-    }
+    };
 
-    async payWithStoredPayment() {
+    private payWithStoredPayment = async () => {
         // todo: pay and handle redirect action
-    }
+    };
 
     render() {
         return (
