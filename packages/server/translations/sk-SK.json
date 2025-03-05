@@ -324,7 +324,7 @@
     "paynow.mobileViewInstruction.step3": "Vyberte možnosť na nasnímanie QR kódu.",
     "paynow.mobileViewInstruction.step4": "Vyberte možnosť nahrať QR kód a vyberte snímku obrazovky.",
     "paynow.mobileViewInstruction.step5": "Dokončite transakciu.",
-    "payto.payid.description": "Zadajte PayID a údaje o účte, ktoré sú pripojené k vášmu účtu Payto.",
+    "payto.payid.description": "Zadajte PayID a údaje o účte, ktoré sú pripojené k vášmu účtu PayTo.",
     "payto.payid.label.identifier": "Identifikátor",
     "payto.payid.label.orgid": "ID organizácie",
     "payto.payid.option.phone": "Mobilný telefón",

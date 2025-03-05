@@ -325,7 +325,7 @@
     "paynow.mobileViewInstruction.step3": "Veldu valkostinn til að skanna QR-kóða.",
     "paynow.mobileViewInstruction.step4": "Veldu valkostinn til að hlaða upp QR-kóða og veldu skjámyndina.",
     "paynow.mobileViewInstruction.step5": "Ljúktu færslunni.",
-    "payto.payid.description": "Sláðu inn PayID og reikningsupplýsingar sem eru tengjast Payto-reikningnum þínum.",
+    "payto.payid.description": "Sláðu inn PayID og reikningsupplýsingar sem eru tengjast PayTo-reikningnum þínum.",
     "payto.payid.label.identifier": "Auðkenni",
     "payto.payid.label.orgid": "Auðkenni fyrirtækis",
     "payto.payid.option.phone": "Farsími",
