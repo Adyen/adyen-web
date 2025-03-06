@@ -1,5 +1,13 @@
 # @adyen/adyen-web
 
+## 6.9.1
+
+### Patch Changes
+
+- GooglePay - Fixed challengeWindowSize property when using Google Pay as Instant payment type inside Drop-in ([#3170](https://github.com/Adyen/adyen-web/pull/3170))
+
+- Translations - Fixed brazilian social security number translation (CPF/CNPJ) for different languages ([#3172](https://github.com/Adyen/adyen-web/pull/3172))
+
 ## 6.9.0
 
 ### Minor Changes
