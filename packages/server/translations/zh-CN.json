@@ -324,7 +324,7 @@
     "paynow.mobileViewInstruction.step3": "选择扫描二维码的选项。",
     "paynow.mobileViewInstruction.step4": "选择上传二维码选项并选择截图。",
     "paynow.mobileViewInstruction.step5": "完成交易。",
-    "payto.payid.description": "请输入与您的 Payto 账户关联的 PayID 和账户详细信息。",
+    "payto.payid.description": "请输入与您的 PayTo 账户关联的 PayID 和账户详细信息。",
     "payto.payid.label.identifier": "标识符",
     "payto.payid.label.orgid": "组织 ID",
     "payto.payid.option.phone": "移动设备",

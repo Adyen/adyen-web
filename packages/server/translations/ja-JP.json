@@ -324,7 +324,7 @@
     "paynow.mobileViewInstruction.step3": "QRコードをスキャンするオプションを選択します。",
     "paynow.mobileViewInstruction.step4": "QRをアップロードするオプションを選択し、スクリーンショットを選択します。",
     "paynow.mobileViewInstruction.step5": "取引を完了します。",
-    "payto.payid.description": "Paytoアカウントに接続されているPayIDとアカウントの詳細を入力してください。",
+    "payto.payid.description": "PayToアカウントに接続されているPayIDとアカウントの詳細を入力してください。",
     "payto.payid.label.identifier": "識別子",
     "payto.payid.label.orgid": "組織ID",
     "payto.payid.option.phone": "携帯",

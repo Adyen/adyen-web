@@ -324,7 +324,7 @@
     "paynow.mobileViewInstruction.step3": "Odaberite opciju skeniranja QR kôda.",
     "paynow.mobileViewInstruction.step4": "Odaberite opciju za prijenos QR-a i odaberite snimku zaslona.",
     "paynow.mobileViewInstruction.step5": "Dovršite transakciju.",
-    "payto.payid.description": "Unesite PayID i podatke o računu koji su povezani s vašim Payto računom.",
+    "payto.payid.description": "Unesite PayID i podatke o računu koji su povezani s vašim PayTo računom.",
     "payto.payid.label.identifier": "Identifikator",
     "payto.payid.label.orgid": "ID organizacije",
     "payto.payid.option.phone": "Mobilni telefon",

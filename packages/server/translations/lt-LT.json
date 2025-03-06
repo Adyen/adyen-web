@@ -325,7 +325,7 @@
     "paynow.mobileViewInstruction.step3": "Pasirinkite QR kodo nuskaitymo parinktį.",
     "paynow.mobileViewInstruction.step4": "Pasirinkite parinktį įkelti QR kodą ir pasirinkite ekrano nuotrauką.",
     "paynow.mobileViewInstruction.step5": "Užbaikite operaciją.",
-    "payto.payid.description": "Įveskite „PayID“ ir sąskaitos duomenis, susietus su jūsų „Payto“ sąskaita.",
+    "payto.payid.description": "Įveskite „PayID“ ir sąskaitos duomenis, susietus su jūsų „PayTo“ sąskaita.",
     "payto.payid.label.identifier": "Identifikatorius",
     "payto.payid.label.orgid": "Organizacijos identifikatorius",
     "payto.payid.option.phone": "Mobilusis telefonas",

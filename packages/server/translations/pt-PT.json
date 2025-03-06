@@ -325,7 +325,7 @@
     "paynow.mobileViewInstruction.step3": "Selecione a opção para ler um código QR.",
     "paynow.mobileViewInstruction.step4": "Escolha a opção para carregar um QR e selecione a captura de ecrã.",
     "paynow.mobileViewInstruction.step5": "Conclua a transação.",
-    "payto.payid.description": "Introduza o PayID e os dados da conta que estão ligados à sua conta Payto.",
+    "payto.payid.description": "Introduza o PayID e os dados da conta que estão ligados à sua conta PayTo.",
     "payto.payid.label.identifier": "Identificador",
     "payto.payid.label.orgid": "ID da Organização",
     "payto.payid.option.phone": "Celular",
