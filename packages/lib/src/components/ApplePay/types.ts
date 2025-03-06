@@ -1,12 +1,6 @@
 import { UIElementProps } from '../internal/UIElement/types';
 import { AddressData } from '../../types/global-types';
 
-declare global {
-    interface Window {
-        ApplePaySession?: ApplePaySession;
-    }
-}
-
 type Initiative = 'web' | 'messaging';
 
 export type ApplePayPaymentOrderDetails = {
@@ -36,6 +30,8 @@ export type ApplePayButtonType =
     | 'support'
     | 'tip'
     | 'top-up';
+
+export type ApplePayButtonStyle = 'black' | 'white' | 'white-outline';
 
 export interface ApplePayConfiguration extends UIElementProps {
     /**
@@ -140,13 +136,25 @@ export interface ApplePayConfiguration extends UIElementProps {
     shippingContact?: ApplePayJS.ApplePayPaymentContact;
 
     /**
+     * It can be used to render the Apple Pay Code in a new window rather than as an overlay modal
+     * Recommended to be used in case of using Apple Pay within an iframe, where the modal may not be presented correctly over the parent website
+     *
+     * @defaultValue 'modal'
+     */
+    renderApplePayCodeAs?: ApplePayWebConfiguration['renderApplePayCodeAs'];
+
+    /**
      * Optional user-defined data.
      */
     applicationData?: string;
 
     // Events
-
     onClick?: (resolve, reject) => void;
+
+    /**
+     * A callback function the Apple Pay SDK calls when the Apple Pay code modal or window closes.
+     */
+    onApplePayCodeClose?: ApplePayWebConfiguration['onApplePayCodeClose'];
 
     /**
      * Callback called when ApplePay authorize the payment.
@@ -204,9 +212,12 @@ export interface ApplePayConfiguration extends UIElementProps {
      */
     onShippingMethodSelected?: (resolve, reject, event: ApplePayJS.ApplePayShippingMethodSelectedEvent) => void;
 
-    // ButtonOptions
-    buttonColor?: 'black' | 'white' | 'white-with-line';
+    buttonColor?: ApplePayButtonStyle;
     buttonType?: ApplePayButtonType;
+    /**
+     * Used to tweak the text of the button types that contain text ('Continue with', 'Book with', etc)
+     */
+    buttonLocale?: string;
 }
 
 export interface ApplePayElementData {
@@ -224,4 +235,9 @@ export interface ApplePaySessionRequest {
     domainName: string;
     initiative: Initiative;
     merchantIdentifier: string;
+}
+
+export interface ApplePayWebConfiguration {
+    renderApplePayCodeAs?: 'modal' | 'window';
+    onApplePayCodeClose?(): void;
 }
