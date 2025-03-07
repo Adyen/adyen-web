@@ -28,7 +28,7 @@ const config: PlaywrightTestConfig = {
     /* Retry on CI only */
     retries: process.env.CI ? 2 : 1,
     /* Opt out of parallel tests on CI. Use default locally */
-    workers: process.env.CI ? 7 : undefined,
+    workers: process.env.CI ? 4 : undefined,
 
     /* Reporter to use. See https://playwright.dev/docs/test-reporters */
     reporter: [['html', { open: 'never' }], ['list']],
