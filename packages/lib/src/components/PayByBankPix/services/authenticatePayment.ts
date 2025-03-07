@@ -2,14 +2,19 @@ import { httpPost } from '../../../core/Services/http';
 import { RawPaymentResponse } from '../../../types/global-types';
 
 interface IAuthenticatePayment {
-    authOptions: string;
+    authCredentials: string;
     clientKey: string;
     loadingContext: string;
     timeout?: number; // in milliseconds
 }
 
-async function authenticatePayment({ authOptions, clientKey, loadingContext, timeout = 10000 }: IAuthenticatePayment): Promise<RawPaymentResponse> {
-    if (!authOptions || !clientKey) {
+async function authenticatePayment({
+    authCredentials,
+    clientKey,
+    loadingContext,
+    timeout = 10000
+}: IAuthenticatePayment): Promise<RawPaymentResponse> {
+    if (!authCredentials || !clientKey) {
         throw new Error('Could not check the enrollment status');
     }
     const options = {
@@ -18,7 +23,7 @@ async function authenticatePayment({ authOptions, clientKey, loadingContext, tim
         timeout
     };
 
-    return httpPost(options, authOptions);
+    return httpPost(options, authCredentials);
 }
 
 export { authenticatePayment };

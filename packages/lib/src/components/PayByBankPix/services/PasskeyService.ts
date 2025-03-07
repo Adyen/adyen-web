@@ -16,6 +16,7 @@ import base64 from '../../../utils/base64';
 export class PasskeyService implements IPasskeyService {
     private passkeySdk: IAdyenPasskey;
     private readonly passkeyServiceConfig: PasskeyServiceConfig;
+    private riskSignals: RiskSignalsEnrollment | RiskSignalsAuthentication;
 
     get deviceId() {
         return this.passkeyServiceConfig.deviceId;
@@ -56,11 +57,17 @@ export class PasskeyService implements IPasskeyService {
     }
 
     public async captureRiskSignalsEnrollment(): Promise<RiskSignalsEnrollment> {
+        if (this.riskSignals) {
+            // Cache it so we don't create unnecessary entries in the localstorage by calling captureRiskSignalsEnrollment
+            return this.riskSignals;
+        }
+
         const result = await this.passkeySdk.captureRiskSignalsEnrollment(this.deviceId);
         if (result && 'type' in result && result.type === PasskeyErrorTypes.RISK_SIGNALS_ERROR) {
             throw new AdyenCheckoutError(SDK_ERROR, result.message);
         }
-        return result as RiskSignalsEnrollment;
+        this.riskSignals = result as RiskSignalsEnrollment;
+        return this.riskSignals;
     }
 
     public async captureRiskSignalsAuthentication(): Promise<RiskSignalsAuthentication> {
