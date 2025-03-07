@@ -1,17 +1,16 @@
 import { httpPost } from '../../../core/Services/http';
 import { RawPaymentResponse } from '../../../types/global-types';
-import { Enrollment } from '../components/PayByBankPix/types';
 
 interface IPostEnrollment {
-    enrollment: Enrollment;
+    enrollment: { enrollmentId: string; fidoAssertion: string };
     clientKey: string;
     loadingContext: string;
     timeout?: number; // in milliseconds
 }
 
-async function postEnrollment({ enrollment, clientKey, loadingContext, timeout = 10000 }: IPostEnrollment): Promise<RawPaymentResponse> {
+async function authorizeEnrollment({ enrollment, clientKey, loadingContext, timeout = 10000 }: IPostEnrollment): Promise<RawPaymentResponse> {
     if (!enrollment || !clientKey) {
-        throw new Error('Could not check the enrollment status');
+        throw new Error('Could not authorize the enrollment');
     }
     const options = {
         loadingContext,
@@ -22,4 +21,4 @@ async function postEnrollment({ enrollment, clientKey, loadingContext, timeout =
     return httpPost(options, enrollment);
 }
 
-export { postEnrollment };
+export { authorizeEnrollment };

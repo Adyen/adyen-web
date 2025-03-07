@@ -9,6 +9,6 @@ export interface PaymentProps {
     clientKey: string;
     issuer: string;
     onPay: () => void;
-    onAuthenticate: (authenticationOptions: string) => void;
+    onAuthorize: (authorizationOptions: string) => void;
     setComponentRef?: (ref) => void;
 }

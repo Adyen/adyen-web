@@ -1,7 +1,7 @@
 import { httpGet } from '../../../../core/Services/http';
 import { RawPaymentResponse } from '../../../../types/global-types';
 
-interface AuthOptions {
+interface IGetAuthorizationStatus {
     enrollmentId: string;
     initiationId: string;
     clientKey: string;
@@ -9,19 +9,20 @@ interface AuthOptions {
     timeout?: number; // in milliseconds
 }
 
-export default async function getAuthOptions({
+export default async function getAuthorizationStatus({
     enrollmentId,
     initiationId,
     clientKey,
     loadingContext,
     timeout = 10000
-}: AuthOptions): Promise<RawPaymentResponse> {
+}: IGetAuthorizationStatus): Promise<RawPaymentResponse> {
     if (!enrollmentId || !initiationId || !clientKey) {
         throw new Error('Could not get auth options');
     }
+
     const options = {
         loadingContext,
-        path: `/${enrollmentId}${initiationId}?clientKey=${clientKey}`, //todo: get the endpoint
+        path: `utility/v1/pixpaybybank/authorization-options?initiationId=${initiationId}&enrollmentId=${enrollmentId}&clientKey=${clientKey}`,
         timeout
     };
 

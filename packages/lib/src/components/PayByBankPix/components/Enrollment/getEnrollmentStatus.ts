@@ -1,7 +1,7 @@
 import { httpGet } from '../../../../core/Services/http';
 import { RawPaymentResponse } from '../../../../types/global-types';
 
-interface EnrollmentStatus {
+interface IGetEnrollmentStatus {
     enrollmentId: string;
     clientKey: string;
     loadingContext: string;
@@ -13,7 +13,7 @@ export default async function getEnrollmentStatus({
     clientKey,
     loadingContext,
     timeout = 10000
-}: EnrollmentStatus): Promise<RawPaymentResponse> {
+}: IGetEnrollmentStatus): Promise<RawPaymentResponse> {
     if (!enrollmentId || !clientKey) {
         throw new Error('Could not check the enrollment status');
     }

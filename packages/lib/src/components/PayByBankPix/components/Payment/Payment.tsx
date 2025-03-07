@@ -6,7 +6,7 @@ import PaymentDetails from '../../../internal/Voucher';
 import useImage from '../../../../core/Context/useImage';
 import PayButton from '../../../internal/PayButton';
 import './Payment.scss';
-import getAuthOptions from './getAuthOptions';
+import getAuthorizationStatus from './getAuthorizationStatus';
 
 function Payment({
     onPay,
@@ -20,12 +20,12 @@ function Payment({
     enrollmentId,
     initiationId,
     clientKey,
-    onAuthenticate
+    onAuthorize
 }: PaymentProps) {
     const { i18n, loadingContext } = useCoreContext();
     const getImage = useImage();
     const [status, setStatus] = useState('ready');
-    const [authenticationOptions, setAuthenticationOptions] = useState<string>(null);
+    const [authorizationOptions, setAuthorizationOptions] = useState<string>(null);
     const buttonModifiers = ['standalone'];
     const details = [
         { label: i18n.get('paybybankpix.payment.receiver.label'), value: receiver },
@@ -36,13 +36,14 @@ function Payment({
         setStatus
     });
 
+    // todo: this function will be used by Await add later
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const pollStatus = async () => {
-        if (authenticationOptions) return;
+        if (authorizationOptions) return;
 
-        const response = await getAuthOptions({ enrollmentId, initiationId, clientKey, loadingContext });
-        if (response.authenticationOptions) {
-            setAuthenticationOptions(response.authenticationOptions);
+        const response = await getAuthorizationStatus({ enrollmentId, initiationId, clientKey, loadingContext });
+        if (response.authorizationOptions) {
+            setAuthorizationOptions(response.authorizationOptions);
         }
         return response;
     };
@@ -52,12 +53,13 @@ function Payment({
     }, [setComponentRef]);
 
     useEffect(() => {
-        if (authenticationOptions) {
-            onAuthenticate(authenticationOptions);
+        if (authorizationOptions) {
+            onAuthorize(authorizationOptions);
         }
-    }, [authenticationOptions]);
+    }, [authorizationOptions]);
 
     return (
+        // todo: add Await
         <Fragment>
             <PaymentDetails
                 issuerImageUrl={getImage()(issuer)}
