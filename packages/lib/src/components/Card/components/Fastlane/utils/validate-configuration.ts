@@ -20,6 +20,10 @@ const VALID_KEYS: ConfigurationKey[] = [
  * @param config
  */
 const isConfigurationValid = (config: FastlaneSignupConfiguration): boolean => {
+    if (!config) {
+        return false;
+    }
+
     Object.keys(config).forEach(
         (key: keyof FastlaneSignupConfiguration) =>
             !VALID_KEYS.includes(key) && console.warn(`Fastlane: '${key}' is not valid Fastlane config property`)

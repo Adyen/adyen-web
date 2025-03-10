@@ -25,7 +25,7 @@ test('should trigger onChange event if the consent UI is not allowed to be shown
 
     const onChangeMock = jest.fn();
 
-    customRender(<FastlaneSignup {...fastlaneConfiguration} onChange={onChangeMock} currentDetectedBrand="card" />);
+    customRender(<FastlaneSignup {...fastlaneConfiguration} onChange={onChangeMock} currentDetectedBrand="card" onSubmitAnalytics={jest.fn()} />);
 
     expect(onChangeMock).toHaveBeenCalledTimes(1);
     expect(onChangeMock.mock.calls[0][0]).toEqual({
@@ -51,7 +51,7 @@ test('should send "consentShown:true" flag if the shopper saw the consent UI at 
 
     const onChangeMock = jest.fn();
 
-    customRender(<FastlaneSignup {...fastlaneConfiguration} onChange={onChangeMock} currentDetectedBrand="mc" />);
+    customRender(<FastlaneSignup {...fastlaneConfiguration} onChange={onChangeMock} currentDetectedBrand="mc" onSubmitAnalytics={jest.fn()} />);
 
     // Show the UI
     await user.click(screen.getByRole('switch'));
@@ -85,7 +85,7 @@ test('should return phone number formatted (without spaces and without prefix)',
 
     const onChangeMock = jest.fn();
 
-    customRender(<FastlaneSignup {...fastlaneConfiguration} onChange={onChangeMock} currentDetectedBrand="visa" />);
+    customRender(<FastlaneSignup {...fastlaneConfiguration} onChange={onChangeMock} currentDetectedBrand="visa" onSubmitAnalytics={jest.fn()} />);
 
     const input = screen.getByLabelText('Mobile number');
 
@@ -115,7 +115,7 @@ test('should display terms and privacy statement links', () => {
 
     const onChangeMock = jest.fn();
 
-    customRender(<FastlaneSignup {...fastlaneConfiguration} onChange={onChangeMock} currentDetectedBrand="visa" />);
+    customRender(<FastlaneSignup {...fastlaneConfiguration} onChange={onChangeMock} currentDetectedBrand="visa" onSubmitAnalytics={jest.fn()} />);
 
     expect(screen.getByRole('link', { name: 'terms' })).toHaveAttribute('href', 'https://fastlane.com/terms');
     expect(screen.getByRole('link', { name: 'privacy statement' })).toHaveAttribute('href', 'https://fastlane.com/privacy-policy');
@@ -135,7 +135,7 @@ test('should open Fastlane info dialog and close it', async () => {
 
     const onChangeMock = jest.fn();
 
-    customRender(<FastlaneSignup {...fastlaneConfiguration} onChange={onChangeMock} currentDetectedBrand="visa" />);
+    customRender(<FastlaneSignup {...fastlaneConfiguration} onChange={onChangeMock} currentDetectedBrand="visa" onSubmitAnalytics={jest.fn()} />);
 
     screen.getByRole('dialog', { hidden: true });
 
@@ -162,7 +162,9 @@ test('should not render the UI if there are missing configuration fields', () =>
     const consoleMock = jest.fn();
     jest.spyOn(console, 'warn').mockImplementation(consoleMock);
 
-    const { container } = customRender(<FastlaneSignup {...fastlaneConfiguration} onChange={onChangeMock} currentDetectedBrand="visa" />);
+    const { container } = customRender(
+        <FastlaneSignup {...fastlaneConfiguration} onChange={onChangeMock} currentDetectedBrand="visa" onSubmitAnalytics={jest.fn()} />
+    );
 
     expect(consoleMock).toHaveBeenCalledTimes(1);
     expect(consoleMock).toHaveBeenCalledWith('Fastlane: Component configuration is not valid. Fastlane will not be displayed');

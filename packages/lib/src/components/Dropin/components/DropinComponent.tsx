@@ -5,7 +5,7 @@ import getOrderStatus from '../../../core/Services/order-status';
 import './DropinComponent.scss';
 import { sanitizeOrder } from '../../internal/UIElement/utils';
 import { PaymentAmount } from '../../../types/global-types';
-import { ANALYTICS_RENDERED_STR } from '../../../core/Analytics/constants';
+import { ANALYTICS_EVENT, ANALYTICS_RENDERED_STR, InfoEventTypes } from '../../../core/Analytics/constants';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import Button from '../../internal/Button';
 import type { DropinComponentProps, DropinComponentState, DropinStatus, DropinStatusProps, onOrderCancelData } from '../types';
@@ -125,6 +125,12 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
     private readonly onShowDefaultPaymentMethodListClick = () => {
         this.setState({
             showDefaultPaymentMethodList: true
+        });
+
+        this.props.modules?.analytics.sendAnalytics('dropin', {
+            type: ANALYTICS_EVENT.info,
+            infoType: InfoEventTypes.clicked,
+            target: 'otherpaymentmethod_button'
         });
     };
 
