@@ -175,6 +175,6 @@ export type CardConfigData = {
     /**
      * Fastlane
      */
-    hasFastlaneConfigured: boolean;
-    isFastlaneConsentDefaultOn: boolean;
+    hasFastlaneConfigured?: boolean;
+    isFastlaneConsentDefaultOn?: boolean;
 };

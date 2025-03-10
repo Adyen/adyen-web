@@ -199,7 +199,7 @@ export const getCardConfigData = (cardProps: CardConfiguration): CardConfigData 
         /**
          * Fastlane
          */
-        // TODO: Do we always append the prop even if it is not used? e.g. merchants not using fastlane
+        // CHECK: Do we always append the prop even if it is not used? e.g. merchants not using fastlane
         ...(isFastlaneConfigValid && {
             hasFastlaneConfigured: true,
             isFastlaneConsentDefaultOn: fastlaneConfiguration.defaultToggleState
