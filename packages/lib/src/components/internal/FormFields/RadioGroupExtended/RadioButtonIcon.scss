@@ -1,0 +1,18 @@
+@import 'styles/variable-generator';
+
+.adyen-checkout__input-icon {
+    border-radius: token(border-radius-s);
+    height: 18px;
+    width: 27px;
+    margin-right: token(spacer-060);
+}
+
+.adyen-checkout__input-icon--hidden {
+    display: none;
+}
+
+.adyen-checkout__input-icon--no-radio-icon {
+    margin-left: calc(token(spacer-090) * -1);
+}
+
+
