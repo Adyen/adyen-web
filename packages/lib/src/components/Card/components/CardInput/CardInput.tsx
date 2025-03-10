@@ -482,7 +482,12 @@ const CardInput = (props: CardInputProps) => {
             />
 
             {props.fastlaneConfiguration && (
-                <FastlaneSignup {...props.fastlaneConfiguration} currentDetectedBrand={internallyDetectedBrand} onChange={props.onChange} />
+                <FastlaneSignup
+                    {...props.fastlaneConfiguration}
+                    currentDetectedBrand={internallyDetectedBrand}
+                    onChange={props.onChange}
+                    onSubmitAnalytics={props.onSubmitAnalytics}
+                />
             )}
 
             {props.showPayButton &&
