@@ -354,5 +354,17 @@
     "payto.label.firstName": "Nom del titular del compte",
     "payto.label.lastName": "Cognom del titular del compte",
     "payto.await.waitForConfirmation": "Esperant la vostra aprovació",
-    "payto.bsb.option.label": "BSB i número de compte"
+    "payto.bsb.option.label": "BSB i número de compte",
+    "card.fastlane.a11y.logo": "Logotip de Fastlane by Paypal",
+    "card.fastlane.a11y.openDialog": "Llegiu més sobre Fastlane",
+    "card.fastlane.a11y.closeDialog": "Tanqueu el diàleg",
+    "card.fastlane.mobileInputLabel": "Número de mòbil",
+    "card.fastlane.consentToggle": "Deseu la vostra informació amb Fastlane per a pagaments més ràpids",
+    "card.fastlane.consentText": "En desar la vostra informació, accepteu rebre codis a través de missatge de text per fer servir Fastlane a tot arreu on estigui disponible. També accepteu els %#termes%# i la %#declaració de privacitat%#.",
+    "card.fastlane.modal.benefit1.header": "Empleneu automàticament els vostres pagament",
+    "card.fastlane.modal.benefit1.text": "Obteniu codis d'un sol ús per utilitzar la targeta i les adreces que heu desat.",
+    "card.fastlane.modal.benefit2.header": "Protegiu la vostra informació",
+    "card.fastlane.modal.benefit2.text": "La vostra informació de pagament està encriptada quan s'emmagatzema i s'envia als llocs on compreu.",
+    "card.fastlane.modal.benefit3.header": "Utilitzeu a totes les botigues",
+    "card.fastlane.modal.benefit3.text": "Accelereu el procés de pagament a tot arreu on Fastlane estigui disponible."
 }

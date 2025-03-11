@@ -353,5 +353,17 @@
     "payto.label.firstName": "Kontohavers fornavn",
     "payto.label.lastName": "Kontohavers efternavn",
     "payto.await.waitForConfirmation": "Afventer din godkendelse",
-    "payto.bsb.option.label": "BSB- og kontonummer"
+    "payto.bsb.option.label": "BSB- og kontonummer",
+    "card.fastlane.a11y.logo": "Fastlane by Paypal-logo",
+    "card.fastlane.a11y.openDialog": "Læs mere om Fastlane",
+    "card.fastlane.a11y.closeDialog": "Luk dialogboks",
+    "card.fastlane.mobileInputLabel": "Mobilnummer",
+    "card.fastlane.consentToggle": "Gem dine oplysninger med Fastlane for hurtigere betalinger",
+    "card.fastlane.consentText": "Ved at gemme dine oplysninger accepterer du at modtage koder via sms til at bruge Fastlane overalt, hvor det er tilgængeligt. Du accepterer også %#terms%# og %#privacy statement%#.",
+    "card.fastlane.modal.benefit1.header": "Udfyld dine betalinger automatisk",
+    "card.fastlane.modal.benefit1.text": "Få engangskoder til at bruge kort og adresser, du har gemt.",
+    "card.fastlane.modal.benefit2.header": "Beskyt dine oplysninger",
+    "card.fastlane.modal.benefit2.text": "Dine betalingsoplysninger krypteres, når de gemmes og sendes til steder, du handler.",
+    "card.fastlane.modal.benefit3.header": "Brug i mange butikker",
+    "card.fastlane.modal.benefit3.text": "Kom hurtigt gennem kassen overalt, hvor Fastlane er tilgængelig."
 }

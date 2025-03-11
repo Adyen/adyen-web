@@ -353,5 +353,17 @@
     "payto.label.firstName": "Vorname des Kontoinhabers",
     "payto.label.lastName": "Nachname des Kontoinhabers",
     "payto.await.waitForConfirmation": "Wir warten auf Ihre Genehmigung",
-    "payto.bsb.option.label": "BLZ und Kontonummer"
+    "payto.bsb.option.label": "BLZ und Kontonummer",
+    "card.fastlane.a11y.logo": "Fastlane by Paypal-Logo",
+    "card.fastlane.a11y.openDialog": "Lesen Sie mehr über Fastlane",
+    "card.fastlane.a11y.closeDialog": "Dialog schließen",
+    "card.fastlane.mobileInputLabel": "Handynummer",
+    "card.fastlane.consentToggle": "Speichern Sie Ihre Daten mit Fastlane für schnellere Bezahlvorgänge",
+    "card.fastlane.consentText": "Durch die Speicherung Ihrer Daten stimmen Sie zu, Codes per SMS zu erhalten, um Fastlane überall dort zu nutzen, wo es verfügbar ist. Sie stimmen auch den %#Nutzungsbedingungen%# und der %#Datenschutzerklärung%# zu.",
+    "card.fastlane.modal.benefit1.header": "Automatisches Ausfüllen Ihrer Zahlungen",
+    "card.fastlane.modal.benefit1.text": "Erhalten Sie Einmalcodes, um die von Ihnen gespeicherten Karten und Adressen zu verwenden.",
+    "card.fastlane.modal.benefit2.header": "Schützen Sie Ihre Daten",
+    "card.fastlane.modal.benefit2.text": "Ihre Zahlungsinformationen werden verschlüsselt gespeichert und an Ihre Einkaufsorte gesendet.",
+    "card.fastlane.modal.benefit3.header": "Filialübergreifend einsetzbar",
+    "card.fastlane.modal.benefit3.text": "Beschleunigen Sie den Bezahlvorgang überall, wo Fastlane verfügbar ist."
 }
