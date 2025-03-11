@@ -1,4 +1,4 @@
-import { formatApplePayContactToAdyenAddressFormat } from './utils';
+import { formatApplePayContactToAdyenAddressFormat } from './format-applepay-contact-to-adyen-format';
 
 describe('formatApplePayContactToAdyenAddressFormat()', () => {
     test('should build the street by merging the address lines and set houseNumberOrName to ZZ', () => {
@@ -84,5 +84,10 @@ describe('formatApplePayContactToAdyenAddressFormat()', () => {
             firstName: 'Jonny',
             lastName: 'Smithson'
         });
+    });
+
+    test('should return undefined if no contact details is passed', () => {
+        // @ts-ignore Testing passing no parameter
+        expect(formatApplePayContactToAdyenAddressFormat()).toBeUndefined();
     });
 });
