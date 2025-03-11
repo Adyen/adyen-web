@@ -265,7 +265,10 @@ export function onChange(state, component) {
      */
     if (isDualBranding) {
         const mode = state.valid.encryptedCardNumber ? 'dualBranding_valid' : 'dualBranding_notValid';
-        setLogosActive(document.querySelector('.secured-fields'), mode);
+
+        const holder = document.querySelector('.secured-fields') || document.querySelector('.secured-fields-1');
+
+        setLogosActive(holder, mode);
     }
 }
 
