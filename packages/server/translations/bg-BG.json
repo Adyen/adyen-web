@@ -325,7 +325,7 @@
     "paynow.mobileViewInstruction.step3": "Изберете опцията за сканиране на QR код.",
     "paynow.mobileViewInstruction.step4": "Изберете опцията за качване на QR код и след това изберете екранната снимка.",
     "paynow.mobileViewInstruction.step5": "Извършете транзакцията.",
-    "payto.payid.description": "Въведете PayID и данните за сметката, които са свързани с Вашия Payto акаунт.",
+    "payto.payid.description": "Въведете PayID и данните за сметката, които са свързани с Вашия PayTo акаунт.",
     "payto.payid.label.identifier": "Идентификатор",
     "payto.payid.label.orgid": "OrganizationID",
     "payto.payid.option.phone": "Мобилно устройство",
@@ -353,5 +353,6 @@
     "payto.mandate.frequency.yearly": "%{count} плащания годишно",
     "payto.label.firstName": "Име на титуляра на сметката",
     "payto.label.lastName": "Фамилия на титуляра на сметката",
-    "payto.await.waitForConfirmation": "Очакваме Вашето одобрение"
+    "payto.await.waitForConfirmation": "Очакваме Вашето одобрение",
+    "payto.bsb.option.label": "BSB и номер на сметка"
 }

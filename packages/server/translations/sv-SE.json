@@ -102,6 +102,7 @@
     "boleto.sendCopyToEmail": "Skicka en kopia till min e-post",
     "button.copy": "Kopiera",
     "button.download": "Ladda ner",
+    "boleto.socialSecurityNumber": "CPF/CNPJ",
     "boleto.socialSecurityNumber.invalid": "Ange ett giltigt CPF-/CNPJ-nummer",
     "creditCard.storedCard.description.ariaLabel": "Sparat kort slutar på %@",
     "voucher.entity": "Enhet",
@@ -323,7 +324,7 @@
     "paynow.mobileViewInstruction.step3": "Välj alternativet för att skanna en QR-kod.",
     "paynow.mobileViewInstruction.step4": "Välj alternativet att ladda upp en QR och välj skärmdumpen.",
     "paynow.mobileViewInstruction.step5": "Slutför transaktionen.",
-    "payto.payid.description": "Ange PayID och kontouppgifter för Payto-kontot.",
+    "payto.payid.description": "Ange PayID och kontouppgifter för PayTo-kontot.",
     "payto.payid.label.identifier": "Identifierare",
     "payto.payid.label.orgid": "Organisations-id",
     "payto.payid.option.phone": "Mobil",
@@ -351,5 +352,6 @@
     "payto.mandate.frequency.yearly": "%{count} betalning(ar) om året",
     "payto.label.firstName": "Kontoinnehavarens förnamn",
     "payto.label.lastName": "Kontoinnehavarens efternamn",
-    "payto.await.waitForConfirmation": "Väntar på ditt godkännande"
+    "payto.await.waitForConfirmation": "Väntar på ditt godkännande",
+    "payto.bsb.option.label": "BSB- och kontonummer"
 }

@@ -102,6 +102,7 @@
     "boleto.sendCopyToEmail": "Trimite o copie la adresa mea de e-mail",
     "button.copy": "Copiere",
     "button.download": "Descărcare",
+    "boleto.socialSecurityNumber": "CPF/CNPJ",
     "boleto.socialSecurityNumber.invalid": "Completați un număr CPF/CNPJ valabil",
     "creditCard.storedCard.description.ariaLabel": "Cardul memorat se termină în %@",
     "voucher.entity": "Entitate",
@@ -323,7 +324,7 @@
     "paynow.mobileViewInstruction.step3": "Selectați opțiunea pentru a scana un cod QR.",
     "paynow.mobileViewInstruction.step4": "Alegeți opțiunea de a încărca un QR și selectați captura de ecran.",
     "paynow.mobileViewInstruction.step5": "Finalizați tranzacția.",
-    "payto.payid.description": "Completați PayID și detaliile contului care sunt conectate la contul dvs. Payto.",
+    "payto.payid.description": "Completați PayID și detaliile contului care sunt conectate la contul dvs. PayTo.",
     "payto.payid.label.identifier": "Identificator",
     "payto.payid.label.orgid": "ID organizație",
     "payto.payid.option.phone": "Mobil",
@@ -351,5 +352,6 @@
     "payto.mandate.frequency.yearly": "%{count} plată/plăți anuale",
     "payto.label.firstName": "Prenumele titularului de cont",
     "payto.label.lastName": "Numele de familie al titularului de cont",
-    "payto.await.waitForConfirmation": "Se așteaptă aprobarea dvs."
+    "payto.await.waitForConfirmation": "Se așteaptă aprobarea dvs.",
+    "payto.bsb.option.label": "BSB și numărul de cont"
 }

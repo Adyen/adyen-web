@@ -14,7 +14,7 @@
     ],
     "scripts": {
         "start": "concurrently --kill-others-on-fail \"yarn workspace @adyen/adyen-web start\"  \"yarn workspace @adyen/adyen-web-playground start\" --names \"lib,playground\"",
-        "start:storybook": "yarn workspace @adyen/adyen-web start:storybook",
+        "start:storybook": "concurrently --kill-others-on-fail  \"yarn workspace @adyen/adyen-web-server start\"  \"yarn workspace @adyen/adyen-web start:storybook\" --names \"express-server,storybook\"",
         "start:prod-storybook": "yarn workspace @adyen/adyen-web-server start:storybook",
         "build": "yarn workspace @adyen/adyen-web build",
         "build:storybook": "yarn workspace @adyen/adyen-web build:storybook",

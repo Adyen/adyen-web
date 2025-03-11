@@ -102,6 +102,7 @@
     "boleto.sendCopyToEmail": "Envoyer une copie à mon adresse e-mail",
     "button.copy": "Copier",
     "button.download": "Télécharger",
+    "boleto.socialSecurityNumber": "CPF/CNPJ",
     "boleto.socialSecurityNumber.invalid": "Saisissez un numéro CPF/CNPJ valide",
     "creditCard.storedCard.description.ariaLabel": "La carte enregistrée se termine en %@",
     "voucher.entity": "Entité",
@@ -323,7 +324,7 @@
     "paynow.mobileViewInstruction.step3": "Sélectionnez l'option permettant de scanner un code QR.",
     "paynow.mobileViewInstruction.step4": "Choisissez l'option pour télécharger un code QR et sélectionnez la capture d'écran.",
     "paynow.mobileViewInstruction.step5": "Complétez la transaction.",
-    "payto.payid.description": "Veuillez saisir le PayID et les détails du compte qui sont connectés à votre compte Payto.",
+    "payto.payid.description": "Veuillez saisir le PayID et les détails du compte qui sont connectés à votre compte PayTo.",
     "payto.payid.label.identifier": "Identifiant",
     "payto.payid.label.orgid": "Identifiant de l'organisation",
     "payto.payid.option.phone": "Portable",
@@ -351,5 +352,6 @@
     "payto.mandate.frequency.yearly": "%{count} paiement(s) par an",
     "payto.label.firstName": "Prénom du titulaire du compte",
     "payto.label.lastName": "Nom de famille du titulaire du compte",
-    "payto.await.waitForConfirmation": "En attente de votre approbation"
+    "payto.await.waitForConfirmation": "En attente de votre approbation",
+    "payto.bsb.option.label": "Numéro BSB et numéro de compte"
 }
