@@ -13,6 +13,7 @@ async function createAdvancedFlowCheckout({
     amount,
     allowedPaymentTypes = [],
     paymentMethodsOverride,
+    paymentsOptions,
     ...restCheckoutProps
 }: AdyenCheckoutProps): Promise<Checkout> {
     const paymentAmount = {
@@ -52,7 +53,8 @@ async function createAdvancedFlowCheckout({
                 const paymentData = {
                     amount: paymentAmount,
                     countryCode,
-                    shopperLocale
+                    shopperLocale,
+                    ...(paymentsOptions && paymentsOptions)
                 };
 
                 const { action, order, resultCode, donationToken } = await makePayment(state.data, paymentData);

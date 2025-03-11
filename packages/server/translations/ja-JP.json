@@ -102,6 +102,7 @@
     "boleto.sendCopyToEmail": "自分のメールアドレスにコピーを送信する",
     "button.copy": "コピー",
     "button.download": "ダウンロード",
+    "boleto.socialSecurityNumber": "CPF/CNPJ",
     "boleto.socialSecurityNumber.invalid": "有効なCPF/CNPJ番号を入力してください",
     "creditCard.storedCard.description.ariaLabel": "保存されたカードは％@に終了します",
     "voucher.entity": "エンティティ",
@@ -323,7 +324,7 @@
     "paynow.mobileViewInstruction.step3": "QRコードをスキャンするオプションを選択します。",
     "paynow.mobileViewInstruction.step4": "QRをアップロードするオプションを選択し、スクリーンショットを選択します。",
     "paynow.mobileViewInstruction.step5": "取引を完了します。",
-    "payto.payid.description": "Paytoアカウントに接続されているPayIDとアカウントの詳細を入力してください。",
+    "payto.payid.description": "PayToアカウントに接続されているPayIDとアカウントの詳細を入力してください。",
     "payto.payid.label.identifier": "識別子",
     "payto.payid.label.orgid": "組織ID",
     "payto.payid.option.phone": "携帯",
@@ -351,5 +352,6 @@
     "payto.mandate.frequency.yearly": "%{count}件の支払を毎年",
     "payto.label.firstName": "口座名義人の名",
     "payto.label.lastName": "口座名義人の姓",
-    "payto.await.waitForConfirmation": "承認待ち"
+    "payto.await.waitForConfirmation": "承認待ち",
+    "payto.bsb.option.label": "BSBおよび口座番号"
 }

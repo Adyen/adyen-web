@@ -325,7 +325,7 @@
     "paynow.mobileViewInstruction.step3": "Atlasiet opciju skenēt QR kodu.",
     "paynow.mobileViewInstruction.step4": "Izvēlieties opciju augšupielādēt QR kodu un veiciet ekrānuzņēmumu.",
     "paynow.mobileViewInstruction.step5": "Pabeidziet darījumu.",
-    "payto.payid.description": "Ievadiet PayID un konta informāciju, kas ir savienota ar Jūsu Payto kontu.",
+    "payto.payid.description": "Ievadiet PayID un konta informāciju, kas ir savienota ar Jūsu PayTo kontu.",
     "payto.payid.label.identifier": "Identifikators",
     "payto.payid.label.orgid": "Organizācijas ID",
     "payto.payid.option.phone": "Mobilais",
@@ -353,5 +353,6 @@
     "payto.mandate.frequency.yearly": "%{count} maksājums(-i) gadā",
     "payto.label.firstName": "Konta īpašnieka vārds",
     "payto.label.lastName": "Konta īpašnieka uzvārds",
-    "payto.await.waitForConfirmation": "Gaida jūsu apstiprinājumu"
+    "payto.await.waitForConfirmation": "Gaida jūsu apstiprinājumu",
+    "payto.bsb.option.label": "BSB un konta numurs"
 }

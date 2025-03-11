@@ -102,6 +102,7 @@
     "boleto.sendCopyToEmail": "Pošalji kopiju na moju e-poštu",
     "button.copy": "Kopiraj",
     "button.download": "Preuzmi",
+    "boleto.socialSecurityNumber": "CPF / CNPJ",
     "boleto.socialSecurityNumber.invalid": "Unesite valjani CPF/CNPJ broj",
     "creditCard.storedCard.description.ariaLabel": "Pohranjena kartica završava na %@",
     "voucher.entity": "Entitet",
@@ -323,7 +324,7 @@
     "paynow.mobileViewInstruction.step3": "Odaberite opciju skeniranja QR kôda.",
     "paynow.mobileViewInstruction.step4": "Odaberite opciju za prijenos QR-a i odaberite snimku zaslona.",
     "paynow.mobileViewInstruction.step5": "Dovršite transakciju.",
-    "payto.payid.description": "Unesite PayID i podatke o računu koji su povezani s vašim Payto računom.",
+    "payto.payid.description": "Unesite PayID i podatke o računu koji su povezani s vašim PayTo računom.",
     "payto.payid.label.identifier": "Identifikator",
     "payto.payid.label.orgid": "ID organizacije",
     "payto.payid.option.phone": "Mobilni telefon",
@@ -351,5 +352,6 @@
     "payto.mandate.frequency.yearly": "Godišnjih uplata: %{count}",
     "payto.label.firstName": "Ime vlasnika računa",
     "payto.label.lastName": "Prezime vlasnika računa",
-    "payto.await.waitForConfirmation": "Čekamo vaše odobrenje"
+    "payto.await.waitForConfirmation": "Čekamo vaše odobrenje",
+    "payto.bsb.option.label": "BSB i broj računa"
 }
