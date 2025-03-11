@@ -51,6 +51,7 @@ const ComponentsNameMap = {
     [TxVariants.clicktopay]: 'ClickToPay',
     [TxVariants.googlepay]: 'GooglePay',
     [TxVariants.paypal]: 'PayPal',
+    [TxVariants.fastlane]: 'Fastlane',
     [TxVariants.paywithgoogle]: 'GooglePay',
     /** Wallets */
 
