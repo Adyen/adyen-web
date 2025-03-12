@@ -1,4 +1,4 @@
-import type { Order, OrderStatus, PaymentActionsType, PaymentAmount } from '../../types/global-types';
+import { Order, OrderStatus, PaymentActionsType, PaymentAmount } from '../../types/global-types';
 import type { UIElementProps, UIElementStatus } from '../internal/UIElement/types';
 import type { NewableComponent } from '../../core/core.registry';
 import type { ICore } from '../../core/types';

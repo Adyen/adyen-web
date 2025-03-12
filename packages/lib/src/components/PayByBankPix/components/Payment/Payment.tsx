@@ -7,12 +7,13 @@ import useImage from '../../../../core/Context/useImage';
 import PayButton from '../../../internal/PayButton';
 import './Payment.scss';
 import getAuthorizationStatus from './getAuthorizationStatus';
+import PayByBankPixAwait from '../Enrollment/components/PayByBankPixAwait';
 
 function Payment({
     onPay,
+    type,
+    countdownTime,
     receiver,
-    paymentDate,
-    paymentMethod,
     amount,
     txVariant,
     issuer,
@@ -20,24 +21,24 @@ function Payment({
     enrollmentId,
     initiationId,
     clientKey,
-    onAuthorize
+    onAuthorize,
+    onError
 }: PaymentProps) {
     const { i18n, loadingContext } = useCoreContext();
     const getImage = useImage();
     const [status, setStatus] = useState('ready');
     const [authorizationOptions, setAuthorizationOptions] = useState<string>(null);
     const buttonModifiers = ['standalone'];
+    const logos = [{ name: 'Open finance', alt: i18n.get('paybybankpix.await.logoAlt.openFinance'), src: `${getImage()('openFinance')}` }];
     const details = [
         { label: i18n.get('paybybankpix.payment.receiver.label'), value: receiver },
-        { label: i18n.get('paybybankpix.payment.paymentDate.label'), value: paymentDate },
-        { label: i18n.get('paybybankpix.payment.paymentMethod.label'), value: paymentMethod }
+        { label: i18n.get('paybybankpix.payment.paymentDate.label'), value: i18n.date(new Date().toString()) },
+        { label: i18n.get('paybybankpix.payment.paymentMethod.label'), value: 'Pix Open Finance' }
     ];
     const self = useRef({
         setStatus
     });
 
-    // todo: this function will be used by Await add later
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const pollStatus = async () => {
         if (authorizationOptions) return;
 
@@ -58,8 +59,17 @@ function Payment({
         }
     }, [authorizationOptions]);
 
-    return (
-        // todo: add Await
+    return type === 'await' ? (
+        <PayByBankPixAwait
+            logos={logos}
+            type={txVariant}
+            countdownTime={countdownTime}
+            clientKey={clientKey}
+            onError={onError}
+            awaitText={i18n.get('paybybankpix.await.fetchDetails')}
+            pollStatus={pollStatus}
+        ></PayByBankPixAwait>
+    ) : (
         <Fragment>
             <PaymentDetails
                 issuerImageUrl={getImage()(issuer)}

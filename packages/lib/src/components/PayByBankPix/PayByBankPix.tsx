@@ -80,7 +80,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
      * There are 3 endpoints (stages) we need to call for the enrollment flow.
      * The first one is the regular payments call on issuer selection - we indicate to store the payment token for the selected issuer.
      * The second one is to poll the enrollment eligibility - we poll the server to get the enrollment challenge in the `getEnrollmentStatus` function.
-     * The third one is in the `onEnroll` function - we create passkeys and authorize the enrollment with shopper's passkey.
+     * The third one is in the `authorizeEnrollment` function - we create passkeys and authorize the enrollment with shopper's passkey.
      */
     private onIssuerSelected = async payload => {
         try {
@@ -115,7 +115,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
 
     /**
      * There are 3 endpoints (stages) we need to call for the payment flow.
-     * The first one is the regular payments call - we attempt to pay with the stored payment token.
+     * The first one `payWithStoredPayment` is the regular payments call - we attempt to pay with the stored payment token.
      * The second one is to poll the authorization options - we poll the server to get the challenge in the `getAuthorizationStatus` function.
      * The third one is in the `authorizePayment` function - we authorize the payment with shopper's passkey.
      */
@@ -175,12 +175,11 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
                     {this.props.storedPaymentMethodId != null ? (
                         <Payment
                             txVariant={PayByBankPixElement.type}
+                            type={this.props.type}
                             clientKey={this.props.clientKey}
                             amount={this.props.amount}
                             issuer={this.props.issuer}
                             receiver={this.props.receiver}
-                            paymentMethod={this.props.paymentMethod}
-                            paymentDate={this.props.paymentDate}
                             enrollmentId={this.props.enrollmentId}
                             initiationId={this.props.initiationId}
                             setComponentRef={this.setComponentRef}
@@ -190,15 +189,14 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
                     ) : (
                         <Enrollment
                             onError={this.handleError}
+                            txVariant={PayByBankPixElement.type}
                             // Await
                             type={this.props.type}
                             clientKey={this.props.clientKey}
                             enrollmentId={this.props.enrollmentId}
-                            paymentMethodType={this.props.paymentMethodType}
                             countdownTime={this.props.countdownTime}
                             onEnroll={this.authorizeEnrollment}
                             // Issuer List
-                            txVariant={PayByBankPixElement.type}
                             issuers={this.props.issuers}
                             payButton={this.payButton}
                             onChange={this.onIssuerSelected}
