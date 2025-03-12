@@ -353,5 +353,17 @@
     "payto.label.firstName": "계좌 소유자 이름(이름)",
     "payto.label.lastName": "계좌 소유자 성",
     "payto.await.waitForConfirmation": "승인 대기 중",
-    "payto.bsb.option.label": "BSB 및 계좌 번호"
+    "payto.bsb.option.label": "BSB 및 계좌 번호",
+    "card.fastlane.a11y.logo": "Fastlane by PayPal 로고",
+    "card.fastlane.a11y.openDialog": "Fastlane 자세히 알아보기",
+    "card.fastlane.a11y.closeDialog": "대화 상자 닫기",
+    "card.fastlane.mobileInputLabel": "휴대폰 번호",
+    "card.fastlane.consentToggle": "Fastlane에 정보를 저장해 결제 속도를 높이세요",
+    "card.fastlane.consentText": "내 정보를 저장함으로써, 가능한 모든 곳에서 Fastlane을 사용하기 위해 문자로 코드를 받는 것에 동의합니다. 이와 더불어 %#이용약관%#과 %#개인정보 처리방침%#에도 동의합니다.",
+    "card.fastlane.modal.benefit1.header": "내 결제 자동 완성",
+    "card.fastlane.modal.benefit1.text": "저장한 카드와 주소를 사용하기 위해 일회용 코드를 받으세요.",
+    "card.fastlane.modal.benefit2.header": "정보 보호",
+    "card.fastlane.modal.benefit2.text": "사용자의 결제 정보를 저장할 때와 구매처로 보낼 때 암호화합니다.",
+    "card.fastlane.modal.benefit3.header": "여러 매장에서 사용",
+    "card.fastlane.modal.benefit3.text": "Fastlane을 사용할 수 있는 어디서든 신속하게 결제하세요"
 }

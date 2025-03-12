@@ -353,5 +353,17 @@
     "payto.label.firstName": "Számlatulajdonos utóneve",
     "payto.label.lastName": "Számlatulajdonos vezetékneve",
     "payto.await.waitForConfirmation": "Várakozás az Ön jóváhagyására",
-    "payto.bsb.option.label": "BSB és számlaszám"
+    "payto.bsb.option.label": "BSB és számlaszám",
+    "card.fastlane.a11y.logo": "Fastlane by PayPal logó",
+    "card.fastlane.a11y.openDialog": "További információ a Fastlane-ről",
+    "card.fastlane.a11y.closeDialog": "Párbeszédpanel bezárása",
+    "card.fastlane.mobileInputLabel": "Mobiltelefonszám",
+    "card.fastlane.consentToggle": "Adatok mentése a Fastlane segítségével a gyorsabb fizetéshez",
+    "card.fastlane.consentText": "Az adatok mentésével elfogadja, hogy szöveges üzenetben kódokat kapjon a Fastlane használatához bárhol, ahol a szolgáltatás elérhető. Elfogadja továbbá a %#terms%# és %#privacy statement%# tartalmát is.",
+    "card.fastlane.modal.benefit1.header": "Fizetési adatok automatikus kitöltése",
+    "card.fastlane.modal.benefit1.text": "Egyszeri kódok fogadásával használhatja mentett kártyáját és címét.",
+    "card.fastlane.modal.benefit2.header": "Adatvédelem",
+    "card.fastlane.modal.benefit2.text": "A tárolt és a vásárlási helyszínre küldött fizetési adatok titkosítottak.",
+    "card.fastlane.modal.benefit3.header": "Áruházi használat",
+    "card.fastlane.modal.benefit3.text": "Fizessen villámgyorsan bárhol, ahol a Fastlane elérhető."
 }

@@ -353,5 +353,17 @@
     "payto.label.firstName": "Όνομα κατόχου λογαριασμού",
     "payto.label.lastName": "Επώνυμο κατόχου λογαριασμού",
     "payto.await.waitForConfirmation": "Αναμονή για την έγκρισή σας",
-    "payto.bsb.option.label": "BSB και αριθμός λογαριασμού"
+    "payto.bsb.option.label": "BSB και αριθμός λογαριασμού",
+    "card.fastlane.a11y.logo": "Λογότυπο Fastlane by Paypal",
+    "card.fastlane.a11y.openDialog": "Διαβάστε περισσότερα για το Fastlane",
+    "card.fastlane.a11y.closeDialog": "Κλείσιμο παραθύρου διαλόγου",
+    "card.fastlane.mobileInputLabel": "Αριθμός κινητού",
+    "card.fastlane.consentToggle": "Αποθηκεύστε τις πληροφορίες σας με το Fastlane για ταχύτερη ολοκλήρωση της πληρωμής",
+    "card.fastlane.consentText": "Αποθηκεύοντας τις πληροφορίες σας, συμφωνείτε να λαμβάνετε κωδικούς μέσω γραπτού μηνύματος για να χρησιμοποιείτε το Fastlane οπουδήποτε είναι διαθέσιμο. Συμφωνείτε επίσης με τους %#terms%# και τη %#privacy statement%#.",
+    "card.fastlane.modal.benefit1.header": "Αυτόματη συμπλήρωση των πληρωμών σας",
+    "card.fastlane.modal.benefit1.text": "Λάβετε κωδικούς μίας χρήσης για να χρησιμοποιήσετε την κάρτα και τις διευθύνσεις που έχετε αποθηκεύσει.",
+    "card.fastlane.modal.benefit2.header": "Προστατέψτε τις πληροφορίες σας",
+    "card.fastlane.modal.benefit2.text": "Τα στοιχεία πληρωμής σας κρυπτογραφούνται όταν αποθηκεύονται και αποστέλλονται σε μέρη που πραγματοποιείτε αγορές.",
+    "card.fastlane.modal.benefit3.header": "Χρήση σε όλα τα καταστήματα",
+    "card.fastlane.modal.benefit3.text": "Ολοκληρώστε γρήγορα την πληρωμή, οπουδήποτε είναι διαθέσιμο το Fastlane."
 }
