@@ -128,7 +128,12 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         const elements = showPaymentMethods ? createElements(paymentMethods, paymentMethodsConfiguration, commonProps, this.core) : [];
         const instantPaymentElements = createInstantPaymentElements(instantPaymentMethods, paymentMethodsConfiguration, commonProps, this.core);
         const storedElements = showStoredPaymentMethods
-            ? createStoredElements(storedPaymentMethods, paymentMethodsConfiguration, commonProps, this.core)
+            ? createStoredElements(
+                  this.props.filterStoredPaymentMethods?.(storedPaymentMethods) ?? storedPaymentMethods,
+                  paymentMethodsConfiguration,
+                  commonProps,
+                  this.core
+              )
             : [];
         const fastlanePaymentElement = fastlanePaymentMethod
             ? createElements([fastlanePaymentMethod], paymentMethodsConfiguration, commonProps, this.core)
