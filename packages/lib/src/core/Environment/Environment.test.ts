@@ -1,6 +1,11 @@
 import { resolveEnvironments } from './Environment';
 
 describe('Environments', () => {
+    beforeAll(() => {
+        // Ignore the process.env.CI check when running on Github
+        process.env.CI = 'false';
+    });
+
     test('should return proper URLs for the "test" environment', () => {
         const { apiUrl, analyticsUrl, cdnImagesUrl, cdnTranslationsUrl } = resolveEnvironments('test');
 
