@@ -3,16 +3,7 @@ import { ComponentContainer } from '../../ComponentContainer';
 import { Checkout } from '../../Checkout';
 import PayByBankPix from '../../../../src/components/PayByBankPix';
 import { PayByBankPixConfiguration } from '../../../../src/components/PayByBankPix/types';
-import { http, HttpResponse } from 'msw';
 import SimulatedIssuer from './SimulatedIssuer';
-import {
-    mockPaymentsResponseMerchantPage,
-    mockPaymentsResponseSimulateHostedPage,
-    mockPendingStatusSimulateHostedPage,
-    mockPostEnrollmentResponse,
-    mockReceivedStatusSimulateHostedPage,
-    mockSubmitDetailsResponseSimulateHostedPage
-} from './mocks';
 import { SimulatedHostedPage } from './SimulatedHostedPage';
 import { getSearchParameter } from '../../../utils/get-query-parameters';
 
@@ -38,18 +29,6 @@ export const MerchantPage: PixBiometricStory = {
         countryCode: 'BR',
         amount: 0,
         componentConfiguration: { _isAdyenHosted: false }
-    },
-    parameters: {
-        msw: {
-            handlers: [
-                http.post('https://localhost:3020/payments', () => {
-                    return HttpResponse.json(mockPaymentsResponseMerchantPage);
-                }),
-                http.post('/details', () => {
-                    return HttpResponse.json();
-                })
-            ]
-        }
     }
 };
 
@@ -60,6 +39,7 @@ export const SimulateHostedPage: PixBiometricStory = {
         countryCode: 'BR',
         amount: 0,
         redirectResult: getSearchParameter('redirectResult'),
+        _environmentUrls: { api: 'http://localhost:8080' },
         componentConfiguration: {
             _isAdyenHosted: true,
             issuers: [
@@ -71,34 +51,6 @@ export const SimulateHostedPage: PixBiometricStory = {
             onChange: data => {
                 console.log({ data });
             }
-        }
-    },
-    parameters: {
-        msw: {
-            handlers: [
-                http.post(
-                    'https://checkoutshopper-test.adyen.com/checkoutshopper/utility/v1/pixpaybybank/redirect-result?clientKey=test_L6HTEOAXQBCZJHKNU4NLN6EI7IE6VRRW',
-                    () => {
-                        return HttpResponse.json(mockPostEnrollmentResponse);
-                    }
-                ),
-                http.post('https://localhost:3020/payments', () => {
-                    return HttpResponse.json(mockPaymentsResponseSimulateHostedPage);
-                }),
-                http.get(
-                    'https://checkoutshopper-test.adyen.com/checkoutshopper/utility/v1/pixpaybybank/registration-options/enrollment123?clientKey=test_L6HTEOAXQBCZJHKNU4NLN6EI7IE6VRRW',
-                    () => {
-                        return HttpResponse.json(
-                            getSearchParameter('pollStatus') === 'pending'
-                                ? mockPendingStatusSimulateHostedPage
-                                : mockReceivedStatusSimulateHostedPage
-                        );
-                    }
-                ),
-                http.post('/details', () => {
-                    return HttpResponse.json(mockSubmitDetailsResponseSimulateHostedPage);
-                })
-            ]
         }
     }
 };

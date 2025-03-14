@@ -2,7 +2,7 @@ const { CHECKOUT_API_KEY, CHECKOUT_URL } = require('./config');
 
 module.exports = (endpoint, request) => {
     const body = JSON.stringify(request);
-
+    console.log({ CHECKOUT_URL });
     return fetch(`${CHECKOUT_URL}/${endpoint}`, {
         method: 'POST',
         body,
