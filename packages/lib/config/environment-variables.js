@@ -11,7 +11,8 @@ function generateEnvironmentVariables(buildType = 'development', bundleType = 'e
         'process.env.BUNDLE_TYPE': JSON.stringify(bundleType),
         'process.env.NODE_ENV': JSON.stringify(buildType),
         'process.env.VERSION': JSON.stringify(packageJson.version),
-        'process.env.__SF_ENV__': JSON.stringify(env.SF_ENV || 'build')
+        'process.env.__SF_ENV__': JSON.stringify(env.SF_ENV || 'build'),
+        'process.env.CI': JSON.stringify(process.env.CI)
     };
 }
 
