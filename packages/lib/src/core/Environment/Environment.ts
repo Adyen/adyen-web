@@ -13,7 +13,9 @@ export const resolveEnvironments = (environment: CoreConfiguration['environment'
     const analyticsUrl = getUrlFromMap(environment, ANALYTICS_ENVIRONMENTS, environmentsUrls?.analytics);
     const cdnImagesUrl = getUrlFromMap(environment, CDN_ENVIRONMENTS, environmentsUrls?.cdn?.images);
     const cdnTranslationsUrl =
-        process.env.NODE_ENV === 'development' ? '/' : getUrlFromMap(environment, CDN_ENVIRONMENTS, environmentsUrls?.cdn?.translations);
+        process.env.NODE_ENV === 'development' || process.env.CI === 'true'
+            ? '/'
+            : getUrlFromMap(environment, CDN_ENVIRONMENTS, environmentsUrls?.cdn?.translations);
 
     return {
         apiUrl,
