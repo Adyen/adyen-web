@@ -21,7 +21,9 @@ export function isConfigured({ csfState, csfConfig, csfProps, csfCallbacks }: CS
     // If a recurring card
     if (csfState.numIframes === 1 && csfConfig.isCreditCardType) {
         if (csfState.type === 'card') {
-            logger.error("ERROR: Payment method with a single secured field - but 'type' has not been set to a specific card brand");
+            logger.error(
+                "ERROR: Payment method with a single secured field - but 'brands' has not been set to an array containing the specific card brand"
+            );
             return false;
         }
 
