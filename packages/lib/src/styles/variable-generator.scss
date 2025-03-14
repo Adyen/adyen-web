@@ -3,6 +3,13 @@
 @import '~@adyen/bento-design-tokens/dist/scss-map/bento/components';
 @import 'overrides';
 
+// simple re-mapping
+$color: map-merge($color, (
+        // this color has been remapped for a11y reasons
+        color-label-critical: map-get($color, color-label-on-background-critical-weak),
+        color-label-tertiary: map-get($color, color-label-secondary), // label tertiary doesn't have enough contrast
+));
+
 @function adyen-sdk-generate-css-variables($maps...) {
     $adyen-output-map: ();
 

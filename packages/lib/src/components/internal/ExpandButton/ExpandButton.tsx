@@ -14,7 +14,8 @@ interface ExpandButton {
 function ExpandButton({ buttonId, showRadioButton, isSelected, expandContentId, children, classNameModifiers = [] }: Readonly<ExpandButton>) {
     return (
         // See discussion: https://github.com/w3c/aria/issues/1404
-        // eslint-disable-next-line jsx-a11y/role-supports-aria-props
+        // this has been disabled as we got quite a few complains
+        // mainly from merchants running automated systems
         <button
             className={classNames(
                 'adyen-checkout__payment-method__header__title',
@@ -23,7 +24,7 @@ function ExpandButton({ buttonId, showRadioButton, isSelected, expandContentId, 
             id={buttonId}
             role={'radio'}
             aria-checked={isSelected}
-            aria-expanded={isSelected}
+            //aria-expanded={isSelected} - disabled for now
             aria-controls={expandContentId}
             type="button"
         >
