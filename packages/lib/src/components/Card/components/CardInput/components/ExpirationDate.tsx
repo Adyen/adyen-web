@@ -38,6 +38,8 @@ export default function ExpirationDate(props: ExpirationDateProps) {
 
     const fieldLabel = expiryDatePolicy !== DATE_POLICY_OPTIONAL ? label : `${label} ${i18n.get('field.title.optional')}`;
 
+    const imageDescription = `${fieldLabel} ${contextualText}`;
+
     return (
         <Field
             label={fieldLabel}
@@ -73,7 +75,7 @@ export default function ExpirationDate(props: ExpirationDateProps) {
                 <img
                     src={getImage({ imageFolder: 'components/' })('expiry_date_hint')}
                     className="adyen-checkout__field__exp-date_hint"
-                    alt={fieldLabel}
+                    alt={imageDescription}
                 />
             </span>
         </Field>
