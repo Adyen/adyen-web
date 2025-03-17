@@ -1,6 +1,6 @@
 import './main.css';
 import { Preview } from '@storybook/preact';
-import { DEFAULT_COUNTRY_CODE, DEFAULT_SHOPPER_LOCALE, DEFAULT_AMOUNT_VALUE, SHOPPER_LOCALES, protocol } from '../storybook/config/commonConfig';
+import { DEFAULT_COUNTRY_CODE, DEFAULT_SHOPPER_LOCALE, DEFAULT_AMOUNT_VALUE, SHOPPER_LOCALES } from '../storybook/config/commonConfig';
 import { initialize, mswLoader } from 'msw-storybook-addon';
 
 const isDev = process.env.NODE_ENV === 'development';
