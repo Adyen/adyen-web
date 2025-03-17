@@ -64,6 +64,13 @@ const configurationMock = {
 describe('ApplePay', () => {
     describe('constructor()', () => {
         test('should load the SDK and define the apple pay version/applepay web options', async () => {
+            Object.defineProperty(window, 'location', {
+                writable: true,
+                value: {
+                    protocol: 'https:'
+                }
+            });
+
             const onApplePayCodeCloseMock = jest.fn();
             new ApplePay(global.core, {
                 onApplePayCodeClose: onApplePayCodeCloseMock
