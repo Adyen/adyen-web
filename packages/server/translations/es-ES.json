@@ -322,7 +322,7 @@
     "paynow.mobileViewInstruction.step3": "Seleccione la opción de escanear un código QR.",
     "paynow.mobileViewInstruction.step4": "Elija la opción de subir un QR y seleccione la captura de pantalla.",
     "paynow.mobileViewInstruction.step5": "Complete la transacción.",
-    "payto.payid.description": "Introduzca el PayID y los detalles de la cuenta que están conectados a su cuenta Payto.",
+    "payto.payid.description": "Introduzca el PayID y los detalles de la cuenta que están conectados a su cuenta PayTo.",
     "payto.payid.label.identifier": "Identificador",
     "payto.payid.label.orgid": "ID de la organización",
     "payto.payid.option.phone": "Teléfono móvil",

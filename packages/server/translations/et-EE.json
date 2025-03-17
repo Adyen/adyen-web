@@ -325,7 +325,7 @@
     "paynow.mobileViewInstruction.step3": "Valige QR-koodi skannimise valik.",
     "paynow.mobileViewInstruction.step4": "Valige QR-koodi üleslaadimise valik ja valige kuvatõmmis.",
     "paynow.mobileViewInstruction.step5": "Viige kanne lõpule.",
-    "payto.payid.description": "Sisestage PayID ja teie Payto kontoga ühendatud konto andmed.",
+    "payto.payid.description": "Sisestage PayID ja teie PayTo kontoga ühendatud konto andmed.",
     "payto.payid.label.identifier": "Tunnus",
     "payto.payid.label.orgid": "Organisatsiooni ID",
     "payto.payid.option.phone": "Mobiil",

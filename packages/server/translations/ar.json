@@ -325,7 +325,7 @@
     "paynow.mobileViewInstruction.step3": "ابحث عن أداة قراءة رمز الاستجابة السريعة وشغلها.",
     "paynow.mobileViewInstruction.step4": "خدد خيار تحميل QR، ثم حدد لقطة الشاشة.",
     "paynow.mobileViewInstruction.step5": "أكمل المعاملة.",
-    "payto.payid.description": "أدخل معرف PayID وتفاصيل الحساب المرتبطة بحساب Payto الخاص بك.",
+    "payto.payid.description": "أدخل معرف PayID وتفاصيل الحساب المرتبطة بحساب PayTo الخاص بك.",
     "payto.payid.label.identifier": "المعرف",
     "payto.payid.label.orgid": "معرف المنظمة",
     "payto.payid.option.phone": "الهاتف المحمول",

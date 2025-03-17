@@ -58,7 +58,9 @@ describe('Testing CSFs isConfigured functionality', () => {
         expect(validateForm).not.toHaveBeenCalled();
 
         expect(res).toEqual(false);
-        expect(consoleError).toEqual("ERROR: Payment method with a single secured field - but 'type' has not been set to a specific card brand");
+        expect(consoleError).toEqual(
+            "ERROR: Payment method with a single secured field - but 'brands' has not been set to an array containing the specific card brand"
+        );
     });
 
     test('validateForm should not be called since we are dealing with a recurring card that has a cvcPolicy that equals "reguired"', () => {

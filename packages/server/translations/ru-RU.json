@@ -322,7 +322,7 @@
     "paynow.mobileViewInstruction.step3": "Выберите опцию сканирования QR-кода.",
     "paynow.mobileViewInstruction.step4": "Выберите опцию загрузки QR-кода и скриншот.",
     "paynow.mobileViewInstruction.step5": "Завершите транзакцию.",
-    "payto.payid.description": "Введите PayID и данные счета, которые связаны с вашей учетной записью Payto.",
+    "payto.payid.description": "Введите PayID и данные счета, которые связаны с вашей учетной записью PayTo.",
     "payto.payid.label.identifier": "Идентификатор",
     "payto.payid.label.orgid": "Идентификатор организации",
     "payto.payid.option.phone": "Мобильный",
