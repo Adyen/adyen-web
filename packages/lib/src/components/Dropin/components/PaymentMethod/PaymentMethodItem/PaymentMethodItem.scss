@@ -76,7 +76,7 @@
 }
 
 .adyen-checkout__payment-method__surcharge {
-    color: token(color-outline-tertiary);
+    color: token(color-label-secondary);
     margin-left: token(spacer-020);
 }
 
@@ -133,7 +133,7 @@
     overflow: hidden;
 
     & .adyen-checkout__payment-method__brand-number {
-        color: token(color-outline-tertiary);
+        color: token(color-label-secondary);
         font-size: token(text-body-font-size);
     }
 }
