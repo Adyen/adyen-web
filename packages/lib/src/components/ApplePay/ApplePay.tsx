@@ -160,6 +160,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
      * @private
      */
     private defineApplePayVersionNumber() {
+        if (window.location.protocol !== 'https:') return;
         this.applePayVersionNumber = this.props.version || resolveSupportedVersion(LATEST_APPLE_PAY_VERSION);
     }
 
