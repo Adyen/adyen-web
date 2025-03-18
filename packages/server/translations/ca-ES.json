@@ -325,7 +325,7 @@
     "paynow.mobileViewInstruction.step3": "Seleccioneu l'opció d'escanejar un codi QR.",
     "paynow.mobileViewInstruction.step4": "Trieu l'opció per carregar un QR i seleccioneu la captura de pantalla.",
     "paynow.mobileViewInstruction.step5": "Completeu la transacció.",
-    "payto.payid.description": "Introduïu el PayID i les dades del compte que estan connectades al vostre compte Payto.",
+    "payto.payid.description": "Introduïu el PayID i les dades del compte que estan connectades al vostre compte PayTo.",
     "payto.payid.label.identifier": "Identificador",
     "payto.payid.label.orgid": "Identificació de l'organització",
     "payto.payid.option.phone": "Mòbil",
@@ -353,5 +353,6 @@
     "payto.mandate.frequency.yearly": "%{count} pagament(s) anual(s)",
     "payto.label.firstName": "Nom del titular del compte",
     "payto.label.lastName": "Cognom del titular del compte",
-    "payto.await.waitForConfirmation": "Esperant la vostra aprovació"
+    "payto.await.waitForConfirmation": "Esperant la vostra aprovació",
+    "payto.bsb.option.label": "BSB i número de compte"
 }

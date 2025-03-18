@@ -1,4 +1,4 @@
-import { Order, OrderStatus, PaymentActionsType, PaymentAmount } from '../../types/global-types';
+import type { Order, OrderStatus, PaymentActionsType, PaymentAmount, StoredPaymentMethod } from '../../types/global-types';
 import type { UIElementProps, UIElementStatus } from '../internal/UIElement/types';
 import type { NewableComponent } from '../../core/core.registry';
 import type { ICore } from '../../core/types';
@@ -101,6 +101,12 @@ export interface DropinConfiguration extends UIElementProps {
      * Callback triggered once the Drop-in is ready to be used
      */
     onReady?(): void;
+
+    /**
+     * Callback triggered before Drop-in creates the stored payment method UIElements.
+     * This callback lets you choose which saved payment methods appear in the Drop-in.
+     */
+    filterStoredPaymentMethods?(storedPaymentMethods: StoredPaymentMethod[]): StoredPaymentMethod[];
 
     /**
      * Callback triggered once the shopper selects a different payment method in the Drop-in

@@ -102,6 +102,7 @@
     "boleto.sendCopyToEmail": "Stuur een kopie naar mijn e-mailadres",
     "button.copy": "Kopiëren",
     "button.download": "Downloaden",
+    "boleto.socialSecurityNumber": "CPF/CNPJ",
     "boleto.socialSecurityNumber.invalid": "Voer een geldig CPF/CNPJ-nummer in",
     "creditCard.storedCard.description.ariaLabel": "Opgeslagen kaart eindigt op %@",
     "voucher.entity": "Entiteit",
@@ -323,7 +324,7 @@
     "paynow.mobileViewInstruction.step3": "Selecteer de optie om een QR-code te scannen.",
     "paynow.mobileViewInstruction.step4": "Kies de optie om een QR-code te uploaden en selecteer de schermafbeelding.",
     "paynow.mobileViewInstruction.step5": "Voltooi de transactie.",
-    "payto.payid.description": "Voer de PayID en accountgegevens in die gekoppeld zijn aan uw Payto-account.",
+    "payto.payid.description": "Voer de PayID en accountgegevens in die gekoppeld zijn aan uw PayTo-account.",
     "payto.payid.label.identifier": "Identificator",
     "payto.payid.label.orgid": "Organisatie-ID",
     "payto.payid.option.phone": "Mobiele telefoon",
@@ -351,5 +352,6 @@
     "payto.mandate.frequency.yearly": "%{count} betaling(en) per jaar",
     "payto.label.firstName": "Voornaam rekeninghouder",
     "payto.label.lastName": "Achternaam rekeninghouder",
-    "payto.await.waitForConfirmation": "In afwachting van uw goedkeuring"
+    "payto.await.waitForConfirmation": "In afwachting van uw goedkeuring",
+    "payto.bsb.option.label": "BSB- en rekeningnummer"
 }

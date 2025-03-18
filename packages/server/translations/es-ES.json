@@ -102,6 +102,7 @@
     "boleto.sendCopyToEmail": "Enviar copia a mi correo electrónico",
     "button.copy": "Copiar",
     "button.download": "Descargar",
+    "boleto.socialSecurityNumber": "CPF/CNPJ",
     "boleto.socialSecurityNumber.invalid": "Introduzca un número CPF/CNPJ válido",
     "creditCard.storedCard.description.ariaLabel": "La tarjeta almacenada termina en %@",
     "voucher.entity": "Entidad",
@@ -321,7 +322,7 @@
     "paynow.mobileViewInstruction.step3": "Seleccione la opción de escanear un código QR.",
     "paynow.mobileViewInstruction.step4": "Elija la opción de subir un QR y seleccione la captura de pantalla.",
     "paynow.mobileViewInstruction.step5": "Complete la transacción.",
-    "payto.payid.description": "Introduzca el PayID y los detalles de la cuenta que están conectados a su cuenta Payto.",
+    "payto.payid.description": "Introduzca el PayID y los detalles de la cuenta que están conectados a su cuenta PayTo.",
     "payto.payid.label.identifier": "Identificador",
     "payto.payid.label.orgid": "ID de la organización",
     "payto.payid.option.phone": "Teléfono móvil",
@@ -349,5 +350,6 @@
     "payto.mandate.frequency.yearly": "%{count} pago(s) anualmente",
     "payto.label.firstName": "Nombre del titular de la cuenta",
     "payto.label.lastName": "Apellidos del titular de la cuenta",
-    "payto.await.waitForConfirmation": "Esperando su aprobación"
+    "payto.await.waitForConfirmation": "Esperando su aprobación",
+    "payto.bsb.option.label": "BSB y número de cuenta"
 }
