@@ -72,7 +72,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         return {
             paymentMethod: { type: TxVariants.paybybank_pix, ...this.state.data },
             // Always store the payment method for the enrollment flow.
-            ...(isEnrollment ? { storePaymentMethod: true } : {})
+            ...(isEnrollment ? { storePaymentMethod: true, deviceId: this.state.deviceId } : {})
         };
     }
 
@@ -88,8 +88,8 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
             if (!data.issuer) {
                 return;
             }
-            const riskSignals = await this.passkeyService.captureRiskSignalsEnrollment();
-            this.setState({ ...payload, data: { ...data, riskSignals } });
+            const { deviceId, ...riskSignals } = await this.passkeyService.captureRiskSignalsEnrollment();
+            this.setState({ ...payload, data: { ...data, riskSignals, deviceId } });
         } catch (error) {
             const errorMsg = error instanceof Error ? error.message : 'Unknown error in the onIssuerSelected';
             this.handleError(error instanceof AdyenCheckoutError ? error : new AdyenCheckoutError(ERROR, errorMsg));
