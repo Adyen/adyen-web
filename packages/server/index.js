@@ -65,7 +65,9 @@ module.exports = (app = express(), options = {}) => {
     app.all('/sdk/:adyenWebVersion/translations/:locale.json', (req, res) => getTranslation(res, req));
 
     if (options.listen) {
-        const port = process.env.PORT || 3030;
+        // If Express is hosting Storybook, we use the default port 3020.
+        // If Express is being used as server to make HTTP requests along with Storybook server, we use port 3030
+        const port = options.shouldHostStorybook ? 3020 : 3030;
 
         isHttps
             ? https.createServer({ key, cert }, app).listen(port, () => {
