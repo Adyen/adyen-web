@@ -173,19 +173,22 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <SRPanelProvider srPanel={this.props.modules.srPanel}>
                     {this.props.storedPaymentMethodId != null ? (
-                        <Payment
-                            txVariant={PayByBankPixElement.type}
-                            type={this.props.type}
-                            clientKey={this.props.clientKey}
-                            amount={this.props.amount}
-                            issuer={this.props.issuer}
-                            receiver={this.props.receiver}
-                            enrollmentId={this.props.enrollmentId}
-                            initiationId={this.props.initiationId}
-                            setComponentRef={this.setComponentRef}
-                            onPay={this.payWithStoredPayment}
-                            onAuthorize={this.authorizePayment}
-                        />
+                        this.passkeyService.captureRiskSignalsAuthentication().then(() => (
+                            // Render payment when the stored deviceId matches with the deviceId from the server
+                            <Payment
+                                txVariant={PayByBankPixElement.type}
+                                type={this.props.type}
+                                clientKey={this.props.clientKey}
+                                amount={this.props.amount}
+                                issuer={this.props.issuer}
+                                receiver={this.props.receiver}
+                                enrollmentId={this.props.enrollmentId}
+                                initiationId={this.props.initiationId}
+                                setComponentRef={this.setComponentRef}
+                                onPay={this.payWithStoredPayment}
+                                onAuthorize={this.authorizePayment}
+                            />
+                        ))
                     ) : (
                         <Enrollment
                             onError={this.handleError}
