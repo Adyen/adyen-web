@@ -325,7 +325,7 @@
     "paynow.mobileViewInstruction.step3": "Veldu valkostinn til að skanna QR-kóða.",
     "paynow.mobileViewInstruction.step4": "Veldu valkostinn til að hlaða upp QR-kóða og veldu skjámyndina.",
     "paynow.mobileViewInstruction.step5": "Ljúktu færslunni.",
-    "payto.payid.description": "Sláðu inn PayID og reikningsupplýsingar sem eru tengjast Payto-reikningnum þínum.",
+    "payto.payid.description": "Sláðu inn PayID og reikningsupplýsingar sem eru tengjast PayTo-reikningnum þínum.",
     "payto.payid.label.identifier": "Auðkenni",
     "payto.payid.label.orgid": "Auðkenni fyrirtækis",
     "payto.payid.option.phone": "Farsími",
@@ -353,5 +353,18 @@
     "payto.mandate.frequency.yearly": "%{count} greiðsla/greiðslur árlega",
     "payto.label.firstName": "Fornafn reikningshafa",
     "payto.label.lastName": "Eftirnafn reikningshafa",
-    "payto.await.waitForConfirmation": "Bíður samþykkis"
+    "payto.await.waitForConfirmation": "Bíður samþykkis",
+    "payto.bsb.option.label": "Bankanúmer banka og reikningsnúmer",
+    "card.fastlane.a11y.logo": "Lógó fyrir Fastlane by Paypal",
+    "card.fastlane.a11y.openDialog": "Lesa meira um Fastlane",
+    "card.fastlane.a11y.closeDialog": "Loka glugga",
+    "card.fastlane.mobileInputLabel": "Farsímanúmer",
+    "card.fastlane.consentToggle": "Vistaðu upplýsingarnar þínar hjá Fastlane til að greiða hraðar",
+    "card.fastlane.consentText": "Með því að vista upplýsingarnar þínar samþykkir þú að fá kóða með textaskilaboðum til að nota Fastlane þar sem það er í boði. Þú samþykkir einnig %#skilmála%# og %#persónuverndaryfirlýsingu%#.",
+    "card.fastlane.modal.benefit1.header": "Sjálfvirk útfylling þegar þú greiðir",
+    "card.fastlane.modal.benefit1.text": "Fáðu einnota kóða til að nota kort og heimilisföng sem þú hefur vistað.",
+    "card.fastlane.modal.benefit2.header": "Verndaðu upplýsingar þínar",
+    "card.fastlane.modal.benefit2.text": "Greiðsluupplýsingar þínar eru dulkóðaðar þegar þær eru geymdar og sendar á staði sem þú verslar á.",
+    "card.fastlane.modal.benefit3.header": "Notað í öllum verslunum",
+    "card.fastlane.modal.benefit3.text": "Hraðaðu þér í gegnum afgreiðsluferlið alls staðar þar sem Fastlane er í boði."
 }

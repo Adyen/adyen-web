@@ -325,7 +325,7 @@
     "paynow.mobileViewInstruction.step3": "Selecione a opção para ler um código QR.",
     "paynow.mobileViewInstruction.step4": "Escolha a opção para carregar um QR e selecione a captura de ecrã.",
     "paynow.mobileViewInstruction.step5": "Conclua a transação.",
-    "payto.payid.description": "Introduza o PayID e os dados da conta que estão ligados à sua conta Payto.",
+    "payto.payid.description": "Introduza o PayID e os dados da conta que estão ligados à sua conta PayTo.",
     "payto.payid.label.identifier": "Identificador",
     "payto.payid.label.orgid": "ID da Organização",
     "payto.payid.option.phone": "Celular",
@@ -353,5 +353,18 @@
     "payto.mandate.frequency.yearly": "%{count} pagamentos anuais",
     "payto.label.firstName": "Nome próprio do titular da conta",
     "payto.label.lastName": "Sobrenome do titular da conta",
-    "payto.await.waitForConfirmation": "Aguardando sua aprovação"
+    "payto.await.waitForConfirmation": "Aguardando sua aprovação",
+    "payto.bsb.option.label": "Número BSB e número da conta",
+    "card.fastlane.a11y.logo": "Logótipo Fastlane by Paypal",
+    "card.fastlane.a11y.openDialog": "Leia mais sobre Fastlane",
+    "card.fastlane.a11y.closeDialog": "Fechar caixa de diálogo",
+    "card.fastlane.mobileInputLabel": "Número de telemóvel",
+    "card.fastlane.consentToggle": "Guarde as suas informações com o Fastlane para finalizar compras mais rapidamente",
+    "card.fastlane.consentText": "Ao guardar as suas informações, aceita receber códigos por mensagem para utilizar o Fastlane sempre que estiver disponível. Também aceita os %#termos%# e a %#declaração de privacidade%#.",
+    "card.fastlane.modal.benefit1.header": "Preencha automaticamente as finalizações de compras",
+    "card.fastlane.modal.benefit1.text": "Receba códigos únicos para usar o cartão e as moradas que guardou.",
+    "card.fastlane.modal.benefit2.header": "Proteja as suas informações",
+    "card.fastlane.modal.benefit2.text": "As suas informações de pagamento são encriptadas quando são armazenadas e enviadas para os locais onde faz compras.",
+    "card.fastlane.modal.benefit3.header": "Utilize em todas as lojas",
+    "card.fastlane.modal.benefit3.text": "Acelere o processo de finalização de compra em todos os locais onde o Fastlane está disponível."
 }

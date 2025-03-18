@@ -325,7 +325,7 @@
     "paynow.mobileViewInstruction.step3": "Atlasiet opciju skenēt QR kodu.",
     "paynow.mobileViewInstruction.step4": "Izvēlieties opciju augšupielādēt QR kodu un veiciet ekrānuzņēmumu.",
     "paynow.mobileViewInstruction.step5": "Pabeidziet darījumu.",
-    "payto.payid.description": "Ievadiet PayID un konta informāciju, kas ir savienota ar Jūsu Payto kontu.",
+    "payto.payid.description": "Ievadiet PayID un konta informāciju, kas ir savienota ar Jūsu PayTo kontu.",
     "payto.payid.label.identifier": "Identifikators",
     "payto.payid.label.orgid": "Organizācijas ID",
     "payto.payid.option.phone": "Mobilais",
@@ -353,5 +353,18 @@
     "payto.mandate.frequency.yearly": "%{count} maksājums(-i) gadā",
     "payto.label.firstName": "Konta īpašnieka vārds",
     "payto.label.lastName": "Konta īpašnieka uzvārds",
-    "payto.await.waitForConfirmation": "Gaida jūsu apstiprinājumu"
+    "payto.await.waitForConfirmation": "Gaida jūsu apstiprinājumu",
+    "payto.bsb.option.label": "BSB un konta numurs",
+    "card.fastlane.a11y.logo": "Fastlane ar Paypal logotipu",
+    "card.fastlane.a11y.openDialog": "Lasīt vairāk par Fastlane",
+    "card.fastlane.a11y.closeDialog": "Aizvērt dialoglodziņu",
+    "card.fastlane.mobileInputLabel": "Mobilais tālruņa numurs",
+    "card.fastlane.consentToggle": "Saglabājiet savu informāciju ar Fastlane, lai ātrāk veiktu norēķinus",
+    "card.fastlane.consentText": "Saglabājot savu informāciju, jūs piekrītat saņemt kodus īsziņā, lai izmantotu Fastlane visur, kur tas ir pieejams. Jūs arī piekrītat %#terms%# un %#privātuma paziņojumam%#.",
+    "card.fastlane.modal.benefit1.header": "Automātiski aizpildiet savas norēķināšanās",
+    "card.fastlane.modal.benefit1.text": "Iegūstiet vienreizējus kodus, lai izmantotu saglabātās kartes un adreses.",
+    "card.fastlane.modal.benefit2.header": "Aizsargājiet savu informāciju",
+    "card.fastlane.modal.benefit2.text": "Jūsu maksājuma informācija tiek šifrēta, kad tā tiek saglabāta un nosūtīta uz vietām, kur iepērkaties.",
+    "card.fastlane.modal.benefit3.header": "Izmantojiet visos veikalos",
+    "card.fastlane.modal.benefit3.text": "Ātri veiciet norēķinus visur, kur pieejams Fastlane."
 }

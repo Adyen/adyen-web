@@ -325,7 +325,7 @@
     "paynow.mobileViewInstruction.step3": "Pasirinkite QR kodo nuskaitymo parinktį.",
     "paynow.mobileViewInstruction.step4": "Pasirinkite parinktį įkelti QR kodą ir pasirinkite ekrano nuotrauką.",
     "paynow.mobileViewInstruction.step5": "Užbaikite operaciją.",
-    "payto.payid.description": "Įveskite „PayID“ ir sąskaitos duomenis, susietus su jūsų „Payto“ sąskaita.",
+    "payto.payid.description": "Įveskite „PayID“ ir sąskaitos duomenis, susietus su jūsų „PayTo“ sąskaita.",
     "payto.payid.label.identifier": "Identifikatorius",
     "payto.payid.label.orgid": "Organizacijos identifikatorius",
     "payto.payid.option.phone": "Mobilusis telefonas",
@@ -353,5 +353,18 @@
     "payto.mandate.frequency.yearly": "%{count} mokėjimas (-ai; -ų) kas metus",
     "payto.label.firstName": "Sąskaitos turėtojo vardas",
     "payto.label.lastName": "Sąskaitos turėtojo pavardė",
-    "payto.await.waitForConfirmation": "Laukiama jūsų patvirtinimo"
+    "payto.await.waitForConfirmation": "Laukiama jūsų patvirtinimo",
+    "payto.bsb.option.label": "BSB ir sąskaitos numeris",
+    "card.fastlane.a11y.logo": "„Fastlane by Paypal“ logotipas",
+    "card.fastlane.a11y.openDialog": "Skaitykite daugiau apie „Fastlane“",
+    "card.fastlane.a11y.closeDialog": "Uždaryti dialogo langą",
+    "card.fastlane.mobileInputLabel": "Mobiliojo telefono numeris",
+    "card.fastlane.consentToggle": "Išsaugokite savo informaciją „Fastlane“, kad greičiau atsiskaitytumėte",
+    "card.fastlane.consentText": "Išsaugodami savo informaciją, sutinkate gauti kodus teksto žinute, kad galėtumėte naudotis „Fastlane“ visur, kur ši paslauga prieinama. Taip pat sutinkate su dokumentais %#sąlygos%# ir %#privatumo pareiškimas%#.",
+    "card.fastlane.modal.benefit1.header": "Automatinis informacijos pildymas atsiskaitant",
+    "card.fastlane.modal.benefit1.text": "Gaukite vienkartinius kodus, kad galėtumėte naudoti išsaugotą kortelę ir adresus.",
+    "card.fastlane.modal.benefit2.header": "Informacijos apsauga",
+    "card.fastlane.modal.benefit2.text": "Jūsų mokėjimo informacija, kai ji saugoma ir siunčiama į vietas, kuriose apsiperkate, yra šifruojama.",
+    "card.fastlane.modal.benefit3.header": "Galimybė naudoti visose parduotuvėse",
+    "card.fastlane.modal.benefit3.text": "Atsiskaitykite greičiau visur, kur galima naudotis „Fastlane“."
 }

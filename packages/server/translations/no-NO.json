@@ -102,6 +102,7 @@
     "boleto.sendCopyToEmail": "Send meg en kopi på e-post",
     "button.copy": "Kopier",
     "button.download": "Last ned",
+    "boleto.socialSecurityNumber": "CPF/CNPJ",
     "boleto.socialSecurityNumber.invalid": "Skriv inn et gyldig CPF/CNPJ-nummer",
     "creditCard.storedCard.description.ariaLabel": "Lagret kort slutter på %@",
     "voucher.entity": "Enhet",
@@ -351,5 +352,18 @@
     "payto.mandate.frequency.yearly": "%{count} betaling(er) per år",
     "payto.label.firstName": "Kontoinnehaverens fornavn",
     "payto.label.lastName": "Kontoinnehaverens etternavn",
-    "payto.await.waitForConfirmation": "Venter på godkjenningen din"
+    "payto.await.waitForConfirmation": "Venter på godkjenningen din",
+    "payto.bsb.option.label": "BSB- og kontonummer",
+    "card.fastlane.a11y.logo": "Fastlane by Paypal-logo",
+    "card.fastlane.a11y.openDialog": "Les mer om Fastlane",
+    "card.fastlane.a11y.closeDialog": "Lukk dialogboksen",
+    "card.fastlane.mobileInputLabel": "Mobilnummer",
+    "card.fastlane.consentToggle": "Lagre informasjonen din med Fastlane for raskere betaling",
+    "card.fastlane.consentText": "Ved å lagre informasjonen din godtar du å få koder via tekstmelding, slik at du kan bruke Fastlane overalt der det er tilgjengelig. Du godtar også %#terms%# and %#privacy statement%#.",
+    "card.fastlane.modal.benefit1.header": "Fyll ut betalinger automatisk",
+    "card.fastlane.modal.benefit1.text": "Få engangskoder for å bruke kort og adresser du har lagret.",
+    "card.fastlane.modal.benefit2.header": "Beskytt informasjonen din",
+    "card.fastlane.modal.benefit2.text": "Betalingsinformasjonen din er kryptert når den lagres og sendes til butikkene der du handler.",
+    "card.fastlane.modal.benefit3.header": "Bruk i mange butikker",
+    "card.fastlane.modal.benefit3.text": "Gå raskt gjennom betalingen overalt der Fastlane er tilgjengelig."
 }
