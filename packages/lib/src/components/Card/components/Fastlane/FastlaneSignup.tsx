@@ -115,7 +115,6 @@ const FastlaneSignup = ({
         onSubmitAnalytics({
             type: ANALYTICS_EVENT.info,
             infoType: InfoEventTypes.rendered,
-            target: '',
             configData: {
                 isFastlaneSignupRendered: shouldDisplaySignup
             }
