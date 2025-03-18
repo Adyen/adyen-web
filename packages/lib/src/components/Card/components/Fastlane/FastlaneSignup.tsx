@@ -1,5 +1,5 @@
 import { Fragment, h } from 'preact';
-import { useEffect, useMemo, useState } from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import cx from 'classnames';
 import Toggle from '../../../internal/Toggle';
 import Img from '../../../internal/Img';
@@ -8,15 +8,18 @@ import USOnlyPhoneInput from './USOnlyPhoneInput';
 import { InfoButton } from './InfoButton';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { LabelOnlyDisclaimerMessage } from '../../../internal/DisclaimerMessage/DisclaimerMessage';
-import type { FastlaneSignupConfiguration } from '../../../PayPalFastlane/types';
 import { isConfigurationValid } from './utils/validate-configuration';
+import mobileNumberFormatter from './utils/mobile-number-formatter';
+import { ANALYTICS_EVENT, InfoEventTypes } from '../../../../core/Analytics/constants';
+import type { FastlaneSignupConfiguration } from '../../../PayPalFastlane/types';
+import type { SendAnalyticsObject } from '../../../../core/Analytics/types';
 
 import './FastlaneSignup.scss';
-import mobileNumberFormatter from './utils/mobile-number-formatter';
 
 type FastlaneSignupProps = FastlaneSignupConfiguration & {
     currentDetectedBrand: string;
     onChange(state: any): void;
+    onSubmitAnalytics(event: SendAnalyticsObject): void;
 };
 
 const SUPPORTED_BRANDS = ['mc', 'visa'];
@@ -30,15 +33,15 @@ const FastlaneSignup = ({
     fastlaneSessionId,
     currentDetectedBrand,
     telephoneNumber: telephoneNumberFromProps,
-    onChange
+    onChange,
+    onSubmitAnalytics
 }: FastlaneSignupProps) => {
-    const displaySignup = useMemo(() => showConsent && SUPPORTED_BRANDS.includes(currentDetectedBrand), [showConsent, currentDetectedBrand]);
-    const [consentShown, setConsentShown] = useState<boolean>(displaySignup);
+    const shouldDisplaySignup = useMemo(() => showConsent && SUPPORTED_BRANDS.includes(currentDetectedBrand), [showConsent, currentDetectedBrand]);
+    const [hasConsentFormBeenShown, setHasConsentFormBeenShown] = useState<boolean>(shouldDisplaySignup);
     const [isChecked, setIsChecked] = useState<boolean>(defaultToggleState);
     const getImage = useImage();
     const [telephoneNumber, setTelephoneNumber] = useState<string>('');
     const { i18n } = useCoreContext();
-
     const isFastlaneConfigurationValid = useMemo(() => {
         return isConfigurationValid({
             showConsent,
@@ -49,6 +52,20 @@ const FastlaneSignup = ({
             fastlaneSessionId
         });
     }, [showConsent, defaultToggleState, termsAndConditionsLink, privacyPolicyLink, termsAndConditionsVersion, fastlaneSessionId]);
+
+    const handleToggleChange = useCallback(() => {
+        const newValue = !isChecked;
+        setIsChecked(newValue);
+
+        onSubmitAnalytics({
+            type: ANALYTICS_EVENT.info,
+            infoType: InfoEventTypes.clicked,
+            target: 'fastlane_signup_consent_toggle',
+            configData: {
+                isToggleOn: newValue
+            }
+        });
+    }, [isChecked, onSubmitAnalytics]);
 
     /**
      * If the configuration is valid, the Component propagates fastlaneData to the Card component state
@@ -63,16 +80,16 @@ const FastlaneSignup = ({
 
         onChange({
             fastlaneData: {
-                consentShown,
+                consentShown: hasConsentFormBeenShown,
                 fastlaneSessionId: fastlaneSessionId,
-                consentGiven: displaySignup ? isChecked : false,
+                consentGiven: shouldDisplaySignup ? isChecked : false,
                 ...(termsAndConditionsVersion && { consentVersion: termsAndConditionsVersion }),
                 ...(telephoneNumber && { telephoneNumber })
             }
         });
     }, [
-        displaySignup,
-        consentShown,
+        shouldDisplaySignup,
+        hasConsentFormBeenShown,
         termsAndConditionsVersion,
         isChecked,
         fastlaneSessionId,
@@ -82,13 +99,29 @@ const FastlaneSignup = ({
     ]);
 
     /**
-     * If the sign-up has been displayed at least once, we set consentShown: true
+     * If the sign-up has been displayed at least once, we set hasConsentFormBeenShown: true
      */
     useEffect(() => {
-        if (displaySignup) setConsentShown(true);
-    }, [displaySignup]);
+        if (shouldDisplaySignup) {
+            setHasConsentFormBeenShown(true);
+        }
+    }, [shouldDisplaySignup]);
 
-    if (!displaySignup || !isFastlaneConfigurationValid) {
+    useEffect(() => {
+        if (!isFastlaneConfigurationValid) {
+            return;
+        }
+
+        onSubmitAnalytics({
+            type: ANALYTICS_EVENT.info,
+            infoType: InfoEventTypes.rendered,
+            configData: {
+                isFastlaneSignupRendered: shouldDisplaySignup
+            }
+        });
+    }, [shouldDisplaySignup, isFastlaneConfigurationValid, onSubmitAnalytics]);
+
+    if (!shouldDisplaySignup || !isFastlaneConfigurationValid) {
         return null;
     }
 
@@ -101,7 +134,7 @@ const FastlaneSignup = ({
             >
                 <Toggle
                     checked={isChecked}
-                    onChange={setIsChecked}
+                    onChange={handleToggleChange}
                     ariaLabel={i18n.get('card.fastlane.consentToggle')}
                     label={
                         <Fragment>

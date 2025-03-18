@@ -69,6 +69,7 @@ export interface AnalyticsObject {
     component: string;
     id: string;
     code?: string;
+    infoType?: string;
     errorType?: string;
     message?: string;
     type?: string;
@@ -171,4 +172,9 @@ export type CardConfigData = {
     hasOnFocus: boolean;
     hasOnLoad: boolean;
     hasOnEnterKeyPressed: boolean;
+    /**
+     * Fastlane
+     */
+    hasFastlaneConfigured?: boolean;
+    isFastlaneConsentDefaultOn?: boolean;
 };

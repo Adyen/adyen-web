@@ -352,6 +352,7 @@ export class CardElement extends UIElement<CardConfiguration> {
                 setComponentRef={this.setComponentRef}
                 {...this.props}
                 {...this.state}
+                onSubmitAnalytics={this.submitAnalytics}
                 onChange={this.setState}
                 onSubmit={this.submit}
                 handleKeyPress={this.handleKeyPress}
