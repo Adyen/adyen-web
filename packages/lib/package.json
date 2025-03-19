@@ -65,6 +65,7 @@
     "build:types": "tsc --emitDeclarationOnly && node scripts/add-type-references.cjs",
     "docs:generate": "typedoc --out docs src --exclude \"**/*+(index|.test).ts\"",
     "start:storybook": "node .storybook/run.cjs",
+    "start:storybook:e2e": "cross-env DISABLE_MSW=true node .storybook/run.cjs",
     "build:storybook": "storybook build --disable-telemetry",
     "test": "jest --config config/jest.config.cjs",
     "test:watch": "npm run test -- --watchAll",

@@ -36,8 +36,13 @@ const config: StorybookConfig = {
     staticDirs: ['../storybook/assets', '../storybook/public'],
 
     viteFinal(config) {
+        const disableMsw = process.env.NODE_ENV === 'production' || !!process.env.DISABLE_MSW;
+
         const finalConfig = mergeConfig(config, {
-            define: generateEnvironmentVariables(process.env.NODE_ENV),
+            define: {
+                'process.env.DISABLE_MSW': JSON.stringify(disableMsw.toString()),
+                ...generateEnvironmentVariables(process.env.NODE_ENV)
+            },
 
             resolve: {
                 alias: [
