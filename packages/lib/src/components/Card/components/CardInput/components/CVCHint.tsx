@@ -20,7 +20,6 @@ export default function CVCHint({ frontCVC = false, fieldLabel, onClick }: CVCHi
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
                 aria-hidden={!frontCVC}
-                aria-describedby={'adyen-checkout__cvc__front-hint-img'}
                 role={'img'}
             >
                 <title id={'adyen-checkout__cvc__front-hint-img'}>{fieldLabel}</title>
@@ -41,7 +40,6 @@ export default function CVCHint({ frontCVC = false, fieldLabel, onClick }: CVCHi
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
                 aria-hidden={!!frontCVC}
-                aria-describedby={'adyen-checkout__cvc__back-hint-img'}
                 role={'img'}
             >
                 <title id={'adyen-checkout__cvc__back-hint-img'}>{fieldLabel}</title>

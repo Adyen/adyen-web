@@ -42,6 +42,8 @@ export default function ExpirationDate(props: ExpirationDateProps) {
         onFocusField(ENCRYPTED_EXPIRY_DATE);
     };
 
+    const imageDescription = `${fieldLabel} ${contextualText}`;
+
     return (
         <Field
             label={fieldLabel}
@@ -78,7 +80,7 @@ export default function ExpirationDate(props: ExpirationDateProps) {
                 <img
                     src={getImage({ imageFolder: 'components/' })('expiry_date_hint')}
                     className="adyen-checkout__field__exp-date_hint"
-                    alt={fieldLabel}
+                    alt={imageDescription}
                     onClick={handleIconClick}
                 />
             </span>

@@ -29,7 +29,7 @@ test.describe('Test Card, & binLookup w/o panLength property', () => {
 });
 
 test.describe('Test Card, & binLookup w. panLength property', () => {
-    test('#1 Fill out PAN and see maxLength is not set on cardNumber SF, and that focus moves to expiryDate', async ({ card }) => {
+    test('#1 Fill out PAN and see maxLength is set on cardNumber SF, and that focus moves to expiryDate', async ({ card }) => {
         await card.goto(URL_MAP.card);
 
         await card.isComponentVisible();
@@ -40,11 +40,11 @@ test.describe('Test Card, & binLookup w. panLength property', () => {
         await expect(card.cardNumberInput).not.toBeFocused();
         await expect(card.expiryDateInput).toBeFocused();
 
-        // Expect iframe to exist in number field with maxlength attr kept to 24, since we know mitigate against binLookup having incorrect panLength values
+        // Expect iframe to exist in number field with maxlength attr set to 19
         let panInputMaxLength = await card.cardNumberInput.getAttribute('maxlength');
-        expect(panInputMaxLength).toEqual('24');
+        expect(panInputMaxLength).toEqual('19');
 
-        // Delete number and see that the maxlength is kept on the iframe
+        // Delete number and see that the maxlength is reset on the iframe
         await card.deleteCardNumber();
         panInputMaxLength = await card.cardNumberInput.getAttribute('maxlength');
 
@@ -180,7 +180,7 @@ test.describe('Test Card, & binLookup w. panLength property', () => {
         }
     );
 
-    test('#8 Fill out PAN with Visa num that binLookup says has a panLength of 16 - you should then be able to type more digits in the card number field', async ({
+    test('#8 Fill out PAN with Visa num that binLookup says has a panLength of 16 - you should not then be able to type more digits in the card number field', async ({
         card
     }) => {
         await card.goto(URL_MAP.card);
@@ -189,12 +189,12 @@ test.describe('Test Card, & binLookup w. panLength property', () => {
 
         await card.typeCardNumber(CARD_WITH_PAN_LENGTH);
 
-        // Should be able to add more digits to the PAN
+        // Should not be able to add more digits to the PAN
         await card.cardNumberInput.press('End'); /** NOTE: how to add text at end */
         await card.typeCardNumber('6');
 
-        // Confirm PAN value has had chars added
+        // Confirm PAN value has not had chars added
         let val = await card.cardNumberInput.inputValue();
-        expect(val).toEqual('4000 6200 0000 0007 6');
+        expect(val).toEqual('4000 6200 0000 0007');
     });
 });
