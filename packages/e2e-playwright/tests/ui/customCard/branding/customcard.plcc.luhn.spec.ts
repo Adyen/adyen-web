@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test } from '../../../../fixtures/base-fixture';
 
 const getPropFromStateValid = prop => {
     return globalThis.securedFields.state.valid[prop];

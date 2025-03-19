@@ -1,4 +1,4 @@
-import { test as base, expect } from '@playwright/test';
+import { test as base, expect } from '../../../fixtures/base-fixture';
 import { binLookupMock } from '../../../mocks/binLookup/binLookup.mock';
 import { optionalDateAndCvcWithPanLengthMock } from '../../../mocks/binLookup/binLookup.data';
 import { REGULAR_TEST_CARD } from '../../utils/constants';

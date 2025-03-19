@@ -1,4 +1,4 @@
-import { test as base, expect, Page } from '@playwright/test';
+import { test as base, expect } from './base-fixture';
 import { Redirect } from '../models/redirect';
 import { URL_MAP } from './URL_MAP';
 

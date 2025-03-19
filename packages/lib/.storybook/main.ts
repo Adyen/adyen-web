@@ -37,7 +37,7 @@ const config: StorybookConfig = {
 
     viteFinal(config) {
         const finalConfig = mergeConfig(config, {
-            define: { ...generateEnvironmentVariables(process.env.NODE_ENV), 'process.env.NETLIFY': JSON.stringify(process.env.NETLIFY) },
+            define: generateEnvironmentVariables(process.env.NODE_ENV),
 
             resolve: {
                 alias: [

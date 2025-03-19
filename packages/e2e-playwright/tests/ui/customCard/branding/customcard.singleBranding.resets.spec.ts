@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test } from '../../../../fixtures/base-fixture';
 
 const singleBrandingIconHolder = '.secured-fields .pm-image';
 const dualBrandingIconHolder = '.secured-fields .pm-image-dual';
