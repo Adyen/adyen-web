@@ -3,11 +3,14 @@ import { Preview } from '@storybook/preact';
 import { DEFAULT_COUNTRY_CODE, DEFAULT_SHOPPER_LOCALE, DEFAULT_AMOUNT_VALUE, SHOPPER_LOCALES } from '../storybook/config/commonConfig';
 import { initialize, mswLoader } from 'msw-storybook-addon';
 
-const isDev = process.env.NODE_ENV === 'development';
-if (isDev) {
+const disableMsw = process.env.DISABLE_MSW === 'true';
+
+let loaders = {};
+
+if (!disableMsw) {
     initialize({ onUnhandledRequest: 'bypass' });
+    loaders = { loaders: [mswLoader] };
 }
-const loaders = isDev ? { loaders: [mswLoader] } : {};
 
 const preview: Preview = {
     argTypes: {
