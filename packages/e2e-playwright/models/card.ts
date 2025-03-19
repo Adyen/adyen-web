@@ -16,6 +16,8 @@ const CVC_IFRAME_LABEL = LANG['creditCard.securityCode.label'];
 const INSTALLMENTS_PAYMENTS = LANG['installments.installments'];
 const REVOLVING_PAYMENT = LANG['installments.revolving'];
 
+const EXPIRY_DATE_ICON_ALT_TEXT = `${LANG['creditCard.expiryDate.label']} ${LANG['creditCard.expiryDate.contextualText']}`;
+
 class Card extends Base {
     readonly rootElement: Locator;
     readonly rootElementSelector: string;
@@ -220,6 +222,14 @@ class Card extends Base {
 
     async selectListItem(who: string) {
         return this.selectorList.locator(`#listItem-${who}`);
+    }
+
+    async selectDateIcon() {
+        await this.expiryDateField.getByAltText(EXPIRY_DATE_ICON_ALT_TEXT).click();
+    }
+
+    async selectCVCIcon() {
+        await this.cvcField.locator('.adyen-checkout__card__cvc__hint__wrapper').click();
     }
 }
 
