@@ -1,7 +1,8 @@
-import { test as base, expect, mergeTests } from '@playwright/test';
+import { test as base, expect } from './base-fixture';
 import { test as card } from './card.fixture';
 import { DropinWithSession } from '../models/dropinWithSession';
 import { Dropin } from '../models/dropin';
+import { mergeTests } from '@playwright/test';
 
 type Fixture = {
     dropin: Dropin;

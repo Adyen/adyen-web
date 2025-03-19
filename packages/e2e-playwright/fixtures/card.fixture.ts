@@ -1,4 +1,4 @@
-import { test as base, expect } from '@playwright/test';
+import { test as base, expect } from './base-fixture';
 import { Card } from '../models/card';
 import { BCMC } from '../models/bcmc';
 import { URL_MAP } from './URL_MAP';

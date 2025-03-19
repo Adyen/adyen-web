@@ -1,6 +1,7 @@
-import { test as base, mergeTests, expect } from '@playwright/test';
+import { test as base, expect } from '../../../../../fixtures/base-fixture';
 import { DropinWithSession } from '../../../../../models/dropinWithSession';
 import { test as card } from '../../../../../fixtures/card.fixture';
+import { mergeTests } from '@playwright/test';
 
 class DropinWithCard extends DropinWithSession {
     get card() {
