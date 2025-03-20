@@ -31,7 +31,8 @@ export const SimulatedHostedPage = ({ redirectResult, sessionId, componentConfig
         void AdyenCheckout({
             clientKey: process.env.CLIENT_KEY,
             // @ts-ignore CLIENT_ENV has valid value
-            environment: process.env.CLIENT_ENV,
+            environment: 'localhost',
+            _environmentUrls: { api: 'http://192.168.16.128:8080/' },
             countryCode: checkoutConfig.countryCode,
             ...(sessionId && { session: { id: sessionId, countryCode: checkoutConfig.countryCode } }),
             // Advanced flow

@@ -22,7 +22,7 @@ export class PasskeyService implements IPasskeyService {
         return this.passkeyServiceConfig.deviceId;
     }
 
-    public static async getWebAuthnUnsupportedReason(): Promise<string> {
+    public async getWebAuthnUnsupportedReason(): Promise<string> {
         if (!window.PublicKeyCredential) {
             return 'Browser does not support webauthn';
         }
