@@ -12,6 +12,7 @@ import { authorizePayment } from './services/authorizePayment';
 import Payment from './components/Payment';
 import Enrollment from './components/Enrollment';
 import { PaymentAction } from '../../types/global-types';
+import type { ICore } from '../../core/types';
 
 //todo: remove
 const hasRedirectResult = (): boolean => {
@@ -22,13 +23,18 @@ const hasRedirectResult = (): boolean => {
 class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
     public static type = TxVariants.paybybank_pix;
     private static TIMEOUT_MINUTES = 1;
-    private passkeyService: PasskeyService;
+    private readonly passkeyService: PasskeyService;
 
     public static defaultProps: PayByBankPixConfiguration = {
         showPayButton: true,
         _isAdyenHosted: window.location.hostname.endsWith('adyen.com') || hasRedirectResult(), // todo: remove hasRedirectResult
         countdownTime: PayByBankPixElement.TIMEOUT_MINUTES
     };
+
+    constructor(checkout: ICore, props?: PayByBankPixConfiguration) {
+        super(checkout, props);
+        this.passkeyService = new PasskeyService({ environment: this.props.environment, deviceId: this.props.deviceId });
+    }
 
     get isValid(): boolean {
         // Always true for non-hosted page or stored payment
@@ -42,7 +48,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
      * Method used to let the merchant know if the shopper's device supports WebAuthn APIs: https://featuredetect.passkeys.dev/
      */
     public override async isAvailable(): Promise<void> {
-        const unsupportedReason = await PasskeyService.getWebAuthnUnsupportedReason();
+        const unsupportedReason = await this.passkeyService.getWebAuthnUnsupportedReason();
         if (unsupportedReason) {
             // todo: send to analytics
             return Promise.reject(new AdyenCheckoutError(ERROR, unsupportedReason));
@@ -50,8 +56,9 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         if (!this.props._isAdyenHosted) {
             return Promise.resolve();
         }
+
         try {
-            this.passkeyService = await new PasskeyService({ environment: this.props.environment, deviceId: this.props.deviceId }).initialize();
+            await this.passkeyService.initialize();
             return Promise.resolve();
         } catch (error) {
             this.handleError(
@@ -72,7 +79,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         return {
             paymentMethod: { type: TxVariants.paybybank_pix, ...this.state.data },
             // Always store the payment method for the enrollment flow.
-            ...(isEnrollment ? { storePaymentMethod: true, deviceId: this.state.deviceId } : {})
+            ...(isEnrollment ? { storePaymentMethod: true } : {})
         };
     }
 
@@ -88,6 +95,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
             if (!data.issuer) {
                 return;
             }
+
             const { deviceId, ...riskSignals } = await this.passkeyService.captureRiskSignalsEnrollment();
             this.setState({ ...payload, data: { ...data, riskSignals, deviceId } });
         } catch (error) {
@@ -121,7 +129,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
      */
     private payWithStoredPayment = () => {
         try {
-            this.setState({ data: { storedPaymentMethodId: this.props.storedPaymentMethodId } });
+            this.state = { ...this.state, ...{ data: { storedPaymentMethodId: this.props.storedPaymentMethodId } } };
             super.submit();
         } catch (error) {
             const errorMsg = error instanceof Error ? error.message : 'Unknown error in the payWithStoredPayment';
