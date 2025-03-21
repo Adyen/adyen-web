@@ -89,7 +89,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
      * The second one is to poll the enrollment eligibility - we poll the server to get the enrollment challenge in the `getEnrollmentStatus` function.
      * The third one is in the `authorizeEnrollment` function - we create passkeys and authorize the enrollment with shopper's passkey.
      */
-    private onIssuerSelected = async payload => {
+    private readonly onIssuerSelected = async payload => {
         try {
             const { data = {} } = payload;
             if (!data.issuer) {
@@ -104,7 +104,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         }
     };
 
-    private authorizeEnrollment = async (registrationOptions: string): Promise<void> => {
+    private readonly authorizeEnrollment = async (registrationOptions: string): Promise<void> => {
         try {
             const fidoAssertion = await this.passkeyService.createCredentialForEnrollment(registrationOptions); // Create passkey and trigger biometrics
             const enrollment = { enrollmentId: this.props.enrollmentId, fidoAssertion };
@@ -127,7 +127,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
      * The second one is to poll the authorization options - we poll the server to get the challenge in the `getAuthorizationStatus` function.
      * The third one is in the `authorizePayment` function - we authorize the payment with shopper's passkey.
      */
-    private payWithStoredPayment = () => {
+    private readonly payWithStoredPayment = () => {
         try {
             this.state = { ...this.state, ...{ data: { storedPaymentMethodId: this.props.storedPaymentMethodId } } };
             super.submit();
@@ -137,7 +137,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         }
     };
 
-    private authorizePayment = async (authenticationOptions: string): Promise<void> => {
+    private readonly authorizePayment = async (authenticationOptions: string): Promise<void> => {
         try {
             const riskSignals = await this.passkeyService.captureRiskSignalsAuthentication();
             const fidoAssertion = await this.passkeyService.authenticateWithCredential(authenticationOptions);
