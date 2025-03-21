@@ -370,5 +370,5 @@
     "paybybankpix.payment.paymentDate.label": "Payment date",
     "paybybankpix.payment.paymentMethod.label": "Payment method",
     "paybybankpix.storedPayment.payButton.label": "Continue payment",
-    "paybybankpix.await.fetchDetails": "Fetching details.."
+    "paybybankpix.await.fetchDetails": "Fetching details..."
 }

@@ -12,6 +12,7 @@ import { authorizePayment } from './services/authorizePayment';
 import Payment from './components/Payment';
 import Enrollment from './components/Enrollment';
 import { PaymentAction } from '../../types/global-types';
+import type { ICore } from '../../core/types';
 
 //todo: remove
 const hasRedirectResult = (): boolean => {
@@ -22,13 +23,18 @@ const hasRedirectResult = (): boolean => {
 class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
     public static type = TxVariants.paybybank_pix;
     private static TIMEOUT_MINUTES = 1;
-    private passkeyService: PasskeyService;
+    private readonly passkeyService: PasskeyService;
 
     public static defaultProps: PayByBankPixConfiguration = {
         showPayButton: true,
         _isAdyenHosted: window.location.hostname.endsWith('adyen.com') || hasRedirectResult(), // todo: remove hasRedirectResult
         countdownTime: PayByBankPixElement.TIMEOUT_MINUTES
     };
+
+    constructor(checkout: ICore, props?: PayByBankPixConfiguration) {
+        super(checkout, props);
+        this.passkeyService = new PasskeyService({ environment: this.props.environment, deviceId: this.props.deviceId });
+    }
 
     get isValid(): boolean {
         // Always true for non-hosted page or stored payment
@@ -42,7 +48,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
      * Method used to let the merchant know if the shopper's device supports WebAuthn APIs: https://featuredetect.passkeys.dev/
      */
     public override async isAvailable(): Promise<void> {
-        const unsupportedReason = await PasskeyService.getWebAuthnUnsupportedReason();
+        const unsupportedReason = await this.passkeyService.getWebAuthnUnsupportedReason();
         if (unsupportedReason) {
             // todo: send to analytics
             return Promise.reject(new AdyenCheckoutError(ERROR, unsupportedReason));
@@ -50,8 +56,9 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         if (!this.props._isAdyenHosted) {
             return Promise.resolve();
         }
+
         try {
-            this.passkeyService = await new PasskeyService({ environment: this.props.environment, deviceId: this.props.deviceId }).initialize();
+            await this.passkeyService.initialize();
             return Promise.resolve();
         } catch (error) {
             this.handleError(
@@ -82,21 +89,22 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
      * The second one is to poll the enrollment eligibility - we poll the server to get the enrollment challenge in the `getEnrollmentStatus` function.
      * The third one is in the `authorizeEnrollment` function - we create passkeys and authorize the enrollment with shopper's passkey.
      */
-    private onIssuerSelected = async payload => {
+    private readonly onIssuerSelected = async payload => {
         try {
             const { data = {} } = payload;
             if (!data.issuer) {
                 return;
             }
-            const riskSignals = await this.passkeyService.captureRiskSignalsEnrollment();
-            this.setState({ ...payload, data: { ...data, riskSignals } });
+
+            const { deviceId, ...riskSignals } = await this.passkeyService.captureRiskSignalsEnrollment();
+            this.setState({ ...payload, data: { ...data, riskSignals, deviceId } });
         } catch (error) {
             const errorMsg = error instanceof Error ? error.message : 'Unknown error in the onIssuerSelected';
             this.handleError(error instanceof AdyenCheckoutError ? error : new AdyenCheckoutError(ERROR, errorMsg));
         }
     };
 
-    private authorizeEnrollment = async (registrationOptions: string): Promise<void> => {
+    private readonly authorizeEnrollment = async (registrationOptions: string): Promise<void> => {
         try {
             const fidoAssertion = await this.passkeyService.createCredentialForEnrollment(registrationOptions); // Create passkey and trigger biometrics
             const enrollment = { enrollmentId: this.props.enrollmentId, fidoAssertion };
@@ -119,9 +127,9 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
      * The second one is to poll the authorization options - we poll the server to get the challenge in the `getAuthorizationStatus` function.
      * The third one is in the `authorizePayment` function - we authorize the payment with shopper's passkey.
      */
-    private payWithStoredPayment = () => {
+    private readonly payWithStoredPayment = () => {
         try {
-            this.setState({ data: { storedPaymentMethodId: this.props.storedPaymentMethodId } });
+            this.state = { ...this.state, ...{ data: { storedPaymentMethodId: this.props.storedPaymentMethodId } } };
             super.submit();
         } catch (error) {
             const errorMsg = error instanceof Error ? error.message : 'Unknown error in the payWithStoredPayment';
@@ -129,7 +137,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         }
     };
 
-    private authorizePayment = async (authenticationOptions: string): Promise<void> => {
+    private readonly authorizePayment = async (authenticationOptions: string): Promise<void> => {
         try {
             const riskSignals = await this.passkeyService.captureRiskSignalsAuthentication();
             const fidoAssertion = await this.passkeyService.authenticateWithCredential(authenticationOptions);
