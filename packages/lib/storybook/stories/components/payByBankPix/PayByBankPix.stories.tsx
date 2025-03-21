@@ -35,19 +35,21 @@ export const MerchantPage: PixBiometricStory = {
 export const SimulateHostedPage: PixBiometricStory = {
     render: props => <SimulatedHostedPage {...props} />,
     args: {
-        useSessions: false,
+        useSessions: true,
         countryCode: 'BR',
         amount: 0,
+        sessionData: {
+            recurringProcessingModel: 'CardOnFile',
+            shopperInteraction: 'ContAuth',
+            shopperName: {
+                firstName: 'Leonardo',
+                lastName: 'Silva'
+            }
+        },
         redirectResult: getSearchParameter('redirectResult'),
         _environmentUrls: { api: 'http://localhost:8080' },
         componentConfiguration: {
             _isAdyenHosted: true,
-            issuers: [
-                {
-                    id: '0b919e9b-bee0-4549-baa3-bb6d003575ce',
-                    name: 'Iniciador Mock Bank'
-                }
-            ],
             onChange: data => {
                 console.log({ data });
             }
