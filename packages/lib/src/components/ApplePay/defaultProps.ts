@@ -1,5 +1,4 @@
 import { ApplePayConfiguration } from './types';
-import { inIframe } from '../../utils/inIframe';
 
 const defaultProps: ApplePayConfiguration = {
     isExpress: false,
@@ -10,7 +9,6 @@ const defaultProps: ApplePayConfiguration = {
     supportedNetworks: ['amex', 'discover', 'masterCard', 'visa'],
     buttonType: 'plain',
     buttonColor: 'black',
-    renderApplePayCodeAs: inIframe() ? 'window' : 'modal',
     onClick: resolve => resolve()
 };
 
