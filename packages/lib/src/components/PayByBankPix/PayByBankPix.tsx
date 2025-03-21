@@ -14,12 +14,6 @@ import Enrollment from './components/Enrollment';
 import { PaymentAction } from '../../types/global-types';
 import type { ICore } from '../../core/types';
 
-//todo: remove
-const hasRedirectResult = (): boolean => {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('redirectResult') != null;
-};
-
 class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
     public static type = TxVariants.paybybank_pix;
     private static TIMEOUT_MINUTES = 1;
@@ -27,7 +21,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
 
     public static defaultProps: PayByBankPixConfiguration = {
         showPayButton: true,
-        _isAdyenHosted: window.location.hostname.endsWith('adyen.com') || hasRedirectResult(), // todo: remove hasRedirectResult
+        _isAdyenHosted: window.location.hostname.endsWith('adyen.com'),
         countdownTime: PayByBankPixElement.TIMEOUT_MINUTES
     };
 
