@@ -50,10 +50,22 @@ async function createAdvancedFlowCheckout({
 
         onSubmit: async (state, component, actions) => {
             try {
+                const enrollment =
+                    paymentAmount.value === 0
+                        ? {
+                              recurringProcessingModel: 'CardOnFile',
+                              shopperInteraction: 'ContAuth',
+                              shopperName: {
+                                  firstName: 'Yu',
+                                  lastName: 'Long'
+                              }
+                          }
+                        : {};
                 const paymentData = {
                     amount: paymentAmount,
                     countryCode,
-                    shopperLocale
+                    shopperLocale,
+                    ...enrollment
                 };
 
                 const { action, order, resultCode, donationToken } = await makePayment(state.data, paymentData);

@@ -35,7 +35,7 @@ export const MerchantPage: PixBiometricStory = {
 export const SimulateHostedPage: PixBiometricStory = {
     render: props => <SimulatedHostedPage {...props} />,
     args: {
-        useSessions: true,
+        useSessions: false,
         countryCode: 'BR',
         amount: 0,
         sessionData: {
@@ -47,7 +47,7 @@ export const SimulateHostedPage: PixBiometricStory = {
             }
         },
         redirectResult: getSearchParameter('redirectResult'),
-        _environmentUrls: { api: 'http://localhost:8080' },
+        _environmentUrls: { api: 'http://192.168.16.128:8080/' },
         componentConfiguration: {
             _isAdyenHosted: true,
             onChange: data => {
