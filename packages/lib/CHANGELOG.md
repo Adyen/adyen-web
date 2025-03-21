@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 6.11.0
+
+### Minor Changes
+
+- Allow typing to continue in cardNumber field after panLength result from binLookup ([#3198](https://github.com/Adyen/adyen-web/pull/3198))
+
 ## 6.10.0
 
 ### Minor Changes
