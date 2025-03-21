@@ -2,7 +2,7 @@ import { h } from 'preact';
 import classNames from 'classnames';
 import { CVCHintProps } from './types';
 
-export default function CVCHint({ frontCVC = false, fieldLabel }: CVCHintProps) {
+export default function CVCHint({ frontCVC = false, fieldLabel, onClick }: CVCHintProps) {
     const hintClassnames = classNames({
         'adyen-checkout__card__cvc__hint__wrapper': true,
         'adyen-checkout__field__cvc--front-hint': !!frontCVC,
@@ -10,7 +10,8 @@ export default function CVCHint({ frontCVC = false, fieldLabel }: CVCHintProps) 
     });
 
     return (
-        <span className={hintClassnames}>
+        // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
+        <span className={hintClassnames} onClick={onClick}>
             <svg
                 className={'adyen-checkout__card__cvc__hint adyen-checkout__card__cvc__hint--front'}
                 width="27"
