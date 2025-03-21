@@ -15,6 +15,7 @@ import { resolveSupportedVersion } from './utils/resolve-supported-version';
 import { formatApplePayContactToAdyenAddressFormat } from './utils/format-applepay-contact-to-adyen-format';
 import { mapBrands } from './utils/map-adyen-brands-to-applepay-brands';
 import ApplePaySdkLoader from './services/ApplePaySdkLoader';
+import { detectInIframe } from '../../utils/detectInIframe';
 
 import type { SendAnalyticsObject } from '../../core/Analytics/types';
 import type { ApplePayConfiguration, ApplePayElementData, ApplePayPaymentOrderDetails, ApplePaySessionRequest } from './types';
@@ -73,7 +74,8 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             configuration: props.configuration,
             supportedNetworks,
             buttonLocale: props.buttonLocale ?? props.i18n?.locale,
-            totalPriceLabel: props.totalPriceLabel || props.configuration?.merchantName
+            totalPriceLabel: props.totalPriceLabel || props.configuration?.merchantName,
+            renderApplePayCodeAs: detectInIframe() ? 'window' : 'modal'
         };
     }
 
