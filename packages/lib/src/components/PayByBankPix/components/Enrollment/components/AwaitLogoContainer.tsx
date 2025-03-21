@@ -11,7 +11,7 @@ export interface IAwaitLogoContainer {
     logos: Logo[];
 }
 
-function AwaitLogoContainer({ logos }: IAwaitLogoContainer) {
+function AwaitLogoContainer({ logos }: Readonly<IAwaitLogoContainer>) {
     return (
         <div className={'adyen-checkout-await-logo-container'}>
             {logos.map(logo => (

@@ -9,7 +9,7 @@ export interface IPasskeySdkLoader {
 }
 
 class PasskeySdkLoader implements IPasskeySdkLoader {
-    private static PASSKEY_SDK_URL = 'js/adyenpasskey/1.0.0/adyen-passkey.js';
+    private static readonly PASSKEY_SDK_URL = 'js/adyenpasskey/1.0.0/adyen-passkey.js';
     private AdyenPasskey: null;
 
     private isAvailable(): boolean {

@@ -2,6 +2,8 @@
 @import 'styles/variable-generator';
 
 .adyen-checkout__voucher-result--paybybank_pix {
+    background-color: token(color-background-primary);
+
     .adyen-checkout__voucher-result__top {
         border: none;
         padding: token(spacer-000);
