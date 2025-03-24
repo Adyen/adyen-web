@@ -66,7 +66,8 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
     /**
      * Formats the component props
      */
-    protected override formatProps(props): ApplePayConfiguration {
+    protected override formatProps(props: ApplePayConfiguration): ApplePayConfiguration {
+        // @ts-ignore TODO: Fix brands prop
         const supportedNetworks = props.brands?.length ? mapBrands(props.brands) : props.supportedNetworks;
 
         return {
@@ -75,7 +76,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             supportedNetworks,
             buttonLocale: props.buttonLocale ?? props.i18n?.locale,
             totalPriceLabel: props.totalPriceLabel || props.configuration?.merchantName,
-            renderApplePayCodeAs: detectInIframe() ? 'window' : 'modal'
+            renderApplePayCodeAs: props.renderApplePayCodeAs ?? (detectInIframe() ? 'window' : 'modal')
         };
     }
 
