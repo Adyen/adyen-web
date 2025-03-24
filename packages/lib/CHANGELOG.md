@@ -1,5 +1,15 @@
 # @adyen/adyen-web
 
+## 6.11.0
+
+### Minor Changes
+
+- Allow typing to continue in cardNumber field after panLength result from binLookup ([#3198](https://github.com/Adyen/adyen-web/pull/3198))
+
+### Patch Changes
+
+- Apple Pay - Fixed issue where its iframe detection code crashes server side rendered apps ([#3204](https://github.com/Adyen/adyen-web/pull/3204))
+
 ## 6.10.0
 
 ### Minor Changes
