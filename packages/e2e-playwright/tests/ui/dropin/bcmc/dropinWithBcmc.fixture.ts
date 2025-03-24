@@ -1,8 +1,7 @@
 import { test as base, expect } from '../../../../fixtures/base-fixture';
 import { DropinWithSession } from '../../../../models/dropinWithSession';
-import { test as card } from '../../../../fixtures/card.fixture';
-import { mergeTests } from '@playwright/test';
 
+// TODO: check this model/fixture
 class DropinWithBcmc extends DropinWithSession {
     get bcmc() {
         return super.getPaymentMethodLabelByType('bcmc');
@@ -17,13 +16,11 @@ type Fixture = {
     dropinWithBcmc: DropinWithBcmc;
 };
 
-const dropin = base.extend<Fixture>({
+const test = base.extend<Fixture>({
     dropinWithBcmc: async ({ page }, use) => {
         const dropin = new DropinWithBcmc(page);
         await use(dropin);
     }
 });
-
-const test = mergeTests(card, dropin);
 
 export { test, expect };

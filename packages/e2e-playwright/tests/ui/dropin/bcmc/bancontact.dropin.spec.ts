@@ -1,8 +1,9 @@
 import { test, expect } from './dropinWithBcmc.fixture';
 import { URL_MAP } from '../../../../fixtures/URL_MAP';
+import { BCMC } from '../../../../models/bcmc';
 
 test.describe('Bcmc in dropin', () => {
-    test('UI looks as expected with no user interaction', async ({ dropinWithBcmc, bcmc }) => {
+    test('UI looks as expected with no user interaction', async ({ dropinWithBcmc, page }) => {
         const expectedAltAttributes = ['Bancontact card', 'MasterCard', 'VISA', 'Maestro'];
 
         await dropinWithBcmc.goto(URL_MAP.dropinWithSession_BCMC_noStoredPms);
@@ -17,8 +18,9 @@ test.describe('Bcmc in dropin', () => {
             expect(img).toHaveAttribute('alt', expectedAltAttributes[index]);
         });
 
-        await dropinWithBcmc.selectPaymentMethod('bcmc');
+        const { paymentMethodDetailsLocator } = await dropinWithBcmc.selectNonStoredPaymentMethod('bcmc');
 
+        const bcmc = new BCMC(page, paymentMethodDetailsLocator);
         await bcmc.isComponentVisible();
 
         await bcmc.waitForVisibleBrands(1);

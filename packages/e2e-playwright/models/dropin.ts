@@ -42,21 +42,49 @@ class Dropin extends Base {
         return this.pmList.locator(`.adyen-checkout__payment-method:has-text("${pmLabel}")`);
     }
 
-    // Non stored payment methods
-    async selectPaymentMethod(pmType: string) {
+    /**
+     * Clicks in the payment method item header, and returns the Locator of its content
+     *
+     * @param pmType tx variant
+     */
+    async selectNonStoredPaymentMethod(pmType: string): Promise<{ paymentMethodDetailsLocator: Locator }> {
         const pmLabel = this.paymentMethods.find((pm: { type: string }) => pm.type === pmType).name;
-        this.page.locator('.adyen-checkout__payment-methods-list--otherPayments').getByRole('radio', { name: pmLabel }).check();
+
+        const paymentMethodHeaderLocator = this.page
+            .locator('.adyen-checkout__payment-methods-list--otherPayments')
+            .getByRole('radio', { name: pmLabel });
+
+        await paymentMethodHeaderLocator.check();
+
+        const paymentMethodDetailsLocator = paymentMethodHeaderLocator
+            .locator('..')
+            .locator('..')
+            .locator(':scope > .adyen-checkout-pm-details-wrapper');
+
+        // const html = await paymentMethodDetailsLocator.innerHTML();
+        // console.log(html);
+
+        return { paymentMethodDetailsLocator };
     }
 
     // Stored payment methods
-    async selectFirstStoredPaymentMethod(pmType: string, lastFour?: string) {
+    async selectFirstStoredPaymentMethod(pmType: string, lastFour?: string): Promise<{ paymentMethodDetailsLocator: Locator }> {
         const pmLabel = this.paymentMethods.find((pm: { type: string }) => pm.type === pmType)?.name;
-        await this.page
+
+        const paymentMethodHeaderLocator = await this.page
             .locator('.adyen-checkout__payment-method')
             .filter({ has: this.page.getByRole('img', { name: pmLabel ?? pmType }) }) // filter the payment methods which have the correct logo
             .getByRole('radio', { name: lastFour, exact: false })
-            .first()
-            .click();
+            .first();
+
+        await paymentMethodHeaderLocator.click();
+
+        const paymentMethodDetailsLocator = paymentMethodHeaderLocator
+            .locator('..')
+            .locator('..')
+            .locator(':scope > .adyen-checkout-pm-details-wrapper');
+
+        return { paymentMethodDetailsLocator };
     }
 
     async saveDetails() {
