@@ -10,6 +10,8 @@
 
 - Apple Pay - Fixed issue where its iframe detection code crashes server side rendered apps ([#3204](https://github.com/Adyen/adyen-web/pull/3204))
 
+- Card - Fixed issue where clicking on the input field icons were not causing the respective input field to be focused ([#3197](https://github.com/Adyen/adyen-web/pull/3197))
+
 ## 6.10.0
 
 ### Minor Changes
