@@ -18,7 +18,7 @@ test('#1 Test that after an unsupported card has been entered we see errors, PAS
     await card.isComponentVisible();
 
     // Fill unsupported card
-    await card.fillCardNumber(VISA_CARD);
+    await card.typeCardNumber(VISA_CARD);
     await page.waitForTimeout(100);
 
     await card.typeExpiryDate(TEST_DATE_VALUE);
@@ -28,7 +28,7 @@ test('#1 Test that after an unsupported card has been entered we see errors, PAS
     await expect(card.cardNumberErrorElement).toHaveText(PAN_ERROR_NOT_SUPPORTED);
 
     // "Paste" number that is supported
-    await card.fillCardNumber(REGULAR_TEST_CARD);
+    await card.typeCardNumber(REGULAR_TEST_CARD);
     await page.waitForTimeout(100);
 
     // If correct events have fired expect the card to not have errors

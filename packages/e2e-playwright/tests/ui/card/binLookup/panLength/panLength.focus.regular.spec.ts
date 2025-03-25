@@ -190,6 +190,7 @@ test.describe('Test Card, & binLookup w. panLength property', () => {
         await card.typeCardNumber(CARD_WITH_PAN_LENGTH);
 
         // Should be able to add more digits to the PAN
+        await card.cardNumberInput.focus();
         await card.cardNumberInput.press('End'); /** NOTE: how to add text at end */
         await card.typeCardNumber('6');
 
