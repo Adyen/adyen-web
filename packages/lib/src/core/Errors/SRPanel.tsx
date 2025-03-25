@@ -19,7 +19,7 @@ export class SRPanel extends BaseElement<SRPanelProps> {
         showPanel: false,
         id: 'ariaLiveSRPanel',
         ariaAttributes: {
-            'aria-relevant': 'all',
+            'aria-relevant': 'additions',
             'aria-live': 'polite',
             'aria-atomic': 'true'
         }
@@ -104,11 +104,9 @@ export class SRPanel extends BaseElement<SRPanelProps> {
         return (
             <div
                 className={this.showPanel ? 'adyen-checkout-sr-panel' : 'adyen-checkout-sr-panel--sr-only'}
-                role={'log'}
-                {...this.props.ariaAttributes}
                 {...(process.env.NODE_ENV !== 'production' && { 'data-testid': this.id })}
             >
-                <SRMessages setComponentRef={this.setComponentRef} />
+                <SRMessages setComponentRef={this.setComponentRef} customAria={this.props.ariaAttributes} />
             </div>
         );
     }
