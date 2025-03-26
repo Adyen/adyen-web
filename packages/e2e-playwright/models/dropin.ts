@@ -59,13 +59,16 @@ class Dropin extends Base {
         await this.isComponentVisible();
     }
 
-    getPaymentMethodLabelByType(pmType: string) {
-        const pmLabel = this.paymentMethods.find((pm: { type: string }) => pm.type === pmType).name;
-        return this.pmList.locator(`.adyen-checkout__payment-method:has-text("${pmLabel}")`);
-    }
-
+    /**
+     * Returns PaymentMethodHeader which manages the Drop-in payment method list item UI
+     */
     getPaymentMethodHeader(paymentMethodLabel: string): PaymentMethodHeader {
-        const locator = this.rootElement.locator(`.adyen-checkout__payment-method:has-text("${paymentMethodLabel}")`);
+        const locator = this.rootElement
+            .locator('.adyen-checkout__payment-method')
+            .getByRole('radio', { name: paymentMethodLabel })
+            .locator('..')
+            .locator('..');
+
         return new PaymentMethodHeader(locator);
     }
 
