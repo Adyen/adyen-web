@@ -82,7 +82,7 @@
     "size": "npm run build && size-limit"
   },
   "devDependencies": {
-    "@adyen/bento-design-tokens": "1.10.0",
+    "@adyen/bento-design-tokens": "1.37.0",
     "@eslint/compat": "1.2.7",
     "@eslint/js": "9.17.0",
     "@preact/preset-vite": "2.10.1",
