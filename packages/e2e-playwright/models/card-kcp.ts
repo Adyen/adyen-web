@@ -3,12 +3,16 @@ import { type Locator, Page } from '@playwright/test';
 import { USER_TYPE_DELAY } from '../tests/utils/constants';
 
 class CardWithKCP extends Card {
-    constructor(page: Page) {
-        super(page);
+    constructor(
+        public readonly page: Page,
+        public readonly rootElementSelector?: Locator | string
+    ) {
+        super(page, rootElementSelector);
     }
 
-    get cardNumberKoreanBrand() {
-        return this.rootElement.getByAltText('korean_local_card');
+    public async isKoreanBrandVisibleOnPanField(): Promise<boolean> {
+        const text = await this.brandingIcon.getAttribute('alt');
+        return text === 'korean_local_card';
     }
 
     get taxNumberInput() {

@@ -6,11 +6,10 @@ import LANG from '../../../../../server/translations/en-US.json';
 
 const PAN_ERROR_NOT_SUPPORTED = LANG['cc.num.903'];
 
-test('#1 Test that after an unsupported card has been entered we see errors, PASTING in a full supported card clears errors & makes it possible to pay', async ({
+test('#1 Test that after an unsupported card has been entered we see errors, then typing in a full supported card clears errors & makes it possible to pay', async ({
     card,
     page
 }) => {
-    //
     const componentConfig = { brands: ['mc'] };
 
     await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
@@ -18,7 +17,7 @@ test('#1 Test that after an unsupported card has been entered we see errors, PAS
     await card.isComponentVisible();
 
     // Fill unsupported card
-    await card.fillCardNumber(VISA_CARD);
+    await card.typeCardNumber(VISA_CARD);
     await page.waitForTimeout(100);
 
     await card.typeExpiryDate(TEST_DATE_VALUE);
@@ -27,8 +26,10 @@ test('#1 Test that after an unsupported card has been entered we see errors, PAS
     await expect(card.cardNumberErrorElement).toBeVisible();
     await expect(card.cardNumberErrorElement).toHaveText(PAN_ERROR_NOT_SUPPORTED);
 
+    await card.deleteCardNumber();
+
     // "Paste" number that is supported
-    await card.fillCardNumber(REGULAR_TEST_CARD);
+    await card.typeCardNumber(REGULAR_TEST_CARD);
     await page.waitForTimeout(100);
 
     // If correct events have fired expect the card to not have errors
@@ -40,7 +41,7 @@ test('#1 Test that after an unsupported card has been entered we see errors, PAS
 });
 
 test(
-    '#2 Enter number of unsupported card, ' + 'then check UI shows an error ' + 'then PASTE card not in db & check UI error is cleared',
+    '#2 Enter number of unsupported card, ' + 'then check UI shows an error ' + 'then type card not in db & check UI error is cleared',
     async ({ card, page }) => {
         const componentConfig = { brands: ['mc'] };
 
@@ -49,7 +50,7 @@ test(
         await card.isComponentVisible();
 
         // Fill unsupported card
-        await card.fillCardNumber(VISA_CARD);
+        await card.typeCardNumber(VISA_CARD);
         await page.waitForTimeout(100);
 
         await card.typeExpiryDate(TEST_DATE_VALUE);
@@ -58,8 +59,9 @@ test(
         await expect(card.cardNumberErrorElement).toBeVisible();
         await expect(card.cardNumberErrorElement).toHaveText(PAN_ERROR_NOT_SUPPORTED);
 
-        // "Paste" number that is unknown
-        await card.fillCardNumber(UNKNOWN_BIN_CARD);
+        await card.deleteCardNumber();
+
+        await card.typeCardNumber(UNKNOWN_BIN_CARD);
         await page.waitForTimeout(100);
 
         // If correct events have fired expect the card to not have errors
@@ -77,7 +79,7 @@ test(
         await card.isComponentVisible();
 
         // Fill unsupported card
-        await card.fillCardNumber(VISA_CARD);
+        await card.typeCardNumber(VISA_CARD);
         await page.waitForTimeout(100);
 
         await expect(card.cardNumberErrorElement).toBeVisible();
