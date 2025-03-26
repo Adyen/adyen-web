@@ -11,6 +11,8 @@ test.describe('Dropin - Card brands displayed in the Payment Method List and und
         await dropinWithSession.goto(URL_MAP.dropinWithSession);
 
         const header = await dropinWithSession.getPaymentMethodHeader('Cards');
+        await header.rootElement.scrollIntoViewIfNeeded();
+
         const brands = await header.getVisibleCardBrands();
         expect(brands).toHaveLength(3);
 
@@ -42,6 +44,8 @@ test.describe('Dropin - Card brands displayed in the Payment Method List and und
         await dropinWithSession.goto(getStoryUrl({ baseUrl: URL_MAP.dropinWithSession, componentConfig: dropinConfig }));
 
         const header = await dropinWithSession.getPaymentMethodHeader('Cards');
+        await header.rootElement.scrollIntoViewIfNeeded();
+
         const brands = await header.getVisibleCardBrands();
         expect(brands).toHaveLength(3);
 
