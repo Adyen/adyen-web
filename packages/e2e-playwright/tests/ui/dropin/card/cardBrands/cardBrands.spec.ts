@@ -7,7 +7,7 @@ import { Card } from '../../../../../models/card';
 dotenv.config();
 const apiVersion = Number(process.env.API_VERSION.substring(1));
 
-const CARD_HEADER_LABEL = apiVersion <= 69 ? 'Credit Card' : 'Cards';
+const CARD_HEADER_LABEL = apiVersion <= 70 ? 'Credit Card' : 'Cards';
 
 test.describe('Dropin - Card brands displayed in the Payment Method List and underneath the PAN field', () => {
     test('should display the 3 logos and left over amount of brands, and then display all available brands under the PAN field', async ({

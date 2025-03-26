@@ -54,7 +54,7 @@ class Card extends Base {
 
     constructor(
         public readonly page: Page,
-        public readonly rootElementSelector: Locator | string
+        public readonly rootElementSelector?: Locator | string
     ) {
         super(page);
         const selector = rootElementSelector ?? '.adyen-checkout__card-input';
