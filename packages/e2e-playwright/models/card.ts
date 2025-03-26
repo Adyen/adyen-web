@@ -20,7 +20,6 @@ const EXPIRY_DATE_ICON_ALT_TEXT = `${LANG['creditCard.expiryDate.label']} ${LANG
 
 class Card extends Base {
     readonly rootElement: Locator;
-    readonly rootElementSelector: string;
 
     readonly cardNumberField: Locator;
     readonly cardNumberLabelElement: Locator;
@@ -55,11 +54,11 @@ class Card extends Base {
 
     constructor(
         public readonly page: Page,
-        rootElementSelector = '.adyen-checkout__card-input'
+        public readonly rootElementSelector?: Locator | string
     ) {
         super(page);
-        this.rootElement = this.page.locator(rootElementSelector);
-        this.rootElementSelector = rootElementSelector;
+        const selector = rootElementSelector ?? '.adyen-checkout__card-input';
+        this.rootElement = typeof selector === 'string' ? this.page.locator(selector) : selector;
 
         /**
          * Card Number elements, in Checkout

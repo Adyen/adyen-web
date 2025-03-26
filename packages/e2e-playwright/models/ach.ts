@@ -2,12 +2,15 @@ import { Base } from './base';
 import { Locator, Page } from '@playwright/test';
 
 class Ach extends Base {
-    private readonly rootElementSelector = '.adyen-checkout__ach';
     private readonly rootElement: Locator;
 
-    constructor(page: Page) {
+    constructor(
+        public readonly page: Page,
+        public readonly rootElementSelector: Locator | string
+    ) {
         super(page);
-        this.rootElement = page.locator(this.rootElementSelector);
+        const selector = rootElementSelector ?? '.adyen-checkout__ach';
+        this.rootElement = typeof selector === 'string' ? this.page.locator(selector) : selector;
     }
 
     get paymentResult() {
