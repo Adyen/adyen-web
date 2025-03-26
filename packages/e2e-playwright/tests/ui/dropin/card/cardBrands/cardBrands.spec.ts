@@ -1,7 +1,13 @@
+import dotenv from 'dotenv';
 import { test, expect } from '../../../../../fixtures/dropin.fixture';
 import { getStoryUrl } from '../../../../utils/getStoryUrl';
 import { URL_MAP } from '../../../../../fixtures/URL_MAP';
 import { Card } from '../../../../../models/card';
+
+dotenv.config();
+const apiVersion = Number(process.env.API_VERSION.substring(1));
+
+const CARD_HEADER_LABEL = apiVersion <= 69 ? 'Credit Card' : 'Cards';
 
 test.describe('Dropin - Card brands displayed in the Payment Method List and underneath the PAN field', () => {
     test('should display the 3 logos and left over amount of brands, and then display all available brands under the PAN field', async ({
@@ -10,7 +16,7 @@ test.describe('Dropin - Card brands displayed in the Payment Method List and und
     }) => {
         await dropinWithSession.goto(URL_MAP.dropinWithSession);
 
-        const header = await dropinWithSession.getPaymentMethodHeader('Cards');
+        const header = await dropinWithSession.getPaymentMethodHeader(CARD_HEADER_LABEL);
         await header.rootElement.scrollIntoViewIfNeeded();
 
         const brands = await header.getVisibleCardBrands();
@@ -43,7 +49,7 @@ test.describe('Dropin - Card brands displayed in the Payment Method List and und
         };
         await dropinWithSession.goto(getStoryUrl({ baseUrl: URL_MAP.dropinWithSession, componentConfig: dropinConfig }));
 
-        const header = await dropinWithSession.getPaymentMethodHeader('Cards');
+        const header = await dropinWithSession.getPaymentMethodHeader(CARD_HEADER_LABEL);
         await header.rootElement.scrollIntoViewIfNeeded();
 
         const brands = await header.getVisibleCardBrands();
