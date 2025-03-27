@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'preact/hooks';
 import useSRPanelContext from '../../../../core/Errors/useSRPanelContext';
 import { SetSRMessagesReturnFn } from '../../../../core/Errors/SRPanelProvider';
-import { handlePartialAddressMode, lookupBlurBasedErrors, mapFieldKey } from './utils';
+import { handlePartialAddressMode, mapFieldKey } from './utils';
 import { usePrevious } from '../../../../utils/hookUtils';
 import { SetSRMessagesReturnObject, SortedErrorObject } from '../../../../core/Errors/types';
 import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD } from '../../../../core/Errors/constants';
@@ -66,14 +66,7 @@ const useSRPanelForCardInputErrors = ({ errors, props, isValidating, retrieveLay
                     const latestErrorMsg = difference?.[0];
 
                     if (latestErrorMsg) {
-                        // Use the error code to look up whether error is actually a blur based one (most are but some SF ones aren't)
-                        const isBlurBasedError = lookupBlurBasedErrors(latestErrorMsg.errorCode);
-
-                        /**
-                         *  ONLY ADD BLUR BASED ERRORS TO THE ERROR PANEL - doing this step prevents the non-blur based errors from being read out twice
-                         *  (once from the aria-live, error panel & once from the aria-describedby element)
-                         */
-                        const latestSRError = isBlurBasedError ? latestErrorMsg.errorMessage : null;
+                        const latestSRError = latestErrorMsg.errorMessage;
                         // console.log('### CardInput2::componentDidUpdate:: #2 (not validating) single error:: latestSRError', latestSRError);
                         setSRMessagesFromStrings(latestSRError);
                     } else {

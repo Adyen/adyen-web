@@ -1,4 +1,4 @@
-import { h, Fragment } from 'preact';
+import { h } from 'preact';
 import { useRef, useState } from 'preact/hooks';
 import { SRMessagesProps } from './types';
 
@@ -7,7 +7,7 @@ export interface SRMessagesRef {
     setMessages?: (who: string[]) => void;
 }
 
-export function SRMessages({ setComponentRef }: SRMessagesProps) {
+export function SRMessages({ setComponentRef, customAria }: SRMessagesProps) {
     const messagesRef = useRef<SRMessagesRef>({});
     // Just call once to create the object by which we expose the members expected by the parent comp
     if (!Object.keys(messagesRef.current).length) {
@@ -22,7 +22,7 @@ export function SRMessages({ setComponentRef }: SRMessagesProps) {
     };
 
     return messages ? (
-        <Fragment>
+        <div role={'log'} {...customAria}>
             {messages.map(msg => {
                 return (
                     <div key={msg} className="adyen-checkout-sr-panel__msg" {...(process.env.NODE_ENV !== 'production' && { 'data-testid': msg })}>
@@ -30,6 +30,6 @@ export function SRMessages({ setComponentRef }: SRMessagesProps) {
                     </div>
                 );
             })}
-        </Fragment>
+        </div>
     ) : null;
 }

@@ -49,6 +49,7 @@ export type SRPanelConfig = Pick<SRPanelProps, 'enabled' | 'node' | 'showPanel' 
 
 export interface SRMessagesProps {
     setComponentRef: (ref: any) => void;
+    customAria: any;
 }
 
 export interface GenericError {
