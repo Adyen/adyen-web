@@ -10,6 +10,8 @@ import { PixInputDataState, PixInputProps } from './types';
 function PixInput({ name, data: dataProps, personalDetailsRequired, showPayButton, onChange, payButton }: PixInputProps) {
     const { i18n } = useCoreContext();
     const formSchema = ['firstName', 'lastName', 'socialSecurityNumber'];
+    console.log(dataProps);
+
     const { handleChangeFor, triggerValidation, setSchema, data, valid, errors, isValid } = useForm<PixInputDataState>({
         schema: formSchema,
         defaultData: dataProps,

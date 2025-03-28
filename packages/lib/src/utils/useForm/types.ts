@@ -23,11 +23,12 @@ export interface Formatter {
 }
 
 export type FormProps = {
+    schema: string[];
     rules?: ValidatorRules;
     formatters?: {
         [key: string]: Formatter | Function;
     };
-    [key: string]: any;
+    // [key: string]: any;
 };
 
 export type HandleChangeForModeType = 'input' | 'blur';

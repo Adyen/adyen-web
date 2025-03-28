@@ -15,6 +15,7 @@ import InputText from '../../../internal/FormFields/InputText';
 import FormInstruction from '../../../internal/FormInstruction';
 import { ComponentMethodsRef } from '../../../internal/UIElement/types';
 import RadioGroup from '../../../internal/FormFields/RadioGroup';
+import { AccountTypeSelector } from '../AccountTypeSelector';
 
 function validateHolderName(holderName, holderNameRequired = false) {
     if (holderNameRequired) {
@@ -148,6 +149,8 @@ function AchInput(props: ACHInputProps) {
                         <LoadingWrapper status={sfpState.status}>
                             <div className={classNames(['adyen-checkout__fieldset', 'adyen-checkout__fieldset--ach'])}>
                                 {<div className="adyen-checkout__fieldset__title">{i18n.get('ach.bankAccount')}</div>}
+
+                                <AccountTypeSelector onSelect={value => console.log(value)} />
 
                                 <Field classNameModifiers={['bankAccountType', 'no-borders']} name={'bankAccountType'} useLabelElement={false}>
                                     <RadioGroup

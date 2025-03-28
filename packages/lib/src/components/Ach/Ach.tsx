@@ -1,10 +1,11 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
-import AchInput from './components/AchInput';
+// import AchInput from './components/AchInput';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import RedirectButton from '../internal/RedirectButton';
 import { AchConfiguration } from './types';
 import { TxVariants } from '../tx-variants';
+import AchComponent from './components/AchComponent';
 
 export class AchElement extends UIElement<AchConfiguration> {
     public static type = TxVariants.ach;
@@ -26,15 +27,15 @@ export class AchElement extends UIElement<AchConfiguration> {
     formatData() {
         const recurringPayment = !!this.props.storedPaymentMethodId;
 
-        // Map holderName to ownerName
         const paymentMethod = {
             type: AchElement.type,
-            ...this.state.data,
-            ownerName: this.state.data?.holderName,
+            ownerName: this.state.data.ownerName,
+            accountHolderType: this.state.data.selectedAccountType?.split('.')[0],
+            bankAccountType: this.state.data.selectedAccountType?.split('.')[1],
+            routingNumber: this.state.data.routingNumber,
+            accountNumber: this.state.data.accountNumber,
             ...(recurringPayment && { storedPaymentMethodId: this.props.storedPaymentMethodId })
         };
-
-        delete paymentMethod.holderName;
 
         return {
             paymentMethod,
@@ -87,15 +88,25 @@ export class AchElement extends UIElement<AchConfiguration> {
                         }}
                     />
                 ) : (
-                    <AchInput
-                        setComponentRef={this.setComponentRef}
-                        handleKeyPress={this.handleKeyPress}
-                        {...this.props}
+                    <AchComponent
                         onChange={this.setState}
-                        onSubmit={this.submit}
                         payButton={this.payButton}
-                        resources={this.resources}
+                        showPayButton={this.props.showPayButton}
+                        hasHolderName={true}
+                        holderNameRequired={true}
+                        placeholders={{}}
+                        showContextualElement={true}
+                        setComponentRef={this.setComponentRef}
                     />
+                    // <AchInput
+                    //     setComponentRef={this.setComponentRef}
+                    //     handleKeyPress={this.handleKeyPress}
+                    //     {...this.props}
+                    //     onChange={this.setState}
+                    //     onSubmit={this.submit}
+                    //     payButton={this.payButton}
+                    //     resources={this.resources}
+                    // />
                 )}
             </CoreProvider>
         );

@@ -17,19 +17,24 @@ export const Default: ACHStory = {
     args: {
         countryCode: 'US',
         componentConfiguration: {
-            data: {
-                holderName: 'B. Fish',
-                billingAddress: {
-                    street: 'Infinite Loop',
-                    postalCode: '95014',
-                    city: 'Cupertino',
-                    houseNumberOrName: '1',
-                    country: 'US',
-                    stateOrProvince: 'CA'
-                }
-            },
-            enableStoreDetails: false
+            onChange(state) {
+                console.log(state);
+            }
         }
+        // componentConfiguration: {
+        //     data: {
+        //         holderName: 'B. Fish',
+        //         billingAddress: {
+        //             street: 'Infinite Loop',
+        //             postalCode: '95014',
+        //             city: 'Cupertino',
+        //             houseNumberOrName: '1',
+        //             country: 'US',
+        //             stateOrProvince: 'CA'
+        //         }
+        //     },
+        //     enableStoreDetails: false
+        // }
     }
 };
 
