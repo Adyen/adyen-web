@@ -6,6 +6,7 @@ import { CVCPolicyType, DatePolicyType } from '../../../../internal/SecuredField
 export interface BrandIconProps {
     brand: string;
     brandsConfiguration: CardBrandsConfiguration;
+    onClick?: () => void;
 }
 
 export interface CardFieldsProps {
@@ -72,6 +73,7 @@ export interface CVCProps {
 export interface CVCHintProps {
     fieldLabel: string;
     frontCVC: boolean;
+    onClick?: () => void;
 }
 
 export interface DualBrandingIconProps {

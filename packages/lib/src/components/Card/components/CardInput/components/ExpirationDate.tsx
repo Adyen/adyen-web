@@ -38,6 +38,12 @@ export default function ExpirationDate(props: ExpirationDateProps) {
 
     const fieldLabel = expiryDatePolicy !== DATE_POLICY_OPTIONAL ? label : `${label} ${i18n.get('field.title.optional')}`;
 
+    const handleIconClick = () => {
+        onFocusField(ENCRYPTED_EXPIRY_DATE);
+    };
+
+    const imageDescription = `${fieldLabel} ${contextualText}`;
+
     return (
         <Field
             label={fieldLabel}
@@ -70,10 +76,12 @@ export default function ExpirationDate(props: ExpirationDateProps) {
                     'adyen-checkout__field__exp-date_hint_wrapper--hidden': error || isValid
                 })}
             >
+                {/*eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions*/}
                 <img
                     src={getImage({ imageFolder: 'components/' })('expiry_date_hint')}
                     className="adyen-checkout__field__exp-date_hint"
-                    alt={fieldLabel}
+                    alt={imageDescription}
+                    onClick={handleIconClick}
                 />
             </span>
         </Field>

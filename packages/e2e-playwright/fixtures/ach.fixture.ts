@@ -1,4 +1,4 @@
-import { test as base, expect } from '@playwright/test';
+import { test as base, expect } from './base-fixture';
 import Ach from '../models/ach';
 
 type Fixture = {

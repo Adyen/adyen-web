@@ -1,4 +1,4 @@
-import { test as base, expect } from '@playwright/test';
+import { test as base, expect } from '../../../fixtures/base-fixture';
 import { URL_MAP } from '../../../fixtures/URL_MAP';
 import BacsDirectDebit from '../../../models/bacs-direct-debit';
 

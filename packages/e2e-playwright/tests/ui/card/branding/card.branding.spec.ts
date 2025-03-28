@@ -1,4 +1,4 @@
-import { test as base, expect } from '@playwright/test';
+import { test as base, expect } from '../../../../fixtures/base-fixture';
 import { MAESTRO_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE } from '../../../utils/constants';
 import LANG from '../../../../../server/translations/en-US.json';
 import { Card } from '../../../../models/card';
