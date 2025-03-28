@@ -26,11 +26,12 @@ const meta: MetaConfiguration<DropinConfiguration> = {
     args: {
         componentConfiguration: getComponentConfigFromUrl() ?? {
             showRadioButton: false,
-            instantPaymentTypes: ['googlepay'],
+            instantPaymentTypes: ['googlepay', 'applepay'],
             showRemovePaymentMethodButton: false,
             paymentMethodsConfiguration: {
                 googlepay: {
-                    buttonType: 'plain'
+                    buttonType: 'plain',
+                    challengeWindowSize: '05'
                 }
             }
         }

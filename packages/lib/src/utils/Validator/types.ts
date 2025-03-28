@@ -1,7 +1,7 @@
 import { ValidationRuleResult } from './ValidationRuleResult';
 import { Formatter } from '../useForm/types';
 
-type ValidatorMode = 'blur' | 'input';
+export type ValidatorMode = 'blur' | 'input';
 
 export type ErrorMessageObject = {
     translationKey: string;
@@ -20,8 +20,10 @@ export type FormatRules = { [field: string]: Formatter };
 
 export type CountryFormatRules = { [country: string]: FormatRules };
 
+export type ValidateFunction = (value: string, context) => boolean;
+
 export interface ValidatorRule {
-    validate: (value, context?) => boolean;
+    validate: ValidateFunction;
     errorMessage?: string | ErrorMessageObject;
     modes: ValidatorMode[];
 }

@@ -68,7 +68,7 @@
 }
 
 .adyen-checkout__await__countdown {
-    color: token(color-outline-tertiary);
+    color: token(color-label-secondary);
     font-size: token(text-body-font-size);
 }
 
@@ -79,6 +79,13 @@
 .adyen-checkout__await__app-link {
     margin-top: token(spacer-070);
     display: none;
+}
+
+.adyen-checkout__await__amount {
+    margin-top: token(spacer-070);
+    font-size: token(text-title-l-font-size);
+    font-weight: token(text-title-font-weight);
+    text-align: center;
 }
 
 @media only screen and (max-device-width: 1200px) {

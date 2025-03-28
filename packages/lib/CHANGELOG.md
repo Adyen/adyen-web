@@ -1,5 +1,61 @@
 # @adyen/adyen-web
 
+## 6.11.0
+
+### Minor Changes
+
+- Allow typing to continue in cardNumber field after panLength result from binLookup ([#3198](https://github.com/Adyen/adyen-web/pull/3198))
+
+### Patch Changes
+
+- Apple Pay - Fixed issue where its iframe detection code crashes server side rendered apps ([#3204](https://github.com/Adyen/adyen-web/pull/3204))
+
+- Card - Fixed issue where clicking on the input field icons were not causing the respective input field to be focused ([#3197](https://github.com/Adyen/adyen-web/pull/3197))
+
+## 6.10.0
+
+### Minor Changes
+
+- ApplePay - Adding support for third-party browsers ([#3130](https://github.com/Adyen/adyen-web/pull/3130))
+
+### Patch Changes
+
+- GooglePay - Fixed challengeWindowSize property when using Google Pay as Instant payment type inside Drop-in ([#3170](https://github.com/Adyen/adyen-web/pull/3170))
+
+- update error message for single branded card ([#3177](https://github.com/Adyen/adyen-web/pull/3177))
+
+- Translations - Fixed brazilian social security number translation (CPF/CNPJ) for different languages ([#3172](https://github.com/Adyen/adyen-web/pull/3172))
+
+- A11y improvements: contrast, aria-expands and svg alt text ([#3188](https://github.com/Adyen/adyen-web/pull/3188))
+
+- Google Pay - Throwing error in case the merchant id is missing ([#3179](https://github.com/Adyen/adyen-web/pull/3179))
+
+- Typescript - Fixed issue where exposed types for GooglePay/ApplePay were not being found ([#3178](https://github.com/Adyen/adyen-web/pull/3178))
+
+## 6.9.0
+
+### Minor Changes
+
+- Feature: New PayTo payment method ([#3114](https://github.com/Adyen/adyen-web/pull/3114))
+
+### Patch Changes
+
+- GooglePay - Fixed issue where calling reject on onClick event was triggering an unhandled exception ([#3151](https://github.com/Adyen/adyen-web/pull/3151))
+
+- Move `@adyen/bento-design-tokens` into devDependencies. ([#3124](https://github.com/Adyen/adyen-web/pull/3124))
+
+- GooglePay - Added 'challengeWindowSize' typescript type to its interface ([#3120](https://github.com/Adyen/adyen-web/pull/3120))
+
+- Fixes giftcard component unresponsive when requiring confirmation ([#3119](https://github.com/Adyen/adyen-web/pull/3119))
+
+- Use built-in mechanism to disable OpenInvoice (and ACH) components when Pay pressed ([#3142](https://github.com/Adyen/adyen-web/pull/3142))
+
+- Boleto - Added missing properties to its typescript interface ([#3121](https://github.com/Adyen/adyen-web/pull/3121))
+
+- Added missing type (onAutoComplete) in CustomCardConfiguration ([#3144](https://github.com/Adyen/adyen-web/pull/3144))
+
+- Adds stored component logic to PayTo ([#3156](https://github.com/Adyen/adyen-web/pull/3156))
+
 ## 6.8.0
 
 ### Minor Changes

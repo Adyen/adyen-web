@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/preact';
-import PhoneInput from '../../../src/components/internal/PhoneInput';
+import PhoneInputForm from '../../../src/components/internal/PhoneInput';
 import { CoreProvider } from '../../../src/core/Context/CoreProvider';
 import Language from '../../../src/language';
 
@@ -55,14 +55,14 @@ const formatPrefixName = item => {
 
 const meta: Meta = {
     title: 'Internals/PhoneInput',
-    component: PhoneInput
+    component: PhoneInputForm
 };
 
 export const Default: StoryObj = {
     render: args => {
         return (
             <CoreProvider loadingContext={'test'} i18n={new Language({ locale: 'en-US', translations: {} })} resources={global.resources}>
-                <PhoneInput
+                <PhoneInputForm
                     items={COUNTRIES.map(formatPrefixName).filter(Boolean)}
                     data={{ phonePrefix: COUNTRIES[0].id }}
                     onChange={item => console.log({ item })}

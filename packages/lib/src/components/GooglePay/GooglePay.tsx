@@ -25,6 +25,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
     constructor(checkout: ICore, props?: GooglePayConfiguration) {
         super(checkout, props);
         this.handleAuthorization = this.handleAuthorization.bind(this);
+        this.showGooglePayPaymentSheet = this.showGooglePayPaymentSheet.bind(this);
 
         const { isExpress, paymentDataCallbacks } = this.props;
 
@@ -32,6 +33,13 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
             throw new AdyenCheckoutError(
                 'IMPLEMENTATION_ERROR',
                 'GooglePay - You must set "isExpress" flag to "true" in order to use "onPaymentDataChanged" callback'
+            );
+        }
+
+        if (!this.props.configuration.merchantId) {
+            throw new AdyenCheckoutError(
+                'IMPLEMENTATION_ERROR',
+                'GooglePay - Missing merchantId. Please ensure that it is correctly configured in your customer area.'
             );
         }
 
@@ -82,23 +90,24 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         super.submitAnalytics({ ...analyticsObj }, this.props);
     }
 
+    /**
+     * Displays the Google Pay payment sheet overlay
+     */
+    private showGooglePayPaymentSheet() {
+        this.googlePay.initiatePayment(this.props, this.core.options.countryCode).catch((error: google.payments.api.PaymentsError) => {
+            // eslint-disable-next-line @typescript-eslint/no-base-to-string
+            this.handleError(new AdyenCheckoutError(error.statusCode === 'CANCELED' ? 'CANCEL' : 'ERROR', error.toString(), { cause: error }));
+        });
+    }
+
     public override submit = () => {
-        // Analytics
         if (this.props.isInstantPayment) {
             this.submitAnalytics({ type: ANALYTICS_SELECTED_STR, target: ANALYTICS_INSTANT_PAYMENT_BUTTON });
         }
 
-        new Promise((resolve, reject) => this.props.onClick(resolve, reject))
-            .then(() => this.googlePay.initiatePayment(this.props, this.core.options.countryCode))
-            .catch((error: google.payments.api.PaymentsError) => {
-                if (error.statusCode === 'CANCELED') {
-                    // eslint-disable-next-line @typescript-eslint/no-base-to-string
-                    this.handleError(new AdyenCheckoutError('CANCEL', error.toString(), { cause: error }));
-                } else {
-                    // eslint-disable-next-line @typescript-eslint/no-base-to-string
-                    this.handleError(new AdyenCheckoutError('ERROR', error.toString(), { cause: error }));
-                }
-            });
+        new Promise<void>((resolve, reject) => this.props.onClick(resolve, reject)).then(this.showGooglePayPaymentSheet).catch(() => {
+            // Swallow exception triggered by onClick reject
+        });
     };
 
     /**

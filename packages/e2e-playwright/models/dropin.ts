@@ -1,5 +1,27 @@
 import { Locator, Page } from '@playwright/test';
 import { Base } from './base';
+
+class PaymentMethodHeader {
+    readonly rootElement: Locator;
+
+    constructor(rootLocator: Locator) {
+        this.rootElement = rootLocator;
+    }
+
+    async getVisibleCardBrands(): Promise<Locator[]> {
+        return await this.rootElement.locator('.adyen-checkout__payment-method__brands').getByRole('img').all();
+    }
+
+    async getRemainingBrandsNumberLocator(): Promise<Locator> {
+        return this.rootElement.locator('.adyen-checkout__payment-method__brand-number');
+    }
+
+    async getRemainingBrandsNumberText(): Promise<string> {
+        const locator = await this.getRemainingBrandsNumberLocator();
+        return await locator.textContent();
+    }
+}
+
 // Non session
 class Dropin extends Base {
     readonly rootElement: Locator;
@@ -37,26 +59,59 @@ class Dropin extends Base {
         await this.isComponentVisible();
     }
 
-    getPaymentMethodLabelByType(pmType: string) {
-        const pmLabel = this.paymentMethods.find((pm: { type: string }) => pm.type === pmType).name;
-        return this.pmList.locator(`.adyen-checkout__payment-method:has-text("${pmLabel}")`);
+    /**
+     * Returns PaymentMethodHeader which manages the Drop-in payment method list item UI
+     */
+    getPaymentMethodHeader(paymentMethodLabel: string): PaymentMethodHeader {
+        const locator = this.rootElement
+            .locator('.adyen-checkout__payment-method')
+            .getByRole('radio', { name: paymentMethodLabel })
+            .locator('..')
+            .locator('..');
+
+        return new PaymentMethodHeader(locator);
     }
 
-    // Non stored payment methods
-    async selectPaymentMethod(pmType: string) {
+    /**
+     * Clicks in the payment method item header, and returns the Locator of its content
+     *
+     * @param pmType tx variant
+     */
+    async selectNonStoredPaymentMethod(pmType: string): Promise<{ paymentMethodDetailsLocator: Locator }> {
         const pmLabel = this.paymentMethods.find((pm: { type: string }) => pm.type === pmType).name;
-        this.page.locator('.adyen-checkout__payment-methods-list--otherPayments').getByRole('radio', { name: pmLabel }).check();
+
+        const paymentMethodHeaderLocator = this.page
+            .locator('.adyen-checkout__payment-methods-list--otherPayments')
+            .getByRole('radio', { name: pmLabel });
+
+        await paymentMethodHeaderLocator.check();
+
+        const paymentMethodDetailsLocator = paymentMethodHeaderLocator
+            .locator('..')
+            .locator('..')
+            .locator(':scope > .adyen-checkout-pm-details-wrapper');
+
+        return { paymentMethodDetailsLocator };
     }
 
     // Stored payment methods
-    async selectFirstStoredPaymentMethod(pmType: string, lastFour?: string) {
+    async selectFirstStoredPaymentMethod(pmType: string, lastFour?: string): Promise<{ paymentMethodDetailsLocator: Locator }> {
         const pmLabel = this.paymentMethods.find((pm: { type: string }) => pm.type === pmType)?.name;
-        await this.page
+
+        const paymentMethodHeaderLocator = await this.page
             .locator('.adyen-checkout__payment-method')
             .filter({ has: this.page.getByRole('img', { name: pmLabel ?? pmType }) }) // filter the payment methods which have the correct logo
             .getByRole('radio', { name: lastFour, exact: false })
-            .first()
-            .click();
+            .first();
+
+        await paymentMethodHeaderLocator.click();
+
+        const paymentMethodDetailsLocator = paymentMethodHeaderLocator
+            .locator('..')
+            .locator('..')
+            .locator(':scope > .adyen-checkout-pm-details-wrapper');
+
+        return { paymentMethodDetailsLocator };
     }
 
     async saveDetails() {

@@ -110,6 +110,11 @@
     margin-top: token(spacer-100);
 }
 
+.adyen-checkout__await__instructions {
+    display: flex;
+    justify-content: center;
+}
+
 @media (max-width: 1024px) {
     .adyen-checkout__qr-loader__app-link {
         display: block;

@@ -1,4 +1,4 @@
-import { test as base, expect } from '@playwright/test';
+import { test as base, expect } from '../../../fixtures/base-fixture';
 import { paymentDetailsMock } from '../../../mocks/paymentDetails/paymentDetails.mock';
 import { paymentDetailsPartiallyAuthorisedAncvMockData } from '../../../mocks/paymentDetails/paymentDetails.data';
 import { createOrderMock } from '../../../mocks/createOrder/createOrder.mock';

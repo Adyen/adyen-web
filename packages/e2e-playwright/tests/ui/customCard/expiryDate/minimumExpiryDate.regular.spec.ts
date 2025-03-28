@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test } from '../../../../fixtures/base-fixture';
 import LANG from '@adyen/adyen-web-server/translations/en-US.json';
 
 const errorHolder = '.pm-form-label__error-text';

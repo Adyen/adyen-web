@@ -13,6 +13,10 @@ export default function CardNumber(props: CardNumberProps) {
     const { i18n } = useCoreContext();
     const { error = '', isValid = false, onFocusField = () => {}, dualBrandingElements, dualBrandingChangeHandler, dualBrandingSelected } = props;
 
+    const handleIconClick = () => {
+        onFocusField(ENCRYPTED_CARD_NUMBER);
+    };
+
     return (
         <Field
             label={props.label}
@@ -43,7 +47,9 @@ export default function CardNumber(props: CardNumberProps) {
                 })}
             ></DataSfSpan>
 
-            {props.showBrandIcon && !dualBrandingElements && <BrandIcon brandsConfiguration={props.brandsConfiguration} brand={props.brand} />}
+            {props.showBrandIcon && !dualBrandingElements && (
+                <BrandIcon brandsConfiguration={props.brandsConfiguration} brand={props.brand} onClick={handleIconClick} />
+            )}
 
             {dualBrandingElements && !error && (
                 <div

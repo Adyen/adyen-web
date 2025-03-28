@@ -1,26 +1,43 @@
-import { test, expect } from './dropinWithCard.fixture';
+import dotenv from 'dotenv';
+import { test, expect } from '../../../../../fixtures/dropin.fixture';
 import { getStoryUrl } from '../../../../utils/getStoryUrl';
 import { URL_MAP } from '../../../../../fixtures/URL_MAP';
+import { Card } from '../../../../../models/card';
+
+dotenv.config();
+const apiVersion = Number(process.env.API_VERSION.substring(1));
+
+const CARD_HEADER_LABEL = apiVersion <= 70 ? 'Credit Card' : 'Cards';
 
 test.describe('Dropin - Card brands displayed in the Payment Method List and underneath the PAN field', () => {
     test('should display the 3 logos and left over amount of brands, and then display all available brands under the PAN field', async ({
-        dropinWithCard,
-        card
+        dropinWithSession,
+        page
     }) => {
-        await dropinWithCard.goto(URL_MAP.dropinWithSession);
-        expect(await dropinWithCard.visibleCardBrands).toHaveLength(3);
-        expect(dropinWithCard.remainingCardBrandsNumber).toContainText('+11');
-        await dropinWithCard.card.scrollIntoViewIfNeeded();
-        await dropinWithCard.selectPaymentMethod('scheme');
+        await dropinWithSession.goto(URL_MAP.dropinWithSession);
+
+        const header = await dropinWithSession.getPaymentMethodHeader(CARD_HEADER_LABEL);
+        await header.rootElement.scrollIntoViewIfNeeded();
+
+        const brands = await header.getVisibleCardBrands();
+        expect(brands).toHaveLength(3);
+
+        const remainingBrandsText = await header.getRemainingBrandsNumberText();
+        expect(remainingBrandsText).toBe('+11');
+
+        const { paymentMethodDetailsLocator } = await dropinWithSession.selectNonStoredPaymentMethod('scheme');
+
+        const card = new Card(page, paymentMethodDetailsLocator);
         await card.isComponentVisible();
-        expect(await dropinWithCard.visibleCardBrands).toHaveLength(0);
-        expect(dropinWithCard.remainingCardBrandsNumber).toBeHidden();
+
+        expect(await header.getVisibleCardBrands()).toHaveLength(0);
+        await expect(await header.getRemainingBrandsNumberLocator()).toHaveCount(0);
         expect(await card.availableBrands).toHaveLength(14);
     });
 
     test('should exclude non-valid brands and display only the right amount in the payment header and underneath the PAN field', async ({
-        dropinWithCard,
-        card
+        dropinWithSession,
+        page
     }) => {
         const dropinConfig = {
             paymentMethodsConfiguration: {
@@ -30,14 +47,22 @@ test.describe('Dropin - Card brands displayed in the Payment Method List and und
                 }
             }
         };
-        await dropinWithCard.goto(getStoryUrl({ baseUrl: URL_MAP.dropinWithSession, componentConfig: dropinConfig }));
-        expect(await dropinWithCard.visibleCardBrands).toHaveLength(3);
-        expect(dropinWithCard.remainingCardBrandsNumber).toContainText('+3');
-        await dropinWithCard.card.scrollIntoViewIfNeeded();
-        await dropinWithCard.selectPaymentMethod('scheme');
+        await dropinWithSession.goto(getStoryUrl({ baseUrl: URL_MAP.dropinWithSession, componentConfig: dropinConfig }));
+
+        const header = await dropinWithSession.getPaymentMethodHeader(CARD_HEADER_LABEL);
+        await header.rootElement.scrollIntoViewIfNeeded();
+
+        const brands = await header.getVisibleCardBrands();
+        expect(brands).toHaveLength(3);
+
+        const { paymentMethodDetailsLocator } = await dropinWithSession.selectNonStoredPaymentMethod('scheme');
+
+        const card = new Card(page, paymentMethodDetailsLocator);
+
         await card.isComponentVisible();
-        expect(await dropinWithCard.visibleCardBrands).toHaveLength(0);
-        expect(dropinWithCard.remainingCardBrandsNumber).toBeHidden();
+
+        expect(await header.getVisibleCardBrands()).toHaveLength(0);
+        await expect(await header.getRemainingBrandsNumberLocator()).toHaveCount(0);
         expect(await card.availableBrands).toHaveLength(6);
     });
 });

@@ -1,12 +1,15 @@
-import { cardInDropin as test, expect } from '../../../../fixtures/dropin.fixture';
+import { test, expect } from '../../../../fixtures/dropin.fixture';
 import { URL_MAP } from '../../../../fixtures/URL_MAP';
 import { PAYMENT_RESULT, TEST_CVC_VALUE, THREEDS2_CHALLENGE_PASSWORD } from '../../../utils/constants';
+import { Card } from '../../../../models/card';
 
 test.describe('Stored Maestro card - cvc optional', () => {
     // When user do not fill in the cvc
-    test('should make a successful payment without the cvc code', async ({ dropinWithSession, card }) => {
+    test('should make a successful payment without the cvc code', async ({ dropinWithSession, page }) => {
         await dropinWithSession.goto(URL_MAP.dropinWithSession);
-        await dropinWithSession.selectFirstStoredPaymentMethod('maestro', '0029');
+        const { paymentMethodDetailsLocator } = await dropinWithSession.selectFirstStoredPaymentMethod('maestro', '0029');
+
+        const card = new Card(page, paymentMethodDetailsLocator);
 
         await card.cvcInput.waitFor({ state: 'visible' });
         await card.pay({ name: /^Pay/i });
@@ -16,9 +19,11 @@ test.describe('Stored Maestro card - cvc optional', () => {
         await expect(card.paymentResult).toContainText(PAYMENT_RESULT.success);
     });
     // When user fills in the cvc
-    test('should make a successful payment after filling in the correct 3ds challenge password', async ({ dropinWithSession, card }) => {
+    test('should make a successful payment after filling in the correct 3ds challenge password', async ({ dropinWithSession, page }) => {
         await dropinWithSession.goto(URL_MAP.dropinWithSession);
-        await dropinWithSession.selectFirstStoredPaymentMethod('maestro', '0029');
+        const { paymentMethodDetailsLocator } = await dropinWithSession.selectFirstStoredPaymentMethod('maestro', '0029');
+
+        const card = new Card(page, paymentMethodDetailsLocator);
 
         await card.cvcInput.waitFor({ state: 'visible' });
         await card.fillCvc(TEST_CVC_VALUE);
@@ -29,9 +34,11 @@ test.describe('Stored Maestro card - cvc optional', () => {
         await expect(card.paymentResult).toContainText(PAYMENT_RESULT.success);
     });
 
-    test('should decline the payment after filling in the wrong 3ds challenge password', async ({ dropinWithSession, card }) => {
+    test('should decline the payment after filling in the wrong 3ds challenge password', async ({ dropinWithSession, page }) => {
         await dropinWithSession.goto(URL_MAP.dropinWithSession);
-        await dropinWithSession.selectFirstStoredPaymentMethod('maestro', '0029');
+        const { paymentMethodDetailsLocator } = await dropinWithSession.selectFirstStoredPaymentMethod('maestro', '0029');
+
+        const card = new Card(page, paymentMethodDetailsLocator);
 
         await card.cvcInput.waitFor({ state: 'visible' });
         await card.fillCvc(TEST_CVC_VALUE);

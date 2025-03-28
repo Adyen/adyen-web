@@ -3,7 +3,7 @@ import { loadEnv } from 'vite';
 import * as path from 'path';
 
 function generateEnvironmentVariables(buildType = 'development', bundleType = 'esm') {
-    const env = loadEnv(buildType, path.resolve('../../', '.env'), '');
+    const env = loadEnv(buildType, path.resolve('../../'), '');
 
     return {
         'process.env.CLIENT_ENV': JSON.stringify(env.CLIENT_ENV),

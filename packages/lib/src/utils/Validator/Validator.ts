@@ -66,6 +66,10 @@ class Validator {
      */
     validate({ key, value, mode = 'blur' }: FieldData, context?: FieldContext) {
         const fieldRules = this.getRulesFor(key);
+        // create an ValidationRuleResult, we run the actual validation inside of it
+        // validate is called in the constructor of ValidationRuleResult
+        // line rule.validate(value, context);
+        //
         const validationRulesResult = fieldRules.map(rule => new ValidationRuleResult(rule, value, mode, context));
 
         return new ValidationResult(validationRulesResult);

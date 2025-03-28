@@ -1,11 +1,12 @@
 import { DataSet, DataSetItem } from '../../../core/Services/data-set';
+import { ComponentMethodsRef } from '../UIElement/types';
 
 export interface PhoneInputSchema {
     phoneNumber?: string;
     phonePrefix?: string;
 }
 
-export interface PhoneInputProps {
+export interface PhoneInputFormProps {
     items: DataSet;
     requiredFields?: string[];
     data: PhoneInputSchema;
@@ -15,6 +16,7 @@ export interface PhoneInputProps {
     phoneNumberErrorKey?: string;
     placeholders?: PhoneInputSchema;
     ref?;
+    setComponentRef: (ref: ComponentMethodsRef) => void;
 }
 
 export interface PhonePrefixes {
