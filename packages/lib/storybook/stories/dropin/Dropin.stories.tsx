@@ -5,6 +5,7 @@ import { DropinConfiguration } from '../../../src/components/Dropin/types';
 import './customization.scss';
 import { Checkout } from '../Checkout';
 import { getComponentConfigFromUrl } from '../../utils/get-configuration-from-url';
+import { StoredPaymentMethod } from '../../../src/types/global-types';
 
 type DropinStory = StoryConfiguration<DropinConfiguration>;
 
@@ -66,6 +67,32 @@ export const StyleCustomization: DropinStory = {
                     {checkout => <ComponentContainer element={new DropinComponent(checkout, componentConfiguration)} />}
                 </Checkout>
             </div>
+        );
+    }
+};
+
+export const OnlySavedACH: DropinStory = {
+    render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<DropinConfiguration>) => {
+        // Register all Components
+        const { Dropin, ...Components } = components;
+        const Classes = Object.keys(Components).map(key => Components[key]);
+        AdyenCheckout.register(...Classes);
+
+        return (
+            <Checkout checkoutConfig={checkoutConfig}>
+                {checkout => (
+                    <ComponentContainer
+                        element={
+                            new DropinComponent(checkout, {
+                                ...componentConfiguration,
+                                showPaymentMethods: false,
+                                filterStoredPaymentMethods: (storedPaymentMethods: StoredPaymentMethod[]) =>
+                                    storedPaymentMethods.filter(pm => pm.type === 'ach')
+                            })
+                        }
+                    />
+                )}
+            </Checkout>
         );
     }
 };
