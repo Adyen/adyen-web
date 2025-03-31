@@ -135,6 +135,10 @@
     "ach.bankAccount.option.personal-savings": "Personal Savings Account",
     "ach.bankAccount.option.business-checking": "Business Checking Account",
     "ach.bankAccount.option.business-savings": "Business Savings Account",
+    "ach.bankAccountNumberVerification.label": "Verify account number",
+    "ach.bankAccountNumberVerification.error.not-match": "Account number does not match",
+
+
     "ach.routingNumber.label": "Routing number",
     "ach.accountHolderNameField.title": "Account holder name",
     "ach.accountHolderNameField.contextualText": "Located on the front of your card",
