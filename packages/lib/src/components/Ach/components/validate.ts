@@ -11,11 +11,18 @@ export const achValidationRules: ValidatorRules = {
         errorMessage: 'ach.accountHolderNameField.invalid',
         modes: ['blur']
     },
-    routingNumber: {
-        validate: value => !!value && value.length > 0,
-        errorMessage: 'ach.loc.947',
-        modes: ['blur']
-    },
+    routingNumber: [
+        {
+            validate: value => !!value && value.length === 0,
+            errorMessage: 'ach.loc.947',
+            modes: ['blur']
+        },
+        {
+            validate: value => !!value && value.length < 9,
+            errorMessage: 'ach.loc.948',
+            modes: ['blur']
+        }
+    ],
     accountNumber: {
         validate: value => !!value && value.length > 0,
         errorMessage: 'ach.num.945',
@@ -31,13 +38,12 @@ export const achValidationRules: ValidatorRules = {
                 const { accountNumber } = context.state.data;
                 return !accountNumber ? !!value && value.length > 0 : true;
             },
-            errorMessage: 'EMPTY',
+            errorMessage: 'ach.bankAccountNumberVerification.error.empty',
             modes: ['blur']
         },
         {
             validate: (value, context) => {
                 const { accountNumber } = context.state.data;
-                console.log(context);
                 return accountNumber === value;
             },
             errorMessage: 'ach.bankAccountNumberVerification.error.not-match',

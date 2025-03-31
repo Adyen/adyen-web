@@ -10,6 +10,7 @@ import Field from '../../internal/FormFields/Field';
 import InputText from '../../internal/FormFields/InputText';
 import { ComponentMethodsRef } from '../../internal/UIElement/types';
 import { achValidationRules } from './validate';
+import StoreDetails from '../../internal/StoreDetails';
 
 interface AchComponentProps {
     onChange(e): void; //TODO
@@ -20,6 +21,7 @@ interface AchComponentProps {
     holderNameRequired: boolean;
     showContextualElement: boolean;
     setComponentRef: (ref: ComponentMethodsRef) => void;
+    enableStoreDetails: boolean;
 }
 
 type AchForm = {
@@ -30,7 +32,16 @@ type AchForm = {
     accountNumberVerification: string;
 };
 
-function AchComponent({ onChange, payButton, showPayButton, placeholders, hasHolderName, holderNameRequired, setComponentRef }: AchComponentProps) {
+function AchComponent({
+    onChange,
+    payButton,
+    showPayButton,
+    placeholders,
+    hasHolderName,
+    holderNameRequired,
+    setComponentRef,
+    enableStoreDetails = true
+}: AchComponentProps) {
     const { i18n } = useCoreContext();
     const [status, setStatus] = useState('ready');
     const { handleChangeFor, triggerValidation, data, errors, valid, isValid } = useForm<AchForm>({
@@ -38,6 +49,7 @@ function AchComponent({ onChange, payButton, showPayButton, placeholders, hasHol
         rules: achValidationRules
     });
     const [hasFormBeenValidated, setHasFormBeenValidated] = useState<boolean>(false);
+    const [storePaymentMethod, setStorePaymentMethod] = useState(false);
 
     /**
      * Callback needed in order to flag when the full form is validated, so we can properly handle
@@ -93,7 +105,7 @@ function AchComponent({ onChange, payButton, showPayButton, placeholders, hasHol
                     <Field
                         label={i18n.get('ach.accountHolderNameField.title')}
                         errorMessage={!!errors.ownerName && i18n.get(errors.ownerName.errorMessage)}
-                        isValid={!!valid.ownerName} // TOOD: is it needed?
+                        isValid={!!valid.ownerName}
                         name={'ownerName'}
                     >
                         <InputText
@@ -112,7 +124,7 @@ function AchComponent({ onChange, payButton, showPayButton, placeholders, hasHol
                     classNameModifiers={['col-60']}
                     errorMessage={!!errors.routingNumber && i18n.get(errors.routingNumber.errorMessage)}
                     name={'routingNumber'}
-                    isValid={!!valid.routingNumber} // TOOD: is it needed?
+                    isValid={!!valid.routingNumber}
                 >
                     <InputText
                         name={'routingNumber'}
@@ -128,7 +140,7 @@ function AchComponent({ onChange, payButton, showPayButton, placeholders, hasHol
                     label={i18n.get('ach.bankAccountNumber.label')}
                     classNameModifiers={['col-40']}
                     errorMessage={!!errors.accountNumber && i18n.get(errors.accountNumber.errorMessage)}
-                    isValid={!!valid.accountNumber} // TOOD: is it needed?
+                    isValid={!!valid.accountNumber}
                     name={'accountNumber'}
                 >
                     <InputText
@@ -145,6 +157,7 @@ function AchComponent({ onChange, payButton, showPayButton, placeholders, hasHol
                     label={i18n.get('ach.bankAccountNumberVerification.label')}
                     errorMessage={!!errors.accountNumberVerification && i18n.get(errors.accountNumberVerification.errorMessage)}
                     name={'accountNumberVerification'}
+                    isValid={!!valid.accountNumberVerification}
                 >
                     <InputText
                         name={'accountNumberVerification'}
@@ -156,6 +169,8 @@ function AchComponent({ onChange, payButton, showPayButton, placeholders, hasHol
                     />
                 </Field>
             </Fieldset>
+
+            {enableStoreDetails && <StoreDetails onChange={setStorePaymentMethod} />}
 
             {showPayButton && payButton({ status, label: i18n.get('confirmPurchase') })}
         </div>
