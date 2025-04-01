@@ -26,5 +26,9 @@
         "dotenv": "16.4.7",
         "express": "^4.20.0"
     },
-    "dependencies": {}
+    "dependencies": {
+        "@netlify/functions": "^3.0.4",
+        "@types/express": "^5.0.1",
+        "serverless-http": "^3.2.0"
+    }
 }
