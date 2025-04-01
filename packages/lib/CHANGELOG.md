@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 6.11.1
+
+### Patch Changes
+
+- BrowserInfo no longer calls obsolete `navigator.javaEnabled` function ([#3234](https://github.com/Adyen/adyen-web/pull/3234))
+
 ## 6.11.0
 
 ### Minor Changes
