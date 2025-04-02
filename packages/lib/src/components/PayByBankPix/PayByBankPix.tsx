@@ -127,9 +127,10 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
      * The second one is to poll the authorization options - we poll the server to get the challenge in the `getAuthorizationStatus` function.
      * The third one is in the `authorizePayment` function - we authorize the payment with shopper's passkey.
      */
-    private readonly payWithStoredPayment = () => {
+    private readonly payWithStoredPayment = async () => {
         try {
-            this.state = { ...this.state, ...{ data: { storedPaymentMethodId: this.props.storedPaymentMethodId } } };
+            const { deviceId, ...riskSignals } = await this.passkeyService.captureRiskSignalsAuthentication();
+            this.state = { ...this.state, ...{ data: { storedPaymentMethodId: this.props.storedPaymentMethodId, riskSignals, deviceId } } };
             super.submit();
         } catch (error) {
             const errorMsg = error instanceof Error ? error.message : 'Unknown error in the payWithStoredPayment';
@@ -139,9 +140,8 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
 
     private readonly authorizePayment = async (authenticationOptions: string): Promise<void> => {
         try {
-            const riskSignals = await this.passkeyService.captureRiskSignalsAuthentication();
             const fidoAssertion = await this.passkeyService.authenticateWithCredential(authenticationOptions);
-            const payment = { enrollmentId: this.props.enrollmentId, initiationId: this.props.initiationId, fidoAssertion, riskSignals };
+            const payment = { enrollmentId: this.props.enrollmentId, initiationId: this.props.initiationId, fidoAssertion };
             const { action = {} } = await authorizePayment({
                 payment,
                 clientKey: this.props.clientKey,

@@ -1,9 +1,8 @@
 import { httpPost } from '../../../core/Services/http';
 import { RawPaymentResponse } from '../../../types/global-types';
-import { RiskSignalsAuthentication } from './types';
 
 interface IAuthorizePayment {
-    payment: { enrollmentId: string; initiationId: string; fidoAssertion: string; riskSignals: RiskSignalsAuthentication };
+    payment: { enrollmentId: string; initiationId: string; fidoAssertion: string };
     clientKey: string;
     loadingContext: string;
     timeout?: number; // in milliseconds
