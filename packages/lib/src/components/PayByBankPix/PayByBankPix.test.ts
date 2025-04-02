@@ -256,7 +256,14 @@ describe('PayByBankPix', () => {
                         paymentMethod: {
                             checkoutAttemptId: 'fetch-checkoutAttemptId-failed',
                             storedPaymentMethodId: 'mock-stored-payment-method-id',
-                            type: 'paybybank_pix'
+                            type: 'paybybank_pix',
+                            deviceId: 'mock-device',
+                            riskSignals: {
+                                language: 'en-US',
+                                osVersion: 'xxx',
+                                screenDimensions: { height: 100, width: 100 },
+                                userTimeZoneOffset: -60
+                            }
                         }
                     },
                     isValid: true
@@ -305,47 +312,40 @@ describe('PayByBankPix', () => {
             );
         });
 
-        test(
-            'should call captureRiskSignalsAuthentication, authenticateWithCredential of the passkeyService, ' +
-                'and authorizePayment endpoint,' +
-                'when authenticationOptions is available',
-            async () => {
-                httpGetMock.mockReset();
-                httpGetMock = (httpGet as jest.Mock).mockImplementation(
-                    jest.fn(() =>
-                        Promise.resolve({
-                            resultCode: 'received',
-                            authorizationOptions: 'mock-authorization-options'
-                        })
-                    )
-                );
-                payByBankPixElement = new PayByBankPix(global.core, {
-                    ...coreProps,
-                    modules: { ...coreProps.modules, srPanel: new SRPanel(global.core) },
-                    onChange: onChangeMock,
-                    onSubmit: onSubmitMock,
-                    _isAdyenHosted: true,
-                    storedPaymentMethodId: 'mock-stored-payment-method-id',
-                    enrollmentId: 'mock-enrollment-id',
-                    initiationId: 'mock-initiationId-id',
-                    clientKey: 'mock-client-key',
-                    type: 'await'
-                });
-                render(payByBankPixElement.render());
-                await waitFor(() => expect(mockRiskSignals).toHaveBeenCalled());
-                await waitFor(() => expect(mockCreateCredential).toHaveBeenCalledWith('mock-authorization-options'));
-                await waitFor(() =>
-                    expect(httpPostMock).toHaveBeenCalledWith(
-                        { loadingContext: 'test', path: 'utility/v1/pixpaybybank/redirect-result?clientKey=mock-client-key', timeout: 10000 },
-                        {
-                            enrollmentId: 'mock-enrollment-id',
-                            initiationId: 'mock-initiationId-id',
-                            fidoAssertion: 'mock-fidoAssertion',
-                            riskSignals
-                        }
-                    )
-                );
-            }
-        );
+        test('should call authenticateWithCredential of the passkeyService, and authorizePayment endpoint, when authenticationOptions is available', async () => {
+            httpGetMock.mockReset();
+            httpGetMock = (httpGet as jest.Mock).mockImplementation(
+                jest.fn(() =>
+                    Promise.resolve({
+                        resultCode: 'received',
+                        authorizationOptions: 'mock-authorization-options'
+                    })
+                )
+            );
+            payByBankPixElement = new PayByBankPix(global.core, {
+                ...coreProps,
+                modules: { ...coreProps.modules, srPanel: new SRPanel(global.core) },
+                onChange: onChangeMock,
+                onSubmit: onSubmitMock,
+                _isAdyenHosted: true,
+                storedPaymentMethodId: 'mock-stored-payment-method-id',
+                enrollmentId: 'mock-enrollment-id',
+                initiationId: 'mock-initiationId-id',
+                clientKey: 'mock-client-key',
+                type: 'await'
+            });
+            render(payByBankPixElement.render());
+            await waitFor(() => expect(mockCreateCredential).toHaveBeenCalledWith('mock-authorization-options'));
+            await waitFor(() =>
+                expect(httpPostMock).toHaveBeenCalledWith(
+                    { loadingContext: 'test', path: 'utility/v1/pixpaybybank/redirect-result?clientKey=mock-client-key', timeout: 10000 },
+                    {
+                        enrollmentId: 'mock-enrollment-id',
+                        initiationId: 'mock-initiationId-id',
+                        fidoAssertion: 'mock-fidoAssertion'
+                    }
+                )
+            );
+        });
     });
 });
