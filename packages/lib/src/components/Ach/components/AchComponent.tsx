@@ -1,28 +1,18 @@
 import { h } from 'preact';
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import FormInstruction from '../../internal/FormInstruction';
 import { AccountTypeSelector } from './AccountTypeSelector';
 import Fieldset from '../../internal/FormFields/Fieldset';
 import useForm from '../../../utils/useForm';
-import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
-import { PayButtonProps } from '../../internal/PayButton/PayButton';
 import Field from '../../internal/FormFields/Field';
 import InputText from '../../internal/FormFields/InputText';
-import { ComponentMethodsRef } from '../../internal/UIElement/types';
-import { achValidationRules } from './validate';
+import { achValidationRules, achFormatters } from './validate';
 import StoreDetails from '../../internal/StoreDetails';
 
-interface AchComponentProps {
-    onChange(e): void; //TODO
-    showPayButton: boolean;
-    payButton: (props: Partial<PayButtonProps>) => h.JSX.Element;
-    placeholders: any; // TODO
-    hasHolderName: boolean;
-    holderNameRequired: boolean;
-    showContextualElement: boolean;
-    setComponentRef: (ref: ComponentMethodsRef) => void;
-    enableStoreDetails: boolean;
-}
+import type { PayButtonProps } from '../../internal/PayButton/PayButton';
+import type { ComponentMethodsRef } from '../../internal/UIElement/types';
+import type { AchPlaceholders } from '../types';
 
 type AchForm = {
     selectedAccountType: string;
@@ -32,6 +22,17 @@ type AchForm = {
     accountNumberVerification: string;
 };
 
+interface AchComponentProps {
+    onChange(e): void; //TODO
+    hasHolderName: boolean;
+    holderNameRequired: boolean;
+    setComponentRef: (ref: ComponentMethodsRef) => void;
+    placeholders?: AchPlaceholders;
+    payButton: (props: Partial<PayButtonProps>) => h.JSX.Element;
+    showPayButton: boolean;
+    enableStoreDetails: boolean;
+}
+
 function AchComponent({
     onChange,
     payButton,
@@ -40,32 +41,20 @@ function AchComponent({
     hasHolderName,
     holderNameRequired,
     setComponentRef,
-    enableStoreDetails = true
+    enableStoreDetails
 }: AchComponentProps) {
     const { i18n } = useCoreContext();
     const [status, setStatus] = useState('ready');
     const { handleChangeFor, triggerValidation, data, errors, valid, isValid } = useForm<AchForm>({
         schema: ['selectedAccountType', 'ownerName', 'routingNumber', 'accountNumber', 'accountNumberVerification'],
-        rules: achValidationRules
+        rules: achValidationRules,
+        formatters: achFormatters
     });
-    const [hasFormBeenValidated, setHasFormBeenValidated] = useState<boolean>(false);
     const [storePaymentMethod, setStorePaymentMethod] = useState(false);
-
-    /**
-     * Callback needed in order to flag when the full form is validated, so we can properly handle
-     * the "Verify Account Number" field validation
-     */
-    const validateForm = useCallback(
-        (scheme: string[]) => {
-            setHasFormBeenValidated(true);
-            triggerValidation(scheme);
-        },
-        [triggerValidation]
-    );
 
     const achRef = useRef<ComponentMethodsRef>({
         setStatus: setStatus,
-        showValidation: validateForm
+        showValidation: triggerValidation
     });
 
     useEffect(() => {
@@ -73,21 +62,24 @@ function AchComponent({
     }, [setComponentRef, achRef.current]);
 
     useEffect(() => {
-        onChange({ data, valid, errors, isValid });
-    }, [onChange, data, valid, errors, isValid]);
+        onChange({ data, valid, errors, isValid, storePaymentMethod });
+    }, [onChange, data, valid, errors, isValid, storePaymentMethod]);
 
     /**
-     * When the "Account Number" loses focus, we apply validation on the "Verify account number" field
-     * if the full form has been ever validated
+     * If the "Verify account number" field has been touched before or if it has errors, we want to trigger
+     * its validation when there is any change done to the "Account number" field
      */
-    const onAccountNumberBlur = useCallback(
-        (event: h.JSX.TargetedFocusEvent<HTMLInputElement>) => {
-            handleChangeFor('accountNumber', 'blur')(event);
-            if (hasFormBeenValidated) {
+    const onAccountNumberInput = useCallback(
+        (event: h.JSX.TargetedInputEvent<HTMLInputElement>) => {
+            handleChangeFor('accountNumber', 'input')(event);
+            const hasAccountVerificationError = !!errors.accountNumberVerification;
+            const hasAccountVerificationBeenTouched = data.accountNumberVerification !== null;
+
+            if (hasAccountVerificationError || hasAccountVerificationBeenTouched) {
                 triggerValidation(['accountNumberVerification']);
             }
         },
-        [handleChangeFor, triggerValidation, hasFormBeenValidated]
+        [handleChangeFor, triggerValidation, data.accountNumberVerification, errors.accountNumberVerification]
     );
 
     return (
@@ -96,6 +88,7 @@ function AchComponent({
 
             <Fieldset classNameModifiers={[]} label={i18n.get('ach.bankAccount.title')}>
                 <AccountTypeSelector
+                    placeholder={placeholders?.accountTypeSelector}
                     onSelect={handleChangeFor('selectedAccountType')}
                     selectedAccountType={data.selectedAccountType}
                     errorMessage={!!errors.selectedAccountType && i18n.get(errors.selectedAccountType.errorMessage)}
@@ -133,6 +126,7 @@ function AchComponent({
                         onInput={handleChangeFor('routingNumber', 'input')}
                         onBlur={handleChangeFor('routingNumber', 'blur')}
                         required={true}
+                        maxlength={9}
                     />
                 </Field>
 
@@ -147,9 +141,10 @@ function AchComponent({
                         name={'accountNumber'}
                         placeholder={placeholders?.accountNumber}
                         value={data.accountNumber}
-                        onInput={handleChangeFor('accountNumber', 'input')}
-                        onBlur={onAccountNumberBlur}
+                        onInput={onAccountNumberInput}
+                        onBlur={handleChangeFor('accountNumber', 'blur')}
                         required={true}
+                        maxlength={17}
                     />
                 </Field>
 
@@ -166,6 +161,7 @@ function AchComponent({
                         onInput={handleChangeFor('accountNumberVerification', 'input')}
                         onBlur={handleChangeFor('accountNumberVerification', 'blur')}
                         required={true}
+                        maxlength={17}
                     />
                 </Field>
             </Fieldset>

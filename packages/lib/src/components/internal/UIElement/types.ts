@@ -112,6 +112,6 @@ export type UIElementStatus = 'ready' | 'loading' | 'error' | 'success';
 
 // An interface for the members exposed by a component to its parent UIElement
 export interface ComponentMethodsRef {
-    showValidation?: (scheme?: string[]) => void;
+    showValidation?: () => void;
     setStatus?(status: UIElementStatus): void;
 }

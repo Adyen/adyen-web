@@ -24,6 +24,14 @@ type PlaceholderKeys = 'holderName' | 'bankAccountNumber' | 'bankLocationId';
 
 export type Placeholders = Partial<Record<PlaceholderKeys, string>>;
 
+export interface AchPlaceholders {
+    accountTypeSelector?: string;
+    ownerName?: string;
+    routingNumber?: string;
+    accountNumber?: string;
+    accountNumberVerification?: string;
+}
+
 export interface ACHInputProps {
     autoFocus?: boolean;
     clientKey?: string;

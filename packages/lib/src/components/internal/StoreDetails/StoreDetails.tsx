@@ -3,6 +3,8 @@ import { h } from 'preact';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import Checkbox from '../FormFields/Checkbox';
 
+import './StoreDetails.scss';
+
 /**
  * "Store details" generic checkbox
  */

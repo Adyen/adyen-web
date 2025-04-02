@@ -16,9 +16,10 @@ interface AccountTypeSelectorProps {
     selectedAccountType?: string;
     onSelect(value: string): void;
     errorMessage?: string;
+    placeholder?: string;
 }
 
-const AccountTypeSelector = ({ onSelect, selectedAccountType, errorMessage }: AccountTypeSelectorProps) => {
+const AccountTypeSelector = ({ onSelect, selectedAccountType, errorMessage, placeholder }: AccountTypeSelectorProps) => {
     const { i18n } = useCoreContext();
     const options: SelectItem[] = useMemo(
         () =>
@@ -46,7 +47,7 @@ const AccountTypeSelector = ({ onSelect, selectedAccountType, errorMessage }: Ac
             errorMessage={errorMessage}
         >
             <Select
-                placeholder={i18n.get('ach.bankAccount.placeholder')}
+                placeholder={placeholder || i18n.get('ach.bankAccount.placeholder')}
                 filterable={false}
                 items={options}
                 selectedValue={selectedAccountType}

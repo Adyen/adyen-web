@@ -19,7 +19,8 @@ export const Default: ACHStory = {
         componentConfiguration: {
             onChange(state) {
                 console.log(state);
-            }
+            },
+            holderNameRequired: false
         }
         // componentConfiguration: {
         //     data: {

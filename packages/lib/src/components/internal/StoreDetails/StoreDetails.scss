@@ -1,0 +1,12 @@
+@import 'styles/variable-generator';
+
+.adyen-checkout__store-details {
+  display: flex;
+  align-items: center;
+  background: token(color-background-primary);
+  gap: token(spacer-060);
+  padding: token(spacer-060) token(spacer-070);
+  margin-top: token(spacer-070);
+  border: token(border-width-s) solid token(color-outline-primary);
+  border-radius: token(border-radius-m);
+}

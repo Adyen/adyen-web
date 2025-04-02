@@ -1,4 +1,8 @@
 import { ValidatorRules } from '../../../utils/Validator/types';
+import { digitsOnlyFormatter } from '../../../utils/Formatters/formatters';
+
+const accountNumberRegex = /^\d{4,17}$/;
+const routingNumberRegex = /^\d{9}$/;
 
 export const achValidationRules: ValidatorRules = {
     selectedAccountType: {
@@ -12,22 +16,33 @@ export const achValidationRules: ValidatorRules = {
         modes: ['blur']
     },
     routingNumber: [
+        // Empty field
         {
-            validate: value => !!value && value.length === 0,
+            validate: value => value.length > 0,
             errorMessage: 'ach.loc.947',
             modes: ['blur']
         },
+        // Incomplete field
         {
-            validate: value => !!value && value.length < 9,
+            validate: value => !!value && routingNumberRegex.test(value),
             errorMessage: 'ach.loc.948',
             modes: ['blur']
         }
     ],
-    accountNumber: {
-        validate: value => !!value && value.length > 0,
-        errorMessage: 'ach.num.945',
-        modes: ['blur']
-    },
+    accountNumber: [
+        // Empty field
+        {
+            validate: value => !!value && value.length > 0,
+            errorMessage: 'ach.num.945',
+            modes: ['blur']
+        },
+        // Incomplete field: value is not between 4 and 17 chars
+        {
+            validate: value => !!value && accountNumberRegex.test(value),
+            errorMessage: 'ach.num.946',
+            modes: ['blur']
+        }
+    ],
     accountNumberVerification: [
         {
             /**
@@ -55,4 +70,10 @@ export const achValidationRules: ValidatorRules = {
         errorMessage: '',
         modes: ['blur']
     }
+};
+
+export const achFormatters = {
+    routingNumber: digitsOnlyFormatter,
+    accountNumber: digitsOnlyFormatter,
+    accountNumberVerification: digitsOnlyFormatter
 };

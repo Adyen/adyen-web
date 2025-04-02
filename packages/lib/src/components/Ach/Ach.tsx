@@ -32,8 +32,8 @@ export class AchElement extends UIElement<AchConfiguration> {
             ownerName: this.state.data.ownerName,
             accountHolderType: this.state.data.selectedAccountType?.split('.')[0],
             bankAccountType: this.state.data.selectedAccountType?.split('.')[1],
-            routingNumber: this.state.data.routingNumber,
-            accountNumber: this.state.data.accountNumber,
+            bankLocationId: this.state.data.routingNumber,
+            bankAccountNumber: this.state.data.accountNumber,
             ...(recurringPayment && { storedPaymentMethodId: this.props.storedPaymentMethodId })
         };
 
@@ -94,19 +94,10 @@ export class AchElement extends UIElement<AchConfiguration> {
                         showPayButton={this.props.showPayButton}
                         hasHolderName={true}
                         holderNameRequired={true}
-                        placeholders={{}}
-                        showContextualElement={true}
+                        placeholders={this.props.placeholders}
                         setComponentRef={this.setComponentRef}
+                        enableStoreDetails={this.props.enableStoreDetails}
                     />
-                    // <AchInput
-                    //     setComponentRef={this.setComponentRef}
-                    //     handleKeyPress={this.handleKeyPress}
-                    //     {...this.props}
-                    //     onChange={this.setState}
-                    //     onSubmit={this.submit}
-                    //     payButton={this.payButton}
-                    //     resources={this.resources}
-                    // />
                 )}
             </CoreProvider>
         );
