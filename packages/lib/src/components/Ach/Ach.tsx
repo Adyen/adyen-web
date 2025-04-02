@@ -6,9 +6,12 @@ import RedirectButton from '../internal/RedirectButton';
 import { AchConfiguration } from './types';
 import { TxVariants } from '../tx-variants';
 import AchComponent from './components/AchComponent';
+import defaultProps from './defaultProps';
 
 export class AchElement extends UIElement<AchConfiguration> {
     public static type = TxVariants.ach;
+
+    protected static defaultProps = defaultProps;
 
     formatProps(props: AchConfiguration) {
         return {
@@ -21,9 +24,6 @@ export class AchElement extends UIElement<AchConfiguration> {
         };
     }
 
-    /**
-     * Formats the component data output
-     */
     formatData() {
         const recurringPayment = !!this.props.storedPaymentMethodId;
 
@@ -41,16 +41,6 @@ export class AchElement extends UIElement<AchConfiguration> {
             paymentMethod,
             ...(this.state.storePaymentMethod && { storePaymentMethod: this.state.storePaymentMethod })
         };
-    }
-
-    updateStyles(stylesObj) {
-        if (this.componentRef && this.componentRef.updateStyles) this.componentRef.updateStyles(stylesObj);
-        return this;
-    }
-
-    setFocusOn(fieldName) {
-        if (this.componentRef && this.componentRef.setFocusOn) this.componentRef.setFocusOn(fieldName);
-        return this;
     }
 
     get isValid() {
