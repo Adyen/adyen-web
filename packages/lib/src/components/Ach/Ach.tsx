@@ -27,19 +27,25 @@ export class AchElement extends UIElement<AchConfiguration> {
     formatData() {
         const recurringPayment = !!this.props.storedPaymentMethodId;
 
-        const paymentMethod = {
-            type: AchElement.type,
-            ownerName: this.state.data.ownerName,
-            accountHolderType: this.state.data.selectedAccountType?.split('.')[0],
-            bankAccountType: this.state.data.selectedAccountType?.split('.')[1],
-            bankLocationId: this.state.data.routingNumber,
-            bankAccountNumber: this.state.data.accountNumber,
-            ...(recurringPayment && { storedPaymentMethodId: this.props.storedPaymentMethodId })
-        };
+        if (recurringPayment) {
+            return {
+                paymentMethod: {
+                    type: AchElement.type,
+                    storedPaymentMethodId: this.props.storedPaymentMethodId
+                }
+            };
+        }
 
         return {
-            paymentMethod,
-            ...(this.state.storePaymentMethod && { storePaymentMethod: this.state.storePaymentMethod })
+            paymentMethod: {
+                type: AchElement.type,
+                ownerName: this.state.data.ownerName,
+                accountHolderType: this.state.data.selectedAccountType?.split('.')[0],
+                bankAccountType: this.state.data.selectedAccountType?.split('.')[1],
+                bankLocationId: this.state.data.routingNumber,
+                bankAccountNumber: this.state.data.accountNumber,
+                ...(this.state.storePaymentMethod && { storePaymentMethod: this.state.storePaymentMethod })
+            }
         };
     }
 
@@ -53,7 +59,6 @@ export class AchElement extends UIElement<AchConfiguration> {
 
     get displayName() {
         if (this.props.storedPaymentMethodId && this.props.bankAccountNumber) {
-            // get lastFour from bankAccountNumber, value comes from storedPaymentMethods
             return `•••• ${this.props.bankAccountNumber.slice(-4)}`;
         }
         return this.props.name;

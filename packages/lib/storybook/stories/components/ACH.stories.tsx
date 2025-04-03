@@ -1,8 +1,9 @@
 import { MetaConfiguration, StoryConfiguration } from '../types';
-import { AchConfiguration } from '../../../src/components/Ach';
 import { ComponentContainer } from '../ComponentContainer';
 import Ach from '../../../src/components/Ach/Ach';
 import { Checkout } from '../Checkout';
+import { AdyenCheckout, components } from '../../../src';
+import type { AchConfiguration } from '../../../src/components/Ach/types';
 
 type ACHStory = StoryConfiguration<AchConfiguration>;
 
@@ -36,6 +37,19 @@ export const Default: ACHStory = {
         //     },
         //     enableStoreDetails: false
         // }
+    }
+};
+
+export const WithDropin: ACHStory = {
+    render: ({ componentConfiguration, ...checkoutConfig }) => {
+        const { Dropin, Ach } = components;
+        AdyenCheckout.register(Ach);
+
+        return (
+            <Checkout checkoutConfig={checkoutConfig}>
+                {checkout => <ComponentContainer element={new Dropin(checkout, componentConfiguration)} />}
+            </Checkout>
+        );
     }
 };
 

@@ -1,12 +1,22 @@
 import { UIElementProps } from '../internal/UIElement/types';
 
 export interface AchConfiguration extends UIElementProps {
-    storedPaymentMethodId?: string;
+    placeholders?: AchPlaceholders;
     holderNameRequired?: boolean;
     hasHolderName?: boolean;
+    /**
+     * Enables storing the payment method using the Checkbox
+     */
     enableStoreDetails?: boolean;
-    bankAccountNumber?: string; // Applies when a storedPM
-    placeholders?: AchPlaceholders;
+    /**
+     * storedPaymentMethodId coming from a stored ACH in /paymentMethods response
+     */
+    storedPaymentMethodId?: string;
+    /**
+     * bankAccountNumber coming from a stored ACH in /paymentMethods response
+     * @internal
+     */
+    bankAccountNumber?: string;
 }
 
 export interface AchPlaceholders {
