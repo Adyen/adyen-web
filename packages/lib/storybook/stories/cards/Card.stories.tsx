@@ -5,6 +5,7 @@ import { CardWith3DS2Redirect } from './cardStoryHelpers/CardWith3DS2Redirect';
 import { createStoredCardComponent } from './cardStoryHelpers/createStoredCardComponent';
 import { createCardComponent } from './cardStoryHelpers/createCardComponent';
 import { getComponentConfigFromUrl } from '../../utils/get-configuration-from-url';
+import { h } from 'preact';
 
 type CardStory = StoryConfiguration<CardConfiguration>;
 
@@ -138,6 +139,22 @@ export const WithKCP: CardStory = {
             // Just set koreanAuthenticationRequired if KCP fields should only show if korean_local_card entered
             configuration: {
                 koreanAuthenticationRequired: true
+            }
+        }
+    }
+};
+
+export const WithMockedFastlane: CardStory = {
+    render: createCardComponent,
+    args: {
+        componentConfiguration: getComponentConfigFromUrl() ?? {
+            fastlaneConfiguration: {
+                showConsent: true,
+                defaultToggleState: true,
+                termsAndConditionsLink: 'https://adyen.com',
+                privacyPolicyLink: 'https://adyen.com',
+                termsAndConditionsVersion: 'v1',
+                fastlaneSessionId: 'ABC-123'
             }
         }
     }

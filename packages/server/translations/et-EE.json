@@ -354,5 +354,17 @@
     "payto.label.firstName": "Konto omaniku eesnimi",
     "payto.label.lastName": "Konto omaniku perekonnanimi",
     "payto.await.waitForConfirmation": "Teie heakskiidu ootel",
-    "payto.bsb.option.label": "BSB ja kontonumber"
+    "payto.bsb.option.label": "BSB ja kontonumber",
+    "card.fastlane.a11y.logo": "Fastlane by Paypal logo",
+    "card.fastlane.a11y.openDialog": "Lisateave Fastlane'i kohta",
+    "card.fastlane.a11y.closeDialog": "Sulge dialoog",
+    "card.fastlane.mobileInputLabel": "Mobiiltelefoni number",
+    "card.fastlane.consentToggle": "Salvestage oma teave Fastlane'iga, et kiirendada maksmist",
+    "card.fastlane.consentText": "Salvestades oma andmed, nõustute saama koode tekstisõnumitega, et kasutada Fastlane'i kõikjal, kus see on saadaval. Samuti nõustute tingimustega %#terms%# ja %#privacy statement%#.",
+    "card.fastlane.modal.benefit1.header": "Täitke oma ostu vormistamised automaatselt",
+    "card.fastlane.modal.benefit1.text": "Hankige ühekordsed koodid salvestatud kaardi ja aadresside kasutamiseks.",
+    "card.fastlane.modal.benefit2.header": "Kaitske oma teavet",
+    "card.fastlane.modal.benefit2.text": "Teie makseandmed krüpteeritakse, kui need salvestatakse ja saadetakse kohtadesse, kus te ostlete.",
+    "card.fastlane.modal.benefit3.header": "Kasutage kõikides kauplustes",
+    "card.fastlane.modal.benefit3.text": "Kiire ostu vormistamine kõikjal, kus Fastlane on saadaval."
 }

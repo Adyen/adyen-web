@@ -4,8 +4,13 @@
 .adyen-checkout__dropin {
     display: flex;
     flex-direction: column;
-    gap: token(spacer-100);
+    gap: token(spacer-070);
 }
+
+.adyen-checkout__button--dropin-show-paymentmethods {
+    align-self: start;
+}
+
 
 .adyen-checkout-payment-methods-container {
     display: flex;
@@ -32,6 +37,7 @@
         pointer-events: none;
     }
 }
+
 
 .adyen-checkout__instant-payment-methods-list {
     $instant-pm-gap: token(spacer-070);

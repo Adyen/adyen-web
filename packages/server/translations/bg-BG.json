@@ -354,5 +354,17 @@
     "payto.label.firstName": "Име на титуляра на сметката",
     "payto.label.lastName": "Фамилия на титуляра на сметката",
     "payto.await.waitForConfirmation": "Очакваме Вашето одобрение",
-    "payto.bsb.option.label": "BSB и номер на сметка"
+    "payto.bsb.option.label": "BSB и номер на сметка",
+    "card.fastlane.a11y.logo": "Лого на Fastlane by Paypal",
+    "card.fastlane.a11y.openDialog": "Прочетете повече за Fastlane",
+    "card.fastlane.a11y.closeDialog": "Затваряне на диалоговия прозорец",
+    "card.fastlane.mobileInputLabel": "Мобилен номер",
+    "card.fastlane.consentToggle": "За по-бързо плащане запазете информацията с Fastlane",
+    "card.fastlane.consentText": "Когато запазите информацията си, приемате да получавате кодове чрез текстови съобщения, за да използвате Fastlane навсякъде, където е наличен. Освен това приемате %#terms%# и %#privacy statement%#.",
+    "card.fastlane.modal.benefit1.header": "Автоматично попълване на плащанията",
+    "card.fastlane.modal.benefit1.text": "Получавате еднократни кодове за използване на запазените карти и адреси.",
+    "card.fastlane.modal.benefit2.header": "Защитете информацията си",
+    "card.fastlane.modal.benefit2.text": "Вашата информация за плащане се криптира, когато се съхранява и изпраща до местата, където пазарувате.",
+    "card.fastlane.modal.benefit3.header": "Използвайте във всички магазини",
+    "card.fastlane.modal.benefit3.text": "Плащайте по-бързо навсякъде, където е наличен Fastlane."
 }
