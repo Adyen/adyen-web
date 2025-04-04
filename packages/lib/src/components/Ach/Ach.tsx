@@ -1,30 +1,19 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
-// import AchInput from './components/AchInput';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import RedirectButton from '../internal/RedirectButton';
-import { AchConfiguration } from './types';
 import { TxVariants } from '../tx-variants';
 import AchComponent from './components/AchComponent';
 import defaultProps from './defaultProps';
+
+import type { AchConfiguration } from './types';
 
 export class AchElement extends UIElement<AchConfiguration> {
     public static type = TxVariants.ach;
 
     protected static defaultProps = defaultProps;
 
-    formatProps(props: AchConfiguration) {
-        return {
-            ...props,
-            // Fix mismatch between passed hasHolderName & holderNameRequired props
-            // (when holderNameRequired = true, but hasHolderName = false - which means component will never be valid)
-            holderNameRequired: props.hasHolderName ?? props.holderNameRequired
-            // TODO - if it turns out that hasHolderName & holderNameRequired are not configurable by the merchant
-            //  then we will need to force these properties to true
-        };
-    }
-
-    formatData() {
+    public override formatData() {
         const recurringPayment = !!this.props.storedPaymentMethodId;
 
         if (recurringPayment) {
@@ -49,7 +38,7 @@ export class AchElement extends UIElement<AchConfiguration> {
         };
     }
 
-    get isValid() {
+    public override get isValid(): boolean {
         if (this.props.storedPaymentMethodId) {
             return true;
         }
@@ -87,8 +76,7 @@ export class AchElement extends UIElement<AchConfiguration> {
                         onChange={this.setState}
                         payButton={this.payButton}
                         showPayButton={this.props.showPayButton}
-                        hasHolderName={true}
-                        holderNameRequired={true}
+                        hasHolderName={this.props.hasHolderName}
                         placeholders={this.props.placeholders}
                         setComponentRef={this.setComponentRef}
                         enableStoreDetails={this.props.enableStoreDetails}

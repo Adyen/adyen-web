@@ -1,3 +1,4 @@
+import React from 'react';
 import { useEffect, useState } from 'preact/hooks';
 import type { ComponentChildren } from 'preact';
 import { createCheckout } from '../helpers/create-checkout';
@@ -10,7 +11,7 @@ interface ICheckout {
     checkoutConfig: GlobalStoryProps;
 }
 
-export const Checkout = ({ children, checkoutConfig }: ICheckout) => {
+export const Checkout: React.FC<ICheckout> = ({ children, checkoutConfig }) => {
     const [adyenCheckout, setAdyenCheckout] = useState<ICore>();
     const [errorMessage, setErrorMessage] = useState<string>();
 

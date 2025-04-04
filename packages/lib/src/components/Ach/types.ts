@@ -1,15 +1,23 @@
 import { UIElementProps } from '../internal/UIElement/types';
 
 export interface AchConfiguration extends UIElementProps {
+    /**
+     * Adds placeholder text to the input fields
+     */
     placeholders?: AchPlaceholders;
-    holderNameRequired?: boolean;
+    /**
+     * Set to false to hide the "Account Holder Name" field if you want to pass the data yourself
+     * @default true
+     */
     hasHolderName?: boolean;
     /**
      * Enables storing the payment method using the Checkbox
+     * @default false
      */
     enableStoreDetails?: boolean;
     /**
      * storedPaymentMethodId coming from a stored ACH in /paymentMethods response
+     * @internal
      */
     storedPaymentMethodId?: string;
     /**

@@ -1,8 +1,10 @@
-import { MetaConfiguration, StoryConfiguration } from '../types';
-import { ComponentContainer } from '../ComponentContainer';
+import React from 'react';
+import { AdyenCheckout, components } from '../../../src';
 import Ach from '../../../src/components/Ach';
 import { Checkout } from '../Checkout';
-import { AdyenCheckout, components } from '../../../src';
+import { ComponentContainer } from '../ComponentContainer';
+
+import type { MetaConfiguration, StoryConfiguration } from '../types';
 import type { AchConfiguration } from '../../../src/components/Ach/types';
 
 type ACHStory = StoryConfiguration<AchConfiguration>;
@@ -17,31 +19,7 @@ export const Default: ACHStory = {
     ),
     args: {
         countryCode: 'US',
-        componentConfiguration: {
-            onChange(state) {
-                console.log(state);
-            },
-
-            onSubmit() {
-                console.log('zzzz');
-            },
-
-            enableStoreDetails: true
-        }
-        // componentConfiguration: {
-        //     data: {
-        //         holderName: 'B. Fish',
-        //         billingAddress: {
-        //             street: 'Infinite Loop',
-        //             postalCode: '95014',
-        //             city: 'Cupertino',
-        //             houseNumberOrName: '1',
-        //             country: 'US',
-        //             stateOrProvince: 'CA'
-        //         }
-        //     },
-        //     enableStoreDetails: false
-        // }
+        componentConfiguration: {}
     }
 };
 

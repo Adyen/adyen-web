@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import FormInstruction from '../../internal/FormInstruction';
 import { AccountTypeSelector } from './AccountTypeSelector';
@@ -23,30 +23,36 @@ type AchForm = {
 };
 
 interface AchComponentProps {
-    onChange(e): void; //TODO
-    hasHolderName: boolean;
-    holderNameRequired: boolean;
-    setComponentRef: (ref: ComponentMethodsRef) => void;
-    placeholders?: AchPlaceholders;
+    onChange({
+        data,
+        valid,
+        errors,
+        isValid,
+        storePaymentMethod
+    }: {
+        data: AchForm;
+        valid: { [key: string]: boolean };
+        errors: { [key: string]: any };
+        isValid: boolean;
+        storePaymentMethod: boolean;
+    }): void;
     payButton: (props: Partial<PayButtonProps>) => h.JSX.Element;
+    setComponentRef: (ref: ComponentMethodsRef) => void;
+    hasHolderName: boolean;
     showPayButton: boolean;
     enableStoreDetails: boolean;
+    placeholders?: AchPlaceholders;
 }
 
-function AchComponent({
-    onChange,
-    payButton,
-    showPayButton,
-    placeholders,
-    hasHolderName,
-    holderNameRequired,
-    setComponentRef,
-    enableStoreDetails
-}: AchComponentProps) {
+function AchComponent({ onChange, payButton, showPayButton, placeholders, hasHolderName, setComponentRef, enableStoreDetails }: AchComponentProps) {
+    const schema = useMemo(
+        () => ['selectedAccountType', 'routingNumber', 'accountNumber', 'accountNumberVerification', ...(hasHolderName ? ['ownerName'] : [])],
+        [hasHolderName]
+    );
     const { i18n } = useCoreContext();
     const [status, setStatus] = useState('ready');
     const { handleChangeFor, triggerValidation, data, errors, valid, isValid } = useForm<AchForm>({
-        schema: ['selectedAccountType', 'ownerName', 'routingNumber', 'accountNumber', 'accountNumberVerification'],
+        schema,
         rules: achValidationRules,
         formatters: achFormatters
     });
@@ -73,6 +79,7 @@ function AchComponent({
     const onAccountNumberInput = useCallback(
         (event: h.JSX.TargetedInputEvent<HTMLInputElement>) => {
             handleChangeFor('accountNumber', 'input')(event);
+
             const hasAccountVerificationError = !!errors.accountNumberVerification;
             const hasAccountVerificationBeenTouched = data.accountNumberVerification !== null;
 
@@ -110,7 +117,7 @@ function AchComponent({
                             value={data.ownerName}
                             onInput={handleChangeFor('ownerName', 'input')}
                             onBlur={handleChangeFor('ownerName', 'blur')}
-                            required={holderNameRequired}
+                            required={true}
                         />
                     </Field>
                 )}
