@@ -18,9 +18,22 @@
         margin-bottom: token(spacer-070);
     }
 
+    .adyen-checkout__voucher-result__image__wrapper {
+        width: 8em;
+
+        > img {
+            width: 100%;
+        }
+    }
+
     .adyen-checkout__voucher-result__amount {
         @include index.adyen-checkout-text-title-l;
 
         margin-top: token(spacer-000);
     }
+}
+
+.adyen-checkout-await-logo-open-finance{
+    width: 8em;
+    height: auto;
 }

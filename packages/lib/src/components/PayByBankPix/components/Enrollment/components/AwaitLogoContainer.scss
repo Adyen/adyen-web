@@ -2,10 +2,16 @@
 
 .adyen-checkout-await-logo-container {
     display: flex;
+    gap: token(spacer-070);
     flex-direction: column;
     align-items: center;
     width: fit-content;
     padding: token(spacer-070) token(spacer-090);
     border-radius: token(border-radius-m);
     background: token(color-background-secondary);
+}
+
+/* When there's only one child inside, remove the background */
+.adyen-checkout-await-logo-container:has(> *:only-child) {
+    background: none;
 }

@@ -6,11 +6,14 @@ import { IIssuerList } from '../../../internal/IssuerList/types';
 import IssuerList from '../../../internal/IssuerList';
 import { useIssuerWithLogo } from './useIssuerWithLogo';
 import getEnrollmentStatus from './getEnrollmentStatus';
-import DisclaimerMessage from '../../../internal/DisclaimerMessage';
 import IssuerListIntroduction from './components/IssuerListIntroduction';
 import PayByBankPixAwait from './components/PayByBankPixAwait';
 import useImage from '../../../../core/Context/useImage';
 import './Enrollment.scss';
+import { LabelOnlyDisclaimerMessage } from '../../../internal/DisclaimerMessage/DisclaimerMessage';
+
+//todo: add
+const TERMS_CONDITIONS_URL = 'https://www.google.com';
 
 function Enrollment(props: EnrollmentProps) {
     const { i18n, loadingContext } = useCoreContext();
@@ -19,9 +22,9 @@ function Enrollment(props: EnrollmentProps) {
     const [registrationOptions, setRegistrationOptions] = useState<string>(null);
     // todo: add
     const logos = [
-        { name: 'Open finance', alt: i18n.get('paybybankpix.await.logoAlt.openFinance'), src: `${getImage()('openFinance')}` },
-        { name: 'Arrow down', alt: i18n.get('paybybankpix.await.logoAlt.arrowDown'), src: `${getImage()('arrowDown')}` },
-        { name: 'Bank', alt: i18n.get('paybybankpix.await.logoAlt.bank'), src: `${getImage()('bank')}` }
+        { name: 'open-finance', alt: i18n.get('paybybankpix.await.logoAlt.openFinance'), src: `${getImage()('open-finance')}` },
+        { name: 'arrow-down', alt: i18n.get('paybybankpix.await.logoAlt.arrowDown'), src: `${getImage()('arrow-down')}` },
+        { name: 'bank', alt: i18n.get('paybybankpix.await.logoAlt.bank'), src: `${getImage()('bank')}` }
     ];
     const self = useRef({
         showValidation: () => {
@@ -80,7 +83,9 @@ function Enrollment(props: EnrollmentProps) {
                         showPayButton={true}
                         ref={issuerListRef}
                     ></IssuerList>
-                    <DisclaimerMessage message={i18n.get('paybybankpix.issuerList.disclaimer')} />
+                    <span className="adyen-checkout-disclaimer__label">
+                        <LabelOnlyDisclaimerMessage message={i18n.get('paybybankpix.issuerList.disclaimer')} urls={[TERMS_CONDITIONS_URL]} />
+                    </span>
                 </div>
             )}
         </div>

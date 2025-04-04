@@ -15,7 +15,12 @@ function AwaitLogoContainer({ logos }: Readonly<IAwaitLogoContainer>) {
     return (
         <div className={'adyen-checkout-await-logo-container'}>
             {logos.map(logo => (
-                <img key={logo.name} src={logo.src} alt={logo.alt} className="adyen-checkout__await__brand-logo" />
+                <img
+                    key={logo.name}
+                    src={logo.src}
+                    alt={logo.alt}
+                    className={`adyen-checkout__await__brand-logo adyen-checkout-await-logo-${logo.name}`}
+                />
             ))}
         </div>
     );

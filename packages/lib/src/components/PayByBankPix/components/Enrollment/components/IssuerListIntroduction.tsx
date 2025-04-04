@@ -5,7 +5,7 @@ import useImage from '../../../../../core/Context/useImage';
 
 // todo: add logos after uploaded to cdn
 const LOGO = {
-    name: 'pix',
+    name: 'open-finance',
     altI18nKey: ''
 };
 function IssuerListIntroduction() {
@@ -15,11 +15,12 @@ function IssuerListIntroduction() {
     return (
         <div className={'adyen-checkout-issuer-list-introduction'}>
             <div className="adyen-checkout-issuer-list-introduction-logo-container">
-                <img src={getImage()(LOGO.name)} alt={i18n.get(LOGO.altI18nKey)} className="adyen-checkout__await__brand-logo" />
+                <img
+                    src={getImage()(LOGO.name)}
+                    alt={i18n.get(LOGO.altI18nKey)}
+                    className="adyen-checkout-issuer-list-introduction-logo-container__logo"
+                />
                 <p className="adyen-checkout-issuer-list-introduction-logo-container__title">
-                    {i18n.get('paybybankpix.issuerList.introduction.logo.title')}
-                </p>
-                <p className="adyen-checkout-issuer-list-introduction-logo-container__content">
                     {i18n.get('paybybankpix.issuerList.introduction.logo.content')}
                 </p>
             </div>
