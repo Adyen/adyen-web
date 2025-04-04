@@ -3,9 +3,11 @@ import { PayButtonFunctionProps } from '../../../internal/UIElement/types';
 import { IssuerItem } from '../../../internal/IssuerList/types';
 import { OnChangeData } from '../../../../core/types';
 import { SendAnalyticsObject } from '../../../../core/Analytics/types';
+import { IPayByBankPixAwait } from './components/PayByBankPixAwait';
 
 interface BaseEnrollmentProps {
     type?: string;
+    txVariant: string;
     registrationOptions?: string;
     payButton(props: PayButtonFunctionProps): h.JSX.Element;
     setComponentRef?: (ref) => void;
@@ -16,16 +18,12 @@ interface BaseEnrollmentProps {
     onEnroll?: (registrationOptions: string) => void;
 }
 
-export interface AwaitProps extends BaseEnrollmentProps {
+export interface AwaitProps extends Partial<IPayByBankPixAwait>, BaseEnrollmentProps {
     type: 'await';
-    clientKey: string;
     enrollmentId: string;
-    paymentMethodType?: string;
-    countdownTime?: number;
 }
 
 export interface IssuerListProps extends BaseEnrollmentProps {
-    txVariant: string;
     issuers?: IssuerItem[];
     /**
      * @internal
