@@ -1,22 +1,59 @@
+import { httpPost } from '../../core/Services/http';
 import ApplePay from './ApplePay';
-import ApplePayService from './ApplePayService';
+import ApplePayService from './services/ApplePayService';
+import ApplePaySdkLoader from './services/ApplePaySdkLoader';
 import { mock } from 'jest-mock-extended';
 import { NO_CHECKOUT_ATTEMPT_ID } from '../../core/Analytics/constants';
+import { render, screen } from '@testing-library/preact';
 
-jest.mock('./ApplePayService');
+jest.mock('../../core/Services/http');
+jest.mock('./services/ApplePayService');
+jest.mock('./services/ApplePaySdkLoader');
+
+const mockedHttpPost = httpPost as jest.Mock;
+
+let mockApplePaySession;
 
 beforeEach(() => {
+    const mockApplePaySdkLoaderLoadFunction = jest.fn().mockImplementation(() => {
+        mockApplePaySession = mock<ApplePaySession>({
+            // @ts-ignore The following methods are not recognized as static members
+            canMakePayments: jest.fn().mockReturnValue(true),
+            applePayCapabilities: jest.fn().mockResolvedValue({}),
+            supportsVersion: jest.fn().mockImplementation(() => true),
+            STATUS_SUCCESS: 1,
+            STATUS_FAILURE: 0
+        });
+
+        // @ts-ignore ApplePaySession does exist
+        global.ApplePaySession = mockApplePaySession;
+
+        Object.defineProperty(window, 'ApplePayWebOptions', {
+            writable: true,
+            value: {
+                set: jest.fn()
+            }
+        });
+
+        return Promise.resolve(mockApplePaySession);
+    });
+
+    // @ts-ignore 'ApplePaySdkLoader' is mocked
+    ApplePaySdkLoader.mockImplementation(() => ({
+        load: mockApplePaySdkLoaderLoadFunction,
+        isSdkLoaded: jest.fn().mockResolvedValue(undefined)
+    }));
+});
+
+afterEach(() => {
     // @ts-ignore 'mockClear' is provided by jest.mock
     ApplePayService.mockClear();
+    // @ts-ignore 'mockClear' is provided by jest.mock
+    ApplePaySdkLoader.mockClear();
+    mockedHttpPost.mockClear();
+
     jest.resetModules();
     jest.resetAllMocks();
-
-    window.ApplePaySession = {
-        // @ts-ignore Mock ApplePaySession.STATUS_SUCCESS STATUS_FAILURE
-        STATUS_SUCCESS: 1,
-        STATUS_FAILURE: 0,
-        supportsVersion: () => true
-    };
 });
 
 const configurationMock = {
@@ -25,6 +62,186 @@ const configurationMock = {
 };
 
 describe('ApplePay', () => {
+    describe('constructor()', () => {
+        test('should load the SDK and define the apple pay version/applepay web options', async () => {
+            Object.defineProperty(window, 'location', {
+                writable: true,
+                value: {
+                    protocol: 'https:'
+                }
+            });
+
+            const onApplePayCodeCloseMock = jest.fn();
+            new ApplePay(global.core, {
+                onApplePayCodeClose: onApplePayCodeCloseMock
+            });
+
+            await new Promise(process.nextTick);
+
+            // @ts-ignore 'supportsVersion' is not recognized as static member
+            expect(window.ApplePaySession.supportsVersion).toHaveBeenCalledTimes(1);
+            // @ts-ignore 'supportsVersion' is not recognized as static member
+            expect(window.ApplePaySession.supportsVersion).toHaveBeenCalledWith(14);
+            expect(window.ApplePayWebOptions.set).toHaveBeenCalledTimes(1);
+            expect(window.ApplePayWebOptions.set).toHaveBeenCalledWith({
+                renderApplePayCodeAs: 'modal',
+                onApplePayCodeClose: onApplePayCodeCloseMock
+            });
+        });
+    });
+
+    describe('showPayButton', () => {
+        test('should not render anything if showPayButton is false', () => {
+            const applepay = new ApplePay(global.core, {
+                showPayButton: false
+            });
+            render(applepay.render());
+            expect(screen.queryByTestId('apple-pay-button')).not.toBeInTheDocument();
+        });
+
+        test('should render apple-pay-button by default', () => {
+            const applepay = new ApplePay(global.core);
+            render(applepay.render());
+            expect(screen.getByTestId('apple-pay-button')).toBeInTheDocument();
+        });
+    });
+
+    describe('isAvailable()', () => {
+        test('should use canMakePayments() API', async () => {
+            Object.defineProperty(window, 'location', {
+                writable: true,
+                value: {
+                    protocol: 'https:'
+                }
+            });
+
+            const applepay = new ApplePay(global.core);
+            await expect(applepay.isAvailable()).resolves.toBeUndefined();
+            expect(ApplePaySession.canMakePayments).toHaveBeenCalledTimes(1);
+        });
+
+        test('should reject if the page is not https', async () => {
+            Object.defineProperty(window, 'location', {
+                writable: true,
+                value: {
+                    protocol: 'http:'
+                }
+            });
+
+            const applepay = new ApplePay(global.core);
+            await expect(applepay.isAvailable()).rejects.toThrow('Trying to start an Apple Pay session from an insecure document');
+        });
+
+        test('should reject if canMakePayments() returns false', async () => {
+            Object.defineProperty(window, 'location', {
+                writable: true,
+                value: {
+                    protocol: 'https:'
+                }
+            });
+
+            const applepay = new ApplePay(global.core);
+            await new Promise(process.nextTick);
+
+            mockApplePaySession.canMakePayments = jest.fn().mockReturnValue(false);
+
+            await expect(applepay.isAvailable()).rejects.toThrow('Apple Pay is not available on this device');
+        });
+
+        test('should reject if something fails when loading the SDK', async () => {
+            Object.defineProperty(window, 'location', {
+                writable: true,
+                value: {
+                    protocol: 'https:'
+                }
+            });
+
+            const applepay = new ApplePay(global.core);
+            await new Promise(process.nextTick);
+
+            applepay['sdkLoader'].isSdkLoaded = jest.fn().mockRejectedValue(undefined);
+
+            await expect(applepay.isAvailable()).rejects.toThrow('Apple Pay SDK failed to load');
+        });
+    });
+
+    describe('applePayCapabilities()', () => {
+        test('should call the applePayCapabilities() API with the merchant config', async () => {
+            const applepay = new ApplePay(global.core, {
+                configuration: configurationMock
+            });
+
+            await expect(applepay.applePayCapabilities()).resolves.toEqual({});
+            expect(mockApplePaySession.applePayCapabilities).toHaveBeenCalledTimes(1);
+            expect(mockApplePaySession.applePayCapabilities).toHaveBeenCalledWith(configurationMock.merchantId);
+        });
+
+        test('should throw error if applePayCapabilities() fails', async () => {
+            const applepay = new ApplePay(global.core, {
+                configuration: configurationMock
+            });
+            mockApplePaySession.applePayCapabilities = jest.fn().mockRejectedValue({});
+
+            await expect(applepay.applePayCapabilities()).rejects.toThrow('Apple Pay: Error when requesting applePayCapabilities()');
+        });
+    });
+
+    describe('validateMerchant()', () => {
+        test('should pass decoded token back to Apple Pay', async () => {
+            mockedHttpPost.mockResolvedValue({
+                data: 'eyJ0b2tlbiI6ImFwcGxlLXBheS1zZXNzaW9uIn0=' // translates to: {"token":"apple-pay-session"}
+            });
+
+            const applepay = new ApplePay(global.core, {
+                configuration: configurationMock,
+                amount: { currency: 'EUR', value: 2000 }
+            });
+
+            applepay.submit();
+
+            // Session initialized
+            await new Promise(process.nextTick);
+            expect(jest.spyOn(ApplePayService.prototype, 'begin')).toHaveBeenCalledTimes(1);
+
+            // Trigger ApplePayService onValidateMerchant property
+            // @ts-ignore ApplePayService is mocked
+            const onValidateMerchant = ApplePayService.mock.calls[0][1].onValidateMerchant;
+            const resolveMock = jest.fn();
+            const rejectMock = jest.fn();
+            onValidateMerchant(resolveMock, rejectMock);
+
+            await new Promise(process.nextTick);
+
+            expect(resolveMock).toHaveBeenCalledWith({ token: 'apple-pay-session' });
+        });
+
+        test('should reject if the session request fails', async () => {
+            mockedHttpPost.mockRejectedValue({});
+
+            const applepay = new ApplePay(global.core, {
+                configuration: configurationMock,
+                amount: { currency: 'EUR', value: 2000 }
+            });
+
+            applepay.submit();
+
+            // Session initialized
+            await new Promise(process.nextTick);
+            expect(jest.spyOn(ApplePayService.prototype, 'begin')).toHaveBeenCalledTimes(1);
+
+            // Trigger ApplePayService onValidateMerchant property
+            // @ts-ignore ApplePayService is mocked
+            const onValidateMerchant = ApplePayService.mock.calls[0][1].onValidateMerchant;
+            const resolveMock = jest.fn();
+            const rejectMock = jest.fn();
+            onValidateMerchant(resolveMock, rejectMock);
+
+            await new Promise(process.nextTick);
+
+            expect(rejectMock).toHaveBeenCalledWith('Could not get Apple Pay session');
+        });
+    });
+
     describe('isExpress flag', () => {
         test('should add subtype: express when isExpress is configured', () => {
             const applepay = new ApplePay(global.core, { isExpress: true });
@@ -54,6 +271,7 @@ describe('ApplePay', () => {
 
             const applepay = new ApplePay(global.core, {
                 configuration: configurationMock,
+                modules: { analytics: global.analytics },
                 amount: { currency: 'EUR', value: 2000 },
                 onPaymentFailed: onPaymentFailedMock,
                 onSubmit(state, component, actions) {
@@ -99,6 +317,7 @@ describe('ApplePay', () => {
             });
 
             const applepay = new ApplePay(global.core, {
+                modules: { analytics: global.analytics },
                 configuration: configurationMock,
                 amount: { currency: 'EUR', value: 2000 },
                 onPaymentFailed: onPaymentFailedMock,

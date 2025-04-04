@@ -5,7 +5,7 @@ import useImage from '../../../../../core/Context/useImage';
 import { useState } from 'preact/hooks';
 import classNames from 'classnames';
 
-export default function BrandIcon({ brand, brandsConfiguration = {} }: BrandIconProps) {
+export default function BrandIcon({ brand, brandsConfiguration = {}, onClick }: BrandIconProps) {
     const getImage = useImage();
     const imageName = brand === 'card' ? 'nocard' : brand;
     const imageUrl = brandsConfiguration[brand]?.icon ?? getCardImageUrl(imageName, getImage);
@@ -26,5 +26,8 @@ export default function BrandIcon({ brand, brandsConfiguration = {} }: BrandIcon
         'adyen-checkout-card-input__icon--hidden': !hasLoaded
     });
 
-    return <img className={fieldClassnames} onLoad={handleLoad} onError={handleError} alt={getFullBrandName(brand)} src={imageUrl} />;
+    return (
+        // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions
+        <img className={fieldClassnames} onLoad={handleLoad} onError={handleError} alt={getFullBrandName(brand)} src={imageUrl} onClick={onClick} />
+    );
 }

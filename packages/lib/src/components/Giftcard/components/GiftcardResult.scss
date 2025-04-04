@@ -32,7 +32,7 @@
     margin-bottom: token(spacer-040);
 
     .adyen-checkout__giftcard-result__balance__title--transactionLimit {
-        color: token(color-outline-tertiary);
+        color: token(color-label-secondary);
     }
 
     &:last-child {

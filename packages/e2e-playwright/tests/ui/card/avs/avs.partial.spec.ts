@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test } from '../../../../fixtures/base-fixture';
 
 const INVALID_POSTALCODE = 'aaaaaaaaaa';
 

@@ -16,6 +16,7 @@
         "start": "concurrently --kill-others-on-fail \"yarn workspace @adyen/adyen-web start\"  \"yarn workspace @adyen/adyen-web-playground start\" --names \"lib,playground\"",
         "start:storybook": "concurrently --kill-others-on-fail  \"yarn workspace @adyen/adyen-web-server start\"  \"yarn workspace @adyen/adyen-web start:storybook\" --names \"express-server,storybook\"",
         "start:prod-storybook": "yarn workspace @adyen/adyen-web-server start:storybook",
+        "start:storybook:e2e": "concurrently --kill-others-on-fail  \"yarn workspace @adyen/adyen-web-server start\"  \"yarn workspace @adyen/adyen-web start:storybook:e2e\" --names \"express-server,storybook\"",
         "build": "yarn workspace @adyen/adyen-web build",
         "build:storybook": "yarn workspace @adyen/adyen-web build:storybook",
         "format": "yarn workspace @adyen/adyen-web format",
@@ -31,9 +32,9 @@
     },
     "devDependencies": {
         "@adyen/adyen-web-server": "1.0.0",
-        "@changesets/cli": "2.27.12",
+        "@changesets/cli": "2.28.1",
         "@changesets/get-github-info": "0.6.0",
         "concurrently": "8.2.2",
-        "prettier": "3.4.2"
+        "prettier": "3.5.3"
     }
 }

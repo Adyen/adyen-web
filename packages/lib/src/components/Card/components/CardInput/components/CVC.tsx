@@ -47,6 +47,12 @@ export default function CVC(props: CVCProps) {
 
     const fieldLabel = cvcPolicy !== CVC_POLICY_OPTIONAL ? label : i18n.get('creditCard.securityCode.label.optional');
 
+    const handleIconClick = () => {
+        onFocusField(ENCRYPTED_SECURITY_CODE);
+    };
+
+    const imageDescription = `${fieldLabel} ${contextualText}`;
+
     return (
         <Field
             label={fieldLabel}
@@ -68,7 +74,7 @@ export default function CVC(props: CVCProps) {
         >
             <DataSfSpan encryptedFieldType={ENCRYPTED_SECURITY_CODE} className={cvcClassnames} />
 
-            <CVCHint frontCVC={frontCVC} fieldLabel={fieldLabel} />
+            <CVCHint frontCVC={frontCVC} fieldLabel={imageDescription} onClick={handleIconClick} />
         </Field>
     );
 }

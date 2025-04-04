@@ -1,5 +1,37 @@
 # @adyen/adyen-web
 
+## 6.11.0
+
+### Minor Changes
+
+- Allow typing to continue in cardNumber field after panLength result from binLookup ([#3198](https://github.com/Adyen/adyen-web/pull/3198))
+
+### Patch Changes
+
+- Apple Pay - Fixed issue where its iframe detection code crashes server side rendered apps ([#3204](https://github.com/Adyen/adyen-web/pull/3204))
+
+- Card - Fixed issue where clicking on the input field icons were not causing the respective input field to be focused ([#3197](https://github.com/Adyen/adyen-web/pull/3197))
+
+## 6.10.0
+
+### Minor Changes
+
+- ApplePay - Adding support for third-party browsers ([#3130](https://github.com/Adyen/adyen-web/pull/3130))
+
+### Patch Changes
+
+- GooglePay - Fixed challengeWindowSize property when using Google Pay as Instant payment type inside Drop-in ([#3170](https://github.com/Adyen/adyen-web/pull/3170))
+
+- update error message for single branded card ([#3177](https://github.com/Adyen/adyen-web/pull/3177))
+
+- Translations - Fixed brazilian social security number translation (CPF/CNPJ) for different languages ([#3172](https://github.com/Adyen/adyen-web/pull/3172))
+
+- A11y improvements: contrast, aria-expands and svg alt text ([#3188](https://github.com/Adyen/adyen-web/pull/3188))
+
+- Google Pay - Throwing error in case the merchant id is missing ([#3179](https://github.com/Adyen/adyen-web/pull/3179))
+
+- Typescript - Fixed issue where exposed types for GooglePay/ApplePay were not being found ([#3178](https://github.com/Adyen/adyen-web/pull/3178))
+
 ## 6.9.0
 
 ### Minor Changes

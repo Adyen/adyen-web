@@ -36,6 +36,13 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
             );
         }
 
+        if (!this.props.configuration.merchantId) {
+            throw new AdyenCheckoutError(
+                'IMPLEMENTATION_ERROR',
+                'GooglePay - Missing merchantId. Please ensure that it is correctly configured in your customer area.'
+            );
+        }
+
         this.googlePay = new GooglePayService(this.props.environment, {
             ...(isExpress && paymentDataCallbacks?.onPaymentDataChanged && { onPaymentDataChanged: paymentDataCallbacks.onPaymentDataChanged }),
             onPaymentAuthorized: this.onPaymentAuthorized

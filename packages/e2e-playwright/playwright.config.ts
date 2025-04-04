@@ -6,7 +6,7 @@ import { protocol } from './environment-variables';
 
 dotenv.config({ path: path.resolve('../../', '.env') });
 
-const playgroundBaseUrl = `${protocol}://localhost:3030`;
+const playgroundBaseUrl = `${protocol}://localhost:3020`;
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -29,7 +29,7 @@ const config: PlaywrightTestConfig = {
     /* Retry on CI only */
     retries: process.env.CI ? 2 : 1,
     /* Opt out of parallel tests on CI. Use default locally */
-    workers: process.env.CI ? 1 : undefined,
+    workers: process.env.CI ? 4 : undefined,
 
     /* Reporter to use. See https://playwright.dev/docs/test-reporters */
     reporter: [['html', { open: 'never' }], ['list']],
@@ -80,7 +80,7 @@ const config: PlaywrightTestConfig = {
         {
             command: 'npm run build:storybook && npm run start:prod-storybook',
             cwd: '../..',
-            port: 3030,
+            port: 3020,
             reuseExistingServer: !process.env.CI,
             timeout: 120 * 1000
         }

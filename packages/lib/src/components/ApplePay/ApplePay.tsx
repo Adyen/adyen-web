@@ -1,29 +1,36 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import ApplePayButton from './components/ApplePayButton';
-import ApplePayService from './ApplePayService';
+import ApplePayService from './services/ApplePayService';
 import base64 from '../../utils/base64';
 import defaultProps from './defaultProps';
 import { httpPost } from '../../core/Services/http';
-import { APPLEPAY_SESSION_ENDPOINT } from './config';
-import { preparePaymentRequest } from './payment-request';
-import { resolveSupportedVersion, mapBrands, formatApplePayContactToAdyenAddressFormat } from './utils';
+import { preparePaymentRequest } from './utils/payment-request';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { DecodeObject } from '../../types/global-types';
 import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
+import { resolveSupportedVersion } from './utils/resolve-supported-version';
+import { formatApplePayContactToAdyenAddressFormat } from './utils/format-applepay-contact-to-adyen-format';
+import { mapBrands } from './utils/map-adyen-brands-to-applepay-brands';
+import ApplePaySdkLoader from './services/ApplePaySdkLoader';
+import { detectInIframe } from '../../utils/detectInIframe';
 
+import type { SendAnalyticsObject } from '../../core/Analytics/types';
 import type { ApplePayConfiguration, ApplePayElementData, ApplePayPaymentOrderDetails, ApplePaySessionRequest } from './types';
 import type { ICore } from '../../core/types';
 import type { PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
-import { SendAnalyticsObject } from '../../core/Analytics/types';
 
-const latestSupportedVersion = 14;
+const LATEST_APPLE_PAY_VERSION = 14;
 
 class ApplePayElement extends UIElement<ApplePayConfiguration> {
     public static type = TxVariants.applepay;
+
     protected static defaultProps = defaultProps;
+
+    private sdkLoader: ApplePaySdkLoader;
+    private applePayVersionNumber: number = undefined;
 
     constructor(checkout: ICore, props?: ApplePayConfiguration) {
         super(checkout, props);
@@ -42,21 +49,34 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         this.validateMerchant = this.validateMerchant.bind(this);
         this.collectOrderTrackingDetailsIfNeeded = this.collectOrderTrackingDetailsIfNeeded.bind(this);
         this.handleAuthorization = this.handleAuthorization.bind(this);
+        this.defineApplePayVersionNumber = this.defineApplePayVersionNumber.bind(this);
+        this.configureApplePayWebOptions = this.configureApplePayWebOptions.bind(this);
+
+        this.sdkLoader = new ApplePaySdkLoader();
+
+        void this.sdkLoader
+            .load()
+            .then(this.defineApplePayVersionNumber)
+            .then(this.configureApplePayWebOptions)
+            .catch(error => {
+                this.handleError(error);
+            });
     }
 
     /**
      * Formats the component props
      */
-    protected override formatProps(props) {
-        const version = props.version || resolveSupportedVersion(latestSupportedVersion);
+    protected override formatProps(props: ApplePayConfiguration): ApplePayConfiguration {
+        // @ts-ignore TODO: Fix brands prop
         const supportedNetworks = props.brands?.length ? mapBrands(props.brands) : props.supportedNetworks;
 
         return {
             ...props,
             configuration: props.configuration,
             supportedNetworks,
-            version,
-            totalPriceLabel: props.totalPriceLabel || props.configuration?.merchantName
+            buttonLocale: props.buttonLocale ?? props.i18n?.locale,
+            totalPriceLabel: props.totalPriceLabel || props.configuration?.merchantName,
+            renderApplePayCodeAs: props.renderApplePayCodeAs ?? (detectInIframe() ? 'window' : 'modal')
         };
     }
 
@@ -91,8 +111,79 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         void this.startSession();
     };
 
+    public get isValid(): boolean {
+        return true;
+    }
+
+    /**
+     * This API is only intended for upstreaming or defaulting to Apple Pay, all other scenarios should continue to
+     * use canMakePayments(). For Safari browsers, this API will indicate whether there is a card available to make
+     * payments. For third-party browsers a new status of paymentCredentialStatusUnknown will be returned. This does
+     * not mean there are no cards available, it means the status cannot be determined and as such defaulting
+     * and upstreaming should still be considered.
+     *
+     * {@link https://developer.apple.com/documentation/apple_pay_on_the_web/applepaysession/4440085-applepaycapabilities}
+     * @param merchantIdentifier
+     */
+    public async applePayCapabilities(merchantIdentifier?: string): Promise<ApplePayJS.PaymentCredentialStatusResponse> {
+        const identifier = merchantIdentifier || this.props.configuration.merchantId;
+
+        try {
+            await this.sdkLoader.isSdkLoaded();
+            return await ApplePaySession?.applePayCapabilities(identifier);
+        } catch (error) {
+            throw new AdyenCheckoutError('ERROR', 'Apple Pay: Error when requesting applePayCapabilities()', { cause: error });
+        }
+    }
+
+    /**
+     * Determines if Apple Pay component can be displayed or not
+     */
+    public override async isAvailable(): Promise<void> {
+        if (window.location.protocol !== 'https:') {
+            return Promise.reject(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to start an Apple Pay session from an insecure document'));
+        }
+
+        try {
+            await this.sdkLoader.isSdkLoaded();
+
+            if (ApplePaySession?.canMakePayments()) {
+                return Promise.resolve();
+            }
+
+            return Promise.reject(new AdyenCheckoutError('ERROR', 'Apple Pay is not available on this device'));
+        } catch (error) {
+            return Promise.reject(new AdyenCheckoutError('ERROR', 'Apple Pay SDK failed to load', { cause: error }));
+        }
+    }
+
+    /**
+     * Sets the Apple Pay version available for the shopper.
+     * This code needs to be executed once the  Apple Pay SDK is fully loaded
+     * @private
+     */
+    private defineApplePayVersionNumber() {
+        if (window.location.protocol !== 'https:') return;
+        this.applePayVersionNumber = this.props.version || resolveSupportedVersion(LATEST_APPLE_PAY_VERSION);
+    }
+
+    /**
+     * Sets the configuration/callbacks that pertain to the Apple Pay code overlay/modal.
+     * @private
+     */
+    private configureApplePayWebOptions() {
+        if (window.ApplePayWebOptions) {
+            const { renderApplePayCodeAs, onApplePayCodeClose } = this.props;
+
+            window.ApplePayWebOptions.set({
+                renderApplePayCodeAs,
+                ...(onApplePayCodeClose && { onApplePayCodeClose })
+            });
+        }
+    }
+
     private startSession() {
-        const { version, onValidateMerchant, onPaymentMethodSelected, onShippingMethodSelected, onShippingContactSelected } = this.props;
+        const { onValidateMerchant, onPaymentMethodSelected, onShippingMethodSelected, onShippingContactSelected } = this.props;
 
         const paymentRequest = preparePaymentRequest({
             companyName: this.props.configuration.merchantName,
@@ -101,7 +192,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         });
 
         const session = new ApplePayService(paymentRequest, {
-            version,
+            version: this.applePayVersionNumber,
             onError: (error: unknown) => {
                 this.handleError(
                     new AdyenCheckoutError('ERROR', 'ApplePay - Something went wrong on ApplePayService', {
@@ -231,7 +322,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         const { hostname: domainName } = window.location;
         const { clientKey, configuration, loadingContext, initiative } = this.props;
         const { merchantName, merchantId } = configuration;
-        const path = `${APPLEPAY_SESSION_ENDPOINT}?clientKey=${clientKey}`;
+        const path = `v1/applePay/sessions?clientKey=${clientKey}`;
         const options = { loadingContext, path };
         const request: ApplePaySessionRequest = {
             displayName: merchantName,
@@ -254,59 +345,19 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         }
     }
 
-    /**
-     * Validation
-     *
-     * @remarks
-     * Apple Pay does not require any specific validation
-     */
-    get isValid(): boolean {
-        return true;
-    }
-
-    /**
-     * Determine a shopper's ability to return a form of payment from Apple Pay.
-     * @returns Promise Resolve/Reject whether the shopper can use Apple Pay
-     */
-    public override async isAvailable(): Promise<void> {
-        if (document.location.protocol !== 'https:') {
-            return Promise.reject(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'Trying to start an Apple Pay session from an insecure document'));
-        }
-
-        if (!this.props.onValidateMerchant && !this.props.clientKey) {
-            return Promise.reject(new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'clientKey was not provided'));
-        }
-
-        try {
-            if (window.ApplePaySession && ApplePaySession.canMakePayments() && ApplePaySession.supportsVersion(this.props.version)) {
-                return Promise.resolve();
-            }
-        } catch (error) {
-            console.warn(error);
-        }
-
-        return Promise.reject(new AdyenCheckoutError('ERROR', 'Apple Pay is not available on this device'));
-    }
-
-    /**
-     * Renders the Apple Pay button or nothing in the Dropin
-     */
     render() {
-        if (this.props.showPayButton) {
-            return (
-                <ApplePayButton
-                    i18n={this.props.i18n}
-                    buttonColor={this.props.buttonColor}
-                    buttonType={this.props.buttonType}
-                    onClick={e => {
-                        e.preventDefault();
-                        this.submit();
-                    }}
-                />
-            );
+        if (!this.props.showPayButton) {
+            return null;
         }
 
-        return null;
+        return (
+            <ApplePayButton
+                buttonStyle={this.props.buttonColor}
+                buttonType={this.props.buttonType}
+                buttonLocale={this.props.buttonLocale}
+                onClick={this.submit}
+            />
+        );
     }
 }
 
