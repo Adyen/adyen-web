@@ -1,6 +1,6 @@
 import { MetaConfiguration, StoryConfiguration } from '../types';
 import { ComponentContainer } from '../ComponentContainer';
-import Ach from '../../../src/components/Ach/Ach';
+import Ach from '../../../src/components/Ach';
 import { Checkout } from '../Checkout';
 import { AdyenCheckout, components } from '../../../src';
 import type { AchConfiguration } from '../../../src/components/Ach/types';
@@ -21,7 +21,12 @@ export const Default: ACHStory = {
             onChange(state) {
                 console.log(state);
             },
-            holderNameRequired: false
+
+            onSubmit() {
+                console.log('zzzz');
+            },
+
+            enableStoreDetails: true
         }
         // componentConfiguration: {
         //     data: {

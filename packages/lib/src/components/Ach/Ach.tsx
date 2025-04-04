@@ -43,9 +43,9 @@ export class AchElement extends UIElement<AchConfiguration> {
                 accountHolderType: this.state.data.selectedAccountType?.split('.')[0],
                 bankAccountType: this.state.data.selectedAccountType?.split('.')[1],
                 bankLocationId: this.state.data.routingNumber,
-                bankAccountNumber: this.state.data.accountNumber,
-                ...(this.state.storePaymentMethod && { storePaymentMethod: this.state.storePaymentMethod })
-            }
+                bankAccountNumber: this.state.data.accountNumber
+            },
+            ...(this.state.storePaymentMethod && { storePaymentMethod: this.state.storePaymentMethod })
         };
     }
 
@@ -57,14 +57,14 @@ export class AchElement extends UIElement<AchConfiguration> {
         return !!this.state.isValid;
     }
 
-    get displayName() {
+    public override get displayName(): string {
         if (this.props.storedPaymentMethodId && this.props.bankAccountNumber) {
             return `•••• ${this.props.bankAccountNumber.slice(-4)}`;
         }
         return this.props.name;
     }
 
-    get additionalInfo() {
+    public override get additionalInfo(): string {
         return this.props.storedPaymentMethodId ? this.props.i18n.get('ach.savedBankAccount') : '';
     }
 
