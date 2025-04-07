@@ -26,9 +26,6 @@ export const WithPersonalDetails: PixStory = {
     args: {
         countryCode: 'BR',
         componentConfiguration: {
-            onChange(data) {
-                console.log(data);
-            },
             personalDetailsRequired: true
         }
     }
