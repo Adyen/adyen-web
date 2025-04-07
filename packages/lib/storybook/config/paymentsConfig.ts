@@ -6,8 +6,6 @@ const protocol = window.location.protocol; // gives 'http:' or 'https:' i.e. add
 const { origin = `${protocol}//localhost:3020` } = window.location;
 
 const paymentsConfig = {
-    recurringProcessingModel: 'CardOnFile',
-    shopperInteraction: 'Ecommerce',
     origin,
     returnUrl: RETURN_URL,
     shopperReference: SHOPPER_REFERENCE,

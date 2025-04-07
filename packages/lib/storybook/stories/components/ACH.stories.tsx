@@ -1,9 +1,10 @@
 import React from 'react';
-import { AdyenCheckout, components } from '../../../src';
-// use direct imports
-import Ach from '../../../src/components/Ach';
 import { Checkout } from '../Checkout';
 import { ComponentContainer } from '../ComponentContainer';
+
+import { AdyenCheckout } from '../../../src/core/AdyenCheckout';
+import Dropin from '../../../src/components/Dropin';
+import Ach from '../../../src/components/Ach';
 
 import type { MetaConfiguration, StoryConfiguration } from '../types';
 import type { AchConfiguration } from '../../../src/components/Ach/types';
@@ -20,17 +21,12 @@ export const Default: ACHStory = {
     ),
     args: {
         countryCode: 'US',
-        componentConfiguration: {
-            onChange(data) {
-                console.log(data);
-            }
-        }
+        componentConfiguration: {}
     }
 };
 
 export const WithDropin: ACHStory = {
     render: ({ componentConfiguration, ...checkoutConfig }) => {
-        const { Dropin, Ach } = components;
         AdyenCheckout.register(Ach);
 
         return (
