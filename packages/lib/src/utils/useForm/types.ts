@@ -28,7 +28,7 @@ export type FormProps = {
     formatters?: {
         [key: string]: Formatter | Function;
     };
-    // [key: string]: any;
+    [key: string]: any; // check
 };
 
 export type HandleChangeForModeType = 'input' | 'blur';

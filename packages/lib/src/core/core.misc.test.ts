@@ -6,8 +6,8 @@ import { Ach, Card, Dropin } from '../components';
 const paymentMethodsResponse = {
     paymentMethods: [
         {
-            name: 'ACH Direct Debit',
-            type: 'ach'
+            name: 'Swish',
+            type: 'swish'
         },
         {
             brands: ['visa', 'mc', 'amex', 'maestro', 'bcmc', 'cartebancaire'],

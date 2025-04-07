@@ -64,12 +64,7 @@ export const achValidationRules: ValidatorRules = {
             errorMessage: 'ach.bankAccountNumberVerification.error.not-match',
             modes: ['blur']
         }
-    ],
-    default: {
-        validate: value => !!value && value.length > 0,
-        errorMessage: '',
-        modes: ['blur']
-    }
+    ]
 };
 
 export const achFormatters = {

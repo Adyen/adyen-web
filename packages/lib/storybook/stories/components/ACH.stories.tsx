@@ -1,5 +1,6 @@
 import React from 'react';
 import { AdyenCheckout, components } from '../../../src';
+// use direct imports
 import Ach from '../../../src/components/Ach';
 import { Checkout } from '../Checkout';
 import { ComponentContainer } from '../ComponentContainer';
@@ -19,7 +20,11 @@ export const Default: ACHStory = {
     ),
     args: {
         countryCode: 'US',
-        componentConfiguration: {}
+        componentConfiguration: {
+            onChange(data) {
+                console.log(data);
+            }
+        }
     }
 };
 

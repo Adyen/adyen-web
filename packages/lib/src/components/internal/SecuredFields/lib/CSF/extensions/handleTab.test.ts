@@ -1,8 +1,6 @@
 import { SecuredFields } from '../../types';
 import handleTab from './handleTab';
 import {
-    ENCRYPTED_BANK_ACCNT_NUMBER_FIELD,
-    ENCRYPTED_BANK_LOCATION_FIELD,
     ENCRYPTED_CARD_NUMBER,
     ENCRYPTED_EXPIRY_DATE,
     ENCRYPTED_EXPIRY_MONTH,
@@ -170,21 +168,6 @@ describe("Testing CSF's handleTab functionality in a KCP card scenario", () => {
             expect(focusExternalField).toBeCalledWith('some-other-div');
         }
     );
-});
-
-describe("Testing CSF's handleTab functionality in a ACH scenario", () => {
-    beforeEach(() => {
-        console.log = jest.fn(() => {});
-
-        // reset
-        myCSF.state.numIframes = 2;
-        myCSF.state.type = 'ach';
-    });
-
-    test('Calling handleSFShiftTab with a fieldType = "encryptedBankLocationId", should see setFocusOnFrame called with "encryptedBankAccountNumber"', () => {
-        myCSF.handleSFShiftTab(ENCRYPTED_BANK_LOCATION_FIELD);
-        expect(myCSF.setFocusOnFrame).toBeCalledWith(ENCRYPTED_BANK_ACCNT_NUMBER_FIELD, false);
-    });
 });
 
 describe("Testing CSF's handleTab functionality in a Giftcard scenario", () => {
