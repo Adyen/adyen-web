@@ -49,8 +49,6 @@ class CustomCard extends Base {
         this.cardNumberLabelElement = this.cardNumberField.locator('.pm-form-label__text');
         this.cardNumberErrorElement = this.cardNumberField.locator('.pm-form-label__error-text');
 
-        this.brandingIcon = this.rootElement.locator('.adyen-checkout__card__cardNumber__brandIcon');
-
         /**
          * Card Number elements, in iframe
          */
@@ -96,6 +94,19 @@ class CustomCard extends Base {
         await this.cardNumberInput.pressSequentially(cardNumber, { delay: USER_TYPE_DELAY });
     }
 
+    /**
+     * Locator.fill:
+     * - checks field is visible, enabled & editable
+     * - focuses a field
+     * - writes to the field's value prop
+     * - fires an input event
+     *
+     * For most of our test cases .fill can be seen to mimic a paste event
+     */
+    async fillCardNumber(cardNumber: string) {
+        await this.cardNumberInput.fill(cardNumber);
+    }
+
     async deleteCardNumber() {
         await this.cardNumberInput.clear();
     }
@@ -110,6 +121,41 @@ class CustomCard extends Base {
 
     async typeCvc(cvc: string) {
         await this.cvcInput.pressSequentially(cvc, { delay: USER_TYPE_DELAY });
+    }
+
+    get singleBrandHolder() {
+        return this.rootElement.locator('.pm-image');
+    }
+
+    get dualBrandsHolder() {
+        return this.rootElement.locator('.pm-image-dual');
+    }
+
+    // Retrieve brands
+    get singleBrand() {
+        return this.singleBrandHolder.locator('img');
+    }
+
+    get dualBrands() {
+        return this.dualBrandsHolder.locator('img').all();
+    }
+
+    async waitForVisibleBrands(expectedNumber = 2) {
+        return await this.page.waitForFunction(
+            expectedLength => [...document.querySelectorAll('.pm-image-dual img')].length === expectedLength,
+            expectedNumber
+        );
+    }
+
+    // Select one of the dual brands
+    async selectBrand(
+        text: string | RegExp,
+        options?: {
+            exact?: boolean;
+        },
+        force = false
+    ) {
+        await this.dualBrandsHolder.getByAltText(text, options).click({ force });
     }
 }
 
