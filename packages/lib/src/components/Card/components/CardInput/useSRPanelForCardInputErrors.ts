@@ -59,7 +59,10 @@ const useSRPanelForCardInputErrors = ({ errors, props, isValidating, retrieveLay
                         isValidating.current = false;
                     }, 300);
                     break;
-                /** On blur scenario: not validating, i.e. trying to submit form, but there might be an error, either to set or to clear */
+
+                /**
+                 * Relates to errors triggered by a field blurring (some pm forms have this, some don't) - check if there is an error to either set or to clear
+                 */
                 case ERROR_ACTION_BLUR_SCENARIO: {
                     const difference = getArrayDifferences<SortedErrorObject, string>(currentErrorsSortedByLayout, previousSortedErrors, 'field');
 

@@ -96,7 +96,7 @@ function IssuerList({ items, placeholder, issuer, highlightedIds = [], showConte
         const srPanelResp: SetSRMessagesReturnObject = setSRMessages?.({ errors, isValidating: true });
         if (srPanelResp?.action === ERROR_ACTION_FOCUS_FIELD) {
             // Focus field in error, if required
-            if (shouldMoveFocusSR) setFocusOnField('.adyen-checkout__issuer-list', srPanelResp.fieldToFocus);
+            if (shouldMoveFocusSR) setFocusOnField('.adyen-checkout__issuer-list', 'issuer-list');
         }
     }, [data, valid, errors, isValid]);
 
