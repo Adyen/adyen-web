@@ -12,7 +12,8 @@ import StoreDetails from '../../internal/StoreDetails';
 
 import type { PayButtonProps } from '../../internal/PayButton/PayButton';
 import type { ComponentMethodsRef } from '../../internal/UIElement/types';
-import type { AchPlaceholders } from '../types';
+import type { AchPlaceholders, AchStateErrors } from '../types';
+import useSRPanelForAchErrors from './useSRPanelForACHErrors';
 
 type AchForm = {
     selectedAccountType: string;
@@ -52,14 +53,21 @@ function AchComponent({
     });
     const [storePaymentMethod, setStorePaymentMethod] = useState(false);
 
+    const isValidating = useRef(false);
+
     const achRef = useRef<ComponentMethodsRef>({
         setStatus: setStatus,
-        showValidation: triggerValidation
+        showValidation: () => {
+            isValidating.current = true;
+            triggerValidation();
+        }
     });
 
     useEffect(() => {
         setComponentRef(achRef.current);
     }, [setComponentRef, achRef.current]);
+
+    useSRPanelForAchErrors({ errors: errors as AchStateErrors, data, isValidating });
 
     useEffect(() => {
         onChange({ data, valid, errors, isValid, storePaymentMethod });

@@ -1,12 +1,13 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
-// import AchInput from './components/AchInput';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import RedirectButton from '../internal/RedirectButton';
 import { AchConfiguration } from './types';
 import { TxVariants } from '../tx-variants';
 import AchComponent from './components/AchComponent';
 import defaultProps from './defaultProps';
+import SRPanelProvider from '../../core/Errors/SRPanelProvider';
+// import { SendAnalyticsObject } from '../../core/Analytics/types';
 
 export class AchElement extends UIElement<AchConfiguration> {
     public static type = TxVariants.ach;
@@ -49,6 +50,10 @@ export class AchElement extends UIElement<AchConfiguration> {
         };
     }
 
+    // protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
+    //     super.submitAnalytics(analyticsObj, this.props);
+    // }
+
     get isValid() {
         if (this.props.storedPaymentMethodId) {
             return true;
@@ -83,16 +88,18 @@ export class AchElement extends UIElement<AchConfiguration> {
                         }}
                     />
                 ) : (
-                    <AchComponent
-                        onChange={this.setState}
-                        payButton={this.payButton}
-                        showPayButton={this.props.showPayButton}
-                        hasHolderName={true}
-                        holderNameRequired={true}
-                        placeholders={this.props.placeholders}
-                        setComponentRef={this.setComponentRef}
-                        enableStoreDetails={this.props.enableStoreDetails}
-                    />
+                    <SRPanelProvider srPanel={this.props.modules.srPanel}>
+                        <AchComponent
+                            onChange={this.setState}
+                            payButton={this.payButton}
+                            showPayButton={this.props.showPayButton}
+                            hasHolderName={true}
+                            holderNameRequired={true}
+                            placeholders={this.props.placeholders}
+                            setComponentRef={this.setComponentRef}
+                            enableStoreDetails={this.props.enableStoreDetails}
+                        />
+                    </SRPanelProvider>
                 )}
             </CoreProvider>
         );

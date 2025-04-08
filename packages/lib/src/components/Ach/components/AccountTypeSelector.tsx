@@ -45,10 +45,11 @@ const AccountTypeSelector = ({ onSelect, selectedAccountType, errorMessage, plac
             showContextualElement={false}
             label={i18n.get('ach.bankAccount.label')}
             errorMessage={errorMessage}
+            classNameModifiers={['selectedAccountType']}
         >
             <Select
                 placeholder={placeholder || i18n.get('ach.bankAccount.placeholder')}
-                filterable={false}
+                filterable={true}
                 items={options}
                 selectedValue={selectedAccountType}
                 onChange={onChange}

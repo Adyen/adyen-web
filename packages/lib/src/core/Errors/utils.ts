@@ -197,6 +197,8 @@ export const setSRMessagesFromErrors = (
         layout
     });
 
+    console.log('### utils::setSRMessagesFromErrors:: currentErrorsSortedByLayout', currentErrorsSortedByLayout);
+
     const doLog = false;
 
     if (doLog) console.log('### setSRMessagesFromErrors::currentErrorsSortedByLayout:: ', currentErrorsSortedByLayout);
