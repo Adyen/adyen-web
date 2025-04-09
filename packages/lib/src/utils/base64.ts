@@ -39,7 +39,7 @@ const base64 = {
         }
     },
 
-    encode: pData => window.btoa(pData),
+    encode: (pData: string) => window.btoa(pData),
 
     isBase64: pDataStr => {
         if (!pDataStr) {

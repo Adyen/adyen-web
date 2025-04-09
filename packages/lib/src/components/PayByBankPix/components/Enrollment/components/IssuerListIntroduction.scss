@@ -3,17 +3,20 @@
 
 .adyen-checkout-issuer-list-introduction-logo-container {
     text-align: center;
+    background: token(color-background-primary);
+    border-radius: token(border-radius-m);
+    padding: token(spacer-070);
+    margin-bottom: token(spacer-070);
 
     &__title {
-        @include index.adyen-checkout-text-subtitle;
+        @include index.adyen-checkout-text-caption-stronger;
 
-        margin: 0 0 token(spacer-020);
+        margin: 0;
     }
 
-    &__content {
-        @include index.adyen-checkout-text-caption;
-
-        margin: 0 0 token(spacer-070);
+    &__logo {
+        width: 8em;
+        height: auto; /* Maintains aspect ratio */
     }
 }
 
@@ -21,13 +24,16 @@
     @include index.adyen-checkout-text-caption;
 
     &__title {
-        @include index.adyen-checkout-text-caption;
+        @include index.adyen-checkout-text-caption-stronger;
 
-        font-weight: token(text-caption-stronger-font-weight);
         margin: 0 0 token(spacer-020);
     }
 
     &__content {
-        margin: 0 0 token(spacer-070);
+        margin: 0;
+
+        &:not(:last-child) {
+            margin-bottom: token(spacer-040);
+        }
     }
 }
