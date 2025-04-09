@@ -6,6 +6,7 @@ import { PayByBankPixConfiguration } from '../../../../src/components/PayByBankP
 import { http, HttpResponse } from 'msw';
 import SimulatedIssuer from './SimulatedIssuer';
 import {
+    mockEnrollmentPayload,
     mockPaymentsResponseMerchantPage,
     mockPaymentsResponseSimulateHostedPage,
     mockPendingStatusSimulateHostedPage,
@@ -21,6 +22,7 @@ type PixBiometricStory = StoryConfiguration<PayByBankPixConfiguration>;
 const meta: MetaConfiguration<PayByBankPixConfiguration> = {
     title: 'Components/PayByBankPix'
 };
+const useMsw = false;
 
 const render = ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<PayByBankPixConfiguration>) => (
     <>
@@ -36,135 +38,81 @@ export const MerchantPage: PixBiometricStory = {
     args: {
         useSessions: false,
         countryCode: 'BR',
-        amount: 0,
         componentConfiguration: { _isAdyenHosted: false }
     },
     parameters: {
-        msw: {
-            handlers: [
-                http.post('https://localhost:3020/payments', () => {
-                    return HttpResponse.json(mockPaymentsResponseMerchantPage);
-                }),
-                http.post('/details', () => {
-                    return HttpResponse.json();
-                })
-            ]
-        }
+        msw: useMsw
+            ? {
+                  handlers: [
+                      http.post('https://localhost:3020/payments', () => {
+                          return HttpResponse.json(mockPaymentsResponseMerchantPage);
+                      }),
+                      http.post('/details', () => {
+                          return HttpResponse.json();
+                      })
+                  ]
+              }
+            : undefined
     }
 };
 
 export const SimulateHostedPage: PixBiometricStory = {
     render: props => <SimulatedHostedPage {...props} />,
+    argTypes: {
+        // @ts-ignore fix later
+        isEnrollment: {
+            control: { type: 'boolean' }
+        },
+        // Hide the amount control when `isEnrollment` is true. Because the amount defaults to 0.
+        amount: { if: { arg: 'isEnrollment', truthy: false } }
+    },
     args: {
+        isEnrollment: true,
         useSessions: false,
         countryCode: 'BR',
-        amount: 0,
-        sessionData: {
-            recurringProcessingModel: 'CardOnFile',
-            shopperInteraction: 'ContAuth',
-            shopperName: {
-                firstName: 'Yu',
-                lastName: 'Long'
-            }
-        },
+        //_environmentUrls: { cdn: { images: 'https://localhost:3020/' } },
+        // @ts-ignore override the /sessions payload
+        sessionData: mockEnrollmentPayload,
         redirectResult: getSearchParameter('redirectResult'),
         componentConfiguration: {
             _isAdyenHosted: true,
-            //storedPaymentMethodId: 'xxx',
-            issuers: [
-                {
-                    disabled: false,
-                    id: '44b193ac-a348-4b6e-acd9-9a3a57bb4ca4',
-                    name: 'Nubank'
-                },
-                {
-                    disabled: false,
-                    id: '97592125-061f-4acc-88c8-89c8fff82da2',
-                    name: 'Banco do Brasil'
-                },
-                {
-                    disabled: true,
-                    id: '7188fdf4-a9b3-42d9-80ca-4f6b695eeaae',
-                    name: 'NEON'
-                },
-                {
-                    disabled: false,
-                    id: 'c3d9e622-49a4-417a-917b-0c8151a5342d',
-                    name: 'Iti'
-                },
-                {
-                    disabled: false,
-                    id: 'aeed85b5-c3dc-4f31-8d2d-12d15552ada7',
-                    name: 'Picpay QA'
-                },
-                {
-                    disabled: false,
-                    id: '38c17d7d-b224-4693-aa24-9122fdc8a7cf',
-                    name: 'pagseguro'
-                },
-                {
-                    disabled: false,
-                    id: '73963528-9732-41ac-888b-138fec3b4ddb',
-                    name: 'Stone Auth Server'
-                },
-                {
-                    disabled: false,
-                    id: '07b7bd3a-fb8d-43a9-b17f-712356007bde',
-                    name: 'Banco Santander Pessoa Física'
-                },
-                {
-                    disabled: false,
-                    id: '97aa6093-676d-4547-b3dc-2449b4a6edde',
-                    name: 'next'
-                },
-                {
-                    disabled: false,
-                    id: '414d34f0-9269-401f-a160-abf51141da3d',
-                    name: 'Bradesco PJ'
-                },
-                {
-                    disabled: false,
-                    id: '0b919e9b-bee0-4549-baa3-bb6d003575ce',
-                    name: 'Iniciador Mock Bank'
-                },
-                {
-                    disabled: false,
-                    id: 'bb2cb3f4-118b-411b-b09e-f13c04e5a292',
-                    name: 'Quero-Quero PAG - HML 2'
-                }
-            ],
+            /*            //storedPaymentMethodId: 'xxx',
+            receiver: 'xxx',
+            issuer: 'bank',*/
             onChange: data => {
                 console.log({ data });
             }
         }
     },
     parameters: {
-        msw: {
-            handlers: [
-                http.post(
-                    'https://checkoutshopper-test.adyen.com/checkoutshopper/utility/v1/pixpaybybank/redirect-result?clientKey=test_L6HTEOAXQBCZJHKNU4NLN6EI7IE6VRRW',
-                    () => {
-                        return HttpResponse.json(mockPostEnrollmentResponse);
-                    }
-                ),
-                http.post('https://localhost:3020/payments', () => {
-                    return HttpResponse.json(mockPaymentsResponseSimulateHostedPage);
-                }),
-                http.get(
-                    'https://checkoutshopper-test.adyen.com/checkoutshopper/utility/v1/pixpaybybank/registration-options/enrollment123?clientKey=test_L6HTEOAXQBCZJHKNU4NLN6EI7IE6VRRW',
-                    () => {
-                        return HttpResponse.json(
-                            getSearchParameter('pollStatus') === 'pending'
-                                ? mockPendingStatusSimulateHostedPage
-                                : mockReceivedStatusSimulateHostedPage
-                        );
-                    }
-                ),
-                http.post('/details', () => {
-                    return HttpResponse.json(mockSubmitDetailsResponseSimulateHostedPage);
-                })
-            ]
-        }
+        msw: useMsw
+            ? {
+                  handlers: [
+                      http.post(
+                          'https://checkoutshopper-test.adyen.com/checkoutshopper/utility/v1/pixpaybybank/redirect-result?clientKey=test_L6HTEOAXQBCZJHKNU4NLN6EI7IE6VRRW',
+                          () => {
+                              return HttpResponse.json(mockPostEnrollmentResponse);
+                          }
+                      ),
+                      http.post('https://localhost:3020/payments', () => {
+                          return HttpResponse.json(mockPaymentsResponseSimulateHostedPage);
+                      }),
+                      http.get(
+                          'https://checkoutshopper-test.adyen.com/checkoutshopper/utility/v1/pixpaybybank/registration-options/enrollment123?clientKey=test_L6HTEOAXQBCZJHKNU4NLN6EI7IE6VRRW',
+                          () => {
+                              return HttpResponse.json(
+                                  getSearchParameter('pollStatus') === 'pending'
+                                      ? mockPendingStatusSimulateHostedPage
+                                      : mockReceivedStatusSimulateHostedPage
+                              );
+                          }
+                      ),
+                      http.post('/details', () => {
+                          return HttpResponse.json(mockSubmitDetailsResponseSimulateHostedPage);
+                      })
+                  ]
+              }
+            : undefined
     }
 };
 

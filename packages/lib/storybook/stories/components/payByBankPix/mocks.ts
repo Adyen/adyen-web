@@ -64,7 +64,7 @@ export const mockPaymentsResponseSimulateHostedPage = {
         paymentMethodType: 'paybybank_pix',
         url: 'https://localhost:3020/iframe.html?args=&globals=&id=components-paybybankpix--simulate-issuer-page&viewMode=story',
         method: 'GET',
-        type: 'redirect'
+        type: 'await'
     }
 };
 // todo: add non pending status
@@ -91,3 +91,14 @@ export const mockSubmitDetailsResponseMerchantPage = {};
 
 export const mockRedirectUrlIssuerPage =
     'https://localhost:3020/iframe.html?globals=&args=&id=components-paybybankpix--simulate-hosted-page&viewMode=story&redirectResult=xxxxxxx&pollStatus=pending';
+
+export const mockEnrollmentPayload = {
+    returnUrl: 'https://localhost:3020/iframe.html?globals=&args=&id=components-paybybankpix--simulate-hosted-page&viewMode=story',
+    socialSecurityNumber: '81421811006',
+    recurringProcessingModel: 'CardOnFile',
+    shopperInteraction: 'ContAuth',
+    shopperName: {
+        firstName: 'Yu',
+        lastName: 'Long'
+    }
+};
