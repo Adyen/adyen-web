@@ -21,7 +21,9 @@ export const Default: ACHStory = {
     ),
     args: {
         countryCode: 'US',
-        componentConfiguration: {}
+        componentConfiguration: {
+            enableStoreDetails: false
+        }
     }
 };
 

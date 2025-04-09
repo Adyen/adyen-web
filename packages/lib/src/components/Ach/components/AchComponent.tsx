@@ -73,7 +73,7 @@ function AchComponent({ onChange, payButton, showPayButton, placeholders, hasHol
     }, [onChange, data, valid, errors, isValid, storePaymentMethod]);
 
     /**
-     * If the "Verify account number" field has been touched before or if it has errors, we want to trigger
+     * If the "Verify account number" field has errors, we want to trigger
      * its validation when there is any change done to the "Account number" field
      */
     const onAccountNumberInput = useCallback(
@@ -81,9 +81,7 @@ function AchComponent({ onChange, payButton, showPayButton, placeholders, hasHol
             handleChangeFor('accountNumber', 'input')(event);
 
             const hasAccountVerificationError = !!errors.accountNumberVerification;
-            const hasAccountVerificationBeenTouched = data.accountNumberVerification !== null;
-
-            if (hasAccountVerificationError || hasAccountVerificationBeenTouched) {
+            if (hasAccountVerificationError) {
                 triggerValidation(['accountNumberVerification']);
             }
         },
