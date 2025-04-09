@@ -23,7 +23,6 @@ export const SimulatedHostedPage = ({ redirectResult, sessionId, isEnrollment, c
 
     const handleSubmit = async (state, _, actions) => {
         try {
-            debugger;
             // testing purpose, change the language to be 2 chars
             state.data.paymentMethod.riskSignals.language = 'en';
             const paymentAmount = {
