@@ -27,7 +27,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
 
     public static defaultProps: PayByBankPixConfiguration = {
         showPayButton: true,
-        _isAdyenHosted: window.location.hostname.endsWith('adyen.com') || hasRedirectResult(), // todo: remove hasRedirectResult
+        _isAdyenHosted: typeof window !== 'undefined' && window.location.hostname.endsWith('adyen.com') || hasRedirectResult(), // todo: remove hasRedirectResult
         countdownTime: PayByBankPixElement.TIMEOUT_MINUTES
     };
 

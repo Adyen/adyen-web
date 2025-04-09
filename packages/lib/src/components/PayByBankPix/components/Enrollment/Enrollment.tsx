@@ -2,7 +2,6 @@ import { h } from 'preact';
 import { useRef, useState, useEffect } from 'preact/hooks';
 import { AwaitProps, EnrollmentProps } from './types';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
-import { IIssuerList } from '../../../internal/IssuerList/types';
 import IssuerList from '../../../internal/IssuerList';
 import { useIssuerWithLogo } from './useIssuerWithLogo';
 import getEnrollmentStatus from './getEnrollmentStatus';
@@ -11,6 +10,7 @@ import PayByBankPixAwait from './components/PayByBankPixAwait';
 import useImage from '../../../../core/Context/useImage';
 import './Enrollment.scss';
 import { LabelOnlyDisclaimerMessage } from '../../../internal/DisclaimerMessage/DisclaimerMessage';
+import { ComponentMethodsRef, UIElementStatus } from '../../../internal/UIElement/types';
 
 //todo: add
 const TERMS_CONDITIONS_URL = 'https://www.google.com';
@@ -18,7 +18,7 @@ const TERMS_CONDITIONS_URL = 'https://www.google.com';
 function Enrollment(props: EnrollmentProps) {
     const { i18n, loadingContext } = useCoreContext();
     const getImage = useImage();
-    const issuerListRef = useRef<IIssuerList>(null);
+    const issuerListRef = useRef<ComponentMethodsRef>(null);
     const [registrationOptions, setRegistrationOptions] = useState<string>(null);
     // todo: add
     const logos = [
@@ -29,6 +29,9 @@ function Enrollment(props: EnrollmentProps) {
     const self = useRef({
         showValidation: () => {
             issuerListRef?.current?.showValidation();
+        },
+        setStatus: (newStatus: UIElementStatus) => {
+            issuerListRef?.current?.setStatus(newStatus);
         }
     });
 
