@@ -154,7 +154,8 @@ export class CardElement extends UIElement<CardConfiguration> {
                     holderName: this.props.holderName ?? ''
                 }),
                 ...(cardBrand && { brand: cardBrand }),
-                ...(this.props.fundingSource && { fundingSource: this.props.fundingSource })
+                ...(this.props.fundingSource && { fundingSource: this.props.fundingSource }),
+                ...(this.state.fastlaneData && { fastlaneData: btoa(JSON.stringify(this.state.fastlaneData)) })
             },
             ...(this.state.billingAddress && { billingAddress: this.state.billingAddress }),
             ...(this.state.socialSecurityNumber && { socialSecurityNumber: this.state.socialSecurityNumber }),
@@ -351,6 +352,7 @@ export class CardElement extends UIElement<CardConfiguration> {
                 setComponentRef={this.setComponentRef}
                 {...this.props}
                 {...this.state}
+                onSubmitAnalytics={this.submitAnalytics}
                 onChange={this.setState}
                 onSubmit={this.submit}
                 handleKeyPress={this.handleKeyPress}

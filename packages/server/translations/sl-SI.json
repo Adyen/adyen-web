@@ -353,5 +353,17 @@
     "payto.label.firstName": "Ime imetnika računa",
     "payto.label.lastName": "Priimek imetnika računa",
     "payto.await.waitForConfirmation": "Čakanje na vašo odobritev",
-    "payto.bsb.option.label": "Podružnična številka BSB in številka računa"
+    "payto.bsb.option.label": "Podružnična številka BSB in številka računa",
+    "card.fastlane.a11y.logo": "Logotip storitve Fastlane by Paypal",
+    "card.fastlane.a11y.openDialog": "Preberite več o storitvi Fastlane",
+    "card.fastlane.a11y.closeDialog": "Zapri pogovorno okno",
+    "card.fastlane.mobileInputLabel": "Številka mobilnega telefona",
+    "card.fastlane.consentToggle": "Shranite svoje podatke v storitvi Fastlane za hitrejše dokončanje nakupov",
+    "card.fastlane.consentText": "S shranitvijo svojih podatkov se strinjate, da boste prek besedilnih sporočil prejemali kode za uporabo storitve Fastlane povsod, kjer je ta na voljo. Prav tako se strinjate s %#pogoji%# in %#izjavo o zasebnosti%#.",
+    "card.fastlane.modal.benefit1.header": "Samodejno izpolnjevanje podatkov za dokončanje nakupa",
+    "card.fastlane.modal.benefit1.text": "Pridobite enkratne kode za uporabo kartice in naslovov, ki ste jih shranili.",
+    "card.fastlane.modal.benefit2.header": "Zaščita vaših podatkov",
+    "card.fastlane.modal.benefit2.text": "Vaši podatki za plačilo so šifrirani, ko so shranjeni in poslani na mesta, kjer nakupujete.",
+    "card.fastlane.modal.benefit3.header": "Uporaba v različnih trgovinah",
+    "card.fastlane.modal.benefit3.text": "Hitro dokončajte nakup povsod, kjer je na voljo storitev Fastlane."
 }

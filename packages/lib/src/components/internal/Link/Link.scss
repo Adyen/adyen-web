@@ -1,5 +1,6 @@
-@use 'mixins';
+@use 'styles/mixins';
 
 .adyen-checkout-link {
   @include mixins.adyen-checkout-link;
 }
+

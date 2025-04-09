@@ -2,12 +2,6 @@ import { AddressData } from '../../types/global-types';
 import { UIElementProps } from '../internal/UIElement/types';
 import PaypalElement from './Paypal';
 
-declare global {
-    interface Window {
-        paypal: object;
-    }
-}
-
 export interface PayPalConfiguration extends UIElementProps {
     /**
      * Configuration returned by the backend

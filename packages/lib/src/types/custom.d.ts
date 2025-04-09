@@ -1,3 +1,4 @@
+import { FastlaneWindowInstance, FastlaneOptions } from '../components/PayPalFastlane/types';
 import { ApplePayButtonStyle, ApplePayButtonType, ApplePayWebConfiguration } from '../components/ApplePay/types';
 
 declare module 'preact' {
@@ -20,6 +21,9 @@ declare module '*.scss' {
 
 declare global {
     interface Window {
+        paypal?: {
+            Fastlane?: (options?: FastlaneOptions) => Promise<FastlaneWindowInstance>;
+        };
         /**
          * ApplePaySession added by ApplePaySDK
          */

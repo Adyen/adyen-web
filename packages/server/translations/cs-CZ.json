@@ -353,5 +353,17 @@
     "payto.label.firstName": "Křestní jméno držitele účtu",
     "payto.label.lastName": "Příjmení držitele účtu",
     "payto.await.waitForConfirmation": "Čekáme na vaše schválení",
-    "payto.bsb.option.label": "Kód banky BSB a číslo účtu"
+    "payto.bsb.option.label": "Kód banky BSB a číslo účtu",
+    "card.fastlane.a11y.logo": "Logo Fastlane by Paypal",
+    "card.fastlane.a11y.openDialog": "Přečtěte si více o Fastlane",
+    "card.fastlane.a11y.closeDialog": "Zavřít dialogové okno",
+    "card.fastlane.mobileInputLabel": "Číslo na mobil",
+    "card.fastlane.consentToggle": "Uložte si své informace pomocí Fastlane pro rychlejší platby",
+    "card.fastlane.consentText": "Uložením vašich informací souhlasíte s přijímáním kódů prostřednictvím textových zpráv pro používání nástroje Fastlane všude, kde je dostupný. Souhlasíte také s dokumenty %#terms%# a %#privacy statement%#.",
+    "card.fastlane.modal.benefit1.header": "Automatické vyplňování na pokladně",
+    "card.fastlane.modal.benefit1.text": "Získejte jednorázové kódy pro použití karty a adres, které jste si uložili.",
+    "card.fastlane.modal.benefit2.header": "Chraňte svoje informace",
+    "card.fastlane.modal.benefit2.text": "Vaše informace o platbě jsou šifrovány, když se ukládají a odesílají na místa, kde nakupujete.",
+    "card.fastlane.modal.benefit3.header": "Využívejte nástroj ve všech obchodech",
+    "card.fastlane.modal.benefit3.text": "Prolétněte pokladnou všude, kde je Fastlane k dispozici."
 }

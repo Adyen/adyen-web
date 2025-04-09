@@ -106,7 +106,7 @@ test('should call onSelect when mounting the Component if openFirstPaymentMethod
         />
     );
 
-    expect(onSelectMock).toHaveBeenCalledTimes(2);
+    expect(onSelectMock).toHaveBeenCalledTimes(1);
     expect(onSelectMock).toHaveBeenCalledWith(paymentMethods[0]);
 });
 

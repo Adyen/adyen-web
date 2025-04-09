@@ -353,5 +353,17 @@
     "payto.label.firstName": "账户持有人名字",
     "payto.label.lastName": "账户持有人姓氏",
     "payto.await.waitForConfirmation": "等待您的批准…",
-    "payto.bsb.option.label": "BSB 和账号"
+    "payto.bsb.option.label": "BSB 和账号",
+    "card.fastlane.a11y.logo": "Fastlane by Paypal 徽标",
+    "card.fastlane.a11y.openDialog": "阅读更多关于 Fastlane 的信息",
+    "card.fastlane.a11y.closeDialog": "关闭对话框",
+    "card.fastlane.mobileInputLabel": "手机号",
+    "card.fastlane.consentToggle": "使用 Fastlane 保存您的信息以加快结账速度",
+    "card.fastlane.consentText": "保存您的信息，即表示您同意通过短信接收代码，以便在任何可用的地方使用 Fastlane。您还同意%#条款%#和%#隐私声明%#。",
+    "card.fastlane.modal.benefit1.header": "自动填充结账信息",
+    "card.fastlane.modal.benefit1.text": "获取一次性代码以使用您保存的卡和地址。",
+    "card.fastlane.modal.benefit2.header": "保护您的信息",
+    "card.fastlane.modal.benefit2.text": "您的付款信息在存储并发送到您购物的地方时会被加密。",
+    "card.fastlane.modal.benefit3.header": "跨商店使用",
+    "card.fastlane.modal.benefit3.text": "在所有支持 Fastlane 的地方加快结账速度。"
 }

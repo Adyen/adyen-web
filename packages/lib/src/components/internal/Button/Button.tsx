@@ -35,7 +35,9 @@ class Button extends Component<ButtonProps, ButtonState> {
         this.props.onKeyDown?.(event);
     };
 
-    render({ classNameModifiers = [], disabled, href, icon, inline, label, status, variant }, { completed }) {
+    render() {
+        const { classNameModifiers = [], disabled, href, icon, inline, label, ariaLabel, status, variant, buttonRef }: ButtonProps = this.props;
+        const { completed } = this.state;
         const { i18n } = useCoreContext();
 
         const buttonIcon = icon ? <img className="adyen-checkout__button__icon" src={icon} alt="" aria-hidden="true" /> : '';
@@ -82,7 +84,15 @@ class Button extends Component<ButtonProps, ButtonState> {
         }
 
         return (
-            <button className={buttonClasses} type="button" disabled={disabled} onClick={this.onClick} onKeyDown={this.onKeyDown}>
+            <button
+                ref={buttonRef}
+                className={buttonClasses}
+                type="button"
+                disabled={disabled}
+                onClick={this.onClick}
+                onKeyDown={this.onKeyDown}
+                aria-label={ariaLabel}
+            >
                 {buttonText}
                 {status !== 'loading' && status !== 'redirect' && this.props.children}
             </button>

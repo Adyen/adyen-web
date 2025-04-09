@@ -27,7 +27,8 @@ const cardInputRequiredProps = {
     loadingContext: 'test',
     resources: global.resources,
     brandsIcons: [],
-    showPayButton: false
+    showPayButton: false,
+    onSubmitAnalytics: jest.fn()
 };
 
 const getWrapper = ui => {

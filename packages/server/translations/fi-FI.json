@@ -353,5 +353,17 @@
     "payto.label.firstName": "Tilinhaltijan etunimi",
     "payto.label.lastName": "Tilinhaltijan sukunimi",
     "payto.await.waitForConfirmation": "Odottaa hyväksyntääsi",
-    "payto.bsb.option.label": "BSB- ja tilinumero"
+    "payto.bsb.option.label": "BSB- ja tilinumero",
+    "card.fastlane.a11y.logo": "Fastlane by Paypal ‑logo",
+    "card.fastlane.a11y.openDialog": "Lue lisää Fastlanesta",
+    "card.fastlane.a11y.closeDialog": "Sulje valintaikkuna",
+    "card.fastlane.mobileInputLabel": "Matkapuhelinnumero",
+    "card.fastlane.consentToggle": "Tallenna tietosi Fastlanen avulla ja maksa nopeammin",
+    "card.fastlane.consentText": "Kun tallennat tietosi, suostut vastaanottamaan koodeja tekstiviestillä Fastlanen käyttöä varten kaikkialla, missä se on käytettävissä. Hyväksyt myös seuraavat: %#terms%# ja %#privacy statement%#.",
+    "card.fastlane.modal.benefit1.header": "Anna tiedot kassalla automaattisesti",
+    "card.fastlane.modal.benefit1.text": "Käytä tallentamiasi kortteja ja osoitteita kertakäyttökoodien avulla.",
+    "card.fastlane.modal.benefit2.header": "Suojaa tietosi",
+    "card.fastlane.modal.benefit2.text": "Maksutiedot salataan, kun ne tallennetaan ja lähetetään palveluihin, joista ostat.",
+    "card.fastlane.modal.benefit3.header": "Käytä eri kaupoissa",
+    "card.fastlane.modal.benefit3.text": "Nopeuta maksuja kaikissa Fastlanea tukevissa palveluissa."
 }
