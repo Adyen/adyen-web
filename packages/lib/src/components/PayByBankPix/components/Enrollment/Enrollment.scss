@@ -1,42 +1,32 @@
 @use 'styles/index';
 @import 'styles/variable-generator';
 
-.adyen-checkout-pix-enrollment {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    .adyen-checkout__await__subtitle,
-    .adyen-checkout__await__countdown-holder {
-        display: none;
-    }
-
-    .adyen-checkout__await--paybybank_pix {
-        padding: 0;
-        border: none;
-    }
-
-    .adyen-checkout__await__indicator-holder {
-        margin-top: token(spacer-090);
-    }
-
-    .adyen-checkout__await__countdown {
-        color: token(color-label-primary);
-    }
-
-    .adyen-checkout__await__end-slot {
-        @include index.adyen-checkout-text-caption;
-
-        margin-top: token(spacer-090);
-        color: token(color-label-tertiary);
-    }
-}
-
 .adyen-checkout-pix-enrollment-issuer-list {
     display: flex;
     flex-direction: column;
+    gap: token(spacer-070);
 
     .adyen-checkout-disclaimer__label {
-        align-self: center;
+        @include index.adyen-checkout-text-caption;
+
+        display: inline-block;
+        text-align: center;
+        color: token(color-label-secondary);
+        margin:0;
     }
+}
+
+.adyen-checkout-await-logo-open-finance{
+    width: 8em;
+    height: auto;
+}
+
+.adyen-checkout-await-logo-arrow-down{
+    width: 1em;
+    height: auto;
+}
+
+.adyen-checkout-await-logo-bank{
+    width: 3em;
+    height: auto;
 }
