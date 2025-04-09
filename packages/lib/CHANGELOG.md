@@ -1,5 +1,13 @@
 # @adyen/adyen-web
 
+## 6.11.1
+
+### Patch Changes
+
+- BrowserInfo no longer calls obsolete `navigator.javaEnabled` function ([#3234](https://github.com/Adyen/adyen-web/pull/3234))
+
+- Apple Pay - Added missing Typescript types for the ApplePayButtonType ([#3218](https://github.com/Adyen/adyen-web/pull/3218))
+
 ## 6.11.0
 
 ### Minor Changes
