@@ -18,6 +18,7 @@ import type {
     PaymentAction,
     PaymentAmount,
     PaymentData,
+    PaymentMethod,
     PaymentMethodsResponse,
     PaymentResponseData
 } from '../../../types/global-types';
@@ -71,14 +72,13 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     protected override buildElementProps(componentProps?: P) {
         const globalCoreProps = this.core.getCorePropsForComponent();
         const isStoredPaymentMethod = !!componentProps?.isStoredPaymentMethod;
-        const paymentMethodsResponseProps = isStoredPaymentMethod
-            ? {}
-            : this.core.paymentMethodsResponse.find(componentProps?.type || this.constructor['type']);
+
+        const paymentMethodFromResponse = isStoredPaymentMethod ? {} : this.getPaymentMethodFromPaymentMethodsResponse(componentProps?.type);
 
         const finalProps = {
             showPayButton: true,
             ...globalCoreProps,
-            ...paymentMethodsResponseProps,
+            ...paymentMethodFromResponse,
             ...componentProps
         };
 
@@ -89,6 +89,15 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
             ...getRegulatoryDefaults(this.core.options.countryCode, isDropin), // regulatory defaults
             ...finalProps // the rest (inc. merchant defined config)
         });
+    }
+
+    /**
+     *  Get the payment method from the paymentMethodsResponse
+     *
+     * @param type - The type of the payment method to get. (This prop is passed by Drop-in OR Standalone components containing the property 'type' as part of their configuration)
+     */
+    protected getPaymentMethodFromPaymentMethodsResponse(type?: string): PaymentMethod {
+        return this.core.paymentMethodsResponse.find(type || this.constructor['type']);
     }
 
     protected storeElementRefOnCore(props?: P) {

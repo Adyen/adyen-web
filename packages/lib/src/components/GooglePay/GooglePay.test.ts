@@ -3,6 +3,9 @@ import GooglePayService from './GooglePayService';
 
 import Analytics from '../../core/Analytics';
 import { ANALYTICS_EVENT, ANALYTICS_SELECTED_STR, NO_CHECKOUT_ATTEMPT_ID } from '../../core/Analytics/constants';
+import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
+import { mock } from 'jest-mock-extended';
+import { ICore } from '../../types';
 
 const analyticsModule = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', bundleType: 'umd' });
 
@@ -55,6 +58,23 @@ beforeEach(() => {
 });
 
 describe('GooglePay', () => {
+    describe('Supporting "paywithgoogle" type as standalone Component', () => {
+        test('should load the configuration from payment methods response', () => {
+            const core = mock<ICore>({});
+            core.paymentMethodsResponse = new PaymentMethods({
+                paymentMethods: [
+                    { name: 'Google Pay', type: 'paywithgoogle', configuration: { merchantId: 'merchant-id', gatewayMerchantId: 'gateway-id' } }
+                ]
+            });
+
+            const googlepay = new GooglePay(core);
+
+            expect(googlepay.type).toBe('paywithgoogle');
+            expect(googlepay.props.configuration.merchantId).toBe('merchant-id');
+            expect(googlepay.props.configuration.gatewayMerchantId).toBe('gateway-id');
+        });
+    });
+
     describe('onClick()', () => {
         test('should not call "initiatePayment" if the onClick reject() is called', async () => {
             const googlepay = new GooglePay(global.core, {
