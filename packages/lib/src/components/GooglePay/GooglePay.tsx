@@ -11,7 +11,7 @@ import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement
 import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
 import { SendAnalyticsObject } from '../../core/Analytics/types';
 
-import type { AddressData, BrowserInfo, PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
+import type { AddressData, BrowserInfo, PaymentMethod, PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
 import type { GooglePayConfiguration } from './types';
 import type { ICore } from '../../core/types';
 
@@ -47,6 +47,19 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
             ...(isExpress && paymentDataCallbacks?.onPaymentDataChanged && { onPaymentDataChanged: paymentDataCallbacks.onPaymentDataChanged }),
             onPaymentAuthorized: this.onPaymentAuthorized
         });
+    }
+
+    /**
+     * Google Pay requires custom logic due to supporting two Tx variants that lead to the same payment method.
+     * If the merchant creates a standalone Google Pay component, we need to verify if the payment method is available using both tx variants
+     *
+     * @param type
+     * @returns
+     */
+    protected override getPaymentMethodFromPaymentMethodsResponse(type?: string): PaymentMethod {
+        return (
+            this.core.paymentMethodsResponse.find(type || this.constructor['type']) || this.core.paymentMethodsResponse.find(TxVariants.paywithgoogle)
+        );
     }
 
     protected override formatProps(props): GooglePayConfiguration {
