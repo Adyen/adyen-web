@@ -14,6 +14,16 @@ import Enrollment from './components/Enrollment';
 import { PaymentAction } from '../../types/global-types';
 import type { ICore } from '../../core/types';
 
+const isAdyenHosted = () => {
+  try {
+    const currentUrl = new URL(window.location.href);
+    return currentUrl.hostname.endsWith('.adyen.com');
+  } catch (e) {
+    // SSR (also means non adyen hosted), or it fails to parse the full url
+    return false;
+  }
+};
+
 class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
     public static type = TxVariants.paybybank_pix;
     private static TIMEOUT_MINUTES = 1;
@@ -21,7 +31,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
 
     public static defaultProps: PayByBankPixConfiguration = {
         showPayButton: true,
-        _isAdyenHosted: window.location.hostname.endsWith('adyen.com'),
+        _isAdyenHosted: isAdyenHosted(), // todo: remove hasRedirectResult
         countdownTime: PayByBankPixElement.TIMEOUT_MINUTES
     };
 
@@ -122,20 +132,20 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
      * The third one is in the `authorizePayment` function - we authorize the payment with shopper's passkey.
      */
     private readonly payWithStoredPayment = () => {
-        try {
-            this.state = { ...this.state, ...{ data: { storedPaymentMethodId: this.props.storedPaymentMethodId } } };
-            super.submit();
-        } catch (error) {
-            const errorMsg = error instanceof Error ? error.message : 'Unknown error in the payWithStoredPayment';
-            this.handleError(error instanceof AdyenCheckoutError ? error : new AdyenCheckoutError(ERROR, errorMsg));
-        }
+      try {
+        const { deviceId, ...riskSignals } = await this.passkeyService.captureRiskSignalsAuthentication();
+        this.state = { ...this.state, ...{ data: { storedPaymentMethodId: this.props.storedPaymentMethodId, riskSignals, deviceId } } };
+        super.submit();
+      } catch (error) {
+        const errorMsg = error instanceof Error ? error.message : 'Unknown error in the payWithStoredPayment';
+        this.handleError(error instanceof AdyenCheckoutError ? error : new AdyenCheckoutError(ERROR, errorMsg));
+      }
     };
 
     private readonly authorizePayment = async (authenticationOptions: string): Promise<void> => {
         try {
-            const riskSignals = await this.passkeyService.captureRiskSignalsAuthentication();
             const fidoAssertion = await this.passkeyService.authenticateWithCredential(authenticationOptions);
-            const payment = { enrollmentId: this.props.enrollmentId, initiationId: this.props.initiationId, fidoAssertion, riskSignals };
+            const payment = { enrollmentId: this.props.enrollmentId, initiationId: this.props.initiationId, fidoAssertion };
             const { action = {} } = await authorizePayment({
                 payment,
                 clientKey: this.props.clientKey,
@@ -175,22 +185,19 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <SRPanelProvider srPanel={this.props.modules.srPanel}>
                     {this.props.storedPaymentMethodId != null ? (
-                        this.passkeyService.captureRiskSignalsAuthentication().then(() => (
-                            // Render payment when the stored deviceId matches with the deviceId from the server
-                            <Payment
-                                txVariant={PayByBankPixElement.type}
-                                type={this.props.type}
-                                clientKey={this.props.clientKey}
-                                amount={this.props.amount}
-                                issuer={this.props.issuer}
-                                receiver={this.props.receiver}
-                                enrollmentId={this.props.enrollmentId}
-                                initiationId={this.props.initiationId}
-                                setComponentRef={this.setComponentRef}
-                                onPay={this.payWithStoredPayment}
-                                onAuthorize={this.authorizePayment}
-                            />
-                        ))
+                        <Payment
+                            txVariant={PayByBankPixElement.type}
+                            type={this.props.type}
+                            clientKey={this.props.clientKey}
+                            amount={this.props.amount}
+                            issuer={this.props.issuer}
+                            receiver={this.props.receiver}
+                            enrollmentId={this.props.enrollmentId}
+                            initiationId={this.props.initiationId}
+                            setComponentRef={this.setComponentRef}
+                            onPay={this.payWithStoredPayment}
+                            onAuthorize={this.authorizePayment}
+                        />
                     ) : (
                         <Enrollment
                             onError={this.handleError}
