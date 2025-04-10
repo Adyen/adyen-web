@@ -19,7 +19,15 @@ const hasRedirectResult = (): boolean => {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get('redirectResult') != null;
 };
-
+const isAdyenHosted = () => {
+    try {
+        const currentUrl = new URL(window.location.href);
+        return currentUrl.hostname.endsWith('.adyen.com');
+    } catch (e) {
+        // SSR (also means non adyen hosted), or it fails to parse the full url
+        return false;
+    }
+};
 class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
     public static type = TxVariants.paybybank_pix;
     private static TIMEOUT_MINUTES = 1;
@@ -27,7 +35,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
 
     public static defaultProps: PayByBankPixConfiguration = {
         showPayButton: true,
-        _isAdyenHosted: typeof window !== 'undefined' && window.location.hostname.endsWith('adyen.com') || hasRedirectResult(), // todo: remove hasRedirectResult
+        _isAdyenHosted: isAdyenHosted() || hasRedirectResult(), // todo: remove hasRedirectResult
         countdownTime: PayByBankPixElement.TIMEOUT_MINUTES
     };
 
