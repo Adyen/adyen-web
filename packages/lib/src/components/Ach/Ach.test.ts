@@ -18,7 +18,7 @@ describe('ACH', () => {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, analytics: global.analytics }
+                modules: { resources: global.resources, analytics: global.analytics, srPanel: global.srPanel }
             });
 
             render(ach.render());
@@ -59,7 +59,7 @@ describe('ACH', () => {
                 enableStoreDetails: true,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, analytics: global.analytics }
+                modules: { resources: global.resources, analytics: global.analytics, srPanel: global.srPanel }
             });
 
             render(ach.render());
@@ -102,7 +102,7 @@ describe('ACH', () => {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, analytics: global.analytics }
+                modules: { resources: global.resources, analytics: global.analytics, srPanel: global.srPanel }
             });
 
             render(ach.render());
@@ -125,7 +125,7 @@ describe('ACH', () => {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, analytics: global.analytics }
+                modules: { resources: global.resources, analytics: global.analytics, srPanel: global.srPanel }
             });
 
             render(ach.render());
@@ -148,7 +148,7 @@ describe('ACH', () => {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, analytics: global.analytics }
+                modules: { resources: global.resources, analytics: global.analytics, srPanel: global.srPanel }
             });
 
             render(ach.render());
@@ -180,7 +180,7 @@ describe('ACH', () => {
                 hasHolderName: false,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, analytics: global.analytics }
+                modules: { resources: global.resources, analytics: global.analytics, srPanel: global.srPanel }
             });
 
             render(ach.render());
@@ -223,7 +223,7 @@ describe('ACH', () => {
                 hasHolderName: false,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, analytics: global.analytics }
+                modules: { resources: global.resources, analytics: global.analytics, srPanel: global.srPanel }
             });
 
             render(ach.render());
@@ -260,7 +260,7 @@ describe('ACH', () => {
                 onSubmit: onSubmitMock,
                 i18n: global.i18n,
                 loadingContext: 'test',
-                modules: { resources: global.resources, analytics: global.analytics },
+                modules: { resources: global.resources, analytics: global.analytics, srPanel: global.srPanel },
                 storedPaymentMethodId: 'PAYMENT-METHOD-ID',
                 bankAccountNumber: '123123'
             });

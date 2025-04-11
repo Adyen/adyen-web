@@ -111,16 +111,32 @@ const useSRPanelForOpenInvoiceErrors = ({ errors, data, props, isValidating }: U
              */
             switch (srPanelResp?.action) {
                 // A call to focus the first field in error will always follow the call to validate the whole form
-                case ERROR_ACTION_FOCUS_FIELD:
+                case ERROR_ACTION_FOCUS_FIELD: {
+                    /**
+                     * For prefixed fields (ones that can occur twice but in different contexts i.e. billingAddress & deliveryAddress) - consider the prefix...
+                     */
+                    // ...Firstly strip it to gain a "clean" reference to the field...
+                    const fieldToFocus = srPanelResp.fieldToFocus.includes(':') ? srPanelResp.fieldToFocus.split(':')[1] : srPanelResp.fieldToFocus; // country, street etc
+
+                    // ...Secondly use the prefix to add context for when we try to select it
+                    let focusContextSelector = '';
+                    const focusContext = srPanelResp.fieldToFocus.includes(':') ? srPanelResp.fieldToFocus.split(':')[0] : ''; // 'billingAddress' | 'deliveryAddress'
+                    if (focusContext.length) {
+                        focusContextSelector = `.adyen-checkout__fieldset--${focusContext} `;
+                    }
+
                     // Focus first field in error, if required
-                    if (shouldMoveFocusSR) setFocusOnField('.adyen-checkout__open-invoice', srPanelResp.fieldToFocus);
+                    if (shouldMoveFocusSR) setFocusOnField('.adyen-checkout__open-invoice', fieldToFocus, focusContextSelector);
                     // Remove 'showValidation' mode - allowing time for collation of all the fields in error whilst it is 'showValidation' mode (some errors come in a second render pass)
                     setTimeout(() => {
                         isValidating.current = false;
                     }, 300);
                     break;
+                }
 
-                /** On blur scenario: not validating, i.e. trying to submit form, but there might be an error, either to set or to clear */
+                /**
+                 * Relates to errors triggered by a field blurring (some pm forms have this, some don't) - check if there is an error to either set or to clear
+                 */
                 case ERROR_ACTION_BLUR_SCENARIO: {
                     const difference = getArrayDifferences(currentErrorsSortedByLayout, previousSortedErrors, 'field');
 
@@ -128,7 +144,7 @@ const useSRPanelForOpenInvoiceErrors = ({ errors, data, props, isValidating }: U
 
                     if (latestErrorMsg) {
                         // Is error actually a blur based one - depends on the specific fields in a component as to whether they validate on blur
-                        const isBlurBasedError = latestErrorMsg.errorCode === 'shopperEmail.invalid';
+                        const isBlurBasedError = latestErrorMsg.field === 'shopperEmail' && latestErrorMsg.errorCode === 'field.error.invalid';
 
                         // Only add blur based errors to the error panel - doing this step prevents the non-blur based errors from being read out twice
                         const latestSRError = isBlurBasedError ? latestErrorMsg.errorMessage : null;

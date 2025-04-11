@@ -175,6 +175,7 @@ export const handlePartialAddressMode = (addressMode: AddressModeOptions): Addre
 
 // Almost all errors are blur based, but some SF ones are not i.e. when an unsupported card is entered or the expiry date is out of range
 export function lookupBlurBasedErrors(errorCode) {
+    // If it's NOT one of these, then it's a blur based error
     return ![
         SF_ErrorCodes.ERROR_MSG_UNSUPPORTED_CARD_ENTERED,
         SF_ErrorCodes.ERROR_MSG_CARD_TOO_OLD,
