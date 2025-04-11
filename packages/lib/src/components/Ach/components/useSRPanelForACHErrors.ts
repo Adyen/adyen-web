@@ -22,17 +22,17 @@ const useSRPanelForACHErrors = ({ errors, data, isValidating }: UseSRPanelForErr
     const { setSRMessagesFromObjects, setSRMessagesFromStrings, clearSRPanel, shouldMoveFocusSR } = useSRPanelContext();
     const setSRMessages: SetSRMessagesReturnFn = setSRMessagesFromObjects?.({});
 
+    // Fixed layout for the ACH comp
+    const layout = ['selectedAccountType', 'ownerName', 'routingNumber', 'accountNumber', 'accountNumberVerification'];
+
     useEffect(() => {
         try {
-            const srPanelResp: SetSRMessagesReturnObject = setSRMessages?.({ errors, isValidating: isValidating.current });
-            console.log('### useSRPanelForACHErrors::srPanelResp:: ', srPanelResp);
+            const srPanelResp: SetSRMessagesReturnObject = setSRMessages?.({ errors, isValidating: isValidating.current, layout });
 
             // Relates to onBlur errors
             const currentErrorsSortedByLayout = srPanelResp?.currentErrorsSortedByLayout;
             // Store the array of sorted error objects separately so that we can use it to make comparisons between the old and new arrays
             setSortedErrorList(currentErrorsSortedByLayout);
-
-            console.log('### useSRPanelForACHErrors:::: currentErrorsSortedByLayout', currentErrorsSortedByLayout);
 
             /**
              * Need extra actions after setting SRPanel messages in order to focus field (if required) and because we have some errors that are fired onBlur
@@ -56,12 +56,10 @@ const useSRPanelForACHErrors = ({ errors, data, isValidating }: UseSRPanelForErr
 
                     const latestErrorMsg = difference?.[0];
 
-                    // const nonBlurBasedErrorArr = [];
-
                     if (latestErrorMsg) {
                         // Is error actually a blur based one - depends on the specific fields in a component as to whether they validate on blur
                         // In the case of the ACH form currently all the fields validate on blur
-                        const isBlurBasedError = true; //!nonBlurBasedErrorArr.includes(latestErrorMsg.errorCode);
+                        const isBlurBasedError = true;
 
                         // Only add blur based errors to the error panel - doing this step prevents the non-blur based errors from being read out twice
                         const latestSRError = isBlurBasedError ? latestErrorMsg.errorMessage : null;
