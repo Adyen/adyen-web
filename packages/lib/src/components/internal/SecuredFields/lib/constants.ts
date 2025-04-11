@@ -9,8 +9,6 @@ export const ENCRYPTED_EXPIRY_YEAR = 'encryptedExpiryYear';
 export const ENCRYPTED_SECURITY_CODE = 'encryptedSecurityCode';
 export const ENCRYPTED_PWD_FIELD = 'encryptedPassword';
 export const ENCRYPTED_PIN_FIELD = 'encryptedPin';
-export const ENCRYPTED_BANK_ACCNT_NUMBER_FIELD = 'encryptedBankAccountNumber';
-export const ENCRYPTED_BANK_LOCATION_FIELD = 'encryptedBankLocationId';
 
 export const ENCRYPTED_SECURITY_CODE_3_DIGITS = 'encryptedSecurityCode3digits';
 export const ENCRYPTED_SECURITY_CODE_4_DIGITS = 'encryptedSecurityCode4digits';
@@ -21,7 +19,7 @@ export const SF_VERSION = '5.5.1';
 
 export const DEFAULT_CARD_GROUP_TYPES = ['amex', 'mc', 'visa'];
 
-export const NON_CREDIT_CARD_TYPE_SECURED_FIELDS = ['ach', GIFT_CARD]; // Maybe, sometime in the future will include 'sepa' & 'sepadirectdebit'
+export const NON_CREDIT_CARD_TYPE_SECURED_FIELDS = [GIFT_CARD]; // Maybe, sometime in the future will include 'sepa' & 'sepadirectdebit'
 
 // Credit card (CardInput) related securedFields (based on the data-cse attribute)
 export const CREDIT_CARD_SF_FIELDS = [
@@ -34,10 +32,8 @@ export const CREDIT_CARD_SF_FIELDS = [
     // ENCRYPTED_PIN_FIELD,// probably redundant - it was an alt. name for KCP's encryptedPassword. But maybe has a role to play if we ever encrypt ibans.
 ];
 
-export const OTHER_SF_FIELDS = [ENCRYPTED_BANK_ACCNT_NUMBER_FIELD, ENCRYPTED_BANK_LOCATION_FIELD]; // ACH fields
-
-/** A list of all the data-cse attributes that relate to securedFields (as found in card, giftcard or ach) */
-export const ALL_SECURED_FIELDS = CREDIT_CARD_SF_FIELDS.concat(OTHER_SF_FIELDS);
+/** A list of all the data-cse attributes that relate to securedFields (as found in card, giftcard) */
+export const ALL_SECURED_FIELDS = CREDIT_CARD_SF_FIELDS;
 
 // Card components created as: checkout.create({BRAND}) e.g. checkout.create('bcmc')
 // - which are dedicated to a single, core, brand e.g. 'bcmc' BUT which can in effect handle multiple brands e.g. "bcmc", "maestro", "visa"
@@ -82,8 +78,6 @@ export const SF_FIELDS_MAP = {
     [ENCRYPTED_EXPIRY_YEAR]: 'expiryYear', // ph
     //
     [ENCRYPTED_PWD_FIELD]: 'password',
-    [ENCRYPTED_BANK_ACCNT_NUMBER_FIELD]: 'bankAccountNumber',
-    [ENCRYPTED_BANK_LOCATION_FIELD]: 'bankLocationId',
     //
     [ENCRYPTED_SECURITY_CODE_3_DIGITS]: 'securityCodeThreeDigits', // ph
     [ENCRYPTED_SECURITY_CODE_4_DIGITS]: 'securityCodeFourDigits' // ph

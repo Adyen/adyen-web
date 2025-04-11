@@ -1,8 +1,6 @@
 import { BrandObject } from '../../../Card/types';
 import SecuredField from './securedField/SecuredField';
 import {
-    ENCRYPTED_BANK_ACCNT_NUMBER_FIELD,
-    ENCRYPTED_BANK_LOCATION_FIELD,
     ENCRYPTED_CARD_NUMBER,
     ENCRYPTED_EXPIRY_DATE,
     ENCRYPTED_EXPIRY_MONTH,
@@ -327,7 +325,6 @@ interface ContextualTexts {
     [ENCRYPTED_EXPIRY_DATE]?: string;
     [ENCRYPTED_SECURITY_CODE_3_DIGITS]?: string;
     [ENCRYPTED_SECURITY_CODE_4_DIGITS]?: string;
-    [ENCRYPTED_BANK_ACCNT_NUMBER_FIELD]?: string;
 }
 
 export type AriaConfig = {
@@ -352,8 +349,6 @@ export interface SFPlaceholdersObject {
     [ENCRYPTED_SECURITY_CODE_3_DIGITS]?: string;
     [ENCRYPTED_SECURITY_CODE_4_DIGITS]?: string;
     [ENCRYPTED_PWD_FIELD]?: string;
-    [ENCRYPTED_BANK_ACCNT_NUMBER_FIELD]?: string;
-    [ENCRYPTED_BANK_LOCATION_FIELD]?: string;
 }
 
 export interface SFKeyPressObj {

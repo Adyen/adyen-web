@@ -3,10 +3,18 @@ import { h } from 'preact';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import Checkbox from '../FormFields/Checkbox';
 
+import './StoreDetails.scss';
+
+interface StoreDetailsProps {
+    storeDetails?: boolean;
+    onChange: (value: boolean) => void;
+    disabled?: boolean;
+}
+
 /**
  * "Store details" generic checkbox
  */
-function StoreDetails({ storeDetails = false, ...props }) {
+function StoreDetails({ storeDetails = false, disabled = false, ...props }: StoreDetailsProps) {
     const { i18n } = useCoreContext();
     const [value, setValue] = useState(storeDetails);
 
@@ -20,7 +28,7 @@ function StoreDetails({ storeDetails = false, ...props }) {
 
     return (
         <div className="adyen-checkout__store-details">
-            <Checkbox onChange={onChange} label={i18n.get('storeDetails')} name={'storeDetails'} />
+            <Checkbox onChange={onChange} disabled={disabled} label={i18n.get('storeDetails')} name={'storeDetails'} />
         </div>
     );
 }

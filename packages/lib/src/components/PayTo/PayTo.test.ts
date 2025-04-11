@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/preact';
-import PayTo from './PayTo';
 import userEvent from '@testing-library/user-event';
-import getDataset from '../../core/Services/get-dataset';
-import { MandateType } from './types';
-import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
+import { setupServer } from 'msw/node';
+import getDataset from '../../core/Services/get-dataset';
+import PayTo from './PayTo';
+import { MandateType } from './types';
 
 jest.mock('../../core/Services/get-dataset');
 (getDataset as jest.Mock).mockImplementation(

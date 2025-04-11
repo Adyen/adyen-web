@@ -1,8 +1,13 @@
-import { MetaConfiguration, StoryConfiguration } from '../types';
-import { AchConfiguration } from '../../../src/components/Ach';
-import { ComponentContainer } from '../ComponentContainer';
-import Ach from '../../../src/components/Ach/Ach';
+import React from 'react';
 import { Checkout } from '../Checkout';
+import { ComponentContainer } from '../ComponentContainer';
+
+import { AdyenCheckout } from '../../../src/core/AdyenCheckout';
+import Dropin from '../../../src/components/Dropin';
+import Ach from '../../../src/components/Ach';
+
+import type { MetaConfiguration, StoryConfiguration } from '../types';
+import type { AchConfiguration } from '../../../src/components/Ach/types';
 
 type ACHStory = StoryConfiguration<AchConfiguration>;
 
@@ -17,19 +22,20 @@ export const Default: ACHStory = {
     args: {
         countryCode: 'US',
         componentConfiguration: {
-            data: {
-                holderName: 'B. Fish',
-                billingAddress: {
-                    street: 'Infinite Loop',
-                    postalCode: '95014',
-                    city: 'Cupertino',
-                    houseNumberOrName: '1',
-                    country: 'US',
-                    stateOrProvince: 'CA'
-                }
-            },
             enableStoreDetails: false
         }
+    }
+};
+
+export const WithDropin: ACHStory = {
+    render: ({ componentConfiguration, ...checkoutConfig }) => {
+        AdyenCheckout.register(Ach);
+
+        return (
+            <Checkout checkoutConfig={checkoutConfig}>
+                {checkout => <ComponentContainer element={new Dropin(checkout, componentConfiguration)} />}
+            </Checkout>
+        );
     }
 };
 

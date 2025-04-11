@@ -1,7 +1,6 @@
 import ua from '../utils/userAgent';
 import * as logger from '../../utilities/logger';
 import { shiftTabCreditCard } from '../utils/tabbing/tabScenarioCreditCard';
-import { shiftTabACH } from '../utils/tabbing/tabScenarioACH';
 import { shiftTabGiftCard } from '../utils/tabbing/tabScenarioGiftCard';
 import { shiftTabKCP } from '../utils/tabbing/tabScenarioKCP';
 import { SFFieldType, ShiftTabObject } from '../../types';
@@ -15,11 +14,6 @@ function handleShiftTab(fieldType: SFFieldType): void {
     let shiftTabObj: ShiftTabObject;
 
     switch (this.state.type) {
-        // ACH scenario: bankAccountNumber SF followed by a bankLocationId SF
-        case 'ach':
-            shiftTabObj = shiftTabACH(fieldType);
-            break;
-
         // GIFT CARD scenario: SecurityCode preceded by CardNumber
         case 'giftcard':
             shiftTabObj = shiftTabGiftCard(fieldType, this.props.rootNode);

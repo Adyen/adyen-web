@@ -4,15 +4,7 @@ import SecuredField from './SecuredField';
 import en from '../../../../../../../server/translations/en-US.json';
 
 import { SF_ErrorCodes } from '../../../../../core/Errors/constants';
-import {
-    CVC_POLICY_REQUIRED,
-    DATE_POLICY_REQUIRED,
-    ENCRYPTED_BANK_ACCNT_NUMBER_FIELD,
-    ENCRYPTED_BANK_LOCATION_FIELD,
-    ENCRYPTED_PWD_FIELD,
-    GIFT_CARD
-} from '../constants';
-import { Placeholders as AchPlaceholders } from '../../../../Ach/components/AchInput/types';
+import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, ENCRYPTED_PWD_FIELD, GIFT_CARD } from '../constants';
 import { Placeholders as GiftcardPlaceholders } from '../../../../Giftcard/components/types';
 import { Placeholders as CardPlaceholders } from '../../../../Card/components/CardInput/types';
 import * as logger from '../utilities/logger';
@@ -184,26 +176,7 @@ describe('SecuredField handling no placeholders config object - should set defau
 });
 
 describe('SecuredField handling placeholders from the placeholders config', () => {
-    const achPlaceholders: AchPlaceholders = { bankAccountNumber: '123', bankLocationId: 'abc' };
     const giftCardPlaceholders: GiftcardPlaceholders = { cardNumber: '123', expiryDate: '01/01', securityCode: '000' };
-
-    test('should set placeholders for txVariant ach (accountNumber field)', () => {
-        // @ts-ignore ignore
-        const ach = new SecuredField(
-            { ...setupObj, txVariant: 'ach', fieldType: ENCRYPTED_BANK_ACCNT_NUMBER_FIELD, placeholders: achPlaceholders },
-            global.i18n
-        );
-        expect(ach.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_BANK_ACCNT_NUMBER_FIELD]).toBe(achPlaceholders.bankAccountNumber);
-    });
-
-    test('should set placeholders for txVariant ach (accountLocation field)', () => {
-        // @ts-ignore ignore
-        const ach = new SecuredField(
-            { ...setupObj, txVariant: 'ach', fieldType: ENCRYPTED_BANK_LOCATION_FIELD, placeholders: achPlaceholders },
-            global.i18n
-        );
-        expect(ach.sfConfig.iframeUIConfig.placeholders[ENCRYPTED_BANK_LOCATION_FIELD]).toBe(achPlaceholders.bankLocationId);
-    });
 
     test('should set placeholders for txVariant gift card (cardNumber field)', () => {
         // @ts-ignore ignore

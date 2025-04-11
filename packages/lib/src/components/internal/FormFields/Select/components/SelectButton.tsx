@@ -2,6 +2,8 @@ import { h, Fragment } from 'preact';
 import cx from 'classnames';
 import { SelectButtonProps } from '../types';
 import Img from '../../../Img';
+import { useMemo } from 'preact/hooks';
+import classnames from 'classnames';
 
 function SelectButtonElement({ filterable, toggleButtonRef, ...props }) {
     if (filterable) {
@@ -15,6 +17,12 @@ function SelectButtonElement({ filterable, toggleButtonRef, ...props }) {
 
 function SelectButton(props: Readonly<SelectButtonProps>) {
     const { active, selected, inputText, readonly, showList, required } = props;
+
+    const isShowingPlaceholder = useMemo(() => {
+        const displayText = selected.selectedOptionName || selected.name;
+        const isValidValue = typeof displayText === 'string' && displayText.trim() !== '';
+        return isValidValue !== true;
+    }, [selected, props.placeholder]);
 
     // display fallback order
     const displayText = selected.selectedOptionName || selected.name || props.placeholder || '';
@@ -65,7 +73,13 @@ function SelectButton(props: Readonly<SelectButtonProps>) {
             {!props.filterable ? (
                 <Fragment>
                     {selected.icon && <Img className="adyen-checkout__dropdown__button__icon" src={selected.icon} alt={selected.name} />}
-                    <span className="adyen-checkout__dropdown__button__text">{displayText}</span>
+                    <span
+                        className={classnames('adyen-checkout__dropdown__button__text', {
+                            'adyen-checkout__dropdown__button__text-placeholder': isShowingPlaceholder
+                        })}
+                    >
+                        {displayText}
+                    </span>
                     {selected.secondaryText && <span className="adyen-checkout__dropdown__button__secondary-text">{selected.secondaryText}</span>}
                 </Fragment>
             ) : (
