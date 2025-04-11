@@ -3,6 +3,7 @@
 
 .adyen-checkout__voucher-result--paybybank_pix {
     background-color: token(color-background-primary);
+    margin-bottom: token(spacer-070);
 
     .adyen-checkout__voucher-result__top {
         border: none;
