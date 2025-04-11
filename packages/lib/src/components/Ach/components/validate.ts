@@ -1,30 +1,34 @@
 import { ValidatorRules } from '../../../utils/Validator/types';
 import { digitsOnlyFormatter } from '../../../utils/Formatters/formatters';
+import { isEmpty } from '../../../utils/validator-utils';
 
 const accountNumberRegex = /^\d{4,17}$/;
 const routingNumberRegex = /^\d{9}$/;
 
 export const achValidationRules: ValidatorRules = {
     selectedAccountType: {
-        validate: value => !!value && value.length > 0,
+        validate: value => (isEmpty(value) ? null : true),
         errorMessage: 'ach.bankAccount.nothing-selected-error',
         modes: ['blur']
     },
     ownerName: {
-        validate: value => !!value && value.length > 0,
+        validate: value => (isEmpty(value) ? null : true),
         errorMessage: 'ach.accountHolderNameField.invalid',
         modes: ['blur']
     },
     routingNumber: [
         // Empty field
         {
-            validate: value => value.length > 0,
+            validate: value => (isEmpty(value) ? null : true),
             errorMessage: 'ach.loc.947',
             modes: ['blur']
         },
         // Incomplete field
         {
-            validate: value => !!value && routingNumberRegex.test(value),
+            validate: value => {
+                if (isEmpty(value)) return null;
+                return routingNumberRegex.test(value);
+            },
             errorMessage: 'ach.loc.948',
             modes: ['blur']
         }
@@ -32,13 +36,16 @@ export const achValidationRules: ValidatorRules = {
     accountNumber: [
         // Empty field
         {
-            validate: value => !!value && value.length > 0,
+            validate: value => (isEmpty(value) ? null : true),
             errorMessage: 'ach.num.945',
             modes: ['blur']
         },
         // Incomplete field: value is not between 4 and 17 chars
         {
-            validate: value => !!value && accountNumberRegex.test(value),
+            validate: value => {
+                if (isEmpty(value)) return null;
+                return accountNumberRegex.test(value);
+            },
             errorMessage: 'ach.num.946',
             modes: ['blur']
         }
@@ -51,25 +58,21 @@ export const achValidationRules: ValidatorRules = {
              */
             validate: (value, context) => {
                 const { accountNumber } = context.state.data;
-                return !accountNumber ? !!value && value.length > 0 : true;
+                return !accountNumber && isEmpty(value) ? null : true;
             },
             errorMessage: 'ach.bankAccountNumberVerification.error.empty',
             modes: ['blur']
         },
         {
             validate: (value, context) => {
+                if (isEmpty(value)) return null;
                 const { accountNumber } = context.state.data;
                 return accountNumber === value;
             },
             errorMessage: 'ach.bankAccountNumberVerification.error.not-match',
             modes: ['blur']
         }
-    ],
-    default: {
-        validate: value => !!value && value.length > 0,
-        errorMessage: '',
-        modes: ['blur']
-    }
+    ]
 };
 
 export const achFormatters = {

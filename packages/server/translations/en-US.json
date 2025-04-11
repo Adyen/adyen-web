@@ -127,7 +127,7 @@
     "storedPaymentMethod.disable.confirmButton": "Yes, remove",
     "storedPaymentMethod.disable.cancelButton": "Cancel",
     "ach.bankAccount": "Bank account",
-    "ach.bankAccount.title": "Bank account type",
+    "ach.bankAccount.title": "Bank account details",
     "ach.bankAccount.label": "Account type",
     "ach.bankAccount.placeholder": "Choose an account type",
     "ach.bankAccount.nothing-selected-error": "Choose an account type",

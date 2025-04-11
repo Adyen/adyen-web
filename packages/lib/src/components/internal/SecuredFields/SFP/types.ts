@@ -5,10 +5,9 @@ import Language from '../../../../language';
 import { Resources } from '../../../../core/Context/Resources';
 import { TouchStartEventObj } from '../../../Card/components/CardInput/components/types';
 import { Placeholders as CardPlaceholders } from '../../../Card/components/CardInput/types';
-import { Placeholders as AchPlaceholders } from '../../../Ach/components/AchInput/types';
 import { Placeholders as GiftcardPlaceholders } from '../../../Giftcard/components/types';
 
-export type Placeholders = CardPlaceholders | AchPlaceholders | GiftcardPlaceholders;
+export type Placeholders = CardPlaceholders | GiftcardPlaceholders;
 
 /**
  * Should be the only props that can be sent to SFP (from CardInput, SecuredFieldsInput, AchInput, GiftcardComponent)
