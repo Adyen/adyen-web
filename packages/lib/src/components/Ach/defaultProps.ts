@@ -1,8 +1,7 @@
 import { AchConfiguration } from './types';
 
 const defaultProps: AchConfiguration = {
-    hasHolderName: true,
-    type: 'ach'
+    hasHolderName: true
 };
 
 export default defaultProps;

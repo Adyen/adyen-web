@@ -6,7 +6,6 @@ import { TxVariants } from '../tx-variants';
 import AchComponent from './components/AchComponent';
 import defaultProps from './defaultProps';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
-// import { SendAnalyticsObject } from '../../core/Analytics/types';
 
 import type { AchConfiguration } from './types';
 
@@ -39,10 +38,6 @@ export class AchElement extends UIElement<AchConfiguration> {
             ...(this.state.storePaymentMethod && { storePaymentMethod: this.state.storePaymentMethod })
         };
     }
-
-    // protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
-    //     super.submitAnalytics(analyticsObj, this.props);
-    // }
 
     public override get isValid(): boolean {
         if (this.props.storedPaymentMethodId) {
