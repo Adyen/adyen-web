@@ -72,7 +72,7 @@ function Payment({
     ) : (
         <Fragment>
             <PaymentDetails
-                issuerImageUrl={getImage()(issuer)}
+                issuerImageUrl={getImage({ imageFolder: `${txVariant}/` })(issuer)}
                 paymentMethodType={txVariant}
                 amount={i18n.amount(amount.value, amount.currency)}
                 voucherDetails={details}

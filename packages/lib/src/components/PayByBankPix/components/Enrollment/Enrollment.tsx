@@ -24,7 +24,7 @@ function Enrollment(props: EnrollmentProps) {
     const logos = [
         { name: 'open-finance', alt: i18n.get('paybybankpix.await.logoAlt.openFinance'), src: `${getImage()('open-finance')}` },
         { name: 'arrow-down', alt: i18n.get('paybybankpix.await.logoAlt.arrowDown'), src: `${getImage()('arrow-down')}` },
-        { name: 'bank', alt: i18n.get('paybybankpix.await.logoAlt.bank'), src: `${getImage()('bank')}` }
+        { name: 'bank', alt: i18n.get('paybybankpix.await.logoAlt.bank'), src: `${getImage()('bento_bank')}` }
     ];
     const self = useRef({
         showValidation: () => {
