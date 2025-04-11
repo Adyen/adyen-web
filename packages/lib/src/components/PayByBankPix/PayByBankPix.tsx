@@ -15,13 +15,13 @@ import { PaymentAction } from '../../types/global-types';
 import type { ICore } from '../../core/types';
 
 const isAdyenHosted = () => {
-  try {
-    const currentUrl = new URL(window.location.href);
-    return currentUrl.hostname.endsWith('.adyen.com');
-  } catch (e) {
-    // SSR (also means non adyen hosted), or it fails to parse the full url
-    return false;
-  }
+    try {
+        const currentUrl = new URL(window.location.href);
+        return currentUrl.hostname.endsWith('.adyen.com');
+    } catch (e) {
+        // SSR (also means non adyen hosted), or it fails to parse the full url
+        return false;
+    }
 };
 
 class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
@@ -31,7 +31,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
 
     public static defaultProps: PayByBankPixConfiguration = {
         showPayButton: true,
-        _isAdyenHosted: isAdyenHosted(), // todo: remove hasRedirectResult
+        _isAdyenHosted: isAdyenHosted(),
         countdownTime: PayByBankPixElement.TIMEOUT_MINUTES
     };
 
@@ -131,15 +131,15 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
      * The second one is to poll the authorization options - we poll the server to get the challenge in the `getAuthorizationStatus` function.
      * The third one is in the `authorizePayment` function - we authorize the payment with shopper's passkey.
      */
-    private readonly payWithStoredPayment = () => {
-      try {
-        const { deviceId, ...riskSignals } = await this.passkeyService.captureRiskSignalsAuthentication();
-        this.state = { ...this.state, ...{ data: { storedPaymentMethodId: this.props.storedPaymentMethodId, riskSignals, deviceId } } };
-        super.submit();
-      } catch (error) {
-        const errorMsg = error instanceof Error ? error.message : 'Unknown error in the payWithStoredPayment';
-        this.handleError(error instanceof AdyenCheckoutError ? error : new AdyenCheckoutError(ERROR, errorMsg));
-      }
+    private readonly payWithStoredPayment = async () => {
+        try {
+            const { deviceId, ...riskSignals } = await this.passkeyService.captureRiskSignalsAuthentication();
+            this.state = { ...this.state, ...{ data: { storedPaymentMethodId: this.props.storedPaymentMethodId, riskSignals, deviceId } } };
+            super.submit();
+        } catch (error) {
+            const errorMsg = error instanceof Error ? error.message : 'Unknown error in the payWithStoredPayment';
+            this.handleError(error instanceof AdyenCheckoutError ? error : new AdyenCheckoutError(ERROR, errorMsg));
+        }
     };
 
     private readonly authorizePayment = async (authenticationOptions: string): Promise<void> => {
