@@ -14,7 +14,7 @@ import { BrowserInfo } from '../types/global-types';
  */
 export default function collectBrowserInfo(): BrowserInfo {
     const colorDepth = getProp(window, 'screen.colorDepth') || '';
-    const javaEnabled = getProp(window, 'navigator.javaEnabled') ? window.navigator.javaEnabled() : false;
+    const javaEnabled = false;
     const screenHeight = getProp(window, 'screen.height') || ''; // TODO: Shall we set this to null instead?
     const screenWidth = getProp(window, 'screen.width') || ''; // TODO: Shall we set this to null instead?
     const userAgent = getProp(window, 'navigator.userAgent') || '';
