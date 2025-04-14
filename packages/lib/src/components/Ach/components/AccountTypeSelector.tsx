@@ -50,7 +50,7 @@ const AccountTypeSelector = ({ onSelect, selectedAccountType, errorMessage, plac
         >
             <Select
                 placeholder={placeholder || i18n.get('ach.bankAccount.placeholder')}
-                filterable={true}
+                filterable={false}
                 items={options}
                 selectedValue={selectedAccountType}
                 onChange={onChange}
