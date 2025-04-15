@@ -72,6 +72,18 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         }
     }
 
+    public override handleAction(action: PaymentAction, props: {} = {}): UIElement | null {
+        const actionEle = super.handleAction(action, props);
+        if (actionEle) {
+            // Make sure passkey is loaded before mounting the action
+            void actionEle.isAvailable().then(() => {
+                actionEle.mount(this._node);
+            });
+            return actionEle;
+        }
+        return null;
+    }
+
     formatData(): PayByBankPixData {
         if (!this.props._isAdyenHosted) {
             return {
