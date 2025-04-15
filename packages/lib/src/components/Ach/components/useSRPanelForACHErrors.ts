@@ -6,12 +6,28 @@ import { usePrevious } from '../../../utils/hookUtils';
 import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD } from '../../../core/Errors/constants';
 import { setFocusOnField } from '../../../utils/setFocus';
 import { getArrayDifferences } from '../../../utils/arrayUtils';
-import { AchStateData, AchStateErrors } from '../types';
+import { ValidationRuleResult } from '../../../utils/Validator/ValidationRuleResult';
+
+export interface AchStateErrors {
+    selectedAccountType: ValidationRuleResult;
+    ownerName: ValidationRuleResult;
+    routingNumber: ValidationRuleResult;
+    accountNumber: ValidationRuleResult;
+    accountNumberVerification: ValidationRuleResult;
+}
 
 interface UseSRPanelForErrorsProps {
     errors: AchStateErrors;
     data: AchStateData;
     isValidating: MutableRef<boolean>;
+}
+
+interface AchStateData {
+    selectedAccountType: string;
+    ownerName: string;
+    routingNumber: string;
+    accountNumber: string;
+    accountNumberVerification: string;
 }
 
 const useSRPanelForACHErrors = ({ errors, data, isValidating }: UseSRPanelForErrorsProps) => {

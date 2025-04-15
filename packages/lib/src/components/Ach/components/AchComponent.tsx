@@ -12,7 +12,8 @@ import StoreDetails from '../../internal/StoreDetails';
 
 import type { PayButtonProps } from '../../internal/PayButton/PayButton';
 import type { ComponentMethodsRef } from '../../internal/UIElement/types';
-import type { AchPlaceholders, AchStateErrors } from '../types';
+import type { AchPlaceholders } from '../types';
+import type { AchStateErrors } from './useSRPanelForACHErrors';
 import useSRPanelForAchErrors from './useSRPanelForACHErrors';
 
 type AchForm = {
