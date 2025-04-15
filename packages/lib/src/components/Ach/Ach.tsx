@@ -5,6 +5,7 @@ import RedirectButton from '../internal/RedirectButton';
 import { TxVariants } from '../tx-variants';
 import AchComponent from './components/AchComponent';
 import defaultProps from './defaultProps';
+import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 
 import type { AchConfiguration } from './types';
 
@@ -72,15 +73,17 @@ export class AchElement extends UIElement<AchConfiguration> {
                         }}
                     />
                 ) : (
-                    <AchComponent
-                        onChange={this.setState}
-                        payButton={this.payButton}
-                        showPayButton={this.props.showPayButton}
-                        hasHolderName={this.props.hasHolderName}
-                        placeholders={this.props.placeholders}
-                        setComponentRef={this.setComponentRef}
-                        enableStoreDetails={this.props.enableStoreDetails}
-                    />
+                    <SRPanelProvider srPanel={this.props.modules.srPanel}>
+                        <AchComponent
+                            onChange={this.setState}
+                            payButton={this.payButton}
+                            showPayButton={this.props.showPayButton}
+                            hasHolderName={this.props.hasHolderName}
+                            placeholders={this.props.placeholders}
+                            setComponentRef={this.setComponentRef}
+                            enableStoreDetails={this.props.enableStoreDetails}
+                        />
+                    </SRPanelProvider>
                 )}
             </CoreProvider>
         );

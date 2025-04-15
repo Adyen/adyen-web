@@ -276,7 +276,7 @@
     "ctp.errors.AUTH_INVALID": "Virheellinen todennus",
     "ctp.errors.NOT_FOUND": "Tiliä ei löytynyt. Anna kelvollinen sähköpostiosoite tai jatka manuaalista kortin syöttöä",
     "ctp.errors.ID_FORMAT_UNSUPPORTED": "Muoto ei tuettu",
-    "ctp.errors.FRAUD": "Käyttäjätili oli lukittu tai poistettu käytöstä",
+    "ctp.errors.FRAUD": "Käyttäjätili on lukittu tai poistettu käytöstä",
     "ctp.errors.CONSUMER_ID_MISSING": "Pyynnöstä puuttuu kuluttajan henkilöllisyys",
     "ctp.errors.ACCT_INACCESSIBLE": "Tämä tili ei ole tällä hetkellä käytettävissä, se voi esimerkiksi olla lukittu",
     "ctp.errors.CODE_INVALID": "Virheellinen vahvistuskoodi",
