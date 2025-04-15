@@ -14,11 +14,6 @@ import Enrollment from './components/Enrollment';
 import { PaymentAction } from '../../types/global-types';
 import type { ICore } from '../../core/types';
 
-//todo: remove
-const hasRedirectResult = (): boolean => {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('redirectResult') != null;
-};
 const isAdyenHosted = () => {
     try {
         const currentUrl = new URL(window.location.href);
@@ -35,7 +30,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
 
     public static defaultProps: PayByBankPixConfiguration = {
         showPayButton: true,
-        _isAdyenHosted: isAdyenHosted() || hasRedirectResult(), // todo: remove hasRedirectResult
+        _isAdyenHosted: isAdyenHosted(),
         countdownTime: PayByBankPixElement.TIMEOUT_MINUTES
     };
 
@@ -74,6 +69,24 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
             );
             return Promise.reject();
         }
+    }
+
+    public override handleAction(action: PaymentAction, props: {} = {}): UIElement | null {
+        const paymentAction = this.core.createFromAction(action, {
+            ...this.elementRef.props,
+            ...props,
+            onAdditionalDetails: this.handleAdditionalDetails
+        });
+        if (paymentAction) {
+            this.unmount();
+            // Make sure the await action UIElement is available before mounting
+            void paymentAction.isAvailable().then(() => {
+                paymentAction.mount(this._node);
+            });
+            return paymentAction;
+        }
+
+        return null;
     }
 
     formatData(): PayByBankPixData {
