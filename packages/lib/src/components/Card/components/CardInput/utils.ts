@@ -17,7 +17,6 @@ import { InstallmentsObj } from './components/Installments/Installments';
 import { SFPProps } from '../../../internal/SecuredFields/SFP/types';
 import { BRAND_READABLE_NAME_MAP } from '../../../internal/SecuredFields/lib/constants';
 import { UseImageHookType } from '../../../../core/Context/useImage';
-import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 
 export const getCardImageUrl = (brand: string, getImage: UseImageHookType): string => {
     const imageOptions = {
@@ -172,16 +171,6 @@ export const extractPropsForSFP = (props: CardInputProps) => {
 export const handlePartialAddressMode = (addressMode: AddressModeOptions): AddressSpecifications | null => {
     return addressMode == AddressModeOptions.partial ? PARTIAL_ADDRESS_SCHEMA : null;
 };
-
-// Almost all errors are blur based, but some SF ones are not i.e. when an unsupported card is entered or the expiry date is out of range
-export function lookupBlurBasedErrors(errorCode) {
-    return ![
-        SF_ErrorCodes.ERROR_MSG_UNSUPPORTED_CARD_ENTERED,
-        SF_ErrorCodes.ERROR_MSG_CARD_TOO_OLD,
-        SF_ErrorCodes.ERROR_MSG_CARD_TOO_FAR_IN_FUTURE,
-        SF_ErrorCodes.ERROR_MSG_CARD_EXPIRES_TOO_SOON
-    ].includes(errorCode);
-}
 
 export function getFullBrandName(brand) {
     return BRAND_READABLE_NAME_MAP[brand] ?? brand;
