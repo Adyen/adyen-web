@@ -23,7 +23,6 @@ const isAdyenHosted = () => {
         return false;
     }
 };
-
 class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
     public static type = TxVariants.paybybank_pix;
     private static TIMEOUT_MINUTES = 1;
@@ -73,14 +72,20 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
     }
 
     public override handleAction(action: PaymentAction, props: {} = {}): UIElement | null {
-        const actionEle = super.handleAction(action, props);
-        if (actionEle) {
-            // Make sure passkey is loaded before mounting the action
-            void actionEle.isAvailable().then(() => {
-                actionEle.mount(this._node);
+        const paymentAction = this.core.createFromAction(action, {
+            ...this.elementRef.props,
+            ...props,
+            onAdditionalDetails: this.handleAdditionalDetails
+        });
+        if (paymentAction) {
+            this.unmount();
+            // Make sure the await action UIElement is available before mounting
+            void paymentAction.isAvailable().then(() => {
+                paymentAction.mount(this._node);
             });
-            return actionEle;
+            return paymentAction;
         }
+
         return null;
     }
 
