@@ -113,8 +113,6 @@ export const CardFieldsWrapper = ({
                 errors={sfpState.errors}
                 valid={sfpState.valid}
                 dualBrandingElements={dualBrandSelectElements.length > 0 && dualBrandSelectElements}
-                dualBrandingChangeHandler={extensions.handleDualBrandSelection}
-                dualBrandingSelected={selectedBrandValue}
             />
 
             {hasHolderName && !positionHolderNameOnTop && cardHolderField}

@@ -11,7 +11,7 @@ import { alternativeLabelContent } from './FieldLabelAlternative';
 
 export default function CardNumber(props: CardNumberProps) {
     const { i18n } = useCoreContext();
-    const { error = '', isValid = false, onFocusField = () => {}, dualBrandingElements, dualBrandingChangeHandler, dualBrandingSelected } = props;
+    const { error = '', isValid = false, onFocusField = () => {}, dualBrandingElements } = props;
 
     const handleIconClick = () => {
         onFocusField(ENCRYPTED_CARD_NUMBER);
@@ -63,9 +63,8 @@ export default function CardNumber(props: CardNumberProps) {
                             key={element.id}
                             brand={element.id}
                             brandsConfiguration={props.brandsConfiguration}
-                            onClick={dualBrandingChangeHandler}
                             dataValue={element.id}
-                            notSelected={dualBrandingSelected !== '' && dualBrandingSelected !== element.id}
+                            onClick={handleIconClick}
                         />
                     ))}
                 </div>
