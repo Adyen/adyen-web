@@ -1,5 +1,21 @@
 # @adyen/adyen-web
 
+## 6.12.0
+
+### Minor Changes
+
+- ACH - Added Drop-down to select Account Type and input field to verify the Account Number ([#3241](https://github.com/Adyen/adyen-web/pull/3241))
+
+### Patch Changes
+
+- Add missing callback types to customCard ([#3212](https://github.com/Adyen/adyen-web/pull/3212))
+
+- BrowserInfo no longer calls obsolete `navigator.javaEnabled` function ([#3234](https://github.com/Adyen/adyen-web/pull/3234))
+
+- Apple Pay - Added missing Typescript types for the ApplePayButtonType ([#3218](https://github.com/Adyen/adyen-web/pull/3218))
+
+- Google Pay - Fixed issue where Google Pay standalone component wasn't recognizing 'paywithgoogle' payment method ([#3253](https://github.com/Adyen/adyen-web/pull/3253))
+
 ## 6.11.0
 
 ### Minor Changes
