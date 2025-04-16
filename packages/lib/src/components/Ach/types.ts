@@ -1,18 +1,36 @@
-import { Placeholders } from './components/AchInput/types';
 import { UIElementProps } from '../internal/UIElement/types';
 
 export interface AchConfiguration extends UIElementProps {
-    storedPaymentMethodId?: string;
-    holderNameRequired?: boolean;
-    hasHolderName?: boolean;
-    enableStoreDetails: boolean;
-    bankAccountNumber?: string; // Applies when a storedPM
-    placeholders?: Placeholders;
     /**
-     * Object that contains placeholder information that you can use to prefill fields.
-     * - merchant set config option
+     * Adds placeholder text to the input fields
      */
-    data?: {
-        holderName?: string;
-    };
+    placeholders?: AchPlaceholders;
+    /**
+     * Set to false to hide the "Account Holder Name" field if you want to pass the data yourself
+     * @default true
+     */
+    hasHolderName?: boolean;
+    /**
+     * Enables storing the payment method using the Checkbox
+     * @default false
+     */
+    enableStoreDetails?: boolean;
+    /**
+     * storedPaymentMethodId coming from a stored ACH in /paymentMethods response
+     * @internal
+     */
+    storedPaymentMethodId?: string;
+    /**
+     * bankAccountNumber coming from a stored ACH in /paymentMethods response
+     * @internal
+     */
+    bankAccountNumber?: string;
+}
+
+export interface AchPlaceholders {
+    accountTypeSelector?: string;
+    ownerName?: string;
+    routingNumber?: string;
+    accountNumber?: string;
+    accountNumberVerification?: string;
 }

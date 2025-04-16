@@ -16,9 +16,10 @@ interface CheckboxProps {
     uniqueId?: string;
     showErrorElement?: boolean;
     showContextualElement?: boolean;
+    disabled?: boolean;
 }
 
-export default function Checkbox({ classNameModifiers = [], label, isInvalid, onChange, ...props }: CheckboxProps) {
+export default function Checkbox({ classNameModifiers = [], label, isInvalid, onChange, disabled = false, ...props }: CheckboxProps) {
     // Strip some values from props. We need to reference them but don't want to set them as attributes.
     const { uniqueId: uid, showErrorElement, showContextualElement, ...newProps } = props;
 
@@ -36,6 +37,7 @@ export default function Checkbox({ classNameModifiers = [], label, isInvalid, on
                     classNameModifiers.map(m => `adyen-checkout__input--${m}`)
                 ])}
                 type="checkbox"
+                disabled={disabled}
                 onChange={onChange}
             />
             <span className="adyen-checkout__checkbox__label">{label}</span>
