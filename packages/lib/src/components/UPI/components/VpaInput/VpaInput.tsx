@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useEffect, useRef, useState } from 'preact/hooks';
+import { useEffect, useRef } from 'preact/hooks';
 import { vpaValidationRules } from './validate';
 import './VpaInput.scss';
 import InputText from '../../../internal/FormFields/InputText';
@@ -7,8 +7,6 @@ import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import useForm from '../../../../utils/useForm';
 import Field from '../../../internal/FormFields/Field';
 import { getErrorMessage } from '../../../../utils/getErrorMessage';
-import { ValidationRuleResult } from '../../../../utils/Validator/ValidationRuleResult';
-// import { ValidationRuleResult } from '../../../../utils/Validator/ValidationRuleResult';
 
 export type OnChangeProps = { data: VpaInputDataState; valid; errors; isValid: boolean };
 
@@ -38,7 +36,6 @@ const VpaInput = (props: VpaInputProps): h.JSX.Element => {
         defaultData: props.data,
         rules: vpaValidationRules
     });
-    // const [showInvalidVpaError, setShowInvalidVpaError] = useState<boolean>(false);
 
     const vpaInputHandlersRef = useRef<VpaInputHandlers>({
         validateInput: () => triggerValidation(),
@@ -49,8 +46,6 @@ const VpaInput = (props: VpaInputProps): h.JSX.Element => {
     });
 
     useEffect(() => {
-        // vpaInputHandlersRef.current.validateInput = validateInput;
-        // debugger;
         props.onSetInputHandlers(vpaInputHandlersRef.current);
     }, [props.onSetInputHandlers]);
 
@@ -76,6 +71,7 @@ const VpaInput = (props: VpaInputProps): h.JSX.Element => {
                 value={data.virtualPaymentAddress}
                 onInput={handleChangeFor('virtualPaymentAddress', 'input')}
                 onBlur={handleChangeFor('virtualPaymentAddress', 'blur')}
+                data-testid={'input-virtual-payment-address'}
             />
         </Field>
     );

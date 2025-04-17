@@ -57,8 +57,6 @@ export function getReducer(processField) {
     return function reducer(state, { type, key, value, mode, schema, defaultData, formValue, selectedSchema, fieldProblems, data }) {
         const validationSchema: string[] = selectedSchema || state.schema;
 
-        console.log(state);
-
         switch (type) {
             case 'setData': {
                 return { ...state, data: { ...state['data'], [key]: value } };

@@ -10,8 +10,6 @@ export const ComponentContainer = ({ element }: IContainer) => {
     const container = useRef(null);
     const [errorMessage, setErrorMessage] = useState(null);
 
-    console.log(element);
-
     useEffect(() => {
         if (!element) return;
 

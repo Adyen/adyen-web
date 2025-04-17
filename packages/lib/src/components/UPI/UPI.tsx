@@ -4,13 +4,14 @@ import UPIComponent from './components/UPIComponent';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import Await from '../internal/Await';
 import QRLoader from '../internal/QRLoader';
-import { App, UPIConfiguration, UpiMode, UpiPaymentData, UpiType } from './types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { TxVariants } from '../tx-variants';
 import isMobile from '../../utils/isMobile';
-import type { ICore } from '../../core/types';
 import { ANALYTICS_EVENT, InfoEventTypes } from '../../core/Analytics/constants';
 import CancelError from '../../core/Errors/CancelError';
+
+import type { ICore } from '../../core/types';
+import type { App, UPIConfiguration, UpiMode, UpiPaymentData, UpiType } from './types';
 
 /**
  * For mobile:
@@ -28,10 +29,8 @@ class UPI extends UIElement<UPIConfiguration> {
 
     private selectedMode: UpiMode;
 
-    constructor(checkout: ICore, props: UPIConfiguration) {
+    constructor(checkout: ICore, props?: UPIConfiguration) {
         super(checkout, props);
-        // this.validateVpaIfRequired = this.validateVpaIfRequired.bind(this);
-
         this.selectedMode = this.props.defaultMode;
     }
 
@@ -70,7 +69,7 @@ class UPI extends UIElement<UPIConfiguration> {
         void this.validateVpaIfRequired()
             .then(() => super.submit())
             .catch(() => {
-                // Swallow CancelError triggered by VPA validation
+                // Swallow the CancelError() triggered by validateVpaIfRequired()
             });
     }
 

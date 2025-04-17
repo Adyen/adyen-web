@@ -26,11 +26,13 @@ export const WithVpaValidation: UpiStory = {
     args: {
         countryCode: 'IN',
         componentConfiguration: {
+            defaultMode: 'vpa',
             onVpaValidation(value: string, actions: { resolve(): void; reject(): void }) {
-                console.log(`onVpaValidation: ${value}`);
+                console.log(`onVpaValidation(): ${value}`);
+
                 setTimeout(() => {
                     actions.reject();
-                }, 2000);
+                }, 1000);
             }
         }
     }
