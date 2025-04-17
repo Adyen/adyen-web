@@ -128,7 +128,7 @@
     "msw-storybook-addon": "2.0.4",
     "postcss": "8.5.3",
     "rollup": "4.37.0",
-    "rollup-plugin-dts": "6.1.1",
+    "rollup-plugin-dts": "6.2.1",
     "rollup-plugin-postcss": "4.0.2",
     "rollup-plugin-stylelint": "1.0.0",
     "rollup-plugin-swc3": "0.12.1",
