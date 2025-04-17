@@ -83,8 +83,15 @@ export class PasskeyService implements IPasskeyService {
         if (!decodedResult.success) {
             throw new AdyenCheckoutError(SDK_ERROR, 'Failed to decode enrollment');
         }
-
-        const result = await this.passkeySdk.createCredentialForEnrollment(JSON.parse(decodedResult.data));
+        // todo remove this local testing purpose
+        const result = await this.passkeySdk.createCredentialForEnrollment({
+            ...JSON.parse(decodedResult.data),
+            rp: {
+                id: window.location.hostname,
+                name: 'Adyen'
+            }
+        });
+        //const result = await this.passkeySdk.createCredentialForEnrollment(JSON.parse(decodedResult.data));
         if (result && 'type' in result && result.type === PasskeyErrorTypes.CREDENTIAL_CREATION_ERROR) {
             throw new AdyenCheckoutError(SDK_ERROR, (result as NavigatorCredentialCreationsError).message);
         }
