@@ -10,9 +10,11 @@ import { useCoreContext } from '../../../../core/Context/CoreProvider';
 
 interface UPIIntentAppListProps {
     apps: Array<App>;
+    showContextualElement: boolean;
     selectedAppId?: string;
     disabled?: boolean;
     onAppSelect?: Function;
+    vpaPlaceholder?: string;
     onVpaInputChange?({ data, valid, errors, isValid }: OnChangeProps): void;
     onSetInputHandlers?(handlers: VpaInputHandlers): void;
 }
@@ -21,6 +23,8 @@ const UPIIntentAppList = ({
     apps,
     selectedAppId,
     disabled,
+    vpaPlaceholder,
+    showContextualElement,
     onAppSelect = () => {},
     onVpaInputChange = () => {},
     onSetInputHandlers = () => {}
@@ -49,7 +53,15 @@ const UPIIntentAppList = ({
 
                 return (
                     <UPIIntentAppItem key={key} app={app} imgSrc={imgSrc} isSelected={isSelected} onSelect={onAppSelect}>
-                        {showUpiCollectInput && <VpaInput disabled={disabled} onChange={onVpaInputChange} onSetInputHandlers={onSetInputHandlers} />}
+                        {showUpiCollectInput && (
+                            <VpaInput
+                                showContextualElement={showContextualElement}
+                                placeholder={vpaPlaceholder}
+                                disabled={disabled}
+                                onChange={onVpaInputChange}
+                                onSetInputHandlers={onSetInputHandlers}
+                            />
+                        )}
                     </UPIIntentAppItem>
                 );
             })}

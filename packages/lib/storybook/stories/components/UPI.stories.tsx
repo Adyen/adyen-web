@@ -19,4 +19,21 @@ export const Default: UpiStory = {
     }
 };
 
+export const WithVpaValidation: UpiStory = {
+    render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<UPIConfiguration>) => (
+        <Checkout checkoutConfig={checkoutConfig}>{checkout => <ComponentContainer element={new UPI(checkout, componentConfiguration)} />}</Checkout>
+    ),
+    args: {
+        countryCode: 'IN',
+        componentConfiguration: {
+            onVpaValidation(value: string, actions: { resolve(): void; reject(): void }) {
+                console.log(`onVpaValidation: ${value}`);
+                setTimeout(() => {
+                    actions.reject();
+                }, 2000);
+            }
+        }
+    }
+};
+
 export default meta;
