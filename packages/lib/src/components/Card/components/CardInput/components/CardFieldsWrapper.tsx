@@ -135,7 +135,12 @@ export const CardFieldsWrapper = ({
 
                                 // TODO - check below if we have to still generate altName through the mapping function or whether it just
                                 //  corresponds to item.brandObject.localeBrand
-                                return { id: item.id, name: item.brandObject.localeBrand, imageURL, altName: getFullBrandName(brand) };
+                                return {
+                                    id: item.id,
+                                    name: item.brandObject.localeBrand || item.brandObject.brand,
+                                    imageURL,
+                                    altName: getFullBrandName(brand)
+                                };
                             })}
                             onChange={extensions.handleDualBrandSelection}
                             required={true}

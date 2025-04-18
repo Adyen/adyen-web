@@ -53,5 +53,19 @@
 
     .adyen-checkout__radio_group-extended__label-wrapper{
         display: flex;
+
+        .adyen-checkout__radio_group-extended__label{
+            width: 100%;
+        }
+
+        .adyen-checkout-input__inline-validation{
+            margin-right: token(spacer-000);
+            display: none;
+        }
+
+        .adyen-checkout-input__inline-validation.adyen-checkout-input__inline-validation--valid{
+            display:block
+        }
+
     }
 }

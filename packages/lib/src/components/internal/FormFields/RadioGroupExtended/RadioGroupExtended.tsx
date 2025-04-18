@@ -5,6 +5,8 @@ import { RadioGroupProps } from './types';
 import { getUniqueId } from '../../../../utils/idGenerator';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import RadioButtonIcon from './RadioButtonIcon';
+import Icon from '../../Icon';
+import { PREFIX } from '../../Icon/constants';
 
 export default function RadioGroupExtended(props: RadioGroupProps) {
     const { items, name, onChange, value, isInvalid, uniqueId, ariaLabel, showRadioIcon = true, style = 'classic' } = props;
@@ -55,7 +57,15 @@ export default function RadioGroupExtended(props: RadioGroupProps) {
                                     dataValue={item.id}
                                     hasRadioIcon={showRadioIcon}
                                 />
-                                <span>{i18n.get(item.name)}</span>
+                                <span className={'adyen-checkout__radio_group-extended__label'}>{i18n.get(item.name)}</span>
+                                <span
+                                    className={cx({
+                                        'adyen-checkout-input__inline-validation': true,
+                                        'adyen-checkout-input__inline-validation--valid': value === item.id
+                                    })}
+                                >
+                                    <Icon type={`${PREFIX}checkmark`} alt={i18n?.get('field.valid')} />
+                                </span>
                             </div>
                         </label>
                     </div>
