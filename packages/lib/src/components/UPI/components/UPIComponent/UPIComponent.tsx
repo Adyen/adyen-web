@@ -7,6 +7,7 @@ import { A11Y } from './constants';
 import './UPIComponent.scss';
 import SegmentedControl from '../../../internal/SegmentedControl';
 import UPIIntentAppList from '../UPIIntentAppList';
+import ContentSeparator from '../../../internal/ContentSeparator';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 
 import type { VpaInputHandlers } from '../VpaInput/VpaInput';
@@ -124,6 +125,7 @@ export default function UPIComponent({
                 classNameModifiers={['upi-margin-bottom']}
                 options={segmentedControlOptions}
             />
+            <ContentSeparator label={i18n.get('upi.completePayment')} />
             {mode === 'intent' && (
                 <div id={A11Y.AreaId.INTENT} aria-labelledby={A11Y.ButtonId.INTENT} className="adyen-checkout-upi-area-intent" role="region">
                     <UPIIntentAppList
