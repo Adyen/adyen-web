@@ -54,8 +54,7 @@ export function handleConfig(props: CSFSetupObject): void {
 
     this.config.sfLogAtStart = window._b$dl === true;
 
-    let sfBundleType: string = this.config.isCreditCardType ? 'card' : props.type;
-    if (sfBundleType.indexOf('sepa') > -1) sfBundleType = 'iban';
+    const sfBundleType: string = this.config.isCreditCardType ? 'card' : props.type;
 
     // Add a hash of the origin to ensure urls are different across domains
     const d = btoa(window.location.origin);

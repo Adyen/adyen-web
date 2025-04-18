@@ -19,7 +19,7 @@ if (fs.existsSync(path)) {
     });
 
     fs.writeFileSync(path, content, 'utf8');
-    console.log('Added references to googlepay and applepayjs types.');
+    console.log('[add-type-reference.cjs] Added references to googlepay and applepayjs types.\n');
 } else {
     console.error(`Error: ${path} not found. Ensure TypeScript declaration files are generated.`);
     process.exit(1);

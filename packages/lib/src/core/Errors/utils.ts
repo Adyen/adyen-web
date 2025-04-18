@@ -4,8 +4,6 @@ import { SortErrorsObj, SortedErrorObject, GenericError, SetSRMessagesReturnObje
 import { ValidationRuleResult } from '../../utils/Validator/ValidationRuleResult';
 import { ErrorMessageObject } from '../../utils/Validator/types';
 import {
-    ENCRYPTED_BANK_ACCNT_NUMBER_FIELD,
-    ENCRYPTED_BANK_LOCATION_FIELD,
     ENCRYPTED_CARD_NUMBER,
     ENCRYPTED_EXPIRY_DATE,
     ENCRYPTED_EXPIRY_MONTH,
@@ -84,12 +82,6 @@ const fieldTypeToErrorCodeIdentifier = (fieldType: string): string => {
             break;
         case ENCRYPTED_PWD_FIELD:
             errorCodeIdentifier = ErrorCodePrefixes.KCP_PWD;
-            break;
-        case ENCRYPTED_BANK_ACCNT_NUMBER_FIELD:
-            errorCodeIdentifier = ErrorCodePrefixes.ACH_NUM;
-            break;
-        case ENCRYPTED_BANK_LOCATION_FIELD:
-            errorCodeIdentifier = ErrorCodePrefixes.ACH_LOC;
             break;
         default:
     }
