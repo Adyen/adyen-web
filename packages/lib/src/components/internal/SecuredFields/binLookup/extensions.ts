@@ -142,7 +142,8 @@ export default function extensions(props, refs, states, hasPanLengthRef: Partial
             // Pass brand object into SecuredFields
             sfp.current.processBinLookupResponse({
                 issuingCountryCode,
-                supportedBrands: brandObjArr
+                supportedBrands: brandObjArr,
+                isDualBrandSelection: true
             });
         }
     };

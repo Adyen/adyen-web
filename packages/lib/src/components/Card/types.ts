@@ -499,6 +499,7 @@ export interface BinLookupResponse {
     issuingCountryCode: string;
     showSocialSecurityNumber?: boolean;
     supportedBrands?: BrandObject[];
+    isDualBrandSelection?: boolean;
 }
 
 export interface DualBrandSelectElement {
