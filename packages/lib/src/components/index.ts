@@ -66,6 +66,7 @@ export { default as Twint } from './Twint';
 export { default as Vipps } from './Vipps';
 export { default as Trustly } from './Trustly';
 export { default as PayByBankUS } from './PayByBankUS';
+export { default as PayByBankPix } from './PayByBankPix';
 
 /** Klarna */
 export { default as Klarna } from './Klarna';
