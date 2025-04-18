@@ -2,12 +2,10 @@
 
 .adyen-checkout__card__dual-branding__buttons {
     display: flex;
-    opacity: 0.4;
-    pointer-events: none;
+    pointer-events: auto;
 
     &--active {
         opacity: 1;
-        pointer-events: auto;
     }
 
     .adyen-checkout__card__cardNumber__brandIcon {
@@ -18,8 +16,5 @@
             right: token(spacer-110);
         }
 
-        &--not-selected {
-            opacity: 0.5;
-        }
     }
 }
