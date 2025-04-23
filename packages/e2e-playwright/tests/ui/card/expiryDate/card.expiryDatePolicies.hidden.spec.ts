@@ -4,10 +4,13 @@ import {
     ENCRYPTED_CARD_NUMBER,
     ENCRYPTED_EXPIRY_DATE,
     ENCRYPTED_SECURITY_CODE,
-    PLCC_NO_LUHN_NO_DATE,
+    PLCC_NO_LUHN_OPTIONAL_DATE,
+    REGULAR_TEST_CARD,
     TEST_CVC_VALUE
 } from '../../../utils/constants';
 import { getStoryUrl } from '../../../utils/getStoryUrl';
+import { binLookupMock } from '../../../../mocks/binLookup/binLookup.mock';
+import { hiddenDateAndRequiredCvcMock } from '../../../../mocks/binLookup/binLookup.data';
 
 const PAN_ERROR = LANG['cc.num.900'];
 const DATE_INVALID_ERROR = LANG['cc.dat.912'];
@@ -19,10 +22,12 @@ const url = getStoryUrl({ baseUrl: urlNoAutoFocus, componentConfig: { brands: ['
 
 test.describe('Test how Card Component handles hidden expiryDate policy', () => {
     test('#1 how UI & state respond', async ({ page, card }) => {
+        await binLookupMock(page, hiddenDateAndRequiredCvcMock);
+
         await card.goto(url);
 
-        // Fill number to provoke binLookup response
-        await card.typeCardNumber(PLCC_NO_LUHN_NO_DATE);
+        // Fill number to provoke (mock) binLookup response
+        await card.typeCardNumber(REGULAR_TEST_CARD);
 
         // UI reflects that binLookup says expiryDate is hidden
         await expect(card.expiryDateField).not.toBeVisible();
@@ -66,7 +71,7 @@ test.describe('Test how Card Component handles hidden expiryDate policy', () => 
         await expect(cardErrors[ENCRYPTED_SECURITY_CODE]).not.toBe(undefined);
 
         // Fill number to provoke binLookup response
-        await card.typeCardNumber(PLCC_NO_LUHN_NO_DATE);
+        await card.typeCardNumber(PLCC_NO_LUHN_OPTIONAL_DATE);
 
         // Headless test seems to need time for UI reset to register on state
         await page.waitForTimeout(500);
@@ -82,6 +87,7 @@ test.describe('Test how Card Component handles hidden expiryDate policy', () => 
     });
 
     test('#3 Hidden date field in error does not stop card becoming valid', async ({ page, card }) => {
+        await binLookupMock(page, hiddenDateAndRequiredCvcMock);
         await card.goto(url);
         // Card out of date
         await card.typeExpiryDate('12/90');
@@ -95,7 +101,7 @@ test.describe('Test how Card Component handles hidden expiryDate policy', () => 
         await card.cardNumberLabelElement.click();
 
         // Fill number to provoke binLookup response
-        await card.typeCardNumber(PLCC_NO_LUHN_NO_DATE);
+        await card.typeCardNumber(REGULAR_TEST_CARD);
 
         // UI reflects that binLookup says expiryDate is hidden
         await expect(card.expiryDateField).not.toBeVisible();
