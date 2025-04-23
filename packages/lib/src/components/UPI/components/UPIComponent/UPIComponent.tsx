@@ -52,7 +52,6 @@ export default function UPIComponent({
     const [isValid, setIsValid] = useState<boolean>(defaultMode === 'qrCode');
     const [mode, setMode] = useState<UpiMode>(defaultMode);
     const [vpa, setVpa] = useState<string>('');
-    // const [vpaInputHandlers, setVpaInputHandlers] = useState<VpaInputHandlers>(null);
     const [selectedApp, setSelectedApp] = useState<App>(null);
     const [valid, setValid] = useState(null);
     const [errors, setErrors] = useState(null);
