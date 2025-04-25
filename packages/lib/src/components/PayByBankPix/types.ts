@@ -17,15 +17,16 @@ export type RiskSignals = {
 };
 
 export type PayByBankPixConfiguration = UIElementProps &
-    Partial<AwaitProps> &
+    Partial<Omit<AwaitProps, 'enrollmentId'>> &
     Partial<IssuerListProps> &
-    Partial<PaymentProps> & {
+    Partial<Omit<PaymentProps, 'enrollmentId' | 'initiationId'>> & {
         // Merchant will pass it when HC is ready to forward it
         deviceId?: string;
         /**
          * @internal
          */
         _isAdyenHosted?: boolean;
+        paymentMethodData?: { enrollmentId: string; initiationId?: string };
     };
 
 export interface PayByBankPixData {
