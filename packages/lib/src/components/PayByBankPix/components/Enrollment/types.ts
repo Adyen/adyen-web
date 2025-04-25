@@ -19,7 +19,7 @@ interface BaseEnrollmentProps {
 }
 
 export interface AwaitProps extends Partial<IPayByBankPixAwait>, BaseEnrollmentProps {
-    type: 'pixChallenge';
+    type: 'await';
     enrollmentId: string;
 }
 
