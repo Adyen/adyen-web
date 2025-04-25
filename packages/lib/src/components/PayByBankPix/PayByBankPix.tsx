@@ -25,7 +25,7 @@ const isAdyenHosted = () => {
 };
 class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
     public static type = TxVariants.paybybank_pix;
-    private static TIMEOUT_MINUTES = 1;
+    private static readonly TIMEOUT_MINUTES = 1;
     private readonly passkeyService: PasskeyService;
 
     public static defaultProps: PayByBankPixConfiguration = {
@@ -128,7 +128,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
     private readonly authorizeEnrollment = async (registrationOptions: string): Promise<void> => {
         try {
             const fidoAssertion = await this.passkeyService.createCredentialForEnrollment(registrationOptions); // Create passkey and trigger biometrics
-            const enrollment = { enrollmentId: this.props.enrollmentId, fidoAssertion };
+            const enrollment = { enrollmentId: this.props.paymentMethodData?.enrollmentId, fidoAssertion };
             const { action = {} } = await authorizeEnrollment({
                 enrollment,
                 clientKey: this.props.clientKey,
@@ -162,7 +162,11 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
     private readonly authorizePayment = async (authenticationOptions: string): Promise<void> => {
         try {
             const fidoAssertion = await this.passkeyService.authenticateWithCredential(authenticationOptions);
-            const payment = { enrollmentId: this.props.enrollmentId, initiationId: this.props.initiationId, fidoAssertion };
+            const payment = {
+                enrollmentId: this.props.paymentMethodData?.enrollmentId,
+                initiationId: this.props.paymentMethodData?.initiationId,
+                fidoAssertion
+            };
             const { action = {} } = await authorizePayment({
                 payment,
                 clientKey: this.props.clientKey,
@@ -209,8 +213,8 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
                             amount={this.props.amount}
                             issuer={this.props.issuer}
                             receiver={this.props.receiver}
-                            enrollmentId={this.props.enrollmentId}
-                            initiationId={this.props.initiationId}
+                            enrollmentId={this.props.paymentMethodData?.enrollmentId}
+                            initiationId={this.props.paymentMethodData?.initiationId}
                             setComponentRef={this.setComponentRef}
                             onPay={this.payWithStoredPayment}
                             onAuthorize={this.authorizePayment}
@@ -222,7 +226,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
                             // Await
                             type={this.props.type}
                             clientKey={this.props.clientKey}
-                            enrollmentId={this.props.enrollmentId}
+                            enrollmentId={this.props.paymentMethodData?.enrollmentId}
                             countdownTime={this.props.countdownTime}
                             onEnroll={this.authorizeEnrollment}
                             // Issuer List

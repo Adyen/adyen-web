@@ -178,7 +178,7 @@ describe('PayByBankPix', () => {
                 modules: { ...coreProps.modules, srPanel: new SRPanel(global.core) },
                 _isAdyenHosted: true,
                 type: 'await',
-                enrollmentId: 'mock-enrollment-id',
+                paymentMethodData: { enrollmentId: 'mock-enrollment-id' },
                 clientKey: 'mock-client-key'
             });
             render(payByBankPixElement.render());
@@ -206,7 +206,7 @@ describe('PayByBankPix', () => {
                 modules: { ...coreProps.modules, srPanel: new SRPanel(global.core) },
                 _isAdyenHosted: true,
                 type: 'await',
-                enrollmentId: 'mock-enrollment-id',
+                paymentMethodData: { enrollmentId: 'mock-enrollment-id' },
                 clientKey: 'mock-client-key'
             });
             render(payByBankPixElement.render());
@@ -297,8 +297,7 @@ describe('PayByBankPix', () => {
                 onSubmit: onSubmitMock,
                 _isAdyenHosted: true,
                 storedPaymentMethodId: 'mock-stored-payment-method-id',
-                enrollmentId: 'mock-enrollment-id',
-                initiationId: 'mock-initiationId-id',
+                paymentMethodData: { enrollmentId: 'mock-enrollment-id', initiationId: 'mock-initiationId-id' },
                 clientKey: 'mock-client-key',
                 type: 'await'
             });
@@ -329,8 +328,7 @@ describe('PayByBankPix', () => {
                 onSubmit: onSubmitMock,
                 _isAdyenHosted: true,
                 storedPaymentMethodId: 'mock-stored-payment-method-id',
-                enrollmentId: 'mock-enrollment-id',
-                initiationId: 'mock-initiationId-id',
+                paymentMethodData: { enrollmentId: 'mock-enrollment-id', initiationId: 'mock-initiationId-id' },
                 clientKey: 'mock-client-key',
                 type: 'await'
             });
