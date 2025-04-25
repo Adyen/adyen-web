@@ -166,7 +166,7 @@ describe('PayByBankPix', () => {
                 ...coreProps,
                 modules: { ...coreProps.modules, srPanel: new SRPanel(global.core) },
                 _isAdyenHosted: true,
-                type: 'pixChallenge'
+                type: 'await'
             });
             render(payByBankPixElement.render());
             expect(await screen.findByText('Waiting for your confirmation...')).toBeInTheDocument();
@@ -177,7 +177,7 @@ describe('PayByBankPix', () => {
                 ...coreProps,
                 modules: { ...coreProps.modules, srPanel: new SRPanel(global.core) },
                 _isAdyenHosted: true,
-                type: 'pixChallenge',
+                type: 'await',
                 enrollmentId: 'mock-enrollment-id',
                 clientKey: 'mock-client-key'
             });
@@ -205,7 +205,7 @@ describe('PayByBankPix', () => {
                 ...coreProps,
                 modules: { ...coreProps.modules, srPanel: new SRPanel(global.core) },
                 _isAdyenHosted: true,
-                type: 'pixChallenge',
+                type: 'await',
                 enrollmentId: 'mock-enrollment-id',
                 clientKey: 'mock-client-key'
             });
@@ -283,7 +283,7 @@ describe('PayByBankPix', () => {
                 storedPaymentMethodId: 'mock-stored-payment-method-id',
                 receiver: 'mock-receiver',
                 amount: { value: 100, currency: 'BRL' },
-                type: 'pixChallenge'
+                type: 'await'
             });
             render(payByBankPixElement.render());
             expect(await screen.findByText('Fetching details...')).toBeInTheDocument();
@@ -300,7 +300,7 @@ describe('PayByBankPix', () => {
                 enrollmentId: 'mock-enrollment-id',
                 initiationId: 'mock-initiationId-id',
                 clientKey: 'mock-client-key',
-                type: 'pixChallenge'
+                type: 'await'
             });
             render(payByBankPixElement.render());
             await waitFor(() =>
@@ -332,7 +332,7 @@ describe('PayByBankPix', () => {
                 enrollmentId: 'mock-enrollment-id',
                 initiationId: 'mock-initiationId-id',
                 clientKey: 'mock-client-key',
-                type: 'pixChallenge'
+                type: 'await'
             });
             render(payByBankPixElement.render());
             await waitFor(() => expect(mockCreateCredential).toHaveBeenCalledWith('mock-authorization-options'));
