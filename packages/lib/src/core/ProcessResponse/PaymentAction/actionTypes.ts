@@ -11,6 +11,7 @@ const createComponent = (core: ICore, registry: IRegistry, componentType, props)
     if (!Element) {
         throw Error(`Action Element of type ${componentType} not found in the registry`);
     }
+
     return new Element(core, { ...props, id: `${componentType}-${uuid()}` });
 };
 
@@ -80,8 +81,7 @@ const actionTypes = {
     qrCode: getActionHandler('custom'),
     await: getActionHandler('custom'),
     bankTransfer: getActionHandler('custom'),
-    sdk: getActionHandler('custom'),
-    pixChallenge: getActionHandler('custom')
+    sdk: getActionHandler('custom')
 } as const;
 
 export default actionTypes;
