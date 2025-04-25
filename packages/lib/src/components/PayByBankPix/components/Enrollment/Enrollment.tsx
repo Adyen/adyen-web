@@ -46,7 +46,7 @@ function Enrollment(props: EnrollmentProps) {
         return response;
     };
     //  Assist typescript to narrow down the type.
-    const isAwait = (props: EnrollmentProps): props is AwaitProps => props.type === 'pixChallenge';
+    const isAwait = (props: EnrollmentProps): props is AwaitProps => props.type === 'await';
     const awaitEndSlot = () => <span>{i18n.get('paybybankpix.await.withOpenFinance')}</span>;
 
     useEffect(() => {

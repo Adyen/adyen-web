@@ -59,7 +59,7 @@ function Payment({
         }
     }, [authorizationOptions]);
 
-    return type === 'pixChallenge' ? (
+    return type === 'await' ? (
         <PayByBankPixAwait
             logos={logos}
             type={txVariant}
