@@ -45,7 +45,7 @@ export default function UPIComponent({
     placeholders,
     apps = [],
     setComponentRef
-}: UPIComponentProps): h.JSX.Element {
+}: Readonly<UPIComponentProps>): h.JSX.Element {
     const { i18n } = useCoreContext();
     const getImage = useImage();
     const [status, setStatus] = useState<UIElementStatus>('ready');

@@ -89,12 +89,14 @@ class UPI extends UIElement<UPIConfiguration> {
                 .then(() => {
                     this.submitAnalytics({
                         type: ANALYTICS_EVENT.info,
+                        target: 'virtualPaymentAddress',
                         infoType: InfoEventTypes.fieldValid
                     });
                 })
                 .catch(() => {
                     this.submitAnalytics({
                         type: ANALYTICS_EVENT.info,
+                        target: 'virtualPaymentAddress',
                         infoType: InfoEventTypes.validationError
                     });
                     this.componentRef.showInvalidVpaError();
