@@ -1,6 +1,6 @@
 import { test, expect } from '../../../../../fixtures/card.fixture';
 import { getStoryUrl } from '../../../../utils/getStoryUrl';
-import { PLCC_NO_LUHN_NO_DATE, PLCC_WITH_LUHN_NO_DATE_WOULD_FAIL_LUHN, TEST_CVC_VALUE, TEST_DATE_VALUE } from '../../../../utils/constants';
+import { PLCC_NO_LUHN_OPTIONAL_DATE, PLCC_WITH_LUHN_OPTIONAL_DATE_WOULD_FAIL_LUHN, TEST_CVC_VALUE } from '../../../../utils/constants';
 import { URL_MAP } from '../../../../../fixtures/URL_MAP';
 import LANG from '../../../../../../server/translations/en-US.json';
 
@@ -18,7 +18,7 @@ test.describe('Testing binLookup/plcc/pasting fny: test what happens when cards 
         /**
          * Type number that identifies as plcc, no date, with luhn required, but that fails luhn
          */
-        await card.fillCardNumber(PLCC_WITH_LUHN_NO_DATE_WOULD_FAIL_LUHN);
+        await card.fillCardNumber(PLCC_WITH_LUHN_OPTIONAL_DATE_WOULD_FAIL_LUHN);
         await page.waitForTimeout(100);
 
         await card.typeCvc(TEST_CVC_VALUE);
@@ -30,7 +30,7 @@ test.describe('Testing binLookup/plcc/pasting fny: test what happens when cards 
         await expect(card.cardNumberErrorElement).toHaveText(PAN_ERROR_NOT_VALID);
 
         // "Paste" number that identifies as plcc, no luhn required
-        await card.fillCardNumber(PLCC_NO_LUHN_NO_DATE);
+        await card.fillCardNumber(PLCC_NO_LUHN_OPTIONAL_DATE);
         await page.waitForTimeout(100);
 
         // If correct events have fired expect the card to be valid i.e. no error message when pressing pay

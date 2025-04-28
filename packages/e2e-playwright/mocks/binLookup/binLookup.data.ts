@@ -41,6 +41,20 @@ const hiddenDateAndCvcMock = {
     requestedId: null
 };
 
+const hiddenDateAndRequiredCvcMock = {
+    brands: [
+        {
+            brand: 'mc',
+            enableLuhnCheck: true,
+            supported: true,
+            cvcPolicy: 'required',
+            expiryDatePolicy: 'hidden'
+        }
+    ],
+    issuingCountryCode: 'US',
+    requestedId: null
+};
+
 const optionalDateWithPanLengthMock = {
     brands: [
         {
@@ -134,6 +148,7 @@ const socialSecurityNumberRequiredMock = {
 export {
     optionalDateAndCvcMock,
     hiddenDateAndCvcMock,
+    hiddenDateAndRequiredCvcMock,
     optionalDateWithPanLengthMock,
     hiddenDateWithPanLengthMock,
     optionalDateAndCvcWithPanLengthMock,
