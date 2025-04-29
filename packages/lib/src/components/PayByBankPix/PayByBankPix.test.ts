@@ -16,7 +16,7 @@ let httpGetMock = (httpGet as jest.Mock).mockImplementation(
         })
     )
 );
-const httpPostMock = (httpPost as jest.Mock).mockImplementation(
+let httpPostMock = (httpPost as jest.Mock).mockImplementation(
     jest.fn(() =>
         Promise.resolve({
             action: {}
@@ -105,6 +105,7 @@ describe('PayByBankPix', () => {
     describe('Enrollment flow', () => {
         let payByBankPixElement: PayByBankPix;
         const onChangeMock = jest.fn();
+        const onAdditionalDetailsMock = jest.fn();
 
         beforeEach(() => {
             payByBankPixElement = new PayByBankPix(global.core, {
@@ -216,6 +217,50 @@ describe('PayByBankPix', () => {
                     { loadingContext: 'test', path: 'utility/v1/pixpaybybank/redirect-result?clientKey=mock-client-key', timeout: 10000 },
                     { enrollmentId: 'mock-enrollment-id', fidoAssertion: 'mock-fidoAssertion' }
                 )
+            );
+        });
+
+        test('should call onAdditionalDetails callback - for the advanced flow, when authorizeEnrollment returns redirectResult', async () => {
+            httpGetMock.mockReset();
+            httpPostMock.mockReset();
+            httpGetMock = (httpGet as jest.Mock).mockImplementation(
+                jest.fn(() =>
+                    Promise.resolve({
+                        resultCode: 'received',
+                        registrationOptions: 'mock-registration-options'
+                    })
+                )
+            );
+            httpPostMock = (httpPost as jest.Mock).mockImplementation(
+                jest.fn(() =>
+                    Promise.resolve({
+                        resultCode: 'RedirectShopper',
+                        redirectResult: 'xxx'
+                    })
+                )
+            );
+            payByBankPixElement = new PayByBankPix(global.core, {
+                ...coreProps,
+                modules: { ...coreProps.modules, srPanel: new SRPanel(global.core) },
+                onAdditionalDetails: onAdditionalDetailsMock,
+                _isAdyenHosted: true,
+                type: 'await',
+                paymentMethodData: { enrollmentId: 'mock-enrollment-id' },
+                clientKey: 'mock-client-key'
+            });
+            render(payByBankPixElement.render());
+            await waitFor(() =>
+                expect(httpPostMock).toHaveBeenCalledWith(
+                    { loadingContext: 'test', path: 'utility/v1/pixpaybybank/redirect-result?clientKey=mock-client-key', timeout: 10000 },
+                    { enrollmentId: 'mock-enrollment-id', fidoAssertion: 'mock-fidoAssertion' }
+                )
+            );
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+            expect(onAdditionalDetailsMock).toHaveBeenCalledWith(
+                { data: { details: { redirectResult: 'xxx' } } },
+                expect.anything(),
+                expect.anything()
             );
         });
     });
