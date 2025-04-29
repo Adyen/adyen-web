@@ -129,13 +129,14 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         try {
             const fidoAssertion = await this.passkeyService.createCredentialForEnrollment(registrationOptions); // Create passkey and trigger biometrics
             const enrollment = { enrollmentId: this.props.paymentMethodData?.enrollmentId, fidoAssertion };
-            const { action = {} } = await authorizeEnrollment({
+            const { redirectResult } = await authorizeEnrollment({
                 enrollment,
                 clientKey: this.props.clientKey,
                 loadingContext: this.props.loadingContext
             });
-            // The action should redirect shopper back to the merchant's page
-            this.handleAction(action as PaymentAction);
+            // Make paymentDetails call to finalize the enrollment.
+            // The response of the details call should be a redirect action to the merchant's site.
+            this.handleAdditionalDetails({ data: { details: { redirectResult } } });
         } catch (error) {
             const errorMsg = error instanceof Error ? error.message : 'Unknown error in the authorizeEnrollment';
             this.handleError(error instanceof AdyenCheckoutError ? error : new AdyenCheckoutError(ERROR, errorMsg));
@@ -167,13 +168,12 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
                 initiationId: this.props.paymentMethodData?.initiationId,
                 fidoAssertion
             };
-            const { action = {} } = await authorizePayment({
+            const { redirectResult } = await authorizePayment({
                 payment,
                 clientKey: this.props.clientKey,
                 loadingContext: this.props.loadingContext
             });
-            // The action should redirect shopper back to the merchant's page
-            this.handleAction(action as PaymentAction);
+            this.handleAdditionalDetails({ data: { details: { redirectResult } } });
         } catch (error) {
             const errorMsg = error instanceof Error ? error.message : 'Unknown error in the authorizePayment';
             this.handleError(error instanceof AdyenCheckoutError ? error : new AdyenCheckoutError(ERROR, errorMsg));
