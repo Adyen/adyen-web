@@ -111,6 +111,7 @@ test.describe('Card with KCP fields', () => {
             await expect(cardWithKCP.taxNumberInput).not.toBeVisible();
 
             await cardWithKCP.typeCardNumber(KOREAN_TEST_CARD);
+            await expect(cardWithKCP.isKoreanBrandVisibleOnPanField()).toBeTruthy();
 
             await expect(cardWithKCP.passwordInput).toBeVisible();
             await expect(cardWithKCP.taxNumberInput).toBeVisible();
@@ -167,6 +168,9 @@ test.describe('Card with KCP fields', () => {
             await cardWithKCP.typeCardNumber(KOREAN_TEST_CARD);
             await cardWithKCP.typeCvc(TEST_CVC_VALUE);
             await cardWithKCP.typeExpiryDate(TEST_DATE_VALUE);
+
+            await expect(cardWithKCP.isKoreanBrandVisibleOnPanField()).toBeTruthy();
+
             await cardWithKCP.pay();
 
             await expect(cardWithKCP.taxNumberErrorLocator).toHaveText('Invalid Cardholder birthdate or Corporate registration number');
