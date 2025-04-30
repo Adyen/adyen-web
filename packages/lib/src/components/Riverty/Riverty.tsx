@@ -1,45 +1,22 @@
-import { h } from 'preact';
-import OpenInvoiceContainer from '../helpers/OpenInvoiceContainer';
-import {
-    DISCLAIMER_MESSAGE_TRANSLATION_KEY,
-    allowedBillingCountries,
-    allowedDeliveryCountries,
-    deliveryAddressSpecification,
-    personalDetailsRequiredFields,
-    termsAndConditionsUrlMap,
-    privacyPolicyUrlMap
-} from './config';
-import { getConsentUrl } from '../../utils/getConsentUrl';
-import { LabelOnlyDisclaimerMessage } from '../internal/DisclaimerMessage/DisclaimerMessage';
-import type { OpenInvoiceConfiguration } from '../helpers/OpenInvoiceContainer/types';
 import { TxVariants } from '../tx-variants';
+import RedirectElement from '../Redirect';
 
-export default class Riverty extends OpenInvoiceContainer {
+class Riverty extends RedirectElement {
     public static readonly type = TxVariants.riverty;
 
-    protected static defaultProps = {
-        personalDetailsRequiredFields,
-        deliveryAddressSpecification,
-        ...OpenInvoiceContainer.defaultProps
+    public static override defaultProps = {
+        type: TxVariants.riverty
     };
 
-    formatProps(props: OpenInvoiceConfiguration) {
-        const tocURL = getConsentUrl(props.countryCode, props.i18n?.locale, termsAndConditionsUrlMap);
-        const privacyURL = getConsentUrl(props.countryCode, props.i18n?.locale, privacyPolicyUrlMap);
-
+    public override formatData() {
         return {
-            ...super.formatProps(props),
-            billingAddressSpecification: {
-                ...props.billingAddressSpecification,
-                allowedCountries: props.countryCode ? [props.countryCode] : allowedBillingCountries
+            paymentMethod: {
+                type: this.type,
+                subtype: 'redirect'
             },
-            deliveryAddressSpecification: {
-                ...props.deliveryAddressSpecification,
-                allowedCountries: allowedDeliveryCountries
-            },
-            consentCheckboxLabel: (
-                <LabelOnlyDisclaimerMessage message={props.i18n.get(DISCLAIMER_MESSAGE_TRANSLATION_KEY)} urls={[tocURL, privacyURL]} />
-            )
+            browserInfo: this.browserInfo
         };
     }
 }
+
+export default Riverty;
