@@ -13,6 +13,10 @@ test.describe('Stored Bancontact card', () => {
 
         await bcmc.pay({ name: /pay €259\.00/i });
         await bcmc.threeDs2Challenge.fillInPassword(THREEDS2_CHALLENGE_PASSWORD);
+
+        // check a11y for stored BCMC cards
+        expect(await dropinWithSession.getA11yErrors()).toHaveLength(0);
+
         await bcmc.threeDs2Challenge.submit();
 
         await expect(bcmc.paymentResult).toContainText(PAYMENT_RESULT.fail);
