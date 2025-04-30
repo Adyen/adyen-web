@@ -1,5 +1,13 @@
 # @adyen/adyen-web
 
+## 6.12.1
+
+### Patch Changes
+
+- Fixed issue where card inputs weren't respecting background color styles if the merchant set a meta tag to describe the color scheme ([#3281](https://github.com/Adyen/adyen-web/pull/3281))
+
+- Upped SF version to fix issue with LastPass & autofilling ([#3279](https://github.com/Adyen/adyen-web/pull/3279))
+
 ## 6.12.0
 
 ### Minor Changes
