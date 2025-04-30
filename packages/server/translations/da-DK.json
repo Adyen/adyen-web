@@ -127,6 +127,18 @@
     "storedPaymentMethod.disable.confirmButton": "Ja, fjern",
     "storedPaymentMethod.disable.cancelButton": "Annuller",
     "ach.bankAccount": "Bankkonto",
+    "ach.bankAccount.title": "Oplysninger om bankkonto",
+    "ach.bankAccount.label": "Kontotype",
+    "ach.bankAccount.placeholder": "Vælg en kontotype",
+    "ach.bankAccount.nothing-selected-error": "Vælg en kontotype",
+    "ach.bankAccount.option.personal-checking": "Personlig lønkonto",
+    "ach.bankAccount.option.personal-savings": "Personlig opsparingskonto",
+    "ach.bankAccount.option.business-checking": "Erhvervslønkonto",
+    "ach.bankAccount.option.business-savings": "Erhvervsopsparingskonto",
+    "ach.bankAccountNumberVerification.label": "Bekræft kontonummer",
+    "ach.bankAccountNumberVerification.error.not-match": "Kontonummeret stemmer ikke overens",
+    "ach.bankAccountNumberVerification.error.empty": "Angiv det angivne kontonummer for at verificere kontonummeret",
+    "ach.routingNumber.label": "Registreringsnummer",
     "ach.accountHolderNameField.title": "Kontohavers navn",
     "ach.accountHolderNameField.contextualText": "Findes på forsiden af dit kort",
     "ach.accountHolderNameField.invalid": "Ugyldigt kontohavernavn",
@@ -366,4 +378,8 @@
     "card.fastlane.modal.benefit2.text": "Dine betalingsoplysninger krypteres, når de gemmes og sendes til steder, du handler.",
     "card.fastlane.modal.benefit3.header": "Brug i mange butikker",
     "card.fastlane.modal.benefit3.text": "Kom hurtigt gennem kassen overalt, hvor Fastlane er tilgængelig."
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> main

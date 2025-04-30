@@ -16,17 +16,20 @@ export type ApplePayPaymentAuthorizationResult = ApplePayJS.ApplePayPaymentAutho
 };
 
 export type ApplePayButtonType =
-    | 'plain'
-    | 'buy'
-    | 'donate'
-    | 'check-out'
-    | 'book'
-    | 'subscribe'
     | 'add-money'
+    | 'book'
+    | 'buy'
+    | 'check-out'
+    | 'continue'
     | 'contribute'
+    | 'donate'
     | 'order'
+    | 'pay'
+    | 'plain'
     | 'reload'
     | 'rent'
+    | 'set-up'
+    | 'subscribe'
     | 'support'
     | 'tip'
     | 'top-up';

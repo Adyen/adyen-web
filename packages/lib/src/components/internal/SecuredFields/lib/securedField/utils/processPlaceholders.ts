@@ -7,7 +7,6 @@ import {
     GIFT_CARD,
     SF_FIELDS_MAP
 } from '../../constants';
-import { Placeholders as AchPlaceholders } from '../../../../../Ach/components/AchInput/types';
 import { Placeholders as GiftcardPlaceholders } from '../../../../../Giftcard/components/types';
 import { Placeholders as CardPlaceholders } from '../../../../../Card/components/CardInput/types';
 
@@ -18,9 +17,6 @@ import { Placeholders as CardPlaceholders } from '../../../../../Card/components
  */
 export function processPlaceholders(txVariant: string, fieldType: string, placeholders: Placeholders): SFPlaceholdersObject {
     switch (txVariant) {
-        case 'ach':
-            return { [fieldType]: (placeholders as AchPlaceholders)[SF_FIELDS_MAP[fieldType]] ?? '' };
-
         case GIFT_CARD:
             return { [fieldType]: (placeholders as GiftcardPlaceholders)[SF_FIELDS_MAP[fieldType]] ?? '' };
 
