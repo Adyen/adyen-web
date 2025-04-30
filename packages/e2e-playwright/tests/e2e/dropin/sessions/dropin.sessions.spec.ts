@@ -18,8 +18,10 @@ test('#1 Should succeed in making a payment', async ({ dropinWithSession, page }
     await card.typeExpiryDate(TEST_DATE_VALUE);
     await card.typeCvc(TEST_CVC_VALUE);
 
-    await dropinWithSession.pay();
+    // check if this UI has a11y errors after card being filled
+    expect(await dropinWithSession.getA11yErrors()).toHaveLength(0);
 
+    await dropinWithSession.pay();
     await expect(dropinWithSession.paymentResult).toContainText(PAYMENT_RESULT.success);
 });
 

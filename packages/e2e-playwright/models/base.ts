@@ -1,4 +1,5 @@
 import type { Page, Locator } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
 
 export abstract class Base {
     readonly payButton: Locator;
@@ -28,5 +29,14 @@ export abstract class Base {
 
     async isComponentVisible() {
         await Promise.resolve();
+    }
+
+    async getA11yErrors() {
+        const results = await new AxeBuilder({ page: this.page })
+            .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+            // only check from component root down
+            .include('#component-root')
+            .analyze();
+        return results;
     }
 }
