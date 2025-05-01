@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import cx from 'classnames';
 import './RadioGroupExtended.scss';
+import '../RadioGroup/RadioGroup.scss';
 import { RadioGroupProps } from './types';
 import { getUniqueId } from '../../../../utils/idGenerator';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
