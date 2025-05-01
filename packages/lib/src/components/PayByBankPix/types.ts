@@ -26,7 +26,14 @@ export type PayByBankPixConfiguration = UIElementProps &
          * @internal
          */
         _isAdyenHosted?: boolean;
+        /**
+         * @internal from backend, action object
+         */
         paymentMethodData?: { enrollmentId: string; initiationId?: string };
+        /**
+         * @internal from backend, paymentMethods storedPaymentMethod response
+         */
+        payByBankPixDetails?: { deviceId: string; receiver: string; ispb: string };
     };
 
 export interface PayByBankPixData {

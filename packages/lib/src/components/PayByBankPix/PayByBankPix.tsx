@@ -36,7 +36,8 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
 
     constructor(checkout: ICore, props?: PayByBankPixConfiguration) {
         super(checkout, props);
-        this.passkeyService = new PasskeyService({ environment: this.props.environment, deviceId: this.props.deviceId });
+        const deviceId = this.props.storedPaymentMethodId ? this.props?.payByBankPixDetails?.deviceId : this.props.deviceId;
+        this.passkeyService = new PasskeyService({ environment: this.props.environment, deviceId });
     }
 
     get isValid(): boolean {
@@ -45,6 +46,12 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
             return true;
         }
         return !!this.state?.isValid;
+    }
+
+    get additionalInfo() {
+        return this.props.storedPaymentMethodId
+            ? this.props.i18n.get('paybybankpix.storedPayment.additionalLabel', { values: { receiver: this.props?.payByBankPixDetails?.receiver } })
+            : '';
     }
 
     /**
@@ -211,8 +218,8 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
                             type={this.props.type}
                             clientKey={this.props.clientKey}
                             amount={this.props.amount}
-                            issuer={this.props.issuer}
-                            receiver={this.props.receiver}
+                            issuer={this.props?.payByBankPixDetails?.ispb}
+                            receiver={this.props?.payByBankPixDetails?.receiver}
                             enrollmentId={this.props.paymentMethodData?.enrollmentId}
                             initiationId={this.props.paymentMethodData?.initiationId}
                             setComponentRef={this.setComponentRef}
