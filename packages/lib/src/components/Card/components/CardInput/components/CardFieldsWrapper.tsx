@@ -118,11 +118,11 @@ export const CardFieldsWrapper = ({
             {hasHolderName && !positionHolderNameOnTop && cardHolderField}
 
             {dualBrandSelectElements.length > 0 && dualBrandSelectElements && (
-                <Fieldset classNameModifiers={['dual-brand-switcher']} label={i18n.get('brand.selector.title')}>
+                <Fieldset classNameModifiers={['dual-brand-switcher']} label={i18n.get('creditCard.dualBrand.title')}>
                     <Field
                         classNameModifiers={['dualBrandSwitcher', 'no-borders']}
                         name={'dualBrandSwitcher'}
-                        label={i18n.get('brand.selector.message')}
+                        label={i18n.get('creditCard.dualBrand.description')}
                     >
                         <RadioGroupExtended
                             name={'dualBrandSwitcher'}
