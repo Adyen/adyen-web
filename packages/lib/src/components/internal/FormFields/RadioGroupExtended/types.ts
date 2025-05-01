@@ -1,16 +1,16 @@
 import { InputBaseProps } from '../InputBase';
 
-interface RadioGroupItem {
+interface RadioGroupExtendedItem {
     name: string;
     id: string;
     imageURL: string;
     altName: string;
 }
 
-export interface RadioGroupProps extends InputBaseProps {
+export interface RadioGroupExtendedProps extends InputBaseProps {
     className?: string;
     isInvalid?: boolean;
-    items: RadioGroupItem[];
+    items: RadioGroupExtendedItem[];
     name?: string;
     onChange: (e) => void;
     value?: string;
