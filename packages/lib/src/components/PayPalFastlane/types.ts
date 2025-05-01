@@ -42,7 +42,6 @@ export interface FastlaneOptions {
     };
 }
 
-// TODO: TBD if this is needed
 interface AuthenticationFlowOptions {}
 
 interface CardPaymentSource {
@@ -68,7 +67,7 @@ interface FastlaneAuthenticatedCustomerSucceeded {
 
 interface FastlaneAuthenticatedCustomerFailed {
     authenticationState: 'failed' | 'canceled' | 'not_found';
-    profileData?: undefined;
+    profileData: undefined;
 }
 
 export type FastlaneAuthenticatedCustomerResult = FastlaneAuthenticatedCustomerSucceeded | FastlaneAuthenticatedCustomerFailed;

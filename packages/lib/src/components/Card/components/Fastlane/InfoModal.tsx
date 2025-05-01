@@ -73,8 +73,8 @@ const InfoModal = ({ isOpen, onClose, focusAfterClose }: InfoModalProps) => {
                         />
                     </div>
 
-                    {FASTLANE_BENEFITS.map((benefit, index) => (
-                        <div key={index} className="adyen-checkout-card-fastlane__modal-section">
+                    {FASTLANE_BENEFITS.map(benefit => (
+                        <div key={benefit.labelById} className="adyen-checkout-card-fastlane__modal-section">
                             <Img
                                 className="adyen-checkout-card-fastlane__modal-section-image"
                                 src={getImage({ imageFolder: 'components/' })(benefit.image)}

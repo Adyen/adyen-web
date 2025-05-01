@@ -1,5 +1,12 @@
 import Language from '../../../../language/Language';
-import { BinLookupResponse, BrandConfiguration, CardBrandsConfiguration, CardBackendConfiguration, DualBrandSelectElement } from '../../types';
+import type {
+    BinLookupResponse,
+    BrandConfiguration,
+    CardBrandsConfiguration,
+    CardBackendConfiguration,
+    DualBrandSelectElement,
+    CardPlaceholders
+} from '../../types';
 import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
 import {
@@ -56,17 +63,6 @@ export interface CardInputDataState {
     socialSecurityNumber?: string;
     taxNumber?: string;
 }
-
-type PlaceholderKeys =
-    | 'holderName'
-    | 'cardNumber'
-    | 'expiryDate'
-    | 'expiryMonth'
-    | 'expiryYear'
-    | 'securityCodeThreeDigits'
-    | 'securityCodeFourDigits'
-    | 'password';
-export type Placeholders = Partial<Record<PlaceholderKeys, string>>;
 
 /**
  * Should be the subset of the props sent to CardInput that are *actually* used by CardInput
@@ -133,7 +129,7 @@ export interface CardInputProps {
     onAddressSelected?: OnAddressSelectedType;
     addressSearchDebounceMs?: number;
     payButton?: (obj) => {};
-    placeholders?: Placeholders;
+    placeholders?: CardPlaceholders;
     positionHolderNameOnTop?: boolean;
     resources: Resources;
     setComponentRef?: (ref) => void;

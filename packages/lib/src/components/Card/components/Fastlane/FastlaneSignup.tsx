@@ -136,13 +136,9 @@ const FastlaneSignup = ({
                     checked={isChecked}
                     onChange={handleToggleChange}
                     ariaLabel={i18n.get('card.fastlane.consentToggle')}
-                    label={
-                        <Fragment>
-                            <span>{i18n.get('card.fastlane.consentToggle')}</span>
-                            <InfoButton />
-                        </Fragment>
-                    }
+                    label={<span>{i18n.get('card.fastlane.consentToggle')}</span>}
                 />
+                <InfoButton />
             </div>
 
             {isChecked && (
