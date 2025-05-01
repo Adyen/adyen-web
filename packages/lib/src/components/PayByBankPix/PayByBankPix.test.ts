@@ -277,7 +277,11 @@ describe('PayByBankPix', () => {
                 onSubmit: onSubmitMock,
                 _isAdyenHosted: true,
                 storedPaymentMethodId: 'mock-stored-payment-method-id',
-                receiver: 'mock-receiver',
+                payByBankPixDetails: {
+                    receiver: 'mock-receiver',
+                    ispb: 'mock-issuer',
+                    deviceId: 'mock-device'
+                },
                 amount: { value: 100, currency: 'BRL' }
             });
         });
@@ -326,7 +330,6 @@ describe('PayByBankPix', () => {
                 onSubmit: onSubmitMock,
                 _isAdyenHosted: true,
                 storedPaymentMethodId: 'mock-stored-payment-method-id',
-                receiver: 'mock-receiver',
                 amount: { value: 100, currency: 'BRL' },
                 type: 'await'
             });
