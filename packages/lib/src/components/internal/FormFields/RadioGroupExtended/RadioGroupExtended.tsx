@@ -10,7 +10,18 @@ import Icon from '../../Icon';
 import { PREFIX } from '../../Icon/constants';
 
 export default function RadioGroupExtended(props: RadioGroupProps) {
-    const { items, name, onChange, value, isInvalid, uniqueId, ariaLabel, showRadioIcon = true, style = 'classic' } = props;
+    const {
+        items,
+        name,
+        onChange,
+        value,
+        isInvalid,
+        uniqueId,
+        ariaLabel,
+        showRadioIcon = false,
+        showSelectedTick = false,
+        style = 'classic'
+    } = props;
 
     const { i18n } = useCoreContext();
     const uniqueIdBase = uniqueId?.replace(/[0-9]/g, '').substring(0, uniqueId.lastIndexOf('-'));
@@ -48,7 +59,7 @@ export default function RadioGroupExtended(props: RadioGroupProps) {
                             onChange={onChange}
                             value={item.id}
                         />
-                        {/*eslint-disable-next-line jsx-a11y/label-has-associated-control*/}
+
                         <label className={fieldClassnames} htmlFor={uniqueId}>
                             <div className={'adyen-checkout__radio_group-extended__label-wrapper'}>
                                 <RadioButtonIcon
@@ -56,17 +67,19 @@ export default function RadioGroupExtended(props: RadioGroupProps) {
                                     imageURL={item.imageURL}
                                     altName={item.altName}
                                     dataValue={item.id}
-                                    hasRadioIcon={showRadioIcon}
+                                    showRadioIcon={showRadioIcon}
                                 />
                                 <span className={'adyen-checkout__radio_group-extended__label'}>{i18n.get(item.name)}</span>
-                                <span
-                                    className={cx({
-                                        'adyen-checkout-input__inline-validation': true,
-                                        'adyen-checkout-input__inline-validation--valid': value === item.id
-                                    })}
-                                >
-                                    <Icon type={`${PREFIX}checkmark`} alt={i18n?.get('field.valid')} />
-                                </span>
+                                {showSelectedTick && (
+                                    <span
+                                        className={cx({
+                                            'adyen-checkout-input__inline-validation': true,
+                                            'adyen-checkout-input__inline-validation--valid': value === item.id
+                                        })}
+                                    >
+                                        <Icon type={`${PREFIX}checkmark`} alt={i18n?.get('field.valid')} />
+                                    </span>
+                                )}
                             </div>
                         </label>
                     </div>

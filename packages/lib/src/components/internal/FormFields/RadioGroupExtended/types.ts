@@ -18,13 +18,13 @@ export interface RadioGroupProps extends InputBaseProps {
     ariaLabel?: string;
     style?: 'classic' | 'button';
     showRadioIcon?: boolean;
+    showSelectedTick?: boolean;
 }
 
 export interface RadioButtonIconProps {
     onClick?: any;
     dataValue?: string;
-    notSelected?: boolean; // TODO - needed??
     imageURL?: string;
     altName?: string;
-    hasRadioIcon?: boolean;
+    showRadioIcon?: boolean;
 }

@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { RadioButtonIconProps } from './types';
 import './RadioButtonIcon.scss';
 
-const RadioButtonIcon = ({ dataValue, imageURL, altName, hasRadioIcon }: RadioButtonIconProps) => {
+const RadioButtonIcon = ({ dataValue, imageURL, altName, showRadioIcon }: RadioButtonIconProps) => {
     const [hasLoaded, setHasLoaded] = useState(false);
 
     const handleError = () => {
@@ -18,7 +18,7 @@ const RadioButtonIcon = ({ dataValue, imageURL, altName, hasRadioIcon }: RadioBu
     const fieldClassnames = classNames({
         'adyen-checkout__input-icon': true,
         'adyen-checkout__input-icon--hidden': !hasLoaded,
-        'adyen-checkout__input-icon--no-radio-icon': !hasRadioIcon
+        'adyen-checkout__input-icon--no-radio-icon': !showRadioIcon
     });
 
     return <img className={fieldClassnames} onError={handleError} onLoad={handleLoad} alt={altName} src={imageURL} data-value={dataValue} />;

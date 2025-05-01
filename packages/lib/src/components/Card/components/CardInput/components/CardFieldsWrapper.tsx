@@ -145,7 +145,8 @@ export const CardFieldsWrapper = ({
                             onChange={extensions.handleDualBrandSelection}
                             required={true}
                             style={'button'}
-                            showRadioIcon={false}
+                            showSelectedTick={true}
+                            // showRadioIcon={true}
                         />
 
                         {/* <SegmentedControl
