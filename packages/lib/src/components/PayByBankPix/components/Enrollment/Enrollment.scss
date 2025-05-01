@@ -4,8 +4,29 @@
 .adyen-checkout-pix-enrollment-issuer-list {
     display: flex;
     flex-direction: column;
+    gap: token(spacer-070);
 
     .adyen-checkout-disclaimer__label {
-        align-self: center;
+        @include index.adyen-checkout-text-caption;
+
+        display: inline-block;
+        text-align: center;
+        color: token(color-label-secondary);
+        margin:0;
     }
+}
+
+.adyen-checkout-await-logo-open-finance{
+    width: 8em;
+    height: auto;
+}
+
+.adyen-checkout-await-logo-arrow-down{
+    width: 1em;
+    height: auto;
+}
+
+.adyen-checkout-await-logo-bank{
+    width: 3em;
+    height: auto;
 }

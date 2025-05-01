@@ -29,7 +29,7 @@ function Payment({
     const [status, setStatus] = useState('ready');
     const [authorizationOptions, setAuthorizationOptions] = useState<string>(null);
     const buttonModifiers = ['standalone'];
-    const logos = [{ name: 'Open finance', alt: i18n.get('paybybankpix.await.logoAlt.openFinance'), src: `${getImage()('openFinance')}` }];
+    const logos = [{ name: 'open-finance', alt: i18n.get('paybybankpix.await.logoAlt.openFinance'), src: `${getImage()('open-finance')}` }];
     const details = [
         { label: i18n.get('paybybankpix.payment.receiver.label'), value: receiver },
         { label: i18n.get('paybybankpix.payment.paymentDate.label'), value: i18n.date(new Date().toString()) },
