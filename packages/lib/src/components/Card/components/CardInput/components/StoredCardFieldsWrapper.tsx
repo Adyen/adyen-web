@@ -1,5 +1,4 @@
 import { h } from 'preact';
-import LoadingWrapper from '../../../../internal/LoadingWrapper';
 import StoredCardFields from './StoredCardFields';
 import Installments from './Installments';
 import DisclaimerMessage from '../../../../internal/DisclaimerMessage';
@@ -27,7 +26,7 @@ export const StoredCardFieldsWrapper = ({
     disclaimerMessage
 }) => {
     return (
-        <LoadingWrapper status={sfpState.status}>
+        <div>
             <StoredCardFields
                 errors={sfpState.errors}
                 brand={sfpState.brand}
@@ -58,6 +57,6 @@ export const StoredCardFieldsWrapper = ({
                     urls={[disclaimerMessage.link]}
                 />
             )}
-        </LoadingWrapper>
+        </div>
     );
 };

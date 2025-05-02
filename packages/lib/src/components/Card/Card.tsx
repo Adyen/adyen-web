@@ -335,6 +335,8 @@ export class CardElement extends UIElement<CardConfiguration> {
     protected override payButton = (props: PayButtonFunctionProps) => {
         const isZeroAuth = this.props.amount?.value === 0;
         const isStoredCard = this.props.storedPaymentMethodId?.length > 0;
+
+        // Here we should handle the state of the loading
         return (
             <PayButton
                 {...props}
