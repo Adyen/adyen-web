@@ -155,6 +155,15 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
                 break;
             }
 
+            case ANALYTICS_EVENT.info: {
+                const { infoType, configData } = analyticsObj;
+                analyticsModule.createAnalyticsEvent({
+                    event: ANALYTICS_EVENT.info,
+                    data: { component, type: infoType, configData, target }
+                });
+                break;
+            }
+
             default: {
                 analyticsModule.createAnalyticsEvent(analyticsObj as CreateAnalyticsEventObject);
             }

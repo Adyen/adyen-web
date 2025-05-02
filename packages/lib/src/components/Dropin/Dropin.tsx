@@ -118,20 +118,23 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
     private handleCreate = () => {
         const { paymentMethodsConfiguration, showStoredPaymentMethods, showPaymentMethods, instantPaymentTypes } = this.props;
 
-        const { paymentMethods, storedPaymentMethods, instantPaymentMethods } = splitPaymentMethods(
+        const { paymentMethods, storedPaymentMethods, instantPaymentMethods, fastlanePaymentMethod } = splitPaymentMethods(
             this.core.paymentMethodsResponse,
             instantPaymentTypes
         );
 
         const commonProps = getCommonProps({ ...this.props, elementRef: this.elementRef });
 
+        const elements = showPaymentMethods ? createElements(paymentMethods, paymentMethodsConfiguration, commonProps, this.core) : [];
+        const instantPaymentElements = createInstantPaymentElements(instantPaymentMethods, paymentMethodsConfiguration, commonProps, this.core);
         const storedElements = showStoredPaymentMethods
             ? createStoredElements(storedPaymentMethods, paymentMethodsConfiguration, commonProps, this.core)
             : [];
-        const elements = showPaymentMethods ? createElements(paymentMethods, paymentMethodsConfiguration, commonProps, this.core) : [];
-        const instantPaymentElements = createInstantPaymentElements(instantPaymentMethods, paymentMethodsConfiguration, commonProps, this.core);
+        const fastlanePaymentElement = fastlanePaymentMethod
+            ? createElements([fastlanePaymentMethod], paymentMethodsConfiguration, commonProps, this.core)
+            : [];
 
-        return [storedElements, elements, instantPaymentElements];
+        return [storedElements, elements, instantPaymentElements, fastlanePaymentElement];
     };
 
     public handleAction(action: PaymentAction, props = {}): this | null {
