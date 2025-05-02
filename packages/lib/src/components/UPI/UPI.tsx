@@ -1,14 +1,17 @@
-import { h, RefObject } from 'preact';
+import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import UPIComponent from './components/UPIComponent';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import Await from '../internal/Await';
 import QRLoader from '../internal/QRLoader';
-import { App, UPIConfiguration, UpiMode, UpiPaymentData, UpiType } from './types';
 import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 import { TxVariants } from '../tx-variants';
 import isMobile from '../../utils/isMobile';
+import { ANALYTICS_EVENT, InfoEventTypes } from '../../core/Analytics/constants';
+import CancelError from '../../core/Errors/CancelError';
+
 import type { ICore } from '../../core/types';
+import type { App, UPIConfiguration, UpiMode, UpiPaymentData, UpiType } from './types';
 
 /**
  * For mobile:
@@ -26,7 +29,7 @@ class UPI extends UIElement<UPIConfiguration> {
 
     private selectedMode: UpiMode;
 
-    constructor(checkout: ICore, props: UPIConfiguration) {
+    constructor(checkout: ICore, props?: UPIConfiguration) {
         super(checkout, props);
         this.selectedMode = this.props.defaultMode;
     }
@@ -55,6 +58,54 @@ class UPI extends UIElement<UPIConfiguration> {
             defaultMode: allowedModes.includes(props?.defaultMode) ? props.defaultMode : fallbackDefaultMode,
             apps
         };
+    }
+
+    public override submit(): void {
+        if (!this.isValid) {
+            this.showValidation();
+            return;
+        }
+
+        void this.validateVpaIfRequired()
+            .then(() => super.submit())
+            .catch(() => {
+                // Swallow the CancelError() triggered by validateVpaIfRequired()
+            });
+    }
+
+    /**
+     * If there is callback for merchant validation, we use it.
+     * Once it gets resolved, we continue the payment flow. If it gets rejected, we halt the payment flow
+     *
+     * @private
+     */
+    private validateVpaIfRequired(): Promise<void> {
+        const shouldValidateVpa = this.paymentType === TxVariants.upi_collect && this.props.onVpaValidation;
+
+        if (shouldValidateVpa) {
+            this.setElementStatus('loading');
+
+            return new Promise<void>((resolve, reject) => this.props.onVpaValidation(this.state.data.virtualPaymentAddress, { resolve, reject }))
+                .then(() => {
+                    this.submitAnalytics({
+                        type: ANALYTICS_EVENT.info,
+                        target: 'virtualPaymentAddress',
+                        infoType: InfoEventTypes.fieldValid
+                    });
+                })
+                .catch(() => {
+                    this.submitAnalytics({
+                        type: ANALYTICS_EVENT.info,
+                        target: 'virtualPaymentAddress',
+                        infoType: InfoEventTypes.validationError
+                    });
+                    this.componentRef.showInvalidVpaError();
+                    this.setElementStatus('ready');
+                    throw new CancelError();
+                });
+        }
+
+        return Promise.resolve();
     }
 
     public get isValid(): boolean {
@@ -129,12 +180,12 @@ class UPI extends UIElement<UPIConfiguration> {
             default:
                 return (
                     <UPIComponent
-                        ref={(ref: RefObject<typeof UPIComponent>) => {
-                            this.componentRef = ref;
-                        }}
+                        setComponentRef={this.setComponentRef}
                         payButton={this.payButton}
                         onChange={this.setState}
                         onUpdateMode={this.onUpdateMode}
+                        placeholders={this.props.placeholders}
+                        showContextualElement={this.props.showContextualElement}
                         apps={this.props.apps}
                         defaultMode={this.props.defaultMode}
                         showPayButton={this.props.showPayButton}

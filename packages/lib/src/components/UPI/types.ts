@@ -16,6 +16,26 @@ export type UpiPaymentData = {
 };
 
 export interface UPIConfiguration extends UIElementProps {
+    /**
+     * Callback used to validate the VPA ID before making the payments call.
+     * actions.resolve() should be called if VPA is valid. Otherwise, actions.reject() to display an error message
+     *
+     * @param value
+     * @param actions
+     */
+    onVpaValidation?(value: string, actions: { resolve(): void; reject(): void }): void;
+    /**
+     * Adds placeholder text to the input fields
+     */
+    placeholders?: {
+        virtualPaymentAddress?: string;
+    };
+    /**
+     * Display the contextual text underneath the input field. Disable it if you are using placeholders instead
+     * @default true
+     */
+    showContextualElement?: boolean;
+
     defaultMode?: UpiMode;
     // upi_intent
     apps?: Array<App>;

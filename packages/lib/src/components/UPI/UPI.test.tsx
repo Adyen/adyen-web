@@ -129,9 +129,9 @@ describe('UPI', () => {
                 isMobileMock.mockReturnValue(false);
                 const upi = new UPI(global.core, { ...props, defaultMode: 'vpa' });
                 render(upi.render());
+
                 const user = userEvent.setup();
-                const vpaInput = await screen.findByLabelText(/Enter UPI ID \/ VPA/i);
-                await user.type(vpaInput, 'test@test');
+                await user.type(screen.getByTestId('input-virtual-payment-address'), 'test@test');
                 expect(upi.isValid).toBe(true);
             });
         });
@@ -170,13 +170,12 @@ describe('UPI', () => {
             test('should be valid when filling the vpa', async () => {
                 const upi = new UPI(global.core, { ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
                 render(upi.render());
+
                 const user = userEvent.setup();
-                const radioButton = await screen.findByRole('radio', { name: /Enter UPI ID/i });
-                await user.click(radioButton);
+                await user.click(screen.getByRole('radio', { name: /Enter UPI ID/i }));
                 expect(upi.isValid).toBe(false);
 
-                const vpaInput = await screen.findByLabelText(/Enter UPI ID \/ VPA/i);
-                await user.type(vpaInput, 'test@test');
+                await user.type(screen.getByTestId('input-virtual-payment-address'), 'test@test');
                 expect(upi.isValid).toBe(true);
             });
         });
@@ -187,6 +186,91 @@ describe('UPI', () => {
             const upi = new UPI(global.core, props);
             render(upi.render());
             expect(await screen.findByRole('group')).toBeInTheDocument();
+        });
+    });
+
+    describe('onValidateVpa callback', () => {
+        let user;
+        beforeEach(() => {
+            user = userEvent.setup();
+        });
+
+        test('should trigger the payment flow if merchant resolves the callback', async () => {
+            const onVpaValidationMock = jest.fn().mockImplementation((value, actions) => actions.resolve());
+            const onSubmitMock = jest.fn();
+
+            const upi = new UPI(global.core, {
+                ...props,
+                onVpaValidation: onVpaValidationMock,
+                onSubmit: onSubmitMock
+            });
+            render(upi.render());
+
+            await user.click(screen.getByRole('button', { name: /UPI ID/i }));
+            await user.type(screen.getByTestId('input-virtual-payment-address'), 'test@test');
+            await user.click(screen.queryByRole('button', { name: 'Continue' }));
+
+            expect(onVpaValidationMock).toHaveBeenCalledTimes(1);
+            expect(onVpaValidationMock).toHaveBeenCalledWith('test@test', expect.anything());
+            expect(onSubmitMock).toHaveBeenCalledTimes(1);
+        });
+
+        test('should not trigger the payment flow if merchant rejects the callback', async () => {
+            const onVpaValidationMock = jest.fn().mockImplementation((value, actions) => actions.rejects());
+            const onSubmitMock = jest.fn();
+
+            const upi = new UPI(global.core, {
+                ...props,
+                onVpaValidation: onVpaValidationMock,
+                onSubmit: onSubmitMock
+            });
+            render(upi.render());
+
+            await user.click(screen.getByRole('button', { name: /UPI ID/i }));
+            await user.type(screen.getByTestId('input-virtual-payment-address'), 'test@test');
+            await user.click(screen.queryByRole('button', { name: 'Continue' }));
+
+            expect(onVpaValidationMock).toHaveBeenCalledTimes(1);
+            expect(onSubmitMock).toHaveBeenCalledTimes(0);
+        });
+
+        test('should trigger the callback if available on mobile flow', async () => {
+            isMobileMock.mockReturnValue(true);
+
+            const onVpaValidationMock = jest.fn().mockImplementation((value, actions) => actions.resolve());
+            const onSubmitMock = jest.fn();
+
+            const upi = new UPI(global.core, {
+                ...props,
+                apps: [{ id: 'gpay', name: 'Google Pay' }],
+                onVpaValidation: onVpaValidationMock,
+                onSubmit: onSubmitMock
+            });
+            render(upi.render());
+
+            await user.click(screen.getByRole('radio', { name: 'Enter UPI ID' }));
+            await user.type(screen.getByTestId('input-virtual-payment-address'), 'test@test');
+            await user.click(screen.queryByRole('button', { name: 'Continue' }));
+
+            expect(onVpaValidationMock).toHaveBeenCalledTimes(1);
+            expect(onVpaValidationMock).toHaveBeenCalledWith('test@test', expect.anything());
+            expect(onSubmitMock).toHaveBeenCalledTimes(1);
+        });
+
+        test('should trigger the payment if callback is not available', async () => {
+            const onSubmitMock = jest.fn();
+
+            const upi = new UPI(global.core, {
+                ...props,
+                onSubmit: onSubmitMock
+            });
+            render(upi.render());
+
+            await user.click(screen.getByRole('button', { name: 'UPI ID' }));
+            await user.type(screen.getByTestId('input-virtual-payment-address'), 'test@test');
+            await user.click(screen.queryByRole('button', { name: 'Continue' }));
+
+            expect(onSubmitMock).toHaveBeenCalledTimes(1);
         });
     });
 });
