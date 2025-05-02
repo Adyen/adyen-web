@@ -13,21 +13,17 @@ import getCurrency from '../../../utils/get-currency';
 import { mockEnrollmentPayload } from './mocks';
 
 interface ISimulatedHostedPage extends PaymentMethodStoryProps<PayByBankPixConfiguration> {
-    redirectResult?: string;
     sessionId?: string;
-    isEnrollment?: boolean;
 }
 
-export const SimulatedHostedPage = ({ redirectResult, sessionId, isEnrollment, componentConfiguration, ...checkoutConfig }: ISimulatedHostedPage) => {
+export const SimulatedHostedPage = ({ redirectResult, sessionId, componentConfiguration, ...checkoutConfig }: ISimulatedHostedPage) => {
     const [uiElement, setUiElement] = useState<UIElement>();
 
     const handleSubmit = async (state, _, actions) => {
         try {
-            // testing purpose, change the language to be 2 chars
-            state.data.paymentMethod.riskSignals.language = 'en';
             const paymentAmount = {
                 currency: getCurrency('BR'),
-                value: isEnrollment ? 0 : checkoutConfig.amount.value
+                value: checkoutConfig.amount
             };
 
             const paymentData = {
@@ -76,7 +72,6 @@ export const SimulatedHostedPage = ({ redirectResult, sessionId, isEnrollment, c
 
         AdyenCheckout.register(PayByBankPix);
         void AdyenCheckout({
-            //_environmentUrls: { cdn: { images: 'https://localhost:3020/' } },
             clientKey: process.env.CLIENT_KEY,
             // @ts-ignore CLIENT_ENV has valid value
             environment: process.env.CLIENT_ENV,
@@ -86,7 +81,11 @@ export const SimulatedHostedPage = ({ redirectResult, sessionId, isEnrollment, c
             ...(!sessionId && { onAdditionalDetails: handleAdditionalDetails }),
             afterAdditionalDetails: (actionElement: UIElement) => {
                 if (actionElement) {
-                    setUiElement(actionElement);
+                    // @ts-ignore simulate hosted checkout page locally
+                    actionElement.props._isAdyenHosted = true;
+                    void actionElement.isAvailable().then(() => {
+                        setUiElement(actionElement);
+                    });
                 }
             },
             onPaymentCompleted: (result, component) => {
