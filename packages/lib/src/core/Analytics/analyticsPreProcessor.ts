@@ -85,7 +85,8 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
             case ANALYTICS_UNFOCUS_STR:
             case ANALYTICS_DISPLAYED_STR: // issuerList or dual-branding buttons from Card
             case ANALYTICS_INPUT_STR: // issuerList
-            case ANALYTICS_DOWNLOAD_STR: { // prettier-ignore // QR Codes
+            case ANALYTICS_DOWNLOAD_STR: {
+                // prettier-ignore // QR Codes
                 // If dual-branding buttons...
                 const { brand, configData } = analyticsObj;
 
@@ -155,6 +156,15 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
                 analyticsModule.createAnalyticsEvent({
                     event: ANALYTICS_EVENT.error,
                     data: { component, type, message, code, errorType }
+                });
+                break;
+            }
+
+            case ANALYTICS_EVENT.info: {
+                const { infoType, configData } = analyticsObj;
+                analyticsModule.createAnalyticsEvent({
+                    event: ANALYTICS_EVENT.info,
+                    data: { component, type: infoType, configData, target }
                 });
                 break;
             }
