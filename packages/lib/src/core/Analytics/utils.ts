@@ -27,7 +27,7 @@ export const getUTCTimestamp = () => Date.now();
  *
  * Info objects have, in addition to the base props:
  *   "type" & "target" &
- *     "issuer" (when dealing with the selection in an issuer lists)
+ *     "issuer" (when dealing with a selection in an issuer list PM)
  *     "brand" (when dealing with the selected brand in a Card, dual-branding, scenario))
  *     "isExpress" & "expressPage" (if we're in a  Plugins / Express PMs scenario)
  *     "isStoredPaymentMethod" & "brand" (when a storedCard is "selected"), or,

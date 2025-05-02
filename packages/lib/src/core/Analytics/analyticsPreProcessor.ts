@@ -99,11 +99,12 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
 
             // - ApplePay & GooglePay when instant PMs
             // - issuerList buttons
+            // - Dual branding button clicked
             case ANALYTICS_SELECTED_STR: {
-                const { issuer } = analyticsObj;
+                const { issuer, brand } = analyticsObj;
                 analyticsModule.createAnalyticsEvent({
                     event: ANALYTICS_EVENT.info,
-                    data: { component, type, target, issuer }
+                    data: { component, type, target, issuer, brand }
                 });
                 break;
             }

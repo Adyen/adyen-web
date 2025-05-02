@@ -528,5 +528,5 @@ export type DualBrandingAnalyticsObject = {
     type: string;
     target: string;
     brand: string;
-    configData: { dualBrands: string };
+    configData?: { dualBrands: string };
 };
