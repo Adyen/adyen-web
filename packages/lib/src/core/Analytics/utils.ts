@@ -21,12 +21,17 @@ export const getUTCTimestamp = () => Date.now();
  *
  * Log objects have, in addition to the base props:
  *  "message" & "type" &
- *    "subtype" (e.g. when an action is handled)
+ *    "subtype" (e.g. when an action is handled, or it is a ThreeDS2 event),
+ *    "result" (for ThreeDS2 events)
  *
  * Info objects have, in addition to the base props:
  *   "type" & "target" &
+ *     "issuer" (when dealing with the selection in an issuer lists)
+ *     "brand" (when dealing with the selected brand in a Card, dual-branding, scenario))
+ *     "isExpress" & "expressPage" (if we're in a  Plugins / Express PMs scenario)
  *     "isStoredPaymentMethod" & "brand" (when a storedCard is "selected"), or,
  *     "validationErrorCode" & "validationErrorMessage" (when the event is describing a validation error)
+ *     "configData" (when we're reporting the initial configuration of a PM, or, describing the available brands when dual-branding)
  *
  *  All objects can also have a "metadata" object of key-value pairs
  */
@@ -43,6 +48,7 @@ export const createAnalyticsObject = (aObj: CreateAnalyticsObject): AnalyticsObj
     /** INFO */
     ...(aObj.event === 'info' && { type: aObj.type, target: aObj.target }), // info event
     ...(aObj.event === 'info' && aObj.issuer && { issuer: aObj.issuer }), // relates to issuerLists
+    ...(aObj.event === 'info' && aObj.brand && { brand: aObj.brand }), // relates to dual branding in Card comp
     ...(aObj.event === 'info' && { isExpress: aObj.isExpress, expressPage: aObj.expressPage }), // relates to Plugins & detecting Express PMs
     ...(aObj.event === 'info' && aObj.isStoredPaymentMethod && { isStoredPaymentMethod: aObj.isStoredPaymentMethod, brand: aObj.brand }), // only added if we have an info event about a storedPM
     ...(aObj.event === 'info' &&

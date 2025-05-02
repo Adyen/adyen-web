@@ -1,5 +1,12 @@
 import Language from '../../../../language/Language';
-import { BinLookupResponse, BrandConfiguration, CardBrandsConfiguration, CardBackendConfiguration, DualBrandSelectElement } from '../../types';
+import {
+    BinLookupResponse,
+    BrandConfiguration,
+    CardBrandsConfiguration,
+    CardBackendConfiguration,
+    DualBrandSelectElement,
+    DualBrandingAnalyticsObject
+} from '../../types';
 import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
 import {
@@ -149,6 +156,7 @@ export interface CardInputProps {
     exposeExpiryDate?: boolean;
     disclaimerMessage?: DisclaimerMsgObject;
     onValidationErrorAnalytics?: (obj: FieldErrorAnalyticsObject) => {};
+    onDualBrandingAnalytics?: (obj: DualBrandingAnalyticsObject) => {};
 }
 
 export interface CardInputState {

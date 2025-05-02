@@ -83,14 +83,19 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
 
             case ANALYTICS_FOCUS_STR:
             case ANALYTICS_UNFOCUS_STR:
-            case ANALYTICS_DISPLAYED_STR: // issuerList
+            case ANALYTICS_DISPLAYED_STR: // issuerList or dual-branding buttons from Card
             case ANALYTICS_INPUT_STR: // issuerList
-            case ANALYTICS_DOWNLOAD_STR: // QR codes
+            case ANALYTICS_DOWNLOAD_STR: {
+                // QR codes
+                // If dual-branding buttons...
+                const { brand, configData } = analyticsObj;
+
                 analyticsModule.createAnalyticsEvent({
                     event: ANALYTICS_EVENT.info,
-                    data: { component, type, target }
+                    data: { component, type, target, brand, configData }
                 });
                 break;
+            }
 
             // - ApplePay & GooglePay when instant PMs
             // - issuerList buttons

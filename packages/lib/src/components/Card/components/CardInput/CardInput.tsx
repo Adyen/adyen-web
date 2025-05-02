@@ -6,7 +6,7 @@ import defaultProps from './defaultProps';
 import './CardInput.scss';
 import { AddressModeOptions, CardInputDataState, CardInputErrorState, CardInputProps, CardInputRef, CardInputValidState } from './types';
 import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER } from '../../../internal/SecuredFields/lib/constants';
-import { BinLookupResponse } from '../../types';
+import { BinLookupResponse, DualBrandingAnalyticsObject } from '../../types';
 import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } from './validate';
 import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';
 import useForm from '../../../../utils/useForm';
@@ -28,6 +28,9 @@ import { CardBrandData, CardFocusData } from '../../../internal/SecuredFields/li
 import { FieldErrorAnalyticsObject } from '../../../../core/Analytics/types';
 import { PREFIX } from '../../../internal/Icon/constants';
 import useSRPanelForCardInputErrors from './useSRPanelForCardInputErrors';
+import { ANALYTICS_DISPLAYED_STR } from '../../../../core/Analytics/constants';
+
+const DUAL_BRAND_BUTTON = 'dual_brand_button';
 
 const CardInput = (props: CardInputProps) => {
     const sfp = useRef(null);
@@ -398,6 +401,26 @@ const CardInput = (props: CardInputProps) => {
             installments
         });
     }, [data, valid, errors, selectedBrandValue, storePaymentMethod, installments]);
+
+    /**
+     * componentDidUpdate handler for dual branding
+     */
+    useEffect(() => {
+        if (dualBrandSelectElements.length > 0 && dualBrandSelectElements) {
+            const dualBrandsArr = dualBrandSelectElements.map(item => item.id);
+            const brand = dualBrandsArr[0]; // initially selected brand
+            const dualBrands = dualBrandsArr.toString();
+
+            const analyticsObj: DualBrandingAnalyticsObject = {
+                type: ANALYTICS_DISPLAYED_STR,
+                target: DUAL_BRAND_BUTTON,
+                brand,
+                configData: { dualBrands }
+            };
+
+            props.onDualBrandingAnalytics(analyticsObj);
+        }
+    }, [dualBrandSelectElements]);
 
     /**
      * RENDER

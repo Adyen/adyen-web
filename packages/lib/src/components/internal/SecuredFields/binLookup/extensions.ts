@@ -112,6 +112,7 @@ export default function extensions(props, refs, states, hasPanLengthRef: Partial
          * Inform SFP of the brand changes when these selections are made
          */
         handleDualBrandSelection: (e: Event | string): void => {
+            console.log('### extensions::handleDualBrandSelection:: e', e);
             let value: Event | string = e;
             if (e instanceof Event) {
                 const target = e.target as HTMLLIElement;

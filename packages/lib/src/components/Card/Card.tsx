@@ -2,7 +2,7 @@ import { h } from 'preact';
 import CardInput from './components/CardInput';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import collectBrowserInfo from '../../utils/browserInfo';
-import { BinLookupResponse, CardElementData, CardConfiguration } from './types';
+import { BinLookupResponse, CardElementData, CardConfiguration, DualBrandingAnalyticsObject } from './types';
 import triggerBinLookUp from '../internal/SecuredFields/binLookup/triggerBinLookUp';
 import { CardBinLookupData, CardConfigSuccessData, CardFocusData } from '../internal/SecuredFields/lib/types';
 import { fieldTypeToSnakeCase } from '../internal/SecuredFields/utils';
@@ -263,6 +263,10 @@ export class CardElement extends UIElement<CardConfiguration> {
         });
     };
 
+    private onDualBrandingAnalytics = (obj: DualBrandingAnalyticsObject) => {
+        this.submitAnalytics(obj);
+    };
+
     public onBinValue = triggerBinLookUp(this);
 
     get storePaymentMethodPayload() {
@@ -364,6 +368,7 @@ export class CardElement extends UIElement<CardConfiguration> {
                 onFocus={this.onFocus}
                 onBlur={this.onBlur}
                 onValidationErrorAnalytics={this.onValidationErrorAnalytics}
+                onDualBrandingAnalytics={this.onDualBrandingAnalytics}
                 onConfigSuccess={this.onConfigSuccess}
             />
         );

@@ -1,13 +1,13 @@
 import { h } from 'preact';
 import cx from 'classnames';
-import './RadioGroupExtended.scss';
-import '../RadioGroup/RadioGroup.scss';
 import { RadioGroupExtendedProps } from './types';
 import { getUniqueId } from '../../../../utils/idGenerator';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import RadioButtonIcon from './RadioButtonIcon';
 import Icon from '../../Icon';
 import { PREFIX } from '../../Icon/constants';
+import './RadioGroupExtended.scss';
+import '../RadioGroup/RadioGroup.scss';
 
 export default function RadioGroupExtended(props: RadioGroupExtendedProps) {
     const {
