@@ -3,14 +3,15 @@ import { getUrlFromMap } from '../../../core/Environment/Environment';
 import type { CoreConfiguration } from '../../../core/types';
 import { CDN_ENVIRONMENTS } from '../../../core/Environment/constants';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
+import Script from '../../../utils/Script';
 
 export interface IPasskeySdkLoader {
     load(environment: CoreConfiguration['environment']): Promise<IAdyenPasskey>;
 }
 
 class PasskeySdkLoader implements IPasskeySdkLoader {
-    private static readonly PASSKEY_SDK_URL = 'js/adyenpasskey/1.0.0/adyen-passkey.js';
-    private AdyenPasskey: null;
+    private static readonly PASSKEY_SDK_URL = 'js/adyenpasskey/1.1.0/adyen-passkey.js';
+    private AdyenPasskey: IAdyenPasskey;
 
     private isAvailable(): boolean {
         return this.AdyenPasskey != null;
@@ -21,8 +22,9 @@ class PasskeySdkLoader implements IPasskeySdkLoader {
         try {
             const cdnUrl = getUrlFromMap(environment as CoreConfiguration['environment'], CDN_ENVIRONMENTS);
             const url = `${cdnUrl}${PasskeySdkLoader.PASSKEY_SDK_URL}`;
-            const module = await import(/* @vite-ignore */ url); // Vite does not support this dynamic import formats
-            this.AdyenPasskey = module.default.AdyenPasskey;
+            const scriptElement = new Script(url);
+            await scriptElement.load();
+            this.AdyenPasskey = window.AdyenPasskey?.default;
             return this.AdyenPasskey;
         } catch (e: unknown) {
             throw new AdyenCheckoutError(
