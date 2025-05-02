@@ -3,11 +3,11 @@ import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import './IssuerListIntroduction.scss';
 import useImage from '../../../../../core/Context/useImage';
 
-// todo: add logos after uploaded to cdn
 const LOGO = {
     name: 'open-finance',
-    altI18nKey: ''
+    altI18nKey: 'paybybankpix.await.logoAlt.openFinance'
 };
+
 function IssuerListIntroduction() {
     const { i18n } = useCoreContext();
     const getImage = useImage();
