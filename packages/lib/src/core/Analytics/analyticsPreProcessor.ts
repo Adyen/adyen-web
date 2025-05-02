@@ -85,8 +85,7 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
             case ANALYTICS_UNFOCUS_STR:
             case ANALYTICS_DISPLAYED_STR: // issuerList or dual-branding buttons from Card
             case ANALYTICS_INPUT_STR: // issuerList
-            case ANALYTICS_DOWNLOAD_STR: {
-                // QR codes
+            case ANALYTICS_DOWNLOAD_STR: { // prettier-ignore // QR Codes
                 // If dual-branding buttons...
                 const { brand, configData } = analyticsObj;
 
