@@ -5,8 +5,7 @@ import type {
     CardBrandsConfiguration,
     CardBackendConfiguration,
     DualBrandSelectElement,
-    CardPlaceholders,
-    DualBrandingAnalyticsObject
+    CardPlaceholders
 } from '../../types';
 import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
@@ -32,7 +31,7 @@ import { OnAddressLookupType, OnAddressSelectedType } from '../../../internal/Ad
 import { ComponentMethodsRef } from '../../../internal/UIElement/types';
 import { AddressData, PaymentAmount } from '../../../../types/global-types';
 import { AnalyticsModule } from '../../../../types/global-types';
-import { FieldErrorAnalyticsObject, SendAnalyticsObject } from '../../../../core/Analytics/types';
+import { SendAnalyticsObject } from '../../../../core/Analytics/types';
 import type { FastlaneSignupConfiguration } from '../../../PayPalFastlane/types';
 
 export interface CardInputValidState {
@@ -148,8 +147,6 @@ export interface CardInputProps {
     maskSecurityCode?: boolean;
     exposeExpiryDate?: boolean;
     disclaimerMessage?: DisclaimerMsgObject;
-    onValidationErrorAnalytics?: (obj: FieldErrorAnalyticsObject) => {};
-    onDualBrandingAnalytics?: (obj: DualBrandingAnalyticsObject) => {};
 }
 
 export interface CardInputState {

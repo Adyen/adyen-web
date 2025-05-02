@@ -29,7 +29,10 @@ import { FieldErrorAnalyticsObject } from '../../../../core/Analytics/types';
 import { PREFIX } from '../../../internal/Icon/constants';
 import useSRPanelForCardInputErrors from './useSRPanelForCardInputErrors';
 import FastlaneSignup from '../Fastlane/FastlaneSignup';
-import { ANALYTICS_DISPLAYED_STR } from '../../../../core/Analytics/constants';
+import { ANALYTICS_DISPLAYED_STR, ANALYTICS_VALIDATION_ERROR_STR } from '../../../../core/Analytics/constants';
+import { fieldTypeToSnakeCase } from '../../../internal/SecuredFields/utils';
+import { getErrorMessageFromCode } from '../../../../core/Errors/utils';
+import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 
 const DUAL_BRAND_BUTTON = 'dual_brand_button';
 
@@ -367,7 +370,12 @@ const CardInput = (props: CardInputProps) => {
                 errorCode: errorItem.errorCode
             };
 
-            props.onValidationErrorAnalytics(aObj);
+            props.onSubmitAnalytics({
+                type: ANALYTICS_VALIDATION_ERROR_STR,
+                target: fieldTypeToSnakeCase(aObj.fieldType),
+                validationErrorCode: aObj.errorCode,
+                validationErrorMessage: getErrorMessageFromCode(aObj.errorCode, SF_ErrorCodes)
+            });
         });
     }
 
@@ -418,7 +426,7 @@ const CardInput = (props: CardInputProps) => {
                 configData: { dualBrands }
             };
 
-            props.onDualBrandingAnalytics(analyticsObj);
+            props.onSubmitAnalytics(analyticsObj);
         }
     }, [dualBrandSelectElements]);
 
