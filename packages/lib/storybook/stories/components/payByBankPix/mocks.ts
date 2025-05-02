@@ -38,6 +38,19 @@ const mockRegistractionOptions = {
     }
 };
 
+const mockAuthOptions = {
+    challenge: 'TXjSIQzUJjIflvyFrDHY2iNQeH3Pzhy6GwbJ91bErto',
+    allowCredentials: [
+        {
+            id: 'spm3BqHW-hFugeKUO5oVFIkzol6K5vxJVenHcuHHBLM',
+            type: 'public-key'
+        }
+    ],
+    timeout: 60000,
+    userVerification: 'required',
+    rpId: 'sandbox.inic.dev'
+};
+
 export const mockPaymentsResponseMerchantPage = {
     action: {
         paymentMethodType: 'paybybank_pix',
@@ -50,6 +63,11 @@ export const mockPaymentsResponseMerchantPage = {
 
 export const mockPostEnrollmentResponse = {
     resultCode: 'RedirectShopper',
+    redirectResult: 'xxx'
+};
+
+export const mockDetailsResponseRedirectEnrollment = {
+    resultCode: 'RedirectShopper',
     action: {
         paymentMethodType: 'paybybank_pix',
         url: 'https://localhost:3020/iframe.html?globals=&args=&id=components-paybybankpix--merchant-page&viewMode=story',
@@ -58,16 +76,30 @@ export const mockPostEnrollmentResponse = {
     }
 };
 
-export const mockPaymentsResponseSimulateHostedPage = {
+export const mockPaymentsResponseEnrollment = {
     resultCode: 'RedirectShopper',
     action: {
         paymentMethodType: 'paybybank_pix',
         url: 'https://localhost:3020/iframe.html?args=&globals=&id=components-paybybankpix--simulate-issuer-page&viewMode=story',
         method: 'GET',
-        type: 'await'
+        type: 'redirect'
     }
 };
-// todo: add non pending status
+
+export const mockPaymentsResponsePayment = {
+    resultCode: 'Pending',
+    action: {
+        paymentMethodType: 'paybybank_pix',
+        paymentData: 'mockPaymentData',
+        type: 'await',
+        paymentMethodData: {
+            type: 'pix',
+            enrollmentId: 'enrollment123',
+            initiationId: 'initiation123'
+        }
+    }
+};
+
 export const mockPendingStatusSimulateHostedPage = {
     resultCode: 'pending'
 };
@@ -77,26 +109,35 @@ export const mockReceivedStatusSimulateHostedPage = {
     registrationOptions: btoa(JSON.stringify(mockRegistractionOptions))
 };
 
+export const mockReceivedStatusPayment = {
+    resultCode: 'received',
+    authorizationOptions: btoa(JSON.stringify(mockAuthOptions))
+};
+
 export const mockSubmitDetailsResponseSimulateHostedPage = {
     resultCode: 'Pending',
     action: {
-        paymentData: 'mockPaymentData',
         paymentMethodType: 'paybybank_pix',
-        enrollmentId: 'enrollment123',
-        type: 'await'
+        paymentData: 'mockPaymentData',
+        type: 'await',
+        paymentMethodData: {
+            type: 'pix',
+            enrollmentId: 'enrollment123'
+        }
     }
 };
 
 export const mockSubmitDetailsResponseMerchantPage = {};
 
 export const mockRedirectUrlIssuerPage =
-    'https://localhost:3020/iframe.html?globals=&args=&id=components-paybybankpix--simulate-hosted-page&viewMode=story&redirectResult=xxxxxxx&pollStatus=pending';
+    'https://localhost:3020/iframe.html?args=&globals=&id=components-paybybankpix--hosted-page-enrollment&viewMode=story&redirectResult=xxxxxxx&pollStatus=pending';
 
 export const mockEnrollmentPayload = {
-    returnUrl: 'https://localhost:3020/iframe.html?globals=&args=&id=components-paybybankpix--simulate-hosted-page&viewMode=story',
+    returnUrl: `${window.location.protocol}://localhost:3020/iframe.html?args=&globals=&id=components-paybybankpix--hosted-page-enrollment&viewMode=story`,
     socialSecurityNumber: '81421811006',
     recurringProcessingModel: 'CardOnFile',
     shopperInteraction: 'ContAuth',
+    shopperReference: 'leonardo-12345',
     shopperName: {
         firstName: 'Yu',
         lastName: 'Long'

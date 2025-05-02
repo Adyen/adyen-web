@@ -8,11 +8,14 @@ import SimulatedIssuer from './SimulatedIssuer';
 import {
     mockEnrollmentPayload,
     mockPaymentsResponseMerchantPage,
-    mockPaymentsResponseSimulateHostedPage,
+    mockPaymentsResponseEnrollment,
     mockPendingStatusSimulateHostedPage,
     mockPostEnrollmentResponse,
     mockReceivedStatusSimulateHostedPage,
-    mockSubmitDetailsResponseSimulateHostedPage
+    mockSubmitDetailsResponseSimulateHostedPage,
+    mockPaymentsResponsePayment,
+    mockReceivedStatusPayment,
+    mockDetailsResponseRedirectEnrollment
 } from './mocks';
 import { SimulatedHostedPage } from './SimulatedHostedPage';
 import { getSearchParameter } from '../../../utils/get-query-parameters';
@@ -22,7 +25,9 @@ type PixBiometricStory = StoryConfiguration<PayByBankPixConfiguration>;
 const meta: MetaConfiguration<PayByBankPixConfiguration> = {
     title: 'Components/PayByBankPix'
 };
-const useMsw = false;
+
+const useMsw = true;
+let detailsCallCount = 0;
 
 const render = ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<PayByBankPixConfiguration>) => (
     <>
@@ -44,10 +49,10 @@ export const MerchantPage: PixBiometricStory = {
         msw: useMsw
             ? {
                   handlers: [
-                      http.post('https://localhost:3020/payments', () => {
+                      http.post('https://localhost:3020/api/payments', () => {
                           return HttpResponse.json(mockPaymentsResponseMerchantPage);
                       }),
-                      http.post('/details', () => {
+                      http.post('/api/details', () => {
                           return HttpResponse.json();
                       })
                   ]
@@ -56,29 +61,19 @@ export const MerchantPage: PixBiometricStory = {
     }
 };
 
-export const SimulateHostedPage: PixBiometricStory = {
+export const HostedPageEnrollment: PixBiometricStory = {
     render: props => <SimulatedHostedPage {...props} />,
-    argTypes: {
-        // @ts-ignore fix later
-        isEnrollment: {
-            control: { type: 'boolean' }
-        },
-        // Hide the amount control when `isEnrollment` is true. Because the amount defaults to 0.
-        amount: { if: { arg: 'isEnrollment', truthy: false } }
-    },
     args: {
-        isEnrollment: true,
         useSessions: false,
         countryCode: 'BR',
-        //_environmentUrls: { cdn: { images: 'https://localhost:3020/' } },
+        shopperReference: 'leonardo-12345',
+        amount: 0,
         // @ts-ignore override the /sessions payload
         sessionData: mockEnrollmentPayload,
         redirectResult: getSearchParameter('redirectResult'),
+        sessionId: getSearchParameter('sessionId'),
         componentConfiguration: {
             _isAdyenHosted: true,
-            /*            //storedPaymentMethodId: 'xxx',
-            receiver: 'xxx',
-            issuer: 'bank',*/
             onChange: data => {
                 console.log({ data });
             }
@@ -94,8 +89,8 @@ export const SimulateHostedPage: PixBiometricStory = {
                               return HttpResponse.json(mockPostEnrollmentResponse);
                           }
                       ),
-                      http.post('https://localhost:3020/payments', () => {
-                          return HttpResponse.json(mockPaymentsResponseSimulateHostedPage);
+                      http.post('https://localhost:3020/api/payments', () => {
+                          return HttpResponse.json(mockPaymentsResponseEnrollment);
                       }),
                       http.get(
                           'https://checkoutshopper-test.adyen.com/checkoutshopper/utility/v1/pixpaybybank/registration-options/enrollment123?clientKey=test_L6HTEOAXQBCZJHKNU4NLN6EI7IE6VRRW',
@@ -107,7 +102,61 @@ export const SimulateHostedPage: PixBiometricStory = {
                               );
                           }
                       ),
-                      http.post('/details', () => {
+                      http.post('/api/details', () => {
+                          detailsCallCount++;
+                          if (detailsCallCount === 1) {
+                              return HttpResponse.json(mockSubmitDetailsResponseSimulateHostedPage);
+                          } else {
+                              return HttpResponse.json(mockDetailsResponseRedirectEnrollment);
+                          }
+                      })
+                  ]
+              }
+            : undefined
+    }
+};
+export const HostedPagePayment: PixBiometricStory = {
+    render: props => <SimulatedHostedPage {...props} />,
+    args: {
+        useSessions: false,
+        countryCode: 'BR',
+        shopperReference: 'leonardo-12345',
+        amount: 3000,
+        // @ts-ignore override the /sessions payload
+        sessionData: mockEnrollmentPayload,
+        componentConfiguration: {
+            _isAdyenHosted: true,
+            deviceId: 'b9be0556-a449-467b-a74a-18ab9754f907',
+            storedPaymentMethodId: 'M9WS5DT5PGCM9J65',
+            receiver: 'xxx',
+            //issuer: '44471172',
+            onChange: data => {
+                console.log({ data });
+            }
+        }
+    },
+    parameters: {
+        msw: useMsw
+            ? {
+                  handlers: [
+                      http.post(
+                          'https://checkoutshopper-test.adyen.com/checkoutshopper/utility/v1/pixpaybybank/redirect-result?clientKey=test_L6HTEOAXQBCZJHKNU4NLN6EI7IE6VRRW',
+                          () => {
+                              return HttpResponse.json(mockPostEnrollmentResponse);
+                          }
+                      ),
+                      http.post('https://localhost:3020/api/payments', () => {
+                          return HttpResponse.json(mockPaymentsResponsePayment);
+                      }),
+                      http.get(
+                          'https://checkoutshopper-test.adyen.com/checkoutshopper/utility/v1/pixpaybybank/authorization-options?initiationId=initiation123&enrollmentId=enrollment123&clientKey=test_L6HTEOAXQBCZJHKNU4NLN6EI7IE6VRRW',
+                          () => {
+                              return HttpResponse.json(
+                                  getSearchParameter('pollStatus') === 'pending' ? mockPendingStatusSimulateHostedPage : mockReceivedStatusPayment
+                              );
+                          }
+                      ),
+                      http.post('/api/details', () => {
                           return HttpResponse.json(mockSubmitDetailsResponseSimulateHostedPage);
                       })
                   ]
