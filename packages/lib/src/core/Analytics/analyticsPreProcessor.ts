@@ -22,7 +22,25 @@ import { getCardConfigData } from './utils';
 export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
     // return function with an analyticsModule reference
     return (component: string, analyticsObj: SendAnalyticsObject, uiElementProps = {} as any) => {
-        const { type, target } = analyticsObj;
+        // @ts-ignore experimental
+        const { type, target, category } = analyticsObj;
+
+        /**
+         * If the passed analyticsObj has a category then we don't need to do anything more than
+         * extract the category as 'event' and directly call analyticsModule.createAnalyticsEvent,
+         * which itself can directly call addAnalyticsEvent bypassing the call to createAnalyticsObject
+         */
+        if (category) {
+            // @ts-ignore experimental
+            const { category: event, ...restAnalyticsObject } = analyticsObj;
+
+            analyticsModule.createAnalyticsEvent({
+                event,
+                // @ts-ignore experimental
+                data: restAnalyticsObject
+            });
+            return;
+        }
 
         if (!type) {
             throw new AdyenCheckoutError(SDK_ERROR, 'You are trying to create an analytics event without a type');

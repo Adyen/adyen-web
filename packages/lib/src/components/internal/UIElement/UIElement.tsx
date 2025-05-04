@@ -175,6 +175,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
          * - otherwise, distinguish cards from non-cards: cards will use their static type property, everything else will use props.type
          */
         try {
+            if (hasOwnProperty(analyticsObj, 'category')) {
+                analyticsObj.component = this.getComponent(analyticsObj);
+                console.log('### UIElement::submitAnalytics:: NEW w. category analyticsObj=', analyticsObj);
+            }
+
             this.props.modules.analytics.sendAnalytics(this.getComponent(analyticsObj), analyticsObj, uiElementProps);
         } catch (error) {
             console.warn('Failed to submit the analytics event. Error:', error);

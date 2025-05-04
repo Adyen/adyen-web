@@ -56,6 +56,14 @@ export const createAnalyticsObject = (aObj: CreateAnalyticsObject): AnalyticsObj
     ...(aObj.metadata && { metadata: aObj.metadata })
 });
 
+export const createNewAnalyticsEvent = (aObj: any): AnalyticsObject => {
+    return {
+        timestamp: String(getUTCTimestamp()),
+        id: uuid(),
+        ...aObj
+    };
+};
+
 const mapErrorCodesForAnalytics = (errorCode: string, target: string) => {
     // Some of the more generic error codes required combination with target to retrieve a specific code
     if (errorCode === ERROR_FIELD_REQUIRED || errorCode === ERROR_INVALID_FORMAT_EXPECTS) {

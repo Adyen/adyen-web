@@ -6,6 +6,7 @@ import { debounce } from '../../utils/debounce';
 import { AnalyticsModule } from '../../types/global-types';
 import { createAnalyticsObject, processAnalyticsData } from './utils';
 import { analyticsPreProcessor } from './analyticsPreProcessor';
+import { hasOwnProperty } from '../../utils/hasOwnProperty';
 
 let capturedCheckoutAttemptId = null;
 let sendEventsTimerId = null;
@@ -87,11 +88,22 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
         createAnalyticsEvent: ({ event, data }: CreateAnalyticsEventObject): AnalyticsObject => {
             if (!props.enabled) return;
 
+            if (hasOwnProperty(data, 'timestamp')) {
+                console.log('### Analytics::createAnalyticsEvent:: NU way');
+                console.log('### Analytics::createAnalyticsEvent:: event=', event, ' data=', data);
+
+                // @ts-ignore experimental
+                addAnalyticsEvent(event, data);
+
+                // @ts-ignore experimental
+                return data;
+            }
+
             const aObj: AnalyticsObject = createAnalyticsObject({
                 event,
                 ...data
             });
-            // console.log('### Analytics::createAnalyticsEvent:: event=', event, ' aObj=', aObj);
+            console.log('### Analytics::createAnalyticsEvent:: event=', event, ' aObj=', aObj);
 
             addAnalyticsEvent(event, aObj);
 

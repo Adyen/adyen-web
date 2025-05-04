@@ -23,7 +23,8 @@ import {
     ANALYTICS_CONFIGURED_STR,
     ANALYTICS_UNFOCUS_STR,
     ANALYTICS_VALIDATION_ERROR_STR,
-    ANALYTICS_RENDERED_STR
+    ANALYTICS_RENDERED_STR,
+    ANALYTICS_EVENT
 } from '../../core/Analytics/constants';
 import { ALL_SECURED_FIELDS } from '../internal/SecuredFields/lib/constants';
 import { FieldErrorAnalyticsObject, SendAnalyticsObject } from '../../core/Analytics/types';
@@ -32,6 +33,7 @@ import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from '../../core/Errors/Adye
 import { getErrorMessageFromCode } from '../../core/Errors/utils';
 import { SF_ErrorCodes } from '../../core/Errors/constants';
 import CardInputDefaultProps from './components/CardInput/defaultProps';
+import { createNewAnalyticsEvent } from '../../core/Analytics/utils';
 
 export class CardElement extends UIElement<CardConfiguration> {
     public static type = TxVariants.scheme;
@@ -220,18 +222,22 @@ export class CardElement extends UIElement<CardConfiguration> {
     }
 
     private onConfigSuccess = (obj: CardConfigSuccessData) => {
-        this.submitAnalytics({
+        const aObj = createNewAnalyticsEvent({
+            category: ANALYTICS_EVENT.info,
             type: ANALYTICS_CONFIGURED_STR
         });
+        this.submitAnalytics(aObj);
 
         this.props.onConfigSuccess?.(obj);
     };
 
     private onFocus = (obj: ComponentFocusObject) => {
-        this.submitAnalytics({
+        const aObj = createNewAnalyticsEvent({
+            category: ANALYTICS_EVENT.info,
             type: ANALYTICS_FOCUS_STR,
             target: fieldTypeToSnakeCase(obj.fieldType)
         });
+        this.submitAnalytics(aObj);
 
         // Call merchant defined callback
         if (ALL_SECURED_FIELDS.includes(obj.fieldType)) {
@@ -242,10 +248,12 @@ export class CardElement extends UIElement<CardConfiguration> {
     };
 
     private onBlur = (obj: ComponentFocusObject) => {
-        this.submitAnalytics({
+        const aObj = createNewAnalyticsEvent({
+            category: ANALYTICS_EVENT.info,
             type: ANALYTICS_UNFOCUS_STR,
             target: fieldTypeToSnakeCase(obj.fieldType)
         });
+        this.submitAnalytics(aObj);
 
         // Call merchant defined callback
         if (ALL_SECURED_FIELDS.includes(obj.fieldType)) {
@@ -256,12 +264,15 @@ export class CardElement extends UIElement<CardConfiguration> {
     };
 
     private onValidationErrorAnalytics = (obj: FieldErrorAnalyticsObject) => {
-        this.submitAnalytics({
+        const aObj = createNewAnalyticsEvent({
+            category: ANALYTICS_EVENT.info,
             type: ANALYTICS_VALIDATION_ERROR_STR,
             target: fieldTypeToSnakeCase(obj.fieldType),
             validationErrorCode: obj.errorCode,
             validationErrorMessage: getErrorMessageFromCode(obj.errorCode, SF_ErrorCodes)
         });
+
+        this.submitAnalytics(aObj);
     };
 
     public onBinValue = triggerBinLookUp(this);
