@@ -7,6 +7,7 @@ import { TxVariants } from '../tx-variants';
 import { RedirectConfiguration } from './types';
 import collectBrowserInfo from '../../utils/browserInfo';
 import { ANALYTICS_ERROR_CODE, ANALYTICS_ERROR_TYPE, ANALYTICS_EVENT } from '../../core/Analytics/constants';
+import { createNewAnalyticsEvent } from '../../core/Analytics/utils';
 
 class RedirectElement extends UIElement<RedirectConfiguration> {
     public static type = TxVariants.redirect;
@@ -25,12 +26,14 @@ class RedirectElement extends UIElement<RedirectConfiguration> {
     }
 
     private handleRedirectError = () => {
-        super.submitAnalytics({
-            component: this.props.paymentMethodType,
+        const aObj = createNewAnalyticsEvent({
+            category: ANALYTICS_EVENT.error,
             type: ANALYTICS_EVENT.error,
+            component: this.props.paymentMethodType,
             errorType: ANALYTICS_ERROR_TYPE.redirect,
             code: ANALYTICS_ERROR_CODE.redirect
         });
+        super.submitAnalytics(aObj);
     };
 
     get isValid() {

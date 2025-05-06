@@ -310,7 +310,14 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.setElementStatus('ready');
 
         if (error.name === NETWORK_ERROR && error.options.code) {
-            this.submitAnalytics({ type: ANALYTICS_EVENT.error, errorType: ANALYTICS_ERROR_TYPE.apiError, code: error.options.code });
+            const aObj = createNewAnalyticsEvent({
+                category: ANALYTICS_EVENT.error,
+                type: ANALYTICS_EVENT.error,
+                errorType: ANALYTICS_ERROR_TYPE.apiError,
+                code: error.options.code
+            });
+
+            this.submitAnalytics(aObj);
         }
 
         if (this.props.onError) {
