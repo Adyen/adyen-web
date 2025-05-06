@@ -312,7 +312,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         if (error.name === NETWORK_ERROR && error.options.code) {
             const aObj = createNewAnalyticsEvent({
                 category: ANALYTICS_EVENT.error,
-                type: ANALYTICS_EVENT.error,
                 errorType: ANALYTICS_ERROR_TYPE.apiError,
                 code: error.options.code
             });

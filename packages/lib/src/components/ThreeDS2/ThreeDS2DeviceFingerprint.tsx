@@ -14,7 +14,7 @@ import {
     ANALYTICS_EVENT
 } from '../../core/Analytics/constants';
 import { EnhancedAnalyticsObject } from '../../core/Analytics/types';
-import { THREEDS2_ERROR, THREEDS2_FINGERPRINT, THREEDS2_FINGERPRINT_ERROR, THREEDS2_FULL } from './constants';
+import { THREEDS2_FINGERPRINT, THREEDS2_FINGERPRINT_ERROR, THREEDS2_FULL } from './constants';
 import { ActionHandledReturnObject } from '../../types/global-types';
 import { createNewAnalyticsEvent } from '../../core/Analytics/utils';
 
@@ -62,7 +62,6 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
             // TODO - check logs to see if this *ever* happens
             const aObj = createNewAnalyticsEvent({
                 category: ANALYTICS_EVENT.error,
-                type: THREEDS2_ERROR,
                 code: Analytics3DS2Errors.ACTION_IS_MISSING_PAYMENT_DATA,
                 errorType: ANALYTICS_ERROR_TYPE.apiError,
                 message: `${THREEDS2_FINGERPRINT_ERROR}: Missing 'paymentData' property from threeDS2 action`

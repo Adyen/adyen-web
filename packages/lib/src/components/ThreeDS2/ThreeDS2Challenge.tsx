@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import PrepareChallenge from './components/Challenge';
-import { DEFAULT_CHALLENGE_WINDOW_SIZE, THREEDS2_CHALLENGE, THREEDS2_CHALLENGE_ERROR, THREEDS2_ERROR, THREEDS2_FULL } from './constants';
+import { DEFAULT_CHALLENGE_WINDOW_SIZE, THREEDS2_CHALLENGE, THREEDS2_CHALLENGE_ERROR, THREEDS2_FULL } from './constants';
 import { existy } from '../../utils/commonUtils';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import { TxVariants } from '../tx-variants';
@@ -69,7 +69,6 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
 
             const aObj = createNewAnalyticsEvent({
                 category: ANALYTICS_EVENT.error,
-                type: THREEDS2_ERROR,
                 code: Analytics3DS2Errors.ACTION_IS_MISSING_PAYMENT_DATA,
                 errorType: ANALYTICS_ERROR_TYPE.apiError,
                 message: `${THREEDS2_CHALLENGE_ERROR}: Missing 'paymentData' property from threeDS2 action`

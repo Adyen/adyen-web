@@ -10,14 +10,7 @@ import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
 import useImage from '../../../../core/Context/useImage';
 import AdyenCheckoutError, { ERROR } from '../../../../core/Errors/AdyenCheckoutError';
 import { EnhancedAnalyticsObject } from '../../../../core/Analytics/types';
-import {
-    THREEDS2_CHALLENGE,
-    THREEDS2_CHALLENGE_ERROR,
-    THREEDS2_FULL,
-    THREEDS2_NUM,
-    MISSING_TOKEN_IN_ACTION_MSG,
-    THREEDS2_ERROR
-} from '../../constants';
+import { THREEDS2_CHALLENGE, THREEDS2_CHALLENGE_ERROR, THREEDS2_FULL, THREEDS2_NUM, MISSING_TOKEN_IN_ACTION_MSG } from '../../constants';
 import { isValidHttpUrl } from '../../../../utils/isValidURL';
 import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, Analytics3DS2Events, ANALYTICS_EVENT } from '../../../../core/Analytics/constants';
 import { ErrorObject } from '../../../../core/Errors/types';
@@ -158,7 +151,6 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             // Send error to analytics endpoint // TODO - check logs to see if the base64 decoding errors *ever* happen
             const aObj = createNewAnalyticsEvent({
                 category: ANALYTICS_EVENT.error,
-                type: THREEDS2_ERROR,
                 code: errorCode,
                 errorType: ANALYTICS_ERROR_TYPE.apiError,
                 message: `${THREEDS2_CHALLENGE_ERROR}: ${errorMsg}` // can be: 'Missing "token" property from threeDS2 action', 'not base64', 'malformed URI sequence' or 'Could not JSON parse token'
@@ -316,7 +308,6 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                             // Send error to analytics endpoint
                             const aObj = createNewAnalyticsEvent({
                                 category: ANALYTICS_EVENT.error,
-                                type: THREEDS2_ERROR,
                                 code: Analytics3DS2Errors.CHALLENGE_RESOLVED_WITHOUT_RESULT_PROP,
                                 errorType: ANALYTICS_ERROR_TYPE.apiError,
                                 message: `${THREEDS2_CHALLENGE_ERROR}: challenge resolved without a "result" object`

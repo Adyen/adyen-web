@@ -28,7 +28,6 @@ class RedirectElement extends UIElement<RedirectConfiguration> {
     private handleRedirectError = () => {
         const aObj = createNewAnalyticsEvent({
             category: ANALYTICS_EVENT.error,
-            type: ANALYTICS_EVENT.error,
             component: this.props.paymentMethodType,
             errorType: ANALYTICS_ERROR_TYPE.redirect,
             code: ANALYTICS_ERROR_CODE.redirect
