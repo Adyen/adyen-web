@@ -215,11 +215,8 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         });
     }
 
-    /**
-     * Validation
-     */
-    get isValid(): boolean {
-        return !!this.state.googlePayToken;
+    public get isValid(): boolean {
+        return true;
     }
 
     /**
