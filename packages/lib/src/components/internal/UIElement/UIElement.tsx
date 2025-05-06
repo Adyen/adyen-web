@@ -27,6 +27,7 @@ import type { NewableComponent } from '../../../core/core.registry';
 import CancelError from '../../../core/Errors/CancelError';
 
 import './UIElement.scss';
+import { createNewAnalyticsEvent } from '../../../core/Analytics/utils';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     protected componentRef: any;
@@ -177,7 +178,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         try {
             if (hasOwnProperty(analyticsObj, 'category')) {
                 analyticsObj.component = this.getComponent(analyticsObj);
-                console.log('### UIElement::submitAnalytics:: NEW w. category analyticsObj=', analyticsObj);
             }
 
             this.props.modules.analytics.sendAnalytics(this.getComponent(analyticsObj), analyticsObj, uiElementProps);
@@ -249,7 +249,12 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     private async submitUsingAdvancedFlow(): Promise<CheckoutAdvancedFlowResponse> {
         return new Promise<CheckoutAdvancedFlowResponse>((resolve, reject) => {
             // Call analytics endpoint
-            this.submitAnalytics({ type: ANALYTICS_SUBMIT_STR });
+            const aObj = createNewAnalyticsEvent({
+                category: ANALYTICS_EVENT.log,
+                type: ANALYTICS_SUBMIT_STR,
+                message: 'Shopper clicked pay'
+            });
+            this.submitAnalytics(aObj);
 
             this.props.onSubmit(
                 {
@@ -263,7 +268,12 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     private async submitUsingSessionsFlow(data: PaymentData): Promise<CheckoutSessionPaymentResponse> {
-        this.submitAnalytics({ type: ANALYTICS_SUBMIT_STR });
+        const aObj = createNewAnalyticsEvent({
+            category: ANALYTICS_EVENT.log,
+            type: ANALYTICS_SUBMIT_STR,
+            message: 'Shopper clicked pay'
+        });
+        this.submitAnalytics(aObj);
 
         try {
             return await this.core.session.submitPayment(data);

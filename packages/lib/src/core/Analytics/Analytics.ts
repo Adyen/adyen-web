@@ -89,7 +89,7 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
             if (!props.enabled) return;
 
             if (hasOwnProperty(data, 'timestamp')) {
-                console.log('### Analytics::createAnalyticsEvent:: NU way');
+                console.log('\n### Analytics::createAnalyticsEvent:: NU way');
                 console.log('### Analytics::createAnalyticsEvent:: event=', event, ' data=', data);
 
                 // @ts-ignore experimental

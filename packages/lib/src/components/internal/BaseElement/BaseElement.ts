@@ -2,13 +2,14 @@ import { ComponentChild, h, render } from 'preact';
 import getProp from '../../../utils/getProp';
 import uuid from '../../../utils/uuid';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
-import { ANALYTICS_RENDERED_STR, NO_CHECKOUT_ATTEMPT_ID } from '../../../core/Analytics/constants';
+import { ANALYTICS_EVENT, ANALYTICS_RENDERED_STR, NO_CHECKOUT_ATTEMPT_ID } from '../../../core/Analytics/constants';
 
 import type { ICore } from '../../../core/types';
 import type { BaseElementProps, IBaseElement } from './types';
 import type { PaymentData } from '../../../types/global-types';
 import type { AnalyticsInitialEvent, SendAnalyticsObject } from '../../../core/Analytics/types';
 import { off, on } from '../../../utils/listenerUtils';
+import { createNewAnalyticsEvent } from '../../../core/Analytics/utils';
 
 /**
  * Verify if the first parameter is instance of Core.
@@ -170,7 +171,11 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
                     // ...create an analytics event  declaring that the component has been rendered
                     // (The dropin will do this itself from DropinComponent once the PM list has rendered)
                     if (!this.props.isDropin) {
-                        this.submitAnalytics({ type: ANALYTICS_RENDERED_STR });
+                        const aObj = createNewAnalyticsEvent({
+                            category: ANALYTICS_EVENT.info,
+                            type: ANALYTICS_RENDERED_STR
+                        });
+                        this.submitAnalytics(aObj);
                     }
                 });
             }
