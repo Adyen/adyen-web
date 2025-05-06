@@ -10,12 +10,19 @@ import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { DecodeObject } from '../../types/global-types';
 import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
-import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
+import {
+    ANALYTICS_EVENT,
+    ANALYTICS_EXPRESS_PAGES_ARRAY,
+    ANALYTICS_INSTANT_PAYMENT_BUTTON,
+    ANALYTICS_RENDERED_STR,
+    ANALYTICS_SELECTED_STR
+} from '../../core/Analytics/constants';
 import { resolveSupportedVersion } from './utils/resolve-supported-version';
 import { formatApplePayContactToAdyenAddressFormat } from './utils/format-applepay-contact-to-adyen-format';
 import { mapBrands } from './utils/map-adyen-brands-to-applepay-brands';
 import ApplePaySdkLoader from './services/ApplePaySdkLoader';
 import { detectInIframe } from '../../utils/detectInIframe';
+import { createNewAnalyticsEvent } from '../../core/Analytics/utils';
 
 import type { SendAnalyticsObject } from '../../core/Analytics/types';
 import type { ApplePayConfiguration, ApplePayElementData, ApplePayPaymentOrderDetails, ApplePaySessionRequest } from './types';
@@ -100,13 +107,31 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
 
     protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
         // Analytics will need to know about this.props.isExpress & this.props.expressPage
+        if (analyticsObj.type === ANALYTICS_RENDERED_STR) {
+            const { isExpress, expressPage } = this.props;
+            const hasExpressPage = expressPage && ANALYTICS_EXPRESS_PAGES_ARRAY.includes(expressPage);
+
+            if (typeof isExpress === 'boolean') {
+                analyticsObj.isExpress = isExpress;
+            }
+
+            if (isExpress === true && hasExpressPage) {
+                analyticsObj.expressPage = expressPage; // We only care about the expressPage value if isExpress is true
+            }
+        }
+
         super.submitAnalytics({ ...analyticsObj }, this.props);
     }
 
     public override submit = (): void => {
         // Analytics
         if (this.props.isInstantPayment) {
-            this.submitAnalytics({ type: ANALYTICS_SELECTED_STR, target: ANALYTICS_INSTANT_PAYMENT_BUTTON });
+            const aObj = createNewAnalyticsEvent({
+                category: ANALYTICS_EVENT.info,
+                type: ANALYTICS_SELECTED_STR,
+                target: ANALYTICS_INSTANT_PAYMENT_BUTTON
+            });
+            this.submitAnalytics(aObj);
         }
         void this.startSession();
     };

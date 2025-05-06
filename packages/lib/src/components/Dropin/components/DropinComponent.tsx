@@ -135,11 +135,13 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
             showDefaultPaymentMethodList: true
         });
 
-        this.props.modules?.analytics.sendAnalytics('dropin', {
-            type: ANALYTICS_EVENT.info,
-            infoType: InfoEventTypes.clicked,
-            target: 'otherpaymentmethod_button'
+        const aObj = createNewAnalyticsEvent({
+            category: ANALYTICS_EVENT.info,
+            type: InfoEventTypes.clicked,
+            target: 'otherpaymentmethod_button',
+            component: 'dropin'
         });
+        this.props.modules?.analytics.sendAnalytics('dropin', aObj);
     };
 
     closeActivePaymentMethod() {
