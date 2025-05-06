@@ -7,10 +7,17 @@ import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import { TxVariants } from '../tx-variants';
 import { ThreeDS2ChallengeConfiguration } from './types';
 import AdyenCheckoutError, { API_ERROR } from '../../core/Errors/AdyenCheckoutError';
-import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, ANALYTICS_RENDERED_STR, Analytics3DS2Events } from '../../core/Analytics/constants';
+import {
+    ANALYTICS_ERROR_TYPE,
+    Analytics3DS2Errors,
+    ANALYTICS_RENDERED_STR,
+    Analytics3DS2Events,
+    ANALYTICS_EVENT
+} from '../../core/Analytics/constants';
 import { SendAnalyticsObject } from '../../core/Analytics/types';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import { ActionHandledReturnObject } from '../../types/global-types';
+import { createNewAnalyticsEvent } from '../../core/Analytics/utils';
 
 class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
     public static type = TxVariants.threeDS2Challenge;
@@ -28,11 +35,13 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
     };
 
     protected onActionHandled = (rtnObj: ActionHandledReturnObject) => {
-        this.submitAnalytics({
+        const aObj = createNewAnalyticsEvent({
+            category: ANALYTICS_EVENT.log,
             type: THREEDS2_FULL,
             message: rtnObj.actionDescription,
-            subtype: Analytics3DS2Events.CHALLENGE_IFRAME_LOADED
+            subType: Analytics3DS2Events.CHALLENGE_IFRAME_LOADED
         });
+        this.submitAnalytics(aObj);
 
         super.onActionHandled(rtnObj);
     };
@@ -58,12 +67,14 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
 
             this.props.onError(new AdyenCheckoutError(API_ERROR, `No ${dataTypeForError} received. 3DS2 Challenge cannot proceed`));
 
-            this.submitAnalytics({
+            const aObj = createNewAnalyticsEvent({
+                category: ANALYTICS_EVENT.error,
                 type: THREEDS2_ERROR,
                 code: Analytics3DS2Errors.ACTION_IS_MISSING_PAYMENT_DATA,
                 errorType: ANALYTICS_ERROR_TYPE.apiError,
                 message: `${THREEDS2_CHALLENGE_ERROR}: Missing 'paymentData' property from threeDS2 action`
             });
+            this.submitAnalytics(aObj);
 
             return null;
         }

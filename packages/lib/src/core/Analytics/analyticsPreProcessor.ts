@@ -26,14 +26,17 @@ export const analyticsPreProcessor = (analyticsModule: AnalyticsModule) => {
         const { type, target, category } = analyticsObj;
 
         /**
-         * If the passed analyticsObj has a category then we don't need to do anything more than
-         * extract the category as 'event' and directly call analyticsModule.createAnalyticsEvent,
-         * which itself can directly call addAnalyticsEvent bypassing the call to createAnalyticsObject
+         * TODO
+         *  If the passed analyticsObj has a category then we don't need to do anything more than
+         *  extract the category as 'event' and directly call analyticsModule.createAnalyticsEvent,
+         *  which itself can directly call addAnalyticsEvent bypassing the call to createAnalyticsObject
          */
         // TODO - throw error, like we currently do for type, if a category isn't specified
         if (category) {
             // @ts-ignore experimental
             const { category: event, ...restAnalyticsObject } = analyticsObj;
+
+            console.log('\n### analyticsPreProcessor:::: BYPASSED!!!');
 
             analyticsModule.createAnalyticsEvent({
                 event,
