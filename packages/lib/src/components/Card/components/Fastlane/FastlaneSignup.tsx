@@ -15,6 +15,7 @@ import type { FastlaneSignupConfiguration } from '../../../PayPalFastlane/types'
 import type { SendAnalyticsObject } from '../../../../core/Analytics/types';
 
 import './FastlaneSignup.scss';
+import { createNewAnalyticsEvent } from '../../../../core/Analytics/utils';
 
 type FastlaneSignupProps = FastlaneSignupConfiguration & {
     currentDetectedBrand: string;
@@ -57,14 +58,15 @@ const FastlaneSignup = ({
         const newValue = !isChecked;
         setIsChecked(newValue);
 
-        onSubmitAnalytics({
-            type: ANALYTICS_EVENT.info,
-            infoType: InfoEventTypes.clicked,
+        const aObj = createNewAnalyticsEvent({
+            category: ANALYTICS_EVENT.info,
+            type: InfoEventTypes.clicked,
             target: 'fastlane_signup_consent_toggle',
             configData: {
                 isToggleOn: newValue
             }
         });
+        onSubmitAnalytics(aObj);
     }, [isChecked, onSubmitAnalytics]);
 
     /**
@@ -111,14 +113,15 @@ const FastlaneSignup = ({
         if (!isFastlaneConfigurationValid) {
             return;
         }
-
-        onSubmitAnalytics({
-            type: ANALYTICS_EVENT.info,
-            infoType: InfoEventTypes.rendered,
+        const aObj = createNewAnalyticsEvent({
+            category: ANALYTICS_EVENT.info,
+            type: InfoEventTypes.rendered,
             configData: {
                 isFastlaneSignupRendered: shouldDisplaySignup
             }
         });
+
+        onSubmitAnalytics(aObj);
     }, [shouldDisplaySignup, isFastlaneConfigurationValid, onSubmitAnalytics]);
 
     if (!shouldDisplaySignup || !isFastlaneConfigurationValid) {
