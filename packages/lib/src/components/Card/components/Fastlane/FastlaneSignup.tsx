@@ -12,7 +12,7 @@ import { isConfigurationValid } from './utils/validate-configuration';
 import mobileNumberFormatter from './utils/mobile-number-formatter';
 import { ANALYTICS_EVENT, InfoEventTypes } from '../../../../core/Analytics/constants';
 import type { FastlaneSignupConfiguration } from '../../../PayPalFastlane/types';
-import type { SendAnalyticsObject } from '../../../../core/Analytics/types';
+import { EnhancedAnalyticsObject } from '../../../../core/Analytics/types';
 
 import './FastlaneSignup.scss';
 import { createNewAnalyticsEvent } from '../../../../core/Analytics/utils';
@@ -20,7 +20,7 @@ import { createNewAnalyticsEvent } from '../../../../core/Analytics/utils';
 type FastlaneSignupProps = FastlaneSignupConfiguration & {
     currentDetectedBrand: string;
     onChange(state: any): void;
-    onSubmitAnalytics(event: SendAnalyticsObject): void;
+    onSubmitAnalytics(event: EnhancedAnalyticsObject): void;
 };
 
 const SUPPORTED_BRANDS = ['mc', 'visa'];

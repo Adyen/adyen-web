@@ -64,32 +64,7 @@ export type AnalyticsProps = Pick<CoreConfiguration, 'loadingContext' | 'locale'
     analyticsContext?: string;
 };
 
-export interface AnalyticsObject {
-    timestamp: string;
-    component: string;
-    id: string;
-    code?: string;
-    infoType?: string;
-    errorType?: string;
-    message?: string;
-    type?: string;
-    subtype?: string;
-    target?: string;
-    metadata?: Record<string, any>;
-    isStoredPaymentMethod?: boolean;
-    brand?: string;
-    validationErrorCode?: string;
-    validationErrorMessage?: string;
-    issuer?: string;
-    isExpress?: boolean;
-    expressPage?: string;
-    result?: string;
-    configData?: Record<string, string | boolean>;
-}
-
 export type AnalyticsEvent = (typeof ANALYTICS_EVENT)[keyof typeof ANALYTICS_EVENT];
-
-export type CreateAnalyticsObject = Omit<AnalyticsObject, 'timestamp' | 'id'> & { event: AnalyticsEvent };
 
 export type AnalyticsInitialEvent = {
     containerWidth: number;
@@ -107,16 +82,52 @@ export type AnalyticsConfig = {
     loadingContext?: string;
 };
 
-export type CreateAnalyticsEventData = Omit<AnalyticsObject, 'timestamp' | 'id'>;
+/**
+ * TODO
+ */
+export interface AnalyticsObject {
+    timestamp: string;
+    component: string;
+    id: string;
+    code?: string;
+    infoType?: string;
+    errorType?: string;
+    message?: string;
+    type?: string;
+    subType?: string;
+    target?: string;
+    metadata?: Record<string, any>;
+    isStoredPaymentMethod?: boolean;
+    brand?: string;
+    validationErrorCode?: string;
+    validationErrorMessage?: string;
+    issuer?: string;
+    isExpress?: boolean;
+    expressPage?: string;
+    result?: string;
+    configData?: Record<string, string | boolean>;
+}
 
-export type CreateAnalyticsEventObject = {
-    event: AnalyticsEvent;
-    data: CreateAnalyticsEventData;
+// TODO
+export type NewAnalyticsEventObject = Omit<AnalyticsObject, 'timestamp' | 'id' | 'component'> & { component?: string };
+
+export type CreateNewAnalyticsEventObject = NewAnalyticsEventObject & {
+    category: AnalyticsEvent;
 };
 
-export type EventQueueProps = Pick<AnalyticsConfig, 'analyticsContext' | 'clientKey'> & { analyticsPath: string };
+export type EnhancedAnalyticsObject = AnalyticsObject & {
+    category: AnalyticsEvent;
+};
 
-export type SendAnalyticsObject = Omit<AnalyticsObject, 'timestamp' | 'id' | 'component'> & { component?: string };
+export type CreateAnalyticsEventObject = AnalyticsObject & {
+    event: AnalyticsEvent;
+    data: AnalyticsObject;
+};
+/**
+ * TODO
+ */
+
+export type EventQueueProps = Pick<AnalyticsConfig, 'analyticsContext' | 'clientKey'> & { analyticsPath: string };
 
 export type FieldErrorAnalyticsObject = {
     fieldType: string;

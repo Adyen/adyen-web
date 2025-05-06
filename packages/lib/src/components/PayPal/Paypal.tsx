@@ -13,7 +13,7 @@ import type { PaymentAction } from '../../types/global-types';
 import type { Intent, PayPalConfiguration } from './types';
 
 import './Paypal.scss';
-import { SendAnalyticsObject } from '../../core/Analytics/types';
+import { EnhancedAnalyticsObject } from '../../core/Analytics/types';
 import { ANALYTICS_EXPRESS_PAGES_ARRAY, ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
 
 class PaypalElement extends UIElement<PayPalConfiguration> {
@@ -54,7 +54,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         };
     }
 
-    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
+    protected submitAnalytics(analyticsObj: EnhancedAnalyticsObject) {
         // Analytics will need to know about this.props.isExpress & this.props.expressPage
         if (analyticsObj.type === ANALYTICS_RENDERED_STR) {
             const { isExpress, expressPage } = this.props;
@@ -69,7 +69,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
             }
         }
 
-        super.submitAnalytics({ ...analyticsObj }, this.props);
+        super.submitAnalytics({ ...analyticsObj });
     }
 
     public submit = () => {

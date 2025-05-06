@@ -1,6 +1,6 @@
 import { PayButtonProps } from '../PayButton/PayButton';
 import { ComponentChildren } from 'preact';
-import { SendAnalyticsObject } from '../../../core/Analytics/types';
+import { EnhancedAnalyticsObject } from '../../../core/Analytics/types';
 
 export interface IssuerListProps {
     items: IssuerItem[];
@@ -13,7 +13,7 @@ export interface IssuerListProps {
     termsAndConditions?: TermsAndConditions;
     showContextualElement?: boolean;
     contextualText?: string;
-    onSubmitAnalytics: (aObj: SendAnalyticsObject) => void;
+    onSubmitAnalytics: (aObj: EnhancedAnalyticsObject) => void;
 }
 
 export interface IssuerItem {

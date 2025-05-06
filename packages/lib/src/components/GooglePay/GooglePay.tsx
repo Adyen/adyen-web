@@ -15,7 +15,7 @@ import {
     ANALYTICS_RENDERED_STR,
     ANALYTICS_SELECTED_STR
 } from '../../core/Analytics/constants';
-import { SendAnalyticsObject } from '../../core/Analytics/types';
+import { EnhancedAnalyticsObject } from '../../core/Analytics/types';
 import { createNewAnalyticsEvent } from '../../core/Analytics/utils';
 
 import type { AddressData, BrowserInfo, PaymentMethod, PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
@@ -105,7 +105,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         };
     }
 
-    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
+    protected submitAnalytics(analyticsObj: EnhancedAnalyticsObject) {
         // Analytics will need to know about this.props.isExpress & this.props.expressPage
         if (analyticsObj.type === ANALYTICS_RENDERED_STR) {
             const { isExpress, expressPage } = this.props;
@@ -120,7 +120,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
             }
         }
 
-        super.submitAnalytics({ ...analyticsObj }, this.props);
+        super.submitAnalytics({ ...analyticsObj });
     }
 
     /**

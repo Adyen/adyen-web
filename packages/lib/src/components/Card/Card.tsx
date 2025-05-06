@@ -27,7 +27,7 @@ import {
     ANALYTICS_EVENT
 } from '../../core/Analytics/constants';
 import { ALL_SECURED_FIELDS } from '../internal/SecuredFields/lib/constants';
-import { FieldErrorAnalyticsObject, SendAnalyticsObject } from '../../core/Analytics/types';
+import { EnhancedAnalyticsObject, FieldErrorAnalyticsObject } from '../../core/Analytics/types';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from '../../core/Errors/AdyenCheckoutError';
 import { getErrorMessageFromCode } from '../../core/Errors/utils';
@@ -205,7 +205,7 @@ export class CardElement extends UIElement<CardConfiguration> {
         }
     }
 
-    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
+    protected submitAnalytics(analyticsObj: EnhancedAnalyticsObject) {
         const { type } = analyticsObj;
 
         if (type === ANALYTICS_RENDERED_STR || type === ANALYTICS_CONFIGURED_STR) {
@@ -222,11 +222,12 @@ export class CardElement extends UIElement<CardConfiguration> {
             }
         }
 
-        super.submitAnalytics(analyticsObj, this.props);
+        // super.submitAnalytics(analyticsObj, this.props);
+        super.submitAnalytics(analyticsObj);
     }
 
     private onConfigSuccess = (obj: CardConfigSuccessData) => {
-        const aObj = createNewAnalyticsEvent({
+        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
             category: ANALYTICS_EVENT.info,
             type: ANALYTICS_CONFIGURED_STR
         });

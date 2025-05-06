@@ -7,7 +7,7 @@ import { hasOwnProperty } from '../../../utils/hasOwnProperty';
 import { Resources } from '../../../core/Context/Resources';
 import { ANALYTICS_ERROR_TYPE, ANALYTICS_EVENT, ANALYTICS_SUBMIT_STR } from '../../../core/Analytics/constants';
 
-import type { AnalyticsInitialEvent, SendAnalyticsObject } from '../../../core/Analytics/types';
+import { AnalyticsInitialEvent, EnhancedAnalyticsObject } from '../../../core/Analytics/types';
 import type { CoreConfiguration, ICore, AdditionalDetailsData } from '../../../core/types';
 import type { ComponentMethodsRef, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
 import type { CheckoutSessionDetailsResponse, CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
@@ -170,7 +170,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      *  In some other cases e.g. 3DS2 components, this function is overridden to allow more specific analytics actions to be created
      */
 
-    protected submitAnalytics(analyticsObj: SendAnalyticsObject, uiElementProps?) {
+    protected submitAnalytics(analyticsObj: EnhancedAnalyticsObject) {
         /** Work out what the component's "type" is:
          * - first check for a dedicated "analyticsType" (currently only applies to custom-cards)
          * - otherwise, distinguish cards from non-cards: cards will use their static type property, everything else will use props.type
@@ -180,13 +180,13 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
                 analyticsObj.component = this.getComponent(analyticsObj);
             }
 
-            this.props.modules.analytics.sendAnalytics(this.getComponent(analyticsObj), analyticsObj, uiElementProps);
+            this.props.modules.analytics.sendAnalytics(analyticsObj);
         } catch (error) {
             console.warn('Failed to submit the analytics event. Error:', error);
         }
     }
 
-    private getComponent({ component }: SendAnalyticsObject): string {
+    private getComponent({ component }: EnhancedAnalyticsObject): string {
         if (component) {
             return component;
         }

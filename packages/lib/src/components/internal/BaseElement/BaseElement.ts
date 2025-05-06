@@ -7,7 +7,7 @@ import { ANALYTICS_EVENT, ANALYTICS_RENDERED_STR, NO_CHECKOUT_ATTEMPT_ID } from 
 import type { ICore } from '../../../core/types';
 import type { BaseElementProps, IBaseElement } from './types';
 import type { PaymentData } from '../../../types/global-types';
-import type { AnalyticsInitialEvent, SendAnalyticsObject } from '../../../core/Analytics/types';
+import { AnalyticsInitialEvent, EnhancedAnalyticsObject } from '../../../core/Analytics/types';
 import { off, on } from '../../../utils/listenerUtils';
 import { createNewAnalyticsEvent } from '../../../core/Analytics/utils';
 
@@ -76,7 +76,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
     }
 
     /* eslint-disable-next-line */
-    protected submitAnalytics(analyticsObj?: SendAnalyticsObject) {
+    protected submitAnalytics(analyticsObj?: EnhancedAnalyticsObject) {
         return null;
     }
 

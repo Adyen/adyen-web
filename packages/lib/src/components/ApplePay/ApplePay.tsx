@@ -24,7 +24,7 @@ import ApplePaySdkLoader from './services/ApplePaySdkLoader';
 import { detectInIframe } from '../../utils/detectInIframe';
 import { createNewAnalyticsEvent } from '../../core/Analytics/utils';
 
-import type { SendAnalyticsObject } from '../../core/Analytics/types';
+import { EnhancedAnalyticsObject } from '../../core/Analytics/types';
 import type { ApplePayConfiguration, ApplePayElementData, ApplePayPaymentOrderDetails, ApplePaySessionRequest } from './types';
 import type { ICore } from '../../core/types';
 import type { PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
@@ -105,7 +105,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         };
     }
 
-    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
+    protected submitAnalytics(analyticsObj: EnhancedAnalyticsObject) {
         // Analytics will need to know about this.props.isExpress & this.props.expressPage
         if (analyticsObj.type === ANALYTICS_RENDERED_STR) {
             const { isExpress, expressPage } = this.props;
@@ -120,7 +120,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
             }
         }
 
-        super.submitAnalytics({ ...analyticsObj }, this.props);
+        super.submitAnalytics({ ...analyticsObj });
     }
 
     public override submit = (): void => {

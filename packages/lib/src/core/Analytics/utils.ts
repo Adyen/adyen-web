@@ -1,9 +1,11 @@
-import { AnalyticsObject, CreateAnalyticsObject, CardConfigData, AnalyticsData } from './types';
-import { ANALYTICS_ACTION_STR, ANALYTICS_VALIDATION_ERROR_STR, errorCodeMapping, ALLOWED_ANALYTICS_DATA } from './constants';
+import { CardConfigData, AnalyticsData, CreateNewAnalyticsEventObject, EnhancedAnalyticsObject } from './types';
+// import { ANALYTICS_ACTION_STR, ANALYTICS_VALIDATION_ERROR_STR, errorCodeMapping, ALLOWED_ANALYTICS_DATA } from './constants';
+// import { errorCodeMapping, ALLOWED_ANALYTICS_DATA } from './constants';
+import { ALLOWED_ANALYTICS_DATA } from './constants';
 import uuid from '../../utils/uuid';
-import { digitsOnlyFormatter } from '../../utils/Formatters/formatters';
-import { ERROR_FIELD_REQUIRED, ERROR_INVALID_FORMAT_EXPECTS } from '../Errors/constants';
-import { DEFAULT_CHALLENGE_WINDOW_SIZE, THREEDS2_FULL } from '../../components/ThreeDS2/constants';
+// import { digitsOnlyFormatter } from '../../utils/Formatters/formatters';
+// import { ERROR_FIELD_REQUIRED, ERROR_INVALID_FORMAT_EXPECTS } from '../Errors/constants';
+import { DEFAULT_CHALLENGE_WINDOW_SIZE } from '../../components/ThreeDS2/constants';
 import { CardConfiguration } from '../../components/Card/types';
 import CardInputDefaultProps from '../../components/Card/components/CardInput/defaultProps';
 import { DEFAULT_CARD_GROUP_TYPES } from '../../components/internal/SecuredFields/lib/constants';
@@ -31,55 +33,55 @@ export const getUTCTimestamp = () => Date.now();
  *
  *  All objects can also have a "metadata" object of key-value pairs
  */
-export const createAnalyticsObject = (aObj: CreateAnalyticsObject): AnalyticsObject => ({
-    timestamp: String(getUTCTimestamp()),
-    component: aObj.component,
-    id: uuid(),
-    /** ERROR */
-    ...(aObj.event === 'error' && { code: aObj.code, errorType: aObj.errorType, message: aObj.message }), // error event
-    /** LOG */
-    ...(aObj.event === 'log' && { type: aObj.type, message: aObj.message }), // log event
-    ...(aObj.event === 'log' && (aObj.type === ANALYTICS_ACTION_STR || aObj.type === THREEDS2_FULL) && { subType: aObj.subtype }), // only added if we have a log event of Action type or ThreeDS2
-    ...(aObj.event === 'log' && aObj.type === THREEDS2_FULL && { result: aObj.result }), // only added if we have a log event of ThreeDS2 type
-    /** INFO */
-    ...(aObj.event === 'info' && { type: aObj.type, target: aObj.target }), // info event
-    ...(aObj.event === 'info' && aObj.issuer && { issuer: aObj.issuer }), // relates to issuerLists
-    ...(aObj.event === 'info' && { isExpress: aObj.isExpress, expressPage: aObj.expressPage }), // relates to Plugins & detecting Express PMs
-    ...(aObj.event === 'info' && aObj.isStoredPaymentMethod && { isStoredPaymentMethod: aObj.isStoredPaymentMethod, brand: aObj.brand }), // only added if we have an info event about a storedPM
-    ...(aObj.event === 'info' &&
-        aObj.type === ANALYTICS_VALIDATION_ERROR_STR && {
-            validationErrorCode: mapErrorCodesForAnalytics(aObj.validationErrorCode, aObj.target),
-            validationErrorMessage: aObj.validationErrorMessage
-        }), // only added if we have an info event describing a validation error
-    ...(aObj.configData && { configData: aObj.configData }),
-    /** All */
-    ...(aObj.metadata && { metadata: aObj.metadata })
-});
+// export const createAnalyticsObject = (aObj: CreateAnalyticsObject): AnalyticsObject => ({
+//     timestamp: String(getUTCTimestamp()),
+//     component: aObj.component,
+//     id: uuid(),
+//     /** ERROR */
+//     ...(aObj.event === 'error' && { code: aObj.code, errorType: aObj.errorType, message: aObj.message }), // error event
+//     /** LOG */
+//     ...(aObj.event === 'log' && { type: aObj.type, message: aObj.message }), // log event
+//     ...(aObj.event === 'log' && (aObj.type === ANALYTICS_ACTION_STR || aObj.type === THREEDS2_FULL) && { subType: aObj.subtype }), // only added if we have a log event of Action type or ThreeDS2
+//     ...(aObj.event === 'log' && aObj.type === THREEDS2_FULL && { result: aObj.result }), // only added if we have a log event of ThreeDS2 type
+//     /** INFO */
+//     ...(aObj.event === 'info' && { type: aObj.type, target: aObj.target }), // info event
+//     ...(aObj.event === 'info' && aObj.issuer && { issuer: aObj.issuer }), // relates to issuerLists
+//     ...(aObj.event === 'info' && { isExpress: aObj.isExpress, expressPage: aObj.expressPage }), // relates to Plugins & detecting Express PMs
+//     ...(aObj.event === 'info' && aObj.isStoredPaymentMethod && { isStoredPaymentMethod: aObj.isStoredPaymentMethod, brand: aObj.brand }), // only added if we have an info event about a storedPM
+//     ...(aObj.event === 'info' &&
+//         aObj.type === ANALYTICS_VALIDATION_ERROR_STR && {
+//             validationErrorCode: mapErrorCodesForAnalytics(aObj.validationErrorCode, aObj.target),
+//             validationErrorMessage: aObj.validationErrorMessage
+//         }), // only added if we have an info event describing a validation error
+//     ...(aObj.configData && { configData: aObj.configData }),
+//     /** All */
+//     ...(aObj.metadata && { metadata: aObj.metadata })
+// });
 
-export const createNewAnalyticsEvent = (aObj: any): AnalyticsObject => {
+export const createNewAnalyticsEvent = (aObj: CreateNewAnalyticsEventObject): EnhancedAnalyticsObject => {
     return {
         timestamp: String(getUTCTimestamp()),
         id: uuid(),
         ...aObj
-    };
+    } as EnhancedAnalyticsObject;
 };
 
-const mapErrorCodesForAnalytics = (errorCode: string, target: string) => {
-    // Some of the more generic error codes required combination with target to retrieve a specific code
-    if (errorCode === ERROR_FIELD_REQUIRED || errorCode === ERROR_INVALID_FORMAT_EXPECTS) {
-        return errorCodeMapping[`${errorCode}.${target}`] ?? errorCode;
-    }
-
-    let errCode = errorCodeMapping[errorCode] ?? errorCode;
-
-    // If errCode isn't now a number - then we just need to remove any non-digits
-    // since the correct error code is already contained within the string e.g. securedField related errors
-    if (isNaN(Number(errCode))) {
-        errCode = digitsOnlyFormatter(errCode);
-    }
-
-    return errCode;
-};
+// const mapErrorCodesForAnalytics = (errorCode: string, target: string) => {
+//     // Some of the more generic error codes required combination with target to retrieve a specific code
+//     if (errorCode === ERROR_FIELD_REQUIRED || errorCode === ERROR_INVALID_FORMAT_EXPECTS) {
+//         return errorCodeMapping[`${errorCode}.${target}`] ?? errorCode;
+//     }
+//
+//     let errCode = errorCodeMapping[errorCode] ?? errorCode;
+//
+//     // If errCode isn't now a number - then we just need to remove any non-digits
+//     // since the correct error code is already contained within the string e.g. securedField related errors
+//     if (isNaN(Number(errCode))) {
+//         errCode = digitsOnlyFormatter(errCode);
+//     }
+//
+//     return errCode;
+// };
 
 export const processAnalyticsData = (analyticsData: AnalyticsData): AnalyticsData => {
     return Object.keys(analyticsData).reduce((acc, prop) => {

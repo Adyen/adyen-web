@@ -246,7 +246,7 @@ class Core implements ICore {
                 message: `${component} action was handled by the SDK`,
                 component
             });
-            this.modules.analytics.sendAnalytics(component, aObj); //TODO - once refactor is complete, we won't need to send component (or even call analyticsPreProcessor)
+            this.modules.analytics.sendAnalytics(aObj);
 
             const props = {
                 ...this.getCorePropsForComponent(),

@@ -1,12 +1,11 @@
 import CollectId from '../Services/analytics/collect-id';
 import EventsQueue, { EventsQueueModule } from './EventsQueue';
-import { AnalyticsEvent, AnalyticsInitialEvent, AnalyticsObject, AnalyticsProps, CreateAnalyticsEventObject } from './types';
+import { AnalyticsEvent, AnalyticsInitialEvent, AnalyticsObject, AnalyticsProps, EnhancedAnalyticsObject } from './types';
 import { ANALYTIC_LEVEL, ANALYTICS_INFO_TIMER_INTERVAL, ANALYTICS_PATH, ANALYTICS_EVENT } from './constants';
 import { debounce } from '../../utils/debounce';
 import { AnalyticsModule } from '../../types/global-types';
-import { createAnalyticsObject, processAnalyticsData } from './utils';
-import { analyticsPreProcessor } from './analyticsPreProcessor';
-import { hasOwnProperty } from '../../utils/hasOwnProperty';
+import { processAnalyticsData } from './utils';
+import AdyenCheckoutError, { SDK_ERROR } from '../Errors/AdyenCheckoutError';
 
 let capturedCheckoutAttemptId = null;
 let sendEventsTimerId = null;
@@ -85,37 +84,80 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
         // Expose getter for testing purposes
         getEventsQueue: () => eventsQueue,
 
-        createAnalyticsEvent: ({ event, data }: CreateAnalyticsEventObject): AnalyticsObject => {
-            if (!props.enabled) return;
-
-            if (hasOwnProperty(data, 'timestamp')) {
-                console.log('### Analytics::createAnalyticsEvent:: NU way');
-                console.log('### Analytics::createAnalyticsEvent:: event=', event, ' data=', data);
-
-                // @ts-ignore experimental
-                addAnalyticsEvent(event, data);
-
-                // @ts-ignore experimental
-                return data;
-            }
-
-            const aObj: AnalyticsObject = createAnalyticsObject({
-                event,
-                ...data
-            });
-            console.log('### Analytics::createAnalyticsEvent:: event=', event, ' aObj=', aObj);
-
-            addAnalyticsEvent(event, aObj);
-
-            return aObj;
-        },
+        // createAnalyticsEvent: ({ event, data }: CreateAnalyticsEventObject): AnalyticsObject => {
+        //     if (!props.enabled) return;
+        //
+        //     // if (hasOwnProperty(data, 'timestamp')) {
+        //     console.log('### Analytics::createAnalyticsEvent:: NU way');
+        //     console.log('### Analytics::createAnalyticsEvent:: event=', event, ' data=', data);
+        //
+        //     addAnalyticsEvent(event, data);
+        //
+        //     return data;
+        //     // }
+        //
+        //     // const aObj: AnalyticsObject = createAnalyticsObject({
+        //     //     event,
+        //     //     ...data
+        //     // });
+        //     // console.log('### Analytics::createAnalyticsEvent:: event=', event, ' aObj=', aObj);
+        //     //
+        //     // addAnalyticsEvent(event, aObj);
+        //     //
+        //     // return aObj;
+        // },
 
         getEnabled: () => props.enabled,
 
-        sendAnalytics: null
+        // sendAnalytics: null,
+
+        sendAnalytics: (analyticsObj: EnhancedAnalyticsObject) => {
+            if (!props.enabled) return;
+
+            const { category } = analyticsObj;
+
+            if (category) {
+                const { category: event, ...restAnalyticsObject } = analyticsObj;
+
+                console.log('\n### anlModule.sendAnalytics::');
+                console.log('### anlModule.sendAnalytics:: NU way');
+                console.log('### anlModule.sendAnalytics:: event=', event, ' data=', restAnalyticsObject);
+
+                addAnalyticsEvent(event, restAnalyticsObject);
+
+                // anlModule.createAnalyticsEvent({
+                //     event,
+                //     data: restAnalyticsObject
+                // } as CreateAnalyticsEventObject);
+                // return;
+            } else {
+                throw new AdyenCheckoutError(SDK_ERROR, 'You are trying to create an analytics event without a category');
+            }
+        }
     };
 
-    anlModule.sendAnalytics = props.enabled === true ? analyticsPreProcessor(anlModule) : () => {};
+    // anlModule.sendAnalytics =
+    //     props.enabled === true
+    //         ? (analyticsObj: EnhancedAnalyticsObject) => {
+    //               const { category } = analyticsObj;
+    //
+    //               if (category) {
+    //                   const { category: event, ...restAnalyticsObject } = analyticsObj;
+    //
+    //                   console.log('\n###  anlModule.sendAnalytics::');
+    //
+    //                   addAnalyticsEvent(event, restAnalyticsObject);
+    //
+    //                   // anlModule.createAnalyticsEvent({
+    //                   //     event,
+    //                   //     data: restAnalyticsObject
+    //                   // } as CreateAnalyticsEventObject);
+    //                   // return;
+    //               } else {
+    //                   throw new AdyenCheckoutError(SDK_ERROR, 'You are trying to create an analytics event without a category');
+    //               }
+    //           }
+    //         : () => {};
 
     return anlModule;
 };

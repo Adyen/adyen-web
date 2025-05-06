@@ -13,7 +13,7 @@ import {
     Analytics3DS2Events,
     ANALYTICS_EVENT
 } from '../../core/Analytics/constants';
-import { SendAnalyticsObject } from '../../core/Analytics/types';
+import { EnhancedAnalyticsObject } from '../../core/Analytics/types';
 import { THREEDS2_ERROR, THREEDS2_FINGERPRINT, THREEDS2_FINGERPRINT_ERROR, THREEDS2_FULL } from './constants';
 import { ActionHandledReturnObject } from '../../types/global-types';
 import { createNewAnalyticsEvent } from '../../core/Analytics/utils';
@@ -28,7 +28,7 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
 
     private callSubmit3DS2Fingerprint = callSubmit3DS2Fingerprint.bind(this); // New 3DS2 flow
 
-    protected submitAnalytics = (aObj: SendAnalyticsObject) => {
+    protected submitAnalytics = (aObj: EnhancedAnalyticsObject) => {
         if (aObj.type === ANALYTICS_RENDERED_STR) return; // suppress the rendered event (it will have the same timestamp as the "threeDSMethodData sent" event)
 
         super.submitAnalytics(aObj);

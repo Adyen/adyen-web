@@ -10,7 +10,7 @@ import { getCardImageUrl, fieldTypeToSnakeCase } from '../internal/SecuredFields
 import { TxVariants } from '../tx-variants';
 import { CustomCardConfiguration } from './types';
 import { ANALYTICS_EVENT, ANALYTICS_FOCUS_STR, ANALYTICS_UNFOCUS_STR } from '../../core/Analytics/constants';
-import { SendAnalyticsObject } from '../../core/Analytics/types';
+import { EnhancedAnalyticsObject } from '../../core/Analytics/types';
 import { createNewAnalyticsEvent } from '../../core/Analytics/utils';
 
 export class CustomCard extends UIElement<CustomCardConfiguration> {
@@ -48,8 +48,8 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
         };
     }
 
-    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
-        super.submitAnalytics(analyticsObj, this.props);
+    protected submitAnalytics(analyticsObj: EnhancedAnalyticsObject) {
+        super.submitAnalytics(analyticsObj);
     }
 
     updateStyles(stylesObj) {

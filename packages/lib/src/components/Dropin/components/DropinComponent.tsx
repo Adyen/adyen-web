@@ -54,7 +54,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
                     component: 'dropin',
                     configData: this.analyticConfigData
                 });
-                this.props.modules?.analytics.sendAnalytics('dropin', aObj);
+                this.props.modules?.analytics.sendAnalytics(aObj);
             }
         );
 
@@ -141,7 +141,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
             target: 'otherpaymentmethod_button',
             component: 'dropin'
         });
-        this.props.modules?.analytics.sendAnalytics('dropin', aObj);
+        this.props.modules?.analytics.sendAnalytics(aObj);
     };
 
     closeActivePaymentMethod() {
