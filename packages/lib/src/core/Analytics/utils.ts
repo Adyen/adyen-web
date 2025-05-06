@@ -1,10 +1,8 @@
 import { CardConfigData, AnalyticsData, CreateNewAnalyticsEventObject, EnhancedAnalyticsObject } from './types';
-// import { ANALYTICS_ACTION_STR, ANALYTICS_VALIDATION_ERROR_STR, errorCodeMapping, ALLOWED_ANALYTICS_DATA } from './constants';
-// import { errorCodeMapping, ALLOWED_ANALYTICS_DATA } from './constants';
-import { ALLOWED_ANALYTICS_DATA } from './constants';
+import { errorCodeMapping, ALLOWED_ANALYTICS_DATA } from './constants';
 import uuid from '../../utils/uuid';
-// import { digitsOnlyFormatter } from '../../utils/Formatters/formatters';
-// import { ERROR_FIELD_REQUIRED, ERROR_INVALID_FORMAT_EXPECTS } from '../Errors/constants';
+import { digitsOnlyFormatter } from '../../utils/Formatters/formatters';
+import { ERROR_FIELD_REQUIRED, ERROR_INVALID_FORMAT_EXPECTS } from '../Errors/constants';
 import { DEFAULT_CHALLENGE_WINDOW_SIZE } from '../../components/ThreeDS2/constants';
 import { CardConfiguration } from '../../components/Card/types';
 import CardInputDefaultProps from '../../components/Card/components/CardInput/defaultProps';
@@ -66,22 +64,22 @@ export const createNewAnalyticsEvent = (aObj: CreateNewAnalyticsEventObject): En
     } as EnhancedAnalyticsObject;
 };
 
-// const mapErrorCodesForAnalytics = (errorCode: string, target: string) => {
-//     // Some of the more generic error codes required combination with target to retrieve a specific code
-//     if (errorCode === ERROR_FIELD_REQUIRED || errorCode === ERROR_INVALID_FORMAT_EXPECTS) {
-//         return errorCodeMapping[`${errorCode}.${target}`] ?? errorCode;
-//     }
-//
-//     let errCode = errorCodeMapping[errorCode] ?? errorCode;
-//
-//     // If errCode isn't now a number - then we just need to remove any non-digits
-//     // since the correct error code is already contained within the string e.g. securedField related errors
-//     if (isNaN(Number(errCode))) {
-//         errCode = digitsOnlyFormatter(errCode);
-//     }
-//
-//     return errCode;
-// };
+export const mapErrorCodesForAnalytics = (errorCode: string, target: string) => {
+    // Some of the more generic error codes required combination with target to retrieve a specific code
+    if (errorCode === ERROR_FIELD_REQUIRED || errorCode === ERROR_INVALID_FORMAT_EXPECTS) {
+        return errorCodeMapping[`${errorCode}.${target}`] ?? errorCode;
+    }
+
+    let errCode = errorCodeMapping[errorCode] ?? errorCode;
+
+    // If errCode isn't now a number - then we just need to remove any non-digits
+    // since the correct error code is already contained within the string e.g. securedField related errors
+    if (isNaN(Number(errCode))) {
+        errCode = digitsOnlyFormatter(errCode);
+    }
+
+    return errCode;
+};
 
 export const processAnalyticsData = (analyticsData: AnalyticsData): AnalyticsData => {
     return Object.keys(analyticsData).reduce((acc, prop) => {

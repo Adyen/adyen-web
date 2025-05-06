@@ -117,19 +117,13 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
             const { category } = analyticsObj;
 
             if (category) {
-                const { category: event, ...restAnalyticsObject } = analyticsObj;
+                const { category: event, ...data } = analyticsObj;
 
                 console.log('\n### anlModule.sendAnalytics::');
                 console.log('### anlModule.sendAnalytics:: NU way');
-                console.log('### anlModule.sendAnalytics:: event=', event, ' data=', restAnalyticsObject);
+                console.log('### anlModule.sendAnalytics:: event=', event, ' data=', data);
 
-                addAnalyticsEvent(event, restAnalyticsObject);
-
-                // anlModule.createAnalyticsEvent({
-                //     event,
-                //     data: restAnalyticsObject
-                // } as CreateAnalyticsEventObject);
-                // return;
+                addAnalyticsEvent(event, data);
             } else {
                 throw new AdyenCheckoutError(SDK_ERROR, 'You are trying to create an analytics event without a category');
             }
