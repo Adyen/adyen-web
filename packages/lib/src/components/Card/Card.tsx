@@ -33,7 +33,7 @@ import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from '../../core/Errors/Adye
 import { getErrorMessageFromCode } from '../../core/Errors/utils';
 import { SF_ErrorCodes } from '../../core/Errors/constants';
 import CardInputDefaultProps from './components/CardInput/defaultProps';
-import { createNewAnalyticsEvent, getCardConfigData, mapErrorCodesForAnalytics } from '../../core/Analytics/utils';
+import { createNewAnalyticsEvent, getCardConfigData } from '../../core/Analytics/utils';
 
 export class CardElement extends UIElement<CardConfiguration> {
     public static type = TxVariants.scheme;
@@ -269,14 +269,11 @@ export class CardElement extends UIElement<CardConfiguration> {
     };
 
     private onValidationErrorAnalytics = (obj: FieldErrorAnalyticsObject) => {
-        const target = fieldTypeToSnakeCase(obj.fieldType);
-
         const aObj = createNewAnalyticsEvent({
             category: ANALYTICS_EVENT.info,
             type: ANALYTICS_VALIDATION_ERROR_STR,
-            target,
-            // Some of the more generic error codes required combination with target to retrieve a specific code
-            validationErrorCode: mapErrorCodesForAnalytics(obj.errorCode, target),
+            target: fieldTypeToSnakeCase(obj.fieldType),
+            validationErrorCode: obj.errorCode,
             validationErrorMessage: getErrorMessageFromCode(obj.errorCode, SF_ErrorCodes)
         });
 
