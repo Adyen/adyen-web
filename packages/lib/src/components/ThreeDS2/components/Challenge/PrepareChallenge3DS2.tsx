@@ -93,7 +93,6 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
                 const errorCodeObject = createNewAnalyticsEvent({
                     category: ANALYTICS_EVENT.error,
-                    type: THREEDS2_ERROR,
                     code: Analytics3DS2Errors.TOKEN_IS_MISSING_ACSURL,
                     errorType: ANALYTICS_ERROR_TYPE.apiError,
                     message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing a valid acsURL property`
@@ -121,7 +120,6 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
                 const aObj = createNewAnalyticsEvent({
                     category: ANALYTICS_EVENT.error,
-                    type: THREEDS2_ERROR,
                     code: Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS,
                     errorType: ANALYTICS_ERROR_TYPE.apiError,
                     message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)`
@@ -199,7 +197,6 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
                 analyticsObject = createNewAnalyticsEvent({
                     category: ANALYTICS_EVENT.error,
-                    type: THREEDS2_ERROR,
                     message: (finalResObject as ErrorCodeObject).message,
                     ...errorTypeAndCode
                 });

@@ -6,15 +6,7 @@ import { FingerPrintData, ResultObject, ErrorCodeObject } from '../../types';
 import { ErrorObject } from '../../../../core/Errors/types';
 import { EnhancedAnalyticsObject } from '../../../../core/Analytics/types';
 import { isValidHttpUrl } from '../../../../utils/isValidURL';
-import {
-    THREEDS2_FULL,
-    THREEDS2_FINGERPRINT,
-    THREEDS2_FINGERPRINT_ERROR,
-    THREEDS2_NUM,
-    MISSING_TOKEN_IN_ACTION_MSG,
-    THREEDS2_ERROR,
-    TIMEOUT
-} from '../../constants';
+import { THREEDS2_FULL, THREEDS2_FINGERPRINT, THREEDS2_FINGERPRINT_ERROR, THREEDS2_NUM, MISSING_TOKEN_IN_ACTION_MSG, TIMEOUT } from '../../constants';
 import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, Analytics3DS2Events, ANALYTICS_EVENT } from '../../../../core/Analytics/constants';
 import { createNewAnalyticsEvent } from '../../../../core/Analytics/utils';
 
@@ -184,7 +176,6 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
 
                 analyticsObject = createNewAnalyticsEvent({
                     category: ANALYTICS_EVENT.error,
-                    type: THREEDS2_ERROR,
                     message: (finalResObject as ErrorCodeObject).message,
                     ...errorTypeAndCode
                 });
