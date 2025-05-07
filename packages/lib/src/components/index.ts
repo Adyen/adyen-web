@@ -1,3 +1,7 @@
+/**
+ * Exposing UI Components derived by UIElement
+ */
+
 /** Card */
 export { default as Card } from './Card';
 export { default as Bancontact } from './Card/Bancontact';
@@ -31,6 +35,7 @@ export { default as CashAppPay } from './CashAppPay';
 export { default as ClickToPay } from './ClickToPay';
 export { default as GooglePay } from './GooglePay';
 export { default as PayPal } from './PayPal';
+export { default as Fastlane } from './PayPalFastlane';
 
 /** Vouchers */
 export { default as Boleto } from './Boleto';

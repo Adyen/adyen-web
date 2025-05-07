@@ -23,6 +23,7 @@ describe('preparePaymentRequest', () => {
             countryCode: 'NL',
             companyName: 'Company Name',
             amount: { value: 115800, currency: 'EUR' },
+            shippingContactEditingMode: 'storePickup',
             supportedNetworks: ['amex', 'discover', 'masterCard', 'visa'],
             totalPriceLabel: 'Amount'
         });
@@ -30,6 +31,7 @@ describe('preparePaymentRequest', () => {
         expect(paymentRequest.total.amount).toBe('1158');
         expect(paymentRequest.total.label).toBe('Amount');
         expect(paymentRequest.countryCode).toBe('NL');
+        expect(paymentRequest.shippingContactEditingMode).toBe('storePickup');
         expect(paymentRequest.supportedNetworks.includes('visa')).toBe(true);
         expect(paymentRequest.currencyCode).toBe('EUR');
     });

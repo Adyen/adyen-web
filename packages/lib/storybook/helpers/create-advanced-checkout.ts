@@ -8,7 +8,16 @@ import type { PaymentMethodsResponse } from '../../src/types';
 import type { AdyenCheckoutProps, ShopperDetails } from '../stories/types';
 
 async function createAdvancedFlowCheckout(checkoutProps: AdyenCheckoutProps, shopperDetails?: ShopperDetails): Promise<Checkout> {
-    const { showPayButton, countryCode, shopperLocale, amount, paymentMethodsOverride, paymentsOptions, ...restCheckoutProps } = checkoutProps;
+    const {
+        showPayButton,
+        countryCode,
+        shopperLocale,
+        amount,
+        allowedPaymentTypes = [],
+        paymentMethodsOverride,
+        paymentsOptions,
+        ...restCheckoutProps
+    } = checkoutProps;
 
     const paymentAmount = {
         currency: getCurrency(countryCode),
@@ -24,15 +33,13 @@ async function createAdvancedFlowCheckout(checkoutProps: AdyenCheckoutProps, sho
     const paymentMethodsResponse = !paymentMethodsOverride
         ? _paymentMethodsResponse
         : {
-              storedPaymentMethods: [
-                  ...(_paymentMethodsResponse.storedPaymentMethods ? _paymentMethodsResponse.storedPaymentMethods : []),
-                  ...(paymentMethodsOverride.storedPaymentMethods ? paymentMethodsOverride.storedPaymentMethods : [])
-              ],
-              paymentMethods: [
-                  ...(_paymentMethodsResponse.paymentMethods ? _paymentMethodsResponse.paymentMethods : []),
-                  ...(paymentMethodsOverride.paymentMethods ? paymentMethodsOverride.paymentMethods : [])
-              ]
+              storedPaymentMethods: paymentMethodsOverride.storedPaymentMethods ? paymentMethodsOverride.storedPaymentMethods : [],
+              paymentMethods: paymentMethodsOverride.paymentMethods ? paymentMethodsOverride.paymentMethods : []
           };
+
+    if (allowedPaymentTypes.length > 0) {
+        paymentMethodsResponse.paymentMethods = paymentMethodsResponse.paymentMethods.filter(pm => allowedPaymentTypes.includes(pm.type));
+    }
 
     const checkout = await AdyenCheckout({
         clientKey: process.env.CLIENT_KEY,

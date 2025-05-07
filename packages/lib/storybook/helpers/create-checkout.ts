@@ -7,15 +7,18 @@ import type { GlobalStoryProps, ShopperDetails } from '../stories/types';
 async function createCheckout(checkoutConfig: GlobalStoryProps, shopperDetails?: ShopperDetails): Promise<Core> {
     const { useSessions, ...rest } = checkoutConfig;
 
-    const overidenPaymentMethodsAmount =
+    const overriddenPaymentMethodsAmount =
         (rest.paymentMethodsOverride?.paymentMethods?.length || 0) + (rest.paymentMethodsOverride?.storedPaymentMethods?.length || 0);
-    const hasPaymentOveride = overidenPaymentMethodsAmount > 0;
+    const hasPaymentOverridden = overriddenPaymentMethodsAmount > 0;
 
-    if (useSessions && !hasPaymentOveride) {
-        return await createSessionsCheckout(rest, shopperDetails);
-    } else if (useSessions && hasPaymentOveride) {
-        console.warn('🟢 Checkout Storybook: paymentMethodsOverride is defined while using Sessions, forcing advance flow.');
+    if (useSessions) {
+        if (!hasPaymentOverridden && !rest.allowedPaymentTypes) {
+            return await createSessionsCheckout(rest, shopperDetails);
+        } else {
+            console.warn('🟢 Checkout Storybook: Forcing advance flow.');
+        }
     }
+
     return await createAdvancedFlowCheckout(rest, shopperDetails);
 }
 
