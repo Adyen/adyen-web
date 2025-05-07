@@ -33,7 +33,8 @@ import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from '../../core/Errors/Adye
 import { getErrorMessageFromCode } from '../../core/Errors/utils';
 import { SF_ErrorCodes } from '../../core/Errors/constants';
 import CardInputDefaultProps from './components/CardInput/defaultProps';
-import { createNewAnalyticsEvent, getCardConfigData } from '../../core/Analytics/utils';
+import { createNewAnalyticsEvent } from '../../core/Analytics/utils';
+import { getCardConfigData } from './components/CardInput/utils';
 
 export class CardElement extends UIElement<CardConfiguration> {
     public static type = TxVariants.scheme;
