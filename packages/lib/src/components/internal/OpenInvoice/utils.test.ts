@@ -64,10 +64,8 @@ describe('OpenInvoice utils', () => {
         const i18n = global.i18n;
 
         const BILLING_ADDRESS = i18n.get('billingAddress');
-        const DELIVERY_ADDRESS = i18n.get('deliveryAddress');
         const STREET = i18n.get('street');
         const DATE_OF_BIRTH = i18n.get('dateOfBirth');
-        const RECIPIENT_FIRST_NAME = i18n.get('deliveryAddress.firstName');
         const ZIP_CODE = i18n.get('zipCode');
 
         const labelSpecs = {
