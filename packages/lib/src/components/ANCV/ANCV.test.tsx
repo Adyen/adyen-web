@@ -40,11 +40,14 @@ describe('ANCV', () => {
             render(ancv.render());
             await ancv.createOrder();
             await flushPromises();
-            expect(mockedSendAnalytics).toHaveBeenCalledWith(
-                'ancv',
-                { code, errorType: ANALYTICS_ERROR_TYPE.apiError, type: ANALYTICS_EVENT.error },
-                undefined
-            );
+            expect(mockedSendAnalytics).toHaveBeenCalledWith({
+                code,
+                component: 'ancv',
+                errorType: ANALYTICS_ERROR_TYPE.apiError,
+                category: ANALYTICS_EVENT.error,
+                timestamp: expect.any(String),
+                id: expect.any(String)
+            });
         });
     });
 });
