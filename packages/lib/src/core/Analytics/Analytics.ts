@@ -56,7 +56,7 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
         }
     };
 
-    const anlModule: AnalyticsModule = {
+    return {
         /**
          * Make "setup" call, to pass containerWidth, buildType, channel etc, and receive a checkoutAttemptId in return
          * @param initialEvent -
@@ -84,32 +84,7 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
         // Expose getter for testing purposes
         getEventsQueue: () => eventsQueue,
 
-        // createAnalyticsEvent: ({ event, data }: CreateAnalyticsEventObject): AnalyticsObject => {
-        //     if (!props.enabled) return;
-        //
-        //     // if (hasOwnProperty(data, 'timestamp')) {
-        //     console.log('### Analytics::createAnalyticsEvent:: NU way');
-        //     console.log('### Analytics::createAnalyticsEvent:: event=', event, ' data=', data);
-        //
-        //     addAnalyticsEvent(event, data);
-        //
-        //     return data;
-        //     // }
-        //
-        //     // const aObj: AnalyticsObject = createAnalyticsObject({
-        //     //     event,
-        //     //     ...data
-        //     // });
-        //     // console.log('### Analytics::createAnalyticsEvent:: event=', event, ' aObj=', aObj);
-        //     //
-        //     // addAnalyticsEvent(event, aObj);
-        //     //
-        //     // return aObj;
-        // },
-
         getEnabled: () => props.enabled,
-
-        // sendAnalytics: null,
 
         sendAnalytics: (analyticsObj: EnhancedAnalyticsObject) => {
             if (!props.enabled) return;
@@ -124,41 +99,15 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
                     data.validationErrorCode = mapErrorCodesForAnalytics(data.validationErrorCode, data.target);
                 }
 
-                console.log('\n### anlModule.sendAnalytics::');
-                console.log('### anlModule.sendAnalytics:: NU way');
-                console.log('### anlModule.sendAnalytics:: event=', event, ' data=', data);
+                console.log('\n### anlModule.sendAnalytics:: NU way');
+                console.log('### anlModule.sendAnalytics:: event=', event.toUpperCase(), ' data=', data);
 
                 addAnalyticsEvent(event, data);
             } else {
                 throw new AdyenCheckoutError(SDK_ERROR, 'You are trying to create an analytics event without a category');
             }
         }
-    };
-
-    // anlModule.sendAnalytics =
-    //     props.enabled === true
-    //         ? (analyticsObj: EnhancedAnalyticsObject) => {
-    //               const { category } = analyticsObj;
-    //
-    //               if (category) {
-    //                   const { category: event, ...restAnalyticsObject } = analyticsObj;
-    //
-    //                   console.log('\n###  anlModule.sendAnalytics::');
-    //
-    //                   addAnalyticsEvent(event, restAnalyticsObject);
-    //
-    //                   // anlModule.createAnalyticsEvent({
-    //                   //     event,
-    //                   //     data: restAnalyticsObject
-    //                   // } as CreateAnalyticsEventObject);
-    //                   // return;
-    //               } else {
-    //                   throw new AdyenCheckoutError(SDK_ERROR, 'You are trying to create an analytics event without a category');
-    //               }
-    //           }
-    //         : () => {};
-
-    return anlModule;
+    } as AnalyticsModule;
 };
 
 export default Analytics;
