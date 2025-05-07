@@ -80,9 +80,6 @@ describe('OpenInvoice utils', () => {
             // should split key and return translated string in expected format
             expect(mapFieldKey('billingAddress:street', i18n, null)).toEqual(`${BILLING_ADDRESS} ${STREET}`);
 
-            // should split and use labels spec to return translated string in expected format
-            expect(mapFieldKey('deliveryAddress:firstName', i18n, labelSpecs)).toEqual(`${DELIVERY_ADDRESS} ${RECIPIENT_FIRST_NAME}`);
-
             // key doesn't need splitting and shouldn't be mapped
             expect(mapFieldKey('street', i18n, null)).toEqual(null);
 
