@@ -1,5 +1,21 @@
 # @adyen/adyen-web
 
+## 6.13.0
+
+### Minor Changes
+
+- [Apple Pay] Add support for shippingContactEditingMode configuration value ([#3289](https://github.com/Adyen/adyen-web/pull/3289))
+
+    This configuration value is used to prevent a user from editing the shipping address. This is useful for store pickup checkout options.
+
+    https://developer.apple.com/documentation/applepayontheweb/applepaypaymentrequest/shippingcontacteditingmode
+
+- Added support for Fastlane payment method ([#3076](https://github.com/Adyen/adyen-web/pull/3076))
+
+### Patch Changes
+
+- GooglePay - isValid flag adjusted to always be true ([#3297](https://github.com/Adyen/adyen-web/pull/3297))
+
 ## 6.12.1
 
 ### Patch Changes
