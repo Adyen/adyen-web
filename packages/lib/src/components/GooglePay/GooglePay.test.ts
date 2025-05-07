@@ -525,19 +525,19 @@ describe('GooglePay', () => {
                 }
             });
 
-            analyticsModule.createAnalyticsEvent = jest.fn(() => null);
+            analyticsModule.sendAnalytics = jest.fn(() => null);
         });
 
         test('Analytics should produce an "info" event, of type "selected", for GooglePay as an instant PM', () => {
             gpay.submit();
 
-            expect(analyticsModule.createAnalyticsEvent).toHaveBeenCalledWith({
-                event: ANALYTICS_EVENT.info,
-                data: {
-                    component: gpay.props.type,
-                    type: ANALYTICS_SELECTED_STR,
-                    target: 'instant_payment_button'
-                }
+            expect(analyticsModule.sendAnalytics).toHaveBeenCalledWith({
+                category: ANALYTICS_EVENT.info,
+                component: gpay.props.type,
+                type: ANALYTICS_SELECTED_STR,
+                target: 'instant_payment_button',
+                timestamp: expect.any(String),
+                id: expect.any(String)
             });
         });
     });

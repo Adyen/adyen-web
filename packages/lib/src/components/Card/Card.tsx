@@ -223,7 +223,6 @@ export class CardElement extends UIElement<CardConfiguration> {
             }
         }
 
-        // super.submitAnalytics(analyticsObj, this.props);
         super.submitAnalytics(analyticsObj);
     }
 
