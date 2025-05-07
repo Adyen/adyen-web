@@ -1,5 +1,13 @@
-import { CardConfigData, AnalyticsData, CreateNewAnalyticsEventObject, EnhancedAnalyticsObject } from './types';
-import { errorCodeMapping, ALLOWED_ANALYTICS_DATA } from './constants';
+import {
+    CardConfigData,
+    AnalyticsData,
+    CreateNewAnalyticsEventObject,
+    EnhancedAnalyticsObject,
+    NewAnalyticsEventObjectInfo,
+    NewAnalyticsEventObjectLog,
+    NewAnalyticsEventObjectError
+} from './types';
+import { errorCodeMapping, ALLOWED_ANALYTICS_DATA, ANALYTICS_EVENT } from './constants';
 import uuid from '../../utils/uuid';
 import { digitsOnlyFormatter } from '../../utils/Formatters/formatters';
 import { ERROR_FIELD_REQUIRED, ERROR_INVALID_FORMAT_EXPECTS } from '../Errors/constants';
@@ -13,12 +21,79 @@ import { isConfigurationValid as isFastlaneComponentConfigValid } from '../../co
 const MAX_LENGTH = 128;
 export const getUTCTimestamp = () => Date.now();
 
+const INVALID_INFO_PROPS = ['code', 'errorType', 'message', 'result', 'subType'];
+const INVALID_ERROR_PROPS = [
+    'brand',
+    'configData',
+    'expressPage',
+    'isExpress',
+    'isStoredPaymentMethod',
+    'issuer',
+    'result',
+    'subType',
+    'target',
+    'type',
+    'validationErrorCode',
+    'validationErrorMessage'
+];
+const INVALID_LOG_PROPS = [
+    'brand',
+    'code',
+    'configData',
+    'errorType',
+    'expressPage',
+    'isExpress',
+    'isStoredPaymentMethod',
+    'issuer',
+    'validationErrorCode',
+    'validationErrorMessage'
+];
+
 export const createNewAnalyticsEvent = (aObj: CreateNewAnalyticsEventObject): EnhancedAnalyticsObject => {
+    /**
+     * Create warnings if props that aren't allowed have been defined for specific analytics event.
+     * If these props are defined the call to the analytics endpoint will fail, although this isn't a payment critical error, hence we only warn.
+     */
+    if (aObj.category === ANALYTICS_EVENT.info) {
+        const inValidProps = isValidEventObject(aObj, INVALID_INFO_PROPS);
+        if (inValidProps.length) {
+            console.warn('You are trying to create an Info analytics event with unsupported props. Namely: ', inValidProps);
+        }
+    }
+
+    if (aObj.category === ANALYTICS_EVENT.log) {
+        const inValidProps = isValidEventObject(aObj, INVALID_LOG_PROPS);
+        if (inValidProps.length) {
+            console.warn('You are trying to create an Log analytics event with unsupported props. Namely: ', inValidProps);
+        }
+    }
+
+    if (aObj.category === ANALYTICS_EVENT.error) {
+        const inValidProps = isValidEventObject(aObj, INVALID_ERROR_PROPS);
+        if (inValidProps.length) {
+            console.warn('You are trying to create an Error analytics event with unsupported props. Namely: ', inValidProps);
+        }
+    }
+
     return {
         timestamp: String(getUTCTimestamp()),
         id: uuid(),
         ...aObj
     } as EnhancedAnalyticsObject;
+};
+
+// Guard to ensure certain props are NOT set on an analytics event
+const isValidEventObject = (
+    obj: NewAnalyticsEventObjectInfo | NewAnalyticsEventObjectLog | NewAnalyticsEventObjectError,
+    inValidPropsToCheckArr: string[]
+): string[] => {
+    // If any of the invalid props are present, push them into a new array
+    return inValidPropsToCheckArr.reduce((acc, item) => {
+        if (obj[item] !== undefined) {
+            acc.push(item);
+        }
+        return acc;
+    }, []);
 };
 
 export const mapErrorCodesForAnalytics = (errorCode: string, target: string) => {

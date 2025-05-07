@@ -90,7 +90,6 @@ export interface AnalyticsObject {
     component: string;
     id: string;
     code?: string;
-    infoType?: string;
     errorType?: string;
     message?: string;
     type?: string;
@@ -108,7 +107,7 @@ export interface AnalyticsObject {
     configData?: Record<string, string | boolean>;
 }
 
-type NewAnalyticsEventObjectInfo = {
+export type NewAnalyticsEventObjectInfo = {
     category: AnalyticsEvent;
     type?: string;
     target?: string;
@@ -123,16 +122,17 @@ type NewAnalyticsEventObjectInfo = {
     component?: string;
 };
 
-type NewAnalyticsEventObjectLog = {
+export type NewAnalyticsEventObjectLog = {
     category: AnalyticsEvent;
     type?: string;
     message?: string;
     subType?: string;
     result?: string;
     component?: string;
+    target?: string; // is this ever used?
 };
 
-type NewAnalyticsEventObjectError = {
+export type NewAnalyticsEventObjectError = {
     category: AnalyticsEvent;
     code?: string;
     errorType?: string;
