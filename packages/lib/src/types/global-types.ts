@@ -383,7 +383,7 @@ export interface AnalyticsModule {
     getEventsQueue: () => EventsQueueModule;
     // createAnalyticsEvent: (a: CreateAnalyticsEventObject) => AnalyticsObject;
     getEnabled: () => boolean;
-    sendAnalytics: (analyticsObj: EnhancedAnalyticsObject) => void;
+    sendAnalytics: (analyticsObj: EnhancedAnalyticsObject) => boolean;
 }
 
 export type ComponentFocusObject = {

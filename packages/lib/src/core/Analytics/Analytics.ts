@@ -86,8 +86,8 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
 
         getEnabled: () => props.enabled,
 
-        sendAnalytics: (analyticsObj: EnhancedAnalyticsObject) => {
-            if (!props.enabled) return;
+        sendAnalytics: (analyticsObj: EnhancedAnalyticsObject): boolean => {
+            if (!props.enabled) return false;
 
             const { category } = analyticsObj;
 
@@ -106,6 +106,8 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
             } else {
                 throw new AdyenCheckoutError(SDK_ERROR, 'You are trying to create an analytics event without a category');
             }
+
+            return true;
         }
     } as AnalyticsModule;
 };
