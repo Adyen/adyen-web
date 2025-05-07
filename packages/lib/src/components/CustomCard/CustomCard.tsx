@@ -103,7 +103,7 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
     }
 
     private onFocus = (obj: CardFocusData) => {
-        const aObj = createNewAnalyticsEvent({
+        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
             category: ANALYTICS_EVENT.info,
             type: obj.focus === true ? ANALYTICS_FOCUS_STR : ANALYTICS_UNFOCUS_STR,
             target: fieldTypeToSnakeCase(obj.fieldType)

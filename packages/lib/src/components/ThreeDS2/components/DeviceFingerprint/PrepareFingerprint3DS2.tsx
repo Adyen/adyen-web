@@ -42,7 +42,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
     }
 
     public onFormSubmit = (msg: string) => {
-        const aObj = createNewAnalyticsEvent({
+        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
             category: ANALYTICS_EVENT.log,
             type: THREEDS2_FULL,
             message: msg,

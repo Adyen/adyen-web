@@ -171,7 +171,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
                     // ...create an analytics event  declaring that the component has been rendered
                     // (The dropin will do this itself from DropinComponent once the PM list has rendered)
                     if (!this.props.isDropin) {
-                        const aObj = createNewAnalyticsEvent({
+                        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
                             category: ANALYTICS_EVENT.info,
                             type: ANALYTICS_RENDERED_STR
                         });

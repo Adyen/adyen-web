@@ -83,7 +83,7 @@ export type AnalyticsConfig = {
 };
 
 /**
- * TODO
+ * start: Analytics event objects
  */
 export interface AnalyticsObject {
     timestamp: string;
@@ -108,12 +108,39 @@ export interface AnalyticsObject {
     configData?: Record<string, string | boolean>;
 }
 
-// TODO
-export type NewAnalyticsEventObject = Omit<AnalyticsObject, 'timestamp' | 'id' | 'component'> & { component?: string };
-
-export type CreateNewAnalyticsEventObject = NewAnalyticsEventObject & {
+type NewAnalyticsEventObjectInfo = {
     category: AnalyticsEvent;
+    type?: string;
+    target?: string;
+    issuer?: string;
+    isExpress?: boolean;
+    expressPage?: string;
+    isStoredPaymentMethod?: boolean;
+    brand?: string;
+    validationErrorCode?: string;
+    validationErrorMessage?: string;
+    configData?: Record<string, string | boolean>;
+    component?: string;
 };
+
+type NewAnalyticsEventObjectLog = {
+    category: AnalyticsEvent;
+    type?: string;
+    message?: string;
+    subType?: string;
+    result?: string;
+    component?: string;
+};
+
+type NewAnalyticsEventObjectError = {
+    category: AnalyticsEvent;
+    code?: string;
+    errorType?: string;
+    message?: string;
+    component?: string;
+};
+
+export type CreateNewAnalyticsEventObject = NewAnalyticsEventObjectInfo | NewAnalyticsEventObjectLog | NewAnalyticsEventObjectError;
 
 export type EnhancedAnalyticsObject = AnalyticsObject & {
     category: AnalyticsEvent;
@@ -124,7 +151,7 @@ export type CreateAnalyticsEventObject = AnalyticsObject & {
     data: AnalyticsObject;
 };
 /**
- * TODO
+ * end: Analytics event objects
  */
 
 export type EventQueueProps = Pick<AnalyticsConfig, 'analyticsContext' | 'clientKey'> & { analyticsPath: string };

@@ -11,6 +11,7 @@ import Button from '../../internal/Button';
 import type { DropinComponentProps, DropinComponentState, DropinStatus, DropinStatusProps, onOrderCancelData } from '../types';
 import UIElement from '../../internal/UIElement';
 import { createNewAnalyticsEvent } from '../../../core/Analytics/utils';
+import { EnhancedAnalyticsObject } from '../../../core/Analytics/types';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
@@ -48,7 +49,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
 
                 this.setStatus('ready');
 
-                const aObj = createNewAnalyticsEvent({
+                const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
                     category: ANALYTICS_EVENT.info,
                     type: ANALYTICS_RENDERED_STR,
                     component: 'dropin',
@@ -107,7 +108,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         if ((activePaymentMethod && activePaymentMethod._id !== paymentMethod._id) || !activePaymentMethod) {
             this.props.onSelect?.(paymentMethod);
 
-            const aObj = createNewAnalyticsEvent({
+            const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
                 category: ANALYTICS_EVENT.info,
                 type: ANALYTICS_RENDERED_STR
             });
@@ -135,7 +136,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
             showDefaultPaymentMethodList: true
         });
 
-        const aObj = createNewAnalyticsEvent({
+        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
             category: ANALYTICS_EVENT.info,
             type: InfoEventTypes.clicked,
             target: 'otherpaymentmethod_button',

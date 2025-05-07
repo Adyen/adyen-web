@@ -18,6 +18,7 @@ import useAutoFocus from '../../../utils/useAutoFocus';
 import { ANALYTICS_DOWNLOAD_STR, ANALYTICS_EVENT, ANALYTICS_QR_CODE_DOWNLOAD } from '../../../core/Analytics/constants';
 import { PREFIX } from '../Icon/constants';
 import { createNewAnalyticsEvent } from '../../../core/Analytics/utils';
+import { EnhancedAnalyticsObject } from '../../../core/Analytics/types';
 
 const QRCODE_URL = 'utility/v1/barcode.png?type=qrCode&data=';
 
@@ -262,7 +263,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                             onClick={(e, { complete }) => {
                                 copyToClipboard(this.props.qrCodeData);
 
-                                const aObj = createNewAnalyticsEvent({
+                                const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
                                     category: ANALYTICS_EVENT.info,
                                     type: ANALYTICS_DOWNLOAD_STR,
                                     target: ANALYTICS_QR_CODE_DOWNLOAD

@@ -35,7 +35,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
     };
 
     protected onActionHandled = (rtnObj: ActionHandledReturnObject) => {
-        const aObj = createNewAnalyticsEvent({
+        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
             category: ANALYTICS_EVENT.log,
             type: THREEDS2_FULL,
             message: rtnObj.actionDescription,
@@ -67,7 +67,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
 
             this.props.onError(new AdyenCheckoutError(API_ERROR, `No ${dataTypeForError} received. 3DS2 Challenge cannot proceed`));
 
-            const aObj = createNewAnalyticsEvent({
+            const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
                 category: ANALYTICS_EVENT.error,
                 code: Analytics3DS2Errors.ACTION_IS_MISSING_PAYMENT_DATA,
                 errorType: ANALYTICS_ERROR_TYPE.apiError,

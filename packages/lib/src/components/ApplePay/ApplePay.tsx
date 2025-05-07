@@ -126,7 +126,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
     public override submit = (): void => {
         // Analytics
         if (this.props.isInstantPayment) {
-            const aObj = createNewAnalyticsEvent({
+            const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
                 category: ANALYTICS_EVENT.info,
                 type: ANALYTICS_SELECTED_STR,
                 target: ANALYTICS_INSTANT_PAYMENT_BUTTON

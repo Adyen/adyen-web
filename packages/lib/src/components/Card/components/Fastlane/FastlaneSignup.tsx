@@ -58,7 +58,7 @@ const FastlaneSignup = ({
         const newValue = !isChecked;
         setIsChecked(newValue);
 
-        const aObj = createNewAnalyticsEvent({
+        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
             category: ANALYTICS_EVENT.info,
             type: InfoEventTypes.clicked,
             target: 'fastlane_signup_consent_toggle',
@@ -113,7 +113,7 @@ const FastlaneSignup = ({
         if (!isFastlaneConfigurationValid) {
             return;
         }
-        const aObj = createNewAnalyticsEvent({
+        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
             category: ANALYTICS_EVENT.info,
             type: InfoEventTypes.rendered,
             configData: {

@@ -249,7 +249,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     private async submitUsingAdvancedFlow(): Promise<CheckoutAdvancedFlowResponse> {
         return new Promise<CheckoutAdvancedFlowResponse>((resolve, reject) => {
             // Call analytics endpoint
-            const aObj = createNewAnalyticsEvent({
+            const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
                 category: ANALYTICS_EVENT.log,
                 type: ANALYTICS_SUBMIT_STR,
                 message: 'Shopper clicked pay'
@@ -268,7 +268,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     private async submitUsingSessionsFlow(data: PaymentData): Promise<CheckoutSessionPaymentResponse> {
-        const aObj = createNewAnalyticsEvent({
+        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
             category: ANALYTICS_EVENT.log,
             type: ANALYTICS_SUBMIT_STR,
             message: 'Shopper clicked pay'
@@ -310,7 +310,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.setElementStatus('ready');
 
         if (error.name === NETWORK_ERROR && error.options.code) {
-            const aObj = createNewAnalyticsEvent({
+            const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
                 category: ANALYTICS_EVENT.error,
                 errorType: ANALYTICS_ERROR_TYPE.apiError,
                 code: error.options.code

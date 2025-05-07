@@ -237,7 +237,7 @@ export class CardElement extends UIElement<CardConfiguration> {
     };
 
     private onFocus = (obj: ComponentFocusObject) => {
-        const aObj = createNewAnalyticsEvent({
+        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
             category: ANALYTICS_EVENT.info,
             type: ANALYTICS_FOCUS_STR,
             target: fieldTypeToSnakeCase(obj.fieldType)
@@ -253,7 +253,7 @@ export class CardElement extends UIElement<CardConfiguration> {
     };
 
     private onBlur = (obj: ComponentFocusObject) => {
-        const aObj = createNewAnalyticsEvent({
+        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
             category: ANALYTICS_EVENT.info,
             type: ANALYTICS_UNFOCUS_STR,
             target: fieldTypeToSnakeCase(obj.fieldType)
@@ -269,7 +269,7 @@ export class CardElement extends UIElement<CardConfiguration> {
     };
 
     private onValidationErrorAnalytics = (obj: FieldErrorAnalyticsObject) => {
-        const aObj = createNewAnalyticsEvent({
+        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
             category: ANALYTICS_EVENT.info,
             type: ANALYTICS_VALIDATION_ERROR_STR,
             target: fieldTypeToSnakeCase(obj.fieldType),

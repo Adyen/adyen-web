@@ -25,6 +25,7 @@ import type { CoreConfiguration, ICore, AdditionalDetailsData } from './types';
 import type { Translations } from '../language/types';
 import type { UIElementProps } from '../components/internal/UIElement/types';
 import { createNewAnalyticsEvent } from './Analytics/utils';
+import { EnhancedAnalyticsObject } from './Analytics/types';
 
 class Core implements ICore {
     public session?: Session;
@@ -239,7 +240,7 @@ class Core implements ICore {
             // 'threeDS2' OR 'qrCode', 'voucher', 'redirect', 'await', 'bankTransfer`
             const component = action.type === THREEDS2_FULL ? `${action.type}${action.subtype}` : action.paymentMethodType;
 
-            const aObj = createNewAnalyticsEvent({
+            const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
                 category: ANALYTICS_EVENT.log,
                 type: ANALYTICS_ACTION_STR,
                 subType: action.type,

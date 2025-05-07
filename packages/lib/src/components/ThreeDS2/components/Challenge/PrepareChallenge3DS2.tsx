@@ -45,7 +45,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
     }
 
     public onFormSubmit = (msg: string) => {
-        const aObj = createNewAnalyticsEvent({
+        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
             category: ANALYTICS_EVENT.log,
             type: THREEDS2_FULL,
             message: msg,
@@ -84,7 +84,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 );
 
                 // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
-                const errorCodeObject = createNewAnalyticsEvent({
+                const errorCodeObject: EnhancedAnalyticsObject = createNewAnalyticsEvent({
                     category: ANALYTICS_EVENT.error,
                     code: Analytics3DS2Errors.TOKEN_IS_MISSING_ACSURL,
                     errorType: ANALYTICS_ERROR_TYPE.apiError,
@@ -111,7 +111,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 );
 
                 // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
-                const aObj = createNewAnalyticsEvent({
+                const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
                     category: ANALYTICS_EVENT.error,
                     code: Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS,
                     errorType: ANALYTICS_ERROR_TYPE.apiError,
@@ -149,7 +149,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             );
 
             // Send error to analytics endpoint // TODO - check logs to see if the base64 decoding errors *ever* happen
-            const aObj = createNewAnalyticsEvent({
+            const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
                 category: ANALYTICS_EVENT.error,
                 code: errorCode,
                 errorType: ANALYTICS_ERROR_TYPE.apiError,
@@ -306,7 +306,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                             );
 
                             // Send error to analytics endpoint
-                            const aObj = createNewAnalyticsEvent({
+                            const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
                                 category: ANALYTICS_EVENT.error,
                                 code: Analytics3DS2Errors.CHALLENGE_RESOLVED_WITHOUT_RESULT_PROP,
                                 errorType: ANALYTICS_ERROR_TYPE.apiError,
