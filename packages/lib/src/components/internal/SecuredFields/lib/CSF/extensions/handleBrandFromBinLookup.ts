@@ -101,7 +101,9 @@ export default function handleBrandFromBinLookup(binLookupResponse: BinLookupRes
         const cardObj: SendBrandObject = {
             brand: passedBrand,
             enableLuhnCheck: binLookupResponse.supportedBrands[0].enableLuhnCheck !== false,
-            ...(binBrandObj?.panLength && { panLength: binBrandObj?.panLength })
+            // Only pass the panLength if a) we have one & b) we're not in a switching-between-dual-brands scenario
+            // (because it causes unnecessary callbacks from SF which uses panLength to trigger moving focus to the expiryDate field)
+            ...(binBrandObj?.panLength && !binLookupResponse.isDualBrandSelection && { panLength: binBrandObj?.panLength })
         };
         this.sendBrandToCardSF(cardObj);
 
