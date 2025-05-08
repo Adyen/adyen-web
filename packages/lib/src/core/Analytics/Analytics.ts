@@ -99,9 +99,6 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
                     data.validationErrorCode = mapErrorCodesForAnalytics(data.validationErrorCode, data.target);
                 }
 
-                console.log('\n### anlModule.sendAnalytics:: NU way');
-                console.log('### anlModule.sendAnalytics:: event=', event.toUpperCase(), ' data=', data);
-
                 addAnalyticsEvent(event, data);
             } else {
                 throw new AdyenCheckoutError(SDK_ERROR, 'You are trying to create an analytics event without a category');

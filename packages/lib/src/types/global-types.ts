@@ -381,7 +381,6 @@ export interface AnalyticsModule {
     setUp: (a: AnalyticsInitialEvent) => Promise<any>;
     getCheckoutAttemptId: () => string;
     getEventsQueue: () => EventsQueueModule;
-    // createAnalyticsEvent: (a: CreateAnalyticsEventObject) => AnalyticsObject;
     getEnabled: () => boolean;
     sendAnalytics: (analyticsObj: EnhancedAnalyticsObject) => boolean;
 }

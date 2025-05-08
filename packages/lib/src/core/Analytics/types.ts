@@ -146,10 +146,6 @@ export type EnhancedAnalyticsObject = AnalyticsObject & {
     category: AnalyticsEvent;
 };
 
-export type CreateAnalyticsEventObject = AnalyticsObject & {
-    event: AnalyticsEvent;
-    data: AnalyticsObject;
-};
 /**
  * end: Analytics event objects
  */
