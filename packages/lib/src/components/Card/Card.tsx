@@ -218,6 +218,7 @@ export class CardElement extends UIElement<CardConfiguration> {
                 }
             }
 
+            // Add config data
             if (type === ANALYTICS_RENDERED_STR) {
                 analyticsObj.configData = getCardConfigData(this.props);
             }

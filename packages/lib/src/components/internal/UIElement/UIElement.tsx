@@ -171,14 +171,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      */
 
     protected submitAnalytics(analyticsObj: EnhancedAnalyticsObject) {
-        /** Work out what the component's "type" is:
-         * - first check for a dedicated "analyticsType" (currently only applies to custom-cards)
-         * - otherwise, distinguish cards from non-cards: cards will use their static type property, everything else will use props.type
-         */
         try {
-            if (hasOwnProperty(analyticsObj, 'category')) {
-                analyticsObj.component = this.getComponent(analyticsObj);
-            }
+            analyticsObj.component = this.getComponent(analyticsObj);
 
             this.props.modules.analytics.sendAnalytics(analyticsObj);
         } catch (error) {
@@ -186,6 +180,10 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         }
     }
 
+    /** Work out what the component's "type" is:
+     * - first check for a dedicated "analyticsType" (currently only applies to custom-cards)
+     * - otherwise, distinguish cards from non-cards: cards will use their static type property, everything else will use props.type
+     */
     private getComponent({ component }: EnhancedAnalyticsObject): string {
         if (component) {
             return component;

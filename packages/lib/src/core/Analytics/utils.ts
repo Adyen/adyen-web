@@ -77,10 +77,10 @@ export const createNewAnalyticsEvent = (aObj: CreateNewAnalyticsEventObject): En
 // Guard to ensure certain props are NOT set on an analytics event
 const isValidEventObject = (
     obj: NewAnalyticsEventObjectInfo | NewAnalyticsEventObjectLog | NewAnalyticsEventObjectError,
-    inValidPropsToCheckArr: string[]
+    invalidPropsToCheckArr: string[]
 ): string[] => {
     // If any of the invalid props are present, push them into a new array
-    return inValidPropsToCheckArr.reduce((acc, item) => {
+    return invalidPropsToCheckArr.reduce((acc, item) => {
         if (obj[item] !== undefined) {
             acc.push(item);
         }
