@@ -30,6 +30,8 @@ import { ALL_SECURED_FIELDS } from '../internal/SecuredFields/lib/constants';
 import { EnhancedAnalyticsObject, FieldErrorAnalyticsObject } from '../../core/Analytics/types';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from '../../core/Errors/AdyenCheckoutError';
+import { getErrorMessageFromCode } from '../../core/Errors/utils';
+import { SF_ErrorCodes } from '../../core/Errors/constants';
 import CardInputDefaultProps from './components/CardInput/defaultProps';
 import { createNewAnalyticsEvent } from '../../core/Analytics/utils';
 import { getCardConfigData } from './components/CardInput/utils';
@@ -380,6 +382,7 @@ export class CardElement extends UIElement<CardConfiguration> {
                 resources={this.resources}
                 onFocus={this.onFocus}
                 onBlur={this.onBlur}
+                onValidationErrorAnalytics={this.onValidationErrorAnalytics}
                 onConfigSuccess={this.onConfigSuccess}
             />
         );
