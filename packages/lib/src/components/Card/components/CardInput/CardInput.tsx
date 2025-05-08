@@ -25,10 +25,15 @@ import { getArrayDifferences } from '../../../../utils/arrayUtils';
 import FormInstruction from '../../../internal/FormInstruction';
 import { AddressData } from '../../../../types/global-types';
 import { CardBrandData, CardFocusData } from '../../../internal/SecuredFields/lib/types';
-import { FieldErrorAnalyticsObject } from '../../../../core/Analytics/types';
+import { EnhancedAnalyticsObject } from '../../../../core/Analytics/types';
 import { PREFIX } from '../../../internal/Icon/constants';
 import useSRPanelForCardInputErrors from './useSRPanelForCardInputErrors';
 import FastlaneSignup from '../Fastlane/FastlaneSignup';
+import { createNewAnalyticsEvent } from '../../../../core/Analytics/utils';
+import { ANALYTICS_EVENT, ANALYTICS_VALIDATION_ERROR_STR } from '../../../../core/Analytics/constants';
+import { fieldTypeToSnakeCase } from '../../../internal/SecuredFields/utils';
+import { getErrorMessageFromCode } from '../../../../core/Errors/utils';
+import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 
 const CardInput = (props: CardInputProps) => {
     const sfp = useRef(null);
@@ -359,12 +364,15 @@ const CardInput = (props: CardInputProps) => {
     if (currentErrorsSortedByLayout) {
         const newErrors = getArrayDifferences<SortedErrorObject, string>(currentErrorsSortedByLayout, previousSortedErrors, 'field');
         newErrors?.forEach(errorItem => {
-            const aObj: FieldErrorAnalyticsObject = {
-                fieldType: errorItem.field,
-                errorCode: errorItem.errorCode
-            };
+            const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
+                category: ANALYTICS_EVENT.info,
+                type: ANALYTICS_VALIDATION_ERROR_STR,
+                target: fieldTypeToSnakeCase(errorItem.field),
+                validationErrorCode: errorItem.errorCode,
+                validationErrorMessage: getErrorMessageFromCode(errorItem.errorCode, SF_ErrorCodes)
+            });
 
-            props.onValidationErrorAnalytics(aObj);
+            props.onSubmitAnalytics(aObj);
         });
     }
 
