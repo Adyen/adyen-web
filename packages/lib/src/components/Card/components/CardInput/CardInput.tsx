@@ -6,7 +6,7 @@ import defaultProps from './defaultProps';
 import './CardInput.scss';
 import { AddressModeOptions, CardInputDataState, CardInputErrorState, CardInputProps, CardInputRef, CardInputValidState } from './types';
 import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER } from '../../../internal/SecuredFields/lib/constants';
-import { BinLookupResponse, DualBrandingAnalyticsObject } from '../../types';
+import { BinLookupResponse } from '../../types';
 import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } from './validate';
 import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';
 import useForm from '../../../../utils/useForm';
@@ -25,15 +25,21 @@ import { getArrayDifferences } from '../../../../utils/arrayUtils';
 import FormInstruction from '../../../internal/FormInstruction';
 import { AddressData } from '../../../../types/global-types';
 import { CardBrandData, CardFocusData } from '../../../internal/SecuredFields/lib/types';
-import { FieldErrorAnalyticsObject } from '../../../../core/Analytics/types';
+import { EnhancedAnalyticsObject, FieldErrorAnalyticsObject } from '../../../../core/Analytics/types';
 import { PREFIX } from '../../../internal/Icon/constants';
 import useSRPanelForCardInputErrors from './useSRPanelForCardInputErrors';
 import FastlaneSignup from '../Fastlane/FastlaneSignup';
-import { ANALYTICS_DISPLAYED_STR, ANALYTICS_SELECTED_STR, ANALYTICS_VALIDATION_ERROR_STR } from '../../../../core/Analytics/constants';
-import { fieldTypeToSnakeCase } from '../../../internal/SecuredFields/utils';
-import { getErrorMessageFromCode } from '../../../../core/Errors/utils';
-import { SF_ErrorCodes } from '../../../../core/Errors/constants';
+import {
+    ANALYTICS_DISPLAYED_STR,
+    ANALYTICS_EVENT,
+    ANALYTICS_SELECTED_STR
+    // ANALYTICS_VALIDATION_ERROR_STR
+} from '../../../../core/Analytics/constants';
+// import { fieldTypeToSnakeCase } from '../../../internal/SecuredFields/utils';
+// import { getErrorMessageFromCode } from '../../../../core/Errors/utils';
+// import { SF_ErrorCodes } from '../../../../core/Errors/constants';
 import { usePrevious } from '../../../../utils/hookUtils';
+import { createNewAnalyticsEvent } from '../../../../core/Analytics/utils';
 
 const DUAL_BRAND_BUTTON = 'dual_brand_button';
 
@@ -371,12 +377,7 @@ const CardInput = (props: CardInputProps) => {
                 errorCode: errorItem.errorCode
             };
 
-            props.onSubmitAnalytics({
-                type: ANALYTICS_VALIDATION_ERROR_STR,
-                target: fieldTypeToSnakeCase(aObj.fieldType),
-                validationErrorCode: aObj.errorCode,
-                validationErrorMessage: getErrorMessageFromCode(aObj.errorCode, SF_ErrorCodes)
-            });
+            props.onValidationErrorAnalytics(aObj);
         });
     }
 
@@ -420,14 +421,15 @@ const CardInput = (props: CardInputProps) => {
             const brand = dualBrandsArr[0]; // initially selected brand
             const dualBrands = dualBrandsArr.toString();
 
-            const analyticsObj: DualBrandingAnalyticsObject = {
+            const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
+                category: ANALYTICS_EVENT.info,
                 type: ANALYTICS_DISPLAYED_STR,
                 target: DUAL_BRAND_BUTTON,
                 brand,
                 configData: { dualBrands }
-            };
+            });
 
-            props.onSubmitAnalytics(analyticsObj);
+            props.onSubmitAnalytics(aObj);
         }
     }, [dualBrandSelectElements]);
 
@@ -438,13 +440,14 @@ const CardInput = (props: CardInputProps) => {
      */
     useEffect(() => {
         if (previousSelectedBrandValue?.length && selectedBrandValue?.length) {
-            const analyticsObj: DualBrandingAnalyticsObject = {
+            const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
+                category: ANALYTICS_EVENT.info,
                 type: ANALYTICS_SELECTED_STR,
                 target: DUAL_BRAND_BUTTON,
                 brand: selectedBrandValue
-            };
+            });
 
-            props.onSubmitAnalytics(analyticsObj);
+            props.onSubmitAnalytics(aObj);
         }
     }, [selectedBrandValue]);
 
