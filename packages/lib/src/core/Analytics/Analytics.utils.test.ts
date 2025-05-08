@@ -1,4 +1,4 @@
-import { getCardConfigData } from './utils';
+import { getCardConfigData } from '../../components/Card/components/CardInput/utils';
 import CardDefaultProps from '../../components/Card/components/CardInput/defaultProps';
 import { DEFAULT_CHALLENGE_WINDOW_SIZE } from '../../components/ThreeDS2/constants';
 import { DEFAULT_CARD_GROUP_TYPES } from '../../components/internal/SecuredFields/lib/constants';

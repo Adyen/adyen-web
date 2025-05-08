@@ -168,11 +168,14 @@ describe('Giftcard', () => {
             giftcard.setState({ isValid: true });
             giftcard.balanceCheck();
             await flushPromises();
-            expect(mockedSendAnalytics).toHaveBeenCalledWith(
-                'giftcard',
-                { code, errorType: ANALYTICS_ERROR_TYPE.apiError, type: ANALYTICS_EVENT.error },
-                undefined
-            );
+            expect(mockedSendAnalytics).toHaveBeenCalledWith({
+                category: ANALYTICS_EVENT.error,
+                code,
+                component: 'giftcard',
+                errorType: ANALYTICS_ERROR_TYPE.apiError,
+                timestamp: expect.any(String),
+                id: expect.any(String)
+            });
         });
 
         test('if there is enough balance for checkout we should require confirmation', async () => {

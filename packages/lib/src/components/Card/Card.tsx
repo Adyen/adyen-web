@@ -18,12 +18,21 @@ import type { PayButtonFunctionProps, UIElementStatus } from '../internal/UIElem
 import UIElement from '../internal/UIElement';
 import PayButton from '../internal/PayButton';
 import type { ICore } from '../../core/types';
-import { ANALYTICS_FOCUS_STR, ANALYTICS_CONFIGURED_STR, ANALYTICS_UNFOCUS_STR, ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
+import {
+    ANALYTICS_FOCUS_STR,
+    ANALYTICS_CONFIGURED_STR,
+    ANALYTICS_UNFOCUS_STR,
+    ANALYTICS_VALIDATION_ERROR_STR,
+    ANALYTICS_RENDERED_STR,
+    ANALYTICS_EVENT
+} from '../../core/Analytics/constants';
 import { ALL_SECURED_FIELDS } from '../internal/SecuredFields/lib/constants';
-import { SendAnalyticsObject } from '../../core/Analytics/types';
+import { EnhancedAnalyticsObject, FieldErrorAnalyticsObject } from '../../core/Analytics/types';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from '../../core/Errors/AdyenCheckoutError';
 import CardInputDefaultProps from './components/CardInput/defaultProps';
+import { createNewAnalyticsEvent } from '../../core/Analytics/utils';
+import { getCardConfigData } from './components/CardInput/utils';
 
 export class CardElement extends UIElement<CardConfiguration> {
     public static type = TxVariants.scheme;
@@ -195,7 +204,7 @@ export class CardElement extends UIElement<CardConfiguration> {
         }
     }
 
-    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
+    protected submitAnalytics(analyticsObj: EnhancedAnalyticsObject) {
         const { type } = analyticsObj;
 
         if (type === ANALYTICS_RENDERED_STR || type === ANALYTICS_CONFIGURED_STR) {
@@ -206,24 +215,33 @@ export class CardElement extends UIElement<CardConfiguration> {
                     analyticsObj.brand = this.props.brand;
                 }
             }
+
+            // Add config data
+            if (type === ANALYTICS_RENDERED_STR) {
+                analyticsObj.configData = getCardConfigData(this.props);
+            }
         }
 
-        super.submitAnalytics(analyticsObj, this.props);
+        super.submitAnalytics(analyticsObj);
     }
 
     private onConfigSuccess = (obj: CardConfigSuccessData) => {
-        this.submitAnalytics({
+        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
+            category: ANALYTICS_EVENT.info,
             type: ANALYTICS_CONFIGURED_STR
         });
+        this.submitAnalytics(aObj);
 
         this.props.onConfigSuccess?.(obj);
     };
 
     private onFocus = (obj: ComponentFocusObject) => {
-        this.submitAnalytics({
+        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
+            category: ANALYTICS_EVENT.info,
             type: ANALYTICS_FOCUS_STR,
             target: fieldTypeToSnakeCase(obj.fieldType)
         });
+        this.submitAnalytics(aObj);
 
         // Call merchant defined callback
         if (ALL_SECURED_FIELDS.includes(obj.fieldType)) {
@@ -234,10 +252,12 @@ export class CardElement extends UIElement<CardConfiguration> {
     };
 
     private onBlur = (obj: ComponentFocusObject) => {
-        this.submitAnalytics({
+        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
+            category: ANALYTICS_EVENT.info,
             type: ANALYTICS_UNFOCUS_STR,
             target: fieldTypeToSnakeCase(obj.fieldType)
         });
+        this.submitAnalytics(aObj);
 
         // Call merchant defined callback
         if (ALL_SECURED_FIELDS.includes(obj.fieldType)) {
@@ -245,6 +265,18 @@ export class CardElement extends UIElement<CardConfiguration> {
         } else {
             this.props.onBlur?.(obj);
         }
+    };
+
+    private onValidationErrorAnalytics = (obj: FieldErrorAnalyticsObject) => {
+        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
+            category: ANALYTICS_EVENT.info,
+            type: ANALYTICS_VALIDATION_ERROR_STR,
+            target: fieldTypeToSnakeCase(obj.fieldType),
+            validationErrorCode: obj.errorCode,
+            validationErrorMessage: getErrorMessageFromCode(obj.errorCode, SF_ErrorCodes)
+        });
+
+        this.submitAnalytics(aObj);
     };
 
     public onBinValue = triggerBinLookUp(this);
