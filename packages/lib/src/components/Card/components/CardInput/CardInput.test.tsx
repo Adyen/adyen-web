@@ -149,21 +149,15 @@ describe('CardInput > holderName', () => {
             </CoreProvider>
         );
 
-        const select = screen.getByRole('form');
-
         /* eslint-disable testing-library/no-node-access */
-        const children = select.children;
+        const form = screen.getByRole('form');
 
-        const positionDiv = children.item(1);
+        const children = form.children;
 
-        const positionDivChildren = positionDiv.children;
+        const wrappingDiv = children.item(1); // children.item(0) is the spinner
 
-        const loadingWrapper = positionDivChildren.item(1); // children.item(0) is the spinner
-
-        const loadingWrapperChildren = loadingWrapper.children;
-
-        // First visible element is the Card number
-        const firstFormElement = loadingWrapperChildren.item(0);
+        // First visible element is the Holder name
+        const firstFormElement = wrappingDiv.children.item(0);
 
         const firstFormElementChildren = firstFormElement.children;
 
@@ -185,21 +179,15 @@ describe('CardInput > holderName', () => {
             </CoreProvider>
         );
 
-        const select = screen.getByRole('form');
+        const form = screen.getByRole('form');
 
         /* eslint-disable testing-library/no-node-access */
-        const children = select.children;
+        const children = form.children;
 
-        const positionDiv = children.item(1);
-
-        const positionDivChildren = positionDiv.children;
-
-        const loadingWrapper = positionDivChildren.item(1); // children.item(0) is the spinner
-
-        const loadingWrapperChildren = loadingWrapper.children;
+        const wrappingDiv = children.item(1); // children.item(0) is the spinner
 
         // First visible element is the Holder name
-        const firstFormElement = loadingWrapperChildren.item(0);
+        const firstFormElement = wrappingDiv.children.item(0);
 
         const firstFormElementChildren = firstFormElement.children;
 
