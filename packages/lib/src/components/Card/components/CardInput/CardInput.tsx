@@ -361,20 +361,22 @@ const CardInput = (props: CardInputProps) => {
     });
 
     // Analytics: ValidationErrors
-    if (currentErrorsSortedByLayout) {
-        const newErrors = getArrayDifferences<SortedErrorObject, string>(currentErrorsSortedByLayout, previousSortedErrors, 'field');
-        newErrors?.forEach(errorItem => {
-            const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
-                category: ANALYTICS_EVENT.info,
-                type: ANALYTICS_VALIDATION_ERROR_STR,
-                target: fieldTypeToSnakeCase(errorItem.field),
-                validationErrorCode: errorItem.errorCode,
-                validationErrorMessage: getErrorMessageFromCode(errorItem.errorCode, SF_ErrorCodes)
-            });
+    useEffect(() => {
+        if (currentErrorsSortedByLayout) {
+            const newErrors = getArrayDifferences<SortedErrorObject, string>(currentErrorsSortedByLayout, previousSortedErrors, 'field');
 
-            props.onSubmitAnalytics(aObj);
-        });
-    }
+            newErrors?.forEach(errorItem => {
+                const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
+                    category: ANALYTICS_EVENT.info,
+                    type: ANALYTICS_VALIDATION_ERROR_STR,
+                    target: fieldTypeToSnakeCase(errorItem.field),
+                    validationErrorCode: errorItem.errorCode,
+                    validationErrorMessage: getErrorMessageFromCode(errorItem.errorCode, SF_ErrorCodes)
+                });
+                props.onSubmitAnalytics(aObj);
+            });
+        }
+    }, [currentErrorsSortedByLayout]);
 
     /**
      * Main 'componentDidUpdate' handler
