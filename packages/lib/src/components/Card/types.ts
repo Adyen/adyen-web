@@ -485,6 +485,7 @@ export interface CardElementData {
 
 export interface BrandObject {
     brand: string;
+    localeBrand?: string;
     cvcPolicy: CVCPolicyType;
     enableLuhnCheck: boolean;
     showExpiryDate?: boolean;

@@ -1,11 +1,11 @@
 import CollectId from '../Services/analytics/collect-id';
 import EventsQueue, { EventsQueueModule } from './EventsQueue';
-import { AnalyticsEvent, AnalyticsInitialEvent, AnalyticsObject, AnalyticsProps, CreateAnalyticsEventObject } from './types';
-import { ANALYTIC_LEVEL, ANALYTICS_INFO_TIMER_INTERVAL, ANALYTICS_PATH, ANALYTICS_EVENT } from './constants';
+import { AnalyticsEvent, AnalyticsInitialEvent, AnalyticsObject, AnalyticsProps, EnhancedAnalyticsObject } from './types';
+import { ANALYTIC_LEVEL, ANALYTICS_INFO_TIMER_INTERVAL, ANALYTICS_PATH, ANALYTICS_EVENT, ANALYTICS_VALIDATION_ERROR_STR } from './constants';
 import { debounce } from '../../utils/debounce';
 import { AnalyticsModule } from '../../types/global-types';
-import { createAnalyticsObject, processAnalyticsData } from './utils';
-import { analyticsPreProcessor } from './analyticsPreProcessor';
+import { mapErrorCodesForAnalytics, processAnalyticsData } from './utils';
+import AdyenCheckoutError, { SDK_ERROR } from '../Errors/AdyenCheckoutError';
 
 let capturedCheckoutAttemptId = null;
 let sendEventsTimerId = null;
@@ -56,7 +56,7 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
         }
     };
 
-    const anlModule: AnalyticsModule = {
+    return {
         /**
          * Make "setup" call, to pass containerWidth, buildType, channel etc, and receive a checkoutAttemptId in return
          * @param initialEvent -
@@ -84,28 +84,29 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
         // Expose getter for testing purposes
         getEventsQueue: () => eventsQueue,
 
-        createAnalyticsEvent: ({ event, data }: CreateAnalyticsEventObject): AnalyticsObject => {
-            if (!props.enabled) return;
-
-            const aObj: AnalyticsObject = createAnalyticsObject({
-                event,
-                ...data
-            });
-            // console.log('### Analytics::createAnalyticsEvent:: event=', event, ' aObj=', aObj);
-
-            addAnalyticsEvent(event, aObj);
-
-            return aObj;
-        },
-
         getEnabled: () => props.enabled,
 
-        sendAnalytics: null
-    };
+        sendAnalytics: (analyticsObj: EnhancedAnalyticsObject): boolean => {
+            if (!props.enabled) return false;
 
-    anlModule.sendAnalytics = props.enabled === true ? analyticsPreProcessor(anlModule) : () => {};
+            const { category } = analyticsObj;
 
-    return anlModule;
+            if (category) {
+                const { category: event, ...data } = analyticsObj;
+
+                // Some of the more generic error codes required combination with target to retrieve a specific code
+                if (data.type === ANALYTICS_VALIDATION_ERROR_STR) {
+                    data.validationErrorCode = mapErrorCodesForAnalytics(data.validationErrorCode, data.target);
+                }
+
+                addAnalyticsEvent(event, data);
+            } else {
+                throw new AdyenCheckoutError(SDK_ERROR, 'You are trying to create an analytics event without a category');
+            }
+
+            return true;
+        }
+    } as AnalyticsModule;
 };
 
 export default Analytics;

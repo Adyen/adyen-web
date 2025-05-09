@@ -3,7 +3,7 @@ import { h } from 'preact';
 import IssuerList from './IssuerList';
 import PayButton from '../PayButton';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
-import { ANALYTICS_FEATURED_ISSUER, ANALYTICS_LIST, ANALYTICS_SELECTED_STR } from '../../../core/Analytics/constants';
+import { ANALYTICS_EVENT, ANALYTICS_FEATURED_ISSUER, ANALYTICS_LIST, ANALYTICS_SELECTED_STR } from '../../../core/Analytics/constants';
 
 describe('IssuerList', () => {
     test('Accepts Items as props', () => {
@@ -181,9 +181,12 @@ describe('IssuerList: calls that generate analytics should produce objects with 
         wrapper.find('.adyen-checkout__issuer-button-group button').at(1).simulate('click');
 
         expect(onSubmitAnalytics).toHaveBeenCalledWith({
+            category: ANALYTICS_EVENT.info,
             type: ANALYTICS_SELECTED_STR,
             target: ANALYTICS_FEATURED_ISSUER,
-            issuer: 'Issuer 3'
+            issuer: 'Issuer 3',
+            timestamp: expect.any(String),
+            id: expect.any(String)
         });
     });
 
@@ -212,9 +215,12 @@ describe('IssuerList: calls that generate analytics should produce objects with 
         highlightedIssuerDropdownItem.simulate('click');
 
         expect(onSubmitAnalytics).toHaveBeenCalledWith({
+            category: ANALYTICS_EVENT.info,
             type: ANALYTICS_SELECTED_STR,
             target: ANALYTICS_LIST,
-            issuer: 'Issuer 2'
+            issuer: 'Issuer 2',
+            timestamp: expect.any(String),
+            id: expect.any(String)
         });
     });
 });
