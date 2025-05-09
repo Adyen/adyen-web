@@ -11,10 +11,8 @@ import {
     ANALYTICS_FOCUS_STR,
     ANALYTICS_RENDERED_STR,
     ANALYTICS_SUBMIT_STR,
-    ANALYTICS_UNFOCUS_STR,
-    ANALYTICS_VALIDATION_ERROR_STR
+    ANALYTICS_UNFOCUS_STR
 } from '../../core/Analytics/constants';
-import { SF_ErrorCodes } from '../../core/Errors/constants';
 import { EnhancedAnalyticsObject } from '../../core/Analytics/types';
 import { createNewAnalyticsEvent } from '../../core/Analytics/utils';
 
@@ -152,24 +150,6 @@ describe('Card: calls that generate "info" analytics should produce objects with
             component: card.constructor['type'],
             type: ANALYTICS_UNFOCUS_STR,
             target: 'card_number',
-            timestamp: expect.any(String),
-            id: expect.any(String)
-        });
-    });
-
-    test('Analytics should produce an "info" event, of type "validationError", with the expected properties', () => {
-        card.onValidationErrorAnalytics({
-            fieldType: 'encryptedCardNumber',
-            errorCode: SF_ErrorCodes.ERROR_MSG_INCORRECTLY_FILLED_PAN
-        });
-
-        expect(analyticsModule.sendAnalytics).toHaveBeenCalledWith({
-            category: ANALYTICS_EVENT.info,
-            component: card.constructor['type'],
-            type: ANALYTICS_VALIDATION_ERROR_STR,
-            target: 'card_number',
-            validationErrorCode: SF_ErrorCodes.ERROR_MSG_INCORRECTLY_FILLED_PAN,
-            validationErrorMessage: 'error-msg-incorrectly-filled-pan',
             timestamp: expect.any(String),
             id: expect.any(String)
         });

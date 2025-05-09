@@ -152,11 +152,6 @@ export type EnhancedAnalyticsObject = AnalyticsObject & {
 
 export type EventQueueProps = Pick<AnalyticsConfig, 'analyticsContext' | 'clientKey'> & { analyticsPath: string };
 
-export type FieldErrorAnalyticsObject = {
-    fieldType: string;
-    errorCode: string;
-};
-
 export type ConfigData = CardConfigData; // TODO extend in future as we get Dropin & Checkout related config data
 
 export type CardConfigData = {
