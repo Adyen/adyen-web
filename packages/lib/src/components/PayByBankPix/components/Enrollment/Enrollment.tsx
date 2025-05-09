@@ -13,7 +13,7 @@ import { LabelOnlyDisclaimerMessage } from '../../../internal/DisclaimerMessage/
 import { ComponentMethodsRef, UIElementStatus } from '../../../internal/UIElement/types';
 
 //todo: add
-const TERMS_CONDITIONS_URL = 'https://www.google.com';
+const TERMS_CONDITIONS_URL = '';
 
 function Enrollment(props: EnrollmentProps) {
     const { i18n, loadingContext } = useCoreContext();
