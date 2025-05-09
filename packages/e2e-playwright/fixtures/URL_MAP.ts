@@ -34,7 +34,6 @@ export const URL_MAP = {
     onlineBankingPL: '/iframe.html?args=&globals=&id=issuerlist-onlinebankingpl--default&viewMode=story',
     /* Open invoice */
     riverty: '/iframe.html?globals=&args=&id=components-riverty--default&viewMode=story',
-    rivertyWithVisibleSrPanel: '/iframe.html?args=srConfig.showPanel:!true&globals=&id=components-riverty--default&viewMode=story',
     /* Redirect */
     ideal: '/iframe.html?globals=&id=components-ideal--default&viewMode=story',
     giftcard_with_card: '/iframe.html?globals=&id=partial-payments-givex-giftcard--with-card&viewMode=story',

@@ -2,18 +2,14 @@ import { createSession } from './checkout-api-calls';
 import { RETURN_URL, SHOPPER_REFERENCE } from '../config/commonConfig';
 import { handleError, handleFinalState } from './checkout-handlers';
 import getCurrency from '../utils/get-currency';
-import { AdyenCheckoutProps } from '../stories/types';
 import Checkout from '../../src/core/core';
 import { AdyenCheckout } from '../../src/core/AdyenCheckout';
 
-async function createSessionsCheckout({
-    showPayButton,
-    countryCode,
-    shopperLocale,
-    amount,
-    sessionData,
-    ...restCheckoutProps
-}: AdyenCheckoutProps): Promise<Checkout> {
+import type { AdyenCheckoutProps, ShopperDetails } from '../stories/types';
+
+async function createSessionsCheckout(checkoutProps: AdyenCheckoutProps, shopperDetails?: ShopperDetails): Promise<Checkout> {
+    const { showPayButton, countryCode, shopperLocale, amount, sessionData, ...restCheckoutProps } = checkoutProps;
+
     const session = await createSession({
         amount: {
             currency: getCurrency(countryCode),
@@ -25,6 +21,7 @@ async function createSessionsCheckout({
         returnUrl: RETURN_URL,
         shopperReference: SHOPPER_REFERENCE,
         shopperEmail: 'shopper.ctp1@adyen.com',
+        ...(shopperDetails && { ...shopperDetails }),
         ...sessionData
     });
 
