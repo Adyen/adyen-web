@@ -3,8 +3,10 @@ import UIElement from '../../src/components/internal/UIElement';
 import { CoreConfiguration, PaymentMethodsResponse } from '../../src/types';
 
 export type GlobalStoryProps = AdyenCheckoutProps &
-    CoreConfiguration & {
+    Omit<CoreConfiguration, 'amount'> & {
         useSessions: boolean;
+        redirectResult?: string;
+        sessionId?: string;
     };
 
 export interface PaymentMethodStoryProps<T> extends GlobalStoryProps {

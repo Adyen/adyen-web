@@ -1,0 +1,39 @@
+@use 'styles/index';
+@import 'styles/variable-generator';
+
+.adyen-checkout-issuer-list-introduction-logo-container {
+    text-align: center;
+    background: token(color-background-primary);
+    border-radius: token(border-radius-m);
+    padding: token(spacer-070);
+    margin-bottom: token(spacer-070);
+
+    &__title {
+        @include index.adyen-checkout-text-caption-stronger;
+
+        margin: 0;
+    }
+
+    &__logo {
+        width: 8em;
+        height: auto; /* Maintains aspect ratio */
+    }
+}
+
+.adyen-checkout-issuer-list-introduction-text-container {
+    @include index.adyen-checkout-text-caption;
+
+    &__title {
+        @include index.adyen-checkout-text-caption-stronger;
+
+        margin: 0 0 token(spacer-020);
+    }
+
+    &__content {
+        margin: 0;
+
+        &:not(:last-child) {
+            margin-bottom: token(spacer-040);
+        }
+    }
+}
