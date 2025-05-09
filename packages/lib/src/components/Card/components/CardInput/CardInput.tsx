@@ -1,4 +1,4 @@
-import { h, Fragment } from 'preact';
+import { h } from 'preact';
 import { useState, useEffect, useRef, useMemo, useCallback } from 'preact/hooks';
 import SecuredFieldsProvider from '../../../internal/SecuredFields/SFP/SecuredFieldsProvider';
 import { OnChangeEventDetails, SFPState } from '../../../internal/SecuredFields/SFP/types';
@@ -29,6 +29,7 @@ import { FieldErrorAnalyticsObject } from '../../../../core/Analytics/types';
 import { PREFIX } from '../../../internal/Icon/constants';
 import useSRPanelForCardInputErrors from './useSRPanelForCardInputErrors';
 import FastlaneSignup from '../Fastlane/FastlaneSignup';
+import LoadingWrapper from '../../../internal/LoadingWrapper';
 
 const CardInput = (props: CardInputProps) => {
     const sfp = useRef(null);
@@ -405,19 +406,19 @@ const CardInput = (props: CardInputProps) => {
     const FieldToRender = props.storedPaymentMethodId ? StoredCardFieldsWrapper : CardFieldsWrapper;
 
     return (
-        <Fragment>
-            <SecuredFieldsProvider
-                ref={sfp}
-                {...extractPropsForSFP(props)}
-                styles={{ ...props.styles }}
-                koreanAuthenticationRequired={props.configuration.koreanAuthenticationRequired}
-                hasKoreanFields={!!(props.configuration.koreanAuthenticationRequired && props.countryCode === 'kr')}
-                onChange={handleSecuredFieldsChange}
-                onBrand={onBrand}
-                onFocus={handleFocus}
-                type={props.brand}
-                disableIOSArrowKeys={props.disableIOSArrowKeys ? handleTouchstartIOS : null}
-                render={({ setRootNode, setFocusOn }, sfpState) => (
+        <SecuredFieldsProvider
+            ref={sfp}
+            {...extractPropsForSFP(props)}
+            styles={{ ...props.styles }}
+            koreanAuthenticationRequired={props.configuration.koreanAuthenticationRequired}
+            hasKoreanFields={!!(props.configuration.koreanAuthenticationRequired && props.countryCode === 'kr')}
+            onChange={handleSecuredFieldsChange}
+            onBrand={onBrand}
+            onFocus={handleFocus}
+            type={props.brand}
+            disableIOSArrowKeys={props.disableIOSArrowKeys ? handleTouchstartIOS : null}
+            render={({ setRootNode, setFocusOn }, sfpState) => (
+                <LoadingWrapper status={sfpState.status}>
                     <div
                         ref={setRootNode}
                         className={classNames({
@@ -478,25 +479,25 @@ const CardInput = (props: CardInputProps) => {
                             onFieldBlurAnalytics={onFieldBlurAnalytics}
                         />
                     </div>
-                )}
-            />
 
-            {props.fastlaneConfiguration && (
-                <FastlaneSignup
-                    {...props.fastlaneConfiguration}
-                    currentDetectedBrand={internallyDetectedBrand}
-                    onChange={props.onChange}
-                    onSubmitAnalytics={props.onSubmitAnalytics}
-                />
+                    {props.fastlaneConfiguration && (
+                        <FastlaneSignup
+                            {...props.fastlaneConfiguration}
+                            currentDetectedBrand={internallyDetectedBrand}
+                            onChange={props.onChange}
+                            onSubmitAnalytics={props.onSubmitAnalytics}
+                        />
+                    )}
+
+                    {props.showPayButton &&
+                        props.payButton({
+                            status,
+                            variant: props.isPayButtonPrimaryVariant ? 'primary' : 'secondary',
+                            icon: getImage({ imageFolder: 'components/' })(`${PREFIX}lock`)
+                        })}
+                </LoadingWrapper>
             )}
-
-            {props.showPayButton &&
-                props.payButton({
-                    status,
-                    variant: props.isPayButtonPrimaryVariant ? 'primary' : 'secondary',
-                    icon: getImage({ imageFolder: 'components/' })(`${PREFIX}lock`)
-                })}
-        </Fragment>
+        />
     );
 };
 

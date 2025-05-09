@@ -1,5 +1,4 @@
 import { h } from 'preact';
-import LoadingWrapper from '../../../../internal/LoadingWrapper';
 import CardFields from './CardFields';
 import KCPAuthentication from './KCPAuthentication';
 import SocialSecurityNumberBrazil from '../../../../internal/SocialSecurityNumberBrazil/SocialSecurityNumberBrazil';
@@ -87,7 +86,7 @@ export const CardFieldsWrapper = ({
     );
 
     return (
-        <LoadingWrapper status={sfpState.status}>
+        <div>
             {hasHolderName && positionHolderNameOnTop && cardHolderField}
 
             <CardFields
@@ -185,6 +184,6 @@ export const CardFieldsWrapper = ({
                     urls={[disclaimerMessage.link]}
                 />
             )}
-        </LoadingWrapper>
+        </div>
     );
 };
