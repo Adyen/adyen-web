@@ -27,6 +27,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
     public static type = TxVariants.paybybank_pix;
     private static readonly TIMEOUT_MINUTES = 1;
     private readonly passkeyService: PasskeyService;
+    private readonly initialized: Promise<PasskeyService | void>;
 
     public static defaultProps: PayByBankPixConfiguration = {
         showPayButton: true,
@@ -38,6 +39,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         super(checkout, props);
         const deviceId = this.props.storedPaymentMethodId ? this.props?.payByBankPixDetails?.deviceId : this.props.deviceId;
         this.passkeyService = new PasskeyService({ environment: this.props.environment, deviceId });
+        this.initialized = this.props._isAdyenHosted ? this.passkeyService.initialize() : Promise.resolve();
     }
 
     get isValid(): boolean {
@@ -119,6 +121,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
      */
     private readonly onIssuerSelected = async payload => {
         try {
+            await this.initialized;
             const { data = {} } = payload;
             if (!data.issuer) {
                 return;
@@ -134,6 +137,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
 
     private readonly authorizeEnrollment = async (registrationOptions: string): Promise<void> => {
         try {
+            await this.initialized;
             const fidoAssertion = await this.passkeyService.createCredentialForEnrollment(registrationOptions); // Create passkey and trigger biometrics
             const enrollment = { enrollmentId: this.props.paymentMethodData?.enrollmentId, fidoAssertion };
             const { redirectResult } = await authorizeEnrollment({
@@ -158,6 +162,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
      */
     private readonly payWithStoredPayment = async () => {
         try {
+            await this.initialized;
             const { deviceId, ...riskSignals } = await this.passkeyService.captureRiskSignalsAuthentication();
             this.state = { ...this.state, ...{ data: { storedPaymentMethodId: this.props.storedPaymentMethodId, riskSignals, deviceId } } };
             super.submit();
@@ -169,6 +174,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
 
     private readonly authorizePayment = async (authenticationOptions: string): Promise<void> => {
         try {
+            await this.initialized;
             const fidoAssertion = await this.passkeyService.authenticateWithCredential(authenticationOptions);
             const payment = {
                 enrollmentId: this.props.paymentMethodData?.enrollmentId,
