@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 5.71.3
+
+### Patch Changes
+
+-   Fixed issue where clipboard copy-paste functionality wasn't working for mobile Safari 18.4 browsers ([#3319](https://github.com/Adyen/adyen-web/pull/3319))
+
 ## 5.71.2
 
 ### Patch Changes
