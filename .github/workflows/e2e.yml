@@ -43,7 +43,7 @@ jobs:
         API_VERSION: ${{matrix.api-version}}
     - name: Archive test result artifacts
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: playwright-report-${{ github.sha }}
         path: packages/e2e-playwright/playwright-report
