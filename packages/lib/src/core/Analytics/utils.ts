@@ -22,12 +22,17 @@ export const getUTCTimestamp = () => Date.now();
  *
  * Log objects have, in addition to the base props:
  *  "message" & "type" &
- *    "subtype" (e.g. when an action is handled)
+ *    "subtype" (e.g. when an action is handled, or it is a ThreeDS2 event),
+ *    "result" (for ThreeDS2 events)
  *
  * Info objects have, in addition to the base props:
  *   "type" & "target" &
+ *     "issuer" (when dealing with a selection in an issuer list PM)
+ *     "brand" (when dealing with the selected brand in a Card, dual-branding, scenario))
+ *     "isExpress" & "expressPage" (if we're in a  Plugins / Express PMs scenario)
  *     "isStoredPaymentMethod" & "brand" (when a storedCard is "selected"), or,
  *     "validationErrorCode" & "validationErrorMessage" (when the event is describing a validation error)
+ *     "configData" (when we're reporting the initial configuration of a PM, or, describing the available brands when dual-branding)
  *
  *  All objects can also have a "metadata" object of key-value pairs
  */
@@ -35,24 +40,60 @@ export const createAnalyticsObject = (aObj: CreateAnalyticsObject): AnalyticsObj
     timestamp: String(getUTCTimestamp()),
     component: aObj.component,
     id: uuid(),
-    /** ERROR */
-    ...(aObj.event === 'error' && { code: aObj.code, errorType: aObj.errorType, message: aObj.message }), // error event
-    /** LOG */
-    ...(aObj.event === 'log' && { type: aObj.type, message: aObj.message }), // log event
-    ...(aObj.event === 'log' && (aObj.type === ANALYTICS_ACTION_STR || aObj.type === THREEDS2_FULL) && { subType: aObj.subtype }), // only added if we have a log event of Action type or ThreeDS2
-    ...(aObj.event === 'log' && aObj.type === THREEDS2_FULL && { result: aObj.result }), // only added if we have a log event of ThreeDS2 type
-    /** INFO */
-    ...(aObj.event === 'info' && { type: aObj.type, target: aObj.target }), // info event
-    ...(aObj.event === 'info' && aObj.issuer && { issuer: aObj.issuer }), // relates to issuerLists
-    ...(aObj.event === 'info' && { isExpress: aObj.isExpress, expressPage: aObj.expressPage }), // relates to Plugins & detecting Express PMs
-    ...(aObj.event === 'info' && aObj.isStoredPaymentMethod && { isStoredPaymentMethod: aObj.isStoredPaymentMethod, brand: aObj.brand }), // only added if we have an info event about a storedPM
+
+    /**
+     * %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     * %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ERROR %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     * %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     */
+    /** Base error event */
+    ...(aObj.event === 'error' && { code: aObj.code, errorType: aObj.errorType, message: aObj.message }),
+
+    /**
+     * %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     * %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LOG %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     * %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     */
+    /** Base log event */
+    ...(aObj.event === 'log' && { type: aObj.type, message: aObj.message }),
+
+    /** Extra props added if we have a log event of "action" type or "threeDS2" */
+    ...(aObj.event === 'log' && (aObj.type === ANALYTICS_ACTION_STR || aObj.type === THREEDS2_FULL) && { subType: aObj.subtype }),
+
+    /** Extra prop added if we have a log event of "threeDS2" type */
+    ...(aObj.event === 'log' && aObj.type === THREEDS2_FULL && { result: aObj.result }),
+
+    /**
+     * %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     * %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% INFO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     * %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     */
+    /** Base info event */
+    ...(aObj.event === 'info' && { type: aObj.type, target: aObj.target }),
+
+    /** Extra prop added related to issuerLists */
+    ...(aObj.event === 'info' && aObj.issuer && { issuer: aObj.issuer }),
+
+    /** Extra prop added related to dual branding in Card comp */
+    ...(aObj.event === 'info' && aObj.brand && { brand: aObj.brand }),
+
+    /** Extra props added related to Plugins & detecting Express PMs */
+    ...(aObj.event === 'info' && { isExpress: aObj.isExpress, expressPage: aObj.expressPage }),
+
+    /** Extra props added related to storedPMs */
+    ...(aObj.event === 'info' && aObj.isStoredPaymentMethod && { isStoredPaymentMethod: aObj.isStoredPaymentMethod, brand: aObj.brand }),
+
+    /** Extra props added related to validation errors */
     ...(aObj.event === 'info' &&
         aObj.type === ANALYTICS_VALIDATION_ERROR_STR && {
             validationErrorCode: mapErrorCodesForAnalytics(aObj.validationErrorCode, aObj.target),
             validationErrorMessage: aObj.validationErrorMessage
-        }), // only added if we have an info event describing a validation error
+        }),
+
+    /** Some info events also contain configData i.e. when a PM is rendered e.g. the Card comp, or, when dual branding UI is displayed (also the Card comp) */
     ...(aObj.configData && { configData: aObj.configData }),
-    /** All */
+
+    /** All events can also have a metadata prop TODO: is this ever used? */
     ...(aObj.metadata && { metadata: aObj.metadata })
 });
 

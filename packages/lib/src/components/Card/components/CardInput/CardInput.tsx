@@ -6,7 +6,7 @@ import defaultProps from './defaultProps';
 import './CardInput.scss';
 import { AddressModeOptions, CardInputDataState, CardInputErrorState, CardInputProps, CardInputRef, CardInputValidState } from './types';
 import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, ENCRYPTED_CARD_NUMBER } from '../../../internal/SecuredFields/lib/constants';
-import { BinLookupResponse } from '../../types';
+import { BinLookupResponse, DualBrandingAnalyticsObject } from '../../types';
 import { cardInputFormatters, cardInputValidationRules, getRuleByNameAndMode } from './validate';
 import CIExtensions from '../../../internal/SecuredFields/binLookup/extensions';
 import useForm from '../../../../utils/useForm';
@@ -29,6 +29,13 @@ import { FieldErrorAnalyticsObject } from '../../../../core/Analytics/types';
 import { PREFIX } from '../../../internal/Icon/constants';
 import useSRPanelForCardInputErrors from './useSRPanelForCardInputErrors';
 import FastlaneSignup from '../Fastlane/FastlaneSignup';
+import { ANALYTICS_DISPLAYED_STR, ANALYTICS_SELECTED_STR, ANALYTICS_VALIDATION_ERROR_STR } from '../../../../core/Analytics/constants';
+import { fieldTypeToSnakeCase } from '../../../internal/SecuredFields/utils';
+import { getErrorMessageFromCode } from '../../../../core/Errors/utils';
+import { SF_ErrorCodes } from '../../../../core/Errors/constants';
+import { usePrevious } from '../../../../utils/hookUtils';
+
+const DUAL_BRAND_BUTTON = 'dual_brand_button';
 
 const CardInput = (props: CardInputProps) => {
     const sfp = useRef(null);
@@ -364,7 +371,12 @@ const CardInput = (props: CardInputProps) => {
                 errorCode: errorItem.errorCode
             };
 
-            props.onValidationErrorAnalytics(aObj);
+            props.onSubmitAnalytics({
+                type: ANALYTICS_VALIDATION_ERROR_STR,
+                target: fieldTypeToSnakeCase(aObj.fieldType),
+                validationErrorCode: aObj.errorCode,
+                validationErrorMessage: getErrorMessageFromCode(aObj.errorCode, SF_ErrorCodes)
+            });
         });
     }
 
@@ -398,6 +410,43 @@ const CardInput = (props: CardInputProps) => {
             installments
         });
     }, [data, valid, errors, selectedBrandValue, storePaymentMethod, installments]);
+
+    /**
+     * "Update" handler related to dual brand buttons being initially displayed
+     */
+    useEffect(() => {
+        if (dualBrandSelectElements.length > 0 && dualBrandSelectElements) {
+            const dualBrandsArr = dualBrandSelectElements.map(item => item.id);
+            const brand = dualBrandsArr[0]; // initially selected brand
+            const dualBrands = dualBrandsArr.toString();
+
+            const analyticsObj: DualBrandingAnalyticsObject = {
+                type: ANALYTICS_DISPLAYED_STR,
+                target: DUAL_BRAND_BUTTON,
+                brand,
+                configData: { dualBrands }
+            };
+
+            props.onSubmitAnalytics(analyticsObj);
+        }
+    }, [dualBrandSelectElements]);
+
+    const previousSelectedBrandValue = usePrevious(selectedBrandValue);
+
+    /**
+     * "Update" handler related to a dual brand button being selected
+     */
+    useEffect(() => {
+        if (previousSelectedBrandValue?.length && selectedBrandValue?.length) {
+            const analyticsObj: DualBrandingAnalyticsObject = {
+                type: ANALYTICS_SELECTED_STR,
+                target: DUAL_BRAND_BUTTON,
+                brand: selectedBrandValue
+            };
+
+            props.onSubmitAnalytics(analyticsObj);
+        }
+    }, [selectedBrandValue]);
 
     /**
      * RENDER
