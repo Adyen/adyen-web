@@ -2,20 +2,23 @@ import { AdyenCheckout } from '../../src/core/AdyenCheckout';
 import { cancelOrder, checkBalance, createOrder, getPaymentMethods, makeDetailsCall, makePayment } from './checkout-api-calls';
 import { handleError, handleFinalState } from './checkout-handlers';
 import getCurrency from '../utils/get-currency';
-import { AdyenCheckoutProps } from '../stories/types';
 import Checkout from '../../src/core/core';
-import { PaymentMethodsResponse } from '../../src/types';
 
-async function createAdvancedFlowCheckout({
-    showPayButton,
-    countryCode,
-    shopperLocale,
-    amount,
-    allowedPaymentTypes = [],
-    paymentMethodsOverride,
-    paymentsOptions,
-    ...restCheckoutProps
-}: AdyenCheckoutProps): Promise<Checkout> {
+import type { PaymentMethodsResponse } from '../../src/types';
+import type { AdyenCheckoutProps, ShopperDetails } from '../stories/types';
+
+async function createAdvancedFlowCheckout(checkoutProps: AdyenCheckoutProps, shopperDetails?: ShopperDetails): Promise<Checkout> {
+    const {
+        showPayButton,
+        countryCode,
+        shopperLocale,
+        amount,
+        allowedPaymentTypes = [],
+        paymentMethodsOverride,
+        paymentsOptions,
+        ...restCheckoutProps
+    } = checkoutProps;
+
     const paymentAmount = {
         currency: getCurrency(countryCode),
         value: Number(amount)
@@ -57,7 +60,7 @@ async function createAdvancedFlowCheckout({
                     ...(paymentsOptions && paymentsOptions)
                 };
 
-                const { action, order, resultCode, donationToken } = await makePayment(state.data, paymentData);
+                const { action, order, resultCode, donationToken } = await makePayment(state.data, paymentData, shopperDetails);
 
                 if (!resultCode) actions.reject();
 

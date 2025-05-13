@@ -12,7 +12,8 @@ import type {
     ResultCode
 } from '../../src/types';
 import type { CheckoutSessionSetupResponse } from '../../src/core/CheckoutSession/types';
-import { DonationAmount, DonationComponentProps } from '../../src/components/Donation/components/types';
+import type { DonationAmount, DonationComponentProps } from '../../src/components/Donation/components/types';
+import type { ShopperDetails } from '../stories/types';
 
 type DonationCampaign = Omit<DonationComponentProps, 'onDonate' | 'onCancel'> & { id: string };
 
@@ -35,8 +36,8 @@ type DonationRequest = {
 export const getPaymentMethods = async (configuration?: any): Promise<PaymentMethodsResponse> =>
     await httpPost('paymentMethods', { ...paymentMethodsConfig, ...configuration });
 
-export const makePayment = async (stateData: any, paymentData: any): Promise<RawPaymentResponse> => {
-    const paymentRequest = { ...paymentsConfig, ...stateData, ...paymentData };
+export const makePayment = async (stateData: any, paymentData: any, shopperDetails?: ShopperDetails): Promise<RawPaymentResponse> => {
+    const paymentRequest = { ...paymentsConfig, ...stateData, ...paymentData, ...shopperDetails };
     if (paymentRequest.order) delete paymentRequest.amount; // why?
     return await httpPost('payments', paymentRequest);
 };
@@ -54,7 +55,8 @@ export const makeDetailsCall = async (
 }> => await httpPost('details', detailsData);
 
 export const createSession = async (data: any): Promise<CheckoutSessionSetupResponse> => {
-    return await httpPost('sessions', { ...data, lineItems: paymentsConfig.lineItems });
+    const payload = { ...data, lineItems: paymentsConfig.lineItems };
+    return await httpPost('sessions', payload);
 };
 
 export const patchPaypalOrder = async ({

@@ -106,7 +106,6 @@ export const ComponentsMap = {
     [TxVariants.facilypay_12x]: FacilyPay12x,
     [TxVariants.ratepay]: RatePay,
     [TxVariants.ratepay_directdebit]: RatePayDirectDebit,
-    [TxVariants.riverty]: Riverty,
     /** Open Invoice */
 
     /** Wallets */
@@ -181,6 +180,7 @@ export const ComponentsMap = {
     [TxVariants.vipps]: Vipps,
     [TxVariants.trustly]: Trustly,
     [TxVariants.paybybank_AIS_DD]: PayByBankUS,
+    [TxVariants.riverty]: Riverty,
     /** Redirect */
 
     /** Klarna */
