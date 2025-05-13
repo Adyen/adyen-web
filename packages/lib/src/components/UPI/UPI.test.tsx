@@ -189,7 +189,7 @@ describe('UPI', () => {
         });
     });
 
-    describe('onValidateVpa callback', () => {
+    describe('onValidateVpa() callback', () => {
         let user;
         beforeEach(() => {
             user = userEvent.setup();
@@ -211,7 +211,7 @@ describe('UPI', () => {
             await user.click(screen.queryByRole('button', { name: 'Continue' }));
 
             expect(onVpaValidationMock).toHaveBeenCalledTimes(1);
-            expect(onVpaValidationMock).toHaveBeenCalledWith('test@test', expect.anything());
+            expect(onVpaValidationMock).toHaveBeenCalledWith({ type: 'upi_collect', virtualPaymentAddress: 'test@test' }, expect.anything());
             expect(onSubmitMock).toHaveBeenCalledTimes(1);
         });
 
@@ -253,7 +253,7 @@ describe('UPI', () => {
             await user.click(screen.queryByRole('button', { name: 'Continue' }));
 
             expect(onVpaValidationMock).toHaveBeenCalledTimes(1);
-            expect(onVpaValidationMock).toHaveBeenCalledWith('test@test', expect.anything());
+            expect(onVpaValidationMock).toHaveBeenCalledWith({ type: 'upi_collect', virtualPaymentAddress: 'test@test' }, expect.anything());
             expect(onSubmitMock).toHaveBeenCalledTimes(1);
         });
 

@@ -3,6 +3,7 @@ import { UPIConfiguration } from '../../../src/components/UPI/types';
 import { ComponentContainer } from '../ComponentContainer';
 import { Checkout } from '../Checkout';
 import UPI from '../../../src/components/UPI/UPI';
+import { validateShopperId } from '../../helpers/checkout-api-calls';
 
 type UpiStory = StoryConfiguration<UPIConfiguration>;
 
@@ -27,12 +28,21 @@ export const WithVpaValidation: UpiStory = {
         countryCode: 'IN',
         componentConfiguration: {
             defaultMode: 'vpa',
-            onVpaValidation(value: string, actions: { resolve(): void; reject(): void }) {
-                console.log(`onVpaValidation(): ${value}`);
 
-                setTimeout(() => {
+            onVpaValidation: async (
+                validationData: { type: string; virtualPaymentAddress: string },
+                actions: { resolve(): void; reject(): void }
+            ) => {
+                try {
+                    const response = await validateShopperId(validationData);
+                    console.log('onVpaValidation()', response);
+
+                    if (response.status === 'VALID') return actions.resolve();
+                    return actions.reject();
+                } catch (error: unknown) {
+                    console.log(error);
                     actions.reject();
-                }, 1000);
+                }
             }
         }
     }

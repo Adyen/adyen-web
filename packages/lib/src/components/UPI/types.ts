@@ -20,10 +20,10 @@ export interface UPIConfiguration extends UIElementProps {
      * Callback used to validate the VPA ID before making the payments call.
      * actions.resolve() should be called if VPA is valid. Otherwise, actions.reject() to display an error message
      *
-     * @param value
+     * @param validationData
      * @param actions
      */
-    onVpaValidation?(value: string, actions: { resolve(): void; reject(): void }): void;
+    onVpaValidation?(validationData: { type: string; virtualPaymentAddress: string }, actions: { resolve(): void; reject(): void }): void;
     /**
      * Adds placeholder text to the input fields
      */

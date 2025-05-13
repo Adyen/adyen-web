@@ -57,6 +57,10 @@ export const createSession = async (data: any): Promise<CheckoutSessionSetupResp
     return await httpPost('sessions', { ...data, lineItems: paymentsConfig.lineItems });
 };
 
+export const validateShopperId = async (data): Promise<{ status: string; reason: string }> => {
+    return await httpPost('validateShopperId', data);
+};
+
 export const patchPaypalOrder = async ({
     sessionId,
     pspReference,

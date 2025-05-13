@@ -85,7 +85,12 @@ class UPI extends UIElement<UPIConfiguration> {
         if (shouldValidateVpa) {
             this.setElementStatus('loading');
 
-            return new Promise<void>((resolve, reject) => this.props.onVpaValidation(this.state.data.virtualPaymentAddress, { resolve, reject }))
+            const validationData = {
+                type: 'upi_collect',
+                virtualPaymentAddress: this.state.data.virtualPaymentAddress
+            };
+
+            return new Promise<void>((resolve, reject) => this.props.onVpaValidation(validationData, { resolve, reject }))
                 .then(() => {
                     this.submitAnalytics({
                         type: ANALYTICS_EVENT.info,
