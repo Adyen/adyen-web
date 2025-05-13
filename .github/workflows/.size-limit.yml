@@ -13,7 +13,7 @@ jobs:
       - name: Setup Node.js 20.12.2
         uses: actions/setup-node@v4
         with:
-          node-version: 20.12.2
+          node-version: 20.19.1
 
       - uses: andresz1/size-limit-action@master
         with:
