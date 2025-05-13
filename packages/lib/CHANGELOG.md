@@ -1,5 +1,35 @@
 # @adyen/adyen-web
 
+## 6.13.1
+
+### Patch Changes
+
+- Fixed issue where clipboard copy-paste functionality wasn't working for mobile Safari 18.4 browsers ([#3314](https://github.com/Adyen/adyen-web/pull/3314))
+
+## 6.13.0
+
+### Minor Changes
+
+- [Apple Pay] Add support for shippingContactEditingMode configuration value ([#3289](https://github.com/Adyen/adyen-web/pull/3289))
+
+    This configuration value is used to prevent a user from editing the shipping address. This is useful for store pickup checkout options.
+
+    https://developer.apple.com/documentation/applepayontheweb/applepaypaymentrequest/shippingcontacteditingmode
+
+- Added support for Fastlane payment method ([#3076](https://github.com/Adyen/adyen-web/pull/3076))
+
+### Patch Changes
+
+- GooglePay - isValid flag adjusted to always be true ([#3297](https://github.com/Adyen/adyen-web/pull/3297))
+
+## 6.12.1
+
+### Patch Changes
+
+- Fixed issue where card inputs weren't respecting background color styles if the merchant set a meta tag to describe the color scheme ([#3281](https://github.com/Adyen/adyen-web/pull/3281))
+
+- Upped SF version to fix issue with LastPass & autofilling ([#3279](https://github.com/Adyen/adyen-web/pull/3279))
+
 ## 6.12.0
 
 ### Minor Changes

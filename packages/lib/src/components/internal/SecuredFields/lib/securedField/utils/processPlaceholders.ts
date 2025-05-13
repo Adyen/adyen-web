@@ -8,7 +8,7 @@ import {
     SF_FIELDS_MAP
 } from '../../constants';
 import { Placeholders as GiftcardPlaceholders } from '../../../../../Giftcard/components/types';
-import { Placeholders as CardPlaceholders } from '../../../../../Card/components/CardInput/types';
+import { CardPlaceholders } from '../../../../../Card/types';
 
 /**
  * Create placeholders with a value from merchant's configuration

@@ -172,4 +172,9 @@ export type CardConfigData = {
     hasOnFocus: boolean;
     hasOnLoad: boolean;
     hasOnEnterKeyPressed: boolean;
+    /**
+     * Fastlane
+     */
+    hasFastlaneConfigured?: boolean;
+    isFastlaneConsentDefaultOn?: boolean;
 };

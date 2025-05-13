@@ -8,6 +8,7 @@ import { CardConfiguration } from '../../components/Card/types';
 import CardInputDefaultProps from '../../components/Card/components/CardInput/defaultProps';
 import { DEFAULT_CARD_GROUP_TYPES } from '../../components/internal/SecuredFields/lib/constants';
 import { notFalsy } from '../../utils/commonUtils';
+import { isConfigurationValid as isFastlaneComponentConfigValid } from '../../components/Card/components/Fastlane/utils/validate-configuration';
 
 const MAX_LENGTH = 128;
 export const getUTCTimestamp = () => Date.now();
@@ -100,6 +101,7 @@ export const getCardConfigData = (cardProps: CardConfiguration): CardConfigData 
         doBinLookup,
         enableStoreDetails,
         exposeExpiryDate,
+        fastlaneConfiguration,
         forceCompat,
         hasHolderName,
         hideCVC,
@@ -135,6 +137,8 @@ export const getCardConfigData = (cardProps: CardConfiguration): CardConfigData 
 
     const riskEnabled = cardProps.modules?.risk?.enabled;
 
+    const isFastlaneConfigValid = isFastlaneComponentConfigValid(fastlaneConfiguration);
+
     const billingAddressModeValue = cardProps.onAddressLookup ? 'lookup' : billingAddressMode;
 
     let showKCPType: 'none' | 'auto' | 'atStart' = 'none';
@@ -142,7 +146,6 @@ export const getCardConfigData = (cardProps: CardConfiguration): CardConfigData 
         showKCPType = countryCode?.toLowerCase() === 'kr' ? 'atStart' : 'auto';
     }
 
-    // @ts-ignore commenting out props until endpoint is ready
     const configData: CardConfigData = {
         autoFocus,
         ...(billingAddressAllowedCountries?.length > 0 && {
@@ -194,7 +197,14 @@ export const getCardConfigData = (cardProps: CardConfiguration): CardConfigData 
         hasOnLoad: onLoad !== CardInputDefaultProps.onLoad,
         // Card level props
         hasOnBinLookup: !!onBinLookup,
-        hasOnEnterKeyPressed: !!onEnterKeyPressed
+        hasOnEnterKeyPressed: !!onEnterKeyPressed,
+        /**
+         * Fastlane
+         */
+        ...(isFastlaneConfigValid && {
+            hasFastlaneConfigured: true,
+            isFastlaneConsentDefaultOn: fastlaneConfiguration.defaultToggleState
+        })
     };
 
     return configData;
