@@ -92,7 +92,7 @@ const CardInput: FunctionalComponent<CardInputProps> = props => {
 
     const showBillingAddress = props.billingAddressMode !== AddressModeOptions.none && props.billingAddressRequired;
 
-    const partialAddressSchema = handlePartialAddressMode(props.billingAddressMode);
+    const partialAddressSchema = handlePartialAddressMode(props.billingAddressMode, specifications.getSpecifications());
     // Keeps the value of the country set initially by the merchant, before the Address Component mutates it
     const partialAddressCountry = useRef<string>(partialAddressSchema && props.data?.billingAddress?.country);
 

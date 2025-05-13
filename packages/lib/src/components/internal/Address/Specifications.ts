@@ -5,10 +5,14 @@ import { AddressField } from '../../../types';
 const SCHEMA_MAX_DEPTH = 2;
 
 class Specifications {
-    private specifications: AddressSpecifications;
+    private readonly specifications: AddressSpecifications;
 
-    constructor(specifications?) {
-        this.specifications = { ...ADDRESS_SPECIFICATIONS, ...specifications };
+    constructor(specifications?: AddressSpecifications) {
+        if (specifications && typeof specifications === 'object') {
+            this.specifications = { ...ADDRESS_SPECIFICATIONS, ...specifications };
+        } else {
+            this.specifications = { ...ADDRESS_SPECIFICATIONS };
+        }
     }
 
     /**
@@ -85,6 +89,14 @@ class Specifications {
         return this.getAddressSchemaForCountry(country)
             .flat(SCHEMA_MAX_DEPTH)
             .filter((element): element is AddressField => typeof element === 'string');
+    }
+
+    /**
+     * Returns the specifications object.
+     * @returns specifications - returns combines specifications
+     */
+    getSpecifications(): AddressSpecifications {
+        return this.specifications;
     }
 }
 
