@@ -4,10 +4,6 @@
     display: flex;
     pointer-events: auto;
 
-    &--active {
-        opacity: 1;
-    }
-
     .adyen-checkout__card__cardNumber__brandIcon {
         cursor: pointer;
         opacity: 1;
