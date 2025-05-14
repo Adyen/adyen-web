@@ -102,6 +102,12 @@ const CardInput = (props: CardInputProps) => {
     const [internallyDetectedBrand, setInternallyDetectedBrand] = useState('card');
 
     /**
+     * Used tho show and hide the pay button and instructions text
+     * Should mimick the same logic as CardInput loading wrapper
+     */
+    const [showCardUIElements, setShowCardUIElements] = useState('loading');
+
+    /**
      * LOCAL VARS
      */
     const {
@@ -228,6 +234,30 @@ const CardInput = (props: CardInputProps) => {
         setCvcPolicy(sfState.cvcPolicy);
         setShowSocialSecurityNumber(sfState.showSocialSecurityNumber);
         setExpiryDatePolicy(sfState.expiryDatePolicy);
+    };
+
+    /**
+     * Listen to the full SecureFieldsProvider state and handle actions
+     * Used right now to mimick the loading status changes, this can only be done this way
+     * Trying to do it via onConfiguSuccess or onChange has side effects
+     */
+    const handleSFPStateUpdate = useCallback(sfpState => {
+        mimickLoadingStatusChange(sfpState);
+    }, []);
+
+    /**
+     * This function implements the same logic that LoadingProvider uses to show and hide elements
+     * We want to mimick this behavior so we can hide and show the pay button or the instructions text
+     * Deciding to do it this way since we garante there's no DOM changes to merchants
+     * We can break this in the next major version (v7)
+     */
+    const mimickLoadingStatusChange = sfpState => {
+        if (!sfpState.status) return;
+        if (sfpState.status == 'loading') {
+            setShowCardUIElements('false');
+        } else {
+            setShowCardUIElements('false');
+        }
     };
 
     // Farm the handlers for binLookup related functionality out to another 'extensions' file
@@ -415,70 +445,75 @@ const CardInput = (props: CardInputProps) => {
                 onChange={handleSecuredFieldsChange}
                 onBrand={onBrand}
                 onFocus={handleFocus}
+                onStateUpdate={handleSFPStateUpdate}
                 type={props.brand}
                 disableIOSArrowKeys={props.disableIOSArrowKeys ? handleTouchstartIOS : null}
-                render={({ setRootNode, setFocusOn }, sfpState) => (
-                    <div
-                        ref={setRootNode}
-                        className={classNames({
-                            'adyen-checkout__card-input': true,
-                            'adyen-checkout-card-input__wrapper': true,
-                            [`adyen-checkout__card-input--${props.fundingSource ?? 'credit'}`]: true,
-                            'adyen-checkout__card-input--loading': status === 'loading'
-                        })}
-                        role={'form'}
-                    >
-                        <FormInstruction />
+                render={({ setRootNode, setFocusOn }, sfpState) =>
+                    showCardUIElements && (
+                        <div
+                            ref={setRootNode}
+                            className={classNames({
+                                'adyen-checkout__card-input': true,
+                                'adyen-checkout-card-input__wrapper': true,
+                                [`adyen-checkout__card-input--${props.fundingSource ?? 'credit'}`]: true,
+                                'adyen-checkout__card-input--loading': status === 'loading'
+                            })}
+                            role={'form'}
+                        >
+                            <FormInstruction />
 
-                        <FieldToRender
-                            // Extract exact props that we need to pass down
-                            {...extractPropsForCardFields(props)}
-                            // Pass on vars created in CardInput:
-                            // Base (shared w. StoredCard)
-                            data={data}
-                            valid={valid}
-                            errors={errors}
-                            handleChangeFor={handleChangeFor}
-                            focusedElement={focusedElement}
-                            setFocusOn={setFocusOn}
-                            sfpState={sfpState}
-                            cvcPolicy={cvcPolicy}
-                            hasInstallments={hasInstallments}
-                            showAmountsInInstallments={showAmountsInInstallments}
-                            handleInstallments={setInstallments}
-                            // For Card
-                            brandsIcons={props.brandsIcons}
-                            formData={formData}
-                            formErrors={formErrors}
-                            formValid={formValid}
-                            expiryDatePolicy={expiryDatePolicy}
-                            dualBrandSelectElements={dualBrandSelectElements}
-                            extensions={extensions}
-                            selectedBrandValue={selectedBrandValue}
-                            // For KCP
-                            showKCP={showKCP}
-                            // For SSN
-                            showBrazilianSSN={showBrazilianSSN}
-                            socialSecurityNumber={socialSecurityNumber}
-                            // For Store details
-                            handleOnStoreDetails={setStorePaymentMethod}
-                            // For Address
-                            setAddressRef={setAddressRef}
-                            billingAddress={billingAddress}
-                            billingAddressValidationRules={partialAddressSchema && getPartialAddressValidationRules(partialAddressCountry.current)}
-                            partialAddressSchema={partialAddressSchema}
-                            handleAddress={handleAddress}
-                            onAddressLookup={props.onAddressLookup}
-                            onAddressSelected={props.onAddressSelected}
-                            addressSearchDebounceMs={props.addressSearchDebounceMs}
-                            //
-                            iOSFocusedField={iOSFocusedField}
-                            //
-                            onFieldFocusAnalytics={onFieldFocusAnalytics}
-                            onFieldBlurAnalytics={onFieldBlurAnalytics}
-                        />
-                    </div>
-                )}
+                            <FieldToRender
+                                // Extract exact props that we need to pass down
+                                {...extractPropsForCardFields(props)}
+                                // Pass on vars created in CardInput:
+                                // Base (shared w. StoredCard)
+                                data={data}
+                                valid={valid}
+                                errors={errors}
+                                handleChangeFor={handleChangeFor}
+                                focusedElement={focusedElement}
+                                setFocusOn={setFocusOn}
+                                sfpState={sfpState}
+                                cvcPolicy={cvcPolicy}
+                                hasInstallments={hasInstallments}
+                                showAmountsInInstallments={showAmountsInInstallments}
+                                handleInstallments={setInstallments}
+                                // For Card
+                                brandsIcons={props.brandsIcons}
+                                formData={formData}
+                                formErrors={formErrors}
+                                formValid={formValid}
+                                expiryDatePolicy={expiryDatePolicy}
+                                dualBrandSelectElements={dualBrandSelectElements}
+                                extensions={extensions}
+                                selectedBrandValue={selectedBrandValue}
+                                // For KCP
+                                showKCP={showKCP}
+                                // For SSN
+                                showBrazilianSSN={showBrazilianSSN}
+                                socialSecurityNumber={socialSecurityNumber}
+                                // For Store details
+                                handleOnStoreDetails={setStorePaymentMethod}
+                                // For Address
+                                setAddressRef={setAddressRef}
+                                billingAddress={billingAddress}
+                                billingAddressValidationRules={
+                                    partialAddressSchema && getPartialAddressValidationRules(partialAddressCountry.current)
+                                }
+                                partialAddressSchema={partialAddressSchema}
+                                handleAddress={handleAddress}
+                                onAddressLookup={props.onAddressLookup}
+                                onAddressSelected={props.onAddressSelected}
+                                addressSearchDebounceMs={props.addressSearchDebounceMs}
+                                //
+                                iOSFocusedField={iOSFocusedField}
+                                //
+                                onFieldFocusAnalytics={onFieldFocusAnalytics}
+                                onFieldBlurAnalytics={onFieldBlurAnalytics}
+                            />
+                        </div>
+                    )
+                }
             />
 
             {props.fastlaneConfiguration && (
@@ -490,7 +525,8 @@ const CardInput = (props: CardInputProps) => {
                 />
             )}
 
-            {props.showPayButton &&
+            {showCardUIElements &&
+                props.showPayButton &&
                 props.payButton({
                     status,
                     variant: props.isPayButtonPrimaryVariant ? 'primary' : 'secondary',
