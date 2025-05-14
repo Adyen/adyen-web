@@ -448,72 +448,68 @@ const CardInput = (props: CardInputProps) => {
                 onStateUpdate={handleSFPStateUpdate}
                 type={props.brand}
                 disableIOSArrowKeys={props.disableIOSArrowKeys ? handleTouchstartIOS : null}
-                render={({ setRootNode, setFocusOn }, sfpState) =>
-                    showCardUIElements && (
-                        <div
-                            ref={setRootNode}
-                            className={classNames({
-                                'adyen-checkout__card-input': true,
-                                'adyen-checkout-card-input__wrapper': true,
-                                [`adyen-checkout__card-input--${props.fundingSource ?? 'credit'}`]: true,
-                                'adyen-checkout__card-input--loading': status === 'loading'
-                            })}
-                            role={'form'}
-                        >
-                            <FormInstruction />
+                render={({ setRootNode, setFocusOn }, sfpState) => (
+                    <div
+                        ref={setRootNode}
+                        className={classNames({
+                            'adyen-checkout__card-input': true,
+                            'adyen-checkout-card-input__wrapper': true,
+                            [`adyen-checkout__card-input--${props.fundingSource ?? 'credit'}`]: true,
+                            'adyen-checkout__card-input--loading': status === 'loading'
+                        })}
+                        role={'form'}
+                    >
+                        {showCardUIElements && <FormInstruction />}
 
-                            <FieldToRender
-                                // Extract exact props that we need to pass down
-                                {...extractPropsForCardFields(props)}
-                                // Pass on vars created in CardInput:
-                                // Base (shared w. StoredCard)
-                                data={data}
-                                valid={valid}
-                                errors={errors}
-                                handleChangeFor={handleChangeFor}
-                                focusedElement={focusedElement}
-                                setFocusOn={setFocusOn}
-                                sfpState={sfpState}
-                                cvcPolicy={cvcPolicy}
-                                hasInstallments={hasInstallments}
-                                showAmountsInInstallments={showAmountsInInstallments}
-                                handleInstallments={setInstallments}
-                                // For Card
-                                brandsIcons={props.brandsIcons}
-                                formData={formData}
-                                formErrors={formErrors}
-                                formValid={formValid}
-                                expiryDatePolicy={expiryDatePolicy}
-                                dualBrandSelectElements={dualBrandSelectElements}
-                                extensions={extensions}
-                                selectedBrandValue={selectedBrandValue}
-                                // For KCP
-                                showKCP={showKCP}
-                                // For SSN
-                                showBrazilianSSN={showBrazilianSSN}
-                                socialSecurityNumber={socialSecurityNumber}
-                                // For Store details
-                                handleOnStoreDetails={setStorePaymentMethod}
-                                // For Address
-                                setAddressRef={setAddressRef}
-                                billingAddress={billingAddress}
-                                billingAddressValidationRules={
-                                    partialAddressSchema && getPartialAddressValidationRules(partialAddressCountry.current)
-                                }
-                                partialAddressSchema={partialAddressSchema}
-                                handleAddress={handleAddress}
-                                onAddressLookup={props.onAddressLookup}
-                                onAddressSelected={props.onAddressSelected}
-                                addressSearchDebounceMs={props.addressSearchDebounceMs}
-                                //
-                                iOSFocusedField={iOSFocusedField}
-                                //
-                                onFieldFocusAnalytics={onFieldFocusAnalytics}
-                                onFieldBlurAnalytics={onFieldBlurAnalytics}
-                            />
-                        </div>
-                    )
-                }
+                        <FieldToRender
+                            // Extract exact props that we need to pass down
+                            {...extractPropsForCardFields(props)}
+                            // Pass on vars created in CardInput:
+                            // Base (shared w. StoredCard)
+                            data={data}
+                            valid={valid}
+                            errors={errors}
+                            handleChangeFor={handleChangeFor}
+                            focusedElement={focusedElement}
+                            setFocusOn={setFocusOn}
+                            sfpState={sfpState}
+                            cvcPolicy={cvcPolicy}
+                            hasInstallments={hasInstallments}
+                            showAmountsInInstallments={showAmountsInInstallments}
+                            handleInstallments={setInstallments}
+                            // For Card
+                            brandsIcons={props.brandsIcons}
+                            formData={formData}
+                            formErrors={formErrors}
+                            formValid={formValid}
+                            expiryDatePolicy={expiryDatePolicy}
+                            dualBrandSelectElements={dualBrandSelectElements}
+                            extensions={extensions}
+                            selectedBrandValue={selectedBrandValue}
+                            // For KCP
+                            showKCP={showKCP}
+                            // For SSN
+                            showBrazilianSSN={showBrazilianSSN}
+                            socialSecurityNumber={socialSecurityNumber}
+                            // For Store details
+                            handleOnStoreDetails={setStorePaymentMethod}
+                            // For Address
+                            setAddressRef={setAddressRef}
+                            billingAddress={billingAddress}
+                            billingAddressValidationRules={partialAddressSchema && getPartialAddressValidationRules(partialAddressCountry.current)}
+                            partialAddressSchema={partialAddressSchema}
+                            handleAddress={handleAddress}
+                            onAddressLookup={props.onAddressLookup}
+                            onAddressSelected={props.onAddressSelected}
+                            addressSearchDebounceMs={props.addressSearchDebounceMs}
+                            //
+                            iOSFocusedField={iOSFocusedField}
+                            //
+                            onFieldFocusAnalytics={onFieldFocusAnalytics}
+                            onFieldBlurAnalytics={onFieldBlurAnalytics}
+                        />
+                    </div>
+                )}
             />
 
             {props.fastlaneConfiguration && (
