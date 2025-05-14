@@ -39,7 +39,9 @@ export const ANALYTICS_ERROR_CODE = {
  */
 export enum InfoEventTypes {
     clicked = 'clicked',
-    rendered = 'rendered'
+    rendered = 'rendered',
+    validationError = 'validationError',
+    fieldValid = 'fieldValid'
 }
 
 export const ANALYTICS_ACTION_STR = 'action';
