@@ -131,6 +131,8 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
 
     public componentDidUpdate() {
         this.checkForKCPFields();
+        // Pass all the state data up - Used right now for loading status
+        this.props.onStateUpdate?.(this.state);
     }
 
     public componentWillUnmount(): void {
