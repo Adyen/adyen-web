@@ -105,7 +105,7 @@ const CardInput = (props: CardInputProps) => {
      * Used tho show and hide the pay button and instructions text
      * Should mimick the same logic as CardInput loading wrapper
      */
-    const [showCardUIElements, setShowCardUIElements] = useState('loading');
+    const [showCardUIElements, setShowCardUIElements] = useState(false);
 
     /**
      * LOCAL VARS
@@ -241,9 +241,12 @@ const CardInput = (props: CardInputProps) => {
      * Used right now to mimick the loading status changes, this can only be done this way
      * Trying to do it via onConfiguSuccess or onChange has side effects
      */
-    const handleSFPStateUpdate = useCallback(sfpState => {
-        mimickLoadingStatusChange(sfpState);
-    }, []);
+    const handleSFPStateUpdate = useCallback(
+        sfpState => {
+            mimickLoadingStatusChange(sfpState);
+        },
+        [showCardUIElements, setShowCardUIElements]
+    );
 
     /**
      * This function implements the same logic that LoadingProvider uses to show and hide elements
@@ -254,9 +257,9 @@ const CardInput = (props: CardInputProps) => {
     const mimickLoadingStatusChange = sfpState => {
         if (!sfpState.status) return;
         if (sfpState.status == 'loading') {
-            setShowCardUIElements('false');
+            setShowCardUIElements(false);
         } else {
-            setShowCardUIElements('false');
+            setShowCardUIElements(true);
         }
     };
 
