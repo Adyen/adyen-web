@@ -226,7 +226,7 @@ class Core implements ICore {
             });
     }
 
-    private afterAdditionalDetails = (response: PaymentResponseData): Promise<PaymentResponseData | Error> => {
+    private readonly afterAdditionalDetails = (response: PaymentResponseData): Promise<PaymentResponseData | Error> => {
         /**
          * After the user is redirected back, a request to `/details` or `/paymentDetails` will be made.
          * Typically, the response will not include an action object, except for the case of `paybybank_pix` payment method.

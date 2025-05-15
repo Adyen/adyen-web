@@ -26,8 +26,12 @@ function Enrollment(props: EnrollmentProps) {
             alt: i18n.get('paybybankpix.await.logoAlt.openFinance'),
             src: `${getImage({ parentFolder: `${props.txVariant}/` })('open-finance')}`
         },
-        { name: 'arrow-down', alt: i18n.get('paybybankpix.await.logoAlt.arrowDown'), src: `${getImage()('arrow_down')}` },
-        { name: 'bank', alt: i18n.get('paybybankpix.await.logoAlt.bank'), src: `${getImage()('bento_bank')}` }
+        {
+            name: 'arrow-down',
+            alt: i18n.get('paybybankpix.await.logoAlt.arrowDown'),
+            src: `${getImage({ imageFolder: 'components/' })('arrow_down')}`
+        },
+        { name: 'bank', alt: i18n.get('paybybankpix.await.logoAlt.bank'), src: `${getImage({ imageFolder: 'components/' })('bank')}` }
     ];
     const self = useRef({
         showValidation: () => {

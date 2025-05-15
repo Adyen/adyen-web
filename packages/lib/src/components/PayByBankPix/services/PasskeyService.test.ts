@@ -27,7 +27,7 @@ describe('PasskeyService', () => {
     it('should initialize successfully', async () => {
         const mockLoader = PasskeySdkLoader as jest.MockedClass<typeof PasskeySdkLoader>;
         mockLoader.prototype.load.mockResolvedValue(mockPasskeySdk);
-        await expect(passkeyService.initialize()).resolves.toBe(passkeyService);
+        await expect(passkeyService.initialize()).resolves.toBeUndefined();
         expect(mockLoader.prototype.load).toHaveBeenCalledWith(mockPasskeyServiceConfig.environment);
     });
 
