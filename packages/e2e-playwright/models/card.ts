@@ -52,6 +52,8 @@ class Card extends Base {
     readonly selectorList: Locator;
     readonly threeDs2Challenge: ThreeDs2Challenge;
 
+    readonly payButton: Locator;
+
     constructor(
         public readonly page: Page,
         public readonly rootElementSelector?: Locator | string
@@ -121,6 +123,9 @@ class Card extends Base {
         this.selectorList = this.rootElement.getByRole('listbox');
 
         this.threeDs2Challenge = new ThreeDs2Challenge(page);
+
+        // Regex needs to be this complex other wise it matches Google Pay in the Dropin
+        this.payButton = this.page.getByRole('button', { name: /(Pay .*)|(Save details)/ });
     }
 
     // The brands as displayed under the CardNumber field
@@ -164,9 +169,7 @@ class Card extends Base {
     }
 
     async isComponentVisible() {
-        await this.cardNumberInput.waitFor({ state: 'visible' });
-        await this.expiryDateInput.waitFor({ state: 'visible' });
-        await this.cvcInput.waitFor({ state: 'visible' });
+        await this.payButton.waitFor({state: 'visible'})
     }
 
     /**
