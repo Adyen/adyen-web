@@ -8,7 +8,7 @@ const LOGO = {
     altI18nKey: 'paybybankpix.await.logoAlt.openFinance'
 };
 
-function IssuerListIntroduction() {
+function IssuerListIntroduction({ txVariant }) {
     const { i18n } = useCoreContext();
     const getImage = useImage();
 
@@ -16,7 +16,7 @@ function IssuerListIntroduction() {
         <div className={'adyen-checkout-issuer-list-introduction'}>
             <div className="adyen-checkout-issuer-list-introduction-logo-container">
                 <img
-                    src={getImage()(LOGO.name)}
+                    src={getImage({ parentFolder: `${txVariant}/` })(LOGO.name)}
                     alt={i18n.get(LOGO.altI18nKey)}
                     className="adyen-checkout-issuer-list-introduction-logo-container__logo"
                 />

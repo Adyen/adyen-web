@@ -1,8 +1,10 @@
+import { SHOPPER_REFERENCE } from '../../../config/commonConfig';
+
 const mockRegistractionOptions = {
     enrollmentId: 'urn:Iniciador:d71e9826-37f0-4585-a6ff-0e273bbd1ab2',
     challenge: 'ZC-rnlucudt1dczpMvyrq82gZEAfg4Hkyb9DDgAYIU0',
     rp: {
-        id: window.location.hostname,
+        id: window.location.host,
         name: 'Adyen'
     },
     user: {
@@ -48,7 +50,7 @@ const mockAuthOptions = {
     ],
     timeout: 60000,
     userVerification: 'required',
-    rpId: 'sandbox.inic.dev'
+    rpId: 'localhost'
 };
 
 export const mockPaymentsResponseMerchantPage = {
@@ -137,7 +139,7 @@ export const mockEnrollmentPayload = {
     socialSecurityNumber: '81421811006',
     recurringProcessingModel: 'CardOnFile',
     shopperInteraction: 'ContAuth',
-    shopperReference: 'leonardo-12345',
+    shopperReference: SHOPPER_REFERENCE,
     shopperName: {
         firstName: 'Yu',
         lastName: 'Long'

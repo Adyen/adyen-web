@@ -1,15 +1,15 @@
 import { h, Fragment } from 'preact';
-import { useState, useEffect, useRef } from 'preact/hooks';
+import { useState, useEffect, useRef, useCallback } from 'preact/hooks';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { PaymentProps } from './types';
 import PaymentDetails from '../../../internal/Voucher';
 import useImage from '../../../../core/Context/useImage';
 import PayButton from '../../../internal/PayButton';
-import './Payment.scss';
+import './StoredPayment.scss';
 import getAuthorizationStatus from './getAuthorizationStatus';
 import PayByBankPixAwait from '../Enrollment/components/PayByBankPixAwait';
 
-function Payment({
+function StoredPayment({
     onPay,
     type,
     countdownTime,
@@ -29,7 +29,13 @@ function Payment({
     const [status, setStatus] = useState('ready');
     const [authorizationOptions, setAuthorizationOptions] = useState<string>(null);
     const buttonModifiers = ['standalone'];
-    const logos = [{ name: 'open-finance', alt: i18n.get('paybybankpix.await.logoAlt.openFinance'), src: `${getImage()('open-finance')}` }];
+    const logos = [
+        {
+            name: 'open-finance',
+            alt: i18n.get('paybybankpix.await.logoAlt.openFinance'),
+            src: `${getImage({ parentFolder: `${txVariant}/` })('open-finance')}`
+        }
+    ];
     const details = [
         { label: i18n.get('paybybankpix.payment.receiver.label'), value: receiver },
         { label: i18n.get('paybybankpix.payment.paymentDate.label'), value: i18n.date(new Date().toString()) },
@@ -39,15 +45,16 @@ function Payment({
         setStatus
     });
 
-    const pollStatus = async () => {
+    const pollStatus = useCallback(async () => {
         if (authorizationOptions) return;
 
         const response = await getAuthorizationStatus({ enrollmentId, initiationId, clientKey, loadingContext });
         if (response.authorizationOptions) {
             setAuthorizationOptions(response.authorizationOptions);
         }
+
         return response;
-    };
+    }, [authorizationOptions, enrollmentId, initiationId, clientKey, loadingContext]);
 
     useEffect(() => {
         setComponentRef(self.current);
@@ -88,4 +95,4 @@ function Payment({
     );
 }
 
-export default Payment;
+export default StoredPayment;
