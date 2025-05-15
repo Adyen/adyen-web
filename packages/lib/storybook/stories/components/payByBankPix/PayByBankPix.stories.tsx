@@ -13,12 +13,13 @@ import {
     mockPostEnrollmentResponse,
     mockReceivedStatusSimulateHostedPage,
     mockSubmitDetailsResponseSimulateHostedPage,
+    mockDetailsResponseRedirectEnrollment,
     mockPaymentsResponsePayment,
-    mockReceivedStatusPayment,
-    mockDetailsResponseRedirectEnrollment
+    mockReceivedStatusPayment
 } from './mocks';
 import { SimulatedHostedPage } from './SimulatedHostedPage';
 import { getSearchParameter } from '../../../utils/get-query-parameters';
+import { SHOPPER_REFERENCE } from '../../../config/commonConfig';
 
 type PixBiometricStory = StoryConfiguration<PayByBankPixConfiguration>;
 
@@ -26,7 +27,7 @@ const meta: MetaConfiguration<PayByBankPixConfiguration> = {
     title: 'Components/PayByBankPix'
 };
 
-const useMsw = true;
+const useMsw = false;
 let detailsCallCount = 0;
 
 const render = ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<PayByBankPixConfiguration>) => (
@@ -66,7 +67,7 @@ export const HostedPageEnrollment: PixBiometricStory = {
     args: {
         useSessions: false,
         countryCode: 'BR',
-        shopperReference: 'leonardo-12345',
+        shopperReference: SHOPPER_REFERENCE,
         amount: 0,
         // @ts-ignore override the /sessions payload
         sessionData: mockEnrollmentPayload,
@@ -115,53 +116,57 @@ export const HostedPageEnrollment: PixBiometricStory = {
             : undefined
     }
 };
+
 export const HostedPagePayment: PixBiometricStory = {
-    render: props => <SimulatedHostedPage {...props} />,
+    render: props => (
+        <>
+            <span>Mock only, go to drop-in to test this flow.</span>
+            <br />
+            <span>First create an enrollment, and pay with the enrolled device</span>
+            <SimulatedHostedPage {...props} />
+        </>
+    ),
     args: {
         useSessions: false,
         countryCode: 'BR',
-        shopperReference: 'leonardo-12345',
+        shopperReference: SHOPPER_REFERENCE,
         amount: 3000,
         // @ts-ignore override the /sessions payload
         sessionData: mockEnrollmentPayload,
         componentConfiguration: {
             _isAdyenHosted: true,
-            deviceId: 'b9be0556-a449-467b-a74a-18ab9754f907',
-            storedPaymentMethodId: 'M9WS5DT5PGCM9J65',
-            receiver: 'xxx',
-            //issuer: '44471172',
+            storedPaymentMethodId: 'mock_stored_id',
+            payByBankPixDetails: { deviceId: 'replace_with_your_enrolled_device_id', ispb: 'xx', receiver: 'xxx' },
             onChange: data => {
                 console.log({ data });
             }
         }
     },
     parameters: {
-        msw: useMsw
-            ? {
-                  handlers: [
-                      http.post(
-                          'https://checkoutshopper-test.adyen.com/checkoutshopper/utility/v1/pixpaybybank/redirect-result?clientKey=test_L6HTEOAXQBCZJHKNU4NLN6EI7IE6VRRW',
-                          () => {
-                              return HttpResponse.json(mockPostEnrollmentResponse);
-                          }
-                      ),
-                      http.post('https://localhost:3020/api/payments', () => {
-                          return HttpResponse.json(mockPaymentsResponsePayment);
-                      }),
-                      http.get(
-                          'https://checkoutshopper-test.adyen.com/checkoutshopper/utility/v1/pixpaybybank/authorization-options?initiationId=initiation123&enrollmentId=enrollment123&clientKey=test_L6HTEOAXQBCZJHKNU4NLN6EI7IE6VRRW',
-                          () => {
-                              return HttpResponse.json(
-                                  getSearchParameter('pollStatus') === 'pending' ? mockPendingStatusSimulateHostedPage : mockReceivedStatusPayment
-                              );
-                          }
-                      ),
-                      http.post('/api/details', () => {
-                          return HttpResponse.json(mockSubmitDetailsResponseSimulateHostedPage);
-                      })
-                  ]
-              }
-            : undefined
+        msw: {
+            handlers: [
+                http.post(
+                    'https://checkoutshopper-test.adyen.com/checkoutshopper/utility/v1/pixpaybybank/redirect-result?clientKey=test_L6HTEOAXQBCZJHKNU4NLN6EI7IE6VRRW',
+                    () => {
+                        return HttpResponse.json(mockPostEnrollmentResponse);
+                    }
+                ),
+                http.post('https://localhost:3020/api/payments', () => {
+                    return HttpResponse.json(mockPaymentsResponsePayment);
+                }),
+                http.get(
+                    'https://checkoutshopper-test.adyen.com/checkoutshopper/utility/v1/pixpaybybank/authorization-options?initiationId=initiation123&enrollmentId=enrollment123&clientKey=test_L6HTEOAXQBCZJHKNU4NLN6EI7IE6VRRW',
+                    () => {
+                        return HttpResponse.json(
+                            getSearchParameter('pollStatus') === 'pending' ? mockPendingStatusSimulateHostedPage : mockReceivedStatusPayment
+                        );
+                    }
+                ),
+                http.post('/api/details', () => {
+                    return HttpResponse.json(mockSubmitDetailsResponseSimulateHostedPage);
+                })
+            ]
+        }
     }
 };
 

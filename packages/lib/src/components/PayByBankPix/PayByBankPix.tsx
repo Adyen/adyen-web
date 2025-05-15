@@ -9,7 +9,7 @@ import AdyenCheckoutError, { ERROR } from '../../core/Errors/AdyenCheckoutError'
 import { PasskeyService } from './services/PasskeyService';
 import { authorizeEnrollment } from './services/authorizeEnrollment';
 import { authorizePayment } from './services/authorizePayment';
-import Payment from './components/Payment';
+import StoredPayment from './components/StoredPayment';
 import Enrollment from './components/Enrollment';
 import { PaymentAction } from '../../types/global-types';
 import type { ICore } from '../../core/types';
@@ -19,7 +19,7 @@ const isAdyenHosted = () => {
         const currentUrl = new URL(window.location.href);
         return currentUrl.hostname.endsWith('.adyen.com');
     } catch (e) {
-        // SSR (also means non adyen hosted), or it fails to parse the full url
+        // SSR, or it fails to parse the full url
         return false;
     }
 };
@@ -62,7 +62,6 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
     public override async isAvailable(): Promise<void> {
         const unsupportedReason = await this.passkeyService.getWebAuthnUnsupportedReason();
         if (unsupportedReason) {
-            // todo: send to analytics
             return Promise.reject(new AdyenCheckoutError(ERROR, unsupportedReason));
         }
         if (!this.props._isAdyenHosted) {
@@ -219,7 +218,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <SRPanelProvider srPanel={this.props.modules.srPanel}>
                     {this.props.storedPaymentMethodId != null ? (
-                        <Payment
+                        <StoredPayment
                             txVariant={PayByBankPixElement.type}
                             type={this.props.type}
                             clientKey={this.props.clientKey}

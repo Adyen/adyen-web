@@ -1,7 +1,7 @@
 import { TxVariants } from '../tx-variants';
 import { UIElementProps } from '../internal/UIElement/types';
 import { AwaitProps, IssuerListProps } from './components/Enrollment/types';
-import { PaymentProps } from './components/Payment/types';
+import { PaymentProps } from './components/StoredPayment/types';
 
 export type RiskSignals = {
     osVersion?: string;

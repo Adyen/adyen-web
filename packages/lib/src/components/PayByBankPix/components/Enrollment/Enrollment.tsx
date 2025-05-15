@@ -20,10 +20,13 @@ function Enrollment(props: EnrollmentProps) {
     const getImage = useImage();
     const issuerListRef = useRef<ComponentMethodsRef>(null);
     const [registrationOptions, setRegistrationOptions] = useState<string>(null);
-    // todo: add
     const logos = [
-        { name: 'open-finance', alt: i18n.get('paybybankpix.await.logoAlt.openFinance'), src: `${getImage()('open-finance')}` },
-        { name: 'arrow-down', alt: i18n.get('paybybankpix.await.logoAlt.arrowDown'), src: `${getImage()('arrow-down')}` },
+        {
+            name: 'open-finance',
+            alt: i18n.get('paybybankpix.await.logoAlt.openFinance'),
+            src: `${getImage({ parentFolder: `${props.txVariant}/` })('open-finance')}`
+        },
+        { name: 'arrow-down', alt: i18n.get('paybybankpix.await.logoAlt.arrowDown'), src: `${getImage()('arrow_down')}` },
         { name: 'bank', alt: i18n.get('paybybankpix.await.logoAlt.bank'), src: `${getImage()('bento_bank')}` }
     ];
     const self = useRef({
@@ -77,7 +80,7 @@ function Enrollment(props: EnrollmentProps) {
                 ></PayByBankPixAwait>
             ) : (
                 <div className="adyen-checkout-pix-enrollment-issuer-list">
-                    <IssuerListIntroduction />
+                    <IssuerListIntroduction txVariant={props.txVariant} />
                     <IssuerList
                         items={useIssuerWithLogo({ issuers: props.issuers, txVariant: props.txVariant })}
                         onSubmitAnalytics={props.onSubmitAnalytics}
