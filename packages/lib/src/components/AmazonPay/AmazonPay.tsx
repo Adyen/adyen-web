@@ -9,7 +9,8 @@ import { getCheckoutDetails } from './services';
 import './AmazonPay.scss';
 import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
-import { SendAnalyticsObject } from '../../core/Analytics/types';
+import { EnhancedAnalyticsObject } from '../../core/Analytics/types';
+import { ANALYTICS_EXPRESS_PAGES_ARRAY, ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
 
 export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
     public static type = TxVariants.amazonpay;
@@ -40,9 +41,22 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
         };
     }
 
-    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
+    protected submitAnalytics(analyticsObj: EnhancedAnalyticsObject) {
         // Analytics will need to know about this.props.isExpress & this.props.expressPage
-        super.submitAnalytics({ ...analyticsObj }, this.props);
+        if (analyticsObj.type === ANALYTICS_RENDERED_STR) {
+            const { isExpress, expressPage } = this.props;
+            const hasExpressPage = expressPage && ANALYTICS_EXPRESS_PAGES_ARRAY.includes(expressPage);
+
+            if (typeof isExpress === 'boolean') {
+                analyticsObj.isExpress = isExpress;
+            }
+
+            if (isExpress === true && hasExpressPage) {
+                analyticsObj.expressPage = expressPage; // We only care about the expressPage value if isExpress is true
+            }
+        }
+
+        super.submitAnalytics({ ...analyticsObj });
     }
 
     getShopperDetails() {

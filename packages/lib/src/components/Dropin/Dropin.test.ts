@@ -10,7 +10,7 @@ import Fastlane from '../PayPalFastlane';
 import enUS from '../../../../server/translations/en-US.json';
 import getTranslations from '../../core/Services/get-translations';
 import { SRPanel } from '../../core/Errors/SRPanel';
-import { ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
+import { ANALYTICS_EVENT, ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
 
 import type { CoreConfiguration, ICore } from '../../core/types';
 import type { PaymentActionsType } from '../../types/global-types';
@@ -293,9 +293,13 @@ describe('Dropin', () => {
             });
             render(dropin.render());
             await new Promise(process.nextTick);
-            expect(mockSendAnalytics).toHaveBeenCalledWith('dropin', {
+            expect(mockSendAnalytics).toHaveBeenCalledWith({
+                category: ANALYTICS_EVENT.info,
                 type: ANALYTICS_RENDERED_STR,
-                configData: dropin.dropinRef.analyticConfigData
+                component: 'dropin',
+                configData: dropin.dropinRef.analyticConfigData,
+                timestamp: expect.any(String),
+                id: expect.any(String)
             });
 
             jest.restoreAllMocks();

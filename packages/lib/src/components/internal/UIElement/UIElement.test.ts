@@ -585,11 +585,19 @@ describe('UIElement', () => {
             element.submit();
             await new Promise(process.nextTick);
 
-            expect(mockedSendAnalytics).toHaveBeenCalledWith(
-                txVariant,
-                { code: errorCode, errorType: ANALYTICS_ERROR_TYPE.apiError, type: ANALYTICS_EVENT.error },
-                undefined
-            );
+            // expect(mockedSendAnalytics).toHaveBeenCalledWith(
+            //     txVariant,
+            //     { code: errorCode, errorType: ANALYTICS_ERROR_TYPE.apiError, type: ANALYTICS_EVENT.error },
+            //     undefined
+            // );
+            expect(mockedSendAnalytics).toHaveBeenCalledWith({
+                category: ANALYTICS_EVENT.error,
+                code: errorCode,
+                errorType: ANALYTICS_ERROR_TYPE.apiError,
+                timestamp: expect.any(String),
+                id: expect.any(String),
+                component: expect.any(String)
+            });
         });
     });
 
@@ -737,11 +745,14 @@ describe('UIElement', () => {
             element.handleAdditionalDetails({});
             await new Promise(process.nextTick);
 
-            expect(mockedSendAnalytics).toHaveBeenCalledWith(
-                txVariant,
-                { code: errorCode, errorType: ANALYTICS_ERROR_TYPE.apiError, type: ANALYTICS_EVENT.error },
-                undefined
-            );
+            expect(mockedSendAnalytics).toHaveBeenCalledWith({
+                category: ANALYTICS_EVENT.error,
+                code: errorCode,
+                errorType: ANALYTICS_ERROR_TYPE.apiError,
+                timestamp: expect.any(String),
+                id: expect.any(String),
+                component: expect.any(String)
+            });
         });
     });
 });

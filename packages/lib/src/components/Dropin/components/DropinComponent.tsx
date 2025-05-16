@@ -10,6 +10,8 @@ import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import Button from '../../internal/Button';
 import type { DropinComponentProps, DropinComponentState, DropinStatus, DropinStatusProps, onOrderCancelData } from '../types';
 import UIElement from '../../internal/UIElement';
+import { createNewAnalyticsEvent } from '../../../core/Analytics/utils';
+import { EnhancedAnalyticsObject } from '../../../core/Analytics/types';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
@@ -47,10 +49,13 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
 
                 this.setStatus('ready');
 
-                this.props.modules?.analytics.sendAnalytics('dropin', {
+                const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
+                    category: ANALYTICS_EVENT.info,
                     type: ANALYTICS_RENDERED_STR,
+                    component: 'dropin',
                     configData: this.analyticConfigData
                 });
+                this.props.modules?.analytics.sendAnalytics(aObj);
             }
         );
 
@@ -103,7 +108,11 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         if ((activePaymentMethod && activePaymentMethod._id !== paymentMethod._id) || !activePaymentMethod) {
             this.props.onSelect?.(paymentMethod);
 
-            paymentMethod.submitAnalytics({ type: ANALYTICS_RENDERED_STR });
+            const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
+                category: ANALYTICS_EVENT.info,
+                type: ANALYTICS_RENDERED_STR
+            });
+            paymentMethod.submitAnalytics(aObj);
         }
     };
 
@@ -127,11 +136,13 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
             showDefaultPaymentMethodList: true
         });
 
-        this.props.modules?.analytics.sendAnalytics('dropin', {
-            type: ANALYTICS_EVENT.info,
-            infoType: InfoEventTypes.clicked,
-            target: 'otherpaymentmethod_button'
+        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
+            category: ANALYTICS_EVENT.info,
+            type: InfoEventTypes.clicked,
+            target: 'otherpaymentmethod_button',
+            component: 'dropin'
         });
+        this.props.modules?.analytics.sendAnalytics(aObj);
     };
 
     closeActivePaymentMethod() {
