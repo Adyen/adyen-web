@@ -76,15 +76,19 @@ function Await(props: AwaitComponentProps) {
         props.onError(new AdyenCheckoutError('ERROR', 'error result with no payload in response'));
     };
 
-    const checkStatus = (): void => {
-        const { paymentData, clientKey, throttleInterval } = props;
+    const checkStatus = async (): Promise<void> => {
+        const { paymentData, clientKey, throttleInterval, pollStatus } = props;
+
+        // If there's a custom pollStatus function, call it.
+        // Otherwise, call the default one.
+        const pollStatusFunction = pollStatus ?? (() => checkPaymentStatus(paymentData, clientKey, loadingContext, throttleInterval));
 
         if (!hasCalledActionHandled) {
             props.onActionHandled?.({ componentType: props.type, actionDescription: 'polling-started' });
             setHasCalledActionHandled(true);
         }
 
-        void checkPaymentStatus(paymentData, clientKey, loadingContext, throttleInterval)
+        return pollStatusFunction()
             .then(processResponse)
             .catch(({ message, ...response }) => ({
                 type: 'network-error',
@@ -120,7 +124,7 @@ function Await(props: AwaitComponentProps) {
     }, [props.shouldRedirectAutomatically, props.url]);
 
     useEffect(() => {
-        checkStatus();
+        void checkStatus();
         return (): void => {
             clearTimeout(storedTimeout);
         };
@@ -134,8 +138,8 @@ function Await(props: AwaitComponentProps) {
         if (!loading) {
             // Retry until getting a complete response from the server OR it times out
             // Changes setTimeout time to new value (throttleInterval) after a certain amount of time (throttleTime) has passed
-            const statusInterval = (): void => {
-                checkStatus();
+            const statusInterval = async (): Promise<void> => {
+                await checkStatus();
 
                 const actualTimePassed = timePassed + delay;
                 // timePassed is the value that is the main "engine" that drives this useEffect/polling
@@ -148,7 +152,7 @@ function Await(props: AwaitComponentProps) {
             };
 
             // Create (another) interval to poll for a result
-            setStoredTimeout(setTimeout(statusInterval, delay));
+            setStoredTimeout(setTimeout(() => void statusInterval(), delay));
         }
     }, [loading, expired, completed, timePassed]);
 
@@ -198,7 +202,7 @@ function Await(props: AwaitComponentProps) {
                 <div className="adyen-checkout__await__amount">{i18n.amount(amount.value, amount.currency)}</div>
             )}
 
-            <div className="adyen-checkout__await__subtitle">{props.messageText}</div>
+            {props.messageText != null && <div className="adyen-checkout__await__subtitle">{props.messageText}</div>}
 
             <div className="adyen-checkout__await__indicator-holder">
                 <div className="adyen-checkout__await__indicator-spinner">

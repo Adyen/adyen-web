@@ -377,5 +377,21 @@
     "card.fastlane.modal.benefit2.header": "Schützen Sie Ihre Daten",
     "card.fastlane.modal.benefit2.text": "Ihre Zahlungsinformationen werden verschlüsselt gespeichert und an Ihre Einkaufsorte gesendet.",
     "card.fastlane.modal.benefit3.header": "Filialübergreifend einsetzbar",
-    "card.fastlane.modal.benefit3.text": "Beschleunigen Sie den Bezahlvorgang überall, wo Fastlane verfügbar ist."
+    "card.fastlane.modal.benefit3.text": "Beschleunigen Sie den Bezahlvorgang überall, wo Fastlane verfügbar ist.",
+    "paybybankpix.redirectBtn.label": "Weiter zu Pix über OpenBanking",
+    "paybybankpix.issuerList.disclaimer": "Durch Klicken auf „Weiter“ stimmen Sie den %#Allgemeinen Geschäftsbedingungen%# zu und werden zu Ihrer Bank weitergeleitet",
+    "paybybankpix.issuerList.introduction.title": "Verknüpfen Sie Ihr Konto",
+    "paybybankpix.issuerList.introduction.logo.content": "Verbinden Sie Ihre bevorzugten PIX-Schlüssel, um über Open Finance zu bezahlen",
+    "paybybankpix.issuerList.introduction.content1": "Genießen Sie den Komfort, mit nur einem Klick zu bezahlen, unterstützt durch die Sicherheit von Open Finance. Sie müssen keine QR-Codes scannen oder Details eingeben, sondern einfach genehmigen und los geht's!",
+    "paybybankpix.issuerList.introduction.content2": "Verwenden Sie dieses Gerät, um Ihre Zahlungen sofort zu autorisieren. Wählen Sie Ihre Bank aus und stellen Sie sicher, dass die App Ihres Finanzinstituts auf Ihrem Smartphone installiert ist, um die Verbindung abzuschließen.",
+    "paybybankpix.await.waitForConfirmation": "Wir warten auf Ihre Bestätigung...",
+    "paybybankpix.await.timeToPay": "Dieser Vorgang wird ungefähr %{numberOfMin} Minute(n) dauern",
+    "paybybankpix.await.withOpenFinance": "Mit der Leichtigkeit von Open Finance",
+    "paybybankpix.await.logoAlt.openFinance": "Open Finance",
+    "paybybankpix.payment.receiver.label": "Empfänger",
+    "paybybankpix.payment.paymentDate.label": "Zahlungsdatum",
+    "paybybankpix.payment.paymentMethod.label": "Zahlungsmethode",
+    "paybybankpix.storedPayment.payButton.label": "Mit Zahlung fortfahren",
+    "paybybankpix.storedPayment.additionalLabel": "%{receiver}-Konto über PIX",
+    "paybybankpix.await.fetchDetails": "Details werden abgerufen..."
 }

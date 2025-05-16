@@ -63,6 +63,7 @@ import PayByBankUS from './PayByBankUS';
 import Fastlane from './PayPalFastlane/Fastlane';
 import { TxVariants } from './tx-variants';
 import PayTo from './PayTo/PayTo';
+import PayByBankPix from './PayByBankPix';
 
 /**
  * Maps each tx variant to a Component element.
@@ -181,6 +182,7 @@ export const ComponentsMap = {
     [TxVariants.trustly]: Trustly,
     [TxVariants.paybybank_AIS_DD]: PayByBankUS,
     [TxVariants.riverty]: Riverty,
+    [TxVariants.paybybank_pix]: PayByBankPix,
     /** Redirect */
 
     /** Klarna */

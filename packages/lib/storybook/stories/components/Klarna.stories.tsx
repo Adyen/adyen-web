@@ -1,4 +1,3 @@
-import React from 'react';
 import { MetaConfiguration, StoryConfiguration } from '../types';
 import { ComponentContainer } from '../ComponentContainer';
 import { KlarnaConfiguration } from '../../../src/components/Klarna/types';

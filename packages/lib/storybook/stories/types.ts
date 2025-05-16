@@ -16,8 +16,10 @@ export type ShopperDetails = {
 };
 
 export type GlobalStoryProps = AdyenCheckoutProps &
-    CoreConfiguration & {
+    Omit<CoreConfiguration, 'amount'> & {
         useSessions: boolean;
+        redirectResult?: string;
+        sessionId?: string;
     };
 
 export interface PaymentMethodStoryProps<T> extends GlobalStoryProps {

@@ -375,5 +375,21 @@
     "card.fastlane.modal.benefit2.header": "Защитите свои данные",
     "card.fastlane.modal.benefit2.text": "Ваши платежные данные шифруются при хранении и отправке в магазины для покупок.",
     "card.fastlane.modal.benefit3.header": "Использование во множестве магазинов",
-    "card.fastlane.modal.benefit3.text": "Ускорьте оформление покупки везде, где доступен Fastlane."
+    "card.fastlane.modal.benefit3.text": "Ускорьте оформление покупки везде, где доступен Fastlane.",
+    "paybybankpix.redirectBtn.label": "Перейти на Pix, используя OpenBanking",
+    "paybybankpix.issuerList.disclaimer": "Нажимая «Продолжить», вы выражаете согласие с %#Условиями%# и будете перенаправлены на сайт своего банка",
+    "paybybankpix.issuerList.introduction.title": "Привяжите свой счет",
+    "paybybankpix.issuerList.introduction.logo.content": "Подключите выбранные ключи PIX для оплаты через Open Finance",
+    "paybybankpix.issuerList.introduction.content1": "Оцените удобство оплаты одним нажатием под защитой Open Finance. Без сканирования QR-кодов и ввода данных — достаточно одного подтверждения!",
+    "paybybankpix.issuerList.introduction.content2": "Используйте это устройство для мгновенного подтверждения платежей. Для завершения подключения выберите свой банк и убедитесь, что на смартфоне установлено приложение вашего финансового учреждения.",
+    "paybybankpix.await.waitForConfirmation": "В ожидании вашего подтверждения…",
+    "paybybankpix.await.timeToPay": "Этот процесс займет приблизительно %{numberOfMin} мин.",
+    "paybybankpix.await.withOpenFinance": "Удобство Open Finance",
+    "paybybankpix.await.logoAlt.openFinance": "Open Finance",
+    "paybybankpix.payment.receiver.label": "Получатель",
+    "paybybankpix.payment.paymentDate.label": "Дата платежа",
+    "paybybankpix.payment.paymentMethod.label": "Способ оплаты",
+    "paybybankpix.storedPayment.payButton.label": "Продолжить платеж",
+    "paybybankpix.storedPayment.additionalLabel": "Счет %{receiver} через PIX",
+    "paybybankpix.await.fetchDetails": "Получение данных..."
 }

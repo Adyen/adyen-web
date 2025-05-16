@@ -378,5 +378,21 @@
     "card.fastlane.modal.benefit2.header": "Protegiu la vostra informació",
     "card.fastlane.modal.benefit2.text": "La vostra informació de pagament està encriptada quan s'emmagatzema i s'envia als llocs on compreu.",
     "card.fastlane.modal.benefit3.header": "Utilitzeu a totes les botigues",
-    "card.fastlane.modal.benefit3.text": "Accelereu el procés de pagament a tot arreu on Fastlane estigui disponible."
+    "card.fastlane.modal.benefit3.text": "Accelereu el procés de pagament a tot arreu on Fastlane estigui disponible.",
+    "paybybankpix.redirectBtn.label": "Continueu a Pix mitjançant OpenBanking",
+    "paybybankpix.issuerList.disclaimer": "En fer clic a Continua, accepteu els %#Termes i Condicions%# i se us redirigirà al vostre banc",
+    "paybybankpix.issuerList.introduction.title": "Enllaçar el vostre compte",
+    "paybybankpix.issuerList.introduction.logo.content": "Connecteu les vostres claus PIX preferides per pagar a través d'Open Finance",
+    "paybybankpix.issuerList.introduction.content1": "Gaudiu de la comoditat de pagar amb un sol clic, amb la seguretat que us ofereix Open Finance. No cal escanejar codis QR ni introduir dades, simplement aproveu i llestos!",
+    "paybybankpix.issuerList.introduction.content2": "Utilitzeu aquest dispositiu per autoritzar els pagaments a l'instant. Seleccioneu el vostre banc i assegureu-vos que teniu instal·lada l'aplicació de l'entitat financera al telèfon intel·ligent per completar la connexió.",
+    "paybybankpix.await.waitForConfirmation": "Esperant la vostra confirmació...",
+    "paybybankpix.await.timeToPay": "Aquest procés trigarà aproximadament %{numberOfMin} minut(s)",
+    "paybybankpix.await.withOpenFinance": "Amb la facilitat d'Open Finance",
+    "paybybankpix.await.logoAlt.openFinance": "Open Finance",
+    "paybybankpix.payment.receiver.label": "Receptor",
+    "paybybankpix.payment.paymentDate.label": "Data de pagament",
+    "paybybankpix.payment.paymentMethod.label": "mètode de pagament",
+    "paybybankpix.storedPayment.payButton.label": "Continuar el pagament",
+    "paybybankpix.storedPayment.additionalLabel": "El compte de %{receiver} a través de PIX",
+    "paybybankpix.await.fetchDetails": "S'estan obtenint les dades..."
 }
