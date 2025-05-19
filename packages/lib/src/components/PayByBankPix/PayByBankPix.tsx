@@ -51,10 +51,22 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         return !!this.state?.isValid;
     }
 
+    /**
+     * Display in the drop-in
+     */
     get additionalInfo() {
         return this.props.storedPaymentMethodId
             ? this.props.i18n.get('paybybankpix.storedPayment.additionalLabel', { values: { receiver: this.props?.payByBankPixDetails?.receiver } })
             : '';
+    }
+
+    /**
+     * Display in the drop-in
+     */
+    public override get icon() {
+        return this.props.storedPaymentMethodId
+            ? this.resources.getImage({ parentFolder: `${PayByBankPixElement.type}/` })(this.props?.payByBankPixDetails?.ispb)
+            : super.icon;
     }
 
     /**
@@ -69,8 +81,16 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
             return Promise.resolve();
         }
 
+        // Load passkey sdk on the hosted page
         try {
             await this.passkeyService.initialize();
+
+            if (this.props.storedPaymentMethodId) {
+                // If the provided deviceId from the server does not match the localstorage deviceId, do not render the stored payment component.
+                const shouldShowStoredPaymentMethod = await this.passkeyService.canUseStoredCredential();
+                return shouldShowStoredPaymentMethod ? Promise.resolve() : Promise.reject();
+            }
+
             return Promise.resolve();
         } catch (error) {
             this.handleError(
@@ -80,6 +100,9 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         }
     }
 
+    /**
+     * Make sure the await action UIElement is available before mounting
+     */
     public override handleAction(action: PaymentAction, props: {} = {}): UIElement | null {
         const paymentAction = this.core.createFromAction(action, {
             ...this.elementRef.props,
@@ -88,7 +111,6 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         });
         if (paymentAction) {
             this.unmount();
-            // Make sure the await action UIElement is available before mounting
             void paymentAction.isAvailable().then(() => {
                 paymentAction.mount(this._node);
             });
@@ -144,7 +166,6 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
                 loadingContext: this.props.loadingContext
             });
             // Make paymentDetails call to finalize the enrollment.
-            // The response of the details call should be a redirect action to the merchant's site.
             this.handleAdditionalDetails({ data: { details: { redirectResult } } });
         } catch (error) {
             const errorMsg = error instanceof Error ? error.message : 'Unknown error in the authorizeEnrollment';

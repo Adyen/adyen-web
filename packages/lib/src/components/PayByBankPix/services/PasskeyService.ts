@@ -44,17 +44,12 @@ export class PasskeyService implements IPasskeyService {
     }
 
     public initialize() {
-        this.initialized = new Promise((resolve, reject) => {
-            void new PasskeySdkLoader()
-                .load(this.passkeyServiceConfig.environment)
-                .then(passkey => {
-                    this.passkeySdk = passkey;
-                    resolve();
-                })
-                .catch((error: AdyenCheckoutError) => {
-                    reject(error);
-                });
-        });
+        if (this.initialized == null) {
+            this.initialized = new PasskeySdkLoader().load(this.passkeyServiceConfig.environment).then(passkey => {
+                this.passkeySdk = passkey;
+            });
+        }
+
         return this.initialized;
     }
 
@@ -73,6 +68,18 @@ export class PasskeyService implements IPasskeyService {
         return this.riskSignals;
     }
 
+    public async canUseStoredCredential(): Promise<boolean> {
+        try {
+            await this.captureRiskSignalsAuthentication();
+            return true;
+        } catch (error) {
+            console.warn(
+                `The device is not eligible for stored credential authentication: ${error instanceof Error ? error?.message : 'unknown error'}`
+            );
+            return false;
+        }
+    }
+
     public async captureRiskSignalsAuthentication(): Promise<RiskSignalsAuthentication> {
         await this.initialized;
         const result = await this.passkeySdk.captureRiskSignalsAuthentication(this.deviceId);
@@ -84,12 +91,8 @@ export class PasskeyService implements IPasskeyService {
 
     public async createCredentialForEnrollment(registrationOptions: string): Promise<string> {
         await this.initialized;
-        const decodedResult: DecodeObject = base64.decode(registrationOptions);
-        if (!decodedResult.success) {
-            throw new AdyenCheckoutError(SDK_ERROR, 'Failed to decode enrollment');
-        }
-
-        const result = await this.passkeySdk.createCredentialForEnrollment(JSON.parse(decodedResult.data));
+        const options = this.decodeJsonBase64(registrationOptions, 'Failed to decode registrationOptions');
+        const result = await this.passkeySdk.createCredentialForEnrollment(options);
         if (result && 'type' in result && result.type === PasskeyErrorTypes.CREDENTIAL_CREATION_ERROR) {
             throw new AdyenCheckoutError(SDK_ERROR, (result as NavigatorCredentialCreationsError).message);
         }
@@ -98,15 +101,19 @@ export class PasskeyService implements IPasskeyService {
 
     public async authenticateWithCredential(authenticationOptions: string): Promise<string> {
         await this.initialized;
-        const decodedResult: DecodeObject = base64.decode(authenticationOptions);
-        if (!decodedResult.success) {
-            throw new AdyenCheckoutError(SDK_ERROR, 'Failed to decode authenticationOptions');
-        }
-
-        const result = await this.passkeySdk.authenticateWithCredential(JSON.parse(decodedResult.data));
+        const options = this.decodeJsonBase64(authenticationOptions, 'Failed to decode authenticationOptions');
+        const result = await this.passkeySdk.authenticateWithCredential(options);
         if (result && 'type' in result && result.type === PasskeyErrorTypes.CREDENTIAL_RETRIEVAL_ERROR) {
             throw new AdyenCheckoutError(SDK_ERROR, (result as NavigatorCredentialRetrievalError).message);
         }
         return base64.encode(JSON.stringify(result));
+    }
+
+    private decodeJsonBase64(encoded: string, errorMessage: string) {
+        const decoded: DecodeObject = base64.decode(encoded);
+        if (!decoded.success) {
+            throw new AdyenCheckoutError(SDK_ERROR, errorMessage);
+        }
+        return JSON.parse(decoded.data);
     }
 }
