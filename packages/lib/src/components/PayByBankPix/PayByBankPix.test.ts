@@ -34,6 +34,7 @@ const mockInitialize = jest.fn().mockResolvedValue(undefined);
 const getWebAuthnUnsupportedReasonMock = jest.fn().mockResolvedValue('');
 const mockRiskSignals = jest.fn().mockResolvedValue(riskSignals);
 const mockCreateCredential = jest.fn().mockResolvedValue('mock-fidoAssertion');
+const canUseStoredCredentialMock = jest.fn().mockResolvedValue(true);
 
 (PasskeyService as jest.Mock).mockImplementation(() => ({
     getWebAuthnUnsupportedReason: getWebAuthnUnsupportedReasonMock,
@@ -41,7 +42,8 @@ const mockCreateCredential = jest.fn().mockResolvedValue('mock-fidoAssertion');
     captureRiskSignalsEnrollment: mockRiskSignals,
     captureRiskSignalsAuthentication: mockRiskSignals,
     createCredentialForEnrollment: mockCreateCredential,
-    authenticateWithCredential: mockCreateCredential
+    authenticateWithCredential: mockCreateCredential,
+    canUseStoredCredential: canUseStoredCredentialMock
 }));
 
 const user = userEvent.setup();
@@ -92,6 +94,24 @@ describe('PayByBankPix', () => {
         });
         await expect(payByBankPixElement.isAvailable()).rejects.toThrow('unsupported');
         getWebAuthnUnsupportedReasonMock.mockReset();
+    });
+
+    test('isAvailable should reject and call handleError if initialize fails', async () => {
+        const onErrorMock = jest.fn();
+        const element = new PayByBankPix(global.core, {
+            ...coreProps,
+            onError: onErrorMock,
+            _isAdyenHosted: true
+        });
+        const error = new Error('Init fail');
+        mockInitialize.mockRejectedValueOnce(error);
+        await expect(element.isAvailable()).rejects.toBe('Init fail');
+        expect(onErrorMock).toHaveBeenCalledWith(
+            expect.objectContaining({
+                message: 'Error initialize passkey service'
+            }),
+            expect.anything()
+        );
     });
 
     test('isAvailable should resolve if there is no WebAuthnUnsupported reasons', async () => {
@@ -284,6 +304,16 @@ describe('PayByBankPix', () => {
                 },
                 amount: { value: 100, currency: 'BRL' }
             });
+        });
+
+        test('isAvailable should resolve if canUseStoredCredential returns true', async () => {
+            await expect(payByBankPixElement.isAvailable()).resolves.toBeUndefined();
+            expect(canUseStoredCredentialMock).toHaveBeenCalled();
+        });
+
+        test('isAvailable should reject if canUseStoredCredential returns false', async () => {
+            canUseStoredCredentialMock.mockResolvedValueOnce(false);
+            await expect(payByBankPixElement.isAvailable()).rejects.toBeUndefined();
         });
 
         test('should show the payment summary', async () => {

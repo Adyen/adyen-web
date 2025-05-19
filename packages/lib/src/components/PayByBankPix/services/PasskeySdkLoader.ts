@@ -18,7 +18,10 @@ class PasskeySdkLoader implements IPasskeySdkLoader {
     }
 
     public async load(environment: string): Promise<IAdyenPasskey> {
-        if (this.isAvailable()) return;
+        if (this.isAvailable()) {
+            return this.AdyenPasskey;
+        }
+
         try {
             const cdnUrl = getUrlFromMap(environment as CoreConfiguration['environment'], CDN_ENVIRONMENTS);
             const url = `${cdnUrl}${PasskeySdkLoader.PASSKEY_SDK_URL}`;
