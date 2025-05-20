@@ -7,17 +7,13 @@ import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import { TxVariants } from '../tx-variants';
 import { ThreeDS2ChallengeConfiguration } from './types';
 import AdyenCheckoutError, { API_ERROR } from '../../core/Errors/AdyenCheckoutError';
-import {
-    ANALYTICS_ERROR_TYPE,
-    Analytics3DS2Errors,
-    ANALYTICS_RENDERED_STR,
-    Analytics3DS2Events,
-    ANALYTICS_EVENT
-} from '../../core/Analytics/constants';
-import { EnhancedAnalyticsObject } from '../../core/Analytics/types';
+import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, ANALYTICS_RENDERED_STR, Analytics3DS2Events } from '../../core/Analytics/constants';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import { ActionHandledReturnObject } from '../../types/global-types';
-import { createNewAnalyticsEvent } from '../../core/Analytics/utils';
+import { AnalyticsEventLog } from '../../core/Analytics/AnalyticsEventLog';
+import { AnalyticsEventClass } from '../../core/Analytics/AnalyticsEventClass';
+import { AnalyticsEventInfo } from '../../core/Analytics/AnalyticsEventInfo';
+import { AnalyticsEventError } from '../../core/Analytics/AnalyticsEventError';
 
 class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
     public static type = TxVariants.threeDS2Challenge;
@@ -28,20 +24,20 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
         type: THREEDS2_CHALLENGE
     };
 
-    protected submitAnalytics = (aObj: EnhancedAnalyticsObject) => {
-        if (aObj.type === ANALYTICS_RENDERED_STR) return; // suppress the rendered event (it will have the same timestamp as the "creq sent" event)
+    protected submitAnalytics = (aObj: AnalyticsEventClass) => {
+        if (aObj instanceof AnalyticsEventInfo && aObj.type === ANALYTICS_RENDERED_STR) return; // suppress the rendered event (it will have the same timestamp as the "creq sent" event)
 
         super.submitAnalytics(aObj);
     };
 
     protected onActionHandled = (rtnObj: ActionHandledReturnObject) => {
-        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
-            category: ANALYTICS_EVENT.log,
+        const event = new AnalyticsEventLog({
             type: THREEDS2_FULL,
             message: rtnObj.actionDescription,
             subType: Analytics3DS2Events.CHALLENGE_IFRAME_LOADED
         });
-        this.submitAnalytics(aObj);
+
+        this.submitAnalytics(event);
 
         super.onActionHandled(rtnObj);
     };
@@ -67,13 +63,13 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
 
             this.props.onError(new AdyenCheckoutError(API_ERROR, `No ${dataTypeForError} received. 3DS2 Challenge cannot proceed`));
 
-            const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
-                category: ANALYTICS_EVENT.error,
+            const event = new AnalyticsEventError({
                 code: Analytics3DS2Errors.ACTION_IS_MISSING_PAYMENT_DATA,
                 errorType: ANALYTICS_ERROR_TYPE.apiError,
                 message: `${THREEDS2_CHALLENGE_ERROR}: Missing 'paymentData' property from threeDS2 action`
             });
-            this.submitAnalytics(aObj);
+
+            this.submitAnalytics(event);
 
             return null;
         }

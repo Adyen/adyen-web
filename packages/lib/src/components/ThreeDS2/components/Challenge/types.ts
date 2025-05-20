@@ -1,7 +1,7 @@
 import { ChallengeData, ThreeDS2ChallengeConfiguration, ThreeDS2FlowObject, ChallengeResolveData } from '../../types';
 import { ActionHandledReturnObject } from '../../../../types/global-types';
-import { EnhancedAnalyticsObject } from '../../../../core/Analytics/types';
 import { ErrorObject } from '../../../../core/Errors/types';
+import { AnalyticsEventClass } from '../../../../core/Analytics/AnalyticsEventClass';
 
 export interface DoChallenge3DS2Props extends ChallengeData {
     onCompleteChallenge: (resolveObject: ThreeDS2FlowObject) => void;
@@ -17,7 +17,7 @@ export interface DoChallenge3DS2State {
 
 export interface PrepareChallenge3DS2Props extends ThreeDS2ChallengeConfiguration {
     onComplete?: (data: ChallengeResolveData) => void;
-    onSubmitAnalytics: (aObj: EnhancedAnalyticsObject) => void;
+    onSubmitAnalytics: (aObj: AnalyticsEventClass) => void;
     environment?: string;
     _environmentUrls?: {
         api?: string;

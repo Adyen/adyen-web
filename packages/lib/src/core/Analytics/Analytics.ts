@@ -6,6 +6,10 @@ import { debounce } from '../../utils/debounce';
 import { AnalyticsModule } from '../../types/global-types';
 import { mapErrorCodesForAnalytics, processAnalyticsData } from './utils';
 import AdyenCheckoutError, { SDK_ERROR } from '../Errors/AdyenCheckoutError';
+import { AnalyticsEventInfo } from './AnalyticsEventInfo';
+import { AnalyticsEventClass } from './AnalyticsEventClass';
+import { AnalyticsEventLog } from './AnalyticsEventLog';
+import { AnalyticsEventError } from './AnalyticsEventError';
 
 let capturedCheckoutAttemptId = null;
 let sendEventsTimerId = null;
@@ -103,6 +107,40 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
             } else {
                 throw new AdyenCheckoutError(SDK_ERROR, 'You are trying to create an analytics event without a category');
             }
+
+            return true;
+        },
+
+        sendAnalytics2: (analyticsObj: AnalyticsEventClass): boolean => {
+            if (!props.enabled) return false;
+
+            // const { category } = analyticsObj;
+
+            let event: AnalyticsEvent;
+
+            if (analyticsObj instanceof AnalyticsEventInfo) {
+                event = ANALYTICS_EVENT.info;
+
+                // Some of the more generic validation error codes required combination with target to retrieve a specific code
+                if (analyticsObj.type === ANALYTICS_VALIDATION_ERROR_STR) {
+                    analyticsObj.validationErrorCode = mapErrorCodesForAnalytics(analyticsObj.validationErrorCode, analyticsObj.target);
+                }
+            }
+
+            if (analyticsObj instanceof AnalyticsEventLog) {
+                event = ANALYTICS_EVENT.log;
+            }
+
+            if (analyticsObj instanceof AnalyticsEventError) {
+                event = ANALYTICS_EVENT.error;
+            }
+
+            if (!event) {
+                throw new AdyenCheckoutError(SDK_ERROR, 'You are trying to create an analytics event without an event type');
+            }
+
+            console.log('### Analytics::sendAnalytics2:: event=', event, 'analyticsObj=', analyticsObj);
+            addAnalyticsEvent(event, analyticsObj);
 
             return true;
         }

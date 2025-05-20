@@ -18,20 +18,14 @@ import type { PayButtonFunctionProps, UIElementStatus } from '../internal/UIElem
 import UIElement from '../internal/UIElement';
 import PayButton from '../internal/PayButton';
 import type { ICore } from '../../core/types';
-import {
-    ANALYTICS_FOCUS_STR,
-    ANALYTICS_CONFIGURED_STR,
-    ANALYTICS_UNFOCUS_STR,
-    ANALYTICS_RENDERED_STR,
-    ANALYTICS_EVENT
-} from '../../core/Analytics/constants';
+import { ANALYTICS_FOCUS_STR, ANALYTICS_CONFIGURED_STR, ANALYTICS_UNFOCUS_STR, ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
 import { ALL_SECURED_FIELDS } from '../internal/SecuredFields/lib/constants';
-import { EnhancedAnalyticsObject } from '../../core/Analytics/types';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from '../../core/Errors/AdyenCheckoutError';
 import CardInputDefaultProps from './components/CardInput/defaultProps';
-import { createNewAnalyticsEvent } from '../../core/Analytics/utils';
 import { getCardConfigData } from './components/CardInput/utils';
+import { AnalyticsEventClass } from '../../core/Analytics/AnalyticsEventClass';
+import { AnalyticsEventInfo } from '../../core/Analytics/AnalyticsEventInfo';
 
 export class CardElement extends UIElement<CardConfiguration> {
     public static type = TxVariants.scheme;
@@ -203,10 +197,10 @@ export class CardElement extends UIElement<CardConfiguration> {
         }
     }
 
-    protected submitAnalytics(analyticsObj: EnhancedAnalyticsObject) {
-        const { type } = analyticsObj;
+    protected submitAnalytics(analyticsObj: AnalyticsEventClass) {
+        const isInfoType = analyticsObj instanceof AnalyticsEventInfo;
 
-        if (type === ANALYTICS_RENDERED_STR || type === ANALYTICS_CONFIGURED_STR) {
+        if ((isInfoType && analyticsObj.type === ANALYTICS_RENDERED_STR) || (isInfoType && analyticsObj.type === ANALYTICS_CONFIGURED_STR)) {
             // Check if it's a storedCard
             if (this.constructor['type'] === 'scheme') {
                 if (hasOwnProperty(this.props, 'supportedShopperInteractions')) {
@@ -216,7 +210,7 @@ export class CardElement extends UIElement<CardConfiguration> {
             }
 
             // Add config data
-            if (type === ANALYTICS_RENDERED_STR) {
+            if (isInfoType && analyticsObj.type === ANALYTICS_RENDERED_STR) {
                 analyticsObj.configData = getCardConfigData(this.props);
             }
         }
@@ -225,22 +219,15 @@ export class CardElement extends UIElement<CardConfiguration> {
     }
 
     private onConfigSuccess = (obj: CardConfigSuccessData) => {
-        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
-            category: ANALYTICS_EVENT.info,
-            type: ANALYTICS_CONFIGURED_STR
-        });
-        this.submitAnalytics(aObj);
+        const event = new AnalyticsEventInfo({ type: ANALYTICS_CONFIGURED_STR });
+        this.submitAnalytics(event);
 
         this.props.onConfigSuccess?.(obj);
     };
 
     private onFocus = (obj: ComponentFocusObject) => {
-        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
-            category: ANALYTICS_EVENT.info,
-            type: ANALYTICS_FOCUS_STR,
-            target: fieldTypeToSnakeCase(obj.fieldType)
-        });
-        this.submitAnalytics(aObj);
+        const event = new AnalyticsEventInfo({ type: ANALYTICS_FOCUS_STR, target: fieldTypeToSnakeCase(obj.fieldType) });
+        this.submitAnalytics(event);
 
         // Call merchant defined callback
         if (ALL_SECURED_FIELDS.includes(obj.fieldType)) {
@@ -251,12 +238,8 @@ export class CardElement extends UIElement<CardConfiguration> {
     };
 
     private onBlur = (obj: ComponentFocusObject) => {
-        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
-            category: ANALYTICS_EVENT.info,
-            type: ANALYTICS_UNFOCUS_STR,
-            target: fieldTypeToSnakeCase(obj.fieldType)
-        });
-        this.submitAnalytics(aObj);
+        const event = new AnalyticsEventInfo({ type: ANALYTICS_UNFOCUS_STR, target: fieldTypeToSnakeCase(obj.fieldType) });
+        this.submitAnalytics(event);
 
         // Call merchant defined callback
         if (ALL_SECURED_FIELDS.includes(obj.fieldType)) {

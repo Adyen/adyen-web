@@ -9,12 +9,13 @@ import './challenge.scss';
 import { hasOwnProperty } from '../../../../utils/hasOwnProperty';
 import useImage from '../../../../core/Context/useImage';
 import AdyenCheckoutError, { ERROR } from '../../../../core/Errors/AdyenCheckoutError';
-import { EnhancedAnalyticsObject } from '../../../../core/Analytics/types';
 import { THREEDS2_CHALLENGE, THREEDS2_CHALLENGE_ERROR, THREEDS2_FULL, THREEDS2_NUM, MISSING_TOKEN_IN_ACTION_MSG } from '../../constants';
 import { isValidHttpUrl } from '../../../../utils/isValidURL';
-import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, Analytics3DS2Events, ANALYTICS_EVENT } from '../../../../core/Analytics/constants';
+import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, Analytics3DS2Events } from '../../../../core/Analytics/constants';
 import { ErrorObject } from '../../../../core/Errors/types';
-import { createNewAnalyticsEvent } from '../../../../core/Analytics/utils';
+import { AnalyticsEventLog } from '../../../../core/Analytics/AnalyticsEventLog';
+import { AnalyticsEventError } from '../../../../core/Analytics/AnalyticsEventError';
+import { AnalyticsEventClass } from '../../../../core/Analytics/AnalyticsEventClass';
 
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
     public static defaultProps = {
@@ -45,13 +46,13 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
     }
 
     public onFormSubmit = (msg: string) => {
-        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
-            category: ANALYTICS_EVENT.log,
+        const event = new AnalyticsEventLog({
             type: THREEDS2_FULL,
             message: msg,
             subType: Analytics3DS2Events.CHALLENGE_DATA_SENT
         });
-        this.props.onSubmitAnalytics(aObj);
+
+        this.props.onSubmitAnalytics(event);
     };
 
     componentDidMount() {
@@ -84,14 +85,12 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 );
 
                 // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
-                const errorCodeObject: EnhancedAnalyticsObject = createNewAnalyticsEvent({
-                    category: ANALYTICS_EVENT.error,
+                const event = new AnalyticsEventError({
                     code: Analytics3DS2Errors.TOKEN_IS_MISSING_ACSURL,
                     errorType: ANALYTICS_ERROR_TYPE.apiError,
                     message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing a valid acsURL property`
                 });
-
-                this.props.onSubmitAnalytics(errorCodeObject);
+                this.props.onSubmitAnalytics(event);
 
                 console.debug('### PrepareChallenge3DS2::exiting:: no valid acsURL');
                 return;
@@ -111,13 +110,12 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 );
 
                 // Send error to analytics endpoint // TODO - check logs to see if this *ever* happens
-                const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
-                    category: ANALYTICS_EVENT.error,
+                const event = new AnalyticsEventError({
                     code: Analytics3DS2Errors.TOKEN_IS_MISSING_OTHER_PROPS,
                     errorType: ANALYTICS_ERROR_TYPE.apiError,
                     message: `${THREEDS2_CHALLENGE_ERROR}: Decoded token is missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)`
                 });
-                this.props.onSubmitAnalytics(aObj);
+                this.props.onSubmitAnalytics(event);
 
                 console.debug(
                     '### PrepareChallenge3DS2::exiting:: missing one or more of the following properties (acsTransID | messageVersion | threeDSServerTransID)'
@@ -149,13 +147,13 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             );
 
             // Send error to analytics endpoint // TODO - check logs to see if the base64 decoding errors *ever* happen
-            const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
-                category: ANALYTICS_EVENT.error,
+            const event = new AnalyticsEventError({
                 code: errorCode,
                 errorType: ANALYTICS_ERROR_TYPE.apiError,
                 message: `${THREEDS2_CHALLENGE_ERROR}: ${errorMsg}` // can be: 'Missing "token" property from threeDS2 action', 'not base64', 'malformed URI sequence' or 'Could not JSON parse token'
             });
-            this.props.onSubmitAnalytics(aObj);
+
+            this.props.onSubmitAnalytics(event);
 
             console.debug('### PrepareChallenge3DS2::exiting:: no challengeData');
         }
@@ -174,7 +172,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 console.debug('### PrepareChallenge3DS2::errorCodeObject::', errorCodeObject);
             }
 
-            let analyticsObject: EnhancedAnalyticsObject;
+            let event: AnalyticsEventClass;
 
             /** Are we in an "error" i.e. timeout or no transStatus, scenario? If so, submit analytics about it */
             const finalResObject = errorCodeObject ? errorCodeObject : resultObj;
@@ -187,14 +185,13 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 // Challenge process has timed out,
                 // or, It's an error reported by the backend 'cos no transStatus could be retrieved // TODO - check logs to see if this *ever* happens
 
-                analyticsObject = createNewAnalyticsEvent({
-                    category: ANALYTICS_EVENT.error,
+                event = new AnalyticsEventError({
                     message: (finalResObject as ErrorCodeObject).message,
                     ...errorTypeAndCode
                 });
 
                 // Send error to analytics endpoint
-                this.props.onSubmitAnalytics(analyticsObject);
+                this.props.onSubmitAnalytics(event);
             }
 
             /** Calculate "result" for analytics */
@@ -218,8 +215,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
             /** Create log object - the process is completed, one way or another */
 
-            analyticsObject = createNewAnalyticsEvent({
-                category: ANALYTICS_EVENT.log,
+            event = new AnalyticsEventLog({
                 type: THREEDS2_FULL,
                 message: `${THREEDS2_NUM} challenge has completed`,
                 subType: Analytics3DS2Events.CHALLENGE_COMPLETED,
@@ -227,7 +223,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
             });
 
             // Send log to analytics endpoint
-            this.props.onSubmitAnalytics(analyticsObject);
+            this.props.onSubmitAnalytics(event);
 
             /**
              * Equals call to onAdditionalDetails (except for in 3DS2InMDFlow)
@@ -306,13 +302,13 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                             );
 
                             // Send error to analytics endpoint
-                            const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
-                                category: ANALYTICS_EVENT.error,
+                            const event = new AnalyticsEventError({
                                 code: Analytics3DS2Errors.CHALLENGE_RESOLVED_WITHOUT_RESULT_PROP,
                                 errorType: ANALYTICS_ERROR_TYPE.apiError,
                                 message: `${THREEDS2_CHALLENGE_ERROR}: challenge resolved without a "result" object`
                             });
-                            this.props.onSubmitAnalytics(aObj);
+
+                            this.props.onSubmitAnalytics(event);
 
                             console.debug('### PrepareChallenge3DS2::exiting:: challenge resolved without a "result" object');
 
