@@ -1,6 +1,19 @@
 import { Meta, StoryObj } from '@storybook/preact';
 import UIElement from '../../src/components/internal/UIElement';
-import { CoreConfiguration, PaymentMethodsResponse } from '../../src/types';
+import { AddressData, CoreConfiguration, PaymentMethodsResponse } from '../../src/types';
+
+export type ShopperDetails = {
+    shopperName: {
+        firstName: string;
+        lastName: string;
+    };
+    telephoneNumber: string;
+    shopperEmail: string;
+    dateOfBirth: string;
+    shopperIP: string;
+    deliveryAddress: AddressData;
+    billingAddress: AddressData;
+};
 
 export type GlobalStoryProps = AdyenCheckoutProps &
     CoreConfiguration & {
