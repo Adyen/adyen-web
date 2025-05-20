@@ -88,14 +88,13 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
             if (this.props.storedPaymentMethodId) {
                 // If the provided deviceId from the server does not match the localstorage deviceId, do not render the stored payment component.
                 const shouldShowStoredPaymentMethod = await this.passkeyService.canUseStoredCredential();
-                return shouldShowStoredPaymentMethod ? Promise.resolve() : Promise.reject();
+                return shouldShowStoredPaymentMethod
+                    ? Promise.resolve()
+                    : Promise.reject(new AdyenCheckoutError('ERROR', 'The stored payment method is not available on this device'));
             }
 
             return Promise.resolve();
         } catch (error) {
-            this.handleError(
-                error instanceof AdyenCheckoutError ? error : new AdyenCheckoutError(ERROR, 'Error initialize passkey service', { cause: error })
-            );
             return Promise.reject(error instanceof Error ? error?.message : 'Unknown error');
         }
     }

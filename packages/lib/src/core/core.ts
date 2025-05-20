@@ -217,12 +217,9 @@ class Core implements ICore {
                 if (e instanceof CancelError) {
                     return;
                 }
-                if (e instanceof Error) {
-                    this.options.onError?.(e as AdyenCheckoutError);
-                } else {
-                    cleanupFinalResult(e);
-                    this.options.onPaymentFailed?.(e);
-                }
+
+                cleanupFinalResult(e as PaymentResponseData);
+                this.options.onPaymentFailed?.(e as PaymentResponseData);
             });
     }
 

@@ -1,9 +1,3 @@
-declare global {
-    interface Window {
-        AdyenPasskey: { default: IAdyenPasskey };
-    }
-}
-
 interface BrowserRiskSignals {
     osVersion: string;
     userTimeZoneOffset: number;

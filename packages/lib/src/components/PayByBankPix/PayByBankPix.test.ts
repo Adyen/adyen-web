@@ -5,6 +5,7 @@ import { PasskeyService } from './services/PasskeyService';
 import { TxVariants } from '../tx-variants';
 import { httpGet, httpPost } from '../../core/Services/http';
 import { SRPanel } from '../../core/Errors/SRPanel';
+import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 
 jest.mock('./services/PasskeyService');
 jest.mock('../../core/Services/http');
@@ -96,22 +97,14 @@ describe('PayByBankPix', () => {
         getWebAuthnUnsupportedReasonMock.mockReset();
     });
 
-    test('isAvailable should reject and call handleError if initialize fails', async () => {
-        const onErrorMock = jest.fn();
+    test('isAvailable should reject if initialize fails', async () => {
         const element = new PayByBankPix(global.core, {
             ...coreProps,
-            onError: onErrorMock,
             _isAdyenHosted: true
         });
         const error = new Error('Init fail');
         mockInitialize.mockRejectedValueOnce(error);
         await expect(element.isAvailable()).rejects.toBe('Init fail');
-        expect(onErrorMock).toHaveBeenCalledWith(
-            expect.objectContaining({
-                message: 'Error initialize passkey service'
-            }),
-            expect.anything()
-        );
     });
 
     test('isAvailable should resolve if there is no WebAuthnUnsupported reasons', async () => {
@@ -313,7 +306,9 @@ describe('PayByBankPix', () => {
 
         test('isAvailable should reject if canUseStoredCredential returns false', async () => {
             canUseStoredCredentialMock.mockResolvedValueOnce(false);
-            await expect(payByBankPixElement.isAvailable()).rejects.toBeUndefined();
+            await expect(payByBankPixElement.isAvailable()).rejects.toThrow(
+                new AdyenCheckoutError('ERROR', 'The stored payment method is not available on this device')
+            );
         });
 
         test('should show the payment summary', async () => {
