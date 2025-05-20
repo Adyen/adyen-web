@@ -52,7 +52,7 @@ export default function CardNumber(props: CardNumberProps) {
             )}
 
             {dualBrandingElements && !error && (
-                <div className={classNames(['adyen-checkout__card__dual-branding__buttons'])}>
+                <div className={classNames(['adyen-checkout__card__dual-branding__icons'])}>
                     {dualBrandingElements.map(element => (
                         <DualBrandingIcon
                             key={element.id}

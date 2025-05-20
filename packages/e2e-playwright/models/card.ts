@@ -130,7 +130,7 @@ class Card extends Base {
 
     // The holder for the icons in the CardNumber field (when dual branding occurs)
     get dualBrandingIconsHolder() {
-        return this.rootElement.locator('.adyen-checkout__card__dual-branding__buttons');
+        return this.rootElement.locator('.adyen-checkout__card__dual-branding__icons');
     }
 
     // The brands as displayed directly in the CardNumber field (when dual branding occurs)
