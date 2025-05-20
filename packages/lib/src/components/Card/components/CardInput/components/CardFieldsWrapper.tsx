@@ -122,6 +122,9 @@ export const CardFieldsWrapper = ({
                         classNameModifiers={['dualBrandSwitcher', 'no-borders']}
                         name={'dualBrandSwitcher'}
                         label={i18n.get('creditCard.dualBrand.description')}
+                        showContextualElement={false}
+                        showErrorElement={false}
+                        contextVisibleToScreenReader={false}
                     >
                         <RadioGroupExtended
                             name={'dualBrandSwitcher'}

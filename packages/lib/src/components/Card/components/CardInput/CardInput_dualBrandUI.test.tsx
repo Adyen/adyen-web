@@ -1,20 +1,9 @@
 import { h } from 'preact';
 import { mount } from 'enzyme';
 import CardInput from './CardInput';
-import { CardInputDataState, CardInputValidState } from './types';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
 
 jest.mock('../../../internal/SecuredFields/lib/CSF');
-
-let valid = {} as CardInputValidState;
-let data = {} as CardInputDataState;
-let onChange;
-beforeEach(() => {
-    onChange = jest.fn((state): any => {
-        valid = state.valid;
-        data = state.data;
-    });
-});
 
 let cardInputRef;
 
@@ -107,7 +96,7 @@ describe('CardNumber and the dual branding UI', () => {
         expect(dualBrandEl.find('[data-value="cartebancaire"]')).toHaveLength(1);
     });
 
-    test.only('Dual branding UI is not hidden when the card number is in error', () => {
+    test('Dual branding UI is not hidden when the card number is in error', async () => {
         const wrapper = getWrapper(<CardInput {...cardInputRequiredProps} />);
 
         cardInputRef.processBinLookupResponse(dualBrandResp, false);
@@ -116,12 +105,14 @@ describe('CardNumber and the dual branding UI', () => {
         //  Dual branding UI visible
         expect(wrapper.find('.adyen-checkout__fieldset--dual-brand-switcher')).toHaveLength(1);
 
-        // expect(wrapper.find('.adyen-checkout-contextual-text')).toHaveLength(0);
+        // 4 error fields - all hidden (three for the securedFields, one for the dual brand switcher)
+        expect(wrapper.find('.adyen-checkout-contextual-text--error.adyen-checkout-contextual-text--hidden')).toHaveLength(4);
 
         cardInputRef.showValidation();
         wrapper.update();
 
-        // expect(wrapper.find('.adyen-checkout-contextual-text--error')).toHaveLength(3);
+        // 3 error fields (or the securedFields) - all visible, so only the one for the dual brand switcher still hidden
+        expect(wrapper.find('.adyen-checkout-contextual-text--error.adyen-checkout-contextual-text--hidden')).toHaveLength(1);
 
         //  Dual branding UI still visible
         expect(wrapper.find('.adyen-checkout__fieldset--dual-brand-switcher')).toHaveLength(1);
