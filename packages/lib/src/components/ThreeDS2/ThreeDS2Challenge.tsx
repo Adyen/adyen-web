@@ -10,7 +10,7 @@ import AdyenCheckoutError, { API_ERROR } from '../../core/Errors/AdyenCheckoutEr
 import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, ANALYTICS_RENDERED_STR, Analytics3DS2Events } from '../../core/Analytics/constants';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import { ActionHandledReturnObject } from '../../types/global-types';
-import { AnalyticsEventLog } from '../../core/Analytics/AnalyticsEventLog';
+import { AnalyticsLogEvent } from '../../core/Analytics/AnalyticsLogEvent';
 import { AnalyticsEventClass } from '../../core/Analytics/AnalyticsEventClass';
 import { AnalyticsEventInfo } from '../../core/Analytics/AnalyticsEventInfo';
 import { AnalyticsErrorEvent } from '../../core/Analytics/AnalyticsErrorEvent';
@@ -31,7 +31,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
     };
 
     protected onActionHandled = (rtnObj: ActionHandledReturnObject) => {
-        const event = new AnalyticsEventLog({
+        const event = new AnalyticsLogEvent({
             type: THREEDS2_FULL,
             message: rtnObj.actionDescription,
             subType: Analytics3DS2Events.CHALLENGE_IFRAME_LOADED

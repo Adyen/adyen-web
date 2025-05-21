@@ -8,7 +8,7 @@ import { processAnalyticsData } from './utils';
 import AdyenCheckoutError, { SDK_ERROR } from '../Errors/AdyenCheckoutError';
 import { AnalyticsEventInfo } from './AnalyticsEventInfo';
 import { AnalyticsEventClass } from './AnalyticsEventClass';
-import { AnalyticsEventLog } from './AnalyticsEventLog';
+import { AnalyticsLogEvent } from './AnalyticsLogEvent';
 import { AnalyticsErrorEvent } from './AnalyticsErrorEvent';
 
 let capturedCheckoutAttemptId = null;
@@ -99,7 +99,7 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
                 event = ANALYTICS_EVENT.info;
             }
 
-            if (analyticsObj instanceof AnalyticsEventLog) {
+            if (analyticsObj instanceof AnalyticsLogEvent) {
                 event = ANALYTICS_EVENT.log;
             }
 

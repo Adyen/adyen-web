@@ -9,7 +9,7 @@ import AdyenCheckoutError, { API_ERROR } from '../../core/Errors/AdyenCheckoutEr
 import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, ANALYTICS_RENDERED_STR, Analytics3DS2Events } from '../../core/Analytics/constants';
 import { THREEDS2_FINGERPRINT, THREEDS2_FINGERPRINT_ERROR, THREEDS2_FULL } from './constants';
 import { ActionHandledReturnObject } from '../../types/global-types';
-import { AnalyticsEventLog } from '../../core/Analytics/AnalyticsEventLog';
+import { AnalyticsLogEvent } from '../../core/Analytics/AnalyticsLogEvent';
 import { AnalyticsEventClass } from '../../core/Analytics/AnalyticsEventClass';
 import { AnalyticsEventInfo } from '../../core/Analytics/AnalyticsEventInfo';
 import { AnalyticsErrorEvent } from '../../core/Analytics/AnalyticsErrorEvent';
@@ -31,7 +31,7 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
     };
 
     protected onActionHandled = (rtnObj: ActionHandledReturnObject) => {
-        const event = new AnalyticsEventLog({
+        const event = new AnalyticsLogEvent({
             type: THREEDS2_FULL,
             message: rtnObj.actionDescription,
             subType: Analytics3DS2Events.FINGERPRINT_IFRAME_LOADED

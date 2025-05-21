@@ -24,7 +24,7 @@ import type { AnalyticsModule, PaymentAction, PaymentResponseData } from '../typ
 import type { CoreConfiguration, ICore, AdditionalDetailsData } from './types';
 import type { Translations } from '../language/types';
 import type { UIElementProps } from '../components/internal/UIElement/types';
-import { AnalyticsEventLog } from './Analytics/AnalyticsEventLog';
+import { AnalyticsLogEvent } from './Analytics/AnalyticsLogEvent';
 
 class Core implements ICore {
     public session?: Session;
@@ -239,7 +239,7 @@ class Core implements ICore {
             // 'threeDS2' OR 'qrCode', 'voucher', 'redirect', 'await', 'bankTransfer`
             const component = action.type === THREEDS2_FULL ? `${action.type}${action.subtype}` : action.paymentMethodType;
 
-            const event = new AnalyticsEventLog({
+            const event = new AnalyticsLogEvent({
                 type: ANALYTICS_ACTION_STR,
                 subType: action.type,
                 message: `${component} action was handled by the SDK`,

@@ -7,7 +7,7 @@ import { ErrorObject } from '../../../../core/Errors/types';
 import { isValidHttpUrl } from '../../../../utils/isValidURL';
 import { THREEDS2_FULL, THREEDS2_FINGERPRINT, THREEDS2_FINGERPRINT_ERROR, THREEDS2_NUM, MISSING_TOKEN_IN_ACTION_MSG, TIMEOUT } from '../../constants';
 import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, Analytics3DS2Events } from '../../../../core/Analytics/constants';
-import { AnalyticsEventLog } from '../../../../core/Analytics/AnalyticsEventLog';
+import { AnalyticsLogEvent } from '../../../../core/Analytics/AnalyticsLogEvent';
 import { AnalyticsEventClass } from '../../../../core/Analytics/AnalyticsEventClass';
 import { AnalyticsErrorEvent } from '../../../../core/Analytics/AnalyticsErrorEvent';
 
@@ -43,7 +43,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
     }
 
     public onFormSubmit = (msg: string) => {
-        const event = new AnalyticsEventLog({
+        const event = new AnalyticsLogEvent({
             type: THREEDS2_FULL,
             message: msg,
             subType: Analytics3DS2Events.FINGERPRINT_DATA_SENT
@@ -211,7 +211,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
              * else {threeDSCompInd:"U"} or {threeDSCompInd:"N"} - if we've had some kind of timeout or data parsing problem (as described above)
              */
 
-            event = new AnalyticsEventLog({
+            event = new AnalyticsLogEvent({
                 type: THREEDS2_FULL,
                 message: `${THREEDS2_NUM} fingerprinting has completed`,
                 subType: Analytics3DS2Events.FINGERPRINT_COMPLETED,

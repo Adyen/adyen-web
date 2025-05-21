@@ -13,7 +13,7 @@ import { THREEDS2_CHALLENGE, THREEDS2_CHALLENGE_ERROR, THREEDS2_FULL, THREEDS2_N
 import { isValidHttpUrl } from '../../../../utils/isValidURL';
 import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, Analytics3DS2Events } from '../../../../core/Analytics/constants';
 import { ErrorObject } from '../../../../core/Errors/types';
-import { AnalyticsEventLog } from '../../../../core/Analytics/AnalyticsEventLog';
+import { AnalyticsLogEvent } from '../../../../core/Analytics/AnalyticsLogEvent';
 import { AnalyticsErrorEvent } from '../../../../core/Analytics/AnalyticsErrorEvent';
 import { AnalyticsEventClass } from '../../../../core/Analytics/AnalyticsEventClass';
 
@@ -46,7 +46,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
     }
 
     public onFormSubmit = (msg: string) => {
-        const event = new AnalyticsEventLog({
+        const event = new AnalyticsLogEvent({
             type: THREEDS2_FULL,
             message: msg,
             subType: Analytics3DS2Events.CHALLENGE_DATA_SENT
@@ -215,7 +215,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
 
             /** Create log object - the process is completed, one way or another */
 
-            event = new AnalyticsEventLog({
+            event = new AnalyticsLogEvent({
                 type: THREEDS2_FULL,
                 message: `${THREEDS2_NUM} challenge has completed`,
                 subType: Analytics3DS2Events.CHALLENGE_COMPLETED,

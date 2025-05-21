@@ -28,7 +28,7 @@ import CancelError from '../../../core/Errors/CancelError';
 
 import './UIElement.scss';
 import { AnalyticsEventClass } from '../../../core/Analytics/AnalyticsEventClass';
-import { AnalyticsEventLog } from '../../../core/Analytics/AnalyticsEventLog';
+import { AnalyticsLogEvent } from '../../../core/Analytics/AnalyticsLogEvent';
 import { AnalyticsErrorEvent } from '../../../core/Analytics/AnalyticsErrorEvent';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
@@ -249,7 +249,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     private async submitUsingAdvancedFlow(): Promise<CheckoutAdvancedFlowResponse> {
         return new Promise<CheckoutAdvancedFlowResponse>((resolve, reject) => {
             // Call analytics endpoint
-            const event = new AnalyticsEventLog({
+            const event = new AnalyticsLogEvent({
                 type: ANALYTICS_SUBMIT_STR,
                 message: 'Shopper clicked pay'
             });
@@ -267,7 +267,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     private async submitUsingSessionsFlow(data: PaymentData): Promise<CheckoutSessionPaymentResponse> {
-        const event = new AnalyticsEventLog({
+        const event = new AnalyticsLogEvent({
             type: ANALYTICS_SUBMIT_STR,
             message: 'Shopper clicked pay'
         });
