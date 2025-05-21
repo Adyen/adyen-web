@@ -2,10 +2,10 @@ import { AnalyticsEventClass } from './AnalyticsEventClass';
 import { AnalyticsErrorEventObject } from './types';
 
 export class AnalyticsErrorEvent extends AnalyticsEventClass {
+    public component: string;
     public code?: string;
     public errorType?: string;
     public message?: string;
-    public component?: string;
 
     constructor(analyticsObject: AnalyticsErrorEventObject) {
         super();

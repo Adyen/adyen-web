@@ -3,10 +3,10 @@ import { AnalyticsLogEventObject } from './types';
 
 export class AnalyticsLogEvent extends AnalyticsEventClass {
     public type: string;
+    public component: string;
     public message?: string;
     public subType?: string;
     public result?: string;
-    public component?: string;
     public target?: string; // is this ever used?
 
     constructor(analyticsObject: AnalyticsLogEventObject) {

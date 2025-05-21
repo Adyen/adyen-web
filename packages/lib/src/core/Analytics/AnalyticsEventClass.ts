@@ -4,7 +4,7 @@ import { getUTCTimestamp } from './utils';
 export abstract class AnalyticsEventClass {
     public timestamp: string;
     public id: string;
-    public component?: string;
+    public component: string;
 
     constructor() {
         this.id = uuid();

@@ -6,6 +6,7 @@ import { AnalyticsInfoEventObject } from './types';
 export class AnalyticsInfoEvent extends AnalyticsEventClass {
     public type: string;
     public target: string;
+    public component: string;
     public issuer?: string;
     public isExpress?: boolean;
     public expressPage?: string;
@@ -14,7 +15,6 @@ export class AnalyticsInfoEvent extends AnalyticsEventClass {
     public validationErrorCode?: string;
     public validationErrorMessage?: string;
     public configData?: Record<string, string | boolean>;
-    public component?: string;
 
     constructor(analyticsObject: AnalyticsInfoEventObject) {
         super();
