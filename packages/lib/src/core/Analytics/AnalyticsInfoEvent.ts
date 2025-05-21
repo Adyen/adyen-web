@@ -3,7 +3,7 @@ import { ANALYTICS_VALIDATION_ERROR_STR } from './constants';
 import { mapErrorCodesForAnalytics } from './utils';
 import { AnalyticsInfoEventObject } from './types';
 
-export class AnalyticsEventInfo extends AnalyticsEventClass {
+export class AnalyticsInfoEvent extends AnalyticsEventClass {
     public type: string;
     public target: string;
     public issuer?: string;

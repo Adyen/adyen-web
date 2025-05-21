@@ -14,7 +14,7 @@ import { InfoEventTypes } from '../../../../core/Analytics/constants';
 import type { FastlaneSignupConfiguration } from '../../../PayPalFastlane/types';
 
 import './FastlaneSignup.scss';
-import { AnalyticsEventInfo } from '../../../../core/Analytics/AnalyticsEventInfo';
+import { AnalyticsInfoEvent } from '../../../../core/Analytics/AnalyticsInfoEvent';
 import { AnalyticsEventClass } from '../../../../core/Analytics/AnalyticsEventClass';
 
 type FastlaneSignupProps = FastlaneSignupConfiguration & {
@@ -58,7 +58,7 @@ const FastlaneSignup = ({
         const newValue = !isChecked;
         setIsChecked(newValue);
 
-        const event = new AnalyticsEventInfo({
+        const event = new AnalyticsInfoEvent({
             type: InfoEventTypes.clicked,
             target: 'fastlane_signup_consent_toggle',
             configData: {
@@ -113,7 +113,7 @@ const FastlaneSignup = ({
             return;
         }
 
-        const event = new AnalyticsEventInfo({
+        const event = new AnalyticsInfoEvent({
             type: InfoEventTypes.rendered,
             configData: {
                 isFastlaneSignupRendered: shouldDisplaySignup

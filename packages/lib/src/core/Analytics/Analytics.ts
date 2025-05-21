@@ -6,7 +6,7 @@ import { debounce } from '../../utils/debounce';
 import { AnalyticsModule } from '../../types/global-types';
 import { processAnalyticsData } from './utils';
 import AdyenCheckoutError, { SDK_ERROR } from '../Errors/AdyenCheckoutError';
-import { AnalyticsEventInfo } from './AnalyticsEventInfo';
+import { AnalyticsInfoEvent } from './AnalyticsInfoEvent';
 import { AnalyticsEventClass } from './AnalyticsEventClass';
 import { AnalyticsLogEvent } from './AnalyticsLogEvent';
 import { AnalyticsErrorEvent } from './AnalyticsErrorEvent';
@@ -95,7 +95,7 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
 
             let event: AnalyticsEvent;
 
-            if (analyticsObj instanceof AnalyticsEventInfo) {
+            if (analyticsObj instanceof AnalyticsInfoEvent) {
                 event = ANALYTICS_EVENT.info;
             }
 

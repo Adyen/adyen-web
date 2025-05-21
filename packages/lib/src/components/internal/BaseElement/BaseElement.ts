@@ -9,7 +9,7 @@ import type { BaseElementProps, IBaseElement } from './types';
 import type { PaymentData } from '../../../types/global-types';
 import { AnalyticsInitialEvent } from '../../../core/Analytics/types';
 import { off, on } from '../../../utils/listenerUtils';
-import { AnalyticsEventInfo } from '../../../core/Analytics/AnalyticsEventInfo';
+import { AnalyticsInfoEvent } from '../../../core/Analytics/AnalyticsInfoEvent';
 import { AnalyticsEventClass } from '../../../core/Analytics/AnalyticsEventClass';
 
 /**
@@ -164,7 +164,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
                     // ...create an analytics event  declaring that the component has been rendered
                     // (The dropin will do this itself from DropinComponent once the PM list has rendered)
                     if (!this.props.isDropin) {
-                        const event = new AnalyticsEventInfo({ type: ANALYTICS_RENDERED_STR });
+                        const event = new AnalyticsInfoEvent({ type: ANALYTICS_RENDERED_STR });
                         this.submitAnalytics(event);
                     }
                 });

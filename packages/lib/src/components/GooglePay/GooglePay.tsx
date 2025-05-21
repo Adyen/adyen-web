@@ -18,7 +18,7 @@ import {
 import type { AddressData, BrowserInfo, PaymentMethod, PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
 import type { GooglePayConfiguration } from './types';
 import type { ICore } from '../../core/types';
-import { AnalyticsEventInfo } from '../../core/Analytics/AnalyticsEventInfo';
+import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
 import { AnalyticsEventClass } from '../../core/Analytics/AnalyticsEventClass';
 
 class GooglePay extends UIElement<GooglePayConfiguration> {
@@ -106,7 +106,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
 
     protected submitAnalytics(analyticsObj: AnalyticsEventClass) {
         // Analytics will need to know about this.props.isExpress & this.props.expressPage
-        if (analyticsObj instanceof AnalyticsEventInfo && analyticsObj.type === ANALYTICS_RENDERED_STR) {
+        if (analyticsObj instanceof AnalyticsInfoEvent && analyticsObj.type === ANALYTICS_RENDERED_STR) {
             const { isExpress, expressPage } = this.props;
             const hasExpressPage = expressPage && ANALYTICS_EXPRESS_PAGES_ARRAY.includes(expressPage);
 
@@ -134,7 +134,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
 
     public override submit = () => {
         if (this.props.isInstantPayment) {
-            const event = new AnalyticsEventInfo({
+            const event = new AnalyticsInfoEvent({
                 type: ANALYTICS_SELECTED_STR,
                 target: ANALYTICS_INSTANT_PAYMENT_BUTTON
             });

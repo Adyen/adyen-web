@@ -10,7 +10,7 @@ import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import Button from '../../internal/Button';
 import type { DropinComponentProps, DropinComponentState, DropinStatus, DropinStatusProps, onOrderCancelData } from '../types';
 import UIElement from '../../internal/UIElement';
-import { AnalyticsEventInfo } from '../../../core/Analytics/AnalyticsEventInfo';
+import { AnalyticsInfoEvent } from '../../../core/Analytics/AnalyticsInfoEvent';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
@@ -48,7 +48,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
 
                 this.setStatus('ready');
 
-                const event = new AnalyticsEventInfo({
+                const event = new AnalyticsInfoEvent({
                     type: ANALYTICS_RENDERED_STR,
                     component: 'dropin',
                     configData: this.analyticConfigData
@@ -107,7 +107,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         if ((activePaymentMethod && activePaymentMethod._id !== paymentMethod._id) || !activePaymentMethod) {
             this.props.onSelect?.(paymentMethod);
 
-            const event = new AnalyticsEventInfo({
+            const event = new AnalyticsInfoEvent({
                 type: ANALYTICS_RENDERED_STR
             });
 
@@ -135,7 +135,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
             showDefaultPaymentMethodList: true
         });
 
-        const event = new AnalyticsEventInfo({
+        const event = new AnalyticsInfoEvent({
             type: InfoEventTypes.clicked,
             target: 'otherpaymentmethod_button',
             component: 'dropin'

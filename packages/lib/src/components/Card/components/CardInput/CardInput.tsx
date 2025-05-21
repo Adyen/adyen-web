@@ -32,7 +32,7 @@ import { ANALYTICS_VALIDATION_ERROR_STR } from '../../../../core/Analytics/const
 import { fieldTypeToSnakeCase } from '../../../internal/SecuredFields/utils';
 import { getErrorMessageFromCode } from '../../../../core/Errors/utils';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
-import { AnalyticsEventInfo } from '../../../../core/Analytics/AnalyticsEventInfo';
+import { AnalyticsInfoEvent } from '../../../../core/Analytics/AnalyticsInfoEvent';
 
 const CardInput = (props: CardInputProps) => {
     const sfp = useRef(null);
@@ -365,7 +365,7 @@ const CardInput = (props: CardInputProps) => {
             const newErrors = getArrayDifferences<SortedErrorObject, string>(currentErrorsSortedByLayout, previousSortedErrors, 'field');
 
             newErrors?.forEach(errorItem => {
-                const event = new AnalyticsEventInfo({
+                const event = new AnalyticsInfoEvent({
                     type: ANALYTICS_VALIDATION_ERROR_STR,
                     target: fieldTypeToSnakeCase(errorItem.field),
                     validationErrorCode: errorItem.errorCode,

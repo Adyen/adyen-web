@@ -26,7 +26,7 @@ import {
     ANALYTICS_SELECTED_STR
 } from '../../../core/Analytics/constants';
 import { debounce } from '../../../utils/debounce';
-import { AnalyticsEventInfo } from '../../../core/Analytics/AnalyticsEventInfo';
+import { AnalyticsInfoEvent } from '../../../core/Analytics/AnalyticsInfoEvent';
 
 const payButtonLabel = ({ issuer, items }, i18n): string => {
     const issuerName = items.find(i => i.id === issuer)?.name;
@@ -72,7 +72,7 @@ function IssuerList({ items, placeholder, issuer, highlightedIds = [], showConte
             const target = type === IssuerListInputTypes.Dropdown ? ANALYTICS_LIST : ANALYTICS_FEATURED_ISSUER;
             const issuerObj = items.find(issuer => issuer.id === (event.target as SelectTargetObject).value);
 
-            const analyticsEvent = new AnalyticsEventInfo({
+            const analyticsEvent = new AnalyticsInfoEvent({
                 type: ANALYTICS_SELECTED_STR,
                 target,
                 issuer: issuerObj.name
@@ -87,7 +87,7 @@ function IssuerList({ items, placeholder, issuer, highlightedIds = [], showConte
 
     const handleListToggle = useCallback((isOpen: boolean) => {
         if (isOpen) {
-            const event = new AnalyticsEventInfo({
+            const event = new AnalyticsInfoEvent({
                 type: ANALYTICS_DISPLAYED_STR,
                 target: ANALYTICS_LIST
             });

@@ -25,7 +25,7 @@ import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from '../../core/Errors/Adye
 import CardInputDefaultProps from './components/CardInput/defaultProps';
 import { getCardConfigData } from './components/CardInput/utils';
 import { AnalyticsEventClass } from '../../core/Analytics/AnalyticsEventClass';
-import { AnalyticsEventInfo } from '../../core/Analytics/AnalyticsEventInfo';
+import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
 
 export class CardElement extends UIElement<CardConfiguration> {
     public static type = TxVariants.scheme;
@@ -198,7 +198,7 @@ export class CardElement extends UIElement<CardConfiguration> {
     }
 
     protected submitAnalytics(analyticsObj: AnalyticsEventClass) {
-        const isInfoType = analyticsObj instanceof AnalyticsEventInfo;
+        const isInfoType = analyticsObj instanceof AnalyticsInfoEvent;
 
         if ((isInfoType && analyticsObj.type === ANALYTICS_RENDERED_STR) || (isInfoType && analyticsObj.type === ANALYTICS_CONFIGURED_STR)) {
             // Check if it's a storedCard
@@ -219,14 +219,14 @@ export class CardElement extends UIElement<CardConfiguration> {
     }
 
     private onConfigSuccess = (obj: CardConfigSuccessData) => {
-        const event = new AnalyticsEventInfo({ type: ANALYTICS_CONFIGURED_STR });
+        const event = new AnalyticsInfoEvent({ type: ANALYTICS_CONFIGURED_STR });
         this.submitAnalytics(event);
 
         this.props.onConfigSuccess?.(obj);
     };
 
     private onFocus = (obj: ComponentFocusObject) => {
-        const event = new AnalyticsEventInfo({ type: ANALYTICS_FOCUS_STR, target: fieldTypeToSnakeCase(obj.fieldType) });
+        const event = new AnalyticsInfoEvent({ type: ANALYTICS_FOCUS_STR, target: fieldTypeToSnakeCase(obj.fieldType) });
         this.submitAnalytics(event);
 
         // Call merchant defined callback
@@ -238,7 +238,7 @@ export class CardElement extends UIElement<CardConfiguration> {
     };
 
     private onBlur = (obj: ComponentFocusObject) => {
-        const event = new AnalyticsEventInfo({ type: ANALYTICS_UNFOCUS_STR, target: fieldTypeToSnakeCase(obj.fieldType) });
+        const event = new AnalyticsInfoEvent({ type: ANALYTICS_UNFOCUS_STR, target: fieldTypeToSnakeCase(obj.fieldType) });
         this.submitAnalytics(event);
 
         // Call merchant defined callback
