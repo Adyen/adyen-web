@@ -419,15 +419,14 @@ const CardInput = (props: CardInputProps) => {
             const brand = dualBrandsArr[0]; // initially selected brand
             const dualBrands = dualBrandsArr.toString();
 
-            const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
-                category: ANALYTICS_EVENT.info,
+            const event = new AnalyticsInfoEvent({
                 type: ANALYTICS_DISPLAYED_STR,
                 target: DUAL_BRAND_BUTTON,
                 brand,
                 configData: { dualBrands }
             });
 
-            props.onSubmitAnalytics(aObj);
+            props.onSubmitAnalytics(event);
         }
     }, [dualBrandSelectElements]);
 
@@ -438,14 +437,9 @@ const CardInput = (props: CardInputProps) => {
      */
     useEffect(() => {
         if (previousSelectedBrandValue?.length && selectedBrandValue?.length) {
-            const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
-                category: ANALYTICS_EVENT.info,
-                type: ANALYTICS_SELECTED_STR,
-                target: DUAL_BRAND_BUTTON,
-                brand: selectedBrandValue
-            });
+            const event = new AnalyticsInfoEvent({ type: ANALYTICS_SELECTED_STR, target: DUAL_BRAND_BUTTON, brand: selectedBrandValue });
 
-            props.onSubmitAnalytics(aObj);
+            props.onSubmitAnalytics(event);
         }
     }, [selectedBrandValue]);
 
