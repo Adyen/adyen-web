@@ -29,7 +29,7 @@ import CancelError from '../../../core/Errors/CancelError';
 import './UIElement.scss';
 import { AnalyticsEventClass } from '../../../core/Analytics/AnalyticsEventClass';
 import { AnalyticsEventLog } from '../../../core/Analytics/AnalyticsEventLog';
-import { AnalyticsEventError } from '../../../core/Analytics/AnalyticsEventError';
+import { AnalyticsErrorEvent } from '../../../core/Analytics/AnalyticsErrorEvent';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     protected componentRef: any;
@@ -308,7 +308,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.setElementStatus('ready');
 
         if (error.name === NETWORK_ERROR && error.options.code) {
-            const event = new AnalyticsEventError({
+            const event = new AnalyticsErrorEvent({
                 errorType: ANALYTICS_ERROR_TYPE.apiError,
                 code: error.options.code
             });

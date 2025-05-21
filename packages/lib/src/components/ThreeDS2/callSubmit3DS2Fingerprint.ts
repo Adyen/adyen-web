@@ -6,7 +6,7 @@ import { THREEDS2_FINGERPRINT_SUBMIT } from './constants';
 import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors } from '../../core/Analytics/constants';
 import { API_ERROR_CODE } from '../../core/Services/sessions/constants';
 import { AnalyticsEventClass } from '../../core/Analytics/AnalyticsEventClass';
-import { AnalyticsEventError } from '../../core/Analytics/AnalyticsEventError';
+import { AnalyticsErrorEvent } from '../../core/Analytics/AnalyticsErrorEvent';
 
 /**
  * ThreeDS2DeviceFingerprint, onComplete, calls a new, internal, endpoint which
@@ -39,7 +39,7 @@ export default function callSubmit3DS2Fingerprint({ data }): void {
                         resData
                     );
 
-                    event = new AnalyticsEventError({
+                    event = new AnalyticsErrorEvent({
                         code: Analytics3DS2Errors.NO_DETAILS_FOR_FRICTIONLESS_OR_REFUSED,
                         errorType: ANALYTICS_ERROR_TYPE.apiError,
                         message: `${THREEDS2_FINGERPRINT_SUBMIT}: no details object in a response indicating either a "frictionless" flow, or a "refused" response`
@@ -62,7 +62,7 @@ export default function callSubmit3DS2Fingerprint({ data }): void {
                     resData
                 );
 
-                event = new AnalyticsEventError({
+                event = new AnalyticsErrorEvent({
                     code: Analytics3DS2Errors.NO_ACTION_FOR_CHALLENGE,
                     errorType: ANALYTICS_ERROR_TYPE.apiError,
                     message: `${THREEDS2_FINGERPRINT_SUBMIT}: no action object in a response indicating a "challenge" flow`
@@ -82,7 +82,7 @@ export default function callSubmit3DS2Fingerprint({ data }): void {
             if (!actionHandler) {
                 console.debug('Handled Error::callSubmit3DS2Fingerprint::FAILED:: no actionHandler');
 
-                event = new AnalyticsEventError({
+                event = new AnalyticsErrorEvent({
                     code: Analytics3DS2Errors.NO_COMPONENT_FOR_ACTION,
                     errorType: ANALYTICS_ERROR_TYPE.sdkError,
                     message: `${THREEDS2_FINGERPRINT_SUBMIT}: no component defined to handle the action response`

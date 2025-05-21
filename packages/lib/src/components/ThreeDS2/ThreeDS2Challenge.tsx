@@ -13,7 +13,7 @@ import { ActionHandledReturnObject } from '../../types/global-types';
 import { AnalyticsEventLog } from '../../core/Analytics/AnalyticsEventLog';
 import { AnalyticsEventClass } from '../../core/Analytics/AnalyticsEventClass';
 import { AnalyticsEventInfo } from '../../core/Analytics/AnalyticsEventInfo';
-import { AnalyticsEventError } from '../../core/Analytics/AnalyticsEventError';
+import { AnalyticsErrorEvent } from '../../core/Analytics/AnalyticsErrorEvent';
 
 class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
     public static type = TxVariants.threeDS2Challenge;
@@ -63,7 +63,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
 
             this.props.onError(new AdyenCheckoutError(API_ERROR, `No ${dataTypeForError} received. 3DS2 Challenge cannot proceed`));
 
-            const event = new AnalyticsEventError({
+            const event = new AnalyticsErrorEvent({
                 code: Analytics3DS2Errors.ACTION_IS_MISSING_PAYMENT_DATA,
                 errorType: ANALYTICS_ERROR_TYPE.apiError,
                 message: `${THREEDS2_CHALLENGE_ERROR}: Missing 'paymentData' property from threeDS2 action`

@@ -12,7 +12,7 @@ import { ActionHandledReturnObject } from '../../types/global-types';
 import { AnalyticsEventLog } from '../../core/Analytics/AnalyticsEventLog';
 import { AnalyticsEventClass } from '../../core/Analytics/AnalyticsEventClass';
 import { AnalyticsEventInfo } from '../../core/Analytics/AnalyticsEventInfo';
-import { AnalyticsEventError } from '../../core/Analytics/AnalyticsEventError';
+import { AnalyticsErrorEvent } from '../../core/Analytics/AnalyticsErrorEvent';
 
 class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfiguration> {
     public static type = TxVariants.threeDS2Fingerprint;
@@ -56,7 +56,7 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
             this.props.onError(new AdyenCheckoutError(API_ERROR, `No paymentData received. 3DS2 Fingerprint cannot proceed`));
 
             // TODO - check logs to see if this *ever* happens
-            const event = new AnalyticsEventError({
+            const event = new AnalyticsErrorEvent({
                 code: Analytics3DS2Errors.ACTION_IS_MISSING_PAYMENT_DATA,
                 errorType: ANALYTICS_ERROR_TYPE.apiError,
                 message: `${THREEDS2_FINGERPRINT_ERROR}: Missing 'paymentData' property from threeDS2 action`

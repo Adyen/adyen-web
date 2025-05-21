@@ -9,7 +9,7 @@ import { THREEDS2_FULL, THREEDS2_FINGERPRINT, THREEDS2_FINGERPRINT_ERROR, THREED
 import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, Analytics3DS2Events } from '../../../../core/Analytics/constants';
 import { AnalyticsEventLog } from '../../../../core/Analytics/AnalyticsEventLog';
 import { AnalyticsEventClass } from '../../../../core/Analytics/AnalyticsEventClass';
-import { AnalyticsEventError } from '../../../../core/Analytics/AnalyticsEventError';
+import { AnalyticsErrorEvent } from '../../../../core/Analytics/AnalyticsErrorEvent';
 
 class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State> {
     public static type = 'scheme';
@@ -175,7 +175,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                  *   - or, token could not be base64 decoded &/or JSON.parsed
                  */
 
-                event = new AnalyticsEventError({
+                event = new AnalyticsErrorEvent({
                     message: (finalResObject as ErrorCodeObject).message,
                     ...errorTypeAndCode
                 });
