@@ -82,9 +82,6 @@ export type AnalyticsConfig = {
     loadingContext?: string;
 };
 
-/**
- * start: Analytics event objects
- */
 export interface AnalyticsObject {
     timestamp: string;
     id: string;
@@ -136,10 +133,6 @@ export type AnalyticsErrorEventObject = {
     message?: string;
     component?: string;
 };
-
-/**
- * end: Analytics event objects
- */
 
 export type EventQueueProps = Pick<AnalyticsConfig, 'analyticsContext' | 'clientKey'> & { analyticsPath: string };
 
