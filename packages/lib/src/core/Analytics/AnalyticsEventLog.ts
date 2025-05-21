@@ -1,4 +1,5 @@
 import { AnalyticsEventClass } from './AnalyticsEventClass';
+import { AnalyticsLogEventObject } from './types';
 
 export class AnalyticsEventLog extends AnalyticsEventClass {
     public type: string;
@@ -7,7 +8,7 @@ export class AnalyticsEventLog extends AnalyticsEventClass {
     public result?: string;
     public target?: string; // is this ever used?
 
-    constructor(analyticsObject: any) {
+    constructor(analyticsObject: AnalyticsLogEventObject) {
         super();
 
         this.type = analyticsObject.type;

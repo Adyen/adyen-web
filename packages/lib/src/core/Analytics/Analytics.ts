@@ -1,10 +1,10 @@
 import CollectId from '../Services/analytics/collect-id';
 import EventsQueue, { EventsQueueModule } from './EventsQueue';
 import { AnalyticsEvent, AnalyticsInitialEvent, AnalyticsObject, AnalyticsProps } from './types';
-import { ANALYTIC_LEVEL, ANALYTICS_INFO_TIMER_INTERVAL, ANALYTICS_PATH, ANALYTICS_EVENT, ANALYTICS_VALIDATION_ERROR_STR } from './constants';
+import { ANALYTIC_LEVEL, ANALYTICS_INFO_TIMER_INTERVAL, ANALYTICS_PATH, ANALYTICS_EVENT } from './constants';
 import { debounce } from '../../utils/debounce';
 import { AnalyticsModule } from '../../types/global-types';
-import { mapErrorCodesForAnalytics, processAnalyticsData } from './utils';
+import { processAnalyticsData } from './utils';
 import AdyenCheckoutError, { SDK_ERROR } from '../Errors/AdyenCheckoutError';
 import { AnalyticsEventInfo } from './AnalyticsEventInfo';
 import { AnalyticsEventClass } from './AnalyticsEventClass';
@@ -97,11 +97,6 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
 
             if (analyticsObj instanceof AnalyticsEventInfo) {
                 event = ANALYTICS_EVENT.info;
-
-                // Some of the more generic validation error codes required combination with target to retrieve a specific code
-                if (analyticsObj.type === ANALYTICS_VALIDATION_ERROR_STR) {
-                    analyticsObj.validationErrorCode = mapErrorCodesForAnalytics(analyticsObj.validationErrorCode, analyticsObj.target);
-                }
             }
 
             if (analyticsObj instanceof AnalyticsEventLog) {

@@ -1,5 +1,7 @@
 import { AnalyticsEventClass } from './AnalyticsEventClass';
-// import { AnalyticsEventObject } from './types';
+import { ANALYTICS_VALIDATION_ERROR_STR } from './constants';
+import { mapErrorCodesForAnalytics } from './utils';
+import { AnalyticsInfoEventObject } from './types';
 
 export class AnalyticsEventInfo extends AnalyticsEventClass {
     public type: string;
@@ -13,7 +15,7 @@ export class AnalyticsEventInfo extends AnalyticsEventClass {
     public validationErrorMessage?: string;
     public configData?: Record<string, string | boolean>;
 
-    constructor(analyticsObject: any) {
+    constructor(analyticsObject: AnalyticsInfoEventObject) {
         super();
 
         this.component = analyticsObject.component;
@@ -29,6 +31,11 @@ export class AnalyticsEventInfo extends AnalyticsEventClass {
         this.validationErrorCode = analyticsObject.validationErrorCode;
         this.validationErrorMessage = analyticsObject.validationErrorMessage;
         this.configData = analyticsObject.configData;
+
+        // Some of the more generic validation error codes required combination with target to retrieve a specific code
+        if (this.type === ANALYTICS_VALIDATION_ERROR_STR) {
+            this.validationErrorCode = mapErrorCodesForAnalytics(this.validationErrorCode, this.target);
+        }
 
         return this;
     }

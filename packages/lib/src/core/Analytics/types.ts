@@ -107,6 +107,36 @@ export interface AnalyticsObject {
     configData?: Record<string, string | boolean>;
 }
 
+export type AnalyticsInfoEventObject = {
+    type?: string;
+    target?: string;
+    issuer?: string;
+    isExpress?: boolean;
+    expressPage?: string;
+    isStoredPaymentMethod?: boolean;
+    brand?: string;
+    validationErrorCode?: string;
+    validationErrorMessage?: string;
+    configData?: Record<string, string | boolean>;
+    component?: string;
+};
+
+export type AnalyticsLogEventObject = {
+    type?: string;
+    message?: string;
+    subType?: string;
+    result?: string;
+    component?: string;
+    target?: string; // is this ever used?
+};
+
+export type AnalyticsErrorEventObject = {
+    code?: string;
+    errorType?: string;
+    message?: string;
+    component?: string;
+};
+
 /**
  * end: Analytics event objects
  */
