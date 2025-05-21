@@ -1,4 +1,5 @@
 import { AnalyticsEventClass } from './AnalyticsEventClass';
+// import { AnalyticsEventObject } from './types';
 
 export class AnalyticsEventInfo extends AnalyticsEventClass {
     public type: string;
@@ -14,6 +15,8 @@ export class AnalyticsEventInfo extends AnalyticsEventClass {
 
     constructor(analyticsObject: any) {
         super();
+
+        this.component = analyticsObject.component;
 
         this.type = analyticsObject.type;
         this.target = analyticsObject.target;

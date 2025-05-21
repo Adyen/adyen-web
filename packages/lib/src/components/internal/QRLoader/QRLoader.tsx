@@ -15,10 +15,9 @@ import { StatusObject } from '../Await/types';
 import useImage from '../../../core/Context/useImage';
 import { useA11yReporter } from '../../../core/Errors/useA11yReporter';
 import useAutoFocus from '../../../utils/useAutoFocus';
-import { ANALYTICS_DOWNLOAD_STR, ANALYTICS_EVENT, ANALYTICS_QR_CODE_DOWNLOAD } from '../../../core/Analytics/constants';
+import { ANALYTICS_DOWNLOAD_STR, ANALYTICS_QR_CODE_DOWNLOAD } from '../../../core/Analytics/constants';
 import { PREFIX } from '../Icon/constants';
-import { createNewAnalyticsEvent } from '../../../core/Analytics/utils';
-import { EnhancedAnalyticsObject } from '../../../core/Analytics/types';
+import { AnalyticsEventInfo } from '../../../core/Analytics/AnalyticsEventInfo';
 
 const QRCODE_URL = 'utility/v1/barcode.png?type=qrCode&data=';
 
@@ -263,12 +262,11 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                             onClick={(e, { complete }) => {
                                 copyToClipboard(this.props.qrCodeData);
 
-                                const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
-                                    category: ANALYTICS_EVENT.info,
+                                const event = new AnalyticsEventInfo({
                                     type: ANALYTICS_DOWNLOAD_STR,
                                     target: ANALYTICS_QR_CODE_DOWNLOAD
                                 });
-                                this.props.onSubmitAnalytics(aObj);
+                                this.props.onSubmitAnalytics(event);
 
                                 complete();
                             }}

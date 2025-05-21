@@ -245,7 +245,7 @@ class Core implements ICore {
                 message: `${component} action was handled by the SDK`,
                 component
             });
-            this.modules.analytics.sendAnalytics2(event);
+            this.modules.analytics.sendAnalytics(event);
 
             const props = {
                 ...this.getCorePropsForComponent(),

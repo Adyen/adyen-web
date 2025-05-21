@@ -123,7 +123,7 @@ export interface CardInputProps {
     onFieldValid?: (o: CardFieldValidData) => {};
     onFocus?: (e) => {};
     onLoad?: (o: CardLoadData) => {};
-    onSubmitAnalytics(event: AnalyticsEventClass): void;
+    onSubmitAnalytics?: (event: AnalyticsEventClass) => void;
     handleKeyPress?: (obj: KeyboardEvent) => void;
     onAddressLookup?: OnAddressLookupType;
     onAddressSelected?: OnAddressSelectedType;

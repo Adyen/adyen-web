@@ -7,7 +7,7 @@ import { hasOwnProperty } from '../../../utils/hasOwnProperty';
 import { Resources } from '../../../core/Context/Resources';
 import { ANALYTICS_ERROR_TYPE, ANALYTICS_SUBMIT_STR } from '../../../core/Analytics/constants';
 
-import { AnalyticsInitialEvent, EnhancedAnalyticsObject } from '../../../core/Analytics/types';
+import { AnalyticsInitialEvent } from '../../../core/Analytics/types';
 import type { CoreConfiguration, ICore, AdditionalDetailsData } from '../../../core/types';
 import type { ComponentMethodsRef, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
 import type { CheckoutSessionDetailsResponse, CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
@@ -174,32 +174,19 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     protected submitAnalytics(analyticsObj: AnalyticsEventClass) {
         try {
-            analyticsObj.component = this.getComponent2(analyticsObj);
+            analyticsObj.component = this.getComponent(analyticsObj);
 
-            this.props.modules.analytics.sendAnalytics2(analyticsObj);
+            this.props.modules.analytics.sendAnalytics(analyticsObj);
         } catch (error) {
             console.warn('Failed to submit the analytics event. Error:', error);
         }
-    }
-
-    private getComponent2({ component }: AnalyticsEventClass): string {
-        if (component) {
-            return component;
-        }
-        if (this.constructor['analyticsType']) {
-            return this.constructor['analyticsType'];
-        }
-        if (this.constructor['type'] === 'scheme' || this.constructor['type'] === 'bcmc') {
-            return this.constructor['type'];
-        }
-        return this.type;
     }
 
     /** Work out what the component's "type" is:
      * - first check for a dedicated "analyticsType" (currently only applies to custom-cards)
      * - otherwise, distinguish cards from non-cards: cards will use their static type property, everything else will use props.type
      */
-    private getComponent({ component }: EnhancedAnalyticsObject): string {
+    private getComponent({ component }: AnalyticsEventClass): string {
         if (component) {
             return component;
         }
@@ -262,13 +249,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     private async submitUsingAdvancedFlow(): Promise<CheckoutAdvancedFlowResponse> {
         return new Promise<CheckoutAdvancedFlowResponse>((resolve, reject) => {
             // Call analytics endpoint
-            // const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
-            //     category: ANALYTICS_EVENT.log,
-            //     type: ANALYTICS_SUBMIT_STR,
-            //     message: 'Shopper clicked pay'
-            // });
-            // this.submitAnalytics(aObj);
-
             const event = new AnalyticsEventLog({
                 type: ANALYTICS_SUBMIT_STR,
                 message: 'Shopper clicked pay'

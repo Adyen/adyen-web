@@ -87,8 +87,8 @@ export type AnalyticsConfig = {
  */
 export interface AnalyticsObject {
     timestamp: string;
-    component: string;
     id: string;
+    component: string;
     code?: string;
     errorType?: string;
     message?: string;
@@ -106,45 +106,6 @@ export interface AnalyticsObject {
     result?: string;
     configData?: Record<string, string | boolean>;
 }
-
-export type NewAnalyticsEventObjectInfo = {
-    category: AnalyticsEvent;
-    type?: string;
-    target?: string;
-    issuer?: string;
-    isExpress?: boolean;
-    expressPage?: string;
-    isStoredPaymentMethod?: boolean;
-    brand?: string;
-    validationErrorCode?: string;
-    validationErrorMessage?: string;
-    configData?: Record<string, string | boolean>;
-    component?: string;
-};
-
-export type NewAnalyticsEventObjectLog = {
-    category: AnalyticsEvent;
-    type?: string;
-    message?: string;
-    subType?: string;
-    result?: string;
-    component?: string;
-    target?: string; // is this ever used?
-};
-
-export type NewAnalyticsEventObjectError = {
-    category: AnalyticsEvent;
-    code?: string;
-    errorType?: string;
-    message?: string;
-    component?: string;
-};
-
-export type CreateNewAnalyticsEventObject = NewAnalyticsEventObjectInfo | NewAnalyticsEventObjectLog | NewAnalyticsEventObjectError;
-
-export type EnhancedAnalyticsObject = AnalyticsObject & {
-    category: AnalyticsEvent;
-};
 
 /**
  * end: Analytics event objects
