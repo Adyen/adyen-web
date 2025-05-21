@@ -2,7 +2,7 @@ import { render } from '@testing-library/preact';
 import { mockDeep } from 'jest-mock-extended';
 import { AnalyticsModule } from '../../types/global-types';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
-import { ANALYTICS_ERROR_TYPE, ANALYTICS_EVENT } from '../../core/Analytics/constants';
+import { ANALYTICS_ERROR_TYPE } from '../../core/Analytics/constants';
 import ANCV from './ANCV';
 
 const flushPromises = () => new Promise(process.nextTick);
@@ -44,7 +44,6 @@ describe('ANCV', () => {
                 code,
                 component: 'ancv',
                 errorType: ANALYTICS_ERROR_TYPE.apiError,
-                category: ANALYTICS_EVENT.error,
                 timestamp: expect.any(String),
                 id: expect.any(String)
             });

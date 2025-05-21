@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { AnalyticsModule } from '../../types/global-types';
 import { mockDeep } from 'jest-mock-extended';
-import { ANALYTICS_ERROR_TYPE, ANALYTICS_EVENT } from '../../core/Analytics/constants';
+import { ANALYTICS_ERROR_TYPE } from '../../core/Analytics/constants';
 
 const flushPromises = () => new Promise(process.nextTick);
 
@@ -169,7 +169,6 @@ describe('Giftcard', () => {
             giftcard.balanceCheck();
             await flushPromises();
             expect(mockedSendAnalytics).toHaveBeenCalledWith({
-                category: ANALYTICS_EVENT.error,
                 code,
                 component: 'giftcard',
                 errorType: ANALYTICS_ERROR_TYPE.apiError,
