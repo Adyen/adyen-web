@@ -3,7 +3,7 @@ import { h } from 'preact';
 import PrepareChallenge3DS2 from './PrepareChallenge3DS2';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { THREEDS2_FULL, TIMEOUT } from '../../constants';
-import { Analytics3DS2Errors, Analytics3DS2Events, ANALYTICS_ERROR_TYPE, ANALYTICS_EVENT } from '../../../../core/Analytics/constants';
+import { Analytics3DS2Errors, Analytics3DS2Events, ANALYTICS_ERROR_TYPE } from '../../../../core/Analytics/constants';
 
 const challengeToken = {
     acsReferenceNumber: 'ADYEN-ACS-SIMULATOR',
@@ -32,7 +32,6 @@ let onError: any;
 let errorMessage: string;
 
 const baseAnalyticsError = {
-    category: ANALYTICS_EVENT.error,
     errorType: ANALYTICS_ERROR_TYPE.apiError,
     timestamp: expect.any(String),
     id: expect.any(String)
@@ -86,7 +85,6 @@ describe('PrepareChallenge3DS2 - Happy flow', () => {
         expect(onError.mock.calls.length).toBe(0);
 
         expect(onSubmitAnalytics).toHaveBeenCalledWith({
-            category: ANALYTICS_EVENT.log,
             type: THREEDS2_FULL,
             message: 'creq sent',
             subType: Analytics3DS2Events.CHALLENGE_DATA_SENT,
@@ -115,7 +113,6 @@ describe('PrepareChallenge3DS2 - Happy flow', () => {
         setTimeout(() => {
             // analytics to say process is complete
             expect(onSubmitAnalytics).toHaveBeenCalledWith({
-                category: ANALYTICS_EVENT.log,
                 type: THREEDS2_FULL,
                 message: '3DS2 challenge has completed',
                 subType: Analytics3DS2Events.CHALLENGE_COMPLETED,
@@ -160,7 +157,6 @@ describe('PrepareChallenge3DS2 - flow completes with errors that are considered 
         setTimeout(() => {
             // analytics for error
             expect(onSubmitAnalytics).toHaveBeenCalledWith({
-                category: ANALYTICS_EVENT.error,
                 message: 'threeDS2Challenge: timeout',
                 code: Analytics3DS2Errors.THREEDS2_TIMEOUT,
                 errorType: ANALYTICS_ERROR_TYPE.network,
@@ -170,7 +166,6 @@ describe('PrepareChallenge3DS2 - flow completes with errors that are considered 
 
             // analytics to say process is complete
             expect(onSubmitAnalytics).toHaveBeenCalledWith({
-                category: ANALYTICS_EVENT.log,
                 type: THREEDS2_FULL,
                 message: '3DS2 challenge has completed',
                 subType: Analytics3DS2Events.CHALLENGE_COMPLETED,
@@ -206,7 +201,6 @@ describe('PrepareChallenge3DS2 - flow completes with errors that are considered 
         setTimeout(() => {
             // analytics for error
             expect(onSubmitAnalytics).toHaveBeenCalledWith({
-                category: ANALYTICS_EVENT.error,
                 message: 'threeDS2Challenge: no transStatus could be retrieved',
                 code: Analytics3DS2Errors.NO_TRANSSTATUS,
                 errorType: ANALYTICS_ERROR_TYPE.apiError,
@@ -216,7 +210,6 @@ describe('PrepareChallenge3DS2 - flow completes with errors that are considered 
 
             // analytics to say process is complete
             expect(onSubmitAnalytics).toHaveBeenCalledWith({
-                category: ANALYTICS_EVENT.log,
                 type: THREEDS2_FULL,
                 message: '3DS2 challenge has completed',
                 subType: Analytics3DS2Events.CHALLENGE_COMPLETED,

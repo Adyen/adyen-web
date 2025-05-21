@@ -3,8 +3,10 @@ import collectId from '../Services/analytics/collect-id';
 import { PaymentAmount } from '../../types';
 import wait from '../../utils/wait';
 import { DEFAULT_DEBOUNCE_TIME_MS } from '../../utils/debounce';
-import { EnhancedAnalyticsObject } from './types';
-import { ANALYTICS_EVENT, ANALYTICS_VALIDATION_ERROR_STR } from './constants';
+import { ANALYTICS_VALIDATION_ERROR_STR } from './constants';
+import { AnalyticsInfoEvent } from './AnalyticsInfoEvent';
+import { AnalyticsErrorEvent } from './AnalyticsErrorEvent';
+import { AnalyticsLogEvent } from './AnalyticsLogEvent';
 
 jest.mock('../Services/analytics/collect-id');
 
@@ -20,14 +22,11 @@ const setUpEvent = {
     flavor: 'components'
 };
 
-const analyticsEventObj = {
-    category: ANALYTICS_EVENT.info,
+const analyticsInfoEventObj = new AnalyticsInfoEvent({
     component: 'cardComponent',
     type: 'Focus',
-    target: 'PAN input',
-    timestamp: expect.any(String),
-    id: expect.any(String)
-} as EnhancedAnalyticsObject;
+    target: 'PAN input'
+});
 
 const applicationInfo = {
     merchantApplication: {
@@ -121,7 +120,7 @@ describe('Analytics initialisation and event queue', () => {
             bundleType: ''
         });
 
-        const aObj: boolean = analytics.sendAnalytics({ ...analyticsEventObj });
+        const aObj: boolean = analytics.sendAnalytics(analyticsInfoEventObj);
 
         expect(aObj).toBe(false);
 
@@ -129,7 +128,7 @@ describe('Analytics initialisation and event queue', () => {
     });
 
     test('With Analytics being enabled by default, create info event and see that it is held in a queue', () => {
-        const aObj: boolean = analytics.sendAnalytics({ ...analyticsEventObj });
+        const aObj: boolean = analytics.sendAnalytics(analyticsInfoEventObj);
 
         expect(aObj).toBe(true);
 
@@ -139,18 +138,19 @@ describe('Analytics initialisation and event queue', () => {
 
     test('Create error event and see that it is sent immediately, also flushing the queued info object', async () => {
         // first create info event
-        analytics.sendAnalytics({ ...analyticsEventObj });
+        analytics.sendAnalytics(analyticsInfoEventObj);
 
         expect(analytics.getEventsQueue().getQueue().info.length).toBe(1);
 
         // create error event
-        analytics.sendAnalytics({
-            category: ANALYTICS_EVENT.error,
-            component: 'threeDS2Fingerprint',
-            code: 'web_704',
-            errorType: 'APIError',
-            message: 'threeDS2Fingerprint Missing paymentData property from threeDS2 action'
-        });
+        analytics.sendAnalytics(
+            new AnalyticsErrorEvent({
+                component: 'threeDS2Fingerprint',
+                code: 'web_704',
+                errorType: 'APIError',
+                message: 'threeDS2Fingerprint Missing paymentData property from threeDS2 action'
+            })
+        );
 
         // error object should be sent almost immediately (after a debounce interval), sending any events as well
         await wait(DEFAULT_DEBOUNCE_TIME_MS);
@@ -159,11 +159,12 @@ describe('Analytics initialisation and event queue', () => {
     });
 
     test('Create log event and see that it is sent (almost) immediately', async () => {
-        analytics.sendAnalytics({
-            category: ANALYTICS_EVENT.log,
-            component: 'scheme',
-            type: 'Submit'
-        });
+        analytics.sendAnalytics(
+            new AnalyticsLogEvent({
+                component: 'scheme',
+                type: 'Submit'
+            })
+        );
 
         // log event should be sent almost immediately (after a debounce interval)
         await wait(DEFAULT_DEBOUNCE_TIME_MS);
@@ -171,14 +172,15 @@ describe('Analytics initialisation and event queue', () => {
     });
 
     test('Creating a validation error info event object and seeing it added to queue', () => {
-        analytics.sendAnalytics({
-            category: ANALYTICS_EVENT.info,
-            component: 'scheme',
-            type: ANALYTICS_VALIDATION_ERROR_STR,
-            target: 'card_number',
-            validationErrorCode: 'cc.num.901',
-            validationErrorMessage: 'error-msg-incorrectly-filled-pan'
-        });
+        analytics.sendAnalytics(
+            new AnalyticsInfoEvent({
+                component: 'scheme',
+                type: ANALYTICS_VALIDATION_ERROR_STR,
+                target: 'card_number',
+                validationErrorCode: 'cc.num.901',
+                validationErrorMessage: 'error-msg-incorrectly-filled-pan'
+            })
+        );
 
         // info event should not be sent immediately
         expect(analytics.getEventsQueue().getQueue().info.length).toBe(1);
