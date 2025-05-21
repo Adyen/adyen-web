@@ -14,6 +14,7 @@ export class AnalyticsInfoEvent extends AnalyticsEventClass {
     public validationErrorCode?: string;
     public validationErrorMessage?: string;
     public configData?: Record<string, string | boolean>;
+    public component?: string;
 
     constructor(analyticsObject: AnalyticsInfoEventObject) {
         super();
