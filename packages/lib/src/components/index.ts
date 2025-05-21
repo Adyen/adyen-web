@@ -26,7 +26,6 @@ export { default as FacilPay10x } from './FacilyPay/FacilyPay10x';
 export { default as FacilPay12x } from './FacilyPay/FacilyPay12x';
 export { default as RatePay } from './RatePay';
 export { default as RatePayDirectDebit } from './RatePay/RatePayDirectDebit';
-export { default as Riverty } from './Riverty';
 
 /** Wallets **/
 export { default as AmazonPay } from './AmazonPay';
@@ -71,6 +70,7 @@ export { default as Twint } from './Twint';
 export { default as Vipps } from './Vipps';
 export { default as Trustly } from './Trustly';
 export { default as PayByBankUS } from './PayByBankUS';
+export { default as Riverty } from './Riverty';
 
 /** Klarna */
 export { default as Klarna } from './Klarna';

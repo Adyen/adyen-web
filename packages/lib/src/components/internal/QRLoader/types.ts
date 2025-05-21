@@ -1,7 +1,7 @@
 import { ActionHandledReturnObject, PaymentAmount } from '../../../types/global-types';
 import Language from '../../../language/Language';
 import { h } from 'preact';
-import { EnhancedAnalyticsObject } from '../../../core/Analytics/types';
+import { AnalyticsEventClass } from '../../../core/Analytics/AnalyticsEventClass';
 
 export interface QRLoaderProps {
     delay?: number;
@@ -29,7 +29,7 @@ export interface QRLoaderProps {
     instructions?: string | (() => h.JSX.Element);
     copyBtn?: boolean;
     onActionHandled?: (rtnObj: ActionHandledReturnObject) => void;
-    onSubmitAnalytics?: (aObj: EnhancedAnalyticsObject) => void;
+    onSubmitAnalytics?: (aObj: AnalyticsEventClass) => void;
 }
 
 export interface QRLoaderState {

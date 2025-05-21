@@ -40,7 +40,6 @@ export enum TxVariants {
     facilypay_12x = 'facilypay_12x',
     ratepay = 'ratepay',
     ratepay_directdebit = 'ratepay_directdebit',
-    riverty = 'riverty',
     /** Open Invoice */
 
     /** Wallets */
@@ -117,6 +116,7 @@ export enum TxVariants {
     vipps = 'vipps',
     trustly = 'trustly',
     paybybank_AIS_DD = 'paybybank_AIS_DD',
+    riverty = 'riverty',
     /** Redirect */
 
     /** Klarna */

@@ -82,13 +82,10 @@ export type AnalyticsConfig = {
     loadingContext?: string;
 };
 
-/**
- * start: Analytics event objects
- */
 export interface AnalyticsObject {
     timestamp: string;
-    component: string;
     id: string;
+    component: string;
     code?: string;
     errorType?: string;
     message?: string;
@@ -107,8 +104,7 @@ export interface AnalyticsObject {
     configData?: Record<string, string | boolean>;
 }
 
-export type NewAnalyticsEventObjectInfo = {
-    category: AnalyticsEvent;
+export type AnalyticsInfoEventObject = {
     type?: string;
     target?: string;
     issuer?: string;
@@ -122,8 +118,7 @@ export type NewAnalyticsEventObjectInfo = {
     component?: string;
 };
 
-export type NewAnalyticsEventObjectLog = {
-    category: AnalyticsEvent;
+export type AnalyticsLogEventObject = {
     type?: string;
     message?: string;
     subType?: string;
@@ -132,23 +127,12 @@ export type NewAnalyticsEventObjectLog = {
     target?: string; // is this ever used?
 };
 
-export type NewAnalyticsEventObjectError = {
-    category: AnalyticsEvent;
+export type AnalyticsErrorEventObject = {
     code?: string;
     errorType?: string;
     message?: string;
     component?: string;
 };
-
-export type CreateNewAnalyticsEventObject = NewAnalyticsEventObjectInfo | NewAnalyticsEventObjectLog | NewAnalyticsEventObjectError;
-
-export type EnhancedAnalyticsObject = AnalyticsObject & {
-    category: AnalyticsEvent;
-};
-
-/**
- * end: Analytics event objects
- */
 
 export type EventQueueProps = Pick<AnalyticsConfig, 'analyticsContext' | 'clientKey'> & { analyticsPath: string };
 

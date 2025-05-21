@@ -2,7 +2,7 @@ import { mount } from 'enzyme';
 import { h } from 'preact';
 import PrepareFingerprint3DS2 from './PrepareFingerprint3DS2';
 import { THREEDS2_FINGERPRINT_ERROR, THREEDS2_FULL, TIMEOUT } from '../../constants';
-import { Analytics3DS2Errors, Analytics3DS2Events, ANALYTICS_ERROR_TYPE, ANALYTICS_EVENT } from '../../../../core/Analytics/constants';
+import { Analytics3DS2Errors, Analytics3DS2Events, ANALYTICS_ERROR_TYPE } from '../../../../core/Analytics/constants';
 
 const fingerPrintToken = {
     threeDSMessageVersion: '2.1.0',
@@ -31,7 +31,6 @@ let wrapper: any;
 const onError: any = () => {};
 
 const baseAnalyticsError = {
-    category: ANALYTICS_EVENT.error,
     errorType: ANALYTICS_ERROR_TYPE.apiError,
     timestamp: expect.any(String),
     id: expect.any(String)
@@ -40,7 +39,6 @@ const baseAnalyticsError = {
 let completeFunction: any;
 
 const completedAnalyticsObj = {
-    category: ANALYTICS_EVENT.log,
     message: '3DS2 fingerprinting has completed',
     type: THREEDS2_FULL,
     subType: Analytics3DS2Events.FINGERPRINT_COMPLETED,
@@ -85,7 +83,6 @@ describe('ThreeDS2DeviceFingerprint - Happy flow', () => {
         mountPrepareFingerprint(propsMaster);
 
         expect(onSubmitAnalytics).toHaveBeenCalledWith({
-            category: ANALYTICS_EVENT.log,
             type: THREEDS2_FULL,
             message: 'threeDSMethodData sent',
             subType: Analytics3DS2Events.FINGERPRINT_DATA_SENT,
@@ -152,7 +149,6 @@ describe('ThreeDS2DeviceFingerprint - flow completes with errors that are consid
         setTimeout(() => {
             // analytics for error
             expect(onSubmitAnalytics).toHaveBeenCalledWith({
-                category: ANALYTICS_EVENT.error,
                 message: 'threeDS2Fingerprint: timeout',
                 code: Analytics3DS2Errors.THREEDS2_TIMEOUT,
                 errorType: ANALYTICS_ERROR_TYPE.network,

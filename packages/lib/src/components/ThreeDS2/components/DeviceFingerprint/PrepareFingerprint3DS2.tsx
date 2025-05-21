@@ -4,11 +4,12 @@ import { createFingerprintResolveData, createOldFingerprintResolveData, isErrorO
 import { PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State } from './types';
 import { FingerPrintData, ResultObject, ErrorCodeObject } from '../../types';
 import { ErrorObject } from '../../../../core/Errors/types';
-import { EnhancedAnalyticsObject } from '../../../../core/Analytics/types';
 import { isValidHttpUrl } from '../../../../utils/isValidURL';
 import { THREEDS2_FULL, THREEDS2_FINGERPRINT, THREEDS2_FINGERPRINT_ERROR, THREEDS2_NUM, MISSING_TOKEN_IN_ACTION_MSG, TIMEOUT } from '../../constants';
-import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, Analytics3DS2Events, ANALYTICS_EVENT } from '../../../../core/Analytics/constants';
-import { createNewAnalyticsEvent } from '../../../../core/Analytics/utils';
+import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, Analytics3DS2Events } from '../../../../core/Analytics/constants';
+import { AnalyticsLogEvent } from '../../../../core/Analytics/AnalyticsLogEvent';
+import { AnalyticsEventClass } from '../../../../core/Analytics/AnalyticsEventClass';
+import { AnalyticsErrorEvent } from '../../../../core/Analytics/AnalyticsErrorEvent';
 
 class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State> {
     public static type = 'scheme';
@@ -42,13 +43,13 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
     }
 
     public onFormSubmit = (msg: string) => {
-        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
-            category: ANALYTICS_EVENT.log,
+        const event = new AnalyticsLogEvent({
             type: THREEDS2_FULL,
             message: msg,
             subType: Analytics3DS2Events.FINGERPRINT_DATA_SENT
         });
-        this.props.onSubmitAnalytics(aObj);
+
+        this.props.onSubmitAnalytics(event);
     };
 
     componentDidMount() {
@@ -151,7 +152,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             const resolveDataFunction = this.props.isMDFlow ? createOldFingerprintResolveData : createFingerprintResolveData;
             const data = resolveDataFunction(this.props.dataKey, resultObj, this.props.paymentData);
 
-            let analyticsObject: EnhancedAnalyticsObject;
+            let event: AnalyticsEventClass;
 
             /** Are we in an error scenario? If so, submit analytics about it */
             const finalResObject = errorCodeObject ? errorCodeObject : resultObj;
@@ -174,14 +175,13 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                  *   - or, token could not be base64 decoded &/or JSON.parsed
                  */
 
-                analyticsObject = createNewAnalyticsEvent({
-                    category: ANALYTICS_EVENT.error,
+                event = new AnalyticsErrorEvent({
                     message: (finalResObject as ErrorCodeObject).message,
                     ...errorTypeAndCode
                 });
 
                 // Send error to analytics endpoint
-                this.props.onSubmitAnalytics(analyticsObject);
+                this.props.onSubmitAnalytics(event);
             }
 
             /** Calculate "result" for analytics */
@@ -211,16 +211,14 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
              * else {threeDSCompInd:"U"} or {threeDSCompInd:"N"} - if we've had some kind of timeout or data parsing problem (as described above)
              */
 
-            analyticsObject = createNewAnalyticsEvent({
-                category: ANALYTICS_EVENT.log,
+            event = new AnalyticsLogEvent({
                 type: THREEDS2_FULL,
                 message: `${THREEDS2_NUM} fingerprinting has completed`,
                 subType: Analytics3DS2Events.FINGERPRINT_COMPLETED,
                 result
             });
-
             // Send log to analytics endpoint
-            this.props.onSubmitAnalytics(analyticsObject);
+            this.props.onSubmitAnalytics(event);
 
             /**
              * Equals call to callSubmit3DS2Fingerprint (except for in 3DS2InMDFlow)

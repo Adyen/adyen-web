@@ -5,7 +5,6 @@ import RedirectShopper from './components/RedirectShopper';
 import RedirectElement from './Redirect';
 import Analytics from '../../core/Analytics';
 import { RedirectConfiguration } from './types';
-import { ANALYTICS_EVENT } from '../../core/Analytics/constants';
 
 jest.mock('../../utils/detectInIframeInSameOrigin', () => {
     return jest.fn().mockImplementation(() => {
@@ -103,7 +102,6 @@ describe('Redirect error', () => {
         });
 
         expect(analytics.sendAnalytics).toHaveBeenCalledWith({
-            category: ANALYTICS_EVENT.error,
             code: '600',
             component: 'ideal',
             errorType: 'Redirect',
@@ -131,7 +129,6 @@ describe('Redirect error', () => {
 
         await waitFor(() => {
             expect(analytics.sendAnalytics).toHaveBeenCalledWith({
-                category: ANALYTICS_EVENT.error,
                 code: '600',
                 component: 'ideal',
                 errorType: 'Redirect',

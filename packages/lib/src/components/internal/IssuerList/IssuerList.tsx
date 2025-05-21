@@ -18,7 +18,6 @@ import Select from '../FormFields/Select';
 import { SelectTargetObject } from '../FormFields/Select/types';
 import {
     ANALYTICS_DISPLAYED_STR,
-    ANALYTICS_EVENT,
     ANALYTICS_FEATURED_ISSUER,
     ANALYTICS_INPUT_STR,
     ANALYTICS_LIST,
@@ -27,8 +26,7 @@ import {
     ANALYTICS_SELECTED_STR
 } from '../../../core/Analytics/constants';
 import { debounce } from '../../../utils/debounce';
-import { createNewAnalyticsEvent } from '../../../core/Analytics/utils';
-import { EnhancedAnalyticsObject } from '../../../core/Analytics/types';
+import { AnalyticsInfoEvent } from '../../../core/Analytics/AnalyticsInfoEvent';
 
 const payButtonLabel = ({ issuer, items }, i18n): string => {
     const issuerName = items.find(i => i.id === issuer)?.name;
@@ -74,13 +72,12 @@ function IssuerList({ items, placeholder, issuer, highlightedIds = [], showConte
             const target = type === IssuerListInputTypes.Dropdown ? ANALYTICS_LIST : ANALYTICS_FEATURED_ISSUER;
             const issuerObj = items.find(issuer => issuer.id === (event.target as SelectTargetObject).value);
 
-            const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
-                category: ANALYTICS_EVENT.info,
+            const analyticsEvent = new AnalyticsInfoEvent({
                 type: ANALYTICS_SELECTED_STR,
                 target,
                 issuer: issuerObj.name
             });
-            props.onSubmitAnalytics(aObj);
+            props.onSubmitAnalytics(analyticsEvent);
 
             setInputType(type);
             handleChangeFor('issuer')(event);
@@ -90,12 +87,11 @@ function IssuerList({ items, placeholder, issuer, highlightedIds = [], showConte
 
     const handleListToggle = useCallback((isOpen: boolean) => {
         if (isOpen) {
-            const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
-                category: ANALYTICS_EVENT.info,
+            const event = new AnalyticsInfoEvent({
                 type: ANALYTICS_DISPLAYED_STR,
                 target: ANALYTICS_LIST
             });
-            props.onSubmitAnalytics(aObj);
+            props.onSubmitAnalytics(event);
         }
     }, []);
 

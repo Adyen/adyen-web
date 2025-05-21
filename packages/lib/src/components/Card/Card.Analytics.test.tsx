@@ -1,20 +1,18 @@
 import { CardElement } from './Card';
 import Analytics from '../../core/Analytics';
-
-const analyticsModule = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', bundleType: 'umd' });
-
-let card;
-
 import {
     ANALYTICS_CONFIGURED_STR,
-    ANALYTICS_EVENT,
     ANALYTICS_FOCUS_STR,
     ANALYTICS_RENDERED_STR,
     ANALYTICS_SUBMIT_STR,
     ANALYTICS_UNFOCUS_STR
 } from '../../core/Analytics/constants';
-import { EnhancedAnalyticsObject } from '../../core/Analytics/types';
-import { createNewAnalyticsEvent } from '../../core/Analytics/utils';
+import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsLogEvent } from '../../core/Analytics/AnalyticsLogEvent';
+
+const analyticsModule = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', bundleType: 'umd' });
+
+let card;
 
 describe('Card: calls that generate "info" analytics should produce objects with the expected shapes ', () => {
     beforeEach(() => {
@@ -31,15 +29,13 @@ describe('Card: calls that generate "info" analytics should produce objects with
     });
 
     test('Analytics should produce an "info" event, of type "rendered", for a card PM', () => {
-        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
-            category: ANALYTICS_EVENT.info,
+        const event = new AnalyticsInfoEvent({
             type: ANALYTICS_RENDERED_STR
         });
 
-        card.submitAnalytics(aObj);
+        card.submitAnalytics(event);
 
         expect(analyticsModule.sendAnalytics).toHaveBeenCalledWith({
-            category: ANALYTICS_EVENT.info,
             component: card.constructor['type'],
             type: ANALYTICS_RENDERED_STR,
             timestamp: expect.any(String),
@@ -49,17 +45,15 @@ describe('Card: calls that generate "info" analytics should produce objects with
     });
 
     test('Analytics should produce an "info" event, of type "rendered", for a storedCard PM', () => {
-        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
-            category: ANALYTICS_EVENT.info,
+        const event = new AnalyticsInfoEvent({
             type: ANALYTICS_RENDERED_STR,
             isStoredPaymentMethod: true,
             brand: 'mc'
         });
 
-        card.submitAnalytics(aObj);
+        card.submitAnalytics(event);
 
         expect(analyticsModule.sendAnalytics).toHaveBeenCalledWith({
-            category: ANALYTICS_EVENT.info,
             component: card.constructor['type'],
             type: ANALYTICS_RENDERED_STR,
             isStoredPaymentMethod: true,
@@ -71,14 +65,12 @@ describe('Card: calls that generate "info" analytics should produce objects with
     });
 
     test('Analytics should produce an "info" event, of type "configured", for a card PM', () => {
-        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
-            category: ANALYTICS_EVENT.info,
+        const event = new AnalyticsInfoEvent({
             type: ANALYTICS_CONFIGURED_STR
         });
-        card.submitAnalytics(aObj);
+        card.submitAnalytics(event);
 
         expect(analyticsModule.sendAnalytics).toHaveBeenCalledWith({
-            category: ANALYTICS_EVENT.info,
             component: card.constructor['type'],
             type: ANALYTICS_CONFIGURED_STR,
             timestamp: expect.any(String),
@@ -87,17 +79,15 @@ describe('Card: calls that generate "info" analytics should produce objects with
     });
 
     test('Analytics should produce an "info" event, of type "configured", for a storedCard PM', () => {
-        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
-            category: ANALYTICS_EVENT.info,
+        const event = new AnalyticsInfoEvent({
             type: ANALYTICS_CONFIGURED_STR,
             isStoredPaymentMethod: true,
             brand: 'mc'
         });
 
-        card.submitAnalytics(aObj);
+        card.submitAnalytics(event);
 
         expect(analyticsModule.sendAnalytics).toHaveBeenCalledWith({
-            category: ANALYTICS_EVENT.info,
             component: card.constructor['type'],
             type: ANALYTICS_CONFIGURED_STR,
             isStoredPaymentMethod: true,
@@ -122,7 +112,6 @@ describe('Card: calls that generate "info" analytics should produce objects with
         });
 
         expect(analyticsModule.sendAnalytics).toHaveBeenCalledWith({
-            category: ANALYTICS_EVENT.info,
             component: card.constructor['type'],
             type: ANALYTICS_FOCUS_STR,
             target: 'card_number',
@@ -146,7 +135,6 @@ describe('Card: calls that generate "info" analytics should produce objects with
         });
 
         expect(analyticsModule.sendAnalytics).toHaveBeenCalledWith({
-            category: ANALYTICS_EVENT.info,
             component: card.constructor['type'],
             type: ANALYTICS_UNFOCUS_STR,
             target: 'card_number',
@@ -170,16 +158,14 @@ describe('Card: calls that generate "log" analytics should produce objects with 
     });
 
     test('Analytics should produce an "log" event, of type "submit", for a card PM', () => {
-        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
-            category: ANALYTICS_EVENT.log,
+        const event = new AnalyticsLogEvent({
             type: ANALYTICS_SUBMIT_STR,
             message: 'Shopper clicked pay'
         });
 
-        card.submitAnalytics(aObj);
+        card.submitAnalytics(event);
 
         expect(analyticsModule.sendAnalytics).toHaveBeenCalledWith({
-            category: ANALYTICS_EVENT.log,
             component: card.constructor['type'],
             type: ANALYTICS_SUBMIT_STR,
             message: 'Shopper clicked pay',

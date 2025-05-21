@@ -1,11 +1,15 @@
 import CollectId from '../Services/analytics/collect-id';
 import EventsQueue, { EventsQueueModule } from './EventsQueue';
-import { AnalyticsEvent, AnalyticsInitialEvent, AnalyticsObject, AnalyticsProps, EnhancedAnalyticsObject } from './types';
-import { ANALYTIC_LEVEL, ANALYTICS_INFO_TIMER_INTERVAL, ANALYTICS_PATH, ANALYTICS_EVENT, ANALYTICS_VALIDATION_ERROR_STR } from './constants';
+import { AnalyticsEvent, AnalyticsInitialEvent, AnalyticsObject, AnalyticsProps } from './types';
+import { ANALYTIC_LEVEL, ANALYTICS_INFO_TIMER_INTERVAL, ANALYTICS_PATH, ANALYTICS_EVENT } from './constants';
 import { debounce } from '../../utils/debounce';
 import { AnalyticsModule } from '../../types/global-types';
-import { mapErrorCodesForAnalytics, processAnalyticsData } from './utils';
+import { processAnalyticsData } from './utils';
 import AdyenCheckoutError, { SDK_ERROR } from '../Errors/AdyenCheckoutError';
+import { AnalyticsInfoEvent } from './AnalyticsInfoEvent';
+import { AnalyticsEventClass } from './AnalyticsEventClass';
+import { AnalyticsLogEvent } from './AnalyticsLogEvent';
+import { AnalyticsErrorEvent } from './AnalyticsErrorEvent';
 
 let capturedCheckoutAttemptId = null;
 let sendEventsTimerId = null;
@@ -86,23 +90,28 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
 
         getEnabled: () => props.enabled,
 
-        sendAnalytics: (analyticsObj: EnhancedAnalyticsObject): boolean => {
+        sendAnalytics: (analyticsObj: AnalyticsEventClass): boolean => {
             if (!props.enabled) return false;
 
-            const { category } = analyticsObj;
+            let event: AnalyticsEvent;
 
-            if (category) {
-                const { category: event, ...data } = analyticsObj;
-
-                // Some of the more generic error codes required combination with target to retrieve a specific code
-                if (data.type === ANALYTICS_VALIDATION_ERROR_STR) {
-                    data.validationErrorCode = mapErrorCodesForAnalytics(data.validationErrorCode, data.target);
-                }
-
-                addAnalyticsEvent(event, data);
-            } else {
-                throw new AdyenCheckoutError(SDK_ERROR, 'You are trying to create an analytics event without a category');
+            if (analyticsObj instanceof AnalyticsInfoEvent) {
+                event = ANALYTICS_EVENT.info;
             }
+
+            if (analyticsObj instanceof AnalyticsLogEvent) {
+                event = ANALYTICS_EVENT.log;
+            }
+
+            if (analyticsObj instanceof AnalyticsErrorEvent) {
+                event = ANALYTICS_EVENT.error;
+            }
+
+            if (!event) {
+                throw new AdyenCheckoutError(SDK_ERROR, 'You are trying to create an analytics event without an event type');
+            }
+
+            addAnalyticsEvent(event, analyticsObj);
 
             return true;
         }

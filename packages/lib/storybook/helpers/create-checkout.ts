@@ -1,9 +1,10 @@
 import { createSessionsCheckout } from './create-sessions-checkout';
 import { createAdvancedFlowCheckout } from './create-advanced-checkout';
-import { GlobalStoryProps } from '../stories/types';
 import Core from '../../src/core';
 
-async function createCheckout(checkoutConfig: GlobalStoryProps): Promise<Core> {
+import type { GlobalStoryProps, ShopperDetails } from '../stories/types';
+
+async function createCheckout(checkoutConfig: GlobalStoryProps, shopperDetails?: ShopperDetails): Promise<Core> {
     const { useSessions, ...rest } = checkoutConfig;
 
     const overriddenPaymentMethodsAmount =
@@ -12,13 +13,13 @@ async function createCheckout(checkoutConfig: GlobalStoryProps): Promise<Core> {
 
     if (useSessions) {
         if (!hasPaymentOverridden && !rest.allowedPaymentTypes) {
-            return await createSessionsCheckout(rest);
+            return await createSessionsCheckout(rest, shopperDetails);
         } else {
             console.warn('🟢 Checkout Storybook: Forcing advance flow.');
         }
     }
 
-    return await createAdvancedFlowCheckout(rest);
+    return await createAdvancedFlowCheckout(rest, shopperDetails);
 }
 
 export { createCheckout };

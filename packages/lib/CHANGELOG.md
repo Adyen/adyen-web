@@ -1,5 +1,19 @@
 # @adyen/adyen-web
 
+## 6.14.0
+
+### Minor Changes
+
+- Riverty - Updated component to be a Redirect component ([#3299](https://github.com/Adyen/adyen-web/pull/3299))
+
+- Added `filterStoredPaymentMethods` callback to the Drop-in. This callback lets you choose which saved payment methods appear in the Drop-in. ([#3183](https://github.com/Adyen/adyen-web/pull/3183))
+
+## 6.13.1
+
+### Patch Changes
+
+- Fixed issue where clipboard copy-paste functionality wasn't working for mobile Safari 18.4 browsers ([#3314](https://github.com/Adyen/adyen-web/pull/3314))
+
 ## 6.13.0
 
 ### Minor Changes

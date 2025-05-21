@@ -10,17 +10,17 @@ import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { LabelOnlyDisclaimerMessage } from '../../../internal/DisclaimerMessage/DisclaimerMessage';
 import { isConfigurationValid } from './utils/validate-configuration';
 import mobileNumberFormatter from './utils/mobile-number-formatter';
-import { ANALYTICS_EVENT, InfoEventTypes } from '../../../../core/Analytics/constants';
+import { InfoEventTypes } from '../../../../core/Analytics/constants';
 import type { FastlaneSignupConfiguration } from '../../../PayPalFastlane/types';
-import { EnhancedAnalyticsObject } from '../../../../core/Analytics/types';
 
 import './FastlaneSignup.scss';
-import { createNewAnalyticsEvent } from '../../../../core/Analytics/utils';
+import { AnalyticsInfoEvent } from '../../../../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsEventClass } from '../../../../core/Analytics/AnalyticsEventClass';
 
 type FastlaneSignupProps = FastlaneSignupConfiguration & {
     currentDetectedBrand: string;
     onChange(state: any): void;
-    onSubmitAnalytics(event: EnhancedAnalyticsObject): void;
+    onSubmitAnalytics(event: AnalyticsEventClass): void;
 };
 
 const SUPPORTED_BRANDS = ['mc', 'visa'];
@@ -58,15 +58,14 @@ const FastlaneSignup = ({
         const newValue = !isChecked;
         setIsChecked(newValue);
 
-        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
-            category: ANALYTICS_EVENT.info,
+        const event = new AnalyticsInfoEvent({
             type: InfoEventTypes.clicked,
             target: 'fastlane_signup_consent_toggle',
             configData: {
                 isToggleOn: newValue
             }
         });
-        onSubmitAnalytics(aObj);
+        onSubmitAnalytics(event);
     }, [isChecked, onSubmitAnalytics]);
 
     /**
@@ -113,15 +112,15 @@ const FastlaneSignup = ({
         if (!isFastlaneConfigurationValid) {
             return;
         }
-        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
-            category: ANALYTICS_EVENT.info,
+
+        const event = new AnalyticsInfoEvent({
             type: InfoEventTypes.rendered,
             configData: {
                 isFastlaneSignupRendered: shouldDisplaySignup
             }
         });
 
-        onSubmitAnalytics(aObj);
+        onSubmitAnalytics(event);
     }, [shouldDisplaySignup, isFastlaneConfigurationValid, onSubmitAnalytics]);
 
     if (!shouldDisplaySignup || !isFastlaneConfigurationValid) {

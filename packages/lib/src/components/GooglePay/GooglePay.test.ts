@@ -2,7 +2,7 @@ import GooglePay from './GooglePay';
 import GooglePayService from './GooglePayService';
 
 import Analytics from '../../core/Analytics';
-import { ANALYTICS_EVENT, ANALYTICS_SELECTED_STR, NO_CHECKOUT_ATTEMPT_ID } from '../../core/Analytics/constants';
+import { ANALYTICS_SELECTED_STR, NO_CHECKOUT_ATTEMPT_ID } from '../../core/Analytics/constants';
 import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
 import { mock } from 'jest-mock-extended';
 import { ICore } from '../../types';
@@ -532,7 +532,6 @@ describe('GooglePay', () => {
             gpay.submit();
 
             expect(analyticsModule.sendAnalytics).toHaveBeenCalledWith({
-                category: ANALYTICS_EVENT.info,
                 component: gpay.props.type,
                 type: ANALYTICS_SELECTED_STR,
                 target: 'instant_payment_button',

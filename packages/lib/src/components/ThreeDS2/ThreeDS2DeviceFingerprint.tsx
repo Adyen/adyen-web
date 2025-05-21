@@ -6,17 +6,13 @@ import { existy } from '../../utils/commonUtils';
 import { TxVariants } from '../tx-variants';
 import { ThreeDS2DeviceFingerprintConfiguration } from './types';
 import AdyenCheckoutError, { API_ERROR } from '../../core/Errors/AdyenCheckoutError';
-import {
-    ANALYTICS_ERROR_TYPE,
-    Analytics3DS2Errors,
-    ANALYTICS_RENDERED_STR,
-    Analytics3DS2Events,
-    ANALYTICS_EVENT
-} from '../../core/Analytics/constants';
-import { EnhancedAnalyticsObject } from '../../core/Analytics/types';
+import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, ANALYTICS_RENDERED_STR, Analytics3DS2Events } from '../../core/Analytics/constants';
 import { THREEDS2_FINGERPRINT, THREEDS2_FINGERPRINT_ERROR, THREEDS2_FULL } from './constants';
 import { ActionHandledReturnObject } from '../../types/global-types';
-import { createNewAnalyticsEvent } from '../../core/Analytics/utils';
+import { AnalyticsLogEvent } from '../../core/Analytics/AnalyticsLogEvent';
+import { AnalyticsEventClass } from '../../core/Analytics/AnalyticsEventClass';
+import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsErrorEvent } from '../../core/Analytics/AnalyticsErrorEvent';
 
 class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfiguration> {
     public static type = TxVariants.threeDS2Fingerprint;
@@ -28,20 +24,20 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
 
     private callSubmit3DS2Fingerprint = callSubmit3DS2Fingerprint.bind(this); // New 3DS2 flow
 
-    protected submitAnalytics = (aObj: EnhancedAnalyticsObject) => {
-        if (aObj.type === ANALYTICS_RENDERED_STR) return; // suppress the rendered event (it will have the same timestamp as the "threeDSMethodData sent" event)
+    protected submitAnalytics = (aObj: AnalyticsEventClass) => {
+        if (aObj instanceof AnalyticsInfoEvent && aObj.type === ANALYTICS_RENDERED_STR) return; // suppress the rendered event (it will have the same timestamp as the "threeDSMethodData sent" event)
 
         super.submitAnalytics(aObj);
     };
 
     protected onActionHandled = (rtnObj: ActionHandledReturnObject) => {
-        const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
-            category: ANALYTICS_EVENT.log,
+        const event = new AnalyticsLogEvent({
             type: THREEDS2_FULL,
             message: rtnObj.actionDescription,
             subType: Analytics3DS2Events.FINGERPRINT_IFRAME_LOADED
         });
-        this.submitAnalytics(aObj);
+
+        this.submitAnalytics(event);
 
         super.onActionHandled(rtnObj);
     };
@@ -60,14 +56,13 @@ class ThreeDS2DeviceFingerprint extends UIElement<ThreeDS2DeviceFingerprintConfi
             this.props.onError(new AdyenCheckoutError(API_ERROR, `No paymentData received. 3DS2 Fingerprint cannot proceed`));
 
             // TODO - check logs to see if this *ever* happens
-            const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
-                category: ANALYTICS_EVENT.error,
+            const event = new AnalyticsErrorEvent({
                 code: Analytics3DS2Errors.ACTION_IS_MISSING_PAYMENT_DATA,
                 errorType: ANALYTICS_ERROR_TYPE.apiError,
                 message: `${THREEDS2_FINGERPRINT_ERROR}: Missing 'paymentData' property from threeDS2 action`
             });
 
-            this.submitAnalytics(aObj);
+            this.submitAnalytics(event);
 
             return null;
         }

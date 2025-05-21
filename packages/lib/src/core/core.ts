@@ -12,7 +12,7 @@ import { SRPanel } from './Errors/SRPanel';
 import registry, { NewableComponent } from './core.registry';
 import { cleanupFinalResult, sanitizeResponse, verifyPaymentDidNotFail } from '../components/internal/UIElement/utils';
 import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from './Errors/AdyenCheckoutError';
-import { ANALYTICS_ACTION_STR, ANALYTICS_EVENT } from './Analytics/constants';
+import { ANALYTICS_ACTION_STR } from './Analytics/constants';
 import { THREEDS2_FULL } from '../components/ThreeDS2/constants';
 import { DEFAULT_LOCALE } from '../language/constants';
 import getTranslations from './Services/get-translations';
@@ -24,8 +24,7 @@ import type { AnalyticsModule, PaymentAction, PaymentResponseData } from '../typ
 import type { CoreConfiguration, ICore, AdditionalDetailsData } from './types';
 import type { Translations } from '../language/types';
 import type { UIElementProps } from '../components/internal/UIElement/types';
-import { createNewAnalyticsEvent } from './Analytics/utils';
-import { EnhancedAnalyticsObject } from './Analytics/types';
+import { AnalyticsLogEvent } from './Analytics/AnalyticsLogEvent';
 
 class Core implements ICore {
     public session?: Session;
@@ -240,14 +239,13 @@ class Core implements ICore {
             // 'threeDS2' OR 'qrCode', 'voucher', 'redirect', 'await', 'bankTransfer`
             const component = action.type === THREEDS2_FULL ? `${action.type}${action.subtype}` : action.paymentMethodType;
 
-            const aObj: EnhancedAnalyticsObject = createNewAnalyticsEvent({
-                category: ANALYTICS_EVENT.log,
+            const event = new AnalyticsLogEvent({
                 type: ANALYTICS_ACTION_STR,
                 subType: action.type,
                 message: `${component} action was handled by the SDK`,
                 component
             });
-            this.modules.analytics.sendAnalytics(aObj);
+            this.modules.analytics.sendAnalytics(event);
 
             const props = {
                 ...this.getCorePropsForComponent(),
