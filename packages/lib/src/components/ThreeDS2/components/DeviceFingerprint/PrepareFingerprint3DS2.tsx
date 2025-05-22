@@ -8,7 +8,7 @@ import { isValidHttpUrl } from '../../../../utils/isValidURL';
 import { THREEDS2_FULL, THREEDS2_FINGERPRINT, THREEDS2_FINGERPRINT_ERROR, THREEDS2_NUM, MISSING_TOKEN_IN_ACTION_MSG, TIMEOUT } from '../../constants';
 import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, Analytics3DS2Events } from '../../../../core/Analytics/constants';
 import { AnalyticsLogEvent } from '../../../../core/Analytics/AnalyticsLogEvent';
-import { AnalyticsEventClass } from '../../../../core/Analytics/AnalyticsEventClass';
+import { AnalyticsEvent } from '../../../../core/Analytics/AnalyticsEvent';
 import { AnalyticsErrorEvent } from '../../../../core/Analytics/AnalyticsErrorEvent';
 
 class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State> {
@@ -152,7 +152,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             const resolveDataFunction = this.props.isMDFlow ? createOldFingerprintResolveData : createFingerprintResolveData;
             const data = resolveDataFunction(this.props.dataKey, resultObj, this.props.paymentData);
 
-            let event: AnalyticsEventClass;
+            let event: AnalyticsEvent;
 
             /** Are we in an error scenario? If so, submit analytics about it */
             const finalResObject = errorCodeObject ? errorCodeObject : resultObj;

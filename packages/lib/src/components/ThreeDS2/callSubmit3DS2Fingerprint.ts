@@ -5,7 +5,7 @@ import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { THREEDS2_FINGERPRINT_SUBMIT } from './constants';
 import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors } from '../../core/Analytics/constants';
 import { API_ERROR_CODE } from '../../core/Services/sessions/constants';
-import { AnalyticsEventClass } from '../../core/Analytics/AnalyticsEventClass';
+import { AnalyticsEvent } from '../../core/Analytics/AnalyticsEvent';
 import { AnalyticsErrorEvent } from '../../core/Analytics/AnalyticsErrorEvent';
 
 /**
@@ -25,7 +25,7 @@ export default function callSubmit3DS2Fingerprint({ data }): void {
         }
     )
         .then(resData => {
-            let event: AnalyticsEventClass;
+            let event: AnalyticsEvent;
 
             /**
              * Frictionless (no challenge) flow OR "refused" flow

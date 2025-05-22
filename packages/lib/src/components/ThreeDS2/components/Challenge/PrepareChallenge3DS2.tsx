@@ -15,7 +15,7 @@ import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, Analytics3DS2Events } from '
 import { ErrorObject } from '../../../../core/Errors/types';
 import { AnalyticsLogEvent } from '../../../../core/Analytics/AnalyticsLogEvent';
 import { AnalyticsErrorEvent } from '../../../../core/Analytics/AnalyticsErrorEvent';
-import { AnalyticsEventClass } from '../../../../core/Analytics/AnalyticsEventClass';
+import { AnalyticsEvent } from '../../../../core/Analytics/AnalyticsEvent';
 
 class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareChallenge3DS2State> {
     public static defaultProps = {
@@ -172,7 +172,7 @@ class PrepareChallenge3DS2 extends Component<PrepareChallenge3DS2Props, PrepareC
                 console.debug('### PrepareChallenge3DS2::errorCodeObject::', errorCodeObject);
             }
 
-            let event: AnalyticsEventClass;
+            let event: AnalyticsEvent;
 
             /** Are we in an "error" i.e. timeout or no transStatus, scenario? If so, submit analytics about it */
             const finalResObject = errorCodeObject ? errorCodeObject : resultObj;

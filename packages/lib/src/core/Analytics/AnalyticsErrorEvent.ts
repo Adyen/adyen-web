@@ -1,7 +1,7 @@
-import { AnalyticsEventClass } from './AnalyticsEventClass';
+import { AnalyticsEvent } from './AnalyticsEvent';
 import { AnalyticsErrorEventObject } from './types';
 
-export class AnalyticsErrorEvent extends AnalyticsEventClass {
+export class AnalyticsErrorEvent extends AnalyticsEvent {
     public component: string;
     public code?: string;
     public errorType?: string;

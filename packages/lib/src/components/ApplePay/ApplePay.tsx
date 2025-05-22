@@ -24,7 +24,7 @@ import { detectInIframe } from '../../utils/detectInIframe';
 import type { ApplePayConfiguration, ApplePayElementData, ApplePayPaymentOrderDetails, ApplePaySessionRequest } from './types';
 import type { ICore } from '../../core/types';
 import type { PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
-import { AnalyticsEventClass } from '../../core/Analytics/AnalyticsEventClass';
+import { AnalyticsEvent } from '../../core/Analytics/AnalyticsEvent';
 import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
 
 const LATEST_APPLE_PAY_VERSION = 14;
@@ -103,7 +103,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         };
     }
 
-    protected submitAnalytics(analyticsObj: AnalyticsEventClass) {
+    protected submitAnalytics(analyticsObj: AnalyticsEvent) {
         // Analytics will need to know about this.props.isExpress & this.props.expressPage
         if (analyticsObj instanceof AnalyticsInfoEvent && analyticsObj.type === ANALYTICS_RENDERED_STR) {
             const { isExpress, expressPage } = this.props;

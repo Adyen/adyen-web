@@ -15,12 +15,12 @@ import type { FastlaneSignupConfiguration } from '../../../PayPalFastlane/types'
 
 import './FastlaneSignup.scss';
 import { AnalyticsInfoEvent } from '../../../../core/Analytics/AnalyticsInfoEvent';
-import { AnalyticsEventClass } from '../../../../core/Analytics/AnalyticsEventClass';
+import { AnalyticsEvent } from '../../../../core/Analytics/AnalyticsEvent';
 
 type FastlaneSignupProps = FastlaneSignupConfiguration & {
     currentDetectedBrand: string;
     onChange(state: any): void;
-    onSubmitAnalytics(event: AnalyticsEventClass): void;
+    onSubmitAnalytics(event: AnalyticsEvent): void;
 };
 
 const SUPPORTED_BRANDS = ['mc', 'visa'];

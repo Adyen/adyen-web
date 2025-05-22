@@ -10,7 +10,7 @@ import './AmazonPay.scss';
 import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
 import { ANALYTICS_EXPRESS_PAGES_ARRAY, ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
-import { AnalyticsEventClass } from '../../core/Analytics/AnalyticsEventClass';
+import { AnalyticsEvent } from '../../core/Analytics/AnalyticsEvent';
 import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
 
 export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
@@ -42,7 +42,7 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
         };
     }
 
-    protected submitAnalytics(analyticsObj: AnalyticsEventClass) {
+    protected submitAnalytics(analyticsObj: AnalyticsEvent) {
         // Analytics will need to know about this.props.isExpress & this.props.expressPage
         if (analyticsObj instanceof AnalyticsInfoEvent && analyticsObj.type === ANALYTICS_RENDERED_STR) {
             const { isExpress, expressPage } = this.props;
