@@ -33,8 +33,8 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
         return Promise.resolve(null);
     };
 
-    const addAnalyticsEvent = (type: AnalyticsEventCategory, obj: AnalyticsObject) => {
-        const arrayName = type === ANALYTICS_EVENT.info ? type : `${type}s`;
+    const addAnalyticsEvent = (eventCat: AnalyticsEventCategory, obj: AnalyticsObject) => {
+        const arrayName = eventCat === ANALYTICS_EVENT.info ? eventCat : `${eventCat}s`;
         eventsQueue.add(`${arrayName}`, obj);
 
         /**
@@ -42,7 +42,7 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
          *  - info events are stored until a log or error comes along,
          *  but, if after a set time, no other analytics event (log or error) has come along then we send the info events anyway
          */
-        if (type === ANALYTICS_EVENT.info) {
+        if (eventCat === ANALYTICS_EVENT.info) {
             clearTimeout(sendEventsTimerId);
             sendEventsTimerId = setTimeout(() => void sendAnalyticsEvents(), ANALYTICS_INFO_TIMER_INTERVAL);
         }
@@ -53,7 +53,7 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
          *  ...but... tests with the 3DS2 process show that many logs can happen almost at the same time (or you can have an error followed immediately by a log),
          *  so instead of making several sequential api calls we see if we can "batch" them using debounce
          */
-        if (type === ANALYTICS_EVENT.log || type === ANALYTICS_EVENT.error) {
+        if (eventCat === ANALYTICS_EVENT.log || eventCat === ANALYTICS_EVENT.error) {
             clearTimeout(sendEventsTimerId); // clear any timer that might be about to dispatch the info events array
 
             debounce(sendAnalyticsEvents)();
