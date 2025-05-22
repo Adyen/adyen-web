@@ -1,13 +1,13 @@
 import CollectId from '../Services/analytics/collect-id';
 import EventsQueue, { EventsQueueModule } from './EventsQueue';
-import { AnalyticsEvent, AnalyticsInitialEvent, AnalyticsObject, AnalyticsProps } from './types';
+import { AnalyticsEventCategory, AnalyticsInitialEvent, AnalyticsObject, AnalyticsProps } from './types';
 import { ANALYTIC_LEVEL, ANALYTICS_INFO_TIMER_INTERVAL, ANALYTICS_PATH, ANALYTICS_EVENT } from './constants';
 import { debounce } from '../../utils/debounce';
 import { AnalyticsModule } from '../../types/global-types';
 import { processAnalyticsData } from './utils';
 import AdyenCheckoutError, { SDK_ERROR } from '../Errors/AdyenCheckoutError';
 import { AnalyticsInfoEvent } from './AnalyticsInfoEvent';
-import { AnalyticsEventClass } from './AnalyticsEventClass';
+import { AnalyticsEvent } from './AnalyticsEvent';
 import { AnalyticsLogEvent } from './AnalyticsLogEvent';
 import { AnalyticsErrorEvent } from './AnalyticsErrorEvent';
 
@@ -33,7 +33,7 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
         return Promise.resolve(null);
     };
 
-    const addAnalyticsEvent = (type: AnalyticsEvent, obj: AnalyticsObject) => {
+    const addAnalyticsEvent = (type: AnalyticsEventCategory, obj: AnalyticsObject) => {
         const arrayName = type === ANALYTICS_EVENT.info ? type : `${type}s`;
         eventsQueue.add(`${arrayName}`, obj);
 
@@ -90,10 +90,10 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
 
         getEnabled: () => props.enabled,
 
-        sendAnalytics: (analyticsObj: AnalyticsEventClass): boolean => {
+        sendAnalytics: (analyticsObj: AnalyticsEvent): boolean => {
             if (!props.enabled) return false;
 
-            let event: AnalyticsEvent;
+            let event: AnalyticsEventCategory;
 
             if (analyticsObj instanceof AnalyticsInfoEvent) {
                 event = ANALYTICS_EVENT.info;

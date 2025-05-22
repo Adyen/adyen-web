@@ -32,7 +32,7 @@ import { ComponentMethodsRef } from '../../../internal/UIElement/types';
 import { AddressData, PaymentAmount } from '../../../../types/global-types';
 import { AnalyticsModule } from '../../../../types/global-types';
 import type { FastlaneSignupConfiguration } from '../../../PayPalFastlane/types';
-import { AnalyticsEventClass } from '../../../../core/Analytics/AnalyticsEventClass';
+import { AnalyticsEvent } from '../../../../core/Analytics/AnalyticsEvent';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -123,7 +123,7 @@ export interface CardInputProps {
     onFieldValid?: (o: CardFieldValidData) => {};
     onFocus?: (e) => {};
     onLoad?: (o: CardLoadData) => {};
-    onSubmitAnalytics?: (event: AnalyticsEventClass) => void;
+    onSubmitAnalytics?: (event: AnalyticsEvent) => void;
     handleKeyPress?: (obj: KeyboardEvent) => void;
     onAddressLookup?: OnAddressLookupType;
     onAddressSelected?: OnAddressSelectedType;

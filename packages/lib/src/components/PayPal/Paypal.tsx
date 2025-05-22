@@ -15,7 +15,7 @@ import type { Intent, PayPalConfiguration } from './types';
 import './Paypal.scss';
 import { ANALYTICS_EXPRESS_PAGES_ARRAY, ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
 import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
-import { AnalyticsEventClass } from '../../core/Analytics/AnalyticsEventClass';
+import { AnalyticsEvent } from '../../core/Analytics/AnalyticsEvent';
 
 class PaypalElement extends UIElement<PayPalConfiguration> {
     public static type = TxVariants.paypal;
@@ -55,7 +55,7 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         };
     }
 
-    protected submitAnalytics(analyticsObj: AnalyticsEventClass) {
+    protected submitAnalytics(analyticsObj: AnalyticsEvent) {
         // Analytics will need to know about this.props.isExpress & this.props.expressPage
         if (analyticsObj instanceof AnalyticsInfoEvent && analyticsObj.type === ANALYTICS_RENDERED_STR) {
             const { isExpress, expressPage } = this.props;

@@ -10,7 +10,7 @@ import type { PaymentData } from '../../../types/global-types';
 import { AnalyticsInitialEvent } from '../../../core/Analytics/types';
 import { off, on } from '../../../utils/listenerUtils';
 import { AnalyticsInfoEvent } from '../../../core/Analytics/AnalyticsInfoEvent';
-import { AnalyticsEventClass } from '../../../core/Analytics/AnalyticsEventClass';
+import { AnalyticsEvent } from '../../../core/Analytics/AnalyticsEvent';
 
 /**
  * Verify if the first parameter is instance of Core.
@@ -77,7 +77,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
     }
 
     /* eslint-disable-next-line */
-    protected submitAnalytics(analyticsObj?: AnalyticsEventClass) {
+    protected submitAnalytics(analyticsObj?: AnalyticsEvent) {
         return null;
     }
 

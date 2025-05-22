@@ -1,7 +1,7 @@
-import { AnalyticsEventClass } from './AnalyticsEventClass';
+import { AnalyticsEvent } from './AnalyticsEvent';
 import { AnalyticsLogEventObject } from './types';
 
-export class AnalyticsLogEvent extends AnalyticsEventClass {
+export class AnalyticsLogEvent extends AnalyticsEvent {
     public type: string;
     public component: string;
     public message?: string;

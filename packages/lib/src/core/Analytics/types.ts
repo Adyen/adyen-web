@@ -64,7 +64,7 @@ export type AnalyticsProps = Pick<CoreConfiguration, 'loadingContext' | 'locale'
     analyticsContext?: string;
 };
 
-export type AnalyticsEvent = (typeof ANALYTICS_EVENT)[keyof typeof ANALYTICS_EVENT];
+export type AnalyticsEventCategory = (typeof ANALYTICS_EVENT)[keyof typeof ANALYTICS_EVENT];
 
 export type AnalyticsInitialEvent = {
     containerWidth: number;

@@ -11,7 +11,7 @@ import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, ANALYTICS_RENDERED_STR, Anal
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import { ActionHandledReturnObject } from '../../types/global-types';
 import { AnalyticsLogEvent } from '../../core/Analytics/AnalyticsLogEvent';
-import { AnalyticsEventClass } from '../../core/Analytics/AnalyticsEventClass';
+import { AnalyticsEvent } from '../../core/Analytics/AnalyticsEvent';
 import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
 import { AnalyticsErrorEvent } from '../../core/Analytics/AnalyticsErrorEvent';
 
@@ -24,7 +24,7 @@ class ThreeDS2Challenge extends UIElement<ThreeDS2ChallengeConfiguration> {
         type: THREEDS2_CHALLENGE
     };
 
-    protected submitAnalytics = (aObj: AnalyticsEventClass) => {
+    protected submitAnalytics = (aObj: AnalyticsEvent) => {
         if (aObj instanceof AnalyticsInfoEvent && aObj.type === ANALYTICS_RENDERED_STR) return; // suppress the rendered event (it will have the same timestamp as the "creq sent" event)
 
         super.submitAnalytics(aObj);

@@ -24,7 +24,7 @@ import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from '../../core/Errors/AdyenCheckoutError';
 import CardInputDefaultProps from './components/CardInput/defaultProps';
 import { getCardConfigData } from './components/CardInput/utils';
-import { AnalyticsEventClass } from '../../core/Analytics/AnalyticsEventClass';
+import { AnalyticsEvent } from '../../core/Analytics/AnalyticsEvent';
 import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
 
 export class CardElement extends UIElement<CardConfiguration> {
@@ -197,7 +197,7 @@ export class CardElement extends UIElement<CardConfiguration> {
         }
     }
 
-    protected submitAnalytics(analyticsObj: AnalyticsEventClass) {
+    protected submitAnalytics(analyticsObj: AnalyticsEvent) {
         const isInfoType = analyticsObj instanceof AnalyticsInfoEvent;
 
         if ((isInfoType && analyticsObj.type === ANALYTICS_RENDERED_STR) || (isInfoType && analyticsObj.type === ANALYTICS_CONFIGURED_STR)) {

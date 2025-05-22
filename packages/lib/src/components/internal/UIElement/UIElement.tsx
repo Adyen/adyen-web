@@ -27,7 +27,7 @@ import type { NewableComponent } from '../../../core/core.registry';
 import CancelError from '../../../core/Errors/CancelError';
 
 import './UIElement.scss';
-import { AnalyticsEventClass } from '../../../core/Analytics/AnalyticsEventClass';
+import { AnalyticsEvent } from '../../../core/Analytics/AnalyticsEvent';
 import { AnalyticsLogEvent } from '../../../core/Analytics/AnalyticsLogEvent';
 import { AnalyticsErrorEvent } from '../../../core/Analytics/AnalyticsErrorEvent';
 
@@ -172,7 +172,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      *  In some other cases e.g. 3DS2 components, this function is overridden to allow more specific analytics actions to be created
      */
 
-    protected submitAnalytics(analyticsObj: AnalyticsEventClass) {
+    protected submitAnalytics(analyticsObj: AnalyticsEvent) {
         try {
             analyticsObj.component = this.getComponent(analyticsObj);
 
@@ -186,7 +186,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * - first check for a dedicated "analyticsType" (currently only applies to custom-cards)
      * - otherwise, distinguish cards from non-cards: cards will use their static type property, everything else will use props.type
      */
-    private getComponent({ component }: AnalyticsEventClass): string {
+    private getComponent({ component }: AnalyticsEvent): string {
         if (component) {
             return component;
         }

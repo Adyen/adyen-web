@@ -1,9 +1,9 @@
-import { AnalyticsEventClass } from './AnalyticsEventClass';
+import { AnalyticsEvent } from './AnalyticsEvent';
 import { ANALYTICS_VALIDATION_ERROR_STR } from './constants';
 import { mapErrorCodesForAnalytics } from './utils';
 import { AnalyticsInfoEventObject } from './types';
 
-export class AnalyticsInfoEvent extends AnalyticsEventClass {
+export class AnalyticsInfoEvent extends AnalyticsEvent {
     public type: string;
     public target: string;
     public component: string;

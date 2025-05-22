@@ -19,7 +19,7 @@ import type { AddressData, BrowserInfo, PaymentMethod, PaymentResponseData, RawP
 import type { GooglePayConfiguration } from './types';
 import type { ICore } from '../../core/types';
 import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
-import { AnalyticsEventClass } from '../../core/Analytics/AnalyticsEventClass';
+import { AnalyticsEvent } from '../../core/Analytics/AnalyticsEvent';
 
 class GooglePay extends UIElement<GooglePayConfiguration> {
     public static type = TxVariants.googlepay;
@@ -104,7 +104,7 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         };
     }
 
-    protected submitAnalytics(analyticsObj: AnalyticsEventClass) {
+    protected submitAnalytics(analyticsObj: AnalyticsEvent) {
         // Analytics will need to know about this.props.isExpress & this.props.expressPage
         if (analyticsObj instanceof AnalyticsInfoEvent && analyticsObj.type === ANALYTICS_RENDERED_STR) {
             const { isExpress, expressPage } = this.props;
