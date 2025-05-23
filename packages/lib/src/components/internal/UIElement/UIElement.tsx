@@ -5,9 +5,9 @@ import { assertIsDropin, cleanupFinalResult, getRegulatoryDefaults, sanitizeResp
 import AdyenCheckoutError, { NETWORK_ERROR } from '../../../core/Errors/AdyenCheckoutError';
 import { hasOwnProperty } from '../../../utils/hasOwnProperty';
 import { Resources } from '../../../core/Context/Resources';
-import { ANALYTICS_ERROR_TYPE, ANALYTICS_EVENT, ANALYTICS_SUBMIT_STR } from '../../../core/Analytics/constants';
+import { ANALYTICS_ERROR_TYPE, ANALYTICS_SUBMIT_STR } from '../../../core/Analytics/constants';
 
-import type { AnalyticsInitialEvent, SendAnalyticsObject } from '../../../core/Analytics/types';
+import { AnalyticsInitialEvent } from '../../../core/Analytics/types';
 import type { CoreConfiguration, ICore, AdditionalDetailsData } from '../../../core/types';
 import type { ComponentMethodsRef, PayButtonFunctionProps, UIElementProps, UIElementStatus } from './types';
 import type { CheckoutSessionDetailsResponse, CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
@@ -27,6 +27,9 @@ import type { NewableComponent } from '../../../core/core.registry';
 import CancelError from '../../../core/Errors/CancelError';
 
 import './UIElement.scss';
+import { AnalyticsEvent } from '../../../core/Analytics/AnalyticsEvent';
+import { AnalyticsLogEvent } from '../../../core/Analytics/AnalyticsLogEvent';
+import { AnalyticsErrorEvent } from '../../../core/Analytics/AnalyticsErrorEvent';
 
 export abstract class UIElement<P extends UIElementProps = UIElementProps> extends BaseElement<P> {
     protected componentRef: any;
@@ -169,19 +172,21 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      *  In some other cases e.g. 3DS2 components, this function is overridden to allow more specific analytics actions to be created
      */
 
-    protected submitAnalytics(analyticsObj: SendAnalyticsObject, uiElementProps?) {
-        /** Work out what the component's "type" is:
-         * - first check for a dedicated "analyticsType" (currently only applies to custom-cards)
-         * - otherwise, distinguish cards from non-cards: cards will use their static type property, everything else will use props.type
-         */
+    protected submitAnalytics(analyticsObj: AnalyticsEvent) {
         try {
-            this.props.modules.analytics.sendAnalytics(this.getComponent(analyticsObj), analyticsObj, uiElementProps);
+            analyticsObj.component = this.getComponent(analyticsObj);
+
+            this.props.modules.analytics.sendAnalytics(analyticsObj);
         } catch (error) {
             console.warn('Failed to submit the analytics event. Error:', error);
         }
     }
 
-    private getComponent({ component }: SendAnalyticsObject): string {
+    /** Work out what the component's "type" is:
+     * - first check for a dedicated "analyticsType" (currently only applies to custom-cards)
+     * - otherwise, distinguish cards from non-cards: cards will use their static type property, everything else will use props.type
+     */
+    private getComponent({ component }: AnalyticsEvent): string {
         if (component) {
             return component;
         }
@@ -244,7 +249,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     private async submitUsingAdvancedFlow(): Promise<CheckoutAdvancedFlowResponse> {
         return new Promise<CheckoutAdvancedFlowResponse>((resolve, reject) => {
             // Call analytics endpoint
-            this.submitAnalytics({ type: ANALYTICS_SUBMIT_STR });
+            const event = new AnalyticsLogEvent({
+                type: ANALYTICS_SUBMIT_STR,
+                message: 'Shopper clicked pay'
+            });
+            this.submitAnalytics(event);
 
             this.props.onSubmit(
                 {
@@ -258,7 +267,11 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
     }
 
     private async submitUsingSessionsFlow(data: PaymentData): Promise<CheckoutSessionPaymentResponse> {
-        this.submitAnalytics({ type: ANALYTICS_SUBMIT_STR });
+        const event = new AnalyticsLogEvent({
+            type: ANALYTICS_SUBMIT_STR,
+            message: 'Shopper clicked pay'
+        });
+        this.submitAnalytics(event);
 
         try {
             return await this.core.session.submitPayment(data);
@@ -295,7 +308,12 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         this.setElementStatus('ready');
 
         if (error.name === NETWORK_ERROR && error.options.code) {
-            this.submitAnalytics({ type: ANALYTICS_EVENT.error, errorType: ANALYTICS_ERROR_TYPE.apiError, code: error.options.code });
+            const event = new AnalyticsErrorEvent({
+                errorType: ANALYTICS_ERROR_TYPE.apiError,
+                code: error.options.code
+            });
+
+            this.submitAnalytics(event);
         }
 
         if (this.props.onError) {

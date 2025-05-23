@@ -10,16 +10,17 @@ import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { LabelOnlyDisclaimerMessage } from '../../../internal/DisclaimerMessage/DisclaimerMessage';
 import { isConfigurationValid } from './utils/validate-configuration';
 import mobileNumberFormatter from './utils/mobile-number-formatter';
-import { ANALYTICS_EVENT, InfoEventTypes } from '../../../../core/Analytics/constants';
+import { InfoEventTypes } from '../../../../core/Analytics/constants';
 import type { FastlaneSignupConfiguration } from '../../../PayPalFastlane/types';
-import type { SendAnalyticsObject } from '../../../../core/Analytics/types';
 
 import './FastlaneSignup.scss';
+import { AnalyticsInfoEvent } from '../../../../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsEvent } from '../../../../core/Analytics/AnalyticsEvent';
 
 type FastlaneSignupProps = FastlaneSignupConfiguration & {
     currentDetectedBrand: string;
     onChange(state: any): void;
-    onSubmitAnalytics(event: SendAnalyticsObject): void;
+    onSubmitAnalytics(event: AnalyticsEvent): void;
 };
 
 const SUPPORTED_BRANDS = ['mc', 'visa'];
@@ -57,14 +58,14 @@ const FastlaneSignup = ({
         const newValue = !isChecked;
         setIsChecked(newValue);
 
-        onSubmitAnalytics({
-            type: ANALYTICS_EVENT.info,
-            infoType: InfoEventTypes.clicked,
+        const event = new AnalyticsInfoEvent({
+            type: InfoEventTypes.clicked,
             target: 'fastlane_signup_consent_toggle',
             configData: {
                 isToggleOn: newValue
             }
         });
+        onSubmitAnalytics(event);
     }, [isChecked, onSubmitAnalytics]);
 
     /**
@@ -112,13 +113,14 @@ const FastlaneSignup = ({
             return;
         }
 
-        onSubmitAnalytics({
-            type: ANALYTICS_EVENT.info,
-            infoType: InfoEventTypes.rendered,
+        const event = new AnalyticsInfoEvent({
+            type: InfoEventTypes.rendered,
             configData: {
                 isFastlaneSignupRendered: shouldDisplaySignup
             }
         });
+
+        onSubmitAnalytics(event);
     }, [shouldDisplaySignup, isFastlaneConfigurationValid, onSubmitAnalytics]);
 
     if (!shouldDisplaySignup || !isFastlaneConfigurationValid) {

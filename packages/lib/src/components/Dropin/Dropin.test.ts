@@ -293,9 +293,12 @@ describe('Dropin', () => {
             });
             render(dropin.render());
             await new Promise(process.nextTick);
-            expect(mockSendAnalytics).toHaveBeenCalledWith('dropin', {
+            expect(mockSendAnalytics).toHaveBeenCalledWith({
                 type: ANALYTICS_RENDERED_STR,
-                configData: dropin.dropinRef.analyticConfigData
+                component: 'dropin',
+                configData: dropin.dropinRef.analyticConfigData,
+                timestamp: expect.any(String),
+                id: expect.any(String)
             });
 
             jest.restoreAllMocks();

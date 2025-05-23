@@ -2,7 +2,7 @@ import GooglePay from './GooglePay';
 import GooglePayService from './GooglePayService';
 
 import Analytics from '../../core/Analytics';
-import { ANALYTICS_EVENT, ANALYTICS_SELECTED_STR, NO_CHECKOUT_ATTEMPT_ID } from '../../core/Analytics/constants';
+import { ANALYTICS_SELECTED_STR, NO_CHECKOUT_ATTEMPT_ID } from '../../core/Analytics/constants';
 import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
 import { mock } from 'jest-mock-extended';
 import { ICore } from '../../types';
@@ -525,19 +525,18 @@ describe('GooglePay', () => {
                 }
             });
 
-            analyticsModule.createAnalyticsEvent = jest.fn(() => null);
+            analyticsModule.sendAnalytics = jest.fn(() => null);
         });
 
         test('Analytics should produce an "info" event, of type "selected", for GooglePay as an instant PM', () => {
             gpay.submit();
 
-            expect(analyticsModule.createAnalyticsEvent).toHaveBeenCalledWith({
-                event: ANALYTICS_EVENT.info,
-                data: {
-                    component: gpay.props.type,
-                    type: ANALYTICS_SELECTED_STR,
-                    target: 'instant_payment_button'
-                }
+            expect(analyticsModule.sendAnalytics).toHaveBeenCalledWith({
+                component: gpay.props.type,
+                type: ANALYTICS_SELECTED_STR,
+                target: 'instant_payment_button',
+                timestamp: expect.any(String),
+                id: expect.any(String)
             });
         });
     });
