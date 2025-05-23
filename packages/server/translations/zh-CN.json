@@ -377,5 +377,21 @@
     "card.fastlane.modal.benefit2.header": "保护您的信息",
     "card.fastlane.modal.benefit2.text": "您的付款信息在存储并发送到您购物的地方时会被加密。",
     "card.fastlane.modal.benefit3.header": "跨商店使用",
-    "card.fastlane.modal.benefit3.text": "在所有支持 Fastlane 的地方加快结账速度。"
+    "card.fastlane.modal.benefit3.text": "在所有支持 Fastlane 的地方加快结账速度。",
+    "paybybankpix.redirectBtn.label": "通过 OpenBanking 继续使用 Pix",
+    "paybybankpix.issuerList.disclaimer": "点击“继续”，即表示您同意%#条款和细则%#，并将被重定向到您的银行",
+    "paybybankpix.issuerList.introduction.title": "关联您的账户",
+    "paybybankpix.issuerList.introduction.logo.content": "关联您最喜欢的 PIX 密钥以通过 Open Finance 付款",
+    "paybybankpix.issuerList.introduction.content1": "享受一键支付的便利，并由 Open Finance 提供安全性支持。无需扫描二维码或输入详细信息，只需批准即可！",
+    "paybybankpix.issuerList.introduction.content2": "使用此设备即时授权您的付款。选择您的银行，并确保您的智能手机上安装了该金融机构的应用以完成连接。",
+    "paybybankpix.await.waitForConfirmation": "等待您的确认...",
+    "paybybankpix.await.timeToPay": "此过程大约需要 %{numberOfMin} 分钟。",
+    "paybybankpix.await.withOpenFinance": "借助 Open Finance 的便利",
+    "paybybankpix.await.logoAlt.openFinance": "Open Finance",
+    "paybybankpix.payment.receiver.label": "收款人",
+    "paybybankpix.payment.paymentDate.label": "付款日期",
+    "paybybankpix.payment.paymentMethod.label": "支付方式",
+    "paybybankpix.storedPayment.payButton.label": "继续支付",
+    "paybybankpix.storedPayment.additionalLabel": "%{receiver} 账户通过 PIX",
+    "paybybankpix.await.fetchDetails": "正在获取详细信息..."
 }
