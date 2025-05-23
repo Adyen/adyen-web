@@ -162,7 +162,8 @@ describe('Analytics initialisation and event queue', () => {
         analytics.sendAnalytics(
             new AnalyticsLogEvent({
                 component: 'scheme',
-                type: 'Submit'
+                type: 'Submit',
+                message: 'shopper clicked pay'
             })
         );
 

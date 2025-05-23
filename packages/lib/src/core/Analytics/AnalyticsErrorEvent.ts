@@ -2,8 +2,8 @@ import { AnalyticsEvent } from './AnalyticsEvent';
 import { ANALYTICS_EVENT } from './constants';
 
 type AnalyticsErrorEventObject = {
-    code?: string;
-    errorType?: string;
+    code: string;
+    errorType: string;
     message?: string;
     component?: string;
 };

@@ -3,7 +3,7 @@ import { ANALYTICS_EVENT, ANALYTICS_VALIDATION_ERROR_STR } from './constants';
 import { mapErrorCodesForAnalytics } from './utils';
 
 type AnalyticsInfoEventObject = {
-    type?: string;
+    type: string;
     target?: string;
     issuer?: string;
     isExpress?: boolean;

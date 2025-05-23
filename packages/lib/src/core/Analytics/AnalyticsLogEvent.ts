@@ -2,8 +2,8 @@ import { AnalyticsEvent } from './AnalyticsEvent';
 import { ANALYTICS_EVENT } from './constants';
 
 type AnalyticsLogEventObject = {
-    type?: string;
-    message?: string;
+    type: string;
+    message: string;
     subType?: string;
     result?: string;
     component?: string;
