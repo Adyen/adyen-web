@@ -38,6 +38,7 @@
         "prettier": "3.5.3"
     },
     "resolutions": {
-        "tar-fs": "^3.0.8"
+        "tar-fs": "^3.0.8",
+        "esbuild": "0.25.0"
     }
 }
