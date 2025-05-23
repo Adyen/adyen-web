@@ -106,6 +106,12 @@ const CardInput = (props: CardInputProps) => {
     const [internallyDetectedBrand, setInternallyDetectedBrand] = useState('card');
 
     /**
+     * Used tho show and hide the pay button and instructions text
+     * Should mimic the same logic as CardInput loading wrapper
+     */
+    const [showCardUIElements, setShowCardUIElements] = useState(false);
+
+    /**
      * LOCAL VARS
      */
     const {
@@ -232,6 +238,33 @@ const CardInput = (props: CardInputProps) => {
         setCvcPolicy(sfState.cvcPolicy);
         setShowSocialSecurityNumber(sfState.showSocialSecurityNumber);
         setExpiryDatePolicy(sfState.expiryDatePolicy);
+    };
+
+    /**
+     * Listen to the full SecureFieldsProvider state and handle actions
+     * Used right now to mimic the loading status changes, this can only be done this way
+     * Trying to do it via onConfiguSuccess or onChange has side effects
+     */
+    const handleSFPStateUpdate = useCallback(
+        sfpState => {
+            mimicLoadingStatusChange(sfpState);
+        },
+        [showCardUIElements, setShowCardUIElements]
+    );
+
+    /**
+     * This function implements the same logic that LoadingProvider uses to show and hide elements
+     * We want to mimic this behavior so we can hide and show the pay button or the instructions text
+     * Deciding to do it this way since we garante there's no DOM changes to merchants
+     * We can break this in the next major version (v7)
+     */
+    const mimicLoadingStatusChange = sfpState => {
+        if (!sfpState.status) return;
+        if (sfpState.status == 'loading') {
+            setShowCardUIElements(false);
+        } else {
+            setShowCardUIElements(true);
+        }
     };
 
     // Farm the handlers for binLookup related functionality out to another 'extensions' file
@@ -423,6 +456,7 @@ const CardInput = (props: CardInputProps) => {
                 onChange={handleSecuredFieldsChange}
                 onBrand={onBrand}
                 onFocus={handleFocus}
+                onStateUpdate={handleSFPStateUpdate}
                 type={props.brand}
                 disableIOSArrowKeys={props.disableIOSArrowKeys ? handleTouchstartIOS : null}
                 render={({ setRootNode, setFocusOn }, sfpState) => (
@@ -436,7 +470,7 @@ const CardInput = (props: CardInputProps) => {
                         })}
                         role={'form'}
                     >
-                        <FormInstruction />
+                        {showCardUIElements && <FormInstruction />}
 
                         <FieldToRender
                             // Extract exact props that we need to pass down
@@ -498,7 +532,8 @@ const CardInput = (props: CardInputProps) => {
                 />
             )}
 
-            {props.showPayButton &&
+            {showCardUIElements &&
+                props.showPayButton &&
                 props.payButton({
                     status,
                     variant: props.isPayButtonPrimaryVariant ? 'primary' : 'secondary',

@@ -52,6 +52,8 @@ class Card extends Base {
     readonly selectorList: Locator;
     readonly threeDs2Challenge: ThreeDs2Challenge;
 
+    readonly payButton: Locator;
+
     constructor(
         public readonly page: Page,
         public readonly rootElementSelector?: Locator | string
@@ -121,6 +123,9 @@ class Card extends Base {
         this.selectorList = this.rootElement.getByRole('listbox');
 
         this.threeDs2Challenge = new ThreeDs2Challenge(page);
+
+        // Regex needs to be this complex other wise it matches Google Pay in the Dropin
+        this.payButton = this.page.getByRole('button', { name: /(Pay .*)|(Save details)/ });
     }
 
     // The brands as displayed under the CardNumber field
@@ -164,9 +169,15 @@ class Card extends Base {
     }
 
     async isComponentVisible() {
-        await this.cardNumberInput.waitFor({ state: 'visible' });
-        await this.expiryDateInput.waitFor({ state: 'visible' });
-        await this.cvcInput.waitFor({ state: 'visible' });
+        await this.payButton.waitFor({ state: 'visible' });
+        // for some reason on webkit this line needs to be here
+        // removing this waitFor makes that the focus state is never returned to the Card Number Input in case of error handling
+        // it's unclear why is that the case and why only happens in Webkit, but also doesn't seem to be a race condition as adding
+        // a really long timeout also doesn't fix the issue
+        // in the the future to test this change pay attention to tests for the auto focus feature
+        await this.cardNumberInput.waitFor({ state: 'visible'});
+        await this.cvcInput.waitFor({ state: 'visible'});
+        await this.expiryDateInput.waitFor({ state: 'visible'});
     }
 
     /**

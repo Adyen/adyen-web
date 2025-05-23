@@ -154,7 +154,7 @@ describe('CardInput > holderName', () => {
         /* eslint-disable testing-library/no-node-access */
         const children = select.children;
 
-        const positionDiv = children.item(1);
+        const positionDiv = children.item(0); // the instrucitions will be hidden while loading
 
         const positionDivChildren = positionDiv.children;
 
@@ -190,7 +190,7 @@ describe('CardInput > holderName', () => {
         /* eslint-disable testing-library/no-node-access */
         const children = select.children;
 
-        const positionDiv = children.item(1);
+        const positionDiv = children.item(0); // the instrucitions will be hidden while loading
 
         const positionDivChildren = positionDiv.children;
 
