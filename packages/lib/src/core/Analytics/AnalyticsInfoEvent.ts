@@ -1,12 +1,24 @@
 import { AnalyticsEvent } from './AnalyticsEvent';
-import { ANALYTICS_VALIDATION_ERROR_STR } from './constants';
+import { ANALYTICS_EVENT, ANALYTICS_VALIDATION_ERROR_STR } from './constants';
 import { mapErrorCodesForAnalytics } from './utils';
-import { AnalyticsInfoEventObject } from './types';
+
+type AnalyticsInfoEventObject = {
+    type: string;
+    target?: string;
+    issuer?: string;
+    isExpress?: boolean;
+    expressPage?: string;
+    isStoredPaymentMethod?: boolean;
+    brand?: string;
+    validationErrorCode?: string;
+    validationErrorMessage?: string;
+    configData?: Record<string, string | boolean>;
+    component?: string;
+};
 
 export class AnalyticsInfoEvent extends AnalyticsEvent {
     public type: string;
     public target: string;
-    public component: string;
     public issuer?: string;
     public isExpress?: boolean;
     public expressPage?: string;
@@ -39,5 +51,9 @@ export class AnalyticsInfoEvent extends AnalyticsEvent {
         }
 
         return this;
+    }
+
+    public getEventCategory(): string {
+        return ANALYTICS_EVENT.info;
     }
 }
