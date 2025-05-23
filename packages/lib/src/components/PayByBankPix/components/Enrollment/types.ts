@@ -2,8 +2,8 @@ import { h } from 'preact';
 import { PayButtonFunctionProps } from '../../../internal/UIElement/types';
 import { IssuerItem } from '../../../internal/IssuerList/types';
 import { OnChangeData } from '../../../../core/types';
-import { SendAnalyticsObject } from '../../../../core/Analytics/types';
 import { IPayByBankPixAwait } from './components/PayByBankPixAwait';
+import { AnalyticsEvent } from '../../../../core/Analytics/AnalyticsEvent';
 
 interface BaseEnrollmentProps {
     type?: string;
@@ -28,7 +28,7 @@ export interface IssuerListProps extends BaseEnrollmentProps {
     /**
      * @internal
      */
-    onSubmitAnalytics?: (aObj: SendAnalyticsObject) => void;
+    onSubmitAnalytics?: (aObj: AnalyticsEvent) => void;
     onChange?(payload: OnChangeData): void;
 }
 
