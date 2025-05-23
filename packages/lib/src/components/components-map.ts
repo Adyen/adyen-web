@@ -61,8 +61,10 @@ import Trustly from './Trustly';
 import Riverty from './Riverty';
 import PayByBankUS from './PayByBankUS';
 import Fastlane from './PayPalFastlane/Fastlane';
-import { TxVariants } from './tx-variants';
+import PreAuthorizedDebitCanada from './PreAuthorizedDebitCanada';
 import PayTo from './PayTo/PayTo';
+
+import { TxVariants } from './tx-variants';
 
 /**
  * Maps each tx variant to a Component element.
@@ -91,6 +93,7 @@ export const ComponentsMap = {
     [TxVariants.ach]: Ach,
     [TxVariants.directdebit_GB]: BacsDD,
     [TxVariants.sepadirectdebit]: Sepa,
+    [TxVariants.eft_directdebit_CA]: PreAuthorizedDebitCanada,
     /** Direct debit */
 
     /** Open Invoice */

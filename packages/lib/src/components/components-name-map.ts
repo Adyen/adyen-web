@@ -26,6 +26,7 @@ const ComponentsNameMap = {
     [TxVariants.ach]: 'Ach',
     [TxVariants.directdebit_GB]: 'BacsDirectDebit',
     [TxVariants.sepadirectdebit]: 'SepaDirectDebit',
+    [TxVariants.eft_directdebit_CA]: 'PreAuthorizedDebitCanada',
     /** Direct debit */
 
     /** Open Invoice */
