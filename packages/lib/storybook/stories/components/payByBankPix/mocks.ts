@@ -143,5 +143,8 @@ export const mockEnrollmentPayload = {
     shopperName: {
         firstName: 'Yu',
         lastName: 'Long'
+    },
+    additionalData: {
+        'checkout.linkId': 'test'
     }
 };

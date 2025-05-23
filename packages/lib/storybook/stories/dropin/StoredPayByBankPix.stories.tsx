@@ -7,6 +7,8 @@ import { getSearchParameter } from '../../utils/get-query-parameters';
 import { useEffect, useState } from 'preact/hooks';
 import UIElement from '../../../src/components/internal/UIElement';
 import { handleError, handleFinalState } from '../../helpers/checkout-handlers';
+import { OnChangeData } from '../../../src/core/types';
+import { mockEnrollmentPayload } from '../components/payByBankPix/mocks';
 
 const meta: MetaConfiguration<DropinConfiguration> = {
     title: 'Dropin/PayByBankPix',
@@ -46,6 +48,7 @@ const render = ({ redirectResult, sessionId, componentConfiguration, ...checkout
                         });
                     }
                 },
+
                 onPaymentCompleted: (result, component) => {
                     console.log('payment completed');
                     handleFinalState(result, component);
@@ -86,15 +89,8 @@ export const CreateEnrollment = {
         amount: 0,
         showPayButton: true,
         sessionData: {
-            returnUrl: `${window.location.protocol}://localhost:3020/iframe.html?args=&globals=&id=dropin-paybybankpix--create-enrollment&viewMode=story`,
-            socialSecurityNumber: '81421811006',
-            storePaymentMethodMode: 'enabled',
-            recurringProcessingModel: 'CardOnFile',
-            shopperInteraction: 'ContAuth',
-            shopperName: {
-                firstName: 'Yu',
-                lastName: 'Long'
-            }
+            ...mockEnrollmentPayload,
+            returnUrl: `${window.location.protocol}://localhost:3020/iframe.html?args=&globals=&id=dropin-paybybankpix--create-enrollment&viewMode=story`
         },
         redirectResult: getSearchParameter('redirectResult'),
         sessionId: getSearchParameter('sessionId'),
@@ -103,6 +99,9 @@ export const CreateEnrollment = {
             showRemovePaymentMethodButton: false,
             paymentMethodsConfiguration: {
                 paybybank_pix: {
+                    onChange: (state: OnChangeData) => {
+                        console.log({ state });
+                    },
                     _isAdyenHosted: true
                 }
             }
@@ -120,15 +119,8 @@ export const PayWithEnrolledDevice = {
         amount: 1000,
         showPayButton: true,
         sessionData: {
-            returnUrl: `${window.location.protocol}://localhost:3020/iframe.html?args=&globals=&id=dropin-paybybankpix--create-enrollment&viewMode=story`,
-            socialSecurityNumber: '81421811006',
-            storePaymentMethodMode: 'enabled',
-            recurringProcessingModel: 'CardOnFile',
-            shopperInteraction: 'ContAuth',
-            shopperName: {
-                firstName: 'Yu',
-                lastName: 'Long'
-            }
+            ...mockEnrollmentPayload,
+            returnUrl: `${window.location.protocol}://localhost:3020/iframe.html?args=&globals=&id=dropin-paybybankpix--create-enrollment&viewMode=story`
         },
         componentConfiguration: {
             showRemovePaymentMethodButton: false,
