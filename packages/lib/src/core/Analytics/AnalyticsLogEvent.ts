@@ -1,9 +1,17 @@
 import { AnalyticsEvent } from './AnalyticsEvent';
-import { AnalyticsLogEventObject } from './types';
+import { ANALYTICS_EVENT } from './constants';
+
+type AnalyticsLogEventObject = {
+    type?: string;
+    message?: string;
+    subType?: string;
+    result?: string;
+    component?: string;
+    target?: string; // is this ever used?
+};
 
 export class AnalyticsLogEvent extends AnalyticsEvent {
     public type: string;
-    public component: string;
     public message?: string;
     public subType?: string;
     public result?: string;
@@ -20,5 +28,9 @@ export class AnalyticsLogEvent extends AnalyticsEvent {
         this.component = analyticsObject.component;
 
         return this;
+    }
+
+    public getEventCategory(): string {
+        return ANALYTICS_EVENT.log;
     }
 }

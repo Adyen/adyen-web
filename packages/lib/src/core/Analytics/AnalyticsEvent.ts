@@ -6,6 +6,8 @@ export abstract class AnalyticsEvent {
     public id: string;
     public component: string;
 
+    public abstract getEventCategory(): string;
+
     constructor() {
         this.id = uuid();
         this.timestamp = String(getUTCTimestamp());

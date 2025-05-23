@@ -5,11 +5,7 @@ import { ANALYTIC_LEVEL, ANALYTICS_INFO_TIMER_INTERVAL, ANALYTICS_PATH, ANALYTIC
 import { debounce } from '../../utils/debounce';
 import { AnalyticsModule } from '../../types/global-types';
 import { processAnalyticsData } from './utils';
-import AdyenCheckoutError, { SDK_ERROR } from '../Errors/AdyenCheckoutError';
-import { AnalyticsInfoEvent } from './AnalyticsInfoEvent';
 import { AnalyticsEvent } from './AnalyticsEvent';
-import { AnalyticsLogEvent } from './AnalyticsLogEvent';
-import { AnalyticsErrorEvent } from './AnalyticsErrorEvent';
 
 let capturedCheckoutAttemptId = null;
 let sendEventsTimerId = null;
@@ -93,25 +89,9 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
         sendAnalytics: (analyticsObj: AnalyticsEvent): boolean => {
             if (!props.enabled) return false;
 
-            let event: AnalyticsEventCategory;
+            const eventCategory: AnalyticsEventCategory = analyticsObj.getEventCategory();
 
-            if (analyticsObj instanceof AnalyticsInfoEvent) {
-                event = ANALYTICS_EVENT.info;
-            }
-
-            if (analyticsObj instanceof AnalyticsLogEvent) {
-                event = ANALYTICS_EVENT.log;
-            }
-
-            if (analyticsObj instanceof AnalyticsErrorEvent) {
-                event = ANALYTICS_EVENT.error;
-            }
-
-            if (!event) {
-                throw new AdyenCheckoutError(SDK_ERROR, 'You are trying to create an analytics event without an event type');
-            }
-
-            addAnalyticsEvent(event, analyticsObj);
+            addAnalyticsEvent(eventCategory, analyticsObj);
 
             return true;
         }
