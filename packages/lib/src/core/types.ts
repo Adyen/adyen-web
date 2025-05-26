@@ -263,6 +263,7 @@ export interface CoreConfiguration {
      * For the tree-shakable integration, register the components beforehand.
      *
      * @param component - The UIElement representing the action, which must be mounted on the page for the user to interact with.
+     * @internal - used by PBL
      */
     afterAdditionalDetails?(component: UIElement): void;
 
