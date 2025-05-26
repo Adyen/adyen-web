@@ -377,5 +377,21 @@
     "card.fastlane.modal.benefit2.header": "Beskyt dine oplysninger",
     "card.fastlane.modal.benefit2.text": "Dine betalingsoplysninger krypteres, når de gemmes og sendes til steder, du handler.",
     "card.fastlane.modal.benefit3.header": "Brug i mange butikker",
-    "card.fastlane.modal.benefit3.text": "Kom hurtigt gennem kassen overalt, hvor Fastlane er tilgængelig."
+    "card.fastlane.modal.benefit3.text": "Kom hurtigt gennem kassen overalt, hvor Fastlane er tilgængelig.",
+    "paybybankpix.redirectBtn.label": "Fortsæt til Pix via OpenBanking",
+    "paybybankpix.issuerList.disclaimer": "Ved at klikke på Fortsæt accepterer du %#vilkår og betingelser%# og bliver sendt videre til din bank",
+    "paybybankpix.issuerList.introduction.title": "Tilknyt din konto",
+    "paybybankpix.issuerList.introduction.logo.content": "Tilslut dine foretrukne PIX-nøgler, og betal nemt via Open Finance",
+    "paybybankpix.issuerList.introduction.content1": "Oplev, hvor nemt det er at betale med ét enkelt klik – sikkert og smart med Open Finance. Ingen grund til at scanne QR-koder eller indtaste oplysninger – bare godkend og betal!",
+    "paybybankpix.issuerList.introduction.content2": "Brug denne enhed til at godkende dine betalinger med det samme. Vælg din bank, og sørg for, at du har bankens app installeret på din smartphone for at fuldføre tilknytningen.",
+    "paybybankpix.await.waitForConfirmation": "Venter på din bekræftelse...",
+    "paybybankpix.await.timeToPay": "Denne proces tager ca. %{numberOfMin} min.",
+    "paybybankpix.await.withOpenFinance": "Med Open Finance bliver det ikke nemmere",
+    "paybybankpix.await.logoAlt.openFinance": "Open Finance",
+    "paybybankpix.payment.receiver.label": "Modtager",
+    "paybybankpix.payment.paymentDate.label": "Betalingsdato",
+    "paybybankpix.payment.paymentMethod.label": "betalingsmåde",
+    "paybybankpix.storedPayment.payButton.label": "Fortsæt betalingen",
+    "paybybankpix.storedPayment.additionalLabel": "%{receiver}-konto gennem PIX",
+    "paybybankpix.await.fetchDetails": "Henter oplysninger..."
 }

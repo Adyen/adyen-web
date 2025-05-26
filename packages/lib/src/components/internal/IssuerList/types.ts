@@ -14,6 +14,7 @@ export interface IssuerListProps {
     showContextualElement?: boolean;
     contextualText?: string;
     onSubmitAnalytics: (aObj: AnalyticsEvent) => void;
+    ref?: any;
 }
 
 export interface IssuerItem {

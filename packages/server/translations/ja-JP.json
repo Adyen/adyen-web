@@ -377,5 +377,21 @@
     "card.fastlane.modal.benefit2.header": "情報を保護",
     "card.fastlane.modal.benefit2.text": "支払情報は保存時およびショッピング先に送信される際に暗号化されます。",
     "card.fastlane.modal.benefit3.header": "複数店舗での利用",
-    "card.fastlane.modal.benefit3.text": "Fastlaneが利用可能なすべての場所でチェックアウトを迅速に行えます。"
+    "card.fastlane.modal.benefit3.text": "Fastlaneが利用可能なすべての場所でチェックアウトを迅速に行えます。",
+    "paybybankpix.redirectBtn.label": "OpenBanking経由でPixに進む",
+    "paybybankpix.issuerList.disclaimer": "[続行] をクリックすると%#利用規約%#に同意したものとみなされ、ご利用の銀行にリダイレクトされます",
+    "paybybankpix.issuerList.introduction.title": "アカウントをリンクしてください",
+    "paybybankpix.issuerList.introduction.logo.content": "お気に入りのPIXキーを接続してOpen Financeで支払います",
+    "paybybankpix.issuerList.introduction.content1": "Open Financeのセキュリティに支えられたワンクリックでの支払いの利便性を享受できます。QRコードのスキャンや情報の入力は不要で、承認して実行するだけです。",
+    "paybybankpix.issuerList.introduction.content2": "このデバイスを使用して、支払いを即座に承認してください。指定の銀行を選択し、接続を完了するには、金融機関のアプリがスマートフォンにインストールされていることをご確認ください。",
+    "paybybankpix.await.waitForConfirmation": "確認を待っています...",
+    "paybybankpix.await.timeToPay": "この処理にはおよそ%{numberOfMin}分かかります",
+    "paybybankpix.await.withOpenFinance": "Open Financeで処理を手軽に",
+    "paybybankpix.await.logoAlt.openFinance": "Open Finance",
+    "paybybankpix.payment.receiver.label": "受信者",
+    "paybybankpix.payment.paymentDate.label": "支払日",
+    "paybybankpix.payment.paymentMethod.label": "支払方法",
+    "paybybankpix.storedPayment.payButton.label": "支払を続ける",
+    "paybybankpix.storedPayment.additionalLabel": "PIX経由で%{receiver}アカウント",
+    "paybybankpix.await.fetchDetails": "詳細を取得しています..."
 }
