@@ -1,5 +1,15 @@
 # @adyen/adyen-web
 
+## 6.15.0
+
+### Minor Changes
+
+- Added `paybybank_pix` component. ([#3252](https://github.com/Adyen/adyen-web/pull/3252))
+
+- Making the creation of analytics events more declarative ([#3300](https://github.com/Adyen/adyen-web/pull/3300))
+
+- Card: Pay button now loads at the same time as other UI elements ([#3298](https://github.com/Adyen/adyen-web/pull/3298))
+
 ## 6.14.0
 
 ### Minor Changes
