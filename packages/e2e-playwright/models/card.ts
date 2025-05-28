@@ -123,11 +123,14 @@ class Card extends Base {
         this.threeDs2Challenge = new ThreeDs2Challenge(page);
     }
 
-    // The brands as displayed under the CardNumber field
+    // The list of card brands as displayed under the CardNumber field
     get availableBrands() {
         return this.rootElement.locator('.adyen-checkout__card__brands').getByRole('img').all();
     }
 
+    /**
+     * Dual branding icons
+     */
     // The holder for the icons in the CardNumber field (when dual branding occurs)
     get dualBrandingIconsHolder() {
         return this.rootElement.locator('.adyen-checkout__card__dual-branding__icons');
@@ -156,7 +159,32 @@ class Card extends Base {
     ) {
         await this.cardNumberField.getByAltText(text, options).click({ force });
     }
-    // --
+    /** end */
+
+    /**
+     * Dual branding UI
+     */
+    get dualBrandingUIHolder() {
+        return this.rootElement.locator('.adyen-checkout__fieldset--dual-brand-switcher');
+    }
+
+    get uiBrandElements() {
+        return this.dualBrandingUIHolder.locator('.adyen-checkout__radio_group__input-wrapper').all();
+    }
+
+    getUIBrandElementImage(brandEl) {
+        return brandEl.locator('.adyen-checkout__input-icon--no-radio-icon');
+    }
+
+    getUIBrandElementLabel(brandEl) {
+        return brandEl.locator('.adyen-checkout__radio_group-extended__label');
+    }
+
+    getUIBrandElementCheckmark(brandEl) {
+        return brandEl.locator('.adyen-checkout-input__inline-validation');
+    }
+
+    /** end */
 
     async goto(url: string = URL_MAP.card) {
         await this.page.goto(url);

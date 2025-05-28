@@ -11,8 +11,8 @@ const componentConfig = {
     brands: ['mc', 'visa', 'amex', 'maestro', 'bcmc', 'star']
 };
 
-test.describe('Card - Testing UI after binLookup has given a dual brand result', () => {
-    test('#1 Fill in dual branded card, but do not complete the number, see dual brand icons are inactive until the number is completed', async ({
+test.describe('Card - Testing full UI (PAN icons & dual branding UI) after binLookup has given a dual brand result', () => {
+    test('#1 Fill in dual branded card, but do not complete the number, see inline dual brand icons are visible but only serve to focus the PAN, even after PAN completed', async ({
         card,
         page
     }) => {
@@ -27,10 +27,10 @@ test.describe('Card - Testing UI after binLookup has given a dual brand result',
         // Since the dominant brand is bcmc - expect the cvc field to be hidden
         await expect(card.cvcField).not.toBeVisible();
 
-        // Expect dual brand icons to be visible
+        // Expect inline dual brand icons to be visible
         await expect(card.dualBrandingIconsHolder).toBeVisible();
 
-        // Since the dual brands are not yet active, trying to click one should force an error in the UI
+        // Trying to click one should force an error in the UI
         await card.selectBrand(/visa/i, null, true);
 
         // We should get a error on the number field
@@ -42,69 +42,95 @@ test.describe('Card - Testing UI after binLookup has given a dual brand result',
         await page.keyboard.press('End');
         await card.typeCardNumber(lastDigits);
 
-        // Click a brand and see that, now they are active...
-        await card.selectBrand(/visa/i);
-
-        // Expect error to go away
+        // Expect error to have gone away
         await expect(card.cardNumberErrorElement).not.toBeVisible();
 
-        // Now we have selected visa - expect cvc to be visible
-        await expect(card.cvcField).toBeVisible();
+        // Move focus to date
+        await card.selectDateIcon();
+        await expect(card.expiryDateInput).toBeFocused();
+
+        // Now we have selected visa - expect cvc to be visible... OLD
+        // await expect(card.cvcField).toBeVisible();
+
+        // Click a brand icon and see focus move to the PAN
+        await card.selectBrand(/visa/i);
+        await expect(card.cardNumberInput).toBeFocused();
     });
 
-    test(
-        '#2 Fill in dual branded card, ' +
-            'then select one of the dual brands,' +
-            'then check the other brand icon is at reduced alpha,' +
-            'then repeat with the other icon',
-        async ({ card, page }) => {
-            await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
-
-            // Type dual branded card
-            await card.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
-
-            const [firstBrand, secondBrand] = await card.brands;
-
-            // Check that both icons do not have the class that would cause their opacity to reduce
-            await expect(firstBrand).not.toHaveClass(/adyen-checkout__card__cardNumber__brandIcon--not-selected/);
-            await expect(secondBrand).not.toHaveClass(/adyen-checkout__card__cardNumber__brandIcon--not-selected/);
-
-            // Click first brand
-            await card.selectBrand('Bancontact card');
-
-            // Check that class that adds opacity ISN'T present
-            await expect(firstBrand).not.toHaveClass(/adyen-checkout__card__cardNumber__brandIcon--not-selected/);
-            // Check that class that adds opacity IS present
-            await expect(secondBrand).toHaveClass(/adyen-checkout__card__cardNumber__brandIcon--not-selected/);
-
-            // Click second brand
-            await card.selectBrand(/visa/i);
-
-            // Check that opacities have switched
-            await expect(firstBrand).toHaveClass(/adyen-checkout__card__cardNumber__brandIcon--not-selected/);
-            await expect(secondBrand).not.toHaveClass(/adyen-checkout__card__cardNumber__brandIcon--not-selected/);
-        }
-    );
-
-    test('#3 Fill in dual branded card, see dual brand icons are at reduced alpha until the number is completed', async ({ card, page }) => {
+    test('#2 Fill in dual branded card, see dual brand UI is visible, with first element selected by default', async ({ card, page }) => {
         await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
 
-        const firstDigits = BCMC_DUAL_BRANDED_VISA.substring(0, 11);
-        const lastDigits = BCMC_DUAL_BRANDED_VISA.substring(11, 16);
+        // Get a binLookup result
+        await card.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
 
-        // Type enough digits to get a binLookup result, but not enough for the field to be complete
-        await card.typeCardNumber(firstDigits);
+        // Since the dominant brand is bcmc - expect the cvc field to be hidden
+        await expect(card.cvcField).not.toBeVisible();
 
-        // Expect icon holder not to have class adding full opacity
-        await expect(card.dualBrandingIconsHolder).not.toHaveClass(/adyen-checkout__card__dual-branding__buttons--active/);
+        // Expect dual brand UI to be visible...
+        await expect(card.dualBrandingUIHolder).toBeVisible();
 
-        // Complete the number
-        await card.cardNumberInput.focus();
-        await page.keyboard.press('End');
-        await card.typeCardNumber(lastDigits);
+        // ...with 2 buttons...
+        const [firstBrand, secondBrand] = await card.uiBrandElements;
+        await expect(firstBrand).toBeVisible();
+        await expect(secondBrand).toBeVisible();
 
-        // Expect icon holder to have class adding full opacity
-        await expect(card.dualBrandingIconsHolder).toHaveClass(/adyen-checkout__card__dual-branding__buttons--active/);
+        // ...each with expected image and text
+        await expect(card.getUIBrandElementImage(firstBrand)).toHaveAttribute('alt', /bancontact/i);
+        await expect(card.getUIBrandElementLabel(firstBrand)).toHaveText(/bancontact/i);
+
+        await expect(card.getUIBrandElementImage(secondBrand)).toHaveAttribute('alt', /visa/i);
+        await expect(card.getUIBrandElementLabel(secondBrand)).toHaveText(/visa/i);
+
+        // First element selected by default
+        await expect(card.getUIBrandElementCheckmark(firstBrand)).toBeVisible();
+        await expect(card.getUIBrandElementCheckmark(secondBrand)).not.toBeVisible();
+    });
+
+    test('#3 Fill in dual branded card, see dual brand UI has expected effects when interacted with', async ({ card, page }) => {
+        await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
+
+        // Get a binLookup result
+        await card.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
+
+        // Since the dominant brand is bcmc - expect the cvc field to be hidden
+        await expect(card.cvcField).not.toBeVisible();
+
+        // Expect dual brand UI to be visible...
+        await expect(card.dualBrandingUIHolder).toBeVisible();
+
+        const [firstBrand, secondBrand] = await card.uiBrandElements;
+
+        // Move focus to date
+        await card.selectDateIcon();
+        await expect(card.expiryDateInput).toBeFocused();
+
+        // Select visa
+        await card.getUIBrandElementLabel(secondBrand).click();
+
+        // Expect cvc to be visible
+        await expect(card.cvcField).toBeVisible();
+
+        // Second element in selected state
+        await expect(card.getUIBrandElementCheckmark(firstBrand)).not.toBeVisible();
+        await expect(card.getUIBrandElementCheckmark(secondBrand)).toBeVisible();
+
+        // Clicking buttons should not see focus move to the PAN or the date fields
+        await expect(card.cardNumberInput).not.toBeFocused();
+        await expect(card.expiryDateInput).not.toBeFocused();
+
+        // Reselect first brand
+        await card.getUIBrandElementLabel(firstBrand).click();
+
+        // Expect cvc to be hidden again
+        await expect(card.cvcField).not.toBeVisible();
+
+        // First element in selected state
+        await expect(card.getUIBrandElementCheckmark(firstBrand)).toBeVisible();
+        await expect(card.getUIBrandElementCheckmark(secondBrand)).not.toBeVisible();
+
+        // Clicking buttons should not see focus move to the PAN or the date fields
+        await expect(card.cardNumberInput).not.toBeFocused();
+        await expect(card.expiryDateInput).not.toBeFocused();
     });
 
     test(
@@ -118,12 +144,15 @@ test.describe('Card - Testing UI after binLookup has given a dual brand result',
 
             await card.typeCardNumber(DUAL_BRANDED_CARD_EXCLUDED);
 
-            // Check brand has not  been set in paymentMethod data
+            // Check brand has not been set in paymentMethod data
             let cardData: any = await page.evaluate('window.component.data');
             expect(cardData.paymentMethod.brand).toBe(undefined);
 
             // Expect dual brand icons not to be visible
             await expect(card.dualBrandingIconsHolder).not.toBeVisible();
+
+            // Expect dual brand UI not to be visible
+            await expect(card.dualBrandingUIHolder).not.toBeVisible();
         }
     );
 });
