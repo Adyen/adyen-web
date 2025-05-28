@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 6.15.1
+
+### Patch Changes
+
+- A11y: Remove radiogroup on dropin when rending a single payment method ([#3338](https://github.com/Adyen/adyen-web/pull/3338))
+
 ## 6.15.0
 
 ### Minor Changes
