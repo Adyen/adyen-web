@@ -28,7 +28,6 @@ test.describe('Bcmc payments with dual branding', () => {
                 expect(firstBrand).toHaveAttribute('data-value', 'bcmc');
                 expect(secondBrand).toHaveAttribute('data-value', 'maestro');
 
-                await bcmc.selectBrand('Bancontact card');
                 await bcmc.pay();
 
                 // check brand has been set in paymentMethod data
@@ -45,8 +44,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
                 await bcmc.fillCardNumber(BCMC_CARD);
-                await bcmc.waitForVisibleBrands();
-                await bcmc.selectBrand('Bancontact card');
+
                 await bcmc.pay();
 
                 await expect(bcmc.expiryDateErrorElement).toHaveText('Enter the expiry date');
@@ -71,13 +69,13 @@ test.describe('Bcmc payments with dual branding', () => {
 
                 await bcmc.fillCardNumber(BCMC_CARD);
                 await bcmc.fillExpiryDate(TEST_DATE_VALUE);
-                await bcmc.waitForVisibleBrands();
 
-                const [firstBrand, secondBrand] = await bcmc.brands;
-                expect(firstBrand).toHaveAttribute('data-value', 'bcmc');
-                expect(secondBrand).toHaveAttribute('data-value', 'maestro');
+                await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
+                const [, secondButton] = await bcmc.dualBrandingButtonElements;
 
-                await bcmc.selectBrand('Maestro');
+                // Select maestro
+                await bcmc.getDualBrandButtonLabel(secondButton).click();
+
                 await bcmc.pay();
 
                 const request = await paymentsRequestPromise;
@@ -92,7 +90,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 await bcmc.isComponentVisible();
                 await bcmc.fillCardNumber(BCMC_CARD);
                 await bcmc.waitForVisibleBrands();
-                await bcmc.selectBrand('Maestro');
+
                 await bcmc.pay();
 
                 await expect(bcmc.expiryDateErrorElement).toHaveText('Enter the expiry date');
@@ -123,7 +121,6 @@ test.describe('Bcmc payments with dual branding', () => {
                 expect(firstBrand).toHaveAttribute('data-value', 'bcmc');
                 expect(secondBrand).toHaveAttribute('data-value', 'visa');
 
-                await bcmc.selectBrand('Bancontact card');
                 await bcmc.pay();
                 await bcmc.threeDs2Challenge.fillInPassword(THREEDS2_CHALLENGE_PASSWORD);
                 await bcmc.threeDs2Challenge.submit();
@@ -160,13 +157,12 @@ test.describe('Bcmc payments with dual branding', () => {
 
                 await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_VISA);
                 await bcmc.fillExpiryDate(TEST_DATE_VALUE);
-                await bcmc.waitForVisibleBrands();
 
-                const [firstBrand, secondBrand] = await bcmc.brands;
-                expect(firstBrand).toHaveAttribute('data-value', 'bcmc');
-                expect(secondBrand).toHaveAttribute('data-value', 'visa');
+                await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
+                const [, secondButton] = await bcmc.dualBrandingButtonElements;
+                // Select visa
+                await bcmc.getDualBrandButtonLabel(secondButton).click();
 
-                await bcmc.selectBrand(/visa/i);
                 await bcmc.fillCvc(TEST_CVC_VALUE);
                 await bcmc.pay();
 
@@ -185,9 +181,12 @@ test.describe('Bcmc payments with dual branding', () => {
 
                 await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_VISA);
                 await bcmc.fillExpiryDate(TEST_DATE_VALUE);
-                await bcmc.waitForVisibleBrands();
 
-                await bcmc.selectBrand(/visa/i);
+                await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
+                const [, secondButton] = await bcmc.dualBrandingButtonElements;
+                // Select visa
+                await bcmc.getDualBrandButtonLabel(secondButton).click();
+
                 await bcmc.pay();
 
                 await expect(bcmc.cvcErrorElement).toHaveText('Enter the security code');
@@ -218,7 +217,6 @@ test.describe('Bcmc payments with dual branding', () => {
                 expect(firstBrand).toHaveAttribute('data-value', 'bcmc');
                 expect(secondBrand).toHaveAttribute('data-value', 'mc');
 
-                await bcmc.selectBrand('Bancontact card');
                 await bcmc.pay();
 
                 await expect(bcmc.paymentResult).toContainText(PAYMENT_RESULT.authorised);
@@ -228,8 +226,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
                 await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_MC);
-                await bcmc.waitForVisibleBrands();
-                await bcmc.selectBrand('Bancontact card');
+
                 await bcmc.pay();
 
                 await expect(bcmc.expiryDateErrorElement).toHaveText('Enter the expiry date');
@@ -254,13 +251,12 @@ test.describe('Bcmc payments with dual branding', () => {
 
                 await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_MC);
                 await bcmc.fillExpiryDate(TEST_DATE_VALUE);
-                await bcmc.waitForVisibleBrands();
 
-                const [firstBrand, secondBrand] = await bcmc.brands;
-                expect(firstBrand).toHaveAttribute('data-value', 'bcmc');
-                expect(secondBrand).toHaveAttribute('data-value', 'mc');
+                await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
+                const [, secondButton] = await bcmc.dualBrandingButtonElements;
+                // Select mc
+                await bcmc.getDualBrandButtonLabel(secondButton).click();
 
-                await bcmc.selectBrand('MasterCard');
                 await bcmc.fillCvc(TEST_CVC_VALUE);
                 await bcmc.pay();
 
@@ -277,9 +273,12 @@ test.describe('Bcmc payments with dual branding', () => {
 
                 await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_MC);
                 await bcmc.fillExpiryDate(TEST_DATE_VALUE);
-                await bcmc.waitForVisibleBrands();
 
-                await bcmc.selectBrand('MasterCard');
+                await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
+                const [, secondButton] = await bcmc.dualBrandingButtonElements;
+                // Select mc
+                await bcmc.getDualBrandButtonLabel(secondButton).click();
+
                 await bcmc.pay();
 
                 await expect(bcmc.cvcErrorElement).toHaveText('Enter the security code');
@@ -305,23 +304,25 @@ test.describe('Bcmc payments with dual branding', () => {
 
                 await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_MC);
                 await bcmc.fillExpiryDate(TEST_DATE_VALUE);
-                await bcmc.waitForVisibleBrands();
 
-                const [firstBrand, secondBrand] = await bcmc.brands;
-                expect(firstBrand).toHaveAttribute('data-value', 'bcmc');
-                expect(secondBrand).toHaveAttribute('data-value', 'mc');
+                await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
+                const [, secondButton] = await bcmc.dualBrandingButtonElements;
+                // Select mc
+                await bcmc.getDualBrandButtonLabel(secondButton).click();
 
-                await bcmc.selectBrand('MasterCard');
                 await bcmc.fillCvc(TEST_CVC_VALUE);
 
                 await bcmc.deleteCardNumber();
                 await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_MC);
 
+                // Give chance for UI to render in order to set correct brand in state
+                await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
+
                 await bcmc.pay();
 
                 const request = await paymentsRequestPromise;
                 const paymentMethod = await request.postDataJSON().paymentMethod;
-                expect(paymentMethod.brand).toBeUndefined();
+                expect(paymentMethod.brand).toEqual('bcmc');
 
                 await expect(bcmc.paymentResult).toContainText(PAYMENT_RESULT.authorised);
             });
