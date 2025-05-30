@@ -54,7 +54,7 @@ test.describe('Card - Testing resetting after binLookup has given a dual brand r
         await page.waitForFunction(() => window['component'].data.paymentMethod.brand === 'bcmc');
 
         // Click second brand (visa)
-        const [firstButton, secondButton] = await card.dualBrandingButtonElements;
+        const [, secondButton] = await card.dualBrandingButtonElements;
 
         await card.getDualBrandButtonImage(secondButton).click();
 

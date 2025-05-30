@@ -34,24 +34,8 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
         }
     );
 
-    test('#2 Fill in dual branded card then ' + 'select maestro & see that cvc field is hidden even though it is maestro ', async ({ bcmc }) => {
-        await bcmc.goto(URL_MAP.bcmc);
-
-        await bcmc.isComponentVisible();
-
-        await bcmc.fillCardNumber(BCMC_CARD);
-
-        await bcmc.waitForVisibleBrands();
-
-        await bcmc.selectBrand('Maestro');
-
-        // Due to brand sorting and priority being given to the Bcmc brand - cvc should remain hidden
-        // even tho' maestro has been selected
-        await bcmc.cvcField.waitFor({ state: 'hidden' });
-    });
-
     test(
-        '#3 Fill in dual branded card then ' +
+        '#2 Fill in dual branded card then ' +
             'paste in number not recognised by binLookup (but that our local regEx will recognise as Visa)' +
             'see that UI stays looking like a BCMC card i.e. bcmc logo remains showing',
         async ({ bcmc }) => {
@@ -60,6 +44,8 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
             await bcmc.isComponentVisible();
 
             await bcmc.typeCardNumber(BCMC_CARD);
+
+            await bcmc.waitForVisibleBrands();
 
             // "paste"
             await bcmc.fillCardNumber(UNKNOWN_VISA_CARD);
@@ -75,7 +61,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
     );
 
     test(
-        '#4 Fill in dual branded card then ' +
+        '#3 Fill in dual branded card then ' +
             'select visa & see that cvc field shows then' +
             'paste in number not recognised by binLookup (but that our local regEx will recognise as Visa) ' +
             'see that UI stays looking like a BCMC card i.e. bcmc logo remains showing and cvc field is hidden again',
@@ -86,11 +72,12 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
 
             await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_VISA);
 
-            await bcmc.waitForVisibleBrands();
+            await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
+            const [, secondButton] = await bcmc.dualBrandingButtonElements;
+            // Select visa
+            await bcmc.getDualBrandButtonLabel(secondButton).click();
 
-            await bcmc.selectBrand('Visa');
-
-            await bcmc.cvcField.waitFor({ state: 'visible' });
+            await expect(bcmc.cvcInput).toBeVisible();
 
             // "paste"
             await bcmc.fillCardNumber(UNKNOWN_VISA_CARD);
@@ -104,12 +91,12 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
             expect(secondBrand).toBeUndefined();
 
             // with hidden cvc
-            await bcmc.cvcField.waitFor({ state: 'hidden' });
+            await expect(bcmc.cvcInput).not.toBeVisible();
         }
     );
 
     test(
-        '#5 Fill in dual branded card then ' +
+        '#4 Fill in dual branded card then ' +
             'select visa & see that cvc field shows then' +
             'delete number and see that bcmc logo remains showing and cvc field is hidden again',
         async ({ bcmc }) => {
@@ -119,13 +106,13 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
 
             await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_VISA);
 
-            await bcmc.waitForVisibleBrands();
+            await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
+            const [, secondButton] = await bcmc.dualBrandingButtonElements;
+            // Select visa
+            await bcmc.getDualBrandButtonLabel(secondButton).click();
 
-            await bcmc.selectBrand('Visa');
+            await expect(bcmc.cvcInput).toBeVisible();
 
-            await bcmc.cvcField.waitFor({ state: 'visible' });
-
-            // "paste"
             await bcmc.deleteCardNumber();
 
             await bcmc.waitForVisibleBrands(1);
@@ -137,7 +124,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
             expect(secondBrand).toBeUndefined();
 
             // with hidden cvc
-            await bcmc.cvcField.waitFor({ state: 'hidden' });
+            await expect(bcmc.cvcInput).not.toBeVisible();
         }
     );
 });

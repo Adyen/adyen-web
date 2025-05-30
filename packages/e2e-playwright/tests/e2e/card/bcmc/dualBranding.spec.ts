@@ -78,6 +78,8 @@ test.describe('Bcmc payments with dual branding', () => {
                 // Select maestro
                 await bcmc.getDualBrandButtonLabel(secondButton).click();
 
+                // Due to brand sorting and priority being given to the Bcmc brand - cvc should remain hidden
+                // even tho' maestro has been selected
                 await expect(bcmc.cvcInput).not.toBeVisible();
 
                 await bcmc.pay();
