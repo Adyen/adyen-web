@@ -28,6 +28,8 @@ test.describe('Bcmc payments with dual branding', () => {
                 expect(firstBrand).toHaveAttribute('data-value', 'bcmc');
                 expect(secondBrand).toHaveAttribute('data-value', 'maestro');
 
+                await expect(bcmc.cvcInput).not.toBeVisible();
+
                 await bcmc.pay();
 
                 // check brand has been set in paymentMethod data
@@ -75,6 +77,8 @@ test.describe('Bcmc payments with dual branding', () => {
 
                 // Select maestro
                 await bcmc.getDualBrandButtonLabel(secondButton).click();
+
+                await expect(bcmc.cvcInput).not.toBeVisible();
 
                 await bcmc.pay();
 
@@ -163,6 +167,8 @@ test.describe('Bcmc payments with dual branding', () => {
                 // Select visa
                 await bcmc.getDualBrandButtonLabel(secondButton).click();
 
+                await expect(bcmc.cvcInput).toBeVisible();
+
                 await bcmc.fillCvc(TEST_CVC_VALUE);
                 await bcmc.pay();
 
@@ -186,6 +192,8 @@ test.describe('Bcmc payments with dual branding', () => {
                 const [, secondButton] = await bcmc.dualBrandingButtonElements;
                 // Select visa
                 await bcmc.getDualBrandButtonLabel(secondButton).click();
+
+                await expect(bcmc.cvcInput).toBeVisible();
 
                 await bcmc.pay();
 
@@ -257,6 +265,8 @@ test.describe('Bcmc payments with dual branding', () => {
                 // Select mc
                 await bcmc.getDualBrandButtonLabel(secondButton).click();
 
+                await expect(bcmc.cvcInput).toBeVisible();
+
                 await bcmc.fillCvc(TEST_CVC_VALUE);
                 await bcmc.pay();
 
@@ -278,6 +288,8 @@ test.describe('Bcmc payments with dual branding', () => {
                 const [, secondButton] = await bcmc.dualBrandingButtonElements;
                 // Select mc
                 await bcmc.getDualBrandButtonLabel(secondButton).click();
+
+                await expect(bcmc.cvcInput).toBeVisible();
 
                 await bcmc.pay();
 
