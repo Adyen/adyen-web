@@ -136,6 +136,7 @@ class Card extends Base {
         return this.rootElement.locator('.adyen-checkout__card__dual-branding__icons');
     }
 
+    // TODO - rename to reflect that this only relates to inline brand *icons* i.e. waitForVisibleDualBrandIcons
     // The brands as displayed directly in the CardNumber field (when dual branding occurs)
     async waitForVisibleBrands(expectedNumber = 2) {
         return await this.page.waitForFunction(
@@ -144,12 +145,12 @@ class Card extends Base {
         );
     }
 
-    // Retrieve dual brands
+    // Retrieve dual brands // TODO - rename to reflect that this only relates to inline brand *icons* i.e. get dualBrandIcons
     get brands() {
         return this.cardNumberField.locator('.adyen-checkout__card__cardNumber__brandIcon').all();
     }
 
-    // Select one of the dual brands
+    // Select one of the dual brands / TODO - rename to reflect that this only relates to inline brand *icons* i.e. selectDualBrandIcons
     async selectBrand(
         text: string | RegExp,
         options?: {
@@ -164,23 +165,23 @@ class Card extends Base {
     /**
      * Dual branding UI
      */
-    get dualBrandingUIHolder() {
+    get dualBrandingButtonsHolder() {
         return this.rootElement.locator('.adyen-checkout__fieldset--dual-brand-switcher');
     }
 
-    get uiBrandElements() {
-        return this.dualBrandingUIHolder.locator('.adyen-checkout__radio_group__input-wrapper').all();
+    get dualBrandingButtonElements() {
+        return this.dualBrandingButtonsHolder.locator('.adyen-checkout__radio_group__input-wrapper').all();
     }
 
-    getUIBrandElementImage(brandEl) {
+    getDualBrandButtonImage(brandEl) {
         return brandEl.locator('.adyen-checkout__input-icon--no-radio-icon');
     }
 
-    getUIBrandElementLabel(brandEl) {
+    getDualBrandButtonLabel(brandEl) {
         return brandEl.locator('.adyen-checkout__radio_group-extended__label');
     }
 
-    getUIBrandElementCheckmark(brandEl) {
+    getDualBrandButtonCheckmark(brandEl) {
         return brandEl.locator('.adyen-checkout-input__inline-validation');
     }
 
