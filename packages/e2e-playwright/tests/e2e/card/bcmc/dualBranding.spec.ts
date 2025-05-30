@@ -138,7 +138,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 await bcmc.isComponentVisible();
                 await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_VISA);
                 await bcmc.waitForVisibleDualBrandIcons();
-                await bcmc.selectBrand('Bancontact card');
+                await bcmc.selectBrandIcon('Bancontact card');
                 await bcmc.pay();
 
                 await expect(bcmc.expiryDateErrorElement).toHaveText('Enter the expiry date');

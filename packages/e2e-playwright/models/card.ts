@@ -144,13 +144,13 @@ class Card extends Base {
         );
     }
 
-    // Retrieve dual brands // TODO - rename to reflect that this only relates to inline brand *icons* i.e. get dualBrandIcons
+    // Retrieve dual brands
     get dualBrandIcons() {
         return this.cardNumberField.locator('.adyen-checkout__card__cardNumber__brandIcon').all();
     }
 
-    // Select one of the dual brands / TODO - rename to reflect that this only relates to inline brand *icons* i.e. selectDualBrandIcons
-    async selectBrand(
+    // Select one of the inline brand icons
+    async selectBrandIcon(
         text: string | RegExp,
         options?: {
             exact?: boolean;

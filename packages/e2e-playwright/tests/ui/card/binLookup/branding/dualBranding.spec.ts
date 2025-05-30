@@ -113,7 +113,7 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
         await expect(card.dualBrandingIconsHolder).toBeVisible();
 
         // Click a brand icon and see focus move to the PAN
-        await card.selectBrand(/visa/i, null, true);
+        await card.selectBrandIcon(/visa/i, null, true);
         await expect(card.cardNumberInput).toBeFocused();
 
         // Move focus to date
@@ -121,7 +121,7 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
         await expect(card.expiryDateInput).toBeFocused();
 
         // Click the other brand icon and see focus move to the PAN
-        await card.selectBrand(/bancontact/i);
+        await card.selectBrandIcon(/bancontact/i);
         await expect(card.cardNumberInput).toBeFocused();
     });
 
@@ -141,7 +141,7 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
         await expect(card.dualBrandingIconsHolder).toBeVisible();
 
         // Trying to click one should force an error in the UI
-        await card.selectBrand(/visa/i, null, true);
+        await card.selectBrandIcon(/visa/i, null, true);
 
         // We should get a error on the number field
         await expect(card.cardNumberErrorElement).toBeVisible();
@@ -160,7 +160,7 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
         await expect(card.expiryDateInput).toBeFocused();
 
         // Click a brand icon and see focus move to the PAN
-        await card.selectBrand(/bancontact/i);
+        await card.selectBrandIcon(/bancontact/i);
         await expect(card.cardNumberInput).toBeFocused();
     });
 
