@@ -24,7 +24,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 await bcmc.fillExpiryDate(TEST_DATE_VALUE);
                 await bcmc.waitForVisibleDualBrandIcons();
 
-                const [firstBrand, secondBrand] = await bcmc.brands;
+                const [firstBrand, secondBrand] = await bcmc.dualBrandIcons;
                 expect(firstBrand).toHaveAttribute('data-value', 'bcmc');
                 expect(secondBrand).toHaveAttribute('data-value', 'maestro');
 
@@ -123,7 +123,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 await bcmc.fillExpiryDate(TEST_DATE_VALUE);
                 await bcmc.waitForVisibleDualBrandIcons();
 
-                const [firstBrand, secondBrand] = await bcmc.brands;
+                const [firstBrand, secondBrand] = await bcmc.dualBrandIcons;
                 expect(firstBrand).toHaveAttribute('data-value', 'bcmc');
                 expect(secondBrand).toHaveAttribute('data-value', 'visa');
 
@@ -223,7 +223,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 await bcmc.fillExpiryDate(TEST_DATE_VALUE);
                 await bcmc.waitForVisibleDualBrandIcons();
 
-                const [firstBrand, secondBrand] = await bcmc.brands;
+                const [firstBrand, secondBrand] = await bcmc.dualBrandIcons;
                 expect(firstBrand).toHaveAttribute('data-value', 'bcmc');
                 expect(secondBrand).toHaveAttribute('data-value', 'mc');
 

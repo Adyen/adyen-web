@@ -16,7 +16,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
 
             await bcmc.waitForVisibleDualBrandIcons();
 
-            let [firstBrand, secondBrand] = await bcmc.brands;
+            let [firstBrand, secondBrand] = await bcmc.dualBrandIcons;
 
             // Correct order
             expect(firstBrand).toHaveAttribute('data-value', 'bcmc');
@@ -26,7 +26,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
 
             await bcmc.waitForVisibleDualBrandIcons(1);
 
-            [firstBrand, secondBrand] = await bcmc.brands;
+            [firstBrand, secondBrand] = await bcmc.dualBrandIcons;
 
             // Now only a single brand
             expect(firstBrand).toHaveAttribute('alt', /bancontact/i);
@@ -52,7 +52,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
 
             await bcmc.waitForVisibleDualBrandIcons(1);
 
-            const [firstBrand, secondBrand] = await bcmc.brands;
+            const [firstBrand, secondBrand] = await bcmc.dualBrandIcons;
 
             // Remains a single brand
             expect(firstBrand).toHaveAttribute('alt', /bancontact/i);
@@ -84,7 +84,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
 
             await bcmc.waitForVisibleDualBrandIcons(1);
 
-            const [firstBrand, secondBrand] = await bcmc.brands;
+            const [firstBrand, secondBrand] = await bcmc.dualBrandIcons;
 
             // Returns to a Bcmc
             expect(firstBrand).toHaveAttribute('alt', /bancontact/i);
@@ -117,7 +117,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
 
             await bcmc.waitForVisibleDualBrandIcons(1);
 
-            const [firstBrand, secondBrand] = await bcmc.brands;
+            const [firstBrand, secondBrand] = await bcmc.dualBrandIcons;
 
             // Returns to a Bcmc
             expect(firstBrand).toHaveAttribute('alt', /bancontact/i);

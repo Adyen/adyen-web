@@ -27,7 +27,7 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
         // Expect inline dual brand icons to be visible
         await expect(card.dualBrandingIconsHolder).toBeVisible();
 
-        let [firstIcon, secondIcon] = await card.brands;
+        let [firstIcon, secondIcon] = await card.dualBrandIcons;
 
         // 2 brand icons, in correct order
         expect(firstIcon).toHaveAttribute('data-value', 'bcmc');

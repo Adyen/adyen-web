@@ -136,7 +136,6 @@ class Card extends Base {
         return this.rootElement.locator('.adyen-checkout__card__dual-branding__icons');
     }
 
-    // TODO - rename to reflect that this only relates to inline brand *icons* i.e. waitForVisibleDualBrandIcons
     // The brands as displayed directly in the CardNumber field (when dual branding occurs)
     async waitForVisibleDualBrandIcons(expectedNumber = 2) {
         return await this.page.waitForFunction(
@@ -146,7 +145,7 @@ class Card extends Base {
     }
 
     // Retrieve dual brands // TODO - rename to reflect that this only relates to inline brand *icons* i.e. get dualBrandIcons
-    get brands() {
+    get dualBrandIcons() {
         return this.cardNumberField.locator('.adyen-checkout__card__cardNumber__brandIcon').all();
     }
 
