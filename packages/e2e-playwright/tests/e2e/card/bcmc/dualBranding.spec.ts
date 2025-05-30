@@ -22,7 +22,7 @@ test.describe('Bcmc payments with dual branding', () => {
 
                 await bcmc.fillCardNumber(BCMC_CARD);
                 await bcmc.fillExpiryDate(TEST_DATE_VALUE);
-                await bcmc.waitForVisibleBrands();
+                await bcmc.waitForVisibleDualBrandIcons();
 
                 const [firstBrand, secondBrand] = await bcmc.brands;
                 expect(firstBrand).toHaveAttribute('data-value', 'bcmc');
@@ -95,7 +95,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
                 await bcmc.fillCardNumber(BCMC_CARD);
-                await bcmc.waitForVisibleBrands();
+                await bcmc.waitForVisibleDualBrandIcons();
 
                 await bcmc.pay();
 
@@ -121,7 +121,7 @@ test.describe('Bcmc payments with dual branding', () => {
 
                 await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_VISA);
                 await bcmc.fillExpiryDate(TEST_DATE_VALUE);
-                await bcmc.waitForVisibleBrands();
+                await bcmc.waitForVisibleDualBrandIcons();
 
                 const [firstBrand, secondBrand] = await bcmc.brands;
                 expect(firstBrand).toHaveAttribute('data-value', 'bcmc');
@@ -137,7 +137,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
                 await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_VISA);
-                await bcmc.waitForVisibleBrands();
+                await bcmc.waitForVisibleDualBrandIcons();
                 await bcmc.selectBrand('Bancontact card');
                 await bcmc.pay();
 
@@ -221,7 +221,7 @@ test.describe('Bcmc payments with dual branding', () => {
 
                 await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_MC);
                 await bcmc.fillExpiryDate(TEST_DATE_VALUE);
-                await bcmc.waitForVisibleBrands();
+                await bcmc.waitForVisibleDualBrandIcons();
 
                 const [firstBrand, secondBrand] = await bcmc.brands;
                 expect(firstBrand).toHaveAttribute('data-value', 'bcmc');

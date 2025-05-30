@@ -138,7 +138,7 @@ class Card extends Base {
 
     // TODO - rename to reflect that this only relates to inline brand *icons* i.e. waitForVisibleDualBrandIcons
     // The brands as displayed directly in the CardNumber field (when dual branding occurs)
-    async waitForVisibleBrands(expectedNumber = 2) {
+    async waitForVisibleDualBrandIcons(expectedNumber = 2) {
         return await this.page.waitForFunction(
             expectedLength => [...document.querySelectorAll('.adyen-checkout__card__cardNumber__brandIcon')].length === expectedLength,
             expectedNumber

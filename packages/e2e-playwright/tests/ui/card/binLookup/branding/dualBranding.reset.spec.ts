@@ -25,7 +25,7 @@ test.describe('Card - Testing resetting after binLookup has given a dual brand r
             await card.deleteCardNumber();
 
             // Expect card to have one, generic, icon in the PAN field
-            await card.waitForVisibleBrands(1);
+            await card.waitForVisibleDualBrandIcons(1);
 
             let [firstBrand, secondBrand] = await card.brands;
 

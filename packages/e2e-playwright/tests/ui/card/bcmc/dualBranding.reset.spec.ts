@@ -14,7 +14,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
 
             await bcmc.fillCardNumber(BCMC_CARD);
 
-            await bcmc.waitForVisibleBrands();
+            await bcmc.waitForVisibleDualBrandIcons();
 
             let [firstBrand, secondBrand] = await bcmc.brands;
 
@@ -24,7 +24,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
 
             await bcmc.deleteCardNumber();
 
-            await bcmc.waitForVisibleBrands(1);
+            await bcmc.waitForVisibleDualBrandIcons(1);
 
             [firstBrand, secondBrand] = await bcmc.brands;
 
@@ -45,12 +45,12 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
 
             await bcmc.typeCardNumber(BCMC_CARD);
 
-            await bcmc.waitForVisibleBrands();
+            await bcmc.waitForVisibleDualBrandIcons();
 
             // "paste"
             await bcmc.fillCardNumber(UNKNOWN_VISA_CARD);
 
-            await bcmc.waitForVisibleBrands(1);
+            await bcmc.waitForVisibleDualBrandIcons(1);
 
             const [firstBrand, secondBrand] = await bcmc.brands;
 
@@ -82,7 +82,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
             // "paste"
             await bcmc.fillCardNumber(UNKNOWN_VISA_CARD);
 
-            await bcmc.waitForVisibleBrands(1);
+            await bcmc.waitForVisibleDualBrandIcons(1);
 
             const [firstBrand, secondBrand] = await bcmc.brands;
 
@@ -115,7 +115,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
 
             await bcmc.deleteCardNumber();
 
-            await bcmc.waitForVisibleBrands(1);
+            await bcmc.waitForVisibleDualBrandIcons(1);
 
             const [firstBrand, secondBrand] = await bcmc.brands;
 

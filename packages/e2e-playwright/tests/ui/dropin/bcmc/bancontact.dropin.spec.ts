@@ -21,7 +21,7 @@ test.describe('Bcmc in dropin', () => {
         const bcmc = new BCMC(page, paymentMethodDetailsLocator);
 
         await bcmc.isComponentVisible();
-        await bcmc.waitForVisibleBrands(1);
+        await bcmc.waitForVisibleDualBrandIcons(1);
 
         const [firstBrand, secondBrand] = await bcmc.brands;
         // Only a single brand in the PAN input
