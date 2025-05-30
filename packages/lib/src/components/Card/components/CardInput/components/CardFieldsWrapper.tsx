@@ -146,7 +146,6 @@ export const CardFieldsWrapper = ({
                             })}
                             onChange={extensions.handleDualBrandSelection}
                             required={true}
-                            style={'button'}
                             showSelectedTick={true}
                             // showRadioIcon={true}
                         />

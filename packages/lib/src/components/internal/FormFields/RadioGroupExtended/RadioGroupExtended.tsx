@@ -10,18 +10,7 @@ import './RadioGroupExtended.scss';
 import '../RadioGroup/RadioGroup.scss';
 
 export default function RadioGroupExtended(props: RadioGroupExtendedProps) {
-    const {
-        items,
-        name,
-        onChange,
-        value,
-        isInvalid,
-        uniqueId,
-        ariaLabel,
-        showRadioIcon = false,
-        showSelectedTick = false,
-        style = 'classic'
-    } = props;
+    const { items, name, onChange, value, isInvalid, uniqueId, ariaLabel, showRadioIcon = false, showSelectedTick = false, style = 'button' } = props;
 
     const { i18n } = useCoreContext();
     const uniqueIdBase = uniqueId?.replace(/[0-9]/g, '').substring(0, uniqueId.lastIndexOf('-'));
