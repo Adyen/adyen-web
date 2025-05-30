@@ -51,6 +51,10 @@
         border-color: token(color-outline-primary-active);
     }
 
+    .adyen-checkout__radio_group__input:checked:focus + .adyen-checkout__radio_group__label--no-radio {
+        border: token(border-width-m) solid token(color-outline-primary-active);
+    }
+
     .adyen-checkout__radio_group-extended__label-wrapper{
         display: flex;
 
