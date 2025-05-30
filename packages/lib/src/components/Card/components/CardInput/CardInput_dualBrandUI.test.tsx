@@ -92,8 +92,15 @@ describe('CardNumber and the dual branding UI', () => {
         // buttons
         expect(dualBrandEl.find('[type="radio"]')).toHaveLength(2);
 
-        expect(dualBrandEl.find('[data-value="visa"]')).toHaveLength(1);
-        expect(dualBrandEl.find('[data-value="cartebancaire"]')).toHaveLength(1);
+        const els = dualBrandEl.find('.adyen-checkout__radio_group-extended__label-wrapper');
+
+        // check images
+        expect(els.at(0).find('img').at(0).prop('alt')).toEqual('VISA'); // the .at(0) is because a button contains a brand image and a checkmark image
+        expect(els.at(1).find('img').at(0).prop('alt')).toEqual('cartebancaire');
+
+        // check texts
+        expect(els.at(0).text().includes('VISA')).toBe(true);
+        expect(els.at(1).text().includes('Carte Bancaire')).toBe(true);
     });
 
     test('Dual branding UI is not hidden when the card number is in error', async () => {
