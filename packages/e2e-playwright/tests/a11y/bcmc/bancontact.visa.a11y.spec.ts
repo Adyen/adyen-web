@@ -23,7 +23,9 @@ test(
         await bcmc.goto(URL_MAP.bcmc);
         await bcmc.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
         await bcmc.typeExpiryDate(TEST_DATE_VALUE);
+
         expect(bcmc.cvcField).toBeHidden();
+
         await page.waitForFunction(() => globalThis.component.isValid === true);
 
         await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
@@ -40,7 +42,7 @@ test(
         // Select bcmc
         await bcmc.getDualBrandButtonLabel(firstButton).click();
 
-        await expect(bcmc.cvcInput).not.toBeVisible();
+        expect(bcmc.cvcField).toBeHidden();
 
         await page.waitForFunction(() => globalThis.component.isValid === true);
     }

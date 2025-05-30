@@ -77,7 +77,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
             // Select visa
             await bcmc.getDualBrandButtonLabel(secondButton).click();
 
-            await expect(bcmc.cvcInput).toBeVisible();
+            await expect(bcmc.cvcField).toBeVisible();
 
             // "paste"
             await bcmc.fillCardNumber(UNKNOWN_VISA_CARD);
@@ -91,7 +91,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
             expect(secondBrand).toBeUndefined();
 
             // with hidden cvc
-            await expect(bcmc.cvcInput).not.toBeVisible();
+            await expect(bcmc.cvcField).toBeHidden();
         }
     );
 
@@ -111,7 +111,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
             // Select visa
             await bcmc.getDualBrandButtonLabel(secondButton).click();
 
-            await expect(bcmc.cvcInput).toBeVisible();
+            await expect(bcmc.cvcField).toBeVisible();
 
             await bcmc.deleteCardNumber();
 
@@ -124,7 +124,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
             expect(secondBrand).toBeUndefined();
 
             // with hidden cvc
-            await expect(bcmc.cvcInput).not.toBeVisible();
+            await expect(bcmc.cvcField).toBeHidden();
         }
     );
 });

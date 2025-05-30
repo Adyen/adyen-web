@@ -28,7 +28,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 expect(firstBrand).toHaveAttribute('data-value', 'bcmc');
                 expect(secondBrand).toHaveAttribute('data-value', 'maestro');
 
-                await expect(bcmc.cvcInput).not.toBeVisible();
+                await expect(bcmc.cvcField).toBeHidden();
 
                 await bcmc.pay();
 
@@ -80,7 +80,7 @@ test.describe('Bcmc payments with dual branding', () => {
 
                 // Due to brand sorting and priority being given to the Bcmc brand - cvc should remain hidden
                 // even tho' maestro has been selected
-                await expect(bcmc.cvcInput).not.toBeVisible();
+                await expect(bcmc.cvcField).toBeHidden();
 
                 await bcmc.pay();
 
@@ -169,7 +169,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 // Select visa
                 await bcmc.getDualBrandButtonLabel(secondButton).click();
 
-                await expect(bcmc.cvcInput).toBeVisible();
+                await expect(bcmc.cvcField).toBeVisible();
 
                 await bcmc.fillCvc(TEST_CVC_VALUE);
                 await bcmc.pay();
@@ -195,7 +195,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 // Select visa
                 await bcmc.getDualBrandButtonLabel(secondButton).click();
 
-                await expect(bcmc.cvcInput).toBeVisible();
+                await expect(bcmc.cvcField).toBeVisible();
 
                 await bcmc.pay();
 
@@ -267,7 +267,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 // Select mc
                 await bcmc.getDualBrandButtonLabel(secondButton).click();
 
-                await expect(bcmc.cvcInput).toBeVisible();
+                await expect(bcmc.cvcField).toBeVisible();
 
                 await bcmc.fillCvc(TEST_CVC_VALUE);
                 await bcmc.pay();
@@ -291,7 +291,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 // Select mc
                 await bcmc.getDualBrandButtonLabel(secondButton).click();
 
-                await expect(bcmc.cvcInput).toBeVisible();
+                await expect(bcmc.cvcField).toBeVisible();
 
                 await bcmc.pay();
 
