@@ -227,6 +227,11 @@ export interface ApplePayConfiguration extends UIElementProps {
      * Used to tweak the text of the button types that contain text ('Continue with', 'Book with', etc)
      */
     buttonLocale?: string;
+
+    /**
+     * Used to override the domain name for the Apple Pay button.
+     */
+    domainNameOverride?: string;
 }
 
 export interface ApplePayElementData {
