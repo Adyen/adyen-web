@@ -1,0 +1,75 @@
+@import 'styles/variable-generator';
+
+.adyen-checkout__radio_group__label--no-radio {
+    margin:0;
+    padding-bottom: 0;
+    padding-left: token(spacer-090);
+    position: relative;
+    display: block;
+    color: inherit;
+    font-size: token(text-body-font-size);
+    font-weight: normal;
+    line-height: token(text-body-line-height);
+    overflow: visible;
+}
+
+.adyen-checkout__radio_group__label--no-radio:hover {
+    border-color: token(color-label-primary);
+    cursor: pointer;
+}
+
+.adyen-checkout__label--focused .adyen-checkout__radio_group__label--no-radio {
+    color: inherit;
+}
+
+.adyen-checkout__radio_group__label--no-radio.adyen-checkout__radio_group__label--no-radio--invalid {
+   color: token(color-outline-critical);
+}
+
+.adyen-checkout__radio_group--button {
+    .adyen-checkout__radio_group__label--no-radio {
+        padding: token(spacer-060);
+        padding-left: calc(token(spacer-060) + token(spacer-090));
+        width: 100%;
+        border: token(border-width-s) solid token(color-outline-primary);
+        border-radius: token(border-radius-m);
+        background-color: token(color-background-primary);
+    }
+
+    .adyen-checkout__radio_group__input:checked + .adyen-checkout__radio_group__label--no-radio {
+        box-shadow: 0 0 0 0.5px token(color-outline-primary-active);
+        border-color: token(color-outline-primary-active);
+    }
+
+    .adyen-checkout__radio_group__input + .adyen-checkout__radio_group__label--no-radio:hover {
+        border-color: token(color-outline-primary-active);
+    }
+
+    .adyen-checkout__radio_group__input:checked:focus + .adyen-checkout__radio_group__label--no-radio,
+    .adyen-checkout__radio_group__input:checked:active + .adyen-checkout__radio_group__label--no-radio {
+        box-shadow: 0 0 0 0.5px token(color-outline-primary-active);
+        border-color: token(color-outline-primary-active);
+    }
+
+    .adyen-checkout__radio_group__input:checked:focus + .adyen-checkout__radio_group__label--no-radio {
+        border: token(border-width-m) solid token(color-outline-primary-active);
+    }
+
+    .adyen-checkout__radio_group-extended__label-wrapper{
+        display: flex;
+
+        .adyen-checkout__radio_group-extended__label{
+            width: 100%;
+        }
+
+        .adyen-checkout-input__inline-validation{
+            margin-right: token(spacer-000);
+            display: none;
+        }
+
+        .adyen-checkout-input__inline-validation.adyen-checkout-input__inline-validation--valid{
+            display:block
+        }
+
+    }
+}

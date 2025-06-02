@@ -8,6 +8,11 @@ import Address from '../../../../internal/Address';
 import CardHolderName from './CardHolderName';
 import Installments from './Installments';
 import DisclaimerMessage from '../../../../internal/DisclaimerMessage';
+import RadioGroupExtended from '../../../../internal/FormFields/RadioGroupExtended';
+import Field from '../../../../internal/FormFields/Field';
+import { mapDualBrandButtons } from '../utils';
+import Fieldset from '../../../../internal/FormFields/Fieldset';
+import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 
 export const CardFieldsWrapper = ({
     // vars created in CardInput:
@@ -71,6 +76,8 @@ export const CardFieldsWrapper = ({
     onFieldFocusAnalytics,
     onFieldBlurAnalytics
 }) => {
+    const { i18n } = useCoreContext();
+
     const cardHolderField = (
         <CardHolderName
             required={holderNameRequired}
@@ -104,11 +111,32 @@ export const CardFieldsWrapper = ({
                 errors={sfpState.errors}
                 valid={sfpState.valid}
                 dualBrandingElements={dualBrandSelectElements.length > 0 && dualBrandSelectElements}
-                dualBrandingChangeHandler={extensions.handleDualBrandSelection}
-                dualBrandingSelected={selectedBrandValue}
             />
 
             {hasHolderName && !positionHolderNameOnTop && cardHolderField}
+
+            {dualBrandSelectElements.length > 0 && dualBrandSelectElements && (
+                <Fieldset classNameModifiers={['dual-brand-switcher']} label={i18n.get('creditCard.dualBrand.title')}>
+                    <Field
+                        classNameModifiers={['dualBrandSwitcher', 'no-borders']}
+                        name={'dualBrandSwitcher'}
+                        label={i18n.get('creditCard.dualBrand.description')}
+                        showContextualElement={false}
+                        showErrorElement={false}
+                        contextVisibleToScreenReader={false}
+                    >
+                        <RadioGroupExtended
+                            name={'dualBrandSwitcher'}
+                            value={selectedBrandValue} // Set which button is in a selected (checked) state
+                            items={mapDualBrandButtons(dualBrandSelectElements, brandsConfiguration)}
+                            onChange={extensions.handleDualBrandSelection}
+                            required={true}
+                            showSelectedTick={true}
+                            // showRadioIcon={true}
+                        />
+                    </Field>
+                </Fieldset>
+            )}
 
             {showKCP && (
                 <KCPAuthentication

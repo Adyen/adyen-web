@@ -118,6 +118,7 @@ export enum TxVariants {
     trustly = 'trustly',
     paybybank_AIS_DD = 'paybybank_AIS_DD',
     riverty = 'riverty',
+    paybybank_pix = 'paybybank_pix',
     /** Redirect */
 
     /** Klarna */

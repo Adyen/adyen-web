@@ -117,6 +117,7 @@ const ComponentsNameMap = {
     [TxVariants.trustly]: 'Trustly',
     [TxVariants.paybybank_AIS_DD]: 'PayByBankUS',
     [TxVariants.riverty]: 'Riverty',
+    [TxVariants.paybybank_pix]: 'PayByBankPix',
     /** Redirect */
 
     /** Klarna */

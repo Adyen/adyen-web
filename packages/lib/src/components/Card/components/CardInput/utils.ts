@@ -16,9 +16,9 @@ import { PARTIAL_ADDRESS_SCHEMA } from '../../../internal/Address/constants';
 import { InstallmentsObj } from './components/Installments/Installments';
 import { SFPProps } from '../../../internal/SecuredFields/SFP/types';
 import { BRAND_READABLE_NAME_MAP, DEFAULT_CARD_GROUP_TYPES } from '../../../internal/SecuredFields/lib/constants';
-import { UseImageHookType } from '../../../../core/Context/useImage';
+import useImage, { UseImageHookType } from '../../../../core/Context/useImage';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
-import { CardConfiguration } from '../../types';
+import { CardBrandsConfiguration, CardConfiguration, DualBrandSelectElement } from '../../types';
 import { CardConfigData } from '../../../../core/Analytics/types';
 import { DEFAULT_CHALLENGE_WINDOW_SIZE } from '../../../ThreeDS2/constants';
 import CardInputDefaultProps from './defaultProps';
@@ -322,4 +322,22 @@ export const getCardConfigData = (cardProps: CardConfiguration): CardConfigData 
     };
 
     return configData;
+};
+
+export const mapDualBrandButtons = (dualBrandSelectElements: DualBrandSelectElement[], brandsConfiguration: CardBrandsConfiguration): any => {
+    return dualBrandSelectElements.map(item => {
+        const brand = item.id;
+        const getImage = useImage();
+        const imageName = brand === 'card' ? 'nocard' : brand;
+        const imageURL = brandsConfiguration[brand]?.icon ?? getCardImageUrl(imageName, getImage);
+
+        // TODO - check below if we have to still generate altName through the mapping function or whether it just
+        //  corresponds to item.brandObject.localeBrand
+        return {
+            id: item.id,
+            name: item.brandObject.localeBrand || item.brandObject.brand,
+            imageURL,
+            altName: getFullBrandName(brand)
+        };
+    });
 };

@@ -11,7 +11,7 @@ import { alternativeLabelContent } from './FieldLabelAlternative';
 
 export default function CardNumber(props: CardNumberProps) {
     const { i18n } = useCoreContext();
-    const { error = '', isValid = false, onFocusField = () => {}, dualBrandingElements, dualBrandingChangeHandler, dualBrandingSelected } = props;
+    const { error = '', isValid = false, onFocusField = () => {}, dualBrandingElements } = props;
 
     const handleIconClick = () => {
         onFocusField(ENCRYPTED_CARD_NUMBER);
@@ -52,20 +52,14 @@ export default function CardNumber(props: CardNumberProps) {
             )}
 
             {dualBrandingElements && !error && (
-                <div
-                    className={classNames([
-                        'adyen-checkout__card__dual-branding__buttons',
-                        { 'adyen-checkout__card__dual-branding__buttons--active': isValid }
-                    ])}
-                >
+                <div className={classNames(['adyen-checkout__card__dual-branding__icons'])}>
                     {dualBrandingElements.map(element => (
                         <DualBrandingIcon
                             key={element.id}
                             brand={element.id}
                             brandsConfiguration={props.brandsConfiguration}
-                            onClick={dualBrandingChangeHandler}
                             dataValue={element.id}
-                            notSelected={dualBrandingSelected !== '' && dualBrandingSelected !== element.id}
+                            onClick={handleIconClick}
                         />
                     ))}
                 </div>

@@ -1,5 +1,6 @@
 import { FastlaneWindowInstance, FastlaneOptions } from '../components/PayPalFastlane/types';
 import { ApplePayButtonStyle, ApplePayButtonType, ApplePayWebConfiguration } from '../components/ApplePay/types';
+import { IAdyenPasskey } from '../components/PayByBankPix/services/types';
 
 declare module 'preact' {
     namespace JSX {
@@ -40,5 +41,7 @@ declare global {
             buildClientProfile?(srciDpaId?: string): any;
             correlationId?: string;
         };
+
+        AdyenPasskey: { default: IAdyenPasskey };
     }
 }

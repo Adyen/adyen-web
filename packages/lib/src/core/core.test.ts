@@ -10,6 +10,7 @@ import Redirect from '../components/Redirect';
 import { PaymentActionsType } from '../types/global-types';
 
 jest.mock('./Services/get-translations');
+jest.mock('./CheckoutSession');
 
 const sessionSetupResponseMock: CheckoutSessionSetupResponse = {
     id: 'session-id',
@@ -20,8 +21,8 @@ const sessionSetupResponseMock: CheckoutSessionSetupResponse = {
     },
     expiresAt: '',
     paymentMethods: {
-        paymentMethods: [],
-        storedPaymentMethods: []
+        paymentMethods: [{}],
+        storedPaymentMethods: [{}]
     },
     returnUrl: '',
     configuration: {},
@@ -337,6 +338,72 @@ describe('Core', () => {
             });
 
             void expect(async () => await checkout.initialize()).rejects.toThrow('You must specify a countryCode');
+        });
+    });
+
+    describe('submitDetails', () => {
+        const details = { details: { redirectResult: 'dummy-redirect-result' } };
+        const mockOnPaymentCompleted = jest.fn();
+        const mockOnError = jest.fn();
+        const mockAfterAdditionalDetails = jest.fn();
+
+        it('calls onPaymentCompleted for the successful payment', async () => {
+            const submitDetailsRes = { resultCode: 'Authorised', sessionData: 'dummySessionData' };
+            // @ts-ignore: testing purpose
+            jest.spyOn(Session.prototype, 'submitDetails').mockImplementation(() => {
+                return Promise.resolve(submitDetailsRes);
+            });
+
+            const core = new AdyenCheckout({
+                countryCode: 'US',
+                clientKey: 'test_CLIENT_KEY',
+                session: { id: 'session-id' },
+                environment: 'test',
+                exposeLibraryMetadata: false,
+                onPaymentCompleted: mockOnPaymentCompleted,
+                onError: mockOnError
+            });
+            await core.initialize();
+            core.submitDetails(details);
+
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+            expect(mockOnPaymentCompleted).toHaveBeenCalledWith(submitDetailsRes);
+        });
+
+        it('calls afterAdditionalDetails if there is an action from the response that needs to be exposed', async () => {
+            const submitDetailsRes = {
+                resultCode: 'RedirectShopper',
+                sessionData: 'dummySessionData',
+                action: {
+                    paymentData: 'mockPaymentData',
+                    paymentMethodType: 'paybybank_pix',
+                    type: 'redirect'
+                }
+            };
+            // @ts-ignore test purpose
+            jest.spyOn(Session.prototype, 'submitDetails').mockImplementation(() => {
+                return Promise.resolve(submitDetailsRes);
+            });
+
+            const core = new AdyenCheckout({
+                countryCode: 'US',
+                clientKey: 'test_CLIENT_KEY',
+                session: { id: 'session-id' },
+                environment: 'test',
+                exposeLibraryMetadata: false,
+                onPaymentCompleted: mockOnPaymentCompleted,
+                onError: mockOnError,
+                afterAdditionalDetails: mockAfterAdditionalDetails
+            });
+            await core.initialize();
+            core.modules = global.commonCoreProps.modules;
+            core.submitDetails(details);
+
+            const flushPromises = () => new Promise(process.nextTick);
+            await flushPromises();
+
+            expect(mockAfterAdditionalDetails).toHaveBeenCalled();
         });
     });
 });
