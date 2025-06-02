@@ -337,4 +337,10 @@ export interface CoreConfiguration {
             translations?: string;
         };
     };
+    /**
+     * Used internally to skip setup on session flow. (Can be updated and make the property available for everyone)
+     *
+     * @internal
+     */
+    _skipSessionSetup?: boolean;
 }

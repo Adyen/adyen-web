@@ -118,7 +118,7 @@ class Core implements ICore {
     }
 
     private async initializeCore(): Promise<this> {
-        if (this.session) {
+        if (!this.options._skipSessionSetup && this.session) {
             return this.session
                 .setupSession(this.options)
                 .then(sessionResponse => {
@@ -188,7 +188,7 @@ class Core implements ICore {
             });
         }
 
-        if (this.session) {
+        if (this.session || this.options._skipSessionSetup) {
             promise = this.session.submitDetails(details).catch(error => {
                 this.options.onError?.(error);
                 return Promise.reject(error);

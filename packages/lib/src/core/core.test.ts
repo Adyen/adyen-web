@@ -33,6 +33,9 @@ const sessionSetupResponseMock: CheckoutSessionSetupResponse = {
 const setupSessionSpy = jest.spyOn(Session.prototype, 'setupSession').mockImplementation(() => {
     return Promise.resolve(sessionSetupResponseMock);
 });
+beforeEach(() => {
+    setupSessionSpy.mockClear();
+});
 
 describe('Core', () => {
     describe('Setting locale', () => {
@@ -68,6 +71,18 @@ describe('Core', () => {
 
             await checkout.initialize();
             expect(setupSessionSpy).toHaveBeenCalledWith(expect.objectContaining({ session: { id: 'session-id', sessionData: 'session-data' } }));
+        });
+        test('should skip the setup call in session flow if _skipSessionSetup is passed', async () => {
+            const checkout = new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456',
+                session: { id: 'session-id', sessionData: 'session-data' },
+                _skipSessionSetup: true
+            });
+
+            await checkout.initialize();
+            expect(setupSessionSpy).not.toHaveBeenCalled();
         });
     });
 
