@@ -6,7 +6,7 @@ import { getUniqueId } from '../../../../utils/idGenerator';
 
 interface FieldsetProps {
     children: ComponentChildren;
-    classNameModifiers: string[];
+    classNameModifiers?: string[];
     label?: string;
     description?: string;
     readonly?: boolean;

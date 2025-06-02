@@ -24,8 +24,8 @@ test.describe('Custom Card - Dual branding', () => {
 
         const cardData: any = await page.evaluate('window.customCardSeparate.data');
 
-        // Check brand has not been set in paymentMethod data
-        expect(cardData.paymentMethod.brand).toBe(undefined);
+        // Check brand has been set, by default, in paymentMethod data
+        expect(cardData.paymentMethod.brand).toBe('bcmc');
     });
 
     test('#2 Entering a dual branded number and clicking the icons, sets the expected values in state', async ({
@@ -35,9 +35,6 @@ test.describe('Custom Card - Dual branding', () => {
         await customCard.typeCardNumber(BCMC_CARD);
 
         await customCard.waitForVisibleBrands();
-
-        // Select brand
-        await customCard.selectBrand('bcmc');
 
         // For some reason: await page.evaluate('window.customCardSeparate.data'); is really flaky in this test...
         // ...so we're doing it this way instead. The test will timeout if brand *not* set to expected value

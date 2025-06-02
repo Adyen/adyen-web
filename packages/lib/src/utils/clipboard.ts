@@ -8,7 +8,7 @@ export function copyToClipboard(value) {
     }
 
     const copyInput = createInput(value);
-    
+
     copyInput.select();
 
     document.execCommand('copy');
