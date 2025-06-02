@@ -10,8 +10,7 @@ import Installments from './Installments';
 import DisclaimerMessage from '../../../../internal/DisclaimerMessage';
 import RadioGroupExtended from '../../../../internal/FormFields/RadioGroupExtended';
 import Field from '../../../../internal/FormFields/Field';
-import { getCardImageUrl, getFullBrandName } from '../utils';
-import useImage from '../../../../../core/Context/useImage';
+import { mapDualBrandButtons } from '../utils';
 import Fieldset from '../../../../internal/FormFields/Fieldset';
 import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 
@@ -129,21 +128,7 @@ export const CardFieldsWrapper = ({
                         <RadioGroupExtended
                             name={'dualBrandSwitcher'}
                             value={selectedBrandValue} // Set which button is in a selected (checked) state
-                            items={dualBrandSelectElements.map(item => {
-                                const brand = item.id;
-                                const getImage = useImage();
-                                const imageName = brand === 'card' ? 'nocard' : brand;
-                                const imageURL = brandsConfiguration[brand]?.icon ?? getCardImageUrl(imageName, getImage);
-
-                                // TODO - check below if we have to still generate altName through the mapping function or whether it just
-                                //  corresponds to item.brandObject.localeBrand
-                                return {
-                                    id: item.id,
-                                    name: item.brandObject.localeBrand || item.brandObject.brand,
-                                    imageURL,
-                                    altName: getFullBrandName(brand)
-                                };
-                            })}
+                            items={mapDualBrandButtons(dualBrandSelectElements, brandsConfiguration)}
                             onChange={extensions.handleDualBrandSelection}
                             required={true}
                             showSelectedTick={true}
