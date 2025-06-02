@@ -54,7 +54,7 @@ function PreAuthorizedDebitCanadaComponent({
     setComponentRef,
     enableStoreDetails,
     showContextualElement = true
-}: PreAuthorizedDebitCanadaComponentProps) {
+}: Readonly<PreAuthorizedDebitCanadaComponentProps>) {
     const getImage = useImage();
     const { i18n } = useCoreContext();
     const [status, setStatus] = useState('ready');
