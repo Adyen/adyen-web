@@ -1,11 +1,22 @@
 import { h } from 'preact';
 import Voucher from '../../../internal/Voucher';
-
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import useImage from '../../../../core/Context/useImage';
 import { extractCommonPropsForVoucher } from '../../../internal/Voucher/utils';
+import type { ActionHandledReturnObject } from '../../../../types/global-types';
 
-export default function BankTransferResult(props) {
+export interface BankTransferResultProps {
+    ref?: (ref: any) => void;
+    paymentMethodType?: string;
+    reference?: string;
+    totalAmount?: { value: number; currency: string };
+    beneficiary?: string;
+    iban?: string;
+    bic?: string;
+    onActionHandled?: (actionHandledObj: ActionHandledReturnObject) => void;
+}
+
+export default function BankTransferResult(props: BankTransferResultProps) {
     const { reference } = props;
     const { i18n } = useCoreContext();
     const getImage = useImage();
