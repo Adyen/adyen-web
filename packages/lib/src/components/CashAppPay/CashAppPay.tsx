@@ -161,7 +161,7 @@ export class CashAppPay extends UIElement<CashAppPayConfiguration> {
                         ref={ref => {
                             this.componentRef = ref;
                         }}
-                        enableStoreDetails={true}
+                        enableStoreDetails={this.props.enableStoreDetails}
                         cashAppService={this.cashAppService}
                         onChangeStoreDetails={this.handleOnChangeStoreDetails}
                         onError={this.handleError}

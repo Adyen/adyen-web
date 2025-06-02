@@ -1,29 +1,27 @@
 import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
-// import FormInstruction from '../../internal/FormInstruction';
-// import { AccountTypeSelector } from './AccountTypeSelector';
 import Fieldset from '../../internal/FormFields/Fieldset';
 import useForm from '../../../utils/useForm';
 import Field from '../../internal/FormFields/Field';
 import InputText from '../../internal/FormFields/InputText';
 import { preAuthorizedDebitCanadaFormatters, preAuthorizedDebitCanadaValidationRules } from './validate';
 import StoreDetails from '../../internal/StoreDetails';
+import useImage from '../../../core/Context/useImage';
+import { SettlementInfo } from './SettlementInfo';
 
 import type { PayButtonProps } from '../../internal/PayButton/PayButton';
 import type { ComponentMethodsRef } from '../../internal/UIElement/types';
 import type { PreAuthorizedDebitCanadaPlaceholders } from '../types';
-import useImage from '../../../core/Context/useImage';
-import { SettlementInfo } from './SettlementInfo';
-// import type { AchStateErrors } from './useSRPanelForACHErrors';
-// import useSRPanelForAchErrors from './useSRPanelForACHErrors';
 
-type PreAuthorizedDebitCanadaForm = {
+import './PreAuthorizedDebitCanada.scss';
+
+interface PreAuthorizedDebitCanadaForm {
     ownerName: string;
     bankAccountNumber: string;
     bankCode: string;
     bankLocationId: string;
-};
+}
 
 interface PreAuthorizedDebitCanadaComponentProps {
     onChange({
@@ -68,12 +66,9 @@ function PreAuthorizedDebitCanadaComponent({
 
     const isFormDisabled = status === 'loading';
 
-    // const isValidating = useRef(false);
-
     const achRef = useRef<ComponentMethodsRef>({
         setStatus: setStatus,
         showValidation: () => {
-            // isValidating.current = true;
             triggerValidation();
         }
     });
@@ -81,8 +76,6 @@ function PreAuthorizedDebitCanadaComponent({
     useEffect(() => {
         setComponentRef(achRef.current);
     }, [setComponentRef, achRef.current]);
-
-    // useSRPanelForAchErrors({ errors: errors as AchStateErrors, data, isValidating });
 
     useEffect(() => {
         onChange({ data, valid, errors, isValid, storePaymentMethod });
@@ -171,7 +164,9 @@ function PreAuthorizedDebitCanadaComponent({
                 </Field>
             </Fieldset>
 
-            {enableStoreDetails && <StoreDetails disabled={isFormDisabled} onChange={setStorePaymentMethod} />}
+            {enableStoreDetails && (
+                <StoreDetails className={'adyen-checkout_eftpad-canada-store-details'} disabled={isFormDisabled} onChange={setStorePaymentMethod} />
+            )}
 
             <SettlementInfo />
 

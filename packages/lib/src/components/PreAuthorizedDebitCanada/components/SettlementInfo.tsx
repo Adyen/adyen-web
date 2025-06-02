@@ -3,8 +3,6 @@ import { useCoreContext } from '../../../core/Context/CoreProvider';
 import useImage from '../../../core/Context/useImage';
 import Img from '../../internal/Img';
 
-import './SettlementInfo.scss';
-
 export const SettlementInfo = () => {
     const { i18n } = useCoreContext();
     const getImage = useImage();

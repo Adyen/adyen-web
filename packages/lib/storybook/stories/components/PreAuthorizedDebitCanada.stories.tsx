@@ -2,8 +2,8 @@ import React from 'react';
 import { Checkout } from '../Checkout';
 import { ComponentContainer } from '../ComponentContainer';
 
-// import { AdyenCheckout } from '../../../src/core/AdyenCheckout';
-// import Dropin from '../../../src/components/Dropin';
+import { AdyenCheckout } from '../../../src/core/AdyenCheckout';
+import Dropin from '../../../src/components/Dropin';
 import PreAuthorizedDebitCanada from '../../../src/components/PreAuthorizedDebitCanada';
 
 import type { MetaConfiguration, StoryConfiguration } from '../types';
@@ -28,17 +28,20 @@ export const Default: PreAuthorizedDebitCanadaStory = {
         // }
     }
 };
-//
-// export const WithDropin: ACHStory = {
-//     render: ({ componentConfiguration, ...checkoutConfig }) => {
-//         AdyenCheckout.register(Ach);
-//
-//         return (
-//             <Checkout checkoutConfig={checkoutConfig}>
-//                 {checkout => <ComponentContainer element={new Dropin(checkout, componentConfiguration)} />}
-//             </Checkout>
-//         );
-//     }
-// };
+
+export const WithDropin: PreAuthorizedDebitCanadaStory = {
+    render: ({ componentConfiguration, ...checkoutConfig }) => {
+        AdyenCheckout.register(PreAuthorizedDebitCanada);
+
+        return (
+            <Checkout checkoutConfig={checkoutConfig}>
+                {checkout => <ComponentContainer element={new Dropin(checkout, componentConfiguration)} />}
+            </Checkout>
+        );
+    },
+    args: {
+        countryCode: 'CA'
+    }
+};
 
 export default meta;

@@ -30,7 +30,7 @@ export const Default: CardStory = {
             disableIOSArrowKeys: false,
             // disclaimerMessage,
             // doBinLookup: false,
-            enableStoreDetails: true,
+            enableStoreDetails: false,
             // exposeExpiryDate: true,
             forceCompat: false,
             hasHolderName: false,
