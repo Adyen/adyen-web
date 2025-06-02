@@ -2,11 +2,12 @@ import { h, Fragment } from 'preact';
 import UIElement from '../internal/UIElement/UIElement';
 import { CoreProvider } from '../../core/Context/CoreProvider';
 import { TxVariants } from '../tx-variants';
-import { PreAuthorizedDebitCanadaConfiguration } from './types';
 import PreAuthorizedDebitCanadaComponent from './components/PreAuthorizedDebitCanadaComponent';
+import { SettlementInfo } from './components/SettlementInfo';
 import RedirectButton from '../internal/RedirectButton';
 import { payAmountLabel } from '../internal/PayButton';
-import { SettlementInfo } from './components/SettlementInfo';
+
+import type { PreAuthorizedDebitCanadaConfiguration } from './types';
 
 export class PreAuthorizedDebitCanada extends UIElement<PreAuthorizedDebitCanadaConfiguration> {
     public static type = TxVariants.eft_directdebit_CA;

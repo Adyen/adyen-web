@@ -2,6 +2,7 @@ import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import Fieldset from '../../internal/FormFields/Fieldset';
+import FormInstruction from '../../internal/FormInstruction';
 import useForm from '../../../utils/useForm';
 import Field from '../../internal/FormFields/Field';
 import InputText from '../../internal/FormFields/InputText';
@@ -83,6 +84,8 @@ function PreAuthorizedDebitCanadaComponent({
 
     return (
         <div className="adyen-checkout__eftpad-canada">
+            <FormInstruction />
+
             <Fieldset classNameModifiers={[]}>
                 <Field
                     label={i18n.get('eftpad-canada.input.accountHolderName.label')}
