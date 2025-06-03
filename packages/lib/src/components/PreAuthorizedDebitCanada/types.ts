@@ -11,7 +11,7 @@ export interface PreAuthorizedDebitCanadaConfiguration extends UIElementProps {
      */
     showContextualElement?: boolean;
     /**
-     * Enables storing the payment method using the Checkbox
+     * Enables storing the payment method using the Checkbox. Used for Advanced flow only
      * @default false
      */
     enableStoreDetails?: boolean;

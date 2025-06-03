@@ -36,6 +36,13 @@ export class PreAuthorizedDebitCanada extends UIElement<PreAuthorizedDebitCanada
         };
     }
 
+    public override formatProps(props: PreAuthorizedDebitCanadaConfiguration): PreAuthorizedDebitCanadaConfiguration {
+        return {
+            enableStoreDetails: props.session?.configuration?.enableStoreDetails ?? props.enableStoreDetails,
+            ...props
+        };
+    }
+
     public override get isValid(): boolean {
         if (this.props.storedPaymentMethodId) {
             return true;
@@ -83,7 +90,7 @@ export class PreAuthorizedDebitCanada extends UIElement<PreAuthorizedDebitCanada
                         placeholders={this.props.placeholders}
                         setComponentRef={this.setComponentRef}
                         showContextualElement={this.props.showContextualElement}
-                        enableStoreDetails={true}
+                        enableStoreDetails={this.props.enableStoreDetails}
                     />
                 )}
             </CoreProvider>

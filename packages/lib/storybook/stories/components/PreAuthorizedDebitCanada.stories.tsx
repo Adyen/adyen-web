@@ -23,9 +23,6 @@ export const Default: PreAuthorizedDebitCanadaStory = {
     ),
     args: {
         countryCode: 'CA'
-        // componentConfiguration: {
-        //     // enableStoreDetails: false
-        // }
     }
 };
 
