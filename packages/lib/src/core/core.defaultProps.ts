@@ -2,8 +2,7 @@ import type { CoreConfiguration } from './types';
 
 const defaultProps: CoreConfiguration = {
     exposeLibraryMetadata: true,
-    showPayButton: true,
-    _skipSessionSetup: false
+    showPayButton: true
 };
 
 export { defaultProps };

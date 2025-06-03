@@ -8,7 +8,7 @@ import { CheckoutSessionDetailsResponse } from '../../CheckoutSession/types';
 function submitDetails(details, session: Session): Promise<CheckoutSessionDetailsResponse> {
     const path = `${API_VERSION}/sessions/${session.id}/paymentDetails?clientKey=${session.clientKey}`;
     const data = {
-        ...(session.data && { sessionData: session.data }),
+        sessionData: session.data,
         ...details
     };
 
