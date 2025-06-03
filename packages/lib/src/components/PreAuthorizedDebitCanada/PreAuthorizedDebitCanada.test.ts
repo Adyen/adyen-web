@@ -115,7 +115,6 @@ describe('PreAuthorizedDebitCanada', () => {
             await user.type(screen.getByLabelText(/Account number/i), '12345');
             await user.type(screen.getByLabelText(/Institution number/), '123');
             await user.type(screen.getByLabelText(/Transit number/i), '12345');
-            await user.click(screen.getByLabelText(/Save for my next payment/i));
 
             await user.click(screen.queryByRole('button', { name: /Pay/i }));
 
@@ -137,7 +136,6 @@ describe('PreAuthorizedDebitCanada', () => {
             await user.type(screen.getByLabelText(/Account number/i), '1234567');
             await user.type(screen.getByLabelText(/Institution number/), '2');
             await user.type(screen.getByLabelText(/Transit number/i), '12345');
-            await user.click(screen.getByLabelText(/Save for my next payment/i));
 
             await user.click(screen.queryByRole('button', { name: /Pay/i }));
 
@@ -159,7 +157,6 @@ describe('PreAuthorizedDebitCanada', () => {
             await user.type(screen.getByLabelText(/Account number/i), '1234567');
             await user.type(screen.getByLabelText(/Institution number/), '123');
             await user.type(screen.getByLabelText(/Transit number/i), '1');
-            await user.click(screen.getByLabelText(/Save for my next payment/i));
 
             await user.click(screen.queryByRole('button', { name: /Pay/i }));
 
