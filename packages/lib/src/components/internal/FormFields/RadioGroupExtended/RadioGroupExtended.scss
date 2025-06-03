@@ -52,7 +52,7 @@
     }
 
     .adyen-checkout__radio_group__input:checked:focus + .adyen-checkout__radio_group__label--no-radio {
-        border: token(border-width-m) solid token(color-outline-primary-active);
+        outline: token(border-width-m) solid token(color-outline-primary-active);
     }
 
     .adyen-checkout__radio_group-extended__label-wrapper{
@@ -68,7 +68,9 @@
         }
 
         .adyen-checkout-input__inline-validation.adyen-checkout-input__inline-validation--valid{
-            display:block
+            display:block;
+            margin-left: token(spacer-040);
+            margin-top: 1px;
         }
 
     }
