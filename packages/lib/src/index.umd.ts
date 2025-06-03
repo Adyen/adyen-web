@@ -1,4 +1,4 @@
-import { AdyenCheckout } from './core/AdyenCheckout';
+import { AdyenCheckout, Core } from './core/AdyenCheckout';
 import { NewableComponent } from './core/core.registry';
 import * as components from './components';
 import createComponent from './create-component.umd';
@@ -10,6 +10,7 @@ const Classes: NewableComponent[] = Object.keys(Components).map(key => Component
 AdyenCheckout.register(...Classes);
 
 const AdyenWeb = {
+    Core,
     AdyenCheckout,
     createComponent,
     ...components

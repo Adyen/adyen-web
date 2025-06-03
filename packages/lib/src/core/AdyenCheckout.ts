@@ -19,4 +19,4 @@ AdyenCheckout.setBundleType = (type: string) => {
     Core.setBundleType(type);
 };
 
-export { AdyenCheckout };
+export { AdyenCheckout, Core };
