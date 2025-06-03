@@ -1,3 +1,4 @@
+@use 'styles/index';
 @import 'styles/variable-generator';
 
 .adyen-checkout__radio_group__label--no-radio {
@@ -73,5 +74,13 @@
             margin-top: 1px;
         }
 
+    }
+}
+
+.adyen-checkout__radio_group__input-wrapper{
+    &.adyen-checkout__field--50 {
+        @include index.screen-s-and-down {
+            min-width: 100%;
+        }
     }
 }
