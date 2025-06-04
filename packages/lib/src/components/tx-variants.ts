@@ -25,6 +25,7 @@ export enum TxVariants {
     ach = 'ach',
     directdebit_GB = 'directdebit_GB',
     sepadirectdebit = 'sepadirectdebit',
+    eft_directdebit_CA = 'eft_directdebit_CA',
     /** Direct debit */
 
     /** Open Invoice */
