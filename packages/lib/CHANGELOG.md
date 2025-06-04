@@ -1,5 +1,19 @@
 # @adyen/adyen-web
 
+## 6.16.0
+
+### Minor Changes
+
+- UPI - Updated label 'Enter UPI ID' to 'UPI ID' ([#3348](https://github.com/Adyen/adyen-web/pull/3348))
+
+- A new UI for switching between dual brands to comply with new guidelines from the schemes ([#3336](https://github.com/Adyen/adyen-web/pull/3336))
+
+### Patch Changes
+
+- A11y: Remove radiogroup on dropin when rending a single payment method ([#3338](https://github.com/Adyen/adyen-web/pull/3338))
+
+- CSS and markup tweaks to new dual branding UI (relates to #3336) ([#3346](https://github.com/Adyen/adyen-web/pull/3346))
+
 ## 6.15.0
 
 ### Minor Changes
