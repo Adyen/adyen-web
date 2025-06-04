@@ -112,14 +112,14 @@ describe('CardNumber and the dual branding UI', () => {
         //  Dual branding UI visible
         expect(wrapper.find('.adyen-checkout__fieldset--dual-brand-switcher')).toHaveLength(1);
 
-        // 4 error fields - all hidden (three for the securedFields, one for the dual brand switcher)
-        expect(wrapper.find('.adyen-checkout-contextual-text--error.adyen-checkout-contextual-text--hidden')).toHaveLength(4);
+        // 3 error fields - all hidden
+        expect(wrapper.find('.adyen-checkout-contextual-text--error.adyen-checkout-contextual-text--hidden')).toHaveLength(3);
 
         cardInputRef.showValidation();
         wrapper.update();
 
-        // 3 error fields (or the securedFields) - all visible, so only the one for the dual brand switcher still hidden
-        expect(wrapper.find('.adyen-checkout-contextual-text--error.adyen-checkout-contextual-text--hidden')).toHaveLength(1);
+        // 3 error fields all visible
+        expect(wrapper.find('.adyen-checkout-contextual-text--error.adyen-checkout-contextual-text--hidden')).toHaveLength(0);
 
         //  Dual branding UI still visible
         expect(wrapper.find('.adyen-checkout__fieldset--dual-brand-switcher')).toHaveLength(1);
