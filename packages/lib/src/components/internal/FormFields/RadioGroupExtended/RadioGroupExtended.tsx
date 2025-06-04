@@ -37,7 +37,7 @@ export default function RadioGroupExtended(props: RadioGroupExtendedProps) {
                 const uniqueId = getUniqueId(uniqueIdBase);
 
                 return (
-                    <div key={item.id} className="adyen-checkout__radio_group__input-wrapper">
+                    <div key={item.id} className="adyen-checkout__radio_group__input-wrapper adyen-checkout__field--50">
                         <input
                             id={uniqueId}
                             type={'radio'}

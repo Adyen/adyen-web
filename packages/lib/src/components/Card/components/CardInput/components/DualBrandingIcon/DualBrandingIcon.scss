@@ -5,7 +5,7 @@
     pointer-events: auto;
 
     .adyen-checkout__card__cardNumber__brandIcon {
-        cursor: pointer;
+        cursor: inherit;
         opacity: 1;
 
         &:nth-child(1) {
