@@ -90,7 +90,7 @@ $deduct-width: token(spacer-040);
 
 .adyen-checkout__field--col-40 {
     @include index.screen-s-and-up {
-        width: calc(40% - $deduct-width);
+        width: 100%;
     }
 }
 

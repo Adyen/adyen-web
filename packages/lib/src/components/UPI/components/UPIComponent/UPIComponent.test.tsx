@@ -36,7 +36,7 @@ describe('UPI component', () => {
         test('should show upi_collect as the first tab, and upi_qr as the second, if no app list is provided.', async () => {
             customRender(<UPIComponent defaultMode={'qrCode'} onChange={onChangeMock} showPayButton={false}></UPIComponent>);
             const segments = await screen.findAllByRole('button');
-            expect(segments[0]).toHaveTextContent('Enter UPI ID');
+            expect(segments[0]).toHaveTextContent('UPI ID');
             expect(segments[1]).toHaveTextContent('QR code');
         });
 
@@ -86,7 +86,7 @@ describe('UPI component', () => {
             customRender(<UPIComponent defaultMode={'qrCode'} onChange={onChangeMock} showPayButton={false}></UPIComponent>);
             const segments = await screen.findAllByRole('button');
             expect(segments[0]).toHaveTextContent('QR code');
-            expect(segments[1]).toHaveTextContent('Enter UPI ID');
+            expect(segments[1]).toHaveTextContent('UPI ID');
         });
     });
 
@@ -164,6 +164,7 @@ describe('UPI component', () => {
 
         test('should call the onChange after selecting the upi collect and filling the data in the vpa input field', async () => {
             const collectApp: App = { id: 'vpa', name: 'Enter UPI ID', type: TxVariants.upi_collect };
+
             const payButtonMock = jest.fn();
             const user = userEvent.setup();
             customRender(
@@ -175,10 +176,9 @@ describe('UPI component', () => {
                     payButton={payButtonMock}
                 ></UPIComponent>
             );
-            const upiCollect = await screen.findByRole('radio', { name: /Enter UPI ID/ });
-            await user.click(upiCollect);
-            const vpaInput = await screen.findByLabelText(/Enter UPI ID \/ VPA/);
-            await user.type(vpaInput, 'test');
+            await user.click(screen.getByRole('radio', { name: /Enter UPI ID/ }));
+            await user.type(screen.getByTestId('input-virtual-payment-address'), 'test@test');
+
             await user.tab();
 
             expect(onChangeMock).toHaveBeenCalledWith({
@@ -207,17 +207,11 @@ describe('UPI component', () => {
             expect(await screen.findByTestId('dummy-pay-button')).toBeInTheDocument();
         });
 
-        test('should show the vpa input field', async () => {
-            customRender(<UPIComponent defaultMode={'vpa'} onChange={onChangeMock} showPayButton={false}></UPIComponent>);
-            const vpaInput = await screen.findByLabelText(/Enter UPI ID \/ VPA/);
-            expect(vpaInput).toBeInTheDocument();
-        });
-
         test('should call onChange with inValid to false if nothing is filled in the vpa input', async () => {
             const user = userEvent.setup();
             customRender(<UPIComponent defaultMode={'vpa'} onChange={onChangeMock} showPayButton={false}></UPIComponent>);
-            const vpaInput = await screen.findByLabelText(/Enter UPI ID \/ VPA/);
-            await user.click(vpaInput);
+            await user.click(screen.getByTestId('input-virtual-payment-address'));
+
             // To blur the input
             await user.tab();
             expect(onChangeMock).toHaveBeenCalledWith({
@@ -231,8 +225,8 @@ describe('UPI component', () => {
         test('should call the onChange with the filled in data and isValid to true, after filling the vpa input field', async () => {
             const user = userEvent.setup();
             customRender(<UPIComponent defaultMode={'vpa'} onChange={onChangeMock} showPayButton={false}></UPIComponent>);
-            const vpaInput = await screen.findByLabelText(/Enter UPI ID \/ VPA/);
-            await user.type(vpaInput, 'test');
+
+            await user.type(screen.getByTestId('input-virtual-payment-address'), 'test');
             await user.tab();
             expect(onChangeMock).toHaveBeenCalledWith({
                 data: { virtualPaymentAddress: 'test' },
