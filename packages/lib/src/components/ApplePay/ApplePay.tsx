@@ -342,13 +342,13 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
 
     private async validateMerchant(resolve, reject) {
         const { hostname: domainName } = window.location;
-        const { clientKey, configuration, loadingContext, initiative } = this.props;
+        const { clientKey, configuration, loadingContext, initiative, domainNameOverride } = this.props;
         const { merchantName, merchantId } = configuration;
         const path = `v1/applePay/sessions?clientKey=${clientKey}`;
         const options = { loadingContext, path };
         const request: ApplePaySessionRequest = {
             displayName: merchantName,
-            domainName,
+            domainName: domainNameOverride || domainName,
             initiative,
             merchantIdentifier: merchantId
         };
