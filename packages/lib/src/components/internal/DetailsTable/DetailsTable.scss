@@ -27,7 +27,7 @@
   &__value {
     max-width: 50%;
     text-align: right;
-    font-weight: bold;
+    font-weight: token(text-body-strongest-font-weight);
   }
 }
 
