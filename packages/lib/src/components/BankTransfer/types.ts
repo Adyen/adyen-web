@@ -1,14 +1,14 @@
 import { UIElementProps } from '../internal/UIElement/types';
+import { BankTransferResultProps } from './components/BankTransferResult/BankTransferResult';
 
-export interface BankTransferConfiguration extends UIElementProps {
-    reference?: string;
-
-    /**
-     * Show/hide email address field
-     * @default true
-     */
-    showEmailAddress?: boolean;
-}
+export type BankTransferConfiguration = UIElementProps &
+    BankTransferResultProps & {
+        /**
+         * Show/hide email address field
+         * @default true
+         */
+        showEmailAddress?: boolean;
+    };
 
 export interface BankTransferState extends UIElementProps {
     data: {
