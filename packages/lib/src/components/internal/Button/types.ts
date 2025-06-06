@@ -1,6 +1,6 @@
 import { h, Ref } from 'preact';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'action' | 'link';
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'action' | 'link' | 'iconOnly';
 
 export interface ButtonProps {
     status?: string;
