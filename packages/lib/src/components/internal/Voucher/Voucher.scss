@@ -10,6 +10,16 @@
 .adyen-checkout__voucher-result__bottom {
     background: token(color-background-primary);
     border: token(border-width-s) solid token(color-separator-primary);
+
+    .adyen-checkout__details-table{
+        border-radius: token(border-radius-m);
+        background: token(color-background-secondary);
+        margin: 0 token(spacer-090) token(spacer-100);
+    }
+
+    .adyen-checkout__details-table__item:first-child {
+        border-top: none;
+    }
 }
 
 .adyen-checkout__voucher-result__top {

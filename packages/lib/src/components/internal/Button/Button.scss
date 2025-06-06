@@ -220,4 +220,44 @@
     .adyen-checkout__spinner {
         @include index.set-spinner-color(token(color-label-on-color), token(color-label-on-color));
     }
+
+    // icon only
+    &.adyen-checkout__button--iconOnly {
+        display: flex;
+        align-items: center;
+        width: auto;
+        height: auto;
+        padding: 0;
+        background: transparent;
+        color: token(button-tertiary-color);
+        border-radius: token(border-radius-xs);
+        box-shadow: token(button-tertiary-box-shadow);
+
+        &:hover {
+             color: token(button-tertiary-hover-color);
+                      background: token(button-tertiary-hover-background-color);
+        }
+
+        &:active {
+            color: token(button-tertiary-active-color);
+            background-color: token(button-tertiary-active-background-color);
+        }
+
+        &:focus {
+            box-shadow: none;
+        }
+
+        &:focus-visible {
+            box-shadow: 0 0 0 token(focus-ring-spacer) token(color-background-primary),0 0 0 token(focus-ring-outline) token(focus-ring-color);
+            outline: 0;
+        }
+
+        &:disabled,
+        &:disabled:hover {
+            box-shadow: none;
+            cursor: not-allowed;
+            opacity: 0.4;
+            user-select: all;
+        }
+    }
 }

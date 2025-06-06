@@ -5,41 +5,42 @@
 
 // simple re-mapping
 $color: map-merge($color, (
-        // this color has been remapped for a11y reasons
+  // this color has been remapped for a11y reasons
         color-label-critical: map-get($color, color-label-on-background-critical-weak),
         color-label-tertiary: map-get($color, color-label-secondary), // label tertiary doesn't have enough contrast
 ));
 
 @function adyen-sdk-generate-css-variables($maps...) {
-    $adyen-output-map: ();
+  $adyen-output-map: ();
 
-    @each $map in $maps {
-        @each $name, $value in $map {
-            $adyen-output-map: map-merge($adyen-output-map, (#{$name}: var(--adyen-sdk-#{$name}, #{$value})));
-        }
+  @each $map in $maps {
+    @each $name, $value in $map {
+      $adyen-output-map: map-merge($adyen-output-map, (#{$name}: var(--adyen-sdk-#{$name}, #{$value})));
     }
+  }
 
-    @return $adyen-output-map;
+  @return $adyen-output-map;
 }
 
 @function token($token, $generate-css-var: true) {
-    $adyen-tokens-map: ();
+  $adyen-tokens-map: ();
 
-    @if $generate-css-var {
-        $adyen-tokens-map: adyen-sdk-generate-css-variables(
-            $color,
-            $text,
-            $focus-ring,
-            $border,
-            $spacer,
-            $shadow,
-            $animation,
-            $toggle,
-            $text-overrides
-        );
-    } @else {
-        $adyen-tokens-map: map-merge($color, $text, $focus-ring, $border, $spacer, $shadow, $animation, $toggle, $text-overrides);
-    }
+  @if $generate-css-var {
+    $adyen-tokens-map: adyen-sdk-generate-css-variables(
+                    $color,
+                    $text,
+                    $focus-ring,
+                    $border,
+                    $spacer,
+                    $shadow,
+                    $animation,
+                    $toggle,
+                    $button,
+                    $text-overrides
+    );
+  } @else {
+    $adyen-tokens-map: map-merge($color, $text, $focus-ring, $border, $spacer, $shadow, $animation, $toggle, $button, $text-overrides);
+  }
 
-    @return map-get($adyen-tokens-map, '#{$token}');
+  @return map-get($adyen-tokens-map, '#{$token}');
 }
