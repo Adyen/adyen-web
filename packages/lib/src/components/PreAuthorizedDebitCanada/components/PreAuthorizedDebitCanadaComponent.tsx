@@ -67,7 +67,7 @@ function PreAuthorizedDebitCanadaComponent({
 
     const isFormDisabled = status === 'loading';
 
-    const achRef = useRef<ComponentMethodsRef>({
+    const componentRef = useRef<ComponentMethodsRef>({
         setStatus: setStatus,
         showValidation: () => {
             triggerValidation();
@@ -75,8 +75,8 @@ function PreAuthorizedDebitCanadaComponent({
     });
 
     useEffect(() => {
-        setComponentRef(achRef.current);
-    }, [setComponentRef, achRef.current]);
+        setComponentRef(componentRef.current);
+    }, [setComponentRef, componentRef.current]);
 
     useEffect(() => {
         onChange({ data, valid, errors, isValid, storePaymentMethod });

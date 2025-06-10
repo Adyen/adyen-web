@@ -34,7 +34,6 @@ const paymentsConfig = {
     // threeDS2RequestData: {
     //     authenticationOnly: false
     // },
-    recurringProcessingModel: 'Subscription',
     channel: 'Web',
     browserInfo: {
         acceptHeader: 'http'
