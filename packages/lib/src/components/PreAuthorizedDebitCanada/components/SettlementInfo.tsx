@@ -9,7 +9,7 @@ export const SettlementInfo = () => {
 
     return (
         <div className="adyen-checkout__eftpad-canada-info">
-            <Img height="18" width="18" src={getImage({ imageFolder: 'components/' })('info')} alt="" ariaHidden={true} />
+            <Img height="18" width="18" src={getImage({ imageFolder: 'components/' })('info_black')} alt="" ariaHidden={true} />
             <div>{i18n.get('eftpad-canada.settlement-info')}</div>
         </div>
     );

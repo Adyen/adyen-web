@@ -21,8 +21,7 @@ const customRender = (ui: h.JSX.Element) => {
     );
 };
 
-// TODO: Fix in another PR
-describe.skip('UPI component', () => {
+describe('UPI component', () => {
     const onChangeMock = jest.fn();
 
     afterEach(() => {
