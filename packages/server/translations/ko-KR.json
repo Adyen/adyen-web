@@ -12,7 +12,7 @@
     "creditCard.expiryDateField.year": "연도",
     "creditCard.storeDetailsButton": "다음을 위해 저장",
     "creditCard.dualBrand.title": "카드 브랜드",
-    "creditCard.dualBrand.description": "Pasirinkite kortelės, kuria pageidaujate atsiskaityti, prekių ženklą. Tai neprivaloma.",
+    "creditCard.dualBrand.description": "결제에 사용할 카드 브랜드를 선택하세요. 이는 선택 사항입니다.",
     "installments": "할부 개월 수",
     "installmentOption": "%{times}x %{partialValue}",
     "installmentOptionMonths": "%{times}개월",
@@ -397,5 +397,17 @@
     "paybybankpix.payment.paymentMethod.label": "결제 수단",
     "paybybankpix.storedPayment.payButton.label": "기존 결제 진행",
     "paybybankpix.storedPayment.additionalLabel": "PIX를 통한 %{receiver} 계정",
-    "paybybankpix.await.fetchDetails": "세부 정보를 가져오는 중..."
+    "paybybankpix.await.fetchDetails": "세부 정보를 가져오는 중...",
+    "eftpad-canada.input.accountHolderName.label": "계좌 소유자 이름",
+    "eftpad-canada.input.accountHolderName.error": "예금주 이름 입력",
+    "eftpad-canada.input.accountNumber.label": "계좌 번호",
+    "eftpad-canada.input.accountNumber.contextualText": "숫자 7~12자",
+    "eftpad-canada.input.accountNumber.error": "7~12자리의 계정 번호 입력",
+    "eftpad-canada.input.institutionNumber.label": "기관 번호",
+    "eftpad-canada.input.institutionNumber.contextualText": "3자리",
+    "eftpad-canada.input.institutionNumber.error": "3자리 기관 번호 입력",
+    "eftpad-canada.input.transitNumber.label": "지점 번호",
+    "eftpad-canada.input.transitNumber.contextualText": "5자리",
+    "eftpad-canada.input.transitNumber.error": "5자리 지점 번호 입력",
+    "eftpad-canada.settlement-info": "내 은행 계좌에서 영업일 기준 1~3일 안에 출금됩니다."
 }

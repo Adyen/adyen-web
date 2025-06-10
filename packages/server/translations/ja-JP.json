@@ -12,7 +12,7 @@
     "creditCard.expiryDateField.year": "年",
     "creditCard.storeDetailsButton": "次回のために保存します",
     "creditCard.dualBrand.title": "カードブランド",
-    "creditCard.dualBrand.description": "お支払いに使用するカードブランドをお選びください。これは任意です。, 결제에 사용할 카드 브랜드를 선택하세요. 이는 선택 사항입니다.",
+    "creditCard.dualBrand.description": "お支払いに使用するカードブランドをお選びください。これは任意です。",
     "installments": "分割回数",
     "installmentOption": "%{times}x %{partialValue}",
     "installmentOptionMonths": "%{times}か月",
@@ -397,5 +397,17 @@
     "paybybankpix.payment.paymentMethod.label": "支払方法",
     "paybybankpix.storedPayment.payButton.label": "支払を続ける",
     "paybybankpix.storedPayment.additionalLabel": "PIX経由で%{receiver}アカウント",
-    "paybybankpix.await.fetchDetails": "詳細を取得しています..."
+    "paybybankpix.await.fetchDetails": "詳細を取得しています...",
+    "eftpad-canada.input.accountHolderName.label": "口座名義",
+    "eftpad-canada.input.accountHolderName.error": "口座名義人名を入力してください",
+    "eftpad-canada.input.accountNumber.label": "口座番号",
+    "eftpad-canada.input.accountNumber.contextualText": "7桁以上12桁以下",
+    "eftpad-canada.input.accountNumber.error": "7～12桁の口座番号を入力してください",
+    "eftpad-canada.input.institutionNumber.label": "金融機関番号",
+    "eftpad-canada.input.institutionNumber.contextualText": "3桁",
+    "eftpad-canada.input.institutionNumber.error": "3桁の機関番号を入力してください",
+    "eftpad-canada.input.transitNumber.label": "トランジット番号",
+    "eftpad-canada.input.transitNumber.contextualText": "5桁",
+    "eftpad-canada.input.transitNumber.error": "5桁のトランジット番号を入力してください",
+    "eftpad-canada.settlement-info": "資金は1〜3営業日以内に銀行口座から引き落とされます。"
 }

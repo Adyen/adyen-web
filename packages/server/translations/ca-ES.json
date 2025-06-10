@@ -398,5 +398,17 @@
     "paybybankpix.payment.paymentMethod.label": "mètode de pagament",
     "paybybankpix.storedPayment.payButton.label": "Continuar el pagament",
     "paybybankpix.storedPayment.additionalLabel": "El compte de %{receiver} a través de PIX",
-    "paybybankpix.await.fetchDetails": "S'estan obtenint les dades..."
+    "paybybankpix.await.fetchDetails": "S'estan obtenint les dades...",
+    "eftpad-canada.input.accountHolderName.label": "Nom del titular del compte",
+    "eftpad-canada.input.accountHolderName.error": "Introduïu un nom de titular del compte",
+    "eftpad-canada.input.accountNumber.label": "Número de compte",
+    "eftpad-canada.input.accountNumber.contextualText": "Entre 7 i 12 dígits",
+    "eftpad-canada.input.accountNumber.error": "Introduïu un número de compte que estigui entre 7 i 12 dígits",
+    "eftpad-canada.input.institutionNumber.label": "Número d'institució",
+    "eftpad-canada.input.institutionNumber.contextualText": "3 dígits",
+    "eftpad-canada.input.institutionNumber.error": "Introduïu un número d'institució que consti de 3 dígits",
+    "eftpad-canada.input.transitNumber.label": "Número de trànsit",
+    "eftpad-canada.input.transitNumber.contextualText": "5 dígits",
+    "eftpad-canada.input.transitNumber.error": "Introduïu un número de trànsit que consta de 5 dígits",
+    "eftpad-canada.settlement-info": "Els fons es retiraran del vostre compte bancari en un termini d'1 a 3 dies hàbils."
 }

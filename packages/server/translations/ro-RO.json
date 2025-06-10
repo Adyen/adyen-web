@@ -12,7 +12,7 @@
     "creditCard.expiryDateField.year": "An",
     "creditCard.storeDetailsButton": "Reține pentru data viitoare",
     "creditCard.dualBrand.title": "Brandul cardului",
-    "creditCard.dualBrand.description": "Выберите платежную систему карты по умолчанию. Это необязательно.",
+    "creditCard.dualBrand.description": "Selectați brandul cardului cu care preferați să plătiți. Acest lucru este opțional.",
     "installments": "Număr de rate",
     "installmentOption": "%{times}x %{partialValue}",
     "installmentOptionMonths": "%{times} luni",
@@ -397,5 +397,17 @@
     "paybybankpix.payment.paymentMethod.label": "metodă de plată",
     "paybybankpix.storedPayment.payButton.label": "Continuați plata",
     "paybybankpix.storedPayment.additionalLabel": "Contul %{receiver} prin PIX",
-    "paybybankpix.await.fetchDetails": "Se preiau detalii..."
+    "paybybankpix.await.fetchDetails": "Se preiau detalii...",
+    "eftpad-canada.input.accountHolderName.label": "Numele titularului de cont",
+    "eftpad-canada.input.accountHolderName.error": "Completați numele titularului de cont",
+    "eftpad-canada.input.accountNumber.label": "Număr de cont",
+    "eftpad-canada.input.accountNumber.contextualText": "Între 7 și 12 cifre",
+    "eftpad-canada.input.accountNumber.error": "Completați un număr de cont care conține între 7 și 12 cifre",
+    "eftpad-canada.input.institutionNumber.label": "Numărul instituției",
+    "eftpad-canada.input.institutionNumber.contextualText": "3 cifre",
+    "eftpad-canada.input.institutionNumber.error": "Completați un număr de instituție compus din 3 cifre",
+    "eftpad-canada.input.transitNumber.label": "Număr de tranzit",
+    "eftpad-canada.input.transitNumber.contextualText": "5 cifre",
+    "eftpad-canada.input.transitNumber.error": "Completați un număr de tranzit compus din 5 cifre",
+    "eftpad-canada.settlement-info": "Fondurile vor fi retrase din contul dvs. bancar în termen de 1–3 zile lucrătoare."
 }

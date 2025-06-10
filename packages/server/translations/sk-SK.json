@@ -12,7 +12,7 @@
     "creditCard.expiryDateField.year": "Rok",
     "creditCard.storeDetailsButton": "Zapamätať na budúce použitie",
     "creditCard.dualBrand.title": "Značka karty",
-    "creditCard.dualBrand.description": "Izberite znamko kartice, s katero želite plačati. To ni obvezno.",
+    "creditCard.dualBrand.description": "Vyberte značku karty, ktorou preferujete platiť. Táto možnosť je nepovinná.",
     "installments": "Počet splátok",
     "installmentOption": "% {times} x % {partialValue}",
     "installmentOptionMonths": "%{times} mesiace/-ov",
@@ -397,5 +397,17 @@
     "paybybankpix.payment.paymentMethod.label": "Spôsob platby",
     "paybybankpix.storedPayment.payButton.label": "Pokračovať v platbe",
     "paybybankpix.storedPayment.additionalLabel": "Účet %{receiver} prostredníctvom PIX",
-    "paybybankpix.await.fetchDetails": "Získavanie podrobností..."
+    "paybybankpix.await.fetchDetails": "Získavanie podrobností...",
+    "eftpad-canada.input.accountHolderName.label": "Meno majiteľa účtu",
+    "eftpad-canada.input.accountHolderName.error": "Zadajte meno majiteľa účtu",
+    "eftpad-canada.input.accountNumber.label": "Číslo účtu",
+    "eftpad-canada.input.accountNumber.contextualText": "7 až 12 číslic",
+    "eftpad-canada.input.accountNumber.error": "Zadajte číslo účtu, ktoré má 7 až 12 číslic",
+    "eftpad-canada.input.institutionNumber.label": "Číslo inštitúcie",
+    "eftpad-canada.input.institutionNumber.contextualText": "3 číslice",
+    "eftpad-canada.input.institutionNumber.error": "Zadajte číslo inštitúcie, ktoré pozostáva z 3 číslic",
+    "eftpad-canada.input.transitNumber.label": "Kód banky príjemcu",
+    "eftpad-canada.input.transitNumber.contextualText": "5 číslic",
+    "eftpad-canada.input.transitNumber.error": "Zadajte kód banky príjemcu, ktoré pozostáva z 5 číslic",
+    "eftpad-canada.settlement-info": "Finančné prostriedky budú z vášho bankového účtu stiahnuté v priebehu 1 až 3 pracovných dní."
 }

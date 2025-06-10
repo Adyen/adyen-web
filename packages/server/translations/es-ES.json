@@ -395,5 +395,17 @@
     "paybybankpix.payment.paymentMethod.label": "Método de pago",
     "paybybankpix.storedPayment.payButton.label": "Continuar con el pago",
     "paybybankpix.storedPayment.additionalLabel": "Cuenta %{receiver} a través de Pix",
-    "paybybankpix.await.fetchDetails": "Obteniendo los detalles…"
+    "paybybankpix.await.fetchDetails": "Obteniendo los detalles…",
+    "eftpad-canada.input.accountHolderName.label": "Nombre del titular de la cuenta",
+    "eftpad-canada.input.accountHolderName.error": "Escriba el nombre del titular de la cuenta",
+    "eftpad-canada.input.accountNumber.label": "Número de cuenta",
+    "eftpad-canada.input.accountNumber.contextualText": "Entre 7 y 12 dígitos",
+    "eftpad-canada.input.accountNumber.error": "Escriba un número de cuenta que tenga entre 7 y 12 dígitos",
+    "eftpad-canada.input.institutionNumber.label": "Número de institución",
+    "eftpad-canada.input.institutionNumber.contextualText": "3 dígitos",
+    "eftpad-canada.input.institutionNumber.error": "Escriba un número de institución que conste de 3 dígitos",
+    "eftpad-canada.input.transitNumber.label": "Número de tránsito",
+    "eftpad-canada.input.transitNumber.contextualText": "5 dígitos",
+    "eftpad-canada.input.transitNumber.error": "Escriba un número de enrutamiento que conste de 5 dígitos",
+    "eftpad-canada.settlement-info": "Los fondos se retirarán de su cuenta bancaria en un plazo de 1 a 3 días laborables."
 }

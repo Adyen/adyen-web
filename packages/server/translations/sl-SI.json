@@ -12,7 +12,7 @@
     "creditCard.expiryDateField.year": "Leto",
     "creditCard.storeDetailsButton": "Zapomni si za prihodnjič",
     "creditCard.dualBrand.title": "Znamka kartice",
-    "creditCard.dualBrand.description": "Välj det kortmärke du föredrar att betala med. Detta är valfritt.",
+    "creditCard.dualBrand.description": "Izberite znamko kartice, s katero želite plačati. To ni obvezno.",
     "installments": "Število obrokov",
     "installmentOption": "%{times} × %{partialValue}",
     "installmentOptionMonths": "Št. mesecev: %{times}",
@@ -397,5 +397,17 @@
     "paybybankpix.payment.paymentMethod.label": "način plačila",
     "paybybankpix.storedPayment.payButton.label": "Nadaljuj plačilo",
     "paybybankpix.storedPayment.additionalLabel": "Račun %{receiver} prek sistema PIX",
-    "paybybankpix.await.fetchDetails": "Pridobivanje podrobnosti..."
+    "paybybankpix.await.fetchDetails": "Pridobivanje podrobnosti...",
+    "eftpad-canada.input.accountHolderName.label": "Ime imetnika računa",
+    "eftpad-canada.input.accountHolderName.error": "Vnesite ime imetnika računa",
+    "eftpad-canada.input.accountNumber.label": "Številka računa",
+    "eftpad-canada.input.accountNumber.contextualText": "Med 7 in 12 številkami",
+    "eftpad-canada.input.accountNumber.error": "Vnesite številko računa, ki je sestavljena iz 7 do 12 števk",
+    "eftpad-canada.input.institutionNumber.label": "Številka ustanove",
+    "eftpad-canada.input.institutionNumber.contextualText": "3 števke",
+    "eftpad-canada.input.institutionNumber.error": "Vnesite številko institucije, ki je sestavljena iz 3 števk",
+    "eftpad-canada.input.transitNumber.label": "Tranzitna številka",
+    "eftpad-canada.input.transitNumber.contextualText": "5 števk",
+    "eftpad-canada.input.transitNumber.error": "Vnesite tranzitno številko, ki je sestavljena iz 5 števk",
+    "eftpad-canada.settlement-info": "Sredstva bodo z vašega bančnega računa dvignjena v 1–3 delovnih dneh."
 }
