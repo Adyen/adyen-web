@@ -101,6 +101,7 @@ function PreAuthorizedDebitCanadaComponent({
                         onInput={handleChangeFor('ownerName', 'input')}
                         onBlur={handleChangeFor('ownerName', 'blur')}
                         required={true}
+                        data-testid={'owner-name'}
                     />
                 </Field>
 
