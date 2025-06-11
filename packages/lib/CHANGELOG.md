@@ -1,5 +1,13 @@
 # @adyen/adyen-web
 
+## 6.17.0
+
+### Minor Changes
+
+- Export `Core` class. ([#3342](https://github.com/Adyen/adyen-web/pull/3342))
+
+- New PreAuthorizationDebitCanada component ([#3341](https://github.com/Adyen/adyen-web/pull/3341))
+
 ## 6.16.0
 
 ### Minor Changes
