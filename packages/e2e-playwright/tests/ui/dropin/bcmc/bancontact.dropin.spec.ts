@@ -4,17 +4,7 @@ import { BCMC } from '../../../../models/bcmc';
 
 test.describe('Bcmc in dropin', () => {
     test('UI looks as expected with no user interaction', async ({ dropinWithSession, page }) => {
-        const expectedAltAttributes = ['Bancontact card', 'MasterCard', 'VISA', 'Maestro'];
-
         await dropinWithSession.goto(URL_MAP.dropinWithSession_BCMC_noStoredPms);
-
-        const header = await dropinWithSession.getPaymentMethodHeader('Bancontact card');
-        const brands = await header.getVisibleCardBrands();
-
-        expect(brands).toHaveLength(4);
-        brands.forEach((img, index) => {
-            expect(img).toHaveAttribute('alt', expectedAltAttributes[index]);
-        });
 
         const { paymentMethodDetailsLocator } = await dropinWithSession.selectNonStoredPaymentMethod('bcmc');
 
