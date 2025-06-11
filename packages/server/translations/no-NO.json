@@ -12,7 +12,7 @@
     "creditCard.expiryDateField.year": "År",
     "creditCard.storeDetailsButton": "Husk til neste gang",
     "creditCard.dualBrand.title": "Kortmerke",
-    "creditCard.dualBrand.description": "Wybierz markę karty, którą preferujesz dokonywać płatności. Jest to opcjonalne.",
+    "creditCard.dualBrand.description": "Velg kortmerket du foretrekker å betale med. Dette er valgfritt.",
     "installments": "Antall avdrag",
     "installmentOption": "%{times}x %{partialValue}",
     "installmentOptionMonths": "%{times} måneder",
@@ -397,5 +397,17 @@
     "paybybankpix.payment.paymentMethod.label": "betalingsmetode",
     "paybybankpix.storedPayment.payButton.label": "Fortsett betaling",
     "paybybankpix.storedPayment.additionalLabel": "%{receiver}-konto gjennom PIX",
-    "paybybankpix.await.fetchDetails": "Henter detaljer..."
+    "paybybankpix.await.fetchDetails": "Henter detaljer...",
+    "eftpad-canada.input.accountHolderName.label": "Kontoholders navn",
+    "eftpad-canada.input.accountHolderName.error": "Skriv inn navnet på en kontoinnehaver",
+    "eftpad-canada.input.accountNumber.label": "Kontonummer",
+    "eftpad-canada.input.accountNumber.contextualText": "Mellom 7 og 12 sifre",
+    "eftpad-canada.input.accountNumber.error": "Enter et kontonummer som består av 7–12 sifre",
+    "eftpad-canada.input.institutionNumber.label": "Institusjonsnummer",
+    "eftpad-canada.input.institutionNumber.contextualText": "3 siffer",
+    "eftpad-canada.input.institutionNumber.error": "Skriv inn et institusjonsnummer som består av 3 sifre",
+    "eftpad-canada.input.transitNumber.label": "Transittnummer",
+    "eftpad-canada.input.transitNumber.contextualText": "5 sifre",
+    "eftpad-canada.input.transitNumber.error": "Skriv inn et transittnummer som består av 5 sifre",
+    "eftpad-canada.settlement-info": "Pengene blir trukket fra bankkontoen din i løpet av 1–3 virkedager."
 }

@@ -397,5 +397,17 @@
     "paybybankpix.payment.paymentMethod.label": "betalingsmåde",
     "paybybankpix.storedPayment.payButton.label": "Fortsæt betalingen",
     "paybybankpix.storedPayment.additionalLabel": "%{receiver}-konto gennem PIX",
-    "paybybankpix.await.fetchDetails": "Henter oplysninger..."
+    "paybybankpix.await.fetchDetails": "Henter oplysninger...",
+    "eftpad-canada.input.accountHolderName.label": "Kontohavers navn",
+    "eftpad-canada.input.accountHolderName.error": "Angiv navn på en kontoindehaver",
+    "eftpad-canada.input.accountNumber.label": "Kontonummer",
+    "eftpad-canada.input.accountNumber.contextualText": "Mellem 7 og 12 cifre",
+    "eftpad-canada.input.accountNumber.error": "Angiv et kontonummer, der er mellem 7 og 12 cifre",
+    "eftpad-canada.input.institutionNumber.label": "Institutionsnummer",
+    "eftpad-canada.input.institutionNumber.contextualText": "3 cifre",
+    "eftpad-canada.input.institutionNumber.error": "Angiv et institutionsnummer, der består af 3 cifre",
+    "eftpad-canada.input.transitNumber.label": "Transitnummer",
+    "eftpad-canada.input.transitNumber.contextualText": "5 cifre",
+    "eftpad-canada.input.transitNumber.error": "Angiv et transitnummer, der består af 5 cifre",
+    "eftpad-canada.settlement-info": "Beløbet trækkes fra din bankkonto inden for 1-3 arbejdsdage."
 }

@@ -24,6 +24,7 @@ export * from './Oxxo/types';
 export * from './PayPal/types';
 export * from './PayPalFastlane/types';
 export * from './Pix/types';
+export * from './PreAuthorizedDebitCanada/types';
 export * from './Redirect/types';
 export * from './Sepa/types';
 export * from './ThreeDS2/types';

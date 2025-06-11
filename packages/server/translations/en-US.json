@@ -398,5 +398,17 @@
     "paybybankpix.payment.paymentMethod.label": "Payment method",
     "paybybankpix.storedPayment.payButton.label": "Continue payment",
     "paybybankpix.storedPayment.additionalLabel": "%{receiver} account through PIX",
-    "paybybankpix.await.fetchDetails": "Fetching details..."
+    "paybybankpix.await.fetchDetails": "Fetching details...",
+    "eftpad-canada.input.accountHolderName.label": "Account holder name",
+    "eftpad-canada.input.accountHolderName.error": "Enter an account holder name",
+    "eftpad-canada.input.accountNumber.label": "Account number",
+    "eftpad-canada.input.accountNumber.contextualText": "Between 7 and 12 digits",
+    "eftpad-canada.input.accountNumber.error": "Enter an account number that is between 7 and 12 digits",
+    "eftpad-canada.input.institutionNumber.label": "Institution number",
+    "eftpad-canada.input.institutionNumber.contextualText": "3 digits",
+    "eftpad-canada.input.institutionNumber.error": "Enter an institution number that consists of 3 digits",
+    "eftpad-canada.input.transitNumber.label": "Transit number",
+    "eftpad-canada.input.transitNumber.contextualText": "5 digits",
+    "eftpad-canada.input.transitNumber.error": "Enter a transit number that consists of 5 digits",
+    "eftpad-canada.settlement-info": "The funds will be withdrawn from your bank account within 1–3 business days."
 }

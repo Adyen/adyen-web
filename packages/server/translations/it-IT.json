@@ -397,5 +397,17 @@
     "paybybankpix.payment.paymentMethod.label": "metodo di pagamento",
     "paybybankpix.storedPayment.payButton.label": "Procedi al pagamento",
     "paybybankpix.storedPayment.additionalLabel": "Conto %{receiver} tramite Pix",
-    "paybybankpix.await.fetchDetails": "Recupero dettagli..."
+    "paybybankpix.await.fetchDetails": "Recupero dettagli...",
+    "eftpad-canada.input.accountHolderName.label": "Nome del titolare del conto",
+    "eftpad-canada.input.accountHolderName.error": "Inserisci il nome del titolare del conto",
+    "eftpad-canada.input.accountNumber.label": "Numero di conto",
+    "eftpad-canada.input.accountNumber.contextualText": "Tra 7 e 12 cifre",
+    "eftpad-canada.input.accountNumber.error": "Inserisci un numero di conto compreso tra 7 e 12 cifre",
+    "eftpad-canada.input.institutionNumber.label": "Numero dell'istituzione",
+    "eftpad-canada.input.institutionNumber.contextualText": "3 cifre",
+    "eftpad-canada.input.institutionNumber.error": "Inserisci un numero di istituto che consiste di 3 cifre",
+    "eftpad-canada.input.transitNumber.label": "Numero di transito",
+    "eftpad-canada.input.transitNumber.contextualText": "5 cifre",
+    "eftpad-canada.input.transitNumber.error": "Inserisci un numero di transito composto da 5 cifre",
+    "eftpad-canada.settlement-info": "I fondi verranno prelevati dal conto bancario entro 1–3 giorni lavorativi."
 }

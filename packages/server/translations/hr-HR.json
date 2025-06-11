@@ -397,5 +397,17 @@
     "paybybankpix.payment.paymentMethod.label": "način plaćanja",
     "paybybankpix.storedPayment.payButton.label": "Nastavi s plaćanjem",
     "paybybankpix.storedPayment.additionalLabel": "%{receiver} račun putem PIX-a",
-    "paybybankpix.await.fetchDetails": "Dohvaćanje podataka..."
+    "paybybankpix.await.fetchDetails": "Dohvaćanje podataka...",
+    "eftpad-canada.input.accountHolderName.label": "Ime vlasnika računa",
+    "eftpad-canada.input.accountHolderName.error": "Unesite ime i prezime vlasnika računa",
+    "eftpad-canada.input.accountNumber.label": "Broj računa",
+    "eftpad-canada.input.accountNumber.contextualText": "Između 7 i 12 znamenki",
+    "eftpad-canada.input.accountNumber.error": "Unesite broj računa koji sadrži između 7 i 12 znamenki",
+    "eftpad-canada.input.institutionNumber.label": "Broj institucije",
+    "eftpad-canada.input.institutionNumber.contextualText": "3 znamenke",
+    "eftpad-canada.input.institutionNumber.error": "Unesite broj ustanove koji sadrži 3 znamenke",
+    "eftpad-canada.input.transitNumber.label": "Tranzitni broj",
+    "eftpad-canada.input.transitNumber.contextualText": "5 znamenki",
+    "eftpad-canada.input.transitNumber.error": "Unesite tranzitni broj koji sadrži 5 znamenki",
+    "eftpad-canada.settlement-info": "Sredstva će biti povučena s vašeg bankovnog računa u roku od 1 do 3 radna dana."
 }

@@ -397,5 +397,17 @@
     "paybybankpix.payment.paymentMethod.label": "způsob platby",
     "paybybankpix.storedPayment.payButton.label": "Pokračovat v platbě",
     "paybybankpix.storedPayment.additionalLabel": "Účet %{receiver} prostřednictvím PIX",
-    "paybybankpix.await.fetchDetails": "Načítání podrobností..."
+    "paybybankpix.await.fetchDetails": "Načítání podrobností...",
+    "eftpad-canada.input.accountHolderName.label": "Jméno držitele účtu",
+    "eftpad-canada.input.accountHolderName.error": "Zadejte jméno držitele účtu",
+    "eftpad-canada.input.accountNumber.label": "Číslo účtu",
+    "eftpad-canada.input.accountNumber.contextualText": "7 až 12 číslic",
+    "eftpad-canada.input.accountNumber.error": "Zadejte 7 až 12místné číslo účtu",
+    "eftpad-canada.input.institutionNumber.label": "Číslo instituce",
+    "eftpad-canada.input.institutionNumber.contextualText": "3 číslice",
+    "eftpad-canada.input.institutionNumber.error": "Zadejte třímístné číslo instituce",
+    "eftpad-canada.input.transitNumber.label": "Tranzitní číslo",
+    "eftpad-canada.input.transitNumber.contextualText": "5 číslic",
+    "eftpad-canada.input.transitNumber.error": "Zadejte pětimístné tranzitní číslo.",
+    "eftpad-canada.settlement-info": "Prostředky budou strženy z vašeho bankovního účtu během 1–3 pracovních dnů."
 }

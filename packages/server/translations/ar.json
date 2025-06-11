@@ -398,5 +398,17 @@
     "paybybankpix.payment.paymentMethod.label": "طريقة الدفع",
     "paybybankpix.storedPayment.payButton.label": "متابعة الدفع",
     "paybybankpix.storedPayment.additionalLabel": "حساب %{receiver} عبر PIX",
-    "paybybankpix.await.fetchDetails": "جارٍ جلب البيانات..."
+    "paybybankpix.await.fetchDetails": "جارٍ جلب البيانات...",
+    "eftpad-canada.input.accountHolderName.label": "اسم صاحب الحساب",
+    "eftpad-canada.input.accountHolderName.error": "أدخل اسم صاحب الحساب",
+    "eftpad-canada.input.accountNumber.label": "رقم الحساب",
+    "eftpad-canada.input.accountNumber.contextualText": "بين 7 و12 رقمًا",
+    "eftpad-canada.input.accountNumber.error": "أدخل رقم الحساب، ويتراوح بين 7 و12 رقمًا",
+    "eftpad-canada.input.institutionNumber.label": "رقم المؤسسة",
+    "eftpad-canada.input.institutionNumber.contextualText": "3 أرقام",
+    "eftpad-canada.input.institutionNumber.error": "أدخل رقم المؤسسة، المكون من 3 أرقام",
+    "eftpad-canada.input.transitNumber.label": "رقم التحويل",
+    "eftpad-canada.input.transitNumber.contextualText": "5 أرقام",
+    "eftpad-canada.input.transitNumber.error": "أدخل رقم التحويل المكون من 5 أرقام",
+    "eftpad-canada.settlement-info": "ستُسحبُ الأموالُ من حسابك المصرفي في غضون مدة تتراوح بين يوم وثلاثة أيام عمل."
 }
