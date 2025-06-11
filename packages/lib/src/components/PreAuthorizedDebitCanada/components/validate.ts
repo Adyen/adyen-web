@@ -12,57 +12,21 @@ export const preAuthorizedDebitCanadaValidationRules: ValidatorRules = {
         errorMessage: 'eftpad-canada.input.accountHolderName.error',
         modes: ['blur']
     },
-    bankAccountNumber: [
-        // Empty field
-        {
-            validate: value => (isEmpty(value) ? null : true),
-            errorMessage: 'eftpad-canada.input.accountNumber.error',
-            modes: ['blur']
-        },
-        // Incomplete field
-        {
-            validate: value => {
-                if (isEmpty(value)) return null;
-                return bankAccountNumberRegex.test(value);
-            },
-            errorMessage: 'eftpad-canada.input.accountNumber.error',
-            modes: ['blur']
-        }
-    ],
-    bankCode: [
-        // Empty field
-        {
-            validate: value => (isEmpty(value) ? null : true),
-            errorMessage: 'eftpad-canada.input.institutionNumber.error',
-            modes: ['blur']
-        },
-        // Incomplete field
-        {
-            validate: value => {
-                if (isEmpty(value)) return null;
-                return bankCodeRegex.test(value);
-            },
-            errorMessage: 'eftpad-canada.input.institutionNumber.error',
-            modes: ['blur']
-        }
-    ],
-    bankLocationId: [
-        // Empty field
-        {
-            validate: value => (isEmpty(value) ? null : true),
-            errorMessage: 'eftpad-canada.input.transitNumber.error',
-            modes: ['blur']
-        },
-        // Incomplete field
-        {
-            validate: value => {
-                if (isEmpty(value)) return null;
-                return bankLocationIdRegex.test(value);
-            },
-            errorMessage: 'eftpad-canada.input.transitNumber.error',
-            modes: ['blur']
-        }
-    ]
+    bankAccountNumber: {
+        validate: value => (isEmpty(value) ? null : bankAccountNumberRegex.test(value)),
+        errorMessage: 'eftpad-canada.input.accountNumber.error',
+        modes: ['blur']
+    },
+    bankCode: {
+        validate: value => (isEmpty(value) ? null : bankCodeRegex.test(value)),
+        errorMessage: 'eftpad-canada.input.institutionNumber.error',
+        modes: ['blur']
+    },
+    bankLocationId: {
+        validate: value => (isEmpty(value) ? null : bankLocationIdRegex.test(value)),
+        errorMessage: 'eftpad-canada.input.transitNumber.error',
+        modes: ['blur']
+    }
 };
 
 export const preAuthorizedDebitCanadaFormatters = {

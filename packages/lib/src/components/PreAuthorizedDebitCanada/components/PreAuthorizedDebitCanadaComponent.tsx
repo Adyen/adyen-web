@@ -86,7 +86,7 @@ function PreAuthorizedDebitCanadaComponent({
         <div className="adyen-checkout__eftpad-canada">
             <FormInstruction />
 
-            <Fieldset classNameModifiers={[]}>
+            <Fieldset>
                 <Field
                     label={i18n.get('eftpad-canada.input.accountHolderName.label')}
                     errorMessage={!!errors.ownerName && i18n.get(errors.ownerName.errorMessage)}
