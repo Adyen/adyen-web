@@ -12,16 +12,15 @@ function displayResultMessage(isAuthorized: boolean, resultCode: string): void {
     );
     image.setAttribute('height', '100');
     image.style.display = 'flex';
-    image.style.margin = 'auto auto 30px';
+    image.style.margin = '0 auto 30px auto';
 
     const resultText = document.createElement('div');
     resultText.setAttribute('data-testid', 'result-message');
-    resultText.classList.add('adyen-checkout__status');
-    resultText.style.textAlign = 'center';
-    resultText.textContent = resultCode;
+    resultText.classList.add('adyen-checkout__status', 'storybook-status-container');
+    resultText.appendChild(image);
+    resultText.appendChild(document.createTextNode(resultCode));
 
     const container = document.getElementById('component-root');
-    container.appendChild(image);
     container.appendChild(resultText);
 }
 
