@@ -7,6 +7,7 @@ import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { PaymentAmount } from '../../types/global-types';
 import { GiftCardElementData, GiftCardConfiguration, balanceCheckResponseType } from './types';
 import { TxVariants } from '../tx-variants';
+import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 
 export class GiftcardElement extends UIElement<GiftCardConfiguration> {
     public static type = TxVariants.giftcard;
@@ -160,18 +161,20 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                <GiftcardComponent
-                    ref={ref => {
-                        this.componentRef = ref;
-                    }}
-                    {...this.props}
-                    handleKeyPress={this.handleKeyPress}
-                    showPayButton={this.props.showPayButton}
-                    onChange={this.setState}
-                    makeBalanceCheck={() => this.onBalanceCheck()}
-                    makePayment={() => this.makeSubmitCall()}
-                    payButton={this.payButton}
-                />
+                <SRPanelProvider srPanel={this.props.modules.srPanel}>
+                    <GiftcardComponent
+                        ref={ref => {
+                            this.componentRef = ref;
+                        }}
+                        {...this.props}
+                        handleKeyPress={this.handleKeyPress}
+                        showPayButton={this.props.showPayButton}
+                        onChange={this.setState}
+                        makeBalanceCheck={() => this.onBalanceCheck()}
+                        makePayment={() => this.makeSubmitCall()}
+                        payButton={this.payButton}
+                    />
+                </SRPanelProvider>
             </CoreProvider>
         );
     }

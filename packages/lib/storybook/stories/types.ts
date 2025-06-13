@@ -46,4 +46,5 @@ export type AdyenCheckoutProps = {
     paymentMethodsOverride?: PaymentMethodsResponse;
     paymentsOptions?: {}; // TODO we don't have proper type for this right now
     onPaymentCompleted?: (data: any, element?: UIElement) => void;
+    srConfig: { showPanel: boolean; moveFocus: boolean };
 };
