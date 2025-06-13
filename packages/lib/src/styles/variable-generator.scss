@@ -36,10 +36,11 @@ $color: map-merge($color, (
                     $animation,
                     $toggle,
                     $button,
+                    $tooltip,
                     $text-overrides
     );
   } @else {
-    $adyen-tokens-map: map-merge($color, $text, $focus-ring, $border, $spacer, $shadow, $animation, $toggle, $button, $text-overrides);
+    $adyen-tokens-map: map-merge($color, $text, $focus-ring, $border, $spacer, $shadow, $animation, $toggle, $button, $tooltip, $text-overrides);
   }
 
   @return map-get($adyen-tokens-map, '#{$token}');
