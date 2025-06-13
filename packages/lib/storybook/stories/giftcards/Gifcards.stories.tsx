@@ -16,6 +16,7 @@ export const withCard: GifcardStory = {
     args: {
         countryCode: 'NL',
         useSessions: true,
+        srConfig: { showPanel: false, moveFocus: true },
         componentConfiguration: {
             brand: 'givex'
         }
@@ -29,6 +30,7 @@ export const withGiftCard: GifcardStory = {
     args: {
         countryCode: 'NL',
         useSessions: true,
+        srConfig: { showPanel: false, moveFocus: true },
         componentConfiguration: {
             brand: 'givex'
         }

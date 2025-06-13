@@ -20,15 +20,16 @@ export const GiftcardExample = ({ contextArgs, renderCard = true }: GiftcardExam
     const [remainingAmount, setRemainingAmount] = useState('');
 
     const createCheckout = async () => {
-        const { useSessions, showPayButton, countryCode, shopperLocale, amount } = contextArgs;
+        const { useSessions, showPayButton, countryCode, shopperLocale, amount, srConfig } = contextArgs;
 
         checkout.current = useSessions
-            ? await createSessionsCheckout({ showPayButton, countryCode, shopperLocale, amount })
+            ? await createSessionsCheckout({ showPayButton, countryCode, shopperLocale, amount, srConfig })
             : await createAdvancedFlowCheckout({
                   showPayButton,
                   countryCode,
                   shopperLocale,
-                  amount
+                  amount,
+                  srConfig
               });
 
         const onOrderUpdated = data => {
