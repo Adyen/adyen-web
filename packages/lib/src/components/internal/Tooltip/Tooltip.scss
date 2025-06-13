@@ -1,0 +1,38 @@
+@import 'styles/variable-generator';
+
+.adyen-checkout-tooltip {
+    position: absolute;
+    background: token(tooltip-background-color);
+    color:token(tooltip-color);
+    padding: token(tooltip-padding);
+    font-size: token(text-body-font-size);
+    border-radius: token(tooltip-border-radius);
+    white-space: nowrap;
+    z-index: 1;
+    user-select: none;
+    pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+}
+
+.adyen-checkout-tooltip-arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+
+    &.adyen-checkout-tooltip-arrow-top {
+        bottom: -4px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 6px 6px 0;
+        border-color: token(tooltip-background-color) transparent transparent;
+    }
+
+    &.adyen-checkout-tooltip-arrow-bottom {
+        top: -4px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 0 6px 6px;
+        border-color: transparent transparent token(tooltip-background-color);
+    }
+}
