@@ -38,6 +38,8 @@
         "prettier": "3.5.3"
     },
     "resolutions": {
-        "tar-fs": "^3.0.8"
-    }
+        "tar-fs": "^3.0.8",
+        "**/estimo/nanoid": "^5.1.5"
+    },
+    "packageManager": "yarn@1.22.21+sha1.1959a18351b811cdeedbd484a8f86c3cc3bbaf72"
 }
