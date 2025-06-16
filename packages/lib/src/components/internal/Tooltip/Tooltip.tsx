@@ -18,24 +18,23 @@ interface TooltipProps<T extends HTMLElement = HTMLElement> {
 export function Tooltip({ text, id, visible, anchorRef }: TooltipProps) {
     const tooltipRef = useRef<HTMLDivElement>(null);
     const [position, setPosition] = useState<TooltipPosition>('top');
+    const [isAnchorVisible, setIsAnchorVisible] = useState<boolean>(true);
     const [style, setStyle] = useState({});
-
+    //visible = true;
     useEffect(() => {
         if (!visible || !anchorRef.current || !tooltipRef.current) return;
 
-        // Wait a tick to ensure DOM has mounted
-        requestAnimationFrame(() => {
+        const updatePosition = () => {
             const anchorEl = anchorRef.current;
-            const anchorRect = anchorEl.getBoundingClientRect();
             const tooltipEl = tooltipRef.current;
+            const anchorRect = anchorEl.getBoundingClientRect();
 
-            const offsetTop = anchorRect.top;
-            const offsetLeft = anchorRect.left;
+            const offsetTop = anchorRect.top + window.scrollY;
+            const offsetLeft = anchorRect.left + window.scrollX;
             const spaceAbove = anchorRect.top;
             const spaceBelow = window.innerHeight - anchorRect.bottom;
 
             let newPosition: TooltipPosition;
-
             if (spaceAbove >= tooltipEl.offsetHeight + OFFSET) {
                 newPosition = 'top';
             } else if (spaceBelow >= tooltipEl.offsetHeight + OFFSET) {
@@ -50,17 +49,43 @@ export function Tooltip({ text, id, visible, anchorRef }: TooltipProps) {
                 transform: 'translateX(-50%)',
                 willChange: 'opacity, visibility, transform'
             };
-
-            if (newPosition === 'top') {
-                newStyle.top = offsetTop - tooltipEl.offsetHeight - OFFSET;
-            } else {
-                newStyle.top = offsetTop + anchorRect.height + OFFSET;
-            }
+            newStyle.top = newPosition === 'top' ? offsetTop - tooltipEl.offsetHeight - OFFSET : offsetTop + anchorRect.height + OFFSET;
 
             setStyle(newStyle);
             setPosition(newPosition);
-        });
-    }, [visible, anchorRef]);
+        };
+
+        // We need {capture: true}, if the tooltip is placed inside scrollable containers because:
+        // Scroll does not bubble. So if an element inside your page scrolls (like a <div> with overflow: scroll),
+        // and you attach a scroll listener on the window without capture: true, it won’t catch those inner scrolls.
+        window.addEventListener('scroll', updatePosition, { capture: true });
+        window.addEventListener('resize', updatePosition);
+
+        requestAnimationFrame(updatePosition);
+
+        return () => {
+            window.removeEventListener('scroll', updatePosition, true);
+            window.removeEventListener('resize', updatePosition);
+        };
+    }, [visible]);
+
+    useEffect(() => {
+        if (!anchorRef.current) return;
+        // Hide the tooltip if it's not in the viewport
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                setIsAnchorVisible(entry.isIntersecting);
+            },
+            {
+                threshold: 0.1 // consider visible if 10% is visible
+            }
+        );
+        observer.observe(anchorRef.current);
+
+        return () => {
+            observer.disconnect();
+        };
+    }, [anchorRef]);
 
     return createPortal(
         <div
@@ -68,7 +93,7 @@ export function Tooltip({ text, id, visible, anchorRef }: TooltipProps) {
             role="tooltip"
             className={cx({
                 'adyen-checkout-tooltip': true,
-                'adyen-checkout-tooltip--hidden': !visible,
+                'adyen-checkout-tooltip--hidden': !visible || !isAnchorVisible,
                 [`adyen-checkout-tooltip--${position}`]: true
             })}
             ref={tooltipRef}
