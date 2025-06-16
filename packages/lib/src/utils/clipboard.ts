@@ -1,4 +1,13 @@
-export function copyToClipboard(value) {
+export async function copyToClipboard(value) {
+    if (navigator?.clipboard?.writeText) {
+        try {
+            await navigator.clipboard.writeText(value);
+            return;
+        } catch (err) {
+            // swallow it, continue to fallback
+        }
+    }
+
     function createInput(text): HTMLInputElement {
         const textArea = document.createElement('textArea');
         (textArea as HTMLInputElement).readOnly = true;
@@ -11,9 +20,16 @@ export function copyToClipboard(value) {
 
     copyInput.select();
 
-    document.execCommand('copy');
-
-    document.body.removeChild(copyInput);
+    try {
+        const successful = document.execCommand('copy');
+        if (!successful) {
+            console.warn('Fallback: Copy command was unsuccessful');
+        }
+    } catch (err) {
+        console.error('Fallback: Unable to copy', err);
+    } finally {
+        document.body.removeChild(copyInput);
+    }
 }
 
 export default copyToClipboard;

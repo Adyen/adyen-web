@@ -21,6 +21,10 @@ export interface ButtonProps {
     onClick?: (e, callbacks) => void;
     onKeyDown?: (event: KeyboardEvent) => void;
     buttonRef?: Ref<HTMLButtonElement>;
+    onMouseEnter?: (event: MouseEvent) => void;
+    onMouseLeave?: (event: MouseEvent) => void;
+    onFocus?: (event: FocusEvent) => void;
+    onBlur?: (event: FocusEvent) => void;
 }
 
 export interface ButtonState {

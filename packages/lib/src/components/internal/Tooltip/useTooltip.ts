@@ -1,16 +1,16 @@
 import { useCallback, useRef, useState, useEffect } from 'preact/hooks';
 
-export function useTooltip(delay = 100) {
+export function useTooltip<T extends HTMLElement = HTMLElement>(delay: number) {
     const [visible, setVisible] = useState(false);
-    const anchorRef = useRef<HTMLElement>(null);
+    const anchorRef = useRef<T>(null);
     const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
-    const show = useCallback(() => {
+    const showTooltip = useCallback(() => {
         clearTimeout(timeoutRef.current);
         timeoutRef.current = setTimeout(() => setVisible(true), delay);
     }, [delay]);
 
-    const hide = useCallback(() => {
+    const hideTooltip = useCallback(() => {
         clearTimeout(timeoutRef.current);
         timeoutRef.current = setTimeout(() => setVisible(false), delay);
     }, [delay]);
@@ -22,7 +22,7 @@ export function useTooltip(delay = 100) {
     return {
         anchorRef,
         visible,
-        show,
-        hide
+        showTooltip,
+        hideTooltip
     };
 }

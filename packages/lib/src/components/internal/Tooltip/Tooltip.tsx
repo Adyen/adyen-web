@@ -1,21 +1,24 @@
 import { h } from 'preact';
-import { useState, useRef, useEffect, MutableRef } from 'preact/hooks';
+import { useRef, useEffect, useState, MutableRef } from 'preact/hooks';
+// eslint-disable-next-line no-restricted-imports
+import { createPortal } from 'preact/compat';
+import cx from 'classnames';
 import './Tooltip.scss';
 
 const OFFSET = 8;
 type TooltipPosition = 'top' | 'bottom';
 
-interface TooltipProps {
+interface TooltipProps<T extends HTMLElement = HTMLElement> {
     text: string;
     visible: boolean;
-    anchorRef: MutableRef<HTMLElement>;
+    anchorRef: MutableRef<T>;
     id: string;
 }
 
 export function Tooltip({ text, id, visible, anchorRef }: TooltipProps) {
-    const [style, setStyle] = useState({});
-    const [position, setPosition] = useState<TooltipPosition>('top');
     const tooltipRef = useRef<HTMLDivElement>(null);
+    const [position, setPosition] = useState<TooltipPosition>('top');
+    const [style, setStyle] = useState({});
 
     useEffect(() => {
         if (!visible || !anchorRef.current || !tooltipRef.current) return;
@@ -23,15 +26,11 @@ export function Tooltip({ text, id, visible, anchorRef }: TooltipProps) {
         // Wait a tick to ensure DOM has mounted
         requestAnimationFrame(() => {
             const anchorEl = anchorRef.current;
-            const tooltipEl = tooltipRef.current;
             const anchorRect = anchorEl.getBoundingClientRect();
-            const containerRect = anchorEl.offsetParent?.getBoundingClientRect();
+            const tooltipEl = tooltipRef.current;
 
-            if (!containerRect) return;
-
-            const offsetTop = anchorRect.top - containerRect.top;
-            const offsetLeft = anchorRect.left - containerRect.left;
-
+            const offsetTop = anchorRect.top;
+            const offsetLeft = anchorRect.left;
             const spaceAbove = anchorRect.top;
             const spaceBelow = window.innerHeight - anchorRect.bottom;
 
@@ -48,7 +47,8 @@ export function Tooltip({ text, id, visible, anchorRef }: TooltipProps) {
             const newStyle: any = {
                 position: 'absolute',
                 left: offsetLeft + anchorRect.width / 2,
-                transform: 'translateX(-50%)'
+                transform: 'translateX(-50%)',
+                willChange: 'opacity, visibility, transform'
             };
 
             if (newPosition === 'top') {
@@ -60,14 +60,23 @@ export function Tooltip({ text, id, visible, anchorRef }: TooltipProps) {
             setStyle(newStyle);
             setPosition(newPosition);
         });
-    }, [visible, anchorRef, position]);
+    }, [visible, anchorRef]);
 
-    return (
-        visible && (
-            <div inert id={id} role="tooltip" className={`adyen-checkout-tooltip adyen-checkout-tooltip-${position}`} ref={tooltipRef} style={style}>
-                {text}
-                <div className={`adyen-checkout-tooltip-arrow adyen-checkout-tooltip-arrow-${position}`} />
-            </div>
-        )
+    return createPortal(
+        <div
+            id={id}
+            role="tooltip"
+            className={cx({
+                'adyen-checkout-tooltip': true,
+                'adyen-checkout-tooltip--hidden': !visible,
+                [`adyen-checkout-tooltip--${position}`]: true
+            })}
+            ref={tooltipRef}
+            style={style}
+        >
+            {text}
+            <div className={`adyen-checkout-tooltip-arrow adyen-checkout-tooltip-arrow--${position}`} />
+        </div>,
+        document.body
     );
 }

@@ -1,17 +1,27 @@
 @import 'styles/variable-generator';
 
 .adyen-checkout-tooltip {
+    display: inline-block;
     position: absolute;
     background: token(tooltip-background-color);
-    color:token(tooltip-color);
+    color: token(tooltip-color);
     padding: token(tooltip-padding);
     font-size: token(text-body-font-size);
     border-radius: token(tooltip-border-radius);
     white-space: nowrap;
-    z-index: 1;
+    z-index: token(tooltip-z-index);
     user-select: none;
     pointer-events: none;
-    transition: opacity .2s ease, transform .2s ease;
+    opacity: 1;
+    visibility: visible;
+    transition:
+        opacity 0.2s ease,
+        visibility 0.2s ease;
+
+    &--hidden {
+        opacity: 0;
+        visibility: hidden;
+    }
 }
 
 .adyen-checkout-tooltip-arrow {
@@ -20,7 +30,7 @@
     height: 0;
     border-style: solid;
 
-    &.adyen-checkout-tooltip-arrow-top {
+    &.adyen-checkout-tooltip-arrow--top {
         bottom: -4px;
         left: 50%;
         transform: translateX(-50%);
@@ -28,7 +38,7 @@
         border-color: token(tooltip-background-color) transparent transparent;
     }
 
-    &.adyen-checkout-tooltip-arrow-bottom {
+    &.adyen-checkout-tooltip-arrow--bottom {
         top: -4px;
         left: 50%;
         transform: translateX(-50%);

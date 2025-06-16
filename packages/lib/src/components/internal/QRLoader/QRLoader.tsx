@@ -260,7 +260,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                             inline
                             variant="action"
                             onClick={(e, { complete }) => {
-                                copyToClipboard(this.props.qrCodeData);
+                                void copyToClipboard(this.props.qrCodeData);
 
                                 const event = new AnalyticsInfoEvent({
                                     type: ANALYTICS_DOWNLOAD_STR,

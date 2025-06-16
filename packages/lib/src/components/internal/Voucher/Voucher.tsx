@@ -91,7 +91,7 @@ export default function Voucher({ voucherDetails = [], className = '', ...props 
                                     inline
                                     variant="action"
                                     onClick={(e, { complete }) => {
-                                        copyToClipboard(props.reference);
+                                        void copyToClipboard(props.reference);
                                         complete();
                                     }}
                                     icon={getImage({ imageFolder: 'components/' })(`${PREFIX}copy`)}
