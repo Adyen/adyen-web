@@ -25,6 +25,8 @@
   }
 
   &__value {
+    display: flex;
+    gap: token(spacer-070);
     max-width: 50%;
     text-align: right;
     font-weight: token(text-body-strongest-font-weight);
