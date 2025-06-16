@@ -6,7 +6,7 @@ const meta: Meta = {
     title: 'Internals/Tooltip',
     component: Tooltip,
     argTypes: {
-        top: {
+        margin: {
             control: { type: 'range', min: 0, max: 500, step: 10 }
         }
     }
@@ -14,22 +14,28 @@ const meta: Meta = {
 
 export const Default: StoryObj = {
     render: args => {
-        const { anchorRef, visible, show, hide } = useTooltip();
+        const { anchorRef, visible, showTooltip, hideTooltip } = useTooltip<HTMLButtonElement>(100);
         const tooltipId = 'tooltip-id';
 
         return (
-            <div style={{ position: 'relative', display: 'inline-block', top: `${args.top}px` }}>
-                <button ref={anchorRef} aria-describedby={tooltipId} onMouseEnter={() => show()} onMouseLeave={() => hide()}>
+            <>
+                <button
+                    style={{ margin: `${args.margin}px` }}
+                    ref={anchorRef}
+                    aria-describedby={tooltipId}
+                    onMouseEnter={() => showTooltip()}
+                    onMouseLeave={() => hideTooltip()}
+                >
                     Hover me
                 </button>
                 <Tooltip text={'I am the tooltip'} anchorRef={anchorRef} id={tooltipId} visible={visible} {...args} />
-            </div>
+            </>
         );
     },
     parameters: {
         controls: { exclude: ['useSessions', 'countryCode', 'shopperLocale', 'amount', 'showPayButton'] }
     },
-    args: { top: 0 }
+    args: { margin: 0 }
 };
 
 export default meta;
