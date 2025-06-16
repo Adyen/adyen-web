@@ -11,7 +11,7 @@ import { SetSRMessagesReturnFn } from '../../../core/Errors/SRPanelProvider';
 /**
  * Interface for gift card field errors, matching the encrypted field types
  */
-export interface GiftcardStateErrors {
+interface GiftcardStateErrors {
     encryptedCardNumber: ValidationRuleResult;
     encryptedSecurityCode: ValidationRuleResult;
 }
@@ -19,7 +19,7 @@ export interface GiftcardStateErrors {
 /**
  * Interface for transformed error objects returned from mapErrorsToValidationRuleResult
  */
-export interface TransformedError {
+interface TransformedError {
     isValid: boolean;
     errorMessage: string;
     errorI18n: string;
@@ -30,7 +30,7 @@ export interface TransformedError {
 /**
  * Interface for errors object with transformed error entries
  */
-export interface TransformedErrorsObj {
+interface TransformedErrorsObj {
     [key: string]: TransformedError | null;
 }
 
@@ -56,8 +56,7 @@ interface SortedErrorObject {
  * This hook manages both visual and screen reader error announcements for the gift card component,
  * handling both blur-based validation errors and form-wide validation errors.
  */
-export const useSRPanelForGiftcardErrors = ({ errors, isValidating }: UseSRPanelForGiftcardErrorsProps) => {
-    console.log('useSRPanelForGiftcardErrors errors', errors);
+const useSRPanelForGiftcardErrors = ({ errors, isValidating }: UseSRPanelForGiftcardErrorsProps) => {
     // Track sorted list of errors for comparison with previous state
     const [sortedErrorList, setSortedErrorList] = useState<SortedErrorObject[]>(null);
     // Track previous error list for detecting changes
@@ -123,7 +122,11 @@ export const useSRPanelForGiftcardErrors = ({ errors, isValidating }: UseSRPanel
             }
         } catch (_) {
             // Fail silently - we don't want to break the component if SRPanel fails
-            console.error('Error in useSRPanelForGiftcardErrors', _);
         }
     }, [errors]);
 };
+
+// Export all interfaces and the hook
+export type { GiftcardStateErrors, TransformedError, TransformedErrorsObj };
+
+export { useSRPanelForGiftcardErrors };

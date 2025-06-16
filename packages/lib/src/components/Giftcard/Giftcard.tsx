@@ -73,6 +73,11 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
     }
 
     private onBalanceCheck = (): void => {
+        if (!this.isValid) {
+            this.showValidation();
+            return;
+        }
+
         // skip balance check if no onBalanceCheck event has been defined
         const hasBalanceCheck = this.props.session || this.props.onBalanceCheck;
         if (!hasBalanceCheck) return super.submit();
@@ -140,11 +145,6 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
     public submit() {
         // for simplicity of the merchant we always only expose .submit()
         // however to make the actual payment call we call makeSubmitCall
-        if (!this.isValid) {
-            this.showValidation();
-            return false;
-        }
-
         this.balanceCheck();
     }
 

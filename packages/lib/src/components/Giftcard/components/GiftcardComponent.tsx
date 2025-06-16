@@ -90,6 +90,19 @@ class Giftcard extends Component<GiftcardComponentProps> {
         this.setState({ balance, transactionLimit });
     };
 
+    public showValidation = () => {
+        // TODO check if this is actually needed
+        this.setState({
+            sfpState: {
+                ...this.state.sfpState,
+                isValidating: true
+            }
+        });
+
+        // Validate SecuredFields
+        this.sfp?.showValidation();
+    };
+
     render(props, { focusedElement, balance, transactionLimit, sfpState, transformedErrors }) {
         const { i18n } = useCoreContext();
 
