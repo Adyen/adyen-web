@@ -30,6 +30,15 @@ const CopyIconButton = (props: CopyIconButtonProps) => {
         showTooltip();
     }, [props.text, i18n, showTooltip]);
 
+    const onKeyDown = useCallback(
+        (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                hideTooltip();
+            }
+        },
+        [hideTooltip]
+    );
+
     useEffect(() => {
         if (!visible) {
             // Make sure to change the tooltip text after it's hidden (with a delay of 100ms)
@@ -42,15 +51,16 @@ const CopyIconButton = (props: CopyIconButtonProps) => {
         <Fragment>
             <Button
                 {...props}
+                variant="iconOnly"
                 aria-describedby={tooltipId.current}
                 buttonRef={anchorRef}
                 ariaLabel={props.ariaLabel ?? i18n.get('button.iconOnly.copy')}
-                variant="iconOnly"
                 onMouseEnter={showTooltip}
                 onMouseLeave={hideTooltip}
                 onFocus={showTooltip}
                 onBlur={hideTooltip}
                 onClick={onClick}
+                onKeyDown={onKeyDown}
             >
                 <svg
                     className="adyen-checkout__button--iconOnly__icon"
