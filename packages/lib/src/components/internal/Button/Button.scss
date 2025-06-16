@@ -234,8 +234,8 @@
         box-shadow: token(button-tertiary-box-shadow);
 
         &:hover {
-             color: token(button-tertiary-hover-color);
-                      background: token(button-tertiary-hover-background-color);
+            color: token(button-tertiary-hover-color);
+            background: token(button-tertiary-hover-background-color);
         }
 
         &:active {
@@ -248,7 +248,9 @@
         }
 
         &:focus-visible {
-            box-shadow: 0 0 0 token(focus-ring-spacer) token(color-background-primary),0 0 0 token(focus-ring-outline) token(focus-ring-color);
+            box-shadow:
+                0 0 0 token(focus-ring-spacer) token(color-background-primary),
+                0 0 0 token(focus-ring-outline) token(focus-ring-color);
             outline: 0;
         }
 

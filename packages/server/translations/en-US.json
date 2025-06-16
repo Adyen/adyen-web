@@ -103,6 +103,8 @@
     "boletobancario.btnLabel": "Generate Boleto",
     "boleto.sendCopyToEmail": "Send a copy to my email",
     "button.copy": "Copy",
+    "button.iconOnly.copy": "Icon only copy button",
+    "button.copied": "Copied!",
     "button.download": "Download",
     "boleto.socialSecurityNumber": "CPF/CNPJ",
     "boleto.socialSecurityNumber.invalid": "Enter a valid CPF/CNPJ number",
