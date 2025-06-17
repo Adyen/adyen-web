@@ -1,3 +1,11 @@
+function createInput(text): HTMLInputElement {
+    const textArea = document.createElement('textArea');
+    (textArea as HTMLInputElement).readOnly = true;
+    (textArea as HTMLInputElement).value = text;
+    document.body.appendChild(textArea);
+    return textArea as HTMLInputElement;
+}
+
 export async function copyToClipboard(value) {
     if (navigator?.clipboard?.writeText) {
         try {
@@ -8,19 +16,10 @@ export async function copyToClipboard(value) {
         }
     }
 
-    function createInput(text): HTMLInputElement {
-        const textArea = document.createElement('textArea');
-        (textArea as HTMLInputElement).readOnly = true;
-        (textArea as HTMLInputElement).value = text;
-        document.body.appendChild(textArea);
-        return textArea as HTMLInputElement;
-    }
-
-    const copyInput = createInput(value);
-
-    copyInput.select();
-
+    let copyInput: HTMLInputElement;
     try {
+        copyInput = createInput(value);
+        copyInput.select();
         const successful = document.execCommand('copy');
         if (!successful) {
             console.warn('Fallback: Copy command was unsuccessful');

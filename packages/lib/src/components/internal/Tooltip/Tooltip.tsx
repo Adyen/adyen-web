@@ -1,6 +1,5 @@
 import { h } from 'preact';
 import { useRef, useEffect, useState, MutableRef } from 'preact/hooks';
-// eslint-disable-next-line no-restricted-imports
 import { createPortal } from 'preact/compat';
 import cx from 'classnames';
 import './Tooltip.scss';
@@ -64,20 +63,21 @@ export function Tooltip({ text, id, visible, anchorRef }: TooltipProps) {
         requestAnimationFrame(updatePosition);
 
         return () => {
-            window.removeEventListener('scroll', updatePosition, true);
+            window.removeEventListener('scroll', updatePosition, { capture: true });
             window.removeEventListener('resize', updatePosition);
         };
-    }, [visible]);
+    }, [visible, anchorRef]);
 
+    // Hide the tooltip if it's not in the viewport.
     useEffect(() => {
         if (!anchorRef.current) return;
-        // Hide the tooltip if it's not in the viewport
         const observer = new IntersectionObserver(
             ([entry]) => {
                 setIsAnchorVisible(entry.isIntersecting);
             },
             {
-                threshold: 0.1 // consider visible if 10% is visible
+                // consider the element is intercepting if it's 10% visible
+                threshold: 0.1
             }
         );
         observer.observe(anchorRef.current);
