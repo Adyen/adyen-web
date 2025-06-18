@@ -399,7 +399,7 @@
 
 This release requires Checkout API v69 or later. We recommend using the latest Checkout API version.
 
-To update from Drop-in/Components v5.x.x, follow the migration guide.
+To update from Drop-in/Components v5.x.x, follow the [migration guide](https://docs.adyen.com/online-payments/upgrade-your-integration/migrate-to-web-v6/).
 
 ---
 
