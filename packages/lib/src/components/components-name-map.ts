@@ -9,10 +9,21 @@ import { TxVariants } from './tx-variants';
 const ComponentsNameMap = {
     /** internal */
     [TxVariants.address]: 'Address',
-    [TxVariants.bankTransfer_IBAN]: 'BankTransfer',
     [TxVariants.donation]: 'Donation',
     [TxVariants.personal_details]: 'PersonalDetails',
     /** internal */
+
+    /** Bank Transfer */
+    [TxVariants.bankTransfer_IBAN]: 'BankTransfer',
+    [TxVariants.bankTransfer_BE]: 'BankTransfer',
+    [TxVariants.bankTransfer_NL]: 'BankTransfer',
+    [TxVariants.bankTransfer_PL]: 'BankTransfer',
+    [TxVariants.bankTransfer_FR]: 'BankTransfer',
+    [TxVariants.bankTransfer_CH]: 'BankTransfer',
+    [TxVariants.bankTransfer_IE]: 'BankTransfer',
+    [TxVariants.bankTransfer_GB]: 'BankTransfer',
+    [TxVariants.bankTransfer_DE]: 'BankTransfer',
+    /** Bank Transfer */
 
     /** Card */
     [TxVariants.bcmc]: 'Bancontact',
