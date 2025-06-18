@@ -39,7 +39,7 @@ interface TransformedErrorsObj {
  */
 interface UseSRPanelForGiftcardErrorsProps {
     errors: TransformedErrorsObj;
-    isValidating: { current: boolean } | boolean;
+    isValidating: boolean;
 }
 
 /**
@@ -73,12 +73,11 @@ const useSRPanelForGiftcardErrors = ({ errors, isValidating }: UseSRPanelForGift
             // Create a partial function for setting SR messages with fixed configuration
             const setMessages: SetSRMessagesReturnFn = setSRMessagesFromObjects?.({});
             // Set messages with current errors and layout
-            // Handle isValidating being either an object with current property or a boolean
-            const isValidatingValue = typeof isValidating === 'boolean' ? isValidating : isValidating?.current || false;
 
+            // Unlike Card SR Panel, isValidating is a boolean
             const srPanelResp: SetSRMessagesReturnObject = setMessages?.({
                 errors,
-                isValidating: isValidatingValue,
+                isValidating,
                 layout
             });
 
@@ -93,12 +92,10 @@ const useSRPanelForGiftcardErrors = ({ errors, isValidating }: UseSRPanelForGift
                     if (shouldMoveFocusSR) {
                         setFocusOnField('.adyen-checkout__giftcard', srPanelResp.fieldToFocus);
                     }
-                    // Reset validation state after 300ms to allow for error collection
+                    // Remove 'showValidation' mode - allowing time for collation of all the fields in error whilst it is 'showValidation' mode (some errors come in a second render pass)
                     setTimeout(() => {
                         if (typeof isValidating === 'boolean') {
                             isValidating = false;
-                        } else if (isValidating?.current !== undefined) {
-                            isValidating.current = false;
                         }
                     }, 300);
                     break;

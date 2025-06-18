@@ -37,6 +37,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
         focusedElement: false,
         isValid: false,
         sfpState: {},
+        isValidating: false,
         transformedErrors: {}
     };
 
@@ -94,22 +95,22 @@ class Giftcard extends Component<GiftcardComponentProps> {
         // TODO check if this is actually needed
         this.setState({
             sfpState: {
-                ...this.state.sfpState,
-                isValidating: true
-            }
+                ...this.state.sfpState
+            },
+            isValidating: true
         });
 
         // Validate SecuredFields
         this.sfp?.showValidation();
     };
 
-    render(props, { focusedElement, balance, transactionLimit, sfpState, transformedErrors }) {
+    render(props, { focusedElement, balance, transactionLimit, isValidating, transformedErrors }) {
         const { i18n } = useCoreContext();
 
         // Handle SRPanel errors in render with transformed error objects
         useSRPanelForGiftcardErrors({
             errors: transformedErrors,
-            isValidating: sfpState?.isValidating || { current: false }
+            isValidating
         });
 
         const transactionAmount = transactionLimit?.value < balance?.value ? transactionLimit : balance;
