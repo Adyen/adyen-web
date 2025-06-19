@@ -66,7 +66,8 @@ const useSRPanelForGiftcardErrors = ({ errors, isValidating }: UseSRPanelForGift
     const { setSRMessagesFromObjects, setSRMessagesFromStrings, clearSRPanel, shouldMoveFocusSR } = useSRPanelContext();
 
     // Fixed layout array defining the order of fields for error sorting
-    const layout = ['encryptedCardNumber', 'encryptedSecurityCode'];
+    // Assume fields in this order, and adds encryptedExpiryDate for MealVoucher, this is ignored in giftcard
+    const layout = ['encryptedCardNumber', 'encryptedExpiryDate', 'encryptedSecurityCode'];
 
     useEffect(() => {
         try {

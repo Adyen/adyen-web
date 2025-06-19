@@ -92,13 +92,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
     };
 
     public showValidation = () => {
-        // TODO check if this is actually needed
-        this.setState({
-            sfpState: {
-                ...this.state.sfpState
-            },
-            isValidating: true
-        });
+        this.setState({ isValidating: true });
 
         // Validate SecuredFields
         this.sfp?.showValidation();
