@@ -1,30 +1,24 @@
 import { h } from 'preact';
-import { useRef, useEffect, useState, MutableRef } from 'preact/hooks';
+import { useRef, useEffect, useState, useLayoutEffect } from 'preact/hooks';
 import { createPortal } from 'preact/compat';
 import cx from 'classnames';
 import './Tooltip.scss';
+import { TooltipPosition, TooltipProps } from './types';
 
+// 8px space between the target and the tooltip
 const OFFSET = 8;
-type TooltipPosition = 'top' | 'bottom';
 
-interface TooltipProps<T extends HTMLElement = HTMLElement> {
-    text: string;
-    visible: boolean;
-    anchorRef: MutableRef<T>;
-    id: string;
-}
-
-export function Tooltip({ text, id, visible, anchorRef }: TooltipProps) {
+export function Tooltip(props: TooltipProps) {
     const tooltipRef = useRef<HTMLDivElement>(null);
     const [position, setPosition] = useState<TooltipPosition>('top');
     const [isAnchorVisible, setIsAnchorVisible] = useState<boolean>(true);
     const [style, setStyle] = useState({});
-    //visible = true;
-    useEffect(() => {
-        if (!visible || !anchorRef.current || !tooltipRef.current) return;
+
+    useLayoutEffect(() => {
+        if (!props?.visible || !props?.anchorRef?.current || !tooltipRef.current) return;
 
         const updatePosition = () => {
-            const anchorEl = anchorRef.current;
+            const anchorEl = props.anchorRef.current;
             const tooltipEl = tooltipRef.current;
             const anchorRect = anchorEl.getBoundingClientRect();
 
@@ -46,7 +40,7 @@ export function Tooltip({ text, id, visible, anchorRef }: TooltipProps) {
                 position: 'absolute',
                 left: offsetLeft + anchorRect.width / 2,
                 transform: 'translateX(-50%)',
-                willChange: 'opacity, visibility, transform'
+                willChange: 'transform'
             };
             newStyle.top = newPosition === 'top' ? offsetTop - tooltipEl.offsetHeight - OFFSET : offsetTop + anchorRect.height + OFFSET;
 
@@ -60,17 +54,18 @@ export function Tooltip({ text, id, visible, anchorRef }: TooltipProps) {
         window.addEventListener('scroll', updatePosition, { capture: true });
         window.addEventListener('resize', updatePosition);
 
-        requestAnimationFrame(updatePosition);
+        updatePosition();
 
         return () => {
             window.removeEventListener('scroll', updatePosition, { capture: true });
             window.removeEventListener('resize', updatePosition);
         };
-    }, [visible, anchorRef]);
+    }, [props?.visible, props?.anchorRef]);
 
     // Hide the tooltip if it's not in the viewport.
     useEffect(() => {
-        if (!anchorRef.current) return;
+        if (!props?.anchorRef?.current) return;
+
         const observer = new IntersectionObserver(
             ([entry]) => {
                 setIsAnchorVisible(entry.isIntersecting);
@@ -80,26 +75,26 @@ export function Tooltip({ text, id, visible, anchorRef }: TooltipProps) {
                 threshold: 0.1
             }
         );
-        observer.observe(anchorRef.current);
+        observer.observe(props.anchorRef.current);
 
         return () => {
             observer.disconnect();
         };
-    }, [anchorRef]);
+    }, [props?.anchorRef]);
 
     return createPortal(
         <div
-            id={id}
+            id={props.id}
             role="tooltip"
             className={cx({
                 'adyen-checkout-tooltip': true,
-                'adyen-checkout-tooltip--hidden': !visible || !isAnchorVisible,
+                'adyen-checkout-tooltip--hidden': !props.visible || !isAnchorVisible,
                 [`adyen-checkout-tooltip--${position}`]: true
             })}
             ref={tooltipRef}
             style={style}
         >
-            {text}
+            {props.text}
             <div className={`adyen-checkout-tooltip-arrow adyen-checkout-tooltip-arrow--${position}`} />
         </div>,
         document.body

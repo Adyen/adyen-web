@@ -12,15 +12,9 @@
     z-index: token(tooltip-z-index);
     user-select: none;
     pointer-events: none;
-    opacity: 1;
-    visibility: visible;
-    transition:
-        opacity 0.2s ease,
-        visibility 0.2s ease;
 
     &--hidden {
-        opacity: 0;
-        visibility: hidden;
+        display: none;
     }
 }
 

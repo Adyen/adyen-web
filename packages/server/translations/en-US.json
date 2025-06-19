@@ -212,6 +212,8 @@
     "bankTransfer.introduction": "Press ‘Continue’ to create a new bank transfer payment. You can use the details in the following screen to finalize this payment.",
     "bankTransfer.instructions": "Thank you for your purchase, please use the following information to complete your payment.",
     "bankTransfer.shopperEmail.contextualText": "A copy of the payment details will be sent to your email so you can complete the payment later.",
+    "bankTransfer.details.title": "Payment process",
+    "bankTransfer.instruction.title": "Payment details",
     "bankTransfer.instruction.step1": "Open your banking app",
     "bankTransfer.instruction.step2": "Start a new transfer",
     "bankTransfer.instruction.step3": "Enter the account details provided below",
