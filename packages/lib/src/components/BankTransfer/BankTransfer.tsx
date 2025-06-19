@@ -6,11 +6,7 @@ import { BankTransferConfiguration, BankTransferState } from './types';
 import BankTransferResult from './components/BankTransferResult';
 import BankTransferInput from './components/BankTransferInput';
 import { TxVariants } from '../tx-variants';
-import type { ICore } from '../../core/types';
-import { CardConfiguration } from '../Card/types';
-import { TooltipController } from '../internal/Tooltip/TooltipController';
 import { TooltipProvider } from '../internal/Tooltip/TooltipProvider';
-import CopyIconButton from '../internal/Button/CopyIconButton';
 
 export class BankTransferElement extends UIElement<BankTransferConfiguration> {
     public static type = TxVariants.bankTransfer_IBAN;
