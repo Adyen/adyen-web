@@ -6,8 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
     selector: 'mode-switcher',
     templateUrl: './mode-switcher.html',
     styleUrl: './mode-switcher.css',
-    imports: [NgClass],
-    standalone: true
+    imports: [NgClass]
 })
 export class ModeSwitcher implements OnInit {
     isAdvancedFlowPageActive = false;
