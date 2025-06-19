@@ -104,7 +104,8 @@ class Giftcard extends Component<GiftcardComponentProps> {
         // Handle SRPanel errors in render with transformed error objects
         useSRPanelForGiftcardErrors({
             errors: transformedErrors,
-            isValidating
+            isValidating,
+            sfp: this.sfp
         });
 
         const transactionAmount = transactionLimit?.value < balance?.value ? transactionLimit : balance;

@@ -4,17 +4,8 @@ import useSRPanelContext from '../../../core/Errors/useSRPanelContext';
 import { usePrevious } from '../../../utils/hookUtils';
 import { ERROR_ACTION_BLUR_SCENARIO, ERROR_ACTION_FOCUS_FIELD } from '../../../core/Errors/constants';
 import { getArrayDifferences } from '../../../utils/arrayUtils';
-import { ValidationRuleResult } from '../../../utils/Validator/ValidationRuleResult';
-import { setFocusOnField } from '../../../utils/setFocus';
 import { SetSRMessagesReturnFn } from '../../../core/Errors/SRPanelProvider';
-
-/**
- * Interface for gift card field errors, matching the encrypted field types
- */
-interface GiftcardStateErrors {
-    encryptedCardNumber: ValidationRuleResult;
-    encryptedSecurityCode: ValidationRuleResult;
-}
+import SecuredFieldsProvider from '../../internal/SecuredFields/SFP/SecuredFieldsProvider';
 
 /**
  * Interface for transformed error objects returned from mapErrorsToValidationRuleResult
@@ -40,6 +31,7 @@ interface TransformedErrorsObj {
 interface UseSRPanelForGiftcardErrorsProps {
     errors: TransformedErrorsObj;
     isValidating: boolean;
+    sfp: SecuredFieldsProvider;
 }
 
 /**
@@ -56,7 +48,7 @@ interface SortedErrorObject {
  * This hook manages both visual and screen reader error announcements for the gift card component,
  * handling both blur-based validation errors and form-wide validation errors.
  */
-const useSRPanelForGiftcardErrors = ({ errors, isValidating }: UseSRPanelForGiftcardErrorsProps) => {
+const useSRPanelForGiftcardErrors = ({ errors, isValidating, sfp }: UseSRPanelForGiftcardErrorsProps) => {
     // Track sorted list of errors for comparison with previous state
     const [sortedErrorList, setSortedErrorList] = useState<SortedErrorObject[]>(null);
     // Track previous error list for detecting changes
@@ -91,7 +83,7 @@ const useSRPanelForGiftcardErrors = ({ errors, isValidating }: UseSRPanelForGift
                 case ERROR_ACTION_FOCUS_FIELD:
                     // When a field needs to be focused due to validation error
                     if (shouldMoveFocusSR) {
-                        setFocusOnField('.adyen-checkout__giftcard', srPanelResp.fieldToFocus);
+                        sfp?.setFocusOn(srPanelResp?.fieldToFocus);
                     }
                     // Remove 'showValidation' mode - allowing time for collation of all the fields in error whilst it is 'showValidation' mode (some errors come in a second render pass)
                     setTimeout(() => {
@@ -125,6 +117,6 @@ const useSRPanelForGiftcardErrors = ({ errors, isValidating }: UseSRPanelForGift
 };
 
 // Export all interfaces and the hook
-export type { GiftcardStateErrors, TransformedError, TransformedErrorsObj };
+export type { TransformedError, TransformedErrorsObj };
 
 export { useSRPanelForGiftcardErrors };
