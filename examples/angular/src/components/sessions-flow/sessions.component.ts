@@ -20,7 +20,6 @@ import { SessionsFlowApi } from '../../services/SessionsFlowApi.service';
 
 @Component({
     selector: 'adyen-sessions-flow',
-    standalone: true,
     templateUrl: './sessions.component.html',
     imports: [ModeSwitcher]
 })
