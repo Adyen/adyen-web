@@ -6,6 +6,11 @@ import { BankTransferConfiguration, BankTransferState } from './types';
 import BankTransferResult from './components/BankTransferResult';
 import BankTransferInput from './components/BankTransferInput';
 import { TxVariants } from '../tx-variants';
+import type { ICore } from '../../core/types';
+import { CardConfiguration } from '../Card/types';
+import { TooltipController } from '../internal/Tooltip/TooltipController';
+import { TooltipProvider } from '../internal/Tooltip/TooltipProvider';
+import CopyIconButton from '../internal/Button/CopyIconButton';
 
 export class BankTransferElement extends UIElement<BankTransferConfiguration> {
     public static type = TxVariants.bankTransfer_IBAN;
@@ -61,7 +66,9 @@ export class BankTransferElement extends UIElement<BankTransferConfiguration> {
         if (this.props.reference) {
             return (
                 <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                    <BankTransferResult ref={this.handleRef} {...this.props} onActionHandled={this.onActionHandled} />
+                    <TooltipProvider>
+                        <BankTransferResult ref={this.handleRef} {...this.props} onActionHandled={this.onActionHandled} />
+                    </TooltipProvider>
                 </CoreProvider>
             );
         }
