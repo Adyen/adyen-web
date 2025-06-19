@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { AnalyticsModule } from '../../types/global-types';
 import { mockDeep } from 'jest-mock-extended';
+import { ANALYTICS_ERROR_TYPE } from '../../core/Analytics/constants';
 
 const flushPromises = () => new Promise(process.nextTick);
 
