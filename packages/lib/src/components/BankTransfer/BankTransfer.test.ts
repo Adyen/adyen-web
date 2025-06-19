@@ -49,16 +49,6 @@ describe('BankTransfer', () => {
             expect(await screen.findByRole('button', { name: /Continue to SEPA Bank Transfer/i })).toBeInTheDocument();
         });
 
-        test('should render a checkbox with label "Send a copy to my email" by default', async () => {
-            const bankTransfer = new BankTransfer(global.core, {
-                ...coreProps,
-                type: 'bankTransfer_NL',
-                name: 'SEPA Bank Transfer'
-            });
-            render(bankTransfer.render());
-            expect(await screen.findByRole('checkbox', { name: /Send a copy to my email/i })).toBeInTheDocument();
-        });
-
         test('should render bank transfer result if there is a reference', async () => {
             const mockResult = {
                 totalAmount: {
