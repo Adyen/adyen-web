@@ -4,12 +4,19 @@ import { BankTransferVoucherProps } from './types';
 import './BankTransferVoucher.scss';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 
-export default function BankTransferVoucher({ voucherDetails, className = '', ...props }: BankTransferVoucherProps) {
+export default function BankTransferVoucher({ voucherDetails, className = '', ...props }: Readonly<BankTransferVoucherProps>) {
     const { i18n } = useCoreContext();
     props.onActionHandled?.({ componentType: props.paymentMethodType, actionDescription: 'voucher-presented' });
 
     return (
-        <div className={classNames('adyen-checkout__voucher-result', `adyen-checkout__voucher-result--${props.paymentMethodType}`, className)}>
+        <div
+            className={classNames(
+                'adyen-checkout__voucher-result',
+                'adyen-checkout__voucher-result--bankTransfer',
+                `adyen-checkout__voucher-result--${props.paymentMethodType}`,
+                className
+            )}
+        >
             <div className="adyen-checkout__voucher-result__top">
                 <div className="adyen-checkout__voucher-result__image">
                     {!!props.imageUrl && (

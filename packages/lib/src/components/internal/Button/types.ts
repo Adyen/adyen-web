@@ -12,6 +12,7 @@ export interface ButtonProps {
     disabled?: boolean;
     label?: string | h.JSX.Element;
     ariaLabel?: string;
+    ariaDescribedBy?: string;
     secondaryLabel?: string;
     icon?: string;
     inline?: boolean;
@@ -20,6 +21,7 @@ export interface ButtonProps {
     rel?: string;
     onClick?: (e, callbacks) => void;
     onKeyDown?: (event: KeyboardEvent) => void;
+    onKeyPress?: (event: KeyboardEvent) => void;
     buttonRef?: Ref<HTMLButtonElement>;
     onMouseEnter?: (event: MouseEvent) => void;
     onMouseLeave?: (event: MouseEvent) => void;

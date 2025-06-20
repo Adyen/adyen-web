@@ -7,7 +7,6 @@ import BankTransferVoucher from './BankTransferVoucher';
 import type { ActionHandledReturnObject } from '../../../../types/global-types';
 
 export interface BankTransferResultProps {
-    ref?: (ref: any) => void;
     paymentMethodType?: string;
     reference?: string;
     totalAmount?: { value: number; currency: string };
@@ -21,7 +20,6 @@ export interface BankTransferResultProps {
 }
 
 export default function BankTransferResult(props: BankTransferResultProps) {
-    const { reference } = props;
     const { i18n } = useCoreContext();
     const getImage = useImage();
 
@@ -42,7 +40,7 @@ export default function BankTransferResult(props: BankTransferResultProps) {
                         { label: i18n.get('bankTransfer.routingNumber'), value: props.routingNumber },
                         { label: i18n.get('bankTransfer.iban'), value: props.iban },
                         { label: i18n.get('bankTransfer.bic'), value: props.bic },
-                        { label: i18n.get('bankTransfer.reference'), value: reference }
+                        { label: i18n.get('bankTransfer.reference'), value: props.reference }
                     ]}
                 />
             }

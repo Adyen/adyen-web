@@ -37,49 +37,51 @@ function createAnchorRef() {
     return { current: anchor };
 }
 
-it('renders tooltip text when visible', () => {
-    const anchorRef = createAnchorRef();
-    render(<Tooltip id="tooltip-id" text="Test tooltip" visible={true} anchorRef={anchorRef} />);
-    expect(screen.getByRole('tooltip')).toHaveTextContent('Test tooltip');
-});
-
-it('applies correct position class', () => {
-    const anchorRef = createAnchorRef();
-    render(<Tooltip id="tooltip-id" text="Tooltip with position" visible={true} anchorRef={anchorRef} />);
-    const tooltip = screen.getByRole('tooltip');
-    expect(tooltip.className).toContain('adyen-checkout-tooltip--top');
-});
-
-it('applies bottom position class if not enough space above', () => {
-    const anchorRef = createAnchorRef();
-    // Simulate anchor near the top (no space above, space below)
-    anchorRef.current.getBoundingClientRect = jest.fn(() => ({
-        top: 0,
-        bottom: 30,
-        left: 100,
-        width: 100,
-        height: 20,
-        right: 200,
-        x: 0,
-        y: 0,
-        toJSON: () => {}
-    }));
-    render(<Tooltip id="tooltip-id" text="Tooltip with position" visible={true} anchorRef={anchorRef} />);
-    const tooltip = screen.getByRole('tooltip');
-    Object.defineProperty(tooltip, 'offsetHeight', {
-        value: 40,
-        configurable: true
+describe('Tooltip', () => {
+    it('renders tooltip text when visible', () => {
+        const anchorRef = createAnchorRef();
+        render(<Tooltip id="tooltip-id" text="Test tooltip" visible={true} anchorRef={anchorRef} />);
+        expect(screen.getByRole('tooltip')).toHaveTextContent('Test tooltip');
     });
-    // Trigger reposition logic again
-    window.dispatchEvent(new Event('resize'));
-    expect(tooltip.className).toContain('adyen-checkout-tooltip--bottom');
-});
 
-it('hides if anchor is not intersecting', async () => {
-    const anchorRef = createAnchorRef();
-    render(<Tooltip id="tooltip-id" text="Tooltip intersection" visible={true} anchorRef={anchorRef} />);
-    // Simulate anchor becoming not visible
-    intersectionCallback([{ isIntersecting: false }]);
-    const tooltip = screen.getByRole('tooltip');
-    await waitFor(() => expect(tooltip).toHaveClass('adyen-checkout-tooltip--hidden'));
+    it('applies correct position class', () => {
+        const anchorRef = createAnchorRef();
+        render(<Tooltip id="tooltip-id" text="Tooltip with position" visible={true} anchorRef={anchorRef} />);
+        const tooltip = screen.getByRole('tooltip');
+        expect(tooltip.className).toContain('adyen-checkout-tooltip--top');
+    });
+
+    it('applies bottom position class if not enough space above', () => {
+        const anchorRef = createAnchorRef();
+        // Simulate anchor near the top (no space above, space below)
+        anchorRef.current.getBoundingClientRect = jest.fn(() => ({
+            top: 0,
+            bottom: 30,
+            left: 100,
+            width: 100,
+            height: 20,
+            right: 200,
+            x: 0,
+            y: 0,
+            toJSON: () => {}
+        }));
+        render(<Tooltip id="tooltip-id" text="Tooltip with position" visible={true} anchorRef={anchorRef} />);
+        const tooltip = screen.getByRole('tooltip');
+        Object.defineProperty(tooltip, 'offsetHeight', {
+            value: 40,
+            configurable: true
+        });
+        // Trigger reposition logic again
+        window.dispatchEvent(new Event('resize'));
+        expect(tooltip.className).toContain('adyen-checkout-tooltip--bottom');
+    });
+
+    it('hides if anchor is not intersecting', async () => {
+        const anchorRef = createAnchorRef();
+        render(<Tooltip id="tooltip-id" text="Tooltip intersection" visible={true} anchorRef={anchorRef} />);
+        // Simulate anchor becoming not visible
+        intersectionCallback([{ isIntersecting: false }]);
+        const tooltip = screen.getByRole('tooltip');
+        await waitFor(() => expect(tooltip).toHaveClass('adyen-checkout-tooltip--hidden'));
+    });
 });

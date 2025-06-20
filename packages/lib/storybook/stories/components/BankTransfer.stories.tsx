@@ -21,7 +21,6 @@ export const Default: BankTransferStory = {
         countryCode: 'BE',
         amount: 2000,
         componentConfiguration: {
-            //data: { shopperEmail: 'dd' },
             onChange: state => {
                 console.log(state);
             }
