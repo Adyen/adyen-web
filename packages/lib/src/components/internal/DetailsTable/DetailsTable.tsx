@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import './DetailsTable.scss';
-import CopyIconButton from '../Button/CopyIconButton';
+import { CopyIconButton } from '../Button/CopyIconButton';
 
 export interface DetailsTableData
     extends Array<{
@@ -13,7 +13,7 @@ export interface DetailsTableProps {
     shouldShowCopyButton?: boolean;
 }
 
-export default function DetailsTable({ tableFields, shouldShowCopyButton }: DetailsTableProps) {
+export default function DetailsTable({ tableFields, shouldShowCopyButton }: Readonly<DetailsTableProps>) {
     // For context, this markup uses 2 classes for backwards compatibility
     // This was originally part of the voucher component and ported out
     // We can remove the voucher class names at point

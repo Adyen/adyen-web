@@ -2,7 +2,7 @@ import { Meta, StoryObj } from '@storybook/preact';
 import Button from '../../../src/components/internal/Button';
 import Language from '../../../src/language';
 import { CoreProvider } from '../../../src/core/Context/CoreProvider';
-import CopyIconButton from '../../../src/components/internal/Button/CopyIconButton';
+import { CopyIconButton } from '../../../src/components/internal/Button/CopyIconButton';
 
 const meta: Meta = {
     title: 'Internals/Button',

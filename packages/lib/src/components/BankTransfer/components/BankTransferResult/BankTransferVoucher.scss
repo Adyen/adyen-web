@@ -7,84 +7,86 @@
     position: relative;
 }
 
-.adyen-checkout__voucher-result-title {
-    @include index.adyen-checkout-text-title;
+.adyen-checkout__voucher-result--bankTransfer {
+    .adyen-checkout__voucher-result-title {
+        @include index.adyen-checkout-text-title;
 
-    margin-bottom: token(spacer-070);
-}
+        margin-bottom: token(spacer-070);
+    }
 
-.adyen-checkout__voucher-result__top,
-.adyen-checkout__voucher-result__bottom {
-    display: flex;
-    flex-direction: column;
-    background: token(color-background-primary);
-    border: token(border-width-s) solid token(color-separator-primary);
+    .adyen-checkout__voucher-result__top,
+    .adyen-checkout__voucher-result__bottom {
+        display: flex;
+        flex-direction: column;
+        background: token(color-background-primary);
+        border: token(border-width-s) solid token(color-separator-primary);
 
-    .adyen-checkout__details-table {
-        margin: 0;
+        .adyen-checkout__details-table {
+            margin: 0;
+            border-radius: token(border-radius-m);
+            background: token(color-background-secondary);
+        }
+
+        .adyen-checkout__details-table__item:first-child {
+            border-top: none;
+        }
+    }
+
+    .adyen-checkout__voucher-result__top {
+        padding: token(spacer-100) token(spacer-090) token(spacer-090);
+        align-items: center;
+        border-radius: token(border-radius-m) token(border-radius-m) 0 0;
+        border-bottom: 0;
+    }
+
+    .adyen-checkout__voucher-result__bottom {
+        padding: 0 token(spacer-090) token(spacer-100);
+        border-top: 0;
+        border-radius: 0 0 token(border-radius-m) token(border-radius-m);
+    }
+
+    .adyen-checkout__voucher-result__image {
+        margin-bottom: token(spacer-090);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .adyen-checkout-link--voucher-result-instructions {
+        display: inline-block;
+    }
+
+    .adyen-checkout__voucher-result__image__wrapper {
+        display: block;
+        position: relative;
+        height: token(spacer-120);
+    }
+
+    .adyen-checkout__voucher-result__image__wrapper::after {
         border-radius: token(border-radius-m);
-        background: token(color-background-secondary);
+        box-shadow: token(shadow-low);
+        content: '';
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
     }
 
-    .adyen-checkout__details-table__item:first-child {
-        border-top: none;
+    .adyen-checkout__voucher-result__image__wrapper:nth-child(2) {
+        margin-left: 0;
     }
-}
 
-.adyen-checkout__voucher-result__top {
-    padding: token(spacer-100) 0 token(spacer-090);
-    align-items: center;
-    border-radius: token(border-radius-m) token(border-radius-m) 0 0;
-    border-bottom: 0;
-}
+    .adyen-checkout__voucher-result__image__brand,
+    .adyen-checkout__voucher-result__image__issuer {
+        height: token(spacer-120);
+        border-radius: token(border-radius-m);
+    }
 
-.adyen-checkout__voucher-result__bottom {
-    padding: 0 token(spacer-090) token(spacer-100);
-    border-top: 0;
-    border-radius: 0 0 token(border-radius-m) token(border-radius-m);
-}
+    .adyen-checkout__voucher-result__amount {
+        @include index.adyen-checkout-text-title-l;
 
-.adyen-checkout__voucher-result__image {
-    margin-bottom: token(spacer-090);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-}
-
-.adyen-checkout-link--voucher-result-instructions {
-    display: inline-block;
-}
-
-.adyen-checkout__voucher-result__image__wrapper {
-    display: block;
-    position: relative;
-    height: token(spacer-120);
-}
-
-.adyen-checkout__voucher-result__image__wrapper::after {
-    border-radius: token(border-radius-m);
-    box-shadow: token(shadow-low);
-    content: '';
-    height: 100%;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 100%;
-}
-
-.adyen-checkout__voucher-result__image__wrapper:nth-child(2) {
-    margin-left: 0;
-}
-
-.adyen-checkout__voucher-result__image__brand,
-.adyen-checkout__voucher-result__image__issuer {
-    height: token(spacer-120);
-    border-radius: token(border-radius-m);
-}
-
-.adyen-checkout__voucher-result__amount {
-    @include index.adyen-checkout-text-title-l;
-
-    margin-bottom: token(spacer-090);
+        margin: 0 auto token(spacer-090);
+    }
 }

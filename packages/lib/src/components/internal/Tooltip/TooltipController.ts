@@ -4,8 +4,8 @@ import { getUniqueId } from '../../../utils/idGenerator';
 type setTooltipState = (state: TooltipProps | null) => void;
 
 export class TooltipController {
-    public static tooltipId = getUniqueId('adyen-checkout-tooltip');
-    private static DEFAULT_TIMEOUT = 100;
+    public static readonly tooltipId = getUniqueId('adyen-checkout-tooltip');
+    private static readonly DEFAULT_TIMEOUT = 100;
     private static timeoutId: ReturnType<typeof setTimeout> | null = null;
     private static registered = false;
     private static updateGlobalTooltip: setTooltipState = () => {};
@@ -27,5 +27,10 @@ export class TooltipController {
     public static hideTooltip(state?: TooltipProps) {
         clearTimeout(this.timeoutId);
         this.timeoutId = setTimeout(() => this.updateGlobalTooltip({ ...state, visible: false }), this.DEFAULT_TIMEOUT);
+    }
+
+    public static reset() {
+        this.registered = false;
+        this.updateGlobalTooltip = () => {};
     }
 }

@@ -1,10 +1,10 @@
-import { Fragment, h } from 'preact';
+import { h } from 'preact';
 import { useCallback, useRef } from 'preact/hooks';
 import Button from './Button';
 import { ButtonProps } from './types';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import copyToClipboard from '../../../utils/clipboard';
-import { useTooltip } from '../Tooltip/SingletonTooltipProvider';
+import { SingletonTooltipProvider, useTooltip } from '../Tooltip/SingletonTooltipProvider';
 import './CopyIconButton.scss';
 
 export interface CopyIconButtonProps extends ButtonProps {
@@ -24,47 +24,71 @@ const CopyIconButton = (props: CopyIconButtonProps) => {
         showTooltip({ anchorRef, text: i18n.get('button.copied') });
     }, [props.text, i18n, showTooltip]);
 
+    // todo: remove it: onKeyPress is deprecated
+    const onKeyPress = useCallback(
+        (event: KeyboardEvent) => {
+            if (event.key === 'Enter' || event.code === 'Enter' || event.key === ' ' || event.code === 'Space') {
+                event.stopPropagation();
+            }
+        },
+        [hideTooltip]
+    );
+
+    // We need it because onKeyPress does not trigger for Esc key
     const onKeyDown = useCallback(
         (event: KeyboardEvent) => {
-            if (event.key === 'Escape') {
+            if (event.key === 'Enter' || event.code === 'Enter' || event.key === ' ' || event.code === 'Space') {
+                event.stopPropagation();
+            }
+
+            if (event.key === 'Escape' || event.code === 'Escape') {
+                event.stopPropagation();
                 hideTooltip();
             }
         },
         [hideTooltip]
     );
 
-    const _showTooltip = useCallback(() => {
+    const handleShowTooltip = useCallback(() => {
         showTooltip({ anchorRef, text: i18n.get('button.copy') });
     }, [anchorRef, i18n, showTooltip]);
 
     return (
-        <Fragment>
-            <Button
-                {...props}
-                variant="iconOnly"
-                aria-describedby={tooltipId}
-                buttonRef={anchorRef}
-                ariaLabel={props.ariaLabel ?? i18n.get('button.iconOnly.copy')}
-                onMouseEnter={_showTooltip}
-                onMouseLeave={hideTooltip}
-                onFocus={_showTooltip}
-                onBlur={hideTooltip}
-                onClick={onClick}
-                onKeyDown={onKeyDown}
+        <Button
+            {...props}
+            variant="iconOnly"
+            buttonRef={anchorRef}
+            ariaDescribedBy={tooltipId}
+            ariaLabel={props.ariaLabel ?? i18n.get('button.copy')}
+            onMouseEnter={handleShowTooltip}
+            onMouseLeave={hideTooltip}
+            onFocus={handleShowTooltip}
+            onBlur={hideTooltip}
+            onClick={onClick}
+            // It's ok to have both, browsers will fire only one click event for enter/space key pressed.
+            onKeyPress={onKeyPress}
+            onKeyDown={onKeyDown}
+        >
+            <svg
+                className="adyen-checkout__button--iconOnly__icon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
             >
-                <svg
-                    className="adyen-checkout__button--iconOnly__icon"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                >
-                    <path d="M3.5 1.25C2.25736 1.25 1.25 2.25736 1.25 3.5V8.5C1.25 9.74264 2.25736 10.75 3.5 10.75H5.25V12.5C5.25 13.7426 6.25736 14.75 7.5 14.75H12.5C13.7426 14.75 14.75 13.7426 14.75 12.5V7.5C14.75 6.25736 13.7426 5.25 12.5 5.25H10.75V3.5C10.75 2.25736 9.74264 1.25 8.5 1.25H3.5ZM9.25 5.25H7.5C6.25736 5.25 5.25 6.25736 5.25 7.5V9.25H3.5C3.08579 9.25 2.75 8.91421 2.75 8.5V3.5C2.75 3.08579 3.08579 2.75 3.5 2.75H8.5C8.91421 2.75 9.25 3.08579 9.25 3.5V5.25ZM6.75 12.5V7.5C6.75 7.08579 7.08579 6.75 7.5 6.75H12.5C12.9142 6.75 13.25 7.08579 13.25 7.5V12.5C13.25 12.9142 12.9142 13.25 12.5 13.25H7.5C7.08579 13.25 6.75 12.9142 6.75 12.5Z" />
-                </svg>
-            </Button>
-        </Fragment>
+                <path d="M3.5 1.25C2.25736 1.25 1.25 2.25736 1.25 3.5V8.5C1.25 9.74264 2.25736 10.75 3.5 10.75H5.25V12.5C5.25 13.7426 6.25736 14.75 7.5 14.75H12.5C13.7426 14.75 14.75 13.7426 14.75 12.5V7.5C14.75 6.25736 13.7426 5.25 12.5 5.25H10.75V3.5C10.75 2.25736 9.74264 1.25 8.5 1.25H3.5ZM9.25 5.25H7.5C6.25736 5.25 5.25 6.25736 5.25 7.5V9.25H3.5C3.08579 9.25 2.75 8.91421 2.75 8.5V3.5C2.75 3.08579 3.08579 2.75 3.5 2.75H8.5C8.91421 2.75 9.25 3.08579 9.25 3.5V5.25ZM6.75 12.5V7.5C6.75 7.08579 7.08579 6.75 7.5 6.75H12.5C12.9142 6.75 13.25 7.08579 13.25 7.5V12.5C13.25 12.9142 12.9142 13.25 12.5 13.25H7.5C7.08579 13.25 6.75 12.9142 6.75 12.5Z" />
+            </svg>
+        </Button>
     );
 };
 
-export default CopyIconButton;
+const withTooltip = (props: CopyIconButtonProps) => {
+    return (
+        <SingletonTooltipProvider>
+            <CopyIconButton {...props} />
+        </SingletonTooltipProvider>
+    );
+};
+
+export { withTooltip as CopyIconButton };

@@ -64,22 +64,22 @@ export function Tooltip(props: TooltipProps) {
 
     // Hide the tooltip if it's not in the viewport.
     useEffect(() => {
-        if (!props?.anchorRef?.current) return;
+        const anchor = props?.anchorRef?.current;
+        if (!anchor) return;
 
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                setIsAnchorVisible(entry.isIntersecting);
-            },
-            {
-                // consider the element is intercepting if it's 10% visible
-                threshold: 0.1
-            }
-        );
-        observer.observe(props.anchorRef.current);
+        if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver(
+                ([entry]) => {
+                    setIsAnchorVisible(entry.isIntersecting);
+                },
+                { threshold: 0.1 }
+            );
+            observer.observe(anchor);
 
-        return () => {
-            observer.disconnect();
-        };
+            return () => {
+                observer.disconnect();
+            };
+        }
     }, [props?.anchorRef]);
 
     return createPortal(
