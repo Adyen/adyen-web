@@ -1,5 +1,26 @@
 # @adyen/adyen-web
 
+## 6.18.0
+
+### Minor Changes
+
+- a11y: improve giftcard screen reader errors ([#3356](https://github.com/Adyen/adyen-web/pull/3356))
+
+- Add support for the following Bank Transfer tx variants: ([#3343](https://github.com/Adyen/adyen-web/pull/3343))
+
+    - bankTransfer_BE
+    - bankTransfer_NL
+    - bankTransfer_PL
+    - bankTransfer_FR
+    - bankTransfer_CH
+    - bankTransfer_IE
+    - bankTransfer_GB
+    - bankTransfer_DE
+
+### Patch Changes
+
+- Fastlane - Exposing utility function on UMD bundle ([#3361](https://github.com/Adyen/adyen-web/pull/3361))
+
 ## 6.17.0
 
 ### Minor Changes
