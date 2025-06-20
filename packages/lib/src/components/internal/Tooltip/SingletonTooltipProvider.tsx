@@ -12,23 +12,25 @@ type TooltipContextValue = {
 
 const TooltipContext = createContext<TooltipContextValue | null>(null);
 
-const TooltipProvider = ({ children }: { children?: ComponentChildren }) => {
+const SingletonTooltipProvider = ({ children }: { children?: ComponentChildren }) => {
     const [tooltipProps, setTooltipProps] = useState<TooltipProps | null>(null);
+    const tooltipId = useRef(TooltipController.tooltipId);
+    const [isPrimaryInstance, setIsPrimaryInstance] = useState(false);
+
     const showTooltip = (state: TooltipProps) => TooltipController.showTooltip(state);
     const hideTooltip = () => TooltipController.hideTooltip();
-    const tooltipId = useRef(TooltipController.getTooltipId());
 
     useEffect(() => {
-        TooltipController.registerTooltipUpdater(setTooltipProps);
-        return () => {
-            TooltipController.unregister();
-        };
+        if (TooltipController.canRegisterTooltipHandler()) {
+            TooltipController.registerTooltipHandler(setTooltipProps);
+            setIsPrimaryInstance(true);
+        }
     }, []);
 
     return (
         <TooltipContext.Provider value={{ showTooltip, hideTooltip, id: tooltipId.current }}>
             {children}
-            {TooltipController.isRegistered() && <Tooltip id={tooltipId.current} {...tooltipProps} />}
+            {isPrimaryInstance && <Tooltip id={tooltipId.current} {...tooltipProps} />}
         </TooltipContext.Provider>
     );
 };
@@ -41,4 +43,4 @@ const useTooltip = () => {
     return ctx;
 };
 
-export { TooltipProvider, useTooltip };
+export { SingletonTooltipProvider, useTooltip };

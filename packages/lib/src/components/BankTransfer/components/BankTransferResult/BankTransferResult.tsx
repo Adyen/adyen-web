@@ -14,6 +14,9 @@ export interface BankTransferResultProps {
     beneficiary?: string;
     iban?: string;
     bic?: string;
+    accountNumber?: string;
+    sortCode?: string;
+    routingNumber?: string;
     onActionHandled?: (actionHandledObj: ActionHandledReturnObject) => void;
 }
 
@@ -34,6 +37,9 @@ export default function BankTransferResult(props: BankTransferResultProps) {
                     shouldShowCopyButton
                     tableFields={[
                         { label: i18n.get('bankTransfer.beneficiary'), value: props.beneficiary },
+                        { label: i18n.get('bankTransfer.accountNumber'), value: props.accountNumber },
+                        { label: i18n.get('bankTransfer.sortCode'), value: props.sortCode },
+                        { label: i18n.get('bankTransfer.routingNumber'), value: props.routingNumber },
                         { label: i18n.get('bankTransfer.iban'), value: props.iban },
                         { label: i18n.get('bankTransfer.bic'), value: props.bic },
                         { label: i18n.get('bankTransfer.reference'), value: reference }

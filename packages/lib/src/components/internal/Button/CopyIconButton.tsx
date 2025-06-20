@@ -4,7 +4,7 @@ import Button from './Button';
 import { ButtonProps } from './types';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import copyToClipboard from '../../../utils/clipboard';
-import { useTooltip } from '../Tooltip/TooltipProvider';
+import { useTooltip } from '../Tooltip/SingletonTooltipProvider';
 import './CopyIconButton.scss';
 
 export interface CopyIconButtonProps extends ButtonProps {
