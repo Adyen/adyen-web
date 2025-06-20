@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from '@storybook/preact';
 import { useRef } from 'preact/hooks';
 import { Tooltip } from '../../../src/components/internal/Tooltip';
-import { TooltipProvider, useTooltip } from '../../../src/components/internal/Tooltip/TooltipProvider';
+import { SingletonTooltipProvider, useTooltip } from '../../../src/components/internal/Tooltip/SingletonTooltipProvider';
 
 const meta: Meta = {
     title: 'Internals/Tooltip',
@@ -35,9 +35,9 @@ export const Default: StoryObj = {
 
         return (
             <>
-                <TooltipProvider>
+                <SingletonTooltipProvider>
                     <TooltipConsumer anchorRef={anchorRef} margin={args.margin} />
-                </TooltipProvider>
+                </SingletonTooltipProvider>
             </>
         );
     },
