@@ -6,6 +6,7 @@ import { BankTransferConfiguration, BankTransferState } from './types';
 import BankTransferResult from './components/BankTransferResult';
 import BankTransferInput from './components/BankTransferInput';
 import { TxVariants } from '../tx-variants';
+import { SingletonTooltipProvider } from '../internal/Tooltip/SingletonTooltipProvider';
 
 export class BankTransferElement extends UIElement<BankTransferConfiguration> {
     public static type = TxVariants.bankTransfer_IBAN;
@@ -22,7 +23,9 @@ export class BankTransferElement extends UIElement<BankTransferConfiguration> {
     ];
 
     public static defaultProps = {
-        showEmailAddress: true
+        showEmailAddress: true,
+        showContextualElement: true,
+        data: { shopperEmail: '' }
     };
 
     // @ts-ignore Double check why state extends all props
@@ -51,22 +54,20 @@ export class BankTransferElement extends UIElement<BankTransferConfiguration> {
         };
     }
 
-    private handleRef = ref => {
-        this.componentRef = ref;
-    };
-
     render() {
         if (this.props.reference) {
             return (
                 <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                    <BankTransferResult ref={this.handleRef} {...this.props} onActionHandled={this.onActionHandled} />
+                    <SingletonTooltipProvider>
+                        <BankTransferResult {...this.props} onActionHandled={this.onActionHandled} />
+                    </SingletonTooltipProvider>
                 </CoreProvider>
             );
         }
 
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                {this.props.showEmailAddress && <BankTransferInput ref={this.handleRef} {...this.props} onChange={this.setState} />}
+                {this.props.showEmailAddress && <BankTransferInput setComponentRef={this.setComponentRef} {...this.props} onChange={this.setState} />}
                 <RedirectButton
                     {...this.props}
                     showPayButton={this.props.showPayButton}
