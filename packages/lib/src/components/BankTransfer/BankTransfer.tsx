@@ -54,16 +54,12 @@ export class BankTransferElement extends UIElement<BankTransferConfiguration> {
         };
     }
 
-    private handleRef = ref => {
-        this.componentRef = ref;
-    };
-
     render() {
         if (this.props.reference) {
             return (
                 <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                     <SingletonTooltipProvider>
-                        <BankTransferResult ref={this.handleRef} {...this.props} onActionHandled={this.onActionHandled} />
+                        <BankTransferResult {...this.props} onActionHandled={this.onActionHandled} />
                     </SingletonTooltipProvider>
                 </CoreProvider>
             );

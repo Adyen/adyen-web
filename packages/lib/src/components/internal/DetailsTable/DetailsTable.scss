@@ -31,6 +31,7 @@
     @include index.adyen-checkout-text-body-strongest;
 
     display: flex;
+    align-items: center;
     gap: token(spacer-070);
     max-width: 50%;
     text-align: right;

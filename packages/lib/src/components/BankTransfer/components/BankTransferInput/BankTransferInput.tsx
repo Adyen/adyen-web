@@ -10,7 +10,7 @@ import Field from '../../../internal/FormFields/Field';
 import { optionalEmailValidationRule } from './validationRule';
 import { BankTransferInputProps } from './types';
 
-function BankTransferInput(props: BankTransferInputProps) {
+function BankTransferInput(props: Readonly<BankTransferInputProps>) {
     const { i18n } = useCoreContext();
     const emailOptionalLabel = `${i18n.get('shopperEmail')} ${i18n.get('field.title.optional')}`;
 
