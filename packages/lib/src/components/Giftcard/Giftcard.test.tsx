@@ -9,16 +9,12 @@ import { ANALYTICS_ERROR_TYPE } from '../../core/Analytics/constants';
 const flushPromises = () => new Promise(process.nextTick);
 
 describe('Giftcard', () => {
-    const resources = global.resources;
     const i18n = global.i18n;
     const user = userEvent.setup();
 
     const baseProps = {
+        ...global.commonCoreProps,
         clientKey: 'mock',
-        modules: {
-            resources,
-            analytics: global.analytics
-        },
         amount: { value: 1000, currency: 'EUR' },
         name: 'My Test Gift Card',
         type: 'giftcard',
@@ -152,7 +148,7 @@ describe('Giftcard', () => {
             const giftcard = new Giftcard(global.core, {
                 ...baseProps,
                 modules: {
-                    resources,
+                    ...baseProps.modules,
                     analytics
                 },
                 onError: () => {},

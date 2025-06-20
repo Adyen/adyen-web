@@ -169,6 +169,7 @@ describe('Gift card', () => {
 
     beforeEach(() => {
         const props = {
+            ...global.commonCoreProps,
             id: '3',
             type: 'giftcard',
             brand: 'givex',
