@@ -70,7 +70,7 @@ describe('BankTransfer', () => {
 
             render(bankTransfer.render());
             expect(await screen.findByText('€259.00')).toBeInTheDocument();
-            expect(await screen.findByText('Beneficiary')).toBeInTheDocument();
+            expect(await screen.findByText('Beneficiary name')).toBeInTheDocument();
             expect(await screen.findByText(mockResult.beneficiary)).toBeInTheDocument();
             expect(await screen.findByText('IBAN')).toBeInTheDocument();
             expect(await screen.findByText(mockResult.iban)).toBeInTheDocument();
