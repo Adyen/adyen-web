@@ -96,7 +96,7 @@ describe('Await', () => {
     describe('Expired', () => {
         let checkPaymentStatusValue;
         beforeEach(() => {
-            checkPaymentStatusValue = { error: 'Unkown error', payload: 'Ab02b4c0!' };
+            checkPaymentStatusValue = { error: 'Unkown error', payload: 'Ab02b4c0!', resultCode: 'refused', type: 'complete' };
             (checkPaymentStatus as jest.Mock).mockResolvedValue(checkPaymentStatusValue);
         });
 
@@ -112,7 +112,11 @@ describe('Await', () => {
                 expect(defaultProps.onComplete).toHaveBeenCalledWith(
                     {
                         data: {
-                            details: { payload: checkPaymentStatusValue.payload },
+                            details: {
+                                payload: checkPaymentStatusValue.payload,
+                                resultCode: checkPaymentStatusValue.resultCode,
+                                type: checkPaymentStatusValue.type
+                            },
                             paymentData: defaultProps.paymentData
                         }
                     },
@@ -150,7 +154,11 @@ describe('Await', () => {
             expect(defaultProps.onComplete).toHaveBeenCalledWith(
                 {
                     data: {
-                        details: { payload: checkPaymentStatusValue.payload },
+                        details: {
+                            payload: checkPaymentStatusValue.payload,
+                            resultCode: checkPaymentStatusValue.resultCode,
+                            type: checkPaymentStatusValue.type
+                        },
                         paymentData: defaultProps.paymentData
                     }
                 },
