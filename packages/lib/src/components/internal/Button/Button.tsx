@@ -13,7 +13,12 @@ class Button extends Component<ButtonProps, ButtonState> {
         label: '',
         inline: false,
         target: '_self',
-        onClick: () => {}
+        onClick: () => {},
+        onMouseEnter: () => {},
+        onMouseLeave: () => {},
+        onFocus: () => {},
+        onBlur: () => {},
+        onKeyPress: () => {}
     };
 
     public onClick = e => {
@@ -36,7 +41,24 @@ class Button extends Component<ButtonProps, ButtonState> {
     };
 
     render() {
-        const { classNameModifiers = [], disabled, href, icon, inline, label, ariaLabel, status, variant, buttonRef }: ButtonProps = this.props;
+        const {
+            classNameModifiers = [],
+            disabled,
+            href,
+            icon,
+            inline,
+            label,
+            ariaLabel,
+            ariaDescribedBy,
+            status,
+            variant,
+            buttonRef,
+            onMouseEnter,
+            onMouseLeave,
+            onFocus,
+            onBlur,
+            onKeyPress
+        }: ButtonProps = this.props;
         const { completed } = this.state;
         const { i18n } = useCoreContext();
 
@@ -92,6 +114,12 @@ class Button extends Component<ButtonProps, ButtonState> {
                 onClick={this.onClick}
                 onKeyDown={this.onKeyDown}
                 aria-label={ariaLabel}
+                aria-describedby={ariaDescribedBy}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onKeyPress={onKeyPress}
             >
                 {buttonText}
                 {status !== 'loading' && status !== 'redirect' && this.props.children}
