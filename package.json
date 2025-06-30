@@ -38,7 +38,7 @@
         "prettier": "3.5.3"
     },
     "resolutions": {
-        "tar-fs": "^3.0.8",
+        "tar-fs": "^3.0.9",
         "**/estimo/nanoid": "^5.1.5"
     }
 }
