@@ -32,7 +32,7 @@
     },
     "devDependencies": {
         "@adyen/adyen-web-server": "1.0.0",
-        "@changesets/cli": "2.29.2",
+        "@changesets/cli": "2.29.5",
         "@changesets/get-github-info": "0.6.0",
         "concurrently": "9.2.0",
         "prettier": "3.5.3"
