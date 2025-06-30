@@ -40,6 +40,6 @@
     "resolutions": {
         "tar-fs": "^3.0.9",
         "**/estimo/nanoid": "^5.1.5",
-        "cheerio": "1.0.0-rc.12"
+        "cheerio": "1.1.0"
     }
 }
