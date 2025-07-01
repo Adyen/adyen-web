@@ -39,9 +39,6 @@ test.describe('Custom Card - Dual branding reset', () => {
 
             await customCard.waitForVisibleBrands();
 
-            // Select brand
-            await customCard.selectBrand('bcmc');
-
             // For some reason: await page.evaluate('window.customCardSeparate.data'); is really flaky in this test...
             // ...so we're doing it this way instead. The test will timeout if brand *not* set to expected value
             await page.waitForFunction(() => window['customCardSeparate'].data.paymentMethod.brand === 'bcmc');

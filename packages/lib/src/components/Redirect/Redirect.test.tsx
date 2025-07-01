@@ -84,7 +84,7 @@ describe('Redirect error', () => {
 
     test('should send an error event to the analytics module if beforeRedirect rejects', async () => {
         const analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', bundleType: '' });
-        analytics.sendAnalytics = jest.fn(() => {});
+        analytics.sendAnalytics = jest.fn(() => true);
         const props: RedirectConfiguration = {
             url: 'test',
             method: 'POST',
@@ -101,11 +101,13 @@ describe('Redirect error', () => {
             expect(screen.getByTestId('redirect-shopper-form')).toBeInTheDocument();
         });
 
-        expect(analytics.sendAnalytics).toHaveBeenCalledWith(
-            'ideal',
-            { code: '600', component: 'ideal', errorType: 'Redirect', type: 'error' },
-            undefined
-        );
+        expect(analytics.sendAnalytics).toHaveBeenCalledWith({
+            code: '600',
+            component: 'ideal',
+            errorType: 'Redirect',
+            timestamp: expect.any(String),
+            id: expect.any(String)
+        });
     });
 
     test('should send an error event to the analytics module if the redirection failed', async () => {
@@ -114,7 +116,7 @@ describe('Redirect error', () => {
         });
 
         const analytics = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', bundleType: '' });
-        analytics.sendAnalytics = jest.fn(() => {});
+        analytics.sendAnalytics = jest.fn(() => true);
         const props: RedirectConfiguration = {
             url: 'test',
             method: 'GET',
@@ -126,11 +128,13 @@ describe('Redirect error', () => {
         render(redirectElement.render());
 
         await waitFor(() => {
-            expect(analytics.sendAnalytics).toHaveBeenCalledWith(
-                'ideal',
-                { code: '600', component: 'ideal', errorType: 'Redirect', type: 'error' },
-                undefined
-            );
+            expect(analytics.sendAnalytics).toHaveBeenCalledWith({
+                code: '600',
+                component: 'ideal',
+                errorType: 'Redirect',
+                timestamp: expect.any(String),
+                id: expect.any(String)
+            });
         });
     });
 });

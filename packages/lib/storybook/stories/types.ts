@@ -1,10 +1,25 @@
 import { Meta, StoryObj } from '@storybook/preact';
 import UIElement from '../../src/components/internal/UIElement';
-import { CoreConfiguration, PaymentMethodsResponse } from '../../src/types';
+import { AddressData, CoreConfiguration, PaymentMethodsResponse } from '../../src/types';
+
+export type ShopperDetails = {
+    shopperName: {
+        firstName: string;
+        lastName: string;
+    };
+    telephoneNumber: string;
+    shopperEmail: string;
+    dateOfBirth: string;
+    shopperIP: string;
+    deliveryAddress: AddressData;
+    billingAddress: AddressData;
+};
 
 export type GlobalStoryProps = AdyenCheckoutProps &
-    CoreConfiguration & {
+    Omit<CoreConfiguration, 'amount'> & {
         useSessions: boolean;
+        redirectResult?: string;
+        sessionId?: string;
     };
 
 export interface PaymentMethodStoryProps<T> extends GlobalStoryProps {
@@ -26,8 +41,10 @@ export type AdyenCheckoutProps = {
     countryCode: string;
     shopperLocale: string;
     amount: number;
-    sessionData?: {}; // TODO we don't have proper type for this right now
+    sessionData?: PaymentMethodsResponse;
+    allowedPaymentTypes?: string[];
     paymentMethodsOverride?: PaymentMethodsResponse;
     paymentsOptions?: {}; // TODO we don't have proper type for this right now
     onPaymentCompleted?: (data: any, element?: UIElement) => void;
+    srConfig: { showPanel: boolean; moveFocus: boolean };
 };

@@ -51,14 +51,3 @@
     position: relative;
     z-index: 11;
 }
-
-@media (max-width: 480px) {
-    .adyen-checkout__modal-wrapper {
-        padding: 0;
-    }
-
-    .adyen-checkout__modal {
-        border-radius: 0;
-        height: 100%;
-    }
-}

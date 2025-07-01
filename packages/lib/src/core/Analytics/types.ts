@@ -64,31 +64,7 @@ export type AnalyticsProps = Pick<CoreConfiguration, 'loadingContext' | 'locale'
     analyticsContext?: string;
 };
 
-export interface AnalyticsObject {
-    timestamp: string;
-    component: string;
-    id: string;
-    code?: string;
-    errorType?: string;
-    message?: string;
-    type?: string;
-    subtype?: string;
-    target?: string;
-    metadata?: Record<string, any>;
-    isStoredPaymentMethod?: boolean;
-    brand?: string;
-    validationErrorCode?: string;
-    validationErrorMessage?: string;
-    issuer?: string;
-    isExpress?: boolean;
-    expressPage?: string;
-    result?: string;
-    configData?: Record<string, string | boolean>;
-}
-
-export type AnalyticsEvent = (typeof ANALYTICS_EVENT)[keyof typeof ANALYTICS_EVENT];
-
-export type CreateAnalyticsObject = Omit<AnalyticsObject, 'timestamp' | 'id'> & { event: AnalyticsEvent };
+export type AnalyticsEventCategory = (typeof ANALYTICS_EVENT)[keyof typeof ANALYTICS_EVENT];
 
 export type AnalyticsInitialEvent = {
     containerWidth: number;
@@ -106,21 +82,29 @@ export type AnalyticsConfig = {
     loadingContext?: string;
 };
 
-export type CreateAnalyticsEventData = Omit<AnalyticsObject, 'timestamp' | 'id'>;
-
-export type CreateAnalyticsEventObject = {
-    event: AnalyticsEvent;
-    data: CreateAnalyticsEventData;
-};
+export interface AnalyticsObject {
+    timestamp: string;
+    id: string;
+    component: string;
+    code?: string;
+    errorType?: string;
+    message?: string;
+    type?: string;
+    subType?: string;
+    target?: string;
+    metadata?: Record<string, any>;
+    isStoredPaymentMethod?: boolean;
+    brand?: string;
+    validationErrorCode?: string;
+    validationErrorMessage?: string;
+    issuer?: string;
+    isExpress?: boolean;
+    expressPage?: string;
+    result?: string;
+    configData?: Record<string, string | boolean>;
+}
 
 export type EventQueueProps = Pick<AnalyticsConfig, 'analyticsContext' | 'clientKey'> & { analyticsPath: string };
-
-export type SendAnalyticsObject = Omit<AnalyticsObject, 'timestamp' | 'id' | 'component'> & { component?: string };
-
-export type FieldErrorAnalyticsObject = {
-    fieldType: string;
-    errorCode: string;
-};
 
 export type ConfigData = CardConfigData; // TODO extend in future as we get Dropin & Checkout related config data
 
@@ -171,4 +155,9 @@ export type CardConfigData = {
     hasOnFocus: boolean;
     hasOnLoad: boolean;
     hasOnEnterKeyPressed: boolean;
+    /**
+     * Fastlane
+     */
+    hasFastlaneConfigured?: boolean;
+    isFastlaneConsentDefaultOn?: boolean;
 };

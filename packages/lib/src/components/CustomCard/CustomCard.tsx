@@ -10,7 +10,7 @@ import { getCardImageUrl, fieldTypeToSnakeCase } from '../internal/SecuredFields
 import { TxVariants } from '../tx-variants';
 import { CustomCardConfiguration } from './types';
 import { ANALYTICS_FOCUS_STR, ANALYTICS_UNFOCUS_STR } from '../../core/Analytics/constants';
-import { SendAnalyticsObject } from '../../core/Analytics/types';
+import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
 
 export class CustomCard extends UIElement<CustomCardConfiguration> {
     public static type = TxVariants.customCard;
@@ -45,10 +45,6 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
             browserInfo: this.browserInfo,
             origin: !!window && window.location.origin
         };
-    }
-
-    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
-        super.submitAnalytics(analyticsObj, this.props);
     }
 
     updateStyles(stylesObj) {
@@ -102,10 +98,12 @@ export class CustomCard extends UIElement<CustomCardConfiguration> {
     }
 
     private onFocus = (obj: CardFocusData) => {
-        this.submitAnalytics({
+        const event = new AnalyticsInfoEvent({
             type: obj.focus === true ? ANALYTICS_FOCUS_STR : ANALYTICS_UNFOCUS_STR,
             target: fieldTypeToSnakeCase(obj.fieldType)
         });
+
+        this.submitAnalytics(event);
 
         // Call merchant defined callback
         this.props.onFocus?.(obj);

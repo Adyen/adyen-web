@@ -1,5 +1,5 @@
-import { CardBrandsConfiguration } from '../Card/types';
-import { Placeholders, SFError } from '../Card/components/CardInput/types';
+import { CardBrandsConfiguration, CardPlaceholders } from '../Card/types';
+import { SFError } from '../Card/components/CardInput/types';
 import {
     CardAllValidData,
     CardAutoCompleteData,
@@ -176,7 +176,7 @@ export type CustomCardConfiguration = CoreCallbacks & {
      * Configure placeholder text for holderName, cardNumber, expirationDate, securityCode and password.
      * - merchant set config option
      */
-    placeholders?: Placeholders;
+    placeholders?: CardPlaceholders;
 
     /**
      * Object to configure the styling of the inputs in the iframes that are used to present the PAN, Expiry Date & Security Code fields

@@ -1,5 +1,5 @@
-import type { Order, OrderStatus, PaymentActionsType, PaymentAmount } from '../../types/global-types';
-import type { UIElementProps, UIElementStatus } from '../internal/UIElement/types';
+import type { Order, OrderStatus, PaymentActionsType, PaymentAmount, StoredPaymentMethod } from '../../types/global-types';
+import { StatusFromAction, UIElementProps, UIElementStatus } from '../internal/UIElement/types';
 import type { NewableComponent } from '../../core/core.registry';
 import type { ICore } from '../../core/types';
 
@@ -103,6 +103,12 @@ export interface DropinConfiguration extends UIElementProps {
     onReady?(): void;
 
     /**
+     * Callback triggered before Drop-in creates the stored payment method UIElements.
+     * This callback lets you choose which saved payment methods appear in the Drop-in.
+     */
+    filterStoredPaymentMethods?(storedPaymentMethods: StoredPaymentMethod[]): StoredPaymentMethod[];
+
+    /**
      * Callback triggered once the shopper selects a different payment method in the Drop-in
      */
     onSelect?(paymentMethod: UIElement): void;
@@ -150,22 +156,25 @@ export interface DropinComponentProps extends DropinConfiguration {
     onOrderCancel?: onOrderCancelType;
 }
 
-interface DropinStatus {
-    type: UIElementStatus;
+export interface DropinStatus {
+    type: UIElementStatus | StatusFromAction;
     props?: DropinStatusProps;
 }
 
 export interface DropinStatusProps {
     component?: UIElement;
+    message?: string;
 }
 
 export interface DropinComponentState {
-    elements: any[];
+    elements: UIElement[];
+    fastlanePaymentElement: UIElement[];
     instantPaymentElements: UIElement[];
     storedPaymentElements: UIElement[];
     status: DropinStatus;
     activePaymentMethod: UIElement;
-    cachedPaymentMethods: object;
+    cachedPaymentMethods: Record<string, boolean>;
+    showDefaultPaymentMethodList: boolean;
     isDisabling: boolean;
     orderStatus: OrderStatus;
 }

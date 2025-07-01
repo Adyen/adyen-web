@@ -1,5 +1,12 @@
 import Language from '../../../../language/Language';
-import { BinLookupResponse, BrandConfiguration, CardBrandsConfiguration, CardBackendConfiguration, DualBrandSelectElement } from '../../types';
+import type {
+    BinLookupResponse,
+    BrandConfiguration,
+    CardBrandsConfiguration,
+    CardBackendConfiguration,
+    DualBrandSelectElement,
+    CardPlaceholders
+} from '../../types';
 import { InstallmentOptions } from './components/types';
 import { ValidationResult } from '../../../internal/PersonalDetails/types';
 import {
@@ -24,7 +31,8 @@ import { OnAddressLookupType, OnAddressSelectedType } from '../../../internal/Ad
 import { ComponentMethodsRef } from '../../../internal/UIElement/types';
 import { AddressData, PaymentAmount } from '../../../../types/global-types';
 import { AnalyticsModule } from '../../../../types/global-types';
-import { FieldErrorAnalyticsObject } from '../../../../core/Analytics/types';
+import type { FastlaneSignupConfiguration } from '../../../PayPalFastlane/types';
+import { AnalyticsEvent } from '../../../../core/Analytics/AnalyticsEvent';
 
 export interface CardInputValidState {
     holderName?: boolean;
@@ -56,17 +64,6 @@ export interface CardInputDataState {
     taxNumber?: string;
 }
 
-type PlaceholderKeys =
-    | 'holderName'
-    | 'cardNumber'
-    | 'expiryDate'
-    | 'expiryMonth'
-    | 'expiryYear'
-    | 'securityCodeThreeDigits'
-    | 'securityCodeFourDigits'
-    | 'password';
-export type Placeholders = Partial<Record<PlaceholderKeys, string>>;
-
 /**
  * Should be the subset of the props sent to CardInput that are *actually* used by CardInput
  * - either in the comp itself or are passed on to its children
@@ -92,6 +89,7 @@ export interface CardInputProps {
     enableStoreDetails?: boolean;
     expiryMonth?: string;
     expiryYear?: string;
+    fastlaneConfiguration?: FastlaneSignupConfiguration;
     forceCompat?: boolean;
     fundingSource?: 'debit' | 'credit';
     hasCVC?: boolean;
@@ -125,12 +123,13 @@ export interface CardInputProps {
     onFieldValid?: (o: CardFieldValidData) => {};
     onFocus?: (e) => {};
     onLoad?: (o: CardLoadData) => {};
+    onSubmitAnalytics?: (event: AnalyticsEvent) => void;
     handleKeyPress?: (obj: KeyboardEvent) => void;
     onAddressLookup?: OnAddressLookupType;
     onAddressSelected?: OnAddressSelectedType;
     addressSearchDebounceMs?: number;
     payButton?: (obj) => {};
-    placeholders?: Placeholders;
+    placeholders?: CardPlaceholders;
     positionHolderNameOnTop?: boolean;
     resources: Resources;
     setComponentRef?: (ref) => void;
@@ -148,7 +147,6 @@ export interface CardInputProps {
     maskSecurityCode?: boolean;
     exposeExpiryDate?: boolean;
     disclaimerMessage?: DisclaimerMsgObject;
-    onValidationErrorAnalytics?: (obj: FieldErrorAnalyticsObject) => {};
 }
 
 export interface CardInputState {

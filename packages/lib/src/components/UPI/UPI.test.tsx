@@ -129,9 +129,9 @@ describe('UPI', () => {
                 isMobileMock.mockReturnValue(false);
                 const upi = new UPI(global.core, { ...props, defaultMode: 'vpa' });
                 render(upi.render());
+
                 const user = userEvent.setup();
-                const vpaInput = await screen.findByLabelText(/Enter UPI ID \/ VPA/i);
-                await user.type(vpaInput, 'test@test');
+                await user.type(screen.getByTestId('input-virtual-payment-address'), 'test@test');
                 expect(upi.isValid).toBe(true);
             });
         });
@@ -170,13 +170,12 @@ describe('UPI', () => {
             test('should be valid when filling the vpa', async () => {
                 const upi = new UPI(global.core, { ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
                 render(upi.render());
+
                 const user = userEvent.setup();
-                const radioButton = await screen.findByRole('radio', { name: /Enter UPI ID/i });
-                await user.click(radioButton);
+                await user.click(screen.getByRole('radio', { name: /Enter UPI ID/i }));
                 expect(upi.isValid).toBe(false);
 
-                const vpaInput = await screen.findByLabelText(/Enter UPI ID \/ VPA/i);
-                await user.type(vpaInput, 'test@test');
+                await user.type(screen.getByTestId('input-virtual-payment-address'), 'test@test');
                 expect(upi.isValid).toBe(true);
             });
         });

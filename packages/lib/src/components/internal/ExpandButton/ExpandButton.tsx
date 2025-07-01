@@ -9,9 +9,27 @@ interface ExpandButton {
     children?: ComponentChildren;
     showRadioButton?: boolean;
     classNameModifiers?: string[];
+    standalone?: boolean;
 }
 
-function ExpandButton({ buttonId, showRadioButton, isSelected, expandContentId, children, classNameModifiers = [] }: Readonly<ExpandButton>) {
+function ExpandButton({
+    buttonId,
+    showRadioButton,
+    isSelected,
+    expandContentId,
+    children,
+    classNameModifiers = [],
+    standalone = false
+}: Readonly<ExpandButton>) {
+    // If we only have a single payment method we should use a div instead of toggable button
+    if (standalone) {
+        return (
+            <div className={classNames('adyen-checkout__payment-method__header__title', 'adyen-checkout__payment-method__header__title--standalone')}>
+                {children}
+            </div>
+        );
+    }
+
     return (
         // See discussion: https://github.com/w3c/aria/issues/1404
         // this has been disabled as we got quite a few complains

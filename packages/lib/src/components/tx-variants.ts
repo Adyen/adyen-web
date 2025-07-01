@@ -2,6 +2,14 @@ export enum TxVariants {
     /** internal */
     address = 'address',
     bankTransfer_IBAN = 'bankTransfer_IBAN',
+    bankTransfer_BE = 'bankTransfer_BE',
+    bankTransfer_NL = 'bankTransfer_NL',
+    bankTransfer_PL = 'bankTransfer_PL',
+    bankTransfer_FR = 'bankTransfer_FR',
+    bankTransfer_CH = 'bankTransfer_CH',
+    bankTransfer_IE = 'bankTransfer_IE',
+    bankTransfer_GB = 'bankTransfer_GB',
+    bankTransfer_DE = 'bankTransfer_DE',
     donation = 'donation',
     personal_details = 'personal_details',
     dropin = 'dropin',
@@ -25,6 +33,7 @@ export enum TxVariants {
     ach = 'ach',
     directdebit_GB = 'directdebit_GB',
     sepadirectdebit = 'sepadirectdebit',
+    eft_directdebit_CA = 'eft_directdebit_CA',
     /** Direct debit */
 
     /** Open Invoice */
@@ -40,7 +49,6 @@ export enum TxVariants {
     facilypay_12x = 'facilypay_12x',
     ratepay = 'ratepay',
     ratepay_directdebit = 'ratepay_directdebit',
-    riverty = 'riverty',
     /** Open Invoice */
 
     /** Wallets */
@@ -50,6 +58,7 @@ export enum TxVariants {
     clicktopay = 'clicktopay',
     googlepay = 'googlepay',
     paypal = 'paypal',
+    fastlane = 'fastlane',
     paywithgoogle = 'paywithgoogle',
     /** Wallets */
 
@@ -116,6 +125,8 @@ export enum TxVariants {
     vipps = 'vipps',
     trustly = 'trustly',
     paybybank_AIS_DD = 'paybybank_AIS_DD',
+    riverty = 'riverty',
+    paybybank_pix = 'paybybank_pix',
     /** Redirect */
 
     /** Klarna */

@@ -22,6 +22,10 @@
         margin-right: token(spacer-000);
         margin-left: token(spacer-070);
     }
+
+    &--standalone {
+        cursor: default;
+    }
 }
 
 /*  Payment Method Radio Button */

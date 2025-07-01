@@ -62,6 +62,7 @@ const VpaInput = (props: VpaInputProps): h.JSX.Element => {
                 value={data.virtualPaymentAddress}
                 onInput={handleChangeFor('virtualPaymentAddress', 'input')}
                 onBlur={handleChangeFor('virtualPaymentAddress', 'blur')}
+                data-testid={'input-virtual-payment-address'}
             />
         </Field>
     );

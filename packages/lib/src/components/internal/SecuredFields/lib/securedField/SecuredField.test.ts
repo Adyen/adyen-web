@@ -6,8 +6,8 @@ import en from '../../../../../../../server/translations/en-US.json';
 import { SF_ErrorCodes } from '../../../../../core/Errors/constants';
 import { CVC_POLICY_REQUIRED, DATE_POLICY_REQUIRED, ENCRYPTED_PWD_FIELD, GIFT_CARD } from '../constants';
 import { Placeholders as GiftcardPlaceholders } from '../../../../Giftcard/components/types';
-import { Placeholders as CardPlaceholders } from '../../../../Card/components/CardInput/types';
 import * as logger from '../utilities/logger';
+import { CardPlaceholders } from '../../../../Card/types';
 
 const ENCRYPTED_CARD_NUMBER = 'encryptedCardNumber';
 const ENCRYPTED_EXPIRY_DATE = 'encryptedExpiryDate';

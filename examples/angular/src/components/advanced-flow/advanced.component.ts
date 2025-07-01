@@ -24,7 +24,6 @@ import { ModeSwitcher } from '../mode-switcher/mode-switcher';
 
 @Component({
     selector: 'adyen-advanced-flow',
-    standalone: true,
     templateUrl: './advanced.component.html',
     imports: [ModeSwitcher]
 })

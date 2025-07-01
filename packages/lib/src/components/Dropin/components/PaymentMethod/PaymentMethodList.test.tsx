@@ -106,7 +106,7 @@ test('should call onSelect when mounting the Component if openFirstPaymentMethod
         />
     );
 
-    expect(onSelectMock).toHaveBeenCalledTimes(2);
+    expect(onSelectMock).toHaveBeenCalledTimes(1);
     expect(onSelectMock).toHaveBeenCalledWith(paymentMethods[0]);
 });
 
@@ -169,6 +169,7 @@ describe('Gift card', () => {
 
     beforeEach(() => {
         const props = {
+            ...global.commonCoreProps,
             id: '3',
             type: 'giftcard',
             brand: 'givex',

@@ -1,5 +1,5 @@
 import { ComponentChildren, h } from 'preact';
-import { useRef } from 'preact/hooks';
+import { useEffect, useRef } from 'preact/hooks';
 import cx from 'classnames';
 import './Modal.scss';
 import { useModal } from './useModal';
@@ -51,6 +51,23 @@ const Modal = ({
         focusAfterClose,
         onClose
     });
+
+    /**
+     * It shouldn't propagate ENTER key event to the parent component. This effect suppress the event propagation
+     * (e.g. ENTER key press might trigger the payment flow for Card)
+     */
+    useEffect(() => {
+        if (!modalContainerRef.current) return;
+
+        const suppressKeyPress = (event: KeyboardEvent) => {
+            if (event.key === 'Enter' || event.code === 'Enter') event.stopPropagation();
+        };
+
+        modalContainerRef.current.addEventListener('keypress', suppressKeyPress, { capture: true });
+        return () => {
+            modalContainerRef.current.removeEventListener('keypress', suppressKeyPress);
+        };
+    }, [modalContainerRef.current]);
 
     return (
         // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions

@@ -1,5 +1,5 @@
 import AdyenCheckout from './core';
-import { render, screen, within } from '@testing-library/preact';
+import { render, screen, waitFor, within } from '@testing-library/preact';
 import { Ach, Card, Dropin } from '../components';
 
 // TODO copy
@@ -64,6 +64,15 @@ const createDropinComponent = async mergeConfig => {
     return component;
 };
 
+beforeEach(() => {
+    jest.useFakeTimers();
+});
+
+afterEach(() => {
+    jest.runOnlyPendingTimers();
+    jest.useRealTimers();
+});
+
 test('should render payButton', async () => {
     const dropinElement = await createDropinComponent({ showPayButton: true });
     render(dropinElement.render());
@@ -74,8 +83,14 @@ test('should render payButton', async () => {
     // go trough and select each element in the dropin, check if it has payButton
     for (const paymentMethodListItem of paymentMethodListItemArray) {
         paymentMethodListItem.click();
-        // eslint-disable-next-line testing-library/no-node-access
-        expect(await within(paymentMethodListItem.parentElement.parentElement).findAllByRole('button')).toHaveLength(1);
+        // exhaust all timers to trigger SF failed state (it's not relevant to succefully load here)
+        // we are just verifying that even SF fails we load the payButton if it's configured
+        // this is the previous behaviour and we are going to main it
+        await jest.runOnlyPendingTimersAsync();
+        await waitFor(async () => {
+            // eslint-disable-next-line testing-library/no-node-access
+            expect(await within(paymentMethodListItem.parentElement.parentElement).findAllByRole('button')).toHaveLength(1);
+        });
     }
 });
 
@@ -89,6 +104,7 @@ test('should NOT render payButton', async () => {
     // go trough and select each element in the dropin, check if it has payButton
     for (const paymentMethodListItem of paymentMethodListItemArray) {
         paymentMethodListItem.click();
+        await jest.runOnlyPendingTimersAsync();
         // eslint-disable-next-line testing-library/no-node-access
         const element = within(paymentMethodListItem.parentElement.parentElement).queryByRole('button');
         // @ts-ignore toBeInDocument

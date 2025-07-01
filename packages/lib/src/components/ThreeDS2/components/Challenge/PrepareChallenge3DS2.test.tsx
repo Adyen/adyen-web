@@ -2,7 +2,7 @@ import { mount } from 'enzyme';
 import { h } from 'preact';
 import PrepareChallenge3DS2 from './PrepareChallenge3DS2';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
-import { THREEDS2_ERROR, THREEDS2_FULL, TIMEOUT } from '../../constants';
+import { THREEDS2_FULL, TIMEOUT } from '../../constants';
 import { Analytics3DS2Errors, Analytics3DS2Events, ANALYTICS_ERROR_TYPE } from '../../../../core/Analytics/constants';
 
 const challengeToken = {
@@ -32,8 +32,9 @@ let onError: any;
 let errorMessage: string;
 
 const baseAnalyticsError = {
-    type: THREEDS2_ERROR,
-    errorType: ANALYTICS_ERROR_TYPE.apiError
+    errorType: ANALYTICS_ERROR_TYPE.apiError,
+    timestamp: expect.any(String),
+    id: expect.any(String)
 };
 
 let onSubmitAnalytics: any;
@@ -86,7 +87,9 @@ describe('PrepareChallenge3DS2 - Happy flow', () => {
         expect(onSubmitAnalytics).toHaveBeenCalledWith({
             type: THREEDS2_FULL,
             message: 'creq sent',
-            subtype: Analytics3DS2Events.CHALLENGE_DATA_SENT
+            subType: Analytics3DS2Events.CHALLENGE_DATA_SENT,
+            timestamp: expect.any(String),
+            id: expect.any(String)
         });
 
         const prepChallComp = wrapper.find('PrepareChallenge3DS2');
@@ -112,8 +115,10 @@ describe('PrepareChallenge3DS2 - Happy flow', () => {
             expect(onSubmitAnalytics).toHaveBeenCalledWith({
                 type: THREEDS2_FULL,
                 message: '3DS2 challenge has completed',
-                subtype: Analytics3DS2Events.CHALLENGE_COMPLETED,
-                result: 'success'
+                subType: Analytics3DS2Events.CHALLENGE_COMPLETED,
+                result: 'success',
+                timestamp: expect.any(String),
+                id: expect.any(String)
             });
 
             expect(onSubmitAnalytics).toHaveBeenCalledTimes(2);
@@ -152,18 +157,21 @@ describe('PrepareChallenge3DS2 - flow completes with errors that are considered 
         setTimeout(() => {
             // analytics for error
             expect(onSubmitAnalytics).toHaveBeenCalledWith({
-                type: THREEDS2_ERROR,
                 message: 'threeDS2Challenge: timeout',
                 code: Analytics3DS2Errors.THREEDS2_TIMEOUT,
-                errorType: ANALYTICS_ERROR_TYPE.network
+                errorType: ANALYTICS_ERROR_TYPE.network,
+                timestamp: expect.any(String),
+                id: expect.any(String)
             });
 
             // analytics to say process is complete
             expect(onSubmitAnalytics).toHaveBeenCalledWith({
                 type: THREEDS2_FULL,
                 message: '3DS2 challenge has completed',
-                subtype: Analytics3DS2Events.CHALLENGE_COMPLETED,
-                result: TIMEOUT
+                subType: Analytics3DS2Events.CHALLENGE_COMPLETED,
+                result: TIMEOUT,
+                timestamp: expect.any(String),
+                id: expect.any(String)
             });
 
             expect(onSubmitAnalytics).toHaveBeenCalledTimes(3);
@@ -193,18 +201,21 @@ describe('PrepareChallenge3DS2 - flow completes with errors that are considered 
         setTimeout(() => {
             // analytics for error
             expect(onSubmitAnalytics).toHaveBeenCalledWith({
-                type: THREEDS2_ERROR,
                 message: 'threeDS2Challenge: no transStatus could be retrieved',
                 code: Analytics3DS2Errors.NO_TRANSSTATUS,
-                errorType: ANALYTICS_ERROR_TYPE.apiError
+                errorType: ANALYTICS_ERROR_TYPE.apiError,
+                timestamp: expect.any(String),
+                id: expect.any(String)
             });
 
             // analytics to say process is complete
             expect(onSubmitAnalytics).toHaveBeenCalledWith({
                 type: THREEDS2_FULL,
                 message: '3DS2 challenge has completed',
-                subtype: Analytics3DS2Events.CHALLENGE_COMPLETED,
-                result: 'noTransStatus'
+                subType: Analytics3DS2Events.CHALLENGE_COMPLETED,
+                result: 'noTransStatus',
+                timestamp: expect.any(String),
+                id: expect.any(String)
             });
 
             expect(onSubmitAnalytics).toHaveBeenCalledTimes(3);

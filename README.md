@@ -55,7 +55,7 @@ You can also import Adyen Web using a `<script>` tag, as shown in the [Web Compo
 
 **Requirements:**
 
--   Node v20.12.2
+-   Node v22.11.0
 -   Yarn
 
 **To run the environment:**

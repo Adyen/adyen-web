@@ -2,6 +2,7 @@ import { useState, useEffect } from 'preact/hooks';
 import { h } from 'preact';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import Checkbox from '../FormFields/Checkbox';
+import cx from 'classnames';
 
 import './StoreDetails.scss';
 
@@ -9,12 +10,13 @@ interface StoreDetailsProps {
     storeDetails?: boolean;
     onChange: (value: boolean) => void;
     disabled?: boolean;
+    className?: string;
 }
 
 /**
  * "Store details" generic checkbox
  */
-function StoreDetails({ storeDetails = false, disabled = false, ...props }: StoreDetailsProps) {
+function StoreDetails({ storeDetails = false, disabled = false, className = '', ...props }: StoreDetailsProps) {
     const { i18n } = useCoreContext();
     const [value, setValue] = useState(storeDetails);
 
@@ -27,7 +29,7 @@ function StoreDetails({ storeDetails = false, disabled = false, ...props }: Stor
     }, [value]);
 
     return (
-        <div className="adyen-checkout__store-details">
+        <div className={cx('adyen-checkout__store-details', className)}>
             <Checkbox onChange={onChange} disabled={disabled} label={i18n.get('storeDetails')} name={'storeDetails'} />
         </div>
     );

@@ -25,9 +25,17 @@ import { getArrayDifferences } from '../../../../utils/arrayUtils';
 import FormInstruction from '../../../internal/FormInstruction';
 import { AddressData } from '../../../../types/global-types';
 import { CardBrandData, CardFocusData } from '../../../internal/SecuredFields/lib/types';
-import { FieldErrorAnalyticsObject } from '../../../../core/Analytics/types';
 import { PREFIX } from '../../../internal/Icon/constants';
 import useSRPanelForCardInputErrors from './useSRPanelForCardInputErrors';
+import FastlaneSignup from '../Fastlane/FastlaneSignup';
+import { ANALYTICS_VALIDATION_ERROR_STR, ANALYTICS_DISPLAYED_STR, ANALYTICS_SELECTED_STR } from '../../../../core/Analytics/constants';
+import { fieldTypeToSnakeCase } from '../../../internal/SecuredFields/utils';
+import { getErrorMessageFromCode } from '../../../../core/Errors/utils';
+import { SF_ErrorCodes } from '../../../../core/Errors/constants';
+import { usePrevious } from '../../../../utils/hookUtils';
+import { AnalyticsInfoEvent } from '../../../../core/Analytics/AnalyticsInfoEvent';
+
+const DUAL_BRAND_BUTTON = 'dual_brand_button';
 
 const CardInput = (props: CardInputProps) => {
     const sfp = useRef(null);
@@ -98,8 +106,13 @@ const CardInput = (props: CardInputProps) => {
      * if the PAN length drops below the /binLookup digit threshold.
      * Default value, 'card', indicates no brand detected
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [internallyDetectedBrand, setInternallyDetectedBrand] = useState('card');
+
+    /**
+     * Used tho show and hide the pay button and instructions text
+     * Should mimic the same logic as CardInput loading wrapper
+     */
+    const [showCardUIElements, setShowCardUIElements] = useState(false);
 
     /**
      * LOCAL VARS
@@ -230,6 +243,33 @@ const CardInput = (props: CardInputProps) => {
         setExpiryDatePolicy(sfState.expiryDatePolicy);
     };
 
+    /**
+     * Listen to the full SecureFieldsProvider state and handle actions
+     * Used right now to mimic the loading status changes, this can only be done this way
+     * Trying to do it via onConfiguSuccess or onChange has side effects
+     */
+    const handleSFPStateUpdate = useCallback(
+        sfpState => {
+            mimicLoadingStatusChange(sfpState);
+        },
+        [showCardUIElements, setShowCardUIElements]
+    );
+
+    /**
+     * This function implements the same logic that LoadingProvider uses to show and hide elements
+     * We want to mimic this behavior so we can hide and show the pay button or the instructions text
+     * Deciding to do it this way since we garante there's no DOM changes to merchants
+     * We can break this in the next major version (v7)
+     */
+    const mimicLoadingStatusChange = sfpState => {
+        if (!sfpState.status) return;
+        if (sfpState.status == 'loading') {
+            setShowCardUIElements(false);
+        } else {
+            setShowCardUIElements(true);
+        }
+    };
+
     // Farm the handlers for binLookup related functionality out to another 'extensions' file
     const extensions = useMemo(
         () =>
@@ -356,17 +396,21 @@ const CardInput = (props: CardInputProps) => {
     });
 
     // Analytics: ValidationErrors
-    if (currentErrorsSortedByLayout) {
-        const newErrors = getArrayDifferences<SortedErrorObject, string>(currentErrorsSortedByLayout, previousSortedErrors, 'field');
-        newErrors?.forEach(errorItem => {
-            const aObj: FieldErrorAnalyticsObject = {
-                fieldType: errorItem.field,
-                errorCode: errorItem.errorCode
-            };
+    useEffect(() => {
+        if (currentErrorsSortedByLayout) {
+            const newErrors = getArrayDifferences<SortedErrorObject, string>(currentErrorsSortedByLayout, previousSortedErrors, 'field');
 
-            props.onValidationErrorAnalytics(aObj);
-        });
-    }
+            newErrors?.forEach(errorItem => {
+                const event = new AnalyticsInfoEvent({
+                    type: ANALYTICS_VALIDATION_ERROR_STR,
+                    target: fieldTypeToSnakeCase(errorItem.field),
+                    validationErrorCode: errorItem.errorCode,
+                    validationErrorMessage: getErrorMessageFromCode(errorItem.errorCode, SF_ErrorCodes)
+                });
+                props.onSubmitAnalytics(event);
+            });
+        }
+    }, [currentErrorsSortedByLayout]);
 
     /**
      * Main 'componentDidUpdate' handler
@@ -400,6 +444,39 @@ const CardInput = (props: CardInputProps) => {
     }, [data, valid, errors, selectedBrandValue, storePaymentMethod, installments]);
 
     /**
+     * "Update" handler related to dual brand buttons being initially displayed
+     */
+    useEffect(() => {
+        if (dualBrandSelectElements.length > 0 && dualBrandSelectElements) {
+            const dualBrandsArr = dualBrandSelectElements.map(item => item.id);
+            const brand = dualBrandsArr[0]; // initially selected brand
+            const dualBrands = dualBrandsArr.toString();
+
+            const event = new AnalyticsInfoEvent({
+                type: ANALYTICS_DISPLAYED_STR,
+                target: DUAL_BRAND_BUTTON,
+                brand,
+                configData: { dualBrands }
+            });
+
+            props.onSubmitAnalytics(event);
+        }
+    }, [dualBrandSelectElements]);
+
+    const previousSelectedBrandValue = usePrevious(selectedBrandValue);
+
+    /**
+     * "Update" handler related to a dual brand button being selected
+     */
+    useEffect(() => {
+        if (previousSelectedBrandValue?.length && selectedBrandValue?.length) {
+            const event = new AnalyticsInfoEvent({ type: ANALYTICS_SELECTED_STR, target: DUAL_BRAND_BUTTON, brand: selectedBrandValue });
+
+            props.onSubmitAnalytics(event);
+        }
+    }, [selectedBrandValue]);
+
+    /**
      * RENDER
      */
     const FieldToRender = props.storedPaymentMethodId ? StoredCardFieldsWrapper : CardFieldsWrapper;
@@ -415,6 +492,7 @@ const CardInput = (props: CardInputProps) => {
                 onChange={handleSecuredFieldsChange}
                 onBrand={onBrand}
                 onFocus={handleFocus}
+                onStateUpdate={handleSFPStateUpdate}
                 type={props.brand}
                 disableIOSArrowKeys={props.disableIOSArrowKeys ? handleTouchstartIOS : null}
                 render={({ setRootNode, setFocusOn }, sfpState) => (
@@ -428,7 +506,7 @@ const CardInput = (props: CardInputProps) => {
                         })}
                         role={'form'}
                     >
-                        <FormInstruction />
+                        {showCardUIElements && <FormInstruction />}
 
                         <FieldToRender
                             // Extract exact props that we need to pass down
@@ -480,7 +558,18 @@ const CardInput = (props: CardInputProps) => {
                     </div>
                 )}
             />
-            {props.showPayButton &&
+
+            {props.fastlaneConfiguration && (
+                <FastlaneSignup
+                    {...props.fastlaneConfiguration}
+                    currentDetectedBrand={internallyDetectedBrand}
+                    onChange={props.onChange}
+                    onSubmitAnalytics={props.onSubmitAnalytics}
+                />
+            )}
+
+            {showCardUIElements &&
+                props.showPayButton &&
                 props.payButton({
                     status,
                     variant: props.isPayButtonPrimaryVariant ? 'primary' : 'secondary',

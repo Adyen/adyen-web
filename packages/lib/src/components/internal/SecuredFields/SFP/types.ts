@@ -1,10 +1,9 @@
 import { CVCPolicyType, DatePolicyType, StylesObject } from '../lib/types';
 import { AddressData } from '../../../../types/global-types';
-import { CardBrandsConfiguration } from '../../../Card/types';
+import { CardBrandsConfiguration, CardPlaceholders } from '../../../Card/types';
 import Language from '../../../../language';
 import { Resources } from '../../../../core/Context/Resources';
 import { TouchStartEventObj } from '../../../Card/components/CardInput/components/types';
-import { Placeholders as CardPlaceholders } from '../../../Card/components/CardInput/types';
 import { Placeholders as GiftcardPlaceholders } from '../../../Giftcard/components/types';
 
 export type Placeholders = CardPlaceholders | GiftcardPlaceholders;
@@ -39,6 +38,7 @@ export interface SFPProps {
     onFieldValid?: () => {};
     onFocus?: () => {};
     onLoad?: () => {};
+    onStateUpdate: (obj: SFPState) => void;
     handleKeyPress?: (obj: KeyboardEvent) => void;
     rootNode: HTMLElement; // Specific to SecuredFieldsInput
     showWarnings?: boolean;

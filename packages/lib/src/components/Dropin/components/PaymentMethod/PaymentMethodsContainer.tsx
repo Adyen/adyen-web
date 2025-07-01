@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import UIElement from '../../../internal/UIElement';
 
 export interface PaymentMethodsContainerProps {
-    label: string;
+    label?: string;
     classNameModifiers?: string[];
     paymentMethods: UIElement[];
     activePaymentMethod?: UIElement;
@@ -44,9 +44,11 @@ function PaymentMethodsContainer({
         ...classNameModifiers.map(m => `adyen-checkout__payment-methods-list--${m}`)
     ]);
 
+    const standalone = paymentMethods.length === 1;
+
     return (
         <div className="adyen-checkout-payment-methods-container">
-            {!!label.length && (
+            {!!label && (
                 <label htmlFor={selectListId} className="adyen-checkout-payment-methods-list-label">
                     {label}
                 </label>
@@ -54,8 +56,8 @@ function PaymentMethodsContainer({
             <div
                 id={selectListId}
                 className={paymentMethodListClassnames}
-                role="radiogroup"
-                aria-label={i18n.get('paymentMethodsList.aria.label')}
+                role={standalone ? undefined : 'radiogroup'}
+                aria-label={standalone ? undefined : i18n.get('paymentMethodsList.aria.label')}
                 required
             >
                 {paymentMethods.map((paymentMethod, index, paymentMethodsCollection) => {
@@ -69,7 +71,7 @@ function PaymentMethodsContainer({
                     return (
                         <PaymentMethodItem
                             className={classNames({ 'adyen-checkout__payment-method--next-selected': isNextOneSelected })}
-                            standalone={paymentMethods.length === 1}
+                            standalone={standalone}
                             paymentMethod={paymentMethod}
                             isSelected={isSelected}
                             isDisablingPaymentMethod={isSelected && isDisablingPaymentMethod}

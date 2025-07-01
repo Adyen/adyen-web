@@ -13,7 +13,9 @@ import type { PaymentAction } from '../../types/global-types';
 import type { Intent, PayPalConfiguration } from './types';
 
 import './Paypal.scss';
-import { SendAnalyticsObject } from '../../core/Analytics/types';
+import { ANALYTICS_EXPRESS_PAGES_ARRAY, ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
+import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsEvent } from '../../core/Analytics/AnalyticsEvent';
 
 class PaypalElement extends UIElement<PayPalConfiguration> {
     public static type = TxVariants.paypal;
@@ -53,9 +55,22 @@ class PaypalElement extends UIElement<PayPalConfiguration> {
         };
     }
 
-    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
+    protected submitAnalytics(analyticsObj: AnalyticsEvent) {
         // Analytics will need to know about this.props.isExpress & this.props.expressPage
-        super.submitAnalytics({ ...analyticsObj }, this.props);
+        if (analyticsObj instanceof AnalyticsInfoEvent && analyticsObj.type === ANALYTICS_RENDERED_STR) {
+            const { isExpress, expressPage } = this.props;
+            const hasExpressPage = expressPage && ANALYTICS_EXPRESS_PAGES_ARRAY.includes(expressPage);
+
+            if (typeof isExpress === 'boolean') {
+                analyticsObj.isExpress = isExpress;
+            }
+
+            if (isExpress === true && hasExpressPage) {
+                analyticsObj.expressPage = expressPage; // We only care about the expressPage value if isExpress is true
+            }
+        }
+
+        super.submitAnalytics(analyticsObj);
     }
 
     public submit = () => {

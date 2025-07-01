@@ -4,18 +4,12 @@ import { createFingerprintResolveData, createOldFingerprintResolveData, isErrorO
 import { PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State } from './types';
 import { FingerPrintData, ResultObject, ErrorCodeObject } from '../../types';
 import { ErrorObject } from '../../../../core/Errors/types';
-import { SendAnalyticsObject } from '../../../../core/Analytics/types';
 import { isValidHttpUrl } from '../../../../utils/isValidURL';
-import {
-    THREEDS2_FULL,
-    THREEDS2_FINGERPRINT,
-    THREEDS2_FINGERPRINT_ERROR,
-    THREEDS2_NUM,
-    MISSING_TOKEN_IN_ACTION_MSG,
-    THREEDS2_ERROR,
-    TIMEOUT
-} from '../../constants';
+import { THREEDS2_FULL, THREEDS2_FINGERPRINT, THREEDS2_FINGERPRINT_ERROR, THREEDS2_NUM, MISSING_TOKEN_IN_ACTION_MSG, TIMEOUT } from '../../constants';
 import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, Analytics3DS2Events } from '../../../../core/Analytics/constants';
+import { AnalyticsLogEvent } from '../../../../core/Analytics/AnalyticsLogEvent';
+import { AnalyticsEvent } from '../../../../core/Analytics/AnalyticsEvent';
+import { AnalyticsErrorEvent } from '../../../../core/Analytics/AnalyticsErrorEvent';
 
 class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, PrepareFingerprint3DS2State> {
     public static type = 'scheme';
@@ -49,11 +43,13 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
     }
 
     public onFormSubmit = (msg: string) => {
-        this.props.onSubmitAnalytics({
+        const event = new AnalyticsLogEvent({
             type: THREEDS2_FULL,
             message: msg,
-            subtype: Analytics3DS2Events.FINGERPRINT_DATA_SENT
+            subType: Analytics3DS2Events.FINGERPRINT_DATA_SENT
         });
+
+        this.props.onSubmitAnalytics(event);
     };
 
     componentDidMount() {
@@ -156,7 +152,7 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
             const resolveDataFunction = this.props.isMDFlow ? createOldFingerprintResolveData : createFingerprintResolveData;
             const data = resolveDataFunction(this.props.dataKey, resultObj, this.props.paymentData);
 
-            let analyticsObject: SendAnalyticsObject;
+            let event: AnalyticsEvent;
 
             /** Are we in an error scenario? If so, submit analytics about it */
             const finalResObject = errorCodeObject ? errorCodeObject : resultObj;
@@ -178,14 +174,14 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
                  *   - or, decoded token is missing one or more of the following properties (threeDSMethodNotificationURL | postMessageDomain | threeDSServerTransID)
                  *   - or, token could not be base64 decoded &/or JSON.parsed
                  */
-                analyticsObject = {
-                    type: THREEDS2_ERROR,
+
+                event = new AnalyticsErrorEvent({
                     message: (finalResObject as ErrorCodeObject).message,
                     ...errorTypeAndCode
-                };
+                });
 
                 // Send error to analytics endpoint
-                this.props.onSubmitAnalytics(analyticsObject);
+                this.props.onSubmitAnalytics(event);
             }
 
             /** Calculate "result" for analytics */
@@ -214,15 +210,15 @@ class PrepareFingerprint3DS2 extends Component<PrepareFingerprint3DS2Props, Prep
              * The resultObj will be {threeDSCompInd:"Y"} in the case of success,
              * else {threeDSCompInd:"U"} or {threeDSCompInd:"N"} - if we've had some kind of timeout or data parsing problem (as described above)
              */
-            analyticsObject = {
+
+            event = new AnalyticsLogEvent({
                 type: THREEDS2_FULL,
                 message: `${THREEDS2_NUM} fingerprinting has completed`,
-                subtype: Analytics3DS2Events.FINGERPRINT_COMPLETED,
+                subType: Analytics3DS2Events.FINGERPRINT_COMPLETED,
                 result
-            };
-
+            });
             // Send log to analytics endpoint
-            this.props.onSubmitAnalytics(analyticsObject);
+            this.props.onSubmitAnalytics(event);
 
             /**
              * Equals call to callSubmit3DS2Fingerprint (except for in 3DS2InMDFlow)

@@ -17,10 +17,10 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 20.12.2
+      - name: Setup Node.js 22.11.0
         uses: actions/setup-node@v4
         with:
-          node-version: 20.12.2
+          node-version: 22.11.0
 
       - name: Install Dependencies
         run: yarn

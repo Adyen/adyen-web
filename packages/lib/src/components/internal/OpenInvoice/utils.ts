@@ -45,6 +45,7 @@ export const mapFieldKey = (key: string, i18n: Language, countrySpecificLabels: 
     // Differentiate between address types (billing and delivery)
     const splitKey = refKey.split(':');
     const hasSplitKey = splitKey.length > 1;
+
     if (hasSplitKey) {
         label = splitKey[0];
         refKey = splitKey[1];

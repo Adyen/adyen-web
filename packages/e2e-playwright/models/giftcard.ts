@@ -17,6 +17,8 @@ export class Giftcard extends Base {
 
     readonly cvcInput: Locator;
 
+    readonly payButton: Locator;
+
     constructor(
         public readonly page: Page,
         rootElementSelector = '.adyen-checkout__giftcard'
@@ -30,6 +32,8 @@ export class Giftcard extends Base {
 
         const cvcIframe = this.rootElement.frameLocator(`[title="${CVC_IFRAME_TITLE}"]`);
         this.cvcInput = cvcIframe.locator(`input[aria-label="${CVC_IFRAME_LABEL}"]`);
+
+        this.payButton = this.rootElement.getByRole('button', { name: 'Redeem' });
     }
 
     async goto(url: string = URL_MAP.giftcard_with_card) {
@@ -43,8 +47,7 @@ export class Giftcard extends Base {
     }
 
     async isComponentVisible() {
-        await this.cardNumberInput.waitFor({ state: 'visible' });
-        await this.cvcInput.waitFor({ state: 'visible' });
+        await this.payButton.waitFor({ state: 'visible' });
     }
 
     async hasCorrectRemainingAmount(amount: string) {

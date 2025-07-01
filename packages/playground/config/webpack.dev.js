@@ -131,14 +131,19 @@ module.exports = {
     devServer: {
         port,
         host,
-        https: httpsConfig,
-        hot: true,
         compress: true,
-        onBeforeSetupMiddleware: devServer => {
-            if (!devServer) {
-                throw new Error('webpack-dev-server is not defined');
+        server: {
+            type: isHttps ? 'https' : 'http',
+            options: {
+                ...(isHttps && {
+                    cert: fs.readFileSync(certPath),
+                    key: fs.readFileSync(certKeyPath)
+                })
             }
+        },
+        setupMiddlewares: (middlewares, devServer) => {
             checkoutDevServer(devServer.app);
+            return middlewares;
         }
     }
 };

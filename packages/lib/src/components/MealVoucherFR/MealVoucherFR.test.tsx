@@ -3,15 +3,11 @@ import MealVoucherFR from './MealVoucherFR';
 import { render, screen } from '@testing-library/preact';
 
 describe('MealVoucherFR', () => {
-    const resources = global.resources;
     const i18n = global.i18n;
     const user = userEvent.setup();
 
     const baseProps = {
-        modules: {
-            resources,
-            analytics: global.analytics
-        },
+        ...global.commonCoreProps,
         amount: { value: 1000, currency: 'EUR' },
         name: 'MealVoucher',
         i18n,

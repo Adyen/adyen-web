@@ -90,6 +90,12 @@ export interface ApplePayConfiguration extends UIElementProps {
     merchantCapabilities?: ApplePayJS.ApplePayMerchantCapability[];
 
     /**
+     * A value that indicates whether the shipping mode prevents the user from editing the shipping address.
+     * {@link https://developer.apple.com/documentation/applepayontheweb/applepaypaymentrequest/shippingcontacteditingmode}
+     */
+    shippingContactEditingMode?: ApplePayJS.ApplePayShippingContactEditingMode;
+
+    /**
      * A set of shipping method objects that describe the available shipping methods.
      */
     shippingMethods?: ApplePayJS.ApplePayShippingMethod[];

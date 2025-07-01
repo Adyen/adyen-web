@@ -4,21 +4,17 @@ import userEvent from '@testing-library/user-event';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { AnalyticsModule } from '../../types/global-types';
 import { mockDeep } from 'jest-mock-extended';
-import { ANALYTICS_ERROR_TYPE, ANALYTICS_EVENT } from '../../core/Analytics/constants';
+import { ANALYTICS_ERROR_TYPE } from '../../core/Analytics/constants';
 
 const flushPromises = () => new Promise(process.nextTick);
 
 describe('Giftcard', () => {
-    const resources = global.resources;
     const i18n = global.i18n;
     const user = userEvent.setup();
 
     const baseProps = {
+        ...global.commonCoreProps,
         clientKey: 'mock',
-        modules: {
-            resources,
-            analytics: global.analytics
-        },
         amount: { value: 1000, currency: 'EUR' },
         name: 'My Test Gift Card',
         type: 'giftcard',
@@ -152,7 +148,7 @@ describe('Giftcard', () => {
             const giftcard = new Giftcard(global.core, {
                 ...baseProps,
                 modules: {
-                    resources,
+                    ...baseProps.modules,
                     analytics
                 },
                 onError: () => {},
@@ -168,11 +164,13 @@ describe('Giftcard', () => {
             giftcard.setState({ isValid: true });
             giftcard.balanceCheck();
             await flushPromises();
-            expect(mockedSendAnalytics).toHaveBeenCalledWith(
-                'giftcard',
-                { code, errorType: ANALYTICS_ERROR_TYPE.apiError, type: ANALYTICS_EVENT.error },
-                undefined
-            );
+            expect(mockedSendAnalytics).toHaveBeenCalledWith({
+                code,
+                component: 'giftcard',
+                errorType: ANALYTICS_ERROR_TYPE.apiError,
+                timestamp: expect.any(String),
+                id: expect.any(String)
+            });
         });
 
         test('if there is enough balance for checkout we should require confirmation', async () => {

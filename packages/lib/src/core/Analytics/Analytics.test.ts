@@ -3,8 +3,10 @@ import collectId from '../Services/analytics/collect-id';
 import { PaymentAmount } from '../../types';
 import wait from '../../utils/wait';
 import { DEFAULT_DEBOUNCE_TIME_MS } from '../../utils/debounce';
-import { AnalyticsEvent, AnalyticsObject, CreateAnalyticsObject } from './types';
 import { ANALYTICS_VALIDATION_ERROR_STR } from './constants';
+import { AnalyticsInfoEvent } from './AnalyticsInfoEvent';
+import { AnalyticsErrorEvent } from './AnalyticsErrorEvent';
+import { AnalyticsLogEvent } from './AnalyticsLogEvent';
 
 jest.mock('../Services/analytics/collect-id');
 
@@ -20,12 +22,11 @@ const setUpEvent = {
     flavor: 'components'
 };
 
-const analyticsEventObj = {
-    event: 'info' as AnalyticsEvent,
+const analyticsInfoEventObj = new AnalyticsInfoEvent({
     component: 'cardComponent',
     type: 'Focus',
     target: 'PAN input'
-} as CreateAnalyticsObject;
+});
 
 const applicationInfo = {
     merchantApplication: {
@@ -119,20 +120,17 @@ describe('Analytics initialisation and event queue', () => {
             bundleType: ''
         });
 
-        const aObj: AnalyticsObject = analytics.createAnalyticsEvent({ event: 'info', data: analyticsEventObj });
+        const aObj: boolean = analytics.sendAnalytics(analyticsInfoEventObj);
 
-        expect(aObj).toBe(undefined);
+        expect(aObj).toBe(false);
+
+        expect(analytics.getEventsQueue().getQueue().info.length).toBe(0);
     });
 
     test('With Analytics being enabled by default, create info event and see that it is held in a queue', () => {
-        const aObj: AnalyticsObject = analytics.createAnalyticsEvent({ event: 'info', data: analyticsEventObj });
+        const aObj: boolean = analytics.sendAnalytics(analyticsInfoEventObj);
 
-        expect(aObj.timestamp).not.toBe(undefined);
-        expect(aObj.target).toEqual('PAN input');
-        expect(aObj.type).toEqual('Focus');
-
-        // no message prop for info events
-        expect(aObj.message).toBe(undefined);
+        expect(aObj).toBe(true);
 
         // info event should not be sent immediately
         expect(analytics.getEventsQueue().getQueue().info.length).toBe(1);
@@ -140,26 +138,19 @@ describe('Analytics initialisation and event queue', () => {
 
     test('Create error event and see that it is sent immediately, also flushing the queued info object', async () => {
         // first create info event
-        analytics.createAnalyticsEvent({ event: 'info', data: analyticsEventObj });
+        analytics.sendAnalytics(analyticsInfoEventObj);
 
         expect(analytics.getEventsQueue().getQueue().info.length).toBe(1);
 
         // create error event
-        const aObj = analytics.createAnalyticsEvent({
-            event: 'error',
-            data: {
-                // event: 'error',
+        analytics.sendAnalytics(
+            new AnalyticsErrorEvent({
                 component: 'threeDS2Fingerprint',
                 code: 'web_704',
                 errorType: 'APIError',
                 message: 'threeDS2Fingerprint Missing paymentData property from threeDS2 action'
-            }
-        });
-
-        expect(aObj.timestamp).not.toBe(undefined);
-        expect(aObj.component).toEqual('threeDS2Fingerprint');
-        expect(aObj.errorType).toEqual('APIError');
-        expect(aObj.message).not.toBe(undefined);
+            })
+        );
 
         // error object should be sent almost immediately (after a debounce interval), sending any events as well
         await wait(DEFAULT_DEBOUNCE_TIME_MS);
@@ -168,43 +159,29 @@ describe('Analytics initialisation and event queue', () => {
     });
 
     test('Create log event and see that it is sent (almost) immediately', async () => {
-        const aObj = analytics.createAnalyticsEvent({
-            event: 'log',
-            data: {
+        analytics.sendAnalytics(
+            new AnalyticsLogEvent({
                 component: 'scheme',
-                type: 'Submit'
-            }
-        });
-
-        expect(aObj.timestamp).not.toBe(undefined);
-        expect(aObj.component).toEqual('scheme');
-        expect(aObj.type).toEqual('Submit');
-
-        // no message prop for a log
-        expect(aObj.message).toBe(undefined);
+                type: 'Submit',
+                message: 'shopper clicked pay'
+            })
+        );
 
         // log event should be sent almost immediately (after a debounce interval)
         await wait(DEFAULT_DEBOUNCE_TIME_MS);
         expect(analytics.getEventsQueue().getQueue().logs.length).toBe(0);
     });
 
-    test('Creating a validation error info event object with the expected properties', () => {
-        const aObj = analytics.createAnalyticsEvent({
-            event: 'info',
-            data: {
+    test('Creating a validation error info event object and seeing it added to queue', () => {
+        analytics.sendAnalytics(
+            new AnalyticsInfoEvent({
                 component: 'scheme',
                 type: ANALYTICS_VALIDATION_ERROR_STR,
                 target: 'card_number',
                 validationErrorCode: 'cc.num.901',
                 validationErrorMessage: 'error-msg-incorrectly-filled-pan'
-            }
-        });
-
-        expect(aObj.timestamp).not.toBe(undefined);
-        expect(aObj.target).toEqual('card_number');
-        expect(aObj.type).toEqual(ANALYTICS_VALIDATION_ERROR_STR);
-        expect(aObj.validationErrorCode).toEqual('901');
-        expect(aObj.validationErrorMessage).toEqual('error-msg-incorrectly-filled-pan');
+            })
+        );
 
         // info event should not be sent immediately
         expect(analytics.getEventsQueue().getQueue().info.length).toBe(1);

@@ -1,4 +1,6 @@
+import { FastlaneWindowInstance, FastlaneOptions } from '../components/PayPalFastlane/types';
 import { ApplePayButtonStyle, ApplePayButtonType, ApplePayWebConfiguration } from '../components/ApplePay/types';
+import { IAdyenPasskey } from '../components/PayByBankPix/services/types';
 
 declare module 'preact' {
     namespace JSX {
@@ -20,6 +22,9 @@ declare module '*.scss' {
 
 declare global {
     interface Window {
+        paypal?: {
+            Fastlane?: (options?: FastlaneOptions) => Promise<FastlaneWindowInstance>;
+        };
         /**
          * ApplePaySession added by ApplePaySDK
          */
@@ -36,5 +41,7 @@ declare global {
             buildClientProfile?(srciDpaId?: string): any;
             correlationId?: string;
         };
+
+        AdyenPasskey: { default: IAdyenPasskey };
     }
 }

@@ -3,11 +3,11 @@ import { useState, useEffect, useRef, useMemo } from 'preact/hooks';
 import Language from '../../../language/Language';
 import SecuredFieldsProvider from '../../internal/SecuredFields/SFP/SecuredFieldsProvider';
 import { SFPState } from '../../internal/SecuredFields/SFP/types';
-import { BinLookupResponse, CardBrandsConfiguration } from '../../Card/types';
+import { BinLookupResponse, CardBrandsConfiguration, CardPlaceholders } from '../../Card/types';
 import SFExtensions from '../../internal/SecuredFields/binLookup/extensions';
 import { StylesObject } from '../../internal/SecuredFields/lib/types';
 import { Resources } from '../../../core/Context/Resources';
-import { Placeholders, SFError } from '../../Card/components/CardInput/types';
+import { SFError } from '../../Card/components/CardInput/types';
 import { ValidationError } from '../types';
 
 interface SecuredFieldsProps {
@@ -37,7 +37,7 @@ interface SecuredFieldsProps {
     onFieldValid?: () => {};
     onFocus?: (e) => {};
     onLoad?: () => {};
-    placeholders?: Placeholders;
+    placeholders?: CardPlaceholders;
     rootNode: HTMLElement;
     resources: Resources;
     showWarnings?: boolean;
