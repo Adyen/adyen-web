@@ -31,11 +31,16 @@ export abstract class Base {
         await Promise.resolve();
     }
 
-    async getA11yErrors() {
+    protected a11yComponentSelector() {
+        return '#component-root';
+    }
+
+    async getA11yErrors(knownViolations) {
         const results = await new AxeBuilder({ page: this.page })
             .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+            .disableRules(knownViolations)
             // only check from component root down
-            .include('#component-root')
+            .include(this.a11yComponentSelector())
             .analyze();
         return results;
     }
