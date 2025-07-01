@@ -6,7 +6,7 @@ import { TooltipController } from './TooltipController';
 
 type TooltipContextValue = {
     id: string;
-    showTooltip: (state: TooltipProps) => void;
+    showTooltip: (state?: TooltipProps) => void;
     hideTooltip: () => void;
 };
 
@@ -15,31 +15,51 @@ const TooltipContext = createContext<TooltipContextValue | null>(null);
 const SingletonTooltipProvider = ({ children }: { children?: ComponentChildren }) => {
     const [tooltipProps, setTooltipProps] = useState<TooltipProps | null>(null);
     const tooltipId = useRef(TooltipController.tooltipId);
-    const [isPrimaryInstance, setIsPrimaryInstance] = useState(false);
+    const isPrimaryInstanceRef = useRef(false);
+    const [, forceUpdate] = useState(0); // To force re-render when primary status changes
+
+    useEffect(() => {
+        const tryRegister = () => {
+            if (TooltipController.canRegisterTooltipHandler()) {
+                TooltipController.registerTooltipHandler(setTooltipProps);
+                isPrimaryInstanceRef.current = true;
+                forceUpdate(r => r + 1);
+            } else {
+                isPrimaryInstanceRef.current = false;
+                forceUpdate(r => r + 1);
+            }
+        };
+
+        tryRegister();
+
+        const unsubscribe = TooltipController.onPrimaryReset(() => {
+            tryRegister();
+        });
+
+        return () => {
+            // When the primary instance is unmounted, the only tooltip component is gone.
+            // So we need to notify other instances, one of the instances should
+            // become the primary instance to mount the tooltip component again.
+            unsubscribe();
+            if (isPrimaryInstanceRef.current) {
+                TooltipController.reset();
+            }
+        };
+    }, []);
+
     const contextValue = useMemo(
         () => ({
             showTooltip: (state?: TooltipProps) => TooltipController.showTooltip(state),
             hideTooltip: (state?: TooltipProps) => TooltipController.hideTooltip(state),
             id: tooltipId.current
         }),
-        [tooltipId.current]
+        []
     );
-
-    useEffect(() => {
-        if (TooltipController.canRegisterTooltipHandler()) {
-            TooltipController.registerTooltipHandler(setTooltipProps);
-            setIsPrimaryInstance(true);
-        }
-
-        return () => {
-            TooltipController.reset();
-        };
-    }, [setTooltipProps]);
 
     return (
         <TooltipContext.Provider value={contextValue}>
             {children}
-            {isPrimaryInstance && <Tooltip id={tooltipId.current} {...tooltipProps} />}
+            {isPrimaryInstanceRef.current && <Tooltip id={tooltipId.current} {...tooltipProps} />}
         </TooltipContext.Provider>
     );
 };
