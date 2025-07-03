@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 6.18.1
+
+### Patch Changes
+
+- Only show the new dual brand switching UI if the /binLookup response contains certain brands. ([#3388](https://github.com/Adyen/adyen-web/pull/3388))
+
 ## 6.18.0
 
 ### Minor Changes
