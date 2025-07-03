@@ -44,7 +44,7 @@ function Await(props: AwaitComponentProps) {
             setCompleted(true);
             const state = {
                 data: {
-                    details: { payload: status.props.payload },
+                    details: { payload: status.props.payload, resultCode: status.props.resultCode, type: status.props.type },
                     paymentData: props.paymentData
                 }
             };
@@ -64,7 +64,7 @@ function Await(props: AwaitComponentProps) {
         if (status.props.payload) {
             const state = {
                 data: {
-                    details: { payload: status.props.payload },
+                    details: { payload: status.props.payload, resultCode: status.props.resultCode, type: status.props.type },
                     paymentData: props.paymentData
                 }
             };
