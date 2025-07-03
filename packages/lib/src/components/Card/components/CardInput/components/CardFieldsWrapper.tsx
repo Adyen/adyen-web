@@ -92,6 +92,11 @@ export const CardFieldsWrapper = ({
         />
     );
 
+    // Only if these brands are present in the binLookup response shguld we show the UI to choose between brands
+    const dualBrandsThatNeedSelectionMechanism = ['cartebancaire', 'bcmc', 'dankort'];
+    // If the filter array contains anything - then we need to show the choice UI
+    const showDualBrandSelectElements = !!dualBrandSelectElements.filter(item => dualBrandsThatNeedSelectionMechanism.includes(item.id)).length;
+
     return (
         <LoadingWrapper status={sfpState.status}>
             {hasHolderName && positionHolderNameOnTop && cardHolderField}
@@ -114,7 +119,7 @@ export const CardFieldsWrapper = ({
 
             {hasHolderName && !positionHolderNameOnTop && cardHolderField}
 
-            {dualBrandSelectElements.length > 0 && dualBrandSelectElements && (
+            {showDualBrandSelectElements && dualBrandSelectElements.length > 0 && dualBrandSelectElements && (
                 <Fieldset classNameModifiers={['dual-brand-switcher']} label={i18n.get('creditCard.dualBrand.title')}>
                     <p className={'adyen-checkout-form-instruction'}>{i18n.get('creditCard.dualBrand.description')}</p>
                     <RadioGroupExtended
