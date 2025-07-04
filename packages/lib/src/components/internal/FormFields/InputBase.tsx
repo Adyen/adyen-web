@@ -74,6 +74,17 @@ export default function InputBase({ setRef, ...props }: InputBaseProps) {
         [props?.onKeyUp]
     );
 
+    /**
+     * The keydown event is fired when a key is pressed.
+     * Unlike the deprecated keypress event, the keydown event is fired for all keys, regardless of whether they produce a character value.
+     */
+    const handleKeyDown = useCallback(
+        (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
+            if (props?.onKeyDown) props.onKeyDown(event);
+        },
+        [props?.onKeyDown]
+    );
+
     const handleBlur = useCallback(
         (event: h.JSX.TargetedFocusEvent<HTMLInputElement>) => {
             props?.onBlurHandler?.(event); // From Field component
@@ -124,6 +135,7 @@ export default function InputBase({ setRef, ...props }: InputBaseProps) {
             onBlur={handleBlur}
             onFocus={handleFocus}
             onKeyUp={handleKeyUp}
+            onKeyDown={handleKeyDown}
             onKeyPress={handleKeyPress}
             disabled={disabled}
             ref={setRef}

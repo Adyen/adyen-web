@@ -19,8 +19,7 @@ import { AnalyticsEvent } from '../../../core/Analytics/AnalyticsEvent';
  */
 function assertIsCoreInstance(checkout: ICore): checkout is ICore {
     if (!checkout) return false;
-    const isCoreObject = typeof checkout.initialize === 'function' && typeof checkout.createFromAction === 'function';
-    return isCoreObject;
+    return typeof checkout.initialize === 'function' && typeof checkout.createFromAction === 'function';
 }
 
 abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
@@ -29,7 +28,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
 
     public props: P;
     public state: any = {};
-    public _component;
+    public _component: ComponentChild;
 
     protected _node: HTMLElement = null;
 
@@ -145,8 +144,8 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
 
         this._node = node;
 
-        // Add listener for key press events, notably 'Enter' key presses
-        on(this._node, 'keypress', this.handleKeyPress, false);
+        // Add listener for key down events, notably 'Enter' key presses
+        on(this._node, 'keydown', this.handleKeyPress, false);
 
         this._component = this.render();
 
@@ -192,7 +191,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
      */
     public unmount(): this {
         // Remove listener
-        off(this._node, 'keypress', this.handleKeyPress);
+        off(this._node, 'keydown', this.handleKeyPress);
 
         if (this._node) {
             render(null, this._node);

@@ -293,6 +293,11 @@ export interface CoreConfiguration {
     /**
      * Called when a Component detects, or is told by a SecuredField, that the Enter key has been pressed.
      * - merchant set config option
+     *
+     * @param activeElement
+     * @param component
+     *
+     * keypress event is [deprecated](https://developer.mozilla.org/en-US/docs/Web/API/Element/keypress_event), kindly request to switch to the `onEnterKeyDown`.
      */
     onEnterKeyPressed?(activeElement: Element, component: UIElement): void;
 
