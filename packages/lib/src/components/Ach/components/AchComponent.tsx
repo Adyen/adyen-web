@@ -9,12 +9,14 @@ import Field from '../../internal/FormFields/Field';
 import InputText from '../../internal/FormFields/InputText';
 import { achValidationRules, achFormatters } from './validate';
 import StoreDetails from '../../internal/StoreDetails';
+import useSRPanelForAchErrors from './useSRPanelForACHErrors';
+import useImage from '../../../core/Context/useImage';
+import { PREFIX } from '../../internal/Icon/constants';
 
 import type { PayButtonProps } from '../../internal/PayButton/PayButton';
 import type { ComponentMethodsRef } from '../../internal/UIElement/types';
 import type { AchPlaceholders } from '../types';
 import type { AchStateErrors } from './useSRPanelForACHErrors';
-import useSRPanelForAchErrors from './useSRPanelForACHErrors';
 
 type AchForm = {
     selectedAccountType: string;
@@ -47,6 +49,7 @@ interface AchComponentProps {
 }
 
 function AchComponent({ onChange, payButton, showPayButton, placeholders, hasHolderName, setComponentRef, enableStoreDetails }: AchComponentProps) {
+    const getImage = useImage();
     const schema = useMemo(
         () => ['selectedAccountType', 'routingNumber', 'accountNumber', 'accountNumberVerification', ...(hasHolderName ? ['ownerName'] : [])],
         [hasHolderName]
@@ -188,7 +191,7 @@ function AchComponent({ onChange, payButton, showPayButton, placeholders, hasHol
 
             {enableStoreDetails && <StoreDetails disabled={isFormDisabled} onChange={setStorePaymentMethod} />}
 
-            {showPayButton && payButton({ status, label: i18n.get('confirmPurchase') })}
+            {showPayButton && payButton({ status, icon: getImage({ imageFolder: 'components/' })(`${PREFIX}lock`) })}
         </div>
     );
 }
