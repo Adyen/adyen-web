@@ -11,6 +11,7 @@ import { achValidationRules, achFormatters } from './validate';
 import StoreDetails from '../../internal/StoreDetails';
 import useSRPanelForAchErrors from './useSRPanelForACHErrors';
 import useImage from '../../../core/Context/useImage';
+import { PREFIX } from '../../internal/Icon/constants';
 
 import type { PayButtonProps } from '../../internal/PayButton/PayButton';
 import type { ComponentMethodsRef } from '../../internal/UIElement/types';
@@ -190,7 +191,7 @@ function AchComponent({ onChange, payButton, showPayButton, placeholders, hasHol
 
             {enableStoreDetails && <StoreDetails disabled={isFormDisabled} onChange={setStorePaymentMethod} />}
 
-            {showPayButton && payButton({ status, icon: getImage({ imageFolder: 'components/' })('bento_lock') })}
+            {showPayButton && payButton({ status, icon: getImage({ imageFolder: 'components/' })(`${PREFIX}lock`) })}
         </div>
     );
 }
