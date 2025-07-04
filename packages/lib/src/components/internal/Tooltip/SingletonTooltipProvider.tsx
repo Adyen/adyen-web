@@ -15,8 +15,16 @@ const TooltipContext = createContext<TooltipContextValue | null>(null);
 const SingletonTooltipProvider = ({ children }: { children?: ComponentChildren }) => {
     const [tooltipProps, setTooltipProps] = useState<TooltipProps | null>(null);
     const tooltipId = useRef(TooltipController.tooltipId);
+    /**
+     * We use `useRef` instead of `useState` to avoid triggering the `useEffect` again
+     * (which would happen if `isPrimary` were a state value in the `useEffect` dependency list).
+     * Because we need `TooltipController.onPrimaryReset` to add an event listener ONCE, we don't want
+     * to re-run `useEffect` and register it again on every state update.
+     *
+     * However, we do need a way to re-render, hence added `forceUpdate`.
+     */
     const isPrimaryInstanceRef = useRef(false);
-    const [, forceUpdate] = useState(0); // To force re-render when primary status changes
+    const [, forceUpdate] = useState(0);
 
     useEffect(() => {
         const tryRegister = () => {

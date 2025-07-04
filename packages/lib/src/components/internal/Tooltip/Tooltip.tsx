@@ -86,6 +86,7 @@ export function Tooltip(props: TooltipProps) {
         <div
             id={props.id}
             role="tooltip"
+            aria-live={'polite'}
             className={cx({
                 'adyen-checkout-tooltip': true,
                 'adyen-checkout-tooltip--hidden': !props.visible || !isAnchorVisible,

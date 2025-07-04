@@ -17,7 +17,7 @@ export interface CopyIconButtonProps extends ButtonProps {
 const CopyIconButton = (props: CopyIconButtonProps) => {
     const { i18n } = useCoreContext();
     const anchorRef = useRef<HTMLButtonElement>(null);
-    const { id: tooltipId, showTooltip, hideTooltip } = useTooltip();
+    const { showTooltip, hideTooltip } = useTooltip();
 
     const onClick = useCallback(() => {
         void copyToClipboard(props.text);
@@ -58,7 +58,6 @@ const CopyIconButton = (props: CopyIconButtonProps) => {
             {...props}
             variant="iconOnly"
             buttonRef={anchorRef}
-            ariaDescribedBy={tooltipId}
             ariaLabel={props.ariaLabel ?? i18n.get('button.copy')}
             onMouseEnter={handleShowTooltip}
             onMouseLeave={hideTooltip}

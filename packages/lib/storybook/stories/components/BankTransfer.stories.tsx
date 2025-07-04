@@ -27,4 +27,28 @@ export const Default: BankTransferStory = {
         }
     }
 };
+
+export const BankTransferResultExample: BankTransferStory = {
+    render: ({ componentConfiguration, ...checkoutConfig }) => (
+        <Checkout checkoutConfig={checkoutConfig}>
+            {checkout => <ComponentContainer element={new BankTransfer(checkout, componentConfiguration)} />}
+        </Checkout>
+    ),
+    args: {
+        countryCode: 'BE',
+        amount: 2000,
+        componentConfiguration: {
+            paymentMethodType: 'bankTransfer_IBAN',
+            type: 'bankTransfer',
+            totalAmount: {
+                currency: 'EUR',
+                value: 2000
+            },
+            beneficiary: 'TestMerchantCheckout',
+            iban: 'NL63ADYX3000571781',
+            bic: 'ADYXNL2A',
+            reference: '88GH47'
+        }
+    }
+};
 export default meta;
