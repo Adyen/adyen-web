@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 6.18.2
+
+### Patch Changes
+
+- ACH - Component pay button now displays "Pay {value}" instead of "Continue purchase" ([#3390](https://github.com/Adyen/adyen-web/pull/3390))
+
 ## 6.18.1
 
 ### Patch Changes
