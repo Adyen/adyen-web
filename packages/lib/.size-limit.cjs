@@ -15,7 +15,7 @@ module.exports = [
         name: 'Auto',
         path: 'auto/auto.js',
         import: '{ AdyenCheckout, Dropin }',
-        limit: '120 KB',
+        limit: '125 KB',
         running: false
     },
     /**

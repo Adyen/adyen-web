@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import './DetailsTable.scss';
+import { CopyIconButton } from '../Button/CopyIconButton';
 
 export interface DetailsTableData
     extends Array<{
@@ -9,9 +10,10 @@ export interface DetailsTableData
 
 export interface DetailsTableProps {
     tableFields: DetailsTableData;
+    shouldShowCopyButton?: boolean;
 }
 
-export default function DetailsTable({ tableFields }: DetailsTableProps) {
+export default function DetailsTable({ tableFields, shouldShowCopyButton }: Readonly<DetailsTableProps>) {
     // For context, this markup uses 2 classes for backwards compatibility
     // This was originally part of the voucher component and ported out
     // We can remove the voucher class names at point
@@ -25,7 +27,10 @@ export default function DetailsTable({ tableFields }: DetailsTableProps) {
                 .map(({ label, value }) => (
                     <div key={`${label + value}`} className="adyen-checkout__voucher-result__details__item adyen-checkout__details-table__item">
                         <dt className="adyen-checkout__voucher-result__details__label adyen-checkout__details-table__label">{label}</dt>
-                        <dd className="adyen-checkout__voucher-result__details__value adyen-checkout__details-table__value">{value}</dd>
+                        <dd className="adyen-checkout__voucher-result__details__value adyen-checkout__details-table__value">
+                            {value}
+                            {shouldShowCopyButton && <CopyIconButton text={value}></CopyIconButton>}
+                        </dd>
                     </div>
                 ))}
         </dl>
