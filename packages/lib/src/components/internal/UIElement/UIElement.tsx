@@ -459,7 +459,8 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
     /**
      * Handle Enter key pressed from a UIElement (called via handleKeyPress)
-     * @param obj
+     * @param activeElement
+     * @param component
      */
     protected onEnterKeyPressed(activeElement: Element, component: UIElement) {
         if (this.props.onEnterKeyPressed) {
