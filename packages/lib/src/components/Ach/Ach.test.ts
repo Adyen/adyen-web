@@ -31,7 +31,7 @@ describe('ACH', () => {
             await user.type(screen.getByLabelText(/Account number/), '1234567890');
             await user.type(screen.getByLabelText(/Verify account number/i), '1234567890');
 
-            await user.click(screen.queryByRole('button', { name: 'Confirm purchase' }));
+            await user.click(screen.queryByRole('button', { name: /Pay/i }));
 
             expect(onSubmitMock).toHaveBeenCalledTimes(1);
             expect(onSubmitMock).toHaveBeenCalledWith(
@@ -74,7 +74,7 @@ describe('ACH', () => {
 
             await user.click(screen.getByLabelText(/Save for my next payment/i));
 
-            await user.click(screen.queryByRole('button', { name: 'Confirm purchase' }));
+            await user.click(screen.queryByRole('button', { name: /Pay/i }));
 
             expect(onSubmitMock).toHaveBeenCalledTimes(1);
             expect(onSubmitMock).toHaveBeenCalledWith(
@@ -114,7 +114,7 @@ describe('ACH', () => {
             await user.type(screen.getByLabelText(/Account number/), '12345');
             await user.type(screen.getByLabelText(/Verify account number/i), '4321');
 
-            await user.click(screen.queryByRole('button', { name: 'Confirm purchase' }));
+            await user.click(screen.queryByRole('button', { name: /Pay/i }));
 
             expect(await screen.findByText('Account number does not match')).toBeVisible();
             expect(onSubmitMock).not.toHaveBeenCalled();
@@ -137,7 +137,7 @@ describe('ACH', () => {
             await user.type(screen.getByLabelText(/Account number/), '123');
             await user.type(screen.getByLabelText(/Verify account number/i), '123');
 
-            await user.click(screen.queryByRole('button', { name: 'Confirm purchase' }));
+            await user.click(screen.queryByRole('button', { name: /Pay/i }));
 
             expect(await screen.findByText('Enter the complete bank account number')).toBeVisible();
             expect(onSubmitMock).not.toHaveBeenCalled();
@@ -159,18 +159,18 @@ describe('ACH', () => {
             await user.type(screen.getByLabelText(/Account number/), '1234567890');
             await user.type(screen.getByLabelText(/Verify account number/i), '1234567890');
 
-            await user.click(screen.queryByRole('button', { name: 'Confirm purchase' }));
+            await user.click(screen.queryByRole('button', { name: /Pay/i }));
 
             expect(await screen.findByText('Enter the bank routing number')).toBeVisible();
             expect(onSubmitMock).not.toHaveBeenCalled();
 
             await user.type(screen.getByLabelText(/Routing number/i), '12345');
-            await user.click(screen.queryByRole('button', { name: 'Confirm purchase' }));
+            await user.click(screen.queryByRole('button', { name: /Pay/i }));
             expect(await screen.findByText('Enter the complete bank routing number')).toBeVisible();
             expect(onSubmitMock).not.toHaveBeenCalled();
 
             await user.type(screen.getByLabelText(/Routing number/i), '123456789');
-            await user.click(screen.queryByRole('button', { name: 'Confirm purchase' }));
+            await user.click(screen.queryByRole('button', { name: /Pay/i }));
             expect(onSubmitMock).toHaveBeenCalledTimes(1);
         });
 
@@ -194,7 +194,7 @@ describe('ACH', () => {
             await user.type(screen.getByLabelText(/Account number/), '1234567890');
             await user.type(screen.getByLabelText(/Verify account number/i), '1234567890');
 
-            await user.click(screen.queryByRole('button', { name: 'Confirm purchase' }));
+            await user.click(screen.queryByRole('button', { name: /Pay/i }));
 
             expect(onSubmitMock).toHaveBeenCalledTimes(1);
             expect(onSubmitMock).toHaveBeenCalledWith(
