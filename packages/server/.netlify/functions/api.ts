@@ -8,4 +8,4 @@ router.get('/hello', (req, res) => res.send('Hello World 2!'));
 
 api.use('/', router);
 
-export const handler = serverless(api);
+export const handler = router;
