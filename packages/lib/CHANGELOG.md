@@ -1,5 +1,112 @@
 # @adyen/adyen-web
 
+## 6.18.0
+
+### Minor Changes
+
+- a11y: improve giftcard screen reader errors ([#3356](https://github.com/Adyen/adyen-web/pull/3356))
+
+- Add support for the following Bank Transfer tx variants: ([#3343](https://github.com/Adyen/adyen-web/pull/3343))
+
+    - bankTransfer_BE
+    - bankTransfer_NL
+    - bankTransfer_PL
+    - bankTransfer_FR
+    - bankTransfer_CH
+    - bankTransfer_IE
+    - bankTransfer_GB
+    - bankTransfer_DE
+
+### Patch Changes
+
+- Fastlane - Exposing utility function on UMD bundle ([#3361](https://github.com/Adyen/adyen-web/pull/3361))
+
+## 6.17.0
+
+### Minor Changes
+
+- Export `Core` class. ([#3342](https://github.com/Adyen/adyen-web/pull/3342))
+
+- New PreAuthorizationDebitCanada component ([#3341](https://github.com/Adyen/adyen-web/pull/3341))
+
+## 6.16.0
+
+### Minor Changes
+
+- UPI - Updated label 'Enter UPI ID' to 'UPI ID' ([#3348](https://github.com/Adyen/adyen-web/pull/3348))
+
+- A new UI for switching between dual brands to comply with new guidelines from the schemes ([#3336](https://github.com/Adyen/adyen-web/pull/3336))
+
+### Patch Changes
+
+- A11y: Remove radiogroup on dropin when rending a single payment method ([#3338](https://github.com/Adyen/adyen-web/pull/3338))
+
+- CSS and markup tweaks to new dual branding UI (relates to #3336) ([#3346](https://github.com/Adyen/adyen-web/pull/3346))
+
+## 6.15.0
+
+### Minor Changes
+
+- Added `paybybank_pix` component. ([#3252](https://github.com/Adyen/adyen-web/pull/3252))
+
+- Making the creation of analytics events more declarative ([#3300](https://github.com/Adyen/adyen-web/pull/3300))
+
+- Card: Pay button now loads at the same time as other UI elements ([#3298](https://github.com/Adyen/adyen-web/pull/3298))
+
+## 6.14.0
+
+### Minor Changes
+
+- Riverty - Updated component to be a Redirect component ([#3299](https://github.com/Adyen/adyen-web/pull/3299))
+
+- Added `filterStoredPaymentMethods` callback to the Drop-in. This callback lets you choose which saved payment methods appear in the Drop-in. ([#3183](https://github.com/Adyen/adyen-web/pull/3183))
+
+## 6.13.1
+
+### Patch Changes
+
+- Fixed issue where clipboard copy-paste functionality wasn't working for mobile Safari 18.4 browsers ([#3314](https://github.com/Adyen/adyen-web/pull/3314))
+
+## 6.13.0
+
+### Minor Changes
+
+- [Apple Pay] Add support for shippingContactEditingMode configuration value ([#3289](https://github.com/Adyen/adyen-web/pull/3289))
+
+    This configuration value is used to prevent a user from editing the shipping address. This is useful for store pickup checkout options.
+
+    https://developer.apple.com/documentation/applepayontheweb/applepaypaymentrequest/shippingcontacteditingmode
+
+- Added support for Fastlane payment method ([#3076](https://github.com/Adyen/adyen-web/pull/3076))
+
+### Patch Changes
+
+- GooglePay - isValid flag adjusted to always be true ([#3297](https://github.com/Adyen/adyen-web/pull/3297))
+
+## 6.12.1
+
+### Patch Changes
+
+- Fixed issue where card inputs weren't respecting background color styles if the merchant set a meta tag to describe the color scheme ([#3281](https://github.com/Adyen/adyen-web/pull/3281))
+
+- Upped SF version to fix issue with LastPass & autofilling ([#3279](https://github.com/Adyen/adyen-web/pull/3279))
+
+## 6.12.0
+
+### Minor Changes
+
+- ACH - Added Drop-down to select Account Type and input field to verify the Account Number ([#3241](https://github.com/Adyen/adyen-web/pull/3241))
+
+### Patch Changes
+
+- Add missing callback types to customCard ([#3212](https://github.com/Adyen/adyen-web/pull/3212))
+
+- BrowserInfo no longer calls obsolete `navigator.javaEnabled` function ([#3234](https://github.com/Adyen/adyen-web/pull/3234))
+
+- Apple Pay - Added missing Typescript types for the ApplePayButtonType ([#3218](https://github.com/Adyen/adyen-web/pull/3218))
+
+- Google Pay - Fixed issue where Google Pay standalone component wasn't recognizing 'paywithgoogle' payment method ([#3253](https://github.com/Adyen/adyen-web/pull/3253))
+
 ## 6.11.0
 
 ### Minor Changes
@@ -313,7 +420,7 @@
 
 This release requires Checkout API v69 or later. We recommend using the latest Checkout API version.
 
-To update from Drop-in/Components v5.x.x, follow the migration guide.
+To update from Drop-in/Components v5.x.x, follow the [migration guide](https://docs.adyen.com/online-payments/upgrade-your-integration/migrate-to-web-v6/).
 
 ---
 

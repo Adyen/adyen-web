@@ -2,10 +2,11 @@ import { httpPost } from '../../core/Services/http';
 import { pick } from '../../utils/commonUtils';
 import { ThreeDS2FingerprintResponse } from './types';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
-import { THREEDS2_ERROR, THREEDS2_FINGERPRINT_SUBMIT } from './constants';
+import { THREEDS2_FINGERPRINT_SUBMIT } from './constants';
 import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors } from '../../core/Analytics/constants';
-import { SendAnalyticsObject } from '../../core/Analytics/types';
 import { API_ERROR_CODE } from '../../core/Services/sessions/constants';
+import { AnalyticsEvent } from '../../core/Analytics/AnalyticsEvent';
+import { AnalyticsErrorEvent } from '../../core/Analytics/AnalyticsErrorEvent';
 
 /**
  * ThreeDS2DeviceFingerprint, onComplete, calls a new, internal, endpoint which
@@ -24,7 +25,7 @@ export default function callSubmit3DS2Fingerprint({ data }): void {
         }
     )
         .then(resData => {
-            let analyticsErrorObject: SendAnalyticsObject;
+            let event: AnalyticsEvent;
 
             /**
              * Frictionless (no challenge) flow OR "refused" flow
@@ -38,14 +39,14 @@ export default function callSubmit3DS2Fingerprint({ data }): void {
                         resData
                     );
 
-                    analyticsErrorObject = {
-                        type: THREEDS2_ERROR,
+                    event = new AnalyticsErrorEvent({
                         code: Analytics3DS2Errors.NO_DETAILS_FOR_FRICTIONLESS_OR_REFUSED,
                         errorType: ANALYTICS_ERROR_TYPE.apiError,
                         message: `${THREEDS2_FINGERPRINT_SUBMIT}: no details object in a response indicating either a "frictionless" flow, or a "refused" response`
-                    };
+                    });
 
-                    this.submitAnalytics(analyticsErrorObject);
+                    this.submitAnalytics(event);
+
                     return;
                 }
 
@@ -61,13 +62,13 @@ export default function callSubmit3DS2Fingerprint({ data }): void {
                     resData
                 );
 
-                analyticsErrorObject = {
-                    type: THREEDS2_ERROR,
+                event = new AnalyticsErrorEvent({
                     code: Analytics3DS2Errors.NO_ACTION_FOR_CHALLENGE,
                     errorType: ANALYTICS_ERROR_TYPE.apiError,
                     message: `${THREEDS2_FINGERPRINT_SUBMIT}: no action object in a response indicating a "challenge" flow`
-                };
-                this.submitAnalytics(analyticsErrorObject);
+                });
+                this.submitAnalytics(event);
+
                 return;
             }
 
@@ -81,13 +82,14 @@ export default function callSubmit3DS2Fingerprint({ data }): void {
             if (!actionHandler) {
                 console.debug('Handled Error::callSubmit3DS2Fingerprint::FAILED:: no actionHandler');
 
-                analyticsErrorObject = {
-                    type: THREEDS2_ERROR,
+                event = new AnalyticsErrorEvent({
                     code: Analytics3DS2Errors.NO_COMPONENT_FOR_ACTION,
                     errorType: ANALYTICS_ERROR_TYPE.sdkError,
                     message: `${THREEDS2_FINGERPRINT_SUBMIT}: no component defined to handle the action response`
-                };
-                this.submitAnalytics(analyticsErrorObject);
+                });
+
+                this.submitAnalytics(event);
+
                 return;
             }
 

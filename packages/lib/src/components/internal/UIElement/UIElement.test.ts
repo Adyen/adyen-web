@@ -6,7 +6,7 @@ import { UIElementProps } from './types';
 import { Resources } from '../../../core/Context/Resources';
 import { AnalyticsModule, PaymentActionsType } from '../../../types/global-types';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
-import { ANALYTICS_ERROR_TYPE, ANALYTICS_EVENT } from '../../../core/Analytics/constants';
+import { ANALYTICS_ERROR_TYPE } from '../../../core/Analytics/constants';
 
 jest.mock('../../../core/Services/get-translations');
 
@@ -585,11 +585,18 @@ describe('UIElement', () => {
             element.submit();
             await new Promise(process.nextTick);
 
-            expect(mockedSendAnalytics).toHaveBeenCalledWith(
-                txVariant,
-                { code: errorCode, errorType: ANALYTICS_ERROR_TYPE.apiError, type: ANALYTICS_EVENT.error },
-                undefined
-            );
+            // expect(mockedSendAnalytics).toHaveBeenCalledWith(
+            //     txVariant,
+            //     { code: errorCode, errorType: ANALYTICS_ERROR_TYPE.apiError, type: ANALYTICS_EVENT.error },
+            //     undefined
+            // );
+            expect(mockedSendAnalytics).toHaveBeenCalledWith({
+                code: errorCode,
+                errorType: ANALYTICS_ERROR_TYPE.apiError,
+                timestamp: expect.any(String),
+                id: expect.any(String),
+                component: expect.any(String)
+            });
         });
     });
 
@@ -737,11 +744,13 @@ describe('UIElement', () => {
             element.handleAdditionalDetails({});
             await new Promise(process.nextTick);
 
-            expect(mockedSendAnalytics).toHaveBeenCalledWith(
-                txVariant,
-                { code: errorCode, errorType: ANALYTICS_ERROR_TYPE.apiError, type: ANALYTICS_EVENT.error },
-                undefined
-            );
+            expect(mockedSendAnalytics).toHaveBeenCalledWith({
+                code: errorCode,
+                errorType: ANALYTICS_ERROR_TYPE.apiError,
+                timestamp: expect.any(String),
+                id: expect.any(String),
+                component: expect.any(String)
+            });
         });
     });
 });

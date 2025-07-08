@@ -1,6 +1,5 @@
-import { CardBrandsConfiguration } from '../Card/types';
-import { Placeholders, SFError } from '../Card/components/CardInput/types';
-import UIElement from '../internal/UIElement';
+import { CardBrandsConfiguration, CardPlaceholders } from '../Card/types';
+import { SFError } from '../Card/components/CardInput/types';
 import {
     CardAllValidData,
     CardAutoCompleteData,
@@ -14,8 +13,23 @@ import {
     StylesObject
 } from '../internal/SecuredFields/lib/types';
 import Language from '../../language';
+import type { CoreConfiguration } from '../../core/types';
 
-export type CustomCardConfiguration = {
+type CoreCallbacks = Pick<
+    CoreConfiguration,
+    | 'beforeRedirect'
+    | 'beforeSubmit'
+    | 'onSubmit'
+    | 'onAdditionalDetails'
+    | 'onPaymentFailed'
+    | 'onPaymentCompleted'
+    | 'onChange'
+    | 'onActionHandled'
+    | 'onError'
+    | 'onEnterKeyPressed'
+>;
+
+export type CustomCardConfiguration = CoreCallbacks & {
     /**
      * Automatically shift the focus from one field to another. Usually happens from a valid Expiry Date field to the Security Code field,
      * but some BINS also allow us to know that the PAN is complete, in which case we can shift focus to the date field
@@ -153,12 +167,6 @@ export type CustomCardConfiguration = {
     onLoad?: (event: CardLoadData) => void;
 
     /**
-     * Called when a Component is told by a SecuredField that the Enter key has been pressed.
-     * - merchant set config option
-     */
-    onEnterKeyPressed?: (activeElement: Element, component: UIElement) => void;
-
-    /**
      * Called as errors are detected within the securedFields
      * - merchant set config option
      */
@@ -168,7 +176,7 @@ export type CustomCardConfiguration = {
      * Configure placeholder text for holderName, cardNumber, expirationDate, securityCode and password.
      * - merchant set config option
      */
-    placeholders?: Placeholders;
+    placeholders?: CardPlaceholders;
 
     /**
      * Object to configure the styling of the inputs in the iframes that are used to present the PAN, Expiry Date & Security Code fields

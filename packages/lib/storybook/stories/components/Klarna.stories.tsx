@@ -23,4 +23,17 @@ export const Widget: KlarnaStory = {
     }
 };
 
+export const B2b: KlarnaStory = {
+    render: ({ componentConfiguration, ...checkoutConfig }) => (
+        <Checkout checkoutConfig={checkoutConfig}>
+            {checkout => <ComponentContainer element={new Klarna(checkout, { ...componentConfiguration, type: 'klarna_b2b' })} />}
+        </Checkout>
+    ),
+
+    args: {
+        countryCode: 'NL',
+        componentConfiguration: {}
+    }
+};
+
 export default meta;

@@ -105,7 +105,7 @@ describe('Test mock binLookup results on CardInput.state', () => {
             { id: 'cartebancaire', brandObject: dualBrandObj2 }
         ]);
 
-        expect(selectedBrandValue).toEqual(''); // no auto brand selection
+        expect(selectedBrandValue).toEqual('visa'); // auto select default brand
     });
 
     test('CardInput.state is altered when a "dual-branded" lookup result is followed by a "single" lookup result ', () => {

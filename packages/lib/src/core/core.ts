@@ -24,6 +24,8 @@ import type { AnalyticsModule, PaymentAction, PaymentResponseData } from '../typ
 import type { CoreConfiguration, ICore, AdditionalDetailsData } from './types';
 import type { Translations } from '../language/types';
 import type { UIElementProps } from '../components/internal/UIElement/types';
+import { AnalyticsLogEvent } from './Analytics/AnalyticsLogEvent';
+import CancelError from './Errors/CancelError';
 
 class Core implements ICore {
     public session?: Session;
@@ -206,15 +208,34 @@ class Core implements ICore {
         promise
             .then(sanitizeResponse)
             .then(verifyPaymentDidNotFail)
+            .then(this.afterAdditionalDetails)
             .then((response: PaymentResponseData) => {
                 cleanupFinalResult(response);
                 this.options.onPaymentCompleted?.(response);
             })
-            .catch((response: PaymentResponseData) => {
-                cleanupFinalResult(response);
-                this.options.onPaymentFailed?.(response);
+            .catch((e: PaymentResponseData | Error) => {
+                if (e instanceof CancelError) {
+                    return;
+                }
+
+                cleanupFinalResult(e as PaymentResponseData);
+                this.options.onPaymentFailed?.(e as PaymentResponseData);
             });
     }
+
+    private readonly afterAdditionalDetails = (response: PaymentResponseData): Promise<PaymentResponseData | Error> => {
+        /**
+         * After the user is redirected back, a request to `/details` or `/paymentDetails` will be made.
+         * Typically, the response will not include an action object, except for the case of `paybybank_pix` payment method.
+         * In terms of `paybybank_pix`, the action UIElement will be created and passed to the `afterAdditionalDetails` callback, allowing it to be mounted on the page.
+         */
+        if (this.options.afterAdditionalDetails && response?.action) {
+            const actionEle = this.createFromAction(response.action);
+            this.options.afterAdditionalDetails(actionEle);
+            return Promise.reject(new CancelError('Handled by afterAdditionalDetails'));
+        }
+        return Promise.resolve(response);
+    };
 
     /**
      * Instantiates a new element component ready to be mounted from an action object
@@ -238,11 +259,13 @@ class Core implements ICore {
             // 'threeDS2' OR 'qrCode', 'voucher', 'redirect', 'await', 'bankTransfer`
             const component = action.type === THREEDS2_FULL ? `${action.type}${action.subtype}` : action.paymentMethodType;
 
-            this.modules.analytics.sendAnalytics(component, {
+            const event = new AnalyticsLogEvent({
                 type: ANALYTICS_ACTION_STR,
-                subtype: action.type,
-                message: `${component} action was handled by the SDK`
+                subType: action.type,
+                message: `${component} action was handled by the SDK`,
+                component
             });
+            this.modules.analytics.sendAnalytics(event);
 
             const props = {
                 ...this.getCorePropsForComponent(),

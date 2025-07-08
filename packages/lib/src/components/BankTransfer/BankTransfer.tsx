@@ -9,6 +9,17 @@ import { TxVariants } from '../tx-variants';
 
 export class BankTransferElement extends UIElement<BankTransferConfiguration> {
     public static type = TxVariants.bankTransfer_IBAN;
+    public static txVariants = [
+        TxVariants.bankTransfer_IBAN,
+        TxVariants.bankTransfer_BE,
+        TxVariants.bankTransfer_NL,
+        TxVariants.bankTransfer_PL,
+        TxVariants.bankTransfer_FR,
+        TxVariants.bankTransfer_CH,
+        TxVariants.bankTransfer_IE,
+        TxVariants.bankTransfer_GB,
+        TxVariants.bankTransfer_DE
+    ];
 
     public static defaultProps = {
         showEmailAddress: true
@@ -29,10 +40,12 @@ export class BankTransferElement extends UIElement<BankTransferConfiguration> {
      */
     formatData() {
         const { shopperEmail } = this.state.data;
+        const subtype = this.type !== (TxVariants.bankTransfer_IBAN as string) ? { subtype: 'embedded' } : {};
 
         return {
             paymentMethod: {
-                type: BankTransferElement.type
+                type: this.type,
+                ...subtype
             },
             ...(shopperEmail && { shopperEmail })
         };

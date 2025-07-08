@@ -18,20 +18,14 @@ import type { PayButtonFunctionProps, UIElementStatus } from '../internal/UIElem
 import UIElement from '../internal/UIElement';
 import PayButton from '../internal/PayButton';
 import type { ICore } from '../../core/types';
-import {
-    ANALYTICS_FOCUS_STR,
-    ANALYTICS_CONFIGURED_STR,
-    ANALYTICS_UNFOCUS_STR,
-    ANALYTICS_VALIDATION_ERROR_STR,
-    ANALYTICS_RENDERED_STR
-} from '../../core/Analytics/constants';
+import { ANALYTICS_FOCUS_STR, ANALYTICS_CONFIGURED_STR, ANALYTICS_UNFOCUS_STR, ANALYTICS_RENDERED_STR } from '../../core/Analytics/constants';
 import { ALL_SECURED_FIELDS } from '../internal/SecuredFields/lib/constants';
-import { FieldErrorAnalyticsObject, SendAnalyticsObject } from '../../core/Analytics/types';
 import { hasOwnProperty } from '../../utils/hasOwnProperty';
 import AdyenCheckoutError, { IMPLEMENTATION_ERROR } from '../../core/Errors/AdyenCheckoutError';
-import { getErrorMessageFromCode } from '../../core/Errors/utils';
-import { SF_ErrorCodes } from '../../core/Errors/constants';
 import CardInputDefaultProps from './components/CardInput/defaultProps';
+import { getCardConfigData } from './components/CardInput/utils';
+import { AnalyticsEvent } from '../../core/Analytics/AnalyticsEvent';
+import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
 
 export class CardElement extends UIElement<CardConfiguration> {
     public static type = TxVariants.scheme;
@@ -154,7 +148,8 @@ export class CardElement extends UIElement<CardConfiguration> {
                     holderName: this.props.holderName ?? ''
                 }),
                 ...(cardBrand && { brand: cardBrand }),
-                ...(this.props.fundingSource && { fundingSource: this.props.fundingSource })
+                ...(this.props.fundingSource && { fundingSource: this.props.fundingSource }),
+                ...(this.state.fastlaneData && { fastlaneData: btoa(JSON.stringify(this.state.fastlaneData)) })
             },
             ...(this.state.billingAddress && { billingAddress: this.state.billingAddress }),
             ...(this.state.socialSecurityNumber && { socialSecurityNumber: this.state.socialSecurityNumber }),
@@ -202,10 +197,10 @@ export class CardElement extends UIElement<CardConfiguration> {
         }
     }
 
-    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
-        const { type } = analyticsObj;
+    protected submitAnalytics(analyticsObj: AnalyticsEvent) {
+        const isInfoType = analyticsObj instanceof AnalyticsInfoEvent;
 
-        if (type === ANALYTICS_RENDERED_STR || type === ANALYTICS_CONFIGURED_STR) {
+        if ((isInfoType && analyticsObj.type === ANALYTICS_RENDERED_STR) || (isInfoType && analyticsObj.type === ANALYTICS_CONFIGURED_STR)) {
             // Check if it's a storedCard
             if (this.constructor['type'] === 'scheme') {
                 if (hasOwnProperty(this.props, 'supportedShopperInteractions')) {
@@ -213,24 +208,26 @@ export class CardElement extends UIElement<CardConfiguration> {
                     analyticsObj.brand = this.props.brand;
                 }
             }
+
+            // Add config data
+            if (isInfoType && analyticsObj.type === ANALYTICS_RENDERED_STR) {
+                analyticsObj.configData = getCardConfigData(this.props);
+            }
         }
 
-        super.submitAnalytics(analyticsObj, this.props);
+        super.submitAnalytics(analyticsObj);
     }
 
     private onConfigSuccess = (obj: CardConfigSuccessData) => {
-        this.submitAnalytics({
-            type: ANALYTICS_CONFIGURED_STR
-        });
+        const event = new AnalyticsInfoEvent({ type: ANALYTICS_CONFIGURED_STR });
+        this.submitAnalytics(event);
 
         this.props.onConfigSuccess?.(obj);
     };
 
     private onFocus = (obj: ComponentFocusObject) => {
-        this.submitAnalytics({
-            type: ANALYTICS_FOCUS_STR,
-            target: fieldTypeToSnakeCase(obj.fieldType)
-        });
+        const event = new AnalyticsInfoEvent({ type: ANALYTICS_FOCUS_STR, target: fieldTypeToSnakeCase(obj.fieldType) });
+        this.submitAnalytics(event);
 
         // Call merchant defined callback
         if (ALL_SECURED_FIELDS.includes(obj.fieldType)) {
@@ -241,10 +238,8 @@ export class CardElement extends UIElement<CardConfiguration> {
     };
 
     private onBlur = (obj: ComponentFocusObject) => {
-        this.submitAnalytics({
-            type: ANALYTICS_UNFOCUS_STR,
-            target: fieldTypeToSnakeCase(obj.fieldType)
-        });
+        const event = new AnalyticsInfoEvent({ type: ANALYTICS_UNFOCUS_STR, target: fieldTypeToSnakeCase(obj.fieldType) });
+        this.submitAnalytics(event);
 
         // Call merchant defined callback
         if (ALL_SECURED_FIELDS.includes(obj.fieldType)) {
@@ -252,15 +247,6 @@ export class CardElement extends UIElement<CardConfiguration> {
         } else {
             this.props.onBlur?.(obj);
         }
-    };
-
-    private onValidationErrorAnalytics = (obj: FieldErrorAnalyticsObject) => {
-        this.submitAnalytics({
-            type: ANALYTICS_VALIDATION_ERROR_STR,
-            target: fieldTypeToSnakeCase(obj.fieldType),
-            validationErrorCode: obj.errorCode,
-            validationErrorMessage: getErrorMessageFromCode(obj.errorCode, SF_ErrorCodes)
-        });
     };
 
     public onBinValue = triggerBinLookUp(this);
@@ -351,6 +337,7 @@ export class CardElement extends UIElement<CardConfiguration> {
                 setComponentRef={this.setComponentRef}
                 {...this.props}
                 {...this.state}
+                onSubmitAnalytics={this.submitAnalytics}
                 onChange={this.setState}
                 onSubmit={this.submit}
                 handleKeyPress={this.handleKeyPress}
@@ -363,7 +350,6 @@ export class CardElement extends UIElement<CardConfiguration> {
                 resources={this.resources}
                 onFocus={this.onFocus}
                 onBlur={this.onBlur}
-                onValidationErrorAnalytics={this.onValidationErrorAnalytics}
                 onConfigSuccess={this.onConfigSuccess}
             />
         );

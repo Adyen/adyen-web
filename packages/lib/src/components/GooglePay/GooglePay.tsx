@@ -8,12 +8,18 @@ import collectBrowserInfo from '../../utils/browserInfo';
 import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { TxVariants } from '../tx-variants';
 import { sanitizeResponse, verifyPaymentDidNotFail } from '../internal/UIElement/utils';
-import { ANALYTICS_INSTANT_PAYMENT_BUTTON, ANALYTICS_SELECTED_STR } from '../../core/Analytics/constants';
-import { SendAnalyticsObject } from '../../core/Analytics/types';
+import {
+    ANALYTICS_EXPRESS_PAGES_ARRAY,
+    ANALYTICS_INSTANT_PAYMENT_BUTTON,
+    ANALYTICS_RENDERED_STR,
+    ANALYTICS_SELECTED_STR
+} from '../../core/Analytics/constants';
 
-import type { AddressData, BrowserInfo, PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
+import type { AddressData, BrowserInfo, PaymentMethod, PaymentResponseData, RawPaymentResponse } from '../../types/global-types';
 import type { GooglePayConfiguration } from './types';
 import type { ICore } from '../../core/types';
+import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsEvent } from '../../core/Analytics/AnalyticsEvent';
 
 class GooglePay extends UIElement<GooglePayConfiguration> {
     public static type = TxVariants.googlepay;
@@ -47,6 +53,19 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
             ...(isExpress && paymentDataCallbacks?.onPaymentDataChanged && { onPaymentDataChanged: paymentDataCallbacks.onPaymentDataChanged }),
             onPaymentAuthorized: this.onPaymentAuthorized
         });
+    }
+
+    /**
+     * Google Pay requires custom logic due to supporting two Tx variants that lead to the same payment method.
+     * If the merchant creates a standalone Google Pay component, we need to verify if the payment method is available using both tx variants
+     *
+     * @param type
+     * @returns
+     */
+    protected override getPaymentMethodFromPaymentMethodsResponse(type?: string): PaymentMethod {
+        return (
+            this.core.paymentMethodsResponse.find(type || this.constructor['type']) || this.core.paymentMethodsResponse.find(TxVariants.paywithgoogle)
+        );
     }
 
     protected override formatProps(props): GooglePayConfiguration {
@@ -85,9 +104,22 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         };
     }
 
-    protected submitAnalytics(analyticsObj: SendAnalyticsObject) {
+    protected submitAnalytics(analyticsObj: AnalyticsEvent) {
         // Analytics will need to know about this.props.isExpress & this.props.expressPage
-        super.submitAnalytics({ ...analyticsObj }, this.props);
+        if (analyticsObj instanceof AnalyticsInfoEvent && analyticsObj.type === ANALYTICS_RENDERED_STR) {
+            const { isExpress, expressPage } = this.props;
+            const hasExpressPage = expressPage && ANALYTICS_EXPRESS_PAGES_ARRAY.includes(expressPage);
+
+            if (typeof isExpress === 'boolean') {
+                analyticsObj.isExpress = isExpress;
+            }
+
+            if (isExpress === true && hasExpressPage) {
+                analyticsObj.expressPage = expressPage; // We only care about the expressPage value if isExpress is true
+            }
+        }
+
+        super.submitAnalytics(analyticsObj);
     }
 
     /**
@@ -102,7 +134,12 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
 
     public override submit = () => {
         if (this.props.isInstantPayment) {
-            this.submitAnalytics({ type: ANALYTICS_SELECTED_STR, target: ANALYTICS_INSTANT_PAYMENT_BUTTON });
+            const event = new AnalyticsInfoEvent({
+                type: ANALYTICS_SELECTED_STR,
+                target: ANALYTICS_INSTANT_PAYMENT_BUTTON
+            });
+
+            this.submitAnalytics(event);
         }
 
         new Promise<void>((resolve, reject) => this.props.onClick(resolve, reject)).then(this.showGooglePayPaymentSheet).catch(() => {
@@ -202,11 +239,8 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         });
     }
 
-    /**
-     * Validation
-     */
-    get isValid(): boolean {
-        return !!this.state.googlePayToken;
+    public get isValid(): boolean {
+        return true;
     }
 
     /**

@@ -1,25 +1,16 @@
 @import 'styles/variable-generator';
 
-.adyen-checkout__card__dual-branding__buttons {
+.adyen-checkout__card__dual-branding__icons {
     display: flex;
-    opacity: 0.4;
-    pointer-events: none;
-
-    &--active {
-        opacity: 1;
-        pointer-events: auto;
-    }
+    pointer-events: auto;
 
     .adyen-checkout__card__cardNumber__brandIcon {
-        cursor: pointer;
+        cursor: inherit;
         opacity: 1;
 
         &:nth-child(1) {
             right: token(spacer-110);
         }
 
-        &--not-selected {
-            opacity: 0.5;
-        }
     }
 }

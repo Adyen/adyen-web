@@ -2,19 +2,23 @@ import { AdyenCheckout } from '../../src/core/AdyenCheckout';
 import { cancelOrder, checkBalance, createOrder, getPaymentMethods, makeDetailsCall, makePayment } from './checkout-api-calls';
 import { handleError, handleFinalState } from './checkout-handlers';
 import getCurrency from '../utils/get-currency';
-import { AdyenCheckoutProps } from '../stories/types';
 import Checkout from '../../src/core/core';
-import { PaymentMethodsResponse } from '../../src/types';
 
-async function createAdvancedFlowCheckout({
-    showPayButton,
-    countryCode,
-    shopperLocale,
-    amount,
-    paymentMethodsOverride,
-    paymentsOptions,
-    ...restCheckoutProps
-}: AdyenCheckoutProps): Promise<Checkout> {
+import type { PaymentMethodsResponse } from '../../src/types';
+import type { AdyenCheckoutProps, ShopperDetails } from '../stories/types';
+
+async function createAdvancedFlowCheckout(checkoutProps: AdyenCheckoutProps, shopperDetails?: ShopperDetails): Promise<Checkout> {
+    const {
+        showPayButton,
+        countryCode,
+        shopperLocale,
+        amount,
+        allowedPaymentTypes = [],
+        paymentMethodsOverride,
+        paymentsOptions,
+        ...restCheckoutProps
+    } = checkoutProps;
+
     const paymentAmount = {
         currency: getCurrency(countryCode),
         value: Number(amount)
@@ -29,15 +33,13 @@ async function createAdvancedFlowCheckout({
     const paymentMethodsResponse = !paymentMethodsOverride
         ? _paymentMethodsResponse
         : {
-              storedPaymentMethods: [
-                  ...(_paymentMethodsResponse.storedPaymentMethods ? _paymentMethodsResponse.storedPaymentMethods : []),
-                  ...(paymentMethodsOverride.storedPaymentMethods ? paymentMethodsOverride.storedPaymentMethods : [])
-              ],
-              paymentMethods: [
-                  ...(_paymentMethodsResponse.paymentMethods ? _paymentMethodsResponse.paymentMethods : []),
-                  ...(paymentMethodsOverride.paymentMethods ? paymentMethodsOverride.paymentMethods : [])
-              ]
+              storedPaymentMethods: paymentMethodsOverride.storedPaymentMethods ? paymentMethodsOverride.storedPaymentMethods : [],
+              paymentMethods: paymentMethodsOverride.paymentMethods ? paymentMethodsOverride.paymentMethods : []
           };
+
+    if (allowedPaymentTypes.length > 0) {
+        paymentMethodsResponse.paymentMethods = paymentMethodsResponse.paymentMethods.filter(pm => allowedPaymentTypes.includes(pm.type));
+    }
 
     const checkout = await AdyenCheckout({
         clientKey: process.env.CLIENT_KEY,
@@ -58,7 +60,7 @@ async function createAdvancedFlowCheckout({
                     ...(paymentsOptions && paymentsOptions)
                 };
 
-                const { action, order, resultCode, donationToken } = await makePayment(state.data, paymentData);
+                const { action, order, resultCode, donationToken } = await makePayment(state.data, paymentData, shopperDetails);
 
                 if (!resultCode) actions.reject();
 

@@ -183,7 +183,9 @@ describe('IssuerList: calls that generate analytics should produce objects with 
         expect(onSubmitAnalytics).toHaveBeenCalledWith({
             type: ANALYTICS_SELECTED_STR,
             target: ANALYTICS_FEATURED_ISSUER,
-            issuer: 'Issuer 3'
+            issuer: 'Issuer 3',
+            timestamp: expect.any(String),
+            id: expect.any(String)
         });
     });
 
@@ -214,7 +216,9 @@ describe('IssuerList: calls that generate analytics should produce objects with 
         expect(onSubmitAnalytics).toHaveBeenCalledWith({
             type: ANALYTICS_SELECTED_STR,
             target: ANALYTICS_LIST,
-            issuer: 'Issuer 2'
+            issuer: 'Issuer 2',
+            timestamp: expect.any(String),
+            id: expect.any(String)
         });
     });
 });

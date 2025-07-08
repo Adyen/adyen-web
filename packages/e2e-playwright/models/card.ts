@@ -52,6 +52,8 @@ class Card extends Base {
     readonly selectorList: Locator;
     readonly threeDs2Challenge: ThreeDs2Challenge;
 
+    readonly payButton: Locator;
+
     constructor(
         public readonly page: Page,
         public readonly rootElementSelector?: Locator | string
@@ -121,20 +123,26 @@ class Card extends Base {
         this.selectorList = this.rootElement.getByRole('listbox');
 
         this.threeDs2Challenge = new ThreeDs2Challenge(page);
+
+        // Regex needs to be this complex other wise it matches Google Pay in the Dropin
+        this.payButton = this.page.getByRole('button', { name: /(Pay .*)|(Save details)/ });
     }
 
-    // The brands as displayed under the CardNumber field
+    // The list of card brands as displayed under the CardNumber field
     get availableBrands() {
         return this.rootElement.locator('.adyen-checkout__card__brands').getByRole('img').all();
     }
 
+    /**
+     * Dual branding icons
+     */
     // The holder for the icons in the CardNumber field (when dual branding occurs)
     get dualBrandingIconsHolder() {
-        return this.rootElement.locator('.adyen-checkout__card__dual-branding__buttons');
+        return this.rootElement.locator('.adyen-checkout__card__dual-branding__icons');
     }
 
     // The brands as displayed directly in the CardNumber field (when dual branding occurs)
-    async waitForVisibleBrands(expectedNumber = 2) {
+    async waitForVisibleDualBrandIcons(expectedNumber = 2) {
         return await this.page.waitForFunction(
             expectedLength => [...document.querySelectorAll('.adyen-checkout__card__cardNumber__brandIcon')].length === expectedLength,
             expectedNumber
@@ -142,12 +150,12 @@ class Card extends Base {
     }
 
     // Retrieve dual brands
-    get brands() {
+    get dualBrandIcons() {
         return this.cardNumberField.locator('.adyen-checkout__card__cardNumber__brandIcon').all();
     }
 
-    // Select one of the dual brands
-    async selectBrand(
+    // Select one of the inline brand icons
+    async selectBrandIcon(
         text: string | RegExp,
         options?: {
             exact?: boolean;
@@ -156,7 +164,32 @@ class Card extends Base {
     ) {
         await this.cardNumberField.getByAltText(text, options).click({ force });
     }
-    // --
+    /** end */
+
+    /**
+     * Dual branding UI
+     */
+    get dualBrandingButtonsHolder() {
+        return this.rootElement.locator('.adyen-checkout__fieldset--dual-brand-switcher');
+    }
+
+    get dualBrandingButtonElements() {
+        return this.dualBrandingButtonsHolder.locator('.adyen-checkout__radio_group__input-wrapper').all();
+    }
+
+    getDualBrandButtonImage(brandEl) {
+        return brandEl.locator('.adyen-checkout__input-icon--no-radio-icon');
+    }
+
+    getDualBrandButtonLabel(brandEl) {
+        return brandEl.locator('.adyen-checkout__radio_group-extended__label');
+    }
+
+    getDualBrandButtonCheckmark(brandEl) {
+        return brandEl.locator('.adyen-checkout-input__inline-validation');
+    }
+
+    /** end */
 
     async goto(url: string = URL_MAP.card) {
         await this.page.goto(url);
@@ -164,9 +197,15 @@ class Card extends Base {
     }
 
     async isComponentVisible() {
-        await this.cardNumberInput.waitFor({ state: 'visible' });
-        await this.expiryDateInput.waitFor({ state: 'visible' });
-        await this.cvcInput.waitFor({ state: 'visible' });
+        await this.payButton.waitFor({ state: 'visible' });
+        // for some reason on webkit this line needs to be here
+        // removing this waitFor makes that the focus state is never returned to the Card Number Input in case of error handling
+        // it's unclear why is that the case and why only happens in Webkit, but also doesn't seem to be a race condition as adding
+        // a really long timeout also doesn't fix the issue
+        // in the the future to test this change pay attention to tests for the auto focus feature
+        await this.cardNumberInput.waitFor({ state: 'visible'});
+        await this.cvcInput.waitFor({ state: 'visible'});
+        await this.expiryDateInput.waitFor({ state: 'visible'});
     }
 
     /**

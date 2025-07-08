@@ -26,6 +26,7 @@ import {
     ANALYTICS_SELECTED_STR
 } from '../../../core/Analytics/constants';
 import { debounce } from '../../../utils/debounce';
+import { AnalyticsInfoEvent } from '../../../core/Analytics/AnalyticsInfoEvent';
 
 const payButtonLabel = ({ issuer, items }, i18n): string => {
     const issuerName = items.find(i => i.id === issuer)?.name;
@@ -70,7 +71,13 @@ function IssuerList({ items, placeholder, issuer, highlightedIds = [], showConte
         (type: IssuerListInputTypes) => (event: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => {
             const target = type === IssuerListInputTypes.Dropdown ? ANALYTICS_LIST : ANALYTICS_FEATURED_ISSUER;
             const issuerObj = items.find(issuer => issuer.id === (event.target as SelectTargetObject).value);
-            props.onSubmitAnalytics({ type: ANALYTICS_SELECTED_STR, target, issuer: issuerObj.name });
+
+            const analyticsEvent = new AnalyticsInfoEvent({
+                type: ANALYTICS_SELECTED_STR,
+                target,
+                issuer: issuerObj.name
+            });
+            props.onSubmitAnalytics(analyticsEvent);
 
             setInputType(type);
             handleChangeFor('issuer')(event);
@@ -80,7 +87,11 @@ function IssuerList({ items, placeholder, issuer, highlightedIds = [], showConte
 
     const handleListToggle = useCallback((isOpen: boolean) => {
         if (isOpen) {
-            props.onSubmitAnalytics({ type: ANALYTICS_DISPLAYED_STR, target: ANALYTICS_LIST });
+            const event = new AnalyticsInfoEvent({
+                type: ANALYTICS_DISPLAYED_STR,
+                target: ANALYTICS_LIST
+            });
+            props.onSubmitAnalytics(event);
         }
     }, []);
 
@@ -96,7 +107,7 @@ function IssuerList({ items, placeholder, issuer, highlightedIds = [], showConte
         const srPanelResp: SetSRMessagesReturnObject = setSRMessages?.({ errors, isValidating: true });
         if (srPanelResp?.action === ERROR_ACTION_FOCUS_FIELD) {
             // Focus field in error, if required
-            if (shouldMoveFocusSR) setFocusOnField('.adyen-checkout__issuer-list', srPanelResp.fieldToFocus);
+            if (shouldMoveFocusSR) setFocusOnField('.adyen-checkout__issuer-list', 'issuer-list');
         }
     }, [data, valid, errors, isValid]);
 

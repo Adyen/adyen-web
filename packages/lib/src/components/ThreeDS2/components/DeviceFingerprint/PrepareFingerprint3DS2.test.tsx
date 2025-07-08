@@ -1,7 +1,7 @@
 import { mount } from 'enzyme';
 import { h } from 'preact';
 import PrepareFingerprint3DS2 from './PrepareFingerprint3DS2';
-import { THREEDS2_ERROR, THREEDS2_FINGERPRINT_ERROR, THREEDS2_FULL, TIMEOUT } from '../../constants';
+import { THREEDS2_FINGERPRINT_ERROR, THREEDS2_FULL, TIMEOUT } from '../../constants';
 import { Analytics3DS2Errors, Analytics3DS2Events, ANALYTICS_ERROR_TYPE } from '../../../../core/Analytics/constants';
 
 const fingerPrintToken = {
@@ -31,8 +31,9 @@ let wrapper: any;
 const onError: any = () => {};
 
 const baseAnalyticsError = {
-    type: THREEDS2_ERROR,
-    errorType: ANALYTICS_ERROR_TYPE.apiError
+    errorType: ANALYTICS_ERROR_TYPE.apiError,
+    timestamp: expect.any(String),
+    id: expect.any(String)
 };
 
 let completeFunction: any;
@@ -40,7 +41,9 @@ let completeFunction: any;
 const completedAnalyticsObj = {
     message: '3DS2 fingerprinting has completed',
     type: THREEDS2_FULL,
-    subtype: Analytics3DS2Events.FINGERPRINT_COMPLETED
+    subType: Analytics3DS2Events.FINGERPRINT_COMPLETED,
+    timestamp: expect.any(String),
+    id: expect.any(String)
 };
 
 const formResult = `
@@ -82,7 +85,9 @@ describe('ThreeDS2DeviceFingerprint - Happy flow', () => {
         expect(onSubmitAnalytics).toHaveBeenCalledWith({
             type: THREEDS2_FULL,
             message: 'threeDSMethodData sent',
-            subtype: Analytics3DS2Events.FINGERPRINT_DATA_SENT
+            subType: Analytics3DS2Events.FINGERPRINT_DATA_SENT,
+            timestamp: expect.any(String),
+            id: expect.any(String)
         });
 
         const prepFingComp = wrapper.find('PrepareFingerprint3DS2');
@@ -144,10 +149,11 @@ describe('ThreeDS2DeviceFingerprint - flow completes with errors that are consid
         setTimeout(() => {
             // analytics for error
             expect(onSubmitAnalytics).toHaveBeenCalledWith({
-                type: THREEDS2_ERROR,
                 message: 'threeDS2Fingerprint: timeout',
                 code: Analytics3DS2Errors.THREEDS2_TIMEOUT,
-                errorType: ANALYTICS_ERROR_TYPE.network
+                errorType: ANALYTICS_ERROR_TYPE.network,
+                timestamp: expect.any(String),
+                id: expect.any(String)
             });
 
             // analytics to say process is complete

@@ -1,8 +1,9 @@
 import { ADDRESS_SCHEMA } from '../components/internal/Address/constants';
 import actionTypes from '../core/ProcessResponse/PaymentAction/actionTypes';
-import { AnalyticsInitialEvent, AnalyticsObject, CreateAnalyticsEventObject, SendAnalyticsObject } from '../core/Analytics/types';
+import { AnalyticsInitialEvent } from '../core/Analytics/types';
 import { EventsQueueModule } from '../core/Analytics/EventsQueue';
 import { CardFocusData } from '../components/internal/SecuredFields/lib/types';
+import { AnalyticsEvent } from '../core/Analytics/AnalyticsEvent';
 
 export type PaymentActionsType = keyof typeof actionTypes;
 
@@ -381,9 +382,8 @@ export interface AnalyticsModule {
     setUp: (a: AnalyticsInitialEvent) => Promise<any>;
     getCheckoutAttemptId: () => string;
     getEventsQueue: () => EventsQueueModule;
-    createAnalyticsEvent: (a: CreateAnalyticsEventObject) => AnalyticsObject;
     getEnabled: () => boolean;
-    sendAnalytics: (component: string, analyticsObj: SendAnalyticsObject, uiElementProps?: any) => void;
+    sendAnalytics: (analyticsObj: AnalyticsEvent) => boolean;
 }
 
 export type ComponentFocusObject = {

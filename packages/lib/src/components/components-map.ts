@@ -60,8 +60,12 @@ import Duitnow from './DuitNow';
 import Trustly from './Trustly';
 import Riverty from './Riverty';
 import PayByBankUS from './PayByBankUS';
-import { TxVariants } from './tx-variants';
+import Fastlane from './PayPalFastlane/Fastlane';
+import PreAuthorizedDebitCanada from './PreAuthorizedDebitCanada';
 import PayTo from './PayTo/PayTo';
+import PayByBankPix from './PayByBankPix';
+
+import { TxVariants } from './tx-variants';
 
 /**
  * Maps each tx variant to a Component element.
@@ -73,10 +77,21 @@ import PayTo from './PayTo/PayTo';
 export const ComponentsMap = {
     /** internal */
     [TxVariants.address]: Address,
-    [TxVariants.bankTransfer_IBAN]: BankTransfer,
     [TxVariants.donation]: Donation,
     [TxVariants.personal_details]: PersonalDetails,
     /** internal */
+
+    /** Bank Transfer */
+    [TxVariants.bankTransfer_IBAN]: BankTransfer,
+    [TxVariants.bankTransfer_BE]: BankTransfer,
+    [TxVariants.bankTransfer_NL]: BankTransfer,
+    [TxVariants.bankTransfer_PL]: BankTransfer,
+    [TxVariants.bankTransfer_FR]: BankTransfer,
+    [TxVariants.bankTransfer_CH]: BankTransfer,
+    [TxVariants.bankTransfer_IE]: BankTransfer,
+    [TxVariants.bankTransfer_GB]: BankTransfer,
+    [TxVariants.bankTransfer_DE]: BankTransfer,
+    /** Bank Transfer */
 
     /** Card */
     [TxVariants.bcmc]: Bancontact,
@@ -90,6 +105,7 @@ export const ComponentsMap = {
     [TxVariants.ach]: Ach,
     [TxVariants.directdebit_GB]: BacsDD,
     [TxVariants.sepadirectdebit]: Sepa,
+    [TxVariants.eft_directdebit_CA]: PreAuthorizedDebitCanada,
     /** Direct debit */
 
     /** Open Invoice */
@@ -105,7 +121,6 @@ export const ComponentsMap = {
     [TxVariants.facilypay_12x]: FacilyPay12x,
     [TxVariants.ratepay]: RatePay,
     [TxVariants.ratepay_directdebit]: RatePayDirectDebit,
-    [TxVariants.riverty]: Riverty,
     /** Open Invoice */
 
     /** Wallets */
@@ -115,6 +130,7 @@ export const ComponentsMap = {
     [TxVariants.clicktopay]: ClickToPay,
     [TxVariants.googlepay]: GooglePay,
     [TxVariants.paypal]: PayPal,
+    [TxVariants.fastlane]: Fastlane,
     [TxVariants.paywithgoogle]: GooglePay,
     /** Wallets */
 
@@ -179,6 +195,8 @@ export const ComponentsMap = {
     [TxVariants.vipps]: Vipps,
     [TxVariants.trustly]: Trustly,
     [TxVariants.paybybank_AIS_DD]: PayByBankUS,
+    [TxVariants.riverty]: Riverty,
+    [TxVariants.paybybank_pix]: PayByBankPix,
     /** Redirect */
 
     /** Klarna */

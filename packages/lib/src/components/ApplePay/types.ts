@@ -16,17 +16,20 @@ export type ApplePayPaymentAuthorizationResult = ApplePayJS.ApplePayPaymentAutho
 };
 
 export type ApplePayButtonType =
-    | 'plain'
-    | 'buy'
-    | 'donate'
-    | 'check-out'
-    | 'book'
-    | 'subscribe'
     | 'add-money'
+    | 'book'
+    | 'buy'
+    | 'check-out'
+    | 'continue'
     | 'contribute'
+    | 'donate'
     | 'order'
+    | 'pay'
+    | 'plain'
     | 'reload'
     | 'rent'
+    | 'set-up'
+    | 'subscribe'
     | 'support'
     | 'tip'
     | 'top-up';
@@ -85,6 +88,12 @@ export interface ApplePayConfiguration extends UIElementProps {
      * @default ['supports3DS']
      */
     merchantCapabilities?: ApplePayJS.ApplePayMerchantCapability[];
+
+    /**
+     * A value that indicates whether the shipping mode prevents the user from editing the shipping address.
+     * {@link https://developer.apple.com/documentation/applepayontheweb/applepaypaymentrequest/shippingcontacteditingmode}
+     */
+    shippingContactEditingMode?: ApplePayJS.ApplePayShippingContactEditingMode;
 
     /**
      * A set of shipping method objects that describe the available shipping methods.

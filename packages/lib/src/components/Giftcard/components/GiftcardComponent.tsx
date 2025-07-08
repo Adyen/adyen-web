@@ -7,6 +7,7 @@ import { PaymentAmount } from '../../../types/global-types';
 import { GIFT_CARD } from '../../internal/SecuredFields/lib/constants';
 import { GiftCardFields } from './GiftcardFields';
 import { GiftcardFieldsProps, Placeholders } from './types';
+import { useSRPanelForGiftcardErrors } from './useSRPanelForGiftcardErrors';
 
 interface GiftcardComponentProps {
     onChange: (state) => void;
@@ -34,7 +35,10 @@ class Giftcard extends Component<GiftcardComponentProps> {
         balance: null,
         transactionLimit: null,
         focusedElement: false,
-        isValid: false
+        isValid: false,
+        sfpState: {},
+        isValidating: false,
+        transformedErrors: {}
     };
 
     public static defaultProps = {
@@ -48,20 +52,29 @@ class Giftcard extends Component<GiftcardComponentProps> {
 
     public sfp;
 
+    /**
+     * Maps string error codes from SecuredFields to validation rule objects
+     */
+    public mapErrorsToValidationObjects = () => {
+        // Use the sfp reference to call mapErrorsToValidationRuleResult
+        if (!this.sfp) return {};
+        return this.sfp.mapErrorsToValidationRuleResult();
+    };
+
     public onChange = sfpState => {
+        // Add transformed errors to the state
+        const transformedErrors = this.mapErrorsToValidationObjects();
+
+        this.setState({
+            sfpState,
+            transformedErrors
+        });
+
         this.props.onChange({
             data: sfpState.data,
             isValid: sfpState.isSfpValid
         });
     };
-
-    public showValidation = () => {
-        this.sfp.showValidation();
-    };
-
-    setStatus(status) {
-        this.setState({ status });
-    }
 
     public handleFocus = e => {
         this.setState({ focusedElement: e.currentFocusObject });
@@ -78,8 +91,22 @@ class Giftcard extends Component<GiftcardComponentProps> {
         this.setState({ balance, transactionLimit });
     };
 
-    render(props, { focusedElement, balance, transactionLimit }) {
+    public showValidation = () => {
+        this.setState({ isValidating: true });
+
+        // Validate SecuredFields
+        this.sfp?.showValidation();
+    };
+
+    render(props, { focusedElement, balance, transactionLimit, isValidating, transformedErrors }) {
         const { i18n } = useCoreContext();
+
+        // Handle SRPanel errors in render with transformed error objects
+        useSRPanelForGiftcardErrors({
+            errors: transformedErrors,
+            isValidating,
+            sfp: this.sfp
+        });
 
         const transactionAmount = transactionLimit?.value < balance?.value ? transactionLimit : balance;
         const hasEnoughBalance = transactionAmount?.value >= this.props.amount?.value;
@@ -92,6 +119,7 @@ class Giftcard extends Component<GiftcardComponentProps> {
                     transactionLimit={transactionLimit}
                     makePayment={props.makePayment}
                     status={this.state.status}
+                    makeBalanceCheck={props.makeBalanceCheck}
                     showPayButton={this.props.showPayButton}
                     payButton={this.props.payButton}
                 />

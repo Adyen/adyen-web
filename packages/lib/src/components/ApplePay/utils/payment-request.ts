@@ -22,6 +22,7 @@ export const preparePaymentRequest = (paymentRequest): ApplePayJS.ApplePayPaymen
         },
 
         lineItems: props.lineItems,
+        shippingContactEditingMode: props.shippingContactEditingMode,
         shippingMethods: props.shippingMethods,
         shippingType: props.shippingType,
 

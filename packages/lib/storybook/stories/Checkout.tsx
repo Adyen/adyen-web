@@ -1,21 +1,24 @@
+import React from 'react';
 import { useEffect, useState } from 'preact/hooks';
-import type { ComponentChildren } from 'preact';
 import { createCheckout } from '../helpers/create-checkout';
-import { GlobalStoryProps } from './types';
-import { ICore } from '../../src/core/types';
 import Spinner from '../../src/components/internal/Spinner';
+
+import type { ComponentChildren } from 'preact';
+import type { GlobalStoryProps, ShopperDetails } from './types';
+import type { ICore } from '../../src/core/types';
 
 interface ICheckout {
     children: (checkout: ICore) => ComponentChildren | void;
     checkoutConfig: GlobalStoryProps;
+    shopperDetails?: ShopperDetails;
 }
 
-export const Checkout = ({ children, checkoutConfig }: ICheckout) => {
+export const Checkout: React.FC<ICheckout> = ({ children, checkoutConfig, shopperDetails }) => {
     const [adyenCheckout, setAdyenCheckout] = useState<ICore>();
     const [errorMessage, setErrorMessage] = useState<string>();
 
     useEffect(() => {
-        createCheckout(checkoutConfig)
+        createCheckout(checkoutConfig, shopperDetails)
             .then(checkout => {
                 setAdyenCheckout(checkout);
             })

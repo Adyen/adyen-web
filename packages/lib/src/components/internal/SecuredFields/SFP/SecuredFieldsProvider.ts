@@ -131,6 +131,8 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
 
     public componentDidUpdate() {
         this.checkForKCPFields();
+        // Pass all the state data up - Used right now for loading status
+        this.props.onStateUpdate?.(this.state);
     }
 
     public componentWillUnmount(): void {
@@ -146,11 +148,6 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
         if (process.env.NODE_ENV === 'development' && process.env.__SF_ENV__ !== 'build') {
             loadingContext = process.env.__SF_ENV__;
         }
-
-        // TODO
-        // if(!this.props.keypadFix){
-        // send analytics action because to know if anyone *ever* sets this config prop
-        // }
 
         const csfSetupObj: CSFSetupObject = {
             rootNode: root,

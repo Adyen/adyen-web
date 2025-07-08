@@ -42,6 +42,12 @@ $adyen-checkout-media-query-s-min: 480px;
 $adyen-checkout-media-query-m-min: 768px;
 $adyen-checkout-media-query-l-min: 1024px;
 
+@mixin screen-s-and-down {
+    @media (max-width: #{$adyen-checkout-media-query-s-min}) {
+        @content;
+    }
+}
+
 @mixin screen-s-and-up {
     @media (min-width: #{$adyen-checkout-media-query-s-min}) {
         @content;
@@ -105,6 +111,12 @@ $adyen-checkout-media-query-l-min: 1024px;
     line-height: token(text-title-line-height);
 }
 
+@mixin adyen-checkout-text-title-l {
+    font-size: token(text-title-l-font-size);
+    font-weight: token(text-title-l-font-weight);
+    line-height: token(text-title-l-line-height);
+}
+
 @mixin adyen-checkout-text-body {
     font-size: token(text-body-font-size);
     font-weight: token(text-body-font-weight);
@@ -115,6 +127,12 @@ $adyen-checkout-media-query-l-min: 1024px;
     font-size: token(text-caption-font-size);
     font-weight: token(text-caption-font-weight);
     line-height: token(text-caption-line-height);
+}
+
+@mixin adyen-checkout-text-caption-stronger {
+   @include adyen-checkout-text-caption;
+
+    font-weight: token(text-caption-stronger-font-weight);
 }
 
 @mixin set-spinner-color($background-color: token(color-background-inverse-primary), $color: token(color-outline-primary-active)) {

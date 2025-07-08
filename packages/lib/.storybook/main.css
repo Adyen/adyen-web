@@ -1,9 +1,8 @@
 html,
 body {
-    font:
-        1rem/1.21 -apple-system,
-        BlinkMacSystemFont,
-        sans-serif;
+    font: 1rem/1.21 -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
     font-weight: 400;
     background-color: #fbfbfb;
 }
@@ -18,4 +17,20 @@ button {
     max-width: 600px;
     padding: 24px;
     margin: auto;
+}
+
+.storybook-status-container {
+    align-items: center;
+    background-color: #ffffff;
+    border: 1px solid #c9cdd3;
+    border-radius: 8px;
+    color: #00112c;
+    display: flex;
+    flex-direction: column;
+    font-size: 1rem;
+    height: 350px;
+    justify-content: center;
+    margin: 0;
+    padding: 32px;
+    text-align: center;
 }

@@ -7,8 +7,10 @@ import { ANALYTICS_RENDERED_STR, NO_CHECKOUT_ATTEMPT_ID } from '../../../core/An
 import type { ICore } from '../../../core/types';
 import type { BaseElementProps, IBaseElement } from './types';
 import type { PaymentData } from '../../../types/global-types';
-import type { AnalyticsInitialEvent, SendAnalyticsObject } from '../../../core/Analytics/types';
+import { AnalyticsInitialEvent } from '../../../core/Analytics/types';
 import { off, on } from '../../../utils/listenerUtils';
+import { AnalyticsInfoEvent } from '../../../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsEvent } from '../../../core/Analytics/AnalyticsEvent';
 
 /**
  * Verify if the first parameter is instance of Core.
@@ -75,7 +77,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
     }
 
     /* eslint-disable-next-line */
-    protected submitAnalytics(analyticsObj?: SendAnalyticsObject) {
+    protected submitAnalytics(analyticsObj?: AnalyticsEvent) {
         return null;
     }
 
@@ -100,14 +102,6 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
 
         if (componentData.paymentMethod && checkoutAttemptId) {
             componentData.paymentMethod.checkoutAttemptId = checkoutAttemptId;
-        }
-
-        // Workaround, to be fixed properly
-        // Remove the firstName & lastName in the billingAddress for non Riverty components
-        // @ts-ignore type exists
-        if (this.props.type !== 'riverty' && componentData.billingAddress) {
-            const { firstName, lastName, ...rest } = componentData.billingAddress;
-            componentData.billingAddress = { ...rest };
         }
 
         return {
@@ -170,7 +164,8 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
                     // ...create an analytics event  declaring that the component has been rendered
                     // (The dropin will do this itself from DropinComponent once the PM list has rendered)
                     if (!this.props.isDropin) {
-                        this.submitAnalytics({ type: ANALYTICS_RENDERED_STR });
+                        const event = new AnalyticsInfoEvent({ type: ANALYTICS_RENDERED_STR });
+                        this.submitAnalytics(event);
                     }
                 });
             }

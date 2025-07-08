@@ -99,6 +99,10 @@
     text-align: left;
 }
 
+.adyen-checkout__dropdown__button__text-placeholder {
+    color: token(color-label-secondary);
+}
+
 .adyen-checkout__dropdown__button__secondary-text {
     margin-right: token(spacer-070);
 }

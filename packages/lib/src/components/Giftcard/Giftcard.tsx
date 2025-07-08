@@ -7,6 +7,7 @@ import AdyenCheckoutError from '../../core/Errors/AdyenCheckoutError';
 import { PaymentAmount } from '../../types/global-types';
 import { GiftCardElementData, GiftCardConfiguration, balanceCheckResponseType } from './types';
 import { TxVariants } from '../tx-variants';
+import SRPanelProvider from '../../core/Errors/SRPanelProvider';
 
 export class GiftcardElement extends UIElement<GiftCardConfiguration> {
     public static type = TxVariants.giftcard;
@@ -72,6 +73,11 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
     }
 
     private onBalanceCheck = (): void => {
+        if (!this.isValid) {
+            this.showValidation();
+            return;
+        }
+
         // skip balance check if no onBalanceCheck event has been defined
         const hasBalanceCheck = this.props.session || this.props.onBalanceCheck;
         if (!hasBalanceCheck) return super.submit();
@@ -139,11 +145,6 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
     public submit() {
         // for simplicity of the merchant we always only expose .submit()
         // however to make the actual payment call we call makeSubmitCall
-        if (!this.isValid) {
-            this.showValidation();
-            return false;
-        }
-
         this.balanceCheck();
     }
 
@@ -160,18 +161,20 @@ export class GiftcardElement extends UIElement<GiftCardConfiguration> {
     render() {
         return (
             <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
-                <GiftcardComponent
-                    ref={ref => {
-                        this.componentRef = ref;
-                    }}
-                    {...this.props}
-                    handleKeyPress={this.handleKeyPress}
-                    showPayButton={this.props.showPayButton}
-                    onChange={this.setState}
-                    makeBalanceCheck={() => this.onBalanceCheck()}
-                    makePayment={() => this.makeSubmitCall()}
-                    payButton={this.payButton}
-                />
+                <SRPanelProvider srPanel={this.props.modules.srPanel}>
+                    <GiftcardComponent
+                        ref={ref => {
+                            this.componentRef = ref;
+                        }}
+                        {...this.props}
+                        handleKeyPress={this.handleKeyPress}
+                        showPayButton={this.props.showPayButton}
+                        onChange={this.setState}
+                        makeBalanceCheck={() => this.onBalanceCheck()}
+                        makePayment={() => this.makeSubmitCall()}
+                        payButton={this.payButton}
+                    />
+                </SRPanelProvider>
             </CoreProvider>
         );
     }

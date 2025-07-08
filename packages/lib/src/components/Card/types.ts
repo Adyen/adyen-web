@@ -13,9 +13,21 @@ import { CVCPolicyType, DatePolicyType, CardAllValidData } from '../internal/Sec
 import { ClickToPayProps } from '../internal/ClickToPay/types';
 import { InstallmentOptions } from './components/CardInput/components/types';
 import { DisclaimerMsgObject } from '../internal/DisclaimerMessage/DisclaimerMessage';
-import { Placeholders } from './components/CardInput/types';
 import { UIElementProps } from '../internal/UIElement/types';
 import type { OnAddressLookupType } from '../internal/Address/components/AddressSearch';
+import type { FastlaneSignupConfiguration } from '../PayPalFastlane/types';
+
+type PlaceholderKeys =
+    | 'holderName'
+    | 'cardNumber'
+    | 'expiryDate'
+    | 'expiryMonth'
+    | 'expiryYear'
+    | 'securityCodeThreeDigits'
+    | 'securityCodeFourDigits'
+    | 'password';
+
+export type CardPlaceholders = Partial<Record<PlaceholderKeys, string>>;
 
 export interface CardConfiguration extends UIElementProps {
     /**
@@ -95,6 +107,11 @@ export interface CardConfiguration extends UIElementProps {
      * - merchant set config option
      */
     clickToPayConfiguration?: ClickToPayProps;
+
+    /**
+     * Configuration for displaying the Fastlane consent UI.
+     */
+    fastlaneConfiguration?: FastlaneSignupConfiguration;
 
     /**
      * An object sent in the /paymentMethods response
@@ -329,7 +346,7 @@ export interface CardConfiguration extends UIElementProps {
      * Configure placeholder text for holderName, cardNumber, expirationDate, securityCode and password.
      * - merchant set config option
      */
-    placeholders?: Placeholders;
+    placeholders?: CardPlaceholders;
 
     /**
      * Position holder name above card number field (instead of having it after the security code field)
@@ -468,6 +485,7 @@ export interface CardElementData {
 
 export interface BrandObject {
     brand: string;
+    localeBrand?: string;
     cvcPolicy: CVCPolicyType;
     enableLuhnCheck: boolean;
     showExpiryDate?: boolean;
@@ -499,6 +517,7 @@ export interface BinLookupResponse {
     issuingCountryCode: string;
     showSocialSecurityNumber?: boolean;
     supportedBrands?: BrandObject[];
+    isDualBrandSelection?: boolean;
 }
 
 export interface DualBrandSelectElement {

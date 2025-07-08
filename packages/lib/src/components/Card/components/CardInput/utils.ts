@@ -15,9 +15,15 @@ import { AddressSpecifications, StringObject } from '../../../internal/Address/t
 import { PARTIAL_ADDRESS_SCHEMA } from '../../../internal/Address/constants';
 import { InstallmentsObj } from './components/Installments/Installments';
 import { SFPProps } from '../../../internal/SecuredFields/SFP/types';
-import { BRAND_READABLE_NAME_MAP } from '../../../internal/SecuredFields/lib/constants';
-import { UseImageHookType } from '../../../../core/Context/useImage';
+import { BRAND_READABLE_NAME_MAP, DEFAULT_CARD_GROUP_TYPES } from '../../../internal/SecuredFields/lib/constants';
+import useImage, { UseImageHookType } from '../../../../core/Context/useImage';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
+import { CardBrandsConfiguration, CardConfiguration, DualBrandSelectElement } from '../../types';
+import { CardConfigData } from '../../../../core/Analytics/types';
+import { DEFAULT_CHALLENGE_WINDOW_SIZE } from '../../../ThreeDS2/constants';
+import CardInputDefaultProps from './defaultProps';
+import { isConfigurationValid as isFastlaneComponentConfigValid } from '../Fastlane/utils/validate-configuration';
+import { notFalsy } from '../../../../utils/commonUtils';
 
 export const getCardImageUrl = (brand: string, getImage: UseImageHookType): string => {
     const imageOptions = {
@@ -175,6 +181,7 @@ export const handlePartialAddressMode = (addressMode: AddressModeOptions): Addre
 
 // Almost all errors are blur based, but some SF ones are not i.e. when an unsupported card is entered or the expiry date is out of range
 export function lookupBlurBasedErrors(errorCode) {
+    // If it's NOT one of these, then it's a blur based error
     return ![
         SF_ErrorCodes.ERROR_MSG_UNSUPPORTED_CARD_ENTERED,
         SF_ErrorCodes.ERROR_MSG_CARD_TOO_OLD,
@@ -186,3 +193,151 @@ export function lookupBlurBasedErrors(errorCode) {
 export function getFullBrandName(brand) {
     return BRAND_READABLE_NAME_MAP[brand] ?? brand;
 }
+
+export const getCardConfigData = (cardProps: CardConfiguration): CardConfigData => {
+    const MAX_LENGTH = 128;
+
+    // Extract props from cardProps - mostly setting a default value, if prop not found
+    const {
+        autoFocus,
+        billingAddressAllowedCountries,
+        billingAddressMode,
+        billingAddressRequired,
+        billingAddressRequiredFields,
+        brands = DEFAULT_CARD_GROUP_TYPES,
+        brandsConfiguration,
+        challengeWindowSize = DEFAULT_CHALLENGE_WINDOW_SIZE,
+        configuration,
+        countryCode,
+        data,
+        disclaimerMessage,
+        disableIOSArrowKeys,
+        doBinLookup,
+        enableStoreDetails,
+        exposeExpiryDate,
+        fastlaneConfiguration,
+        forceCompat,
+        hasHolderName,
+        hideCVC,
+        holderNameRequired,
+        installmentOptions,
+        keypadFix,
+        legacyInputMode,
+        maskSecurityCode,
+        minimumExpiryDate,
+        name, // = 'none',
+        placeholders,
+        positionHolderNameOnTop,
+        showBrandIcon,
+        showInstallmentAmounts,
+        showPayButton = false, // hard coded default
+        styles,
+        onAllValid,
+        onBinLookup,
+        onBinValue,
+        onBlur,
+        onBrand,
+        onConfigSuccess,
+        onEnterKeyPressed,
+        onFieldValid,
+        onFocus,
+        onLoad
+    } = cardProps;
+
+    const dataString = JSON.stringify(CardInputDefaultProps.data);
+
+    const srPanelEnabled = cardProps.modules?.srPanel?.enabled;
+    const srPanelMoveFocus = cardProps.modules?.srPanel?.moveFocus;
+
+    const riskEnabled = cardProps.modules?.risk?.enabled;
+
+    const isFastlaneConfigValid = isFastlaneComponentConfigValid(fastlaneConfiguration);
+
+    const billingAddressModeValue = cardProps.onAddressLookup ? 'lookup' : billingAddressMode;
+
+    let showKCPType: 'none' | 'auto' | 'atStart' = 'none';
+    if (configuration?.koreanAuthenticationRequired === true) {
+        showKCPType = countryCode?.toLowerCase() === 'kr' ? 'atStart' : 'auto';
+    }
+
+    const configData: CardConfigData = {
+        autoFocus,
+        ...(billingAddressAllowedCountries?.length > 0 && {
+            billingAddressAllowedCountries: billingAddressAllowedCountries.toString().substring(0, MAX_LENGTH)
+        }),
+        billingAddressMode: billingAddressModeValue,
+        billingAddressRequired,
+        billingAddressRequiredFields: billingAddressRequiredFields?.toString()?.substring(0, MAX_LENGTH),
+        // Probably just for development - in real life we wouldn't expect the number of supported brands to push the endpoint limit on 128 chars
+        brands: brands?.toString()?.substring(0, MAX_LENGTH),
+        challengeWindowSize,
+        disableIOSArrowKeys,
+        doBinLookup,
+        enableStoreDetails,
+        exposeExpiryDate,
+        forceCompat,
+        hasBrandsConfiguration: notFalsy(brandsConfiguration),
+        hasData: data && JSON.stringify(cardProps.data) !== dataString,
+        hasDisclaimerMessage: !!disclaimerMessage,
+        hasHolderName,
+        hasInstallmentOptions: notFalsy(installmentOptions),
+        hasPlaceholders: notFalsy(placeholders), // has merchant defined placeholders
+        hasStylesConfigured: notFalsy(styles),
+        hideCVC,
+        holderNameRequired,
+        keypadFix,
+        legacyInputMode,
+        maskSecurityCode,
+        minimumExpiryDate: !!minimumExpiryDate, // Potentially, in the future, we can send the actual string value
+        name,
+        positionHolderNameOnTop,
+        riskEnabled,
+        showBrandIcon,
+        showInstallmentAmounts: !!showInstallmentAmounts,
+        showKCPType,
+        showPayButton,
+        socialSecurityNumberMode: configuration?.socialSecurityNumberMode,
+        srPanelEnabled,
+        srPanelMoveFocus,
+        /** callbacks */
+        // We need to detect if the merchant themselves has defined these, not if we've set them as a default
+        hasOnAllValid: onAllValid !== CardInputDefaultProps.onAllValid,
+        hasOnBinValue: onBinValue !== CardInputDefaultProps.onBinValue,
+        hasOnBlur: onBlur !== CardInputDefaultProps.onBlur,
+        hasOnBrand: onBrand !== CardInputDefaultProps.onBrand,
+        hasOnConfigSuccess: onConfigSuccess !== CardInputDefaultProps.onConfigSuccess,
+        hasOnFieldValid: onFieldValid !== CardInputDefaultProps.onFieldValid,
+        hasOnFocus: onFocus !== CardInputDefaultProps.onFocus,
+        hasOnLoad: onLoad !== CardInputDefaultProps.onLoad,
+        // Card level props
+        hasOnBinLookup: !!onBinLookup,
+        hasOnEnterKeyPressed: !!onEnterKeyPressed,
+        /**
+         * Fastlane
+         */
+        ...(isFastlaneConfigValid && {
+            hasFastlaneConfigured: true,
+            isFastlaneConsentDefaultOn: fastlaneConfiguration.defaultToggleState
+        })
+    };
+
+    return configData;
+};
+
+export const mapDualBrandButtons = (dualBrandSelectElements: DualBrandSelectElement[], brandsConfiguration: CardBrandsConfiguration): any => {
+    return dualBrandSelectElements.map(item => {
+        const brand = item.id;
+        const getImage = useImage();
+        const imageName = brand === 'card' ? 'nocard' : brand;
+        const imageURL = brandsConfiguration[brand]?.icon ?? getCardImageUrl(imageName, getImage);
+
+        // TODO - check below if we have to still generate altName through the mapping function or whether it just
+        //  corresponds to item.brandObject.localeBrand
+        return {
+            id: item.id,
+            name: item.brandObject.localeBrand || item.brandObject.brand,
+            imageURL,
+            altName: getFullBrandName(brand)
+        };
+    });
+};

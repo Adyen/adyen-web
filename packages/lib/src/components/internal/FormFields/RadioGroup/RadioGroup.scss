@@ -104,7 +104,7 @@
         display: flex;
         flex: 1 0 0;
     }
-    
+
     .adyen-checkout__radio_group__label::after {
         position: absolute;
         top: calc(50% - token(spacer-030) / 2);

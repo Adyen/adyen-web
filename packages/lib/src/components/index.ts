@@ -1,3 +1,7 @@
+/**
+ * Exposing UI Components derived by UIElement
+ */
+
 /** Card */
 export { default as Card } from './Card';
 export { default as Bancontact } from './Card/Bancontact';
@@ -9,6 +13,7 @@ export { default as ThreeDS2DeviceFingerprint } from './ThreeDS2/ThreeDS2DeviceF
 export { default as Ach } from './Ach';
 export { default as BacsDirectDebit } from './BacsDD';
 export { default as SepaDirectDebit } from './Sepa';
+export { default as PreAuthorizedDebitCanada } from './PreAuthorizedDebitCanada';
 
 /** Open invoice */
 export { default as Affirm } from './Affirm';
@@ -22,7 +27,6 @@ export { default as FacilPay10x } from './FacilyPay/FacilyPay10x';
 export { default as FacilPay12x } from './FacilyPay/FacilyPay12x';
 export { default as RatePay } from './RatePay';
 export { default as RatePayDirectDebit } from './RatePay/RatePayDirectDebit';
-export { default as Riverty } from './Riverty';
 
 /** Wallets **/
 export { default as AmazonPay } from './AmazonPay';
@@ -31,6 +35,7 @@ export { default as CashAppPay } from './CashAppPay';
 export { default as ClickToPay } from './ClickToPay';
 export { default as GooglePay } from './GooglePay';
 export { default as PayPal } from './PayPal';
+export { default as Fastlane } from './PayPalFastlane';
 
 /** Vouchers */
 export { default as Boleto } from './Boleto';
@@ -66,6 +71,8 @@ export { default as Twint } from './Twint';
 export { default as Vipps } from './Vipps';
 export { default as Trustly } from './Trustly';
 export { default as PayByBankUS } from './PayByBankUS';
+export { default as Riverty } from './Riverty';
+export { default as PayByBankPix } from './PayByBankPix';
 
 /** Klarna */
 export { default as Klarna } from './Klarna';
