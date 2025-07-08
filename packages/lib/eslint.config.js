@@ -47,8 +47,13 @@ const config = tseslint.config(
             'no-restricted-imports': [
                 'error',
                 {
-                    name: 'preact/compat',
-                    message: 'preact/compat should be used to leverage a React app to start using Preact, which it is not the case for adyen-web SDK.'
+                    paths: [
+                        {
+                            name: 'preact/compat',
+                            importNames: ['forwardRef'],
+                            message: 'forwardRef might lead to unexpected behaviors in preact/compat.'
+                        }
+                    ]
                 }
             ],
 

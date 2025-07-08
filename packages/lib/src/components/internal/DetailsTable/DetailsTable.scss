@@ -1,3 +1,4 @@
+@use 'styles/index';
 @import 'styles/variable-generator';
 
 .adyen-checkout__details-table {
@@ -20,14 +21,20 @@
   }
 
   &__label {
+    @include index.adyen-checkout-text-body;
+
     max-width: 50%;
     text-align: left;
   }
 
   &__value {
+    @include index.adyen-checkout-text-body-strongest;
+
+    display: flex;
+    align-items: center;
+    gap: token(spacer-070);
     max-width: 50%;
     text-align: right;
-    font-weight: bold;
   }
 }
 
