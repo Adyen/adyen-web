@@ -178,22 +178,35 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
 
         await expect(card.dualBrandingButtonsHolder).toBeVisible();
 
-        const [firstButton, secondButton] = await card.dualBrandingButtonElements;
+        // Detect buttons
+        const visaBtn = await card.selectDualBrandUIItem(/visa/i);
+        const bcmcBtn = await card.selectDualBrandUIItem(/bancontact/i, false);
 
-        // First element should still be in a selected state
-        await expect(card.getDualBrandButtonCheckmark(firstButton)).toBeVisible();
-        await expect(card.getDualBrandButtonCheckmark(secondButton)).not.toBeVisible();
+        // Find the buttons' parent, so we can see if that parent also contains a checkmark
+        const visaBtnParent = visaBtn.locator('xpath=..');
+        const bcmcBtnParent = bcmcBtn.locator('xpath=..');
 
-        // Trying to click one (second element) should force an error in the UI
-        await card.getDualBrandButtonLabel(secondButton).click();
+        // Select visa
+        await visaBtn.click();
 
-        // We should get a error on the number field
+        // Visa button in selected state (showing a checkmark)
+        await expect(card.getDualBrandButtonCheckmark(visaBtnParent)).toBeVisible();
+        // Bcmc not
+        await expect(card.getDualBrandButtonCheckmark(bcmcBtnParent)).not.toBeVisible();
+
+        // Having clicked a button We should get a error on the number field
         await expect(card.cardNumberErrorElement).toBeVisible();
         await expect(card.cardNumberErrorElement).toHaveText(PAN_ERROR_NOT_COMPLETE);
 
-        // However second element should be in a selected state
-        await expect(card.getDualBrandButtonCheckmark(firstButton)).not.toBeVisible();
-        await expect(card.getDualBrandButtonCheckmark(secondButton)).toBeVisible();
+        /** ----- */
+
+        // Select bcmc
+        await bcmcBtn.click();
+
+        // Now bcmc button should be in a selected state
+        await expect(card.getDualBrandButtonCheckmark(bcmcBtnParent)).toBeVisible();
+        // Visa not
+        await expect(card.getDualBrandButtonCheckmark(visaBtnParent)).not.toBeVisible();
 
         // Complete the number
         await card.cardNumberInput.focus(); // Focus the input field
@@ -207,10 +220,9 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
         await card.selectDateIcon();
         await expect(card.expiryDateInput).toBeFocused();
 
-        // Click one (first element) should not shift focus
-        await card.getDualBrandButtonLabel(firstButton).click();
+        // Clicking an element should not see focus move to the PAN or the date fields
+        await visaBtn.click();
 
-        // Clicking buttons should not see focus move to the PAN or the date fields
         await expect(card.cardNumberInput).not.toBeFocused();
         await expect(card.expiryDateInput).not.toBeFocused();
     });

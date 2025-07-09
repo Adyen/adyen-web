@@ -177,15 +177,6 @@ class Card extends Base {
         return this.dualBrandingButtonsHolder.locator('.adyen-checkout__radio_group__input-wrapper').all();
     }
 
-    // TODO check these are still used
-    // getDualBrandButtonImage(brandEl) {
-    //     return brandEl.locator('.adyen-checkout__input-icon--no-radio-icon');
-    // }
-
-    getDualBrandButtonLabel(brandEl) {
-        return brandEl.locator('.adyen-checkout__radio_group-extended__label');
-    }
-
     getDualBrandButtonCheckmark(brandEl) {
         return brandEl.locator('.adyen-checkout-input__inline-validation');
     }
