@@ -182,7 +182,7 @@ class Card extends Base {
     }
 
     // Identify a dual branding button by its label
-    async selectDualBrandUIItem(text: string | RegExp, exact = true) {
+    selectDualBrandUIItem(text: string | RegExp, exact = true) {
         return this.dualBrandingButtonsHolder.locator('.adyen-checkout__radio_group__input-wrapper').getByText(text, { exact });
     }
 

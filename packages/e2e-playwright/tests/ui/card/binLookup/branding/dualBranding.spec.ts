@@ -67,7 +67,7 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
         await expect(card.expiryDateInput).toBeFocused();
 
         // Select visa
-        const visaBtn = await card.selectDualBrandUIItem(/visa/i);
+        const visaBtn = card.selectDualBrandUIItem(/visa/i);
         await visaBtn.click();
 
         // Expect cvc to be visible
@@ -84,7 +84,7 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
         await expect(card.expiryDateInput).not.toBeFocused();
 
         // Select other brand
-        const bcmcBtn = await card.selectDualBrandUIItem(/bancontact/i, false);
+        const bcmcBtn = card.selectDualBrandUIItem(/bancontact/i, false);
         await bcmcBtn.click();
 
         // Expect cvc to be hidden
@@ -174,8 +174,8 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
         await expect(card.dualBrandingButtonsHolder).toBeVisible();
 
         // Detect buttons
-        const visaBtn = await card.selectDualBrandUIItem(/visa/i);
-        const bcmcBtn = await card.selectDualBrandUIItem(/bancontact/i, false);
+        const visaBtn = card.selectDualBrandUIItem(/visa/i);
+        const bcmcBtn = card.selectDualBrandUIItem(/bancontact/i, false);
 
         // Find the buttons' parent, so we can see if that parent also contains a checkmark
         const visaBtnParent = visaBtn.locator('xpath=..');

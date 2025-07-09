@@ -50,14 +50,14 @@ test.describe('Card - Testing resetting after binLookup has given a dual brand r
             await card.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
 
             // Select visa
-            const visaBtn = await card.selectDualBrandUIItem(/visa/i);
+            const visaBtn = card.selectDualBrandUIItem(/visa/i);
             await visaBtn.click();
 
             // Check brand has been set in paymentMethod data
             await page.waitForFunction(() => window['component'].data.paymentMethod.brand === 'visa');
 
             // Select bcmc
-            const bcmcBtn = await card.selectDualBrandUIItem(/bancontact/i, false);
+            const bcmcBtn = card.selectDualBrandUIItem(/bancontact/i, false);
             await bcmcBtn.click();
 
             // Check brand has been set in paymentMethod data
