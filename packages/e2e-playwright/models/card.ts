@@ -180,7 +180,6 @@ class Card extends Base {
     getDualBrandButtonCheckmark(brandEl) {
         return brandEl.locator('.adyen-checkout-input__inline-validation');
     }
-    // end TODO
 
     // Identify a dual branding button by its label
     async selectDualBrandUIItem(text: string | RegExp, exact = true) {

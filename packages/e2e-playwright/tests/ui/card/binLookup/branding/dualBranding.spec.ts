@@ -56,16 +56,11 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
         // Get a binLookup result
         await card.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
 
-        // Since the dominant brand is bcmc - expect the cvc field to be hidden
-        // await expect(card.cvcField).not.toBeVisible();
-
         /**
          * Dual brand buttons
          */
         // Expect dual brand buttons to be visible...
         await expect(card.dualBrandingButtonsHolder).toBeVisible();
-
-        const [firstButton, secondButton] = await card.dualBrandingButtonElements;
 
         // Move focus to date
         await card.selectDateIcon();
