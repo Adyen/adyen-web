@@ -10,6 +10,7 @@ import { BRAND_ICON_UI_EXCLUSION_LIST } from '../../../../internal/SecuredFields
 import PaymentMethodName from '../PaymentMethodName';
 import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import ExpandButton from '../../../../internal/ExpandButton';
+import { getFullBrandName } from '../../../../Card/components/CardInput/utils';
 
 export interface PaymentMethodItemProps {
     paymentMethod: UIElement;
@@ -96,7 +97,7 @@ class PaymentMethodItem extends Component<PaymentMethodItemProps> {
                     >
                         <PaymentMethodIcon
                             // Only add alt attribute to storedPaymentMethods (to avoid SR reading the PM name twice)
-                            {...(paymentMethod.props.oneClick && { altDescription: paymentMethod.props.brand })}
+                            {...(paymentMethod.props.oneClick && { altDescription: getFullBrandName(paymentMethod.props.brand) })}
                             type={paymentMethod.type}
                             src={paymentMethod.icon}
                         />
