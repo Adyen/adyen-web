@@ -1,5 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { Base } from './base';
+import { getFullBrandName } from '../../lib/src/components/Card/components/CardInput/utils';
 
 class PaymentMethodHeader {
     readonly rootElement: Locator;
@@ -107,7 +108,8 @@ class Dropin extends Base {
 
     // Stored payment methods
     async selectFirstStoredPaymentMethod(pmType: string, lastFour?: string): Promise<{ paymentMethodDetailsLocator: Locator }> {
-        const pmLabel = this.storedPaymentMethods.find((pm: { brand: string }) => pm.brand === pmType)?.name;
+        let pmLabel = this.storedPaymentMethods.find((pm: { brand: string }) => pm.brand === pmType)?.brand;
+        pmLabel = getFullBrandName(pmLabel);
 
         const paymentMethodHeaderLocator = await this.page
             .locator('.adyen-checkout__payment-method')
