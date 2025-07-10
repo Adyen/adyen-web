@@ -108,6 +108,10 @@ class Dropin extends Base {
 
     // Stored payment methods
     async selectFirstStoredPaymentMethod(pmType: string, lastFour?: string): Promise<{ paymentMethodDetailsLocator: Locator }> {
+        /**
+         * Find storedPM based on brand/txvariant, and then map this to the "display name", which is what will have been used for the image's alt attr.
+         * (It is the image's alt attr that we use below, to locate the element)
+         */
         let pmLabel = this.storedPaymentMethods.find((pm: { brand: string }) => pm.brand === pmType)?.brand;
         pmLabel = getFullBrandName(pmLabel);
 
