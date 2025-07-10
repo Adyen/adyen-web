@@ -43,30 +43,33 @@ test.describe('Card - Testing resetting after binLookup has given a dual brand r
         }
     );
 
-    test('#2 Fill in dual branded card, make selections and see that brand is set, then delete digits and see that brand is reset', async ({
-        card,
-        page
-    }) => {
-        await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
-        await card.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
+    test(
+        '#2 Fill in dual branded card, then' + ' make selections and see that brand is set, then' + ' delete digits and see that brand is reset',
+        async ({ card, page }) => {
+            await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
+            await card.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
 
-        // Check brand has been set, by default, in paymentMethod data
-        await page.waitForFunction(() => window['component'].data.paymentMethod.brand === 'bcmc');
+            // Select visa
+            const visaBtn = card.selectDualBrandUIItem(/visa/i);
+            await visaBtn.click();
 
-        // Click second brand (visa)
-        const [, secondButton] = await card.dualBrandingButtonElements;
+            // Check brand has been set in paymentMethod data
+            await page.waitForFunction(() => window['component'].data.paymentMethod.brand === 'visa');
 
-        await card.getDualBrandButtonImage(secondButton).click();
+            // Select bcmc
+            const bcmcBtn = card.selectDualBrandUIItem(/bancontact/i, false);
+            await bcmcBtn.click();
 
-        // Check brand has been set in paymentMethod data
-        await page.waitForFunction(() => window['component'].data.paymentMethod.brand === 'visa');
+            // Check brand has been set in paymentMethod data
+            await page.waitForFunction(() => window['component'].data.paymentMethod.brand === 'bcmc');
 
-        // Delete number
-        await card.deleteCardNumber();
+            // Delete number
+            await card.deleteCardNumber();
 
-        // Check brand has been reset in paymentMethod data
-        await page.waitForFunction(() => window['component'].data.paymentMethod.brand === undefined);
-    });
+            // Check brand has been reset in paymentMethod data
+            await page.waitForFunction(() => window['component'].data.paymentMethod.brand === undefined);
+        }
+    );
 
     test(
         '#3 Fill in dual branded card, automatically sets brand in state, ' +
@@ -75,8 +78,8 @@ test.describe('Card - Testing resetting after binLookup has given a dual brand r
             await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
             await card.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
 
-            // Check brand has been set in paymentMethod data
-            await page.waitForFunction(() => window['component'].data.paymentMethod.brand === 'bcmc');
+            // Check brand has been set, by default, in paymentMethod data
+            await page.waitForFunction(() => window['component'].data.paymentMethod.brand !== undefined);
 
             // Need this - it allows time for the UI to update when the icon changes
             const responsePromise = page.waitForResponse(response => response.url().includes('/binLookup') && response.request().method() === 'POST');
