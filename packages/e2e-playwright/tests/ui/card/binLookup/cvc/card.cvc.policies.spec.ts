@@ -8,7 +8,7 @@ const CVC_LABEL = LANG['creditCard.securityCode.label'];
 const CVC_LABEL_OPTIONAL = LANG['creditCard.securityCode.label.optional'];
 
 const componentConfig = {
-    brands: ['mc', 'visa', 'amex', 'maestro', 'bcmc']
+    brands: ['mc', 'visa', 'amex', 'bcmc', 'maestro']
 };
 
 test.describe('Card - testing /binLookup as it affects the cvc field', () => {

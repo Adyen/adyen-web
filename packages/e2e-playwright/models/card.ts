@@ -177,16 +177,13 @@ class Card extends Base {
         return this.dualBrandingButtonsHolder.locator('.adyen-checkout__radio_group__input-wrapper').all();
     }
 
-    getDualBrandButtonImage(brandEl) {
-        return brandEl.locator('.adyen-checkout__input-icon--no-radio-icon');
-    }
-
-    getDualBrandButtonLabel(brandEl) {
-        return brandEl.locator('.adyen-checkout__radio_group-extended__label');
-    }
-
     getDualBrandButtonCheckmark(brandEl) {
         return brandEl.locator('.adyen-checkout-input__inline-validation');
+    }
+
+    // Identify a dual branding button by its label
+    selectDualBrandUIItem(text: string | RegExp, exact = true) {
+        return this.dualBrandingButtonsHolder.locator('.adyen-checkout__radio_group__input-wrapper').getByText(text, { exact });
     }
 
     /** end */
@@ -203,9 +200,9 @@ class Card extends Base {
         // it's unclear why is that the case and why only happens in Webkit, but also doesn't seem to be a race condition as adding
         // a really long timeout also doesn't fix the issue
         // in the the future to test this change pay attention to tests for the auto focus feature
-        await this.cardNumberInput.waitFor({ state: 'visible'});
-        await this.cvcInput.waitFor({ state: 'visible'});
-        await this.expiryDateInput.waitFor({ state: 'visible'});
+        await this.cardNumberInput.waitFor({ state: 'visible' });
+        await this.cvcInput.waitFor({ state: 'visible' });
+        await this.expiryDateInput.waitFor({ state: 'visible' });
     }
 
     /**

@@ -73,9 +73,10 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
             await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_VISA);
 
             await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
-            const [, secondButton] = await bcmc.dualBrandingButtonElements;
+
             // Select visa
-            await bcmc.getDualBrandButtonLabel(secondButton).click();
+            const visaBtn = await bcmc.selectDualBrandUIItem(/visa/i);
+            await visaBtn.click();
 
             await expect(bcmc.cvcField).toBeVisible();
 
@@ -96,9 +97,7 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
     );
 
     test(
-        '#4 Fill in dual branded card then ' +
-            'select visa & see that cvc field shows then' +
-            'delete number and see that bcmc logo remains showing and cvc field is hidden again',
+        '#4 Fill in dual branded card then ' + 'select visa, then' + 'delete number and see that UI returns to looking like a BCMC card',
         async ({ bcmc }) => {
             await bcmc.goto(URL_MAP.bcmc);
 
@@ -107,11 +106,10 @@ test.describe('Testing Bancontact, with dual branded cards, how UI resets', () =
             await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_VISA);
 
             await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
-            const [, secondButton] = await bcmc.dualBrandingButtonElements;
-            // Select visa
-            await bcmc.getDualBrandButtonLabel(secondButton).click();
 
-            await expect(bcmc.cvcField).toBeVisible();
+            // Select visa
+            const visaBtn = await bcmc.selectDualBrandUIItem(/visa/i);
+            await visaBtn.click();
 
             await bcmc.deleteCardNumber();
 

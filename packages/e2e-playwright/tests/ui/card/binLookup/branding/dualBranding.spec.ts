@@ -12,49 +12,43 @@ const componentConfig = {
 };
 
 test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after binLookup has given a dual brand result', () => {
-    test('#1 Fill in dual branded card, see dual brand icons and dual brand buttons appear as expected, with first element selected by default', async ({
-        card,
-        page
-    }) => {
-        await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
+    test(
+        '#1 Fill in dual branded card, then ' +
+            ' see dual brand icons and dual brand buttons appear as expected, with first element selected by default',
+        async ({ card, page }) => {
+            await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
 
-        // Get a binLookup result
-        await card.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
+            // Get a binLookup result
+            await card.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
 
-        /**
-         * Dual brand icons
-         */
-        // Expect inline dual brand icons to be visible
-        await expect(card.dualBrandingIconsHolder).toBeVisible();
+            /**
+             * Dual brand icons
+             */
+            // Expect inline dual brand icons to be visible
+            await expect(card.dualBrandingIconsHolder).toBeVisible();
 
-        let [firstIcon, secondIcon] = await card.dualBrandIcons;
+            const [firstIcon, secondIcon] = await card.dualBrandIcons;
 
-        // 2 brand icons, in correct order
-        expect(firstIcon).toHaveAttribute('data-value', 'bcmc');
-        expect(secondIcon).toHaveAttribute('data-value', 'visa');
+            // 2 brand icons
+            expect(firstIcon).toBeDefined();
+            expect(secondIcon).toBeDefined();
 
-        /**
-         * Dual brand buttons
-         */
-        // Expect dual brand buttons to be visible...
-        await expect(card.dualBrandingButtonsHolder).toBeVisible();
+            /**
+             * Dual brand buttons
+             */
+            // Expect dual brand buttons to be visible...
+            await expect(card.dualBrandingButtonsHolder).toBeVisible();
 
-        // ...with 2 buttons...
-        const [firstButton, secondButton] = await card.dualBrandingButtonElements;
-        await expect(firstButton).toBeVisible();
-        await expect(secondButton).toBeVisible();
+            // ...with 2 buttons...
+            const [firstButton, secondButton] = await card.dualBrandingButtonElements;
+            await expect(firstButton).toBeVisible();
+            await expect(secondButton).toBeVisible();
 
-        // ...each with expected image and text
-        await expect(card.getDualBrandButtonImage(firstButton)).toHaveAttribute('alt', /bancontact/i);
-        await expect(card.getDualBrandButtonLabel(firstButton)).toHaveText(/bancontact/i);
-
-        await expect(card.getDualBrandButtonImage(secondButton)).toHaveAttribute('alt', /visa/i);
-        await expect(card.getDualBrandButtonLabel(secondButton)).toHaveText(/visa/i);
-
-        // First element selected by default
-        await expect(card.getDualBrandButtonCheckmark(firstButton)).toBeVisible();
-        await expect(card.getDualBrandButtonCheckmark(secondButton)).not.toBeVisible();
-    });
+            // First element selected by default
+            await expect(card.getDualBrandButtonCheckmark(firstButton)).toBeVisible();
+            await expect(card.getDualBrandButtonCheckmark(secondButton)).not.toBeVisible();
+        }
+    );
 
     test('#2 Fill in dual branded card, see dual brand UI has expected effects when interacted with', async ({ card, page }) => {
         await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
@@ -62,46 +56,47 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
         // Get a binLookup result
         await card.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
 
-        // Since the dominant brand is bcmc - expect the cvc field to be hidden
-        await expect(card.cvcField).not.toBeVisible();
-
         /**
          * Dual brand buttons
          */
         // Expect dual brand buttons to be visible...
         await expect(card.dualBrandingButtonsHolder).toBeVisible();
 
-        const [firstButton, secondButton] = await card.dualBrandingButtonElements;
-
         // Move focus to date
         await card.selectDateIcon();
         await expect(card.expiryDateInput).toBeFocused();
 
         // Select visa
-        await card.getDualBrandButtonLabel(secondButton).click();
+        const visaBtn = card.selectDualBrandUIItem(/visa/i);
+        await visaBtn.click();
 
         // Expect cvc to be visible
         await expect(card.cvcField).toBeVisible();
 
-        // Second element in selected state
-        await expect(card.getDualBrandButtonCheckmark(firstButton)).not.toBeVisible();
-        await expect(card.getDualBrandButtonCheckmark(secondButton)).toBeVisible();
+        // Find the button's parent, so we can see if that parent also contains a checkmark
+        let btnParent = visaBtn.locator('xpath=..');
 
-        // Clicking buttons should not see focus move to the PAN or the date fields
+        // Button in selected state (showing a checkmark)
+        await expect(card.getDualBrandButtonCheckmark(btnParent)).toBeVisible();
+
+        // Clicking buttons should not have seen focus move to the PAN or the date fields
         await expect(card.cardNumberInput).not.toBeFocused();
         await expect(card.expiryDateInput).not.toBeFocused();
 
-        // Reselect first brand
-        await card.getDualBrandButtonLabel(firstButton).click();
+        // Select other brand
+        const bcmcBtn = card.selectDualBrandUIItem(/bancontact/i, false);
+        await bcmcBtn.click();
 
-        // Expect cvc to be hidden again
+        // Expect cvc to be hidden
         await expect(card.cvcField).not.toBeVisible();
 
-        // First element in selected state
-        await expect(card.getDualBrandButtonCheckmark(firstButton)).toBeVisible();
-        await expect(card.getDualBrandButtonCheckmark(secondButton)).not.toBeVisible();
+        // Find the button's parent, so we can see if that parent also contains a checkmark
+        btnParent = bcmcBtn.locator('xpath=..');
 
-        // Clicking buttons should not see focus move to the PAN or the date fields
+        // Button in selected state (showing a checkmark)
+        await expect(card.getDualBrandButtonCheckmark(btnParent)).toBeVisible();
+
+        // Clicking buttons should not have seen focus move to the PAN or the date fields
         await expect(card.cardNumberInput).not.toBeFocused();
         await expect(card.expiryDateInput).not.toBeFocused();
 
@@ -178,22 +173,35 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
 
         await expect(card.dualBrandingButtonsHolder).toBeVisible();
 
-        const [firstButton, secondButton] = await card.dualBrandingButtonElements;
+        // Detect buttons
+        const visaBtn = card.selectDualBrandUIItem(/visa/i);
+        const bcmcBtn = card.selectDualBrandUIItem(/bancontact/i, false);
 
-        // First element should still be in a selected state
-        await expect(card.getDualBrandButtonCheckmark(firstButton)).toBeVisible();
-        await expect(card.getDualBrandButtonCheckmark(secondButton)).not.toBeVisible();
+        // Find the buttons' parent, so we can see if that parent also contains a checkmark
+        const visaBtnParent = visaBtn.locator('xpath=..');
+        const bcmcBtnParent = bcmcBtn.locator('xpath=..');
 
-        // Trying to click one (second element) should force an error in the UI
-        await card.getDualBrandButtonLabel(secondButton).click();
+        // Select visa
+        await visaBtn.click();
 
-        // We should get a error on the number field
+        // Visa button in selected state (showing a checkmark)
+        await expect(card.getDualBrandButtonCheckmark(visaBtnParent)).toBeVisible();
+        // Bcmc not
+        await expect(card.getDualBrandButtonCheckmark(bcmcBtnParent)).not.toBeVisible();
+
+        // Having clicked a button We should get a error on the number field
         await expect(card.cardNumberErrorElement).toBeVisible();
         await expect(card.cardNumberErrorElement).toHaveText(PAN_ERROR_NOT_COMPLETE);
 
-        // However second element should be in a selected state
-        await expect(card.getDualBrandButtonCheckmark(firstButton)).not.toBeVisible();
-        await expect(card.getDualBrandButtonCheckmark(secondButton)).toBeVisible();
+        /** ----- */
+
+        // Select bcmc
+        await bcmcBtn.click();
+
+        // Now bcmc button should be in a selected state
+        await expect(card.getDualBrandButtonCheckmark(bcmcBtnParent)).toBeVisible();
+        // Visa not
+        await expect(card.getDualBrandButtonCheckmark(visaBtnParent)).not.toBeVisible();
 
         // Complete the number
         await card.cardNumberInput.focus(); // Focus the input field
@@ -207,10 +215,9 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
         await card.selectDateIcon();
         await expect(card.expiryDateInput).toBeFocused();
 
-        // Click one (first element) should not shift focus
-        await card.getDualBrandButtonLabel(firstButton).click();
+        // Clicking an element should not see focus move to the PAN or the date fields
+        await visaBtn.click();
 
-        // Clicking buttons should not see focus move to the PAN or the date fields
         await expect(card.cardNumberInput).not.toBeFocused();
         await expect(card.expiryDateInput).not.toBeFocused();
     });

@@ -23,7 +23,7 @@ test.describe('Dropin - Card brands displayed in the Payment Method List and und
         expect(brands).toHaveLength(3);
 
         const remainingBrandsText = await header.getRemainingBrandsNumberText();
-        expect(remainingBrandsText).toBe('+11');
+        expect(remainingBrandsText).toBe('+12');
 
         const { paymentMethodDetailsLocator } = await dropinWithSession.selectNonStoredPaymentMethod('scheme');
 
@@ -32,7 +32,7 @@ test.describe('Dropin - Card brands displayed in the Payment Method List and und
 
         expect(await header.getVisibleCardBrands()).toHaveLength(0);
         await expect(await header.getRemainingBrandsNumberLocator()).toHaveCount(0);
-        expect(await card.availableBrands).toHaveLength(14);
+        expect(await card.availableBrands).toHaveLength(15);
     });
 
     test('should exclude non-valid brands and display only the right amount in the payment header and underneath the PAN field', async ({
