@@ -1,5 +1,17 @@
 # @adyen/adyen-web
 
+## 6.19.0
+
+### Minor Changes
+
+- UI improvements for the `BankTransfer` UI element. ([#3359](https://github.com/Adyen/adyen-web/pull/3359))
+
+### Patch Changes
+
+- Change how Dropin story selects a storedCard, and how we set the alt attr on a storedCard image, after changes to the API response. ([#3395](https://github.com/Adyen/adyen-web/pull/3395))
+
+- ACH - Component pay button now displays "Pay {value}" instead of "Continue purchase" ([#3390](https://github.com/Adyen/adyen-web/pull/3390))
+
 ## 6.18.1
 
 ### Patch Changes
