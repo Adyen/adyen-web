@@ -7,7 +7,7 @@ import { Card } from '../../../../models/card';
 test.describe('Stored master card - cvc required', () => {
     test('#1 Can fill out the cvc fields in the stored card and make a successful payment', async ({ dropinWithSession, page }) => {
         await dropinWithSession.goto(URL_MAP.dropinWithSession);
-        const { paymentMethodDetailsLocator } = await dropinWithSession.selectFirstStoredPaymentMethod('MasterCard', '4444');
+        const { paymentMethodDetailsLocator } = await dropinWithSession.selectFirstStoredPaymentMethod('mc', '4444');
 
         const card = new Card(page, paymentMethodDetailsLocator);
 
@@ -19,7 +19,7 @@ test.describe('Stored master card - cvc required', () => {
 
     test('#2 Pressing pay without filling the cvc should generate a translated error ("empty")', async ({ dropinWithSession, page }) => {
         await dropinWithSession.goto(URL_MAP.dropinWithSession);
-        const { paymentMethodDetailsLocator } = await dropinWithSession.selectFirstStoredPaymentMethod('MasterCard', '4444');
+        const { paymentMethodDetailsLocator } = await dropinWithSession.selectFirstStoredPaymentMethod('mc', '4444');
 
         const card = new Card(page, paymentMethodDetailsLocator);
 
@@ -38,7 +38,7 @@ test.describe('Stored master card - cvc required', () => {
             }
         });
         await dropinWithSession.goto(url);
-        const { paymentMethodDetailsLocator } = await dropinWithSession.selectFirstStoredPaymentMethod('MasterCard', '4444');
+        const { paymentMethodDetailsLocator } = await dropinWithSession.selectFirstStoredPaymentMethod('mc', '4444');
 
         const card = new Card(page, paymentMethodDetailsLocator);
 

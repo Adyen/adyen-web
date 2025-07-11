@@ -1,5 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { Base } from './base';
+import { getFullBrandName } from '../../lib/src/components/Card/components/CardInput/utils';
 
 class PaymentMethodHeader {
     readonly rootElement: Locator;
@@ -32,6 +33,7 @@ class Dropin extends Base {
     readonly payButton: Locator;
 
     protected _paymentMethods: Array<{ name: string; type: string }>;
+    protected _storedPaymentMethods: Array<{ name: string; type: string; brand: string }>;
 
     constructor(
         public readonly page: Page,
@@ -55,7 +57,17 @@ class Dropin extends Base {
         // Wait for payment methods from the payments call
         const responsePromise = this.page.waitForResponse(response => response.url().includes('paymentMethods') && response.status() === 200);
         const response = await responsePromise;
-        this._paymentMethods = (await response.json()).paymentMethods.map(({ name, type }: { name: string; type: string }) => ({ name, type }));
+        this._paymentMethods = (await response.json()).paymentMethods.map(({ name, type }: { name: string; type: string }) => ({
+            name,
+            type
+        }));
+        this._storedPaymentMethods = (await response.json()).storedPaymentMethods.map(
+            ({ name, type, brand }: { name: string; type: string; brand: string }) => ({
+                name,
+                type,
+                brand
+            })
+        );
         await this.isComponentVisible();
     }
 
@@ -96,7 +108,12 @@ class Dropin extends Base {
 
     // Stored payment methods
     async selectFirstStoredPaymentMethod(pmType: string, lastFour?: string): Promise<{ paymentMethodDetailsLocator: Locator }> {
-        const pmLabel = this.paymentMethods.find((pm: { type: string }) => pm.type === pmType)?.name;
+        /**
+         * Find storedPM based on brand/txvariant, and then map this to the "display name", which is what will have been used for the image's alt attr.
+         * (It is the image's alt attr that we use below, to locate the element)
+         */
+        let pmLabel = this.storedPaymentMethods.find((pm: { brand: string }) => pm.brand === pmType)?.brand;
+        pmLabel = getFullBrandName(pmLabel);
 
         const paymentMethodHeaderLocator = await this.page
             .locator('.adyen-checkout__payment-method')
@@ -120,6 +137,10 @@ class Dropin extends Base {
 
     get paymentMethods() {
         return this._paymentMethods;
+    }
+
+    get storedPaymentMethods() {
+        return this._storedPaymentMethods;
     }
 
     get paymentResult() {
