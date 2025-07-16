@@ -302,7 +302,6 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
              * rather than the expected this.handleAdditionalDetails (which comes from this.handleAction).
              */
             const callbackName = this.props.onComplete.name;
-            console.log('### UIElement::onComplete::callbackName ', callbackName);
 
             if (callbackName === 'onAdditionalDetails') {
                 /** createFromAction flow: call handleAdditionalDetails which will call the passed onAdditonalDetails handler, whilst also passing it the expected actions (resolve & reject) */
