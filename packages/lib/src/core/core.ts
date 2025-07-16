@@ -256,7 +256,7 @@ class Core implements ICore {
         }
 
         if (action.type) {
-            // 'threeDS2' OR 'qrCode', 'voucher', 'redirect', 'await', 'bankTransfer`
+            // 'threeDS2' OR 'qrCode', 'voucher', 'redirect', 'await', 'bankTransfer`, 'sdk'
             const component = action.type === THREEDS2_FULL ? `${action.type}${action.subtype}` : action.paymentMethodType;
 
             const event = new AnalyticsLogEvent({
