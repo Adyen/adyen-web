@@ -295,8 +295,23 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
         // };
     }
 
-    protected onComplete(state): void {
-        if (this.props.onComplete) this.props.onComplete(state, this.elementRef);
+    protected onComplete(state): any {
+        if (this.props.onComplete) {
+            /**
+             * When an action is handled via checkout.createFromAction, this.props.onComplete translates to the onAdditionalDetails prop passed from the core,
+             * rather than the expected this.handleAdditionalDetails (which comes from this.handleAction).
+             */
+            const callbackName = this.props.onComplete.name;
+            console.log('### UIElement::onComplete::callbackName ', callbackName);
+
+            if (callbackName === 'onAdditionalDetails') {
+                /** createFromAction flow: call handleAdditionalDetails which will call the passed onAdditonalDetails handler, whilst also passing it the expected actions (resolve & reject) */
+                this.handleAdditionalDetails(state);
+            } else {
+                /** Regular, handleAction, flow */
+                this.props.onComplete(state, this.elementRef);
+            }
+        }
     }
 
     protected handleError = (error: AdyenCheckoutError): void => {
