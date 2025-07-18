@@ -14,7 +14,7 @@ import { ClickToPayProps } from '../internal/ClickToPay/types';
 import { InstallmentOptions } from './components/CardInput/components/types';
 import { DisclaimerMsgObject } from '../internal/DisclaimerMessage/DisclaimerMessage';
 import { UIElementProps } from '../internal/UIElement/types';
-import type { OnAddressLookupType } from '../internal/Address/components/AddressSearch';
+import type { OnAddressLookupType, OnAddressSelectedType } from '../internal/Address/components/AddressSearch';
 import type { FastlaneSignupConfiguration } from '../PayPalFastlane/types';
 
 type PlaceholderKeys =
@@ -286,6 +286,12 @@ export interface CardConfiguration extends UIElementProps {
      * - merchant set config option
      */
     onAddressLookup?: OnAddressLookupType;
+
+    /**
+     * Function used to handle the selected address from 3rd party Address lookup
+     * - merchant set config option
+     */
+    onAddressSelected?: OnAddressSelectedType;
 
     /**
      * After binLookup call - provides the brand(s) we detect the user is entering, and if we support the brand(s)
