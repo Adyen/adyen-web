@@ -4,7 +4,6 @@ import { AdditionalDetailsData } from '../../core/types';
 
 declare global {
     interface Window {
-        Klarna: any;
         klarnaAsyncCallback: any;
     }
 }
