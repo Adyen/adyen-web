@@ -264,7 +264,14 @@ describe('Core', () => {
 
             // @ts-ignore onComplete is not public method, although we call it here to test the callback
             paymentAction.onComplete({});
-            expect(onAdditionalDetailsCreateFromAction).toHaveBeenCalledWith({}, expect.any(BCMCMobileElement));
+            expect(onAdditionalDetailsCreateFromAction).toHaveBeenCalledWith(
+                {},
+                expect.any(BCMCMobileElement),
+                expect.objectContaining({
+                    resolve: expect.any(Function),
+                    reject: expect.any(Function)
+                })
+            );
         });
     });
 

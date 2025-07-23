@@ -3,7 +3,7 @@ import uuid from '../../../utils/uuid';
 import UIElement from '../../../components/internal/UIElement';
 import type { PaymentAction } from '../../../types/global-types';
 import type { IRegistry } from '../../core.registry';
-import type { ICore } from '../../types';
+import { AdditionalDetailsData, ICore } from '../../types';
 
 const createComponent = (core: ICore, registry: IRegistry, componentType, props): UIElement => {
     const Element = registry.getComponent(componentType);
@@ -20,7 +20,16 @@ const getActionHandler = statusType => {
         const config = {
             ...props,
             ...action,
-            onComplete: props.onAdditionalDetails,
+            // onComplete should trigger `onAdditionalDetails` callback or `submitDetails` call for the sessions flow
+            onComplete: (state: AdditionalDetailsData, component?: UIElement) => {
+                if (component) {
+                    // We use a type assertion to call the protected 'handleAdditionalDetails' method from the UIElement.
+                    // This is safe because this is internal framework code.
+                    (component as unknown as { handleAdditionalDetails: (state: AdditionalDetailsData) => void }).handleAdditionalDetails(state);
+                } else {
+                    core.submitDetails(state.data);
+                }
+            },
             onError: props.onError,
             statusType,
             originalAction: action
