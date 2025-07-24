@@ -90,7 +90,7 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
     public displayFinalAnimation(type: 'success' | 'error') {
         if (this.props.disableFinalAnimation) return;
 
-        this.dropinRef.setStatus(type);
+        this.dropinRef?.setStatus(type);
     }
 
     /**
