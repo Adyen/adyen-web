@@ -20,7 +20,9 @@ const getActionHandler = statusType => {
         const config = {
             ...props,
             ...action,
-            // onComplete should trigger `onAdditionalDetails` callback or `submitDetails` call for the sessions flow
+            // `onComplete` should trigger `onAdditionalDetails` callback for the advanced flow,
+            // or call `this.session.submitDetails` for the sessions flow.
+            // The above logic is handled in `UIElement.handleAdditionalDetails` or `core.submitDetails`
             onComplete: (state: AdditionalDetailsData, component?: UIElement) => {
                 if (component) {
                     // We use a type assertion to call the protected 'handleAdditionalDetails' method from the UIElement.
