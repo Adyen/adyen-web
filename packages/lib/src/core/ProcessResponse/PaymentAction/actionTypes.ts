@@ -20,7 +20,7 @@ const getActionHandler = statusType => {
         const config = {
             ...props,
             ...action,
-            onComplete: props.onAdditionalDetails,
+            onComplete: props.onComplete,
             onError: props.onError,
             statusType,
             originalAction: action
