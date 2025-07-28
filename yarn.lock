@@ -1225,10 +1225,10 @@
   dependencies:
     playwright "1.50.0"
 
-"@preact/preset-vite@2.10.1":
-  version "2.10.1"
-  resolved "https://registry.yarnpkg.com/@preact/preset-vite/-/preset-vite-2.10.1.tgz#133292e50094626fce5dc982de1444516b1c3678"
-  integrity sha512-59lyGBXNfZIr5OOuBUB4/IB8AqF/ULbvYnyItgK/2BJnsGJqaeaJobRVtMp1129obHQuj8oZ/dVxB9inmH8Xig==
+"@preact/preset-vite@2.10.2":
+  version "2.10.2"
+  resolved "https://registry.yarnpkg.com/@preact/preset-vite/-/preset-vite-2.10.2.tgz#7fdf94e523bab2588054858c3ecd4d253fdbcea9"
+  integrity sha512-K9wHlJOtkE+cGqlyQ5v9kL3Ge0Ql4LlIZjkUTL+1zf3nNdF88F9UZN6VTV8jdzBX9Fl7WSzeNMSDG7qECPmSmg==
   dependencies:
     "@babel/plugin-transform-react-jsx" "^7.22.15"
     "@babel/plugin-transform-react-jsx-development" "^7.22.5"
@@ -1236,7 +1236,7 @@
     "@rollup/pluginutils" "^4.1.1"
     babel-plugin-transform-hook-names "^1.0.2"
     debug "^4.3.4"
-    kolorist "^1.8.0"
+    picocolors "^1.1.1"
     vite-prerender-plugin "^0.5.3"
 
 "@prefresh/babel-plugin@0.5.2":
