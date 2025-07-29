@@ -35,13 +35,13 @@ export abstract class Base {
         return '#component-root';
     }
 
-    async getA11yErrors(knownViolations) {
+    async getA11yErrors(knownViolations = []) {
         const results = await new AxeBuilder({ page: this.page })
-            .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
             .disableRules(knownViolations)
             // only check from component root down
             .include(this.a11yComponentSelector())
             .analyze();
-        return results;
+        return results.violations;
     }
 }

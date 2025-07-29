@@ -70,10 +70,10 @@ test.describe('Automated a11y testing', () => {
             // get known violations id
             const knownViolations: string[] = KNOWN_A11Y_VIOLATIONS.hasOwnProperty(storyId) ? KNOWN_A11Y_VIOLATIONS[storyId] : [];
 
-            const results = await automatedModel.getA11yErrors(knownViolations);
+            const violations = await automatedModel.getA11yErrors(knownViolations);
             expect(
-                results.violations,
-                `Accessibility violations found on story: ${storyId} (${storyUrl}) \nViolations:\n ${JSON.stringify(results.violations, null, 2)}` // Include violations in error message
+                violations,
+                `Accessibility violations found on story: ${storyId} (${storyUrl}) \nViolations:\n ${JSON.stringify(violations, null, 2)}` // Include violations in error message
             ).toEqual([]);
         });
     }
