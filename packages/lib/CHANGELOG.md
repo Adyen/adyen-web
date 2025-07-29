@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 6.19.1
+
+### Patch Changes
+
+- adds onAddressSelected callback type to CardConfiguration ([#3379](https://github.com/Adyen/adyen-web/pull/3379))
+
 ## 6.19.0
 
 ### Minor Changes
