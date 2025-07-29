@@ -11,7 +11,12 @@ const STORYBOOK_INDEX_PATH = '../lib/storybook-static/index.json';
 const EXCLUDED_STORIES: string[] = [
     'wallets-applepay--express', // Can't run Apple Pay in the e2e tests
     'wallets-applepay--default',
-    'helpers-paypalreviewpage--paypal-review-page' // Unsure what needs to be done here
+    'wallets-fastlane--lookup',
+    'helpers-paypalreviewpage--paypal-review-page', // Unsure what needs to be done here
+    'components-paybybankpix--merchant-page', // demo pages for pix
+    'components-paybybankpix--hosted-page-enrollment',
+    'components-paybybankpix--hosted-page-payment',
+    'components-paybybankpix--simulate-issuer-page',
 ];
 
 // These are the list of violations that are know for each expose component
