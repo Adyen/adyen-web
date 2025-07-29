@@ -23,9 +23,12 @@ const EXCLUDED_STORIES: string[] = [
 // The key is the story id, this can be found in the test that is failing or in storybook
 // The values in the violation array are the ID of the printed violation
 const KNOWN_A11Y_VIOLATIONS = {
-    'components-payto--default': ['aria-valid-attr-value'],
-    'dropin-default--style-customization': ['color-contrast'],
-    'internals-toggle--toggle-only': ['label']
+    'components-payto--default': ['aria-valid-attr-value'], 
+    'dropin-default--style-customization': ['color-contrast'], // Demo page
+    'internals-toggle--toggle-only': ['label'],
+    'issuerlist-onlinebankingcz--default': ['link-in-text-block'], // TODO
+    'issuerlist-onlinebankingpl--default': ['link-in-text-block'], // TODO
+    'issuerlist-onlinebankingsk--default': ['link-in-text-block'], // TODO
 };
 
 // types

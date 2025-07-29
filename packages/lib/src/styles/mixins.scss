@@ -67,20 +67,16 @@ $adyen-checkout-media-query-l-min: 1024px;
 }
 
 @mixin adyen-checkout-link {
-    --text-decoration: underline;
+    --text-decoration: none;
 
-    color: token(color-link-primary);
+    color: token(color-label-highlight);
     text-decoration: var(--text-decoration);
 
     @include b-link-reset;
 
     &:hover,
     &:active {
-        --text-decoration: none;
-    }
-
-    &:active {
-        color: token(color-link-primary-active);
+        --text-decoration: underline;
     }
 
     &:focus-visible {

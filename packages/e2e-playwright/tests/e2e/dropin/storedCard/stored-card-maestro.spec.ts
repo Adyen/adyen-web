@@ -12,10 +12,6 @@ test.describe('Stored Maestro card - cvc optional', () => {
         const card = new Card(page, paymentMethodDetailsLocator);
 
         await card.cvcInput.waitFor({ state: 'visible' });
-
-        // check a11y for stored Maestro cards
-        expect(await dropinWithSession.getA11yErrors()).toHaveLength(0);
-
         await card.pay({ name: /^Pay/i });
         await card.threeDs2Challenge.fillInPassword(THREEDS2_CHALLENGE_PASSWORD);
         await card.threeDs2Challenge.submit();

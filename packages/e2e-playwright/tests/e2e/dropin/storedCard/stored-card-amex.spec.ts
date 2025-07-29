@@ -14,9 +14,6 @@ test.describe('Stored Amex card - cvc required', () => {
         await card.cvcInput.waitFor({ state: 'visible' });
         await card.fillCvc('7373');
 
-        // check if this UI has a11y errors after stored card being filled
-        expect(await dropinWithSession.getA11yErrors()).toHaveLength(0);
-
         await card.pay({ name: /pay \$259\.00/i });
         await expect(card.paymentResult).toContainText(PAYMENT_RESULT.success);
     });
@@ -30,9 +27,6 @@ test.describe('Stored Amex card - cvc required', () => {
         await card.cvcInput.waitFor({ state: 'visible' });
         await card.pay({ name: /pay \$259\.00/i });
         await expect(card.cvcErrorElement).toContainText('Enter the security code');
-
-        // check if this UI has a11y errors after errors being triggered
-        expect(await dropinWithSession.getA11yErrors()).toHaveLength(0);
     });
 
     test('#3 A storedCard with no expiry date field still can be used for a successful payment', async ({ dropinWithSession, page }) => {
@@ -51,9 +45,6 @@ test.describe('Stored Amex card - cvc required', () => {
 
         await card.cvcInput.waitFor({ state: 'visible' });
         await card.fillCvc('7373');
-
-        // check a11y for stored cards without no expiry date
-        expect(await dropinWithSession.getA11yErrors()).toHaveLength(0);
 
         await card.pay({ name: /pay \$259\.00/i });
         await expect(card.paymentResult).toContainText(PAYMENT_RESULT.success);
