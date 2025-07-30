@@ -1,0 +1,53 @@
+name: Automated Accessibility Tests
+
+on:
+  pull_request:
+  workflow_dispatch:
+  # Optional: Add schedule if you want these tests to run on a regular basis
+  # schedule:
+  #   - cron: '0 2 * * 1-5' # Runs at 2 AM UTC Monday-Friday
+
+jobs:
+  automated-a11y:
+    if: ${{ github.actor != 'renovate[bot]' && github.actor != 'lgtm-com[bot]' }}
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [22.11.0]
+        api-version: ["v71"] # Using only latest API version for a11y tests
+        runner-browser: ["chromium"] # Often a11y tests only need to run on one browser
+    env:
+      CHECKOUT_API_KEY: ${{secrets.ADYEN_CHECKOUT_API_KEY}}
+      MERCHANT_ACCOUNT: ${{secrets.ADYEN_CHECKOUT_MERCHANT_ACCOUNT}}
+      CLIENT_KEY: ${{secrets.ADYEN_CHECKOUT_CLIENT_KEY}}
+      CLIENT_ENV: test
+      TESTING_ENVIRONMENT: https://checkout-test.adyen.com/checkout/${{matrix.api-version}}
+      API_VERSION: ${{matrix.api-version}}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+    
+    - name: Install Project Dependencies
+      run: yarn install
+    
+    - name: Install Playwright Dependencies
+      working-directory: packages/e2e-playwright/
+      run: yarn install && npx playwright install --with-deps
+    
+    - name: Run Automated Accessibility Tests
+      run: yarn test:automated-a11y -- --project=${{ matrix.runner-browser }}
+    
+    - name: Archive test result artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: a11y-report-${{matrix.api-version}}-${{matrix.runner-browser}}-${{ github.sha }}
+        path: packages/e2e-playwright/playwright-report
+        retention-days: 5
