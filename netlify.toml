@@ -1,0 +1,9 @@
+[functions]
+  external_node_modules = ["express"]
+  node_bundler = "esbuild"
+
+[[redirects]]
+  force = true
+  from = "/hello"
+  to = "/.netlify/functions/hello"
+  status = 200
