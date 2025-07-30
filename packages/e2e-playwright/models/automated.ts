@@ -2,17 +2,12 @@ import type { Page, Locator } from '@playwright/test';
 import { Base } from './base';
 
 export class Automated extends Base {
-    readonly payButton: Locator;
+    readonly component: Locator;
 
     constructor(page: Page) {
         super(page);
 
-        this.payButton = this.page.locator('#component-root');
-    }
-
-    async goto(url: string) {
-        await this.page.goto(url, { waitUntil: 'domcontentloaded', timeout: 15000 });
-        await this.isComponentVisible();
+        this.component = this.page.locator('#component-root');
     }
 
     private isInternalStory() { 
@@ -34,6 +29,6 @@ export class Automated extends Base {
             // another way of doing this is welcome
             return this.page.waitForTimeout(3000);
         }
-        await this.payButton.waitFor({ state: 'visible' });
+        await this.component.waitFor({ state: 'visible' });
     }
 }

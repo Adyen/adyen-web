@@ -1,12 +1,7 @@
 import { test as base, expect } from '@playwright/test';
 import http from 'http';
-import AxeBuilder from '@axe-core/playwright';
 
-type AxeFixture = {
-    makeAxeBuilder: () => AxeBuilder;
-};
-
-const test = base.extend<AxeFixture>({
+const test = base.extend({
     /**
      * Intercept the requests to CDN, fetch the translations from the Express server, and send them back to the web app
      */

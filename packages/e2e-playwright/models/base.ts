@@ -11,7 +11,7 @@ export abstract class Base {
     }
 
     async goto(url: string) {
-        await this.page.goto(url);
+        await this.page.goto(url, { waitUntil: 'domcontentloaded', timeout: 15000 });
         await this.isComponentVisible();
     }
 
