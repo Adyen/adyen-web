@@ -45,6 +45,10 @@ app.all('/api/donationCampaigns', (req, res) => getDonationCampaigns(res, req.bo
 app.all('/api/donations', (req, res) => createDonation(res, req.body));
 app.all('/sdk/:adyenWebVersion/translations/:locale.json', (req, res) => getTranslation(res, req));
 
+app.all('/hello', (req, res) => {
+    return new Response("Hello, world from the replica server!");
+});
+
 // Wrap the Express app with serverless
 const handler = serverless(app);
 
