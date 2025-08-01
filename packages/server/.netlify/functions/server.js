@@ -1,6 +1,6 @@
 const serverless = require('serverless-http');
 const express = require('express');
-const adyenWebServer = require('./index');
+const adyenWebServer = require('./../index');
 
 const app = express();
 
