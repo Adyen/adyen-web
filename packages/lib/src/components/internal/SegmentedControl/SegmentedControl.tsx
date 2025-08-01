@@ -2,31 +2,13 @@ import { h } from 'preact';
 import cx from 'classnames';
 import './SegmentedControl.scss';
 
-/**
- * It makes no sense of the aria tags to be responsibility of another component
- * The new interface makes it clear that id and control are required
- * While moving the expanded logic to within the SegmentedController
- * Both interfaces are compatible
- */
-export interface OldSegmentedControlOption<T> {
-    label: string;
-    value: T;
-    htmlProps: {
-        id: string;
-        'aria-expanded': boolean;
-        'aria-controls': string;
-    };
-}
-
-export interface NewSegmentedControlOption<T> {
+export interface SegmentedControlOption<T> {
     label: string;
     value: T;
     id: string;
     controls: string;
     htmlProps?: {};
 }
-
-type SegmentedControlOption<T> = NewSegmentedControlOption<T> | OldSegmentedControlOption<T>;
 
 export type SegmentedControlOptions<T> = Array<SegmentedControlOption<T>>;
 
@@ -70,7 +52,7 @@ function SegmentedControl<T>({ classNameModifiers = [], selectedValue, disabled 
             )}
             role="group"
         >
-            {options.map(({ label, value, controls, htmlProps }: NewSegmentedControlOption<T>) => (
+            {options.map(({ label, value, controls, htmlProps }: SegmentedControlOption<T>) => (
                 <button
                     disabled={disabled}
                     key={value}

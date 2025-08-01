@@ -5,117 +5,153 @@ import isMobile from '../../utils/isMobile';
 import { SRPanel } from '../../core/Errors/SRPanel';
 import { TxVariants } from '../tx-variants';
 import { Resources } from '../../core/Context/Resources';
+import { getIntentOption, getQrOption, getVpaOption } from './constants';
 
 jest.mock('../../utils/isMobile');
 const isMobileMock = isMobile as jest.Mock;
 
+jest.mock('./constants', () => ({
+    ...jest.requireActual('./constants'),
+    getIntentOption: jest.fn(() => ({ label: 'UPI app', value: 'intent' })),
+    getVpaOption: jest.fn(() => ({ label: 'UPI ID', value: 'vpa' })),
+    getQrOption: jest.fn(() => ({ label: 'QR code', value: 'qrCode' }))
+}));
+
 describe('UPI', () => {
-    // @ts-ignore ignore
-    const props = { i18n: global.i18n, loadingContext: 'test', modules: { srPanel: new SRPanel(global.core), resources: new Resources('test') } };
+    const props = {
+        i18n: global.i18n,
+        loadingContext: 'test',
+        modules: { srPanel: new SRPanel(global.core), resources: new Resources('test') }
+    };
+
     afterEach(() => {
         isMobileMock.mockReset();
+        (getIntentOption as jest.Mock).mockClear();
+        (getVpaOption as jest.Mock).mockClear();
+        (getQrOption as jest.Mock).mockClear();
     });
 
     describe('formatProps', () => {
         describe('on mobile devices', () => {
-            let upi: UPI;
             beforeEach(() => {
                 isMobileMock.mockReturnValue(true);
-                upi = new UPI(global.core, props);
             });
 
-            test('should return an app list from the given props.apps and a collect app', () => {
-                expect(upi.formatProps({ ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] })).toMatchObject({
-                    apps: [
-                        { id: 'gpay', name: 'Google Pay', type: TxVariants.upi_intent },
-                        { id: 'vpa', name: 'Enter UPI ID', type: TxVariants.upi_collect }
-                    ],
-                    defaultMode: 'intent'
+            test('should configure for intent and vpa modes if apps are provided', () => {
+                const upi = new UPI(global.core, props);
+                const gpayApp = { id: 'gpay', name: 'Google Pay' };
+                const formattedProps = upi.formatProps({ ...props, apps: [gpayApp] });
+
+                expect(formattedProps).toMatchObject({
+                    apps: [gpayApp],
+                    defaultMode: 'intent',
+                    segmentedControlOptions: [
+                        { label: 'UPI app', value: 'intent' },
+                        { label: 'UPI ID', value: 'vpa' }
+                    ]
                 });
             });
 
-            test('should return an empty app list if there is no app list from the props', () => {
-                expect(upi.formatProps(props)).toMatchObject({ apps: [], defaultMode: 'vpa' });
+            test('should configure for only vpa mode if no apps are provided', () => {
+                const upi = new UPI(global.core, props);
+                const formattedProps = upi.formatProps({ ...props, apps: [] });
+
+                expect(formattedProps).toMatchObject({
+                    apps: [],
+                    defaultMode: 'vpa',
+                    segmentedControlOptions: []
+                });
+            });
+
+            test('should respect a valid defaultMode prop', () => {
+                const upi = new UPI(global.core, props);
+                const gpayApp = { id: 'gpay', name: 'Google Pay' };
+                const formattedProps = upi.formatProps({ ...props, apps: [gpayApp], defaultMode: 'vpa' });
+
+                expect(formattedProps.defaultMode).toBe('vpa');
             });
         });
 
-        describe('on non mobile devices', () => {
-            let upi: UPI;
+        describe('on non-mobile (desktop) devices', () => {
             beforeEach(() => {
                 isMobileMock.mockReturnValue(false);
-                upi = new UPI(global.core, props);
             });
 
-            test('should return an empty app list, and set the default mode to QR code', () => {
-                expect(upi.formatProps({})).toEqual({ apps: [], defaultMode: 'qrCode' });
+            test('should configure for qrCode and vpa modes, and ignore any apps', () => {
+                const upi = new UPI(global.core, props);
+                const gpayApp = { id: 'gpay', name: 'Google Pay' };
+                const formattedProps = upi.formatProps({ ...props, apps: [gpayApp] });
+
+                expect(formattedProps).toMatchObject({
+                    apps: [],
+                    defaultMode: 'qrCode',
+                    segmentedControlOptions: [
+                        { label: 'QR code', value: 'qrCode' },
+                        { label: 'UPI ID', value: 'vpa' }
+                    ]
+                });
+            });
+
+            test('should respect a valid defaultMode prop', () => {
+                const upi = new UPI(global.core, props);
+                const formattedProps = upi.formatProps({ ...props, defaultMode: 'vpa' });
+                expect(formattedProps.defaultMode).toBe('vpa');
             });
         });
     });
 
     describe('formatData', () => {
-        describe('select the QR code mode', () => {
-            test('should return the payment type upi_qr', () => {
-                isMobileMock.mockReturnValue(false);
-                const upi = new UPI(global.core, { ...props, defaultMode: 'qrCode' });
-                expect(upi.formatData()).toEqual({ paymentMethod: { type: TxVariants.upi_qr } });
-            });
+        test('should return type upi_qr when in QR code mode', () => {
+            isMobileMock.mockReturnValue(false);
+            const upi = new UPI(global.core, { ...props, defaultMode: 'qrCode' });
+            render(upi.render());
+            // In QR mode, data is formatted correctly on init without user interaction
+            expect(upi.formatData()).toEqual({ paymentMethod: { type: TxVariants.upi_qr } });
         });
 
-        describe('select the vpa mode', () => {
-            test('should return the payment type upi_collect and virtualPaymentAddress', () => {
-                isMobileMock.mockReturnValue(false);
-                const upi = new UPI(global.core, { ...props, defaultMode: 'vpa' });
-                upi.setState({ data: { virtualPaymentAddress: 'test' }, valid: {}, errors: {}, isValid: true });
-                expect(upi.formatData()).toEqual({ paymentMethod: { type: TxVariants.upi_collect, virtualPaymentAddress: 'test' } });
-            });
-        });
+        test('should return type upi_collect and VPA when in VPA mode', async () => {
+            isMobileMock.mockReturnValue(false);
+            const upi = new UPI(global.core, { ...props, defaultMode: 'vpa' });
+            render(upi.render());
 
-        describe('select the intent mode', () => {
-            beforeEach(() => {
-                isMobileMock.mockReturnValue(true);
-            });
+            const user = userEvent.setup();
+            await user.type(screen.getByTestId('input-virtual-payment-address'), 'test@vpa');
+            await user.tab();
 
-            describe('pay with the UPI ID / VPA', () => {
-                test('should return the payment type upi_collect and virtualPaymentAddress', () => {
-                    const upi = new UPI(global.core, { ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
-                    upi.setState({
-                        data: { virtualPaymentAddress: 'test', app: { id: 'vpa', type: TxVariants.upi_collect } },
-                        valid: {},
-                        errors: {},
-                        isValid: true
-                    });
-                    expect(upi.formatData()).toEqual({ paymentMethod: { type: TxVariants.upi_collect, virtualPaymentAddress: 'test' } });
+            await waitFor(() => {
+                expect(upi.formatData()).toEqual({
+                    paymentMethod: { type: TxVariants.upi_collect, virtualPaymentAddress: 'test@vpa' }
                 });
             });
+        });
 
-            describe('pay with other apps', () => {
-                test('should return the payment type upi_intent and the chosen appId', () => {
-                    const upi = new UPI(global.core, { ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
-                    upi.setState({
-                        data: { app: { id: 'gpay', type: TxVariants.upi_intent } },
-                        valid: {},
-                        errors: {},
-                        isValid: true
-                    });
-                    expect(upi.formatData()).toEqual({ paymentMethod: { type: TxVariants.upi_intent, appId: 'gpay' } });
+        test('should return type upi_intent and appId when in intent mode', async () => {
+            isMobileMock.mockReturnValue(true);
+            const gpayApp = { id: 'gpay', name: 'Google Pay' };
+            const upi = new UPI(global.core, { ...props, apps: [gpayApp], defaultMode: 'intent' });
+            render(upi.render());
+
+            const user = userEvent.setup();
+            const radioButton = await screen.findByRole('radio', { name: /google pay/i });
+            await user.click(radioButton);
+
+            await waitFor(() => {
+                expect(upi.formatData()).toEqual({
+                    paymentMethod: { type: TxVariants.upi_intent, appId: 'gpay' }
                 });
             });
         });
     });
 
     describe('isValid', () => {
-        describe('select the QR code mode', () => {
-            test('should be valid', async () => {
-                isMobileMock.mockReturnValue(false);
-                const upi = new UPI(global.core, { ...props, defaultMode: 'qrCode' });
-                render(upi.render());
-                await waitFor(() => {
-                    expect(upi.isValid).toBe(true);
-                });
-            });
+        test('should be valid for QR code mode', () => {
+            isMobileMock.mockReturnValue(false);
+            const upi = new UPI(global.core, { ...props, defaultMode: 'qrCode' });
+            render(upi.render());
+            expect(upi.isValid).toBe(true);
         });
 
-        describe('select the vpa mode', () => {
+        describe('VPA mode', () => {
             test('should not be valid on init', async () => {
                 isMobileMock.mockReturnValue(false);
                 const upi = new UPI(global.core, { ...props, defaultMode: 'vpa' });
@@ -125,18 +161,22 @@ describe('UPI', () => {
                 });
             });
 
-            test('should be valid when filling in the vpa', async () => {
+            test('should be valid after filling in a valid VPA', async () => {
                 isMobileMock.mockReturnValue(false);
                 const upi = new UPI(global.core, { ...props, defaultMode: 'vpa' });
                 render(upi.render());
 
                 const user = userEvent.setup();
                 await user.type(screen.getByTestId('input-virtual-payment-address'), 'test@test');
-                expect(upi.isValid).toBe(true);
+                await user.tab();
+
+                await waitFor(() => {
+                    expect(upi.isValid).toBe(true);
+                });
             });
         });
 
-        describe('select the intent mode', () => {
+        describe('Intent mode', () => {
             beforeEach(() => {
                 isMobileMock.mockReturnValue(true);
             });
@@ -149,42 +189,79 @@ describe('UPI', () => {
                 });
             });
 
-            test('should be valid when selecting other apps', async () => {
+            test('should be valid after selecting an app', async () => {
                 const upi = new UPI(global.core, { ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
                 render(upi.render());
                 const user = userEvent.setup();
                 const radioButton = await screen.findByRole('radio', { name: /google pay/i });
                 await user.click(radioButton);
-                expect(upi.isValid).toBe(true);
+                await waitFor(() => {
+                    expect(upi.isValid).toBe(true);
+                });
             });
 
-            test('should not be valid when selecting upi collect', async () => {
+            test('should switch to VPA mode, be invalid, then become valid after typing', async () => {
                 const upi = new UPI(global.core, { ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
                 render(upi.render());
                 const user = userEvent.setup();
-                const radioButton = await screen.findByRole('radio', { name: /Enter UPI ID/i });
-                await user.click(radioButton);
-                expect(upi.isValid).toBe(false);
-            });
 
-            test('should be valid when filling the vpa', async () => {
-                const upi = new UPI(global.core, { ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
-                render(upi.render());
+                // Switch to VPA mode
+                const vpaModeButton = await screen.findByRole('button', { name: /UPI ID/i });
+                await user.click(vpaModeButton);
 
-                const user = userEvent.setup();
-                await user.click(screen.getByRole('radio', { name: /Enter UPI ID/i }));
-                expect(upi.isValid).toBe(false);
+                // Should be invalid after switching
+                await waitFor(() => {
+                    expect(upi.isValid).toBe(false);
+                });
 
                 await user.type(screen.getByTestId('input-virtual-payment-address'), 'test@test');
-                expect(upi.isValid).toBe(true);
+                await user.tab();
+
+                await waitFor(() => {
+                    expect(upi.isValid).toBe(true);
+                });
             });
         });
     });
 
-    describe('render', () => {
+    describe('showValidation', () => {
+        beforeEach(() => {
+            isMobileMock.mockReturnValue(true);
+        });
+
+        test('should show an error alert in intent mode if no app is selected', async () => {
+            const upi = new UPI(global.core, { ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
+            render(upi.render());
+
+            upi.showValidation();
+
+            const alert = await screen.findByRole('alert');
+            expect(alert).toHaveTextContent('Select your preferred UPI app to continue');
+
+            await waitFor(() => {
+                expect(upi.isValid).toBe(false);
+            });
+        });
+
+        test('should not show an error and be valid if an app is selected', async () => {
+            const upi = new UPI(global.core, { ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
+            render(upi.render());
+            const user = userEvent.setup();
+            const radioButton = await screen.findByRole('radio', { name: /google pay/i });
+            await user.click(radioButton);
+
+            upi.showValidation();
+
+            expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+            expect(upi.isValid).toBe(true);
+        });
+    });
+
+    describe('UI Rendering', () => {
         test('should render the UPI component by default', async () => {
             const upi = new UPI(global.core, props);
             render(upi.render());
+            // Check for segmented control group
             expect(await screen.findByRole('group')).toBeInTheDocument();
         });
     });

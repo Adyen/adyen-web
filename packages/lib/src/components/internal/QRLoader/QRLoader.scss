@@ -1,3 +1,4 @@
+@use 'styles/mixins';
 @import 'styles/variable-generator';
 
 .adyen-checkout__qr-loader {
@@ -35,10 +36,10 @@
 }
 
 .adyen-checkout__qr-loader__subtitle {
+    @include mixins.adyen-checkout-text-body;
+
     max-width: 400px;
-    color: token(color-label-primary);
-    font-size: token(text-body-font-size);
-    line-height: token(text-body-line-height);
+    color: token(color-label-secondary);
     text-align: center;
 }
 
@@ -63,7 +64,7 @@
     padding-right: 3%;
     margin-bottom: token(spacer-060);
 
-    [dir="rtl"] & {
+    [dir='rtl'] & {
         padding-right: 0;
         padding-left: 3%;
     }
@@ -80,7 +81,6 @@
     font-size: token(text-caption-font-size);
     text-align: center;
 }
-
 
 .adyen-checkout__qr-loader > .adyen-checkout__spinner__wrapper {
     margin: 60px 0;
