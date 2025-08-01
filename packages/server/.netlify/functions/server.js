@@ -7,6 +7,6 @@ const app = express();
 const adyenWebExpress = adyenWebServer(app);
 
 const handler = serverless(adyenWebExpress);
-module.exports.funcName = async (context, req) => {
+module.exports.handler = async (context, req) => {
   context.res = await handler(context, req);
 }
