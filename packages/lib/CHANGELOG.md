@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 5.71.4
+
+### Patch Changes
+
+-   Click to Pay: treat cards with Status Active and Pending as non expired. ([#3406](https://github.com/Adyen/adyen-web/pull/3406))
+
 ## 5.71.3
 
 ### Patch Changes
