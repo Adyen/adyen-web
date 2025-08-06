@@ -1,4 +1,5 @@
 import type { Page, Locator } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
 
 export abstract class Base {
     readonly payButton: Locator;
@@ -10,7 +11,7 @@ export abstract class Base {
     }
 
     async goto(url: string) {
-        await this.page.goto(url);
+        await this.page.goto(url, { waitUntil: 'domcontentloaded', timeout: 15000 });
         await this.isComponentVisible();
     }
 
@@ -28,5 +29,19 @@ export abstract class Base {
 
     async isComponentVisible() {
         await Promise.resolve();
+    }
+
+    protected a11yComponentSelector() {
+        return '#component-root';
+    }
+
+    async getA11yErrors(knownViolations = []) {
+        const results = await new AxeBuilder({ page: this.page })
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+            .disableRules(knownViolations)
+            // only check from component root down
+            .include(this.a11yComponentSelector())
+            .analyze();
+        return results.violations;
     }
 }

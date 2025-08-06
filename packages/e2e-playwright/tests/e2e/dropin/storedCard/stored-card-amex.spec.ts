@@ -13,6 +13,7 @@ test.describe('Stored Amex card - cvc required', () => {
 
         await card.cvcInput.waitFor({ state: 'visible' });
         await card.fillCvc('7373');
+
         await card.pay({ name: /pay \$259\.00/i });
         await expect(card.paymentResult).toContainText(PAYMENT_RESULT.success);
     });
@@ -44,6 +45,7 @@ test.describe('Stored Amex card - cvc required', () => {
 
         await card.cvcInput.waitFor({ state: 'visible' });
         await card.fillCvc('7373');
+
         await card.pay({ name: /pay \$259\.00/i });
         await expect(card.paymentResult).toContainText(PAYMENT_RESULT.success);
     });
