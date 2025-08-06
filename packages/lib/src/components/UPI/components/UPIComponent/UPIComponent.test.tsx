@@ -106,7 +106,7 @@ describe('UPIComponent', () => {
 
             const googlePayRadio = await screen.findByRole('radio', { name: /Google Pay/i });
             await user.click(googlePayRadio);
-            expect(payButtonMock).toHaveBeenLastCalledWith(expect.objectContaining({ status: 'success' }));
+            expect(payButtonMock).toHaveBeenLastCalledWith(expect.objectContaining({ status: 'ready' }));
         });
 
         test('should fire onChange with invalid state initially, then with valid state after selecting an app', async () => {

@@ -77,7 +77,7 @@ export default function UPIComponent({
 
             setSelectedApp(app);
             setIsValid(true);
-            setStatus('success');
+            setStatus('ready');
         },
         [selectedApp]
     );
@@ -87,7 +87,7 @@ export default function UPIComponent({
             setStatus('error');
             setIsValid(false);
         } else {
-            setStatus('success');
+            setStatus('ready');
             setIsValid(true);
         }
     }, [selectedApp]);

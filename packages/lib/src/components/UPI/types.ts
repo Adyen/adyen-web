@@ -4,7 +4,7 @@ import { SegmentedControlOption } from '../internal/SegmentedControl/SegmentedCo
 
 export type UpiType = TxVariants.upi_qr | TxVariants.upi_intent | TxVariants.upi_collect;
 
-export type UpiMode = 'vpa' | 'qrCode' | 'intent' | '';
+export type UpiMode = 'vpa' | 'qrCode' | 'intent';
 
 export type App = { id: string; name: string; type?: UpiType };
 
