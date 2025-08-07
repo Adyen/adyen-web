@@ -3,7 +3,7 @@ import cx from 'classnames';
 import './Alert.scss';
 import Icon from '../Icon';
 
-const ALERT_TYPES = ['error', 'warning', 'success'];
+const ALERT_TYPES = ['error', 'warning', 'info', 'success'];
 
 interface AlertProps {
     children: ComponentChildren;
@@ -13,8 +13,10 @@ interface AlertProps {
 }
 
 export default function Alert({ children, classNames = [], type = 'error', icon }: AlertProps) {
+    const role = type === 'error' || type === 'warning' ? 'alert' : 'status';
+
     return (
-        <div className={cx('adyen-checkout__alert-message', `adyen-checkout__alert-message--${type}`, classNames)}>
+        <div role={role} className={cx('adyen-checkout__alert-message', `adyen-checkout__alert-message--${type}`, classNames)}>
             {icon && <Icon className={'adyen-checkout__alert-message__icon'} type={icon} />}
             {children}
         </div>
