@@ -141,7 +141,7 @@
         "typescript": "5.5.3",
         "typescript-eslint": "7.18.0",
         "vite": "6.3.5",
-        "vite-plugin-stylelint": "6.0.0",
+        "vite-plugin-stylelint": "6.0.2",
         "whatwg-fetch": "3.6.20"
     },
     "dependencies": {

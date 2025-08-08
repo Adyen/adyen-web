@@ -1379,7 +1379,7 @@
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
 
-"@rollup/pluginutils@^5.0.1", "@rollup/pluginutils@^5.1.0", "@rollup/pluginutils@^5.1.2", "@rollup/pluginutils@^5.1.3":
+"@rollup/pluginutils@^5.0.1", "@rollup/pluginutils@^5.1.0", "@rollup/pluginutils@^5.1.2", "@rollup/pluginutils@^5.2.0":
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/@rollup/pluginutils/-/pluginutils-5.2.0.tgz#eac25ca5b0bdda4ba735ddaca5fbf26bd435f602"
   integrity sha512-qWJ2ZTbmumwiLFomfzTyt5Kng4hwPi9rwCYN4SHb6eaRU1KNO4ccxINHr/VhH4GgPlt1XfSTLX2LBTme8ne4Zw==
@@ -4063,7 +4063,7 @@ debug@2.6.9:
   dependencies:
     ms "2.0.0"
 
-debug@4, debug@^4.1.0, debug@^4.1.1, debug@^4.3.1, debug@^4.3.2, debug@^4.3.4, debug@^4.3.7, debug@^4.4.0, debug@^4.4.1:
+debug@4, debug@^4.1.0, debug@^4.1.1, debug@^4.3.1, debug@^4.3.2, debug@^4.3.4, debug@^4.4.0, debug@^4.4.1:
   version "4.4.1"
   resolved "https://registry.yarnpkg.com/debug/-/debug-4.4.1.tgz#e5a8bc6cbc4c6cd3e64308b0693a3d4fa550189b"
   integrity sha512-KcKCqiftBJcZr++7ykoDIEwSa3XWowTfNPo92BYxjXiyYEVrUQh2aLyhxBCwww+heortUFxEJYcRzosstTEBYQ==
@@ -10588,13 +10588,13 @@ vary@~1.1.2:
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==
 
-vite-plugin-stylelint@6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/vite-plugin-stylelint/-/vite-plugin-stylelint-6.0.0.tgz#4d899f4a76f08306ac5148ada47f52d5cf382775"
-  integrity sha512-qXsot4hTkAlR8aXNXhBxF1KWyP78SocCobD1mBwka85l0+nY1Ja4HEyW2x2RbC7kIs6ff9mdUxK9TqcwuxQjxw==
+vite-plugin-stylelint@6.0.2:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/vite-plugin-stylelint/-/vite-plugin-stylelint-6.0.2.tgz#8a44345dacb6710877cd841e0467811c6b90253d"
+  integrity sha512-whqm2m5rvfd4cYA+cpwZ3BROR/5enRGdRr65hxQNHYn6YFmP8M1xrVKEbLIEBSmmSZ7G7AEZWccS8X+UAksIXA==
   dependencies:
-    "@rollup/pluginutils" "^5.1.3"
-    debug "^4.3.7"
+    "@rollup/pluginutils" "^5.2.0"
+    debug "^4.4.1"
 
 vite-prerender-plugin@^0.5.3:
   version "0.5.10"
