@@ -166,7 +166,10 @@ export const extractPropsForSFP = (props: CardInputProps) => {
     } as SFPProps; // Can't set as return type on fn or it will complain about missing, mandatory, props
 };
 
-export const handlePartialAddressMode = (addressMode: AddressModeOptions): AddressSpecifications | null => {
+export const handlePartialAddressMode = (addressMode: AddressModeOptions, specifications: AddressSpecifications): AddressSpecifications | null => {
+    if (specifications) {
+        return specifications;
+    }
     return addressMode == AddressModeOptions.partial ? PARTIAL_ADDRESS_SCHEMA : null;
 };
 
