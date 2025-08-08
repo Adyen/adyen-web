@@ -1,7 +1,12 @@
 name: Size limit
 
-on: [pull_request]
-
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+    
 jobs:
   size:
     runs-on: ubuntu-latest
