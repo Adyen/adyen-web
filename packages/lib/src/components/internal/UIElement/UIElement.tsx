@@ -372,8 +372,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         const paymentAction = this.core.createFromAction(action, {
             ...this.elementRef.props,
-            ...props,
-            onAdditionalDetails: this.handleAdditionalDetails
+            ...props
         });
 
         if (paymentAction) {

@@ -269,7 +269,16 @@ class Core implements ICore {
 
             const props = {
                 ...this.getCorePropsForComponent(),
-                ...options
+                ...options,
+                onComplete: (state: AdditionalDetailsData, component?: UIElement) => {
+                    if (component) {
+                        // We use a type assertion to call the protected 'handleAdditionalDetails' method from the UIElement.
+                        // This is safe because this is internal framework code.
+                        (component as unknown as { handleAdditionalDetails: (state: AdditionalDetailsData) => void }).handleAdditionalDetails(state);
+                    } else {
+                        this.submitDetails(state.data);
+                    }
+                }
             };
 
             return getComponentForAction(this, registry, action, props);
