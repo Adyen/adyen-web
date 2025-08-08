@@ -62,6 +62,10 @@ module.exports = (app = express(), options = {}) => {
 
     app.all('/api/donations', (req, res) => createDonation(res, req.body));
 
+    app.all('/api/health', (req, res) => {
+        res.status(200).send('OK');
+    });
+
     app.all('/sdk/:adyenWebVersion/translations/:locale.json', (req, res) => getTranslation(res, req));
 
     if (options.listen) {
