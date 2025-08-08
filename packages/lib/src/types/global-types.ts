@@ -298,6 +298,10 @@ export interface PaymentData extends PaymentMethodData {
     clientStateDataIndicator: boolean;
     sessionData?: string;
     storePaymentMethod?: boolean;
+    billingAddress?: AddressData;
+    deliveryAddress?: AddressData;
+    shopperEmail?: string;
+    shopperName?: string;
 }
 
 export type ResultCode =
