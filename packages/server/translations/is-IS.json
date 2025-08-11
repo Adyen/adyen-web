@@ -4,7 +4,7 @@
     "payButton.with": "Greiddu %{value} með %{maskedData}",
     "payButton.saveDetails": "Vista upplýsingar",
     "close": "Loka",
-    "storeDetails": "Spara fyrir næstu greiðslu",
+    "storeDetails": "Vista fyrir næstu greiðslu",
     "readMore": "Nánar",
     "creditCard.holderName": "Nafn á korti",
     "creditCard.holderName.invalid": "Sláðu inn nafn eins og það kemur fram á kortinu",
