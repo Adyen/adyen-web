@@ -12,7 +12,7 @@ export interface PayButtonProps extends ButtonProps {
      */
     classNameModifiers?: string[];
     label?: string;
-    amount: PaymentAmountExtended;
+    amount?: PaymentAmountExtended;
     secondaryAmount?: PaymentAmountExtended;
     status?: string;
     disabled?: boolean;
