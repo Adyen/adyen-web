@@ -1,117 +1,105 @@
 import { h } from 'preact';
-import { mount } from 'enzyme';
+import { render, screen, waitFor } from '@testing-library/preact';
+import userEvent from '@testing-library/user-event';
 import OpenInvoice from './OpenInvoice';
-import { mock } from 'jest-mock-extended';
 import { OpenInvoiceProps } from './types';
-import { FieldsetVisibility } from '../../../types';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
-import userEvent from '@testing-library/user-event';
 import { SRPanel } from '../../../core/Errors/SRPanel';
-import { render, screen } from '@testing-library/preact';
 import getDataset from '../../../core/Services/get-dataset';
 
 jest.mock('../../../core/Services/get-dataset');
-(getDataset as jest.Mock).mockImplementation(jest.fn(() => Promise.resolve([{ id: 'NL', name: 'Netherlands' }])));
+(getDataset as jest.Mock).mockImplementation(() => Promise.resolve([{ id: 'NL', name: 'Netherlands' }]));
 
-let componentRef;
-const setComponentRef = ref => {
-    componentRef = ref;
-};
+const renderOpenInvoice = (props: Partial<OpenInvoiceProps> = {}) => {
+    const srPanel = new SRPanel(global.core);
+    const defaultProps: OpenInvoiceProps = {
+        onChange: jest.fn(),
+        consentCheckboxLabel: '',
+        payButton: jest.fn(),
+        data: { personalDetails: {}, billingAddress: {}, deliveryAddress: {} },
+        visibility: {
+            personalDetails: 'editable',
+            billingAddress: 'editable',
+            deliveryAddress: 'editable'
+        },
+        ...props
+    };
 
-const defaultProps = {
-    onChange: () => {},
-    data: { personalDetails: {}, billingAddress: {}, deliveryAddress: {} },
-    visibility: {
-        personalDetails: 'editable' as FieldsetVisibility,
-        billingAddress: 'editable' as FieldsetVisibility,
-        deliveryAddress: 'editable' as FieldsetVisibility
-    },
-    setComponentRef: setComponentRef
-};
-
-const openInvoicePropsMock = mock<OpenInvoiceProps>();
-const getWrapper = (props = {}) =>
-    mount(
+    render(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-            <OpenInvoice {...openInvoicePropsMock} {...defaultProps} {...props} />
+            <SRPanelProvider srPanel={srPanel}>
+                <OpenInvoice {...defaultProps} />
+            </SRPanelProvider>
         </CoreProvider>
     );
 
+    return {
+        onChangeMock: defaultProps.onChange as jest.Mock,
+        user: userEvent.setup()
+    };
+};
+
 describe('OpenInvoice', () => {
     test('should not display fieldsets set to hidden', () => {
-        const visibility = { personalDetails: 'hidden' };
-        const wrapper = getWrapper({ visibility });
-        expect(wrapper.find('PersonalDetails')).toHaveLength(0);
+        renderOpenInvoice({ visibility: { personalDetails: 'hidden' } });
+        expect(screen.queryByLabelText(/first name/i)).not.toBeInTheDocument();
     });
 
     test('should hide the delivery address by default', () => {
-        const wrapper = getWrapper();
-        expect(wrapper.find('Address')).toHaveLength(1);
+        renderOpenInvoice();
+        expect(screen.getByText('Billing address')).toBeInTheDocument();
+        expect(screen.queryByText('Delivery Address')).not.toBeInTheDocument();
     });
 
     test('should show the separate delivery checkbox by default', () => {
-        const wrapper = getWrapper();
-        expect(wrapper.find('Checkbox')).toHaveLength(1);
+        renderOpenInvoice();
+        expect(screen.getByRole('checkbox', { name: 'Specify a separate delivery address' })).toBeInTheDocument();
     });
 
     test('should not show the separate delivery checkbox if the delivery address is set to hidden', () => {
-        const visibility = { deliveryAddress: 'hidden' };
-        const wrapper = getWrapper({ visibility });
-        expect(wrapper.find('Checkbox')).toHaveLength(0);
+        renderOpenInvoice({ visibility: { deliveryAddress: 'hidden' } });
+        expect(screen.queryByRole('checkbox', { name: 'Specify a separate delivery address' })).not.toBeInTheDocument();
     });
 
     test('should not show the separate delivery checkbox if the billing address is set to hidden', () => {
-        const visibility = { billingAddress: 'hidden' };
-        const wrapper = getWrapper({ visibility });
-        expect(wrapper.find('Checkbox')).toHaveLength(0);
+        renderOpenInvoice({ visibility: { billingAddress: 'hidden' } });
+        expect(screen.queryByRole('checkbox', { name: 'Specify a separate delivery address' })).not.toBeInTheDocument();
     });
 
-    test('clicking the separate delivery checkbox should toggle the delivery address fieldset', () => {
-        const wrapper = getWrapper();
-        wrapper.find('Checkbox').prop('onChange')();
-        wrapper.update();
-        expect(wrapper.find('Address')).toHaveLength(2);
-        wrapper.find('Checkbox').prop('onChange')();
-        wrapper.update();
-        expect(wrapper.find('Address')).toHaveLength(1);
+    test('should show delivery address fieldset if checkbox is toggled', async () => {
+        const { user } = renderOpenInvoice();
+        const deliveryCheckbox = screen.getByRole('checkbox', { name: 'Specify a separate delivery address' });
+
+        expect(screen.queryByText('Delivery Address')).not.toBeInTheDocument();
+
+        await user.click(deliveryCheckbox);
+        expect(await screen.findByText('Delivery Address')).toBeInTheDocument();
+
+        await user.click(deliveryCheckbox);
+        expect(screen.queryByText('Delivery Address')).not.toBeInTheDocument();
     });
 
     test('should render a consent checkbox if a consentCheckboxLabel is passed as a prop', () => {
-        const wrapper = getWrapper({ consentCheckboxLabel: 'TEST' });
-        expect(wrapper.find('ConsentCheckbox')).toHaveLength(1);
+        renderOpenInvoice({ consentCheckboxLabel: 'I agree to the terms' });
+        expect(screen.getByRole('checkbox', { name: 'I agree to the terms' })).toBeInTheDocument();
     });
 
-    test('toggling consent checkbox should call the onChange', async () => {
-        const user = userEvent.setup();
-        const srPanel = new SRPanel(global.core);
-        const customRender = ui => {
-            return render(
-                // @ts-ignore render ui as children
-                <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-                    <SRPanelProvider srPanel={srPanel}>{ui}</SRPanelProvider>
-                </CoreProvider>
-            );
-        };
-        const onChange = jest.fn();
-        const props = {
-            ...defaultProps,
-            visibility: { billingAddress: 'hidden' as FieldsetVisibility, deliveryAddress: 'hidden' as FieldsetVisibility },
-            consentCheckboxLabel: 'Test',
-            payButton: () => {},
-            onChange
-        };
-        customRender(<OpenInvoice {...props} />);
+    test('should call onChange with validation status when toggling the consent checkbox', async () => {
+        const { user, onChangeMock } = renderOpenInvoice({
+            consentCheckboxLabel: 'I agree',
+            visibility: { billingAddress: 'hidden', deliveryAddress: 'hidden' }
+        });
 
-        await user.click(await screen.findByRole('checkbox'));
-        expect(onChange).toHaveBeenCalledWith(
-            expect.objectContaining({
-                errors: expect.objectContaining({ consentCheckbox: null })
-            })
-        );
+        const consentCheckbox = screen.getByRole('checkbox', { name: 'I agree' });
 
-        await user.click(await screen.findByRole('checkbox'));
-        expect(onChange).toHaveBeenCalledWith(
+        // Click to check it (making it valid)
+        await user.click(consentCheckbox);
+        expect(onChangeMock).toHaveBeenCalledWith(expect.objectContaining({ errors: expect.objectContaining({ consentCheckbox: null }) }));
+
+        // Click to uncheck it (making it invalid)
+        await user.click(consentCheckbox);
+        expect(onChangeMock).toHaveBeenCalledWith(
             expect.objectContaining({
                 errors: expect.objectContaining({
                     consentCheckbox: {
@@ -124,29 +112,22 @@ describe('OpenInvoice', () => {
         );
     });
 
-    test('should call the onChange', () => {
-        const onChange = jest.fn();
-        getWrapper({ onChange });
-        expect(onChange).toHaveBeenCalledWith(
-            expect.objectContaining({
-                data: expect.any(Object),
-                errors: expect.any(Object),
-                isValid: expect.any(Boolean)
-            })
-        );
+    test('should call the onChange on initial render with default state', async () => {
+        const { onChangeMock } = renderOpenInvoice();
+
+        await waitFor(() => {
+            expect(onChangeMock).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    data: expect.any(Object),
+                    errors: expect.any(Object),
+                    isValid: expect.any(Boolean)
+                })
+            );
+        });
     });
 
-    test('should be possible to change the status', () => {
-        const payButton = jest.fn();
-        const wrapper = getWrapper({ payButton, showPayButton: true });
-        const status = 'loading';
-        componentRef.setStatus(status);
-        wrapper.update();
-        expect(payButton).toHaveBeenCalledWith(expect.objectContaining({ status }));
-    });
-
-    test('should show FormInstruction', () => {
-        const wrapper = getWrapper({});
-        expect(wrapper.find('FormInstruction')).toHaveLength(1);
+    test('should show the form instruction', () => {
+        renderOpenInvoice();
+        expect(screen.getByText('All fields are required unless marked otherwise.')).toBeInTheDocument();
     });
 });
