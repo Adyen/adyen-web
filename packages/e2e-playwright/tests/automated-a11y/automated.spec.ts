@@ -1,8 +1,7 @@
-import { test, expect, Page } from '@playwright/test';
-import AxeBuilder from '@axe-core/playwright';
+import { test, expect } from '../../fixtures/base-fixture';
 import fs from 'node:fs';
-import { Base } from '../../models/base';
 import { Automated } from '../../models/automated';
+
 
 // Config
 // This is relative to playwright root: adyen-web/lib/e2e-playwright/
