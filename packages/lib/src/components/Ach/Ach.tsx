@@ -80,6 +80,7 @@ export class AchElement extends UIElement<AchConfiguration> {
                             showPayButton={this.props.showPayButton}
                             hasHolderName={this.props.hasHolderName}
                             placeholders={this.props.placeholders}
+                            data={this.props.data}
                             setComponentRef={this.setComponentRef}
                             enableStoreDetails={this.props.enableStoreDetails}
                         />
