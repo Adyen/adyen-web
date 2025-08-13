@@ -1181,10 +1181,10 @@
   dependencies:
     "@types/mdx" "^2.0.0"
 
-"@mswjs/interceptors@^0.37.0":
-  version "0.37.6"
-  resolved "https://registry.yarnpkg.com/@mswjs/interceptors/-/interceptors-0.37.6.tgz#2635319b7a81934e1ef1b5593ef7910347e2b761"
-  integrity sha512-wK+5pLK5XFmgtH3aQ2YVvA3HohS3xqV/OxuVOdNx9Wpnz7VE/fnC+e1A7ln6LFYeck7gOJ/dsZV6OLplOtAJ2w==
+"@mswjs/interceptors@^0.39.1":
+  version "0.39.6"
+  resolved "https://registry.yarnpkg.com/@mswjs/interceptors/-/interceptors-0.39.6.tgz#44094a578f20da4749d1a0eaf3cdb7973604004b"
+  integrity sha512-bndDP83naYYkfayr/qhBHMhk0YGwS1iv6vaEGcr0SQbO0IZtbOPqjKjds/WcG+bJA+1T5vCx6kprKOzn5Bg+Vw==
   dependencies:
     "@open-draft/deferred-promise" "^2.2.0"
     "@open-draft/logger" "^0.3.0"
@@ -7623,16 +7623,16 @@ msw-storybook-addon@2.0.5:
   dependencies:
     is-node-process "^1.0.1"
 
-msw@2.7.5:
-  version "2.7.5"
-  resolved "https://registry.yarnpkg.com/msw/-/msw-2.7.5.tgz#8e73e58ac84d490e819d30b2ad8ce4cb3f9b7f94"
-  integrity sha512-00MyTlY3TJutBa5kiU+jWiz2z5pNJDYHn2TgPkGkh92kMmNH43RqvMXd8y/7HxNn8RjzUbvZWYZjcS36fdb6sw==
+msw@2.10.4:
+  version "2.10.4"
+  resolved "https://registry.yarnpkg.com/msw/-/msw-2.10.4.tgz#a39dad96468aecfd752e5b7df4bbc86f1d73dec4"
+  integrity sha512-6R1or/qyele7q3RyPwNuvc0IxO8L8/Aim6Sz5ncXEgcWUNxSKE+udriTOWHtpMwmfkLYlacA2y7TIx4cL5lgHA==
   dependencies:
     "@bundled-es-modules/cookie" "^2.0.1"
     "@bundled-es-modules/statuses" "^1.0.1"
     "@bundled-es-modules/tough-cookie" "^0.1.6"
     "@inquirer/confirm" "^5.0.0"
-    "@mswjs/interceptors" "^0.37.0"
+    "@mswjs/interceptors" "^0.39.1"
     "@open-draft/deferred-promise" "^2.2.0"
     "@open-draft/until" "^2.1.0"
     "@types/cookie" "^0.6.0"
