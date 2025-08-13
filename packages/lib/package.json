@@ -98,7 +98,7 @@
         "@storybook/manager-api": "8.6.12",
         "@storybook/preact": "8.6.12",
         "@storybook/preact-vite": "8.6.12",
-        "@swc/core": "1.13.0",
+        "@swc/core": "1.13.2",
         "@testing-library/jest-dom": "6.6.3",
         "@testing-library/preact": "3.2.4",
         "@testing-library/preact-hooks": "1.1.0",
