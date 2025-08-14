@@ -240,8 +240,6 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
                             type={this.props.type}
                             clientKey={this.props.clientKey}
                             amount={this.props.amount}
-                            issuer={this.props?.payByBankPixDetails?.ispb}
-                            receiver={this.props?.payByBankPixDetails?.receiver}
                             enrollmentId={this.props.paymentMethodData?.enrollmentId}
                             initiationId={this.props.paymentMethodData?.initiationId}
                             setComponentRef={this.setComponentRef}
