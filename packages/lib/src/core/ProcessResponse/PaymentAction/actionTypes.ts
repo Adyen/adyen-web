@@ -57,7 +57,10 @@ const actionTypes = {
             token: action.token,
             paymentData,
             onActionHandled: props.onActionHandled,
+            // onComplete: props.isMDFlow ? props.onComplete : props.onAdditionalDetails, // old way
             onComplete: props.onComplete,
+            // OR,
+            // onComplete: props.isMDFlow ? props.originalOnComplete : props.onComplete, // new way, allowing for isMDFlow
             onError: props.onError,
             isDropin: !!props.isDropin,
             loadingContext: props.loadingContext,

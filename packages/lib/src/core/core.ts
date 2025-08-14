@@ -267,10 +267,21 @@ class Core implements ICore {
             });
             this.modules.analytics.sendAnalytics(event);
 
+            console.log('### core::createFromAction:: options', options);
+
             const props = {
                 ...this.getCorePropsForComponent(),
                 ...options,
                 onComplete: (state: AdditionalDetailsData, component?: UIElement) => {
+                    // TODO - might need check here for MDFlow to see if onComplete has been defined in the props, in which case we want to call that
+                    //  that is if MDFlow ever moves to v6!
+                    // if ((options as unknown as { onComplete: (result: AdditionalDetailsData) => void }).onComplete) {
+                    //     (options as unknown as { onComplete: (result: AdditionalDetailsData) => void }).onComplete(state);
+                    // }
+                    // OR,
+                    // if props.isMDFlow then we want to keep a ref to the passed onComplete fn i.e originalOnComplete & then actionTypes.ts should use that if props.isMDFlow
+                    // - so maybe if we have an options.onComplete -> set a originalOnComplete: options.onComplete
+                    // end TODO --
                     if (component) {
                         // We use a type assertion to call the protected 'handleAdditionalDetails' method from the UIElement.
                         // This is safe because this is internal framework code.
