@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { render } from '@testing-library/preact';
 import AdyenCheckout from './core';
 import BCMCMobileElement from '../components/BcmcMobile';
 import Session from './CheckoutSession';
@@ -231,7 +231,7 @@ describe('Core', () => {
                 }
             });
 
-            mount(dropin.render());
+            render(dropin.render());
             const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 

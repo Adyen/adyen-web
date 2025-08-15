@@ -1,10 +1,11 @@
 import { h } from 'preact';
-import { mount } from 'enzyme';
+import { render, screen, waitFor } from '@testing-library/preact';
 import PersonalDetails from './PersonalDetails';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
+import { PersonalDetailsProps } from './types';
 
-const getWrapper = (props = {}) => {
-    return mount(
+const renderPersonalDetails = (props: Partial<PersonalDetailsProps>) => {
+    return render(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
             <PersonalDetails {...props} />
         </CoreProvider>
@@ -12,23 +13,29 @@ const getWrapper = (props = {}) => {
 };
 
 describe('PersonalDetails', () => {
-    test('has the required fields', () => {
+    test('should show only the required fields', () => {
         const requiredFields = ['firstName', 'lastName', 'telephoneNumber'];
-        const wrapper = getWrapper({ requiredFields });
-        expect(wrapper.find('InputText[name="firstName"]')).toHaveLength(1);
-        expect(wrapper.find('InputText[name="lastName"]')).toHaveLength(1);
-        expect(wrapper.find('InputTelephone[name="telephoneNumber"]')).toHaveLength(1);
-        expect(wrapper.find('InputEmail[name="shopperEmail"]')).toHaveLength(0);
+        renderPersonalDetails({ requiredFields });
+
+        expect(screen.getByLabelText(/first name/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/last name/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/telephone number/i)).toBeInTheDocument();
+        expect(screen.queryByLabelText(/email address/i)).not.toBeInTheDocument();
     });
 
-    test('shows the PersonalDetails as readOnly', () => {
-        const requiredFields = ['firstName', 'lastName', 'gender', 'dateOfBirth', 'telephoneNumber', 'shopperEmail'];
-        const visibility = 'readOnly';
-        const wrapper = getWrapper({ requiredFields, visibility });
-        expect(wrapper.find('ReadOnlyPersonalDetails')).toHaveLength(1);
+    test('should show plain text if "readonly" is set', () => {
+        const requiredFields = ['firstName', 'lastName'];
+        const data = { firstName: 'John', lastName: 'Smith' };
+
+        renderPersonalDetails({ requiredFields, data, visibility: 'readOnly' });
+
+        expect(screen.getByText('John', { exact: false })).toBeInTheDocument();
+        expect(screen.getByText('Smith', { exact: false })).toBeInTheDocument();
+
+        expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
     });
 
-    test('prefills the data', () => {
+    test('should prefill the data in editable mode', () => {
         const data = {
             firstName: 'John',
             lastName: 'Smith',
@@ -38,16 +45,17 @@ describe('PersonalDetails', () => {
             shopperEmail: 'shopper@email.com'
         };
 
-        const wrapper = getWrapper({ data });
-        expect(wrapper.find('InputText[name="firstName"]').prop('value')).toBe(data.firstName);
-        expect(wrapper.find('InputText[name="lastName"]').prop('value')).toBe(data.lastName);
-        expect(wrapper.find('RadioGroup[name="gender"]').prop('value')).toBe(data.gender);
-        expect(wrapper.find('InputDate[name="dateOfBirth"]').prop('value')).toBe(data.dateOfBirth);
-        expect(wrapper.find('InputTelephone[name="telephoneNumber"]').prop('value')).toBe(data.telephoneNumber);
-        expect(wrapper.find('InputEmail[name="shopperEmail"]').prop('value')).toBe(data.shopperEmail);
+        renderPersonalDetails({ data });
+
+        expect(screen.getByLabelText(/first name/i)).toHaveValue(data.firstName);
+        expect(screen.getByLabelText(/last name/i)).toHaveValue(data.lastName);
+        expect(screen.getByLabelText(/telephone number/i)).toHaveValue(data.telephoneNumber);
+        expect(screen.getByLabelText(/email address/i)).toHaveValue(data.shopperEmail);
+        expect(screen.getByRole('radio', { name: 'Male' })).toBeChecked();
+        expect(screen.getByLabelText(/date of birth/i)).toHaveValue(data.dateOfBirth);
     });
 
-    test('returns the data in the expected format', () => {
+    test('should return the data in the expected format on initial render', async () => {
         const data = {
             firstName: 'John',
             lastName: 'Smith',
@@ -58,17 +66,26 @@ describe('PersonalDetails', () => {
         };
 
         const onChange = jest.fn();
-        getWrapper({ data, onChange });
-        const formattedData = onChange.mock.calls[onChange.mock.calls.length - 1][0].data;
+        renderPersonalDetails({ data, onChange });
 
-        expect(formattedData.firstName).toBe(undefined);
-        expect(formattedData.firstName).toBe(undefined);
-        expect(formattedData.gender).toBe(undefined);
+        // The onChange event is likely fired in a `useEffect`, so we wait for the mock to be called.
+        await waitFor(() => {
+            expect(onChange).toHaveBeenCalled();
+        });
+
+        const { data: formattedData } = onChange.mock.calls[0][0];
+
+        // Assert that the data is correctly transformed (e.g., firstName/lastName moved into shopperName)
         expect(formattedData.shopperName.firstName).toBe(data.firstName);
-        expect(formattedData.shopperName.firstName).toBe(data.firstName);
+        expect(formattedData.shopperName.lastName).toBe(data.lastName);
         expect(formattedData.shopperName.gender).toBe(data.gender);
         expect(formattedData.dateOfBirth).toBe(data.dateOfBirth);
         expect(formattedData.telephoneNumber).toBe(data.telephoneNumber);
         expect(formattedData.shopperEmail).toBe(data.shopperEmail);
+
+        // Assert that the original top-level keys are no longer present
+        expect(formattedData.firstName).toBeUndefined();
+        expect(formattedData.lastName).toBeUndefined();
+        expect(formattedData.gender).toBeUndefined();
     });
 });
