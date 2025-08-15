@@ -13,7 +13,13 @@
             <form class="merchant-checkout__form" method="post">
                 <div class="merchant-checkout__payment-method">
                     <div class="merchant-checkout__payment-method__header">
+                        <div style="display:flex;justify-content:space-between;">
                         <h2>ThreeDS2</h2>
+                        <span style="margin-top:-3px;font-size:0.9em">
+                            <label for="useCreateFromAction">Handle 3DS2 using <i>createFromAction</i></label>
+                            <input type="checkbox" id="useCreateFromAction" name="useCreateFromAction" value="compat">
+                        </span>
+                        </div>
                     </div>
                     <div class="merchant-checkout__payment-method__details">
                         <div class="card-field"></div>
@@ -21,8 +27,8 @@
                 </div>
             </form>
             <div class="merchant-checkout__form">
-                        <div class="threeds-field"></div>
-                    </div>
+                <div class="threeds-field"></div>
+            </div>
             <div class="info">
                 <h2>3DS2:</h2>
                 <table style="margin-bottom: 0">

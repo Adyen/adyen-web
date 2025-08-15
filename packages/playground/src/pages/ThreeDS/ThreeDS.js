@@ -18,19 +18,21 @@ import { handleOnPaymentCompleted, handleOnPaymentFailed } from '../../handlers'
 
                 if (!resultCode) actions.reject();
 
-                /**
-                 * Comment in if-else statement to test a merchant-uses-a-createFromAction flow
-                 */
-                // if (action) {
-                //     window.checkout.createFromAction(action).mount('.threeds-field');
-                // } else {
-                actions.resolve({
-                    resultCode,
-                    action,
-                    order,
-                    donationToken
-                });
-                // }
+                const checkbox = document.getElementById('useCreateFromAction');
+                const useCreateFromAction = checkbox.checked;
+
+                if (useCreateFromAction) {
+                    if (action) {
+                        window.checkout.createFromAction(action).mount('.threeds-field');
+                    }
+                } else {
+                    actions.resolve({
+                        resultCode,
+                        action,
+                        order,
+                        donationToken
+                    });
+                }
             } catch (error) {
                 console.error('## onSubmit - critical error', error);
                 actions.reject();
