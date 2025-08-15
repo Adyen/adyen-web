@@ -29,7 +29,7 @@ import { handleOnPaymentCompleted, handleOnPaymentFailed } from '../../handlers'
                     // Mocking MDFlow (comment out above call to createFromAction)
                     // const compiledAction = {
                     //     token: action.token,
-                    //     paymentData: '3ds2RedirectPlaceholder',
+                    //     paymentData: '3ds2Redirect',
                     //     type: 'threeDS2',
                     //     subtype: 'fingerprint'
                     // };
