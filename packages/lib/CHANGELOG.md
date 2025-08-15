@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 6.20.1
+
+### Patch Changes
+
+- ACH - Adding config to pre-fill 'Account holder name' field ([#3434](https://github.com/Adyen/adyen-web/pull/3434))
+
 ## 6.20.0
 
 ### Minor Changes
