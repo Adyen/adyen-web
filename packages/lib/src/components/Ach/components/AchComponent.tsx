@@ -26,6 +26,8 @@ type AchForm = {
     accountNumberVerification: string;
 };
 
+export type AchFormPrefillData = Partial<Pick<AchForm, 'ownerName'>>;
+
 interface AchComponentProps {
     onChange({
         data,
@@ -46,9 +48,19 @@ interface AchComponentProps {
     showPayButton: boolean;
     enableStoreDetails: boolean;
     placeholders?: AchPlaceholders;
+    data?: AchFormPrefillData;
 }
 
-function AchComponent({ onChange, payButton, showPayButton, placeholders, hasHolderName, setComponentRef, enableStoreDetails }: AchComponentProps) {
+function AchComponent({
+    onChange,
+    payButton,
+    showPayButton,
+    placeholders,
+    data: defaultData,
+    hasHolderName,
+    setComponentRef,
+    enableStoreDetails
+}: AchComponentProps) {
     const getImage = useImage();
     const schema = useMemo(
         () => ['selectedAccountType', 'routingNumber', 'accountNumber', 'accountNumberVerification', ...(hasHolderName ? ['ownerName'] : [])],
@@ -58,6 +70,7 @@ function AchComponent({ onChange, payButton, showPayButton, placeholders, hasHol
     const [status, setStatus] = useState('ready');
     const { handleChangeFor, triggerValidation, data, errors, valid, isValid } = useForm<AchForm>({
         schema,
+        defaultData,
         rules: achValidationRules,
         formatters: achFormatters
     });
