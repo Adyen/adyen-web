@@ -267,7 +267,13 @@ class Core implements ICore {
             });
             this.modules.analytics.sendAnalytics(event);
 
-            console.log('### core::createFromAction:: options', options);
+            // "Testing" MDFlow
+            // @ts-ignore prop can exist
+            options.isMDFlow = true;
+            // @ts-ignore prop can exist
+            options.onComplete = () => {
+                console.log('### core::onComplete:: MDFLOW_FINISHED');
+            };
 
             const props = {
                 ...this.getCorePropsForComponent(),
@@ -291,6 +297,9 @@ class Core implements ICore {
                     }
                 }
             };
+
+            // For MDFlow we want to keep a ref to the original, passed, onComplete fn so actionTypes.ts can use it
+            props.originalOptions = { ...options };
 
             return getComponentForAction(this, registry, action, props);
         }
