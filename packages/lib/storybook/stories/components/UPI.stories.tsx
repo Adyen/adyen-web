@@ -15,7 +15,12 @@ export const Default: UpiStory = {
         <Checkout checkoutConfig={checkoutConfig}>{checkout => <ComponentContainer element={new UPI(checkout, componentConfiguration)} />}</Checkout>
     ),
     args: {
-        countryCode: 'IN'
+        countryCode: 'IN',
+        componentConfiguration: {
+            onChange(state) {
+                console.log({ state });
+            }
+        }
     }
 };
 

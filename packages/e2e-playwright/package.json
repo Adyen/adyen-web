@@ -7,14 +7,18 @@
   "scripts": {
     "test:headless": "npx playwright test",
     "test:headed": "npx playwright test --headed",
-    "test:ui-mode": "npx playwright test --ui"
+    "test:ui-mode": "npx playwright test --ui",
+    "test:automated-a11y:headless": "npx playwright test --config=automated-a11y.config.ts",
+    "test:automated-a11y:headed": "npx playwright test --config=automated-a11y.config.ts --headed",
+    "test:automated-a11y:ui-mode": "npx playwright test --config=automated-a11y.config.ts --ui"
   },
   "devDependencies": {
     "@adyen/adyen-web-server": "1.0.0",
     "@playwright/test": "1.50.0",
     "cross-env": "^7.0.3",
-    "dotenv": "16.5.0",
+    "dotenv": "16.6.1",
     "ts-loader": "9.4.4",
-    "typescript": "5.2.2"
+    "typescript": "5.2.2",
+    "@axe-core/playwright": "^4.10.1"
   }
 }

@@ -4,22 +4,23 @@ import { PayButtonFunctionProps, UIElementStatus } from '../../../types';
 import VpaInput, { VpaInputHandlers } from '../VpaInput/VpaInput';
 import { App, UpiMode } from '../../types';
 import useImage from '../../../../core/Context/useImage';
-import useUpiSegmentedControlOptions from './useUpiSegmentedControlOptions';
-import { A11Y } from './constants';
+import { A11Y } from '../../constants';
 import './UPIComponent.scss';
 import SegmentedControl from '../../../internal/SegmentedControl';
-import ContentSeparator from '../../../internal/ContentSeparator';
 import UPIIntentAppList from '../UPIIntentAppList';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
+import Alert from '../../../internal/Alert';
+import { SegmentedControlOption } from '../../../internal/SegmentedControl/SegmentedControl';
 
 type UpiData = { app?: App; virtualPaymentAddress?: string };
 
-type OnChangeProps = { data: UpiData; valid; errors; isValid: boolean };
+type OnChangeProps = { data: UpiData; valid?: { [key: string]: boolean }; errors?: { [key: string]: any }; isValid: boolean };
 
 interface UPIComponentProps {
     defaultMode: UpiMode;
     showPayButton: boolean;
     apps?: Array<App>;
+    segmentedControlOptions?: Array<SegmentedControlOption<UpiMode>>;
 
     ref?(ref: RefObject<typeof UPIComponent>): void;
 
@@ -30,18 +31,22 @@ interface UPIComponentProps {
     onUpdateMode?(mode: UpiMode): void;
 }
 
-export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payButton, showPayButton, apps = [] }: UPIComponentProps): h.JSX.Element {
+export default function UPIComponent({
+    defaultMode,
+    onChange,
+    onUpdateMode = () => {},
+    payButton,
+    showPayButton,
+    apps = [],
+    segmentedControlOptions = []
+}: Readonly<UPIComponentProps>): h.JSX.Element {
     const { i18n } = useCoreContext();
     const getImage = useImage();
     const [status, setStatus] = useState<UIElementStatus>('ready');
-    const [isValid, setIsValid] = useState<boolean>(defaultMode === 'qrCode');
     const [mode, setMode] = useState<UpiMode>(defaultMode);
-    const [vpa, setVpa] = useState<string>('');
     const [vpaInputHandlers, setVpaInputHandlers] = useState<VpaInputHandlers>(null);
     const [selectedApp, setSelectedApp] = useState<App>(null);
-    const [valid, setValid] = useState(null);
-    const [errors, setErrors] = useState(null);
-    const segmentedControlOptions = useUpiSegmentedControlOptions(apps, mode);
+    const [isValid, setIsValid] = useState<boolean>(defaultMode === 'qrCode');
 
     this.setStatus = (status: UIElementStatus) => {
         setStatus(status);
@@ -49,6 +54,9 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
 
     this.showValidation = () => {
         vpaInputHandlers?.validateInput();
+        if (mode === 'intent') {
+            validateIntentApp();
+        }
     };
 
     const onSetVpaInputHandlers = useCallback((handlers: VpaInputHandlers) => {
@@ -69,23 +77,25 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
 
             setSelectedApp(app);
             setIsValid(true);
+            setStatus('ready');
         },
         [selectedApp]
     );
 
-    const handleVpaInputChange = useCallback(({ data: { virtualPaymentAddress }, errors, valid, isValid }: OnChangeProps) => {
-        setVpa(virtualPaymentAddress);
-        setErrors(errors);
-        setValid(valid);
-        setIsValid(isValid);
-    }, []);
+    const validateIntentApp = useCallback(() => {
+        if (!selectedApp) {
+            setStatus('error');
+            setIsValid(false);
+        } else {
+            setStatus('ready');
+            setIsValid(true);
+        }
+    }, [selectedApp]);
 
     useEffect(() => {
         if (mode !== 'qrCode') {
             onChange({
-                data: { ...(vpa && { virtualPaymentAddress: vpa }), ...(selectedApp && { app: selectedApp }) },
-                errors,
-                valid,
+                data: { ...(selectedApp && { app: selectedApp }) },
                 isValid
             });
         } else {
@@ -94,11 +104,11 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
              */
             onChange({ data: {}, valid: {}, errors: {}, isValid: true });
         }
-    }, [vpa, selectedApp, errors, valid, isValid, mode]);
+    }, [selectedApp, isValid, mode, onChange]);
 
     return (
         <Fragment>
-            <p className="adyen-checkout_upi-mode-selection-text">{i18n.get('upi.modeSelection')}</p>
+            {segmentedControlOptions.length > 0 && <p className="adyen-checkout_upi-mode-selection-text">{i18n.get('upi.modeSelection')}</p>}
             <SegmentedControl
                 onChange={onChangeUpiMode}
                 selectedValue={mode}
@@ -106,28 +116,23 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
                 classNameModifiers={['upi-margin-bottom']}
                 options={segmentedControlOptions}
             />
-            <ContentSeparator label={i18n.get('upi.completePayment')} />
+
             {mode === 'intent' && (
                 <div id={A11Y.AreaId.INTENT} aria-labelledby={A11Y.ButtonId.INTENT} className="adyen-checkout-upi-area-intent" role="region">
-                    <UPIIntentAppList
-                        disabled={status === 'loading'}
-                        apps={apps}
-                        selectedAppId={selectedApp?.id}
-                        onAppSelect={handleAppSelect}
-                        onVpaInputChange={handleVpaInputChange}
-                        onSetInputHandlers={onSetVpaInputHandlers}
-                    />
+                    <span className="adyen-checkout-upi-instruction-label">{i18n.get('upi.intent.instruction')}</span>
+                    {status === 'error' && <Alert icon={'cross'}>{i18n.get('upi.error.noAppSelected')}</Alert>}
+                    <UPIIntentAppList disabled={status === 'loading'} apps={apps} selectedAppId={selectedApp?.id} onAppSelect={handleAppSelect} />
 
                     {showPayButton &&
                         payButton({
                             label: i18n.get('continue'),
-                            status,
-                            disabled: selectedApp == null
+                            status
                         })}
                 </div>
             )}
             {mode === 'vpa' && (
                 <div id={A11Y.AreaId.VPA} aria-labelledby={A11Y.ButtonId.VPA} className="adyen-checkout-upi-area-vpa" role="region">
+                    <span className="adyen-checkout-upi-instruction-label">{i18n.get('upi.collect.instruction')}</span>
                     <VpaInput disabled={status === 'loading'} onChange={onChange} onSetInputHandlers={onSetVpaInputHandlers} />
 
                     {showPayButton &&
@@ -139,6 +144,7 @@ export default function UPIComponent({ defaultMode, onChange, onUpdateMode, payB
             )}
             {mode === 'qrCode' && (
                 <div id={A11Y.AreaId.QR} aria-labelledby={A11Y.ButtonId.QR} className="adyen-checkout-upi-area-qr-code" role="region">
+                    <span className="adyen-checkout-upi-instruction-label">{i18n.get('upi.qrCode.instruction')}</span>
                     {showPayButton &&
                         payButton({
                             label: i18n.get('generateQRCode'),

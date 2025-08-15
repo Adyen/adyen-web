@@ -1,4 +1,4 @@
-import { ComponentChildren, h } from 'preact';
+import { h } from 'preact';
 import cx from 'classnames';
 import { App } from '../../../types';
 import PaymentMethodIcon from '../../../../Dropin/components/PaymentMethod/PaymentMethodIcon';
@@ -10,10 +10,9 @@ interface UPIIntentAppItemProps {
     imgSrc: string;
     isSelected: boolean;
     onSelect?: Function;
-    children?: ComponentChildren;
 }
 
-const UPIIntentAppItem = ({ app, imgSrc, isSelected, onSelect = () => {}, children }: UPIIntentAppItemProps): h.JSX.Element => {
+const UPIIntentAppItem = ({ app, imgSrc, isSelected, onSelect = () => {} }: UPIIntentAppItemProps): h.JSX.Element => {
     const buttonId = `adyen-checkout-upi-app-item-button-${app.id}`;
     const containerId = `adyen-checkout-upi-app-${app.id}`;
     const handleAppSelected = (app: App) => {
@@ -37,11 +36,7 @@ const UPIIntentAppItem = ({ app, imgSrc, isSelected, onSelect = () => {}, childr
                     </label>
                 </ExpandButton>
             </div>
-            {isSelected && children && (
-                <div className="adyen-checkout-upi-app-item-details" id={containerId}>
-                    {children}
-                </div>
-            )}
+            {isSelected && <span className="adyen-checkout-checkmark" />}
         </li>
     );
 };

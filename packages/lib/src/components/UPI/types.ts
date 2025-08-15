@@ -1,5 +1,6 @@
 import { UIElementProps } from '../internal/UIElement/types';
 import { TxVariants } from '../tx-variants';
+import { SegmentedControlOption } from '../internal/SegmentedControl/SegmentedControl';
 
 export type UpiType = TxVariants.upi_qr | TxVariants.upi_intent | TxVariants.upi_collect;
 
@@ -24,6 +25,10 @@ export interface UPIConfiguration extends UIElementProps {
      * @internal
      */
     url?: string;
+    /**
+     * @internal
+     */
+    segmentedControlOptions?: Array<SegmentedControlOption<UpiMode>>;
     // Await
     paymentData?: string;
     // QR code

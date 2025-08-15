@@ -44,7 +44,8 @@ class ShopperCard {
     }
 
     private confirmCardIsExpired(): boolean {
-        if (this.status !== 'ACTIVE') return true;
+        if (!['ACTIVE', 'PENDING'].includes(this.status)) return true;
+
         if (!this.panExpirationYear && !this.panExpirationMonth) return false;
 
         const [currentMonth, currentYear] = [new Date().getMonth() + 1, new Date().getFullYear()];

@@ -9,18 +9,16 @@ dotenv.config({ path: path.resolve('../../', '.env') });
 const playgroundBaseUrl = `${protocol}://localhost:3020`;
 
 /**
- * See https://playwright.dev/docs/test-configuration.
+ * Configuration specific for automated accessibility tests
  */
 const config: PlaywrightTestConfig = {
-    testDir: './tests/',
-    // Exclude the automated-a11y tests which run in a separate pipeline
-    testIgnore: ['**/automated-a11y/**'],
+    // Only target the automated-a11y test directory
+    testDir: './tests/automated-a11y',
     /* Maximum time one test can run for. */
     timeout: 60 * 1000,
     expect: {
         /**
          * Maximum time expect() should wait for the condition to be met.
-         * For example in `await expect(locator).toHaveText();`
          */
         timeout: 10000
     },
@@ -36,14 +34,10 @@ const config: PlaywrightTestConfig = {
     /* Reporter to use. See https://playwright.dev/docs/test-reporters */
     reporter: [['html', { open: 'never' }], ['list']],
 
-    /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
+    /* Shared settings for all the projects below. */
     use: {
-        /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
         actionTimeout: 30000,
-        /* Base URL to use in actions like `await page.goto('/')`. */
         baseURL: playgroundBaseUrl,
-
-        /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
         trace: 'on-first-retry',
         ignoreHTTPSErrors: true,
         screenshot: 'only-on-failure',
@@ -73,9 +67,6 @@ const config: PlaywrightTestConfig = {
             }
         }
     ],
-
-    /* Folder for test artifacts such as screenshots, videos, traces, etc. */
-    // outputDir: 'test-results/',
 
     /* Run your local dev server before starting the tests */
     webServer: [

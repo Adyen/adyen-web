@@ -100,7 +100,7 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
      * @param type - The type of the payment method to get. (This prop is passed by Drop-in OR Standalone components containing the property 'type' as part of their configuration)
      */
     protected getPaymentMethodFromPaymentMethodsResponse(type?: string): PaymentMethod {
-        return this.core.paymentMethodsResponse.find(type || this.constructor['type']);
+        return this.core.paymentMethodsResponse?.find(type || this.constructor['type']);
     }
 
     protected storeElementRefOnCore(props?: P) {

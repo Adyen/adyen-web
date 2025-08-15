@@ -1,24 +1,31 @@
+@use 'styles/mixins';
 @import 'styles/variable-generator';
 
 .adyen-checkout__alert-message {
     display: flex;
+    align-items: center;
     border-radius: token(border-radius-m);
     margin: 0 0 token(spacer-070);
     text-align: left;
     padding: token(spacer-060);
-    font-size: token(text-caption-font-size);
+
+    @include mixins.adyen-checkout-text-body;
 }
 
 .adyen-checkout__alert-message--error {
-    background: token(color-background-critical-strong);
+    background: token(alert-critical-background-color);
 }
 
 .adyen-checkout__alert-message--warning {
-    background: token(alert-severity-warning-background-color);
+    background: token(alert-warning-background-color);
 }
 
 .adyen-checkout__alert-message--info {
-    background: token(color-background-secondary);
+    background: token(alert-highlight-background-color);
+}
+
+.adyen-checkout__alert-message--success {
+    background: token(alert-success-background-color);
 }
 
 .adyen-checkout__alert-message__icon {
