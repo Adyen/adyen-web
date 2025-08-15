@@ -25,6 +25,26 @@ import { handleOnPaymentCompleted, handleOnPaymentFailed } from '../../handlers'
                     if (action) {
                         window.checkout.createFromAction(action).mount('.threeds-field');
                     }
+
+                    // Mocking MDFlow (comment out above call to createFromAction)
+                    // const compiledAction = {
+                    //     token: action.token,
+                    //     paymentData: '3ds2RedirectPlaceholder',
+                    //     type: 'threeDS2',
+                    //     subtype: 'fingerprint'
+                    // };
+                    //
+                    // window.checkout
+                    //     .createFromAction(compiledAction, {
+                    //         onComplete: async result => {
+                    //             console.log('### MDFlow::onComplete:: res', result);
+                    //         },
+                    //         onError: err => {
+                    //             console.log('### MDFlow::onComplete:: err', err);
+                    //         },
+                    //         isMDFlow: true
+                    //     })
+                    //     .mount('.threeds-field');
                 } else {
                     actions.resolve({
                         resultCode,

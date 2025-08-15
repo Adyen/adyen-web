@@ -267,14 +267,6 @@ class Core implements ICore {
             });
             this.modules.analytics.sendAnalytics(event);
 
-            // "Testing" MDFlow
-            // @ts-ignore prop can exist
-            options.isMDFlow = true;
-            // @ts-ignore prop can exist
-            options.onComplete = () => {
-                console.log('### core::onComplete:: MDFLOW_FINISHED');
-            };
-
             const props = {
                 ...this.getCorePropsForComponent(),
                 ...options,
