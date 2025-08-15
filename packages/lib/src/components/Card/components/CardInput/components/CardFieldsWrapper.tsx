@@ -9,9 +9,10 @@ import CardHolderName from './CardHolderName';
 import Installments from './Installments';
 import DisclaimerMessage from '../../../../internal/DisclaimerMessage';
 import RadioGroupExtended from '../../../../internal/FormFields/RadioGroupExtended';
-import { mapDualBrandButtons } from '../utils';
+import { mapDualBrandButtons, mustHandleDualBrandingAccordingToEURegulations } from '../utils';
 import Fieldset from '../../../../internal/FormFields/Fieldset';
 import { useCoreContext } from '../../../../../core/Context/CoreProvider';
+import { DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM } from '../../../Card';
 
 export const CardFieldsWrapper = ({
     // vars created in CardInput:
@@ -92,10 +93,12 @@ export const CardFieldsWrapper = ({
         />
     );
 
-    // Only if these brands are present in the binLookup response should we show the UI to choose between brands
-    const dualBrandsThatNeedSelectionMechanism = ['cartebancaire', 'bcmc', 'dankort'];
-    // If the filter array contains anything - then we need to show the choice UI
-    const showDualBrandSelectElements = !!dualBrandSelectElements.filter(item => dualBrandsThatNeedSelectionMechanism.includes(item.id)).length;
+    //  Only if the brands in DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM are present in the binLookup response should we handle dual branding based on EU regulations
+    const showDualBrandSelectElements = mustHandleDualBrandingAccordingToEURegulations(
+        DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM,
+        dualBrandSelectElements,
+        'id'
+    );
 
     return (
         <LoadingWrapper status={sfpState.status}>
