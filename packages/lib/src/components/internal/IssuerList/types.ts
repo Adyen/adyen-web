@@ -13,6 +13,7 @@ export interface IssuerListProps {
     termsAndConditions?: TermsAndConditions;
     showContextualElement?: boolean;
     contextualText?: string;
+    selectFieldLabel?: string;
     onSubmitAnalytics: (aObj: AnalyticsEvent) => void;
     ref?: any;
 }

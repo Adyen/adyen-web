@@ -1,8 +1,7 @@
-import { h, Fragment } from 'preact';
+import { h } from 'preact';
 import { useState, useEffect, useRef, useCallback } from 'preact/hooks';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { PaymentProps } from './types';
-import PaymentDetails from '../../../internal/Voucher';
 import useImage from '../../../../core/Context/useImage';
 import PayButton from '../../../internal/PayButton';
 import './StoredPayment.scss';
@@ -13,10 +12,8 @@ function StoredPayment({
     onPay,
     type,
     countdownTime,
-    receiver,
     amount,
     txVariant,
-    issuer,
     setComponentRef,
     enrollmentId,
     initiationId,
@@ -36,11 +33,7 @@ function StoredPayment({
             src: `${getImage({ parentFolder: `${txVariant}/` })('open-finance')}`
         }
     ];
-    const details = [
-        { label: i18n.get('paybybankpix.payment.receiver.label'), value: receiver },
-        { label: i18n.get('paybybankpix.payment.paymentDate.label'), value: i18n.date(new Date().toString()) },
-        { label: i18n.get('paybybankpix.payment.paymentMethod.label'), value: 'Pix Open Finance' }
-    ];
+
     const self = useRef({
         setStatus
     });
@@ -77,21 +70,13 @@ function StoredPayment({
             pollStatus={pollStatus}
         ></PayByBankPixAwait>
     ) : (
-        <Fragment>
-            <PaymentDetails
-                issuerImageUrl={getImage({ imageFolder: `${txVariant}/` })(issuer)}
-                paymentMethodType={txVariant}
-                amount={i18n.amount(amount.value, amount.currency)}
-                voucherDetails={details}
-            ></PaymentDetails>
-            <PayButton
-                classNameModifiers={buttonModifiers}
-                label={i18n.get('paybybankpix.storedPayment.payButton.label')}
-                status={status}
-                amount={amount}
-                onClick={onPay}
-            />
-        </Fragment>
+        <PayButton
+            classNameModifiers={buttonModifiers}
+            label={i18n.get('paybybankpix.redirectBtn.label')}
+            status={status}
+            amount={amount}
+            onClick={onPay}
+        />
     );
 }
 

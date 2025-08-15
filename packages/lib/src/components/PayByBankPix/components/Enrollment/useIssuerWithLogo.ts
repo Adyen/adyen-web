@@ -8,7 +8,7 @@ interface UseIssuerWithLogoProps {
     txVariant: string;
     issuers: IssuerItem[];
 }
-export const useIssuerWithLogo = ({ issuers, txVariant }: UseIssuerWithLogoProps): IssuerItem[] => {
+export const useIssuerWithLogo = ({ issuers = [], txVariant }: UseIssuerWithLogoProps): IssuerItem[] => {
     const { loadingContext } = useCoreContext();
     const getImage = useImage();
     const [issuersWithLogo, setIssuersWithLogo] = useState<IssuerItem[]>(issuers);

@@ -12,8 +12,7 @@ import './Enrollment.scss';
 import { LabelOnlyDisclaimerMessage } from '../../../internal/DisclaimerMessage/DisclaimerMessage';
 import { ComponentMethodsRef, UIElementStatus } from '../../../internal/UIElement/types';
 
-//todo: add
-const TERMS_CONDITIONS_URL = '';
+const TERMS_CONDITIONS_URL = 'https://www.adyen.com/pt_BR/legal/termo-de-consentimento-br';
 
 function Enrollment(props: EnrollmentProps) {
     const { i18n, loadingContext } = useCoreContext();
@@ -87,6 +86,7 @@ function Enrollment(props: EnrollmentProps) {
                     <IssuerListIntroduction txVariant={props.txVariant} />
                     <IssuerList
                         items={useIssuerWithLogo({ issuers: props.issuers, txVariant: props.txVariant })}
+                        selectFieldLabel={i18n.get('paybybankpix.issuerList.selectField.label')}
                         onSubmitAnalytics={props.onSubmitAnalytics}
                         onChange={props.onChange}
                         payButton={props.payButton}

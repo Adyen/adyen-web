@@ -48,7 +48,16 @@ enum IssuerListInputTypes {
     Dropdown
 }
 
-function IssuerList({ items, placeholder, issuer, highlightedIds = [], showContextualElement, contextualText, ...props }: IssuerListProps) {
+function IssuerList({
+    items,
+    placeholder,
+    issuer,
+    highlightedIds = [],
+    showContextualElement,
+    contextualText,
+    selectFieldLabel,
+    ...props
+}: IssuerListProps) {
     const { i18n } = useCoreContext();
     const { handleChangeFor, triggerValidation, data, valid, errors, isValid } = useForm({
         schema,
@@ -137,7 +146,7 @@ function IssuerList({ items, placeholder, issuer, highlightedIds = [], showConte
             )}
 
             <Field
-                label={i18n.get('issuerList.selectField.label')}
+                label={selectFieldLabel ?? i18n.get('issuerList.selectField.label')}
                 errorMessage={getErrorMessage(errors.issuer)}
                 classNameModifiers={['issuer-list']}
                 name={'issuer'}
