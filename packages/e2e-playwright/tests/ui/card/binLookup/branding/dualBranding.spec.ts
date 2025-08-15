@@ -21,6 +21,10 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
             // Get a binLookup result
             await card.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
 
+            // Check brand has been set, by default, in paymentMethod data
+            let cardData: any = await page.evaluate('window.component.data');
+            expect(cardData.paymentMethod.brand).not.toBe(undefined);
+
             /**
              * Dual brand icons
              */
@@ -223,9 +227,8 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
     });
 
     test(
-        '#5 Fill in dual branded card, ' +
-            'but one of the brands should be excluded from the UI, ' +
-            '(meaning also that no brand should be set in the PM data), ' +
+        '#5 Fill in dual branded card, with a brand that should be excluded from the UI, ' +
+            '(meaning there should be no dual branding UI & that no brand should be set in the PM data), ' +
             'then check PM data does not have a brand property,' +
             'and check there are no dual branding icons/buttons',
         async ({ card, page }) => {
@@ -247,7 +250,7 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
 
     test(
         '#6 Fill in dual branded card, with PAN that falls outside of EU regulations, ' +
-            '(meaning that no button UI should show & the brand should not be set in the PM data), ' +
+            '(meaning that the button part of the dual branding UI should not show & the brand should not be set in the PM data), ' +
             'then check PM data does not have a brand property,' +
             'and check there are no dual branding buttons',
         async ({ card, page }) => {
@@ -261,7 +264,10 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
             let cardData: any = await page.evaluate('window.component.data');
             expect(cardData.paymentMethod.brand).toBe(undefined);
 
-            // Expect dual brand UI not to be visible
+            // Expect dual brand icons *to* be visible
+            await expect(card.dualBrandingIconsHolder).toBeVisible();
+
+            // Expect dual brand UI *not* to be visible
             await expect(card.dualBrandingButtonsHolder).not.toBeVisible();
         }
     );
