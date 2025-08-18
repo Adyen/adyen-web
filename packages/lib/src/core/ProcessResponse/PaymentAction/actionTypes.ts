@@ -55,7 +55,7 @@ const actionTypes = {
         if (props.isMDFlow) {
             mappedOnComplete = props.originalOptions.onComplete;
         }
-        if (props.originalOptions.isDropin) {
+        if (props.originalOptions?.isDropin) {
             mappedOnComplete = (state: any) => {
                 // If we were in a dropin, we need to pass the dropin ref, not the 3DS2 component ref
                 props.onComplete(state, props.originalOptions.elementRef);
