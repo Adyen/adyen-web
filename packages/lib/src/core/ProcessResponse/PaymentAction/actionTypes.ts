@@ -51,13 +51,24 @@ const actionTypes = {
          */
         const paymentData = action.subtype === 'fingerprint' || props.isMDFlow ? action.paymentData : action.authorisationToken;
 
+        let mappedOnComplete: any = props.onComplete; // usual way
+        if (props.isMDFlow) {
+            mappedOnComplete = props.originalOptions.onComplete;
+        }
+        if (props.originalOptions.isDropin) {
+            mappedOnComplete = (state: any) => {
+                // If we were in a dropin, we need to pass the dropin ref, not the 3DS2 component ref
+                props.onComplete(state, props.originalOptions.elementRef);
+            };
+        }
+
         const config = {
             // Props common to both flows
             core: core,
             token: action.token,
             paymentData,
             onActionHandled: props.onActionHandled,
-            onComplete: props.isMDFlow ? props.originalOptions.onComplete : props.onComplete,
+            onComplete: mappedOnComplete,
             onError: props.onError,
             isDropin: !!props.isDropin,
             loadingContext: props.loadingContext,
