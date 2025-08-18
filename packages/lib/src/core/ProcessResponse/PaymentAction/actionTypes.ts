@@ -62,14 +62,19 @@ const actionTypes = {
         let mappedOnComplete: (state: any, component?: UIElement) => void = (state, component?: UIElement) =>
             (component as unknown as { handleAdditionalDetails: (state: AdditionalDetailsData) => void }).handleAdditionalDetails(state);
 
+        /**
+         * In MDFlow we always want to finalise the 3DS2 flow by calling the passed onComplete function.
+         * (The MDFlow will then make any required, subsequent calls
+         */
         if (props.isMDFlow) {
-            /** In MDFlow we always want to finalise the 3DS2 flow by calling the passed onComplete function. (The MDFlow will then make any required, subsequent calls */
             mappedOnComplete = props.onComplete;
         }
 
+        /**
+         * If we were in a Dropin, we need to call Dropin's handleAdditionalDetails, which will ensure that the ref to "this" remains correct
+         */
         if (props.isDropin) {
             mappedOnComplete = (state: any) => {
-                // If we were in a dropin, we need to call Dropin.handleAdditionalDetails
                 props.elementRef.handleAdditionalDetails(state);
             };
         }
