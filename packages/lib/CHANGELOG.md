@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 5.71.5
+
+### Patch Changes
+
+-   Fixed alignment and font size for the Pay button's secondary amount label. ([#3452](https://github.com/Adyen/adyen-web/pull/3452))
+
 ## 5.71.4
 
 ### Patch Changes
