@@ -45,6 +45,18 @@ describe('PayButton', () => {
         expect(button).not.toHaveTextContent(PAY_BTN_DIVIDER);
     });
 
+    test('should not render a secondary amount if primary amount is not correct', () => {
+        renderPayButton({
+            amount: {
+                currency: '',
+                value: 1000
+            },
+            secondaryAmount: { currency: 'HRK', value: 7534 }
+        });
+        const button = screen.getByRole('button', { name: 'Pay' });
+        expect(button).not.toHaveTextContent(PAY_BTN_DIVIDER);
+    });
+
     test('should not render any amount if a specific label is provided', () => {
         renderPayButton({
             label: 'Redirect to',
