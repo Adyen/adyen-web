@@ -38,6 +38,12 @@ describe('PayButton', () => {
         expect(wrapper.getDOMNode().nodeName).toBe('BUTTON');
     });
 
+    test('should not render a secondary amount if primary amount is not correct', () => {
+        const wrapper = getWrapper({ amount: { currency: '', value: 1000 }, secondaryAmount: { currency: 'HRK', value: 7534 } });
+        expect(wrapper.text()).not.toContain(PAY_BTN_DIVIDER);
+        expect(wrapper.getDOMNode().nodeName).toBe('BUTTON');
+    });
+
     test('Renders a pay button with no amount so there should be no secondary amount', () => {
         const wrapper = getWrapper({ secondaryAmount: { currency: 'HRK', value: 7534 } });
         expect(wrapper.text()).not.toContain(PAY_BTN_DIVIDER);
