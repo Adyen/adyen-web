@@ -3,7 +3,7 @@ import uuid from '../../../utils/uuid';
 import UIElement from '../../../components/internal/UIElement';
 import type { PaymentAction } from '../../../types/global-types';
 import type { IRegistry } from '../../core.registry';
-import type { ICore } from '../../types';
+import { AdditionalDetailsData, ICore } from '../../types';
 
 const createComponent = (core: ICore, registry: IRegistry, componentType, props): UIElement => {
     const Element = registry.getComponent(componentType);
@@ -20,7 +20,15 @@ const getActionHandler = statusType => {
         const config = {
             ...props,
             ...action,
-            onComplete: props.onComplete,
+            onComplete: (state: AdditionalDetailsData, component?: UIElement) => {
+                if (component) {
+                    // We use a type assertion to call the protected 'handleAdditionalDetails' method from the UIElement.
+                    // This is safe because this is internal framework code.
+                    (component as unknown as { handleAdditionalDetails: (state: AdditionalDetailsData) => void }).handleAdditionalDetails(state);
+                } else {
+                    core.submitDetails(state.data);
+                }
+            },
             onError: props.onError,
             statusType,
             originalAction: action
@@ -51,14 +59,31 @@ const actionTypes = {
          */
         const paymentData = action.subtype === 'fingerprint' || props.isMDFlow ? action.paymentData : action.authorisationToken;
 
-        let mappedOnComplete: any = props.onComplete; // usual way
+        // let mappedOnComplete: any = props.onComplete; // usual way
+        // if (props.isMDFlow) {
+        //     mappedOnComplete = props.originalOptions.onComplete;
+        // }
+        // if (props.originalOptions?.isDropin) {
+        //     mappedOnComplete = (state: any) => {
+        //         // If we were in a dropin, we need to pass the dropin ref, not the 3DS2 component ref
+        //         props.onComplete(state, props.originalOptions.elementRef);
+        //     };
+        // }
+
+        console.log('### actionTypes::threeDS2::props ', props);
+
+        let mappedOnComplete: (state: any, component?: UIElement) => void = (state, component?: UIElement) =>
+            (component as unknown as { handleAdditionalDetails: (state: AdditionalDetailsData) => void }).handleAdditionalDetails(state);
+
         if (props.isMDFlow) {
-            mappedOnComplete = props.originalOptions.onComplete;
+            /** In MDFlow we always want to finalise the 3DS2 flow by calling the passed onComplete function. (The MDFlow will then make any required, subsequent calls */
+            mappedOnComplete = props.onComplete;
         }
-        if (props.originalOptions?.isDropin) {
+
+        if (props.isDropin) {
             mappedOnComplete = (state: any) => {
                 // If we were in a dropin, we need to pass the dropin ref, not the 3DS2 component ref
-                props.onComplete(state, props.originalOptions.elementRef);
+                props.onComplete(state, props.elementRef);
             };
         }
 
