@@ -59,12 +59,20 @@ const actionTypes = {
          */
         const paymentData = action.subtype === 'fingerprint' || props.isMDFlow ? action.paymentData : action.authorisationToken;
 
+        /**
+         * When an action is handled via checkout.createFromAction, props.onAdditionalDetails translates to the merchant defined onAdditionalDetails
+         * callback passed from the core, rather than UIElement.handleAdditionalDetails (which comes from UIElement.handleAction).
+         *
+         * Here we ensure that the call to onAdditionalDetails (referenced as the "onComplete" fn) is always pushed towards the Component (UIElement)
+         * handleAdditionalDetails function (which will correctly create a Promise that can then be finalised with the resolve & reject functions that
+         * are passed, as the third argument, to the merchant's own onAdditionalDetails callback).
+         */
         let mappedOnComplete: (state: any, component?: UIElement) => void = (state, component?: UIElement) =>
             (component as unknown as { handleAdditionalDetails: (state: AdditionalDetailsData) => void }).handleAdditionalDetails(state);
 
         /**
-         * In MDFlow we always want to finalise the 3DS2 flow by calling the passed onComplete function.
-         * (The MDFlow will then make any required, subsequent calls
+         * In MDFlow we always want to finalise the 3DS2 flow by calling the original passed onComplete function.
+         * (The MDFlow will then make any required, subsequent, calls)
          */
         if (props.isMDFlow) {
             mappedOnComplete = props.onComplete;
