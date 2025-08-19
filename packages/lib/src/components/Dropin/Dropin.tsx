@@ -167,7 +167,10 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         const paymentAction: UIElement = this.core.createFromAction(action, {
             ...props,
             elementRef: this.elementRef, // maintain elementRef for 3DS2 flow
-            onAdditionalDetails: this.handleAdditionalDetails,
+            // onAdditionalDetails: this.handleAdditionalDetails,
+            // TODO - check how this flow works if we comment out this line
+            //  - do we still need the extra clause in actionTypes? - A: Yes
+            //  - But do all the other scenarios & tests pass with this line commented out? e2e tests pass, manual Dropin/card & storedCard works (with 3DS2)
             isDropin: true
         });
 
