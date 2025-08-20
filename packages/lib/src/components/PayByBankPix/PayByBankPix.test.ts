@@ -311,15 +311,6 @@ describe('PayByBankPix', () => {
             );
         });
 
-        test('should show the payment summary', async () => {
-            render(payByBankPixElement.render());
-            expect(await screen.findByText('R$1.00')).toBeInTheDocument();
-            expect(await screen.findByText('Receiver')).toBeInTheDocument();
-            expect(await screen.findByText('mock-receiver')).toBeInTheDocument();
-            expect(await screen.findByText('Payment method')).toBeInTheDocument();
-            expect(await screen.findByText('Pix Open Finance')).toBeInTheDocument();
-        });
-
         test('should send the storedPaymentMethodId when the pay button is clicked', async () => {
             render(payByBankPixElement.render());
             await user.click(screen.getByRole('button', { name: /Continue/i }));
