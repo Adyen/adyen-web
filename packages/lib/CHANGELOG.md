@@ -1,11 +1,24 @@
 # @adyen/adyen-web
 
+## 6.21.0
+
+### Minor Changes
+
+- PIX Open Finance UX improvements. ([#3446](https://github.com/Adyen/adyen-web/pull/3446))
+
+### Patch Changes
+
+- Stop preselecting a card brand in dual branding scenarios outside of Europe. This will allow us to continue doing low cost routing outside of Europe ([#3447](https://github.com/Adyen/adyen-web/pull/3447))
+
+- Fixed alignment and font size for the Pay button's secondary amount label. ([#3451](https://github.com/Adyen/adyen-web/pull/3451))
+
+- ACH - Adding config to pre-fill 'Account holder name' field ([#3434](https://github.com/Adyen/adyen-web/pull/3434))
+
 ## 6.20.0
 
 ### Minor Changes
 
 - Improved the user experience for the UPI component: ([#3420](https://github.com/Adyen/adyen-web/pull/3420))
-
     - **On mobile devices,** the QR code flow has been removed. Shoppers will be guided to pay with their installed UPI apps (Intent flow) or by entering their UPI ID.
     - **On desktop devices,** the QR code flow is now the default, with the option to pay via UPI ID also available.
     - Added a validation alert to guide shoppers to select a UPI app before proceeding with the payment.
@@ -48,7 +61,6 @@
 - a11y: improve giftcard screen reader errors ([#3356](https://github.com/Adyen/adyen-web/pull/3356))
 
 - Add support for the following Bank Transfer tx variants: ([#3343](https://github.com/Adyen/adyen-web/pull/3343))
-
     - bankTransfer_BE
     - bankTransfer_NL
     - bankTransfer_PL
@@ -221,7 +233,6 @@
 ### Minor Changes
 
 - Start tracking API errors for the following endpoints for analytics purposes: ([#3035](https://github.com/Adyen/adyen-web/pull/3035))
-
     - `/sessions/${session.id}/payments`
     - `/sessions/${session.id}/orders`
     - `/sessions/${session.id}/paymentDetails`
