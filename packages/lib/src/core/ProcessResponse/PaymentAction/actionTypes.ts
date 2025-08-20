@@ -67,8 +67,10 @@ const actionTypes = {
          * handleAdditionalDetails function (which will correctly create a Promise that can then be finalised with the resolve & reject functions that
          * are passed, as the third argument, to the merchant's own onAdditionalDetails callback).
          */
-        let mappedOnComplete: (state: any, component?: UIElement) => void = (state, component?: UIElement) =>
+        let mappedOnComplete: (state: any, component?: UIElement) => void = (state, component?: UIElement) => {
+            console.log('\n### actionTyoes::regular::mappedOnComplete:: component', component);
             (component as unknown as { handleAdditionalDetails: (state: AdditionalDetailsData) => void }).handleAdditionalDetails(state);
+        };
 
         /**
          * In MDFlow we always want to finalise the 3DS2 flow by calling the original passed onComplete function.
@@ -79,13 +81,16 @@ const actionTypes = {
         }
 
         /**
-         * If we were in a Dropin, we need to call Dropin's handleAdditionalDetails, which will ensure that the ref to "this" remains correct
+         * If we were in a Dropin, coming through the usual "handleAction" route, and involving a "challenge" step, we need to call Dropin's handleAdditionalDetails, which will ensure that the ref to "this" remains correct
          */
-        if (props.isDropin) {
-            mappedOnComplete = (state: any) => {
-                props.elementRef.handleAdditionalDetails(state);
-            };
-        }
+        // if (props.isDropin) {
+        //     console.log('### actionTypes::threeDS2::isDropin:: HITS HERE');
+        //     mappedOnComplete = (state: any, component) => {
+        //         console.log('\n### actionTyoes::dropinclause::mappedOnComplete:: isDropin:: component', component);
+        //         console.log('### actionTyoes::dropinclause::mappedOnComplete:: isDropin:: props.elementRef', props.elementRef);
+        //         props.elementRef.handleAdditionalDetails(state);
+        //     };
+        // }
 
         const config = {
             // Props common to both flows
