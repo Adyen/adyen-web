@@ -269,7 +269,6 @@ class Core implements ICore {
 
             const props = {
                 ...this.getCorePropsForComponent(),
-                ...options,
                 onComplete: (state: AdditionalDetailsData, component?: UIElement) => {
                     if (component) {
                         // We use a type assertion to call the protected 'handleAdditionalDetails' method from the UIElement.
@@ -278,11 +277,9 @@ class Core implements ICore {
                     } else {
                         this.submitDetails(state.data); // Fallback. Not sure if there are circumstances in which this will ever fire? But we have a unit test for it, just in case.
                     }
-                }
+                },
+                ...options // allow for the passed options to overwrite the mapped onComplete fn, above e.g. in the MDFlow we want to use the original, passed, onComplete fn
             };
-
-            // For MDFlow we want to keep a ref to the original, passed, onComplete fn so actionTypes.ts can use it
-            props.originalOptions = { ...options };
 
             return getComponentForAction(this, registry, action, props);
         }
