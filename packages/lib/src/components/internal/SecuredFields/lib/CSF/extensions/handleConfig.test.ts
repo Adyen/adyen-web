@@ -1,4 +1,5 @@
 import { handleConfig } from './handleConfig';
+import * as logger from '../../utilities/logger';
 import { CSFConfigObject, CSFSetupObject } from '../types';
 import { SF_VERSION } from '../../constants';
 
@@ -9,15 +10,18 @@ const myConfig: CSFConfigObject = {
     loadingContext: ''
 };
 
-const myHandleConfig = handleConfig.bind({
-    config: myConfig
-});
+const _this = { config: myConfig };
+
+// handleConfig refers to "this.config", so mock the "this" binding
+const myHandleConfig = handleConfig.bind(_this);
 
 let props: CSFSetupObject;
 
 describe('Testing the config values that handleConfig generates when based different props', () => {
     beforeEach(() => {
-        // console.log = jest.fn(() => {});
+        /* @ts-ignore prefer-const */
+        console.warn = logger.warn = jest.fn(() => {});
+        console.log = jest.fn(() => {});
 
         // Reset basic props
         props = {
@@ -29,11 +33,32 @@ describe('Testing the config values that handleConfig generates when based diffe
             exposeExpiryDate: false,
             shouldDisableIOSArrowKeys: false,
             loadingContext: 'checkoutshopper/',
+            iframeUIConfig: { foo: 'bar' },
             forceCompat: false,
             useModern: false
         };
     });
 
+    /**
+     * Testing loadingContext
+     */
+    test('With loadingContext not set, handleConfig should exit, as tested by seeing that props end up undefined rather than having a value set', () => {
+        props.loadingContext = '';
+
+        myHandleConfig(props);
+
+        expect(myConfig.iframeUIConfig).toBeUndefined();
+    });
+
+    test('With loadingContext set, handleConfig should proceed', () => {
+        myHandleConfig(props);
+
+        expect(myConfig.iframeUIConfig).toEqual({ foo: 'bar' });
+    });
+
+    /**
+     * Testing iframeSrc
+     */
     test('With the basic props, iframeSrc should point to the regular bundle', () => {
         myHandleConfig(props);
 
