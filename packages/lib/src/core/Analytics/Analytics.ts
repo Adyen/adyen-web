@@ -61,10 +61,11 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
          * Make "setup" call, to pass containerWidth, buildType, channel etc, and receive a checkoutAttemptId in return
          * @param initialEvent -
          */
-        setUp: async (initialEvent: AnalyticsInitialEvent) => {
+        setUp: async (initialEvent?: AnalyticsInitialEvent) => {
             const { payload, enabled } = props; // TODO what is payload, is it ever used?
             const level = enabled ? ANALYTIC_LEVEL.all : ANALYTIC_LEVEL.initial;
             const analyticsData = processAnalyticsData(props.analyticsData);
+
             if (!capturedCheckoutAttemptId) {
                 try {
                     capturedCheckoutAttemptId = await collectId({
