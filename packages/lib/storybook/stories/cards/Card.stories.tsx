@@ -44,9 +44,10 @@ export const Default: CardStory = {
             placeholders: {}, // e.g. { holderName: 'B Bob' }
             positionHolderNameOnTop: false,
             showBrandIcon: true,
-            showContextualElement: true
+            showContextualElement: true,
             // showPayButton: false,
             // styles: { base: { fontWeight: 300 } },
+            useModern: false
         }
     }
 };

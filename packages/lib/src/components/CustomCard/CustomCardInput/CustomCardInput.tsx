@@ -44,6 +44,7 @@ interface SecuredFieldsProps {
     styles?: StylesObject;
     trimTrailingSeparator?: boolean;
     type: string;
+    useModern?: boolean;
     maskSecurityCode?: boolean;
 }
 
@@ -191,6 +192,7 @@ const extractPropsForSFP = (props: SecuredFieldsProps) => {
         showWarnings: props.showWarnings,
         styles: props.styles,
         trimTrailingSeparator: props.trimTrailingSeparator,
+        useModern: props.useModern,
         resources: props.resources,
         maskSecurityCode: props.maskSecurityCode,
         placeholders: props.placeholders

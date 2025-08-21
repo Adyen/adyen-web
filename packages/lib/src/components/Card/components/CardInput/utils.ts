@@ -171,7 +171,8 @@ export const extractPropsForSFP = (props: CardInputProps) => {
         resources: props.resources,
         showContextualElement: props.showContextualElement,
         showWarnings: props.showWarnings,
-        trimTrailingSeparator: props.trimTrailingSeparator
+        trimTrailingSeparator: props.trimTrailingSeparator,
+        useModern: props.useModern
     } as SFPProps; // Can't set as return type on fn or it will complain about missing, mandatory, props
 };
 
@@ -232,6 +233,7 @@ export const getCardConfigData = (cardProps: CardConfiguration): CardConfigData 
         showInstallmentAmounts,
         showPayButton = false, // hard coded default
         styles,
+        useModern,
         onAllValid,
         onBinLookup,
         onBinValue,
@@ -299,6 +301,7 @@ export const getCardConfigData = (cardProps: CardConfiguration): CardConfigData 
         socialSecurityNumberMode: configuration?.socialSecurityNumberMode,
         srPanelEnabled,
         srPanelMoveFocus,
+        useModern,
         /** callbacks */
         // We need to detect if the merchant themselves has defined these, not if we've set them as a default
         hasOnAllValid: onAllValid !== CardInputDefaultProps.onAllValid,

@@ -416,6 +416,12 @@ export interface CardConfiguration extends UIElementProps {
      * @internal
      */
     type?: string;
+
+    /**
+     * Force securedFields to use the 'modern', smaller, version of the bundle.
+     * - merchant set config option
+     */
+    useModern?: boolean;
 }
 
 export type SocialSecurityMode = 'show' | 'hide' | 'auto';
