@@ -82,7 +82,6 @@ export function handleConfig(props: CSFSetupObject): void {
         bundleModifier = 'Modern';
     }
 
-    // TODO - create a config prop 'forceModern' (available from v6 onwards)
     const bundleType = `${sfBundleType}${bundleModifier}`; // e.g. 'card' or 'cardCompat' or 'cardModern'
 
     this.config.iframeSrc = `${this.config.loadingContext}securedfields/${props.clientKey}/${SF_VERSION}/securedFields.html?type=${bundleType}&d=${d}`;
