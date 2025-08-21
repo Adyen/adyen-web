@@ -193,6 +193,40 @@ describe('Core', () => {
                 })
             );
         });
+
+        test('should call submitDetails with correct params when the action object calls onComplete and no component is defined', async () => {
+            const onAdditionalDetails = jest.fn().mockName('onAdditionalDetailsGlobal');
+            const checkout = new AdyenCheckout({
+                countryCode: 'US',
+                environment: 'test',
+                clientKey: 'test_123456',
+                onAdditionalDetails
+            });
+            await checkout.initialize();
+
+            // Overwrite core.submitDetails
+            const submitDetails = jest.fn(() => {});
+            checkout.submitDetails = submitDetails;
+
+            AdyenCheckout.register(BCMCMobileElement);
+            const paymentAction = checkout.createFromAction({
+                paymentMethodType: 'bcmc_mobile_QR',
+                qrCodeData: 'BEP://1bcmc-test.adyen.com/pal/bep$ZTHYT3DHKVXYJ3GHBQNNCX4M',
+                type: 'qrCode',
+                paymentData: 'test'
+            });
+
+            // @ts-ignore onComplete is not public method - we need to overwrite UIElement.onComplete to test this edge-case scenario
+            paymentAction.onComplete = state => {
+                if (paymentAction.props.onComplete) paymentAction.props.onComplete(state, null);
+            };
+
+            // @ts-ignore onComplete is not public method, although we call it here to test the callback
+            paymentAction.onComplete({ data: { foo: 'bar' } });
+
+            // should be called with state.data
+            expect(submitDetails).toHaveBeenCalledWith({ foo: 'bar' });
+        });
     });
 
     describe('Props order', () => {
