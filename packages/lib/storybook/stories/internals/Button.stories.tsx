@@ -1,37 +1,15 @@
 import { Meta, StoryObj } from '@storybook/preact';
-import Button from '../../../src/components/internal/Button';
+import Button from '../../../src/components/internal/Button/Button';
+import PayButton from '../../../src/components/internal/PayButton/PayButton';
 import Language from '../../../src/language';
 import { CoreProvider } from '../../../src/core/Context/CoreProvider';
-import { CopyIconButton } from '../../../src/components/internal/Button/CopyIconButton';
+import { CopyIconButton, CopyIconButtonProps } from '../../../src/components/internal/Button/CopyIconButton';
+import { PayButtonProps } from '../../../src/components/internal/PayButton/PayButton';
+import { ButtonProps } from '../../../src/components/internal/Button/types';
 
-const meta: Meta = {
+const meta: Meta<ButtonProps> = {
     title: 'Internals/Button',
-    // @ts-ignore todo:fix
-    component: Button
-};
-
-export const Default: StoryObj = {
-    render: args => {
-        return (
-            <CoreProvider
-                loadingContext={'test'}
-                i18n={
-                    new Language({
-                        locale: 'en-US',
-                        translations: {
-                            'payButton.redirecting': 'Redirecting'
-                        }
-                    })
-                }
-                resources={global.resources}
-            >
-                <Button {...args} onClick={() => console.log('Button clicked')} />
-            </CoreProvider>
-        );
-    },
-    parameters: {
-        controls: { exclude: ['useSessions', 'countryCode', 'shopperLocale', 'amount', 'showPayButton'] }
-    },
+    component: Button as any,
     argTypes: {
         status: {
             options: ['loading', 'redirect', 'other'],
@@ -44,7 +22,36 @@ export const Default: StoryObj = {
         disabled: { control: 'boolean' },
         inline: { control: 'boolean' },
         icon: { control: 'text' },
-        ariaLabel: { control: 'text' }
+        ariaLabel: { control: 'text' },
+        label: { control: 'text', description: 'If label is provided, the secondary label will not be shown' }
+    }
+};
+
+const coreProps = {
+    loadingContext: 'test',
+    i18n: new Language({
+        locale: 'en-US',
+        translations: {
+            'payButton.redirecting': 'Redirecting',
+            payButton: 'Pay',
+            'button.copy': 'Copy',
+            'button.copied': 'Copied!',
+            confirmPreauthorization: 'Confirm preauthorization'
+        }
+    }),
+    resources: global.resources
+};
+
+export const Default: StoryObj<ButtonProps> = {
+    render: args => {
+        return (
+            <CoreProvider {...coreProps}>
+                <Button {...args} onClick={() => console.log('Button clicked')} />
+            </CoreProvider>
+        );
+    },
+    parameters: {
+        controls: { exclude: ['useSessions', 'countryCode', 'shopperLocale', 'amount', 'showPayButton'] }
     },
     args: {
         disabled: false,
@@ -55,36 +62,44 @@ export const Default: StoryObj = {
     }
 };
 
-export const CopyIconOnlyButton: StoryObj = {
+export const CopyIconOnlyButton: StoryObj<CopyIconButtonProps> = {
     render: args => {
         return (
-            <CoreProvider
-                loadingContext={'test'}
-                i18n={
-                    new Language({
-                        locale: 'en-US',
-                        translations: {
-                            'button.copy': 'Copy',
-                            'button.copied': 'Copied!'
-                        }
-                    })
-                }
-                resources={global.resources}
-            >
+            <CoreProvider {...coreProps}>
                 <CopyIconButton {...args} text={'Text to be copied'} />
             </CoreProvider>
         );
     },
     parameters: {
-        controls: { exclude: ['useSessions', 'countryCode', 'shopperLocale', 'amount', 'showPayButton'] }
-    },
-    argTypes: {
-        disabled: { control: 'boolean' },
-        inline: { control: 'boolean' },
-        ariaLabel: { control: 'text' }
+        controls: { include: ['disabled', 'inline', 'ariaLabel'] }
     },
     args: {
         disabled: false
+    }
+};
+
+export const PaymentButton: StoryObj<PayButtonProps> = {
+    render: args => {
+        return (
+            <CoreProvider {...coreProps}>
+                <PayButton {...args} onClick={() => console.log('Pay button clicked')} />
+            </CoreProvider>
+        );
+    },
+    parameters: {
+        controls: { exclude: ['useSessions', 'countryCode', 'shopperLocale', 'showPayButton'] }
+    },
+    argTypes: {
+        amount: { control: 'object' },
+        secondaryAmount: { control: 'object' }
+    },
+    args: {
+        amount: { value: 1000, currency: 'EUR' },
+        secondaryAmount: { value: 1200, currency: 'USD' },
+        disabled: false,
+        inline: false,
+        variant: 'primary',
+        icon: 'https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/images/components/bento_lock.svg'
     }
 };
 

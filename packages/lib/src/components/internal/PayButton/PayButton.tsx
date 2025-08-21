@@ -12,7 +12,7 @@ export interface PayButtonProps extends ButtonProps {
      */
     classNameModifiers?: string[];
     label?: string;
-    amount: PaymentAmountExtended;
+    amount?: PaymentAmountExtended;
     secondaryAmount?: PaymentAmountExtended;
     status?: string;
     disabled?: boolean;
@@ -32,10 +32,10 @@ const PayButton = ({ amount, secondaryAmount, classNameModifiers = [], label, ..
      *  - we do have an amount object (merchant might not be passing this in order to not show the amount on the button), and
      *  - we have a secondaryAmount object with some properties
      */
-    const secondaryLabel =
-        !isZeroAuth && !label && amount && secondaryAmount && Object.keys(secondaryAmount).length
-            ? secondaryAmountLabel(i18n, secondaryAmount)
-            : null;
+    const hasValidAmount = amount && typeof amount.value === 'number' && !!amount.currency;
+    const hasSecondaryAmount = secondaryAmount && Object.keys(secondaryAmount).length > 0;
+
+    const secondaryLabel = !isZeroAuth && !label && hasValidAmount && hasSecondaryAmount ? secondaryAmountLabel(i18n, secondaryAmount) : null;
 
     return (
         <Button

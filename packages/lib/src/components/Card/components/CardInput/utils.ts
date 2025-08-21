@@ -18,7 +18,7 @@ import { SFPProps } from '../../../internal/SecuredFields/SFP/types';
 import { BRAND_READABLE_NAME_MAP, DEFAULT_CARD_GROUP_TYPES } from '../../../internal/SecuredFields/lib/constants';
 import useImage, { UseImageHookType } from '../../../../core/Context/useImage';
 import { SF_ErrorCodes } from '../../../../core/Errors/constants';
-import { CardBrandsConfiguration, CardConfiguration, DualBrandSelectElement } from '../../types';
+import { BrandObject, CardBrandsConfiguration, CardConfiguration, DualBrandSelectElement } from '../../types';
 import { CardConfigData } from '../../../../core/Analytics/types';
 import { DEFAULT_CHALLENGE_WINDOW_SIZE } from '../../../ThreeDS2/constants';
 import CardInputDefaultProps from './defaultProps';
@@ -341,3 +341,16 @@ export const mapDualBrandButtons = (dualBrandSelectElements: DualBrandSelectElem
         };
     });
 };
+
+/**
+ *  Only if the brands in EU_BrandArray are present in the binLookup response should we handle dual branding based on EU regulations
+ *
+ * If the result from Array.filter contains anything - then we are in a EU dual branding regulation scenario, i.e.
+ * - Show the new dualBranding UI Buttons
+ * - Preselect a card brand
+ */
+export const mustHandleDualBrandingAccordingToEURegulations = (
+    EU_BrandArray: string[],
+    returnedDualBrandingObjects: DualBrandSelectElement[] | BrandObject[],
+    key: string
+) => !!returnedDualBrandingObjects.filter(item => EU_BrandArray.includes(item[key])).length;

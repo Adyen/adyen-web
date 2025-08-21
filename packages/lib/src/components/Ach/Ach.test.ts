@@ -252,6 +252,19 @@ describe('ACH', () => {
             expect(onChangeMock.mock.lastCall[0].data.paymentMethod.accountHolderType).toBe('business');
             expect(onChangeMock.mock.lastCall[0].data.paymentMethod.bankAccountType).toBe('savings');
         });
+
+        test('should prefill the account holder name', () => {
+            const ach = new Ach(global.core, {
+                data: { ownerName: 'John doe' },
+                i18n: global.i18n,
+                loadingContext: 'test',
+                modules: { resources: global.resources, analytics: global.analytics, srPanel: global.srPanel }
+            });
+
+            render(ach.render());
+
+            expect(screen.getByLabelText('Account holder name')).toHaveValue('John doe');
+        });
     });
 
     describe('Stored component', () => {

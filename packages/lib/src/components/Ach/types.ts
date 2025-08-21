@@ -1,6 +1,11 @@
-import { UIElementProps } from '../internal/UIElement/types';
+import type { UIElementProps } from '../internal/UIElement/types';
+import type { AchFormPrefillData } from './components/AchComponent';
 
 export interface AchConfiguration extends UIElementProps {
+    /**
+     * Pre-fill ACH form with shopper data
+     */
+    data?: AchFormPrefillData;
     /**
      * Adds placeholder text to the input fields
      */

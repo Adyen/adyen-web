@@ -1,134 +1,138 @@
-import { mount } from 'enzyme';
 import { h } from 'preact';
+import { render, waitFor } from '@testing-library/preact';
 import QRLoader from './QRLoader';
 import checkPaymentStatus from '../../../core/Services/payment-status';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { SRPanel } from '../../../core/Errors/SRPanel';
 import SRPanelProvider from '../../../core/Errors/SRPanelProvider';
+import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
+import type { QRLoaderProps } from './types';
 
 jest.mock('../../../core/Services/payment-status');
 jest.useFakeTimers();
 
-const getWrapper = ui => {
+const renderQRLoader = (props: Partial<QRLoaderProps> = {}) => {
     const srPanel = new SRPanel(global.core);
-    return mount(
+    const defaultProps: QRLoaderProps = {
+        onComplete: jest.fn(),
+        onError: jest.fn(),
+        paymentData: 'initial-payment-data',
+        i18n: global.i18n,
+        loadingContext: 'test',
+        clientKey: 'test_key'
+    };
+
+    const mergedProps = { ...defaultProps, ...props };
+
+    render(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-            <SRPanelProvider srPanel={srPanel}> {ui}</SRPanelProvider>
+            <SRPanelProvider srPanel={srPanel}>
+                <QRLoader {...mergedProps} />
+            </SRPanelProvider>
         </CoreProvider>
     );
+
+    return {
+        onCompleteMock: mergedProps.onComplete as jest.Mock,
+        onErrorMock: mergedProps.onError as jest.Mock
+    };
 };
 
 describe('QRLoader', () => {
-    beforeAll(() => {
-        Object.defineProperty(window, 'matchMedia', {
-            value: jest.fn(() => ({ matches: true }))
-        });
-    });
-
-    afterEach(() => {
+    beforeEach(() => {
+        jest.clearAllMocks();
         jest.clearAllTimers();
-        jest.restoreAllMocks();
     });
 
-    describe('checkStatus', () => {
-        // Pending status
-        test('checkStatus processes a pending response', () => {
-            // Mock the checkPaymentStatusValue with a pending response
-            const checkPaymentStatusValue = { payload: 'Ab02b4c0!', resultCode: 'pending', type: 'complete' };
-            (checkPaymentStatus as jest.Mock).mockReturnValueOnce(Promise.resolve(checkPaymentStatusValue));
+    test('should poll for status and call onComplete when authorised', async () => {
+        const paymentData = 'initial-payment-data';
+        const authorisedResponse = { payload: 'details-payload', resultCode: 'authorised', type: 'complete' };
+        (checkPaymentStatus as jest.Mock).mockResolvedValue(authorisedResponse);
 
-            const qrloader = getWrapper(<QRLoader />);
+        const expectedOnCompleteData = {
+            data: {
+                details: { payload: 'details-payload' },
+                paymentData: paymentData
+            }
+        };
 
-            qrloader
-                .find('QRLoader')
-                .instance()
-                .checkStatus()
-                .then(status => {
-                    expect(status.props).toEqual(checkPaymentStatusValue);
-                    expect(status.type).toBe('pending');
-                });
+        const { onCompleteMock, onErrorMock } = renderQRLoader({ paymentData });
+
+        jest.runAllTimers();
+
+        // Polling should start immediately on render
+        expect(checkPaymentStatus).toHaveBeenCalledTimes(1);
+
+        // Wait for the async onComplete callback to be called
+        await waitFor(() => {
+            expect(onCompleteMock).toHaveBeenCalledTimes(1);
+        });
+        expect(onCompleteMock).toHaveBeenCalledWith(expectedOnCompleteData, expect.any(Object));
+        expect(onErrorMock).not.toHaveBeenCalled();
+
+        // Verify that polling has stopped
+        jest.runOnlyPendingTimers();
+        expect(checkPaymentStatus).toHaveBeenCalledTimes(1);
+    });
+
+    test('should poll for status and call onError when status is an error', async () => {
+        (checkPaymentStatus as jest.Mock).mockResolvedValue({ type: 'validation' });
+
+        const { onCompleteMock, onErrorMock } = renderQRLoader();
+
+        jest.runAllTimers();
+
+        // Polling starts on render
+        expect(checkPaymentStatus).toHaveBeenCalledTimes(1);
+
+        // Wait for the onError callback
+        await waitFor(() => {
+            expect(onErrorMock).toHaveBeenCalledTimes(1);
         });
 
-        // Authorised status
-        test('checkStatus processes a authorised response', () => {
-            // Mock the checkPaymentStatusValue with an authorised response
-            const checkPaymentStatusValue = { payload: 'Ab02b4c0!', resultCode: 'authorised', type: 'complete' };
-            (checkPaymentStatus as jest.Mock).mockReturnValueOnce(Promise.resolve(checkPaymentStatusValue));
+        expect(onErrorMock).toHaveBeenCalledWith(new AdyenCheckoutError('ERROR', 'error result with no payload in response'));
+        expect(onCompleteMock).not.toHaveBeenCalled();
 
-            const onCompleteMock = jest.fn();
-            const onErrorMock = jest.fn();
-            const expectedResult = {
-                data: {
-                    details: {
-                        payload: 'Ab02b4c0!' // this should come from the status endpoint
-                    },
-                    paymentData: 'Ab02b4c0!2' // this should come from the initial props (from the initial /payments call)
-                }
-            };
+        // Verify that polling has stopped
+        jest.runOnlyPendingTimers();
+        expect(checkPaymentStatus).toHaveBeenCalledTimes(1);
+    });
 
-            const qrloader = getWrapper(<QRLoader paymentData={'Ab02b4c0!2'} onComplete={onCompleteMock} onError={onErrorMock} />);
-            qrloader
-                .find('QRLoader')
-                .instance()
-                .checkStatus()
-                .then(status => {
-                    expect(status.props).toEqual(checkPaymentStatusValue);
-                    expect(status.type).toBe('success');
-                    expect(onCompleteMock.mock.calls.length).toBe(1);
-                    expect(onCompleteMock).toBeCalledWith(expectedResult, expect.any(Object));
-                    expect(onErrorMock.mock.calls.length).toBe(0);
-                    expect(qrloader.find('QRLoader').state('completed')).toBe(true);
-                });
+    test('should keep polling if status is pending', async () => {
+        const pendingResponse = { payload: 'Ab02b4c0!', resultCode: 'pending', type: 'complete' };
+        (checkPaymentStatus as jest.Mock).mockResolvedValue(pendingResponse);
+
+        const { onCompleteMock, onErrorMock } = renderQRLoader({ delay: 1000 });
+
+        jest.runAllTimers();
+
+        await waitFor(() => expect(checkPaymentStatus).toHaveBeenCalledTimes(1));
+        expect(onCompleteMock).not.toHaveBeenCalled();
+        expect(onErrorMock).not.toHaveBeenCalled();
+
+        // Advance time to trigger the second poll
+        jest.advanceTimersByTime(1000);
+        await waitFor(() => expect(checkPaymentStatus).toHaveBeenCalledTimes(2));
+
+        // Advance time again for the third poll
+        jest.advanceTimersByTime(1000);
+        await waitFor(() => expect(checkPaymentStatus).toHaveBeenCalledTimes(3));
+    });
+
+    test('should use throttledInterval after throttleTime has passed', async () => {
+        const pendingResponse = { resultCode: 'pending' };
+        (checkPaymentStatus as jest.Mock).mockResolvedValue(pendingResponse);
+        jest.spyOn(global, 'setTimeout');
+
+        renderQRLoader({
+            delay: 1000,
+            throttleTime: 0,
+            throttledInterval: 2000
         });
 
-        // Error status
-        test('checkStatus processes an error response', () => {
-            // Mock the checkPaymentStatusValue with an error
-            const checkPaymentStatusValue = { error: 'Unkown error' };
-            (checkPaymentStatus as jest.Mock).mockReturnValueOnce(Promise.resolve(checkPaymentStatusValue));
+        jest.runAllTimers();
 
-            const onCompleteMock = jest.fn();
-            const onErrorMock = jest.fn();
-
-            const qrloader = getWrapper(<QRLoader onComplete={onCompleteMock} onError={onErrorMock} />);
-
-            qrloader
-                .find('QRLoader')
-                .instance()
-                .checkStatus()
-                .then(status => {
-                    expect(status.props).toEqual(checkPaymentStatusValue);
-                    expect(status.type).toBe('error');
-                    expect(onCompleteMock.mock.calls.length).toBe(0);
-                    expect(onErrorMock.mock.calls.length).toBe(1);
-                });
-        });
-
-        describe('statusInterval', () => {
-            let qrLoader;
-
-            beforeEach(() => {
-                const checkPaymentStatusValue = { payload: 'Ab02b4c0!', resultCode: 'pending', type: 'complete' };
-                (checkPaymentStatus as jest.Mock).mockResolvedValue(checkPaymentStatusValue);
-            });
-
-            test('should set a timeout recursively', async () => {
-                jest.spyOn(global, 'setTimeout');
-                qrLoader = new QRLoader({ delay: 1000 });
-                qrLoader.statusInterval();
-                expect(setTimeout).toHaveBeenCalledTimes(1);
-                expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 1000);
-                await jest.runOnlyPendingTimersAsync();
-                expect(setTimeout).toHaveBeenCalledTimes(2);
-            });
-
-            test('should change the delay to the throttledInterval if the timePassed exceeds the throttleTime', () => {
-                jest.spyOn(global, 'setTimeout');
-                qrLoader = new QRLoader({ throttleTime: 0, throttledInterval: 2000, delay: 1000 });
-                qrLoader.statusInterval();
-                expect(setTimeout).toHaveBeenCalledTimes(1);
-                expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 2000);
-            });
-        });
+        await waitFor(() => expect(checkPaymentStatus).toHaveBeenCalledTimes(1));
+        expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 2000);
     });
 });

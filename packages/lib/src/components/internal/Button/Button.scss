@@ -61,7 +61,9 @@
     &.adyen-checkout__button--pay {
         margin-top: token(spacer-070);
         display: flex;
+        gap: token(spacer-020);
         justify-content: center;
+        align-items: center;
 
         &:disabled {
             opacity: 0.4;

@@ -134,6 +134,7 @@ function Installments(props: InstallmentsProps) {
                     onChange={onSelectInstallment}
                     name={'installments'}
                     readonly={readOnly}
+                    disabled={readOnly}
                     allowIdOnButton={true}
                 />
             </Field>
