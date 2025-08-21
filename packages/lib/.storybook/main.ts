@@ -6,6 +6,11 @@ import generateEnvironmentVariables from '../config/environment-variables';
 import { resolve } from 'node:path';
 import preact from '@preact/preset-vite';
 
+/*
+ * This is the build time configuration
+ * Configurations here will be define during build step
+ */
+
 const certPath = process.env.CERT_PATH ?? path.resolve(__dirname, 'localhost.pem');
 const certKeyPath = process.env.CERT_KEY_PATH ?? path.resolve(__dirname, 'localhost-key.pem');
 
@@ -35,12 +40,12 @@ const config: StorybookConfig = {
     // '../storybook/public'
     staticDirs: ['../storybook/assets', '../storybook/public'],
 
+    // we are using JSON.stringify to ensure the value is a string, relevant for preview.tsx
+    // also makes it consistent to what we do we generateEnvironmentVariables
     viteFinal(config) {
-        const disableMsw = process.env.DISABLE_MSW === 'true';
-
         const finalConfig = mergeConfig(config, {
             define: {
-                'process.env.DISABLE_MSW': disableMsw,
+                'process.env.DISABLE_MSW': JSON.stringify(process.env.DISABLE_MSW),
                 ...generateEnvironmentVariables(process.env.NODE_ENV)
             },
 
