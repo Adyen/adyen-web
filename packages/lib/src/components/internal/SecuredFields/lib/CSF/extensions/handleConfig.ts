@@ -63,9 +63,24 @@ export function handleConfig(props: CSFSetupObject): void {
      * Unless we are forcing the use of the compat version via card config
      * - detect Edge vn \<= 18 & IE11 - who don't support TextEncoder; and use this as an indicator to load a different, compatible, version of SF
      */
-    const needsJWECompatVersion = props.forceCompat ? true : !(typeof window.TextEncoder === 'function');
+    let needsJWECompatVersion = props.forceCompat ? true : !(typeof window.TextEncoder === 'function');
 
-    const bundleType = `${sfBundleType}${needsJWECompatVersion ? 'Compat' : ''}`; // e.g. 'card' or 'cardCompat'
+    /**
+     * Don't allow compat version on Live - it is only for testing.
+     * Our build targets for v6 mean that the necessary window.crypto fny will be available in Live.
+     * The compat version is only for if the merchant wants to test with a custom http url.
+     */
+    if (this.config.loadingContext.includes('live')) {
+        needsJWECompatVersion = false;
+    }
+
+    let bundleModifier = '';
+    if (needsJWECompatVersion) {
+        bundleModifier = 'Compat';
+    }
+
+    // TODO - create a config prop 'forceModern' (available from v6 onwards)
+    const bundleType = `${sfBundleType}${bundleModifier}`; // e.g. 'card' or 'cardCompat'
 
     this.config.iframeSrc = `${this.config.loadingContext}securedfields/${props.clientKey}/${SF_VERSION}/securedFields.html?type=${bundleType}&d=${d}`;
 
