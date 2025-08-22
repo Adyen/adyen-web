@@ -15,9 +15,8 @@ import {
 } from './types';
 
 import Analytics from '../../core/Analytics';
+import { AnalyticsInfoEvent, InfoEventTypes, InfoEventSubtypes } from '../../core/Analytics/AnalyticsInfoEvent';
 import type { AnalyticsModule } from '../../types/global-types';
-import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
-import { InfoEventSubtypes, InfoEventTypes } from '../../core/Analytics/constants';
 
 class FastlaneSDK {
     private readonly clientKey: string;
@@ -51,6 +50,8 @@ class FastlaneSDK {
             analyticsContext: analyticsUrl,
             clientKey: this.clientKey
         });
+
+        document.addEventListener('visibilitychange', this.handlePageVisibilityChanges);
     }
 
     /**
@@ -61,8 +62,13 @@ class FastlaneSDK {
         const tokenData = await this.requestClientToken();
         await this.fetchSdk(tokenData.value, tokenData.clientId);
         await this.initializeFastlaneInstance();
-        this.trackEvent(InfoEventSubtypes.FastlaneInitialized);
+        this.trackEvent(InfoEventSubtypes.Initialized);
         return this;
+    }
+
+    public destroy(): void {
+        document.removeEventListener('visibilitychange', this.handlePageVisibilityChanges);
+        this.analytics.flush();
     }
 
     /**
@@ -76,14 +82,14 @@ class FastlaneSDK {
             throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'authenticate(): Fastlane SDK is not initialized');
         }
 
-        this.trackEvent(InfoEventSubtypes.FastlaneLookup);
+        this.trackEvent(InfoEventSubtypes.LookupStarted);
 
         try {
             const { customerContextId } = await this.fastlaneSdk.identity.lookupCustomerByEmail(email);
 
             if (customerContextId) {
                 this.latestShopperDetails = { email, customerId: customerContextId };
-                this.trackEvent(InfoEventSubtypes.FastlaneOtpStarted);
+                this.trackEvent(InfoEventSubtypes.OtpStarted);
 
                 const authResult = await this.fastlaneSdk.identity.triggerAuthenticationFlow(customerContextId);
                 this.trackEvent(this.getOtpAnalyticsSubtype(authResult.authenticationState));
@@ -91,7 +97,7 @@ class FastlaneSDK {
                 return authResult;
             }
 
-            this.trackEvent(InfoEventSubtypes.FastlaneLookupUserNotFound);
+            this.trackEvent(InfoEventSubtypes.LookupUserNotFound);
             return {
                 authenticationState: 'not_found',
                 profileData: undefined
@@ -117,6 +123,8 @@ class FastlaneSDK {
             );
         }
 
+        this.analytics.flush();
+
         const isAuthSuccess = authResult.authenticationState === 'succeeded';
         const hasCardData = !!authResult.profileData?.card;
         const hasShopperDetails = !!this.latestShopperDetails?.email;
@@ -136,11 +144,11 @@ class FastlaneSDK {
             throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'showShippingAddressSelector(): Fastlane SDK is not initialized');
         }
 
-        this.trackEvent(InfoEventSubtypes.FastlaneAddressSelectorClicked);
+        this.trackEvent(InfoEventSubtypes.AddressSelectorClicked);
 
         try {
             const addressSelectorResult = await this.fastlaneSdk.profile.showShippingAddressSelector();
-            if (addressSelectorResult.selectionChanged) this.trackEvent(InfoEventSubtypes.FastlaneAddressChanged);
+            if (addressSelectorResult.selectionChanged) this.trackEvent(InfoEventSubtypes.AddressChanged);
             return addressSelectorResult;
         } catch (error: unknown) {
             throw new AdyenCheckoutError('ERROR', 'Fastlane SDK: An error occurred when showing the shipping address selector', { cause: error });
@@ -276,6 +284,12 @@ class FastlaneSDK {
         this.analytics.sendAnalytics(event);
     }
 
+    private handlePageVisibilityChanges = (): void => {
+        if (document.visibilityState === 'hidden') {
+            this.analytics.flush();
+        }
+    };
+
     /**
      * Returns the Info event subtype based on the 'authenticationState'
      * @param authenticationState
@@ -284,15 +298,15 @@ class FastlaneSDK {
     private getOtpAnalyticsSubtype(authenticationState: FastlaneAuthenticatedCustomerResult['authenticationState']) {
         switch (authenticationState) {
             case 'succeeded':
-                return InfoEventSubtypes.FastlaneOtpSucceeded;
+                return InfoEventSubtypes.OtpSucceeded;
             case 'canceled':
-                return InfoEventSubtypes.FastlaneOtpCanceled;
+                return InfoEventSubtypes.OtpCanceled;
             case 'failed':
-                return InfoEventSubtypes.FastlaneOtpFailed;
+                return InfoEventSubtypes.OtpFailed;
             case 'not_found':
-                return InfoEventSubtypes.FastlaneLookupUserNotFound;
+                return InfoEventSubtypes.LookupUserNotFound;
             default:
-                return InfoEventSubtypes.FastlaneOtpFailed;
+                return InfoEventSubtypes.OtpFailed;
         }
     }
 }

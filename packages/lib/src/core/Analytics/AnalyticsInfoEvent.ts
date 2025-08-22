@@ -18,10 +18,21 @@ type AnalyticsInfoEventObject = {
 };
 
 export enum InfoEventType {
+    clicked = 'clicked',
+    rendered = 'rendered',
     sdkDownloadInitiated = 'sdkDownloadInitiated',
     sdkDownloadFailed = 'sdkDownloadFailed',
     sdkDownloadAborted = 'sdkDownloadAborted',
-    sdkDownloadCompleted = 'sdkDownloadCompleted'
+    sdkDownloadCompleted = 'sdkDownloadCompleted',
+Initialized = 'Initialized',
+    LookupStarted = 'LookupStarted',
+    LookupUserNotFound = 'LookupUserNotFound',
+    OtpStarted = 'OtpStarted',
+    OtpSucceeded = 'OtpSucceeded',
+    OtpCanceled = 'OtpCanceled',
+    OtpFailed = 'OtpFailed',
+    AddressSelectorClicked = 'AddressSelectorClicked',
+    AddressChanged = 'AddressChanged'
 }
 
 export class AnalyticsInfoEvent extends AnalyticsEvent {
