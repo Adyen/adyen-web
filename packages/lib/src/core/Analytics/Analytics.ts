@@ -87,6 +87,10 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
 
         getEnabled: () => props.enabled,
 
+        flush: () => {
+            void sendAnalyticsEvents();
+        },
+
         sendAnalytics: (analyticsObj: AnalyticsEvent): boolean => {
             if (!props.enabled) return false;
 

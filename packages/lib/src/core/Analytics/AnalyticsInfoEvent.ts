@@ -1,5 +1,5 @@
 import { AnalyticsEvent } from './AnalyticsEvent';
-import { ANALYTICS_EVENT, ANALYTICS_VALIDATION_ERROR_STR, InfoEventSubtypes } from './constants';
+import { ANALYTICS_EVENT, ANALYTICS_VALIDATION_ERROR_STR } from './constants';
 import { mapErrorCodesForAnalytics } from './utils';
 
 type AnalyticsInfoEventObject = {
@@ -16,6 +16,24 @@ type AnalyticsInfoEventObject = {
     component?: string;
     subtype?: InfoEventSubtypes;
 };
+
+export enum InfoEventTypes {
+    clicked = 'clicked',
+    rendered = 'rendered',
+    ThirdPartySdk = 'ThirdPartySDK'
+}
+
+export enum InfoEventSubtypes {
+    Initialized = 'Initialized',
+    LookupStarted = 'LookupStarted',
+    LookupUserNotFound = 'LookupUserNotFound',
+    OtpStarted = 'OtpStarted',
+    OtpSucceeded = 'OtpSucceeded',
+    OtpCanceled = 'OtpCanceled',
+    OtpFailed = 'OtpFailed',
+    AddressSelectorClicked = 'AddressSelectorClicked',
+    AddressChanged = 'AddressChanged'
+}
 
 export class AnalyticsInfoEvent extends AnalyticsEvent {
     public type: string;
