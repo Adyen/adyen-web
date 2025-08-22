@@ -14,7 +14,26 @@ type AnalyticsInfoEventObject = {
     validationErrorMessage?: string;
     configData?: Record<string, string | boolean>;
     component?: string;
+    subtype?: InfoEventSubtypes;
 };
+
+export enum InfoEventTypes {
+    clicked = 'clicked',
+    rendered = 'rendered',
+    ThirdPartySdk = 'ThirdPartySDK'
+}
+
+export enum InfoEventSubtypes {
+    Initialized = 'Initialized',
+    LookupStarted = 'LookupStarted',
+    LookupUserNotFound = 'LookupUserNotFound',
+    OtpStarted = 'OtpStarted',
+    OtpSucceeded = 'OtpSucceeded',
+    OtpCanceled = 'OtpCanceled',
+    OtpFailed = 'OtpFailed',
+    AddressSelectorClicked = 'AddressSelectorClicked',
+    AddressChanged = 'AddressChanged'
+}
 
 export class AnalyticsInfoEvent extends AnalyticsEvent {
     public type: string;
@@ -27,6 +46,8 @@ export class AnalyticsInfoEvent extends AnalyticsEvent {
     public validationErrorCode?: string;
     public validationErrorMessage?: string;
     public configData?: Record<string, string | boolean>;
+
+    public subtype?: InfoEventSubtypes;
 
     constructor(analyticsObject: AnalyticsInfoEventObject) {
         super();
@@ -44,6 +65,8 @@ export class AnalyticsInfoEvent extends AnalyticsEvent {
         this.validationErrorCode = analyticsObject.validationErrorCode;
         this.validationErrorMessage = analyticsObject.validationErrorMessage;
         this.configData = analyticsObject.configData;
+
+        this.subtype = analyticsObject.subtype;
 
         // Some of the more generic validation error codes required combination with target to retrieve a specific code
         if (this.type === ANALYTICS_VALIDATION_ERROR_STR) {

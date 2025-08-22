@@ -1,5 +1,6 @@
 import type { CoreConfiguration } from '../../core/types';
 import type { UIElementProps } from '../internal/UIElement/types';
+import { AnalyticsOptions } from '../../core/Analytics/types';
 
 /**
  * PayPal Fastlane Reference:
@@ -127,7 +128,7 @@ type FastlaneComponentConfiguration = {
 type FastlaneCardComponentConfiguration = {
     paymentType: 'card';
     configuration: {
-        fastlaneConfiguration: FastlaneSignupConfiguration;
+        fastlaneConfiguration?: FastlaneSignupConfiguration;
     };
 };
 
@@ -142,6 +143,7 @@ export interface FastlaneSDKConfiguration {
     clientKey: string;
     environment: CoreConfiguration['environment'];
     locale?: 'en-US' | 'es-US' | 'fr-RS' | 'zh-US';
+    analytics?: Pick<AnalyticsOptions, 'enabled'>;
     /**
      * Used to force the Fastlane SDK to return the consent details in case the shopper is not recognized.
      * Use-case: Developer is testing the flow in another country outside US, which would not get consent details.
