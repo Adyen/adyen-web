@@ -382,6 +382,7 @@ export interface ActionHandledReturnObject {
 
 export interface AnalyticsModule {
     setUp: (a?: AnalyticsInitialEvent) => Promise<any>;
+    flush(): void;
     getCheckoutAttemptId: () => string;
     getEventsQueue: () => EventsQueueModule;
     getEnabled: () => boolean;
