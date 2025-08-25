@@ -3,7 +3,7 @@ import uuid from '../../../utils/uuid';
 import UIElement from '../../../components/internal/UIElement';
 import type { PaymentAction } from '../../../types/global-types';
 import type { IRegistry } from '../../core.registry';
-import type { ICore } from '../../types';
+import { AdditionalDetailsData, ICore } from '../../types';
 
 const createComponent = (core: ICore, registry: IRegistry, componentType, props): UIElement => {
     const Element = registry.getComponent(componentType);
@@ -20,7 +20,15 @@ const getActionHandler = statusType => {
         const config = {
             ...props,
             ...action,
-            onComplete: props.onAdditionalDetails,
+            onComplete: (state: AdditionalDetailsData, component?: UIElement) => {
+                if (component) {
+                    // We use a type assertion to call the protected 'handleAdditionalDetails' method from the UIElement.
+                    // This is safe because this is internal framework code.
+                    (component as unknown as { handleAdditionalDetails: (state: AdditionalDetailsData) => void }).handleAdditionalDetails(state);
+                } else {
+                    core.submitDetails(state.data);
+                }
+            },
             onError: props.onError,
             statusType,
             originalAction: action
@@ -51,13 +59,46 @@ const actionTypes = {
          */
         const paymentData = action.subtype === 'fingerprint' || props.isMDFlow ? action.paymentData : action.authorisationToken;
 
+        /**
+         * When an action is handled via checkout.createFromAction, props.onAdditionalDetails translates to the merchant defined onAdditionalDetails
+         * callback passed from the core, rather than UIElement.handleAdditionalDetails (which comes from UIElement.handleAction).
+         *
+         * Here we ensure that the call to onAdditionalDetails (referenced as the "onComplete" fn) is always pushed towards the Component (UIElement)
+         * handleAdditionalDetails function (which will correctly create a Promise that can then be finalised with the resolve & reject functions that
+         * are passed, as the third argument, to the merchant's own onAdditionalDetails callback).
+         */
+        let mappedOnComplete: (state: any, component?: UIElement) => void = (state, component?: UIElement) => {
+            console.log('\n### actionTyoes::regular::mappedOnComplete:: component', component);
+            (component as unknown as { handleAdditionalDetails: (state: AdditionalDetailsData) => void }).handleAdditionalDetails(state);
+        };
+
+        /**
+         * In MDFlow we always want to finalise the 3DS2 flow by calling the original passed onComplete function.
+         * (The MDFlow will then make any required, subsequent, calls)
+         */
+        if (props.isMDFlow) {
+            mappedOnComplete = props.onComplete;
+        }
+
+        /**
+         * If we were in a Dropin, coming through the usual "handleAction" route, and involving a "challenge" step, we need to call Dropin's handleAdditionalDetails, which will ensure that the ref to "this" remains correct
+         */
+        // if (props.isDropin) {
+        //     console.log('### actionTypes::threeDS2::isDropin:: HITS HERE');
+        //     mappedOnComplete = (state: any, component) => {
+        //         console.log('\n### actionTyoes::dropinclause::mappedOnComplete:: isDropin:: component', component);
+        //         console.log('### actionTyoes::dropinclause::mappedOnComplete:: isDropin:: props.elementRef', props.elementRef);
+        //         props.elementRef.handleAdditionalDetails(state);
+        //     };
+        // }
+
         const config = {
             // Props common to both flows
             core: core,
             token: action.token,
             paymentData,
             onActionHandled: props.onActionHandled,
-            onComplete: props.isMDFlow ? props.onComplete : props.onAdditionalDetails,
+            onComplete: mappedOnComplete,
             onError: props.onError,
             isDropin: !!props.isDropin,
             loadingContext: props.loadingContext,
