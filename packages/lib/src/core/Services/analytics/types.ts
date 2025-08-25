@@ -4,11 +4,13 @@ import { PaymentAmount } from '../../../types';
 export type CheckoutAttemptIdSession = {
     id: string;
     timestamp: number;
+    needsUpdate: boolean;
 };
 
 export type CollectIdProps = Pick<AnalyticsConfig, 'clientKey' | 'analyticsContext' | 'locale' | 'amount'> & {
     analyticsPath: string;
     bundleType: string;
+    isBeforeCheckout: boolean;
 };
 
 export type TelemetryEvent = {

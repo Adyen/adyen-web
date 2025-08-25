@@ -10,7 +10,7 @@ import { AnalyticsEvent } from './AnalyticsEvent';
 let capturedCheckoutAttemptId = null;
 let sendEventsTimerId = null;
 
-const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bundleType }: AnalyticsProps): AnalyticsModule => {
+const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, isBeforeCheckout, bundleType }: AnalyticsProps): AnalyticsModule => {
     const defaultProps = {
         enabled: true,
         checkoutAttemptId: null,
@@ -19,7 +19,16 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
 
     const props = { ...defaultProps, ...analytics };
 
-    const collectId = CollectId({ analyticsContext, clientKey, locale, amount, analyticsPath: ANALYTICS_PATH, bundleType });
+    const collectId = CollectId({
+        analyticsContext,
+        clientKey,
+        locale,
+        amount,
+        analyticsPath: ANALYTICS_PATH,
+        bundleType,
+        isBeforeCheckout
+    });
+
     const eventsQueue: EventsQueueModule = EventsQueue({ analyticsContext, clientKey, analyticsPath: ANALYTICS_PATH });
 
     const sendAnalyticsEvents = () => {
@@ -65,6 +74,8 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
             const { payload, enabled } = props; // TODO what is payload, is it ever used?
             const level = enabled ? ANALYTIC_LEVEL.all : ANALYTIC_LEVEL.initial;
             const analyticsData = processAnalyticsData(props.analyticsData);
+
+            debugger;
 
             if (!capturedCheckoutAttemptId) {
                 try {

@@ -48,7 +48,8 @@ class FastlaneSDK {
             analytics: configuration.analytics,
             locale: configuration.locale || 'en-US',
             analyticsContext: analyticsUrl,
-            clientKey: this.clientKey
+            clientKey: this.clientKey,
+            isBeforeCheckout: true
         });
 
         document.addEventListener('visibilitychange', this.handlePageVisibilityChanges);
@@ -59,6 +60,7 @@ class FastlaneSDK {
      */
     public async initialize(): Promise<FastlaneSDK> {
         void this.analytics.setUp();
+
         const tokenData = await this.requestClientToken();
         await this.fetchSdk(tokenData.value, tokenData.clientId);
         await this.initializeFastlaneInstance();
