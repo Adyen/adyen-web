@@ -1,4 +1,4 @@
-import { PaymentAmount } from '../../types';
+import { AdyenCheckout, PaymentAmount } from '../../types';
 import { CoreConfiguration } from '../types';
 import { SocialSecurityMode } from '../../components/Card/types';
 import { ANALYTICS_EVENT } from './constants';
@@ -62,11 +62,13 @@ export interface AnalyticsOptions {
 export type AnalyticsProps = Pick<CoreConfiguration, 'loadingContext' | 'locale' | 'clientKey' | 'analytics' | 'amount'> & {
     bundleType?: string;
     analyticsContext?: string;
+    isBeforeCheckout?: boolean;
 };
 
 export type AnalyticsEventCategory = (typeof ANALYTICS_EVENT)[keyof typeof ANALYTICS_EVENT];
 
 export type AnalyticsInitialEvent = {
+    isBeforeCheckout?: boolean;
     containerWidth?: number;
     component?: string;
     flavor?: string;
