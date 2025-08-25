@@ -348,7 +348,7 @@ export const mapDualBrandButtons = (dualBrandSelectElements: DualBrandSelectElem
 /**
  *  Only if the brands in EU_BrandArray are present in the binLookup response should we handle dual branding based on EU regulations
  *
- * If the result from Array.filter contains anything - then we are in a EU dual branding regulation scenario, i.e.
+ * If the result from Array.some is true - then we are in a EU dual branding regulation scenario, i.e.
  * - Show the new dualBranding UI Buttons
  * - Preselect a card brand
  */
@@ -356,4 +356,4 @@ export const mustHandleDualBrandingAccordingToEURegulations = (
     EU_BrandArray: string[],
     returnedDualBrandingObjects: DualBrandSelectElement[] | BrandObject[],
     key: string
-) => !!returnedDualBrandingObjects.filter(item => EU_BrandArray.includes(item[key])).length;
+) => returnedDualBrandingObjects.some(item => EU_BrandArray.includes(item[key]));
