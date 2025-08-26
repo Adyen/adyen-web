@@ -98,6 +98,8 @@ class UPI extends UIElement<UPIConfiguration> {
     };
 
     private renderContent(type: string, url: string, paymentMethodType: string): h.JSX.Element {
+        const isAutoPay = !!this.props.mandate;
+
         switch (type) {
             case 'qrCode':
                 return (
@@ -113,6 +115,7 @@ class UPI extends UIElement<UPIConfiguration> {
                         introduction={this.props.i18n.get('upi.qrCodeWaitingMessage')}
                         countdownTime={5}
                         onActionHandled={this.onActionHandled}
+                        showAmount={!isAutoPay}
                     />
                 );
             case 'await':
@@ -125,7 +128,7 @@ class UPI extends UIElement<UPIConfiguration> {
                         type={paymentMethodType}
                         showCountdownTimer
                         shouldRedirectAutomatically
-                        showAmount
+                        showAmount={!isAutoPay}
                         countdownTime={5}
                         clientKey={this.props.clientKey}
                         paymentData={this.props.paymentData}
@@ -151,6 +154,8 @@ class UPI extends UIElement<UPIConfiguration> {
                         segmentedControlOptions={this.props.segmentedControlOptions}
                         defaultMode={this.props.defaultMode}
                         showPayButton={this.props.showPayButton}
+                        amount={this.props.amount}
+                        mandate={this.props.mandate}
                     />
                 );
         }

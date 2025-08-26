@@ -41,7 +41,13 @@ export type AdyenCheckoutProps = {
     countryCode: string;
     shopperLocale: string;
     amount: number;
-    sessionData?: PaymentMethodsResponse;
+    sessionData?: PaymentMethodsResponse & {
+        mandate?: {
+            amount: string;
+            frequency: 'adhoc' | 'daily' | 'weekly' | 'biWeekly' | 'monthly' | 'quarterly' | 'halfYearly' | 'yearly';
+            amountRule: 'max' | 'exact';
+        };
+    };
     allowedPaymentTypes?: string[];
     paymentMethodsOverride?: PaymentMethodsResponse;
     paymentsOptions?: {}; // TODO we don't have proper type for this right now
