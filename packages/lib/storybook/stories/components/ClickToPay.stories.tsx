@@ -16,20 +16,14 @@ export const StandaloneComponent: ClickToPayStory = {
     render: ({ componentConfiguration, ...checkoutConfig }) => (
         <Checkout checkoutConfig={checkoutConfig}>
             {checkout => {
-                const shopperEmail = new URLSearchParams(document.location.search).get('shopperEmail');
-                return (
-                    <ComponentContainer element={new ClickToPay(checkout, { ...componentConfiguration, ...(shopperEmail && { shopperEmail }) })} />
-                );
+                return <ComponentContainer element={new ClickToPay(checkout, componentConfiguration)} />;
             }}
         </Checkout>
     ),
     args: {
         componentConfiguration: {
-            shopperEmail: 'gui.ctp@adyen.com',
+            shopperEmail: new URLSearchParams(document.location.search).get('shopperEmail') || 'gui.ctp@adyen.com',
             merchantDisplayName: 'Adyen Merchant Name',
-            onChange(state, component) {
-                console.log(state, component);
-            },
             configuration: {
                 visaSrciDpaId: '8e6e347c-254e-863f-0e6a-196bf2d9df02',
                 visaSrcInitiatorId: 'B9SECVKIQX2SOBQ6J9X721dVBBKHhJJl1nxxVbemHGn5oB6S8',

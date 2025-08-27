@@ -44,6 +44,32 @@ const config: StorybookConfig = {
     // also makes it consistent to what we do we generateEnvironmentVariables
     viteFinal(config) {
         const finalConfig = mergeConfig(config, {
+            // Mirror Rollup's CSS processing exactly
+            css: {
+                // Use same PostCSS config file as Rollup
+                postcss: resolve(__dirname, '../postcss.config.cjs'),
+
+                // Mirror Rollup's SCSS settings
+                preprocessorOptions: {
+                    scss: {
+                        includePaths: [resolve(__dirname, '../src')] // Same as Rollup
+                    }
+                },
+
+                // Enable source maps like Rollup
+                devSourcemap: true
+            },
+
+            // Single CSS file like Rollup's extract behavior
+            build: {
+                cssCodeSplit: false,
+                rollupOptions: {
+                    output: {
+                        assetFileNames: 'adyen.[ext]' // Matches Rollup's extract: 'adyen.css'
+                    }
+                }
+            },
+
             define: {
                 'process.env.DISABLE_MSW': JSON.stringify(process.env.DISABLE_MSW),
                 ...generateEnvironmentVariables(process.env.NODE_ENV)
