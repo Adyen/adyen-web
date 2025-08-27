@@ -62,18 +62,17 @@ export interface AnalyticsOptions {
 export type AnalyticsProps = Pick<CoreConfiguration, 'loadingContext' | 'locale' | 'clientKey' | 'analytics' | 'amount'> & {
     bundleType?: string;
     analyticsContext?: string;
-    isBeforeCheckout?: boolean;
 };
 
 export type AnalyticsEventCategory = (typeof ANALYTICS_EVENT)[keyof typeof ANALYTICS_EVENT];
 
 export type AnalyticsInitialEvent = {
-    isBeforeCheckout?: boolean;
     containerWidth?: number;
     component?: string;
     flavor?: string;
     paymentMethods?: any[];
     sessionId?: string;
+    checkoutStage: 'PreCheckout' | 'Checkout';
 };
 
 export type AnalyticsConfig = {
