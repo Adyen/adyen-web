@@ -60,16 +60,16 @@ export interface AnalyticsOptions {
 }
 
 export type AnalyticsProps = Pick<CoreConfiguration, 'loadingContext' | 'locale' | 'clientKey' | 'analytics' | 'amount'> & {
-    bundleType: string;
+    bundleType?: string;
     analyticsContext?: string;
 };
 
 export type AnalyticsEventCategory = (typeof ANALYTICS_EVENT)[keyof typeof ANALYTICS_EVENT];
 
 export type AnalyticsInitialEvent = {
-    containerWidth: number;
-    component: string;
-    flavor: string;
+    containerWidth?: number;
+    component?: string;
+    flavor?: string;
     paymentMethods?: any[];
     sessionId?: string;
 };

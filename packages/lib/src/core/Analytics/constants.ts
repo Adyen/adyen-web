@@ -34,14 +34,6 @@ export const ANALYTICS_ERROR_CODE = {
     redirect: '600'
 };
 
-/**
- * Info Events
- */
-export enum InfoEventTypes {
-    clicked = 'clicked',
-    rendered = 'rendered'
-}
-
 export const ANALYTICS_ACTION_STR = 'action';
 export const ANALYTICS_SUBMIT_STR = 'submit';
 export const ANALYTICS_SELECTED_STR = 'selected';
