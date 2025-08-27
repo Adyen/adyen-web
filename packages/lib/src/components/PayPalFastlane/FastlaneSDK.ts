@@ -48,8 +48,7 @@ class FastlaneSDK {
             analytics: configuration.analytics,
             locale: configuration.locale || 'en-US',
             analyticsContext: analyticsUrl,
-            clientKey: this.clientKey,
-            isBeforeCheckout: true
+            clientKey: this.clientKey
         });
 
         document.addEventListener('visibilitychange', this.handlePageVisibilityChanges);
@@ -59,7 +58,7 @@ class FastlaneSDK {
      * Initializes the Fastlane SDK
      */
     public async initialize(): Promise<FastlaneSDK> {
-        void this.analytics.setUp();
+        void this.analytics.setUp({ checkoutStage: 'PreCheckout', component: 'fastlane' });
 
         const tokenData = await this.requestClientToken();
         await this.fetchSdk(tokenData.value, tokenData.clientId);
