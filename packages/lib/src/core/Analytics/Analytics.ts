@@ -6,9 +6,22 @@ import { debounce } from '../../utils/debounce';
 import { AnalyticsModule } from '../../types/global-types';
 import { processAnalyticsData } from './utils';
 import { AnalyticsEvent } from './AnalyticsEvent';
+import Storage from '../../utils/Storage';
+import { CheckoutAttemptIdSession } from '../Services/analytics/types';
 
-let capturedCheckoutAttemptId = null;
+let capturedCheckoutAttemptId: string | null = null;
 let sendEventsTimerId = null;
+
+/**
+ * If the checkout attempt ID was stored more than fifteen minutes ago, then we should request a new ID.
+ * More here: COWEB-1099
+ */
+function isSessionCreatedUnderFifteenMinutes(session: CheckoutAttemptIdSession): boolean {
+    const FIFTEEN_MINUTES_IN_MS = 15 * 60 * 1000;
+    if (!session?.timestamp) return false;
+    const fifteenMinutesAgo = Date.now() - FIFTEEN_MINUTES_IN_MS;
+    return session.timestamp > fifteenMinutesAgo;
+}
 
 const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bundleType }: AnalyticsProps): AnalyticsModule => {
     const defaultProps = {
@@ -19,7 +32,16 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
 
     const props = { ...defaultProps, ...analytics };
 
-    const collectId = CollectId({ analyticsContext, clientKey, locale, amount, analyticsPath: ANALYTICS_PATH, bundleType });
+    const collectId = CollectId({
+        analyticsContext,
+        clientKey,
+        locale,
+        amount,
+        analyticsPath: ANALYTICS_PATH,
+        bundleType
+    });
+
+    const storage = new Storage<CheckoutAttemptIdSession>('checkout-attempt-id', 'sessionStorage');
     const eventsQueue: EventsQueueModule = EventsQueue({ analyticsContext, clientKey, analyticsPath: ANALYTICS_PATH });
 
     const sendAnalyticsEvents = () => {
@@ -57,26 +79,36 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
     };
 
     return {
-        /**
-         * Make "setup" call, to pass containerWidth, buildType, channel etc, and receive a checkoutAttemptId in return
-         * @param initialEvent -
-         */
-        setUp: async (initialEvent?: AnalyticsInitialEvent) => {
-            const { payload, enabled } = props; // TODO what is payload, is it ever used?
+        setUp: async (setupProps?: AnalyticsInitialEvent): Promise<void> => {
+            const defaultProps: Partial<AnalyticsInitialEvent> = { checkoutStage: 'Checkout' };
+            const finalSetupProps = { ...defaultProps, ...setupProps };
+
+            const checkoutAttemptIdSession = storage.get();
+            const isSessionReusable = isSessionCreatedUnderFifteenMinutes(checkoutAttemptIdSession);
+
+            const { payload, enabled } = props;
             const level = enabled ? ANALYTIC_LEVEL.all : ANALYTIC_LEVEL.initial;
             const analyticsData = processAnalyticsData(props.analyticsData);
 
-            if (!capturedCheckoutAttemptId) {
-                try {
-                    capturedCheckoutAttemptId = await collectId({
-                        ...initialEvent,
-                        ...(payload && { ...payload }),
-                        ...(Object.keys(analyticsData).length && { ...analyticsData }),
-                        ...{ level }
-                    });
-                } catch (e: any) {
-                    console.warn(`Fetching checkoutAttemptId failed.${e ? ` Error=${e}` : ''}`);
-                }
+            const availableCheckoutAttemptId: string | undefined = isSessionReusable ? checkoutAttemptIdSession.id : analyticsData?.checkoutAttemptId;
+
+            try {
+                const collectIdPayload = {
+                    ...finalSetupProps,
+                    ...payload,
+                    ...analyticsData,
+                    ...(availableCheckoutAttemptId && { checkoutAttemptId: availableCheckoutAttemptId }),
+                    level
+                };
+
+                capturedCheckoutAttemptId = await collectId(collectIdPayload);
+
+                storage.set({
+                    id: capturedCheckoutAttemptId,
+                    timestamp: isSessionReusable ? checkoutAttemptIdSession.timestamp : Date.now()
+                });
+            } catch (error: unknown) {
+                console.warn(error);
             }
         },
 

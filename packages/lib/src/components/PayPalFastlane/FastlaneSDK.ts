@@ -58,7 +58,8 @@ class FastlaneSDK {
      * Initializes the Fastlane SDK
      */
     public async initialize(): Promise<FastlaneSDK> {
-        void this.analytics.setUp();
+        void this.analytics.setUp({ checkoutStage: 'PreCheckout', component: 'fastlane' });
+
         const tokenData = await this.requestClientToken();
         await this.fetchSdk(tokenData.value, tokenData.clientId);
         await this.initializeFastlaneInstance();

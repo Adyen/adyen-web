@@ -1,4 +1,4 @@
-import { PaymentAmount } from '../../types';
+import { AdyenCheckout, PaymentAmount } from '../../types';
 import { CoreConfiguration } from '../types';
 import { SocialSecurityMode } from '../../components/Card/types';
 import { ANALYTICS_EVENT } from './constants';
@@ -72,6 +72,7 @@ export type AnalyticsInitialEvent = {
     flavor?: string;
     paymentMethods?: any[];
     sessionId?: string;
+    checkoutStage: 'PreCheckout' | 'Checkout';
 };
 
 export type AnalyticsConfig = {
