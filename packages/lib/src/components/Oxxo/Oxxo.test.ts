@@ -19,7 +19,7 @@ test('should show pay button by default', async () => {
 });
 
 test('should trigger submit when Pay button is pressed', async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: 0 });
 
     const oxxoElement = new Oxxo(global.core, {
         loadingContext: 'test',

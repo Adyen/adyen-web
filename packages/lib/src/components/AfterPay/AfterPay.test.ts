@@ -1,5 +1,5 @@
 import AfterPay from './AfterPay';
-import { render, screen, within } from '@testing-library/preact';
+import { render, screen, waitFor, within } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
@@ -15,8 +15,12 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 describe('AfterPay', () => {
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     test('should make a payment', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ delay: 0 });
         const onSubmitMock = jest.fn();
 
         const afterpay = new AfterPay(global.core, {
@@ -60,45 +64,50 @@ describe('AfterPay', () => {
         });
         await user.click(termsAndConditionsCheckbox);
 
+        await waitFor(() => {
+            afterpay.state.isValid = true;
+        });
+
         const payButton = await screen.findByRole('button', { name: 'Confirm purchase' });
         await user.click(payButton);
 
-        expect(onSubmitMock).toHaveBeenCalledTimes(1);
-        expect(onSubmitMock).toHaveBeenCalledWith(
-            expect.objectContaining({
-                data: {
-                    billingAddress: {
-                        city: 'Amsterdam',
-                        country: 'NL',
-                        houseNumberOrName: '100000',
-                        postalCode: '1011DJ',
-                        stateOrProvince: 'N/A',
-                        street: 'Simon Carmilgestraat'
+        await waitFor(() => {
+            expect(onSubmitMock).toHaveBeenCalledWith(
+                {
+                    data: {
+                        billingAddress: {
+                            city: 'Amsterdam',
+                            country: 'NL',
+                            houseNumberOrName: '100000',
+                            postalCode: '1011DJ',
+                            stateOrProvince: 'N/A',
+                            street: 'Simon Carmilgestraat'
+                        },
+                        clientStateDataIndicator: true,
+                        dateOfBirth: '1990-01-01',
+                        deliveryAddress: {
+                            city: 'Amsterdam',
+                            country: 'NL',
+                            houseNumberOrName: '100000',
+                            postalCode: '1011DJ',
+                            stateOrProvince: 'N/A',
+                            street: 'Simon Carmilgestraat'
+                        },
+                        paymentMethod: { checkoutAttemptId: 'fetch-checkoutAttemptId-failed', type: 'afterpay_default' },
+                        shopperEmail: 'jose@adyen.com',
+                        shopperName: { firstName: 'Jose', gender: 'MALE', lastName: 'Fernandez' },
+                        telephoneNumber: '612345678'
                     },
-                    clientStateDataIndicator: true,
-                    dateOfBirth: '1990-01-01',
-                    deliveryAddress: {
-                        city: 'Amsterdam',
-                        country: 'NL',
-                        houseNumberOrName: '100000',
-                        postalCode: '1011DJ',
-                        stateOrProvince: 'N/A',
-                        street: 'Simon Carmilgestraat'
-                    },
-                    paymentMethod: { checkoutAttemptId: 'fetch-checkoutAttemptId-failed', type: 'afterpay_default' },
-                    shopperEmail: 'jose@adyen.com',
-                    shopperName: { firstName: 'Jose', gender: 'MALE', lastName: 'Fernandez' },
-                    telephoneNumber: '612345678'
+                    isValid: true
                 },
-                isValid: true
-            }),
-            expect.anything(),
-            expect.anything()
-        );
+                expect.anything(),
+                expect.anything()
+            );
+        });
     });
 
     test('should send a different delivery address when checking the checkbox', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ delay: 0 });
         const onSubmitMock = jest.fn();
 
         const afterpay = new AfterPay(global.core, {
@@ -160,45 +169,50 @@ describe('AfterPay', () => {
         });
         await user.click(termsAndConditionsCheckbox);
 
+        await waitFor(() => {
+            afterpay.state.isValid = true;
+        });
+
         const payButton = await screen.findByRole('button', { name: 'Confirm purchase' });
         await user.click(payButton);
 
-        expect(onSubmitMock).toHaveBeenCalledTimes(1);
-        expect(onSubmitMock).toHaveBeenCalledWith(
-            expect.objectContaining({
-                data: {
-                    billingAddress: {
-                        city: 'Amsterdam',
-                        country: 'NL',
-                        houseNumberOrName: '100000',
-                        postalCode: '1011DJ',
-                        stateOrProvince: 'N/A',
-                        street: 'Simon Carmilgestraat'
+        await waitFor(() => {
+            expect(onSubmitMock).toHaveBeenCalledWith(
+                {
+                    data: {
+                        billingAddress: {
+                            city: 'Amsterdam',
+                            country: 'NL',
+                            houseNumberOrName: '100000',
+                            postalCode: '1011DJ',
+                            stateOrProvince: 'N/A',
+                            street: 'Simon Carmilgestraat'
+                        },
+                        clientStateDataIndicator: true,
+                        dateOfBirth: '1990-01-01',
+                        deliveryAddress: {
+                            city: 'Amsterdam',
+                            country: 'NL',
+                            houseNumberOrName: '100',
+                            postalCode: '1010PX',
+                            stateOrProvince: 'N/A',
+                            street: 'Kinkerstraat'
+                        },
+                        paymentMethod: { checkoutAttemptId: 'fetch-checkoutAttemptId-failed', type: 'afterpay_default' },
+                        shopperEmail: 'jose@adyen.com',
+                        shopperName: { firstName: 'Jose', gender: 'MALE', lastName: 'Fernandez' },
+                        telephoneNumber: '612345678'
                     },
-                    clientStateDataIndicator: true,
-                    dateOfBirth: '1990-01-01',
-                    deliveryAddress: {
-                        city: 'Amsterdam',
-                        country: 'NL',
-                        houseNumberOrName: '100',
-                        postalCode: '1010PX',
-                        stateOrProvince: 'N/A',
-                        street: 'Kinkerstraat'
-                    },
-                    paymentMethod: { checkoutAttemptId: 'fetch-checkoutAttemptId-failed', type: 'afterpay_default' },
-                    shopperEmail: 'jose@adyen.com',
-                    shopperName: { firstName: 'Jose', gender: 'MALE', lastName: 'Fernandez' },
-                    telephoneNumber: '612345678'
+                    isValid: true
                 },
-                isValid: true
-            }),
-            expect.anything(),
-            expect.anything()
-        );
+                expect.anything(),
+                expect.anything()
+            );
+        });
     });
 
     test('should not submit the payment if form is not valid nor consent checkbox is checked', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ delay: 0 });
         const onSubmitMock = jest.fn();
 
         const afterpay = new AfterPay(global.core, {

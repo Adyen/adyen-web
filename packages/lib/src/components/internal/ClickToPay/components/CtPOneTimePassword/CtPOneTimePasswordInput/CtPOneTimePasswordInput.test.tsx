@@ -28,7 +28,7 @@ const customRender = (ui, { clickToPayService = mock<IClickToPayService>(), conf
 
 describe('Click to Pay - CtPOneTimePasswordInput', () => {
     test('should resend OTP when clicking on "Resend" button and focus back on the input', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ delay: 0 });
         const ctpServiceMock = mock<IClickToPayService>();
         const onResendCodeMock = jest.fn();
 
@@ -57,7 +57,7 @@ describe('Click to Pay - CtPOneTimePasswordInput', () => {
     });
 
     test('should resend OTP when clicking on "Resend" button and NOT focus back on the input', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ delay: 0 });
         const ctpServiceMock = mock<IClickToPayService>();
         const configuration = {
             disableOtpAutoFocus: true

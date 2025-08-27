@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { render, screen } from '@testing-library/preact';
+import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import StoreDetails from './StoreDetails';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
@@ -13,7 +13,7 @@ const renderWithCoreProvider = ui => {
 };
 
 test('StoredDetails defaults to false, toggles to true', async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: 0 });
     let value;
 
     const onChangeMock = jest.fn(event => (value = event));
@@ -26,12 +26,14 @@ test('StoredDetails defaults to false, toggles to true', async () => {
 
     await user.click(checkbox);
     expect(checkbox).toBeChecked();
-    expect(value).toBe(true);
+    await waitFor(() => {
+        expect(value).toBe(true);
+    });
 });
 
 test('StoredDetails storeDetails prop true does nothing LEGACY TEST', async () => {
     // I wanted to capture this buggy feature,
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: 0 });
     let value;
 
     const onChangeMock = jest.fn(event => (value = event));
@@ -51,5 +53,7 @@ test('StoredDetails storeDetails prop true does nothing LEGACY TEST', async () =
     await user.click(checkbox);
     // now it's all correct
     expect(checkbox).not.toBeChecked();
-    expect(value).toBe(false);
+    await waitFor(() => {
+        expect(value).toBe(false);
+    });
 });

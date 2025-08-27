@@ -114,7 +114,7 @@ describe('UPI', () => {
             const upi = new UPI(global.core, { ...props, defaultMode: 'vpa' });
             render(upi.render());
 
-            const user = userEvent.setup();
+            const user = userEvent.setup({ delay: 0 });
             await user.type(screen.getByTestId('input-virtual-payment-address'), 'test@vpa');
             await user.tab();
 
@@ -131,7 +131,7 @@ describe('UPI', () => {
             const upi = new UPI(global.core, { ...props, apps: [gpayApp], defaultMode: 'intent' });
             render(upi.render());
 
-            const user = userEvent.setup();
+            const user = userEvent.setup({ delay: 0 });
             const radioButton = await screen.findByRole('radio', { name: /google pay/i });
             await user.click(radioButton);
 
@@ -166,7 +166,7 @@ describe('UPI', () => {
                 const upi = new UPI(global.core, { ...props, defaultMode: 'vpa' });
                 render(upi.render());
 
-                const user = userEvent.setup();
+                const user = userEvent.setup({ delay: 0 });
                 await user.type(screen.getByTestId('input-virtual-payment-address'), 'test@test');
                 await user.tab();
 
@@ -192,7 +192,7 @@ describe('UPI', () => {
             test('should be valid after selecting an app', async () => {
                 const upi = new UPI(global.core, { ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
                 render(upi.render());
-                const user = userEvent.setup();
+                const user = userEvent.setup({ delay: 0 });
                 const radioButton = await screen.findByRole('radio', { name: /google pay/i });
                 await user.click(radioButton);
                 await waitFor(() => {
@@ -203,7 +203,7 @@ describe('UPI', () => {
             test('should switch to VPA mode, be invalid, then become valid after typing', async () => {
                 const upi = new UPI(global.core, { ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
                 render(upi.render());
-                const user = userEvent.setup();
+                const user = userEvent.setup({ delay: 0 });
 
                 // Switch to VPA mode
                 const vpaModeButton = await screen.findByRole('button', { name: /UPI ID/i });
@@ -246,14 +246,15 @@ describe('UPI', () => {
         test('should not show an error and be valid if an app is selected', async () => {
             const upi = new UPI(global.core, { ...props, apps: [{ id: 'gpay', name: 'Google Pay' }] });
             render(upi.render());
-            const user = userEvent.setup();
+            const user = userEvent.setup({ delay: 0 });
             const radioButton = await screen.findByRole('radio', { name: /google pay/i });
             await user.click(radioButton);
 
             upi.showValidation();
-
             expect(screen.queryByRole('alert')).not.toBeInTheDocument();
-            expect(upi.isValid).toBe(true);
+            await waitFor(() => {
+                expect(upi.isValid).toBe(true);
+            });
         });
     });
 

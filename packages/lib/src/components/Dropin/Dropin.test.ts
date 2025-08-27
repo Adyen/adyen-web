@@ -381,7 +381,7 @@ describe('Dropin', () => {
                 }
             });
             const checkout = await createAdyenCheckout(config);
-            const user = userEvent.setup();
+            const user = userEvent.setup({ delay: 0 });
 
             const dropin = new Dropin(checkout, {
                 paymentMethodComponents: [Fastlane],

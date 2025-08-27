@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import Toggle from './Toggle';
 
 test('should emit correct values', async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: 0 });
     const onChangeMock = jest.fn();
 
     render(<Toggle checked={false} onChange={onChangeMock} />);

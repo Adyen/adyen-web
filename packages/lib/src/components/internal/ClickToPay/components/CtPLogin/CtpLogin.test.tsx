@@ -17,7 +17,7 @@ const customRender = (children: ComponentChildren, providerProps: IClickToPayCon
 };
 
 test('should set CTP to primary payment method if shopper interacts with the login input', async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: 0 });
 
     const contextProps = mock<IClickToPayContext>();
     contextProps.isCtpPrimaryPaymentMethod = false;
@@ -45,7 +45,7 @@ test('should set CTP to primary payment method if shopper interacts with the log
 });
 
 test('should not start the user login if the email is invalid', async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: 0 });
 
     const contextProps = mock<IClickToPayContext>();
     contextProps.isCtpPrimaryPaymentMethod = true;
@@ -71,7 +71,7 @@ test('should not start the user login if the email is invalid', async () => {
 });
 
 test('should display not found if the email is not registered', async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: 0 });
 
     const contextProps = mock<IClickToPayContext>();
     contextProps.isCtpPrimaryPaymentMethod = true;
@@ -96,7 +96,7 @@ test('should display not found if the email is not registered', async () => {
 });
 
 test('should start the identity validation if the user is enrolled', async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: 0 });
 
     const contextProps = mock<IClickToPayContext>();
     contextProps.isCtpPrimaryPaymentMethod = true;

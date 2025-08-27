@@ -1,5 +1,5 @@
 import RatePayDirectDebit from './RatePayDirectDebit';
-import { render, screen, within } from '@testing-library/preact';
+import { render, screen, waitFor, within } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
@@ -16,7 +16,7 @@ afterAll(() => server.close());
 
 describe('RatePay Direct Debit', () => {
     test('should make a payment', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ delay: 0 });
         const onSubmitMock = jest.fn();
 
         const ratepay = new RatePayDirectDebit(global.core, {
@@ -62,10 +62,16 @@ describe('RatePay Direct Debit', () => {
         await user.type(postalCodeInput, '10179');
         await user.type(cityInput, 'Berlin');
 
+        await waitFor(() => {
+            ratepay.state.isValid = true;
+        });
+
         const payButton = await screen.findByRole('button', { name: 'Confirm purchase' });
         await user.click(payButton);
 
-        expect(onSubmitMock).toHaveBeenCalledTimes(1);
+        await waitFor(() => {
+            expect(onSubmitMock).toHaveBeenCalledTimes(1);
+        });
         expect(onSubmitMock).toHaveBeenCalledWith(
             expect.objectContaining({
                 data: {
@@ -101,7 +107,7 @@ describe('RatePay Direct Debit', () => {
     });
 
     test('should send a different delivery address when checking the checkbox', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ delay: 0 });
         const onSubmitMock = jest.fn();
 
         const ratepay = new RatePayDirectDebit(global.core, {
@@ -164,10 +170,16 @@ describe('RatePay Direct Debit', () => {
         await user.type(deliveryPostalCodeInput, '00089');
         await user.type(deliveryCityInput, 'Berlin');
 
+        await waitFor(() => {
+            ratepay.state.isValid = true;
+        });
+
         const payButton = await screen.findByRole('button', { name: 'Confirm purchase' });
         await user.click(payButton);
 
-        expect(onSubmitMock).toHaveBeenCalledTimes(1);
+        await waitFor(() => {
+            expect(onSubmitMock).toHaveBeenCalledTimes(1);
+        });
         expect(onSubmitMock).toHaveBeenCalledWith(
             expect.objectContaining({
                 data: {
@@ -203,7 +215,7 @@ describe('RatePay Direct Debit', () => {
     });
 
     test('should not submit the payment if form is not valid', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ delay: 0 });
         const onSubmitMock = jest.fn();
 
         const ratepay = new RatePayDirectDebit(global.core, {

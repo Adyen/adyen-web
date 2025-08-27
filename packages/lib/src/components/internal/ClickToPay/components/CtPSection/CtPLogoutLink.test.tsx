@@ -28,7 +28,7 @@ test('should not render if shopper is not recognized', () => {
 });
 
 test('should render i18n message of ctp.logout.notYourCards if there are multiple cards available', async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: 0 });
 
     const contextProps = mock<IClickToPayContext>();
     contextProps.ctpState = CtpState.Ready;
@@ -43,7 +43,7 @@ test('should render i18n message of ctp.logout.notYourCards if there are multipl
 });
 
 test('should render i18n message of ctp.logout.notYourCard if there is only one card available', async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: 0 });
 
     const contextProps = mock<IClickToPayContext>();
     contextProps.ctpState = CtpState.Ready;
@@ -58,7 +58,7 @@ test('should render i18n message of ctp.logout.notYourCard if there is only one 
 });
 
 test('should render i18n message of ctp.logout.notYourProfile if there is no card available', async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: 0 });
 
     const contextProps = mock<IClickToPayContext>();
     contextProps.ctpState = CtpState.Ready;
@@ -73,7 +73,7 @@ test('should render i18n message of ctp.logout.notYourProfile if there is no car
 });
 
 test('should render i18n message of ctp.logout.notYou if the shopper is going through OTP ', async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: 0 });
 
     const contextProps = mock<IClickToPayContext>();
     contextProps.ctpState = CtpState.OneTimePassword;

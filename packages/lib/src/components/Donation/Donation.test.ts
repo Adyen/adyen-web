@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/preact';
+import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import DonationElement from './Donation';
 
@@ -27,6 +27,7 @@ const roundupDonationProp = {
 describe('Donation element', () => {
     describe('Roundup donation', () => {
         test('should call onDonate with the donation data', async () => {
+            const user = userEvent.setup({ delay: 0 });
             const onDonate = jest.fn();
             // @ts-ignore not all callbacks are needed
             const donationElement = new DonationElement(global.core, {
@@ -35,11 +36,12 @@ describe('Donation element', () => {
             });
             render(donationElement.render());
             const donateBtn = await screen.findByRole('button', { name: 'Donate €1.00' });
-            donateBtn.click();
+            await user.click(donateBtn);
             expect(onDonate).toBeCalledWith({ data: { amount: { currency: 'EUR', value: 100 } }, isValid: true }, expect.any(Object));
         });
 
         test('should call onCancel with the donation data', async () => {
+            const user = userEvent.setup({ delay: 0 });
             const onCancel = jest.fn();
             // @ts-ignore not all callbacks are needed
             const donationElement = new DonationElement(global.core, {
@@ -48,14 +50,14 @@ describe('Donation element', () => {
             });
             render(donationElement.render());
             const cancelBtn = await screen.findByRole('button', { name: /not now/i });
-            cancelBtn.click();
+            await user.click(cancelBtn);
             expect(onCancel).toBeCalledWith({ data: { amount: { currency: 'EUR', value: 100 } }, isValid: true });
         });
     });
 
     describe('Fixed amounts donation', () => {
         test('should call onDonate with the donation data', async () => {
-            const user = userEvent.setup();
+            const user = userEvent.setup({ delay: 0 });
             const onDonate = jest.fn();
             const {
                 donation: { currency, values: expectedValues }
@@ -68,12 +70,16 @@ describe('Donation element', () => {
             render(donationElement.render());
             const firstAmount = (await screen.findAllByRole('radio'))[0];
             await user.click(firstAmount);
+            await waitFor(() => {
+                expect(donationElement.isValid).toBe(true);
+            });
             const donateBtn = await screen.findByRole('button', { name: 'Donate' });
-            donateBtn.click();
-            expect(onDonate).toBeCalledWith({ data: { amount: { currency, value: expectedValues[0] } }, isValid: true }, expect.any(Object));
+            await user.click(donateBtn);
+            expect(onDonate).toHaveBeenCalledWith({ data: { amount: { currency, value: expectedValues[0] } }, isValid: true }, expect.any(Object));
         });
 
         test('should call onCancel with the donation data', async () => {
+            const user = userEvent.setup({ delay: 0 });
             const {
                 donation: { currency }
             } = fixedAmountsDonationProp;
@@ -85,7 +91,7 @@ describe('Donation element', () => {
             });
             render(donationElement.render());
             const cancelBtn = await screen.findByRole('button', { name: /not now/i });
-            cancelBtn.click();
+            await user.click(cancelBtn);
             expect(onCancel).toBeCalledWith({ data: { amount: { currency, value: null } }, isValid: false });
         });
     });

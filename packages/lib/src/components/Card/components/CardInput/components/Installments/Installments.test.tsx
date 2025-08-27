@@ -29,7 +29,7 @@ const renderInstallments = (props: Partial<InstallmentsProps> = {}) => {
 };
 
 describe('Installments', () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: 0 });
 
     test('should render the installments dropdown by default', () => {
         renderInstallments();

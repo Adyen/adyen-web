@@ -28,7 +28,7 @@ const customRender = (ui, { clickToPayService = mock<IClickToPayService>(), conf
 
 describe('Click to Pay - CtPOneTimePassword', () => {
     test('should set to store the cookie if shopper ticks the checkbox', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ delay: 0 });
         const ctpServiceMock = mock<IClickToPayService>();
         ctpServiceMock.schemes = ['visa', 'mc'];
         // const onResendCodeMock = jest.fn();
