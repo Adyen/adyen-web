@@ -1,5 +1,16 @@
 // A script to mark all GitHub releases in a repository as [DEPRECATED].
 // Uses the GitHub REST API and supports a dry run mode.
+// 
+// To get your API token go to Your profile, and create a Fine-grained PAT:
+// Resource owner: Adyen
+// Repository access: adyen-web
+// Give permission for: Contents R/W
+//
+// Then you can export the token temporarily in your console (before runnning):
+// export GITHUB_TOKEN=github_pat_xxx
+//
+// You can run this script by doing:
+// DRY_RUN=false MAJOR_VERSION=X node .github/scripts/deprecate-releases.js
 
 const fetch = require('node-fetch');
 
