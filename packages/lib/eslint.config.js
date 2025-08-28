@@ -1,6 +1,5 @@
 // @ts-check
 import eslint from '@eslint/js';
-import { fixupPluginRules } from '@eslint/compat';
 import tseslint from 'typescript-eslint';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import testingLibrary from 'eslint-plugin-testing-library';
@@ -115,16 +114,12 @@ const config = tseslint.config(
     },
     {
         name: 'Testing files rules',
-        plugins: {
-            'testing-library': fixupPluginRules({
-                rules: testingLibrary.rules
-            })
-        },
         files: ['**/?(*.)+(spec|test).[jt]s?(x)'],
-        rules: {
-            ...testingLibrary.configs.dom.rules,
-            ...testingLibrary.configs.react.rules
-        }
+        plugins: {
+            'testing-library': testingLibrary
+        },
+        ...testingLibrary.configs['flat/dom'],
+        ...testingLibrary.configs['flat/react']
     }
 );
 
