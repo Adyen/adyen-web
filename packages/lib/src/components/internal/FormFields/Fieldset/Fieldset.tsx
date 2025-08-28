@@ -3,6 +3,7 @@ import cx from 'classnames';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import './Fieldset.scss';
 import { getUniqueId } from '../../../../utils/idGenerator';
+import { useMemo } from 'preact/hooks';
 
 interface FieldsetProps {
     children: ComponentChildren;
