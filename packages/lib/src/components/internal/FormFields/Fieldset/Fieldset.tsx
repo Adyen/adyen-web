@@ -16,7 +16,7 @@ interface FieldsetProps {
 export default function Fieldset({ children, classNameModifiers = [], label, readonly = false, description, id }: FieldsetProps) {
     const { i18n } = useCoreContext();
 
-    const describedById = getUniqueId('fieldset-description');
+    const describedById = useMemo(() => getUniqueId('fieldset-description'), []);
 
     return (
         <fieldset
