@@ -105,7 +105,7 @@ async function deprecateRelease(release) {
 async function main() {
   if (!GITHUB_TOKEN || !REPO_OWNER || !REPO_NAME) {
     console.error('Error: Make sure GITHUB_TOKEN, REPO_OWNER, and REPO_NAME are set as environment variables.');
-    return;
+    process.exit(1);
   }
 
   if (DRY_RUN) {
