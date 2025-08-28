@@ -58,6 +58,16 @@ const passMandateToPayments = (mandate: MandateType, checkoutConfig: GlobalStory
     }
 };
 
+const createPayToMockHandlers = () => [
+    http.post('https://checkoutshopper-test.adyen.com/checkoutshopper/services/PaymentInitiation/v1/status', () => {
+        return HttpResponse.json({
+            payload: '',
+            resultCode: 'pending',
+            type: 'pending'
+        });
+    })
+];
+
 export const Default: PayToStory = {
     render: ({ componentConfiguration, mandate, ...checkoutConfig }) => (
         <Checkout checkoutConfig={passMandateToPayments(mandate, checkoutConfig)}>
@@ -95,15 +105,7 @@ export const PayToAwaitScreen: PayToStory = {
     },
     parameters: {
         msw: {
-            handlers: [
-                http.post('https://checkoutshopper-test.adyen.com/checkoutshopper/services/PaymentInitiation/v1/status', () => {
-                    return HttpResponse.json({
-                        payload: '',
-                        resultCode: 'pending',
-                        type: 'pending'
-                    });
-                })
-            ]
+            handlers: createPayToMockHandlers()
         }
     },
     render: ({ componentConfiguration, mandate, payee, ...checkoutConfig }) => (
@@ -134,15 +136,7 @@ export const PayToMockedResponse: PayToStory = {
     },
     parameters: {
         msw: {
-            handlers: [
-                http.post('https://checkoutshopper-test.adyen.com/checkoutshopper/services/PaymentInitiation/v1/status', () => {
-                    return HttpResponse.json({
-                        payload: '',
-                        resultCode: 'pending',
-                        type: 'pending'
-                    });
-                })
-            ]
+            handlers: createPayToMockHandlers()
         }
     },
     render: ({ componentConfiguration, mandate, payee, ...checkoutConfig }) => (
