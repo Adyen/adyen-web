@@ -10,15 +10,17 @@ interface FieldsetProps {
     label?: string;
     description?: string;
     readonly?: boolean;
+    id?: string;
 }
 
-export default function Fieldset({ children, classNameModifiers = [], label, readonly = false, description }: FieldsetProps) {
+export default function Fieldset({ children, classNameModifiers = [], label, readonly = false, description, id }: FieldsetProps) {
     const { i18n } = useCoreContext();
 
-    const describedById = getUniqueId('payid-input-description');
+    const describedById = getUniqueId('fieldset-description');
 
     return (
         <fieldset
+            id={id}
             className={cx([
                 'adyen-checkout__fieldset',
                 ...classNameModifiers.map(m => `adyen-checkout__fieldset--${m}`),
