@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 6.21.1
+
+### Patch Changes
+
+- Fix PayTo aria-controls poiting to wrong IDs ([#3475](https://github.com/Adyen/adyen-web/pull/3475))
+
 ## 6.21.0
 
 ### Minor Changes
