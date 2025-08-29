@@ -5,7 +5,7 @@ import Select from './Select';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
 
 describe('Select', () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: 0 });
     const getWrapper = (props: any) =>
         render(
             <CoreProvider loadingContext={'test'} i18n={global.i18n} resources={global.resources}>

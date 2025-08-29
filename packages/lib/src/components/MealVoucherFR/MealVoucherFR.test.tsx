@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/preact';
 
 describe('MealVoucherFR', () => {
     const i18n = global.i18n;
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: 0 });
 
     const baseProps = {
         ...global.commonCoreProps,

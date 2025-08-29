@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 
 describe('Bacs Direct Debit', () => {
     test('should make a Bacs Direct Debit payment', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ delay: 0 });
         const onSubmitMock = jest.fn();
 
         const bacs = new BacsDD(global.core, {
@@ -59,7 +59,7 @@ describe('Bacs Direct Debit', () => {
     });
 
     test('should not let shopper continue if email is wrong or checkboxes are not checked', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ delay: 0 });
 
         const onSubmitMock = jest.fn();
 
@@ -94,7 +94,7 @@ describe('Bacs Direct Debit', () => {
     });
 
     test('should allow shopper to Edit the details before making the payment', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ delay: 0 });
 
         const onSubmitMock = jest.fn();
 

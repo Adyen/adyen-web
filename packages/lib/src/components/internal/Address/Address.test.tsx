@@ -240,7 +240,7 @@ describe('Address', () => {
 
     describe('With predefined country specific rules', () => {
         test('should show error when switching from country that has valid postal code to one that has invalid postal code', async () => {
-            const user = userEvent.setup();
+            const user = userEvent.setup({ delay: 0 });
             const allowedCountries = Object.keys(countrySpecificFormatters);
             const countryCode = 'US';
             const data: AddressData = {
@@ -270,7 +270,7 @@ describe('Address', () => {
         });
 
         test('should show error when remove focus from postal code with invalid value', async () => {
-            const user = userEvent.setup();
+            const user = userEvent.setup({ delay: 0 });
             const allowedCountries = Object.keys(countrySpecificFormatters);
             const countryCode = 'US';
             const data: AddressData = {

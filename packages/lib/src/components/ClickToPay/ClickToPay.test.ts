@@ -107,7 +107,7 @@ test('should reject isAvailable if shopper account is not found', async () => {
 
 describe('Click to Pay: ENTER keypress should perform an action only within the CtP Component and should not propagate the event up to UIElement', () => {
     test('[Login form] should trigger shopper email lookup when ENTER key is pressed', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ delay: 0 });
 
         const mockCtpService = mock<IClickToPayService>();
         mockCtpService.initialize.mockImplementation(() => Promise.resolve());
@@ -145,7 +145,7 @@ describe('Click to Pay: ENTER keypress should perform an action only within the 
     });
 
     test('[OTP form] should trigger OTP validation when ENTER key is pressed', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ delay: 0 });
 
         const mockCtpService = mock<IClickToPayService>();
         mockCtpService.initialize.mockImplementation(() => Promise.resolve());
@@ -171,8 +171,8 @@ describe('Click to Pay: ENTER keypress should perform an action only within the 
         });
         render(element.mount('body'));
 
-        const emailInput = await screen.findByLabelText('One time code', { exact: false });
-        await user.type(emailInput, '654321');
+        const otp = await screen.findByLabelText('One time code');
+        await user.type(otp, '654321');
         await user.keyboard('[Enter]');
 
         expect(mockCtpService.finishIdentityValidation).toHaveBeenCalledTimes(1);
@@ -183,7 +183,7 @@ describe('Click to Pay: ENTER keypress should perform an action only within the 
     });
 
     test('[Card view] should trigger Click to Pay checkout when ENTER key is pressed', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ delay: 0 });
 
         const mockCtpService = mock<IClickToPayService>();
         mockCtpService.initialize.mockImplementation(() => Promise.resolve());

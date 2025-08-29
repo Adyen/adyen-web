@@ -15,7 +15,7 @@ const renderComponent = (text = 'Copy me') =>
     );
 
 describe('CopyIconButton', () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: 0 });
 
     beforeEach(() => {
         jest.clearAllMocks();

@@ -27,7 +27,7 @@ const requiredProps: PaymentMethodItemProps = {
 };
 
 describe('PaymentMethodItem', () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: 0 });
 
     const customRender = ui => {
         return render(

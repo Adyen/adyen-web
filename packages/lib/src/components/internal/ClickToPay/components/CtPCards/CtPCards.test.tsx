@@ -17,7 +17,7 @@ const customRender = (children: ComponentChildren, providerProps?: ClickToPayPro
 };
 
 test('should pre selected available card', async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: 0 });
 
     const ctpService = mock<IClickToPayService>();
     ctpService.shopperCards = [
@@ -84,7 +84,7 @@ test('should pre selected available card', async () => {
 });
 
 test('should not be able to checkout with expired card (single card)', async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: 0 });
 
     const ctpService = mock<IClickToPayService>();
     ctpService.shopperCards = [
@@ -124,7 +124,7 @@ test('should not be able to checkout with expired card (single card)', async () 
 });
 
 test('should not be able to checkout with expired card (card list)', async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: 0 });
 
     const ctpService = mock<IClickToPayService>();
     ctpService.shopperCards = [
@@ -194,7 +194,7 @@ test('should not be able to checkout with expired card (card list)', async () =>
 });
 
 test('should be able to checkout (card list)', async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: 0 });
     const mcPayload = mock<MastercardCheckout>();
     const contextProps = mock<ClickToPayProviderProps>();
 
@@ -265,7 +265,7 @@ test('should be able to checkout (card list)', async () => {
 });
 
 test('should be able to checkout (single card)', async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: 0 });
     const visaPayload = mock<VisaCheckout>();
 
     const ctpService = mock<IClickToPayService>();

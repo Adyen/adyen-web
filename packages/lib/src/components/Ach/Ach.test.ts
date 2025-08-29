@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/preact';
+import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 
 import Ach from './Ach';
@@ -73,6 +73,10 @@ describe('ACH', () => {
             await user.type(screen.getByLabelText(/Verify account number/i), '1234567890');
 
             await user.click(screen.getByLabelText(/Save for my next payment/i));
+
+            await waitFor(() => {
+                expect(ach.state.storePaymentMethod).toBe(true);
+            });
 
             await user.click(screen.queryByRole('button', { name: /Pay/i }));
 
@@ -231,26 +235,50 @@ describe('ACH', () => {
             await user.click(screen.queryByPlaceholderText('Choose an account type'));
             await user.click(screen.queryByRole('option', { name: 'Personal Checking Account' }));
 
-            expect(onChangeMock.mock.lastCall[0].data.paymentMethod.accountHolderType).toBe('personal');
-            expect(onChangeMock.mock.lastCall[0].data.paymentMethod.bankAccountType).toBe('checking');
+            await waitFor(() => {
+                expect(onChangeMock.mock.lastCall[0].data.paymentMethod).toEqual(
+                    expect.objectContaining({
+                        accountHolderType: 'personal',
+                        bankAccountType: 'checking'
+                    })
+                );
+            });
 
             await user.click(screen.queryByRole('button', { name: 'Personal Checking Account' }));
             await user.click(screen.queryByRole('option', { name: 'Personal Savings Account' }));
 
-            expect(onChangeMock.mock.lastCall[0].data.paymentMethod.accountHolderType).toBe('personal');
-            expect(onChangeMock.mock.lastCall[0].data.paymentMethod.bankAccountType).toBe('savings');
+            await waitFor(() => {
+                expect(onChangeMock.mock.lastCall[0].data.paymentMethod).toEqual(
+                    expect.objectContaining({
+                        accountHolderType: 'personal',
+                        bankAccountType: 'savings'
+                    })
+                );
+            });
 
             await user.click(screen.queryByRole('button', { name: 'Personal Savings Account' }));
             await user.click(screen.queryByRole('option', { name: 'Business Checking Account' }));
 
-            expect(onChangeMock.mock.lastCall[0].data.paymentMethod.accountHolderType).toBe('business');
-            expect(onChangeMock.mock.lastCall[0].data.paymentMethod.bankAccountType).toBe('checking');
+            await waitFor(() => {
+                expect(onChangeMock.mock.lastCall[0].data.paymentMethod).toEqual(
+                    expect.objectContaining({
+                        accountHolderType: 'business',
+                        bankAccountType: 'checking'
+                    })
+                );
+            });
 
             await user.click(screen.queryByRole('button', { name: 'Business Checking Account' }));
             await user.click(screen.queryByRole('option', { name: 'Business Savings Account' }));
 
-            expect(onChangeMock.mock.lastCall[0].data.paymentMethod.accountHolderType).toBe('business');
-            expect(onChangeMock.mock.lastCall[0].data.paymentMethod.bankAccountType).toBe('savings');
+            await waitFor(() => {
+                expect(onChangeMock.mock.lastCall[0].data.paymentMethod).toEqual(
+                    expect.objectContaining({
+                        accountHolderType: 'business',
+                        bankAccountType: 'savings'
+                    })
+                );
+            });
         });
 
         test('should prefill the account holder name', () => {

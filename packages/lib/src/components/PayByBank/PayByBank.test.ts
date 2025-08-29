@@ -31,7 +31,7 @@ test('should hide pay button if property is set to false', () => {
 });
 
 test('should trigger submit when Pay button is pressed', async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: 0 });
 
     const payByBankEle = new PayByBank(global.core, {
         name: 'Pay By Bank',

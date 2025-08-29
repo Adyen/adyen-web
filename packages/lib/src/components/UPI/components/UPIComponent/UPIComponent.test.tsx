@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { render, screen } from '@testing-library/preact';
+import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import SRPanelProvider from '../../../../core/Errors/SRPanelProvider';
 import { SRPanel } from '../../../../core/Errors/SRPanel';
@@ -37,7 +37,7 @@ describe('UPIComponent', () => {
 
         test('should call onUpdateMode when a new mode is selected', async () => {
             const onUpdateModeMock = jest.fn();
-            const user = userEvent.setup();
+            const user = userEvent.setup({ delay: 0 });
 
             customRender(
                 <UPIComponent
@@ -57,7 +57,7 @@ describe('UPIComponent', () => {
 
         test('should call onChange when a new mode is selected', async () => {
             const onChangeMock = jest.fn();
-            const user = userEvent.setup();
+            const user = userEvent.setup({ delay: 0 });
 
             customRender(<UPIComponent defaultMode={'intent'} onChange={onChangeMock} showPayButton={false} segmentedControlOptions={mockOptions} />);
 
@@ -66,7 +66,9 @@ describe('UPIComponent', () => {
             const qrModeButton = await screen.findByRole('button', { name: /QR Code/i });
             await user.click(qrModeButton);
 
-            expect(onChangeMock).toHaveBeenCalledTimes(2);
+            await waitFor(() => {
+                expect(onChangeMock).toHaveBeenCalledTimes(2);
+            });
             expect(onChangeMock).toHaveBeenLastCalledWith({ data: {}, valid: {}, errors: {}, isValid: true });
         });
     });
@@ -96,7 +98,7 @@ describe('UPIComponent', () => {
 
         test('should call payButton with the correct status', async () => {
             const payButtonMock = jest.fn().mockImplementation(() => <button>Pay</button>);
-            const user = userEvent.setup();
+            const user = userEvent.setup({ delay: 0 });
 
             customRender(
                 <UPIComponent apps={[gpayApp]} defaultMode={'intent'} onChange={jest.fn()} showPayButton={true} payButton={payButtonMock} />
@@ -111,7 +113,7 @@ describe('UPIComponent', () => {
 
         test('should fire onChange with invalid state initially, then with valid state after selecting an app', async () => {
             const onChangeMock = jest.fn();
-            const user = userEvent.setup();
+            const user = userEvent.setup({ delay: 0 });
 
             customRender(<UPIComponent apps={[gpayApp]} defaultMode={'intent'} showPayButton={false} onChange={onChangeMock} />);
 
@@ -123,7 +125,9 @@ describe('UPIComponent', () => {
             const googlePayRadio = await screen.findByRole('radio', { name: /Google Pay/i });
             await user.click(googlePayRadio);
 
-            expect(onChangeMock).toHaveBeenCalledTimes(2);
+            await waitFor(() => {
+                expect(onChangeMock).toHaveBeenCalledTimes(2);
+            });
             expect(onChangeMock).toHaveBeenLastCalledWith({
                 data: { app: gpayApp },
                 isValid: true
@@ -139,7 +143,7 @@ describe('UPIComponent', () => {
 
         test('should call onChange with isValid: false if VPA input is invalid', async () => {
             const onChangeMock = jest.fn();
-            const user = userEvent.setup();
+            const user = userEvent.setup({ delay: 0 });
 
             customRender(<UPIComponent defaultMode={'vpa'} onChange={onChangeMock} showPayButton={false} />);
 
@@ -157,7 +161,7 @@ describe('UPIComponent', () => {
 
         test('should call onChange with isValid: true after filling the VPA input field correctly', async () => {
             const onChangeMock = jest.fn();
-            const user = userEvent.setup();
+            const user = userEvent.setup({ delay: 0 });
 
             customRender(<UPIComponent defaultMode={'vpa'} onChange={onChangeMock} showPayButton={false} />);
 

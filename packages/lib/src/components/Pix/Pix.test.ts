@@ -32,7 +32,7 @@ test('should show pay button by default', async () => {
 });
 
 test('should validate Brazil SSN', async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: 0 });
     const i18n = global.i18n;
     const pixElement = new Pix(global.core, {
         personalDetailsRequired: true,
@@ -61,7 +61,7 @@ test('should validate Brazil SSN', async () => {
 });
 
 test('should trigger submit when Pay button is pressed', async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: 0 });
     const i18n = global.i18n;
     const pixElement = new Pix(global.core, { i18n, loadingContext: 'ggg', modules: { resources: global.resources } });
     pixElement.submit = jest.fn();

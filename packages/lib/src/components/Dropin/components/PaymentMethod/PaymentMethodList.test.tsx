@@ -69,7 +69,7 @@ const customRender = (children: ComponentChildren) => {
 };
 
 test('onSelect should be triggered only once', async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: 0 });
     const paymentMethods = createPaymentMethodsMock();
     const onSelectMock = jest.fn();
 

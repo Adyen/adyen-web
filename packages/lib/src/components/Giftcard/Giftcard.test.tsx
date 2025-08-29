@@ -10,7 +10,7 @@ const flushPromises = () => new Promise(process.nextTick);
 
 describe('Giftcard', () => {
     const i18n = global.i18n;
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: 0 });
 
     const baseProps = {
         ...global.commonCoreProps,
