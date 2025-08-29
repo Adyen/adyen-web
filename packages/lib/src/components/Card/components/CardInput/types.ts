@@ -147,6 +147,7 @@ export interface CardInputProps {
     maskSecurityCode?: boolean;
     exposeExpiryDate?: boolean;
     disclaimerMessage?: DisclaimerMsgObject;
+    useModern?: boolean;
 }
 
 export interface CardInputState {

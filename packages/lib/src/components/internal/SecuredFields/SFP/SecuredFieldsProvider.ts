@@ -187,7 +187,8 @@ class SecuredFieldsProvider extends Component<SFPProps, SFPState> {
             exposeExpiryDate: this.props.exposeExpiryDate,
             shouldDisableIOSArrowKeys: !!this.props.disableIOSArrowKeys, // convert whether function has been defined into a boolean
             placeholders: this.props.placeholders ?? {},
-            showContextualElement: this.props.showContextualElement
+            showContextualElement: this.props.showContextualElement,
+            useModern: this.props.useModern
         };
 
         this.csf = initCSF(csfSetupObj);
