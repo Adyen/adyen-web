@@ -27,11 +27,12 @@ export interface BSBInputProps {
     placeholders: PayToPlaceholdersType;
     onChange: (e) => void;
     setComponentRef: (ref: ComponentMethodsRef) => void;
+    id?: string;
 }
 
 const BASE_SCHEMA = ['bankAccountNumber', 'bsb', 'firstName', 'lastName'];
 
-export default function BSBInput({ setComponentRef, defaultData, placeholders, onChange, setStatus }: BSBInputProps) {
+export default function BSBInput({ setComponentRef, defaultData, placeholders, onChange, setStatus, id }: BSBInputProps) {
     const { i18n } = useCoreContext();
 
     const form = useForm<BSBFormData>({
@@ -57,7 +58,7 @@ export default function BSBInput({ setComponentRef, defaultData, placeholders, o
     }, [setComponentRef]);
 
     return (
-        <Fieldset classNameModifiers={['payto__bsb_input']} label={'BSB'} description={'payto.bsb.description'}>
+        <Fieldset id={id} classNameModifiers={['payto__bsb_input']} label={'BSB'} description={'payto.bsb.description'}>
             <Field
                 label={i18n.get('payto.bsb.label.bankAccountNumber')}
                 classNameModifiers={['col-60', 'bankAccountNumber']}
