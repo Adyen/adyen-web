@@ -421,5 +421,12 @@
     "eftpad-canada.input.transitNumber.label": "Kód banky príjemcu",
     "eftpad-canada.input.transitNumber.contextualText": "5 číslic",
     "eftpad-canada.input.transitNumber.error": "Zadajte kód banky príjemcu, ktoré pozostáva z 5 číslic",
-    "eftpad-canada.settlement-info": "Finančné prostriedky budú z vášho bankového účtu stiahnuté v priebehu 1 až 3 pracovných dní."
+    "eftpad-canada.settlement-info": "Finančné prostriedky budú z vášho bankového účtu stiahnuté v priebehu 1 až 3 pracovných dní.",
+    "upi.mandate.intro": "Nastavujete opakovanú platbu UPI Autopay %{mandateText}.",
+    "upi.mandate.exact": "(%{amount}%{frequency})",
+    "upi.mandate.max.withAmount": "(%{amount}). Schválite vyšší limit, aby ste umožnili budúce zmeny plánu (maximálne %{mandateAmount}%{frequency})",
+    "upi.mandate.max.withoutAmount": "(maximálne %{mandateAmount}%{frequency})",
+    "upi.mandate.frequency.monthly": "/mesiac",
+    "upi.mandate.frequency.weekly": "/týždeň",
+    "upi.mandate.frequency.adhoc": " ako je prezentované"
 }
