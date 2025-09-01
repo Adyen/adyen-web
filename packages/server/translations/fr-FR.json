@@ -421,5 +421,12 @@
     "eftpad-canada.input.transitNumber.label": "Numéro de transit",
     "eftpad-canada.input.transitNumber.contextualText": "5 chiffres",
     "eftpad-canada.input.transitNumber.error": "Saisissez un numéro de transit composé de 5 chiffres",
-    "eftpad-canada.settlement-info": "Les fonds seront retirés de votre compte bancaire sous 1 à 3 jours ouvrables."
+    "eftpad-canada.settlement-info": "Les fonds seront retirés de votre compte bancaire sous 1 à 3 jours ouvrables.",
+    "upi.mandate.intro": "Vous configurez actuellement un paiement récurrent UPI Autopay %{mandateText}.",
+    "upi.mandate.exact": "(%{amount}%{frequency})",
+    "upi.mandate.max.withAmount": "(%{amount}). Vous allez approuver une limite plus élevée pour autoriser de futurs changements de forfait (jusqu'à %{mandateAmount}%{frequency})",
+    "upi.mandate.max.withoutAmount": "(jusqu'à %{mandateAmount}%{frequency})",
+    "upi.mandate.frequency.monthly": "/mois",
+    "upi.mandate.frequency.weekly": "/semaine",
+    "upi.mandate.frequency.adhoc": " tel que présenté"
 }

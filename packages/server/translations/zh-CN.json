@@ -421,5 +421,12 @@
     "eftpad-canada.input.transitNumber.label": "转运编号",
     "eftpad-canada.input.transitNumber.contextualText": "5 位数",
     "eftpad-canada.input.transitNumber.error": "输入由 5 位数字组成的分行号码",
-    "eftpad-canada.settlement-info": "资金将在 1–3 个工作日内从您的银行账户中提取。"
+    "eftpad-canada.settlement-info": "资金将在 1–3 个工作日内从您的银行账户中提取。",
+    "upi.mandate.intro": "您正在设置 UPI 自动支付定期付款 %{mandateText}。",
+    "upi.mandate.exact": "(%{amount}%{frequency})",
+    "upi.mandate.max.withAmount": "(%{amount})。您将批准更高的限制以允许将来更改计划（最多 {mandateAmount}%{frequency}）",
+    "upi.mandate.max.withoutAmount": "（最多 %{mandateAmount}%{frequency}）",
+    "upi.mandate.frequency.monthly": "/月",
+    "upi.mandate.frequency.weekly": "/周",
+    "upi.mandate.frequency.adhoc": " 如所展示"
 }

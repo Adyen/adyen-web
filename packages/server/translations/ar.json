@@ -422,5 +422,12 @@
     "eftpad-canada.input.transitNumber.label": "رقم التحويل",
     "eftpad-canada.input.transitNumber.contextualText": "5 أرقام",
     "eftpad-canada.input.transitNumber.error": "أدخل رقم التحويل المكون من 5 أرقام",
-    "eftpad-canada.settlement-info": "ستُسحبُ الأموالُ من حسابك المصرفي في غضون مدة تتراوح بين يوم وثلاثة أيام عمل."
+    "eftpad-canada.settlement-info": "ستُسحبُ الأموالُ من حسابك المصرفي في غضون مدة تتراوح بين يوم وثلاثة أيام عمل.",
+    "upi.mandate.intro": "أنت بصدد إعداد دفعة متكررة عبر UPI Autopay %{mandateText}.",
+    "upi.mandate.exact": "(%{amount}%{frequency})",
+    "upi.mandate.max.withAmount": "(%{amount}). سوف توافق على حد أعلى؛ لتمكين تغييرات الخطة المستقبلية (ما يصل إلى %{mandateAmount}%{frequency})",
+    "upi.mandate.max.withoutAmount": "(ما يصل إلى %{mandateAmount}%{frequency})",
+    "upi.mandate.frequency.monthly": "/شهر",
+    "upi.mandate.frequency.weekly": "/أسبوع",
+    "upi.mandate.frequency.adhoc": " كما هو موضح"
 }

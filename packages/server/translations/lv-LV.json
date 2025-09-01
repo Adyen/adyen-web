@@ -422,5 +422,12 @@
     "eftpad-canada.input.transitNumber.label": "Tranzīta numurs",
     "eftpad-canada.input.transitNumber.contextualText": "5 cipari",
     "eftpad-canada.input.transitNumber.error": "Ievadiet tranzīta numuru, kas satur 5 ciparus",
-    "eftpad-canada.settlement-info": "Līdzekļi tiks noņemti no jūsu bankas konta 1–3 darba dienu laikā."
+    "eftpad-canada.settlement-info": "Līdzekļi tiks noņemti no jūsu bankas konta 1–3 darba dienu laikā.",
+    "upi.mandate.intro": "Jūs iestatāt UPI Autopay atkārtotu maksājumu %{mandateText}.",
+    "upi.mandate.exact": "(%{summa}%{biežums})",
+    "upi.mandate.max.withAmount": "(%{summa}). Jūs apstiprināsiet augstāku limitu, lai atļautu turpmākas plāna izmaiņas (līdz %{mandateAmount}%{frequency})",
+    "upi.mandate.max.withoutAmount": "(līdz %{mandateAmount}%{frequency})",
+    "upi.mandate.frequency.monthly": "/mēnesī",
+    "upi.mandate.frequency.weekly": "/nedēļā",
+    "upi.mandate.frequency.adhoc": " kā uzrādīts"
 }

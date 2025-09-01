@@ -419,5 +419,12 @@
     "eftpad-canada.input.transitNumber.label": "Número de tránsito",
     "eftpad-canada.input.transitNumber.contextualText": "5 dígitos",
     "eftpad-canada.input.transitNumber.error": "Escriba un número de enrutamiento que conste de 5 dígitos",
-    "eftpad-canada.settlement-info": "Los fondos se retirarán de su cuenta bancaria en un plazo de 1 a 3 días laborables."
+    "eftpad-canada.settlement-info": "Los fondos se retirarán de su cuenta bancaria en un plazo de 1 a 3 días laborables.",
+    "upi.mandate.intro": "Está configurando un pago recurrente de UPI Autopay %{mandateText}.",
+    "upi.mandate.exact": "(%{amount}%{frequency})",
+    "upi.mandate.max.withAmount": "(%{amount}). Aprobará un límite más alto para permitir futuros cambios en el plan (hasta %{mandateAmount}%{frequency})",
+    "upi.mandate.max.withoutAmount": "(hasta %{mandateAmount}%{frequency})",
+    "upi.mandate.frequency.monthly": "/mes",
+    "upi.mandate.frequency.weekly": "/semana",
+    "upi.mandate.frequency.adhoc": " tal como se presenta"
 }
