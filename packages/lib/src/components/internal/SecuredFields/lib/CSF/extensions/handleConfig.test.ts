@@ -34,8 +34,7 @@ describe('Testing the config values that handleConfig generates when based diffe
             shouldDisableIOSArrowKeys: false,
             loadingContext: 'checkoutshopper/',
             iframeUIConfig: { foo: 'bar' },
-            forceCompat: false,
-            useModern: false
+            forceCompat: false
         };
     });
 
@@ -94,35 +93,6 @@ describe('Testing the config values that handleConfig generates when based diffe
         const d = btoa(window.location.origin);
 
         const bundleType = 'card';
-
-        expect(myConfig.iframeSrc).toEqual(
-            `${props.loadingContext}securedfields/${props.clientKey}/${SF_VERSION}/securedFields.html?type=${bundleType}&d=${d}`
-        );
-    });
-
-    test('With useModern set to true, iframeSrc should point to the compat bundle', () => {
-        props.useModern = true;
-
-        myHandleConfig(props);
-
-        const d = btoa(window.location.origin);
-
-        const bundleType = 'cardModern';
-
-        expect(myConfig.iframeSrc).toEqual(
-            `${props.loadingContext}securedfields/${props.clientKey}/${SF_VERSION}/securedFields.html?type=${bundleType}&d=${d}`
-        );
-    });
-
-    test('With forceCompat set to true, but also useModern set to true, iframeSrc should point to the modern bundle', () => {
-        props.forceCompat = true;
-        props.useModern = true;
-
-        myHandleConfig(props);
-
-        const d = btoa(window.location.origin);
-
-        const bundleType = 'cardModern';
 
         expect(myConfig.iframeSrc).toEqual(
             `${props.loadingContext}securedfields/${props.clientKey}/${SF_VERSION}/securedFields.html?type=${bundleType}&d=${d}`

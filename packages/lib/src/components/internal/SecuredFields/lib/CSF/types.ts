@@ -72,7 +72,6 @@ export interface CSFSetupObject extends CSFCommonProps {
     maskSecurityCode: boolean;
     exposeExpiryDate: boolean;
     shouldDisableIOSArrowKeys: boolean;
-    useModern: boolean;
 }
 
 export interface CSFCallbacksConfig {

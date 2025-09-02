@@ -45,7 +45,6 @@ export interface SFPProps {
     styles?: StylesObject;
     trimTrailingSeparator?: boolean;
     type: string;
-    useModern?: boolean;
     render: () => {};
     resources: Resources;
     maskSecurityCode: boolean;

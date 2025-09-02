@@ -40,8 +40,6 @@ export default {
     isPayButtonPrimaryVariant: true,
     showContextualElement: true,
 
-    useModern: false,
-
     // Events
     onLoad: (): any => {},
     onConfigSuccess: (): any => {},
