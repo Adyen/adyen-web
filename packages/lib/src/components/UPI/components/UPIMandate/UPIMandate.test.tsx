@@ -21,7 +21,8 @@ describe('UPIMandate', () => {
             mandate: { amount: '10000', frequency: 'monthly', amountRule: 'exact' }
         };
         customRender(<UPIMandate {...props} />);
-        expect(screen.getByText('You’re setting up a UPI Autopay recurring payment (₹100.00/month).')).toBeInTheDocument();
+        const status = screen.getByRole('status');
+        expect(status).toHaveTextContent('You’re setting up a UPI Autopay recurring payment (₹100.00/month).');
     });
 
     test('should render the correct text for a mandate with the "max" rule and a transaction amount', () => {
@@ -30,11 +31,10 @@ describe('UPIMandate', () => {
             mandate: { amount: '20000', frequency: 'monthly', amountRule: 'max' }
         };
         customRender(<UPIMandate {...props} />);
-        expect(
-            screen.getByText(
-                'You’re setting up a UPI Autopay recurring payment (₹100.00). You’ll approve a higher limit to allow future plan changes (up to ₹200.00/month).'
-            )
-        ).toBeInTheDocument();
+        const status = screen.getByRole('status');
+        expect(status).toHaveTextContent(
+            'You’re setting up a UPI Autopay recurring payment (₹100.00). You’ll approve a higher limit to allow future plan changes (up to ₹200.00/month).'
+        );
     });
 
     test('should render the correct text for a mandate with the "max" rule, without a transaction amount', () => {
@@ -44,7 +44,8 @@ describe('UPIMandate', () => {
             mandate: { amount: '20000', frequency: 'monthly', amountRule: 'max' }
         };
         customRender(<UPIMandate {...props} />);
-        expect(screen.getByText('You’re setting up a UPI Autopay recurring payment (up to ₹200.00/month).')).toBeInTheDocument();
+        const status = screen.getByRole('status');
+        expect(status).toHaveTextContent('You’re setting up a UPI Autopay recurring payment (up to ₹200.00/month).');
     });
 
     test('should render the correct text for an "adhoc" frequency mandate', () => {
@@ -53,7 +54,8 @@ describe('UPIMandate', () => {
             mandate: { amount: '10000', frequency: 'adhoc', amountRule: 'exact' }
         };
         customRender(<UPIMandate {...props} />);
-        expect(screen.getByText('You’re setting up a UPI Autopay recurring payment (₹100.00 as presented).')).toBeInTheDocument();
+        const status = screen.getByRole('status');
+        expect(status).toHaveTextContent('You’re setting up a UPI Autopay recurring payment (₹100.00 as presented).');
     });
 
     test('should render nothing if currency is not provided and log a warning', () => {
@@ -65,8 +67,11 @@ describe('UPIMandate', () => {
             mandate: { amount: '10000', frequency: 'monthly', amountRule: 'exact' }
         };
         customRender(<UPIMandate {...props} />);
-        expect(screen.queryByText('You’re setting up a UPI Autopay recurring payment', { exact: false })).not.toBeInTheDocument();
-        expect(consoleWarnSpy).toHaveBeenCalledWith('No mandate information because of missing currency');
+
+        expect(screen.queryByRole('status')).not.toBeInTheDocument();
+        expect(consoleWarnSpy).toHaveBeenCalledWith(
+            'No mandate information because of missing one of the following: frequency, amountRule, amount or currency'
+        );
         consoleWarnSpy.mockRestore();
     });
 });

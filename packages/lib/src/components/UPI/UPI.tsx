@@ -113,7 +113,7 @@ class UPI extends UIElement<UPIConfiguration> {
                         brandLogo={this.props.brandLogo || this.icon}
                         onComplete={this.onComplete}
                         introduction={this.props.i18n.get('upi.qrCodeWaitingMessage')}
-                        countdownTime={5}
+                        countdownTime={this.props.countdownTime ?? 5}
                         onActionHandled={this.onActionHandled}
                         showAmount={!isAutoPay}
                     />
@@ -129,7 +129,7 @@ class UPI extends UIElement<UPIConfiguration> {
                         showCountdownTimer
                         shouldRedirectAutomatically
                         showAmount={!isAutoPay}
-                        countdownTime={5}
+                        countdownTime={this.props.countdownTime ?? 5}
                         clientKey={this.props.clientKey}
                         paymentData={this.props.paymentData}
                         onActionHandled={this.onActionHandled}

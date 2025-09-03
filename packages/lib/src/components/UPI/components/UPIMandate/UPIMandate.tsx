@@ -14,40 +14,54 @@ export interface UPIMandateProps {
 const UPIMandate = ({ mandate, amount }: UPIMandateProps): h.JSX.Element => {
     const { i18n } = useCoreContext();
 
-    const mandateText = useMemo((): string => {
+    const mandateContent = useMemo((): h.JSX.Element => {
         const { amount: mandateAmount, frequency, amountRule } = mandate;
         const { value: paymentAmount, currency } = amount || {};
 
-        if (!currency) {
-            console.warn('No mandate information because of missing currency');
-            return '';
+        if (!frequency || !amountRule || !mandateAmount || !currency) {
+            console.warn('No mandate information because of missing one of the following: frequency, amountRule, amount or currency');
+            return null;
         }
 
         const formattedMandateAmount = i18n.amount(Number(mandateAmount), currency);
         const formattedTransactionAmount = paymentAmount ? i18n.amount(paymentAmount, currency) : null;
 
         const frequencyText = i18n.get(`upi.mandate.frequency.${frequency}`);
+        const introText = i18n.get('upi.mandate.intro');
+        const recurringAmount = `${formattedMandateAmount}${frequencyText}`;
 
         if (amountRule === 'exact') {
-            return i18n.get('upi.mandate.exact', { values: { amount: formattedMandateAmount, frequency: frequencyText } });
+            return (
+                <span>
+                    {introText} (<strong>{recurringAmount}</strong>).
+                </span>
+            );
         }
 
-        // rule === 'max'
+        // amountRule === 'max'
+        const maxAmountText = i18n.get('upi.mandate.upTo', { values: { amount: recurringAmount } });
+
         if (formattedTransactionAmount) {
-            return i18n.get('upi.mandate.max.withAmount', {
-                values: { amount: formattedTransactionAmount, mandateAmount: formattedMandateAmount, frequency: frequencyText }
-            });
+            const extraText = i18n.get('upi.mandate.max.extraText');
+            return (
+                <span>
+                    {introText} (<strong>{formattedTransactionAmount}</strong>). {extraText} (<strong>{maxAmountText}</strong>).
+                </span>
+            );
         }
 
-        // rule === 'max' and no payment amount
-        return i18n.get('upi.mandate.max.withoutAmount', { values: { mandateAmount: formattedMandateAmount, frequency: frequencyText } });
+        return (
+            <span>
+                {introText} (<strong>{maxAmountText}</strong>).
+            </span>
+        );
     }, [mandate, amount, i18n]);
 
-    if (!mandateText) return null;
+    if (!mandateContent) return null;
 
     return (
-        <Alert icon="info" type="info">
-            {i18n.get('upi.mandate.intro', { values: { mandateText } })}
+        <Alert icon="info_black" type="info">
+            {mandateContent}
         </Alert>
     );
 };
