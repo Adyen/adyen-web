@@ -3,6 +3,7 @@ import cx from 'classnames';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import './Fieldset.scss';
 import { getUniqueId } from '../../../../utils/idGenerator';
+import { useMemo } from 'preact/hooks';
 
 interface FieldsetProps {
     children: ComponentChildren;
@@ -10,15 +11,17 @@ interface FieldsetProps {
     label?: string;
     description?: string;
     readonly?: boolean;
+    id?: string;
 }
 
-export default function Fieldset({ children, classNameModifiers = [], label, readonly = false, description }: FieldsetProps) {
+export default function Fieldset({ children, classNameModifiers = [], label, readonly = false, description, id }: FieldsetProps) {
     const { i18n } = useCoreContext();
 
-    const describedById = getUniqueId('payid-input-description');
+    const describedById = useMemo(() => getUniqueId('fieldset-description'), []);
 
     return (
         <fieldset
+            id={id}
             className={cx([
                 'adyen-checkout__fieldset',
                 ...classNameModifiers.map(m => `adyen-checkout__fieldset--${m}`),
