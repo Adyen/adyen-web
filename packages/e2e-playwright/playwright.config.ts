@@ -80,7 +80,7 @@ const config: PlaywrightTestConfig = {
     /* Run your local dev server before starting the tests */
     webServer: [
         {
-            command: 'DISABLE_MSW=true npm run build:storybook:e2e && npm run start:prod-storybook',
+            command: 'npm run build:storybook:e2e && npm run start:prod-storybook',
             cwd: '../..',
             port: 3020,
             reuseExistingServer: !process.env.CI,
