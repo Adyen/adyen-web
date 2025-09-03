@@ -1,5 +1,4 @@
-import { AdyenCheckout, PaymentAmount } from '../../types';
-import { CoreConfiguration } from '../types';
+import { PaymentAmount } from '../../types';
 import { SocialSecurityMode } from '../../components/Card/types';
 import { ANALYTICS_EVENT } from './constants';
 
@@ -59,9 +58,12 @@ export interface AnalyticsOptions {
     analyticsData?: AnalyticsData;
 }
 
-export type AnalyticsProps = Pick<CoreConfiguration, 'loadingContext' | 'locale' | 'clientKey' | 'analytics' | 'amount'> & {
-    bundleType?: string;
-    analyticsContext?: string;
+export type AnalyticsProps = {
+    clientKey: string;
+    analytics?: AnalyticsOptions;
+    locale: string;
+    bundleType: string;
+    analyticsContext: string;
 };
 
 export type AnalyticsEventCategory = (typeof ANALYTICS_EVENT)[keyof typeof ANALYTICS_EVENT];
@@ -72,7 +74,7 @@ export type AnalyticsInitialEvent = {
     flavor?: string;
     paymentMethods?: any[];
     sessionId?: string;
-    checkoutStage: 'PreCheckout' | 'Checkout';
+    checkoutStage?: 'PreCheckout' | 'Checkout';
 };
 
 export type AnalyticsConfig = {

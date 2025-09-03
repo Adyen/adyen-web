@@ -23,7 +23,7 @@ function isSessionCreatedUnderFifteenMinutes(session: CheckoutAttemptIdSession):
     return session.timestamp > fifteenMinutesAgo;
 }
 
-const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bundleType }: AnalyticsProps): AnalyticsModule => {
+const Analytics = ({ locale, clientKey, analytics, analyticsContext, bundleType }: AnalyticsProps): AnalyticsModule => {
     const defaultProps = {
         enabled: true,
         checkoutAttemptId: null,
@@ -36,7 +36,6 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
         analyticsContext,
         clientKey,
         locale,
-        amount,
         analyticsPath: ANALYTICS_PATH,
         bundleType
     });

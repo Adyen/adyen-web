@@ -6,7 +6,7 @@ export type CheckoutAttemptIdSession = {
     timestamp: number;
 };
 
-export type CollectIdProps = Pick<AnalyticsConfig, 'clientKey' | 'analyticsContext' | 'locale' | 'amount'> & {
+export type CollectIdProps = Pick<AnalyticsConfig, 'clientKey' | 'analyticsContext' | 'locale'> & {
     analyticsPath: string;
     bundleType: string;
 };
