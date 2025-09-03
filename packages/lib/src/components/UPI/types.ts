@@ -37,4 +37,8 @@ export interface UPIConfiguration extends UIElementProps {
     // QR code
     qrCodeData?: string;
     brandLogo?: string;
+    /**
+     * The duration in minutes before the await/QR code expires.
+     */
+    countdownTime?: number;
 }

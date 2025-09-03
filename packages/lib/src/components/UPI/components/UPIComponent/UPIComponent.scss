@@ -23,6 +23,12 @@
     }
 }
 
+#upi-area-vpa {
+    .adyen-checkout__alert-message--info {
+        margin-top: token(spacer-070);
+    }
+}
+
 .adyen-checkout-upi-area-qr-code {
     .adyen-checkout__button--pay {
         margin-top: token(spacer-000);
