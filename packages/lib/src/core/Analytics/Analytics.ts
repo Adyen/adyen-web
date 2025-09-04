@@ -22,6 +22,8 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
     const collectId = CollectId({ analyticsContext, clientKey, locale, amount, analyticsPath: ANALYTICS_PATH, bundleType });
     const eventsQueue: EventsQueueModule = EventsQueue({ analyticsContext, clientKey, analyticsPath: ANALYTICS_PATH });
 
+    const level = props.enabled ? ANALYTIC_LEVEL.all : ANALYTIC_LEVEL.initial;
+
     const sendAnalyticsEvents = () => {
         if (capturedCheckoutAttemptId) {
             return eventsQueue.run(capturedCheckoutAttemptId);
@@ -59,11 +61,14 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
     return {
         /**
          * Make "setup" call, to pass containerWidth, buildType, channel etc, and receive a checkoutAttemptId in return
+         *
+         * N.B. This call is always made regardless of whether the merchant has disabled analytics
+         *
          * @param initialEvent -
          */
         setUp: async (initialEvent: AnalyticsInitialEvent) => {
-            const { payload, enabled } = props; // TODO what is payload, is it ever used?
-            const level = enabled ? ANALYTIC_LEVEL.all : ANALYTIC_LEVEL.initial;
+            const { payload } = props; // TODO what is payload, is it ever used?
+
             const analyticsData = processAnalyticsData(props.analyticsData);
             if (!capturedCheckoutAttemptId) {
                 try {
@@ -87,7 +92,8 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
         getEnabled: () => props.enabled,
 
         sendAnalytics: (analyticsObj: AnalyticsEvent): boolean => {
-            if (!props.enabled) return false;
+            /** Only send analytics if the merchant hasn't disabled them */
+            if (level !== ANALYTIC_LEVEL.all) return false;
 
             const eventCategory: AnalyticsEventCategory = analyticsObj.getEventCategory();
 
