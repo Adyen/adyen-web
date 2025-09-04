@@ -7,7 +7,7 @@ import PaymentMethods from '../../core/ProcessResponse/PaymentMethods';
 import { mock } from 'jest-mock-extended';
 import { ICore } from '../../types';
 
-const analyticsModule = Analytics({ analytics: {}, loadingContext: '', locale: '', clientKey: '', bundleType: 'umd' });
+const analyticsModule = Analytics({ analytics: {}, analyticsContext: '', locale: '', clientKey: '', bundleType: 'umd' });
 
 jest.mock('./GooglePayService');
 
