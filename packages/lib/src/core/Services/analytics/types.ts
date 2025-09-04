@@ -15,13 +15,13 @@ export type TelemetryEvent = {
     version: string;
     channel: 'Web';
     platform: 'Web';
-    locale: string;
-    referrer: string;
-    screenWidth: number;
-    containerWidth: number;
-    component: string;
-    flavor: string;
-    buildType: string;
+    locale?: string;
+    referrer?: string;
+    screenWidth?: number;
+    containerWidth?: number;
+    component?: string;
+    flavor?: string;
+    buildType?: string;
     amount?: PaymentAmount;
 } & AnalyticsInitialEvent &
     AnalyticsData;
