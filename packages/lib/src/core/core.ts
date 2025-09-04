@@ -381,12 +381,10 @@ class Core implements ICore {
         this.modules = Object.freeze({
             risk: new RiskModule(this, { ...this.options, loadingContext: this.loadingContext }),
             analytics: Analytics({
-                loadingContext: this.loadingContext,
                 analyticsContext: this.analyticsContext,
                 clientKey: this.options.clientKey,
                 locale: this.options.locale,
                 analytics: this.options.analytics,
-                amount: this.options.amount,
                 bundleType: Core.metadata.bundleType
             }),
             resources: new Resources(this.cdnImagesUrl),
