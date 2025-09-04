@@ -167,7 +167,6 @@ class DropinElement extends UIElement<DropinConfiguration> implements IDropin {
         const paymentAction: UIElement = this.core.createFromAction(action, {
             ...props,
             elementRef: this.elementRef, // maintain elementRef for 3DS2 flow
-            onAdditionalDetails: this.handleAdditionalDetails,
             isDropin: true
         });
 
