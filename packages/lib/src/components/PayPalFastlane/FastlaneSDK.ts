@@ -48,7 +48,8 @@ class FastlaneSDK {
             analytics: configuration.analytics,
             locale: configuration.locale || 'en-US',
             analyticsContext: analyticsUrl,
-            clientKey: this.clientKey
+            clientKey: this.clientKey,
+            bundleType: process.env.BUNDLE_TYPE
         });
 
         document.addEventListener('visibilitychange', this.handlePageVisibilityChanges);
