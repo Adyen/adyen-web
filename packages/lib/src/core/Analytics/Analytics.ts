@@ -25,9 +25,7 @@ function isSessionCreatedUnderFifteenMinutes(session: CheckoutAttemptIdSession):
 
 const Analytics = ({ locale, clientKey, analytics, analyticsContext, bundleType }: AnalyticsProps): AnalyticsModule => {
     const defaultProps = {
-        enabled: true,
-        checkoutAttemptId: null,
-        analyticsData: {}
+        enabled: true
     };
 
     const props = { ...defaultProps, ...analytics };
