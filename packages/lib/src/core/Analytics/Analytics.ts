@@ -77,7 +77,7 @@ const Analytics = ({ locale, clientKey, analytics, analyticsContext, bundleType 
 
     return {
         setUp: async (setupProps?: AnalyticsInitialEvent): Promise<void> => {
-            const defaultProps: Partial<AnalyticsInitialEvent> = { checkoutStage: 'checkout' };
+            const defaultProps: Partial<AnalyticsInitialEvent> = {};
             const finalSetupProps = { ...defaultProps, ...setupProps };
 
             const checkoutAttemptIdSession = storage.get();
