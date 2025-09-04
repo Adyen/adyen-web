@@ -1,5 +1,6 @@
 import { HttpOptions, httpPost } from '../http';
 import type { CollectIdEvent, CollectIdProps, TelemetryEvent } from './types';
+import AdyenCheckoutError from '../../Errors/AdyenCheckoutError';
 
 export const FAILURE_MSG =
     'WARNING: Failed to retrieve "checkoutAttemptId". Consequently, analytics will not be available for this payment. The payment process, however, will not be affected.';
@@ -36,7 +37,12 @@ const collectId = ({ analyticsContext, clientKey, locale, analyticsPath, bundleT
             ...event
         };
 
-        memoizedPromise = httpPost<{ checkoutAttemptId: string }>(options, telemetryEvent).then(conversion => conversion?.checkoutAttemptId);
+        memoizedPromise = httpPost<{ checkoutAttemptId: string }>(options, telemetryEvent).then(conversion => {
+            if (conversion?.checkoutAttemptId) {
+                return conversion.checkoutAttemptId;
+            }
+            throw new AdyenCheckoutError('NETWORK_ERROR', 'Analytics: Attempt ID request was successfully but no ID was returned');
+        });
 
         return memoizedPromise;
     };
