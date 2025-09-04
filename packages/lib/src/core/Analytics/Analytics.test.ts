@@ -155,21 +155,14 @@ describe('Analytics', () => {
                 clientKey: 'test_client_key',
                 locale: 'en-US'
             });
-            expect(collectIdPromiseMock).toHaveBeenCalledWith({ level: 'all', checkoutStage: 'checkout' });
+            expect(collectIdPromiseMock).toHaveBeenCalledWith({ level: 'all' });
         });
 
         test('should make the setup call using level:info if analytics is disabled', async () => {
             const analytics = Analytics({ ...DEFAULT_ANALYTICS_PROPS, analytics: { enabled: false } });
             await analytics.setUp();
 
-            expect(collectIdPromiseMock).toHaveBeenCalledWith({ level: 'initial', checkoutStage: 'checkout' });
-        });
-
-        test('should use "PreCheckout" as value for the checkoutStage property if set', async () => {
-            const analytics = Analytics(DEFAULT_ANALYTICS_PROPS);
-            await analytics.setUp({ checkoutStage: 'precheckout' });
-
-            expect(collectIdPromiseMock).toHaveBeenCalledWith({ level: 'all', checkoutStage: 'precheckout' });
+            expect(collectIdPromiseMock).toHaveBeenCalledWith({ level: 'initial' });
         });
 
         test('should save the attempt ID in the session storage', async () => {
@@ -180,7 +173,7 @@ describe('Analytics', () => {
             await analytics.setUp();
             await flushPromises();
 
-            expect(collectIdPromiseMock).toHaveBeenCalledWith({ level: 'all', checkoutStage: 'checkout' });
+            expect(collectIdPromiseMock).toHaveBeenCalledWith({ level: 'all' });
 
             attemptId = storage.get();
             expect(attemptId.id).toBe(MOCKED_ATTEMPT_ID);
@@ -194,7 +187,6 @@ describe('Analytics', () => {
 
             expect(collectIdPromiseMock).toHaveBeenCalledWith({
                 level: 'all',
-                checkoutStage: 'checkout',
                 checkoutAttemptId: MOCKED_ATTEMPT_ID
             });
         });
@@ -210,8 +202,7 @@ describe('Analytics', () => {
             await flushPromises();
 
             expect(collectIdPromiseMock).toHaveBeenCalledWith({
-                level: 'all',
-                checkoutStage: 'checkout'
+                level: 'all'
             });
 
             const newSession = storage.get();
@@ -229,7 +220,6 @@ describe('Analytics', () => {
 
             expect(collectIdPromiseMock).toHaveBeenCalledWith({
                 level: 'all',
-                checkoutStage: 'checkout',
                 checkoutAttemptId: PAYBYLINK_ATTEMPT_ID
             });
         });
@@ -242,7 +232,7 @@ describe('Analytics', () => {
             await expect(analytics.setUp()).resolves.not.toThrow();
             await flushPromises();
 
-            expect(collectIdPromiseMock).toHaveBeenCalledWith({ level: 'all', checkoutStage: 'checkout' });
+            expect(collectIdPromiseMock).toHaveBeenCalledWith({ level: 'all' });
 
             expect(warnSpy).toHaveBeenCalled();
             warnSpy.mockRestore();
@@ -284,7 +274,6 @@ describe('Analytics', () => {
                         version: 'version'
                     }
                 },
-                checkoutStage: 'checkout',
                 level: 'all'
             });
         });
