@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { render, screen } from '@testing-library/preact';
+import { render, screen, waitFor } from '@testing-library/preact';
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import FastlaneSignup from './FastlaneSignup';
 import type { FastlaneSignupConfiguration } from '../../../PayPalFastlane/types';
@@ -13,7 +13,7 @@ const customRender = ui => {
     );
 };
 
-test('should trigger onChange event if the consent UI is not allowed to be shown (showConsent: false)', () => {
+test('should trigger onChange event if the consent UI is not allowed to be shown (showConsent: false)', async () => {
     const fastlaneConfiguration: FastlaneSignupConfiguration = {
         showConsent: false,
         fastlaneSessionId: 'fastlane-session-id',
@@ -27,7 +27,10 @@ test('should trigger onChange event if the consent UI is not allowed to be shown
 
     customRender(<FastlaneSignup {...fastlaneConfiguration} onChange={onChangeMock} currentDetectedBrand="card" onSubmitAnalytics={jest.fn()} />);
 
-    expect(onChangeMock).toHaveBeenCalledTimes(1);
+    await waitFor(() => {
+        expect(onChangeMock).toHaveBeenCalledTimes(1);
+    });
+
     expect(onChangeMock.mock.calls[0][0]).toEqual({
         fastlaneData: {
             consentGiven: false,
@@ -61,13 +64,15 @@ test('should send "consentShown:true" flag if the shopper saw the consent UI at 
     await user.click(screen.getByRole('switch'));
     expect(screen.queryByText('Mobile number')).toBeNull();
 
-    expect(onChangeMock).lastCalledWith({
-        fastlaneData: {
-            consentGiven: false,
-            consentShown: true,
-            consentVersion: 'v1',
-            fastlaneSessionId: 'xxx-bbb'
-        }
+    await waitFor(() => {
+        expect(onChangeMock).lastCalledWith({
+            fastlaneData: {
+                consentGiven: false,
+                consentShown: true,
+                consentVersion: 'v1',
+                fastlaneSessionId: 'xxx-bbb'
+            }
+        });
     });
 });
 
@@ -92,14 +97,16 @@ test('should return phone number formatted (without spaces and without prefix)',
     await user.click(input);
     await user.keyboard('8005550199');
 
-    expect(onChangeMock).lastCalledWith({
-        fastlaneData: {
-            consentGiven: true,
-            consentShown: true,
-            consentVersion: 'v1',
-            fastlaneSessionId: 'xxx-bbb',
-            telephoneNumber: '8005550199'
-        }
+    await waitFor(() => {
+        expect(onChangeMock).lastCalledWith({
+            fastlaneData: {
+                consentGiven: true,
+                consentShown: true,
+                consentVersion: 'v1',
+                fastlaneSessionId: 'xxx-bbb',
+                telephoneNumber: '8005550199'
+            }
+        });
     });
 });
 

@@ -95,21 +95,25 @@ describe('OpenInvoice', () => {
 
         // Click to check it (making it valid)
         await user.click(consentCheckbox);
-        expect(onChangeMock).toHaveBeenCalledWith(expect.objectContaining({ errors: expect.objectContaining({ consentCheckbox: null }) }));
+        await waitFor(() => {
+            expect(onChangeMock).toHaveBeenCalledWith(expect.objectContaining({ errors: expect.objectContaining({ consentCheckbox: null }) }));
+        });
 
         // Click to uncheck it (making it invalid)
         await user.click(consentCheckbox);
-        expect(onChangeMock).toHaveBeenCalledWith(
-            expect.objectContaining({
-                errors: expect.objectContaining({
-                    consentCheckbox: {
-                        isValid: false,
-                        errorMessage: 'consent.checkbox.invalid',
-                        error: 'consent.checkbox.invalid'
-                    }
+        await waitFor(() => {
+            expect(onChangeMock).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    errors: expect.objectContaining({
+                        consentCheckbox: {
+                            isValid: false,
+                            errorMessage: 'consent.checkbox.invalid',
+                            error: 'consent.checkbox.invalid'
+                        }
+                    })
                 })
-            })
-        );
+            );
+        });
     });
 
     test('should call the onChange on initial render with default state', async () => {

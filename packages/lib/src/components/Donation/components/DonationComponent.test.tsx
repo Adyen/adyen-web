@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { render, screen } from '@testing-library/preact';
+import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import DonationComponent from './DonationComponent';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
@@ -87,7 +87,9 @@ describe('DonationComponent', () => {
         test('Should return isValid true when an amount is selected', async () => {
             renderComponent({ onChange });
             await userEvent.click(screen.getByLabelText('€0.50'));
-            expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ isValid: true }));
+            await waitFor(() => {
+                expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ isValid: true }));
+            });
         });
 
         test('Should submit the right amount', async () => {

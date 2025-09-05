@@ -1,5 +1,5 @@
 import Boleto from './Boleto';
-import { render, screen } from '@testing-library/preact';
+import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
@@ -24,11 +24,13 @@ describe('Boleto', () => {
     test('should make a Boleto payment', async () => {
         const user = userEvent.setup();
 
+        const onChangeMock = jest.fn();
         const onSubmitMock = jest.fn();
 
         const boleto = new Boleto(global.core, {
             modules: { analytics: global.analytics, resources: global.resources },
             i18n: global.i18n,
+            onChange: onChangeMock,
             onSubmit: onSubmitMock,
             loadingContext: 'https://checkoutshopper-live.adyen.com/checkoutshopper/'
         });
@@ -54,6 +56,12 @@ describe('Boleto', () => {
 
         await user.click(state);
         await user.keyboard('[ArrowDown][Enter]');
+
+        // Avoid race condition that asserting the onSubmit too early,
+        // before the component's state has been fully updated
+        await waitFor(() => {
+            expect(onChangeMock).toHaveBeenLastCalledWith(expect.objectContaining({ isValid: true }), expect.anything());
+        });
 
         const button = await screen.findByRole('button', { name: 'Generate Boleto' });
         await user.click(button);
@@ -106,24 +114,26 @@ describe('Boleto', () => {
 
         expect(onSubmitMock).toHaveBeenCalledTimes(0);
 
-        expect(screen.getByText('Enter your first name')).toBeInTheDocument();
-        expect(screen.getByText('Enter your last name')).toBeInTheDocument();
-        expect(screen.getByText('Enter a valid CPF/CNPJ number')).toBeInTheDocument();
-        expect(screen.getByText('Enter the street')).toBeInTheDocument();
-        expect(screen.getByText('Enter the house number')).toBeInTheDocument();
-        expect(screen.getByText('Enter the postal code')).toBeInTheDocument();
-        expect(screen.getByText('Enter the city')).toBeInTheDocument();
-        expect(screen.getByText('Enter the state')).toBeInTheDocument();
+        expect(await screen.findByText('Enter your first name')).toBeInTheDocument();
+        expect(await screen.findByText('Enter your last name')).toBeInTheDocument();
+        expect(await screen.findByText('Enter a valid CPF/CNPJ number')).toBeInTheDocument();
+        expect(await screen.findByText('Enter the street')).toBeInTheDocument();
+        expect(await screen.findByText('Enter the house number')).toBeInTheDocument();
+        expect(await screen.findByText('Enter the postal code')).toBeInTheDocument();
+        expect(await screen.findByText('Enter the city')).toBeInTheDocument();
+        expect(await screen.findByText('Enter the state')).toBeInTheDocument();
     });
 
     test('should allow shoppers to send a copy to their email and make a Boleto payment', async () => {
         const user = userEvent.setup();
 
+        const onChangeMock = jest.fn();
         const onSubmitMock = jest.fn();
 
         const boleto = new Boleto(global.core, {
             modules: { analytics: global.analytics, resources: global.resources },
             i18n: global.i18n,
+            onChange: onChangeMock,
             onSubmit: onSubmitMock,
             loadingContext: 'https://checkoutshopper-live.adyen.com/checkoutshopper/'
         });
@@ -155,6 +165,10 @@ describe('Boleto', () => {
 
         const email = await screen.findByLabelText('Email address');
         await user.type(email, 'jose@adyen.com');
+
+        await waitFor(() => {
+            expect(onChangeMock).toHaveBeenLastCalledWith(expect.objectContaining({ isValid: true }), expect.anything());
+        });
 
         const button = await screen.findByRole('button', { name: 'Generate Boleto' });
         await user.click(button);

@@ -1,5 +1,5 @@
 import AfterPay from './AfterPay';
-import { render, screen, within } from '@testing-library/preact';
+import { render, screen, waitFor, within } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
@@ -15,15 +15,21 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 describe('AfterPay', () => {
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     test('should make a payment', async () => {
         const user = userEvent.setup();
         const onSubmitMock = jest.fn();
+        const onChangeMock = jest.fn();
 
         const afterpay = new AfterPay(global.core, {
             countryCode: 'NL',
             modules: { analytics: global.analytics, resources: global.resources, srPanel: global.srPanel },
             i18n: global.i18n,
             onSubmit: onSubmitMock,
+            onChange: onChangeMock,
             loadingContext: 'https://checkoutshopper-live.adyen.com/checkoutshopper/'
         });
 
@@ -45,67 +51,121 @@ describe('AfterPay', () => {
         await user.type(firstNameInput, 'Jose');
         await user.type(lastNameInput, 'Fernandez');
         await user.click(maleRadioInput);
+        await waitFor(() => {
+            expect(onChangeMock).toHaveBeenLastCalledWith(
+                expect.objectContaining({
+                    data: expect.objectContaining({ shopperName: { firstName: 'Jose', lastName: 'Fernandez', gender: 'MALE' } })
+                }),
+                expect.anything()
+            );
+        });
         await user.type(dateOfBirthInput, '1990-01-01');
+        await waitFor(() => {
+            expect(onChangeMock).toHaveBeenLastCalledWith(
+                expect.objectContaining({ data: expect.objectContaining({ dateOfBirth: '1990-01-01' }) }),
+                expect.anything()
+            );
+        });
         await user.type(emailAddressInput, 'jose@adyen.com');
+        await waitFor(() => {
+            expect(onChangeMock).toHaveBeenLastCalledWith(
+                expect.objectContaining({ data: expect.objectContaining({ shopperEmail: 'jose@adyen.com' }) }),
+                expect.anything()
+            );
+        });
         await user.type(telephoneNumberInput, '612345678');
+        await waitFor(() => {
+            expect(onChangeMock).toHaveBeenLastCalledWith(
+                expect.objectContaining({ data: expect.objectContaining({ telephoneNumber: '612345678' }) }),
+                expect.anything()
+            );
+        });
 
         // Billing address
         await user.type(streetInput, 'Simon Carmilgestraat');
         await user.type(houseNumberInput, '100000');
         await user.type(postalCodeInput, '1011DJ');
         await user.type(cityInput, 'Amsterdam');
+        await waitFor(() => {
+            expect(onChangeMock).toHaveBeenLastCalledWith(
+                expect.objectContaining({
+                    data: expect.objectContaining({
+                        billingAddress: {
+                            country: 'NL',
+                            stateOrProvince: 'N/A',
+                            street: 'Simon Carmilgestraat',
+                            houseNumberOrName: '100000',
+                            postalCode: '1011DJ',
+                            city: 'Amsterdam'
+                        }
+                    })
+                }),
+                expect.anything()
+            );
+        });
 
         const termsAndConditionsCheckbox = await screen.findByRole('checkbox', {
             name: /I agree with the payment conditions of Riverty/i
         });
         await user.click(termsAndConditionsCheckbox);
+        await waitFor(() => {
+            expect(onChangeMock).toHaveBeenLastCalledWith(
+                expect.objectContaining({
+                    isValid: true
+                }),
+                expect.anything()
+            );
+        });
 
         const payButton = await screen.findByRole('button', { name: 'Confirm purchase' });
         await user.click(payButton);
 
-        expect(onSubmitMock).toHaveBeenCalledTimes(1);
-        expect(onSubmitMock).toHaveBeenCalledWith(
-            expect.objectContaining({
-                data: {
-                    billingAddress: {
-                        city: 'Amsterdam',
-                        country: 'NL',
-                        houseNumberOrName: '100000',
-                        postalCode: '1011DJ',
-                        stateOrProvince: 'N/A',
-                        street: 'Simon Carmilgestraat'
+        await waitFor(() => {
+            expect(onSubmitMock).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    data: {
+                        billingAddress: {
+                            city: 'Amsterdam',
+                            country: 'NL',
+                            houseNumberOrName: '100000',
+                            postalCode: '1011DJ',
+                            stateOrProvince: 'N/A',
+                            street: 'Simon Carmilgestraat'
+                        },
+                        clientStateDataIndicator: true,
+                        dateOfBirth: '1990-01-01',
+                        deliveryAddress: {
+                            city: 'Amsterdam',
+                            country: 'NL',
+                            houseNumberOrName: '100000',
+                            postalCode: '1011DJ',
+                            stateOrProvince: 'N/A',
+                            street: 'Simon Carmilgestraat'
+                        },
+                        paymentMethod: { checkoutAttemptId: 'fetch-checkoutAttemptId-failed', type: 'afterpay_default' },
+                        shopperEmail: 'jose@adyen.com',
+                        shopperName: { firstName: 'Jose', gender: 'MALE', lastName: 'Fernandez' },
+                        telephoneNumber: '612345678'
                     },
-                    clientStateDataIndicator: true,
-                    dateOfBirth: '1990-01-01',
-                    deliveryAddress: {
-                        city: 'Amsterdam',
-                        country: 'NL',
-                        houseNumberOrName: '100000',
-                        postalCode: '1011DJ',
-                        stateOrProvince: 'N/A',
-                        street: 'Simon Carmilgestraat'
-                    },
-                    paymentMethod: { checkoutAttemptId: 'fetch-checkoutAttemptId-failed', type: 'afterpay_default' },
-                    shopperEmail: 'jose@adyen.com',
-                    shopperName: { firstName: 'Jose', gender: 'MALE', lastName: 'Fernandez' },
-                    telephoneNumber: '612345678'
-                },
-                isValid: true
-            }),
-            expect.anything(),
-            expect.anything()
-        );
+                    isValid: true
+                }),
+                expect.anything(),
+                expect.anything()
+            );
+        });
     });
 
     test('should send a different delivery address when checking the checkbox', async () => {
         const user = userEvent.setup();
         const onSubmitMock = jest.fn();
+        const onChangeMock = jest.fn();
 
         const afterpay = new AfterPay(global.core, {
             countryCode: 'NL',
             modules: { analytics: global.analytics, resources: global.resources, srPanel: global.srPanel },
             i18n: global.i18n,
             onSubmit: onSubmitMock,
+            onChange: onChangeMock,
             loadingContext: 'https://checkoutshopper-live.adyen.com/checkoutshopper/'
         });
 
@@ -127,18 +187,74 @@ describe('AfterPay', () => {
         await user.type(firstNameInput, 'Jose');
         await user.type(lastNameInput, 'Fernandez');
         await user.click(maleRadioInput);
+        await waitFor(() => {
+            expect(onChangeMock).toHaveBeenLastCalledWith(
+                expect.objectContaining({
+                    data: expect.objectContaining({ shopperName: { firstName: 'Jose', lastName: 'Fernandez', gender: 'MALE' } })
+                }),
+                expect.anything()
+            );
+        });
         await user.type(dateOfBirthInput, '1990-01-01');
+        await waitFor(() => {
+            expect(onChangeMock).toHaveBeenLastCalledWith(
+                expect.objectContaining({ data: expect.objectContaining({ dateOfBirth: '1990-01-01' }) }),
+                expect.anything()
+            );
+        });
         await user.type(emailAddressInput, 'jose@adyen.com');
+        await waitFor(() => {
+            expect(onChangeMock).toHaveBeenLastCalledWith(
+                expect.objectContaining({ data: expect.objectContaining({ shopperEmail: 'jose@adyen.com' }) }),
+                expect.anything()
+            );
+        });
         await user.type(telephoneNumberInput, '612345678');
+        await waitFor(() => {
+            expect(onChangeMock).toHaveBeenLastCalledWith(
+                expect.objectContaining({ data: expect.objectContaining({ telephoneNumber: '612345678' }) }),
+                expect.anything()
+            );
+        });
 
         // Billing address
         await user.type(streetInput, 'Simon Carmilgestraat');
         await user.type(houseNumberInput, '100000');
         await user.type(postalCodeInput, '1011DJ');
         await user.type(cityInput, 'Amsterdam');
+        await waitFor(() => {
+            expect(onChangeMock).toHaveBeenLastCalledWith(
+                expect.objectContaining({
+                    data: expect.objectContaining({
+                        billingAddress: {
+                            country: 'NL',
+                            stateOrProvince: 'N/A',
+                            street: 'Simon Carmilgestraat',
+                            houseNumberOrName: '100000',
+                            postalCode: '1011DJ',
+                            city: 'Amsterdam'
+                        }
+                    })
+                }),
+                expect.anything()
+            );
+        });
 
         const deliveryAddressCheckbox = await screen.findByRole('checkbox', { name: 'Specify a separate delivery address' });
         await user.click(deliveryAddressCheckbox);
+        await waitFor(() => {
+            expect(onChangeMock).toHaveBeenLastCalledWith(
+                expect.objectContaining({
+                    data: expect.objectContaining({
+                        deliveryAddress: {
+                            country: 'NL',
+                            stateOrProvince: 'N/A'
+                        }
+                    })
+                }),
+                expect.anything()
+            );
+        });
 
         // eslint-disable-next-line testing-library/no-node-access,testing-library/no-container
         const [deliveryAddressSection] = container.querySelectorAll('.adyen-checkout__fieldset--deliveryAddress');
@@ -150,51 +266,77 @@ describe('AfterPay', () => {
 
         // Delivery address
         await user.type(deliveryStreetInput, 'Kinkerstraat');
-        await user.type(deliveryHouseNumberInput, '100');
+        await user.type(deliveryHouseNumberInput, '100000');
         await user.type(deliveryPostalCodeInput, '1010PX');
         await user.type(deliveryCityInput, 'Amsterdam');
+        await waitFor(() => {
+            expect(onChangeMock).toHaveBeenLastCalledWith(
+                expect.objectContaining({
+                    data: expect.objectContaining({
+                        deliveryAddress: {
+                            country: 'NL',
+                            stateOrProvince: 'N/A',
+                            street: 'Kinkerstraat',
+                            houseNumberOrName: '100000',
+                            postalCode: '1010PX',
+                            city: 'Amsterdam'
+                        }
+                    })
+                }),
+                expect.anything()
+            );
+        });
 
         const termsAndConditionsCheckbox = await screen.findByRole('checkbox', {
             name: /I agree with the payment conditions of Riverty/i,
             exact: false
         });
         await user.click(termsAndConditionsCheckbox);
+        await waitFor(() => {
+            expect(onChangeMock).toHaveBeenLastCalledWith(
+                expect.objectContaining({
+                    isValid: true
+                }),
+                expect.anything()
+            );
+        });
 
         const payButton = await screen.findByRole('button', { name: 'Confirm purchase' });
         await user.click(payButton);
 
-        expect(onSubmitMock).toHaveBeenCalledTimes(1);
-        expect(onSubmitMock).toHaveBeenCalledWith(
-            expect.objectContaining({
-                data: {
-                    billingAddress: {
-                        city: 'Amsterdam',
-                        country: 'NL',
-                        houseNumberOrName: '100000',
-                        postalCode: '1011DJ',
-                        stateOrProvince: 'N/A',
-                        street: 'Simon Carmilgestraat'
+        await waitFor(() => {
+            expect(onSubmitMock).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    data: {
+                        billingAddress: {
+                            city: 'Amsterdam',
+                            country: 'NL',
+                            houseNumberOrName: '100000',
+                            postalCode: '1011DJ',
+                            stateOrProvince: 'N/A',
+                            street: 'Simon Carmilgestraat'
+                        },
+                        clientStateDataIndicator: true,
+                        dateOfBirth: '1990-01-01',
+                        deliveryAddress: {
+                            city: 'Amsterdam',
+                            country: 'NL',
+                            houseNumberOrName: '100000',
+                            postalCode: '1010PX',
+                            stateOrProvince: 'N/A',
+                            street: 'Kinkerstraat'
+                        },
+                        paymentMethod: { checkoutAttemptId: 'fetch-checkoutAttemptId-failed', type: 'afterpay_default' },
+                        shopperEmail: 'jose@adyen.com',
+                        shopperName: { firstName: 'Jose', gender: 'MALE', lastName: 'Fernandez' },
+                        telephoneNumber: '612345678'
                     },
-                    clientStateDataIndicator: true,
-                    dateOfBirth: '1990-01-01',
-                    deliveryAddress: {
-                        city: 'Amsterdam',
-                        country: 'NL',
-                        houseNumberOrName: '100',
-                        postalCode: '1010PX',
-                        stateOrProvince: 'N/A',
-                        street: 'Kinkerstraat'
-                    },
-                    paymentMethod: { checkoutAttemptId: 'fetch-checkoutAttemptId-failed', type: 'afterpay_default' },
-                    shopperEmail: 'jose@adyen.com',
-                    shopperName: { firstName: 'Jose', gender: 'MALE', lastName: 'Fernandez' },
-                    telephoneNumber: '612345678'
-                },
-                isValid: true
-            }),
-            expect.anything(),
-            expect.anything()
-        );
+                    isValid: true
+                }),
+                expect.anything(),
+                expect.anything()
+            );
+        });
     });
 
     test('should not submit the payment if form is not valid nor consent checkbox is checked', async () => {
