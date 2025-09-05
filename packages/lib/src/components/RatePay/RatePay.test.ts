@@ -1,5 +1,5 @@
 import RatePay from './RatePay';
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/preact';
+import { render, screen, waitFor, within } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
