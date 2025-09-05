@@ -24,4 +24,18 @@ export const Default: UpiStory = {
     }
 };
 
+export const AutoPaySession: UpiStory = {
+    render: ({ componentConfiguration, ...checkoutConfig }: PaymentMethodStoryProps<UPIConfiguration>) => (
+        <Checkout checkoutConfig={checkoutConfig}>{checkout => <ComponentContainer element={new UPI(checkout, componentConfiguration)} />}</Checkout>
+    ),
+    args: {
+        countryCode: 'IN',
+        useSessions: true,
+        sessionData: { mandate: { amount: '30000', frequency: 'monthly', amountRule: 'max' } },
+        componentConfiguration: {
+            mandate: { amount: '30000', frequency: 'monthly', amountRule: 'max' }
+        }
+    }
+};
+
 export default meta;

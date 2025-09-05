@@ -11,6 +11,8 @@ import UPIIntentAppList from '../UPIIntentAppList';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import Alert from '../../../internal/Alert';
 import { SegmentedControlOption } from '../../../internal/SegmentedControl/SegmentedControl';
+import UPIMandate, { Mandate } from '../UPIMandate/UPIMandate';
+import type { PaymentAmount } from '../../../../types/global-types';
 
 type UpiData = { app?: App; virtualPaymentAddress?: string };
 
@@ -21,6 +23,8 @@ interface UPIComponentProps {
     showPayButton: boolean;
     apps?: Array<App>;
     segmentedControlOptions?: Array<SegmentedControlOption<UpiMode>>;
+    mandate?: Mandate;
+    amount?: PaymentAmount;
 
     ref?(ref: RefObject<typeof UPIComponent>): void;
 
@@ -34,9 +38,11 @@ interface UPIComponentProps {
 export default function UPIComponent({
     defaultMode,
     onChange,
-    onUpdateMode = () => {},
     payButton,
     showPayButton,
+    mandate,
+    amount,
+    onUpdateMode = () => {},
     apps = [],
     segmentedControlOptions = []
 }: Readonly<UPIComponentProps>): h.JSX.Element {
@@ -47,6 +53,7 @@ export default function UPIComponent({
     const [vpaInputHandlers, setVpaInputHandlers] = useState<VpaInputHandlers>(null);
     const [selectedApp, setSelectedApp] = useState<App>(null);
     const [isValid, setIsValid] = useState<boolean>(defaultMode === 'qrCode');
+    const mandateComponent = mandate && <UPIMandate mandate={mandate} amount={amount} />;
 
     this.setStatus = (status: UIElementStatus) => {
         setStatus(status);
@@ -122,7 +129,7 @@ export default function UPIComponent({
                     <span className="adyen-checkout-upi-instruction-label">{i18n.get('upi.intent.instruction')}</span>
                     {status === 'error' && <Alert icon={'cross'}>{i18n.get('upi.error.noAppSelected')}</Alert>}
                     <UPIIntentAppList disabled={status === 'loading'} apps={apps} selectedAppId={selectedApp?.id} onAppSelect={handleAppSelect} />
-
+                    {mandateComponent}
                     {showPayButton &&
                         payButton({
                             label: i18n.get('continue'),
@@ -134,7 +141,7 @@ export default function UPIComponent({
                 <div id={A11Y.AreaId.VPA} aria-labelledby={A11Y.ButtonId.VPA} className="adyen-checkout-upi-area-vpa" role="region">
                     <span className="adyen-checkout-upi-instruction-label">{i18n.get('upi.collect.instruction')}</span>
                     <VpaInput disabled={status === 'loading'} onChange={onChange} onSetInputHandlers={onSetVpaInputHandlers} />
-
+                    {mandateComponent}
                     {showPayButton &&
                         payButton({
                             label: i18n.get('continue'),
@@ -145,6 +152,7 @@ export default function UPIComponent({
             {mode === 'qrCode' && (
                 <div id={A11Y.AreaId.QR} aria-labelledby={A11Y.ButtonId.QR} className="adyen-checkout-upi-area-qr-code" role="region">
                     <span className="adyen-checkout-upi-instruction-label">{i18n.get('upi.qrCode.instruction')}</span>
+                    {mandateComponent}
                     {showPayButton &&
                         payButton({
                             label: i18n.get('generateQRCode'),

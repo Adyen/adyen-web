@@ -422,5 +422,12 @@
     "eftpad-canada.input.transitNumber.label": "Número de trànsit",
     "eftpad-canada.input.transitNumber.contextualText": "5 dígits",
     "eftpad-canada.input.transitNumber.error": "Introduïu un número de trànsit que consta de 5 dígits",
-    "eftpad-canada.settlement-info": "Els fons es retiraran del vostre compte bancari en un termini d'1 a 3 dies hàbils."
+    "eftpad-canada.settlement-info": "Els fons es retiraran del vostre compte bancari en un termini d'1 a 3 dies hàbils.",
+    "upi.mandate.intro": "Esteu configurant un pagament recurrent d'UPI Autopay %{mandateText}.",
+    "upi.mandate.exact": "(%{amount}%{frequency})",
+    "upi.mandate.max.withAmount": "(%{amount}). Aprovareu un límit més alt per permetre futurs canvis de pla (fins a %{mandateAmount}%{frequency})",
+    "upi.mandate.max.withoutAmount": "(Fins a %{mandateAmount}%{frequency})",
+    "upi.mandate.frequency.monthly": "/mes",
+    "upi.mandate.frequency.weekly": "/setmana",
+    "upi.mandate.frequency.adhoc": " tal com es presenta"
 }
