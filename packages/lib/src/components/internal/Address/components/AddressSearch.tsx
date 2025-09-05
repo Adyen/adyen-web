@@ -17,7 +17,7 @@ export type OnAddressLookupType = (
 ) => Promise<void>;
 
 export type OnAddressSelectedType = (
-    value: string,
+    value: { id: string; name: string },
     actions: {
         resolve: (value: AddressLookupItem) => void;
         reject: (reason?: any) => void;
@@ -53,8 +53,8 @@ export default function AddressSearch({
     placeholder,
     addressSearchDebounceMs
 }: Readonly<AddressSearchProps>) {
-    const [formattedData, setFormattedData] = useState([]);
-    const [originalData, setOriginalData] = useState([]);
+    const [formattedData, setFormattedData] = useState<AddressLookupItem[]>([]);
+    const [originalData, setOriginalData] = useState<AddressLookupItem[]>([]);
 
     const [errorMessage, setErrorMessage] = useState('');
 
