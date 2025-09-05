@@ -2,13 +2,14 @@ import { selectOne } from '../components/internal/SecuredFields/lib/utilities/do
 
 /**
  * Generic function to set focus on named element
- * @param holder -
- * @param fieldToFocus -
+ * @param holder - DOM element or CSS selector string to search within
+ * @param fieldToFocus - Name of the field to focus on
  * @param focusContextSelector - some fields can occur twice in a form but in a different context e.g. as part of a billingAddress or as part of a deliverySddress.
  * This param provides the context so we can select them correctly
  */
-export const setFocusOnField = (holder, fieldToFocus, focusContextSelector = '') => {
-    const pdHolder = selectOne(document, holder);
+export const setFocusOnField = (holder: Element | string, fieldToFocus: string, focusContextSelector = '') => {
+    // If holder is already a DOM element, use it directly; otherwise query for it
+    const pdHolder = holder instanceof Element ? holder : selectOne(document, holder);
 
     // Identify if we're dealing with a dropdown
     if (
