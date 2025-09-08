@@ -77,19 +77,21 @@ const Analytics = ({ locale, clientKey, analytics, analyticsContext, bundleType 
 
     return {
         setUp: async (setupProps?: AnalyticsInitialEvent): Promise<void> => {
-            const defaultProps: Partial<AnalyticsInitialEvent> = {};
-            const finalSetupProps = { ...defaultProps, ...setupProps };
-
-            const checkoutAttemptIdSession = storage.get();
-            const isSessionReusable = isSessionCreatedUnderFifteenMinutes(checkoutAttemptIdSession);
-
-            const { payload, enabled } = props;
-            const level = enabled ? ANALYTIC_LEVEL.all : ANALYTIC_LEVEL.initial;
-            const analyticsData = processAnalyticsData(props.analyticsData);
-
-            const availableCheckoutAttemptId: string | undefined = isSessionReusable ? checkoutAttemptIdSession.id : analyticsData?.checkoutAttemptId;
-
             try {
+                const defaultProps: Partial<AnalyticsInitialEvent> = {};
+                const finalSetupProps = { ...defaultProps, ...setupProps };
+
+                const checkoutAttemptIdSession = storage.get();
+                const isSessionReusable = isSessionCreatedUnderFifteenMinutes(checkoutAttemptIdSession);
+
+                const { payload, enabled } = props;
+                const level = enabled ? ANALYTIC_LEVEL.all : ANALYTIC_LEVEL.initial;
+                const analyticsData = processAnalyticsData(props.analyticsData);
+
+                const availableCheckoutAttemptId: string | undefined = isSessionReusable
+                    ? checkoutAttemptIdSession.id
+                    : analyticsData?.checkoutAttemptId;
+
                 const collectIdPayload = {
                     ...finalSetupProps,
                     ...payload,
