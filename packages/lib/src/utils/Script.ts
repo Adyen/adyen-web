@@ -24,8 +24,9 @@ class Script implements IScript {
     private readonly attributes: Partial<HTMLScriptElement>;
     private readonly dataAttributes: Record<string, string | undefined>;
 
-    private loadPromise: Promise<void> | null = null;
     private script: HTMLScriptElement;
+    private loadPromise: Promise<void> | null = null;
+    private rejectLoadPromise: (reason?: any) => void | null = null;
 
     private static RETRY_DELAY = 1000;
     private static MAX_NUMBER_OF_RETRIES = 3;
@@ -44,6 +45,7 @@ class Script implements IScript {
         }
 
         this.loadPromise = new Promise((resolve, reject) => {
+            this.rejectLoadPromise = reject;
             let attempts = 0;
 
             const loadScriptWithRetry = async (): Promise<void> => {
@@ -52,12 +54,17 @@ class Script implements IScript {
                     await this.loadScript();
                     resolve();
                 } catch (error: unknown) {
+                    if (this.loadPromise === null) {
+                        return;
+                    }
+
                     this.removeScript();
 
                     if (attempts < Script.MAX_NUMBER_OF_RETRIES) {
                         setTimeout(() => void loadScriptWithRetry(), Script.RETRY_DELAY);
                     } else {
                         this.loadPromise = null;
+                        this.rejectLoadPromise = null;
                         reject(error);
                     }
                 }
@@ -70,6 +77,7 @@ class Script implements IScript {
     };
 
     public remove = () => {
+        this.rejectLoadPromise?.(new AdyenCheckoutError('CANCEL', 'Script loading cancelled.'));
         this.removeScript();
         this.loadPromise = null;
     };
