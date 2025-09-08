@@ -10,7 +10,8 @@ describe('PaypalComponent', () => {
             configuration: {
                 merchantId: 'TestMerchant',
                 intent: 'authorize'
-            }
+            },
+            onScriptLoadFailure: jest.fn()
         });
         render(<PaypalComponent {...props} />);
         screen.getByTestId('spinner');
