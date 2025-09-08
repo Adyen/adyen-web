@@ -48,7 +48,6 @@ class Script implements IScript {
 
             const loadScriptWithRetry = async (): Promise<void> => {
                 try {
-                    console.log(`loading ${this.src}`);
                     attempts++;
                     await this.loadScript();
                     resolve();
