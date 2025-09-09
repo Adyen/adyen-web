@@ -28,8 +28,8 @@ class Script implements IScript {
     private loadPromise: Promise<void> | null = null;
     private rejectLoadPromise: (reason?: any) => void | null = null;
 
-    private static RETRY_DELAY = 1000;
-    private static MAX_NUMBER_OF_RETRIES = 3;
+    public static readonly RETRY_DELAY = 1000;
+    public static readonly MAX_NUMBER_OF_RETRIES = 3;
 
     constructor(src: string, node = 'body', attributes: Partial<HTMLScriptElement> = {}, dataAttributes: Record<string, string | undefined> = {}) {
         this.src = src;
@@ -90,6 +90,7 @@ class Script implements IScript {
     private loadScript(): Promise<void> {
         return new Promise((resolve, reject) => {
             const scriptContainer = document.querySelector(this.node);
+
             if (!scriptContainer) {
                 reject(new AdyenCheckoutError('SCRIPT_ERROR', `Unable to find script container node: ${this.node}`));
                 return;
@@ -134,6 +135,7 @@ class Script implements IScript {
 
             // Script element doesn't exist in the browser, so we create it and append to the DOM tree
             this.script = document.createElement('script');
+
             Object.assign(this.script, this.attributes);
             Object.assign(this.script.dataset, this.dataAttributes);
 
