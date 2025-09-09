@@ -1,14 +1,16 @@
-import { render, screen } from '@testing-library/preact';
+import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 
 import PreAuthorizedDebitCanada from './PreAuthorizedDebitCanada';
 
 describe('PreAuthorizedDebitCanada', () => {
     let onSubmitMock;
+    let onChangeMock;
     let user;
 
     beforeEach(() => {
         onSubmitMock = jest.fn();
+        onChangeMock = jest.fn();
         user = userEvent.setup();
     });
 
@@ -65,6 +67,7 @@ describe('PreAuthorizedDebitCanada', () => {
         test('should submit the payment with the store consent given', async () => {
             const preAuthorizedDebitCanada = new PreAuthorizedDebitCanada(global.core, {
                 onSubmit: onSubmitMock,
+                onChange: onChangeMock,
                 enableStoreDetails: true,
                 i18n: global.i18n,
                 loadingContext: 'test',
@@ -79,8 +82,20 @@ describe('PreAuthorizedDebitCanada', () => {
             await user.type(screen.getByLabelText(/Transit number/i), '12345');
             await user.click(screen.getByLabelText(/Save for my next payment/i));
 
-            await user.click(screen.queryByRole('button', { name: /Pay/i }));
+            // Avoid race condition that asserting the onSubmit too early,
+            // before the component's state has been fully updated
+            await waitFor(() => {
+                expect(onChangeMock).toHaveBeenLastCalledWith(
+                    expect.objectContaining({
+                        data: expect.objectContaining({
+                            storePaymentMethod: true
+                        })
+                    }),
+                    expect.anything()
+                );
+            });
 
+            await user.click(screen.queryByRole('button', { name: /Pay/i }));
             expect(onSubmitMock).toHaveBeenCalledTimes(1);
             expect(onSubmitMock).toHaveBeenCalledWith(
                 expect.objectContaining({
