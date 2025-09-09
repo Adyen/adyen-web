@@ -422,10 +422,9 @@
     "eftpad-canada.input.transitNumber.contextualText": "5 cyfr",
     "eftpad-canada.input.transitNumber.error": "Wprowadź numer tranzytowy składający się z 5 cyfr",
     "eftpad-canada.settlement-info": "Środki zostaną pobrane z Twojego konta bankowego w ciągu 1–3 dni roboczych.",
-    "upi.mandate.intro": "Ustawiasz cykliczne płatności UPI Autopay %{mandateText}.",
-    "upi.mandate.exact": "(%{amount}%{frequency})",
-    "upi.mandate.max.withAmount": "(%{amount}). Zatwierdzisz wyższy limit, aby umożliwić przyszłe zmiany planu (up to %{mandateAmount}%{frequency})",
-    "upi.mandate.max.withoutAmount": "(do %{mandateAmount}%{frequency})",
+    "upi.mandate.intro": "Ustawiasz cykliczną płatność UPI Autopay",
+    "upi.mandate.max.extraText": "Zatwierdzisz wyższy limit, aby umożliwić przyszłe zmiany planu",
+    "upi.mandate.upTo": "do %{amount}",
     "upi.mandate.frequency.monthly": "/miesiąc",
     "upi.mandate.frequency.weekly": "/tydzień",
     "upi.mandate.frequency.adhoc": " jak przedstawiono"

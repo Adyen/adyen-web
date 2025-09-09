@@ -422,10 +422,9 @@
     "eftpad-canada.input.transitNumber.contextualText": "5桁",
     "eftpad-canada.input.transitNumber.error": "5桁のトランジット番号を入力してください",
     "eftpad-canada.settlement-info": "資金は1〜3営業日以内に銀行口座から引き落とされます。",
-    "upi.mandate.intro": "UPI Autopay定期支払い%{mandateText}を設定しています。",
-    "upi.mandate.exact": "(%{amount}%{frequency})",
-    "upi.mandate.max.withAmount": "(%{amount})。将来のプラン変更を可能にするために、より高い制限を承認します（最大%{mandateAmount}%{frequency}）",
-    "upi.mandate.max.withoutAmount": "（最大%{mandateAmount}%{frequency}）",
+    "upi.mandate.intro": "UPI Autopayの定期支払いを設定しています。",
+    "upi.mandate.max.extraText": "今後のプランの変更を許可するために、より高い制限を承認します",
+    "upi.mandate.upTo": "最大%{amount}",
     "upi.mandate.frequency.monthly": "/月",
     "upi.mandate.frequency.weekly": "/週",
     "upi.mandate.frequency.adhoc": " 提示のとおり"

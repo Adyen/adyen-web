@@ -423,10 +423,9 @@
     "eftpad-canada.input.transitNumber.contextualText": "5 skaitmenys",
     "eftpad-canada.input.transitNumber.error": "Įveskite tranzito numerį, kurį sudaro 5 skaitmenys",
     "eftpad-canada.settlement-info": "Lėšos bus nurašytos iš jūsų banko sąskaitos per 1–3 darbo dienas.",
-    "upi.mandate.intro": "Kuriate pasikartojantį UPI automatinio mokėjimo įgaliojimą %(mandateText).",
-    "upi.mandate.exact": "(%{amount}%{frequency})",
-    "upi.mandate.max.withAmount": "(%{amount}). Patvirtinsite didesnį limitą, kad būtų galima keisti planą ateityje (iki %{mandateAmount} %{frequency})",
-    "upi.mandate.max.withoutAmount": "(iki %{mandateAmount}%{frequency})",
+    "upi.mandate.intro": "Nustatote „UPI Autopay“ periodinį mokėjimą",
+    "upi.mandate.max.extraText": "Patvirtinsite didesnį limitą, kad būtų galima keisti planą ateityje",
+    "upi.mandate.upTo": "iki %{amount}",
     "upi.mandate.frequency.monthly": "/mėn.",
     "upi.mandate.frequency.weekly": "/sav.",
     "upi.mandate.frequency.adhoc": " kaip pateikta"

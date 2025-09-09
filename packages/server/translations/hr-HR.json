@@ -422,10 +422,9 @@
     "eftpad-canada.input.transitNumber.contextualText": "5 znamenki",
     "eftpad-canada.input.transitNumber.error": "Unesite tranzitni broj koji sadrži 5 znamenki",
     "eftpad-canada.settlement-info": "Sredstva će biti povučena s vašeg bankovnog računa u roku od 1 do 3 radna dana.",
-    "upi.mandate.intro": "Postavljate ponavljajuće plaćanje UPI Autopay %{mandateText}.",
-    "upi.mandate.exact": "(%{iznos}%{učestalost})",
-    "upi.mandate.max.withAmount": "(%{iznos}). Odobrit ćete veće ograničenje kako biste omogućili buduće promjene plana (do %{mandateAmount}%{frequency})",
-    "upi.mandate.max.withoutAmount": "(Do %{mandateAmount}%{frequency})",
+    "upi.mandate.intro": "Postavljate ponavljajuću uplatu UPI Autopay",
+    "upi.mandate.max.extraText": "Odobrit ćete veće ograničenje kako biste omogućili buduće promjene plana",
+    "upi.mandate.upTo": "do % {iznos}",
     "upi.mandate.frequency.monthly": "/mjesec",
     "upi.mandate.frequency.weekly": "/trjedan",
     "upi.mandate.frequency.adhoc": " kako je predočeno"

@@ -422,10 +422,9 @@
     "eftpad-canada.input.transitNumber.contextualText": "5 číslic",
     "eftpad-canada.input.transitNumber.error": "Zadejte pětimístné tranzitní číslo.",
     "eftpad-canada.settlement-info": "Prostředky budou strženy z vašeho bankovního účtu během 1–3 pracovních dnů.",
-    "upi.mandate.intro": "Nastavujete opakující se platbu UPI Autopay %{mandateText}.",
-    "upi.mandate.exact": "(%{amount}%{frequency})",
-    "upi.mandate.max.withAmount": "(%{amount}). Schválíte vyšší limit, aby bylo možné provádět budoucí změny plánu (až do %{mandateAmount}%{frequency})",
-    "upi.mandate.max.withoutAmount": "(Až %{mandateAmount}%{frequency})",
+    "upi.mandate.intro": "Nastavujete opakovanou platbu UPI Autopay",
+    "upi.mandate.max.extraText": "Schválíte vyšší limit, aby bylo možné provádět budoucí změny plánu",
+    "upi.mandate.upTo": "až do %{částka}",
     "upi.mandate.frequency.monthly": "/měsíc",
     "upi.mandate.frequency.weekly": "/týden",
     "upi.mandate.frequency.adhoc": " jak je předloženo"

@@ -422,10 +422,9 @@
     "eftpad-canada.input.transitNumber.contextualText": "5자리",
     "eftpad-canada.input.transitNumber.error": "5자리 지점 번호 입력",
     "eftpad-canada.settlement-info": "내 은행 계좌에서 영업일 기준 1~3일 안에 출금됩니다.",
-    "upi.mandate.intro": "UPI 자동이체 반복 결제를 설정하고 계십니다 %{mandateText}.",
-    "upi.mandate.exact": "(%{amount}%{frequency})",
-    "upi.mandate.max.withAmount": "(%{amount}). 향후 요금제 변경을 허용하기 위해 더 높은 한도를 승인하게 됩니다(최대 %{mandateAmount}%{frequency})",
-    "upi.mandate.max.withoutAmount": "(최대 %{mandateAmount}%{frequency})",
+    "upi.mandate.intro": "UPI 자동이체 반복 결제를 설정하고 있습니다",
+    "upi.mandate.max.extraText": "향후 요금제를 변경할 수 있도록 더 높은 한도를 승인합니다",
+    "upi.mandate.upTo": "최대 %{amount}",
     "upi.mandate.frequency.monthly": "/월",
     "upi.mandate.frequency.weekly": "/주",
     "upi.mandate.frequency.adhoc": " 제시된 대로"
