@@ -17,7 +17,7 @@ export type OnAddressLookupType = (
 ) => Promise<void>;
 
 export type OnAddressSelectedType = (
-    value: { id: string; name: string },
+    value: AddressLookupItem,
     actions: {
         resolve: (value: AddressLookupItem) => void;
         reject: (reason?: any) => void;
