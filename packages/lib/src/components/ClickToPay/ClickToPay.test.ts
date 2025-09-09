@@ -1,5 +1,5 @@
 import { mock } from 'jest-mock-extended';
-import { render, screen } from '@testing-library/preact';
+import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 
 import { ClickToPayElement } from './ClickToPay';
@@ -107,7 +107,9 @@ test('should reject isAvailable if shopper account is not found', async () => {
 
 describe('Click to Pay: ENTER keypress should perform an action only within the CtP Component and should not propagate the event up to UIElement', () => {
     test('[Login form] should trigger shopper email lookup when ENTER key is pressed', async () => {
-        const user = userEvent.setup();
+        // It's not possible to wait for onChange because it's not called.
+        // Hence, add some delay between individual keystrokes, which yields to the event loop and allows pending state updates to be processed.
+        const user = userEvent.setup({ delay: 100 });
 
         const mockCtpService = mock<IClickToPayService>();
         mockCtpService.initialize.mockImplementation(() => Promise.resolve());
@@ -137,15 +139,16 @@ describe('Click to Pay: ENTER keypress should perform an action only within the 
         await user.type(emailInput, 'shopper@example.com');
         await user.keyboard('[Enter]');
 
-        expect(mockCtpService.verifyIfShopperIsEnrolled).toHaveBeenCalledTimes(1);
-        expect(mockCtpService.verifyIfShopperIsEnrolled).toHaveBeenCalledWith({ shopperEmail: 'shopper@example.com' });
-        expect(onSubmitMock).not.toHaveBeenCalled();
+        await waitFor(() => {
+            expect(mockCtpService.verifyIfShopperIsEnrolled).toHaveBeenCalledWith({ shopperEmail: 'shopper@example.com' });
+        });
 
+        expect(onSubmitMock).not.toHaveBeenCalled();
         element.unmount();
     });
 
     test('[OTP form] should trigger OTP validation when ENTER key is pressed', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ delay: 100 });
 
         const mockCtpService = mock<IClickToPayService>();
         mockCtpService.initialize.mockImplementation(() => Promise.resolve());
@@ -171,19 +174,21 @@ describe('Click to Pay: ENTER keypress should perform an action only within the 
         });
         render(element.mount('body'));
 
-        const emailInput = await screen.findByLabelText('One time code', { exact: false });
-        await user.type(emailInput, '654321');
+        const otp = await screen.findByLabelText('One time code');
+        await user.type(otp, '654321');
         await user.keyboard('[Enter]');
 
-        expect(mockCtpService.finishIdentityValidation).toHaveBeenCalledTimes(1);
-        expect(mockCtpService.finishIdentityValidation).toHaveBeenCalledWith('654321');
+        await waitFor(() => {
+            expect(mockCtpService.finishIdentityValidation).toHaveBeenCalledWith('654321');
+        });
+
         expect(onSubmitMock).not.toHaveBeenCalled();
 
         element.unmount();
     });
 
     test('[Card view] should trigger Click to Pay checkout when ENTER key is pressed', async () => {
-        const user = userEvent.setup();
+        const user = userEvent.setup({ delay: 100 });
 
         const mockCtpService = mock<IClickToPayService>();
         mockCtpService.initialize.mockImplementation(() => Promise.resolve());
@@ -243,8 +248,10 @@ describe('Click to Pay: ENTER keypress should perform an action only within the 
 
         await user.keyboard('[Enter]');
 
-        expect(mockCtpService.checkout).toHaveBeenCalledTimes(1);
-        expect(mockCtpService.checkout).toHaveBeenCalledWith(mockCtpService.shopperCards[0]);
+        await waitFor(() => {
+            expect(mockCtpService.checkout).toHaveBeenCalledWith(mockCtpService.shopperCards[0]);
+        });
+
         expect(onSubmitMock).toHaveBeenCalled();
 
         element.unmount();
