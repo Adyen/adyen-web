@@ -278,7 +278,7 @@ class Core implements ICore {
                         this.submitDetails(state.data); // Fallback. Not sure if there are circumstances in which this will ever fire? But we have a unit test for it, just in case.
                     }
                 },
-                ...options // allow for the passed options to overwrite the mapped onComplete fn, above e.g. in the MDFlow we want to use the original, passed, onComplete fn
+                ...options // allow for any passed options to overwrite the mapped onComplete fn, above e.g. in the MDFlow we want to use the original, passed, onComplete fn
             };
 
             return getComponentForAction(this, registry, action, props);
