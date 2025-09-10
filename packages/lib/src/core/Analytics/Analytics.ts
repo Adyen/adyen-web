@@ -92,7 +92,7 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
         getEnabled: () => props.enabled,
 
         sendAnalytics: (analyticsObj: AnalyticsEvent): boolean => {
-            /** Only send analytics if the merchant hasn't disabled them */
+            /** Only send analytics if the merchant has not disabled them */
             if (level !== ANALYTIC_LEVEL.all) return false;
 
             const eventCategory: AnalyticsEventCategory = analyticsObj.getEventCategory();
