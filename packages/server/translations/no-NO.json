@@ -421,5 +421,11 @@
     "eftpad-canada.input.transitNumber.label": "Transittnummer",
     "eftpad-canada.input.transitNumber.contextualText": "5 sifre",
     "eftpad-canada.input.transitNumber.error": "Skriv inn et transittnummer som består av 5 sifre",
-    "eftpad-canada.settlement-info": "Pengene blir trukket fra bankkontoen din i løpet av 1–3 virkedager."
+    "eftpad-canada.settlement-info": "Pengene blir trukket fra bankkontoen din i løpet av 1–3 virkedager.",
+    "upi.mandate.intro": "Du setter opp regelmessig betaling med UPI Autopay",
+    "upi.mandate.max.extraText": "Du godkjenner en høyere grense for å gi rom for fremtidige endringer i abonnementet",
+    "upi.mandate.upTo": "opptil %{amount}",
+    "upi.mandate.frequency.monthly": "per måned",
+    "upi.mandate.frequency.weekly": "per uke",
+    "upi.mandate.frequency.adhoc": " som vist"
 }
