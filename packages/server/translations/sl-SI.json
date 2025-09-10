@@ -421,5 +421,11 @@
     "eftpad-canada.input.transitNumber.label": "Tranzitna številka",
     "eftpad-canada.input.transitNumber.contextualText": "5 števk",
     "eftpad-canada.input.transitNumber.error": "Vnesite tranzitno številko, ki je sestavljena iz 5 števk",
-    "eftpad-canada.settlement-info": "Sredstva bodo z vašega bančnega računa dvignjena v 1–3 delovnih dneh."
+    "eftpad-canada.settlement-info": "Sredstva bodo z vašega bančnega računa dvignjena v 1–3 delovnih dneh.",
+    "upi.mandate.intro": "Nastavljate ponavljajoče se plačilo UPI Autopay",
+    "upi.mandate.max.extraText": "Odobrili boste višjo omejitev, da omogočite prihodnje spremembe načrta",
+    "upi.mandate.upTo": "do zneska %{amount}",
+    "upi.mandate.frequency.monthly": "/mesec",
+    "upi.mandate.frequency.weekly": "/teden",
+    "upi.mandate.frequency.adhoc": " kot je predstavljeno"
 }

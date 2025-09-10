@@ -421,5 +421,11 @@
     "eftpad-canada.input.transitNumber.label": "Αριθμός διαμετακόμισης",
     "eftpad-canada.input.transitNumber.contextualText": "5 ψηφία",
     "eftpad-canada.input.transitNumber.error": "Εισαγάγετε έναν αριθμό διαμετακόμισης που αποτελείται από 5 ψηφία",
-    "eftpad-canada.settlement-info": "Τα κεφάλαια θα αποσυρθούν από τον τραπεζικό λογαριασμό σας εντός 1-3 εργάσιμων ημερών."
+    "eftpad-canada.settlement-info": "Τα κεφάλαια θα αποσυρθούν από τον τραπεζικό λογαριασμό σας εντός 1-3 εργάσιμων ημερών.",
+    "upi.mandate.intro": "Ρυθμίζετε μια επαναλαμβανόμενη πληρωμή μέσω UPI Autopay",
+    "upi.mandate.max.extraText": "Θα εγκρίνετε υψηλότερο όριο για να επιτρέψετε μελλοντικές αλλαγές στο πρόγραμμα",
+    "upi.mandate.upTo": "έως %{amount}",
+    "upi.mandate.frequency.monthly": "/μήνα",
+    "upi.mandate.frequency.weekly": "/εβδομάδα",
+    "upi.mandate.frequency.adhoc": " όπως παρουσιάστηκε"
 }
