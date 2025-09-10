@@ -1,9 +1,17 @@
-import { mount } from 'enzyme';
+import { render, screen, waitFor } from '@testing-library/preact';
+import userEvent from '@testing-library/user-event';
 import { h } from 'preact';
 import IssuerList from './IssuerList';
 import PayButton from '../PayButton';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { ANALYTICS_FEATURED_ISSUER, ANALYTICS_LIST, ANALYTICS_SELECTED_STR } from '../../../core/Analytics/constants';
+
+/**
+ * DON'T USE THIS FILE
+ * This file should be deprecated, there's very litle reason to test IssuerList without it's container
+ * All these tests are misleading, becaused clicking on Pay Button doesn't trigger the usual component submit logic
+ * IMPORTANT: For any kind of integration test use IssuerListContainer instead
+ */
 
 describe('IssuerList', () => {
     test('Accepts Items as props', () => {
@@ -12,7 +20,7 @@ describe('IssuerList', () => {
             { name: 'Issuer 2', id: '2' },
             { name: 'Issuer 3', id: '3' }
         ];
-        const wrapper = mount(
+        render(
             <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
                 <IssuerList
                     items={items}
@@ -23,8 +31,11 @@ describe('IssuerList', () => {
                 />
             </CoreProvider>
         );
-        expect(wrapper.find('IssuerList').props().items).toHaveLength(3);
-        expect(wrapper.find('ul li')).toHaveLength(3);
+        const listItems = screen.getAllByRole('option');
+        expect(listItems).toHaveLength(3);
+        expect(screen.getByText('Issuer 1')).toBeInTheDocument();
+        expect(screen.getByText('Issuer 2')).toBeInTheDocument();
+        expect(screen.getByText('Issuer 3')).toBeInTheDocument();
     });
 
     test('Renders highlighted issuers button group', () => {
@@ -35,7 +46,7 @@ describe('IssuerList', () => {
         ];
         const highlightedIds = ['2', '3'];
 
-        const wrapper = mount(
+        render(
             <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
                 <IssuerList
                     items={items}
@@ -47,11 +58,13 @@ describe('IssuerList', () => {
                 />
             </CoreProvider>
         );
-        expect(wrapper.find('IssuerList').props().highlightedIds).toHaveLength(2);
-        expect(wrapper.find('.adyen-checkout__issuer-button-group button')).toHaveLength(2);
+        const highlightedButtons = screen
+            .getAllByRole('button')
+            .filter(button => button.textContent === 'Issuer 2' || button.textContent === 'Issuer 3');
+        expect(highlightedButtons).toHaveLength(2);
     });
 
-    test('Clicking in a highlighted issuer trigger onChange callback', () => {
+    test('Clicking in a highlighted issuer trigger onChange callback', async () => {
         const items = [
             { name: 'Issuer 1', id: '1' },
             { name: 'Issuer 2', id: '2' },
@@ -62,7 +75,7 @@ describe('IssuerList', () => {
 
         expect(onChangeCb).toBeCalledTimes(0);
 
-        const wrapper = mount(
+        render(
             <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
                 <IssuerList
                     items={items}
@@ -81,11 +94,15 @@ describe('IssuerList', () => {
         expect(onChangeCb.mock.calls[0][0]).toStrictEqual(callbackData);
         expect(onChangeCb.mock.calls[1][0]).toStrictEqual(callbackData);
 
-        wrapper.find('.adyen-checkout__issuer-button-group button').at(1).simulate('click');
+        const user = userEvent.setup();
+        const issuer3Button = screen.getByRole('button', { name: 'Issuer 3' });
+        await user.click(issuer3Button);
 
         callbackData = { data: { issuer: '3' }, valid: { issuer: true }, errors: { issuer: null }, isValid: true };
 
-        expect(onChangeCb).toBeCalledTimes(3);
+        await waitFor(() => {
+            expect(onChangeCb).toBeCalledTimes(3);
+        });
         expect(onChangeCb.mock.calls[2][0]).toStrictEqual(callbackData);
     });
 
@@ -97,7 +114,7 @@ describe('IssuerList', () => {
         ];
         const highlightedIds = ['3', '4', '5'];
 
-        const wrapper = mount(
+        render(
             <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
                 <IssuerList
                     items={items}
@@ -110,10 +127,10 @@ describe('IssuerList', () => {
             </CoreProvider>
         );
 
-        const highlightedButtons = wrapper.find('.adyen-checkout__issuer-button-group button');
+        const highlightedButtons = screen.getAllByRole('button').filter(button => button.textContent === 'Issuer 3');
 
         expect(highlightedButtons).toHaveLength(1);
-        expect(highlightedButtons.at(0).text()).toBe('Issuer 3');
+        expect(highlightedButtons[0]).toHaveTextContent('Issuer 3');
     });
 
     test('Highlighted issuer is rendered as Button and as part of the dropdown', () => {
@@ -124,7 +141,7 @@ describe('IssuerList', () => {
         ];
         const highlightedIds = ['3'];
 
-        const wrapper = mount(
+        render(
             <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
                 <IssuerList
                     items={items}
@@ -137,11 +154,13 @@ describe('IssuerList', () => {
             </CoreProvider>
         );
 
-        const highlightedIssuerButton = wrapper.find('.adyen-checkout__issuer-button-group button').at(0);
-        const highlightedIssuerDropdownItem = wrapper.find('ul li').at(2);
+        const highlightedIssuerButton = screen.getByRole('button', { name: 'Issuer 3' });
+        const highlightedIssuerDropdownItem = screen.getByRole('option', { name: 'Issuer 3' });
 
-        expect(highlightedIssuerButton.text()).toBe(highlightedIssuerDropdownItem.text());
-        expect(highlightedIssuerButton.prop('value')).toBe(highlightedIssuerDropdownItem.prop('data-value'));
+        expect(highlightedIssuerButton).toHaveTextContent('Issuer 3');
+        expect(highlightedIssuerDropdownItem).toHaveTextContent('Issuer 3');
+        expect(highlightedIssuerButton).toHaveAttribute('value', '3');
+        expect(highlightedIssuerDropdownItem).toHaveAttribute('data-value', '3');
     });
 });
 
@@ -155,7 +174,7 @@ describe('IssuerList: calls that generate analytics should produce objects with 
         });
     });
 
-    test('Clicking on a highlighted issuer button triggers call to onSubmitAnalytics with expected analytics object', () => {
+    test('Clicking on a highlighted issuer button triggers call to onSubmitAnalytics with expected analytics object', async () => {
         const items = [
             { name: 'Issuer 1', id: '1' },
             { name: 'Issuer 2', id: '2' },
@@ -165,7 +184,7 @@ describe('IssuerList: calls that generate analytics should produce objects with 
 
         expect(onSubmitAnalytics).toBeCalledTimes(0);
 
-        const wrapper = mount(
+        render(
             <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
                 <IssuerList
                     items={items}
@@ -178,7 +197,9 @@ describe('IssuerList: calls that generate analytics should produce objects with 
             </CoreProvider>
         );
 
-        wrapper.find('.adyen-checkout__issuer-button-group button').at(1).simulate('click');
+        const user = userEvent.setup();
+        const issuer3Button = screen.getByRole('button', { name: 'Issuer 3' });
+        await user.click(issuer3Button);
 
         expect(onSubmitAnalytics).toHaveBeenCalledWith({
             type: ANALYTICS_SELECTED_STR,
@@ -189,7 +210,7 @@ describe('IssuerList: calls that generate analytics should produce objects with 
         });
     });
 
-    test('Clicking on a issuer in the dropdown triggers call to onSubmitAnalytics with expected analytics object', () => {
+    test('Clicking on a issuer in the dropdown triggers call to onSubmitAnalytics with expected analytics object', async () => {
         const items = [
             { name: 'Issuer 1', id: '1' },
             { name: 'Issuer 2', id: '2' },
@@ -198,7 +219,7 @@ describe('IssuerList: calls that generate analytics should produce objects with 
 
         expect(onSubmitAnalytics).toBeCalledTimes(0);
 
-        const wrapper = mount(
+        render(
             <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
                 <IssuerList
                     items={items}
@@ -210,8 +231,9 @@ describe('IssuerList: calls that generate analytics should produce objects with 
             </CoreProvider>
         );
 
-        const highlightedIssuerDropdownItem = wrapper.find('ul li').at(1);
-        highlightedIssuerDropdownItem.simulate('click');
+        const user = userEvent.setup();
+        const issuer2DropdownItem = screen.getByRole('option', { name: 'Issuer 2' });
+        await user.click(issuer2DropdownItem);
 
         expect(onSubmitAnalytics).toHaveBeenCalledWith({
             type: ANALYTICS_SELECTED_STR,
