@@ -4,10 +4,11 @@
 .adyen-checkout__alert-message {
     display: flex;
     align-items: center;
+    border: token(border-width-s) solid token(color-outline-secondary);
     border-radius: token(border-radius-m);
     margin: 0 0 token(spacer-070);
     text-align: left;
-    padding: token(spacer-060);
+    padding: token(spacer-070);
 
     @include mixins.adyen-checkout-text-body;
 }

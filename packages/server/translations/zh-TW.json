@@ -421,5 +421,11 @@
     "eftpad-canada.input.transitNumber.label": "轉帳號碼",
     "eftpad-canada.input.transitNumber.contextualText": "5 位數",
     "eftpad-canada.input.transitNumber.error": "請輸入一組 5 位數的轉帳編號",
-    "eftpad-canada.settlement-info": "資金將在 1–3 個工作日內從您的銀行帳戶中扣除。"
+    "eftpad-canada.settlement-info": "資金將在 1–3 個工作日內從您的銀行帳戶中扣除。",
+    "upi.mandate.intro": "您正在設定 UPI 自動扣款的定期付款",
+    "upi.mandate.max.extraText": "您將核准更高的上限，以允許變更未來方案",
+    "upi.mandate.upTo": "上限為 %{amount}",
+    "upi.mandate.frequency.monthly": "/月",
+    "upi.mandate.frequency.weekly": "／週",
+    "upi.mandate.frequency.adhoc": " 如所示"
 }
