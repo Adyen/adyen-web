@@ -35,6 +35,7 @@ export interface PayIDInputProps {
     placeholders: PayToPlaceholdersType;
     onChange: (e) => void;
     setComponentRef: (ref: ComponentMethodsRef) => void;
+    id?: string;
 }
 
 const BASE_SCHEMA = ['selectedIdentifier', 'firstName', 'lastName'];
@@ -46,7 +47,7 @@ const IDENTIFIER_SCHEMA = {
     [PayToIdentifierEnum.orgid]: ['orgid']
 };
 
-export default function PayIDInput({ setComponentRef, defaultData, placeholders, onChange, setStatus }: PayIDInputProps) {
+export default function PayIDInput({ setComponentRef, defaultData, placeholders, onChange, setStatus, id }: PayIDInputProps) {
     const { i18n } = useCoreContext();
 
     const form = useForm<PayIdFormData>({
@@ -78,7 +79,7 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
     }, [setComponentRef]);
 
     return (
-        <Fieldset classNameModifiers={['payto__payid_input']} label={'PayID'} description={'payto.payid.description'}>
+        <Fieldset id={id} classNameModifiers={['payto__payid_input']} label={'PayID'} description={'payto.payid.description'}>
             <IdentifierSelector
                 classNameModifiers={['col-40']}
                 onSelectedIdentifier={handleChangeFor('selectedIdentifier')}

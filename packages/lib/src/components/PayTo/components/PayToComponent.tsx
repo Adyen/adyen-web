@@ -9,6 +9,7 @@ import { ComponentMethodsRef, UIElementStatus } from '../../internal/UIElement/t
 import { PayToData, PayToPlaceholdersType } from '../types';
 import { PayButtonProps } from '../../internal/PayButton/PayButton';
 import classNames from 'classnames';
+import { getUniqueId } from '../../../utils/idGenerator';
 import './PayToComponent.scss';
 
 export type PayToInputOption = 'payid-option' | 'bsb-option';
@@ -29,22 +30,26 @@ export default function PayToComponent(props: PayToComponentProps) {
 
     const [status, setStatus] = useState<UIElementStatus>('ready');
 
+    // Generate unique IDs for the input sections
+    const payidInputId = useMemo(() => getUniqueId('payid-input'), []);
+    const bsbInputId = useMemo(() => getUniqueId('bsb-input'), []);
+
     const inputOptions: SegmentedControlOptions<PayToInputOption> = useMemo(
         () => [
             {
                 value: 'payid-option',
                 label: 'PayID',
                 id: 'payid-option',
-                controls: 'payid-input'
+                controls: payidInputId
             },
             {
                 value: 'bsb-option',
                 label: i18n.get('payto.bsb.option.label'),
                 id: 'bsb-option',
-                controls: 'bsb-input'
+                controls: bsbInputId
             }
         ],
-        [i18n]
+        [i18n, payidInputId, bsbInputId]
     );
 
     const defaultOption = inputOptions[0].value;
@@ -65,6 +70,7 @@ export default function PayToComponent(props: PayToComponentProps) {
             <SegmentedControl selectedValue={selectedInput} options={inputOptions} onChange={setSelectedInput} />
             {selectedInput === 'payid-option' && (
                 <PayIDInput
+                    id={payidInputId}
                     status={status}
                     setStatus={setStatus}
                     setComponentRef={props.setComponentRef}
@@ -75,6 +81,7 @@ export default function PayToComponent(props: PayToComponentProps) {
             )}
             {selectedInput === 'bsb-option' && (
                 <BSBInput
+                    id={bsbInputId}
                     status={status}
                     setStatus={setStatus}
                     setComponentRef={props.setComponentRef}
