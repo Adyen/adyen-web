@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import IssuerListContainer from './IssuerListContainer';
-import { render, screen } from '@testing-library/preact';
+import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 
 describe('IssuerListContainer: Multiple instances focus behavior', () => {
@@ -47,7 +47,9 @@ describe('IssuerListContainer: Multiple instances focus behavior', () => {
 
         // Verify that the second IssuerList's input has focus, not the first one
         // This tests that our fix correctly scopes the focus to the specific component instance
-        expect(secondIssuerListInput).toHaveFocus();
+        await waitFor(() => {
+            expect(secondIssuerListInput).toHaveFocus();
+        });
         expect(firstIssuerListInput).not.toHaveFocus();
     });
 });

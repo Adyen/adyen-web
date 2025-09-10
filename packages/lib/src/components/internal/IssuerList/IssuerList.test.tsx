@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/preact';
+import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { h } from 'preact';
 import IssuerList from './IssuerList';
@@ -100,7 +100,9 @@ describe('IssuerList', () => {
 
         callbackData = { data: { issuer: '3' }, valid: { issuer: true }, errors: { issuer: null }, isValid: true };
 
-        expect(onChangeCb).toBeCalledTimes(3);
+        await waitFor(() => {
+            expect(onChangeCb).toBeCalledTimes(3);
+        });
         expect(onChangeCb.mock.calls[2][0]).toStrictEqual(callbackData);
     });
 
