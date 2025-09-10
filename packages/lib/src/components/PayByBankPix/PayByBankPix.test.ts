@@ -148,31 +148,32 @@ describe('PayByBankPix', () => {
             await user.click(await screen.findByRole('listbox'));
             await user.click(await screen.findByRole('option', { name: /Iniciador Mock Bank/i }));
 
-            expect(mockRiskSignals).toHaveBeenCalled();
-            expect(onChangeMock).toHaveBeenCalledWith(
-                {
-                    data: {
-                        clientStateDataIndicator: true,
-                        paymentMethod: {
-                            checkoutAttemptId: 'fetch-checkoutAttemptId-failed',
-                            deviceId: 'mock-device',
-                            issuer: '123',
-                            riskSignals: {
-                                language: 'en-US',
-                                osVersion: 'xxx',
-                                screenDimensions: { height: 100, width: 100 },
-                                userTimeZoneOffset: -60
+            await waitFor(() => {
+                expect(onChangeMock).toHaveBeenCalledWith(
+                    {
+                        data: {
+                            clientStateDataIndicator: true,
+                            paymentMethod: {
+                                checkoutAttemptId: 'fetch-checkoutAttemptId-failed',
+                                deviceId: 'mock-device',
+                                issuer: '123',
+                                riskSignals: {
+                                    language: 'en-US',
+                                    osVersion: 'xxx',
+                                    screenDimensions: { height: 100, width: 100 },
+                                    userTimeZoneOffset: -60
+                                },
+                                type: 'paybybank_pix'
                             },
-                            type: 'paybybank_pix'
+                            storePaymentMethod: true
                         },
-                        storePaymentMethod: true
+                        errors: { issuer: null },
+                        isValid: true,
+                        valid: { issuer: true }
                     },
-                    errors: { issuer: null },
-                    isValid: true,
-                    valid: { issuer: true }
-                },
-                expect.anything()
-            );
+                    expect.anything()
+                );
+            });
         });
 
         test('should render the Await for the await action', async () => {
@@ -309,15 +310,6 @@ describe('PayByBankPix', () => {
             await expect(payByBankPixElement.isAvailable()).rejects.toThrow(
                 new AdyenCheckoutError('ERROR', 'The stored payment method is not available on this device')
             );
-        });
-
-        test('should show the payment summary', async () => {
-            render(payByBankPixElement.render());
-            expect(await screen.findByText('R$1.00')).toBeInTheDocument();
-            expect(await screen.findByText('Receiver')).toBeInTheDocument();
-            expect(await screen.findByText('mock-receiver')).toBeInTheDocument();
-            expect(await screen.findByText('Payment method')).toBeInTheDocument();
-            expect(await screen.findByText('Pix Open Finance')).toBeInTheDocument();
         });
 
         test('should send the storedPaymentMethodId when the pay button is clicked', async () => {

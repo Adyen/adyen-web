@@ -1,5 +1,4 @@
 import { test as base, expect } from '@playwright/test';
-import http from 'http';
 
 const test = base.extend({
     /**
@@ -10,22 +9,10 @@ const test = base.extend({
             const translationUrlPath = route.request().url().replace('https://checkoutshopper-test.cdn.adyen.com/checkoutshopper/', '/');
             const currentPageUrl = route.request().frame().url();
             const origin = new URL(currentPageUrl).origin;
-
             const newUrl = `${origin}${translationUrlPath}`;
 
-            // Manually fetch the HTTP content
-            const response: { status: number; body: string } = await new Promise((resolve, reject) => {
-                http.get(newUrl, res => {
-                    let body = '';
-                    res.on('data', chunk => (body += chunk));
-                    res.on('end', () => resolve({ status: res.statusCode, body }));
-                }).on('error', reject);
-            });
-
-            await route.fulfill({
-                status: response.status,
-                body: response.body
-            });
+            const response = await page.request.fetch(newUrl, { ignoreHTTPSErrors: true }); // Playwright handles HTTP/HTTPS and certificate validation automatically
+            await route.fulfill({ response });
         });
 
         await use(page);

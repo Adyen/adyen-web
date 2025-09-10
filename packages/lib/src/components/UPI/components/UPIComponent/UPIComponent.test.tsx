@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { render, screen } from '@testing-library/preact';
+import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import SRPanelProvider from '../../../../core/Errors/SRPanelProvider';
 import { SRPanel } from '../../../../core/Errors/SRPanel';
@@ -66,7 +66,9 @@ describe('UPIComponent', () => {
             const qrModeButton = await screen.findByRole('button', { name: /QR Code/i });
             await user.click(qrModeButton);
 
-            expect(onChangeMock).toHaveBeenCalledTimes(2);
+            await waitFor(() => {
+                expect(onChangeMock).toHaveBeenCalledTimes(2);
+            });
             expect(onChangeMock).toHaveBeenLastCalledWith({ data: {}, valid: {}, errors: {}, isValid: true });
         });
     });
@@ -123,7 +125,9 @@ describe('UPIComponent', () => {
             const googlePayRadio = await screen.findByRole('radio', { name: /Google Pay/i });
             await user.click(googlePayRadio);
 
-            expect(onChangeMock).toHaveBeenCalledTimes(2);
+            await waitFor(() => {
+                expect(onChangeMock).toHaveBeenCalledTimes(2);
+            });
             expect(onChangeMock).toHaveBeenLastCalledWith({
                 data: { app: gpayApp },
                 isValid: true

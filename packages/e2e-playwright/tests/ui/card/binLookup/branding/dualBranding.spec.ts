@@ -1,7 +1,7 @@
 import { expect, test } from '../../../../../fixtures/card.fixture';
 import { getStoryUrl } from '../../../../utils/getStoryUrl';
 import { URL_MAP } from '../../../../../fixtures/URL_MAP';
-import { BCMC_DUAL_BRANDED_VISA, DUAL_BRANDED_CARD_EXCLUDED } from '../../../../utils/constants';
+import { BCMC_DUAL_BRANDED_VISA, DUAL_BRANDED_CARD_EXCLUDED, DUAL_BRANDED_EFTPOS } from '../../../../utils/constants';
 
 import LANG from '../../../../../../server/translations/en-US.json';
 
@@ -20,6 +20,10 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
 
             // Get a binLookup result
             await card.typeCardNumber(BCMC_DUAL_BRANDED_VISA);
+
+            // Check brand has been set, by default, in paymentMethod data
+            let cardData: any = await page.evaluate('window.component.data');
+            expect(cardData.paymentMethod.brand).not.toBe(undefined);
 
             /**
              * Dual brand icons
@@ -223,9 +227,8 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
     });
 
     test(
-        '#5 Fill in dual branded card, ' +
-            'but one of the brands should be excluded from the UI, ' +
-            '(meaning also that no brand should be set in the PM data), ' +
+        '#5 Fill in dual branded card, with a brand that should be excluded from the UI, ' +
+            '(meaning there should be no dual branding UI & that no brand should be set in the PM data), ' +
             'then check PM data does not have a brand property,' +
             'and check there are no dual branding icons/buttons',
         async ({ card, page }) => {
@@ -241,6 +244,30 @@ test.describe('Card - Testing full UI (PAN icons & dual branding buttons) after 
             await expect(card.dualBrandingIconsHolder).not.toBeVisible();
 
             // Expect dual brand UI not to be visible
+            await expect(card.dualBrandingButtonsHolder).not.toBeVisible();
+        }
+    );
+
+    test(
+        '#6 Fill in dual branded card, with PAN that falls outside of EU regulations, ' +
+            '(meaning that the button part of the dual branding UI should not show & the brand should not be set in the PM data), ' +
+            'then check PM data does not have a brand property,' +
+            'and check there are no dual branding buttons',
+        async ({ card, page }) => {
+            const componentConfig = { brands: ['mc', 'visa', 'amex', 'maestro', 'bcmc', 'eftpos_australia'] };
+
+            await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
+
+            await card.typeCardNumber(DUAL_BRANDED_EFTPOS);
+
+            // Check brand has not been set in paymentMethod data
+            let cardData: any = await page.evaluate('window.component.data');
+            expect(cardData.paymentMethod.brand).toBe(undefined);
+
+            // Expect dual brand icons *to* be visible
+            await expect(card.dualBrandingIconsHolder).toBeVisible();
+
+            // Expect dual brand UI *not* to be visible
             await expect(card.dualBrandingButtonsHolder).not.toBeVisible();
         }
     );

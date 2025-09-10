@@ -1,11 +1,13 @@
 import { h } from 'preact';
-import { mount } from 'enzyme';
+import { render, screen, waitFor } from '@testing-library/preact';
+import userEvent from '@testing-library/user-event';
 import DonationComponent from './DonationComponent';
-import { render, screen } from '@testing-library/preact';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
-import { FixedAmountsDonation, RoundupDonation } from './types';
+import type { DonationComponentProps, FixedAmountsDonation, RoundupDonation } from './types';
 
-const onDonate = () => {};
+const onDonate = jest.fn();
+const onCancel = jest.fn();
+const onChange = jest.fn();
 
 const fixedAmounts: FixedAmountsDonation = {
     type: 'fixedAmounts',
@@ -21,127 +23,93 @@ const roundUp: RoundupDonation = {
 
 const commercialTxAmount = 1000;
 
-const createWrapper = (props = {}) => {
-    return mount(
+const renderComponent = (props: Partial<DonationComponentProps> = {}) => {
+    const defaultProps: DonationComponentProps = {
+        commercialTxAmount,
+        onDonate,
+        donation: fixedAmounts
+    };
+
+    return render(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-            <DonationComponent commercialTxAmount={commercialTxAmount} onDonate={onDonate} donation={fixedAmounts} {...props} />
+            <DonationComponent {...defaultProps} {...props} />
         </CoreProvider>
     );
 };
 
 describe('DonationComponent', () => {
-    test('Renders the Donation Component', () => {
-        const wrapper = createWrapper();
-        expect(wrapper.find('.adyen-checkout__adyen-giving')).toHaveLength(1);
+    beforeEach(() => {
+        jest.clearAllMocks();
     });
 
-    test('Renders the Success state', () => {
-        const wrapper = createWrapper({ donation: fixedAmounts, onDonate });
-        wrapper.find('DonationComponent').instance().setStatus('success');
-        wrapper.update();
-        expect(wrapper.find('.adyen-checkout__status__icon--success')).toBeDefined();
-    });
-
-    test('Renders the Error state', () => {
-        const wrapper = createWrapper({ donation: fixedAmounts, onDonate });
-        wrapper.find('DonationComponent').instance().setStatus('error');
-        wrapper.update();
-        expect(wrapper.find('.adyen-checkout__status__icon--error')).toBeDefined();
-    });
-
-    test('Calls the onCancel event', () => {
-        const onCancelMock = jest.fn();
-        const wrapper = createWrapper({ onCancel: onCancelMock });
-        wrapper.find('.adyen-checkout__button--decline').simulate('click');
-        expect(onCancelMock.mock.calls).toHaveLength(1);
+    test('Calls the onCancel event when the cancel button is clicked', async () => {
+        renderComponent({ onCancel });
+        await userEvent.click(screen.getByRole('button', { name: /not now/i }));
+        expect(onCancel).toHaveBeenCalledTimes(1);
     });
 
     test('Shows the Cancel button by default', () => {
-        const wrapper = createWrapper();
-        expect(wrapper.find('.adyen-checkout__button--decline')).toHaveLength(1);
+        renderComponent();
+        expect(screen.getByRole('button', { name: /not now/i })).toBeInTheDocument();
     });
 
-    test('Hides the Cancel button', () => {
-        const wrapper = createWrapper({ donation: fixedAmounts, showCancelButton: false });
-        expect(wrapper.find('.adyen-checkout__button--decline')).toHaveLength(0);
+    test('Hides the Cancel button when showCancelButton is false', () => {
+        renderComponent({ showCancelButton: false });
+        expect(screen.queryByRole('button', { name: /not now/i })).not.toBeInTheDocument();
     });
 
     test('Should show number fractions in the labels', () => {
-        const wrapper = createWrapper();
-        expect(wrapper.find('label.adyen-checkout__button').at(0).text()).toEqual('€0.50');
-        expect(wrapper.find('label.adyen-checkout__button').at(1).text()).toEqual('€1.99');
-        expect(wrapper.find('label.adyen-checkout__button').at(2).text()).toEqual('€3.00');
+        renderComponent();
+        expect(screen.getByLabelText('€0.50')).toBeInTheDocument();
+        expect(screen.getByLabelText('€1.99')).toBeInTheDocument();
+        expect(screen.getByLabelText('€3.00')).toBeInTheDocument();
     });
 
-    test('Should render the disclaimer if termsAndConditionUrl presents', () => {
-        const termsAndConditionUrl = 'https://www.adyen.com';
-
-        render(
-            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-                <DonationComponent
-                    donation={fixedAmounts}
-                    termsAndConditionsUrl={termsAndConditionUrl}
-                    onDonate={onDonate}
-                    commercialTxAmount={commercialTxAmount}
-                />
-            </CoreProvider>
-        );
+    test('Should render the disclaimer if termsAndConditionsUrl is present', () => {
+        const termsAndConditionsUrl = 'https://www.adyen.com';
+        renderComponent({ termsAndConditionsUrl });
         expect(screen.getByText('By donating you agree to the', { exact: false }).textContent).toEqual(
             'By donating you agree to the terms and conditions'
         );
     });
 
-    test('Should not render the disclaimer if there is no termsAndConditionUrl', () => {
-        render(
-            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-                <DonationComponent donation={fixedAmounts} onDonate={onDonate} commercialTxAmount={commercialTxAmount} />
-            </CoreProvider>
-        );
-        expect(screen.queryByText('By continuing', { exact: false })).toBeNull();
+    test('Should not render the disclaimer if there is no termsAndConditionsUrl', () => {
+        renderComponent();
+        expect(screen.queryByText('By donating you agree to the', { exact: false })).toBeNull();
     });
 
     describe('Fixed amount donation', () => {
-        test('Shows amounts', () => {
-            const wrapper = createWrapper();
-            expect(wrapper.find('.adyen-checkout__button-group__input')).toHaveLength(3);
+        test('Shows all fixed amount options', () => {
+            renderComponent();
+            expect(screen.getAllByRole('radio')).toHaveLength(3);
         });
 
-        test('Should return isValid true when an amount is selected', () => {
-            const onChangeMock = jest.fn();
-            const wrapper = createWrapper({ onChange: onChangeMock });
-            wrapper.find('.adyen-checkout__button-group__input').first().simulate('change');
-            const lastOnChangeCall = onChangeMock.mock.calls.pop();
-            expect(lastOnChangeCall[0].isValid).toBe(true);
+        test('Should return isValid true when an amount is selected', async () => {
+            renderComponent({ onChange });
+            await userEvent.click(screen.getByLabelText('€0.50'));
+            await waitFor(() => {
+                expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ isValid: true }));
+            });
         });
 
-        test('Should submit the right amount', () => {
-            const onDonateMock = jest.fn();
-            const wrapper = createWrapper({ onDonate: onDonateMock });
+        test('Should submit the right amount', async () => {
+            renderComponent({ onDonate });
 
-            wrapper.find('.adyen-checkout__button-group__input').first().simulate('change');
-            wrapper.find('.adyen-checkout__button--donate').simulate('click');
+            await userEvent.click(screen.getByLabelText('€0.50'));
+            await userEvent.click(screen.getByRole('button', { name: 'Donate' }));
 
-            const callbackData = onDonateMock.mock.calls[0][0];
-            expect(callbackData.data.amount.value).toBe(50);
+            expect(onDonate).toHaveBeenCalledWith(expect.objectContaining({ data: { amount: { currency: 'EUR', value: 50 } } }));
         });
     });
 
     describe('Roundup donation', () => {
         test('Should show the roundup amount in the donate button', () => {
-            render(
-                <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-                    <DonationComponent donation={roundUp} onDonate={onDonate} commercialTxAmount={commercialTxAmount} />
-                </CoreProvider>
-            );
-            expect(screen.getByRole('button', { name: 'Donate €0.89' })).toBeTruthy();
+            renderComponent({ donation: roundUp });
+            expect(screen.getByRole('button', { name: 'Donate €0.89' })).toBeInTheDocument();
         });
 
         test('Should show the roundup description', () => {
-            render(
-                <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-                    <DonationComponent donation={roundUp} onDonate={onDonate} commercialTxAmount={commercialTxAmount} />
-                </CoreProvider>
-            );
+            renderComponent({ donation: roundUp });
             expect(screen.getByText('€0.89 is a round up', { exact: false }).textContent).toEqual(
                 '€0.89 is a round up from your original payment (€10.00)'
             );

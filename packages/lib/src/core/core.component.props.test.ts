@@ -1,4 +1,4 @@
-import { mount } from 'enzyme';
+import { render } from '@testing-library/preact';
 import AdyenCheckout from './core';
 import { PaymentMethodsResponse } from '../types';
 import { PayPal, Card, Dropin, Redirect } from '../components';
@@ -193,7 +193,7 @@ describe('Core - tests ensuring props reach components', () => {
         });
 
         test('StoredCard in Dropin receives correct props ', async () => {
-            mount(dropin.render());
+            render(dropin.render());
             const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
@@ -222,7 +222,7 @@ describe('Core - tests ensuring props reach components', () => {
         });
 
         test('Card in Dropin receives correct props ', async () => {
-            mount(dropin.render());
+            render(dropin.render());
             const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
@@ -251,7 +251,7 @@ describe('Core - tests ensuring props reach components', () => {
         });
 
         test('PayPal in Dropin receives correct props ', async () => {
-            mount(dropin.render());
+            render(dropin.render());
             const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 
@@ -277,7 +277,7 @@ describe('Core - tests ensuring props reach components', () => {
         });
 
         test('Redirect PM in Dropin receives correct props ', async () => {
-            mount(dropin.render());
+            render(dropin.render());
             const flushPromises = () => new Promise(process.nextTick);
             await flushPromises();
 

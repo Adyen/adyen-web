@@ -48,7 +48,7 @@ test('should pre selected available card', async () => {
                 dateOfCardLastUsed: '2022-02-16T08:10:02.312Z',
                 paymentCardDescriptor: 'mc',
                 panExpirationMonth: '12',
-                panExpirationYear: '2025',
+                panExpirationYear: '9999',
                 digitalCardData: {
                     descriptorName: 'Mastercard',
                     artUri: 'http://image.com/mc',
@@ -209,7 +209,7 @@ test('should be able to checkout (card list)', async () => {
                 dateOfCardLastUsed: '2022-09-28T08:10:02.312Z',
                 paymentCardDescriptor: 'visa',
                 panExpirationMonth: '12',
-                panExpirationYear: '2025',
+                panExpirationYear: '9999',
                 digitalCardData: {
                     descriptorName: 'Visa',
                     artUri: 'http://image.com/visa',
@@ -228,7 +228,7 @@ test('should be able to checkout (card list)', async () => {
                 dateOfCardLastUsed: '2022-09-16T08:10:02.312Z',
                 paymentCardDescriptor: 'mc',
                 panExpirationMonth: '08',
-                panExpirationYear: '2025',
+                panExpirationYear: '9999',
                 digitalCardData: {
                     descriptorName: 'Mastercard',
                     artUri: 'http://image.com/mc',
@@ -279,7 +279,7 @@ test('should be able to checkout (single card)', async () => {
                 dateOfCardLastUsed: '2022-09-16T08:10:02.312Z',
                 paymentCardDescriptor: 'visa',
                 panExpirationMonth: '12',
-                panExpirationYear: '2025',
+                panExpirationYear: '9999',
                 digitalCardData: {
                     descriptorName: 'Visa',
                     artUri: 'http://image.com',

@@ -37,3 +37,6 @@ Vagrantfile
 # Certifictes
 cert
 *.pem
+
+# Local Netlify folder
+.netlify

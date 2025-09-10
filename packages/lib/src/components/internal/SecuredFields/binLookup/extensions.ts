@@ -2,6 +2,8 @@ import { SingleBrandResetObject } from '../SFP/types';
 import { BrandObject } from '../../../Card/types';
 import createCardVariantSwitcher from './createCardVariantSwitcher';
 import { BRAND_ICON_UI_EXCLUSION_LIST } from '../lib/constants';
+import { mustHandleDualBrandingAccordingToEURegulations } from '../../../Card/components/CardInput/utils';
+import { DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM } from '../../../Card/Card';
 
 // Externally testable utils
 export const containsExcludedBrand = (brandsArr: BrandObject[], excludedBrands: string[]): boolean => {
@@ -67,7 +69,15 @@ export default function extensions(props, refs, states, hasPanLengthRef: Partial
                 // 1) Multiple options found - add to the UI & inform SFP
                 if (supportedBrands.length > 1) {
                     // --
-                    const switcherObj = createCardVariantSwitcher(supportedBrands);
+
+                    //  Only if the brands in DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM are present in the binLookup response should we handle dual branding based on EU regulations
+                    const preselectBrand = mustHandleDualBrandingAccordingToEURegulations(
+                        DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM,
+                        supportedBrands,
+                        'brand'
+                    );
+
+                    const switcherObj = createCardVariantSwitcher(supportedBrands, preselectBrand);
 
                     // Set properties on state to trigger the dual branding icons in the UI
                     setDualBrandSelectElements(switcherObj.dualBrandSelectElements);

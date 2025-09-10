@@ -1,196 +1,181 @@
 import { h } from 'preact';
-import { mount } from 'enzyme';
-import Installments from './Installments';
-import { InstallmentOptions } from '../types';
 import { render, screen } from '@testing-library/preact';
+import userEvent from '@testing-library/user-event';
+import Installments from './Installments';
 import { CoreProvider } from '../../../../../../core/Context/CoreProvider';
+import type { InstallmentOptions, InstallmentsProps } from '../types';
+
+const renderInstallments = (props: Partial<InstallmentsProps> = {}) => {
+    const installmentOptions: InstallmentOptions = {
+        card: { values: [1, 2] },
+        mc: { values: [1, 2, 3] },
+        visa: { values: [1, 2, 3, 4] },
+        ...props.installmentOptions
+    };
+
+    const defaultProps: InstallmentsProps = {
+        amount: { value: 30000, currency: 'USD' },
+        brand: 'card',
+        installmentOptions,
+        onChange: jest.fn(),
+        ...props
+    };
+
+    return render(
+        <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+            <Installments {...defaultProps} />
+        </CoreProvider>
+    );
+};
 
 describe('Installments', () => {
-    let installmentOptions;
-    const getWrapper = (props = {}) =>
-        mount(
-            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-                <Installments installmentOptions={installmentOptions} {...props} />{' '}
-            </CoreProvider>
-        );
+    const user = userEvent.setup();
 
-    beforeEach(() => {
-        installmentOptions = {
-            card: {
-                values: [1, 2]
-            },
-            mc: {
-                values: [1, 2, 3]
-            },
-            visa: {
-                values: [1, 2, 3, 4]
-            }
-        } as InstallmentOptions;
+    test('should render the installments dropdown by default', () => {
+        renderInstallments();
+        expect(screen.getByText('Number of installments')).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /Number of installments/i })).toBeInTheDocument();
     });
 
-    test('renders the installment options', () => {
-        const wrapper = getWrapper();
-        expect(wrapper.find('Installments')).toHaveLength(1);
+    test('should not render if the passed amount is 0', () => {
+        renderInstallments({ amount: { value: 0, currency: 'EUR' } });
+        expect(screen.queryByText('Number of installments')).not.toBeInTheDocument();
     });
 
-    test('does not render any installment options if the passed amount is 0', () => {
-        const amount = { value: 0, currency: 'EUR' };
-        const wrapper = getWrapper({ amount });
-        expect(wrapper.find('.adyen-checkout__dropdown__element')).toHaveLength(0);
+    test('should not render any installment options by default when no card key is passed', () => {
+        renderInstallments({ installmentOptions: { mc: { values: [1, 2, 3] } } });
+        expect(screen.queryByText('Number of installments')).not.toBeInTheDocument();
     });
 
-    test('does not render any installment options by default when no card key is passed', () => {
-        delete installmentOptions.card;
-        const wrapper = getWrapper({ installmentOptions });
-        expect(wrapper.find('.adyen-checkout__dropdown__element')).toHaveLength(0);
+    test('should render as readonly if only one option is passed', () => {
+        const installmentOptions: InstallmentOptions = {
+            card: { values: [3] }
+        };
+        renderInstallments({ installmentOptions });
+        expect(screen.getByRole('button')).toBeDisabled();
     });
 
-    test('renders the select as read only if only one option is passed', () => {
-        installmentOptions.card.values = [3];
-        const wrapper = getWrapper({ installmentOptions });
-        expect(wrapper.find('Select').prop('readonly')).toBe(true);
+    test('should preselect the value from "preselectedValue"', async () => {
+        const installmentOptions: InstallmentOptions = {
+            card: { values: [1, 2], preselectedValue: 2 }
+        };
+        renderInstallments({ installmentOptions, type: 'amount' });
+        expect(await screen.findByRole('button')).toHaveTextContent('2x $150.00');
     });
 
-    test('preselects the passed value', () => {
-        installmentOptions.card.preselectedValue = 2;
-        const wrapper = getWrapper({ installmentOptions });
-        // TODO: This test should be migrated to react test library instead of reading form props
-        expect(wrapper.find('Select').prop('selectedValue')).toBe(2);
-    });
-
-    test('preselect the first if the preselectedValue is not provided', async () => {
-        const amount = { value: 30000, currency: 'USD' };
-        const props = { amount, installmentOptions, type: 'amount' };
-
-        render(
-            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-                <Installments {...props} />
-            </CoreProvider>
-        );
+    test('should preselect the first value if "preselectedValue" is not provided', async () => {
+        renderInstallments({ type: 'amount' });
         expect(await screen.findByRole('button')).toHaveTextContent('1x $300.00');
-        expect(await screen.findByText('Number of installments')).toBeTruthy();
+    });
+
+    test('should render the correct number of installment options for each brand', async () => {
+        const { rerender } = renderInstallments({ brand: 'card' });
+        await user.click(screen.getByRole('button'));
+        expect(await screen.findAllByRole('option')).toHaveLength(2);
+
+        rerender(
+            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                <Installments brand="mc" amount={{ value: 30000, currency: 'USD' }} installmentOptions={{ mc: { values: [1, 2, 3] } }} />
+            </CoreProvider>
+        );
+        await user.click(screen.getByRole('button'));
+        expect(await screen.findAllByRole('option')).toHaveLength(3);
+
+        rerender(
+            <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                <Installments brand="visa" amount={{ value: 30000, currency: 'USD' }} installmentOptions={{ visa: { values: [1, 2, 3, 4] } }} />
+            </CoreProvider>
+        );
+        await user.click(screen.getByRole('button'));
+        expect(await screen.findAllByRole('option')).toHaveLength(4);
     });
 
     describe('On brand change', () => {
-        let amount;
-        let type;
-        beforeEach(() => {
-            amount = { value: 30000, currency: 'USD' };
-            type = 'amount';
+        test('should keep the current value if the new brand supports it', async () => {
+            const installmentOptions: InstallmentOptions = {
+                card: { values: [1, 2, 3, 4], preselectedValue: 2 },
+                visa: { values: [1, 2] }
+            };
+
+            const { rerender } = renderInstallments({ installmentOptions, brand: 'card', type: 'amount' });
+            expect(await screen.findByRole('button')).toHaveTextContent('2x $150.00');
+
+            // Rerender with a new brand
+            rerender(
+                <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                    <Installments brand={'visa'} type={'amount'} installmentOptions={installmentOptions} amount={{ value: 30000, currency: 'USD' }} />
+                </CoreProvider>
+            );
+
+            expect(await screen.findByRole('button')).toHaveTextContent('2x $150.00');
         });
 
-        describe('New brand supports the installmentAmount', () => {
-            test('should keep selecting the current installmentAmount', async () => {
-                installmentOptions = {
-                    card: {
-                        values: [1, 2, 3, 4],
-                        preselectedValue: 2
-                    },
-                    visa: {
-                        values: [1, 2]
-                    }
-                };
-                const props = { amount, installmentOptions, type };
-                const { rerender } = render(
-                    <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-                        <Installments {...props} />
-                    </CoreProvider>
-                );
-                expect(await screen.findByRole('button')).toHaveTextContent('2x $150.00');
-                rerender(
-                    <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-                        <Installments brand={'visa'} {...props} />{' '}
-                    </CoreProvider>
-                );
-                expect(await screen.findByRole('button')).toHaveTextContent('2x $150.00');
-            });
+        test('should use the new brands "preselectedValue" if the old value is not supported', async () => {
+            const installmentOptions: InstallmentOptions = {
+                card: { values: [1, 2, 3, 4], preselectedValue: 4 },
+                visa: { values: [1, 2], preselectedValue: 2 }
+            };
+            const { rerender } = renderInstallments({ installmentOptions, brand: 'card', type: 'amount' });
+
+            expect(await screen.findByRole('button')).toHaveTextContent('4x $75.00');
+
+            rerender(
+                <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                    <Installments type={'amount'} brand="visa" amount={{ value: 30000, currency: 'USD' }} installmentOptions={installmentOptions} />
+                </CoreProvider>
+            );
+
+            expect(await screen.findByRole('button')).toHaveTextContent('2x $150.00');
         });
 
-        describe('New brand does not support the installmentAmount', () => {
-            test('should preselect the preselectedValue if provided', async () => {
-                installmentOptions = {
-                    card: {
-                        values: [1, 2, 3, 4],
-                        preselectedValue: 4
-                    },
-                    visa: {
-                        values: [1, 2],
-                        preselectedValue: 2
-                    }
-                };
-                const props = { amount, installmentOptions, type };
-                const { rerender } = render(
-                    <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-                        <Installments {...props} />
-                    </CoreProvider>
-                );
-                expect(await screen.findByRole('button')).toHaveTextContent('4x $75.00');
-                rerender(
-                    <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-                        <Installments brand={'visa'} {...props} />
-                    </CoreProvider>
-                );
-                expect(await screen.findByRole('button')).toHaveTextContent('2x $150.00');
-            });
+        test('should default to the first option if the old value and "preselectedValue" are not supported', async () => {
+            const installmentOptions: InstallmentOptions = {
+                card: { values: [1, 2, 3, 4], preselectedValue: 4 },
+                visa: { values: [1, 2] }
+            };
+            const { rerender } = renderInstallments({ installmentOptions, brand: 'card', type: 'amount' });
 
-            test('should preselect the first installments', async () => {
-                installmentOptions = {
-                    card: {
-                        values: [1, 2, 3, 4],
-                        preselectedValue: 4
-                    },
-                    visa: {
-                        values: [1, 2]
-                    }
-                };
-                const props = { amount, installmentOptions, type };
-                const { rerender } = render(
-                    <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-                        <Installments {...props} />
-                    </CoreProvider>
-                );
-                expect(await screen.findByRole('button')).toHaveTextContent('4x $75.00');
-                rerender(
-                    <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
-                        <Installments brand={'visa'} {...props} />
-                    </CoreProvider>
-                );
-                expect(await screen.findByRole('button')).toHaveTextContent('1x $300.00');
-            });
+            expect(await screen.findByRole('button')).toHaveTextContent('4x $75.00');
+
+            rerender(
+                <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
+                    <Installments brand="visa" amount={{ value: 30000, currency: 'USD' }} installmentOptions={installmentOptions} type={'amount'} />
+                </CoreProvider>
+            );
+
+            expect(await screen.findByRole('button')).toHaveTextContent('1x $300.00');
         });
     });
 
-    test('renders the right amount of installment options', () => {
-        // card
-        expect(getWrapper().find('.adyen-checkout__dropdown__element')).toHaveLength(2);
+    describe('Revolving plans UI', () => {
+        const installmentOptions: InstallmentOptions = {
+            visa: {
+                values: [1, 2, 3, 4],
+                plans: ['regular', 'revolving']
+            },
+            mc: {
+                values: [1, 2, 3]
+            }
+        };
 
-        expect(getWrapper({ brand: 'mc' }).find('.adyen-checkout__dropdown__element')).toHaveLength(3);
-        expect(getWrapper({ brand: 'visa' }).find('.adyen-checkout__dropdown__element')).toHaveLength(4);
-    });
+        test('should render radio buttons when plans are available for the brand', () => {
+            renderInstallments({ brand: 'visa', installmentOptions });
 
-    test('renders the radio button UI', () => {
-        installmentOptions.visa.plans = ['regular', 'revolving'];
+            expect(screen.getByRole('radio', { name: 'One time payment' })).toBeVisible();
+            expect(screen.getByRole('radio', { name: 'Installments payment' })).toBeVisible();
+            expect(screen.getByRole('radio', { name: 'Revolving payment' })).toBeVisible();
+        });
 
-        // containing div - not present 'cos no brand is set
-        expect(getWrapper().find('.adyen-checkout__fieldset--revolving-plan')).toHaveLength(0);
+        test('should show installments options when shopper selects "installments payment"', async () => {
+            renderInstallments({ brand: 'visa', installmentOptions });
 
-        const wrapper = getWrapper({ brand: 'visa' });
-        // containing div - once brand is set
-        expect(wrapper.find('.adyen-checkout__fieldset--revolving-plan')).toHaveLength(1);
-        // radio buttons
-        expect(wrapper.find('.adyen-checkout__radio_group__input')).toHaveLength(3);
-        // dropdown
-        expect(wrapper.find('.adyen-checkout__dropdown__element')).toHaveLength(4);
-    });
+            await user.click(screen.getByRole('radio', { name: 'Installments payment' }));
+            expect(await screen.findAllByRole('option')).toHaveLength(4);
+        });
 
-    test('does not render the radio button UI for mc', () => {
-        const wrapper = getWrapper({ brand: 'mc' });
-        // no containing div
-        expect(wrapper.find('.adyen-checkout__fieldset--revolving-plan')).toHaveLength(0);
-        // no radio buttons
-        expect(wrapper.find('.adyen-checkout__radio_group__input')).toHaveLength(0);
-
-        // dropdown
-        expect(wrapper.find('.adyen-checkout__dropdown__element')).toHaveLength(3);
+        test('should not render radio buttons when no plans are available for the brand', () => {
+            renderInstallments({ brand: 'mc', installmentOptions });
+            expect(screen.queryByRole('radiogroup')).not.toBeInTheDocument();
+        });
     });
 });
