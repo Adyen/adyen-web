@@ -49,7 +49,8 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
         throttledInterval: 10000,
         introduction: 'wechatpay.scanqrcode',
         timeToPay: 'wechatpay.timetopay',
-        buttonLabel: 'openApp'
+        buttonLabel: 'openApp',
+        showAmount: true
     };
 
     componentDidMount() {
@@ -152,7 +153,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
             });
     };
 
-    render({ amount, url, brandLogo, brandName, countdownTime, type, onActionHandled }: QRLoaderProps, { expired, completed, loading }) {
+    render({ amount, showAmount, url, brandLogo, brandName, countdownTime, type, onActionHandled }: QRLoaderProps, { expired, completed, loading }) {
         const { i18n, loadingContext } = useCoreContext();
         const getImage = useImage();
 
@@ -226,7 +227,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                     </div>
                 )}
 
-                {amount && amount.value && amount.currency && (
+                {showAmount && amount && amount.value !== null && !!amount.currency && (
                     <div className="adyen-checkout__qr-loader__payment_amount">{i18n.amount(amount.value, amount.currency)}</div>
                 )}
 

@@ -1,4 +1,5 @@
 @use 'styles/mixins';
+@use 'styles/index';
 @import 'styles/variable-generator';
 
 @mixin input-wrapper-inactive {
@@ -41,6 +42,92 @@
                 box-shadow: none;
                 border: none;
             }
+        }
+    }
+
+    &--20 {
+        @include index.screen-s-and-up {
+            width: 20%;
+        }
+    }
+
+    &--30 {
+        @include index.screen-s-and-up {
+            width: 30%;
+        }
+    }
+
+    &--40 {
+        @include index.screen-s-and-up {
+            width: 40%;
+        }
+    }
+
+    &--50 {
+        @include index.screen-s-and-up {
+            width: 50%;
+        }
+    }
+
+    &--60 {
+        @include index.screen-s-and-up {
+            width: 60%;
+        }
+    }
+
+    &--70 {
+        @include index.screen-s-and-up {
+            width: 70%;
+        }
+    }
+
+    &--80 {
+        @include index.screen-s-and-up {
+            width: 80%;
+        }
+    }
+
+    $deduct-width: token(spacer-040);
+
+    &--col-20 {
+        @include index.screen-s-and-up {
+            width: calc(20% - $deduct-width);
+        }
+    }
+
+    &--col-30 {
+        @include index.screen-s-and-up {
+            width: calc(30% - $deduct-width);
+        }
+    }
+
+    &--col-40 {
+        @include index.screen-s-and-up {
+            width: calc(40% - $deduct-width);
+        }
+    }
+
+    &--col-50 {
+        @include index.screen-s-and-up {
+            width: calc(50% - $deduct-width);
+        }
+    }
+
+    &--col-60 {
+        @include index.screen-s-and-up {
+            width: calc(60% - $deduct-width);
+        }
+    }
+
+    &--col-70 {
+        @include index.screen-s-and-up {
+            width: calc(70% - $deduct-width);
+        }
+    }
+
+    &--col-80 {
+        @include index.screen-s-and-up {
+            width: calc(80% - $deduct-width);
         }
     }
 }

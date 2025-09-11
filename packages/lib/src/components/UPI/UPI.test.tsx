@@ -251,9 +251,10 @@ describe('UPI', () => {
             await user.click(radioButton);
 
             upi.showValidation();
-
             expect(screen.queryByRole('alert')).not.toBeInTheDocument();
-            expect(upi.isValid).toBe(true);
+            await waitFor(() => {
+                expect(upi.isValid).toBe(true);
+            });
         });
     });
 

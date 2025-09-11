@@ -1,5 +1,21 @@
 # @adyen/adyen-web
 
+## 6.22.0
+
+### Minor Changes
+
+- Adjust the existing UPI component to support UPI Autopay. ([#3465](https://github.com/Adyen/adyen-web/pull/3465))
+
+### Patch Changes
+
+- Analytics - Patching attempt ID when page refreshes ([#3491](https://github.com/Adyen/adyen-web/pull/3491))
+
+- fix: OnAddressSelectedType typing ([#3499](https://github.com/Adyen/adyen-web/pull/3499))
+
+- fix: focus bug when having multiple IssuerLists inside dropin ([#3498](https://github.com/Adyen/adyen-web/pull/3498))
+
+- Fix PayTo aria-controls poiting to wrong IDs ([#3475](https://github.com/Adyen/adyen-web/pull/3475))
+
 ## 6.21.0
 
 ### Minor Changes
