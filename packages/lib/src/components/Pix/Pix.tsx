@@ -1,17 +1,21 @@
 import { h } from 'preact';
 import QRLoaderContainer from '../helpers/QRLoaderContainer/QRLoaderContainer';
 import { CoreProvider } from '../../core/Context/CoreProvider';
-import PixInput from './PixInput';
+import PixInput from './components/PixInput';
 import { cleanCPFCNPJ } from '../internal/SocialSecurityNumberBrazil/utils';
 import { PixElementData, PixConfiguration } from './types';
 import { TxVariants } from '../tx-variants';
+import QRLoader from '../internal/QRLoader';
+import SRPanelProvider from '../../core/Errors/SRPanelProvider';
+import PixQRDetails from './components/PixQRDetails';
+import './Pix.scss';
 
 class PixElement extends QRLoaderContainer<PixConfiguration> {
     public static type = TxVariants.pix;
 
     public static defaultProps = {
         personalDetailsRequired: false,
-        countdownTime: 15,
+        countdownTime: 100,
         delay: 2000,
         ...QRLoaderContainer.defaultProps
     };
@@ -20,7 +24,7 @@ class PixElement extends QRLoaderContainer<PixConfiguration> {
         return !!this.state.isValid;
     }
 
-    formatProps(props): PixConfiguration {
+    formatProps(props: PixConfiguration): PixConfiguration {
         return {
             copyBtn: true,
             introduction: 'pix.instructions',
@@ -39,6 +43,29 @@ class PixElement extends QRLoaderContainer<PixConfiguration> {
             ...(firstName && lastName && { shopperName: { firstName, lastName } }),
             ...(socialSecurityNumber && { socialSecurityNumber: cleanCPFCNPJ(socialSecurityNumber) })
         };
+    }
+
+    renderQRCode() {
+        return (
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
+                <SRPanelProvider srPanel={this.props.modules.srPanel}>
+                    <QRLoader
+                        ref={ref => {
+                            this.componentRef = ref;
+                        }}
+                        {...this.props}
+                        type={this.constructor['type']}
+                        brandLogo={this.props.brandLogo || this.icon}
+                        onComplete={this.onComplete}
+                        onActionHandled={this.onActionHandled}
+                        brandName={this.displayName}
+                        onSubmitAnalytics={this.submitAnalytics}
+                    >
+                        <PixQRDetails />
+                    </QRLoader>
+                </SRPanelProvider>
+            </CoreProvider>
+        );
     }
 
     render() {
