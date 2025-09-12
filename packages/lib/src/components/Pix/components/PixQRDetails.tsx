@@ -7,8 +7,7 @@ import { getUniqueId } from '../../../utils/idGenerator';
 import isMobile from '../../../utils/isMobile';
 
 const PixQRDetails = () => {
-    const { qrCodeData, qrCodeImage, percentage, timeToPay, copyBtn, onTick, countdownTime, onQRCodeLoad, onTimeUp, handleCopy } =
-        useQRLoaderDetails();
+    const { qrCodeData, qrCodeImage, percentage, timeToPay, onTick, countdownTime, onQRCodeLoad, onTimeUp, handleCopy } = useQRLoaderDetails();
 
     const qrCodeControlId = useMemo(() => getUniqueId('pix-qrcode-control'), []);
     const copyAndPasteControlId = useMemo(() => getUniqueId('pix-copy-and-paste-control'), []);
@@ -55,8 +54,8 @@ const PixQRDetails = () => {
                 {selectedInput === 'pix-copy-and-paste-option' && (
                     <Fragment>
                         <QRInstructions instructions="Copy the code below and paste it into your banking app" />
-                        {copyBtn && <QRCodeCopyButton copyText="Copy pix code" handleCopy={handleCopy} />}
-                        <PixCode value={qrCodeData.repeat(10)} />
+                        <QRCodeCopyButton copyText="Copy pix code" handleCopy={handleCopy} />
+                        <PixCode value={qrCodeData} />
                     </Fragment>
                 )}
             </div>
