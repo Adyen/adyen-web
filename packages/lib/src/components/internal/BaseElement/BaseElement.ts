@@ -11,6 +11,7 @@ import { AnalyticsInitialEvent } from '../../../core/Analytics/types';
 import { off, on } from '../../../utils/listenerUtils';
 import { AnalyticsInfoEvent } from '../../../core/Analytics/AnalyticsInfoEvent';
 import { AnalyticsEvent } from '../../../core/Analytics/AnalyticsEvent';
+import { createSdkData } from '../../../utils/createSdkData';
 
 /**
  * Verify if the first parameter is instance of Core.
@@ -104,9 +105,12 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
             componentData.paymentMethod.checkoutAttemptId = checkoutAttemptId;
         }
 
+        // Create sdkData when both analytics and risk data are available
+        const sdkData = checkoutAttemptId && clientData ? createSdkData(checkoutAttemptId, clientData) : undefined;
+
         return {
-            ...(clientData && { riskData: { clientData } }),
             ...(order && { order: { orderData: order.orderData, pspReference: order.pspReference } }),
+            ...(sdkData && { sdkData }),
             ...componentData,
             clientStateDataIndicator: true
         };
