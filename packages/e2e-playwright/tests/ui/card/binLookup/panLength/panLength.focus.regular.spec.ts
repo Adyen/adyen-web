@@ -108,6 +108,8 @@ test.describe('Test Card, & binLookup w. panLength property', () => {
         // Card out of date
         await card.fillExpiryDate('12/90');
 
+        await page.waitForTimeout(500); // give time for srPanel/error messaging routine to run
+
         await card.typeCardNumber(CARD_WITH_PAN_LENGTH);
 
         // Expect UI change - expiryDate field has focus

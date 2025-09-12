@@ -30,6 +30,8 @@ const Analytics = ({ locale, clientKey, analytics, analyticsContext, bundleType 
 
     const props = { ...defaultProps, ...analytics };
 
+    const level = props.enabled ? ANALYTIC_LEVEL.all : ANALYTIC_LEVEL.initial;
+
     const collectId = CollectId({
         analyticsContext,
         clientKey,
@@ -76,6 +78,11 @@ const Analytics = ({ locale, clientKey, analytics, analyticsContext, bundleType 
     };
 
     return {
+        /**
+         * Make "setup" call, to pass data to analytics endpoint and receive a checkoutAttemptId in return
+         *
+         * N.B. This call is always made regardless of whether the merchant has disabled analytics
+         */
         setUp: async (setupProps?: AnalyticsInitialEvent): Promise<void> => {
             try {
                 const defaultProps: Partial<AnalyticsInitialEvent> = {};
@@ -84,8 +91,8 @@ const Analytics = ({ locale, clientKey, analytics, analyticsContext, bundleType 
                 const checkoutAttemptIdSession = storage.get();
                 const isSessionReusable = isSessionCreatedUnderFifteenMinutes(checkoutAttemptIdSession);
 
-                const { payload, enabled } = props;
-                const level = enabled ? ANALYTIC_LEVEL.all : ANALYTIC_LEVEL.initial;
+                const { payload } = props;
+
                 const analyticsData = processAnalyticsData(props.analyticsData);
 
                 const availableCheckoutAttemptId: string | undefined = isSessionReusable
@@ -123,7 +130,8 @@ const Analytics = ({ locale, clientKey, analytics, analyticsContext, bundleType 
         },
 
         sendAnalytics: (analyticsObj: AnalyticsEvent): boolean => {
-            if (!props.enabled) return false;
+            /** Only send subsequent analytics if the merchant has not disabled this functionality (i.e. set analytics.enabled = false) */
+            if (level !== ANALYTIC_LEVEL.all) return false;
 
             const eventCategory: AnalyticsEventCategory = analyticsObj.getEventCategory();
 
