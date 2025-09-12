@@ -105,7 +105,7 @@
     "autoprefixer": "10.4.21",
     "cross-env": "10.0.0",
     "cssnano": "7.1.0",
-    "dotenv": "16.6.1",
+    "dotenv": "17.2.1",
     "enzyme": "3.11.0",
     "enzyme-adapter-preact-pure": "4.1.0",
     "eslint": "9.32.0",
