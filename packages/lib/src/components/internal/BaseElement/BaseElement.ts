@@ -8,6 +8,7 @@ import type { BaseElementProps, IBaseElement } from './types';
 import type { PaymentData } from '../../../types/global-types';
 import { off, on } from '../../../utils/listenerUtils';
 import { AbstractAnalyticsEvent } from '../../../core/Analytics/events/AbstractAnalyticsEvent';
+import { createSdkData } from '../../../utils/createSdkData';
 
 /**
  * Verify if the first parameter is instance of Core.
@@ -96,9 +97,12 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
             componentData.paymentMethod.checkoutAttemptId = checkoutAttemptId;
         }
 
+        // Create sdkData when both analytics and risk data are available
+        const sdkData = checkoutAttemptId && clientData ? createSdkData(checkoutAttemptId, clientData) : undefined;
+
         return {
-            ...(clientData && { riskData: { clientData } }),
             ...(order && { order: { orderData: order.orderData, pspReference: order.pspReference } }),
+            ...(sdkData && { sdkData }),
             ...componentData,
             clientStateDataIndicator: true
         };
