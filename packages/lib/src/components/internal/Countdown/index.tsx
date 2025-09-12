@@ -15,7 +15,8 @@ function Countdown({ minutesFromNow, onTick = () => {}, onCompleted = () => {} }
     const { startTime, endTime } = startAndEndTime.current;
     const [time, setTime] = useState<CountdownTime>({
         minutes: '-',
-        seconds: '-'
+        seconds: '-',
+        percentage: 0
     });
     useCountdownA11yReporter(time);
 
