@@ -34,7 +34,7 @@ export default function PaypalComponent({ onApprove, onCancel, onChange, onError
         const attributes = { ...(props.cspNonce && { nonce: props.cspNonce }) },
             dataAttributes = { ...(props.cspNonce && { cspNonce: props.cspNonce }) };
 
-        const script = new Script(src, 'body', attributes, dataAttributes);
+        const script = new Script({ src, attributes, dataAttributes });
 
         script.load().then(handlePaypalLoad).catch(handlePaypalLoadFailure);
 

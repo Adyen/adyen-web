@@ -25,7 +25,7 @@ export default function AmazonPayComponent(props: AmazonPayComponentProps) {
 
     useEffect(() => {
         const src = getAmazonPayUrl(props.configuration.region);
-        const script = new Script(src);
+        const script = new Script({ src });
         if (window.amazon) {
             handleLoad();
         } else {

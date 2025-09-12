@@ -5,19 +5,13 @@ interface IScript {
     remove(): void;
 }
 
-/**
- * Creates a script element from a certain source in the passed node selector.
- * If no selector is passed it will add the script element in the body.
- *
- * @example
- * ```
- * const script = new Script('https://example.com/script.js', '.container');
- * script.load().then(doSomething);
- *
- * // To clean up just call the remove method
- * script.remove();
- * ```
- */
+interface IScriptProps {
+    src: string;
+    node?: string;
+    attributes?: Partial<HTMLScriptElement>;
+    dataAttributes?: Record<string, string | undefined>;
+}
+
 class Script implements IScript {
     private readonly src: string;
     private readonly node: string;
@@ -31,7 +25,7 @@ class Script implements IScript {
     public static readonly RETRY_DELAY = 1000;
     public static readonly MAX_NUMBER_OF_RETRIES = 3;
 
-    constructor(src: string, node = 'body', attributes: Partial<HTMLScriptElement> = {}, dataAttributes: Record<string, string | undefined> = {}) {
+    constructor({ src, node = 'body', attributes, dataAttributes }: IScriptProps) {
         this.src = src;
         this.node = node;
         this.attributes = attributes;

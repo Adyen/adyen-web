@@ -25,7 +25,7 @@ class PasskeySdkLoader implements IPasskeySdkLoader {
         try {
             const cdnUrl = getUrlFromMap(environment as CoreConfiguration['environment'], CDN_ENVIRONMENTS);
             const url = `${cdnUrl}${PasskeySdkLoader.PASSKEY_SDK_URL}`;
-            const scriptElement = new Script(url);
+            const scriptElement = new Script({ src: url });
             await scriptElement.load();
             this.AdyenPasskey = window.AdyenPasskey?.default;
             return this.AdyenPasskey;

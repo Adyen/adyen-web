@@ -94,7 +94,7 @@ export function KlarnaWidget({ sdkData, paymentMethodType, widgetInitializationT
         window.klarnaAsyncCallback = function () {
             initializeKlarnaWidget();
         };
-        const script = new Script(KLARNA_WIDGET_URL);
+        const script = new Script({ src: KLARNA_WIDGET_URL });
         void script.load();
 
         return () => {

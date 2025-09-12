@@ -13,10 +13,10 @@ class CashAppSdkLoader implements ICashAppSdkLoader {
     }
 
     public async load(environment: string): Promise<ICashAppWindowObject> {
-        const url = environment.toLowerCase().includes('live') ? CASHAPPPAY_PROD_SDK : CASHAPPPAY_SANDBOX_SDK;
+        const src = environment.toLowerCase().includes('live') ? CASHAPPPAY_PROD_SDK : CASHAPPPAY_SANDBOX_SDK;
 
         if (!this.isSdkIsAvailableOnWindow()) {
-            const scriptElement = new Script(url);
+            const scriptElement = new Script({ src });
             await scriptElement.load();
         }
 

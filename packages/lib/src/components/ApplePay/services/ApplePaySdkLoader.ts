@@ -8,7 +8,7 @@ class ApplePaySdkLoader {
 
     public async load(): Promise<ApplePaySession> {
         try {
-            const scriptElement = new Script(APPLE_PAY_SDK_URL, 'body', { crossOrigin: 'anonymous' });
+            const scriptElement = new Script({ src: APPLE_PAY_SDK_URL, attributes: { crossOrigin: 'anonymous' } });
             this.sdkLoadingPromise = scriptElement.load();
             await this.sdkLoadingPromise;
             return window?.ApplePaySession;
