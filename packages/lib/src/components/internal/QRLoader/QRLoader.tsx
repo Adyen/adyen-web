@@ -1,6 +1,6 @@
 import { Component, h } from 'preact';
 import Button from '../Button';
-// import Spinner from '../Spinner';
+import Spinner from '../Spinner';
 import checkPaymentStatus from '../../../core/Services/payment-status';
 import processResponse from '../../../core/ProcessResponse';
 
@@ -84,7 +84,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
             // Wait for previous status call to finish.
             // Also taking the server response time into the consideration to calculate timePassed.
             const start = performance.now();
-            // await this.checkStatus();
+            await this.checkStatus();
             const end = performance.now();
             this.statusInterval(Math.round(end - start));
         }, delay);
@@ -203,18 +203,18 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
             return finalState('success', 'creditCard.success');
         }
 
-        // if (loading) {
-        //     return (
-        //         <div className="adyen-checkout__qr-loader">
-        //             {brandLogo && (
-        //                 <div className="adyen-checkout__qr-loader__brand-logo-wrapper">
-        //                     <img alt={brandName} src={brandLogo} className="adyen-checkout__qr-loader__brand-logo" />
-        //                 </div>
-        //             )}
-        //             <Spinner />
-        //         </div>
-        //     );
-        // }
+        if (loading) {
+            return (
+                <div className="adyen-checkout__qr-loader">
+                    {brandLogo && (
+                        <div className="adyen-checkout__qr-loader__brand-logo-wrapper">
+                            <img alt={brandName} src={brandLogo} className="adyen-checkout__qr-loader__brand-logo" />
+                        </div>
+                    )}
+                    <Spinner />
+                </div>
+            );
+        }
 
         const qrSubtitleRef = useAutoFocus();
         const classnames = this.props.classNameModifiers.map(m => `adyen-checkout__qr-loader--${m}`);
@@ -228,13 +228,13 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                 )}
 
                 {showAmount && amount && amount.value !== null && !!amount.currency && (
-                    <div className="adyen-checkout__qr-loader__payment_amount">{i18n.amount(amount.value, amount.currency)}</div>
+                    <h1 className="adyen-checkout__qr-loader__payment_amount">{i18n.amount(amount.value, amount.currency)}</h1>
                 )}
 
                 {url && (
                     <div className="adyen-checkout__qr-loader__app-link">
                         {this.props.redirectIntroduction && (
-                            <div className="adyen-checkout__qr-loader__subtitle">{i18n.get(this.props.redirectIntroduction)}</div>
+                            <p className="adyen-checkout__qr-loader__subtitle">{i18n.get(this.props.redirectIntroduction)}</p>
                         )}
                         <Button classNameModifiers={['qr-loader']} onClick={() => this.redirectToApp(url)} label={i18n.get(this.props.buttonLabel)} />
                         <ContentSeparator />
@@ -242,9 +242,9 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                 )}
 
                 {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
-                <div ref={qrSubtitleRef} tabIndex={0} className="adyen-checkout__qr-loader__subtitle">
+                <p ref={qrSubtitleRef} tabIndex={0} className="adyen-checkout__qr-loader__subtitle">
                     {typeof this.props.introduction === 'string' ? i18n.get(this.props.introduction) : this.props.introduction?.()}
-                </div>
+                </p>
 
                 <QRLoaderDetailsProvider
                     qrCodeImage={qrCodeImage}

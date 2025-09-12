@@ -15,7 +15,7 @@ class PixElement extends QRLoaderContainer<PixConfiguration> {
 
     public static defaultProps = {
         personalDetailsRequired: false,
-        countdownTime: 100,
+        countdownTime: 15,
         delay: 2000,
         ...QRLoaderContainer.defaultProps
     };

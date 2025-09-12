@@ -2,11 +2,12 @@ import { Fragment, h } from 'preact';
 import { QRImage, QRProgressbar, QRCountdown, QRInstructions, QRCodeCopyButton, useQRLoaderDetails } from '../../internal/QRLoader';
 import { useMemo, useState } from 'preact/hooks';
 import SegmentedControl, { SegmentedControlOptions } from '../../internal/SegmentedControl/SegmentedControl';
+import PixCode from './PixCode';
 import { getUniqueId } from '../../../utils/idGenerator';
 import isMobile from '../../../utils/isMobile';
 
 const PixQRDetails = () => {
-    const { qrCodeData, qrCodeImage, percentage, timeToPay, copyBtn, instructions, onTick, countdownTime, onQRCodeLoad, onTimeUp, handleCopy } =
+    const { qrCodeData, qrCodeImage, percentage, timeToPay, copyBtn, onTick, countdownTime, onQRCodeLoad, onTimeUp, handleCopy } =
         useQRLoaderDetails();
 
     const qrCodeControlId = useMemo(() => getUniqueId('pix-qrcode-control'), []);
@@ -44,18 +45,21 @@ const PixQRDetails = () => {
             <QRCountdown countdownTime={countdownTime} timeToPay={timeToPay} onTick={onTick} onCompleted={onTimeUp} />
             <SegmentedControl classNameModifiers={['pix']} selectedValue={selectedInput} options={inputOptions} onChange={setSelectedInput} />
 
-            {selectedInput === 'pix-qrcode-option' && (
-                <Fragment>
-                    {instructions && <QRInstructions instructions={instructions} />}
-                    <QRImage src={qrCodeImage} onLoad={onQRCodeLoad} />
-                </Fragment>
-            )}
-            {selectedInput === 'pix-copy-and-paste-option' && (
-                <Fragment>
-                    {copyBtn && <QRCodeCopyButton handleCopy={handleCopy} />}
-                    <span>{qrCodeData}</span>
-                </Fragment>
-            )}
+            <div className="adyen-checkout__segmented-control--pix__content">
+                {selectedInput === 'pix-qrcode-option' && (
+                    <Fragment>
+                        <QRInstructions instructions="Scan the QR code with the PIX app" />
+                        <QRImage src={qrCodeImage} onLoad={onQRCodeLoad} />
+                    </Fragment>
+                )}
+                {selectedInput === 'pix-copy-and-paste-option' && (
+                    <Fragment>
+                        <QRInstructions instructions="Copy the code below and paste it into your banking app" />
+                        {copyBtn && <QRCodeCopyButton copyText="Copy pix code" handleCopy={handleCopy} />}
+                        <PixCode value={qrCodeData.repeat(10)} />
+                    </Fragment>
+                )}
+            </div>
         </div>
     );
 };

@@ -20,7 +20,11 @@ const QRDetails = () => {
 
             {instructions && <QRInstructions instructions={instructions} />}
 
-            {copyBtn && <QRCodeCopyButton handleCopy={handleCopy} />}
+            {copyBtn && (
+                <div className="adyen-checkout__qr-loader__actions">
+                    <QRCodeCopyButton handleCopy={handleCopy} />
+                </div>
+            )}
         </Fragment>
     );
 };

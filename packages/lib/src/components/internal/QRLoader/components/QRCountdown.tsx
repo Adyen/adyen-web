@@ -9,11 +9,11 @@ const QRCountdown = ({ countdownTime, timeToPay, onTick, onCompleted }: QRCountd
     const timeToPayString = i18n.get(timeToPay).split('%@');
 
     return (
-        <div className="adyen-checkout__qr-loader__countdown">
+        <span aria-live="polite" className="adyen-checkout__qr-loader__countdown">
             {timeToPayString[0]}&nbsp;
             <Countdown minutesFromNow={countdownTime} onTick={onTick} onCompleted={onCompleted} />
             &nbsp;{timeToPayString[1]}
-        </div>
+        </span>
     );
 };
 export default QRCountdown;
