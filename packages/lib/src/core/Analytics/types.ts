@@ -1,5 +1,4 @@
 import { PaymentAmount } from '../../types';
-import { CoreConfiguration } from '../types';
 import { SocialSecurityMode } from '../../components/Card/types';
 import { ANALYTICS_EVENT } from './constants';
 
@@ -59,19 +58,23 @@ export interface AnalyticsOptions {
     analyticsData?: AnalyticsData;
 }
 
-export type AnalyticsProps = Pick<CoreConfiguration, 'loadingContext' | 'locale' | 'clientKey' | 'analytics' | 'amount'> & {
+export type AnalyticsProps = {
+    clientKey: string;
+    analytics?: AnalyticsOptions;
+    locale: string;
     bundleType: string;
-    analyticsContext?: string;
+    analyticsContext: string;
 };
 
 export type AnalyticsEventCategory = (typeof ANALYTICS_EVENT)[keyof typeof ANALYTICS_EVENT];
 
 export type AnalyticsInitialEvent = {
-    containerWidth: number;
-    component: string;
-    flavor: string;
+    containerWidth?: number;
+    component?: string;
+    flavor?: string;
     paymentMethods?: any[];
     sessionId?: string;
+    checkoutStage?: 'precheckout' | 'checkout';
 };
 
 export type AnalyticsConfig = {

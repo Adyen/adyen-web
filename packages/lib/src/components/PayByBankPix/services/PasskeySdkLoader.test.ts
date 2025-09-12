@@ -47,7 +47,7 @@ describe('PasskeySdkLoader', () => {
     });
 
     it('should throw AdyenCheckoutError if script fails to load', async () => {
-        (Script as jest.Mock).mockImplementationOnce(() => ({
+        (Script as unknown as jest.Mock).mockImplementationOnce(() => ({
             load: jest.fn().mockRejectedValue(new Error('Script load failed'))
         }));
 
