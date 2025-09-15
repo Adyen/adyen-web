@@ -54,7 +54,7 @@ const PixQRDetails = () => {
                 {selectedInput === 'pix-copy-and-paste-option' && (
                     <Fragment>
                         <QRInstructions instructions="Copy the code below and paste it into your banking app" />
-                        <QRCodeCopyButton copyText="Copy pix code" handleCopy={handleCopy} />
+                        <QRCodeCopyButton copyText="Copy pix code" copiedText="Copied pix code" handleCopy={handleCopy} />
                         <PixCode value={qrCodeData} />
                     </Fragment>
                 )}

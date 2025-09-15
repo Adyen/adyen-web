@@ -19,6 +19,7 @@ export interface ButtonProps {
     href?: string;
     target?: string;
     rel?: string;
+    completedLabel?: string;
     onClick?: (e, callbacks) => void;
     onKeyDown?: (event: KeyboardEvent) => void;
     onKeyPress?: (event: KeyboardEvent) => void;

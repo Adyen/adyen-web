@@ -29,7 +29,7 @@ class Button extends Component<ButtonProps, ButtonState> {
         }
     };
 
-    public complete = (delay = 1000) => {
+    public complete = (delay = 1_500) => {
         this.setState({ completed: true });
         setTimeout(() => {
             this.setState({ completed: false });
@@ -53,6 +53,7 @@ class Button extends Component<ButtonProps, ButtonState> {
             status,
             variant,
             buttonRef,
+            completedLabel,
             onMouseEnter,
             onMouseLeave,
             onFocus,
@@ -90,7 +91,7 @@ class Button extends Component<ButtonProps, ButtonState> {
             default: (
                 <span className="adyen-checkout__button__content">
                     {buttonIcon}
-                    <span className="adyen-checkout__button__text">{label}</span>
+                    <span className="adyen-checkout__button__text">{this.state.completed ? (completedLabel ?? label) : label}</span>
                 </span>
             )
         };

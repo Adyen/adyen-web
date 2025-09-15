@@ -4,7 +4,13 @@ import { PREFIX } from '../../Icon/constants';
 import useImage from '../../../../core/Context/useImage';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 
-const QRCodeCopyButton = ({ copyText, handleCopy }: { copyText?: string; handleCopy: (onComplete: () => void) => void }) => {
+interface QRCodeCopyButtonProps {
+    copyText?: string;
+    copiedText?: string;
+    handleCopy: (onComplete: () => void) => void;
+}
+
+const QRCodeCopyButton = ({ copyText, copiedText, handleCopy }: QRCodeCopyButtonProps) => {
     const { i18n } = useCoreContext();
     const getImage = useImage();
 
@@ -14,6 +20,7 @@ const QRCodeCopyButton = ({ copyText, handleCopy }: { copyText?: string; handleC
             onClick={(_, { complete }) => handleCopy(complete)}
             icon={getImage({ imageFolder: 'components/' })(`${PREFIX}copy`)}
             label={copyText ?? i18n.get('button.copy')}
+            completedLabel={copiedText}
         />
     );
 };
