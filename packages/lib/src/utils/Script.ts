@@ -1,4 +1,6 @@
 import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
+import { AnalyticsInfoEvent, InfoEventType } from '../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsModule } from '../types/global-types';
 
 interface IScript {
     load(): Promise<void>;
@@ -7,6 +9,8 @@ interface IScript {
 
 interface IScriptProps {
     src: string;
+    component: string;
+    analytics: AnalyticsModule;
     node?: string;
     attributes?: Partial<HTMLScriptElement>;
     dataAttributes?: Record<string, string | undefined>;
@@ -14,9 +18,11 @@ interface IScriptProps {
 
 class Script implements IScript {
     private readonly src: string;
+    private readonly component: string;
     private readonly node: string;
     private readonly attributes: Partial<HTMLScriptElement>;
     private readonly dataAttributes: Record<string, string | undefined>;
+    private readonly analytics: AnalyticsModule;
 
     private script: HTMLScriptElement;
     private loadPromise: Promise<void> | null = null;
@@ -25,11 +31,13 @@ class Script implements IScript {
     public static readonly RETRY_DELAY = 1000;
     public static readonly MAX_NUMBER_OF_RETRIES = 3;
 
-    constructor({ src, node = 'body', attributes, dataAttributes }: IScriptProps) {
+    constructor({ src, component, node = 'body', attributes, dataAttributes, analytics }: IScriptProps) {
         this.src = src;
+        this.component = component;
         this.node = node;
         this.attributes = attributes;
         this.dataAttributes = dataAttributes;
+        this.analytics = analytics;
     }
 
     public load = (): Promise<void> => {
@@ -42,21 +50,27 @@ class Script implements IScript {
             this.rejectLoadPromise = reject;
             let attempts = 0;
 
+            this.trackEvent(InfoEventType.sdkDownloadInitiated);
+
             const loadScriptWithRetry = async (): Promise<void> => {
                 try {
                     attempts++;
                     await this.loadScript();
+                    this.trackEvent(InfoEventType.sdkDownloadCompleted);
                     resolve();
                 } catch (error: unknown) {
                     if (this.loadPromise === null) {
                         return;
                     }
 
+                    this.trackEvent(InfoEventType.sdkDownloadFailed);
+
                     this.removeScript();
 
                     if (attempts < Script.MAX_NUMBER_OF_RETRIES) {
                         setTimeout(() => void loadScriptWithRetry(), Script.RETRY_DELAY);
                     } else {
+                        this.trackEvent(InfoEventType.sdkDownloadAborted);
                         this.loadPromise = null;
                         this.rejectLoadPromise = null;
                         reject(error);
@@ -141,6 +155,11 @@ class Script implements IScript {
 
             scriptContainer.appendChild(this.script);
         });
+    }
+
+    private trackEvent(eventType: InfoEventType) {
+        const event = new AnalyticsInfoEvent({ type: eventType, component: this.component });
+        this.analytics.sendAnalytics(event);
     }
 }
 

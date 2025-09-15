@@ -13,11 +13,12 @@ import {
 import SrciError, { MastercardError, VisaError } from './SrciError';
 import { ClickToPayScheme } from '../../types';
 import Script from '../../../../../utils/Script';
+import { AnalyticsModule } from '../../../../../types/global-types';
 
 export interface ISrcInitiator {
     schemeName: ClickToPayScheme;
     // Loading 3rd party library
-    loadSdkScript(): Promise<void>;
+    loadSdkScript(analytics: AnalyticsModule): Promise<void>;
     removeSdkScript(): void;
     // SRCi specification methods
     init(params: SrcInitParams, srciTransactionId: string): Promise<void>;
@@ -46,9 +47,14 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
         this.customSdkConfiguration = customSdkConfiguration;
     }
 
-    public async loadSdkScript(): Promise<void> {
+    public async loadSdkScript(analytics: AnalyticsModule): Promise<void> {
         if (!this.isSdkIsAvailableOnWindow()) {
-            this.scriptElement = new Script({ src: this.sdkUrl });
+            this.scriptElement = new Script({
+                src: this.sdkUrl,
+                component: 'clicktopay',
+                analytics
+            });
+
             await this.scriptElement.load();
         }
         this.assignSdkReference();

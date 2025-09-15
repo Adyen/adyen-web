@@ -37,7 +37,15 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
     constructor(checkout: ICore, props?: PayByBankPixConfiguration) {
         super(checkout, props);
         const deviceId = this.props.storedPaymentMethodId ? this.props?.payByBankPixDetails?.deviceId : this.props.deviceId;
-        this.passkeyService = new PasskeyService({ environment: this.props.environment, deviceId });
+
+        this.passkeyService = new PasskeyService(
+            {
+                environment: this.props.environment,
+                deviceId
+            },
+            this.analytics
+        );
+
         if (this.props._isAdyenHosted) {
             void this.passkeyService.initialize();
         }
@@ -213,7 +221,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         // Always render the redirect button on the merchant's page
         if (!this.props._isAdyenHosted) {
             return (
-                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
+                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources} analytics={this.analytics}>
                     <SRPanelProvider srPanel={this.props.modules.srPanel}>
                         <RedirectButton
                             showPayButton={this.props.showPayButton}
@@ -232,7 +240,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         }
 
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources} analytics={this.analytics}>
                 <SRPanelProvider srPanel={this.props.modules.srPanel}>
                     {this.props.storedPaymentMethodId != null ? (
                         <StoredPayment

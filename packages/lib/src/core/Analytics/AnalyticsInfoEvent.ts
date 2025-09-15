@@ -16,6 +16,13 @@ type AnalyticsInfoEventObject = {
     component?: string;
 };
 
+export enum InfoEventType {
+    sdkDownloadInitiated = 'sdkDownloadInitiated',
+    sdkDownloadFailed = 'sdkDownloadFailed',
+    sdkDownloadAborted = 'sdkDownloadAborted',
+    sdkDownloadCompleted = 'sdkDownloadCompleted'
+}
+
 export class AnalyticsInfoEvent extends AnalyticsEvent {
     public type: string;
     public target: string;

@@ -6,9 +6,11 @@ import { getPaypalUrl } from '../utils/get-paypal-url';
 import Script from '../../../utils/Script';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import type { PayPalComponentProps } from './types';
+import useAnalytics from '../../../core/Analytics/useAnalytics';
 
 export default function PaypalComponent({ onApprove, onCancel, onChange, onError, onSubmit, onScriptLoadFailure, ...props }: PayPalComponentProps) {
     const [status, setStatus] = useState('pending');
+    const { analytics } = useAnalytics();
 
     this.setStatus = setStatus;
 
@@ -34,7 +36,13 @@ export default function PaypalComponent({ onApprove, onCancel, onChange, onError
         const attributes = { ...(props.cspNonce && { nonce: props.cspNonce }) },
             dataAttributes = { ...(props.cspNonce && { cspNonce: props.cspNonce }) };
 
-        const script = new Script({ src, attributes, dataAttributes });
+        const script = new Script({
+            src,
+            component: 'paypal',
+            attributes,
+            dataAttributes,
+            analytics
+        });
 
         script.load().then(handlePaypalLoad).catch(handlePaypalLoadFailure);
 

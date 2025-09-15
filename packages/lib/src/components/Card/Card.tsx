@@ -43,7 +43,13 @@ export class CardElement extends UIElement<CardConfiguration> {
         super(checkout, props);
 
         if (props && !props._disableClickToPay) {
-            this.clickToPayService = createClickToPayService(this.props.configuration, this.props.clickToPayConfiguration, this.props.environment);
+            this.clickToPayService = createClickToPayService(
+                this.props.configuration,
+                this.props.clickToPayConfiguration,
+                this.props.environment,
+                this.analytics
+            );
+
             void this.clickToPayService?.initialize();
         }
     }
@@ -359,7 +365,7 @@ export class CardElement extends UIElement<CardConfiguration> {
 
     render() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources} analytics={this.analytics}>
                 <SRPanelProvider srPanel={this.props.modules.srPanel}>
                     <ClickToPayWrapper
                         amount={this.props.amount}

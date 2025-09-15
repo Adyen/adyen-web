@@ -5,10 +5,12 @@ import { KLARNA_WIDGET_URL } from '../../constants';
 import type { KlarnaWidgetAuthorizeResponse, KlarnaWidgetProps } from '../../types';
 
 import './KlarnaWidget.scss';
+import useAnalytics from '../../../../core/Analytics/useAnalytics';
 
 export function KlarnaWidget({ sdkData, paymentMethodType, widgetInitializationTime, payButton, ...props }: KlarnaWidgetProps) {
     const klarnaWidgetRef = useRef(null);
     const [status, setStatus] = useState('ready');
+    const { analytics } = useAnalytics();
 
     const handleError = useCallback(() => {
         setStatus('error');
@@ -94,13 +96,18 @@ export function KlarnaWidget({ sdkData, paymentMethodType, widgetInitializationT
         window.klarnaAsyncCallback = function () {
             initializeKlarnaWidget();
         };
-        const script = new Script({ src: KLARNA_WIDGET_URL });
+        const script = new Script({
+            src: KLARNA_WIDGET_URL,
+            component: 'klarna',
+            analytics
+        });
+
         void script.load();
 
         return () => {
             script.remove();
         };
-    }, [initializeKlarnaWidget]);
+    }, [initializeKlarnaWidget, analytics]);
 
     if (status !== 'error' && status !== 'success') {
         return (

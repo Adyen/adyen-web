@@ -142,7 +142,13 @@ class FastlaneSDK {
 
     private async fetchSdk(clientToken: string, clientId: string): Promise<void> {
         const src = `https://www.paypal.com/sdk/js?client-id=${clientId}&components=buttons,fastlane`;
-        const script = new Script({ src, dataAttributes: { sdkClientToken: clientToken } });
+
+        // @ts-ignore TODO: FIX THIS
+        const script = new Script({
+            src,
+            component: 'fastlane',
+            dataAttributes: { sdkClientToken: clientToken }
+        });
 
         await script.load();
     }
