@@ -421,5 +421,11 @@
     "eftpad-canada.input.transitNumber.label": "Transitnummer",
     "eftpad-canada.input.transitNumber.contextualText": "5 Stellen",
     "eftpad-canada.input.transitNumber.error": "Geben Sie eine Transitnummer ein, die aus 5 Ziffern besteht",
-    "eftpad-canada.settlement-info": "Die Gelder werden innerhalb von 1–3 Werktagen von Ihrem Bankkonto abgebucht."
+    "eftpad-canada.settlement-info": "Die Gelder werden innerhalb von 1–3 Werktagen von Ihrem Bankkonto abgebucht.",
+    "upi.mandate.intro": "Sie richten eine wiederkehrende UPI-Autopay-Zahlung ein",
+    "upi.mandate.max.extraText": "Sie genehmigen ein höheres Limit, um zukünftige Planänderungen zu ermöglichen",
+    "upi.mandate.upTo": "bis zu %{amount}",
+    "upi.mandate.frequency.monthly": "/Monat",
+    "upi.mandate.frequency.weekly": "/Woche",
+    "upi.mandate.frequency.adhoc": " wie dargestellt"
 }
