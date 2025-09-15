@@ -56,7 +56,11 @@ const PixQRDetails = () => {
                 {selectedInput === 'pix-copy-and-paste-option' && (
                     <Fragment>
                         <QRInstructions instructions={i18n.get('pix.instructions.copyAndPaste')} />
-                        <QRCodeCopyButton copyLabel={i18n.get('pix.copyCode')} copiedLabel={i18n.get('pix.copiedCode')} handleCopy={handleCopy} />
+                        <QRCodeCopyButton
+                            copyLabel={i18n.get('pix.code.copy.label')}
+                            copiedLabel={i18n.get('pix.code.copied.label')}
+                            handleCopy={handleCopy}
+                        />
                         <PixCode value={qrCodeData} />
                     </Fragment>
                 )}

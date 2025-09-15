@@ -21,7 +21,7 @@ const QRCodeCopyButton = ({ copyLabel, copiedLabel, handleCopy }: QRCodeCopyButt
             icon={getImage({ imageFolder: 'components/' })(`${PREFIX}copy`)}
             onClickCompletedIcon={getImage({ imageFolder: 'components/' })(`${PREFIX}checkmark`)}
             label={copyLabel ?? i18n.get('button.copy')}
-            onClickCompletedLabel={copiedLabel}
+            onClickCompletedLabel={copiedLabel ?? i18n.get('button.copied')}
         />
     );
 };
