@@ -27,7 +27,7 @@ class PixElement extends QRLoaderContainer<PixConfiguration> {
     formatProps(props: PixConfiguration): PixConfiguration {
         return {
             copyBtn: true,
-            introduction: 'pix.instructions',
+            introduction: 'pix.introduction',
             ...super.formatProps(props)
         };
     }

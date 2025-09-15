@@ -5,12 +5,12 @@ import useImage from '../../../../core/Context/useImage';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 
 interface QRCodeCopyButtonProps {
-    copyText?: string;
-    copiedText?: string;
+    copyLabel?: string;
+    copiedLabel?: string;
     handleCopy: (onComplete: () => void) => void;
 }
 
-const QRCodeCopyButton = ({ copyText, copiedText, handleCopy }: QRCodeCopyButtonProps) => {
+const QRCodeCopyButton = ({ copyLabel, copiedLabel, handleCopy }: QRCodeCopyButtonProps) => {
     const { i18n } = useCoreContext();
     const getImage = useImage();
 
@@ -19,8 +19,9 @@ const QRCodeCopyButton = ({ copyText, copiedText, handleCopy }: QRCodeCopyButton
             variant="action"
             onClick={(_, { complete }) => handleCopy(complete)}
             icon={getImage({ imageFolder: 'components/' })(`${PREFIX}copy`)}
-            label={copyText ?? i18n.get('button.copy')}
-            completedLabel={copiedText}
+            onClickCompletedIcon={getImage({ imageFolder: 'components/' })(`${PREFIX}checkmark`)}
+            label={copyLabel ?? i18n.get('button.copy')}
+            onClickCompletedLabel={copiedLabel}
         />
     );
 };

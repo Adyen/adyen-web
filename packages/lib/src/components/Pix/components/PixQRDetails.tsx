@@ -5,8 +5,10 @@ import SegmentedControl, { SegmentedControlOptions } from '../../internal/Segmen
 import PixCode from './PixCode';
 import { getUniqueId } from '../../../utils/idGenerator';
 import isMobile from '../../../utils/isMobile';
+import { useCoreContext } from '../../../core/Context/CoreProvider';
 
 const PixQRDetails = () => {
+    const { i18n } = useCoreContext();
     const { qrCodeData, qrCodeImage, percentage, timeToPay, onTick, countdownTime, onQRCodeLoad, onTimeUp, handleCopy } = useQRLoaderDetails();
 
     const qrCodeControlId = useMemo(() => getUniqueId('pix-qrcode-control'), []);
@@ -47,14 +49,14 @@ const PixQRDetails = () => {
             <div className="adyen-checkout__segmented-control--pix__content">
                 {selectedInput === 'pix-qrcode-option' && (
                     <Fragment>
-                        <QRInstructions instructions="Scan the QR code with the PIX app" />
+                        <QRInstructions instructions={i18n.get('pix.instructions.qrCode')} />
                         <QRImage src={qrCodeImage} onLoad={onQRCodeLoad} />
                     </Fragment>
                 )}
                 {selectedInput === 'pix-copy-and-paste-option' && (
                     <Fragment>
-                        <QRInstructions instructions="Copy the code below and paste it into your banking app" />
-                        <QRCodeCopyButton copyText="Copy pix code" copiedText="Copied pix code" handleCopy={handleCopy} />
+                        <QRInstructions instructions={i18n.get('pix.instructions.copyAndPaste')} />
+                        <QRCodeCopyButton copyLabel={i18n.get('pix.copyCode')} copiedLabel={i18n.get('pix.copiedCode')} handleCopy={handleCopy} />
                         <PixCode value={qrCodeData} />
                     </Fragment>
                 )}
