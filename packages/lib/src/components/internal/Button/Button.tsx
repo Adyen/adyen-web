@@ -29,7 +29,7 @@ class Button extends Component<ButtonProps, ButtonState> {
         }
     };
 
-    public complete = (delay = 1_500) => {
+    public complete = (delay = 1_000) => {
         this.setState({ completed: true });
         setTimeout(() => {
             this.setState({ completed: false });
