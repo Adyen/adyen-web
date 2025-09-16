@@ -33,22 +33,22 @@ export class CashAppPay extends UIElement<CashAppPayConfiguration> {
             return;
         }
 
-        const sdkLoader = new CashAppSdkLoader();
-        this.cashAppService = new CashAppService(
-            sdkLoader,
-            {
-                storePaymentMethod: this.props.storePaymentMethod,
-                useCashAppButtonUi: this.props.showPayButton,
-                environment: this.props.environment,
-                amount: this.props.amount,
-                redirectURL: this.props.redirectURL,
-                clientId: this.props.configuration?.clientId,
-                scopeId: this.props.configuration?.scopeId,
-                button: this.props.button,
-                referenceId: this.props.referenceId
-            },
-            this.analytics
-        );
+        const sdkLoader = new CashAppSdkLoader({
+            environment: this.props.environment,
+            analytics: this.analytics
+        });
+
+        this.cashAppService = new CashAppService(sdkLoader, {
+            storePaymentMethod: this.props.storePaymentMethod,
+            useCashAppButtonUi: this.props.showPayButton,
+            environment: this.props.environment,
+            amount: this.props.amount,
+            redirectURL: this.props.redirectURL,
+            clientId: this.props.configuration?.clientId,
+            scopeId: this.props.configuration?.scopeId,
+            button: this.props.button,
+            referenceId: this.props.referenceId
+        });
     }
 
     public formatProps(props: CashAppPayConfiguration) {

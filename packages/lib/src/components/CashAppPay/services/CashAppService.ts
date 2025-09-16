@@ -6,7 +6,6 @@ import { AnalyticsModule } from '../../../types/global-types';
 export default class CashAppService implements ICashAppService {
     private readonly sdkLoader: ICashAppSdkLoader;
     private readonly configuration: CashAppServiceConfig;
-    private readonly analytics: AnalyticsModule;
 
     private pay: ICashAppSDK;
 
@@ -15,10 +14,9 @@ export default class CashAppService implements ICashAppService {
      */
     private startAuthorization?: () => void;
 
-    constructor(sdkLoader: ICashAppSdkLoader, configuration: CashAppServiceConfig, analytics: AnalyticsModule) {
+    constructor(sdkLoader: ICashAppSdkLoader, configuration: CashAppServiceConfig) {
         this.configuration = configuration;
         this.sdkLoader = sdkLoader;
-        this.analytics = analytics;
 
         if (!configuration.clientId) {
             console.warn('CashAppService: clientId is missing');
@@ -41,7 +39,7 @@ export default class CashAppService implements ICashAppService {
     public async initialize(): Promise<void> {
         try {
             const { environment, clientId } = this.configuration;
-            const cashApp = await this.sdkLoader.load(environment, this.analytics);
+            const cashApp = await this.sdkLoader.load(environment);
             this.pay = await cashApp.pay({ clientId });
         } catch (error) {
             throw new AdyenCheckoutError('ERROR', 'Error during initialization', { cause: error });
