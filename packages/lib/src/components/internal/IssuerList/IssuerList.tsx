@@ -70,6 +70,8 @@ function IssuerList({
     const { setSRMessagesFromObjects, shouldMoveFocusSR } = useSRPanelContext();
     const setSRMessages: SetSRMessagesReturnFn = setSRMessagesFromObjects?.({});
 
+    const containerRef = useRef<HTMLDivElement>(null);
+
     const getErrorMessage = error => (error && error.errorMessage ? i18n.get(error.errorMessage) : !!error);
 
     this.setStatus = newStatus => {
@@ -116,7 +118,7 @@ function IssuerList({
         const srPanelResp: SetSRMessagesReturnObject = setSRMessages?.({ errors, isValidating: true });
         if (srPanelResp?.action === ERROR_ACTION_FOCUS_FIELD) {
             // Focus field in error, if required
-            if (shouldMoveFocusSR) setFocusOnField('.adyen-checkout__issuer-list', 'issuer-list');
+            if (shouldMoveFocusSR) setFocusOnField(containerRef.current, 'issuer-list');
         }
     }, [data, valid, errors, isValid]);
 
@@ -133,7 +135,7 @@ function IssuerList({
     );
 
     return (
-        <div className="adyen-checkout__issuer-list">
+        <div ref={containerRef} className="adyen-checkout__issuer-list">
             {!!highlightedItems.length && (
                 <Fragment>
                     <IssuerButtonGroup

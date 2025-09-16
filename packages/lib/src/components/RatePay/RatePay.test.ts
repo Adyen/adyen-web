@@ -18,7 +18,7 @@ server.events.on('request:start', ({ request }) => {
     console.log('MSW intercepted:', request.method, request.url);
 });
 
-describe.only('RatePay Direct Debit', () => {
+describe('RatePay Direct Debit', () => {
     afterEach(() => {
         jest.clearAllMocks();
     });
