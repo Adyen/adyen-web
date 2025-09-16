@@ -57,7 +57,7 @@ module.exports = (app = express(), options = {}) => {
     }
 
     // API route logging middleware
-    app.use('/api/*', (req, res, next) => {
+    app.use('/api/*splat', (req, res, next) => {
         console.log(`[API] Processing ${req.method} ${req.url}`);
         console.log(`[API] Route params:`, req.params);
         console.log(`[API] Query params:`, req.query);
@@ -206,7 +206,7 @@ module.exports = (app = express(), options = {}) => {
     });
 
     // 404 handler
-    app.use('*', (req, res) => {
+    app.use('*splat', (req, res) => {
         console.log(`[404] Route not found: ${req.method} ${req.url}`);
         res.status(404).json({ 
             error: 'Route not found', 
