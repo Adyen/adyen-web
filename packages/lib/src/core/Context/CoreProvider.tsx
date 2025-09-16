@@ -10,8 +10,8 @@ interface CoreProviderProps {
     loadingContext: string;
     i18n: Language;
     resources: Resources;
-    analytics: AnalyticsModule;
     children: ComponentChildren;
+    analytics?: AnalyticsModule;
 }
 
 type ContextValue = {
@@ -25,12 +25,12 @@ const CoreContext = createContext<ContextValue | undefined>(undefined);
 
 const CoreProvider = ({ i18n, loadingContext, resources, analytics, children }: CoreProviderProps) => {
     useEffect(() => {
-        if (!i18n || !loadingContext || !resources || !analytics) {
+        if (!i18n || !loadingContext || !resources) {
             console.warn(
-                `CoreProvider - WARNING core provider is missing:${i18n ? '' : 'i18n'} ${loadingContext ? '' : 'loadingContext'} ${resources ? '' : 'resources'} ${analytics ? '' : 'analytics'}`
+                `CoreProvider - WARNING core provider is missing:${i18n ? '' : 'i18n'} ${loadingContext ? '' : 'loadingContext'} ${resources ? '' : 'resources'}`
             );
         }
-    }, [i18n, loadingContext, resources, analytics]);
+    }, [i18n, loadingContext, resources]);
 
     return (
         <CoreContext.Provider
