@@ -144,7 +144,7 @@
   },
   "dependencies": {
     "@types/applepayjs": "14.0.9",
-    "@types/googlepay": "0.7.6",
+    "@types/googlepay": "0.7.7",
     "classnames": "2.5.1",
     "preact": "10.22.1"
   },
