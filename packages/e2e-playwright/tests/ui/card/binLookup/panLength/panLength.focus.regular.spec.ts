@@ -99,7 +99,6 @@ test.describe('Test Card, & binLookup w. panLength property', () => {
         card,
         page
     }) => {
-
         await binLookupMock(page, optionalDateWithPanLengthMock);
 
         await card.goto(URL_MAP.card);
