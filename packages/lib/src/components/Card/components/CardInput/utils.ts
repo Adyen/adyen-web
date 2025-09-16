@@ -232,6 +232,7 @@ export const getCardConfigData = (cardProps: CardConfiguration): CardConfigData 
         showInstallmentAmounts,
         showPayButton = false, // hard coded default
         styles,
+        trimTrailingSeparator,
         onAllValid,
         onBinLookup,
         onBinValue,
@@ -299,6 +300,7 @@ export const getCardConfigData = (cardProps: CardConfiguration): CardConfigData 
         socialSecurityNumberMode: configuration?.socialSecurityNumberMode,
         srPanelEnabled,
         srPanelMoveFocus,
+        trimTrailingSeparator,
         /** callbacks */
         // We need to detect if the merchant themselves has defined these, not if we've set them as a default
         hasOnAllValid: onAllValid !== CardInputDefaultProps.onAllValid,
