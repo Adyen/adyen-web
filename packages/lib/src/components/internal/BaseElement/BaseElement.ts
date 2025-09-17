@@ -109,6 +109,7 @@ abstract class BaseElement<P extends BaseElementProps> implements IBaseElement {
         const sdkData = checkoutAttemptId && clientData ? createSdkData(checkoutAttemptId, clientData) : undefined;
 
         return {
+            ...(clientData && { riskData: { clientData } }),
             ...(order && { order: { orderData: order.orderData, pspReference: order.pspReference } }),
             ...(sdkData && { sdkData }),
             ...componentData,
