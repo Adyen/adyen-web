@@ -32,7 +32,7 @@ module.exports = (app = express(), options = {}) => {
     console.log(`[STARTUP] Environment:`, process.env.NODE_ENV || 'development');
     
     app.use(express.json());
-    app.use(express.urlencoded({ extended: true }));
+    //app.use(express.urlencoded({ extended: true }));
     
     // Request logging middleware
     app.use((req, res, next) => {
