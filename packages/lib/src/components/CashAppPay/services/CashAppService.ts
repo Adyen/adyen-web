@@ -1,7 +1,6 @@
 import { ICashAppSdkLoader } from './CashAppSdkLoader';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { CashAppPayEvents, CashAppServiceConfig, ICashAppSDK, ICashAppService } from './types';
-import { AnalyticsModule } from '../../../types/global-types';
 
 export default class CashAppService implements ICashAppService {
     private readonly sdkLoader: ICashAppSdkLoader;

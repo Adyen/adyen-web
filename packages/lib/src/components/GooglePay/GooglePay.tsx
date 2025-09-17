@@ -49,7 +49,11 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
             );
         }
 
-        this.googlePay = new GooglePayService(this.props.environment, this.props.modules.analytics, {
+        console.log('hi');
+        console.log(this.analytics);
+        console.log(this.props);
+
+        this.googlePay = new GooglePayService(this.props.environment, this.analytics, {
             ...(isExpress && paymentDataCallbacks?.onPaymentDataChanged && { onPaymentDataChanged: paymentDataCallbacks.onPaymentDataChanged }),
             onPaymentAuthorized: this.onPaymentAuthorized
         });
@@ -133,6 +137,8 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
     }
 
     public override submit = () => {
+        console.log('he');
+
         if (this.props.isInstantPayment) {
             const event = new AnalyticsInfoEvent({
                 type: ANALYTICS_SELECTED_STR,
