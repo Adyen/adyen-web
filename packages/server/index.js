@@ -2,7 +2,6 @@ const path = require('path');
 const express = require('express');
 const https = require('https');
 const fs = require('fs');
-const bodyParser = require('body-parser')
 
 require('dotenv').config({ path: path.resolve('../../', '.env') });
 
