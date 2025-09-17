@@ -151,7 +151,7 @@ describe('GooglePay', () => {
                 onPaymentCompleted: onPaymentCompletedMock
             });
 
-            // @ts-ignore  is mocked
+            // @ts-ignore GooglePayService is mocked
             const onPaymentAuthorized = GooglePayService.mock.calls[0][2].onPaymentAuthorized;
             const promise = onPaymentAuthorized(googlePaymentData);
 

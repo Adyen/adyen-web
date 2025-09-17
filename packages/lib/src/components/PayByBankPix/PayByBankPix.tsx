@@ -221,7 +221,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         // Always render the redirect button on the merchant's page
         if (!this.props._isAdyenHosted) {
             return (
-                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources} analytics={this.analytics}>
+                <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                     <SRPanelProvider srPanel={this.props.modules.srPanel}>
                         <RedirectButton
                             showPayButton={this.props.showPayButton}
@@ -240,7 +240,7 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
         }
 
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources} analytics={this.analytics}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <SRPanelProvider srPanel={this.props.modules.srPanel}>
                     {this.props.storedPaymentMethodId != null ? (
                         <StoredPayment

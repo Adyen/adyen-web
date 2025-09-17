@@ -106,7 +106,7 @@ export class ClickToPayElement extends UIElement<ClickToPayConfiguration> {
 
     render() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources} analytics={this.analytics}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
                 <ClickToPayProvider
                     isStandaloneComponent={true}
                     configuration={this.ctpConfiguration}
