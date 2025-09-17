@@ -2,7 +2,10 @@ const path = require('path');
 const express = require('express');
 const https = require('https');
 const fs = require('fs');
+const bodyParser = require('body-parser')
+
 require('dotenv').config({ path: path.resolve('../../', '.env') });
+
 const getPaymentMethods = require('./api/paymentMethods');
 const getPaymentMethodsBalance = require('./api/paymentMethodsBalance');
 const makePayment = require('./api/payments');
@@ -31,8 +34,8 @@ module.exports = (app = express(), options = {}) => {
     console.log(`[STARTUP] Node version:`, process.version);
     console.log(`[STARTUP] Environment:`, process.env.NODE_ENV || 'development');
     
-    app.use(express.json());
-    //app.use(express.urlencoded({ extended: true }));
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({ extended: true }));
     
     // Request logging middleware
     app.use((req, res, next) => {
