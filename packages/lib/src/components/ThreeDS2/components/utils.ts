@@ -206,6 +206,7 @@ export const get3DS2FlowProps = (actionSubtype, props) => {
     // Challenge
     return {
         statusType: 'custom',
-        i18n: props.i18n
+        i18n: props.i18n,
+        elementRef: props.elementRef
     };
 };
