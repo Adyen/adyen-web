@@ -1,6 +1,8 @@
 import MastercardSdk from './MastercardSdk';
 import Script from '../../../../../utils/Script';
 import { MC_SDK_PROD, MC_SDK_TEST } from './config';
+import { mock } from 'jest-mock-extended';
+import { AnalyticsModule } from '../../../../../types/global-types';
 
 const mockScriptLoaded = jest.fn().mockImplementation(() => {
     window.SRCSDK_MASTERCARD = {
@@ -42,6 +44,7 @@ const mockScriptLoaded = jest.fn().mockImplementation(() => {
     };
 });
 
+const mockAnalytics = mock<AnalyticsModule>();
 const mockScriptRemoved = jest.fn();
 
 jest.mock('../../../../../utils/Script', () => {
@@ -63,28 +66,28 @@ afterEach(() => {
 
 describe('SDK urls', () => {
     test('should load sdk script with correct URL for live', async () => {
-        const sdk = new MastercardSdk('live', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        const sdk = new MastercardSdk('live', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' }, mockAnalytics);
         expect(sdk.schemeSdk).toBeNull;
         expect(sdk.schemeName).toBe('mc');
 
         await sdk.loadSdkScript();
 
-        expect(Script).toHaveBeenCalledWith(MC_SDK_PROD);
+        expect(Script).toHaveBeenCalledWith({ component: 'clicktopay', src: MC_SDK_PROD, analytics: mockAnalytics });
         expect(mockScriptLoaded).toHaveBeenCalledTimes(1);
     });
 
     test('should load sdk script with correct URL for test', async () => {
-        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' }, mockAnalytics);
         await sdk.loadSdkScript();
 
-        expect(Script).toHaveBeenCalledWith(MC_SDK_TEST);
+        expect(Script).toHaveBeenCalledWith({ component: 'clicktopay', src: MC_SDK_TEST, analytics: mockAnalytics });
         expect(mockScriptLoaded).toHaveBeenCalledTimes(1);
     });
 });
 
 describe('init()', () => {
     test('should init with the correct values', async () => {
-        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' }, mockAnalytics);
         await sdk.loadSdkScript();
 
         const srcInitiatorId = 'xxxx-yyyy';
@@ -115,7 +118,7 @@ describe('init()', () => {
     });
 
     test('should trigger error if init fails', async () => {
-        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' }, mockAnalytics);
         await sdk.loadSdkScript();
 
         const mcError = {
@@ -138,7 +141,7 @@ describe('init()', () => {
 
 describe('identityLookup()', () => {
     test('should call identityLookup with the correct values', async () => {
-        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' }, mockAnalytics);
         await sdk.loadSdkScript();
 
         const response = await sdk.identityLookup({ identityValue: 'john@example.com', type: 'email' });
@@ -153,7 +156,7 @@ describe('identityLookup()', () => {
     });
 
     test('should trigger error if identityLookup fails', async () => {
-        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' }, mockAnalytics);
         await sdk.loadSdkScript();
 
         const mcError = {
@@ -176,7 +179,7 @@ describe('identityLookup()', () => {
 
 describe('completeIdentityValidation()', () => {
     test('should call completeIdentityValidation with the correct values', async () => {
-        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' }, mockAnalytics);
         await sdk.loadSdkScript();
 
         const otp = '123456';
@@ -190,7 +193,7 @@ describe('completeIdentityValidation()', () => {
     });
 
     test('should trigger error if completeIdentityValidation fails', async () => {
-        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' }, mockAnalytics);
         await sdk.loadSdkScript();
 
         const mcError = {
@@ -213,7 +216,7 @@ describe('completeIdentityValidation()', () => {
 
 describe('checkout()', () => {
     test('should call checkout with the correct values', async () => {
-        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' }, mockAnalytics);
         await sdk.loadSdkScript();
 
         const response = await sdk.checkout({
@@ -232,7 +235,7 @@ describe('checkout()', () => {
     });
 
     test('should trigger error if checkout fails', async () => {
-        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' }, mockAnalytics);
         await sdk.loadSdkScript();
 
         const mcError = {
@@ -255,7 +258,7 @@ describe('checkout()', () => {
 
 describe('unbindAppInstance()', () => {
     test('should call unbind', async () => {
-        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' }, mockAnalytics);
         await sdk.loadSdkScript();
         await sdk.unbindAppInstance();
 
@@ -263,7 +266,7 @@ describe('unbindAppInstance()', () => {
     });
 
     test('should trigger error if unbindAppInstance fails', async () => {
-        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' }, mockAnalytics);
         await sdk.loadSdkScript();
 
         const mcError = {
@@ -286,7 +289,7 @@ describe('unbindAppInstance()', () => {
 
 describe('isRecognized()', () => {
     test('should call isRecognized', async () => {
-        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' }, mockAnalytics);
         await sdk.loadSdkScript();
 
         const response = await sdk.isRecognized();
@@ -297,7 +300,7 @@ describe('isRecognized()', () => {
     });
 
     test('should trigger error if isRecognized fails', async () => {
-        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' }, mockAnalytics);
         await sdk.loadSdkScript();
 
         const mcError = {
@@ -320,7 +323,7 @@ describe('isRecognized()', () => {
 
 describe('initiateIdentityValidation()', () => {
     test('should call initiateIdentityValidation', async () => {
-        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' }, mockAnalytics);
         await sdk.loadSdkScript();
 
         const response = await sdk.initiateIdentityValidation();
@@ -330,7 +333,7 @@ describe('initiateIdentityValidation()', () => {
     });
 
     test('should trigger error if initiateIdentityValidation fails', async () => {
-        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' }, mockAnalytics);
         await sdk.loadSdkScript();
 
         const mcError = {
@@ -353,7 +356,7 @@ describe('initiateIdentityValidation()', () => {
 
 describe('getSrcProfile()', () => {
     test('should call getSrcProfile', async () => {
-        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' }, mockAnalytics);
         await sdk.loadSdkScript();
 
         const response = await sdk.getSrcProfile(['id-token']);
@@ -366,7 +369,7 @@ describe('getSrcProfile()', () => {
     });
 
     test('should trigger error if getSrcProfile fails', async () => {
-        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' }, mockAnalytics);
         await sdk.loadSdkScript();
 
         const mcError = {
@@ -389,7 +392,7 @@ describe('getSrcProfile()', () => {
 
 describe('Removing script', () => {
     test('should remove script', async () => {
-        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        const sdk = new MastercardSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' }, mockAnalytics);
         await sdk.loadSdkScript();
         sdk.removeSdkScript();
 

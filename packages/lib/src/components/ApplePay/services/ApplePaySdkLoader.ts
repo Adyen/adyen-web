@@ -6,14 +6,19 @@ export const APPLE_PAY_SDK_URL = 'https://applepay.cdn-apple.com/jsapi/1.latest/
 
 class ApplePaySdkLoader {
     private sdkLoadingPromise: Promise<void>;
+    private readonly analytics: AnalyticsModule;
 
-    public async load(analytics: AnalyticsModule): Promise<ApplePaySession> {
+    constructor({ analytics }: { analytics: AnalyticsModule }) {
+        this.analytics = analytics;
+    }
+
+    public async load(): Promise<ApplePaySession> {
         try {
             const scriptElement = new Script({
                 src: APPLE_PAY_SDK_URL,
                 component: 'applepay',
                 attributes: { crossOrigin: 'anonymous' },
-                analytics: analytics
+                analytics: this.analytics
             });
 
             this.sdkLoadingPromise = scriptElement.load();

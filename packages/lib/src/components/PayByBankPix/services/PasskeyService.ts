@@ -48,9 +48,11 @@ export class PasskeyService implements IPasskeyService {
 
     public initialize() {
         if (this.initialized == null) {
-            this.initialized = new PasskeySdkLoader().load(this.passkeyServiceConfig.environment, this.analytics).then(passkey => {
-                this.passkeySdk = passkey;
-            });
+            this.initialized = new PasskeySdkLoader({ environment: this.passkeyServiceConfig.environment, analytics: this.analytics })
+                .load()
+                .then(passkey => {
+                    this.passkeySdk = passkey;
+                });
         }
 
         return this.initialized;

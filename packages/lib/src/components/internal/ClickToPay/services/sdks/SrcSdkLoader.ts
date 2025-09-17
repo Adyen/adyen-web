@@ -12,9 +12,14 @@ const sdkMap: Record<string, typeof VisaSdk | typeof MastercardSdk | null> = {
     default: null
 };
 
-const getSchemeSdk = (scheme: string, environment: string, customConfig: CustomSdkConfiguration): ISrcInitiator | null => {
+const getSchemeSdk = (
+    scheme: string,
+    environment: string,
+    customConfig: CustomSdkConfiguration,
+    analytics: AnalyticsModule
+): ISrcInitiator | null => {
     const SchemeSdkClass = sdkMap[scheme] || sdkMap.default;
-    return SchemeSdkClass ? new SchemeSdkClass(environment, customConfig) : null;
+    return SchemeSdkClass ? new SchemeSdkClass(environment, customConfig, analytics) : null;
 };
 
 export interface ISrcSdkLoader {
@@ -38,8 +43,8 @@ class SrcSdkLoader implements ISrcSdkLoader {
         }
 
         return new Promise((resolve, reject) => {
-            const sdks: ISrcInitiator[] = this.schemes.map(scheme => getSchemeSdk(scheme, environment, this.customSdkConfiguration));
-            const loadScriptPromises = sdks.map(sdk => sdk.loadSdkScript(analytics));
+            const sdks: ISrcInitiator[] = this.schemes.map(scheme => getSchemeSdk(scheme, environment, this.customSdkConfiguration, analytics));
+            const loadScriptPromises = sdks.map(sdk => sdk.loadSdkScript());
 
             void Promise.allSettled(loadScriptPromises).then(loadScriptResponses => {
                 if (loadScriptResponses.every(isRejected)) {

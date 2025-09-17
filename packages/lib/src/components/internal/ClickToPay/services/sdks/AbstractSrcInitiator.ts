@@ -18,7 +18,7 @@ import { AnalyticsModule } from '../../../../../types/global-types';
 export interface ISrcInitiator {
     schemeName: ClickToPayScheme;
     // Loading 3rd party library
-    loadSdkScript(analytics: AnalyticsModule): Promise<void>;
+    loadSdkScript(): Promise<void>;
     removeSdkScript(): void;
     // SRCi specification methods
     init(params: SrcInitParams, srciTransactionId: string): Promise<void>;
@@ -37,22 +37,24 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
 
     protected readonly customSdkConfiguration: CustomSdkConfiguration;
 
+    private readonly analytics: AnalyticsModule;
     private readonly sdkUrl: string;
     private scriptElement: Script | null = null;
 
-    protected constructor(sdkUrl: string, customSdkConfiguration: CustomSdkConfiguration) {
+    protected constructor(sdkUrl: string, customSdkConfiguration: CustomSdkConfiguration, analytics: AnalyticsModule) {
         if (!sdkUrl) throw Error('AbstractSrcInitiator: Invalid SDK URL');
 
         this.sdkUrl = sdkUrl;
         this.customSdkConfiguration = customSdkConfiguration;
+        this.analytics = analytics;
     }
 
-    public async loadSdkScript(analytics: AnalyticsModule): Promise<void> {
+    public async loadSdkScript(): Promise<void> {
         if (!this.isSdkIsAvailableOnWindow()) {
             this.scriptElement = new Script({
                 src: this.sdkUrl,
                 component: 'clicktopay',
-                analytics
+                analytics: this.analytics
             });
 
             await this.scriptElement.load();
