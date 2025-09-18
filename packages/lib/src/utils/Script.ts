@@ -120,9 +120,13 @@ class Script implements IScript {
             const handleOnError = (errorEvent: ErrorEvent) => {
                 cleanupListeners();
                 reject(
-                    new AdyenCheckoutError('SCRIPT_ERROR', `Unable to load script ${this.src}. Message: ${errorEvent.message}`, {
-                        cause: errorEvent?.error || errorEvent
-                    })
+                    new AdyenCheckoutError(
+                        'SCRIPT_ERROR',
+                        `Unable to load script ${this.src}.${errorEvent?.message && `Message: ${errorEvent.message}`}`,
+                        {
+                            cause: errorEvent?.error || errorEvent
+                        }
+                    )
                 );
             };
 
@@ -159,7 +163,11 @@ class Script implements IScript {
     }
 
     private trackEvent(eventType: InfoEventType) {
-        const event = new AnalyticsInfoEvent({ type: eventType, component: this.component });
+        const event = new AnalyticsInfoEvent({
+            type: eventType,
+            component: this.component,
+            cdnUrl: this.src
+        });
         this.analytics?.sendAnalytics(event);
     }
 }
