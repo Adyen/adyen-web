@@ -36,7 +36,7 @@
         "@adyen/adyen-web-server": "1.0.0",
         "@changesets/cli": "2.29.6",
         "@changesets/get-github-info": "0.6.0",
-        "concurrently": "9.2.0",
+        "concurrently": "9.2.1",
         "prettier": "3.6.2"
     },
     "resolutions": {
