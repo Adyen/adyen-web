@@ -18,13 +18,13 @@ const PixQRDetails = () => {
         let options = [
             {
                 value: 'pix-qrcode-option',
-                label: 'QR code',
+                label: i18n.get('pix.options.qrCode.label'),
                 id: 'pix-qrcode-option',
                 controls: qrCodeControlId
             },
             {
                 value: 'pix-copy-and-paste-option',
-                label: 'Copy and Paste',
+                label: i18n.get('pix.options.copyAndPaste.label'),
                 id: 'pix-copy-and-paste-option',
                 controls: copyAndPasteControlId
             }
@@ -35,7 +35,7 @@ const PixQRDetails = () => {
         }
 
         return options;
-    }, [qrCodeControlId, copyAndPasteControlId]);
+    }, [qrCodeControlId, copyAndPasteControlId, i18n]);
 
     const defaultOption = inputOptions[0].value;
     const [selectedInput, setSelectedInput] = useState<string>(defaultOption);
