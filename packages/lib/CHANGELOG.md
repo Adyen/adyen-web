@@ -1,5 +1,11 @@
 # @adyen/adyen-web
 
+## 6.22.1
+
+### Patch Changes
+
+- Adding retrial mechanism for third party script load ([#3500](https://github.com/Adyen/adyen-web/pull/3500))
+
 ## 6.22.0
 
 ### Minor Changes
