@@ -1,7 +1,10 @@
 import Script from './Script';
 import AdyenCheckoutError from '../core/Errors/AdyenCheckoutError';
+import { mock } from 'jest-mock-extended';
+import { AnalyticsModule } from '../types/global-types';
 
 const SCRIPT_SRC = 'https://example.com/script.js';
+const mockAnalytics = mock<AnalyticsModule>();
 
 describe('Script', () => {
     beforeEach(() => {
@@ -14,7 +17,12 @@ describe('Script', () => {
         jest.spyOn(document, 'createElement').mockImplementation(() => scriptElement);
 
         const dataAttributes = { clientToken: 'xxx-yyy', cspNonce: 'nonce-value' };
-        const script = new Script(SCRIPT_SRC, 'body', {}, dataAttributes);
+        const script = new Script({
+            src: SCRIPT_SRC,
+            component: 'example-sdk',
+            dataAttributes,
+            analytics: mockAnalytics
+        });
 
         const loadPromise = script.load();
 
@@ -38,7 +46,12 @@ describe('Script', () => {
 
         const createElementSpy = jest.spyOn(document, 'createElement');
 
-        const script = new Script(SCRIPT_SRC);
+        const script = new Script({
+            src: SCRIPT_SRC,
+            component: 'example-sdk',
+            analytics: mockAnalytics
+        });
+
         await expect(script.load()).resolves.toBeUndefined();
         expect(createElementSpy).not.toHaveBeenCalled();
     });
@@ -52,7 +65,7 @@ describe('Script', () => {
         const createElementSpy = jest.spyOn(document, 'createElement');
         const addListenerSpy = jest.spyOn(existingScript, 'addEventListener');
 
-        const script = new Script(SCRIPT_SRC);
+        const script = new Script({ src: SCRIPT_SRC, component: 'example-sdk', analytics: mockAnalytics });
         const loadPromise = script.load();
 
         // Assertions: The class should find the existing script and attach listeners to it.
@@ -77,7 +90,7 @@ describe('Script', () => {
             .mockImplementationOnce(() => firstAttemptScript)
             .mockImplementationOnce(() => secondAttemptScript);
 
-        const script = new Script(SCRIPT_SRC);
+        const script = new Script({ src: SCRIPT_SRC, component: 'example-sdk', analytics: mockAnalytics });
         const loadPromise = script.load();
 
         // Trigger the 'error' event on the first loading attempt
@@ -107,7 +120,7 @@ describe('Script', () => {
             .mockImplementationOnce(() => secondAttemptScript)
             .mockImplementationOnce(() => thirdAttemptScript);
 
-        const script = new Script(SCRIPT_SRC);
+        const script = new Script({ src: SCRIPT_SRC, component: 'example-sdk', analytics: mockAnalytics });
         const loadPromise = script.load();
 
         // Trigger the 'error' event on the first loading attempt
@@ -136,7 +149,7 @@ describe('Script', () => {
         const scriptElement = document.createElement('script');
         const createElementSpy = jest.spyOn(document, 'createElement').mockImplementationOnce(() => scriptElement);
 
-        const script = new Script(SCRIPT_SRC);
+        const script = new Script({ src: SCRIPT_SRC, component: 'example-sdk', analytics: mockAnalytics });
         const loadPromise = script.load();
 
         // Simulate 'load' event by dispatching it
@@ -161,7 +174,7 @@ describe('Script', () => {
         jest.spyOn(document, 'querySelector').mockReturnValue(null);
         const createElementSpy = jest.spyOn(document, 'createElement');
 
-        const script = new Script(SCRIPT_SRC, '#non-existent-node');
+        const script = new Script({ src: SCRIPT_SRC, node: '#non-existent-node', component: 'example-sdk', analytics: mockAnalytics });
         const loadPromise = script.load();
 
         await expect(loadPromise).rejects.toThrow('Unable to find script container node: #non-existent-node');
@@ -169,7 +182,7 @@ describe('Script', () => {
     });
 
     test('should reject a pending promise when remove() is called', async () => {
-        const script = new Script(SCRIPT_SRC);
+        const script = new Script({ src: SCRIPT_SRC, component: 'example-sdk', analytics: mockAnalytics });
         const loadPromise = script.load();
 
         script.remove();

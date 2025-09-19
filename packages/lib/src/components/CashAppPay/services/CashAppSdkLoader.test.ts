@@ -3,6 +3,9 @@ import Script from '../../../utils/Script';
 import { CASHAPPPAY_PROD_SDK, CASHAPPPAY_SANDBOX_SDK } from './config';
 import { ICashAppWindowObject } from './types';
 import { mock } from 'jest-mock-extended';
+import { AnalyticsModule } from '../../../types/global-types';
+
+const mockAnalytics = mock<AnalyticsModule>();
 
 const mockLoad = jest.fn().mockImplementation(() => {
     const mockCashAppWindowObj = mock<ICashAppWindowObject>();
@@ -22,21 +25,23 @@ beforeEach(() => {
 });
 
 test('should load CashAppPay sandbox SDK if env is test', async () => {
-    const sdkLoader = new CashAppSdkLoader();
-    const cashAppWindowObj = await sdkLoader.load('test');
+    const sdkLoader = new CashAppSdkLoader({ environment: 'test', analytics: mockAnalytics });
+    const cashAppWindowObj = await sdkLoader.load();
 
-    expect(Script).toHaveBeenCalledWith(CASHAPPPAY_SANDBOX_SDK);
+    expect(Script).toHaveBeenCalledWith({ component: 'cashapppay', src: CASHAPPPAY_SANDBOX_SDK, analytics: mockAnalytics });
     expect(mockLoad).toHaveBeenCalledTimes(1);
+
     // @ts-ignore CashApp is created by the Cash App SDK
     expect(cashAppWindowObj).toEqual(window.CashApp);
 });
 
 test('should load CashAppPay production SDK if env is live', async () => {
-    const sdkLoader = new CashAppSdkLoader();
-    const cashAppWindowObj = await sdkLoader.load('live-us');
+    const sdkLoader = new CashAppSdkLoader({ environment: 'live-us', analytics: mockAnalytics });
+    const cashAppWindowObj = await sdkLoader.load();
 
-    expect(Script).toHaveBeenCalledWith(CASHAPPPAY_PROD_SDK);
+    expect(Script).toHaveBeenCalledWith({ component: 'cashapppay', src: CASHAPPPAY_PROD_SDK, analytics: mockAnalytics });
     expect(mockLoad).toHaveBeenCalledTimes(1);
+
     // @ts-ignore CashApp is created by the Cash App SDK
     expect(cashAppWindowObj).toEqual(window.CashApp);
 });

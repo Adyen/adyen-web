@@ -70,7 +70,7 @@ class KlarnaPayments extends UIElement<KlarnaConfiguration> {
 
     render() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources} analytics={this.analytics}>
                 <KlarnaContainer
                     {...this.props}
                     setComponentRef={this.setComponentRef}

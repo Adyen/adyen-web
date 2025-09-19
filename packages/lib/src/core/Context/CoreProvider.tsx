@@ -2,24 +2,28 @@ import { h, toChildArray, createContext } from 'preact';
 import { useContext, useEffect } from 'preact/hooks';
 import { Resources } from './Resources';
 import Language from '../../language';
+
 import type { ComponentChildren } from 'preact';
+import type { AnalyticsModule } from '../../types/global-types';
 
 interface CoreProviderProps {
     loadingContext: string;
     i18n: Language;
     resources: Resources;
     children: ComponentChildren;
+    analytics?: AnalyticsModule;
 }
 
 type ContextValue = {
     i18n: Language;
     loadingContext: string;
     resources: Resources;
+    analytics: AnalyticsModule;
 };
 
 const CoreContext = createContext<ContextValue | undefined>(undefined);
 
-const CoreProvider = ({ i18n, loadingContext, resources, children }: CoreProviderProps) => {
+const CoreProvider = ({ i18n, loadingContext, resources, analytics, children }: CoreProviderProps) => {
     useEffect(() => {
         if (!i18n || !loadingContext || !resources) {
             console.warn(
@@ -33,7 +37,8 @@ const CoreProvider = ({ i18n, loadingContext, resources, children }: CoreProvide
             value={{
                 i18n,
                 loadingContext,
-                resources
+                resources,
+                analytics
             }}
         >
             {toChildArray(children)}

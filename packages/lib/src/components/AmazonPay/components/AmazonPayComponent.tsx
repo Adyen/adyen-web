@@ -8,11 +8,13 @@ import ChangePaymentDetailsButton from './ChangePaymentDetailsButton';
 import OrderButton from './OrderButton';
 import SignOutButton from './SignOutButton';
 import Script from '../../../utils/Script';
+import useAnalytics from '../../../core/Analytics/useAnalytics';
 
 export default function AmazonPayComponent(props: AmazonPayComponentProps) {
     const [status, setStatus] = useState('pending');
     const amazonPayButtonRef = useRef(null);
     const orderButtonRef = useRef(null);
+    const { analytics } = useAnalytics();
 
     const handleLoad = () => {
         setStatus('ready');
@@ -25,7 +27,12 @@ export default function AmazonPayComponent(props: AmazonPayComponentProps) {
 
     useEffect(() => {
         const src = getAmazonPayUrl(props.configuration.region);
-        const script = new Script(src);
+        const script = new Script({
+            src,
+            component: 'amazonpay',
+            analytics
+        });
+
         if (window.amazon) {
             handleLoad();
         } else {
@@ -35,7 +42,7 @@ export default function AmazonPayComponent(props: AmazonPayComponentProps) {
         return () => {
             script.remove();
         };
-    }, []);
+    }, [analytics]);
 
     if (status === 'pending') {
         return (

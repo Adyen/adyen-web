@@ -43,7 +43,13 @@ export class CardElement extends UIElement<CardConfiguration> {
         super(checkout, props);
 
         if (props && !props._disableClickToPay) {
-            this.clickToPayService = createClickToPayService(this.props.configuration, this.props.clickToPayConfiguration, this.props.environment);
+            this.clickToPayService = createClickToPayService(
+                this.props.configuration,
+                this.props.clickToPayConfiguration,
+                this.props.environment,
+                this.analytics
+            );
+
             void this.clickToPayService?.initialize();
         }
     }

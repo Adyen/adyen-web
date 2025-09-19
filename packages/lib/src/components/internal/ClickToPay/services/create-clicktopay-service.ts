@@ -4,6 +4,7 @@ import { IClickToPayService, IdentityLookupParams } from './types';
 import { SrcInitParams } from './sdks/types';
 import { CardBackendConfiguration } from '../../../Card/types';
 import { ClickToPayProps, ClickToPayScheme } from '../types';
+import type { AnalyticsModule } from '../../../../types/global-types';
 
 /**
  * Creates the Click to Pay service in case the required configuration is provided
@@ -11,7 +12,8 @@ import { ClickToPayProps, ClickToPayScheme } from '../types';
 export default function createClickToPayService(
     configuration: CardBackendConfiguration,
     clickToPayConfiguration: ClickToPayProps | undefined,
-    environment: string
+    environment: string,
+    analytics: AnalyticsModule
 ): IClickToPayService | null {
     const schemesConfig = createSchemesInitConfiguration(configuration);
 
@@ -26,7 +28,8 @@ export default function createClickToPayService(
         dpaLocale: clickToPayConfiguration?.locale,
         dpaPresentationName: clickToPayConfiguration?.merchantDisplayName
     });
-    return new ClickToPayService(schemesConfig, srcSdkLoader, environment, shopperIdentity, clickToPayConfiguration?.onTimeout);
+
+    return new ClickToPayService(schemesConfig, srcSdkLoader, environment, analytics, shopperIdentity, clickToPayConfiguration?.onTimeout);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

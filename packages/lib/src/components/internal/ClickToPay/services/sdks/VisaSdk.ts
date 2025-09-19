@@ -8,6 +8,7 @@ import type {
     SrciIdentityLookupResponse,
     SrcInitParams
 } from './types';
+import { AnalyticsModule } from '../../../../../types/global-types';
 
 const IdentityTypeMap = {
     email: 'EMAIL',
@@ -17,8 +18,8 @@ const IdentityTypeMap = {
 class VisaSdk extends AbstractSrcInitiator {
     public readonly schemeName = 'visa';
 
-    constructor(environment: string, customSdkConfig: CustomSdkConfiguration) {
-        super(environment.toLowerCase().includes('live') ? VISA_SDK_PROD : VISA_SDK_TEST, customSdkConfig);
+    constructor(environment: string, customSdkConfig: CustomSdkConfiguration, analytics: AnalyticsModule) {
+        super(environment.toLowerCase().includes('live') ? VISA_SDK_PROD : VISA_SDK_TEST, customSdkConfig, analytics);
     }
 
     protected isSdkIsAvailableOnWindow(): boolean {

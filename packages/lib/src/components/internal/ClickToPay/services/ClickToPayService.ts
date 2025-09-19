@@ -19,6 +19,7 @@ import AdyenCheckoutError from '../../../../core/Errors/AdyenCheckoutError';
 import { isFulfilled, isRejected } from '../../../../utils/promise-util';
 import TimeoutError from '../errors/TimeoutError';
 import { executeWithTimeout } from './execute-with-timeout';
+import type { AnalyticsModule } from '../../../../types/global-types';
 
 export enum CtpState {
     Idle = 'Idle',
@@ -35,6 +36,7 @@ class ClickToPayService implements IClickToPayService {
     private readonly schemesConfig: SchemesConfiguration;
     private readonly shopperIdentity?: IdentityLookupParams;
     private readonly environment: string;
+    private readonly analytics: AnalyticsModule;
 
     private readonly onTimeout?: (error: TimeoutError) => void;
 
@@ -60,6 +62,7 @@ class ClickToPayService implements IClickToPayService {
         schemesConfig: SchemesConfiguration,
         sdkLoader: ISrcSdkLoader,
         environment: string,
+        analytics: AnalyticsModule,
         shopperIdentity?: IdentityLookupParams,
         onTimeout?: (error: TimeoutError) => void
     ) {
@@ -68,6 +71,7 @@ class ClickToPayService implements IClickToPayService {
         this.shopperIdentity = shopperIdentity;
         this.environment = environment;
         this.onTimeout = onTimeout;
+        this.analytics = analytics;
     }
 
     public get shopperAccountFound(): boolean {
@@ -86,7 +90,7 @@ class ClickToPayService implements IClickToPayService {
         this.setState(CtpState.Loading);
 
         try {
-            this.sdks = await this.sdkLoader.load(this.environment);
+            this.sdks = await this.sdkLoader.load(this.environment, this.analytics);
             await this.initiateSdks();
 
             const { recognized = false, idTokens = null } = await this.verifyIfShopperIsRecognized();

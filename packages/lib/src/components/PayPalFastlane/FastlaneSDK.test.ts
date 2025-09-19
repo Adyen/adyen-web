@@ -72,12 +72,11 @@ describe('FastlaneSDK', () => {
             path: 'utility/v1/payPalFastlane/tokens?clientKey=test_xxx',
             errorLevel: 'fatal'
         });
-        expect(Script).toHaveBeenCalledWith(
-            'https://www.paypal.com/sdk/js?client-id=CLIENT-ID&components=buttons,fastlane',
-            'body',
-            {},
-            { sdkClientToken: 'TOKEN-VALUE' }
-        );
+        expect(Script).toHaveBeenCalledWith({
+            src: 'https://www.paypal.com/sdk/js?client-id=CLIENT-ID&components=buttons,fastlane',
+            component: 'fastlane',
+            dataAttributes: { sdkClientToken: 'TOKEN-VALUE' }
+        });
     });
 
     test('should return not_found if email is not recognized', async () => {

@@ -1,9 +1,10 @@
 import { PasskeyService } from './PasskeyService';
 import { PasskeySdkLoader } from './PasskeySdkLoader';
 import AdyenCheckoutError, { SDK_ERROR } from '../../../core/Errors/AdyenCheckoutError';
-import { mockDeep } from 'jest-mock-extended';
+import { mock, mockDeep } from 'jest-mock-extended';
 import { IAdyenPasskey, PasskeyErrorTypes } from './types';
 import base64 from '../../../utils/base64';
+import { AnalyticsModule } from '../../../types/global-types';
 
 jest.mock('./PasskeySdkLoader');
 beforeAll(() => {
@@ -16,11 +17,12 @@ beforeAll(() => {
 describe('PasskeyService', () => {
     const mockPasskeySdk = mockDeep<IAdyenPasskey>();
     const mockPasskeyServiceConfig = { environment: 'test', deviceId: 'test-device-id' };
+    const mockAnalytics = mock<AnalyticsModule>();
 
     let passkeyService: PasskeyService;
 
     beforeEach(() => {
-        passkeyService = new PasskeyService(mockPasskeyServiceConfig);
+        passkeyService = new PasskeyService(mockPasskeyServiceConfig, mockAnalytics);
         jest.clearAllMocks();
     });
 
@@ -28,7 +30,7 @@ describe('PasskeyService', () => {
         const mockLoader = PasskeySdkLoader as jest.MockedClass<typeof PasskeySdkLoader>;
         mockLoader.prototype.load.mockResolvedValue(mockPasskeySdk);
         await expect(passkeyService.initialize()).resolves.toBeUndefined();
-        expect(mockLoader.prototype.load).toHaveBeenCalledWith(mockPasskeyServiceConfig.environment);
+        expect(mockLoader.prototype.load).toHaveBeenCalled();
     });
 
     it('should reject if initialize fails', async () => {

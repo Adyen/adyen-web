@@ -57,7 +57,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         this.defineApplePayVersionNumber = this.defineApplePayVersionNumber.bind(this);
         this.configureApplePayWebOptions = this.configureApplePayWebOptions.bind(this);
 
-        this.sdkLoader = new ApplePaySdkLoader();
+        this.sdkLoader = new ApplePaySdkLoader({ analytics: this.analytics });
 
         void this.sdkLoader
             .load()

@@ -31,7 +31,8 @@ export class ClickToPayElement extends UIElement<ClickToPayConfiguration> {
             onTimeout: this.props.onTimeout
         };
 
-        this.clickToPayService = createClickToPayService(this.props.configuration, this.ctpConfiguration, this.props.environment);
+        this.clickToPayService = createClickToPayService(this.props.configuration, this.ctpConfiguration, this.props.environment, this.analytics);
+
         this.clickToPayService?.initialize().catch(error => {
             this.handleError(new AdyenCheckoutError('ERROR', error.toString(), { cause: error }));
         });

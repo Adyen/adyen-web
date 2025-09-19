@@ -8,6 +8,9 @@ import { SrciCheckoutResponse, SrciIdentityLookupResponse, SrcProfile } from './
 import SrciError from './sdks/SrciError';
 import ShopperCard from '../models/ShopperCard';
 import TimeoutError from '../errors/TimeoutError';
+import { AnalyticsModule } from '../../../../types/global-types';
+
+const mockAnalytics = mock<AnalyticsModule>();
 
 describe('Timeout handling', () => {
     test('should report timeout to Visa SDK passing srciDpaId since correlationId is unavailable', async () => {
@@ -34,7 +37,7 @@ describe('Timeout handling', () => {
             buildClientProfile: jest.fn()
         };
 
-        const service = new ClickToPayService(schemesConfig, sdkLoader, 'test', undefined, onTimeoutMock);
+        const service = new ClickToPayService(schemesConfig, sdkLoader, 'test', mockAnalytics, undefined, onTimeoutMock);
         await service.initialize();
 
         // @ts-ignore  Mock window.VISA_SDK with the buildClientProfile method
@@ -67,7 +70,7 @@ describe('Timeout handling', () => {
             correlationId: 'xxx-yyy'
         };
 
-        const service = new ClickToPayService(schemesConfig, sdkLoader, 'test', undefined, onTimeoutMock);
+        const service = new ClickToPayService(schemesConfig, sdkLoader, 'test', mockAnalytics, undefined, onTimeoutMock);
         await service.initialize();
 
         // @ts-ignore  Mock window.VISA_SDK with the buildClientProfile method
@@ -102,7 +105,7 @@ describe('Timeout handling', () => {
             buildClientProfile: jest.fn()
         };
 
-        const service = new ClickToPayService(schemesConfig, sdkLoader, 'test', undefined, onTimeoutMock);
+        const service = new ClickToPayService(schemesConfig, sdkLoader, 'test', mockAnalytics, undefined, onTimeoutMock);
         await service.initialize();
 
         // @ts-ignore  Mock window.VISA_SDK with the buildClientProfile method
@@ -118,7 +121,7 @@ test('should be able to tweak the configuration to store the cookie', () => {
     const sdkLoader = mock<ISrcSdkLoader>();
     sdkLoader.load.mockResolvedValue([visa]);
 
-    const service = new ClickToPayService(schemesConfig, sdkLoader, 'test');
+    const service = new ClickToPayService(schemesConfig, sdkLoader, 'test', mockAnalytics);
     expect(service.storeCookies).toBe(false);
 
     service.updateStoreCookiesConsent(true);
@@ -177,7 +180,7 @@ test('should pass the complianceSettings if the cookie is set to be stored', asy
 
     sdkLoader.load.mockResolvedValue([visa]);
 
-    const service = new ClickToPayService(schemesConfig, sdkLoader, 'test');
+    const service = new ClickToPayService(schemesConfig, sdkLoader, 'test', mockAnalytics);
     service.updateStoreCookiesConsent(true);
 
     await service.initialize();
@@ -224,7 +227,7 @@ test('should pass the correct configuration to the respective scheme SDKs', asyn
         }
     };
 
-    const service = new ClickToPayService(schemesConfig, sdkLoader, 'test');
+    const service = new ClickToPayService(schemesConfig, sdkLoader, 'test', mockAnalytics);
     await service.initialize();
 
     expect(visa.init.mock.calls[0][0]).toBe(schemesConfig.visa);
@@ -241,7 +244,7 @@ test('should set state to not available if there is no cookie AND no user identi
     visa.init.mockResolvedValue();
     visa.isRecognized.mockResolvedValue({ recognized: false });
 
-    const service = new ClickToPayService(schemesConfig, sdkLoader, 'test');
+    const service = new ClickToPayService(schemesConfig, sdkLoader, 'test', mockAnalytics);
     await service.initialize();
 
     expect(service.state).toBe(CtpState.NotAvailable);
@@ -261,7 +264,7 @@ test('should set state to not available if there is no cookie AND provided shopp
     visa.isRecognized.mockResolvedValue({ recognized: false });
     visa.identityLookup.mockResolvedValue({ consumerPresent: false });
 
-    const service = new ClickToPayService(schemesConfig, sdkLoader, 'test', identity);
+    const service = new ClickToPayService(schemesConfig, sdkLoader, 'test', mockAnalytics, identity);
     await service.initialize();
 
     expect(visa.identityLookup).toHaveBeenCalledWith({ identityValue: identity.shopperEmail, type: 'email' });
@@ -328,7 +331,7 @@ test('should load shopper cards when cookie is available AND shopper has CtP pro
     mc.isRecognized.mockResolvedValue({ recognized: false });
     mc.getSrcProfile.mockRejectedValue(mock<SrciError>());
 
-    const service = new ClickToPayService(schemesConfig, sdkLoader, 'test');
+    const service = new ClickToPayService(schemesConfig, sdkLoader, 'test', mockAnalytics);
     await service.initialize();
 
     expect(visa.getSrcProfile).toHaveBeenCalledWith(mockedIdToken);
@@ -436,7 +439,7 @@ test('should load shopper cards when cookie is available AND shopper has CtP pro
     mc.isRecognized.mockResolvedValue({ recognized: false });
     mc.getSrcProfile.mockResolvedValue(profileFromMastercardSystem);
 
-    const service = new ClickToPayService(schemesConfig, sdkLoader, 'test');
+    const service = new ClickToPayService(schemesConfig, sdkLoader, 'test', mockAnalytics);
     await service.initialize();
 
     expect(visa.getSrcProfile).toHaveBeenCalledWith(mockedIdToken);
@@ -508,7 +511,7 @@ test('should clean up shopper cards and set CtP state as Login after performing 
     mc.isRecognized.mockResolvedValue({ recognized: false });
     mc.getSrcProfile.mockRejectedValue(mock<SrciError>());
 
-    const service = new ClickToPayService(schemesConfig, sdkLoader, 'test');
+    const service = new ClickToPayService(schemesConfig, sdkLoader, 'test', mockAnalytics);
     service.subscribeOnStateChange(stateSubscriberFn);
     await service.initialize();
 
@@ -607,7 +610,7 @@ test('should authenticate the shopper with the fastest SDK that finds the shoppe
         () => new Promise<SrciIdentityLookupResponse>(resolve => setTimeout(() => resolve({ consumerPresent: true }), 200))
     );
 
-    const service = new ClickToPayService(schemesConfig, sdkLoader, 'test', identity);
+    const service = new ClickToPayService(schemesConfig, sdkLoader, 'test', mockAnalytics, identity);
     await service.initialize();
 
     expect(mc.identityLookup).toHaveBeenCalledWith({ identityValue: identity.shopperEmail, type: 'email' });

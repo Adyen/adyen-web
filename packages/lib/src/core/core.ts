@@ -20,8 +20,8 @@ import { defaultProps } from './core.defaultProps';
 import { formatCustomTranslations, formatLocale } from '../language/utils';
 import { resolveEnvironments } from './Environment';
 
-import type { AnalyticsModule, PaymentAction, PaymentResponseData } from '../types/global-types';
-import type { CoreConfiguration, ICore, AdditionalDetailsData } from './types';
+import type { PaymentAction, PaymentResponseData } from '../types/global-types';
+import type { CoreConfiguration, ICore, AdditionalDetailsData, CoreModules } from './types';
 import type { Translations } from '../language/types';
 import type { UIElementProps } from '../components/internal/UIElement/types';
 import { AnalyticsLogEvent } from './Analytics/AnalyticsLogEvent';
@@ -30,13 +30,7 @@ import CancelError from './Errors/CancelError';
 class Core implements ICore {
     public session?: Session;
     public paymentMethodsResponse: PaymentMethods;
-    public modules: Readonly<{
-        risk: RiskModule;
-        analytics: AnalyticsModule;
-        resources: Resources;
-        i18n: Language;
-        srPanel: SRPanel;
-    }>;
+    public modules: CoreModules;
     public options: CoreConfiguration;
 
     public analyticsContext: string;
