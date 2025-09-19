@@ -29,7 +29,7 @@ class Button extends Component<ButtonProps, ButtonState> {
         }
     };
 
-    public complete = (delay = 1000) => {
+    public complete = (delay = 1_000) => {
         this.setState({ completed: true });
         setTimeout(() => {
             this.setState({ completed: false });
@@ -46,6 +46,7 @@ class Button extends Component<ButtonProps, ButtonState> {
             disabled,
             href,
             icon,
+            onClickCompletedIcon,
             inline,
             label,
             ariaLabel,
@@ -53,6 +54,7 @@ class Button extends Component<ButtonProps, ButtonState> {
             status,
             variant,
             buttonRef,
+            onClickCompletedLabel,
             onMouseEnter,
             onMouseLeave,
             onFocus,
@@ -62,7 +64,17 @@ class Button extends Component<ButtonProps, ButtonState> {
         const { completed } = this.state;
         const { i18n } = useCoreContext();
 
-        const buttonIcon = icon ? <img className="adyen-checkout__button__icon" src={icon} alt="" aria-hidden="true" /> : '';
+        const buttonIcon =
+            onClickCompletedIcon || icon ? (
+                <img
+                    className="adyen-checkout__button__icon"
+                    src={this.state.completed ? (onClickCompletedIcon ?? icon) : icon}
+                    alt=""
+                    aria-hidden="true"
+                />
+            ) : (
+                ''
+            );
 
         const modifiers = [
             ...classNameModifiers,
@@ -90,7 +102,7 @@ class Button extends Component<ButtonProps, ButtonState> {
             default: (
                 <span className="adyen-checkout__button__content">
                     {buttonIcon}
-                    <span className="adyen-checkout__button__text">{label}</span>
+                    <span className="adyen-checkout__button__text">{this.state.completed ? (onClickCompletedLabel ?? label) : label}</span>
                 </span>
             )
         };
