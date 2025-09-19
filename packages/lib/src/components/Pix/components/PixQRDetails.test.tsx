@@ -40,7 +40,7 @@ const renderPixQRDetails = () => {
 describe('PixQRDetails', () => {
     test('should render qr code', () => {
         renderPixQRDetails();
-        expect(screen.getByText('Scan the QR code with the Pix app')).toBeInTheDocument();
+        expect(screen.getByText('Scan the QR code with the PIX app')).toBeInTheDocument();
         expect(screen.getByAltText('Scan QR code')).toHaveAttribute('src', QR_CODE_IMAGE_URL);
     });
 
@@ -55,7 +55,7 @@ describe('PixQRDetails', () => {
             expect(screen.getByText('Copy the code below and paste it into your banking app')).toBeInTheDocument();
         });
 
-        expect(screen.getByLabelText('Pix code')).toHaveTextContent(QR_CODE_DATA);
+        expect(screen.getByLabelText('PIX code')).toHaveTextContent(QR_CODE_DATA);
     });
 
     test('can copy code with copy button', async () => {
@@ -69,11 +69,11 @@ describe('PixQRDetails', () => {
             expect(screen.getByText('Copy the code below and paste it into your banking app')).toBeInTheDocument();
         });
 
-        const copyButton = await screen.findByRole('button', { name: 'Copy Pix code' });
+        const copyButton = await screen.findByRole('button', { name: 'Copy PIX code' });
         await user.click(copyButton);
 
         await waitFor(() => {
-            expect(screen.getByRole('button', { name: 'Pix code copied' })).toBeInTheDocument();
+            expect(screen.getByRole('button', { name: 'PIX code copied' })).toBeInTheDocument();
         });
 
         expect(handleCopyMock).toHaveBeenCalledTimes(1);
