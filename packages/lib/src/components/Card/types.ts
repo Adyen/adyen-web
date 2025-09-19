@@ -411,6 +411,13 @@ export interface CardConfiguration extends UIElementProps {
     supportedShopperInteractions?: string[];
 
     /**
+     * For the PAN field: If the card number is now at one of it's valid lengths and the formatting process has added a separator
+     * to the end of the string... delete the separator
+     * - merchant set config option. Defaults to true
+     */
+    trimTrailingSeparator?: boolean;
+
+    /**
      * type will always be "card" (generic card, stored card)
      * except for a single branded card when it will be the same as the brand prop
      * @internal
