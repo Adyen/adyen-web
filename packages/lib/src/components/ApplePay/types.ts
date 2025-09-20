@@ -231,7 +231,7 @@ export interface ApplePayConfiguration extends UIElementProps {
     /**
      * Used to override the domain name for the Apple Pay button.
      */
-    domainNameOverride?: string;
+    domainName?: string;
 }
 
 export interface ApplePayElementData {
