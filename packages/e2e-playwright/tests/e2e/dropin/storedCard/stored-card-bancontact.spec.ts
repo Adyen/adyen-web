@@ -1,13 +1,14 @@
 import { test, expect } from '../../../../fixtures/dropin.fixture';
-import { PAYMENT_RESULT, THREEDS2_CHALLENGE_PASSWORD } from '../../../utils/constants';
+import { BCMC_CARD, PAYMENT_RESULT, THREEDS2_CHALLENGE_PASSWORD } from '../../../utils/constants';
 import { BCMC } from '../../../../models/bcmc';
+import { getCardNumberLast4 } from '../../../utils/cards';
 
 const BCMC_URL = '/iframe.html?args=countryCode:BE&globals=&id=dropin-default--auto&viewMode=story';
 
 test.describe('Stored Bancontact card', () => {
     test('should make a successful payment', async ({ dropinWithSession, page }) => {
         await dropinWithSession.goto(BCMC_URL);
-        const { paymentMethodDetailsLocator } = await dropinWithSession.selectFirstStoredPaymentMethod('bcmc', '4444');
+        const { paymentMethodDetailsLocator } = await dropinWithSession.selectFirstStoredPaymentMethod('bcmc', getCardNumberLast4(BCMC_CARD));
 
         const bcmc = new BCMC(page, paymentMethodDetailsLocator);
 
