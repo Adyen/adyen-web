@@ -1,0 +1,1 @@
+export const getCardNumberLast4 = (cardNumber: string | number) => cardNumber.toString().slice(-4);
