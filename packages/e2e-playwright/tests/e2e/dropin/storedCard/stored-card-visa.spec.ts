@@ -1,13 +1,14 @@
 import { test, expect } from '../../../../fixtures/dropin.fixture';
 import { URL_MAP } from '../../../../fixtures/URL_MAP';
-import { PAYMENT_RESULT, TEST_CVC_VALUE } from '../../../utils/constants';
+import { PAYMENT_RESULT, TEST_CVC_VALUE, VISA_CARD } from '../../../utils/constants';
 import { getStoryUrl } from '../../../utils/getStoryUrl';
 import { Card } from '../../../../models/card';
+import { getCardNumberLast4 } from '../../../utils/cards';
 
 test.describe('Stored visa card - cvc required', () => {
     test('#1 Can fill out the cvc fields in the stored card and make a successful payment', async ({ dropinWithSession, page }) => {
         await dropinWithSession.goto(URL_MAP.dropinWithSession);
-        const { paymentMethodDetailsLocator } = await dropinWithSession.selectFirstStoredPaymentMethod('Visa', '1111');
+        const { paymentMethodDetailsLocator } = await dropinWithSession.selectFirstStoredPaymentMethod('Visa', getCardNumberLast4(VISA_CARD));
 
         const card = new Card(page, paymentMethodDetailsLocator);
 
@@ -19,7 +20,7 @@ test.describe('Stored visa card - cvc required', () => {
 
     test('#2 Pressing pay without filling the cvc should generate a translated error ("empty")', async ({ dropinWithSession, page }) => {
         await dropinWithSession.goto(URL_MAP.dropinWithSession);
-        const { paymentMethodDetailsLocator } = await dropinWithSession.selectFirstStoredPaymentMethod('Visa', '1111');
+        const { paymentMethodDetailsLocator } = await dropinWithSession.selectFirstStoredPaymentMethod('Visa', getCardNumberLast4(VISA_CARD));
 
         const card = new Card(page, paymentMethodDetailsLocator);
         await card.cvcInput.waitFor({ state: 'visible' });
@@ -37,7 +38,7 @@ test.describe('Stored visa card - cvc required', () => {
             }
         });
         await dropinWithSession.goto(url);
-        const { paymentMethodDetailsLocator } = await dropinWithSession.selectFirstStoredPaymentMethod('Visa', '1111');
+        const { paymentMethodDetailsLocator } = await dropinWithSession.selectFirstStoredPaymentMethod('Visa', getCardNumberLast4(VISA_CARD));
 
         const card = new Card(page, paymentMethodDetailsLocator);
 
