@@ -7,7 +7,7 @@ const BCMC_URL = '/iframe.html?args=countryCode:BE&globals=&id=dropin-default--a
 test.describe('Stored Bancontact card', () => {
     test('should make a successful payment', async ({ dropinWithSession, page }) => {
         await dropinWithSession.goto(BCMC_URL);
-        const { paymentMethodDetailsLocator } = await dropinWithSession.selectFirstStoredPaymentMethod('bcmc', '4449');
+        const { paymentMethodDetailsLocator } = await dropinWithSession.selectFirstStoredPaymentMethod('bcmc', '4444');
 
         const bcmc = new BCMC(page, paymentMethodDetailsLocator);
 
