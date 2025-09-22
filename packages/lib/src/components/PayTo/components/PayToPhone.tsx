@@ -8,25 +8,19 @@ import { useCallback } from 'preact/hooks';
 
 interface PayToPhoneProps {
     form: Form<PayIdFormData>;
-    onChange: (value: string) => void;
-    data: any; // Data
 }
 
 // we have decided to hardcode phone prefix as it's going to be always +61 for now
-const HARDCODED_USE_PHONE_PREFIXES = {
-    phonePrefixes: [
-        {
-            id: '+61',
-            name: '+61 (AU)',
-            selectedOptionName: '+61'
-        }
-    ]
-};
+const AUSTRALIAN_PHONE_PREFIXES = [
+    {
+        id: '+61',
+        name: '+61 (AU)',
+        selectedOptionName: '+61'
+    }
+];
 
-export default function PayToPhone({ form, onChange, data }: PayToPhoneProps) {
+export default function PayToPhone({ form }: PayToPhoneProps) {
     const { i18n } = useCoreContext();
-
-    const { phonePrefixes } = HARDCODED_USE_PHONE_PREFIXES;
 
     const getError = useCallback((field: string) => getErrorMessage(i18n, form.errors[field]), [i18n, form]);
 
@@ -34,9 +28,7 @@ export default function PayToPhone({ form, onChange, data }: PayToPhoneProps) {
         <PhoneInputFields
             phoneNumberKey={'mobileNumber'}
             getError={getError}
-            items={phonePrefixes}
-            data={data}
-            onChange={onChange}
+            items={AUSTRALIAN_PHONE_PREFIXES}
             canSelectPrefix={false}
             showNumber={true}
             showPrefix={true}
