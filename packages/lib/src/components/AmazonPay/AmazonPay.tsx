@@ -113,7 +113,7 @@ export class AmazonPayElement extends UIElement<AmazonPayConfiguration> {
 
     render() {
         return (
-            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources}>
+            <CoreProvider i18n={this.props.i18n} loadingContext={this.props.loadingContext} resources={this.resources} analytics={this.analytics}>
                 <AmazonPayComponent
                     ref={ref => {
                         this.componentRef = ref;
