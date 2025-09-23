@@ -24,6 +24,11 @@ class Script implements IScript {
     private readonly attributes: Partial<HTMLScriptElement>;
     private readonly dataAttributes: Record<string, string | undefined>;
     private readonly analytics?: AnalyticsModule;
+    /**
+     * Base URL of the resource which does not contain any query parameters (e.g. merchant ID, token, etc)
+     * @private
+     */
+    private readonly baseUrl: string;
 
     private script: HTMLScriptElement;
     private loadPromise: Promise<void> | null = null;
@@ -39,6 +44,9 @@ class Script implements IScript {
         this.attributes = attributes;
         this.dataAttributes = dataAttributes;
         this.analytics = analytics;
+
+        const url = new URL(this.src);
+        this.baseUrl = url.origin + url.pathname;
     }
 
     public load = (): Promise<void> => {
@@ -166,7 +174,7 @@ class Script implements IScript {
         const event = new AnalyticsInfoEvent({
             type: eventType,
             component: this.component,
-            cdnUrl: this.src
+            cdnUrl: this.baseUrl
         });
         this.analytics?.sendAnalytics(event);
     }
