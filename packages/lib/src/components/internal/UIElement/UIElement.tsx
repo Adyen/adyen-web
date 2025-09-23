@@ -13,6 +13,7 @@ import type { ComponentMethodsRef, PayButtonFunctionProps, UIElementProps, UIEle
 import type { CheckoutSessionDetailsResponse, CheckoutSessionPaymentResponse } from '../../../core/CheckoutSession/types';
 import type {
     ActionHandledReturnObject,
+    AnalyticsModule,
     CheckoutAdvancedFlowResponse,
     Order,
     PaymentAction,
@@ -70,6 +71,10 @@ export abstract class UIElement<P extends UIElementProps = UIElementProps> exten
 
         this.onEnterKeyPressed = this.onEnterKeyPressed.bind(this);
         this.onActionHandled = this.onActionHandled.bind(this);
+    }
+
+    get analytics(): AnalyticsModule {
+        return this.core.modules.analytics;
     }
 
     protected override buildElementProps(componentProps?: P) {

@@ -10,16 +10,19 @@ import {
     NavigatorCredentialRetrievalError
 } from './types';
 import AdyenCheckoutError, { SDK_ERROR } from '../../../core/Errors/AdyenCheckoutError';
-import { DecodeObject } from '../../../types/global-types';
+import { AnalyticsModule, DecodeObject } from '../../../types/global-types';
 import base64 from '../../../utils/base64';
 
 export class PasskeyService implements IPasskeyService {
-    private passkeySdk: IAdyenPasskey;
     private readonly passkeyServiceConfig: PasskeyServiceConfig;
+    private readonly analytics: AnalyticsModule;
+
+    private passkeySdk: IAdyenPasskey;
     private riskSignals: RiskSignalsEnrollment | RiskSignalsAuthentication;
     private initialized: Promise<void>;
 
-    constructor(configuration: PasskeyServiceConfig) {
+    constructor(configuration: PasskeyServiceConfig, analytics: AnalyticsModule) {
+        this.analytics = analytics;
         this.passkeyServiceConfig = configuration;
     }
 
@@ -45,9 +48,11 @@ export class PasskeyService implements IPasskeyService {
 
     public initialize() {
         if (this.initialized == null) {
-            this.initialized = new PasskeySdkLoader().load(this.passkeyServiceConfig.environment).then(passkey => {
-                this.passkeySdk = passkey;
-            });
+            this.initialized = new PasskeySdkLoader({ environment: this.passkeyServiceConfig.environment, analytics: this.analytics })
+                .load()
+                .then(passkey => {
+                    this.passkeySdk = passkey;
+                });
         }
 
         return this.initialized;
