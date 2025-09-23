@@ -17,6 +17,12 @@ interface IScriptProps {
     dataAttributes?: Record<string, string | undefined>;
 }
 
+// Returns Base URL of the resource without any query parameters (e.g. merchant ID, token, etc). Used for Analytics
+function getBaseURL(src: string): string {
+    const url = new URL(src);
+    return url.origin + url.pathname;
+}
+
 class Script implements IScript {
     private readonly src: string;
     private readonly component: string;
@@ -24,10 +30,6 @@ class Script implements IScript {
     private readonly attributes: Partial<HTMLScriptElement>;
     private readonly dataAttributes: Record<string, string | undefined>;
     private readonly analytics?: AnalyticsModule;
-    /**
-     * Base URL of the resource which does not contain any query parameters (e.g. merchant ID, token, etc)
-     * @private
-     */
     private readonly baseUrl: string;
 
     private script: HTMLScriptElement;
@@ -44,9 +46,7 @@ class Script implements IScript {
         this.attributes = attributes;
         this.dataAttributes = dataAttributes;
         this.analytics = analytics;
-
-        const url = new URL(this.src);
-        this.baseUrl = url.origin + url.pathname;
+        this.baseUrl = getBaseURL(this.src);
     }
 
     public load = (): Promise<void> => {
