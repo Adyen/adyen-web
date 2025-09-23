@@ -11,10 +11,7 @@ class GooglePayService {
     public readonly paymentsClient: Promise<google.payments.api.PaymentsClient>;
 
     constructor(environment: string, analytics: AnalyticsModule, paymentDataCallbacks: google.payments.api.PaymentDataCallbacks) {
-        console.log('zzxx');
         const googlePayEnvironment = resolveEnvironment(environment);
-
-        console.log('zz');
 
         this.analytics = analytics;
         this.paymentsClient = this.getGooglePaymentsClient({
