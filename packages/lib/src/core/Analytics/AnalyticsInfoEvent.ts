@@ -14,7 +14,7 @@ type AnalyticsInfoEventObject = {
     validationErrorMessage?: string;
     configData?: Record<string, string | boolean>;
     component?: string;
-    cdnUrl: string;
+    cdnUrl?: string;
 };
 
 export enum InfoEventType {
