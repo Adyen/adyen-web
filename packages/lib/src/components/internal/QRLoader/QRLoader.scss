@@ -96,9 +96,10 @@
 }
 
 .adyen-checkout__qr-loader__instructions {
+    @include mixins.adyen-checkout-text-body;
+
     max-width: 300px;
     color: token(color-label-tertiary);
-    font-size: token(text-subtitle-font-size);
     line-height: 1.5;
     margin-top: token(spacer-090);
     text-align: center;
@@ -112,6 +113,7 @@
 .adyen-checkout__qr-loader__actions {
     margin-top: token(spacer-100);
     width: 100%;
+    max-width: 400px;
 }
 
 @include index.screen-l-and-down {

@@ -8,6 +8,8 @@
     flex-direction: column;
     align-items: center;
     margin-top: token(spacer-070);
+    width: 100%;
+    max-width: 400px;
 
     .adyen-checkout__qr-loader__actions {
       margin-top: token(spacer-000);
@@ -23,7 +25,7 @@
     border-radius: token(border-radius-l);
     padding: token(spacer-070);
     padding-bottom: token(spacer-090);
-    width: 100%;
+    width: fit-content;
 
     &__label {
       @include index.adyen-checkout-text-subtitle;
@@ -50,6 +52,7 @@
     align-items: center;
     gap: token(spacer-070);
     padding: token(spacer-070) token(spacer-000);
+    width: 100%;
 
     * {
       margin-top: token(spacer-000);
