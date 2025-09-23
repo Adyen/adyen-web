@@ -23,7 +23,7 @@ import { QRLoaderDetailsProvider } from './QRLoaderDetailsProvider';
 const QRCODE_URL = 'utility/v1/barcode.png?type=qrCode&data=';
 
 class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
-    private timeoutId: NodeJS.Timeout | undefined;
+    private timeoutId: NodeJS.Timeout | number | undefined;
 
     constructor(props: QRLoaderProps) {
         super(props);
