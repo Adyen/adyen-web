@@ -9,7 +9,7 @@ import { initialize, mswLoader } from 'msw-storybook-addon';
  */
 
 // we expect this to be formatted as a string in main.tsx
-const disableMsw = 'true';
+const disableMsw = process.env.DISABLE_MSW === 'true';
 
 let loaders = {};
 
