@@ -9,7 +9,7 @@ const orgidRegex = /`^[!-@[-~][ -@[-~]{0,254}[!-@[-~]$`/;
 const emailRegex =
     /^(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?)$/;
 
-const phoneNumberRegex = /^[0-9]{2,30}$/;
+const phoneNumberRegex = /^[0-9]{1,29}$/;
 
 export const validationFromRegex = (value: string, regex: RegExp, validationRule: ValidatorRule): boolean | null => {
     // null is returned here for legacy reasons
