@@ -1,5 +1,5 @@
 import { createSession } from './checkout-api-calls';
-import { RETURN_URL, SHOPPER_REFERENCE } from '../config/commonConfig';
+import { RETURN_URL, SHOPPER_REFERENCE, STORYBOOK_ENVIRONMENT_URLS } from '../config/commonConfig';
 import { handleError, handleFinalState } from './checkout-handlers';
 import getCurrency from '../utils/get-currency';
 import Checkout from '../../src/core/core';
@@ -50,6 +50,7 @@ async function createSessionsCheckout(checkoutProps: AdyenCheckoutProps, shopper
             handleError(error, component);
         },
 
+        _environmentUrls: STORYBOOK_ENVIRONMENT_URLS,
         ...restCheckoutProps
     });
 }
