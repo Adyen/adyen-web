@@ -27,15 +27,16 @@ export enum InfoEventType {
     sdkDownloadFailed = 'sdkDownloadFailed',
     sdkDownloadAborted = 'sdkDownloadAborted',
     sdkDownloadCompleted = 'sdkDownloadCompleted',
-    Initialized = 'Initialized',
-    LookupStarted = 'LookupStarted',
-    LookupUserNotFound = 'LookupUserNotFound',
-    OtpStarted = 'OtpStarted',
-    OtpSucceeded = 'OtpSucceeded',
-    OtpCanceled = 'OtpCanceled',
-    OtpFailed = 'OtpFailed',
-    AddressSelectorClicked = 'AddressSelectorClicked',
-    AddressChanged = 'AddressChanged'
+    Initialized = 'initialized',
+    LookupStarted = 'lookupStarted',
+    LookupUserNotFound = 'lookupUserNotFound',
+    OtpStarted = 'otpStarted',
+    OtpSucceeded = 'otpSucceeded',
+    OtpCanceled = 'otpCanceled',
+    OtpFailed = 'otpFailed',
+    AddressSelectorClicked = 'addressSelectorClicked',
+    AddressSelectorClosed = 'addressSelectorClosed',
+    AddressChanged = 'addressChanged'
 }
 
 export class AnalyticsInfoEvent extends AnalyticsEvent {

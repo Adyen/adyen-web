@@ -4,7 +4,6 @@ import { httpPost } from '../../core/Services/http';
 import Script from '../../utils/Script';
 import FastlaneSDK from './FastlaneSDK';
 import type { FastlaneWindowInstance, FastlaneProfile, FastlaneShipping } from './types';
-// import Analytics from '../../core/Analytics';
 
 const fastlaneMock = mockDeep<FastlaneWindowInstance>();
 let fastlaneConstructorMock = null;
@@ -36,7 +35,7 @@ const httpPostMock = (httpPost as jest.Mock).mockResolvedValue({
     expiresAt: '2024-11-01T13:34:01.804+00:00'
 });
 
-describe.only('FastlaneSDK', () => {
+describe('FastlaneSDK', () => {
     beforeEach(() => {
         mockReset(fastlaneMock);
 
@@ -82,7 +81,8 @@ describe.only('FastlaneSDK', () => {
         expect(Script).toHaveBeenCalledWith({
             src: 'https://www.paypal.com/sdk/js?client-id=CLIENT-ID&components=buttons%2Cfastlane',
             component: 'fastlane',
-            dataAttributes: { sdkClientToken: 'TOKEN-VALUE' }
+            dataAttributes: { sdkClientToken: 'TOKEN-VALUE' },
+            analytics: expect.anything()
         });
     });
 

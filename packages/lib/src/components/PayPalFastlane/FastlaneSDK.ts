@@ -48,8 +48,7 @@ class FastlaneSDK {
             analytics: configuration.analytics,
             locale: configuration.locale || 'en-US',
             analyticsContext: analyticsUrl,
-            clientKey: this.clientKey,
-            bundleType: 'FIXME'
+            clientKey: this.clientKey
         });
 
         document.addEventListener('visibilitychange', this.handlePageVisibilityChanges);
@@ -59,7 +58,10 @@ class FastlaneSDK {
      * Initializes the Fastlane SDK
      */
     public async initialize(): Promise<FastlaneSDK> {
-        void this.analytics.setUp();
+        void this.analytics.setUp({
+            checkoutStage: 'precheckout'
+        });
+
         const tokenData = await this.requestClientToken();
         await this.fetchSdk(tokenData.value, tokenData.clientId);
         await this.initializeFastlaneInstance();
@@ -149,7 +151,11 @@ class FastlaneSDK {
 
         try {
             const addressSelectorResult = await this.fastlaneSdk.profile.showShippingAddressSelector();
-            if (addressSelectorResult.selectionChanged) this.trackEvent(InfoEventType.AddressChanged);
+            if (addressSelectorResult.selectionChanged) {
+                this.trackEvent(InfoEventType.AddressChanged);
+            }
+            this.trackEvent(InfoEventType.AddressSelectorClosed);
+
             return addressSelectorResult;
         } catch (error: unknown) {
             throw new AdyenCheckoutError('ERROR', 'Fastlane SDK: An error occurred when showing the shipping address selector', { cause: error });
@@ -184,7 +190,8 @@ class FastlaneSDK {
         const script = new Script({
             src: sdkUrl.href,
             component: 'fastlane',
-            dataAttributes: { sdkClientToken: clientToken }
+            dataAttributes: { sdkClientToken: clientToken },
+            analytics: this.analytics
         });
 
         await script.load();

@@ -4,7 +4,7 @@ import { Analytics3DS2Errors, ANALYTICS_RENDERED_STR, ANALYTICS_ERROR_TYPE } fro
 import { THREEDS2_FINGERPRINT_ERROR } from './constants';
 import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
 
-const analyticsModule = Analytics({ analytics: {}, analyticsContext: '', locale: '', clientKey: '', bundleType: 'umd' });
+const analyticsModule = Analytics({ analytics: {}, analyticsContext: '', locale: '', clientKey: '' });
 
 describe('ThreeDS2DeviceFingerprint: calls that generate analytics should produce objects with the expected shapes ', () => {
     let fingerprint;

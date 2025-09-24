@@ -1,6 +1,7 @@
 import { HttpOptions, httpPost } from '../http';
 import type { CollectIdEvent, CollectIdProps, TelemetryEvent } from './types';
 import AdyenCheckoutError from '../../Errors/AdyenCheckoutError';
+import { LIBRARY_BUNDLE_TYPE, LIBRARY_VERSION } from '../../config';
 
 export const FAILURE_MSG =
     'WARNING: Failed to retrieve "checkoutAttemptId". Consequently, analytics will not be available for this payment. The payment process, however, will not be affected.';
@@ -10,7 +11,7 @@ export const FAILURE_MSG =
  * @param config - object containing values needed to calculate the url for the request; and also some that need to be serialized and included in the body of request
  * @returns a function returning a promise containing the response of the call (an object containing a checkoutAttemptId property)
  */
-const collectId = ({ analyticsContext, clientKey, locale, analyticsPath, bundleType }: CollectIdProps) => {
+const collectId = ({ analyticsContext, clientKey, locale, analyticsPath }: CollectIdProps) => {
     let memoizedPromise: Promise<string> | null = null;
 
     const options: HttpOptions = {
@@ -27,10 +28,10 @@ const collectId = ({ analyticsContext, clientKey, locale, analyticsPath, bundleT
         }
 
         const telemetryEvent: TelemetryEvent = {
-            version: process.env.VERSION,
+            version: LIBRARY_VERSION,
+            buildType: LIBRARY_BUNDLE_TYPE,
             channel: 'Web',
             platform: 'Web',
-            buildType: bundleType,
             locale,
             referrer: window.location.href,
             screenWidth: window.screen.width,
