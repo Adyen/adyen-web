@@ -3,6 +3,12 @@ const path = require('path');
 
 module.exports = (res, req) => {
     const locale = req.params.locale;
+    
+    // Validate locale format to prevent path traversal (e.g., en-US, fr-FR, zh-CN)
+    if (!/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/.test(locale)) {
+        console.log(`ERROR: Invalid locale format: ${locale}`);
+        return res.status(400).json({ error: 'Invalid locale format' });
+    }
 
     try {
         // use LAMBDA_TASK_ROOT when running in Netlify Functions
