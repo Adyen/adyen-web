@@ -65,7 +65,6 @@ function SegmentedControl<T>({ classNameModifiers = [], selectedValue, disabled 
                     type="button"
                     {...htmlProps}
                 >
-                    {selectedValue === value && <span className="adyen-checkout-checkmark"></span>}
                     {label}
                 </button>
             ))}
