@@ -2,8 +2,9 @@ import { mockDeep, mock, mockReset } from 'jest-mock-extended';
 import initializeFastlane from './initializeFastlane';
 import { httpPost } from '../../core/Services/http';
 import Script from '../../utils/Script';
-import type { FastlaneWindowInstance, FastlaneProfile, FastlaneShipping } from './types';
 import FastlaneSDK from './FastlaneSDK';
+import type { FastlaneWindowInstance, FastlaneProfile, FastlaneShipping } from './types';
+// import Analytics from '../../core/Analytics';
 
 const fastlaneMock = mockDeep<FastlaneWindowInstance>();
 let fastlaneConstructorMock = null;
@@ -12,6 +13,12 @@ const mockScriptLoaded = jest.fn().mockImplementation(() => {
     window.paypal = {};
     window.paypal.Fastlane = fastlaneConstructorMock;
     return Promise.resolve();
+});
+
+jest.mock('../../core/Analytics', () => {
+    return jest.fn().mockImplementation(() => {
+        return { setUp: jest.fn(), sendAnalytics: jest.fn(), flush: jest.fn() };
+    });
 });
 
 jest.mock('../../core/Services/http');
@@ -29,7 +36,7 @@ const httpPostMock = (httpPost as jest.Mock).mockResolvedValue({
     expiresAt: '2024-11-01T13:34:01.804+00:00'
 });
 
-describe('FastlaneSDK', () => {
+describe.only('FastlaneSDK', () => {
     beforeEach(() => {
         mockReset(fastlaneMock);
 

@@ -20,11 +20,14 @@ type AnalyticsInfoEventObject = {
 export enum InfoEventType {
     clicked = 'clicked',
     rendered = 'rendered',
+    /**
+     * Third party SDK events
+     */
     sdkDownloadInitiated = 'sdkDownloadInitiated',
     sdkDownloadFailed = 'sdkDownloadFailed',
     sdkDownloadAborted = 'sdkDownloadAborted',
     sdkDownloadCompleted = 'sdkDownloadCompleted',
-Initialized = 'Initialized',
+    Initialized = 'Initialized',
     LookupStarted = 'LookupStarted',
     LookupUserNotFound = 'LookupUserNotFound',
     OtpStarted = 'OtpStarted',

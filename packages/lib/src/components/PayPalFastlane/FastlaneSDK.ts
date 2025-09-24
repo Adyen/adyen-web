@@ -15,7 +15,7 @@ import {
 } from './types';
 
 import Analytics from '../../core/Analytics';
-import { AnalyticsInfoEvent, InfoEventTypes, InfoEventSubtypes } from '../../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType } from '../../core/Analytics/AnalyticsInfoEvent';
 import type { AnalyticsModule } from '../../types/global-types';
 
 class FastlaneSDK {
@@ -48,7 +48,8 @@ class FastlaneSDK {
             analytics: configuration.analytics,
             locale: configuration.locale || 'en-US',
             analyticsContext: analyticsUrl,
-            clientKey: this.clientKey
+            clientKey: this.clientKey,
+            bundleType: 'FIXME'
         });
 
         document.addEventListener('visibilitychange', this.handlePageVisibilityChanges);
@@ -62,7 +63,7 @@ class FastlaneSDK {
         const tokenData = await this.requestClientToken();
         await this.fetchSdk(tokenData.value, tokenData.clientId);
         await this.initializeFastlaneInstance();
-        this.trackEvent(InfoEventSubtypes.Initialized);
+        this.trackEvent(InfoEventType.Initialized);
         return this;
     }
 
@@ -82,14 +83,14 @@ class FastlaneSDK {
             throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'authenticate(): Fastlane SDK is not initialized');
         }
 
-        this.trackEvent(InfoEventSubtypes.LookupStarted);
+        this.trackEvent(InfoEventType.LookupStarted);
 
         try {
             const { customerContextId } = await this.fastlaneSdk.identity.lookupCustomerByEmail(email);
 
             if (customerContextId) {
                 this.latestShopperDetails = { email, customerId: customerContextId };
-                this.trackEvent(InfoEventSubtypes.OtpStarted);
+                this.trackEvent(InfoEventType.OtpStarted);
 
                 const authResult = await this.fastlaneSdk.identity.triggerAuthenticationFlow(customerContextId);
                 this.trackEvent(this.getOtpAnalyticsSubtype(authResult.authenticationState));
@@ -97,7 +98,7 @@ class FastlaneSDK {
                 return authResult;
             }
 
-            this.trackEvent(InfoEventSubtypes.LookupUserNotFound);
+            this.trackEvent(InfoEventType.LookupUserNotFound);
             return {
                 authenticationState: 'not_found',
                 profileData: undefined
@@ -144,11 +145,11 @@ class FastlaneSDK {
             throw new AdyenCheckoutError('IMPLEMENTATION_ERROR', 'showShippingAddressSelector(): Fastlane SDK is not initialized');
         }
 
-        this.trackEvent(InfoEventSubtypes.AddressSelectorClicked);
+        this.trackEvent(InfoEventType.AddressSelectorClicked);
 
         try {
             const addressSelectorResult = await this.fastlaneSdk.profile.showShippingAddressSelector();
-            if (addressSelectorResult.selectionChanged) this.trackEvent(InfoEventSubtypes.AddressChanged);
+            if (addressSelectorResult.selectionChanged) this.trackEvent(InfoEventType.AddressChanged);
             return addressSelectorResult;
         } catch (error: unknown) {
             throw new AdyenCheckoutError('ERROR', 'Fastlane SDK: An error occurred when showing the shipping address selector', { cause: error });
@@ -279,8 +280,8 @@ class FastlaneSDK {
         };
     }
 
-    private trackEvent(subtype: InfoEventSubtypes): void {
-        const event = new AnalyticsInfoEvent({ type: InfoEventTypes.ThirdPartySdk, component: 'fastlane', subtype });
+    private trackEvent(eventType: InfoEventType): void {
+        const event = new AnalyticsInfoEvent({ type: eventType, component: 'fastlane' });
         this.analytics.sendAnalytics(event);
     }
 
@@ -298,15 +299,15 @@ class FastlaneSDK {
     private getOtpAnalyticsSubtype(authenticationState: FastlaneAuthenticatedCustomerResult['authenticationState']) {
         switch (authenticationState) {
             case 'succeeded':
-                return InfoEventSubtypes.OtpSucceeded;
+                return InfoEventType.OtpSucceeded;
             case 'canceled':
-                return InfoEventSubtypes.OtpCanceled;
+                return InfoEventType.OtpCanceled;
             case 'failed':
-                return InfoEventSubtypes.OtpFailed;
+                return InfoEventType.OtpFailed;
             case 'not_found':
-                return InfoEventSubtypes.LookupUserNotFound;
+                return InfoEventType.LookupUserNotFound;
             default:
-                return InfoEventSubtypes.OtpFailed;
+                return InfoEventType.OtpFailed;
         }
     }
 }

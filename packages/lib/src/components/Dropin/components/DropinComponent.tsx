@@ -10,7 +10,7 @@ import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import Button from '../../internal/Button';
 import type { DropinComponentProps, DropinComponentState, DropinStatus, DropinStatusProps, onOrderCancelData } from '../types';
 import UIElement from '../../internal/UIElement';
-import { AnalyticsInfoEvent, InfoEventTypes } from '../../../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType } from '../../../core/Analytics/AnalyticsInfoEvent';
 
 export class DropinComponent extends Component<DropinComponentProps, DropinComponentState> {
     public state: DropinComponentState = {
@@ -136,7 +136,7 @@ export class DropinComponent extends Component<DropinComponentProps, DropinCompo
         });
 
         const event = new AnalyticsInfoEvent({
-            type: InfoEventTypes.clicked,
+            type: InfoEventType.clicked,
             target: 'otherpaymentmethod_button',
             component: 'dropin'
         });
