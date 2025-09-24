@@ -1,7 +1,7 @@
 import { AdyenCheckout, Dropin } from '@adyen/adyen-web/auto';
 import '@adyen/adyen-web/styles/adyen.css';
 import { createSession } from '../../services';
-import { amount, shopperLocale, shopperReference, countryCode, returnUrl } from '../../config/commonConfig';
+import { amount, shopperLocale, shopperReference, countryCode, returnUrl, environmentUrlsOverride } from '../../config/commonConfig';
 import { handleOnPaymentCompleted, handleOnPaymentFailed } from '../../handlers';
 
 export async function initSession() {
@@ -22,11 +22,7 @@ export async function initSession() {
         session,
 
         locale: shopperLocale,
-        _environmentUrls: {
-            cdn: {
-                translations: '/'
-            }
-        },
+        ...environmentUrlsOverride,
 
         // Events
         beforeSubmit: (data, component, actions) => {

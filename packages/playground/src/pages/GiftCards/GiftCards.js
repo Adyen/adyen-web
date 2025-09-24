@@ -1,7 +1,7 @@
 import { AdyenCheckout, Giftcard, MealVoucherFR, Card, fr_FR } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { handleChange, handleOnPaymentCompleted, handleOnPaymentFailed, handleSubmit } from '../../handlers';
-import { amount, shopperLocale, countryCode, returnUrl, shopperReference } from '../../config/commonConfig';
+import { amount, shopperLocale, countryCode, returnUrl, shopperReference, environmentUrlsOverride } from '../../config/commonConfig';
 import { checkBalance, createOrder, createSession } from '../../services';
 import '../../../config/polyfills';
 import '../../utils';
@@ -13,6 +13,7 @@ import '../../style.scss';
         locale: shopperLocale,
         countryCode,
         environment: process.env.__CLIENT_ENV__,
+        ...environmentUrlsOverride,
         onChange: handleChange,
         onSubmit: handleSubmit,
         onPaymentCompleted: handleOnPaymentCompleted,
@@ -61,6 +62,7 @@ import '../../style.scss';
         clientKey: process.env.__CLIENT_KEY__,
         session,
         showPayButton: false,
+        ...environmentUrlsOverride,
 
         // Events
         beforeSubmit: (data, component, actions) => {
