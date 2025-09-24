@@ -1,7 +1,8 @@
 import { render, screen, waitFor } from '@testing-library/preact';
 import KlarnaPayments from './KlarnaPayments';
 import Dropin from '../Dropin';
-import { PaymentAction } from '../../types/global-types';
+import { AnalyticsModule, PaymentAction } from '../../types/global-types';
+import { mock } from 'jest-mock-extended';
 
 describe('KlarnaPayments', () => {
     const coreProps = {
@@ -72,6 +73,7 @@ describe('KlarnaPayments', () => {
                 }
             };
 
+            global.core.modules.analytics = mock<AnalyticsModule>();
             const klarna = new KlarnaPayments(global.core, {
                 ...coreProps,
                 type: 'klarna_paynow',
@@ -98,6 +100,7 @@ describe('KlarnaPayments', () => {
                 method: 'GET'
             };
 
+            global.core.modules.analytics = mock<AnalyticsModule>();
             const klarna = new KlarnaPayments(global.core, {
                 ...coreProps,
                 type: 'klarna_paynow',

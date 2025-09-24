@@ -2,6 +2,8 @@ import VisaSdk from './VisaSdk';
 import Script from '../../../../../utils/Script';
 import { VISA_SDK_PROD, VISA_SDK_TEST } from './config';
 import { VisaError } from './SrciError';
+import { mock } from 'jest-mock-extended';
+import { AnalyticsModule } from '../../../../../types/global-types';
 
 const mockScriptLoaded = jest.fn().mockImplementation(() => {
     window.vAdapters = {
@@ -12,7 +14,7 @@ const mockScriptLoaded = jest.fn().mockImplementation(() => {
         }))
     };
 });
-
+const mockAnalytics = mock<AnalyticsModule>();
 const mockScriptRemoved = jest.fn();
 
 jest.mock('../../../../../utils/Script', () => {
@@ -32,30 +34,35 @@ afterEach(() => {
     delete window?.vAdapters?.VisaSRCI;
 });
 
+function createVisaSDK(environment = 'test') {
+    const sdk = new VisaSdk(environment, { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' }, mockAnalytics);
+    return sdk;
+}
+
 describe('SDK urls', () => {
     test('should load sdk script with correct URL for live', async () => {
-        const sdk = new VisaSdk('live', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        const sdk = createVisaSDK('live');
         expect(sdk.schemeSdk).toBeNull;
         expect(sdk.schemeName).toBe('visa');
 
         await sdk.loadSdkScript();
 
-        expect(Script).toHaveBeenCalledWith(VISA_SDK_PROD);
+        expect(Script).toHaveBeenCalledWith({ component: 'clicktopay', src: VISA_SDK_PROD, analytics: mockAnalytics });
         expect(mockScriptLoaded).toHaveBeenCalledTimes(1);
     });
 
     test('should load sdk script with correct URL for test', async () => {
-        const sdk = new VisaSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        const sdk = createVisaSDK();
         await sdk.loadSdkScript();
 
-        expect(Script).toHaveBeenCalledWith(VISA_SDK_TEST);
+        expect(Script).toHaveBeenCalledWith({ component: 'clicktopay', src: VISA_SDK_TEST, analytics: mockAnalytics });
         expect(mockScriptLoaded).toHaveBeenCalledTimes(1);
     });
 });
 
 describe('init()', () => {
     test('should init with the correct values', async () => {
-        const sdk = new VisaSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        const sdk = createVisaSDK();
         await sdk.loadSdkScript();
 
         const srcInitiatorId = 'xxxx-yyyy';
@@ -78,7 +85,7 @@ describe('init()', () => {
     });
 
     test('should trigger error if init fails', async () => {
-        const sdk = new VisaSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        const sdk = createVisaSDK();
         await sdk.loadSdkScript();
 
         const error: VisaError = {
@@ -103,7 +110,7 @@ describe('init()', () => {
 
 describe('identityLookup()', () => {
     test('should call identityLookup with the correct values', async () => {
-        const sdk = new VisaSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        const sdk = createVisaSDK();
         await sdk.loadSdkScript();
 
         const response = await sdk.identityLookup({ identityValue: 'john@example.com', type: 'email' });
@@ -116,7 +123,7 @@ describe('identityLookup()', () => {
     });
 
     test('should trigger error if identityLookup fails', async () => {
-        const sdk = new VisaSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        const sdk = createVisaSDK();
         await sdk.loadSdkScript();
 
         const error: VisaError = {
@@ -141,7 +148,7 @@ describe('identityLookup()', () => {
 
 describe('completeValidation()', () => {
     test('should call completeIdentityValidation with the correct values', async () => {
-        const sdk = new VisaSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        const sdk = createVisaSDK();
         await sdk.loadSdkScript();
 
         const otp = '123456';
@@ -153,7 +160,7 @@ describe('completeValidation()', () => {
     });
 
     test('should trigger error if completeIdentityValidation fails', async () => {
-        const sdk = new VisaSdk('test', { dpaLocale: 'en-US', dpaPresentationName: 'MyStore' });
+        const sdk = createVisaSDK();
         await sdk.loadSdkScript();
 
         const error: VisaError = {

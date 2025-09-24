@@ -37,7 +37,15 @@ class PayByBankPixElement extends UIElement<PayByBankPixConfiguration> {
     constructor(checkout: ICore, props?: PayByBankPixConfiguration) {
         super(checkout, props);
         const deviceId = this.props.storedPaymentMethodId ? this.props?.payByBankPixDetails?.deviceId : this.props.deviceId;
-        this.passkeyService = new PasskeyService({ environment: this.props.environment, deviceId });
+
+        this.passkeyService = new PasskeyService(
+            {
+                environment: this.props.environment,
+                deviceId
+            },
+            this.analytics
+        );
+
         if (this.props._isAdyenHosted) {
             void this.passkeyService.initialize();
         }

@@ -13,6 +13,7 @@ import {
 import SrciError, { MastercardError, VisaError } from './SrciError';
 import { ClickToPayScheme } from '../../types';
 import Script from '../../../../../utils/Script';
+import { AnalyticsModule } from '../../../../../types/global-types';
 
 export interface ISrcInitiator {
     schemeName: ClickToPayScheme;
@@ -36,19 +37,26 @@ export default abstract class AbstractSrcInitiator implements ISrcInitiator {
 
     protected readonly customSdkConfiguration: CustomSdkConfiguration;
 
+    private readonly analytics: AnalyticsModule;
     private readonly sdkUrl: string;
     private scriptElement: Script | null = null;
 
-    protected constructor(sdkUrl: string, customSdkConfiguration: CustomSdkConfiguration) {
+    protected constructor(sdkUrl: string, customSdkConfiguration: CustomSdkConfiguration, analytics: AnalyticsModule) {
         if (!sdkUrl) throw Error('AbstractSrcInitiator: Invalid SDK URL');
 
         this.sdkUrl = sdkUrl;
         this.customSdkConfiguration = customSdkConfiguration;
+        this.analytics = analytics;
     }
 
     public async loadSdkScript(): Promise<void> {
         if (!this.isSdkIsAvailableOnWindow()) {
-            this.scriptElement = new Script(this.sdkUrl);
+            this.scriptElement = new Script({
+                src: this.sdkUrl,
+                component: 'clicktopay',
+                analytics: this.analytics
+            });
+
             await this.scriptElement.load();
         }
         this.assignSdkReference();

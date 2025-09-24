@@ -30,12 +30,12 @@ export class CountdownA11yReporter {
     }
 
     public update(time: CountdownTime): void {
-        const { minutes, seconds } = time;
+        const { minutes, seconds, percentage } = time;
         if (minutes === '-' || seconds === '-') return;
 
         const minutesLeft = typeof minutes === 'string' ? parseInt(minutes, 10) : minutes;
         const secondsLeft = typeof seconds === 'string' ? parseInt(seconds, 10) : seconds;
-        this.timeLeft = { minutes: minutesLeft, seconds: secondsLeft };
+        this.timeLeft = { minutes: minutesLeft, seconds: secondsLeft, percentage };
 
         if (minutesLeft > 5 && this.timeout !== this.LONG_TIMEOUT) {
             this.timeout = this.LONG_TIMEOUT;
@@ -58,7 +58,7 @@ export class CountdownA11yReporter {
         this.srPanel.setMessages(null);
     }
 
-    private setInterval(timeout): void {
+    private setInterval(timeout: number): void {
         this.clearInterval();
         const setSrMessages = () => {
             this.srPanel.setMessages(null);
@@ -71,7 +71,7 @@ export class CountdownA11yReporter {
 
     private getSrMessages({ minutes, seconds }): Array<string> {
         const translation = this.i18n.get(this.TRANSLATION_KEY);
-        const getTimeTranslation = time => (time !== 0 ? translation => `${time} ${translation}` : () => '');
+        const getTimeTranslation = (time: number) => (time !== 0 ? (translation: string) => `${time} ${translation}` : () => '');
         const fns = [minutes, seconds].map(getTimeTranslation);
         return [interpolateElement(translation, fns).join('')];
     }
