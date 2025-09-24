@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@adyen/adyen-web": "^6.2.0",
-    "nuxt": "^3.16.0",
+    "nuxt": "^3.19.0",
     "vue": "latest"
   },
   "devDependencies": {
