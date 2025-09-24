@@ -2,6 +2,7 @@ import Field from '../FormFields/Field';
 import SocialSecurityNumberBrazil from './SocialSecurityNumberBrazil';
 import { h } from 'preact';
 import InputText from '../FormFields/InputText';
+import Fieldset from '../FormFields/Fieldset';
 
 export function BrazilPersonalDetail(props) {
     const { i18n, data, handleChangeFor, errors, valid } = props;
@@ -10,7 +11,7 @@ export function BrazilPersonalDetail(props) {
         <div className={'adyen-checkout__fieldset adyen-checkout__fieldset--address adyen-checkout__fieldset--personalDetails'}>
             <div className="adyen-checkout__fieldset__title">{i18n.get('personalDetails')}</div>
 
-            <div className="adyen-checkout__fieldset__fields">
+            <Fieldset>
                 <Field
                     label={i18n.get('firstName')}
                     classNameModifiers={['firstName', 'col-50']}
@@ -42,7 +43,6 @@ export function BrazilPersonalDetail(props) {
                         onBlur={handleChangeFor('lastName', 'blur')}
                     />
                 </Field>
-
                 <SocialSecurityNumberBrazil
                     data={data.socialSecurityNumber}
                     error={errors.socialSecurityNumber}
@@ -50,7 +50,7 @@ export function BrazilPersonalDetail(props) {
                     onInput={handleChangeFor('socialSecurityNumber', 'input')}
                     onBlur={handleChangeFor('socialSecurityNumber', 'blur')}
                 />
-            </div>
+            </Fieldset>
         </div>
     );
 }

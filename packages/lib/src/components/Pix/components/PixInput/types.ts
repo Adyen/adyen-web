@@ -1,6 +1,6 @@
 import { h, RefObject } from 'preact';
 import PixInput from './PixInput';
-import { PayButtonFunctionProps } from '../../internal/UIElement/types';
+import { PayButtonFunctionProps } from '../../../internal/UIElement/types';
 
 export interface PixInputDataState {
     firstName?: string;
