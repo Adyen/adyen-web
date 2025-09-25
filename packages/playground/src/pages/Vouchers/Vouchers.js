@@ -1,6 +1,6 @@
 import { AdyenCheckout, BacsDirectDebit, Multibanco, Oxxo, Dragonpay, Boleto, Doku, Econtext } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
-import { shopperLocale, countryCode } from '../../config/commonConfig';
+import { shopperLocale, countryCode, environmentUrlsOverride } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
 import '../../utils';
@@ -10,6 +10,7 @@ import './Vouchers.scss';
         clientKey: process.env.__CLIENT_KEY__,
         countryCode,
         locale: shopperLocale,
+        ...environmentUrlsOverride,
         environment: process.env.__CLIENT_ENV__,
         onActionHandled: obj => {
             console.log('### Vouchers::onActionHandled:: obj', obj);

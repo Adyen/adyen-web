@@ -1,6 +1,6 @@
 import '@adyen/adyen-web/styles/adyen.css';
 import { getPaymentMethods, makePayment, checkBalance, createOrder, cancelOrder, makeDetailsCall } from '../../services';
-import { amount, shopperLocale, countryCode, returnUrl } from '../../config/commonConfig';
+import { amount, shopperLocale, countryCode, returnUrl, environmentUrlsOverride } from '../../config/commonConfig';
 import { getSearchParameters } from '../../utils';
 import { handleOnPaymentCompleted, handleOnPaymentFailed } from '../../handlers';
 
@@ -15,11 +15,7 @@ export async function initManual() {
         clientKey: process.env.__CLIENT_KEY__,
         paymentMethodsResponse,
         locale: shopperLocale,
-        _environmentUrls: {
-            cdn: {
-                translations: '/'
-            }
-        },
+        ...environmentUrlsOverride,
         environment: process.env.__CLIENT_ENV__,
         onSubmit: async (state, component, actions) => {
             try {

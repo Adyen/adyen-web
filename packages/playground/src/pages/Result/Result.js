@@ -4,12 +4,14 @@ import '@adyen/adyen-web/styles/adyen.css';
 import { getSearchParameters } from '../../utils';
 import '../../../config/polyfills';
 import '../../style.scss';
+import { environmentUrlsOverride } from '../../config/commonConfig';
 
 async function handleRedirectResult(redirectResult, sessionId) {
     window.checkout = await AdyenCheckout({
         session: { id: sessionId },
         clientKey: process.env.__CLIENT_KEY__,
         environment: process.env.__CLIENT_ENV__,
+        ...environmentUrlsOverride,
         onPaymentCompleted: (result, element) => {
             console.log('onPaymentCompleted', result, element);
             document.querySelector('#result-container > pre').innerHTML = JSON.stringify(result, null, '\t');
