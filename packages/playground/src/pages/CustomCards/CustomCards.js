@@ -6,7 +6,7 @@ import { styles, setFocus, onBrand, onConfigSuccess, onBinLookup, onChange, setC
 import { styles_si, onConfigSuccess_si, onFieldValid_si, onBrand_si, onError_si, onFocus_si } from './customCards-si.config';
 import { fancyStyles, fancyChangeBrand, fancyErrors, fancyFieldValid, fancyFocus } from './customCards-fancy.config';
 import { materialStyles, materialFocus, handleMaterialError, onMaterialFieldValid } from './customCards-material.config';
-import { shopperLocale, countryCode } from '../../config/commonConfig';
+import { shopperLocale, countryCode, environmentUrlsOverride } from '../../config/commonConfig';
 import paymentsConfig from '../../config/paymentsConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
@@ -52,6 +52,7 @@ const configObj = {
     locale: shopperLocale,
     //        environment: 'http://localhost:8080/checkoutshopper/',
     environment: 'test',
+    ...environmentUrlsOverride,
     onChange: handleOnChange,
     onAdditionalDetails,
     onError: console.error,

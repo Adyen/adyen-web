@@ -1,7 +1,7 @@
 import { AdyenCheckout, WeChat, BcmcMobile, Swish, PromptPay, PayNow, DuitNow } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { makePayment } from '../../services';
-import { shopperLocale, countryCode } from '../../config/commonConfig';
+import { shopperLocale, countryCode, environmentUrlsOverride } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../utils';
 import '../../style.scss';
@@ -38,6 +38,7 @@ const handleQRCodePayment = async (state, component, actions, countryCode) => {
         countryCode,
         locale: shopperLocale,
         environment: process.env.__CLIENT_ENV__,
+        ...environmentUrlsOverride,
         risk: { node: 'body', onError: console.error },
         onPaymentCompleted: handleOnPaymentCompleted,
         onPaymentFailed: handleOnPaymentFailed

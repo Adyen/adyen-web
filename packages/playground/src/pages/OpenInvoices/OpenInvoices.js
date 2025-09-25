@@ -2,7 +2,7 @@ import { AdyenCheckout, RatePay, Riverty, RatePayDirectDebit, AfterPay, AfterPay
 import '@adyen/adyen-web/styles/adyen.css';
 import { getPaymentMethods } from '../../services';
 import { handleChange, handleOnPaymentCompleted, handleOnPaymentFailed, handleSubmit } from '../../handlers';
-import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
+import { amount, shopperLocale, countryCode, environmentUrlsOverride } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
 
@@ -27,6 +27,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsData => {
         paymentMethodsResponse: paymentMethodsData,
         environment: process.env.__CLIENT_ENV__,
         // onChange: handleChange,
+        ...environmentUrlsOverride,
         onSubmit: handleSubmit,
         onPaymentCompleted: handleOnPaymentCompleted,
         onPaymentFailed: handleOnPaymentFailed,

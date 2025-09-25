@@ -38,3 +38,9 @@ export const SHOPPER_LOCALES = [
     'zh-CN',
     'zh-TW'
 ];
+
+export const STORYBOOK_ENVIRONMENT_URLS = {
+    cdn: {
+        translations: '/'
+    }
+};

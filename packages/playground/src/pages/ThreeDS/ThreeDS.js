@@ -3,14 +3,16 @@ import '@adyen/adyen-web/styles/adyen.css';
 import '../../../config/polyfills';
 import '../../style.scss';
 import { makeDetailsCall } from '../../services';
-import { shopperLocale, countryCode } from '../../config/commonConfig';
+import { shopperLocale, countryCode, environmentUrlsOverride } from '../../config/commonConfig';
 
 (async () => {
     const checkout = await AdyenCheckout({
         countryCode,
         locale: shopperLocale,
         environment: 'test',
-        clientKey: process.env.__CLIENT_KEY__,
+        clientKey: process.env.__CLIENT_KEY__,  
+
+        ...environmentUrlsOverride,
 
         onAdditionalDetails: async (state, element, actions) => {
             try {
