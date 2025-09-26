@@ -36,6 +36,7 @@ export default {
     showBrandIcon: true,
     showInstallmentAmounts: null,
     styles: {},
+    trimTrailingSeparator: true,
 
     isPayButtonPrimaryVariant: true,
     showContextualElement: true,

@@ -146,6 +146,7 @@ export type CardConfigData = {
     socialSecurityNumberMode: SocialSecurityMode;
     srPanelEnabled: boolean;
     srPanelMoveFocus: boolean;
+    trimTrailingSeparator: boolean;
     // callbacks
     hasOnAllValid: boolean;
     hasOnBinLookup: boolean;
