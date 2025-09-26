@@ -83,7 +83,7 @@ describe('Redirect error', () => {
     });
 
     test('should send an error event to the analytics module if beforeRedirect rejects', async () => {
-        const analytics = Analytics({ analytics: {}, analyticsContext: '', locale: '', clientKey: '', bundleType: '' });
+        const analytics = Analytics({ analytics: {}, analyticsContext: '', locale: '', clientKey: '' });
         analytics.sendAnalytics = jest.fn(() => true);
         const props: RedirectConfiguration = {
             url: 'test',
@@ -115,7 +115,7 @@ describe('Redirect error', () => {
             throw new Error('Mock error');
         });
 
-        const analytics = Analytics({ analytics: {}, analyticsContext: '', locale: '', clientKey: '', bundleType: '' });
+        const analytics = Analytics({ analytics: {}, analyticsContext: '', locale: '', clientKey: '' });
         analytics.sendAnalytics = jest.fn(() => true);
         const props: RedirectConfiguration = {
             url: 'test',

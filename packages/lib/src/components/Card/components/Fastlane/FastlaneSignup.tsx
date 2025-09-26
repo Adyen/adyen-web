@@ -10,11 +10,10 @@ import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { LabelOnlyDisclaimerMessage } from '../../../internal/DisclaimerMessage/DisclaimerMessage';
 import { isConfigurationValid } from './utils/validate-configuration';
 import mobileNumberFormatter from './utils/mobile-number-formatter';
-import { InfoEventTypes } from '../../../../core/Analytics/constants';
 import type { FastlaneSignupConfiguration } from '../../../PayPalFastlane/types';
 
 import './FastlaneSignup.scss';
-import { AnalyticsInfoEvent } from '../../../../core/Analytics/AnalyticsInfoEvent';
+import { AnalyticsInfoEvent, InfoEventType } from '../../../../core/Analytics/AnalyticsInfoEvent';
 import { AnalyticsEvent } from '../../../../core/Analytics/AnalyticsEvent';
 
 type FastlaneSignupProps = FastlaneSignupConfiguration & {
@@ -59,7 +58,7 @@ const FastlaneSignup = ({
         setIsChecked(newValue);
 
         const event = new AnalyticsInfoEvent({
-            type: InfoEventTypes.clicked,
+            type: InfoEventType.clicked,
             target: 'fastlane_signup_consent_toggle',
             configData: {
                 isToggleOn: newValue
@@ -114,7 +113,7 @@ const FastlaneSignup = ({
         }
 
         const event = new AnalyticsInfoEvent({
-            type: InfoEventTypes.rendered,
+            type: InfoEventType.rendered,
             configData: {
                 isFastlaneSignupRendered: shouldDisplaySignup
             }

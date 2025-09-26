@@ -1,30 +1,31 @@
 import { httpPost } from '../http';
 import collectId, { FAILURE_MSG } from './collect-id';
 import { ANALYTICS_PATH } from '../../Analytics/constants';
+import type { CollectIdProps } from './types';
 
 jest.mock('../http');
+jest.mock('../../config', () => {
+    return {
+        LIBRARY_VERSION: 'x.x.x',
+        LIBRARY_BUNDLE_TYPE: 'umd'
+    };
+});
 
 const mockedHttpPost = httpPost as jest.Mock;
 
 const httpPromiseSuccessMock = jest.fn(() => Promise.resolve({ checkoutAttemptId: 'mockCheckoutAttemptId' }));
 const httpPromiseFailMock = jest.fn(() => Promise.reject('Error'));
 
-const BASE_CONFIGURATION = {
+const BASE_CONFIGURATION: CollectIdProps = {
     analyticsContext: 'https://checkoutanalytics-test.adyen.com/checkoutanalytics/',
     locale: 'en-US',
-    bundleType: 'umd',
     clientKey: 'xxxx-yyyy',
-    amount: {
-        value: 10000,
-        currency: 'USD'
-    },
     analyticsPath: ANALYTICS_PATH
 };
 
 let requestAttemptId;
 
 beforeEach(() => {
-    process.env.VERSION = 'x.x.x';
     requestAttemptId = collectId(BASE_CONFIGURATION);
 
     mockedHttpPost.mockReset();
