@@ -1,5 +1,23 @@
 # @adyen/adyen-web
 
+## 6.23.0
+
+### Minor Changes
+
+- Analytics - Adding events when loading third party script SDKs ([#3512](https://github.com/Adyen/adyen-web/pull/3512))
+
+- Fastlane - Added analytics to the shopper recognition flow ([#3464](https://github.com/Adyen/adyen-web/pull/3464))
+
+-   - Update QR code UI for PIX payment to switch between displaying QR code and copying code text ([#3509](https://github.com/Adyen/adyen-web/pull/3509))
+
+    - Display full bank code for PIX so users can also highlight and copy the code directly
+
+### Patch Changes
+
+- Adding retrial mechanism for third party script load ([#3500](https://github.com/Adyen/adyen-web/pull/3500))
+
+- Fix checkmark style for UPI app selector ([#3533](https://github.com/Adyen/adyen-web/pull/3533))
+
 ## 6.22.0
 
 ### Minor Changes
