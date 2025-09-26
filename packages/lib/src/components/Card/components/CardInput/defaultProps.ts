@@ -11,6 +11,7 @@ export default {
     billingAddressAllowedCountries: [],
     billingAddressMode: AddressModeOptions.full,
     billingAddressRequired: false,
+    specifications: {},
     billingAddressRequiredFields: ['street', 'houseNumberOrName', 'postalCode', 'city', 'stateOrProvince', 'country'],
 
     configuration: { koreanAuthenticationRequired: false, socialSecurityNumberMode: 'auto' as SocialSecurityMode },
