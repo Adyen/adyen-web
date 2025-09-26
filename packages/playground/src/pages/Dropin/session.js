@@ -1,7 +1,7 @@
 import { AdyenCheckout, Dropin, Card, WeChat, Giftcard, PayPal, Ach, GooglePay, Riverty, Bancontact, Klarna } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { createSession } from '../../services';
-import { amount, shopperLocale, shopperReference, countryCode, returnUrl } from '../../config/commonConfig';
+import { amount, shopperLocale, shopperReference, countryCode, returnUrl, environmentUrlsOverride } from '../../config/commonConfig';
 import { handleOnPaymentCompleted, handleOnPaymentFailed } from '../../handlers';
 
 export async function initSession() {
@@ -21,6 +21,8 @@ export async function initSession() {
         clientKey: process.env.__CLIENT_KEY__,
 
         session,
+
+        ...environmentUrlsOverride,
 
         // Events
         beforeSubmit: (data, component, actions) => {

@@ -3,7 +3,7 @@ import '@adyen/adyen-web/styles/adyen.css';
 
 import { getPaymentMethods } from '../../services';
 import { handleSubmit, handleAdditionalDetails, handleError, handleOnPaymentFailed, handleOnPaymentCompleted } from '../../handlers';
-import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
+import { amount, shopperLocale, countryCode, environmentUrlsOverride } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
 import { MockReactApp } from './MockReactApp';
@@ -35,6 +35,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         amount,
         countryCode,
         clientKey: process.env.__CLIENT_KEY__,
+        ...environmentUrlsOverride,
         paymentMethodsResponse,
         locale: shopperLocale,
         environment: process.env.__CLIENT_ENV__,

@@ -3,7 +3,7 @@ import '@adyen/adyen-web/styles/adyen.css';
 import '../../../config/polyfills';
 import '../../style.scss';
 import { getPaymentMethods } from '../../services';
-import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
+import { amount, shopperLocale, countryCode, environmentUrlsOverride } from '../../config/commonConfig';
 import { searchFunctionExample } from '../../utils';
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
@@ -11,6 +11,7 @@ getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse =
         amount, // Optional. Used to display the amount in the Pay Button.
         countryCode,
         clientKey: process.env.__CLIENT_KEY__,
+        ...environmentUrlsOverride,
         paymentMethodsResponse,
         locale: shopperLocale,
         translations: {

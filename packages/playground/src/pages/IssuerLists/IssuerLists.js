@@ -13,7 +13,7 @@ import {
 import '@adyen/adyen-web/styles/adyen.css';
 
 import { createSession } from '../../services';
-import { shopperLocale, countryCode, returnUrl } from '../../config/commonConfig';
+import { shopperLocale, countryCode, returnUrl, environmentUrlsOverride } from '../../config/commonConfig';
 import '../../../config/polyfills';
 import '../../style.scss';
 
@@ -33,6 +33,7 @@ import '../../style.scss';
         clientKey: process.env.__CLIENT_KEY__,
         locale: shopperLocale,
         environment: process.env.__CLIENT_ENV__,
+        ...environmentUrlsOverride,
         onError: console.error
     });
 

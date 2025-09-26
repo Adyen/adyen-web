@@ -36,7 +36,7 @@ const UPIIntentAppItem = ({ app, imgSrc, isSelected, onSelect = () => {} }: UPII
                     </label>
                 </ExpandButton>
             </div>
-            {isSelected && <span className="adyen-checkout-checkmark" />}
+            {isSelected && <span className="adyen-checkout-upi-app-item__checkmark" />}
         </li>
     );
 };

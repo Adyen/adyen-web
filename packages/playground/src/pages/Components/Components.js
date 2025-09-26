@@ -20,13 +20,14 @@ import '../../../config/polyfills';
 import '../../style.scss';
 import { getPaymentMethods } from '../../services';
 import { handleSubmit, handleAdditionalDetails, handleChange, handleOnPaymentFailed, handleOnPaymentCompleted } from '../../handlers';
-import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
+import { amount, shopperLocale, countryCode, environmentUrlsOverride } from '../../config/commonConfig';
 
 getPaymentMethods({ amount, shopperLocale }).then(async paymentMethodsResponse => {
     window.checkout = await AdyenCheckout({
         amount, // Optional. Used to display the amount in the Pay Button.
         countryCode,
         clientKey: process.env.__CLIENT_KEY__,
+        ...environmentUrlsOverride,
         paymentMethodsResponse,
         locale: shopperLocale,
         environment: process.env.__CLIENT_ENV__,
