@@ -74,6 +74,10 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
 
         const callbackIntents: google.payments.api.CallbackIntent[] = [...props.callbackIntents, 'PAYMENT_AUTHORIZATION'];
 
+        console.log(props);
+
+        // const allowedCardNetworks =
+
         return {
             ...props,
             configuration: props.configuration,
