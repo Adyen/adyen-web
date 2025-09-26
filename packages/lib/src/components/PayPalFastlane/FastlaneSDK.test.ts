@@ -2,8 +2,8 @@ import { mockDeep, mock, mockReset } from 'jest-mock-extended';
 import initializeFastlane from './initializeFastlane';
 import { httpPost } from '../../core/Services/http';
 import Script from '../../utils/Script';
-import type { FastlaneWindowInstance, FastlaneProfile, FastlaneShipping } from './types';
 import FastlaneSDK from './FastlaneSDK';
+import type { FastlaneWindowInstance, FastlaneProfile, FastlaneShipping } from './types';
 
 const fastlaneMock = mockDeep<FastlaneWindowInstance>();
 let fastlaneConstructorMock = null;
@@ -12,6 +12,12 @@ const mockScriptLoaded = jest.fn().mockImplementation(() => {
     window.paypal = {};
     window.paypal.Fastlane = fastlaneConstructorMock;
     return Promise.resolve();
+});
+
+jest.mock('../../core/Analytics', () => {
+    return jest.fn().mockImplementation(() => {
+        return { setUp: jest.fn(), sendAnalytics: jest.fn(), flush: jest.fn() };
+    });
 });
 
 jest.mock('../../core/Services/http');
@@ -73,9 +79,10 @@ describe('FastlaneSDK', () => {
             errorLevel: 'fatal'
         });
         expect(Script).toHaveBeenCalledWith({
-            src: 'https://www.paypal.com/sdk/js?client-id=CLIENT-ID&components=buttons,fastlane',
+            src: 'https://www.paypal.com/sdk/js?client-id=CLIENT-ID&components=buttons%2Cfastlane',
             component: 'fastlane',
-            dataAttributes: { sdkClientToken: 'TOKEN-VALUE' }
+            dataAttributes: { sdkClientToken: 'TOKEN-VALUE' },
+            analytics: expect.anything()
         });
     });
 
@@ -212,7 +219,7 @@ describe('FastlaneSDK', () => {
         });
     });
 
-    test('should throw an error if fastlane profile does not have a card assigned to it', async () => {
+    test('should return Card configuration if fastlane profile does not have a card assigned to it', async () => {
         const customerContextId = 'customer-context-id';
         fastlaneMock.identity.lookupCustomerByEmail.mockResolvedValue({
             customerContextId
@@ -226,6 +233,15 @@ describe('FastlaneSDK', () => {
         fastlaneMock.identity.getSession.mockResolvedValue({
             sessionId: 'fastlane-session-id'
         });
+        fastlaneMock.ConsentComponent.mockResolvedValue({
+            getRenderState: jest.fn().mockResolvedValue({
+                showConsent: true,
+                defaultToggleState: true,
+                termsAndConditionsLink: 'https://fastlane.com/terms',
+                termsAndConditionsVersion: 'v1',
+                privacyPolicyLink: 'https://fastlane.com/privacy'
+            })
+        });
 
         const fastlane = await initializeFastlane({
             clientKey: 'test_xxx',
@@ -233,9 +249,21 @@ describe('FastlaneSDK', () => {
         });
         const authResult = await fastlane.authenticate('test@adyen.com');
 
-        await expect(fastlane.getComponentConfiguration(authResult)).rejects.toThrow(
-            'getComponentConfiguration(): There is no card associated with the authenticated profile'
-        );
+        const config = await fastlane.getComponentConfiguration(authResult);
+
+        expect(config).toStrictEqual({
+            paymentType: 'card',
+            configuration: {
+                fastlaneConfiguration: {
+                    defaultToggleState: true,
+                    showConsent: true,
+                    fastlaneSessionId: 'fastlane-session-id',
+                    privacyPolicyLink: 'https://fastlane.com/privacy',
+                    termsAndConditionsLink: 'https://fastlane.com/terms',
+                    termsAndConditionsVersion: 'v1'
+                }
+            }
+        });
     });
 
     test('should return card component configuration if shopper does not have profile', async () => {

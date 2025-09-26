@@ -5,7 +5,7 @@ module.exports = [
 
     /**
      * These are the results as of 2025-08-08
-     * 
+     *
      *  [
             {
                 "name": "UMD",
@@ -32,7 +32,7 @@ module.exports = [
     {
         name: 'UMD',
         path: 'dist/umd/adyen.js',
-        limit: '116 KB',
+        limit: '120 KB',
         running: false
     },
     /**

@@ -10,7 +10,7 @@ import {
 import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
 import { AnalyticsLogEvent } from '../../core/Analytics/AnalyticsLogEvent';
 
-const analyticsModule = Analytics({ analytics: {}, analyticsContext: '', locale: '', clientKey: '', bundleType: 'umd' });
+const analyticsModule = Analytics({ analytics: {}, analyticsContext: '', locale: '', clientKey: '' });
 
 let card;
 

@@ -10,8 +10,7 @@ interface IScript {
 interface IScriptProps {
     src: string;
     component: string;
-    // TODO: The optional flag will be fixed on PR #3464
-    analytics?: AnalyticsModule;
+    analytics: AnalyticsModule;
     node?: string;
     attributes?: Partial<HTMLScriptElement>;
     dataAttributes?: Record<string, string | undefined>;
@@ -29,7 +28,7 @@ class Script implements IScript {
     private readonly node: string;
     private readonly attributes: Partial<HTMLScriptElement>;
     private readonly dataAttributes: Record<string, string | undefined>;
-    private readonly analytics?: AnalyticsModule;
+    private readonly analytics: AnalyticsModule;
     private readonly baseUrl: string;
 
     private script: HTMLScriptElement;

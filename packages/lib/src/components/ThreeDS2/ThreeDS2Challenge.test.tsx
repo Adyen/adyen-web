@@ -4,7 +4,7 @@ import { ANALYTICS_ERROR_TYPE, Analytics3DS2Errors, ANALYTICS_RENDERED_STR } fro
 import { THREEDS2_CHALLENGE_ERROR } from './constants';
 import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
 
-const analyticsModule = Analytics({ analytics: {}, analyticsContext: '', locale: '', clientKey: '', bundleType: 'umd' });
+const analyticsModule = Analytics({ analytics: {}, analyticsContext: '', locale: '', clientKey: '' });
 
 describe('ThreeDS2Challenge: calls that generate analytics should produce objects with the expected shapes ', () => {
     let challenge;
