@@ -3,7 +3,7 @@ import { h } from 'preact';
 
 export interface QRLoaderConfiguration extends UIElementProps {
     /**
-     * Number of miliseconds that the component will wait in between status calls
+     * Number of milliseconds that the component will wait in between status calls
      */
     delay?: number;
 

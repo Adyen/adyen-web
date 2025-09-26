@@ -25,7 +25,7 @@ import {
 } from '@adyen/adyen-web';
 import '@adyen/adyen-web/styles/adyen.css';
 import { getPaymentMethods, makePayment, checkBalance, createOrder, cancelOrder, makeDetailsCall } from '../../services';
-import { amount, shopperLocale, countryCode } from '../../config/commonConfig';
+import { amount, shopperLocale, countryCode, environmentUrlsOverride } from '../../config/commonConfig';
 import { getSearchParameters } from '../../utils';
 import { handleOnPaymentCompleted, handleOnPaymentFailed } from '../../handlers';
 
@@ -39,6 +39,8 @@ export async function initManual() {
         paymentMethodsResponse,
 
         locale: shopperLocale,
+
+        ...environmentUrlsOverride,
 
         environment: process.env.__CLIENT_ENV__,
 

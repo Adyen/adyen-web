@@ -194,12 +194,13 @@ We merge every pull request into the `main` branch. We aim to keep `main` in goo
 Have a look at our [contributing guidelines](https://github.com/Adyen/.github/blob/master/CONTRIBUTING.md) to find out how to raise a pull request.
 
 ## See also
-
--   [Complete documentation for Adyen Web](https://docs.adyen.com/checkout/)
--   [API Explorer](https://docs.adyen.com/api-explorer/)
--   [Example integrations](https://github.com/adyen-examples)
--   [Adyen Components JS Sample Code](https://github.com/Adyen/adyen-components-js-sample-code)
--   [Why we open sourced Adyen Web](https://www.adyen.com/blog/why-we-opened-sourced-our-web-framework)
+- [Accepting online payments](https://docs.adyen.com/online-payments/)
+- [Sessions flow integration guide](https://docs.adyen.com/online-payments/build-your-integration/sessions-flow/?platform=Web)
+- [Advanced flow integration guide](https://docs.adyen.com/online-payments/build-your-integration/advanced-flow/?platform=Web) 
+- [API Explorer](https://docs.adyen.com/api-explorer/)
+- [Example integrations](https://github.com/adyen-examples)
+- [Adyen Components JS Sample Code](https://github.com/Adyen/adyen-components-js-sample-code)
+- [Why we open sourced Adyen Web](https://www.adyen.com/blog/why-we-opened-sourced-our-web-framework)
 
 ## Support
 

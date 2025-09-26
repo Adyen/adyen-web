@@ -3,13 +3,17 @@ import { resolveEnvironment } from './utils';
 import Script from '../../utils/Script';
 import config from './config';
 import type { GooglePayConfiguration } from './types';
+import { AnalyticsModule } from '../../types/global-types';
 
 class GooglePayService {
+    private readonly analytics: AnalyticsModule;
+
     public readonly paymentsClient: Promise<google.payments.api.PaymentsClient>;
 
-    constructor(environment: string, paymentDataCallbacks: google.payments.api.PaymentDataCallbacks) {
+    constructor(environment: string, analytics: AnalyticsModule, paymentDataCallbacks: google.payments.api.PaymentDataCallbacks) {
         const googlePayEnvironment = resolveEnvironment(environment);
 
+        this.analytics = analytics;
         this.paymentsClient = this.getGooglePaymentsClient({
             environment: googlePayEnvironment,
             paymentDataCallbacks
@@ -24,7 +28,7 @@ class GooglePayService {
      */
     async getGooglePaymentsClient(paymentOptions: google.payments.api.PaymentOptions): Promise<google.payments.api.PaymentsClient> {
         if (!window.google?.payments) {
-            const script = new Script(config.URL);
+            const script = new Script({ src: config.URL, component: 'googlepay', analytics: this.analytics });
             await script.load();
         }
 

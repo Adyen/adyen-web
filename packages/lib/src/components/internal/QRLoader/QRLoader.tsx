@@ -1,5 +1,4 @@
 import { Component, h } from 'preact';
-import Countdown from '../Countdown';
 import Button from '../Button';
 import Spinner from '../Spinner';
 import checkPaymentStatus from '../../../core/Services/payment-status';
@@ -16,15 +15,17 @@ import useImage from '../../../core/Context/useImage';
 import { useA11yReporter } from '../../../core/Errors/useA11yReporter';
 import useAutoFocus from '../../../utils/useAutoFocus';
 import { ANALYTICS_DOWNLOAD_STR, ANALYTICS_QR_CODE_DOWNLOAD } from '../../../core/Analytics/constants';
-import { PREFIX } from '../Icon/constants';
 import { AnalyticsInfoEvent } from '../../../core/Analytics/AnalyticsInfoEvent';
+import { CountdownTime } from '../Countdown/types';
+import QRDetails from './components/QRDetails';
+import { QRLoaderDetailsProvider } from './QRLoaderDetailsProvider';
 
 const QRCODE_URL = 'utility/v1/barcode.png?type=qrCode&data=';
 
 class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
-    private timeoutId;
+    private timeoutId: NodeJS.Timeout | number | undefined;
 
-    constructor(props) {
+    constructor(props: QRLoaderProps) {
         super(props);
 
         this.state = {
@@ -89,7 +90,7 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
         }, delay);
     }
 
-    private onTick = (time): void => {
+    private onTick = (time: CountdownTime): void => {
         this.setState({ percentage: time.percentage });
     };
 
@@ -160,7 +161,26 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
             ? `${loadingContext}${QRCODE_URL}${this.props.qrCodeData}&clientKey=${this.props.clientKey}`
             : this.props.qrCodeImage;
 
-        const finalState = (image, message) => {
+        const handleCopy = (complete: () => void) => {
+            void copyToClipboard(this.props.qrCodeData);
+
+            const event = new AnalyticsInfoEvent({
+                type: ANALYTICS_DOWNLOAD_STR,
+                target: ANALYTICS_QR_CODE_DOWNLOAD
+            });
+            this.props.onSubmitAnalytics(event);
+
+            complete();
+        };
+
+        const onQrCodeLoad = () => {
+            onActionHandled?.({
+                componentType: this.props.type,
+                actionDescription: 'qr-code-loaded'
+            });
+        };
+
+        const finalState = (image: string, message: string) => {
             const status = i18n.get(message);
             useA11yReporter(status);
             return (
@@ -196,8 +216,6 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
             );
         }
 
-        const timeToPayString = i18n.get(this.props.timeToPay).split('%@');
-
         const qrSubtitleRef = useAutoFocus();
         const classnames = this.props.classNameModifiers.map(m => `adyen-checkout__qr-loader--${m}`);
 
@@ -210,13 +228,13 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                 )}
 
                 {showAmount && amount && amount.value !== null && !!amount.currency && (
-                    <div className="adyen-checkout__qr-loader__payment_amount">{i18n.amount(amount.value, amount.currency)}</div>
+                    <h1 className="adyen-checkout__qr-loader__payment_amount">{i18n.amount(amount.value, amount.currency)}</h1>
                 )}
 
                 {url && (
                     <div className="adyen-checkout__qr-loader__app-link">
                         {this.props.redirectIntroduction && (
-                            <div className="adyen-checkout__qr-loader__subtitle">{i18n.get(this.props.redirectIntroduction)}</div>
+                            <p className="adyen-checkout__qr-loader__subtitle">{i18n.get(this.props.redirectIntroduction)}</p>
                         )}
                         <Button classNameModifiers={['qr-loader']} onClick={() => this.redirectToApp(url)} label={i18n.get(this.props.buttonLabel)} />
                         <ContentSeparator />
@@ -224,58 +242,25 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
                 )}
 
                 {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
-                <div ref={qrSubtitleRef} tabIndex={0} className="adyen-checkout__qr-loader__subtitle">
+                <p ref={qrSubtitleRef} tabIndex={0} className="adyen-checkout__qr-loader__subtitle">
                     {typeof this.props.introduction === 'string' ? i18n.get(this.props.introduction) : this.props.introduction?.()}
-                </div>
+                </p>
 
-                <img
-                    src={qrCodeImage}
-                    alt={i18n.get('wechatpay.scanqrcode')}
-                    onLoad={() => {
-                        onActionHandled?.({
-                            componentType: this.props.type,
-                            actionDescription: 'qr-code-loaded'
-                        });
-                    }}
-                />
-
-                <div className="adyen-checkout__qr-loader__progress">
-                    <span className="adyen-checkout__qr-loader__percentage" style={{ width: `${this.state.percentage}%` }} />
-                </div>
-
-                <div className="adyen-checkout__qr-loader__countdown">
-                    {timeToPayString[0]}&nbsp;
-                    <Countdown minutesFromNow={countdownTime} onTick={this.onTick} onCompleted={this.onTimeUp} />
-                    &nbsp;{timeToPayString[1]}
-                </div>
-
-                {this.props.instructions && (
-                    <div className="adyen-checkout__qr-loader__instructions">
-                        {typeof this.props.instructions === 'string' ? i18n.get(this.props.instructions) : this.props.instructions?.()}
-                    </div>
-                )}
-
-                {this.props.copyBtn && (
-                    <div className="adyen-checkout__qr-loader__actions">
-                        <Button
-                            inline
-                            variant="action"
-                            onClick={(e, { complete }) => {
-                                void copyToClipboard(this.props.qrCodeData);
-
-                                const event = new AnalyticsInfoEvent({
-                                    type: ANALYTICS_DOWNLOAD_STR,
-                                    target: ANALYTICS_QR_CODE_DOWNLOAD
-                                });
-                                this.props.onSubmitAnalytics(event);
-
-                                complete();
-                            }}
-                            icon={getImage({ imageFolder: 'components/' })(`${PREFIX}copy`)}
-                            label={i18n.get('button.copy')}
-                        />
-                    </div>
-                )}
+                <QRLoaderDetailsProvider
+                    qrCodeImage={qrCodeImage}
+                    qrCodeData={this.props.qrCodeData}
+                    percentage={this.state.percentage}
+                    timeToPay={this.props.timeToPay}
+                    copyBtn={this.props.copyBtn}
+                    instructions={this.props.instructions}
+                    countdownTime={countdownTime}
+                    onTick={(time: CountdownTime) => this.onTick(time)}
+                    onQRCodeLoad={onQrCodeLoad}
+                    onTimeUp={() => this.onTimeUp()}
+                    handleCopy={handleCopy}
+                >
+                    {this.props.children ? this.props.children : <QRDetails />}
+                </QRLoaderDetailsProvider>
             </div>
         );
     }

@@ -14,7 +14,15 @@ type AnalyticsInfoEventObject = {
     validationErrorMessage?: string;
     configData?: Record<string, string | boolean>;
     component?: string;
+    cdnUrl?: string;
 };
+
+export enum InfoEventType {
+    sdkDownloadInitiated = 'sdkDownloadInitiated',
+    sdkDownloadFailed = 'sdkDownloadFailed',
+    sdkDownloadAborted = 'sdkDownloadAborted',
+    sdkDownloadCompleted = 'sdkDownloadCompleted'
+}
 
 export class AnalyticsInfoEvent extends AnalyticsEvent {
     public type: string;
@@ -27,6 +35,11 @@ export class AnalyticsInfoEvent extends AnalyticsEvent {
     public validationErrorCode?: string;
     public validationErrorMessage?: string;
     public configData?: Record<string, string | boolean>;
+
+    /**
+     *  Third party script URL's (e.g. Apple Pay)
+     */
+    public cdnUrl?: string;
 
     constructor(analyticsObject: AnalyticsInfoEventObject) {
         super();
@@ -44,6 +57,8 @@ export class AnalyticsInfoEvent extends AnalyticsEvent {
         this.validationErrorCode = analyticsObject.validationErrorCode;
         this.validationErrorMessage = analyticsObject.validationErrorMessage;
         this.configData = analyticsObject.configData;
+
+        this.cdnUrl = analyticsObject.cdnUrl;
 
         // Some of the more generic validation error codes required combination with target to retrieve a specific code
         if (this.type === ANALYTICS_VALIDATION_ERROR_STR) {

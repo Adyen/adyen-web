@@ -39,12 +39,12 @@ class QRLoaderContainer<T extends QRLoaderConfiguration = QRLoaderConfiguration>
                             this.componentRef = ref;
                         }}
                         {...this.props}
-                        type={this.constructor['type']}
-                        brandLogo={this.props.brandLogo || this.icon}
                         delay={this.props.delay}
-                        onComplete={this.onComplete}
                         countdownTime={this.props.countdownTime}
                         instructions={this.props.instructions}
+                        type={this.constructor['type']}
+                        brandLogo={this.props.brandLogo || this.icon}
+                        onComplete={this.onComplete}
                         onActionHandled={this.onActionHandled}
                         brandName={this.displayName}
                         onSubmitAnalytics={this.submitAnalytics}

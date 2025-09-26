@@ -1,13 +1,14 @@
 import { test, expect } from '../../../../fixtures/dropin.fixture';
 import { URL_MAP } from '../../../../fixtures/URL_MAP';
-import { PAYMENT_RESULT } from '../../../utils/constants';
+import { AMEX_CARD, PAYMENT_RESULT } from '../../../utils/constants';
 import { getStoryUrl } from '../../../utils/getStoryUrl';
 import { Card } from '../../../../models/card';
+import { getCardNumberLast4 } from '../../../utils/cards';
 
 test.describe('Stored Amex card - cvc required', () => {
     test('#1 Can fill out the cvc fields in the stored card and make a successful payment', async ({ dropinWithSession, page }) => {
         await dropinWithSession.goto(URL_MAP.dropinWithSession);
-        const { paymentMethodDetailsLocator } = await dropinWithSession.selectFirstStoredPaymentMethod('amex', '0002');
+        const { paymentMethodDetailsLocator } = await dropinWithSession.selectFirstStoredPaymentMethod('amex', getCardNumberLast4(AMEX_CARD));
 
         const card = new Card(page, paymentMethodDetailsLocator);
 
@@ -20,7 +21,7 @@ test.describe('Stored Amex card - cvc required', () => {
 
     test('#2 Pressing pay without filling the cvc should generate a translated error ("empty")', async ({ dropinWithSession, page }) => {
         await dropinWithSession.goto(URL_MAP.dropinWithSession);
-        const { paymentMethodDetailsLocator } = await dropinWithSession.selectFirstStoredPaymentMethod('amex', '0002');
+        const { paymentMethodDetailsLocator } = await dropinWithSession.selectFirstStoredPaymentMethod('amex', getCardNumberLast4(AMEX_CARD));
 
         const card = new Card(page, paymentMethodDetailsLocator);
 
@@ -39,7 +40,7 @@ test.describe('Stored Amex card - cvc required', () => {
             }
         });
         await dropinWithSession.goto(url);
-        const { paymentMethodDetailsLocator } = await dropinWithSession.selectFirstStoredPaymentMethod('amex', '0002');
+        const { paymentMethodDetailsLocator } = await dropinWithSession.selectFirstStoredPaymentMethod('amex', getCardNumberLast4(AMEX_CARD));
 
         const card = new Card(page, paymentMethodDetailsLocator);
 

@@ -11,10 +11,12 @@ export interface ButtonProps {
     variant?: ButtonVariant;
     disabled?: boolean;
     label?: string | h.JSX.Element;
+    onClickCompletedLabel?: string | h.JSX.Element;
     ariaLabel?: string;
     ariaDescribedBy?: string;
     secondaryLabel?: string;
     icon?: string;
+    onClickCompletedIcon?: string;
     inline?: boolean;
     href?: string;
     target?: string;
