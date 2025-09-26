@@ -85,9 +85,7 @@ export default function PayIDInput({ setComponentRef, defaultData, placeholders,
                 onSelectedIdentifier={handleChangeFor('selectedIdentifier')}
                 selectedIdentifier={data.selectedIdentifier}
             />
-            {data.selectedIdentifier === PayToIdentifierEnum.phone && (
-                <PayToPhone onChange={handleChangeFor('phone', 'blur')} data={data} form={form} />
-            )}
+            {data.selectedIdentifier === PayToIdentifierEnum.phone && <PayToPhone form={form} />}
 
             {/* TODO probably worth refactoring this into  either re-usable components or builder */}
             {data.selectedIdentifier === PayToIdentifierEnum.email && (
