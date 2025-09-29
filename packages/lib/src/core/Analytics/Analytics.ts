@@ -23,7 +23,7 @@ function isSessionCreatedUnderFifteenMinutes(session: CheckoutAttemptIdSession):
     return session.timestamp > fifteenMinutesAgo;
 }
 
-const Analytics = ({ locale, clientKey, analytics, analyticsContext, bundleType }: AnalyticsProps): AnalyticsModule => {
+const Analytics = ({ locale, clientKey, analytics, analyticsContext }: AnalyticsProps): AnalyticsModule => {
     const defaultProps = {
         enabled: true
     };
@@ -34,8 +34,7 @@ const Analytics = ({ locale, clientKey, analytics, analyticsContext, bundleType 
         analyticsContext,
         clientKey,
         locale,
-        analyticsPath: ANALYTICS_PATH,
-        bundleType
+        analyticsPath: ANALYTICS_PATH
     });
 
     const storage = new Storage<CheckoutAttemptIdSession>('checkout-attempt-id', 'sessionStorage');
@@ -78,7 +77,7 @@ const Analytics = ({ locale, clientKey, analytics, analyticsContext, bundleType 
     return {
         setUp: async (setupProps?: AnalyticsInitialEvent): Promise<void> => {
             try {
-                const defaultProps: Partial<AnalyticsInitialEvent> = {};
+                const defaultProps: Partial<AnalyticsInitialEvent> = { checkoutStage: 'checkout' };
                 const finalSetupProps = { ...defaultProps, ...setupProps };
 
                 const checkoutAttemptIdSession = storage.get();
