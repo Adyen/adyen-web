@@ -19,6 +19,7 @@ import getTranslations from './Services/get-translations';
 import { defaultProps } from './core.defaultProps';
 import { formatCustomTranslations, formatLocale } from '../language/utils';
 import { resolveEnvironments } from './Environment';
+import { LIBRARY_BUNDLE_TYPE, LIBRARY_VERSION } from './config';
 
 import type { PaymentAction, PaymentResponseData } from '../types/global-types';
 import type { CoreConfiguration, ICore, AdditionalDetailsData, CoreModules } from './types';
@@ -41,8 +42,8 @@ class Core implements ICore {
     private components: UIElement[] = [];
 
     public static readonly metadata = {
-        version: process.env.VERSION,
-        bundleType: process.env.BUNDLE_TYPE
+        version: LIBRARY_VERSION,
+        bundleType: LIBRARY_BUNDLE_TYPE
     };
 
     public static registry = registry;
@@ -378,8 +379,7 @@ class Core implements ICore {
                 analyticsContext: this.analyticsContext,
                 clientKey: this.options.clientKey,
                 locale: this.options.locale,
-                analytics: this.options.analytics,
-                bundleType: Core.metadata.bundleType
+                analytics: this.options.analytics
             }),
             resources: new Resources(this.cdnImagesUrl),
             i18n: new Language({

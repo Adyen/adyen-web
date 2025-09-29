@@ -8,7 +8,6 @@ export type CheckoutAttemptIdSession = {
 
 export type CollectIdProps = Pick<AnalyticsConfig, 'clientKey' | 'analyticsContext' | 'locale' | 'amount'> & {
     analyticsPath: string;
-    bundleType: string;
 };
 
 export type TelemetryEvent = {
