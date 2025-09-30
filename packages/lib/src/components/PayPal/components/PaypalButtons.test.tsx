@@ -6,7 +6,7 @@ import { mock } from 'jest-mock-extended';
 import { PayPalButtonsProps } from './types';
 
 const paypalIsEligibleMock = jest.fn(() => true);
-const paypalRenderMock = jest.fn((e: HTMLElement) => Promise.resolve());
+const paypalRenderMock = jest.fn((el: HTMLElement) => Promise.resolve(el));
 
 const paypalRefMock = {
     FUNDING: {
