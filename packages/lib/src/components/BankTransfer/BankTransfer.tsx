@@ -18,7 +18,25 @@ export class BankTransferElement extends UIElement<BankTransferConfiguration> {
         TxVariants.bankTransfer_CH,
         TxVariants.bankTransfer_IE,
         TxVariants.bankTransfer_GB,
-        TxVariants.bankTransfer_DE
+        TxVariants.bankTransfer_DE,
+        TxVariants.bankTransfer_AE,
+        TxVariants.bankTransfer_AT,
+        TxVariants.bankTransfer_AU,
+        TxVariants.bankTransfer_BG,
+        TxVariants.bankTransfer_CA,
+        TxVariants.bankTransfer_EE,
+        TxVariants.bankTransfer_ES,
+        TxVariants.bankTransfer_FI,
+        TxVariants.bankTransfer_HK,
+        TxVariants.bankTransfer_HU,
+        TxVariants.bankTransfer_IT,
+        TxVariants.bankTransfer_JP,
+        TxVariants.bankTransfer_LU,
+        TxVariants.bankTransfer_NZ,
+        TxVariants.bankTransfer_PT,
+        TxVariants.bankTransfer_SG,
+        TxVariants.bankTransfer_SK,
+        TxVariants.bankTransfer_US
     ];
 
     public static defaultProps = {
