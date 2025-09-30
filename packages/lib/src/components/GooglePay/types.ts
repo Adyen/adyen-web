@@ -5,6 +5,12 @@ export interface GooglePayConfiguration extends UIElementProps {
     type?: 'googlepay' | 'paywithgoogle';
 
     /**
+     * List of brands accepted by the component. Values are configured on the Backoffice and returned in the /paymentMethodsResponse data
+     * @internal
+     */
+    brands?: string[];
+
+    /**
      * Used for analytics
      */
     expressPage?: 'cart' | 'minicart' | 'pdp' | 'checkout';
