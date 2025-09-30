@@ -29,16 +29,7 @@ const paypalRefMock = {
  * @param calls
  */
 const getRenderedButtons = (calls: [e: HTMLElement][]) => {
-    return calls.reduce((buttons, callArgs) => {
-        const element = callArgs[0];
-        const button = element.classList[1]?.split('--')[1];
-
-        if (button) {
-            return [...buttons, button];
-        }
-
-        return [...buttons];
-    }, [] as string[]);
+    return calls.map(callArgs => callArgs[0].classList[1]?.split('--')[1]).filter(Boolean);
 };
 
 const renderWithCoreProvider = ui => {
