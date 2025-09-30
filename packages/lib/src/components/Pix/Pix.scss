@@ -1,21 +1,26 @@
 @import 'styles/variable-generator';
 
-.adyen-checkout__pix__qr_details {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    max-width: 318px;
-    gap: token(spacer-070);
+.adyen-checkout__pix {
+    padding-bottom: token(spacer-110);
 
-    &__timer {
+    &__qr_details {
         display: flex;
         flex-direction: column;
         align-items: center;
-    }
+        width: 100%;
+        max-width: 318px;
+        gap: token(spacer-070);
 
-    &__code {
-        font-size: token(text-body-font-size);
-        text-align: center;
+        &__timer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: token(spacer-040);
+        }
+
+        &__code {
+            font-size: token(text-body-font-size);
+            text-align: center;
+        }
     }
 }
