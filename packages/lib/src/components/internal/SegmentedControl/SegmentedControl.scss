@@ -2,7 +2,7 @@
 
 .adyen-checkout__segmented-control {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(token(spacer-140), 1fr));
     gap: token(spacer-020);
     padding: token(spacer-030);
     background: token(color-background-tertiary);
@@ -14,7 +14,6 @@
         > .adyen-checkout__segmented-control-segment {
             color: token(color-label-disabled);
         }
-
     }
 }
 

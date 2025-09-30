@@ -17,5 +17,12 @@ export const Default: Story = {
         <Checkout checkoutConfig={checkoutConfig}>
             {checkout => <ComponentContainer element={new Paypal(checkout, componentConfiguration)} />}
         </Checkout>
-    )
+    ),
+    args: {
+        componentConfiguration: {
+            blockPayPalCreditButton: false,
+            blockPayPalPayLaterButton: false,
+            blockPayPalVenmoButton: false
+        }
+    }
 };

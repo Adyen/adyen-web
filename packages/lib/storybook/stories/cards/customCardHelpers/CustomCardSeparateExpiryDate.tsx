@@ -15,13 +15,8 @@ export const CustomCardSeparateExpiryDate = ({ contextArgs }) => {
         const { useSessions, showPayButton, countryCode, shopperLocale, amount } = contextArgs;
 
         checkout.current = useSessions
-            ? await createSessionsCheckout({ countryCode, shopperLocale, amount })
-            : await createAdvancedFlowCheckout({
-                  showPayButton,
-                  countryCode,
-                  shopperLocale,
-                  amount
-              });
+            ? await createSessionsCheckout({ showPayButton, countryCode, shopperLocale, amount })
+            : await createAdvancedFlowCheckout({ showPayButton, countryCode, shopperLocale, amount });
 
         const customCard = new CustomCard(checkout.current, { ...contextArgs.componentConfiguration });
 
