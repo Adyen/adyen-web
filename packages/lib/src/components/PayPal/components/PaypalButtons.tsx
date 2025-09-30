@@ -53,8 +53,8 @@ export default function PaypalButtons({
 
     useEffect(() => {
         const { PAYPAL, CREDIT, PAYLATER, VENMO } = paypalRef.FUNDING;
-        createButton(PAYPAL, paypalButtonRef);
 
+        if (!props.blockPayPalButton || props.isDropin) createButton(PAYPAL, paypalButtonRef);
         if (!props.blockPayPalCreditButton) createButton(CREDIT, creditButtonRef);
         if (!props.blockPayPalPayLaterButton) createButton(PAYLATER, payLaterButtonRef);
         if (!props.blockPayPalVenmoButton) createButton(VENMO, venmoButtonRef);
