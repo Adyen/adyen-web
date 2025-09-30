@@ -60,12 +60,14 @@ export function handleConfig(props: CSFSetupObject): void {
     const d = btoa(window.location.origin);
 
     /**
-     * Unless we are forcing the use of the compat version via card config
-     * - detect Edge vn \<= 18 & IE11 - who don't support TextEncoder; and use this as an indicator to load a different, compatible, version of SF
+     * Don't allow compat version on Live - it is only for if the merchant wants to *test* with a custom http url.
+     * Otherwise, set it passed on the config prop
      */
-    const needsJWECompatVersion = props.forceCompat ? true : !(typeof window.TextEncoder === 'function');
+    const needsJWECompatVersion = this.config.loadingContext.includes('live') ? false : props.forceCompat;
 
-    const bundleType = `${sfBundleType}${needsJWECompatVersion ? 'Compat' : ''}`; // e.g. 'card' or 'cardCompat'
+    const bundleModifier = !needsJWECompatVersion ? '' : 'Compat';
+
+    const bundleType = `${sfBundleType}${bundleModifier}`; // e.g. 'card' or 'cardCompat'
 
     this.config.iframeSrc = `${this.config.loadingContext}securedfields/${props.clientKey}/${SF_VERSION}/securedFields.html?type=${bundleType}&d=${d}`;
 
