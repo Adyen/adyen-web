@@ -16,12 +16,7 @@ const PixQRDetails = () => {
                 <QRCountdown countdownTime={countdownTime} timeToPay={timeToPay} onTick={onTick} onCompleted={onTimeUp} />
             </div>
             <Field name="pix-code" useLabelElement={false}>
-                <InputText
-                    className="adyen-checkout__pix__qr_details__code"
-                    value={qrCodeData.repeat(10)}
-                    readonly
-                    aria-label={i18n.get('pix.code.label')}
-                />
+                <InputText className="adyen-checkout__pix__qr_details__code" value={qrCodeData} readonly aria-label={i18n.get('pix.code.label')} />
             </Field>
             <QRCodeCopyButton copyLabel={i18n.get('pix.code.copy.label')} copiedLabel={i18n.get('pix.code.copied.label')} handleCopy={handleCopy} />
         </div>
