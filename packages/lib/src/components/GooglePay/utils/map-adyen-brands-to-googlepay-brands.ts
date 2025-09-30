@@ -1,4 +1,4 @@
-const brandMapping: Record<string, google.payments.api.CardNetwork> = {
+const brandMapping: Record<string, google.payments.api.CardNetwork> = Object.freeze({
     mc: 'MASTERCARD',
     amex: 'AMEX',
     visa: 'VISA',
@@ -9,7 +9,7 @@ const brandMapping: Record<string, google.payments.api.CardNetwork> = {
     jcb: 'JCB',
     electron: 'ELECTRON',
     maestro: 'MAESTRO'
-};
+});
 
 export function mapGooglePayBrands(brands: string[]): google.payments.api.CardNetwork[] {
     const mappedBrands = brands.map(brand => brandMapping[brand]).filter((brand): brand is google.payments.api.CardNetwork => !!brand);

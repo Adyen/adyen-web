@@ -120,19 +120,20 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
      * to use the 'brands' returned by the backoffice. It can be that 'brands' is not returned, which in this case we
      * set default values
      *
-     * @param allowedCardNetworks
-     * @param brandsFromBackoffice
+     * @param {object} brandsConfig
+     * @param brandsConfig.allowedCardNetworks - Brands set in the component config
+     * @param brandsConfig.brands - Brands returned by backend
      * @private
      */
     private createAllowedCardNetworksValues({
         allowedCardNetworks,
-        brands: brandsFromBackoffice
+        brands
     }: {
         allowedCardNetworks?: google.payments.api.CardNetwork[];
         brands?: string[];
     }): google.payments.api.CardNetwork[] {
         if (allowedCardNetworks?.length > 0) return allowedCardNetworks;
-        if (brandsFromBackoffice?.length > 0) return mapGooglePayBrands(brandsFromBackoffice);
+        if (brands?.length > 0) return mapGooglePayBrands(brands);
 
         return DEFAULT_ALLOWED_CARD_NETWORKS;
     }
