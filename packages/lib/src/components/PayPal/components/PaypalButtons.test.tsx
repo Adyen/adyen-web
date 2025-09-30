@@ -63,10 +63,7 @@ describe('PaypalButtons', () => {
         expect(paypalRefMock.Buttons().render).toHaveBeenCalledTimes(4);
         // eslint-disable-next-line testing-library/render-result-naming-convention
         const renderedButtons = getRenderedButtons(paypalRenderMock.mock.calls);
-        expect(renderedButtons.includes('paypal')).toBe(true);
-        expect(renderedButtons.includes('credit')).toBe(true);
-        expect(renderedButtons.includes('pay-later')).toBe(true);
-        expect(renderedButtons.includes('venmo')).toBe(true);
+        expect(renderedButtons).toEqual(['paypal', 'credit', 'pay-later', 'venmo']);
     });
 
     test('should not call paypalRef.Buttons().render for blocked buttons', () => {
@@ -78,10 +75,7 @@ describe('PaypalButtons', () => {
         expect(paypalRefMock.Buttons().render).toHaveBeenCalledTimes(2);
         // eslint-disable-next-line testing-library/render-result-naming-convention
         const renderedButtons = getRenderedButtons(paypalRenderMock.mock.calls);
-        expect(renderedButtons.includes('paypal')).toBe(true);
-        expect(renderedButtons.includes('credit')).toBe(true);
-        expect(renderedButtons.includes('pay-later')).toBe(false);
-        expect(renderedButtons.includes('venmo')).toBe(false);
+        expect(renderedButtons).toEqual(['paypal', 'credit']);
     });
 
     test('should call paypalRef.Buttons().render for the paypal button if it is blocked and in dropin ', () => {
@@ -94,6 +88,7 @@ describe('PaypalButtons', () => {
         // eslint-disable-next-line testing-library/render-result-naming-convention
         const renderedButtons = getRenderedButtons(paypalRenderMock.mock.calls);
         expect(renderedButtons.includes('paypal')).toBe(true);
+        expect(renderedButtons).toEqual(['paypal', 'credit', 'pay-later', 'venmo']);
     });
 
     test('should not call paypalRef.Buttons().render for the paypal button if it is blocked and not in dropin ', () => {
@@ -105,7 +100,7 @@ describe('PaypalButtons', () => {
         expect(paypalRefMock.Buttons().render).toHaveBeenCalledTimes(3);
         // eslint-disable-next-line testing-library/render-result-naming-convention
         const renderedButtons = getRenderedButtons(paypalRenderMock.mock.calls);
-        expect(renderedButtons.includes('paypal')).toBe(false);
+        expect(renderedButtons).toEqual(['credit', 'pay-later', 'venmo']);
     });
 
     test('should pass onShippingAddressChange and onShippingOptionsChange callbacks to PayPal button', () => {
