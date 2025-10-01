@@ -352,7 +352,7 @@ export const mapDualBrandButtons = (dualBrandSelectElements: DualBrandSelectElem
  * - Preselect a card brand
  */
 export const mustHandleDualBrandingAccordingToEURegulations = (
-    EU_BrandArray: string[],
+    EU_BrandArray: readonly string[],
     returnedDualBrandingObjects: DualBrandSelectElement[] | BrandObject[],
     key: string
 ) => returnedDualBrandingObjects.some(item => EU_BrandArray.includes(item[key]));
