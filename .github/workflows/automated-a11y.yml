@@ -40,11 +40,10 @@ jobs:
       run: yarn install --immutable
     
     - name: Install Playwright Dependencies
-      working-directory: packages/e2e-playwright/
-      run: yarn install && npx playwright install --with-deps
+      run: npx playwright install --with-deps
     
     - name: Run Automated Accessibility Tests
-      run: yarn test:automated-a11y -- --project=${{ matrix.runner-browser }}
+      run: yarn test:automated-a11y --project=${{ matrix.runner-browser }}
     
     - name: Archive test result artifacts
       if: always()
