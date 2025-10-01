@@ -2,6 +2,7 @@ node_modules
 dist
 coverage
 storybook-static
+.yarn
 
 # Playwright reports
 packages/playground/playwright-report/
