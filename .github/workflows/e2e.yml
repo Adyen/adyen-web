@@ -38,6 +38,21 @@ jobs:
     - name: Install Project Dependencies
       run: yarn install --immutable
 
+    - name: Extract Playwright version
+      id: playwright-version
+      run: echo "PLAYWRIGHT_VERSION=$(jq -r '.devDependencies["@playwright/test"]' packages/e2e-playwright/package.json)" >> $GITHUB_ENV
+
+    - name: Cache Playwright
+      uses: actions/cache@v4
+      env:
+        cache-name: playwright-v1
+      with:
+        path: ~/.cache/ms-playwright
+        key: ${{ runner.os }}-cache-${{ env.cache-name }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+
+    - name: Install Playwright Dependencies
+      run: npx playwright install --with-deps
+
   build-then-e2e:
     timeout-minutes: 120
     runs-on: ubuntu-latest
@@ -79,6 +94,18 @@ jobs:
 
     - name: Enable Corepack
       run: corepack enable
+
+    - name: Extract Playwright version
+      id: playwright-version
+      run: echo "PLAYWRIGHT_VERSION=$(jq -r '.devDependencies["@playwright/test"]' packages/e2e-playwright/package.json)" >> $GITHUB_ENV
+
+    - name: Cache Playwright
+      uses: actions/cache@v4
+      env:
+        cache-name: playwright-v1
+      with:
+        path: ~/.cache/ms-playwright
+        key: ${{ runner.os }}-cache-${{ env.cache-name }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
 
     - name: Install Playwright Dependencies
       run: npx playwright install --with-deps
