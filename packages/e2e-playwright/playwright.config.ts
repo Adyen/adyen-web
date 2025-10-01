@@ -13,6 +13,7 @@ const playgroundBaseUrl = `${protocol}://localhost:3020`;
  */
 const config: PlaywrightTestConfig = {
     testDir: './tests/',
+    testMatch: '**/*.spec.ts',
     // Exclude the automated-a11y tests which run in a separate pipeline
     testIgnore: ['**/automated-a11y/**'],
     /* Maximum time one test can run for. */
