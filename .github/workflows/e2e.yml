@@ -31,8 +31,10 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
+    - name: Enable Corepack
+      run: corepack enable
     - name: Install Project Dependencies
-      run: yarn install
+      run: yarn install --frozen-lockfile
     - name: Install Playwright Dependencies
       working-directory: packages/e2e-playwright/
       run: yarn install && npx playwright install --with-deps
