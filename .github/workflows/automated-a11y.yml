@@ -37,7 +37,7 @@ jobs:
       run: corepack enable
     
     - name: Install Project Dependencies
-      run: yarn --immutable
+      run: yarn install --immutable --immutable-cache --check-cache
     
     - name: Install Playwright Dependencies
       working-directory: packages/e2e-playwright/

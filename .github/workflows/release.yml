@@ -26,7 +26,7 @@ jobs:
         run: corepack enable
 
       - name: Install Dependencies
-        run: yarn --immutable
+        run: yarn install --immutable --immutable-cache --check-cache
 
       - name: Create Release Pull Request
         uses: changesets/action@v1
