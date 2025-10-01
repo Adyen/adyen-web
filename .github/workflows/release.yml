@@ -26,7 +26,7 @@ jobs:
         run: corepack enable
 
       - name: Install Dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn --immutable
 
       - name: Create Release Pull Request
         uses: changesets/action@v1

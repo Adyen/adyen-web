@@ -27,19 +27,25 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+
     - name: Setup Node
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
+
     - name: Enable Corepack
       run: corepack enable
+
     - name: Install Project Dependencies
-      run: yarn install --frozen-lockfile
+      run: yarn --immutable
+
     - name: Install Playwright Dependencies
       working-directory: packages/e2e-playwright/
       run: yarn install && npx playwright install --with-deps
+
     - name: Run E2E Tests
       run: yarn test:e2e -- --project=${{ matrix.runner-browser }}
+
     - name: Archive test result artifacts
       if: always()
       uses: actions/upload-artifact@v4
