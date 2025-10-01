@@ -12,7 +12,7 @@ import RadioGroupExtended from '../../../../internal/FormFields/RadioGroupExtend
 import { mapDualBrandButtons, mustHandleDualBrandingAccordingToEURegulations } from '../utils';
 import Fieldset from '../../../../internal/FormFields/Fieldset';
 import { useCoreContext } from '../../../../../core/Context/CoreProvider';
-import { DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM } from '../../../Card';
+import { DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM } from '../../../constants';
 
 export const CardFieldsWrapper = ({
     // vars created in CardInput:
