@@ -40,8 +40,7 @@ jobs:
       run: yarn install --immutable
 
     - name: Install Playwright Dependencies
-      working-directory: packages/e2e-playwright/
-      run: yarn install && npx playwright install --with-deps
+      run: npx playwright install --with-deps
 
     - name: Run E2E Tests
       run: yarn test:e2e -- --project=${{ matrix.runner-browser }}
