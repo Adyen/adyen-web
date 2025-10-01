@@ -8,7 +8,7 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  build:
+  install_dependencies:
     runs-on: ubuntu-latest
 
     strategy:
@@ -25,19 +25,66 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
+    - name: Cache node modules
+      uses: actions/cache@v4
+      env:
+        cache-name: node-modules-v1
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-cache-${{ env.cache-name }}-node-${{ matrix.node-version }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cache-${{ env.cache-name }}-node-${{ matrix.node-version }}-yarn-
+
     - name: Enable Corepack
       run: corepack enable
 
     - name: Install Project Dependencies
       run: yarn install --immutable
 
-    - run: yarn build
 
-    - run: yarn lint
+  run_unit_tests:
+    runs-on: ubuntu-latest
 
-    - run: yarn type-check
+    needs: install_dependencies
 
-    - run: yarn test:coverage
+    strategy:
+      matrix:
+        node-version: [22.18.0]
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Cache node modules
+      uses: actions/cache@v4
+      env:
+        cache-name: node-modules-v1
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-cache-${{ env.cache-name }}-node-${{ matrix.node-version }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cache-${{ env.cache-name }}-node-${{ matrix.node-version }}-yarn-
+
+    - name: Enable Corepack
+      run: corepack enable
+
+    - name: Build packages
+      run: yarn build
+
+    - name: Lint files
+      run: yarn lint
+
+    - name: Type check files
+      run: yarn type-check
+
+    - name: Generate test coverage
+      run: yarn test:coverage
 
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master
