@@ -8,44 +8,8 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  install_dependencies:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [22.18.0]
-
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-
-    - name: Cache node modules
-      uses: actions/cache@v4
-      env:
-        cache-name: node-modules-v1
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-cache-${{ env.cache-name }}-node-${{ matrix.node-version }}-yarn-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-cache-${{ env.cache-name }}-node-${{ matrix.node-version }}-yarn-
-
-    - name: Enable Corepack
-      run: corepack enable
-
-    - name: Install Project Dependencies
-      run: yarn install --immutable
-
-
   run_unit_tests:
     runs-on: ubuntu-latest
-
-    needs: install_dependencies
 
     strategy:
       matrix:
