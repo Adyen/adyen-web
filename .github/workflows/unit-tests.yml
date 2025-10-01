@@ -26,6 +26,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
 
     - name: Cache node modules
+      id: node-modules-cache
       uses: actions/cache@v4
       env:
         cache-name: node-modules-v1
@@ -37,6 +38,10 @@ jobs:
 
     - name: Enable Corepack
       run: corepack enable
+
+    - name: Install Project Dependencies
+      if: steps.node-modules-cache.outputs.cache-hit != 'true'
+      run: yarn install --immutable
 
     - name: Build packages
       run: yarn build
