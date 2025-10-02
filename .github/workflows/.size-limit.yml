@@ -15,18 +15,6 @@ jobs:
         with:
           node-version: 22.18.0
 
-      - name: Cache node modules
-        id: node-modules-cache
-        uses: actions/cache@v4
-        env:
-          cache-name: node-modules-v1
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-cache-${{ env.cache-name }}-node-22.18.0-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cache-${{ env.cache-name }}-node-22.18.0-yarn-
-
-
       - name: Enable Corepack
         run: corepack enable
 
