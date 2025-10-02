@@ -3,7 +3,7 @@ import { BrandObject } from '../../../Card/types';
 import createCardVariantSwitcher from './createCardVariantSwitcher';
 import { BRAND_ICON_UI_EXCLUSION_LIST } from '../lib/constants';
 import { mustHandleDualBrandingAccordingToEURegulations } from '../../../Card/components/CardInput/utils';
-import { DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM } from '../../../Card/Card';
+import { DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM } from '../../../Card/constants';
 
 // Externally testable utils
 export const containsExcludedBrand = (brandsArr: BrandObject[], excludedBrands: string[]): boolean => {

@@ -23,13 +23,12 @@ const MOCK_MANDATE: MandateType = {
     startsAt: '2024-11-13' // [Optional] will be returned only if the merchant sends it
 };
 
-describe('PayTo', () => {
-    let onSubmitMock;
-    let user;
+const onSubmitMock = jest.fn();
+const user = userEvent.setup();
 
-    beforeEach(() => {
-        onSubmitMock = jest.fn();
-        user = userEvent.setup();
+describe('PayTo', () => {
+    afterEach(() => {
+        onSubmitMock.mockClear();
     });
 
     test('should render payment and show PayID page', async () => {
@@ -99,7 +98,7 @@ describe('PayTo', () => {
 
             render(payTo.render());
 
-            await user.type(screen.queryByLabelText(/Mobile number/i), '411111111');
+            await user.type(screen.queryByLabelText(/Mobile number/i), '0411111111');
             await user.type(screen.queryByLabelText(/First name/i), 'John');
             await user.type(screen.queryByLabelText(/Last name/i), 'Doe');
 
@@ -110,7 +109,7 @@ describe('PayTo', () => {
                 expect.objectContaining({
                     data: expect.objectContaining({
                         paymentMethod: expect.objectContaining({
-                            shopperAccountIdentifier: '+61-411111111',
+                            shopperAccountIdentifier: '+61-0411111111',
                             type: 'payto'
                         }),
                         shopperName: {

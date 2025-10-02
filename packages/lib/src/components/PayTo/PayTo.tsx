@@ -54,7 +54,7 @@ export class PayToElement extends UIElement<PayToConfiguration> {
         placeholders: {}
     };
 
-    formatProps(props) {
+    formatProps(props: PayToConfiguration) {
         return {
             ...props,
             data: {
