@@ -36,7 +36,6 @@ const defaultProps: GooglePayConfiguration = {
     // CardParameters
     // https://developers.google.com/pay/api/web/reference/object#CardParameters
     allowedAuthMethods: ['PAN_ONLY', 'CRYPTOGRAM_3DS'] as google.payments.api.CardAuthMethod[],
-    allowedCardNetworks: ['AMEX', 'DISCOVER', 'JCB', 'MASTERCARD', 'VISA'] as google.payments.api.CardNetwork[],
     allowCreditCards: true, // Set to false if you don't support credit cards.
     allowPrepaidCards: true, // Set to false if you don't support prepaid cards.
     billingAddressRequired: false, // A billing address should only be requested if it's required to process the transaction.

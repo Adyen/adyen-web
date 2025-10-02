@@ -20,6 +20,9 @@ import type { GooglePayConfiguration } from './types';
 import type { ICore } from '../../core/types';
 import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
 import { AnalyticsEvent } from '../../core/Analytics/AnalyticsEvent';
+import { mapGooglePayBrands } from './utils/map-adyen-brands-to-googlepay-brands';
+
+const DEFAULT_ALLOWED_CARD_NETWORKS: google.payments.api.CardNetwork[] = ['AMEX', 'DISCOVER', 'JCB', 'MASTERCARD', 'VISA'];
 
 class GooglePay extends UIElement<GooglePayConfiguration> {
     public static type = TxVariants.googlepay;
@@ -68,14 +71,20 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
         );
     }
 
-    protected override formatProps(props): GooglePayConfiguration {
+    protected override formatProps(props: GooglePayConfiguration): GooglePayConfiguration {
         const buttonSizeMode = props.buttonSizeMode ?? (props.isDropin ? 'fill' : 'static');
         const buttonLocale = getGooglePayLocale(props.buttonLocale ?? props.i18n?.locale);
 
         const callbackIntents: google.payments.api.CallbackIntent[] = [...props.callbackIntents, 'PAYMENT_AUTHORIZATION'];
 
+        const allowedCardNetworks = this.createAllowedCardNetworksValues({
+            allowedCardNetworks: props.allowedCardNetworks,
+            brands: props.brands
+        });
+
         return {
             ...props,
+            allowedCardNetworks,
             configuration: props.configuration,
             buttonSizeMode,
             buttonLocale,
@@ -102,6 +111,31 @@ class GooglePay extends UIElement<GooglePayConfiguration> {
             ...(billingAddress && { billingAddress }),
             ...(deliveryAddress && { deliveryAddress })
         };
+    }
+
+    /**
+     * Generate the 'allowedCardNetworks' value used by Google Pay
+     *
+     * If the 'allowedCardNetworks' is defined in the Component configuration, it will be used. Otherwise we fallback
+     * to use the 'brands' returned by the backoffice. It can be that 'brands' is not returned, which in this case we
+     * set default values
+     *
+     * @param {object} brandsConfig
+     * @param brandsConfig.allowedCardNetworks - Brands set in the component config
+     * @param brandsConfig.brands - Brands returned by backend
+     * @private
+     */
+    private createAllowedCardNetworksValues({
+        allowedCardNetworks,
+        brands
+    }: {
+        allowedCardNetworks?: google.payments.api.CardNetwork[];
+        brands?: string[];
+    }): google.payments.api.CardNetwork[] {
+        if (allowedCardNetworks?.length > 0) return allowedCardNetworks;
+        if (brands?.length > 0) return mapGooglePayBrands(brands);
+
+        return DEFAULT_ALLOWED_CARD_NETWORKS;
     }
 
     protected submitAnalytics(analyticsObj: AnalyticsEvent) {
