@@ -12,15 +12,12 @@ import { Form } from '../../../utils/useForm/types';
 export interface PhoneInputFieldProps {
     items: DataSet;
     requiredFields?: string[];
-    data: PhoneInputSchema;
-    onChange: (obj) => void;
     form: Form<PhoneInputSchema>;
-    getError: (string) => string | boolean;
+    getError: (key: string) => string | boolean;
     phoneNumberKey?: string;
     phonePrefixErrorKey?: string;
     phoneNumberErrorKey?: string;
     placeholders?: PhoneInputSchema;
-    ref?;
     showPrefix?: boolean;
     showNumber?: boolean;
     canSelectPrefix?: boolean;
