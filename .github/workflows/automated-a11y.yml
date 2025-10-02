@@ -9,7 +9,6 @@ on:
 
 jobs:
   automated-a11y:
-    if: ${{ github.actor != 'renovate[bot]' && github.actor != 'lgtm-com[bot]' }}
     timeout-minutes: 60
     runs-on: ubuntu-latest
     strategy:
