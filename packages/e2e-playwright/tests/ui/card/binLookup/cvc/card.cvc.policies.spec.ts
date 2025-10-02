@@ -1,5 +1,5 @@
 import { test, expect } from '../../../../../fixtures/card.fixture';
-import { MAESTRO_CARD, BCMC_CARD } from '../../../../utils/constants';
+import { THREEDS2_MAESTRO_CARD, BCMC_CARD } from '../../../../utils/constants';
 import { URL_MAP } from '../../../../../fixtures/URL_MAP';
 import { getStoryUrl } from '../../../../utils/getStoryUrl';
 
@@ -41,7 +41,7 @@ test.describe('Card - testing /binLookup as it affects the cvc field', () => {
         await card.goto(getStoryUrl({ baseUrl: URL_MAP.card, componentConfig }));
 
         // PAN that will trigger /binLookup with cvcPolicy:"optional"
-        await card.typeCardNumber(MAESTRO_CARD);
+        await card.typeCardNumber(THREEDS2_MAESTRO_CARD);
 
         // Optional cvc field
         await expect(card.cvcField).toBeVisible();
