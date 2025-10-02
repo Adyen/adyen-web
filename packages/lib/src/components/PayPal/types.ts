@@ -30,13 +30,6 @@ export interface PayPalConfiguration extends UIElementProps {
     expressPage?: 'cart' | 'minicart' | 'pdp' | 'checkout';
 
     /**
-     * Set to true to force the UI to not render PayPal button
-     * Only applied if the PayPal component is standalone without Dropin
-     * @default false
-     */
-    blockPayPalButton?: boolean;
-
-    /**
      * Set to true to force the UI to not render PayPal Credit button
      * @default false
      */

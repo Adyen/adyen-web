@@ -60,47 +60,42 @@ describe('PaypalButtons', () => {
             paypalRef: paypalRefMock
         });
         renderWithCoreProvider(<PaypalButtons {...buttonPropsMock} />);
-        expect(paypalRefMock.Buttons().render).toHaveBeenCalledTimes(4);
         // eslint-disable-next-line testing-library/render-result-naming-convention
         const renderedButtons = getRenderedButtons(paypalRenderMock.mock.calls);
         expect(renderedButtons).toEqual(['paypal', 'credit', 'pay-later', 'venmo']);
     });
 
-    test('should not call paypalRef.Buttons().render for blocked buttons', () => {
+    test('should not call paypalRef.Buttons().render for blocked paypal credit button', () => {
         jest.clearAllMocks();
         const buttonPropsMock = mock<PayPalButtonsProps>({
             paypalRef: paypalRefMock
         });
-        renderWithCoreProvider(<PaypalButtons {...buttonPropsMock} blockPayPalVenmoButton blockPayPalPayLaterButton />);
-        expect(paypalRefMock.Buttons().render).toHaveBeenCalledTimes(2);
+        renderWithCoreProvider(<PaypalButtons {...buttonPropsMock} blockPayPalCreditButton />);
         // eslint-disable-next-line testing-library/render-result-naming-convention
         const renderedButtons = getRenderedButtons(paypalRenderMock.mock.calls);
-        expect(renderedButtons).toEqual(['paypal', 'credit']);
+        expect(renderedButtons).toEqual(['paypal', 'pay-later', 'venmo']);
     });
 
-    test('should call paypalRef.Buttons().render for the paypal button if it is blocked and in dropin ', () => {
+    test('should not call paypalRef.Buttons().render for blocked paypal pay later button', () => {
         jest.clearAllMocks();
         const buttonPropsMock = mock<PayPalButtonsProps>({
             paypalRef: paypalRefMock
         });
-        renderWithCoreProvider(<PaypalButtons {...buttonPropsMock} blockPayPalButton isDropin />);
-        expect(paypalRefMock.Buttons().render).toHaveBeenCalledTimes(4);
+        renderWithCoreProvider(<PaypalButtons {...buttonPropsMock} blockPayPalPayLaterButton />);
         // eslint-disable-next-line testing-library/render-result-naming-convention
         const renderedButtons = getRenderedButtons(paypalRenderMock.mock.calls);
-        expect(renderedButtons.includes('paypal')).toBe(true);
-        expect(renderedButtons).toEqual(['paypal', 'credit', 'pay-later', 'venmo']);
+        expect(renderedButtons).toEqual(['paypal', 'credit', 'venmo']);
     });
 
-    test('should not call paypalRef.Buttons().render for the paypal button if it is blocked and not in dropin ', () => {
+    test('should not call paypalRef.Buttons().render for blocked paypal venmo button', () => {
         jest.clearAllMocks();
         const buttonPropsMock = mock<PayPalButtonsProps>({
             paypalRef: paypalRefMock
         });
-        renderWithCoreProvider(<PaypalButtons {...buttonPropsMock} blockPayPalButton isDropin={false} />);
-        expect(paypalRefMock.Buttons().render).toHaveBeenCalledTimes(3);
+        renderWithCoreProvider(<PaypalButtons {...buttonPropsMock} blockPayPalVenmoButton />);
         // eslint-disable-next-line testing-library/render-result-naming-convention
         const renderedButtons = getRenderedButtons(paypalRenderMock.mock.calls);
-        expect(renderedButtons).toEqual(['credit', 'pay-later', 'venmo']);
+        expect(renderedButtons).toEqual(['paypal', 'credit', 'pay-later']);
     });
 
     test('should pass onShippingAddressChange and onShippingOptionsChange callbacks to PayPal button', () => {
