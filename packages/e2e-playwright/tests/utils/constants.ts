@@ -26,8 +26,13 @@ export const UNKNOWN_BIN_CARD_REGEX_VISA = '4354100140049554'; // card that is n
 export const UNKNOWN_VISA_CARD = '41111111'; // card is now in the test DBs (visa) - so keep it short to stop it firing binLookup
 
 export const PLCC_NO_LUHN_OPTIONAL_DATE = '6044100018023838'; // binLookup gives luhn check and date not required
+export const PLCC_WITH_LUHN_NO_DATE = '6044141000018769'; // binLookup gives luhn check required but date not required
 export const PLCC_WITH_LUHN_OPTIONAL_DATE_WOULD_FAIL_LUHN = '6044141000018768'; // binLookup gives luhn check required, date not required, BUT that will fail the luhn check
 export const PLCC_NO_LUHN_OPTIONAL_DATE_WOULD_FAIL_LUHN = '6044100033327222'; // A PAN that identifies as a plcc that doesn't require a luhn check BUT that would fail the luhn check if it was required
+
+// intersolve (plastix)
+export const GIFTCARD_NUMBER = '4010100000000000000';
+export const GIFTCARD_PIN = '73737';
 
 export const INVALID_TEST_DATE_VALUE = '0390';
 export const TEST_DATE_VALUE = '03/30';
@@ -56,6 +61,10 @@ export const TEST_YEAR_VALUE = '30';
 export const TEST_PWD_VALUE = '12';
 export const TEST_TAX_NUMBER_VALUE = '123456';
 export const TEST_CPF_VALUE = '22936094488';
+
+export const JWE_VERSION = '1';
+export const JWE_CONTENT_ALG = 'A256CBC-HS512';
+export const JWE_ALG = 'RSA-OAEP';
 
 export const PAYMENT_RESULT = {
     authorised: 'Authorised',
