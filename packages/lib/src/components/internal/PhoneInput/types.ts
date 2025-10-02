@@ -10,12 +10,11 @@ export interface PhoneInputFormProps {
     items: DataSet;
     requiredFields?: string[];
     data: PhoneInputSchema;
-    onChange: (obj) => void;
+    onChange: (data: { data: PhoneInputSchema; valid: { [p: string]: boolean }; errors: { [p: string]: any }; isValid: boolean }) => void;
     phoneNumberKey?: string;
     phonePrefixErrorKey?: string;
     phoneNumberErrorKey?: string;
     placeholders?: PhoneInputSchema;
-    ref?;
     setComponentRef: (ref: ComponentMethodsRef) => void;
 }
 
