@@ -74,6 +74,12 @@ export interface ApplePayConfiguration extends UIElementProps {
         merchantId?: string;
     };
 
+    /**
+     * Used to override the domain name for the Apple Pay button. Useful when using ApplePay within cross-domain iframe
+     * For more context: https://github.com/Adyen/adyen-web/pull/3340
+     */
+    domainName?: string;
+
     clientKey?: string;
     initiative?: Initiative;
 
