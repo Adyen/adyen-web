@@ -203,8 +203,7 @@ describe('ApplePay', () => {
             await new Promise(process.nextTick);
             expect(jest.spyOn(ApplePayService.prototype, 'begin')).toHaveBeenCalledTimes(1);
 
-            // Trigger ApplePayService onValidateMerchant property
-            // @ts-ignore ApplePayService is mocked
+            // @ts-ignore  ApplePayService is mocked. Trigger ApplePayService onValidateMerchant property
             const onValidateMerchant = ApplePayService.mock.calls[0][1].onValidateMerchant;
             const resolveMock = jest.fn();
             const rejectMock = jest.fn();
@@ -213,6 +212,59 @@ describe('ApplePay', () => {
             await new Promise(process.nextTick);
 
             expect(resolveMock).toHaveBeenCalledWith({ token: 'apple-pay-session' });
+        });
+
+        test('should use the current URL as default', () => {
+            const originalHostname = window.location.hostname;
+            Object.defineProperty(window.location, 'hostname', {
+                value: 'adyen.dev',
+                configurable: true
+            });
+
+            const applepay = new ApplePay(global.core, {
+                configuration: configurationMock,
+                amount: { currency: 'EUR', value: 2000 }
+            });
+
+            applepay.submit();
+
+            // @ts-ignore ApplePayService is mocked. Trigger ApplePayService onValidateMerchant property
+            const onValidateMerchant = ApplePayService.mock.calls[0][1].onValidateMerchant;
+            onValidateMerchant(jest.fn(), jest.fn());
+
+            expect(mockedHttpPost).toHaveBeenCalledWith(expect.anything(), {
+                displayName: 'TestMerchant',
+                domainName: 'adyen.dev',
+                initiative: 'web',
+                merchantIdentifier: 'test-merchant'
+            });
+
+            // Restoring original value
+            Object.defineProperty(window.location, 'hostname', {
+                value: originalHostname,
+                configurable: true
+            });
+        });
+
+        test('should use custom domainName if set in the component configuration', () => {
+            const applepay = new ApplePay(global.core, {
+                configuration: configurationMock,
+                domainName: 'https://pay.example.com',
+                amount: { currency: 'EUR', value: 2000 }
+            });
+
+            applepay.submit();
+
+            // @ts-ignore ApplePayService is mocked. Trigger ApplePayService onValidateMerchant property
+            const onValidateMerchant = ApplePayService.mock.calls[0][1].onValidateMerchant;
+            onValidateMerchant(jest.fn(), jest.fn());
+
+            expect(mockedHttpPost).toHaveBeenCalledWith(expect.anything(), {
+                displayName: 'TestMerchant',
+                domainName: 'https://pay.example.com',
+                initiative: 'web',
+                merchantIdentifier: 'test-merchant'
+            });
         });
 
         test('should reject if the session request fails', async () => {
