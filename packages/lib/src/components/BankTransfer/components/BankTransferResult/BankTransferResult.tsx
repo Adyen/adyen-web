@@ -32,10 +32,10 @@ export default function BankTransferResult(props: BankTransferResultProps) {
         { label: i18n.get('bankTransfer.sortCode'), value: props.sortCode },
         { label: i18n.get('bankTransfer.routingNumber'), value: props.routingNumber },
         { label: i18n.get('bankTransfer.iban'), value: props.iban },
-        { label: i18n.get('bankTransfer.bic'), value: props.bic },
         { label: i18n.get('bankTransfer.branchCode'), value: props.branchCode },
         { label: i18n.get('bankTransfer.bankCode'), value: props.bankCode },
-        { label: i18n.get('bankTransfer.reference'), value: props.reference }
+        { label: i18n.get('bankTransfer.reference'), value: props.reference },
+        { label: i18n.get('bankTransfer.bic'), value: props.bic }
     ];
 
     return (
