@@ -87,7 +87,7 @@ export function KlarnaWidget({ sdkData, paymentMethodType, widgetInitializationT
      * because the UIElement class has an on keypress handler which can trigger a components submit function
      * ENTER key press on this button should not trigger this behaviour since the Klarna script has already been loaded
      */
-    const handleKeyPress = (e: h.JSX.TargetedKeyboardEvent<HTMLButtonElement>) => {
+    const handleKeyDown = (e: h.JSX.TargetedKeyboardEvent<HTMLButtonElement>) => {
         if (e.key === 'Enter' || e.code === 'Enter') {
             e.preventDefault();
             authorizeKlarna();
@@ -130,7 +130,7 @@ export function KlarnaWidget({ sdkData, paymentMethodType, widgetInitializationT
                     status,
                     disabled: status === 'loading',
                     onClick: authorizeKlarna,
-                    onKeyPress: handleKeyPress
+                    onKeyDown: handleKeyDown
                 })}
             </div>
         );
