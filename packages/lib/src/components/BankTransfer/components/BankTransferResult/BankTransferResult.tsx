@@ -16,12 +16,27 @@ export interface BankTransferResultProps {
     accountNumber?: string;
     sortCode?: string;
     routingNumber?: string;
+    branchCode?: string;
+    bankCode?: string;
     onActionHandled?: (actionHandledObj: ActionHandledReturnObject) => void;
 }
 
 export default function BankTransferResult(props: BankTransferResultProps) {
     const { i18n } = useCoreContext();
     const getImage = useImage();
+
+    // we don't have to filter these values here, they get filtered inside the DetailsTable component
+    const tableFields = [
+        { label: i18n.get('bankTransfer.beneficiary'), value: props.beneficiary },
+        { label: i18n.get('bankTransfer.accountNumber'), value: props.accountNumber },
+        { label: i18n.get('bankTransfer.sortCode'), value: props.sortCode },
+        { label: i18n.get('bankTransfer.routingNumber'), value: props.routingNumber },
+        { label: i18n.get('bankTransfer.iban'), value: props.iban },
+        { label: i18n.get('bankTransfer.branchCode'), value: props.branchCode },
+        { label: i18n.get('bankTransfer.bankCode'), value: props.bankCode },
+        { label: i18n.get('bankTransfer.reference'), value: props.reference },
+        { label: i18n.get('bankTransfer.bic'), value: props.bic }
+    ];
 
     return (
         <BankTransferVoucher
@@ -30,20 +45,7 @@ export default function BankTransferResult(props: BankTransferResultProps) {
             onActionHandled={props.onActionHandled}
             amount={i18n.amount(props.totalAmount.value, props.totalAmount.currency)}
             instructions={<BankTransferResultInstructions />}
-            voucherDetails={
-                <DetailsTable
-                    shouldShowCopyButton
-                    tableFields={[
-                        { label: i18n.get('bankTransfer.beneficiary'), value: props.beneficiary },
-                        { label: i18n.get('bankTransfer.accountNumber'), value: props.accountNumber },
-                        { label: i18n.get('bankTransfer.sortCode'), value: props.sortCode },
-                        { label: i18n.get('bankTransfer.routingNumber'), value: props.routingNumber },
-                        { label: i18n.get('bankTransfer.iban'), value: props.iban },
-                        { label: i18n.get('bankTransfer.bic'), value: props.bic },
-                        { label: i18n.get('bankTransfer.reference'), value: props.reference }
-                    ]}
-                />
-            }
+            voucherDetails={<DetailsTable shouldShowCopyButton tableFields={tableFields} />}
         />
     );
 }

@@ -79,5 +79,70 @@ describe('BankTransfer', () => {
             expect(await screen.findByText('Reference')).toBeInTheDocument();
             expect(await screen.findByText(mockResult.reference)).toBeInTheDocument();
         });
+
+        test('should render bank transfer result with branchCode when available', async () => {
+            const mockResult = {
+                totalAmount: {
+                    currency: 'AUD',
+                    value: 10000
+                },
+                beneficiary: 'TestMerchantAU',
+                accountNumber: '123456789',
+                branchCode: '001-001',
+                reference: 'AU123REF'
+            };
+
+            const bankTransfer = new BankTransfer(global.core, {
+                ...coreProps,
+                type: 'bankTransfer_AU',
+                name: 'Bank Transfer AU',
+                ...mockResult
+            });
+
+            render(bankTransfer.render());
+            expect(await screen.findByText('A$100.00')).toBeInTheDocument();
+            expect(await screen.findByText('Beneficiary name')).toBeInTheDocument();
+            expect(await screen.findByText(mockResult.beneficiary)).toBeInTheDocument();
+            expect(await screen.findByText('Account number')).toBeInTheDocument();
+            expect(await screen.findByText(mockResult.accountNumber)).toBeInTheDocument();
+            expect(await screen.findByText('Branch code')).toBeInTheDocument();
+            expect(await screen.findByText(mockResult.branchCode)).toBeInTheDocument();
+            expect(await screen.findByText('Reference')).toBeInTheDocument();
+            expect(await screen.findByText(mockResult.reference)).toBeInTheDocument();
+        });
+
+        test('should render bank transfer result with bankCode when available', async () => {
+            const mockResult = {
+                totalAmount: {
+                    currency: 'HKD',
+                    value: 50000
+                },
+                beneficiary: 'TestMerchantHK',
+                accountNumber: '987654321',
+                branchCode: '001234567',
+                bankCode: 'HKBANK',
+                reference: 'HK456REF'
+            };
+
+            const bankTransfer = new BankTransfer(global.core, {
+                ...coreProps,
+                type: 'bankTransfer_HK',
+                name: 'Bank Transfer HK',
+                ...mockResult
+            });
+
+            render(bankTransfer.render());
+            expect(await screen.findByText('HK$500.00')).toBeInTheDocument();
+            expect(await screen.findByText('Beneficiary name')).toBeInTheDocument();
+            expect(await screen.findByText(mockResult.beneficiary)).toBeInTheDocument();
+            expect(await screen.findByText('Account number')).toBeInTheDocument();
+            expect(await screen.findByText(mockResult.accountNumber)).toBeInTheDocument();
+            expect(await screen.findByText('Branch code')).toBeInTheDocument();
+            expect(await screen.findByText(mockResult.branchCode)).toBeInTheDocument();
+            expect(await screen.findByText('Bank code')).toBeInTheDocument();
+            expect(await screen.findByText(mockResult.bankCode)).toBeInTheDocument();
+            expect(await screen.findByText('Reference')).toBeInTheDocument();
+            expect(await screen.findByText(mockResult.reference)).toBeInTheDocument();
+        });
     });
 });
