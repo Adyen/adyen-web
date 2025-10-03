@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import { render, screen } from '@testing-library/preact';
+import userEvent from '@testing-library/user-event';
 import { KlarnaWidget } from './KlarnaWidget';
 import Script from '../../../../utils/Script';
 import { KLARNA_WIDGET_URL } from '../../constants';
@@ -8,7 +9,6 @@ import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { mock } from 'jest-mock-extended';
 import { AnalyticsModule } from '../../../../types/global-types';
 import { PayButtonFunctionProps } from '../../../internal/UIElement/types';
-import userEvent from '@testing-library/user-event';
 
 jest.mock('../../../../utils/Script', () => {
     return jest.fn().mockImplementation(() => {
