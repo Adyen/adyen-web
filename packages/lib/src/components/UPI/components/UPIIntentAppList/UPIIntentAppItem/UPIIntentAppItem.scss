@@ -27,6 +27,7 @@ $expand-btn: '.adyen-checkout-expand-button--upi-app-item';
 
     &__label {
         cursor: pointer;
+        font-size: token(text-body-font-size);
     }
 
     &:hover:not(&--selected) {
