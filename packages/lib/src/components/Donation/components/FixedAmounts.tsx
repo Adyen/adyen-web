@@ -11,7 +11,7 @@ interface FixedAmountsProps {
     values: Array<number>;
     status: Status;
     onAmountSelected: ({ target }) => void;
-    onDonateButtonClicked: (amount: number) => void;
+    onDonateButtonClicked: () => void;
 }
 export default function FixedAmounts(props: FixedAmountsProps) {
     const { currency, values, selectedAmount, status, onAmountSelected, onDonateButtonClicked } = props;

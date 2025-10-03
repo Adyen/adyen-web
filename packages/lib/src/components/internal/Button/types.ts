@@ -21,7 +21,7 @@ export interface ButtonProps {
     href?: string;
     target?: string;
     rel?: string;
-    onClick?: (e, callbacks) => void;
+    onClick?: (e: h.JSX.TargetedMouseEvent<HTMLButtonElement>, callbacks?: { complete?: () => void }) => void;
     onKeyDown?: (event: KeyboardEvent) => void;
     onKeyPress?: (event: KeyboardEvent) => void;
     buttonRef?: Ref<HTMLButtonElement>;

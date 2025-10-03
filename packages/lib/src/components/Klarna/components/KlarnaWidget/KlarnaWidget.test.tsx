@@ -1,5 +1,6 @@
 import { h } from 'preact';
-import { fireEvent, render, screen } from '@testing-library/preact';
+import { render, screen } from '@testing-library/preact';
+import userEvent from '@testing-library/user-event';
 import { KlarnaWidget } from './KlarnaWidget';
 import Script from '../../../../utils/Script';
 import { KLARNA_WIDGET_URL } from '../../constants';
@@ -7,6 +8,7 @@ import { KlarnaWidgetAuthorizeResponse, type KlarnaWidgetProps } from '../../typ
 import { CoreProvider } from '../../../../core/Context/CoreProvider';
 import { mock } from 'jest-mock-extended';
 import { AnalyticsModule } from '../../../../types/global-types';
+import { PayButtonFunctionProps } from '../../../internal/UIElement/types';
 
 jest.mock('../../../../utils/Script', () => {
     return jest.fn().mockImplementation(() => {
@@ -42,7 +44,7 @@ describe('KlarnaWidget', () => {
     const paymentData = 'test';
     const paymentMethodType = 'klarna';
     const sdkData = { client_token: '123', payment_method_category: 'paynow' };
-    const payButton = props => (
+    const payButton = (props: PayButtonFunctionProps) => (
         <button data-testid="pay-with-klarna" {...props}>
             Pay with Klarna
         </button>
@@ -115,11 +117,12 @@ describe('KlarnaWidget', () => {
 
     describe('Pay with Klarna widget', () => {
         test('should call the onComplete if the payment is authorized', async () => {
+            const user = userEvent.setup();
             const authRes = { approved: true, show_form: true, authorization_token: 'abc' };
             klarnaObj.Payments.load = getKlarnaActionImp({ show_form: true });
             klarnaObj.Payments.authorize = getKlarnaActionImp(authRes);
             customRender(props);
-            fireEvent.click(await screen.findByTestId(/pay-with-klarna/i));
+            await user.click(await screen.findByTestId(/pay-with-klarna/i));
             expect(onComplete).toHaveBeenCalledWith({
                 data: {
                     paymentData,
@@ -129,20 +132,65 @@ describe('KlarnaWidget', () => {
                 }
             });
         });
+
+        test('should call the onComplete if the payment is authorized after pay button is triggered with {Enter} key', async () => {
+            const user = userEvent.setup();
+            const authRes = { approved: true, show_form: true, authorization_token: 'abc' };
+            klarnaObj.Payments.load = getKlarnaActionImp({ show_form: true });
+            klarnaObj.Payments.authorize = getKlarnaActionImp(authRes);
+            customRender(props);
+
+            const payButton = await screen.findByTestId(/pay-with-klarna/i);
+            payButton.focus();
+            await user.keyboard('{Enter}');
+
+            expect(onComplete).toHaveBeenCalledWith({
+                data: {
+                    paymentData,
+                    details: {
+                        authorization_token: authRes.authorization_token
+                    }
+                }
+            });
+        });
+
+        test('should call the onComplete if the payment is authorized after pay button is triggered with {Space} key', async () => {
+            const user = userEvent.setup();
+            const authRes = { approved: true, show_form: true, authorization_token: 'abc' };
+            klarnaObj.Payments.load = getKlarnaActionImp({ show_form: true });
+            klarnaObj.Payments.authorize = getKlarnaActionImp(authRes);
+            customRender(props);
+
+            const payButton = await screen.findByTestId(/pay-with-klarna/i);
+            payButton.focus();
+            await user.keyboard('{Space}');
+
+            expect(onComplete).toHaveBeenCalledWith({
+                data: {
+                    paymentData,
+                    details: {
+                        authorization_token: authRes.authorization_token
+                    }
+                }
+            });
+        });
+
         test('should call the onError if the payment is not authorized temporarily', async () => {
+            const user = userEvent.setup();
             klarnaObj.Payments.load = getKlarnaActionImp({ show_form: true });
             const authRes = { approved: false, show_form: true };
             klarnaObj.Payments.authorize = getKlarnaActionImp(authRes);
             customRender(props);
-            fireEvent.click(await screen.findByTestId(/pay-with-klarna/i));
+            await user.click(await screen.findByTestId(/pay-with-klarna/i));
             expect(onError).toHaveBeenCalledWith(authRes);
         });
 
         test('should call the onComplete if the payment is not authorized permanently', async () => {
+            const user = userEvent.setup();
             klarnaObj.Payments.load = getKlarnaActionImp({ show_form: true });
             klarnaObj.Payments.authorize = getKlarnaActionImp({ show_form: false });
             customRender(props);
-            fireEvent.click(await screen.findByTestId(/pay-with-klarna/i));
+            await user.click(await screen.findByTestId(/pay-with-klarna/i));
             expect(onComplete).toHaveBeenCalledWith({
                 data: {
                     paymentData,

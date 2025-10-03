@@ -12,20 +12,14 @@ class Button extends Component<ButtonProps, ButtonState> {
         disabled: false,
         label: '',
         inline: false,
-        target: '_self',
-        onClick: () => {},
-        onMouseEnter: () => {},
-        onMouseLeave: () => {},
-        onFocus: () => {},
-        onBlur: () => {},
-        onKeyPress: () => {}
+        target: '_self'
     };
 
-    public onClick = e => {
+    public onClick = (e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
         if (!this.props.disabled) {
-            this.props.onClick(e, { complete: this.complete });
+            this.props.onClick?.(e, { complete: this.complete });
         }
     };
 
@@ -34,10 +28,6 @@ class Button extends Component<ButtonProps, ButtonState> {
         setTimeout(() => {
             this.setState({ completed: false });
         }, delay);
-    };
-
-    public onKeyDown = (event: KeyboardEvent) => {
-        this.props.onKeyDown?.(event);
     };
 
     render() {
@@ -59,6 +49,7 @@ class Button extends Component<ButtonProps, ButtonState> {
             onMouseLeave,
             onFocus,
             onBlur,
+            onKeyDown,
             onKeyPress
         }: ButtonProps = this.props;
         const { completed } = this.state;
@@ -124,11 +115,11 @@ class Button extends Component<ButtonProps, ButtonState> {
                 type="button"
                 disabled={disabled}
                 onClick={this.onClick}
-                onKeyDown={this.onKeyDown}
                 aria-label={ariaLabel}
                 aria-describedby={ariaDescribedBy}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
+                onKeyDown={onKeyDown}
                 onFocus={onFocus}
                 onBlur={onBlur}
                 onKeyPress={onKeyPress}

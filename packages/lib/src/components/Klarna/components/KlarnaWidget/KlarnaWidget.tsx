@@ -32,7 +32,7 @@ export function KlarnaWidget({ sdkData, paymentMethodType, widgetInitializationT
                 container: klarnaWidgetRef.current,
                 payment_method_category: sdkData.payment_method_category
             },
-            function (res) {
+            function (res: { show_form: boolean; error: unknown }) {
                 // If show_form: true is received together with an error, something fixable is wrong and the consumer
                 // needs to take action before moving forward
                 // If show_form: false, the payment method in the loaded widget will not be offered for this order
@@ -82,6 +82,19 @@ export function KlarnaWidget({ sdkData, paymentMethodType, widgetInitializationT
     }, [sdkData.payment_method_category, props.onComplete, props.onError]);
 
     /**
+     * TODO: Clean this up when we have a different solution for handling on click in the BaseElement class
+     * We need this specifically for handling ENTER keypresses from the keyboard
+     * because the UIElement class has an on keypress handler which can trigger a components submit function
+     * ENTER key press on this button should not trigger this behaviour since the Klarna script has already been loaded
+     */
+    const handleKeyDown = (e: h.JSX.TargetedKeyboardEvent<HTMLButtonElement>) => {
+        if (e.key === 'Enter' || e.code === 'Enter') {
+            e.preventDefault();
+            authorizeKlarna();
+        }
+    };
+
+    /**
      * Initializes Klarna SDK if it is already available and reinitialize
      * it when the init time refreshes
      */
@@ -113,7 +126,12 @@ export function KlarnaWidget({ sdkData, paymentMethodType, widgetInitializationT
         return (
             <div className="adyen-checkout__klarna-widget">
                 <div ref={klarnaWidgetRef} />
-                {payButton({ status, disabled: status === 'loading', onClick: authorizeKlarna })}
+                {payButton({
+                    status,
+                    disabled: status === 'loading',
+                    onClick: authorizeKlarna,
+                    onKeyDown: handleKeyDown
+                })}
             </div>
         );
     }

@@ -6,6 +6,7 @@ import { KlarnaContainer } from './components/KlarnaContainer/KlarnaContainer';
 import { TxVariants } from '../tx-variants';
 import type { KlarnaAction, KlarnaAdditionalDetailsData, KlarnaComponentRef, KlarnaConfiguration } from './types';
 import type { ICore } from '../../core/types';
+import { PayButtonFunctionProps } from '../internal/UIElement/types';
 
 class KlarnaPayments extends UIElement<KlarnaConfiguration> {
     public static type = TxVariants.klarna;
@@ -38,7 +39,7 @@ class KlarnaPayments extends UIElement<KlarnaConfiguration> {
         };
     }
 
-    public payButton = props => {
+    public payButton = (props: PayButtonFunctionProps) => {
         return <PayButton amount={this.props.amount} onClick={this.submit} {...props} />;
     };
 
