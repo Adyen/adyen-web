@@ -13,6 +13,9 @@ export interface BaseElementProps {
         resources?: Resources;
         risk?: RiskElement;
     };
+    /**
+     * Identifies if the Element is the DropIn element
+     */
     isDropin?: boolean;
 }
 

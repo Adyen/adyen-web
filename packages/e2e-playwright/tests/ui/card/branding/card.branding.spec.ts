@@ -1,5 +1,5 @@
 import { test as base, expect } from '../../../../fixtures/base-fixture';
-import { MAESTRO_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE } from '../../../utils/constants';
+import { THREEDS2_MAESTRO_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE } from '../../../utils/constants';
 import LANG from '../../../../../server/translations/en-US.json';
 import { Card } from '../../../../models/card';
 import { getStoryUrl } from '../../../utils/getStoryUrl';
@@ -88,7 +88,7 @@ test.describe('Testing branding - especially regarding optional and hidden cvc f
         '#2 Test card is valid with maestro details (cvc optional)' + 'then test it is invalid (& brand reset) when number deleted',
         async ({ page, cardBrandingPage }) => {
             // Maestro
-            await cardBrandingPage.typeCardNumber(MAESTRO_CARD);
+            await cardBrandingPage.typeCardNumber(THREEDS2_MAESTRO_CARD);
             await cardBrandingPage.typeExpiryDate(TEST_DATE_VALUE);
 
             // maestro card icon
@@ -135,7 +135,7 @@ test.describe('Testing branding - especially regarding optional and hidden cvc f
             'then test it is valid if cvc deleted',
         async ({ page, cardBrandingPage }) => {
             // Maestro
-            await cardBrandingPage.typeCardNumber(MAESTRO_CARD);
+            await cardBrandingPage.typeCardNumber(THREEDS2_MAESTRO_CARD);
             await cardBrandingPage.typeExpiryDate(TEST_DATE_VALUE);
 
             // Partial cvc

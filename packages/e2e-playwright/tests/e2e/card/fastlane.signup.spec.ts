@@ -1,5 +1,5 @@
 import { test, expect } from '../../../fixtures/card.fixture';
-import { MAESTRO_CARD, PAYMENT_RESULT, REGULAR_TEST_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE, VISA_CARD } from '../../utils/constants';
+import { THREEDS2_MAESTRO_CARD, PAYMENT_RESULT, REGULAR_TEST_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE, VISA_CARD } from '../../utils/constants';
 import { URL_MAP } from '../../../fixtures/URL_MAP';
 import { paymentSuccessfulMock } from '../../../mocks/payments/payments.mock';
 import { getStoryUrl } from '../../utils/getStoryUrl';
@@ -28,7 +28,7 @@ test.describe('Card - Fastlane Sign up', () => {
             await expect(cardWithFastlane.fastlaneElement).not.toBeVisible();
 
             // Enter brand not supported by fastlame (MAESTRO)
-            await cardWithFastlane.typeCardNumber(MAESTRO_CARD);
+            await cardWithFastlane.typeCardNumber(THREEDS2_MAESTRO_CARD);
             await cardWithFastlane.typeCvc(TEST_CVC_VALUE);
             await cardWithFastlane.typeExpiryDate(TEST_DATE_VALUE);
             await expect(cardWithFastlane.fastlaneElement).not.toBeVisible();
@@ -80,7 +80,7 @@ test.describe('Card - Fastlane Sign up', () => {
             const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
 
             await cardWithFastlane.goto(URL_MAP.cardWithFastlane);
-            await cardWithFastlane.typeCardNumber(MAESTRO_CARD);
+            await cardWithFastlane.typeCardNumber(THREEDS2_MAESTRO_CARD);
             await cardWithFastlane.typeCvc(TEST_CVC_VALUE);
             await cardWithFastlane.typeExpiryDate(TEST_DATE_VALUE);
             await expect(cardWithFastlane.fastlaneElement).not.toBeVisible();

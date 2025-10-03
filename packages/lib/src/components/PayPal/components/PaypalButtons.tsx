@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, RefObject } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
 import classnames from 'classnames';
 import { getStyle } from '../utils/get-paypal-styles';
@@ -29,7 +29,7 @@ export default function PaypalButtons({
     const payLaterButtonRef = useRef<HTMLDivElement>(null);
     const venmoButtonRef = useRef<HTMLDivElement>(null);
 
-    const createButton = (fundingSource: FundingSource, buttonRef) => {
+    const createButton = (fundingSource: FundingSource, buttonRef: RefObject<HTMLDivElement>) => {
         const configuration = {
             ...(isTokenize && { createBillingAgreement: onSubmit }),
             ...(!isTokenize && { createOrder: onSubmit }),
@@ -53,6 +53,7 @@ export default function PaypalButtons({
 
     useEffect(() => {
         const { PAYPAL, CREDIT, PAYLATER, VENMO } = paypalRef.FUNDING;
+
         createButton(PAYPAL, paypalButtonRef);
 
         if (!props.blockPayPalCreditButton) createButton(CREDIT, creditButtonRef);

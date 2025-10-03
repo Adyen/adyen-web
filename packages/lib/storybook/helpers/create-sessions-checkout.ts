@@ -7,8 +7,21 @@ import { AdyenCheckout } from '../../src/core/AdyenCheckout';
 
 import type { AdyenCheckoutProps, ShopperDetails } from '../stories/types';
 
-async function createSessionsCheckout(checkoutProps: AdyenCheckoutProps, shopperDetails?: ShopperDetails): Promise<Checkout> {
-    const { showPayButton, countryCode, shopperLocale, amount, sessionData, ...restCheckoutProps } = checkoutProps;
+async function createSessionsCheckout(
+    checkoutProps: Omit<AdyenCheckoutProps, 'srConfig'> & {
+        srConfig?: { showPanel: boolean; moveFocus: boolean };
+    },
+    shopperDetails?: ShopperDetails
+): Promise<Checkout> {
+    const {
+        showPayButton,
+        countryCode,
+        shopperLocale,
+        amount,
+        sessionData,
+        srConfig = { showPanel: false, moveFocus: true },
+        ...restCheckoutProps
+    } = checkoutProps;
 
     const session = await createSession({
         amount: {
@@ -51,6 +64,7 @@ async function createSessionsCheckout(checkoutProps: AdyenCheckoutProps, shopper
         },
 
         _environmentUrls: STORYBOOK_ENVIRONMENT_URLS,
+        srConfig,
         ...restCheckoutProps
     });
 }

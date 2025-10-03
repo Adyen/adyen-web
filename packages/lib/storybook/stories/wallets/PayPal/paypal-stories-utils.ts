@@ -3,7 +3,7 @@
  * This must be implemented on the backend side by the merchant for safety reasons.
  */
 
-export function getDeliveryMethodsByCountry(country) {
+export function getDeliveryMethodsByCountry(country: string) {
     if (country === 'NL') {
         return [
             {
