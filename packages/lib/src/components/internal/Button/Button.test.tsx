@@ -2,8 +2,9 @@ import { h } from 'preact';
 import { mount } from 'enzyme';
 import Button from './Button';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
+import { ButtonProps } from './types';
 
-const getWrapper = props => {
+const getWrapper = (props: ButtonProps) => {
     return mount(
         <CoreProvider i18n={global.i18n} loadingContext="test" resources={global.resources}>
             <Button {...props} />
@@ -58,17 +59,17 @@ describe('Button', () => {
     });
 
     test('Renders secondary button', () => {
-        const wrapper = getWrapper({ variant: 'secondary ' });
+        const wrapper = getWrapper({ variant: 'secondary' });
         expect(wrapper.find('.adyen-checkout__button--secondary').length).toBe(1);
     });
 
     test('Renders action button', () => {
-        const wrapper = getWrapper({ variant: 'action ' });
+        const wrapper = getWrapper({ variant: 'action' });
         expect(wrapper.find('.adyen-checkout__button--action').length).toBe(1);
     });
 
     test('Renders ghost button', () => {
-        const wrapper = getWrapper({ variant: 'ghost ' });
+        const wrapper = getWrapper({ variant: 'ghost' });
         expect(wrapper.find('.adyen-checkout__button--ghost').length).toBe(1);
     });
 });
