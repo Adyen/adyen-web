@@ -211,6 +211,8 @@
     "bankTransfer.accountNumber": "Številka računa",
     "bankTransfer.sortCode": "Številka banke",
     "bankTransfer.routingNumber": "Številka za usmerjanje",
+    "bankTransfer.branchCode": "Šifra poslovalnice",
+    "bankTransfer.bankCode": "Šifra banke",
     "bankTransfer.introduction": "Pritisnite »Nadaljuj« za ustvarjanje novega plačila z bančnim nakazilom. Za dokončanje tega plačila lahko uporabite podatke na naslednjem zaslonu.",
     "bankTransfer.instructions": "Zahvaljujemo se vam za nakup. Za dokončanje plačila uporabite naslednji kupon.",
     "bankTransfer.shopperEmail.contextualText": "Kopija podatkov o plačilu bo poslana na vaš e-poštni naslov, tako da boste lahko plačilo dokončali pozneje.",

@@ -211,6 +211,8 @@
     "bankTransfer.accountNumber": "Kontonummer",
     "bankTransfer.sortCode": "Bankleitzahl",
     "bankTransfer.routingNumber": "Bankleitzahl",
+    "bankTransfer.branchCode": "Filialcode",
+    "bankTransfer.bankCode": "Bankleitzahl",
     "bankTransfer.introduction": "Drücken Sie auf „Weiter“, um eine neue Banküberweisungszahlung zu erstellen. Sie können die Informationen auf dem nächsten Bildschirm verwenden, um diese Zahlung abzuschließen.",
     "bankTransfer.instructions": "Vielen Dank für Ihren Kauf. Bitte schließen Sie Ihre Zahlung unter Verwendung der folgenden Informationen ab.",
     "bankTransfer.shopperEmail.contextualText": "Eine Kopie der Zahlungsinformationen wird an Ihre E-Mail-Adresse gesendet, damit Sie die Zahlung später abschließen können.",

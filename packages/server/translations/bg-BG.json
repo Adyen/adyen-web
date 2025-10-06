@@ -211,6 +211,8 @@
     "bankTransfer.accountNumber": "Номер на сметка",
     "bankTransfer.sortCode": "Код за сортиране",
     "bankTransfer.routingNumber": "Маршрутен номер",
+    "bankTransfer.branchCode": "Код на клон",
+    "bankTransfer.bankCode": "Код на банка",
     "bankTransfer.introduction": "Натиснете „Продължи“, за да създадете ново плащане с банков превод. Можете да използвате данните в следващия екран, за да финализирате това плащане.",
     "bankTransfer.instructions": "Благодарим Ви за покупката, моля, използвайте следната информация, за да извършите плащането.",
     "bankTransfer.shopperEmail.contextualText": "Копие от данните за плащане ще бъде изпратено на вашия имейл, за да можете да завършите плащането по-късно.",

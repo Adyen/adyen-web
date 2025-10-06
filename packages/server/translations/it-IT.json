@@ -211,6 +211,8 @@
     "bankTransfer.accountNumber": "Numero di conto",
     "bankTransfer.sortCode": "Sort code",
     "bankTransfer.routingNumber": "Numero di routing",
+    "bankTransfer.branchCode": "Codice filiale",
+    "bankTransfer.bankCode": "Codice bancario",
     "bankTransfer.introduction": "Premi “Continua” per creare un nuovo pagamento tramite bonifico bancario. Puoi utilizzare i dettagli nella schermata seguente per completare l'operazione.",
     "bankTransfer.instructions": "Grazie per il tuo acquisto, utilizza i seguenti dati per completare il pagamento.",
     "bankTransfer.shopperEmail.contextualText": "Una copia dei dettagli del pagamento verrà inviata alla tua e-mail, così potrai completare il pagamento in un secondo momento.",

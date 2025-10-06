@@ -211,6 +211,8 @@
     "bankTransfer.accountNumber": "帳戶號碼",
     "bankTransfer.sortCode": "銀行代碼",
     "bankTransfer.routingNumber": "匯款路徑編號",
+    "bankTransfer.branchCode": "分行代碼",
+    "bankTransfer.bankCode": "銀行代碼",
     "bankTransfer.introduction": "按下「繼續」以建立新的銀行轉帳付款。您可以使用以下螢幕中的詳細資訊來完成此項付款。",
     "bankTransfer.instructions": "多謝惠顧，請使用以下資訊完成付款。",
     "bankTransfer.shopperEmail.contextualText": "我們會將付款資訊的副本發送到您的電子郵件地址，好方便您之後再找時間完成付款。",

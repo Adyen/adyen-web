@@ -211,6 +211,8 @@
     "bankTransfer.accountNumber": "Numer rachunku",
     "bankTransfer.sortCode": "Numer rozliczeniowy SORT",
     "bankTransfer.routingNumber": "Numer rozliczeniowy",
+    "bankTransfer.branchCode": "Kod oddziału",
+    "bankTransfer.bankCode": "Kod bankowy",
     "bankTransfer.introduction": "Naciśnij „Kontynuuj”, aby utworzyć nową płatność przelewem bankowym. Możesz użyć szczegółów na następnym ekranie, aby sfinalizować tę płatność.",
     "bankTransfer.instructions": "Dziękujemy za zakup. Dokończ płatność przy użyciu poniższych informacji.",
     "bankTransfer.shopperEmail.contextualText": "Kopię szczegółów płatności wyślemy na Twój adres e-mail, dzięki czemu dokończysz płatność później.",

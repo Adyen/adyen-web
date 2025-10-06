@@ -209,6 +209,8 @@
     "bankTransfer.accountNumber": "Número de cuenta",
     "bankTransfer.sortCode": "Código de sucursal",
     "bankTransfer.routingNumber": "Número de ruta bancaria",
+    "bankTransfer.branchCode": "Código de sucursal",
+    "bankTransfer.bankCode": "Código del banco",
     "bankTransfer.introduction": "Pulse Continuar para crear un nuevo pago mediante transferencia bancaria. Puede utilizar los detalles en la siguiente pantalla para finalizar este pago.",
     "bankTransfer.instructions": "Gracias por su compra. Use la siguiente información para completar su pago.",
     "bankTransfer.shopperEmail.contextualText": "Se enviará una copia de los detalles de pago a su correo electrónico para que pueda realizar el pago más tarde.",
