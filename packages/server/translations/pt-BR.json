@@ -211,6 +211,8 @@
     "bankTransfer.accountNumber": "Número da conta",
     "bankTransfer.sortCode": "Código de classificação",
     "bankTransfer.routingNumber": "Número de roteamento",
+    "bankTransfer.branchCode": "Código da agência",
+    "bankTransfer.bankCode": "Código do banco",
     "bankTransfer.introduction": "Pressione “Continuar” para criar um novo pagamento por transferência bancária. Use as informações na tela a seguir para concluí-lo.",
     "bankTransfer.instructions": "Obrigado pela sua compra, use a informação a seguir para concluir o seu pagamento.",
     "bankTransfer.shopperEmail.contextualText": "Uma cópia dos dados do pagamento será enviada para o seu e-mail para que você possa concluir o método de pagamento mais tarde.",

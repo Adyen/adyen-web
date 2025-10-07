@@ -211,6 +211,8 @@
     "bankTransfer.accountNumber": "口座番号",
     "bankTransfer.sortCode": "ソートコード",
     "bankTransfer.routingNumber": "ルーティング番号",
+    "bankTransfer.branchCode": "支店コード",
+    "bankTransfer.bankCode": "銀行コード",
     "bankTransfer.introduction": "「続行」を押して、新しい銀行振込によるお支払の作成を続行します。次の画面の詳細を使用して、このお支払いを確定できます。",
     "bankTransfer.instructions": "お買い上げありがとうございます。以下の情報を使用して、お支払いを完了してください。",
     "bankTransfer.shopperEmail.contextualText": "支払明細のコピーがメールで送信されますので、後でお支払いを完了することができます。",
