@@ -211,6 +211,8 @@
     "bankTransfer.accountNumber": "Numéro du compte",
     "bankTransfer.sortCode": "Code de tri (sort code)",
     "bankTransfer.routingNumber": "Numéro de routage",
+    "bankTransfer.branchCode": "Code de l'agence",
+    "bankTransfer.bankCode": "Code banque",
     "bankTransfer.introduction": "Appuyez sur « Continuer » pour créer un nouveau paiement par virement bancaire. Utilisez les informations de l'écran suivant pour finaliser ce paiement.",
     "bankTransfer.instructions": "Merci pour votre achat ! Veuillez utiliser les informations suivantes pour finaliser votre paiement.",
     "bankTransfer.shopperEmail.contextualText": "Une copie des informations de paiement vous sera envoyée à votre adresse e-mail afin que vous puissiez finaliser le paiement ultérieurement.",

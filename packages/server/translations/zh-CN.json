@@ -211,6 +211,8 @@
     "bankTransfer.accountNumber": "账号",
     "bankTransfer.sortCode": "分类代码",
     "bankTransfer.routingNumber": "路由号码",
+    "bankTransfer.branchCode": "分行代码",
+    "bankTransfer.bankCode": "银行代码",
     "bankTransfer.introduction": "按“继续”以新建银行转账付款。您可以使用以下屏幕中的详细信息来完成这笔付款。",
     "bankTransfer.instructions": "感谢您的购买，请使用以下信息完成支付。",
     "bankTransfer.shopperEmail.contextualText": "支付详情的副本将发送到您的电子邮件，以便您稍后完成付款。",

@@ -211,6 +211,8 @@
     "bankTransfer.accountNumber": "Číslo účtu",
     "bankTransfer.sortCode": "Variabilný symbol",
     "bankTransfer.routingNumber": "Smerovacie číslo",
+    "bankTransfer.branchCode": "Kód pobočky",
+    "bankTransfer.bankCode": "Kód banky",
     "bankTransfer.introduction": "Stlačte „Pokračovať“ na vytvorenie novej platby bankovým prevodom. Túto platbu môžete dokončiť pomocou informácií na nasledujúcej obrazovke.",
     "bankTransfer.instructions": "Ďakujeme vám za nákup. Na dokončenie platby použite nasledujúce informácie.",
     "bankTransfer.shopperEmail.contextualText": "Kópia údajov k platbe bude odoslaná na váš e-mail, aby ste mohli platbu dokončiť neskôr.",

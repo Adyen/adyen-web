@@ -211,6 +211,8 @@
     "bankTransfer.accountNumber": "Tilinumero",
     "bankTransfer.sortCode": "Lajittelukoodi",
     "bankTransfer.routingNumber": "Reititysnumero",
+    "bankTransfer.branchCode": "Konttorin koodi",
+    "bankTransfer.bankCode": "Pankkikoodi",
     "bankTransfer.introduction": "Luo uusi pankkisiirtomaksu painamalla Jatka-painiketta. Voit viimeistellä tämän maksun seuraavan näytön tietojen avulla.",
     "bankTransfer.instructions": "Kiitos hankinnastasi, käytä seuraavia tietoja päättääksesi maksusi.",
     "bankTransfer.shopperEmail.contextualText": "Kopio maksutiedoista lähetetään sähköpostiisi, jotta voit suorittaa maksun myöhemmin.",

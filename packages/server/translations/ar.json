@@ -211,6 +211,8 @@
     "bankTransfer.accountNumber": "رقم الحساب",
     "bankTransfer.sortCode": "رمز تعريف البنك",
     "bankTransfer.routingNumber": "رقم التوجيه",
+    "bankTransfer.branchCode": "رمز الفرع",
+    "bankTransfer.bankCode": "رمز البنك",
     "bankTransfer.introduction": "اضغط على متابعة؛ لإنشاء مدفوعات تحويل بنكية جديدة. يمكنك استخدام البيانات الواردة في الشاشة التالية لإتمام عملية الدفع.",
     "bankTransfer.instructions": "شكرًا لك على شرائك، يرجى استخدام المعلومات التالية لإتمام عملية الدفع.",
     "bankTransfer.shopperEmail.contextualText": "ستصلك تفاصيل الدفع عبر البريد الإلكتروني لتتمكن من إكمال عملية الدفع في وقت لاحق.",
