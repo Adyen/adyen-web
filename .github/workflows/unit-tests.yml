@@ -25,15 +25,33 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - run: yarn --frozen-lockfile
+    - name: Cache node modules
+      id: node-modules-cache
+      uses: actions/cache@v4
+      env:
+        cache-name: node-modules-v1
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-cache-${{ env.cache-name }}-node-${{ matrix.node-version }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
-    - run: yarn build
+    - name: Enable Corepack
+      run: corepack enable
 
-    - run: yarn lint
+    - name: Install Project Dependencies
+      if: steps.node-modules-cache.outputs.cache-hit != 'true'
+      run: yarn install --immutable
 
-    - run: yarn type-check
+    - name: Build packages
+      run: yarn build
 
-    - run: yarn test:coverage
+    - name: Lint files
+      run: yarn lint
+
+    - name: Type check files
+      run: yarn type-check
+
+    - name: Generate test coverage
+      run: yarn test:coverage
 
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master

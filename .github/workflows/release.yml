@@ -22,8 +22,11 @@ jobs:
         with:
           node-version: 22.18.0
 
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Install Dependencies
-        run: yarn
+        run: yarn install --immutable
 
       - name: Create Release Pull Request
         uses: changesets/action@v1

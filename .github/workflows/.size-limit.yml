@@ -10,10 +10,13 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 22.18.0
+      - name: Use Node.js 22.18.0
         uses: actions/setup-node@v4
         with:
           node-version: 22.18.0
+
+      - name: Enable Corepack
+        run: corepack enable
 
       - uses: andresz1/size-limit-action@master
         with:
