@@ -28,7 +28,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@adyen/adyen-web-playground@workspace:packages/playground"
   dependencies:
-    "@adyen/adyen-web": "npm:6.22.0"
+    "@adyen/adyen-web": "npm:6.23.0"
     "@adyen/adyen-web-server": "npm:1.0.0"
     autoprefixer: "npm:^10.4.9"
     core-js-pure: "npm:^3.25.3"
@@ -75,11 +75,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@adyen/adyen-web@npm:6.22.0, @adyen/adyen-web@workspace:packages/lib":
+"@adyen/adyen-web@npm:6.23.0, @adyen/adyen-web@workspace:packages/lib":
   version: 0.0.0-use.local
   resolution: "@adyen/adyen-web@workspace:packages/lib"
   dependencies:
-    "@adyen/bento-design-tokens": "npm:1.10.0"
+    "@adyen/bento-design-tokens": "npm:1.63.0"
     "@eslint/js": "npm:9.32.0"
     "@preact/preset-vite": "npm:2.10.2"
     "@rollup/plugin-commonjs": "npm:28.0.6"
@@ -146,10 +146,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@adyen/bento-design-tokens@npm:1.10.0":
-  version: 1.10.0
-  resolution: "@adyen/bento-design-tokens@npm:1.10.0"
-  checksum: 10c0/0da79cf007965ceaddc1ebe7882ed9f56512f8d5b245f38fb162782b8673e7c3666cc53b1bb8897af4b0f7e0e238fabe0de6b6686587863c5b8ed7363c31a8a6
+"@adyen/bento-design-tokens@npm:1.63.0":
+  version: 1.63.0
+  resolution: "@adyen/bento-design-tokens@npm:1.63.0"
+  checksum: 10c0/1d064cecf61ff301a5bff8f7982b75e654197b9fdf7afb548e82a121960e7d7269ec6b6e701dcfa1d0ba42f1f79f106904528971a69b7000116b2983d547a106
   languageName: node
   linkType: hard
 
