@@ -12,7 +12,7 @@ import { URL_MAP } from '../../../../fixtures/URL_MAP';
 
 import LANG from '../../../../../server/translations/en-US.json';
 import { binLookupMock } from '../../../../mocks/binLookup/binLookup.mock';
-import { dualBrandBCMCWithMCCvcRequiredMock } from '../../../../mocks/binLookup/binLookup.data';
+import { dualBrandBCMCWithMCCvcRequiredMock, dualBrandBCMCWithVisaCvcRequiredMock } from '../../../../mocks/binLookup/binLookup.data';
 const CVC_LABEL_OPTIONAL = LANG['creditCard.securityCode.label.optional'];
 
 test.describe('Bcmc payments with dual branding', () => {
@@ -169,6 +169,7 @@ test.describe('Bcmc payments with dual branding', () => {
 
         test.describe('Selecting the visa brand', () => {
             test('#4a should submit the visa payment', async ({ bcmc, page }) => {
+                await binLookupMock(page, dualBrandBCMCWithVisaCvcRequiredMock);
                 const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
 
                 await bcmc.goto(URL_MAP.bcmc);
@@ -197,7 +198,8 @@ test.describe('Bcmc payments with dual branding', () => {
                 await expect(bcmc.paymentResult).toContainText(PAYMENT_RESULT.authorised);
             });
 
-            test('#4b should not submit the visa payment with incomplete form data', async ({ bcmc }) => {
+            test('#4b should not submit the visa payment with incomplete form data', async ({ bcmc, page }) => {
+                await binLookupMock(page, dualBrandBCMCWithVisaCvcRequiredMock);
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
 
@@ -349,7 +351,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 const mcBtn = await bcmc.selectDualBrandUIItem(/mastercard/i, false);
                 await mcBtn.click();
 
-                await bcmc.fillCvc(TEST_CVC_VALUE, { timeout: 60000 });
+                await bcmc.fillCvc(TEST_CVC_VALUE, { timeout: 40000 });
 
                 await bcmc.deleteCardNumber();
                 await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_MC);

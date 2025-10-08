@@ -173,6 +173,34 @@ const dualBrandBCMCWithMCCvcRequiredMock = {
     requestId: null
 };
 
+const dualBrandBCMCWithVisaCvcRequiredMock = {
+    brands: [
+        {
+            brand: 'visa',
+            cvcPolicy: 'required',
+            enableLuhnCheck: true,
+            expiryDatePolicy: 'required',
+            localeBrand: 'VISA',
+            paymentMethodVariant: 'visa',
+            showSocialSecurityNumber: false,
+            supported: true
+        },
+        {
+            brand: 'bcmc',
+            cvcPolicy: 'hidden',
+            enableLuhnCheck: true,
+            expiryDatePolicy: 'required',
+            localeBrand: 'Bancontact card',
+            panLength: 16,
+            paymentMethodVariant: 'bcmc',
+            showSocialSecurityNumber: false,
+            supported: true
+        }
+    ],
+    issuingCountryCode: 'BE',
+    requestId: 'fe0d4402-0916-4ae9-81df-e4fffe1e4a02'
+};
+
 export {
     optionalDateAndCvcMock,
     hiddenDateAndCvcMock,
@@ -184,5 +212,6 @@ export {
     amexWithPanLengthMock,
     kcpMockOptionalDateAndCvcWithPanLengthMock,
     socialSecurityNumberRequiredMock,
-    dualBrandBCMCWithMCCvcRequiredMock
+    dualBrandBCMCWithMCCvcRequiredMock,
+    dualBrandBCMCWithVisaCvcRequiredMock
 };
