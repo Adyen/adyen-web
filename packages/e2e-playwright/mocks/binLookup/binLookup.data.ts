@@ -145,7 +145,7 @@ const socialSecurityNumberRequiredMock = {
     requestId: null
 };
 
-const dualBrandMCAndBCMCCvcRequiredMock = {
+const dualBrandBCMCWithMCCvcRequiredMock = {
     brands: [
         {
             brand: 'mc',
@@ -184,5 +184,5 @@ export {
     amexWithPanLengthMock,
     kcpMockOptionalDateAndCvcWithPanLengthMock,
     socialSecurityNumberRequiredMock,
-    dualBrandMCAndBCMCCvcRequiredMock
+    dualBrandBCMCWithMCCvcRequiredMock
 };
