@@ -169,6 +169,7 @@ test.describe('Bcmc payments with dual branding', () => {
 
         test.describe('Selecting the visa brand', () => {
             test('#4a should submit the visa payment', async ({ bcmc, page }) => {
+                test.slow();
                 await binLookupMock(page, dualBrandBCMCWithVisaCvcRequiredMock);
                 const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
 
@@ -199,6 +200,7 @@ test.describe('Bcmc payments with dual branding', () => {
             });
 
             test('#4b should not submit the visa payment with incomplete form data', async ({ bcmc, page }) => {
+                test.slow();
                 await binLookupMock(page, dualBrandBCMCWithVisaCvcRequiredMock);
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
@@ -303,6 +305,7 @@ test.describe('Bcmc payments with dual branding', () => {
             });
 
             test('#6b should not submit the mc payment with incomplete form data', async ({ bcmc, page }) => {
+                test.slow();
                 await binLookupMock(page, dualBrandBCMCWithMCCvcRequiredMock);
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
@@ -336,6 +339,7 @@ test.describe('Bcmc payments with dual branding', () => {
     test.describe('Selecting the mc brand', () => {
         test.describe('Then deleting the PAN and retyping it without selecting a brand', () => {
             test('#7 should submit payment branded to a default value', async ({ bcmc, page }) => {
+                test.slow();
                 await binLookupMock(page, dualBrandBCMCWithMCCvcRequiredMock);
                 const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
 
