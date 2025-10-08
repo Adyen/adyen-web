@@ -309,6 +309,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 await bcmc.fillExpiryDate(TEST_DATE_VALUE);
 
                 await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
+                await bcmc.cvcField.waitFor({ state: 'visible' });
 
                 // Select mc
                 const mcBtn = await bcmc.selectDualBrandUIItem(/mastercard/i, false);
@@ -344,6 +345,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 await bcmc.fillExpiryDate(TEST_DATE_VALUE);
 
                 await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
+                await bcmc.cvcField.waitFor({ state: 'visible' });
 
                 // Select mc
                 const mcBtn = await bcmc.selectDualBrandUIItem(/mastercard/i, false);
