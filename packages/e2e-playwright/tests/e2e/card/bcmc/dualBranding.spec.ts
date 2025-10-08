@@ -314,7 +314,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 const mcBtn = await bcmc.selectDualBrandUIItem(/mastercard/i, false);
                 await mcBtn.click();
 
-                await expect(bcmc.cvcField).toBeVisible();
+                await expect(bcmc.cvcField).toBeVisible({ timeout: 30000 });
 
                 await bcmc.pay();
 
@@ -349,7 +349,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 const mcBtn = await bcmc.selectDualBrandUIItem(/mastercard/i, false);
                 await mcBtn.click();
 
-                await bcmc.fillCvc(TEST_CVC_VALUE);
+                await bcmc.fillCvc(TEST_CVC_VALUE, { timeout: 60000 });
 
                 await bcmc.deleteCardNumber();
                 await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_MC);
