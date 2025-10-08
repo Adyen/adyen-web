@@ -300,7 +300,8 @@ test.describe('Bcmc payments with dual branding', () => {
                 await expect(bcmc.paymentResult).toContainText(PAYMENT_RESULT.authorised);
             });
 
-            test('#6b should not submit the mc payment with incomplete form data', async ({ bcmc }) => {
+            test('#6b should not submit the mc payment with incomplete form data', async ({ bcmc, page }) => {
+                await binLookupMock(page, dualBrandMCAndBCMCCvcRequiredMock);
                 await bcmc.goto(URL_MAP.bcmc);
                 await bcmc.isComponentVisible();
 
