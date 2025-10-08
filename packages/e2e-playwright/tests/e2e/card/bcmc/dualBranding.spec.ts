@@ -314,7 +314,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 const mcBtn = await bcmc.selectDualBrandUIItem(/mastercard/i, false);
                 await mcBtn.click();
 
-                await expect(bcmc.cvcField).toBeVisible({ timeout: 30000 });
+                await expect(bcmc.cvcField).toBeVisible();
 
                 await bcmc.pay();
 
