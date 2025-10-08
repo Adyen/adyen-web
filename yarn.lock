@@ -17,7 +17,7 @@ __metadata:
   resolution: "@adyen/adyen-web-main@workspace:."
   dependencies:
     "@adyen/adyen-web-server": "npm:1.0.0"
-    "@changesets/cli": "npm:2.29.6"
+    "@changesets/cli": "npm:2.29.7"
     "@changesets/get-github-info": "npm:0.6.0"
     concurrently: "npm:9.2.1"
     prettier: "npm:3.6.2"
@@ -639,7 +639,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@changesets/apply-release-plan@npm:^7.0.12":
+"@changesets/apply-release-plan@npm:^7.0.13":
   version: 7.0.13
   resolution: "@changesets/apply-release-plan@npm:7.0.13"
   dependencies:
@@ -683,11 +683,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@changesets/cli@npm:2.29.6":
-  version: 2.29.6
-  resolution: "@changesets/cli@npm:2.29.6"
+"@changesets/cli@npm:2.29.7":
+  version: 2.29.7
+  resolution: "@changesets/cli@npm:2.29.7"
   dependencies:
-    "@changesets/apply-release-plan": "npm:^7.0.12"
+    "@changesets/apply-release-plan": "npm:^7.0.13"
     "@changesets/assemble-release-plan": "npm:^6.0.9"
     "@changesets/changelog-git": "npm:^0.2.1"
     "@changesets/config": "npm:^3.1.1"
@@ -717,7 +717,7 @@ __metadata:
     term-size: "npm:^2.1.0"
   bin:
     changeset: bin.js
-  checksum: 10c0/6e09201df1bc83f45526f7ab3d77b1171c2c74e89639993367acf183b9d0809d02845b9d900f34a5febcd1a963cdad7246e2b9c444da2440760d297aad3aff32
+  checksum: 10c0/a868fd39ace25993714f8b80ebb08529e0aba5446266e18edee9e5fd34d529ef6f8fcb7f53fc5831ab99c5721762fe06198aade304799792f1f79b9d37600d04
   languageName: node
   linkType: hard
 
