@@ -11,6 +11,8 @@ import {
 import { URL_MAP } from '../../../../fixtures/URL_MAP';
 
 import LANG from '../../../../../server/translations/en-US.json';
+import { binLookupMock } from '../../../../mocks/binLookup/binLookup.mock';
+import { dualBrandMCAndBCMCCvcRequiredMock } from '../../../../mocks/binLookup/binLookup.data';
 const CVC_LABEL_OPTIONAL = LANG['creditCard.securityCode.label.optional'];
 
 test.describe('Bcmc payments with dual branding', () => {
@@ -331,6 +333,7 @@ test.describe('Bcmc payments with dual branding', () => {
     test.describe('Selecting the mc brand', () => {
         test.describe('Then deleting the PAN and retyping it without selecting a brand', () => {
             test('#7 should submit payment branded to a default value', async ({ bcmc, page }) => {
+                await binLookupMock(page, dualBrandMCAndBCMCCvcRequiredMock);
                 const paymentsRequestPromise = page.waitForRequest(request => request.url().includes('/payments') && request.method() === 'POST');
 
                 await bcmc.goto(URL_MAP.bcmc);

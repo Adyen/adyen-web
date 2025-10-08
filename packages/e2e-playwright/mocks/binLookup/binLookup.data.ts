@@ -145,6 +145,34 @@ const socialSecurityNumberRequiredMock = {
     requestId: null
 };
 
+const dualBrandMCAndBCMCCvcRequiredMock = {
+    brands: [
+        {
+            brand: 'mc',
+            cvcPolicy: 'required',
+            enableLuhnCheck: true,
+            expiryDatePolicy: 'required',
+            localeBrand: 'MasterCard',
+            paymentMethodVariant: 'mcstandarddebit',
+            showSocialSecurityNumber: false,
+            supported: true
+        },
+        {
+            brand: 'bcmc',
+            cvcPolicy: 'hidden',
+            enableLuhnCheck: true,
+            expiryDatePolicy: 'required',
+            localeBrand: 'Bancontact card',
+            panLength: 16,
+            paymentMethodVariant: 'bcmc',
+            showSocialSecurityNumber: false,
+            supported: true
+        }
+    ],
+    issuingCountryCode: 'BE',
+    requestId: null
+};
+
 export {
     optionalDateAndCvcMock,
     hiddenDateAndCvcMock,
@@ -155,5 +183,6 @@ export {
     multiLengthMaestroWithPanLengthMock,
     amexWithPanLengthMock,
     kcpMockOptionalDateAndCvcWithPanLengthMock,
-    socialSecurityNumberRequiredMock
+    socialSecurityNumberRequiredMock,
+    dualBrandMCAndBCMCCvcRequiredMock
 };
