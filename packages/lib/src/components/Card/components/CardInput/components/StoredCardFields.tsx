@@ -34,12 +34,11 @@ export default function StoredCardFields({
 
     return (
         <div className="adyen-checkout__card__form adyen-checkout__card__form--oneClick" aria-label={ariaLabel}>
-            <div className="adyen-checkout__card__exp-cvc adyen-checkout__field-wrapper">
+            <div className="adyen-checkout__card__exp-cvc adyen-checkout__fieldset__fields">
                 {expiryMonth && expiryYear && (
                     <Field
                         label={i18n.get('creditCard.expiryDate.label')}
-                        className="adyen-checkout__field--50"
-                        classNameModifiers={['storedCard']}
+                        classNameModifiers={['col-50', 'storedCard']}
                         name={'expiryDateField'}
                         disabled
                     >
@@ -62,8 +61,7 @@ export default function StoredCardFields({
                         isValid={!!valid.encryptedSecurityCode}
                         label={i18n.get('creditCard.securityCode.label')}
                         onFocusField={onFocusField}
-                        {...(expiryMonth && expiryYear && { className: 'adyen-checkout__field--50' })}
-                        classNameModifiers={['storedCard']}
+                        classNameModifiers={[...(expiryMonth && expiryYear ? ['col-50', 'storedCard'] : ['storedCard'])]}
                         frontCVC={isAmex}
                         showContextualElement={showContextualElement}
                         contextualText={cvcContextualText}
