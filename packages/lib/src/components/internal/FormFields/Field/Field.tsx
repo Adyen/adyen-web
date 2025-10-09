@@ -228,6 +228,7 @@ const Field: FunctionalComponent<FieldProps> = props => {
      */
     return (
         <div
+            data-testid="form-field"
             className={classNames(
                 'adyen-checkout__field',
                 className,

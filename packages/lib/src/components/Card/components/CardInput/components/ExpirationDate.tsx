@@ -21,6 +21,7 @@ export default function ExpirationDate(props: ExpirationDateProps) {
         filled,
         onFocusField,
         className = '',
+        classNameModifiers = [],
         error = '',
         isValid = false,
         expiryDatePolicy = DATE_POLICY_REQUIRED,
@@ -47,7 +48,7 @@ export default function ExpirationDate(props: ExpirationDateProps) {
     return (
         <Field
             label={fieldLabel}
-            classNameModifiers={['expiryDate']}
+            classNameModifiers={[...classNameModifiers, 'expiryDate']}
             className={fieldClassnames}
             focused={focused}
             filled={filled}
