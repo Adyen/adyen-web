@@ -15,6 +15,8 @@ import { binLookupMock } from '../../../../mocks/binLookup/binLookup.mock';
 import { dualBrandBCMCWithMCCvcRequiredMock, dualBrandBCMCWithVisaCvcRequiredMock } from '../../../../mocks/binLookup/binLookup.data';
 const CVC_LABEL_OPTIONAL = LANG['creditCard.securityCode.label.optional'];
 
+test.describe.configure({ mode: 'serial' });
+
 test.describe('Bcmc payments with dual branding', () => {
     test.describe('Bancontact (BCMC) / Maestro brands', () => {
         test.describe('Selecting the Bancontact brand', () => {
