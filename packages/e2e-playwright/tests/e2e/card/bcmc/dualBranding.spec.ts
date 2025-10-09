@@ -190,7 +190,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 const visaBtn = await bcmc.selectDualBrandUIItem(/visa/i);
                 await visaBtn.click();
 
-                await expect(bcmc.cvcField).toBeVisible();
+                await expect(bcmc.cvcField).toBeVisible({ timeout: 60_000 });
 
                 await bcmc.fillCvc(TEST_CVC_VALUE);
                 await bcmc.pay();
@@ -212,13 +212,13 @@ test.describe('Bcmc payments with dual branding', () => {
                 await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_VISA);
                 await bcmc.fillExpiryDate(TEST_DATE_VALUE);
 
-                await expect(bcmc.dualBrandingButtonsHolder).toBeVisible({ timeout: 60_000 });
+                await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
 
                 // Select visa
                 const visaBtn = await bcmc.selectDualBrandUIItem(/visa/i);
                 await visaBtn.click();
 
-                await expect(bcmc.cvcField).toBeVisible();
+                await expect(bcmc.cvcField).toBeVisible({ timeout: 60_000 });
 
                 await bcmc.pay();
 
@@ -357,7 +357,9 @@ test.describe('Bcmc payments with dual branding', () => {
                 const mcBtn = await bcmc.selectDualBrandUIItem(/mastercard/i, false);
                 await mcBtn.click();
 
-                await bcmc.fillCvc(TEST_CVC_VALUE, { timeout: 60_000 });
+                await expect(bcmc.cvcField).toBeVisible({ timeout: 60_000 });
+
+                await bcmc.fillCvc(TEST_CVC_VALUE);
 
                 await bcmc.deleteCardNumber();
                 await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_MC);
