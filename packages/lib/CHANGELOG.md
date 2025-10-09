@@ -1,5 +1,43 @@
 # @adyen/adyen-web
 
+## 6.23.0
+
+### Minor Changes
+
+- Analytics - Adding events when loading third party script SDKs ([#3512](https://github.com/Adyen/adyen-web/pull/3512))
+
+- Fastlane - Added analytics to the shopper recognition flow ([#3464](https://github.com/Adyen/adyen-web/pull/3464))
+
+- Apple Pay - Adding 'domainName' configuration property which can be used to set which domain is performing the merchant validation request (Useful when embedding component within iframe) ([#3561](https://github.com/Adyen/adyen-web/pull/3561))
+
+- Add support for bankTransfer in new countries ([#3543](https://github.com/Adyen/adyen-web/pull/3543))
+
+-   - Update UI to display Pix code ([#3542](https://github.com/Adyen/adyen-web/pull/3542))
+
+    - Adjusted legal text for Fastlane
+
+-   - Update QR code UI for PIX payment to switch between displaying QR code and copying code text ([#3509](https://github.com/Adyen/adyen-web/pull/3509))
+
+    - Display full bank code for PIX so users can also highlight and copy the code directly
+
+-   - Improve responsiveness of Segmented controller component and fix font size ([#3544](https://github.com/Adyen/adyen-web/pull/3544))
+
+    - Improve paypal button unit tests
+
+- Allow leading zeros for payto phone number input ([#3529](https://github.com/Adyen/adyen-web/pull/3529))
+
+- Use v6 SecuredFields: which bumps the JWE version, drops the ACH bundle, and disallows the "compat" version on Live ([#3461](https://github.com/Adyen/adyen-web/pull/3461))
+
+### Patch Changes
+
+- Adding retrial mechanism for third party script load ([#3500](https://github.com/Adyen/adyen-web/pull/3500))
+
+- Fix accessibility issue with opening klarna widget with enter button ([#3560](https://github.com/Adyen/adyen-web/pull/3560))
+
+- GooglePay - Parsing brands from Backoffice if available ([#3539](https://github.com/Adyen/adyen-web/pull/3539))
+
+- Fix checkmark style for UPI app selector ([#3533](https://github.com/Adyen/adyen-web/pull/3533))
+
 ## 6.22.0
 
 ### Minor Changes
