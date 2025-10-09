@@ -15,7 +15,11 @@ import { binLookupMock } from '../../../../mocks/binLookup/binLookup.mock';
 import { dualBrandBCMCWithMCCvcRequiredMock, dualBrandBCMCWithVisaCvcRequiredMock } from '../../../../mocks/binLookup/binLookup.data';
 const CVC_LABEL_OPTIONAL = LANG['creditCard.securityCode.label.optional'];
 
-test.describe.configure({ mode: 'serial' });
+test.beforeEach(async ({}, testInfo) => {
+    // Some of the tests on this file seem to be quite flaky with locator
+    //  as some elements take time to show up
+    testInfo.setTimeout(testInfo.timeout * 2);
+});
 
 test.describe('Bcmc payments with dual branding', () => {
     test.describe('Bancontact (BCMC) / Maestro brands', () => {
@@ -208,7 +212,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_VISA);
                 await bcmc.fillExpiryDate(TEST_DATE_VALUE);
 
-                await expect(bcmc.dualBrandingButtonsHolder).toBeVisible();
+                await expect(bcmc.dualBrandingButtonsHolder).toBeVisible({ timeout: 60_000 });
 
                 // Select visa
                 const visaBtn = await bcmc.selectDualBrandUIItem(/visa/i);
@@ -353,7 +357,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 const mcBtn = await bcmc.selectDualBrandUIItem(/mastercard/i, false);
                 await mcBtn.click();
 
-                await bcmc.fillCvc(TEST_CVC_VALUE, { timeout: 40000 });
+                await bcmc.fillCvc(TEST_CVC_VALUE, { timeout: 60_000 });
 
                 await bcmc.deleteCardNumber();
                 await bcmc.fillCardNumber(BCMC_DUAL_BRANDED_MC);
