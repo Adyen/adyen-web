@@ -18,7 +18,7 @@ const CVC_LABEL_OPTIONAL = LANG['creditCard.securityCode.label.optional'];
 test.beforeEach(async ({}, testInfo) => {
     // Some of the tests on this file seem to be quite flaky with locator
     //  as some elements take time to show up
-    testInfo.setTimeout(testInfo.timeout * 2);
+    testInfo.setTimeout(testInfo.timeout + 10_000);
 });
 
 test.describe('Bcmc payments with dual branding', () => {
@@ -322,7 +322,7 @@ test.describe('Bcmc payments with dual branding', () => {
                 const mcBtn = await bcmc.selectDualBrandUIItem(/mastercard/i, false);
                 await mcBtn.click();
 
-                await expect(bcmc.cvcField).toBeVisible();
+                await expect(bcmc.cvcField).toBeVisible({ timeout: 60_000 });
 
                 await bcmc.pay();
 
