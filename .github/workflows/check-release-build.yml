@@ -13,7 +13,7 @@ jobs:
       trigger_release: ${{ steps.check_commit_message.outputs.trigger_release }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Get commit message
         id: get_commit_message
