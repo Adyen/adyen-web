@@ -19,8 +19,8 @@ export const AmazonPayExample = ({ contextArgs }: AmazonPayExampleProps) => {
     const createCheckout = async () => {
         const { useSessions, showPayButton, countryCode, shopperLocale, amount } = contextArgs;
         //URL selection
-        // http://localhost:3020/iframe.html?id=wallets-amazonpay--default&viewMode=story
-        // http://localhost:3020/?path=/story/wallets-amazonpay--default
+        // http://localhost:3020/iframe.html?id=components-wallets-amazonpay--default&viewMode=story
+        // http://localhost:3020/?path=/story/components-wallets-amazonpay--default
         // either has iframe or path
 
         const urlSearchParams = new URLSearchParams(window.location.search);
@@ -54,8 +54,8 @@ export const AmazonPayExample = ({ contextArgs }: AmazonPayExampleProps) => {
                  * The merchant will receive the amazonCheckoutSessionId attached in the return URL.
                  */
                 amazonCheckoutSessionId,
-                cancelUrl: 'http://localhost:3020/iframe.html?id=wallets-amazonpay--default&viewMode=story',
-                returnUrl: 'http://localhost:3020/iframe.html?id=wallets-amazonpay--default&viewMode=story&step=result'
+                cancelUrl: 'http://localhost:3020/iframe.html?id=components-wallets-amazonpay--default&viewMode=story',
+                returnUrl: 'http://localhost:3020/iframe.html?id=components-wallets-amazonpay--default&viewMode=story&step=result'
             });
             setElement(amazonPayElement);
         } else if (step === 'result') {
@@ -83,7 +83,7 @@ export const AmazonPayExample = ({ contextArgs }: AmazonPayExampleProps) => {
                 // checkoutMode: 'ProcessOrder'
 
                 // Express Checkout flow:
-                returnUrl: ' http://localhost:3020/iframe.html?id=wallets-amazonpay--default&viewMode=story&step=review'
+                returnUrl: ' http://localhost:3020/iframe.html?id=components-wallets-amazonpay--default&viewMode=story&step=review'
             });
             setElement(amazonPayElement);
         }
