@@ -107,7 +107,7 @@ const config = tseslint.config(
     },
     {
         name: 'Storybook story rules',
-        files: ['storybook/**'],
+        files: ['**/?(*.)+(stories).[jt]s?(x)'],
         rules: {
             '@typescript-eslint/no-misused-promises': 'off'
         }
