@@ -2,32 +2,31 @@ import { test, expect } from '../../fixtures/base-fixture';
 import fs from 'node:fs';
 import { Automated } from '../../models/automated';
 
-
 // Config
 // This is relative to playwright root: adyen-web/lib/e2e-playwright/
 const STORYBOOK_INDEX_PATH = '../lib/storybook-static/index.json';
 
 const EXCLUDED_STORIES: string[] = [
-    'wallets-applepay--express', // Can't run Apple Pay in the e2e tests
-    'wallets-applepay--default',
-    'wallets-fastlane--lookup',
+    'components-wallets-applepay--express', // Can't run Apple Pay in the e2e tests
+    'components-wallets-applepay--default',
+    'components-wallets-fastlane--lookup',
     'helpers-paypalreviewpage--paypal-review-page', // Unsure what needs to be done here
     'components-paybybankpix--merchant-page', // demo pages for pix
     'components-paybybankpix--hosted-page-enrollment',
     'components-paybybankpix--hosted-page-payment',
-    'components-paybybankpix--simulate-issuer-page',
+    'components-paybybankpix--simulate-issuer-page'
 ];
 
 // These are the list of violations that are know for each expose component
 // The key is the story id, this can be found in the test that is failing or in storybook
 // The values in the violation array are the ID of the printed violation
 const KNOWN_A11Y_VIOLATIONS = {
-    'components-payto--default': ['aria-valid-attr-value'], 
-    'dropin-default--style-customization': ['color-contrast'], // Demo page
-    'internals-toggle--toggle-only': ['label'],
-    'issuerlist-onlinebankingcz--default': ['link-in-text-block'], // TODO - the link style needs fixing
-    'issuerlist-onlinebankingpl--default': ['link-in-text-block'], // TODO - the link style needs fixing
-    'issuerlist-onlinebankingsk--default': ['link-in-text-block'], // TODO - the link style needs fixing
+    'components-payto--default': ['aria-valid-attr-value'],
+    'components-dropin-default--style-customization': ['color-contrast'], // Demo page
+    'components-internals-toggle--toggle-only': ['label'],
+    'components-issuerlist-onlinebankingcz--default': ['link-in-text-block'], // TODO - the link style needs fixing
+    'components-issuerlist-onlinebankingpl--default': ['link-in-text-block'], // TODO - the link style needs fixing
+    'components-issuerlist-onlinebankingsk--default': ['link-in-text-block'] // TODO - the link style needs fixing
 };
 
 // types
@@ -60,7 +59,6 @@ storyIds = allEntries
             !EXCLUDED_STORIES.includes(entry.id) // Exclude stories in the exclusion list
     )
     .map(entry => entry.id); // Extract the IDs
-
 
 test.describe('Automated a11y testing', () => {
     // Dynamically generate tests for each story
