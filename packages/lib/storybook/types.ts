@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/preact';
-import UIElement from '../../src/components/internal/UIElement';
-import { AddressData, CoreConfiguration, MandateType, PaymentMethodsResponse } from '../../src/types';
+import UIElement from '../src/components/internal/UIElement';
+import { AddressData, CoreConfiguration, MandateType, PaymentMethodsResponse } from '../src/types';
 
 export type ShopperDetails = {
     shopperName: {
@@ -47,6 +47,6 @@ export type AdyenCheckoutProps = {
     allowedPaymentTypes?: string[];
     paymentMethodsOverride?: PaymentMethodsResponse;
     paymentsOptions?: {}; // TODO we don't have proper type for this right now
-    onPaymentCompleted?: (data: any, element?: UIElement) => void;
+    onPaymentCompleted?: (data: unknown, element?: UIElement) => void;
     srConfig: { showPanel: boolean; moveFocus: boolean };
 };
