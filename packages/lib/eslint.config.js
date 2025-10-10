@@ -118,8 +118,10 @@ const config = tseslint.config(
         plugins: {
             'testing-library': testingLibrary
         },
-        ...testingLibrary.configs['flat/dom'],
-        ...testingLibrary.configs['flat/react']
+        rules: {
+            ...testingLibrary.configs['flat/dom'].rules,
+            ...testingLibrary.configs['flat/react'].rules
+        }
     }
 );
 
