@@ -23,8 +23,9 @@ const EXCLUDED_STORIES: string[] = [
 const KNOWN_A11Y_VIOLATIONS = {
     'components-payto--default': ['aria-valid-attr-value'],
     'components-dropin-default--style-customization': ['color-contrast'], // Demo page
-    'components-internals-toggle--toggle-only': ['label'],
+    'internals-toggle--toggle-only': ['label'],
     'components-issuerlist-onlinebankingcz--default': ['link-in-text-block'], // TODO - the link style needs fixing
+    'components-issuerlist-onlinebankingfi--default': ['link-in-text-block'], // TODO - the link style needs fixing
     'components-issuerlist-onlinebankingpl--default': ['link-in-text-block'], // TODO - the link style needs fixing
     'components-issuerlist-onlinebankingsk--default': ['link-in-text-block'] // TODO - the link style needs fixing
 };

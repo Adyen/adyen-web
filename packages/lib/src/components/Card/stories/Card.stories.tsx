@@ -16,7 +16,7 @@ const meta: MetaConfiguration<CardConfiguration> = {
 export const Default: CardStory = {
     render: createCardComponent,
     args: {
-        srConfig: { moveFocus: true, showPanel: false },
+        srConfig: { moveFocus: true, showPanel: true },
         componentConfiguration: getComponentConfigFromUrl() ?? {
             _disableClickToPay: true,
             autoFocus: true,
@@ -67,7 +67,7 @@ export const WithSSN: CardStory = {
 export const WithAVS: CardStory = {
     render: createCardComponent,
     args: {
-        srConfig: { moveFocus: true, showPanel: false },
+        srConfig: { moveFocus: true, showPanel: true },
         componentConfiguration: {
             _disableClickToPay: true,
             billingAddressRequired: true,
