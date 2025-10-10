@@ -1,0 +1,30 @@
+.dropin-customization {
+    .adyen-checkout__payment-method--selected {
+        --adyen-sdk-color-background-secondary: white;
+        --adyen-sdk-color-outline-secondary: orange;
+
+        .adyen-checkout__payment-method__header__title {
+            --adyen-sdk-color-label-secondary: orange;
+        }
+
+        .adyen-checkout__payment-method__radio--selected {
+            --adyen-sdk-color-label-primary: orange;
+        }
+    }
+
+    .adyen-checkout__input-wrapper {
+        --adyen-sdk-border-width-s: 2px;
+        --adyen-sdk-color-outline-primary-active: darkorange;
+    }
+
+    .adyen-checkout__button,
+    .adyen-checkout__button--pay {
+        --adyen-sdk-color-background-always-dark: orange;
+        --adyen-sdk-color-background-always-dark-active: #ba8000;
+        --adyen-sdk-color-background-inverse-primary-hover: #ba8000;
+    }
+
+    .adyen-checkout__payment-method__name--selected {
+        color: orange;
+    }
+}

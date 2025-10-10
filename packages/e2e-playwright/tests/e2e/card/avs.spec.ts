@@ -82,7 +82,7 @@ test.describe('Card payments with full avs', () => {
     test.describe('When switching to a different delivery country', () => {
         test('should make a successful card payment', async ({ cardWithAvs }) => {
             const url =
-                '/iframe.html?globals=&args=componentConfiguration.billingAddressAllowedCountries:!undefined;componentConfiguration.data.billingAddress.postalCode:A9A9A9&id=cards-card--with-avs&viewMode=story';
+                '/iframe.html?globals=&args=componentConfiguration.billingAddressAllowedCountries:!undefined;componentConfiguration.data.billingAddress.postalCode:A9A9A9&id=components-cards-card--with-avs&viewMode=story';
             await cardWithAvs.goto(url);
             await expect(cardWithAvs.billingAddress.postalCodeError).toContainText('Invalid format. Expected format');
             await cardWithAvs.billingAddress.selectCountry({ name: 'Japan' });

@@ -44,6 +44,13 @@ const preview: Preview = {
         amount: DEFAULT_AMOUNT_VALUE,
         showPayButton: true
     },
+    parameters: {
+        options: {
+          storySort: {
+            order: ['Components', ['Cards', ['Card', "*"], 'Dropin', 'Wallets', 'IssuerList','OpenInvoice', 'Partial Payments', 'Vouchers', '*'],'*'],
+          },
+        },
+      },
     ...loaders
 };
 

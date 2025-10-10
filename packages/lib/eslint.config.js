@@ -107,7 +107,7 @@ const config = tseslint.config(
     },
     {
         name: 'Storybook story rules',
-        files: ['storybook/**'],
+        files: ['**/?(*.)+(stories).[jt]s?(x)'],
         rules: {
             '@typescript-eslint/no-misused-promises': 'off'
         }
@@ -118,8 +118,10 @@ const config = tseslint.config(
         plugins: {
             'testing-library': testingLibrary
         },
-        ...testingLibrary.configs['flat/dom'],
-        ...testingLibrary.configs['flat/react']
+        rules: {
+            ...testingLibrary.configs['flat/dom'].rules,
+            ...testingLibrary.configs['flat/react'].rules
+        }
     }
 );
 
