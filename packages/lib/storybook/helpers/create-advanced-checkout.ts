@@ -6,7 +6,7 @@ import Checkout from '../../src/core/core';
 import { STORYBOOK_ENVIRONMENT_URLS } from '../config/commonConfig';
 
 import type { PaymentMethodsResponse } from '../../src/types';
-import type { AdyenCheckoutProps, ShopperDetails } from '../stories/types';
+import type { AdyenCheckoutProps, ShopperDetails } from '../types';
 
 async function createAdvancedFlowCheckout(
     checkoutProps: Omit<AdyenCheckoutProps, 'srConfig'> & {
@@ -120,7 +120,7 @@ async function createAdvancedFlowCheckout(
                 const res = await checkBalance(payload);
                 resolve(res);
             } catch (e) {
-                reject(e);
+                reject(e as Error);
             }
         },
 
@@ -128,8 +128,8 @@ async function createAdvancedFlowCheckout(
             try {
                 const order = await createOrder(paymentAmount);
                 resolve(order);
-            } catch (e) {
-                reject(e);
+            } catch (e: unknown) {
+                reject(e as Error);
             }
         },
 

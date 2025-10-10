@@ -39,6 +39,7 @@
     },
     "include": [
         "./src/**/*",
+        "./storybook/**/*",
         "./src/types/custom.d.ts",
     ],
     "exclude": ["node_modules", "./dist/**", "**/*.scss", "**/*_*/**"],
