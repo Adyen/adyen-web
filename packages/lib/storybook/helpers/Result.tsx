@@ -1,3 +1,5 @@
+import { h } from 'preact';
+
 interface IResult {
     resultCode?: string;
     resultMessage?: string;

@@ -2,7 +2,7 @@ import { createSessionsCheckout } from './create-sessions-checkout';
 import { createAdvancedFlowCheckout } from './create-advanced-checkout';
 import Core from '../../src/core';
 
-import type { GlobalStoryProps, ShopperDetails } from '../stories/types';
+import type { GlobalStoryProps, ShopperDetails } from '../types';
 
 async function createCheckout(checkoutConfig: GlobalStoryProps, shopperDetails?: ShopperDetails): Promise<Core> {
     const { useSessions, ...rest } = checkoutConfig;

@@ -5,7 +5,7 @@ import getCurrency from '../utils/get-currency';
 import Checkout from '../../src/core/core';
 import { AdyenCheckout } from '../../src/core/AdyenCheckout';
 
-import type { AdyenCheckoutProps, ShopperDetails } from '../stories/types';
+import type { AdyenCheckoutProps, ShopperDetails } from '../types';
 
 async function createSessionsCheckout(
     checkoutProps: Omit<AdyenCheckoutProps, 'srConfig'> & {
