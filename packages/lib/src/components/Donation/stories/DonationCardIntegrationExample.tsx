@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { AdyenCheckout } from '../../../core/AdyenCheckout';

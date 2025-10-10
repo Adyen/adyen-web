@@ -1,3 +1,4 @@
+import { h } from "preact";
 import Card from '../..';
 import getCurrency from '../../../../../storybook/utils/get-currency';
 import { makePayment } from '../../../../../storybook/helpers/checkout-api-calls';

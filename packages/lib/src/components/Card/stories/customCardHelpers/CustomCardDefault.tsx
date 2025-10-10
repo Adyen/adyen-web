@@ -1,3 +1,4 @@
+import { Fragment, h } from "preact";
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { createAdvancedFlowCheckout } from '../../../../../storybook/helpers/create-advanced-checkout';
 import { createSessionsCheckout } from '../../../../../storybook/helpers/create-sessions-checkout';
@@ -55,7 +56,7 @@ export const CustomCardDefault = ({ contextArgs }) => {
     }, [element]);
 
     return (
-        <>
+        <Fragment>
             {errorMessage ? (
                 <div>{errorMessage}</div>
             ) : (
@@ -104,6 +105,6 @@ export const CustomCardDefault = ({ contextArgs }) => {
                     </div>
                 </div>
             )}
-        </>
+        </Fragment>
     );
 };

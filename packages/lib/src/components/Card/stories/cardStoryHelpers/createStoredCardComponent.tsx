@@ -1,3 +1,4 @@
+import { Fragment, h } from "preact";
 import { PaymentMethodStoryProps } from '../../../../../storybook/types';
 import { CardConfiguration } from '../../types';
 import { Checkout } from '../../../../../storybook/components/Checkout';
@@ -26,7 +27,7 @@ export const createStoredCardComponent = (args: PaymentMethodStoryProps<CardConf
                         const card = new Card(checkout, { ...storedCardData, ...componentConfiguration });
 
                         return (
-                            <>
+                            <Fragment>
                                 <div className={'stored-card-info'}>
                                     <p>
                                         <i>Stored card info:</i>
@@ -47,7 +48,7 @@ export const createStoredCardComponent = (args: PaymentMethodStoryProps<CardConf
                                     </div>
                                 </div>
                                 <ComponentContainer element={card} />
-                            </>
+                            </Fragment>
                         );
                     } else {
                         return <div>No stored cards found</div>;
