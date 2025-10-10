@@ -5,7 +5,8 @@ import { REGULAR_TEST_CARD, TEST_CVC_VALUE, TEST_DATE_VALUE } from '../../utils/
 
 const test = mergeTests(cardWithAvs, srPanel);
 // Card with AVS, show srPanel, no prefilled data
-const url = '/iframe.html?args=srConfig.showPanel:!true;componentConfiguration.data:!undefined&globals=&id=cards-card--with-avs&viewMode=story';
+const url =
+    '/iframe.html?args=srConfig.showPanel:!true;componentConfiguration.data:!undefined&globals=&id=components-cards-card--with-avs&viewMode=story';
 
 test('#1 avsCard error fields and inputs should have correct aria attributes', async ({ cardWithAvs }) => {
     await cardWithAvs.goto(url);
