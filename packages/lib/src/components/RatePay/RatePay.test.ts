@@ -2,12 +2,12 @@ import RatePay from './RatePay';
 import { render, screen, waitFor, within } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { setupServer } from 'msw/node';
-import { http, HttpResponse, RequestHandler } from 'msw';
+import { http, HttpResponse } from 'msw';
 
 const server = setupServer(
     http.get('https://checkoutshopper-live.adyen.com/checkoutshopper/datasets/countries/en-US.json', () => {
         return HttpResponse.json([{ id: 'DE', name: 'Germany' }]);
-    }) as RequestHandler
+    }) as any
 );
 
 beforeAll(() => server.listen());
