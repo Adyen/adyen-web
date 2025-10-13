@@ -2,12 +2,12 @@ import AfterPay from './AfterPay';
 import { render, screen, waitFor, within } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 import { setupServer } from 'msw/node';
-import { http, HttpResponse } from 'msw';
+import { http, HttpResponse, RequestHandler } from 'msw';
 
 const server = setupServer(
     http.get('https://checkoutshopper-live.adyen.com/checkoutshopper/datasets/countries/en-US.json', () => {
         return HttpResponse.json([{ id: 'NL', name: 'Netherlands' }]);
-    }) as any
+    }) as RequestHandler
 );
 
 beforeAll(() => server.listen());

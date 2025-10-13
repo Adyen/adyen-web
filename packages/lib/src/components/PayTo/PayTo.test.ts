@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
-import { http, HttpResponse } from 'msw';
+import { http, HttpResponse, RequestHandler } from 'msw';
 import { setupServer } from 'msw/node';
 import getDataset from '../../core/Services/get-dataset';
 import PayTo from './PayTo';
@@ -246,7 +246,7 @@ describe('PayTo', () => {
                     resultCode: 'pending',
                     type: 'pending'
                 });
-            }) as any
+            }) as RequestHandler
         );
 
         beforeAll(() => server.listen());

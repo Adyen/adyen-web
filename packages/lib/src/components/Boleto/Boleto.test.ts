@@ -1,19 +1,19 @@
 import Boleto from './Boleto';
 import { render, screen, waitFor } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
-import { http, HttpResponse } from 'msw';
+import { http, HttpResponse, RequestHandler } from 'msw';
 import { setupServer } from 'msw/node';
 
 const server = setupServer(
     http.get('https://checkoutshopper-live.adyen.com/checkoutshopper/datasets/countries/en-US.json', () => {
         return HttpResponse.json([{ id: 'BR', name: 'Brazil' }]);
-    }) as any,
+    }) as RequestHandler,
     http.get('https://checkoutshopper-live.adyen.com/checkoutshopper/datasets/states/BR/en-US.json', () => {
         return HttpResponse.json([
             { id: 'MG', name: 'Minas Gerais' },
             { id: 'SP', name: 'Sao Paulo' }
         ]);
-    }) as any
+    }) as RequestHandler
 );
 
 beforeAll(() => server.listen());
