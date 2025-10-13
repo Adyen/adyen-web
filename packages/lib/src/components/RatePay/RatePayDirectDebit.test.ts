@@ -5,7 +5,6 @@ import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
 
 const server = setupServer(
-    // @ts-ignore
     http.get('https://checkoutshopper-live.adyen.com/checkoutshopper/datasets/countries/en-US.json', () => {
         return HttpResponse.json([{ id: 'DE', name: 'Germany' }]);
     })
