@@ -246,7 +246,7 @@ describe('PayTo', () => {
                     resultCode: 'pending',
                     type: 'pending'
                 });
-            })
+            }) as any
         );
 
         beforeAll(() => server.listen());
