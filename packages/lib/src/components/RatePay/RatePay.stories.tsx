@@ -18,7 +18,7 @@ export const Default: RatePayStory = {
         </Checkout>
     ),
     args: {
-        countryCode: 'NL'
+        countryCode: 'DE'
     }
 };
 

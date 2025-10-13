@@ -18,7 +18,7 @@ export const Default: RatePayDirectDebitStory = {
         </Checkout>
     ),
     args: {
-        countryCode: 'NL'
+        countryCode: 'DE'
     }
 };
 
