@@ -20,7 +20,7 @@ const shopperDetails: ShopperDetails = {
     telephoneNumber: '0612345678',
     shopperEmail: 'test@adyen.com',
     dateOfBirth: '1990-08-10',
-    shopperIP: '172.0.0.1',
+    shopperIP: '0.0.0.0',
     billingAddress: {
         city: 'Amsterdam',
         country: 'NL',
