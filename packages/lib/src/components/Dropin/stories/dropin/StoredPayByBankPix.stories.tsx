@@ -91,7 +91,7 @@ export const CreateEnrollment = {
         showPayButton: true,
         sessionData: {
             ...mockEnrollmentPayload,
-            returnUrl: ``${window.location.origin}/iframe.html?args=&globals=&id=components-dropin-paybybankpix--create-enrollment&viewMode=story`
+            returnUrl: `${window.location.origin}/iframe.html?args=&globals=&id=components-dropin-paybybankpix--create-enrollment&viewMode=story`
         },
         redirectResult: getSearchParameter('redirectResult'),
         sessionId: getSearchParameter('sessionId'),
@@ -121,7 +121,7 @@ export const PayWithEnrolledDevice = {
         showPayButton: true,
         sessionData: {
             ...mockEnrollmentPayload,
-            returnUrl: ``${window.location.origin}/iframe.html?args=&globals=&id=components-dropin-paybybankpix--create-enrollment&viewMode=story`
+            returnUrl: `${window.location.origin}/iframe.html?args=&globals=&id=components-dropin-paybybankpix--create-enrollment&viewMode=story`
         },
         componentConfiguration: {
             showRemovePaymentMethodButton: false,
