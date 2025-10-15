@@ -1,7 +1,7 @@
 import { Fragment, h } from 'preact';
 import { Meta, StoryObj } from '@storybook/preact';
 import { useRef } from 'preact/hooks';
-import { Tooltip } from '.';
+import { Tooltip } from './Tooltip';
 import { SingletonTooltipProvider, useTooltip } from './SingletonTooltipProvider';
 
 const meta: Meta = {

@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { Meta, StoryObj } from '@storybook/preact';
-import Toggle from '.';
+import Toggle from './Toggle';
 import { useState } from 'preact/hooks';
 
 const meta: Meta = {

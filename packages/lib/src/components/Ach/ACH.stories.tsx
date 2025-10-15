@@ -4,7 +4,7 @@ import { ComponentContainer } from '../../../storybook/components/ComponentConta
 
 import { AdyenCheckout } from '../../core/AdyenCheckout';
 import Dropin from '../Dropin';
-import Ach from '.';
+import Ach from './Ach';
 
 import type { MetaConfiguration, StoryConfiguration } from '../../../storybook/types';
 import type { AchConfiguration } from './types';

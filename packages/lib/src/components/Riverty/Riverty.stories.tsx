@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../storybook/components/Checkout';
-import Riverty from '.';
+import Riverty from './Riverty';
 
 import type { MetaConfiguration, PaymentMethodStoryProps, ShopperDetails, StoryConfiguration } from '../../../storybook/types';
 import type { RedirectConfiguration } from '../Redirect/types';

@@ -3,7 +3,7 @@ import { MetaConfiguration, StoryConfiguration } from '../../../storybook/types'
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { GooglePayConfiguration } from './types';
 import getCurrency from '../../../storybook/utils/get-currency';
-import GooglePay from '.';
+import GooglePay from './GooglePay';
 import { makePayment } from '../../../storybook/helpers/checkout-api-calls';
 import { Checkout } from '../../../storybook/components/Checkout';
 

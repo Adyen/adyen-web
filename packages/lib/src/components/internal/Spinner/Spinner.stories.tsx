@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { Meta, StoryObj } from '@storybook/preact';
-import Spinner from '.';
+import Spinner from './Spinner';
 
 const meta: Meta = {
     title: 'Internals/Spinner',

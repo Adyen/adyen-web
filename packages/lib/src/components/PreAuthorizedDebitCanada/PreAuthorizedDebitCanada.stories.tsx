@@ -4,7 +4,7 @@ import { ComponentContainer } from '../../../storybook/components/ComponentConta
 
 import { AdyenCheckout } from '../../core/AdyenCheckout';
 import Dropin from '../Dropin';
-import PreAuthorizedDebitCanada from '.';
+import PreAuthorizedDebitCanada from './PreAuthorizedDebitCanada';
 
 import type { MetaConfiguration, StoryConfiguration } from '../../../storybook/types';
 import type { PreAuthorizedDebitCanadaConfiguration } from './types';

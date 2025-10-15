@@ -3,7 +3,7 @@ import { MetaConfiguration, PaymentMethodStoryProps, StoryConfiguration } from '
 import { QRLoaderConfiguration } from '../../types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../storybook/components/Checkout';
-import Swish from '.';
+import Swish from './Swish';
 
 type SwishStory = StoryConfiguration<QRLoaderConfiguration>;
 

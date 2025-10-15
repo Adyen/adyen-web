@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { Checkout } from '../../../storybook/components/Checkout';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
-import ClickToPay from '.';
+import ClickToPay from './ClickToPay';
 
 import type { MetaConfiguration, StoryConfiguration } from '../../../storybook/types';
 import type { ClickToPayConfiguration } from './types';

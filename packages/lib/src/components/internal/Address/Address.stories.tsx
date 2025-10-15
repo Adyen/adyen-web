@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { Meta } from '@storybook/preact';
-import Address from '.';
+import Address from './Address';
 import { ComponentContainer } from '../../../../storybook/components/ComponentContainer';
 import AddressElement from '../../Address/Address';
 import { Checkout } from '../../../../storybook/components/Checkout';

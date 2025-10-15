@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { Meta, StoryObj } from '@storybook/preact';
-import PhoneInputForm from '.';
+import PhoneInputForm from './PhoneInputForm';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import Language from '../../../language';
 

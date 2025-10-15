@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { MetaConfiguration, StoryConfiguration } from '../../../storybook/types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { GooglePayConfiguration } from './types';
-import GooglePay from '.';
+import GooglePay from './GooglePay';
 import { Checkout } from '../../../storybook/components/Checkout';
 
 type GooglePayStory = StoryConfiguration<GooglePayConfiguration>;

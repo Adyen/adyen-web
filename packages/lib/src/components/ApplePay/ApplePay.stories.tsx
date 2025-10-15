@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { MetaConfiguration, StoryConfiguration } from '../../../storybook/types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { ApplePayConfiguration } from './types';
-import ApplePay from '.';
+import ApplePay from './ApplePay';
 import { Checkout } from '../../../storybook/components/Checkout';
 
 type ApplePayStory = StoryConfiguration<ApplePayConfiguration>;

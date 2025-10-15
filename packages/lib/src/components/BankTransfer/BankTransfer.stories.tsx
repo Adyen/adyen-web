@@ -4,7 +4,7 @@ import { PaymentMethodStoryProps } from '../../../storybook/types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { Checkout } from '../../../storybook/components/Checkout';
 import { BankTransferConfiguration } from './types';
-import BankTransfer from '.';
+import BankTransfer from './BankTransfer';
 
 type BankTransferStory = StoryObj<PaymentMethodStoryProps<BankTransferConfiguration>>;
 

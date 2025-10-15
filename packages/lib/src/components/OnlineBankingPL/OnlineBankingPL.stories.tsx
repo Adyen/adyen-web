@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { MetaConfiguration, StoryConfiguration } from '../../../storybook/types';
 import { ComponentContainer } from '../../../storybook/components/ComponentContainer';
 import { IssuerListConfiguration } from '../helpers/IssuerListContainer/types';
-import OnlineBankingPL from '.';
+import OnlineBankingPL from './OnlineBankingPL';
 import { Checkout } from '../../../storybook/components/Checkout';
 import { getComponentConfigFromUrl } from '../../../storybook/utils/get-configuration-from-url';
 

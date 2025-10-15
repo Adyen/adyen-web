@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { Meta, StoryObj } from '@storybook/preact';
-import { Timeline } from '.';
+import { Timeline } from './Timeline';
 
 const meta: Meta = {
     title: 'Internals/Timeline',

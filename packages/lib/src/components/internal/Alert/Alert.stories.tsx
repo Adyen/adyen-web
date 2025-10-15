@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { Meta, StoryObj } from '@storybook/preact';
-import Alert from '.';
+import Alert from './Alert';
 import Language from '../../../language';
 import { CoreProvider } from '../../../core/Context/CoreProvider';
 import { Resources } from '../../../core/Context/Resources';
