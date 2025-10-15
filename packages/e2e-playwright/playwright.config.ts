@@ -70,7 +70,9 @@ const config: PlaywrightTestConfig = {
         {
             name: 'webkit',
             use: {
-                ...devices['Desktop Safari']
+                ...devices['Desktop Safari'],
+                // Speed up tests for webkit by only recording videos on first retry
+                video: 'on-first-retry'
             }
         }
     ],

@@ -41,9 +41,6 @@ jobs:
       if: steps.node-modules-cache.outputs.cache-hit != 'true'
       run: yarn install --immutable
 
-    - name: Build packages
-      run: yarn build
-
     - name: Lint files
       run: yarn lint
 
