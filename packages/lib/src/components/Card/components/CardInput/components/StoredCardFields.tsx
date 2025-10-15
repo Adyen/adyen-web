@@ -5,6 +5,7 @@ import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import { StoredCardFieldsProps } from './types';
 import { ENCRYPTED_SECURITY_CODE } from '../../../../internal/SecuredFields/lib/constants';
 import InputText from '../../../../internal/FormFields/InputText';
+import Fieldset from '../../../../internal/FormFields/Fieldset';
 
 export default function StoredCardFields({
     brand,
@@ -34,7 +35,7 @@ export default function StoredCardFields({
 
     return (
         <div className="adyen-checkout__card__form adyen-checkout__card__form--oneClick" aria-label={ariaLabel}>
-            <div className="adyen-checkout__card__exp-cvc adyen-checkout__fieldset__fields">
+            <Fieldset classNamesFields={['adyen-checkout__card__exp-cvc']}>
                 {expiryMonth && expiryYear && (
                     <Field
                         label={i18n.get('creditCard.expiryDate.label')}
@@ -67,7 +68,7 @@ export default function StoredCardFields({
                         contextualText={cvcContextualText}
                     />
                 )}
-            </div>
+            </Fieldset>
         </div>
     );
 }
