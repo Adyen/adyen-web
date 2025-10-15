@@ -7,13 +7,13 @@ import { setupServer } from 'msw/node';
 const server = setupServer(
     http.get('https://checkoutshopper-live.adyen.com/checkoutshopper/datasets/countries/en-US.json', () => {
         return HttpResponse.json([{ id: 'BR', name: 'Brazil' }]);
-    }),
+    }) as any,
     http.get('https://checkoutshopper-live.adyen.com/checkoutshopper/datasets/states/BR/en-US.json', () => {
         return HttpResponse.json([
             { id: 'MG', name: 'Minas Gerais' },
             { id: 'SP', name: 'Sao Paulo' }
         ]);
-    })
+    }) as any
 );
 
 beforeAll(() => server.listen());
