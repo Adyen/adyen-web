@@ -1,7 +1,7 @@
 import { RETURN_URL, SHOPPER_REFERENCE } from './commonConfig';
 
 const identifier = new Date().getMilliseconds();
-const origin = window.location.origin;
+const origin = globalThis.window.location.origin;
 
 const paymentsConfig = {
     origin,
