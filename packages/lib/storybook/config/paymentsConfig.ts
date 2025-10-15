@@ -1,9 +1,7 @@
 import { RETURN_URL, SHOPPER_REFERENCE } from './commonConfig';
 
 const identifier = new Date().getMilliseconds();
-const protocol = window.location.protocol; // gives 'http:' or 'https:' i.e. adds the colon
-const host = window.location.host;
-const origin = `${protocol}//${host}`;
+const origin = window.location.origin;
 
 const paymentsConfig = {
     origin,

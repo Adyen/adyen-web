@@ -131,10 +131,10 @@ export const mockSubmitDetailsResponseSimulateHostedPage = {
 
 export const mockSubmitDetailsResponseMerchantPage = {};
 
-export const mockRedirectUrlIssuerPage = `${window.location.protocol}//${window.location.host}/iframe.html?args=&globals=&id=components-paybybankpix--hosted-page-enrollment&viewMode=story&redirectResult=xxxxxxx&pollStatus=pending`;
+export const mockRedirectUrlIssuerPage = ``${window.location.origin}/iframe.html?args=&globals=&id=components-paybybankpix--hosted-page-enrollment&viewMode=story&redirectResult=xxxxxxx&pollStatus=pending`;
 
 export const mockEnrollmentPayload = {
-    returnUrl: `${window.location.protocol}//${window.location.host}/iframe.html?args=&globals=&id=components-paybybankpix--hosted-page-enrollment&viewMode=story`,
+    returnUrl: ``${window.location.origin}/iframe.html?args=&globals=&id=components-paybybankpix--hosted-page-enrollment&viewMode=story`,
     socialSecurityNumber: '81421811006',
     recurringProcessingModel: 'CardOnFile',
     shopperInteraction: 'ContAuth',
