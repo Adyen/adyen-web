@@ -4,7 +4,6 @@ import CVC from './CVC';
 import ExpirationDate from './ExpirationDate';
 import { useCoreContext } from '../../../../../core/Context/CoreProvider';
 import { CardFieldsProps } from './types';
-import classNames from 'classnames';
 import {
     BRAND_ICON_UI_EXCLUSION_LIST,
     DATE_POLICY_HIDDEN,
@@ -13,6 +12,8 @@ import {
     ENCRYPTED_SECURITY_CODE
 } from '../../../../internal/SecuredFields/lib/constants';
 import AvailableBrands from './AvailableBrands';
+import Fieldset from '../../../../internal/FormFields/Fieldset';
+import './CardFields.scss';
 
 export default function CardFields({
     brand,
@@ -59,10 +60,13 @@ export default function CardFields({
 
             <AvailableBrands activeBrand={brand} brands={allowedBrands} />
 
-            <div
-                className={classNames('adyen-checkout__card__exp-cvc adyen-checkout__fieldset__fields', {
-                    'adyen-checkout__card__exp-cvc__exp-date__input--hidden': expiryDatePolicy === DATE_POLICY_HIDDEN
-                })}
+            <Fieldset
+                classNameModifiers={['card-expiry-cvc']}
+                classNamesFields={
+                    expiryDatePolicy === DATE_POLICY_HIDDEN
+                        ? ['adyen-checkout__card__exp-cvc', 'adyen-checkout__card__exp-cvc__exp-date__input--hidden']
+                        : ['adyen-checkout__card__exp-cvc']
+                }
             >
                 <ExpirationDate
                     classNameModifiers={['col-50']}
@@ -92,7 +96,7 @@ export default function CardFields({
                         contextualText={cvcContextualText}
                     />
                 )}
-            </div>
+            </Fieldset>
         </div>
     );
 }

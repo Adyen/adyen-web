@@ -14,6 +14,7 @@ import { getMaxLengthByFieldAndCountry } from '../../../utils/validator-utils';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
 import AddressSearch from './components/AddressSearch';
 import { ComponentMethodsRef } from '../UIElement/types';
+import './Address.scss';
 
 export default function Address(props: AddressProps) {
     const { i18n } = useCoreContext();
@@ -185,7 +186,7 @@ export default function Address(props: AddressProps) {
 
     return (
         <Fragment>
-            <Fieldset classNameModifiers={[label || 'address']} label={label}>
+            <Fieldset classNameModifiers={[label, 'address']} label={label}>
                 {showAddressSearch && (
                     <AddressSearch
                         onAddressLookup={props.onAddressLookup}

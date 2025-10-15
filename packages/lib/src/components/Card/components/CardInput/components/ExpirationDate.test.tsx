@@ -6,7 +6,7 @@ import { DATE_POLICY_REQUIRED } from '../../../../internal/SecuredFields/lib/con
 
 const renderWithCoreContext = ui => {
     return render(
-        <CoreProvider i18n={global.i18n} resources={global.resources} loadingContext="test">
+        <CoreProvider i18n={globalThis.i18n} resources={globalThis.resources} loadingContext="test">
             {ui}
         </CoreProvider>
     );
