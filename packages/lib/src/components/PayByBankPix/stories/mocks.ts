@@ -72,7 +72,7 @@ export const mockDetailsResponseRedirectEnrollment = {
     resultCode: 'RedirectShopper',
     action: {
         paymentMethodType: 'paybybank_pix',
-        url: 'https://localhost:3020/iframe.html?globals=&args=&id=components-paybybankpix--merchant-page&viewMode=story',
+        url: `${globalThis.location.origin}/iframe.html?globals=&args=&id=components-paybybankpix--merchant-page&viewMode=story`,
         method: 'GET',
         type: 'redirect'
     }
@@ -82,7 +82,7 @@ export const mockPaymentsResponseEnrollment = {
     resultCode: 'RedirectShopper',
     action: {
         paymentMethodType: 'paybybank_pix',
-        url: 'https://localhost:3020/iframe.html?args=&globals=&id=components-paybybankpix--simulate-issuer-page&viewMode=story',
+        url: `${globalThis.location.origin}/iframe.html?args=&globals=&id=components-paybybankpix--simulate-issuer-page&viewMode=story`,
         method: 'GET',
         type: 'redirect'
     }
@@ -131,11 +131,10 @@ export const mockSubmitDetailsResponseSimulateHostedPage = {
 
 export const mockSubmitDetailsResponseMerchantPage = {};
 
-export const mockRedirectUrlIssuerPage =
-    'https://localhost:3020/iframe.html?args=&globals=&id=components-paybybankpix--hosted-page-enrollment&viewMode=story&redirectResult=xxxxxxx&pollStatus=pending';
+export const mockRedirectUrlIssuerPage = `${globalThis.location.origin}/iframe.html?args=&globals=&id=components-paybybankpix--hosted-page-enrollment&viewMode=story&redirectResult=xxxxxxx&pollStatus=pending`;
 
 export const mockEnrollmentPayload = {
-    returnUrl: `${window.location.protocol}://localhost:3020/iframe.html?args=&globals=&id=components-paybybankpix--hosted-page-enrollment&viewMode=story`,
+    returnUrl: `${globalThis.location.origin}/iframe.html?args=&globals=&id=components-paybybankpix--hosted-page-enrollment&viewMode=story`,
     socialSecurityNumber: '81421811006',
     recurringProcessingModel: 'CardOnFile',
     shopperInteraction: 'ContAuth',
