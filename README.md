@@ -23,7 +23,7 @@ You can integrate with Adyen Web in two ways:
 | 6.x.x         | Active     | ---          | ---          |
 | 5.x.x         | Inactive   | TBA          | TBA          |
 | 4.x.x         | Deprecated | August 2025  | August 2026  |
-| 3.x.x         | Deprecated | October 2024 | October 2025 |
+| 3.x.x         | End-of-life | October 2024 | October 2025 |
 
 More information about our versioning and the Drop-in/Components lifecycle can be found [here](https://docs.adyen.com/online-payments/upgrade-your-integration/)
 
@@ -56,7 +56,7 @@ You can also import Adyen Web using a `<script>` tag, as shown in the [Web Compo
 **Requirements:**
 
 -   Node v22.18.0
--   Yarn
+-   Yarn (Using [Corepack](https://yarnpkg.com/corepack) - Run `corepack enable` after installing Node)
 
 **To run the environment:**
 
@@ -194,12 +194,13 @@ We merge every pull request into the `main` branch. We aim to keep `main` in goo
 Have a look at our [contributing guidelines](https://github.com/Adyen/.github/blob/master/CONTRIBUTING.md) to find out how to raise a pull request.
 
 ## See also
-
--   [Complete documentation for Adyen Web](https://docs.adyen.com/checkout/)
--   [API Explorer](https://docs.adyen.com/api-explorer/)
--   [Example integrations](https://github.com/adyen-examples)
--   [Adyen Components JS Sample Code](https://github.com/Adyen/adyen-components-js-sample-code)
--   [Why we open sourced Adyen Web](https://www.adyen.com/blog/why-we-opened-sourced-our-web-framework)
+- [Accepting online payments](https://docs.adyen.com/online-payments/)
+- [Sessions flow integration guide](https://docs.adyen.com/online-payments/build-your-integration/sessions-flow/?platform=Web)
+- [Advanced flow integration guide](https://docs.adyen.com/online-payments/build-your-integration/advanced-flow/?platform=Web) 
+- [API Explorer](https://docs.adyen.com/api-explorer/)
+- [Example integrations](https://github.com/adyen-examples)
+- [Adyen Components JS Sample Code](https://github.com/Adyen/adyen-components-js-sample-code)
+- [Why we open sourced Adyen Web](https://www.adyen.com/blog/why-we-opened-sourced-our-web-framework)
 
 ## Support
 

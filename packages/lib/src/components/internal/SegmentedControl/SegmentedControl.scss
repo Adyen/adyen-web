@@ -1,21 +1,8 @@
 @import 'styles/variable-generator';
 
-@mixin set-checkmark-color($color: token(color-label-primary)) {
-    border-bottom: 1.5px solid $color;
-    border-right: 1.5px solid $color;
-}
-
-.adyen-checkout-checkmark {
-    @include set-checkmark-color;
-
-    transform: rotate(45deg);
-    height: token(spacer-060);
-    width: token(spacer-030);
-}
-
 .adyen-checkout__segmented-control {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(token(spacer-140), 1fr));
     gap: token(spacer-020);
     padding: token(spacer-030);
     background: token(color-background-tertiary);
@@ -27,27 +14,16 @@
         > .adyen-checkout__segmented-control-segment {
             color: token(color-label-disabled);
         }
-
-        > .adyen-checkout__segmented-control-segment--selected {
-            .adyen-checkout-checkmark {
-                @include set-checkmark-color(token(color-label-disabled));
-            }
-        }
     }
 }
 
 .adyen-checkout__segmented-control-segment {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: token(spacer-050);
-    flex-grow: 1;
     cursor: pointer;
-    width: 100%;
-    height: token(spacer-110);
+    padding: token(spacer-040) token(spacer-060);
     color: token(color-label-primary);
     text-align: center;
     font-weight: token(text-body-stronger-font-weight);
+    font-size: token(text-body-font-size);
     border-radius: token(border-radius-m);
     border: 0;
     background: transparent;

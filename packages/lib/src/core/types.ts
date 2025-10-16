@@ -14,14 +14,18 @@ import type {
     SessionsResponse,
     ResultCode,
     PaymentData,
-    AddressData
+    AddressData,
+    AnalyticsModule
 } from '../types/global-types';
 import type { AnalyticsOptions } from './Analytics/types';
-import type { RiskModuleOptions } from './RiskModule/RiskModule';
+import RiskModule, { RiskModuleOptions } from './RiskModule/RiskModule';
 import type { onBalanceCheckCallbackType, onOrderRequestCallbackType } from '../components/Giftcard/types';
 import type { SRPanelConfig } from './Errors/types';
 import type { NewableComponent } from './core.registry';
 import type { onOrderCancelType } from '../components/Dropin/types';
+import { Resources } from './Context/Resources';
+import Language from '../language';
+import { SRPanel } from './Errors/SRPanel';
 
 export interface ICore {
     initialize(): Promise<ICore>;
@@ -34,9 +38,18 @@ export interface ICore {
     createFromAction(action: PaymentAction, options?: any): UIElement;
     storeElementReference(element: UIElement): void;
     options: CoreConfiguration;
+    modules: CoreModules;
     paymentMethodsResponse: PaymentMethods;
     session?: Session;
 }
+
+export type CoreModules = Readonly<{
+    risk: RiskModule;
+    analytics: AnalyticsModule;
+    resources: Resources;
+    i18n: Language;
+    srPanel: SRPanel;
+}>;
 
 export type PaymentCompletedData = SessionsResponse | { resultCode: ResultCode; donationToken?: string };
 

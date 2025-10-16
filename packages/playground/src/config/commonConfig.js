@@ -28,3 +28,12 @@ export default {
     shopperReference,
     ...(merchantAccount && { merchantAccount })
 };
+
+// Force translations to be loaded from the local server path in Playground
+export const environmentUrlsOverride = {
+    _environmentUrls: {
+        cdn: {
+            translations: '/'
+        }
+    }
+};

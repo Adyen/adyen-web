@@ -8,20 +8,19 @@ export type CheckoutAttemptIdSession = {
 
 export type CollectIdProps = Pick<AnalyticsConfig, 'clientKey' | 'analyticsContext' | 'locale' | 'amount'> & {
     analyticsPath: string;
-    bundleType: string;
 };
 
 export type TelemetryEvent = {
     version: string;
     channel: 'Web';
     platform: 'Web';
-    locale: string;
-    referrer: string;
-    screenWidth: number;
-    containerWidth: number;
-    component: string;
-    flavor: string;
-    buildType: string;
+    locale?: string;
+    referrer?: string;
+    screenWidth?: number;
+    containerWidth?: number;
+    component?: string;
+    flavor?: string;
+    buildType?: string;
     amount?: PaymentAmount;
 } & AnalyticsInitialEvent &
     AnalyticsData;

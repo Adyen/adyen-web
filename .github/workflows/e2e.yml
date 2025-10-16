@@ -6,7 +6,6 @@ on:
 
 jobs:
   build-then-e2e:
-    if: ${{ github.actor != 'renovate[bot]' && github.actor != 'lgtm-com[bot]' }}
     timeout-minutes: 120
     runs-on: ubuntu-latest
     strategy:
@@ -28,17 +27,51 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+
     - name: Setup Node
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
+
+    - name: Cache node modules
+      id: node-modules-cache
+      uses: actions/cache@v4
+      env:
+        cache-name: node-modules-v1
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-cache-${{ env.cache-name }}-node-${{ matrix.node-version }}-yarn-${{ hashFiles('**/yarn.lock') }}
+
+    - name: Enable Corepack
+      run: corepack enable
+
     - name: Install Project Dependencies
-      run: yarn install
+      if: steps.node-modules-cache.outputs.cache-hit != 'true'
+      run: yarn install --immutable
+
+    - name: Extract Playwright version
+      id: playwright-version
+      run: echo "PLAYWRIGHT_VERSION=$(jq -r '.devDependencies["@playwright/test"]' packages/e2e-playwright/package.json)" >> $GITHUB_ENV
+
+    - name: Cache Playwright
+      # Using a cache for the webkit binary files causes this error on subsequent runs
+      # /home/runner/.cache/ms-playwright/webkit-2123/minibrowser-wpe/bin/MiniBrowser: error while loading shared libraries: libwoff2dec.so.1.0.2: cannot open shared object file: No such file or directory
+      if: matrix.runner-browser != 'webkit'
+      id: playwright-cache
+      uses: actions/cache@v4
+      env:
+        cache-name: playwright-v1
+      with:
+        path: ~/.cache/ms-playwright
+        key: ${{ runner.os }}-cache-${{ env.cache-name }}-node-${{ matrix.node-version }}-playwright-${{ env.PLAYWRIGHT_VERSION }}-browser-${{ matrix.runner-browser }}
+
     - name: Install Playwright Dependencies
-      working-directory: packages/e2e-playwright/
-      run: yarn install && npx playwright install --with-deps
+      if: steps.playwright-cache.outputs.cache-hit != 'true' || matrix.runner-browser == 'webkit'
+      run: npx playwright install --with-deps ${{ matrix.runner-browser }}
+
     - name: Run E2E Tests
-      run: yarn test:e2e -- --project=${{ matrix.runner-browser }}
+      run: yarn test:e2e --project=${{ matrix.runner-browser }}
+
     - name: Archive test result artifacts
       if: always()
       uses: actions/upload-artifact@v4

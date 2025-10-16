@@ -34,14 +34,14 @@
     },
     "devDependencies": {
         "@adyen/adyen-web-server": "1.0.0",
-        "@changesets/cli": "2.29.5",
+        "@changesets/cli": "2.29.7",
         "@changesets/get-github-info": "0.6.0",
-        "concurrently": "9.2.0",
+        "concurrently": "9.2.1",
         "prettier": "3.6.2"
     },
     "resolutions": {
         "tar-fs": "^3.0.9",
-        "**/estimo/nanoid": "^5.1.5",
         "cheerio": "1.0.0-rc.12"
-    }
+    },
+    "packageManager": "yarn@4.10.3"
 }

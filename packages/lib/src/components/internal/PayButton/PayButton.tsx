@@ -17,7 +17,7 @@ export interface PayButtonProps extends ButtonProps {
     status?: string;
     disabled?: boolean;
     icon?: string;
-    onClick?(): void;
+    onClick?: (e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => void;
 }
 
 const PayButton = ({ amount, secondaryAmount, classNameModifiers = [], label, ...props }: PayButtonProps) => {

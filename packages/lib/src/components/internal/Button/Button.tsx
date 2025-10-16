@@ -12,32 +12,22 @@ class Button extends Component<ButtonProps, ButtonState> {
         disabled: false,
         label: '',
         inline: false,
-        target: '_self',
-        onClick: () => {},
-        onMouseEnter: () => {},
-        onMouseLeave: () => {},
-        onFocus: () => {},
-        onBlur: () => {},
-        onKeyPress: () => {}
+        target: '_self'
     };
 
-    public onClick = e => {
+    public onClick = (e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
         if (!this.props.disabled) {
-            this.props.onClick(e, { complete: this.complete });
+            this.props.onClick?.(e, { complete: this.complete });
         }
     };
 
-    public complete = (delay = 1000) => {
+    public complete = (delay = 1_000) => {
         this.setState({ completed: true });
         setTimeout(() => {
             this.setState({ completed: false });
         }, delay);
-    };
-
-    public onKeyDown = (event: KeyboardEvent) => {
-        this.props.onKeyDown?.(event);
     };
 
     render() {
@@ -46,6 +36,7 @@ class Button extends Component<ButtonProps, ButtonState> {
             disabled,
             href,
             icon,
+            onClickCompletedIcon,
             inline,
             label,
             ariaLabel,
@@ -53,16 +44,28 @@ class Button extends Component<ButtonProps, ButtonState> {
             status,
             variant,
             buttonRef,
+            onClickCompletedLabel,
             onMouseEnter,
             onMouseLeave,
             onFocus,
             onBlur,
+            onKeyDown,
             onKeyPress
         }: ButtonProps = this.props;
         const { completed } = this.state;
         const { i18n } = useCoreContext();
 
-        const buttonIcon = icon ? <img className="adyen-checkout__button__icon" src={icon} alt="" aria-hidden="true" /> : '';
+        const buttonIcon =
+            onClickCompletedIcon || icon ? (
+                <img
+                    className="adyen-checkout__button__icon"
+                    src={this.state.completed ? (onClickCompletedIcon ?? icon) : icon}
+                    alt=""
+                    aria-hidden="true"
+                />
+            ) : (
+                ''
+            );
 
         const modifiers = [
             ...classNameModifiers,
@@ -90,7 +93,7 @@ class Button extends Component<ButtonProps, ButtonState> {
             default: (
                 <span className="adyen-checkout__button__content">
                     {buttonIcon}
-                    <span className="adyen-checkout__button__text">{label}</span>
+                    <span className="adyen-checkout__button__text">{this.state.completed ? (onClickCompletedLabel ?? label) : label}</span>
                 </span>
             )
         };
@@ -112,11 +115,11 @@ class Button extends Component<ButtonProps, ButtonState> {
                 type="button"
                 disabled={disabled}
                 onClick={this.onClick}
-                onKeyDown={this.onKeyDown}
                 aria-label={ariaLabel}
                 aria-describedby={ariaDescribedBy}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
+                onKeyDown={onKeyDown}
                 onFocus={onFocus}
                 onBlur={onBlur}
                 onKeyPress={onKeyPress}

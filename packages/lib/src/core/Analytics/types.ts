@@ -1,5 +1,4 @@
 import { PaymentAmount } from '../../types';
-import { CoreConfiguration } from '../types';
 import { SocialSecurityMode } from '../../components/Card/types';
 import { ANALYTICS_EVENT } from './constants';
 
@@ -59,19 +58,22 @@ export interface AnalyticsOptions {
     analyticsData?: AnalyticsData;
 }
 
-export type AnalyticsProps = Pick<CoreConfiguration, 'loadingContext' | 'locale' | 'clientKey' | 'analytics' | 'amount'> & {
-    bundleType: string;
-    analyticsContext?: string;
+export type AnalyticsProps = {
+    clientKey: string;
+    analyticsContext: string;
+    locale: string;
+    analytics?: AnalyticsOptions;
 };
 
 export type AnalyticsEventCategory = (typeof ANALYTICS_EVENT)[keyof typeof ANALYTICS_EVENT];
 
 export type AnalyticsInitialEvent = {
-    containerWidth: number;
-    component: string;
-    flavor: string;
+    containerWidth?: number;
+    component?: string;
+    flavor?: string;
     paymentMethods?: any[];
     sessionId?: string;
+    checkoutStage?: 'precheckout' | 'checkout';
 };
 
 export type AnalyticsConfig = {
@@ -144,6 +146,7 @@ export type CardConfigData = {
     socialSecurityNumberMode: SocialSecurityMode;
     srPanelEnabled: boolean;
     srPanelMoveFocus: boolean;
+    trimTrailingSeparator: boolean;
     // callbacks
     hasOnAllValid: boolean;
     hasOnBinLookup: boolean;

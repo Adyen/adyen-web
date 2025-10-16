@@ -1,144 +1,86 @@
 import { httpPost } from '../http';
 import collectId, { FAILURE_MSG } from './collect-id';
 import { ANALYTICS_PATH } from '../../Analytics/constants';
-import { CollectIdEvent } from './types';
+import type { CollectIdProps } from './types';
 
 jest.mock('../http');
+jest.mock('../../config', () => {
+    return {
+        LIBRARY_VERSION: 'x.x.x',
+        LIBRARY_BUNDLE_TYPE: 'umd'
+    };
+});
 
 const mockedHttpPost = httpPost as jest.Mock;
 
 const httpPromiseSuccessMock = jest.fn(() => Promise.resolve({ checkoutAttemptId: 'mockCheckoutAttemptId' }));
+const httpPromiseFailMock = jest.fn(() => Promise.reject('Error'));
 
-const httpPromiseFailMock = jest.fn(() => Promise.reject(' url incorrect'));
-
-const BASE_CONFIGURATION = {
+const BASE_CONFIGURATION: CollectIdProps = {
     analyticsContext: 'https://checkoutanalytics-test.adyen.com/checkoutanalytics/',
     locale: 'en-US',
-    bundleType: 'umd',
-    amount: {
-        value: 10000,
-        currency: 'USD'
-    },
+    clientKey: 'xxxx-yyyy',
     analyticsPath: ANALYTICS_PATH
 };
 
+let requestAttemptId;
+
 beforeEach(() => {
-    process.env.VERSION = 'x.x.x';
+    requestAttemptId = collectId(BASE_CONFIGURATION);
 
     mockedHttpPost.mockReset();
     mockedHttpPost.mockImplementation(httpPromiseSuccessMock);
     httpPromiseSuccessMock.mockClear();
+    httpPromiseFailMock.mockClear();
 });
 
 afterEach(() => {
     window.sessionStorage.clear();
 });
 
-test('Should lead to a rejected promise since no clientKey is provided', () => {
-    const log = collectId(BASE_CONFIGURATION);
-    log({} as CollectIdEvent).catch(e => {
-        expect(e).toEqual('no-client-key');
-    });
-});
-
-test('Should fail since path is incorrect', () => {
-    mockedHttpPost.mockReset();
+test('should reject the promise in case the request fails', async () => {
     mockedHttpPost.mockImplementation(httpPromiseFailMock);
-    httpPromiseFailMock.mockClear();
 
-    const configuration = {
-        ...BASE_CONFIGURATION,
-        clientKey: 'xxxx-yyyy',
-        analyticsPath: 'v99/analytics',
-        bundleType: 'umd'
-    };
-
-    const log = collectId(configuration);
-    log({} as CollectIdEvent)
-        .then(val => {
-            expect(val).toEqual(FAILURE_MSG);
-        })
-        .catch(() => {});
-
+    await expect(requestAttemptId({})).rejects.toBeDefined();
     expect(httpPost).toHaveBeenCalledTimes(1);
 });
 
-test('Should send expected data to http service', () => {
-    const configuration = {
-        ...BASE_CONFIGURATION,
-        clientKey: 'xxxx-yyyy'
-    };
-
+test('should send expected data to http service', async () => {
     const customEvent = {
         flavor: 'components',
         containerWidth: 600,
         component: 'scheme'
     };
 
-    const log = collectId(configuration);
-
-    void log(customEvent).then(val => {
-        expect(val).toEqual('mockCheckoutAttemptId');
-    });
+    await expect(requestAttemptId(customEvent)).resolves.toStrictEqual('mockCheckoutAttemptId');
 
     expect(httpPost).toHaveBeenCalledTimes(1);
     expect(httpPost).toHaveBeenCalledWith(
         {
             errorLevel: 'fatal',
             loadingContext: 'https://checkoutanalytics-test.adyen.com/checkoutanalytics/',
-            path: `${ANALYTICS_PATH}?clientKey=xxxx-yyyy`
+            path: `${ANALYTICS_PATH}?clientKey=xxxx-yyyy`,
+            errorMessage: FAILURE_MSG
         },
         {
-            // amount: configuration.amount,// TODO will be supported in the future
+            version: 'x.x.x',
             channel: 'Web',
             platform: 'Web',
-            locale: configuration.locale,
+            locale: BASE_CONFIGURATION.locale,
             referrer: 'http://localhost/',
             screenWidth: 0,
-            version: 'x.x.x',
             flavor: customEvent.flavor,
             containerWidth: customEvent.containerWidth,
             component: customEvent.component,
             buildType: 'umd'
         }
     );
+});
 
-    // A second attempt should return the previous promise and not lead to a new http call
-    const log2 = log(customEvent);
-    void log2.then(val => {
-        expect(val).toEqual('mockCheckoutAttemptId');
-    });
+test('should reuse the same if called multiple times', async () => {
+    await expect(requestAttemptId({})).resolves.toStrictEqual('mockCheckoutAttemptId');
     expect(httpPost).toHaveBeenCalledTimes(1);
-});
 
-test('Should save the checkout-attempt-id in the session storage', async () => {
-    const configuration = {
-        ...BASE_CONFIGURATION,
-        clientKey: 'xxxx-yyyy'
-    };
-    const customEvent = {
-        flavor: 'components',
-        containerWidth: 600,
-        component: 'scheme'
-    };
-    expect(window.sessionStorage.getItem('adyen-checkout__checkout-attempt-id')).toBeNull();
-    await collectId(configuration)(customEvent);
-    expect(JSON.parse(window.sessionStorage.getItem('adyen-checkout__checkout-attempt-id'))).toMatchObject({ id: 'mockCheckoutAttemptId' });
-});
-
-test('Should reuse the same the checkout-attempt-id in the session storage', async () => {
-    const configuration = {
-        ...BASE_CONFIGURATION,
-        clientKey: 'xxxx-yyyy'
-    };
-    const customEvent = {
-        flavor: 'components',
-        containerWidth: 600,
-        component: 'scheme'
-    };
-    const log = collectId(configuration);
-    await log(customEvent);
-    expect(JSON.parse(window.sessionStorage.getItem('adyen-checkout__checkout-attempt-id'))).toMatchObject({ id: 'mockCheckoutAttemptId' });
-    await log(customEvent);
-    expect(JSON.parse(window.sessionStorage.getItem('adyen-checkout__checkout-attempt-id'))).toMatchObject({ id: 'mockCheckoutAttemptId' });
+    await expect(requestAttemptId({})).resolves.toStrictEqual('mockCheckoutAttemptId');
+    expect(httpPost).toHaveBeenCalledTimes(1);
 });

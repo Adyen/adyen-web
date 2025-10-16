@@ -7,7 +7,7 @@ import { http, HttpResponse } from 'msw';
 const server = setupServer(
     http.get('https://checkoutshopper-live.adyen.com/checkoutshopper/datasets/countries/en-US.json', () => {
         return HttpResponse.json([{ id: 'DE', name: 'Germany' }]);
-    })
+    }) as any
 );
 
 beforeAll(() => server.listen());
@@ -18,7 +18,7 @@ server.events.on('request:start', ({ request }) => {
     console.log('MSW intercepted:', request.method, request.url);
 });
 
-describe.only('RatePay Direct Debit', () => {
+describe('RatePay Direct Debit', () => {
     afterEach(() => {
         jest.clearAllMocks();
     });

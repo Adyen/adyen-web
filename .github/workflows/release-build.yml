@@ -19,8 +19,11 @@ jobs:
           node-version: 22.18.0
           registry-url: https://registry.npmjs.org/
 
-      - run: yarn install --frozen-lockfile
+      - name: Enable Corepack
+        run: corepack enable
 
+      - name: Install Project Dependencies
+        run: yarn install
       # Build
       - name: Build
         run: cd packages/lib && npm run build

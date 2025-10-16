@@ -57,7 +57,7 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
         this.defineApplePayVersionNumber = this.defineApplePayVersionNumber.bind(this);
         this.configureApplePayWebOptions = this.configureApplePayWebOptions.bind(this);
 
-        this.sdkLoader = new ApplePaySdkLoader();
+        this.sdkLoader = new ApplePaySdkLoader({ analytics: this.analytics });
 
         void this.sdkLoader
             .load()
@@ -341,14 +341,14 @@ class ApplePayElement extends UIElement<ApplePayConfiguration> {
     }
 
     private async validateMerchant(resolve, reject) {
-        const { hostname: domainName } = window.location;
-        const { clientKey, configuration, loadingContext, initiative } = this.props;
+        const { hostname } = window.location;
+        const { clientKey, configuration, loadingContext, initiative, domainName } = this.props;
         const { merchantName, merchantId } = configuration;
         const path = `v1/applePay/sessions?clientKey=${clientKey}`;
         const options = { loadingContext, path };
         const request: ApplePaySessionRequest = {
             displayName: merchantName,
-            domainName,
+            domainName: domainName || hostname,
             initiative,
             merchantIdentifier: merchantId
         };

@@ -2,6 +2,7 @@ import { ActionHandledReturnObject, PaymentAmount } from '../../../types/global-
 import Language from '../../../language/Language';
 import { h } from 'preact';
 import { AnalyticsEvent } from '../../../core/Analytics/AnalyticsEvent';
+import { CountdownTime } from '../Countdown/types';
 
 export interface QRLoaderProps {
     delay?: number;
@@ -18,6 +19,7 @@ export interface QRLoaderProps {
     qrCodeData?: string;
     qrCodeImage?: string;
     amount?: PaymentAmount;
+    showAmount?: boolean;
     i18n?: Language;
     classNameModifiers?: string[];
     brandLogo?: string;
@@ -40,4 +42,16 @@ export interface QRLoaderState {
     loading: boolean;
     percentage: number;
     timePassed: number;
+}
+
+export interface QRCountdownProps {
+    countdownTime: number;
+    timeToPay: string;
+    onTick: (time: CountdownTime) => void;
+    onCompleted: () => void;
+}
+
+export interface QRImageProps {
+    src: string;
+    onLoad: () => void;
 }

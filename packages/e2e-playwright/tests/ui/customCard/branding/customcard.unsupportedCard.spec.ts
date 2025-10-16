@@ -98,7 +98,7 @@ test.describe('Testing persistence of "Unsupported card" error and state at both
             // await checkIframeElHasExactText(t, cardPage.iframeSelector, 0, getAriaErrorField('encryptedCardNumber'), '');
             //
             // // Add supported number
-            // await cardPage.cardUtils.fillCardNumber(t, MAESTRO_CARD);
+            // await cardPage.cardUtils.fillCardNumber(t, THREEDS2_MAESTRO_CARD);
             //
             // // Field should be marked in state as valid...
             // await t.expect(cardPage.getFromState(BASE_REF, 'valid.encryptedCardNumber')).eql(true);
@@ -164,7 +164,7 @@ test.describe('Testing persistence of "Unsupported card" error and state at both
             // /**
             //  * Paste in supported number
             //  */
-            // await cardPage.cardUtils.fillCardNumber(t, MAESTRO_CARD, 'paste');
+            // await cardPage.cardUtils.fillCardNumber(t, THREEDS2_MAESTRO_CARD, 'paste');
             //
             // // Merchant/components level error field hidden
             // await t.expect(cardPage.numErrorText.filterHidden().exists).ok();

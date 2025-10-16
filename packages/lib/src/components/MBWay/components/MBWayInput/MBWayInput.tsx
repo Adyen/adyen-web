@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useState, useRef } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 import { useCoreContext } from '../../../../core/Context/CoreProvider';
 import { MBWayInputProps } from './types';
 import './MBWayInput.scss';
@@ -9,8 +9,6 @@ import usePhonePrefixes from '../../../internal/PhoneInput/usePhonePrefixes';
 
 function MBWayInput(props: MBWayInputProps) {
     const { i18n, loadingContext } = useCoreContext();
-
-    const phoneInputRef = useRef(null);
 
     const { allowedCountries = [] } = props;
 
@@ -27,14 +25,7 @@ function MBWayInput(props: MBWayInputProps) {
     return (
         <LoadingWrapper status={prefixLoadingStatus}>
             <div className="adyen-checkout__mb-way">
-                <PhoneInputForm
-                    setComponentRef={props.setComponentRef}
-                    {...props}
-                    items={phonePrefixes}
-                    ref={phoneInputRef}
-                    onChange={onChange}
-                    data={props.data}
-                />
+                <PhoneInputForm setComponentRef={props.setComponentRef} {...props} items={phonePrefixes} onChange={onChange} data={props.data} />
 
                 {props.showPayButton && props.payButton({ status, label: i18n.get('confirmPurchase') })}
             </div>

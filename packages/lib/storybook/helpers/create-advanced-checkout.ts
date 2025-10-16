@@ -1,13 +1,20 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { AdyenCheckout } from '../../src/core/AdyenCheckout';
 import { cancelOrder, checkBalance, createOrder, getPaymentMethods, makeDetailsCall, makePayment } from './checkout-api-calls';
 import { handleError, handleFinalState } from './checkout-handlers';
 import getCurrency from '../utils/get-currency';
 import Checkout from '../../src/core/core';
+import { STORYBOOK_ENVIRONMENT_URLS } from '../config/commonConfig';
 
 import type { PaymentMethodsResponse } from '../../src/types';
-import type { AdyenCheckoutProps, ShopperDetails } from '../stories/types';
+import type { AdyenCheckoutProps, ShopperDetails } from '../types';
 
-async function createAdvancedFlowCheckout(checkoutProps: AdyenCheckoutProps, shopperDetails?: ShopperDetails): Promise<Checkout> {
+async function createAdvancedFlowCheckout(
+    checkoutProps: Omit<AdyenCheckoutProps, 'srConfig'> & {
+        srConfig?: { showPanel: boolean; moveFocus: boolean };
+    },
+    shopperDetails?: ShopperDetails
+): Promise<Checkout> {
     const {
         showPayButton,
         countryCode,
@@ -16,6 +23,7 @@ async function createAdvancedFlowCheckout(checkoutProps: AdyenCheckoutProps, sho
         allowedPaymentTypes = [],
         paymentMethodsOverride,
         paymentsOptions,
+        srConfig = { showPanel: false, moveFocus: true },
         ...restCheckoutProps
     } = checkoutProps;
 
@@ -113,7 +121,7 @@ async function createAdvancedFlowCheckout(checkoutProps: AdyenCheckoutProps, sho
                 const res = await checkBalance(payload);
                 resolve(res);
             } catch (e) {
-                reject(e);
+                reject(e as Error);
             }
         },
 
@@ -121,8 +129,8 @@ async function createAdvancedFlowCheckout(checkoutProps: AdyenCheckoutProps, sho
             try {
                 const order = await createOrder(paymentAmount);
                 resolve(order);
-            } catch (e) {
-                reject(e);
+            } catch (e: unknown) {
+                reject(e as Error);
             }
         },
 
@@ -139,6 +147,8 @@ async function createAdvancedFlowCheckout(checkoutProps: AdyenCheckoutProps, sho
             handleError(error, component);
         },
 
+        _environmentUrls: STORYBOOK_ENVIRONMENT_URLS,
+        srConfig,
         ...restCheckoutProps
     });
 

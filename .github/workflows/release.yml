@@ -22,13 +22,16 @@ jobs:
         with:
           node-version: 22.18.0
 
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Install Dependencies
-        run: yarn
+        run: yarn install --immutable
 
       - name: Create Release Pull Request
         uses: changesets/action@v1
         with:
-          version: yarn run version
+          version: yarn run version && yarn install ## Run yarn install to also update the yarn.lock file with the new package version
           commit: '[ci] release ${{ github.ref_name }}'
           title: '[ci] Release ${{ github.ref_name }}'
         env:

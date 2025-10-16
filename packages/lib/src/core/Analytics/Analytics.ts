@@ -6,20 +6,40 @@ import { debounce } from '../../utils/debounce';
 import { AnalyticsModule } from '../../types/global-types';
 import { processAnalyticsData } from './utils';
 import { AnalyticsEvent } from './AnalyticsEvent';
+import Storage from '../../utils/Storage';
+import { CheckoutAttemptIdSession } from '../Services/analytics/types';
 
-let capturedCheckoutAttemptId = null;
+let capturedCheckoutAttemptId: string | null = null;
 let sendEventsTimerId = null;
 
-const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bundleType }: AnalyticsProps): AnalyticsModule => {
+/**
+ * If the checkout attempt ID was stored more than fifteen minutes ago, then we should request a new ID.
+ * More here: COWEB-1099
+ */
+function isSessionCreatedUnderFifteenMinutes(session: CheckoutAttemptIdSession): boolean {
+    const FIFTEEN_MINUTES_IN_MS = 15 * 60 * 1000;
+    if (!session?.timestamp) return false;
+    const fifteenMinutesAgo = Date.now() - FIFTEEN_MINUTES_IN_MS;
+    return session.timestamp > fifteenMinutesAgo;
+}
+
+const Analytics = ({ locale, clientKey, analytics, analyticsContext }: AnalyticsProps): AnalyticsModule => {
     const defaultProps = {
-        enabled: true,
-        checkoutAttemptId: null,
-        analyticsData: {}
+        enabled: true
     };
 
     const props = { ...defaultProps, ...analytics };
 
-    const collectId = CollectId({ analyticsContext, clientKey, locale, amount, analyticsPath: ANALYTICS_PATH, bundleType });
+    const level = props.enabled ? ANALYTIC_LEVEL.all : ANALYTIC_LEVEL.initial;
+
+    const collectId = CollectId({
+        analyticsContext,
+        clientKey,
+        locale,
+        analyticsPath: ANALYTICS_PATH
+    });
+
+    const storage = new Storage<CheckoutAttemptIdSession>('checkout-attempt-id', 'sessionStorage');
     const eventsQueue: EventsQueueModule = EventsQueue({ analyticsContext, clientKey, analyticsPath: ANALYTICS_PATH });
 
     const sendAnalyticsEvents = () => {
@@ -58,24 +78,42 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
 
     return {
         /**
-         * Make "setup" call, to pass containerWidth, buildType, channel etc, and receive a checkoutAttemptId in return
-         * @param initialEvent -
+         * Make "setup" call, to pass data to analytics endpoint and receive a checkoutAttemptId in return
+         *
+         * N.B. This call is always made regardless of whether the merchant has disabled analytics
          */
-        setUp: async (initialEvent: AnalyticsInitialEvent) => {
-            const { payload, enabled } = props; // TODO what is payload, is it ever used?
-            const level = enabled ? ANALYTIC_LEVEL.all : ANALYTIC_LEVEL.initial;
-            const analyticsData = processAnalyticsData(props.analyticsData);
-            if (!capturedCheckoutAttemptId) {
-                try {
-                    capturedCheckoutAttemptId = await collectId({
-                        ...initialEvent,
-                        ...(payload && { ...payload }),
-                        ...(Object.keys(analyticsData).length && { ...analyticsData }),
-                        ...{ level }
-                    });
-                } catch (e: any) {
-                    console.warn(`Fetching checkoutAttemptId failed.${e ? ` Error=${e}` : ''}`);
-                }
+        setUp: async (setupProps?: AnalyticsInitialEvent): Promise<void> => {
+            try {
+                const defaultProps: Partial<AnalyticsInitialEvent> = { checkoutStage: 'checkout' };
+                const finalSetupProps = { ...defaultProps, ...setupProps };
+
+                const checkoutAttemptIdSession = storage.get();
+                const isSessionReusable = isSessionCreatedUnderFifteenMinutes(checkoutAttemptIdSession);
+
+                const { payload } = props;
+
+                const analyticsData = processAnalyticsData(props.analyticsData);
+
+                const availableCheckoutAttemptId: string | undefined = isSessionReusable
+                    ? checkoutAttemptIdSession.id
+                    : analyticsData?.checkoutAttemptId;
+
+                const collectIdPayload = {
+                    ...finalSetupProps,
+                    ...payload,
+                    ...analyticsData,
+                    ...(availableCheckoutAttemptId && { checkoutAttemptId: availableCheckoutAttemptId }),
+                    level
+                };
+
+                capturedCheckoutAttemptId = await collectId(collectIdPayload);
+
+                storage.set({
+                    id: capturedCheckoutAttemptId,
+                    timestamp: isSessionReusable ? checkoutAttemptIdSession.timestamp : Date.now()
+                });
+            } catch (error: unknown) {
+                console.warn(error);
             }
         },
 
@@ -86,8 +124,13 @@ const Analytics = ({ locale, clientKey, analytics, amount, analyticsContext, bun
 
         getEnabled: () => props.enabled,
 
+        flush: () => {
+            void sendAnalyticsEvents();
+        },
+
         sendAnalytics: (analyticsObj: AnalyticsEvent): boolean => {
-            if (!props.enabled) return false;
+            /** Only send subsequent analytics if the merchant has not disabled this functionality (i.e. set analytics.enabled = false) */
+            if (level !== ANALYTIC_LEVEL.all) return false;
 
             const eventCategory: AnalyticsEventCategory = analyticsObj.getEventCategory();
 

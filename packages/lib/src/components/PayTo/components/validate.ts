@@ -9,8 +9,8 @@ const orgidRegex = /`^[!-@[-~][ -@[-~]{0,254}[!-@[-~]$`/;
 const emailRegex =
     /^(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?)$/;
 
-// full phone regex Phone: ^\+[0-9]{1,3}-[1-9]{1,1}[0-9]{1,29}$
-const phoneNumberRegex = /^[1-9]{1,1}[0-9]{1,29}$/;
+// Full phone number regex with country code: ^+\[0-9\]{1,3}-\[1-9\]{1,1}\[0-9\]{1,29}$
+const phoneNumberRegexWithoutCountryCode = /^[0-9]{1,29}$/;
 
 export const validationFromRegex = (value: string, regex: RegExp, validationRule: ValidatorRule): boolean | null => {
     // null is returned here for legacy reasons
@@ -65,7 +65,7 @@ export const payIdValidationRules: ValidatorRules = {
     phoneNumber: {
         modes: ['blur'],
         validate: value => {
-            return isEmpty(value) ? null : phoneNumberRegex.test(value);
+            return isEmpty(value) ? null : phoneNumberRegexWithoutCountryCode.test(value);
         },
         errorMessage: 'mobileNumber.invalid'
     },

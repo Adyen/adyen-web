@@ -2,6 +2,11 @@
 
 $expand-btn: '.adyen-checkout-expand-button--upi-app-item';
 
+@mixin set-checkmark-color($color: token(color-label-primary)) {
+    border-bottom: 1.5px solid $color;
+    border-right: 1.5px solid $color;
+}
+
 .adyen-checkout-upi-app-item {
     background: token(color-background-primary);
     display: flex;
@@ -22,6 +27,7 @@ $expand-btn: '.adyen-checkout-expand-button--upi-app-item';
 
     &__label {
         cursor: pointer;
+        font-size: token(text-body-font-size);
     }
 
     &:hover:not(&--selected) {
@@ -44,5 +50,13 @@ $expand-btn: '.adyen-checkout-expand-button--upi-app-item';
 
     #{$expand-btn} {
         margin-right: 0;
+    }
+
+    &__checkmark {
+        @include set-checkmark-color;
+
+        transform: rotate(45deg);
+        height: token(spacer-060);
+        width: token(spacer-030);
     }
 }

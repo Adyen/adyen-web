@@ -27,8 +27,6 @@ import { getCardConfigData } from './components/CardInput/utils';
 import { AnalyticsEvent } from '../../core/Analytics/AnalyticsEvent';
 import { AnalyticsInfoEvent } from '../../core/Analytics/AnalyticsInfoEvent';
 
-export const DUAL_BRANDS_THAT_NEED_SELECTION_MECHANISM = ['cartebancaire', 'bcmc', 'dankort'];
-
 export class CardElement extends UIElement<CardConfiguration> {
     public static type = TxVariants.scheme;
 
@@ -43,7 +41,13 @@ export class CardElement extends UIElement<CardConfiguration> {
         super(checkout, props);
 
         if (props && !props._disableClickToPay) {
-            this.clickToPayService = createClickToPayService(this.props.configuration, this.props.clickToPayConfiguration, this.props.environment);
+            this.clickToPayService = createClickToPayService(
+                this.props.configuration,
+                this.props.clickToPayConfiguration,
+                this.props.environment,
+                this.analytics
+            );
+
             void this.clickToPayService?.initialize();
         }
     }

@@ -19,9 +19,10 @@ import getTranslations from './Services/get-translations';
 import { defaultProps } from './core.defaultProps';
 import { formatCustomTranslations, formatLocale } from '../language/utils';
 import { resolveEnvironments } from './Environment';
+import { LIBRARY_BUNDLE_TYPE, LIBRARY_VERSION } from './config';
 
-import type { AnalyticsModule, PaymentAction, PaymentResponseData } from '../types/global-types';
-import type { CoreConfiguration, ICore, AdditionalDetailsData } from './types';
+import type { PaymentAction, PaymentResponseData } from '../types/global-types';
+import type { CoreConfiguration, ICore, AdditionalDetailsData, CoreModules } from './types';
 import type { Translations } from '../language/types';
 import type { UIElementProps } from '../components/internal/UIElement/types';
 import { AnalyticsLogEvent } from './Analytics/AnalyticsLogEvent';
@@ -30,13 +31,7 @@ import CancelError from './Errors/CancelError';
 class Core implements ICore {
     public session?: Session;
     public paymentMethodsResponse: PaymentMethods;
-    public modules: Readonly<{
-        risk: RiskModule;
-        analytics: AnalyticsModule;
-        resources: Resources;
-        i18n: Language;
-        srPanel: SRPanel;
-    }>;
+    public modules: CoreModules;
     public options: CoreConfiguration;
 
     public analyticsContext: string;
@@ -47,8 +42,8 @@ class Core implements ICore {
     private components: UIElement[] = [];
 
     public static readonly metadata = {
-        version: process.env.VERSION,
-        bundleType: process.env.BUNDLE_TYPE
+        version: LIBRARY_VERSION,
+        bundleType: LIBRARY_BUNDLE_TYPE
     };
 
     public static registry = registry;
@@ -390,13 +385,10 @@ class Core implements ICore {
         this.modules = Object.freeze({
             risk: new RiskModule(this, { ...this.options, loadingContext: this.loadingContext }),
             analytics: Analytics({
-                loadingContext: this.loadingContext,
                 analyticsContext: this.analyticsContext,
                 clientKey: this.options.clientKey,
                 locale: this.options.locale,
-                analytics: this.options.analytics,
-                amount: this.options.amount,
-                bundleType: Core.metadata.bundleType
+                analytics: this.options.analytics
             }),
             resources: new Resources(this.cdnImagesUrl),
             i18n: new Language({
