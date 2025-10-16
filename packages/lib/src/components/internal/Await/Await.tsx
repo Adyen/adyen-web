@@ -13,6 +13,7 @@ import './Await.scss';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import ContentSeparator from '../ContentSeparator';
 import useImage from '../../../core/Context/useImage';
+import { CountdownTime } from '../Countdown/types';
 
 function Await(props: AwaitComponentProps) {
     const { i18n, loadingContext } = useCoreContext();
@@ -25,7 +26,7 @@ function Await(props: AwaitComponentProps) {
     const [percentage, setPercentage] = useState(100);
     const [timePassed, setTimePassed] = useState(0);
     const [hasAdjustedTime, setHasAdjustedTime] = useState(false);
-    const [storedTimeout, setStoredTimeout] = useState(null);
+    const [storedTimeout, setStoredTimeout] = useState<NodeJS.Timeout | number | null>(null);
     const { amount } = props;
 
     const onTimeUp = (): void => {
@@ -34,7 +35,7 @@ function Await(props: AwaitComponentProps) {
         props.onError(new AdyenCheckoutError('ERROR', 'Payment Expired'));
     };
 
-    const onTick = (time): void => {
+    const onTick = (time: CountdownTime): void => {
         setPercentage(time.percentage);
     };
 
@@ -113,7 +114,7 @@ function Await(props: AwaitComponentProps) {
             });
     };
 
-    const redirectToApp = (url): void => {
+    const redirectToApp = (url: string): void => {
         window.location.assign(url);
     };
 
@@ -156,7 +157,7 @@ function Await(props: AwaitComponentProps) {
         }
     }, [loading, expired, completed, timePassed]);
 
-    const finalState = (image, message) => (
+    const finalState = (image: string, message: string) => (
         <div className="adyen-checkout__await adyen-checkout__await--result">
             <img
                 className="adyen-checkout__await__icon adyen-checkout__await__icon--result"

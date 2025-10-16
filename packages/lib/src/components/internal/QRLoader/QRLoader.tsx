@@ -1,11 +1,12 @@
-import { Component, h } from 'preact';
+import { h, ComponentChildren } from 'preact';
+import { useState, useEffect } from 'preact/hooks';
 import Button from '../Button';
 import Spinner from '../Spinner';
 import checkPaymentStatus from '../../../core/Services/payment-status';
 import processResponse from '../../../core/ProcessResponse';
 
 import './QRLoader.scss';
-import { QRLoaderProps, QRLoaderState } from './types';
+import { QRLoaderProps } from './types';
 import copyToClipboard from '../../../utils/clipboard';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
 import { useCoreContext } from '../../../core/Context/CoreProvider';
@@ -22,118 +23,68 @@ import { QRLoaderDetailsProvider } from './QRLoaderDetailsProvider';
 
 const QRCODE_URL = 'utility/v1/barcode.png?type=qrCode&data=';
 
-class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
-    private timeoutId: NodeJS.Timeout | number | undefined;
+function QRLoader(props: QRLoaderProps & { children?: ComponentChildren }) {
+    const { i18n, loadingContext } = useCoreContext();
+    const getImage = useImage();
+    const [completed, setCompleted] = useState(false);
+    const [expired, setExpired] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [delay, setDelay] = useState(props.delay);
+    const [percentage, setPercentage] = useState(100);
+    const [timePassed, setTimePassed] = useState(0);
+    const [hasAdjustedTime, setHasAdjustedTime] = useState(false);
+    const [storedTimeout, setStoredTimeout] = useState<NodeJS.Timeout | number | null>(null);
 
-    constructor(props: QRLoaderProps) {
-        super(props);
-
-        this.state = {
-            buttonStatus: 'default',
-            completed: false,
-            delay: props.delay,
-            expired: false,
-            loading: true,
-            percentage: 100,
-            timePassed: 0
-        };
-    }
-
-    public static defaultProps = {
-        delay: 2000,
-        countdownTime: 15,
-        onError: () => {},
-        onComplete: () => {},
-        throttleTime: 60000,
-        classNameModifiers: [],
-        throttledInterval: 10000,
-        introduction: 'wechatpay.scanqrcode',
-        timeToPay: 'wechatpay.timetopay',
-        buttonLabel: 'openApp',
-        showAmount: true
-    };
-
-    componentDidMount() {
-        this.statusInterval();
-    }
-
-    componentWillUnmount() {
-        clearTimeout(this.timeoutId);
-    }
-
-    public redirectToApp = (url: string | URL) => {
+    const redirectToApp = (url: string | URL): void => {
         window.location.assign(url);
     };
 
-    // Retry until getting a complete response from the server, or it times out
-    public statusInterval = (responseTime = 0) => {
-        // If we are already in the final statuses, do not poll!
-        if (this.state.expired || this.state.completed) return;
-
-        this.setState(previous => ({ timePassed: previous.timePassed + this.props.delay + responseTime }));
-        // Changes interval time to 10 seconds after 1 minute (60 seconds)
-        const newDelay = this.state.timePassed >= this.props.throttleTime ? this.props.throttledInterval : this.state.delay;
-        this.pollStatus(newDelay);
+    const onTick = (time: CountdownTime): void => {
+        setPercentage(time.percentage);
     };
 
-    private pollStatus(delay: number) {
-        clearTimeout(this.timeoutId);
-
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        this.timeoutId = setTimeout(async () => {
-            // Wait for previous status call to finish.
-            // Also taking the server response time into the consideration to calculate timePassed.
-            const start = performance.now();
-            await this.checkStatus();
-            const end = performance.now();
-            this.statusInterval(Math.round(end - start));
-        }, delay);
-    }
-
-    private onTick = (time: CountdownTime): void => {
-        this.setState({ percentage: time.percentage });
+    const onTimeUp = (): void => {
+        setExpired(true);
+        clearTimeout(storedTimeout);
+        props.onError(new AdyenCheckoutError('ERROR', 'Payment Expired'));
     };
 
-    private onTimeUp = (): void => {
-        this.setState({ expired: true });
-        clearTimeout(this.timeoutId);
-        this.props.onError(new AdyenCheckoutError('ERROR', 'Payment Expired'));
-    };
-
-    private onComplete = (status: StatusObject): void => {
-        clearTimeout(this.timeoutId);
-        this.setState({ completed: true, loading: false });
+    const onComplete = (status: StatusObject): void => {
+        clearTimeout(storedTimeout);
+        setCompleted(true);
+        setLoading(false);
 
         const state = {
             data: {
                 details: { payload: status.props.payload },
-                paymentData: this.props.paymentData
+                paymentData: props.paymentData
             }
         };
 
-        this.props.onComplete(state, this);
+        props.onComplete(state, this);
     };
 
-    private onError = (status: StatusObject): void => {
-        clearTimeout(this.timeoutId);
-        this.setState({ expired: true, loading: false });
+    const onError = (status: StatusObject): void => {
+        clearTimeout(storedTimeout);
+        setExpired(true);
+        setLoading(false);
 
         if (status.props.payload) {
             const state = {
                 data: {
                     details: { payload: status.props.payload },
-                    paymentData: this.props.paymentData
+                    paymentData: props.paymentData
                 }
             };
-            this.props.onComplete(state, this);
+            props.onComplete(state, this);
         }
 
         const error = new AdyenCheckoutError('ERROR', 'error result with no payload in response');
-        return this.props.onError(error);
+        return props.onError(error);
     };
 
-    private checkStatus = () => {
-        const { paymentData, clientKey, loadingContext, throttledInterval } = this.props;
+    const checkStatus = async (): Promise<void> => {
+        const { paymentData, clientKey, throttledInterval } = props;
 
         return checkPaymentStatus(paymentData, clientKey, loadingContext, throttledInterval)
             .then(processResponse)
@@ -141,129 +92,171 @@ class QRLoader extends Component<QRLoaderProps, QRLoaderState> {
             .then((status: StatusObject) => {
                 switch (status.type) {
                     case 'success':
-                        this.onComplete(status);
+                        onComplete(status);
                         break;
                     case 'error':
-                        this.onError(status);
+                        onError(status);
                         break;
                     default:
-                        this.setState({ loading: false });
+                        setLoading(false);
                 }
-                return status;
             });
     };
 
-    render({ amount, showAmount, url, brandLogo, brandName, countdownTime, type, onActionHandled }: QRLoaderProps, { expired, completed, loading }) {
-        const { i18n, loadingContext } = useCoreContext();
-        const getImage = useImage();
-
-        const qrCodeImage = this.props.qrCodeData
-            ? `${loadingContext}${QRCODE_URL}${this.props.qrCodeData}&clientKey=${this.props.clientKey}`
-            : this.props.qrCodeImage;
-
-        const handleCopy = (complete: () => void) => {
-            void copyToClipboard(this.props.qrCodeData);
-
-            const event = new AnalyticsInfoEvent({
-                type: ANALYTICS_DOWNLOAD_STR,
-                target: ANALYTICS_QR_CODE_DOWNLOAD
-            });
-            this.props.onSubmitAnalytics(event);
-
-            complete();
+    useEffect(() => {
+        void checkStatus();
+        return (): void => {
+            clearTimeout(storedTimeout);
         };
+    }, []);
 
-        const onQrCodeLoad = () => {
-            onActionHandled?.({
-                componentType: this.props.type,
-                actionDescription: 'qr-code-loaded'
-            });
-        };
+    useEffect(() => {
+        if (expired) return clearTimeout(storedTimeout);
+        if (completed) return clearTimeout(storedTimeout);
 
-        const finalState = (image: string, message: string) => {
-            const status = i18n.get(message);
-            useA11yReporter(status);
-            return (
-                <div className="adyen-checkout__qr-loader adyen-checkout__qr-loader--result">
-                    <img
-                        className="adyen-checkout__qr-loader__icon adyen-checkout__qr-loader__icon--result"
-                        src={getImage({ imageFolder: 'components/' })(image)}
-                        alt={status}
-                    />
-                    <div className="adyen-checkout__qr-loader__subtitle">{status}</div>
-                </div>
-            );
-        };
+        if (!loading) {
+            // Retry until getting a complete response from the server OR it times out
+            // Changes setTimeout time to new value (throttleInterval) after a certain amount of time (throttleTime) has passed
+            const statusInterval = async (): Promise<void> => {
+                await checkStatus();
 
-        if (expired) {
-            return finalState('error', 'error.subtitle.payment');
+                const actualTimePassed = timePassed + delay;
+                // timePassed is the value that is the main "engine" that drives this useEffect/polling
+                setTimePassed(actualTimePassed);
+
+                if (actualTimePassed >= props.throttleTime && !hasAdjustedTime) {
+                    setDelay(props.throttledInterval);
+                    setHasAdjustedTime(true);
+                }
+            };
+
+            // Create (another) interval to poll for a result
+            setStoredTimeout(setTimeout(() => void statusInterval(), delay));
         }
+    }, [loading, expired, completed, timePassed]);
 
-        if (completed) {
-            return finalState('success', 'creditCard.success');
-        }
+    const { amount, showAmount, url, brandLogo, brandName, countdownTime, type, onActionHandled } = props;
 
-        if (loading) {
-            return (
-                <div className="adyen-checkout__qr-loader">
-                    {brandLogo && (
-                        <div className="adyen-checkout__qr-loader__brand-logo-wrapper">
-                            <img alt={brandName} src={brandLogo} className="adyen-checkout__qr-loader__brand-logo" />
-                        </div>
-                    )}
-                    <Spinner />
-                </div>
-            );
-        }
+    const qrCodeImage = props.qrCodeData
+        ? `${loadingContext}${QRCODE_URL}${props.qrCodeData}&clientKey=${props.clientKey}`
+        : props.qrCodeImage;
 
-        const qrSubtitleRef = useAutoFocus();
-        const classnames = this.props.classNameModifiers.map(m => `adyen-checkout__qr-loader--${m}`);
+    const handleCopy = (complete: () => void) => {
+        void copyToClipboard(props.qrCodeData);
 
+        const event = new AnalyticsInfoEvent({
+            type: ANALYTICS_DOWNLOAD_STR,
+            target: ANALYTICS_QR_CODE_DOWNLOAD
+        });
+        props.onSubmitAnalytics(event);
+
+        complete();
+    };
+
+    const onQrCodeLoad = () => {
+        onActionHandled?.({
+            componentType: props.type,
+            actionDescription: 'qr-code-loaded'
+        });
+    };
+
+    const finalState = (image: string, message: string) => {
+        const status = i18n.get(message);
+        useA11yReporter(status);
         return (
-            <div className={`adyen-checkout__qr-loader adyen-checkout__qr-loader--${type} ${classnames.join(' ')}`}>
+            <div className="adyen-checkout__qr-loader adyen-checkout__qr-loader--result">
+                <img
+                    className="adyen-checkout__qr-loader__icon adyen-checkout__qr-loader__icon--result"
+                    src={getImage({ imageFolder: 'components/' })(image)}
+                    alt={status}
+                />
+                <div className="adyen-checkout__qr-loader__subtitle">{status}</div>
+            </div>
+        );
+    };
+
+    if (expired) {
+        return finalState('error', 'error.subtitle.payment');
+    }
+
+    if (completed) {
+        return finalState('success', 'creditCard.success');
+    }
+
+    if (loading) {
+        return (
+            <div className="adyen-checkout__qr-loader">
                 {brandLogo && (
                     <div className="adyen-checkout__qr-loader__brand-logo-wrapper">
-                        <img src={brandLogo} alt={brandName} className="adyen-checkout__qr-loader__brand-logo" />
+                        <img alt={brandName} src={brandLogo} className="adyen-checkout__qr-loader__brand-logo" />
                     </div>
                 )}
-
-                {showAmount && amount && amount.value !== null && !!amount.currency && (
-                    <h1 className="adyen-checkout__qr-loader__payment_amount">{i18n.amount(amount.value, amount.currency)}</h1>
-                )}
-
-                {url && (
-                    <div className="adyen-checkout__qr-loader__app-link">
-                        {this.props.redirectIntroduction && (
-                            <p className="adyen-checkout__qr-loader__subtitle">{i18n.get(this.props.redirectIntroduction)}</p>
-                        )}
-                        <Button classNameModifiers={['qr-loader']} onClick={() => this.redirectToApp(url)} label={i18n.get(this.props.buttonLabel)} />
-                        <ContentSeparator />
-                    </div>
-                )}
-
-                {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
-                <p ref={qrSubtitleRef} tabIndex={0} className="adyen-checkout__qr-loader__subtitle">
-                    {typeof this.props.introduction === 'string' ? i18n.get(this.props.introduction) : this.props.introduction?.()}
-                </p>
-
-                <QRLoaderDetailsProvider
-                    qrCodeImage={qrCodeImage}
-                    qrCodeData={this.props.qrCodeData}
-                    percentage={this.state.percentage}
-                    timeToPay={this.props.timeToPay}
-                    copyBtn={this.props.copyBtn}
-                    instructions={this.props.instructions}
-                    countdownTime={countdownTime}
-                    onTick={(time: CountdownTime) => this.onTick(time)}
-                    onQRCodeLoad={onQrCodeLoad}
-                    onTimeUp={() => this.onTimeUp()}
-                    handleCopy={handleCopy}
-                >
-                    {this.props.children ? this.props.children : <QRDetails />}
-                </QRLoaderDetailsProvider>
+                <Spinner />
             </div>
         );
     }
+
+    const qrSubtitleRef = useAutoFocus();
+    const classnames = props.classNameModifiers.map(m => `adyen-checkout__qr-loader--${m}`);
+
+    return (
+        <div className={`adyen-checkout__qr-loader adyen-checkout__qr-loader--${type} ${classnames.join(' ')}`}>
+            {brandLogo && (
+                <div className="adyen-checkout__qr-loader__brand-logo-wrapper">
+                    <img src={brandLogo} alt={brandName} className="adyen-checkout__qr-loader__brand-logo" />
+                </div>
+            )}
+
+            {showAmount && amount && amount.value !== null && !!amount.currency && (
+                <h1 className="adyen-checkout__qr-loader__payment_amount">{i18n.amount(amount.value, amount.currency)}</h1>
+            )}
+
+            {url && (
+                <div className="adyen-checkout__qr-loader__app-link">
+                    {props.redirectIntroduction && (
+                        <p className="adyen-checkout__qr-loader__subtitle">{i18n.get(props.redirectIntroduction)}</p>
+                    )}
+                    <Button classNameModifiers={['qr-loader']} onClick={() => redirectToApp(url)} label={i18n.get(props.buttonLabel)} />
+                    <ContentSeparator />
+                </div>
+            )}
+
+            {/* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */}
+            <p ref={qrSubtitleRef} tabIndex={0} className="adyen-checkout__qr-loader__subtitle">
+                {typeof props.introduction === 'string' ? i18n.get(props.introduction) : props.introduction?.()}
+            </p>
+
+            <QRLoaderDetailsProvider
+                qrCodeImage={qrCodeImage}
+                qrCodeData={props.qrCodeData}
+                percentage={percentage}
+                timeToPay={props.timeToPay}
+                copyBtn={props.copyBtn}
+                instructions={props.instructions}
+                countdownTime={countdownTime}
+                onTick={(time: CountdownTime) => onTick(time)}
+                onQRCodeLoad={onQrCodeLoad}
+                onTimeUp={() => onTimeUp()}
+                handleCopy={handleCopy}
+            >
+                {props.children ? props.children : <QRDetails />}
+            </QRLoaderDetailsProvider>
+        </div>
+    );
 }
+
+QRLoader.defaultProps = {
+    delay: 2000,
+    countdownTime: 15,
+    onError: () => {},
+    onComplete: () => {},
+    throttleTime: 60000,
+    classNameModifiers: [],
+    throttledInterval: 10000,
+    introduction: 'wechatpay.scanqrcode',
+    timeToPay: 'wechatpay.timetopay',
+    buttonLabel: 'openApp',
+    showAmount: true
+};
 
 export default QRLoader;
