@@ -1,11 +1,9 @@
 import { h, ComponentChildren } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect, useRef } from 'preact/hooks';
 import Button from '../Button';
 import Spinner from '../Spinner';
 import checkPaymentStatus from '../../../core/Services/payment-status';
 import processResponse from '../../../core/ProcessResponse';
-
-import './QRLoader.scss';
 import { QRLoaderProps } from './types';
 import copyToClipboard from '../../../utils/clipboard';
 import AdyenCheckoutError from '../../../core/Errors/AdyenCheckoutError';
@@ -20,6 +18,7 @@ import { AnalyticsInfoEvent } from '../../../core/Analytics/AnalyticsInfoEvent';
 import { CountdownTime } from '../Countdown/types';
 import QRDetails from './components/QRDetails';
 import { QRLoaderDetailsProvider } from './QRLoaderDetailsProvider';
+import './QRLoader.scss';
 
 const QRCODE_URL = 'utility/v1/barcode.png?type=qrCode&data=';
 
@@ -27,13 +26,12 @@ function QRLoader(props: QRLoaderProps & { children?: ComponentChildren }) {
     const { i18n, loadingContext } = useCoreContext();
     const getImage = useImage();
     const [completed, setCompleted] = useState(false);
+    const [delay, setDelay] = useState(props.delay);
     const [expired, setExpired] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [delay, setDelay] = useState(props.delay);
     const [percentage, setPercentage] = useState(100);
     const [timePassed, setTimePassed] = useState(0);
-    const [hasAdjustedTime, setHasAdjustedTime] = useState(false);
-    const [storedTimeout, setStoredTimeout] = useState<NodeJS.Timeout | number | null>(null);
+    const timeoutRef = useRef<NodeJS.Timeout | number | null>(null);
 
     const redirectToApp = (url: string | URL): void => {
         window.location.assign(url);
@@ -45,12 +43,12 @@ function QRLoader(props: QRLoaderProps & { children?: ComponentChildren }) {
 
     const onTimeUp = (): void => {
         setExpired(true);
-        clearTimeout(storedTimeout);
+        console.log('clear timeout expired', new Date().toISOString());
+        clearTimeout(timeoutRef.current);
         props.onError(new AdyenCheckoutError('ERROR', 'Payment Expired'));
     };
 
     const onComplete = (status: StatusObject): void => {
-        clearTimeout(storedTimeout);
         setCompleted(true);
         setLoading(false);
 
@@ -65,7 +63,6 @@ function QRLoader(props: QRLoaderProps & { children?: ComponentChildren }) {
     };
 
     const onError = (status: StatusObject): void => {
-        clearTimeout(storedTimeout);
         setExpired(true);
         setLoading(false);
 
@@ -104,45 +101,56 @@ function QRLoader(props: QRLoaderProps & { children?: ComponentChildren }) {
     };
 
     useEffect(() => {
-        void checkStatus();
-        return (): void => {
-            clearTimeout(storedTimeout);
-        };
+        console.log('initial check', new Date().toISOString());
+        checkStatus();
     }, []);
 
     useEffect(() => {
-        if (expired) return clearTimeout(storedTimeout);
-        if (completed) return clearTimeout(storedTimeout);
-
-        if (!loading) {
-            // Retry until getting a complete response from the server OR it times out
-            // Changes setTimeout time to new value (throttleInterval) after a certain amount of time (throttleTime) has passed
-            const statusInterval = async (): Promise<void> => {
-                await checkStatus();
-
-                const actualTimePassed = timePassed + delay;
-                // timePassed is the value that is the main "engine" that drives this useEffect/polling
-                setTimePassed(actualTimePassed);
-
-                if (actualTimePassed >= props.throttleTime && !hasAdjustedTime) {
-                    setDelay(props.throttledInterval);
-                    setHasAdjustedTime(true);
-                }
-            };
-
-            // Create (another) interval to poll for a result
-            setStoredTimeout(setTimeout(() => void statusInterval(), delay));
+        if (expired || completed) {
+            console.log({ expired, completed }, new Date().toISOString());
+            clearTimeout(timeoutRef.current);
+            return;
         }
-    }, [loading, expired, completed, timePassed]);
+
+        if (loading) {
+            console.log({ loading }, new Date().toISOString());
+            return;
+        }
+
+        let currentDelay = delay;
+
+        const statusInterval = async (): Promise<void> => {
+            const start = performance.now();
+            console.log('status interval', new Date().toISOString());
+            await checkStatus();
+            const end = performance.now();
+            const responseTime = end - start;
+
+            const actualTimePassed = timePassed + responseTime + currentDelay;
+            setTimePassed(actualTimePassed);
+
+            if (actualTimePassed >= props.throttleTime && currentDelay !== props.throttledInterval) {
+                setDelay(props.throttledInterval);
+            }
+        };
+
+        console.log('setting timeout', new Date().toISOString());
+        timeoutRef.current = setTimeout(() => {
+            statusInterval();
+        }, currentDelay);
+
+        return () => {
+            console.log('clear timeout', new Date().toISOString());
+            clearTimeout(timeoutRef.current);
+        };
+    }, [expired, completed, loading, timePassed]);
 
     const { amount, showAmount, url, brandLogo, brandName, countdownTime, type, onActionHandled } = props;
 
-    const qrCodeImage = props.qrCodeData
-        ? `${loadingContext}${QRCODE_URL}${props.qrCodeData}&clientKey=${props.clientKey}`
-        : props.qrCodeImage;
+    const qrCodeImage = props.qrCodeData ? `${loadingContext}${QRCODE_URL}${props.qrCodeData}&clientKey=${props.clientKey}` : props.qrCodeImage;
 
     const handleCopy = (complete: () => void) => {
-        void copyToClipboard(props.qrCodeData);
+        copyToClipboard(props.qrCodeData);
 
         const event = new AnalyticsInfoEvent({
             type: ANALYTICS_DOWNLOAD_STR,
@@ -213,9 +221,7 @@ function QRLoader(props: QRLoaderProps & { children?: ComponentChildren }) {
 
             {url && (
                 <div className="adyen-checkout__qr-loader__app-link">
-                    {props.redirectIntroduction && (
-                        <p className="adyen-checkout__qr-loader__subtitle">{i18n.get(props.redirectIntroduction)}</p>
-                    )}
+                    {props.redirectIntroduction && <p className="adyen-checkout__qr-loader__subtitle">{i18n.get(props.redirectIntroduction)}</p>}
                     <Button classNameModifiers={['qr-loader']} onClick={() => redirectToApp(url)} label={i18n.get(props.buttonLabel)} />
                     <ContentSeparator />
                 </div>
