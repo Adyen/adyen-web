@@ -5,8 +5,6 @@ import { ComponentContainer } from '../../../storybook/components/ComponentConta
 import AfterPay from './AfterPay';
 import { Checkout } from '../../../storybook/components/Checkout';
 
-console.log(manny);
-
 type AfterPayStory = StoryConfiguration<OpenInvoiceConfiguration>;
 
 const meta: MetaConfiguration<OpenInvoiceConfiguration> = {
